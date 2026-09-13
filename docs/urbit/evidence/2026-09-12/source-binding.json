@@ -1,0 +1,13 @@
+{
+  "classification": "source-commit-binding-for-executed-file-hashes",
+  "source_commit": "dc3ee14a2e7db019f9fe1e8c9cbdfed816444abd",
+  "meaning": "The committed native smoke, harness dependency closure, lock and corpus bytes are exactly those reported by independent execution. Broader files are not thereby native-qualified.",
+  "native_evidence": "native-smoke-independent-pass.json",
+  "evidence_sha256": "a711f2ff234ed78bc0b16ca90f7724537aaf88d91d3fab2e586daf3719826227",
+  "recorded_hashes": {
+    "native_tree_sha256": "dff85b9af5429c096e38789f81f1e6097368c244e84d2d1b5b49a66a1f6fcf89",
+    "harness_tree_sha256": "36e141574825b284e6877d6947a58cb4710d65abebb91ac19d518bfd5506e93e",
+    "toolchain_sha256": "4a209c10cf1756eb0f7357cc3eca8250bf66c239b4cd0ca31a8c0886d4d304ee"
+  },
+  "contract_freeze_sha256": "61d9a18f16b8b01629bd35177d5b801cc05cd8ddaf7f68c3cc1678faf642cf90"
+}
