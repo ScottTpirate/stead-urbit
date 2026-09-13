@@ -1,0 +1,31 @@
+/+  stead-codec
+:-  %say
+|=  *
+:-  %noun
+~|  %work-ascii
+=/  cmd  (decode:stead-codec '{"protocol": "stead.command/1", "request_id": "019939ba-4000-7000-8000-000000000003", "project_id": "019939ba-4000-7000-8000-000000000001", "resource_id": "019939ba-4000-7000-8000-000000000002", "expected_revision": "0", "authority_epoch": "1", "operation": "work.create", "payload": {"title": "Synthetic task", "description": "Public test fixture only.", "type": "task", "status": "todo", "priority": "medium"}}')
+?>  =('{"authority_epoch":"1","expected_revision":"0","operation":"work.create","payload":{"description":"Public test fixture only.","priority":"medium","status":"todo","title":"Synthetic task","type":"task"},"project_id":"019939ba-4000-7000-8000-000000000001","protocol":"stead.command/1","request_id":"019939ba-4000-7000-8000-000000000003","resource_id":"019939ba-4000-7000-8000-000000000002"}' canonical-bytes.cmd)
+?>  =('cfc1ecec366f04fbccbd0d75d5a5360ddf27e0092477ee9bf957ec3016538ced' digest.cmd)
+~|  %document-unicode
+=/  cmd  (decode:stead-codec '{"protocol": "stead.command/1", "request_id": "019939ba-4000-7000-8000-000000000003", "project_id": "019939ba-4000-7000-8000-000000000001", "resource_id": "019939ba-4000-7000-8000-000000000002", "expected_revision": "0", "authority_epoch": "1", "operation": "document.save", "payload": {"container_id": "019939ba-4000-7000-8000-000000000004", "markdown": "---\\nid: 019939ba-4000-7000-8000-000000000002\\ntype: page\\nstate: draft\\n---\\n# Synthetic café\\nLine with \\"quotes\\", \\\\ and 雪.\\n"}}')
+?>  =('{"authority_epoch":"1","expected_revision":"0","operation":"document.save","payload":{"container_id":"019939ba-4000-7000-8000-000000000004","markdown":"---\\nid: 019939ba-4000-7000-8000-000000000002\\ntype: page\\nstate: draft\\n---\\n# Synthetic café\\nLine with \\"quotes\\", \\\\ and 雪.\\n"},"project_id":"019939ba-4000-7000-8000-000000000001","protocol":"stead.command/1","request_id":"019939ba-4000-7000-8000-000000000003","resource_id":"019939ba-4000-7000-8000-000000000002"}' canonical-bytes.cmd)
+?>  =('ed74227934b2fd911690b60d6541483f704f8248d017f79fc1a34c1c9aa53217' digest.cmd)
+~|  %project-create
+=/  cmd  (decode:stead-codec '{"protocol": "stead.command/1", "request_id": "019939ba-4000-7000-8000-00000000000c", "project_id": "019939ba-4000-7000-8000-000000000001", "resource_id": "019939ba-4000-7000-8000-000000000001", "expected_revision": "0", "authority_epoch": "1", "operation": "project.create", "payload": {"organization_id": "019939ba-4000-7000-8000-000000000005", "owning_team_id": "019939ba-4000-7000-8000-000000000006", "title": "Synthetic project", "project_key": "SYN", "preset": "general"}}')
+?>  =('{"authority_epoch":"1","expected_revision":"0","operation":"project.create","payload":{"organization_id":"019939ba-4000-7000-8000-000000000005","owning_team_id":"019939ba-4000-7000-8000-000000000006","preset":"general","project_key":"SYN","title":"Synthetic project"},"project_id":"019939ba-4000-7000-8000-000000000001","protocol":"stead.command/1","request_id":"019939ba-4000-7000-8000-00000000000c","resource_id":"019939ba-4000-7000-8000-000000000001"}' canonical-bytes.cmd)
+?>  =('c661eea78f54f8459a60c9d4dade787426722f88de23cc9458d7640538b8da14' digest.cmd)
+~|  %work-update
+=/  cmd  (decode:stead-codec '{"protocol": "stead.command/1", "request_id": "019939ba-4000-7000-8000-00000000000d", "project_id": "019939ba-4000-7000-8000-000000000001", "resource_id": "019939ba-4000-7000-8000-000000000002", "expected_revision": "1", "authority_epoch": "1", "operation": "work.update", "payload": {"title": "Synthetic task", "description": "Public test fixture only.", "type": "task", "status": "done", "priority": "medium"}}')
+?>  =('{"authority_epoch":"1","expected_revision":"1","operation":"work.update","payload":{"description":"Public test fixture only.","priority":"medium","status":"done","title":"Synthetic task","type":"task"},"project_id":"019939ba-4000-7000-8000-000000000001","protocol":"stead.command/1","request_id":"019939ba-4000-7000-8000-00000000000d","resource_id":"019939ba-4000-7000-8000-000000000002"}' canonical-bytes.cmd)
+?>  =('308947d429dfc39e31228528ec6cd8f64350757fb73812ed04ce71cb212fe17a' digest.cmd)
+~|  %policy-grant
+=/  cmd  (decode:stead-codec '{"protocol": "stead.command/1", "request_id": "019939ba-4000-7000-8000-00000000000e", "project_id": "019939ba-4000-7000-8000-000000000001", "resource_id": "019939ba-4000-7000-8000-000000000001", "expected_revision": "1", "authority_epoch": "1", "operation": "policy.grant", "payload": {"grant_id": "019939ba-4000-7000-8000-000000000008", "principal_id": "019939ba-4000-7000-8000-000000000009", "role": "contributor", "expires_at_ms": "1900000000000"}}')
+?>  =('{"authority_epoch":"1","expected_revision":"1","operation":"policy.grant","payload":{"expires_at_ms":"1900000000000","grant_id":"019939ba-4000-7000-8000-000000000008","principal_id":"019939ba-4000-7000-8000-000000000009","role":"contributor"},"project_id":"019939ba-4000-7000-8000-000000000001","protocol":"stead.command/1","request_id":"019939ba-4000-7000-8000-00000000000e","resource_id":"019939ba-4000-7000-8000-000000000001"}' canonical-bytes.cmd)
+?>  =('86347a8e979d5c9da92ece20588177d8e0b35c9dc54e827e56271c33a81dbcde' digest.cmd)
+~|  %policy-revoke
+=/  cmd  (decode:stead-codec '{"protocol": "stead.command/1", "request_id": "019939ba-4000-7000-8000-00000000000f", "project_id": "019939ba-4000-7000-8000-000000000001", "resource_id": "019939ba-4000-7000-8000-000000000001", "expected_revision": "2", "authority_epoch": "1", "operation": "policy.revoke", "payload": {"grant_id": "019939ba-4000-7000-8000-000000000008"}}')
+?>  =('{"authority_epoch":"1","expected_revision":"2","operation":"policy.revoke","payload":{"grant_id":"019939ba-4000-7000-8000-000000000008"},"project_id":"019939ba-4000-7000-8000-000000000001","protocol":"stead.command/1","request_id":"019939ba-4000-7000-8000-00000000000f","resource_id":"019939ba-4000-7000-8000-000000000001"}' canonical-bytes.cmd)
+?>  =('6691220b304845cd8799fcc0fc0c6ef2d9acb220712a5e6381272b9c19ab73d5' digest.cmd)
+?>  =((parse:stead-codec '{"a":"x","a":"y"}') ~)
+?>  =((parse:stead-codec '{"a":"\\u0000"}') ~)
+%stead-codec-six-vectors-pass

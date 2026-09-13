@@ -256,6 +256,7 @@ def handle(connection):
                 result = {**PROGRESS, 'ships': {s: {'pid': p.pid, 'exit': p.poll()} for s, p in PROCESSES.items()}}
             elif request == {'op': 'stop'}:
                 STOP_REQUESTED.set()
+                PROGRESS.update(stage='stopping', ready=False)
                 with MUTEX:
                     all_stop()
                     result = {'stopped': True}
@@ -265,6 +266,12 @@ def handle(connection):
                     if not PROGRESS['ready']:
                         raise RuntimeError('Fixture not ready: ' + str(PROGRESS))
                     result = smoke_test()
+            elif request == {'op': 'core-test'}:
+                with MUTEX:
+                    if not PROGRESS['ready']:
+                        raise RuntimeError('Fixture not ready')
+                    import core_test
+                    result = core_test.run(globals())
             else:
                 raise ValueError('Unknown control command')
             reply = {'ok': True, 'result': result}

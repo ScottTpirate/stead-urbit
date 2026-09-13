@@ -1,4 +1,4 @@
-.PHONY: setup doctor start stop reset test plan-check contracts-check
+.PHONY: setup doctor start stop reset test core-test plan-check contracts-check
 setup:
 	python3 scripts/urbit/toolchain.py fetch
 doctor:
@@ -11,6 +11,8 @@ reset:
 	python3 scripts/urbit/harness.py reset
 test:
 	python3 scripts/urbit/harness.py test
+core-test:
+	python3 scripts/urbit/harness.py core-test
 plan-check:
 	python3 scripts/urbit/validate_plan.py
 contracts-check:

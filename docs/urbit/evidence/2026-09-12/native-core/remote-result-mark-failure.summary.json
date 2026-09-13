@@ -1,0 +1,19 @@
+{
+  "source_file": ".piers/fakes/logs/core-20260913T024849Z.json",
+  "raw_sha256": "7d0e17049c8caa4ab7f55d205a92c5cff37046dd3f23b943a2bcfd092f09f5dc",
+  "compressed_sha256": "270886a29b1f15f0059c7cca39bb91e408444302b4b5adea711e5fb3523f1ce7",
+  "classification": "local-real-native-fake-ships",
+  "status": "fail",
+  "error": "loom: mapped 512MB\r\nlite: arvo formula 4ce68411\r\nlite: core 641296f\r\nlite: final state 641296f\r\neval (cue, newt):\n\r\ncancelled\r\neval: bail: %thread-fail",
+  "elapsed_seconds": 28.692,
+  "native_tree_sha256": "9581e36c9f3805139a252978ac7e176f3b97e9407fe4c40c1e07551f38a90445",
+  "toolchain_sha256": "4a209c10cf1756eb0f7357cc3eca8250bf66c239b4cd0ca31a8c0886d4d304ee",
+  "checks": [
+    {
+      "name": "native-project-created",
+      "passed": true
+    }
+  ],
+  "qa_case_counts": null,
+  "qa_check_counts": null
+}

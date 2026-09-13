@@ -1,0 +1,2683 @@
+{
+  "status": "pass",
+  "classification": "local-real-native-fake-ships",
+  "elapsed_seconds": 390.266,
+  "inputs_before": {
+    "native": "6f1bc326d0d0388ee8ea4c3e12e01c345e2f309e69e5664b3de3b96be8611669",
+    "runner": {
+      "core_test.py": "a668aa0971741279d17a13185748d882ebd3413637fb23d79b5c1b465823ce2c",
+      "core_conn.py": "460ecd9c37979d0974c2fdef74579d346b9af2bd7592e037ee7f82e868d90090",
+      "core_cases.py": "2db9b3d6f71c8c4cadaeaa2b65eab88740b9785626231855e3ea1c7bc294530e",
+      "core_export.py": "089e6a43dd9e712908d62743926968b53d1ae79e0672938545f05ff7e77f30ca"
+    },
+    "harness": "5520adf8a4258795c03793a517b0ac787d2acab0ec45d379da1657f9bb401da2",
+    "toolchain": "4a209c10cf1756eb0f7357cc3eca8250bf66c239b4cd0ca31a8c0886d4d304ee",
+    "fixture": "e693116efbc00b1131714f9eb7077ec678669d4fdb27ddfdce284461e0dffe74",
+    "cases": "88d554aebc48e071f63db981263cacdfb144c16aa870046248134ba667362e4c",
+    "vectors": "3269fb0ebae091b9a022954e4ca876d318c5e06c4b6c69b7445628186d886592",
+    "freeze": "61d9a18f16b8b01629bd35177d5b801cc05cd8ddaf7f68c3cc1678faf642cf90"
+  },
+  "inputs_after": {
+    "native": "6f1bc326d0d0388ee8ea4c3e12e01c345e2f309e69e5664b3de3b96be8611669",
+    "runner": {
+      "core_test.py": "a668aa0971741279d17a13185748d882ebd3413637fb23d79b5c1b465823ce2c",
+      "core_conn.py": "460ecd9c37979d0974c2fdef74579d346b9af2bd7592e037ee7f82e868d90090",
+      "core_cases.py": "2db9b3d6f71c8c4cadaeaa2b65eab88740b9785626231855e3ea1c7bc294530e",
+      "core_export.py": "089e6a43dd9e712908d62743926968b53d1ae79e0672938545f05ff7e77f30ca"
+    },
+    "harness": "5520adf8a4258795c03793a517b0ac787d2acab0ec45d379da1657f9bb401da2",
+    "toolchain": "4a209c10cf1756eb0f7357cc3eca8250bf66c239b4cd0ca31a8c0886d4d304ee",
+    "fixture": "e693116efbc00b1131714f9eb7077ec678669d4fdb27ddfdce284461e0dffe74",
+    "cases": "88d554aebc48e071f63db981263cacdfb144c16aa870046248134ba667362e4c",
+    "vectors": "3269fb0ebae091b9a022954e4ca876d318c5e06c4b6c69b7445628186d886592",
+    "freeze": "61d9a18f16b8b01629bd35177d5b801cc05cd8ddaf7f68c3cc1678faf642cf90"
+  },
+  "coverage_limits": [
+    "Synthetic sender bindings; no live/browser authentication or production isolation.",
+    "Warm process restart and declared on-load checks; no abrupt crash-window injection.",
+    "Delivery reducer is executed; full adversarial Gall subscription races remain separate.",
+    "Native document objects exported through stock Git; no Smart HTTP forge.",
+    "UUID collisions and project sequence counters remain metadata confidentiality gates."
+  ],
+  "supported_predecessor_versions": [],
+  "raw_report_sha256": "e22f4606a53c42b2beee75ae2bed5dca26ae8260346513398f328cbc95d5ca6e",
+  "gzip_sha256": "a9685da91f5cdc4caa6fbd5621f89a80044c3cf347d1047a490d7191f89f3a58",
+  "raw_report_bytes": 8242058,
+  "checks_passed": 413,
+  "checks_failed": [],
+  "qa_case_counts": {
+    "incomplete": 14,
+    "passed": 115
+  },
+  "qa_check_counts": {
+    "passed": 2542,
+    "skipped": 25
+  },
+  "qa_coverage_status": "incomplete",
+  "qa_cases": [
+    {
+      "name": "empty-project-known-unknown",
+      "lane": "ordered_cases",
+      "status": "incomplete"
+    },
+    {
+      "name": "nonadministrator-cannot-create",
+      "lane": "ordered_cases",
+      "status": "passed"
+    },
+    {
+      "name": "team-ownership-is-explicit",
+      "lane": "ordered_cases",
+      "status": "passed"
+    },
+    {
+      "name": "create-project",
+      "lane": "ordered_cases",
+      "status": "passed"
+    },
+    {
+      "name": "duplicate-project-create",
+      "lane": "ordered_cases",
+      "status": "passed"
+    },
+    {
+      "name": "outsider-private-project-existence",
+      "lane": "ordered_cases",
+      "status": "incomplete"
+    },
+    {
+      "name": "native-peer-without-grant",
+      "lane": "ordered_cases",
+      "status": "passed"
+    },
+    {
+      "name": "reader-fixture-is-not-an-implicit-role",
+      "lane": "ordered_cases",
+      "status": "passed"
+    },
+    {
+      "name": "ungranted-contributor-cannot-create-work",
+      "lane": "ordered_cases",
+      "status": "passed"
+    },
+    {
+      "name": "explicit-contributor-grant",
+      "lane": "ordered_cases",
+      "status": "passed"
+    },
+    {
+      "name": "explicit-reader-grant",
+      "lane": "ordered_cases",
+      "status": "passed"
+    },
+    {
+      "name": "contributor-creates-work",
+      "lane": "ordered_cases",
+      "status": "passed"
+    },
+    {
+      "name": "reader-can-read-work",
+      "lane": "ordered_cases",
+      "status": "incomplete"
+    },
+    {
+      "name": "outsider-work-known-unknown",
+      "lane": "ordered_cases",
+      "status": "incomplete"
+    },
+    {
+      "name": "reader-cannot-write",
+      "lane": "ordered_cases",
+      "status": "passed"
+    },
+    {
+      "name": "outsider-cannot-write",
+      "lane": "ordered_cases",
+      "status": "passed"
+    },
+    {
+      "name": "work-create-duplicate",
+      "lane": "ordered_cases",
+      "status": "passed"
+    },
+    {
+      "name": "same-id-different-command",
+      "lane": "ordered_cases",
+      "status": "passed"
+    },
+    {
+      "name": "request-id-is-scoped-to-principal",
+      "lane": "ordered_cases",
+      "status": "passed"
+    },
+    {
+      "name": "receipt-recovery-is-scoped-to-principal",
+      "lane": "ordered_cases",
+      "status": "passed"
+    },
+    {
+      "name": "work-first-edit",
+      "lane": "ordered_cases",
+      "status": "passed"
+    },
+    {
+      "name": "second-independent-work",
+      "lane": "ordered_cases",
+      "status": "passed"
+    },
+    {
+      "name": "work-a-second-edit",
+      "lane": "ordered_cases",
+      "status": "passed"
+    },
+    {
+      "name": "work-b-revision-does-not-follow-work-a",
+      "lane": "ordered_cases",
+      "status": "passed"
+    },
+    {
+      "name": "stale-work-revision",
+      "lane": "ordered_cases",
+      "status": "passed"
+    },
+    {
+      "name": "future-epoch-mismatch",
+      "lane": "ordered_cases",
+      "status": "passed"
+    },
+    {
+      "name": "outsider-epoch-does-not-disclose-current-epoch",
+      "lane": "ordered_cases",
+      "status": "passed"
+    },
+    {
+      "name": "stale-policy-revision",
+      "lane": "ordered_cases",
+      "status": "passed"
+    },
+    {
+      "name": "contributor-cannot-grant",
+      "lane": "ordered_cases",
+      "status": "passed"
+    },
+    {
+      "name": "existing-grant-id-cannot-upgrade",
+      "lane": "ordered_cases",
+      "status": "passed"
+    },
+    {
+      "name": "revoke-contributor",
+      "lane": "ordered_cases",
+      "status": "passed"
+    },
+    {
+      "name": "revoked-equal-retry-hides-receipt",
+      "lane": "ordered_cases",
+      "status": "passed"
+    },
+    {
+      "name": "revoked-mismatched-retry-hides-reuse-result",
+      "lane": "ordered_cases",
+      "status": "passed"
+    },
+    {
+      "name": "revoked-receipt-recovery-hides-result",
+      "lane": "ordered_cases",
+      "status": "passed"
+    },
+    {
+      "name": "revoked-read-hides-retained-work",
+      "lane": "ordered_cases",
+      "status": "passed"
+    },
+    {
+      "name": "revoked-grant-id-is-a-tombstone",
+      "lane": "ordered_cases",
+      "status": "passed"
+    },
+    {
+      "name": "fresh-id-restores-bus-as-maintainer",
+      "lane": "ordered_cases",
+      "status": "passed"
+    },
+    {
+      "name": "reauthorized-retry-returns-historical-receipt",
+      "lane": "ordered_cases",
+      "status": "passed"
+    },
+    {
+      "name": "maintainer-cannot-create-maintainer",
+      "lane": "ordered_cases",
+      "status": "passed"
+    },
+    {
+      "name": "maintainer-cannot-revoke-maintainer",
+      "lane": "ordered_cases",
+      "status": "passed"
+    },
+    {
+      "name": "maintainer-can-grant-reader",
+      "lane": "ordered_cases",
+      "status": "passed"
+    },
+    {
+      "name": "explicit-grant-allows-former-outsider",
+      "lane": "ordered_cases",
+      "status": "incomplete"
+    },
+    {
+      "name": "maintainer-can-revoke-reader",
+      "lane": "ordered_cases",
+      "status": "passed"
+    },
+    {
+      "name": "revoked-temporary-reader-is-outsider-again",
+      "lane": "ordered_cases",
+      "status": "passed"
+    },
+    {
+      "name": "grant-id-cannot-downgrade-existing-maintainer",
+      "lane": "ordered_cases",
+      "status": "passed"
+    },
+    {
+      "name": "role-change-revokes-old-reader-id",
+      "lane": "ordered_cases",
+      "status": "passed"
+    },
+    {
+      "name": "role-change-uses-fresh-contributor-id",
+      "lane": "ordered_cases",
+      "status": "passed"
+    },
+    {
+      "name": "restore-reader-revokes-contributor-id",
+      "lane": "ordered_cases",
+      "status": "passed"
+    },
+    {
+      "name": "restore-reader-uses-fresh-id",
+      "lane": "ordered_cases",
+      "status": "passed"
+    },
+    {
+      "name": "expired-grant-cannot-be-admitted",
+      "lane": "ordered_cases",
+      "status": "passed"
+    },
+    {
+      "name": "grant-cannot-outlive-binding",
+      "lane": "ordered_cases",
+      "status": "passed"
+    },
+    {
+      "name": "save-first-private-document",
+      "lane": "ordered_cases",
+      "status": "passed"
+    },
+    {
+      "name": "save-second-private-document",
+      "lane": "ordered_cases",
+      "status": "passed"
+    },
+    {
+      "name": "save-administrator-private-document",
+      "lane": "ordered_cases",
+      "status": "passed"
+    },
+    {
+      "name": "work-resource-collides-with-project",
+      "lane": "ordered_cases",
+      "status": "passed"
+    },
+    {
+      "name": "work-resource-collides-with-document",
+      "lane": "ordered_cases",
+      "status": "passed"
+    },
+    {
+      "name": "work-resource-collides-with-organization",
+      "lane": "ordered_cases",
+      "status": "passed"
+    },
+    {
+      "name": "work-resource-collides-with-team",
+      "lane": "ordered_cases",
+      "status": "passed"
+    },
+    {
+      "name": "work-resource-collides-with-principal",
+      "lane": "ordered_cases",
+      "status": "passed"
+    },
+    {
+      "name": "work-resource-collides-with-binding",
+      "lane": "ordered_cases",
+      "status": "passed"
+    },
+    {
+      "name": "work-resource-collides-with-container",
+      "lane": "ordered_cases",
+      "status": "passed"
+    },
+    {
+      "name": "work-resource-collides-with-grant",
+      "lane": "ordered_cases",
+      "status": "passed"
+    },
+    {
+      "name": "document-resource-collides-with-work",
+      "lane": "ordered_cases",
+      "status": "passed"
+    },
+    {
+      "name": "owner-reads-private-document",
+      "lane": "ordered_cases",
+      "status": "incomplete"
+    },
+    {
+      "name": "reader-private-document-known-unknown",
+      "lane": "ordered_cases",
+      "status": "incomplete"
+    },
+    {
+      "name": "outsider-private-document-known-unknown",
+      "lane": "ordered_cases",
+      "status": "incomplete"
+    },
+    {
+      "name": "administrator-has-no-private-container-override",
+      "lane": "ordered_cases",
+      "status": "passed"
+    },
+    {
+      "name": "maintainer-has-no-other-owner-container-override",
+      "lane": "ordered_cases",
+      "status": "passed"
+    },
+    {
+      "name": "other-principal-cannot-recover-private-document-receipt",
+      "lane": "ordered_cases",
+      "status": "passed"
+    },
+    {
+      "name": "reader-cannot-save-private-document",
+      "lane": "ordered_cases",
+      "status": "passed"
+    },
+    {
+      "name": "maintainer-cannot-save-other-owner-document",
+      "lane": "ordered_cases",
+      "status": "passed"
+    },
+    {
+      "name": "save-cannot-move-document-to-other-container",
+      "lane": "ordered_cases",
+      "status": "passed"
+    },
+    {
+      "name": "administrator-cannot-move-another-owner-document",
+      "lane": "ordered_cases",
+      "status": "passed"
+    },
+    {
+      "name": "unknown-container-does-not-create-container",
+      "lane": "ordered_cases",
+      "status": "passed"
+    },
+    {
+      "name": "project-views-never-include-other-owner-private-metadata",
+      "lane": "ordered_cases",
+      "status": "incomplete"
+    },
+    {
+      "name": "duplicate-document-save-has-no-new-commit",
+      "lane": "ordered_cases",
+      "status": "passed"
+    },
+    {
+      "name": "edit-document-a-using-its-own-revision",
+      "lane": "ordered_cases",
+      "status": "passed"
+    },
+    {
+      "name": "edit-document-b-after-a-preserves-both",
+      "lane": "ordered_cases",
+      "status": "passed"
+    },
+    {
+      "name": "stale-document-save-is-atomic-rejection",
+      "lane": "ordered_cases",
+      "status": "passed"
+    },
+    {
+      "name": "document-request-id-payload-mismatch",
+      "lane": "ordered_cases",
+      "status": "passed"
+    },
+    {
+      "name": "frontmatter-wrong-id",
+      "lane": "ordered_cases",
+      "status": "passed"
+    },
+    {
+      "name": "frontmatter-duplicate-id",
+      "lane": "ordered_cases",
+      "status": "passed"
+    },
+    {
+      "name": "frontmatter-unknown-key",
+      "lane": "ordered_cases",
+      "status": "passed"
+    },
+    {
+      "name": "frontmatter-wrong-order",
+      "lane": "ordered_cases",
+      "status": "passed"
+    },
+    {
+      "name": "frontmatter-anchor",
+      "lane": "ordered_cases",
+      "status": "passed"
+    },
+    {
+      "name": "frontmatter-nested",
+      "lane": "ordered_cases",
+      "status": "passed"
+    },
+    {
+      "name": "frontmatter-missing-close",
+      "lane": "ordered_cases",
+      "status": "passed"
+    },
+    {
+      "name": "frontmatter-bom",
+      "lane": "ordered_cases",
+      "status": "passed"
+    },
+    {
+      "name": "frontmatter-published",
+      "lane": "ordered_cases",
+      "status": "passed"
+    },
+    {
+      "name": "frontmatter-unsupported-type",
+      "lane": "ordered_cases",
+      "status": "passed"
+    },
+    {
+      "name": "reader-private-manifest-known-unknown",
+      "lane": "ordered_cases",
+      "status": "incomplete"
+    },
+    {
+      "name": "administrator-cannot-export-other-owner-container",
+      "lane": "ordered_cases",
+      "status": "passed"
+    },
+    {
+      "name": "owner-export-materializes-home-created-objects",
+      "lane": "ordered_cases",
+      "status": "passed"
+    },
+    {
+      "name": "object-read-binds-retained-snapshot-and-container",
+      "lane": "ordered_cases",
+      "status": "incomplete"
+    },
+    {
+      "name": "historical-authorized-snapshot-remains-exact",
+      "lane": "ordered_cases",
+      "status": "passed"
+    },
+    {
+      "name": "restart-preserves-content-policy-objects-and-journal",
+      "lane": "ordered_cases",
+      "status": "incomplete"
+    },
+    {
+      "name": "accepted-retry-after-restart",
+      "lane": "ordered_cases",
+      "status": "passed"
+    },
+    {
+      "name": "denial-after-restart",
+      "lane": "ordered_cases",
+      "status": "passed"
+    },
+    {
+      "name": "export-after-restart-has-identical-git-bytes",
+      "lane": "ordered_cases",
+      "status": "passed"
+    },
+    {
+      "name": "remove-long-lived-bus-grant",
+      "lane": "real_expiry_continuation",
+      "status": "passed"
+    },
+    {
+      "name": "admit-short-lived-maintainer",
+      "lane": "real_expiry_continuation",
+      "status": "passed"
+    },
+    {
+      "name": "short-maintainer-cannot-issue-longer-authority",
+      "lane": "real_expiry_continuation",
+      "status": "passed"
+    },
+    {
+      "name": "accept-work-before-expiry",
+      "lane": "real_expiry_continuation",
+      "status": "passed"
+    },
+    {
+      "name": "wait-for-real-authority-expiry",
+      "lane": "real_expiry_continuation",
+      "status": "passed"
+    },
+    {
+      "name": "expired-equal-retry-hides-receipt",
+      "lane": "real_expiry_continuation",
+      "status": "passed"
+    },
+    {
+      "name": "expired-receipt-recovery-hides-result",
+      "lane": "real_expiry_continuation",
+      "status": "passed"
+    },
+    {
+      "name": "expired-read-hides-retained-work",
+      "lane": "real_expiry_continuation",
+      "status": "passed"
+    },
+    {
+      "name": "restore-with-new-unexpired-grant",
+      "lane": "real_expiry_continuation",
+      "status": "passed"
+    },
+    {
+      "name": "expired-history-remains-idempotent-after-new-grant",
+      "lane": "real_expiry_continuation",
+      "status": "passed"
+    },
+    {
+      "name": "revoke-creators-content-membership",
+      "lane": "source_review_continuation",
+      "status": "passed"
+    },
+    {
+      "name": "organization-capability-does-not-read-project",
+      "lane": "source_review_continuation",
+      "status": "passed"
+    },
+    {
+      "name": "revoked-creator-equal-retry-hides-receipt",
+      "lane": "source_review_continuation",
+      "status": "passed"
+    },
+    {
+      "name": "revoked-creator-mismatched-retry-hides-reuse",
+      "lane": "source_review_continuation",
+      "status": "passed"
+    },
+    {
+      "name": "revoked-creator-recovery-hides-receipt",
+      "lane": "source_review_continuation",
+      "status": "passed"
+    },
+    {
+      "name": "policy-authority-retains-only-policy-receipt-scope",
+      "lane": "source_review_continuation",
+      "status": "passed"
+    },
+    {
+      "name": "organization-policy-capability-restores-explicit-membership",
+      "lane": "source_review_continuation",
+      "status": "passed"
+    },
+    {
+      "name": "restored-creator-retry-is-original-receipt",
+      "lane": "source_review_continuation",
+      "status": "passed"
+    },
+    {
+      "name": "role-downgrade-revokes-maintainer",
+      "lane": "source_review_continuation",
+      "status": "passed"
+    },
+    {
+      "name": "role-downgrade-uses-fresh-reader-grant",
+      "lane": "source_review_continuation",
+      "status": "passed"
+    },
+    {
+      "name": "downgraded-reader-retains-work-read",
+      "lane": "source_review_continuation",
+      "status": "incomplete"
+    },
+    {
+      "name": "downgraded-reader-cannot-retry-work-mutation",
+      "lane": "source_review_continuation",
+      "status": "passed"
+    },
+    {
+      "name": "downgraded-reader-cannot-recover-write-receipt",
+      "lane": "source_review_continuation",
+      "status": "incomplete"
+    },
+    {
+      "name": "downgraded-owner-cannot-retry-document-save",
+      "lane": "source_review_continuation",
+      "status": "passed"
+    },
+    {
+      "name": "downgraded-owner-cannot-recover-document-save-receipt",
+      "lane": "source_review_continuation",
+      "status": "passed"
+    },
+    {
+      "name": "restore-role-revokes-reader",
+      "lane": "source_review_continuation",
+      "status": "passed"
+    },
+    {
+      "name": "restore-role-uses-fresh-maintainer",
+      "lane": "source_review_continuation",
+      "status": "passed"
+    },
+    {
+      "name": "create-second-project-after-primary-journey",
+      "lane": "separate_project_journal_lane",
+      "status": "passed"
+    },
+    {
+      "name": "bus-cannot-read-second-project",
+      "lane": "separate_project_journal_lane",
+      "status": "passed"
+    },
+    {
+      "name": "other-project-event-does-not-shift-primary-sequence",
+      "lane": "separate_project_journal_lane",
+      "status": "passed"
+    }
+  ],
+  "incomplete_assertions": [
+    {
+      "case": "empty-project-known-unknown",
+      "name": "one-shot-request-duct-only",
+      "status": "skipped",
+      "reason": "No per-request fact/kick/subscriber evidence; separate delivery suite owns this check"
+    },
+    {
+      "case": "empty-project-known-unknown",
+      "name": "one-shot-request-duct-only",
+      "status": "skipped",
+      "reason": "No per-request fact/kick/subscriber evidence; separate delivery suite owns this check"
+    },
+    {
+      "case": "outsider-private-project-existence",
+      "name": "one-shot-request-duct-only",
+      "status": "skipped",
+      "reason": "No per-request fact/kick/subscriber evidence; separate delivery suite owns this check"
+    },
+    {
+      "case": "outsider-private-project-existence",
+      "name": "one-shot-request-duct-only",
+      "status": "skipped",
+      "reason": "No per-request fact/kick/subscriber evidence; separate delivery suite owns this check"
+    },
+    {
+      "case": "reader-can-read-work",
+      "name": "one-shot-request-duct-only",
+      "status": "skipped",
+      "reason": "No per-request fact/kick/subscriber evidence; separate delivery suite owns this check"
+    },
+    {
+      "case": "outsider-work-known-unknown",
+      "name": "one-shot-request-duct-only",
+      "status": "skipped",
+      "reason": "No per-request fact/kick/subscriber evidence; separate delivery suite owns this check"
+    },
+    {
+      "case": "outsider-work-known-unknown",
+      "name": "one-shot-request-duct-only",
+      "status": "skipped",
+      "reason": "No per-request fact/kick/subscriber evidence; separate delivery suite owns this check"
+    },
+    {
+      "case": "explicit-grant-allows-former-outsider",
+      "name": "one-shot-request-duct-only",
+      "status": "skipped",
+      "reason": "No per-request fact/kick/subscriber evidence; separate delivery suite owns this check"
+    },
+    {
+      "case": "owner-reads-private-document",
+      "name": "one-shot-request-duct-only",
+      "status": "skipped",
+      "reason": "No per-request fact/kick/subscriber evidence; separate delivery suite owns this check"
+    },
+    {
+      "case": "reader-private-document-known-unknown",
+      "name": "one-shot-request-duct-only",
+      "status": "skipped",
+      "reason": "No per-request fact/kick/subscriber evidence; separate delivery suite owns this check"
+    },
+    {
+      "case": "reader-private-document-known-unknown",
+      "name": "one-shot-request-duct-only",
+      "status": "skipped",
+      "reason": "No per-request fact/kick/subscriber evidence; separate delivery suite owns this check"
+    },
+    {
+      "case": "outsider-private-document-known-unknown",
+      "name": "one-shot-request-duct-only",
+      "status": "skipped",
+      "reason": "No per-request fact/kick/subscriber evidence; separate delivery suite owns this check"
+    },
+    {
+      "case": "outsider-private-document-known-unknown",
+      "name": "one-shot-request-duct-only",
+      "status": "skipped",
+      "reason": "No per-request fact/kick/subscriber evidence; separate delivery suite owns this check"
+    },
+    {
+      "case": "project-views-never-include-other-owner-private-metadata",
+      "name": "projection-timing-and-all-metadata-nondisclosure",
+      "status": "skipped",
+      "reason": "Closed returned fields are tested; collision/sequence metadata confidentiality remains an explicit contract gate"
+    },
+    {
+      "case": "reader-private-manifest-known-unknown",
+      "name": "one-shot-request-duct-only",
+      "status": "skipped",
+      "reason": "No per-request fact/kick/subscriber evidence; separate delivery suite owns this check"
+    },
+    {
+      "case": "reader-private-manifest-known-unknown",
+      "name": "one-shot-request-duct-only",
+      "status": "skipped",
+      "reason": "No per-request fact/kick/subscriber evidence; separate delivery suite owns this check"
+    },
+    {
+      "case": "object-read-binds-retained-snapshot-and-container",
+      "name": "one-shot-request-duct-only",
+      "status": "skipped",
+      "reason": "No per-request fact/kick/subscriber evidence; separate delivery suite owns this check"
+    },
+    {
+      "case": "object-read-binds-retained-snapshot-and-container",
+      "name": "one-shot-request-duct-only",
+      "status": "skipped",
+      "reason": "No per-request fact/kick/subscriber evidence; separate delivery suite owns this check"
+    },
+    {
+      "case": "object-read-binds-retained-snapshot-and-container",
+      "name": "one-shot-request-duct-only",
+      "status": "skipped",
+      "reason": "No per-request fact/kick/subscriber evidence; separate delivery suite owns this check"
+    },
+    {
+      "case": "object-read-binds-retained-snapshot-and-container",
+      "name": "one-shot-request-duct-only",
+      "status": "skipped",
+      "reason": "No per-request fact/kick/subscriber evidence; separate delivery suite owns this check"
+    },
+    {
+      "case": "object-read-binds-retained-snapshot-and-container",
+      "name": "one-shot-request-duct-only",
+      "status": "skipped",
+      "reason": "No per-request fact/kick/subscriber evidence; separate delivery suite owns this check"
+    },
+    {
+      "case": "object-read-binds-retained-snapshot-and-container",
+      "name": "one-shot-request-duct-only",
+      "status": "skipped",
+      "reason": "No per-request fact/kick/subscriber evidence; separate delivery suite owns this check"
+    },
+    {
+      "case": "restart-preserves-content-policy-objects-and-journal",
+      "name": "no-external-effects-replayed",
+      "status": "skipped",
+      "reason": "Lifecycle adapter has no external-effect observation"
+    },
+    {
+      "case": "downgraded-reader-retains-work-read",
+      "name": "one-shot-request-duct-only",
+      "status": "skipped",
+      "reason": "No per-request fact/kick/subscriber evidence; separate delivery suite owns this check"
+    },
+    {
+      "case": "downgraded-reader-cannot-recover-write-receipt",
+      "name": "source-ordering-property",
+      "status": "skipped",
+      "reason": "Outcome checks do not prove internal lookup ordering; independent source review owns this assertion"
+    }
+  ],
+  "native_codec_cases": [
+    "frozen-vector-0",
+    "frozen-vector-1",
+    "frozen-vector-2",
+    "frozen-vector-3",
+    "frozen-vector-4",
+    "frozen-vector-5",
+    "caller-author-top-level",
+    "caller-principal-id",
+    "caller-binding-id",
+    "caller-accepted-at-ms",
+    "caller-policy",
+    "caller-author-in-payload",
+    "duplicate-literal-key",
+    "duplicate-escaped-key",
+    "escaped-nul-in-uuid",
+    "escaped-nul-in-key",
+    "escaped-nul-in-markdown",
+    "literal-backslash-u0000",
+    "short-controls-and-del-canonical",
+    "unicode-surrogate-pair",
+    "unicode-unescaped-scalars",
+    "nfc-preserved",
+    "decomposed-preserved",
+    "whitespace-and-key-order",
+    "single-escaped-key",
+    "unpaired-high-surrogate",
+    "unpaired-low-surrogate",
+    "invalid-surrogate-pair",
+    "utf8-bom",
+    "invalid-utf8",
+    "literal-control-byte",
+    "cr-in-description",
+    "crlf-markdown",
+    "numeric-revision",
+    "boolean-revision",
+    "null-payload",
+    "array-payload",
+    "nested-payload-value",
+    "trailing-json-value",
+    "leading-zero-revision",
+    "u64-overflow-epoch",
+    "zero-epoch",
+    "uppercase-uuid",
+    "unknown-protocol",
+    "unknown-operation",
+    "title-over-scalar-limit",
+    "description-over-byte-limit",
+    "envelope-over-65536-bytes",
+    "markdown-over-32768-bytes"
+  ],
+  "root_checks": [
+    {
+      "name": "loaded-supervisor-source-matches",
+      "passed": true
+    },
+    {
+      "name": "loaded-core-runner-source-matches",
+      "passed": true
+    },
+    {
+      "name": "frozen-contract-manifest-matches-corpus",
+      "passed": true
+    },
+    {
+      "name": "installed-byte-match:zod:app/stead-home.hoon",
+      "passed": true
+    },
+    {
+      "name": "installed-byte-match:zod:gen/stead-build-probe.hoon",
+      "passed": true
+    },
+    {
+      "name": "installed-byte-match:zod:gen/stead-codec-probe.hoon",
+      "passed": true
+    },
+    {
+      "name": "installed-byte-match:zod:gen/stead-core-probe.hoon",
+      "passed": true
+    },
+    {
+      "name": "installed-byte-match:zod:gen/stead-reducers-probe.hoon",
+      "passed": true
+    },
+    {
+      "name": "installed-byte-match:zod:lib/stead-codec.hoon",
+      "passed": true
+    },
+    {
+      "name": "installed-byte-match:zod:lib/stead-core.hoon",
+      "passed": true
+    },
+    {
+      "name": "installed-byte-match:zod:lib/stead-delivery.hoon",
+      "passed": true
+    },
+    {
+      "name": "installed-byte-match:zod:lib/stead-git.hoon",
+      "passed": true
+    },
+    {
+      "name": "installed-byte-match:zod:mar/stead-command-1.hoon",
+      "passed": true
+    },
+    {
+      "name": "installed-byte-match:zod:mar/stead-control-1.hoon",
+      "passed": true
+    },
+    {
+      "name": "installed-byte-match:zod:mar/stead-fixture-1.hoon",
+      "passed": true
+    },
+    {
+      "name": "installed-byte-match:zod:mar/stead-result-1.hoon",
+      "passed": true
+    },
+    {
+      "name": "installed-byte-match:zod:ted/stead-client.hoon",
+      "passed": true
+    },
+    {
+      "name": "installed-byte-match:zod:tests/stead-git.hoon",
+      "passed": true
+    },
+    {
+      "name": "zod:=/  raw=@t  .^(@t %cx /=base=/app/stead-home/hoon)  =(0x7daf.b0d9.af56.67eb.8ea9.6484.76e3.ba2a.8119.c4dc.15d0.3724.d5d9.8b26.8be9.b6f4 (sha-256l:sha [(met 3 raw) (rev 3 (met 3 raw) raw)]))",
+      "passed": true
+    },
+    {
+      "name": "zod:=/  raw=@t  .^(@t %cx /=base=/gen/stead-build-probe/hoon)  =(0x60aa.bb4c.5653.540b.0ed5.bead.7f6f.dd2e.bcdf.dd97.b207.5490.166c.2ecc.dd7d.89ff (sha-256l:sha [(met 3 raw) (rev 3 (met 3 raw) raw)]))",
+      "passed": true
+    },
+    {
+      "name": "zod:=/  raw=@t  .^(@t %cx /=base=/gen/stead-codec-probe/hoon)  =(0x77ac.ef53.149b.fc51.7c30.625a.b902.cc9d.cf06.faf1.0d2f.5413.7595.91df.9cfb.3ff6 (sha-256l:sha [(met 3 raw) (rev 3 (met 3 raw) raw)]))",
+      "passed": true
+    },
+    {
+      "name": "zod:=/  raw=@t  .^(@t %cx /=base=/gen/stead-core-probe/hoon)  =(0xe58a.7eb7.610c.e5b1.7bd4.267e.42f9.4767.6938.294b.0ce8.e96f.fd62.f709.f598.3977 (sha-256l:sha [(met 3 raw) (rev 3 (met 3 raw) raw)]))",
+      "passed": true
+    },
+    {
+      "name": "zod:=/  raw=@t  .^(@t %cx /=base=/gen/stead-reducers-probe/hoon)  =(0xa5c3.b59e.f426.a2e1.d44b.b3b0.084b.222a.2612.0ed9.99dd.0744.885b.be2a.78c1.4471 (sha-256l:sha [(met 3 raw) (rev 3 (met 3 raw) raw)]))",
+      "passed": true
+    },
+    {
+      "name": "zod:=/  raw=@t  .^(@t %cx /=base=/lib/stead-codec/hoon)  =(0xce4c.7a69.b03e.e176.1590.c37e.71ff.49b9.f63a.1a2e.dd2a.aa6d.fbf7.5bc3.c960.584a (sha-256l:sha [(met 3 raw) (rev 3 (met 3 raw) raw)]))",
+      "passed": true
+    },
+    {
+      "name": "zod:=/  raw=@t  .^(@t %cx /=base=/lib/stead-core/hoon)  =(0x6c88.6d37.d17b.2ef6.c732.e72c.9293.4d58.6c2d.d36a.a1c1.3691.456c.c467.5718.4d24 (sha-256l:sha [(met 3 raw) (rev 3 (met 3 raw) raw)]))",
+      "passed": true
+    },
+    {
+      "name": "zod:=/  raw=@t  .^(@t %cx /=base=/lib/stead-delivery/hoon)  =(0x178c.ac63.4471.554d.ae99.28f8.c382.4875.1329.3143.9106.1976.a436.a22a.7075.548d (sha-256l:sha [(met 3 raw) (rev 3 (met 3 raw) raw)]))",
+      "passed": true
+    },
+    {
+      "name": "zod:=/  raw=@t  .^(@t %cx /=base=/lib/stead-git/hoon)  =(0x826b.8348.5429.c02f.577c.9b46.2ee6.cddd.3ab8.ea1a.099d.33b6.6893.f863.d54c.54d7 (sha-256l:sha [(met 3 raw) (rev 3 (met 3 raw) raw)]))",
+      "passed": true
+    },
+    {
+      "name": "zod:=/  raw=@t  .^(@t %cx /=base=/mar/stead-command-1/hoon)  =(0xfcd8.7c92.acc1.6c28.83b1.dd49.00af.5064.d1da.910a.f317.e93c.3274.55cd.56d9.553b (sha-256l:sha [(met 3 raw) (rev 3 (met 3 raw) raw)]))",
+      "passed": true
+    },
+    {
+      "name": "zod:=/  raw=@t  .^(@t %cx /=base=/mar/stead-control-1/hoon)  =(0x643d.9d52.21b5.b432.30f8.64f1.1b1d.6830.ad2b.32ff.d646.44c7.7ea7.0c0f.a1ea.8c5e (sha-256l:sha [(met 3 raw) (rev 3 (met 3 raw) raw)]))",
+      "passed": true
+    },
+    {
+      "name": "zod:=/  raw=@t  .^(@t %cx /=base=/mar/stead-fixture-1/hoon)  =(0xfcd8.7c92.acc1.6c28.83b1.dd49.00af.5064.d1da.910a.f317.e93c.3274.55cd.56d9.553b (sha-256l:sha [(met 3 raw) (rev 3 (met 3 raw) raw)]))",
+      "passed": true
+    },
+    {
+      "name": "zod:=/  raw=@t  .^(@t %cx /=base=/mar/stead-result-1/hoon)  =(0xfcd8.7c92.acc1.6c28.83b1.dd49.00af.5064.d1da.910a.f317.e93c.3274.55cd.56d9.553b (sha-256l:sha [(met 3 raw) (rev 3 (met 3 raw) raw)]))",
+      "passed": true
+    },
+    {
+      "name": "zod:=/  raw=@t  .^(@t %cx /=base=/ted/stead-client/hoon)  =(0x4211.ca0d.32af.c125.e114.973a.a6bc.666c.d714.217b.fea9.6751.a6ab.0b94.0cbd.61ea (sha-256l:sha [(met 3 raw) (rev 3 (met 3 raw) raw)]))",
+      "passed": true
+    },
+    {
+      "name": "zod:=/  raw=@t  .^(@t %cx /=base=/tests/stead-git/hoon)  =(0x5151.8a12.3937.3467.8644.12e6.4ab9.2cfb.c825.8bd3.7783.988b.2ae6.c17c.6eac.2d98 (sha-256l:sha [(met 3 raw) (rev 3 (met 3 raw) raw)]))",
+      "passed": true
+    },
+    {
+      "name": "zod:+stead-build-probe",
+      "passed": true
+    },
+    {
+      "name": "installed-byte-match:bus:app/stead-home.hoon",
+      "passed": true
+    },
+    {
+      "name": "installed-byte-match:bus:gen/stead-build-probe.hoon",
+      "passed": true
+    },
+    {
+      "name": "installed-byte-match:bus:gen/stead-codec-probe.hoon",
+      "passed": true
+    },
+    {
+      "name": "installed-byte-match:bus:gen/stead-core-probe.hoon",
+      "passed": true
+    },
+    {
+      "name": "installed-byte-match:bus:gen/stead-reducers-probe.hoon",
+      "passed": true
+    },
+    {
+      "name": "installed-byte-match:bus:lib/stead-codec.hoon",
+      "passed": true
+    },
+    {
+      "name": "installed-byte-match:bus:lib/stead-core.hoon",
+      "passed": true
+    },
+    {
+      "name": "installed-byte-match:bus:lib/stead-delivery.hoon",
+      "passed": true
+    },
+    {
+      "name": "installed-byte-match:bus:lib/stead-git.hoon",
+      "passed": true
+    },
+    {
+      "name": "installed-byte-match:bus:mar/stead-command-1.hoon",
+      "passed": true
+    },
+    {
+      "name": "installed-byte-match:bus:mar/stead-control-1.hoon",
+      "passed": true
+    },
+    {
+      "name": "installed-byte-match:bus:mar/stead-fixture-1.hoon",
+      "passed": true
+    },
+    {
+      "name": "installed-byte-match:bus:mar/stead-result-1.hoon",
+      "passed": true
+    },
+    {
+      "name": "installed-byte-match:bus:ted/stead-client.hoon",
+      "passed": true
+    },
+    {
+      "name": "installed-byte-match:bus:tests/stead-git.hoon",
+      "passed": true
+    },
+    {
+      "name": "bus:=/  raw=@t  .^(@t %cx /=base=/app/stead-home/hoon)  =(0x7daf.b0d9.af56.67eb.8ea9.6484.76e3.ba2a.8119.c4dc.15d0.3724.d5d9.8b26.8be9.b6f4 (sha-256l:sha [(met 3 raw) (rev 3 (met 3 raw) raw)]))",
+      "passed": true
+    },
+    {
+      "name": "bus:=/  raw=@t  .^(@t %cx /=base=/gen/stead-build-probe/hoon)  =(0x60aa.bb4c.5653.540b.0ed5.bead.7f6f.dd2e.bcdf.dd97.b207.5490.166c.2ecc.dd7d.89ff (sha-256l:sha [(met 3 raw) (rev 3 (met 3 raw) raw)]))",
+      "passed": true
+    },
+    {
+      "name": "bus:=/  raw=@t  .^(@t %cx /=base=/gen/stead-codec-probe/hoon)  =(0x77ac.ef53.149b.fc51.7c30.625a.b902.cc9d.cf06.faf1.0d2f.5413.7595.91df.9cfb.3ff6 (sha-256l:sha [(met 3 raw) (rev 3 (met 3 raw) raw)]))",
+      "passed": true
+    },
+    {
+      "name": "bus:=/  raw=@t  .^(@t %cx /=base=/gen/stead-core-probe/hoon)  =(0xe58a.7eb7.610c.e5b1.7bd4.267e.42f9.4767.6938.294b.0ce8.e96f.fd62.f709.f598.3977 (sha-256l:sha [(met 3 raw) (rev 3 (met 3 raw) raw)]))",
+      "passed": true
+    },
+    {
+      "name": "bus:=/  raw=@t  .^(@t %cx /=base=/gen/stead-reducers-probe/hoon)  =(0xa5c3.b59e.f426.a2e1.d44b.b3b0.084b.222a.2612.0ed9.99dd.0744.885b.be2a.78c1.4471 (sha-256l:sha [(met 3 raw) (rev 3 (met 3 raw) raw)]))",
+      "passed": true
+    },
+    {
+      "name": "bus:=/  raw=@t  .^(@t %cx /=base=/lib/stead-codec/hoon)  =(0xce4c.7a69.b03e.e176.1590.c37e.71ff.49b9.f63a.1a2e.dd2a.aa6d.fbf7.5bc3.c960.584a (sha-256l:sha [(met 3 raw) (rev 3 (met 3 raw) raw)]))",
+      "passed": true
+    },
+    {
+      "name": "bus:=/  raw=@t  .^(@t %cx /=base=/lib/stead-core/hoon)  =(0x6c88.6d37.d17b.2ef6.c732.e72c.9293.4d58.6c2d.d36a.a1c1.3691.456c.c467.5718.4d24 (sha-256l:sha [(met 3 raw) (rev 3 (met 3 raw) raw)]))",
+      "passed": true
+    },
+    {
+      "name": "bus:=/  raw=@t  .^(@t %cx /=base=/lib/stead-delivery/hoon)  =(0x178c.ac63.4471.554d.ae99.28f8.c382.4875.1329.3143.9106.1976.a436.a22a.7075.548d (sha-256l:sha [(met 3 raw) (rev 3 (met 3 raw) raw)]))",
+      "passed": true
+    },
+    {
+      "name": "bus:=/  raw=@t  .^(@t %cx /=base=/lib/stead-git/hoon)  =(0x826b.8348.5429.c02f.577c.9b46.2ee6.cddd.3ab8.ea1a.099d.33b6.6893.f863.d54c.54d7 (sha-256l:sha [(met 3 raw) (rev 3 (met 3 raw) raw)]))",
+      "passed": true
+    },
+    {
+      "name": "bus:=/  raw=@t  .^(@t %cx /=base=/mar/stead-command-1/hoon)  =(0xfcd8.7c92.acc1.6c28.83b1.dd49.00af.5064.d1da.910a.f317.e93c.3274.55cd.56d9.553b (sha-256l:sha [(met 3 raw) (rev 3 (met 3 raw) raw)]))",
+      "passed": true
+    },
+    {
+      "name": "bus:=/  raw=@t  .^(@t %cx /=base=/mar/stead-control-1/hoon)  =(0x643d.9d52.21b5.b432.30f8.64f1.1b1d.6830.ad2b.32ff.d646.44c7.7ea7.0c0f.a1ea.8c5e (sha-256l:sha [(met 3 raw) (rev 3 (met 3 raw) raw)]))",
+      "passed": true
+    },
+    {
+      "name": "bus:=/  raw=@t  .^(@t %cx /=base=/mar/stead-fixture-1/hoon)  =(0xfcd8.7c92.acc1.6c28.83b1.dd49.00af.5064.d1da.910a.f317.e93c.3274.55cd.56d9.553b (sha-256l:sha [(met 3 raw) (rev 3 (met 3 raw) raw)]))",
+      "passed": true
+    },
+    {
+      "name": "bus:=/  raw=@t  .^(@t %cx /=base=/mar/stead-result-1/hoon)  =(0xfcd8.7c92.acc1.6c28.83b1.dd49.00af.5064.d1da.910a.f317.e93c.3274.55cd.56d9.553b (sha-256l:sha [(met 3 raw) (rev 3 (met 3 raw) raw)]))",
+      "passed": true
+    },
+    {
+      "name": "bus:=/  raw=@t  .^(@t %cx /=base=/ted/stead-client/hoon)  =(0x4211.ca0d.32af.c125.e114.973a.a6bc.666c.d714.217b.fea9.6751.a6ab.0b94.0cbd.61ea (sha-256l:sha [(met 3 raw) (rev 3 (met 3 raw) raw)]))",
+      "passed": true
+    },
+    {
+      "name": "bus:=/  raw=@t  .^(@t %cx /=base=/tests/stead-git/hoon)  =(0x5151.8a12.3937.3467.8644.12e6.4ab9.2cfb.c825.8bd3.7783.988b.2ae6.c17c.6eac.2d98 (sha-256l:sha [(met 3 raw) (rev 3 (met 3 raw) raw)]))",
+      "passed": true
+    },
+    {
+      "name": "bus:+stead-build-probe",
+      "passed": true
+    },
+    {
+      "name": "installed-byte-match:nec:app/stead-home.hoon",
+      "passed": true
+    },
+    {
+      "name": "installed-byte-match:nec:gen/stead-build-probe.hoon",
+      "passed": true
+    },
+    {
+      "name": "installed-byte-match:nec:gen/stead-codec-probe.hoon",
+      "passed": true
+    },
+    {
+      "name": "installed-byte-match:nec:gen/stead-core-probe.hoon",
+      "passed": true
+    },
+    {
+      "name": "installed-byte-match:nec:gen/stead-reducers-probe.hoon",
+      "passed": true
+    },
+    {
+      "name": "installed-byte-match:nec:lib/stead-codec.hoon",
+      "passed": true
+    },
+    {
+      "name": "installed-byte-match:nec:lib/stead-core.hoon",
+      "passed": true
+    },
+    {
+      "name": "installed-byte-match:nec:lib/stead-delivery.hoon",
+      "passed": true
+    },
+    {
+      "name": "installed-byte-match:nec:lib/stead-git.hoon",
+      "passed": true
+    },
+    {
+      "name": "installed-byte-match:nec:mar/stead-command-1.hoon",
+      "passed": true
+    },
+    {
+      "name": "installed-byte-match:nec:mar/stead-control-1.hoon",
+      "passed": true
+    },
+    {
+      "name": "installed-byte-match:nec:mar/stead-fixture-1.hoon",
+      "passed": true
+    },
+    {
+      "name": "installed-byte-match:nec:mar/stead-result-1.hoon",
+      "passed": true
+    },
+    {
+      "name": "installed-byte-match:nec:ted/stead-client.hoon",
+      "passed": true
+    },
+    {
+      "name": "installed-byte-match:nec:tests/stead-git.hoon",
+      "passed": true
+    },
+    {
+      "name": "nec:=/  raw=@t  .^(@t %cx /=base=/app/stead-home/hoon)  =(0x7daf.b0d9.af56.67eb.8ea9.6484.76e3.ba2a.8119.c4dc.15d0.3724.d5d9.8b26.8be9.b6f4 (sha-256l:sha [(met 3 raw) (rev 3 (met 3 raw) raw)]))",
+      "passed": true
+    },
+    {
+      "name": "nec:=/  raw=@t  .^(@t %cx /=base=/gen/stead-build-probe/hoon)  =(0x60aa.bb4c.5653.540b.0ed5.bead.7f6f.dd2e.bcdf.dd97.b207.5490.166c.2ecc.dd7d.89ff (sha-256l:sha [(met 3 raw) (rev 3 (met 3 raw) raw)]))",
+      "passed": true
+    },
+    {
+      "name": "nec:=/  raw=@t  .^(@t %cx /=base=/gen/stead-codec-probe/hoon)  =(0x77ac.ef53.149b.fc51.7c30.625a.b902.cc9d.cf06.faf1.0d2f.5413.7595.91df.9cfb.3ff6 (sha-256l:sha [(met 3 raw) (rev 3 (met 3 raw) raw)]))",
+      "passed": true
+    },
+    {
+      "name": "nec:=/  raw=@t  .^(@t %cx /=base=/gen/stead-core-probe/hoon)  =(0xe58a.7eb7.610c.e5b1.7bd4.267e.42f9.4767.6938.294b.0ce8.e96f.fd62.f709.f598.3977 (sha-256l:sha [(met 3 raw) (rev 3 (met 3 raw) raw)]))",
+      "passed": true
+    },
+    {
+      "name": "nec:=/  raw=@t  .^(@t %cx /=base=/gen/stead-reducers-probe/hoon)  =(0xa5c3.b59e.f426.a2e1.d44b.b3b0.084b.222a.2612.0ed9.99dd.0744.885b.be2a.78c1.4471 (sha-256l:sha [(met 3 raw) (rev 3 (met 3 raw) raw)]))",
+      "passed": true
+    },
+    {
+      "name": "nec:=/  raw=@t  .^(@t %cx /=base=/lib/stead-codec/hoon)  =(0xce4c.7a69.b03e.e176.1590.c37e.71ff.49b9.f63a.1a2e.dd2a.aa6d.fbf7.5bc3.c960.584a (sha-256l:sha [(met 3 raw) (rev 3 (met 3 raw) raw)]))",
+      "passed": true
+    },
+    {
+      "name": "nec:=/  raw=@t  .^(@t %cx /=base=/lib/stead-core/hoon)  =(0x6c88.6d37.d17b.2ef6.c732.e72c.9293.4d58.6c2d.d36a.a1c1.3691.456c.c467.5718.4d24 (sha-256l:sha [(met 3 raw) (rev 3 (met 3 raw) raw)]))",
+      "passed": true
+    },
+    {
+      "name": "nec:=/  raw=@t  .^(@t %cx /=base=/lib/stead-delivery/hoon)  =(0x178c.ac63.4471.554d.ae99.28f8.c382.4875.1329.3143.9106.1976.a436.a22a.7075.548d (sha-256l:sha [(met 3 raw) (rev 3 (met 3 raw) raw)]))",
+      "passed": true
+    },
+    {
+      "name": "nec:=/  raw=@t  .^(@t %cx /=base=/lib/stead-git/hoon)  =(0x826b.8348.5429.c02f.577c.9b46.2ee6.cddd.3ab8.ea1a.099d.33b6.6893.f863.d54c.54d7 (sha-256l:sha [(met 3 raw) (rev 3 (met 3 raw) raw)]))",
+      "passed": true
+    },
+    {
+      "name": "nec:=/  raw=@t  .^(@t %cx /=base=/mar/stead-command-1/hoon)  =(0xfcd8.7c92.acc1.6c28.83b1.dd49.00af.5064.d1da.910a.f317.e93c.3274.55cd.56d9.553b (sha-256l:sha [(met 3 raw) (rev 3 (met 3 raw) raw)]))",
+      "passed": true
+    },
+    {
+      "name": "nec:=/  raw=@t  .^(@t %cx /=base=/mar/stead-control-1/hoon)  =(0x643d.9d52.21b5.b432.30f8.64f1.1b1d.6830.ad2b.32ff.d646.44c7.7ea7.0c0f.a1ea.8c5e (sha-256l:sha [(met 3 raw) (rev 3 (met 3 raw) raw)]))",
+      "passed": true
+    },
+    {
+      "name": "nec:=/  raw=@t  .^(@t %cx /=base=/mar/stead-fixture-1/hoon)  =(0xfcd8.7c92.acc1.6c28.83b1.dd49.00af.5064.d1da.910a.f317.e93c.3274.55cd.56d9.553b (sha-256l:sha [(met 3 raw) (rev 3 (met 3 raw) raw)]))",
+      "passed": true
+    },
+    {
+      "name": "nec:=/  raw=@t  .^(@t %cx /=base=/mar/stead-result-1/hoon)  =(0xfcd8.7c92.acc1.6c28.83b1.dd49.00af.5064.d1da.910a.f317.e93c.3274.55cd.56d9.553b (sha-256l:sha [(met 3 raw) (rev 3 (met 3 raw) raw)]))",
+      "passed": true
+    },
+    {
+      "name": "nec:=/  raw=@t  .^(@t %cx /=base=/ted/stead-client/hoon)  =(0x4211.ca0d.32af.c125.e114.973a.a6bc.666c.d714.217b.fea9.6751.a6ab.0b94.0cbd.61ea (sha-256l:sha [(met 3 raw) (rev 3 (met 3 raw) raw)]))",
+      "passed": true
+    },
+    {
+      "name": "nec:=/  raw=@t  .^(@t %cx /=base=/tests/stead-git/hoon)  =(0x5151.8a12.3937.3467.8644.12e6.4ab9.2cfb.c825.8bd3.7783.988b.2ae6.c17c.6eac.2d98 (sha-256l:sha [(met 3 raw) (rev 3 (met 3 raw) raw)]))",
+      "passed": true
+    },
+    {
+      "name": "nec:+stead-build-probe",
+      "passed": true
+    },
+    {
+      "name": "installed-byte-match:bud:app/stead-home.hoon",
+      "passed": true
+    },
+    {
+      "name": "installed-byte-match:bud:gen/stead-build-probe.hoon",
+      "passed": true
+    },
+    {
+      "name": "installed-byte-match:bud:gen/stead-codec-probe.hoon",
+      "passed": true
+    },
+    {
+      "name": "installed-byte-match:bud:gen/stead-core-probe.hoon",
+      "passed": true
+    },
+    {
+      "name": "installed-byte-match:bud:gen/stead-reducers-probe.hoon",
+      "passed": true
+    },
+    {
+      "name": "installed-byte-match:bud:lib/stead-codec.hoon",
+      "passed": true
+    },
+    {
+      "name": "installed-byte-match:bud:lib/stead-core.hoon",
+      "passed": true
+    },
+    {
+      "name": "installed-byte-match:bud:lib/stead-delivery.hoon",
+      "passed": true
+    },
+    {
+      "name": "installed-byte-match:bud:lib/stead-git.hoon",
+      "passed": true
+    },
+    {
+      "name": "installed-byte-match:bud:mar/stead-command-1.hoon",
+      "passed": true
+    },
+    {
+      "name": "installed-byte-match:bud:mar/stead-control-1.hoon",
+      "passed": true
+    },
+    {
+      "name": "installed-byte-match:bud:mar/stead-fixture-1.hoon",
+      "passed": true
+    },
+    {
+      "name": "installed-byte-match:bud:mar/stead-result-1.hoon",
+      "passed": true
+    },
+    {
+      "name": "installed-byte-match:bud:ted/stead-client.hoon",
+      "passed": true
+    },
+    {
+      "name": "installed-byte-match:bud:tests/stead-git.hoon",
+      "passed": true
+    },
+    {
+      "name": "bud:=/  raw=@t  .^(@t %cx /=base=/app/stead-home/hoon)  =(0x7daf.b0d9.af56.67eb.8ea9.6484.76e3.ba2a.8119.c4dc.15d0.3724.d5d9.8b26.8be9.b6f4 (sha-256l:sha [(met 3 raw) (rev 3 (met 3 raw) raw)]))",
+      "passed": true
+    },
+    {
+      "name": "bud:=/  raw=@t  .^(@t %cx /=base=/gen/stead-build-probe/hoon)  =(0x60aa.bb4c.5653.540b.0ed5.bead.7f6f.dd2e.bcdf.dd97.b207.5490.166c.2ecc.dd7d.89ff (sha-256l:sha [(met 3 raw) (rev 3 (met 3 raw) raw)]))",
+      "passed": true
+    },
+    {
+      "name": "bud:=/  raw=@t  .^(@t %cx /=base=/gen/stead-codec-probe/hoon)  =(0x77ac.ef53.149b.fc51.7c30.625a.b902.cc9d.cf06.faf1.0d2f.5413.7595.91df.9cfb.3ff6 (sha-256l:sha [(met 3 raw) (rev 3 (met 3 raw) raw)]))",
+      "passed": true
+    },
+    {
+      "name": "bud:=/  raw=@t  .^(@t %cx /=base=/gen/stead-core-probe/hoon)  =(0xe58a.7eb7.610c.e5b1.7bd4.267e.42f9.4767.6938.294b.0ce8.e96f.fd62.f709.f598.3977 (sha-256l:sha [(met 3 raw) (rev 3 (met 3 raw) raw)]))",
+      "passed": true
+    },
+    {
+      "name": "bud:=/  raw=@t  .^(@t %cx /=base=/gen/stead-reducers-probe/hoon)  =(0xa5c3.b59e.f426.a2e1.d44b.b3b0.084b.222a.2612.0ed9.99dd.0744.885b.be2a.78c1.4471 (sha-256l:sha [(met 3 raw) (rev 3 (met 3 raw) raw)]))",
+      "passed": true
+    },
+    {
+      "name": "bud:=/  raw=@t  .^(@t %cx /=base=/lib/stead-codec/hoon)  =(0xce4c.7a69.b03e.e176.1590.c37e.71ff.49b9.f63a.1a2e.dd2a.aa6d.fbf7.5bc3.c960.584a (sha-256l:sha [(met 3 raw) (rev 3 (met 3 raw) raw)]))",
+      "passed": true
+    },
+    {
+      "name": "bud:=/  raw=@t  .^(@t %cx /=base=/lib/stead-core/hoon)  =(0x6c88.6d37.d17b.2ef6.c732.e72c.9293.4d58.6c2d.d36a.a1c1.3691.456c.c467.5718.4d24 (sha-256l:sha [(met 3 raw) (rev 3 (met 3 raw) raw)]))",
+      "passed": true
+    },
+    {
+      "name": "bud:=/  raw=@t  .^(@t %cx /=base=/lib/stead-delivery/hoon)  =(0x178c.ac63.4471.554d.ae99.28f8.c382.4875.1329.3143.9106.1976.a436.a22a.7075.548d (sha-256l:sha [(met 3 raw) (rev 3 (met 3 raw) raw)]))",
+      "passed": true
+    },
+    {
+      "name": "bud:=/  raw=@t  .^(@t %cx /=base=/lib/stead-git/hoon)  =(0x826b.8348.5429.c02f.577c.9b46.2ee6.cddd.3ab8.ea1a.099d.33b6.6893.f863.d54c.54d7 (sha-256l:sha [(met 3 raw) (rev 3 (met 3 raw) raw)]))",
+      "passed": true
+    },
+    {
+      "name": "bud:=/  raw=@t  .^(@t %cx /=base=/mar/stead-command-1/hoon)  =(0xfcd8.7c92.acc1.6c28.83b1.dd49.00af.5064.d1da.910a.f317.e93c.3274.55cd.56d9.553b (sha-256l:sha [(met 3 raw) (rev 3 (met 3 raw) raw)]))",
+      "passed": true
+    },
+    {
+      "name": "bud:=/  raw=@t  .^(@t %cx /=base=/mar/stead-control-1/hoon)  =(0x643d.9d52.21b5.b432.30f8.64f1.1b1d.6830.ad2b.32ff.d646.44c7.7ea7.0c0f.a1ea.8c5e (sha-256l:sha [(met 3 raw) (rev 3 (met 3 raw) raw)]))",
+      "passed": true
+    },
+    {
+      "name": "bud:=/  raw=@t  .^(@t %cx /=base=/mar/stead-fixture-1/hoon)  =(0xfcd8.7c92.acc1.6c28.83b1.dd49.00af.5064.d1da.910a.f317.e93c.3274.55cd.56d9.553b (sha-256l:sha [(met 3 raw) (rev 3 (met 3 raw) raw)]))",
+      "passed": true
+    },
+    {
+      "name": "bud:=/  raw=@t  .^(@t %cx /=base=/mar/stead-result-1/hoon)  =(0xfcd8.7c92.acc1.6c28.83b1.dd49.00af.5064.d1da.910a.f317.e93c.3274.55cd.56d9.553b (sha-256l:sha [(met 3 raw) (rev 3 (met 3 raw) raw)]))",
+      "passed": true
+    },
+    {
+      "name": "bud:=/  raw=@t  .^(@t %cx /=base=/ted/stead-client/hoon)  =(0x4211.ca0d.32af.c125.e114.973a.a6bc.666c.d714.217b.fea9.6751.a6ab.0b94.0cbd.61ea (sha-256l:sha [(met 3 raw) (rev 3 (met 3 raw) raw)]))",
+      "passed": true
+    },
+    {
+      "name": "bud:=/  raw=@t  .^(@t %cx /=base=/tests/stead-git/hoon)  =(0x5151.8a12.3937.3467.8644.12e6.4ab9.2cfb.c825.8bd3.7783.988b.2ae6.c17c.6eac.2d98 (sha-256l:sha [(met 3 raw) (rev 3 (met 3 raw) raw)]))",
+      "passed": true
+    },
+    {
+      "name": "bud:+stead-build-probe",
+      "passed": true
+    },
+    {
+      "name": "zod:+stead-codec-probe",
+      "passed": true
+    },
+    {
+      "name": "zod:+stead-reducers-probe",
+      "passed": true
+    },
+    {
+      "name": "fixture-initialized-once",
+      "passed": true
+    },
+    {
+      "name": "all-qa-native-cases-executed-without-failure",
+      "passed": true
+    },
+    {
+      "name": "codec:frozen-vector-0",
+      "passed": true
+    },
+    {
+      "name": "codec-frozen-digest:frozen-vector-0",
+      "passed": true
+    },
+    {
+      "name": "codec-no-business-change:frozen-vector-0",
+      "passed": true
+    },
+    {
+      "name": "codec:frozen-vector-1",
+      "passed": true
+    },
+    {
+      "name": "codec-frozen-digest:frozen-vector-1",
+      "passed": true
+    },
+    {
+      "name": "codec-no-business-change:frozen-vector-1",
+      "passed": true
+    },
+    {
+      "name": "codec:frozen-vector-2",
+      "passed": true
+    },
+    {
+      "name": "codec-frozen-digest:frozen-vector-2",
+      "passed": true
+    },
+    {
+      "name": "codec-no-business-change:frozen-vector-2",
+      "passed": true
+    },
+    {
+      "name": "codec:frozen-vector-3",
+      "passed": true
+    },
+    {
+      "name": "codec-frozen-digest:frozen-vector-3",
+      "passed": true
+    },
+    {
+      "name": "codec-no-business-change:frozen-vector-3",
+      "passed": true
+    },
+    {
+      "name": "codec:frozen-vector-4",
+      "passed": true
+    },
+    {
+      "name": "codec-frozen-digest:frozen-vector-4",
+      "passed": true
+    },
+    {
+      "name": "codec-no-business-change:frozen-vector-4",
+      "passed": true
+    },
+    {
+      "name": "codec:frozen-vector-5",
+      "passed": true
+    },
+    {
+      "name": "codec-frozen-digest:frozen-vector-5",
+      "passed": true
+    },
+    {
+      "name": "codec-no-business-change:frozen-vector-5",
+      "passed": true
+    },
+    {
+      "name": "codec:caller-author-top-level",
+      "passed": true
+    },
+    {
+      "name": "home-rejects-malformed:caller-author-top-level",
+      "passed": true
+    },
+    {
+      "name": "codec-no-business-change:caller-author-top-level",
+      "passed": true
+    },
+    {
+      "name": "codec:caller-principal-id",
+      "passed": true
+    },
+    {
+      "name": "home-rejects-malformed:caller-principal-id",
+      "passed": true
+    },
+    {
+      "name": "codec-no-business-change:caller-principal-id",
+      "passed": true
+    },
+    {
+      "name": "codec:caller-binding-id",
+      "passed": true
+    },
+    {
+      "name": "home-rejects-malformed:caller-binding-id",
+      "passed": true
+    },
+    {
+      "name": "codec-no-business-change:caller-binding-id",
+      "passed": true
+    },
+    {
+      "name": "codec:caller-accepted-at-ms",
+      "passed": true
+    },
+    {
+      "name": "home-rejects-malformed:caller-accepted-at-ms",
+      "passed": true
+    },
+    {
+      "name": "codec-no-business-change:caller-accepted-at-ms",
+      "passed": true
+    },
+    {
+      "name": "codec:caller-policy",
+      "passed": true
+    },
+    {
+      "name": "home-rejects-malformed:caller-policy",
+      "passed": true
+    },
+    {
+      "name": "codec-no-business-change:caller-policy",
+      "passed": true
+    },
+    {
+      "name": "codec:caller-author-in-payload",
+      "passed": true
+    },
+    {
+      "name": "home-rejects-malformed:caller-author-in-payload",
+      "passed": true
+    },
+    {
+      "name": "codec-no-business-change:caller-author-in-payload",
+      "passed": true
+    },
+    {
+      "name": "codec:duplicate-literal-key",
+      "passed": true
+    },
+    {
+      "name": "home-rejects-malformed:duplicate-literal-key",
+      "passed": true
+    },
+    {
+      "name": "codec-no-business-change:duplicate-literal-key",
+      "passed": true
+    },
+    {
+      "name": "codec:duplicate-escaped-key",
+      "passed": true
+    },
+    {
+      "name": "home-rejects-malformed:duplicate-escaped-key",
+      "passed": true
+    },
+    {
+      "name": "codec-no-business-change:duplicate-escaped-key",
+      "passed": true
+    },
+    {
+      "name": "codec:escaped-nul-in-uuid",
+      "passed": true
+    },
+    {
+      "name": "home-rejects-malformed:escaped-nul-in-uuid",
+      "passed": true
+    },
+    {
+      "name": "codec-no-business-change:escaped-nul-in-uuid",
+      "passed": true
+    },
+    {
+      "name": "codec:escaped-nul-in-key",
+      "passed": true
+    },
+    {
+      "name": "home-rejects-malformed:escaped-nul-in-key",
+      "passed": true
+    },
+    {
+      "name": "codec-no-business-change:escaped-nul-in-key",
+      "passed": true
+    },
+    {
+      "name": "codec:escaped-nul-in-markdown",
+      "passed": true
+    },
+    {
+      "name": "home-rejects-malformed:escaped-nul-in-markdown",
+      "passed": true
+    },
+    {
+      "name": "codec-no-business-change:escaped-nul-in-markdown",
+      "passed": true
+    },
+    {
+      "name": "codec:literal-backslash-u0000",
+      "passed": true
+    },
+    {
+      "name": "codec-no-business-change:literal-backslash-u0000",
+      "passed": true
+    },
+    {
+      "name": "codec:short-controls-and-del-canonical",
+      "passed": true
+    },
+    {
+      "name": "codec-no-business-change:short-controls-and-del-canonical",
+      "passed": true
+    },
+    {
+      "name": "codec:unicode-surrogate-pair",
+      "passed": true
+    },
+    {
+      "name": "codec-no-business-change:unicode-surrogate-pair",
+      "passed": true
+    },
+    {
+      "name": "codec:unicode-unescaped-scalars",
+      "passed": true
+    },
+    {
+      "name": "codec-no-business-change:unicode-unescaped-scalars",
+      "passed": true
+    },
+    {
+      "name": "codec:nfc-preserved",
+      "passed": true
+    },
+    {
+      "name": "codec-no-business-change:nfc-preserved",
+      "passed": true
+    },
+    {
+      "name": "codec:decomposed-preserved",
+      "passed": true
+    },
+    {
+      "name": "codec-no-business-change:decomposed-preserved",
+      "passed": true
+    },
+    {
+      "name": "codec:whitespace-and-key-order",
+      "passed": true
+    },
+    {
+      "name": "codec-no-business-change:whitespace-and-key-order",
+      "passed": true
+    },
+    {
+      "name": "codec:single-escaped-key",
+      "passed": true
+    },
+    {
+      "name": "codec-no-business-change:single-escaped-key",
+      "passed": true
+    },
+    {
+      "name": "codec:unpaired-high-surrogate",
+      "passed": true
+    },
+    {
+      "name": "home-rejects-malformed:unpaired-high-surrogate",
+      "passed": true
+    },
+    {
+      "name": "codec-no-business-change:unpaired-high-surrogate",
+      "passed": true
+    },
+    {
+      "name": "codec:unpaired-low-surrogate",
+      "passed": true
+    },
+    {
+      "name": "home-rejects-malformed:unpaired-low-surrogate",
+      "passed": true
+    },
+    {
+      "name": "codec-no-business-change:unpaired-low-surrogate",
+      "passed": true
+    },
+    {
+      "name": "codec:invalid-surrogate-pair",
+      "passed": true
+    },
+    {
+      "name": "home-rejects-malformed:invalid-surrogate-pair",
+      "passed": true
+    },
+    {
+      "name": "codec-no-business-change:invalid-surrogate-pair",
+      "passed": true
+    },
+    {
+      "name": "codec:utf8-bom",
+      "passed": true
+    },
+    {
+      "name": "home-rejects-malformed:utf8-bom",
+      "passed": true
+    },
+    {
+      "name": "codec-no-business-change:utf8-bom",
+      "passed": true
+    },
+    {
+      "name": "codec:invalid-utf8",
+      "passed": true
+    },
+    {
+      "name": "home-rejects-malformed:invalid-utf8",
+      "passed": true
+    },
+    {
+      "name": "codec-no-business-change:invalid-utf8",
+      "passed": true
+    },
+    {
+      "name": "codec:literal-control-byte",
+      "passed": true
+    },
+    {
+      "name": "home-rejects-malformed:literal-control-byte",
+      "passed": true
+    },
+    {
+      "name": "codec-no-business-change:literal-control-byte",
+      "passed": true
+    },
+    {
+      "name": "codec:cr-in-description",
+      "passed": true
+    },
+    {
+      "name": "home-rejects-malformed:cr-in-description",
+      "passed": true
+    },
+    {
+      "name": "codec-no-business-change:cr-in-description",
+      "passed": true
+    },
+    {
+      "name": "codec:crlf-markdown",
+      "passed": true
+    },
+    {
+      "name": "home-rejects-malformed:crlf-markdown",
+      "passed": true
+    },
+    {
+      "name": "codec-no-business-change:crlf-markdown",
+      "passed": true
+    },
+    {
+      "name": "codec:numeric-revision",
+      "passed": true
+    },
+    {
+      "name": "home-rejects-malformed:numeric-revision",
+      "passed": true
+    },
+    {
+      "name": "codec-no-business-change:numeric-revision",
+      "passed": true
+    },
+    {
+      "name": "codec:boolean-revision",
+      "passed": true
+    },
+    {
+      "name": "home-rejects-malformed:boolean-revision",
+      "passed": true
+    },
+    {
+      "name": "codec-no-business-change:boolean-revision",
+      "passed": true
+    },
+    {
+      "name": "codec:null-payload",
+      "passed": true
+    },
+    {
+      "name": "home-rejects-malformed:null-payload",
+      "passed": true
+    },
+    {
+      "name": "codec-no-business-change:null-payload",
+      "passed": true
+    },
+    {
+      "name": "codec:array-payload",
+      "passed": true
+    },
+    {
+      "name": "home-rejects-malformed:array-payload",
+      "passed": true
+    },
+    {
+      "name": "codec-no-business-change:array-payload",
+      "passed": true
+    },
+    {
+      "name": "codec:nested-payload-value",
+      "passed": true
+    },
+    {
+      "name": "home-rejects-malformed:nested-payload-value",
+      "passed": true
+    },
+    {
+      "name": "codec-no-business-change:nested-payload-value",
+      "passed": true
+    },
+    {
+      "name": "codec:trailing-json-value",
+      "passed": true
+    },
+    {
+      "name": "home-rejects-malformed:trailing-json-value",
+      "passed": true
+    },
+    {
+      "name": "codec-no-business-change:trailing-json-value",
+      "passed": true
+    },
+    {
+      "name": "codec:leading-zero-revision",
+      "passed": true
+    },
+    {
+      "name": "home-rejects-malformed:leading-zero-revision",
+      "passed": true
+    },
+    {
+      "name": "codec-no-business-change:leading-zero-revision",
+      "passed": true
+    },
+    {
+      "name": "codec:u64-overflow-epoch",
+      "passed": true
+    },
+    {
+      "name": "home-rejects-malformed:u64-overflow-epoch",
+      "passed": true
+    },
+    {
+      "name": "codec-no-business-change:u64-overflow-epoch",
+      "passed": true
+    },
+    {
+      "name": "codec:zero-epoch",
+      "passed": true
+    },
+    {
+      "name": "home-rejects-malformed:zero-epoch",
+      "passed": true
+    },
+    {
+      "name": "codec-no-business-change:zero-epoch",
+      "passed": true
+    },
+    {
+      "name": "codec:uppercase-uuid",
+      "passed": true
+    },
+    {
+      "name": "home-rejects-malformed:uppercase-uuid",
+      "passed": true
+    },
+    {
+      "name": "codec-no-business-change:uppercase-uuid",
+      "passed": true
+    },
+    {
+      "name": "codec:unknown-protocol",
+      "passed": true
+    },
+    {
+      "name": "home-rejects-malformed:unknown-protocol",
+      "passed": true
+    },
+    {
+      "name": "codec-no-business-change:unknown-protocol",
+      "passed": true
+    },
+    {
+      "name": "codec:unknown-operation",
+      "passed": true
+    },
+    {
+      "name": "home-rejects-malformed:unknown-operation",
+      "passed": true
+    },
+    {
+      "name": "codec-no-business-change:unknown-operation",
+      "passed": true
+    },
+    {
+      "name": "codec:title-over-scalar-limit",
+      "passed": true
+    },
+    {
+      "name": "home-rejects-malformed:title-over-scalar-limit",
+      "passed": true
+    },
+    {
+      "name": "codec-no-business-change:title-over-scalar-limit",
+      "passed": true
+    },
+    {
+      "name": "codec:description-over-byte-limit",
+      "passed": true
+    },
+    {
+      "name": "home-rejects-malformed:description-over-byte-limit",
+      "passed": true
+    },
+    {
+      "name": "codec-no-business-change:description-over-byte-limit",
+      "passed": true
+    },
+    {
+      "name": "codec:envelope-over-65536-bytes",
+      "passed": true
+    },
+    {
+      "name": "home-rejects-malformed:envelope-over-65536-bytes",
+      "passed": true
+    },
+    {
+      "name": "codec-no-business-change:envelope-over-65536-bytes",
+      "passed": true
+    },
+    {
+      "name": "codec:markdown-over-32768-bytes",
+      "passed": true
+    },
+    {
+      "name": "home-rejects-malformed:markdown-over-32768-bytes",
+      "passed": true
+    },
+    {
+      "name": "codec-no-business-change:markdown-over-32768-bytes",
+      "passed": true
+    },
+    {
+      "name": "owner-control:missing",
+      "passed": true
+    },
+    {
+      "name": "invalid-context-watch-nack:profile-classification-missing",
+      "passed": true
+    },
+    {
+      "name": "invalid-context-poke-transport-only:profile-classification-missing",
+      "passed": true
+    },
+    {
+      "name": "context-read-denied:profile-classification-missing",
+      "passed": true
+    },
+    {
+      "name": "context-read-denied:profile-classification-missing",
+      "passed": true
+    },
+    {
+      "name": "context-read-denied:profile-classification-missing",
+      "passed": true
+    },
+    {
+      "name": "context-probes-preserve-state:profile-classification-missing",
+      "passed": true
+    },
+    {
+      "name": "owner-control:profile",
+      "passed": true
+    },
+    {
+      "name": "context-restored:profile-classification-missing",
+      "passed": true
+    },
+    {
+      "name": "owner-control:profile",
+      "passed": true
+    },
+    {
+      "name": "invalid-context-watch-nack:profile-classification-unsupported",
+      "passed": true
+    },
+    {
+      "name": "invalid-context-poke-transport-only:profile-classification-unsupported",
+      "passed": true
+    },
+    {
+      "name": "context-read-denied:profile-classification-unsupported",
+      "passed": true
+    },
+    {
+      "name": "context-read-denied:profile-classification-unsupported",
+      "passed": true
+    },
+    {
+      "name": "context-read-denied:profile-classification-unsupported",
+      "passed": true
+    },
+    {
+      "name": "context-probes-preserve-state:profile-classification-unsupported",
+      "passed": true
+    },
+    {
+      "name": "owner-control:profile",
+      "passed": true
+    },
+    {
+      "name": "context-restored:profile-classification-unsupported",
+      "passed": true
+    },
+    {
+      "name": "owner-control:missing",
+      "passed": true
+    },
+    {
+      "name": "invalid-context-watch-nack:profile-custody-missing",
+      "passed": true
+    },
+    {
+      "name": "invalid-context-poke-transport-only:profile-custody-missing",
+      "passed": true
+    },
+    {
+      "name": "context-read-denied:profile-custody-missing",
+      "passed": true
+    },
+    {
+      "name": "context-read-denied:profile-custody-missing",
+      "passed": true
+    },
+    {
+      "name": "context-read-denied:profile-custody-missing",
+      "passed": true
+    },
+    {
+      "name": "context-probes-preserve-state:profile-custody-missing",
+      "passed": true
+    },
+    {
+      "name": "owner-control:profile",
+      "passed": true
+    },
+    {
+      "name": "context-restored:profile-custody-missing",
+      "passed": true
+    },
+    {
+      "name": "owner-control:profile",
+      "passed": true
+    },
+    {
+      "name": "invalid-context-watch-nack:profile-custody-unsupported",
+      "passed": true
+    },
+    {
+      "name": "invalid-context-poke-transport-only:profile-custody-unsupported",
+      "passed": true
+    },
+    {
+      "name": "context-read-denied:profile-custody-unsupported",
+      "passed": true
+    },
+    {
+      "name": "context-read-denied:profile-custody-unsupported",
+      "passed": true
+    },
+    {
+      "name": "context-read-denied:profile-custody-unsupported",
+      "passed": true
+    },
+    {
+      "name": "context-probes-preserve-state:profile-custody-unsupported",
+      "passed": true
+    },
+    {
+      "name": "owner-control:profile",
+      "passed": true
+    },
+    {
+      "name": "context-restored:profile-custody-unsupported",
+      "passed": true
+    },
+    {
+      "name": "owner-control:missing",
+      "passed": true
+    },
+    {
+      "name": "invalid-context-watch-nack:profile-runtime-missing",
+      "passed": true
+    },
+    {
+      "name": "invalid-context-poke-transport-only:profile-runtime-missing",
+      "passed": true
+    },
+    {
+      "name": "context-read-denied:profile-runtime-missing",
+      "passed": true
+    },
+    {
+      "name": "context-read-denied:profile-runtime-missing",
+      "passed": true
+    },
+    {
+      "name": "context-read-denied:profile-runtime-missing",
+      "passed": true
+    },
+    {
+      "name": "context-probes-preserve-state:profile-runtime-missing",
+      "passed": true
+    },
+    {
+      "name": "owner-control:profile",
+      "passed": true
+    },
+    {
+      "name": "context-restored:profile-runtime-missing",
+      "passed": true
+    },
+    {
+      "name": "owner-control:profile",
+      "passed": true
+    },
+    {
+      "name": "invalid-context-watch-nack:profile-runtime-unsupported",
+      "passed": true
+    },
+    {
+      "name": "invalid-context-poke-transport-only:profile-runtime-unsupported",
+      "passed": true
+    },
+    {
+      "name": "context-read-denied:profile-runtime-unsupported",
+      "passed": true
+    },
+    {
+      "name": "context-read-denied:profile-runtime-unsupported",
+      "passed": true
+    },
+    {
+      "name": "context-read-denied:profile-runtime-unsupported",
+      "passed": true
+    },
+    {
+      "name": "context-probes-preserve-state:profile-runtime-unsupported",
+      "passed": true
+    },
+    {
+      "name": "owner-control:profile",
+      "passed": true
+    },
+    {
+      "name": "context-restored:profile-runtime-unsupported",
+      "passed": true
+    },
+    {
+      "name": "owner-control:missing",
+      "passed": true
+    },
+    {
+      "name": "invalid-context-watch-nack:profile-authentication-missing",
+      "passed": true
+    },
+    {
+      "name": "invalid-context-poke-transport-only:profile-authentication-missing",
+      "passed": true
+    },
+    {
+      "name": "context-read-denied:profile-authentication-missing",
+      "passed": true
+    },
+    {
+      "name": "context-read-denied:profile-authentication-missing",
+      "passed": true
+    },
+    {
+      "name": "context-read-denied:profile-authentication-missing",
+      "passed": true
+    },
+    {
+      "name": "context-probes-preserve-state:profile-authentication-missing",
+      "passed": true
+    },
+    {
+      "name": "owner-control:profile",
+      "passed": true
+    },
+    {
+      "name": "context-restored:profile-authentication-missing",
+      "passed": true
+    },
+    {
+      "name": "owner-control:profile",
+      "passed": true
+    },
+    {
+      "name": "invalid-context-watch-nack:profile-authentication-unsupported",
+      "passed": true
+    },
+    {
+      "name": "invalid-context-poke-transport-only:profile-authentication-unsupported",
+      "passed": true
+    },
+    {
+      "name": "context-read-denied:profile-authentication-unsupported",
+      "passed": true
+    },
+    {
+      "name": "context-read-denied:profile-authentication-unsupported",
+      "passed": true
+    },
+    {
+      "name": "context-read-denied:profile-authentication-unsupported",
+      "passed": true
+    },
+    {
+      "name": "context-probes-preserve-state:profile-authentication-unsupported",
+      "passed": true
+    },
+    {
+      "name": "owner-control:profile",
+      "passed": true
+    },
+    {
+      "name": "context-restored:profile-authentication-unsupported",
+      "passed": true
+    },
+    {
+      "name": "owner-control:expiry",
+      "passed": true
+    },
+    {
+      "name": "invalid-context-watch-nack:expired-binding",
+      "passed": true
+    },
+    {
+      "name": "invalid-context-poke-transport-only:expired-binding",
+      "passed": true
+    },
+    {
+      "name": "context-read-denied:expired-binding",
+      "passed": true
+    },
+    {
+      "name": "context-read-denied:expired-binding",
+      "passed": true
+    },
+    {
+      "name": "context-read-denied:expired-binding",
+      "passed": true
+    },
+    {
+      "name": "context-probes-preserve-state:expired-binding",
+      "passed": true
+    },
+    {
+      "name": "owner-control:expiry",
+      "passed": true
+    },
+    {
+      "name": "context-restored:expired-binding",
+      "passed": true
+    },
+    {
+      "name": "owner-control:active",
+      "passed": true
+    },
+    {
+      "name": "invalid-context-watch-nack:revoked-binding",
+      "passed": true
+    },
+    {
+      "name": "invalid-context-poke-transport-only:revoked-binding",
+      "passed": true
+    },
+    {
+      "name": "context-read-denied:revoked-binding",
+      "passed": true
+    },
+    {
+      "name": "context-read-denied:revoked-binding",
+      "passed": true
+    },
+    {
+      "name": "context-read-denied:revoked-binding",
+      "passed": true
+    },
+    {
+      "name": "context-probes-preserve-state:revoked-binding",
+      "passed": true
+    },
+    {
+      "name": "owner-control:active",
+      "passed": true
+    },
+    {
+      "name": "context-restored:revoked-binding",
+      "passed": true
+    },
+    {
+      "name": "owner-control:binding-drop",
+      "passed": true
+    },
+    {
+      "name": "invalid-context-watch-nack:missing-binding",
+      "passed": true
+    },
+    {
+      "name": "invalid-context-poke-transport-only:missing-binding",
+      "passed": true
+    },
+    {
+      "name": "context-read-denied:missing-binding",
+      "passed": true
+    },
+    {
+      "name": "context-read-denied:missing-binding",
+      "passed": true
+    },
+    {
+      "name": "context-read-denied:missing-binding",
+      "passed": true
+    },
+    {
+      "name": "context-probes-preserve-state:missing-binding",
+      "passed": true
+    },
+    {
+      "name": "owner-control:binding-restore",
+      "passed": true
+    },
+    {
+      "name": "context-restored:missing-binding",
+      "passed": true
+    },
+    {
+      "name": "owner-control:profile",
+      "passed": true
+    },
+    {
+      "name": "invalid-context-watch-nack:unsupported-authentication-mechanism",
+      "passed": true
+    },
+    {
+      "name": "invalid-context-poke-transport-only:unsupported-authentication-mechanism",
+      "passed": true
+    },
+    {
+      "name": "context-read-denied:unsupported-authentication-mechanism",
+      "passed": true
+    },
+    {
+      "name": "context-read-denied:unsupported-authentication-mechanism",
+      "passed": true
+    },
+    {
+      "name": "context-read-denied:unsupported-authentication-mechanism",
+      "passed": true
+    },
+    {
+      "name": "context-probes-preserve-state:unsupported-authentication-mechanism",
+      "passed": true
+    },
+    {
+      "name": "owner-control:profile",
+      "passed": true
+    },
+    {
+      "name": "context-restored:unsupported-authentication-mechanism",
+      "passed": true
+    },
+    {
+      "name": "owner-control:kind",
+      "passed": true
+    },
+    {
+      "name": "invalid-context-watch-nack:contradictory-context",
+      "passed": true
+    },
+    {
+      "name": "invalid-context-poke-transport-only:contradictory-context",
+      "passed": true
+    },
+    {
+      "name": "context-read-denied:contradictory-context",
+      "passed": true
+    },
+    {
+      "name": "context-read-denied:contradictory-context",
+      "passed": true
+    },
+    {
+      "name": "context-read-denied:contradictory-context",
+      "passed": true
+    },
+    {
+      "name": "context-probes-preserve-state:contradictory-context",
+      "passed": true
+    },
+    {
+      "name": "owner-control:kind",
+      "passed": true
+    },
+    {
+      "name": "context-restored:contradictory-context",
+      "passed": true
+    },
+    {
+      "name": "owner-control:kind",
+      "passed": true
+    },
+    {
+      "name": "invalid-context-watch-nack:unsupported-agent-delegation",
+      "passed": true
+    },
+    {
+      "name": "invalid-context-poke-transport-only:unsupported-agent-delegation",
+      "passed": true
+    },
+    {
+      "name": "context-read-denied:unsupported-agent-delegation",
+      "passed": true
+    },
+    {
+      "name": "context-read-denied:unsupported-agent-delegation",
+      "passed": true
+    },
+    {
+      "name": "context-read-denied:unsupported-agent-delegation",
+      "passed": true
+    },
+    {
+      "name": "context-probes-preserve-state:unsupported-agent-delegation",
+      "passed": true
+    },
+    {
+      "name": "owner-control:kind",
+      "passed": true
+    },
+    {
+      "name": "context-restored:unsupported-agent-delegation",
+      "passed": true
+    },
+    {
+      "name": "owner-control-rejected:load-future",
+      "passed": true
+    },
+    {
+      "name": "unsupported-state-specific-rejection:load-future",
+      "passed": true
+    },
+    {
+      "name": "unsupported-state-preserves-data:load-future",
+      "passed": true
+    },
+    {
+      "name": "owner-control-rejected:load-counter",
+      "passed": true
+    },
+    {
+      "name": "unsupported-state-specific-rejection:load-counter",
+      "passed": true
+    },
+    {
+      "name": "unsupported-state-preserves-data:load-counter",
+      "passed": true
+    },
+    {
+      "name": "owner-control:roundtrip",
+      "passed": true
+    },
+    {
+      "name": "native-on-save-on-load-roundtrip",
+      "passed": true
+    },
+    {
+      "name": "owner-control-rejected:binding-drop",
+      "passed": true
+    },
+    {
+      "name": "outsider-cannot-use-fixture-control",
+      "passed": true
+    },
+    {
+      "name": "two-principal-concurrent-cas-one-winner",
+      "passed": true
+    },
+    {
+      "name": "concurrent-receipt-trusted-sender",
+      "passed": true
+    },
+    {
+      "name": "concurrent-winner-visible-to-reader",
+      "passed": true
+    },
+    {
+      "name": "concurrent-cas-one-acceptance",
+      "passed": true
+    },
+    {
+      "name": "concurrent-same-path-read-separation",
+      "passed": true
+    },
+    {
+      "name": "sender-cannot-reserve-another-result-route",
+      "passed": true
+    },
+    {
+      "name": "concurrent-reads-and-wrong-route-preserve-state",
+      "passed": true
+    }
+  ],
+  "concurrent_submissions": [
+    {
+      "sender": "bus",
+      "command": {
+        "protocol": "stead.command/1",
+        "request_id": "019939ba-4000-7000-8000-000000008000",
+        "project_id": "019939ba-4000-7000-8000-000000000001",
+        "resource_id": "019939ba-4000-7000-8000-000000000301",
+        "expected_revision": "4",
+        "authority_epoch": "1",
+        "operation": "work.update",
+        "payload": {
+          "title": "Concurrent synthetic writer bus",
+          "description": "Public work after a hidden other-project event.",
+          "type": "task",
+          "status": "done",
+          "priority": "medium"
+        }
+      },
+      "response": {
+        "raw": "{\"error\":\"revision_conflict\",\"protocol\":\"stead.result/1\",\"status\":\"rejected\"}",
+        "json": {
+          "error": "revision_conflict",
+          "protocol": "stead.result/1",
+          "status": "rejected"
+        },
+        "native": {
+          "ship": "bus",
+          "mode": "command",
+          "route": "/v1/result/~bus/019939ba-4000-7000-8000-000000000202/019939ba-4000-7000-8000-000000000001/019939ba-4000-7000-8000-000000008000/f23156c6a134ffed110422670a39908a0b9c3ff7656566712d3045193d558fdf",
+          "input_sha256": "c9d7cc62b561350b6d748810f6e85a670ec51ae935d9c100afd8fcf63ffae088",
+          "input_bytes": 427,
+          "outcome": {
+            "raw": "{\"error\":\"revision_conflict\",\"protocol\":\"stead.result/1\",\"status\":\"rejected\"}",
+            "json": {
+              "error": "revision_conflict",
+              "protocol": "stead.result/1",
+              "status": "rejected"
+            }
+          },
+          "stdout": "[32 %avow 0 %noun %stead-core-result '7b226572726f72223a227265766973696f6e5f636f6e666c696374222c2270726f746f636f6c223a2273746561642e726573756c742f31222c22737461747573223a2272656a6563746564227d']",
+          "stderr": "loom: mapped 512MB\r\nlite: arvo formula 4ce68411\r\nlite: core 641296f\r\nlite: final state 641296f\r\neval (cue, newt):",
+          "request": "[32 %fyrd [%base %stead-client %noun [%noun [~zod %command [0x3176 0x746c.7573.6572 0x7375.627e 0x3230.3230.3030.3030.3030.3030.2d30.3030.382d.3030.3037.2d30.3030.342d.6162.3933.3939.3130 0x3130.3030.3030.3030.3030.3030.2d30.3030.382d.3030.3037.2d30.3030.342d.6162.3933.3939.3130 0x3030.3038.3030.3030.3030.3030.2d30.3030.382d.3030.3037.2d30.3030.342d.6162.3933.3939.3130 0x6664.6638.3535.6433.3931.3534.3033.6432.3137.3636.3536.3536.3766.6633.6339.6230.6138.3039.3933.6130.3736.3232.3430.3131.6465.6666.3433.3161.3663.3635.3133.3266 ~] 0x7d.2231.3033.3030.3030.3030.3030.302d.3030.3038.2d30.3030.372d.3030.3034.2d61.6239.3339.3931.3022.3a22.6469.5f65.6372.756f.7365.7222.2c22.3030.3038.3030.3030.3030.3030.2d30.3030.382d.3030.3037.2d30.3030.342d.6162.3933.3939.3130.223a.2264.695f.7473.6575.7165.7222.2c22.312f.646e.616d.6d6f.632e.6461.6574.7322.3a22.6c6f.636f.746f.7270.222c.2231.3030.3030.3030.3030.3030.302d.3030.3038.2d30.3030.372d.3030.3034.2d61.6239.3339.3931.3022.3a22.6469.5f74.6365.6a6f.7270.222c.7d22.6b73.6174.223a.2265.7079.7422.2c22.7375.6220.7265.7469.7277.2063.6974.6568.746e.7973.2074.6e65.7272.7563.6e6f.4322.3a22.656c.7469.7422.2c22.656e.6f64.223a.2273.7574.6174.7322.2c22.6d75.6964.656d.223a.2279.7469.726f.6972.7022.2c22.2e74.6e65.7665.2074.6365.6a6f.7270.2d72.6568.746f.206e.6564.6469.6820.6120.7265.7466.6120.6b72.6f77.2063.696c.6275.5022.3a22.6e6f.6974.7069.7263.7365.6422.7b3a.2264.616f.6c79.6170.222c.2265.7461.6470.752e.6b72.6f77.223a.226e.6f69.7461.7265.706f.222c.2234.223a.226e.6f69.7369.7665.725f.6465.7463.6570.7865.222c.2231.223a.2268.636f.7065.5f79.7469.726f.6874.7561.227b]]]]",
+          "response_frame_sha256": "f7e05abfbbc8ed2e69f105e4255e57cc6707047045fed6bdaefdaed435954072"
+        }
+      }
+    },
+    {
+      "sender": "zod",
+      "command": {
+        "protocol": "stead.command/1",
+        "request_id": "019939ba-4000-7000-8000-000000008001",
+        "project_id": "019939ba-4000-7000-8000-000000000001",
+        "resource_id": "019939ba-4000-7000-8000-000000000301",
+        "expected_revision": "4",
+        "authority_epoch": "1",
+        "operation": "work.update",
+        "payload": {
+          "title": "Concurrent synthetic writer zod",
+          "description": "Public work after a hidden other-project event.",
+          "type": "task",
+          "status": "done",
+          "priority": "medium"
+        }
+      },
+      "response": {
+        "raw": "{\"accepted_at_ms\":\"1789270342650\",\"authentication\":\"fake-native/1\",\"authentication_strength\":\"synthetic-native-sender\",\"authority_epoch\":\"1\",\"binding_id\":\"019939ba-4000-7000-8000-000000000201\",\"canonical_sha256\":\"5b9c1b67d9e9cdc249d5b903252a28a7efd374b5afca32fdb06b46146ee485c3\",\"git_commit_oid\":\"\",\"journal_digest\":\"c2d90713bced6d50eeaed5c465b5df969ba727a1fdd9a36cec310c9a194b0255\",\"journal_sequence\":\"33\",\"policy_revision\":\"20\",\"principal_id\":\"019939ba-4000-7000-8000-000000000101\",\"project_id\":\"019939ba-4000-7000-8000-000000000001\",\"protocol\":\"stead.receipt/1\",\"request_id\":\"019939ba-4000-7000-8000-000000008001\",\"resource_id\":\"019939ba-4000-7000-8000-000000000301\",\"resource_revision\":\"5\",\"status\":\"accepted\"}",
+        "json": {
+          "accepted_at_ms": "1789270342650",
+          "authentication": "fake-native/1",
+          "authentication_strength": "synthetic-native-sender",
+          "authority_epoch": "1",
+          "binding_id": "019939ba-4000-7000-8000-000000000201",
+          "canonical_sha256": "5b9c1b67d9e9cdc249d5b903252a28a7efd374b5afca32fdb06b46146ee485c3",
+          "git_commit_oid": "",
+          "journal_digest": "c2d90713bced6d50eeaed5c465b5df969ba727a1fdd9a36cec310c9a194b0255",
+          "journal_sequence": "33",
+          "policy_revision": "20",
+          "principal_id": "019939ba-4000-7000-8000-000000000101",
+          "project_id": "019939ba-4000-7000-8000-000000000001",
+          "protocol": "stead.receipt/1",
+          "request_id": "019939ba-4000-7000-8000-000000008001",
+          "resource_id": "019939ba-4000-7000-8000-000000000301",
+          "resource_revision": "5",
+          "status": "accepted"
+        },
+        "native": {
+          "ship": "zod",
+          "mode": "command",
+          "route": "/v1/result/~zod/019939ba-4000-7000-8000-000000000201/019939ba-4000-7000-8000-000000000001/019939ba-4000-7000-8000-000000008001/5b9c1b67d9e9cdc249d5b903252a28a7efd374b5afca32fdb06b46146ee485c3",
+          "input_sha256": "ac08e07ac5b66e5181d79007bed7d9640cdaf12eeab8293c99d165dba5010773",
+          "input_bytes": 427,
+          "outcome": {
+            "raw": "{\"accepted_at_ms\":\"1789270342650\",\"authentication\":\"fake-native/1\",\"authentication_strength\":\"synthetic-native-sender\",\"authority_epoch\":\"1\",\"binding_id\":\"019939ba-4000-7000-8000-000000000201\",\"canonical_sha256\":\"5b9c1b67d9e9cdc249d5b903252a28a7efd374b5afca32fdb06b46146ee485c3\",\"git_commit_oid\":\"\",\"journal_digest\":\"c2d90713bced6d50eeaed5c465b5df969ba727a1fdd9a36cec310c9a194b0255\",\"journal_sequence\":\"33\",\"policy_revision\":\"20\",\"principal_id\":\"019939ba-4000-7000-8000-000000000101\",\"project_id\":\"019939ba-4000-7000-8000-000000000001\",\"protocol\":\"stead.receipt/1\",\"request_id\":\"019939ba-4000-7000-8000-000000008001\",\"resource_id\":\"019939ba-4000-7000-8000-000000000301\",\"resource_revision\":\"5\",\"status\":\"accepted\"}",
+            "json": {
+              "accepted_at_ms": "1789270342650",
+              "authentication": "fake-native/1",
+              "authentication_strength": "synthetic-native-sender",
+              "authority_epoch": "1",
+              "binding_id": "019939ba-4000-7000-8000-000000000201",
+              "canonical_sha256": "5b9c1b67d9e9cdc249d5b903252a28a7efd374b5afca32fdb06b46146ee485c3",
+              "git_commit_oid": "",
+              "journal_digest": "c2d90713bced6d50eeaed5c465b5df969ba727a1fdd9a36cec310c9a194b0255",
+              "journal_sequence": "33",
+              "policy_revision": "20",
+              "principal_id": "019939ba-4000-7000-8000-000000000101",
+              "project_id": "019939ba-4000-7000-8000-000000000001",
+              "protocol": "stead.receipt/1",
+              "request_id": "019939ba-4000-7000-8000-000000008001",
+              "resource_id": "019939ba-4000-7000-8000-000000000301",
+              "resource_revision": "5",
+              "status": "accepted"
+            }
+          },
+          "stdout": "[32 %avow 0 %noun %stead-core-result '7b2261636365707465645f61745f6d73223a2231373839323730333432363530222c2261757468656e7469636174696f6e223a2266616b652d6e61746976652f31222c2261757468656e7469636174696f6e5f737472656e677468223a2273796e7468657469632d6e61746976652d73656e646572222c22617574686f726974795f65706f6368223a2231222c2262696e64696e675f6964223a2230313939333962612d343030302d373030302d383030302d303030303030303030323031222c2263616e6f6e6963616c5f736861323536223a2235623963316236376439653963646332343964356239303332353261323861376566643337346235616663613332666462303662343631343665653438356333222c226769745f636f6d6d69745f6f6964223a22222c226a6f75726e616c5f646967657374223a2263326439303731336263656436643530656561656435633436356235646639363962613732376131666464396133366365633331306339613139346230323535222c226a6f75726e616c5f73657175656e6365223a223333222c22706f6c6963795f7265766973696f6e223a223230222c227072696e636970616c5f6964223a2230313939333962612d343030302d373030302d383030302d303030303030303030313031222c2270726f6a6563745f6964223a2230313939333962612d343030302d373030302d383030302d303030303030303030303031222c2270726f746f636f6c223a2273746561642e726563656970742f31222c22726571756573745f6964223a2230313939333962612d343030302d373030302d383030302d303030303030303038303031222c227265736f757263655f6964223a2230313939333962612d343030302d373030302d383030302d303030303030303030333031222c227265736f757263655f7265766973696f6e223a2235222c22737461747573223a226163636570746564227d']",
+          "stderr": "loom: mapped 512MB\r\nlite: arvo formula 4ce68411\r\nlite: core 641296f\r\nlite: final state 641296f\r\neval (cue, newt):",
+          "request": "[32 %fyrd [%base %stead-client %noun [%noun [~zod %command [0x3176 0x746c.7573.6572 0x646f.7a7e 0x3130.3230.3030.3030.3030.3030.2d30.3030.382d.3030.3037.2d30.3030.342d.6162.3933.3939.3130 0x3130.3030.3030.3030.3030.3030.2d30.3030.382d.3030.3037.2d30.3030.342d.6162.3933.3939.3130 0x3130.3038.3030.3030.3030.3030.2d30.3030.382d.3030.3037.2d30.3030.342d.6162.3933.3939.3130 0x3363.3538.3465.6536.3431.3634.6236.3062.6466.3233.6163.6661.3562.3437.3364.6665.3761.3832.6132.3532.3330.3962.3564.3934.3263.6463.3965.3964.3736.6231.6339.6235 ~] 0x7d.2231.3033.3030.3030.3030.3030.302d.3030.3038.2d30.3030.372d.3030.3034.2d61.6239.3339.3931.3022.3a22.6469.5f65.6372.756f.7365.7222.2c22.3130.3038.3030.3030.3030.3030.2d30.3030.382d.3030.3037.2d30.3030.342d.6162.3933.3939.3130.223a.2264.695f.7473.6575.7165.7222.2c22.312f.646e.616d.6d6f.632e.6461.6574.7322.3a22.6c6f.636f.746f.7270.222c.2231.3030.3030.3030.3030.3030.302d.3030.3038.2d30.3030.372d.3030.3034.2d61.6239.3339.3931.3022.3a22.6469.5f74.6365.6a6f.7270.222c.7d22.6b73.6174.223a.2265.7079.7422.2c22.646f.7a20.7265.7469.7277.2063.6974.6568.746e.7973.2074.6e65.7272.7563.6e6f.4322.3a22.656c.7469.7422.2c22.656e.6f64.223a.2273.7574.6174.7322.2c22.6d75.6964.656d.223a.2279.7469.726f.6972.7022.2c22.2e74.6e65.7665.2074.6365.6a6f.7270.2d72.6568.746f.206e.6564.6469.6820.6120.7265.7466.6120.6b72.6f77.2063.696c.6275.5022.3a22.6e6f.6974.7069.7263.7365.6422.7b3a.2264.616f.6c79.6170.222c.2265.7461.6470.752e.6b72.6f77.223a.226e.6f69.7461.7265.706f.222c.2234.223a.226e.6f69.7369.7665.725f.6465.7463.6570.7865.222c.2231.223a.2268.636f.7065.5f79.7469.726f.6874.7561.227b]]]]",
+          "response_frame_sha256": "bd5d5583a48169fc4b7af7e04d1007515ec3cb53f85e66dd95a1158fff756871"
+        }
+      }
+    }
+  ]
+}

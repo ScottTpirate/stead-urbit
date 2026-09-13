@@ -86,6 +86,7 @@ def sandbox(command):
     args += ['--proc', '/proc', '--dev', '/dev', '--tmpfs', '/tmp', '--dir', '/etc',
              '--ro-bind', str(ROOT / 'scripts/urbit'), '/code',
              '--ro-bind', str(ROOT / 'native'), '/native',
+             '--ro-bind', str(ROOT / 'specs/urbit'), '/specs',
              '--ro-bind', str(toolchain.LOCK_PATH), '/toolchain.json',
              '--ro-bind', str(ROOT / 'specs/urbit/smoke-corpus.json'), '/corpus.json',
              '--ro-bind', str(ROOT / '.runtime/bin'), '/runtime/bin',
@@ -200,15 +201,23 @@ def test():
         raise RuntimeError('Native smoke failed; retain evidence and fix before claiming success')
 
 
+def core_test():
+    guard()
+    result = rpc('core-test', timeout=3600)
+    print(json.dumps(result, indent=2))
+    if result['status'] != 'pass':
+        raise RuntimeError('Native core acceptance failed; retained evidence is not a pass')
+
+
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument('command', choices=['doctor', 'start', 'stop', 'reset', 'status', 'test'])
+    parser.add_argument('command', choices=['doctor', 'start', 'stop', 'reset', 'status', 'test', 'core-test'])
     args = parser.parse_args()
     try:
         if args.command == 'status':
             guard()
             print(json.dumps(rpc('status'), indent=2))
         else:
-            globals()[args.command]()
+            globals()[args.command.replace('-', '_')]()
     except (OSError, ValueError, RuntimeError, subprocess.SubprocessError) as error:
         parser.exit(1, f'FAIL: {error}\n')

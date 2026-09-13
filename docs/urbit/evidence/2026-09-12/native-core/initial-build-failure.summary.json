@@ -1,0 +1,14 @@
+{
+  "source_file": ".piers/fakes/logs/core-20260913T023514Z.json",
+  "raw_sha256": "cc6859da027602866e82643e128bb6d89575e70c404b5ce153ac511afeef7710",
+  "compressed_sha256": "618d4133818c95c381206215ca1c79581b0e66589a44a47422cf5c66934d8f97",
+  "classification": "local-real-native-fake-ships",
+  "status": "fail",
+  "error": "HTTP Error 500: hosed",
+  "elapsed_seconds": 14.4,
+  "native_tree_sha256": "14a128e5e8f5f979650d25d5258573e48b365b71ad1fa53ac9dc1eb432d302e5",
+  "toolchain_sha256": "4a209c10cf1756eb0f7357cc3eca8250bf66c239b4cd0ca31a8c0886d4d304ee",
+  "checks": [],
+  "qa_case_counts": null,
+  "qa_check_counts": null
+}

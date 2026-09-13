@@ -128,3 +128,114 @@ URB-030 freezes only the minimum first-slice contracts after independent review.
 URB-040/050 native product behavior, browser/session isolation, full native Git,
 CI, export/recovery qualification, canary and deployment require their own evidence.
 Evidence attached to an issue is coordination, not owner merge or release approval.
+
+## Work/Docs and authorization — executed native first slice
+
+The subsequent URB-040/050 increment implements native state and authorization
+under the minimum URB-030 contracts, without changing that freeze or the active
+runtime lock. [NATIVE_CORE.md](NATIVE_CORE.md) describes the implemented API and
+limits. This section supersedes earlier future-tense references to that slice;
+it does not broaden the earlier counter or candidate-Git evidence.
+
+Root executed `make core-test` on the four isolated fake ships. The final root
+run passed its bounded execution gate in **390.266 seconds**, including a real
+120-second grant-expiry interval. It recorded **413 direct checks**, **129 native
+business cases**, and **2,542 independent-corpus assertions** with no failed or
+unrun business cases. The QA coverage subreport deliberately remains incomplete:
+115 cases have all their declared checks, 14 have broader checks still open, and
+**25 assertions are explicitly skipped**. These include subscriber instrumentation,
+metadata confidentiality, external-effect observation and source-order inspection;
+none are relabeled as native passes.
+
+The executed behavior includes:
+
+- Home-owned project and work creation/update, explicit contributor/reader grants,
+  maintainer grant ceilings, retained revocation IDs, and organization capability
+  without implicit content access.
+- Exact original receipts on authorized duplicate requests; changed-payload reuse,
+  stale resource revisions and epoch mismatches reject. Current revoked, expired
+  or downgraded authority cannot recover an old mutation receipt.
+- Five native Git-backed document saves in two owner-private containers, including
+  independent document revisions, exact Markdown/frontmatter, parent commits,
+  historical snapshots and current authorization on every object fetch.
+- A clean home process restart with preserved content, policy, receipts, journal
+  and objects; real `on-save`/`on-load` roundtrip; unsupported counter/future state
+  rejection without data loss. There are zero declared predecessor product versions.
+- Two actually simultaneous work mutations from `~bus` and `~zod`: one accepted,
+  one revision conflict. Concurrent same-path document reads return the owner's
+  exact body and the outsider's opaque denial. Another sender cannot reserve the
+  owner's result path.
+- **49 native codec vectors** (six frozen plus 43 adversarial), including all 35
+  malformed inputs rejected again at the home. **14 invalid-context scenarios**
+  reject result registration, prevent direct-poke business changes, and deny reads.
+  Native ACK/fact/kick reducer permutations and its negative controls also execute.
+
+Every one of the 15 Hoon files is checked byte-for-byte through actual Clay `%cx`
+scries on all four ships before the app/client compile probes. Before/after source,
+fixture, corpus and lock hashes match, and loaded Python closures match disk.
+The root report contains 871 exact administrative/native command records. The
+independent Hoon reviewer also verified its wrappers, all 34 accepted journal
+records in two project chains, receipt fields, and all 15 unique exported Git
+object IDs. See [review](NATIVE_CORE_REVIEW.md) and the
+[readable report](evidence/2026-09-12/native-core/root-pass.summary.json).
+The full JSON is retained as a standard gzip artifact with hashes in that index.
+
+Eight native document exports were reconstructed and checked with stock Git.
+A selected synthetic document container was also exported as a standard
+[Git bundle](evidence/2026-09-12/native-core/synthetic-documents.bundle), then
+independently cloned without Urbit, checked with `git fsck --full --strict`, and
+both current Markdown files recovered exactly. See
+[bundle recovery](evidence/2026-09-12/native-core/bundle-recovery.json).
+This is document-container exitability, not a complete organization backup.
+
+The original `make test` counter suite still passes on the final harness:
+12 commands, five specific expected failures, and restart in **23.628 seconds**;
+its native source hash is unchanged. All **131 host tests** pass, including
+17 scripted-native/real-temporary-Git export checks. The original pure native
+Git constructors separately passed **51/51** vector checks, with compiler and
+failed-assertion controls: [object evidence](evidence/2026-09-12/git-objects/index.json).
+Planning/contract validators also pass and retain their explicitly non-native labels.
+
+Actual failures are preserved alongside the passes. They exposed invalid native
+path encoding, a missing/wrong mark conversion, a typed snapshot-helper build
+error, and a 64 KiB pipe-output truncation in the pinned Vere evaluator. The last
+failure occurred after all 129 business outcomes, so that run remained overall
+failed. A direct reproduction showed 65,536 output bytes against a 65,590-byte
+frame despite exit 0. File-backed output returns the full frame, and the final
+native run rejects the 65,537-byte input at the home as expected. Host export
+regressions additionally caught wrong response identities, object-kind mismatches
+and 33-entry trees. See the [evidence index](evidence/2026-09-12/native-core/README.md).
+
+The benchmark environment remains the recorded local Arch/Linux x86-64 machine,
+i9-12900H and 64 GB physical RAM; four separately fenced fake processes share one
+loopback-only namespace, with 2 GiB configured loom per ship. The times above are
+suite wall times with compilation, native transport, exports and real expiry waits.
+No product p50/p95, representative load, RPO/RTO or enterprise capacity is claimed.
+The lock remains Vere 4.6 / kernel 408k-2, pinned brass pill, Node 24.21.0 and Git
+2.55.0, with all exact URLs and hashes in [the lock](../../specs/urbit/toolchain.lock.json).
+
+Browser sessions/direct-home HTTPS, live identity verification, Smart HTTP packs
+and refs, general shared/public document containers, full portable Work/policy
+export, native CI, production backup/recovery and endpoint isolation are not
+implemented by this increment. Global caller-chosen UUID collision disclosure and
+private-container activity inference through project counters remain explicit
+confidentiality gates. The Urgit hardened full replay/integration gate also remains
+open; the new native document constructor does not copy or depend on Urgit source.
+Real company data, canary, implementation merges and deployment remain owner-gated.
+
+Independent QA then executed the same `make core-test` from unchanged source:
+**PASS**, exit 0, **390.834 seconds** native suite time (**391.002 seconds** including
+its wrapper), again 413 direct checks, 129 business cases, 2,542 passed assertions
+and 25 explicit skips. [Independent report](evidence/2026-09-12/native-core/independent-pass.summary.json)
+and [QA execution metadata](evidence/2026-09-12/native-core/qa-execution.json) retain
+source bindings, command output and five-second temperature samples. The source
+was uncommitted during execution; the final source-binding record maps those
+exact bytes to the committed increment rather than mislabeling the base commit.
+
+The independent run sampled a **96°C** CPU package/core peak at
+`2026-09-13T03:35:53.696675Z`. Sampling does not establish an unsampled maximum or
+attribute the cause. The main harness has no thermal stop; this is a functional
+pass, **not a thermally bounded or sustained-load qualification**. No further
+native runs were made after that observation. Operator thermal controls and
+measurement remain open before repeated heavy runs or representative benchmarks;
+Urgit's separate hardened thermal aborts remain failures, not replaced by this pass.

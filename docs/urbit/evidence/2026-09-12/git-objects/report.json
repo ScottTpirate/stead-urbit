@@ -1,0 +1,305 @@
+{
+  "status": "passed",
+  "scope": "real local pure Hoon and stock Git; no Gall/HTTP/live-network test",
+  "checks": [
+    {
+      "name": "test-empty-blob",
+      "passed": true,
+      "output": "~"
+    },
+    {
+      "name": "test-trailing-zero-blob",
+      "passed": true,
+      "output": "~"
+    },
+    {
+      "name": "test-all-zero-blob",
+      "passed": true,
+      "output": "~"
+    },
+    {
+      "name": "test-blob-width-rejected",
+      "passed": true,
+      "output": "~"
+    },
+    {
+      "name": "test-object-kind-rejected",
+      "passed": true,
+      "output": "~"
+    },
+    {
+      "name": "test-empty-tree",
+      "passed": true,
+      "output": "~"
+    },
+    {
+      "name": "test-tree-byte-order",
+      "passed": true,
+      "output": "~"
+    },
+    {
+      "name": "test-tree-duplicate-rejected",
+      "passed": true,
+      "output": "~"
+    },
+    {
+      "name": "test-tree-path-rejected",
+      "passed": true,
+      "output": "~"
+    },
+    {
+      "name": "test-tree-uppercase-rejected",
+      "passed": true,
+      "output": "~"
+    },
+    {
+      "name": "test-tree-uuid-version-rejected",
+      "passed": true,
+      "output": "~"
+    },
+    {
+      "name": "test-tree-oid-width-rejected",
+      "passed": true,
+      "output": "~"
+    },
+    {
+      "name": "test-tree-at-bound",
+      "passed": true,
+      "output": "~"
+    },
+    {
+      "name": "test-tree-over-bound-rejected",
+      "passed": true,
+      "output": "~"
+    },
+    {
+      "name": "test-oid-leading-zero-padding",
+      "passed": true,
+      "output": "~"
+    },
+    {
+      "name": "test-commit-no-parent",
+      "passed": true,
+      "output": "~"
+    },
+    {
+      "name": "test-commit-invalid-principal-rejected",
+      "passed": true,
+      "output": "~"
+    },
+    {
+      "name": "test-commit-zero-revision-rejected",
+      "passed": true,
+      "output": "~"
+    },
+    {
+      "name": "test-commit-parent-width-rejected",
+      "passed": true,
+      "output": "~"
+    },
+    {
+      "name": "test-commit-time-overflow-rejected",
+      "passed": true,
+      "output": "~"
+    },
+    {
+      "name": "failing-tang-control-detected",
+      "passed": true
+    },
+    {
+      "name": "compiler-failure-control-detected",
+      "passed": true
+    },
+    {
+      "name": "blob-empty",
+      "passed": true,
+      "kind": "blob",
+      "bytes": 0,
+      "oid": "e69de29bb2d1d6434b8b29ae775ad8c2e48c5391",
+      "body_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "name": "blob-empty-stock-roundtrip",
+      "passed": true
+    },
+    {
+      "name": "blob-trailing-zero",
+      "passed": true,
+      "kind": "blob",
+      "bytes": 2,
+      "oid": "90802fedc2462f10bf2114d086cacb9e3af99ffb",
+      "body_sha256": "ffe9aaeaa2a2d5048174df0b80599ef0197ec024c4b051bc9860cff58ef7f9f3"
+    },
+    {
+      "name": "blob-trailing-zero-stock-roundtrip",
+      "passed": true
+    },
+    {
+      "name": "blob-all-zero",
+      "passed": true,
+      "kind": "blob",
+      "bytes": 2,
+      "oid": "09f370e38f498a462e1ca0faa724559b6630c04f",
+      "body_sha256": "96a296d224f285c67bee93c30f8a309157f0daa35dc5b87e410b78630a09cfc7"
+    },
+    {
+      "name": "blob-all-zero-stock-roundtrip",
+      "passed": true
+    },
+    {
+      "name": "blob-binary",
+      "passed": true,
+      "kind": "blob",
+      "bytes": 4,
+      "oid": "8db985ab3e6e555ce80ac87dbc208564b8f66a84",
+      "body_sha256": "fcac58980f5053b60bc41f02af0a17a9003f5377edfaed7735cd433452f09069"
+    },
+    {
+      "name": "blob-binary-stock-roundtrip",
+      "passed": true
+    },
+    {
+      "name": "blob-markdown",
+      "passed": true,
+      "kind": "blob",
+      "bytes": 35,
+      "oid": "03046124a1fe49472abfd09988557ad333daa10a",
+      "body_sha256": "4e93a7e2fd88b432826f40371116808d3ee5b85e796abe524f01349f3faf7c1c"
+    },
+    {
+      "name": "blob-markdown-stock-roundtrip",
+      "passed": true
+    },
+    {
+      "name": "blob-oid-leading-zero",
+      "passed": true,
+      "kind": "blob",
+      "bytes": 28,
+      "oid": "0027bc98f14ba4d8d750d20c2963dcb7f388a5a9",
+      "body_sha256": "9f897caf242aab9149fc6d0020e3fb656319edaab387f263ade387c6cd2fc3f2"
+    },
+    {
+      "name": "blob-oid-leading-zero-stock-roundtrip",
+      "passed": true
+    },
+    {
+      "name": "blob-oid-trailing-zero",
+      "passed": true,
+      "kind": "blob",
+      "bytes": 28,
+      "oid": "0092cbd28a5d8311863f54acc42a7f8ee5a70200",
+      "body_sha256": "d9d9bc691614c299f5412fb6115a3ccab9f09523828528630f131ed68cde0fcb"
+    },
+    {
+      "name": "blob-oid-trailing-zero-stock-roundtrip",
+      "passed": true
+    },
+    {
+      "name": "tree-empty",
+      "passed": true,
+      "kind": "tree",
+      "bytes": 0,
+      "oid": "4b825dc642cb6eb9a060e54bf8d69288fbee4904",
+      "body_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "name": "tree-empty-stock-roundtrip",
+      "passed": true
+    },
+    {
+      "name": "tree-byte-order",
+      "passed": true,
+      "kind": "tree",
+      "bytes": 134,
+      "oid": "bd885154fa7530cd6f3aa6ba6f94d9307ce2fe94",
+      "body_sha256": "fd9caa7f5742a2dc69274a189e1808ecd821f61bbdf447c01311961f2197b9ef"
+    },
+    {
+      "name": "tree-byte-order-stock-roundtrip",
+      "passed": true
+    },
+    {
+      "name": "tree-reversed-input",
+      "passed": true,
+      "kind": "tree",
+      "bytes": 134,
+      "oid": "bd885154fa7530cd6f3aa6ba6f94d9307ce2fe94",
+      "body_sha256": "fd9caa7f5742a2dc69274a189e1808ecd821f61bbdf447c01311961f2197b9ef"
+    },
+    {
+      "name": "tree-reversed-input-stock-roundtrip",
+      "passed": true
+    },
+    {
+      "name": "tree-32-entries",
+      "passed": true,
+      "kind": "tree",
+      "bytes": 2144,
+      "oid": "6b57da87e710a81009607a29aeb342ec4dd07e01",
+      "body_sha256": "e14b1b6bcd6370c79c715e360d0fb2076b030a3c556b0d52448f67b2a05ef489"
+    },
+    {
+      "name": "tree-32-entries-stock-roundtrip",
+      "passed": true
+    },
+    {
+      "name": "commit-first",
+      "passed": true,
+      "kind": "commit",
+      "bytes": 285,
+      "oid": "7819726cdf00caeb75221b527f7d5d18eefa5a6d",
+      "body_sha256": "82c1902f96338241f9785378cd0039b5edaebba2ddcd7ad22bd52627d185ecaa"
+    },
+    {
+      "name": "commit-first-stock-roundtrip",
+      "passed": true
+    },
+    {
+      "name": "commit-parent",
+      "passed": true,
+      "kind": "commit",
+      "bytes": 333,
+      "oid": "9d7bd7729090f326a1aaad79ab51eeab3ee1427f",
+      "body_sha256": "48a643ad93c7439d891b01ab7d8e89910bda314ebad771e18c6eb8e069ef3968"
+    },
+    {
+      "name": "commit-parent-stock-roundtrip",
+      "passed": true
+    },
+    {
+      "name": "commit-decimal-fields",
+      "passed": true,
+      "kind": "commit",
+      "bytes": 318,
+      "oid": "3093e5fc3021b4bf99d73a6ab58de7e767ba3211",
+      "body_sha256": "5348082129ed42bcf28cc1e59990d4e4ef252849d04e98dfcaa659e70cbd82b4"
+    },
+    {
+      "name": "commit-decimal-fields-stock-roundtrip",
+      "passed": true
+    },
+    {
+      "name": "native-object-graph-stock-fsck",
+      "passed": true,
+      "expected_notice": "extra vectors may be dangling objects"
+    }
+  ],
+  "sources_sha256": {
+    "native/core/desk/lib/stead-git.hoon": "826b83485429c02f577c9b462ee6cddd3ab8ea1a099d33b66893f863d54c54d7",
+    "native/core/desk/tests/stead-git.hoon": "51518a1239373467864412e64ab92cfbc8258bd37783988b2ae6c17c6eac2d98",
+    "scripts/urbit/git_vectors.py": "7c1997350143d3e08ae8ad5f9e113e2c01d9cb94b7dd69ca1e38c4d9fbb25c40"
+  },
+  "toolchain_lock_sha256": "4a209c10cf1756eb0f7357cc3eca8250bf66c239b4cd0ca31a8c0886d4d304ee",
+  "native_test_helper_sha256": "55d5196a3a8dbd5323943c06f138c9b9aa8fd955506c4f4b14e5d56ff05abcc6",
+  "cpu_affinity": [
+    19
+  ],
+  "loom_exponent": 29,
+  "uname": [
+    "Linux",
+    "<development-host>",
+    "7.1.9-arch1-2",
+    "#1 SMP PREEMPT_DYNAMIC Fri, 21 Aug 2026 22:18:59 +0000",
+    "x86_64"
+  ]
+}

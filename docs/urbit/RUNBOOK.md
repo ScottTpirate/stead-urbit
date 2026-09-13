@@ -14,6 +14,7 @@ make doctor
 make start
 python3 scripts/urbit/harness.py status
 make test
+make core-test
 make stop
 make reset
 ```
@@ -34,6 +35,15 @@ results. A timeout is an unknown result, not a permission denial or successful
 save. The test command exits nonzero on missing, unexpected or failed outcomes.
 After changing harness Python source, stop/start the supervisor before testing;
 loaded-source hashing rejects stale process code.
+
+`core-test` installs the separate `native/core/desk` into freshly restored fake
+fixtures and executes the Work/Docs/permissions journey, native codec and state
+version checks, and stock-Git materialization of home-created document objects.
+It includes a real two-minute grant-expiry wait. `test` retains the original
+counter smoke. Both commands own only disposable test state. The native core
+report preserves independently tracked incomplete coverage (such as adversarial
+subscription races) separately from executed business outcomes. Read
+[NATIVE_CORE.md](NATIVE_CORE.md) and the exact evidence before inferring scope.
 
 `stop` uses Vere's supported SIGTERM path, checks clean exits and waits for the
 lifetime filesystem lock. A failed shutdown is reported, without force-killing and
@@ -72,3 +82,9 @@ The planning tests copy only named metadata inputs, never piers/runtimes. Some
 safety tests use mocked processes/network and actual temporary filesystem locks;
 read their scope labels. These checks do not compile Hoon. The independent Urgit
 candidate command and its limitations are recorded in URGIT_AUDIT.md.
+
+The independent native-core replay sampled a 96°C CPU peak. The main harness
+currently has no thermal stop (Urgit's separate runner does). Monitor this local
+machine and use `make stop` when necessary; functional test success does not
+qualify repeated heavy runs or sustained load. The exact observation and open
+operator/measurement gate are retained in TEST_RESULTS.md.

@@ -1,0 +1,837 @@
+{
+  "source_file": ".piers/fakes/logs/core-20260913T031535Z.json",
+  "raw_sha256": "f38e0d060aef9710535b1489ee743acecd13a521344ef82c667a29d6ac953383",
+  "compressed_sha256": "ac0cfa1a86cbcb45ae28a0417c83e894848560b7aa1b670c73342edfdb3b721c",
+  "classification": "local-real-native-fake-ships",
+  "status": "fail",
+  "error": "ValueError: Invalid runtime-encoded core request",
+  "elapsed_seconds": 335.382,
+  "native_tree_sha256": "6f1bc326d0d0388ee8ea4c3e12e01c345e2f309e69e5664b3de3b96be8611669",
+  "toolchain_sha256": "4a209c10cf1756eb0f7357cc3eca8250bf66c239b4cd0ca31a8c0886d4d304ee",
+  "checks": [
+    {
+      "name": "loaded-supervisor-source-matches",
+      "passed": true
+    },
+    {
+      "name": "loaded-core-runner-source-matches",
+      "passed": true
+    },
+    {
+      "name": "frozen-contract-manifest-matches-corpus",
+      "passed": true
+    },
+    {
+      "name": "installed-byte-match:zod:app/stead-home.hoon",
+      "passed": true
+    },
+    {
+      "name": "installed-byte-match:zod:gen/stead-build-probe.hoon",
+      "passed": true
+    },
+    {
+      "name": "installed-byte-match:zod:gen/stead-codec-probe.hoon",
+      "passed": true
+    },
+    {
+      "name": "installed-byte-match:zod:gen/stead-core-probe.hoon",
+      "passed": true
+    },
+    {
+      "name": "installed-byte-match:zod:gen/stead-reducers-probe.hoon",
+      "passed": true
+    },
+    {
+      "name": "installed-byte-match:zod:lib/stead-codec.hoon",
+      "passed": true
+    },
+    {
+      "name": "installed-byte-match:zod:lib/stead-core.hoon",
+      "passed": true
+    },
+    {
+      "name": "installed-byte-match:zod:lib/stead-delivery.hoon",
+      "passed": true
+    },
+    {
+      "name": "installed-byte-match:zod:lib/stead-git.hoon",
+      "passed": true
+    },
+    {
+      "name": "installed-byte-match:zod:mar/stead-command-1.hoon",
+      "passed": true
+    },
+    {
+      "name": "installed-byte-match:zod:mar/stead-control-1.hoon",
+      "passed": true
+    },
+    {
+      "name": "installed-byte-match:zod:mar/stead-fixture-1.hoon",
+      "passed": true
+    },
+    {
+      "name": "installed-byte-match:zod:mar/stead-result-1.hoon",
+      "passed": true
+    },
+    {
+      "name": "installed-byte-match:zod:ted/stead-client.hoon",
+      "passed": true
+    },
+    {
+      "name": "installed-byte-match:zod:tests/stead-git.hoon",
+      "passed": true
+    },
+    {
+      "name": "zod:+stead-build-probe",
+      "passed": true
+    },
+    {
+      "name": "installed-byte-match:bus:app/stead-home.hoon",
+      "passed": true
+    },
+    {
+      "name": "installed-byte-match:bus:gen/stead-build-probe.hoon",
+      "passed": true
+    },
+    {
+      "name": "installed-byte-match:bus:gen/stead-codec-probe.hoon",
+      "passed": true
+    },
+    {
+      "name": "installed-byte-match:bus:gen/stead-core-probe.hoon",
+      "passed": true
+    },
+    {
+      "name": "installed-byte-match:bus:gen/stead-reducers-probe.hoon",
+      "passed": true
+    },
+    {
+      "name": "installed-byte-match:bus:lib/stead-codec.hoon",
+      "passed": true
+    },
+    {
+      "name": "installed-byte-match:bus:lib/stead-core.hoon",
+      "passed": true
+    },
+    {
+      "name": "installed-byte-match:bus:lib/stead-delivery.hoon",
+      "passed": true
+    },
+    {
+      "name": "installed-byte-match:bus:lib/stead-git.hoon",
+      "passed": true
+    },
+    {
+      "name": "installed-byte-match:bus:mar/stead-command-1.hoon",
+      "passed": true
+    },
+    {
+      "name": "installed-byte-match:bus:mar/stead-control-1.hoon",
+      "passed": true
+    },
+    {
+      "name": "installed-byte-match:bus:mar/stead-fixture-1.hoon",
+      "passed": true
+    },
+    {
+      "name": "installed-byte-match:bus:mar/stead-result-1.hoon",
+      "passed": true
+    },
+    {
+      "name": "installed-byte-match:bus:ted/stead-client.hoon",
+      "passed": true
+    },
+    {
+      "name": "installed-byte-match:bus:tests/stead-git.hoon",
+      "passed": true
+    },
+    {
+      "name": "bus:+stead-build-probe",
+      "passed": true
+    },
+    {
+      "name": "installed-byte-match:nec:app/stead-home.hoon",
+      "passed": true
+    },
+    {
+      "name": "installed-byte-match:nec:gen/stead-build-probe.hoon",
+      "passed": true
+    },
+    {
+      "name": "installed-byte-match:nec:gen/stead-codec-probe.hoon",
+      "passed": true
+    },
+    {
+      "name": "installed-byte-match:nec:gen/stead-core-probe.hoon",
+      "passed": true
+    },
+    {
+      "name": "installed-byte-match:nec:gen/stead-reducers-probe.hoon",
+      "passed": true
+    },
+    {
+      "name": "installed-byte-match:nec:lib/stead-codec.hoon",
+      "passed": true
+    },
+    {
+      "name": "installed-byte-match:nec:lib/stead-core.hoon",
+      "passed": true
+    },
+    {
+      "name": "installed-byte-match:nec:lib/stead-delivery.hoon",
+      "passed": true
+    },
+    {
+      "name": "installed-byte-match:nec:lib/stead-git.hoon",
+      "passed": true
+    },
+    {
+      "name": "installed-byte-match:nec:mar/stead-command-1.hoon",
+      "passed": true
+    },
+    {
+      "name": "installed-byte-match:nec:mar/stead-control-1.hoon",
+      "passed": true
+    },
+    {
+      "name": "installed-byte-match:nec:mar/stead-fixture-1.hoon",
+      "passed": true
+    },
+    {
+      "name": "installed-byte-match:nec:mar/stead-result-1.hoon",
+      "passed": true
+    },
+    {
+      "name": "installed-byte-match:nec:ted/stead-client.hoon",
+      "passed": true
+    },
+    {
+      "name": "installed-byte-match:nec:tests/stead-git.hoon",
+      "passed": true
+    },
+    {
+      "name": "nec:+stead-build-probe",
+      "passed": true
+    },
+    {
+      "name": "installed-byte-match:bud:app/stead-home.hoon",
+      "passed": true
+    },
+    {
+      "name": "installed-byte-match:bud:gen/stead-build-probe.hoon",
+      "passed": true
+    },
+    {
+      "name": "installed-byte-match:bud:gen/stead-codec-probe.hoon",
+      "passed": true
+    },
+    {
+      "name": "installed-byte-match:bud:gen/stead-core-probe.hoon",
+      "passed": true
+    },
+    {
+      "name": "installed-byte-match:bud:gen/stead-reducers-probe.hoon",
+      "passed": true
+    },
+    {
+      "name": "installed-byte-match:bud:lib/stead-codec.hoon",
+      "passed": true
+    },
+    {
+      "name": "installed-byte-match:bud:lib/stead-core.hoon",
+      "passed": true
+    },
+    {
+      "name": "installed-byte-match:bud:lib/stead-delivery.hoon",
+      "passed": true
+    },
+    {
+      "name": "installed-byte-match:bud:lib/stead-git.hoon",
+      "passed": true
+    },
+    {
+      "name": "installed-byte-match:bud:mar/stead-command-1.hoon",
+      "passed": true
+    },
+    {
+      "name": "installed-byte-match:bud:mar/stead-control-1.hoon",
+      "passed": true
+    },
+    {
+      "name": "installed-byte-match:bud:mar/stead-fixture-1.hoon",
+      "passed": true
+    },
+    {
+      "name": "installed-byte-match:bud:mar/stead-result-1.hoon",
+      "passed": true
+    },
+    {
+      "name": "installed-byte-match:bud:ted/stead-client.hoon",
+      "passed": true
+    },
+    {
+      "name": "installed-byte-match:bud:tests/stead-git.hoon",
+      "passed": true
+    },
+    {
+      "name": "bud:+stead-build-probe",
+      "passed": true
+    },
+    {
+      "name": "zod:+stead-codec-probe",
+      "passed": true
+    },
+    {
+      "name": "zod:+stead-reducers-probe",
+      "passed": true
+    },
+    {
+      "name": "fixture-initialized-once",
+      "passed": true
+    },
+    {
+      "name": "all-qa-native-cases-executed-without-failure",
+      "passed": true
+    },
+    {
+      "name": "codec:frozen-vector-0",
+      "passed": true
+    },
+    {
+      "name": "codec-frozen-digest:frozen-vector-0",
+      "passed": true
+    },
+    {
+      "name": "codec-no-business-change:frozen-vector-0",
+      "passed": true
+    },
+    {
+      "name": "codec:frozen-vector-1",
+      "passed": true
+    },
+    {
+      "name": "codec-frozen-digest:frozen-vector-1",
+      "passed": true
+    },
+    {
+      "name": "codec-no-business-change:frozen-vector-1",
+      "passed": true
+    },
+    {
+      "name": "codec:frozen-vector-2",
+      "passed": true
+    },
+    {
+      "name": "codec-frozen-digest:frozen-vector-2",
+      "passed": true
+    },
+    {
+      "name": "codec-no-business-change:frozen-vector-2",
+      "passed": true
+    },
+    {
+      "name": "codec:frozen-vector-3",
+      "passed": true
+    },
+    {
+      "name": "codec-frozen-digest:frozen-vector-3",
+      "passed": true
+    },
+    {
+      "name": "codec-no-business-change:frozen-vector-3",
+      "passed": true
+    },
+    {
+      "name": "codec:frozen-vector-4",
+      "passed": true
+    },
+    {
+      "name": "codec-frozen-digest:frozen-vector-4",
+      "passed": true
+    },
+    {
+      "name": "codec-no-business-change:frozen-vector-4",
+      "passed": true
+    },
+    {
+      "name": "codec:frozen-vector-5",
+      "passed": true
+    },
+    {
+      "name": "codec-frozen-digest:frozen-vector-5",
+      "passed": true
+    },
+    {
+      "name": "codec-no-business-change:frozen-vector-5",
+      "passed": true
+    },
+    {
+      "name": "codec:caller-author-top-level",
+      "passed": true
+    },
+    {
+      "name": "home-rejects-malformed:caller-author-top-level",
+      "passed": true
+    },
+    {
+      "name": "codec-no-business-change:caller-author-top-level",
+      "passed": true
+    },
+    {
+      "name": "codec:caller-principal-id",
+      "passed": true
+    },
+    {
+      "name": "home-rejects-malformed:caller-principal-id",
+      "passed": true
+    },
+    {
+      "name": "codec-no-business-change:caller-principal-id",
+      "passed": true
+    },
+    {
+      "name": "codec:caller-binding-id",
+      "passed": true
+    },
+    {
+      "name": "home-rejects-malformed:caller-binding-id",
+      "passed": true
+    },
+    {
+      "name": "codec-no-business-change:caller-binding-id",
+      "passed": true
+    },
+    {
+      "name": "codec:caller-accepted-at-ms",
+      "passed": true
+    },
+    {
+      "name": "home-rejects-malformed:caller-accepted-at-ms",
+      "passed": true
+    },
+    {
+      "name": "codec-no-business-change:caller-accepted-at-ms",
+      "passed": true
+    },
+    {
+      "name": "codec:caller-policy",
+      "passed": true
+    },
+    {
+      "name": "home-rejects-malformed:caller-policy",
+      "passed": true
+    },
+    {
+      "name": "codec-no-business-change:caller-policy",
+      "passed": true
+    },
+    {
+      "name": "codec:caller-author-in-payload",
+      "passed": true
+    },
+    {
+      "name": "home-rejects-malformed:caller-author-in-payload",
+      "passed": true
+    },
+    {
+      "name": "codec-no-business-change:caller-author-in-payload",
+      "passed": true
+    },
+    {
+      "name": "codec:duplicate-literal-key",
+      "passed": true
+    },
+    {
+      "name": "home-rejects-malformed:duplicate-literal-key",
+      "passed": true
+    },
+    {
+      "name": "codec-no-business-change:duplicate-literal-key",
+      "passed": true
+    },
+    {
+      "name": "codec:duplicate-escaped-key",
+      "passed": true
+    },
+    {
+      "name": "home-rejects-malformed:duplicate-escaped-key",
+      "passed": true
+    },
+    {
+      "name": "codec-no-business-change:duplicate-escaped-key",
+      "passed": true
+    },
+    {
+      "name": "codec:escaped-nul-in-uuid",
+      "passed": true
+    },
+    {
+      "name": "home-rejects-malformed:escaped-nul-in-uuid",
+      "passed": true
+    },
+    {
+      "name": "codec-no-business-change:escaped-nul-in-uuid",
+      "passed": true
+    },
+    {
+      "name": "codec:escaped-nul-in-key",
+      "passed": true
+    },
+    {
+      "name": "home-rejects-malformed:escaped-nul-in-key",
+      "passed": true
+    },
+    {
+      "name": "codec-no-business-change:escaped-nul-in-key",
+      "passed": true
+    },
+    {
+      "name": "codec:escaped-nul-in-markdown",
+      "passed": true
+    },
+    {
+      "name": "home-rejects-malformed:escaped-nul-in-markdown",
+      "passed": true
+    },
+    {
+      "name": "codec-no-business-change:escaped-nul-in-markdown",
+      "passed": true
+    },
+    {
+      "name": "codec:literal-backslash-u0000",
+      "passed": true
+    },
+    {
+      "name": "codec-no-business-change:literal-backslash-u0000",
+      "passed": true
+    },
+    {
+      "name": "codec:short-controls-and-del-canonical",
+      "passed": true
+    },
+    {
+      "name": "codec-no-business-change:short-controls-and-del-canonical",
+      "passed": true
+    },
+    {
+      "name": "codec:unicode-surrogate-pair",
+      "passed": true
+    },
+    {
+      "name": "codec-no-business-change:unicode-surrogate-pair",
+      "passed": true
+    },
+    {
+      "name": "codec:unicode-unescaped-scalars",
+      "passed": true
+    },
+    {
+      "name": "codec-no-business-change:unicode-unescaped-scalars",
+      "passed": true
+    },
+    {
+      "name": "codec:nfc-preserved",
+      "passed": true
+    },
+    {
+      "name": "codec-no-business-change:nfc-preserved",
+      "passed": true
+    },
+    {
+      "name": "codec:decomposed-preserved",
+      "passed": true
+    },
+    {
+      "name": "codec-no-business-change:decomposed-preserved",
+      "passed": true
+    },
+    {
+      "name": "codec:whitespace-and-key-order",
+      "passed": true
+    },
+    {
+      "name": "codec-no-business-change:whitespace-and-key-order",
+      "passed": true
+    },
+    {
+      "name": "codec:single-escaped-key",
+      "passed": true
+    },
+    {
+      "name": "codec-no-business-change:single-escaped-key",
+      "passed": true
+    },
+    {
+      "name": "codec:unpaired-high-surrogate",
+      "passed": true
+    },
+    {
+      "name": "home-rejects-malformed:unpaired-high-surrogate",
+      "passed": true
+    },
+    {
+      "name": "codec-no-business-change:unpaired-high-surrogate",
+      "passed": true
+    },
+    {
+      "name": "codec:unpaired-low-surrogate",
+      "passed": true
+    },
+    {
+      "name": "home-rejects-malformed:unpaired-low-surrogate",
+      "passed": true
+    },
+    {
+      "name": "codec-no-business-change:unpaired-low-surrogate",
+      "passed": true
+    },
+    {
+      "name": "codec:invalid-surrogate-pair",
+      "passed": true
+    },
+    {
+      "name": "home-rejects-malformed:invalid-surrogate-pair",
+      "passed": true
+    },
+    {
+      "name": "codec-no-business-change:invalid-surrogate-pair",
+      "passed": true
+    },
+    {
+      "name": "codec:utf8-bom",
+      "passed": true
+    },
+    {
+      "name": "home-rejects-malformed:utf8-bom",
+      "passed": true
+    },
+    {
+      "name": "codec-no-business-change:utf8-bom",
+      "passed": true
+    },
+    {
+      "name": "codec:invalid-utf8",
+      "passed": true
+    },
+    {
+      "name": "home-rejects-malformed:invalid-utf8",
+      "passed": true
+    },
+    {
+      "name": "codec-no-business-change:invalid-utf8",
+      "passed": true
+    },
+    {
+      "name": "codec:literal-control-byte",
+      "passed": true
+    },
+    {
+      "name": "home-rejects-malformed:literal-control-byte",
+      "passed": true
+    },
+    {
+      "name": "codec-no-business-change:literal-control-byte",
+      "passed": true
+    },
+    {
+      "name": "codec:cr-in-description",
+      "passed": true
+    },
+    {
+      "name": "home-rejects-malformed:cr-in-description",
+      "passed": true
+    },
+    {
+      "name": "codec-no-business-change:cr-in-description",
+      "passed": true
+    },
+    {
+      "name": "codec:crlf-markdown",
+      "passed": true
+    },
+    {
+      "name": "home-rejects-malformed:crlf-markdown",
+      "passed": true
+    },
+    {
+      "name": "codec-no-business-change:crlf-markdown",
+      "passed": true
+    },
+    {
+      "name": "codec:numeric-revision",
+      "passed": true
+    },
+    {
+      "name": "home-rejects-malformed:numeric-revision",
+      "passed": true
+    },
+    {
+      "name": "codec-no-business-change:numeric-revision",
+      "passed": true
+    },
+    {
+      "name": "codec:boolean-revision",
+      "passed": true
+    },
+    {
+      "name": "home-rejects-malformed:boolean-revision",
+      "passed": true
+    },
+    {
+      "name": "codec-no-business-change:boolean-revision",
+      "passed": true
+    },
+    {
+      "name": "codec:null-payload",
+      "passed": true
+    },
+    {
+      "name": "home-rejects-malformed:null-payload",
+      "passed": true
+    },
+    {
+      "name": "codec-no-business-change:null-payload",
+      "passed": true
+    },
+    {
+      "name": "codec:array-payload",
+      "passed": true
+    },
+    {
+      "name": "home-rejects-malformed:array-payload",
+      "passed": true
+    },
+    {
+      "name": "codec-no-business-change:array-payload",
+      "passed": true
+    },
+    {
+      "name": "codec:nested-payload-value",
+      "passed": true
+    },
+    {
+      "name": "home-rejects-malformed:nested-payload-value",
+      "passed": true
+    },
+    {
+      "name": "codec-no-business-change:nested-payload-value",
+      "passed": true
+    },
+    {
+      "name": "codec:trailing-json-value",
+      "passed": true
+    },
+    {
+      "name": "home-rejects-malformed:trailing-json-value",
+      "passed": true
+    },
+    {
+      "name": "codec-no-business-change:trailing-json-value",
+      "passed": true
+    },
+    {
+      "name": "codec:leading-zero-revision",
+      "passed": true
+    },
+    {
+      "name": "home-rejects-malformed:leading-zero-revision",
+      "passed": true
+    },
+    {
+      "name": "codec-no-business-change:leading-zero-revision",
+      "passed": true
+    },
+    {
+      "name": "codec:u64-overflow-epoch",
+      "passed": true
+    },
+    {
+      "name": "home-rejects-malformed:u64-overflow-epoch",
+      "passed": true
+    },
+    {
+      "name": "codec-no-business-change:u64-overflow-epoch",
+      "passed": true
+    },
+    {
+      "name": "codec:zero-epoch",
+      "passed": true
+    },
+    {
+      "name": "home-rejects-malformed:zero-epoch",
+      "passed": true
+    },
+    {
+      "name": "codec-no-business-change:zero-epoch",
+      "passed": true
+    },
+    {
+      "name": "codec:uppercase-uuid",
+      "passed": true
+    },
+    {
+      "name": "home-rejects-malformed:uppercase-uuid",
+      "passed": true
+    },
+    {
+      "name": "codec-no-business-change:uppercase-uuid",
+      "passed": true
+    },
+    {
+      "name": "codec:unknown-protocol",
+      "passed": true
+    },
+    {
+      "name": "home-rejects-malformed:unknown-protocol",
+      "passed": true
+    },
+    {
+      "name": "codec-no-business-change:unknown-protocol",
+      "passed": true
+    },
+    {
+      "name": "codec:unknown-operation",
+      "passed": true
+    },
+    {
+      "name": "home-rejects-malformed:unknown-operation",
+      "passed": true
+    },
+    {
+      "name": "codec-no-business-change:unknown-operation",
+      "passed": true
+    },
+    {
+      "name": "codec:title-over-scalar-limit",
+      "passed": true
+    },
+    {
+      "name": "home-rejects-malformed:title-over-scalar-limit",
+      "passed": true
+    },
+    {
+      "name": "codec-no-business-change:title-over-scalar-limit",
+      "passed": true
+    },
+    {
+      "name": "codec:description-over-byte-limit",
+      "passed": true
+    },
+    {
+      "name": "home-rejects-malformed:description-over-byte-limit",
+      "passed": true
+    },
+    {
+      "name": "codec-no-business-change:description-over-byte-limit",
+      "passed": true
+    }
+  ],
+  "qa_case_counts": {
+    "incomplete": 14,
+    "passed": 115
+  },
+  "qa_check_counts": {
+    "passed": 2542,
+    "skipped": 25
+  }
+}

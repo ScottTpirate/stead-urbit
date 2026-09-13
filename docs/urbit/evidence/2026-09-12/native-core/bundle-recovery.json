@@ -1,0 +1,87 @@
+{
+  "classification": "local-real-stock-Git; no Urbit service used for recovery",
+  "bundle_sha256": "902fe6e4c34abc6d0f572c7ddbfb5c14a4f960a9e218234ccda4a435a7652fec",
+  "commands": [
+    {
+      "argv": [
+        "git",
+        "clone",
+        "--bare",
+        "--template=",
+        "/home/skilgore/stead-urbit/docs/urbit/evidence/2026-09-12/native-core/synthetic-documents.bundle",
+        "/tmp/stead-bundle-check-qzh5xazu/recovered.git"
+      ],
+      "exit": 0,
+      "stdout": "",
+      "stderr": "Cloning into bare repository '/tmp/stead-bundle-check-qzh5xazu/recovered.git'...\n"
+    },
+    {
+      "argv": [
+        "git",
+        "-C",
+        "/tmp/stead-bundle-check-qzh5xazu/recovered.git",
+        "fsck",
+        "--full",
+        "--strict"
+      ],
+      "exit": 0,
+      "stdout": "",
+      "stderr": ""
+    },
+    {
+      "argv": [
+        "git",
+        "-C",
+        "/tmp/stead-bundle-check-qzh5xazu/recovered.git",
+        "log",
+        "--format=%H %P"
+      ],
+      "exit": 0,
+      "stdout": "d6ca5f9e72e844198365056d5cd959d40b48ed8c 07aa9052a8df43359cdfa85ee3b1565ee1c7b16a\n07aa9052a8df43359cdfa85ee3b1565ee1c7b16a a61292b942c7b7776e0da0f90f3d211307ad4c1c\na61292b942c7b7776e0da0f90f3d211307ad4c1c d55102021ca346f42cd8c1b4552a3f256a28d582\nd55102021ca346f42cd8c1b4552a3f256a28d582 \n",
+      "stderr": ""
+    },
+    {
+      "argv": [
+        "git",
+        "-C",
+        "/tmp/stead-bundle-check-qzh5xazu/recovered.git",
+        "ls-tree",
+        "-r",
+        "HEAD"
+      ],
+      "exit": 0,
+      "stdout": "100644 blob 27d9b74a4b0d62554c05b0bb7dfe6a2b6eb9ef48\t019939ba-4000-7000-8000-000000000401.md\n100644 blob 1141825f03ece0ef68eda153e32be920139c9c5e\t019939ba-4000-7000-8000-000000000402.md\n",
+      "stderr": ""
+    }
+  ],
+  "files": [
+    {
+      "name": "019939ba-4000-7000-8000-000000000401.md",
+      "argv": [
+        "git",
+        "-C",
+        "/tmp/stead-bundle-check-qzh5xazu/recovered.git",
+        "show",
+        "HEAD:019939ba-4000-7000-8000-000000000401.md"
+      ],
+      "exit": 0,
+      "exact_bytes_equal_to": "document_a_2.payload.markdown",
+      "sha256": "ab0b85e0e29faa8a4d4eb9b5dd35b54be11507826362620916563e359bb516f1"
+    },
+    {
+      "name": "019939ba-4000-7000-8000-000000000402.md",
+      "argv": [
+        "git",
+        "-C",
+        "/tmp/stead-bundle-check-qzh5xazu/recovered.git",
+        "show",
+        "HEAD:019939ba-4000-7000-8000-000000000402.md"
+      ],
+      "exit": 0,
+      "exact_bytes_equal_to": "document_b_2.payload.markdown",
+      "sha256": "caf3e30423269d6b93581a73eecebac1ed0bda9562aa5b85b7a31330b5224afd"
+    }
+  ],
+  "status": "pass",
+  "scope": "Selected synthetic bus document container, not complete organization backup"
+}
