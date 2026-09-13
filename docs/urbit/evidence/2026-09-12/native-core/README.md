@@ -64,3 +64,7 @@ Independent QA's complete replay is `independent-pass.json.gz`, indexed by
 samples include 96°C at 03:35:53.696675Z. The main harness has no thermal stop:
 this passing functional replay does not qualify thermal bounds or sustained load.
 No further native runs were made after observing that result.
+
+Exact tested implementation source: `f52293f7cd6970ded20e73b097beffb7418e4bbd`.
+[source-binding.json](source-binding.json) verifies Git blobs against both complete
+run manifests. It is a records-only descendant, not a new runtime execution or approval.

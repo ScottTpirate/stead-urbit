@@ -239,3 +239,7 @@ pass, **not a thermally bounded or sustained-load qualification**. No further
 native runs were made after that observation. Operator thermal controls and
 measurement remain open before repeated heavy runs or representative benchmarks;
 Urgit's separate hardened thermal aborts remain failures, not replaced by this pass.
+
+Tested native source commit: `f52293f7cd6970ded20e73b097beffb7418e4bbd`; the records-only
+[source binding](evidence/2026-09-12/native-core/source-binding.json) verifies that
+its Git blobs exactly match both completed run manifests.
