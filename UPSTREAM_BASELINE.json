@@ -1,0 +1,10 @@
+{
+  "source": "https://github.com/ScottTpirate/stead.git",
+  "commit": "3d47f0172a41beebb31f5c3a7df133cc1d4b1ead",
+  "new_repository": "ScottTpirate/stead-urbit",
+  "inspected_on": "2026-09-12",
+  "original_repository_modified": false,
+  "history": "reachable main-line history retained; other branches/tags not copied",
+  "old_working_tree": "reference/stead",
+  "runtime_status": "not_implemented"
+}

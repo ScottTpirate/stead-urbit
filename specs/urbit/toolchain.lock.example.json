@@ -1,0 +1,26 @@
+{
+  "status": "unresolved_example_not_executable",
+  "runtime": {
+    "repository": "urbit/vere",
+    "commit": null,
+    "release": null,
+    "sha256": null
+  },
+  "kernel": {
+    "commit": null,
+    "kelvin": null
+  },
+  "boot_artifact": {
+    "source": null,
+    "sha256": null
+  },
+  "frontend": {
+    "node": null,
+    "lock_sha256": null
+  },
+  "urgit": {
+    "repository": "yapishu/urgit",
+    "commit": null,
+    "license_decision": "unresolved_not_approved"
+  }
+}

@@ -1,44 +1,24 @@
-# Stead
+# Stead Urbit — experimental native implementation
 
-Stead is an open-source, self-hostable, organization-wide open work and knowledge platform. Its single normative product and architecture specification is the [canonical Master Build Directive](docs/architecture/MASTER_BUILD_DIRECTIVE.md).
+Status: **planning/bootstrap; no Urbit application has been implemented or deployed by this package.**
 
-Phase 0 is approved and baselined at tag `phase0`, commit `e24a4d9d05ad6df19c5bcaa9c385ee74fd5d8c31`. Phase 1 is active: `STEAD-P1-001` is complete, and the next product implementation issue remains blocked only by its named pre-implementation ADR decisions. Phase 2–3 remain phase-gated.
+An independent derivative of `ScottTpirate/stead`, preserving that repository's main-line history through `3d47f0172a41beebb31f5c3a7df133cc1d4b1ead` (inspected September 12, 2026). The original repository is not modified.
 
-## Phase 0 package
+The working architecture is **federated project homes**: one authoritative home for each project, explicit organizational custody, ordinary Git compatibility, individual authorization, and selective reads/replication. No automatic company-wide replicas on personal ships. No blockchain transaction per edit or commit.
 
-- [Reconciliation report](docs/architecture/PHASE0_RECONCILIATION_REPORT.md)
-- [Architecture constitution](docs/architecture/constitution.md)
-- [Requirements traceability register](specs/traceability/requirements.yaml)
-- [Dependency-ordered epic and issue hierarchy](docs/planning/epic-issue-hierarchy.md)
-- [Machine-readable implementation issue catalog](docs/planning/implementation-issue-catalog.yaml)
-- [Thirteen-workstream ownership map](docs/architecture/workstream-ownership.md)
-- [Contract ownership matrix](docs/architecture/contract-ownership-matrix.md)
-- [Repository layout and boundaries](docs/architecture/repository-layout-and-boundaries.md)
-- [Agent-ready compatibility overlay](docs/architecture/agent-ready-compatibility.md)
-- [Phase 0 artifact backlog](docs/planning/phase-0-artifact-backlog.md)
-- [Golden vertical-slice test plan](docs/testing/golden-vertical-slice.md)
-- [Threat model](docs/security/threat-model.md) and [classification bypass inventory](docs/security/classification-bypass-inventory.md)
-- [Machine-readable threat and bypass traceability](specs/traceability/security-findings.yaml)
-- [License and dependency approval workflow](docs/governance/license-and-dependency-approval.md)
-- [Release gates and independent approvals](docs/governance/release-gates.md)
-- [Unresolved ADR candidates](docs/adr/unresolved-implementation-choices.md)
-- [Phase 0 validation evidence](docs/phase0/VALIDATION_EVIDENCE.md)
+## Start here
 
-## Current gate
+- [Master directive](docs/urbit/MASTER_BUILD_DIRECTIVE.md)
+- [Development and deployment](docs/urbit/DEPLOYMENT.md)
+- [Phases and acceptance gates](docs/urbit/ROADMAP.md)
+- [First implementation-agent assignment](docs/urbit/AGENT_HANDOFF.md)
+- [Research sources and verification limits](docs/urbit/SOURCES.md)
+- [Machine-readable backlog](specs/urbit/backlog.json)
 
-`GATE-P0-APPROVED` is **approved** against tag `phase0` and immutable commit `e24a4d9d05ad6df19c5bcaa9c385ee74fd5d8c31`. The five required dispositions are recorded in the [Phase 0 Closeout Packet](docs/phase0/PHASE0_CLOSEOUT_PACKET.md). Approval opens dependency-ready work only; it does not waive ADR deadlines, issue acceptance criteria, independent review, or later release gates.
+Run `python3 scripts/urbit/validate_plan.py` to validate this planning package. This is not a Hoon build, security audit, or interoperability test.
 
-Validate the machine-readable Phase 0 planning package with:
+The old source tree is retained under `reference/stead/` for specification traceability and selective reuse. Its build/deployment instructions and architecture locks are not this experiment's live instructions. Inherited workflows are archived there rather than activated. Original license and third-party notices remain at the root.
 
-```bash
-ruby scripts/validate_phase0.rb
-scripts/validate_json_schemas.sh
-```
+Native application logic and Git semantics are the target. Browser JavaScript, Linux hosting, independent CI execution, and a documented replaceable bulk-storage boundary are allowed in the staged implementation. This is not a claim that every infrastructure dependency has been rewritten in Hoon.
 
-## Naming
-
-**Stead** is the project and repository name. Directive-defined component contract names (`stead-web`, `stead-api`, `stead-worker`, and `steadctl`) remain in force unless an approved ADR supplies a compatibility and migration plan.
-
-## License
-
-New original core code is licensed under the [Apache License 2.0](LICENSE), subject to the directive's dependency and retained-notice rules. No dependency is approved merely because it appears in a draft plan.
+No candidate dependency is approved by being named here. In particular, Urgit reuse requires a recorded license decision and independent compatibility/security results.

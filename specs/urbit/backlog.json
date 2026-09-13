@@ -1,0 +1,286 @@
+{
+  "version": "0.1",
+  "as_of": "2026-09-12",
+  "status": "proposed_not_created_as_github_issues",
+  "issues": [
+    {
+      "id": "URB-000",
+      "title": "Isolate repository and archive original working tree",
+      "phase": "0",
+      "owner_role": "integration",
+      "status": "planned",
+      "depends_on": [],
+      "acceptance": [
+        "New remote only; upstream push disabled",
+        "Original main history and license/notices preserved",
+        "Old workflows inactive; new directive authoritative"
+      ]
+    },
+    {
+      "id": "URB-010",
+      "title": "Pin runtime, kernel, boot artifacts and frontend toolchain",
+      "phase": "0",
+      "owner_role": "platform",
+      "status": "planned",
+      "depends_on": [
+        "URB-000"
+      ],
+      "acceptance": [
+        "Verified checksums and immutable source refs",
+        "Document compatible native build/test commands",
+        "No unresolved toolchain pins in executable builds"
+      ]
+    },
+    {
+      "id": "URB-020",
+      "title": "Build isolated four-fake-ship development harness",
+      "phase": "0",
+      "owner_role": "platform",
+      "status": "planned",
+      "depends_on": [
+        "URB-010"
+      ],
+      "acceptance": [
+        "Start/stop/reset repeatably with safe path guards",
+        "Native positive/negative smoke tests execute",
+        "No live identities or production pier fixtures"
+      ]
+    },
+    {
+      "id": "URB-025",
+      "title": "Audit native Git dependency license and conformance",
+      "phase": "0",
+      "owner_role": "git",
+      "status": "planned",
+      "depends_on": [
+        "URB-010"
+      ],
+      "acceptance": [
+        "Record licensing and reuse decision",
+        "Independently run available stock Git vectors",
+        "Document unsupported features and limits"
+      ]
+    },
+    {
+      "id": "URB-030",
+      "title": "Freeze principal/project/command/policy contracts",
+      "phase": "1",
+      "owner_role": "architecture",
+      "status": "planned",
+      "depends_on": [
+        "URB-020"
+      ],
+      "acceptance": [
+        "IDs are not tied to host URL or sponsorship",
+        "Schema includes request ID, expected revision and authority epoch",
+        "Document full mutation owner and authorization invariants"
+      ]
+    },
+    {
+      "id": "URB-040",
+      "title": "Implement home state and Work/Docs transitions",
+      "phase": "1",
+      "owner_role": "native-core",
+      "status": "planned",
+      "depends_on": [
+        "URB-030"
+      ],
+      "acceptance": [
+        "Native compile and restart persistence",
+        "No silent overwrite or duplicate accepted transition",
+        "Git-backed document canonicality and portable exports specified/tested as implemented"
+      ]
+    },
+    {
+      "id": "URB-050",
+      "title": "Implement and adversarially test authorization",
+      "phase": "1",
+      "owner_role": "security",
+      "status": "planned",
+      "depends_on": [
+        "URB-030"
+      ],
+      "acceptance": [
+        "Reader/contributor/outsider negative tests",
+        "Revocation checked at commit and on all reads",
+        "No implicit parent, sponsor or administrator bypass"
+      ]
+    },
+    {
+      "id": "URB-060",
+      "title": "Implement isolated per-person browser sessions",
+      "phase": "2",
+      "owner_role": "identity",
+      "status": "planned",
+      "depends_on": [
+        "URB-040",
+        "URB-050"
+      ],
+      "acceptance": [
+        "No shared +code or actor-name-only login",
+        "Expiring one-use origin/session-bound identity challenge",
+        "CSRF/replay/session isolation tests; raw endpoint bypass tests"
+      ]
+    },
+    {
+      "id": "URB-070",
+      "title": "Implement unified browser Work/Docs flow",
+      "phase": "2",
+      "owner_role": "frontend",
+      "status": "planned",
+      "depends_on": [
+        "URB-060"
+      ],
+      "acceptance": [
+        "Direct home content delivery; no personal-ship proxy by default",
+        "Revision conflicts and queued vs saved visible",
+        "Authorized minimal subscriptions and separate user browser tests"
+      ]
+    },
+    {
+      "id": "URB-080",
+      "title": "Integrate native Git under authoritative policy",
+      "phase": "3",
+      "owner_role": "git",
+      "status": "planned",
+      "depends_on": [
+        "URB-025",
+        "URB-040",
+        "URB-050"
+      ],
+      "acceptance": [
+        "Ordinary clone/fetch/push/fsck preserves OIDs",
+        "No raw engine route bypasses final policy check",
+        "Concurrent refs/revocation and malformed pack tests"
+      ]
+    },
+    {
+      "id": "URB-090",
+      "title": "Implement reviews and scoped agent proposals",
+      "phase": "3",
+      "owner_role": "agents",
+      "status": "planned",
+      "depends_on": [
+        "URB-070",
+        "URB-080"
+      ],
+      "acceptance": [
+        "Agent cannot self-grant merge/release permission",
+        "Review evidence bound to exact code revision",
+        "Private conversation promotion requires explicit authorization"
+      ]
+    },
+    {
+      "id": "URB-100",
+      "title": "Implement portable project exports and restore",
+      "phase": "4",
+      "owner_role": "data",
+      "status": "planned",
+      "depends_on": [
+        "URB-070",
+        "URB-080"
+      ],
+      "acceptance": [
+        "Recover Git/Markdown/JSON plus authority evidence",
+        "Rebuild derived indexes from exported records",
+        "No live duplicate ship; loss window and continuity checked"
+      ]
+    },
+    {
+      "id": "URB-110",
+      "title": "Establish native CI and independent verification",
+      "phase": "2",
+      "owner_role": "qa",
+      "status": "planned",
+      "depends_on": [
+        "URB-020",
+        "URB-030"
+      ],
+      "acceptance": [
+        "Disposable isolated runners and synthetic fixtures",
+        "Actual native tests, not only mocked APIs",
+        "No production secrets for untrusted jobs"
+      ]
+    },
+    {
+      "id": "URB-120",
+      "title": "Implement VPS deployment and operation runbooks",
+      "phase": "4",
+      "owner_role": "operations",
+      "status": "planned",
+      "depends_on": [
+        "URB-100",
+        "URB-110"
+      ],
+      "acceptance": [
+        "Explicit owner-approved host/identity provisioning",
+        "Restricted admin, HTTPS and native transport checks",
+        "Backup/restore drill, resource monitoring and release rollback evidence"
+      ]
+    },
+    {
+      "id": "URB-130",
+      "title": "Run public/synthetic live canary",
+      "phase": "4",
+      "owner_role": "qa",
+      "status": "planned",
+      "depends_on": [
+        "URB-090",
+        "URB-120"
+      ],
+      "acceptance": [
+        "Multi-host identity and private-access tests",
+        "Concurrent import/UI workload measurements",
+        "Independent security review; sensitive data still gated"
+      ]
+    },
+    {
+      "id": "URB-140",
+      "title": "Implement explicit project replicas and migration",
+      "phase": "5",
+      "owner_role": "federation",
+      "status": "planned",
+      "depends_on": [
+        "URB-100",
+        "URB-130"
+      ],
+      "acceptance": [
+        "Replica custody scopes and staleness visible",
+        "Single-writer fencing and epoch migration tests",
+        "No unqualified active-active or automatic failover"
+      ]
+    },
+    {
+      "id": "URB-150",
+      "title": "Cut over own source to native authority",
+      "phase": "5",
+      "owner_role": "release",
+      "status": "planned",
+      "depends_on": [
+        "URB-130",
+        "URB-140"
+      ],
+      "acceptance": [
+        "Document one source of truth before/after switch",
+        "GitHub becomes controlled one-way mirror",
+        "Demonstrate recovery without original host or application"
+      ]
+    },
+    {
+      "id": "URB-160",
+      "title": "Design browser-only organizational identity profile",
+      "phase": "5",
+      "owner_role": "identity",
+      "status": "planned",
+      "depends_on": [
+        "URB-060",
+        "URB-130"
+      ],
+      "acceptance": [
+        "No requirement for one ship per employee",
+        "Reviewed OIDC/passkey protocol and native feasibility decision",
+        "Individual attribution/delegation survives identity binding changes"
+      ]
+    }
+  ]
+}
