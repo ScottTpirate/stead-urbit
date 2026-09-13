@@ -1,6 +1,6 @@
 # Stead Urbit — experimental native implementation
 
-Status: **planning/bootstrap; no Urbit application has been implemented or deployed by this package.**
+Status: **pinned local four-fake-ship harness and synthetic native counter verified; Work/Docs and production access remain separate implementation gates.**
 
 An independent derivative of `ScottTpirate/stead`, preserving that repository's main-line history through `3d47f0172a41beebb31f5c3a7df133cc1d4b1ead` (inspected September 12, 2026). The original repository is not modified.
 
@@ -15,7 +15,9 @@ The working architecture is **federated project homes**: one authoritative home 
 - [Research sources and verification limits](docs/urbit/SOURCES.md)
 - [Machine-readable backlog](specs/urbit/backlog.json)
 
-Run `python3 scripts/urbit/validate_plan.py` to validate this planning package. This is not a Hoon build, security audit, or interoperability test.
+Use the [local runbook](docs/urbit/RUNBOOK.md) for `make setup`, `make doctor`, `make start`, `make test` and `make stop`. Read [actual results and limitations](docs/urbit/TEST_RESULTS.md).
+
+Run `python3 scripts/urbit/validate_plan.py` to validate the planning metadata. This is not a Hoon build, security audit, or interoperability test.
 
 The old source tree is retained under `reference/stead/` for specification traceability and selective reuse. Its build/deployment instructions and architecture locks are not this experiment's live instructions. Inherited workflows are archived there rather than activated. Original license and third-party notices remain at the root.
 

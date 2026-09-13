@@ -1,0 +1,176 @@
+{
+  "format": 1,
+  "scope": "local isolated synthetic dependency evaluation only",
+  "runs": [
+    {
+      "label": "pre-fix-pass",
+      "ignored_run_directory": ".runtime/urgit-evaluations/20260913T011320Z-vw0a4w3q",
+      "files": {
+        "report.json": {
+          "original_sha256": "5d6f5a5428e23c3e0681ae71043b91696008d241c4cd27adb89aba18424234af",
+          "copied_sha256": "5d6f5a5428e23c3e0681ae71043b91696008d241c4cd27adb89aba18424234af",
+          "copied_bytes": 3141
+        },
+        "commands.jsonl": {
+          "original_sha256": "1470a25675dde6def76d0c6f064c0c950f431978b9908c1dd5ed649bf5def254",
+          "copied_sha256": "1470a25675dde6def76d0c6f064c0c950f431978b9908c1dd5ed649bf5def254",
+          "copied_bytes": 18559
+        },
+        "provenance.json": {
+          "original_sha256": "73e1bbc98601cca3ea0ad8f51673ae824ac6782728f008d6db2bdef4e052e551",
+          "copied_sha256": "9ae24fccafde54b34941282dcdb287243f96c2dfb47f751bb0a85e28f163e14d",
+          "copied_bytes": 2955
+        },
+        "thermal.jsonl": {
+          "original_sha256": "01e3d9a2d4212f39339bd4f4ddeeccad9966a58125642dd2c30aca48236f51b6",
+          "copied_sha256": "01e3d9a2d4212f39339bd4f4ddeeccad9966a58125642dd2c30aca48236f51b6",
+          "copied_bytes": 18336
+        },
+        "sandbox-command.json": {
+          "original_sha256": "d688c60342d4e146f543978c498e752bd4d0a9cb3a9297fe8411fa1bc439905b",
+          "copied_sha256": "ddfc34cdbb84c492bd9846eefe692eb98543d8e2e0760a1c5f3944c31c5a98a7",
+          "copied_bytes": 1145
+        },
+        "native-vectors.json": {
+          "original_sha256": "f3dca574dffe7f48f48bfe1f77295581555982bf85c8109be9b0f1e13b88190a",
+          "copied_sha256": "f3dca574dffe7f48f48bfe1f77295581555982bf85c8109be9b0f1e13b88190a",
+          "copied_bytes": 1340
+        }
+      },
+      "status": "passed",
+      "checks_passed": 14,
+      "runtime_exit_code": 0,
+      "sandbox_exit_code": 0,
+      "original_manifest_sha256": "2dd3e34ed7c9fd3a7a10280751fe2c76934dba97d5646ce4ecd7eed2bd9bb20a",
+      "maximum_host_temperature_c": 96.0,
+      "last_thermal_sample_seconds": 330.2
+    },
+    {
+      "label": "thermal-stop-early",
+      "ignored_run_directory": ".runtime/urgit-evaluations/20260913T013127Z-q5ts_8zz",
+      "files": {
+        "report.json": {
+          "original_sha256": "d38fea556247ba63fb24d1d9832ff27c8a1a1f6309bd8aa91ff0d6df8f851c16",
+          "copied_sha256": "d38fea556247ba63fb24d1d9832ff27c8a1a1f6309bd8aa91ff0d6df8f851c16",
+          "copied_bytes": 1195
+        },
+        "commands.jsonl": {
+          "original_sha256": "e3e1be6a89547ec6a01fa4bda2c682323087781ab85acf208eff3930024da2dd",
+          "copied_sha256": "e3e1be6a89547ec6a01fa4bda2c682323087781ab85acf208eff3930024da2dd",
+          "copied_bytes": 78
+        },
+        "provenance.json": {
+          "original_sha256": "ea844b5e031af224c5e257deb8d6a3ed8c6a2db64c52945137ee2c7e6bc68efd",
+          "copied_sha256": "8d7b43e083949a0befc7b24a2ba2172c3b0c81196437c7ba6a8a787dd131bfc8",
+          "copied_bytes": 3114
+        },
+        "thermal.jsonl": {
+          "original_sha256": "84c1e9d8802629abd956b441e52094737525b712b4f2b1e6f536cef3e0486614",
+          "copied_sha256": "84c1e9d8802629abd956b441e52094737525b712b4f2b1e6f536cef3e0486614",
+          "copied_bytes": 3001
+        },
+        "sandbox-command.json": {
+          "original_sha256": "0cae1c4617b0363e659f7c7f8ec35efad0f1a0ea6023f655b4eff9ce89027a60",
+          "copied_sha256": "80741e5e812029a9ac16f34b62b9ad8ef219b3c24a1093d2c8def30deddc42b3",
+          "copied_bytes": 1471
+        }
+      },
+      "status": "failed",
+      "checks_passed": 0,
+      "runtime_exit_code": 1,
+      "sandbox_exit_code": 1,
+      "original_manifest_sha256": "7dfe0ef542ca0154c991d864a8d3aa7493824c9cc83de73766cc5ad71f4f7b9b",
+      "maximum_host_temperature_c": 95.0,
+      "last_thermal_sample_seconds": 50.0
+    },
+    {
+      "label": "thermal-stop-late",
+      "ignored_run_directory": ".runtime/urgit-evaluations/20260913T013620Z-fmsmnyvc",
+      "files": {
+        "report.json": {
+          "original_sha256": "f4212d9615621dd68df3af7a91a34e2f32a414576b254923a6d1ace18bbad5ae",
+          "copied_sha256": "f4212d9615621dd68df3af7a91a34e2f32a414576b254923a6d1ace18bbad5ae",
+          "copied_bytes": 1205
+        },
+        "commands.jsonl": {
+          "original_sha256": "e3e1be6a89547ec6a01fa4bda2c682323087781ab85acf208eff3930024da2dd",
+          "copied_sha256": "e3e1be6a89547ec6a01fa4bda2c682323087781ab85acf208eff3930024da2dd",
+          "copied_bytes": 78
+        },
+        "provenance.json": {
+          "original_sha256": "5796f4b38f902b22503d6ef4f753e55d81e278b2c71d838972a17b8560b15cbd",
+          "copied_sha256": "7fa7e5da3763013129a846d0939334df4c26a99599b204bd9184b1004c2ef5c2",
+          "copied_bytes": 3114
+        },
+        "thermal.jsonl": {
+          "original_sha256": "e63207d20761bbbe6523000efd31dd1b6bbba6e5d8048072e708ed0d3a46f059",
+          "copied_sha256": "e63207d20761bbbe6523000efd31dd1b6bbba6e5d8048072e708ed0d3a46f059",
+          "copied_bytes": 16966
+        },
+        "sandbox-command.json": {
+          "original_sha256": "af4bbdecfcee32ab362a8aa8a03745ce06387bded048ea9c2317e1c31f257b1b",
+          "copied_sha256": "ac159912f3ba59ef12ff3fba4567c48544f4b68cd1222895fcd4112f2214a03c",
+          "copied_bytes": 1471
+        }
+      },
+      "status": "failed",
+      "checks_passed": 0,
+      "runtime_exit_code": 1,
+      "sandbox_exit_code": 1,
+      "original_manifest_sha256": "86098bb35a50a7d74bfc8c52327b2b5a47ac3b887e422d6ea4acf2267eef8078",
+      "maximum_host_temperature_c": 93.0,
+      "last_thermal_sample_seconds": 305.1
+    },
+    {
+      "label": "thermal-stop-quota",
+      "ignored_run_directory": ".runtime/urgit-evaluations/20260913T014440Z-doze539t",
+      "files": {
+        "report.json": {
+          "original_sha256": "f4212d9615621dd68df3af7a91a34e2f32a414576b254923a6d1ace18bbad5ae",
+          "copied_sha256": "f4212d9615621dd68df3af7a91a34e2f32a414576b254923a6d1ace18bbad5ae",
+          "copied_bytes": 1205
+        },
+        "commands.jsonl": {
+          "original_sha256": "e3e1be6a89547ec6a01fa4bda2c682323087781ab85acf208eff3930024da2dd",
+          "copied_sha256": "e3e1be6a89547ec6a01fa4bda2c682323087781ab85acf208eff3930024da2dd",
+          "copied_bytes": 78
+        },
+        "provenance.json": {
+          "original_sha256": "ea2e3fe287e035f02a21b4c1a09adcc5629fe31501310fc83535ae9eebb0fea3",
+          "copied_sha256": "bfac073bb171ee2f9e04035cc37c23cfb067cd1cea8692f5cdd7bf9ceb8577ea",
+          "copied_bytes": 3114
+        },
+        "thermal.jsonl": {
+          "original_sha256": "1323d7493032860f261c30c8d18857b6d991866ca2eda5c76ecbe762d0895457",
+          "copied_sha256": "1323d7493032860f261c30c8d18857b6d991866ca2eda5c76ecbe762d0895457",
+          "copied_bytes": 6280
+        },
+        "sandbox-command.json": {
+          "original_sha256": "9cd8788362d1c9a1b4a7185a2c482671b02860a53c99dc2ddcf3a6e4a6252f84",
+          "copied_sha256": "f0254bbad1e90cd3e7b94b76f60a2d49e798d89b3f0dc31ea61e66d2676cb766",
+          "copied_bytes": 1471
+        },
+        "resource-control.json": {
+          "original_sha256": "1434642d38b0bee2704ae78067e420f816aa79ef76f0744036c5198d89f26a45",
+          "copied_sha256": "1434642d38b0bee2704ae78067e420f816aa79ef76f0744036c5198d89f26a45",
+          "copied_bytes": 1260
+        }
+      },
+      "status": "failed",
+      "checks_passed": 0,
+      "runtime_exit_code": 1,
+      "sandbox_exit_code": 1,
+      "original_manifest_sha256": "dcc0a6c56622e53d913a4ecd25a05ff7e64110f29a3520d59dea5c1986971832",
+      "maximum_host_temperature_c": 92.0,
+      "last_thermal_sample_seconds": 110.1
+    }
+  ],
+  "preservation": "Original run directories remain unchanged and ignored; bounded selected copies exclude piers, candidate source and raw native logs.",
+  "transforms": "Host repository path is replaced by <repo>; uname nodename is <development-host>. Credentials were redacted by the evaluator before output; generated-token report invariant was true. Manifest records both original and copied digests.",
+  "current_result": "repaired-run native completion blocked by repeated thermal stops, including verified50% CPU quota; initial14-check pass remains pre-fix evidence",
+  "current_sources": {
+    "scripts/urbit/urgit_audit.py": "13ee74670b4b42fcb738fcff062db2bb61340bd63cb7f16c1a903796d7b84022",
+    "scripts/urbit/urgit_eval/evaluate.py": "bd14bb9088a62420d65350a85c98553c48f4743adf05d7d61a3e8022a56d8f91",
+    "specs/urbit/urgit-candidate.lock.json": "50a90b296fa40e5a9178999cb2709682884812a98e2b133f6261eb5ec3934561"
+  }
+}

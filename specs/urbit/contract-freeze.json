@@ -1,0 +1,24 @@
+{
+  "protocol": "stead.contract-freeze/1",
+  "status": "frozen_for_minimum_URB-040_050_development",
+  "date": "2026-09-12 US/Eastern",
+  "integration_owner": "root implementation agent",
+  "independent_reviews": [
+    "hoon_review: bounded contract/source review passed",
+    "qa_review: adversarial contract review and 18 host reference checks passed"
+  ],
+  "scope": "minimum raw command codec, single-home state and policy, individual fixture principals, receipts/one-shot reads, bounded private Git-backed document subset",
+  "approval_limit": "not native implementation qualification, human merge approval, production authentication or release approval",
+  "change_rule": "Changes require explicit versioned integration decision, updated vectors and independent review; never silently refresh hashes to make a validator pass",
+  "files": {
+    "docs/urbit/CONTRACTS.md": "f43c64e71c4356a62be0e7f9e4f42de569d9916311f883aa44196388a0a5cb2e",
+    "docs/urbit/FIRST_NATIVE_SLICE.md": "20ac9481ffafe76026353b740477d89519863130212c957fe35868bf0346c10b",
+    "specs/urbit/command.schema.json": "968fbdcfa0dbff712e6282dafe87429332dbcc19d5a9dff914bba8a7a410210f",
+    "specs/urbit/policy-contract.json": "3e23cc5fd08240d85bd03a46d4cfb3569a6a30a1c543b2283bfb3b4ed08ec6d0",
+    "specs/urbit/native-fixture.json": "e693116efbc00b1131714f9eb7077ec678669d4fdb27ddfdce284461e0dffe74",
+    "specs/urbit/native-api.json": "ee976ceaa975a7f67e58bea8cd7e03aa238b704985d06b0a96178ac087753056",
+    "specs/urbit/fixtures/commands.json": "3269fb0ebae091b9a022954e4ca876d318c5e06c4b6c69b7445628186d886592",
+    "scripts/urbit/contracts.py": "7ccd0b9e664428487b25740bb2a75807de4c047c5d41544bfeff2d771b7bb8e2",
+    "tests/urbit/test_contracts.py": "ce9ccec4a42a21ec973d13e33ec27d6581041c2cd9cb70b73e0a01b203c3cc75"
+  }
+}

@@ -172,6 +172,11 @@ though v1's mutation schema does not specify the future read transport.
 | Organization administrator, organization | Reader/contributor operations in explicitly granted projects; project.create in this organization; project policy.grant/revoke | Reader, contributor or maintainer within this organization |
 
 `policy.grant` is project-scoped and cannot grant organization administrator.
+Grant IDs are create-only and globally collision-checked against retained IDs.
+A grant operation cannot overwrite, downgrade or refresh an existing grant.
+Revoked grant IDs remain non-reusable tombstones. A role change requires an
+authorized revoke of the old grant followed by a fresh grant ID; both operations
+recheck the current actor ceiling and policy revision.
 Organization administrators come from a separately authorized organization binding
 (only explicit fixture configuration in the initial native profile). Revoke checks
 the existing grant's role and project at final acceptance; a lower role cannot

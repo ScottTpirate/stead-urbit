@@ -16,7 +16,7 @@ import traceback
 import urllib.request
 
 from digests import sha, source_sha, tree_sha
-from conn import run_thread
+from conn import assert_result, run_thread
 
 STATE = Path('/state')
 LIVE = STATE / 'live'
@@ -196,14 +196,8 @@ def sync_sources():
 def expect(ship, command, positive, rejection=None):
     response = run_thread('/runtime/' + LOCK['runtime']['binary'],
                           LIVE / ship / '.urb/conn.sock', command)
-    result = response['stdout'] + '\n' + response['stderr']
     record(ship + ': ' + command, response)
-    if positive:
-        if response['stdout'] != '[32 %avow 0 %noun %stead-smoke-ack]':
-            raise AssertionError(f'Expected destination ACK for {ship}: {result}')
-    else:
-        if response['stdout'] != '[32 %avow 1]' or 'poke-fail' not in result or rejection not in result:
-            raise AssertionError(f'Expected destination rejection for {ship}: {result}')
+    assert_result(response, positive, rejection)
 
 
 def smoke_test():

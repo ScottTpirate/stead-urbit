@@ -17,9 +17,11 @@ import urllib.error
 import urllib.request
 
 ROOT = Path('/work')
-EVIDENCE = ROOT / 'evidence'
-PIN = json.loads((ROOT / 'candidate.lock.json').read_text())
-TOOLCHAIN = json.loads((ROOT / 'toolchain.lock.json').read_text())
+INPUT = Path('/input')
+CONTROL = Path('/control')
+EVIDENCE = Path('/output')
+PIN = json.loads((INPUT / 'candidate.lock.json').read_text())
+TOOLCHAIN = json.loads((INPUT / 'toolchain.lock.json').read_text())
 TOKEN = secrets.token_urlsafe(32)
 AUTH = base64.b64encode(('vector:' + TOKEN).encode()).decode()
 REDACTIONS = (TOKEN, AUTH)
@@ -51,7 +53,7 @@ def phase(name):
 
 
 def cancelled():
-    if (ROOT / 'STOP').exists():
+    if (CONTROL / 'STOP').exists():
         raise InterruptedError('evaluation stop requested')
 
 
@@ -62,7 +64,7 @@ def interrupt_control(_signum, _frame):
 
 def watch_stop():
     while not FINISHING.wait(0.5):
-        if (ROOT / 'STOP').exists():
+        if (CONTROL / 'STOP').exists():
             os.kill(os.getpid(), signal.SIGUSR1)
             return
 
@@ -242,7 +244,7 @@ def smart_http():
 
 def main():
     global PORT, RUNTIME
-    marker = json.loads((ROOT / '.stead-disposable.json').read_text())
+    marker = json.loads((INPUT / '.stead-disposable.json').read_text())
     if marker != {'format': 1, 'purpose': 'URB-025 isolated candidate evaluation', 'fake_identity': 'zod'}:
         raise ValueError('Missing exact disposable audit marker')
     if (ROOT / 'zod').exists() or Path('/home/skilgore').exists() or len(os.sched_getaffinity(0)) != 1:
@@ -291,8 +293,8 @@ def main():
         mount = ROOT / 'zod/urgit'
         if not mount.is_dir() or mount.is_symlink():
             raise RuntimeError('Native desk mount absent')
-        shutil.copytree(ROOT / 'candidate/desk', mount, dirs_exist_ok=True)
-        shutil.copyfile(ROOT / 'skeleton.hoon', mount / 'lib/skeleton.hoon')
+        shutil.copytree(INPUT / 'candidate/desk', mount, dirs_exist_ok=True)
+        shutil.copyfile(INPUT / 'skeleton.hoon', mount / 'lib/skeleton.hoon')
         hood('commit %urgit')
         hood('install our %urgit')
         vectors()
@@ -311,6 +313,16 @@ def main():
                     hood('exit', stopping=True)
                 except Exception as error:
                     event('shutdown-request-failure', error=repr(error))
+            else:
+                # A thermal stop during boot has no native control endpoint.
+                # Do not keep that busy boot running for a grace period in
+                # which no exit request could have been sent.
+                report['status'] = 'failed'
+                report['shutdown_fallback'] = 'SIGTERM: native control endpoint unavailable'
+                try:
+                    os.killpg(RUNTIME.pid, signal.SIGTERM)
+                except ProcessLookupError:
+                    pass
             try:
                 RUNTIME.wait(timeout=30)
             except subprocess.TimeoutExpired:

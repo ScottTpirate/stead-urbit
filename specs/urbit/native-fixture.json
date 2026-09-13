@@ -1,0 +1,21 @@
+{
+  "protocol": "stead.fixture/1",
+  "scope": "explicit public synthetic native development only",
+  "organization_id": "019939ba-4000-7000-8000-000000000005",
+  "owning_team_id": "019939ba-4000-7000-8000-000000000006",
+  "profile": {"classification": "public-synthetic", "custody": "local-disposable", "runtime": "isolated-fake", "authentication": "fake-native/1"},
+  "bindings": [
+    {"ship": "zod", "principal_id": "019939ba-4000-7000-8000-000000000101", "binding_id": "019939ba-4000-7000-8000-000000000201", "kind": "service", "organization_administrator": true},
+    {"ship": "bus", "principal_id": "019939ba-4000-7000-8000-000000000102", "binding_id": "019939ba-4000-7000-8000-000000000202", "kind": "person", "organization_administrator": false},
+    {"ship": "nec", "principal_id": "019939ba-4000-7000-8000-000000000103", "binding_id": "019939ba-4000-7000-8000-000000000203", "kind": "person", "organization_administrator": false},
+    {"ship": "bud", "principal_id": "019939ba-4000-7000-8000-000000000104", "binding_id": "019939ba-4000-7000-8000-000000000204", "kind": "person", "organization_administrator": false}
+  ],
+  "private_containers": [
+    {"container_id": "019939ba-4000-7000-8000-000000000004", "project_id": "019939ba-4000-7000-8000-000000000001", "owner_principal_id": "019939ba-4000-7000-8000-000000000102"},
+    {"container_id": "019939ba-4000-7000-8000-000000000007", "project_id": "019939ba-4000-7000-8000-000000000001", "owner_principal_id": "019939ba-4000-7000-8000-000000000101"}
+  ],
+  "project_grants": [],
+  "binding_expiry_ms": "4102444800000",
+  "limits": {"projects": 16, "work_items_per_project": 128, "documents_per_container": 32, "grants_per_project": 128, "journal_events": 4096, "document_commits_per_container": 128, "git_object_bytes": 8388608},
+  "unimplemented_profiles": ["live-native", "browser-session", "oidc", "passkey", "agent-delegation", "identity-recovery", "regulated-data"]
+}

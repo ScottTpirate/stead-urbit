@@ -1,0 +1,19 @@
+{
+  "classification": "real-local-git-and-authenticated-github-read",
+  "repository": {
+    "defaultBranchRef": {
+      "name": "main"
+    },
+    "isPrivate": true,
+    "nameWithOwner": "ScottTpirate/stead-urbit"
+  },
+  "baseline": "3d47f0172a41beebb31f5c3a7df133cc1d4b1ead",
+  "baseline_is_ancestor": true,
+  "every_archived_blob_matches_baseline": true,
+  "archived_tracked_entries": 342,
+  "enabled_workflows": 0,
+  "upstream_push": "disabled",
+  "planning_pr32_merge": "4bb28c645ed155f842f5b9479a0919e743a89378",
+  "active_checkpoint_before_planning_review": "d3d370b",
+  "archive_notice_note": "Bootstrap retained LICENSE and THIRD_PARTY_NOTICES at root; exact baseline copies now also reside in reference/stead, completing all342 archived entries."
+}

@@ -1,0 +1,7 @@
+{
+  "git-codec-vector": "['3b18e512dba79e4c8300dd08aeb37f8e728b8dad' 337.385.628.493.903.499.893.399.965.760.019.822.894.776.028.589 [p=50 q=104.824.326.403.929.236.244.016.890.389.725.521.001.149.340.457.463.405.839.351.771.948.407.411.174.891.930.553.102.278.159.132.369.488.405.758.830.206.726.192] [~ [pkt=[%data payload=[p=46 q=24.406.315.387.210.165.207.278.190.737.060.625.339.194.513.032.553.579.155.204.764.555.303.242.796.774.006.111.803.995.016.760.278.839.712.440.695]] rest=[p=0 q=0]]]]\n",
+  "git-pack-vector": "[56 124.288.524.559.694.436.273.596.488.639.135.621.593.896.948.213.618.696.263.414.102.462.309.199.453.434.530.449.005.215.949.602.034.589.672.546.399.369.237.981.044.926.488.723.792]\n",
+  "git-stock-pack-vector": "[header=%.y first-inflated=%.y first-consumed=651 second-offset=665 second=%.y second-inflated=%.y second-consumed=25 third-offset=692 third=%.y third-inflated=%.y third-consumed=46 decoded=%.y]\n",
+  "git-delta-pack-vector": "[parsed=%.y entry-count=6 first=%.y second=%.y third=%.y fourth=%.y delta=%.y sixth=%.y direct=%.y direct-size=8.389 base-oid='9c411def56bb81319d53a36ced4e2e5d97d1106c' referenced='9c411def56bb81319d53a36ced4e2e5d97d1106c' consumed=[676 645 45 1.060 34 45 ~] resolved=%.y object-count=6 decoded=%.y]\n",
+  "git-ofs-delta-pack-vector": "[decoded=%.y object-count=6]\n"
+}

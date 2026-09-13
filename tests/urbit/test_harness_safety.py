@@ -378,7 +378,7 @@ class SupervisorLifecycleSafety(unittest.TestCase):
             return original_read_text(path, *args, **kwargs)
 
         # Loading module definitions never executes its __main__ launch block.
-        with patch.object(Path, 'read_text', fixture_lock):
+        with patch.object(Path, 'read_text', fixture_lock), patch.object(digests, 'source_sha', return_value='mocked-source-digest'):
             spec.loader.exec_module(self.supervisor)
 
     def test_stop_signals_cancellation_before_waiting_for_active_initialization(self):

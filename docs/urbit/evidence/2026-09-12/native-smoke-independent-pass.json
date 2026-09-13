@@ -1,0 +1,316 @@
+{
+  "classification": "local-real-native-fake-ships",
+  "status": "pass",
+  "elapsed_seconds": 20.953,
+  "toolchain_sha256": "4a209c10cf1756eb0f7357cc3eca8250bf66c239b4cd0ca31a8c0886d4d304ee",
+  "native_tree_sha256": "dff85b9af5429c096e38789f81f1e6097368c244e84d2d1b5b49a66a1f6fcf89",
+  "harness_tree_sha256": "36e141574825b284e6877d6947a58cb4710d65abebb91ac19d518bfd5506e93e",
+  "commands": [
+    {
+      "utc": "2026-09-13T01:35:17Z",
+      "command": "shutdown zod",
+      "result": {
+        "exit_code": 0
+      }
+    },
+    {
+      "utc": "2026-09-13T01:35:17Z",
+      "command": "shutdown bus",
+      "result": {
+        "exit_code": 0
+      }
+    },
+    {
+      "utc": "2026-09-13T01:35:18Z",
+      "command": "shutdown nec",
+      "result": {
+        "exit_code": 0
+      }
+    },
+    {
+      "utc": "2026-09-13T01:35:18Z",
+      "command": "shutdown bud",
+      "result": {
+        "exit_code": 0
+      }
+    },
+    {
+      "utc": "2026-09-13T01:35:19Z",
+      "command": "launch zod",
+      "result": {
+        "argv": [
+          "/runtime/bin/vere-v4.6-linux-x86_64",
+          "-t",
+          "-L",
+          "--no-dock",
+          "--loom",
+          "31",
+          "-b",
+          "127.0.0.1",
+          "--http-port",
+          "18080",
+          "/state/live/zod"
+        ],
+        "pid": 100
+      }
+    },
+    {
+      "utc": "2026-09-13T01:35:22Z",
+      "command": "zod: zuse",
+      "result": "%408\n"
+    },
+    {
+      "utc": "2026-09-13T01:35:22Z",
+      "command": "launch bus",
+      "result": {
+        "argv": [
+          "/runtime/bin/vere-v4.6-linux-x86_64",
+          "-t",
+          "-L",
+          "--no-dock",
+          "--loom",
+          "31",
+          "-b",
+          "127.0.0.1",
+          "--http-port",
+          "18081",
+          "/state/live/bus"
+        ],
+        "pid": 107
+      }
+    },
+    {
+      "utc": "2026-09-13T01:35:24Z",
+      "command": "bus: zuse",
+      "result": "%408\n"
+    },
+    {
+      "utc": "2026-09-13T01:35:24Z",
+      "command": "launch nec",
+      "result": {
+        "argv": [
+          "/runtime/bin/vere-v4.6-linux-x86_64",
+          "-t",
+          "-L",
+          "--no-dock",
+          "--loom",
+          "31",
+          "-b",
+          "127.0.0.1",
+          "--http-port",
+          "18082",
+          "/state/live/nec"
+        ],
+        "pid": 114
+      }
+    },
+    {
+      "utc": "2026-09-13T01:35:27Z",
+      "command": "nec: zuse",
+      "result": "%408\n"
+    },
+    {
+      "utc": "2026-09-13T01:35:27Z",
+      "command": "launch bud",
+      "result": {
+        "argv": [
+          "/runtime/bin/vere-v4.6-linux-x86_64",
+          "-t",
+          "-L",
+          "--no-dock",
+          "--loom",
+          "31",
+          "-b",
+          "127.0.0.1",
+          "--http-port",
+          "18083",
+          "/state/live/bud"
+        ],
+        "pid": 121
+      }
+    },
+    {
+      "utc": "2026-09-13T01:35:29Z",
+      "command": "bud: zuse",
+      "result": "%408\n"
+    },
+    {
+      "utc": "2026-09-13T01:35:29Z",
+      "command": "zod: |commit %base",
+      "result": ">="
+    },
+    {
+      "utc": "2026-09-13T01:35:30Z",
+      "command": "bus: |commit %base",
+      "result": ">="
+    },
+    {
+      "utc": "2026-09-13T01:35:30Z",
+      "command": "nec: |commit %base",
+      "result": ">="
+    },
+    {
+      "utc": "2026-09-13T01:35:30Z",
+      "command": "bud: |commit %base",
+      "result": ">="
+    },
+    {
+      "utc": "2026-09-13T01:35:31Z",
+      "command": "zod: |start %stead-home",
+      "result": ">="
+    },
+    {
+      "utc": "2026-09-13T01:35:31Z",
+      "command": "zod: -stead-smoke ~zod [%assert 0]",
+      "result": {
+        "stdout": "[32 %avow 0 %noun %stead-smoke-ack]",
+        "stderr": "loom: mapped 512MB\r\nlite: arvo formula 4ce68411\r\nlite: core 641296f\r\nlite: final state 641296f\r\neval (cue, newt):",
+        "request": "[32 %fyrd [%base %stead-smoke %noun [%noun [~zod [%assert 0]]]]]",
+        "response_frame_sha256": "3530ab4116ee4a53b337d33da39aaffba6ad10029babade28d911ffb5ef8d9ce"
+      }
+    },
+    {
+      "utc": "2026-09-13T01:35:32Z",
+      "command": "bud: -stead-smoke ~zod [%advance ~bus 0]",
+      "result": {
+        "stdout": "[32 %avow 1]",
+        "stderr": "loom: mapped 512MB\r\nlite: arvo formula 4ce68411\r\nlite: core 641296f\r\nlite: final state 641296f\r\neval (cue, newt):\n\r\n/sys/vane/gall/hoon:<[1.863 9].[1.863 37]>\r\n/app/stead-home/hoon:<[27 3].[50 5]>\r\n/app/stead-home/hoon:<[28 3].[50 5]>\r\n/app/stead-home/hoon:<[29 3].[50 5]>\r\n/app/stead-home/hoon:<[30 3].[50 5]>\r\n/app/stead-home/hoon:<[42 7].[49 31]>\r\n/app/stead-home/hoon:<[43 9].[44 11]>\r\nstead-smoke-denied\r\n/app/stead-home/hoon:<[44 9].[44 11]>\r\npoke-ack\r\npoke-fail\r\neval: bail: %thread-fail",
+        "request": "[32 %fyrd [%base %stead-smoke %noun [%noun [~zod [%advance ~bus 0]]]]]",
+        "response_frame_sha256": "c63fb76ea742dd91ae9bf129fb0df8304bc9d26fee819c5f131b0b1701aa1f51"
+      }
+    },
+    {
+      "utc": "2026-09-13T01:35:33Z",
+      "command": "nec: -stead-smoke ~zod [%advance ~bus 0]",
+      "result": {
+        "stdout": "[32 %avow 1]",
+        "stderr": "loom: mapped 512MB\r\nlite: arvo formula 4ce68411\r\nlite: core 641296f\r\nlite: final state 641296f\r\neval (cue, newt):\n\r\n/sys/vane/gall/hoon:<[1.863 9].[1.863 37]>\r\n/app/stead-home/hoon:<[27 3].[50 5]>\r\n/app/stead-home/hoon:<[28 3].[50 5]>\r\n/app/stead-home/hoon:<[29 3].[50 5]>\r\n/app/stead-home/hoon:<[30 3].[50 5]>\r\n/app/stead-home/hoon:<[42 7].[49 31]>\r\n/app/stead-home/hoon:<[43 9].[44 11]>\r\nstead-smoke-denied\r\n/app/stead-home/hoon:<[44 9].[44 11]>\r\npoke-ack\r\npoke-fail\r\neval: bail: %thread-fail",
+        "request": "[32 %fyrd [%base %stead-smoke %noun [%noun [~zod [%advance ~bus 0]]]]]",
+        "response_frame_sha256": "c63fb76ea742dd91ae9bf129fb0df8304bc9d26fee819c5f131b0b1701aa1f51"
+      }
+    },
+    {
+      "utc": "2026-09-13T01:35:34Z",
+      "command": "zod: -stead-smoke ~zod [%assert 0]",
+      "result": {
+        "stdout": "[32 %avow 0 %noun %stead-smoke-ack]",
+        "stderr": "loom: mapped 512MB\r\nlite: arvo formula 4ce68411\r\nlite: core 641296f\r\nlite: final state 641296f\r\neval (cue, newt):",
+        "request": "[32 %fyrd [%base %stead-smoke %noun [%noun [~zod [%assert 0]]]]]",
+        "response_frame_sha256": "3530ab4116ee4a53b337d33da39aaffba6ad10029babade28d911ffb5ef8d9ce"
+      }
+    },
+    {
+      "utc": "2026-09-13T01:35:34Z",
+      "command": "bus: -stead-smoke ~zod [%advance ~bud 0]",
+      "result": {
+        "stdout": "[32 %avow 0 %noun %stead-smoke-ack]",
+        "stderr": "loom: mapped 512MB\r\nlite: arvo formula 4ce68411\r\nlite: core 641296f\r\nlite: final state 641296f\r\neval (cue, newt):",
+        "request": "[32 %fyrd [%base %stead-smoke %noun [%noun [~zod [%advance ~bud 0]]]]]",
+        "response_frame_sha256": "3530ab4116ee4a53b337d33da39aaffba6ad10029babade28d911ffb5ef8d9ce"
+      }
+    },
+    {
+      "utc": "2026-09-13T01:35:35Z",
+      "command": "bus: -stead-smoke ~zod [%advance ~bus 0]",
+      "result": {
+        "stdout": "[32 %avow 1]",
+        "stderr": "loom: mapped 512MB\r\nlite: arvo formula 4ce68411\r\nlite: core 641296f\r\nlite: final state 641296f\r\neval (cue, newt):\n\r\n/sys/vane/gall/hoon:<[1.863 9].[1.863 37]>\r\n/app/stead-home/hoon:<[27 3].[50 5]>\r\n/app/stead-home/hoon:<[28 3].[50 5]>\r\n/app/stead-home/hoon:<[29 3].[50 5]>\r\n/app/stead-home/hoon:<[30 3].[50 5]>\r\n/app/stead-home/hoon:<[42 7].[49 31]>\r\n/app/stead-home/hoon:<[45 7].[49 31]>\r\n/app/stead-home/hoon:<[46 7].[49 31]>\r\n/app/stead-home/hoon:<[47 9].[48 11]>\r\nstead-smoke-stale\r\n/app/stead-home/hoon:<[48 9].[48 11]>\r\npoke-ack\r\npoke-fail\r\neval: bail: %thread-fail",
+        "request": "[32 %fyrd [%base %stead-smoke %noun [%noun [~zod [%advance ~bus 0]]]]]",
+        "response_frame_sha256": "53d03058ef16f9fac8ccdba746da9f016f5d004f8768d01957b9fb4ac52d503d"
+      }
+    },
+    {
+      "utc": "2026-09-13T01:35:35Z",
+      "command": "zod: -stead-smoke ~zod [%assert 1]",
+      "result": {
+        "stdout": "[32 %avow 0 %noun %stead-smoke-ack]",
+        "stderr": "loom: mapped 512MB\r\nlite: arvo formula 4ce68411\r\nlite: core 641296f\r\nlite: final state 641296f\r\neval (cue, newt):",
+        "request": "[32 %fyrd [%base %stead-smoke %noun [%noun [~zod [%assert 1]]]]]",
+        "response_frame_sha256": "3530ab4116ee4a53b337d33da39aaffba6ad10029babade28d911ffb5ef8d9ce"
+      }
+    },
+    {
+      "utc": "2026-09-13T01:35:35Z",
+      "command": "shutdown zod",
+      "result": {
+        "exit_code": 0
+      }
+    },
+    {
+      "utc": "2026-09-13T01:35:35Z",
+      "command": "launch zod",
+      "result": {
+        "argv": [
+          "/runtime/bin/vere-v4.6-linux-x86_64",
+          "-t",
+          "-L",
+          "--no-dock",
+          "--loom",
+          "31",
+          "-b",
+          "127.0.0.1",
+          "--http-port",
+          "18080",
+          "/state/live/zod"
+        ],
+        "pid": 146
+      }
+    },
+    {
+      "utc": "2026-09-13T01:35:37Z",
+      "command": "zod: zuse",
+      "result": "%408\n"
+    },
+    {
+      "utc": "2026-09-13T01:35:37Z",
+      "command": "zod: -stead-smoke ~zod [%assert 1]",
+      "result": {
+        "stdout": "[32 %avow 0 %noun %stead-smoke-ack]",
+        "stderr": "loom: mapped 512MB\r\nlite: arvo formula 4ce68411\r\nlite: core 641296f\r\nlite: final state 641296f\r\neval (cue, newt):",
+        "request": "[32 %fyrd [%base %stead-smoke %noun [%noun [~zod [%assert 1]]]]]",
+        "response_frame_sha256": "3530ab4116ee4a53b337d33da39aaffba6ad10029babade28d911ffb5ef8d9ce"
+      }
+    },
+    {
+      "utc": "2026-09-13T01:35:37Z",
+      "command": "bud: -stead-smoke ~zod [%advance ~bus 1]",
+      "result": {
+        "stdout": "[32 %avow 1]",
+        "stderr": "loom: mapped 512MB\r\nlite: arvo formula 4ce68411\r\nlite: core 641296f\r\nlite: final state 641296f\r\neval (cue, newt):\n\r\n/sys/vane/gall/hoon:<[1.863 9].[1.863 37]>\r\n/app/stead-home/hoon:<[27 3].[50 5]>\r\n/app/stead-home/hoon:<[28 3].[50 5]>\r\n/app/stead-home/hoon:<[29 3].[50 5]>\r\n/app/stead-home/hoon:<[30 3].[50 5]>\r\n/app/stead-home/hoon:<[42 7].[49 31]>\r\n/app/stead-home/hoon:<[43 9].[44 11]>\r\nstead-smoke-denied\r\n/app/stead-home/hoon:<[44 9].[44 11]>\r\npoke-ack\r\npoke-fail\r\neval: bail: %thread-fail",
+        "request": "[32 %fyrd [%base %stead-smoke %noun [%noun [~zod [%advance ~bus 1]]]]]",
+        "response_frame_sha256": "c63fb76ea742dd91ae9bf129fb0df8304bc9d26fee819c5f131b0b1701aa1f51"
+      }
+    },
+    {
+      "utc": "2026-09-13T01:35:38Z",
+      "command": "bus: -stead-smoke ~zod [%advance ~bus 1]",
+      "result": {
+        "stdout": "[32 %avow 0 %noun %stead-smoke-ack]",
+        "stderr": "loom: mapped 512MB\r\nlite: arvo formula 4ce68411\r\nlite: core 641296f\r\nlite: final state 641296f\r\neval (cue, newt):",
+        "request": "[32 %fyrd [%base %stead-smoke %noun [%noun [~zod [%advance ~bus 1]]]]]",
+        "response_frame_sha256": "3530ab4116ee4a53b337d33da39aaffba6ad10029babade28d911ffb5ef8d9ce"
+      }
+    },
+    {
+      "utc": "2026-09-13T01:35:38Z",
+      "command": "zod: -stead-smoke ~zod [%assert 2]",
+      "result": {
+        "stdout": "[32 %avow 0 %noun %stead-smoke-ack]",
+        "stderr": "loom: mapped 512MB\r\nlite: arvo formula 4ce68411\r\nlite: core 641296f\r\nlite: final state 641296f\r\neval (cue, newt):",
+        "request": "[32 %fyrd [%base %stead-smoke %noun [%noun [~zod [%assert 2]]]]]",
+        "response_frame_sha256": "3530ab4116ee4a53b337d33da39aaffba6ad10029babade28d911ffb5ef8d9ce"
+      }
+    },
+    {
+      "utc": "2026-09-13T01:35:38Z",
+      "command": "zod: -stead-smoke ~zod [%assert 999]",
+      "result": {
+        "stdout": "[32 %avow 1]",
+        "stderr": "loom: mapped 512MB\r\nlite: arvo formula 4ce68411\r\nlite: core 641296f\r\nlite: final state 641296f\r\neval (cue, newt):\n\r\n/sys/vane/gall/hoon:<[1.863 9].[1.863 37]>\r\n/app/stead-home/hoon:<[27 3].[50 5]>\r\n/app/stead-home/hoon:<[28 3].[50 5]>\r\n/app/stead-home/hoon:<[29 3].[50 5]>\r\n/app/stead-home/hoon:<[30 3].[50 5]>\r\n/app/stead-home/hoon:<[33 7].[39 12]>\r\n/app/stead-home/hoon:<[36 7].[39 12]>\r\n/app/stead-home/hoon:<[37 9].[38 11]>\r\nstead-smoke-assertion\r\n/app/stead-home/hoon:<[38 9].[38 11]>\r\npoke-fail\r\neval: bail: %thread-fail",
+        "request": "[32 %fyrd [%base %stead-smoke %noun [%noun [~zod [%assert 999]]]]]",
+        "response_frame_sha256": "be840ea5bc1badef4e3fc3efea8001eec933aabe0751694a01d112b68c2c2a46"
+      }
+    }
+  ],
+  "scope": "synthetic counter only; not product/session/Git authorization"
+}

@@ -70,6 +70,13 @@ class Contracts(unittest.TestCase):
             other['payload'][key] = value
             self.rejected(other)
 
+    def test_project_key_preserves_ten_character_prefix_limit(self):
+        request = copy.deepcopy(self.vectors[2]['request'])
+        request['payload']['project_key'] = 'ABCDEFGHIJ'
+        c.parse(json.dumps(request).encode())
+        request['payload']['project_key'] = 'ABCDEFGHIJK'
+        self.rejected(request)
+
     def test_utf8_byte_limits_not_only_character_counts(self):
         other = copy.deepcopy(self.request)
         other['payload']['description'] = '雪' * 3000

@@ -76,5 +76,10 @@
       ]
     }
   },
-  "role_reference_scope": "Role/action contribution only. Caller must supply separately resolved matching scope; never authenticates evidence or bypasses the five-dimension decision."
+  "role_reference_scope": "Role/action contribution only. Caller must supply separately resolved matching scope; never authenticates evidence or bypasses the five-dimension decision.",
+  "grant_identity": {
+    "creation": "new globally unused ID only",
+    "revocation": "retain non-reusable tombstone",
+    "role_change": "authorized revoke plus fresh grant ID; cannot overwrite existing higher-role grant"
+  }
 }

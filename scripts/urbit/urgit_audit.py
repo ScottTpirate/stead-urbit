@@ -8,13 +8,16 @@ Every invocation leaves its marked synthetic evidence below ignored .runtime/.
 from __future__ import annotations
 
 import argparse
+from contextlib import contextmanager
 from datetime import datetime, timezone
 import hashlib
 import json
 import os
 from pathlib import Path, PurePosixPath
 import shutil
+import secrets
 import signal
+import stat
 import subprocess
 import tarfile
 import tempfile
@@ -26,6 +29,13 @@ import toolchain
 ROOT = Path(__file__).resolve().parents[2]
 PIN = ROOT / 'specs/urbit/urgit-candidate.lock.json'
 HELPERS = Path(__file__).resolve().parent / 'urgit_eval'
+OUTPUT_LIMITS = {
+    'commands.jsonl': 8 * 1024 * 1024,
+    'native.log': 64 * 1024 * 1024,
+    'native-vectors.json': 1024 * 1024,
+    'report.json': 1024 * 1024,
+    'status.json': 4096,
+}
 
 
 def digest(path):
@@ -38,8 +48,73 @@ def no_links(path):
         raise ValueError(f'Refusing redirected path: {path}')
 
 
+@contextmanager
+def directory_fd(path):
+    """Anchor each existing directory component without following links."""
+    path = Path(path).absolute()
+    if '..' in path.parts:
+        raise ValueError('Parent traversal in directory path')
+    flags = os.O_RDONLY | os.O_DIRECTORY | os.O_NOFOLLOW | os.O_CLOEXEC
+    descriptor = os.open('/', flags)
+    try:
+        for part in path.parts[1:]:
+            child = os.open(part, flags, dir_fd=descriptor)
+            os.close(descriptor)
+            descriptor = child
+        yield descriptor
+    finally:
+        os.close(descriptor)
+
+
+def write_bytes(path, payload):
+    """Atomically replace one host-owned output; never follow a final link."""
+    path = Path(path)
+    with directory_fd(path.parent) as parent:
+        temporary = '.' + path.name + '.' + secrets.token_hex(12) + '.tmp'
+        descriptor = os.open(temporary, os.O_WRONLY | os.O_CREAT | os.O_EXCL
+                             | os.O_NOFOLLOW | os.O_CLOEXEC, 0o600, dir_fd=parent)
+        try:
+            with os.fdopen(descriptor, 'wb') as destination:
+                destination.write(payload)
+            os.replace(temporary, path.name, src_dir_fd=parent, dst_dir_fd=parent)
+        finally:
+            try:
+                os.unlink(temporary, dir_fd=parent)
+            except FileNotFoundError:
+                pass
+
+
 def write_json(path, value):
-    path.write_text(json.dumps(value, indent=2) + '\n')
+    write_bytes(path, (json.dumps(value, indent=2) + '\n').encode())
+
+
+def read_regular_at(parent, name, maximum_bytes):
+    """Read a bounded untrusted output through a pre-opened directory handle.
+
+    NOFOLLOW rejects symbolic links; NONBLOCK avoids hanging on a FIFO before
+    fstat rejects non-regular files. Never enumerate and follow child paths.
+    """
+    if not name or name in ('.', '..') or '/' in name or maximum_bytes < 0:
+        raise ValueError('Invalid bounded output request')
+    descriptor = os.open(name, os.O_RDONLY | os.O_NOFOLLOW | os.O_NONBLOCK
+                         | os.O_CLOEXEC, dir_fd=parent)
+    try:
+        info = os.fstat(descriptor)
+        if not stat.S_ISREG(info.st_mode) or info.st_nlink != 1:
+            raise ValueError('Output must be a singly linked regular file')
+        if info.st_size > maximum_bytes:
+            raise ValueError('Output exceeds byte limit')
+        payload = bytearray()
+        while len(payload) <= maximum_bytes:
+            chunk = os.read(descriptor, min(65536, maximum_bytes + 1 - len(payload)))
+            if not chunk:
+                break
+            payload.extend(chunk)
+        if len(payload) > maximum_bytes:
+            raise ValueError('Output exceeds byte limit')
+        return bytes(payload)
+    finally:
+        os.close(descriptor)
 
 
 def download(url, expected, destination, limit):
@@ -129,19 +204,28 @@ def execute():
     if subprocess.run(['git', 'check-ignore', '-q', '.runtime/urgit-evaluations/probe'],
                       cwd=ROOT).returncode:
         raise ValueError('Evaluation directory is not ignored by Git')
+    initial_readings = temperatures()
+    if not initial_readings or max(initial_readings.values()) > pin['limits']['start_temperature_c']:
+        raise ValueError('Host is above the start temperature limit or has no thermal readings; retry when cool')
     base = ROOT / '.runtime/urgit-evaluations'
     no_links(base)
     base.mkdir(mode=0o700, exist_ok=True)
     run = Path(tempfile.mkdtemp(prefix=datetime.now(timezone.utc).strftime('%Y%m%dT%H%M%SZ-'), dir=base))
     evidence = run / 'evidence'
     evidence.mkdir()
-    write_json(run / '.stead-disposable.json', {
-        'format': 1, 'purpose': 'URB-025 isolated candidate evaluation', 'fake_identity': 'zod'})
-    (run / 'toolchain.lock.json').write_bytes(runtime_bytes)
-    (run / 'candidate.lock.json').write_bytes(pin_bytes)
+    # The candidate can write only work/ and output/. Never expose the run's
+    # parent, host evidence, or a second writable alias of read-only inputs.
+    inputs, work, output, control = (run / name for name in ('input', 'work', 'output', 'control'))
+    for path in (inputs, work, output, control):
+        path.mkdir(mode=0o700)
+    marker = {'format': 1, 'purpose': 'URB-025 isolated candidate evaluation', 'fake_identity': 'zod'}
+    write_json(run / '.stead-disposable.json', marker)
+    write_json(inputs / '.stead-disposable.json', marker)
+    (inputs / 'toolchain.lock.json').write_bytes(runtime_bytes)
+    (inputs / 'candidate.lock.json').write_bytes(pin_bytes)
     print('Audit directory: ' + str(run), flush=True)
     # Copy only our Python helpers, never source from the candidate into Git.
-    support = run / 'support'
+    support = inputs / 'support'
     support.mkdir()
     for source in sorted(HELPERS.glob('*.py')):
         no_links(source)
@@ -150,10 +234,10 @@ def execute():
     limits = pin['limits']
     candidate = pin['candidate']
     skeleton = pin['skeleton']
-    download(candidate['url'], candidate['sha256'], run / 'candidate.tar.gz', limits['maximum_download_bytes'])
-    source_info = unpack(run / 'candidate.tar.gz', run / 'candidate', pin)
-    download(skeleton['url'], skeleton['sha256'], run / 'skeleton.hoon', limits['maximum_download_bytes'])
-    download(skeleton['license_url'], skeleton['license_sha256'], run / 'skeleton-LICENSE.txt', limits['maximum_download_bytes'])
+    download(candidate['url'], candidate['sha256'], inputs / 'candidate.tar.gz', limits['maximum_download_bytes'])
+    source_info = unpack(inputs / 'candidate.tar.gz', inputs / 'candidate', pin)
+    download(skeleton['url'], skeleton['sha256'], inputs / 'skeleton.hoon', limits['maximum_download_bytes'])
+    download(skeleton['license_url'], skeleton['license_sha256'], inputs / 'skeleton-LICENSE.txt', limits['maximum_download_bytes'])
     cpu = max(os.sched_getaffinity(0))
     write_json(evidence / 'provenance.json', {
         'scope': pin['profile'], 'candidate': candidate, 'skeleton': skeleton,
@@ -162,27 +246,37 @@ def execute():
         'helpers_sha256': helpers, 'runner_sha256': digest(Path(__file__)),
         'source': source_info, 'cpu_affinity': [cpu], 'loom_exponent': limits['loom_exponent'],
         'host_tools_sha256': {p: digest(Path(p)) for p in ('/usr/bin/git', '/usr/bin/bwrap', '/usr/bin/python3')},
-        'uname': list(os.uname()), 'initial_temperatures_c': temperatures(),
+        'uname': list(os.uname()), 'initial_temperatures_c': initial_readings,
+        'thermal_limits_c': {'start': limits['start_temperature_c'], 'stop': limits['stop_temperature_c']},
+        'evidence_boundary': 'host evidence never mounted; fixed-name bounded no-follow output import',
         'excluded_claims': pin['excluded_claims']})
     args = ['/usr/bin/bwrap', '--unshare-all', '--die-with-parent', '--new-session', '--clearenv',
             '--ro-bind', '/usr', '/usr', '--symlink', 'usr/lib', '/lib',
             '--symlink', 'usr/lib64', '/lib64', '--symlink', 'usr/bin', '/bin',
             '--proc', '/proc', '--dev', '/dev', '--tmpfs', '/tmp', '--dir', '/home/audit',
             '--setenv', 'HOME', '/home/audit', '--setenv', 'PATH', '/usr/bin',
-            '--setenv', 'LANG', 'C.UTF-8', '--bind', str(run), '/work',
+            '--setenv', 'LANG', 'C.UTF-8', '--bind', str(work), '/work',
+            '--bind', str(output), '/output', '--ro-bind', str(inputs), '/input',
+            '--ro-bind', str(control), '/control',
             '--ro-bind', str(support), '/code',
             '--ro-bind', str(toolchain.CACHE / data['runtime']['binary']), '/runtime/vere',
             '--ro-bind', str(toolchain.CACHE / 'downloads' / data['boot_artifact']['archive']), '/runtime/pill',
             '--ro-bind', str(toolchain.CACHE / data['kernel']['directory']), '/kernel',
             '--chdir', '/work', '/usr/bin/python3', '-I', '/code/evaluate.py']
     write_json(evidence / 'sandbox-command.json', {'argv': args, 'cpu_affinity': [cpu]})
+    # Keep this handle open from before candidate execution until all outputs
+    # have been copied. Parent renames cannot redirect a later host read.
+    with directory_fd(output) as output_handle:
+        return run_sandbox(run, evidence, control, output_handle, args, cpu, limits)
+
+
+def run_sandbox(run, evidence, control, output_handle, args, cpu, limits):
     cancelled = False
     previous_handlers = {}
 
     def request_stop(signum, _frame):
         nonlocal cancelled
         cancelled = True
-        (run / 'STOP').touch(exist_ok=True)
 
     for sig in (signal.SIGINT, signal.SIGTERM):
         previous_handlers[sig] = signal.signal(sig, request_stop)
@@ -202,26 +296,29 @@ def execute():
                     stop_reason = stop_reason or 'operator interrupt'
                 elif elapsed > limits['total_timeout_seconds']:
                     stop_reason = stop_reason or 'overall evaluation timeout'
+                elif not readings:
+                    stop_reason = stop_reason or 'thermal readings unavailable'
                 elif readings and max(readings.values()) >= limits['stop_temperature_c']:
                     stop_reason = stop_reason or 'thermal ceiling reached'
                 if stop_reason:
-                    (run / 'STOP').touch(exist_ok=True)
+                    write_bytes(control / 'STOP', b'')
                     stop_at = stop_at or time.monotonic()
                     if time.monotonic() - stop_at > 90:
                         process.terminate()
                         break
                 if int(elapsed) % 30 < 5:
-                    status_path = evidence / 'status.json'
                     try:
-                        phase = json.loads(status_path.read_text())['phase']
-                    except (OSError, json.JSONDecodeError):
+                        phase = json.loads(read_regular_at(output_handle, 'status.json', 4096))['phase']
+                        if not isinstance(phase, str) or not phase.isprintable() or len(phase) > 120:
+                            raise ValueError('Invalid phase label')
+                    except (OSError, ValueError, KeyError, TypeError):
                         phase = 'starting isolated evaluator'
                     print(f'{phase}; elapsed {elapsed:.0f}s; max temperature {max(readings.values(), default=0):.1f} C', flush=True)
                 time.sleep(5)
             process.wait(timeout=15)
     finally:
         if process is not None and process.poll() is None:
-            (run / 'STOP').touch(exist_ok=True)
+            write_bytes(control / 'STOP', b'')
             try:
                 process.wait(timeout=45)
             except subprocess.TimeoutExpired:
@@ -229,14 +326,38 @@ def execute():
                 process.wait(timeout=15)
         for sig, handler in previous_handlers.items():
             signal.signal(sig, handler)
-    report_path = evidence / 'report.json'
-    report = json.loads(report_path.read_text()) if report_path.exists() else {'status': 'failed', 'reason': 'evaluator produced no report'}
+    imported, failures = {}, []
+    for name, limit in OUTPUT_LIMITS.items():
+        try:
+            imported[name] = read_regular_at(output_handle, name, limit)
+            write_bytes(evidence / name, imported[name])
+        except (ValueError, OSError) as error:
+            failures.append({'file': name, 'error': type(error).__name__})
+    try:
+        report = json.loads(imported.get('report.json', b'null'))
+        if (not isinstance(report, dict) or report.get('status') not in ('passed', 'failed')
+                or not isinstance(report.get('checks'), list) or len(report['checks']) > 32
+                or any(not isinstance(row, dict) or type(row.get('passed')) is not bool
+                       for row in report['checks'])):
+            raise ValueError('Invalid evaluator report shape')
+    except (ValueError, TypeError):
+        report = {'status': 'failed', 'reason': 'evaluator produced no valid report', 'checks': []}
+    if failures:
+        report.update(status='failed', output_import_failures=failures)
     if stop_reason:
         report.update(status='failed', host_stop_reason=stop_reason)
     report['sandbox_exit_code'] = process.returncode
-    write_json(report_path, report)
-    write_json(evidence / 'SHA256SUMS.json', {p.name: digest(p) for p in sorted(evidence.iterdir())
-                                             if p.is_file() and p.name != 'SHA256SUMS.json'})
+    if process.returncode != 0:
+        report.update(status='failed', reason='sandbox exited unsuccessfully')
+    write_json(evidence / 'report.json', report)
+    # Only host-created evidence exists here; no sandbox-controlled directory
+    # walk or Path.is_file()/digest() pair can follow an injected link.
+    names = sorted(set(imported) | {'report.json', 'provenance.json', 'sandbox-command.json',
+                                   'console.log', 'thermal.jsonl'})
+    with directory_fd(evidence) as evidence_handle:
+        hashes = {name: hashlib.sha256(read_regular_at(evidence_handle, name, 64 * 1024 * 1024)).hexdigest()
+                  for name in names}
+    write_json(evidence / 'SHA256SUMS.json', hashes)
     print(json.dumps({'audit_directory': str(run), 'status': report['status'],
                       'checks_passed': sum(x['passed'] for x in report.get('checks', [])),
                       'sandbox_exit_code': process.returncode}, indent=2))

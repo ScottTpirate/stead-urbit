@@ -1,0 +1,27 @@
+{
+  "argv": [
+    "systemd-run",
+    "--user",
+    "--scope",
+    "--quiet",
+    "--unit=stead-urgit-audit-20260913T014430Z",
+    "--property=CPUQuota=50%",
+    "--property=CPUQuotaPeriodSec=10ms",
+    "/usr/bin/python3",
+    "scripts/urbit/urgit_audit.py"
+  ],
+  "unit": "stead-urgit-audit-20260913T014430Z.scope",
+  "systemd_version": "systemd 261 (261.2-1-arch)",
+  "systemd_run_sha256": "e14f7e69b1c30ae2135de4abc8df315fe2f23a92ab5ee39d41d4fa5f0b0c6339",
+  "observed_systemd_properties": {
+    "ActiveState": "active",
+    "ControlGroup": "/user.slice/user-1000.slice/user@1000.service/app.slice/stead-urgit-audit-20260913T014430Z.scope",
+    "CPUQuotaPerSecUSec": "500ms",
+    "CPUQuotaPeriodUSec": "10ms"
+  },
+  "observed_cpu_max": "5000 10000",
+  "observed_cpu_stat": "usage_usec 17804899\nuser_usec 17471299\nsystem_usec 333600\nnice_usec 0\ncore_sched.force_idle_usec 0\nnr_periods 3580\nnr_throttled 3556\nthrottled_usec 17590658\nnr_bursts 0\nburst_usec 0\n",
+  "observed_at_utc": "2026-09-13T01:45:15Z",
+  "interpretation": "5000 microseconds of CPU per 10000-microsecond period; unchanged runner adds affinity CPU19 and75/90 C thermal guards",
+  "scope": "transient per-process-group resource control; no persistent system configuration change"
+}

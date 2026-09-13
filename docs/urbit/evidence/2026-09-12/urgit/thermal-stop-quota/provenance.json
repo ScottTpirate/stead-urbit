@@ -1,7 +1,5 @@
 {
-  "format": 1,
-  "profile": "isolated-native-git-candidate-evaluation-only",
-  "resolved_on": "2026-09-12",
+  "scope": "isolated-native-git-candidate-evaluation-only",
   "candidate": {
     "repository": "yapishu/urgit",
     "commit": "9cec0371b02269efcdbd8580c42e883e69b82000",
@@ -21,21 +19,46 @@
     "license_url": "https://raw.githubusercontent.com/urbit/urbit/0f94550b941dfe046d9dff4a541330bd084e8cd1/LICENSE.txt",
     "license_sha256": "b5d62c0a6f6b17ff490de29606527bf77b6509998ef07048488d659e2b719e52"
   },
-  "runtime_lock": "specs/urbit/toolchain.lock.json",
-  "fake_identity": "zod",
-  "limits": {
-    "maximum_download_bytes": 4194304,
-    "maximum_archive_files": 500,
-    "maximum_source_bytes": 33554432,
-    "maximum_file_bytes": 2097152,
-    "loom_exponent": 31,
-    "cpu_count": 1,
-    "boot_timeout_seconds": 1200,
-    "command_timeout_seconds": 300,
-    "total_timeout_seconds": 2100,
-    "start_temperature_c": 75,
-    "stop_temperature_c": 90
+  "candidate_lock_sha256": "50a90b296fa40e5a9178999cb2709682884812a98e2b133f6261eb5ec3934561",
+  "toolchain_lock_sha256": "4a209c10cf1756eb0f7357cc3eca8250bf66c239b4cd0ca31a8c0886d4d304ee",
+  "helpers_sha256": {
+    "evaluate.py": "bd14bb9088a62420d65350a85c98553c48f4743adf05d7d61a3e8022a56d8f91"
   },
+  "runner_sha256": "13ee74670b4b42fcb738fcff062db2bb61340bd63cb7f16c1a903796d7b84022",
+  "source": {
+    "regular_files": 132,
+    "source_bytes": 1258242
+  },
+  "cpu_affinity": [
+    19
+  ],
+  "loom_exponent": 31,
+  "host_tools_sha256": {
+    "/usr/bin/git": "93473c28694fd72bd889364107cd2770514de59780885a6a4aafca4d602e30ad",
+    "/usr/bin/bwrap": "7c44fa8e7326e62e81ab3f70ff682bfc0eb3b447b39cf9fbb779a31948364762",
+    "/usr/bin/python3": "d78f9cf7178ecff09963551399855543c297f37ac207e626228bfe43cb26a70c"
+  },
+  "uname": [
+    "Linux",
+    "<development-host>",
+    "7.1.9-arch1-2",
+    "#1 SMP PREEMPT_DYNAMIC Fri, 21 Aug 2026 22:18:59 +0000",
+    "x86_64"
+  ],
+  "initial_temperatures_c": {
+    "thermal_zone2:SEN3": 42.05,
+    "thermal_zone0:acpitz": 27.8,
+    "thermal_zone5:x86_pkg_temp": 48.0,
+    "thermal_zone3:TCPU": 48.0,
+    "thermal_zone1:INT3400 Thermal": 20.0,
+    "thermal_zone6:iwlwifi_1": 45.0,
+    "thermal_zone4:TCPU_PCI": 48.0
+  },
+  "thermal_limits_c": {
+    "start": 75,
+    "stop": 90
+  },
+  "evidence_boundary": "host evidence never mounted; fixed-name bounded no-follow output import",
   "excluded_claims": [
     "Stead Git integration or production admission",
     "concurrent server CAS",

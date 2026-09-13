@@ -1,0 +1,170 @@
+{
+  "classification": "local-real-native-fake-ships",
+  "status": "fail",
+  "error": "timed out",
+  "elapsed_seconds": 210.102,
+  "toolchain_sha256": "4a209c10cf1756eb0f7357cc3eca8250bf66c239b4cd0ca31a8c0886d4d304ee",
+  "native_tree_sha256": "50b627aadbd0dabc749271e0e9f7f210ba2e66f02572ac2c240463bddb635d32",
+  "harness_tree_sha256": "61e4316b6b1a3b971588f5947e3a495bf3eb03cdc86a57dd4cbf3114af573a6a",
+  "commands": [
+    {
+      "utc": "2026-09-13T01:07:54Z",
+      "command": "shutdown zod",
+      "result": {
+        "exit_code": 0
+      }
+    },
+    {
+      "utc": "2026-09-13T01:07:55Z",
+      "command": "shutdown bus",
+      "result": {
+        "exit_code": 0
+      }
+    },
+    {
+      "utc": "2026-09-13T01:07:56Z",
+      "command": "shutdown nec",
+      "result": {
+        "exit_code": 0
+      }
+    },
+    {
+      "utc": "2026-09-13T01:07:59Z",
+      "command": "shutdown bud",
+      "result": {
+        "exit_code": 0
+      }
+    },
+    {
+      "utc": "2026-09-13T01:08:05Z",
+      "command": "launch zod",
+      "result": {
+        "argv": [
+          "/runtime/bin/vere-v4.6-linux-x86_64",
+          "-t",
+          "-L",
+          "--no-dock",
+          "--loom",
+          "31",
+          "-b",
+          "127.0.0.1",
+          "--http-port",
+          "18080",
+          "/state/live/zod"
+        ],
+        "pid": 39
+      }
+    },
+    {
+      "utc": "2026-09-13T01:08:08Z",
+      "command": "zod: zuse",
+      "result": "%408\n"
+    },
+    {
+      "utc": "2026-09-13T01:08:08Z",
+      "command": "launch bus",
+      "result": {
+        "argv": [
+          "/runtime/bin/vere-v4.6-linux-x86_64",
+          "-t",
+          "-L",
+          "--no-dock",
+          "--loom",
+          "31",
+          "-b",
+          "127.0.0.1",
+          "--http-port",
+          "18081",
+          "/state/live/bus"
+        ],
+        "pid": 46
+      }
+    },
+    {
+      "utc": "2026-09-13T01:08:11Z",
+      "command": "bus: zuse",
+      "result": "%408\n"
+    },
+    {
+      "utc": "2026-09-13T01:08:11Z",
+      "command": "launch nec",
+      "result": {
+        "argv": [
+          "/runtime/bin/vere-v4.6-linux-x86_64",
+          "-t",
+          "-L",
+          "--no-dock",
+          "--loom",
+          "31",
+          "-b",
+          "127.0.0.1",
+          "--http-port",
+          "18082",
+          "/state/live/nec"
+        ],
+        "pid": 53
+      }
+    },
+    {
+      "utc": "2026-09-13T01:08:18Z",
+      "command": "nec: zuse",
+      "result": "%408\n"
+    },
+    {
+      "utc": "2026-09-13T01:08:18Z",
+      "command": "launch bud",
+      "result": {
+        "argv": [
+          "/runtime/bin/vere-v4.6-linux-x86_64",
+          "-t",
+          "-L",
+          "--no-dock",
+          "--loom",
+          "31",
+          "-b",
+          "127.0.0.1",
+          "--http-port",
+          "18083",
+          "/state/live/bud"
+        ],
+        "pid": 60
+      }
+    },
+    {
+      "utc": "2026-09-13T01:08:22Z",
+      "command": "bud: zuse",
+      "result": "%408\n"
+    },
+    {
+      "utc": "2026-09-13T01:08:22Z",
+      "command": "zod: |commit %base",
+      "result": ">="
+    },
+    {
+      "utc": "2026-09-13T01:08:22Z",
+      "command": "bus: |commit %base",
+      "result": ">="
+    },
+    {
+      "utc": "2026-09-13T01:08:23Z",
+      "command": "nec: |commit %base",
+      "result": ">="
+    },
+    {
+      "utc": "2026-09-13T01:08:23Z",
+      "command": "bud: |commit %base",
+      "result": ">="
+    },
+    {
+      "utc": "2026-09-13T01:08:24Z",
+      "command": "zod: |start %stead-home",
+      "result": ">="
+    },
+    {
+      "utc": "2026-09-13T01:08:24Z",
+      "command": "zod: -stead-smoke ~zod [%assert 0]",
+      "result": "%stead-smoke-ack\n"
+    }
+  ],
+  "scope": "synthetic counter only; not product/session/Git authorization"
+}

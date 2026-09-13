@@ -7,16 +7,19 @@ parsing, redaction, and symlink effects are real host operations.
 """
 from __future__ import annotations
 
+from contextlib import redirect_stdout
 import hashlib
 import importlib.util
 import io
 import json
+import os
 from pathlib import Path
 import sys
 import tarfile
 import tempfile
+import threading
 import unittest
-from unittest.mock import patch
+from unittest.mock import MagicMock, patch
 
 
 REPO = Path(__file__).resolve().parents[2]
@@ -25,6 +28,13 @@ import urgit_audit  # noqa: E402
 
 
 class UrgitHostBoundarySafety(unittest.TestCase):
+    def test_json_output_is_written_to_regular_host_file(self):
+        with tempfile.TemporaryDirectory(prefix='stead-urgit-host-boundary-') as tmp:
+            report = Path(tmp) / 'report.json'
+            value = {'status': 'failed', 'synthetic': True}
+            urgit_audit.write_json(report, value)
+            self.assertEqual(json.loads(report.read_text()), value)
+
     def test_json_output_cannot_overwrite_file_outside_run_via_symlink(self):
         with tempfile.TemporaryDirectory(prefix='stead-urgit-host-boundary-') as tmp:
             root = Path(tmp)
@@ -39,6 +49,19 @@ class UrgitHostBoundarySafety(unittest.TestCase):
             except (ValueError, OSError):
                 pass  # Refusal or an atomic safe replacement both preserve host data.
             self.assertEqual(sentinel.read_text(), 'preserve synthetic outside content')
+
+    def test_json_output_rejects_redirected_parent_directory(self):
+        with tempfile.TemporaryDirectory(prefix='stead-urgit-host-boundary-') as tmp:
+            root = Path(tmp)
+            outside = root / 'outside-run'
+            outside.mkdir()
+            sentinel = outside / 'report.json'
+            sentinel.write_text('preserve outside parent content')
+            redirected = root / 'evidence'
+            redirected.symlink_to(outside, target_is_directory=True)
+            with self.assertRaises((ValueError, OSError)):
+                urgit_audit.write_json(redirected / 'report.json', {'status': 'failed'})
+            self.assertEqual(sentinel.read_text(), 'preserve outside parent content')
 
     def test_download_never_follows_existing_destination_symlink(self):
         with tempfile.TemporaryDirectory(prefix='stead-urgit-download-') as tmp:
@@ -122,7 +145,107 @@ class UrgitArchiveSafety(unittest.TestCase):
     def test_absent_license_declaration_blocks_evaluation(self):
         self.tar([(self.license[0], b'no reviewed license declaration')])
         with self.assertRaisesRegex(ValueError, 'MIT declaration absent'):
-            urgit_audit.unpack(self.archive, self.destination, self.pin)
+                    urgit_audit.unpack(self.archive, self.destination, self.pin)
+
+
+class UrgitOutputImportSafety(unittest.TestCase):
+    def setUp(self):
+        self.temp = tempfile.TemporaryDirectory(prefix='stead-urgit-output-')
+        self.addCleanup(self.temp.cleanup)
+        self.root = Path(self.temp.name)
+        self.output = self.root / 'output'
+        self.output.mkdir()
+
+    def test_regular_file_is_read_through_anchored_directory(self):
+        (self.output / 'report.json').write_bytes(b'{"synthetic":true}')
+        with urgit_audit.directory_fd(self.output) as parent:
+            self.assertEqual(urgit_audit.read_regular_at(parent, 'report.json', 64), b'{"synthetic":true}')
+
+    def test_output_symlink_cannot_read_outside_file(self):
+        outside = self.root / 'outside'
+        outside.write_bytes(b'private synthetic sentinel')
+        (self.output / 'report.json').symlink_to(outside)
+        with urgit_audit.directory_fd(self.output) as parent:
+            with self.assertRaises((ValueError, OSError)):
+                urgit_audit.read_regular_at(parent, 'report.json', 64)
+
+    def test_oversized_output_is_rejected(self):
+        (self.output / 'report.json').write_bytes(b'x' * 65)
+        with urgit_audit.directory_fd(self.output) as parent:
+            with self.assertRaises(ValueError):
+                urgit_audit.read_regular_at(parent, 'report.json', 64)
+
+    def test_parent_traversal_filename_is_rejected(self):
+        (self.root / 'outside').write_bytes(b'synthetic sentinel')
+        with urgit_audit.directory_fd(self.output) as parent:
+            with self.assertRaises(ValueError):
+                urgit_audit.read_regular_at(parent, '../outside', 64)
+
+    def test_multiply_linked_file_is_rejected(self):
+        outside = self.root / 'outside'
+        outside.write_bytes(b'synthetic sentinel')
+        os.link(outside, self.output / 'report.json')
+        with urgit_audit.directory_fd(self.output) as parent:
+            with self.assertRaises(ValueError):
+                urgit_audit.read_regular_at(parent, 'report.json', 64)
+
+    def test_directory_rename_cannot_redirect_preopened_reader(self):
+        (self.output / 'report.json').write_bytes(b'original accepted output')
+        outside = self.root / 'outside'
+        outside.mkdir()
+        (outside / 'report.json').write_bytes(b'forbidden replacement')
+        with urgit_audit.directory_fd(self.output) as parent:
+            self.output.rename(self.root / 'original-output')
+            self.output.symlink_to(outside, target_is_directory=True)
+            self.assertEqual(urgit_audit.read_regular_at(parent, 'report.json', 64), b'original accepted output')
+
+    def test_fifo_is_rejected_without_waiting_for_writer(self):
+        fifo = self.output / 'report.json'
+        os.mkfifo(fifo)
+        completed = threading.Event()
+        outcomes = []
+        with urgit_audit.directory_fd(self.output) as parent:
+            def attempt():
+                try:
+                    outcomes.append(urgit_audit.read_regular_at(parent, 'report.json', 64))
+                except Exception as error:
+                    outcomes.append(error)
+                finally:
+                    completed.set()
+
+            worker = threading.Thread(target=attempt, daemon=True)
+            worker.start()
+            returned_without_writer = completed.wait(1)
+            if not returned_without_writer:
+                # Unblock a regressed implementation so this negative test
+                # reports a failure rather than hanging the entire test suite.
+                writer = os.open(fifo, os.O_WRONLY | os.O_NONBLOCK)
+                os.write(writer, b'x')
+                os.close(writer)
+            worker.join(2)
+            self.assertTrue(returned_without_writer, 'Untrusted FIFO blocked the host evidence reader')
+            self.assertIsInstance(outcomes[0], (ValueError, OSError))
+
+    def test_nonzero_sandbox_exit_cannot_persist_passed_host_report(self):
+        evidence, control = self.root / 'evidence', self.root / 'control'
+        evidence.mkdir()
+        control.mkdir()
+        for name in urgit_audit.OUTPUT_LIMITS:
+            (self.output / name).write_bytes(b'{}')
+        (self.output / 'report.json').write_text(json.dumps({'status': 'passed', 'checks': [{'passed': True}]}))
+        for name in ('provenance.json', 'sandbox-command.json'):
+            (evidence / name).write_bytes(b'{}')
+        process = MagicMock()
+        process.returncode = 17
+        process.poll.return_value = 17
+        process.wait.return_value = 17
+        with urgit_audit.directory_fd(self.output) as parent:
+            # Only the subprocess is mocked; output import/report writes and
+            # final checksum generation execute against the synthetic files.
+            with patch.object(urgit_audit.subprocess, 'Popen', return_value=process), redirect_stdout(io.StringIO()):
+                result = urgit_audit.run_sandbox(self.root, evidence, control, parent, ['not-executed'], 0, {})
+        self.assertEqual(result, 1)
+        self.assertEqual(json.loads((evidence / 'report.json').read_text())['status'], 'failed')
 
 
 class UrgitCredentialRedactionSafety(unittest.TestCase):
@@ -136,12 +259,12 @@ class UrgitCredentialRedactionSafety(unittest.TestCase):
         read_text, open_path = Path.read_text, Path.open
 
         def fixture_read(path, *args, **kwargs):
-            if path in (Path('/work/candidate.lock.json'), Path('/work/toolchain.lock.json')):
+            if path in (Path('/input/candidate.lock.json'), Path('/input/toolchain.lock.json')):
                 return '{}'
             return read_text(path, *args, **kwargs)
 
         def fixture_open(path, *args, **kwargs):
-            if path == Path('/work/evidence/commands.jsonl'):
+            if path == Path('/output/commands.jsonl'):
                 return self.events
             return open_path(path, *args, **kwargs)
 

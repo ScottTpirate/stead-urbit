@@ -1,6 +1,8 @@
 # Native implementation boundary
 
-No runnable Hoon application is included yet. URB-010 and URB-020 establish the pinned toolchain and fake-ship harness first.
+The counter in `native/desk` compiles and passes the real four-fake-ship smoke/restart corpus. It is deliberately limited to URB-020 and does not implement Work/Docs or application sessions. See `docs/urbit/TEST_RESULTS.md` and `RUNBOOK.md`.
+
+The first product state/authorization increment will use `native/core/desk` under the minimum frozen contracts, keeping the original counter fixture reproducible. Only one `stead-home` version runs on a given disposable home at a time.
 
 Proposed layout, to be created as implemented:
 

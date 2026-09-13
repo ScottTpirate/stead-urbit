@@ -82,7 +82,7 @@
             },
             "project_key": {
               "type": "string",
-              "pattern": "^[A-Z][A-Z0-9]{1,11}$"
+              "pattern": "^[A-Z][A-Z0-9]{1,9}$"
             },
             "preset": {
               "enum": [
