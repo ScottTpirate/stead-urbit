@@ -22,3 +22,9 @@ The old source tree is retained under `reference/stead/` for specification trace
 Native application logic and Git semantics are the target. Browser JavaScript, Linux hosting, independent CI execution, and a documented replaceable bulk-storage boundary are allowed in the staged implementation. This is not a claim that every infrastructure dependency has been rewritten in Hoon.
 
 No candidate dependency is approved by being named here. In particular, Urgit reuse requires a recorded license decision and independent compatibility/security results.
+
+## Ecosystem roadmap and contributor guidance
+
+[Roadmap issue #1](https://github.com/ScottTpirate/stead-urbit/issues/1) links the 30 tracked tasks. The [ecosystem plan](docs/urbit/ECOSYSTEM_PLAN.md) preserves phases 0–5 and adds a supported ecosystem release gate. Read the [developer guide](docs/urbit/DEVELOPER_GUIDE.md) for repo-local Hoon skills and checks, and the [carryover ledger](docs/urbit/STEAD_CARRYOVER.md) before reusing original Stead work.
+
+These are implementation requirements and tested planning tools, not evidence that the native product is complete. Existing agent work remains the priority. CONTRIBUTING.md, SECURITY.md and SUPPORT.md describe the current experimental scope.
