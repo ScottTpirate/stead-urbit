@@ -1,0 +1,6 @@
+# Scope normalization to new Hoon and instruction source. Never renormalize archives/fixtures.
+native/**/*.hoon text eol=lf
+.agents/skills/**/SKILL.md text eol=lf
+reference/** -text
+tests/**/fixtures/** -text
+native/**/fixtures/** -text
