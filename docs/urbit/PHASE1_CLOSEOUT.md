@@ -12,8 +12,10 @@ PR #33 remains draft at `96971540cf70c557f01a5ef10db832ddee2e0130`;
 PR #34 remains draft at `77428f6c35eb0fe7b7e497b64c5a1eab92e943cd`.
 The last actually tested native product source remains
 `f52293f7cd6970ded20e73b097beffb7418e4bbd`;77428f6 is its records-only binding.
-The new source/evidence binding and current PR link are recorded in the adjacent
-qualification evidence. No implementation PR was merged or force-pushed.
+The new source commit is `54734c85b1afc544c331dc80409dfa8f585ae977`;
+its [source/evidence binding](evidence/2026-09-13/qualification/source-binding.json)
+verifies all88 recorded code/input files against that commit. The current PR link
+is recorded with the issue handoff. No implementation PR was merged or force-pushed.
 
 ## What changed and what ran
 
@@ -76,8 +78,9 @@ evaluator temporary-file writes are time-bounded, not a hard disk quota.
 All 25 historical skips remain unchanged. The new manifest tracks 22 delivery
 observations, the wider scoped-confidentiality claim, one narrow absent-effect
 disposition and one source-ordering obligation. Source/N-A evidence stays labelled
-separately. No required native skip has become a pass. The new current gate fails
-with missing native evidence, including the actual delayed inbound old-leave
+separately. No required native skip has become a pass. The [executed current gate](evidence/2026-09-13/qualification/current-gate.json)
+qualifies seven separately typed host/source/N-A requirements and fails with0/66
+native requirements supported, including the actual delayed inbound old-leave
 schedule. An owner-controlled stale local `%leave` request may be discarded by
 Gall before transport; it does not prove injection at the home. That remaining
 test mechanism must be implemented/reviewed, not renamed away.

@@ -1,0 +1,814 @@
+{
+  "protocol": "stead.qualification-gate/2",
+  "status": "failed",
+  "test_owner": "/root/qa_review",
+  "items": [
+    {
+      "id": "delivery:empty-project-known-unknown:1",
+      "kind": "native",
+      "status": "missing",
+      "scope": "Actual observer request fact/kick plus an active foreign subscriber receiving no event; known valid mark and fault-free runtime evidence.",
+      "reason": "Required current-phase evidence was not executed or supplied"
+    },
+    {
+      "id": "delivery:empty-project-known-unknown:2",
+      "kind": "native",
+      "status": "missing",
+      "scope": "Actual observer request fact/kick plus an active foreign subscriber receiving no event; known valid mark and fault-free runtime evidence.",
+      "reason": "Required current-phase evidence was not executed or supplied"
+    },
+    {
+      "id": "delivery:outsider-private-project-existence:1",
+      "kind": "native",
+      "status": "missing",
+      "scope": "Actual observer request fact/kick plus an active foreign subscriber receiving no event; known valid mark and fault-free runtime evidence.",
+      "reason": "Required current-phase evidence was not executed or supplied"
+    },
+    {
+      "id": "delivery:outsider-private-project-existence:2",
+      "kind": "native",
+      "status": "missing",
+      "scope": "Actual observer request fact/kick plus an active foreign subscriber receiving no event; known valid mark and fault-free runtime evidence.",
+      "reason": "Required current-phase evidence was not executed or supplied"
+    },
+    {
+      "id": "delivery:reader-can-read-work:1",
+      "kind": "native",
+      "status": "missing",
+      "scope": "Actual observer request fact/kick plus an active foreign subscriber receiving no event; known valid mark and fault-free runtime evidence.",
+      "reason": "Required current-phase evidence was not executed or supplied"
+    },
+    {
+      "id": "delivery:outsider-work-known-unknown:1",
+      "kind": "native",
+      "status": "missing",
+      "scope": "Actual observer request fact/kick plus an active foreign subscriber receiving no event; known valid mark and fault-free runtime evidence.",
+      "reason": "Required current-phase evidence was not executed or supplied"
+    },
+    {
+      "id": "delivery:outsider-work-known-unknown:2",
+      "kind": "native",
+      "status": "missing",
+      "scope": "Actual observer request fact/kick plus an active foreign subscriber receiving no event; known valid mark and fault-free runtime evidence.",
+      "reason": "Required current-phase evidence was not executed or supplied"
+    },
+    {
+      "id": "delivery:explicit-grant-allows-former-outsider:1",
+      "kind": "native",
+      "status": "missing",
+      "scope": "Actual observer request fact/kick plus an active foreign subscriber receiving no event; known valid mark and fault-free runtime evidence.",
+      "reason": "Required current-phase evidence was not executed or supplied"
+    },
+    {
+      "id": "delivery:owner-reads-private-document:1",
+      "kind": "native",
+      "status": "missing",
+      "scope": "Actual observer request fact/kick plus an active foreign subscriber receiving no event; known valid mark and fault-free runtime evidence.",
+      "reason": "Required current-phase evidence was not executed or supplied"
+    },
+    {
+      "id": "delivery:reader-private-document-known-unknown:1",
+      "kind": "native",
+      "status": "missing",
+      "scope": "Actual observer request fact/kick plus an active foreign subscriber receiving no event; known valid mark and fault-free runtime evidence.",
+      "reason": "Required current-phase evidence was not executed or supplied"
+    },
+    {
+      "id": "delivery:reader-private-document-known-unknown:2",
+      "kind": "native",
+      "status": "missing",
+      "scope": "Actual observer request fact/kick plus an active foreign subscriber receiving no event; known valid mark and fault-free runtime evidence.",
+      "reason": "Required current-phase evidence was not executed or supplied"
+    },
+    {
+      "id": "delivery:outsider-private-document-known-unknown:1",
+      "kind": "native",
+      "status": "missing",
+      "scope": "Actual observer request fact/kick plus an active foreign subscriber receiving no event; known valid mark and fault-free runtime evidence.",
+      "reason": "Required current-phase evidence was not executed or supplied"
+    },
+    {
+      "id": "delivery:outsider-private-document-known-unknown:2",
+      "kind": "native",
+      "status": "missing",
+      "scope": "Actual observer request fact/kick plus an active foreign subscriber receiving no event; known valid mark and fault-free runtime evidence.",
+      "reason": "Required current-phase evidence was not executed or supplied"
+    },
+    {
+      "id": "scoped-private-metadata",
+      "kind": "native",
+      "status": "missing",
+      "scope": "Reproduce former availability/activity oracles and verify scoped allocation, retry/recovery/normal receipt and authorized exports. Shared physical timing remains outside this bounded assertion.",
+      "reason": "Required current-phase evidence was not executed or supplied"
+    },
+    {
+      "id": "delivery:reader-private-manifest-known-unknown:1",
+      "kind": "native",
+      "status": "missing",
+      "scope": "Actual observer request fact/kick plus an active foreign subscriber receiving no event; known valid mark and fault-free runtime evidence.",
+      "reason": "Required current-phase evidence was not executed or supplied"
+    },
+    {
+      "id": "delivery:reader-private-manifest-known-unknown:2",
+      "kind": "native",
+      "status": "missing",
+      "scope": "Actual observer request fact/kick plus an active foreign subscriber receiving no event; known valid mark and fault-free runtime evidence.",
+      "reason": "Required current-phase evidence was not executed or supplied"
+    },
+    {
+      "id": "delivery:object-read-binds-retained-snapshot-and-container:1",
+      "kind": "native",
+      "status": "missing",
+      "scope": "Actual observer request fact/kick plus an active foreign subscriber receiving no event; known valid mark and fault-free runtime evidence.",
+      "reason": "Required current-phase evidence was not executed or supplied"
+    },
+    {
+      "id": "delivery:object-read-binds-retained-snapshot-and-container:2",
+      "kind": "native",
+      "status": "missing",
+      "scope": "Actual observer request fact/kick plus an active foreign subscriber receiving no event; known valid mark and fault-free runtime evidence.",
+      "reason": "Required current-phase evidence was not executed or supplied"
+    },
+    {
+      "id": "delivery:object-read-binds-retained-snapshot-and-container:3",
+      "kind": "native",
+      "status": "missing",
+      "scope": "Actual observer request fact/kick plus an active foreign subscriber receiving no event; known valid mark and fault-free runtime evidence.",
+      "reason": "Required current-phase evidence was not executed or supplied"
+    },
+    {
+      "id": "delivery:object-read-binds-retained-snapshot-and-container:4",
+      "kind": "native",
+      "status": "missing",
+      "scope": "Actual observer request fact/kick plus an active foreign subscriber receiving no event; known valid mark and fault-free runtime evidence.",
+      "reason": "Required current-phase evidence was not executed or supplied"
+    },
+    {
+      "id": "delivery:object-read-binds-retained-snapshot-and-container:5",
+      "kind": "native",
+      "status": "missing",
+      "scope": "Actual observer request fact/kick plus an active foreign subscriber receiving no event; known valid mark and fault-free runtime evidence.",
+      "reason": "Required current-phase evidence was not executed or supplied"
+    },
+    {
+      "id": "delivery:object-read-binds-retained-snapshot-and-container:6",
+      "kind": "native",
+      "status": "missing",
+      "scope": "Actual observer request fact/kick plus an active foreign subscriber receiving no event; known valid mark and fault-free runtime evidence.",
+      "reason": "Required current-phase evidence was not executed or supplied"
+    },
+    {
+      "id": "no-effect-subsystem",
+      "kind": "not_applicable",
+      "status": "not_applicable",
+      "scope": "This increment implements no external effect executor. This is not a replay-safety test or proof about future build/message/model/deployment effects.",
+      "verified_by": "stead.qualification-gate/2",
+      "artifact": {
+        "path": "docs/urbit/evidence/2026-09-13/qualification/bound-proofs.json",
+        "sha256": "c5edbf7c4b4f9774c6a69648b10d0cb80599a0cbf8ac132cc73441a5a069f31b",
+        "pointer": "/proofs/1"
+      },
+      "bindings": {
+        "source_commit": "54734c85b1afc544c331dc80409dfa8f585ae977",
+        "native_tree_sha256": "a16e6ca6125797fce156aa9e36721432f9152cae5514708d2632464d42f77b7d",
+        "runtime_lock_sha256": "4a209c10cf1756eb0f7357cc3eca8250bf66c239b4cd0ca31a8c0886d4d304ee",
+        "corpus_sha256": "95c915e2d0c93f358225274b34216fff0fe2efc09791905855b1e3f36aec368a",
+        "contract_freeze_sha256": "a2336e5060c71c7c16849b3151cc024a598d6cdf867561452eff1338e3232670",
+        "runner_sha256": "2df9e36455150e832067bc384f28740eab99781989f776138957e5289ea6a3d4"
+      },
+      "assertion_count": 1
+    },
+    {
+      "id": "delivery:downgraded-reader-retains-work-read:1",
+      "kind": "native",
+      "status": "missing",
+      "scope": "Actual observer request fact/kick plus an active foreign subscriber receiving no event; known valid mark and fault-free runtime evidence.",
+      "reason": "Required current-phase evidence was not executed or supplied"
+    },
+    {
+      "id": "receipt-lookup-order",
+      "kind": "source_review",
+      "status": "reviewed",
+      "scope": "Current typed resource/action authorization must run before receipt lookup/decode; source digest must match the executed closure.",
+      "verified_by": "stead.qualification-gate/2",
+      "artifact": {
+        "path": "docs/urbit/evidence/2026-09-13/qualification/bound-proofs.json",
+        "sha256": "c5edbf7c4b4f9774c6a69648b10d0cb80599a0cbf8ac132cc73441a5a069f31b",
+        "pointer": "/proofs/0"
+      },
+      "bindings": {
+        "source_commit": "54734c85b1afc544c331dc80409dfa8f585ae977",
+        "native_tree_sha256": "a16e6ca6125797fce156aa9e36721432f9152cae5514708d2632464d42f77b7d",
+        "runtime_lock_sha256": "4a209c10cf1756eb0f7357cc3eca8250bf66c239b4cd0ca31a8c0886d4d304ee",
+        "corpus_sha256": "95c915e2d0c93f358225274b34216fff0fe2efc09791905855b1e3f36aec368a",
+        "contract_freeze_sha256": "a2336e5060c71c7c16849b3151cc024a598d6cdf867561452eff1338e3232670",
+        "runner_sha256": "2df9e36455150e832067bc384f28740eab99781989f776138957e5289ea6a3d4"
+      },
+      "assertion_count": 1
+    },
+    {
+      "id": "guard-independent-source-review",
+      "kind": "source_review",
+      "status": "reviewed",
+      "scope": "Exact common source reviewed; thermal, lock, lease, scope, cleanup, fail status and seed boundaries remain conservative.",
+      "verified_by": "stead.qualification-gate/2",
+      "artifact": {
+        "path": "docs/urbit/evidence/2026-09-13/qualification/bound-proofs.json",
+        "sha256": "c5edbf7c4b4f9774c6a69648b10d0cb80599a0cbf8ac132cc73441a5a069f31b",
+        "pointer": "/proofs/2"
+      },
+      "bindings": {
+        "source_commit": "54734c85b1afc544c331dc80409dfa8f585ae977",
+        "native_tree_sha256": "a16e6ca6125797fce156aa9e36721432f9152cae5514708d2632464d42f77b7d",
+        "runtime_lock_sha256": "4a209c10cf1756eb0f7357cc3eca8250bf66c239b4cd0ca31a8c0886d4d304ee",
+        "corpus_sha256": "95c915e2d0c93f358225274b34216fff0fe2efc09791905855b1e3f36aec368a",
+        "contract_freeze_sha256": "a2336e5060c71c7c16849b3151cc024a598d6cdf867561452eff1338e3232670",
+        "runner_sha256": "2df9e36455150e832067bc384f28740eab99781989f776138957e5289ea6a3d4"
+      },
+      "assertion_count": 1
+    },
+    {
+      "id": "guard-negative-host-tests",
+      "kind": "host_mocked",
+      "status": "passed",
+      "scope": "Synthetic sensor/child failure tests only; unchanged75/90C and50%CPU limits.",
+      "verified_by": "stead.qualification-gate/2",
+      "artifact": {
+        "path": "docs/urbit/evidence/2026-09-13/qualification/bound-proofs.json",
+        "sha256": "c5edbf7c4b4f9774c6a69648b10d0cb80599a0cbf8ac132cc73441a5a069f31b",
+        "pointer": "/proofs/3"
+      },
+      "bindings": {
+        "guard_sha256": "7166d197a6e3879f21c22637f2bd3074ff90975c33a2149f6e07763e2eeaa04e"
+      },
+      "assertion_count": 7
+    },
+    {
+      "id": "guard-real-hot-preflight-refusal",
+      "kind": "real_host",
+      "status": "passed",
+      "scope": "Two retained real-host refusals:93C light shim and81C four-fake start; neither launched Vere.",
+      "verified_by": "stead.qualification-gate/2",
+      "artifact": {
+        "path": "docs/urbit/evidence/2026-09-13/qualification/bound-proofs.json",
+        "sha256": "c5edbf7c4b4f9774c6a69648b10d0cb80599a0cbf8ac132cc73441a5a069f31b",
+        "pointer": "/proofs/4"
+      },
+      "bindings": {
+        "guard_sha256": "7166d197a6e3879f21c22637f2bd3074ff90975c33a2149f6e07763e2eeaa04e"
+      },
+      "assertion_count": 2
+    },
+    {
+      "id": "guard-real-platform-mocked-sensors",
+      "kind": "real_platform_mocked_sensors",
+      "status": "passed",
+      "scope": "Actual systemd/bwrap/namespace/lock lifetime with mocked cool sensors; no native/thermal qualification.",
+      "verified_by": "stead.qualification-gate/2",
+      "artifact": {
+        "path": "docs/urbit/evidence/2026-09-13/qualification/bound-proofs.json",
+        "sha256": "c5edbf7c4b4f9774c6a69648b10d0cb80599a0cbf8ac132cc73441a5a069f31b",
+        "pointer": "/proofs/5"
+      },
+      "bindings": {
+        "guard_sha256": "7166d197a6e3879f21c22637f2bd3074ff90975c33a2149f6e07763e2eeaa04e"
+      },
+      "assertion_count": 4
+    },
+    {
+      "id": "v2-native-compile",
+      "kind": "native",
+      "status": "missing",
+      "scope": "Native compile/load of exact current Hoon closure including observer; compiler warnings/errors retained.",
+      "reason": "Required current-phase evidence was not executed or supplied"
+    },
+    {
+      "id": "v2-ordered-journey",
+      "kind": "native",
+      "status": "missing",
+      "scope": "All129 retained cases with explicit9 scoped-identity acceptance changes, exact native receipt/internal journal and atomicity assertions.",
+      "reason": "Required current-phase evidence was not executed or supplied"
+    },
+    {
+      "id": "v2-codec-and-home-rejection",
+      "kind": "native",
+      "status": "missing",
+      "scope": "Six derived vectors and43 raw/Unicode/schema controls at native codec and actual home boundary; negative input leaves business state unchanged.",
+      "reason": "Required current-phase evidence was not executed or supplied"
+    },
+    {
+      "id": "v2-context-controls",
+      "kind": "native",
+      "status": "missing",
+      "scope": "All14 missing/expired/revoked/profile/sender controls against actual native authorization.",
+      "reason": "Required current-phase evidence was not executed or supplied"
+    },
+    {
+      "id": "v2-concurrent-cas",
+      "kind": "native",
+      "status": "missing",
+      "scope": "Two simultaneous current-authorized work writes; one CAS wins and one conflicts; no double receipt/journal.",
+      "reason": "Required current-phase evidence was not executed or supplied"
+    },
+    {
+      "id": "legacy-private-project-probe-reproduced",
+      "kind": "native",
+      "status": "missing",
+      "scope": "Provenance-bound v1 native accepted history reproduces hidden cross-project local-ID availability oracle.",
+      "reason": "Required current-phase evidence was not executed or supplied"
+    },
+    {
+      "id": "legacy-private-container-probe-reproduced",
+      "kind": "native",
+      "status": "missing",
+      "scope": "Provenance-bound v1 native accepted history reproduces same-project other-owner document availability oracle.",
+      "reason": "Required current-phase evidence was not executed or supplied"
+    },
+    {
+      "id": "v2-cross-project-local-id",
+      "kind": "native",
+      "status": "missing",
+      "scope": "Same work/grant local IDs allocate independently across current-authorized project scopes; outsider cannot read either hidden scope.",
+      "reason": "Required current-phase evidence was not executed or supplied"
+    },
+    {
+      "id": "v2-cross-container-local-id",
+      "kind": "native",
+      "status": "missing",
+      "scope": "Same document local ID independently saves in private containers with no global lookup or disclosure.",
+      "reason": "Required current-phase evidence was not executed or supplied"
+    },
+    {
+      "id": "v2-public-receipt-normal",
+      "kind": "native",
+      "status": "missing",
+      "scope": "New accepted Work/Docs receipts exclude journal sequence/hash/policy counters and carry exact typed scope.",
+      "reason": "Required current-phase evidence was not executed or supplied"
+    },
+    {
+      "id": "v2-public-receipt-retry",
+      "kind": "native",
+      "status": "missing",
+      "scope": "Current-authorized equal retries return identical projected receipts despite unrelated private activity.",
+      "reason": "Required current-phase evidence was not executed or supplied"
+    },
+    {
+      "id": "v2-public-receipt-recovery",
+      "kind": "native",
+      "status": "missing",
+      "scope": "Recovery uses exact project/container/kind scope and excludes private journal/policy metadata.",
+      "reason": "Required current-phase evidence was not executed or supplied"
+    },
+    {
+      "id": "v2-public-export-projection",
+      "kind": "native",
+      "status": "missing",
+      "scope": "Exports contain only authorized selected-container objects/history; no private project journal or unrelated container activity.",
+      "reason": "Required current-phase evidence was not executed or supplied"
+    },
+    {
+      "id": "legacy-revocation-exhaustion-reproduced",
+      "kind": "native",
+      "status": "missing",
+      "scope": "Legitimate near4096 predecessor transition history reproduces blocked security revocation; no counter injection.",
+      "reason": "Required current-phase evidence was not executed or supplied"
+    },
+    {
+      "id": "v2-security-revoke-reserve",
+      "kind": "native",
+      "status": "missing",
+      "scope": "At ordinary4096 capacity, final-authorized revoke still accepts atomically from reserved capacity.",
+      "reason": "Required current-phase evidence was not executed or supplied"
+    },
+    {
+      "id": "v2-cross-project-security-admin",
+      "kind": "native",
+      "status": "missing",
+      "scope": "Another exhausted project cannot block explicit organization-policy administrator revocation in this project; all profile and current authority checks retained.",
+      "reason": "Required current-phase evidence was not executed or supplied"
+    },
+    {
+      "id": "v2-security-reserve-exhaustion",
+      "kind": "native",
+      "status": "missing",
+      "scope": "All128 retained grants revoked through real transitions; project closes to subsequent reads/retries/recovery/writes; other projects retain security capacity.",
+      "reason": "Required current-phase evidence was not executed or supplied"
+    },
+    {
+      "id": "v2-security-counter-u64-edge",
+      "kind": "native",
+      "status": "missing",
+      "scope": "Separately labeled synthetic u64 edge refuses/derives closure; not legitimate4096-history proof.",
+      "reason": "Required current-phase evidence was not executed or supplied"
+    },
+    {
+      "id": "boundary-projects",
+      "kind": "native",
+      "status": "missing",
+      "scope": "16project boundary: new allocation fails atomically; no metadata for unauthorized requester.",
+      "reason": "Required current-phase evidence was not executed or supplied"
+    },
+    {
+      "id": "boundary-grants",
+      "kind": "native",
+      "status": "missing",
+      "scope": "128retained-grant boundary/tombstones, current auth before capacity, no partial policy/receipt write.",
+      "reason": "Required current-phase evidence was not executed or supplied"
+    },
+    {
+      "id": "boundary-work",
+      "kind": "native",
+      "status": "missing",
+      "scope": "128work/project boundary; scoped collision cases included; revision updates within bound remain coherent.",
+      "reason": "Required current-phase evidence was not executed or supplied"
+    },
+    {
+      "id": "boundary-documents-tree",
+      "kind": "native",
+      "status": "missing",
+      "scope": "32documents/container and tree entry bound; rejected save leaves objects/ref/pointer/journal/receipt unchanged.",
+      "reason": "Required current-phase evidence was not executed or supplied"
+    },
+    {
+      "id": "boundary-container-history",
+      "kind": "native",
+      "status": "missing",
+      "scope": "128commits/container; failed129th save has no admitted Git objects/ref or receipt.",
+      "reason": "Required current-phase evidence was not executed or supplied"
+    },
+    {
+      "id": "boundary-object-bytes",
+      "kind": "native",
+      "status": "missing",
+      "scope": "8388608canonical object bytes; boundary refusal admits no object, ref, pointer or journal.",
+      "reason": "Required current-phase evidence was not executed or supplied"
+    },
+    {
+      "id": "boundary-ordinary-journal-receipts",
+      "kind": "native",
+      "status": "missing",
+      "scope": "4096ordinary accepted events/receipts reached by real bounded native batches; no off-by-one or implicit successful rejection.",
+      "reason": "Required current-phase evidence was not executed or supplied"
+    },
+    {
+      "id": "boundary-pending",
+      "kind": "native",
+      "status": "missing",
+      "scope": "16per-sender/64total pending reservations; no hidden metadata or business state changes.",
+      "reason": "Required current-phase evidence was not executed or supplied"
+    },
+    {
+      "id": "delivery-positive-known-mark-control",
+      "kind": "native",
+      "status": "missing",
+      "scope": "Actual valid stead-result-2 fact/control proves observer sees delivered leak metadata; zero-evidence claim fails if observer faults/runtime loses mark.",
+      "reason": "Required current-phase evidence was not executed or supplied"
+    },
+    {
+      "id": "delivery-ended-duct-no-late-fact",
+      "kind": "native",
+      "status": "missing",
+      "scope": "Completed/cancelled/expired old ducts receive no later private fact; fresh exact registration is a distinct authorized attempt.",
+      "reason": "Required current-phase evidence was not executed or supplied"
+    },
+    {
+      "id": "delivery-expired-same-path-reregistration",
+      "kind": "native",
+      "status": "missing",
+      "scope": "After60s expired same path is retired; ACK+kick without fact means no result. A subsequent fresh registration has a live recipient.",
+      "reason": "Required current-phase evidence was not executed or supplied"
+    },
+    {
+      "id": "delivery-late-old-leave",
+      "kind": "native",
+      "status": "missing",
+      "scope": "Retired old duct leave cannot delete a new same-path reservation; actual native observer and pending state are recorded.",
+      "reason": "Required current-phase evidence was not executed or supplied"
+    },
+    {
+      "id": "delivery-expiration-lazy",
+      "kind": "native",
+      "status": "missing",
+      "scope": "Record real time and later triggering event; no claim of autonomous cleanup timer.",
+      "reason": "Required current-phase evidence was not executed or supplied"
+    },
+    {
+      "id": "delivery-leave-cancels",
+      "kind": "native",
+      "status": "missing",
+      "scope": "Current sender leave frees pending route without accepted business change; old route gets no content.",
+      "reason": "Required current-phase evidence was not executed or supplied"
+    },
+    {
+      "id": "delivery-same-path-private-readers",
+      "kind": "native",
+      "status": "missing",
+      "scope": "Held outsider same-path duct receives no owner read content; outsider release only yields exact denial.",
+      "reason": "Required current-phase evidence was not executed or supplied"
+    },
+    {
+      "id": "delivery-wrong-sender-digest",
+      "kind": "native",
+      "status": "missing",
+      "scope": "Wrong source/binding/digest cannot reserve or consume another sender result.",
+      "reason": "Required current-phase evidence was not executed or supplied"
+    },
+    {
+      "id": "delivery-missing-channel",
+      "kind": "native",
+      "status": "missing",
+      "scope": "Command may durably accept without a result channel; ACK alone cannot be shown Saved; current-authorized recovery required.",
+      "reason": "Required current-phase evidence was not executed or supplied"
+    },
+    {
+      "id": "delivery-home-unavailable",
+      "kind": "native",
+      "status": "missing",
+      "scope": "Stopped/unreachable home produces unavailable/pending; no fabricated accepted receipt.",
+      "reason": "Required current-phase evidence was not executed or supplied"
+    },
+    {
+      "id": "delivery-late-response",
+      "kind": "native",
+      "status": "missing",
+      "scope": "Late result on expired/cancelled route cannot become current Saved state or reopen old duct.",
+      "reason": "Required current-phase evidence was not executed or supplied"
+    },
+    {
+      "id": "migration-current-roundtrip",
+      "kind": "native",
+      "status": "missing",
+      "scope": "Current%2save/load preserves exact state; distinct from predecessor migration.",
+      "reason": "Required current-phase evidence was not executed or supplied"
+    },
+    {
+      "id": "migration-actual-v1-vase",
+      "kind": "native",
+      "status": "missing",
+      "scope": "Actual provenance-built predecessor%1state migrates to%2without changing Git/audit bytes, grants or acceptance count; not OTA proof.",
+      "reason": "Required current-phase evidence was not executed or supplied"
+    },
+    {
+      "id": "migration-legacy-receipt-projection",
+      "kind": "native",
+      "status": "missing",
+      "scope": "Retained v1 canonical digest/time/OID survive current-authorized v2 retry/recovery projection; unaccepted legacy command rejects.",
+      "reason": "Required current-phase evidence was not executed or supplied"
+    },
+    {
+      "id": "migration-invalid-predecessors",
+      "kind": "native",
+      "status": "missing",
+      "scope": "Counter/future/malformed predecessor rejects without active-state reset or partial conversion.",
+      "reason": "Required current-phase evidence was not executed or supplied"
+    },
+    {
+      "id": "warm-home-restart",
+      "kind": "native",
+      "status": "missing",
+      "scope": "Graceful fenced process replacement retains accepted revisions, policy and canonical Git bytes; not abrupt crash.",
+      "reason": "Required current-phase evidence was not executed or supplied"
+    },
+    {
+      "id": "evaluator-error-boundaries",
+      "kind": "native",
+      "status": "missing",
+      "scope": "Pinned native evaluator errors and >64KiB framing regression cannot produce a successful native report.",
+      "reason": "Required current-phase evidence was not executed or supplied"
+    },
+    {
+      "id": "delivery-host-order-permutations",
+      "kind": "host_mocked",
+      "status": "passed",
+      "scope": "Host reducer preserves real acceptance only for exact correlated receipts; no live reordering claim.",
+      "verified_by": "stead.qualification-gate/2",
+      "artifact": {
+        "path": "docs/urbit/evidence/2026-09-13/qualification/bound-proofs.json",
+        "sha256": "c5edbf7c4b4f9774c6a69648b10d0cb80599a0cbf8ac132cc73441a5a069f31b",
+        "pointer": "/proofs/6"
+      },
+      "bindings": {
+        "source_commit": "54734c85b1afc544c331dc80409dfa8f585ae977",
+        "native_tree_sha256": "a16e6ca6125797fce156aa9e36721432f9152cae5514708d2632464d42f77b7d",
+        "runtime_lock_sha256": "4a209c10cf1756eb0f7357cc3eca8250bf66c239b4cd0ca31a8c0886d4d304ee",
+        "corpus_sha256": "95c915e2d0c93f358225274b34216fff0fe2efc09791905855b1e3f36aec368a",
+        "contract_freeze_sha256": "a2336e5060c71c7c16849b3151cc024a598d6cdf867561452eff1338e3232670",
+        "runner_sha256": "2df9e36455150e832067bc384f28740eab99781989f776138957e5289ea6a3d4"
+      },
+      "assertion_count": 6
+    }
+  ],
+  "historical_skips": [
+    {
+      "case": "empty-project-known-unknown",
+      "check": "one-shot-request-duct-only",
+      "occurrence": 1,
+      "historical_status": "skipped",
+      "current_requirement": "delivery:empty-project-known-unknown:1",
+      "report_check_pointer": "/qa/checks/7"
+    },
+    {
+      "case": "empty-project-known-unknown",
+      "check": "one-shot-request-duct-only",
+      "occurrence": 2,
+      "historical_status": "skipped",
+      "current_requirement": "delivery:empty-project-known-unknown:2",
+      "report_check_pointer": "/qa/checks/13"
+    },
+    {
+      "case": "outsider-private-project-existence",
+      "check": "one-shot-request-duct-only",
+      "occurrence": 1,
+      "historical_status": "skipped",
+      "current_requirement": "delivery:outsider-private-project-existence:1",
+      "report_check_pointer": "/qa/checks/81"
+    },
+    {
+      "case": "outsider-private-project-existence",
+      "check": "one-shot-request-duct-only",
+      "occurrence": 2,
+      "historical_status": "skipped",
+      "current_requirement": "delivery:outsider-private-project-existence:2",
+      "report_check_pointer": "/qa/checks/87"
+    },
+    {
+      "case": "reader-can-read-work",
+      "check": "one-shot-request-duct-only",
+      "occurrence": 1,
+      "historical_status": "skipped",
+      "current_requirement": "delivery:reader-can-read-work:1",
+      "report_check_pointer": "/qa/checks/216"
+    },
+    {
+      "case": "outsider-work-known-unknown",
+      "check": "one-shot-request-duct-only",
+      "occurrence": 1,
+      "historical_status": "skipped",
+      "current_requirement": "delivery:outsider-work-known-unknown:1",
+      "report_check_pointer": "/qa/checks/227"
+    },
+    {
+      "case": "outsider-work-known-unknown",
+      "check": "one-shot-request-duct-only",
+      "occurrence": 2,
+      "historical_status": "skipped",
+      "current_requirement": "delivery:outsider-work-known-unknown:2",
+      "report_check_pointer": "/qa/checks/233"
+    },
+    {
+      "case": "explicit-grant-allows-former-outsider",
+      "check": "one-shot-request-duct-only",
+      "occurrence": 1,
+      "historical_status": "skipped",
+      "current_requirement": "delivery:explicit-grant-allows-former-outsider:1",
+      "report_check_pointer": "/qa/checks/652"
+    },
+    {
+      "case": "owner-reads-private-document",
+      "check": "one-shot-request-duct-only",
+      "occurrence": 1,
+      "historical_status": "skipped",
+      "current_requirement": "delivery:owner-reads-private-document:1",
+      "report_check_pointer": "/qa/checks/1151"
+    },
+    {
+      "case": "reader-private-document-known-unknown",
+      "check": "one-shot-request-duct-only",
+      "occurrence": 1,
+      "historical_status": "skipped",
+      "current_requirement": "delivery:reader-private-document-known-unknown:1",
+      "report_check_pointer": "/qa/checks/1162"
+    },
+    {
+      "case": "reader-private-document-known-unknown",
+      "check": "one-shot-request-duct-only",
+      "occurrence": 2,
+      "historical_status": "skipped",
+      "current_requirement": "delivery:reader-private-document-known-unknown:2",
+      "report_check_pointer": "/qa/checks/1168"
+    },
+    {
+      "case": "outsider-private-document-known-unknown",
+      "check": "one-shot-request-duct-only",
+      "occurrence": 1,
+      "historical_status": "skipped",
+      "current_requirement": "delivery:outsider-private-document-known-unknown:1",
+      "report_check_pointer": "/qa/checks/1180"
+    },
+    {
+      "case": "outsider-private-document-known-unknown",
+      "check": "one-shot-request-duct-only",
+      "occurrence": 2,
+      "historical_status": "skipped",
+      "current_requirement": "delivery:outsider-private-document-known-unknown:2",
+      "report_check_pointer": "/qa/checks/1186"
+    },
+    {
+      "case": "project-views-never-include-other-owner-private-metadata",
+      "check": "projection-timing-and-all-metadata-nondisclosure",
+      "occurrence": 1,
+      "historical_status": "skipped",
+      "current_requirement": "scoped-private-metadata",
+      "report_check_pointer": "/qa/checks/1325"
+    },
+    {
+      "case": "reader-private-manifest-known-unknown",
+      "check": "one-shot-request-duct-only",
+      "occurrence": 1,
+      "historical_status": "skipped",
+      "current_requirement": "delivery:reader-private-manifest-known-unknown:1",
+      "report_check_pointer": "/qa/checks/1670"
+    },
+    {
+      "case": "reader-private-manifest-known-unknown",
+      "check": "one-shot-request-duct-only",
+      "occurrence": 2,
+      "historical_status": "skipped",
+      "current_requirement": "delivery:reader-private-manifest-known-unknown:2",
+      "report_check_pointer": "/qa/checks/1676"
+    },
+    {
+      "case": "object-read-binds-retained-snapshot-and-container",
+      "check": "one-shot-request-duct-only",
+      "occurrence": 1,
+      "historical_status": "skipped",
+      "current_requirement": "delivery:object-read-binds-retained-snapshot-and-container:1",
+      "report_check_pointer": "/qa/checks/1772"
+    },
+    {
+      "case": "object-read-binds-retained-snapshot-and-container",
+      "check": "one-shot-request-duct-only",
+      "occurrence": 2,
+      "historical_status": "skipped",
+      "current_requirement": "delivery:object-read-binds-retained-snapshot-and-container:2",
+      "report_check_pointer": "/qa/checks/1776"
+    },
+    {
+      "case": "object-read-binds-retained-snapshot-and-container",
+      "check": "one-shot-request-duct-only",
+      "occurrence": 3,
+      "historical_status": "skipped",
+      "current_requirement": "delivery:object-read-binds-retained-snapshot-and-container:3",
+      "report_check_pointer": "/qa/checks/1780"
+    },
+    {
+      "case": "object-read-binds-retained-snapshot-and-container",
+      "check": "one-shot-request-duct-only",
+      "occurrence": 4,
+      "historical_status": "skipped",
+      "current_requirement": "delivery:object-read-binds-retained-snapshot-and-container:4",
+      "report_check_pointer": "/qa/checks/1784"
+    },
+    {
+      "case": "object-read-binds-retained-snapshot-and-container",
+      "check": "one-shot-request-duct-only",
+      "occurrence": 5,
+      "historical_status": "skipped",
+      "current_requirement": "delivery:object-read-binds-retained-snapshot-and-container:5",
+      "report_check_pointer": "/qa/checks/1788"
+    },
+    {
+      "case": "object-read-binds-retained-snapshot-and-container",
+      "check": "one-shot-request-duct-only",
+      "occurrence": 6,
+      "historical_status": "skipped",
+      "current_requirement": "delivery:object-read-binds-retained-snapshot-and-container:6",
+      "report_check_pointer": "/qa/checks/1792"
+    },
+    {
+      "case": "restart-preserves-content-policy-objects-and-journal",
+      "check": "no-external-effects-replayed",
+      "occurrence": 1,
+      "historical_status": "skipped",
+      "current_requirement": "no-effect-subsystem",
+      "report_check_pointer": "/qa/checks/1880"
+    },
+    {
+      "case": "downgraded-reader-retains-work-read",
+      "check": "one-shot-request-duct-only",
+      "occurrence": 1,
+      "historical_status": "skipped",
+      "current_requirement": "delivery:downgraded-reader-retains-work-read:1",
+      "report_check_pointer": "/qa/checks/2376"
+    },
+    {
+      "case": "downgraded-reader-cannot-recover-write-receipt",
+      "check": "source-ordering-property",
+      "occurrence": 1,
+      "historical_status": "skipped",
+      "current_requirement": "receipt-lookup-order",
+      "report_check_pointer": "/qa/checks/2400"
+    }
+  ],
+  "historical_reports_unchanged": true,
+  "scope": "Current URB-040/050 fake-native privacy/exhaustion/delivery qualification only; no browser/live/Git-forge/deployment acceptance",
+  "errors": [],
+  "counts": {
+    "missing": 66,
+    "not_applicable": 1,
+    "reviewed": 2,
+    "passed": 4
+  },
+  "native_required": 66,
+  "native_passed": 0
+}

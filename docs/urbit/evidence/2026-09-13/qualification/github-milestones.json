@@ -1,0 +1,235 @@
+{
+  "classification": "real-GitHub-metadata-only",
+  "verified_at_utc": "2026-09-13T15:41:12.398287+00:00",
+  "repository": "ScottTpirate/stead-urbit",
+  "executed_apply_command": [
+    "python3",
+    "scripts/urbit/sync_milestones.py",
+    "--apply"
+  ],
+  "apply_stdout": "Created 7 milestones; assigned 30 issues. Existing milestones/statuses were preserved.",
+  "milestones": [
+    {
+      "number": 1,
+      "title": "M0 - Reproducible native development",
+      "state": "open"
+    },
+    {
+      "number": 2,
+      "title": "M1 - Authoritative Work and Docs",
+      "state": "open"
+    },
+    {
+      "number": 3,
+      "title": "M2 - Usable team alpha",
+      "state": "open"
+    },
+    {
+      "number": 4,
+      "title": "M3 - Native software collaboration",
+      "state": "open"
+    },
+    {
+      "number": 5,
+      "title": "M4 - Installable and recoverable beta",
+      "state": "open"
+    },
+    {
+      "number": 6,
+      "title": "M5 - Federation and self-dogfooding",
+      "state": "open"
+    },
+    {
+      "number": 7,
+      "title": "M6 - Supported ecosystem release",
+      "state": "open"
+    }
+  ],
+  "issues": [
+    {
+      "task": "URB-000",
+      "issue": 2,
+      "state": "open",
+      "milestone": "M0 - Reproducible native development"
+    },
+    {
+      "task": "URB-010",
+      "issue": 3,
+      "state": "open",
+      "milestone": "M0 - Reproducible native development"
+    },
+    {
+      "task": "URB-020",
+      "issue": 4,
+      "state": "open",
+      "milestone": "M0 - Reproducible native development"
+    },
+    {
+      "task": "URB-025",
+      "issue": 5,
+      "state": "open",
+      "milestone": "M0 - Reproducible native development"
+    },
+    {
+      "task": "URB-170",
+      "issue": 20,
+      "state": "open",
+      "milestone": "M0 - Reproducible native development"
+    },
+    {
+      "task": "URB-030",
+      "issue": 6,
+      "state": "open",
+      "milestone": "M1 - Authoritative Work and Docs"
+    },
+    {
+      "task": "URB-040",
+      "issue": 7,
+      "state": "open",
+      "milestone": "M1 - Authoritative Work and Docs"
+    },
+    {
+      "task": "URB-050",
+      "issue": 8,
+      "state": "open",
+      "milestone": "M1 - Authoritative Work and Docs"
+    },
+    {
+      "task": "URB-210",
+      "issue": 24,
+      "state": "open",
+      "milestone": "M1 - Authoritative Work and Docs"
+    },
+    {
+      "task": "URB-060",
+      "issue": 9,
+      "state": "open",
+      "milestone": "M2 - Usable team alpha"
+    },
+    {
+      "task": "URB-070",
+      "issue": 10,
+      "state": "open",
+      "milestone": "M2 - Usable team alpha"
+    },
+    {
+      "task": "URB-110",
+      "issue": 14,
+      "state": "open",
+      "milestone": "M2 - Usable team alpha"
+    },
+    {
+      "task": "URB-180",
+      "issue": 21,
+      "state": "open",
+      "milestone": "M2 - Usable team alpha"
+    },
+    {
+      "task": "URB-190",
+      "issue": 22,
+      "state": "open",
+      "milestone": "M2 - Usable team alpha"
+    },
+    {
+      "task": "URB-260",
+      "issue": 29,
+      "state": "open",
+      "milestone": "M2 - Usable team alpha"
+    },
+    {
+      "task": "URB-080",
+      "issue": 11,
+      "state": "open",
+      "milestone": "M3 - Native software collaboration"
+    },
+    {
+      "task": "URB-090",
+      "issue": 12,
+      "state": "open",
+      "milestone": "M3 - Native software collaboration"
+    },
+    {
+      "task": "URB-200",
+      "issue": 23,
+      "state": "open",
+      "milestone": "M3 - Native software collaboration"
+    },
+    {
+      "task": "URB-250",
+      "issue": 28,
+      "state": "open",
+      "milestone": "M3 - Native software collaboration"
+    },
+    {
+      "task": "URB-100",
+      "issue": 13,
+      "state": "open",
+      "milestone": "M4 - Installable and recoverable beta"
+    },
+    {
+      "task": "URB-120",
+      "issue": 15,
+      "state": "open",
+      "milestone": "M4 - Installable and recoverable beta"
+    },
+    {
+      "task": "URB-130",
+      "issue": 16,
+      "state": "open",
+      "milestone": "M4 - Installable and recoverable beta"
+    },
+    {
+      "task": "URB-220",
+      "issue": 25,
+      "state": "open",
+      "milestone": "M4 - Installable and recoverable beta"
+    },
+    {
+      "task": "URB-230",
+      "issue": 26,
+      "state": "open",
+      "milestone": "M4 - Installable and recoverable beta"
+    },
+    {
+      "task": "URB-240",
+      "issue": 27,
+      "state": "open",
+      "milestone": "M4 - Installable and recoverable beta"
+    },
+    {
+      "task": "URB-140",
+      "issue": 17,
+      "state": "open",
+      "milestone": "M5 - Federation and self-dogfooding"
+    },
+    {
+      "task": "URB-150",
+      "issue": 18,
+      "state": "open",
+      "milestone": "M5 - Federation and self-dogfooding"
+    },
+    {
+      "task": "URB-160",
+      "issue": 19,
+      "state": "open",
+      "milestone": "M5 - Federation and self-dogfooding"
+    },
+    {
+      "task": "URB-270",
+      "issue": 30,
+      "state": "open",
+      "milestone": "M6 - Supported ecosystem release"
+    },
+    {
+      "task": "URB-280",
+      "issue": 31,
+      "state": "open",
+      "milestone": "M6 - Supported ecosystem release"
+    }
+  ],
+  "does_not_establish": [
+    "native runtime correctness",
+    "GitHub CI",
+    "implementation acceptance"
+  ]
+}

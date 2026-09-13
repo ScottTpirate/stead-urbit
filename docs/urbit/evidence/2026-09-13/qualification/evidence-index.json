@@ -1,0 +1,115 @@
+{
+  "items": [
+    {
+      "id": "receipt-lookup-order",
+      "kind": "source_review",
+      "status": "reviewed",
+      "bindings": {
+        "source_commit": "54734c85b1afc544c331dc80409dfa8f585ae977",
+        "native_tree_sha256": "a16e6ca6125797fce156aa9e36721432f9152cae5514708d2632464d42f77b7d",
+        "runtime_lock_sha256": "4a209c10cf1756eb0f7357cc3eca8250bf66c239b4cd0ca31a8c0886d4d304ee",
+        "corpus_sha256": "95c915e2d0c93f358225274b34216fff0fe2efc09791905855b1e3f36aec368a",
+        "contract_freeze_sha256": "a2336e5060c71c7c16849b3151cc024a598d6cdf867561452eff1338e3232670",
+        "runner_sha256": "2df9e36455150e832067bc384f28740eab99781989f776138957e5289ea6a3d4"
+      },
+      "artifact": {
+        "path": "docs/urbit/evidence/2026-09-13/qualification/bound-proofs.json",
+        "sha256": "c5edbf7c4b4f9774c6a69648b10d0cb80599a0cbf8ac132cc73441a5a069f31b",
+        "pointer": "/proofs/0"
+      }
+    },
+    {
+      "id": "no-effect-subsystem",
+      "kind": "not_applicable",
+      "status": "not_applicable",
+      "bindings": {
+        "source_commit": "54734c85b1afc544c331dc80409dfa8f585ae977",
+        "native_tree_sha256": "a16e6ca6125797fce156aa9e36721432f9152cae5514708d2632464d42f77b7d",
+        "runtime_lock_sha256": "4a209c10cf1756eb0f7357cc3eca8250bf66c239b4cd0ca31a8c0886d4d304ee",
+        "corpus_sha256": "95c915e2d0c93f358225274b34216fff0fe2efc09791905855b1e3f36aec368a",
+        "contract_freeze_sha256": "a2336e5060c71c7c16849b3151cc024a598d6cdf867561452eff1338e3232670",
+        "runner_sha256": "2df9e36455150e832067bc384f28740eab99781989f776138957e5289ea6a3d4"
+      },
+      "artifact": {
+        "path": "docs/urbit/evidence/2026-09-13/qualification/bound-proofs.json",
+        "sha256": "c5edbf7c4b4f9774c6a69648b10d0cb80599a0cbf8ac132cc73441a5a069f31b",
+        "pointer": "/proofs/1"
+      }
+    },
+    {
+      "id": "guard-independent-source-review",
+      "kind": "source_review",
+      "status": "reviewed",
+      "bindings": {
+        "source_commit": "54734c85b1afc544c331dc80409dfa8f585ae977",
+        "native_tree_sha256": "a16e6ca6125797fce156aa9e36721432f9152cae5514708d2632464d42f77b7d",
+        "runtime_lock_sha256": "4a209c10cf1756eb0f7357cc3eca8250bf66c239b4cd0ca31a8c0886d4d304ee",
+        "corpus_sha256": "95c915e2d0c93f358225274b34216fff0fe2efc09791905855b1e3f36aec368a",
+        "contract_freeze_sha256": "a2336e5060c71c7c16849b3151cc024a598d6cdf867561452eff1338e3232670",
+        "runner_sha256": "2df9e36455150e832067bc384f28740eab99781989f776138957e5289ea6a3d4"
+      },
+      "artifact": {
+        "path": "docs/urbit/evidence/2026-09-13/qualification/bound-proofs.json",
+        "sha256": "c5edbf7c4b4f9774c6a69648b10d0cb80599a0cbf8ac132cc73441a5a069f31b",
+        "pointer": "/proofs/2"
+      }
+    },
+    {
+      "id": "guard-negative-host-tests",
+      "kind": "host_mocked",
+      "status": "passed",
+      "bindings": {
+        "guard_sha256": "7166d197a6e3879f21c22637f2bd3074ff90975c33a2149f6e07763e2eeaa04e"
+      },
+      "artifact": {
+        "path": "docs/urbit/evidence/2026-09-13/qualification/bound-proofs.json",
+        "sha256": "c5edbf7c4b4f9774c6a69648b10d0cb80599a0cbf8ac132cc73441a5a069f31b",
+        "pointer": "/proofs/3"
+      }
+    },
+    {
+      "id": "guard-real-hot-preflight-refusal",
+      "kind": "real_host",
+      "status": "passed",
+      "bindings": {
+        "guard_sha256": "7166d197a6e3879f21c22637f2bd3074ff90975c33a2149f6e07763e2eeaa04e"
+      },
+      "artifact": {
+        "path": "docs/urbit/evidence/2026-09-13/qualification/bound-proofs.json",
+        "sha256": "c5edbf7c4b4f9774c6a69648b10d0cb80599a0cbf8ac132cc73441a5a069f31b",
+        "pointer": "/proofs/4"
+      }
+    },
+    {
+      "id": "guard-real-platform-mocked-sensors",
+      "kind": "real_platform_mocked_sensors",
+      "status": "passed",
+      "bindings": {
+        "guard_sha256": "7166d197a6e3879f21c22637f2bd3074ff90975c33a2149f6e07763e2eeaa04e"
+      },
+      "artifact": {
+        "path": "docs/urbit/evidence/2026-09-13/qualification/bound-proofs.json",
+        "sha256": "c5edbf7c4b4f9774c6a69648b10d0cb80599a0cbf8ac132cc73441a5a069f31b",
+        "pointer": "/proofs/5"
+      }
+    },
+    {
+      "id": "delivery-host-order-permutations",
+      "kind": "host_mocked",
+      "status": "passed",
+      "bindings": {
+        "source_commit": "54734c85b1afc544c331dc80409dfa8f585ae977",
+        "native_tree_sha256": "a16e6ca6125797fce156aa9e36721432f9152cae5514708d2632464d42f77b7d",
+        "runtime_lock_sha256": "4a209c10cf1756eb0f7357cc3eca8250bf66c239b4cd0ca31a8c0886d4d304ee",
+        "corpus_sha256": "95c915e2d0c93f358225274b34216fff0fe2efc09791905855b1e3f36aec368a",
+        "contract_freeze_sha256": "a2336e5060c71c7c16849b3151cc024a598d6cdf867561452eff1338e3232670",
+        "runner_sha256": "2df9e36455150e832067bc384f28740eab99781989f776138957e5289ea6a3d4"
+      },
+      "artifact": {
+        "path": "docs/urbit/evidence/2026-09-13/qualification/bound-proofs.json",
+        "sha256": "c5edbf7c4b4f9774c6a69648b10d0cb80599a0cbf8ac132cc73441a5a069f31b",
+        "pointer": "/proofs/6"
+      }
+    }
+  ]
+}
