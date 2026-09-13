@@ -1,0 +1,307 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:stead-urbit:command:1",
+  "title": "Stead first-slice request v1 (not implemented by the smoke agent)",
+  "$comment": "Additional byte limits, cross-field and creation preconditions are normative in CONTRACTS.md and contracts.py.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "protocol",
+    "request_id",
+    "project_id",
+    "resource_id",
+    "expected_revision",
+    "authority_epoch",
+    "operation",
+    "payload"
+  ],
+  "properties": {
+    "protocol": {
+      "const": "stead.command/1"
+    },
+    "request_id": {
+      "$ref": "#/$defs/uuid"
+    },
+    "project_id": {
+      "$ref": "#/$defs/uuid"
+    },
+    "resource_id": {
+      "$ref": "#/$defs/uuid"
+    },
+    "expected_revision": {
+      "$ref": "#/$defs/uint64"
+    },
+    "authority_epoch": {
+      "type": "string",
+      "pattern": "^[1-9][0-9]{0,19}$"
+    },
+    "operation": {
+      "enum": [
+        "project.create",
+        "work.create",
+        "work.update",
+        "document.save",
+        "policy.grant",
+        "policy.revoke"
+      ]
+    },
+    "payload": {
+      "type": "object"
+    }
+  },
+  "oneOf": [
+    {
+      "properties": {
+        "operation": {
+          "const": "project.create"
+        },
+        "payload": {
+          "type": "object",
+          "required": [
+            "organization_id",
+            "owning_team_id",
+            "title",
+            "project_key",
+            "preset"
+          ],
+          "additionalProperties": false,
+          "properties": {
+            "organization_id": {
+              "type": "string",
+              "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-7[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$"
+            },
+            "owning_team_id": {
+              "type": "string",
+              "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-7[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$"
+            },
+            "title": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 200,
+              "pattern": "^[^\\u0000-\\u001f]*$"
+            },
+            "project_key": {
+              "type": "string",
+              "pattern": "^[A-Z][A-Z0-9]{1,11}$"
+            },
+            "preset": {
+              "enum": [
+                "general",
+                "software",
+                "controlled_knowledge"
+              ]
+            }
+          }
+        }
+      }
+    },
+    {
+      "properties": {
+        "operation": {
+          "const": "work.create"
+        },
+        "payload": {
+          "type": "object",
+          "required": [
+            "title",
+            "description",
+            "type",
+            "status",
+            "priority"
+          ],
+          "additionalProperties": false,
+          "properties": {
+            "title": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 200,
+              "pattern": "^[^\\u0000-\\u001f]*$"
+            },
+            "description": {
+              "type": "string",
+              "maxLength": 8192,
+              "pattern": "^[^\\u0000\\r]*$"
+            },
+            "type": {
+              "enum": [
+                "deliverable",
+                "task",
+                "problem"
+              ]
+            },
+            "status": {
+              "enum": [
+                "backlog",
+                "todo",
+                "in_progress",
+                "blocked",
+                "done",
+                "canceled"
+              ]
+            },
+            "priority": {
+              "enum": [
+                "none",
+                "low",
+                "medium",
+                "high",
+                "urgent"
+              ]
+            }
+          }
+        }
+      }
+    },
+    {
+      "properties": {
+        "operation": {
+          "const": "work.update"
+        },
+        "payload": {
+          "type": "object",
+          "required": [
+            "title",
+            "description",
+            "type",
+            "status",
+            "priority"
+          ],
+          "additionalProperties": false,
+          "properties": {
+            "title": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 200,
+              "pattern": "^[^\\u0000-\\u001f]*$"
+            },
+            "description": {
+              "type": "string",
+              "maxLength": 8192,
+              "pattern": "^[^\\u0000\\r]*$"
+            },
+            "type": {
+              "enum": [
+                "deliverable",
+                "task",
+                "problem"
+              ]
+            },
+            "status": {
+              "enum": [
+                "backlog",
+                "todo",
+                "in_progress",
+                "blocked",
+                "done",
+                "canceled"
+              ]
+            },
+            "priority": {
+              "enum": [
+                "none",
+                "low",
+                "medium",
+                "high",
+                "urgent"
+              ]
+            }
+          }
+        }
+      }
+    },
+    {
+      "properties": {
+        "operation": {
+          "const": "document.save"
+        },
+        "payload": {
+          "type": "object",
+          "required": [
+            "container_id",
+            "markdown"
+          ],
+          "additionalProperties": false,
+          "properties": {
+            "container_id": {
+              "type": "string",
+              "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-7[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$"
+            },
+            "markdown": {
+              "type": "string",
+              "maxLength": 32768,
+              "pattern": "^[^\\u0000\\r]*$"
+            }
+          }
+        }
+      }
+    },
+    {
+      "properties": {
+        "operation": {
+          "const": "policy.grant"
+        },
+        "payload": {
+          "type": "object",
+          "required": [
+            "grant_id",
+            "principal_id",
+            "role",
+            "expires_at_ms"
+          ],
+          "additionalProperties": false,
+          "properties": {
+            "grant_id": {
+              "type": "string",
+              "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-7[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$"
+            },
+            "principal_id": {
+              "type": "string",
+              "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-7[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$"
+            },
+            "role": {
+              "enum": [
+                "reader",
+                "contributor",
+                "maintainer"
+              ]
+            },
+            "expires_at_ms": {
+              "type": "string",
+              "pattern": "^(0|[1-9][0-9]{0,19})$"
+            }
+          }
+        }
+      }
+    },
+    {
+      "properties": {
+        "operation": {
+          "const": "policy.revoke"
+        },
+        "payload": {
+          "type": "object",
+          "required": [
+            "grant_id"
+          ],
+          "additionalProperties": false,
+          "properties": {
+            "grant_id": {
+              "type": "string",
+              "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-7[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$"
+            }
+          }
+        }
+      }
+    }
+  ],
+  "$defs": {
+    "uuid": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-7[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$"
+    },
+    "uint64": {
+      "type": "string",
+      "pattern": "^(0|[1-9][0-9]{0,19})$"
+    }
+  }
+}

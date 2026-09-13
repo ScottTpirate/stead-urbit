@@ -1,0 +1,80 @@
+{
+  "version": "stead.policy/1",
+  "dimensions": [
+    "membership",
+    "information_flow",
+    "credential_scope",
+    "resource_action",
+    "runtime_context"
+  ],
+  "evidence_values": [
+    "allow",
+    "deny",
+    "missing",
+    "expired",
+    "contradictory",
+    "unsupported"
+  ],
+  "allow_if": "every dimension is present exactly once and equal to allow; all other inputs deny",
+  "public_denial": "denied_or_not_found",
+  "roles_are_not_bypasses": true,
+  "implementation": "host reference decision only; native policy not implemented",
+  "role_bundles": {
+    "reader": {
+      "project_operations": [
+        "project.read",
+        "work.read",
+        "document.read"
+      ],
+      "grant_roles": []
+    },
+    "contributor": {
+      "project_operations": [
+        "project.read",
+        "work.read",
+        "document.read",
+        "work.create",
+        "work.update",
+        "document.save"
+      ],
+      "grant_roles": []
+    },
+    "maintainer": {
+      "project_operations": [
+        "project.read",
+        "work.read",
+        "document.read",
+        "work.create",
+        "work.update",
+        "document.save",
+        "policy.grant",
+        "policy.revoke"
+      ],
+      "grant_roles": [
+        "reader",
+        "contributor"
+      ]
+    },
+    "organization_administrator": {
+      "project_operations": [
+        "project.read",
+        "work.read",
+        "document.read",
+        "work.create",
+        "work.update",
+        "document.save",
+        "policy.grant",
+        "policy.revoke"
+      ],
+      "organization_operations": [
+        "project.create"
+      ],
+      "grant_roles": [
+        "reader",
+        "contributor",
+        "maintainer"
+      ]
+    }
+  },
+  "role_reference_scope": "Role/action contribution only. Caller must supply separately resolved matching scope; never authenticates evidence or bypasses the five-dimension decision."
+}
