@@ -25,6 +25,7 @@ import time
 import urllib.request
 
 import toolchain
+import execution_policy
 
 ROOT = Path(__file__).resolve().parents[2]
 PIN = ROOT / 'specs/urbit/urgit-candidate.lock.json'
@@ -170,14 +171,9 @@ def unpack(archive_path, destination, pin):
 
 
 def temperatures():
-    readings = {}
-    for zone in Path('/sys/class/thermal').glob('thermal_zone*'):
-        try:
-            readings[zone.name + ':' + (zone / 'type').read_text().strip()] = (
-                int((zone / 'temp').read_text()) / 1000)
-        except (ValueError, OSError):
-            pass
-    return readings
+    sample = execution_policy.sample_temperatures()
+    execution_policy.validate_sample(sample, execution_policy.Policy())
+    return sample.readings_c
 
 
 def execute():
@@ -204,9 +200,9 @@ def execute():
     if subprocess.run(['git', 'check-ignore', '-q', '.runtime/urgit-evaluations/probe'],
                       cwd=ROOT).returncode:
         raise ValueError('Evaluation directory is not ignored by Git')
-    initial_readings = temperatures()
-    if not initial_readings or max(initial_readings.values()) > pin['limits']['start_temperature_c']:
-        raise ValueError('Host is above the start temperature limit or has no thermal readings; retry when cool')
+    initial_sample = execution_policy.sample_temperatures()
+    execution_policy.validate_sample(initial_sample, execution_policy.policy_from_limits(pin['limits']), preflight=True)
+    initial_readings = initial_sample.readings_c
     base = ROOT / '.runtime/urgit-evaluations'
     no_links(base)
     base.mkdir(mode=0o700, exist_ok=True)
@@ -271,61 +267,26 @@ def execute():
 
 
 def run_sandbox(run, evidence, control, output_handle, args, cpu, limits):
-    cancelled = False
-    previous_handlers = {}
-
-    def request_stop(signum, _frame):
-        nonlocal cancelled
-        cancelled = True
-
-    for sig in (signal.SIGINT, signal.SIGTERM):
-        previous_handlers[sig] = signal.signal(sig, request_stop)
-    process = None
-    stop_reason, stop_at = None, None
-    started = time.monotonic()
-    try:
-        with (evidence / 'console.log').open('wb') as console, (evidence / 'thermal.jsonl').open('w') as thermal:
-            process = subprocess.Popen(args, stdin=subprocess.DEVNULL, stdout=console, stderr=subprocess.STDOUT,
-                                       preexec_fn=lambda: os.sched_setaffinity(0, {cpu}))
-            while process.poll() is None:
-                readings = temperatures()
-                elapsed = round(time.monotonic() - started, 1)
-                thermal.write(json.dumps({'elapsed_seconds': elapsed, 'temperatures_c': readings}) + '\n')
-                thermal.flush()
-                if cancelled:
-                    stop_reason = stop_reason or 'operator interrupt'
-                elif elapsed > limits['total_timeout_seconds']:
-                    stop_reason = stop_reason or 'overall evaluation timeout'
-                elif not readings:
-                    stop_reason = stop_reason or 'thermal readings unavailable'
-                elif readings and max(readings.values()) >= limits['stop_temperature_c']:
-                    stop_reason = stop_reason or 'thermal ceiling reached'
-                if stop_reason:
-                    write_bytes(control / 'STOP', b'')
-                    stop_at = stop_at or time.monotonic()
-                    if time.monotonic() - stop_at > 90:
-                        process.terminate()
-                        break
-                if int(elapsed) % 30 < 5:
-                    try:
-                        phase = json.loads(read_regular_at(output_handle, 'status.json', 4096))['phase']
-                        if not isinstance(phase, str) or not phase.isprintable() or len(phase) > 120:
-                            raise ValueError('Invalid phase label')
-                    except (OSError, ValueError, KeyError, TypeError):
-                        phase = 'starting isolated evaluator'
-                    print(f'{phase}; elapsed {elapsed:.0f}s; max temperature {max(readings.values(), default=0):.1f} C', flush=True)
-                time.sleep(5)
-            process.wait(timeout=15)
-    finally:
-        if process is not None and process.poll() is None:
-            write_bytes(control / 'STOP', b'')
-            try:
-                process.wait(timeout=45)
-            except subprocess.TimeoutExpired:
-                process.kill()
-                process.wait(timeout=15)
-        for sig, handler in previous_handlers.items():
-            signal.signal(sig, handler)
+    def command(guard_control, _run_id):
+        result = list(args)
+        # The evaluator sees only this host-controlled read-only STOP directory,
+        # never the common lock, evidence parent or another writable alias.
+        index = result.index(str(control))
+        if result[index - 1] != '--ro-bind' or result[index + 1] != '/control':
+            raise ValueError('Candidate control mount is not the reviewed read-only boundary')
+        result[index] = str(guard_control)
+        return result
+    with (evidence / 'console.log').open('wb') as console:
+        guarded = execution_policy.run_guarded(command, root=ROOT, label='urgit',
+                    policy=execution_policy.policy_from_limits(limits),
+                    timeout=limits['total_timeout_seconds'], console=console)
+    write_json(evidence / 'execution-guard.json', guarded)
+    with (evidence / 'thermal.jsonl').open('w') as thermal:
+        for item in guarded['events']:
+            if 'sample' in item:
+                thermal.write(json.dumps({'elapsed_seconds': item['elapsed_seconds'],
+                    'temperatures_c': item['sample']['readings_c']}) + '\n')
+    stop_reason = guarded['reason'] if guarded['status'] != 'completed' else None
     imported, failures = {}, []
     for name, limit in OUTPUT_LIMITS.items():
         try:
@@ -346,22 +307,22 @@ def run_sandbox(run, evidence, control, output_handle, args, cpu, limits):
         report.update(status='failed', output_import_failures=failures)
     if stop_reason:
         report.update(status='failed', host_stop_reason=stop_reason)
-    report['sandbox_exit_code'] = process.returncode
-    if process.returncode != 0:
+    report['sandbox_exit_code'] = guarded['exit_code']
+    if guarded['exit_code'] != 0:
         report.update(status='failed', reason='sandbox exited unsuccessfully')
     write_json(evidence / 'report.json', report)
     # Only host-created evidence exists here; no sandbox-controlled directory
     # walk or Path.is_file()/digest() pair can follow an injected link.
     names = sorted(set(imported) | {'report.json', 'provenance.json', 'sandbox-command.json',
-                                   'console.log', 'thermal.jsonl'})
+                                   'console.log', 'thermal.jsonl', 'execution-guard.json'})
     with directory_fd(evidence) as evidence_handle:
         hashes = {name: hashlib.sha256(read_regular_at(evidence_handle, name, 64 * 1024 * 1024)).hexdigest()
                   for name in names}
     write_json(evidence / 'SHA256SUMS.json', hashes)
     print(json.dumps({'audit_directory': str(run), 'status': report['status'],
                       'checks_passed': sum(x['passed'] for x in report.get('checks', [])),
-                      'sandbox_exit_code': process.returncode}, indent=2))
-    return 0 if report['status'] == 'passed' and process.returncode == 0 else 1
+                      'sandbox_exit_code': guarded['exit_code']}, indent=2))
+    return 0 if report['status'] == 'passed' and guarded['exit_code'] == 0 and guarded['status'] == 'completed' else 1
 
 
 if __name__ == '__main__':
@@ -369,5 +330,5 @@ if __name__ == '__main__':
     parser.parse_args()
     try:
         raise SystemExit(execute())
-    except (ValueError, OSError, subprocess.SubprocessError) as error:
+    except (ValueError, OSError, RuntimeError, subprocess.SubprocessError) as error:
         parser.exit(1, f'FAIL: {error}\n')

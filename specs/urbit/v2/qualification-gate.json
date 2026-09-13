@@ -1,0 +1,822 @@
+{
+  "protocol": "stead.qualification-manifest/2",
+  "scope": "Current URB-040/050 fake-native privacy/exhaustion/delivery qualification only; no browser/live/Git-forge/deployment acceptance",
+  "status": "required_unexecuted_native_evidence_fails",
+  "historical_report": {
+    "path": "docs/urbit/evidence/2026-09-12/native-core/independent-pass.json.gz",
+    "sha256": "fec9aa8dd0aef2454cf233e20b96dc24d62a12fc4f70fe930e1bad8c884a36b1",
+    "uncompressed_sha256": "2edcedc7f8e0ca570122897027e5c062c3dc546adf7bab2509e8fee6ad52a17a"
+  },
+  "historical_skips": [
+    {
+      "case": "empty-project-known-unknown",
+      "check": "one-shot-request-duct-only",
+      "occurrence": 1,
+      "historical_status": "skipped",
+      "current_requirement": "delivery:empty-project-known-unknown:1",
+      "report_check_pointer": "/qa/checks/7"
+    },
+    {
+      "case": "empty-project-known-unknown",
+      "check": "one-shot-request-duct-only",
+      "occurrence": 2,
+      "historical_status": "skipped",
+      "current_requirement": "delivery:empty-project-known-unknown:2",
+      "report_check_pointer": "/qa/checks/13"
+    },
+    {
+      "case": "outsider-private-project-existence",
+      "check": "one-shot-request-duct-only",
+      "occurrence": 1,
+      "historical_status": "skipped",
+      "current_requirement": "delivery:outsider-private-project-existence:1",
+      "report_check_pointer": "/qa/checks/81"
+    },
+    {
+      "case": "outsider-private-project-existence",
+      "check": "one-shot-request-duct-only",
+      "occurrence": 2,
+      "historical_status": "skipped",
+      "current_requirement": "delivery:outsider-private-project-existence:2",
+      "report_check_pointer": "/qa/checks/87"
+    },
+    {
+      "case": "reader-can-read-work",
+      "check": "one-shot-request-duct-only",
+      "occurrence": 1,
+      "historical_status": "skipped",
+      "current_requirement": "delivery:reader-can-read-work:1",
+      "report_check_pointer": "/qa/checks/216"
+    },
+    {
+      "case": "outsider-work-known-unknown",
+      "check": "one-shot-request-duct-only",
+      "occurrence": 1,
+      "historical_status": "skipped",
+      "current_requirement": "delivery:outsider-work-known-unknown:1",
+      "report_check_pointer": "/qa/checks/227"
+    },
+    {
+      "case": "outsider-work-known-unknown",
+      "check": "one-shot-request-duct-only",
+      "occurrence": 2,
+      "historical_status": "skipped",
+      "current_requirement": "delivery:outsider-work-known-unknown:2",
+      "report_check_pointer": "/qa/checks/233"
+    },
+    {
+      "case": "explicit-grant-allows-former-outsider",
+      "check": "one-shot-request-duct-only",
+      "occurrence": 1,
+      "historical_status": "skipped",
+      "current_requirement": "delivery:explicit-grant-allows-former-outsider:1",
+      "report_check_pointer": "/qa/checks/652"
+    },
+    {
+      "case": "owner-reads-private-document",
+      "check": "one-shot-request-duct-only",
+      "occurrence": 1,
+      "historical_status": "skipped",
+      "current_requirement": "delivery:owner-reads-private-document:1",
+      "report_check_pointer": "/qa/checks/1151"
+    },
+    {
+      "case": "reader-private-document-known-unknown",
+      "check": "one-shot-request-duct-only",
+      "occurrence": 1,
+      "historical_status": "skipped",
+      "current_requirement": "delivery:reader-private-document-known-unknown:1",
+      "report_check_pointer": "/qa/checks/1162"
+    },
+    {
+      "case": "reader-private-document-known-unknown",
+      "check": "one-shot-request-duct-only",
+      "occurrence": 2,
+      "historical_status": "skipped",
+      "current_requirement": "delivery:reader-private-document-known-unknown:2",
+      "report_check_pointer": "/qa/checks/1168"
+    },
+    {
+      "case": "outsider-private-document-known-unknown",
+      "check": "one-shot-request-duct-only",
+      "occurrence": 1,
+      "historical_status": "skipped",
+      "current_requirement": "delivery:outsider-private-document-known-unknown:1",
+      "report_check_pointer": "/qa/checks/1180"
+    },
+    {
+      "case": "outsider-private-document-known-unknown",
+      "check": "one-shot-request-duct-only",
+      "occurrence": 2,
+      "historical_status": "skipped",
+      "current_requirement": "delivery:outsider-private-document-known-unknown:2",
+      "report_check_pointer": "/qa/checks/1186"
+    },
+    {
+      "case": "project-views-never-include-other-owner-private-metadata",
+      "check": "projection-timing-and-all-metadata-nondisclosure",
+      "occurrence": 1,
+      "historical_status": "skipped",
+      "current_requirement": "scoped-private-metadata",
+      "report_check_pointer": "/qa/checks/1325"
+    },
+    {
+      "case": "reader-private-manifest-known-unknown",
+      "check": "one-shot-request-duct-only",
+      "occurrence": 1,
+      "historical_status": "skipped",
+      "current_requirement": "delivery:reader-private-manifest-known-unknown:1",
+      "report_check_pointer": "/qa/checks/1670"
+    },
+    {
+      "case": "reader-private-manifest-known-unknown",
+      "check": "one-shot-request-duct-only",
+      "occurrence": 2,
+      "historical_status": "skipped",
+      "current_requirement": "delivery:reader-private-manifest-known-unknown:2",
+      "report_check_pointer": "/qa/checks/1676"
+    },
+    {
+      "case": "object-read-binds-retained-snapshot-and-container",
+      "check": "one-shot-request-duct-only",
+      "occurrence": 1,
+      "historical_status": "skipped",
+      "current_requirement": "delivery:object-read-binds-retained-snapshot-and-container:1",
+      "report_check_pointer": "/qa/checks/1772"
+    },
+    {
+      "case": "object-read-binds-retained-snapshot-and-container",
+      "check": "one-shot-request-duct-only",
+      "occurrence": 2,
+      "historical_status": "skipped",
+      "current_requirement": "delivery:object-read-binds-retained-snapshot-and-container:2",
+      "report_check_pointer": "/qa/checks/1776"
+    },
+    {
+      "case": "object-read-binds-retained-snapshot-and-container",
+      "check": "one-shot-request-duct-only",
+      "occurrence": 3,
+      "historical_status": "skipped",
+      "current_requirement": "delivery:object-read-binds-retained-snapshot-and-container:3",
+      "report_check_pointer": "/qa/checks/1780"
+    },
+    {
+      "case": "object-read-binds-retained-snapshot-and-container",
+      "check": "one-shot-request-duct-only",
+      "occurrence": 4,
+      "historical_status": "skipped",
+      "current_requirement": "delivery:object-read-binds-retained-snapshot-and-container:4",
+      "report_check_pointer": "/qa/checks/1784"
+    },
+    {
+      "case": "object-read-binds-retained-snapshot-and-container",
+      "check": "one-shot-request-duct-only",
+      "occurrence": 5,
+      "historical_status": "skipped",
+      "current_requirement": "delivery:object-read-binds-retained-snapshot-and-container:5",
+      "report_check_pointer": "/qa/checks/1788"
+    },
+    {
+      "case": "object-read-binds-retained-snapshot-and-container",
+      "check": "one-shot-request-duct-only",
+      "occurrence": 6,
+      "historical_status": "skipped",
+      "current_requirement": "delivery:object-read-binds-retained-snapshot-and-container:6",
+      "report_check_pointer": "/qa/checks/1792"
+    },
+    {
+      "case": "restart-preserves-content-policy-objects-and-journal",
+      "check": "no-external-effects-replayed",
+      "occurrence": 1,
+      "historical_status": "skipped",
+      "current_requirement": "no-effect-subsystem",
+      "report_check_pointer": "/qa/checks/1880"
+    },
+    {
+      "case": "downgraded-reader-retains-work-read",
+      "check": "one-shot-request-duct-only",
+      "occurrence": 1,
+      "historical_status": "skipped",
+      "current_requirement": "delivery:downgraded-reader-retains-work-read:1",
+      "report_check_pointer": "/qa/checks/2376"
+    },
+    {
+      "case": "downgraded-reader-cannot-recover-write-receipt",
+      "check": "source-ordering-property",
+      "occurrence": 1,
+      "historical_status": "skipped",
+      "current_requirement": "receipt-lookup-order",
+      "report_check_pointer": "/qa/checks/2400"
+    }
+  ],
+  "required": [
+    {
+      "id": "delivery:empty-project-known-unknown:1",
+      "kind": "native",
+      "assertions": [
+        "one-shot-request-duct-only"
+      ],
+      "scope": "Actual observer request fact/kick plus an active foreign subscriber receiving no event; known valid mark and fault-free runtime evidence."
+    },
+    {
+      "id": "delivery:empty-project-known-unknown:2",
+      "kind": "native",
+      "assertions": [
+        "one-shot-request-duct-only"
+      ],
+      "scope": "Actual observer request fact/kick plus an active foreign subscriber receiving no event; known valid mark and fault-free runtime evidence."
+    },
+    {
+      "id": "delivery:outsider-private-project-existence:1",
+      "kind": "native",
+      "assertions": [
+        "one-shot-request-duct-only"
+      ],
+      "scope": "Actual observer request fact/kick plus an active foreign subscriber receiving no event; known valid mark and fault-free runtime evidence."
+    },
+    {
+      "id": "delivery:outsider-private-project-existence:2",
+      "kind": "native",
+      "assertions": [
+        "one-shot-request-duct-only"
+      ],
+      "scope": "Actual observer request fact/kick plus an active foreign subscriber receiving no event; known valid mark and fault-free runtime evidence."
+    },
+    {
+      "id": "delivery:reader-can-read-work:1",
+      "kind": "native",
+      "assertions": [
+        "one-shot-request-duct-only"
+      ],
+      "scope": "Actual observer request fact/kick plus an active foreign subscriber receiving no event; known valid mark and fault-free runtime evidence."
+    },
+    {
+      "id": "delivery:outsider-work-known-unknown:1",
+      "kind": "native",
+      "assertions": [
+        "one-shot-request-duct-only"
+      ],
+      "scope": "Actual observer request fact/kick plus an active foreign subscriber receiving no event; known valid mark and fault-free runtime evidence."
+    },
+    {
+      "id": "delivery:outsider-work-known-unknown:2",
+      "kind": "native",
+      "assertions": [
+        "one-shot-request-duct-only"
+      ],
+      "scope": "Actual observer request fact/kick plus an active foreign subscriber receiving no event; known valid mark and fault-free runtime evidence."
+    },
+    {
+      "id": "delivery:explicit-grant-allows-former-outsider:1",
+      "kind": "native",
+      "assertions": [
+        "one-shot-request-duct-only"
+      ],
+      "scope": "Actual observer request fact/kick plus an active foreign subscriber receiving no event; known valid mark and fault-free runtime evidence."
+    },
+    {
+      "id": "delivery:owner-reads-private-document:1",
+      "kind": "native",
+      "assertions": [
+        "one-shot-request-duct-only"
+      ],
+      "scope": "Actual observer request fact/kick plus an active foreign subscriber receiving no event; known valid mark and fault-free runtime evidence."
+    },
+    {
+      "id": "delivery:reader-private-document-known-unknown:1",
+      "kind": "native",
+      "assertions": [
+        "one-shot-request-duct-only"
+      ],
+      "scope": "Actual observer request fact/kick plus an active foreign subscriber receiving no event; known valid mark and fault-free runtime evidence."
+    },
+    {
+      "id": "delivery:reader-private-document-known-unknown:2",
+      "kind": "native",
+      "assertions": [
+        "one-shot-request-duct-only"
+      ],
+      "scope": "Actual observer request fact/kick plus an active foreign subscriber receiving no event; known valid mark and fault-free runtime evidence."
+    },
+    {
+      "id": "delivery:outsider-private-document-known-unknown:1",
+      "kind": "native",
+      "assertions": [
+        "one-shot-request-duct-only"
+      ],
+      "scope": "Actual observer request fact/kick plus an active foreign subscriber receiving no event; known valid mark and fault-free runtime evidence."
+    },
+    {
+      "id": "delivery:outsider-private-document-known-unknown:2",
+      "kind": "native",
+      "assertions": [
+        "one-shot-request-duct-only"
+      ],
+      "scope": "Actual observer request fact/kick plus an active foreign subscriber receiving no event; known valid mark and fault-free runtime evidence."
+    },
+    {
+      "id": "scoped-private-metadata",
+      "kind": "native",
+      "assertions": [
+        "projection-timing-and-all-metadata-nondisclosure"
+      ],
+      "scope": "Reproduce former availability/activity oracles and verify scoped allocation, retry/recovery/normal receipt and authorized exports. Shared physical timing remains outside this bounded assertion."
+    },
+    {
+      "id": "delivery:reader-private-manifest-known-unknown:1",
+      "kind": "native",
+      "assertions": [
+        "one-shot-request-duct-only"
+      ],
+      "scope": "Actual observer request fact/kick plus an active foreign subscriber receiving no event; known valid mark and fault-free runtime evidence."
+    },
+    {
+      "id": "delivery:reader-private-manifest-known-unknown:2",
+      "kind": "native",
+      "assertions": [
+        "one-shot-request-duct-only"
+      ],
+      "scope": "Actual observer request fact/kick plus an active foreign subscriber receiving no event; known valid mark and fault-free runtime evidence."
+    },
+    {
+      "id": "delivery:object-read-binds-retained-snapshot-and-container:1",
+      "kind": "native",
+      "assertions": [
+        "one-shot-request-duct-only"
+      ],
+      "scope": "Actual observer request fact/kick plus an active foreign subscriber receiving no event; known valid mark and fault-free runtime evidence."
+    },
+    {
+      "id": "delivery:object-read-binds-retained-snapshot-and-container:2",
+      "kind": "native",
+      "assertions": [
+        "one-shot-request-duct-only"
+      ],
+      "scope": "Actual observer request fact/kick plus an active foreign subscriber receiving no event; known valid mark and fault-free runtime evidence."
+    },
+    {
+      "id": "delivery:object-read-binds-retained-snapshot-and-container:3",
+      "kind": "native",
+      "assertions": [
+        "one-shot-request-duct-only"
+      ],
+      "scope": "Actual observer request fact/kick plus an active foreign subscriber receiving no event; known valid mark and fault-free runtime evidence."
+    },
+    {
+      "id": "delivery:object-read-binds-retained-snapshot-and-container:4",
+      "kind": "native",
+      "assertions": [
+        "one-shot-request-duct-only"
+      ],
+      "scope": "Actual observer request fact/kick plus an active foreign subscriber receiving no event; known valid mark and fault-free runtime evidence."
+    },
+    {
+      "id": "delivery:object-read-binds-retained-snapshot-and-container:5",
+      "kind": "native",
+      "assertions": [
+        "one-shot-request-duct-only"
+      ],
+      "scope": "Actual observer request fact/kick plus an active foreign subscriber receiving no event; known valid mark and fault-free runtime evidence."
+    },
+    {
+      "id": "delivery:object-read-binds-retained-snapshot-and-container:6",
+      "kind": "native",
+      "assertions": [
+        "one-shot-request-duct-only"
+      ],
+      "scope": "Actual observer request fact/kick plus an active foreign subscriber receiving no event; known valid mark and fault-free runtime evidence."
+    },
+    {
+      "id": "no-effect-subsystem",
+      "kind": "not_applicable",
+      "assertions": [
+        "no-external-effects-replayed"
+      ],
+      "scope": "This increment implements no external effect executor. This is not a replay-safety test or proof about future build/message/model/deployment effects."
+    },
+    {
+      "id": "delivery:downgraded-reader-retains-work-read:1",
+      "kind": "native",
+      "assertions": [
+        "one-shot-request-duct-only"
+      ],
+      "scope": "Actual observer request fact/kick plus an active foreign subscriber receiving no event; known valid mark and fault-free runtime evidence."
+    },
+    {
+      "id": "receipt-lookup-order",
+      "kind": "source_review",
+      "assertions": [
+        "source-ordering-property"
+      ],
+      "scope": "Current typed resource/action authorization must run before receipt lookup/decode; source digest must match the executed closure."
+    },
+    {
+      "id": "guard-independent-source-review",
+      "kind": "source_review",
+      "assertions": [
+        "guard-independent-source-review"
+      ],
+      "scope": "Exact common source reviewed; thermal, lock, lease, scope, cleanup, fail status and seed boundaries remain conservative."
+    },
+    {
+      "id": "guard-negative-host-tests",
+      "kind": "host_mocked",
+      "assertions": [
+        "hot-preflight-no-launch",
+        "missing-stale-sensors",
+        "crossing-stops-own-scope",
+        "bounded-shutdown",
+        "preserved-logs",
+        "nonpassing-final",
+        "no-forced-seed"
+      ],
+      "scope": "Synthetic sensor/child failure tests only; unchanged75/90C and50%CPU limits.",
+      "binding_keys": [
+        "guard_sha256"
+      ]
+    },
+    {
+      "id": "guard-real-hot-preflight-refusal",
+      "kind": "real_host",
+      "assertions": [
+        "real-93c-refusal",
+        "real-81c-refusal"
+      ],
+      "scope": "Two retained real-host refusals:93C light shim and81C four-fake start; neither launched Vere.",
+      "binding_keys": [
+        "guard_sha256"
+      ]
+    },
+    {
+      "id": "guard-real-platform-mocked-sensors",
+      "kind": "real_platform_mocked_sensors",
+      "assertions": [
+        "scope-quota-readback",
+        "namespace-pass",
+        "lock-released-after-scope",
+        "readonly-lease"
+      ],
+      "scope": "Actual systemd/bwrap/namespace/lock lifetime with mocked cool sensors; no native/thermal qualification.",
+      "binding_keys": [
+        "guard_sha256"
+      ]
+    },
+    {
+      "id": "v2-native-compile",
+      "kind": "native",
+      "assertions": [
+        "v2-native-compile"
+      ],
+      "scope": "Native compile/load of exact current Hoon closure including observer; compiler warnings/errors retained."
+    },
+    {
+      "id": "v2-ordered-journey",
+      "kind": "native",
+      "assertions": [
+        "v2-ordered-journey"
+      ],
+      "scope": "All129 retained cases with explicit9 scoped-identity acceptance changes, exact native receipt/internal journal and atomicity assertions."
+    },
+    {
+      "id": "v2-codec-and-home-rejection",
+      "kind": "native",
+      "assertions": [
+        "v2-codec-and-home-rejection"
+      ],
+      "scope": "Six derived vectors and43 raw/Unicode/schema controls at native codec and actual home boundary; negative input leaves business state unchanged."
+    },
+    {
+      "id": "v2-context-controls",
+      "kind": "native",
+      "assertions": [
+        "v2-context-controls"
+      ],
+      "scope": "All14 missing/expired/revoked/profile/sender controls against actual native authorization."
+    },
+    {
+      "id": "v2-concurrent-cas",
+      "kind": "native",
+      "assertions": [
+        "v2-concurrent-cas"
+      ],
+      "scope": "Two simultaneous current-authorized work writes; one CAS wins and one conflicts; no double receipt/journal."
+    },
+    {
+      "id": "legacy-private-project-probe-reproduced",
+      "kind": "native",
+      "assertions": [
+        "legacy-private-project-probe-reproduced"
+      ],
+      "scope": "Provenance-bound v1 native accepted history reproduces hidden cross-project local-ID availability oracle."
+    },
+    {
+      "id": "legacy-private-container-probe-reproduced",
+      "kind": "native",
+      "assertions": [
+        "legacy-private-container-probe-reproduced"
+      ],
+      "scope": "Provenance-bound v1 native accepted history reproduces same-project other-owner document availability oracle."
+    },
+    {
+      "id": "v2-cross-project-local-id",
+      "kind": "native",
+      "assertions": [
+        "v2-cross-project-local-id"
+      ],
+      "scope": "Same work/grant local IDs allocate independently across current-authorized project scopes; outsider cannot read either hidden scope."
+    },
+    {
+      "id": "v2-cross-container-local-id",
+      "kind": "native",
+      "assertions": [
+        "v2-cross-container-local-id"
+      ],
+      "scope": "Same document local ID independently saves in private containers with no global lookup or disclosure."
+    },
+    {
+      "id": "v2-public-receipt-normal",
+      "kind": "native",
+      "assertions": [
+        "v2-public-receipt-normal"
+      ],
+      "scope": "New accepted Work/Docs receipts exclude journal sequence/hash/policy counters and carry exact typed scope."
+    },
+    {
+      "id": "v2-public-receipt-retry",
+      "kind": "native",
+      "assertions": [
+        "v2-public-receipt-retry"
+      ],
+      "scope": "Current-authorized equal retries return identical projected receipts despite unrelated private activity."
+    },
+    {
+      "id": "v2-public-receipt-recovery",
+      "kind": "native",
+      "assertions": [
+        "v2-public-receipt-recovery"
+      ],
+      "scope": "Recovery uses exact project/container/kind scope and excludes private journal/policy metadata."
+    },
+    {
+      "id": "v2-public-export-projection",
+      "kind": "native",
+      "assertions": [
+        "v2-public-export-projection"
+      ],
+      "scope": "Exports contain only authorized selected-container objects/history; no private project journal or unrelated container activity."
+    },
+    {
+      "id": "legacy-revocation-exhaustion-reproduced",
+      "kind": "native",
+      "assertions": [
+        "legacy-revocation-exhaustion-reproduced"
+      ],
+      "scope": "Legitimate near4096 predecessor transition history reproduces blocked security revocation; no counter injection."
+    },
+    {
+      "id": "v2-security-revoke-reserve",
+      "kind": "native",
+      "assertions": [
+        "v2-security-revoke-reserve"
+      ],
+      "scope": "At ordinary4096 capacity, final-authorized revoke still accepts atomically from reserved capacity."
+    },
+    {
+      "id": "v2-cross-project-security-admin",
+      "kind": "native",
+      "assertions": [
+        "v2-cross-project-security-admin"
+      ],
+      "scope": "Another exhausted project cannot block explicit organization-policy administrator revocation in this project; all profile and current authority checks retained."
+    },
+    {
+      "id": "v2-security-reserve-exhaustion",
+      "kind": "native",
+      "assertions": [
+        "v2-security-reserve-exhaustion"
+      ],
+      "scope": "All128 retained grants revoked through real transitions; project closes to subsequent reads/retries/recovery/writes; other projects retain security capacity."
+    },
+    {
+      "id": "v2-security-counter-u64-edge",
+      "kind": "native",
+      "assertions": [
+        "v2-security-counter-u64-edge"
+      ],
+      "scope": "Separately labeled synthetic u64 edge refuses/derives closure; not legitimate4096-history proof."
+    },
+    {
+      "id": "boundary-projects",
+      "kind": "native",
+      "assertions": [
+        "boundary-projects"
+      ],
+      "scope": "16project boundary: new allocation fails atomically; no metadata for unauthorized requester."
+    },
+    {
+      "id": "boundary-grants",
+      "kind": "native",
+      "assertions": [
+        "boundary-grants"
+      ],
+      "scope": "128retained-grant boundary/tombstones, current auth before capacity, no partial policy/receipt write."
+    },
+    {
+      "id": "boundary-work",
+      "kind": "native",
+      "assertions": [
+        "boundary-work"
+      ],
+      "scope": "128work/project boundary; scoped collision cases included; revision updates within bound remain coherent."
+    },
+    {
+      "id": "boundary-documents-tree",
+      "kind": "native",
+      "assertions": [
+        "boundary-documents-tree"
+      ],
+      "scope": "32documents/container and tree entry bound; rejected save leaves objects/ref/pointer/journal/receipt unchanged."
+    },
+    {
+      "id": "boundary-container-history",
+      "kind": "native",
+      "assertions": [
+        "boundary-container-history"
+      ],
+      "scope": "128commits/container; failed129th save has no admitted Git objects/ref or receipt."
+    },
+    {
+      "id": "boundary-object-bytes",
+      "kind": "native",
+      "assertions": [
+        "boundary-object-bytes"
+      ],
+      "scope": "8388608canonical object bytes; boundary refusal admits no object, ref, pointer or journal."
+    },
+    {
+      "id": "boundary-ordinary-journal-receipts",
+      "kind": "native",
+      "assertions": [
+        "boundary-ordinary-journal-receipts"
+      ],
+      "scope": "4096ordinary accepted events/receipts reached by real bounded native batches; no off-by-one or implicit successful rejection."
+    },
+    {
+      "id": "boundary-pending",
+      "kind": "native",
+      "assertions": [
+        "boundary-pending"
+      ],
+      "scope": "16per-sender/64total pending reservations; no hidden metadata or business state changes."
+    },
+    {
+      "id": "delivery-positive-known-mark-control",
+      "kind": "native",
+      "assertions": [
+        "delivery-positive-known-mark-control"
+      ],
+      "scope": "Actual valid stead-result-2 fact/control proves observer sees delivered leak metadata; zero-evidence claim fails if observer faults/runtime loses mark."
+    },
+    {
+      "id": "delivery-ended-duct-no-late-fact",
+      "kind": "native",
+      "assertions": [
+        "delivery-ended-duct-no-late-fact"
+      ],
+      "scope": "Completed/cancelled/expired old ducts receive no later private fact; fresh exact registration is a distinct authorized attempt."
+    },
+    {
+      "id": "delivery-expired-same-path-reregistration",
+      "kind": "native",
+      "assertions": [
+        "delivery-expired-same-path-reregistration"
+      ],
+      "scope": "After60s expired same path is retired; ACK+kick without fact means no result. A subsequent fresh registration has a live recipient."
+    },
+    {
+      "id": "delivery-late-old-leave",
+      "kind": "native",
+      "assertions": [
+        "delivery-late-old-leave"
+      ],
+      "scope": "Retired old duct leave cannot delete a new same-path reservation; actual native observer and pending state are recorded."
+    },
+    {
+      "id": "delivery-expiration-lazy",
+      "kind": "native",
+      "assertions": [
+        "delivery-expiration-lazy"
+      ],
+      "scope": "Record real time and later triggering event; no claim of autonomous cleanup timer."
+    },
+    {
+      "id": "delivery-leave-cancels",
+      "kind": "native",
+      "assertions": [
+        "delivery-leave-cancels"
+      ],
+      "scope": "Current sender leave frees pending route without accepted business change; old route gets no content."
+    },
+    {
+      "id": "delivery-same-path-private-readers",
+      "kind": "native",
+      "assertions": [
+        "delivery-same-path-private-readers"
+      ],
+      "scope": "Held outsider same-path duct receives no owner read content; outsider release only yields exact denial."
+    },
+    {
+      "id": "delivery-wrong-sender-digest",
+      "kind": "native",
+      "assertions": [
+        "delivery-wrong-sender-digest"
+      ],
+      "scope": "Wrong source/binding/digest cannot reserve or consume another sender result."
+    },
+    {
+      "id": "delivery-missing-channel",
+      "kind": "native",
+      "assertions": [
+        "delivery-missing-channel"
+      ],
+      "scope": "Command may durably accept without a result channel; ACK alone cannot be shown Saved; current-authorized recovery required."
+    },
+    {
+      "id": "delivery-home-unavailable",
+      "kind": "native",
+      "assertions": [
+        "delivery-home-unavailable"
+      ],
+      "scope": "Stopped/unreachable home produces unavailable/pending; no fabricated accepted receipt."
+    },
+    {
+      "id": "delivery-late-response",
+      "kind": "native",
+      "assertions": [
+        "delivery-late-response"
+      ],
+      "scope": "Late result on expired/cancelled route cannot become current Saved state or reopen old duct."
+    },
+    {
+      "id": "migration-current-roundtrip",
+      "kind": "native",
+      "assertions": [
+        "migration-current-roundtrip"
+      ],
+      "scope": "Current%2save/load preserves exact state; distinct from predecessor migration."
+    },
+    {
+      "id": "migration-actual-v1-vase",
+      "kind": "native",
+      "assertions": [
+        "migration-actual-v1-vase"
+      ],
+      "scope": "Actual provenance-built predecessor%1state migrates to%2without changing Git/audit bytes, grants or acceptance count; not OTA proof."
+    },
+    {
+      "id": "migration-legacy-receipt-projection",
+      "kind": "native",
+      "assertions": [
+        "migration-legacy-receipt-projection"
+      ],
+      "scope": "Retained v1 canonical digest/time/OID survive current-authorized v2 retry/recovery projection; unaccepted legacy command rejects."
+    },
+    {
+      "id": "migration-invalid-predecessors",
+      "kind": "native",
+      "assertions": [
+        "migration-invalid-predecessors"
+      ],
+      "scope": "Counter/future/malformed predecessor rejects without active-state reset or partial conversion."
+    },
+    {
+      "id": "warm-home-restart",
+      "kind": "native",
+      "assertions": [
+        "warm-home-restart"
+      ],
+      "scope": "Graceful fenced process replacement retains accepted revisions, policy and canonical Git bytes; not abrupt crash."
+    },
+    {
+      "id": "evaluator-error-boundaries",
+      "kind": "native",
+      "assertions": [
+        "evaluator-error-boundaries"
+      ],
+      "scope": "Pinned native evaluator errors and >64KiB framing regression cannot produce a successful native report."
+    },
+    {
+      "id": "delivery-host-order-permutations",
+      "kind": "host_mocked",
+      "assertions": [
+        "fact-before-ack",
+        "ack-before-fact",
+        "kick-before-ack",
+        "nack-is-not-accepted",
+        "ack-without-result",
+        "timeout-partial-missing-never-saved"
+      ],
+      "scope": "Host reducer preserves real acceptance only for exact correlated receipts; no live reordering claim."
+    }
+  ]
+}

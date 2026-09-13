@@ -1,0 +1,106 @@
+{
+  "protocol": "stead.native-fixture/2",
+  "scope": "public synthetic disposable fake ships; not browser or live authentication",
+  "mutation": {
+    "mark": "stead-command-2",
+    "payload": "raw UTF-8 command JSON cord; maximum 65536 bytes",
+    "authoritative_context": "src.bowl resolved against current fixture binding; no caller actor"
+  },
+  "result": {
+    "mark": "stead-result-2",
+    "payload": "UTF-8 JSON outcome cord",
+    "path": "/v2/result/<sender_ship>/<binding_id>/<project_id>/<request_id>/<canonical_sha256>",
+    "delivery": "one exact-path fact then kick, final authority rechecked; ACK alone is not success",
+    "per_sender_pending": 16,
+    "total_pending": 64,
+    "expires_seconds": 60,
+    "expiry_cleanup": "lazy on a later watch or poke; no timer"
+  },
+  "read_paths": [
+    "/v2/project/<project_id>",
+    "/v2/work/<project_id>/<resource_id>",
+    "/v2/document/<project_id>/<container_id>/<resource_id>",
+    "/v2/receipt/<project_id>/<container_or_project_id>/<resource_id>/<operation>/<request_id>",
+    "/v2/git/<project_id>/<container_id>",
+    "/v2/git-object/<project_id>/<container_id>/<snapshot_commit_oid>/<object_oid>"
+  ],
+  "read_delivery": "current authenticated request duct only; one fact then kick; no ongoing content subscription",
+  "denial": {
+    "protocol": "stead.result/2",
+    "status": "rejected",
+    "error": "denied_or_not_found"
+  },
+  "authorized_errors": [
+    "revision_conflict",
+    "authority_epoch_conflict",
+    "request_id_reuse",
+    "invalid_command",
+    "invalid_document",
+    "capacity_exceeded",
+    "unsupported_version"
+  ],
+  "fixture_initialization": {
+    "mark": "stead-fixture-1",
+    "source": "owner-local administration on disposable zod, empty product state only",
+    "data": "native-fixture.json"
+  },
+  "unimplemented": [
+    "HTTP",
+    "browser sessions",
+    "live ship bindings",
+    "agent delegation",
+    "search",
+    "content subscriptions",
+    "Smart HTTP",
+    "pack ingestion",
+    "replication",
+    "general container management",
+    "document publication"
+  ],
+  "max_response_bytes": 262144,
+  "git_export": "Authorized current-ref manifest plus individual object reads, each reauthorized and proven reachable from the named retained snapshot in this container",
+  "limits": {
+    "ordinary_journal_events": 4096,
+    "security_revocations_per_project": 128,
+    "total_journal_and_receipts": 6144
+  },
+  "resource_identity": "typed scoped tuple; local UUID alone is not complete identity",
+  "receipt": {
+    "protocol": "stead.receipt/2",
+    "closed_fields": [
+      "protocol",
+      "status",
+      "request_id",
+      "canonical_sha256",
+      "project_id",
+      "resource_id",
+      "resource_kind",
+      "container_id",
+      "resource_revision",
+      "authority_epoch",
+      "principal_id",
+      "binding_id",
+      "authentication",
+      "authentication_strength",
+      "accepted_at_ms",
+      "git_commit_oid"
+    ],
+    "resource_kind": {
+      "project.create": "project",
+      "work.create": "work",
+      "work.update": "work",
+      "document.save": "document",
+      "policy.grant": "policy",
+      "policy.revoke": "policy"
+    },
+    "container_id": "document container UUID or empty string",
+    "scope": "policy is a distinct project-policy resource; its revision is visible only to an authorized policy actor"
+  },
+  "compatibility": {
+    "stead-command-2": "command/2 new or retry; command/1 replay-only",
+    "stead-command-1": "command/1 replay-only; command/2 rejected as mismatched mark",
+    "result": "all outcomes use stead-result-2; reads and result reservations use /v2",
+    "unaccepted_legacy": "current authority/epoch checked first, then unsupported_version; no accepted state change",
+    "v1_paths": "opaque denied_or_not_found; no scope fallback"
+  }
+}

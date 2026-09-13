@@ -9,7 +9,9 @@ OID = re.compile(r'[0-9a-f]{40}')
 FILE = re.compile(r'[0-9a-f]{8}-[0-9a-f]{4}-7[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}\.md')
 
 
-def export(call, destination, ship, project, container, snapshot=None):
+def export(call, destination, ship, project, container, snapshot=None, *, api_version=1):
+    if api_version not in (1, 2):
+        raise ValueError('Unsupported export API version')
     destination = Path(destination)
     destination.mkdir(mode=0o700)
     environment = {'PATH':'/usr/bin:/bin', 'LANG':'C.UTF-8', 'GIT_CONFIG_NOSYSTEM':'1', 'GIT_CONFIG_GLOBAL':'/dev/null'}
@@ -29,12 +31,12 @@ def export(call, destination, ship, project, container, snapshot=None):
         envelope = result['json']
         if not isinstance(envelope, dict) or envelope.get('status') != 'read':
             raise AssertionError('Authorized export read failed: ' + path)
-        if (envelope.get('protocol') != 'stead.result/1'
+        if (envelope.get('protocol') != f'stead.result/{api_version}'
                 or envelope.get('project_id') != project
                 or envelope.get('resource_id') != container):
             raise AssertionError('Export response scope/protocol mismatch: ' + path)
         return envelope['payload']
-    manifest = read(f'/v1/git/{project}/{container}')
+    manifest = read(f'/v{api_version}/git/{project}/{container}')
     head = snapshot or manifest['snapshot_commit_oid']
     if not OID.fullmatch(head):
         raise ValueError('Bad snapshot OID')
@@ -51,7 +53,7 @@ def export(call, destination, ship, project, container, snapshot=None):
             continue
         if len(objects) >= 512:
             raise ValueError('Export graph bound')
-        obj = read(f'/v1/git-object/{project}/{container}/{head}/{oid}')
+        obj = read(f'/v{api_version}/git-object/{project}/{container}/{head}/{oid}')
         if obj['oid'] != oid or obj['snapshot_commit_oid'] != head or obj['kind'] != expected_kind:
             raise AssertionError('Object identity/type changed')
         body = bytes.fromhex(obj['hex'])

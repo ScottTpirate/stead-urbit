@@ -1,0 +1,2 @@
+python3 scripts/urbit/harness.py stop
+STOPPED: fixture lifetime lock released

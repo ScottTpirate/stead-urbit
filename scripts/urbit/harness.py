@@ -15,6 +15,7 @@ import sys
 import time
 
 import toolchain
+import execution_policy
 
 ROOT = toolchain.ROOT
 BASE = ROOT / '.piers'
@@ -42,7 +43,7 @@ def guard(create=False):
         raise ValueError('Fixture escaped repository')
     if STATE.stat().st_uid != os.getuid() or STATE.stat().st_mode & 0o077:
         raise ValueError('Fixture must be owned by this user with mode 0700')
-    for name in ('live', 'seed', 'logs', 'control.sock', 'lifecycle.lock'):
+    for name in ('live', 'seed', 'logs', 'control.sock', 'lifecycle.lock', 'unclean-live.json'):
         if (STATE / name).is_symlink():
             raise ValueError(f'Refusing redirected fixture entry: {name}')
     return STATE
@@ -74,7 +75,7 @@ def running():
         return None
 
 
-def sandbox(command):
+def sandbox(command, *, execution_control=None, execution_id=None):
     # Only fixture state is writable. No home, credentials, Docker socket or LAN.
     args = ['bwrap', '--unshare-all', '--new-session', '--ro-bind', '/usr', '/usr']
     for name in ('bin', 'sbin', 'lib', 'lib64'):
@@ -94,8 +95,33 @@ def sandbox(command):
              '--ro-bind', str(ROOT / '.runtime' / toolchain.lock()['kernel']['directory']), '/kernel',
              '--bind', str(STATE), '/state', '--chdir', '/state', '--clearenv',
              '--setenv', 'PATH', '/usr/bin:/bin', '--setenv', 'TERM', 'dumb',
-             '--setenv', 'LANG', 'C.UTF-8', '--', *command]
+             '--setenv', 'LANG', 'C.UTF-8']
+    if execution_control is not None:
+        args += ['--ro-bind', str(execution_control), '/execution',
+                 '--setenv', 'STEAD_EXECUTION_ID', execution_id]
+    args += ['--', *command]
     return args
+
+
+def execution_limits():
+    pin = execution_policy.read_json(ROOT / 'specs/urbit/urgit-candidate.lock.json')
+    return execution_policy.policy_from_limits(pin['limits'])
+
+
+def guarded_supervisor():
+    guard()
+    report = execution_policy.run_guarded(
+        lambda control, run_id: sandbox(['/usr/bin/python3', '/code/supervisor.py'],
+                                         execution_control=control, execution_id=run_id),
+        root=ROOT, label='four-fakes', policy=execution_limits())
+    if report['status'] != 'completed' and report.get('launched'):
+        # A forced/disrupted live fixture is never promoted into a clean seed.
+        guard()
+        execution_policy.write_json(STATE / 'unclean-live.json', {
+            'reason': report['reason'], 'guard_report': report['run_directory'] + '/report.json'})
+    print(json.dumps({'guard_status': report['status'], 'guard_report': report['run_directory'] + '/report.json'}), flush=True)
+    if report['status'] != 'completed':
+        raise RuntimeError('Guarded supervisor stopped without clean completion: ' + str(report['reason']))
 
 
 def doctor():
@@ -122,8 +148,12 @@ def start():
             raise ValueError('Existing fixture toolchain differs; no automatic upgrade')
     current = running()
     if current is not None:
+        if not current.get('execution_guard'):
+            raise RuntimeError('Loaded supervisor has no common guard; make stop before restart')
         print(json.dumps(current, indent=2))
         return
+    if (STATE / 'unclean-live.json').exists():
+        raise RuntimeError('Previous live fixture was interrupted; inspect evidence then make reset from verified clean seeds')
     (STATE / 'logs').mkdir(exist_ok=True)
     # The supervisor takes this lifetime lock before launching any ship. A stale
     # socket or PID file alone can never authorize another writer or deletion.
@@ -134,7 +164,7 @@ def start():
             raise RuntimeError('Supervisor owns fixture; inspect logs, do not duplicate')
         fcntl.flock(gate, fcntl.LOCK_UN)
     with (STATE / 'logs/supervisor.log').open('ab') as output:
-        process = subprocess.Popen(sandbox(['/usr/bin/python3', '/code/supervisor.py']),
+        process = subprocess.Popen([sys.executable, str(Path(__file__).resolve()), '_guarded-supervisor'],
                                    stdin=subprocess.DEVNULL, stdout=output, stderr=output,
                                    start_new_session=True)
     for _ in range(100):
@@ -190,6 +220,7 @@ def reset():
         live.mkdir()
         for ship in SHIPS:
             shutil.copytree(seed / ship, live / ship, symlinks=True)
+        (STATE / 'unclean-live.json').unlink(missing_ok=True)
     print('RESET: restored four stopped, hash-verified synthetic seeds')
 
 
@@ -211,12 +242,14 @@ def core_test():
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument('command', choices=['doctor', 'start', 'stop', 'reset', 'status', 'test', 'core-test'])
+    parser.add_argument('command', choices=['doctor', 'start', 'stop', 'reset', 'status', 'test', 'core-test', '_guarded-supervisor'])
     args = parser.parse_args()
     try:
         if args.command == 'status':
             guard()
             print(json.dumps(rpc('status'), indent=2))
+        elif args.command == '_guarded-supervisor':
+            guarded_supervisor()
         else:
             globals()[args.command.replace('-', '_')]()
     except (OSError, ValueError, RuntimeError, subprocess.SubprocessError) as error:

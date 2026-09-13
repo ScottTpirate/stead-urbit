@@ -235,15 +235,14 @@ class UrgitOutputImportSafety(unittest.TestCase):
         (self.output / 'report.json').write_text(json.dumps({'status': 'passed', 'checks': [{'passed': True}]}))
         for name in ('provenance.json', 'sandbox-command.json'):
             (evidence / name).write_bytes(b'{}')
-        process = MagicMock()
-        process.returncode = 17
-        process.poll.return_value = 17
-        process.wait.return_value = 17
+        failed_guard = {'status': 'failed', 'exit_code': 17,
+                        'reason': 'Owned sandbox exited unsuccessfully', 'events': []}
         with urgit_audit.directory_fd(self.output) as parent:
-            # Only the subprocess is mocked; output import/report writes and
+            # The shared guard is mocked; output import/report writes and
             # final checksum generation execute against the synthetic files.
-            with patch.object(urgit_audit.subprocess, 'Popen', return_value=process), redirect_stdout(io.StringIO()):
-                result = urgit_audit.run_sandbox(self.root, evidence, control, parent, ['not-executed'], 0, {})
+            with patch.object(urgit_audit.execution_policy, 'run_guarded', return_value=failed_guard), redirect_stdout(io.StringIO()):
+                result = urgit_audit.run_sandbox(self.root, evidence, control, parent, ['not-executed'], 0,
+                    {'start_temperature_c': 75, 'stop_temperature_c': 90, 'total_timeout_seconds': 2100})
         self.assertEqual(result, 1)
         self.assertEqual(json.loads((evidence / 'report.json').read_text())['status'], 'failed')
 

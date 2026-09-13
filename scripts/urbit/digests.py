@@ -29,7 +29,7 @@ def tree_sha(root, *, source_links=False):
 def source_sha(root):
     # The loaded supervisor does not import the independent planning, contracts
     # or Urgit evaluation programs. Bind its actual dependency closure only.
-    names = ('conn.py', 'digests.py', 'harness.py', 'namespace_check.py',
+    names = ('conn.py', 'digests.py', 'execution_policy.py', 'harness.py', 'namespace_check.py',
              'supervisor.py', 'toolchain.py')
     entries = [sha(root / name) + '  ' + name + '\n' for name in names]
     return hashlib.sha256(''.join(entries).encode()).hexdigest()

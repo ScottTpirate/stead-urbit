@@ -27,6 +27,20 @@ four separate piers sequentially, mounts the disposable base desks, gracefully
 stops all processes, makes hash-verified clean seeds, then starts them again.
 This can take several minutes. Later restarts use those seeds.
 
+`start` now requires the common host-owned execution guardian used by the Urgit
+candidate runner. Preflight refuses any thermal reading above 75°C; monitoring
+stops execution at 90°C. Missing, malformed, changed or older-than-three-second
+sensor evidence fails closed. The host reads sensors every second; the isolated
+supervisor checks a read-only lease every quarter second and before operations.
+The guardian also verifies a transient 50% CPU quota with a 10 ms period and one
+CPU of affinity. A shared kernel-held lock permits only one heavy native run.
+None of these settings changes persistent host configuration.
+
+If preflight refuses, preserve its `.runtime/execution-runs/*/report.json` and
+do not retry hot boots. Finish source/lightweight work and record pending native
+commands. An alternative runner requires existing, explicit authorization and
+the same compatibility/isolation policy. No alternative is currently qualified.
+
 `test` deliberately replaces only the marked synthetic **live fixture** from its
 stopped clean seed. It recompiles native source, tests actual native ACK/NACK
 outcomes across four senders and restarts the home. It never resets Git or edits
@@ -40,14 +54,19 @@ loaded-source hashing rejects stale process code.
 fixtures and executes the Work/Docs/permissions journey, native codec and state
 version checks, and stock-Git materialization of home-created document objects.
 It includes a real two-minute grant-expiry wait. `test` retains the original
-counter smoke. Both commands own only disposable test state. The native core
-report preserves independently tracked incomplete coverage (such as adversarial
-subscription races) separately from executed business outcomes. Read
+counter smoke. Both commands own only disposable test state. The v2 core runner
+adds scoped-identity/privacy, predecessor migration, capacity and actual Gall
+observer schedules. These source changes have **not** compiled or run yet: the
+September 13 guardian refused real host samples of 93°C and 81°C before launching
+its native child. The current qualification gate fails when required evidence is
+missing; historical 25 skipped assertions remain unchanged. Read
 [NATIVE_CORE.md](NATIVE_CORE.md) and the exact evidence before inferring scope.
 
 `stop` uses Vere's supported SIGTERM path, checks clean exits and waits for the
-lifetime filesystem lock. A failed shutdown is reported, without force-killing and
-pretending the seed is consistent. `reset` requires stopped processes and the
+lifetime filesystem lock. The guardian bounds cooperative/TERM/KILL cleanup at
+10/10/5 seconds, using only its owned scope and processes. Forced or interrupted
+execution is nonpassing, preserves logs, and records `unclean-live.json`; it must
+never create a clean seed. `reset` requires stopped processes and the
 kernel-held lock, an exact ownership marker, private permissions, matching
 versions and every seed hash. It accepts no custom deletion path. It replaces only
 `.piers/fakes/live`; it refuses an unmarked path, redirected path, active owner or
@@ -83,8 +102,9 @@ safety tests use mocked processes/network and actual temporary filesystem locks;
 read their scope labels. These checks do not compile Hoon. The independent Urgit
 candidate command and its limitations are recorded in URGIT_AUDIT.md.
 
-The independent native-core replay sampled a 96°C CPU peak. The main harness
-currently has no thermal stop (Urgit's separate runner does). Monitor this local
-machine and use `make stop` when necessary; functional test success does not
-qualify repeated heavy runs or sustained load. The exact observation and open
-operator/measurement gate are retained in TEST_RESULTS.md.
+The previous independent native-core replay sampled a 96°C CPU peak before the
+common guardian existed. That historical result remains unchanged. Host guard
+tests and a short actual systemd/bubblewrap check with explicitly mocked sensors
+do not qualify a guarded native run or sustained load. See TEST_RESULTS.md for
+separate evidence layers. Restart the supervisor after any harness change; do
+not reuse a process that loaded different source.

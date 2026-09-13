@@ -7,6 +7,7 @@ import hashlib
 import json
 import os
 from pathlib import Path
+import signal
 import shutil
 import socket
 import subprocess
@@ -17,6 +18,7 @@ import urllib.request
 
 from digests import sha, source_sha, tree_sha
 from conn import assert_result, run_thread
+import execution_policy
 
 STATE = Path('/state')
 LIVE = STATE / 'live'
@@ -29,8 +31,76 @@ PROGRESS = {'stage': 'starting', 'ready': False, 'error': None}
 MUTEX = threading.Lock()
 STOP = threading.Event()
 STOP_REQUESTED = threading.Event()
+NORMAL_STOP = threading.Event()
+FORCED_STOP = threading.Event()
+INITIALIZATION_FAILED = threading.Event()
 EVIDENCE = []
 LOADED_SOURCE_DIGEST = source_sha(Path('/code'))
+
+
+def execution_check(preflight=False):
+    if STOP_REQUESTED.is_set():
+        raise execution_policy.GuardError('Fixture stop is latched')
+    return execution_policy.require_lease(preflight=preflight, read_only=True)
+
+
+def completion_code():
+    # A zero process status must not erase a lease failure or an interrupted
+    # initialization simply because runtime SIGTERM persisted its own state.
+    return 0 if NORMAL_STOP.is_set() and not FORCED_STOP.is_set() and not INITIALIZATION_FAILED.is_set() else 1
+
+
+def execution_watch():
+    previous = None
+    while not STOP.wait(.25):
+        try:
+            lease = execution_check()
+            if previous is not None and (lease['generation'] < previous['generation']
+                    or lease['sample']['finished'] < previous['sample']['finished']):
+                raise execution_policy.GuardError('Execution lease moved backwards')
+            previous = lease
+        except Exception as error:
+            normal = NORMAL_STOP.is_set()
+            STOP_REQUESTED.set()
+            if not normal:
+                FORCED_STOP.set()
+            PROGRESS.update(stage='stopping' if normal else 'guard-stopped', ready=False,
+                            error=None if normal else str(error))
+            record('requested fixture stop' if normal else 'execution guard stopped',
+                   {'error': None if normal else str(error)})
+            # Interrupt our known Popen children immediately, before waiting for
+            # an active test's mutex. No PID-file lookup or unrelated signaling.
+            for process in tuple(PROCESSES.values()):
+                if process.poll() is None:
+                    process.terminate()
+            with MUTEX:
+                try:
+                    all_stop()
+                except Exception as cleanup_error:
+                    record('guard shutdown failure', {'error': str(cleanup_error)})
+                STOP.set()
+            return
+
+
+def guarded_result(result):
+    try:
+        lease = execution_check()
+        result['execution_guard'] = {key: lease[key] for key in (
+            'run_id', 'generation', 'guard_sha256', 'policy_sha256', 'policy')}
+    except Exception as error:
+        result.update(status='fail', error='Execution guard interrupted result: ' + str(error))
+    # Persist the same final guarded status, including an interrupted test that
+    # completed its own checks just before cancellation. No stale green report.
+    if 'evidence_file' in result:
+        name = Path(result['evidence_file']).name
+        if not (name.startswith(('core-', 'smoke-')) and name.endswith('.json')):
+            raise ValueError('Unexpected native evidence target')
+        path = STATE / 'logs' / name
+        evidence = execution_policy.read_json(path, maximum=16 * 1024 * 1024)
+        evidence.update(status=result['status'], execution_guard=result.get('execution_guard'),
+                        error=result.get('error'))
+        execution_policy.write_json(path, evidence)
+    return result
 
 
 def record(command, result):
@@ -41,6 +111,7 @@ def record(command, result):
 
 
 def dojo(ship, command, timeout=120):
+    execution_check()
     lines = (LIVE / ship / '.http.ports').read_text().splitlines()
     port = next(int(line.split()[0]) for line in lines if 'loopback' in line)
     # Lens parses a build expression separately from its sink. Dojo's |hood
@@ -65,6 +136,7 @@ def wait_ready(ship, timeout=1200):
     while time.monotonic() < deadline:
         if STOP_REQUESTED.is_set():
             raise InterruptedError('Fixture boot cancelled by stop')
+        execution_check()
         if PROCESSES[ship].poll() is not None:
             raise RuntimeError(f'{ship} exited during boot; inspect logs')
         try:
@@ -79,6 +151,7 @@ def wait_ready(ship, timeout=1200):
 
 
 def launch(ship):
+    execution_check()
     pier = LIVE / ship
     if pier.is_symlink():
         raise ValueError('Refusing redirected pier')
@@ -96,25 +169,40 @@ def launch(ship):
     record('launch ' + ship, {'argv': command, 'pid': PROCESSES[ship].pid})
 
 
-def shutdown(ship):
+def shutdown(ship, timeout=10):
     process = PROCESSES.get(ship)
-    if process is None or process.poll() is not None:
+    if process is None:
         return
     # Pinned Vere king.c handles SIGTERM with u3_king_exit, including bootstrap.
     # Unlike Dojo input this remains available before Lens has started.
-    process.terminate()
-    process.wait(timeout=120)
-    if process.returncode != 0:
-        raise RuntimeError(f'{ship} exit was not clean: {process.returncode}')
-    LOGS[ship].close()
-    record('shutdown ' + ship, {'exit_code': process.returncode})
+    forced = False
+    try:
+        if process.poll() is None:
+            process.terminate()
+            try:
+                process.wait(timeout=timeout)
+            except subprocess.TimeoutExpired:
+                forced = True
+                FORCED_STOP.set()
+                process.kill()
+                process.wait(timeout=1)
+        record('shutdown ' + ship, {'exit_code': process.returncode, 'forced': forced})
+        if forced or process.returncode != 0:
+            raise RuntimeError(f'{ship} exit was not clean: {process.returncode}; forced={forced}')
+    finally:
+        if ship in LOGS:
+            LOGS[ship].close()
 
 
 def all_stop():
     errors = []
+    deadline = time.monotonic() + 15
+    for process in tuple(PROCESSES.values()):
+        if process.poll() is None:
+            process.terminate()
     for ship in SHIPS:
         try:
-            shutdown(ship)
+            shutdown(ship, timeout=max(.05, deadline - time.monotonic()))
         except Exception as error:
             errors.append(str(error))
     if errors:
@@ -122,6 +210,7 @@ def all_stop():
 
 
 def copy_seed_to_live():
+    execution_check()
     if any(process.poll() is None for process in PROCESSES.values()):
         raise RuntimeError('Cannot restore while a fake ship is live')
     manifest = json.loads((SEED / 'manifest.json').read_text())
@@ -141,6 +230,7 @@ def copy_seed_to_live():
 def initialize():
     with MUTEX:
         try:
+            execution_check(preflight=True)
             if (SEED / 'manifest.json').exists():
                 if json.loads((SEED / 'manifest.json').read_text())['toolchain_sha256'] != sha('/toolchain.json'):
                     raise ValueError('Existing fixture toolchain differs')
@@ -158,6 +248,9 @@ def initialize():
             if not (SEED / 'manifest.json').exists():
                 PROGRESS['stage'] = 'creating stopped clean seeds'
                 all_stop()
+                execution_check()
+                if FORCED_STOP.is_set():
+                    raise RuntimeError('Interrupted or forcibly stopped state cannot become a clean seed')
                 if SEED.exists():
                     raise RuntimeError('Incomplete seed exists; inspect it without overwriting')
                 SEED.mkdir()
@@ -170,9 +263,12 @@ def initialize():
                 for ship in SHIPS:
                     launch(ship)
                     wait_ready(ship)
+            execution_check()
             PROGRESS.update(stage='ready', ready=True)
         except Exception as error:
-            PROGRESS.update(stage='failed', error=str(error))
+            INITIALIZATION_FAILED.set()
+            STOP_REQUESTED.set()
+            PROGRESS.update(stage='failed', ready=False, error=str(error))
             traceback.print_exc()
 
 
@@ -194,6 +290,7 @@ def sync_sources():
 
 
 def expect(ship, command, positive, rejection=None):
+    execution_check()
     response = run_thread('/runtime/' + LOCK['runtime']['binary'],
                           LIVE / ship / '.urb/conn.sock', command)
     record(ship + ': ' + command, response)
@@ -207,6 +304,7 @@ def smoke_test():
     native_digest = tree_sha(Path('/native/desk'))
     code_digest = source_sha(Path('/code'))
     try:
+        execution_check(preflight=True)
         if code_digest != LOADED_SOURCE_DIGEST:
             raise RuntimeError('Supervisor source changed since load; stop/start before testing')
         # Test owns only this marked synthetic fixture and starts from stopped seeds.
@@ -227,6 +325,7 @@ def smoke_test():
                 expect(**case)
         if native_digest != tree_sha(Path('/native/desk')) or code_digest != source_sha(Path('/code')):
             raise RuntimeError('Source changed during native test; results cannot label new bytes')
+        execution_check()
         result['status'] = 'pass'
     except Exception as error:
         result['error'] = str(error)
@@ -253,25 +352,36 @@ def handle(connection):
                 data += block
             request = json.loads(data)
             if request == {'op': 'status'}:
-                result = {**PROGRESS, 'ships': {s: {'pid': p.pid, 'exit': p.poll()} for s, p in PROCESSES.items()}}
+                try:
+                    lease = execution_check()
+                    execution = {'run_id': lease['run_id'], 'generation': lease['generation'], 'state': 'running'}
+                except Exception as error:
+                    PROGRESS.update(stage='guard-stopped', ready=False, error=str(error))
+                    execution = {'state': 'stopped', 'error': str(error)}
+                result = {**PROGRESS, 'execution_guard': execution,
+                          'ships': {s: {'pid': p.pid, 'exit': p.poll()} for s, p in PROCESSES.items()}}
             elif request == {'op': 'stop'}:
+                NORMAL_STOP.set()
                 STOP_REQUESTED.set()
                 PROGRESS.update(stage='stopping', ready=False)
                 with MUTEX:
                     all_stop()
-                    result = {'stopped': True}
+                    result = {'stopped': True, 'status': 'stopped', 'ready': False}
+                    PROGRESS.update(stage='stopped', ready=False)
                     STOP.set()
             elif request == {'op': 'test'}:
                 with MUTEX:
                     if not PROGRESS['ready']:
                         raise RuntimeError('Fixture not ready: ' + str(PROGRESS))
-                    result = smoke_test()
+                    execution_check(preflight=True)
+                    result = guarded_result(smoke_test())
             elif request == {'op': 'core-test'}:
                 with MUTEX:
                     if not PROGRESS['ready']:
                         raise RuntimeError('Fixture not ready')
+                    execution_check(preflight=True)
                     import core_test
-                    result = core_test.run(globals())
+                    result = guarded_result(core_test.run(globals()))
             else:
                 raise ValueError('Unknown control command')
             reply = {'ok': True, 'result': result}
@@ -282,6 +392,9 @@ def handle(connection):
 
 if __name__ == '__main__':
     os.umask(0o077)
+    execution_check(preflight=True)
+    for sig in (signal.SIGTERM, signal.SIGINT):
+        signal.signal(sig, lambda *_: STOP_REQUESTED.set())
     # This fd lives for the entire supervisor lifetime, including every child.
     gate = (STATE / 'lifecycle.lock').open('a+')
     fcntl.flock(gate, fcntl.LOCK_EX | fcntl.LOCK_NB)
@@ -294,6 +407,7 @@ if __name__ == '__main__':
         server.bind(str(socket_path))
         server.listen(8)
         server.settimeout(.5)
+        threading.Thread(target=execution_watch, daemon=True).start()
         threading.Thread(target=initialize, daemon=True).start()
         while not STOP.is_set():
             try:
@@ -302,3 +416,4 @@ if __name__ == '__main__':
             except TimeoutError:
                 pass
     socket_path.unlink(missing_ok=True)
+    raise SystemExit(completion_code())

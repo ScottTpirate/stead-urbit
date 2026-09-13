@@ -1,8 +1,11 @@
 # Native Work/Docs and permissions slice
 
-This increment implements one home-owned synthetic project/work/document state
-machine and authorization together. The minimum contracts remain byte-for-byte
-frozen under `specs/urbit/contract-freeze.json`. Its executable desk is
+The original increment executed one home-owned synthetic project/work/document
+state machine and authorization together at `f52293f`. The current v2 changes
+are source-reviewed but **uncompiled and unexecuted** after real thermal preflight
+refusals. The original minimum contracts remain byte-for-byte frozen under
+`specs/urbit/contract-freeze.json`; the narrow [v2 amendment](CONTRACT_AMENDMENT_2.md)
+has its own `specs/urbit/v2/contract-freeze.json`. The native desk is
 `native/core/desk`; the URB-020 counter remains separately available in
 `native/desk`. They are installed into separate fresh test runs, never as two
 simultaneous owners of the same state.
@@ -58,20 +61,37 @@ stock Git operations and static Hoon review have separate evidence labels.
 Source/toolchain/corpus hashes are captured before and after every native run;
 loaded Python mismatches or source drift fail that run.
 
-The initial saved-state format is `[%stead-home %1 state]`. There are zero declared
-predecessor product formats. Owner-only tests invoke the real `on-save`/`on-load`
-arms, and reject the counter and future versions without changing accepted data.
-Warm process restart is tested separately. Neither check establishes abrupt-crash
+The current source saves `[%stead-home %2 state]` and explicitly converts the
+original `%1` format. The test-only predecessor builder calls the archived v1
+transition, in batches of at most 32 commands, to produce an actual old-state
+vase; it does not assign a fabricated journal count. Migration reconstructs and
+checks content/policy projections while preserving original journal, receipt and
+Git bytes. These new migration and corruption tests remain unexecuted. Current
+save/load and warm process restart are separate checks. None establishes abrupt-crash
 windows, production backups, a safe runtime rollback or same-identity live migration.
 
-Open confidentiality decisions include caller-selected globally unique IDs
-(create success versus collision can reveal allocation) and project journal
-sequence counters (aggregate activity can leak across private containers). Opaque
-known/unknown read outcomes do not resolve those design limits. Real company data
+V2 scopes local work IDs by project, documents by project/container, and grants by
+project. It removes the global resource-availability lookup. Public receipts use
+a closed sixteen-field projection without internal sequence/digest/policy counters;
+normal replies, retries and recovery use the same scope. Original internal bytes
+and the v1 freeze/evidence remain unchanged. New writes require command2; retained
+command1 retries are replay-only and undergo current authorization first.
+
+Ordinary accepted activity is bounded at 4,096 records. Each of at most sixteen
+projects has a separate reserve of 128 revocations for its retained grants. A
+fully consumed reserve, or an exhausted policy counter, closes that project's
+protected reads, retries and mutations. No ordinary workload consumes another
+project's security reserve. No history is erased and no administrator bypass is
+introduced. The derived bound is 6,144 retained acceptance records.
+
+These privacy/capacity changes require their actual native regressions; source
+review is not reproduction of either old vulnerability or proof of the fix. Real company data
 remains blocked pending the independent authentication, endpoint-isolation and
-backup reviews in the master directive. Capacity-edge fill schedules, concurrent
-subscription races, abrupt crash injection and production effect replay monitoring
-are also separate gates; no representative latency or capacity claim is made.
+backup reviews in the master directive. The current gate requires capacity-edge
+fill schedules and actual subscription evidence. Abrupt crash injection and
+production effects remain later work. There is no implemented external-effect
+subsystem to replay; this is a bounded source/N-A disposition, not effect-engine
+qualification. No representative latency or capacity claim is made.
 
 Executed counts, failures, exact source binding and review links belong in
 [TEST_RESULTS.md](TEST_RESULTS.md) and the attached issue evidence, not this usage

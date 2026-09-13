@@ -1,5 +1,11 @@
 # Executed development evidence
 
+Current September13 checkpoint: [Phase1 closeout](PHASE1_CLOSEOUT.md) and
+[exact lightweight execution](evidence/2026-09-13/qualification/root-lightweight-final.json).
+The v2 source is uncompiled/unexecuted after real thermal preflight refusals.
+The September12 record below, including its failures and25 skips, is historical
+and remains unchanged. Do not apply its native success to the new source.
+
 September 12, 2026 US/Eastern; raw timestamps are UTC. This report separates
 planning, mocked/host, real local native, stock-Git candidate and GitHub actions.
 The source commit/evidence binding is recorded with the implementation PR. Every

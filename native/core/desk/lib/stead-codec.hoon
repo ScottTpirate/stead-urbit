@@ -1,9 +1,9 @@
-::  Stead command/1 codec. Newly authored bounded composition of pinned parsers.
+::  Stead command/1 replay and command/2 codec. Newly authored bounded composition of pinned parsers.
 ::  String parser follows MIT Urbit zuse +stri, preserving/rejecting NUL first.
 |%
 +$  object-map  (map @t json)
 +$  command
-  $:  request=@t  project=@t  resource=@t  expected=@ud  epoch=@ud
+  $:  protocol=@t  request=@t  project=@t  resource=@t  expected=@ud  epoch=@ud
       operation=@t  payload=object-map  canonical-bytes=@t  digest=@t
   ==
 ++  string-rule
@@ -217,7 +217,8 @@
   ?>  ?=([%o *] value)
   =/  obj  p.value
   ?>  (keys obj ~['protocol' 'request_id' 'project_id' 'resource_id' 'expected_revision' 'authority_epoch' 'operation' 'payload'])
-  ?>  =('stead.command/1' (field obj 'protocol'))
+  =/  protocol  (field obj 'protocol')
+  ?>  ?|(=('stead.command/1' protocol) =('stead.command/2' protocol))
   =/  req  (field obj 'request_id')
   =/  pro  (field obj 'project_id')
   =/  res  (field obj 'resource_id')
@@ -261,7 +262,7 @@
         ==
     |
   =/  canon  (canonical value)
-  [req pro res exp epo op pay canon (hash 'stead.command/1' canon)]
+  [protocol req pro res exp epo op pay canon (hash protocol canon)]
 ++  work-payload
   |=  pay=object-map
   ^-  ?
@@ -271,5 +272,23 @@
       (~(has in (silt ~['deliverable' 'task' 'problem'])) (field pay 'type'))
       (~(has in (silt ~['backlog' 'todo' 'in_progress' 'blocked' 'done' 'canceled'])) (field pay 'status'))
       (~(has in (silt ~['none' 'low' 'medium' 'high' 'urgent'])) (field pay 'priority'))
+  ==
+++  receipt-kind
+  |=  operation=@t
+  ^-  @t
+  ?:  =('project.create' operation)  'project'
+  ?:  =('document.save' operation)  'document'
+  ?:  ?|(=('policy.grant' operation) =('policy.revoke' operation))  'policy'
+  'work'
+++  receipt-fields
+  |=  obj=object-map
+  ^-  ?
+  ?&  (keys obj ~['protocol' 'status' 'request_id' 'canonical_sha256' 'project_id' 'resource_id' 'resource_kind' 'container_id' 'resource_revision' 'authority_epoch' 'principal_id' 'binding_id' 'authentication' 'authentication_strength' 'accepted_at_ms' 'git_commit_oid'])
+      =('stead.receipt/2' (field obj 'protocol'))
+      =('accepted' (field obj 'status'))
+      (~(has in (silt ~['project' 'work' 'document' 'policy'])) (field obj 'resource_kind'))
+      ?:  =('document' (field obj 'resource_kind'))
+        (uuid (field obj 'container_id'))
+      =('' (field obj 'container_id'))
   ==
 --

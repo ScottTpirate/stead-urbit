@@ -1,0 +1,110 @@
+{
+  "protocol": "stead.qa-host-review/2",
+  "owner": "/root/qa_review",
+  "classification": "host-only tests of mocked adapters, authored events and immutable metadata; no native runtime or native Hoon compile",
+  "status": "passed",
+  "total_tests": 40,
+  "native_tests_executed": 0,
+  "executed_git_head": "77428f6c35eb0fe7b7e497b64c5a1eab92e943cd",
+  "source_before": {
+    "scripts/urbit/core_cases_v2.py": "eaaf9035eed9ca7e99823c8698cfc9c1a9fbf6c9503dec75f82bcfdd593d0e6a",
+    "scripts/urbit/delivery_cases.py": "904c11b2b83a9c54036ad2c8046b38f3dafaedb8a4f76e9f661cf36aa01ba560",
+    "scripts/urbit/delivery_suite.py": "35980a0e9dd2be0eda54cc0d1ac5582012e75359e0faf39a05005bd8eb08b180",
+    "scripts/urbit/qualification_gate.py": "4d11a0de57f24875634f3e6c276952cb76b8703df75be04b8adeffe2b1c80bd7",
+    "specs/urbit/fixtures/native-cases-v2.json": "95c915e2d0c93f358225274b34216fff0fe2efc09791905855b1e3f36aec368a",
+    "specs/urbit/v2/qualification-gate.json": "f374349cc3ccd64993e3dade9a44e306854479c228b7f93d6559647006aee94c",
+    "tests/urbit/test_core_cases_v2.py": "baba80530b8316f55270c7f37b45402fa2ed4a73e61d21d465a6c62fdcefc381",
+    "tests/urbit/test_delivery_cases.py": "ce34d65a3ecf48b1f85f903b23d8587f73b9fb1fac1812d33991f68ee95ac677",
+    "tests/urbit/test_delivery_suite.py": "e66cd2df343c8163852f8c8a5852f97a0e25175565b07d8e8722de09cc83ea9d",
+    "tests/urbit/test_qualification_gate.py": "b6fb3f4a090b226bc6baa27cedb6db82160808802563e83773a32c711cc343c2"
+  },
+  "source_after": {
+    "scripts/urbit/core_cases_v2.py": "eaaf9035eed9ca7e99823c8698cfc9c1a9fbf6c9503dec75f82bcfdd593d0e6a",
+    "scripts/urbit/delivery_cases.py": "904c11b2b83a9c54036ad2c8046b38f3dafaedb8a4f76e9f661cf36aa01ba560",
+    "scripts/urbit/delivery_suite.py": "35980a0e9dd2be0eda54cc0d1ac5582012e75359e0faf39a05005bd8eb08b180",
+    "scripts/urbit/qualification_gate.py": "4d11a0de57f24875634f3e6c276952cb76b8703df75be04b8adeffe2b1c80bd7",
+    "specs/urbit/fixtures/native-cases-v2.json": "95c915e2d0c93f358225274b34216fff0fe2efc09791905855b1e3f36aec368a",
+    "specs/urbit/v2/qualification-gate.json": "f374349cc3ccd64993e3dade9a44e306854479c228b7f93d6559647006aee94c",
+    "tests/urbit/test_core_cases_v2.py": "baba80530b8316f55270c7f37b45402fa2ed4a73e61d21d465a6c62fdcefc381",
+    "tests/urbit/test_delivery_cases.py": "ce34d65a3ecf48b1f85f903b23d8587f73b9fb1fac1812d33991f68ee95ac677",
+    "tests/urbit/test_delivery_suite.py": "e66cd2df343c8163852f8c8a5852f97a0e25175565b07d8e8722de09cc83ea9d",
+    "tests/urbit/test_qualification_gate.py": "b6fb3f4a090b226bc6baa27cedb6db82160808802563e83773a32c711cc343c2"
+  },
+  "sources_unchanged": true,
+  "runs": [
+    {
+      "argv": [
+        "python",
+        "-m",
+        "unittest",
+        "discover",
+        "-s",
+        "tests/urbit",
+        "-p",
+        "test_delivery*.py",
+        "-v"
+      ],
+      "cwd": "/home/skilgore/stead-urbit",
+      "start_utc": "2026-09-13T14:17:36.395532+00:00",
+      "elapsed_seconds": 0.050472,
+      "returncode": 0,
+      "expected_test_count": 20,
+      "output_path": "docs/urbit/evidence/2026-09-13/qualification/qa-delivery-host-output.txt",
+      "output_sha256": "9aa0bd5ca8f89ee12b6770d6d3116c6b38b0532c405c4c5bfa7ce56df83cde26"
+    },
+    {
+      "argv": [
+        "python",
+        "-m",
+        "unittest",
+        "discover",
+        "-s",
+        "tests/urbit",
+        "-p",
+        "test_core_cases_v2.py",
+        "-v"
+      ],
+      "cwd": "/home/skilgore/stead-urbit",
+      "start_utc": "2026-09-13T14:17:36.446260+00:00",
+      "elapsed_seconds": 0.093415,
+      "returncode": 0,
+      "expected_test_count": 11,
+      "output_path": "docs/urbit/evidence/2026-09-13/qualification/qa-core-cases-v2-host-output.txt",
+      "output_sha256": "01f90a099b5b16bc7e84470453ff6d12684451c8d3f5e23524052d26486acf0d"
+    },
+    {
+      "argv": [
+        "python",
+        "-m",
+        "unittest",
+        "discover",
+        "-s",
+        "tests/urbit",
+        "-p",
+        "test_qualification_gate.py",
+        "-v"
+      ],
+      "cwd": "/home/skilgore/stead-urbit",
+      "start_utc": "2026-09-13T14:17:36.539841+00:00",
+      "elapsed_seconds": 0.042781,
+      "returncode": 0,
+      "expected_test_count": 9,
+      "output_path": "docs/urbit/evidence/2026-09-13/qualification/qa-qualification-gate-host-output.txt",
+      "output_sha256": "4cf0bd48e9be7ec23ecabd19262680529a147952a5e3a958d0ab320e4e4d36fc"
+    }
+  ],
+  "earlier_failures_preserved": [
+    {
+      "suite": "delivery",
+      "kind": "host test fixture error",
+      "detail": "Initial subTest used nonexistent variable k; corrected to kinds. Initial10tests:9pass1error."
+    },
+    {
+      "suite": "core-cases-v2",
+      "kind": "host test fixture error",
+      "detail": "Initial vector test omitted raw_recipe/command_recipe expansion. Initial11tests:10pass1error. Corrected expansion verifies all43 corpus inputs."
+    }
+  ],
+  "native_qualification": "failed: real thermal preflight refused before launch; no current native claims supplied",
+  "historical_skips_preserved": 25
+}

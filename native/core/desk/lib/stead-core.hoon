@@ -1,5 +1,5 @@
 ::  One home-owned state; pure transitions use trusted Gall context supplied by app.
-/+  stead-codec, stead-git
+/+  stead-codec, stead-git, stead-core-v1
 =,  stead-codec
 |%
 +$  binding
@@ -102,12 +102,13 @@
         =((fixture-id '000000000006') (field payload.cmd 'owning_team_id'))
     ==
   ?.  (~(has by projects.db) project.cmd)  |
+  ?:  (closed db project.cmd)  |
   =/  rank  (role db principal.actor project.cmd now)
   ?:  ?|  =('policy.grant' operation.cmd)  =('policy.revoke' operation.cmd)
       ==
     =/  affected=@t
       ?:  =('policy.grant' operation.cmd)  (field payload.cmd 'role')
-      =/  found  (~(get by grants.db) (field payload.cmd 'grant_id'))
+      =/  found  (~(get by grants.db) (scope-key project.cmd (field payload.cmd 'grant_id')))
       ?~  found  ''
       ?.  =(project.cmd project.u.found)  ''
       role.u.found
@@ -121,7 +122,7 @@
   ?.  (gte rank 2)  |
   ?:  =('document.save' operation.cmd)
     =/  container  (field payload.cmd 'container_id')
-    =/  found  (~(get by documents.db) [project.cmd resource.cmd])
+    =/  found  (~(get by documents.db) [project.cmd (scope-key (field payload.cmd 'container_id') resource.cmd)])
     ?&  (container-access db actor project.cmd container now)
         ?~(found & =(container container.u.found))
     ==
@@ -131,7 +132,7 @@
 ++  error
   |=  name=@t
   ^-  @t
-  (canonical (object ~[['protocol' 'stead.result/1'] ['status' 'rejected'] ['error' name]]))
+  (canonical (object ~[['protocol' 'stead.result/2'] ['status' 'rejected'] ['error' name]]))
 ++  revision
   |=  [db=state cmd=command]
   ^-  @ud
@@ -143,7 +144,7 @@
     =/  found  (~(got by projects.db) project.cmd)
     policy.found
   ?:  =('document.save' operation.cmd)
-    =/  found  (~(get by documents.db) [project.cmd resource.cmd])
+    =/  found  (~(get by documents.db) [project.cmd (scope-key (field payload.cmd 'container_id') resource.cmd)])
     ?~(found 0 revision.u.found)
   =/  found  (~(get by works.db) [project.cmd resource.cmd])
   ?~(found 0 revision.u.found)
@@ -195,7 +196,7 @@
     ==
   =.  journal.db  [[project.cmd record digest] journal.db]
   =.  receipts.db  (~(put by receipts.db) [project.cmd principal.actor request.cmd] [digest.cmd resource.cmd operation.cmd canonical-bytes.cmd receipt])
-  [receipt db]
+  [(public-receipt [digest.cmd resource.cmd operation.cmd canonical-bytes.cmd receipt]) db]
 ++  apply-command
   |=  [db=state sender=@p now=@ud cmd=command]
   ^-  transition
@@ -203,7 +204,7 @@
   ?~  identity  [(error 'denied_or_not_found') db]
   =/  actor  u.identity
   ?.  (allowed db actor cmd now)  [(error 'denied_or_not_found') db]
-  ?.  (read-scope db actor project.cmd resource.cmd operation.cmd now)
+  ?.  (read-scope db actor project.cmd resource.cmd operation.cmd (command-container cmd) now)
     [(error 'denied_or_not_found') db]
   =/  epo=@ud
     ?:  =('project.create' operation.cmd)  1
@@ -214,10 +215,13 @@
   =/  duplicate  (~(get by receipts.db) [project.cmd principal.actor request.cmd])
   ?^  duplicate
     ?.  =(digest.cmd digest.u.duplicate)  [(error 'request_id_reuse') db]
-    [bytes.u.duplicate db]
+    [(public-receipt u.duplicate) db]
+  ?.  =('stead.command/2' protocol.cmd)  [(error 'unsupported_version') db]
   =/  old  (revision db cmd)
   ?.  =(old expected.cmd)  [(error 'revision_conflict') db]
-  ?:  ?|((gte (lent journal.db) 4.096) =(old 18.446.744.073.709.551.615))
+  ?:  ?|  =(old 18.446.744.073.709.551.615)
+          ?:(=('policy.revoke' operation.cmd) (gte (security-count db project.cmd) 128) (gte (ordinary-count db) 4.096))
+      ==
     [(error 'capacity_exceeded') db]
   =/  new  +(old)
   =/  pol=@ud
@@ -226,15 +230,16 @@
     policy.pro
   ?:  =('project.create' operation.cmd)
     ?:  (gte (lent ~(tap by projects.db)) 16)  [(error 'capacity_exceeded') db]
-    ?:  ?|((id-used db project.cmd) (id-used db request.cmd) =(project.cmd request.cmd))
-      [(error 'invalid_command') db]
+    ::  Existing project allocation is visible only to the explicit org policy
+    ::  administrator in this single-org profile. Never inspect other kinds.
+    ?:  (~(has by projects.db) project.cmd)  [(error 'invalid_command') db]
     =.  projects.db  (~(put by projects.db) project.cmd [1 1 1 payload.cmd])
     ::  Reserve the creation request UUID as the explicit creator grant UUID.
-    =.  grants.db  (~(put by grants.db) request.cmd [project.cmd principal.actor 'maintainer' expires.actor |])
+    =.  grants.db  (~(put by grants.db) (scope-key project.cmd request.cmd) [project.cmd principal.actor 'maintainer' expires.actor |])
     (accept db actor cmd now old new pol '')
   ?:  =('policy.grant' operation.cmd)
     =/  gid  (field payload.cmd 'grant_id')
-    ?:  (id-used db gid)  [(error 'invalid_command') db]
+    ?:  (~(has by grants.db) (scope-key project.cmd gid))  [(error 'invalid_command') db]
     =/  pid  (field payload.cmd 'principal_id')
     ?.  (lien ~(tap by bindings.db) |=([ship=@p val=binding] =(pid principal.val)))
       [(error 'invalid_command') db]
@@ -252,19 +257,19 @@
     ?:  (gte count 128)  [(error 'capacity_exceeded') db]
     =/  pro  (~(got by projects.db) project.cmd)
     =.  projects.db  (~(put by projects.db) project.cmd pro(policy new))
-    =.  grants.db  (~(put by grants.db) gid [project.cmd pid (field payload.cmd 'role') expiry |])
+    =.  grants.db  (~(put by grants.db) (scope-key project.cmd gid) [project.cmd pid (field payload.cmd 'role') expiry |])
     (accept db actor cmd now old new pol '')
   ?:  =('policy.revoke' operation.cmd)
     =/  gid  (field payload.cmd 'grant_id')
-    =/  grant  (~(got by grants.db) gid)
+    =/  grant  (~(got by grants.db) (scope-key project.cmd gid))
     ?:  revoked.grant  [(error 'invalid_command') db]
     =/  pro  (~(got by projects.db) project.cmd)
     =.  projects.db  (~(put by projects.db) project.cmd pro(policy new))
-    =.  grants.db  (~(put by grants.db) gid grant(revoked &))
+    =.  grants.db  (~(put by grants.db) (scope-key project.cmd gid) grant(revoked &))
     (accept db actor cmd now old new pol '')
   ?:  =('document.save' operation.cmd)  (save-document db actor cmd now old new pol)
   ?:  =('work.create' operation.cmd)
-    ?:  (id-used db resource.cmd)  [(error 'invalid_command') db]
+    ?:  (~(has by works.db) [project.cmd resource.cmd])  [(error 'invalid_command') db]
     =/  count  (lent (skim ~(tap by works.db) |=([key=[project=@t resource=@t] val=work-state] =(project.cmd project.key))))
     ?:  (gte count 128)  [(error 'capacity_exceeded') db]
     =.  works.db  (~(put by works.db) [project.cmd resource.cmd] [new payload.cmd])
@@ -275,7 +280,6 @@
   |=  [db=state actor=binding cmd=command now=@ud old=@ud new=@ud pol=@ud]
   ^-  transition
   =/  markdown  (field payload.cmd 'markdown')
-  ?:  &(=(old 0) (id-used db resource.cmd))  [(error 'invalid_command') db]
   =/  header  (rap 3 ~['---' 10 'id: ' resource.cmd 10 'type: page' 10 'state: draft' 10 '---' 10])
   ?.  =(header (cut 3 [0 (met 3 header)] markdown))
     [(error 'invalid_document') db]
@@ -307,12 +311,12 @@
   =.  objects.db  objects
   =.  object-bytes.db  total
   =.  containers.db  (~(put by containers.db) cid container(head [~ oid.commit], history [oid.commit history.container]))
-  =.  documents.db  (~(put by documents.db) [project.cmd resource.cmd] [new cid oid.blob oid.commit])
+  =.  documents.db  (~(put by documents.db) [project.cmd (scope-key cid resource.cmd)] [new cid oid.blob oid.commit])
   (accept db actor cmd now old new pol (oid-text:stead-git oid.commit))
 ++  read-result
   |=  [project=@t resource=@t revision=@ud data=json]
   ^-  @t
-  =/  base  (object ~[['protocol' 'stead.result/1'] ['status' 'read'] ['project_id' project] ['resource_id' resource] ['resource_revision' (decimal revision)]])
+  =/  base  (object ~[['protocol' 'stead.result/2'] ['status' 'read'] ['project_id' project] ['resource_id' resource] ['resource_revision' (decimal revision)]])
   ?>  ?=([%o *] base)
   (canonical [%o (~(put by p.base) 'payload' data)])
 ++  read
@@ -322,38 +326,43 @@
   =/  identity  (context db sender now)
   ?~  identity  denied
   =/  actor  u.identity
-  ?.  ?=([%v1 @ @ *] route)  denied
+  ?.  ?=([%v2 @ @ *] route)  denied
   =/  project  i.t.t.route
   =/  kind  i.t.route
-  ?:  ?=([%v1 %receipt @ @ @ @ ~] route)
-    =/  resource  i.t.t.t.route
-    =/  operation  i.t.t.t.t.route
-    =/  request  i.t.t.t.t.t.route
-    ?.  (read-scope db actor project resource operation now)  denied
+  ?:  ?=([%v2 %receipt @ @ @ @ @ ~] route)
+    =/  container  i.t.t.t.route
+    =/  resource  i.t.t.t.t.route
+    =/  operation  i.t.t.t.t.t.route
+    =/  request  i.t.t.t.t.t.t.route
+    ?.  (read-scope db actor project resource operation container now)  denied
     =/  receipt  (~(get by receipts.db) [project principal.actor request])
     ?~  receipt  denied
     ?.  &(=(resource resource.u.receipt) =(operation operation.u.receipt))  denied
-    ?.  (allowed db actor (decode command.u.receipt) now)  denied
-    bytes.u.receipt
+    =/  cmd  (decode command.u.receipt)
+    ?.  =(container (command-container cmd))  denied
+    ?.  (allowed db actor cmd now)  denied
+    (public-receipt u.receipt)
   ?.  (~(has by projects.db) project)  denied
+  ?:  (closed db project)  denied
   ?.  (gth (role db principal.actor project now) 0)  denied
-  ?:  ?=([%v1 %project @ ~] route)
+  ?:  ?=([%v2 %project @ ~] route)
     =/  pro  (~(got by projects.db) project)
-    =/  data  (~(put by data.pro) 'policy_revision' [%s (decimal policy.pro)])
-    (read-result project project revision.pro [%o data])
-  ?:  ?=([%v1 %work @ @ ~] route)
+    (read-result project project revision.pro [%o data.pro])
+  ?:  ?=([%v2 %work @ @ ~] route)
     =/  id  i.t.t.t.route
     =/  found  (~(get by works.db) [project id])
     ?~  found  denied
     (read-result project id revision.u.found [%o data.u.found])
-  ?:  ?=([%v1 %document @ @ ~] route)
-    =/  id  i.t.t.t.route
-    =/  found  (~(get by documents.db) [project id])
+  ?:  ?=([%v2 %document @ @ @ ~] route)
+    =/  cid  i.t.t.t.route
+    =/  id  i.t.t.t.t.route
+    ?.  (container-access db actor project cid now)  denied
+    =/  found  (~(get by documents.db) [project (scope-key cid id)])
     ?~  found  denied
     ?.  (container-access db actor project container.u.found now)  denied
     =/  blob  (~(got by objects.db) blob.u.found)
     (read-result project id revision.u.found (object ~[['container_id' container.u.found] ['markdown' data.body.blob] ['git_commit_oid' (oid-text:stead-git commit.u.found)]]))
-  ?:  ?=([%v1 %git @ @ ~] route)
+  ?:  ?=([%v2 %git @ @ ~] route)
     =/  cid  i.t.t.t.route
     ?.  (container-access db actor project cid now)  denied
     =/  container  (~(got by containers.db) cid)
@@ -368,7 +377,7 @@
     =/  data  (object ~[['snapshot_commit_oid' (oid-text:stead-git u.head.container)]])
     ?>  ?=([%o *] data)
     (read-result project cid (lent history.container) [%o (~(put by p.data) 'objects' objects-json)])
-  ?:  ?=([%v1 %git-object @ @ @ @ ~] route)
+  ?:  ?=([%v2 %git-object @ @ @ @ ~] route)
     =/  cid  i.t.t.t.route
     ?.  (container-access db actor project cid now)  denied
     =/  container  (~(got by containers.db) cid)
@@ -399,11 +408,12 @@
   ?~  digit  ~
   $(bytes t.bytes, value (add (mul value 16) u.digit))
 ++  read-scope
-  |=  [db=state actor=binding project=@t resource=@t operation=@t now=@ud]
+  |=  [db=state actor=binding project=@t resource=@t operation=@t container=@t now=@ud]
   ^-  ?
   ?:  &(!(~(has by projects.db) project) =('project.create' operation))
     administrator.actor
   ?.  (~(has by projects.db) project)  |
+  ?:  (closed db project)  |
   =/  rank  (role db principal.actor project now)
   ?:  ?|(=('policy.grant' operation) =('policy.revoke' operation))
     ?|(administrator.actor =(rank 3))
@@ -411,22 +421,230 @@
   ?:  =('project.create' operation)  administrator.actor
   ?.  (gte rank 2)  |
   ?:  =('document.save' operation)
-    =/  found  (~(get by documents.db) [project resource])
-    ?~  found  &
-    (container-access db actor project container.u.found now)
+    (container-access db actor project container now)
   (~(has in (silt ~['work.create' 'work.update'])) operation)
-++  id-used
-  |=  [db=state id=@t]
+++  scope-key
+  |=  [scope=@t id=@t]
+  ^-  @t
+  (cat 3 scope (cat 3 '/' id))
+++  command-container
+  |=  cmd=command
+  ^-  @t
+  ?:  =('document.save' operation.cmd)  (field payload.cmd 'container_id')
+  project.cmd
+++  resource-kind
+  |=  operation=@t
+  ^-  @t
+  ?:  =('project.create' operation)  'project'
+  ?:  =('document.save' operation)  'document'
+  ?:  ?|(=('policy.grant' operation) =('policy.revoke' operation))  'policy'
+  'work'
+++  public-receipt
+  |=  accepted=receipt-state
+  ^-  @t
+  =/  value  (need (parse-result bytes.accepted))
+  ?>  ?=([%o *] value)
+  ::  Closed projection: no unknown historical field can become a public field.
+  =/  names
+    ~['status' 'request_id' 'canonical_sha256' 'project_id' 'resource_id' 'resource_revision' 'authority_epoch' 'principal_id' 'binding_id' 'authentication' 'authentication_strength' 'accepted_at_ms' 'git_commit_oid']
+  =/  fields
+    %-  malt
+    (turn names |=(name=@t [name [%s (field p.value name)]]))
+  =.  fields  (~(put by fields) 'protocol' [%s 'stead.receipt/2'])
+  =.  fields  (~(put by fields) 'resource_kind' [%s (resource-kind operation.accepted)])
+  =/  container
+    ?:  =('document.save' operation.accepted)
+      (command-container (decode command.accepted))
+    ''
+  =.  fields  (~(put by fields) 'container_id' [%s container])
+  (canonical [%o fields])
+++  ordinary-count
+  |=  db=state
+  ^-  @ud
+  %-  lent
+  %+  skim  ~(tap by receipts.db)
+  |=  [key=[@t @t @t] val=receipt-state]
+  !=('policy.revoke' operation.val)
+++  security-count
+  |=  [db=state project=@t]
+  ^-  @ud
+  %-  lent
+  %+  skim  ~(tap by receipts.db)
+  |=  [key=[project-id=@t principal=@t request=@t] val=receipt-state]
+  &(=(project project-id.key) =('policy.revoke' operation.val))
+++  closed
+  |=  [db=state project=@t]
   ^-  ?
-  ?|  (~(has by projects.db) id)
-      (~(has by grants.db) id)
-      (~(has by containers.db) id)
-      =(id (fixture-id '000000000005'))
-      =(id (fixture-id '000000000006'))
-      (lien ~(tap by bindings.db) |=([ship=@p val=binding] ?|(=(id principal.val) =(id id.val))))
-      (lien ~(tap by works.db) |=([key=[project=@t resource=@t] val=work-state] =(id resource.key)))
-      (lien ~(tap by documents.db) |=([key=[project=@t resource=@t] val=document-state] =(id resource.key)))
+  =/  found  (~(get by projects.db) project)
+  ?~  found  |
+  ?|  (gte (security-count db project) 128)
+      (gte policy.u.found 18.446.744.073.709.551.615)
   ==
+++  migrate-v1
+  |=  old=state:stead-core-v1
+  ^-  state
+  ::  Exact supported predecessor, not a reset or a current-format roundtrip.
+  ?>  (lte (lent journal.old) 4.096)
+  ?>  =((lent journal.old) (lent ~(tap by receipts.old)))
+  ?>  (lte (lent ~(tap by projects.old)) 16)
+  ?>  (lte object-bytes.old 8.388.608)
+  ?>  (validate-predecessor old)
+  =/  out=state  old
+  =.  grants.out
+    %-  malt
+    %+  turn  ~(tap by grants.old)
+    |=  [key=@t val=grant-state]
+    [(scope-key project.val key) val]
+  =.  documents.out
+    %-  malt
+    %+  turn  ~(tap by documents.old)
+    |=  [key=[project=@t id=@t] val=document-state]
+    [[project.key (scope-key container.val id.key)] val]
+  out
+++  validate-predecessor
+  |=  old=state:stead-core-v1
+  ^-  ?
+  ::  Verification only: never reauthorize history or execute its commands.
+  ?.  initialized.old
+    =/  pristine=state:stead-core-v1  *state:stead-core-v1
+    =(old pristine(initialized |))
+  ?>  =((silt (turn ~(tap by containers.old) |=([key=@t val=container-state] key))) (silt ~[(fixture-id '000000000004') (fixture-id '000000000007')]))
+  ?>  %+  levy  ~(tap by objects.old)
+      |=  [key=@ux val=object:stead-git]
+      &(=(key oid.val) =((make-object:stead-git kind.val body.val) val))
+  ?>  =((roll ~(tap by objects.old) |=([pair=[@ux object:stead-git] sum=@ud] (add sum length.body.+.pair))) object-bytes.old)
+  ?>  (levy ~(tap by containers.old) |=([key=@t val=container-state] &((lte (lent history.val) 128) (lte (lent ~(tap by entries.val)) 32))))
+  ?>  %+  levy  ~(tap by projects.old)
+      |=  [id=@t val=project-state]
+      =/  grants  (skim ~(tap by grants.old) |=([key=@t val=grant-state] =(id project.val)))
+      =/  works  (skim ~(tap by works.old) |=([key=[project=@t resource=@t] val=work-state] =(id project.key)))
+      &((lte (lent grants) 128) (lte (lent works) 128))
+  =/  rows  (flop journal.old)
+  =/  heads=(map @t [sequence=@ud digest=@t])  ~
+  =/  seen=(set [@t @t @t])  ~
+  =/  revoked=(set @t)  ~
+  =/  policies=(map @t @ud)  ~
+  =/  grants=(map @t grant-state)  ~
+  =/  works=(map [@t @t] work-state)  ~
+  =/  documents=(map [@t @t] document-state)  ~
+  =/  objects=(map @ux object:stead-git)  ~
+  =/  reachable=(map @ux (set @ux))  ~
+  =/  containers
+    %-  malt
+    %+  turn  ~(tap by containers.old)
+    |=  [key=@t val=container-state]
+    ?>  =(project.val (fixture-id '000000000001'))
+    ?>  ?|  &(=(key (fixture-id '000000000004')) =(owner.val (fixture-id '000000000102')))
+            &(=(key (fixture-id '000000000007')) =(owner.val (fixture-id '000000000101')))
+        ==
+    [key val(head ~, history ~, entries ~)]
+  |-
+  ?~  rows
+    ?>  =((lent ~(tap in seen)) (lent ~(tap by receipts.old)))
+    ?>  (levy ~(tap by grants.old) |=([key=@t val=grant-state] =(revoked.val (~(has in revoked) key))))
+    ?>  =((lent ~(tap by policies)) (lent ~(tap by projects.old)))
+    ?>  (levy ~(tap by projects.old) |=([id=@t val=project-state] &(=(1 revision.val) =(1 epoch.val) =(policy.val (~(got by policies) id)))))
+    ?>  &(=(grants grants.old) =(works works.old) =(documents documents.old) =(objects objects.old) =(reachable reachable.old) =(containers containers.old))
+    &
+  =/  row  i.rows
+  =/  parsed  (need (parse-result bytes.row))
+  ?>  ?=([%o *] parsed)
+  =/  record  p.parsed
+  ?>  =('stead.journal/1' (field record 'protocol'))
+  ?>  =(bytes.row (canonical parsed))
+  ?>  =(digest.row (hash 'stead.journal/1' bytes.row))
+  =/  cmd  (decode (field record 'canonical_command'))
+  ?>  =('stead.command/1' protocol.cmd)
+  ?>  =(project.row project.cmd)
+  =/  key  [project.cmd (field record 'principal_id') request.cmd]
+  ?>  !(~(has in seen) key)
+  =/  receipt  (~(got by receipts.old) key)
+  ?>  &(=(digest.cmd digest.receipt) =(resource.cmd resource.receipt) =(operation.cmd operation.receipt) =(canonical-bytes.cmd command.receipt))
+  =/  receipt-json  (need (parse-result bytes.receipt))
+  ?>  ?=([%o *] receipt-json)
+  =/  receipt-fields  p.receipt-json
+  ?>  (keys receipt-fields ~['protocol' 'status' 'request_id' 'canonical_sha256' 'project_id' 'resource_id' 'resource_revision' 'authority_epoch' 'policy_revision' 'journal_sequence' 'journal_digest' 'principal_id' 'binding_id' 'authentication' 'authentication_strength' 'accepted_at_ms' 'git_commit_oid'])
+  ?>  =('accepted' (field receipt-fields 'status'))
+  ?>  =(bytes.receipt (canonical receipt-json))
+  ?>  =('stead.receipt/1' (field receipt-fields 'protocol'))
+  ?>  &(=(digest.row (field receipt-fields 'journal_digest')) =(digest.cmd (field receipt-fields 'canonical_sha256')))
+  ?>  (levy ~['principal_id' 'binding_id' 'authentication' 'authentication_strength' 'accepted_at_ms' 'policy_revision' 'authority_epoch' 'git_commit_oid'] |=(name=@t =((field record name) (field receipt-fields name))))
+  ?>  &(=(project.cmd (field receipt-fields 'project_id')) =(resource.cmd (field receipt-fields 'resource_id')) =(request.cmd (field receipt-fields 'request_id')))
+  =/  previous  (~(get by heads) project.cmd)
+  =/  seq  ?~(previous 1 +(sequence.u.previous))
+  ?>  &(=(seq (uint (field record 'sequence'))) =((decimal seq) (field receipt-fields 'journal_sequence')))
+  ?>  =(?~(previous (hex 64 0) digest.u.previous) (field record 'previous_digest'))
+  ?>  =((field record 'new_revision') (field receipt-fields 'resource_revision'))
+  =/  old-revision  (uint (field record 'old_revision'))
+  =/  new-revision  (uint (field record 'new_revision'))
+  ?>  &(=(old-revision expected.cmd) =(new-revision +(old-revision)))
+  =/  policy  (~(get by policies) project.cmd)
+  =.  policies
+    ?:  =('project.create' operation.cmd)
+      ?>  &(=(~ policy) =(0 old-revision) =('0' (field record 'policy_revision')))
+      =/  project  (~(got by projects.old) project.cmd)
+      ?>  =(payload.cmd data.project)
+      (~(put by policies) project.cmd 1)
+    ?>  ?=(^ policy)
+    ?>  =(u.policy (uint (field record 'policy_revision')))
+    ?:  ?|(=('policy.grant' operation.cmd) =('policy.revoke' operation.cmd))
+      ?>  =(u.policy old-revision)
+      (~(put by policies) project.cmd new-revision)
+    policies
+  =.  works
+    ?.  ?|(=('work.create' operation.cmd) =('work.update' operation.cmd))  works
+    =/  prior  (~(get by works) [project.cmd resource.cmd])
+    ?>  =(old-revision ?~(prior 0 revision.u.prior))
+    (~(put by works) [project.cmd resource.cmd] [new-revision payload.cmd])
+  =.  grants
+    ?:  =('project.create' operation.cmd)
+      ?>  !(~(has by grants) request.cmd)
+      =/  original  (~(got by grants.old) request.cmd)
+      ::  Creator expiry was implicit in v1 and is not a journal field. Preserve
+      ::  the bounded existing value; do not infer it from today's binding.
+      ?>  &((gth expires.original (uint (field record 'accepted_at_ms'))) (lte expires.original 18.446.744.073.709.551.615))
+      (~(put by grants) request.cmd [project.cmd (field record 'principal_id') 'maintainer' expires.original |])
+    ?:  =('policy.grant' operation.cmd)
+      =/  gid  (field payload.cmd 'grant_id')
+      ?>  !(~(has by grants) gid)
+      (~(put by grants) gid [project.cmd (field payload.cmd 'principal_id') (field payload.cmd 'role') (uint (field payload.cmd 'expires_at_ms')) |])
+    ?:  =('policy.revoke' operation.cmd)
+      =/  gid  (field payload.cmd 'grant_id')
+      =/  prior  (~(got by grants) gid)
+      ?>  &(=(project.cmd project.prior) !revoked.prior)
+      (~(put by grants) gid prior(revoked &))
+    grants
+  =/  projected
+    ?.  =('document.save' operation.cmd)  [documents containers objects reachable]
+    =/  cid  (field payload.cmd 'container_id')
+    =/  container  (~(got by containers) cid)
+    ?>  &(=(project.cmd project.container) =(owner.container (field record 'principal_id')))
+    =/  prior  (~(get by documents) [project.cmd resource.cmd])
+    ?>  =(old-revision ?~(prior 0 revision.u.prior))
+    =/  markdown  (field payload.cmd 'markdown')
+    =/  blob  (make-blob:stead-git [(met 3 markdown) markdown])
+    =.  entries.container  (~(put by entries.container) resource.cmd oid.blob)
+    =/  tree  (make-tree:stead-git (turn ~(tap by entries.container) |=([id=@t oid=@ux] [(cat 3 id '.md') oid])))
+    =/  commit  (make-commit:stead-git oid.tree head.container (field record 'principal_id') (div (uint (field record 'accepted_at_ms')) 1.000) resource.cmd new-revision)
+    ?>  =((oid-text:stead-git oid.commit) (field record 'git_commit_oid'))
+    =/  reach  ?~(head.container *(set @ux) (~(got by reachable) u.head.container))
+    =.  reach  (~(uni in reach) (silt ~[oid.blob oid.tree oid.commit]))
+    :*  (~(put by documents) [project.cmd resource.cmd] [new-revision cid oid.blob oid.commit])
+        (~(put by containers) cid container(head [~ oid.commit], history [oid.commit history.container]))
+        (~(put by (~(put by (~(put by objects) oid.blob blob)) oid.tree tree)) oid.commit commit)
+        (~(put by reachable) oid.commit reach)
+    ==
+  =.  documents  -.projected
+  =.  containers  +<.projected
+  =.  objects  +>-.projected
+  =.  reachable  +>+.projected
+  =.  revoked
+    ?:  =('policy.revoke' operation.cmd)
+      =/  gid  (field payload.cmd 'grant_id')
+      ?>  !(~(has in revoked) gid)
+      (~(put in revoked) gid)
+    revoked
+  $(rows t.rows, heads (~(put by heads) project.cmd [seq digest.row]), seen (~(put in seen) key))
 ++  immutable-object
   |=  [objects=(map @ux object:stead-git) obj=object:stead-git]
   ^-  ?

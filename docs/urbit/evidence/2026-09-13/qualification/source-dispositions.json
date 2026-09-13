@@ -1,0 +1,91 @@
+{
+  "protocol": "stead.source-dispositions/2",
+  "owner": "/root/qa_review",
+  "review_date": "2026-09-13",
+  "approval_limit": "Independent AI source review, not human approval, native compilation, merge or deployment permission.",
+  "binding_rule": "Integration may fill exact commit/tree/runner/lock/corpus/freeze bindings only after verifying reviewed_source_files against the committed bytes. Changed reviewed bytes require renewed independent review. Null bindings cannot pass the current gate.",
+  "historical_skips_unchanged": true,
+  "proofs": [
+    {
+      "id": "receipt-lookup-order",
+      "kind": "source_review",
+      "status": "reviewed",
+      "reviewer": "/root/qa_review",
+      "assertions": [
+        {
+          "name": "source-ordering-property",
+          "status": "reviewed"
+        }
+      ],
+      "scope": "Exact-source review of current binding/profile/expiry and typed action scope before receipt lookup/decode. apply-command: context then allowed/read-scope then epoch then duplicate lookup. read receipt: context then typed route/read-scope before receipts lookup; stored operation/resource/container and allowed are rechecked before public projection. This is source ordering evidence only; native denial/observer behavior remains required.",
+      "reviewed_source_files": {
+        "native/core/desk/lib/stead-core.hoon": "9ad77eba9c2bb5e916af74c62250761513278bdbfbb729ec3919edb04d2b5da4"
+      },
+      "source_arms": [
+        "context",
+        "allowed",
+        "apply-command",
+        "read",
+        "read-scope",
+        "public-receipt"
+      ],
+      "bindings": null,
+      "native_execution": "not_executed"
+    },
+    {
+      "id": "no-effect-subsystem",
+      "kind": "not_applicable",
+      "status": "not_applicable",
+      "reviewer": "/root/qa_review",
+      "assertions": [
+        {
+          "name": "no-external-effects-replayed",
+          "status": "not_applicable"
+        }
+      ],
+      "scope": "The current Work/Docs home implements pure transitions plus native response facts/kicks and synthetic owner fixture controls. There is no build, model, deployment, purchase or message-effect executor in this slice.",
+      "reason": "An external-effect executor is absent. Do not invent external_effects_replayed=0; this disposition makes no claim about replay safety of future effect execution or about native response delivery, which has separate mandatory tests.",
+      "reviewed_source_files": {
+        "native/core/desk/app/stead-home.hoon": "122bb4d8b7b27f25eddb8652e5552a7f46298e156cdc3e73023044b6ce78ed6b",
+        "native/core/desk/lib/stead-core.hoon": "9ad77eba9c2bb5e916af74c62250761513278bdbfbb729ec3919edb04d2b5da4"
+      },
+      "source_arms": [
+        "state",
+        "transition",
+        "on-save",
+        "on-load",
+        "on-poke",
+        "on-watch",
+        "on-leave"
+      ],
+      "bindings": null,
+      "native_execution": "not_executed"
+    },
+    {
+      "id": "guard-independent-source-review",
+      "kind": "source_review",
+      "status": "reviewed",
+      "reviewer": "/root/qa_review",
+      "assertions": [
+        {
+          "name": "guard-independent-source-review",
+          "status": "reviewed"
+        }
+      ],
+      "scope": "Bounded independent review of host-owned thermal sampler,75Cpreflight/90Cstop thresholds, fresh stable CPU sensor inventory, shared no-follow flock, read-only source/generation-bound lease,50%/10ms transient scope, bounded targeted cleanup, supervisor forced/init failure exit status, and refusal to create clean seeds from interrupted state. Native execution remains unqualified; real mocked-sensor shim and hot refusal are separately labeled artifacts.",
+      "reviewed_source_files": {
+        "scripts/urbit/execution_policy.py": "7166d197a6e3879f21c22637f2bd3074ff90975c33a2149f6e07763e2eeaa04e",
+        "scripts/urbit/harness.py": "abfb8ae6237dc39ca3d35b4e023faba40c2f405b694aa4f914b88df072a456c3",
+        "scripts/urbit/supervisor.py": "5f10e9e9d6914c5709276e5fc6d0d94281d562e7062ce01638dcb6c2dc2197f2",
+        "scripts/urbit/urgit_audit.py": "eb78a0b8b8879b03fc2d7aeef88db345f8cd8cf137a63b977e4d875886b03e4a"
+      },
+      "review_findings_fixed": [
+        "Lease-write failure must not bypass targeted TERM/KILL cleanup",
+        "Null sensor inventory must fail closed",
+        "Forced/init supervisor shutdown must exit nonzero"
+      ],
+      "native_execution": "not_executed",
+      "bindings": null
+    }
+  ]
+}

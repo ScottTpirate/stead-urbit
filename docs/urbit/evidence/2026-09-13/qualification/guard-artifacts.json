@@ -1,0 +1,30 @@
+{
+  "records": [
+    {
+      "source": ".runtime/execution-runs/real-namespace-check-pez60jeh/report.json",
+      "artifact": "docs/urbit/evidence/2026-09-13/qualification/guard-real-preflight-93c.json",
+      "sha256": "ee5343d8baf6b148654401792409a93f8868a2332dbbe49fba1099846dd44dc4",
+      "classification": "real-host-preflight-refusal-no-child"
+    },
+    {
+      "source": ".runtime/execution-runs/four-fakes-quzqb11u/report.json",
+      "artifact": "docs/urbit/evidence/2026-09-13/qualification/guard-real-start-81c.json",
+      "sha256": "78f5902e38dc5c20bbe89bd9ec415f67b72c1300167f6cc701972b04d67d426b",
+      "classification": "real-host-preflight-refusal-no-child"
+    },
+    {
+      "source": ".runtime/execution-runs/mocked-sensor-scope-check-3cyiccrv/report.json",
+      "artifact": "docs/urbit/evidence/2026-09-13/qualification/guard-platform-mocked-sensors.json",
+      "sha256": "27d98c3dbed1aebdd1a8b23d344ceeec002c271508f7323fd07091fb8243dd46",
+      "classification": "real-platform-with-mocked-sensors-no-Vere"
+    },
+    {
+      "source": ".runtime/guard-mocked-sensor-check-i3ssvn5h.log",
+      "artifact": "docs/urbit/evidence/2026-09-13/qualification/guard-platform-mocked-sensors.log",
+      "sha256": "27964c2ebe27f62166668998ba7aa42562226b78725c05ef684a7371deb24a55",
+      "classification": "real-platform-with-mocked-sensors-no-Vere"
+    }
+  ],
+  "native_runs": 0,
+  "scope": "Guard reports are unchanged bytes; mocked sensors never qualify native execution."
+}

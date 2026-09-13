@@ -17,3 +17,5 @@ plan-check:
 	python3 scripts/urbit/validate_plan.py
 contracts-check:
 	python3 scripts/urbit/contracts.py test
+	python3 scripts/urbit/contracts_v2.py
+	python3 -m unittest discover -s tests/urbit -p test_contracts_v2.py -v

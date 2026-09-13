@@ -411,7 +411,9 @@ class SupervisorLifecycleSafety(unittest.TestCase):
     def test_shutdown_failure_still_attempts_every_other_ship_and_reports_failure(self):
         attempted = []
 
-        def shutdown(ship):
+        def shutdown(ship, timeout):
+            self.assertGreater(timeout, 0)
+            self.assertLessEqual(timeout, 15)
             attempted.append(ship)
             if ship == 'zod':
                 raise RuntimeError('synthetic zod shutdown failure')
@@ -420,6 +422,74 @@ class SupervisorLifecycleSafety(unittest.TestCase):
             with self.assertRaisesRegex(RuntimeError, 'synthetic zod shutdown failure'):
                 self.supervisor.all_stop()
         self.assertEqual(attempted, list(self.supervisor.SHIPS))
+
+    def test_normal_stop_watchdog_does_not_label_a_clean_stop_as_forced(self):
+        self.supervisor.NORMAL_STOP.set()
+        self.supervisor.STOP_REQUESTED.set()
+        with patch.object(self.supervisor, 'all_stop') as stop_ships, patch.object(self.supervisor, 'record'):
+            self.supervisor.execution_watch()
+        stop_ships.assert_called_once()
+        self.assertFalse(self.supervisor.FORCED_STOP.is_set())
+        self.assertFalse(self.supervisor.PROGRESS['ready'])
+        self.assertIsNone(self.supervisor.PROGRESS['error'])
+        self.assertEqual(self.supervisor.completion_code(), 0)
+
+    def test_supervisor_exit_is_nonzero_for_guard_or_initialization_failure(self):
+        self.assertEqual(self.supervisor.completion_code(), 1)
+        self.supervisor.NORMAL_STOP.set()
+        self.supervisor.FORCED_STOP.set()
+        self.assertEqual(self.supervisor.completion_code(), 1)
+        self.supervisor.FORCED_STOP.clear()
+        self.supervisor.INITIALIZATION_FAILED.set()
+        self.supervisor.PROGRESS['stage'] = 'stopped'
+        self.assertEqual(self.supervisor.completion_code(), 1)
+
+    def test_stale_guard_latches_cancellation_before_the_busy_test_mutex(self):
+        self.supervisor.MUTEX.acquire()
+        worker = threading.Thread(target=self.supervisor.execution_watch, daemon=True)
+        with patch.object(self.supervisor.execution_policy, 'require_lease', side_effect=RuntimeError('synthetic stale lease')), \
+                patch.object(self.supervisor, 'all_stop') as stop_ships, patch.object(self.supervisor, 'record'):
+            worker.start()
+            try:
+                self.assertTrue(self.supervisor.STOP_REQUESTED.wait(1))
+                self.assertTrue(self.supervisor.FORCED_STOP.is_set())
+                self.assertFalse(self.supervisor.PROGRESS['ready'])
+                stop_ships.assert_not_called()
+            finally:
+                self.supervisor.MUTEX.release()
+                worker.join(2)
+            self.assertFalse(worker.is_alive())
+            stop_ships.assert_called_once()
+
+    def test_guard_stop_overwrites_a_just_written_passing_native_report(self):
+        with tempfile.TemporaryDirectory(prefix='stead-native-result-guard-') as tmp:
+            root = Path(tmp)
+            (root / 'logs').mkdir()
+            path = root / 'logs/core-synthetic.json'
+            path.write_text('{"status":"pass","checks":[]}')
+            self.supervisor.STOP_REQUESTED.set()
+            with patch.object(self.supervisor, 'STATE', root):
+                result = self.supervisor.guarded_result({'status':'pass', 'evidence_file':'.piers/fakes/logs/core-synthetic.json'})
+            self.assertEqual(result['status'], 'fail')
+            self.assertEqual(json.loads(path.read_text())['status'], 'fail')
+
+    def test_forced_state_is_never_promoted_to_a_clean_seed(self):
+        with tempfile.TemporaryDirectory(prefix='stead-seed-after-stop-') as tmp:
+            root = Path(tmp)
+            live, seed = root / 'live', root / 'seed'
+            for ship in self.supervisor.SHIPS:
+                (live / ship / 'base').mkdir(parents=True)
+            def stopped():
+                self.supervisor.FORCED_STOP.set()
+            with patch.object(self.supervisor, 'LIVE', live), patch.object(self.supervisor, 'SEED', seed), \
+                    patch.object(self.supervisor, 'execution_check'), patch.object(self.supervisor, 'launch'), \
+                    patch.object(self.supervisor, 'wait_ready'), patch.object(self.supervisor, 'dojo'), \
+                    patch.object(self.supervisor, 'record'), patch.object(self.supervisor.traceback, 'print_exc'), \
+                    patch.object(self.supervisor, 'all_stop', side_effect=stopped):
+                self.supervisor.initialize()
+            self.assertFalse(seed.exists())
+            self.assertEqual(self.supervisor.PROGRESS['stage'], 'failed')
+            self.assertIn('clean seed', self.supervisor.PROGRESS['error'])
 
 
 if __name__ == '__main__':
