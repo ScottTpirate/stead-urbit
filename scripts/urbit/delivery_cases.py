@@ -68,6 +68,7 @@ def observation(record, *, probe_id=None, route=None):
     counters = {kind: 0 for kind in ('fact', 'kick', 'watch-ack', 'watch-nack', 'poke-ack', 'poke-nack')}
     ordered = sorted(obj['events'].items(), key=lambda pair: number(pair[0]))
     last_time = 0
+    terminal_seen = False
     for serial, event in ordered:
         require(0 < number(serial) <= 256, 'Observer event serial')
         require(isinstance(event, dict) and set(event) == EVENT_FIELDS, 'Observer event envelope')
@@ -83,6 +84,12 @@ def observation(record, *, probe_id=None, route=None):
         require(when >= last_time, 'Observer event time reversed')
         last_time = when
         require(event['after_terminal'] in ('true', 'false'), 'Terminal flag encoding')
+        # closed/leaving are latched for a probe. A late ACK is legal, but it
+        # cannot claim to precede an already observed kick or watch NACK.
+        require(not terminal_seen or event['after_terminal'] == 'true', 'Terminal marker reversed')
+        require(event['after_terminal'] != 'true' or terminal_seen or obj['leave_requested'] == 'true',
+                'Terminal marker has no preceding close or local leave')
+        terminal_seen = terminal_seen or event['after_terminal'] == 'true' or kind in ('kick', 'watch-nack')
         if kind == 'fact':
             require(event['mark'] == 'stead-result-2' and 0 < size <= 262144, 'Wrong fact mark/size')
             require(bool(HEX.fullmatch(event['payload_sha256'])), 'Fact digest missing')
@@ -118,13 +125,20 @@ def verify_one_shot(trace, raw, *, ship=None, route=None):
                 and 0 <= log['start'] <= log['end'], 'Malformed runtime log delta reference')
     require({log['ship'] for log in logs} == FAKES, 'All four runtime log deltas required')
     request = trace.get('request', {})
-    require(request.get('ship') in FAKES, 'Observed requester missing')
+    require(isinstance(request, dict), 'Observed request must be an object')
+    require(isinstance(request.get('ship'), str) and request['ship'] in FAKES, 'Observed requester missing')
+    require(isinstance(request.get('probe_id'), str) and bool(UUID.fullmatch(request['probe_id'])),
+            'Explicit observed probe identity required')
+    require(isinstance(request.get('route'), str) and request['route'].startswith('/v2/')
+            and len(request['route'].encode()) <= 1024, 'Explicit bounded observed route required')
     require(ship is None or request['ship'] == ship, 'Wrong observed requester')
     require(route is None or request.get('route') == route, 'Wrong request path correlation')
     obj, events = observation(trace.get('response'), probe_id=request.get('probe_id'), route=request.get('route'))
     require(obj['watch_requested'] == 'true' and obj['leave_requested'] == 'false', 'No completed watch observation')
     require((number(obj['facts']), number(obj['kicks']), number(obj['watch_acks']), number(obj['watch_nacks'])) == (1, 1, 1, 0), 'One fact/one kick/one watch ACK required')
     require(obj['closed'] == 'true' and obj['ongoing_subscription'] == 'false', 'Duct remains open')
+    require(number(obj['pokes_requested']) == number(obj['poke_acks']) == number(obj['poke_nacks']) == 0,
+            'Read-only observation contains poke activity')
     require(isinstance(raw, str), 'Expected exact response bytes missing')
     fact = next(event for _, event in events if event['kind'] == 'fact')
     require(fact['payload_sha256'] == hashlib.sha256(raw.encode()).hexdigest() and number(fact['payload_bytes']) == len(raw.encode()), 'Observed fact differs from business response')
@@ -134,19 +148,28 @@ def verify_one_shot(trace, raw, *, ship=None, route=None):
     require(isinstance(sentinels, list) and bool(sentinels), 'No active foreign subscriber observation')
     identities = set()
     for sentinel in sentinels:
+        require(isinstance(sentinel, dict), 'Sentinel must be an object')
         other = sentinel.get('ship')
-        require(other in FAKES and other != request['ship'] and other not in identities, 'Foreign sentinel identity')
+        require(isinstance(other, str) and other in FAKES and other != request['ship'] and other not in identities, 'Foreign sentinel identity')
         identities.add(other)
         before, _ = observation(sentinel.get('before'))
         after, _ = observation(sentinel.get('after'), probe_id=before['id'], route=before['route'])
-        reserved = before['route'].startswith(f'/v2/result/~{other}/')
+        require(isinstance(before['route'], str), 'Sentinel route must be text')
+        parts = before['route'].split('/')
+        reserved = (len(parts) == 8 and parts[:4] == ['', 'v2', 'result', '~' + other]
+                    and all(bool(UUID.fullmatch(part)) for part in parts[4:7])
+                    and bool(HEX.fullmatch(parts[7])))
         held = sentinel.get('held_control', {})
+        require(isinstance(held, dict), 'Held sentinel control must be an object')
         held_read = (other == 'bud' and before['route'] == request['route']
                      and held.get('operation') == 'hold-outsider-read'
                      and held.get('ship') == 'bud' and held.get('route') == before['route']
                      and bool(held.get('native')))
         require(reserved or held_read, 'Sentinel must be its own reservation or owner-evidenced held outsider read')
-        require(before['watch_requested'] == 'true' and before['ongoing_subscription'] == 'true' and before['closed'] == 'false', 'Sentinel was not active')
+        for state in (before, after):
+            require(state['watch_requested'] == 'true' and state['ongoing_subscription'] == 'true'
+                    and state['closed'] == 'false' and state['leave_requested'] == 'false',
+                    'Sentinel is not continuously active in the recorded snapshots')
         require(number(before['watch_acks']) == 1 and number(before['watch_nacks']) == 0 and number(before['facts']) == 0, 'Sentinel baseline not acknowledged and empty')
         require(before['events'] == after['events'] and after['ongoing_subscription'] == 'true', 'Foreign duct received an event during the observed request')
     return {'status': 'passed', 'classification': 'real-native-observer',
