@@ -1,0 +1,14 @@
+{
+  "recorded_at": "2026-09-24T22:18:58.504031+00:00",
+  "source_commit": "b425cc2576ad8767b6ac9a5696879f9df80535aa",
+  "classification": "local-fixture-lifecycle-after-retained-native-failure",
+  "stop_result": "STOPPED: fixture lifetime lock released",
+  "reset_result": "RESET: restored four stopped, hash-verified synthetic seeds",
+  "status_command": "make status",
+  "status_exit_code": 0,
+  "status_stdout": "python3 scripts/urbit/harness.py status\n{\n  \"stage\": \"stopped\",\n  \"ready\": false,\n  \"ships\": {}\n}\n",
+  "unclean_marker_present_after_reset": false,
+  "source_files_match_recorded_commit": 48,
+  "native_compile_qualified": false,
+  "native_phase_qualified": false
+}

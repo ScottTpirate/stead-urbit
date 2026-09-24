@@ -1,8 +1,8 @@
 # Local development continuation — September 24, 2026
 
 Phase 0 and Phase 1 remain open. Phase 2 implementation has not started. This
-checkpoint improves the local edit/build/test flow and retains a real guarded
-native failure. It does not replace the outstanding acceptance evidence.
+checkpoint improves the local edit/build/test flow and retains real guarded
+native failures. It does not replace the outstanding acceptance evidence.
 
 The working base now includes PR #36 (`ce808a2cf9b87d44506e983f7dcebc94f0d2ed4b`),
 fast-forwarded locally after a clean-checkout and remote check. No implementation
@@ -35,11 +35,18 @@ Linux testing differs from browser testing and a later live-network canary.
 | Root new host regressions | 19 developer-flow tests passed, including interrupted report retention and actual temporary-source cached-import checks. Native callbacks are mocked. |
 | Independent final host/static/mocked | `make check` passed, including the full 283-test suite and both contract freezes. [Exact review and hashes](reviews/2026-09-24-dev-flow.md). |
 | Actual Linux platform | Current `make doctor` passed the private loopback namespace/no home/no Docker socket check and verified the existing pins. [Commands/output](evidence/2026-09-24/dev-flow/host-platform.json). |
-| Actual guarded native attempt | All four fake ships booted and reported kernel `%408`. The subsequent evaluator stage hit a 93 C host sensor reading and the guardian terminated its owned scope. No current compile/probe pass resulted. [Failure index](evidence/2026-09-24/dev-flow/native-attempts.json). |
-| Final checkpoint enhancement | Host interruption regression only; it was added after the native thermal stop and has not been exercised with a successful native build. |
+| Actual guarded native attempts | All four fake ships booted and reported kernel `%408` in each admitted attempt. The subsequent evaluator stage hit 93 C and then 91 C host sensor readings; the guardian terminated its owned scope each time. No current compile/probe pass resulted. [Failure index](evidence/2026-09-24/dev-flow/native-attempts.json). |
+| Final checkpoint enhancement | Host interruption regression passed. The second actual native interruption retained a failed checkpoint with exact inputs and stage `evaluator-controls`; no compiler/probe command completed. |
 | Browser/live network/GitHub CI/deployment | Not executed. No browser URL or deployed product is claimed. |
 
-The actual admitted invocation restricted the launcher to CPU 19 with `taskset`;
+The final isolated retry executed source commit
+`b425cc2576ad8767b6ac9a5696879f9df80535aa`, with the host-test and review work idle.
+Its [source binding](evidence/2026-09-24/dev-flow/interrupted-source-binding.json)
+matches 48 source/pin files to that commit and binds the retained failed
+checkpoint. This establishes interruption evidence only, not installed Clay
+bytes or successful Hoon compilation.
+
+Both actual admitted invocations restricted the launcher to CPU 19 with `taskset`;
 the existing guardian independently enforced one CPU and the unchanged 50 percent
 quota/10 ms period, 75 C admission and 90 C stop. No persistent machine setting,
 toolchain pin or thermal ceiling changed. Host temperature samples cannot
@@ -48,7 +55,8 @@ attribute heat to a particular process.
 The interruption created the expected unclean-state marker. After preserving the
 guard and native startup logs, `make stop` proved the lifetime lock released and
 `make reset` restored only stopped, hash-verified, marked disposable seeds. Final
-`make status` reports stopped. The stopped fixture is ready for a future guarded
+`make status` reports stopped. The [final lifecycle record](evidence/2026-09-24/dev-flow/final-lifecycle.json)
+retains these outcomes. The stopped fixture is ready for a future guarded
 attempt; no hot boot or test is left running.
 
 ## Outstanding work, in dependency order

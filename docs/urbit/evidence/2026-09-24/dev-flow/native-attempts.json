@@ -1,5 +1,5 @@
 {
-  "recorded_at": "2026-09-24T22:08:03.294565+00:00",
+  "recorded_at": "2026-09-24T22:18:58.381604+00:00",
   "classification": "real-local-platform-guarded-fake-runtime-attempts",
   "native_core_qualified": false,
   "attempts": [
@@ -42,13 +42,25 @@
       "maximum_observed_c": 93.0,
       "guard_sha256": "7166d197a6e3879f21c22637f2bd3074ff90975c33a2149f6e07763e2eeaa04e",
       "run_id": "e614403d855c8fcfb12aaa89aa362c30"
+    },
+    {
+      "artifact": "docs/urbit/evidence/2026-09-24/dev-flow/four-fakes-wxci_ewe.json",
+      "sha256": "6308e1091a3fca57201e1241e17c80aa790487f309b529b1a8dd3a5524f4f8d8",
+      "status": "failed",
+      "reason": "GuardError: Thermal ceiling reached",
+      "launched": true,
+      "maximum_observed_c": 91.0,
+      "guard_sha256": "7166d197a6e3879f21c22637f2bd3074ff90975c33a2149f6e07763e2eeaa04e",
+      "run_id": "2d3bbbabfb640bf621437aeec134054e",
+      "source_commit": "b425cc2576ad8767b6ac9a5696879f9df80535aa",
+      "retained_checkpoint": "docs/urbit/evidence/2026-09-24/dev-flow/core-check-20260924T221243Z.json"
     }
   ],
   "limitations": [
     "No current Hoon compile/probe pass",
     "No current business/capacity/migration/delivery acceptance",
-    "Guarded native attempt preceded final compile-check checkpoint enhancement",
-    "No browser, live network, GitHub CI or deployment execution"
+    "No browser, live network, GitHub CI or deployment execution",
+    "Final checkpoint source executed only through interrupted evaluator stage; no compiler/probe pass"
   ],
   "native_log": {
     "artifact": "docs/urbit/evidence/2026-09-24/dev-flow/native-start-and-thermal-stop.log",
@@ -57,5 +69,9 @@
   "scope_proof": {
     "artifact": "docs/urbit/evidence/2026-09-24/dev-flow/native-scope.json",
     "sha256": "5773c62daea4bcedd38c4a52be89c483379c9543a44ded092c03294d1a043ba0"
+  },
+  "last_scope_proof": {
+    "artifact": "docs/urbit/evidence/2026-09-24/dev-flow/four-fakes-wxci_ewe-scope.json",
+    "sha256": "4564431820574a107e91c4b231b77f4b07c48368f0f3452e6e04a3e15717a038"
   }
 }
