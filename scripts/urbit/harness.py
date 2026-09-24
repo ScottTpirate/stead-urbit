@@ -9,6 +9,7 @@ import os
 from pathlib import Path
 import platform
 import shutil
+import signal
 import socket
 import subprocess
 import sys
@@ -75,6 +76,49 @@ def running():
         return None
 
 
+def status():
+    """Read lifecycle state without creating a fixture or assuming a free lock."""
+    if not STATE.exists() and not STATE.is_symlink() and not BASE.is_symlink():
+        result = {'stage': 'not-created', 'ready': False, 'ships': {}}
+    else:
+        guard()
+        try:
+            result = rpc('status', timeout=2)
+        except (FileNotFoundError, ConnectionRefusedError):
+            result = {'stage': 'stopped', 'ready': False, 'ships': {}}
+            try:
+                with (STATE / 'lifecycle.lock').open('rb') as gate:
+                    fcntl.flock(gate, fcntl.LOCK_EX | fcntl.LOCK_NB)
+                    fcntl.flock(gate, fcntl.LOCK_UN)
+            except FileNotFoundError:
+                pass
+            except BlockingIOError:
+                result['stage'] = 'unresponsive-owner'
+    print(json.dumps(result, indent=2))
+    return result
+
+
+def wait_ready(timeout=1200):
+    """Wait for the existing guarded supervisor; never retry a failed start."""
+    guard()
+    deadline = time.monotonic() + timeout
+    previous = None
+    while time.monotonic() < deadline:
+        current = rpc('status', timeout=5)
+        stage = current.get('stage')
+        if stage != previous:
+            print(json.dumps({'stage': stage, 'ready': current.get('ready')}), flush=True)
+            previous = stage
+        if current.get('ready') is True:
+            if current.get('execution_guard', {}).get('state') != 'running':
+                raise RuntimeError('Ready fixture has no running execution guard')
+            return current
+        if stage in ('failed', 'stopped', 'stopping', 'guard-stopped'):
+            raise RuntimeError('Fixture cannot become ready: ' + str(current))
+        time.sleep(1)
+    raise RuntimeError('Readiness timed out; inspect logs and make stop')
+
+
 def sandbox(command, *, execution_control=None, execution_id=None):
     # Only fixture state is writable. No home, credentials, Docker socket or LAN.
     args = ['bwrap', '--unshare-all', '--new-session', '--ro-bind', '/usr', '/usr']
@@ -106,6 +150,24 @@ def sandbox(command, *, execution_control=None, execution_id=None):
 def execution_limits():
     pin = execution_policy.read_json(ROOT / 'specs/urbit/urgit-candidate.lock.json')
     return execution_policy.policy_from_limits(pin['limits'])
+
+
+def preflight():
+    """Read current admission conditions without launching a process or fixture."""
+    policy = execution_limits()
+    sample = execution_policy.sample_temperatures()
+    result = {'classification': 'real-host-thermal-sample',
+              'readings_c': sample.readings_c, 'start_limit_c': policy.start_c,
+              'stop_limit_c': policy.stop_c, 'admitted': False}
+    try:
+        execution_policy.validate_sample(sample, policy, preflight=True)
+        result['admitted'] = True
+    except execution_policy.GuardError as error:
+        result['reason'] = str(error)
+        raise
+    finally:
+        print(json.dumps(result, indent=2), flush=True)
+    return result
 
 
 def guarded_supervisor():
@@ -240,15 +302,42 @@ def core_test():
         raise RuntimeError('Native core acceptance failed; retained evidence is not a pass')
 
 
+def core_check():
+    guard()
+    result = rpc('core-check', timeout=1800)
+    print(json.dumps(result, indent=2))
+    if result['status'] != 'pass':
+        raise RuntimeError('Native compilation/probes failed; inspect the recorded evidence')
+
+
+def dev():
+    def interrupted(*_):
+        raise KeyboardInterrupt('Developer command interrupted')
+
+    previous = signal.signal(signal.SIGTERM, interrupted)
+    try:
+        start()
+        wait_ready()
+        core_check()
+    except BaseException:
+        # An interrupted developer operation must not leave a heavy run behind.
+        try:
+            if STATE.exists():
+                stop()
+        except (OSError, ValueError, RuntimeError) as cleanup_error:
+            print('Cleanup failed; inspect make status: ' + str(cleanup_error), file=sys.stderr)
+        raise
+    finally:
+        signal.signal(signal.SIGTERM, previous)
+
+
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument('command', choices=['doctor', 'start', 'stop', 'reset', 'status', 'test', 'core-test', '_guarded-supervisor'])
+    parser.add_argument('command', choices=['doctor', 'preflight', 'start', 'stop', 'reset', 'status',
+                        'wait-ready', 'dev', 'test', 'core-check', 'core-test', '_guarded-supervisor'])
     args = parser.parse_args()
     try:
-        if args.command == 'status':
-            guard()
-            print(json.dumps(rpc('status'), indent=2))
-        elif args.command == '_guarded-supervisor':
+        if args.command == '_guarded-supervisor':
             guarded_supervisor()
         else:
             globals()[args.command.replace('-', '_')]()

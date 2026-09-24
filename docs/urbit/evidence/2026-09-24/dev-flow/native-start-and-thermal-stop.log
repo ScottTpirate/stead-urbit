@@ -1,0 +1,15 @@
+{"utc": "2026-09-24T22:01:01Z", "command": "launch zod", "result": {"argv": ["/runtime/bin/vere-v4.6-linux-x86_64", "-t", "-L", "--no-dock", "--loom", "31", "-b", "127.0.0.1", "--http-port", "18080", "/state/live/zod"], "pid": 5}}
+{"utc": "2026-09-24T22:01:05Z", "command": "zod: zuse", "result": "%408\n"}
+{"utc": "2026-09-24T22:01:05Z", "command": "zod: |mount %base", "result": ">="}
+{"utc": "2026-09-24T22:01:05Z", "command": "launch bus", "result": {"argv": ["/runtime/bin/vere-v4.6-linux-x86_64", "-t", "-L", "--no-dock", "--loom", "31", "-b", "127.0.0.1", "--http-port", "18081", "/state/live/bus"], "pid": 18}}
+{"utc": "2026-09-24T22:01:09Z", "command": "bus: zuse", "result": "%408\n"}
+{"utc": "2026-09-24T22:01:09Z", "command": "bus: |mount %base", "result": ">="}
+{"utc": "2026-09-24T22:01:09Z", "command": "launch nec", "result": {"argv": ["/runtime/bin/vere-v4.6-linux-x86_64", "-t", "-L", "--no-dock", "--loom", "31", "-b", "127.0.0.1", "--http-port", "18082", "/state/live/nec"], "pid": 29}}
+{"utc": "2026-09-24T22:01:12Z", "command": "nec: zuse", "result": "%408\n"}
+{"utc": "2026-09-24T22:01:13Z", "command": "nec: |mount %base", "result": ">="}
+{"utc": "2026-09-24T22:01:13Z", "command": "launch bud", "result": {"argv": ["/runtime/bin/vere-v4.6-linux-x86_64", "-t", "-L", "--no-dock", "--loom", "31", "-b", "127.0.0.1", "--http-port", "18083", "/state/live/bud"], "pid": 39}}
+{"utc": "2026-09-24T22:01:16Z", "command": "bud: zuse", "result": "%408\n"}
+{"utc": "2026-09-24T22:01:16Z", "command": "bud: |mount %base", "result": ">="}
+{"utc": "2026-09-24T22:01:32Z", "command": "execution guard stopped", "result": {"error": "Execution STOP is terminal"}}
+{"guard_status": "failed", "guard_report": "/home/skilgore/stead-urbit/.runtime/execution-runs/four-fakes-fhqjosxn/report.json"}
+FAIL: Guarded supervisor stopped without clean completion: GuardError: Thermal ceiling reached

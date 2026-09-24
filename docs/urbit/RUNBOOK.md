@@ -1,5 +1,9 @@
 # Local fake-ship development
 
+See [the edit/build/test flow](DEV_FLOW.md) for the local command reference and
+the distinction between compile checks, acceptance, browser testing and hosting.
+`make` prints help; `make status` and `make preflight` do not start ships.
+
 This profile is Linux x86-64, public/synthetic inputs only. It uses the existing
 machine, four fake identities, and no live identity or cloud resource. The tested
 host is recorded in TEST_RESULTS.md. Prerequisites: Python 3.12+, bubblewrap,
@@ -11,8 +15,10 @@ From the repository root:
 ```sh
 make setup
 make doctor
+make preflight
 make start
-python3 scripts/urbit/harness.py status
+make wait-ready
+make core-check
 make test
 make core-test
 make stop
@@ -49,6 +55,13 @@ results. A timeout is an unknown result, not a permission denial or successful
 save. The test command exits nonzero on missing, unexpected or failed outcomes.
 After changing harness Python source, stop/start the supervisor before testing;
 loaded-source hashing rejects stale process code.
+
+`make dev` combines start, readiness wait and `core-check`, and attempts owned
+cleanup on failure, Ctrl-C or SIGTERM. The compile check installs the home desk,
+verifies its actual Clay bytes and runs four named native probes. It records
+`qualifies_phase: false`; successful compilation alone cannot close Phase 1.
+It uses a fresh disposable fixture, so it is not a state-preserving UI hot-reload
+command. Failed compilation clears readiness and stops the fake processes.
 
 `core-test` installs the separate `native/core/desk` into freshly restored fake
 fixtures and executes the Work/Docs/permissions journey, native codec and state

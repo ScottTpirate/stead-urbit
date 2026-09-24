@@ -1,0 +1,61 @@
+{
+  "recorded_at": "2026-09-24T22:08:03.294565+00:00",
+  "classification": "real-local-platform-guarded-fake-runtime-attempts",
+  "native_core_qualified": false,
+  "attempts": [
+    {
+      "artifact": "docs/urbit/evidence/2026-09-24/dev-flow/four-fakes-gh59axvx.json",
+      "sha256": "f27e684c883bead00e337519addf3d8faf5a10d30f8c9dbb33bc3606fc4b2de9",
+      "status": "failed",
+      "reason": "GuardError: Start temperature exceeded",
+      "launched": false,
+      "maximum_observed_c": 95.0,
+      "guard_sha256": "7166d197a6e3879f21c22637f2bd3074ff90975c33a2149f6e07763e2eeaa04e",
+      "run_id": "c1663774800afa3c606b7ac875c0783f"
+    },
+    {
+      "artifact": "docs/urbit/evidence/2026-09-24/dev-flow/four-fakes-188v0n46.json",
+      "sha256": "7f9d6b575ac2c0dc02ed3f64e714978f4c146d848139e254fe88dec9d34e2c63",
+      "status": "failed",
+      "reason": "GuardError: Start temperature exceeded",
+      "launched": false,
+      "maximum_observed_c": 94.0,
+      "guard_sha256": "7166d197a6e3879f21c22637f2bd3074ff90975c33a2149f6e07763e2eeaa04e",
+      "run_id": "dfda8d07bdc387aea69c8ce8db3dfb36"
+    },
+    {
+      "artifact": "docs/urbit/evidence/2026-09-24/dev-flow/four-fakes-74fei4en.json",
+      "sha256": "9a37d9894610de7e3c403bf715d1791742fbc2aa85e1414887cab8ee79f5b321",
+      "status": "failed",
+      "reason": "GuardError: Start temperature exceeded",
+      "launched": false,
+      "maximum_observed_c": 76.0,
+      "guard_sha256": "7166d197a6e3879f21c22637f2bd3074ff90975c33a2149f6e07763e2eeaa04e",
+      "run_id": "566fd20ccf970fe81efa32af882a91ac"
+    },
+    {
+      "artifact": "docs/urbit/evidence/2026-09-24/dev-flow/four-fakes-fhqjosxn.json",
+      "sha256": "15a6ccca29ef8e94d655cca109c82a9b5cfdfc8fd39c665d141887c2dcb32f0a",
+      "status": "failed",
+      "reason": "GuardError: Thermal ceiling reached",
+      "launched": true,
+      "maximum_observed_c": 93.0,
+      "guard_sha256": "7166d197a6e3879f21c22637f2bd3074ff90975c33a2149f6e07763e2eeaa04e",
+      "run_id": "e614403d855c8fcfb12aaa89aa362c30"
+    }
+  ],
+  "limitations": [
+    "No current Hoon compile/probe pass",
+    "No current business/capacity/migration/delivery acceptance",
+    "Guarded native attempt preceded final compile-check checkpoint enhancement",
+    "No browser, live network, GitHub CI or deployment execution"
+  ],
+  "native_log": {
+    "artifact": "docs/urbit/evidence/2026-09-24/dev-flow/native-start-and-thermal-stop.log",
+    "sha256": "4bf425f70f92e5539ed166944da39846f781d4d05d8b969d81b6b5e0bedf8f95"
+  },
+  "scope_proof": {
+    "artifact": "docs/urbit/evidence/2026-09-24/dev-flow/native-scope.json",
+    "sha256": "5773c62daea4bcedd38c4a52be89c483379c9543a44ded092c03294d1a043ba0"
+  }
+}

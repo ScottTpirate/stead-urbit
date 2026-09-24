@@ -1,0 +1,49 @@
+{
+  "source_commit": "ce808a2cf9b87d44506e983f7dcebc94f0d2ed4b",
+  "classification": "host-static-and-mocked",
+  "commands": [
+    {
+      "command": [
+        "python3",
+        "scripts/urbit/validate_plan.py"
+      ],
+      "exit_code": 0,
+      "output": ".runtime/work-20260924/baseline-0.log",
+      "sha256": "c260fc2d5ecac9a8b12d6873f70530e7357122f56c978b463f2490a96137960c"
+    },
+    {
+      "command": [
+        "python3",
+        "scripts/urbit/check_ecosystem.py"
+      ],
+      "exit_code": 0,
+      "output": ".runtime/work-20260924/baseline-1.log",
+      "sha256": "9060fccd9d31afff0ba17fbf856aab6eb81cb2d0d4832c806ae4ed1b602473ab"
+    },
+    {
+      "command": [
+        "make",
+        "contracts-check"
+      ],
+      "exit_code": 0,
+      "output": ".runtime/work-20260924/baseline-2.log",
+      "sha256": "16952665c6bf55cb2f9875869354c83c25d93883155795560de55e97a688194f"
+    },
+    {
+      "command": [
+        "python3",
+        "-m",
+        "unittest",
+        "discover",
+        "-s",
+        "tests/urbit",
+        "-p",
+        "test_*.py",
+        "-v"
+      ],
+      "exit_code": 0,
+      "output": ".runtime/work-20260924/baseline-3.log",
+      "sha256": "473a65b6c0e06f643233b8a86a088b470758a3e0c240537b45060089e42af105"
+    }
+  ]
+}

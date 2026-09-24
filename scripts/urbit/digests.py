@@ -27,9 +27,12 @@ def tree_sha(root, *, source_links=False):
 
 
 def source_sha(root):
-    # The loaded supervisor does not import the independent planning, contracts
-    # or Urgit evaluation programs. Bind its actual dependency closure only.
+    # Both native runners load eagerly with the supervisor. Bind their shared
+    # modules too: a cached import must never acquire a newer file's identity.
+    # Planning/contracts/Urgit programs are not part of this process closure.
     names = ('conn.py', 'digests.py', 'execution_policy.py', 'harness.py', 'namespace_check.py',
-             'supervisor.py', 'toolchain.py')
+             'supervisor.py', 'toolchain.py', 'core_check.py', 'core_test.py', 'core_conn.py',
+             'core_cases_v2.py', 'core_export.py', 'delivery_cases.py', 'delivery_suite.py',
+             'qualification_cases.py', 'qualification_gate.py', 'native_transcript.py')
     entries = [sha(root / name) + '  ' + name + '\n' for name in names]
     return hashlib.sha256(''.join(entries).encode()).hexdigest()

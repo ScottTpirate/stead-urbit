@@ -19,6 +19,8 @@ import urllib.request
 from digests import sha, source_sha, tree_sha
 from conn import assert_result, run_thread
 import execution_policy
+import core_check
+import core_test
 
 STATE = Path('/state')
 LIVE = STATE / 'live'
@@ -380,8 +382,23 @@ def handle(connection):
                     if not PROGRESS['ready']:
                         raise RuntimeError('Fixture not ready')
                     execution_check(preflight=True)
-                    import core_test
                     result = guarded_result(core_test.run(globals()))
+            elif request == {'op': 'core-check'}:
+                with MUTEX:
+                    if not PROGRESS['ready']:
+                        raise RuntimeError('Fixture not ready')
+                    execution_check(preflight=True)
+                    PROGRESS.update(stage='compiling', ready=False, error=None)
+                    result = None
+                    try:
+                        result = guarded_result(core_check.run(globals()))
+                    finally:
+                        if result is None or result['status'] != 'pass':
+                            PROGRESS.update(stage='failed', ready=False,
+                                            error='Native compilation/probes failed; make stop before retry')
+                            all_stop()
+                        else:
+                            PROGRESS.update(stage='ready', ready=True, error=None)
             else:
                 raise ValueError('Unknown control command')
             reply = {'ok': True, 'result': result}

@@ -1,5 +1,10 @@
 # Executed development evidence
 
+September 24 continuation: [local development checkpoint](DEVELOPMENT_CHECKPOINT_20260924.md).
+The latest host suite passes; the actual guarded four-fake startup was terminated
+at its thermal ceiling before a core compile/probe pass. These results do not
+replace the historical native records below or complete the current phase gate.
+
 Current September13 checkpoint: [Phase1 closeout](PHASE1_CLOSEOUT.md) and
 [exact lightweight execution](evidence/2026-09-13/qualification/root-lightweight-final.json).
 The v2 source is uncompiled/unexecuted after real thermal preflight refusals.
