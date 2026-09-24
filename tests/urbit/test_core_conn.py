@@ -67,6 +67,24 @@ class CoreConnectionTests(unittest.TestCase):
                 with self.assertRaisesRegex(AssertionError, 'exact bytes'):
                     core_conn.evaluator_controls('/unused')
 
+    def test_evaluator_requires_actual_frame_larger_than_pipe_boundary(self):
+        for size in (32, 65536):
+            frame = b'\0' + (size - 5).to_bytes(4, 'little') + b'x' * (size - 5)
+            with self.subTest(size=size), patch.object(core_conn, 'evaluate',
+                    side_effect=[(b'', b'parse failed'), (frame, b'')]):
+                with self.assertRaisesRegex(AssertionError, 'not above64KiB'):
+                    core_conn.evaluator_controls('/unused')
+
+    def test_evaluator_large_frame_requires_exact_roundtrip(self):
+        expected = {'protocol': 'stead.framing-control/1', 'synthetic_text': 'x' * 34000}
+        raw = json.dumps(expected, sort_keys=True, separators=(',', ':')).encode()
+        frame = b'\0' + (68000).to_bytes(4, 'little') + b'x' * 68000
+        with patch.object(core_conn, 'evaluate', side_effect=[(b'', b'parse failed'),
+                (frame, b''), (self.wrap(raw).encode(), b'')]):
+            result = core_conn.evaluator_controls('/unused')
+        self.assertEqual(result['status'], 'passed')
+        self.assertGreater(result['large_frame_bytes'], 65536)
+
     def test_evaluator_crash_is_not_an_expected_parse_rejection(self):
         with patch.object(core_conn, 'evaluate', side_effect=subprocess.CalledProcessError(-11, ['Vere', 'eval'])):
             with self.assertRaises(subprocess.CalledProcessError):

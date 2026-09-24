@@ -83,7 +83,10 @@ def evaluator_controls(binary):
         raise AssertionError('Invalid evaluator input lacks its parse failure evidence')
     errors = {'exit': 0, 'encoder_rejected': True, 'stdout_hex': bad.hex(),
               'stderr': stderr.decode(errors='replace')}
-    expected = {'protocol': 'stead.framing-control/1', 'synthetic_text': 'x' * 70000}
+    # The JSON travels as hex text inside the noun: 34k source bytes already
+    # exceed the 64KiB pipe boundary after encoding. This control establishes
+    # framing, not application capacity. Keep the actual frame-size check below.
+    expected = {'protocol': 'stead.framing-control/1', 'synthetic_text': 'x' * 34000}
     raw = json.dumps(expected, sort_keys=True, separators=(',', ':')).encode()
     noun = b"[32 %avow 0 %noun %stead-core-result '" + raw.hex().encode() + b"']"
     frame, encode_stderr = evaluate(binary, '-jn', noun)

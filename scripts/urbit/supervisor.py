@@ -15,6 +15,7 @@ import threading
 import time
 import traceback
 import urllib.request
+import weakref
 
 from digests import sha, source_sha, tree_sha
 from conn import assert_result, run_thread
@@ -35,7 +36,10 @@ STOP = threading.Event()
 STOP_REQUESTED = threading.Event()
 NORMAL_STOP = threading.Event()
 FORCED_STOP = threading.Event()
+SHUTDOWN_FAILED = threading.Event()
 INITIALIZATION_FAILED = threading.Event()
+TERMINATION_LOCK = threading.Lock()
+TERMINATED = weakref.WeakSet()
 EVIDENCE = []
 LOADED_SOURCE_DIGEST = source_sha(Path('/code'))
 
@@ -49,7 +53,32 @@ def execution_check(preflight=False):
 def completion_code():
     # A zero process status must not erase a lease failure or an interrupted
     # initialization simply because runtime SIGTERM persisted its own state.
-    return 0 if NORMAL_STOP.is_set() and not FORCED_STOP.is_set() and not INITIALIZATION_FAILED.is_set() else 1
+    return 0 if (NORMAL_STOP.is_set() and not FORCED_STOP.is_set()
+                 and not SHUTDOWN_FAILED.is_set() and not INITIALIZATION_FAILED.is_set()) else 1
+
+
+def terminate_once(process):
+    # The watchdog and control handler may both request shutdown. Key by Popen
+    # incarnation, not ship name or PID, so a later restart still receives TERM.
+    with TERMINATION_LOCK:
+        if process.poll() is None and process not in TERMINATED:
+            try:
+                process.terminate()
+            except Exception:
+                SHUTDOWN_FAILED.set()
+                raise
+            TERMINATED.add(process)
+
+
+def signal_children():
+    errors = []
+    for process in tuple(PROCESSES.values()):
+        try:
+            terminate_once(process)
+        except Exception as error:
+            SHUTDOWN_FAILED.set()
+            errors.append(str(error))
+    return errors
 
 
 def execution_watch():
@@ -72,13 +101,13 @@ def execution_watch():
                    {'error': None if normal else str(error)})
             # Interrupt our known Popen children immediately, before waiting for
             # an active test's mutex. No PID-file lookup or unrelated signaling.
-            for process in tuple(PROCESSES.values()):
-                if process.poll() is None:
-                    process.terminate()
+            for error in signal_children():
+                record('guard signal failure', {'error': error})
             with MUTEX:
                 try:
                     all_stop()
                 except Exception as cleanup_error:
+                    SHUTDOWN_FAILED.set()
                     record('guard shutdown failure', {'error': str(cleanup_error)})
                 STOP.set()
             return
@@ -175,12 +204,12 @@ def shutdown(ship, timeout=10):
     process = PROCESSES.get(ship)
     if process is None:
         return
-    # Pinned Vere king.c handles SIGTERM with u3_king_exit, including bootstrap.
-    # Unlike Dojo input this remains available before Lens has started.
+    # TERM remains available before Lens starts. A nonzero startup/shutdown
+    # result is unclean even when no escalation was needed.
     forced = False
     try:
         if process.poll() is None:
-            process.terminate()
+            terminate_once(process)
             try:
                 process.wait(timeout=timeout)
             except subprocess.TimeoutExpired:
@@ -191,23 +220,28 @@ def shutdown(ship, timeout=10):
         record('shutdown ' + ship, {'exit_code': process.returncode, 'forced': forced})
         if forced or process.returncode != 0:
             raise RuntimeError(f'{ship} exit was not clean: {process.returncode}; forced={forced}')
+    except Exception:
+        SHUTDOWN_FAILED.set()
+        raise
     finally:
         if ship in LOGS:
-            LOGS[ship].close()
+            try:
+                LOGS[ship].close()
+            except Exception:
+                SHUTDOWN_FAILED.set()
+                raise
 
 
 def all_stop():
-    errors = []
     deadline = time.monotonic() + 15
-    for process in tuple(PROCESSES.values()):
-        if process.poll() is None:
-            process.terminate()
+    errors = signal_children()
     for ship in SHIPS:
         try:
             shutdown(ship, timeout=max(.05, deadline - time.monotonic()))
         except Exception as error:
             errors.append(str(error))
     if errors:
+        SHUTDOWN_FAILED.set()
         raise RuntimeError('; '.join(errors))
 
 

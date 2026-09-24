@@ -381,6 +381,92 @@ class SupervisorLifecycleSafety(unittest.TestCase):
         with patch.object(Path, 'read_text', fixture_lock), patch.object(digests, 'source_sha', return_value='mocked-source-digest'):
             spec.loader.exec_module(self.supervisor)
 
+    class Child:
+        """Host-only child model: a repeated TERM reproduces an unclean exit."""
+        def __init__(self, exit_code=0):
+            self.pid = 123
+            self.returncode = None
+            self.exit_code = exit_code
+            self.terms = 0
+            self.kills = 0
+
+        def poll(self):
+            return self.returncode
+
+        def terminate(self):
+            self.terms += 1
+            if self.terms > 1:
+                self.returncode = -15
+
+        def wait(self, timeout):
+            if self.returncode is None:
+                self.returncode = self.exit_code
+            return self.returncode
+
+        def kill(self):
+            self.kills += 1
+            self.returncode = -9
+
+    def test_overlapping_shutdown_paths_send_term_once_per_process_incarnation(self):
+        children = {name: self.Child() for name in self.supervisor.SHIPS}
+        self.supervisor.PROCESSES.update(children)
+        # Both threads really contend for the TERM lock; no native process runs.
+        workers = [threading.Thread(target=self.supervisor.signal_children) for _ in range(2)]
+        for worker in workers:
+            worker.start()
+        for worker in workers:
+            worker.join(2)
+            self.assertFalse(worker.is_alive())
+        with patch.object(self.supervisor, 'record'):
+            self.supervisor.all_stop()
+            self.supervisor.all_stop()
+        self.assertTrue(all(child.terms == 1 and child.returncode == 0 for child in children.values()))
+        replacement = self.Child()  # Deliberately reuses the mocked PID.
+        self.supervisor.PROCESSES['zod'] = replacement
+        with patch.object(self.supervisor, 'record'):
+            self.supervisor.shutdown('zod')
+        self.assertEqual(replacement.terms, 1)
+        self.supervisor.NORMAL_STOP.set()
+        self.assertEqual(self.supervisor.completion_code(), 0)
+
+    def test_nonzero_child_exit_stays_unclean_after_normal_stop(self):
+        for code in (-15, -11, 1):
+            with self.subTest(code=code):
+                self.supervisor.SHUTDOWN_FAILED.clear()
+                children = {name: self.Child(code if name == 'bus' else 0) for name in self.supervisor.SHIPS}
+                self.supervisor.PROCESSES.update(children)
+                with patch.object(self.supervisor, 'record'), self.assertRaisesRegex(RuntimeError, 'bus exit was not clean'):
+                    self.supervisor.all_stop()
+                self.assertTrue(all(child.returncode is not None for child in children.values()))
+                self.supervisor.NORMAL_STOP.set()
+                self.assertTrue(self.supervisor.SHUTDOWN_FAILED.is_set())
+                self.assertEqual(self.supervisor.completion_code(), 1)
+
+    def test_signal_and_wait_failures_do_not_abandon_other_children(self):
+        for fault in ('terminate', 'wait', 'kill'):
+            with self.subTest(fault=fault):
+                self.supervisor.SHUTDOWN_FAILED.clear()
+                children = {name: self.Child() for name in self.supervisor.SHIPS}
+                self.supervisor.PROCESSES.update(children)
+                with ExitStack() as stack:
+                    stack.enter_context(patch.object(self.supervisor, 'record'))
+                    if fault in ('wait', 'kill'):
+                        stack.enter_context(patch.object(children['bus'], 'wait', side_effect=subprocess.TimeoutExpired('synthetic', 1)))
+                    if fault in ('terminate', 'kill'):
+                        stack.enter_context(patch.object(children['bus'], fault, side_effect=OSError('synthetic ' + fault)))
+                    with self.assertRaises(RuntimeError):
+                        self.supervisor.all_stop()
+                self.assertTrue(self.supervisor.SHUTDOWN_FAILED.is_set())
+                self.assertTrue(all(children[name].returncode == 0 for name in ('zod', 'nec', 'bud')))
+
+    def test_normal_stop_watchdog_cannot_swallow_cleanup_failure(self):
+        self.supervisor.NORMAL_STOP.set()
+        self.supervisor.STOP_REQUESTED.set()
+        with patch.object(self.supervisor, 'all_stop', side_effect=RuntimeError('synthetic cleanup')), patch.object(self.supervisor, 'record'):
+            self.supervisor.execution_watch()
+        self.assertTrue(self.supervisor.SHUTDOWN_FAILED.is_set())
+        self.assertEqual(self.supervisor.completion_code(), 1)
+
     def test_stop_signals_cancellation_before_waiting_for_active_initialization(self):
         server, client = socket.socketpair()
         self.addCleanup(client.close)

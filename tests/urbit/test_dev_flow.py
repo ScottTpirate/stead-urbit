@@ -118,6 +118,22 @@ class LifecycleTests(unittest.TestCase):
                 launch.assert_not_called()
                 self.assertFalse(self.state.exists())
 
+    def test_failed_launched_supervisor_marks_fixture_and_blocks_next_start(self):
+        harness.guard(create=True)
+        report = {'status': 'failed', 'launched': True, 'reason': 'child exit 1',
+                  'run_directory': str(self.root / 'synthetic-run')}
+        with patch.object(harness, 'execution_limits', return_value=execution_policy.Policy()), \
+                patch.object(execution_policy, 'run_guarded', return_value=report):
+            with self.assertRaisesRegex(RuntimeError, 'without clean completion'):
+                harness.guarded_supervisor()
+        marker = json.loads((self.state / 'unclean-live.json').read_text())
+        self.assertEqual(marker['reason'], 'child exit 1')
+        with patch.object(harness.toolchain, 'verify'), patch.object(harness, 'running', return_value=None), \
+                patch.object(harness.subprocess, 'Popen') as launch:
+            with self.assertRaisesRegex(RuntimeError, 'interrupted'):
+                harness.start()
+            launch.assert_not_called()
+
 
 class SupervisorDeveloperTests(unittest.TestCase):
     def setUp(self):
