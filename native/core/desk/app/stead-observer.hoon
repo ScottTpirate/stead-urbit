@@ -25,6 +25,7 @@
   ^-  path
   ?>  &((gth (met 3 raw) 0) (lte (met 3 raw) 1.024))
   =/  bytes  (rip 3 raw)
+  ?>  ?=(^ bytes)
   ?>  =(47 i.bytes)
   =.  bytes  t.bytes
   =/  out=path  ~
