@@ -330,6 +330,54 @@ class AuthoredFixture:
 
 
 class Phase1ReconciliationHostTests(unittest.TestCase):
+    def historical_fixture(self, *, current_extra=b''):
+        """Authored review wrapper around unchanged real historical records."""
+        fixture = AuthoredFixture()
+        actual = (ROOT / 'scripts/urbit/execution_policy.py').read_bytes()
+        old = actual.replace(G.GUARD_LAUNCH_ADDITION, b'', 1)
+        self.assertEqual(digest(old), '7166d197a6e3879f21c22637f2bd3074ff90975c33a2149f6e07763e2eeaa04e')
+        current = actual + current_extra
+        guard_sha = digest(current)
+        fixture.expected['guard_sha256'] = guard_sha
+        fixture.expected['source_files']['scripts/urbit/execution_policy.py'] = guard_sha
+        for lane in fixture.guards:
+            fixture.guards[lane]['guard_sha256'] = guard_sha
+            fixture.reports[lane]['execution_guard']['guard_sha256'] = guard_sha
+        fixture.proofs['guard-independent-source-review']['reviewed_source_files']['scripts/urbit/execution_policy.py'] = guard_sha
+        host_log = b'AUTHORED host output fixture; this is not a retained execution result\n'
+        fixture.proofs['guard-negative-host-tests'].update(bindings={'guard_sha256': guard_sha},
+            underlying_artifacts=[{'path': 'authored-host.log', 'sha256': digest(host_log)}])
+        historical = {}
+        names = {'guard-real-hot-preflight-refusal': ('guard-real-preflight-93c.json', 'guard-real-start-81c.json'),
+                 'guard-real-platform-mocked-sensors': ('guard-platform-mocked-sensors.json', 'guard-platform-mocked-sensors.log')}
+        original_bytes = {}
+        for identifier, files in names.items():
+            refs = []
+            for name in files:
+                path = 'docs/urbit/evidence/2026-09-13/qualification/' + name
+                original_bytes[path] = (ROOT / path).read_bytes()
+                refs.append({'path': path, 'sha256': digest(original_bytes[path])})
+            historical[identifier] = refs
+            fixture.proofs[identifier].update(bindings={'guard_sha256': digest(old)}, underlying_artifacts=copy.deepcopy(refs))
+
+        def attach(bundle, artifacts):
+            artifacts.update(original_bytes)
+            artifacts.update({'old-guard.py': old, 'current-guard.py': current, 'authored-host.log': host_log})
+            items = {item['id']: item for item in bundle['items']}
+            review = {'protocol': 'stead.historical-guard-continuity/1', 'status': 'reviewed',
+                'reviewer': '/root/independent_review',
+                'fixture_classification': 'AUTHORED HOST WRAPPER; NOT AN ACTUAL REVIEW',
+                'change_id': 'add-prelaunch-resample-cancel-check-and-lease-publication',
+                'historical_guard_sha256': digest(old), 'current_guard_sha256': guard_sha,
+                'previous_source': {'path': 'old-guard.py', 'sha256': digest(old)},
+                'current_source': {'path': 'current-guard.py', 'sha256': guard_sha},
+                'historical_artifacts': copy.deepcopy(historical),
+                'current_source_review': copy.deepcopy(items['guard-independent-source-review']['artifact']),
+                'current_host_tests': copy.deepcopy(items['guard-negative-host-tests']['artifact'])}
+            artifacts['continuity.json'] = raw(review)
+            bundle['historical_guard_continuity'] = {'path': 'continuity.json', 'sha256': digest(artifacts['continuity.json']), 'pointer': ''}
+        return fixture, attach
+
     def call(self, fixture, *, damage=None, reader=True):
         bundle, artifacts = fixture.materialize()
         if damage is not None:
@@ -624,6 +672,40 @@ class Phase1ReconciliationHostTests(unittest.TestCase):
                                  fixture.reports['core']['evaluator_controls']['commands']):
                         rows[0].update(ship='zod', dojo='AUTHORED non-Dojo evaluator', result='')
                 self.rejects(fixture)
+
+    def test_historical_guard_records_keep_original_binding_with_exact_current_review(self):
+        fixture, attach = self.historical_fixture()
+        result = self.call(fixture, damage=attach)
+        self.assertEqual(result['status'], 'passed', diagnostic(result))
+        rows = {row['id']: row for row in result['items']}
+        self.assertEqual(rows['guard-real-hot-preflight-refusal']['bindings']['guard_sha256'],
+                         '7166d197a6e3879f21c22637f2bd3074ff90975c33a2149f6e07763e2eeaa04e')
+        self.assertEqual(rows['guard-negative-host-tests']['bindings']['guard_sha256'], fixture.expected['guard_sha256'])
+        self.rejects(fixture)
+
+    def test_historical_guard_bridge_rejects_other_changes_and_missing_current_evidence(self):
+        fixture, attach = self.historical_fixture(current_extra=b'\n# an additional unreviewed source change\n')
+        self.rejects(fixture, damage=attach)
+        for mode in ('owner-review', 'unknown-change', 'extra-requirement', 'wrong-current-review',
+                     'changed-original-bytes', 'changed-original-ref', 'missing-host-output'):
+            with self.subTest(mode=mode):
+                fixture, attach = self.historical_fixture()
+                def damage(bundle, artifacts):
+                    attach(bundle, artifacts)
+                    review = json.loads(artifacts['continuity.json'])
+                    if mode == 'owner-review': review['reviewer'] = '/root'
+                    elif mode == 'unknown-change': review['change_id'] = 'accept-any-later-guard'
+                    elif mode == 'extra-requirement': review['historical_artifacts']['v2-native-compile'] = []
+                    elif mode == 'wrong-current-review': review['current_source_review'] = review['current_host_tests']
+                    elif mode == 'changed-original-bytes':
+                        path = review['historical_artifacts']['guard-real-hot-preflight-refusal'][0]['path']
+                        artifacts[path] += b' changed'
+                    elif mode == 'changed-original-ref':
+                        review['historical_artifacts']['guard-real-hot-preflight-refusal'][0]['sha256'] = '0' * 64
+                    elif mode == 'missing-host-output': artifacts.pop('authored-host.log')
+                    artifacts['continuity.json'] = raw(review)
+                    bundle['historical_guard_continuity']['sha256'] = digest(artifacts['continuity.json'])
+                self.rejects(fixture, damage=damage)
 
     def test_missing_reader_wrong_hash_missing_artifact_and_changed_transcript_fail(self):
         self.rejects(AuthoredFixture(), reader=False)

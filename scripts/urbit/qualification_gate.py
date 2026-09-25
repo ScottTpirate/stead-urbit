@@ -33,6 +33,24 @@ DELIVERY = ('known-mark-and-held-outsider', 'wrong-sender-and-binding',
             'home-unavailable', 'ended-leave-attempt')
 RECIPES = {'v1-private-identity-and-sequence-reproduction', 'v1-exhaustion-migration-security-reserve',
            'projects', 'work_items', 'grants', 'documents', 'history', 'object_bytes'}
+HISTORICAL_GUARD = '7166d197a6e3879f21c22637f2bd3074ff90975c33a2149f6e07763e2eeaa04e'
+HISTORICAL_GUARD_ARTIFACTS = {
+    'guard-real-hot-preflight-refusal': (
+        ('guard-real-preflight-93c.json', 'ee5343d8baf6b148654401792409a93f8868a2332dbbe49fba1099846dd44dc4'),
+        ('guard-real-start-81c.json', '78f5902e38dc5c20bbe89bd9ec415f67b72c1300167f6cc701972b04d67d426b')),
+    'guard-real-platform-mocked-sensors': (
+        ('guard-platform-mocked-sensors.json', '27d98c3dbed1aebdd1a8b23d344ceeec002c271508f7323fd07091fb8243dd46'),
+        ('guard-platform-mocked-sensors.log', '27964c2ebe27f62166668998ba7aa42562226b78725c05ef684a7371deb24a55'))}
+GUARD_LAUNCH_ADDITION = b'''                # A verified stopped-seed snapshot may take time. Re-admit at
+                # the actual launch boundary; never launch on an aged sample.
+                launch_sample = sampler()
+                event('launch-sample', sample=asdict(launch_sample))
+                validate_sample(launch_sample, policy, preflight=True,
+                                expected_inventory=initial.readings_c)
+                if cancel.is_set() or (stop_requested is not None and stop_requested()):
+                    raise GuardError('Operator stop requested during launch preparation')
+                publish(launch_sample)
+'''
 
 
 def require(condition, reason):
@@ -145,7 +163,7 @@ def artifact_reader(root):
     return read
 
 
-def evaluate(manifest, evidence, expected_bindings, *, read_artifact=None):
+def evaluate(manifest, evidence, expected_bindings, *, read_artifact=None, _historical_guard_bindings=None):
     """Return failed for missing/stale/mock-as-native/zero-assertion evidence.
 
     evidence is a list (or {'items': list}) with id/kind/status/bindings/artifact.
@@ -191,6 +209,8 @@ def evaluate(manifest, evidence, expected_bindings, *, read_artifact=None):
             bindings = item.get('bindings', {})
             expected_source = (expected_bindings.get('execution_lanes', {}).get(item.get('execution_lane'), {})
                                if kind == 'native' and 'execution_lanes' in expected_bindings else expected_bindings)
+            if identifier in (_historical_guard_bindings or {}):
+                expected_source = {'guard_sha256': _historical_guard_bindings[identifier]}
             keys = NATIVE_BINDINGS if kind == 'native' else requirement.get('binding_keys', BASE_BINDINGS)
             if not keys or not isinstance(bindings, dict):
                 raise ValueError('Exact evidence source bindings required')
@@ -415,6 +435,82 @@ def validate_evaluator_controls(report):
     return indices
 
 
+def validate_historical_guard_continuity(bundle, expected, read):
+    """Only the frozen 93/81C and mocked-platform records may keep their old SHA.
+
+    This validates historical facts plus a separately reviewed conservative
+    source delta. It never calls those facts current-source executions.
+    """
+    reference = bundle.get('historical_guard_continuity')
+    if reference is None:
+        return {}
+    require(isinstance(reference, dict) and reference.get('pointer') == '', 'Historical continuity must retain its whole review')
+    review = retained(reference, read)
+    require(isinstance(review, dict), 'Historical continuity review must be an object')
+    reviewer = review.get('reviewer')
+    require(review.get('protocol') == 'stead.historical-guard-continuity/1'
+            and review.get('status') == 'reviewed'
+            and reviewer in expected.get('independent_reviewers', [])
+            and reviewer in ('/root/qa_review', '/root/hoon_review', '/root/independent_review')
+            and reviewer != expected.get('implementation_owner', '/root')
+            and review.get('change_id') == 'add-prelaunch-resample-cancel-check-and-lease-publication'
+            and review.get('historical_guard_sha256') == HISTORICAL_GUARD
+            and review.get('current_guard_sha256') == expected.get('guard_sha256')
+            and expected.get('source_files', {}).get('scripts/urbit/execution_policy.py') == expected.get('guard_sha256'),
+            'Missing independent exact-source historical guard continuity review')
+
+    def blob(ref):
+        require(isinstance(ref, dict) and ref.get('pointer', '') == ''
+                and isinstance(ref.get('sha256'), str) and HEX.fullmatch(ref['sha256']),
+                'Historical/current artifact needs exact whole-byte reference')
+        value = read(ref['path'])
+        require(isinstance(value, bytes) and 0 < len(value) <= 2 * 1024 * 1024
+                and hashlib.sha256(value).hexdigest() == ref['sha256'], 'Historical/current artifact byte mismatch')
+        return value
+
+    old = blob(review['previous_source'])
+    current = blob(review['current_source'])
+    anchor = b'                command = command_factory(control, run_id)\n'
+    require(review['previous_source']['sha256'] == HISTORICAL_GUARD
+            and review['current_source']['sha256'] == expected['guard_sha256']
+            and old.count(anchor) == 1 and current == old.replace(anchor, anchor + GUARD_LAUNCH_ADDITION, 1),
+            'Historical guard continuity permits only the reviewed nine-line conservative addition')
+    items = {item['id']: item for item in bundle['items']}
+    for field, identifier, kind, status in (
+            ('current_source_review', 'guard-independent-source-review', 'source_review', 'reviewed'),
+            ('current_host_tests', 'guard-negative-host-tests', 'host_mocked', 'passed')):
+        require(review.get(field) == items[identifier]['artifact'], 'Current guard prerequisite reference differs')
+        proof = retained(review[field], read)
+        require(proof.get('id') == identifier and proof.get('kind') == kind and proof.get('status') == status,
+                'Current guard prerequisite is missing or nonpassing')
+        if kind == 'source_review':
+            require(proof.get('reviewer') == reviewer
+                    and proof.get('reviewed_source_files', {}).get('scripts/urbit/execution_policy.py') == expected['guard_sha256'],
+                    'Current guard source review does not bind reviewed implementation bytes')
+        else:
+            require(proof.get('bindings') == {'guard_sha256': expected['guard_sha256']}
+                    and isinstance(proof.get('underlying_artifacts'), list) and bool(proof['underlying_artifacts']),
+                    'Current guard host tests lack retained execution artifacts')
+            for ref in proof['underlying_artifacts']:
+                blob(ref)
+    originals = review.get('historical_artifacts')
+    require(isinstance(originals, dict) and set(originals) == set(HISTORICAL_GUARD_ARTIFACTS),
+            'Historical continuity is limited to the two frozen non-native requirements')
+    result = {}
+    for identifier, records in HISTORICAL_GUARD_ARTIFACTS.items():
+        required = [{'path': 'docs/urbit/evidence/2026-09-13/qualification/' + name, 'sha256': digest}
+                    for name, digest in records]
+        item = items[identifier]
+        proof = retained(item['artifact'], read)
+        require(item.get('bindings') == proof.get('bindings') == {'guard_sha256': HISTORICAL_GUARD}
+                and originals[identifier] == proof.get('underlying_artifacts') == required,
+                'Historical guard facts or original source binding were replaced')
+        for ref in required:
+            blob(ref)
+        result[identifier] = HISTORICAL_GUARD
+    return result
+
+
 def validate_schedule(report):
     import gall_schedule_proof
     import gall_schedule
@@ -509,10 +605,15 @@ def reconcile(manifest, bundle, expected_bindings, *, read_artifact=None):
                         or isinstance(record.get('mode'), str) and isinstance(record.get('stdout'), str)
                         and isinstance(record.get('stderr'), str) and isinstance(record.get('transcript'), dict)),
                         'Native command is missing its actual response/transport')
-        result = evaluate(manifest, bundle, expected_bindings, read_artifact=read_artifact)
+        historical = validate_historical_guard_continuity(bundle, expected_bindings, read_artifact)
+        result = evaluate(manifest, bundle, expected_bindings, read_artifact=read_artifact,
+                          _historical_guard_bindings=historical)
         result.update(protocol=failed['protocol'], classification=failed['classification'],
                       execution_artifacts=bundle['executions'], guard_artifacts=bundle['guards'],
                       test_owner='/root/independent_review')
+        if historical:
+            result['historical_guard_continuity'] = bundle['historical_guard_continuity']
+            result['historical_guard_bindings'] = historical
         return result
     except (KeyError, ValueError, TypeError, IndexError, OSError, EOFError) as error:
         failed['errors'].append(type(error).__name__ + ': ' + str(error))

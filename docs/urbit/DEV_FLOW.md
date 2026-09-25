@@ -47,6 +47,9 @@ versioned filesystem. It reads the imported bytes back through Clay and compares
 their hashes. The native build probe imports the home agent, client, observer
 and marks; further probes exercise the codec and pure reducers. A compiler error,
 wrong probe result or missing source fails the command.
+The save/load probe also calls the actual home agent's saved-state arms and
+compares the resulting serialized noun. It passed with 53 native checks on
+September 25; the full behavioral/migration qualification remains separate.
 
 No general Hoon hot-reload claim is made: committing a desk and preserving a
 running app's state across an update are different operations. Application
@@ -77,6 +80,13 @@ The reviewed guard admits startup at at most 75 C and stops native execution at
 The shared lock serializes this repository's native jobs. Other workstation
 workloads continue independently. If a start is refused, inspect `make preflight`
 and the retained report; resume after cooling without changing the limits.
+
+`make start` and `make dev` also put preparation in a transient user scope with
+the same 50 percent/10 ms CPU limit and one allowed CPU. This covers seed and
+toolchain hashing before the native guardian takes over. A manually wrapped
+run of this setup passed the native probes; the Makefile integration is subject
+to its next recorded `make dev` run. The successful independent Git audit used
+the same preparation limit. No fan or persistent power setting is required.
 
 `make dev` cleans up a failed/interrupted operation. A successful developer check
 leaves the supervised fake environment running for the next check; use `make stop`

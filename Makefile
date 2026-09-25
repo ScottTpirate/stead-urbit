@@ -1,4 +1,6 @@
 .DEFAULT_GOAL := help
+# Bound seed/toolchain verification before the inner native guardian launches.
+PREP = systemd-run --user --scope --quiet -p CPUQuota=50% -p CPUQuotaPeriodSec=10ms -- taskset -c "$$(python3 -c 'import os; print(max(os.sched_getaffinity(0)))')"
 .PHONY: help setup doctor preflight dev start status wait-ready stop reset check test core-check core-test gall-schedule skill-prequalify plan-check contracts-check
 help:
 	@python3 scripts/urbit/dev_help.py
@@ -9,13 +11,13 @@ doctor:
 preflight:
 	python3 scripts/urbit/harness.py preflight
 start:
-	python3 scripts/urbit/harness.py start
+	$(PREP) python3 scripts/urbit/harness.py start
 status:
 	python3 scripts/urbit/harness.py status
 wait-ready:
 	python3 scripts/urbit/harness.py wait-ready
 dev:
-	python3 scripts/urbit/harness.py dev
+	$(PREP) python3 scripts/urbit/harness.py dev
 stop:
 	python3 scripts/urbit/harness.py stop
 reset:

@@ -4,12 +4,13 @@ No dates or effort estimates here are promises. Each phase exits on evidence, no
 
 | Phase | Deliverable | Gate |
 |---|---|---|
-| 0 | Independent repo, pinned dependencies, four-fake-ship harness, Git feasibility audit | Actual native smoke tests and recorded license/toolchain decisions |
+| 0 | Independent repo, pinned dependencies, four-fake-ship harness, Git feasibility audit, contributor workflow | Actual native smoke tests, recorded reuse decisions and executed baseline/assisted workflow evaluation |
 | 1 | One authoritative home, core Work/Docs state, explicit permissions | Restart, negative access, idempotence and revision tests |
 | 2 | Individual sessions, useful shared web UI, native CI | Two users collaborate while an outsider cannot read or mutate through alternate paths |
 | 3 | Native Git, reviews and limited agent proposals | Stock Git conformance, branch/ref policy, revoked-token and corrupt-pack tests |
 | 4 | Portable export, operational recovery, low-cost public/synthetic canary | Independent security/restore/load evidence |
 | 5 | Explicit replicas, safe home migration, self-hosted dogfooding | One authoritative source of truth, fenced migration and tested exitability |
+| 6 | Supported ecosystem release | Independent adopters, integration, maintainership and qualified security/recovery/distribution process |
 
 Workstreams: integration/architecture owns shared contracts; platform owns runtime/harness; native-core owns authoritative transitions; identity/security owns authentication and policy; Git owns protocol/object validation; frontend owns direct-home UX; QA/operations owns independent verification and deployments. One person or agent may fill several roles, but implementation and final approval must remain independent.
 
@@ -17,7 +18,9 @@ Parallelize only after contracts freeze. Do not launch separate agents to invent
 
 Start: URB-000, then URB-010, URB-020 and URB-025, then URB-030. The first product milestone is one page/work item saved on the home and correctly visible or denied to different principals after a restart. Do not start by translating all upstream engine source.
 
-Full machine-readable tasks follow in `specs/urbit/backlog.json`. These are seeds, not claims of existing GitHub issues.
+The original task definitions remain in `specs/urbit/backlog.json`;
+`specs/urbit/ecosystem.json` adds ecosystem tasks, milestones and live issue
+numbers. Live issues track execution; the evidence determines acceptance.
 
 ## First adversarial acceptance corpus
 

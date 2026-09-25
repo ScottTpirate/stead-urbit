@@ -1,9 +1,16 @@
 # Executed development evidence
 
-September 25 continuation: the [native build and smoke](evidence/2026-09-25/native-build/index.json)
+September 25 continuation: the [saved-state probe](evidence/2026-09-25/saved-state-probe/index.json)
+passed all 53 checks at `c1e437f`, including actual on-save/on-load and exact noun
+preservation. The [independent Git audit](reviews/URB025_REUSE_DECISION_20260925.md)
+passed all 14 vectors and records an explicit non-adoption decision. Issues #2
+(repository/provenance) and #5 (Git evaluation) are closed; other phase gates
+remain open.
+
+The earlier [native build and smoke](evidence/2026-09-25/native-build/index.json)
 passed at `c299f19`. The [first full core run](evidence/2026-09-25/native-core-first-run/index.json)
 failed a real saved-state round-trip after 145 passed cases and three incomplete
-typed dispositions. The failed result remains unchanged. Follow-up save/load,
+typed dispositions. The failed result remains unchanged. Follow-up full-corpus,
 recovery and qualification-runner changes remain subject to new native evidence;
 Phases 0/1 are still open and Phase 2 has not started.
 
