@@ -138,11 +138,10 @@
       =/  resource  (field:stead-codec p.input 'resource')
       ?>  &((uuid:stead-codec project) (uuid:stead-codec resource))
       =/  route=path
-        ?+  key  !!
-          'project'  [%v1 %project project ~]
-          'work'  [%v1 %work project resource ~]
-          'document'  [%v1 %document project resource ~]
-        ==
+        ?:  =('project' key)  [%v1 %project project ~]
+        ?:  =('work' key)  [%v1 %work project resource ~]
+        ?:  =('document' key)  [%v1 %document project resource ~]
+        !!
       `this(predecessor-response (read:stead-core-v1 predecessor ship (now-ms now.bowl) route))
     ?:  =(%legacy-batch op)
       ?>  initialized.predecessor
