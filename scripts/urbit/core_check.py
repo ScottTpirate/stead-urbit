@@ -92,7 +92,8 @@ def run(host):
                 ('stead-build-probe', '%stead-builds-pass'),
                 ('stead-codec-probe', '%stead-codec-six-vectors-pass'),
                 ('stead-core-probe', '%stead-core-basic-and-counter-edge-pass'),
-                ('stead-reducers-probe', '%stead-native-reducers-pass')):
+                ('stead-reducers-probe', '%stead-native-reducers-pass'),
+                ('stead-save-probe', '%stead-save-format2-roundtrip-pass')):
             command('+' + probe, expected)
         host['execution_check']()
         report['status'] = 'pass'

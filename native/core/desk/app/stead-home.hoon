@@ -2,7 +2,7 @@
 /+  default-agent, stead-core, stead-codec, stead-core-v1, stead-codec-v1
 =>
 |%
-+$  saved  $%([%stead-home %1 db=state:stead-core-v1] [%stead-home %2 db=state:stead-core])
++$  saved  [%stead-home $%([%1 db=state:stead-core-v1] [%2 db=state:stead-core])]
 +$  pending-entry  [sender=@p expires=@da]
 ++  now-ms
   |=  now=@da

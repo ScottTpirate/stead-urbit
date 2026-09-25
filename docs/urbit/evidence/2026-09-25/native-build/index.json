@@ -251,5 +251,14 @@
   "loaded_native_source_commit": "c299f19acf0f7afb368d22c85f91c60f3af8515b",
   "compile_checks_passed": 50,
   "evaluator_large_frame_bytes": 68159,
-  "guard_status": "running when successful compile/smoke completed; final guard report retained separately after clean shutdown"
+  "guard_status": "completed exit0 after core failure and make stop; native failure preserved",
+  "final_guard_artifact": {
+    "original": ".runtime/execution-runs/four-fakes-akioaczx/report.json",
+    "path": "docs/urbit/evidence/2026-09-25/native-core-first-run/execution-guard.json.gz",
+    "original_sha256": "af6b46d5a8799b78ed192e11dc193920d949c5ca26df68cad192d1bbb9447fdc",
+    "sha256": "7024c7fcb07628b945935efcb40400f15060e9ee193be85d087b6fc2feb5c9d1",
+    "original_bytes": 730358,
+    "bytes": 42927,
+    "encoding": "gzip exact original bytes"
+  }
 }
