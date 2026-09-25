@@ -102,7 +102,7 @@ def tree(path, destination=None):
                     output.close()
                 os.close(fd)
     return {'sha256': hashlib.sha256(''.join(value + '  ' + name + '\n'
-                       for name, value in sorted(entries)).encode()).hexdigest(),
+                       for name, value in sorted(entries, key=lambda row: Path(row[0]).parts)).encode()).hexdigest(),
             'files': len(entries), 'bytes': total}
 
 

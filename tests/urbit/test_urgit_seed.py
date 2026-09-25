@@ -23,6 +23,7 @@ from unittest.mock import patch
 REPO = Path(__file__).resolve().parents[2]
 sys.path.insert(0, str(REPO / 'scripts/urbit'))
 import execution_policy as G
+import digests as D
 import urgit_audit as A
 import urgit_seed as S
 
@@ -74,6 +75,27 @@ def fixture():
 
 
 class StoppedSeedBoundary(unittest.TestCase):
+    def test_prefix_file_directory_order_matches_existing_seed_manifest(self):
+        with fixture() as root:
+            source = root / '.piers/fakes/seed/zod'
+            (source / 'base/fuse').mkdir(mode=0o700)
+            for name in ('fuse/help.txt', 'fuse-list.hoon', 'fuse.hoon'):
+                (source / 'base' / name).write_text('authored prefix fixture: ' + name)
+            path_order = [p.relative_to(source).as_posix()
+                          for p in sorted(source.rglob('*')) if p.is_file()]
+            self.assertNotEqual(path_order, sorted(path_order))
+            expected = D.tree_sha(source)
+            self.assertEqual(expected_tree(source)['sha256'], expected)
+            self.assertEqual(S.tree(source)['sha256'], expected)
+            manifest_path = root / '.piers/fakes/seed/manifest.json'
+            manifest = json.loads(manifest_path.read_text())
+            manifest['ships']['zod'] = expected
+            manifest_path.write_text(json.dumps(manifest))
+            with S.snapshot(root, root / 'input', PIN_SHA) as record:
+                self.assertEqual(record['copied']['sha256'], expected)
+                self.assertEqual(D.tree_sha(root / 'input/seed-zod'), expected)
+            self.assertEqual(D.tree_sha(source), expected)
+
     def test_exact_snapshot_preserves_original_and_owns_separate_bytes(self):
         with fixture() as root:
             source, target = root / '.piers/fakes/seed/zod', root / 'input/seed-zod'
