@@ -568,7 +568,9 @@
   ?>  =(bytes.receipt (canonical receipt-json))
   ?>  =('stead.receipt/1' (field receipt-fields 'protocol'))
   ?>  &(=(digest.row (field receipt-fields 'journal_digest')) =(digest.cmd (field receipt-fields 'canonical_sha256')))
-  ?>  (levy ~['principal_id' 'binding_id' 'authentication' 'authentication_strength' 'accepted_at_ms' 'policy_revision' 'authority_epoch' 'git_commit_oid'] |=(name=@t =((field record name) (field receipt-fields name))))
+  =/  shared-fields=(list @t)
+    ~['principal_id' 'binding_id' 'authentication' 'authentication_strength' 'accepted_at_ms' 'policy_revision' 'authority_epoch' 'git_commit_oid']
+  ?>  (levy shared-fields |=(name=@t =((field record name) (field receipt-fields name))))
   ?>  &(=(project.cmd (field receipt-fields 'project_id')) =(resource.cmd (field receipt-fields 'resource_id')) =(request.cmd (field receipt-fields 'request_id')))
   =/  previous  (~(get by heads) project.cmd)
   =/  seq  ?~(previous 1 +(sequence.u.previous))
