@@ -1,0 +1,43 @@
+{
+  "schema": 1,
+  "observed_at_utc": "2026-09-25T10:15:47.338284+00:00",
+  "classification": "real-host-parser-check-only",
+  "upstream_repository": "urbit/hoon-language-server",
+  "upstream_commit": "1024fbf219007e58605ae06c9314235abfdb42bd",
+  "node_version": "v24.21.0",
+  "node_binary_sha256": "7fde7b8afa198da66257f42ee2001d874c7355631e6d1579a5fb5ef1f246df4c",
+  "source_sha256": "d6e2caf17d83ba982b5846dd304aeb4edef9dd36211ba00bf745015ceaf71ca2",
+  "checks": [
+    {
+      "name": "exact-upstream-TypeScript-syntax",
+      "argv": [
+        "/home/skilgore/stead-urbit/.runtime/node-v24.21.0-linux-x64/bin/node",
+        "--check",
+        "/home/skilgore/stead-urbit/docs/urbit/evidence/2026-09-25/editor-tooling/upstream/src/server.ts"
+      ],
+      "stdin": null,
+      "exit_code": 1,
+      "stdout": "",
+      "stderr": "/home/skilgore/stead-urbit/docs/urbit/evidence/2026-09-25/editor-tooling/upstream/src/server.ts:8\nimport { tmpdir } from os;\n                       ^^\n\nSyntaxError: Unexpected identifier 'os'\n    at checkSyntax (node:internal/main/check_syntax:84:5)\n\nNode.js v24.21.0\n"
+    },
+    {
+      "name": "valid-quoted-import-parser-control",
+      "argv": [
+        "/home/skilgore/stead-urbit/.runtime/node-v24.21.0-linux-x64/bin/node",
+        "--input-type=module",
+        "--check"
+      ],
+      "stdin": "import { tmpdir } from \"node:os\";\n",
+      "exit_code": 0,
+      "stdout": "",
+      "stderr": ""
+    }
+  ],
+  "not_executed": [
+    "npm install/ci",
+    "TypeScript tsc build",
+    "ship-side agent compile/start",
+    "HTTP/Airlock integration",
+    "editor/plugin installation or integration"
+  ]
+}

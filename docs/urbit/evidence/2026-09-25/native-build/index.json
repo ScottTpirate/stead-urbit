@@ -1,0 +1,255 @@
+{
+  "classification": "real-native-compile-and-four-fake-smoke",
+  "qualifies_phase": false,
+  "scope": "Seven observed compiler failures retained, followed by passing compile/probes and actual smoke; full Phase 1 suite separate.",
+  "records": [
+    {
+      "label": "dev01",
+      "execution": {
+        "command": [
+          "make",
+          "dev"
+        ],
+        "source_commit": "87ea9e199a748a86daf1a9d95d4946e65b45c3ba",
+        "started_utc": "2026-09-25T09:40:01.953049+00:00",
+        "elapsed_seconds": 70.131,
+        "exit": 2
+      },
+      "artifacts": [
+        {
+          "original": ".runtime/phase01-20260925/dev01.json",
+          "path": "docs/urbit/evidence/2026-09-25/native-build/dev01.json",
+          "sha256": "72f556ad1d29597f6b4b969e4cf35bc9f78f44a12d635e49071d6c5c70a3ec60",
+          "bytes": 203
+        },
+        {
+          "original": ".piers/fakes/logs/core-check-20260925T094015Z.json",
+          "path": "docs/urbit/evidence/2026-09-25/native-build/core-check-20260925T094015Z.json",
+          "sha256": "39c0dd7fd80216150281af92e28c75370d8dc4f9347bc85c82d404d4eee8ff6d",
+          "bytes": 14708
+        }
+      ],
+      "native_result": "fail"
+    },
+    {
+      "label": "dev02",
+      "execution": {
+        "command": [
+          "make",
+          "dev"
+        ],
+        "source_commit": "cece865bd4cc3cf0f5308a3d4a3c08dd9f78ef3a",
+        "started_utc": "2026-09-25T09:42:25.937276+00:00",
+        "elapsed_seconds": 56.215,
+        "exit": 2
+      },
+      "artifacts": [
+        {
+          "original": ".runtime/phase01-20260925/dev02.json",
+          "path": "docs/urbit/evidence/2026-09-25/native-build/dev02.json",
+          "sha256": "bc25ff2cb8fc01b1cd51d07b0f5e7c85bb4fda3386ab73ea43662a60fe566451",
+          "bytes": 203
+        },
+        {
+          "original": ".piers/fakes/logs/core-check-20260925T094232Z.json",
+          "path": "docs/urbit/evidence/2026-09-25/native-build/core-check-20260925T094232Z.json",
+          "sha256": "ac50c9ba2a857b8db28e3d7005417d9341c8de107e601207d69c67b3c703e4ea",
+          "bytes": 14707
+        }
+      ],
+      "native_result": "fail"
+    },
+    {
+      "label": "dev03",
+      "execution": {
+        "command": [
+          "make",
+          "dev"
+        ],
+        "source_commit": "51f7a6a4e58e4bd48326aca0a4459ad82d73ae66",
+        "working_tree": "",
+        "started_utc": "2026-09-25T09:44:31.579084+00:00",
+        "elapsed_seconds": 59.56,
+        "exit": 2
+      },
+      "artifacts": [
+        {
+          "original": ".runtime/phase01-20260925/dev03.json",
+          "path": "docs/urbit/evidence/2026-09-25/native-build/dev03.json",
+          "sha256": "1dcdc609890f91b2173cc6862b8f92e0a9fea2ffe6b6b2b747aded2eab6eb2cd",
+          "bytes": 224
+        },
+        {
+          "original": ".piers/fakes/logs/core-check-20260925T094439Z.json",
+          "path": "docs/urbit/evidence/2026-09-25/native-build/core-check-20260925T094439Z.json",
+          "sha256": "5bd0189773ae663d33d1af1ef9d9d4eecb88e1fa9247fbbb2948f7449847aabd",
+          "bytes": 14708
+        }
+      ],
+      "native_result": "fail"
+    },
+    {
+      "label": "dev04",
+      "execution": {
+        "command": [
+          "make",
+          "dev"
+        ],
+        "source_commit": "9957807f43a21804721eac537a521623ecb877d0",
+        "working_tree": "",
+        "started_utc": "2026-09-25T09:47:02.586321+00:00",
+        "elapsed_seconds": 61.155,
+        "exit": 2
+      },
+      "artifacts": [
+        {
+          "original": ".runtime/phase01-20260925/dev04.json",
+          "path": "docs/urbit/evidence/2026-09-25/native-build/dev04.json",
+          "sha256": "e6d41cbb04d592b24f874230785f35ac087cd5bf9266e38b456a061eebf50fc7",
+          "bytes": 225
+        },
+        {
+          "original": ".piers/fakes/logs/core-check-20260925T094709Z.json",
+          "path": "docs/urbit/evidence/2026-09-25/native-build/core-check-20260925T094709Z.json",
+          "sha256": "828e0751152b8bb0cbd835463ca74c2ce2a4e32026ac86350b9d783054e0e31c",
+          "bytes": 14708
+        }
+      ],
+      "native_result": "fail"
+    },
+    {
+      "label": "dev05",
+      "execution": {
+        "command": [
+          "make",
+          "dev"
+        ],
+        "source_commit": "b2c5615bb8d6364a28a8d0cf86fd21dce5926ec6",
+        "working_tree": "",
+        "started_utc": "2026-09-25T09:54:20.482865+00:00",
+        "elapsed_seconds": 61.275,
+        "exit": 2
+      },
+      "artifacts": [
+        {
+          "original": ".runtime/phase01-20260925/dev05.json",
+          "path": "docs/urbit/evidence/2026-09-25/native-build/dev05.json",
+          "sha256": "7670fc47797f09dd02e8426374030c158dd123c958957ea9b1a49be28482b538",
+          "bytes": 225
+        },
+        {
+          "original": ".piers/fakes/logs/core-check-20260925T095428Z.json",
+          "path": "docs/urbit/evidence/2026-09-25/native-build/core-check-20260925T095428Z.json",
+          "sha256": "d43b5cd20a65aef18ccd44122f476cbc6325e0fbeec7d5d945fc443472ffc1c1",
+          "bytes": 14708
+        }
+      ],
+      "native_result": "fail"
+    },
+    {
+      "label": "dev06",
+      "execution": {
+        "command": [
+          "make",
+          "dev"
+        ],
+        "source_commit": "76c0d1f25d61cf12be7ddaef21f49b87dee14a26",
+        "working_tree": "?? tests/urbit/skill_evaluation/\n",
+        "started_utc": "2026-09-25T09:56:06.968118+00:00",
+        "elapsed_seconds": 62.209,
+        "exit": 2
+      },
+      "artifacts": [
+        {
+          "original": ".runtime/phase01-20260925/dev06.json",
+          "path": "docs/urbit/evidence/2026-09-25/native-build/dev06.json",
+          "sha256": "343b88df4ed56958c241e8e8d4415b6879803f7ed3d0b9ecd584de45bd1dfdf3",
+          "bytes": 259
+        },
+        {
+          "original": ".piers/fakes/logs/core-check-20260925T095613Z.json",
+          "path": "docs/urbit/evidence/2026-09-25/native-build/core-check-20260925T095613Z.json",
+          "sha256": "63b532cf7cbbdeb70f5ad5f7dff23cf6f132aa595288d5a1c21cbfe6f8b9d9a9",
+          "bytes": 14708
+        }
+      ],
+      "native_result": "fail"
+    },
+    {
+      "label": "dev07",
+      "execution": {
+        "command": [
+          "make",
+          "dev"
+        ],
+        "source_commit": "7a741b6c009a8a9fde57eeb9309853ba9164ea64",
+        "working_tree": "?? tests/urbit/skill_evaluation/\n",
+        "started_utc": "2026-09-25T09:57:32.571934+00:00",
+        "elapsed_seconds": 58.704,
+        "exit": 2
+      },
+      "artifacts": [
+        {
+          "original": ".runtime/phase01-20260925/dev07.json",
+          "path": "docs/urbit/evidence/2026-09-25/native-build/dev07.json",
+          "sha256": "183657b9d83b89560d9a79e5e04cd3ec1d2c33cfde6a31d4e8812330f2159108",
+          "bytes": 259
+        },
+        {
+          "original": ".piers/fakes/logs/core-check-20260925T095740Z.json",
+          "path": "docs/urbit/evidence/2026-09-25/native-build/core-check-20260925T095740Z.json",
+          "sha256": "7dd1c18a2d89a60996709d30f63ecd93bfbc7a18da63cca9f240f0931ef91595",
+          "bytes": 14707
+        }
+      ],
+      "native_result": "fail"
+    },
+    {
+      "label": "dev08",
+      "execution": {
+        "command": [
+          "make",
+          "dev"
+        ],
+        "source_commit": "c299f19acf0f7afb368d22c85f91c60f3af8515b",
+        "working_tree": "?? tests/urbit/skill_evaluation/\n",
+        "started_utc": "2026-09-25T09:59:12.130158+00:00",
+        "elapsed_seconds": 59.152,
+        "exit": 0
+      },
+      "artifacts": [
+        {
+          "original": ".runtime/phase01-20260925/dev08.json",
+          "path": "docs/urbit/evidence/2026-09-25/native-build/dev08.json",
+          "sha256": "0406fb9b4944b2fe8ae97d5cec8421285411bf459519e21c48e0ae635d5cac5e",
+          "bytes": 259
+        },
+        {
+          "original": ".piers/fakes/logs/core-check-20260925T095919Z.json",
+          "path": "docs/urbit/evidence/2026-09-25/native-build/core-check-20260925T095919Z.json",
+          "sha256": "a05fc950fb74dfb92b89314b2e8f9998da7d84527aed39be5608afaf43cb8c90",
+          "bytes": 15078
+        }
+      ],
+      "native_result": "pass"
+    },
+    {
+      "label": "actual-four-fake-smoke",
+      "original": ".runtime/phase01-20260925/smoke01.json",
+      "path": "docs/urbit/evidence/2026-09-25/native-build/smoke01.json",
+      "sha256": "64221dbe060f62ca6463112f3b6b59e82e7915cc2cf42f907fbfb967ade6894e",
+      "bytes": 260
+    },
+    {
+      "label": "actual-four-fake-smoke",
+      "original": ".piers/fakes/logs/smoke-20260925T100137Z.json",
+      "path": "docs/urbit/evidence/2026-09-25/native-build/smoke-20260925T100137Z.json",
+      "sha256": "6d15137f3e771a5e3ecb4a331b175c5124faf90e9d6f1692d5d66c77c8132cd2",
+      "bytes": 10918
+    }
+  ],
+  "loaded_native_source_commit": "c299f19acf0f7afb368d22c85f91c60f3af8515b",
+  "compile_checks_passed": 50,
+  "evaluator_large_frame_bytes": 68159,
+  "guard_status": "running when successful compile/smoke completed; final guard report retained separately after clean shutdown"
+}
