@@ -145,6 +145,7 @@
   |=  value=*
   ^-  @t
   =/  raw  (jam value)
+  ~|  [%stead-scheduled-gall-noun-record-bytes (met 3 raw)]
   ?>  (lte (met 3 raw) 16.384)
   %-  canonical:stead-codec
   %-  object:stead-codec
