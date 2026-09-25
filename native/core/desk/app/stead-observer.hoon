@@ -27,7 +27,7 @@
   =/  bytes  (rip 3 raw)
   ?>  ?=(^ bytes)
   ?>  =(47 i.bytes)
-  =.  bytes  t.bytes
+  =/  bytes  t.bytes
   =/  out=path  ~
   =/  part=@t  ''
   |-
