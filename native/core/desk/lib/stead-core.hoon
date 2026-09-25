@@ -529,7 +529,7 @@
   =/  documents=(map [@t @t] document-state)  ~
   =/  objects=(map @ux object:stead-git)  ~
   =/  reachable=(map @ux (set @ux))  ~
-  =/  containers
+  =/  containers=(map @t container-state)
     %-  malt
     %+  turn  ~(tap by containers.old)
     |=  [key=@t val=container-state]
