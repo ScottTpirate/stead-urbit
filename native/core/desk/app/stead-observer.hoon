@@ -160,6 +160,18 @@
 ++  on-agent
   |=  [=wire =sign:agent:gall]
   ^-  (quip card:agent:gall _this)
+  =/  record
+    |=  [id=@t lane=@t value=probe kind=@t mark=@t size=@ud bytes-digest=@t terminal=? failure=@t]
+    ^-  (quip card:agent:gall _this)
+    =/  expected-lane
+      ?:(?|(=('poke-ack' kind) =('poke-nack' kind)) 'poke' 'watch')
+    =.  failure  ?:(=(lane expected-lane) failure 'Unexpected native sign lane')
+    =/  source-provenance  (jam sap.bowl)
+    =/  text-wire  (cat 3 '/probe/' (cat 3 id (cat 3 '/' lane)))
+    =/  event=observation
+      [kind src.bowl text-wire mark size bytes-digest (digest source-provenance) (milliseconds now.bowl) terminal]
+    =.  value  value(events (~(put by events.value) +(count) event))
+    `this(probes (~(put by probes) id value), count +(count), fault failure)
   ?:  !=('' fault)  `this
   ?.  &(?=([%probe @ @ ~] wire) =(src.bowl ~zod))
     `this(fault 'Unexpected native source or wire')
@@ -210,18 +222,6 @@
       =.  value  value(poke-nacks +(poke-nacks.value))
       (record id lane value 'poke-nack' mark size bytes-digest was-terminal '')
   ==
-++  record
-  |=  [id=@t lane=@t value=probe kind=@t mark=@t size=@ud bytes-digest=@t terminal=? failure=@t]
-  ^-  (quip card:agent:gall _this)
-  =/  expected-lane
-    ?:(?|(=('poke-ack' kind) =('poke-nack' kind)) 'poke' 'watch')
-  =.  failure  ?:(=(lane expected-lane) failure 'Unexpected native sign lane')
-  =/  source-provenance  (jam sap.bowl)
-  =/  text-wire  (cat 3 '/probe/' (cat 3 id (cat 3 '/' lane)))
-  =/  event=observation
-    [kind src.bowl text-wire mark size bytes-digest (digest source-provenance) (milliseconds now.bowl) terminal]
-  =.  value  value(events (~(put by events.value) +(count) event))
-  `this(probes (~(put by probes) id value), count +(count), fault failure)
 ++  on-watch
   |=  route=path
   ^-  (quip card:agent:gall _this)

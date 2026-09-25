@@ -78,6 +78,27 @@
   |=  value=*
   =/  bytes  (jam value)
   (hex:stead-codec 64 (sha-256l:sha [(met 3 bytes) (rev 3 (met 3 bytes) bytes)]))
+++  pending-snapshot
+  |=  [pending=(map path pending-entry) now=@da incoming=(map duct [ship=@p watched=path])]
+  ^-  @t
+  ::  Administrative observations do not prune; expiry is lazy, not a timer.
+  =/  entries  ~(tap by pending)
+  ?>  (lte (lent entries) 64)
+  =/  base  (object:stead-codec ~[['protocol' 'stead.fixture-pending/1'] ['now_ms' (decimal:stead-codec (now-ms now))] ['total' (decimal:stead-codec (lent entries))]])
+  ?>  ?=([%o *] base)
+  =/  by-ship
+    %-  object:stead-codec
+    %+  turn  ~[~zod ~bus ~nec ~bud]
+    |=  ship=@p
+    =/  name  (scot %p ship)
+    [(cut 3 [1 (dec (met 3 name))] name) (decimal:stead-codec (lent (skim entries |=([key=path val=pending-entry] =(ship sender.val)))))]
+  =/  rows
+    %-  malt
+    %+  turn  entries
+    |=  [route=path val=pending-entry]
+    =/  ducts  (skim ~(tap by incoming) |=([duct [ship=@p watched=path]] =(route watched)))
+    [(rap 3 (turn route |=(part=@t (cat 3 '/' part)))) (object:stead-codec ~[['sender' (scot %p sender.val)] ['expires_at_ms' (decimal:stead-codec (now-ms expires.val))] ['incoming_ducts' (decimal:stead-codec (lent ducts))]])]
+  (canonical:stead-codec [%o (~(put by (~(put by p.base) 'by_ship' by-ship)) 'entries' [%o rows])])
 --
 =|  db=state:stead-core
 =.  initialized.db  |
@@ -279,7 +300,7 @@
   =/  response=@t
     ?:  =(route /v1/pending-snapshot)
       ?>  &(=(our.bowl ~zod) =(src.bowl our.bowl))
-      pending-snapshot
+      (pending-snapshot pending now.bowl sup.bowl)
     ?:  =(route /v1/batch-response)
       ?>  &(=(our.bowl ~zod) =(src.bowl our.bowl))
       (canonical:stead-codec (object:stead-codec ~[['protocol' 'stead.fixture-predecessor/1'] ['response' batch-response]]))
@@ -305,26 +326,6 @@
   ?~  found  `this
   ?.  =(src.bowl sender.u.found)  `this
   `this(pending (~(del by pending) route))
-++  pending-snapshot
-  ^-  @t
-  ::  Administrative observations do not prune; expiry is lazy, not a timer.
-  =/  entries  ~(tap by pending)
-  ?>  (lte (lent entries) 64)
-  =/  base  (object:stead-codec ~[['protocol' 'stead.fixture-pending/1'] ['now_ms' (decimal:stead-codec (now-ms now.bowl))] ['total' (decimal:stead-codec (lent entries))]])
-  ?>  ?=([%o *] base)
-  =/  by-ship
-    %-  object:stead-codec
-    %+  turn  ~[~zod ~bus ~nec ~bud]
-    |=  ship=@p
-    =/  name  (scot %p ship)
-    [(cut 3 [1 (dec (met 3 name))] name) (decimal:stead-codec (lent (skim entries |=([key=path val=pending-entry] =(ship sender.val)))))]
-  =/  rows
-    %-  malt
-    %+  turn  entries
-    |=  [route=path val=pending-entry]
-    =/  ducts  (skim ~(tap by sup.bowl) |=([duct [ship=@p watched=path]] =(route watched)))
-    [(rap 3 (turn route |=(part=@t (cat 3 '/' part)))) (object:stead-codec ~[['sender' (scot %p sender.val)] ['expires_at_ms' (decimal:stead-codec (now-ms expires.val))] ['incoming_ducts' (decimal:stead-codec (lent ducts))]])]
-  (canonical:stead-codec [%o (~(put by (~(put by p.base) 'by_ship' by-ship)) 'entries' [%o rows])])
 ++  on-peek   on-peek:def
 ++  on-agent  on-agent:def
 ++  on-arvo   on-arvo:def
