@@ -4,13 +4,13 @@
 =>
 |%
 +$  observation
-  $:  kind=@t source=@p wire=@t mark=@t size=@ud digest=@t
-      provenance=@t at=@ud terminal=?
+  $:  kind=@t  source=@p  wire=@t  mark=@t  size=@ud  digest=@t
+      provenance=@t  at=@ud  terminal=?
   ==
 +$  probe
-  $:  route=@t watch=? leaving=? closed=? facts=@ud kicks=@ud
-      watch-acks=@ud watch-nacks=@ud poke-acks=@ud poke-nacks=@ud
-      pokes=@ud events=(map @ud observation)
+  $:  route=@t  watch=?  leaving=?  closed=?  facts=@ud  kicks=@ud
+      watch-acks=@ud  watch-nacks=@ud  poke-acks=@ud  poke-nacks=@ud
+      pokes=@ud  events=(map @ud observation)
   ==
 +$  saved
   [%stead-observer %1 probes=(map @t probe) count=@ud fault=@t]
