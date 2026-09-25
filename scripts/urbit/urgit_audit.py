@@ -37,6 +37,42 @@ OUTPUT_LIMITS = {
     'report.json': 1024 * 1024,
     'status.json': 4096,
 }
+EXPECTED_CHECKS = (
+    'pinned-native-kernel-ready',
+    'native-codec-matches-stock-Git',
+    'native-pack-accepted-by-stock-Git',
+    'git-stock-pack-vector',
+    'git-delta-pack-vector',
+    'git-ofs-delta-pack-vector',
+    'unauthenticated-push-denied',
+    'push-preserves-original-oid',
+    'clone-fsck-roundtrip',
+    'annotated-tag-oid-preserved',
+    'incremental-fetch-oid-preserved',
+    'stale-client-lease-denied',
+    'corrupt-pack-no-ref-change',
+    'revoked-before-request-push-denied',
+)
+
+
+def validate_evaluator_report(report):
+    """A passing sandbox exit cannot substitute for the frozen check inventory."""
+    if (not isinstance(report, dict) or report.get('status') not in ('passed', 'failed')
+            or not isinstance(report.get('checks'), list)
+            or len(report['checks']) > len(EXPECTED_CHECKS)):
+        raise ValueError('Invalid evaluator report shape')
+    names = []
+    for row in report['checks']:
+        if (not isinstance(row, dict) or type(row.get('passed')) is not bool
+                or not isinstance(row.get('name'), str) or row['name'] not in EXPECTED_CHECKS):
+            raise ValueError('Invalid evaluator check identity or result')
+        names.append(row['name'])
+    if len(set(names)) != len(names):
+        raise ValueError('Duplicate evaluator check identity')
+    if report['status'] == 'passed' and (
+            set(names) != set(EXPECTED_CHECKS) or not all(row['passed'] for row in report['checks'])):
+        raise ValueError('Passed evaluator report requires all fourteen named checks to pass')
+    return report
 
 
 def digest(path):
@@ -291,18 +327,16 @@ def run_sandbox(run, evidence, control, output_handle, args, cpu, limits):
     for name, limit in OUTPUT_LIMITS.items():
         try:
             imported[name] = read_regular_at(output_handle, name, limit)
-            write_bytes(evidence / name, imported[name])
+            # Retain the exact untrusted report even when host validation must
+            # replace its disposition. Failed/partial runs remain inspectable.
+            write_bytes(evidence / ('evaluator-report.json' if name == 'report.json' else name), imported[name])
         except (ValueError, OSError) as error:
             failures.append({'file': name, 'error': type(error).__name__})
     try:
-        report = json.loads(imported.get('report.json', b'null'))
-        if (not isinstance(report, dict) or report.get('status') not in ('passed', 'failed')
-                or not isinstance(report.get('checks'), list) or len(report['checks']) > 32
-                or any(not isinstance(row, dict) or type(row.get('passed')) is not bool
-                       for row in report['checks'])):
-            raise ValueError('Invalid evaluator report shape')
-    except (ValueError, TypeError):
-        report = {'status': 'failed', 'reason': 'evaluator produced no valid report', 'checks': []}
+        report = validate_evaluator_report(json.loads(imported.get('report.json', b'null')))
+    except (ValueError, TypeError) as error:
+        report = {'status': 'failed', 'reason': 'evaluator produced no valid report',
+                  'validation_error': str(error), 'checks': []}
     if failures:
         report.update(status='failed', output_import_failures=failures)
     if stop_reason:
@@ -313,7 +347,8 @@ def run_sandbox(run, evidence, control, output_handle, args, cpu, limits):
     write_json(evidence / 'report.json', report)
     # Only host-created evidence exists here; no sandbox-controlled directory
     # walk or Path.is_file()/digest() pair can follow an injected link.
-    names = sorted(set(imported) | {'report.json', 'provenance.json', 'sandbox-command.json',
+    names = sorted({'evaluator-report.json' if name == 'report.json' else name for name in imported}
+                   | {'report.json', 'provenance.json', 'sandbox-command.json',
                                    'console.log', 'thermal.jsonl', 'execution-guard.json'})
     with directory_fd(evidence) as evidence_handle:
         hashes = {name: hashlib.sha256(read_regular_at(evidence_handle, name, 64 * 1024 * 1024)).hexdigest()

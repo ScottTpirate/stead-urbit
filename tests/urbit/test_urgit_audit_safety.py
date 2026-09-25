@@ -226,25 +226,65 @@ class UrgitOutputImportSafety(unittest.TestCase):
             self.assertTrue(returned_without_writer, 'Untrusted FIFO blocked the host evidence reader')
             self.assertIsInstance(outcomes[0], (ValueError, OSError))
 
-    def test_nonzero_sandbox_exit_cannot_persist_passed_host_report(self):
+    def import_report(self, report, guard=None):
         evidence, control = self.root / 'evidence', self.root / 'control'
-        evidence.mkdir()
-        control.mkdir()
+        evidence.mkdir(exist_ok=True)
+        control.mkdir(exist_ok=True)
         for name in urgit_audit.OUTPUT_LIMITS:
             (self.output / name).write_bytes(b'{}')
-        (self.output / 'report.json').write_text(json.dumps({'status': 'passed', 'checks': [{'passed': True}]}))
+        raw = (json.dumps(report) + '\n').encode()
+        (self.output / 'report.json').write_bytes(raw)
         for name in ('provenance.json', 'sandbox-command.json'):
             (evidence / name).write_bytes(b'{}')
-        failed_guard = {'status': 'failed', 'exit_code': 17,
-                        'reason': 'Owned sandbox exited unsuccessfully', 'events': []}
+        guard = guard or {'status': 'completed', 'exit_code': 0, 'reason': None, 'events': []}
         with urgit_audit.directory_fd(self.output) as parent:
             # The shared guard is mocked; output import/report writes and
             # final checksum generation execute against the synthetic files.
-            with patch.object(urgit_audit.execution_policy, 'run_guarded', return_value=failed_guard), redirect_stdout(io.StringIO()):
+            with patch.object(urgit_audit.execution_policy, 'run_guarded', return_value=guard), redirect_stdout(io.StringIO()):
                 result = urgit_audit.run_sandbox(self.root, evidence, control, parent, ['not-executed'], 0,
                     {'start_temperature_c': 75, 'stop_temperature_c': 90, 'total_timeout_seconds': 2100})
+        self.assertEqual((evidence / 'evaluator-report.json').read_bytes(), raw)
+        hashes = json.loads((evidence / 'SHA256SUMS.json').read_text())
+        self.assertEqual(hashes['evaluator-report.json'], hashlib.sha256(raw).hexdigest())
+        return result, json.loads((evidence / 'report.json').read_text())
+
+    def passed_report(self):
+        return {'status': 'passed', 'checks': [
+            {'name': name, 'passed': True} for name in urgit_audit.EXPECTED_CHECKS]}
+
+    def test_nonzero_sandbox_exit_cannot_persist_passed_host_report(self):
+        result, report = self.import_report(self.passed_report(), {
+            'status': 'failed', 'exit_code': 17,
+            'reason': 'Owned sandbox exited unsuccessfully', 'events': []})
         self.assertEqual(result, 1)
-        self.assertEqual(json.loads((evidence / 'report.json').read_text())['status'], 'failed')
+        self.assertEqual(report['status'], 'failed')
+
+    def test_only_exact_nonempty_passing_inventory_can_pass(self):
+        valid = self.passed_report()
+        malformed = {
+            'empty': [],
+            'missing': valid['checks'][:-1],
+            'duplicate': valid['checks'][:-1] + [valid['checks'][0]],
+            'unknown': valid['checks'][:-1] + [{'name': 'invented', 'passed': True}],
+            'false': valid['checks'][:-1] + [{'name': urgit_audit.EXPECTED_CHECKS[-1], 'passed': False}],
+            'nonboolean': valid['checks'][:-1] + [{'name': urgit_audit.EXPECTED_CHECKS[-1], 'passed': 1}],
+        }
+        for label, checks in malformed.items():
+            with self.subTest(label=label):
+                result, report = self.import_report({'status': 'passed', 'checks': checks})
+                self.assertEqual(result, 1)
+                self.assertEqual(report['status'], 'failed')
+        result, report = self.import_report(valid)
+        self.assertEqual(result, 0)
+        self.assertEqual(report['status'], 'passed')
+        self.assertEqual(len(report['checks']), 14)
+
+    def test_failed_partial_report_preserves_actual_check_results(self):
+        checks = [{'name': urgit_audit.EXPECTED_CHECKS[0], 'passed': True},
+                  {'name': urgit_audit.EXPECTED_CHECKS[1], 'passed': False}]
+        result, report = self.import_report({'status': 'failed', 'checks': checks})
+        self.assertEqual(result, 1)
+        self.assertEqual(report['checks'], checks)
 
 
 class UrgitCredentialRedactionSafety(unittest.TestCase):
