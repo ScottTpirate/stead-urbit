@@ -15,6 +15,10 @@ import threading
 import time
 import urllib.error
 import urllib.request
+import sys
+
+sys.path.insert(0, str(Path(__file__).parent))
+import bootstrap
 
 ROOT = Path('/work')
 INPUT = Path('/input')
@@ -252,11 +256,14 @@ def main():
     routes = Path('/proc/net/route').read_text().splitlines()[1:]
     if any(line.split()[1] == '00000000' for line in routes):
         raise ValueError('Network namespace has a default route')
-    args = ['/runtime/vere', '-t', '-F', 'zod', '-B', '/runtime/pill', '-A', '/kernel/pkg/arvo',
-            '--loom', str(PIN['limits']['loom_exponent']), '--no-dock', '--http-port', '8080',
-            '-b', '127.0.0.1', '-c', '/work/zod']
+    baseline = json.loads((INPUT / 'bootstrap.json').read_text())
+    args = bootstrap.argv(baseline['mode'], PIN['limits']['loom_exponent'])
+    if baseline['mode'] == 'verified-stopped-fake-seed':
+        shutil.copytree(INPUT / 'seed-zod', ROOT / 'zod')
+        bootstrap.verify_work(ROOT / 'zod', baseline)
     report = {'status': 'failed', 'scope': PIN['profile'], 'checks': CHECKS,
-              'excluded_claims': PIN['excluded_claims'], 'runtime_argv': args}
+              'excluded_claims': PIN['excluded_claims'], 'runtime_argv': args,
+              'bootstrap': baseline}
     reader = None
     signal.signal(signal.SIGUSR1, interrupt_control)
     threading.Thread(target=watch_stop, daemon=True).start()
@@ -287,6 +294,12 @@ def main():
         else:
             raise TimeoutError('Pinned fake ship boot deadline')
         check('pinned-native-kernel-ready', ready.strip() == '%' + str(TOOLCHAIN['kernel']['kelvin']), result=ready.strip())
+        identity = expression('our')
+        # Clay's empty-desk %d lists all local desks; Gall %f lists non-nuked
+        # agent incarnations, including suspended ones. These read native state.
+        clean = expression('=/  desks=(set @tas)  .^((set @tas) %cd /(scot %p our)//(scot %da now))  =/  apps=(map @tas @)  .^((map @tas @) %gf /(scot %p our)//(scot %da now)/$)  ?&(!((~(has in desks) %urgit)) !((~(has by apps) %urgit)))')
+        bootstrap.validate(identity, ready, clean)
+        report['native_baseline'] = {'identity': identity, 'kelvin': ready, 'clean_urgit_state': clean}
         phase('compiling pinned native candidate desk')
         hood('new-desk %urgit')
         hood('mount %urgit')

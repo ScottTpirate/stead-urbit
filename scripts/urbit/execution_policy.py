@@ -343,6 +343,15 @@ def run_guarded(command_factory, *, root, label, policy=None, timeout=7200,
                 publish(initial)
                 cpu = max(os.sched_getaffinity(0))
                 command = command_factory(control, run_id)
+                # A verified stopped-seed snapshot may take time. Re-admit at
+                # the actual launch boundary; never launch on an aged sample.
+                launch_sample = sampler()
+                event('launch-sample', sample=asdict(launch_sample))
+                validate_sample(launch_sample, policy, preflight=True,
+                                expected_inventory=initial.readings_c)
+                if cancel.is_set() or (stop_requested is not None and stop_requested()):
+                    raise GuardError('Operator stop requested during launch preparation')
+                publish(launch_sample)
                 argv = scope_command(command, control, run_id, cpu, policy, owner.descriptor)
                 report['argv'] = argv
                 event('launch', cpu_affinity=[cpu])

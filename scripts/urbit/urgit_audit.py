@@ -8,7 +8,7 @@ Every invocation leaves its marked synthetic evidence below ignored .runtime/.
 from __future__ import annotations
 
 import argparse
-from contextlib import contextmanager
+from contextlib import contextmanager, ExitStack
 from datetime import datetime, timezone
 import hashlib
 import json
@@ -26,6 +26,7 @@ import urllib.request
 
 import toolchain
 import execution_policy
+import urgit_seed
 
 ROOT = Path(__file__).resolve().parents[2]
 PIN = ROOT / 'specs/urbit/urgit-candidate.lock.json'
@@ -259,7 +260,7 @@ def execute():
     # Copy only our Python helpers, never source from the candidate into Git.
     support = inputs / 'support'
     support.mkdir()
-    for source in sorted(HELPERS.glob('*.py')):
+    for source in sorted(HELPERS.glob('*.py')) + [Path(urgit_seed.__file__)]:
         no_links(source)
         shutil.copyfile(source, support / source.name)
     helpers = {p.name: digest(p) for p in support.glob('*.py')}
@@ -276,6 +277,7 @@ def execute():
         'candidate_lock_sha256': hashlib.sha256(pin_bytes).hexdigest(),
         'toolchain_lock_sha256': hashlib.sha256(runtime_bytes).hexdigest(),
         'helpers_sha256': helpers, 'runner_sha256': digest(Path(__file__)),
+        'seed_helper_sha256': digest(Path(urgit_seed.__file__)),
         'source': source_info, 'cpu_affinity': [cpu], 'loom_exponent': limits['loom_exponent'],
         'host_tools_sha256': {p: digest(Path(p)) for p in ('/usr/bin/git', '/usr/bin/bwrap', '/usr/bin/python3')},
         'uname': list(os.uname()), 'initial_temperatures_c': initial_readings,
@@ -303,7 +305,14 @@ def execute():
 
 
 def run_sandbox(run, evidence, control, output_handle, args, cpu, limits):
+    lifetime = ExitStack()
+    bootstrap = None
     def command(guard_control, _run_id):
+        nonlocal bootstrap
+        bootstrap = lifetime.enter_context(urgit_seed.snapshot(
+            ROOT, run / 'input', digest(toolchain.LOCK_PATH)))
+        write_json(run / 'input/bootstrap.json', bootstrap)
+        write_json(evidence / 'bootstrap.json', bootstrap)
         result = list(args)
         # The evaluator sees only this host-controlled read-only STOP directory,
         # never the common lock, evidence parent or another writable alias.
@@ -312,10 +321,22 @@ def run_sandbox(run, evidence, control, output_handle, args, cpu, limits):
             raise ValueError('Candidate control mount is not the reviewed read-only boundary')
         result[index] = str(guard_control)
         return result
-    with (evidence / 'console.log').open('wb') as console:
-        guarded = execution_policy.run_guarded(command, root=ROOT, label='urgit',
-                    policy=execution_policy.policy_from_limits(limits),
-                    timeout=limits['total_timeout_seconds'], console=console)
+    seed_error = None
+    try:
+        with (evidence / 'console.log').open('wb') as console:
+            guarded = execution_policy.run_guarded(command, root=ROOT, label='urgit',
+                        policy=execution_policy.policy_from_limits(limits),
+                        timeout=limits['total_timeout_seconds'], console=console)
+    finally:
+        try:
+            lifetime.close()
+        except (OSError, ValueError) as error:
+            seed_error = str(error)
+    if bootstrap is None:
+        write_json(evidence / 'bootstrap.json', {'mode': 'refused', 'status': 'failed'})
+    else:
+        write_json(evidence / 'bootstrap.json', {**bootstrap,
+                   'source_and_input_unchanged': seed_error is None, 'error': seed_error})
     write_json(evidence / 'execution-guard.json', guarded)
     with (evidence / 'thermal.jsonl').open('w') as thermal:
         for item in guarded['events']:
@@ -341,6 +362,8 @@ def run_sandbox(run, evidence, control, output_handle, args, cpu, limits):
         report.update(status='failed', output_import_failures=failures)
     if stop_reason:
         report.update(status='failed', host_stop_reason=stop_reason)
+    if seed_error:
+        report.update(status='failed', bootstrap_validation_error=seed_error)
     report['sandbox_exit_code'] = guarded['exit_code']
     if guarded['exit_code'] != 0:
         report.update(status='failed', reason='sandbox exited unsuccessfully')
@@ -349,7 +372,7 @@ def run_sandbox(run, evidence, control, output_handle, args, cpu, limits):
     # walk or Path.is_file()/digest() pair can follow an injected link.
     names = sorted({'evaluator-report.json' if name == 'report.json' else name for name in imported}
                    | {'report.json', 'provenance.json', 'sandbox-command.json',
-                                   'console.log', 'thermal.jsonl', 'execution-guard.json'})
+                                   'console.log', 'thermal.jsonl', 'execution-guard.json', 'bootstrap.json'})
     with directory_fd(evidence) as evidence_handle:
         hashes = {name: hashlib.sha256(read_regular_at(evidence_handle, name, 64 * 1024 * 1024)).hexdigest()
                   for name in names}
