@@ -1,0 +1,18 @@
+{
+  "classification": "host-static-mocked-checks; no Hoon compilation",
+  "source_commit": "ed1bd89da8eb3473d89c720fba1446714a47c216",
+  "command": [
+    "env",
+    "PYTHONDONTWRITEBYTECODE=1",
+    "make",
+    "check"
+  ],
+  "started_utc": "2026-09-25T00:17:44.284425+00:00",
+  "elapsed_seconds": 4.568,
+  "exit_code": 0,
+  "stdout_file": "latest-source-host-check.log",
+  "stdout_sha256": "a2e5dab370af254312284bf60f98997aec86cc4952f48645a0d5ba8ec67db51c",
+  "native_executed": false,
+  "native_callbacks_mocked": true,
+  "git_status_before_docs_commit": " M README.md\n M docs/urbit/TEST_RESULTS.md\n?? docs/urbit/COOLING_CHECKPOINT_20260924.md\n?? docs/urbit/evidence/2026-09-24/cooling-retry/\n?? docs/urbit/reviews/2026-09-24-cooling-retry.md\n"
+}

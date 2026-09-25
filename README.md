@@ -2,9 +2,9 @@
 
 Status: **Phase 1 qualification remains open. Earlier Work/Docs code has native execution evidence; the current hardened core still needs a passing native run. Browser login, a full Git forge and production access remain separate gates.**
 
-Latest [development checkpoint](docs/urbit/DEVELOPMENT_CHECKPOINT_20260924.md):
-local Linux commands and host checks improved; the guarded native run stopped at
-its thermal ceiling. No phase completion or browser deployment is claimed.
+Latest [cooling and build checkpoint](docs/urbit/COOLING_CHECKPOINT_20260924.md):
+290 host tests pass. Real native framing and cleanup passed; a Hoon type error
+was corrected but still needs native verification. Phases 0/1 remain open.
 
 An independent derivative of `ScottTpirate/stead`, preserving that repository's main-line history through `3d47f0172a41beebb31f5c3a7df133cc1d4b1ead` (inspected September 12, 2026). The original repository is not modified.
 

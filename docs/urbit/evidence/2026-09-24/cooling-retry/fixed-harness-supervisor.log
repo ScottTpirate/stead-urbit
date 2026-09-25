@@ -1,0 +1,43 @@
+{"utc": "2026-09-24T23:59:01Z", "command": "launch zod", "result": {"argv": ["/runtime/bin/vere-v4.6-linux-x86_64", "-t", "-L", "--no-dock", "--loom", "31", "-b", "127.0.0.1", "--http-port", "18080", "/state/live/zod"], "pid": 5}}
+{"utc": "2026-09-24T23:59:04Z", "command": "zod: zuse", "result": "%408\n"}
+{"utc": "2026-09-24T23:59:04Z", "command": "zod: |mount %base", "result": ">="}
+{"utc": "2026-09-24T23:59:04Z", "command": "launch bus", "result": {"argv": ["/runtime/bin/vere-v4.6-linux-x86_64", "-t", "-L", "--no-dock", "--loom", "31", "-b", "127.0.0.1", "--http-port", "18081", "/state/live/bus"], "pid": 17}}
+{"utc": "2026-09-24T23:59:07Z", "command": "bus: zuse", "result": "%408\n"}
+{"utc": "2026-09-24T23:59:07Z", "command": "bus: |mount %base", "result": ">="}
+{"utc": "2026-09-24T23:59:07Z", "command": "launch nec", "result": {"argv": ["/runtime/bin/vere-v4.6-linux-x86_64", "-t", "-L", "--no-dock", "--loom", "31", "-b", "127.0.0.1", "--http-port", "18082", "/state/live/nec"], "pid": 27}}
+{"utc": "2026-09-24T23:59:10Z", "command": "nec: zuse", "result": "%408\n"}
+{"utc": "2026-09-24T23:59:10Z", "command": "nec: |mount %base", "result": ">="}
+{"utc": "2026-09-24T23:59:10Z", "command": "launch bud", "result": {"argv": ["/runtime/bin/vere-v4.6-linux-x86_64", "-t", "-L", "--no-dock", "--loom", "31", "-b", "127.0.0.1", "--http-port", "18083", "/state/live/bud"], "pid": 37}}
+{"utc": "2026-09-24T23:59:13Z", "command": "bud: zuse", "result": "%408\n"}
+{"utc": "2026-09-24T23:59:13Z", "command": "bud: |mount %base", "result": ">="}
+{"utc": "2026-09-24T23:59:29Z", "command": "shutdown zod", "result": {"exit_code": 0, "forced": false}}
+{"utc": "2026-09-24T23:59:29Z", "command": "shutdown bus", "result": {"exit_code": 0, "forced": false}}
+{"utc": "2026-09-24T23:59:29Z", "command": "shutdown nec", "result": {"exit_code": 0, "forced": false}}
+{"utc": "2026-09-24T23:59:33Z", "command": "shutdown bud", "result": {"exit_code": 0, "forced": false}}
+{"utc": "2026-09-24T23:59:38Z", "command": "launch zod", "result": {"argv": ["/runtime/bin/vere-v4.6-linux-x86_64", "-t", "-L", "--no-dock", "--loom", "31", "-b", "127.0.0.1", "--http-port", "18080", "/state/live/zod"], "pid": 56}}
+{"utc": "2026-09-24T23:59:42Z", "command": "zod: zuse", "result": "%408\n"}
+{"utc": "2026-09-24T23:59:42Z", "command": "launch bus", "result": {"argv": ["/runtime/bin/vere-v4.6-linux-x86_64", "-t", "-L", "--no-dock", "--loom", "31", "-b", "127.0.0.1", "--http-port", "18081", "/state/live/bus"], "pid": 63}}
+{"utc": "2026-09-24T23:59:45Z", "command": "bus: zuse", "result": "%408\n"}
+{"utc": "2026-09-24T23:59:45Z", "command": "launch nec", "result": {"argv": ["/runtime/bin/vere-v4.6-linux-x86_64", "-t", "-L", "--no-dock", "--loom", "31", "-b", "127.0.0.1", "--http-port", "18082", "/state/live/nec"], "pid": 70}}
+{"utc": "2026-09-24T23:59:49Z", "command": "nec: zuse", "result": "%408\n"}
+{"utc": "2026-09-24T23:59:49Z", "command": "launch bud", "result": {"argv": ["/runtime/bin/vere-v4.6-linux-x86_64", "-t", "-L", "--no-dock", "--loom", "31", "-b", "127.0.0.1", "--http-port", "18083", "/state/live/bud"], "pid": 77}}
+{"utc": "2026-09-24T23:59:52Z", "command": "bud: zuse", "result": "%408\n"}
+Traceback (most recent call last):
+  File "/code/core_check.py", line 96, in run
+    command('+' + probe, expected)
+    ~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^
+  File "/code/core_check.py", line 62, in command
+    check(source, result.strip() == expected)
+    ~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/code/core_check.py", line 55, in check
+    raise AssertionError(name)
+AssertionError: +stead-build-probe
+{"utc": "2026-09-25T00:00:07Z", "command": "shutdown zod", "result": {"exit_code": 0, "forced": false}}
+{"utc": "2026-09-25T00:00:07Z", "command": "shutdown bus", "result": {"exit_code": 0, "forced": false}}
+{"utc": "2026-09-25T00:00:07Z", "command": "shutdown nec", "result": {"exit_code": 0, "forced": false}}
+{"utc": "2026-09-25T00:00:09Z", "command": "shutdown bud", "result": {"exit_code": 0, "forced": false}}
+{"utc": "2026-09-25T00:00:09Z", "command": "shutdown zod", "result": {"exit_code": 0, "forced": false}}
+{"utc": "2026-09-25T00:00:09Z", "command": "shutdown bus", "result": {"exit_code": 0, "forced": false}}
+{"utc": "2026-09-25T00:00:09Z", "command": "shutdown nec", "result": {"exit_code": 0, "forced": false}}
+{"utc": "2026-09-25T00:00:09Z", "command": "shutdown bud", "result": {"exit_code": 0, "forced": false}}
+{"guard_status": "completed", "guard_report": "/home/skilgore/stead-urbit/.runtime/execution-runs/four-fakes-l8c2r_ho/report.json"}

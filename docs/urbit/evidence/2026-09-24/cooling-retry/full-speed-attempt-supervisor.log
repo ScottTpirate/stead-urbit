@@ -1,0 +1,52 @@
+{"utc": "2026-09-24T23:50:09Z", "command": "launch zod", "result": {"argv": ["/runtime/bin/vere-v4.6-linux-x86_64", "-t", "-L", "--no-dock", "--loom", "31", "-b", "127.0.0.1", "--http-port", "18080", "/state/live/zod"], "pid": 5}}
+{"utc": "2026-09-24T23:50:13Z", "command": "zod: zuse", "result": "%408\n"}
+{"utc": "2026-09-24T23:50:13Z", "command": "zod: |mount %base", "result": ">="}
+{"utc": "2026-09-24T23:50:13Z", "command": "launch bus", "result": {"argv": ["/runtime/bin/vere-v4.6-linux-x86_64", "-t", "-L", "--no-dock", "--loom", "31", "-b", "127.0.0.1", "--http-port", "18081", "/state/live/bus"], "pid": 17}}
+{"utc": "2026-09-24T23:50:16Z", "command": "bus: zuse", "result": "%408\n"}
+{"utc": "2026-09-24T23:50:16Z", "command": "bus: |mount %base", "result": ">="}
+{"utc": "2026-09-24T23:50:16Z", "command": "launch nec", "result": {"argv": ["/runtime/bin/vere-v4.6-linux-x86_64", "-t", "-L", "--no-dock", "--loom", "31", "-b", "127.0.0.1", "--http-port", "18082", "/state/live/nec"], "pid": 27}}
+{"utc": "2026-09-24T23:50:19Z", "command": "nec: zuse", "result": "%408\n"}
+{"utc": "2026-09-24T23:50:19Z", "command": "nec: |mount %base", "result": ">="}
+{"utc": "2026-09-24T23:50:19Z", "command": "launch bud", "result": {"argv": ["/runtime/bin/vere-v4.6-linux-x86_64", "-t", "-L", "--no-dock", "--loom", "31", "-b", "127.0.0.1", "--http-port", "18083", "/state/live/bud"], "pid": 37}}
+{"utc": "2026-09-24T23:50:22Z", "command": "bud: zuse", "result": "%408\n"}
+{"utc": "2026-09-24T23:50:22Z", "command": "bud: |mount %base", "result": ">="}
+Traceback (most recent call last):
+  File "/code/core_check.py", line 70, in run
+    report['evaluator_controls'] = core_conn.evaluator_controls(binary)
+                                   ~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^
+  File "/code/core_conn.py", line 89, in evaluator_controls
+    frame, encode_stderr = evaluate(binary, '-jn', noun)
+                           ~~~~~~~~^^^^^^^^^^^^^^^^^^^^^
+  File "/code/core_conn.py", line 18, in evaluate
+    result = subprocess.run([str(binary), 'eval', '--loom', '29', flags], input=data,
+                            stdout=output, stderr=diagnostics, timeout=30, check=False)
+  File "/usr/lib/python3.14/subprocess.py", line 557, in run
+    stdout, stderr = process.communicate(input, timeout=timeout)
+                     ~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.14/subprocess.py", line 1221, in communicate
+    stdout, stderr = self._communicate(input, endtime, timeout)
+                     ~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.14/subprocess.py", line 2179, in _communicate
+    self.wait(timeout=self._remaining_time(endtime))
+    ~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.14/subprocess.py", line 1279, in wait
+    return self._wait(timeout=timeout)
+           ~~~~~~~~~~^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.14/subprocess.py", line 2076, in _wait
+    raise TimeoutExpired(self.args, timeout)
+subprocess.TimeoutExpired: Command '['/runtime/bin/vere-v4.6-linux-x86_64', 'eval', '--loom', '29', '-jn']' timed out after 30 seconds
+{"utc": "2026-09-24T23:50:55Z", "command": "shutdown zod", "result": {"exit_code": 0, "forced": false}}
+{"utc": "2026-09-24T23:50:55Z", "command": "shutdown bus", "result": {"exit_code": 0, "forced": false}}
+{"utc": "2026-09-24T23:50:55Z", "command": "shutdown nec", "result": {"exit_code": 0, "forced": false}}
+{"utc": "2026-09-24T23:50:55Z", "command": "shutdown bud", "result": {"exit_code": -15, "forced": false}}
+{"utc": "2026-09-24T23:50:55Z", "command": "shutdown zod", "result": {"exit_code": 0, "forced": false}}
+{"utc": "2026-09-24T23:50:55Z", "command": "shutdown bus", "result": {"exit_code": 0, "forced": false}}
+{"utc": "2026-09-24T23:50:55Z", "command": "shutdown nec", "result": {"exit_code": 0, "forced": false}}
+{"utc": "2026-09-24T23:50:55Z", "command": "shutdown bud", "result": {"exit_code": -15, "forced": false}}
+{"utc": "2026-09-24T23:50:55Z", "command": "requested fixture stop", "result": {"error": null}}
+{"utc": "2026-09-24T23:50:55Z", "command": "shutdown zod", "result": {"exit_code": 0, "forced": false}}
+{"utc": "2026-09-24T23:50:55Z", "command": "shutdown bus", "result": {"exit_code": 0, "forced": false}}
+{"utc": "2026-09-24T23:50:55Z", "command": "shutdown nec", "result": {"exit_code": 0, "forced": false}}
+{"utc": "2026-09-24T23:50:55Z", "command": "shutdown bud", "result": {"exit_code": -15, "forced": false}}
+{"utc": "2026-09-24T23:50:55Z", "command": "guard shutdown failure", "result": {"error": "bud exit was not clean: -15; forced=False"}}
+{"guard_status": "completed", "guard_report": "/home/skilgore/stead-urbit/.runtime/execution-runs/four-fakes-kyxk138c/report.json"}

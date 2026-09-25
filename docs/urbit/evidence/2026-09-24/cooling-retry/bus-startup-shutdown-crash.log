@@ -1,0 +1,31 @@
+urbit 4.6
+boot: home is /state/live/bus
+loom: mapped 2048MB
+lite: arvo formula 4ce68411
+lite: core 641296f
+lite: final state 641296f
+disk: loaded epoch 0i0
+loom: mapped 2048MB
+boot: protected loom
+live: mapped: MB/222.756.864
+boot: installed 2178 jets
+vere: checking version compatibility
+loom: external fault: 0x588 (0x200000000 : 0x280000000)
+
+Stacktrace:
+0   u3m_stacktrace                      pkg/noun/manage.c:870
+1   u3m_fault                           pkg/noun/manage.c:2315
+2   sigsegv_handler                     .zig-cache/p/N-V-__8AAHQhHwCCMyKUtQhO0AMsY182In-wQIwXVhenOql5/src/handler-unix.c:269
+3   -                                   /home/runner/work/_temp/d95d56a1-5c86-4115-9d59-87f908994288/zig-x86_64-linux-0.15.2/lib/libc/musl/src/signal/x86_64/restore.s:
+4   _lord_plea_ripe                     pkg/vere/lord.c:276
+5   _lord_on_plea                       pkg/vere/lord.c:569
+6   _newt_meat_poke                     pkg/vere/newt.c:70
+7   _newt_read_cb                       pkg/vere/newt.c:200
+8   uv__read                            .zig-cache/p/N-V-__8AAH34QwB6wi5eQK_lFbfDGSN3hRE8l-6Ep198ZsGg/src/unix/stream.c:1148
+9   uv__stream_io                       .zig-cache/p/N-V-__8AAH34QwB6wi5eQK_lFbfDGSN3hRE8l-6Ep198ZsGg/src/unix/stream.c:1208
+10  uv__io_poll                         .zig-cache/p/N-V-__8AAH34QwB6wi5eQK_lFbfDGSN3hRE8l-6Ep198ZsGg/src/unix/linux.c:1565
+11  uv_run                              .zig-cache/p/N-V-__8AAH34QwB6wi5eQK_lFbfDGSN3hRE8l-6Ep198ZsGg/src/unix/core.c:460
+12  u3_king_commence                    pkg/vere/king.c:1093
+13  main                                pkg/vere/main.c:3389
+14  libc_start_main_stage2              /home/runner/work/_temp/d95d56a1-5c86-4115-9d59-87f908994288/zig-x86_64-linux-0.15.2/lib/libc/musl/src/env/__libc_start_main.c:
+
