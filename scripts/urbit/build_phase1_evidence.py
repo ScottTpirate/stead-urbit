@@ -287,6 +287,68 @@ def lifecycle(report, evidence):
     require(len(stops) == 1 and stops[0]['result'] == {'exit_code': 0, 'forced': False}, 'Missing graceful native shutdown')
 
 
+def concurrent_records(retained, requests, results):
+    """Verify the exact two observed call intervals, never infer overlap from CAS."""
+    release = retained.report.get('concurrent_release')
+    rows = retained.report.get('concurrent_submissions')
+    require(isinstance(release, dict) and set(release) == {
+        'protocol', 'clock', 'participants', 'barrier_timeout_seconds', 'released_ns'}
+        and release['protocol'] == 'stead.concurrent-native-calls/1'
+        and release['clock'] == 'time.monotonic_ns'
+        and type(release['participants']) is int and release['participants'] == 2
+        and type(release['barrier_timeout_seconds']) is int and release['barrier_timeout_seconds'] == 10,
+        'Missing exact two-worker barrier release')
+    require(isinstance(rows, list) and len(rows) == len(requests) == len(results) == 2
+            and [request[0] for request in requests] == ['bus', 'zod'],
+            'Wrong concurrent writer inventory')
+
+    def clock(value):
+        require(type(value) is int and 0 < value < 2**63, 'Invalid finite monotonic call time')
+        return value
+
+    released = clock(release['released_ns'])
+    indices, intervals, starts, finishes = [], [], [], []
+    fields = {'sender', 'command', 'route', 'input_sha256', 'ready_ns',
+              'started_ns', 'finished_ns', 'response', 'interval'}
+    for row, (ship, command), result in zip(rows, requests, results, strict=True):
+        require(isinstance(row, dict) and set(row) == fields
+                and row['sender'] == ship and row['command'] == command
+                and row['route'] == DS.command_route(ship, command)
+                and row['input_sha256'] == sha(QA.canonical(command)),
+                'Concurrent submission differs from exact requested command')
+        ready, started, finished = (clock(row[key]) for key in ('ready_ns', 'started_ns', 'finished_ns'))
+        require(ready <= released <= started < finished
+                and released - ready <= 10_000_000_000
+                and finished - released <= 180_000_000_000,
+                'Reversed, unbounded or uncoordinated native call interval')
+        require(row['response'] == result, 'Concurrent response differs from replayed actual outcome')
+        index = retained.bind_response(result)
+        require(isinstance(row['interval'], dict) and set(row['interval']) == {'transcript'},
+                'Missing actual retained call interval')
+        interval_ref = row['interval']['transcript']
+        require(isinstance(interval_ref, dict) and type(interval_ref.get('line')) is int
+                and interval_ref['line'] > result['native']['transcript']['line'],
+                'Call interval must follow its completed response')
+        interval = retained.record(interval_ref)
+        require(interval == {'kind': 'concurrent-call-interval', 'release': release,
+            **{key: row[key] for key in ('sender', 'route', 'input_sha256',
+                                        'ready_ns', 'started_ns', 'finished_ns')},
+            'response_transcript': result['native']['transcript']},
+            'Claimed overlap differs from actual retained timing record')
+        actual = retained.commands[index]
+        require((actual['ship'], actual['mode'], actual['route'], actual['request']) == (
+            ship, 'command', row['route'], command_source('command', row['route'], QA.canonical(command))),
+            'Concurrent interval is tied to the wrong native exchange')
+        indices.append(index)
+        intervals.append(interval_ref['line'])
+        starts.append(started)
+        finishes.append(finished)
+    require(len(set(indices)) == 2, 'One native exchange cannot represent two concurrent calls')
+    require(len(set(intervals)) == 2, 'Distinct observed call interval records are required')
+    require(max(starts) < min(finishes), 'Native command call intervals do not overlap')
+    return indices
+
+
 def export_records(value, ship, project, container, snapshot, cwd):
     """Reconstruct the recorded stock-Git journey from already bound native reads.
 
@@ -629,6 +691,7 @@ class CoreStages:
 
     def concurrency(self):
         ids, before = self.corpus['fixture_ids'], self.replay.snapshot()
+        before_index = max(self.replay.used)
         template = self.corpus['commands']['journal_first_project_followup']
         requests, results = [], []
         for index, ship in enumerate(('bus', 'zod')):
@@ -637,6 +700,8 @@ class CoreStages:
             cmd['payload']['title'] = 'Concurrent synthetic writer ' + ship
             requests.append((ship, cmd))
             results.append(self.replay.call(ship, 'command', DS.command_route(ship, cmd), QA.canonical(cmd)))
+        indices = concurrent_records(self.retained, requests, results)
+        self.check('actual-two-call-overlap-after-baseline', before_index < min(indices))
         accepted = [i for i, result in enumerate(results) if result['json'] and result['json'].get('status') == 'accepted']
         rejected = [result for result in results if result['json'] == {'protocol': 'stead.result/2', 'status': 'rejected', 'error': 'revision_conflict'}]
         self.check('two-principal-one-winner', len(accepted) == len(rejected) == 1)
@@ -646,6 +711,7 @@ class CoreStages:
         view = self.replay.call('nec', 'read', f"/v2/work/{ids['project']}/{ids['work_a']}")
         self.check('reader-sees-winner', view['json']['payload'] == requests[winner][1]['payload'] and view['json']['resource_revision'] == '5')
         after = self.replay.snapshot()
+        self.check('concurrent-results-precede-final-snapshot', max(indices) < max(self.replay.used))
         self.check('one-durable-acceptance', int(after['journal_events']) == int(before['journal_events']) + 1
                    and int(after['receipts']) == int(before['receipts']) + 1 and after['objects'] == before['objects'])
         path = f"/v2/document/{ids['project']}/{ids['bus_container']}/{ids['document_a']}"

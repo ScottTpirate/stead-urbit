@@ -8,6 +8,7 @@ from pathlib import Path
 import socket
 import sys
 import tempfile
+import threading
 import time
 import unittest
 from unittest.mock import patch
@@ -15,6 +16,7 @@ from unittest.mock import patch
 ROOT = Path(__file__).resolve().parents[2]
 sys.path.insert(0, str(ROOT / 'scripts/urbit'))
 import build_phase1_evidence as B
+import core_test
 
 
 def authored(value=None, *, change_record=None, change_summary=None):
@@ -90,7 +92,191 @@ def authored_export():
         ('bus', project, container, None, cwd)
 
 
+def authored_concurrency(*, finishes=(170, 180)):
+    """Two explicit overlapping format records, never observed native calls."""
+    corpus = B.decode((ROOT / 'specs/urbit/fixtures/native-cases-v2.json').read_bytes())
+    requests, summaries, results, lines = [], [], [], []
+    for index, ship in enumerate(('bus', 'zod')):
+        command = copy.deepcopy(corpus['commands']['journal_first_project_followup'])
+        command.update(request_id=f'019939ba-4000-7000-8000-00000000800{index}', expected_revision='4')
+        command['payload']['title'] = 'Authored concurrent interval fixture ' + ship
+        requests.append((ship, command))
+        raw = B.QA.canonical(command)
+        route = B.DS.command_route(ship, command)
+        value = {'status': 'AUTHORED_NOT_NATIVE', 'sender': ship}
+        output = B.QA.canonical(value).decode()
+        record = {'ship': ship, 'mode': 'command', 'route': route,
+                  'input_sha256': B.sha(raw), 'input_bytes': len(raw),
+                  'request': B.command_source('command', route, raw),
+                  'response_frame_sha256': str(index + 1) * 64,
+                  'stdout': "[32 %avow 0 %noun %stead-core-result '" + output.encode().hex() + "']",
+                  'stderr': '', 'outcome': {'raw': output, 'json': value}}
+        line = (json.dumps(record, separators=(',', ':')) + '\n').encode()
+        lines.append(line)
+        summary = {key: record[key] for key in ('ship', 'mode', 'route', 'input_sha256', 'input_bytes',
+                                                'response_frame_sha256', 'stdout', 'stderr')}
+        summary.update(request_sha256=B.sha(record['request'].encode()), transcript={
+            'artifact': 'concurrent-authored.jsonl.gz', 'line': index + 1,
+            'record_sha256': B.sha(line), 'record_bytes': len(line)})
+        summaries.append(summary)
+        results.append({**record['outcome'], 'native': copy.deepcopy(summary)})
+    transport = b''.join(lines)
+    compressed = gzip.compress(transport, mtime=0)
+    report = {'classification': 'AUTHORED_NOT_NATIVE', 'commands': summaries,
+              'concurrent_release': {'protocol': 'stead.concurrent-native-calls/1',
+                  'clock': 'time.monotonic_ns', 'participants': 2,
+                  'barrier_timeout_seconds': 10, 'released_ns': 107},
+              'concurrent_submissions': [
+                  {'sender': ship, 'command': command, 'route': summaries[i]['route'],
+                   'input_sha256': summaries[i]['input_sha256'], 'ready_ns': 100 + i,
+                   'started_ns': 110 + 10 * i, 'finished_ns': finishes[i],
+                   'response': copy.deepcopy(results[i])} for i, (ship, command) in enumerate(requests)],
+              'transport_artifact': {'file': 'concurrent-authored.jsonl.gz', 'encoding': 'gzip-jsonl',
+                  'records': 2, 'uncompressed_bytes': len(transport), 'uncompressed_sha256': B.sha(transport),
+                  'sha256': B.sha(compressed)}}
+    for row in report['concurrent_submissions']:
+        interval = {'kind': 'concurrent-call-interval', 'release': copy.deepcopy(report['concurrent_release']),
+                    **{key: row[key] for key in ('sender', 'route', 'input_sha256',
+                                                'ready_ns', 'started_ns', 'finished_ns')},
+                    'response_transcript': copy.deepcopy(row['response']['native']['transcript'])}
+        line = (json.dumps(interval, separators=(',', ':')) + '\n').encode()
+        lines.append(line)
+        row['interval'] = {'transcript': {'artifact': 'concurrent-authored.jsonl.gz', 'line': len(lines),
+            'record_sha256': B.sha(line), 'record_bytes': len(line)}}
+    transport = b''.join(lines)
+    compressed = gzip.compress(transport, mtime=0)
+    report['transport_artifact'].update(records=len(lines), uncompressed_bytes=len(transport),
+        uncompressed_sha256=B.sha(transport), sha256=B.sha(compressed))
+    artifacts = {'authored/concurrent-authored.jsonl.gz': compressed}
+    return report, artifacts, requests, results
+
+
 class BuilderTests(unittest.TestCase):
+    def retained_concurrency(self, report, artifacts):
+        raw = B.encoded(report)
+        return B.Retained(report, B.reference('authored/concurrent.json', raw), artifacts.__getitem__)
+
+    def test_concurrency_requires_exact_raw_exchanges_and_overlapping_intervals(self):
+        report, artifacts, requests, results = authored_concurrency()
+        retained = self.retained_concurrency(report, artifacts)
+        self.assertEqual([0, 1], B.concurrent_records(retained, requests, results))
+        self.assertEqual('AUTHORED_NOT_NATIVE', report['classification'])
+
+    def test_concurrency_rejects_missing_nonfinite_reversed_and_sequential_intervals(self):
+        changes = {
+            'missing release': lambda report: report.pop('concurrent_release'),
+            'wrong clock': lambda report: report['concurrent_release'].update(clock='wall-clock'),
+            'boolean participant count': lambda report: report['concurrent_release'].update(participants=True),
+            'unexpected release field': lambda report: report['concurrent_release'].update(synthetic=True),
+            'zero release': lambda report: report['concurrent_release'].update(released_ns=0),
+            'infinite start': lambda report: report['concurrent_submissions'][0].update(started_ns=float('inf')),
+            'nan finish': lambda report: report['concurrent_submissions'][0].update(finished_ns=float('nan')),
+            'boolean timestamp': lambda report: report['concurrent_submissions'][0].update(ready_ns=True),
+            'numeric string': lambda report: report['concurrent_submissions'][0].update(started_ns='110'),
+            'unbounded timestamp': lambda report: report['concurrent_submissions'][0].update(finished_ns=2**63),
+            'ready after release': lambda report: report['concurrent_submissions'][0].update(ready_ns=108),
+            'start before release': lambda report: report['concurrent_submissions'][0].update(started_ns=106),
+            'reversed interval': lambda report: report['concurrent_submissions'][0].update(finished_ns=109),
+            'unbounded duration': lambda report: report['concurrent_submissions'][0].update(finished_ns=180_000_000_108),
+            'touching without overlap': lambda report: report['concurrent_submissions'][0].update(finished_ns=120),
+            'sequential': lambda report: report['concurrent_submissions'][0].update(finished_ns=119),
+            'plausible changed start': lambda report: report['concurrent_submissions'][0].update(started_ns=112),
+            'plausible changed release': lambda report: report['concurrent_release'].update(released_ns=108),
+        }
+        for name, change in changes.items():
+            with self.subTest(name=name):
+                report, artifacts, requests, results = authored_concurrency()
+                change(report)
+                with self.assertRaises((ValueError, KeyError, TypeError)):
+                    B.concurrent_records(self.retained_concurrency(report, artifacts), requests, results)
+
+    def test_concurrency_rejects_edited_command_response_and_reference_inventory(self):
+        changes = {
+            'missing writer': lambda report: report['concurrent_submissions'].pop(),
+            'extra writer': lambda report: report['concurrent_submissions'].append(copy.deepcopy(report['concurrent_submissions'][0])),
+            'wrong sender': lambda report: report['concurrent_submissions'][0].update(sender='bud'),
+            'edited command': lambda report: report['concurrent_submissions'][0]['command'].update(expected_revision='5'),
+            'wrong route': lambda report: report['concurrent_submissions'][0].update(route='/v2/elsewhere'),
+            'wrong input': lambda report: report['concurrent_submissions'][0].update(input_sha256='0' * 64),
+            'missing response': lambda report: report['concurrent_submissions'][0].pop('response'),
+            'swapped response': lambda report: report['concurrent_submissions'][0].update(response=copy.deepcopy(report['concurrent_submissions'][1]['response'])),
+            'wrong transcript': lambda report: report['concurrent_submissions'][0]['response']['native']['transcript'].update(line=2),
+            'failed worker': lambda report: report['concurrent_submissions'][0].update(error='RuntimeError: authored failure'),
+            'missing interval': lambda report: report['concurrent_submissions'][0].pop('interval'),
+            'duplicate interval': lambda report: report['concurrent_submissions'][0].update(interval=copy.deepcopy(report['concurrent_submissions'][1]['interval'])),
+            'interval is response': lambda report: report['concurrent_submissions'][0].update(interval={'transcript': copy.deepcopy(report['concurrent_submissions'][0]['response']['native']['transcript'])}),
+        }
+        for name, change in changes.items():
+            with self.subTest(name=name):
+                report, artifacts, requests, results = authored_concurrency()
+                change(report)
+                with self.assertRaises((ValueError, KeyError, TypeError)):
+                    B.concurrent_records(self.retained_concurrency(report, artifacts), requests, results)
+
+    def test_summary_cannot_invent_overlap_over_actual_sequential_interval_records(self):
+        report, artifacts, requests, results = authored_concurrency(finishes=(119, 180))
+        report['concurrent_submissions'][0]['finished_ns'] = 170
+        with self.assertRaisesRegex(ValueError, 'actual retained timing record'):
+            B.concurrent_records(self.retained_concurrency(report, artifacts), requests, results)
+
+    def test_exact_sequential_or_touching_raw_intervals_do_not_prove_overlap(self):
+        for finish in (119, 120):
+            with self.subTest(first_finish=finish):
+                report, artifacts, requests, results = authored_concurrency(finishes=(finish, 180))
+                with self.assertRaisesRegex(ValueError, 'call intervals do not overlap'):
+                    B.concurrent_records(self.retained_concurrency(report, artifacts), requests, results)
+
+    def test_producer_releases_two_actual_host_callbacks_and_retains_their_intervals(self):
+        source, _, pairs, _ = authored_concurrency()
+        requests = [(ship, command, B.DS.command_route(ship, command), B.QA.canonical(command))
+                    for ship, command in pairs]
+        together = threading.Barrier(2, timeout=2)
+        def call(ship, mode, route, raw):
+            self.assertEqual('command', mode)
+            self.assertEqual(next(row['input_sha256'] for row in source['concurrent_submissions']
+                                  if row['sender'] == ship), B.sha(raw))
+            together.wait()  # Actual two-thread overlap, with no native process.
+            return next(row['response'] for row in source['concurrent_submissions'] if row['sender'] == ship)
+        report = {}
+        intervals, lock = [], threading.Lock()
+        def record_interval(value):
+            with lock:
+                intervals.append(copy.deepcopy(value))
+                return {'authored_interval': len(intervals)}
+        results = core_test.concurrent_writes(call, requests, report, record_interval)
+        self.assertEqual([row['response'] for row in source['concurrent_submissions']], results)
+        rows = report['concurrent_submissions']
+        released = report['concurrent_release']['released_ns']
+        for row, result in zip(rows, results, strict=True):
+            self.assertLessEqual(row['ready_ns'], released)
+            self.assertLessEqual(released, row['started_ns'])
+            self.assertLess(row['started_ns'], row['finished_ns'])
+            self.assertEqual(result, row['response'])
+            actual = intervals[row['interval']['transcript']['authored_interval'] - 1]
+            self.assertEqual(row['started_ns'], actual['started_ns'])
+            self.assertEqual(row['finished_ns'], actual['finished_ns'])
+            self.assertEqual(result['native']['transcript'], actual['response_transcript'])
+        self.assertLess(max(row['started_ns'] for row in rows), min(row['finished_ns'] for row in rows))
+
+    def test_producer_retains_failed_worker_and_does_not_return_a_pass(self):
+        source, _, pairs, _ = authored_concurrency()
+        requests = [(ship, command, B.DS.command_route(ship, command), B.QA.canonical(command))
+                    for ship, command in pairs]
+        together = threading.Barrier(2, timeout=2)
+        def call(ship, *_):
+            together.wait()
+            if ship == 'bus':
+                raise RuntimeError('authored callback failure')
+            return source['concurrent_submissions'][1]['response']
+        report = {}
+        with self.assertRaisesRegex(RuntimeError, 'authored callback failure'):
+            core_test.concurrent_writes(call, requests, report, lambda record: {'authored_interval': 1})
+        failed, other = report['concurrent_submissions']
+        self.assertEqual('RuntimeError: authored callback failure', failed['error'])
+        self.assertNotIn('response', failed)
+        self.assertGreater(failed['finished_ns'], failed['started_ns'])
+        self.assertEqual(source['concurrent_submissions'][1]['response'], other['response'])
+
     def test_exact_bytes_resolve_and_business_denial_is_preserved(self):
         report, ref, files = authored()
         report['status'] = 'passed'  # This label does not make a denied result accepted.

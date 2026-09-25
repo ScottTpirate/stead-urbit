@@ -59,6 +59,55 @@ def inputs():
             'qualification_manifest': sha('/specs/v2/qualification-gate.json')}
 
 
+def concurrent_writes(call, requests, report, record_interval):
+    """Release two native calls together and retain their observed lifetimes.
+
+    The intervals cover actual client calls, including encoding and transport;
+    they do not claim simultaneous processing inside the authoritative ship.
+    Publish records before work so a broken barrier or failed call stays visible.
+    """
+    if len(requests) != 2 or [value[0] for value in requests] != ['bus', 'zod']:
+        raise ValueError('Exactly the two frozen concurrent writers are required')
+    release = {'protocol': 'stead.concurrent-native-calls/1',
+               'clock': 'time.monotonic_ns', 'participants': 2,
+               'barrier_timeout_seconds': 10}
+    rows = [{'sender': ship, 'command': copy.deepcopy(cmd), 'route': route,
+             'input_sha256': hashlib.sha256(raw).hexdigest()}
+            for ship, cmd, route, raw in requests]
+    report['concurrent_release'], report['concurrent_submissions'] = release, rows
+    barrier = threading.Barrier(3, timeout=10,
+        action=lambda: release.update(released_ns=time.monotonic_ns()))
+
+    def invoke(index):
+        row = rows[index]
+        ship, _, route, raw = requests[index]
+        row['ready_ns'] = time.monotonic_ns()
+        try:
+            barrier.wait()
+            row['started_ns'] = time.monotonic_ns()
+            result = call(ship, 'command', route, raw)
+            row['finished_ns'] = time.monotonic_ns()
+            row['response'] = result
+            interval = {'kind': 'concurrent-call-interval', 'release': copy.deepcopy(release),
+                        **{key: row[key] for key in ('sender', 'route', 'input_sha256',
+                                                    'ready_ns', 'started_ns', 'finished_ns')},
+                        'response_transcript': copy.deepcopy(result['native']['transcript'])}
+            row['interval'] = {'transcript': record_interval(interval)}
+            return result
+        except BaseException as error:
+            row.setdefault('finished_ns', time.monotonic_ns())
+            row['error'] = type(error).__name__ + ': ' + str(error)
+            raise
+
+    with ThreadPoolExecutor(max_workers=2) as pool:
+        futures = [pool.submit(invoke, index) for index in range(2)]
+        barrier.wait()
+        results = [future.result() for future in futures]
+    if max(row['started_ns'] for row in rows) >= min(row['finished_ns'] for row in rows):
+        raise AssertionError('Concurrent native write calls did not overlap')
+    return results
+
+
 def run(host):
     started = time.monotonic()
     run_id = time.strftime('%Y%m%dT%H%M%SZ', time.gmtime())
@@ -338,9 +387,13 @@ def run(host):
             raw = core_cases.canonical(cmd)
             route = f"/v2/result/~{ship}/{core_cases.BINDINGS[ship]}/{cmd['project_id']}/{cmd['request_id']}/{core_cases.command_digest(raw)}"
             requests.append((ship,cmd,route,raw))
-        with ThreadPoolExecutor(max_workers=2) as pool:
-            pending = [pool.submit(call,ship,'command',route,raw) for ship,cmd,route,raw in requests]
-            results = [future.result() for future in pending]
+        def record_interval(value):
+            with transcript_lock:
+                return transcript.append(value)
+        results = concurrent_writes(call, requests, report, record_interval)
+        check('two-principal-concurrent-call-overlap',
+              max(row['started_ns'] for row in report['concurrent_submissions'])
+              < min(row['finished_ns'] for row in report['concurrent_submissions']))
         accepted = [i for i,r in enumerate(results) if r['json'] and r['json'].get('status') == 'accepted']
         rejected = [r for r in results if r['json'] == {'protocol':'stead.result/2','status':'rejected','error':'revision_conflict'}]
         check('two-principal-concurrent-cas-one-winner', len(accepted)==1 and len(rejected)==1)
@@ -362,7 +415,6 @@ def run(host):
         denied = call('bud','command',route,raw)
         check('sender-cannot-reserve-another-result-route', denied['json'] is None and 'stead-watch-denied' in denied['native']['stderr'])
         check('concurrent-reads-and-wrong-route-preserve-state', same(after,snapshot()))
-        report['concurrent_submissions'] = [{'sender':r[0], 'command':r[1], 'response':out} for r,out in zip(requests,results,strict=True)]
 
     try:
         report['source_commit'] = host['qualified_source']()

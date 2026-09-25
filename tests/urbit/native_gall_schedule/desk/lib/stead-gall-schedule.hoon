@@ -242,6 +242,7 @@
   ::  New observer probe, identical path, distinct kernel-generated nonce/duct.
   =^  new-watch-output  bus  (control bus 'watch' new-id exact-text '')
   =/  new-watch  (one-pass new-watch-output)
+  ?>  ?=([* %pass * %g %deal * * %watch *] new-watch)
   =/  new-duct  (input-duct new-watch)
   ?>  !=(old-duct new-duct)
   =/  old-sent=passage  old-watch
