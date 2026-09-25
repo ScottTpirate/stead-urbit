@@ -1,0 +1,105 @@
+{
+  "classification": "local-real-native-compile-probes",
+  "qualifies_phase": false,
+  "source_commit": "c1e437ff19e5d03b5be8bc1ced00b303a909b046",
+  "results": [
+    {
+      "label": "dev09",
+      "status": "failed",
+      "checks_passed": 52,
+      "error": "New probe failed compilation at untyped cards binding; no successful save/load result."
+    },
+    {
+      "label": "dev10",
+      "status": "passed",
+      "checks_passed": 53,
+      "elapsed_seconds": 48.395,
+      "result": "Actual home on-save/on-load arms preserved exact format2 saved noun; all prior pure build/codec/core/reducer probes passed."
+    }
+  ],
+  "transformations": [
+    "Reports and compiler/guard logs gzip-compressed without changing decompressed bytes."
+  ],
+  "artifacts": [
+    {
+      "file": "core-check-20260925T113240Z.json.gz",
+      "sha256": "0dc7756d886204f87c25d4b7e7700136b23900b88993336c79f359a171cb36de",
+      "original_local_path": ".piers/fakes/logs/core-check-20260925T113240Z.json",
+      "original_sha256": "62ccecd9a8a8bfaaa6f71f5f1b4abae49a5340bb9e4f1c99ae600e9213b9c4ff",
+      "encoding": "gzip"
+    },
+    {
+      "file": "dev09.json",
+      "sha256": "9b45cc85fc3b7c0a396e6c67fc0cbfc3f769d6b9be741333c9ad75c4706a8bd0",
+      "original_local_path": ".runtime/phase01-20260925/dev09.json",
+      "original_sha256": "9b45cc85fc3b7c0a396e6c67fc0cbfc3f769d6b9be741333c9ad75c4706a8bd0",
+      "encoding": "identity"
+    },
+    {
+      "file": "dev09.log",
+      "sha256": "a99bee676405c279c9ee43b2e79c41e261f4fe5a0c65155f8aa690e6fa81b5fc",
+      "original_local_path": ".runtime/phase01-20260925/dev09.log",
+      "original_sha256": "a99bee676405c279c9ee43b2e79c41e261f4fe5a0c65155f8aa690e6fa81b5fc",
+      "encoding": "identity"
+    },
+    {
+      "file": "dev09-compiler.log.gz",
+      "sha256": "6bab2154da1aaf1e6c05318476e2f0207ed650eb2917e0e0157f10f164ac82d5",
+      "original_local_path": ".runtime/phase01-20260925/dev09-zod.log",
+      "original_sha256": "558499966014f04fe74356be8a77f33c8a79c2198e51043f49c9f58556a593de",
+      "encoding": "gzip"
+    },
+    {
+      "file": "dev09-guard.json.gz",
+      "sha256": "f37d8698a35ea5332a2ca718c53569eb6e5865683d76631fc2586509585dd89f",
+      "original_local_path": ".runtime/execution-runs/four-fakes-62siqyvj/report.json",
+      "original_sha256": "8a0dfb256d7e0d0ecdc15733da7d3b629b5c98e38aa335c2a943052ade54ff19",
+      "encoding": "gzip"
+    },
+    {
+      "file": "core-check-20260925T113418Z.json.gz",
+      "sha256": "d1bab04b380b6c2b293bd5838b9219d4dbe541d0483b149e79f78fc6fd08b2d2",
+      "original_local_path": ".piers/fakes/logs/core-check-20260925T113418Z.json",
+      "original_sha256": "dcd4cf132b36d84454f79da728c5b9a81d4d7ab6b1ad3b60b6c00858b7e656ce",
+      "encoding": "gzip"
+    },
+    {
+      "file": "dev10.json",
+      "sha256": "fab8cff27bf01f83eb8599b36b770367c37c4b02e90be61350b719688e671a15",
+      "original_local_path": ".runtime/phase01-20260925/dev10.json",
+      "original_sha256": "fab8cff27bf01f83eb8599b36b770367c37c4b02e90be61350b719688e671a15",
+      "encoding": "identity"
+    },
+    {
+      "file": "dev10.log",
+      "sha256": "f0610e7976a5086bf496146bcf08e7c0f3eb32743e501859a576831b0b558079",
+      "original_local_path": ".runtime/phase01-20260925/dev10.log",
+      "original_sha256": "f0610e7976a5086bf496146bcf08e7c0f3eb32743e501859a576831b0b558079",
+      "encoding": "identity"
+    },
+    {
+      "file": "dev10-compiler.log.gz",
+      "sha256": "d1685d01df5739acb57541354e3d076fd334a465eb080a7987baeca56f4a6d7b",
+      "original_local_path": ".runtime/phase01-20260925/dev10-zod.log",
+      "original_sha256": "2e86cd423c3ddf5718c64823788cd63522b6685901af077e894514f9e577c971",
+      "encoding": "gzip"
+    },
+    {
+      "file": "dev10-guard.json.gz",
+      "sha256": "e325bd5b007250b1299fbe101af3c6ff706fe4c38536acd1bed04172d46f6273",
+      "original_local_path": ".runtime/execution-runs/four-fakes-coadqx3l/report.json",
+      "original_sha256": "946a2d74c44684eeff8cb4f4cdbfdc624ec8b904c58aab9b544fb9afc0c2c24f",
+      "encoding": "gzip"
+    },
+    {
+      "file": "dev10-preparation-limit.json",
+      "sha256": "af6d2a0adf948855cc9934cce2d8e7e736c7c9ac8a73b5e036cc2de38d4e59a8",
+      "encoding": "identity"
+    },
+    {
+      "file": "source-binding.json",
+      "sha256": "7491ca1a0c798360c77e8c4c689705f80835c6e293860d44ed4b247a0014c153",
+      "encoding": "identity"
+    }
+  ]
+}

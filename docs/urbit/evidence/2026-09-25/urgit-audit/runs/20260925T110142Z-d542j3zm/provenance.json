@@ -1,0 +1,75 @@
+{
+  "candidate": {
+    "archive_root": "urgit-9cec0371b02269efcdbd8580c42e883e69b82000",
+    "commit": "9cec0371b02269efcdbd8580c42e883e69b82000",
+    "license_declared": "MIT",
+    "license_evidence": "desk/desk.docket-0:7",
+    "license_introduced_commit": "ca0d1396bdb17559a9fda2a959f4059a79945de6",
+    "repository": "yapishu/urgit",
+    "reuse_disposition": "local evaluation under explicit app MIT declaration; no tracked vendoring or production admission; redistribution notice and provenance audit remains open",
+    "sha256": "facf578b6edccbdb5b748ff16eabcbeaf10c4ca0dbc8c6073bedb0cbee7e5ee3",
+    "url": "https://codeload.github.com/yapishu/urgit/tar.gz/9cec0371b02269efcdbd8580c42e883e69b82000"
+  },
+  "candidate_lock_sha256": "50a90b296fa40e5a9178999cb2709682884812a98e2b133f6261eb5ec3934561",
+  "cpu_affinity": [
+    19
+  ],
+  "evidence_boundary": "host evidence never mounted; fixed-name bounded no-follow output import",
+  "excluded_claims": [
+    "Stead Git integration or production admission",
+    "concurrent server CAS",
+    "revocation while ingestion is staged",
+    "private-project endpoint isolation",
+    "frontend or Zig build",
+    "live Urbit networking or deployment",
+    "SHA-256 repositories, LFS, partial/shallow clone qualification",
+    "crash-during-push recovery or load capacity"
+  ],
+  "helpers_sha256": {
+    "bootstrap.py": "49e9fe5665490c7eab60e4e07dd5c72769fbf3c95a771bbb4e1093a6e73d4b56",
+    "evaluate.py": "ca4263bc736e5bdfcb50ea86615a7c3a1151eeee546f45cc2072deb86c266652",
+    "urgit_seed.py": "abb5b8bccec6e8f46278283a344e8afa6ffbfe9aae58b8d509a527f055f33b50"
+  },
+  "host_tools_sha256": {
+    "/usr/bin/bwrap": "7c44fa8e7326e62e81ab3f70ff682bfc0eb3b447b39cf9fbb779a31948364762",
+    "/usr/bin/git": "93473c28694fd72bd889364107cd2770514de59780885a6a4aafca4d602e30ad",
+    "/usr/bin/python3": "d78f9cf7178ecff09963551399855543c297f37ac207e626228bfe43cb26a70c"
+  },
+  "initial_temperatures_c": {
+    "thermal_zone0:acpitz": 27.8,
+    "thermal_zone1:INT3400 Thermal": 20.0,
+    "thermal_zone2:SEN3": 40.05,
+    "thermal_zone3:TCPU": 58.0,
+    "thermal_zone4:TCPU_PCI": 57.0,
+    "thermal_zone5:x86_pkg_temp": 57.0,
+    "thermal_zone6:iwlwifi_1": 41.0
+  },
+  "loom_exponent": 31,
+  "runner_sha256": "c16b32b67c450ccd1fab8efc739e7d272ef4dc96c82dff8f119107f30b3c28d5",
+  "scope": "isolated-native-git-candidate-evaluation-only",
+  "seed_helper_sha256": "abb5b8bccec6e8f46278283a344e8afa6ffbfe9aae58b8d509a527f055f33b50",
+  "skeleton": {
+    "commit": "0f94550b941dfe046d9dff4a541330bd084e8cd1",
+    "license_sha256": "b5d62c0a6f6b17ff490de29606527bf77b6509998ef07048488d659e2b719e52",
+    "license_url": "https://raw.githubusercontent.com/urbit/urbit/0f94550b941dfe046d9dff4a541330bd084e8cd1/LICENSE.txt",
+    "repository": "urbit/urbit",
+    "sha256": "c7c654a91c5dc1a535d4a76b019ec175955e52961b1ddff70ad49121208d20f5",
+    "url": "https://raw.githubusercontent.com/urbit/urbit/0f94550b941dfe046d9dff4a541330bd084e8cd1/pkg/base-dev/lib/skeleton.hoon"
+  },
+  "source": {
+    "regular_files": 132,
+    "source_bytes": 1258242
+  },
+  "thermal_limits_c": {
+    "start": 75,
+    "stop": 90
+  },
+  "toolchain_lock_sha256": "4a209c10cf1756eb0f7357cc3eca8250bf66c239b4cd0ca31a8c0886d4d304ee",
+  "uname": [
+    "Linux",
+    "<HOST>",
+    "7.2.5-3-omarchy",
+    "#1 SMP PREEMPT_DYNAMIC Mon, 14 Sep 2026 19:55:01 +0000",
+    "x86_64"
+  ]
+}

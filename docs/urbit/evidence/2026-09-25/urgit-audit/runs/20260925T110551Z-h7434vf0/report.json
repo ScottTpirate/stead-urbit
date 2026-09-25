@@ -1,0 +1,18 @@
+{
+  "checks": [],
+  "host_stop_reason": "Owned sandbox exited unsuccessfully",
+  "output_import_failures": [
+    {
+      "error": "FileNotFoundError",
+      "file": "native-vectors.json"
+    },
+    {
+      "error": "FileNotFoundError",
+      "file": "report.json"
+    }
+  ],
+  "reason": "sandbox exited unsuccessfully",
+  "sandbox_exit_code": 1,
+  "status": "failed",
+  "validation_error": "Invalid evaluator report shape"
+}

@@ -1,0 +1,82 @@
+{
+  "bootstrap": {
+    "before": {
+      "manifest_sha256": "a8a0e096234938b8c4f8cb4853c49a563300fd5cdf89c4265af6ab34193e3865",
+      "marker_sha256": "cec56d49ae35e72d5d9f5093257b8086d4458316b60718aa37434ccbe4ca5b88",
+      "ships": {
+        "bud": {
+          "bytes": 241085150,
+          "files": 551,
+          "sha256": "b12134e0481c944b8cc465a7c5b78475eb19f6f0c4dcc3fd6b7328b0dda52d11"
+        },
+        "bus": {
+          "bytes": 241027806,
+          "files": 551,
+          "sha256": "268fc4455328229b4edac91f4e1293a9a3af508c04b3cf163970ecac89b0a8bb"
+        },
+        "nec": {
+          "bytes": 240814814,
+          "files": 551,
+          "sha256": "f3fb7b3519d06c3b91acd2b071f9d7907afe412b0070e8d39473aa7be7336b4b"
+        },
+        "zod": {
+          "bytes": 241294046,
+          "files": 551,
+          "sha256": "c723988e13b2ee2498970154ca4a43dc1edd4fed2fef114d6bdb7a05db892375"
+        }
+      },
+      "toolchain_sha256": "4a209c10cf1756eb0f7357cc3eca8250bf66c239b4cd0ca31a8c0886d4d304ee"
+    },
+    "copied": {
+      "bytes": 241294046,
+      "files": 551,
+      "sha256": "c723988e13b2ee2498970154ca4a43dc1edd4fed2fef114d6bdb7a05db892375"
+    },
+    "mode": "verified-stopped-fake-seed",
+    "source": ".piers/fakes/seed/zod"
+  },
+  "checks": [
+    {
+      "name": "pinned-native-kernel-ready",
+      "passed": true,
+      "result": "%408"
+    }
+  ],
+  "error": "ValueError('Native fake identity, Kelvin or clean Urgit baseline failed')",
+  "excluded_claims": [
+    "Stead Git integration or production admission",
+    "concurrent server CAS",
+    "revocation while ingestion is staged",
+    "private-project endpoint isolation",
+    "frontend or Zig build",
+    "live Urbit networking or deployment",
+    "SHA-256 repositories, LFS, partial/shallow clone qualification",
+    "crash-during-push recovery or load capacity"
+  ],
+  "generated_credential_absent_from_evidence": true,
+  "host_stop_reason": "Owned sandbox exited unsuccessfully",
+  "output_import_failures": [
+    {
+      "error": "FileNotFoundError",
+      "file": "native-vectors.json"
+    }
+  ],
+  "reason": "sandbox exited unsuccessfully",
+  "runtime_argv": [
+    "/runtime/vere",
+    "-t",
+    "-L",
+    "--loom",
+    "31",
+    "--no-dock",
+    "--http-port",
+    "8080",
+    "-b",
+    "127.0.0.1",
+    "/work/zod"
+  ],
+  "runtime_exit_code": 0,
+  "sandbox_exit_code": 1,
+  "scope": "isolated-native-git-candidate-evaluation-only",
+  "status": "failed"
+}

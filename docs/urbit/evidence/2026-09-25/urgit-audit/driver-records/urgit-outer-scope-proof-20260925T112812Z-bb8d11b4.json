@@ -1,0 +1,12 @@
+{
+  "cgroup": "/user.slice/user-<UID>.slice/user@<UID>.service/app.slice/stead-urgit-driver-7b0679d88f3eaf78dce4763ef763c128.scope",
+  "cpu_affinity": [
+    19
+  ],
+  "cpu_max": "5000 10000",
+  "driver_command": [
+    "python3",
+    "scripts/urbit/urgit_audit.py"
+  ],
+  "unit": "stead-urgit-driver-7b0679d88f3eaf78dce4763ef763c128.scope"
+}

@@ -1,0 +1,928 @@
+{
+  "argv": [
+    "/usr/bin/systemd-run",
+    "--user",
+    "--scope",
+    "--quiet",
+    "--unit=stead-native-4fe3a0845dd9d49eb80440c3c240b6d4.scope",
+    "--property=CPUQuota=50%",
+    "--property=CPUQuotaPeriodSec=10ms",
+    "/usr/bin/python3",
+    "<REPO>/scripts/urbit/execution_policy.py",
+    "_scope",
+    "<REPO>/.runtime/execution-runs/urgit-anaxyego/control",
+    "4fe3a0845dd9d49eb80440c3c240b6d4",
+    "19",
+    "6",
+    "57",
+    "11416985",
+    "--",
+    "/usr/bin/bwrap",
+    "--unshare-all",
+    "--die-with-parent",
+    "--new-session",
+    "--clearenv",
+    "--ro-bind",
+    "/usr",
+    "/usr",
+    "--symlink",
+    "usr/lib",
+    "/lib",
+    "--symlink",
+    "usr/lib64",
+    "/lib64",
+    "--symlink",
+    "usr/bin",
+    "/bin",
+    "--proc",
+    "/proc",
+    "--dev",
+    "/dev",
+    "--tmpfs",
+    "/tmp",
+    "--dir",
+    "/home/audit",
+    "--setenv",
+    "HOME",
+    "/home/audit",
+    "--setenv",
+    "PATH",
+    "/usr/bin",
+    "--setenv",
+    "LANG",
+    "C.UTF-8",
+    "--bind",
+    "<REPO>/.runtime/urgit-evaluations/20260925T112813Z-p7thco40/work",
+    "/work",
+    "--bind",
+    "<REPO>/.runtime/urgit-evaluations/20260925T112813Z-p7thco40/output",
+    "/output",
+    "--ro-bind",
+    "<REPO>/.runtime/urgit-evaluations/20260925T112813Z-p7thco40/input",
+    "/input",
+    "--ro-bind",
+    "<REPO>/.runtime/execution-runs/urgit-anaxyego/control",
+    "/control",
+    "--ro-bind",
+    "<REPO>/.runtime/urgit-evaluations/20260925T112813Z-p7thco40/input/support",
+    "/code",
+    "--ro-bind",
+    "<REPO>/.runtime/bin/vere-v4.6-linux-x86_64",
+    "/runtime/vere",
+    "--ro-bind",
+    "<REPO>/.runtime/downloads/brass-408k-2.pill",
+    "/runtime/pill",
+    "--ro-bind",
+    "<REPO>/.runtime/urbit-5a187fededc4582a34fcd6055c67bb63e0917b94",
+    "/kernel",
+    "--chdir",
+    "/work",
+    "/usr/bin/python3",
+    "-I",
+    "/code/evaluate.py"
+  ],
+  "cleanup": [],
+  "elapsed_seconds": 38.469,
+  "events": [
+    {
+      "elapsed_seconds": 0.002,
+      "event": "preflight-sample",
+      "sample": {
+        "cpu_sensors": [
+          "thermal_zone3:TCPU",
+          "thermal_zone5:x86_pkg_temp"
+        ],
+        "finished": 745601.292195794,
+        "readings_c": {
+          "thermal_zone0:acpitz": 27.8,
+          "thermal_zone1:INT3400 Thermal": 20.0,
+          "thermal_zone2:SEN3": 40.05,
+          "thermal_zone3:TCPU": 41.0,
+          "thermal_zone4:TCPU_PCI": 42.0,
+          "thermal_zone5:x86_pkg_temp": 42.0,
+          "thermal_zone6:iwlwifi_1": 42.0
+        },
+        "started": 745601.290144808
+      }
+    },
+    {
+      "elapsed_seconds": 0.002,
+      "event": "preflight-accepted",
+      "sample": {
+        "cpu_sensors": [
+          "thermal_zone3:TCPU",
+          "thermal_zone5:x86_pkg_temp"
+        ],
+        "finished": 745601.292195794,
+        "readings_c": {
+          "thermal_zone0:acpitz": 27.8,
+          "thermal_zone1:INT3400 Thermal": 20.0,
+          "thermal_zone2:SEN3": 40.05,
+          "thermal_zone3:TCPU": 41.0,
+          "thermal_zone4:TCPU_PCI": 42.0,
+          "thermal_zone5:x86_pkg_temp": 42.0,
+          "thermal_zone6:iwlwifi_1": 42.0
+        },
+        "started": 745601.290144808
+      }
+    },
+    {
+      "elapsed_seconds": 3.329,
+      "event": "launch-sample",
+      "sample": {
+        "cpu_sensors": [
+          "thermal_zone3:TCPU",
+          "thermal_zone5:x86_pkg_temp"
+        ],
+        "finished": 745604.619119981,
+        "readings_c": {
+          "thermal_zone0:acpitz": 27.8,
+          "thermal_zone1:INT3400 Thermal": 20.0,
+          "thermal_zone2:SEN3": 40.05,
+          "thermal_zone3:TCPU": 51.0,
+          "thermal_zone4:TCPU_PCI": 51.0,
+          "thermal_zone5:x86_pkg_temp": 50.0,
+          "thermal_zone6:iwlwifi_1": 42.0
+        },
+        "started": 745604.616630534
+      }
+    },
+    {
+      "cpu_affinity": [
+        19
+      ],
+      "elapsed_seconds": 3.33,
+      "event": "launch"
+    },
+    {
+      "elapsed_seconds": 3.337,
+      "event": "sample",
+      "sample": {
+        "cpu_sensors": [
+          "thermal_zone3:TCPU",
+          "thermal_zone5:x86_pkg_temp"
+        ],
+        "finished": 745604.626943171,
+        "readings_c": {
+          "thermal_zone0:acpitz": 27.8,
+          "thermal_zone1:INT3400 Thermal": 20.0,
+          "thermal_zone2:SEN3": 40.05,
+          "thermal_zone3:TCPU": 43.0,
+          "thermal_zone4:TCPU_PCI": 50.0,
+          "thermal_zone5:x86_pkg_temp": 50.0,
+          "thermal_zone6:iwlwifi_1": 42.0
+        },
+        "started": 745604.625028508
+      }
+    },
+    {
+      "elapsed_seconds": 4.34,
+      "event": "sample",
+      "sample": {
+        "cpu_sensors": [
+          "thermal_zone3:TCPU",
+          "thermal_zone5:x86_pkg_temp"
+        ],
+        "finished": 745605.629857351,
+        "readings_c": {
+          "thermal_zone0:acpitz": 27.8,
+          "thermal_zone1:INT3400 Thermal": 20.0,
+          "thermal_zone2:SEN3": 40.05,
+          "thermal_zone3:TCPU": 42.0,
+          "thermal_zone4:TCPU_PCI": 50.0,
+          "thermal_zone5:x86_pkg_temp": 50.0,
+          "thermal_zone6:iwlwifi_1": 42.0
+        },
+        "started": 745605.627389828
+      }
+    },
+    {
+      "elapsed_seconds": 5.343,
+      "event": "sample",
+      "sample": {
+        "cpu_sensors": [
+          "thermal_zone3:TCPU",
+          "thermal_zone5:x86_pkg_temp"
+        ],
+        "finished": 745606.633499377,
+        "readings_c": {
+          "thermal_zone0:acpitz": 27.8,
+          "thermal_zone1:INT3400 Thermal": 20.0,
+          "thermal_zone2:SEN3": 40.05,
+          "thermal_zone3:TCPU": 51.0,
+          "thermal_zone4:TCPU_PCI": 46.0,
+          "thermal_zone5:x86_pkg_temp": 46.0,
+          "thermal_zone6:iwlwifi_1": 42.0
+        },
+        "started": 745606.630496186
+      }
+    },
+    {
+      "elapsed_seconds": 6.347,
+      "event": "sample",
+      "sample": {
+        "cpu_sensors": [
+          "thermal_zone3:TCPU",
+          "thermal_zone5:x86_pkg_temp"
+        ],
+        "finished": 745607.637049336,
+        "readings_c": {
+          "thermal_zone0:acpitz": 27.8,
+          "thermal_zone1:INT3400 Thermal": 20.0,
+          "thermal_zone2:SEN3": 40.05,
+          "thermal_zone3:TCPU": 42.0,
+          "thermal_zone4:TCPU_PCI": 42.0,
+          "thermal_zone5:x86_pkg_temp": 42.0,
+          "thermal_zone6:iwlwifi_1": 42.0
+        },
+        "started": 745607.634128253
+      }
+    },
+    {
+      "elapsed_seconds": 7.352,
+      "event": "sample",
+      "sample": {
+        "cpu_sensors": [
+          "thermal_zone3:TCPU",
+          "thermal_zone5:x86_pkg_temp"
+        ],
+        "finished": 745608.641881217,
+        "readings_c": {
+          "thermal_zone0:acpitz": 27.8,
+          "thermal_zone1:INT3400 Thermal": 20.0,
+          "thermal_zone2:SEN3": 40.05,
+          "thermal_zone3:TCPU": 44.0,
+          "thermal_zone4:TCPU_PCI": 44.0,
+          "thermal_zone5:x86_pkg_temp": 44.0,
+          "thermal_zone6:iwlwifi_1": 42.0
+        },
+        "started": 745608.638033894
+      }
+    },
+    {
+      "elapsed_seconds": 8.356,
+      "event": "sample",
+      "sample": {
+        "cpu_sensors": [
+          "thermal_zone3:TCPU",
+          "thermal_zone5:x86_pkg_temp"
+        ],
+        "finished": 745609.646256551,
+        "readings_c": {
+          "thermal_zone0:acpitz": 27.8,
+          "thermal_zone1:INT3400 Thermal": 20.0,
+          "thermal_zone2:SEN3": 40.05,
+          "thermal_zone3:TCPU": 42.0,
+          "thermal_zone4:TCPU_PCI": 43.0,
+          "thermal_zone5:x86_pkg_temp": 43.0,
+          "thermal_zone6:iwlwifi_1": 42.0
+        },
+        "started": 745609.642554864
+      }
+    },
+    {
+      "elapsed_seconds": 9.361,
+      "event": "sample",
+      "sample": {
+        "cpu_sensors": [
+          "thermal_zone3:TCPU",
+          "thermal_zone5:x86_pkg_temp"
+        ],
+        "finished": 745610.650945819,
+        "readings_c": {
+          "thermal_zone0:acpitz": 27.8,
+          "thermal_zone1:INT3400 Thermal": 20.0,
+          "thermal_zone2:SEN3": 40.05,
+          "thermal_zone3:TCPU": 43.0,
+          "thermal_zone4:TCPU_PCI": 43.0,
+          "thermal_zone5:x86_pkg_temp": 47.0,
+          "thermal_zone6:iwlwifi_1": 42.0
+        },
+        "started": 745610.646809583
+      }
+    },
+    {
+      "elapsed_seconds": 10.364,
+      "event": "sample",
+      "sample": {
+        "cpu_sensors": [
+          "thermal_zone3:TCPU",
+          "thermal_zone5:x86_pkg_temp"
+        ],
+        "finished": 745611.653935892,
+        "readings_c": {
+          "thermal_zone0:acpitz": 27.8,
+          "thermal_zone1:INT3400 Thermal": 20.0,
+          "thermal_zone2:SEN3": 40.05,
+          "thermal_zone3:TCPU": 44.0,
+          "thermal_zone4:TCPU_PCI": 44.0,
+          "thermal_zone5:x86_pkg_temp": 44.0,
+          "thermal_zone6:iwlwifi_1": 42.0
+        },
+        "started": 745611.651659155
+      }
+    },
+    {
+      "elapsed_seconds": 11.368,
+      "event": "sample",
+      "sample": {
+        "cpu_sensors": [
+          "thermal_zone3:TCPU",
+          "thermal_zone5:x86_pkg_temp"
+        ],
+        "finished": 745612.657987241,
+        "readings_c": {
+          "thermal_zone0:acpitz": 27.8,
+          "thermal_zone1:INT3400 Thermal": 20.0,
+          "thermal_zone2:SEN3": 41.05,
+          "thermal_zone3:TCPU": 49.0,
+          "thermal_zone4:TCPU_PCI": 51.0,
+          "thermal_zone5:x86_pkg_temp": 51.0,
+          "thermal_zone6:iwlwifi_1": 42.0
+        },
+        "started": 745612.65602894
+      }
+    },
+    {
+      "elapsed_seconds": 12.371,
+      "event": "sample",
+      "sample": {
+        "cpu_sensors": [
+          "thermal_zone3:TCPU",
+          "thermal_zone5:x86_pkg_temp"
+        ],
+        "finished": 745613.661279258,
+        "readings_c": {
+          "thermal_zone0:acpitz": 27.8,
+          "thermal_zone1:INT3400 Thermal": 20.0,
+          "thermal_zone2:SEN3": 41.05,
+          "thermal_zone3:TCPU": 46.0,
+          "thermal_zone4:TCPU_PCI": 46.0,
+          "thermal_zone5:x86_pkg_temp": 45.0,
+          "thermal_zone6:iwlwifi_1": 42.0
+        },
+        "started": 745613.658483867
+      }
+    },
+    {
+      "elapsed_seconds": 13.374,
+      "event": "sample",
+      "sample": {
+        "cpu_sensors": [
+          "thermal_zone3:TCPU",
+          "thermal_zone5:x86_pkg_temp"
+        ],
+        "finished": 745614.664153913,
+        "readings_c": {
+          "thermal_zone0:acpitz": 27.8,
+          "thermal_zone1:INT3400 Thermal": 20.0,
+          "thermal_zone2:SEN3": 41.05,
+          "thermal_zone3:TCPU": 44.0,
+          "thermal_zone4:TCPU_PCI": 44.0,
+          "thermal_zone5:x86_pkg_temp": 44.0,
+          "thermal_zone6:iwlwifi_1": 42.0
+        },
+        "started": 745614.662004987
+      }
+    },
+    {
+      "elapsed_seconds": 14.378,
+      "event": "sample",
+      "sample": {
+        "cpu_sensors": [
+          "thermal_zone3:TCPU",
+          "thermal_zone5:x86_pkg_temp"
+        ],
+        "finished": 745615.668321493,
+        "readings_c": {
+          "thermal_zone0:acpitz": 27.8,
+          "thermal_zone1:INT3400 Thermal": 20.0,
+          "thermal_zone2:SEN3": 41.05,
+          "thermal_zone3:TCPU": 46.0,
+          "thermal_zone4:TCPU_PCI": 46.0,
+          "thermal_zone5:x86_pkg_temp": 46.0,
+          "thermal_zone6:iwlwifi_1": 42.0
+        },
+        "started": 745615.666026587
+      }
+    },
+    {
+      "elapsed_seconds": 15.381,
+      "event": "sample",
+      "sample": {
+        "cpu_sensors": [
+          "thermal_zone3:TCPU",
+          "thermal_zone5:x86_pkg_temp"
+        ],
+        "finished": 745616.671129163,
+        "readings_c": {
+          "thermal_zone0:acpitz": 27.8,
+          "thermal_zone1:INT3400 Thermal": 20.0,
+          "thermal_zone2:SEN3": 41.05,
+          "thermal_zone3:TCPU": 48.0,
+          "thermal_zone4:TCPU_PCI": 48.0,
+          "thermal_zone5:x86_pkg_temp": 48.0,
+          "thermal_zone6:iwlwifi_1": 42.0
+        },
+        "started": 745616.669027754
+      }
+    },
+    {
+      "elapsed_seconds": 16.384,
+      "event": "sample",
+      "sample": {
+        "cpu_sensors": [
+          "thermal_zone3:TCPU",
+          "thermal_zone5:x86_pkg_temp"
+        ],
+        "finished": 745617.674176631,
+        "readings_c": {
+          "thermal_zone0:acpitz": 27.8,
+          "thermal_zone1:INT3400 Thermal": 20.0,
+          "thermal_zone2:SEN3": 41.05,
+          "thermal_zone3:TCPU": 45.0,
+          "thermal_zone4:TCPU_PCI": 45.0,
+          "thermal_zone5:x86_pkg_temp": 44.0,
+          "thermal_zone6:iwlwifi_1": 42.0
+        },
+        "started": 745617.671858994
+      }
+    },
+    {
+      "elapsed_seconds": 17.388,
+      "event": "sample",
+      "sample": {
+        "cpu_sensors": [
+          "thermal_zone3:TCPU",
+          "thermal_zone5:x86_pkg_temp"
+        ],
+        "finished": 745618.678237527,
+        "readings_c": {
+          "thermal_zone0:acpitz": 27.8,
+          "thermal_zone1:INT3400 Thermal": 20.0,
+          "thermal_zone2:SEN3": 41.05,
+          "thermal_zone3:TCPU": 50.0,
+          "thermal_zone4:TCPU_PCI": 63.0,
+          "thermal_zone5:x86_pkg_temp": 63.0,
+          "thermal_zone6:iwlwifi_1": 42.0
+        },
+        "started": 745618.676029268
+      }
+    },
+    {
+      "elapsed_seconds": 18.392,
+      "event": "sample",
+      "sample": {
+        "cpu_sensors": [
+          "thermal_zone3:TCPU",
+          "thermal_zone5:x86_pkg_temp"
+        ],
+        "finished": 745619.681793991,
+        "readings_c": {
+          "thermal_zone0:acpitz": 27.8,
+          "thermal_zone1:INT3400 Thermal": 20.0,
+          "thermal_zone2:SEN3": 41.05,
+          "thermal_zone3:TCPU": 47.0,
+          "thermal_zone4:TCPU_PCI": 47.0,
+          "thermal_zone5:x86_pkg_temp": 47.0,
+          "thermal_zone6:iwlwifi_1": 42.0
+        },
+        "started": 745619.679026434
+      }
+    },
+    {
+      "elapsed_seconds": 19.396,
+      "event": "sample",
+      "sample": {
+        "cpu_sensors": [
+          "thermal_zone3:TCPU",
+          "thermal_zone5:x86_pkg_temp"
+        ],
+        "finished": 745620.686316702,
+        "readings_c": {
+          "thermal_zone0:acpitz": 27.8,
+          "thermal_zone1:INT3400 Thermal": 20.0,
+          "thermal_zone2:SEN3": 41.05,
+          "thermal_zone3:TCPU": 45.0,
+          "thermal_zone4:TCPU_PCI": 45.0,
+          "thermal_zone5:x86_pkg_temp": 46.0,
+          "thermal_zone6:iwlwifi_1": 42.0
+        },
+        "started": 745620.682463481
+      }
+    },
+    {
+      "elapsed_seconds": 20.4,
+      "event": "sample",
+      "sample": {
+        "cpu_sensors": [
+          "thermal_zone3:TCPU",
+          "thermal_zone5:x86_pkg_temp"
+        ],
+        "finished": 745621.689784002,
+        "readings_c": {
+          "thermal_zone0:acpitz": 27.8,
+          "thermal_zone1:INT3400 Thermal": 20.0,
+          "thermal_zone2:SEN3": 41.05,
+          "thermal_zone3:TCPU": 47.0,
+          "thermal_zone4:TCPU_PCI": 47.0,
+          "thermal_zone5:x86_pkg_temp": 47.0,
+          "thermal_zone6:iwlwifi_1": 42.0
+        },
+        "started": 745621.686835526
+      }
+    },
+    {
+      "elapsed_seconds": 21.403,
+      "event": "sample",
+      "sample": {
+        "cpu_sensors": [
+          "thermal_zone3:TCPU",
+          "thermal_zone5:x86_pkg_temp"
+        ],
+        "finished": 745622.693125077,
+        "readings_c": {
+          "thermal_zone0:acpitz": 27.8,
+          "thermal_zone1:INT3400 Thermal": 20.0,
+          "thermal_zone2:SEN3": 41.05,
+          "thermal_zone3:TCPU": 46.0,
+          "thermal_zone4:TCPU_PCI": 46.0,
+          "thermal_zone5:x86_pkg_temp": 46.0,
+          "thermal_zone6:iwlwifi_1": 42.0
+        },
+        "started": 745622.690505241
+      }
+    },
+    {
+      "elapsed_seconds": 22.407,
+      "event": "sample",
+      "sample": {
+        "cpu_sensors": [
+          "thermal_zone3:TCPU",
+          "thermal_zone5:x86_pkg_temp"
+        ],
+        "finished": 745623.697405075,
+        "readings_c": {
+          "thermal_zone0:acpitz": 27.8,
+          "thermal_zone1:INT3400 Thermal": 20.0,
+          "thermal_zone2:SEN3": 41.05,
+          "thermal_zone3:TCPU": 44.0,
+          "thermal_zone4:TCPU_PCI": 45.0,
+          "thermal_zone5:x86_pkg_temp": 46.0,
+          "thermal_zone6:iwlwifi_1": 42.0
+        },
+        "started": 745623.693784371
+      }
+    },
+    {
+      "elapsed_seconds": 23.412,
+      "event": "sample",
+      "sample": {
+        "cpu_sensors": [
+          "thermal_zone3:TCPU",
+          "thermal_zone5:x86_pkg_temp"
+        ],
+        "finished": 745624.701919931,
+        "readings_c": {
+          "thermal_zone0:acpitz": 27.8,
+          "thermal_zone1:INT3400 Thermal": 20.0,
+          "thermal_zone2:SEN3": 41.05,
+          "thermal_zone3:TCPU": 47.0,
+          "thermal_zone4:TCPU_PCI": 50.0,
+          "thermal_zone5:x86_pkg_temp": 50.0,
+          "thermal_zone6:iwlwifi_1": 42.0
+        },
+        "started": 745624.698022583
+      }
+    },
+    {
+      "elapsed_seconds": 24.416,
+      "event": "sample",
+      "sample": {
+        "cpu_sensors": [
+          "thermal_zone3:TCPU",
+          "thermal_zone5:x86_pkg_temp"
+        ],
+        "finished": 745625.70631055,
+        "readings_c": {
+          "thermal_zone0:acpitz": 27.8,
+          "thermal_zone1:INT3400 Thermal": 20.0,
+          "thermal_zone2:SEN3": 42.05,
+          "thermal_zone3:TCPU": 48.0,
+          "thermal_zone4:TCPU_PCI": 48.0,
+          "thermal_zone5:x86_pkg_temp": 47.0,
+          "thermal_zone6:iwlwifi_1": 42.0
+        },
+        "started": 745625.702627223
+      }
+    },
+    {
+      "elapsed_seconds": 25.42,
+      "event": "sample",
+      "sample": {
+        "cpu_sensors": [
+          "thermal_zone3:TCPU",
+          "thermal_zone5:x86_pkg_temp"
+        ],
+        "finished": 745626.710221878,
+        "readings_c": {
+          "thermal_zone0:acpitz": 27.8,
+          "thermal_zone1:INT3400 Thermal": 20.0,
+          "thermal_zone2:SEN3": 42.05,
+          "thermal_zone3:TCPU": 47.0,
+          "thermal_zone4:TCPU_PCI": 47.0,
+          "thermal_zone5:x86_pkg_temp": 47.0,
+          "thermal_zone6:iwlwifi_1": 42.0
+        },
+        "started": 745626.706839147
+      }
+    },
+    {
+      "elapsed_seconds": 26.423,
+      "event": "sample",
+      "sample": {
+        "cpu_sensors": [
+          "thermal_zone3:TCPU",
+          "thermal_zone5:x86_pkg_temp"
+        ],
+        "finished": 745627.713456795,
+        "readings_c": {
+          "thermal_zone0:acpitz": 27.8,
+          "thermal_zone1:INT3400 Thermal": 20.0,
+          "thermal_zone2:SEN3": 42.05,
+          "thermal_zone3:TCPU": 45.0,
+          "thermal_zone4:TCPU_PCI": 45.0,
+          "thermal_zone5:x86_pkg_temp": 45.0,
+          "thermal_zone6:iwlwifi_1": 42.0
+        },
+        "started": 745627.710902511
+      }
+    },
+    {
+      "elapsed_seconds": 27.427,
+      "event": "sample",
+      "sample": {
+        "cpu_sensors": [
+          "thermal_zone3:TCPU",
+          "thermal_zone5:x86_pkg_temp"
+        ],
+        "finished": 745628.717351013,
+        "readings_c": {
+          "thermal_zone0:acpitz": 27.8,
+          "thermal_zone1:INT3400 Thermal": 20.0,
+          "thermal_zone2:SEN3": 42.05,
+          "thermal_zone3:TCPU": 45.0,
+          "thermal_zone4:TCPU_PCI": 47.0,
+          "thermal_zone5:x86_pkg_temp": 47.0,
+          "thermal_zone6:iwlwifi_1": 42.0
+        },
+        "started": 745628.714166997
+      }
+    },
+    {
+      "elapsed_seconds": 28.432,
+      "event": "sample",
+      "sample": {
+        "cpu_sensors": [
+          "thermal_zone3:TCPU",
+          "thermal_zone5:x86_pkg_temp"
+        ],
+        "finished": 745629.721751211,
+        "readings_c": {
+          "thermal_zone0:acpitz": 27.8,
+          "thermal_zone1:INT3400 Thermal": 20.0,
+          "thermal_zone2:SEN3": 42.05,
+          "thermal_zone3:TCPU": 47.0,
+          "thermal_zone4:TCPU_PCI": 46.0,
+          "thermal_zone5:x86_pkg_temp": 46.0,
+          "thermal_zone6:iwlwifi_1": 42.0
+        },
+        "started": 745629.717867654
+      }
+    },
+    {
+      "elapsed_seconds": 29.436,
+      "event": "sample",
+      "sample": {
+        "cpu_sensors": [
+          "thermal_zone3:TCPU",
+          "thermal_zone5:x86_pkg_temp"
+        ],
+        "finished": 745630.725820789,
+        "readings_c": {
+          "thermal_zone0:acpitz": 27.8,
+          "thermal_zone1:INT3400 Thermal": 20.0,
+          "thermal_zone2:SEN3": 42.05,
+          "thermal_zone3:TCPU": 45.0,
+          "thermal_zone4:TCPU_PCI": 45.0,
+          "thermal_zone5:x86_pkg_temp": 45.0,
+          "thermal_zone6:iwlwifi_1": 42.0
+        },
+        "started": 745630.722417994
+      }
+    },
+    {
+      "elapsed_seconds": 30.439,
+      "event": "sample",
+      "sample": {
+        "cpu_sensors": [
+          "thermal_zone3:TCPU",
+          "thermal_zone5:x86_pkg_temp"
+        ],
+        "finished": 745631.729501834,
+        "readings_c": {
+          "thermal_zone0:acpitz": 27.8,
+          "thermal_zone1:INT3400 Thermal": 20.0,
+          "thermal_zone2:SEN3": 42.05,
+          "thermal_zone3:TCPU": 44.0,
+          "thermal_zone4:TCPU_PCI": 47.0,
+          "thermal_zone5:x86_pkg_temp": 47.0,
+          "thermal_zone6:iwlwifi_1": 42.0
+        },
+        "started": 745631.726342019
+      }
+    },
+    {
+      "elapsed_seconds": 31.443,
+      "event": "sample",
+      "sample": {
+        "cpu_sensors": [
+          "thermal_zone3:TCPU",
+          "thermal_zone5:x86_pkg_temp"
+        ],
+        "finished": 745632.732892297,
+        "readings_c": {
+          "thermal_zone0:acpitz": 27.8,
+          "thermal_zone1:INT3400 Thermal": 20.0,
+          "thermal_zone2:SEN3": 42.05,
+          "thermal_zone3:TCPU": 44.0,
+          "thermal_zone4:TCPU_PCI": 45.0,
+          "thermal_zone5:x86_pkg_temp": 45.0,
+          "thermal_zone6:iwlwifi_1": 42.0
+        },
+        "started": 745632.730209653
+      }
+    },
+    {
+      "elapsed_seconds": 32.447,
+      "event": "sample",
+      "sample": {
+        "cpu_sensors": [
+          "thermal_zone3:TCPU",
+          "thermal_zone5:x86_pkg_temp"
+        ],
+        "finished": 745633.737271069,
+        "readings_c": {
+          "thermal_zone0:acpitz": 27.8,
+          "thermal_zone1:INT3400 Thermal": 20.0,
+          "thermal_zone2:SEN3": 42.05,
+          "thermal_zone3:TCPU": 51.0,
+          "thermal_zone4:TCPU_PCI": 51.0,
+          "thermal_zone5:x86_pkg_temp": 51.0,
+          "thermal_zone6:iwlwifi_1": 42.0
+        },
+        "started": 745633.733537229
+      }
+    },
+    {
+      "elapsed_seconds": 33.452,
+      "event": "sample",
+      "sample": {
+        "cpu_sensors": [
+          "thermal_zone3:TCPU",
+          "thermal_zone5:x86_pkg_temp"
+        ],
+        "finished": 745634.742266406,
+        "readings_c": {
+          "thermal_zone0:acpitz": 27.8,
+          "thermal_zone1:INT3400 Thermal": 20.0,
+          "thermal_zone2:SEN3": 42.05,
+          "thermal_zone3:TCPU": 49.0,
+          "thermal_zone4:TCPU_PCI": 47.0,
+          "thermal_zone5:x86_pkg_temp": 47.0,
+          "thermal_zone6:iwlwifi_1": 42.0
+        },
+        "started": 745634.737801633
+      }
+    },
+    {
+      "elapsed_seconds": 34.457,
+      "event": "sample",
+      "sample": {
+        "cpu_sensors": [
+          "thermal_zone3:TCPU",
+          "thermal_zone5:x86_pkg_temp"
+        ],
+        "finished": 745635.747124891,
+        "readings_c": {
+          "thermal_zone0:acpitz": 27.8,
+          "thermal_zone1:INT3400 Thermal": 20.0,
+          "thermal_zone2:SEN3": 42.05,
+          "thermal_zone3:TCPU": 46.0,
+          "thermal_zone4:TCPU_PCI": 47.0,
+          "thermal_zone5:x86_pkg_temp": 46.0,
+          "thermal_zone6:iwlwifi_1": 42.0
+        },
+        "started": 745635.743062871
+      }
+    },
+    {
+      "elapsed_seconds": 35.461,
+      "event": "sample",
+      "sample": {
+        "cpu_sensors": [
+          "thermal_zone3:TCPU",
+          "thermal_zone5:x86_pkg_temp"
+        ],
+        "finished": 745636.750929386,
+        "readings_c": {
+          "thermal_zone0:acpitz": 27.8,
+          "thermal_zone1:INT3400 Thermal": 20.0,
+          "thermal_zone2:SEN3": 42.05,
+          "thermal_zone3:TCPU": 47.0,
+          "thermal_zone4:TCPU_PCI": 47.0,
+          "thermal_zone5:x86_pkg_temp": 47.0,
+          "thermal_zone6:iwlwifi_1": 42.0
+        },
+        "started": 745636.747638361
+      }
+    },
+    {
+      "elapsed_seconds": 36.464,
+      "event": "sample",
+      "sample": {
+        "cpu_sensors": [
+          "thermal_zone3:TCPU",
+          "thermal_zone5:x86_pkg_temp"
+        ],
+        "finished": 745637.754343203,
+        "readings_c": {
+          "thermal_zone0:acpitz": 27.8,
+          "thermal_zone1:INT3400 Thermal": 20.0,
+          "thermal_zone2:SEN3": 42.05,
+          "thermal_zone3:TCPU": 45.0,
+          "thermal_zone4:TCPU_PCI": 45.0,
+          "thermal_zone5:x86_pkg_temp": 46.0,
+          "thermal_zone6:iwlwifi_1": 42.0
+        },
+        "started": 745637.751453502
+      }
+    },
+    {
+      "elapsed_seconds": 37.468,
+      "event": "sample",
+      "sample": {
+        "cpu_sensors": [
+          "thermal_zone3:TCPU",
+          "thermal_zone5:x86_pkg_temp"
+        ],
+        "finished": 745638.758082681,
+        "readings_c": {
+          "thermal_zone0:acpitz": 27.8,
+          "thermal_zone1:INT3400 Thermal": 20.0,
+          "thermal_zone2:SEN3": 42.05,
+          "thermal_zone3:TCPU": 52.0,
+          "thermal_zone4:TCPU_PCI": 58.0,
+          "thermal_zone5:x86_pkg_temp": 58.0,
+          "thermal_zone6:iwlwifi_1": 42.0
+        },
+        "started": 745638.756023745
+      }
+    },
+    {
+      "elapsed_seconds": 38.469,
+      "event": "final",
+      "reason": null,
+      "status": "completed"
+    }
+  ],
+  "exit_code": 0,
+  "format": 1,
+  "guard_sha256": "da16e2e0fd32eb5b90706b546a7ea8332a65807fc8279f3bd765dcc18aaad9b5",
+  "label": "urgit",
+  "launched": true,
+  "policy": {
+    "cooperative_seconds": 10,
+    "cpu_period_us": 10000,
+    "cpu_quota_us": 5000,
+    "kill_seconds": 5,
+    "sample_seconds": 1,
+    "stale_seconds": 3,
+    "start_c": 75,
+    "stop_c": 90,
+    "terminate_seconds": 10
+  },
+  "reason": null,
+  "run_directory": "<REPO>/.runtime/execution-runs/urgit-anaxyego",
+  "run_id": "4fe3a0845dd9d49eb80440c3c240b6d4",
+  "scope": "stead-native-4fe3a0845dd9d49eb80440c3c240b6d4.scope",
+  "scope_proof": {
+    "cgroup": "/user.slice/user-<UID>.slice/user@<UID>.service/app.slice/stead-native-4fe3a0845dd9d49eb80440c3c240b6d4.scope",
+    "cpu_affinity": [
+      19
+    ],
+    "cpu_max": "5000 10000",
+    "unit": "stead-native-4fe3a0845dd9d49eb80440c3c240b6d4.scope"
+  },
+  "status": "completed"
+}

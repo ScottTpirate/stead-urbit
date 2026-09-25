@@ -1,0 +1,11 @@
+{
+  "command": [
+    "make",
+    "dev"
+  ],
+  "source_commit": "c1e437ff19e5d03b5be8bc1ced00b303a909b046",
+  "working_tree": "?? docs/urbit/evidence/2026-09-25/urgit-audit/\n?? scripts/urbit/build_phase1_evidence.py\n",
+  "started_utc": "2026-09-25T11:34:10.785557+00:00",
+  "elapsed_seconds": 56.438,
+  "exit": 0
+}

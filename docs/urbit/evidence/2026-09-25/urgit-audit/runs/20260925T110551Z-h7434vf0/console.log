@@ -1,0 +1,28 @@
+booting one pinned fake ship on one CPU
+stopping the disposable fake ship
+Traceback (most recent call last):
+  File "/code/evaluate.py", line 301, in main
+    bootstrap.validate(identity, ready, clean)
+    ~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/code/bootstrap.py", line 22, in validate
+    raise ValueError('Native fake identity, Kelvin or clean Urgit baseline failed')
+ValueError: Native fake identity, Kelvin or clean Urgit baseline failed
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/code/evaluate.py", line 317, in main
+    report['error'] = clean(repr(error))
+                      ~~~~~^^^^^^^^^^^^^
+TypeError: 'str' object is not callable
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/code/evaluate.py", line 381, in <module>
+    raise SystemExit(main())
+                     ~~~~^^
+  File "/code/evaluate.py", line 374, in main
+    (EVIDENCE / 'report.json').write_text(clean(report) + '\n')
+                                          ~~~~~^^^^^^^^
+TypeError: 'str' object is not callable

@@ -1,0 +1,75 @@
+{
+  "command": [
+    "python3",
+    "scripts/urbit/urgit_audit.py"
+  ],
+  "command_executed": true,
+  "console": "<REPO>/.runtime/urgit-independent-attempt-20260925T110142Z-aa03f11a.log",
+  "exit_code": 1,
+  "finished_utc": "2026-09-25T11:01:43.538392+00:00",
+  "format": 1,
+  "immediate_preflight_sample": {
+    "cpu_sensors": [
+      "thermal_zone3:TCPU",
+      "thermal_zone5:x86_pkg_temp"
+    ],
+    "finished": 744009.559376125,
+    "readings_c": {
+      "thermal_zone0:acpitz": 27.8,
+      "thermal_zone1:INT3400 Thermal": 20.0,
+      "thermal_zone2:SEN3": 40.05,
+      "thermal_zone3:TCPU": 50.0,
+      "thermal_zone4:TCPU_PCI": 50.0,
+      "thermal_zone5:x86_pkg_temp": 47.0,
+      "thermal_zone6:iwlwifi_1": 41.0
+    },
+    "started": 744009.557191298
+  },
+  "kind": "independent-guarded-urgit-attempt",
+  "locks_before": {
+    ".piers/fakes/lifecycle.lock": "unheld",
+    ".runtime/native-execution.lock": "unheld"
+  },
+  "origin": {
+    "fetch": "https://github.com/ScottTpirate/stead-urbit.git",
+    "push": "https://github.com/ScottTpirate/stead-urbit.git"
+  },
+  "policy_unchanged": {
+    "cooperative_seconds": 10,
+    "cpu_period_us": 10000,
+    "cpu_quota_us": 5000,
+    "kill_seconds": 5,
+    "sample_seconds": 1,
+    "stale_seconds": 3,
+    "start_c": 75,
+    "stop_c": 90,
+    "terminate_seconds": 10
+  },
+  "scheduling_comfort_maximum_c": 60,
+  "sha256_after": {
+    "scripts/urbit/digests.py": "8a976c8861b3d65fed22d8d4cd4a62f704e25c9f0e3f0105a3228df48549a845",
+    "scripts/urbit/execution_policy.py": "da16e2e0fd32eb5b90706b546a7ea8332a65807fc8279f3bd765dcc18aaad9b5",
+    "scripts/urbit/toolchain.py": "31234bbab1af217c885d8c081d7f438972f6ff1b6d89c93d10bdf49871b3ea16",
+    "scripts/urbit/urgit_audit.py": "c16b32b67c450ccd1fab8efc739e7d272ef4dc96c82dff8f119107f30b3c28d5",
+    "scripts/urbit/urgit_eval/bootstrap.py": "49e9fe5665490c7eab60e4e07dd5c72769fbf3c95a771bbb4e1093a6e73d4b56",
+    "scripts/urbit/urgit_eval/evaluate.py": "ca4263bc736e5bdfcb50ea86615a7c3a1151eeee546f45cc2072deb86c266652",
+    "scripts/urbit/urgit_seed.py": "abb5b8bccec6e8f46278283a344e8afa6ffbfe9aae58b8d509a527f055f33b50",
+    "specs/urbit/toolchain.lock.json": "4a209c10cf1756eb0f7357cc3eca8250bf66c239b4cd0ca31a8c0886d4d304ee",
+    "specs/urbit/urgit-candidate.lock.json": "50a90b296fa40e5a9178999cb2709682884812a98e2b133f6261eb5ec3934561"
+  },
+  "sha256_before": {
+    "scripts/urbit/digests.py": "8a976c8861b3d65fed22d8d4cd4a62f704e25c9f0e3f0105a3228df48549a845",
+    "scripts/urbit/execution_policy.py": "da16e2e0fd32eb5b90706b546a7ea8332a65807fc8279f3bd765dcc18aaad9b5",
+    "scripts/urbit/toolchain.py": "31234bbab1af217c885d8c081d7f438972f6ff1b6d89c93d10bdf49871b3ea16",
+    "scripts/urbit/urgit_audit.py": "c16b32b67c450ccd1fab8efc739e7d272ef4dc96c82dff8f119107f30b3c28d5",
+    "scripts/urbit/urgit_eval/bootstrap.py": "49e9fe5665490c7eab60e4e07dd5c72769fbf3c95a771bbb4e1093a6e73d4b56",
+    "scripts/urbit/urgit_eval/evaluate.py": "ca4263bc736e5bdfcb50ea86615a7c3a1151eeee546f45cc2072deb86c266652",
+    "scripts/urbit/urgit_seed.py": "abb5b8bccec6e8f46278283a344e8afa6ffbfe9aae58b8d509a527f055f33b50",
+    "specs/urbit/toolchain.lock.json": "4a209c10cf1756eb0f7357cc3eca8250bf66c239b4cd0ca31a8c0886d4d304ee",
+    "specs/urbit/urgit-candidate.lock.json": "50a90b296fa40e5a9178999cb2709682884812a98e2b133f6261eb5ec3934561"
+  },
+  "source_commit": "209bd33f047ef3dbc686557c1c70b8137080d337",
+  "sources_unchanged": true,
+  "started_utc": "2026-09-25T11:01:42.238222+00:00",
+  "status": "failed"
+}

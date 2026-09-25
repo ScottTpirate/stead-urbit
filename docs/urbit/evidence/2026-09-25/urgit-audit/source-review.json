@@ -1,0 +1,27 @@
+{
+  "authority_references": {
+    "clay-report": "desk/app/urgit.hoon:9592",
+    "peer-finish": "desk/app/urgit.hoon:2596",
+    "write-authorized": "desk/app/urgit.hoon:7800"
+  },
+  "candidate_archive_sha256": "facf578b6edccbdb5b748ff16eabcbeaf10c4ca0dbc8c6073bedb0cbee7e5ee3",
+  "candidate_commit": "9cec0371b02269efcdbd8580c42e883e69b82000",
+  "candidate_repository": "yapishu/urgit",
+  "copyright_or_permission_text_outside_dependency_lockfiles": [],
+  "governing_directive_sha256": "30cd338df7f716b040f6337d5b3de97da1704c6b39c7a3124a95c40a7a1653ab",
+  "license_copying_notice_files": [],
+  "license_declaration": {
+    "file": "desk/desk.docket-0",
+    "line": 7,
+    "text": "license+'MIT'"
+  },
+  "reviewed_source_sha256": {
+    "build.zig": "736d533a7c5c8a3fc76a9fe432f2444c605ad3ada9a0c9eb0528911da01c326b",
+    "desk/app/urgit.hoon": "199e35523408cb7f52dedbd464618cb36dcb6169c20c668458858f826799502e",
+    "desk/desk.docket-0": "2a2b4bcac0b4e1f6cc0c54b904f6ca68ce8826e1432d2655f5e181bd0eba5f37",
+    "specs/architecture.md": "52c09d6e7045e619aa91fd3c64efa8a5802cfe2f5b6ef9254f7e3795cc9e1f69"
+  },
+  "scope": "Static source observations; no exploit, permission expansion or backend adoption inferred. Candidate source is not vendored in this bundle.",
+  "source_bytes": 1258242,
+  "source_regular_files": 132
+}

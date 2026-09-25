@@ -1,0 +1,17 @@
+{
+  "classification": "real-local-git-bootstrap-verification",
+  "checked_utc": "2026-09-25T11:39:20.449481+00:00",
+  "source_commit": "c1e437ff19e5d03b5be8bc1ced00b303a909b046",
+  "original_baseline": "3d47f0172a41beebb31f5c3a7df133cc1d4b1ead",
+  "original_is_ancestor": true,
+  "archived_tree_exact_paths_modes_object_ids_match": true,
+  "archived_files": 342,
+  "origin_fetch": "https://github.com/ScottTpirate/stead-urbit.git",
+  "origin_push": "https://github.com/ScottTpirate/stead-urbit.git",
+  "upstream_fetch": "https://github.com/ScottTpirate/stead.git",
+  "upstream_push": "DISABLED_UPSTREAM_PUSH",
+  "active_workflows": [],
+  "directive": "docs/urbit/MASTER_BUILD_DIRECTIVE.md",
+  "catalog_sha256": "7193c6fd85bd464a9bd14d6c833ba7083f2b0a5f5198cf5af4264239f8f1ba06",
+  "runtime_execution_claim": false
+}

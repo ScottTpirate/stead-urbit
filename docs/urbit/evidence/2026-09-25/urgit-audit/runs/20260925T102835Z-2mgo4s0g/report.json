@@ -1,0 +1,47 @@
+{
+  "checks": [],
+  "error": "InterruptedError('evaluation stop requested')",
+  "excluded_claims": [
+    "Stead Git integration or production admission",
+    "concurrent server CAS",
+    "revocation while ingestion is staged",
+    "private-project endpoint isolation",
+    "frontend or Zig build",
+    "live Urbit networking or deployment",
+    "SHA-256 repositories, LFS, partial/shallow clone qualification",
+    "crash-during-push recovery or load capacity"
+  ],
+  "generated_credential_absent_from_evidence": true,
+  "host_stop_reason": "GuardError: Thermal ceiling reached",
+  "output_import_failures": [
+    {
+      "error": "FileNotFoundError",
+      "file": "native-vectors.json"
+    }
+  ],
+  "reason": "sandbox exited unsuccessfully",
+  "runtime_argv": [
+    "/runtime/vere",
+    "-t",
+    "-F",
+    "zod",
+    "-B",
+    "/runtime/pill",
+    "-A",
+    "/kernel/pkg/arvo",
+    "--loom",
+    "31",
+    "--no-dock",
+    "--http-port",
+    "8080",
+    "-b",
+    "127.0.0.1",
+    "-c",
+    "/work/zod"
+  ],
+  "runtime_exit_code": 1,
+  "sandbox_exit_code": 1,
+  "scope": "isolated-native-git-candidate-evaluation-only",
+  "shutdown_fallback": "SIGTERM: native control endpoint unavailable",
+  "status": "failed"
+}

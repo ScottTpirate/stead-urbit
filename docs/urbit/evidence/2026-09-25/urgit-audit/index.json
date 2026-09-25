@@ -1,0 +1,926 @@
+{
+  "artifacts": [
+    {
+      "normalization": "JSON parsed, declared substitutions applied, keys sorted, indent 2, final LF",
+      "original_bytes": 889,
+      "original_path": ".runtime/urgit-evaluations/20260925T102835Z-2mgo4s0g/evidence/SHA256SUMS.json",
+      "original_sha256": "96794899e17a97a2bf60ff5aa6b3363605a56e0853201b609b22f6b55e606132",
+      "portable_bytes": 889,
+      "portable_path": "runs/20260925T102835Z-2mgo4s0g/SHA256SUMS.original.json",
+      "portable_sha256": "96794899e17a97a2bf60ff5aa6b3363605a56e0853201b609b22f6b55e606132"
+    },
+    {
+      "normalization": "Each JSON line parsed, declared substitutions applied, keys sorted, final LF",
+      "original_bytes": 78,
+      "original_path": ".runtime/urgit-evaluations/20260925T102835Z-2mgo4s0g/evidence/commands.jsonl",
+      "original_sha256": "e3e1be6a89547ec6a01fa4bda2c682323087781ab85acf208eff3930024da2dd",
+      "portable_bytes": 78,
+      "portable_path": "runs/20260925T102835Z-2mgo4s0g/commands.jsonl",
+      "portable_sha256": "0e1965ff390ca0026e288266a5f14ab7806af538e088d9ebe7b5740eedfbc912"
+    },
+    {
+      "normalization": "Declared literal path/UID substitutions only; other text bytes preserved",
+      "original_bytes": 139,
+      "original_path": ".runtime/urgit-evaluations/20260925T102835Z-2mgo4s0g/evidence/console.log",
+      "original_sha256": "aeb8e8c0fb8e46fd7e5edf975a8007b8ec4c5c3377e6e1acb7f66e568cd27137",
+      "portable_bytes": 139,
+      "portable_path": "runs/20260925T102835Z-2mgo4s0g/console.log",
+      "portable_sha256": "aeb8e8c0fb8e46fd7e5edf975a8007b8ec4c5c3377e6e1acb7f66e568cd27137"
+    },
+    {
+      "normalization": "JSON parsed, declared substitutions applied, keys sorted, indent 2, final LF",
+      "original_bytes": 838,
+      "original_path": ".runtime/urgit-evaluations/20260925T102835Z-2mgo4s0g/evidence/evaluator-report.json",
+      "original_sha256": "a4d83e9b295d6e0880019b9f48641b23fa21e126f90211df54c06f98be525789",
+      "portable_bytes": 966,
+      "portable_path": "runs/20260925T102835Z-2mgo4s0g/evaluator-report.json",
+      "portable_sha256": "700779bea484bf2483262e0b4c346b3580e41dda51567c0a7023f07646e7489d"
+    },
+    {
+      "normalization": "JSON parsed, declared substitutions applied, keys sorted, indent 2, final LF",
+      "original_bytes": 231122,
+      "original_path": ".runtime/urgit-evaluations/20260925T102835Z-2mgo4s0g/evidence/execution-guard.json",
+      "original_sha256": "f8aedb6a165d52ba18d42a1b889a1ae01de89d08029620771e41b9843215a479",
+      "portable_bytes": 230902,
+      "portable_path": "runs/20260925T102835Z-2mgo4s0g/execution-guard.json",
+      "portable_sha256": "040433e13ed7685b429c4e76dfb043854d5724fc2014379e0b62f15fc91afd32"
+    },
+    {
+      "normalization": "JSON parsed, declared substitutions applied, keys sorted, indent 2, final LF",
+      "original_bytes": 3105,
+      "original_path": ".runtime/urgit-evaluations/20260925T102835Z-2mgo4s0g/evidence/provenance.json",
+      "original_sha256": "ebbf0f026851c6ed6ceeb2f02bdadadbf567ac91cb90fbc180bd397db81a8e61",
+      "portable_bytes": 3104,
+      "portable_path": "runs/20260925T102835Z-2mgo4s0g/provenance.json",
+      "portable_sha256": "76d36e82f716e6b28bf0cd38d4b14176a91c32128982aad68789810c0917d352"
+    },
+    {
+      "normalization": "JSON parsed, declared substitutions applied, keys sorted, indent 2, final LF",
+      "original_bytes": 1217,
+      "original_path": ".runtime/urgit-evaluations/20260925T102835Z-2mgo4s0g/evidence/report.json",
+      "original_sha256": "66b064b9650660757057cd69fa1b5fffeaea249a76c6ba3e019dace2833880a3",
+      "portable_bytes": 1217,
+      "portable_path": "runs/20260925T102835Z-2mgo4s0g/report.json",
+      "portable_sha256": "ca2f93fcb69e5c0f51774f280eed1eaf2f1f35766e2679befbe6c9c3c6fea896"
+    },
+    {
+      "normalization": "JSON parsed, declared substitutions applied, keys sorted, indent 2, final LF",
+      "original_bytes": 1631,
+      "original_path": ".runtime/urgit-evaluations/20260925T102835Z-2mgo4s0g/evidence/sandbox-command.json",
+      "original_sha256": "f5312db3447f98516dcb9c4fba67ca8719c9d885a55ac44aac45fecb900b7e2f",
+      "portable_bytes": 1471,
+      "portable_path": "runs/20260925T102835Z-2mgo4s0g/sandbox-command.json",
+      "portable_sha256": "71af6fd5319c0177f7e8ff86248d3fa749b06dce723685b5e78d22b0bc4b11b4"
+    },
+    {
+      "normalization": "JSON parsed, declared substitutions applied, keys sorted, indent 2, final LF",
+      "original_bytes": 20,
+      "original_path": ".runtime/urgit-evaluations/20260925T102835Z-2mgo4s0g/evidence/status.json",
+      "original_sha256": "9b2bf1723be8d3f31974570d8bbc7238d36261d7fd043991b8869e0b2bd236f5",
+      "portable_bytes": 24,
+      "portable_path": "runs/20260925T102835Z-2mgo4s0g/status.json",
+      "portable_sha256": "15b96683f7a2d4ec9b25e826861733bc2b89dacf75b32dc02ff9a0f40b9f77e5"
+    },
+    {
+      "normalization": "Each JSON line parsed, declared substitutions applied, keys sorted, final LF",
+      "original_bytes": 103071,
+      "original_path": ".runtime/urgit-evaluations/20260925T102835Z-2mgo4s0g/evidence/thermal.jsonl",
+      "original_sha256": "3bc61ae4e20565ca7629c585c36d9d5a205bd05adf6c7b8d45edc05b21b11bf5",
+      "portable_bytes": 103071,
+      "portable_path": "runs/20260925T102835Z-2mgo4s0g/thermal.jsonl",
+      "portable_sha256": "3bc61ae4e20565ca7629c585c36d9d5a205bd05adf6c7b8d45edc05b21b11bf5"
+    },
+    {
+      "normalization": "JSON parsed, declared substitutions applied, keys sorted, indent 2, final LF",
+      "original_bytes": 625,
+      "original_path": ".runtime/urgit-evaluations/20260925T110142Z-d542j3zm/evidence/SHA256SUMS.json",
+      "original_sha256": "bc0f5fa91bd844e31edf40eb9714e9c9b1d32aabb6b66afdb84a392db6b1434e",
+      "portable_bytes": 625,
+      "portable_path": "runs/20260925T110142Z-d542j3zm/SHA256SUMS.original.json",
+      "portable_sha256": "bc0f5fa91bd844e31edf40eb9714e9c9b1d32aabb6b66afdb84a392db6b1434e"
+    },
+    {
+      "normalization": "JSON parsed, declared substitutions applied, keys sorted, indent 2, final LF",
+      "original_bytes": 46,
+      "original_path": ".runtime/urgit-evaluations/20260925T110142Z-d542j3zm/evidence/bootstrap.json",
+      "original_sha256": "ce0e500a41261eb67c9fc4352760f060df333d82afd3d91176fcac51924fe675",
+      "portable_bytes": 46,
+      "portable_path": "runs/20260925T110142Z-d542j3zm/bootstrap.json",
+      "portable_sha256": "ce0e500a41261eb67c9fc4352760f060df333d82afd3d91176fcac51924fe675"
+    },
+    {
+      "normalization": "Declared literal path/UID substitutions only; other text bytes preserved",
+      "original_bytes": 0,
+      "original_path": ".runtime/urgit-evaluations/20260925T110142Z-d542j3zm/evidence/console.log",
+      "original_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "portable_bytes": 0,
+      "portable_path": "runs/20260925T110142Z-d542j3zm/console.log",
+      "portable_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "normalization": "JSON parsed, declared substitutions applied, keys sorted, indent 2, final LF",
+      "original_bytes": 2132,
+      "original_path": ".runtime/urgit-evaluations/20260925T110142Z-d542j3zm/evidence/execution-guard.json",
+      "original_sha256": "5051e8a991e20537fff33588fde20d60e7eb5c3814e945fea6cbc7cbbcb52abd",
+      "portable_bytes": 2112,
+      "portable_path": "runs/20260925T110142Z-d542j3zm/execution-guard.json",
+      "portable_sha256": "790cdf1bd17c48de654c73f8fb1a3790c2b0c9a304f9384fb637d641d9e58e14"
+    },
+    {
+      "normalization": "JSON parsed, declared substitutions applied, keys sorted, indent 2, final LF",
+      "original_bytes": 3374,
+      "original_path": ".runtime/urgit-evaluations/20260925T110142Z-d542j3zm/evidence/provenance.json",
+      "original_sha256": "920d4e97202c7c095c04d7e44752cb79822519b318e9ac0b181de273e10fc818",
+      "portable_bytes": 3373,
+      "portable_path": "runs/20260925T110142Z-d542j3zm/provenance.json",
+      "portable_sha256": "1d08556e00fcea26347eda6da8f31bc4933943575608861663e1e9c6d1b4ff8b"
+    },
+    {
+      "normalization": "JSON parsed, declared substitutions applied, keys sorted, indent 2, final LF",
+      "original_bytes": 661,
+      "original_path": ".runtime/urgit-evaluations/20260925T110142Z-d542j3zm/evidence/report.json",
+      "original_sha256": "ba9e0cd3265fe55b21ed8d39ac104566f411f5f77447c78ac916fe2661ea2c6a",
+      "portable_bytes": 661,
+      "portable_path": "runs/20260925T110142Z-d542j3zm/report.json",
+      "portable_sha256": "3fd7d64d486617d1f8042c88ca4ce8f06477afd3d1ca8360a4b0432260ab1294"
+    },
+    {
+      "normalization": "JSON parsed, declared substitutions applied, keys sorted, indent 2, final LF",
+      "original_bytes": 1631,
+      "original_path": ".runtime/urgit-evaluations/20260925T110142Z-d542j3zm/evidence/sandbox-command.json",
+      "original_sha256": "cf42b6fc98fd2f791ad812b47cc77c7b438499d303fd58ca8a76f063b4764773",
+      "portable_bytes": 1471,
+      "portable_path": "runs/20260925T110142Z-d542j3zm/sandbox-command.json",
+      "portable_sha256": "3865d1ea7aa2171ab2a73de7ebe0273ce284c2d50feb38f802899cae1167530d"
+    },
+    {
+      "normalization": "Each JSON line parsed, declared substitutions applied, keys sorted, final LF",
+      "original_bytes": 548,
+      "original_path": ".runtime/urgit-evaluations/20260925T110142Z-d542j3zm/evidence/thermal.jsonl",
+      "original_sha256": "ae85e1648204db0ea033cb20214b653375735470a4e0ca2a96f79f0c8ea397ef",
+      "portable_bytes": 548,
+      "portable_path": "runs/20260925T110142Z-d542j3zm/thermal.jsonl",
+      "portable_sha256": "ae85e1648204db0ea033cb20214b653375735470a4e0ca2a96f79f0c8ea397ef"
+    },
+    {
+      "normalization": "JSON parsed, declared substitutions applied, keys sorted, indent 2, final LF",
+      "original_bytes": 882,
+      "original_path": ".runtime/urgit-evaluations/20260925T110551Z-h7434vf0/evidence/SHA256SUMS.json",
+      "original_sha256": "e09d432f9b65d6edda05b9caf74266b033bf0d54efe5a791a86196168dfd8d0e",
+      "portable_bytes": 882,
+      "portable_path": "runs/20260925T110551Z-h7434vf0/SHA256SUMS.original.json",
+      "portable_sha256": "e09d432f9b65d6edda05b9caf74266b033bf0d54efe5a791a86196168dfd8d0e"
+    },
+    {
+      "normalization": "JSON parsed, declared substitutions applied, keys sorted, indent 2, final LF",
+      "original_bytes": 1224,
+      "original_path": ".runtime/urgit-evaluations/20260925T110551Z-h7434vf0/evidence/bootstrap.json",
+      "original_sha256": "85b76afbc55aba2a033c8ecf66d9300d773c091de1c687f5d31e015470aee7ea",
+      "portable_bytes": 1224,
+      "portable_path": "runs/20260925T110551Z-h7434vf0/bootstrap.json",
+      "portable_sha256": "09e289b618b84a81640a5f624d582784a11b1b907bb87b1a818b174df0a5508d"
+    },
+    {
+      "normalization": "Each JSON line parsed, declared substitutions applied, keys sorted, final LF",
+      "original_bytes": 1438,
+      "original_path": ".runtime/urgit-evaluations/20260925T110551Z-h7434vf0/evidence/commands.jsonl",
+      "original_sha256": "e4775d5e3e4c4371124e9d5ccd4279324b53e65fa5ea6def4fbb2ae7e0958f35",
+      "portable_bytes": 1438,
+      "portable_path": "runs/20260925T110551Z-h7434vf0/commands.jsonl",
+      "portable_sha256": "675d15383441e052695611522fa8a3e76abed06e5fe2c9111f4fb19c04d5f28c"
+    },
+    {
+      "normalization": "Declared literal path/UID substitutions only; other text bytes preserved",
+      "original_bytes": 1146,
+      "original_path": ".runtime/urgit-evaluations/20260925T110551Z-h7434vf0/evidence/console.log",
+      "original_sha256": "c8c03f9b3e4279206813fd44b0bc3ad42840830e6ab66cc9291bd82962a7406b",
+      "portable_bytes": 1146,
+      "portable_path": "runs/20260925T110551Z-h7434vf0/console.log",
+      "portable_sha256": "c8c03f9b3e4279206813fd44b0bc3ad42840830e6ab66cc9291bd82962a7406b"
+    },
+    {
+      "normalization": "JSON parsed, declared substitutions applied, keys sorted, indent 2, final LF",
+      "original_bytes": 7970,
+      "original_path": ".runtime/urgit-evaluations/20260925T110551Z-h7434vf0/evidence/execution-guard.json",
+      "original_sha256": "b140f8c60b9a7e57f069126a3e7aa9d3d760cf3e011b7b2981bbf261da0caed7",
+      "portable_bytes": 7750,
+      "portable_path": "runs/20260925T110551Z-h7434vf0/execution-guard.json",
+      "portable_sha256": "26ed93067d2f08cceb3b68c4c787856dc66fa7c6d9bb2949efcbf50092fbf1a3"
+    },
+    {
+      "normalization": "JSON parsed, declared substitutions applied, keys sorted, indent 2, final LF",
+      "original_bytes": 3374,
+      "original_path": ".runtime/urgit-evaluations/20260925T110551Z-h7434vf0/evidence/provenance.json",
+      "original_sha256": "d4c963b1162a6e74b8c620e72311d353b60aa6a12c474d8846baaecdedac5ab6",
+      "portable_bytes": 3373,
+      "portable_path": "runs/20260925T110551Z-h7434vf0/provenance.json",
+      "portable_sha256": "680bb491f66213e12685cd645e8eed11178a6cfd79dbd3840648cc4aab4f2147"
+    },
+    {
+      "normalization": "JSON parsed, declared substitutions applied, keys sorted, indent 2, final LF",
+      "original_bytes": 425,
+      "original_path": ".runtime/urgit-evaluations/20260925T110551Z-h7434vf0/evidence/report.json",
+      "original_sha256": "f2c84d05b4bb38359342885398cce3c9100491cc93981d35d06380d45c4b58e5",
+      "portable_bytes": 425,
+      "portable_path": "runs/20260925T110551Z-h7434vf0/report.json",
+      "portable_sha256": "a169787777efaa5c3f86512966aa35be4d58ec6e195460b9b59eac739bfe7c48"
+    },
+    {
+      "normalization": "JSON parsed, declared substitutions applied, keys sorted, indent 2, final LF",
+      "original_bytes": 1631,
+      "original_path": ".runtime/urgit-evaluations/20260925T110551Z-h7434vf0/evidence/sandbox-command.json",
+      "original_sha256": "23638a2927d4c0ee5226bb4fbe408a36f79069e2eb2771777c8083a25e88f310",
+      "portable_bytes": 1471,
+      "portable_path": "runs/20260925T110551Z-h7434vf0/sandbox-command.json",
+      "portable_sha256": "8a9f5ba72f561b04183bcb8f9fa1c7e9c94a82622dd986553b7dcf7f473dc615"
+    },
+    {
+      "normalization": "JSON parsed, declared substitutions applied, keys sorted, indent 2, final LF",
+      "original_bytes": 47,
+      "original_path": ".runtime/urgit-evaluations/20260925T110551Z-h7434vf0/evidence/status.json",
+      "original_sha256": "8476899c4b33a988e08db872c2ee3248518c5f611cd41f7fe180b1d446c4b64a",
+      "portable_bytes": 51,
+      "portable_path": "runs/20260925T110551Z-h7434vf0/status.json",
+      "portable_sha256": "3920b6844f90fb1b5bed2450efc04edfdd1237f5aa050a1ce658256e8120dfc1"
+    },
+    {
+      "normalization": "Each JSON line parsed, declared substitutions applied, keys sorted, final LF",
+      "original_bytes": 2192,
+      "original_path": ".runtime/urgit-evaluations/20260925T110551Z-h7434vf0/evidence/thermal.jsonl",
+      "original_sha256": "1fe0ad43e9354aabe90925bc8c840a7fa1d89cc81e05e75e4b8dc0ac3da94583",
+      "portable_bytes": 2192,
+      "portable_path": "runs/20260925T110551Z-h7434vf0/thermal.jsonl",
+      "portable_sha256": "1fe0ad43e9354aabe90925bc8c840a7fa1d89cc81e05e75e4b8dc0ac3da94583"
+    },
+    {
+      "normalization": "JSON parsed, declared substitutions applied, keys sorted, indent 2, final LF",
+      "original_bytes": 977,
+      "original_path": ".runtime/urgit-evaluations/20260925T111141Z-ukilsapn/evidence/SHA256SUMS.json",
+      "original_sha256": "04fe723518df53b55645a2babdc3ecbf5a7fd88243048e312fc7121311bb7137",
+      "portable_bytes": 977,
+      "portable_path": "runs/20260925T111141Z-ukilsapn/SHA256SUMS.original.json",
+      "portable_sha256": "04fe723518df53b55645a2babdc3ecbf5a7fd88243048e312fc7121311bb7137"
+    },
+    {
+      "normalization": "JSON parsed, declared substitutions applied, keys sorted, indent 2, final LF",
+      "original_bytes": 1224,
+      "original_path": ".runtime/urgit-evaluations/20260925T111141Z-ukilsapn/evidence/bootstrap.json",
+      "original_sha256": "85b76afbc55aba2a033c8ecf66d9300d773c091de1c687f5d31e015470aee7ea",
+      "portable_bytes": 1224,
+      "portable_path": "runs/20260925T111141Z-ukilsapn/bootstrap.json",
+      "portable_sha256": "09e289b618b84a81640a5f624d582784a11b1b907bb87b1a818b174df0a5508d"
+    },
+    {
+      "normalization": "Each JSON line parsed, declared substitutions applied, keys sorted, final LF",
+      "original_bytes": 1561,
+      "original_path": ".runtime/urgit-evaluations/20260925T111141Z-ukilsapn/evidence/commands.jsonl",
+      "original_sha256": "0f4d5c1ac8b4ca5a45a9541d8e242e54a9f12fd486885fdd16d12783fdf136cf",
+      "portable_bytes": 1561,
+      "portable_path": "runs/20260925T111141Z-ukilsapn/commands.jsonl",
+      "portable_sha256": "71c5253bf3b6e07cf6768214fba6450431fd90868f3aece6ccdca72a02ee413f"
+    },
+    {
+      "normalization": "Declared literal path/UID substitutions only; other text bytes preserved",
+      "original_bytes": 139,
+      "original_path": ".runtime/urgit-evaluations/20260925T111141Z-ukilsapn/evidence/console.log",
+      "original_sha256": "643bbf678ae921547daba0395e834696dd9874b908bfbcba0c456c340e3c92ac",
+      "portable_bytes": 139,
+      "portable_path": "runs/20260925T111141Z-ukilsapn/console.log",
+      "portable_sha256": "643bbf678ae921547daba0395e834696dd9874b908bfbcba0c456c340e3c92ac"
+    },
+    {
+      "normalization": "JSON parsed, declared substitutions applied, keys sorted, indent 2, final LF",
+      "original_bytes": 1786,
+      "original_path": ".runtime/urgit-evaluations/20260925T111141Z-ukilsapn/evidence/evaluator-report.json",
+      "original_sha256": "d763cc81e850534b2e2f1874ad26ee5596c3a8550d8d96d620366351d9db244b",
+      "portable_bytes": 2196,
+      "portable_path": "runs/20260925T111141Z-ukilsapn/evaluator-report.json",
+      "portable_sha256": "3afa7f97a485a2a0c53288f6f178eb61bdec0711c630f870d4a46b71e6a56740"
+    },
+    {
+      "normalization": "JSON parsed, declared substitutions applied, keys sorted, indent 2, final LF",
+      "original_bytes": 7361,
+      "original_path": ".runtime/urgit-evaluations/20260925T111141Z-ukilsapn/evidence/execution-guard.json",
+      "original_sha256": "7af8e9c37e65c9c856bc0565dc282e1791ba347a60296d503b185598d115613c",
+      "portable_bytes": 7141,
+      "portable_path": "runs/20260925T111141Z-ukilsapn/execution-guard.json",
+      "portable_sha256": "ff4bc7f58b6851ebb2f87290cd8f2babdaca0d6b348eb8cd698e53aad8cb8239"
+    },
+    {
+      "normalization": "JSON parsed, declared substitutions applied, keys sorted, indent 2, final LF",
+      "original_bytes": 3374,
+      "original_path": ".runtime/urgit-evaluations/20260925T111141Z-ukilsapn/evidence/provenance.json",
+      "original_sha256": "6a00ce7180f308aae1217f2ec5f987d0d8929dbc07c0f5f0d88600a8897846f3",
+      "portable_bytes": 3373,
+      "portable_path": "runs/20260925T111141Z-ukilsapn/provenance.json",
+      "portable_sha256": "edd3496aadfd1d2e506958ec735a65e3334e5409c8abb999aa9a6330b3298c38"
+    },
+    {
+      "normalization": "JSON parsed, declared substitutions applied, keys sorted, indent 2, final LF",
+      "original_bytes": 2447,
+      "original_path": ".runtime/urgit-evaluations/20260925T111141Z-ukilsapn/evidence/report.json",
+      "original_sha256": "85a240ed411e048662b40c5a61dd27eba33a9700a4642fd5a25088c18e3bd84e",
+      "portable_bytes": 2447,
+      "portable_path": "runs/20260925T111141Z-ukilsapn/report.json",
+      "portable_sha256": "21b1597211382db4019a1896cd51fdb13a063a17fec11420910140fd7f70cfb7"
+    },
+    {
+      "normalization": "JSON parsed, declared substitutions applied, keys sorted, indent 2, final LF",
+      "original_bytes": 1631,
+      "original_path": ".runtime/urgit-evaluations/20260925T111141Z-ukilsapn/evidence/sandbox-command.json",
+      "original_sha256": "f57b782e882d9790e38cb83fde43aaec244df2f3eea7c4a81917af56f225cd7c",
+      "portable_bytes": 1471,
+      "portable_path": "runs/20260925T111141Z-ukilsapn/sandbox-command.json",
+      "portable_sha256": "7d9afa9c7fa79dd863fb4cd2f9f8a024e0ac90d0913e9a53b5621a00d6bd0a30"
+    },
+    {
+      "normalization": "JSON parsed, declared substitutions applied, keys sorted, indent 2, final LF",
+      "original_bytes": 20,
+      "original_path": ".runtime/urgit-evaluations/20260925T111141Z-ukilsapn/evidence/status.json",
+      "original_sha256": "9b2bf1723be8d3f31974570d8bbc7238d36261d7fd043991b8869e0b2bd236f5",
+      "portable_bytes": 24,
+      "portable_path": "runs/20260925T111141Z-ukilsapn/status.json",
+      "portable_sha256": "15b96683f7a2d4ec9b25e826861733bc2b89dacf75b32dc02ff9a0f40b9f77e5"
+    },
+    {
+      "normalization": "Each JSON line parsed, declared substitutions applied, keys sorted, final LF",
+      "original_bytes": 1918,
+      "original_path": ".runtime/urgit-evaluations/20260925T111141Z-ukilsapn/evidence/thermal.jsonl",
+      "original_sha256": "ab3069932639701ab90d242fc3dedb3d20eae22ff4eebea70c004539f07af545",
+      "portable_bytes": 1918,
+      "portable_path": "runs/20260925T111141Z-ukilsapn/thermal.jsonl",
+      "portable_sha256": "ab3069932639701ab90d242fc3dedb3d20eae22ff4eebea70c004539f07af545"
+    },
+    {
+      "normalization": "JSON parsed, declared substitutions applied, keys sorted, indent 2, final LF",
+      "original_bytes": 625,
+      "original_path": ".runtime/urgit-evaluations/20260925T111845Z-kf_u2q3b/evidence/SHA256SUMS.json",
+      "original_sha256": "12ce45271855a30ada840c73468aab4bafb65f53acb5cb35d9bbd9fdfdee09a8",
+      "portable_bytes": 625,
+      "portable_path": "runs/20260925T111845Z-kf_u2q3b/SHA256SUMS.original.json",
+      "portable_sha256": "12ce45271855a30ada840c73468aab4bafb65f53acb5cb35d9bbd9fdfdee09a8"
+    },
+    {
+      "normalization": "JSON parsed, declared substitutions applied, keys sorted, indent 2, final LF",
+      "original_bytes": 1224,
+      "original_path": ".runtime/urgit-evaluations/20260925T111845Z-kf_u2q3b/evidence/bootstrap.json",
+      "original_sha256": "85b76afbc55aba2a033c8ecf66d9300d773c091de1c687f5d31e015470aee7ea",
+      "portable_bytes": 1224,
+      "portable_path": "runs/20260925T111845Z-kf_u2q3b/bootstrap.json",
+      "portable_sha256": "09e289b618b84a81640a5f624d582784a11b1b907bb87b1a818b174df0a5508d"
+    },
+    {
+      "normalization": "Declared literal path/UID substitutions only; other text bytes preserved",
+      "original_bytes": 0,
+      "original_path": ".runtime/urgit-evaluations/20260925T111845Z-kf_u2q3b/evidence/console.log",
+      "original_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "portable_bytes": 0,
+      "portable_path": "runs/20260925T111845Z-kf_u2q3b/console.log",
+      "portable_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "normalization": "JSON parsed, declared substitutions applied, keys sorted, indent 2, final LF",
+      "original_bytes": 2753,
+      "original_path": ".runtime/urgit-evaluations/20260925T111845Z-kf_u2q3b/evidence/execution-guard.json",
+      "original_sha256": "cfdef98936178ef718ee5ac1223ecfa53f727c310f8229939c03c2de92c1284f",
+      "portable_bytes": 2733,
+      "portable_path": "runs/20260925T111845Z-kf_u2q3b/execution-guard.json",
+      "portable_sha256": "f80d9341c6d237380fabed364d36743399baad4ad9e51399ecffa0d25ff01cfc"
+    },
+    {
+      "normalization": "JSON parsed, declared substitutions applied, keys sorted, indent 2, final LF",
+      "original_bytes": 3374,
+      "original_path": ".runtime/urgit-evaluations/20260925T111845Z-kf_u2q3b/evidence/provenance.json",
+      "original_sha256": "4588f37f63f9e91a98341c8fea79a458d9af061e97b40fef570f2d14a1552744",
+      "portable_bytes": 3373,
+      "portable_path": "runs/20260925T111845Z-kf_u2q3b/provenance.json",
+      "portable_sha256": "8a4e60ab3cda847426dbe29b6e805c20048982e48c7707eca572ad06e895b012"
+    },
+    {
+      "normalization": "JSON parsed, declared substitutions applied, keys sorted, indent 2, final LF",
+      "original_bytes": 664,
+      "original_path": ".runtime/urgit-evaluations/20260925T111845Z-kf_u2q3b/evidence/report.json",
+      "original_sha256": "fee506e15bb926d54044212bfaacaf40d99def508ab132fc1446ca0bb8d2e226",
+      "portable_bytes": 664,
+      "portable_path": "runs/20260925T111845Z-kf_u2q3b/report.json",
+      "portable_sha256": "3b1244909579f6203b624712f96628487002ba95a3db420592a5bd2678ec6e6a"
+    },
+    {
+      "normalization": "JSON parsed, declared substitutions applied, keys sorted, indent 2, final LF",
+      "original_bytes": 1631,
+      "original_path": ".runtime/urgit-evaluations/20260925T111845Z-kf_u2q3b/evidence/sandbox-command.json",
+      "original_sha256": "dd16c6cc185c1c143a139686b2f22aebde4d43b5ab2e2e37bccde07e04d1a093",
+      "portable_bytes": 1471,
+      "portable_path": "runs/20260925T111845Z-kf_u2q3b/sandbox-command.json",
+      "portable_sha256": "d04fc4171b4a3b0a10f12c7735805ea11b5ddff03a3499385906ea725591065b"
+    },
+    {
+      "normalization": "Each JSON line parsed, declared substitutions applied, keys sorted, final LF",
+      "original_bytes": 822,
+      "original_path": ".runtime/urgit-evaluations/20260925T111845Z-kf_u2q3b/evidence/thermal.jsonl",
+      "original_sha256": "6cbd2976a2748e7eb8aa1cb78eccec2f4fa5f07bc1b195cc8a8c7a9475dc722a",
+      "portable_bytes": 822,
+      "portable_path": "runs/20260925T111845Z-kf_u2q3b/thermal.jsonl",
+      "portable_sha256": "6cbd2976a2748e7eb8aa1cb78eccec2f4fa5f07bc1b195cc8a8c7a9475dc722a"
+    },
+    {
+      "normalization": "JSON parsed, declared substitutions applied, keys sorted, indent 2, final LF",
+      "original_bytes": 625,
+      "original_path": ".runtime/urgit-evaluations/20260925T112445Z-_1wiivjr/evidence/SHA256SUMS.json",
+      "original_sha256": "a328584d74fe9147729b4a99ae1013db56f0abfda14619b68d9841833868e9f8",
+      "portable_bytes": 625,
+      "portable_path": "runs/20260925T112445Z-_1wiivjr/SHA256SUMS.original.json",
+      "portable_sha256": "a328584d74fe9147729b4a99ae1013db56f0abfda14619b68d9841833868e9f8"
+    },
+    {
+      "normalization": "JSON parsed, declared substitutions applied, keys sorted, indent 2, final LF",
+      "original_bytes": 1224,
+      "original_path": ".runtime/urgit-evaluations/20260925T112445Z-_1wiivjr/evidence/bootstrap.json",
+      "original_sha256": "85b76afbc55aba2a033c8ecf66d9300d773c091de1c687f5d31e015470aee7ea",
+      "portable_bytes": 1224,
+      "portable_path": "runs/20260925T112445Z-_1wiivjr/bootstrap.json",
+      "portable_sha256": "09e289b618b84a81640a5f624d582784a11b1b907bb87b1a818b174df0a5508d"
+    },
+    {
+      "normalization": "Declared literal path/UID substitutions only; other text bytes preserved",
+      "original_bytes": 0,
+      "original_path": ".runtime/urgit-evaluations/20260925T112445Z-_1wiivjr/evidence/console.log",
+      "original_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "portable_bytes": 0,
+      "portable_path": "runs/20260925T112445Z-_1wiivjr/console.log",
+      "portable_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "normalization": "JSON parsed, declared substitutions applied, keys sorted, indent 2, final LF",
+      "original_bytes": 2746,
+      "original_path": ".runtime/urgit-evaluations/20260925T112445Z-_1wiivjr/evidence/execution-guard.json",
+      "original_sha256": "ca19da43159fcd2b0b54687ba9900d0b4c863ec6fab1d89b9b6e878e292c18cd",
+      "portable_bytes": 2726,
+      "portable_path": "runs/20260925T112445Z-_1wiivjr/execution-guard.json",
+      "portable_sha256": "cdd3e8a6d4b98070b6c726b57698ca2814796994f4003b6638efff1b0f0837a0"
+    },
+    {
+      "normalization": "JSON parsed, declared substitutions applied, keys sorted, indent 2, final LF",
+      "original_bytes": 3374,
+      "original_path": ".runtime/urgit-evaluations/20260925T112445Z-_1wiivjr/evidence/provenance.json",
+      "original_sha256": "38747ca6b98634f03e10ba5218753f5c0a17951565f55eecca47371979d139b9",
+      "portable_bytes": 3373,
+      "portable_path": "runs/20260925T112445Z-_1wiivjr/provenance.json",
+      "portable_sha256": "5de9bced038e2cf7ac005940b3cff5a37b99a756cf8a8a21dcef0bcff2c9e159"
+    },
+    {
+      "normalization": "JSON parsed, declared substitutions applied, keys sorted, indent 2, final LF",
+      "original_bytes": 664,
+      "original_path": ".runtime/urgit-evaluations/20260925T112445Z-_1wiivjr/evidence/report.json",
+      "original_sha256": "fee506e15bb926d54044212bfaacaf40d99def508ab132fc1446ca0bb8d2e226",
+      "portable_bytes": 664,
+      "portable_path": "runs/20260925T112445Z-_1wiivjr/report.json",
+      "portable_sha256": "3b1244909579f6203b624712f96628487002ba95a3db420592a5bd2678ec6e6a"
+    },
+    {
+      "normalization": "JSON parsed, declared substitutions applied, keys sorted, indent 2, final LF",
+      "original_bytes": 1631,
+      "original_path": ".runtime/urgit-evaluations/20260925T112445Z-_1wiivjr/evidence/sandbox-command.json",
+      "original_sha256": "a5c23c0b1cf2c2b34e6cd7213c4ecd115c18a7e678bcf217aa9d88a5b6789740",
+      "portable_bytes": 1471,
+      "portable_path": "runs/20260925T112445Z-_1wiivjr/sandbox-command.json",
+      "portable_sha256": "a8aeb0257b7a0e0f2f9a32c5134138c9c0f8c0f7699ca9a80272321974c7d365"
+    },
+    {
+      "normalization": "Each JSON line parsed, declared substitutions applied, keys sorted, final LF",
+      "original_bytes": 822,
+      "original_path": ".runtime/urgit-evaluations/20260925T112445Z-_1wiivjr/evidence/thermal.jsonl",
+      "original_sha256": "93c8f7408df356261e8a67c10d7ab1ef3de1dd97c30bf2fd9d2efefda10801fc",
+      "portable_bytes": 822,
+      "portable_path": "runs/20260925T112445Z-_1wiivjr/thermal.jsonl",
+      "portable_sha256": "93c8f7408df356261e8a67c10d7ab1ef3de1dd97c30bf2fd9d2efefda10801fc"
+    },
+    {
+      "normalization": "JSON parsed, declared substitutions applied, keys sorted, indent 2, final LF",
+      "original_bytes": 1070,
+      "original_path": ".runtime/urgit-evaluations/20260925T112813Z-p7thco40/evidence/SHA256SUMS.json",
+      "original_sha256": "9a30f3b94b373a10bc5f03c636cacb0aec699dcc1b60e57be08b6e7120e335a9",
+      "portable_bytes": 1070,
+      "portable_path": "runs/20260925T112813Z-p7thco40/SHA256SUMS.original.json",
+      "portable_sha256": "9a30f3b94b373a10bc5f03c636cacb0aec699dcc1b60e57be08b6e7120e335a9"
+    },
+    {
+      "normalization": "JSON parsed, declared substitutions applied, keys sorted, indent 2, final LF",
+      "original_bytes": 1224,
+      "original_path": ".runtime/urgit-evaluations/20260925T112813Z-p7thco40/evidence/bootstrap.json",
+      "original_sha256": "85b76afbc55aba2a033c8ecf66d9300d773c091de1c687f5d31e015470aee7ea",
+      "portable_bytes": 1224,
+      "portable_path": "runs/20260925T112813Z-p7thco40/bootstrap.json",
+      "portable_sha256": "09e289b618b84a81640a5f624d582784a11b1b907bb87b1a818b174df0a5508d"
+    },
+    {
+      "normalization": "Each JSON line parsed, declared substitutions applied, keys sorted, final LF",
+      "original_bytes": 19322,
+      "original_path": ".runtime/urgit-evaluations/20260925T112813Z-p7thco40/evidence/commands.jsonl",
+      "original_sha256": "a2c04f75385aefb76ec8f2b0045e87aea27afd6688bcc09c33ffbf5dc937ef55",
+      "portable_bytes": 19322,
+      "portable_path": "runs/20260925T112813Z-p7thco40/commands.jsonl",
+      "portable_sha256": "bfbcf1894c046ca223f130a93d9bd8b5f05d7ea041da0a54df7d1435ee12153d"
+    },
+    {
+      "normalization": "Declared literal path/UID substitutions only; other text bytes preserved",
+      "original_bytes": 271,
+      "original_path": ".runtime/urgit-evaluations/20260925T112813Z-p7thco40/evidence/console.log",
+      "original_sha256": "5621944f388439ee3ad1ec06560dba4f0582e3e53855c71e26589818e6c8854d",
+      "portable_bytes": 271,
+      "portable_path": "runs/20260925T112813Z-p7thco40/console.log",
+      "portable_sha256": "5621944f388439ee3ad1ec06560dba4f0582e3e53855c71e26589818e6c8854d"
+    },
+    {
+      "normalization": "JSON parsed, declared substitutions applied, keys sorted, indent 2, final LF",
+      "original_bytes": 3611,
+      "original_path": ".runtime/urgit-evaluations/20260925T112813Z-p7thco40/evidence/evaluator-report.json",
+      "original_sha256": "841660bb571677b4c34b9dd67ced5866824682dab3921e4728056c1553a51ec0",
+      "portable_bytes": 4395,
+      "portable_path": "runs/20260925T112813Z-p7thco40/evaluator-report.json",
+      "portable_sha256": "3b1d2656f974b2f244035140300cf628ef4d76286a88dcd5cf7339ec3bee5b11"
+    },
+    {
+      "normalization": "JSON parsed, declared substitutions applied, keys sorted, indent 2, final LF",
+      "original_bytes": 26455,
+      "original_path": ".runtime/urgit-evaluations/20260925T112813Z-p7thco40/evidence/execution-guard.json",
+      "original_sha256": "98f41addfddef067174bc3adb23391104d63693a49b90efce86d7b1c6eb349f7",
+      "portable_bytes": 26237,
+      "portable_path": "runs/20260925T112813Z-p7thco40/execution-guard.json",
+      "portable_sha256": "e80c4f19e73180faa42fcf67e6333bd4f1e939592105e7097e3727c13991c1fc"
+    },
+    {
+      "normalization": "JSON parsed, declared substitutions applied, keys sorted, indent 2, final LF",
+      "original_bytes": 1340,
+      "original_path": ".runtime/urgit-evaluations/20260925T112813Z-p7thco40/evidence/native-vectors.json",
+      "original_sha256": "f3dca574dffe7f48f48bfe1f77295581555982bf85c8109be9b0f1e13b88190a",
+      "portable_bytes": 1340,
+      "portable_path": "runs/20260925T112813Z-p7thco40/native-vectors.json",
+      "portable_sha256": "f85b3f3992d44ac5d88df66d0fa396a3c002c872fbe719f4369a2c2294d2340a"
+    },
+    {
+      "normalization": "JSON parsed, declared substitutions applied, keys sorted, indent 2, final LF",
+      "original_bytes": 3374,
+      "original_path": ".runtime/urgit-evaluations/20260925T112813Z-p7thco40/evidence/provenance.json",
+      "original_sha256": "8de9d5315764e5e6ac55df86e77775f77aeb1d59a3e666b305c395193f5cbd42",
+      "portable_bytes": 3373,
+      "portable_path": "runs/20260925T112813Z-p7thco40/provenance.json",
+      "portable_sha256": "9dcf041ed05ca67888e7ba7d8cd58c908136b64a017e28d45409c9ccaf5cbf78"
+    },
+    {
+      "normalization": "JSON parsed, declared substitutions applied, keys sorted, indent 2, final LF",
+      "original_bytes": 4421,
+      "original_path": ".runtime/urgit-evaluations/20260925T112813Z-p7thco40/evidence/report.json",
+      "original_sha256": "1f1ea3eb12bb2747736248f65116b1be60f092a4b1c42e57f1d0c7365ec3e396",
+      "portable_bytes": 4421,
+      "portable_path": "runs/20260925T112813Z-p7thco40/report.json",
+      "portable_sha256": "635e07513be3db1ffddfd81fae07c4c20e39c3bb6ca1e85ee06658ab9026b0ba"
+    },
+    {
+      "normalization": "JSON parsed, declared substitutions applied, keys sorted, indent 2, final LF",
+      "original_bytes": 1631,
+      "original_path": ".runtime/urgit-evaluations/20260925T112813Z-p7thco40/evidence/sandbox-command.json",
+      "original_sha256": "c355dfe62c01101c6ecd4c30ff57e23ece4d2b0214de08ee58ae11590d2fd3d3",
+      "portable_bytes": 1471,
+      "portable_path": "runs/20260925T112813Z-p7thco40/sandbox-command.json",
+      "portable_sha256": "bfa50b70b1ac1c9b1889c7cec42838c766c3f45278576120c0a28333bf82aa9d"
+    },
+    {
+      "normalization": "JSON parsed, declared substitutions applied, keys sorted, indent 2, final LF",
+      "original_bytes": 20,
+      "original_path": ".runtime/urgit-evaluations/20260925T112813Z-p7thco40/evidence/status.json",
+      "original_sha256": "5cd273bc5d02d1055688f1ebba5257e65179e255a612389644a145613c93d49a",
+      "portable_bytes": 24,
+      "portable_path": "runs/20260925T112813Z-p7thco40/status.json",
+      "portable_sha256": "177b156a003d7640ee40728d9541741799493f2e7e032cd721ae686bf27a937b"
+    },
+    {
+      "normalization": "Each JSON line parsed, declared substitutions applied, keys sorted, final LF",
+      "original_bytes": 10436,
+      "original_path": ".runtime/urgit-evaluations/20260925T112813Z-p7thco40/evidence/thermal.jsonl",
+      "original_sha256": "9981edf32016a59685c0ae25b0403fa8981e63413da405d54100ff05f55c7455",
+      "portable_bytes": 10436,
+      "portable_path": "runs/20260925T112813Z-p7thco40/thermal.jsonl",
+      "portable_sha256": "9981edf32016a59685c0ae25b0403fa8981e63413da405d54100ff05f55c7455"
+    },
+    {
+      "normalization": "JSON parsed, declared substitutions applied, keys sorted, indent 2, final LF",
+      "original_bytes": 3527,
+      "original_path": ".runtime/urgit-independent-attempt-20260925T110142Z-aa03f11a.json",
+      "original_sha256": "4cdaabc408286b184b45fa1fc5f762f1f6dd7d464ade983d6f046fc98a0f7cd9",
+      "portable_bytes": 3507,
+      "portable_path": "driver-records/urgit-independent-attempt-20260925T110142Z-aa03f11a.json",
+      "portable_sha256": "45f7bd981e08218615a105948cc2b4c0c81f573a7eebafa380fd49d04199f69d"
+    },
+    {
+      "normalization": "Declared literal path/UID substitutions only; other text bytes preserved",
+      "original_bytes": 277,
+      "original_path": ".runtime/urgit-independent-attempt-20260925T110142Z-aa03f11a.log",
+      "original_sha256": "17dc8d2a08864e3a0fc6b12e6cfbd5e37c02293f16c97d07f9bcfe132f9ae241",
+      "portable_bytes": 237,
+      "portable_path": "driver-records/urgit-independent-attempt-20260925T110142Z-aa03f11a.log",
+      "portable_sha256": "f5f1964ee287bc220b237bdd2f75a1a1d2be60f5b6ba89094771c111e96859f8"
+    },
+    {
+      "normalization": "JSON parsed, declared substitutions applied, keys sorted, indent 2, final LF",
+      "original_bytes": 3527,
+      "original_path": ".runtime/urgit-independent-attempt-20260925T110551Z-ff412aee.json",
+      "original_sha256": "e784c6bc85350d69bb287ea1d7e1360480aa731b131f22c83b8800d3acc36695",
+      "portable_bytes": 3507,
+      "portable_path": "driver-records/urgit-independent-attempt-20260925T110551Z-ff412aee.json",
+      "portable_sha256": "699f3fcd2f7634c4b59783cd2069b148158702719936ea1f3453e565cfd57e9f"
+    },
+    {
+      "normalization": "Declared literal path/UID substitutions only; other text bytes preserved",
+      "original_bytes": 274,
+      "original_path": ".runtime/urgit-independent-attempt-20260925T110551Z-ff412aee.log",
+      "original_sha256": "7351eee559c9ff41b9249d4a566a36f9124c01d842e05e444d2112fc41fa3d6b",
+      "portable_bytes": 234,
+      "portable_path": "driver-records/urgit-independent-attempt-20260925T110551Z-ff412aee.log",
+      "portable_sha256": "62a758db2378ca4e6e7427c992083f45782b692744a045842ecf92b529ff4132"
+    },
+    {
+      "normalization": "JSON parsed, declared substitutions applied, keys sorted, indent 2, final LF",
+      "original_bytes": 3525,
+      "original_path": ".runtime/urgit-independent-attempt-20260925T111141Z-2380a8b2.json",
+      "original_sha256": "6b12441ffac3894625e5e4ddb5f0767b957db137bc0ad7b2a29ca6f807afa750",
+      "portable_bytes": 3505,
+      "portable_path": "driver-records/urgit-independent-attempt-20260925T111141Z-2380a8b2.json",
+      "portable_sha256": "5e73df8df1b92c798ec3db5315955244d11bae82c38d9c144a16d413e8f95650"
+    },
+    {
+      "normalization": "Declared literal path/UID substitutions only; other text bytes preserved",
+      "original_bytes": 274,
+      "original_path": ".runtime/urgit-independent-attempt-20260925T111141Z-2380a8b2.log",
+      "original_sha256": "adbf624b95a7d9656f8f27b72ce3589e6067852703b2e203de423b71101cbe69",
+      "portable_bytes": 234,
+      "portable_path": "driver-records/urgit-independent-attempt-20260925T111141Z-2380a8b2.log",
+      "portable_sha256": "e7d4f941ddee5ed4037288d39f3bf48bda9cb48685ca7c3da7d8bcf1b9e3a045"
+    },
+    {
+      "normalization": "JSON parsed, declared substitutions applied, keys sorted, indent 2, final LF",
+      "original_bytes": 3527,
+      "original_path": ".runtime/urgit-independent-attempt-20260925T111845Z-83279821.json",
+      "original_sha256": "7c7fcf2c31a120291b47a951af401b50c7afd73668753114deb5af5d2780caf0",
+      "portable_bytes": 3507,
+      "portable_path": "driver-records/urgit-independent-attempt-20260925T111845Z-83279821.json",
+      "portable_sha256": "bb9428cbeb28423e48544163777e4050082bb154860d08ebe3a114bbdca53564"
+    },
+    {
+      "normalization": "Declared literal path/UID substitutions only; other text bytes preserved",
+      "original_bytes": 277,
+      "original_path": ".runtime/urgit-independent-attempt-20260925T111845Z-83279821.log",
+      "original_sha256": "fa90d035ef7cb8542cd9561fa71bc192cb72c69dea3c35e755d17a427839dc3e",
+      "portable_bytes": 237,
+      "portable_path": "driver-records/urgit-independent-attempt-20260925T111845Z-83279821.log",
+      "portable_sha256": "175641f9b5eaf4c11c892ae89066a401c9fffbd8e7cb3cc3df6da6f321841f87"
+    },
+    {
+      "normalization": "JSON parsed, declared substitutions applied, keys sorted, indent 2, final LF",
+      "original_bytes": 3527,
+      "original_path": ".runtime/urgit-independent-attempt-20260925T112445Z-e0a56b01.json",
+      "original_sha256": "f804c302de7c6e090759b114554d92e1724a6a6b3d8a390969eb0cd070b46c73",
+      "portable_bytes": 3507,
+      "portable_path": "driver-records/urgit-independent-attempt-20260925T112445Z-e0a56b01.json",
+      "portable_sha256": "72d1bd1ba868bc99a376a2f371d009e76911853a027adfb1f478e65992f99934"
+    },
+    {
+      "normalization": "Declared literal path/UID substitutions only; other text bytes preserved",
+      "original_bytes": 277,
+      "original_path": ".runtime/urgit-independent-attempt-20260925T112445Z-e0a56b01.log",
+      "original_sha256": "c39b7d855bd66e6f54f052fc067a5c4820bb2ac59558cf78ce5bf61120d67ef8",
+      "portable_bytes": 237,
+      "portable_path": "driver-records/urgit-independent-attempt-20260925T112445Z-e0a56b01.log",
+      "portable_sha256": "7f583827a02234379900f8e9dd2eaa75652892e2037794edfe41f523c546f527"
+    },
+    {
+      "normalization": "JSON parsed, declared substitutions applied, keys sorted, indent 2, final LF",
+      "original_bytes": 5793,
+      "original_path": ".runtime/urgit-independent-attempt-20260925T112812Z-bb8d11b4.json",
+      "original_sha256": "88b08d6c02dfbed1c055042c3588ade3a9050ffad57af7376831eb2cf40acabd",
+      "portable_bytes": 5715,
+      "portable_path": "driver-records/urgit-independent-attempt-20260925T112812Z-bb8d11b4.json",
+      "portable_sha256": "16fb58faf945c8fb654f47ccc6089202f41666f58953c7e1bb50b31935875e04"
+    },
+    {
+      "normalization": "Declared literal path/UID substitutions only; other text bytes preserved",
+      "original_bytes": 608,
+      "original_path": ".runtime/urgit-independent-attempt-20260925T112812Z-bb8d11b4.log",
+      "original_sha256": "2a7ca42187c943fc7f630c3d71ce3400052fb1facd178fab918fca392c4885df",
+      "portable_bytes": 570,
+      "portable_path": "driver-records/urgit-independent-attempt-20260925T112812Z-bb8d11b4.log",
+      "portable_sha256": "8e0791d31462f616196837c103617a3e9fd7cd37701bdd1c31102ad1345e0172"
+    },
+    {
+      "normalization": "JSON parsed, declared substitutions applied, keys sorted, indent 2, final LF",
+      "original_bytes": 339,
+      "original_path": ".runtime/urgit-outer-scope-proof-20260925T112812Z-bb8d11b4.json",
+      "original_sha256": "15b533306fc7eb5787273cbec86bab2f68038240123af629e3f964d1962a587f",
+      "portable_bytes": 341,
+      "portable_path": "driver-records/urgit-outer-scope-proof-20260925T112812Z-bb8d11b4.json",
+      "portable_sha256": "4024d48b7219f6a90cfac80b52575d05614eab7517f7677d56025742f05df0a4"
+    },
+    {
+      "normalization": "JSON parsed, declared substitutions applied, keys sorted, indent 2, final LF",
+      "original_bytes": 2893,
+      "original_path": ".runtime/urgit-preflight-refusal-20260925T110018Z-a16198a4.json",
+      "original_sha256": "dcc9e2a88148b844633dc188b45e66a5cd1f6b93847ec910a01ee0a05c4d8283",
+      "portable_bytes": 2893,
+      "portable_path": "driver-records/urgit-preflight-refusal-20260925T110018Z-a16198a4.json",
+      "portable_sha256": "f0c9e438d607240a9d16216f47d96445f53ad9e343d87060a96ca31a447d46e4"
+    },
+    {
+      "normalization": "JSON parsed, declared substitutions applied, keys sorted, indent 2, final LF",
+      "original_bytes": 3235,
+      "original_path": ".runtime/urgit-evaluations/20260925T112813Z-p7thco40/input/toolchain.lock.json",
+      "original_sha256": "4a209c10cf1756eb0f7357cc3eca8250bf66c239b4cd0ca31a8c0886d4d304ee",
+      "portable_bytes": 3235,
+      "portable_path": "inputs/toolchain.lock.json",
+      "portable_sha256": "87d34671948439f2d9813253e692d82311d464ffc32c69d48a4186e2d5c315e1"
+    },
+    {
+      "normalization": "JSON parsed, declared substitutions applied, keys sorted, indent 2, final LF",
+      "original_bytes": 2198,
+      "original_path": ".runtime/urgit-evaluations/20260925T112813Z-p7thco40/input/candidate.lock.json",
+      "original_sha256": "50a90b296fa40e5a9178999cb2709682884812a98e2b133f6261eb5ec3934561",
+      "portable_bytes": 2198,
+      "portable_path": "inputs/candidate.lock.json",
+      "portable_sha256": "6c033d7ebd7e337565fc4cdc0d54c7ca6775a03ffcaf836a87edb04f3e23f891"
+    },
+    {
+      "normalization": "Declared literal path/UID substitutions only; other text bytes preserved",
+      "original_bytes": 1071,
+      "original_path": ".runtime/urgit-evaluations/20260925T112813Z-p7thco40/input/skeleton-LICENSE.txt",
+      "original_sha256": "b5d62c0a6f6b17ff490de29606527bf77b6509998ef07048488d659e2b719e52",
+      "portable_bytes": 1071,
+      "portable_path": "inputs/skeleton-LICENSE.txt",
+      "portable_sha256": "b5d62c0a6f6b17ff490de29606527bf77b6509998ef07048488d659e2b719e52"
+    }
+  ],
+  "audited_source_commit": "7f4cf118e0bb18bb34f05e4633de16175894fded",
+  "checkout_commit_at_passing_wrapper": "a0f5fe218ecc9b909e7a2d5b54bc87198cb8bd08",
+  "earlier_evidence": "../../2026-09-12/urgit/index.json",
+  "excluded_payloads": [
+    "piers and stopped seeds",
+    "candidate source archive and extracted candidate source",
+    "runtime/kernel/pill binaries",
+    "raw native logs (hash references retained)",
+    "host homes and credentials"
+  ],
+  "format": 1,
+  "local_only_artifacts": [
+    {
+      "original_bytes": 5122,
+      "original_path": ".runtime/urgit-evaluations/20260925T102835Z-2mgo4s0g/evidence/native.log",
+      "original_sha256": "09fafd6ce7266853eb6765d6d72454c4a4f1a340c0475ba6f23603aac92cd6d3",
+      "reason": "Raw native logs remain local; portable commands, console, results and guard records retain observed outcomes."
+    },
+    {
+      "original_bytes": 647,
+      "original_path": ".runtime/urgit-evaluations/20260925T110551Z-h7434vf0/evidence/native.log",
+      "original_sha256": "3e2b89ea3ad6db1583a98182fba55d4f1359e734413ad0c063a8182a5852de02",
+      "reason": "Raw native logs remain local; portable commands, console, results and guard records retain observed outcomes."
+    },
+    {
+      "original_bytes": 647,
+      "original_path": ".runtime/urgit-evaluations/20260925T111141Z-ukilsapn/evidence/native.log",
+      "original_sha256": "3e2b89ea3ad6db1583a98182fba55d4f1359e734413ad0c063a8182a5852de02",
+      "reason": "Raw native logs remain local; portable commands, console, results and guard records retain observed outcomes."
+    },
+    {
+      "original_bytes": 1040,
+      "original_path": ".runtime/urgit-evaluations/20260925T112813Z-p7thco40/evidence/native.log",
+      "original_sha256": "9a62a0d56ac9ec8fe76c8a6134c3ae02776d6b3a6b4d8c0c885570eb17b6c506",
+      "reason": "Raw native logs remain local; portable commands, console, results and guard records retain observed outcomes."
+    }
+  ],
+  "normalization": {
+    "cgroup_local_user_id": "<UID>",
+    "credentials": "Runner-generated synthetic token and Basic encoding were already replaced with <generated-synthetic-credential> before local evidence was written; no additional token or Git identity rewriting is performed here.",
+    "host_home_absolute_path": "<HOST_HOME>",
+    "repository_absolute_path": "<REPO>",
+    "serialization": "JSON and JSONL are reserialized as stated per artifact; portable hashes differ from original hashes when bytes change. Git OIDs, pack bytes represented in results, candidate/source/toolchain hashes, statuses, errors, command options, readings and timings are unchanged.",
+    "uname_node_name": "<HOST>"
+  },
+  "owner": "Independent execution and source-review agent /root/editor_tool_review; no separate agent or human approval claimed.",
+  "passing_run": "20260925T112813Z-p7thco40",
+  "prepared_utc": "2026-09-25T11:33:50.745914+00:00",
+  "run_summaries": [
+    {
+      "checks_observed_in_command_transcript": 0,
+      "checks_passed_in_host_report": 0,
+      "checks_recorded_in_host_report": 0,
+      "guard_elapsed_seconds": 372.978,
+      "guard_reason": "GuardError: Thermal ceiling reached",
+      "guard_status": "failed",
+      "host_status": "failed",
+      "native_sandbox_launched": true,
+      "peak_sampled_temperature_c": 92.0,
+      "run_id": "20260925T102835Z-2mgo4s0g",
+      "runner_sha256": "dceae3d2c44a4be9fbdb4a776f40c428914872ad818ce1cbc1486d3c839f4e98",
+      "sandbox_exit_code": 1
+    },
+    {
+      "checks_observed_in_command_transcript": 0,
+      "checks_passed_in_host_report": 0,
+      "checks_recorded_in_host_report": 0,
+      "guard_elapsed_seconds": 0.552,
+      "guard_reason": "ValueError: Fake seed hash mismatch",
+      "guard_status": "failed",
+      "host_status": "failed",
+      "native_sandbox_launched": false,
+      "peak_sampled_temperature_c": 55.0,
+      "run_id": "20260925T110142Z-d542j3zm",
+      "runner_sha256": "c16b32b67c450ccd1fab8efc739e7d272ef4dc96c82dff8f119107f30b3c28d5",
+      "sandbox_exit_code": null
+    },
+    {
+      "checks_observed_in_command_transcript": 1,
+      "checks_passed_in_host_report": 0,
+      "checks_recorded_in_host_report": 0,
+      "guard_elapsed_seconds": 6.435,
+      "guard_reason": "Owned sandbox exited unsuccessfully",
+      "guard_status": "failed",
+      "host_status": "failed",
+      "native_sandbox_launched": true,
+      "peak_sampled_temperature_c": 71.0,
+      "run_id": "20260925T110551Z-h7434vf0",
+      "runner_sha256": "c16b32b67c450ccd1fab8efc739e7d272ef4dc96c82dff8f119107f30b3c28d5",
+      "sandbox_exit_code": 1
+    },
+    {
+      "checks_observed_in_command_transcript": 1,
+      "checks_passed_in_host_report": 1,
+      "checks_recorded_in_host_report": 1,
+      "guard_elapsed_seconds": 5.508,
+      "guard_reason": "Owned sandbox exited unsuccessfully",
+      "guard_status": "failed",
+      "host_status": "failed",
+      "native_sandbox_launched": true,
+      "peak_sampled_temperature_c": 73.0,
+      "run_id": "20260925T111141Z-ukilsapn",
+      "runner_sha256": "c16b32b67c450ccd1fab8efc739e7d272ef4dc96c82dff8f119107f30b3c28d5",
+      "sandbox_exit_code": 1
+    },
+    {
+      "checks_observed_in_command_transcript": 0,
+      "checks_passed_in_host_report": 0,
+      "checks_recorded_in_host_report": 0,
+      "guard_elapsed_seconds": 1.435,
+      "guard_reason": "GuardError: Start temperature exceeded",
+      "guard_status": "failed",
+      "host_status": "failed",
+      "native_sandbox_launched": false,
+      "peak_sampled_temperature_c": 78.0,
+      "run_id": "20260925T111845Z-kf_u2q3b",
+      "runner_sha256": "c16b32b67c450ccd1fab8efc739e7d272ef4dc96c82dff8f119107f30b3c28d5",
+      "sandbox_exit_code": null
+    },
+    {
+      "checks_observed_in_command_transcript": 0,
+      "checks_passed_in_host_report": 0,
+      "checks_recorded_in_host_report": 0,
+      "guard_elapsed_seconds": 1.404,
+      "guard_reason": "GuardError: Start temperature exceeded",
+      "guard_status": "failed",
+      "host_status": "failed",
+      "native_sandbox_launched": false,
+      "peak_sampled_temperature_c": 81.0,
+      "run_id": "20260925T112445Z-_1wiivjr",
+      "runner_sha256": "c16b32b67c450ccd1fab8efc739e7d272ef4dc96c82dff8f119107f30b3c28d5",
+      "sandbox_exit_code": null
+    },
+    {
+      "checks_observed_in_command_transcript": 14,
+      "checks_passed_in_host_report": 14,
+      "checks_recorded_in_host_report": 14,
+      "guard_elapsed_seconds": 38.469,
+      "guard_reason": null,
+      "guard_status": "completed",
+      "host_status": "passed",
+      "native_sandbox_launched": true,
+      "peak_sampled_temperature_c": 63.0,
+      "run_id": "20260925T112813Z-p7thco40",
+      "runner_sha256": "c16b32b67c450ccd1fab8efc739e7d272ef4dc96c82dff8f119107f30b3c28d5",
+      "sandbox_exit_code": 0
+    }
+  ],
+  "scope": "All seven September 25, 2026 audit-driver invocations present in .runtime/urgit-evaluations plus the preliminary preflight refusal and independent driver records. Earlier September 12/13 history remains separately published.",
+  "supplemental_artifacts": [
+    {
+      "portable_bytes": 1319,
+      "portable_path": "source-review.json",
+      "portable_sha256": "fc1bcc4784377f92806d3ee5b0a9710553baf818805272cb22526da15b12af19"
+    },
+    {
+      "portable_bytes": 733,
+      "portable_path": "cleanup-observation.json",
+      "portable_sha256": "41b33acdffcdecd47aa767a1ad1cbd646dbd6c908e8e16e6f8a1eb6d3815fcff"
+    },
+    {
+      "portable_bytes": 6258,
+      "portable_path": "README.md",
+      "portable_sha256": "1a7d16c641a3ab6ec296266f3ed8d6cabd237958d1fadd526b55e1170cb3d95b"
+    }
+  ]
+}

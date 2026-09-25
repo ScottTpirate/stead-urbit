@@ -1,0 +1,290 @@
+{
+  "argv": [
+    "/usr/bin/systemd-run",
+    "--user",
+    "--scope",
+    "--quiet",
+    "--unit=stead-native-30fbd883ec2004d89426e029f903a755.scope",
+    "--property=CPUQuota=50%",
+    "--property=CPUQuotaPeriodSec=10ms",
+    "/usr/bin/python3",
+    "<REPO>/scripts/urbit/execution_policy.py",
+    "_scope",
+    "<REPO>/.runtime/execution-runs/urgit-2_gqtz9a/control",
+    "30fbd883ec2004d89426e029f903a755",
+    "19",
+    "6",
+    "57",
+    "11416985",
+    "--",
+    "/usr/bin/bwrap",
+    "--unshare-all",
+    "--die-with-parent",
+    "--new-session",
+    "--clearenv",
+    "--ro-bind",
+    "/usr",
+    "/usr",
+    "--symlink",
+    "usr/lib",
+    "/lib",
+    "--symlink",
+    "usr/lib64",
+    "/lib64",
+    "--symlink",
+    "usr/bin",
+    "/bin",
+    "--proc",
+    "/proc",
+    "--dev",
+    "/dev",
+    "--tmpfs",
+    "/tmp",
+    "--dir",
+    "/home/audit",
+    "--setenv",
+    "HOME",
+    "/home/audit",
+    "--setenv",
+    "PATH",
+    "/usr/bin",
+    "--setenv",
+    "LANG",
+    "C.UTF-8",
+    "--bind",
+    "<REPO>/.runtime/urgit-evaluations/20260925T110551Z-h7434vf0/work",
+    "/work",
+    "--bind",
+    "<REPO>/.runtime/urgit-evaluations/20260925T110551Z-h7434vf0/output",
+    "/output",
+    "--ro-bind",
+    "<REPO>/.runtime/urgit-evaluations/20260925T110551Z-h7434vf0/input",
+    "/input",
+    "--ro-bind",
+    "<REPO>/.runtime/execution-runs/urgit-2_gqtz9a/control",
+    "/control",
+    "--ro-bind",
+    "<REPO>/.runtime/urgit-evaluations/20260925T110551Z-h7434vf0/input/support",
+    "/code",
+    "--ro-bind",
+    "<REPO>/.runtime/bin/vere-v4.6-linux-x86_64",
+    "/runtime/vere",
+    "--ro-bind",
+    "<REPO>/.runtime/downloads/brass-408k-2.pill",
+    "/runtime/pill",
+    "--ro-bind",
+    "<REPO>/.runtime/urbit-5a187fededc4582a34fcd6055c67bb63e0917b94",
+    "/kernel",
+    "--chdir",
+    "/work",
+    "/usr/bin/python3",
+    "-I",
+    "/code/evaluate.py"
+  ],
+  "cleanup": [],
+  "elapsed_seconds": 6.435,
+  "events": [
+    {
+      "elapsed_seconds": 0.002,
+      "event": "preflight-sample",
+      "sample": {
+        "cpu_sensors": [
+          "thermal_zone3:TCPU",
+          "thermal_zone5:x86_pkg_temp"
+        ],
+        "finished": 744258.967775323,
+        "readings_c": {
+          "thermal_zone0:acpitz": 27.8,
+          "thermal_zone1:INT3400 Thermal": 20.0,
+          "thermal_zone2:SEN3": 40.05,
+          "thermal_zone3:TCPU": 52.0,
+          "thermal_zone4:TCPU_PCI": 52.0,
+          "thermal_zone5:x86_pkg_temp": 52.0,
+          "thermal_zone6:iwlwifi_1": 41.0
+        },
+        "started": 744258.966157129
+      }
+    },
+    {
+      "elapsed_seconds": 0.002,
+      "event": "preflight-accepted",
+      "sample": {
+        "cpu_sensors": [
+          "thermal_zone3:TCPU",
+          "thermal_zone5:x86_pkg_temp"
+        ],
+        "finished": 744258.967775323,
+        "readings_c": {
+          "thermal_zone0:acpitz": 27.8,
+          "thermal_zone1:INT3400 Thermal": 20.0,
+          "thermal_zone2:SEN3": 40.05,
+          "thermal_zone3:TCPU": 52.0,
+          "thermal_zone4:TCPU_PCI": 52.0,
+          "thermal_zone5:x86_pkg_temp": 52.0,
+          "thermal_zone6:iwlwifi_1": 41.0
+        },
+        "started": 744258.966157129
+      }
+    },
+    {
+      "elapsed_seconds": 1.422,
+      "event": "launch-sample",
+      "sample": {
+        "cpu_sensors": [
+          "thermal_zone3:TCPU",
+          "thermal_zone5:x86_pkg_temp"
+        ],
+        "finished": 744260.387743008,
+        "readings_c": {
+          "thermal_zone0:acpitz": 27.8,
+          "thermal_zone1:INT3400 Thermal": 20.0,
+          "thermal_zone2:SEN3": 40.05,
+          "thermal_zone3:TCPU": 59.0,
+          "thermal_zone4:TCPU_PCI": 59.0,
+          "thermal_zone5:x86_pkg_temp": 59.0,
+          "thermal_zone6:iwlwifi_1": 40.0
+        },
+        "started": 744260.386119188
+      }
+    },
+    {
+      "cpu_affinity": [
+        19
+      ],
+      "elapsed_seconds": 1.422,
+      "event": "launch"
+    },
+    {
+      "elapsed_seconds": 1.423,
+      "event": "sample",
+      "sample": {
+        "cpu_sensors": [
+          "thermal_zone3:TCPU",
+          "thermal_zone5:x86_pkg_temp"
+        ],
+        "finished": 744260.389482133,
+        "readings_c": {
+          "thermal_zone0:acpitz": 27.8,
+          "thermal_zone1:INT3400 Thermal": 20.0,
+          "thermal_zone2:SEN3": 40.05,
+          "thermal_zone3:TCPU": 71.0,
+          "thermal_zone4:TCPU_PCI": 71.0,
+          "thermal_zone5:x86_pkg_temp": 71.0,
+          "thermal_zone6:iwlwifi_1": 40.0
+        },
+        "started": 744260.388351173
+      }
+    },
+    {
+      "elapsed_seconds": 2.426,
+      "event": "sample",
+      "sample": {
+        "cpu_sensors": [
+          "thermal_zone3:TCPU",
+          "thermal_zone5:x86_pkg_temp"
+        ],
+        "finished": 744261.391972045,
+        "readings_c": {
+          "thermal_zone0:acpitz": 27.8,
+          "thermal_zone1:INT3400 Thermal": 20.0,
+          "thermal_zone2:SEN3": 40.05,
+          "thermal_zone3:TCPU": 44.0,
+          "thermal_zone4:TCPU_PCI": 44.0,
+          "thermal_zone5:x86_pkg_temp": 44.0,
+          "thermal_zone6:iwlwifi_1": 41.0
+        },
+        "started": 744261.389875773
+      }
+    },
+    {
+      "elapsed_seconds": 3.429,
+      "event": "sample",
+      "sample": {
+        "cpu_sensors": [
+          "thermal_zone3:TCPU",
+          "thermal_zone5:x86_pkg_temp"
+        ],
+        "finished": 744262.394849882,
+        "readings_c": {
+          "thermal_zone0:acpitz": 27.8,
+          "thermal_zone1:INT3400 Thermal": 20.0,
+          "thermal_zone2:SEN3": 40.05,
+          "thermal_zone3:TCPU": 41.0,
+          "thermal_zone4:TCPU_PCI": 42.0,
+          "thermal_zone5:x86_pkg_temp": 42.0,
+          "thermal_zone6:iwlwifi_1": 40.0
+        },
+        "started": 744262.392505826
+      }
+    },
+    {
+      "elapsed_seconds": 4.432,
+      "event": "sample",
+      "sample": {
+        "cpu_sensors": [
+          "thermal_zone3:TCPU",
+          "thermal_zone5:x86_pkg_temp"
+        ],
+        "finished": 744263.397626663,
+        "readings_c": {
+          "thermal_zone0:acpitz": 27.8,
+          "thermal_zone1:INT3400 Thermal": 20.0,
+          "thermal_zone2:SEN3": 40.05,
+          "thermal_zone3:TCPU": 40.0,
+          "thermal_zone4:TCPU_PCI": 41.0,
+          "thermal_zone5:x86_pkg_temp": 41.0,
+          "thermal_zone6:iwlwifi_1": 40.0
+        },
+        "started": 744263.395427695
+      }
+    },
+    {
+      "elapsed_seconds": 5.434,
+      "event": "sample",
+      "sample": {
+        "cpu_sensors": [
+          "thermal_zone3:TCPU",
+          "thermal_zone5:x86_pkg_temp"
+        ],
+        "finished": 744264.400513206,
+        "readings_c": {
+          "thermal_zone0:acpitz": 27.8,
+          "thermal_zone1:INT3400 Thermal": 20.0,
+          "thermal_zone2:SEN3": 40.05,
+          "thermal_zone3:TCPU": 41.0,
+          "thermal_zone4:TCPU_PCI": 41.0,
+          "thermal_zone5:x86_pkg_temp": 41.0,
+          "thermal_zone6:iwlwifi_1": 40.0
+        },
+        "started": 744264.398178964
+      }
+    },
+    {
+      "elapsed_seconds": 6.435,
+      "event": "final",
+      "reason": "Owned sandbox exited unsuccessfully",
+      "status": "failed"
+    }
+  ],
+  "exit_code": 1,
+  "format": 1,
+  "guard_sha256": "da16e2e0fd32eb5b90706b546a7ea8332a65807fc8279f3bd765dcc18aaad9b5",
+  "label": "urgit",
+  "launched": true,
+  "policy": {
+    "cooperative_seconds": 10,
+    "cpu_period_us": 10000,
+    "cpu_quota_us": 5000,
+    "kill_seconds": 5,
+    "sample_seconds": 1,
+    "stale_seconds": 3,
+    "start_c": 75,
+    "stop_c": 90,
+    "terminate_seconds": 10
+  },
+  "reason": "Owned sandbox exited unsuccessfully",
+  "run_directory": "<REPO>/.runtime/execution-runs/urgit-2_gqtz9a",
+  "run_id": "30fbd883ec2004d89426e029f903a755",
+  "scope": "stead-native-30fbd883ec2004d89426e029f903a755.scope",
+  "status": "failed"
+}

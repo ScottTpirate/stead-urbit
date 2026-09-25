@@ -1,0 +1,30 @@
+{
+  "checks": [],
+  "host_stop_reason": "ValueError: Fake seed hash mismatch",
+  "output_import_failures": [
+    {
+      "error": "FileNotFoundError",
+      "file": "commands.jsonl"
+    },
+    {
+      "error": "FileNotFoundError",
+      "file": "native.log"
+    },
+    {
+      "error": "FileNotFoundError",
+      "file": "native-vectors.json"
+    },
+    {
+      "error": "FileNotFoundError",
+      "file": "report.json"
+    },
+    {
+      "error": "FileNotFoundError",
+      "file": "status.json"
+    }
+  ],
+  "reason": "sandbox exited unsuccessfully",
+  "sandbox_exit_code": null,
+  "status": "failed",
+  "validation_error": "Invalid evaluator report shape"
+}

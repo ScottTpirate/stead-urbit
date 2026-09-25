@@ -1,0 +1,20 @@
+{
+  "classification": "real-host-transient-preparation-limit",
+  "unit": "stead-prep-dev10.scope",
+  "sample_utc": "2026-09-25T11:35:02.131063+00:00",
+  "cpu_max": "5000 10000",
+  "affinity_by_pid": {
+    "2704681": [
+      19
+    ],
+    "2704693": [
+      19
+    ],
+    "2704694": [
+      19
+    ],
+    "2704698": [
+      19
+    ]
+  }
+}

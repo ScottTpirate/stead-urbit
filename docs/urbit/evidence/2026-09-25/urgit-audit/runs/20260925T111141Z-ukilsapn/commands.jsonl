@@ -1,0 +1,7 @@
+{"elapsed_seconds": 0.075, "http_status": 200, "kind": "lens", "label": "kernel readiness", "output": "\"%408\\n\"", "payload": {"sink": {"stdout": null}, "source": {"dojo": "zuse"}}}
+{"kind": "check", "name": "pinned-native-kernel-ready", "passed": true, "result": "%408"}
+{"elapsed_seconds": 0.06, "http_status": 200, "kind": "lens", "label": "our", "output": "\"~zod\\n\"", "payload": {"sink": {"stdout": null}, "source": {"dojo": "our"}}}
+{"elapsed_seconds": 0.122, "http_status": 200, "kind": "lens", "label": "=/  desks=(set @tas)  .^((set @tas) %cd ~[(scot %p our) %$ (scot %da now)])  =/  apps=(map @tas @)  .^((map @tas @) %gf ~[(scot %p our) %$ (scot %da now) %$])  ?&(!((~(has in desks) %urgit)) !((~(has by apps) %urgit)))", "output": "\"-find.$\\ndojo: hoon expression failed\\n\"", "payload": {"sink": {"stdout": null}, "source": {"dojo": "=/  desks=(set @tas)  .^((set @tas) %cd ~[(scot %p our) %$ (scot %da now)])  =/  apps=(map @tas @)  .^((map @tas @) %gf ~[(scot %p our) %$ (scot %da now) %$])  ?&(!((~(has in desks) %urgit)) !((~(has by apps) %urgit)))"}}}
+{"error": "ValueError('Native fake identity, Kelvin or clean Urgit baseline failed')", "kind": "failure"}
+{"elapsed_seconds": 0.036, "http_status": 200, "kind": "lens", "label": "cancel pending control request", "output": "\"cancelled\"", "payload": {"sink": {"stdout": null}, "source": {"cancel": null}}}
+{"elapsed_seconds": 0.064, "http_status": 200, "kind": "lens", "label": "+hood/exit", "output": "\">=\"", "payload": {"sink": {"app": "hood"}, "source": {"dojo": "+hood/exit"}}}
