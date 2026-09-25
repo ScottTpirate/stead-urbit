@@ -68,7 +68,7 @@
     }
   },
   "fixed_clock": "2026-09-25T00:00:00Z",
-  "generated_hoon_sha256": "b7419a902ba2b5a7d66038397f0f67a46b375270720ee77878c42c772787ddb5",
+  "generated_hoon_sha256": "178ac9f2381d933e4eb2aa9dba1da68a2cd885cba91a13fe2f135eaf403da1ad",
   "kernel_commit": "5a187fededc4582a34fcd6055c67bb63e0917b94",
   "source_files": {
     "specs/urbit/fixtures/native-cases-v2.json": "95c915e2d0c93f358225274b34216fff0fe2efc09791905855b1e3f36aec368a",

@@ -40,7 +40,10 @@ def expected():
     for name, raw in chosen.items():
         if not raw or raw.endswith(b"\0") or len(raw) > 65536:
             raise ValueError("Input cord bounds")
-        lines.extend([f"++  {name}", f"  `@t`0x{int.from_bytes(raw, 'little'):x}"])
+        digits = f"{int.from_bytes(raw, 'little'):x}"
+        first = len(digits) % 4 or 4
+        literal = "0x" + ".".join([digits[:first]] + [digits[i:i + 4] for i in range(first, len(digits), 4)])
+        lines.extend([f"++  {name}", f"  `@t`{literal}"])
     lines.extend(["--", ""])
     source = "\n".join(lines).encode()
     manifest = {
