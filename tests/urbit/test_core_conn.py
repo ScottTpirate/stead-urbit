@@ -84,6 +84,14 @@ class CoreConnectionTests(unittest.TestCase):
             result = core_conn.evaluator_controls('/unused')
         self.assertEqual(result['status'], 'passed')
         self.assertGreater(result['large_frame_bytes'], 65536)
+        self.assertEqual(result['large_frame_hex'], frame.hex())
+        self.assertEqual(result['decoded_stdout'], self.wrap(raw))
+        self.assertEqual([r['argv'] for r in result['commands']], [
+            ['/unused', 'eval', '--loom', '29', flag] for flag in ('-jn', '-jn', '-ckn')])
+        self.assertEqual(bytes.fromhex(result['commands'][0]['input_hex']), b'[')
+        self.assertEqual(bytes.fromhex(result['commands'][1]['stdout_hex']), frame)
+        self.assertEqual(bytes.fromhex(result['commands'][2]['input_hex']), frame)
+        self.assertEqual(bytes.fromhex(result['commands'][2]['stdout_hex']), self.wrap(raw).encode())
 
     def test_evaluator_crash_is_not_an_expected_parse_rejection(self):
         with patch.object(core_conn, 'evaluate', side_effect=subprocess.CalledProcessError(-11, ['Vere', 'eval'])):

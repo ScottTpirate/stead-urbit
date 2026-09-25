@@ -74,7 +74,16 @@ def evaluator_controls(binary):
     """
     # This control targets the observed pinned zero-exit parser failure. A
     # crash/signal/nonzero exit is a failed control, never an expected rejection.
-    bad, stderr = evaluate(binary, '-jn', b'[')
+    commands = []
+
+    def observed(flags, data):
+        output, diagnostics = evaluate(binary, flags, data)
+        commands.append({'mode': 'evaluator', 'argv': [str(binary), 'eval', '--loom', '29', flags],
+                         'input_hex': data.hex(), 'stdout_hex': output.hex(),
+                         'stderr_hex': diagnostics.hex(), 'exit_code': 0})
+        return output, diagnostics
+
+    bad, stderr = observed('-jn', b'[')
     try:
         complete = len(bad) == 5 + framed_length(bad[:5])
     except ValueError:
@@ -89,16 +98,18 @@ def evaluator_controls(binary):
     expected = {'protocol': 'stead.framing-control/1', 'synthetic_text': 'x' * 34000}
     raw = json.dumps(expected, sort_keys=True, separators=(',', ':')).encode()
     noun = b"[32 %avow 0 %noun %stead-core-result '" + raw.hex().encode() + b"']"
-    frame, encode_stderr = evaluate(binary, '-jn', noun)
+    frame, encode_stderr = observed('-jn', noun)
     if len(frame) <= 65536 or len(frame) != 5 + framed_length(frame[:5]):
         raise AssertionError('Large evaluator control was truncated or not above64KiB')
-    text, decode_stderr = evaluate(binary, '-ckn', frame)
+    text, decode_stderr = observed('-ckn', frame)
     actual = parse_response(text.decode('utf-8'))
     if actual != {'raw': raw.decode(), 'json': expected}:
         raise AssertionError('Large evaluator control did not recover exact bytes')
     return {'status': 'passed', 'classification': 'real-native-evaluator',
             'invalid_input': errors, 'large_frame_bytes': len(frame),
             'large_frame_sha256': hashlib.sha256(frame).hexdigest(),
+            'large_frame_hex': frame.hex(), 'decoded_stdout': text.decode('utf-8'),
+            'commands': commands,
             'result_sha256': hashlib.sha256(raw).hexdigest(),
             'encode_stderr': encode_stderr.decode(errors='replace'),
             'decode_stderr': decode_stderr.decode(errors='replace')}

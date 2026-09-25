@@ -370,6 +370,7 @@ def run(host):
         check('loaded-supervisor-source-matches', before_inputs['harness'] == host['LOADED_SOURCE_DIGEST'])
         check('loaded-core-runner-source-matches', before_inputs['runner'] == LOADED_CLOSURE)
         report['evaluator_controls'] = core_conn.evaluator_controls(binary)
+        report['commands'].extend(report['evaluator_controls']['commands'])
         check('native-evaluator-failure-and-large-frame-controls', report['evaluator_controls']['status'] == 'passed')
         host['execution_check']()
         corpus = json.loads(Path('/specs/fixtures/native-cases-v2.json').read_text())

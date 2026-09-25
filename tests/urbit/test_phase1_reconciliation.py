@@ -73,6 +73,24 @@ def assertion(name, status='passed'):
     return {'name': name, 'status': status}
 
 
+def authored_evaluator_controls():
+    """Consistent invented exchange bytes, NOT a real jam frame or native run."""
+    expected = {'protocol': 'stead.framing-control/1', 'synthetic_text': 'x' * 34000}
+    encoded = json.dumps(expected, sort_keys=True, separators=(',', ':')).encode()
+    noun = b"[32 %avow 0 %noun %stead-core-result '" + encoded.hex().encode() + b"']"
+    frame = b'\0' + (68000).to_bytes(4, 'little') + b'x' * 68000
+    error = b'AUTHORED HOST PARSE REJECTION'
+    binary = '/runtime/' + json.loads((ROOT / 'specs/urbit/toolchain.lock.json').read_bytes())['runtime']['binary']
+    commands = [{'mode': 'evaluator', 'argv': [binary, 'eval', '--loom', '29', flag],
+                 'input_hex': source.hex(), 'stdout_hex': stdout.hex(), 'stderr_hex': stderr.hex(), 'exit_code': 0}
+                for flag, source, stdout, stderr in (
+                    ('-jn', b'[', b'', error), ('-jn', noun, frame, b''), ('-ckn', frame, noun, b''))]
+    return {'status': 'passed', 'classification': 'real-native-evaluator', 'commands': commands,
+            'invalid_input': {'exit': 0, 'encoder_rejected': True, 'stdout_hex': '', 'stderr': error.decode()},
+            'large_frame_bytes': len(frame), 'large_frame_hex': frame.hex(), 'large_frame_sha256': digest(frame),
+            'result_sha256': digest(encoded), 'decoded_stdout': noun.decode(), 'encode_stderr': '', 'decode_stderr': ''}
+
+
 def diagnostic(result):
     """Keep a negative test failure readable rather than dumping all 73 proofs."""
     return {'status': result.get('status'), 'errors': result.get('errors'),
@@ -173,6 +191,10 @@ class AuthoredFixture:
                     classification='native-scheduled-gall' if lane == 'gall_schedule' else 'real-native-fake-ships',
                     guard_status='completed',
                     native=[{'$execution': lane, 'pointer': '/commands/0'}])
+                if identifier == 'evaluator-error-boundaries':
+                    proof['classification'] = 'real-native-evaluator'
+                    proof['native'] = [{'$execution': 'core', 'pointer': '/commands/' + str(index)}
+                                       for index in (1, 2, 3)]
             elif kind in ('source_review', 'not_applicable'):
                 proof.update(reviewer='/root/independent_review', author='/root',
                     reviewed_source_files=copy.deepcopy(self.expected['source_files']))
@@ -251,6 +273,8 @@ class AuthoredFixture:
             'request_sha256': digest(self.transport_record['request'].encode()),
             'transcript': {'artifact': 'transport.jsonl.gz', 'line': 1,
                 'record_bytes': len(line), 'record_sha256': digest(line)}}]
+        core['evaluator_controls'] = authored_evaluator_controls()
+        core['commands'].extend(copy.deepcopy(core['evaluator_controls']['commands']))
 
     def _schedule(self):
         report = self.reports['gall_schedule']
@@ -539,6 +563,66 @@ class Phase1ReconciliationHostTests(unittest.TestCase):
             with self.subTest(native=native):
                 fixture = AuthoredFixture()
                 fixture.proofs['v2-native-compile']['native'] = native
+                self.rejects(fixture)
+
+    def test_evaluator_raw_bytes_inventory_and_summaries_are_required(self):
+        for mode in ('empty-bytes', 'missing-record', 'extra-record', 'wrong-argv', 'wrong-runtime',
+                     'bool-exit', 'nonzero-exit', 'odd-hex', 'nonhex', 'oversized',
+                     'wrong-input', 'silent-rejection', 'valid-frame-rejection', 'short-frame',
+                     'bad-frame-length', 'disconnected-decode', 'changed-result',
+                     'wrong-frame-hash', 'wrong-result-hash', 'wrong-raw-summary', 'wrong-diagnostic'):
+            with self.subTest(mode=mode):
+                controls = authored_evaluator_controls()
+                commands = controls['commands']
+                if mode == 'empty-bytes':
+                    for row in commands:
+                        row.update(input_hex='', stdout_hex='', stderr_hex='')
+                elif mode == 'missing-record': commands.pop()
+                elif mode == 'extra-record': commands.append(copy.deepcopy(commands[0]))
+                elif mode == 'wrong-argv': commands[2]['argv'][4] = '-jn'
+                elif mode == 'wrong-runtime': commands[0]['argv'][0] = '/runtime/../other'
+                elif mode == 'bool-exit': commands[0]['exit_code'] = False
+                elif mode == 'nonzero-exit': commands[0]['exit_code'] = -11
+                elif mode == 'odd-hex': commands[0]['stdout_hex'] = '0'
+                elif mode == 'nonhex': commands[0]['stdout_hex'] = 'gg'
+                elif mode == 'oversized': commands[0]['stdout_hex'] = '00' * 1_000_001
+                elif mode == 'wrong-input': commands[0]['input_hex'] = b']'.hex()
+                elif mode == 'silent-rejection': commands[0]['stderr_hex'] = ''
+                elif mode == 'valid-frame-rejection': commands[0]['stdout_hex'] = b'\0\1\0\0\0x'.hex()
+                elif mode == 'short-frame': commands[1]['stdout_hex'] = b'\0\1\0\0\0x'.hex()
+                elif mode == 'bad-frame-length': commands[1]['stdout_hex'] = controls['large_frame_hex'][:-2]
+                elif mode == 'disconnected-decode': commands[2]['input_hex'] = '00'
+                elif mode == 'changed-result': commands[2]['stdout_hex'] = b"[32 %avow 0 %noun %stead-core-result '7b7d']".hex()
+                elif mode == 'wrong-frame-hash': controls['large_frame_sha256'] = '0' * 64
+                elif mode == 'wrong-result-hash': controls['result_sha256'] = '0' * 64
+                elif mode == 'wrong-raw-summary': controls['large_frame_hex'] = '00'
+                elif mode == 'wrong-diagnostic': controls['encode_stderr'] = 'unobserved diagnostic'
+                report = {'evaluator_controls': controls, 'commands': copy.deepcopy(commands)}
+                with self.assertRaises(ValueError):
+                    G.validate_evaluator_controls(report)
+        controls = authored_evaluator_controls()
+        with self.assertRaises(ValueError):
+            G.validate_evaluator_controls({'evaluator_controls': controls,
+                'commands': [dict(row, input_hex='00') for row in controls['commands']]})
+
+    def test_evaluator_references_require_all_three_and_cannot_prove_ship_actions(self):
+        fixture = AuthoredFixture()
+        fixture.proofs['evaluator-error-boundaries']['classification'] = 'real-native-fake-ships'
+        self.rejects(fixture)
+        for pointers in ([1], [1, 1, 3], [3, 2, 1], [0, 2, 3]):
+            with self.subTest(pointers=pointers):
+                fixture = AuthoredFixture()
+                fixture.proofs['evaluator-error-boundaries']['native'] = [
+                    {'$execution': 'core', 'pointer': '/commands/' + str(index)} for index in pointers]
+                self.rejects(fixture)
+        for camouflage in (False, True):
+            with self.subTest(camouflage=camouflage):
+                fixture = AuthoredFixture()
+                fixture.proofs['v2-native-compile']['native'] = [{'$execution': 'core', 'pointer': '/commands/1'}]
+                if camouflage:
+                    for rows in (fixture.reports['core']['commands'][1:],
+                                 fixture.reports['core']['evaluator_controls']['commands']):
+                        rows[0].update(ship='zod', dojo='AUTHORED non-Dojo evaluator', result='')
                 self.rejects(fixture)
 
     def test_missing_reader_wrong_hash_missing_artifact_and_changed_transcript_fail(self):

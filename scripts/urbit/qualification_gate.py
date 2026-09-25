@@ -222,7 +222,8 @@ def evaluate(manifest, evidence, expected_bindings, *, read_artifact=None):
             if proof.get('bindings') != bindings:
                 raise ValueError('Artifact source bindings differ from index')
             if kind == 'native':
-                wanted_class = ('native-scheduled-gall' if identifier == 'delivery-late-old-leave'
+                wanted_class = ('real-native-evaluator' if identifier == 'evaluator-error-boundaries'
+                                else 'native-scheduled-gall' if identifier == 'delivery-late-old-leave'
                                 and item.get('execution_lane') == 'gall_schedule' else 'real-native-fake-ships')
                 if proof.get('classification') != wanted_class or not proof.get('native'):
                     raise ValueError('Actual native commands/signs missing or mocked')
@@ -349,6 +350,71 @@ def validate_transport(report, execution, read):
             and digest.hexdigest() == artifact['uncompressed_sha256'], 'Transport inventory/digest mismatch')
 
 
+def validate_evaluator_controls(report):
+    """Bind three retained pure-evaluator exchanges; never infer ship delivery."""
+    controls = report['evaluator_controls']
+    require(isinstance(controls, dict) and controls.get('status') == 'passed'
+            and controls.get('classification') == 'real-native-evaluator',
+            'Wrong evaluator control classification')
+    commands = controls.get('commands')
+    require(isinstance(commands, list) and len(commands) == 3, 'Exactly three evaluator control exchanges required')
+    require(isinstance(report.get('commands'), list), 'Missing retained evaluator command list')
+    indices = [index for index, row in enumerate(report['commands'])
+               if isinstance(row, dict) and row.get('mode') == 'evaluator']
+    require(len(indices) == 3 and [report['commands'][index] for index in indices] == commands,
+            'Evaluator controls differ from retained command inventory')
+    specs = Path('/specs') if Path(__file__).parent == Path('/code') else Path(__file__).resolve().parents[2] / 'specs/urbit'
+    binary = '/runtime/' + json.loads((specs / 'toolchain.lock.json').read_bytes(), object_pairs_hook=unique)['runtime']['binary']
+    observed = []
+    fields = {'mode', 'argv', 'input_hex', 'stdout_hex', 'stderr_hex', 'exit_code'}
+    for command, flag in zip(commands, ('-jn', '-jn', '-ckn'), strict=True):
+        require(isinstance(command, dict) and set(command) == fields and command['mode'] == 'evaluator'
+                and command['argv'] == [binary, 'eval', '--loom', '29', flag]
+                and type(command['exit_code']) is int and command['exit_code'] == 0,
+                'Wrong evaluator argv, mode, result or record shape')
+        values = []
+        for key in ('input_hex', 'stdout_hex', 'stderr_hex'):
+            value = command[key]
+            require(isinstance(value, str) and len(value) <= 2_000_000
+                    and re.fullmatch(r'(?:[0-9a-f]{2})*', value) is not None,
+                    'Malformed or oversized evaluator bytes')
+            values.append(bytes.fromhex(value))
+        observed.append(values)
+
+    def complete_frame(value):
+        return (len(value) >= 5 and value[0] == 0
+                and 0 < int.from_bytes(value[1:5], 'little') <= 1_000_000
+                and len(value) == 5 + int.from_bytes(value[1:5], 'little'))
+
+    bad_input, bad_output, bad_error = observed[0]
+    require(bad_input == b'[' and not complete_frame(bad_output) and bool(bad_error.strip()),
+            'Missing actual invalid-input evaluator rejection')
+    require(controls.get('invalid_input') == {'exit': 0, 'encoder_rejected': True,
+            'stdout_hex': bad_output.hex(), 'stderr': bad_error.decode(errors='replace')},
+            'Invalid-input summary differs from retained evaluator bytes')
+    expected = {'protocol': 'stead.framing-control/1', 'synthetic_text': 'x' * 34000}
+    raw = json.dumps(expected, sort_keys=True, separators=(',', ':')).encode()
+    noun = b"[32 %avow 0 %noun %stead-core-result '" + raw.hex().encode() + b"']"
+    encode_input, frame, encode_error = observed[1]
+    decode_input, text, decode_error = observed[2]
+    require(encode_input == noun and complete_frame(frame) and len(frame) > 65536 and decode_input == frame,
+            'Large evaluator frame is missing, truncated, small or disconnected')
+    match = re.fullmatch(rb"\s*\[32\s+%avow\s+0\s+%noun\s+%stead-core-result\s+'([0-9a-f]+)'\]\s*", text)
+    require(match is not None, 'Missing exact decoded evaluator result')
+    decoded = bytes.fromhex(match[1].decode())
+    require(decoded == raw and json.loads(decoded, object_pairs_hook=unique) == expected,
+            'Evaluator roundtrip changed exact result bytes')
+    require(type(controls.get('large_frame_bytes')) is int and controls['large_frame_bytes'] == len(frame)
+            and controls.get('large_frame_hex') == frame.hex()
+            and controls.get('large_frame_sha256') == hashlib.sha256(frame).hexdigest()
+            and controls.get('result_sha256') == hashlib.sha256(decoded).hexdigest()
+            and controls.get('decoded_stdout') == text.decode('utf-8')
+            and controls.get('encode_stderr') == encode_error.decode(errors='replace')
+            and controls.get('decode_stderr') == decode_error.decode(errors='replace'),
+            'Evaluator summaries differ from actual command bytes')
+    return indices
+
+
 def validate_schedule(report):
     import gall_schedule_proof
     import gall_schedule
@@ -401,6 +467,7 @@ def reconcile(manifest, bundle, expected_bindings, *, read_artifact=None):
         require(core['inputs_before'].get('qualification_manifest') == bundle['manifest']['sha256']
                 and core.get('independent_closeout', {}).get('manifest_sha256') == bundle['manifest']['sha256'],
                 'Native execution used a different qualification manifest')
+        evaluator_indices = validate_evaluator_controls(core)
         require(core.get('status') == 'execution_complete'
                 and core.get('execution_status') == 'completed-awaiting-independent-qualification'
                 and core.get('classification') == 'local-real-native-fake-ships'
@@ -415,7 +482,13 @@ def reconcile(manifest, bundle, expected_bindings, *, read_artifact=None):
                 continue
             lane = 'gall_schedule' if item['id'] == 'delivery-late-old-leave' else 'core'
             require(item.get('execution_lane') == lane and proof.get('execution_lane') == lane
-                    and isinstance(proof.get('native'), list) and bool(proof['native']), 'Native proof has wrong lane or no references')
+                    and isinstance(proof.get('native'), list) and bool(proof['native'])
+                    and all(isinstance(reference, dict) for reference in proof['native']),
+                    'Native proof has wrong lane or no references')
+            if item['id'] == 'evaluator-error-boundaries':
+                require([reference.get('pointer') for reference in proof['native']]
+                        == ['/commands/' + str(index) for index in evaluator_indices],
+                        'Evaluator proof must reference all three exact control exchanges')
             for reference in proof['native']:
                 execution = bundle['executions'][lane]
                 require(reference.get('path') == execution['path'] and reference.get('sha256') == execution['sha256'],
@@ -427,11 +500,15 @@ def reconcile(manifest, bundle, expected_bindings, *, read_artifact=None):
                 require(isinstance(record, dict) and bool(record)
                         and record.get('status') not in ('failed', 'fail', 'not_run', 'skipped')
                         and record.get('passed') is not False, 'Native reference is missing, failed, or not a record')
-                require(record.get('ship') in ('zod', 'bus', 'nec', 'bud') and (
-                    isinstance(record.get('dojo'), str) and isinstance(record.get('result'), str)
-                    or isinstance(record.get('mode'), str) and isinstance(record.get('stdout'), str)
-                    and isinstance(record.get('stderr'), str) and isinstance(record.get('transcript'), dict)),
-                    'Native command is missing its actual response/transport')
+                if record.get('mode') == 'evaluator':
+                    require(item['id'] == 'evaluator-error-boundaries',
+                            'Pure evaluator records cannot support ship or Dojo requirements')
+                else:
+                    require(record.get('ship') in ('zod', 'bus', 'nec', 'bud') and (
+                        isinstance(record.get('dojo'), str) and isinstance(record.get('result'), str)
+                        or isinstance(record.get('mode'), str) and isinstance(record.get('stdout'), str)
+                        and isinstance(record.get('stderr'), str) and isinstance(record.get('transcript'), dict)),
+                        'Native command is missing its actual response/transport')
         result = evaluate(manifest, bundle, expected_bindings, read_artifact=read_artifact)
         result.update(protocol=failed['protocol'], classification=failed['classification'],
                       execution_artifacts=bundle['executions'], guard_artifacts=bundle['guards'],
