@@ -133,7 +133,8 @@
   |=  raw=@t
   ^-  path
   =/  command  (decode:stead-codec raw)
-  /v2/result/~bus/019939ba-4000-7000-8000-000000000202/[project.command]/[request.command]/[digest.command]
+  =/  binding=@t  '019939ba-4000-7000-8000-000000000202'
+  /v2/result/~bus/[binding]/[project.command]/[request.command]/[digest.command]
 ++  route-text
   |=  value=path
   (rap 3 (turn value |=(segment=@t (cat 3 '/' segment))))
