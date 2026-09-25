@@ -311,6 +311,66 @@ class UrgitCredentialRedactionSafety(unittest.TestCase):
             spec.loader.exec_module(self.evaluator)
         self.evaluator.EVIDENCE = Path(self.temp.name)
 
+    def test_main_bootstrap_failure_preserves_partial_report_and_redacts_error(self):
+        evaluator = self.evaluator
+        evaluator.INPUT = evaluator.EVIDENCE / 'input'
+        evaluator.ROOT = evaluator.EVIDENCE / 'work'
+        evaluator.INPUT.mkdir()
+        evaluator.ROOT.mkdir()
+        marker = {'format': 1, 'purpose': 'URB-025 isolated candidate evaluation', 'fake_identity': 'zod'}
+        (evaluator.INPUT / '.stead-disposable.json').write_text(json.dumps(marker))
+        (evaluator.INPUT / 'bootstrap.json').write_text('{"mode":"cold"}')
+        evaluator.PIN = {'profile': 'authored-host-only', 'excluded_claims': [],
+                         'limits': {'loom_exponent': 31, 'boot_timeout_seconds': 1}}
+        evaluator.TOOLCHAIN = {'kernel': {'kelvin': 408}}
+        runtime = MagicMock(stdout=io.BytesIO(), returncode=None)
+        runtime.poll.return_value = None
+        runtime.wait.side_effect = lambda **_: setattr(runtime, 'returncode', 0)
+        thread = MagicMock()
+        thread.is_alive.return_value = False
+        read_text, exists = Path.read_text, Path.exists
+
+        def isolated_read(path, *args, **kwargs):
+            if path == Path('/proc/net/route'):
+                return 'Iface Destination\n'  # Authored empty network namespace.
+            return read_text(path, *args, **kwargs)
+
+        def isolated_exists(path):
+            return False if path == Path('/home/skilgore') else exists(path)
+
+        def authored_launch(*_args, **_kwargs):
+            pier = evaluator.ROOT / 'zod'
+            pier.mkdir()
+            (pier / '.http.ports').write_text('12321 loopback\n')
+            return runtime  # Never start a native child or output reader.
+
+        failure = ValueError('authored bootstrap failure ' + evaluator.TOKEN + ' ' + evaluator.AUTH)
+        with patch.object(Path, 'read_text', isolated_read), patch.object(Path, 'exists', isolated_exists), \
+                patch.object(evaluator.os, 'sched_getaffinity', return_value={0}), \
+                patch.object(evaluator.os, 'killpg', side_effect=AssertionError('No native signals')) as kill, \
+                patch.object(evaluator.signal, 'signal'), patch.object(evaluator.threading, 'Thread', return_value=thread), \
+                patch.object(evaluator.subprocess, 'Popen', side_effect=authored_launch) as launch, \
+                patch.object(evaluator, 'lens', return_value='%408\n'), \
+                patch.object(evaluator, 'expression', side_effect=['~zod\n', '%.n\n']), \
+                patch.object(evaluator.bootstrap, 'validate', side_effect=failure) as validate, \
+                patch.object(evaluator, 'hood') as hood, patch.object(evaluator, 'vectors') as vectors, \
+                redirect_stdout(io.StringIO()):
+            self.assertEqual(evaluator.main(), 1)
+        launch.assert_called_once()
+        kill.assert_not_called()
+        vectors.assert_not_called()
+        hood.assert_called_once_with('exit', stopping=True)
+        validate.assert_called_once_with('~zod\n', '%408\n', '%.n\n')
+        report = json.loads((evaluator.EVIDENCE / 'report.json').read_text())
+        self.assertEqual(report['status'], 'failed')
+        self.assertEqual(report['checks'], [{'name': 'pinned-native-kernel-ready', 'passed': True, 'result': '%408'}])
+        self.assertIn('authored bootstrap failure', report['error'])
+        self.assertEqual(report['error'].count('<generated-synthetic-credential>'), 2)
+        self.assertEqual(report['runtime_exit_code'], 0)  # Explicitly mocked exit.
+        for value in (evaluator.TOKEN, evaluator.AUTH):
+            self.assertNotIn(value, json.dumps(report))
+            self.assertNotIn(value, self.events.getvalue())
+
     def test_structured_events_redact_raw_and_basic_auth_values(self):
         self.evaluator.event('synthetic', token=self.evaluator.TOKEN, header='Basic ' + self.evaluator.AUTH)
         raw = self.events.getvalue()
