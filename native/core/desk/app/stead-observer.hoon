@@ -184,7 +184,7 @@
   ?:  (gte count 256)
     =/  cards=(list card:agent:gall)
       %+  turn  ~(tap by wex.bowl)
-      |=  [[route=wire ship=@p name=@tas] [acked=? path=path]]
+      |=  [[route=path ship=@p name=@tas] [acked=? watched=path]]
       [%pass route %agent [ship name] %leave ~]
     [cards this(fault 'Observer event capacity exceeded')]
   =/  value  u.found
