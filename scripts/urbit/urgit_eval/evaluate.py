@@ -297,9 +297,9 @@ def main():
         identity = expression('our')
         # Clay's empty-desk %d lists all local desks; Gall %f lists non-nuked
         # agent incarnations, including suspended ones. These read native state.
-        clean_observation = expression('=/  desks=(set @tas)  .^((set @tas) %cd ~[(scot %p our) %$ (scot %da now)])  =/  apps=(map @tas @)  .^((map @tas @) %gf ~[(scot %p our) %$ (scot %da now) %$])  ?&(!((~(has in desks) %urgit)) !((~(has by apps) %urgit)))')
-        bootstrap.validate(identity, ready, clean_observation)
+        clean_observation = expression('=/  desks=(set @tas)  .^((set @tas) %cd ~[(scot %p our) %$ (scot %da now)])  =/  apps=(map @tas @)  .^((map @tas @) %gf ~[(scot %p our) %$ (scot %da now) %$])  ?&(!(~(has in desks) %urgit) !(~(has by apps) %urgit))')
         report['native_baseline'] = {'identity': identity, 'kelvin': ready, 'clean_urgit_state': clean_observation}
+        bootstrap.validate(identity, ready, clean_observation)
         phase('compiling pinned native candidate desk')
         hood('new-desk %urgit')
         hood('mount %urgit')
