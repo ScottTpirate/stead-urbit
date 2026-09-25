@@ -1,5 +1,5 @@
 .DEFAULT_GOAL := help
-.PHONY: help setup doctor preflight dev start status wait-ready stop reset check test core-check core-test plan-check contracts-check
+.PHONY: help setup doctor preflight dev start status wait-ready stop reset check test core-check core-test gall-schedule skill-prequalify plan-check contracts-check
 help:
 	@python3 scripts/urbit/dev_help.py
 setup:
@@ -26,6 +26,10 @@ core-test:
 	python3 scripts/urbit/harness.py core-test
 core-check:
 	python3 scripts/urbit/harness.py core-check
+gall-schedule:
+	python3 scripts/urbit/harness.py gall-schedule
+skill-prequalify:
+	python3 scripts/urbit/harness.py skill-evaluation --condition prequalification
 check:
 	python3 scripts/urbit/validate_plan.py
 	python3 scripts/urbit/check_ecosystem.py

@@ -17,11 +17,13 @@ import traceback
 import urllib.request
 import weakref
 
-from digests import sha, source_sha, tree_sha
+from digests import sha, source_sha, tree_sha, source_inventory, read_source
 from conn import assert_result, run_thread
 import execution_policy
 import core_check
 import core_test
+import gall_schedule
+import skill_evaluation_support
 
 STATE = Path('/state')
 LIVE = STATE / 'live'
@@ -42,6 +44,31 @@ TERMINATION_LOCK = threading.Lock()
 TERMINATED = weakref.WeakSet()
 EVIDENCE = []
 LOADED_SOURCE_DIGEST = source_sha(Path('/code'))
+
+
+def qualified_source():
+    context = execution_policy.read_json('/execution/source-context.json')
+    if (context.get('dirty_paths') != [] or context.get('committed_bytes_verified') is not True
+            or not context.get('committed_files') or context.get('harness_sha256') != LOADED_SOURCE_DIGEST
+            or context.get('native_tree_sha256') != tree_sha(Path('/native/core/desk'))):
+        raise ValueError('Qualification requires the exact committed source captured at startup')
+    if context.get('script_files') != source_inventory(Path('/code')):
+        raise ValueError('Helper file inventory changed after startup')
+    mounts = {'scripts/urbit': Path('/code'), 'native': Path('/native'), 'specs/urbit': Path('/specs'),
+              'tests/urbit/native_gall_schedule': Path('/native-tests/gall-schedule'),
+              'tests/urbit/skill_evaluation': Path('/native-tests/skill-evaluation')}
+    for name, digest in context['trees'].items():
+        if name not in mounts or tree_sha(mounts[name]) != digest:
+            raise ValueError('Qualification source tree changed after startup')
+    for name, digest in context['committed_files'].items():
+        matched = [(prefix, mount) for prefix, mount in mounts.items() if name.startswith(prefix + '/')]
+        if len(matched) != 1:
+            raise ValueError('Qualification source is outside fixed read-only mounts')
+        prefix, mount = matched[0]
+        source = mount / name[len(prefix) + 1:]
+        if hashlib.sha256(read_source(source)).hexdigest() != digest:
+            raise ValueError('Qualification source no longer matches committed bytes')
+    return context['source_commit']
 
 
 def execution_check(preflight=False):
@@ -124,7 +151,7 @@ def guarded_result(result):
     # completed its own checks just before cancellation. No stale green report.
     if 'evidence_file' in result:
         name = Path(result['evidence_file']).name
-        if not (name.startswith(('core-', 'smoke-')) and name.endswith('.json')):
+        if not (name.startswith(('core-', 'smoke-', 'gall-schedule-', 'skill-evaluation-')) and name.endswith('.json')):
             raise ValueError('Unexpected native evidence target')
         path = STATE / 'logs' / name
         evidence = execution_policy.read_json(path, maximum=16 * 1024 * 1024)
@@ -433,6 +460,57 @@ def handle(connection):
                             all_stop()
                         else:
                             PROGRESS.update(stage='ready', ready=True, error=None)
+            elif request == {'op': 'gall-schedule'}:
+                with MUTEX:
+                    if not PROGRESS['ready']:
+                        raise RuntimeError('Fixture not ready')
+                    PROGRESS.update(stage='gall-schedule', ready=False, error=None)
+                    result = None
+                    try:
+                        result = guarded_result(gall_schedule.run(globals()))
+                    finally:
+                        if result is None or result['status'] != 'pass':
+                            PROGRESS.update(stage='failed', ready=False, error='Scheduled Gall lane failed')
+                            all_stop()
+                        else:
+                            PROGRESS.update(stage='ready', ready=True, error=None)
+            elif (set(request) == {'op', 'condition'} and request['op'] == 'skill-evaluation'
+                  and request['condition'] in ('prequalification', 'baseline', 'local_skill_assisted')):
+                with MUTEX:
+                    if not PROGRESS['ready']:
+                        raise RuntimeError('Fixture not ready')
+                    PROGRESS.update(stage='skill-evaluation', ready=False, error=None)
+                    condition = request['condition']
+                    try:
+                        context = dict(globals(), WORKFLOW_SOURCE_COMMIT=qualified_source())
+                        if condition != 'prequalification':
+                            proof = execution_policy.read_json('/workflow/prequalification.json')
+                            if set(proof) != {'inner', 'guard'}:
+                                raise ValueError('Exact workflow prequalification references required')
+                            for reference in proof.values():
+                                path = Path(reference['path'])
+                                if not path.is_absolute() or not path.is_relative_to('/workflow') or '..' in path.parts:
+                                    raise ValueError('Workflow proof must be inside the fixed read-only mount')
+                            context['WORKFLOW_PREQUALIFICATION'] = proof
+                        result = guarded_result(skill_evaluation_support.run(context,
+                            Path('/native-tests/skill-evaluation'), Path('/workflow') / condition,
+                            condition, prequalify=condition == 'prequalification'))
+                        try:
+                            if qualified_source() != context['WORKFLOW_SOURCE_COMMIT']:
+                                raise ValueError('Workflow committed source changed')
+                        except Exception as error:
+                            result.update(status='fail', error='Workflow final source binding failed: ' + str(error))
+                            result = guarded_result(result)
+                    finally:
+                        # Always finish this owned lifetime, including an
+                        # admission exception before the adapter checkpoints.
+                        NORMAL_STOP.set()
+                        STOP_REQUESTED.set()
+                        try:
+                            all_stop()
+                        finally:
+                            PROGRESS.update(stage='stopped', ready=False)
+                            STOP.set()
             else:
                 raise ValueError('Unknown control command')
             reply = {'ok': True, 'result': result}

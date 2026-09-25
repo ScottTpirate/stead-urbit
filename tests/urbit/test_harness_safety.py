@@ -1,6 +1,8 @@
 """Independent host safety regression tests; NOT evidence of native Hoon execution.
 
 Owner/reviewer: /root/qa_review (independent agent, not human approval).
+The source inventory, cache and committed-input follow-up tests were authored
+by /root/independent_review; they remain host-only checks.
 Every writable path belongs to TemporaryDirectory. Control-socket responses and
 download bytes are mocked where stated; filesystem hashes, locks, and the benign
 tamper executable are real host operations. No live fixture is started or reset.
@@ -12,8 +14,11 @@ import fcntl
 import importlib.util
 import io
 import json
+import os
 from pathlib import Path
+import py_compile
 import shlex
+import shutil
 import socket
 import subprocess
 import sys
@@ -201,6 +206,51 @@ class FixtureSafety(unittest.TestCase):
 
 
 class DigestSafety(unittest.TestCase):
+    def test_special_sources_refuse_without_waiting_for_fifo_writer(self):
+        with tempfile.TemporaryDirectory(prefix='stead-source-fifo-') as tmp:
+            root = Path(tmp)
+            fifo = root / 'source.py'
+            os.mkfifo(fifo)
+            for function, value in (('sha', fifo), ('read_source', fifo), ('source_inventory', root)):
+                with self.subTest(function=function):
+                    result = subprocess.run([sys.executable, '-B', '-c',
+                        'import sys; from pathlib import Path; sys.path.insert(0, sys.argv[1]); '
+                        'import digests; getattr(digests, sys.argv[2])(Path(sys.argv[3]))',
+                        str(REPO / 'scripts/urbit'), function, str(value)],
+                        capture_output=True, text=True, timeout=2)
+                    self.assertNotEqual(result.returncode, 0)
+                    self.assertIn('regular file', result.stderr)
+
+    def test_helper_inventory_binds_new_files_and_excludes_only_cache_directory(self):
+        with tempfile.TemporaryDirectory(prefix='stead-source-inventory-') as tmp:
+            root = Path(tmp)
+            (root / 'original.py').write_text('VALUE = 1\n')
+            original = digests.source_inventory(root)
+            cache = root / '__pycache__'
+            cache.mkdir()
+            (cache / 'ignored.pyc').write_bytes(b'authored cache sentinel')
+            self.assertEqual(digests.source_inventory(root), original)
+            (root / 'new.py').write_text('VALUE = 2\n')
+            self.assertEqual(set(digests.source_inventory(root)), {'original.py', 'new.py'})
+            (root / 'top-level.pyc').write_bytes(b'not an excluded cache directory')
+            self.assertIn('top-level.pyc', digests.source_inventory(root))
+
+    def test_fresh_cache_prefix_executes_source_instead_of_old_host_bytecode(self):
+        with tempfile.TemporaryDirectory(prefix='stead-source-cache-') as tmp:
+            root = Path(tmp)
+            source = root / 'reviewer_fixture.py'
+            source.write_text("VALUE = 'before'\n")
+            old = source.stat()
+            py_compile.compile(str(source), doraise=True)
+            source.write_text("VALUE = 'after!'\n")
+            os.utime(source, ns=(old.st_atime_ns, old.st_mtime_ns))
+            code = 'import reviewer_fixture; print(reviewer_fixture.VALUE)'
+            ordinary = subprocess.check_output([sys.executable, '-B', '-c', code], cwd=root, text=True)
+            isolated = subprocess.check_output([sys.executable, '-B', '-X',
+                'pycache_prefix=' + str(root / 'fresh-cache'), '-c', code], cwd=root, text=True)
+            self.assertEqual(ordinary.strip(), 'before', 'Control must actually load old cached code')
+            self.assertEqual(isolated.strip(), 'after!')
+
     def test_source_profile_covers_internal_aliases_and_their_targets(self):
         with tempfile.TemporaryDirectory(prefix='stead-source-alias-') as tmp:
             root = Path(tmp)
@@ -258,6 +308,127 @@ class DigestSafety(unittest.TestCase):
             except ValueError:
                 return
             self.assertNotEqual(redirected, original)
+
+
+class QualificationSourceSafety(unittest.TestCase):
+    """Real temporary Git/bytes; native supervisor launch and mounts are mocked."""
+    def setUp(self):
+        self.temp = tempfile.TemporaryDirectory(prefix='stead-qualification-source-')
+        self.addCleanup(self.temp.cleanup)
+        self.root = Path(self.temp.name) / 'source'
+        self.root.mkdir()
+        self.control = Path(self.temp.name) / 'control'
+        self.control.mkdir(mode=0o700)
+        for name in ('scripts/urbit', 'native/core/desk', 'specs/urbit',
+                     'tests/urbit/native_gall_schedule', 'tests/urbit/skill_evaluation'):
+            directory = self.root / name
+            directory.mkdir(parents=True)
+            if name == 'scripts/urbit':
+                for source in (REPO / name).glob('*.py'):
+                    shutil.copyfile(source, directory / source.name)
+            else:
+                (directory / 'fixture.txt').write_text('authored host fixture\n')
+        (self.root / '.gitignore').write_text('__pycache__/\n')
+        self.git('init', '-q')
+        self.git('add', '.')
+        self.git('-c', 'core.hooksPath=/dev/null', '-c', 'commit.gpgsign=false',
+                 '-c', 'user.name=Authored Host Test', '-c', 'user.email=host-test@example.invalid',
+                 'commit', '-qm', 'Synthetic temporary provenance fixture')
+
+    def git(self, *arguments):
+        return subprocess.check_output(['git', *arguments], cwd=self.root, stderr=subprocess.PIPE)
+
+    def capture(self):
+        def mock_guard(factory, **_):
+            factory(self.control, 'a' * 32)
+            return {'status': 'completed', 'run_directory': str(self.control)}
+        with patch.object(harness, 'ROOT', self.root), patch.object(harness, 'guard'), \
+                patch.object(harness, 'sandbox', return_value=['synthetic-no-runtime']) as sandbox, \
+                patch.object(harness, 'execution_limits', return_value=harness.execution_policy.Policy()), \
+                patch.object(harness.execution_policy, 'run_guarded', side_effect=mock_guard), \
+                redirect_stdout(io.StringIO()):
+            harness.guarded_supervisor()
+        self.sandbox_command = sandbox.call_args.args[0]
+        return json.loads((self.control / 'source-context.json').read_text())
+
+    def qualify(self, context):
+        source = REPO / 'scripts/urbit/supervisor.py'
+        spec = importlib.util.spec_from_file_location('stead_source_supervisor', source)
+        supervisor = importlib.util.module_from_spec(spec)
+        original_read, original_digest = Path.read_text, digests.source_sha
+        with patch.object(Path, 'read_text', lambda p, *a, **kw: '{}' if p == Path('/toolchain.json')
+                else original_read(p, *a, **kw)), patch.object(digests, 'source_sha',
+                side_effect=lambda p: original_digest(source.parent if p == Path('/code') else p)):
+            spec.loader.exec_module(supervisor)
+        mounts = {'/code': 'scripts/urbit', '/native': 'native', '/specs': 'specs/urbit',
+                  '/native-tests/gall-schedule': 'tests/urbit/native_gall_schedule',
+                  '/native-tests/skill-evaluation': 'tests/urbit/skill_evaluation'}
+        def mounted(value):
+            path = Path(value)
+            for prefix, relative in mounts.items():
+                if path.is_relative_to(prefix):
+                    return self.root / relative / path.relative_to(prefix)
+            return path
+        with patch.object(supervisor, 'Path', side_effect=mounted), \
+                patch.object(supervisor, 'LOADED_SOURCE_DIGEST', context['harness_sha256']), \
+                patch.object(supervisor.execution_policy, 'read_json', return_value=context):
+            return supervisor.qualified_source()
+
+    def test_clean_committed_bytes_and_cache_admission(self):
+        cache = self.root / 'scripts/urbit/__pycache__'
+        cache.mkdir()
+        (cache / 'ignored.pyc').write_bytes(b'authored untrusted cache')
+        context = self.capture()
+        self.assertEqual(context['dirty_paths'], [])
+        self.assertTrue(context['committed_bytes_verified'])
+        self.assertEqual(self.qualify(context), self.git('rev-parse', 'HEAD').decode().strip())
+        self.assertEqual(self.sandbox_command, ['/usr/bin/python3', '-X',
+            'pycache_prefix=/tmp/python-cache', '/code/supervisor.py'])
+
+    def test_added_helper_and_changed_mounted_inputs_reject(self):
+        context = self.capture()
+        extra = self.root / 'scripts/urbit/added_after_capture.py'
+        extra.write_text('VALUE = 2\n')
+        with self.assertRaises(ValueError):
+            self.qualify(context)
+        extra.unlink()
+        for name in ('native/core/desk', 'specs/urbit', 'tests/urbit/native_gall_schedule',
+                     'tests/urbit/skill_evaluation'):
+            with self.subTest(mount=name):
+                source = self.root / name / 'fixture.txt'
+                source.write_text('changed after capture\n')
+                with self.assertRaises(ValueError):
+                    self.qualify(context)
+                source.write_text('authored host fixture\n')
+
+    def test_clean_git_status_does_not_hide_changed_committed_bytes(self):
+        source = 'scripts/urbit/dev_help.py'
+        self.git('update-index', '--assume-unchanged', source)
+        with (self.root / source).open('a') as output:
+            output.write('\n# authored changed input\n')
+        context = self.capture()
+        self.assertEqual(context['dirty_paths'], [])
+        self.assertFalse(context['committed_bytes_verified'])
+        with self.assertRaises(ValueError):
+            self.qualify(context)
+
+    def test_ignored_uncommitted_mounted_inputs_cannot_claim_exact_commit(self):
+        names = [root + '/ignored.hoon' for root in ('native/core/desk', 'specs/urbit',
+            'tests/urbit/native_gall_schedule', 'tests/urbit/skill_evaluation')]
+        names.append('native/core/desk/__pycache__/hidden.hoon')
+        (self.root / '.git/info/exclude').write_text(''.join('/' + name + '\n' for name in names))
+        for name in names:
+            with self.subTest(input=name):
+                source = self.root / name
+                source.parent.mkdir(parents=True, exist_ok=True)
+                source.write_text('42\n')
+                context = self.capture()
+                self.assertEqual(context['dirty_paths'], [])
+                self.assertNotIn(name, context['committed_files'])
+                self.assertFalse(context['committed_bytes_verified'])
+                with self.assertRaises(ValueError):
+                    self.qualify(context)
+                source.unlink()
 
 
 class SupplyChainSafety(unittest.TestCase):

@@ -4,6 +4,7 @@ from __future__ import annotations
 
 import argparse
 import fcntl
+import hashlib
 import json
 import os
 from pathlib import Path
@@ -17,6 +18,7 @@ import time
 
 import toolchain
 import execution_policy
+from digests import source_sha, tree_sha, source_inventory, read_source
 
 ROOT = toolchain.ROOT
 BASE = ROOT / '.piers'
@@ -132,6 +134,8 @@ def sandbox(command, *, execution_control=None, execution_id=None):
              '--ro-bind', str(ROOT / 'scripts/urbit'), '/code',
              '--ro-bind', str(ROOT / 'native'), '/native',
              '--ro-bind', str(ROOT / 'specs/urbit'), '/specs',
+             '--ro-bind', str(ROOT / 'tests/urbit/native_gall_schedule'), '/native-tests/gall-schedule',
+             '--ro-bind', str(ROOT / 'tests/urbit/skill_evaluation'), '/native-tests/skill-evaluation',
              '--ro-bind', str(toolchain.LOCK_PATH), '/toolchain.json',
              '--ro-bind', str(ROOT / 'specs/urbit/smoke-corpus.json'), '/corpus.json',
              '--ro-bind', str(ROOT / '.runtime/bin'), '/runtime/bin',
@@ -143,6 +147,11 @@ def sandbox(command, *, execution_control=None, execution_id=None):
     if execution_control is not None:
         args += ['--ro-bind', str(execution_control), '/execution',
                  '--setenv', 'STEAD_EXECUTION_ID', execution_id]
+    workflow = ROOT / '.runtime/workflow-evaluation'
+    if workflow.exists():
+        if workflow.is_symlink() or workflow.stat().st_uid != os.getuid() or workflow.stat().st_mode & 0o077:
+            raise ValueError('Workflow input root must be owned and private')
+        args += ['--ro-bind', str(workflow), '/workflow']
     args += ['--', *command]
     return args
 
@@ -172,9 +181,50 @@ def preflight():
 
 def guarded_supervisor():
     guard()
+    def command(control, run_id):
+        paths = ['scripts/urbit', 'native', 'specs/urbit',
+                 'tests/urbit/native_gall_schedule', 'tests/urbit/skill_evaluation']
+        scripts = source_inventory(ROOT / 'scripts/urbit')
+        context = {
+            'source_commit': subprocess.check_output(['git', 'rev-parse', 'HEAD'], cwd=ROOT, text=True).strip(),
+            'dirty_paths': subprocess.check_output(['git', 'status', '--porcelain', '--', *paths], cwd=ROOT, text=True).splitlines(),
+            'harness_sha256': source_sha(ROOT / 'scripts/urbit'),
+            'native_tree_sha256': tree_sha(ROOT / 'native/core/desk'), 'script_files': scripts}
+        context['trees'] = {path: tree_sha(ROOT / path) for path in paths if path != 'scripts/urbit'}
+        context['committed_files'] = {}
+        context['committed_bytes_verified'] = not context['dirty_paths']
+        listing = subprocess.check_output(['git', 'ls-tree', '-r', '-z', context['source_commit'], '--', *paths], cwd=ROOT)
+        for entry in listing.split(b'\0'):
+            if not entry:
+                continue
+            metadata, raw_path = entry.split(b'\t', 1)
+            mode, kind, oid = metadata.decode().split()
+            path = raw_path.decode()
+            source = ROOT / path
+            if kind != 'blob' or mode not in ('100644', '100755') or source.is_symlink():
+                raise ValueError('Unsupported redirected qualification source')
+            raw = read_source(source)
+            actual = hashlib.sha1(b'blob ' + str(len(raw)).encode() + b'\0' + raw).hexdigest()
+            context['committed_bytes_verified'] &= actual == oid
+            context['committed_files'][path] = hashlib.sha256(raw).hexdigest()
+        committed_scripts = {name.removeprefix('scripts/urbit/'): value for name, value in context['committed_files'].items()
+                             if name.startswith('scripts/urbit/')}
+        context['committed_bytes_verified'] &= committed_scripts == scripts
+        for prefix in paths[1:]:
+            actual_files = source_inventory(ROOT / prefix, ignore_python_cache=False)
+            committed_files = {name[len(prefix) + 1:]: value for name, value in context['committed_files'].items()
+                               if name.startswith(prefix + '/')}
+            context['committed_bytes_verified'] &= actual_files == committed_files
+        if source_inventory(ROOT / 'scripts/urbit') != scripts:
+            raise ValueError('Helper source inventory changed during capture')
+        if (subprocess.check_output(['git', 'rev-parse', 'HEAD'], cwd=ROOT, text=True).strip() != context['source_commit']
+                or subprocess.check_output(['git', 'status', '--porcelain', '--', *paths], cwd=ROOT, text=True).splitlines() != context['dirty_paths']):
+            raise ValueError('Source checkout changed during provenance capture')
+        execution_policy.write_json(control / 'source-context.json', context)
+        return sandbox(['/usr/bin/python3', '-X', 'pycache_prefix=/tmp/python-cache', '/code/supervisor.py'],
+                       execution_control=control, execution_id=run_id)
     report = execution_policy.run_guarded(
-        lambda control, run_id: sandbox(['/usr/bin/python3', '/code/supervisor.py'],
-                                         execution_control=control, execution_id=run_id),
+        command,
         root=ROOT, label='four-fakes', policy=execution_limits())
     if report['status'] != 'completed' and report.get('launched'):
         # A forced/disrupted live fixture is never promoted into a clean seed.
@@ -298,8 +348,10 @@ def core_test():
     guard()
     result = rpc('core-test', timeout=3600)
     print(json.dumps(result, indent=2))
-    if result['status'] != 'pass':
+    if result['status'] not in ('pass', 'execution_complete'):
         raise RuntimeError('Native core acceptance failed; retained evidence is not a pass')
+    if result['status'] == 'execution_complete':
+        print('Native execution completed; independent phase qualification remains required.')
 
 
 def core_check():
@@ -308,6 +360,22 @@ def core_check():
     print(json.dumps(result, indent=2))
     if result['status'] != 'pass':
         raise RuntimeError('Native compilation/probes failed; inspect the recorded evidence')
+
+
+def gall_schedule():
+    guard()
+    result = rpc('gall-schedule', timeout=1800)
+    print(json.dumps(result, indent=2))
+    if result['status'] != 'pass':
+        raise RuntimeError('Scheduled Gall native lane failed; inspect retained evidence')
+
+
+def skill_evaluation(condition):
+    guard()
+    result = rpc('skill-evaluation', condition=condition, timeout=3600)
+    print(json.dumps(result, indent=2))
+    if result['status'] != 'pass':
+        raise RuntimeError('Workflow native evaluation failed; inspect retained evidence')
 
 
 def dev():
@@ -334,11 +402,17 @@ def dev():
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument('command', choices=['doctor', 'preflight', 'start', 'stop', 'reset', 'status',
-                        'wait-ready', 'dev', 'test', 'core-check', 'core-test', '_guarded-supervisor'])
+                        'wait-ready', 'dev', 'test', 'core-check', 'core-test', 'gall-schedule',
+                        'skill-evaluation', '_guarded-supervisor'])
+    parser.add_argument('--condition', choices=['prequalification', 'baseline', 'local_skill_assisted'])
     args = parser.parse_args()
     try:
         if args.command == '_guarded-supervisor':
             guarded_supervisor()
+        elif args.command == 'skill-evaluation':
+            if args.condition is None:
+                raise ValueError('Explicit workflow evaluation condition required')
+            skill_evaluation(args.condition)
         else:
             globals()[args.command.replace('-', '_')]()
     except (OSError, ValueError, RuntimeError, subprocess.SubprocessError) as error:

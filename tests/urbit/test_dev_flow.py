@@ -228,7 +228,8 @@ class CompileEvidenceTests(unittest.TestCase):
         self.probes = {'+stead-build-probe': '%stead-builds-pass',
                        '+stead-codec-probe': '%stead-codec-six-vectors-pass',
                        '+stead-core-probe': '%stead-core-basic-and-counter-edge-pass',
-                       '+stead-reducers-probe': '%stead-native-reducers-pass'}
+                       '+stead-reducers-probe': '%stead-native-reducers-pass',
+                       '+stead-save-probe': '%stead-save-format2-roundtrip-pass'}
         self.host = {'SHIPS': ('zod', 'bus', 'nec', 'bud'), 'LIVE': self.root / 'live',
                      'LOCK': {'runtime': {'binary': 'synthetic-not-executed'}},
                      'LOADED_SOURCE_DIGEST': 'harness',
@@ -249,6 +250,18 @@ class CompileEvidenceTests(unittest.TestCase):
         self.probes['+stead-build-probe'] = 'compile error'
         self.assertEqual(core_check.run(self.host)['status'], 'fail')
         self.assertTrue(any(c['result'] == 'compile error' for c in self.report()['commands']))
+
+    def test_required_save_load_probe_cannot_pass_on_empty_or_wrong_result(self):
+        for output in ('', '~', '%stead-unsupported-state'):
+            with self.subTest(output=output):
+                self.probes['+stead-save-probe'] = output
+                result = core_check.run(self.host)
+                self.assertEqual(result['status'], 'fail')
+                report = self.report()
+                self.assertIn('+stead-save-probe', report['error'])
+                self.assertEqual(report['commands'][-1], {
+                    'ship': 'zod', 'dojo': '+stead-save-probe', 'result': output})
+                self.assertIn({'name': '+stead-save-probe', 'passed': False}, report['checks'])
 
     def test_empty_sources_cannot_be_a_successful_build(self):
         (self.native / 'synthetic.hoon').unlink()

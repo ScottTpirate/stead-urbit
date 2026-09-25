@@ -1,5 +1,12 @@
 # Executed development evidence
 
+September 25 continuation: the [native build and smoke](evidence/2026-09-25/native-build/index.json)
+passed at `c299f19`. The [first full core run](evidence/2026-09-25/native-core-first-run/index.json)
+failed a real saved-state round-trip after 145 passed cases and three incomplete
+typed dispositions. The failed result remains unchanged. Follow-up save/load,
+recovery and qualification-runner changes remain subject to new native evidence;
+Phases 0/1 are still open and Phase 2 has not started.
+
 Latest September 24 continuation: [cooling and native build checkpoint](COOLING_CHECKPOINT_20260924.md).
 290 host tests passed; real native framing and cleanup passed, while the Hoon
 build failed. The subsequent type correction remains unexecuted after thermal

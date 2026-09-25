@@ -196,10 +196,12 @@ def exhaustion_recipe():
     overflow = new.work(PROJECT, works[PROJECT], len(fill) + 1)
     closed_probes = {project: new.work(project, works[project], len(fill) + 1 if project == PROJECT else 1,
                                       sender='bus') for project in projects}
+    unaccepted_legacy = old.work(PROJECT, works[PROJECT], len(fill) + 1)
     return {'name': 'v1-exhaustion-migration-security-reserve', 'projects': projects,
             'setup': setup, 'fill': fill, 'ordinary': ordinary, 'grants': grants,
             'creators': creators, 'works': works, 'document': document,
-            'old_revokes': failed_old_revokes, 'revokes': revokes, 'overflow': overflow, 'closed_probes': closed_probes}
+            'old_revokes': failed_old_revokes, 'revokes': revokes, 'overflow': overflow,
+            'closed_probes': closed_probes, 'unaccepted_legacy': unaccepted_legacy}
 
 
 def predecessor_privacy_recipe():
@@ -265,6 +267,7 @@ def recipe_inventory():
         'old_refusals_sha256': recipe_digest(recipe['old_revokes']),
         'revocations_sha256': {project: recipe_digest(entries) for project, entries in recipe['revokes'].items()},
         'ordinary_overflow_sha256': recipe_digest([recipe['overflow']]),
+        'unaccepted_legacy_sha256': recipe_digest([recipe['unaccepted_legacy']]),
         'closed_project_mutations_sha256': recipe_digest(list(recipe['closed_probes'].values())),
         'unauthorized_boundary_probe': 'Exact overflow command via bud transport before authorized refusal',
         'missing_binding_probe': 'Exact overflow command via bus after owner binding-drop, then restore exact binding state',
@@ -458,6 +461,12 @@ class Driver:
         route = f"/v2/result/~{entry.sender}/{BINDINGS[entry.sender]}/{cmd['project_id']}/{cmd['request_id']}/{entry.digest}"
         return self.invoke(entry.sender, 'command', route, entry.raw)['json']
 
+    def recover(self, entry, sender=None):
+        cmd = entry.command
+        container = cmd['payload'].get('container_id', cmd['project_id'])
+        route = f"/v2/receipt/{cmd['project_id']}/{container}/{cmd['resource_id']}/{cmd['operation']}/{cmd['request_id']}"
+        return self.invoke(sender or entry.sender, 'read', route)
+
     def denied_without_change(self, entry, sender='bud', name='unauthorized-before-capacity'):
         before = self.snapshot()
         probe = Entry(sender, entry.command)
@@ -544,7 +553,15 @@ class Driver:
         replay = self.receipt(self.direct(doc), doc)
         self.check('v1-replay-projects-original-acceptance', replay['protocol'] == 'stead.receipt/2'
             and all(replay[key] == old_doc[key] for key in ('accepted_at_ms', 'canonical_sha256', 'git_commit_oid')))
-        self.unchanged(migrated, self.snapshot(), 'migration-read-and-replay-create-no-events')
+        recovered = self.recover(doc)
+        self.receipt(recovered['json'], doc)
+        self.check('migrated-v1-recovery-matches-current-public-retry',
+            recovered['json'] == replay and recovered['raw'].encode() == encoded(replay))
+        self.report['recipes'][recipe['name']]['migrated_receipt_projections'] = {
+            'predecessor': old_doc, 'retry': replay, 'recovery': recovered['json']}
+        self.check('never-accepted-legacy-command-rejected', self.direct(recipe['unaccepted_legacy']) == {
+            'protocol': 'stead.result/2', 'status': 'rejected', 'error': 'unsupported_version'})
+        self.unchanged(migrated, self.snapshot(), 'migration-read-replay-recovery-and-legacy-denial-create-no-events')
         self.denied_without_change(recipe['overflow'])
         self.missing_binding_at_capacity(recipe['overflow'])
         before = self.snapshot()
@@ -568,6 +585,10 @@ class Driver:
                         'protocol':'stead.result/2', 'status':'rejected', 'error':'denied_or_not_found'})
             self.check('closed-project-retry-denied', self.direct(recipe['creators'][project]) == {
                 'protocol':'stead.result/2', 'status':'rejected', 'error':'denied_or_not_found'})
+            for sender in ('zod', 'bus'):
+                self.check('closed-project-receipt-recovery-denied:' + sender,
+                    self.recover(recipe['creators'][project], sender)['json'] == {
+                        'protocol': 'stead.result/2', 'status': 'rejected', 'error': 'denied_or_not_found'})
             self.denied_without_change(recipe['closed_probes'][project], 'bus', 'revoked-member-mutation-at-ordinary-capacity')
             if project_index == 0:
                 other = recipe['projects'][1]

@@ -256,29 +256,55 @@ class GuardFailureOutcomeTests(unittest.TestCase):
     def test_evidence_write_failure_still_signals_owned_running_child(self):
         child = Mock(); child.returncode = None
         child.poll.side_effect = lambda: child.returncode
+        launched = False
+        def launch_owned(*_args, **_kwargs):
+            nonlocal launched
+            launched = True
+            return child
         def stop(unit, signum):
             child.returncode = 0
             return {'signal': str(signum), 'returncode': 0}
         original = guard.write_json
-        lease_writes = 0
         def fail_later_lease(path, value):
-            nonlocal lease_writes
-            if Path(path).name == 'lease.json':
-                lease_writes += 1
-                if lease_writes > 1:
-                    raise OSError('Synthetic control disk failure')
+            if launched and Path(path).name == 'lease.json':
+                raise OSError('Synthetic control disk failure')
             return original(path, value)
-        sampler = Mock(side_effect=[self.current(50), self.current(96)])
-        with patch.object(guard.subprocess, 'Popen', return_value=child), \
+        with patch.object(guard.subprocess, 'Popen', side_effect=launch_owned) as launch, \
                 patch.object(guard, 'signal_owned_scope', side_effect=stop) as signals, \
                 patch.object(guard, 'write_json', side_effect=fail_later_lease):
             report = guard.run_guarded(lambda *_: ['synthetic-no-runtime'], root=self.root,
-                                       label='disk-failure', sampler=sampler,
+                                       label='disk-failure', sampler=lambda: self.current(50),
                                        policy=guard.Policy(cooperative_seconds=0, terminate_seconds=.01,
                                                            kill_seconds=.01, sample_seconds=.001))
+        launch.assert_called_once()
+        self.assertTrue(report['launched'])
         self.assertEqual(report['status'], 'failed')
+        self.assertIn('Synthetic control disk failure', report['reason'])
         self.assertGreaterEqual(signals.call_count, 1, 'Lease I/O error bypassed owned-child cleanup')
         self.assertEqual(child.returncode, 0)
+
+    def test_evidence_write_failure_after_preparation_prevents_child_launch(self):
+        prepared = False
+        def prepare(*_):
+            nonlocal prepared
+            prepared = True
+            return ['synthetic-no-runtime']
+        original = guard.write_json
+        def fail_prelaunch_lease(path, value):
+            if prepared and Path(path).name == 'lease.json':
+                raise OSError('Synthetic prelaunch control disk failure')
+            return original(path, value)
+        factory = Mock(side_effect=prepare)
+        with patch.object(guard.subprocess, 'Popen') as launch, \
+                patch.object(guard, 'signal_owned_scope') as signals, \
+                patch.object(guard, 'write_json', side_effect=fail_prelaunch_lease):
+            report = guard.run_guarded(factory, root=self.root, label='prelaunch-disk-failure',
+                                       sampler=lambda: self.current(50))
+        factory.assert_called_once()
+        launch.assert_not_called(); signals.assert_not_called()
+        self.assertFalse(report['launched'])
+        self.assertEqual(report['status'], 'failed')
+        self.assertIn('Synthetic prelaunch control disk failure', report['reason'])
 
     def test_operator_stop_before_launch_is_nonpassing_without_launch(self):
         factory = Mock()

@@ -365,7 +365,8 @@ class Suite:
         completed=bool(self.report['calls']) and all(case['status']=='passed' for case in self.report['cases'])
         self.report['functional_scope_passed']=completed
         self.report['native_qualified']=completed and self.report['classification']=='real-native-fake-ships'
-        self.report['status']='passed' if self.report['native_qualified'] else 'host-only' if completed else 'failed'
+        deferred=bool(self.report['calls']) and all(case['status'] in ('passed','incomplete') for case in self.report['cases'])
+        self.report['status']='passed' if self.report['native_qualified'] else 'host-only' if completed else 'incomplete' if deferred else 'failed'
         return self.report
 
 

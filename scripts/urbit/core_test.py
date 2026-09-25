@@ -72,6 +72,9 @@ def run(host):
                   'No provisioning, shared-container lifecycle, browser sessions, HTTPS UI or live identity.']}
     before_inputs = inputs()
     report['inputs_before'] = before_inputs
+    report['installed_files'] = {str(path.relative_to('/native/core/desk')): sha(path)
+                                 for path in sorted(Path('/native/core/desk').rglob('*.hoon'))}
+    report['installed_by_ship'], report['clay_verified_by_ship'] = {}, {}
     lifecycle_start = len(host['EVIDENCE'])
     export_count = 0
     transcript = native_transcript.Transcript(Path('/state/logs') / ('core-' + run_id + '-transport.jsonl.gz'))
@@ -99,6 +102,7 @@ def run(host):
             path = '/' + str(source.relative_to('/native/core/desk')).replace('.hoon','/hoon')
             expression = f'=/  raw=@t  .^(@t %cx /=base={path})  =({literal} (sha-256l:sha [(met 3 raw) (rev 3 (met 3 raw) raw)]))'
             command(ship, expression, '%.y')
+            report['clay_verified_by_ship'].setdefault(ship, {})[str(source.relative_to('/native/core/desk'))] = digest
 
     binary = '/runtime/' + host['LOCK']['runtime']['binary']
 
@@ -361,6 +365,7 @@ def run(host):
         report['concurrent_submissions'] = [{'sender':r[0], 'command':r[1], 'response':out} for r,out in zip(requests,results,strict=True)]
 
     try:
+        report['source_commit'] = host['qualified_source']()
         host['execution_check'](preflight=True)
         check('loaded-supervisor-source-matches', before_inputs['harness'] == host['LOADED_SOURCE_DIGEST'])
         check('loaded-core-runner-source-matches', before_inputs['runner'] == LOADED_CLOSURE)
@@ -381,6 +386,7 @@ def run(host):
                 target.parent.mkdir(parents=True, exist_ok=True)
                 shutil.copyfile(source, target)
                 check('installed-byte-match:' + ship + ':' + str(source.relative_to('/native/core/desk')), sha(source) == sha(target))
+                report['installed_by_ship'].setdefault(ship, {})[str(source.relative_to('/native/core/desk'))] = sha(target)
             command(ship, '|commit %base')
             clay_bytes(ship)
             command(ship, '+stead-build-probe', '%stead-builds-pass')
@@ -394,7 +400,8 @@ def run(host):
         report['qa'] = core_cases.run(corpus, call, snapshot, restart, export, object_matrix,
                                      trusted_now_ms=trusted_now_ms, wait_until=wait_until,
                                      classification='local-real-native-fake-ships', include_second_project=True,
-                                     include_scoped_privacy=True, delivery_evidence=delivery_evidence)
+                                     include_scoped_privacy=True, delivery_evidence=delivery_evidence,
+                                     defer_phase1_reviews=True)
         outcomes = report['qa']['case_counts']
         expected_cases = [c['name'] for c in corpus['ordered_cases']]
         for lane in ('real_expiry_continuation','source_review_continuation','separate_project_journal_lane', 'scoped_privacy_lane'):
@@ -439,13 +446,19 @@ def run(host):
             'status': 'pending', 'manifest_sha256': before_inputs['qualification_manifest'],
             'command': 'python3 scripts/urbit/qualification_gate.py --manifest specs/urbit/v2/qualification-gate.json --evidence EVIDENCE_INDEX --bindings EXACT_BINDINGS --output CURRENT_GATE',
             'scope': 'A native execution result does not close the phase or approve a merge.'}
-        check('required-current-qa-assertions-complete', report['qa']['status'] == 'passed')
-        check('required-native-delivery-schedules', report['delivery']['status'] == 'passed')
-        report['status'] = 'pass'
+        report['deferred_qa_requirements'] = qualification_gate.deferred_execution(report)
+        report['execution_status'] = 'completed-awaiting-independent-qualification'
+        report['status'] = 'execution_complete'
     except Exception as exc:
         report['error'] = f'{type(exc).__name__}: {exc}'
         traceback.print_exc()
     report['inputs_after'] = inputs()
+    try:
+        report['source_commit_after'] = host['qualified_source']()
+        if report.get('source_commit') != report['source_commit_after']:
+            raise ValueError('Qualification source commit changed')
+    except Exception as error:
+        report.update(status='fail', source_binding_error=str(error))
     if before_inputs != report['inputs_after']:
         report.update(status='fail', error='Source/input changed during execution; results cannot label changed bytes')
     report['elapsed_seconds'] = round(time.monotonic() - started, 3)

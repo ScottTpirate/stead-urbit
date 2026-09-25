@@ -25,6 +25,8 @@ data, and the browser application is not implemented yet.
 | `make core-check` | Reinstall edited Hoon into a fresh fake fixture and rerun compilation/probes | Shorter native feedback, separate from acceptance |
 | `make test` | Run the original four-identity counter smoke | Native allow/deny, failure propagation and restart |
 | `make core-test` | Run the full current Work/Docs qualification corpus | Business, access, delivery, migration and export evidence; missing requirements still fail |
+| `make gall-schedule` | Run actual pinned Gall/app gates with a controlled queue and clock | The delayed old-leave case; no Ames/network identity claim |
+| `make skill-prequalify` | Run frozen workflow reference, oracle and mutant controls | Prerequisite for the separate skill evaluation; no participant result |
 | `make stop` | Stop the owned ships and release their lifecycle lock | Clean local shutdown |
 
 Run each native command sequentially. Start once, then use `make core-check`
@@ -56,15 +58,25 @@ The qualification flow also records exact runtime, source, loaded Python and
 test-input identities. Native output is under `.piers/fakes/logs/`; execution
 guard reports are under `.runtime/execution-runs/`. Keep failures. Independent
 review reconciles the full native results against the required evidence manifest.
+Full qualification requires committed source. At startup the supervisor records
+the commit, verifies each relevant Git blob and input tree, and checks those
+bytes again during qualification. Ordinary `core-check` still supports edits
+before committing.
+
+A full corpus can finish with `execution_complete` while its three explicitly
+deferred evidence dispositions remain open. The original skipped checks stay in
+the raw report. The independent gate reads the completed guard, exact native
+transport, scheduled-Gall evidence, and separately reviewed source/N/A proofs.
+Only that complete gate can support Phase 1 closure.
 
 ## Host conditions
 
 The reviewed guard admits startup at at most 75 C and stops native execution at
 90 C. It also requires fresh sensor evidence, one CPU of affinity and a transient
 50 percent CPU quota. These controls do not change persistent workstation settings.
-Keep competing heavy workloads paused during qualification. If a start is
-refused, inspect `make preflight` and the retained report; do not raise limits or
-repeatedly retry a hot boot.
+The shared lock serializes this repository's native jobs. Other workstation
+workloads continue independently. If a start is refused, inspect `make preflight`
+and the retained report; resume after cooling without changing the limits.
 
 `make dev` cleans up a failed/interrupted operation. A successful developer check
 leaves the supervised fake environment running for the next check; use `make stop`

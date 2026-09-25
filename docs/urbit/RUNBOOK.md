@@ -58,7 +58,7 @@ loaded-source hashing rejects stale process code.
 
 `make dev` combines start, readiness wait and `core-check`, and attempts owned
 cleanup on failure, Ctrl-C or SIGTERM. The compile check installs the home desk,
-verifies its actual Clay bytes and runs four named native probes. It records
+verifies its actual Clay bytes and runs five named native probes. It records
 `qualifies_phase: false`; successful compilation alone cannot close Phase 1.
 It uses a fresh disposable fixture, so it is not a state-preserving UI hot-reload
 command. Failed compilation clears readiness and stops the fake processes.
@@ -69,10 +69,12 @@ version checks, and stock-Git materialization of home-created document objects.
 It includes a real two-minute grant-expiry wait. `test` retains the original
 counter smoke. Both commands own only disposable test state. The v2 core runner
 adds scoped-identity/privacy, predecessor migration, capacity and actual Gall
-observer schedules. These source changes have **not** compiled or run yet: the
-September 13 guardian refused real host samples of 93°C and 81°C before launching
-its native child. The current qualification gate fails when required evidence is
-missing; historical 25 skipped assertions remain unchanged. Read
+observer schedules. The September 25 build and smoke passed at `c299f19`; the
+following full run passed 145 business cases and left three typed dispositions
+incomplete before failing a real saved-state round-trip. That failed report is
+preserved under `evidence/2026-09-25/native-core-first-run/`. Subsequent source
+fixes require their own recorded execution. The current qualification gate fails
+when required evidence is missing; historical 25 skipped assertions remain unchanged. Read
 [NATIVE_CORE.md](NATIVE_CORE.md) and the exact evidence before inferring scope.
 
 `stop` uses Vere's supported SIGTERM path, checks clean exits and waits for the

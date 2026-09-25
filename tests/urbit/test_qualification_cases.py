@@ -40,6 +40,7 @@ def entries():
     for commands in recipe['revokes'].values():
         yield from commands
     yield recipe['overflow']
+    yield recipe['unaccepted_legacy']
     yield from recipe['closed_probes'].values()
     privacy = q.predecessor_privacy_recipe()
     yield from privacy['setup']
@@ -90,7 +91,7 @@ class QualificationRecipesTests(unittest.TestCase):
         cls.commands = list(entries())
 
     def test_every_generated_command_matches_its_frozen_schema_and_digest(self):
-        self.assertEqual(len(self.commands), 5064)
+        self.assertEqual(len(self.commands), 5065)
         for entry in self.commands:
             reference = v1 if entry.command['protocol'] == 'stead.command/1' else v2
             self.assertEqual(reference.parse(entry.raw), entry.command)
@@ -156,6 +157,19 @@ class QualificationRecipesTests(unittest.TestCase):
             self.assertEqual([e.command['payload']['grant_id'] for e in revokes], recipe['grants'][project])
             self.assertEqual(revokes[-1].command['payload']['grant_id'], recipe['creators'][project].command['request_id'])
         self.assertEqual(4096 + sum(map(len, recipe['revokes'].values())), 4352)
+
+    def test_unaccepted_legacy_control_is_fresh_valid_v1_at_current_revision(self):
+        recipe = self.exhaustion
+        entry = recipe['unaccepted_legacy']
+        self.assertEqual(entry.command['protocol'], 'stead.command/1')
+        self.assertEqual(v1.parse(entry.raw), entry.command)
+        self.assertEqual(entry.sender, 'zod')
+        self.assertNotIn(entry.command['request_id'], {value.command['request_id'] for value in recipe['ordinary']})
+        self.assertNotIn(entry.command['request_id'], {value.command['request_id'] for value in recipe['old_revokes']})
+        self.assertEqual(entry.command['expected_revision'], '3838')
+        for field in ('project_id', 'resource_id', 'operation', 'payload', 'expected_revision', 'authority_epoch'):
+            self.assertEqual(entry.command[field], recipe['overflow'].command[field])
+        self.assertEqual(q.recipe_inventory()[recipe['name']]['unaccepted_legacy_sha256'], q.recipe_digest([entry]))
 
     def test_privacy_controls_share_hidden_ids_but_fresh_control_does_not(self):
         recipe = q.predecessor_privacy_recipe()
@@ -265,6 +279,25 @@ class QualificationAdapterTests(unittest.TestCase):
         self.call = mock.Mock()
         self.driver = q.Driver(self.call, 'host-scripted-adapter-test', {'test_only': True}, FIXTURE)
         self.entry = q.Commands(2, 90).project(q.PROJECT)
+
+    def test_recovery_uses_document_container_or_project_scope_and_actual_sender(self):
+        document = q.Commands(1, 91).document(q.uuid('document', 901), sender='bus')
+        response = terminal({'protocol': 'stead.result/2', 'status': 'rejected', 'error': 'denied_or_not_found'})
+        self.call.return_value = response
+        for entry, override, sender, container in (
+                (document, None, 'bus', q.CONTAINERS['bus']),
+                (self.entry, None, 'zod', q.PROJECT),
+                (self.entry, 'bus', 'bus', q.PROJECT)):
+            with self.subTest(operation=entry.command['operation'], override=override):
+                self.call.reset_mock()
+                actual = self.driver.recover(entry, override)
+                cmd = entry.command
+                expected_route = (f"/v2/receipt/{cmd['project_id']}/{container}/"
+                                  f"{cmd['resource_id']}/{cmd['operation']}/{cmd['request_id']}")
+                self.call.assert_called_once_with(sender, 'read', expected_route, b'')
+                self.assertEqual(actual, response)
+                self.assertEqual(self.driver.report['calls'][-1]['route'], expected_route)
+                self.assertEqual(self.driver.report['calls'][-1]['ship'], sender)
 
     def test_no_callback_or_provenance_keeps_all_native_recipes_unexecuted(self):
         binding = {'fixture_sha256': q.FIXTURE_SHA256, 'test_only': 'Isolate host status test from concurrent native source edits'}

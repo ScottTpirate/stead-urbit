@@ -1,0 +1,78 @@
+{
+  "classification": "generated-input-metadata-not-native-evidence",
+  "commands": {
+    "grant": {
+      "authority_epoch": "1",
+      "expected_revision": "1",
+      "operation": "policy.grant",
+      "payload": {
+        "expires_at_ms": "4102444800000",
+        "grant_id": "019939ba-4000-7000-8000-000000000501",
+        "principal_id": "019939ba-4000-7000-8000-000000000102",
+        "role": "contributor"
+      },
+      "project_id": "019939ba-4000-7000-8000-000000000001",
+      "protocol": "stead.command/2",
+      "request_id": "019939ba-4000-7000-8000-000000001003",
+      "resource_id": "019939ba-4000-7000-8000-000000000001"
+    },
+    "project": {
+      "authority_epoch": "1",
+      "expected_revision": "0",
+      "operation": "project.create",
+      "payload": {
+        "organization_id": "019939ba-4000-7000-8000-000000000005",
+        "owning_team_id": "019939ba-4000-7000-8000-000000000006",
+        "preset": "general",
+        "project_key": "QAT",
+        "title": "Synthetic QA project"
+      },
+      "project_id": "019939ba-4000-7000-8000-000000000001",
+      "protocol": "stead.command/2",
+      "request_id": "019939ba-4000-7000-8000-000000001000",
+      "resource_id": "019939ba-4000-7000-8000-000000000001"
+    },
+    "work": {
+      "authority_epoch": "1",
+      "expected_revision": "0",
+      "operation": "work.create",
+      "payload": {
+        "description": "Public synthetic work A.",
+        "priority": "medium",
+        "status": "todo",
+        "title": "Synthetic task A",
+        "type": "task"
+      },
+      "project_id": "019939ba-4000-7000-8000-000000000001",
+      "protocol": "stead.command/2",
+      "request_id": "019939ba-4000-7000-8000-000000001002",
+      "resource_id": "019939ba-4000-7000-8000-000000000301"
+    }
+  },
+  "constants": {
+    "fixture": {
+      "bytes": 1935,
+      "sha256": "e693116efbc00b1131714f9eb7077ec678669d4fdb27ddfdce284461e0dffe74"
+    },
+    "grant": {
+      "bytes": 429,
+      "sha256": "9e40bab3a23bf0261aba48fff32f782b2339c5b42ed4e6e7e0ae1e6167a71212"
+    },
+    "project": {
+      "bytes": 457,
+      "sha256": "0ea70794d31ad25af0547f3747700580cbebd764635c90fa9a10c58dff1237d7"
+    },
+    "work": {
+      "bytes": 389,
+      "sha256": "6c972409e906c059e8093cbc48c33b020bec4310e03ef3ff884d9eb2e5d2ed3f"
+    }
+  },
+  "fixed_clock": "2026-09-25T00:00:00Z",
+  "generated_hoon_sha256": "b7419a902ba2b5a7d66038397f0f67a46b375270720ee77878c42c772787ddb5",
+  "kernel_commit": "5a187fededc4582a34fcd6055c67bb63e0917b94",
+  "source_files": {
+    "specs/urbit/fixtures/native-cases-v2.json": "95c915e2d0c93f358225274b34216fff0fe2efc09791905855b1e3f36aec368a",
+    "specs/urbit/native-fixture.json": "e693116efbc00b1131714f9eb7077ec678669d4fdb27ddfdce284461e0dffe74",
+    "specs/urbit/v2/contract-freeze.json": "a2336e5060c71c7c16849b3151cc024a598d6cdf867561452eff1338e3232670"
+  }
+}

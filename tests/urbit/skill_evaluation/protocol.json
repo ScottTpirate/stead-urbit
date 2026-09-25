@@ -1,0 +1,20 @@
+{
+  "protocol": "stead.skill-evaluation/1",
+  "package_version": 1,
+  "status": "prepared_not_native_prequalified_not_executed",
+  "test_owner": "/root/independent_review",
+  "issue": "https://github.com/ScottTpirate/stead-urbit/issues/20",
+  "conditions": ["baseline", "local_skill_assisted"],
+  "task_order": ["T01", "T02", "T03", "T04", "T05", "T06"],
+  "contexts": {"fresh_per_condition": true, "fork_history": false, "same_exact_model_and_settings": true, "cross_condition_answer_access": false},
+  "budgets": {"active_seconds_per_condition": 1800, "public_feedback_submissions_per_task": 3, "final_private_scoring_runs_per_task": 1, "exclude_native_queue_and_guard_wait_from_active_time": true},
+  "public_inputs": ["public", "common"],
+  "private_inputs": ["reviewer", "README.md", "result.schema.json"],
+  "assisted_skills": ["stead-hoon", "stead-gall-security", "stead-native-tests", "stead-urbit-release"],
+  "skill_routing": {"T01": ["stead-hoon"], "T02": ["stead-hoon"], "T03": ["stead-hoon", "stead-gall-security", "stead-native-tests"], "T04": ["stead-hoon", "stead-gall-security", "stead-native-tests"], "T05": ["stead-native-tests"], "T06": ["stead-hoon", "stead-native-tests", "stead-urbit-release"]},
+  "scoring": {"task_pass": "all required actual native and applicable file assertions pass", "zero_missing_or_skipped_cases": true, "retain_all_attempts": true, "no_post_private_feedback_repair": true, "report_compile_and_runtime_separately": true, "claim_general_improvement": false},
+  "invalidations": ["oracle_or_other_condition_answer_exposed", "baseline_skill_text_exposed", "changed_corpus_after_participant_start", "unequal_unreported_context_or_budget", "stale_loaded_source", "missing_expected_test", "missing_failure_control", "unbound_native_artifact"],
+  "native_execution": "Integrator only, existing guarded disposable fake harness; adapter integration and all runs still required",
+  "infrastructure_statuses": ["not_run", "refused", "interrupted", "invalid"],
+  "participant_launch_authorized_by_package": false
+}

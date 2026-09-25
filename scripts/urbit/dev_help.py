@@ -10,7 +10,9 @@ print('''Stead Urbit local development (Linux, synthetic fake ships)
   make status      Show stopped, booting, ready or unavailable owner state
   make core-check  Recompile core and run pure probes on a fresh fake fixture
   make test        Run the original four-ship native smoke suite
-  make core-test   Run full current native core acceptance on fresh fake fixtures
+  make core-test   Execute the full native corpus; independent qualification follows
+  make gall-schedule  Run the pinned Gall reordered-leave qualification lane
+  make skill-prequalify  Validate frozen workflow references before evaluation
   make stop        Gracefully stop the owned fake ships and guard
 
 After Hoon edits: make core-check. After harness Python edits: make stop; make dev.
