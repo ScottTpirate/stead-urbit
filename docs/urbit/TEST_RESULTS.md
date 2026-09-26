@@ -1,5 +1,27 @@
 # Executed development evidence
 
+September 26 continuation: issues #2–#6 and #24 are closed for their bounded
+bootstrap, toolchain, harness, Git-evaluation, contract and threat-map design
+acceptance. [Independent design review](reviews/URB030_210_DESIGN_REVIEW_20260926.md)
+binds all 14 frozen files and the actual pinned userspace sources. Browser and
+runtime activation remain with the owning later issues. The [433-test checkpoint](evidence/2026-09-26/host-checkpoint/index.json)
+is host/static/mocked evidence, separately labeled from native execution.
+
+The [Gall08 attempt](evidence/2026-09-26/native-attempts/gall08/index.json)
+compiled and passed its 14 positive scheduled-Gall assertions. Its negative
+control actually failed with the intended pending-count hint, but the result
+parser rejected the pinned runtime's tang format, so the suite remains failed.
+The reviewed parser correction requires a new native run. Workflow
+[prequal04](evidence/2026-09-26/native-attempts/prequal04/index.json) and
+[prequal06](evidence/2026-09-26/native-attempts/prequal06/index.json) passed T01/T02
+then timed out in T03; neither admits participant launch. The latter verifies
+that the corrected timeout path leaves T04–T06 unrun. Both required forced zod
+cleanup and restoration from verified stopped seeds. Separately,
+[prequal05](evidence/2026-09-26/native-attempts/prequal05/index.json) executed no
+task before sensor-freshness shutdown. All failures remain unchanged. Current
+workflow comparison, full native core and final 73-obligation reconciliation
+remain open; Phase 2 has not started.
+
 September 25 continuation: the [saved-state probe](evidence/2026-09-25/saved-state-probe/index.json)
 passed all 53 checks at `c1e437f`, including actual on-save/on-load and exact noun
 preservation. The [independent Git audit](reviews/URB025_REUSE_DECISION_20260925.md)

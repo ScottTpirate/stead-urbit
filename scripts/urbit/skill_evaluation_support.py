@@ -382,6 +382,10 @@ def valid_observation(record, label):
             and isinstance(record.get('decode_stderr'), str))
 
 
+def initial_saved_noun(record):
+    return re.fullmatch(r'\s*\[\s*1\s+0\s+0\s*\]\s*', record.get('actual_noun', '')) is not None
+
+
 def prequalification_inventory(content, oracles):
     inventory = {}
     for task in oracles['tasks']:
@@ -441,6 +445,13 @@ def validate_prequalification_execution(inner, content, oracles):
                 'T05:immutable-subject', 'T05:exact-test-imports', 'T05:nonempty-complete-arm-inventory',
                 'T05:coverage-report', 'T06:exact-supplied-bytes', 'T06:exact-assembly-manifest',
                 'T06:repeat-empty-assembly', 'T06:exact-native-mounted-desk', 'T06:native-clean-generator-result'}
+    diagnostics = inner.get('prequalification_diagnostics')
+    initial_label = 'T03-initial-save-probe'
+    if (not isinstance(diagnostics, dict) or set(diagnostics) != {initial_label}
+            or not valid_observation(diagnostics[initial_label], initial_label)
+            or not initial_saved_noun(diagnostics[initial_label])):
+        raise ValueError('Missing actual initial-save diagnostic')
+    required.add(initial_label + ':initial-saved-noun')
     result_records = []
     for row in rows:
         name, wanted = row['id'], inventory[row['id']]
@@ -452,6 +463,8 @@ def validate_prequalification_execution(inner, content, oracles):
         required.update((name + ':exact-file-inventory', name + ':nonzero-native-results'))
         if name in ('T03', 'T04'):
             required.update((name + ':ten-Gall-arms', name + ':only-authorized-arms-edited'))
+        if name == 'T03':
+            result_records.append(diagnostics[initial_label])
         if name == 'T05':
             mutants = [Path(path).stem for path in oracles['tasks'][4]['mutants']]
             if row.get('mutants') != mutants or row.get('requires_independent_test_semantics_review') is not True:
@@ -571,41 +584,84 @@ GALL_PRELUDE = '''/=  gall-raw  /sys/vane/gall
 '''
 
 
+def t03_initial_program():
+    """Small prequalification diagnostic; no full vase/type serialization."""
+    return '''/=  candidate  /app/eval-counter
+:-  %say
+|=  *
+:-  %noun
+~&  [%stead-skill-t03-initial %body-enter]
+=/  context=bowl:gall  *bowl:gall
+=.  our.context  ~zod
+=.  src.context  ~zod
+=.  now.context  ~2026.9.25
+=/  original=agent:gall  ~(. candidate context)
+~&  [%stead-skill-t03-initial %agent-ready]
+=/  initial=vase  on-save:original
+~&  [%stead-skill-t03-initial %save-returned]
+?>  =([%1 0 0] q.initial)
+^-  [@tas @ud]
+[%skill-result (jam q.initial)]
+'''
+
+
 def t03_program(task):
     # One fixed-sample gate avoids accumulating twelve inferred agent subjects.
     # Pinned lull ++agent/++form defines the interface; hoon ++mute virtualizes
     # the same thunk as ++mule without reconstructing its full success type.
     # Rejection-only checks need its real %| result, never a returned agent.
     code = ['/=  candidate  /app/eval-counter', ':-  %say', '|=  *', ':-  %noun',
+            '~&  [%stead-skill-t03 %body-enter]',
             '=/  context=bowl:gall  *bowl:gall', '=.  our.context  ~zod',
             '=.  src.context  ~zod', '=.  now.context  ~2026.9.25',
-            '=/  original=agent:gall  ~(. candidate context)', '=/  initial=vase  on-save:original',
+            '=/  original=agent:gall  ~(. candidate context)',
+            '~&  [%stead-skill-t03 %initial-agent-ready]', '=/  initial=vase  on-save:original',
+            '~&  [%stead-skill-t03 %initial-save-returned]',
             '?>  =([%1 0 0] q.initial)',
             '=/  run-case',
             '  |=  [label=@t incoming=vase expected=* must-reject=? repeat-load=?]',
             '  ^-  *',
-            '  =/  agent=agent:gall  ~(. candidate context)']
+            '  ~&  [%stead-skill-t03 %case-begin label]',
+            '  =/  agent=agent:gall  ~(. candidate context)',
+            '  ~&  [%stead-skill-t03 %case-agent-ready label]']
     if any(case.get('expect_native_rejection') for case in task['cases']):
         code += ['  ?:  must-reject',
+                 '    ~&  [%stead-skill-t03 %reject-setup-begin label]',
                  '    =+  [cards loaded]=(on-load:agent !>([%1 5 2]))',
+                 '    ~&  [%stead-skill-t03 %reject-setup-loaded label]',
                  '    ?>  =(~ cards)', '    =/  before=vase  on-save:loaded',
+                 '    ~&  [%stead-skill-t03 %mute-begin label]',
                  '    =/  rejected  (mute:vi |.((on-load:loaded incoming)))',
+                 '    ~&  [%stead-skill-t03 %mute-returned label]',
                  '    ?>  ?=(%| -.rejected)', '    =/  after=vase  on-save:loaded',
-                 '    ?>  =(before after)', '    [label before rejected after]']
+                 '    ?>  =(before after)', '    ~&  [%stead-skill-t03 %case-checked label]',
+                 '    [label before rejected after]']
     else:
         code += ['  ?>  =(%.n must-reject)']
-    code += ['  =+  [cards loaded]=(on-load:agent incoming)', '  ?>  =(~ cards)',
-             '  =/  observed=vase  on-save:loaded', '  ?>  =(expected q.observed)',
+    code += ['  ~&  [%stead-skill-t03 %load-begin label]',
+             '  =+  [cards loaded]=(on-load:agent incoming)',
+             '  ~&  [%stead-skill-t03 %load-returned label]', '  ?>  =(~ cards)',
+             '  =/  observed=vase  on-save:loaded',
+             '  ~&  [%stead-skill-t03 %save-returned label]', '  ?>  =(expected q.observed)',
              '  ?:  repeat-load',
-             '    =+  [later-cards reloaded]=(on-load:loaded observed)', '    ?>  =(~ later-cards)',
+             '    ~&  [%stead-skill-t03 %roundtrip-load-begin label]',
+             '    =+  [later-cards reloaded]=(on-load:loaded observed)',
+             '    ~&  [%stead-skill-t03 %roundtrip-load-returned label]', '    ?>  =(~ later-cards)',
              '    =/  again=vase  on-save:reloaded', '    ?>  =(observed again)',
-             '    [label cards observed]', '  [label cards observed]',
+             '    ~&  [%stead-skill-t03 %case-checked label]', '    [label cards observed]',
+             '  ~&  [%stead-skill-t03 %case-checked label]', '  [label cards observed]',
              '=/  evidence=(list *)', '  :~']
     for case in task['cases']:
         code += [f"    (run-case '{case['id']}' !>({case['load_noun']}) {case.get('saved_noun', '~')} "
                  + ('%.y' if case.get('expect_native_rejection') else '%.n') + ' '
                  + ('%.y' if case.get('repeat_load_saved_output') else '%.n') + ')']
-    return '\n'.join(code + ['  ==', '^-  [@tas @ud]', '[%skill-result (jam evidence)]']) + '\n'
+    return '\n'.join(code + ['  ==', '~&  [%stead-skill-t03 %all-cases-checked]',
+        '~&  [%stead-skill-t03 %jam-begin]', '=/  encoded=@ud  (jam evidence)',
+        '=/  encoded-bytes=@ud  (met 3 encoded)',
+        '~&  [%stead-skill-t03 %result-jam-bytes encoded-bytes]',
+        f"?.  (lte encoded-bytes {format(MAX_JAM, ',').replace(',', '.')})",
+        '  ~|  [%stead-skill-t03-result-jam-oversize encoded-bytes]', '  !!',
+        '^-  [@tas @ud]', '[%skill-result encoded]']) + '\n'
 
 
 def t04_program(scenario):
@@ -836,6 +892,12 @@ def run(host, package_root, candidate_root, condition, *, prequalify=False,
                         results.append(native(program, name + '-' + case['id']))
                     row['expected_cases'] = [case['id'] for case in task['cases']]
                 elif name == 'T03':
+                    if prequalify:
+                        label = name + '-initial-save-probe'
+                        diagnostic = generator(t03_initial_program(), label)
+                        report['prequalification_diagnostics'] = {label: diagnostic}
+                        check(label + ':initial-saved-noun', initial_saved_noun(diagnostic))
+                        checkpoint(label + '-passed')
                     results.append(generator(t03_program(task), name + '-all-load-cases'))
                     row['expected_cases'] = [case['id'] for case in task['cases']]
                 elif name == 'T04':

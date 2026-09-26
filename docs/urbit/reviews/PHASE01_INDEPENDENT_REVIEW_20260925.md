@@ -758,3 +758,64 @@ The reviewer confirmed all 12 ordered oracle cases, full-vase roundtrip, six
 rejections after nonempty-state initialization, unchanged rejection state,
 public-only filtering and immediate timeout cleanup. The reviewer performed
 no native execution and did not rerun the author's host tests.
+
+
+## T03 timeout localization, not a confirmed cause (September 26)
+
+The integrator's subsequent prequal06 report at `decfe35`,
+`.piers/fakes/logs/skill-evaluation-20260926T141133Z-prequalification.json`, has
+SHA-256 `d09b8d700d11bd4e3838b7850df1751655257d23b3b75917d6acf9c6e05b13a6`.
+T01 and T02 passed, but T03 again timed out at 120 seconds. T04–T06 remained
+`not_run`, demonstrating the new abort path in this actual run. Cleanup still
+failed with zod exit `-9`; the attempt remains failed. The preceding prequal05
+was a guard freshness failure before any task, not a T03 result.
+
+The timeout's cause is not established. Successful Clay byte scries do not
+prove the imported agent or generator compiled. The full T03 report also jams
+saved vases and rejection tangs before decimal rendering; the earlier successful
+Stead save probe instead returns a small constant after checking saved nouns.
+These observations motivate separating import/initial-save, case execution,
+encoding and rendering rather than claiming either type expansion or printing
+as the confirmed cause.
+
+At the integrator's request, `/root/independent_review` added a small
+prequalification-only import/initial-save generator. Its actual result will be
+retained separately as `T03-initial-save-probe` and must be the exact initial
+saved noun `[1 0 0]`. Receipt admission requires the diagnostic's native
+observation, generator command, generated source digest and explicit check;
+it cannot substitute for the original 12-case result. Public feedback and
+final private scoring do not run this prequalification diagnostic.
+
+The full probe keeps all 12 case assertions and full native vase comparisons.
+Bounded `~&` markers distinguish entry, each load or virtual rejection,
+completion and final encoded byte count. Pinned `sys/hoon.hoon` lines 8559–8564
+lower `~&` to the native slog hint; the existing Gall fixture uses the same
+size-marker form. The probe jams its unchanged evidence once and applies the
+existing host `MAX_JAM` limit of 262,144 bytes natively before decimal rendering,
+with `stead-skill-t03-result-jam-oversize` and measured size on failure. It
+raises no limit, changes no frozen case and claims no completed execution.
+
+Actual focused host execution of `test_skill_evaluation_support.py` passed
+**39 tests in 0.185 seconds**, including the preceding 36. Additional authored
+controls reject absent, incomplete, wrongly valued or relabeled diagnostic
+evidence and its use instead of the full task. Mocked Python execution retains
+the initial probe before a full-probe timeout and queues no following task.
+Generated-source controls check retained assertions, the single encoding and
+the bound before rendering. These are host-only tests; Hoon remains uncompiled
+at handoff. Scoped diff checking passed.
+
+| File | SHA-256 |
+| --- | --- |
+| `scripts/urbit/skill_evaluation_support.py` | `289295fd2650fe8a22f6e69a7657440ef8a43dd65791a78b7da9f4d509d20ded` |
+| `tests/urbit/test_skill_evaluation_support.py` | `c3fe67b2b066dddcd730b1cfba12eea4cac210dd77304e46d40d2ea4de56dc30` |
+
+The implementation was frozen and handed to `/root/editor_tool_review` for
+independent review before the integrator's next guarded run. No participant
+has been launched by this agent and no phase acceptance follows from this
+instrumentation. Derivative remotes were verified before writing.
+
+Independent source review by `/root/editor_tool_review` cleared adapter
+`289295fd` and tests `c3fe67b2` above. It verified the unchanged 12 case paths,
+separate initial-save evidence and admission inventory, one-line pinned hint
+syntax, single jam and the existing byte limit before decimal rendering. The
+reviewer did not rerun host tests or execute Hoon. Native results remain pending.

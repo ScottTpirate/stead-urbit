@@ -1,0 +1,249 @@
+{
+  "protocol": "stead.native-attempt/1",
+  "label": "prequal06",
+  "source_commit": "decfe35b875af736a2077d7df7b0a3519dcef07f",
+  "native_status": "fail",
+  "native_error": "Workflow final cleanup failed: zod exit was not clean: -9; forced=False",
+  "native_elapsed_seconds": 209.311,
+  "outer_guard_status": "failed",
+  "outer_guard_reason": "Owned sandbox exited unsuccessfully",
+  "outer_guard_exit": 1,
+  "qualifies_phase": false,
+  "scope": "Exact individual execution record; phase acceptance requires separate reconciliation and review.",
+  "transformations": [
+    "gzip compression only; decompressed bytes unchanged"
+  ],
+  "artifacts": [
+    {
+      "file": "skill-evaluation-20260926T141133Z-prequalification.json.gz",
+      "sha256": "684715ac8e55a490188b2570c1e41cdc2f054ffd778a80580ddb81a2b325e125",
+      "original_local_path": ".piers/fakes/logs/skill-evaluation-20260926T141133Z-prequalification.json",
+      "original_sha256": "d09b8d700d11bd4e3838b7850df1751655257d23b3b75917d6acf9c6e05b13a6",
+      "encoding": "gzip"
+    },
+    {
+      "file": "outer-guard.json.gz",
+      "sha256": "63a8545fddd1357bd8b2a309a83c3aa0792815a1ae2909c13c8293bb9940e1e4",
+      "original_local_path": ".runtime/execution-runs/four-fakes-3tol60nt/report.json",
+      "original_sha256": "1a4ea5ed081b70d4d557f5652bd11806041148b1af8c4da473936dc6e6610bf8",
+      "encoding": "gzip"
+    },
+    {
+      "file": "source-context.json.gz",
+      "sha256": "021f69ac3bf233d96ea50122ea4df1055a791738c2294b9d1288eeba842b0327",
+      "original_local_path": ".runtime/execution-runs/four-fakes-3tol60nt/control/source-context.json",
+      "original_sha256": "848e819bf43ff49c1d3dc5fd8a15186546f01e05dc26bce42a30651b51de3737",
+      "encoding": "gzip"
+    },
+    {
+      "file": "prequal06.json.gz",
+      "sha256": "84cb569b4cc9db8f35f45211df4d49b4d71ba9bbdd21b78cbe02f0cc1ea5ac2d",
+      "original_local_path": ".runtime/phase01-20260925/prequal06.json",
+      "original_sha256": "f223be7375071c17ff094dff497831f2a798afefea38fdd227af040a57e36fba",
+      "encoding": "gzip"
+    },
+    {
+      "file": "prequal06.log.gz",
+      "sha256": "6be77ff723ee95de0f950d3980b7deefb67892edc985d7165d72a6643a86674f",
+      "original_local_path": ".runtime/phase01-20260925/prequal06.log",
+      "original_sha256": "f45c45b36a3d956913db6141711afcea9fb4934e0b68c023b32f604ac469e8e7",
+      "encoding": "gzip"
+    },
+    {
+      "file": "prequal06-zod.log.gz",
+      "sha256": "e71d615b5cb84bca1753797a22f2f60fe84d16f5f32e7bb44cc5cca519753332",
+      "original_local_path": ".runtime/phase01-20260925/prequal06-zod.log",
+      "original_sha256": "6ab9b43a6a9389e70e5673c6a294c1aeca098876cf959cfa62055bcefc4ce5b4",
+      "encoding": "gzip"
+    },
+    {
+      "file": "start25.json.gz",
+      "sha256": "ddfb868b1f3ab8dc3bc53d804a84fc46577239e003cf6105dc89ea4c63c0568a",
+      "original_local_path": ".runtime/phase01-20260925/start25.json",
+      "original_sha256": "4a46503910959bfe0a369ced9dacec3ad7bd61bff4c959ecde1540de560ced01",
+      "encoding": "gzip"
+    },
+    {
+      "file": "start25.log.gz",
+      "sha256": "1edb3d3a355442bb3460446ea1a98e8f6186405ad472013c109aa3f022412c8a",
+      "original_local_path": ".runtime/phase01-20260925/start25.log",
+      "original_sha256": "455eb75c7c1a30a40cfd791f31322d2bef5f4595d2c2771e21c20cca9572994b",
+      "encoding": "gzip"
+    },
+    {
+      "file": "ready25.json.gz",
+      "sha256": "d98cdbfec3395d25b93371437beb3cff0c1e36c32f393d85dd91e8a015dae1ed",
+      "original_local_path": ".runtime/phase01-20260925/ready25.json",
+      "original_sha256": "cc44884bcc0f711d41a455baf882b18fedb5eee42efaa37bb54ea126b990aa48",
+      "encoding": "gzip"
+    },
+    {
+      "file": "ready25.log.gz",
+      "sha256": "01cedc45b27b73b7c8d5c8d2e0aa7bae317933250f77076dc26ab76b2428f17e",
+      "original_local_path": ".runtime/phase01-20260925/ready25.log",
+      "original_sha256": "6ade3d62b67dd2066207260ae96b6ef88847dbb824720cc7be7b132fee5510e9",
+      "encoding": "gzip"
+    },
+    {
+      "file": "stop25.json.gz",
+      "sha256": "080e32e1c326e16f530828f5e52b7b8e80facaa63c4f33273c6894a1824aa831",
+      "original_local_path": ".runtime/phase01-20260925/stop25.json",
+      "original_sha256": "25643cc389e40ac2bfb787d234285d273342e9716b50050384da453bd4d1d368",
+      "encoding": "gzip"
+    },
+    {
+      "file": "stop25.log.gz",
+      "sha256": "12c671e095df8b045e620680c1b93956a87a91531f555b53cad5fd1a748b4a19",
+      "original_local_path": ".runtime/phase01-20260925/stop25.log",
+      "original_sha256": "7e0046a61997e91b4c00d40b33b385148d315de81c5f28722592072cb3fde000",
+      "encoding": "gzip"
+    },
+    {
+      "file": "input-T01-both-outside.hoon.gz",
+      "sha256": "b7a3e7af153b83651bb4ccc9c54623d572f3838dc81836e91d3cfdf360ce1189",
+      "original_local_path": ".piers/fakes/logs/skill-evaluation-20260926T141133Z-prequalification-inputs/T01-both-outside.hoon",
+      "original_sha256": "1b08e6b6c0181239107b25b61aa7f3f1871378b03aadc42401feac3a0f4c1530",
+      "encoding": "gzip"
+    },
+    {
+      "file": "input-T01-exact-sum-boundary.hoon.gz",
+      "sha256": "fb5de25657bcecb7401273b63bfa1a23cab24cf04353eac048268a379cbf7123",
+      "original_local_path": ".piers/fakes/logs/skill-evaluation-20260926T141133Z-prequalification-inputs/T01-exact-sum-boundary.hoon",
+      "original_sha256": "12bc06b363e834ebbae7f19ceb1ec3cd1a3c6dbeae5b03156f9b943928341619",
+      "encoding": "gzip"
+    },
+    {
+      "file": "input-T01-large-atom.hoon.gz",
+      "sha256": "83550a907108ebf4837be518999777e7c9daec73e88ff0e41b8f28072b740b98",
+      "original_local_path": ".piers/fakes/logs/skill-evaluation-20260926T141133Z-prequalification-inputs/T01-large-atom.hoon",
+      "original_sha256": "294bea61074d9a402e9d55c1f284e73c035f9b73b5355c652747cf98c1345624",
+      "encoding": "gzip"
+    },
+    {
+      "file": "input-T01-left-boundary.hoon.gz",
+      "sha256": "2f9a58956313143017c143e7aa778dd003840bc03d9ad3016d0c8c334e9ad1cc",
+      "original_local_path": ".piers/fakes/logs/skill-evaluation-20260926T141133Z-prequalification-inputs/T01-left-boundary.hoon",
+      "original_sha256": "48a16ec6d8bc43140561517cdf2c6388176043203c418492e23d2d5897e2307c",
+      "encoding": "gzip"
+    },
+    {
+      "file": "input-T01-left-outside.hoon.gz",
+      "sha256": "d3a60a97268a1378f9147390d38ab872ff0746cfe2435e122b9570f26d28d494",
+      "original_local_path": ".piers/fakes/logs/skill-evaluation-20260926T141133Z-prequalification-inputs/T01-left-outside.hoon",
+      "original_sha256": "c68cb774365fc35ace58e5f6962da5945b168ffa607cd798fbc884a0b30e8c78",
+      "encoding": "gzip"
+    },
+    {
+      "file": "input-T01-public-overflow.hoon.gz",
+      "sha256": "b1655b70f2ff866af3a19501e81df50f98257f027275424fd6ec5a3d5e66c34d",
+      "original_local_path": ".piers/fakes/logs/skill-evaluation-20260926T141133Z-prequalification-inputs/T01-public-overflow.hoon",
+      "original_sha256": "4feec6acc204666bca22311e63bceb54fa0a972ebf3267232e286beb1b5fd23d",
+      "encoding": "gzip"
+    },
+    {
+      "file": "input-T01-public-sum.hoon.gz",
+      "sha256": "68eb975632c11f35fc00f5cdb0bf66a9ba8738d35d4fabe3f1f4a2491f8a33e2",
+      "original_local_path": ".piers/fakes/logs/skill-evaluation-20260926T141133Z-prequalification-inputs/T01-public-sum.hoon",
+      "original_sha256": "5739b86ea18e131421d2274bf2810e36f5052b97d1ab9fe92bb4f58ee7ba59dc",
+      "encoding": "gzip"
+    },
+    {
+      "file": "input-T01-right-boundary.hoon.gz",
+      "sha256": "a2ef05dba199db64fdfb97997472244de6df6783acc28d0d099fd29ffd3a39db",
+      "original_local_path": ".piers/fakes/logs/skill-evaluation-20260926T141133Z-prequalification-inputs/T01-right-boundary.hoon",
+      "original_sha256": "435b538fbbaa27418ae3ad997a25c1ef47136185f10f6b2037b8ce1b20856994",
+      "encoding": "gzip"
+    },
+    {
+      "file": "input-T01-right-outside.hoon.gz",
+      "sha256": "4e07a8f613464d63aa87c005241d77902ef5aa75617bc89e3e488b0d4b52a704",
+      "original_local_path": ".piers/fakes/logs/skill-evaluation-20260926T141133Z-prequalification-inputs/T01-right-outside.hoon",
+      "original_sha256": "3033ada5debbe25016b68d49d7e499e1ceb19b61ef6d405c712772326a65ad42",
+      "encoding": "gzip"
+    },
+    {
+      "file": "input-T01-sum-over-boundary.hoon.gz",
+      "sha256": "4d054888404f5e03346501f925846351984da830dd92989e70e4d54ba2f026e5",
+      "original_local_path": ".piers/fakes/logs/skill-evaluation-20260926T141133Z-prequalification-inputs/T01-sum-over-boundary.hoon",
+      "original_sha256": "897ca17acbe5d2190811f0bc0ea20c4ea2b8b6e9798cde15db26a9e838320481",
+      "encoding": "gzip"
+    },
+    {
+      "file": "input-T01-zero.hoon.gz",
+      "sha256": "6bfd2de97c33a2e140f2743ed6381e7f145515bcc720f012ff1b8255dfcf35ea",
+      "original_local_path": ".piers/fakes/logs/skill-evaluation-20260926T141133Z-prequalification-inputs/T01-zero.hoon",
+      "original_sha256": "2f1376a4952edbef02505abb37b3bf3bd405424f3ff5603ee148aaa40751cb8e",
+      "encoding": "gzip"
+    },
+    {
+      "file": "input-T02-off-large.hoon.gz",
+      "sha256": "33a1f2fcf9060bbc1ac1310cd29c122992fe5265252fb1cf2489653790b6d65e",
+      "original_local_path": ".piers/fakes/logs/skill-evaluation-20260926T141133Z-prequalification-inputs/T02-off-large.hoon",
+      "original_sha256": "9b78c03628cef15dc3ee53f582b6e7c92a5024c813a9d161cc257c6af15461cd",
+      "encoding": "gzip"
+    },
+    {
+      "file": "input-T02-off-zero-is-none.hoon.gz",
+      "sha256": "cdb5c5688e0115abb3ddf97ab443f87cad93cd65fc8b42b933a6041f62e9dc67",
+      "original_local_path": ".piers/fakes/logs/skill-evaluation-20260926T141133Z-prequalification-inputs/T02-off-zero-is-none.hoon",
+      "original_sha256": "c66a1eb1a396b5e40fed5eb409591c9cc88e1140811d4651c84f1b541a344755",
+      "encoding": "gzip"
+    },
+    {
+      "file": "input-T02-on-different.hoon.gz",
+      "sha256": "332dcea1eb778babd54e40fdec374deef701259d5c65ccabb29a6a29c174fc1c",
+      "original_local_path": ".piers/fakes/logs/skill-evaluation-20260926T141133Z-prequalification-inputs/T02-on-different.hoon",
+      "original_sha256": "9b98628522fb8a2d5f831771ceaa0c3bc792b41d239de638e70afbf7acdc07df",
+      "encoding": "gzip"
+    },
+    {
+      "file": "input-T02-on-large.hoon.gz",
+      "sha256": "130c54839340c80bc7001ce0affc7bbfa935dd4f49f8829d482747c7f9526f19",
+      "original_local_path": ".piers/fakes/logs/skill-evaluation-20260926T141133Z-prequalification-inputs/T02-on-large.hoon",
+      "original_sha256": "717ccd12fb3e4ce9e0c24c50a98d40b4a8cb448e6b9b66b4bbfb84c1e930626b",
+      "encoding": "gzip"
+    },
+    {
+      "file": "input-T02-on-zero-is-some.hoon.gz",
+      "sha256": "9219932ffc0e308495fe5c73197fbec943c884eb39b5dc8aa1d2ef38ee545c35",
+      "original_local_path": ".piers/fakes/logs/skill-evaluation-20260926T141133Z-prequalification-inputs/T02-on-zero-is-some.hoon",
+      "original_sha256": "5887477ff7224a880e1beee5801ec4098fbd031788eed950d85174fb0296acbe",
+      "encoding": "gzip"
+    },
+    {
+      "file": "input-T02-public-off.hoon.gz",
+      "sha256": "f79782bd09400971c5c8c9acdbc85f99e4f4daac271fc40b9b19a43a23cb0e75",
+      "original_local_path": ".piers/fakes/logs/skill-evaluation-20260926T141133Z-prequalification-inputs/T02-public-off.hoon",
+      "original_sha256": "307a48bda920c16073ada954c729c52b5dda642de4c3007492408a06a9348444",
+      "encoding": "gzip"
+    },
+    {
+      "file": "input-T02-public-on.hoon.gz",
+      "sha256": "65a42bae3b6f8672cc50de7891f507d8c03727e8948081a1bddfda34e6924e23",
+      "original_local_path": ".piers/fakes/logs/skill-evaluation-20260926T141133Z-prequalification-inputs/T02-public-on.hoon",
+      "original_sha256": "97827cf5d5a493ebba2f1187124bfe974d3f33b4c7395ac385b781388e36ea30",
+      "encoding": "gzip"
+    },
+    {
+      "file": "input-T02-starter-rejection.hoon.gz",
+      "sha256": "2aab131a5d0ed2a3822feb10fe9986f7babfb54488b1cdb772e89b946ae3f495",
+      "original_local_path": ".piers/fakes/logs/skill-evaluation-20260926T141133Z-prequalification-inputs/T02-starter-rejection.hoon",
+      "original_sha256": "9e69615b96332b1ae751f02e8681f334e8a6adce94a564ffc51ac89ca8d8e240",
+      "encoding": "gzip"
+    },
+    {
+      "file": "input-T03-all-load-cases.hoon.gz",
+      "sha256": "898ac46ddd847c8a6f7addc01ad7e6e2b9db20928885b2f1f5f089bd522060c7",
+      "original_local_path": ".piers/fakes/logs/skill-evaluation-20260926T141133Z-prequalification-inputs/T03-all-load-cases.hoon",
+      "original_sha256": "d8b5592c366dd20f291ba06b1f3e15e4c4dbf3ddd216dbf40d95e50bf237ead6",
+      "encoding": "gzip"
+    },
+    {
+      "file": "input-deliberate-false-native-expectation.hoon.gz",
+      "sha256": "5b72a8cb237c8fc0cd03f7edaa80611fe7428a4d9c108a1a838f3b8c128cace4",
+      "original_local_path": ".piers/fakes/logs/skill-evaluation-20260926T141133Z-prequalification-inputs/deliberate-false-native-expectation.hoon",
+      "original_sha256": "2ba13db97f0793d973a4e7caec199835218495065011162f8645b36a919f2c3f",
+      "encoding": "gzip"
+    }
+  ]
+}

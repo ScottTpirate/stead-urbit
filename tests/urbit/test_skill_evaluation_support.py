@@ -19,6 +19,7 @@ from unittest.mock import Mock, patch
 ROOT = Path(__file__).resolve().parents[2]
 sys.path[:0] = [str(ROOT / 'scripts/urbit'), str(Path(__file__).parent)]
 import skill_evaluation_support as S
+from gall_schedule_proof import _jam
 
 PACKAGE = ROOT / 'tests/urbit/skill_evaluation'
 # Exact ANSI-stripped streams from retained failed prequal03 T02 starter,
@@ -40,6 +41,10 @@ def authored_receipt(content, oracles):
 
     control = observed('deliberate-false-native-expectation')
     control.update(actual_jam_hex='29', actual_jam_sha256=S.digest(b'\x29'), actual_noun='[0 0]')
+    initial_raw = _jam((1, (0, 0)))  # Authored host noun, never native evidence.
+    initial = observed('T03-initial-save-probe')
+    initial.update(actual_jam_hex=initial_raw.hex(), actual_jam_sha256=S.digest(initial_raw),
+                   actual_noun='[1 0 0]')
     rows, observations = [], [control]
     for name, wanted in inventory.items():
         results = ([{'label': wanted['labels'][0], 'actual_noun': '42'}] if name == 'T06'
@@ -50,6 +55,8 @@ def authored_receipt(content, oracles):
             row.update(mutants=[Path(path).stem for path in oracles['tasks'][4]['mutants']],
                        requires_independent_test_semantics_review=True)
         rows.append(row)
+        if name == 'T03':
+            observations.append(initial)
         if name != 'T06':
             observations.extend(results)
     labels = [item['label'] for item in observations]
@@ -61,7 +68,9 @@ def authored_receipt(content, oracles):
                  'stderr': 'nest-fail' if label == 'T02-starter-rejection' else ''}
                 for label in [pure_labels[0], 'T02-starter-rejection', *pure_labels[1:]]]
     commands += [{'kind': 'native-observed-noun', 'status': 'completed', **value} for value in observations]
-    commands += [{'kind': 'native-dojo', 'status': 'completed', 'source': '+skill-eval-check', 'stdout': '[%skill-result 2]'} for _ in range(3)]
+    commands += [{'kind': 'native-dojo', 'status': 'completed', 'source': '+skill-eval-check',
+                  'stdout': '[%skill-result ' + str(int.from_bytes(bytes.fromhex(value['actual_jam_hex']), 'little')) + ']'}
+                 for value in observations if value['label'].startswith(('T03-', 'T04-'))]
     commands += [{'kind': 'native-dojo', 'status': 'completed', 'source': '+skill-eval!eval-desk-probe', 'stdout': '42'}]
     names = {'loaded-adapter-closure-current', 'loaded-supervisor-current', 'actual-evaluator-controls',
              'T02-starter-rejection:actual-compiler-rejection', 'candidate-inputs-unchanged',
@@ -69,7 +78,8 @@ def authored_receipt(content, oracles):
              'T01:declared-public-interface', 'T02:declared-public-interface', 'T05:immutable-subject',
              'T05:exact-test-imports', 'T05:nonempty-complete-arm-inventory', 'T05:coverage-report',
              'T06:exact-supplied-bytes', 'T06:exact-assembly-manifest', 'T06:repeat-empty-assembly',
-             'T06:exact-native-mounted-desk', 'T06:native-clean-generator-result'}
+             'T06:exact-native-mounted-desk', 'T06:native-clean-generator-result',
+             'T03-initial-save-probe:initial-saved-noun'}
     names.update(label + ':native-evaluator-success' for label in pure_labels)
     names.update(label + ':exact-nonempty-result-frame' for label in labels)
     for name in S.TASKS:
@@ -78,7 +88,8 @@ def authored_receipt(content, oracles):
         names.update((name + ':ten-Gall-arms', name + ':only-authorized-arms-edited'))
     names.update('T05:original-arm-retained:' + arm for arm in oracles['tasks'][4]['preserved_test_arms'])
     return {'tasks': rows, 'checks': [{'name': name, 'passed': True} for name in sorted(names)],
-            'commands': commands, 'failure_control': control, 'candidate_files_sha256': references,
+            'commands': commands, 'failure_control': control,
+            'prequalification_diagnostics': {'T03-initial-save-probe': initial}, 'candidate_files_sha256': references,
             'candidate_inputs_after': copy.deepcopy(references), 'generated_source_files_sha256': generated,
             'generated_source_files_after': copy.deepcopy(generated),
             'evaluator_controls': {'status': 'passed', 'classification': 'real-native-evaluator',
@@ -121,6 +132,17 @@ class PriorExecutionAdmission(unittest.TestCase):
         self.reject(lambda r: r.pop('evaluator_controls'))
         self.reject(lambda r: r['evaluator_controls'].update(large_frame_bytes=65536))
         self.reject(lambda r: r['evaluator_controls']['invalid_input'].update(encoder_rejected=False))
+
+    def test_initial_save_diagnostic_cannot_replace_full_cases_or_omit_native_evidence(self):
+        label = 'T03-initial-save-probe'
+        self.reject(lambda r: r.pop('prequalification_diagnostics'))
+        self.reject(lambda r: r.update(prequalification_diagnostics={label: {'status': 'passed'}}))
+        self.reject(lambda r: r['prequalification_diagnostics'][label].update(actual_noun='[1 1 0]'))
+        self.reject(lambda r: r['prequalification_diagnostics'].update(extra=r['failure_control']))
+        self.reject(lambda r: r.update(commands=[c for c in r['commands'] if c.get('label') != label]))
+        self.reject(lambda r: r['generated_source_files_sha256'].pop(label + '.hoon'))
+        self.reject(lambda r: r.update(checks=[c for c in r['checks'] if c['name'] != label + ':initial-saved-noun']))
+        self.reject(lambda r: r['tasks'][2].update(results=[r['prequalification_diagnostics'][label]]))
 
     def test_missing_starter_rejection_or_signal_is_not_rejection(self):
         self.reject(lambda r: r['commands'].pop(1))
@@ -313,6 +335,32 @@ class PublicFeedbackSelection(unittest.TestCase):
         for private in ('(mute:vi ', '[%1 5 2]', 'future-version', '65.536', 'repeat-roundtrip'):
             self.assertNotIn(private, public)
 
+    def test_t03_instrumentation_enforces_same_bound_before_rendering_without_dropping_evidence(self):
+        source = S.t03_program(self.oracles['tasks'][2])
+        for stage in ('body-enter', 'case-begin label', 'load-begin label', 'load-returned label',
+                      'mute-begin label', 'mute-returned label', 'case-checked label',
+                      'roundtrip-load-begin label', 'roundtrip-load-returned label',
+                      'all-cases-checked', 'jam-begin', 'result-jam-bytes encoded-bytes'):
+            self.assertIn('[%stead-skill-t03 %' + stage + ']', source)
+        self.assertEqual(source.count('(jam evidence)'), 1)
+        check = '?.  (lte encoded-bytes 262.144)'
+        self.assertEqual(S.MAX_JAM, 262144)
+        self.assertLess(source.index('%all-cases-checked'), source.index('(jam evidence)'))
+        self.assertLess(source.index('(jam evidence)'), source.index(check))
+        self.assertLess(source.index(check), source.index('[%skill-result encoded]'))
+        self.assertIn('~|  [%stead-skill-t03-result-jam-oversize encoded-bytes]\n  !!', source)
+        for assertion in ('?>  =(~ cards)', '?>  =(~ later-cards)', '?>  =(expected q.observed)',
+                          '?>  ?=(%| -.rejected)', '?>  =(before after)', '?>  =(observed again)'):
+            self.assertIn(assertion, source)
+        self.assertIn('[label before rejected after]', source)
+        self.assertIn('[label cards observed]', source)
+        initial = S.t03_initial_program()
+        self.assertIn('=/  original=agent:gall', initial)
+        self.assertIn('=/  initial=vase  on-save:original', initial)
+        self.assertIn('?>  =([%1 0 0] q.initial)', initial)
+        self.assertIn('[%skill-result (jam q.initial)]', initial)
+        self.assertNotIn('(jam initial)', initial)
+
 
 class PublicFeedbackExecution(unittest.TestCase):
     """Actual Python adapter execution with all native calls explicitly mocked."""
@@ -323,7 +371,7 @@ class PublicFeedbackExecution(unittest.TestCase):
 
     def execute(self, task, *, condition='baseline', missing_prior=False,
                 compile_failure=False, cleanup_failure=False, private_all=False,
-                dojo_timeout=False, evaluator_timeout=False):
+                dojo_timeout=False, evaluator_timeout=False, prequalify=False):
         with tempfile.TemporaryDirectory(prefix='stead-public-feedback-host-') as temp, ExitStack() as stack:
             root = Path(temp)
             candidate = root / 'candidate'
@@ -361,7 +409,9 @@ class PublicFeedbackExecution(unittest.TestCase):
                     (live / 'zod/skill-eval').mkdir()
                 if source == '+skill-eval!eval-desk-probe':
                     return '42'
-                if source == '+skill-eval-check' and dojo_timeout:
+                generator = live / 'zod/base/gen/skill-eval-check.hoon'
+                initial = generator.exists() and '%stead-skill-t03-initial' in generator.read_text()
+                if source == '+skill-eval-check' and dojo_timeout and not initial:
                     raise TimeoutError('AUTHORED pending native computation')
                 return '[ %skill-result\r\n  2\r\n]' if source == '+skill-eval-check' else '%.y'
 
@@ -384,6 +434,9 @@ class PublicFeedbackExecution(unittest.TestCase):
 
             def evaluate(binary, source, record):
                 programs.append((record['label'], source))
+                if record['label'] == 'T02-starter-rejection':
+                    record.update(status='completed', exit_code=0, stdout=T02_ACTUAL_STDOUT, stderr=T02_ACTUAL_STDERR)
+                    return 0, T02_ACTUAL_STDOUT, T02_ACTUAL_STDERR
                 if evaluator_timeout and record['label'].startswith(task):
                     record.update(status='failed', timed_out=True)
                     raise subprocess.TimeoutExpired(['AUTHORED-evaluator'], 30)
@@ -394,12 +447,17 @@ class PublicFeedbackExecution(unittest.TestCase):
                 return record['exit_code'], record['stdout'], record['stderr']
 
             evaluator = stack.enter_context(patch.object(S, 'evaluate_source', side_effect=evaluate))
-            stack.enter_context(patch.object(S.core_conn, 'evaluate', return_value=(b'AUTHORED HOST NOUN', b'')))
-            result = S.run(host, PACKAGE, candidate, condition,
-                           feedback_task=None if private_all else task,
-                           feedback_attempt=None if private_all else 1)
+            def decode(*_):
+                generator = live / 'zod/base/gen/skill-eval-check.hoon'
+                initial = generator.exists() and '%stead-skill-t03-initial' in generator.read_text()
+                return (b'[1 0 0]\n' if initial else b'AUTHORED HOST NOUN', b'')
+            stack.enter_context(patch.object(S.core_conn, 'evaluate', side_effect=decode))
+            result = S.run(host, PACKAGE, candidate, 'prequalification' if prequalify else condition,
+                           prequalify=prequalify,
+                           feedback_task=None if private_all or prequalify else task,
+                           feedback_attempt=None if private_all or prequalify else 1)
             private = json.loads((state / 'logs' / Path(result['evidence_file']).name).read_bytes())
-            public = (None if private_all else
+            public = (None if private_all or prequalify else
                       json.loads((state / 'logs' / Path(result['feedback_file']).name).read_bytes()))
             launch.assert_not_called()
             return {'result': result, 'private': private, 'public': public, 'programs': programs,
@@ -486,6 +544,22 @@ class PublicFeedbackExecution(unittest.TestCase):
         self.assertEqual(report['commands'][-1]['status'], 'failed')
         self.assertNotIn('/app/eval-access/hoon', json.dumps(report['commands']))
         self.assertEqual(run['host']['all_stop'].call_count, 2)
+
+    def test_prequalification_retains_small_initial_probe_then_full_timeout_without_scoring_later_tasks(self):
+        run = self.execute('T03', prequalify=True, dojo_timeout=True)
+        report = run['private']
+        self.assertEqual([row['status'] for row in report['tasks']],
+                         ['passed', 'passed', 'failed', 'not_run', 'not_run', 'not_run'])
+        initial = report['prequalification_diagnostics']['T03-initial-save-probe']
+        self.assertEqual(initial['actual_noun'], '[1 0 0]\n')
+        self.assertIn('T03-initial-save-probe.hoon', report['generated_source_files_sha256'])
+        calls = [c for c in report['commands'] if c.get('source') == '+skill-eval-check']
+        self.assertEqual([c['status'] for c in calls], ['completed', 'failed'])
+        self.assertEqual(run['host']['all_stop'].call_count, 2)
+        self.assertNotIn('/app/eval-access/hoon', json.dumps(report['commands']))
+        public = self.execute('T03')['private']
+        self.assertNotIn('prequalification_diagnostics', public)
+        self.assertNotIn('T03-initial-save-probe.hoon', public['generated_source_files_sha256'])
 
     def test_evaluator_timeout_also_aborts_remaining_tasks(self):
         run = self.execute('T01', private_all=True, evaluator_timeout=True)
