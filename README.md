@@ -6,6 +6,9 @@ Latest [executed results](docs/urbit/TEST_RESULTS.md): 53 native compilation and
 save/load checks pass, and the independent Git evaluation passes all 14 checks.
 Repository preservation and the Git reuse decision are complete. Full core,
 delivery and contributor-workflow qualification still keep Phases 0/1 open.
+The [September 26 checkpoint](docs/urbit/PHASE01_CHECKPOINT_20260926.md) records
+445 passing host tests, reviewed issue closures, retained native interruptions
+and the quiet-host requirement for the remaining qualification.
 
 An independent derivative of `ScottTpirate/stead`, preserving that repository's main-line history through `3d47f0172a41beebb31f5c3a7df133cc1d4b1ead` (inspected September 12, 2026). The original repository is not modified.
 

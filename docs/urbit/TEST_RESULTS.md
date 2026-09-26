@@ -1,5 +1,7 @@
 # Executed development evidence
 
+Current [September 26 handoff](PHASE01_CHECKPOINT_20260926.md): 445 host tests pass; native workflow and full core acceptance remain blocked/pending. The host reached 96 C with all Stead ships stopped. Phases 0/1 remain open.
+
 September 26 continuation: issues #2–#6 and #24 are closed for their bounded
 bootstrap, toolchain, harness, Git-evaluation, contract and threat-map design
 acceptance. [Independent design review](reviews/URB030_210_DESIGN_REVIEW_20260926.md)
@@ -18,7 +20,7 @@ then timed out in T03; neither admits participant launch. The latter verifies
 that the corrected timeout path leaves T04–T06 unrun. Both required forced zod
 cleanup and restoration from verified stopped seeds. Separately,
 [prequal05](evidence/2026-09-26/native-attempts/prequal05/index.json) executed no
-task before sensor-freshness shutdown. All failures remain unchanged. Current
+task before the supervisor reported `Stale, future or reversed thermal sample`. All failures remain unchanged. Current
 workflow comparison, full native core and final 73-obligation reconciliation
 remain open; Phase 2 has not started.
 

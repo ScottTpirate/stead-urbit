@@ -768,7 +768,8 @@ SHA-256 `d09b8d700d11bd4e3838b7850df1751655257d23b3b75917d6acf9c6e05b13a6`.
 T01 and T02 passed, but T03 again timed out at 120 seconds. T04–T06 remained
 `not_run`, demonstrating the new abort path in this actual run. Cleanup still
 failed with zod exit `-9`; the attempt remains failed. The preceding prequal05
-was a guard freshness failure before any task, not a T03 result.
+stopped before any task with `Stale, future or reversed thermal sample`, not a
+T03 result.
 
 The timeout's cause is not established. Successful Clay byte scries do not
 prove the imported agent or generator compiled. The full T03 report also jams
@@ -819,3 +820,26 @@ Independent source review by `/root/editor_tool_review` cleared adapter
 separate initial-save evidence and admission inventory, one-line pinned hint
 syntax, single jam and the existing byte limit before decimal rendering. The
 reviewer did not rerun host tests or execute Hoon. Native results remain pending.
+
+
+## Final checkpoint artifact audit (September 26)
+
+`/root/gall_schedule_review` independently verified the 99 original gzip records
+and all 171 regular workflow archive members against indexed hashes and original
+local bytes. No extra, link or traversal members were found. The workflow bundle
+contains bounded support/planning/test sources and synthetic file-operation
+probes, with the original incomplete evidence retained separately. It contains
+no participant result or qualification claim.
+
+Raw host logs confirm 445 tests in 65.579 seconds, exit zero, with helper commit
+`b2ec89c` unchanged before/after. The reviewer confirmed failed/nonqualifying
+prequal05–08 results, the actual 96 C thermal observations, stopped fixture and
+restoration of all 34 original fan values plus the unchanged performance profile.
+The reviewer performed no writes, tests or native launches.
+
+The review found that prequal05/07's primary report and outer guard alone did
+not establish the supervisor's precise stop reason. The integrator retained two
+unchanged byte excerpts with original line/byte ranges and digests from the
+existing supervisor log in the environment bundle, and corrected the checkpoint
+to quote `Stale, future or reversed thermal sample` without selecting one cause.
+This audit is agent review, not human approval, GitHub CI or native acceptance.

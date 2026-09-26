@@ -1,0 +1,1044 @@
+{
+  "classification": "reviewed synthetic workflow support and host-only probes; no participant evaluation",
+  "qualifies_phase": false,
+  "archive": {
+    "file": "reviewed-support-and-host-probes.tar.gz",
+    "sha256": "2a9a7476aedaa4a6d654a7f07b18d87bd9aac37cd95edcde5cbd0e7f02a2e25e",
+    "encoding": "gzip-compressed tar; original member bytes unchanged"
+  },
+  "files": [
+    {
+      "archive_member": "workspace_tool.py",
+      "original_local_path": ".runtime/workflow-participants/workspace_tool.py",
+      "sha256": "1a6b7af40bb367eb4e1d8d8ed9ee70c279de294a86ba83edb34244a6503af016",
+      "bytes": 26593
+    },
+    {
+      "archive_member": "probe_fileops.py",
+      "original_local_path": ".runtime/workflow-participants/probe_fileops.py",
+      "sha256": "2fbe9c481774fa655e66e8a09ad960d02b2372655b557599b370ef5448a0a033",
+      "bytes": 10240
+    },
+    {
+      "archive_member": "feedback_broker.py",
+      "original_local_path": ".runtime/workflow-participants/feedback_broker.py",
+      "sha256": "9dfd58259464478020431095130db39c33bfb1c103dc71357adc401a67d969fe",
+      "bytes": 24417
+    },
+    {
+      "archive_member": "test_feedback_broker.py",
+      "original_local_path": ".runtime/workflow-participants/test_feedback_broker.py",
+      "sha256": "307715f89ab9e7962a6431d585e94a28223ddcaf3fc2881651f59fc6671de371",
+      "bytes": 15533
+    },
+    {
+      "archive_member": "trial_clock.py",
+      "original_local_path": ".runtime/workflow-participants/trial_clock.py",
+      "sha256": "3d0c4ce8791a465fb5f5d2dfa0e6e41cc84f4dc1112cc912c3fcb872d653eae2",
+      "bytes": 5156
+    },
+    {
+      "archive_member": "test_trial_clock.py",
+      "original_local_path": ".runtime/workflow-participants/test_trial_clock.py",
+      "sha256": "1ca2fb6e97c9ecd58142720bd7b56df3a44b58648f148f3d3f46dab1a4548878",
+      "bytes": 3781
+    },
+    {
+      "archive_member": "PAIRED_TRIAL_CHECKLIST.md",
+      "original_local_path": ".runtime/workflow-participants/PAIRED_TRIAL_CHECKLIST.md",
+      "sha256": "985ffd61fb877ccf8fe2d5577330f37ef77ad3b1be5e254acc6ca90db476d83c",
+      "bytes": 9582
+    },
+    {
+      "archive_member": "paired-input-map.json",
+      "original_local_path": ".runtime/workflow-participants/paired-input-map.json",
+      "sha256": "d31bbac7ecda459cd33438e52238d6a26d7c224ad95c10279183b32562a5b47e",
+      "bytes": 9136
+    },
+    {
+      "archive_member": "launch-prompt-template.txt",
+      "original_local_path": ".runtime/workflow-participants/launch-prompt-template.txt",
+      "sha256": "ae847d32989a4fd7ede227c92ec1b4369ad7752215f1375f65e1dfeffdfb62a3",
+      "bytes": 4106
+    },
+    {
+      "archive_member": "probes/fileops-1790430093986207893/admission-refusal/isolation-probe/calls/fileops-v2-1790430101110253293-cc2348f57180.finish.json",
+      "original_local_path": ".runtime/workflow-participants/probes/fileops-1790430093986207893/admission-refusal/isolation-probe/calls/fileops-v2-1790430101110253293-cc2348f57180.finish.json",
+      "sha256": "77d05ecd2082e72cb059a5a97c8c56c6059cf73cc270cbfd7510e59021576dbb",
+      "bytes": 1560
+    },
+    {
+      "archive_member": "probes/fileops-1790430093986207893/admission-refusal/isolation-probe/calls/fileops-v2-1790430101110253293-cc2348f57180.start.json",
+      "original_local_path": ".runtime/workflow-participants/probes/fileops-1790430093986207893/admission-refusal/isolation-probe/calls/fileops-v2-1790430101110253293-cc2348f57180.start.json",
+      "sha256": "090f9947d9560254a5ca10ca50bf4037e2715cc573f4c554bd321449744166b6",
+      "bytes": 1472
+    },
+    {
+      "archive_member": "probes/fileops-1790430093986207893/basic/isolation-probe/calls/fileops-v2-1790430094015098675-704f5dc57ebd.finish.json",
+      "original_local_path": ".runtime/workflow-participants/probes/fileops-1790430093986207893/basic/isolation-probe/calls/fileops-v2-1790430094015098675-704f5dc57ebd.finish.json",
+      "sha256": "7516c41d35ecc5875e30dc6c2554a700bb5cfa38159f5ba1bd82d6abc2f12551",
+      "bytes": 3082
+    },
+    {
+      "archive_member": "probes/fileops-1790430093986207893/basic/isolation-probe/calls/fileops-v2-1790430094015098675-704f5dc57ebd.start.json",
+      "original_local_path": ".runtime/workflow-participants/probes/fileops-1790430093986207893/basic/isolation-probe/calls/fileops-v2-1790430094015098675-704f5dc57ebd.start.json",
+      "sha256": "3f1aecb25a1bf6f8ff4bbb9d2546d1ab1717da555dc004d8b38b986dcd48b7c4",
+      "bytes": 1450
+    },
+    {
+      "archive_member": "probes/fileops-1790430093986207893/basic/isolation-probe/calls/fileops-v2-1790430094433448620-e0279246d7d8.finish.json",
+      "original_local_path": ".runtime/workflow-participants/probes/fileops-1790430093986207893/basic/isolation-probe/calls/fileops-v2-1790430094433448620-e0279246d7d8.finish.json",
+      "sha256": "0954d07b3e9e75d9deaccd1f8cc0c1875e6b19eaa7acc28351e09ad5b63bcd64",
+      "bytes": 3082
+    },
+    {
+      "archive_member": "probes/fileops-1790430093986207893/basic/isolation-probe/calls/fileops-v2-1790430094433448620-e0279246d7d8.start.json",
+      "original_local_path": ".runtime/workflow-participants/probes/fileops-1790430093986207893/basic/isolation-probe/calls/fileops-v2-1790430094433448620-e0279246d7d8.start.json",
+      "sha256": "1a3d4408040c8f1d71f95f9aba3faec2ddc363bf01200d9464883f1a1dc2ab9b",
+      "bytes": 1474
+    },
+    {
+      "archive_member": "probes/fileops-1790430093986207893/basic/isolation-probe/calls/fileops-v2-1790430094846938671-1542377a97cf.finish.json",
+      "original_local_path": ".runtime/workflow-participants/probes/fileops-1790430093986207893/basic/isolation-probe/calls/fileops-v2-1790430094846938671-1542377a97cf.finish.json",
+      "sha256": "cd61745451503fd794a9f4eb2b90eacd172be5423871f8c3548bf59ae612de90",
+      "bytes": 3027
+    },
+    {
+      "archive_member": "probes/fileops-1790430093986207893/basic/isolation-probe/calls/fileops-v2-1790430094846938671-1542377a97cf.start.json",
+      "original_local_path": ".runtime/workflow-participants/probes/fileops-1790430093986207893/basic/isolation-probe/calls/fileops-v2-1790430094846938671-1542377a97cf.start.json",
+      "sha256": "0a3b522a278988b0f6558eb90e2d23430b9dee43346eb01afd8876f75d691998",
+      "bytes": 1474
+    },
+    {
+      "archive_member": "probes/fileops-1790430093986207893/basic/isolation-probe/calls/fileops-v2-1790430095256386855-77afade7002d.finish.json",
+      "original_local_path": ".runtime/workflow-participants/probes/fileops-1790430093986207893/basic/isolation-probe/calls/fileops-v2-1790430095256386855-77afade7002d.finish.json",
+      "sha256": "08a15164be9b0c15867b162d256825fe2c0c6d09654aa1a2fbb40e7e2291bee0",
+      "bytes": 3030
+    },
+    {
+      "archive_member": "probes/fileops-1790430093986207893/basic/isolation-probe/calls/fileops-v2-1790430095256386855-77afade7002d.start.json",
+      "original_local_path": ".runtime/workflow-participants/probes/fileops-1790430093986207893/basic/isolation-probe/calls/fileops-v2-1790430095256386855-77afade7002d.start.json",
+      "sha256": "5e5bb7171885e6df6f840cda1e08474248f2cf7a65d2a2ed90c8447e9cd4e9bd",
+      "bytes": 1555
+    },
+    {
+      "archive_member": "probes/fileops-1790430093986207893/basic/isolation-probe/calls/fileops-v2-1790430095789719343-8ac6faa340d5.finish.json",
+      "original_local_path": ".runtime/workflow-participants/probes/fileops-1790430093986207893/basic/isolation-probe/calls/fileops-v2-1790430095789719343-8ac6faa340d5.finish.json",
+      "sha256": "2216f45a601c25ba7185a464dfb868bc920ed28caa1f8222d54253dd183d3560",
+      "bytes": 3223
+    },
+    {
+      "archive_member": "probes/fileops-1790430093986207893/basic/isolation-probe/calls/fileops-v2-1790430095789719343-8ac6faa340d5.start.json",
+      "original_local_path": ".runtime/workflow-participants/probes/fileops-1790430093986207893/basic/isolation-probe/calls/fileops-v2-1790430095789719343-8ac6faa340d5.start.json",
+      "sha256": "460530d5fa474746a3986a37db7a0468005630a78ad1598852e0be1711169493",
+      "bytes": 1676
+    },
+    {
+      "archive_member": "probes/fileops-1790430093986207893/basic/isolation-probe/calls/fileops-v2-1790430096222745546-6ef401329a05.finish.json",
+      "original_local_path": ".runtime/workflow-participants/probes/fileops-1790430093986207893/basic/isolation-probe/calls/fileops-v2-1790430096222745546-6ef401329a05.finish.json",
+      "sha256": "a2c1339db3f15bda58a8958b6e1407e08c45f118d624758941eb3a12a4390dee",
+      "bytes": 3416
+    },
+    {
+      "archive_member": "probes/fileops-1790430093986207893/basic/isolation-probe/calls/fileops-v2-1790430096222745546-6ef401329a05.start.json",
+      "original_local_path": ".runtime/workflow-participants/probes/fileops-1790430093986207893/basic/isolation-probe/calls/fileops-v2-1790430096222745546-6ef401329a05.start.json",
+      "sha256": "142be41d22391d3ea660ce1c8db7efba3d0e008fcb8015c23d77434956f4070e",
+      "bytes": 1880
+    },
+    {
+      "archive_member": "probes/fileops-1790430093986207893/basic/isolation-probe/calls/fileops-v2-1790430096579877372-365db6233b95.finish.json",
+      "original_local_path": ".runtime/workflow-participants/probes/fileops-1790430093986207893/basic/isolation-probe/calls/fileops-v2-1790430096579877372-365db6233b95.finish.json",
+      "sha256": "874dc9401e1dc412f995ac3c2b028402847e90a14d1cbce90c5bb0152e8593f2",
+      "bytes": 3291
+    },
+    {
+      "archive_member": "probes/fileops-1790430093986207893/basic/isolation-probe/calls/fileops-v2-1790430096579877372-365db6233b95.start.json",
+      "original_local_path": ".runtime/workflow-participants/probes/fileops-1790430093986207893/basic/isolation-probe/calls/fileops-v2-1790430096579877372-365db6233b95.start.json",
+      "sha256": "c52bd4b97f6d15caf4be19ad8b5d89a025443e94d30f87ce7ba5a8cd42b57936",
+      "bytes": 1832
+    },
+    {
+      "archive_member": "probes/fileops-1790430093986207893/basic/isolation-probe/calls/fileops-v2-1790430096800001805-0dc1ef30e903.finish.json",
+      "original_local_path": ".runtime/workflow-participants/probes/fileops-1790430093986207893/basic/isolation-probe/calls/fileops-v2-1790430096800001805-0dc1ef30e903.finish.json",
+      "sha256": "00b97272e4d803db2226ce5e7114ab6ce06452f1f863fa49ae3a5365038d3dd6",
+      "bytes": 2714
+    },
+    {
+      "archive_member": "probes/fileops-1790430093986207893/basic/isolation-probe/calls/fileops-v2-1790430096800001805-0dc1ef30e903.start.json",
+      "original_local_path": ".runtime/workflow-participants/probes/fileops-1790430093986207893/basic/isolation-probe/calls/fileops-v2-1790430096800001805-0dc1ef30e903.start.json",
+      "sha256": "2ff80b477cc4d5438a93d18ff7f45a49f214054ba0fdaac14004bc3f594603be",
+      "bytes": 1718
+    },
+    {
+      "archive_member": "probes/fileops-1790430093986207893/basic/isolation-probe/calls/fileops-v2-1790430096987509899-54977ff188aa.finish.json",
+      "original_local_path": ".runtime/workflow-participants/probes/fileops-1790430093986207893/basic/isolation-probe/calls/fileops-v2-1790430096987509899-54977ff188aa.finish.json",
+      "sha256": "58a52345baa7797d9fba4988c714d234071b12c852543c44afcdfa97b3562213",
+      "bytes": 217
+    },
+    {
+      "archive_member": "probes/fileops-1790430093986207893/basic/isolation-probe/calls/fileops-v2-1790430096987509899-54977ff188aa.start.json",
+      "original_local_path": ".runtime/workflow-participants/probes/fileops-1790430093986207893/basic/isolation-probe/calls/fileops-v2-1790430096987509899-54977ff188aa.start.json",
+      "sha256": "881f63ad46514b6731d99f0eab0d8115e918c6b2878e8da7fd27e6ce25b9745e",
+      "bytes": 411
+    },
+    {
+      "archive_member": "probes/fileops-1790430093986207893/basic/isolation-probe/calls/fileops-v2-1790430097029992499-cdbe98445e9b.finish.json",
+      "original_local_path": ".runtime/workflow-participants/probes/fileops-1790430093986207893/basic/isolation-probe/calls/fileops-v2-1790430097029992499-cdbe98445e9b.finish.json",
+      "sha256": "cf195d5eb6b41632146dbcc7cf2d62f52b61c8b7636097602e3f53fb891fd243",
+      "bytes": 228
+    },
+    {
+      "archive_member": "probes/fileops-1790430093986207893/basic/isolation-probe/calls/fileops-v2-1790430097029992499-cdbe98445e9b.start.json",
+      "original_local_path": ".runtime/workflow-participants/probes/fileops-1790430093986207893/basic/isolation-probe/calls/fileops-v2-1790430097029992499-cdbe98445e9b.start.json",
+      "sha256": "73b419f44f43d521da8770c29ff1e18d1ed77249b2cf48f7a398c33f3cdca5b3",
+      "bytes": 437
+    },
+    {
+      "archive_member": "probes/fileops-1790430093986207893/basic/isolation-probe/calls/fileops-v2-1790430097074036650-22fde4a42f78.finish.json",
+      "original_local_path": ".runtime/workflow-participants/probes/fileops-1790430093986207893/basic/isolation-probe/calls/fileops-v2-1790430097074036650-22fde4a42f78.finish.json",
+      "sha256": "cf195d5eb6b41632146dbcc7cf2d62f52b61c8b7636097602e3f53fb891fd243",
+      "bytes": 228
+    },
+    {
+      "archive_member": "probes/fileops-1790430093986207893/basic/isolation-probe/calls/fileops-v2-1790430097074036650-22fde4a42f78.start.json",
+      "original_local_path": ".runtime/workflow-participants/probes/fileops-1790430093986207893/basic/isolation-probe/calls/fileops-v2-1790430097074036650-22fde4a42f78.start.json",
+      "sha256": "c9e9f3b3e22b3120d4137ff80c4ae3751a35b2ee7bd9c472c1d5fed48150926c",
+      "bytes": 443
+    },
+    {
+      "archive_member": "probes/fileops-1790430093986207893/basic/isolation-probe/calls/fileops-v2-1790430097121737528-22ec62b0fbd6.finish.json",
+      "original_local_path": ".runtime/workflow-participants/probes/fileops-1790430093986207893/basic/isolation-probe/calls/fileops-v2-1790430097121737528-22ec62b0fbd6.finish.json",
+      "sha256": "58a52345baa7797d9fba4988c714d234071b12c852543c44afcdfa97b3562213",
+      "bytes": 217
+    },
+    {
+      "archive_member": "probes/fileops-1790430093986207893/basic/isolation-probe/calls/fileops-v2-1790430097121737528-22ec62b0fbd6.start.json",
+      "original_local_path": ".runtime/workflow-participants/probes/fileops-1790430093986207893/basic/isolation-probe/calls/fileops-v2-1790430097121737528-22ec62b0fbd6.start.json",
+      "sha256": "5c75640bf73ae638ad63f6c64f37aabc85831f283ef031a55279825f9e70ba82",
+      "bytes": 459
+    },
+    {
+      "archive_member": "probes/fileops-1790430093986207893/basic/isolation-probe/calls/fileops-v2-1790430097166964825-2b12856e396d.finish.json",
+      "original_local_path": ".runtime/workflow-participants/probes/fileops-1790430093986207893/basic/isolation-probe/calls/fileops-v2-1790430097166964825-2b12856e396d.finish.json",
+      "sha256": "f6aed40b7d58bd33785a87e9c16a3916bd37c597292a65f8a3ccbb3061c2a246",
+      "bytes": 236
+    },
+    {
+      "archive_member": "probes/fileops-1790430093986207893/basic/isolation-probe/calls/fileops-v2-1790430097166964825-2b12856e396d.start.json",
+      "original_local_path": ".runtime/workflow-participants/probes/fileops-1790430093986207893/basic/isolation-probe/calls/fileops-v2-1790430097166964825-2b12856e396d.start.json",
+      "sha256": "a33629ad6e29bc1c31ea20370a3880d026fdd7f1cb0d00fb93460e1d57f77821",
+      "bytes": 131493
+    },
+    {
+      "archive_member": "probes/fileops-1790430093986207893/basic/isolation-probe/calls/fileops-v2-1790430097216262982-898d5d040480.finish.json",
+      "original_local_path": ".runtime/workflow-participants/probes/fileops-1790430093986207893/basic/isolation-probe/calls/fileops-v2-1790430097216262982-898d5d040480.finish.json",
+      "sha256": "f6aed40b7d58bd33785a87e9c16a3916bd37c597292a65f8a3ccbb3061c2a246",
+      "bytes": 236
+    },
+    {
+      "archive_member": "probes/fileops-1790430093986207893/basic/isolation-probe/calls/fileops-v2-1790430097216262982-898d5d040480.start.json",
+      "original_local_path": ".runtime/workflow-participants/probes/fileops-1790430093986207893/basic/isolation-probe/calls/fileops-v2-1790430097216262982-898d5d040480.start.json",
+      "sha256": "92f820fa41916ca515562afca76769713a39099c2063d6bc788fe276dc59d7b3",
+      "bytes": 435
+    },
+    {
+      "archive_member": "probes/fileops-1790430093986207893/basic/isolation-probe/calls/fileops-v2-1790430097262404851-d77f33bd96f3.finish.json",
+      "original_local_path": ".runtime/workflow-participants/probes/fileops-1790430093986207893/basic/isolation-probe/calls/fileops-v2-1790430097262404851-d77f33bd96f3.finish.json",
+      "sha256": "f6aed40b7d58bd33785a87e9c16a3916bd37c597292a65f8a3ccbb3061c2a246",
+      "bytes": 236
+    },
+    {
+      "archive_member": "probes/fileops-1790430093986207893/basic/isolation-probe/calls/fileops-v2-1790430097262404851-d77f33bd96f3.start.json",
+      "original_local_path": ".runtime/workflow-participants/probes/fileops-1790430093986207893/basic/isolation-probe/calls/fileops-v2-1790430097262404851-d77f33bd96f3.start.json",
+      "sha256": "6cd0400fe417dfdd03cc00b8dd0a7e0796a5cdae381d27fd6ebf05c2671cee60",
+      "bytes": 431
+    },
+    {
+      "archive_member": "probes/fileops-1790430093986207893/basic/isolation-probe/calls/fileops-v2-1790430097306114113-d1f235009e2a.finish.json",
+      "original_local_path": ".runtime/workflow-participants/probes/fileops-1790430093986207893/basic/isolation-probe/calls/fileops-v2-1790430097306114113-d1f235009e2a.finish.json",
+      "sha256": "cf195d5eb6b41632146dbcc7cf2d62f52b61c8b7636097602e3f53fb891fd243",
+      "bytes": 228
+    },
+    {
+      "archive_member": "probes/fileops-1790430093986207893/basic/isolation-probe/calls/fileops-v2-1790430097306114113-d1f235009e2a.start.json",
+      "original_local_path": ".runtime/workflow-participants/probes/fileops-1790430093986207893/basic/isolation-probe/calls/fileops-v2-1790430097306114113-d1f235009e2a.start.json",
+      "sha256": "29477e133c283f45e05b8f7e4a4f55ee693c5c6daa7469e756d76a3e703e738c",
+      "bytes": 481
+    },
+    {
+      "archive_member": "probes/fileops-1790430093986207893/basic/isolation-probe/calls/fileops-v2-1790430097350010947-242170bdad59.finish.json",
+      "original_local_path": ".runtime/workflow-participants/probes/fileops-1790430093986207893/basic/isolation-probe/calls/fileops-v2-1790430097350010947-242170bdad59.finish.json",
+      "sha256": "e6b9b53e0ecdcc2ccb98beaf908c10e0c478a2d8d7907abe5e2d781afc70707a",
+      "bytes": 223
+    },
+    {
+      "archive_member": "probes/fileops-1790430093986207893/basic/isolation-probe/calls/fileops-v2-1790430097350010947-242170bdad59.start.json",
+      "original_local_path": ".runtime/workflow-participants/probes/fileops-1790430093986207893/basic/isolation-probe/calls/fileops-v2-1790430097350010947-242170bdad59.start.json",
+      "sha256": "1eb026c41ff85c881f365e93449ac4f8086049497016fc4d6ad4ee9651f264af",
+      "bytes": 445
+    },
+    {
+      "archive_member": "probes/fileops-1790430093986207893/basic/isolation-probe/calls/fileops-v2-1790430097399140101-49d2a87008b6.finish.json",
+      "original_local_path": ".runtime/workflow-participants/probes/fileops-1790430093986207893/basic/isolation-probe/calls/fileops-v2-1790430097399140101-49d2a87008b6.finish.json",
+      "sha256": "e6b9b53e0ecdcc2ccb98beaf908c10e0c478a2d8d7907abe5e2d781afc70707a",
+      "bytes": 223
+    },
+    {
+      "archive_member": "probes/fileops-1790430093986207893/basic/isolation-probe/calls/fileops-v2-1790430097399140101-49d2a87008b6.start.json",
+      "original_local_path": ".runtime/workflow-participants/probes/fileops-1790430093986207893/basic/isolation-probe/calls/fileops-v2-1790430097399140101-49d2a87008b6.start.json",
+      "sha256": "a17008cee8631a2487500f3cb2b04dde74a8fedf127842280e99dcbaec9a2946",
+      "bytes": 445
+    },
+    {
+      "archive_member": "probes/fileops-1790430093986207893/basic/isolation-probe/calls/fileops-v2-1790430097446071431-3fbd84e194f1.finish.json",
+      "original_local_path": ".runtime/workflow-participants/probes/fileops-1790430093986207893/basic/isolation-probe/calls/fileops-v2-1790430097446071431-3fbd84e194f1.finish.json",
+      "sha256": "e6b9b53e0ecdcc2ccb98beaf908c10e0c478a2d8d7907abe5e2d781afc70707a",
+      "bytes": 223
+    },
+    {
+      "archive_member": "probes/fileops-1790430093986207893/basic/isolation-probe/calls/fileops-v2-1790430097446071431-3fbd84e194f1.start.json",
+      "original_local_path": ".runtime/workflow-participants/probes/fileops-1790430093986207893/basic/isolation-probe/calls/fileops-v2-1790430097446071431-3fbd84e194f1.start.json",
+      "sha256": "c5868d7367fba2824040063fe3a2c36a553615d2889ad16f36e98948f64707ef",
+      "bytes": 445
+    },
+    {
+      "archive_member": "probes/fileops-1790430093986207893/cleanup-refusal/isolation-probe/calls/fileops-v2-1790430101301629315-8483fc07ca26.finish.json",
+      "original_local_path": ".runtime/workflow-participants/probes/fileops-1790430093986207893/cleanup-refusal/isolation-probe/calls/fileops-v2-1790430101301629315-8483fc07ca26.finish.json",
+      "sha256": "9618139014b4a94ded3c270cb77e9a9b7ff7f857fbc94342899266bb2ddb497c",
+      "bytes": 2976
+    },
+    {
+      "archive_member": "probes/fileops-1790430093986207893/cleanup-refusal/isolation-probe/calls/fileops-v2-1790430101301629315-8483fc07ca26.start.json",
+      "original_local_path": ".runtime/workflow-participants/probes/fileops-1790430093986207893/cleanup-refusal/isolation-probe/calls/fileops-v2-1790430101301629315-8483fc07ca26.start.json",
+      "sha256": "c5f7ea88b886e1ec8b502dfb76eef26891ef990c493f40bad48f3efda545557a",
+      "bytes": 1474
+    },
+    {
+      "archive_member": "probes/fileops-1790430093986207893/cumulative-budget/isolation-probe/calls/fileops-v2-1790430097524897613-7cbec7fef9fe.finish.json",
+      "original_local_path": ".runtime/workflow-participants/probes/fileops-1790430093986207893/cumulative-budget/isolation-probe/calls/fileops-v2-1790430097524897613-7cbec7fef9fe.finish.json",
+      "sha256": "e2c38b9c69e49a0a414b98e8a0a897a03aad0d5cabb5ec7c5de5e91492e91ea5",
+      "bytes": 3032
+    },
+    {
+      "archive_member": "probes/fileops-1790430093986207893/cumulative-budget/isolation-probe/calls/fileops-v2-1790430097524897613-7cbec7fef9fe.start.json",
+      "original_local_path": ".runtime/workflow-participants/probes/fileops-1790430093986207893/cumulative-budget/isolation-probe/calls/fileops-v2-1790430097524897613-7cbec7fef9fe.start.json",
+      "sha256": "c51808b210ccdbffeb23b41725f99d4ecbb58b5ef0c17a47dd6114d4bd0dcb8d",
+      "bytes": 132540
+    },
+    {
+      "archive_member": "probes/fileops-1790430093986207893/cumulative-budget/isolation-probe/calls/fileops-v2-1790430097723513003-32b34fe75c44.finish.json",
+      "original_local_path": ".runtime/workflow-participants/probes/fileops-1790430093986207893/cumulative-budget/isolation-probe/calls/fileops-v2-1790430097723513003-32b34fe75c44.finish.json",
+      "sha256": "ca550baf736a5cad428ec98f63e9afdd20201dd272307a97333d0baf952ac35b",
+      "bytes": 3031
+    },
+    {
+      "archive_member": "probes/fileops-1790430093986207893/cumulative-budget/isolation-probe/calls/fileops-v2-1790430097723513003-32b34fe75c44.start.json",
+      "original_local_path": ".runtime/workflow-participants/probes/fileops-1790430093986207893/cumulative-budget/isolation-probe/calls/fileops-v2-1790430097723513003-32b34fe75c44.start.json",
+      "sha256": "cc00af3ab52e9620edda2d864611799883432d54d0db1f9d62d093e48bf13256",
+      "bytes": 132687
+    },
+    {
+      "archive_member": "probes/fileops-1790430093986207893/cumulative-budget/isolation-probe/calls/fileops-v2-1790430097928533046-42359bd4cec4.finish.json",
+      "original_local_path": ".runtime/workflow-participants/probes/fileops-1790430093986207893/cumulative-budget/isolation-probe/calls/fileops-v2-1790430097928533046-42359bd4cec4.finish.json",
+      "sha256": "45a696ea8fedb8553568dd919b2d8dc6714e6df7bde166f9fc63d6ca1b252f0a",
+      "bytes": 3032
+    },
+    {
+      "archive_member": "probes/fileops-1790430093986207893/cumulative-budget/isolation-probe/calls/fileops-v2-1790430097928533046-42359bd4cec4.start.json",
+      "original_local_path": ".runtime/workflow-participants/probes/fileops-1790430093986207893/cumulative-budget/isolation-probe/calls/fileops-v2-1790430097928533046-42359bd4cec4.start.json",
+      "sha256": "e0b6faa5f3416d264f1c3126cba0733448e1b60405896a6bd5712eeb4e49ffbc",
+      "bytes": 132688
+    },
+    {
+      "archive_member": "probes/fileops-1790430093986207893/cumulative-budget/isolation-probe/calls/fileops-v2-1790430098146958958-3c5f5e3e6a8f.finish.json",
+      "original_local_path": ".runtime/workflow-participants/probes/fileops-1790430093986207893/cumulative-budget/isolation-probe/calls/fileops-v2-1790430098146958958-3c5f5e3e6a8f.finish.json",
+      "sha256": "e77a90cd71d8dbd37439fe07664f5f3094167d54eb5e35d6b08dd711989a8575",
+      "bytes": 3032
+    },
+    {
+      "archive_member": "probes/fileops-1790430093986207893/cumulative-budget/isolation-probe/calls/fileops-v2-1790430098146958958-3c5f5e3e6a8f.start.json",
+      "original_local_path": ".runtime/workflow-participants/probes/fileops-1790430093986207893/cumulative-budget/isolation-probe/calls/fileops-v2-1790430098146958958-3c5f5e3e6a8f.start.json",
+      "sha256": "6bd50db59852dc82501c5452db4975af90abf6c1cd3b0601819c79805b00ffc4",
+      "bytes": 132688
+    },
+    {
+      "archive_member": "probes/fileops-1790430093986207893/cumulative-budget/isolation-probe/calls/fileops-v2-1790430098360930228-655c8c697ffd.finish.json",
+      "original_local_path": ".runtime/workflow-participants/probes/fileops-1790430093986207893/cumulative-budget/isolation-probe/calls/fileops-v2-1790430098360930228-655c8c697ffd.finish.json",
+      "sha256": "505172eca1510ba0946a5ba9775b3791125e1a50c6d7fce545b1e927dac768d7",
+      "bytes": 3032
+    },
+    {
+      "archive_member": "probes/fileops-1790430093986207893/cumulative-budget/isolation-probe/calls/fileops-v2-1790430098360930228-655c8c697ffd.start.json",
+      "original_local_path": ".runtime/workflow-participants/probes/fileops-1790430093986207893/cumulative-budget/isolation-probe/calls/fileops-v2-1790430098360930228-655c8c697ffd.start.json",
+      "sha256": "952b81ad4ee52b806a6328e4927e14945c181bdaff44feb9f3d463485cf02e4f",
+      "bytes": 132688
+    },
+    {
+      "archive_member": "probes/fileops-1790430093986207893/cumulative-budget/isolation-probe/calls/fileops-v2-1790430098590931629-cf1a428deded.finish.json",
+      "original_local_path": ".runtime/workflow-participants/probes/fileops-1790430093986207893/cumulative-budget/isolation-probe/calls/fileops-v2-1790430098590931629-cf1a428deded.finish.json",
+      "sha256": "40317e2f6ee4ec26f2be347ae5a33d42c19d3b403c15ba388880ca8b764297ae",
+      "bytes": 3031
+    },
+    {
+      "archive_member": "probes/fileops-1790430093986207893/cumulative-budget/isolation-probe/calls/fileops-v2-1790430098590931629-cf1a428deded.start.json",
+      "original_local_path": ".runtime/workflow-participants/probes/fileops-1790430093986207893/cumulative-budget/isolation-probe/calls/fileops-v2-1790430098590931629-cf1a428deded.start.json",
+      "sha256": "8db69cd51afa7641a173265d401f9d3c4fd1e3cf1ab300474fad6f059c16e080",
+      "bytes": 132688
+    },
+    {
+      "archive_member": "probes/fileops-1790430093986207893/cumulative-budget/isolation-probe/calls/fileops-v2-1790430098817192149-cc71779cac4a.finish.json",
+      "original_local_path": ".runtime/workflow-participants/probes/fileops-1790430093986207893/cumulative-budget/isolation-probe/calls/fileops-v2-1790430098817192149-cc71779cac4a.finish.json",
+      "sha256": "87323491d5588733f6366c100781062390cfd3c77ad7f7706e42753990fb7322",
+      "bytes": 3031
+    },
+    {
+      "archive_member": "probes/fileops-1790430093986207893/cumulative-budget/isolation-probe/calls/fileops-v2-1790430098817192149-cc71779cac4a.start.json",
+      "original_local_path": ".runtime/workflow-participants/probes/fileops-1790430093986207893/cumulative-budget/isolation-probe/calls/fileops-v2-1790430098817192149-cc71779cac4a.start.json",
+      "sha256": "51e68b93cfe5385ee787f798f62e2f1eb93c7b0ae859aea01236c78074350f58",
+      "bytes": 132688
+    },
+    {
+      "archive_member": "probes/fileops-1790430093986207893/cumulative-budget/isolation-probe/calls/fileops-v2-1790430099016898186-63146a82ad43.finish.json",
+      "original_local_path": ".runtime/workflow-participants/probes/fileops-1790430093986207893/cumulative-budget/isolation-probe/calls/fileops-v2-1790430099016898186-63146a82ad43.finish.json",
+      "sha256": "02a300984022cfb3309bf232ce488f3a63ab920b871bfaa9c6420b2ed7f8a54d",
+      "bytes": 3032
+    },
+    {
+      "archive_member": "probes/fileops-1790430093986207893/cumulative-budget/isolation-probe/calls/fileops-v2-1790430099016898186-63146a82ad43.start.json",
+      "original_local_path": ".runtime/workflow-participants/probes/fileops-1790430093986207893/cumulative-budget/isolation-probe/calls/fileops-v2-1790430099016898186-63146a82ad43.start.json",
+      "sha256": "c94585fb1632f460f4f1d2e4b27e31a5edc3697e9f05d3d10d382912238a42f3",
+      "bytes": 132688
+    },
+    {
+      "archive_member": "probes/fileops-1790430093986207893/cumulative-budget/isolation-probe/calls/fileops-v2-1790430099218615063-007a24afffb3.finish.json",
+      "original_local_path": ".runtime/workflow-participants/probes/fileops-1790430093986207893/cumulative-budget/isolation-probe/calls/fileops-v2-1790430099218615063-007a24afffb3.finish.json",
+      "sha256": "6d58313ba42728c7502c0b5140f2dad6c08bef4a5d23e5605ddb22b457f946fd",
+      "bytes": 3032
+    },
+    {
+      "archive_member": "probes/fileops-1790430093986207893/cumulative-budget/isolation-probe/calls/fileops-v2-1790430099218615063-007a24afffb3.start.json",
+      "original_local_path": ".runtime/workflow-participants/probes/fileops-1790430093986207893/cumulative-budget/isolation-probe/calls/fileops-v2-1790430099218615063-007a24afffb3.start.json",
+      "sha256": "ac0f834a5d49ae13f7c1d06652eb8f6c94cdb118685d74d983e43c1d04dffdd6",
+      "bytes": 132688
+    },
+    {
+      "archive_member": "probes/fileops-1790430093986207893/cumulative-budget/isolation-probe/calls/fileops-v2-1790430099412858312-7047e58a77b0.finish.json",
+      "original_local_path": ".runtime/workflow-participants/probes/fileops-1790430093986207893/cumulative-budget/isolation-probe/calls/fileops-v2-1790430099412858312-7047e58a77b0.finish.json",
+      "sha256": "b3bd62f12d4b7c5ab5a1325c3ed0daa1408dc406117d581f10438f53b6f4526c",
+      "bytes": 3032
+    },
+    {
+      "archive_member": "probes/fileops-1790430093986207893/cumulative-budget/isolation-probe/calls/fileops-v2-1790430099412858312-7047e58a77b0.start.json",
+      "original_local_path": ".runtime/workflow-participants/probes/fileops-1790430093986207893/cumulative-budget/isolation-probe/calls/fileops-v2-1790430099412858312-7047e58a77b0.start.json",
+      "sha256": "2c099e855656b8265566e1051b49a1de053255abd412f2e37dcf21d636e12c7f",
+      "bytes": 132688
+    },
+    {
+      "archive_member": "probes/fileops-1790430093986207893/cumulative-budget/isolation-probe/calls/fileops-v2-1790430099620060765-2ff903ddc9b2.finish.json",
+      "original_local_path": ".runtime/workflow-participants/probes/fileops-1790430093986207893/cumulative-budget/isolation-probe/calls/fileops-v2-1790430099620060765-2ff903ddc9b2.finish.json",
+      "sha256": "4ac360483a7530addd84f6beb284781111d8d2f331867e7cb5837009d7f64ac6",
+      "bytes": 3031
+    },
+    {
+      "archive_member": "probes/fileops-1790430093986207893/cumulative-budget/isolation-probe/calls/fileops-v2-1790430099620060765-2ff903ddc9b2.start.json",
+      "original_local_path": ".runtime/workflow-participants/probes/fileops-1790430093986207893/cumulative-budget/isolation-probe/calls/fileops-v2-1790430099620060765-2ff903ddc9b2.start.json",
+      "sha256": "1550a6b21a987ec1f484b58a251532b6eb9c351c345b124e06e4fa403d7139a4",
+      "bytes": 132688
+    },
+    {
+      "archive_member": "probes/fileops-1790430093986207893/cumulative-budget/isolation-probe/calls/fileops-v2-1790430099817600217-b246623d3c64.finish.json",
+      "original_local_path": ".runtime/workflow-participants/probes/fileops-1790430093986207893/cumulative-budget/isolation-probe/calls/fileops-v2-1790430099817600217-b246623d3c64.finish.json",
+      "sha256": "1899b52c9a747fc2c8fa8c9ec4ea42e42412962b008f4d25147dced7a576580f",
+      "bytes": 3032
+    },
+    {
+      "archive_member": "probes/fileops-1790430093986207893/cumulative-budget/isolation-probe/calls/fileops-v2-1790430099817600217-b246623d3c64.start.json",
+      "original_local_path": ".runtime/workflow-participants/probes/fileops-1790430093986207893/cumulative-budget/isolation-probe/calls/fileops-v2-1790430099817600217-b246623d3c64.start.json",
+      "sha256": "6b14ac5fb16356d395de9a8ae1abe26886b4716a72a9d7d1b2ea54a38a833987",
+      "bytes": 132688
+    },
+    {
+      "archive_member": "probes/fileops-1790430093986207893/cumulative-budget/isolation-probe/calls/fileops-v2-1790430100019261618-7a635143a9f8.finish.json",
+      "original_local_path": ".runtime/workflow-participants/probes/fileops-1790430093986207893/cumulative-budget/isolation-probe/calls/fileops-v2-1790430100019261618-7a635143a9f8.finish.json",
+      "sha256": "5040dca2e3d3fda5b55e7fefe8613ded205d882bc599ef9cbc62e5a7116ded4c",
+      "bytes": 3031
+    },
+    {
+      "archive_member": "probes/fileops-1790430093986207893/cumulative-budget/isolation-probe/calls/fileops-v2-1790430100019261618-7a635143a9f8.start.json",
+      "original_local_path": ".runtime/workflow-participants/probes/fileops-1790430093986207893/cumulative-budget/isolation-probe/calls/fileops-v2-1790430100019261618-7a635143a9f8.start.json",
+      "sha256": "66ea46483f11376711b411d3b1626c7564fa71555f24646a0de1bf97f23c5dbb",
+      "bytes": 132688
+    },
+    {
+      "archive_member": "probes/fileops-1790430093986207893/cumulative-budget/isolation-probe/calls/fileops-v2-1790430100209880807-56b1a8e367ad.finish.json",
+      "original_local_path": ".runtime/workflow-participants/probes/fileops-1790430093986207893/cumulative-budget/isolation-probe/calls/fileops-v2-1790430100209880807-56b1a8e367ad.finish.json",
+      "sha256": "96ece2129a63d83217dbad08bf49a867b8294208ec34c50187b584979c359e5b",
+      "bytes": 3032
+    },
+    {
+      "archive_member": "probes/fileops-1790430093986207893/cumulative-budget/isolation-probe/calls/fileops-v2-1790430100209880807-56b1a8e367ad.start.json",
+      "original_local_path": ".runtime/workflow-participants/probes/fileops-1790430093986207893/cumulative-budget/isolation-probe/calls/fileops-v2-1790430100209880807-56b1a8e367ad.start.json",
+      "sha256": "8568f94abdca6c1240331c82727ade1da2b3f36640e9874ba7c25f6d3cc54e9a",
+      "bytes": 132688
+    },
+    {
+      "archive_member": "probes/fileops-1790430093986207893/cumulative-budget/isolation-probe/calls/fileops-v2-1790430100409992934-eee5e4c341ea.finish.json",
+      "original_local_path": ".runtime/workflow-participants/probes/fileops-1790430093986207893/cumulative-budget/isolation-probe/calls/fileops-v2-1790430100409992934-eee5e4c341ea.finish.json",
+      "sha256": "d98ec5d8c94c715f7ca2421b0c5d8b7aec070b7c8a105e80d6eec1967091aa5a",
+      "bytes": 3031
+    },
+    {
+      "archive_member": "probes/fileops-1790430093986207893/cumulative-budget/isolation-probe/calls/fileops-v2-1790430100409992934-eee5e4c341ea.start.json",
+      "original_local_path": ".runtime/workflow-participants/probes/fileops-1790430093986207893/cumulative-budget/isolation-probe/calls/fileops-v2-1790430100409992934-eee5e4c341ea.start.json",
+      "sha256": "64f28b67a7c2a8fbd5b103fc7933d47b1f2c8335b688f31d4df95c1b706b6a25",
+      "bytes": 132688
+    },
+    {
+      "archive_member": "probes/fileops-1790430093986207893/cumulative-budget/isolation-probe/calls/fileops-v2-1790430100623567298-cdd6b3797ae6.finish.json",
+      "original_local_path": ".runtime/workflow-participants/probes/fileops-1790430093986207893/cumulative-budget/isolation-probe/calls/fileops-v2-1790430100623567298-cdd6b3797ae6.finish.json",
+      "sha256": "363ee6918d3dbee97577a71417090d3af2cf2b08b655adb1b4a01e5c1c7b5c1c",
+      "bytes": 3032
+    },
+    {
+      "archive_member": "probes/fileops-1790430093986207893/cumulative-budget/isolation-probe/calls/fileops-v2-1790430100623567298-cdd6b3797ae6.start.json",
+      "original_local_path": ".runtime/workflow-participants/probes/fileops-1790430093986207893/cumulative-budget/isolation-probe/calls/fileops-v2-1790430100623567298-cdd6b3797ae6.start.json",
+      "sha256": "617e93f4d2c8c64e20a49a67adc3c910d8779f174f069f8107c29740099939ce",
+      "bytes": 132688
+    },
+    {
+      "archive_member": "probes/fileops-1790430093986207893/cumulative-budget/isolation-probe/calls/fileops-v2-1790430100819958363-e65414c554cc.finish.json",
+      "original_local_path": ".runtime/workflow-participants/probes/fileops-1790430093986207893/cumulative-budget/isolation-probe/calls/fileops-v2-1790430100819958363-e65414c554cc.finish.json",
+      "sha256": "e25ca0e2e3f39e88148841531b766b833c1eb72ee6a9e4d9901fa5d122b62fdd",
+      "bytes": 220
+    },
+    {
+      "archive_member": "probes/fileops-1790430093986207893/cumulative-budget/isolation-probe/calls/fileops-v2-1790430100819958363-e65414c554cc.start.json",
+      "original_local_path": ".runtime/workflow-participants/probes/fileops-1790430093986207893/cumulative-budget/isolation-probe/calls/fileops-v2-1790430100819958363-e65414c554cc.start.json",
+      "sha256": "c1bf373b67188409c1eb63e757fa8da93bb1d2a5a2866f5ee03723a68eb31246",
+      "bytes": 442
+    },
+    {
+      "archive_member": "probes/fileops-1790430093986207893/cumulative-budget/isolation-probe/calls/fileops-v2-1790430100868634830-7c657ff4c72e.finish.json",
+      "original_local_path": ".runtime/workflow-participants/probes/fileops-1790430093986207893/cumulative-budget/isolation-probe/calls/fileops-v2-1790430100868634830-7c657ff4c72e.finish.json",
+      "sha256": "9de1d4de0be885fd1e5b396ef6d27ea2aee2fc4dc6bb8c152c2e60bf949f9e5f",
+      "bytes": 3049
+    },
+    {
+      "archive_member": "probes/fileops-1790430093986207893/cumulative-budget/isolation-probe/calls/fileops-v2-1790430100868634830-7c657ff4c72e.start.json",
+      "original_local_path": ".runtime/workflow-participants/probes/fileops-1790430093986207893/cumulative-budget/isolation-probe/calls/fileops-v2-1790430100868634830-7c657ff4c72e.start.json",
+      "sha256": "1ce11fb0a4903ed38a9cd05dfbdc0a027964558abf19aa3f16b4f13364e0ab85",
+      "bytes": 1591
+    },
+    {
+      "archive_member": "probes/fileops-1790430093986207893/cumulative-budget/isolation-probe/calls/fileops-v2-1790430101061098526-9485599eee9e.finish.json",
+      "original_local_path": ".runtime/workflow-participants/probes/fileops-1790430093986207893/cumulative-budget/isolation-probe/calls/fileops-v2-1790430101061098526-9485599eee9e.finish.json",
+      "sha256": "e25ca0e2e3f39e88148841531b766b833c1eb72ee6a9e4d9901fa5d122b62fdd",
+      "bytes": 220
+    },
+    {
+      "archive_member": "probes/fileops-1790430093986207893/cumulative-budget/isolation-probe/calls/fileops-v2-1790430101061098526-9485599eee9e.start.json",
+      "original_local_path": ".runtime/workflow-participants/probes/fileops-1790430093986207893/cumulative-budget/isolation-probe/calls/fileops-v2-1790430101061098526-9485599eee9e.start.json",
+      "sha256": "9ca165f0e41cbaaf4ee904779fa22fa3afa88b14332ab519dfd59f87f72154f3",
+      "bytes": 442
+    },
+    {
+      "archive_member": "probes/fileops-1790430093986207893/summary.json",
+      "original_local_path": ".runtime/workflow-participants/probes/fileops-1790430093986207893/summary.json",
+      "sha256": "4a866318f1f14ec626ac60794dd1839a4fd75c96ac690513c9bbc16dd2a72a25",
+      "bytes": 87244
+    },
+    {
+      "archive_member": "probes/fileops-1790430580026945460/admission-refusal/isolation-probe/calls/fileops-v2-1790430585749996080-76384312e0b3.finish.json",
+      "original_local_path": ".runtime/workflow-participants/probes/fileops-1790430580026945460/admission-refusal/isolation-probe/calls/fileops-v2-1790430585749996080-76384312e0b3.finish.json",
+      "sha256": "d41419ca85c968508c03317dd64f439ff913fcc13de18ad9e705194a9fa85cbd",
+      "bytes": 1560
+    },
+    {
+      "archive_member": "probes/fileops-1790430580026945460/admission-refusal/isolation-probe/calls/fileops-v2-1790430585749996080-76384312e0b3.start.json",
+      "original_local_path": ".runtime/workflow-participants/probes/fileops-1790430580026945460/admission-refusal/isolation-probe/calls/fileops-v2-1790430585749996080-76384312e0b3.start.json",
+      "sha256": "168daba6ee1a30f4defc03892c409802f9539f647f45d02cbe70ec768a4dcaba",
+      "bytes": 1472
+    },
+    {
+      "archive_member": "probes/fileops-1790430580026945460/basic/isolation-probe/calls/fileops-v2-1790430580053372367-1cbd26624ee2.finish.json",
+      "original_local_path": ".runtime/workflow-participants/probes/fileops-1790430580026945460/basic/isolation-probe/calls/fileops-v2-1790430580053372367-1cbd26624ee2.finish.json",
+      "sha256": "8f0d259aefe68c7f30658bc4b90641c021da0ac253f50dfeeb47d1b4ca223089",
+      "bytes": 3082
+    },
+    {
+      "archive_member": "probes/fileops-1790430580026945460/basic/isolation-probe/calls/fileops-v2-1790430580053372367-1cbd26624ee2.start.json",
+      "original_local_path": ".runtime/workflow-participants/probes/fileops-1790430580026945460/basic/isolation-probe/calls/fileops-v2-1790430580053372367-1cbd26624ee2.start.json",
+      "sha256": "82ba38cc665ccc4ec31019031d9d172cbe3ffe3f88a22610a1f267fd2b36812d",
+      "bytes": 1450
+    },
+    {
+      "archive_member": "probes/fileops-1790430580026945460/basic/isolation-probe/calls/fileops-v2-1790430580240064084-629a34f81bef.finish.json",
+      "original_local_path": ".runtime/workflow-participants/probes/fileops-1790430580026945460/basic/isolation-probe/calls/fileops-v2-1790430580240064084-629a34f81bef.finish.json",
+      "sha256": "c07f799e7cda85a12d038786c3f304e3f13d04bac511b06c607cf8a23006021e",
+      "bytes": 3082
+    },
+    {
+      "archive_member": "probes/fileops-1790430580026945460/basic/isolation-probe/calls/fileops-v2-1790430580240064084-629a34f81bef.start.json",
+      "original_local_path": ".runtime/workflow-participants/probes/fileops-1790430580026945460/basic/isolation-probe/calls/fileops-v2-1790430580240064084-629a34f81bef.start.json",
+      "sha256": "8ab95340d15e64f72969ce1e506604075f2ed5eec62d5edfd63a289178a2c277",
+      "bytes": 1474
+    },
+    {
+      "archive_member": "probes/fileops-1790430580026945460/basic/isolation-probe/calls/fileops-v2-1790430580424604667-de6c33c23457.finish.json",
+      "original_local_path": ".runtime/workflow-participants/probes/fileops-1790430580026945460/basic/isolation-probe/calls/fileops-v2-1790430580424604667-de6c33c23457.finish.json",
+      "sha256": "3518e4aab26f3aba06f1716b66d465c09294e84e2dddb7c3d990a90b669577f5",
+      "bytes": 3029
+    },
+    {
+      "archive_member": "probes/fileops-1790430580026945460/basic/isolation-probe/calls/fileops-v2-1790430580424604667-de6c33c23457.start.json",
+      "original_local_path": ".runtime/workflow-participants/probes/fileops-1790430580026945460/basic/isolation-probe/calls/fileops-v2-1790430580424604667-de6c33c23457.start.json",
+      "sha256": "c19b0ddb204715a265ce3861303c5380e5d76548dfc8e5cec02ac5d402895316",
+      "bytes": 1474
+    },
+    {
+      "archive_member": "probes/fileops-1790430580026945460/basic/isolation-probe/calls/fileops-v2-1790430580596715593-df07ded6ab3d.finish.json",
+      "original_local_path": ".runtime/workflow-participants/probes/fileops-1790430580026945460/basic/isolation-probe/calls/fileops-v2-1790430580596715593-df07ded6ab3d.finish.json",
+      "sha256": "856ef5cdf429016973a6f9f156c86a920e04fd3d3328460292d13df9d44f2229",
+      "bytes": 3223
+    },
+    {
+      "archive_member": "probes/fileops-1790430580026945460/basic/isolation-probe/calls/fileops-v2-1790430580596715593-df07ded6ab3d.start.json",
+      "original_local_path": ".runtime/workflow-participants/probes/fileops-1790430580026945460/basic/isolation-probe/calls/fileops-v2-1790430580596715593-df07ded6ab3d.start.json",
+      "sha256": "29a3963ff73e3d752e9baeeaa6aba52d0ce80271d703b4bc9df17d3b05c1ffe9",
+      "bytes": 1555
+    },
+    {
+      "archive_member": "probes/fileops-1790430580026945460/basic/isolation-probe/calls/fileops-v2-1790430580798789793-a4af3b41ac09.finish.json",
+      "original_local_path": ".runtime/workflow-participants/probes/fileops-1790430580026945460/basic/isolation-probe/calls/fileops-v2-1790430580798789793-a4af3b41ac09.finish.json",
+      "sha256": "0cc8f2ae90fb3554d1f2392a324fbda479cf4b6a654d85ef3d25263a6081265c",
+      "bytes": 3414
+    },
+    {
+      "archive_member": "probes/fileops-1790430580026945460/basic/isolation-probe/calls/fileops-v2-1790430580798789793-a4af3b41ac09.start.json",
+      "original_local_path": ".runtime/workflow-participants/probes/fileops-1790430580026945460/basic/isolation-probe/calls/fileops-v2-1790430580798789793-a4af3b41ac09.start.json",
+      "sha256": "85256757508df6cda7cd1b64a3fd9b15090315cbac68ad0fd67a2f829bed801c",
+      "bytes": 1676
+    },
+    {
+      "archive_member": "probes/fileops-1790430580026945460/basic/isolation-probe/calls/fileops-v2-1790430580996113261-94e29d4ad800.finish.json",
+      "original_local_path": ".runtime/workflow-participants/probes/fileops-1790430580026945460/basic/isolation-probe/calls/fileops-v2-1790430580996113261-94e29d4ad800.finish.json",
+      "sha256": "94d719d78896972b04a92dc7b11b978cb93474010f0d6d64a3f306c808a20656",
+      "bytes": 3415
+    },
+    {
+      "archive_member": "probes/fileops-1790430580026945460/basic/isolation-probe/calls/fileops-v2-1790430580996113261-94e29d4ad800.start.json",
+      "original_local_path": ".runtime/workflow-participants/probes/fileops-1790430580026945460/basic/isolation-probe/calls/fileops-v2-1790430580996113261-94e29d4ad800.start.json",
+      "sha256": "9b0c5b757df6e041de6f2f216a341eb97374dec91a1744b7d47fdd2487ce594b",
+      "bytes": 1880
+    },
+    {
+      "archive_member": "probes/fileops-1790430580026945460/basic/isolation-probe/calls/fileops-v2-1790430581197201970-05a1c2dda583.finish.json",
+      "original_local_path": ".runtime/workflow-participants/probes/fileops-1790430580026945460/basic/isolation-probe/calls/fileops-v2-1790430581197201970-05a1c2dda583.finish.json",
+      "sha256": "969edda4687d0258e61d99071b0ccad0a90ab4226d676e92ddaf458dae4eb813",
+      "bytes": 3291
+    },
+    {
+      "archive_member": "probes/fileops-1790430580026945460/basic/isolation-probe/calls/fileops-v2-1790430581197201970-05a1c2dda583.start.json",
+      "original_local_path": ".runtime/workflow-participants/probes/fileops-1790430580026945460/basic/isolation-probe/calls/fileops-v2-1790430581197201970-05a1c2dda583.start.json",
+      "sha256": "3cb9bb29cb9998ab36439285e0ad0eb24f35f9490171561eaa456d7a9d6d0e73",
+      "bytes": 1832
+    },
+    {
+      "archive_member": "probes/fileops-1790430580026945460/basic/isolation-probe/calls/fileops-v2-1790430581398942316-ed5b4f3f94fd.finish.json",
+      "original_local_path": ".runtime/workflow-participants/probes/fileops-1790430580026945460/basic/isolation-probe/calls/fileops-v2-1790430581398942316-ed5b4f3f94fd.finish.json",
+      "sha256": "2b29e9ee3aafa3e9ee27d15a39df587387794ffa19fa4fcdfdf53b2719df872e",
+      "bytes": 2714
+    },
+    {
+      "archive_member": "probes/fileops-1790430580026945460/basic/isolation-probe/calls/fileops-v2-1790430581398942316-ed5b4f3f94fd.start.json",
+      "original_local_path": ".runtime/workflow-participants/probes/fileops-1790430580026945460/basic/isolation-probe/calls/fileops-v2-1790430581398942316-ed5b4f3f94fd.start.json",
+      "sha256": "33948087d5334f1eb10c219333735348477e165db037a74f1ab183652b90eeb4",
+      "bytes": 1718
+    },
+    {
+      "archive_member": "probes/fileops-1790430580026945460/basic/isolation-probe/calls/fileops-v2-1790430581612720685-82a796cad8cc.finish.json",
+      "original_local_path": ".runtime/workflow-participants/probes/fileops-1790430580026945460/basic/isolation-probe/calls/fileops-v2-1790430581612720685-82a796cad8cc.finish.json",
+      "sha256": "58a52345baa7797d9fba4988c714d234071b12c852543c44afcdfa97b3562213",
+      "bytes": 217
+    },
+    {
+      "archive_member": "probes/fileops-1790430580026945460/basic/isolation-probe/calls/fileops-v2-1790430581612720685-82a796cad8cc.start.json",
+      "original_local_path": ".runtime/workflow-participants/probes/fileops-1790430580026945460/basic/isolation-probe/calls/fileops-v2-1790430581612720685-82a796cad8cc.start.json",
+      "sha256": "9d06735b4ce39cd073212d2e6101c1a02bc91f82ce71f6eca43ccba0e7f580ea",
+      "bytes": 411
+    },
+    {
+      "archive_member": "probes/fileops-1790430580026945460/basic/isolation-probe/calls/fileops-v2-1790430581667968165-ffe53246c55f.finish.json",
+      "original_local_path": ".runtime/workflow-participants/probes/fileops-1790430580026945460/basic/isolation-probe/calls/fileops-v2-1790430581667968165-ffe53246c55f.finish.json",
+      "sha256": "cf195d5eb6b41632146dbcc7cf2d62f52b61c8b7636097602e3f53fb891fd243",
+      "bytes": 228
+    },
+    {
+      "archive_member": "probes/fileops-1790430580026945460/basic/isolation-probe/calls/fileops-v2-1790430581667968165-ffe53246c55f.start.json",
+      "original_local_path": ".runtime/workflow-participants/probes/fileops-1790430580026945460/basic/isolation-probe/calls/fileops-v2-1790430581667968165-ffe53246c55f.start.json",
+      "sha256": "15abfbcf25ce9d7e0c5a594d187f472468a512a3a32853ae17290142086980ca",
+      "bytes": 437
+    },
+    {
+      "archive_member": "probes/fileops-1790430580026945460/basic/isolation-probe/calls/fileops-v2-1790430581722905011-1a68de00f050.finish.json",
+      "original_local_path": ".runtime/workflow-participants/probes/fileops-1790430580026945460/basic/isolation-probe/calls/fileops-v2-1790430581722905011-1a68de00f050.finish.json",
+      "sha256": "cf195d5eb6b41632146dbcc7cf2d62f52b61c8b7636097602e3f53fb891fd243",
+      "bytes": 228
+    },
+    {
+      "archive_member": "probes/fileops-1790430580026945460/basic/isolation-probe/calls/fileops-v2-1790430581722905011-1a68de00f050.start.json",
+      "original_local_path": ".runtime/workflow-participants/probes/fileops-1790430580026945460/basic/isolation-probe/calls/fileops-v2-1790430581722905011-1a68de00f050.start.json",
+      "sha256": "cc066186fe715028450aa750d935199482d0b85e40fb49a91b31ca5163d76430",
+      "bytes": 443
+    },
+    {
+      "archive_member": "probes/fileops-1790430580026945460/basic/isolation-probe/calls/fileops-v2-1790430581768018632-3bb30b015013.finish.json",
+      "original_local_path": ".runtime/workflow-participants/probes/fileops-1790430580026945460/basic/isolation-probe/calls/fileops-v2-1790430581768018632-3bb30b015013.finish.json",
+      "sha256": "58a52345baa7797d9fba4988c714d234071b12c852543c44afcdfa97b3562213",
+      "bytes": 217
+    },
+    {
+      "archive_member": "probes/fileops-1790430580026945460/basic/isolation-probe/calls/fileops-v2-1790430581768018632-3bb30b015013.start.json",
+      "original_local_path": ".runtime/workflow-participants/probes/fileops-1790430580026945460/basic/isolation-probe/calls/fileops-v2-1790430581768018632-3bb30b015013.start.json",
+      "sha256": "69b0cb055ca13b67ae0fce03ab59376f6446a4952a007053683ed59511bc867c",
+      "bytes": 459
+    },
+    {
+      "archive_member": "probes/fileops-1790430580026945460/basic/isolation-probe/calls/fileops-v2-1790430581814778330-8e09dc73eb47.finish.json",
+      "original_local_path": ".runtime/workflow-participants/probes/fileops-1790430580026945460/basic/isolation-probe/calls/fileops-v2-1790430581814778330-8e09dc73eb47.finish.json",
+      "sha256": "f6aed40b7d58bd33785a87e9c16a3916bd37c597292a65f8a3ccbb3061c2a246",
+      "bytes": 236
+    },
+    {
+      "archive_member": "probes/fileops-1790430580026945460/basic/isolation-probe/calls/fileops-v2-1790430581814778330-8e09dc73eb47.start.json",
+      "original_local_path": ".runtime/workflow-participants/probes/fileops-1790430580026945460/basic/isolation-probe/calls/fileops-v2-1790430581814778330-8e09dc73eb47.start.json",
+      "sha256": "08d06edb5d4f816fa93d52733e891b4d3e80e55c87b40bdfaa3ed7cbe1aa9a02",
+      "bytes": 131493
+    },
+    {
+      "archive_member": "probes/fileops-1790430580026945460/basic/isolation-probe/calls/fileops-v2-1790430581868255400-d7d2fb45fe48.finish.json",
+      "original_local_path": ".runtime/workflow-participants/probes/fileops-1790430580026945460/basic/isolation-probe/calls/fileops-v2-1790430581868255400-d7d2fb45fe48.finish.json",
+      "sha256": "f6aed40b7d58bd33785a87e9c16a3916bd37c597292a65f8a3ccbb3061c2a246",
+      "bytes": 236
+    },
+    {
+      "archive_member": "probes/fileops-1790430580026945460/basic/isolation-probe/calls/fileops-v2-1790430581868255400-d7d2fb45fe48.start.json",
+      "original_local_path": ".runtime/workflow-participants/probes/fileops-1790430580026945460/basic/isolation-probe/calls/fileops-v2-1790430581868255400-d7d2fb45fe48.start.json",
+      "sha256": "39c8a9bf02797343b1f670829d2f6e075cf9629b657e364d071fb505ad21b2d6",
+      "bytes": 435
+    },
+    {
+      "archive_member": "probes/fileops-1790430580026945460/basic/isolation-probe/calls/fileops-v2-1790430581912531895-bf139b238e1c.finish.json",
+      "original_local_path": ".runtime/workflow-participants/probes/fileops-1790430580026945460/basic/isolation-probe/calls/fileops-v2-1790430581912531895-bf139b238e1c.finish.json",
+      "sha256": "f6aed40b7d58bd33785a87e9c16a3916bd37c597292a65f8a3ccbb3061c2a246",
+      "bytes": 236
+    },
+    {
+      "archive_member": "probes/fileops-1790430580026945460/basic/isolation-probe/calls/fileops-v2-1790430581912531895-bf139b238e1c.start.json",
+      "original_local_path": ".runtime/workflow-participants/probes/fileops-1790430580026945460/basic/isolation-probe/calls/fileops-v2-1790430581912531895-bf139b238e1c.start.json",
+      "sha256": "d37712e6c6fe7061b2e87e6393fbec219597ee60e1f331f77d19403d41ce6240",
+      "bytes": 431
+    },
+    {
+      "archive_member": "probes/fileops-1790430580026945460/basic/isolation-probe/calls/fileops-v2-1790430581958076499-d6a6c4a7558a.finish.json",
+      "original_local_path": ".runtime/workflow-participants/probes/fileops-1790430580026945460/basic/isolation-probe/calls/fileops-v2-1790430581958076499-d6a6c4a7558a.finish.json",
+      "sha256": "cf195d5eb6b41632146dbcc7cf2d62f52b61c8b7636097602e3f53fb891fd243",
+      "bytes": 228
+    },
+    {
+      "archive_member": "probes/fileops-1790430580026945460/basic/isolation-probe/calls/fileops-v2-1790430581958076499-d6a6c4a7558a.start.json",
+      "original_local_path": ".runtime/workflow-participants/probes/fileops-1790430580026945460/basic/isolation-probe/calls/fileops-v2-1790430581958076499-d6a6c4a7558a.start.json",
+      "sha256": "32e264f36635930a4453e8b319079c756ce9a2d16a8ea7162cebbde307665ad0",
+      "bytes": 481
+    },
+    {
+      "archive_member": "probes/fileops-1790430580026945460/basic/isolation-probe/calls/fileops-v2-1790430582007839431-0d8e0f16d6b3.finish.json",
+      "original_local_path": ".runtime/workflow-participants/probes/fileops-1790430580026945460/basic/isolation-probe/calls/fileops-v2-1790430582007839431-0d8e0f16d6b3.finish.json",
+      "sha256": "e6b9b53e0ecdcc2ccb98beaf908c10e0c478a2d8d7907abe5e2d781afc70707a",
+      "bytes": 223
+    },
+    {
+      "archive_member": "probes/fileops-1790430580026945460/basic/isolation-probe/calls/fileops-v2-1790430582007839431-0d8e0f16d6b3.start.json",
+      "original_local_path": ".runtime/workflow-participants/probes/fileops-1790430580026945460/basic/isolation-probe/calls/fileops-v2-1790430582007839431-0d8e0f16d6b3.start.json",
+      "sha256": "e225e06f574da35e6068205bc2009b3cf56f98296a513c028217a92d2d2598b1",
+      "bytes": 445
+    },
+    {
+      "archive_member": "probes/fileops-1790430580026945460/basic/isolation-probe/calls/fileops-v2-1790430582051692107-78a5a96f167c.finish.json",
+      "original_local_path": ".runtime/workflow-participants/probes/fileops-1790430580026945460/basic/isolation-probe/calls/fileops-v2-1790430582051692107-78a5a96f167c.finish.json",
+      "sha256": "e6b9b53e0ecdcc2ccb98beaf908c10e0c478a2d8d7907abe5e2d781afc70707a",
+      "bytes": 223
+    },
+    {
+      "archive_member": "probes/fileops-1790430580026945460/basic/isolation-probe/calls/fileops-v2-1790430582051692107-78a5a96f167c.start.json",
+      "original_local_path": ".runtime/workflow-participants/probes/fileops-1790430580026945460/basic/isolation-probe/calls/fileops-v2-1790430582051692107-78a5a96f167c.start.json",
+      "sha256": "67e0a0a33e77b14ba5497ec57a1788077547bab2a7fdd6e3d9bdcf6b9a36d19c",
+      "bytes": 445
+    },
+    {
+      "archive_member": "probes/fileops-1790430580026945460/basic/isolation-probe/calls/fileops-v2-1790430582099117156-4d82b7d85b68.finish.json",
+      "original_local_path": ".runtime/workflow-participants/probes/fileops-1790430580026945460/basic/isolation-probe/calls/fileops-v2-1790430582099117156-4d82b7d85b68.finish.json",
+      "sha256": "e6b9b53e0ecdcc2ccb98beaf908c10e0c478a2d8d7907abe5e2d781afc70707a",
+      "bytes": 223
+    },
+    {
+      "archive_member": "probes/fileops-1790430580026945460/basic/isolation-probe/calls/fileops-v2-1790430582099117156-4d82b7d85b68.start.json",
+      "original_local_path": ".runtime/workflow-participants/probes/fileops-1790430580026945460/basic/isolation-probe/calls/fileops-v2-1790430582099117156-4d82b7d85b68.start.json",
+      "sha256": "9373e497a8f794f362e98693048adaa83f80e7e2fdbbe1c2d1dea8c5c047c784",
+      "bytes": 445
+    },
+    {
+      "archive_member": "probes/fileops-1790430580026945460/cleanup-refusal/isolation-probe/calls/fileops-v2-1790430585939638553-10c78cb9dd6d.finish.json",
+      "original_local_path": ".runtime/workflow-participants/probes/fileops-1790430580026945460/cleanup-refusal/isolation-probe/calls/fileops-v2-1790430585939638553-10c78cb9dd6d.finish.json",
+      "sha256": "4200a2f42b3d15fd8263ab08c6ec29ef051f44deb98af269a8536b4e00dfc3fb",
+      "bytes": 2975
+    },
+    {
+      "archive_member": "probes/fileops-1790430580026945460/cleanup-refusal/isolation-probe/calls/fileops-v2-1790430585939638553-10c78cb9dd6d.start.json",
+      "original_local_path": ".runtime/workflow-participants/probes/fileops-1790430580026945460/cleanup-refusal/isolation-probe/calls/fileops-v2-1790430585939638553-10c78cb9dd6d.start.json",
+      "sha256": "fb38cec987595488c59a4a7af37bdf22a379c10db7b32e4c3a0a3abdf1fc99f5",
+      "bytes": 1474
+    },
+    {
+      "archive_member": "probes/fileops-1790430580026945460/cumulative-budget/isolation-probe/calls/fileops-v2-1790430582142018093-ffa0689bd6ae.finish.json",
+      "original_local_path": ".runtime/workflow-participants/probes/fileops-1790430580026945460/cumulative-budget/isolation-probe/calls/fileops-v2-1790430582142018093-ffa0689bd6ae.finish.json",
+      "sha256": "76efe9e798d351335842478e1880fa6720e4f83fde8a62b18e4277ba980017e4",
+      "bytes": 3174
+    },
+    {
+      "archive_member": "probes/fileops-1790430580026945460/cumulative-budget/isolation-probe/calls/fileops-v2-1790430582142018093-ffa0689bd6ae.start.json",
+      "original_local_path": ".runtime/workflow-participants/probes/fileops-1790430580026945460/cumulative-budget/isolation-probe/calls/fileops-v2-1790430582142018093-ffa0689bd6ae.start.json",
+      "sha256": "730265421e821c51d8cb3a1cecb5c925179e67179f91001dee119511b117b891",
+      "bytes": 132540
+    },
+    {
+      "archive_member": "probes/fileops-1790430580026945460/cumulative-budget/isolation-probe/calls/fileops-v2-1790430582391880018-3d44213c7895.finish.json",
+      "original_local_path": ".runtime/workflow-participants/probes/fileops-1790430580026945460/cumulative-budget/isolation-probe/calls/fileops-v2-1790430582391880018-3d44213c7895.finish.json",
+      "sha256": "e6464317938d66fae7a850cad76656119245336195c2dbeeb8edb6677dec587f",
+      "bytes": 3175
+    },
+    {
+      "archive_member": "probes/fileops-1790430580026945460/cumulative-budget/isolation-probe/calls/fileops-v2-1790430582391880018-3d44213c7895.start.json",
+      "original_local_path": ".runtime/workflow-participants/probes/fileops-1790430580026945460/cumulative-budget/isolation-probe/calls/fileops-v2-1790430582391880018-3d44213c7895.start.json",
+      "sha256": "a1e3771e8a36656e7453ecb6a40c991d2377cd23622f0205bb1fd1eae1cb11ed",
+      "bytes": 132687
+    },
+    {
+      "archive_member": "probes/fileops-1790430580026945460/cumulative-budget/isolation-probe/calls/fileops-v2-1790430582595724971-f2207643e9f7.finish.json",
+      "original_local_path": ".runtime/workflow-participants/probes/fileops-1790430580026945460/cumulative-budget/isolation-probe/calls/fileops-v2-1790430582595724971-f2207643e9f7.finish.json",
+      "sha256": "525d262f7bdafc653e8ce456b7f475751a4f34097c818b5bba3b954789238f0b",
+      "bytes": 3174
+    },
+    {
+      "archive_member": "probes/fileops-1790430580026945460/cumulative-budget/isolation-probe/calls/fileops-v2-1790430582595724971-f2207643e9f7.start.json",
+      "original_local_path": ".runtime/workflow-participants/probes/fileops-1790430580026945460/cumulative-budget/isolation-probe/calls/fileops-v2-1790430582595724971-f2207643e9f7.start.json",
+      "sha256": "40fec63bded2b613983ec97009e738734ad2764fee1c641aceafdd242965031b",
+      "bytes": 132688
+    },
+    {
+      "archive_member": "probes/fileops-1790430580026945460/cumulative-budget/isolation-probe/calls/fileops-v2-1790430582793373347-f630b8c781b5.finish.json",
+      "original_local_path": ".runtime/workflow-participants/probes/fileops-1790430580026945460/cumulative-budget/isolation-probe/calls/fileops-v2-1790430582793373347-f630b8c781b5.finish.json",
+      "sha256": "8c9b353aeff7fe821a8cb653db5cbd72ec3a7e86b23b6804f0731d2cf5c8ccf5",
+      "bytes": 3175
+    },
+    {
+      "archive_member": "probes/fileops-1790430580026945460/cumulative-budget/isolation-probe/calls/fileops-v2-1790430582793373347-f630b8c781b5.start.json",
+      "original_local_path": ".runtime/workflow-participants/probes/fileops-1790430580026945460/cumulative-budget/isolation-probe/calls/fileops-v2-1790430582793373347-f630b8c781b5.start.json",
+      "sha256": "8e567d0cfb1d5eb0c1966e362397a3be973f7e177f4ae9d4494940a65f089d66",
+      "bytes": 132688
+    },
+    {
+      "archive_member": "probes/fileops-1790430580026945460/cumulative-budget/isolation-probe/calls/fileops-v2-1790430582987565854-36005fd3fae0.finish.json",
+      "original_local_path": ".runtime/workflow-participants/probes/fileops-1790430580026945460/cumulative-budget/isolation-probe/calls/fileops-v2-1790430582987565854-36005fd3fae0.finish.json",
+      "sha256": "13435cc038a8dfa56fbc4fb31d6d361a50a2508329513266cd7977505cf18ded",
+      "bytes": 3175
+    },
+    {
+      "archive_member": "probes/fileops-1790430580026945460/cumulative-budget/isolation-probe/calls/fileops-v2-1790430582987565854-36005fd3fae0.start.json",
+      "original_local_path": ".runtime/workflow-participants/probes/fileops-1790430580026945460/cumulative-budget/isolation-probe/calls/fileops-v2-1790430582987565854-36005fd3fae0.start.json",
+      "sha256": "e285ffafa454e7843cacde1d737850712893c87a02569c9a2a27b5612850ac9a",
+      "bytes": 132688
+    },
+    {
+      "archive_member": "probes/fileops-1790430580026945460/cumulative-budget/isolation-probe/calls/fileops-v2-1790430583188017904-473a277f03bc.finish.json",
+      "original_local_path": ".runtime/workflow-participants/probes/fileops-1790430580026945460/cumulative-budget/isolation-probe/calls/fileops-v2-1790430583188017904-473a277f03bc.finish.json",
+      "sha256": "cad8248449b7a339acd4d8a13e89d5807cc809a8f3693708f9f183b88a68dd9f",
+      "bytes": 3175
+    },
+    {
+      "archive_member": "probes/fileops-1790430580026945460/cumulative-budget/isolation-probe/calls/fileops-v2-1790430583188017904-473a277f03bc.start.json",
+      "original_local_path": ".runtime/workflow-participants/probes/fileops-1790430580026945460/cumulative-budget/isolation-probe/calls/fileops-v2-1790430583188017904-473a277f03bc.start.json",
+      "sha256": "9d4371290e8a6c840f2e865080fa57224947f18c3d5a2ac0b2eb5500e6902c82",
+      "bytes": 132688
+    },
+    {
+      "archive_member": "probes/fileops-1790430580026945460/cumulative-budget/isolation-probe/calls/fileops-v2-1790430583398702533-6be0b6783b21.finish.json",
+      "original_local_path": ".runtime/workflow-participants/probes/fileops-1790430580026945460/cumulative-budget/isolation-probe/calls/fileops-v2-1790430583398702533-6be0b6783b21.finish.json",
+      "sha256": "a56602c6356372a49a5b151b1e85478c4d8cd6eac88370421c0edc0b867a8964",
+      "bytes": 3175
+    },
+    {
+      "archive_member": "probes/fileops-1790430580026945460/cumulative-budget/isolation-probe/calls/fileops-v2-1790430583398702533-6be0b6783b21.start.json",
+      "original_local_path": ".runtime/workflow-participants/probes/fileops-1790430580026945460/cumulative-budget/isolation-probe/calls/fileops-v2-1790430583398702533-6be0b6783b21.start.json",
+      "sha256": "7d8a6f0652c1cd67b6bc73617b6fa99f56053412084be4528eb348e98352a304",
+      "bytes": 132688
+    },
+    {
+      "archive_member": "probes/fileops-1790430580026945460/cumulative-budget/isolation-probe/calls/fileops-v2-1790430583585262797-19ce0b4a720f.finish.json",
+      "original_local_path": ".runtime/workflow-participants/probes/fileops-1790430580026945460/cumulative-budget/isolation-probe/calls/fileops-v2-1790430583585262797-19ce0b4a720f.finish.json",
+      "sha256": "44f5ab4e5b295cd5b628dce35e7ded9d4988a48fb49d762bb3179462e1fb73e2",
+      "bytes": 3175
+    },
+    {
+      "archive_member": "probes/fileops-1790430580026945460/cumulative-budget/isolation-probe/calls/fileops-v2-1790430583585262797-19ce0b4a720f.start.json",
+      "original_local_path": ".runtime/workflow-participants/probes/fileops-1790430580026945460/cumulative-budget/isolation-probe/calls/fileops-v2-1790430583585262797-19ce0b4a720f.start.json",
+      "sha256": "bf5d47d89a05d0706238a9b80b9985f94bdc37bd5e2cf1bab66962c67999d408",
+      "bytes": 132688
+    },
+    {
+      "archive_member": "probes/fileops-1790430580026945460/cumulative-budget/isolation-probe/calls/fileops-v2-1790430583785712826-820a0e655f28.finish.json",
+      "original_local_path": ".runtime/workflow-participants/probes/fileops-1790430580026945460/cumulative-budget/isolation-probe/calls/fileops-v2-1790430583785712826-820a0e655f28.finish.json",
+      "sha256": "be57580fb8b64d8437a3d47aa8e2e24fe0becea99311285737530c9f0d0112b3",
+      "bytes": 3175
+    },
+    {
+      "archive_member": "probes/fileops-1790430580026945460/cumulative-budget/isolation-probe/calls/fileops-v2-1790430583785712826-820a0e655f28.start.json",
+      "original_local_path": ".runtime/workflow-participants/probes/fileops-1790430580026945460/cumulative-budget/isolation-probe/calls/fileops-v2-1790430583785712826-820a0e655f28.start.json",
+      "sha256": "5b1ec7fd07f875ec344e74d9c032f12f3f772988f115c493a7753d28d77d47bb",
+      "bytes": 132688
+    },
+    {
+      "archive_member": "probes/fileops-1790430580026945460/cumulative-budget/isolation-probe/calls/fileops-v2-1790430583979715063-4235a7e30948.finish.json",
+      "original_local_path": ".runtime/workflow-participants/probes/fileops-1790430580026945460/cumulative-budget/isolation-probe/calls/fileops-v2-1790430583979715063-4235a7e30948.finish.json",
+      "sha256": "b2333e81608f68e1cf1f349c5fc2acf172e1b313169224a545af06b948034485",
+      "bytes": 3175
+    },
+    {
+      "archive_member": "probes/fileops-1790430580026945460/cumulative-budget/isolation-probe/calls/fileops-v2-1790430583979715063-4235a7e30948.start.json",
+      "original_local_path": ".runtime/workflow-participants/probes/fileops-1790430580026945460/cumulative-budget/isolation-probe/calls/fileops-v2-1790430583979715063-4235a7e30948.start.json",
+      "sha256": "fe54930004be989a6d2c81ecdac4c1f9252a28c4a7b5e9dad8c7298b2f199a26",
+      "bytes": 132688
+    },
+    {
+      "archive_member": "probes/fileops-1790430580026945460/cumulative-budget/isolation-probe/calls/fileops-v2-1790430584184044491-938605f31b62.finish.json",
+      "original_local_path": ".runtime/workflow-participants/probes/fileops-1790430580026945460/cumulative-budget/isolation-probe/calls/fileops-v2-1790430584184044491-938605f31b62.finish.json",
+      "sha256": "52bb519bfaf40a3f28e8f17edcc068471c51319364d19f87d9436a65077a91db",
+      "bytes": 3175
+    },
+    {
+      "archive_member": "probes/fileops-1790430580026945460/cumulative-budget/isolation-probe/calls/fileops-v2-1790430584184044491-938605f31b62.start.json",
+      "original_local_path": ".runtime/workflow-participants/probes/fileops-1790430580026945460/cumulative-budget/isolation-probe/calls/fileops-v2-1790430584184044491-938605f31b62.start.json",
+      "sha256": "f61993ab52ea22f9978d1429abf503aab4736ea150d7c3e2bf327272b048db6a",
+      "bytes": 132688
+    },
+    {
+      "archive_member": "probes/fileops-1790430580026945460/cumulative-budget/isolation-probe/calls/fileops-v2-1790430584392692281-8113820b8185.finish.json",
+      "original_local_path": ".runtime/workflow-participants/probes/fileops-1790430580026945460/cumulative-budget/isolation-probe/calls/fileops-v2-1790430584392692281-8113820b8185.finish.json",
+      "sha256": "7183e95b6c3f593a9d4f911e671897f4d1291dc883c609181a00d8b82c372c9c",
+      "bytes": 3174
+    },
+    {
+      "archive_member": "probes/fileops-1790430580026945460/cumulative-budget/isolation-probe/calls/fileops-v2-1790430584392692281-8113820b8185.start.json",
+      "original_local_path": ".runtime/workflow-participants/probes/fileops-1790430580026945460/cumulative-budget/isolation-probe/calls/fileops-v2-1790430584392692281-8113820b8185.start.json",
+      "sha256": "f94a706d3e21492ed33500d1493a08d5916f190e568fc5adaa5f19f1ddd8b1cb",
+      "bytes": 132688
+    },
+    {
+      "archive_member": "probes/fileops-1790430580026945460/cumulative-budget/isolation-probe/calls/fileops-v2-1790430584619162516-be536ed6efd0.finish.json",
+      "original_local_path": ".runtime/workflow-participants/probes/fileops-1790430580026945460/cumulative-budget/isolation-probe/calls/fileops-v2-1790430584619162516-be536ed6efd0.finish.json",
+      "sha256": "182994f3a2f2d9287c6cde4a120fead6711ed36f5c4286873ae717a8b8e11e72",
+      "bytes": 3175
+    },
+    {
+      "archive_member": "probes/fileops-1790430580026945460/cumulative-budget/isolation-probe/calls/fileops-v2-1790430584619162516-be536ed6efd0.start.json",
+      "original_local_path": ".runtime/workflow-participants/probes/fileops-1790430580026945460/cumulative-budget/isolation-probe/calls/fileops-v2-1790430584619162516-be536ed6efd0.start.json",
+      "sha256": "2bceae97eec1fcd3d7d6cd277350bf002597747812d0155017f9c737e7d0d2e0",
+      "bytes": 132688
+    },
+    {
+      "archive_member": "probes/fileops-1790430580026945460/cumulative-budget/isolation-probe/calls/fileops-v2-1790430584828701757-011b02c4f100.finish.json",
+      "original_local_path": ".runtime/workflow-participants/probes/fileops-1790430580026945460/cumulative-budget/isolation-probe/calls/fileops-v2-1790430584828701757-011b02c4f100.finish.json",
+      "sha256": "121003c36756cbdf1ac30c46b3d515119bdcca6a2359a5b7b8430dba648fd9b3",
+      "bytes": 3174
+    },
+    {
+      "archive_member": "probes/fileops-1790430580026945460/cumulative-budget/isolation-probe/calls/fileops-v2-1790430584828701757-011b02c4f100.start.json",
+      "original_local_path": ".runtime/workflow-participants/probes/fileops-1790430580026945460/cumulative-budget/isolation-probe/calls/fileops-v2-1790430584828701757-011b02c4f100.start.json",
+      "sha256": "2658b6b79690e21f2ea3f70f64160b52f50efd0ea0ad2e671e244207e727c416",
+      "bytes": 132688
+    },
+    {
+      "archive_member": "probes/fileops-1790430580026945460/cumulative-budget/isolation-probe/calls/fileops-v2-1790430585025669650-35fb51bbc48b.finish.json",
+      "original_local_path": ".runtime/workflow-participants/probes/fileops-1790430580026945460/cumulative-budget/isolation-probe/calls/fileops-v2-1790430585025669650-35fb51bbc48b.finish.json",
+      "sha256": "27e0c17a951c64572da4a8c4a6c1c2fa529e5b4d22c5e5ac3a4ae5e13d261351",
+      "bytes": 3175
+    },
+    {
+      "archive_member": "probes/fileops-1790430580026945460/cumulative-budget/isolation-probe/calls/fileops-v2-1790430585025669650-35fb51bbc48b.start.json",
+      "original_local_path": ".runtime/workflow-participants/probes/fileops-1790430580026945460/cumulative-budget/isolation-probe/calls/fileops-v2-1790430585025669650-35fb51bbc48b.start.json",
+      "sha256": "a707efb1870e4353b0d681e445c411a878ccec4deede71c91e11368fc17c6453",
+      "bytes": 132688
+    },
+    {
+      "archive_member": "probes/fileops-1790430580026945460/cumulative-budget/isolation-probe/calls/fileops-v2-1790430585234278718-eb65b677896e.finish.json",
+      "original_local_path": ".runtime/workflow-participants/probes/fileops-1790430580026945460/cumulative-budget/isolation-probe/calls/fileops-v2-1790430585234278718-eb65b677896e.finish.json",
+      "sha256": "060677ed3ad1c5b0aeb1b4d8befee6edbdddc01abdbc69025d9814367571f780",
+      "bytes": 3175
+    },
+    {
+      "archive_member": "probes/fileops-1790430580026945460/cumulative-budget/isolation-probe/calls/fileops-v2-1790430585234278718-eb65b677896e.start.json",
+      "original_local_path": ".runtime/workflow-participants/probes/fileops-1790430580026945460/cumulative-budget/isolation-probe/calls/fileops-v2-1790430585234278718-eb65b677896e.start.json",
+      "sha256": "f41b263f17f17bd835eaee4929dd9e8e1b7482eda30e15f01d9dd37d2204882a",
+      "bytes": 132688
+    },
+    {
+      "archive_member": "probes/fileops-1790430580026945460/cumulative-budget/isolation-probe/calls/fileops-v2-1790430585454210640-a150e3ad05bb.finish.json",
+      "original_local_path": ".runtime/workflow-participants/probes/fileops-1790430580026945460/cumulative-budget/isolation-probe/calls/fileops-v2-1790430585454210640-a150e3ad05bb.finish.json",
+      "sha256": "e25ca0e2e3f39e88148841531b766b833c1eb72ee6a9e4d9901fa5d122b62fdd",
+      "bytes": 220
+    },
+    {
+      "archive_member": "probes/fileops-1790430580026945460/cumulative-budget/isolation-probe/calls/fileops-v2-1790430585454210640-a150e3ad05bb.start.json",
+      "original_local_path": ".runtime/workflow-participants/probes/fileops-1790430580026945460/cumulative-budget/isolation-probe/calls/fileops-v2-1790430585454210640-a150e3ad05bb.start.json",
+      "sha256": "40f064b4e13f81918963eb8434375003ef0c7e951441e43c97df358978bed0e3",
+      "bytes": 442
+    },
+    {
+      "archive_member": "probes/fileops-1790430580026945460/cumulative-budget/isolation-probe/calls/fileops-v2-1790430585499840603-5039b6eac9bd.finish.json",
+      "original_local_path": ".runtime/workflow-participants/probes/fileops-1790430580026945460/cumulative-budget/isolation-probe/calls/fileops-v2-1790430585499840603-5039b6eac9bd.finish.json",
+      "sha256": "b4571d5debf1dff6f18eeb8c04a911a77f752ebc92b6e635161b39c3d73be76d",
+      "bytes": 3048
+    },
+    {
+      "archive_member": "probes/fileops-1790430580026945460/cumulative-budget/isolation-probe/calls/fileops-v2-1790430585499840603-5039b6eac9bd.start.json",
+      "original_local_path": ".runtime/workflow-participants/probes/fileops-1790430580026945460/cumulative-budget/isolation-probe/calls/fileops-v2-1790430585499840603-5039b6eac9bd.start.json",
+      "sha256": "0bf6ea3647e1353faf8f5cab15ede54adf7f6f432e6f9a5f5e1a9e9620e9296a",
+      "bytes": 1591
+    },
+    {
+      "archive_member": "probes/fileops-1790430580026945460/cumulative-budget/isolation-probe/calls/fileops-v2-1790430585702445970-28877a9add44.finish.json",
+      "original_local_path": ".runtime/workflow-participants/probes/fileops-1790430580026945460/cumulative-budget/isolation-probe/calls/fileops-v2-1790430585702445970-28877a9add44.finish.json",
+      "sha256": "e25ca0e2e3f39e88148841531b766b833c1eb72ee6a9e4d9901fa5d122b62fdd",
+      "bytes": 220
+    },
+    {
+      "archive_member": "probes/fileops-1790430580026945460/cumulative-budget/isolation-probe/calls/fileops-v2-1790430585702445970-28877a9add44.start.json",
+      "original_local_path": ".runtime/workflow-participants/probes/fileops-1790430580026945460/cumulative-budget/isolation-probe/calls/fileops-v2-1790430585702445970-28877a9add44.start.json",
+      "sha256": "2d4048c314b6db3a2193e25901fc1ca5318eaaddbf242785779ce4406a311e01",
+      "bytes": 442
+    },
+    {
+      "archive_member": "probes/fileops-1790430580026945460/summary.json",
+      "original_local_path": ".runtime/workflow-participants/probes/fileops-1790430580026945460/summary.json",
+      "sha256": "1a021e0761bbf681ed3f6f8e9a8130b80d9ea1255571ea00d156a4de72ad7f10",
+      "bytes": 89911
+    }
+  ],
+  "scope": [
+    "Actual role file-operations probes include real sandbox/file/cleanup operations plus authored refusal cases. They are not Hoon tests.",
+    "Original fileops-1790430093986207893 inventory evidence is incomplete and retained unchanged. Corrected 41-probe run is fileops-1790430580026945460.",
+    "Broker host tests mock native commands; no actual public feedback delivery or participant launch has happened.",
+    "Timer eight host tests passed independently; model-idle boundaries, complete tool transcript audit and parent cutoff enforcement remain required.",
+    "Source paths are experimental parent tooling under .runtime/workflow-participants, not a deployed service or technical sandbox for the entire model."
+  ]
+}
