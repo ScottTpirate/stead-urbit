@@ -5,10 +5,16 @@
 ^-  thread:spider
 |=  arg=vase
 =/  [~ target=@p mode=@tas route=path raw=@t]  ;;([~ @p @tas path @t] q.arg)
+=/  load-control=?
+  ?.  =(%control mode)  |
+  =/  val  ;;([@tas @p @t @t] (cue raw))
+  ?|  =(%migrate-legacy -.val)  =(%load-bad-legacy -.val)
+  ==
 =/  m  (strand ,vase)
 =/  n  (strand ,~)
 ^-  form:m
-%+  (set-timeout:strandio ,vase)  ~s55
+::  Full-state fixture validation can occupy one event; normal calls stay 55s.
+%+  (set-timeout:strandio ,vase)  ?:(load-control ~s600 ~s55)
 ;<  =bowl:spider  bind:m  get-bowl:strandio
 ?:  =(%observe mode)
   ;<  ~  bind:m  (poke:strandio [our.bowl %stead-observer] %stead-observer-1 !>(raw))

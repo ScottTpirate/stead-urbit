@@ -145,7 +145,9 @@ def home_unavailable(host, attempt, call):
             'sender': observations, 'attempt': outcome, 'native': host['EVIDENCE'][begin:]}
 
 
-def run(host, *, delivery_only=False):
+def run(host, *, delivery_only=False, capacity_only=False):
+    if delivery_only and capacity_only:
+        raise ValueError('Select only one focused diagnostic')
     started = time.monotonic()
     run_id = time.strftime('%Y%m%dT%H%M%SZ', time.gmtime())
     report = {'status': 'fail', 'classification': 'local-real-native-fake-ships',
@@ -159,6 +161,9 @@ def run(host, *, delivery_only=False):
     if delivery_only:
         report.update(classification='local-real-native-delivery-lifecycle', qualifies_phase=False,
                       scope='Two offline-home native timeouts and sender recovery; no phase qualification.')
+    elif capacity_only:
+        report.update(classification='local-real-native-capacity-diagnostic', qualifies_phase=False,
+                      scope='All eight capacity/predecessor recipes; no full phase qualification.')
     before_inputs = inputs()
     report['inputs_before'] = before_inputs
     report['installed_files'] = {str(path.relative_to('/native/core/desk')): sha(path)
@@ -197,10 +202,14 @@ def run(host, *, delivery_only=False):
 
     def call(ship, mode, route='/', raw=b'', **kwargs):
         host['execution_check']()
+        started_ns = time.monotonic_ns()
         try:
             result = core_conn.run(binary, host['LIVE'] / ship / '.urb/conn.sock', mode, route, raw, **kwargs)
         except Exception as error:
+            finished_ns = time.monotonic_ns()
             failure = {'ship': ship, 'mode': mode, 'route': route, 'status': 'failed',
+                       'started_ns': started_ns, 'finished_ns': finished_ns,
+                       'elapsed_seconds': (finished_ns - started_ns) / 1_000_000_000,
                        'input_sha256': hashlib.sha256(raw).hexdigest(),
                        'error': type(error).__name__ + ': ' + str(error),
                        'transport': getattr(error, 'native_failure', None)}
@@ -208,14 +217,17 @@ def run(host, *, delivery_only=False):
                 reference = transcript.append(failure)
             report['commands'].append({key: value for key, value in failure.items() if key != 'transport'} | {'transcript': reference})
             raise
+        finished_ns = time.monotonic_ns()
         record = {'ship':ship, 'mode':mode, 'route':route, 'input_sha256':hashlib.sha256(raw).hexdigest(),
+                  'started_ns': started_ns, 'finished_ns': finished_ns,
+                  'elapsed_seconds': (finished_ns - started_ns) / 1_000_000_000,
                   'input_bytes':len(raw), **result}
         # Keep exact large framing/control evidence once, outside the bounded
         # summary. Callback consumers receive hashes plus the evidence location.
         with transcript_lock:
             reference = transcript.append(record)
         summary = {key: record[key] for key in ('ship', 'mode', 'route', 'input_sha256',
-                   'input_bytes', 'response_frame_sha256')}
+                   'input_bytes', 'response_frame_sha256', 'started_ns', 'finished_ns', 'elapsed_seconds')}
         summary.update(transcript=reference,
                        stdout=record['stdout'] if len(record['stdout']) <= 1024 else '<see exact transcript>',
                        stderr=record['stderr'], request_sha256=hashlib.sha256(record['request'].encode()).hexdigest())
@@ -443,6 +455,15 @@ def run(host, *, delivery_only=False):
         check('sender-cannot-reserve-another-result-route', denied['json'] is None and 'stead-watch-denied' in denied['native']['stderr'])
         check('concurrent-reads-and-wrong-route-preserve-state', same(after,snapshot()))
 
+    def capacity():
+        report['qualification'] = qualification_cases.run(call,
+            classification='local-real-native-fake-ships', provenance=before_inputs)
+        check('native-capacity-and-predecessor-qualification', report['qualification']['status'] == 'passed'
+              and report['qualification']['native_qualified']
+              and len(report['qualification']['recipes']) == 8
+              and all(lane['status'] == 'executed' for lane in report['qualification']['recipes'].values()))
+        report['supported_predecessor_versions'] = [1]
+
     try:
         report['source_commit'] = host['qualified_source']()
         host['execution_check'](preflight=True)
@@ -489,6 +510,9 @@ def run(host, *, delivery_only=False):
                 recovered = call('bus', 'read', delivery_suite.receipt_route(suite.command))
                 check('post-timeout-protected-read:' + str(repetition + 1), recovered['json'] == core_cases.DENIAL)
             report['status'] = 'pass'
+        elif capacity_only:
+            capacity()
+            report['status'] = 'pass'
         else:
             report['qa'] = core_cases.run(corpus, call, snapshot, restart, export, object_matrix,
                                          trusted_now_ms=trusted_now_ms, wait_until=wait_until,
@@ -526,13 +550,7 @@ def run(host, *, delivery_only=False):
                 classification='real-native-fake-ships', probe_pool=probes, sink=delivery_sink)
             check('delivery-has-no-observed-failure', all(case['status'] in ('passed', 'incomplete')
                   for case in report['delivery']['cases']))
-            report['qualification'] = qualification_cases.run(call,
-                classification='local-real-native-fake-ships', provenance=before_inputs)
-            check('native-capacity-and-predecessor-qualification', report['qualification']['status'] == 'passed'
-                  and report['qualification']['native_qualified']
-                  and len(report['qualification']['recipes']) == 8
-                  and all(lane['status'] == 'executed' for lane in report['qualification']['recipes'].values()))
-            report['supported_predecessor_versions'] = [1]
+            capacity()
             # Independent artifact verification is a distinct closeout operation
             # over the completed guarded report. This runner cannot approve itself.
             report['independent_closeout'] = {
@@ -559,11 +577,12 @@ def run(host, *, delivery_only=False):
     report['native_tree_sha256'] = before_inputs['native']
     report['toolchain_sha256'] = before_inputs['toolchain']
     report['transport_artifact'] = transcript.close()
-    path = Path('/state/logs') / (('core-delivery-check-' if delivery_only else 'core-') + run_id + '.json')
+    prefix = 'core-delivery-check-' if delivery_only else 'core-capacity-check-' if capacity_only else 'core-'
+    path = Path('/state/logs') / (prefix + run_id + '.json')
     report, payload = bounded_report(report)
     path.write_bytes(payload)
     return {'status':report['status'], 'checks_passed':sum(c['passed'] for c in report['checks']),
             'checks_failed':[c for c in report['checks'] if not c['passed']], 'error':report.get('error'),
             'qa_case_counts':report.get('qa',{}).get('case_counts'), 'qa_coverage_status':report.get('qa_coverage_status'),
             'elapsed_seconds':report['elapsed_seconds'], 'evidence_file':'.piers/fakes/logs/' + path.name,
-            **({'qualifies_phase':False} if delivery_only else {})}
+            **({'qualifies_phase':False} if delivery_only or capacity_only else {})}

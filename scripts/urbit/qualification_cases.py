@@ -371,10 +371,19 @@ class Driver:
         return result
 
     def control(self, operation, sender='zod', key='', value='', *, negative=False):
-        result = self.invoke('zod', 'control', control=(operation, sender, key, value))
+        # Only the private fixture's bounded full-state loads get this budget.
+        # It permits measuring validation; exceeding it is still a failure.
+        wait = {'timeout': 620} if operation in ('migrate-legacy', 'load-bad-legacy') else {}
+        result = self.invoke('zod', 'control', control=(operation, sender, key, value), **wait)
         if negative:
+            native = result.get('native', {})
+            stderr = native.get('stderr') if isinstance(native, dict) else None
+            lines = [line.strip() for line in stderr.splitlines() if line.strip()] if isinstance(stderr, str) else []
             self.check('native-control-specific-nack:' + operation,
-                result['json'] is None and result.get('native', {}).get('stdout') == '[32 %avow 1]')
+                result['raw'] is None and result['json'] is None
+                and isinstance(native, dict) and native.get('stdout') == '[32 %avow 1]'
+                and 'stead-unsupported-state' in lines and 'poke-fail' in lines
+                and lines[-1:] == ['eval: bail: %thread-fail'] and 'timeout' not in lines)
         else:
             self.check('native-control-terminal-ack:' + operation, result['json'] == {})
         return result

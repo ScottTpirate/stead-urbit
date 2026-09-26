@@ -359,7 +359,9 @@ def test():
 
 def core_test():
     guard()
-    result = rpc('core-test', timeout=3600)
+    # Wait within the existing outer guard's two-hour ceiling; do not abandon
+    # a legitimate bounded load while its owned supervisor is still running.
+    result = rpc('core-test', timeout=7200)
     print(json.dumps(result, indent=2))
     if result['status'] not in ('pass', 'execution_complete'):
         raise RuntimeError('Native core acceptance failed; retained evidence is not a pass')
@@ -373,6 +375,14 @@ def delivery_check():
     print(json.dumps(result, indent=2))
     if result['status'] != 'pass' or result.get('qualifies_phase') is not False:
         raise RuntimeError('Native delivery lifecycle check failed; inspect retained evidence')
+
+
+def capacity_check():
+    guard()
+    result = rpc('capacity-check', timeout=7200)
+    print(json.dumps(result, indent=2))
+    if result['status'] != 'pass' or result.get('qualifies_phase') is not False:
+        raise RuntimeError('Native capacity diagnostic failed; inspect retained evidence')
 
 
 def core_check():
@@ -435,7 +445,7 @@ def dev():
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument('command', choices=['doctor', 'preflight', 'start', 'stop', 'reset', 'status',
-                        'wait-ready', 'dev', 'test', 'core-check', 'core-test', 'delivery-check', 'gall-schedule',
+                        'wait-ready', 'dev', 'test', 'core-check', 'core-test', 'delivery-check', 'capacity-check', 'gall-schedule',
                         'skill-evaluation', 'skill-feedback', '_guarded-supervisor'])
     parser.add_argument('--condition', choices=['prequalification', 'baseline', 'local_skill_assisted'])
     parser.add_argument('--task', choices=['T01', 'T02', 'T03', 'T04', 'T05', 'T06'])

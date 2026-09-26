@@ -326,13 +326,51 @@ class QualificationAdapterTests(unittest.TestCase):
                 self.assertTrue(all(recipe['status'] == 'unexecuted' for recipe in report['recipes'].values()))
 
     def test_control_timeout_ack_or_missing_value_is_not_expected_nack(self):
+        # Pinned native timeout shape observed in deliverycheck02: the stdout
+        # is identical to a poke failure, so stdout alone is not a predicate.
+        timeout = ('loom: mapped 512MB\nlite: arvo formula 4ce68411\n'
+                   'lite: core 641296f\nlite: final state 641296f\n'
+                   'eval (cue, newt):\ntimeout\neval: bail: %thread-fail')
         for result in (terminal({}), {'raw': None, 'json': None, 'native': {}},
-                       {'raw': None, 'json': None, 'native': {'stdout': 'timeout'}}):
+                       {'raw': None, 'json': None, 'native': {'stdout': 'timeout'}},
+                       {'raw': None, 'json': None, 'native': {'stdout': '[32 %avow 1]'}},
+                       {'raw': None, 'json': None, 'native': {'stdout': '[32 %avow 1]', 'stderr': timeout}}):
             self.call.return_value = result
             with self.assertRaises(AssertionError):
                 self.driver.control('load-bad-legacy', negative=True)
-        self.call.return_value = {'raw': None, 'json': None, 'native': {'stdout': '[32 %avow 1]'}}
+        # Host adapter fixture matching the observed core05 rejection hints;
+        # this is not a newly executed native response.
+        self.call.return_value = {'raw': None, 'json': None, 'native': {
+            'stdout': '[32 %avow 1]',
+            'stderr': 'stead-unsupported-state\npoke-fail\neval: bail: %thread-fail'}}
         self.driver.control('load-bad-legacy', negative=True)
+
+    def test_load_rejection_requires_specific_context_and_no_timeout(self):
+        good = 'stead-unsupported-state\npoke-fail\neval: bail: %thread-fail'
+        for stderr in (good.replace('stead-unsupported-state', 'unrelated-hint'),
+                       good.replace('poke-fail', 'watch-fail'),
+                       good.replace('eval: bail: %thread-fail', 'different-terminal'),
+                       good.replace('poke-fail', 'poke-fail\ntimeout'), None):
+            with self.subTest(stderr=stderr):
+                self.call.return_value = {'raw': None, 'json': None, 'native': {
+                    'stdout': '[32 %avow 1]', 'stderr': stderr}}
+                with self.assertRaises(AssertionError):
+                    self.driver.control('load-bad-legacy', negative=True)
+        self.call.return_value = {'raw': 'unexpected body', 'json': None, 'native': {
+            'stdout': '[32 %avow 1]', 'stderr': good}}
+        with self.assertRaises(AssertionError):
+            self.driver.control('load-bad-legacy', negative=True)
+
+    def test_only_private_full_load_controls_get_bulk_wait(self):
+        for operation in ('migrate-legacy', 'load-bad-legacy', 'legacy-batch',
+                          'native-batch', 'profile', 'roundtrip', 'load-future'):
+            with self.subTest(operation=operation):
+                self.call.reset_mock()
+                self.call.return_value = terminal({})
+                self.driver.control(operation)
+                kwargs = {'timeout': 620} if operation in ('migrate-legacy', 'load-bad-legacy') else {}
+                self.call.assert_called_once_with('zod', 'control', '/', b'',
+                    control=(operation, 'zod', '', ''), **kwargs)
 
     def test_inconsistent_oversized_and_wrong_json_fail(self):
         for result in ({'raw': '{}', 'json': {'status': 'accepted'}},
