@@ -55,7 +55,14 @@ def guard(create=False):
 def rpc(op, timeout=30, **kwargs):
     with socket.socket(socket.AF_UNIX) as client:
         client.settimeout(timeout)
-        client.connect(str(STATE / 'control.sock'))
+        # The supported Linux profile may have a checkout deeper than sun_path.
+        # Resolve the same filesystem socket through an owned directory fd;
+        # do not move the socket or create a second authority endpoint.
+        directory = os.open(STATE, os.O_RDONLY | os.O_DIRECTORY | os.O_NOFOLLOW | os.O_CLOEXEC)
+        try:
+            client.connect(f'/proc/self/fd/{directory}/control.sock')
+        finally:
+            os.close(directory)
         client.sendall(json.dumps({'op': op, **kwargs}).encode() + b'\n')
         data = b''
         while not data.endswith(b'\n'):

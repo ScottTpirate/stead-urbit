@@ -1,0 +1,83 @@
+{
+  "base_commit": "0d877cff4319de8d437f0da58d4518535f758c36",
+  "findings": [],
+  "host_tests_launched_by_reviewer": false,
+  "implementation_and_test_patch_sha256": "70d408c4ee6d63f36e2474132881ab95fb2ab1ba6815e4c09974b4e682d05524",
+  "implementation_review": [
+    "Linux AF_UNIX address spelling changes only: rpc opens the existing STATE directory with O_RDONLY|O_DIRECTORY|O_NOFOLLOW|O_CLOEXEC, connects /proc/self/fd/<fd>/control.sock and closes the directory descriptor in finally.",
+    "The connected endpoint remains the existing filesystem control socket. No second listener, authority endpoint, native command path, permission grant, or execution-guard bypass is introduced.",
+    "Directory lifetime is held during connect; the connected socket remains valid after that directory descriptor closes. The finally block also closes it if connect fails.",
+    "Existing operation encoding, socket timeout, newline framing, response byte limit and server error handling are unchanged.",
+    "The long-path regression independently binds a real AF_UNIX server via a restored temporary cwd, asserts the absolute path is over 108 bytes, verifies stopped status, observes the actual status request and response, joins the responder, and verifies stopped status after unlink.",
+    "The test does not launch Hoon, a supervisor, or fake ships. Other lifecycle tests remain supporting host/mock evidence."
+  ],
+  "native_execution_performed": false,
+  "observed_at": "2026-09-26T19:39:25.238848+00:00",
+  "pending": [
+    "Fresh clean contributor setup/status at the committed fix source; add a separate exact-evidence review when available.",
+    "Complete current-source Phase1 native qualification remains open."
+  ],
+  "problem": {
+    "evidence": ".runtime/phase01-20260926/contributor-clean-setup/result.json",
+    "observed": "make status failed with AF_UNIX path too long after pinned setup and doctor succeeded in a clean nested checkout.",
+    "prior_setup_source_commit": "0d877cff4319de8d437f0da58d4518535f758c36",
+    "prior_setup_status": "failed"
+  },
+  "protocol": "stead.independent-socket-path-source-review/1",
+  "qualifies_phase": false,
+  "restart_scope_document_review": {
+    "finding": "The amended prose correctly limits current Phase1 restart to graceful fenced process replacement; current save/load and predecessor migration remain separate. Issue7 alone uses cold restart; ecosystem and backlog wording is restart persistence.",
+    "frozen_gate_and_Hoon_unchanged": true,
+    "no_completed_current_core_restart_claim": true,
+    "older_hash_bound_reviews_unchanged": true,
+    "status": "reviewed"
+  },
+  "review_limits": [
+    "Targeted source/test/documentation review only, not a fresh whole-application audit.",
+    "No test or native execution was launched by this reviewer.",
+    "The original clean-setup failure remains preserved and is not rewritten."
+  ],
+  "reviewed_working_files_sha256": {
+    "docs/urbit/NATIVE_CORE.md": "8b5e1d49dac68a3662626d05b2c5fd05b012f79880cc96e1413cabf86a3c52c8",
+    "docs/urbit/reviews/PHASE1_RESTART_SCOPE_CORRECTION_20260926.md": "77943d2433afafff43683c7d0921b32609fc750b509a89fa299e704d6c00f85e",
+    "scripts/urbit/harness.py": "55683233cd65be353cc072d32e8414009552ccdc0db88beb700c2c7336079282",
+    "tests/urbit/test_dev_flow.py": "27700da68611fe1864cea3969ff2807156fdd30fe8ed5c3a35bf437f7b7aef53"
+  },
+  "reviewer": "/root/core_acceptance_review",
+  "source_implications": [
+    "harness.py participates in the shared loaded-source closure, so this change invalidates reuse of 0d877 native execution bindings for a new current-source gate.",
+    "Existing 0d877 core, Gall, workflow and nonnative artifacts remain exact historical source-bound evidence; this review does not relabel them as executions of the fixed harness.",
+    "Future current-source Phase1 reconciliation requires applicable fresh native lanes and updated source-bound dispositions, with independent review."
+  ],
+  "status": "approved-for-bounded-fix-with-clean-setup-recheck-pending",
+  "validation": {
+    "classification": "host/static/mocked suite plus actual local Unix socket regression; no Hoon execution",
+    "command": [
+      "make",
+      "check"
+    ],
+    "diff_check": "passed",
+    "exit_code": 0,
+    "logs": [
+      {
+        "bytes": 734,
+        "path": ".runtime/phase01-20260926/host-after-socket-fix/stdout.log",
+        "sha256": "a1b535d66e3f44c4702b8b357e06bbbe8d2eae441edd1c6b8dd896df2bcfcc20"
+      },
+      {
+        "bytes": 2973,
+        "path": ".runtime/phase01-20260926/host-after-socket-fix/stderr.log",
+        "sha256": "58a4ce4e070ec4f1e86808600a3d290c615542da79a07034176e976028d351a6"
+      }
+    ],
+    "outer_seconds": 68.70657145499717,
+    "retained_host_result": {
+      "path": ".runtime/phase01-20260926/host-after-socket-fix/result.json",
+      "sha256": "1a716377935da98ee267ffe76c2458ba46a931b1021cf6be8cab99678e450cab"
+    },
+    "separate_contract_invocations_added_to_unittest_count": false,
+    "targeted_32_test_run": "Reported by integrator without separate retained logs; not independently certified by this review.",
+    "unittest_count": 465,
+    "unittest_seconds": 67.951
+  }
+}

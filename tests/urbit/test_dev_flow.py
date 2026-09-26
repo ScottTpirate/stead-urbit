@@ -4,12 +4,14 @@ import fcntl
 import importlib.util
 import io
 import json
+import os
 from pathlib import Path
 import sys
 import tempfile
 import shutil
 import socket
 import subprocess
+import threading
 import unittest
 from unittest.mock import Mock, patch
 
@@ -42,6 +44,49 @@ class LifecycleTests(unittest.TestCase):
             self.assertEqual(harness.status()['stage'], 'stopped')
             fcntl.flock(owner, fcntl.LOCK_EX | fcntl.LOCK_NB)
             self.assertEqual(harness.status()['stage'], 'unresponsive-owner')
+
+    def test_status_uses_real_socket_in_long_checkout_path(self):
+        deep_root = self.root / ('checkout-' + 'x' * 100)
+        with patch.object(harness, 'ROOT', deep_root), \
+                patch.object(harness, 'BASE', deep_root / '.piers'), \
+                patch.object(harness, 'STATE', deep_root / '.piers/fakes'):
+            deep_root.mkdir()
+            state = harness.guard(create=True)
+            self.assertGreater(len(os.fsencode(state / 'control.sock')), 108)
+            self.assertEqual(harness.status()['stage'], 'stopped')
+            requests, errors = [], []
+            with socket.socket(socket.AF_UNIX) as server:
+                server.settimeout(3)
+                # Bind the real socket independently of the client's fd path.
+                previous = os.open('.', os.O_RDONLY | os.O_DIRECTORY)
+                try:
+                    os.chdir(state)
+                    server.bind('control.sock')
+                finally:
+                    os.fchdir(previous)
+                    os.close(previous)
+                server.listen(1)
+
+                def respond():
+                    try:
+                        with server.accept()[0] as peer:
+                            peer.settimeout(3)
+                            requests.append(json.loads(peer.recv(4096)))
+                            peer.sendall(b'{"ok":true,"result":{"stage":"ready","ready":true}}\n')
+                    except BaseException as error:
+                        errors.append(error)
+
+                responder = threading.Thread(target=respond, daemon=True)
+                responder.start()
+                try:
+                    self.assertEqual(harness.status(), {'stage': 'ready', 'ready': True})
+                finally:
+                    responder.join(timeout=4)
+                self.assertFalse(responder.is_alive())
+                self.assertEqual(errors, [])
+                self.assertEqual(requests, [{'op': 'status'}])
+            (state / 'control.sock').unlink()
+            self.assertEqual(harness.status()['stage'], 'stopped')
 
     def test_status_refuses_redirected_fixture(self):
         self.state.parent.mkdir()
