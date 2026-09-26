@@ -39,6 +39,13 @@ MAX_OUTPUT = 1_000_000
 MAX_JAM = 262144
 FAILURE_PREFIX = 65536
 ANSI = re.compile(r'\x1b\[[0-9;]*m')
+T06_PLATFORM_BASELINE = ('mar/noun.hoon', 'mar/hoon.hoon', 'mar/txt.hoon',
+                         'mar/kelvin.hoon', 'sys.kelvin')
+T06_PLATFORM_ADDITIONS = ('mar/bill.hoon',)
+T06_METADATA_CHECKS = {
+    'desk.bill': '=(~ .^((list dude:gall) %cx /=skill-eval=/desk/bill))',
+    'sys.kelvin': '=([%zuse 408] .^(waft:clay %cx /=skill-eval=/sys/kelvin))',
+}
 
 
 def digest(data):
@@ -444,7 +451,10 @@ def validate_prequalification_execution(inner, content, oracles):
                 'all-six-native-tasks-passed', 'T01:declared-public-interface', 'T02:declared-public-interface',
                 'T05:immutable-subject', 'T05:exact-test-imports', 'T05:nonempty-complete-arm-inventory',
                 'T05:coverage-report', 'T06:exact-supplied-bytes', 'T06:exact-assembly-manifest',
-                'T06:repeat-empty-assembly', 'T06:exact-native-mounted-desk', 'T06:native-clean-generator-result'}
+                'T06:repeat-empty-assembly', 'T06:pinned-platform-baseline',
+                'T06:exact-native-mounted-desk', 'T06:native-clean-generator-result',
+                'loaded-clay-metadata:skill-eval:desk.bill',
+                'loaded-clay-metadata:skill-eval:sys.kelvin'}
     diagnostics = inner.get('prequalification_diagnostics')
     initial_label = 'T03-initial-save-probe'
     if (not isinstance(diagnostics, dict) or set(diagnostics) != {initial_label}
@@ -515,6 +525,10 @@ def validate_prequalification_execution(inner, content, oracles):
     if not any(command.get('kind') == 'native-dojo' and command.get('source') == '+skill-eval!eval-desk-probe'
                and command.get('stdout', '').strip() == '42' for command in commands):
         raise ValueError('Missing clean-desk native command')
+    for name, source in T06_METADATA_CHECKS.items():
+        if not any(command.get('kind') == 'native-dojo' and command.get('source') == source
+                   and command.get('stdout', '').strip() == '%.y' for command in commands):
+            raise ValueError('Missing actual typed desk metadata readback: ' + name)
     generators = [command for command in commands if command.get('kind') == 'native-dojo'
                   and command.get('source') == '+skill-eval-check']
     expected_generators = [record for record in result_records if record['label'].startswith(('T03-', 'T04-'))]
@@ -610,6 +624,9 @@ def t03_program(task):
     # Pinned lull ++agent/++form defines the interface; hoon ++mute virtualizes
     # the same thunk as ++mule without reconstructing its full success type.
     # Rejection-only checks need its real %| result, never a returned agent.
+    # Full-vase comparisons stay native. Their compiler types and rejection
+    # tangs are transported as native jam lengths/SHA-256 digests: prequal10
+    # reached every assertion but produced a 1,325,984-byte full evidence jam.
     code = ['/=  candidate  /app/eval-counter', ':-  %say', '|=  *', ':-  %noun',
             '~&  [%stead-skill-t03 %body-enter]',
             '=/  context=bowl:gall  *bowl:gall', '=.  our.context  ~zod',
@@ -618,6 +635,11 @@ def t03_program(task):
             '~&  [%stead-skill-t03 %initial-agent-ready]', '=/  initial=vase  on-save:original',
             '~&  [%stead-skill-t03 %initial-save-returned]',
             '?>  =([%1 0 0] q.initial)',
+            '=/  view-saved',
+            '  |=  saved=vase',
+            '  ^-  [value=* type-bytes=@ud type-sha256=@ux]',
+            '  =/  encoded-type=@  (jam p.saved)',
+            '  [q.saved (met 3 encoded-type) (shax encoded-type)]',
             '=/  run-case',
             '  |=  [label=@t incoming=vase expected=* must-reject=? repeat-load=?]',
             '  ^-  *',
@@ -635,7 +657,8 @@ def t03_program(task):
                  '    ~&  [%stead-skill-t03 %mute-returned label]',
                  '    ?>  ?=(%| -.rejected)', '    =/  after=vase  on-save:loaded',
                  '    ?>  =(before after)', '    ~&  [%stead-skill-t03 %case-checked label]',
-                 '    [label before rejected after]']
+                 '    =/  encoded-tang=@  (jam p.rejected)',
+                 '    [label (view-saved before) [-.rejected (met 3 encoded-tang) (shax encoded-tang)] (view-saved after)]']
     else:
         code += ['  ?>  =(%.n must-reject)']
     code += ['  ~&  [%stead-skill-t03 %load-begin label]',
@@ -648,8 +671,8 @@ def t03_program(task):
              '    =+  [later-cards reloaded]=(on-load:loaded observed)',
              '    ~&  [%stead-skill-t03 %roundtrip-load-returned label]', '    ?>  =(~ later-cards)',
              '    =/  again=vase  on-save:reloaded', '    ?>  =(observed again)',
-             '    ~&  [%stead-skill-t03 %case-checked label]', '    [label cards observed]',
-             '  ~&  [%stead-skill-t03 %case-checked label]', '  [label cards observed]',
+             '    ~&  [%stead-skill-t03 %case-checked label]', '    [label cards (view-saved observed)]',
+             '  ~&  [%stead-skill-t03 %case-checked label]', '  [label cards (view-saved observed)]',
              '=/  evidence=(list *)', '  :~']
     for case in task['cases']:
         code += [f"    (run-case '{case['id']}' !>({case['load_noun']}) {case.get('saved_noun', '~')} "
@@ -778,13 +801,25 @@ def run(host, package_root, candidate_root, condition, *, prequalify=False,
             path.write_bytes(raw)
             check('installed-file:' + desk + ':' + name, sha(path) == digest(raw))
         command('|commit %' + desk)
+        readbacks = {}
         for name, raw in mapping.items():
+            if desk == 'skill-eval' and name in T06_METADATA_CHECKS:
+                # These marks store parsed nouns in Clay, not their source
+                # text. Exact assembled/mounted bytes are checked separately.
+                check('loaded-clay-metadata:' + desk + ':' + name,
+                      command(T06_METADATA_CHECKS[name]) == '%.y')
+                readbacks[name] = 'typed-native-noun'
+                continue
             stem, suffix = name.rsplit('.', 1)
+            if suffix != 'hoon':
+                raise ValueError('No reviewed native readback for installed mark: ' + suffix)
             clay = '/' + stem + '/' + suffix
             atom = core_conn.atom(bytes.fromhex(digest(raw))[::-1])
             query = f'=/  raw=@t  .^(@t %cx /={desk}={clay})  =({atom} (sha-256l:sha [(met 3 raw) (rev 3 (met 3 raw) raw)]))'
             check('loaded-clay-file:' + desk + ':' + name, command(query) == '%.y')
-        report['installed_clay_files'].append({'desk': desk, 'files_sha256': hashes(mapping)})
+            readbacks[name] = 'native-text-sha256'
+        report['installed_clay_files'].append({'desk': desk, 'files_sha256': hashes(mapping),
+                                               'native_readback': readbacks})
 
     def native(source, label, *, rejection=False):
         host['execution_check']()
@@ -952,9 +987,25 @@ def run(host, package_root, candidate_root, condition, *, prequalify=False,
                     check('T06:repeat-empty-assembly', files(work / 'assembly-1') == files(work / 'assembly-2') == {name.removeprefix('desk/'): raw for name, raw in expected.items()})
                     command('|new-desk %skill-eval')
                     command('|mount %skill-eval')
-                    install({name.removeprefix('desk/'): raw for name, raw in expected.items()}, 'skill-eval')
+                    baseline = {name: (kernel / 'pkg/arvo' / name).read_bytes()
+                                for name in T06_PLATFORM_BASELINE}
+                    additions = {name: (kernel / 'pkg/arvo' / name).read_bytes()
+                                 for name in T06_PLATFORM_ADDITIONS}
+                    check('T06:pinned-platform-baseline', files(host['LIVE'] / 'zod/skill-eval') == baseline)
+                    report['native_dependencies_sha256'].update(
+                        {str(kernel / 'pkg/arvo' / name): digest(raw)
+                         for name, raw in (baseline | additions).items()})
+                    report['desk_platform'] = {
+                        'classification': 'pinned-standard-platform-scaffold-not-candidate-files',
+                        'initial_files_sha256': hashes(baseline),
+                        'added_files_sha256': hashes(additions)}
+                    # Establish the bill mark before importing desk.bill.
+                    install(additions, 'skill-eval')
+                    assembled = {name.removeprefix('desk/'): raw for name, raw in expected.items()}
+                    install(assembled, 'skill-eval')
                     check('T06:exact-native-mounted-desk', files(host['LIVE'] / 'zod/skill-eval')
-                          == {name.removeprefix('desk/'): raw for name, raw in expected.items()})
+                          == baseline | additions | assembled)
+                    report['desk_platform']['mounted_files_sha256'] = hashes(baseline | additions | assembled)
                     actual = command('+skill-eval!eval-desk-probe')
                     check('T06:native-clean-generator-result', actual == '42')
                     results.append({'label': 'T06-native-clean-generator', 'actual_noun': actual})

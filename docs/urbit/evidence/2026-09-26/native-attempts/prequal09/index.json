@@ -1,0 +1,95 @@
+{
+  "protocol": "stead.native-attempt/1",
+  "label": "prequal09",
+  "source_commit": "a68a5a7b12c2f87396ca666807e22a170d82a3f1",
+  "native_status": "fail",
+  "native_error": "GuardError: Start temperature exceeded",
+  "native_elapsed_seconds": 4.401,
+  "outer_guard_status": "completed",
+  "outer_guard_reason": null,
+  "outer_guard_exit": 0,
+  "qualifies_phase": false,
+  "scope": "Exact individual execution record; phase acceptance requires separate reconciliation and review.",
+  "transformations": [
+    "gzip compression only; decompressed bytes unchanged"
+  ],
+  "artifacts": [
+    {
+      "file": "skill-evaluation-20260926T162222Z-prequalification.json.gz",
+      "sha256": "34e45c7c53d92e14a7bcc0fa9b9bd53059f785762e3b02aca9604eb1f25b0c3c",
+      "original_local_path": ".piers/fakes/logs/skill-evaluation-20260926T162222Z-prequalification.json",
+      "original_sha256": "1dfa40a6f7e39d07d9ddb5c09fbb47d4ba01acf72b8e985dbc2a8ead5ca8f2f4",
+      "encoding": "gzip"
+    },
+    {
+      "file": "outer-guard.json.gz",
+      "sha256": "b5552f9c4d958739ad63e617190585425b7d5e90b7acd145ca51b94097cd9a60",
+      "original_local_path": ".runtime/execution-runs/four-fakes-g0qln8kd/report.json",
+      "original_sha256": "c52a45159a16923f8ba3a5bf04ff0d63cfad7b68fc1c2f7a2ce7af35b3d15acd",
+      "encoding": "gzip"
+    },
+    {
+      "file": "source-context.json.gz",
+      "sha256": "1ab52757214833b9ec65218f9f60649aa95fb2fb5f7b03455aaa67b3315156c5",
+      "original_local_path": ".runtime/execution-runs/four-fakes-g0qln8kd/control/source-context.json",
+      "original_sha256": "6ca4af4ed12b407fa75e0f1a2b693e0f33ecfa8b534cc5e487d815bf06dd4132",
+      "encoding": "gzip"
+    },
+    {
+      "file": "prequal09.json.gz",
+      "sha256": "87154737231c1bc23d54aad71c78ae10c914b29ef85d5c11d8136dd2f5e944a4",
+      "original_local_path": ".runtime/phase01-20260925/prequal09.json",
+      "original_sha256": "8516b618538c09775b09a6dd4cd30cf0d0f8280cf37f8b4e065412e4845972a5",
+      "encoding": "gzip"
+    },
+    {
+      "file": "prequal09.log.gz",
+      "sha256": "679624403f199e400be7985129c09bffb0cf9cc39f181c309b6e858c1c9d2392",
+      "original_local_path": ".runtime/phase01-20260925/prequal09.log",
+      "original_sha256": "1dd5fe02a23bdf7d29d99ccf95948edbc7e38135fc1a0890d6e9749b9c599060",
+      "encoding": "gzip"
+    },
+    {
+      "file": "start28.json.gz",
+      "sha256": "b825b89893466f399de606a186fac473341dac824c6434e226a80e5f513cd02e",
+      "original_local_path": ".runtime/phase01-20260925/start28.json",
+      "original_sha256": "acf93c2c09ce657a701c7a8b756cda6f1f65708b2386c560bdbdfe706bda63e4",
+      "encoding": "gzip"
+    },
+    {
+      "file": "start28.log.gz",
+      "sha256": "450367a694aa34ca765a3d6ce32a481747e6d4d472e8f0182ba2caaab04d43ac",
+      "original_local_path": ".runtime/phase01-20260925/start28.log",
+      "original_sha256": "882fb032826f3d84aad081d61b7dccab03acb9b888cc2969872bad56a76cdc9f",
+      "encoding": "gzip"
+    },
+    {
+      "file": "ready28.json.gz",
+      "sha256": "b2866b129f7348df5beaa02118a93dc17327a0e0393339889f3fc5525260f6e7",
+      "original_local_path": ".runtime/phase01-20260925/ready28.json",
+      "original_sha256": "0f1cff979ed6145e93337c161aaa6cacff0714e29ee51c33c86ce84a57a8f357",
+      "encoding": "gzip"
+    },
+    {
+      "file": "ready28.log.gz",
+      "sha256": "f9daf25b4fa57ca04f862aad8f432861e55dc410a1debfc9bbd7d154c822cafe",
+      "original_local_path": ".runtime/phase01-20260925/ready28.log",
+      "original_sha256": "a72ca35e72e75acf0561a125681ee27ed251c4f186934114933082bf866a5505",
+      "encoding": "gzip"
+    },
+    {
+      "file": "stop28.json.gz",
+      "sha256": "8ef475c6e2d00d089aaeb30252b845af4d4321587df5d6ce8758465f0f7bcf9b",
+      "original_local_path": ".runtime/phase01-20260925/stop28.json",
+      "original_sha256": "0f8e733ea276f7247cf2ef666f5a3a66274810d41adee747846aacaba2a56a42",
+      "encoding": "gzip"
+    },
+    {
+      "file": "stop28.log.gz",
+      "sha256": "12c671e095df8b045e620680c1b93956a87a91531f555b53cad5fd1a748b4a19",
+      "original_local_path": ".runtime/phase01-20260925/stop28.log",
+      "original_sha256": "7e0046a61997e91b4c00d40b33b385148d315de81c5f28722592072cb3fde000",
+      "encoding": "gzip"
+    }
+  ]
+}

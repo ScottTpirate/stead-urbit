@@ -72,12 +72,16 @@ def authored_receipt(content, oracles):
                   'stdout': '[%skill-result ' + str(int.from_bytes(bytes.fromhex(value['actual_jam_hex']), 'little')) + ']'}
                  for value in observations if value['label'].startswith(('T03-', 'T04-'))]
     commands += [{'kind': 'native-dojo', 'status': 'completed', 'source': '+skill-eval!eval-desk-probe', 'stdout': '42'}]
+    commands += [{'kind': 'native-dojo', 'status': 'completed', 'source': source, 'stdout': '%.y'}
+                 for source in S.T06_METADATA_CHECKS.values()]
     names = {'loaded-adapter-closure-current', 'loaded-supervisor-current', 'actual-evaluator-controls',
              'T02-starter-rejection:actual-compiler-rejection', 'candidate-inputs-unchanged',
              'loaded-adapter-closure-still-current', 'loaded-supervisor-still-current', 'all-six-native-tasks-passed',
              'T01:declared-public-interface', 'T02:declared-public-interface', 'T05:immutable-subject',
              'T05:exact-test-imports', 'T05:nonempty-complete-arm-inventory', 'T05:coverage-report',
              'T06:exact-supplied-bytes', 'T06:exact-assembly-manifest', 'T06:repeat-empty-assembly',
+             'T06:pinned-platform-baseline',
+             'loaded-clay-metadata:skill-eval:desk.bill', 'loaded-clay-metadata:skill-eval:sys.kelvin',
              'T06:exact-native-mounted-desk', 'T06:native-clean-generator-result',
              'T03-initial-save-probe:initial-saved-noun'}
     names.update(label + ':native-evaluator-success' for label in pure_labels)
@@ -183,6 +187,11 @@ class PriorExecutionAdmission(unittest.TestCase):
         self.reject(lambda r: r['generated_source_files_after'].clear())
         self.reject(lambda r: r['commands'].pop())
         self.reject(lambda r: r['commands'].pop(-2))
+        self.reject(lambda r: r.update(commands=[c for c in r['commands']
+                    if c.get('source') != '+skill-eval!eval-desk-probe']))
+        for source in S.T06_METADATA_CHECKS.values():
+            self.reject(lambda r, source=source: next(c for c in r['commands']
+                        if c.get('source') == source).update(stdout='%.n'))
         self.reject(lambda r: r['commands'][0].update(stdout=''))
         self.reject(lambda r: r['commands'][0].update(stdout='[%skill-result 2]'))
 
@@ -335,7 +344,7 @@ class PublicFeedbackSelection(unittest.TestCase):
         for private in ('(mute:vi ', '[%1 5 2]', 'future-version', '65.536', 'repeat-roundtrip'):
             self.assertNotIn(private, public)
 
-    def test_t03_instrumentation_enforces_same_bound_before_rendering_without_dropping_evidence(self):
+    def test_t03_keeps_native_assertions_and_bounds_projected_evidence_before_rendering(self):
         source = S.t03_program(self.oracles['tasks'][2])
         for stage in ('body-enter', 'case-begin label', 'load-begin label', 'load-returned label',
                       'mute-begin label', 'mute-returned label', 'case-checked label',
@@ -352,8 +361,11 @@ class PublicFeedbackSelection(unittest.TestCase):
         for assertion in ('?>  =(~ cards)', '?>  =(~ later-cards)', '?>  =(expected q.observed)',
                           '?>  ?=(%| -.rejected)', '?>  =(before after)', '?>  =(observed again)'):
             self.assertIn(assertion, source)
-        self.assertIn('[label before rejected after]', source)
-        self.assertIn('[label cards observed]', source)
+        self.assertIn('[q.saved (met 3 encoded-type) (shax encoded-type)]', source)
+        self.assertIn('[label (view-saved before) [-.rejected (met 3 encoded-tang) (shax encoded-tang)] (view-saved after)]', source)
+        self.assertIn('[label cards (view-saved observed)]', source)
+        self.assertNotIn('[label before rejected after]', source)
+        self.assertNotIn('[label cards observed]', source)
         initial = S.t03_initial_program()
         self.assertIn('=/  original=agent:gall', initial)
         self.assertIn('=/  initial=vase  on-save:original', initial)
@@ -371,7 +383,8 @@ class PublicFeedbackExecution(unittest.TestCase):
 
     def execute(self, task, *, condition='baseline', missing_prior=False,
                 compile_failure=False, cleanup_failure=False, private_all=False,
-                dojo_timeout=False, evaluator_timeout=False, prequalify=False):
+                dojo_timeout=False, evaluator_timeout=False, prequalify=False,
+                extra_platform_file=False, bad_metadata=None):
         with tempfile.TemporaryDirectory(prefix='stead-public-feedback-host-') as temp, ExitStack() as stack:
             root = Path(temp)
             candidate = root / 'candidate'
@@ -395,7 +408,8 @@ class PublicFeedbackExecution(unittest.TestCase):
             (live / 'zod/base').mkdir(parents=True)
             kernel = root / 'kernel'
             for name in ('pkg/base-dev/lib/test.hoon', 'pkg/base-dev/lib/default-agent.hoon',
-                         'pkg/arvo/sys/vane/gall.hoon', 'pkg/arvo/lib/test/ames-gall.hoon'):
+                         'pkg/arvo/sys/vane/gall.hoon', 'pkg/arvo/lib/test/ames-gall.hoon',
+                         *('pkg/arvo/' + path for path in S.T06_PLATFORM_BASELINE + S.T06_PLATFORM_ADDITIONS)):
                 path = kernel / name
                 path.parent.mkdir(parents=True, exist_ok=True)
                 path.write_text(':: HOST-ONLY MOCK NATIVE DEPENDENCY\n')
@@ -406,7 +420,16 @@ class PublicFeedbackExecution(unittest.TestCase):
             def dojo(ship, source):
                 self.assertEqual(ship, 'zod')
                 if source == '|mount %skill-eval':
-                    (live / 'zod/skill-eval').mkdir()
+                    desk = live / 'zod/skill-eval'
+                    desk.mkdir()
+                    for name in S.T06_PLATFORM_BASELINE:
+                        target = desk / name
+                        target.parent.mkdir(parents=True, exist_ok=True)
+                        target.write_bytes((kernel / 'pkg/arvo' / name).read_bytes())
+                    if extra_platform_file:
+                        (desk / 'unexpected.hoon').write_text(':: authored unexpected platform file\n')
+                if bad_metadata and source == S.T06_METADATA_CHECKS[bad_metadata]:
+                    return '%.n'
                 if source == '+skill-eval!eval-desk-probe':
                     return '42'
                 generator = live / 'zod/base/gen/skill-eval-check.hoon'
@@ -487,12 +510,35 @@ class PublicFeedbackExecution(unittest.TestCase):
                 else:
                     self.assertEqual(row['observed_cases'], ['assembly-bytes', 'repeat-empty-assembly', 'native-clean-generator'])
                     self.assertEqual(row['results'][0]['actual_noun'], '42')
+                    platform = run['private']['desk_platform']
+                    self.assertEqual(len(platform['initial_files_sha256']), 5)
+                    self.assertEqual(list(platform['added_files_sha256']), ['mar/bill.hoon'])
+                    self.assertEqual(len(platform['mounted_files_sha256']), 9)
+                    calls = run['host']['dojo'].call_args_list
+                    for source in S.T06_METADATA_CHECKS.values():
+                        self.assertTrue(any(call.args == ('zod', source) for call in calls))
                 disclosed = json.dumps(public)
                 self.assertNotIn('PRIVATE-PRIOR-RECORD', disclosed)
                 self.assertNotIn('deliberate-false-native-expectation', disclosed)
                 self.assertNotIn('T04-private-Gall', disclosed)
                 self.assertNotIn('all-six-native-tasks-passed', disclosed)
                 run['prior'].assert_called_once()
+
+    def test_unexpected_platform_file_blocks_desk_before_candidate_install(self):
+        run = self.execute('T06', extra_platform_file=True)
+        self.assertEqual(run['public']['status'], 'fail')
+        self.assertIn('T06:pinned-platform-baseline', run['private']['tasks'][0]['error'])
+        self.assertFalse(any(call.args[1] in ('|commit %skill-eval', '+skill-eval!eval-desk-probe')
+                             for call in run['host']['dojo'].call_args_list))
+
+    def test_wrong_typed_metadata_blocks_native_generator(self):
+        for name in S.T06_METADATA_CHECKS:
+            with self.subTest(name=name):
+                run = self.execute('T06', bad_metadata=name)
+                self.assertEqual(run['public']['status'], 'fail')
+                self.assertIn('loaded-clay-metadata:skill-eval:' + name, run['private']['tasks'][0]['error'])
+                self.assertFalse(any(call.args[1] == '+skill-eval!eval-desk-probe'
+                                     for call in run['host']['dojo'].call_args_list))
 
     def test_conditions_receive_identical_public_programs(self):
         baseline = self.execute('T01')

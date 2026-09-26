@@ -1,0 +1,30 @@
+{
+  "classification": "host-only-native-calls-mocked",
+  "qualifies_phase": false,
+  "tests": 41,
+  "test_elapsed_seconds": 0.991,
+  "exit_code": 0,
+  "artifacts": [
+    {
+      "file": "stdout.log.gz",
+      "sha256": "9ceffb7310338057cfe71a4ae1e2c98d2c485d81cdef906532a801f457a38d64",
+      "original_local_path": ".runtime/phase01-20260926/workflow-projection-host/stdout.log",
+      "original_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "encoding": "gzip"
+    },
+    {
+      "file": "stderr.log.gz",
+      "sha256": "cf9eceed4be6f803c479a5f178dc6d33cf1a75c11028d153ee2af1187b33b49b",
+      "original_local_path": ".runtime/phase01-20260926/workflow-projection-host/stderr.log",
+      "original_sha256": "22595d95c36c0aeceefad14ecb36f4ff115dddf5b760b38df5db2bb4702b2d56",
+      "encoding": "gzip"
+    },
+    {
+      "file": "result.json.gz",
+      "sha256": "44f7ee831f42169dcf28415dc2f1218b2106579743481778fddf629dc35811e7",
+      "original_local_path": ".runtime/phase01-20260926/workflow-projection-host/result.json",
+      "original_sha256": "8ede2a78d88a5da7422e7113f243e8985021997a1f3fcd902b131e9dc906a02d",
+      "encoding": "gzip"
+    }
+  ]
+}
