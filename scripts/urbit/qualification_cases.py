@@ -465,10 +465,13 @@ class Driver:
             last = self.apply_batch(batch, predecessor=predecessor)
         return last
 
-    def direct(self, entry):
+    def command(self, entry):
         cmd = entry.command
         route = f"/v2/result/~{entry.sender}/{BINDINGS[entry.sender]}/{cmd['project_id']}/{cmd['request_id']}/{entry.digest}"
-        return self.invoke(entry.sender, 'command', route, entry.raw)['json']
+        return self.invoke(entry.sender, 'command', route, entry.raw)
+
+    def direct(self, entry):
+        return self.command(entry)['json']
 
     def recover(self, entry, sender=None):
         cmd = entry.command
@@ -487,12 +490,38 @@ class Driver:
         before = self.snapshot()
         self.control('binding-drop', sender='bus')
         try:
-            self.denied_without_change(entry, 'bus', 'missing-current-binding-before-ordinary-capacity')
+            missing = self.snapshot()
+            self.check('fixture-removed-current-contributor-binding',
+                       missing['bindings_sha256'] != before['bindings_sha256'])
+            probe = Entry('bus', entry.command)
+            # No authenticated result subscription exists after this binding
+            # is removed. Its exact watch NACK cannot stand in for a mutation.
+            result = self.command(probe)
+            native = result.get('native', {})
+            stderr = native.get('stderr') if isinstance(native, dict) else None
+            lines = [line.strip() for line in stderr.splitlines() if line.strip()] if isinstance(stderr, str) else []
+            self.check('missing-binding-result-watch-specifically-denied',
+                result['raw'] is None and result['json'] is None
+                and isinstance(native, dict) and native.get('stdout') == '[32 %avow 1]'
+                and all(hint in lines for hint in ('stead-watch-denied', 'watch-ack', 'watch-ack-fail'))
+                and lines[-1:] == ['eval: bail: %thread-fail'] and 'timeout' not in lines)
+            self.unchanged(missing, self.snapshot(), 'missing-binding-watch-preserves-state')
+            # Deliver a real Gall poke without first registering a result watch.
+            # This ACK is transport completion only, never business acceptance.
+            ack = self.invoke('bus', 'poke', raw=probe.raw)
+            self.check('missing-binding-poke-transport-ack-only', ack['json'] == {})
+            self.unchanged(missing, self.snapshot(), 'missing-binding-real-poke-preserves-state')
+            # The existing owner-only fixture also exposes the actual native
+            # final transition result for this exact sender and command.
+            denial, after = self.apply_batch([probe], accepted=False, expected_error='denied_or_not_found')
+            self.check('missing-current-binding-before-ordinary-capacity', denial == {
+                'protocol': 'stead.result/2', 'status': 'rejected', 'error': 'denied_or_not_found'})
+            self.unchanged(missing, after, 'missing-binding-final-transition-preserves-state')
         finally:
             # Best effort only: a failed transport remains a failed run. No
             # counters/receipts are fabricated to restore a passing result.
             self.control('binding-restore', sender='bus')
-        self.unchanged(before, self.snapshot(), 'exact-binding-restored-after-denied-capacity-probe')
+            self.unchanged(before, self.snapshot(), 'exact-binding-restored-after-denied-capacity-probe')
 
     def reset_current(self):
         self.control('legacy-init', value=self.fixture_raw.decode())

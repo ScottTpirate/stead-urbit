@@ -408,19 +408,100 @@ class QualificationAdapterTests(unittest.TestCase):
         self.assertEqual(sent.raw, self.entry.raw)
         self.assertEqual(sent.digest, self.entry.digest)
 
-    def test_missing_binding_probe_restores_only_fixture_binding_and_propagates_failure(self):
-        events = []
-        def control(operation, **kwargs):
-            events.append((operation, kwargs['sender']))
-        def refused(*args):
-            events.append(('denial-assertion', args[1]))
-            raise AssertionError('scripted wrong capacity error')
-        with mock.patch.object(self.driver, 'snapshot', return_value=snapshot()), \
-             mock.patch.object(self.driver, 'control', side_effect=control), \
-             mock.patch.object(self.driver, 'denied_without_change', side_effect=refused), \
-             self.assertRaisesRegex(AssertionError, 'scripted wrong capacity error'):
+    def watch_rejection(self):
+        # Host fixture matching the actual capacity01 missing-binding terminal.
+        return {'raw': None, 'json': None, 'native': {'stdout': '[32 %avow 1]',
+            'stderr': 'stead-watch-denied\nwatch-ack\nwatch-ack-fail\neval: bail: %thread-fail'}}
+
+    def test_missing_binding_requires_real_poke_and_explicit_final_gate_denial(self):
+        before = snapshot()
+        missing = snapshot(bindings_sha256='1' * 64, state_jam_sha256='1' * 64)
+        denial = {'protocol': 'stead.result/2', 'status': 'rejected', 'error': 'denied_or_not_found'}
+        with mock.patch.object(self.driver, 'snapshot', side_effect=[before, missing, missing, missing, before]), \
+             mock.patch.object(self.driver, 'control') as control, \
+             mock.patch.object(self.driver, 'command', return_value=self.watch_rejection()) as command, \
+             mock.patch.object(self.driver, 'invoke', return_value=terminal({})) as poke, \
+             mock.patch.object(self.driver, 'apply_batch', return_value=(denial, missing)) as batch:
             self.driver.missing_binding_at_capacity(self.entry)
-        self.assertEqual(events, [('binding-drop', 'bus'), ('denial-assertion', 'bus'), ('binding-restore', 'bus')])
+        probe = command.call_args.args[0]
+        self.assertEqual((probe.sender, probe.raw, probe.digest), ('bus', self.entry.raw, self.entry.digest))
+        poke.assert_called_once_with('bus', 'poke', raw=self.entry.raw)
+        batch.assert_called_once_with([probe], accepted=False, expected_error='denied_or_not_found')
+        self.assertEqual(control.call_args_list, [mock.call('binding-drop', sender='bus'),
+                                                 mock.call('binding-restore', sender='bus')])
+
+    def test_missing_binding_watch_timeout_or_unrelated_failure_cannot_qualify(self):
+        missing = snapshot(bindings_sha256='1' * 64)
+        good = self.watch_rejection()
+        variants = [terminal({}), terminal({'status': 'rejected'}), {'raw': None, 'json': None, 'native': {}},
+                    {**good, 'raw': 'unexpected body'}]
+        for hint in ('stead-watch-denied', 'watch-ack', 'watch-ack-fail', 'eval: bail: %thread-fail'):
+            variants.append({**good, 'native': {**good['native'],
+                'stderr': '\n'.join(line for line in good['native']['stderr'].splitlines() if line != hint)}})
+        variants.append({**good, 'native': {**good['native'],
+            'stderr': 'timeout\n' + good['native']['stderr']}})
+        for response in variants:
+            with self.subTest(response=response), \
+                 mock.patch.object(self.driver, 'snapshot', side_effect=[snapshot(), missing, snapshot()]), \
+                 mock.patch.object(self.driver, 'control') as control, \
+                 mock.patch.object(self.driver, 'command', return_value=response), \
+                 mock.patch.object(self.driver, 'invoke') as poke, \
+                 mock.patch.object(self.driver, 'apply_batch') as batch, \
+                 self.assertRaisesRegex(AssertionError, 'missing-binding-result-watch-specifically-denied'):
+                self.driver.missing_binding_at_capacity(self.entry)
+            poke.assert_not_called()
+            batch.assert_not_called()
+            self.assertEqual(control.call_args_list[-1], mock.call('binding-restore', sender='bus'))
+
+    def test_missing_binding_poke_business_body_or_mutation_cannot_qualify(self):
+        missing = snapshot(bindings_sha256='1' * 64)
+        for ack, after in ((terminal({'status': 'accepted'}), missing),
+                           (terminal({}), {**missing, 'receipts': '1'})):
+            snapshots = [snapshot(), missing, missing] + ([after] if ack['json'] == {} else []) + [snapshot()]
+            with self.subTest(ack=ack, after=after), \
+                 mock.patch.object(self.driver, 'snapshot', side_effect=snapshots), \
+                 mock.patch.object(self.driver, 'control') as control, \
+                 mock.patch.object(self.driver, 'command', return_value=self.watch_rejection()), \
+                 mock.patch.object(self.driver, 'invoke', return_value=ack), \
+                 mock.patch.object(self.driver, 'apply_batch') as batch, self.assertRaises(AssertionError):
+                self.driver.missing_binding_at_capacity(self.entry)
+            batch.assert_not_called()
+            self.assertEqual(control.call_args_list[-1], mock.call('binding-restore', sender='bus'))
+
+    def test_missing_binding_final_gate_or_transport_failure_restores_binding(self):
+        missing = snapshot(bindings_sha256='1' * 64)
+        denial = {'protocol': 'stead.result/2', 'status': 'rejected', 'error': 'denied_or_not_found'}
+        for failure in (RuntimeError('transport failed'),
+                        ({**denial, 'error': 'capacity_exceeded'}, missing),
+                        (denial, {**missing, 'journal_events': '1'})):
+            with self.subTest(failure=failure), \
+                 mock.patch.object(self.driver, 'snapshot', side_effect=[snapshot(), missing, missing, missing, snapshot()]), \
+                 mock.patch.object(self.driver, 'control') as control, \
+                 mock.patch.object(self.driver, 'command', return_value=self.watch_rejection()), \
+                 mock.patch.object(self.driver, 'invoke', return_value=terminal({})), \
+                 mock.patch.object(self.driver, 'apply_batch') as batch, self.assertRaises((AssertionError, RuntimeError)):
+                if isinstance(failure, Exception):
+                    batch.side_effect = failure
+                else:
+                    batch.return_value = failure
+                self.driver.missing_binding_at_capacity(self.entry)
+            self.assertEqual(control.call_args_list[-1], mock.call('binding-restore', sender='bus'))
+
+    def test_missing_binding_not_removed_or_not_restored_cannot_qualify(self):
+        before = snapshot()
+        missing = snapshot(bindings_sha256='1' * 64)
+        denial = {'protocol': 'stead.result/2', 'status': 'rejected', 'error': 'denied_or_not_found'}
+        for snapshots, failure in (([before, before, before], 'fixture-removed-current-contributor-binding'),
+                                   ([before, missing, missing, missing, missing], 'exact-binding-restored')):
+            with self.subTest(failure=failure), \
+                 mock.patch.object(self.driver, 'snapshot', side_effect=snapshots), \
+                 mock.patch.object(self.driver, 'control') as control, \
+                 mock.patch.object(self.driver, 'command', return_value=self.watch_rejection()), \
+                 mock.patch.object(self.driver, 'invoke', return_value=terminal({})), \
+                 mock.patch.object(self.driver, 'apply_batch', return_value=(denial, missing)), \
+                 self.assertRaisesRegex(AssertionError, failure):
+                self.driver.missing_binding_at_capacity(self.entry)
+            self.assertEqual(control.call_args_list[-1], mock.call('binding-restore', sender='bus'))
 
     def test_receipt_must_match_version_identity_scope_and_closed_fields(self):
         good = scripted_receipt(self.entry)
