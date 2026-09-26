@@ -287,6 +287,32 @@ def lifecycle(report, evidence):
     require(len(stops) == 1 and stops[0]['result'] == {'exit_code': 0, 'forced': False}, 'Missing graceful native shutdown')
 
 
+def unavailable_lifecycle(report, evidence):
+    rows = evidence.get('native', [])
+    all_rows = report.get('lifecycle', [])
+    indices = [i for i in range(len(all_rows)) if rows and all_rows[i:i + len(rows)] == rows]
+    require(len(indices) == 1, 'Offline-home lifecycle is not a unique exact retained segment')
+    preceding = all_rows[:indices[0]]
+    require([row.get('command') for row in rows] == [
+        'unavailable sender liveness', 'shutdown zod', 'unavailable native terminal',
+        'unavailable sender liveness', 'launch zod', 'zod: zuse',
+        'unavailable sender probe', 'unavailable sender liveness'], 'Offline-home lifecycle order')
+    require([rows[i]['result'] for i in (0, 3, 7)] == evidence.get('sender'), 'Sender liveness observations differ')
+    native = evidence['attempt']['response']['native']
+    require(rows[2]['result'] == {key: native[key] for key in ('response_frame_sha256', 'stdout')},
+            'Home restarted before the retained native terminal')
+    require(rows[6]['result'] == {'ship': 'bus', 'dojo': 'zuse', 'result': '%408\n'},
+            'Missing actual contributor readiness after home recovery')
+    require(rows[1]['result'] == {'exit_code': 0, 'forced': False}
+            and rows[4]['result'].get('pid') == evidence['replacement_pid'],
+            'Offline-home shutdown/replacement identity differs')
+    for ship, pid in (('zod', evidence['old_pid']), ('bus', evidence['sender'][0]['pid'])):
+        events = [row for row in preceding if row.get('command') in ('launch ' + ship, 'shutdown ' + ship)]
+        require(events and events[-1]['command'] == 'launch ' + ship
+                and events[-1]['result'].get('pid') == pid,
+                'Offline-home segment lacks the current live ' + ship + ' incarnation')
+
+
 def concurrent_records(retained, requests, results):
     """Verify the exact two observed call intervals, never infer overlap from CAS."""
     release = retained.report.get('concurrent_release')
@@ -771,7 +797,8 @@ def replay_delivery(retained, corpus, start):
         evidence = copy.deepcopy(cases['home-unavailable']['unavailability'])
         lifecycle(retained.report, evidence)
         actual = attempt(replay.call)
-        require(actual == evidence['attempt'], 'Unavailable outcome differs from retained transport exception')
+        require(actual == evidence['attempt'], 'Unavailable outcome differs from retained native terminal')
+        unavailable_lifecycle(retained.report, evidence)
         return evidence
 
     class RecordedSuite(DS.Suite):

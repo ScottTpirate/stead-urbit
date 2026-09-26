@@ -8,11 +8,13 @@ import json
 from pathlib import Path
 import sys
 import unittest
+from unittest.mock import Mock
 
 ROOT=Path(__file__).resolve().parents[2]
 sys.path.insert(0,str(ROOT/'scripts/urbit'))
 import delivery_suite as S
 import delivery_cases as D
+import core_test
 from test_delivery_cases import record,RAW,ROUTE,wrap
 
 CORPUS=json.loads((ROOT/'specs/urbit/fixtures/native-cases-v2.json').read_bytes())
@@ -103,22 +105,88 @@ class DeliveryScheduleHostTests(unittest.TestCase):
         suite=S.Suite(CORPUS,lambda *a,**k:result,sink=lambda row:{'sha256':'unverified'})
         with self.assertRaises(D.ObservationError):suite.call('bus','observe',raw=b'{}')
 
-    def test_unavailable_home_does_not_green_adapter_programming_errors(self):
-        def check(error,allowed):
-            suite=S.Suite(CORPUS);suite.current={'name':'mock-unavailable','assertions':[]}
-            suite.snap=lambda:{'state_jam_sha256':'a'*64};suite.same=lambda before:before
-            def lifecycle(attempt):
-                def bounded(*args,**kwargs):raise error
-                return {'native':{'mock':True},'old_pid':101,'old_exit':0,'replacement_pid':102,'attempt':attempt(bounded)}
-            suite.unavailable_home=lifecycle
-            if allowed:
-                suite.unavailable();self.assertTrue(all(x['status']=='passed' for x in suite.current['assertions']))
-            else:
-                with self.assertRaises(type(error)):suite.unavailable()
-        for error in (ValueError('bad fixture'),AssertionError('adapter defect'),FileNotFoundError('missing executable')):
-            with self.subTest(error=error):check(error,False)
-        check(TimeoutError('mock bounded native timeout'),True)
-        check(OSError(errno.EHOSTUNREACH,'mock route unavailable'),True)
+    @staticmethod
+    def timeout_response():
+        return {'raw':None,'json':None,'native':{'stdout':'[32 %avow 1]',
+            'response_frame_sha256':'a'*64, 'stderr':
+            'loom: mapped 512MB\r\nlite: arvo formula 4ce68411\r\nlite: core 641296f\r\n'
+            'lite: final state 641296f\r\neval (cue, newt):\n\r\ntimeout\r\neval: bail: %thread-fail'}}
+
+    def unavailable_suite(self, response=None, error=None, sender_pid=101):
+        suite=S.Suite(CORPUS);suite.current={'name':'mock-unavailable','assertions':[]}
+        suite.snap=lambda:{'state_jam_sha256':'a'*64};suite.same=lambda before:before
+        def lifecycle(attempt):
+            def bounded(*args,**kwargs):
+                self.assertEqual(kwargs['timeout'],75)
+                if error is not None:raise error
+                return response
+            sender=[{'ship':'bus','phase':phase,'pid':101 if index<2 else sender_pid,'exit':None}
+                    for index,phase in enumerate(('before-stop','after-terminal','after-restart'))]
+            return {'native':{'mock':True},'old_pid':201,'old_exit':0,'replacement_pid':202,
+                    'sender':sender,'attempt':attempt(bounded)}
+        suite.unavailable_home=lifecycle
+        return suite
+
+    def test_only_specific_drained_native_timeout_is_expected_unavailability(self):
+        suite=self.unavailable_suite(self.timeout_response());suite.unavailable()
+        self.assertTrue(all(x['status']=='passed' for x in suite.current['assertions']))
+        self.assertEqual(suite.current['unavailability']['attempt']['supported_failure'],'native-timeout')
+
+    def test_unavailable_home_rejects_transport_and_programming_failures(self):
+        for error in (ValueError('bad fixture'),AssertionError('adapter defect'),FileNotFoundError('missing executable'),
+                      TimeoutError('local socket deadline'),ConnectionRefusedError(errno.ECONNREFUSED,'sender died'),
+                      OSError(errno.EHOSTUNREACH,'route unavailable'),EOFError('truncated terminal')):
+            with self.subTest(error=error),self.assertRaises(type(error)):
+                self.unavailable_suite(error=error).unavailable()
+
+    def test_unavailable_home_rejects_business_output_ack_and_unrelated_bails(self):
+        bad=[]
+        for field,value in (('stdout','[32 %avow 0]'),('response_frame_sha256',''),
+                            ('stderr','timeout'),('stderr','poke-fail\ntimeout\neval: bail: %thread-fail')):
+            response=self.timeout_response();response['native'][field]=value;bad.append(response)
+        response=self.timeout_response();response['json']={'status':'accepted'};response['raw']='{}';bad.append(response)
+        response=self.timeout_response();response['native']['stderr']=response['native']['stderr'].replace('\r\ntimeout', '\r\nnot-timeout');bad.append(response)
+        for response in bad:
+            with self.subTest(response=response),self.assertRaises(D.ObservationError):
+                self.unavailable_suite(response).unavailable()
+        with self.assertRaisesRegex(D.ObservationError,'same-live-sender'):
+            self.unavailable_suite(self.timeout_response(),sender_pid=102).unavailable()
+
+    def test_home_lifecycle_leaves_home_offline_after_transport_failure(self):
+        events=[];bus=Mock(pid=101);bus.poll.return_value=None
+        zod=Mock(pid=201,returncode=0)
+        host={'EVIDENCE':[], 'PROCESSES':{'bus':bus,'zod':zod},
+              'execution_check':Mock(), 'shutdown':Mock(side_effect=lambda ship:events.append('stop')),
+              'launch':Mock(), 'wait_ready':Mock(), 'dojo':Mock(return_value='%408\n')}
+        host['record']=lambda command,result:host['EVIDENCE'].append({'command':command,'result':result})
+        def attempt(call):
+            self.assertEqual(events,['stop'])
+            raise TimeoutError('unfinished native request')
+        with self.assertRaises(TimeoutError):core_test.home_unavailable(host,attempt,Mock())
+        host['launch'].assert_not_called();host['dojo'].assert_not_called()
+
+    def test_home_lifecycle_drains_before_restart_and_rejects_dead_sender(self):
+        for died in (False,True):
+            with self.subTest(died=died):
+                events=[];bus=Mock(pid=101);bus.poll.side_effect=[None, -11 if died else None, None]
+                processes={'bus':bus,'zod':Mock(pid=201,returncode=0)}
+                def launch(ship):
+                    events.append('restart');processes[ship]=Mock(pid=202,returncode=None)
+                host={'EVIDENCE':[], 'PROCESSES':processes, 'execution_check':Mock(),
+                      'shutdown':lambda ship:events.append('stop'), 'launch':Mock(side_effect=launch),
+                      'wait_ready':Mock(), 'dojo':Mock(return_value='%408\n')}
+                host['record']=lambda command,result:host['EVIDENCE'].append({'command':command,'result':result})
+                def attempt(call):
+                    events.append('terminal');return {'response':self.timeout_response()}
+                if died:
+                    with self.assertRaisesRegex(RuntimeError,'Contributor exited'):
+                        core_test.home_unavailable(host,attempt,Mock())
+                    host['launch'].assert_not_called()
+                else:
+                    result=core_test.home_unavailable(host,attempt,Mock())
+                    self.assertEqual(events,['stop','terminal','restart'])
+                    self.assertEqual(result['replacement_pid'],202)
+                    self.assertEqual([x['pid'] for x in result['sender']],[101]*3)
 
 
 if __name__=='__main__':

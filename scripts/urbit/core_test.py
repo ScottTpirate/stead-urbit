@@ -108,7 +108,44 @@ def concurrent_writes(call, requests, report, record_interval):
     return results
 
 
-def run(host):
+def home_unavailable(host, attempt, call):
+    """Drain the native terminal before restart; do not reuse a failed sender."""
+    begin = len(host['EVIDENCE'])
+    sender = host['PROCESSES']['bus']
+    observations = []
+
+    def sender_alive(phase):
+        host['execution_check']()
+        row = {'phase': phase, 'ship': 'bus', 'pid': sender.pid, 'exit': sender.poll()}
+        host['record']('unavailable sender liveness', row)
+        observations.append(row)
+        if host['PROCESSES']['bus'] is not sender or row['exit'] is not None:
+            raise RuntimeError('Contributor exited or was replaced during offline-home delivery')
+
+    sender_alive('before-stop')
+    old_pid = host['PROCESSES']['zod'].pid
+    host['shutdown']('zod')
+    stopped = host['PROCESSES']['zod'].returncode
+    # If the transport fails, leave home stopped and fail the run. Restarting it
+    # would let a queued remote reply race a locally abandoned Khan connection.
+    outcome = attempt(call)
+    host['record']('unavailable native terminal', {
+        'response_frame_sha256': outcome['response']['native']['response_frame_sha256'],
+        'stdout': outcome['response']['native']['stdout']})
+    sender_alive('after-terminal')
+    host['launch']('zod')
+    host['wait_ready']('zod')
+    alive = host['dojo']('bus', 'zuse')
+    host['record']('unavailable sender probe', {'ship': 'bus', 'dojo': 'zuse', 'result': alive})
+    if alive.strip() != '%408':
+        raise RuntimeError('Contributor kernel probe failed after home recovery')
+    sender_alive('after-restart')
+    return {'old_pid': old_pid, 'old_exit': stopped,
+            'replacement_pid': host['PROCESSES']['zod'].pid,
+            'sender': observations, 'attempt': outcome, 'native': host['EVIDENCE'][begin:]}
+
+
+def run(host, *, delivery_only=False):
     started = time.monotonic()
     run_id = time.strftime('%Y%m%dT%H%M%SZ', time.gmtime())
     report = {'status': 'fail', 'classification': 'local-real-native-fake-ships',
@@ -119,6 +156,9 @@ def run(host):
                   'Native document objects exported through stock Git; no Smart HTTP forge.',
                   'Source recipes are unqualified until their exact native outcomes and independent evidence are present.',
                   'No provisioning, shared-container lifecycle, browser sessions, HTTPS UI or live identity.']}
+    if delivery_only:
+        report.update(classification='local-real-native-delivery-lifecycle', qualifies_phase=False,
+                      scope='Two offline-home native timeouts and sender recovery; no phase qualification.')
     before_inputs = inputs()
     report['inputs_before'] = before_inputs
     report['installed_files'] = {str(path.relative_to('/native/core/desk')): sha(path)
@@ -262,20 +302,7 @@ def run(host):
                                          route or native.get('route'), result)
 
     def unavailable_home(attempt):
-        begin = len(host['EVIDENCE'])
-        old_pid = host['PROCESSES']['zod'].pid
-        host['shutdown']('zod')
-        stopped = host['PROCESSES']['zod'].returncode
-        try:
-            outcome = attempt(call)
-        finally:
-            # No forced/crashed fixture is resumed or promoted to a clean seed.
-            host['execution_check']()
-            host['launch']('zod')
-            host['wait_ready']('zod')
-        return {'old_pid': old_pid, 'old_exit': stopped,
-                'replacement_pid': host['PROCESSES']['zod'].pid,
-                'attempt': outcome, 'native': host['EVIDENCE'][begin:]}
+        return home_unavailable(host, attempt, call)
 
     def delivery_sink(record):
         # Suite arguments can include the exact request bytes positionally.
@@ -450,58 +477,71 @@ def run(host):
         for ship in host['SHIPS']:
             command(ship, '|start %stead-observer')
         check('fixture-initialized-once', call('zod','fixture',raw=Path('/specs/native-fixture.json').read_bytes())['json'] == {})
-        report['qa'] = core_cases.run(corpus, call, snapshot, restart, export, object_matrix,
-                                     trusted_now_ms=trusted_now_ms, wait_until=wait_until,
-                                     classification='local-real-native-fake-ships', include_second_project=True,
-                                     include_scoped_privacy=True, delivery_evidence=delivery_evidence,
-                                     defer_phase1_reviews=True)
-        outcomes = report['qa']['case_counts']
-        expected_cases = [c['name'] for c in corpus['ordered_cases']]
-        for lane in ('real_expiry_continuation','source_review_continuation','separate_project_journal_lane', 'scoped_privacy_lane'):
-            expected_cases.extend(c['name'] for c in corpus[lane]['cases'])
-        check('all-qa-native-cases-executed-without-failure', len(expected_cases)==148
-              and [c['name'] for c in report['qa']['cases']]==expected_cases
-              and sum(outcomes.values())==len(expected_cases)
-              and not outcomes.get('failed') and not outcomes.get('not_run'))
-        # Required missing assertions keep the current report nonpassing.
-        report['qa_coverage_status'] = report['qa']['status']
-        print('core: ordered, expiry, authorization and export outcomes complete', flush=True)
-        codec()
-        contexts()
-        before = snapshot()
-        for op in ('load-future','load-counter'):
-            result = control((op,'bus','',''),succeeds=False)
-            check('unsupported-state-specific-rejection:' + op, 'stead-unsupported-state' in result['native']['stderr'])
-            check('unsupported-state-preserves-data:' + op, same(before,snapshot()))
-        control(('roundtrip','bus','',''))
-        check('native-on-save-on-load-roundtrip', same(before,snapshot()))
-        control(('binding-drop','bus','',''),succeeds=False,sender='bud')
-        check('outsider-cannot-use-fixture-control', same(before,snapshot()))
-        concurrency()
-        report['delivery'] = delivery_suite.run(corpus, call, snapshot=snapshot,
-            pending_snapshot=lambda: call('zod', 'read', '/v1/pending-snapshot'),
-            control=lambda *value: control(value), trusted_now_ms=trusted_now_ms,
-            wait_until=wait_until, unavailable_home=unavailable_home, pause=pause,
-            runtime_errors=runtime_logs, provenance=before_inputs,
-            classification='real-native-fake-ships', probe_pool=probes, sink=delivery_sink)
-        check('delivery-has-no-observed-failure', all(case['status'] in ('passed', 'incomplete')
-              for case in report['delivery']['cases']))
-        report['qualification'] = qualification_cases.run(call,
-            classification='local-real-native-fake-ships', provenance=before_inputs)
-        check('native-capacity-and-predecessor-qualification', report['qualification']['status'] == 'passed'
-              and report['qualification']['native_qualified']
-              and len(report['qualification']['recipes']) == 8
-              and all(lane['status'] == 'executed' for lane in report['qualification']['recipes'].values()))
-        report['supported_predecessor_versions'] = [1]
-        # Independent artifact verification is a distinct closeout operation
-        # over the completed guarded report. This runner cannot approve itself.
-        report['independent_closeout'] = {
-            'status': 'pending', 'manifest_sha256': before_inputs['qualification_manifest'],
-            'command': 'python3 scripts/urbit/qualification_gate.py --manifest specs/urbit/v2/qualification-gate.json --evidence EVIDENCE_INDEX --bindings EXACT_BINDINGS --output CURRENT_GATE',
-            'scope': 'A native execution result does not close the phase or approve a merge.'}
-        report['deferred_qa_requirements'] = qualification_gate.deferred_execution(report)
-        report['execution_status'] = 'completed-awaiting-independent-qualification'
-        report['status'] = 'execution_complete'
+        if delivery_only:
+            # This focused diagnostic uses an empty initialized fixture. It
+            # never executes or qualifies the frozen full acceptance schedule.
+            report['delivery_probe'] = []
+            for repetition in range(2):
+                suite = delivery_suite.Suite(corpus, snapshot=snapshot, unavailable_home=unavailable_home)
+                suite.current = {'name': 'home-unavailable-' + str(repetition + 1), 'assertions': []}
+                report['delivery_probe'].append(suite.current)
+                suite.unavailable()
+                recovered = call('bus', 'read', delivery_suite.receipt_route(suite.command))
+                check('post-timeout-protected-read:' + str(repetition + 1), recovered['json'] == core_cases.DENIAL)
+            report['status'] = 'pass'
+        else:
+            report['qa'] = core_cases.run(corpus, call, snapshot, restart, export, object_matrix,
+                                         trusted_now_ms=trusted_now_ms, wait_until=wait_until,
+                                         classification='local-real-native-fake-ships', include_second_project=True,
+                                         include_scoped_privacy=True, delivery_evidence=delivery_evidence,
+                                         defer_phase1_reviews=True)
+            outcomes = report['qa']['case_counts']
+            expected_cases = [c['name'] for c in corpus['ordered_cases']]
+            for lane in ('real_expiry_continuation','source_review_continuation','separate_project_journal_lane', 'scoped_privacy_lane'):
+                expected_cases.extend(c['name'] for c in corpus[lane]['cases'])
+            check('all-qa-native-cases-executed-without-failure', len(expected_cases)==148
+                  and [c['name'] for c in report['qa']['cases']]==expected_cases
+                  and sum(outcomes.values())==len(expected_cases)
+                  and not outcomes.get('failed') and not outcomes.get('not_run'))
+            # Required missing assertions keep the current report nonpassing.
+            report['qa_coverage_status'] = report['qa']['status']
+            print('core: ordered, expiry, authorization and export outcomes complete', flush=True)
+            codec()
+            contexts()
+            before = snapshot()
+            for op in ('load-future','load-counter'):
+                result = control((op,'bus','',''),succeeds=False)
+                check('unsupported-state-specific-rejection:' + op, 'stead-unsupported-state' in result['native']['stderr'])
+                check('unsupported-state-preserves-data:' + op, same(before,snapshot()))
+            control(('roundtrip','bus','',''))
+            check('native-on-save-on-load-roundtrip', same(before,snapshot()))
+            control(('binding-drop','bus','',''),succeeds=False,sender='bud')
+            check('outsider-cannot-use-fixture-control', same(before,snapshot()))
+            concurrency()
+            report['delivery'] = delivery_suite.run(corpus, call, snapshot=snapshot,
+                pending_snapshot=lambda: call('zod', 'read', '/v1/pending-snapshot'),
+                control=lambda *value: control(value), trusted_now_ms=trusted_now_ms,
+                wait_until=wait_until, unavailable_home=unavailable_home, pause=pause,
+                runtime_errors=runtime_logs, provenance=before_inputs,
+                classification='real-native-fake-ships', probe_pool=probes, sink=delivery_sink)
+            check('delivery-has-no-observed-failure', all(case['status'] in ('passed', 'incomplete')
+                  for case in report['delivery']['cases']))
+            report['qualification'] = qualification_cases.run(call,
+                classification='local-real-native-fake-ships', provenance=before_inputs)
+            check('native-capacity-and-predecessor-qualification', report['qualification']['status'] == 'passed'
+                  and report['qualification']['native_qualified']
+                  and len(report['qualification']['recipes']) == 8
+                  and all(lane['status'] == 'executed' for lane in report['qualification']['recipes'].values()))
+            report['supported_predecessor_versions'] = [1]
+            # Independent artifact verification is a distinct closeout operation
+            # over the completed guarded report. This runner cannot approve itself.
+            report['independent_closeout'] = {
+                'status': 'pending', 'manifest_sha256': before_inputs['qualification_manifest'],
+                'command': 'python3 scripts/urbit/qualification_gate.py --manifest specs/urbit/v2/qualification-gate.json --evidence EVIDENCE_INDEX --bindings EXACT_BINDINGS --output CURRENT_GATE',
+                'scope': 'A native execution result does not close the phase or approve a merge.'}
+            report['deferred_qa_requirements'] = qualification_gate.deferred_execution(report)
+            report['execution_status'] = 'completed-awaiting-independent-qualification'
+            report['status'] = 'execution_complete'
     except Exception as exc:
         report['error'] = f'{type(exc).__name__}: {exc}'
         traceback.print_exc()
@@ -519,10 +559,11 @@ def run(host):
     report['native_tree_sha256'] = before_inputs['native']
     report['toolchain_sha256'] = before_inputs['toolchain']
     report['transport_artifact'] = transcript.close()
-    path = Path('/state/logs') / ('core-' + run_id + '.json')
+    path = Path('/state/logs') / (('core-delivery-check-' if delivery_only else 'core-') + run_id + '.json')
     report, payload = bounded_report(report)
     path.write_bytes(payload)
     return {'status':report['status'], 'checks_passed':sum(c['passed'] for c in report['checks']),
             'checks_failed':[c for c in report['checks'] if not c['passed']], 'error':report.get('error'),
             'qa_case_counts':report.get('qa',{}).get('case_counts'), 'qa_coverage_status':report.get('qa_coverage_status'),
-            'elapsed_seconds':report['elapsed_seconds'], 'evidence_file':'.piers/fakes/logs/' + path.name}
+            'elapsed_seconds':report['elapsed_seconds'], 'evidence_file':'.piers/fakes/logs/' + path.name,
+            **({'qualifies_phase':False} if delivery_only else {})}

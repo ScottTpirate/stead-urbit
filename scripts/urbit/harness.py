@@ -367,6 +367,14 @@ def core_test():
         print('Native execution completed; independent phase qualification remains required.')
 
 
+def delivery_check():
+    guard()
+    result = rpc('delivery-check', timeout=1800)
+    print(json.dumps(result, indent=2))
+    if result['status'] != 'pass' or result.get('qualifies_phase') is not False:
+        raise RuntimeError('Native delivery lifecycle check failed; inspect retained evidence')
+
+
 def core_check():
     guard()
     result = rpc('core-check', timeout=1800)
@@ -427,7 +435,7 @@ def dev():
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument('command', choices=['doctor', 'preflight', 'start', 'stop', 'reset', 'status',
-                        'wait-ready', 'dev', 'test', 'core-check', 'core-test', 'gall-schedule',
+                        'wait-ready', 'dev', 'test', 'core-check', 'core-test', 'delivery-check', 'gall-schedule',
                         'skill-evaluation', 'skill-feedback', '_guarded-supervisor'])
     parser.add_argument('--condition', choices=['prequalification', 'baseline', 'local_skill_assisted'])
     parser.add_argument('--task', choices=['T01', 'T02', 'T03', 'T04', 'T05', 'T06'])

@@ -363,6 +363,35 @@ class BuilderTests(unittest.TestCase):
         with self.assertRaisesRegex(ValueError, 'graceful native shutdown'):
             B.lifecycle({'lifecycle': rows}, {'old_pid': 1, 'old_exit': 0, 'replacement_pid': 2})
 
+    def test_offline_home_segment_binds_the_actual_home_and_sender_incarnations(self):
+        sender=[{'phase':phase,'ship':'bus','pid':10,'exit':None}
+                for phase in ('before-stop','after-terminal','after-restart')]
+        terminal={'stdout':'[32 %avow 1]','response_frame_sha256':'a'*64}
+        rows=[{'command':command,'result':result} for command,result in (
+            ('unavailable sender liveness',sender[0]),
+            ('shutdown zod',{'exit_code':0,'forced':False}),
+            ('unavailable native terminal',terminal),
+            ('unavailable sender liveness',sender[1]),
+            ('launch zod',{'pid':2}),('zod: zuse','%408\n'),
+            ('unavailable sender probe',{'ship':'bus','dojo':'zuse','result':'%408\n'}),
+            ('unavailable sender liveness',sender[2]))]
+        prefix=[{'command':'launch zod','result':{'pid':1}}, {'command':'launch bus','result':{'pid':10}}]
+        evidence={'old_pid':1,'replacement_pid':2,'sender':sender,'native':rows,
+                  'attempt':{'response':{'native':terminal}}}
+        B.unavailable_lifecycle({'lifecycle':prefix+rows},evidence)
+        for kind in ('wrong-old','wrong-new','forced','sender-replaced','sender-stopped','home-stopped','duplicate'):
+            actual=copy.deepcopy(evidence);history=copy.deepcopy(prefix)
+            if kind=='wrong-old':actual['old_pid']=99
+            elif kind=='wrong-new':actual['replacement_pid']=99
+            elif kind=='forced':actual['native'][1]['result']['forced']=True
+            elif kind=='sender-replaced':history.append({'command':'launch bus','result':{'pid':99}})
+            elif kind=='sender-stopped':history.append({'command':'shutdown bus','result':{'exit_code':0,'forced':False}})
+            elif kind=='home-stopped':history.append({'command':'shutdown zod','result':{'exit_code':0,'forced':False}})
+            history+=actual['native']
+            if kind=='duplicate':history+=actual['native']
+            with self.subTest(kind=kind),self.assertRaises(ValueError):
+                B.unavailable_lifecycle({'lifecycle':history},actual)
+
     def test_wait_needs_real_authority_clock_and_exact_observation(self):
         report, ref, files = authored()
         replay = B.Replay(B.Retained(report, ref, files.__getitem__))

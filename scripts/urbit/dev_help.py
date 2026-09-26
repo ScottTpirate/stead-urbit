@@ -11,6 +11,7 @@ print('''Stead Urbit local development (Linux, synthetic fake ships)
   make core-check  Recompile core and run pure probes on a fresh fake fixture
   make test        Run the original four-ship native smoke suite
   make core-test   Execute the full native corpus; independent qualification follows
+  make delivery-check  Check native offline-home timeouts and sender recovery
   make gall-schedule  Run the pinned Gall reordered-leave qualification lane
   make skill-prequalify  Validate frozen workflow references before evaluation
   make stop        Gracefully stop the owned fake ships and guard

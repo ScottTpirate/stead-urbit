@@ -457,6 +457,21 @@ def handle(connection):
                         raise RuntimeError('Fixture not ready')
                     execution_check(preflight=True)
                     result = guarded_result(core_test.run(globals()))
+            elif request == {'op': 'delivery-check'}:
+                with MUTEX:
+                    if not PROGRESS['ready']:
+                        raise RuntimeError('Fixture not ready')
+                    execution_check(preflight=True)
+                    PROGRESS.update(stage='delivery-check', ready=False, error=None)
+                    result = None
+                    try:
+                        result = guarded_result(core_test.run(globals(), delivery_only=True))
+                    finally:
+                        if result is None or result['status'] != 'pass':
+                            PROGRESS.update(stage='failed', ready=False, error='Native delivery lifecycle check failed')
+                            all_stop()
+                        else:
+                            PROGRESS.update(stage='ready', ready=True, error=None)
             elif request == {'op': 'core-check'}:
                 with MUTEX:
                     if not PROGRESS['ready']:

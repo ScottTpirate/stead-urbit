@@ -10,9 +10,9 @@ from __future__ import annotations
 
 from concurrent.futures import ThreadPoolExecutor
 import copy
-import errno
 import hashlib
 import json
+import re
 import threading
 import time
 
@@ -54,6 +54,19 @@ def command_route(ship, command, digest=None):
 def receipt_route(command):
     container = command['payload'].get('container_id',command['project_id'])
     return f"/v2/receipt/{command['project_id']}/{container}/{command['resource_id']}/{command['operation']}/{command['request_id']}"
+
+
+def native_timeout(response):
+    """Accept only a completely drained Spider timeout, never a socket failure."""
+    native = response.get('native', {})
+    lines = [line.strip() for line in native.get('stderr', '').splitlines() if line.strip()]
+    return (response.get('raw') is None and response.get('json') is None
+            and native.get('stdout') == '[32 %avow 1]'
+            and bool(C.HEX64.fullmatch(native.get('response_frame_sha256', '')))
+            and len(lines) == 7 and lines[0] == 'loom: mapped 512MB'
+            and all(re.fullmatch(prefix + r'[0-9a-f]+', line)
+                    for prefix, line in zip(('lite: arvo formula ', 'lite: core ', 'lite: final state '), lines[1:4]))
+            and lines[4:] == ['eval (cue, newt):', 'timeout', 'eval: bail: %thread-fail'])
 
 
 def correlated(command, ship):
@@ -315,22 +328,24 @@ class Suite:
     def unavailable(self):
         before=self.snap();route=receipt_route(self.command)
         def attempt(bounded_call):
-            try:
-                response=bounded_call('bus','read',route=route,raw=b'',timeout=5)
-                return {'response':response,'supported_failure':None,
-                        'saved':isinstance(response.get('json'),dict) and response['json'].get('status')=='accepted'}
-            except TimeoutError as error:
-                return {'exception':type(error).__name__+': '+str(error),'supported_failure':'timeout','saved':False}
-            except OSError as error:
-                if error.errno not in (errno.ECONNREFUSED,errno.EHOSTUNREACH,errno.ENETUNREACH,errno.ETIMEDOUT):
-                    raise
-                return {'exception':type(error).__name__+': '+str(error),'supported_failure':'unreachable','errno':error.errno,'saved':False}
+            # stead-client owns a 55-second native timeout. Keep its socket and
+            # the offline home unchanged until the terminal response is drained.
+            # Local timeout/EOF/refusal means broken infrastructure, not success.
+            response=bounded_call('bus','read',route=route,raw=b'',timeout=75)
+            D.require(native_timeout(response), 'Expected the complete specific native timeout')
+            return {'response':response,'supported_failure':'native-timeout','saved':False}
         evidence=self.unavailable_home(attempt)
+        self.current['unavailability']=evidence
         self.check('actual-home-unavailability-lifecycle',isinstance(evidence,dict) and bool(evidence.get('native')) and evidence.get('old_exit')==0 and evidence.get('old_pid')!=evidence.get('replacement_pid') and bool(evidence.get('old_pid')) and bool(evidence.get('replacement_pid')))
+        sender=evidence.get('sender',[])
+        self.check('same-live-sender-through-home-unavailability',len(sender)==3
+                   and [row.get('phase') for row in sender]==['before-stop','after-terminal','after-restart']
+                   and all(row.get('ship')=='bus' and type(row.get('pid')) is int and row['pid']>0
+                           and row.get('exit') is None and row['pid']==sender[0]['pid'] for row in sender))
         during=evidence.get('attempt',{})
         self.check('unavailable-home-never-saved',during.get('saved') is False
-                   and during.get('supported_failure') in ('timeout','unreachable') and 'exception'in during)
-        self.current['unavailability']=evidence;self.same(before)
+                   and during.get('supported_failure')=='native-timeout' and native_timeout(during.get('response',{})))
+        self.same(before)
 
     def ended_leave(self):
         before=self.snap();D.require(self.old_completed is not None,'Prior completed duct required')
