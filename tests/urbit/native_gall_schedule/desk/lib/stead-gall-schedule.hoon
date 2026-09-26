@@ -350,11 +350,10 @@
   =^  final-history  home  (query home ~zod %stead-home /v1/fixture-snapshot)
   ?>  =(committed final-history)
   ::  Scalar diagnostics precede bounded serialization, including unprojected gifts.
-  ~&  [%stead-scheduled-gall-jam-bytes
-       [%old-poke (met 3 (jam old-poke-output))]
-       [%fresh-poke (met 3 (jam new-poke-output))]
-       [%old-result-gifts (met 3 (jam old-result-gifts))]
-       [%fresh-result-gifts (met 3 (jam fresh-gifts))]]
+  ~&  [%old-poke-jam-bytes (met 3 (jam old-poke-output))]
+  ~&  [%fresh-poke-jam-bytes (met 3 (jam new-poke-output))]
+  ~&  [%old-result-gifts-jam-bytes (met 3 (jam old-result-gifts))]
+  ~&  [%fresh-result-gifts-jam-bytes (met 3 (jam fresh-gifts))]
   =/  result
     %-  canonical:stead-codec
     %-  object:stead-codec
