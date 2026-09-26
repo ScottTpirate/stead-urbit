@@ -1,0 +1,69 @@
+{
+  "confirmation": "All seven source files matched a68a5a7 Git bytes and worktree; harness a63615ca and supervisor d157a974 were exactly the bytes independently approved in the referenced feedback and stop-race records. Referenced document hashes and sections matched committed bytes. No attribution or semantic concern for these deltas.",
+  "confirmation_delivery": "Actual collaboration message received in this task; this recorder did not impersonate or rerun the independent review.",
+  "confirmation_from": "/root/editor_tool_review",
+  "final_bindings": null,
+  "host_test_execution": false,
+  "independently_confirmed_files": {
+    "Makefile": "da78fc039ee0562efcf5b408a9b8ab24f243f5d2965991599548a76b42b8a0f8",
+    "scripts/urbit/digests.py": "88e6333bd6c764f48fb8939bafa77c9eb236c5b3586a19fe1a1f6e48e27dc08c",
+    "scripts/urbit/execution_policy.py": "da16e2e0fd32eb5b90706b546a7ea8332a65807fc8279f3bd765dcc18aaad9b5",
+    "scripts/urbit/harness.py": "a63615cabf3c01698cec27bc6ae3f1381cc22be08d0c33859c992d96b8035c04",
+    "scripts/urbit/namespace_check.py": "87950f4e7796fafb91807c36b9ea7d392d1d1840e5516d15d5fc6c5d476d0449",
+    "scripts/urbit/supervisor.py": "d157a974075d2e1cbfb1ae07609182a3232c5a3f16b75c3e9287652434d774d2",
+    "scripts/urbit/toolchain.py": "31234bbab1af217c885d8c081d7f438972f6ff1b6d89c93d10bdf49871b3ea16"
+  },
+  "independently_confirmed_observed_head": "a68a5a7b12c2f87396ca666807e22a170d82a3f1",
+  "independently_confirmed_prior_records": [
+    {
+      "approved_sources": {
+        "scripts/urbit/harness.py": "aa798c754b3fc62da384ac14fdf43fba04205f88ffc3fd106ca4ff692855c5df",
+        "scripts/urbit/supervisor.py": "d157a974075d2e1cbfb1ae07609182a3232c5a3f16b75c3e9287652434d774d2"
+      },
+      "lines": [
+        552,
+        622
+      ],
+      "path": "docs/urbit/reviews/PHASE01_INDEPENDENT_REVIEW_20260925.md",
+      "reviewed_commits": [
+        "b0e1a4c"
+      ],
+      "section": "Public workflow feedback and observed pretty-output correction (September 26)",
+      "sha256": "ae0edda0a91d5b89b1cd070c8685de8d73dbc190093563c8cd2d4dba1d51b717"
+    },
+    {
+      "approved_sources": {
+        "scripts/urbit/harness.py": "a63615cabf3c01698cec27bc6ae3f1381cc22be08d0c33859c992d96b8035c04"
+      },
+      "lines": [
+        668,
+        704
+      ],
+      "path": "docs/urbit/reviews/PHASE01_INDEPENDENT_REVIEW_20260925.md",
+      "reviewed_commits": [
+        "97e8628"
+      ],
+      "section": "Observed compiler stream and stop-socket race corrections (September 26)",
+      "sha256": "ae0edda0a91d5b89b1cd070c8685de8d73dbc190093563c8cd2d4dba1d51b717"
+    }
+  ],
+  "native_execution": false,
+  "old_host_artifact": {
+    "path": "docs/urbit/evidence/2026-09-25/phase1-nonnative/host-current.json",
+    "sha256": "5cfe4d692e6898113a8e1ff1dba3c78ebc4832a1fc2eb621d63f50c967fe4772"
+  },
+  "old_host_artifact_unchanged_and_stale": true,
+  "proposal": {
+    "path": ".runtime/phase01-20260926/guard-source-proof-proposed.json",
+    "sha256": "dcd7b1634d0817f875448cc84e4414c3c3ebdc04dc2ef646f3c067689250e3f9"
+  },
+  "protocol": "stead.guard-source-review-confirmation/1",
+  "recorded_at": "2026-09-26T16:51:36.477676+00:00",
+  "recorded_by": "/root/independent_review",
+  "remaining_requirements": [
+    "Fresh host capture at final committed source and complete actual test inventory.",
+    "Bind final common source/toolchain/input identities and refresh dependent artifact pointers.",
+    "Do not interpret this confirmation as current host, native or phase acceptance."
+  ],
+  "status": "composite-attribution-confirmed-final-binding-and-current-host-evidence-pending"
+}

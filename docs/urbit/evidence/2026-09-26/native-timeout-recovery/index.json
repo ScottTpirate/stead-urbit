@@ -1,0 +1,115 @@
+{
+  "protocol": "stead.retained-local-execution/1",
+  "source_commit": "8334a75cad4c2b063147e7e3352cdf76da0d5893",
+  "notes": [
+    "Failed start30 readiness after the prior timed-out native Dojo request; exact failure and stopped-seed reset29 retained.",
+    "A pending request in persisted disposable state was the working diagnosis; no assertion that process shutdown alone resolves native state.",
+    "Reset acts only on marked verified stopped disposable fake fixtures; no Git reset or live identity."
+  ],
+  "artifacts": [
+    {
+      "file": "start30.json.gz",
+      "sha256": "c40cf7ac5058e1b1fa265ca292cdd1c89842991cd5de402cc0ab0e772775274c",
+      "encoding": "gzip",
+      "original_path": ".runtime/phase01-20260925/start30.json",
+      "original_sha256": "96d884d19ecb67445a846115dee513f55e359bdf4dc8ba8d2d8b294ff1f76aa5",
+      "original_bytes": 226
+    },
+    {
+      "file": "start30.log.gz",
+      "sha256": "28c06356a5b4d50dcd6b24caff7b656216d12e1fd02fcb7cc232c62aa4eb47f9",
+      "encoding": "gzip",
+      "original_path": ".runtime/phase01-20260925/start30.log",
+      "original_sha256": "a5a2997c9d51b3028345587afe10bc2c4cd2d2611612af070b80027eec51e10d",
+      "original_bytes": 453
+    },
+    {
+      "file": "ready30.json.gz",
+      "sha256": "791de9d820e33eb23737a0e6f2a629d880ae4b3658c389f697646004da1aeeb0",
+      "encoding": "gzip",
+      "original_path": ".runtime/phase01-20260925/ready30.json",
+      "original_sha256": "d51e44a6943cec7e11b80c625790e70acc2c7d62607ebd5076a591cee8863cac",
+      "original_bytes": 232
+    },
+    {
+      "file": "ready30.log.gz",
+      "sha256": "d97ff23ba2e9c52236118c7ad3eb76ee61b0be37d9a75245d6a7de3a4e4e8abc",
+      "encoding": "gzip",
+      "original_path": ".runtime/phase01-20260925/ready30.log",
+      "original_sha256": "5d5e14ee4bb75ff8f6aea0f8187d0779f8fa469da455655c6e8f660dd3b23aa2",
+      "original_bytes": 404
+    },
+    {
+      "file": "stop30cancel.json.gz",
+      "sha256": "9af988facc15ce5738e36857f9e06dbd67076f21e482291e0dceecae7edf5a2d",
+      "encoding": "gzip",
+      "original_path": ".runtime/phase01-20260925/stop30cancel.json",
+      "original_sha256": "0bc74cda0930370f52c2b606aaf1928bbf3bca8896bfb2b5617ad25bfca12b22",
+      "original_bytes": 224
+    },
+    {
+      "file": "stop30cancel.log.gz",
+      "sha256": "3515bb00ab4541684f1f9147aacb7e7157ed671b8d21b6ef4cf9f013b859c7f8",
+      "encoding": "gzip",
+      "original_path": ".runtime/phase01-20260925/stop30cancel.log",
+      "original_sha256": "fe8b2280abb0c0a09259c5211aa3dc729b9b42caa2afdaa7431a4d4936ba213c",
+      "original_bytes": 141
+    },
+    {
+      "file": "stop30.json.gz",
+      "sha256": "b1e962d98909e082b8d777e326e01580caef92172ed9b5828e4d46eff545ff61",
+      "encoding": "gzip",
+      "original_path": ".runtime/phase01-20260925/stop30.json",
+      "original_sha256": "571d1727e23f8219241453295c980456ed7faacb5467fa42a09e8e33a28f766f",
+      "original_bytes": 225
+    },
+    {
+      "file": "stop30.log.gz",
+      "sha256": "12c671e095df8b045e620680c1b93956a87a91531f555b53cad5fd1a748b4a19",
+      "encoding": "gzip",
+      "original_path": ".runtime/phase01-20260925/stop30.log",
+      "original_sha256": "7e0046a61997e91b4c00d40b33b385148d315de81c5f28722592072cb3fde000",
+      "original_bytes": 78
+    },
+    {
+      "file": "reset29.json.gz",
+      "sha256": "fd6e0d1096c4ed2156917a7f8dda209716d09236771e998ffcf846e3047172b3",
+      "encoding": "gzip",
+      "original_path": ".runtime/phase01-20260925/reset29.json",
+      "original_sha256": "f19c65046867b0b213cfc8a63e583075804825384d138a9d1a8efd68cd122017",
+      "original_bytes": 429
+    },
+    {
+      "file": "reset29.log.gz",
+      "sha256": "f881934e094a5ba8c507279e050f290402ae6d979b64fdc64a2714336c108cca",
+      "encoding": "gzip",
+      "original_path": ".runtime/phase01-20260925/reset29.log",
+      "original_sha256": "20a4f83e68b491f063b2573def36659991a7d8456eb5c92f4624dabdce7e290a",
+      "original_bytes": 60
+    },
+    {
+      "file": "pre-reset29-unclean-live.json.gz",
+      "sha256": "40db80e6220ae4ac900ef4b0d636f36d4b983ec293e6d9241ee00bd43a6f90bc",
+      "encoding": "gzip",
+      "original_path": ".runtime/phase01-20260925/pre-reset29-unclean-live.json",
+      "original_sha256": "8540e330c1c3ecee23726f5044e3c91afd54b9a314974e866c13fc0900a41f36",
+      "original_bytes": 152
+    },
+    {
+      "file": "outer-guard.json.gz",
+      "sha256": "486e9e46ca0ed26deb5e26335ab050d7c7d7186611c5b4ec04161a43fafd4fbf",
+      "encoding": "gzip",
+      "original_path": ".runtime/execution-runs/four-fakes-48v3jaev/report.json",
+      "original_sha256": "cfac430684216298ddbd477a99dde947c3d4bc8a58c9c1402c7b42c9a73b6058",
+      "original_bytes": 40807
+    },
+    {
+      "file": "source-context.json.gz",
+      "sha256": "8ca913526ffefde836b288039fdf5c96dbff1bc49f9fbeb64f7495f1b894ff63",
+      "encoding": "gzip",
+      "original_path": ".runtime/execution-runs/four-fakes-48v3jaev/control/source-context.json",
+      "original_sha256": "edbcd628266e39334ddcf12b974d14ebbc548119201d6f2720a366e36bb1cf37",
+      "original_bytes": 18110
+    }
+  ]
+}

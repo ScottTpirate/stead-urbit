@@ -1,0 +1,140 @@
+{
+  "protocol": "stead.native-attempt/1",
+  "source_commit": "8334a75cad4c2b063147e7e3352cdf76da0d5893",
+  "status": "interrupted",
+  "qualifies_phase": false,
+  "guard_run_id": "3c29c33184bb5d71fd0590910f99400f",
+  "reason": "Actual thermal ceiling92C; unchanged90Cstop. Outerfailed,exit1,cleanupempty.",
+  "raw_qa_counts": {
+    "passed": 90,
+    "incomplete": 1,
+    "failed": 1,
+    "not_run": 56
+  },
+  "failed_case_classification": "guard interruption, not a demonstrated application assertion failure",
+  "limits": [
+    "Raw execution_guard is null after supervisor observed terminal stop; original bytes preserved and actual outer report separately linked.",
+    "No capacity/migration/final qualification claim."
+  ],
+  "artifacts": [
+    {
+      "file": "core-20260926T172751Z.json.gz",
+      "sha256": "c57aa245c07d8a811bc20c1e32bfa298743e7e40f7ed389526a378925eaa3ed7",
+      "original_path": ".piers/fakes/logs/core-20260926T172751Z.json",
+      "original_sha256": "ff9a6db614b65368220f925a662fe844b22ad5f976713ad704916d0a03ab0bbd",
+      "encoding": "gzip"
+    },
+    {
+      "file": "core-20260926T172751Z-transport.jsonl.gz",
+      "sha256": "5e3f0ca6d267fa95498e1a1c145ba87b0d2a33bbf467d16b19b1dba5854ec3d2",
+      "original_path": ".piers/fakes/logs/core-20260926T172751Z-transport.jsonl.gz",
+      "original_sha256": "5e3f0ca6d267fa95498e1a1c145ba87b0d2a33bbf467d16b19b1dba5854ec3d2",
+      "encoding": "original-gzip"
+    },
+    {
+      "file": "outer-guard.json.gz",
+      "sha256": "3b7d698f65a4fcad909ab1f1aa329b99e6b561d98f94df7d84870460d474bfc9",
+      "original_path": ".runtime/execution-runs/four-fakes-wz6jgduh/report.json",
+      "original_sha256": "44e281b4a59a6bf22fd320999ee8ed0d22384a20f0da8331bd658832c63307c9",
+      "encoding": "gzip"
+    },
+    {
+      "file": "source-context.json.gz",
+      "sha256": "8ca913526ffefde836b288039fdf5c96dbff1bc49f9fbeb64f7495f1b894ff63",
+      "original_path": ".runtime/execution-runs/four-fakes-wz6jgduh/control/source-context.json",
+      "original_sha256": "edbcd628266e39334ddcf12b974d14ebbc548119201d6f2720a366e36bb1cf37",
+      "encoding": "gzip"
+    },
+    {
+      "file": "lifecycle.json.gz",
+      "sha256": "a015a14ded6f7089b513201d7928b2bf6ca7c8998810a818e9a0f0e5fdf27e0d",
+      "original_path": ".runtime/phase01-20260926/core-final-lifecycle.json",
+      "original_sha256": "37c5a177e484fb9977efc5cf9505673e2c02409c393325ea248cdd8324fa3b35",
+      "encoding": "gzip"
+    },
+    {
+      "file": "start32.json.gz",
+      "sha256": "37f1a3b157778f977793db7fe9a8e9ec751247ed059f0d8779961f279c80533a",
+      "original_path": ".runtime/phase01-20260925/start32.json",
+      "original_sha256": "da4c58456e66532aa49400271ae843a6e8fbe9825e4f7a71d3207c955a845b7c",
+      "encoding": "gzip"
+    },
+    {
+      "file": "start32.log.gz",
+      "sha256": "0a516c2718f4c18290900b9bc9922fe7e3b163f24452e094a2ec5186a7199382",
+      "original_path": ".runtime/phase01-20260925/start32.log",
+      "original_sha256": "f40da00a3baff86be86e67bd6b18739adbb9a16b3e236bcd3edee5c3cf323258",
+      "encoding": "gzip"
+    },
+    {
+      "file": "ready32.json.gz",
+      "sha256": "2642b4f0a786a2b2ed96b1f93f07001cd9a4411cb752c789ef5ed7e4709b0a7d",
+      "original_path": ".runtime/phase01-20260925/ready32.json",
+      "original_sha256": "787a4f3fc8a7b47aec932fb4c6b1a097eb4459b05c9a6dbef954ff1099a5e78d",
+      "encoding": "gzip"
+    },
+    {
+      "file": "ready32.log.gz",
+      "sha256": "01cedc45b27b73b7c8d5c8d2e0aa7bae317933250f77076dc26ab76b2428f17e",
+      "original_path": ".runtime/phase01-20260925/ready32.log",
+      "original_sha256": "6ade3d62b67dd2066207260ae96b6ef88847dbb824720cc7be7b132fee5510e9",
+      "encoding": "gzip"
+    },
+    {
+      "file": "core02.json.gz",
+      "sha256": "971d03404a0a6820903f77451eb5fe00db6f86b8daf4c4107884b50b24a9cdd2",
+      "original_path": ".runtime/phase01-20260925/core02.json",
+      "original_sha256": "6595f3c6afc56f86069e1910fbe24cec0b11e97caebb1343eccf9c4d14dafb35",
+      "encoding": "gzip"
+    },
+    {
+      "file": "core02.log.gz",
+      "sha256": "df010ff771a2a41e156e1c262a58becd63d8cf466221050f688598fb3bb06bee",
+      "original_path": ".runtime/phase01-20260925/core02.log",
+      "original_sha256": "1ea253e0d2cb8e0ac6b5cb592743717497de781e22ab1ccd17c7d76539ac5702",
+      "encoding": "gzip"
+    },
+    {
+      "file": "stop32.json.gz",
+      "sha256": "c08fd8db16be7c8b88513a7b3ea6af640ff2a3d834ff7395e98cef1b83771f3a",
+      "original_path": ".runtime/phase01-20260925/stop32.json",
+      "original_sha256": "c887e5d362a07305f83066df30dbec7697ac1a372f230167e916e64314f18c20",
+      "encoding": "gzip"
+    },
+    {
+      "file": "stop32.log.gz",
+      "sha256": "12c671e095df8b045e620680c1b93956a87a91531f555b53cad5fd1a748b4a19",
+      "original_path": ".runtime/phase01-20260925/stop32.log",
+      "original_sha256": "7e0046a61997e91b4c00d40b33b385148d315de81c5f28722592072cb3fde000",
+      "encoding": "gzip"
+    },
+    {
+      "file": "zod.log.gz",
+      "sha256": "83178a759e3fda0b3ff90ca2eea87c4e7af9cf573e2e2c760edbc547a7f46da7",
+      "original_path": ".piers/fakes/logs/zod.log",
+      "original_sha256": "09f82ab0dc1599a04236462bd32ed425fb4125ae9b2c3c8193f6a94cece1e1d5",
+      "encoding": "gzip"
+    },
+    {
+      "file": "bus.log.gz",
+      "sha256": "5a4e27ccdb073231f5299ed5bd0df0924f2971a0668d76108861a513df98b0d4",
+      "original_path": ".piers/fakes/logs/bus.log",
+      "original_sha256": "3ce4cd419b8f2890ddc2f081c54e40aa8192a826f9aa73bc4855f5b4ea14d4a6",
+      "encoding": "gzip"
+    },
+    {
+      "file": "nec.log.gz",
+      "sha256": "4dd82ca048bf3a4109a6c4012048022bf5bbdbf448bcf8b6cec97d19558a2940",
+      "original_path": ".piers/fakes/logs/nec.log",
+      "original_sha256": "78650f907e976c524df64c271abac949fa85338fb63e8f09170c333a9be11b6a",
+      "encoding": "gzip"
+    },
+    {
+      "file": "bud.log.gz",
+      "sha256": "7b88cedd256dabff47a11ac605387a095f8cf0aca918424db62b6bda796e0ed3",
+      "original_path": ".piers/fakes/logs/bud.log",
+      "original_sha256": "5f71d491774e5375c526027b9a95bde843f3194324be67be0d260a9a93c231e5",
+      "encoding": "gzip"
+    }
+  ]
+}

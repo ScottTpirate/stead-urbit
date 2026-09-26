@@ -1,0 +1,615 @@
+{
+  "approval_limit": "Independent AI source review and retained host execution, not human approval, native acceptance, merge permission or phase completion.",
+  "binding_observed_source_commit": "8334a75cad4c2b063147e7e3352cdf76da0d5893",
+  "binding_rule": "Integrator may fill common commit/tree/runner/lock/corpus/freeze bindings only after checking all reviewed_source_files and host-current source_files_before/after against those actual committed bytes. Preserve the actual host-run base HEAD and uncommitted status; no rerun at the later commit is claimed. Changed reviewed/tested bytes require renewed review/testing. Null bindings fail admission.",
+  "historical_skips_unchanged": true,
+  "observed_head": "ffab82f8ac5251cb912236be60edc3d3fac3dfba",
+  "owner": "/root/independent_review",
+  "promotion": {
+    "composite_confirmation": {
+      "path": "docs/urbit/evidence/2026-09-26/phase1-nonnative/guard-source-proof-confirmation.json",
+      "pointer": "",
+      "sha256": "523292f26db197a0b48e6fa4f316308f95b51ec6f646cd4269325156fea2fefe"
+    },
+    "host_audit_confirmation": {
+      "path": "docs/urbit/evidence/2026-09-26/phase1-nonnative/host-audit-confirmation.json",
+      "pointer": "",
+      "sha256": "1d9aabffa452409383def87f82e9f851eebc3c17d6d714fdf6d94a57217c1eb6"
+    },
+    "host_test_execution": false,
+    "independent_review_performed": false,
+    "native_execution": false,
+    "original_review": {
+      "path": "docs/urbit/evidence/2026-09-25/phase1-nonnative/source-dispositions-pending.json",
+      "pointer": "",
+      "sha256": "dd18bf2e8258c6a5f66a5e12f0279d70472cd33e670122a469ceeb7208772fe9"
+    },
+    "prepared_by": "/root/gall_schedule_review",
+    "scope": "Mechanical exact-byte retention and verified common binding; original reviewer attribution preserved."
+  },
+  "proofs": {
+    "delivery-host-order-permutations": {
+      "assertions": [
+        {
+          "name": "fact-before-ack",
+          "observed_test_ids": [
+            "test_delivery_cases.DeliveryEvidenceHostTests.test_fact_ack_kick_host_permutations_require_exact_receipt"
+          ],
+          "observed_test_records": [
+            {
+              "path": "docs/urbit/evidence/2026-09-26/phase1-nonnative/host-current/host-current.json",
+              "pointer": "/observed_tests/108",
+              "sha256": "a6c3ce3878da93544609f71dfe847a6751395cd938c40b9a26993d35008e40c8"
+            }
+          ],
+          "status": "passed"
+        },
+        {
+          "name": "ack-before-fact",
+          "observed_test_ids": [
+            "test_delivery_cases.DeliveryEvidenceHostTests.test_fact_ack_kick_host_permutations_require_exact_receipt"
+          ],
+          "observed_test_records": [
+            {
+              "path": "docs/urbit/evidence/2026-09-26/phase1-nonnative/host-current/host-current.json",
+              "pointer": "/observed_tests/108",
+              "sha256": "a6c3ce3878da93544609f71dfe847a6751395cd938c40b9a26993d35008e40c8"
+            }
+          ],
+          "status": "passed"
+        },
+        {
+          "name": "kick-before-ack",
+          "observed_test_ids": [
+            "test_delivery_cases.DeliveryEvidenceHostTests.test_fact_ack_kick_host_permutations_require_exact_receipt"
+          ],
+          "observed_test_records": [
+            {
+              "path": "docs/urbit/evidence/2026-09-26/phase1-nonnative/host-current/host-current.json",
+              "pointer": "/observed_tests/108",
+              "sha256": "a6c3ce3878da93544609f71dfe847a6751395cd938c40b9a26993d35008e40c8"
+            }
+          ],
+          "status": "passed"
+        },
+        {
+          "name": "nack-is-not-accepted",
+          "observed_test_ids": [
+            "test_delivery_cases.DeliveryEvidenceHostTests.test_ack_nack_timeout_partial_missing_and_duplicate_never_saved"
+          ],
+          "observed_test_records": [
+            {
+              "path": "docs/urbit/evidence/2026-09-26/phase1-nonnative/host-current/host-current.json",
+              "pointer": "/observed_tests/106",
+              "sha256": "a6c3ce3878da93544609f71dfe847a6751395cd938c40b9a26993d35008e40c8"
+            }
+          ],
+          "status": "passed"
+        },
+        {
+          "name": "ack-without-result",
+          "observed_test_ids": [
+            "test_delivery_cases.DeliveryEvidenceHostTests.test_ack_nack_timeout_partial_missing_and_duplicate_never_saved"
+          ],
+          "observed_test_records": [
+            {
+              "path": "docs/urbit/evidence/2026-09-26/phase1-nonnative/host-current/host-current.json",
+              "pointer": "/observed_tests/106",
+              "sha256": "a6c3ce3878da93544609f71dfe847a6751395cd938c40b9a26993d35008e40c8"
+            }
+          ],
+          "status": "passed"
+        },
+        {
+          "name": "timeout-partial-missing-never-saved",
+          "observed_test_ids": [
+            "test_delivery_cases.DeliveryEvidenceHostTests.test_ack_nack_timeout_partial_missing_and_duplicate_never_saved"
+          ],
+          "observed_test_records": [
+            {
+              "path": "docs/urbit/evidence/2026-09-26/phase1-nonnative/host-current/host-current.json",
+              "pointer": "/observed_tests/106",
+              "sha256": "a6c3ce3878da93544609f71dfe847a6751395cd938c40b9a26993d35008e40c8"
+            }
+          ],
+          "status": "passed"
+        }
+      ],
+      "bindings": {
+        "contract_freeze_sha256": "a2336e5060c71c7c16849b3151cc024a598d6cdf867561452eff1338e3232670",
+        "corpus_sha256": "95c915e2d0c93f358225274b34216fff0fe2efc09791905855b1e3f36aec368a",
+        "native_tree_sha256": "7b0257ba03b0de93de319d55c5523fa481c302772471645987818da543ac4621",
+        "runner_sha256": "dcf5ead9d3969322dfe880427090b108e0729e40d4a29aaadd4bc1dcf77c0916",
+        "runtime_lock_sha256": "4a209c10cf1756eb0f7357cc3eca8250bf66c239b4cd0ca31a8c0886d4d304ee",
+        "source_commit": "8334a75cad4c2b063147e7e3352cdf76da0d5893"
+      },
+      "current_retained_evidence_audit": {
+        "path": "docs/urbit/evidence/2026-09-26/phase1-nonnative/host-audit-confirmation.json",
+        "pointer": "",
+        "sha256": "1d9aabffa452409383def87f82e9f851eebc3c17d6d714fdf6d94a57217c1eb6"
+      },
+      "evidence_limit": "Authored event records exercise the actual host reducer. No ordering was induced on live Gall/Ames. ACK alone is never business acceptance.",
+      "executor": "/root",
+      "id": "delivery-host-order-permutations",
+      "kind": "host_mocked",
+      "native_execution": false,
+      "reviewed_source_files": {
+        "scripts/urbit/delivery_cases.py": "171edf429fc1677e3250bcebff4cd2fb55e762d767204afdae846f86deccc131"
+      },
+      "reviewer": "/root/independent_review",
+      "scope": "Host reducer preserves real acceptance only for exact correlated receipts; no live reordering claim.",
+      "status": "passed",
+      "supersedes": {
+        "path": "docs/urbit/evidence/2026-09-25/phase1-nonnative/source-dispositions-pending.json",
+        "pointer": "/proofs/delivery-host-order-permutations",
+        "sha256": "dd18bf2e8258c6a5f66a5e12f0279d70472cd33e670122a469ceeb7208772fe9"
+      },
+      "tests_observed": 137,
+      "underlying_artifacts": [
+        {
+          "path": "docs/urbit/evidence/2026-09-26/phase1-nonnative/host-current/host-current.json",
+          "pointer": "",
+          "sha256": "a6c3ce3878da93544609f71dfe847a6751395cd938c40b9a26993d35008e40c8"
+        },
+        {
+          "path": "docs/urbit/evidence/2026-09-26/phase1-nonnative/host-current/host-current.stderr.log",
+          "pointer": "",
+          "sha256": "4e667898af99e9d742cb738f6fa4f29403e75c9002ce88c8704471081e6a7a86"
+        },
+        {
+          "path": "docs/urbit/evidence/2026-09-26/phase1-nonnative/host-current/selected-tests.json",
+          "pointer": "",
+          "sha256": "1d66e2e912d7a10a84c5f2387157981351fafa6f458fa4522308bd9afc73c1a5"
+        },
+        {
+          "path": "docs/urbit/evidence/2026-09-26/phase1-nonnative/host-current/test-events.jsonl",
+          "pointer": "",
+          "sha256": "65f4dd2073cecd363550cb3611be0bd4ab28b35f25be95d9a5f5f53734c45190"
+        }
+      ]
+    },
+    "guard-independent-source-review": {
+      "assertions": [
+        {
+          "name": "guard-independent-source-review",
+          "status": "reviewed"
+        }
+      ],
+      "bindings": {
+        "contract_freeze_sha256": "a2336e5060c71c7c16849b3151cc024a598d6cdf867561452eff1338e3232670",
+        "corpus_sha256": "95c915e2d0c93f358225274b34216fff0fe2efc09791905855b1e3f36aec368a",
+        "native_tree_sha256": "7b0257ba03b0de93de319d55c5523fa481c302772471645987818da543ac4621",
+        "runner_sha256": "dcf5ead9d3969322dfe880427090b108e0729e40d4a29aaadd4bc1dcf77c0916",
+        "runtime_lock_sha256": "4a209c10cf1756eb0f7357cc3eca8250bf66c239b4cd0ca31a8c0886d4d304ee",
+        "source_commit": "8334a75cad4c2b063147e7e3352cdf76da0d5893"
+      },
+      "execution_limit": "No host tests, native process, participant or qualification run was started for this refresh. Existing authored host regressions were read, not rerun.",
+      "findings": [
+        {
+          "claim": "The stop-socket race catches only FileNotFoundError and ConnectionRefusedError. It still waits for exclusive acquisition of the kernel-held lifetime lock, and a held lock fails. It does not treat socket disappearance, a PID lookup or an RPC status as proof of clean guard completion.",
+          "lines": [
+            293,
+            315
+          ],
+          "source": "scripts/urbit/harness.py"
+        },
+        {
+          "claim": "The new public-feedback command accepts only two named candidate conditions, T01 through T06 and an actual integer attempt1 through3. The supervisor admits an exact RPC-key set and constructs the read-only candidate path itself; no new caller-selected path or raw native operation is exposed.",
+          "sources": {
+            "scripts/urbit/harness.py": [
+              387,
+              397
+            ],
+            "scripts/urbit/supervisor.py": [
+              490,
+              519
+            ]
+          }
+        },
+        {
+          "claim": "Workflow evaluation and public feedback retain exact committed-source admission before execution and recheck source afterward. Every admitted operation clears readiness and finishes this owned lifetime, including prequalification admission failure before a result exists.",
+          "lines": [
+            496,
+            543
+          ],
+          "source": "scripts/urbit/supervisor.py"
+        },
+        {
+          "claim": "Late guard failure, final source mismatch and cleanup failure keep a failed result and invalidate both private and public evidence. Detailed private failures are not copied into public feedback. An ordinary failed public compilation under a healthy guard remains an application task failure, not fabricated infrastructure failure.",
+          "sources": {
+            "scripts/urbit/supervisor.py": [
+              141,
+              176,
+              522,
+              543
+            ],
+            "tests/urbit/test_dev_flow.py": [
+              285,
+              329
+            ]
+          }
+        },
+        {
+          "claim": "These deltas do not alter the common thermal policy, freshness validation, owned scope, no-follow lease/lock, read-only source mounts, actual Git-byte verification, private Python cache, TERM deduplication, shutdown-failure latch or seed promotion checks. Exactly five other previously reviewed source files remain byte-identical, and the unchanged surrounding lifecycle code was reread.",
+          "scope": "Source semantics only; final completed outer guard is still independently required.",
+          "unchanged_files": [
+            "Makefile",
+            "scripts/urbit/digests.py",
+            "scripts/urbit/execution_policy.py",
+            "scripts/urbit/namespace_check.py",
+            "scripts/urbit/toolchain.py"
+          ]
+        }
+      ],
+      "id": "guard-independent-source-review",
+      "independence": {
+        "changed_delta_author": "/root/independent_review",
+        "changed_delta_independent_reviewer": "/root/editor_tool_review",
+        "common_guard_reviewer": "/root/independent_review",
+        "final_composite_confirmation": {
+          "path": "docs/urbit/evidence/2026-09-26/phase1-nonnative/guard-source-proof-confirmation.json",
+          "pointer": "",
+          "sha256": "523292f26db197a0b48e6fa4f316308f95b51ec6f646cd4269325156fea2fefe"
+        },
+        "prior_independent_records": [
+          {
+            "approved_sources": {
+              "scripts/urbit/harness.py": "aa798c754b3fc62da384ac14fdf43fba04205f88ffc3fd106ca4ff692855c5df",
+              "scripts/urbit/supervisor.py": "d157a974075d2e1cbfb1ae07609182a3232c5a3f16b75c3e9287652434d774d2"
+            },
+            "lines": [
+              552,
+              622
+            ],
+            "path": "docs/urbit/reviews/PHASE01_INDEPENDENT_REVIEW_20260925.md",
+            "reviewed_commits": [
+              "b0e1a4c"
+            ],
+            "section": "Public workflow feedback and observed pretty-output correction (September 26)",
+            "sha256": "ae0edda0a91d5b89b1cd070c8685de8d73dbc190093563c8cd2d4dba1d51b717"
+          },
+          {
+            "approved_sources": {
+              "scripts/urbit/harness.py": "a63615cabf3c01698cec27bc6ae3f1381cc22be08d0c33859c992d96b8035c04"
+            },
+            "lines": [
+              668,
+              704
+            ],
+            "path": "docs/urbit/reviews/PHASE01_INDEPENDENT_REVIEW_20260925.md",
+            "reviewed_commits": [
+              "97e8628"
+            ],
+            "section": "Observed compiler stream and stop-socket race corrections (September 26)",
+            "sha256": "ae0edda0a91d5b89b1cd070c8685de8d73dbc190093563c8cd2d4dba1d51b717"
+          }
+        ],
+        "self_read_is_not_independent_delta_approval": true
+      },
+      "kind": "source_review",
+      "native_execution": false,
+      "reviewed_source_files": {
+        "Makefile": "da78fc039ee0562efcf5b408a9b8ab24f243f5d2965991599548a76b42b8a0f8",
+        "scripts/urbit/digests.py": "88e6333bd6c764f48fb8939bafa77c9eb236c5b3586a19fe1a1f6e48e27dc08c",
+        "scripts/urbit/execution_policy.py": "da16e2e0fd32eb5b90706b546a7ea8332a65807fc8279f3bd765dcc18aaad9b5",
+        "scripts/urbit/harness.py": "a63615cabf3c01698cec27bc6ae3f1381cc22be08d0c33859c992d96b8035c04",
+        "scripts/urbit/namespace_check.py": "87950f4e7796fafb91807c36b9ea7d392d1d1840e5516d15d5fc6c5d476d0449",
+        "scripts/urbit/supervisor.py": "d157a974075d2e1cbfb1ae07609182a3232c5a3f16b75c3e9287652434d774d2",
+        "scripts/urbit/toolchain.py": "31234bbab1af217c885d8c081d7f438972f6ff1b6d89c93d10bdf49871b3ea16"
+      },
+      "reviewer": "/root/independent_review",
+      "scope": "Composite source review of the exact common guard and four-fake lifecycle. Unchanged common guard is independently reviewed by /root/independent_review; author-owned public-feedback/stop-race deltas rely explicitly on /root/editor_tool_review independent approvals. This is a proposed replacement, not final qualification.",
+      "status": "reviewed",
+      "supersedes": {
+        "path": "docs/urbit/evidence/2026-09-25/phase1-nonnative/source-dispositions-pending.json",
+        "pointer": "/proofs/guard-independent-source-review",
+        "sha256": "dd18bf2e8258c6a5f66a5e12f0279d70472cd33e670122a469ceeb7208772fe9"
+      },
+      "underlying_artifacts": [
+        {
+          "path": "docs/urbit/evidence/2026-09-26/phase1-nonnative/guard-source-proof-proposed.json",
+          "pointer": "",
+          "sha256": "dcd7b1634d0817f875448cc84e4414c3c3ebdc04dc2ef646f3c067689250e3f9"
+        },
+        {
+          "path": "docs/urbit/evidence/2026-09-26/phase1-nonnative/guard-source-proof-confirmation.json",
+          "pointer": "",
+          "sha256": "523292f26db197a0b48e6fa4f316308f95b51ec6f646cd4269325156fea2fefe"
+        }
+      ]
+    },
+    "guard-negative-host-tests": {
+      "assertions": [
+        {
+          "name": "hot-preflight-no-launch",
+          "observed_test_ids": [
+            "test_execution_policy.ControlledChildExecution.test_hot_preflight_never_launches_a_child",
+            "test_runtime_guard_adversarial.GuardFailureOutcomeTests.test_hot_or_missing_preflight_never_calls_factory_or_process"
+          ],
+          "observed_test_records": [
+            {
+              "path": "docs/urbit/evidence/2026-09-26/phase1-nonnative/host-current/host-current.json",
+              "pointer": "/observed_tests/3",
+              "sha256": "a6c3ce3878da93544609f71dfe847a6751395cd938c40b9a26993d35008e40c8"
+            },
+            {
+              "path": "docs/urbit/evidence/2026-09-26/phase1-nonnative/host-current/host-current.json",
+              "pointer": "/observed_tests/8",
+              "sha256": "a6c3ce3878da93544609f71dfe847a6751395cd938c40b9a26993d35008e40c8"
+            }
+          ],
+          "status": "passed"
+        },
+        {
+          "name": "missing-stale-sensors",
+          "observed_test_ids": [
+            "test_runtime_guard_adversarial.ThermalEvidenceTests.test_missing_or_renamed_hottest_sensor_refuses_continuation",
+            "test_runtime_guard_adversarial.ThermalEvidenceTests.test_stale_future_reversed_and_nonfinite_clocks_refuse",
+            "test_runtime_guard_adversarial.LeaseAdmissionTests.test_stale_and_future_freshly_written_leases_refuse"
+          ],
+          "observed_test_records": [
+            {
+              "path": "docs/urbit/evidence/2026-09-26/phase1-nonnative/host-current/host-current.json",
+              "pointer": "/observed_tests/26",
+              "sha256": "a6c3ce3878da93544609f71dfe847a6751395cd938c40b9a26993d35008e40c8"
+            },
+            {
+              "path": "docs/urbit/evidence/2026-09-26/phase1-nonnative/host-current/host-current.json",
+              "pointer": "/observed_tests/31",
+              "sha256": "a6c3ce3878da93544609f71dfe847a6751395cd938c40b9a26993d35008e40c8"
+            },
+            {
+              "path": "docs/urbit/evidence/2026-09-26/phase1-nonnative/host-current/host-current.json",
+              "pointer": "/observed_tests/12",
+              "sha256": "a6c3ce3878da93544609f71dfe847a6751395cd938c40b9a26993d35008e40c8"
+            }
+          ],
+          "status": "passed"
+        },
+        {
+          "name": "crossing-stops-own-scope",
+          "observed_test_ids": [
+            "test_execution_policy.ControlledChildExecution.test_trip_with_child_exit_zero_stays_failed_and_preserves_crossing",
+            "test_runtime_guard_adversarial.OwnedHostFilesTests.test_scope_signal_rejects_other_unit_without_systemctl"
+          ],
+          "observed_test_records": [
+            {
+              "path": "docs/urbit/evidence/2026-09-26/phase1-nonnative/host-current/host-current.json",
+              "pointer": "/observed_tests/4",
+              "sha256": "a6c3ce3878da93544609f71dfe847a6751395cd938c40b9a26993d35008e40c8"
+            },
+            {
+              "path": "docs/urbit/evidence/2026-09-26/phase1-nonnative/host-current/host-current.json",
+              "pointer": "/observed_tests/21",
+              "sha256": "a6c3ce3878da93544609f71dfe847a6751395cd938c40b9a26993d35008e40c8"
+            }
+          ],
+          "status": "passed"
+        },
+        {
+          "name": "bounded-shutdown",
+          "observed_test_ids": [
+            "test_execution_policy.ControlledChildExecution.test_uncooperative_owned_child_is_killed_within_bounded_cleanup",
+            "test_harness_safety.SupervisorLifecycleSafety.test_signal_and_wait_failures_do_not_abandon_other_children"
+          ],
+          "observed_test_records": [
+            {
+              "path": "docs/urbit/evidence/2026-09-26/phase1-nonnative/host-current/host-current.json",
+              "pointer": "/observed_tests/5",
+              "sha256": "a6c3ce3878da93544609f71dfe847a6751395cd938c40b9a26993d35008e40c8"
+            },
+            {
+              "path": "docs/urbit/evidence/2026-09-26/phase1-nonnative/host-current/host-current.json",
+              "pointer": "/observed_tests/64",
+              "sha256": "a6c3ce3878da93544609f71dfe847a6751395cd938c40b9a26993d35008e40c8"
+            }
+          ],
+          "status": "passed"
+        },
+        {
+          "name": "preserved-logs",
+          "observed_test_ids": [
+            "test_execution_policy.ControlledChildExecution.test_clean_light_child_completion_is_not_labeled_native_pass",
+            "test_execution_policy.ControlledChildExecution.test_trip_with_child_exit_zero_stays_failed_and_preserves_crossing"
+          ],
+          "observed_test_records": [
+            {
+              "path": "docs/urbit/evidence/2026-09-26/phase1-nonnative/host-current/host-current.json",
+              "pointer": "/observed_tests/1",
+              "sha256": "a6c3ce3878da93544609f71dfe847a6751395cd938c40b9a26993d35008e40c8"
+            },
+            {
+              "path": "docs/urbit/evidence/2026-09-26/phase1-nonnative/host-current/host-current.json",
+              "pointer": "/observed_tests/4",
+              "sha256": "a6c3ce3878da93544609f71dfe847a6751395cd938c40b9a26993d35008e40c8"
+            }
+          ],
+          "status": "passed"
+        },
+        {
+          "name": "nonpassing-final",
+          "observed_test_ids": [
+            "test_harness_safety.SupervisorLifecycleSafety.test_supervisor_exit_is_nonzero_for_guard_or_initialization_failure",
+            "test_harness_safety.SupervisorLifecycleSafety.test_normal_stop_watchdog_cannot_swallow_cleanup_failure",
+            "test_dev_flow.LifecycleTests.test_failed_launched_supervisor_marks_fixture_and_blocks_next_start"
+          ],
+          "observed_test_records": [
+            {
+              "path": "docs/urbit/evidence/2026-09-26/phase1-nonnative/host-current/host-current.json",
+              "pointer": "/observed_tests/67",
+              "sha256": "a6c3ce3878da93544609f71dfe847a6751395cd938c40b9a26993d35008e40c8"
+            },
+            {
+              "path": "docs/urbit/evidence/2026-09-26/phase1-nonnative/host-current/host-current.json",
+              "pointer": "/observed_tests/60",
+              "sha256": "a6c3ce3878da93544609f71dfe847a6751395cd938c40b9a26993d35008e40c8"
+            },
+            {
+              "path": "docs/urbit/evidence/2026-09-26/phase1-nonnative/host-current/host-current.json",
+              "pointer": "/observed_tests/86",
+              "sha256": "a6c3ce3878da93544609f71dfe847a6751395cd938c40b9a26993d35008e40c8"
+            }
+          ],
+          "status": "passed"
+        },
+        {
+          "name": "no-forced-seed",
+          "observed_test_ids": [
+            "test_harness_safety.SupervisorLifecycleSafety.test_forced_state_is_never_promoted_to_a_clean_seed",
+            "test_harness_safety.FixtureSafety.test_changed_seed_preserves_live_data"
+          ],
+          "observed_test_records": [
+            {
+              "path": "docs/urbit/evidence/2026-09-26/phase1-nonnative/host-current/host-current.json",
+              "pointer": "/observed_tests/57",
+              "sha256": "a6c3ce3878da93544609f71dfe847a6751395cd938c40b9a26993d35008e40c8"
+            },
+            {
+              "path": "docs/urbit/evidence/2026-09-26/phase1-nonnative/host-current/host-current.json",
+              "pointer": "/observed_tests/40",
+              "sha256": "a6c3ce3878da93544609f71dfe847a6751395cd938c40b9a26993d35008e40c8"
+            }
+          ],
+          "status": "passed"
+        }
+      ],
+      "bindings": {
+        "guard_sha256": "da16e2e0fd32eb5b90706b546a7ea8332a65807fc8279f3bd765dcc18aaad9b5"
+      },
+      "current_retained_evidence_audit": {
+        "path": "docs/urbit/evidence/2026-09-26/phase1-nonnative/host-audit-confirmation.json",
+        "pointer": "",
+        "sha256": "1d9aabffa452409383def87f82e9f851eebc3c17d6d714fdf6d94a57217c1eb6"
+      },
+      "evidence_limit": "137 actual root-executed host tests; thermal/systemd test responses are mocked. Python child, file, flock and cache operations are real host controls. The total includes delivery tests and is not additive to previous runs. Original assertion mapping and independent retained-evidence audit are separately attributed.",
+      "executor": "/root",
+      "id": "guard-negative-host-tests",
+      "kind": "host_mocked",
+      "native_execution": false,
+      "reviewer": "/root/independent_review",
+      "scope": "Synthetic sensor/child failure tests only; unchanged75/90C and50%CPU limits.",
+      "status": "passed",
+      "supersedes": {
+        "path": "docs/urbit/evidence/2026-09-25/phase1-nonnative/source-dispositions-pending.json",
+        "pointer": "/proofs/guard-negative-host-tests",
+        "sha256": "dd18bf2e8258c6a5f66a5e12f0279d70472cd33e670122a469ceeb7208772fe9"
+      },
+      "tests_observed": 137,
+      "underlying_artifacts": [
+        {
+          "path": "docs/urbit/evidence/2026-09-26/phase1-nonnative/host-current/host-current.json",
+          "pointer": "",
+          "sha256": "a6c3ce3878da93544609f71dfe847a6751395cd938c40b9a26993d35008e40c8"
+        },
+        {
+          "path": "docs/urbit/evidence/2026-09-26/phase1-nonnative/host-current/host-current.stderr.log",
+          "pointer": "",
+          "sha256": "4e667898af99e9d742cb738f6fa4f29403e75c9002ce88c8704471081e6a7a86"
+        },
+        {
+          "path": "docs/urbit/evidence/2026-09-26/phase1-nonnative/host-current/selected-tests.json",
+          "pointer": "",
+          "sha256": "1d66e2e912d7a10a84c5f2387157981351fafa6f458fa4522308bd9afc73c1a5"
+        },
+        {
+          "path": "docs/urbit/evidence/2026-09-26/phase1-nonnative/host-current/test-events.jsonl",
+          "pointer": "",
+          "sha256": "65f4dd2073cecd363550cb3611be0bd4ab28b35f25be95d9a5f5f53734c45190"
+        }
+      ]
+    },
+    "no-effect-subsystem": {
+      "assertions": [
+        {
+          "name": "no-external-effects-replayed",
+          "status": "not_applicable"
+        }
+      ],
+      "bindings": {
+        "contract_freeze_sha256": "a2336e5060c71c7c16849b3151cc024a598d6cdf867561452eff1338e3232670",
+        "corpus_sha256": "95c915e2d0c93f358225274b34216fff0fe2efc09791905855b1e3f36aec368a",
+        "native_tree_sha256": "7b0257ba03b0de93de319d55c5523fa481c302772471645987818da543ac4621",
+        "runner_sha256": "dcf5ead9d3969322dfe880427090b108e0729e40d4a29aaadd4bc1dcf77c0916",
+        "runtime_lock_sha256": "4a209c10cf1756eb0f7357cc3eca8250bf66c239b4cd0ca31a8c0886d4d304ee",
+        "source_commit": "8334a75cad4c2b063147e7e3352cdf76da0d5893"
+      },
+      "findings": [
+        "Pure library transitions return the new business state. The authoritative home retains it and emits bounded one-shot result facts/kicks.",
+        "on-save retains a versioned state; on-load validates supported saved state and clears pending reservations with kicks.",
+        "No external_effects_replayed counter was fabricated. This disposition does not prove replay safety of any future external executor."
+      ],
+      "id": "no-effect-subsystem",
+      "kind": "not_applicable",
+      "native_execution": false,
+      "reason": "The current synthetic Work/Docs slice has no build, model, deployment, purchase or message-effect executor. Bounded native result facts/kicks remain separately required delivery behavior.",
+      "reviewed_source_files": {
+        "native/core/desk/app/stead-home.hoon": "3bfc0e45062ef0bc8572d5034a60b5b35f6502350f821129b5ba7a7cca0b2b9c",
+        "native/core/desk/lib/stead-core.hoon": "4c183ef6283030437af5e1433e3fbf80f414757bcede4cab1282fc71ff5f34de"
+      },
+      "reviewer": "/root/independent_review",
+      "scope": "This increment implements no external effect executor. This is not a replay-safety test or proof about future build/message/model/deployment effects.",
+      "source_arms": [
+        "apply-command",
+        "on-save",
+        "on-load",
+        "on-poke",
+        "on-watch",
+        "on-leave"
+      ],
+      "status": "not_applicable",
+      "supersedes": {
+        "path": "docs/urbit/evidence/2026-09-25/phase1-nonnative/source-dispositions-pending.json",
+        "pointer": "/proofs/no-effect-subsystem",
+        "sha256": "dd18bf2e8258c6a5f66a5e12f0279d70472cd33e670122a469ceeb7208772fe9"
+      }
+    },
+    "receipt-lookup-order": {
+      "assertions": [
+        {
+          "name": "source-ordering-property",
+          "status": "reviewed"
+        }
+      ],
+      "bindings": {
+        "contract_freeze_sha256": "a2336e5060c71c7c16849b3151cc024a598d6cdf867561452eff1338e3232670",
+        "corpus_sha256": "95c915e2d0c93f358225274b34216fff0fe2efc09791905855b1e3f36aec368a",
+        "native_tree_sha256": "7b0257ba03b0de93de319d55c5523fa481c302772471645987818da543ac4621",
+        "runner_sha256": "dcf5ead9d3969322dfe880427090b108e0729e40d4a29aaadd4bc1dcf77c0916",
+        "runtime_lock_sha256": "4a209c10cf1756eb0f7357cc3eca8250bf66c239b4cd0ca31a8c0886d4d304ee",
+        "source_commit": "8334a75cad4c2b063147e7e3352cdf76da0d5893"
+      },
+      "findings": [
+        "context requires initialized state, a current active unexpired binding, the permitted principal kind and the complete expected profile.",
+        "apply-command checks context, typed allowed/read-scope and authority epoch before duplicate receipt lookup at line 215.",
+        "read checks current context and typed project/resource/action/container scope before receipt lookup/decode at lines 336-342; stored resource, action, container and current allowed are checked before public projection.",
+        "Closed project, grant rank and private container ownership checks remain in read-scope/allowed. public-receipt uses a closed field inventory.",
+        "This is source ordering evidence only. Native denial, migration, restart, receipt recovery and delivery tests remain separate requirements."
+      ],
+      "id": "receipt-lookup-order",
+      "kind": "source_review",
+      "native_execution": false,
+      "reviewed_source_files": {
+        "native/core/desk/lib/stead-core.hoon": "4c183ef6283030437af5e1433e3fbf80f414757bcede4cab1282fc71ff5f34de"
+      },
+      "reviewer": "/root/independent_review",
+      "scope": "Current typed resource/action authorization must run before receipt lookup/decode; source digest must match the executed closure.",
+      "source_arms": [
+        "context",
+        "allowed",
+        "apply-command",
+        "read",
+        "read-scope",
+        "public-receipt"
+      ],
+      "status": "reviewed",
+      "supersedes": {
+        "path": "docs/urbit/evidence/2026-09-25/phase1-nonnative/source-dispositions-pending.json",
+        "pointer": "/proofs/receipt-lookup-order",
+        "sha256": "dd18bf2e8258c6a5f66a5e12f0279d70472cd33e670122a469ceeb7208772fe9"
+      }
+    }
+  },
+  "protocol": "stead.source-dispositions/3",
+  "reviewed_at": "2026-09-25T11:57:24.763020+00:00",
+  "status": "bound-to-observed-committed-source"
+}

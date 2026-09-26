@@ -1,0 +1,23 @@
+{
+  "protocol": "stead.received-independent-review/1",
+  "reviewer": "/root/editor_tool_review",
+  "recorded_by": "/root/independent_review",
+  "provenance": "Actual collaboration messages received from the independent reviewer during this task. This JSON was prepared by the recorder; the reviewer was read-only and did not author an artifact file.",
+  "status": "completed-with-blocking-T05-inventory-gap",
+  "source_commit": "8334a75cad4c2b063147e7e3352cdf76da0d5893",
+  "disposition": "Keep URB-170 / issue20 open. Preserve v1 as actual incomplete execution. T05 is invalid for missing cases, with the observed outsider-granted mutation failure retained. Repair/version the scorer and use a fresh paired evaluation; no v1 private retries or candidate repairs.",
+  "reviewed_findings": [
+    "All53 baseline and58 assisted wrapper calls, all19 message deliveries, all16 exposed model-setting records, timing journals and candidate hashes reconciled.",
+    "Charged active times are717.089037753seconds baseline and651.180362496seconds assisted. No participant work was observed during paused intervals. Baseline retains23.683894211seconds conservatively charged after a failed agent-capacity delivery that did not reach the participant.",
+    "Five other tasks passed in each condition. Both private T05 evaluations stopped after the outsider-granted mutant survived; everyone-granted and claim-must-match were not run.",
+    "Frozen README line90 requires the identical submitted test suite against every mutant; line106 invalidates a task with a missing case. The paired checklist requires a versioned fresh pair if scoring is repaired after participant launch.",
+    "Corrected filtered traces retain visible task messages. The earlier export with that gap is preserved. Incoming agent-message payloads remain encrypted; integrator-observed plaintext is not independently decrypted text or full context-isolation proof.",
+    "The reviewer performed source/evidence review, not an additional native or host-test execution."
+  ],
+  "reference_trace_hashes": {
+    "baseline": "c3f81d8583ef3c915bf7173ff901e9056f33f526ab9a9d3a6ae768f37e462ddd",
+    "local_skill_assisted": "6e86397806946603cdb073ef8d0b0a355b724664bed4b4bb71a207ecbc6333db"
+  },
+  "review_is_phase_acceptance": false,
+  "reviewer_authored_this_file": false
+}

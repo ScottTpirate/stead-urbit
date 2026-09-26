@@ -1,0 +1,15 @@
+{
+  "confirmation_delivery": "Actual collaboration message received; recorder did not impersonate reviewer or execute tests.",
+  "confirmation_from": "/root/independent_review",
+  "confirmation_verbatim": "Host artifact audit complete, no new execution: host-current a6c3ce3878da93544609f71dfe847a6751395cd938c40b9a26993d35008e40c8 has all8 output hashes valid,137 unique expected/started/finished/passed IDs and162 passed subtests; seven modules6/26/43/31/10/11/10. All155 captured source SHA256s match current worktree and actual8334a75 Git blob IDs. CPU5000/10000 +affinity19 before/after, same sole PID, exit0, unloaded clean scope; actual unittest2.910s, worker3.631861s, outer4.340288s. All old15 guard assertion test IDs and2 delivery IDs occur in current passes. Receipt/no-effect/delivery source hashes unchanged; composite proposed7 hashes current and editor-confirmed. Historical guard old7166/currentda16 exact627B nine-line permitted delta verified, old two historical proof hashes/bindings unchanged. Promotion needs source proof composite substitution,137 root-executed host refs/counts, final common bindings, then bottom-up continuity/index refs. Preserve old127 and failed137 artifacts, no new heat/platform claim. I am returning now to release slot.",
+  "host_capture": {
+    "path": "docs/urbit/evidence/2026-09-26/phase1-nonnative/host-current/host-current.json",
+    "pointer": "",
+    "sha256": "a6c3ce3878da93544609f71dfe847a6751395cd938c40b9a26993d35008e40c8"
+  },
+  "host_test_execution": false,
+  "native_execution": false,
+  "protocol": "stead.retained-collaboration-confirmation/1",
+  "recorded_by": "/root/gall_schedule_review",
+  "scope": "Retained-byte audit and attribution only; not independent native or phase acceptance."
+}

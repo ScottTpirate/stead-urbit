@@ -1,94 +1,82 @@
 # Phase 0/1 checkpoint — September 26, 2026
 
-**Phases 0 and 1 remain open. Phase 2 has not started.** Reviewed implementation
-and evidence are pushed on `increment/phase01-closeout-20260925`, in
-[PR #42](https://github.com/ScottTpirate/stead-urbit/pull/42). The latest native
-helper source is `b2ec89c258c5544a3344c3665a81700b9e7075b4`; subsequent checkpoint
-commits change documentation/evidence only. No implementation PR was merged.
+**Phases 0 and 1 remain open. Phase 2 has not started.** Implementation and
+retained evidence are on `increment/phase01-closeout-20260925`, in
+[PR #42](https://github.com/ScottTpirate/stead-urbit/pull/42). Latest executed
+source: `8334a75cad4c2b063147e7e3352cdf76da0d5893`. No implementation PR has
+been merged and no GitHub CI or human approval is claimed.
 
-## Completed and independently reviewed
+## Accepted bounded work
 
-Issues #2–#6 and #24 are closed for their bounded repository, toolchain, harness,
-Git evaluation, contract-freeze and threat-map design acceptance. The real
-four-fake smoke at `4236ed5` covered all 12 frozen calls and actual home restart;
-its completed guard and exact source context were independently verified.
-Contract review recomputed all 14 frozen file hashes. Threat-map closure is a
-design/test-inventory decision; browser isolation and later route qualification
-remain required. The 14-vector stock-Git audit records explicit non-adoption of
-the candidate backend. No original Stead approval was inherited.
+Issues #2–#6 and #24 are closed for repository preservation, pinned toolchain,
+four-fake harness, Git dependency evaluation, frozen contracts and threat-map
+**design** acceptance. The smoke at `4236ed5` executed all 12 frozen calls and
+actual home restart under a completed guard. The independent 14-vector Git audit
+records explicit non-adoption of the candidate backend. No original Stead
+approval transfers to this derivative. Browser and future route security remain
+with the owning later issues.
 
-At `b2ec89c`, `make check` passed the plan, ecosystem and both contract checks,
-then **445 host/static/mocked tests in 65.579 seconds**. The complete wrapper
-took 66.297 seconds with CPU50%/10ms on CPU19. [Exact logs](evidence/2026-09-26/final-host-checkpoint/index.json)
-are retained. These tests do not establish Hoon behavior. Independent agent
-source reviews are recorded in [the review log](reviews/PHASE01_INDEPENDENT_REVIEW_20260925.md);
-they are not human/GitHub approvals or CI passes.
+At `8334a75`, `make check` passed planning and both contract freezes, then
+**447 host/static/mocked tests**. The CPU50%/10ms CPU19 wrapper took 66.429 seconds;
+[exact logs](evidence/2026-09-26/host-check-8334a75/index.json) are retained.
+The independently audited 137-test capture overlaps this suite and must not be
+added to it. It supports [seven nonnative dispositions](evidence/2026-09-26/phase1-nonnative/dispositions.json);
+the separate readiness record still has 66 missing native obligations.
+These host results are not Hoon execution.
 
-The native code previously passed 53 compile/save-load probes, and the daily
-`make dev` flow passed in about 58 seconds at its recorded source. Full current
-qualification remains distinct. [DEV_FLOW.md](DEV_FLOW.md) documents the Linux
-edit/build/test commands and the conditions they actually prove.
+The native compile/save-load probes previously passed all 53 checks, and
+`make dev` passed in about 58 seconds at its recorded source. Full populated
+behavioral/migration qualification remains separate. [DEV_FLOW.md](DEV_FLOW.md)
+documents the Linux edit/build/test loop and stopped-seed recovery.
 
-## Native results and remaining work
+## Current native evidence and remaining gates
 
-| Gate | Observed result | Required next execution |
+| Gate | Actual result | Remaining execution |
 | --- | --- | --- |
-| Scheduled Gall | Gall08 compiled and passed 14 positive assertions. Its real negative tang was rejected by the old parser; that attempt stays failed. The reviewed exact-tang parser correction has host regressions. | Fresh complete positive/negative scheduled-Gall run and completed guard. |
-| URB-170 workflow, issue #20 | Reference T01/T02 passed in prequal04 and prequal06. T03 timed out; prequal06 correctly left T04–T06 unrun. A typed probe, separate initial-save diagnostic, progress markers and native result-size bound are now reviewed. The cause of the timeout remains unconfirmed. | All six references/controls must pass before fresh baseline/assisted participants, real public feedback, one private score per task and complete independent tool/timing audit. |
-| URB-040/050, issues #7/#8 | The earlier full corpus failed a populated save/load roundtrip after 145 native cases. The saved-format repair passed a smaller native probe. | Fresh full core, concurrent calls, delivery, populated migration/capacity/recovery and exact Git results; reconcile all 66 native plus seven separately typed obligations. |
+| Workflow reference admission | [prequal11](evidence/2026-09-26/native-attempts/prequal11/index.json): all six tasks, 121 checks and evaluator controls passed at `8334a75`; completed outer guard. | New prequalification after the versioned scorer repair. |
+| URB-170, issue #20 | [Actual fresh-context paired v1 run](evidence/2026-09-26/workflow-evaluation/README.md): five verified task passes per condition. Both T05 suites missed the outsider mutant; the scorer bailed before two remaining mutants. T05 qualification is invalid and the overall comparison incomplete. | Retain v1, repair complete mutation collection, freeze v2, then run two fresh contexts once with complete private scoring and independent trace/timing review. No old-candidate retries or efficacy claim. |
+| URB-040/050, issues #7/#8 | [core02](evidence/2026-09-26/native-attempts/core02/index.json): thermal stop at 92 C, after 90 passed cases, one typed deferral, one guard-interrupted case and 56 not run. | Full corpus, populated round-trip, migration/capacity, concurrent/delivery/recovery/export lanes under a completed guard. |
+| Scheduled Gall | The earlier Gall08 compiled and passed 14 positive assertions. Its actual negative tang was rejected by the old parser; the exact-format correction is reviewed. | Fresh complete positive/negative run at the same source as full core. |
+| Phase 1 acceptance | Seven typed source/N-A/host dispositions are retained at `8334a75`; native acceptance remains absent. | Reconcile all 66 native plus seven nonnative obligations against exact current execution and independently review the artifacts. |
 
-The reviewed [workflow tooling bundle](evidence/2026-09-26/workflow-tooling/index.json)
-retains exact workspace/broker/timer sources and synthetic host probes, including
-the original incomplete file-inventory evidence. The corrected file-operation
-probe has 41 checks; broker tests mock native execution; timer tests use synthetic
-time and temporary files. No participant, real public-feedback delivery or
-skill-effectiveness result is claimed. Two equal public input directories are
-prepared locally, but their actual initial T02 diagnostic remains pending a
-completed reference prequalification. Both clocks remain unstarted.
+The original failed runs remain unchanged. This includes the earlier populated
+round-trip failure, workflow timeouts/size failures, thermal refusals, and the
+[Dojo timeout recovery](evidence/2026-09-26/native-timeout-recovery/index.json).
+Process shutdown does not guarantee that a timed-out request is absent from a
+disposable pier; preserve the failed run and restore verified stopped seeds.
 
-Prequal05 and prequal07 stopped before tasks with the supervisor error
-`Stale, future or reversed thermal sample`. The exact supervisor excerpts are
-retained in the final environment record; the combined error does not identify
-which condition occurred. Prequal08 stopped before tasks at an actual 96 C sample. All reports,
-source contexts and closed outer guards are retained as failures. No limit was
-raised: admission remains 75 C, stop 90 C, sensor freshness three seconds and
-CPU50%/10ms. After interruptions, all owned ships were stopped and their test
-state restored from verified stopped synthetic seeds. [Recovery records](evidence/2026-09-26/native-recovery-checkpoints/index.json)
-retain the earlier cancellation/resets; [the final environment record](evidence/2026-09-26/environment-closeout/index.json)
-retains the later resets and fan restoration.
+## Thermal and review boundaries
 
-A separate 30-sample observation reached **96 C while the fixture was stopped
-before and after**, with both fans at roughly 6,600–6,700 RPM. Individual sensor
-reads took at most 0.002458 seconds in that observation. This proves the host can
-exceed the native-test ceiling independently of Stead; it does not attribute the
-spikes to a particular other process or diagnose their hardware cause. Repeated
-native retries were paused. A quiet workload window or a separately approved
-Linux test host is needed for reliable qualification. No other workload was
-stopped and no CPU/power profile or thermal ceiling was changed. The temporary
-fan boost was restored and all 34 original curve/enable values verified.
+Admission remains 75 C, stop 90 C, sensor freshness three seconds and native
+CPU50%/10ms with one CPU of affinity. The core02 guard stopped all owned work
+cleanly and recorded no cleanup escalation. Its interrupted case is not an
+application failure assertion and its partial successes cannot close Phase 1.
+The host can also exceed the cutoff while Stead is stopped, as retained earlier
+observations demonstrate; temperature alone does not identify the responsible
+process or hardware cause. No security or thermal threshold was raised.
 
-## Branches and next phase
+The paired v1 audit reconciled every observed wrapper call, final candidate
+hash, model setting and charged interval. Both conditions used the same observed
+model alias/settings, with unknown immutable backend revision. Five passes each
+show no observed benefit. The full tool catalog was exposed, so trace review
+is not complete tool isolation. Encrypted incoming delivery metadata is retained
+with a separately attributed integrator plaintext ledger. Hidden reasoning and
+system/developer content are excluded from portable traces. Independent agent
+review is not human approval or a CI result.
 
-Independent ancestry review verified the complete chain:
+## Integration and Phase 2
+
+All prior branch work is contained in the aggregate chain:
 `main 4bb28c6 → #33 9697154 → #34 77428f6 → #35 aa93f41 → #36 ce808a2 → #41 87ea9e1 → #42`.
-All prior local branch work is contained in the aggregate. Local
-`increment/native-core-qualification` points to PR #36's commit while its remote
-is PR #35's head; do not bulk-push branches. Local main and old review/worktree
-refs were preserved. All implementation PRs remain drafts with no GitHub checks
-or approval claimed. Final qualification/review must precede integration; merge
-commits or one aggregate merge can preserve evidence-bound commit identities.
+Local branches, main and the old review worktree reference are preserved. Local
+`increment/native-core-qualification` points to PR #36 while its remote points
+to PR #35; do not bulk-push branches. Qualification and final source review must
+precede integration; retain the commits to which native evidence is bound.
 
-After Phase 0/1 acceptance, Phase 2 starts with individual sessions, the narrow
-public API and a usable two-principal Work/Docs browser journey, followed by
-private search/activity, native CI and onboarding/accessibility. The local Linux
-fake ships need no hosted Urbit server, purchased identity or GPU. Browser testing
-can be local once that interface exists. Real identities, hosting and live
-network/recovery acceptance are later, owner-controlled work.
-
-For the next operator: keep the latest helper source unchanged, confirm a quiet
-host with `make preflight`, then use a fresh `make start`/`make wait-ready` lifetime
-for `make skill-prequalify`; always finish with `make stop`. Inspect the new T03
-initial-save and per-case/encoded-size markers before choosing any further code
-change. Do not bypass the guard or treat a compile message as six-task success.
-The full core and scheduled-Gall runs must bind the final common source closure
-before building the 73-obligation evidence and admitting Phase 2.
+After Phase 0/1 acceptance, begin Phase 2 with a narrow published developer
+package and independent native Work client, then individual sessions and the
+multi-user Work/Docs browser journey. Private search/activity, native CI and
+onboarding/accessibility complete that phase. The local Linux fake ships need
+no purchased identity, hosted Urbit server or GPU. A browser journey can run
+locally once the interface and session boundary exist. Real identities,
+external hosting and live-network recovery remain later owner-controlled work.

@@ -28,6 +28,7 @@ data, and the browser application is not implemented yet.
 | `make gall-schedule` | Run actual pinned Gall/app gates with a controlled queue and clock | The delayed old-leave case; no Ames/network identity claim |
 | `make skill-prequalify` | Run frozen workflow reference, oracle and mutant controls | Prerequisite for the separate skill evaluation; no participant result |
 | `make stop` | Stop the owned ships and release their lifecycle lock | Clean local shutdown |
+| `make reset` | Restore verified, stopped disposable fake seeds | Fresh synthetic state after preserving a failed run; never a Git reset |
 
 Run each native command sequentially. Start once, then use `make core-check`
 after Hoon edits. After changing any Python harness/runner module, use
@@ -93,6 +94,14 @@ leaves the supervised fake environment running for the next check; use `make sto
 when finished. If a hard interruption leaves an unclean marker, preserve the
 failure record and use the documented seed verification/reset procedure. A saved
 process snapshot is not automatically a clean seed.
+
+A timed-out Dojo/Lens request can also leave pending work in the disposable
+pier even after the processes stop. If the next boot cannot become ready,
+retain both attempts, run `make stop`, then `make reset` before `make dev`.
+The reset command verifies that the owned fixture is stopped and that its seed
+hashes match. The [September 26 recovery record](evidence/2026-09-26/native-timeout-recovery/index.json)
+retains an observed readiness failure and the subsequent verified reset. Do not
+delete a pier or treat a process snapshot as a replacement seed.
 
 ## Phase 2 and later testing
 
