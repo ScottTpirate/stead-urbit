@@ -55,6 +55,34 @@ class LifecycleTests(unittest.TestCase):
             with self.assertRaises(TimeoutError):
                 harness.status()
 
+    def test_stop_socket_disappearance_still_requires_released_lifetime_lock(self):
+        harness.guard(create=True)
+        for error in (FileNotFoundError(), ConnectionRefusedError()):
+            for held in (False, True):
+                with self.subTest(error=type(error).__name__, held=held), (self.state / 'lifecycle.lock').open('a+') as owner:
+                    if held:
+                        fcntl.flock(owner, fcntl.LOCK_EX | fcntl.LOCK_NB)
+                    with patch.object(harness, 'running', return_value={'stage': 'ready'}), \
+                            patch.object(harness, 'rpc', side_effect=error) as rpc, \
+                            patch.object(harness.time, 'monotonic', side_effect=[0, 11]), \
+                            patch.object(harness.time, 'sleep') as sleep:
+                        if held:
+                            with self.assertRaisesRegex(RuntimeError, 'still owns the fixture'):
+                                harness.stop()
+                        else:
+                            harness.stop()
+                        rpc.assert_called_once_with('stop', timeout=180)
+                        sleep.assert_not_called()
+
+    def test_stop_does_not_swallow_other_control_failures(self):
+        harness.guard(create=True)
+        for error in (TimeoutError('control timed out'), RuntimeError('shutdown failed'), PermissionError('socket denied')):
+            with self.subTest(error=type(error).__name__), \
+                    patch.object(harness, 'running', return_value={'stage': 'ready'}), \
+                    patch.object(harness, 'rpc', side_effect=error):
+                with self.assertRaises(type(error)):
+                    harness.stop()
+
     def test_ready_requires_running_guard(self):
         harness.guard(create=True)
         for value in ({}, {'state': 'stopped'}):

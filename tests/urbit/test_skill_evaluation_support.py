@@ -21,6 +21,13 @@ sys.path[:0] = [str(ROOT / 'scripts/urbit'), str(Path(__file__).parent)]
 import skill_evaluation_support as S
 
 PACKAGE = ROOT / 'tests/urbit/skill_evaluation'
+# Exact ANSI-stripped streams from retained failed prequal03 T02 starter,
+# 20260926T134510Z. This is observed output reused as a host parser fixture,
+# not a native rerun or a replacement for that attempt's failed final status.
+T02_ACTUAL_STDOUT = '-need.u(@ud)\r\n-have.@ud\r\nnest-fail'
+T02_ACTUAL_STDERR = ('loom: mapped 512MB\r\nlite: arvo formula 4ce68411\r\n'
+                     'lite: core 641296f\r\nlite: final state 641296f\r\n'
+                     'eval (run):\n\r\neval: bail: %exit')
 
 
 def authored_receipt(content, oracles):
@@ -119,6 +126,24 @@ class PriorExecutionAdmission(unittest.TestCase):
         self.reject(lambda r: r['commands'].pop(1))
         self.reject(lambda r: r['commands'][1].update(exit_code=-15))
         self.reject(lambda r: r['commands'][1].update(stderr='timeout'))
+
+    def test_actual_stdout_compiler_diagnostic_passes_both_parser_and_receipt_admission(self):
+        self.assertTrue(S.compiler_rejection(0, T02_ACTUAL_STDOUT, T02_ACTUAL_STDERR))
+        self.assertTrue(S.compiler_rejection(0, '', T02_ACTUAL_STDOUT))
+        report = authored_receipt(self.content, self.oracles)
+        report['commands'][1].update(stdout=T02_ACTUAL_STDOUT, stderr=T02_ACTUAL_STDERR)
+        S.validate_prequalification_execution(report, self.content, self.oracles)
+
+    def test_generic_bail_signal_timeout_and_result_do_not_replace_compiler_rejection(self):
+        for code, stdout, stderr in ((0, '', T02_ACTUAL_STDERR), (0, 'timeout', 'eval: bail: %exit'),
+                (-15, T02_ACTUAL_STDOUT, T02_ACTUAL_STDERR), (True, T02_ACTUAL_STDOUT, ''),
+                (0, T02_ACTUAL_STDOUT + '\n[%skill-result 2]', ''),
+                (0, T02_ACTUAL_STDOUT, '[%skill-result 2]')):
+            with self.subTest(code=code, stdout=stdout, stderr=stderr):
+                self.assertFalse(S.compiler_rejection(code, stdout, stderr))
+                self.reject(lambda r: r['commands'][1].update(exit_code=code, stdout=stdout, stderr=stderr))
+        with patch.object(S, 'MAX_OUTPUT', 8):
+            self.assertFalse(S.compiler_rejection(0, T02_ACTUAL_STDOUT, ''))
 
     def test_empty_false_nonboolean_and_missing_required_checks_rejected(self):
         self.reject(lambda r: r.update(checks=[]))

@@ -293,7 +293,13 @@ def start():
 def stop():
     guard()
     if running() is not None:
-        print(json.dumps(rpc('stop', timeout=180), indent=2))
+        try:
+            print(json.dumps(rpc('stop', timeout=180), indent=2))
+        except (FileNotFoundError, ConnectionRefusedError):
+            # Workflow runs stop their own supervisor. If its socket vanishes
+            # between status and stop, only the lifetime lock below can prove
+            # cleanup completed; disappearance alone is never success.
+            pass
     with (STATE / 'lifecycle.lock').open('a+') as gate:
         # Kernel-held lock, not a PID that might have been reused.
         deadline = time.monotonic() + 10

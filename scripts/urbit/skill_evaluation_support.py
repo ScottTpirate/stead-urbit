@@ -154,6 +154,19 @@ def result_jam(stdout):
     return atom.to_bytes(size, 'little')
 
 
+def compiler_rejection(exit_code, stdout, stderr):
+    """Pinned Vere may print its compiler diagnostic on either output stream.
+
+    A generic eval bail, timeout/signal, or result frame is not the expected
+    starter type error. Keep this identical at execution and receipt admission.
+    """
+    streams = (stdout, stderr)
+    return (type(exit_code) is int and exit_code >= 0
+            and all(isinstance(stream, str) and len(stream) <= MAX_OUTPUT for stream in streams)
+            and not any('%skill-result' in stream for stream in streams)
+            and any(re.search(r'\b(?:nest-fail|mull-[a-z-]+|mint-[a-z-]+)\b', stream) for stream in streams))
+
+
 def evaluate_source(binary, source, record):
     """Retain bounded raw evidence even for timeout/limit/UTF-8 failures."""
     argv = [str(binary), 'eval', '--loom', '29']
@@ -471,8 +484,7 @@ def validate_prequalification_execution(inner, content, oracles):
                 or not isinstance(command.get('stdout'), str) or not isinstance(command.get('stderr'), str)):
             raise ValueError('Missing evaluator command evidence')
         if label == 'T02-starter-rejection':
-            if (command['exit_code'] < 0 or '%skill-result' in command['stdout']
-                    or not re.search(r'\b(?:nest-fail|mull-[a-z-]+|mint-[a-z-]+)\b', command['stderr'])):
+            if not compiler_rejection(command['exit_code'], command['stdout'], command['stderr']):
                 raise ValueError('Starter needs actual type/compiler rejection')
         else:
             expected_jam = next(record['actual_jam_hex'] for record in result_records if record['label'] == label)
@@ -723,9 +735,7 @@ def run(host, package_root, candidate_root, condition, *, prequalify=False,
         checkpoint('native-execution')
         host['execution_check']()
         if rejection:
-            check(label + ':actual-compiler-rejection', exit_code >= 0
-                  and bool(re.search(r'\b(?:nest-fail|mull-[a-z-]+|mint-[a-z-]+)\b', stderr))
-                  and '%skill-result' not in stdout)
+            check(label + ':actual-compiler-rejection', compiler_rejection(exit_code, stdout, stderr))
             return record
         check(label + ':native-evaluator-success', exit_code == 0 and 'eval: bail:' not in stderr)
         return observe(stdout, label)
