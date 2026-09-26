@@ -370,3 +370,335 @@ producer opt-in and reconciliation semantics are separately assigned to
 actual completed artifacts. This record does not approve unexecuted native
 code, the six-task skill evaluation, Git conformance, Phase 0/1 completion or
 Phase 2 activation.
+
+
+## Evaluator facts, narrow historical continuity and current nonnative evidence
+
+Reviewer and host-test executor: `/root/independent_review`. This follow-up
+retains actual current host results and source findings. It is not a native
+execution, human approval or Phase 0/1 completion record. Remotes were checked
+before each authorized evidence/review write; original historical files were
+read only.
+
+The evaluator record importer now requires exactly the three actual exchanges
+for malformed input, encoding the large result and decoding that same frame.
+It checks the pinned binary/arguments, exact raw input/output/diagnostics,
+nonzero large-frame inventory, actual size over 65,536 bytes, linked frame and
+result hashes, and exact expected decoded JSON bytes. A pure evaluator record
+cannot also masquerade as a ship/Dojo record or satisfy another requirement.
+The `evaluator-error-boundaries` proof is labeled `real-native-evaluator`, and
+must reference all three actual commands in order. The host validator does not
+independently execute jam/cue; authored validator fixtures are not native
+results. Root reviewed the importer after this reviewer implemented these
+bounded admission corrections.
+
+The executed `test_core_conn.py` and `test_phase1_reconciliation.py` suites
+passed **32 host tests in 14.008 seconds** at these unchanged source hashes:
+
+| File | SHA-256 at that execution |
+| --- | --- |
+| `scripts/urbit/core_conn.py` | `e178a5c0ce619031b8da64376b99b429ac0f90dded293ac60fa1137447d53614` |
+| `scripts/urbit/core_test.py` | `fc46acabdedce6b597015624dc9ad333f9179fd98c1578cba2c88ad4c7dde27d` |
+| `scripts/urbit/qualification_gate.py` | `404e81ddc940ddf9030a266c2e835226eeef6944d581145be115d662461dfda7` |
+| `tests/urbit/test_core_conn.py` | `fdca369149ed4eea7e8af94491b0835dfe4828faa38ffa9f571a30fb22a81d37` |
+| `tests/urbit/test_phase1_reconciliation.py` | `1e894b70d1aed40b4e9f2a86ef11accebf17a52b303d9c0ae71c106ccae1536c` |
+
+The subsequent historical-continuity change is limited to the two original
+nonnative guard requirements and four fixed September 13 artifact hashes.
+It retains the original guard hash
+`7166d197a6e3879f21c22637f2bd3074ff90975c33a2149f6e07763e2eeaa04e`.
+Admission requires actual historical/current source bytes to differ only by
+the exact nine-line prelaunch resample, cancellation check and lease publication.
+It also requires a current independent guard-source review and retained current
+host-test artifacts. It grants no general stale-source exception and changes
+no frozen requirement or assertion. Two targeted host test methods, including
+adversarial subcases, passed **2.085 seconds** with unchanged gate hash
+`ce0d8d0d87e9556940143943d7107099bfeb5c36eec6744342e555bfd292a6ab`
+and test hash
+`850dff88548529ef74555733c0b23616a4fb823d1cc57896e048f8adbc5b815b`.
+Root independently reviewed and accepted that bounded implementation. This
+reviewer does not describe review of their own gate changes as independent.
+
+The exact current common guard is
+`da16e2e0fd32eb5b90706b546a7ea8332a65807fc8279f3bd765dcc18aaad9b5`.
+Whole-source comparison confirms the nine-line conservative addition, leaving
+initial refusal, limits, scope, lock, lease and cleanup source unchanged.
+The historical reports still show real 93/81 C refusals with no child launch.
+The historical positive shim remains explicitly a real platform check using
+mocked 45 C readings, with actual quota/namespace/read-only-lease output.
+Historical lock release is supported by the completed guarded lifetime and
+unchanged lock context; no additional historical lock readback was recreated.
+No old observation is rebound to the current guard hash and no heat was
+manufactured.
+
+A fresh combined run passed **127 unique host tests in 1.628 seconds** across
+`test_execution_policy`, `test_runtime_guard_adversarial`,
+`test_harness_safety`, `test_dev_flow`, `test_delivery_cases`,
+`test_delivery_evidence_regressions` and `test_delivery_suite`. Actual stdout,
+stderr, command, timing, every observed test ID and unchanged before/after
+source hashes are retained in
+`docs/urbit/evidence/2026-09-25/phase1-nonnative/host-current.json`
+(SHA-256 `5cfe4d692e6898113a8e1ff1dba3c78ebc4832a1fc2eb621d63f50c967fe4772`).
+The execution correctly retains base HEAD
+`8ed872e576e0ee0317ddf4f5824f38d4e7cf3c3d` and its then-uncommitted gate.
+These are host regressions with synthetic sensor/transport records, plus real
+lightweight Python-child, file, flock and cache controls. They neither start
+ships nor demonstrate live event reordering. Their counts overlap earlier
+runs and must not be added as distinct coverage.
+
+The pending seven-item disposition index is
+`docs/urbit/evidence/2026-09-25/phase1-nonnative/dispositions-pending.json`.
+Its current source proofs bind exact reviewed home/core/guard bytes; assertion
+rows link the actually observed host test IDs. The source review confirms
+current typed authorization before receipt lookup/decode. The only N/A is the
+absent external executor; native response facts/kicks keep their independent
+mandatory delivery tests. Two historical items directly reference their
+unchanged original proof JSON. Common commit/tree/runner bindings remain null
+while native fixture compiler corrections continue. The integrator may fill
+them only after comparing reviewed/tested bytes with the final committed
+source and refreshing all artifact references. Null bindings cannot qualify.
+The actual host-run identity must remain unchanged during that final binding.
+
+Separately, source inspection of the saved-state probe's one-line `=+`
+destructuring correction found that it preserves the same `on-load`, empty
+card-list assertion and exact subsequent `on-save` noun comparison. This
+reviewer inspected root's resulting
+`.piers/fakes/logs/core-check-20260925T113418Z.json`
+(SHA-256 `dcd4cf132b36d84454f79da728c5b9a81d4d7ab6b1ad3b60b6c00858b7e656ce`):
+53/53 checks, stage completed, 48.395 seconds, unchanged input hashes and
+`qualifies_phase=false`. This is root-executed compile/probe evidence inspected
+by this reviewer, not an independently launched native run or full business,
+delivery, predecessor or capacity acceptance.
+
+
+## Initial builder semantics review: simultaneous-write evidence still open
+
+This is read-only source review by `/root/independent_review`, with no builder
+or native execution in this follow-up. The inspected source hashes were:
+
+- `scripts/urbit/build_phase1_evidence.py`: `de7492a0c2d2a124cf87062f4e26131ab9c25c9dde3194b1a2b7556e7efe2387`
+- `scripts/urbit/core_test.py`: `fc46acabdedce6b597015624dc9ad333f9179fd98c1578cba2c88ad4c7dde27d`
+- `scripts/urbit/qualification_gate.py`: `ce0d8d0d87e9556940143943d7107099bfeb5c36eec6744342e555bfd292a6ab`
+
+The builder reconstructs exact command sources, actors and routes, re-parses
+retained terminal results, verifies restart launch/clean-stop rows, reconstructs
+Git object identities and the recorded materialization/fsck command context,
+and maps the frozen 66 native requirements across their proper lanes. It
+retains failed stages and typed deferrals. Source inspection does not qualify
+its delivery/capacity/scheduled-Gall replay paths without actual completed
+artifacts and a final assertion review.
+
+One concrete acceptance gap was sent to the integrator and builder author.
+The frozen `v2-concurrent-cas` scope requires two simultaneous writes. Current
+`core_test.py` submits two ThreadPool calls but retains only their final
+sender/command/response records; it retains no start/end overlap evidence.
+`CoreStages.concurrency` recomputes one winner, one conflict and one durable
+acceptance, while reconciliation only checks the submission list length.
+Sequential matching exchanges can satisfy those predicates. Before closing
+that requirement, retain a bounded two-worker release and actual monotonic
+call intervals linked to their exact transcript references, then verify both
+calls started before either finished and that both exact submitted identities
+match the recomputed requests/responses. This is a requested correction, not
+an executed regression or a weakened requirement.
+
+
+## Bounded concurrency correction and host validation
+
+The integrator assigned the above concurrency correction to this reviewer.
+Accordingly, this subsection records implementation and actual host execution
+by `/root/independent_review`; independent source review of this correction
+belongs to `/root/editor_tool_review`.
+
+Two actual native client calls now wait at a bounded common barrier. The
+producer retains readiness, shared release, start and finish times from
+`time.monotonic_ns`, preserves failed-worker records, and requires strict
+overlap before proceeding. Each successful call appends a separate interval
+record to the same raw transport sidecar under its existing lock. That record
+contains the shared release, exact times, sender/route/input digest and the
+exact completed response transcript reference. The reader requires distinct
+interval records after their own responses and exact equality between raw
+interval bytes, summary metadata and the recomputed requested commands and
+outcomes. Client-call overlap includes encoding/transport; it does not claim
+simultaneous state mutation inside the authoritative ship.
+
+The independent reviewer caught the initial summary-only timing field gap.
+It was corrected before this final host run. Negative fixtures now reject
+plausible summary-only time/release edits, invented overlap over unchanged
+sequential raw records, missing/swapped interval and response references,
+wrong request identities, nonfinite/reversed/unbounded clocks, and distinct
+raw intervals that are sequential or merely touch. Actual lightweight Python
+callbacks exercise barrier overlap and a retained worker failure. No native
+process, ship or production identity is involved.
+
+Final focused execution passed **26 host tests in 0.328 seconds**. These are
+not additional native tests and overlap the earlier intermediate 25-test run.
+Before/after source hashes were unchanged:
+
+| File | SHA-256 |
+| --- | --- |
+| `scripts/urbit/core_test.py` | `dcf5ead9d3969322dfe880427090b108e0729e40d4a29aaadd4bc1dcf77c0916` |
+| `scripts/urbit/build_phase1_evidence.py` | `1eb8f8dad1199ce9f3cf6667ef3f26e20774ab3eb50d54590e5b0b30e4b8fb63` |
+| `tests/urbit/test_phase1_evidence_builder.py` | `73ec54971d7d50ed96cf858109078f6e270d8a4b9fa587ea6dad080705f70900` |
+
+Actual command, source identities, count, timing and stdout/stderr are retained
+in `docs/urbit/evidence/2026-09-25/phase1-nonnative/concurrency-host.json`
+(SHA-256 `6a7b4c2e04eee0cacf0fd9b7af8b37b6dd3454ffb506348f9fefd4af572484c8`).
+The correction is uncommitted at that execution and no rerun at a later commit
+is implied. Source/test edits were then explicitly frozen for the integrator.
+Native simultaneous-write acceptance still awaits the actual current-source
+corpus, raw interval records and final independent artifact review.
+
+
+## Public workflow feedback and observed pretty-output correction (September 26)
+
+The integrator assigned this bounded implementation to
+`/root/independent_review`; this subsection is the implementer's execution
+record, not independent approval of its own changes. Independent source
+review belongs to `/root/editor_tool_review`. Remotes were verified before
+each write; no native process or participant was started by this agent.
+
+The retained failed prequalification report
+`.piers/fakes/logs/skill-evaluation-20260925T122058Z-prequalification.json`
+has SHA-256
+`931cae7989ce99cad377edd734aa8a7b267bac2fc2fec2f7819bcdcfcc2a093c`.
+Its actual deliberate-failure-control output placed whitespace after `[` and
+before `]`, including CRLF around the grouped decimal atom. The parser now
+accepts that observed formatting while retaining whole-frame matching,
+canonical decimal validation and text/noun bounds. A regression contains the
+exact stripped stdout. Parsing that retained output in a host test does not
+turn the failed native attempt into a pass.
+
+The separate `skill-feedback` operation accepts only a candidate condition,
+one of T01–T06, and integer attempt 1–3. It resolves a fixed read-only snapshot
+at `/workflow/feedback/{condition}/{task}/{attempt}`, requires completed
+reference prequalification, and ends the owned supervisor lifetime. T01–T03
+run only their two frozen public examples; T04 runs only the public pinned-Gall
+scenario; T05 executes all submitted test arms against the correct subject
+without mutants or the private minimum-added-arm gate; T06 checks the supplied
+assembly bytes and native generator. The six-task private scoring path and
+frozen package are unchanged.
+
+Participant feedback is a distinct `*-feedback.json` projection. It excludes
+admission/reference proofs, infrastructure-control commands and private case
+results. Late guard, final source or cleanup failure invalidates both public
+and internal records. The independent reviewer caught an initial status bug:
+an ordinary compiler failure would have been described as infrastructure
+failure. Explicit guard/source/cleanup invalidation now preserves the
+distinction, including a healthy-guard failed-compiler regression.
+
+Actual focused host execution on the dirty tree based on
+`4236ed5ad408ee8fc6e4cb2b9f699a16be7e4f84`:
+
+- `python3 -m unittest discover -s tests/urbit -p 'test_skill_evaluation_support.py' -v`:
+  **30 tests passed in 0.110 seconds**.
+- `python3 -m unittest discover -s tests/urbit -p 'test_dev_flow.py' -v`:
+  **29 tests passed in 0.167 seconds**.
+- Scoped `git diff --check` passed. There is no diff under the frozen
+  `tests/urbit/skill_evaluation` package.
+
+These **59 unique host tests** include actual Python adapter/control dispatch
+with mocked native responses; they are not native Hoon execution. The counts
+and durations above are transcribed from the actual tool output; a new raw
+stdout/stderr artifact was not written for these two commands. Exact final
+source/test hashes, frozen before the integrator's next native run:
+
+| File | SHA-256 |
+| --- | --- |
+| `scripts/urbit/skill_evaluation_support.py` | `50ea71b69bd240e01bbffcb04eefc2a5364a14f78ff633477586c97584247289` |
+| `scripts/urbit/harness.py` | `aa798c754b3fc62da384ac14fdf43fba04205f88ffc3fd106ca4ff692855c5df` |
+| `scripts/urbit/supervisor.py` | `d157a974075d2e1cbfb1ae07609182a3232c5a3f16b75c3e9287652434d774d2` |
+| `tests/urbit/test_skill_evaluation_support.py` | `82a3391048f2201557f415dacd2fd9cc42ea1f6e3e79b20d2e33457b43ac2209` |
+| `tests/urbit/test_dev_flow.py` | `f5d32daee698ab452be51df2c522d1dbeb39829a133e375b9bc4052798ea4364` |
+
+The broker still must count and freeze each participant request, enforce the
+equal maximum of three public requests per task, exclude native queue/guard
+wait from active work time, and release public feedback only after the final
+outer guard completes cleanly. The attempt field alone is not a durable
+request ledger. Both participants must receive the same actual T02 starter
+compiler diagnostic from completed prequalification before beginning. Native
+prequalification and subsequent participant execution/private scoring remain
+unexecuted for this new slice. Phase 0/1 and Phase 2 admission remain open.
+
+
+## Independent smoke02 artifact and execution review (September 26)
+
+`/root/editor_tool_review` independently reviewed the retained smoke02 evidence;
+this reviewer did not execute the native run. The [portable bundle index](../evidence/2026-09-25/native-followup-attempts/index.json)
+has SHA-256 `431dd989e13eaa37b82d4d089f6a562ad36cdaf69a84139366df1bfc172690e0`.
+All **38 artifacts** match their compressed hashes, decompressed hashes and
+original local bytes. Gzip is the only declared transformation. All **126
+source-context file hashes** were independently checked against committed Git
+blobs at `4236ed5ad408ee8fc6e4cb2b9f699a16be7e4f84`.
+
+The smoke report does not contain its own commit field; its wrapper and retained
+source context supply the commit binding. Recomputing that commit's source
+closure yields harness SHA-256
+`764ea8e1729fcd59dbb96413edb14041ec8e8b5f529663e3f0dace4a4b8966c6`
+and smoke desk SHA-256
+`dff85b9af5429c096e38789f81f1e6097368c244e84d2d1b5b49a66a1f6fcf89`,
+both equal to the executed report. Toolchain and frozen smoke-corpus hashes
+also match. Both workflow common examples are byte-identical to the executed
+smoke library and agent; this does not prequalify the six workflow tasks.
+
+Command-level review confirms all **12 frozen native calls: seven positive
+ACKs and five expected runtime rejections**, including spoofed sender claims,
+stale revision and the deliberately incorrect counter assertion. The recorded
+request nouns, terminal frames and specific runtime rejection diagnostics
+match the corpus. A graceful zod stop, distinct replacement process and
+post-restart assertion confirm retained count 1. Smoke duration was **54.981
+seconds**. The separate reset15 record reports successful restoration of four
+stopped, hash-verified synthetic seeds.
+
+Guard `efeca8d16129cc8e8d4bc9a903647841` matches the smoke report's run ID,
+policy and guard-source digest. It completed with exit zero in **99.472
+seconds**, actual `cpu.max` readback `5000 10000`, CPU affinity `[19]`, 102
+retained thermal samples peaking at **71 degrees C**, and no cleanup escalation.
+This same guarded lifetime later contains failed prequal01; its clean outer
+completion does not turn that failed task into a pass.
+
+Disposition: the exact smoke02 source, native positive/negative behavior,
+restart and guard closure are accepted as scoped URB-020 evidence. Full issue
+closure also relies on the separately retained safe-path host negatives.
+Gall04/Gall05 and prequal01 remain failures. No current edited helper bytes,
+Phase 1 qualification, workflow comparison, live-network behavior or deployment
+are certified by this historical smoke run. The existing draft above is
+preserved unchanged; the author confirmed this file was free for this append,
+and derivative remotes were verified immediately before writing.
+
+
+## Observed compiler stream and stop-socket race corrections (September 26)
+
+The integrator assigned these two implementation corrections to
+`/root/independent_review`; `/root/editor_tool_review` independently inspected
+the final source and regressions without rerunning tests. The failed prequal03
+report `.piers/fakes/logs/skill-evaluation-20260926T134510Z-prequalification.json`
+has SHA-256 `42c9d00aade97d90121f790cee94abafd408a38726b88b36a135081f9d7bf28e`.
+Its actual T02 starter compiler diagnostic is on stdout (`-need.u(@ud)`,
+`-have.@ud`, `nest-fail`); stderr contains ordinary runtime diagnostics and
+`eval: bail: %exit`, with exit code zero. The retained native attempt remains
+failed. The shared execution/receipt predicate now recognizes the existing
+compiler-error token classes in either bounded stream, while rejecting a
+generic bail, process signal, result frame and oversized diagnostic.
+
+The other observed failure was a stop request racing the supervisor's own
+clean shutdown. Only missing/refused control-socket connections now fall
+through to the existing lifetime-lock wait. A held lock still fails; timeout,
+permission and reported control errors still propagate. The host regression
+uses real temporary-file flocks to exercise both released and held cases.
+
+Actual focused host execution: **32 adapter tests passed in 0.113 seconds**
+and **31 developer-flow tests passed in 0.160 seconds**, using the same two
+`python3 -m unittest discover` commands recorded above. These 63 tests include
+the previous 59 and are not additive native evidence. Scoped diff checking
+passed. Final reviewed hashes:
+
+| File | SHA-256 |
+| --- | --- |
+| `scripts/urbit/skill_evaluation_support.py` | `d4f5404816ad1adae3309afd9cabeb425e87543b61a61c6cd885185948f147ca` |
+| `scripts/urbit/harness.py` | `a63615cabf3c01698cec27bc6ae3f1381cc22be08d0c33859c992d96b8035c04` |
+| `tests/urbit/test_skill_evaluation_support.py` | `dd084b0c58c4ef4fcb4835fd594200fd61cdfc2d60043e944984aaad39879da3` |
+| `tests/urbit/test_dev_flow.py` | `4ca41c49a993bdc12032ec1b0e3df3a9bcd46923627603ee169e88e28dbdb66e` |
+
+No frozen package changed and this agent launched no native process. The
+integrator committed the reviewed slice as `97e8628`; subsequent native
+results must be retained separately before qualification or participant launch.

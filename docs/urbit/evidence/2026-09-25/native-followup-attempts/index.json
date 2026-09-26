@@ -1,0 +1,338 @@
+{
+  "protocol": "stead.native-followup-attempts/1",
+  "qualifies_phase": false,
+  "scope": "Fresh local fake-ship smoke passes. Gall04/05 and workflow reference prequalification fail; no Phase 1 or workflow comparison pass is claimed. Successful outer guards establish bounded clean completion only.",
+  "results": [
+    {
+      "label": "smoke02",
+      "status": "pass",
+      "classification": "local-real-native-fake-ships",
+      "report": "smoke-20260925T122058Z.json.gz",
+      "source_commit_from_wrapper": "4236ed5ad408ee8fc6e4cb2b9f699a16be7e4f84",
+      "source_commit_in_native_report": null,
+      "elapsed_seconds": 54.981,
+      "error": null,
+      "guard": "guard-efeca8d16129cc8e8d4bc9a903647841.json.gz",
+      "source_context": "source-context-efeca8d16129cc8e8d4bc9a903647841.json.gz"
+    },
+    {
+      "label": "gall04",
+      "status": "fail",
+      "classification": "native-scheduled-gall",
+      "report": "gall-schedule-20260925T121346Z-068dbe35f117.json.gz",
+      "source_commit_from_wrapper": "5c995f90e4c21d7e0228e2cb2d2f3c09f7a89f15",
+      "source_commit_in_native_report": "5c995f90e4c21d7e0228e2cb2d2f3c09f7a89f15",
+      "elapsed_seconds": 37.614,
+      "error": "AssertionError: positive-native-result-shape",
+      "guard": "guard-05164d002ccacfb800f164871c17d7f5.json.gz",
+      "source_context": "source-context-05164d002ccacfb800f164871c17d7f5.json.gz"
+    },
+    {
+      "label": "gall05",
+      "status": "fail",
+      "classification": "native-scheduled-gall",
+      "report": "gall-schedule-20260925T121736Z-4246b09397ff.json.gz",
+      "source_commit_from_wrapper": "4236ed5ad408ee8fc6e4cb2b9f699a16be7e4f84",
+      "source_commit_in_native_report": "4236ed5ad408ee8fc6e4cb2b9f699a16be7e4f84",
+      "elapsed_seconds": 36.839,
+      "error": "AssertionError: positive-native-result-shape",
+      "guard": "guard-6061cb1d7531523054b2460f40e5598f.json.gz",
+      "source_context": "source-context-6061cb1d7531523054b2460f40e5598f.json.gz"
+    },
+    {
+      "label": "prequal01",
+      "status": "fail",
+      "classification": "native-unit-and-pinned-gall-synthetic-routing",
+      "report": "skill-evaluation-20260925T122058Z-prequalification.json.gz",
+      "source_commit_from_wrapper": "4236ed5ad408ee8fc6e4cb2b9f699a16be7e4f84",
+      "source_commit_in_native_report": "4236ed5ad408ee8fc6e4cb2b9f699a16be7e4f84",
+      "elapsed_seconds": 35.89,
+      "error": "ValueError: Missing exact native result frame",
+      "guard": "guard-efeca8d16129cc8e8d4bc9a903647841.json.gz",
+      "source_context": "source-context-efeca8d16129cc8e8d4bc9a903647841.json.gz"
+    }
+  ],
+  "common_examples_identical_to_native_smoke": [
+    {
+      "workflow_file": "tests/urbit/skill_evaluation/common/smoke-library.hoon",
+      "native_file": "native/desk/lib/stead-smoke.hoon",
+      "sha256": "a064e0b81fdaa1b0341d884aa71773d52c271c3223ff7e56d1e6566460dfdfd0"
+    },
+    {
+      "workflow_file": "tests/urbit/skill_evaluation/common/smoke-agent.hoon",
+      "native_file": "native/desk/app/stead-home.hoon",
+      "sha256": "6b4071c1d3906223a62bd1af6193b2a48942b751b46460fa96cea2f8b48a729b"
+    }
+  ],
+  "transformations": [
+    "gzip compression only; decompressed original bytes unchanged"
+  ],
+  "artifacts": [
+    {
+      "file": "smoke-20260925T122058Z.json.gz",
+      "sha256": "851f9cd739b22cbb52aba55d4c31a25151d01c4235cf4710d53d3d8644a81c34",
+      "encoding": "gzip",
+      "original_local_path": ".piers/fakes/logs/smoke-20260925T122058Z.json",
+      "original_sha256": "db6142f9193a6520ffe26f1fc623406e32c8ef80ee0b4b60b3932516cfb10de5"
+    },
+    {
+      "file": "guard-efeca8d16129cc8e8d4bc9a903647841.json.gz",
+      "sha256": "b956c48b60b0ebf3cc448398cdf06fea4e1c4f1d75b057e882f63ca1ea454b59",
+      "encoding": "gzip",
+      "original_local_path": ".runtime/execution-runs/four-fakes-mknx6k93/report.json",
+      "original_sha256": "28ad528cd45056bf426b7f39f4eedd5b5b5b1d44f07ff8789f5b369663ffd228"
+    },
+    {
+      "file": "source-context-efeca8d16129cc8e8d4bc9a903647841.json.gz",
+      "sha256": "70e7f757fb82328da536f3a0548cf2e48850cab66ab9fc8fd808fb7edcf39ede",
+      "encoding": "gzip",
+      "original_local_path": ".runtime/execution-runs/four-fakes-mknx6k93/control/source-context.json",
+      "original_sha256": "39ca57a2b78e284976186c6744cb44f3cd4eebb0774e43c2cc9140cc67726338"
+    },
+    {
+      "file": "smoke02.json.gz",
+      "sha256": "cc9210a397d8c206d53472ffc9eb16ebf843825fdadbbf17dfbcbe1638ba9e06",
+      "encoding": "gzip",
+      "original_local_path": ".runtime/phase01-20260925/smoke02.json",
+      "original_sha256": "8832bdf8c14015d42c83196f2a6734de46e38e78132c3028e73595fb75312220"
+    },
+    {
+      "file": "smoke02.log.gz",
+      "sha256": "448c44ac26e3ad9f6be6d9f825407e7c4092ee8cf9914b19411133cd8ce3bf73",
+      "encoding": "gzip",
+      "original_local_path": ".runtime/phase01-20260925/smoke02.log",
+      "original_sha256": "e6f16bd12388135ea2e80c35b648934a61093f7737b71ec998b28a60d5d5a89c"
+    },
+    {
+      "file": "gall-schedule-20260925T121346Z-068dbe35f117.json.gz",
+      "sha256": "79e7740b88472aa80318b1f4f8cc4112063f4cbede8c45ede9513ed625f77cf5",
+      "encoding": "gzip",
+      "original_local_path": ".piers/fakes/logs/gall-schedule-20260925T121346Z-068dbe35f117.json",
+      "original_sha256": "34370f06f726c4c96c35cbc5cec51bb1d4efcab21da5d1452ead87b3e9154c57"
+    },
+    {
+      "file": "guard-05164d002ccacfb800f164871c17d7f5.json.gz",
+      "sha256": "9e0e81e60e6bbd545caff79acfbd0073070c569da78a2d8640fbd9b7e1d921c2",
+      "encoding": "gzip",
+      "original_local_path": ".runtime/execution-runs/four-fakes-hrgvq4mm/report.json",
+      "original_sha256": "39b67e9783195f88768b52123e5df9ef9f5dad3ae462815b356defa4f3fb7177"
+    },
+    {
+      "file": "source-context-05164d002ccacfb800f164871c17d7f5.json.gz",
+      "sha256": "d885c93a4adf7442294ec1c9b0becdb907057fbff3e42fe42a431b22cb6b52ed",
+      "encoding": "gzip",
+      "original_local_path": ".runtime/execution-runs/four-fakes-hrgvq4mm/control/source-context.json",
+      "original_sha256": "3aac2404b4f33319ad380138e63d0f4de8a3e09be5dae339c1db88f4cc8f8939"
+    },
+    {
+      "file": "gall04.json.gz",
+      "sha256": "0d4b2172c45fb0dd54e0c736ac085073c0dabdc818092f56fb1e1a38f07d8f50",
+      "encoding": "gzip",
+      "original_local_path": ".runtime/phase01-20260925/gall04.json",
+      "original_sha256": "81741959ab83dec945ee576ee92970a381ffe5c5f57b80331c42be7e1f9cf54b"
+    },
+    {
+      "file": "gall04.log.gz",
+      "sha256": "9bf0af349da26a0d992d18e975c4a0b82de2ba4cbfc3237d4f011c942f16d5b5",
+      "encoding": "gzip",
+      "original_local_path": ".runtime/phase01-20260925/gall04.log",
+      "original_sha256": "1a2b684f0a4f869ac516a4c653b22945076ff3178a1bd44256c75e842f5d62f0"
+    },
+    {
+      "file": "gall04-zod.log.gz",
+      "sha256": "2db1290677c168022b57bc47d69e9685c8e2daf316a6cc4e8adf830118d7c699",
+      "encoding": "gzip",
+      "original_local_path": ".runtime/phase01-20260925/gall04-zod.log",
+      "original_sha256": "c6a54a3096c50eec324207021dbf506d41d8553abe23454f012711cb666868c5"
+    },
+    {
+      "file": "gall-schedule-20260925T121736Z-4246b09397ff.json.gz",
+      "sha256": "1677b1e14100a4a88b3434d03df742d085372cc9da5bedfb9ccdbc7f179201bb",
+      "encoding": "gzip",
+      "original_local_path": ".piers/fakes/logs/gall-schedule-20260925T121736Z-4246b09397ff.json",
+      "original_sha256": "136c347deba24ff919fc130dc96aa12bc1d8755b6e01903917cde162033d6b13"
+    },
+    {
+      "file": "guard-6061cb1d7531523054b2460f40e5598f.json.gz",
+      "sha256": "84cd5741de1b62ebdd40d572081322d15c388fe367a21d114106b05722d021d6",
+      "encoding": "gzip",
+      "original_local_path": ".runtime/execution-runs/four-fakes-3p9iy5gb/report.json",
+      "original_sha256": "c946c6f740874d1d67b81b71ac0fb0cc772d02b54f455497e35dce7c0e192d3f"
+    },
+    {
+      "file": "source-context-6061cb1d7531523054b2460f40e5598f.json.gz",
+      "sha256": "70e7f757fb82328da536f3a0548cf2e48850cab66ab9fc8fd808fb7edcf39ede",
+      "encoding": "gzip",
+      "original_local_path": ".runtime/execution-runs/four-fakes-3p9iy5gb/control/source-context.json",
+      "original_sha256": "39ca57a2b78e284976186c6744cb44f3cd4eebb0774e43c2cc9140cc67726338"
+    },
+    {
+      "file": "gall05.json.gz",
+      "sha256": "9e7c206b73ae802138c0efb745265e544f7f5fd28b6293f9affda28f0f9ee126",
+      "encoding": "gzip",
+      "original_local_path": ".runtime/phase01-20260925/gall05.json",
+      "original_sha256": "e9f6283591a58d5c1e9d3f17fd71daeaa62db583e0266ba5f5d771f37ccb43c9"
+    },
+    {
+      "file": "gall05.log.gz",
+      "sha256": "6861c8c6a1c2f6abbf93953038b0c68d21a40686dd3cbde8ca948a7e0dbac868",
+      "encoding": "gzip",
+      "original_local_path": ".runtime/phase01-20260925/gall05.log",
+      "original_sha256": "1ed870cee05c0a65a08c7e7c964b9e142409b412aa1bc092a6eaad199429c3d9"
+    },
+    {
+      "file": "gall05-zod.log.gz",
+      "sha256": "ed8ee3e8b59fd8e507c1d040ec2efb9263ac8edbbab767fb1ee39fd34947806a",
+      "encoding": "gzip",
+      "original_local_path": ".runtime/phase01-20260925/gall05-zod.log",
+      "original_sha256": "778c2c81a495d40985ba02ec493b368cc6adbffbd5082b870620d44188456109"
+    },
+    {
+      "file": "skill-evaluation-20260925T122058Z-prequalification.json.gz",
+      "sha256": "ce3d7c92f94e0544023c41dfa004126172554bef9e3545887b8a8527d7fe8d36",
+      "encoding": "gzip",
+      "original_local_path": ".piers/fakes/logs/skill-evaluation-20260925T122058Z-prequalification.json",
+      "original_sha256": "931cae7989ce99cad377edd734aa8a7b267bac2fc2fec2f7819bcdcfcc2a093c"
+    },
+    {
+      "file": "prequal01.json.gz",
+      "sha256": "14a88b893570b01294eda7da550c1b291e3a0af6ebd05c7aeeb382ac20721976",
+      "encoding": "gzip",
+      "original_local_path": ".runtime/phase01-20260925/prequal01.json",
+      "original_sha256": "163756bf73e9565a4403e35a89ed4b5efe0c9c6860dd5cb86427ce4825df83d3"
+    },
+    {
+      "file": "prequal01.log.gz",
+      "sha256": "bb7a583ff69c33b330cd03f3e5bddb49241675d05bc2ec7c581ae5835a591394",
+      "encoding": "gzip",
+      "original_local_path": ".runtime/phase01-20260925/prequal01.log",
+      "original_sha256": "727b3884788367e541ede174bcee233addb6fcfa7d62d9c47e22b88d50092367"
+    },
+    {
+      "file": "start14.json.gz",
+      "sha256": "97dbd99948625f75151fe99d29c70a348b80e7d9af014eb19dbbe25babeca96b",
+      "encoding": "gzip",
+      "original_local_path": ".runtime/phase01-20260925/start14.json",
+      "original_sha256": "6646e84eec7398f6796fc20179ab1506c290022fc980da7df48bd3cb858a864f"
+    },
+    {
+      "file": "start14.log.gz",
+      "sha256": "f8e0093f019ca6a51c857dbd28c837c145c10b59db0e5284f8ce7a5202596408",
+      "encoding": "gzip",
+      "original_local_path": ".runtime/phase01-20260925/start14.log",
+      "original_sha256": "8978479b069c88b5cb0ab1c3c9b0da64000b2ecbe3f9cc97c201b3a150aef649"
+    },
+    {
+      "file": "reset15.json.gz",
+      "sha256": "c42bf4e420c2646b09eb0df4bcf1a5ec0080563bd8c70449dc7def026f8c6a4e",
+      "encoding": "gzip",
+      "original_local_path": ".runtime/phase01-20260925/reset15.json",
+      "original_sha256": "47af297d2ca3dd9400844528cc2856272faae0842df285b3e8f8905cbb0910c7"
+    },
+    {
+      "file": "reset15.log.gz",
+      "sha256": "6c41425cb4becb4a852ead90ffdc5b3e78e1929335834562a4fbe9df690fe5cc",
+      "encoding": "gzip",
+      "original_local_path": ".runtime/phase01-20260925/reset15.log",
+      "original_sha256": "8b81d5a737c418dcdceed52813863364ad01dd0d862f99f3b5e18987339220dc"
+    },
+    {
+      "file": "start15.json.gz",
+      "sha256": "230b7f5f78da40ebc269f986be587b0e54e7cdcd9078326283eb5dedbae8c19c",
+      "encoding": "gzip",
+      "original_local_path": ".runtime/phase01-20260925/start15.json",
+      "original_sha256": "6c0743856ca9fe4edf6c8eed7ef000a4fd4eb5829f8837b522d33fddf4d778ee"
+    },
+    {
+      "file": "start15.log.gz",
+      "sha256": "f10164822e6422c4b426550aeb74694d3784560c9779dd35cd67099463ab6720",
+      "encoding": "gzip",
+      "original_local_path": ".runtime/phase01-20260925/start15.log",
+      "original_sha256": "7f0ea2ea6e279d4e2831fb354c783416c2425dba3ba0481fca683267c2209901"
+    },
+    {
+      "file": "ready15.json.gz",
+      "sha256": "6c7502989a16fae85c226fa5db87dd6bf4058c99192c9b1dec47c4a67036a55a",
+      "encoding": "gzip",
+      "original_local_path": ".runtime/phase01-20260925/ready15.json",
+      "original_sha256": "340c1cbf303ecd145171aa2373f8abc09ab80f6c128199cf93de5870011e7fee"
+    },
+    {
+      "file": "ready15.log.gz",
+      "sha256": "01cedc45b27b73b7c8d5c8d2e0aa7bae317933250f77076dc26ab76b2428f17e",
+      "encoding": "gzip",
+      "original_local_path": ".runtime/phase01-20260925/ready15.log",
+      "original_sha256": "6ade3d62b67dd2066207260ae96b6ef88847dbb824720cc7be7b132fee5510e9"
+    },
+    {
+      "file": "start16.json.gz",
+      "sha256": "4a16a171b8200124ebc73469d6251ede8d61dc42f6cb55aab078946279399123",
+      "encoding": "gzip",
+      "original_local_path": ".runtime/phase01-20260925/start16.json",
+      "original_sha256": "eefec9b1d92253cef6a13a9e5f4e316b1e6d85e93c6e9cb143a9d10d9b96b305"
+    },
+    {
+      "file": "start16.log.gz",
+      "sha256": "bd00ec229717249cf07e091b1ee1c2c8c3b919373e8cf073f035a7d3ea23c705",
+      "encoding": "gzip",
+      "original_local_path": ".runtime/phase01-20260925/start16.log",
+      "original_sha256": "334d78d73cb36eac9a7f7fe7da9e2927d551dfe0bbc9349a6bc50caf90d36812"
+    },
+    {
+      "file": "ready16.json.gz",
+      "sha256": "b02acb063ac93451df5a93b5ef5e68045891067ccbd61c6bb48760ce9890ce1c",
+      "encoding": "gzip",
+      "original_local_path": ".runtime/phase01-20260925/ready16.json",
+      "original_sha256": "7d4c0b446d25a5d9ead8d0dd2f98805e863886f08200eb03e30790e0ca000e5d"
+    },
+    {
+      "file": "ready16.log.gz",
+      "sha256": "01cedc45b27b73b7c8d5c8d2e0aa7bae317933250f77076dc26ab76b2428f17e",
+      "encoding": "gzip",
+      "original_local_path": ".runtime/phase01-20260925/ready16.log",
+      "original_sha256": "6ade3d62b67dd2066207260ae96b6ef88847dbb824720cc7be7b132fee5510e9"
+    },
+    {
+      "file": "start17.json.gz",
+      "sha256": "8523ad4c86d75c31eb4f128cd48ec03d58076f6cd7f3c946e34ca95d319f3ba5",
+      "encoding": "gzip",
+      "original_local_path": ".runtime/phase01-20260925/start17.json",
+      "original_sha256": "3ea3f72425f0c46deba8180c1c181f243ee4682abbc217e02329fa5ba6be539a"
+    },
+    {
+      "file": "start17.log.gz",
+      "sha256": "39fb3fd5b53fdea1889d60a8d9ea56bf1f2d8d1b16d05813a2b38f174340fa58",
+      "encoding": "gzip",
+      "original_local_path": ".runtime/phase01-20260925/start17.log",
+      "original_sha256": "2582603a10b26921e6d5ae67756e10eb827e3b87c5c27a77ca9bb44b593303f2"
+    },
+    {
+      "file": "ready17.json.gz",
+      "sha256": "6265b5e7de4b7f4c64c1e4beb711b1d986c8b59bae30fd383d92e7fefb63602e",
+      "encoding": "gzip",
+      "original_local_path": ".runtime/phase01-20260925/ready17.json",
+      "original_sha256": "588b7b1e8716526892f74290352c081554d08717624f6009cbe3771b00290bc3"
+    },
+    {
+      "file": "ready17.log.gz",
+      "sha256": "01cedc45b27b73b7c8d5c8d2e0aa7bae317933250f77076dc26ab76b2428f17e",
+      "encoding": "gzip",
+      "original_local_path": ".runtime/phase01-20260925/ready17.log",
+      "original_sha256": "6ade3d62b67dd2066207260ae96b6ef88847dbb824720cc7be7b132fee5510e9"
+    },
+    {
+      "file": "pre-start15-unclean-live.json.gz",
+      "sha256": "e100afa4fc9da20a6681557d0be9157224fe53b5906fc10e48402121865171a5",
+      "encoding": "gzip",
+      "original_local_path": ".runtime/phase01-20260925/pre-start15-unclean-live.json",
+      "original_sha256": "d92a000c00eff7709beacecda363fc2757794c51aee03db57bd844e34f1d8d16"
+    },
+    {
+      "file": "prequal01-input-deliberate-false-native-expectation.hoon.gz",
+      "sha256": "5b72a8cb237c8fc0cd03f7edaa80611fe7428a4d9c108a1a838f3b8c128cace4",
+      "encoding": "gzip",
+      "original_local_path": ".piers/fakes/logs/skill-evaluation-20260925T122058Z-prequalification-inputs/deliberate-false-native-expectation.hoon",
+      "original_sha256": "2ba13db97f0793d973a4e7caec199835218495065011162f8645b36a919f2c3f"
+    }
+  ]
+}

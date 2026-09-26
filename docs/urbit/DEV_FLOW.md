@@ -83,10 +83,10 @@ and the retained report; resume after cooling without changing the limits.
 
 `make start` and `make dev` also put preparation in a transient user scope with
 the same 50 percent/10 ms CPU limit and one allowed CPU. This covers seed and
-toolchain hashing before the native guardian takes over. A manually wrapped
-run of this setup passed the native probes; the Makefile integration is subject
-to its next recorded `make dev` run. The successful independent Git audit used
-the same preparation limit. No fan or persistent power setting is required.
+toolchain hashing before the native guardian takes over. The integrated
+`make dev` passed all 53 native checks at `b9765bf` in 58 seconds, with
+committed, unchanged source inputs; see the [execution record](evidence/2026-09-25/dev-flow-and-gall-attempts/index.json).
+The successful independent Git audit used the same preparation limit. No fan or persistent power setting is required.
 
 `make dev` cleans up a failed/interrupted operation. A successful developer check
 leaves the supervised fake environment running for the next check; use `make stop`

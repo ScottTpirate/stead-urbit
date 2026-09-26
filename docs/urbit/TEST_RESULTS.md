@@ -4,8 +4,23 @@ September 25 continuation: the [saved-state probe](evidence/2026-09-25/saved-sta
 passed all 53 checks at `c1e437f`, including actual on-save/on-load and exact noun
 preservation. The [independent Git audit](reviews/URB025_REUSE_DECISION_20260925.md)
 passed all 14 vectors and records an explicit non-adoption decision. Issues #2
-(repository/provenance) and #5 (Git evaluation) are closed; other phase gates
-remain open.
+(repository/provenance), #3 (pinned toolchain) and #5 (Git evaluation) are closed;
+other phase gates remain open. The integrated `make dev` also passed 53 checks
+at `b9765bf`; [its record](evidence/2026-09-25/dev-flow-and-gall-attempts/index.json)
+preserves three subsequent scheduled-Gall compiler failures separately.
+
+The [follow-up artifacts](evidence/2026-09-25/native-followup-attempts/index.json)
+retain the fresh smoke pass at `4236ed5` (54.981 seconds), both later Gall
+serialization failures and the first workflow reference-prequalification
+failure. The smoke run exercises the 12 frozen commands, real home restart,
+authorized and denied remote requests, stale revision and a deliberately wrong
+assertion. Its exact source context and completed outer guard are included.
+The common workflow examples are byte-identical to this compiled smoke source.
+Gall05 measured a 1,376,721-byte poke output list, exceeding the 16 KiB evidence
+decoder limit; the pending projection retains the body and routing and reports
+the omitted compiler type's native hash and size. The workflow failure was a
+result parser mismatch with actual multiline native output. Neither failed run
+counts as acceptance.
 
 The earlier [native build and smoke](evidence/2026-09-25/native-build/index.json)
 passed at `c299f19`. The [first full core run](evidence/2026-09-25/native-core-first-run/index.json)

@@ -1,0 +1,101 @@
+{
+  "protocol": "stead.native-attempt/1",
+  "label": "gall06",
+  "source_commit": "b0e1a4cf17a34f7cb27520b08ed5547e8dc43974",
+  "native_status": "fail",
+  "native_error": "AssertionError: positive-native-result-shape",
+  "native_elapsed_seconds": 34.667,
+  "outer_guard_status": "completed",
+  "outer_guard_reason": null,
+  "outer_guard_exit": 0,
+  "qualifies_phase": false,
+  "transformations": [
+    "gzip compression only; decompressed bytes unchanged"
+  ],
+  "artifacts": [
+    {
+      "file": "gall-schedule-20260926T133336Z-3267ec5aaa74.json.gz",
+      "sha256": "5fb91fda21871eb6969ca6a2b58c6647abc8e1238eab3901c2b6ca0c4a8892ad",
+      "original_local_path": ".piers/fakes/logs/gall-schedule-20260926T133336Z-3267ec5aaa74.json",
+      "original_sha256": "e85e43b8f7f05c9739d8c1e8f4d4f19b7d790fc91e2b20a8e4511f52b0329707",
+      "encoding": "gzip"
+    },
+    {
+      "file": "outer-guard.json.gz",
+      "sha256": "27a88a2830cb6d0b799da0e3f610ad3db7b72a15bf8a04097b89d4a361fe52dd",
+      "original_local_path": ".runtime/execution-runs/four-fakes-tjmumrdw/report.json",
+      "original_sha256": "a05f24819b0e1fa8fde8c6014f97722bc9afdbd1ba2247243783e602fd1609c1",
+      "encoding": "gzip"
+    },
+    {
+      "file": "source-context.json.gz",
+      "sha256": "78aea28fe93b1a3cb3b4bb55228b0ca3cf36ef55a0e85c205a471451faed4bf0",
+      "original_local_path": ".runtime/execution-runs/four-fakes-tjmumrdw/control/source-context.json",
+      "original_sha256": "a1c60506d341c04b5bad5b72444f7d8661d2f8687b156b08ada2a170765c55ab",
+      "encoding": "gzip"
+    },
+    {
+      "file": "gall06.json.gz",
+      "sha256": "62dd69ee8b680a0b9d6b631f5f502c0ab829631a69b548e4ff816139889caef4",
+      "original_local_path": ".runtime/phase01-20260925/gall06.json",
+      "original_sha256": "66e6169624997b3b107b6bc654d7d88a300e530b8f422a38db26cc5730c178f8",
+      "encoding": "gzip"
+    },
+    {
+      "file": "gall06.log.gz",
+      "sha256": "991f83ab265088696c801bf6a5c0459f8bdce8cae78def8da2a184efec49660a",
+      "original_local_path": ".runtime/phase01-20260925/gall06.log",
+      "original_sha256": "c268831de1652c478eb5ef2a2413317e515753aa1bbeb56f5f8dffb9ff66d438",
+      "encoding": "gzip"
+    },
+    {
+      "file": "gall06-zod.log.gz",
+      "sha256": "de777053f9acc4d5432da5ac739fab90dfbbec7fd3bbe50a00fb9ab682d75442",
+      "original_local_path": ".runtime/phase01-20260925/gall06-zod.log",
+      "original_sha256": "0bbe3fce5653f2ae58050027d0d61f20a0c3a91ee301c38547ed91efd53c9cba",
+      "encoding": "gzip"
+    },
+    {
+      "file": "start18.json.gz",
+      "sha256": "079472e961ffe3b14e009de0f92f6a7217911ab0ad060f1ef191207580651a40",
+      "original_local_path": ".runtime/phase01-20260925/start18.json",
+      "original_sha256": "43159d6e247e5e5cd7103f1589ce3062bd8a59256a631bbbf50367c55f095ea0",
+      "encoding": "gzip"
+    },
+    {
+      "file": "start18.log.gz",
+      "sha256": "526a1c832a6313580bea779f2902abd6a3ca6a2a706c5d7304a8680c26d9cf4c",
+      "original_local_path": ".runtime/phase01-20260925/start18.log",
+      "original_sha256": "7ffaad31b874529fbdfbc5c1247da2b0775564f1ae8c6983ff3e07bf1c8281ea",
+      "encoding": "gzip"
+    },
+    {
+      "file": "ready18.json.gz",
+      "sha256": "88e23445ffac1b21d88bd3f20e683f30a0aa1f81ca338ef293b0aced10984e4e",
+      "original_local_path": ".runtime/phase01-20260925/ready18.json",
+      "original_sha256": "5ae419e382cbceb3939bd6fa60835b8c18e52eb0883d90179e5fb5235501564c",
+      "encoding": "gzip"
+    },
+    {
+      "file": "ready18.log.gz",
+      "sha256": "01cedc45b27b73b7c8d5c8d2e0aa7bae317933250f77076dc26ab76b2428f17e",
+      "original_local_path": ".runtime/phase01-20260925/ready18.log",
+      "original_sha256": "6ade3d62b67dd2066207260ae96b6ef88847dbb824720cc7be7b132fee5510e9",
+      "encoding": "gzip"
+    },
+    {
+      "file": "stop18.json.gz",
+      "sha256": "325b2f3d6b4907b7626f3f790583597ce102f0f469bea59a42f20fc7c01ae0e4",
+      "original_local_path": ".runtime/phase01-20260925/stop18.json",
+      "original_sha256": "7546fca2612b495f7cd9e413a21a0acd0bde2527e7674e5649f9682d4b8c7628",
+      "encoding": "gzip"
+    },
+    {
+      "file": "stop18.log.gz",
+      "sha256": "3515bb00ab4541684f1f9147aacb7e7157ed671b8d21b6ef4cf9f013b859c7f8",
+      "original_local_path": ".runtime/phase01-20260925/stop18.log",
+      "original_sha256": "fe8b2280abb0c0a09259c5211aa3dc729b9b42caa2afdaa7431a4d4936ba213c",
+      "encoding": "gzip"
+    }
+  ]
+}
