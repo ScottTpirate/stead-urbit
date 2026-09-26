@@ -702,3 +702,59 @@ passed. Final reviewed hashes:
 No frozen package changed and this agent launched no native process. The
 integrator committed the reviewed slice as `97e8628`; subsequent native
 results must be retained separately before qualification or participant launch.
+
+
+## T03 probe type bounds and timeout abort (September 26)
+
+The integrator's actual prequal04 report at source `97e8628` has SHA-256
+`861e4f594850945dbc19a97553c9fa62facc8ccb2f32acdf2d383f7611f0bd80`.
+T01 and T02 passed their reference checks. T03 timed out after 120 seconds;
+the old adapter then queued T04's commit, which also timed out. The recorded
+cleanup failed with zod exit `-9`. This attempt remains failed and does not
+qualify the six-task workflow.
+
+At the integrator's request, `/root/independent_review` implemented the bounded
+adapter correction. `TimeoutError` and `subprocess.TimeoutExpired` now retain
+the failed task, exit the task loop immediately and enter existing cleanup.
+Later tasks remain `not_run`. Public feedback marks this uncertain native
+execution as infrastructure failure even if cleanup later completes cleanly.
+No timeout was increased.
+
+The generated T03 probe now calls one fixed-sample gate for the same 12 frozen
+cases in their original order, with explicit `agent:gall` and `vase` types.
+It retains actual load calls, empty-card checks, expected saved state, the
+initialized nonempty state before rejection, native rejection tags, unchanged
+before/after vases, and repeated full-vase save/load comparison. Rejection-only
+checks use pinned `mute:vi`. In pinned Arvo commit
+`5a187fededc4582a34fcd6055c67bb63e0917b94`, `sys/hoon.hoon` lines 6292–6328 show
+polymorphic `mule` reconstructing the success type while typed `mute` returns
+`(each * (list tank))`; `mute` belongs to `vi` and has no top-level alias. This
+supports the intended type-work reduction, but does not establish the cause
+of the native timeout without another actual native run. The two-case public
+probe still excludes all private cases and rejection setup.
+
+Actual focused host execution was
+`python3 -m unittest discover -s tests/urbit -p test_skill_evaluation_support.py -v`:
+**36 tests passed in 0.156 seconds**, including the prior 32. Authored native
+mocks prove that a T03 timeout queues no T04 command, an evaluator timeout
+queues no T02 evaluation, cleanup is entered, and timed-out public execution
+cannot be published as an ordinary task failure. Generated-source checks
+preserve the exact frozen case inventory. These are host-only observations,
+not Hoon execution. Scoped diff checking passed.
+
+| File | SHA-256 |
+| --- | --- |
+| `scripts/urbit/skill_evaluation_support.py` | `6c32d46b4022085ea04d9e0a4a22d4069d1342d16ae8b96615ccfadb63c6c45d` |
+| `tests/urbit/test_skill_evaluation_support.py` | `0a48ee6112e08f35b0fea703b00097a5dbb5aaa936773bc69dbec653ec7d1689` |
+
+The source was handed to `/root/editor_tool_review` for independent review.
+This implementing agent launched no native process. The frozen package is
+unchanged; native prequalification, participant execution and phase closure
+remain pending. Derivative remotes were verified before each write.
+
+Independent source disposition: `/root/editor_tool_review` reviewed the exact
+`6c32d46b` adapter and `0a48ee61` test bytes above and found no remaining blocker.
+The reviewer confirmed all 12 ordered oracle cases, full-vase roundtrip, six
+rejections after nonempty-state initialization, unchanged rejection state,
+public-only filtering and immediate timeout cleanup. The reviewer performed
+no native execution and did not rerun the author's host tests.

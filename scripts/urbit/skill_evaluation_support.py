@@ -1,4 +1,4 @@
-"""Unexecuted URB-170 adapter; native prequalification is mandatory.
+"""URB-170 adapter; native prequalification is mandatory.
 
 Call only inside the existing guarded supervisor. Mount the frozen package and
 candidate inputs read-only. Candidate roots contain T01/... through T06/...;
@@ -352,7 +352,8 @@ def public_feedback_projection(report):
         raise ValueError('Public feedback cannot disclose other tasks')
     start = report.get('public_command_start')
     commands = report['commands'][start:] if type(start) is int and 0 <= start <= len(report['commands']) else []
-    infrastructure_failure = (bool(report.get('cleanup_error') or report.get('final_binding_error'))
+    infrastructure_failure = (bool(report.get('cleanup_error') or report.get('final_binding_error')
+                                   or report.get('native_execution_interrupted'))
                               or (report.get('status') != 'pass' and rows[0].get('status') != 'failed'))
     return {'protocol': 'stead.skill-public-feedback/1', 'status': report['status'],
             'condition': report['condition'], 'task': name, 'attempt': report['feedback_attempt'],
@@ -571,29 +572,40 @@ GALL_PRELUDE = '''/=  gall-raw  /sys/vane/gall
 
 
 def t03_program(task):
+    # One fixed-sample gate avoids accumulating twelve inferred agent subjects.
+    # Pinned lull ++agent/++form defines the interface; hoon ++mute virtualizes
+    # the same thunk as ++mule without reconstructing its full success type.
+    # Rejection-only checks need its real %| result, never a returned agent.
     code = ['/=  candidate  /app/eval-counter', ':-  %say', '|=  *', ':-  %noun',
             '=/  context=bowl:gall  *bowl:gall', '=.  our.context  ~zod',
             '=.  src.context  ~zod', '=.  now.context  ~2026.9.25',
-            '=/  original  ~(. candidate context)', '=/  initial  on-save:original',
-            '?>  =([%1 0 0] q.initial)', '=/  evidence=(list *)  ~']
+            '=/  original=agent:gall  ~(. candidate context)', '=/  initial=vase  on-save:original',
+            '?>  =([%1 0 0] q.initial)',
+            '=/  run-case',
+            '  |=  [label=@t incoming=vase expected=* must-reject=? repeat-load=?]',
+            '  ^-  *',
+            '  =/  agent=agent:gall  ~(. candidate context)']
+    if any(case.get('expect_native_rejection') for case in task['cases']):
+        code += ['  ?:  must-reject',
+                 '    =+  [cards loaded]=(on-load:agent !>([%1 5 2]))',
+                 '    ?>  =(~ cards)', '    =/  before=vase  on-save:loaded',
+                 '    =/  rejected  (mute:vi |.((on-load:loaded incoming)))',
+                 '    ?>  ?=(%| -.rejected)', '    =/  after=vase  on-save:loaded',
+                 '    ?>  =(before after)', '    [label before rejected after]']
+    else:
+        code += ['  ?>  =(%.n must-reject)']
+    code += ['  =+  [cards loaded]=(on-load:agent incoming)', '  ?>  =(~ cards)',
+             '  =/  observed=vase  on-save:loaded', '  ?>  =(expected q.observed)',
+             '  ?:  repeat-load',
+             '    =+  [later-cards reloaded]=(on-load:loaded observed)', '    ?>  =(~ later-cards)',
+             '    =/  again=vase  on-save:reloaded', '    ?>  =(observed again)',
+             '    [label cards observed]', '  [label cards observed]',
+             '=/  evidence=(list *)', '  :~']
     for case in task['cases']:
-        code += ['=/  agent  ~(. candidate context)']
-        if case.get('expect_native_rejection'):
-            code += ['=^  cards  agent  (on-load:agent !>([%1 5 2]))', '?>  =(~ cards)',
-                     '=/  before  on-save:agent',
-                     f"=/  rejected  (mule |.((on-load:agent !>({case['load_noun']}))))",
-                     '?>  ?=(%| -.rejected)', '=/  after  on-save:agent',
-                     '?>  =(before after)',
-                     f"=.  evidence  [['{case['id']}' before rejected after] evidence]"]
-        else:
-            code += [f"=^  cards  agent  (on-load:agent !>({case['load_noun']}))",
-                     '?>  =(~ cards)', '=/  observed  on-save:agent',
-                     f"?>  =({case['saved_noun']} q.observed)"]
-            if case.get('repeat_load_saved_output'):
-                code += ['=^  cards  agent  (on-load:agent observed)', '?>  =(~ cards)',
-                         '=/  again  on-save:agent', '?>  =(observed again)']
-            code += [f"=.  evidence  [['{case['id']}' cards observed] evidence]"]
-    return '\n'.join(code + ['^-  [@tas @ud]', '[%skill-result (jam (flop evidence))]']) + '\n'
+        code += [f"    (run-case '{case['id']}' !>({case['load_noun']}) {case.get('saved_noun', '~')} "
+                 + ('%.y' if case.get('expect_native_rejection') else '%.n') + ' '
+                 + ('%.y' if case.get('repeat_load_saved_output') else '%.n') + ')']
+    return '\n'.join(code + ['  ==', '^-  [@tas @ud]', '[%skill-result (jam evidence)]']) + '\n'
 
 
 def t04_program(scenario):
@@ -890,6 +902,13 @@ def run(host, package_root, candidate_root, condition, *, prequalify=False,
                            observed_cases=list(row['expected_cases']))
             except Exception as error:
                 row.update(status='failed', error=type(error).__name__ + ': ' + str(error))
+                if isinstance(error, (TimeoutError, subprocess.TimeoutExpired)):
+                    # A timed-out Lens request may still be evaluating inside
+                    # the ship. Do not queue another task on that uncertain
+                    # runtime; retain the failure and immediately enter cleanup.
+                    report['native_execution_interrupted'] = {'task': name, 'error': row['error']}
+                    checkpoint(name + '-aborted-native-timeout')
+                    raise
                 host['execution_check']()
             checkpoint(name + '-finished')
         host['execution_check']()

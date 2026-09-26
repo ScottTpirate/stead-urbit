@@ -298,6 +298,21 @@ class PublicFeedbackSelection(unittest.TestCase):
                           feedback_task=task, feedback_attempt=attempt)
                 verify.assert_not_called()
 
+    def test_t03_generated_gate_keeps_exact_frozen_case_calls_and_public_filter(self):
+        task = self.oracles['tasks'][2]
+        source = S.t03_program(task)
+        self.assertEqual(source.count('|=  [label=@t incoming=vase expected=* must-reject=? repeat-load=?]'), 1)
+        self.assertIn('=/  agent=agent:gall', source)
+        self.assertIn('(mute:vi |.((on-load:loaded incoming)))', source)
+        for case in task['cases']:
+            self.assertEqual(source.count("(run-case '" + case['id'] + "'"), 1)
+            self.assertIn('!>(' + case['load_noun'] + ')', source)
+        self.assertEqual(source.count('(run-case '), 12)
+        public = S.t03_program(S.task_plan(self.oracles, 'T03')[0])
+        self.assertEqual(public.count('(run-case '), 2)
+        for private in ('(mute:vi ', '[%1 5 2]', 'future-version', '65.536', 'repeat-roundtrip'):
+            self.assertNotIn(private, public)
+
 
 class PublicFeedbackExecution(unittest.TestCase):
     """Actual Python adapter execution with all native calls explicitly mocked."""
@@ -307,7 +322,8 @@ class PublicFeedbackExecution(unittest.TestCase):
         cls.references = S.select_inputs(cls.content, None, True)
 
     def execute(self, task, *, condition='baseline', missing_prior=False,
-                compile_failure=False, cleanup_failure=False):
+                compile_failure=False, cleanup_failure=False, private_all=False,
+                dojo_timeout=False, evaluator_timeout=False):
         with tempfile.TemporaryDirectory(prefix='stead-public-feedback-host-') as temp, ExitStack() as stack:
             root = Path(temp)
             candidate = root / 'candidate'
@@ -318,6 +334,9 @@ class PublicFeedbackExecution(unittest.TestCase):
                 selected['tests/eval-coverage.hoon'] = self.content['public/starters/T05/tests/eval-coverage.hoon']
                 selected['coverage.json'] = json.dumps({'missing_behavior': 'host fixture',
                     'why_existing_tests_miss_it': 'host fixture', 'added_arms': []}).encode()
+            if private_all:
+                selected = {name + '/' + path: raw for name, values in self.references.items()
+                            for path, raw in values.items()}
             for name, raw in selected.items():
                 path = candidate / name
                 path.parent.mkdir(parents=True, exist_ok=True)
@@ -342,6 +361,8 @@ class PublicFeedbackExecution(unittest.TestCase):
                     (live / 'zod/skill-eval').mkdir()
                 if source == '+skill-eval!eval-desk-probe':
                     return '42'
+                if source == '+skill-eval-check' and dojo_timeout:
+                    raise TimeoutError('AUTHORED pending native computation')
                 return '[ %skill-result\r\n  2\r\n]' if source == '+skill-eval-check' else '%.y'
 
             host = {'STATE': state, 'LIVE': live, 'SHIPS': ('zod', 'bus', 'nec', 'bud'),
@@ -363,6 +384,9 @@ class PublicFeedbackExecution(unittest.TestCase):
 
             def evaluate(binary, source, record):
                 programs.append((record['label'], source))
+                if evaluator_timeout and record['label'].startswith(task):
+                    record.update(status='failed', timed_out=True)
+                    raise subprocess.TimeoutExpired(['AUTHORED-evaluator'], 30)
                 failed = compile_failure and record['label'].startswith(task)
                 record.update(status='completed', exit_code=1 if failed else 0,
                               stdout='' if failed else '[%skill-result 2]',
@@ -371,9 +395,12 @@ class PublicFeedbackExecution(unittest.TestCase):
 
             evaluator = stack.enter_context(patch.object(S, 'evaluate_source', side_effect=evaluate))
             stack.enter_context(patch.object(S.core_conn, 'evaluate', return_value=(b'AUTHORED HOST NOUN', b'')))
-            result = S.run(host, PACKAGE, candidate, condition, feedback_task=task, feedback_attempt=1)
+            result = S.run(host, PACKAGE, candidate, condition,
+                           feedback_task=None if private_all else task,
+                           feedback_attempt=None if private_all else 1)
             private = json.loads((state / 'logs' / Path(result['evidence_file']).name).read_bytes())
-            public = json.loads((state / 'logs' / Path(result['feedback_file']).name).read_bytes())
+            public = (None if private_all else
+                      json.loads((state / 'logs' / Path(result['feedback_file']).name).read_bytes()))
             launch.assert_not_called()
             return {'result': result, 'private': private, 'public': public, 'programs': programs,
                     'prior': prior, 'controls': controls, 'evaluator': evaluator, 'host': host}
@@ -448,6 +475,30 @@ class PublicFeedbackExecution(unittest.TestCase):
         report['tasks'].append({'id': 'T02', 'status': 'passed'})
         with self.assertRaisesRegex(ValueError, 'cannot disclose other tasks'):
             S.public_feedback_projection(report)
+
+    def test_lens_timeout_aborts_before_following_task_and_enters_cleanup(self):
+        run = self.execute('T03', private_all=True, dojo_timeout=True)
+        report = run['private']
+        self.assertEqual([row['status'] for row in report['tasks']],
+                         ['passed', 'passed', 'failed', 'not_run', 'not_run', 'not_run'])
+        self.assertEqual(report['native_execution_interrupted']['task'], 'T03')
+        self.assertEqual(report['commands'][-1]['source'], '+skill-eval-check')
+        self.assertEqual(report['commands'][-1]['status'], 'failed')
+        self.assertNotIn('/app/eval-access/hoon', json.dumps(report['commands']))
+        self.assertEqual(run['host']['all_stop'].call_count, 2)
+
+    def test_evaluator_timeout_also_aborts_remaining_tasks(self):
+        run = self.execute('T01', private_all=True, evaluator_timeout=True)
+        self.assertEqual([row['status'] for row in run['private']['tasks']],
+                         ['failed', 'not_run', 'not_run', 'not_run', 'not_run', 'not_run'])
+        self.assertEqual(run['private']['native_execution_interrupted']['task'], 'T01')
+        self.assertEqual(run['host']['all_stop'].call_count, 2)
+        self.assertFalse(any(label.startswith('T02-') for label, _ in run['programs']))
+
+    def test_public_timeout_is_infrastructure_failure_not_publishable_task_feedback(self):
+        run = self.execute('T03', dojo_timeout=True)
+        self.assertEqual(run['public']['status'], 'fail')
+        self.assertTrue(run['public']['infrastructure_error'])
 
 
 class FailureEvidence(unittest.TestCase):
