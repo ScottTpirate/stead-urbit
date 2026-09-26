@@ -52,6 +52,28 @@ def gift(duct, kind, body=0):
     return tup(duct, a("give"), a("unto"), a(kind), body)
 
 
+def poke_projection(noun):
+    """Project an authored poke type; no bytes here came from native execution."""
+    emitted = G._one_pass(noun, "poke")
+    fields = G._parts(emitted, 9)
+    mark, vase = G._parts(fields[-1], 2)
+    kind, body = G._parts(vase, 2)
+    originals = {"original_moves": G._jam(noun), "original_poke": G._jam(emitted),
+                 "omitted_type": G._jam(kind)}
+    type_hash = hashlib.sha256(originals["omitted_type"]).hexdigest()
+    marker = tup(a(G.POKE_MARKER), a(type_hash), len(originals["omitted_type"]))
+    fields[-1] = tup(mark, tup(marker, body))
+    projected = tup(*fields)
+    result = {"protocol": G.POKE_PROTOCOL, "representation": "poke-vase-type-omitted",
+              "measurement_scope": G.POKE_MEASUREMENT_SCOPE,
+              "projected_moves": record(lst([projected if move == emitted else move
+                                               for move in G._list(noun)]))}
+    for key, raw in originals.items():
+        result[key + "_jam_sha256"] = hashlib.sha256(raw).hexdigest()
+        result[key + "_jam_bytes"] = str(len(raw))
+    return j(result)
+
+
 def specimen():
     """A complete invented report to test rejection controls, not execution."""
     command = json.loads((ROOT / "specs/urbit/fixtures/native-cases-v2.json").read_bytes())["commands"]["work_a_create"]
@@ -162,7 +184,8 @@ def specimen():
                "transport": "mock direct Gall dispatch; no Ames or UDP", "late_old_leave": "passed",
                "current_live_leave_control": "passed", "expected_fresh_pending": "1", "same_path": route,
                "old_nonce": "1", "new_nonce": "2", "receipt_sha256": receipt_digest}
-    payload.update({name: record(value) for name, value in nouns.items()})
+    payload.update({name: poke_projection(value) if name in G.POKE_FIELDS else record(value)
+                    for name, value in nouns.items()})
     payload.update({name: j(value) for name, value in data.items()})
     return payload
 
@@ -179,6 +202,9 @@ class GallScheduleProofTests(unittest.TestCase):
         self.assertEqual(result["status"], "passed")
         self.assertFalse(result["native_execution_verified"])
         self.assertEqual(result["classification"], "host-validation-of-supplied-native-schedule")
+        self.assertEqual(result["projected_jam_record_count"], 2)
+        self.assertFalse(result["opaque_measurements"]["independently_reconstructed"])
+        self.assertEqual(result["opaque_measurements"]["scope"], G.POKE_MEASUREMENT_SCOPE)
         names = [row["name"] for row in result["assertions"]]
         self.assertEqual(len(names), len(set(names)))
         self.assertIn(G.REQUIREMENT, names)
@@ -197,7 +223,7 @@ class GallScheduleProofTests(unittest.TestCase):
                 G._cue(raw)
 
     def test_every_required_record_is_required(self):
-        for field in G.NOUN_FIELDS | G.JSON_FIELDS | G.TEXT_FIELDS:
+        for field in G.NOUN_FIELDS | G.POKE_FIELDS | G.JSON_FIELDS | G.TEXT_FIELDS:
             with self.subTest(field=field):
                 self.reject(lambda value, field=field: value.pop(field))
 
@@ -232,6 +258,102 @@ class GallScheduleProofTests(unittest.TestCase):
             value["captured_leave_moves"] = record(lst(moves))
         self.reject(all_changed)
 
+    def test_projection_protocol_scope_and_exact_fields_are_required(self):
+        for field, replacement in (("protocol", "stead.gall-poke-projection/2"),
+                ("representation", "complete-original-moves"),
+                ("measurement_scope", "independently reconstructed"), ("unknown", "extra")):
+            def change(value, field=field, replacement=replacement):
+                projection = json.loads(value["old_poke_moves"])
+                projection[field] = replacement
+                value["old_poke_moves"] = j(projection)
+            with self.subTest(field=field):
+                self.reject(change)
+        for field in json.loads(specimen()["old_poke_moves"]):
+            def missing(value, field=field):
+                projection = json.loads(value["old_poke_moves"])
+                projection.pop(field)
+                value["old_poke_moves"] = j(projection)
+            with self.subTest(missing=field):
+                self.reject(missing)
+
+    def test_projection_measurements_are_required_bounded_canonical_scalars(self):
+        for stem in G.POKE_MEASUREMENTS:
+            for suffix, replacement in (("_jam_sha256", "missing"), ("_jam_sha256", "A" * 64),
+                    ("_jam_bytes", "0"), ("_jam_bytes", "01"),
+                    ("_jam_bytes", str(G.MAX_OPAQUE_JAM + 1)), ("_jam_bytes", 1)):
+                def change(value, key=stem + suffix, replacement=replacement):
+                    projection = json.loads(value["old_poke_moves"])
+                    projection[key] = replacement
+                    value["old_poke_moves"] = j(projection)
+                with self.subTest(stem=stem, suffix=suffix, replacement=replacement):
+                    self.reject(change)
+
+    def test_projection_nested_jam_integrity_and_decoder_bound_are_unchanged(self):
+        for key, replacement in (("jam_sha256", "0" * 64), ("jam_bytes", "1"),
+                ("jam_hex", "0200"), ("jam_hex", "aa" * (G.MAX_JAM + 1))):
+            def change(value, key=key, replacement=replacement):
+                projection = json.loads(value["old_poke_moves"])
+                nested = json.loads(projection["projected_moves"])
+                nested[key] = replacement
+                projection["projected_moves"] = j(nested)
+                value["old_poke_moves"] = j(projection)
+            with self.subTest(key=key):
+                self.reject(change)
+        self.assertEqual((G.MAX_REPORT, G.MAX_JAM, G.MAX_NODES, G.MAX_DEPTH, G.MAX_EXPANDED),
+                         (131072, 16384, 4096, 96, 16384))
+
+    def test_projection_is_not_accepted_for_exact_leave_or_gift_records(self):
+        for key in ("captured_leave", "delivered_leave", "captured_leave_moves", "old_result_gifts"):
+            with self.subTest(key=key):
+                self.reject(lambda value, key=key: value.update({key: value["old_poke_moves"]}))
+        self.reject(lambda value: value.update(old_poke_moves=json.loads(value["old_poke_moves"])["projected_moves"]))
+
+    def test_projection_marker_body_route_and_owner_ack_are_bound(self):
+        def replace(value, edit):
+            projection = json.loads(value["old_poke_moves"])
+            moves = G._list(G._record(projection["projected_moves"]))
+            fields = G._parts(moves[1], 9)
+            edit(fields, moves)
+            moves[1] = tup(*fields)
+            projection["projected_moves"] = record(lst(moves))
+            value["old_poke_moves"] = j(projection)
+        def edit_type(fields, kind):
+            mark, vase = G._parts(fields[8], 2)
+            fields[8] = tup(mark, tup(kind, G._parts(vase, 2)[1]))
+        def edit_marker(fields, index, replacement):
+            marker = G._parts(G._parts(G._parts(fields[8], 2)[1], 2)[0], 3)
+            marker[index] = replacement
+            edit_type(fields, tup(*marker))
+        for edit in (lambda fields, moves: edit_type(fields, a("unmarked-type")),
+                     lambda fields, moves: edit_marker(fields, 0, a("other-marker")),
+                     lambda fields, moves: edit_marker(fields, 1, a("0" * 64)),
+                     lambda fields, moves: edit_marker(fields, 2, 1),
+                     lambda fields, moves: fields.__setitem__(2, path("/changed-wire")),
+                     lambda fields, moves: fields.__setitem__(5, tup(0, 0, path("/gall/stead-observer"))),
+                     lambda fields, moves: fields.__setitem__(6, a("other-agent")),
+                     lambda fields, moves: fields.__setitem__(8, tup(a("other-mark"), G._parts(fields[8], 2)[1])),
+                     lambda fields, moves: fields.__setitem__(8, tup(a("stead-command-2"),
+                         tup(G._parts(G._parts(fields[8], 2)[1], 2)[0], a("changed-command")))),
+                     lambda fields, moves: moves.__setitem__(0, gift(lst([path("/wrong-owner")]), "poke-ack"))):
+            with self.subTest(edit=edit):
+                self.reject(lambda value, edit=edit: replace(value, edit))
+
+    def test_old_and_fresh_opaque_type_measurements_must_agree(self):
+        def change(value):
+            projection = json.loads(value["fresh_poke_moves"])
+            projection["omitted_type_jam_sha256"] = "0" * 64
+            moves = G._list(G._record(projection["projected_moves"]))
+            fields = G._parts(moves[1], 9)
+            mark, vase = G._parts(fields[8], 2)
+            marker, body = G._parts(vase, 2)
+            marker_parts = G._parts(marker, 3)
+            marker_parts[1] = a("0" * 64)
+            fields[8] = tup(mark, tup(tup(*marker_parts), body))
+            moves[1] = tup(*fields)
+            projection["projected_moves"] = record(lst(moves))
+            value["fresh_poke_moves"] = j(projection)
+        self.reject(change)
+
     def test_edited_duct_same_nonce_and_noncanonical_nonce_fail(self):
         self.reject(lambda value: value.update(old_duct=value["new_duct"]))
         self.reject(lambda value: value.update(new_nonce=value["old_nonce"]))
@@ -264,7 +386,7 @@ class GallScheduleProofTests(unittest.TestCase):
 
     def test_scope_cannot_be_promoted_to_other_native_requirement(self):
         for field, value in (("classification", "real-native-fake-ships"), ("requirement", "other-requirement"),
-                             ("protocol", "stead.native-scheduled-gall/2"), ("status", "planned"),
+                             ("protocol", "stead.native-scheduled-gall/1"), ("status", "planned"),
                              ("transport", "Ames UDP"), ("late_old_leave", "failed")):
             with self.subTest(field=field):
                 self.reject(lambda report, field=field, value=value: report.update({field: value}))

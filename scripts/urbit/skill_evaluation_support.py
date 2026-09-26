@@ -15,6 +15,7 @@ artifacts as {path, sha256}, mounted read-only from the prior completed run.
 """
 from __future__ import annotations
 
+import copy
 import hashlib
 import json
 import os
@@ -134,7 +135,7 @@ def result_jam(stdout):
     """
     if len(stdout) > MAX_OUTPUT:
         raise ValueError('Native result text bound')
-    match = re.fullmatch(r'\[%skill-result\s+([0-9.]+)\]', stdout)
+    match = re.fullmatch(r'\s*\[\s*%skill-result\s+([0-9.]+)\s*\]\s*', stdout)
     if match is None:
         raise ValueError('Missing exact native result frame')
     printed = match[1]
@@ -275,7 +276,11 @@ def arm_block(source, name):
     raise ValueError('Expected original test arm missing')
 
 
-def select_inputs(content, root, prequalify):
+def select_inputs(content, root, prequalify, feedback_task=None):
+    if feedback_task is not None:
+        if prequalify or feedback_task not in TASKS:
+            raise ValueError('Public feedback requires one explicit candidate task')
+        return {feedback_task: files(root, maximum=8)}
     if not prequalify:
         all_files = files(root, maximum=32)
         if {name.split('/')[0] for name in all_files} != set(TASKS):
@@ -300,6 +305,53 @@ def select_inputs(content, root, prequalify):
         'kernel_commit': '5a187fededc4582a34fcd6055c67bb63e0917b94', 'dependencies': [],
         'files': {name.removeprefix('desk/'): digest(raw) for name, raw in selected['T06'].items()}}).encode()
     return selected
+
+
+def task_plan(oracles, feedback_task=None):
+    """Public feedback never constructs held-out cases or mutation programs."""
+    tasks = copy.deepcopy(oracles['tasks'])
+    if feedback_task is None:
+        return tasks
+    if feedback_task not in TASKS:
+        raise ValueError('Unknown public feedback task')
+    task = next(task for task in tasks if task['id'] == feedback_task)
+    if feedback_task in ('T01', 'T02', 'T03'):
+        task['cases'] = [case for case in task['cases'] if case.get('public') is True]
+        if len(task['cases']) != 2:
+            raise ValueError('Exactly the two frozen public examples are required')
+    elif feedback_task == 'T04':
+        if len(task['public_scenario']) != 2:
+            raise ValueError('Exactly the frozen public Gall scenario is required')
+        task.pop('private_scenario')
+    elif feedback_task == 'T05':
+        task['mutants'] = []
+        task['classification'] = 'native_tests_correct_subject_only'
+    return [task]
+
+
+def public_feedback_projection(report):
+    """Participant-safe public observations; never return reference/oracle proof."""
+    if report.get('public_feedback') is not True or report.get('feedback_task') not in TASKS:
+        raise ValueError('Only a public feedback run can be disclosed as feedback')
+    name = report['feedback_task']
+    rows = report.get('tasks', [])
+    if len(rows) != 1 or rows[0].get('id') != name:
+        raise ValueError('Public feedback cannot disclose other tasks')
+    start = report.get('public_command_start')
+    commands = report['commands'][start:] if type(start) is int and 0 <= start <= len(report['commands']) else []
+    infrastructure_failure = (bool(report.get('cleanup_error') or report.get('final_binding_error'))
+                              or (report.get('status') != 'pass' and rows[0].get('status') != 'failed'))
+    return {'protocol': 'stead.skill-public-feedback/1', 'status': report['status'],
+            'condition': report['condition'], 'task': name, 'attempt': report['feedback_attempt'],
+            'source_commit': report['source_commit'], 'package_sha256': report['package_sha256'],
+            'candidate_files_sha256': report['candidate_files_sha256'],
+            'toolchain_sha256': report['toolchain_sha256'], 'outer_guard_status': 'pending',
+            'qualifies_phase': False, 'private_scoring': False,
+            'scope': 'Only the submitted task and frozen public examples; no private cases or mutation feedback.',
+            'tasks': copy.deepcopy(rows), 'commands': copy.deepcopy(commands),
+            'checks': [copy.deepcopy(row) for row in report['checks'] if row['name'].startswith((name + ':', name + '-'))],
+            'infrastructure_error': ('Public feedback incomplete; integrator must inspect the private execution record.'
+                                     if infrastructure_failure else None)}
 
 
 def valid_observation(record, label):
@@ -562,7 +614,8 @@ def t04_program(scenario):
     return '\n'.join(code + ['^-  [@tas @ud]', '[%skill-result (jam (flop evidence))]']) + '\n'
 
 
-def run(host, package_root, candidate_root, condition, *, prequalify=False):
+def run(host, package_root, candidate_root, condition, *, prequalify=False,
+        feedback_task=None, feedback_attempt=None):
     """Execute actual native tasks; caller owns guard, mounts and outer receipt.
 
     Returns status fail/pass for adapter execution only. A pass is pending outer
@@ -571,26 +624,35 @@ def run(host, package_root, candidate_root, condition, *, prequalify=False):
     """
     if condition not in ('baseline', 'local_skill_assisted', 'prequalification') or (prequalify != (condition == 'prequalification')):
         raise ValueError('Explicit condition/prequalification pairing required')
+    public = feedback_task is not None
+    if (public and (prequalify or feedback_task not in TASKS or type(feedback_attempt) is not int
+                    or feedback_attempt not in (1, 2, 3))) or (not public and feedback_attempt is not None):
+        raise ValueError('Public feedback requires a candidate condition, task and attempt 1 through 3')
     if not re.fullmatch(r'[a-f0-9]{40}', host.get('WORKFLOW_SOURCE_COMMIT', '')):
         raise ValueError('Actual workflow source commit required from integrator')
     content, oracles = verify_package(package_root)
-    candidates = select_inputs(content, candidate_root, prequalify)
+    plan = task_plan(oracles, feedback_task)
+    names = [task['id'] for task in plan]
+    candidates = select_inputs(content, candidate_root, prequalify, feedback_task)
     original = {task: hashes(value) for task, value in candidates.items()}
     started = time.monotonic()
     token = time.strftime('%Y%m%dT%H%M%SZ', time.gmtime()) + '-' + condition
+    if public:
+        token += '-public-' + feedback_task + '-' + str(feedback_attempt)
     report_path = Path(host['STATE']) / 'logs' / ('skill-evaluation-' + token + '.json')
     work = Path(host['STATE']) / 'logs' / ('skill-evaluation-' + token + '-inputs')
     work.mkdir(exist_ok=False)
     report = {'protocol': 'stead.skill-native-adapter/1', 'status': 'fail',
               'classification': 'native-unit-and-pinned-gall-synthetic-routing',
               'condition': condition, 'prequalification': prequalify,
+              'public_feedback': public, 'feedback_task': feedback_task, 'feedback_attempt': feedback_attempt,
               'qualifies_phase': False, 'outer_guard_status': 'pending',
               'source_commit': host['WORKFLOW_SOURCE_COMMIT'], 'package_sha256': PACKAGE_SHA,
               'candidate_files_sha256': original, 'loaded_closure': LOADED_CLOSURE,
               'loaded_supervisor_source_sha256': host['LOADED_SOURCE_DIGEST'],
               'toolchain_sha256': sha('/toolchain.json'), 'checks': [], 'commands': [],
               'installed_clay_files': [], 'generated_source_files_sha256': {},
-              'tasks': [{'id': name, 'status': 'not_run'} for name in TASKS],
+              'tasks': [{'id': name, 'status': 'not_run'} for name in names],
               'limits': ['Synthetic native fixture only; no browser/live-network/production proof.',
                          'Equal model/context/budget and independent review are external required evidence.']}
     binary = '/runtime/' + host['LOCK']['runtime']['binary']
@@ -723,7 +785,9 @@ def run(host, package_root, candidate_root, condition, *, prequalify=False):
         if prequalify:
             starter = content['public/starters/T02/lib/eval-maybe.hoon'].decode()
             native('=>\n' + starter + '\n(maybe-count %.y 7)\n', 'T02-starter-rejection', rejection=True)
-        for task, row in zip(oracles['tasks'], report['tasks'], strict=True):
+        if public:
+            report['public_command_start'] = len(report['commands'])
+        for task, row in zip(plan, report['tasks'], strict=True):
             name, selected = task['id'], candidates[task['id']]
             checkpoint(name)
             try:
@@ -754,8 +818,10 @@ def run(host, package_root, candidate_root, condition, *, prequalify=False):
                     row['expected_cases'] = [case['id'] for case in task['cases']]
                 elif name == 'T04':
                     results.append(generator(t04_program(task['public_scenario']), name + '-public-Gall'))
-                    results.append(generator(t04_program(task['private_scenario']), name + '-private-Gall'))
-                    row['expected_cases'] = ['public-' + str(i) for i in range(len(task['public_scenario']))] + [case['id'] for case in task['private_scenario']]
+                    row['expected_cases'] = ['public-' + str(i) for i in range(len(task['public_scenario']))]
+                    if not public:
+                        results.append(generator(t04_program(task['private_scenario']), name + '-private-Gall'))
+                        row['expected_cases'] += [case['id'] for case in task['private_scenario']]
                 elif name == 'T05':
                     subject = selected['lib/eval-authorization.hoon']
                     check('T05:immutable-subject', subject == content[task['immutable_subject']])
@@ -763,7 +829,8 @@ def run(host, package_root, candidate_root, condition, *, prequalify=False):
                     header, body = tests.split('\n', 1)
                     check('T05:exact-test-imports', header == '/+  *test, eval-authorization')
                     arms = tuple(arm for arm in arm_names(body) if arm.startswith('test-'))
-                    check('T05:nonempty-complete-arm-inventory', len(arms) >= 4 and set(task['preserved_test_arms']).issubset(arms))
+                    minimum = len(task['preserved_test_arms']) if public else 4
+                    check('T05:nonempty-complete-arm-inventory', len(arms) >= minimum and set(task['preserved_test_arms']).issubset(arms))
                     original_tests = content['public/starters/T05/tests/eval-coverage.hoon'].decode()
                     for original_arm in task['preserved_test_arms']:
                         check('T05:original-arm-retained:' + original_arm,
@@ -817,10 +884,11 @@ def run(host, package_root, candidate_root, condition, *, prequalify=False):
             checkpoint(name + '-finished')
         host['execution_check']()
         verify_package(package_root)
-        check('candidate-inputs-unchanged', original == {task: hashes(value) for task, value in select_inputs(content, candidate_root, prequalify).items()})
+        check('candidate-inputs-unchanged', original == {task: hashes(value) for task, value in select_inputs(content, candidate_root, prequalify, feedback_task).items()})
         check('loaded-adapter-closure-still-current', closure() == LOADED_CLOSURE)
         check('loaded-supervisor-still-current', source_sha(Path(core_conn.__file__).parent) == host['LOADED_SOURCE_DIGEST'])
-        check('all-six-native-tasks-passed', [row['id'] for row in report['tasks']] == list(TASKS) and all(row['status'] == 'passed' for row in report['tasks']))
+        check('selected-public-task-passed' if public else 'all-six-native-tasks-passed',
+              [row['id'] for row in report['tasks']] == names and all(row['status'] == 'passed' for row in report['tasks']))
         report['status'] = 'pass'
     except Exception as error:
         report['error'] = type(error).__name__ + ': ' + str(error)
@@ -832,7 +900,7 @@ def run(host, package_root, candidate_root, condition, *, prequalify=False):
             report['cleanup_error'] = type(error).__name__ + ': ' + str(error)
         try:
             verify_package(package_root)
-            report['candidate_inputs_after'] = {task: hashes(value) for task, value in select_inputs(content, candidate_root, prequalify).items()}
+            report['candidate_inputs_after'] = {task: hashes(value) for task, value in select_inputs(content, candidate_root, prequalify, feedback_task).items()}
             report['loaded_closure_after'] = closure()
             report['generated_source_files_after'] = hashes({path.name: path.read_bytes() for path in work.glob('*.hoon')})
             if (report['candidate_inputs_after'] != original or report['loaded_closure_after'] != LOADED_CLOSURE
@@ -845,7 +913,12 @@ def run(host, package_root, candidate_root, condition, *, prequalify=False):
             report['final_binding_error'] = type(error).__name__ + ': ' + str(error)
         report['elapsed_seconds'] = round(time.monotonic() - started, 3)
         checkpoint('finished-pending-outer-guard' if report['status'] == 'pass' else 'failed')
-    return {'status': report['status'], 'qualifies_phase': False, 'outer_guard_status': 'pending',
+    result = {'status': report['status'], 'qualifies_phase': False, 'outer_guard_status': 'pending',
             'condition': condition, 'error': report.get('error'),
             'tasks_passed': sum(row['status'] == 'passed' for row in report['tasks']),
             'evidence_file': '.piers/fakes/logs/' + report_path.name}
+    if public:
+        feedback = report_path.with_name(report_path.stem + '-feedback.json')
+        execution_policy.write_json(feedback, public_feedback_projection(report))
+        result['feedback_file'] = '.piers/fakes/logs/' + feedback.name
+    return result

@@ -29,12 +29,20 @@ MAX_JAM = 16384
 MAX_NODES = 4096
 MAX_DEPTH = 96
 MAX_EXPANDED = 16384
-PROTOCOL = "stead.native-scheduled-gall/1"
+# Native-only measurement cap justified by the retained Gall05 size diagnostic.
+# These bytes are omitted, never accepted by the bounded jam decoder below.
+MAX_OPAQUE_JAM = 2097152
+PROTOCOL = "stead.native-scheduled-gall/2"
+POKE_PROTOCOL = "stead.gall-poke-projection/1"
+POKE_MEASUREMENT_SCOPE = "native hash-and-size only; omitted bytes not reconstructed"
+POKE_MARKER = "stead-opaque-vase-type"
+POKE_MEASUREMENTS = ("original_moves", "original_poke", "omitted_type")
+POKE_FIELDS = frozenset({"old_poke_moves", "fresh_poke_moves"})
 REQUIREMENT = "delivery-late-old-leave"
 NOUN_FIELDS = frozenset("""
 old_duct new_duct old_watch_moves old_watch_gifts captured_leave_moves
-captured_leave delivered_leave delivered_leave_output old_poke_moves
-old_result_gifts fresh_watch_moves fresh_watch_gifts fresh_poke_moves
+captured_leave delivered_leave delivered_leave_output
+old_result_gifts fresh_watch_moves fresh_watch_gifts
 fresh_result_gifts old_incoming_active old_incoming_retired incoming_before
 incoming_after live_watch_moves live_leave_moves live_delivery_output
 """.split())
@@ -53,6 +61,7 @@ receipt_sha256
 ASSERTIONS = (
     "bounded-native-schedule-scope",
     "canonical-jam-record-integrity",
+    "bounded-tagged-poke-projections-with-explicit-opaque-measurements",
     "captured-emitted-old-leave-delivered-unchanged",
     "distinct-old-and-fresh-nonce-ducts",
     "old-home-duct-retired-before-fresh-watch",
@@ -375,6 +384,36 @@ def _result_gifts(noun, watch_duct, poke_duct, receipt):
         _require(tag != "fact" or value == receipt, "Fact bytes differ from exact receipt")
 
 
+def _poke_projection(raw):
+    """Inspect the projection; omitted original bytes cannot be reconstructed."""
+    projection = _json(raw)
+    measurement_keys = {stem + suffix for stem in POKE_MEASUREMENTS
+                        for suffix in ("_jam_sha256", "_jam_bytes")}
+    _require(set(projection) == measurement_keys | {
+        "protocol", "representation", "measurement_scope", "projected_moves"}
+        and all(isinstance(value, str) for value in projection.values()),
+        "Poke projection fields")
+    _require(projection["protocol"] == POKE_PROTOCOL
+             and projection["representation"] == "poke-vase-type-omitted"
+             and projection["measurement_scope"] == POKE_MEASUREMENT_SCOPE,
+             "Poke projection scope")
+    for stem in POKE_MEASUREMENTS:
+        _require(HASH.fullmatch(projection[stem + "_jam_sha256"])
+                 and 0 < _decimal(projection[stem + "_jam_bytes"], MAX_OPAQUE_JAM),
+                 "Missing or unbounded native-only opaque measurement")
+    noun = _record(projection["projected_moves"])
+    emitted = _one_pass(noun, "poke")
+    _, cage = _pass(emitted, "poke")
+    _, vase = _parts(cage, 2)
+    marker, _ = _parts(vase, 2)
+    tag, digest, size = _parts(marker, 3)
+    _require(tag == _atom(POKE_MARKER)
+             and _cord(digest) == projection["omitted_type_jam_sha256"]
+             and type(size) is int and size == _decimal(projection["omitted_type_jam_bytes"], MAX_OPAQUE_JAM),
+             "Poke projection omitted-type marker mismatch")
+    return noun, {key: projection[key] for key in sorted(measurement_keys)}
+
+
 def _duct(noun, nonce, probe, lane="watch"):
     paths = _list(noun, 2)
     _require(len(paths) == 2 and _path(paths[1]) == "/init", "Bad complete duct")
@@ -425,7 +464,7 @@ def _observer(raw, value, route, *, facts, kicks, pokes, ongoing, leaving):
 
 def _validate(payload):
     """Validate supplied output or raise ValueError; this never proves execution."""
-    _require(isinstance(payload, dict) and set(payload) == NOUN_FIELDS | JSON_FIELDS | TEXT_FIELDS,
+    _require(isinstance(payload, dict) and set(payload) == NOUN_FIELDS | POKE_FIELDS | JSON_FIELDS | TEXT_FIELDS,
              "Missing or unexpected schedule report field")
     _require(all(isinstance(value, str) for value in payload.values()), "Native report values must be strings")
     encoded = json.dumps(payload, sort_keys=True, separators=(",", ":"), ensure_ascii=False).encode()
@@ -437,6 +476,12 @@ def _validate(payload):
                 "transport": "mock direct Gall dispatch; no Ames or UDP"}
     _require(all(payload[key] == value for key, value in expected.items()), "Wrong schedule scope/control")
     nouns = {key: _record(payload[key]) for key in NOUN_FIELDS}
+    opaque_measurements = {}
+    for key in sorted(POKE_FIELDS):
+        nouns[key], opaque_measurements[key] = _poke_projection(payload[key])
+    _require(all(opaque_measurements["old_poke_moves"][key] == opaque_measurements["fresh_poke_moves"][key]
+                 for key in ("omitted_type_jam_sha256", "omitted_type_jam_bytes")),
+             "Old/fresh native-only omitted-type measurements differ")
     data = {key: _json(payload[key]) for key in JSON_FIELDS}
     corpus = json.loads((SPECS / "fixtures/native-cases-v2.json").read_bytes())
     command = corpus["commands"]["work_a_create"]
@@ -562,11 +607,14 @@ def _validate(payload):
     assertions = [{"name": name, "status": "passed"} for name in ASSERTIONS]
     _require(assertions and len({row["name"] for row in assertions}) == len(assertions)
              and all(row["name"] for row in assertions), "Empty or duplicate assertion inventory")
-    return {"protocol": "stead.native-schedule-payload-validation/1", "status": "passed",
+    return {"protocol": "stead.native-schedule-payload-validation/2", "status": "passed",
             "classification": "host-validation-of-supplied-native-schedule",
             "requirement": REQUIREMENT, "native_execution_verified": False,
             "report_sha256": hashlib.sha256(encoded).hexdigest(),
-            "jam_record_count": len(nouns), "assertions": assertions}
+            "jam_record_count": len(nouns), "projected_jam_record_count": len(POKE_FIELDS),
+            "opaque_measurements": {"scope": POKE_MEASUREMENT_SCOPE,
+                "independently_reconstructed": False, "records": opaque_measurements},
+            "assertions": assertions}
 
 
 def validate(payload):

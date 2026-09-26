@@ -7,13 +7,14 @@ Actual source/guard binding and reference execution are separately required.
 from __future__ import annotations
 
 import copy
+from contextlib import ExitStack
 import json
 from pathlib import Path
 import subprocess
 import sys
 import tempfile
 import unittest
-from unittest.mock import patch
+from unittest.mock import Mock, patch
 
 ROOT = Path(__file__).resolve().parents[2]
 sys.path[:0] = [str(ROOT / 'scripts/urbit'), str(Path(__file__).parent)]
@@ -174,6 +175,21 @@ class TypedInterfaceTests(unittest.TestCase):
 
 
 class InputAndNounBounds(unittest.TestCase):
+    def test_actual_prequalification_pretty_result_whitespace(self):
+        # Exact stripped stdout from failed prequalification 20260925T122058Z,
+        # deliberate-false-native-expectation. This tests parsing only and does
+        # not replace the retained failed native execution with a native pass.
+        actual = ('[ %skill-result\r\n  '
+                  '10.602.123.684.338.566.177.939.652.388.787.148.777.188.920.248.210.308.928.773.'
+                  '706.642.695.662.615.299.182.632.132.802.634.759.275.267.683.938.877.228.415.'
+                  '889.472.646.015.887.216.225.529.507.403.835.343.456.750.928.735.211.397.610.501\r\n]')
+        atom = int(actual.split()[2].replace('.', ''))
+        self.assertEqual(S.result_jam(actual), atom.to_bytes((atom.bit_length() + 7) // 8, 'little'))
+        for malformed in (actual + '\n[%skill-result 2]', 'noise\n' + actual,
+                          actual.replace('10.602', '10. 602'), actual.replace('%skill-result', '%other')):
+            with self.subTest(malformed=malformed), self.assertRaises(ValueError):
+                S.result_jam(malformed)
+
     def test_file_limit_is_enforced_before_reading_an_extra_file(self):
         with tempfile.TemporaryDirectory() as temp:
             for name in ('first', 'second'):
@@ -219,6 +235,194 @@ class InputAndNounBounds(unittest.TestCase):
         with patch.object(S, 'MAX_JAM', 1), self.assertRaises(ValueError):
             S.result_jam('[%skill-result 999]')
         self.assertEqual(S.result_jam('[%skill-result 1.234]'), (1234).to_bytes(2, 'little'))
+
+
+class PublicFeedbackSelection(unittest.TestCase):
+    @classmethod
+    def setUpClass(cls):
+        cls.content, cls.oracles = S.verify_package(PACKAGE)
+
+    def test_public_plan_excludes_every_held_out_case_and_mutant_without_changing_oracles(self):
+        before = copy.deepcopy(self.oracles)
+        for name in S.TASKS:
+            plan = S.task_plan(self.oracles, name)
+            self.assertEqual([task['id'] for task in plan], [name])
+            original = next(task for task in self.oracles['tasks'] if task['id'] == name)
+            if name in ('T01', 'T02', 'T03'):
+                self.assertEqual(plan[0]['cases'], [case for case in original['cases'] if case.get('public') is True])
+                self.assertEqual(len(plan[0]['cases']), 2)
+            elif name == 'T04':
+                self.assertNotIn('private_scenario', plan[0])
+                self.assertEqual(plan[0]['public_scenario'], original['public_scenario'])
+            elif name == 'T05':
+                self.assertEqual(plan[0]['mutants'], [])
+            else:
+                self.assertEqual(plan[0], original)
+        self.assertEqual(self.oracles, before)
+        self.assertEqual(S.task_plan(self.oracles), before['tasks'])
+
+    def test_invalid_public_mode_rejected_before_source_or_runtime_access(self):
+        for condition, prequalify, task, attempt in (
+                ('prequalification', True, 'T01', 1), ('baseline', False, 'T07', 1),
+                ('baseline', False, 'T01', 0), ('baseline', False, 'T01', 4),
+                ('baseline', False, 'T01', True), ('baseline', False, 'T01', '1'),
+                ('baseline', False, None, 1)):
+            with self.subTest(condition=condition, task=task, attempt=attempt), patch.object(S, 'verify_package') as verify:
+                with self.assertRaisesRegex(ValueError, 'Public feedback requires'):
+                    S.run({}, PACKAGE, '/not-accessed', condition, prequalify=prequalify,
+                          feedback_task=task, feedback_attempt=attempt)
+                verify.assert_not_called()
+
+
+class PublicFeedbackExecution(unittest.TestCase):
+    """Actual Python adapter execution with all native calls explicitly mocked."""
+    @classmethod
+    def setUpClass(cls):
+        cls.content, cls.oracles = S.verify_package(PACKAGE)
+        cls.references = S.select_inputs(cls.content, None, True)
+
+    def execute(self, task, *, condition='baseline', missing_prior=False,
+                compile_failure=False, cleanup_failure=False):
+        with tempfile.TemporaryDirectory(prefix='stead-public-feedback-host-') as temp, ExitStack() as stack:
+            root = Path(temp)
+            candidate = root / 'candidate'
+            selected = copy.deepcopy(self.references[task])
+            if task == 'T05':
+                # The public path executes even the original two arms; private
+                # scoring alone requires added coverage and the four mutants.
+                selected['tests/eval-coverage.hoon'] = self.content['public/starters/T05/tests/eval-coverage.hoon']
+                selected['coverage.json'] = json.dumps({'missing_behavior': 'host fixture',
+                    'why_existing_tests_miss_it': 'host fixture', 'added_arms': []}).encode()
+            for name, raw in selected.items():
+                path = candidate / name
+                path.parent.mkdir(parents=True, exist_ok=True)
+                path.write_bytes(raw)
+            state = root / 'state'
+            (state / 'logs').mkdir(parents=True)
+            live = state / 'live'
+            (live / 'zod/base').mkdir(parents=True)
+            kernel = root / 'kernel'
+            for name in ('pkg/base-dev/lib/test.hoon', 'pkg/base-dev/lib/default-agent.hoon',
+                         'pkg/arvo/sys/vane/gall.hoon', 'pkg/arvo/lib/test/ames-gall.hoon'):
+                path = kernel / name
+                path.parent.mkdir(parents=True, exist_ok=True)
+                path.write_text(':: HOST-ONLY MOCK NATIVE DEPENDENCY\n')
+            lease = {'run_id': 'authored-host-only', 'generation': 1, 'guard_sha256': 'a' * 64,
+                     'policy_sha256': 'b' * 64, 'policy': {'authored': True}}
+            stop = Mock(side_effect=[None, RuntimeError('authored cleanup failure')] if cleanup_failure else None)
+
+            def dojo(ship, source):
+                self.assertEqual(ship, 'zod')
+                if source == '|mount %skill-eval':
+                    (live / 'zod/skill-eval').mkdir()
+                if source == '+skill-eval!eval-desk-probe':
+                    return '42'
+                return '[ %skill-result\r\n  2\r\n]' if source == '+skill-eval-check' else '%.y'
+
+            host = {'STATE': state, 'LIVE': live, 'SHIPS': ('zod', 'bus', 'nec', 'bud'),
+                    'LOCK': {'runtime': {'binary': 'never-executed'}},
+                    'WORKFLOW_SOURCE_COMMIT': 'a' * 40, 'LOADED_SOURCE_DIGEST': 'authored-source',
+                    'execution_check': Mock(return_value=lease), 'all_stop': stop,
+                    'copy_seed_to_live': Mock(), 'launch': Mock(), 'wait_ready': Mock(),
+                    'dojo': Mock(side_effect=dojo)}
+            original_sha = S.sha
+            stack.enter_context(patch.object(S, 'Path', side_effect=lambda value: kernel if value == '/kernel' else Path(value)))
+            stack.enter_context(patch.object(S, 'sha', side_effect=lambda value: 'c' * 64 if value == '/toolchain.json' else original_sha(value)))
+            stack.enter_context(patch.object(S, 'source_sha', return_value='authored-source'))
+            prior = stack.enter_context(patch.object(S, 'require_prequalification',
+                side_effect=ValueError('PRIVATE-PRIOR-RECORD') if missing_prior else None,
+                return_value={'authored': 'PRIVATE-PRIOR-RECORD'}))
+            controls = stack.enter_context(patch.object(S.core_conn, 'evaluator_controls', return_value={'status': 'passed'}))
+            launch = stack.enter_context(patch.object(S.subprocess, 'run', side_effect=AssertionError('No native process may execute in host regression')))
+            programs = []
+
+            def evaluate(binary, source, record):
+                programs.append((record['label'], source))
+                failed = compile_failure and record['label'].startswith(task)
+                record.update(status='completed', exit_code=1 if failed else 0,
+                              stdout='' if failed else '[%skill-result 2]',
+                              stderr='authored public compiler diagnostic' if failed else '')
+                return record['exit_code'], record['stdout'], record['stderr']
+
+            evaluator = stack.enter_context(patch.object(S, 'evaluate_source', side_effect=evaluate))
+            stack.enter_context(patch.object(S.core_conn, 'evaluate', return_value=(b'AUTHORED HOST NOUN', b'')))
+            result = S.run(host, PACKAGE, candidate, condition, feedback_task=task, feedback_attempt=1)
+            private = json.loads((state / 'logs' / Path(result['evidence_file']).name).read_bytes())
+            public = json.loads((state / 'logs' / Path(result['feedback_file']).name).read_bytes())
+            launch.assert_not_called()
+            return {'result': result, 'private': private, 'public': public, 'programs': programs,
+                    'prior': prior, 'controls': controls, 'evaluator': evaluator, 'host': host}
+
+    def test_each_public_task_executes_only_its_public_inventory(self):
+        for task in S.TASKS:
+            with self.subTest(task=task):
+                run = self.execute(task)
+                public = run['public']
+                self.assertEqual(public['status'], 'pass', run['private'].get('error'))
+                self.assertFalse(public['private_scoring'])
+                self.assertFalse(public['qualifies_phase'])
+                self.assertEqual(public['outer_guard_status'], 'pending')
+                self.assertEqual(list(public['candidate_files_sha256']), [task])
+                self.assertEqual([row['id'] for row in public['tasks']], [task])
+                row = public['tasks'][0]
+                if task in ('T01', 'T02', 'T03'):
+                    self.assertEqual(row['observed_cases'], [case['id'] for case in S.task_plan(self.oracles, task)[0]['cases']])
+                elif task == 'T04':
+                    self.assertEqual(row['observed_cases'], ['public-0', 'public-1'])
+                    self.assertEqual([result['label'] for result in row['results']], ['T04-public-Gall'])
+                elif task == 'T05':
+                    self.assertEqual(row['observed_cases'], ['test-writer', 'test-stale'])
+                    self.assertEqual(row['mutants'], [])
+                    self.assertEqual([result['label'] for result in row['results']], ['T05-correct'])
+                else:
+                    self.assertEqual(row['observed_cases'], ['assembly-bytes', 'repeat-empty-assembly', 'native-clean-generator'])
+                    self.assertEqual(row['results'][0]['actual_noun'], '42')
+                disclosed = json.dumps(public)
+                self.assertNotIn('PRIVATE-PRIOR-RECORD', disclosed)
+                self.assertNotIn('deliberate-false-native-expectation', disclosed)
+                self.assertNotIn('T04-private-Gall', disclosed)
+                self.assertNotIn('all-six-native-tasks-passed', disclosed)
+                run['prior'].assert_called_once()
+
+    def test_conditions_receive_identical_public_programs(self):
+        baseline = self.execute('T01')
+        assisted = self.execute('T01', condition='local_skill_assisted')
+        self.assertEqual(baseline['programs'], assisted['programs'])
+        self.assertEqual(baseline['public']['tasks'], assisted['public']['tasks'])
+
+    def test_missing_completed_prequalification_blocks_all_native_work_without_disclosing_proof(self):
+        run = self.execute('T01', missing_prior=True)
+        self.assertEqual(run['public']['status'], 'fail')
+        self.assertEqual(run['public']['commands'], [])
+        self.assertNotIn('PRIVATE-PRIOR-RECORD', json.dumps(run['public']))
+        self.assertIn('PRIVATE-PRIOR-RECORD', run['private']['error'])
+        for call in (run['controls'], run['evaluator'], run['host']['dojo'], run['host']['launch']):
+            call.assert_not_called()
+        run['host']['all_stop'].assert_called_once()
+
+    def test_failed_public_compiler_result_is_retained_and_never_reported_green(self):
+        run = self.execute('T01', compile_failure=True)
+        self.assertEqual(run['public']['status'], 'fail')
+        self.assertEqual(run['public']['tasks'][0]['status'], 'failed')
+        self.assertIn('authored public compiler diagnostic', json.dumps(run['public']['commands']))
+        self.assertNotIn('PRIVATE-PRIOR-RECORD', json.dumps(run['public']))
+
+    def test_cleanup_failure_invalidates_previously_passing_public_task(self):
+        run = self.execute('T01', cleanup_failure=True)
+        self.assertEqual(run['public']['tasks'][0]['status'], 'passed')
+        self.assertEqual(run['public']['status'], 'fail')
+        self.assertTrue(run['public']['infrastructure_error'])
+        self.assertIn('authored cleanup failure', run['private']['cleanup_error'])
+
+    def test_private_scoring_or_multiple_tasks_cannot_be_projected_as_feedback(self):
+        report = self.execute('T01')['private']
+        report['public_feedback'] = False
+        with self.assertRaisesRegex(ValueError, 'Only a public feedback'):
+            S.public_feedback_projection(report)
+        report['public_feedback'] = True
+        report['tasks'].append({'id': 'T02', 'status': 'passed'})
+        with self.assertRaisesRegex(ValueError, 'cannot disclose other tasks'):
+            S.public_feedback_projection(report)
 
 
 class FailureEvidence(unittest.TestCase):

@@ -154,6 +154,45 @@
       ['jam_bytes' (decimal:stead-codec (met 3 raw))]
       ['noun' (crip <value>)]
   ==
+++  measured-jam
+  |=  value=*
+  ^-  @
+  =/  raw  (jam value)
+  ::  Native-only hash input, never exported or passed to the host noun decoder.
+  ::  Gall05 measured 1,376,721 bytes for the actual old poke output list.
+  ~|  [%stead-scheduled-gall-opaque-measurement-bytes (met 3 raw)]
+  ?>  (lte (met 3 raw) 2.097.152)
+  raw
+++  poke-record
+  |=  moves=(list motion)
+  ^-  @t
+  =/  emitted  (one-pass moves)
+  ?>  ?=([* %pass * %g %deal * * %poke *] emitted)
+  =/  [return=duct a=@ link=wire b=@ c=@ origin=[ship ship path] app=term d=@ payload=cage]  emitted
+  =/  original-moves  (measured-jam moves)
+  =/  original-poke  (measured-jam emitted)
+  =/  original-type  (measured-jam p.q.payload)
+  =/  type-sha  (hash original-type)
+  =/  type-bytes  (met 3 original-type)
+  ::  This deliberately invalid vase type is a report projection, never a task.
+  ::  Preserve every other field, the exact body, output order and owner ACK.
+  =/  projected=*
+    [return a link b c origin app d p.payload [%stead-opaque-vase-type type-sha type-bytes] q.q.payload]
+  =/  projected-moves
+    (turn moves |=(message=motion ?:(=(message emitted) projected message)))
+  %-  canonical:stead-codec
+  %-  object:stead-codec
+  :~  ['protocol' 'stead.gall-poke-projection/1']
+      ['representation' 'poke-vase-type-omitted']
+      ['measurement_scope' 'native hash-and-size only; omitted bytes not reconstructed']
+      ['projected_moves' (noun-record projected-moves)]
+      ['original_moves_jam_sha256' (hash original-moves)]
+      ['original_moves_jam_bytes' (decimal:stead-codec (met 3 original-moves))]
+      ['original_poke_jam_sha256' (hash original-poke)]
+      ['original_poke_jam_bytes' (decimal:stead-codec (met 3 original-poke))]
+      ['omitted_type_jam_sha256' type-sha]
+      ['omitted_type_jam_bytes' (decimal:stead-codec type-bytes)]
+  ==
 ++  assert-fresh
   |=  [observation=@t facts=@t kicks=@t ongoing=@t pokes=@t]
   ^-  ?
@@ -310,10 +349,16 @@
   ?>  (assert-fresh live-observer '0' '0' 'false' '0')
   =^  final-history  home  (query home ~zod %stead-home /v1/fixture-snapshot)
   ?>  =(committed final-history)
+  ::  Scalar diagnostics precede bounded serialization, including unprojected gifts.
+  ~&  [%stead-scheduled-gall-jam-bytes
+       [%old-poke (met 3 (jam old-poke-output))]
+       [%fresh-poke (met 3 (jam new-poke-output))]
+       [%old-result-gifts (met 3 (jam old-result-gifts))]
+       [%fresh-result-gifts (met 3 (jam fresh-gifts))]]
   =/  result
     %-  canonical:stead-codec
     %-  object:stead-codec
-    :~  ['protocol' 'stead.native-scheduled-gall/1']
+    :~  ['protocol' 'stead.native-scheduled-gall/2']
         ['classification' 'native-scheduled-gall']
         ['status' 'passed']
         ['requirement' 'delivery-late-old-leave']
@@ -332,11 +377,11 @@
         ['captured_leave' held-before]
         ['delivered_leave' (noun-record held-leave)]
         ['delivered_leave_output' (noun-record late-leave-output)]
-        ['old_poke_moves' (noun-record old-poke-output)]
+        ['old_poke_moves' (poke-record old-poke-output)]
         ['old_result_gifts' (noun-record old-result-gifts)]
         ['fresh_watch_moves' (noun-record new-watch-output)]
         ['fresh_watch_gifts' (noun-record new-watch-gifts)]
-        ['fresh_poke_moves' (noun-record new-poke-output)]
+        ['fresh_poke_moves' (poke-record new-poke-output)]
         ['fresh_result_gifts' (noun-record fresh-gifts)]
         ['old_pending_active' old-pending]
         ['old_pending_retired' retired-pending]

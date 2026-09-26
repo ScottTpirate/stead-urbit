@@ -146,19 +146,32 @@ def guarded_result(result):
         result['execution_guard'] = {key: lease[key] for key in (
             'run_id', 'generation', 'guard_sha256', 'policy_sha256', 'policy')}
     except Exception as error:
-        result.update(status='fail', error='Execution guard interrupted result: ' + str(error))
+        result.update(status='fail', error='Execution guard interrupted result: ' + str(error),
+                      feedback_infrastructure_failure=True)
+    persist_result_evidence(result)
+    return result
+
+
+def persist_result_evidence(result):
     # Persist the same final guarded status, including an interrupted test that
     # completed its own checks just before cancellation. No stale green report.
-    if 'evidence_file' in result:
-        name = Path(result['evidence_file']).name
+    for field in ('evidence_file', 'feedback_file'):
+        if field not in result:
+            continue
+        name = Path(result[field]).name
         if not (name.startswith(('core-', 'smoke-', 'gall-schedule-', 'skill-evaluation-')) and name.endswith('.json')):
             raise ValueError('Unexpected native evidence target')
         path = STATE / 'logs' / name
         evidence = execution_policy.read_json(path, maximum=16 * 1024 * 1024)
-        evidence.update(status=result['status'], execution_guard=result.get('execution_guard'),
-                        error=result.get('error'))
+        evidence.update(status=result['status'], execution_guard=result.get('execution_guard'))
+        if field == 'feedback_file':
+            # Detailed admission/source failures remain in the private audit
+            # record. Never disclose the reference/oracle receipt as feedback.
+            if result.get('feedback_infrastructure_failure') is True:
+                evidence['infrastructure_error'] = 'Public feedback incomplete; integrator must inspect the private execution record.'
+        else:
+            evidence['error'] = result.get('error')
         execution_policy.write_json(path, evidence)
-    return result
 
 
 def record(command, result):
@@ -474,13 +487,18 @@ def handle(connection):
                             all_stop()
                         else:
                             PROGRESS.update(stage='ready', ready=True, error=None)
-            elif (set(request) == {'op', 'condition'} and request['op'] == 'skill-evaluation'
-                  and request['condition'] in ('prequalification', 'baseline', 'local_skill_assisted')):
+            elif ((set(request) == {'op', 'condition'} and request['op'] == 'skill-evaluation'
+                   and request['condition'] in ('prequalification', 'baseline', 'local_skill_assisted'))
+                  or (set(request) == {'op', 'condition', 'task', 'attempt'} and request['op'] == 'skill-feedback'
+                      and request['condition'] in ('baseline', 'local_skill_assisted')
+                      and request['task'] in skill_evaluation_support.TASKS
+                      and type(request['attempt']) is int and request['attempt'] in (1, 2, 3))):
                 with MUTEX:
                     if not PROGRESS['ready']:
                         raise RuntimeError('Fixture not ready')
-                    PROGRESS.update(stage='skill-evaluation', ready=False, error=None)
+                    PROGRESS.update(stage=request['op'], ready=False, error=None)
                     condition = request['condition']
+                    result = None
                     try:
                         context = dict(globals(), WORKFLOW_SOURCE_COMMIT=qualified_source())
                         if condition != 'prequalification':
@@ -492,14 +510,19 @@ def handle(connection):
                                 if not path.is_absolute() or not path.is_relative_to('/workflow') or '..' in path.parts:
                                     raise ValueError('Workflow proof must be inside the fixed read-only mount')
                             context['WORKFLOW_PREQUALIFICATION'] = proof
+                        candidate = Path('/workflow') / condition
+                        options = {'prequalify': condition == 'prequalification'}
+                        if request['op'] == 'skill-feedback':
+                            candidate = Path('/workflow/feedback') / condition / request['task'] / str(request['attempt'])
+                            options.update(feedback_task=request['task'], feedback_attempt=request['attempt'])
                         result = guarded_result(skill_evaluation_support.run(context,
-                            Path('/native-tests/skill-evaluation'), Path('/workflow') / condition,
-                            condition, prequalify=condition == 'prequalification'))
+                            Path('/native-tests/skill-evaluation'), candidate, condition, **options))
                         try:
                             if qualified_source() != context['WORKFLOW_SOURCE_COMMIT']:
                                 raise ValueError('Workflow committed source changed')
                         except Exception as error:
-                            result.update(status='fail', error='Workflow final source binding failed: ' + str(error))
+                            result.update(status='fail', error='Workflow final source binding failed: ' + str(error),
+                                          feedback_infrastructure_failure=True)
                             result = guarded_result(result)
                     finally:
                         # Always finish this owned lifetime, including an
@@ -508,6 +531,12 @@ def handle(connection):
                         STOP_REQUESTED.set()
                         try:
                             all_stop()
+                        except Exception as error:
+                            if result is not None:
+                                result.update(status='fail', error='Workflow final cleanup failed: ' + str(error),
+                                              feedback_infrastructure_failure=True)
+                                persist_result_evidence(result)
+                            raise
                         finally:
                             PROGRESS.update(stage='stopped', ready=False)
                             STOP.set()

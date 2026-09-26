@@ -1,7 +1,10 @@
 # Delayed old leave: bounded native Gall schedule
 
-Status: draft, not compiled or executed. This directory alone is not acceptance
-evidence and does not amend any frozen contract or qualification mapping.
+Status: the prior draft compiled and reached its scheduling assertions in the
+retained Gall04/Gall05 runs, then failed report serialization. The protocol-2
+projection revision below has not yet been natively compiled or executed. This
+directory alone is not acceptance evidence and does not amend a frozen contract
+or qualification mapping.
 
 The proposed classification is `native-scheduled-gall`: compile and execute the
 actual pinned `/sys/vane/gall`, `/app/stead-home`, and `/app/stead-observer` gates
@@ -64,6 +67,40 @@ The runner must check the explicit `passed` result and named controls; the
 negative generator must be recognized as the intended runtime assertion, not
 an arbitrary failed build. Root and the independent test owner must approve
 any mapping of this evidence to `delivery-late-old-leave` before phase closure.
+
+## Bounded reporting and explicitly omitted poke types
+
+`stead.native-scheduled-gall/2` changes only the representation of
+`old_poke_moves` and `fresh_poke_moves`. Gall05 measured the actual old poke
+output list at 1,376,721 jam bytes for a 389-byte command. Its inferred vase
+type therefore cannot be emitted through the existing 16 KiB noun-record bound.
+The dispatch schedule still sends every original poke, leave and gift unchanged.
+
+Only during final report serialization, `poke-record` creates a
+`stead.gall-poke-projection/1` record. Its bounded `projected_moves` jam retains
+the original output order, owner ACK, parent duct, outgoing wire, sender, target,
+provenance, agent, mark and exact command body. Only the poke vase type is
+replaced with `[ %stead-opaque-vase-type type-sha256 type-jam-bytes ]`. This marker
+is deliberately not a valid vase type and is never dispatched to Gall.
+
+The wrapper also retains native-measured jam SHA-256 and byte count for the
+original complete move list, selected poke move and omitted vase type. Each
+measurement has a separate 2 MiB native-only input cap, based on the observed
+Gall05 size. The omitted bytes are never passed to the host decoder. These are
+opaque native measurements: the host verifies their scalar bounds, explicit
+scope, marker consistency and old/fresh type equality, but cannot independently
+reconstruct or check the omitted original bytes against their reported hashes.
+The guarded native command, exact output and reviewed source bindings remain
+necessary. The host result states `independently_reconstructed: false` and
+`native_execution_verified: false`.
+
+Captured and delivered leave records, watch records, incoming duct maps and
+result gift records remain complete canonical jams. Their 16 KiB jam limit,
+existing host traversal bounds and 128 KiB total report bound are unchanged.
+A native scalar diagnostic prints the jam byte counts of both original poke
+lists and both result gift lists before serialization. Gift limits remain
+unchanged; a gift-size failure is retained for measurement and review rather
+than automatically widened or projected.
 
 ## Source and license provenance
 

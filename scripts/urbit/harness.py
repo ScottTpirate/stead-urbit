@@ -378,6 +378,18 @@ def skill_evaluation(condition):
         raise RuntimeError('Workflow native evaluation failed; inspect retained evidence')
 
 
+def skill_feedback(condition, task, attempt):
+    if (condition not in ('baseline', 'local_skill_assisted')
+            or task not in ('T01', 'T02', 'T03', 'T04', 'T05', 'T06')
+            or type(attempt) is not int or attempt not in (1, 2, 3)):
+        raise ValueError('Public feedback requires candidate condition, task and attempt 1 through 3')
+    guard()
+    result = rpc('skill-feedback', condition=condition, task=task, attempt=attempt, timeout=3600)
+    print(json.dumps(result, indent=2))
+    if result['status'] != 'pass':
+        raise RuntimeError('Public task feedback failed; retain its public and private execution records')
+
+
 def dev():
     def interrupted(*_):
         raise KeyboardInterrupt('Developer command interrupted')
@@ -403,16 +415,20 @@ if __name__ == '__main__':
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument('command', choices=['doctor', 'preflight', 'start', 'stop', 'reset', 'status',
                         'wait-ready', 'dev', 'test', 'core-check', 'core-test', 'gall-schedule',
-                        'skill-evaluation', '_guarded-supervisor'])
+                        'skill-evaluation', 'skill-feedback', '_guarded-supervisor'])
     parser.add_argument('--condition', choices=['prequalification', 'baseline', 'local_skill_assisted'])
+    parser.add_argument('--task', choices=['T01', 'T02', 'T03', 'T04', 'T05', 'T06'])
+    parser.add_argument('--attempt', type=int, choices=[1, 2, 3])
     args = parser.parse_args()
     try:
         if args.command == '_guarded-supervisor':
             guarded_supervisor()
         elif args.command == 'skill-evaluation':
-            if args.condition is None:
+            if args.condition is None or args.task is not None or args.attempt is not None:
                 raise ValueError('Explicit workflow evaluation condition required')
             skill_evaluation(args.condition)
+        elif args.command == 'skill-feedback':
+            skill_feedback(args.condition, args.task, args.attempt)
         else:
             globals()[args.command.replace('-', '_')]()
     except (OSError, ValueError, RuntimeError, subprocess.SubprocessError) as error:
