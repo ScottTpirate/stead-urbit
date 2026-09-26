@@ -1,0 +1,108 @@
+{
+  "acceptance_performed": false,
+  "classification": "independent-read-only-source-and-acceptance-review",
+  "current_blockers": [
+    "A completed retained core run for source 0d877cff has not been supplied for this review.",
+    "Final 73-row derivation and independent semantic acceptance remain pending."
+  ],
+  "final_audit_checklist": [
+    "Bind exact committed source and loaded runner closure, runtime lock, corpus/freezes and installed Clay files; require immutable raw reports plus original transport sidecar and closed clean core/Gall guards.",
+    "Require execution_complete and exact 148 ordered QA cases: 145 passed and only the three frozen typed deferrals; no extra skip, failure or not_run.",
+    "Recompute semantic predicates from exact terminal frames; check deliberate evaluator failure and complete frame above 64 KiB.",
+    "Check populated current save/load, unsupported versions, all 14 context controls and actual overlapping two-writer CAS call intervals with one accepted transition.",
+    "Check actual old zod PID exit and distinct replacement plus protected snapshot, current-authorized postrestart reads, exact retry, denial and stock-Git export identity.",
+    "Check eight delivery cases with only ended-leave deferred to separately retained native scheduled Gall positive and negative controls.",
+    "Check all eight executed capacity/predecessor recipes; legit accepted transition history must support ordinary4096 and reserved security128 boundaries, with synthetic uint64 probe separately scoped.",
+    "Reconcile exactly 65 core + 1 scheduled Gall native rows and seven typed nonnative rows; verify source reviews and N/A attribution without relabeling host/mock evidence native.",
+    "Preserve historical 25 skips and earlier failed/thermal attempts; raw completion and metadata pass alone are not independent semantic acceptance."
+  ],
+  "gate_inventory": {
+    "core_native": 65,
+    "native": 66,
+    "nonnative": 7,
+    "nonnative_requirements": [
+      {
+        "id": "no-effect-subsystem",
+        "kind": "not_applicable"
+      },
+      {
+        "id": "receipt-lookup-order",
+        "kind": "source_review"
+      },
+      {
+        "id": "guard-independent-source-review",
+        "kind": "source_review"
+      },
+      {
+        "id": "guard-negative-host-tests",
+        "kind": "host_mocked"
+      },
+      {
+        "id": "guard-real-hot-preflight-refusal",
+        "kind": "real_host"
+      },
+      {
+        "id": "guard-real-platform-mocked-sensors",
+        "kind": "real_platform_mocked_sensors"
+      },
+      {
+        "id": "delivery-host-order-permutations",
+        "kind": "host_mocked"
+      }
+    ],
+    "scheduled_gall_native": 1,
+    "total": 73,
+    "typed_counts": {
+      "host_mocked": 2,
+      "native": 66,
+      "not_applicable": 1,
+      "real_host": 1,
+      "real_platform_mocked_sensors": 1,
+      "source_review": 2
+    }
+  },
+  "host_tests_launched": false,
+  "limits": [
+    "Targeted current-source and gate review, not a new exhaustive application security review.",
+    "No workflow candidate workspaces or participant traces were accessed.",
+    "No tests or native runs were launched; no tracked files were changed."
+  ],
+  "native_execution_performed": false,
+  "observed_at": "2026-09-26T18:56:42.214081+00:00",
+  "protocol": "stead.phase1-independent-core-preflight-review/1",
+  "restart_finding": {
+    "current_required_boundary": "Actual graceful stopped-process replacement; current save/load and predecessor migration are distinct assertions.",
+    "doc_correction_required": "NATIVE_CORE.md lines 73-75 and 94-96 incorrectly elevate abrupt-crash recovery to a current Phase 1 gate. Correct after frozen runs; retain older attributed review artifacts unchanged.",
+    "gate_scope": "Graceful fenced process replacement retains accepted revisions, policy and canonical Git bytes; not abrupt crash.",
+    "live_issue": "https://github.com/ScottTpirate/stead-urbit/issues/7",
+    "live_issue_state_observed": "OPEN",
+    "live_issue_test_wording": "Native compile, two-client revision conflict, replay/idempotency, wrong policy revision, save/load round-trip, cold restart and invariant tests.",
+    "source_evidence": [
+      "scripts/urbit/core_test.py:196: shutdown zod, record old exit, launch zod and wait ready; no pier reset occurs inside restart callback.",
+      "scripts/urbit/build_phase1_evidence.py:274: require positive distinct old and new PIDs, old exit 0, recorded launch ordering and one nonforced shutdown.",
+      "scripts/urbit/core_cases_v2.py:496: freshly read retained project, policy, Work and Docs revision/content/OID state.",
+      "specs/urbit/fixtures/native-cases-v2.json:3118: require unchanged business snapshot, then exact retry, denial after restart and identical Git export."
+    ],
+    "unqualified": "Abrupt-crash recovery, production backup/restore, OTA, live migration and real identities remain unqualified."
+  },
+  "reviewer": "/root/core_acceptance_review",
+  "source_commit": "0d877cff4319de8d437f0da58d4518535f758c36",
+  "source_files": {
+    "docs/urbit/CONTRACT_AMENDMENT_2.md": "f9793a947b4ba69e9099ec0cd68ed004602cb0ffe6fbbf79f9f464cb256315c6",
+    "docs/urbit/ECOSYSTEM_PLAN.md": "b4054941b3729d9f7bea5ebd277580111406f4b1dea74ebeddb76c327878442e",
+    "docs/urbit/MASTER_BUILD_DIRECTIVE.md": "30cd338df7f716b040f6337d5b3de97da1704c6b39c7a3124a95c40a7a1653ab",
+    "docs/urbit/NATIVE_CORE.md": "25af0f2f5d17b2d82e912ee576f0a02f30338566bd35d5c25ded9447396ae5a6",
+    "native/core/desk/app/stead-home.hoon": "3bfc0e45062ef0bc8572d5034a60b5b35f6502350f821129b5ba7a7cca0b2b9c",
+    "native/core/desk/lib/stead-core.hoon": "4c183ef6283030437af5e1433e3fbf80f414757bcede4cab1282fc71ff5f34de",
+    "scripts/urbit/build_phase1_evidence.py": "1eb8f8dad1199ce9f3cf6667ef3f26e20774ab3eb50d54590e5b0b30e4b8fb63",
+    "scripts/urbit/core_cases_v2.py": "6db78c1712bee0c0e613b9ae6250a48871983e7c9a3a1f9a159da4517047e6ac",
+    "scripts/urbit/core_test.py": "dcf5ead9d3969322dfe880427090b108e0729e40d4a29aaadd4bc1dcf77c0916",
+    "scripts/urbit/qualification_cases.py": "1d06a75fea124e2a17b27167c8402090532d8f30425d69ecde8441094b088c71",
+    "scripts/urbit/qualification_gate.py": "ce0d8d0d87e9556940143943d7107099bfeb5c36eec6744342e555bfd292a6ab",
+    "specs/urbit/backlog.json": "7a2395a19c77ec08d1ed7c96eae393be44f7c367b5065e3fbb0523262f4ba116",
+    "specs/urbit/fixtures/native-cases-v2.json": "95c915e2d0c93f358225274b34216fff0fe2efc09791905855b1e3f36aec368a",
+    "specs/urbit/toolchain.lock.json": "4a209c10cf1756eb0f7357cc3eca8250bf66c239b4cd0ca31a8c0886d4d304ee",
+    "specs/urbit/v2/qualification-gate.json": "f374349cc3ccd64993e3dade9a44e306854479c228b7f93d6559647006aee94c"
+  },
+  "status": "checklist-prepared-awaiting-completed-native-core"
+}

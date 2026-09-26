@@ -1,0 +1,172 @@
+{
+  "protocol": "stead.portable-gall-retention/1",
+  "source_commit": "0d877cff4319de8d437f0da58d4518535f758c36",
+  "reviewer": "/root/gall_schedule_review",
+  "review_file": "reviews/phase1-nonnative-v2-gall-audit.json",
+  "review_sha256": "5dd036d6f58df19b38f9ac4f8a9886aa6a7fe1e8bb5be1c8ae95aa0a1e44b8b2",
+  "artifacts": [
+    {
+      "source": {
+        "path": ".piers/fakes/logs/gall-schedule-20260926T181737Z-a05b0328313d.json",
+        "pointer": "",
+        "sha256": "30f202f13746b6d142826a281cf734f69e9c13bf7f4abeb5a1d39e3e48516207"
+      },
+      "file": "native/gall-schedule.json",
+      "sha256": "30f202f13746b6d142826a281cf734f69e9c13bf7f4abeb5a1d39e3e48516207",
+      "bytes": 223619
+    },
+    {
+      "source": {
+        "path": ".runtime/execution-runs/four-fakes-ix6ego3g/report.json",
+        "pointer": "",
+        "sha256": "0095e0410ce2af27c7cb6d25f545419787f55556029cf1bd55e0509fae5162d2"
+      },
+      "file": "native/gall-schedule-guard.json",
+      "sha256": "0095e0410ce2af27c7cb6d25f545419787f55556029cf1bd55e0509fae5162d2",
+      "bytes": 26877
+    },
+    {
+      "source": {
+        "path": ".runtime/execution-runs/four-fakes-ix6ego3g/events.jsonl",
+        "pointer": "",
+        "sha256": "4def0acb2d6409fb53950f0057f3b4ecd6df8fb72e9cfbcf61bbbcdd8f4aa717"
+      },
+      "file": "retained/gall/events.jsonl",
+      "sha256": "4def0acb2d6409fb53950f0057f3b4ecd6df8fb72e9cfbcf61bbbcdd8f4aa717",
+      "bytes": 23804
+    },
+    {
+      "source": {
+        "path": ".runtime/execution-runs/four-fakes-ix6ego3g/control/source-context.json",
+        "pointer": "",
+        "sha256": "5c352e97a94345d4651077d07bbe1e14466551819b6718e0f6ceca10cccaaf8d"
+      },
+      "file": "retained/gall/control/source-context.json",
+      "sha256": "5c352e97a94345d4651077d07bbe1e14466551819b6718e0f6ceca10cccaaf8d",
+      "bytes": 18248
+    },
+    {
+      "source": {
+        "path": ".runtime/execution-runs/four-fakes-ix6ego3g/control/scope.json",
+        "pointer": "",
+        "sha256": "eea2d78cf0208a32a612f87b38d15d17fa04ddafc7fab31fa83da5edcac7e153"
+      },
+      "file": "retained/gall/control/scope.json",
+      "sha256": "eea2d78cf0208a32a612f87b38d15d17fa04ddafc7fab31fa83da5edcac7e153",
+      "bytes": 232
+    },
+    {
+      "source": {
+        "path": ".runtime/execution-runs/four-fakes-ix6ego3g/control/lease.json",
+        "pointer": "",
+        "sha256": "31d309d0f39d6f522759b21e621e9f0db7fc3502ce115da8361493f8ed288a2e"
+      },
+      "file": "retained/gall/control/lease.json",
+      "sha256": "31d309d0f39d6f522759b21e621e9f0db7fc3502ce115da8361493f8ed288a2e",
+      "bytes": 1064
+    },
+    {
+      "source": {
+        "path": ".runtime/execution-runs/four-fakes-ix6ego3g/control/STOP",
+        "pointer": "",
+        "sha256": "7d3b42bbed97fbe07fdd87226f47c82456368c7336a1de0dd0629653265c5b26"
+      },
+      "file": "retained/gall/control/STOP",
+      "sha256": "7d3b42bbed97fbe07fdd87226f47c82456368c7336a1de0dd0629653265c5b26",
+      "bytes": 17
+    },
+    {
+      "source": {
+        "path": ".runtime/phase01-20260926/gall-v2-lifecycle.json",
+        "pointer": "",
+        "sha256": "65993506dbb0b8e931d2f061d2a4b89f74e379f77a8af6af66d3c4b67ad19516"
+      },
+      "file": "retained/gall/lifecycle.json",
+      "sha256": "65993506dbb0b8e931d2f061d2a4b89f74e379f77a8af6af66d3c4b67ad19516",
+      "bytes": 446
+    },
+    {
+      "source": {
+        "path": ".runtime/phase01-20260925/start34.json",
+        "pointer": "",
+        "sha256": "9c3ddd18c37565336612e71b201fe7aca3fb683011b69962c663c7621bd96ac9"
+      },
+      "file": "retained/gall/steps/start34.json",
+      "sha256": "9c3ddd18c37565336612e71b201fe7aca3fb683011b69962c663c7621bd96ac9",
+      "bytes": 288
+    },
+    {
+      "source": {
+        "path": ".runtime/phase01-20260925/start34.log",
+        "pointer": "",
+        "sha256": "7c4437a4b0f5bcd1a07a92b4aa46759599cd895f9309375ce3901ee1993cbe58"
+      },
+      "file": "retained/gall/steps/start34.log",
+      "sha256": "7c4437a4b0f5bcd1a07a92b4aa46759599cd895f9309375ce3901ee1993cbe58",
+      "bytes": 453
+    },
+    {
+      "source": {
+        "path": ".runtime/phase01-20260925/ready34.json",
+        "pointer": "",
+        "sha256": "2bff0486089dbf4dba1636e385b131ccad3368c9a12f2a11ba4ff6c87b444cd1"
+      },
+      "file": "retained/gall/steps/ready34.json",
+      "sha256": "2bff0486089dbf4dba1636e385b131ccad3368c9a12f2a11ba4ff6c87b444cd1",
+      "bytes": 293
+    },
+    {
+      "source": {
+        "path": ".runtime/phase01-20260925/ready34.log",
+        "pointer": "",
+        "sha256": "6ade3d62b67dd2066207260ae96b6ef88847dbb824720cc7be7b132fee5510e9"
+      },
+      "file": "retained/gall/steps/ready34.log",
+      "sha256": "6ade3d62b67dd2066207260ae96b6ef88847dbb824720cc7be7b132fee5510e9",
+      "bytes": 242
+    },
+    {
+      "source": {
+        "path": ".runtime/phase01-20260925/gallv2.json",
+        "pointer": "",
+        "sha256": "944174c5ba481659d894258680d6de4ad15b6d1dc5fff904829ead6123368734"
+      },
+      "file": "retained/gall/steps/gallv2.json",
+      "sha256": "944174c5ba481659d894258680d6de4ad15b6d1dc5fff904829ead6123368734",
+      "bytes": 297
+    },
+    {
+      "source": {
+        "path": ".runtime/phase01-20260925/gallv2.log",
+        "pointer": "",
+        "sha256": "d12516c3a39201cb445bf55d3026487e149b52c4aff58fd6136b39ac2a93f803"
+      },
+      "file": "retained/gall/steps/gallv2.log",
+      "sha256": "d12516c3a39201cb445bf55d3026487e149b52c4aff58fd6136b39ac2a93f803",
+      "bytes": 962
+    },
+    {
+      "source": {
+        "path": ".runtime/phase01-20260925/stop34.json",
+        "pointer": "",
+        "sha256": "26d7ec4dd825b877fa4a9dbce28aec8a117240a8714030dfaba7282228532f07"
+      },
+      "file": "retained/gall/steps/stop34.json",
+      "sha256": "26d7ec4dd825b877fa4a9dbce28aec8a117240a8714030dfaba7282228532f07",
+      "bytes": 287
+    },
+    {
+      "source": {
+        "path": ".runtime/phase01-20260925/stop34.log",
+        "pointer": "",
+        "sha256": "fe8b2280abb0c0a09259c5211aa3dc729b9b42caa2afdaa7431a4d4936ba213c"
+      },
+      "file": "retained/gall/steps/stop34.log",
+      "sha256": "fe8b2280abb0c0a09259c5211aa3dc729b9b42caa2afdaa7431a4d4936ba213c",
+      "bytes": 141
+    }
+  ],
+  "transformations": [],
+  "status": "scheduled-Gall-passed-core-and-full-qualification-pending",
+  "scope": "Only delivery-late-old-leave; no Ames/UDP claim. Original whole mutable ship log was not retained; exact fixed command results and bounded embedded log slices are retained unchanged and independently checked."
+}

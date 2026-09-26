@@ -1,0 +1,25 @@
+{
+  "protocol": "stead.exact-retained-files/1",
+  "files": [
+    {
+      "file": "applied.json",
+      "source": ".runtime/phase01-20260926/widget-pause-proposal/applied.json",
+      "sha256": "466f227bc6767d67c5cb3b590e8d4b94157ab4a7e7471b211c6f54f7bee9624d",
+      "bytes": 713
+    },
+    {
+      "file": "verified.json",
+      "source": ".runtime/phase01-20260926/widget-pause-proposal/verified.json",
+      "sha256": "9d114385c99f6772852962d98fd9dbc4223898e4bdf5deaae505717a2f95c691",
+      "bytes": 420
+    },
+    {
+      "file": "minimal.diff",
+      "source": ".runtime/phase01-20260926/widget-pause-proposal/minimal.diff",
+      "sha256": "419c870620242dee6af4194513fb2d933321f7eb045cf42ff24497594bead105",
+      "bytes": 232
+    }
+  ],
+  "full_desktop_configuration_published": false,
+  "restoration_required_after_native_work": true
+}

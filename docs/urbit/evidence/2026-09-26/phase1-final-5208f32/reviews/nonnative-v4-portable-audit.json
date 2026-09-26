@@ -1,0 +1,209 @@
+{
+  "actual_current_files": 22,
+  "actual_host_tests": 142,
+  "all_four_retention_bundles_verified": [
+    "docs/urbit/evidence/2026-09-26/phase1-nonnative-v4/retention-index.json",
+    "docs/urbit/evidence/2026-09-26/phase1-nonnative-v3/retention-index.json",
+    "docs/urbit/evidence/2026-09-26/phase1-nonnative-v2/retention-index.json",
+    "docs/urbit/evidence/2026-09-26/phase1-nonnative/retention-index.json"
+  ],
+  "audit_resources": {
+    "affinity": [
+      19
+    ],
+    "cpu_max": "2000 10000"
+  },
+  "blocking_qualification_findings": [],
+  "bundle": "docs/urbit/evidence/2026-09-26/phase1-nonnative-v4",
+  "checks_count": 3584,
+  "direct_hash_pointer_references_verified": 145,
+  "dispositions": {
+    "path": "docs/urbit/evidence/2026-09-26/phase1-nonnative-v4/dispositions.json",
+    "pointer": "",
+    "sha256": "2ef0e381b9b0918a6e2ba9f46fb74887af6246fccba1f4e1a3e2cdb11c519c52"
+  },
+  "exact_retained_copies": 14,
+  "focused_native_limit": "deliverycheck02 has a separate independent review at5208, two observed cycles and qualifies_phase=false. It is not inserted into this bundle or used as a Phase1/native requirement pass. Earlier source-refresh-review retains its historical pending observation unchanged.",
+  "generated_hashed_files": 7,
+  "guard_composite": "Three changed files are explicitly independently reviewed; prior self-authored changes retain editor review attribution and v2/v3 reviewer confirmations.",
+  "host_source_files_independently_bound": 156,
+  "host_test_execution": false,
+  "native_execution": false,
+  "native_missing": 66,
+  "native_passed": 0,
+  "native_required": 66,
+  "observed_at": "2026-09-26T20:54:53.113019+00:00",
+  "protocol": "stead.nonnative-v4-portable-audit/1",
+  "provenance_limit": "The four references initially outside the v1-v4 retention chain resolve through the two separate existing supplemental indices. All exact original/portable bytes and hashes match. The22 frozen v4 files are unchanged.",
+  "provenance_only_refs_without_portable_mapping": [],
+  "pure_metadata_recomputation": "Recomputed expected_inputs, historical continuity and evaluate over retained bytes; no native engine, ships or unittest execution.",
+  "qualification_acceptance": false,
+  "readiness": {
+    "path": "docs/urbit/evidence/2026-09-26/phase1-nonnative-v4/nonnative-readiness.json",
+    "pointer": "",
+    "sha256": "202e50191707d8306319e262e0ececdc878dddf6fa2071d891bbfdda1ea9d120"
+  },
+  "remaining": [
+    "Complete current fullcore/applicable Gall and independent73 gate before Phase1 acceptance."
+  ],
+  "resolved_provenance_references": [
+    {
+      "owner": "docs/urbit/evidence/2026-09-26/phase1-nonnative-v4/delivery-lifecycle-source-review.json",
+      "pointer": "/host_validation/portable_full_run_before_final_builder_correction/log",
+      "portable": {
+        "path": "docs/urbit/evidence/2026-09-26/delivery-lifecycle-fix/host-before-builder-correction.log",
+        "pointer": "",
+        "sha256": "a655381441170fd8a50dc6832d7286c676585e04fe53ce4e850cdd6b3a540549"
+      },
+      "reference": {
+        "path": ".runtime/phase01-20260926/delivery-lifecycle-fix/host.log",
+        "sha256": "a655381441170fd8a50dc6832d7286c676585e04fe53ce4e850cdd6b3a540549"
+      }
+    },
+    {
+      "owner": "docs/urbit/evidence/2026-09-26/phase1-nonnative-v4/delivery-lifecycle-source-review.json",
+      "pointer": "/host_validation/portable_full_run_before_final_builder_correction/result",
+      "portable": {
+        "path": "docs/urbit/evidence/2026-09-26/delivery-lifecycle-fix/host-before-builder-correction.json",
+        "pointer": "",
+        "sha256": "5367d21c9458855c0de636563cffcb8a28a353b4e3758e512954da485c9fe3b0"
+      },
+      "reference": {
+        "path": ".runtime/phase01-20260926/delivery-lifecycle-fix/host.json",
+        "sha256": "5367d21c9458855c0de636563cffcb8a28a353b4e3758e512954da485c9fe3b0"
+      }
+    },
+    {
+      "owner": "docs/urbit/evidence/2026-09-26/phase1-nonnative-v4/delivery-lifecycle-source-review.json",
+      "pointer": "/host_validation/portable_full_run_before_final_builder_correction/tested_patch",
+      "portable": {
+        "path": "docs/urbit/evidence/2026-09-26/delivery-lifecycle-fix/host-before-builder-correction.patch",
+        "pointer": "",
+        "sha256": "7ac476a21868e351369083b8f393a801e989fba39b6b2ef99c399e266484f60d"
+      },
+      "reference": {
+        "path": ".runtime/phase01-20260926/delivery-lifecycle-fix/tested.patch",
+        "sha256": "7ac476a21868e351369083b8f393a801e989fba39b6b2ef99c399e266484f60d"
+      }
+    },
+    {
+      "owner": "docs/urbit/evidence/2026-09-26/phase1-nonnative-v4/source-refresh-review.json",
+      "pointer": "/previous_promotion_helper",
+      "portable": {
+        "path": "docs/urbit/evidence/2026-09-26/phase1-final-5208f32/support/promote_phase1_nonnative_v3.py",
+        "pointer": "",
+        "sha256": "8cf2c4ca55bae7ce499bdfaecf1aa6bc92b857c14bcc34be4c52b57ae823d7fb"
+      },
+      "reference": {
+        "path": ".runtime/phase01-20260926/promote_phase1_nonnative_v3.py",
+        "pointer": "",
+        "sha256": "8cf2c4ca55bae7ce499bdfaecf1aa6bc92b857c14bcc34be4c52b57ae823d7fb"
+      }
+    }
+  ],
+  "retention_index": {
+    "path": "docs/urbit/evidence/2026-09-26/phase1-nonnative-v4/retention-index.json",
+    "pointer": "",
+    "sha256": "a7a4855532e729003161890a262d91c92052dc7ee8229411b7dfc2772513facc"
+  },
+  "reviewer": "/root/independent_review",
+  "revision_history": [
+    {
+      "previous_raw_utf8": "{\n  \"actual_current_files\": 22,\n  \"actual_host_tests\": 142,\n  \"all_four_retention_bundles_verified\": [\n    \"docs/urbit/evidence/2026-09-26/phase1-nonnative-v4/retention-index.json\",\n    \"docs/urbit/evidence/2026-09-26/phase1-nonnative-v3/retention-index.json\",\n    \"docs/urbit/evidence/2026-09-26/phase1-nonnative-v2/retention-index.json\",\n    \"docs/urbit/evidence/2026-09-26/phase1-nonnative/retention-index.json\"\n  ],\n  \"audit_resources\": {\n    \"affinity\": [\n      19\n    ],\n    \"cpu_max\": \"2000 10000\"\n  },\n  \"blocking_qualification_findings\": [],\n  \"bundle\": \"docs/urbit/evidence/2026-09-26/phase1-nonnative-v4\",\n  \"checks_count\": 3584,\n  \"direct_hash_pointer_references_verified\": 145,\n  \"dispositions\": {\n    \"path\": \"docs/urbit/evidence/2026-09-26/phase1-nonnative-v4/dispositions.json\",\n    \"pointer\": \"\",\n    \"sha256\": \"2ef0e381b9b0918a6e2ba9f46fb74887af6246fccba1f4e1a3e2cdb11c519c52\"\n  },\n  \"exact_retained_copies\": 14,\n  \"focused_native_limit\": \"deliverycheck02 has a separate independent review at5208, two observed cycles and qualifies_phase=false. It is not inserted into this bundle or used as a Phase1/native requirement pass. Earlier source-refresh-review retains its historical pending observation unchanged.\",\n  \"generated_hashed_files\": 7,\n  \"guard_composite\": \"Three changed files are explicitly independently reviewed; prior self-authored changes retain editor review attribution and v2/v3 reviewer confirmations.\",\n  \"host_source_files_independently_bound\": 156,\n  \"host_test_execution\": false,\n  \"native_execution\": false,\n  \"native_missing\": 66,\n  \"native_passed\": 0,\n  \"native_required\": 66,\n  \"observed_at\": \"2026-09-26T20:54:53.113019+00:00\",\n  \"protocol\": \"stead.nonnative-v4-portable-audit/1\",\n  \"provenance_limit\": \"These four exact local hashes match. They describe the superseded469 host check or prior promotion helper; no current seven-obligation assertion relies on them. The current v4 promotion helper also remains ignored support. Retain separately if full provenance/reproduction is to be portable; do not alter original hash-bound records.\",\n  \"provenance_only_refs_without_portable_mapping\": [\n    {\n      \"owner\": \"docs/urbit/evidence/2026-09-26/phase1-nonnative-v4/delivery-lifecycle-source-review.json\",\n      \"pointer\": \"/host_validation/portable_full_run_before_final_builder_correction/log\",\n      \"reference\": {\n        \"path\": \".runtime/phase01-20260926/delivery-lifecycle-fix/host.log\",\n        \"sha256\": \"a655381441170fd8a50dc6832d7286c676585e04fe53ce4e850cdd6b3a540549\"\n      }\n    },\n    {\n      \"owner\": \"docs/urbit/evidence/2026-09-26/phase1-nonnative-v4/delivery-lifecycle-source-review.json\",\n      \"pointer\": \"/host_validation/portable_full_run_before_final_builder_correction/result\",\n      \"reference\": {\n        \"path\": \".runtime/phase01-20260926/delivery-lifecycle-fix/host.json\",\n        \"sha256\": \"5367d21c9458855c0de636563cffcb8a28a353b4e3758e512954da485c9fe3b0\"\n      }\n    },\n    {\n      \"owner\": \"docs/urbit/evidence/2026-09-26/phase1-nonnative-v4/delivery-lifecycle-source-review.json\",\n      \"pointer\": \"/host_validation/portable_full_run_before_final_builder_correction/tested_patch\",\n      \"reference\": {\n        \"path\": \".runtime/phase01-20260926/delivery-lifecycle-fix/tested.patch\",\n        \"sha256\": \"7ac476a21868e351369083b8f393a801e989fba39b6b2ef99c399e266484f60d\"\n      }\n    },\n    {\n      \"owner\": \"docs/urbit/evidence/2026-09-26/phase1-nonnative-v4/source-refresh-review.json\",\n      \"pointer\": \"/previous_promotion_helper\",\n      \"reference\": {\n        \"path\": \".runtime/phase01-20260926/promote_phase1_nonnative_v3.py\",\n        \"pointer\": \"\",\n        \"sha256\": \"8cf2c4ca55bae7ce499bdfaecf1aa6bc92b857c14bcc34be4c52b57ae823d7fb\"\n      }\n    }\n  ],\n  \"pure_metadata_recomputation\": \"Recomputed expected_inputs, historical continuity and evaluate over retained bytes; no native engine, ships or unittest execution.\",\n  \"qualification_acceptance\": false,\n  \"readiness\": {\n    \"path\": \"docs/urbit/evidence/2026-09-26/phase1-nonnative-v4/nonnative-readiness.json\",\n    \"pointer\": \"\",\n    \"sha256\": \"202e50191707d8306319e262e0ececdc878dddf6fa2071d891bbfdda1ea9d120\"\n  },\n  \"remaining\": [\n    \"Optional separate retention of the four provenance references and current promotion helper, with an appended mapping.\",\n    \"Complete current fullcore/applicable Gall and independent73 gate before Phase1 acceptance.\"\n  ],\n  \"retention_index\": {\n    \"path\": \"docs/urbit/evidence/2026-09-26/phase1-nonnative-v4/retention-index.json\",\n    \"pointer\": \"\",\n    \"sha256\": \"a7a4855532e729003161890a262d91c92052dc7ee8229411b7dfc2772513facc\"\n  },\n  \"reviewer\": \"/root/independent_review\",\n  \"source_and_host_review_scope\": \"Source review and retained-byte audit only; actual host tests were executed by /root. The142 selected tests overlap470. Both historical guard observations retain their old source hash and classifications.\",\n  \"source_bindings\": {\n    \"path\": \"docs/urbit/evidence/2026-09-26/phase1-nonnative-v4/source-bindings.json\",\n    \"pointer\": \"\",\n    \"sha256\": \"32d17727a152382893d34ca62d6877e1bf4fe12dae89c5c86872b2ce978b2f21\"\n  },\n  \"source_commit\": \"5208f3273426e8fe76dc8622ffe93ace93982e17\",\n  \"source_files_independently_bound\": 128,\n  \"status\": \"seven-dispositions-admissible-with-provenance-copy-limit\",\n  \"typed_dispositions\": 7\n}\n",
+      "previous_sha256": "549f03bec0c028658ad177446647ab02ef84e0257dabe3d8515a3400a32fea17",
+      "reason": "Separate retained provenance indices were supplied as the initial bounded audit finished; verified all13 copies and resolved the four original-path references without changing frozen bundles."
+    }
+  ],
+  "source_and_host_review_scope": "Source review and retained-byte audit only; actual host tests were executed by /root. The142 selected tests overlap470. Both historical guard observations retain their old source hash and classifications.",
+  "source_bindings": {
+    "path": "docs/urbit/evidence/2026-09-26/phase1-nonnative-v4/source-bindings.json",
+    "pointer": "",
+    "sha256": "32d17727a152382893d34ca62d6877e1bf4fe12dae89c5c86872b2ce978b2f21"
+  },
+  "source_commit": "5208f3273426e8fe76dc8622ffe93ace93982e17",
+  "source_files_independently_bound": 128,
+  "status": "seven-dispositions-admissible-portable-provenance-verified",
+  "supplemental_audit_at": "2026-09-26T20:56:00.306125+00:00",
+  "supplemental_retention": {
+    "count": 13,
+    "exact_copies_verified": [
+      {
+        "path": "docs/urbit/evidence/2026-09-26/phase1-final-5208f32/support/promote_phase1_nonnative.pre-bin.py",
+        "pointer": "",
+        "sha256": "f404340164d926997b9d63991d0ae161a46c534892c6b07b183a8f4c7fa550c8"
+      },
+      {
+        "path": "docs/urbit/evidence/2026-09-26/phase1-final-5208f32/support/promote_phase1_nonnative.py",
+        "pointer": "",
+        "sha256": "fe5d786d07f7e50ec8f381b29ba8533c7d942382eda28bd84508387bf749496a"
+      },
+      {
+        "path": "docs/urbit/evidence/2026-09-26/phase1-final-5208f32/support/promote_phase1_nonnative_v2.py",
+        "pointer": "",
+        "sha256": "2fc8a59186ee912f2c6e7606a67cf3717dd23813c850b811d84372575917d1ef"
+      },
+      {
+        "path": "docs/urbit/evidence/2026-09-26/phase1-final-5208f32/support/promote_phase1_nonnative_v3.py",
+        "pointer": "",
+        "sha256": "8cf2c4ca55bae7ce499bdfaecf1aa6bc92b857c14bcc34be4c52b57ae823d7fb"
+      },
+      {
+        "path": "docs/urbit/evidence/2026-09-26/phase1-final-5208f32/support/promote_phase1_nonnative_v4.py",
+        "pointer": "",
+        "sha256": "8ec61b5d51220a0032e42fa47a77a7644e9cbc5562260918f1654b306a4e104c"
+      },
+      {
+        "path": "docs/urbit/evidence/2026-09-26/phase1-final-5208f32/support/run_native_lifecycle.py",
+        "pointer": "",
+        "sha256": "4787b1bd808e3c00f25fddb3018735f669d8b57d7da4c6f6b53ad444e77a8f24"
+      },
+      {
+        "path": "docs/urbit/evidence/2026-09-26/phase1-final-5208f32/support/retain_lifecycle.py",
+        "pointer": "",
+        "sha256": "8624c0379459f3e690bec0ddbf2b627c574b49c5f735c2be57c8d1eacfe18061"
+      },
+      {
+        "path": "docs/urbit/evidence/2026-09-26/delivery-lifecycle-fix/source-review.json",
+        "pointer": "",
+        "sha256": "0c3fd4c76fd96b4351be98b67334c2a8682c931020fef76b575f8688dab0a795"
+      },
+      {
+        "path": "docs/urbit/evidence/2026-09-26/delivery-lifecycle-fix/host-final.json",
+        "pointer": "",
+        "sha256": "3e83f810a8fadfa8cf9ee7695061761d7be5ba09df88473887b99e205c82de79"
+      },
+      {
+        "path": "docs/urbit/evidence/2026-09-26/delivery-lifecycle-fix/host-final.log",
+        "pointer": "",
+        "sha256": "8802873e4b153b33bd06ada7bc9b2c454da2fd0b2c0f630bb230e7ac8c4a802f"
+      },
+      {
+        "path": "docs/urbit/evidence/2026-09-26/delivery-lifecycle-fix/host-before-builder-correction.json",
+        "pointer": "",
+        "sha256": "5367d21c9458855c0de636563cffcb8a28a353b4e3758e512954da485c9fe3b0"
+      },
+      {
+        "path": "docs/urbit/evidence/2026-09-26/delivery-lifecycle-fix/host-before-builder-correction.log",
+        "pointer": "",
+        "sha256": "a655381441170fd8a50dc6832d7286c676585e04fe53ce4e850cdd6b3a540549"
+      },
+      {
+        "path": "docs/urbit/evidence/2026-09-26/delivery-lifecycle-fix/host-before-builder-correction.patch",
+        "pointer": "",
+        "sha256": "7ac476a21868e351369083b8f393a801e989fba39b6b2ef99c399e266484f60d"
+      }
+    ],
+    "historical_host_index": {
+      "path": "docs/urbit/evidence/2026-09-26/delivery-lifecycle-fix/index.json",
+      "pointer": "",
+      "sha256": "7db7c08f2fa014f81f8c166295054c3a02ccdc557322ef81e3ced714501efed2"
+    },
+    "scope": "Exact helper/source provenance and earlier469 host evidence only. Presence is not execution; current142 and full470 retain their distinct actual execution records.",
+    "support_index": {
+      "path": "docs/urbit/evidence/2026-09-26/phase1-final-5208f32/support/retention.json",
+      "pointer": "",
+      "sha256": "dc45284a85462566b9b60b21fa565dd335f93a38c79fc0f9ca803d108b77a8bc"
+    }
+  },
+  "typed_dispositions": 7
+}

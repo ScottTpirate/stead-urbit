@@ -1,0 +1,200 @@
+{
+  "protocol": "stead.clean-contributor-setup/1",
+  "source_commit": "55475f0565ceb38db9eb5bc057962967398aa5da",
+  "started_at": "2026-09-26T19:42:28.798821+00:00",
+  "classification": "real pinned network downloads and local namespace setup; no Hoon execution",
+  "scope": {
+    "cpu_max": "5000 10000",
+    "affinity": [
+      19
+    ],
+    "control_group": "/user.slice/user-1000.slice/user@1000.service/app.slice/run-p1045844-i17764189.scope"
+  },
+  "steps": [
+    {
+      "name": "clone",
+      "command": [
+        "git",
+        "clone",
+        "--no-local",
+        "--no-hardlinks",
+        "--no-checkout",
+        "--single-branch",
+        "--branch",
+        "increment/phase01-closeout-20260925",
+        "/home/skilgore/stead-urbit",
+        "/home/skilgore/stead-urbit/.runtime/phase01-20260926/contributor-clean-setup-v2/checkout"
+      ],
+      "cwd": ".",
+      "exit_code": 0,
+      "elapsed_seconds": 0.620353990001604,
+      "stdout": {
+        "file": "clone.stdout.log",
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "stderr": {
+        "file": "clone.stderr.log",
+        "bytes": 107,
+        "sha256": "54aa0d55a40d78f3860a489bd3624b2c1a6315d1b0c823f4a101441ad5e1e434"
+      }
+    },
+    {
+      "name": "checkout",
+      "command": [
+        "git",
+        "checkout",
+        "--detach",
+        "55475f0565ceb38db9eb5bc057962967398aa5da"
+      ],
+      "cwd": ".runtime/phase01-20260926/contributor-clean-setup-v2/checkout",
+      "exit_code": 0,
+      "elapsed_seconds": 0.17159236199222505,
+      "stdout": {
+        "file": "checkout.stdout.log",
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "stderr": {
+        "file": "checkout.stderr.log",
+        "bytes": 80,
+        "sha256": "444c9fb40524b2e347d14f439a463caede99c7ad766c74a516401712d2c9a002"
+      }
+    },
+    {
+      "name": "help",
+      "command": [
+        "make"
+      ],
+      "cwd": ".runtime/phase01-20260926/contributor-clean-setup-v2/checkout",
+      "exit_code": 0,
+      "elapsed_seconds": 0.03584598400630057,
+      "stdout": {
+        "file": "help.stdout.log",
+        "bytes": 1265,
+        "sha256": "63d67e51985c54bd410c57ede612000777f4d3fbba43f5eb34ea6052cd486cb3"
+      },
+      "stderr": {
+        "file": "help.stderr.log",
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      }
+    },
+    {
+      "name": "setup",
+      "command": [
+        "make",
+        "setup"
+      ],
+      "cwd": ".runtime/phase01-20260926/contributor-clean-setup-v2/checkout",
+      "exit_code": 0,
+      "elapsed_seconds": 10.580632628989406,
+      "stdout": {
+        "file": "setup.stdout.log",
+        "bytes": 490,
+        "sha256": "73a420f1e7e24276553fd29d0a78abd3764e69d8d4f1ae71383b24ee98ba8b80"
+      },
+      "stderr": {
+        "file": "setup.stderr.log",
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      }
+    },
+    {
+      "name": "doctor",
+      "command": [
+        "make",
+        "doctor"
+      ],
+      "cwd": ".runtime/phase01-20260926/contributor-clean-setup-v2/checkout",
+      "exit_code": 0,
+      "elapsed_seconds": 0.8275807979516685,
+      "stdout": {
+        "file": "doctor.stdout.log",
+        "bytes": 247,
+        "sha256": "0d97944d8f7ee194300c78829b7ece29f8a2937ac5e4673216002d813ea14106"
+      },
+      "stderr": {
+        "file": "doctor.stderr.log",
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      }
+    },
+    {
+      "name": "status",
+      "command": [
+        "make",
+        "status"
+      ],
+      "cwd": ".runtime/phase01-20260926/contributor-clean-setup-v2/checkout",
+      "exit_code": 0,
+      "elapsed_seconds": 0.21915887400973588,
+      "stdout": {
+        "file": "status.stdout.log",
+        "bytes": 98,
+        "sha256": "5e65e0130def0002c00c134159bda19f2995e4e0083707d1e7ebbc5fa6aeefeb"
+      },
+      "stderr": {
+        "file": "status.stderr.log",
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      }
+    }
+  ],
+  "status": "passed",
+  "native_ships_started": false,
+  "limits": [
+    "Uses existing Linux host prerequisites; not a fresh OS installation.",
+    "No source edits, native boot, participant trial, user study or Phase 1 acceptance.",
+    "Source clone is local; GitHub clone authentication is not exercised."
+  ],
+  "initial": {
+    "tracked_clean": true,
+    "runtime_absent": true,
+    "piers_absent": true,
+    "tree": "3d30c6b25490e85c8f5a6d7d212b30264a729cf3",
+    "remotes": [
+      "origin\thttps://github.com/ScottTpirate/stead-urbit.git (fetch)",
+      "origin\thttps://github.com/ScottTpirate/stead-urbit.git (push)",
+      "upstream\thttps://github.com/ScottTpirate/stead.git (fetch)",
+      "upstream\tDISABLED_UPSTREAM_PUSH (push)"
+    ]
+  },
+  "downloads": [
+    {
+      "key": "runtime",
+      "url": "https://github.com/urbit/vere/releases/download/vere-v4.6/linux-x86_64.tgz",
+      "file": "vere-v4.6-linux-x86_64.tgz",
+      "bytes": 9729797,
+      "sha256": "f332e96d66cb767f847fbf15e04b4f953fd078e610b449fbbc26629ea312a3ae"
+    },
+    {
+      "key": "kernel",
+      "url": "https://codeload.github.com/urbit/urbit/tar.gz/5a187fededc4582a34fcd6055c67bb63e0917b94",
+      "file": "urbit-408k-2.tar.gz",
+      "bytes": 3973711,
+      "sha256": "7f6f41388f456d1e94850a51b60b15e3148ede103ebb03b8acad470ed27beb31"
+    },
+    {
+      "key": "boot_artifact",
+      "url": "https://media.githubusercontent.com/media/urbit/urbit/5a187fededc4582a34fcd6055c67bb63e0917b94/bin/brass.pill",
+      "file": "brass-408k-2.pill",
+      "bytes": 23389629,
+      "sha256": "b4babd14e9f1acbdb421b3c31c215ee637ad6691b7e382b99c6fd8991e623708"
+    },
+    {
+      "key": "frontend",
+      "url": "https://nodejs.org/dist/v24.21.0/node-v24.21.0-linux-x64.tar.xz",
+      "file": "node-v24.21.0-linux-x64.tar.xz",
+      "bytes": 31890184,
+      "sha256": "fd8e59d5a511510f6a298afb548f18c7d2b1be404d8b4a27d94fbe49f56cb2d6"
+    }
+  ],
+  "final": {
+    "tracked_clean": true,
+    "live_piers_exist": false,
+    "control_socket_exists": false,
+    "namespace_negative_result": "PASS private network (loopback only, no internet route), no host home or Docker socket"
+  },
+  "finished_at": "2026-09-26T19:42:41.916627+00:00"
+}

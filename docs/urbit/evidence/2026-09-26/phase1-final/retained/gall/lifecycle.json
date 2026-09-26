@@ -1,0 +1,28 @@
+{
+  "source_commit": "55475f0565ceb38db9eb5bc057962967398aa5da",
+  "started_at": "2026-09-26T19:46:01.678323+00:00",
+  "elapsed_seconds": 61.413549729040824,
+  "steps": [
+    {
+      "label": "start36",
+      "target": "start",
+      "exit": 0
+    },
+    {
+      "label": "ready36",
+      "target": "wait-ready",
+      "exit": 0
+    },
+    {
+      "label": "gall-final01",
+      "target": "gall-schedule",
+      "exit": 0
+    },
+    {
+      "label": "stop36",
+      "target": "stop",
+      "exit": 0
+    }
+  ],
+  "all_steps_exit_zero": true
+}

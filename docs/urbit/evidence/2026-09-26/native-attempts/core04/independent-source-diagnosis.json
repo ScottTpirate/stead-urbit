@@ -1,0 +1,422 @@
+{
+  "artifacts": {
+    "core-20260926T194741Z-transport.jsonl.gz": {
+      "original_bytes": 713585,
+      "original_sha256": "a67848bd9a816f7804de654431985f968fc3c27b08b46455902fe60bf9ca9dee",
+      "path": "docs/urbit/evidence/2026-09-26/native-attempts/core04/core-20260926T194741Z-transport.jsonl.gz",
+      "sha256": "a67848bd9a816f7804de654431985f968fc3c27b08b46455902fe60bf9ca9dee"
+    },
+    "core.json.gz": {
+      "original_bytes": 7121354,
+      "original_sha256": "0a5e20aee967a912ab95455edcb3aed4ade1d9fbad94a1558a8c2663d10a0423",
+      "path": "docs/urbit/evidence/2026-09-26/native-attempts/core04/core.json.gz",
+      "sha256": "c00e8c7e2f1317c00b7e5cc1547ae18261578b5b0cdcd92aa8ea1b84fe94d58d"
+    },
+    "guard/.stead-disposable.json.gz": {
+      "original_bytes": 102,
+      "original_sha256": "802cc97a3ec4008f6b85be58a15f72436d08f700f982f0daecc8c2176aac585f",
+      "path": "docs/urbit/evidence/2026-09-26/native-attempts/core04/guard/.stead-disposable.json.gz",
+      "sha256": "226ad6156561a9a893a74e6965630fc34bd5d229bea109e91c22614f55bbb93a"
+    },
+    "guard/control/STOP.gz": {
+      "original_bytes": 50,
+      "original_sha256": "eae99002a34809e6547b54c72d698f0e096ed89f4bcd714fb8ccbab20ae18bd4",
+      "path": "docs/urbit/evidence/2026-09-26/native-attempts/core04/guard/control/STOP.gz",
+      "sha256": "603a450e6168c9798a1f17ea67ddd546cdf31b7a858408da122abf07f4dca869"
+    },
+    "guard/control/lease.json.gz": {
+      "original_bytes": 1097,
+      "original_sha256": "2e34f9f72ccda994bb523bbfc8281dfe1de1bcd247358648d23d7ef2a1d5dd6b",
+      "path": "docs/urbit/evidence/2026-09-26/native-attempts/core04/guard/control/lease.json.gz",
+      "sha256": "a1d8ba0cb150493cf2719dc55b1e747b8ddd0525e7805922a2549235607f84aa"
+    },
+    "guard/control/scope.json.gz": {
+      "original_bytes": 232,
+      "original_sha256": "9b05ebc708c475ad09fa75583d57a59c2b7319d347a24b9e2afdcec0ad1376a4",
+      "path": "docs/urbit/evidence/2026-09-26/native-attempts/core04/guard/control/scope.json.gz",
+      "sha256": "fcc0026232cb5b544568e5fb1083b96f8b655efdb5dc49490a9e4042cc7c3cbd"
+    },
+    "guard/control/source-context.json.gz": {
+      "original_bytes": 18248,
+      "original_sha256": "b69d1c69c8291da33e33569296cc3f5bf3e0ad149b91d02ed61ce9d37fcc6de4",
+      "path": "docs/urbit/evidence/2026-09-26/native-attempts/core04/guard/control/source-context.json.gz",
+      "sha256": "e223d9562a764fe4c2035989b1e88b480dfb96cf80be42af84f149daba3fe877"
+    },
+    "guard/events.jsonl.gz": {
+      "original_bytes": 754423,
+      "original_sha256": "d10da54a9884b6269bc7ef4517816dd6438a249335df92c0a6392541dd54c555",
+      "path": "docs/urbit/evidence/2026-09-26/native-attempts/core04/guard/events.jsonl.gz",
+      "sha256": "43850403ac844b97d930a65419624c8178240aade645d79b9cb0c57510e66c51"
+    },
+    "guard/report.json.gz": {
+      "original_bytes": 758975,
+      "original_sha256": "25b4e3dd5e3e7f97eac59bbab4ab32c3a681d76f22bfaa026d5d4d3d797a9b9a",
+      "path": "docs/urbit/evidence/2026-09-26/native-attempts/core04/guard/report.json.gz",
+      "sha256": "4340f4c0dc677b0d0fc717aec73a5c08c62b5c8924c69fce00802b48c403b6c2"
+    },
+    "lifecycle.json.gz": {
+      "original_bytes": 587,
+      "original_sha256": "c4c054d1530c51c32abbcee491520541dda587dfa481af61e99cc2c1137b652f",
+      "path": "docs/urbit/evidence/2026-09-26/native-attempts/core04/lifecycle.json.gz",
+      "sha256": "720513015cf4f75d1d0e7b7c7bdbeaeb37ecb11e0a71fc7ed5229d461b88a7f1"
+    },
+    "logs/bud.log.gz": {
+      "original_bytes": 221384,
+      "original_sha256": "81cc6f45da1b4afa8d8e7ed67c70f4657f85c0d9424f9a9bbbe8668af4bbb779",
+      "path": "docs/urbit/evidence/2026-09-26/native-attempts/core04/logs/bud.log.gz",
+      "sha256": "10fcd55379196705aef389be108bb36970f2b98268e837b8d229c109fbb0cb43"
+    },
+    "logs/bus.log.gz": {
+      "original_bytes": 228742,
+      "original_sha256": "e51b89a4eb9e681dca62cb3d07c0793bd2333de8fa008ea399f7a03930c6c0f6",
+      "path": "docs/urbit/evidence/2026-09-26/native-attempts/core04/logs/bus.log.gz",
+      "sha256": "8330a59907b4bafec037a4f952200ffda681ba2cfaa5bdad46f0c97eecca7873"
+    },
+    "logs/nec.log.gz": {
+      "original_bytes": 115970,
+      "original_sha256": "d956ee7682f5dd0031ecc02abc9e815c5a32ca0d55517556887205e313acaec5",
+      "path": "docs/urbit/evidence/2026-09-26/native-attempts/core04/logs/nec.log.gz",
+      "sha256": "5f578b25bbf3ea6ed5e9ca7328c07fc486316824259e0c4d4866aeccc45e6fcf"
+    },
+    "logs/supervisor.log.gz": {
+      "original_bytes": 397539,
+      "original_sha256": "07ec81222493b48ac71ad15f1601f3489665c95cacf58ed9a1a20e3d689c58c9",
+      "path": "docs/urbit/evidence/2026-09-26/native-attempts/core04/logs/supervisor.log.gz",
+      "sha256": "62db9515559483b3dea7ec64298b6c03908d5540400bf7963b00c67e8f98c536"
+    },
+    "logs/zod.log.gz": {
+      "original_bytes": 225233,
+      "original_sha256": "55924081f3018c8947e17a1be9cec4d1b353bf430aedd1bfbf8fd3140b655319",
+      "path": "docs/urbit/evidence/2026-09-26/native-attempts/core04/logs/zod.log.gz",
+      "sha256": "75a8245147a7e413471180e39044462de8b7475ba9196b1daecfba6336253c11"
+    },
+    "steps/core04.json.gz": {
+      "original_bytes": 951,
+      "original_sha256": "9ddc98fc51d0cc3f5307cdca5fade3b4226413b8ed36b56df2d73f1f61036fd0",
+      "path": "docs/urbit/evidence/2026-09-26/native-attempts/core04/steps/core04.json.gz",
+      "sha256": "5283e04dd82b260d572edd06912b3e511e6248d509f6c5efc44d1e96078b3b4e"
+    },
+    "steps/core04.log.gz": {
+      "original_bytes": 1118,
+      "original_sha256": "0dc83b4f02f4fb46e6ea0f000d2c72546e88615ec0ce11bb7c2681aec9f0df5a",
+      "path": "docs/urbit/evidence/2026-09-26/native-attempts/core04/steps/core04.log.gz",
+      "sha256": "7d3670d51e85bd56a27aa42f673145289810250b64e88b1a3eb89eecd92c6a70"
+    },
+    "steps/ready37.json.gz": {
+      "original_bytes": 949,
+      "original_sha256": "cdaa631d0ea3a69332a2ba7487df2220a0a4ed2a46d01e005c156267421acd80",
+      "path": "docs/urbit/evidence/2026-09-26/native-attempts/core04/steps/ready37.json.gz",
+      "sha256": "830e3fca68931bf3c9cb683efc6ddfcaa1c556127a70560514d7e23ae317667e"
+    },
+    "steps/ready37.log.gz": {
+      "original_bytes": 242,
+      "original_sha256": "6ade3d62b67dd2066207260ae96b6ef88847dbb824720cc7be7b132fee5510e9",
+      "path": "docs/urbit/evidence/2026-09-26/native-attempts/core04/steps/ready37.log.gz",
+      "sha256": "01cedc45b27b73b7c8d5c8d2e0aa7bae317933250f77076dc26ab76b2428f17e"
+    },
+    "steps/start37.json.gz": {
+      "original_bytes": 944,
+      "original_sha256": "3de760c72fa17afde05a6782e9c9ad4dd2abbbea347e0bb85b361449ae281611",
+      "path": "docs/urbit/evidence/2026-09-26/native-attempts/core04/steps/start37.json.gz",
+      "sha256": "1b0b85df7b2cadb9ab07daaec8a319b0dd62538e3971fca11961310902276fea"
+    },
+    "steps/start37.log.gz": {
+      "original_bytes": 453,
+      "original_sha256": "cb5c8ac5c2e895d83ae4c0a715f89dd5e00615b089bf24576f11cbaf10f5d8c8",
+      "path": "docs/urbit/evidence/2026-09-26/native-attempts/core04/steps/start37.log.gz",
+      "sha256": "6d6f08103ee33694a9546cb2f15f284fa511c82448acfce8f3a16de87236e40c"
+    },
+    "steps/stop37.json.gz": {
+      "original_bytes": 1058,
+      "original_sha256": "f43040870628cb368ef8f24c5b74f837b624a71d83919ac4fff8c70ef08b4d8f",
+      "path": "docs/urbit/evidence/2026-09-26/native-attempts/core04/steps/stop37.json.gz",
+      "sha256": "10613fabd09c7f30e55e74dac00ee55463d0d0b80a88ca7e882586e29113dd0a"
+    },
+    "steps/stop37.log.gz": {
+      "original_bytes": 124,
+      "original_sha256": "41a6c609e4c45672bc9ab80eef9c36c9345358ccd579da19e39d4bd4c0ce98db",
+      "path": "docs/urbit/evidence/2026-09-26/native-attempts/core04/steps/stop37.log.gz",
+      "sha256": "bc3cc085e5863a044bdf59bb5dcaeec806a644b110aa81803d247946a8b5bcc0"
+    },
+    "unclean-live.json.gz": {
+      "original_bytes": 152,
+      "original_sha256": "a8f9911fc6bf4dd260e6bd7043a3b81857268790c3be3fedfadb305884c56b6b",
+      "path": "docs/urbit/evidence/2026-09-26/native-attempts/core04/unclean-live.json.gz",
+      "sha256": "caa4d4115157301b0577073d75e4a9379248e7e38b5d48ca376c61ede30ffabc"
+    }
+  },
+  "findings": [
+    {
+      "classification": "confirmed-source-lifecycle-gap",
+      "evidence": [
+        "delivery_suite.py:319 requests timeout=5.",
+        "core_conn.py:145-168 closes its AF_UNIX channel when read_exact raises at that deadline.",
+        "stead-client.hoon:11 wraps the remote watch in set-timeout 55 seconds.",
+        "core_test.py:264-277 immediately relaunches home when attempt returns, with no terminal drain, native cancellation or sender-liveness fence.",
+        "Transport line2168 records an encoded request, response-header timeout and zero received frame bytes."
+      ],
+      "id": "F1",
+      "implication": "The native request may complete later and attempt to write to an abandoned control connection. A five-second host timeout proves no timely observed result, not native request termination.",
+      "severity": "high",
+      "title": "The unavailable-home caller abandons a live native request before its native timeout."
+    },
+    {
+      "classification": "confirmed-source-admission-weakness",
+      "evidence": [
+        "delivery_suite.py:324-327 accepts ECONNREFUSED/EHOSTUNREACH/ENETUNREACH/ETIMEDOUT as supported unreachable.",
+        "The host connection is to the live sender bus .urb/conn.sock, not directly to the stopped zod home.",
+        "Line2171 actually reports connection refusal at that local connect stage after the bus crash."
+      ],
+      "id": "F2",
+      "implication": "A dead or broken sender/host transport must fail infrastructure admission; it cannot prove the intended stopped-home behavior.",
+      "severity": "high",
+      "title": "Local sender control-socket refusal can be mislabeled as remote home unavailability."
+    },
+    {
+      "classification": "confirmed-incomplete-native-schedule",
+      "evidence": [
+        "ended_leave starts with a home snapshot and self.recover(self.command) before fresh watch and leave-ended.",
+        "The last case contains only the successful home-snapshot assertion; line2171 is its initial bus receipt read.",
+        "No ended_leave_transport evidence exists in this attempt."
+      ],
+      "id": "F3",
+      "implication": "Do not classify the old leave action as disproved or passed; preserve the raw failed case and rerun it after fixing the preceding lifetime boundary.",
+      "severity": "high",
+      "title": "The ended-leave action itself was never reached."
+    },
+    {
+      "classification": "plausible-crash-trigger-not-proven-root-cause",
+      "evidence": [
+        "Home restarted at20:16:40 and was ready20:16:42, well before the 55-second native timeout.",
+        "Two fresh zod snapshots preserve the same business state after restart.",
+        "Retained bus log has newt broken pipe immediately before external fault0 and stack frame u3_king_commence king.c1093.",
+        "Supervisor records bus exit-11; the guard failed on owned sandbox exit and never thermally stopped."
+      ],
+      "id": "F4",
+      "limits": "This review has no process memory image, exact bus-thread state or controlled reproduction. It does not prove socket abandonment caused the fault or identify the faulty C instruction. Legal socket closure exposing a runtime bug remains possible.",
+      "severity": "medium",
+      "title": "An orphaned late reply is consistent with the observed broken pipe then SIGSEGV."
+    }
+  ],
+  "host_tests_launched": false,
+  "kernel_timeout_source": {
+    "path": ".runtime/urbit-5a187fededc4582a34fcd6055c67bb63e0917b94/pkg/arvo/lib/strandio.hoon",
+    "pinned_kernel_commit": "5a187fededc4582a34fcd6055c67bb63e0917b94",
+    "predicate": "set-timeout emits [%fail %timeout ~] for its matching timer wake",
+    "sha256": "3408c7d279bea54f3aee9c2db61f6353522da1e37d31a5cd58aca43fd79d2ef7"
+  },
+  "limits": [
+    "Source diagnosis and bounded retained artifact validation only; not currentPhase1 acceptance or a native rerun.",
+    "No current coredump memory image was available to this review; root owns system coredump/OOM inspection and pinned Vere C-source investigation.",
+    "Cumulative ship logs are not standalone per-run transcripts.",
+    "Only targeted relevant source files were independently compared to Git blobs; no full runtime binary/kernel tree rehash was performed."
+  ],
+  "native_execution_performed": false,
+  "observed_at": "2026-09-26T20:24:44.388153+00:00",
+  "protocol": "stead.core04-delivery-independent-source-diagnosis/1",
+  "qualifies_phase": false,
+  "raw_result": {
+    "bus_shutdown_exit": -11,
+    "capacity_predecessor_lane_reached": false,
+    "delivery_case_statuses": [
+      {
+        "error": null,
+        "name": "known-mark-and-held-outsider",
+        "status": "passed"
+      },
+      {
+        "error": null,
+        "name": "wrong-sender-and-binding",
+        "status": "passed"
+      },
+      {
+        "error": null,
+        "name": "missing-channel-and-wrong-digest",
+        "status": "passed"
+      },
+      {
+        "error": null,
+        "name": "leave-and-fresh-retry",
+        "status": "passed"
+      },
+      {
+        "error": null,
+        "name": "lazy-expiry-and-same-path-retirement",
+        "status": "passed"
+      },
+      {
+        "error": null,
+        "name": "pending-quotas",
+        "status": "passed"
+      },
+      {
+        "error": null,
+        "name": "home-unavailable",
+        "status": "passed"
+      },
+      {
+        "error": "ConnectionRefusedError: [Errno 111] Connection refused",
+        "name": "ended-leave-attempt",
+        "status": "failed"
+      }
+    ],
+    "direct_passed": 494,
+    "error": "AssertionError: delivery-has-no-observed-failure",
+    "guard_cleanup_errors": [],
+    "guard_reason": "Owned sandbox exited unsuccessfully",
+    "guard_run_id": "14ce5c35e6f14847ea2b5ff6fe9c76f2",
+    "guard_status": "failed",
+    "peak_cpu_c": 87.0,
+    "qa_case_counts": {
+      "incomplete": 3,
+      "passed": 145
+    },
+    "status": "fail",
+    "thermal_guard_stop": false
+  },
+  "recommended_bounded_design": {
+    "cancellation_alternative": "Do not invent a Khan cancellation command. An explicit cancel path would need pinned protocol support, a known request/thread identity, native termination acknowledgement and terminal draining; source review here has not established that path.",
+    "preferred": "Keep the home stopped and retain the original AF_UNIX connection until the existing55-second native timeout produces its complete terminal result, within a75-second host transport bound.",
+    "requirements": [
+      "Observe the actual pinned native timeout output first; define a specific complete-frame predicate for [%avow1] plus the standalone timeout diagnostic. A generic failure tag, substring or missing business value is insufficient.",
+      "Keep no-Saved semantics: expected native timeout is an unavailable result, never accepted work; preserve request/frame/decoded diagnostics and exact route/source identities.",
+      "Host timeout, EOF, connection refusal, wrong native diagnostic, malformed/partial result or any child crash remains infrastructure failure. Do not convert a hard75-second bound failure into expected unavailability and continue.",
+      "Confirm the sender process remains the same live PID and its local control endpoint responds after draining. Restart home only after terminal completion; then require unchanged authoritative snapshot and exact current-authorized receipt recovery.",
+      "Preserve the original observer state and ended-leave ordering. Do not restart/reset bus, move ended-leave before unavailable-home, or suppress the last case to avoid the crash.",
+      "On an uncompleted terminal lifetime, let the existing guard stop the entire disposable fixture and retain failure/unclean-state evidence. No pin change, thermal-limit change or raw runtime bypass is justified.",
+      "Update the retained-evidence replay to recompute the same specific native-timeout predicate, not producer status labels. Preserve oldcore04 raw evidence and refresh changed-source bindings for later qualification."
+    ],
+    "status": "source-reviewed-proposal-awaiting-actual-native-diagnostic"
+  },
+  "retained_artifacts_hash_verified": 24,
+  "retention_index": {
+    "path": "docs/urbit/evidence/2026-09-26/native-attempts/core04/index.json",
+    "sha256": "6754dd02b63f80df5459bd5a6b2378d7f9116f7c371d93d69046a30a1506ea24"
+  },
+  "reviewer": "/root/core_acceptance_review",
+  "selected_transport": [
+    {
+      "line": 2167,
+      "mode": "read",
+      "record_sha256": "5d79f5fbae33994f804b4095789c87a374cbc2fdb943eb65bc3dec66b19c3f1c",
+      "route": "/v1/fixture-snapshot",
+      "ship": "zod",
+      "snapshot": {
+        "journal_events": "50",
+        "now_ms": "1790453794145",
+        "state_jam_sha256": "5abb9bf842f246184b04530cd65620a55a245b0a5d8aafc9a39b74e9988cebb1"
+      },
+      "status": "terminal-returned"
+    },
+    {
+      "error": "TimeoutError: timed out",
+      "failure_stage": "response-header",
+      "line": 2168,
+      "mode": "read",
+      "received_frame_bytes": 0,
+      "record_sha256": "ed75529e27502b5d4624c66fbaf4cf84d7cfa4b2417aa014e7f06f4d50f52d99",
+      "route": "/v2/receipt/019939ba-4000-7000-8000-000000000001/019939ba-4000-7000-8000-000000000004/019939ba-4000-7000-8000-000000000402/document.save/019939ba-4000-7000-8000-000000001021",
+      "ship": "bus",
+      "status": "failed"
+    },
+    {
+      "line": 2169,
+      "mode": "read",
+      "record_sha256": "4067f9c03d8ea77a09a39fe604690490cdd61ae9aad633cf1d34496b79aa3192",
+      "route": "/v1/fixture-snapshot",
+      "ship": "zod",
+      "snapshot": {
+        "journal_events": "50",
+        "now_ms": "1790453803483",
+        "state_jam_sha256": "5abb9bf842f246184b04530cd65620a55a245b0a5d8aafc9a39b74e9988cebb1"
+      },
+      "status": "terminal-returned"
+    },
+    {
+      "line": 2170,
+      "mode": "read",
+      "record_sha256": "0e9abb10b49b81248b3e52da18f69b67110aabceeba0fd8a7bb07ce23ff7d66e",
+      "route": "/v1/fixture-snapshot",
+      "ship": "zod",
+      "snapshot": {
+        "journal_events": "50",
+        "now_ms": "1790453804544",
+        "state_jam_sha256": "5abb9bf842f246184b04530cd65620a55a245b0a5d8aafc9a39b74e9988cebb1"
+      },
+      "status": "terminal-returned"
+    },
+    {
+      "error": "ConnectionRefusedError: [Errno 111] Connection refused",
+      "failure_stage": "connect",
+      "line": 2171,
+      "mode": "read",
+      "received_frame_bytes": 0,
+      "record_sha256": "816f804aa24cfc7b771051e569d860ac6445f35ddd7ea79d7b3519e32cad4d4d",
+      "route": "/v2/receipt/019939ba-4000-7000-8000-000000000001/019939ba-4000-7000-8000-000000000004/019939ba-4000-7000-8000-000000000402/document.save/019939ba-4000-7000-8000-000000001021",
+      "ship": "bus",
+      "status": "failed"
+    }
+  ],
+  "source_commit": "55475f0565ceb38db9eb5bc057962967398aa5da",
+  "source_files_sha256": {
+    "native/core/desk/ted/stead-client.hoon": "e039355539b2aef4db0ac8137dae71984d9284abeaffd20a1d9fb110adb35c5f",
+    "scripts/urbit/build_phase1_evidence.py": "1eb8f8dad1199ce9f3cf6667ef3f26e20774ab3eb50d54590e5b0b30e4b8fb63",
+    "scripts/urbit/core_conn.py": "e178a5c0ce619031b8da64376b99b429ac0f90dded293ac60fa1137447d53614",
+    "scripts/urbit/core_test.py": "dcf5ead9d3969322dfe880427090b108e0729e40d4a29aaadd4bc1dcf77c0916",
+    "scripts/urbit/delivery_cases.py": "171edf429fc1677e3250bcebff4cd2fb55e762d767204afdae846f86deccc131",
+    "scripts/urbit/delivery_suite.py": "d948425e7f047c2ba7ce723d443ae6fc5f0945230fe2e70191bf513786139031",
+    "scripts/urbit/qualification_gate.py": "ce0d8d0d87e9556940143943d7107099bfeb5c36eec6744342e555bfd292a6ab",
+    "scripts/urbit/supervisor.py": "d157a974075d2e1cbfb1ae07609182a3232c5a3f16b75c3e9287652434d774d2"
+  },
+  "status": "source-diagnosis-complete-native-confirmation-pending",
+  "unavailability_lifecycle": {
+    "attempt": {
+      "exception": "TimeoutError: timed out",
+      "saved": false,
+      "supported_failure": "timeout"
+    },
+    "native": [
+      {
+        "command": "shutdown zod",
+        "result": {
+          "exit_code": 0,
+          "forced": false
+        },
+        "utc": "2026-09-26T20:16:34Z"
+      },
+      {
+        "command": "launch zod",
+        "result": {
+          "argv": [
+            "/runtime/bin/vere-v4.6-linux-x86_64",
+            "-t",
+            "-L",
+            "--no-dock",
+            "--loom",
+            "31",
+            "-b",
+            "127.0.0.1",
+            "--http-port",
+            "18080",
+            "/state/live/zod"
+          ],
+          "pid": 3753
+        },
+        "utc": "2026-09-26T20:16:40Z"
+      },
+      {
+        "command": "zod: zuse",
+        "result": "%408\n",
+        "utc": "2026-09-26T20:16:42Z"
+      }
+    ],
+    "old_exit": 0,
+    "old_pid": 1544,
+    "replacement_pid": 3753
+  },
+  "validation_needed": [
+    "A focused guarded stopped-home native diagnostic with complete terminal timeout bytes, sender liveness, home restart and successful subsequent request.",
+    "Negative host predicates for arbitrary native bail, missing timeout diagnostic, host timeout, partial/absent frame and dead sender; these must not count as expected unavailable.",
+    "Then the complete current-source delivery sequence and full core qualification with matching guards, source and independent evidence review."
+  ]
+}

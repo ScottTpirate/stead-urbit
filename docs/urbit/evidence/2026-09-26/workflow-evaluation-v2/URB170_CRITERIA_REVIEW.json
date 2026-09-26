@@ -1,0 +1,249 @@
+{
+  "criteria": [
+    {
+      "evidence": [
+        {
+          "bytes": 1642,
+          "classification": "read-only committed source inspection",
+          "repository_path": ".agents/skills/stead-hoon/SKILL.md",
+          "sha256": "5469b3567b908b3f9fc684f92376c379de2a611f6c60dc0cf770627583ba121a",
+          "source_commit": "0d877cff4319de8d437f0da58d4518535f758c36"
+        },
+        {
+          "bytes": 1834,
+          "classification": "read-only committed source inspection",
+          "repository_path": ".agents/skills/stead-gall-security/SKILL.md",
+          "sha256": "c5de6d6f494f65891e064276c1a9c65629ffe6276a0ade4929d9012901350fcc",
+          "source_commit": "0d877cff4319de8d437f0da58d4518535f758c36"
+        },
+        {
+          "bytes": 1825,
+          "classification": "read-only committed source inspection",
+          "repository_path": ".agents/skills/stead-native-tests/SKILL.md",
+          "sha256": "13622cf24e087573d63b7fc4850f49c44ed943cbf3ad8f0cf4fe4ed590774ba8",
+          "source_commit": "0d877cff4319de8d437f0da58d4518535f758c36"
+        },
+        {
+          "bytes": 1930,
+          "classification": "read-only committed source inspection",
+          "repository_path": ".agents/skills/stead-urbit-release/SKILL.md",
+          "sha256": "52e5f9ef225d4a9849386b50b9253abb801c12f02bfa60e839595c14430d3685",
+          "source_commit": "0d877cff4319de8d437f0da58d4518535f758c36"
+        },
+        {
+          "bytes": 3960,
+          "classification": "read-only committed source inspection",
+          "repository_path": "AGENTS.md",
+          "sha256": "662a3971c6c78f71084eaba5e5b31883c4cfb2c2ee9968894c6145b988c51a20",
+          "source_commit": "0d877cff4319de8d437f0da58d4518535f758c36"
+        }
+      ],
+      "finding": "Four original repo-local skills and scoped AGENTS guidance are present. The observed participant workflow uses only its fixed wrapper; there is no observed global skill installation or live conn.sock action. This is not a full-machine absence claim.",
+      "id": "scoped-local-skills",
+      "limits": [
+        "Skills are guidance, not compiler-verified Hoon or technical isolation."
+      ],
+      "status": "supported"
+    },
+    {
+      "evidence": [
+        {
+          "bytes": 6145,
+          "classification": "read-only committed source inspection",
+          "repository_path": "docs/urbit/DEVELOPER_GUIDE.md",
+          "sha256": "b6976a495d75033f3e771a057f19a939fc1b38659bac78910592c22145df7918",
+          "source_commit": "0d877cff4319de8d437f0da58d4518535f758c36"
+        },
+        {
+          "bytes": 7788,
+          "classification": "read-only committed source inspection",
+          "repository_path": "specs/urbit/ecosystem.json",
+          "sha256": "7193c6fd85bd464a9bd14d6c833ba7083f2b0a5f5198cf5af4264239f8f1ba06",
+          "source_commit": "0d877cff4319de8d437f0da58d4518535f758c36"
+        }
+      ],
+      "finding": "The developer guide and catalog pin thelifeandtimes/running-urbit at 90912c1425573de37110a65627c6ab4bf125586c, record MIT/readme/Gall-instruction inspection, distinguish safe from works, and identify the inconsistent saved-state envelope. Upstream remains reference-only; no imported implementation/license adoption is claimed. A separately retained proposed repair has not yet been reviewed here.",
+      "id": "upstream-intake-and-repair-proposal",
+      "limits": [
+        "Existing source-review record is evidence of the bounded prior review; this reviewer has not rerun upstream example compilation.",
+        "Integrator is preparing a separate unsent proposal; it is not treated as completed or upstream accepted."
+      ],
+      "status": "partial-pending-distinct-repair-proposal"
+    },
+    {
+      "evidence": [
+        {
+          "bytes": 7712,
+          "classification": "attributed independent editor source/host review",
+          "repository_path": "docs/urbit/reviews/URB170_EDITOR_TOOL_REVIEW_20260925.md",
+          "sha256": "05ae8896e51c0ff2932dc6262ba5ac5fb929748f78bd12bfa39eab50b9d9521e"
+        },
+        {
+          "bytes": 1652,
+          "classification": "actual host parser observations",
+          "repository_path": "docs/urbit/evidence/2026-09-25/editor-tooling/host-parser-result.json",
+          "sha256": "c7105b424421317ba6bad90318331248191a8b0a9ca561582b612481d568b71c"
+        },
+        {
+          "bytes": 3278,
+          "classification": "exact upstream source/license inventory",
+          "repository_path": "docs/urbit/evidence/2026-09-25/editor-tooling/upstream-source-manifest.json",
+          "sha256": "58fce2707ef7bb39e3457b243ce8f38cb342396c3a58c36a0efea0d5816400e0"
+        },
+        {
+          "bytes": 8312,
+          "classification": "observed pinned stack identities",
+          "repository_path": "docs/urbit/evidence/2026-09-25/editor-tooling/pinned-stack-inventory.json",
+          "sha256": "e626b92f43849365a7baf2caa86b3a607262d4ad815719fe613f4e69f8f60307"
+        }
+      ],
+      "finding": "The pinned upstream bridge fails an actual host parser check; quoted-import control passes. Version/source/license and existing native stack were reviewed. Optional editor tool is evaluated and rejected for M0, not installed or certified working.",
+      "id": "optional-editor-tool",
+      "limits": [
+        "No npm/tsc, native language-server integration or editor/plugin success is inferred from the parser result."
+      ],
+      "status": "supported-non-adoption"
+    },
+    {
+      "evidence": [
+        {
+          "portable_path": "reports/result.json",
+          "sha256": "04f208f6bd0bb20d39c9700b61a4843af7c4d87aba3956d00482997403bf18e4"
+        },
+        {
+          "portable_path": "reports/independent-audit.json",
+          "sha256": "400d2cb723aa287711ba9eca1e594903022c134db2509343423dacc28f5bc1e1"
+        },
+        {
+          "portable_path": "POSTPACKAGING_REVIEW.json",
+          "sha256": "f73faed3a27e69eca46e65048cacd5f5730781519873c6f6400d9613305c5d9a"
+        }
+      ],
+      "finding": "Fresh v2 reference qualification and two fresh final participant contexts completed all six tasks. Each scores 5/6. T05 correct plus all four mutants and all candidate arms ran; the ~bud outsider-granted mutant survives in both conditions. No private repair/retry.",
+      "id": "frozen-six-task-comparison",
+      "limits": [
+        "One model alias, unknown immutable backend revision, one pair and pinned toolchain.",
+        "Full tool exposure; one missing-path invocation; 15 matched ciphertexts but only three attributed plaintext observations and twelve earlier null plaintexts.",
+        "No complete prompt-equality/context-isolation, efficacy or general improvement claim."
+      ],
+      "status": "supported-complete-with-candidate-failures"
+    },
+    {
+      "evidence": [
+        {
+          "bytes": 4031,
+          "classification": "retained host/static/mocked command and source-hash index",
+          "repository_path": "docs/urbit/evidence/2026-09-26/workflow-v2-source/index.json",
+          "sha256": "832ebe51eeba79125943e3d3bea125f4a48a1629cda0322ad1b785bfab9b06ba"
+        },
+        {
+          "bytes": 5027,
+          "classification": "read-only committed source inspection",
+          "repository_path": "scripts/urbit/check_ecosystem.py",
+          "sha256": "28a86e6142a6a6477e1543385032cf0992e7be0e7d891cb1116a8fabdb8c984f",
+          "source_commit": "0d877cff4319de8d437f0da58d4518535f758c36"
+        },
+        {
+          "bytes": 81906,
+          "classification": "read-only committed source inspection",
+          "repository_path": "scripts/urbit/skill_evaluation_support.py",
+          "sha256": "67597ff220928b99ca1cf1e925bd86c903fa3d1399fd59e00825aec936965fe7",
+          "source_commit": "0d877cff4319de8d437f0da58d4518535f758c36"
+        }
+      ],
+      "finding": "Retained actual make check passed 464 host/static/mocked tests and the planning/ecosystem commands. check_ecosystem checks the four skill frontmatter fields, names, nonempty body, LF bytes and required guidance-file presence. Current frozen participant adapter also enforces LF/bounded UTF-8 inputs.",
+      "id": "frontmatter-and-lf",
+      "limits": [
+        "Host record was executed before the source commit with explicit dirty source bindings. It does not itself execute Hoon; the separate native trial supplies that evidence."
+      ],
+      "status": "supported-host-and-source"
+    },
+    {
+      "evidence": [
+        {
+          "bytes": 5027,
+          "classification": "read-only committed source inspection",
+          "repository_path": "scripts/urbit/check_ecosystem.py",
+          "sha256": "28a86e6142a6a6477e1543385032cf0992e7be0e7d891cb1116a8fabdb8c984f",
+          "source_commit": "0d877cff4319de8d437f0da58d4518535f758c36"
+        },
+        {
+          "bytes": 1642,
+          "classification": "read-only committed source inspection",
+          "repository_path": ".agents/skills/stead-hoon/SKILL.md",
+          "sha256": "5469b3567b908b3f9fc684f92376c379de2a611f6c60dc0cf770627583ba121a",
+          "source_commit": "0d877cff4319de8d437f0da58d4518535f758c36"
+        },
+        {
+          "bytes": 1834,
+          "classification": "read-only committed source inspection",
+          "repository_path": ".agents/skills/stead-gall-security/SKILL.md",
+          "sha256": "c5de6d6f494f65891e064276c1a9c65629ffe6276a0ade4929d9012901350fcc",
+          "source_commit": "0d877cff4319de8d437f0da58d4518535f758c36"
+        },
+        {
+          "bytes": 1825,
+          "classification": "read-only committed source inspection",
+          "repository_path": ".agents/skills/stead-native-tests/SKILL.md",
+          "sha256": "13622cf24e087573d63b7fc4850f49c44ed943cbf3ad8f0cf4fe4ed590774ba8",
+          "source_commit": "0d877cff4319de8d437f0da58d4518535f758c36"
+        },
+        {
+          "bytes": 1930,
+          "classification": "read-only committed source inspection",
+          "repository_path": ".agents/skills/stead-urbit-release/SKILL.md",
+          "sha256": "52e5f9ef225d4a9849386b50b9253abb801c12f02bfa60e839595c14430d3685",
+          "source_commit": "0d877cff4319de8d437f0da58d4518535f758c36"
+        }
+      ],
+      "finding": "The four skills cite repo guidance and primary public documentation. Existing check_ecosystem validates required local guidance paths, not external HTTP reference reachability. A separate actual external-link check is not yet reviewed here.",
+      "id": "reference-links",
+      "limits": [
+        "Do not relabel metadata/frontmatter checks as an external-link check."
+      ],
+      "status": "partial-static-path-inspection-external-reachability-unreviewed"
+    },
+    {
+      "evidence": [
+        {
+          "bytes": 77033,
+          "classification": "host sandbox support/probe inventory",
+          "repository_path": "docs/urbit/evidence/2026-09-26/workflow-tooling/index.json",
+          "sha256": "4643df0b45ee7999bb48858f62664ac90913d9f0fdfe2bcddd19e40737f4e964"
+        },
+        {
+          "archive_member": "probes/fileops-1790430580026945460/summary.json",
+          "classification": "actual host sandbox probes; no Hoon execution",
+          "repository_path": "docs/urbit/evidence/2026-09-26/workflow-tooling/reviewed-support-and-host-probes.tar.gz",
+          "sha256": "1a021e0761bbf681ed3f6f8e9a8130b80d9ea1255571ea00d156a4de72ad7f10"
+        }
+      ],
+      "finding": "Retained workflow tooling contains the corrected current wrapper 1a6b7af4 and 41 actual fixed-sandbox/file-operation probes, including invalid operations, symlink/hardlink/FIFO refusal, cumulative limits, cleanup and next-call denial. Two controls explicitly use authored host faults for admission/cleanup. All 171 archived tooling members were independently rehashed during this records audit.",
+      "id": "sandbox-negative-controls",
+      "limits": [
+        "The older 89cc09a8 probe run remains preserved with its missing independent post-state limitation.",
+        "This is a permitted-subprocess boundary, not enforced restriction of every inherited model tool."
+      ],
+      "status": "supported-bounded-host-sandbox"
+    },
+    {
+      "evidence": [],
+      "finding": "Native T06 proves clean desk assembly on the pinned fixture; it is not a fresh contributor setup. Root reports a new isolated checkout/empty-cache setup and doctor passed, but status failed with an overlong AF_UNIX path; that attempt is not promoted to overall setup acceptance. A corrected source and fresh setup are in progress and are outside this immutable paired trial.",
+      "id": "clean-contributor-setup",
+      "limits": [
+        "No fresh OS, prerequisite installation, successful final status, or new exact-source setup pass is inferred."
+      ],
+      "status": "pending-completed-setup-artifact"
+    }
+  ],
+  "executed_trial_source": "0d877cff4319de8d437f0da58d4518535f758c36",
+  "frozen_comparison_disposition": "Satisfied by complete actual v2 execution and honest 5/6 outcomes in both conditions; no efficacy claim.",
+  "issue": "https://github.com/ScottTpirate/stead-urbit/issues/20",
+  "issue_state_observed": "OPEN",
+  "native_or_host_test_execution_by_reviewer": false,
+  "protocol": "stead.urb170-criterion-map/1",
+  "recorded_at": "2026-09-26T19:36:50.287627+00:00",
+  "reviewer": "/root/independent_review",
+  "source_authorship_disclosure": "Reviewer authored the frozen workflow package and portions of the adapter. Root and /root/editor_tool_review independently reviewed those before launch. This record audits actual participant artifacts and separately classifies the other issue criteria.",
+  "whole_issue_disposition": "Do not infer closure from the paired result alone. The clean contributor setup, separate upstream fix proposal and external-link reachability rows remain explicitly pending final artifact review below."
+}

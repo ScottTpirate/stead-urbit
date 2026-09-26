@@ -1,0 +1,28 @@
+python3 scripts/urbit/harness.py gall-schedule
+{
+  "status": "pass",
+  "classification": "native-scheduled-gall",
+  "requirement": "delivery-late-old-leave",
+  "scope": "Actual pinned Gall and app gates; simulated dispatch queue and fixed clock; no Ames or UDP.",
+  "elapsed_seconds": 41.937,
+  "error": null,
+  "checks_passed": 58,
+  "evidence_file": ".piers/fakes/logs/gall-schedule-20260926T194515Z-f8b9dbec2ebf.json",
+  "execution_guard": {
+    "run_id": "76d77d0ab2095d3a6f091a9aeb549241",
+    "generation": 58,
+    "guard_sha256": "da16e2e0fd32eb5b90706b546a7ea8332a65807fc8279f3bd765dcc18aaad9b5",
+    "policy_sha256": "dbbd9dc1af8fdc946b78f8cfe741411e3bf83f832f554c20cd2c8cef447b2f23",
+    "policy": {
+      "cooperative_seconds": 10,
+      "cpu_period_us": 10000,
+      "cpu_quota_us": 5000,
+      "kill_seconds": 5,
+      "sample_seconds": 1,
+      "stale_seconds": 3,
+      "start_c": 75,
+      "stop_c": 90,
+      "terminate_seconds": 10
+    }
+  }
+}

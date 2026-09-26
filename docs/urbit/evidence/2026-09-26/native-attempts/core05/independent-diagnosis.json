@@ -1,0 +1,132 @@
+{
+  "artifacts": {
+    "failed_record": {
+      "bytes": 725,
+      "line": 2761,
+      "sha256": "fa34707b880e8e23c7442a5d57c03c2701ed87acecb70897e4f64ad65d4eac47"
+    },
+    "guard": {
+      "path": "docs/urbit/evidence/2026-09-26/native-attempts/core05/guard.json",
+      "sha256": "5f15f7019c2ca5efb3d36fe7cf936f629301000da5ecc973deec72fecaf0f98c"
+    },
+    "preceding_snapshot_record": {
+      "line": 2760,
+      "sha256": "d3528ca0cf4887008c010d83a3cb956da94bb1f269267c956aa8e13cfd89b218"
+    },
+    "receipts_rejection_record": {
+      "line": 2758,
+      "sha256": "26b4e7bd254585c9b975f89d70fff8ea3acc9f1c69c68b5b6c25653b671fc459"
+    },
+    "report": {
+      "path": "docs/urbit/evidence/2026-09-26/native-attempts/core05/native.json",
+      "sha256": "bcbe1f7ec6e0afd533e764ab2101f395940ae820afc63fc270f0868998482e45"
+    },
+    "transport": {
+      "path": "docs/urbit/evidence/2026-09-26/native-attempts/core05/core-20260926T205140Z-transport.jsonl.gz",
+      "sha256": "fe5c9991be17590301456ce3fd29ac7e90f1d2e79444af746923c472afd79686"
+    }
+  },
+  "closure": {
+    "forced_zod_stop": {
+      "exit_code": -9,
+      "forced": true,
+      "utc": "2026-09-26T21:31:03Z"
+    },
+    "guard_exit_code": 1,
+    "guard_reason": "Owned sandbox exited unsuccessfully",
+    "guard_status": "failed",
+    "peak_recorded_cpu_c": 69.0,
+    "thermal_stop": false,
+    "unclean_marker_retained": true
+  },
+  "native_execution_performed": false,
+  "observed_at": "2026-09-26T21:39:11.768592+00:00",
+  "performance_recommendation": [
+    "Measure the real full-capacity validator entry/progress/exit using scalar phase or row-count diagnostics, without payload disclosure or changing validation semantics; use a focused guarded diagnostic before repeating the entire corpus.",
+    "If a diagnostic needs a longer wait, scope one explicit finite deadline to owner-local migration validation and retain unchanged thermal/resource/cleanup controls. Timeout or forced stop stays failure. A deadline value requires observed completion/progress, not this source inference.",
+    "Do not only add an early policy rejection: that leaves grant/reachable and the positive full migration feasibility unmeasured.",
+    "If progress shows the full pass cannot fit a suitable bounded operation budget, optimize repeated parsing/canonicalization while preserving every equality, history/digest, receipt, graph, and atomicity check; changing the caps or skipping history validation is not acceptable."
+  ],
+  "protocol": "stead.independent-core05-capacity-diagnosis/1",
+  "qualifies_phase": false,
+  "read_only_validation": {
+    "full_24_artifact_audit_performed": false,
+    "native_launched": false,
+    "resources": "CPU20percent,10ms period,CPU19,30s bounded scopes",
+    "tests_launched": false,
+    "verified": "Report and guard hashes match exact immutable originals; compressed transport hash and exact selected record hashes match; selected retained logs were decoded and hashed. No mutable runtime state changed."
+  },
+  "required_narrow_correctness_fix": {
+    "current_attempt_was_not_false_pass": "Core05 had no frame and correctly failed. This source ambiguity must be fixed before attempting a longer control wait.",
+    "file": "scripts/urbit/qualification_cases.py:373-379",
+    "issue": "The negative control currently accepts json=null plus stdout=[32 %avow1] without checking stderr. Real Spider timeout has the same stdout, so an eventual timeout could be misclassified as malformed predecessor rejection.",
+    "proposal": "Require the retained native on-load rejection context stead-unsupported-state plus poke-fail, reject timeout/unrelated bails, retain terminal-frame and exact unchanged-state checks. Add the actual observed native timeout stderr shape as a negative test and an actual unsupported-state nack shape as the positive fixture.",
+    "test_gap": "test_qualification_cases.py:328-335 uses stdout=timeout as its timeout negative and accepts bare avow1 without stderr; this differs from actual native timeout framing."
+  },
+  "reviewer": "/root/gall_schedule_review",
+  "scope": "Read-only exact failed-transport and source diagnosis; no complete core qualification or migration performance result.",
+  "source_commit": "5208f3273426e8fe76dc8622ffe93ace93982e17",
+  "source_diagnosis": {
+    "cheap_path": "migrate-v1:488 catches the first receipts-count mutation before validate-predecessor.",
+    "confidence": "Heavy synchronous validation is a source-supported performance hypothesis. No native progress marker or profiler identifies the actual stuck instruction, completed duration, memory behavior, or optimal deadline. No claim of a proven asymptotic bug or repaired migration.",
+    "cost": "A full4096-row pass performs4096 journal parses,4096 command decodes and4096 receipt parses, plus journal/command/receipt canonicalization and journal/command hashing. Three late malformed variants(policy,grant,reachable) and one valid migration each require this full path unless an earlier check fails.",
+    "entry": "stead-home.hoon:207-227 mutates one policy field and calls the actual on-load; line126 calls migrate-v1.",
+    "full_policy_path": "An otherwise valid policy-mutated predecessor passes shape/count checks and is rejected by the final reconstructed policy equality at stead-core.hoon:546, after the rows loop.",
+    "loop": "stead-core.hoon:549-649 consumes one journal row per tail call; uses bounded map/set lookups and rebuilds state. No repeated whole-journal scan is visible inside that loop.",
+    "timer": "Pinned strandio set-timeout registers a Behn wait and handles its later wake; it cannot preempt synchronous computation inside a running home event. The55-second strand timeout is not a CPU-time bound on validation."
+  },
+  "source_sha256": {
+    ".runtime/urbit-5a187fededc4582a34fcd6055c67bb63e0917b94/pkg/arvo/lib/strandio.hoon": "3408c7d279bea54f3aee9c2db61f6353522da1e37d31a5cd58aca43fd79d2ef7",
+    "native/core/desk/app/stead-home.hoon": "3bfc0e45062ef0bc8572d5034a60b5b35f6502350f821129b5ba7a7cca0b2b9c",
+    "native/core/desk/lib/stead-codec.hoon": "56e3d574381bbf8cdf29ca192c70eff256009f89d782e3ffe859b19c1321cbd7",
+    "native/core/desk/lib/stead-core.hoon": "4c183ef6283030437af5e1433e3fbf80f414757bcede4cab1282fc71ff5f34de",
+    "native/core/desk/ted/stead-client.hoon": "e039355539b2aef4db0ac8137dae71984d9284abeaffd20a1d9fb110adb35c5f",
+    "scripts/urbit/core_conn.py": "e178a5c0ce619031b8da64376b99b429ac0f90dded293ac60fa1137447d53614",
+    "scripts/urbit/qualification_cases.py": "1d06a75fea124e2a17b27167c8402090532d8f30425d69ecde8441094b088c71"
+  },
+  "status": "failed-native-boundary-confirmed-source-fix-required",
+  "test_execution_performed": false,
+  "verified_failure": {
+    "error": "TimeoutError: timed out",
+    "failed_direct_check": "native-capacity-and-predecessor-qualification",
+    "host_timeout_seconds": 75,
+    "last_predecessor_snapshot": {
+      "documents": "1",
+      "grants": "256",
+      "journal_events": "4096",
+      "object_bytes": "447",
+      "objects": "3",
+      "projects": "2",
+      "receipts": "4096",
+      "state_jam_sha256": "0fc2ad944a2c8169467b91fcc5924fdff73da04e8bce7375ce99e0247a72c2c3",
+      "work_items": "2"
+    },
+    "mutation_key": "policy",
+    "native_terminal_received": false,
+    "previous_negative": "Receipt-map removal returned a real poke-fail with stead-unsupported-state and migrate-v1 line488 assertion context.",
+    "received_frame_hex": "",
+    "reported_capacity_recipes": {
+      "executed": [
+        "v1-private-identity-and-sequence-reproduction"
+      ],
+      "unexecuted_count": 7
+    },
+    "reported_delivery_counts": {
+      "incomplete": 1,
+      "passed": 7
+    },
+    "reported_direct_checks": {
+      "failed": 1,
+      "passed": 495,
+      "total": 496
+    },
+    "reported_qa_counts": {
+      "incomplete": 3,
+      "passed": 145
+    },
+    "request": "[32 %fyrd [%base %stead-client %noun [%noun [~zod %control ~ (jam [%load-bad-legacy ~zod 0x7963.696c.6f70 0x0])]]]]",
+    "ship": "zod",
+    "source_before_after_equal": true,
+    "stage": "response-header"
+  }
+}

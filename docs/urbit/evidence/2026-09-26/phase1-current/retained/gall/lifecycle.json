@@ -1,0 +1,26 @@
+{
+  "steps": [
+    {
+      "label": "start34",
+      "target": "start",
+      "exit": 0
+    },
+    {
+      "label": "ready34",
+      "target": "wait-ready",
+      "exit": 0
+    },
+    {
+      "label": "gallv2",
+      "target": "gall-schedule",
+      "exit": 0
+    },
+    {
+      "label": "stop34",
+      "target": "stop",
+      "exit": 0
+    }
+  ],
+  "elapsed_seconds": 52.303424853947945,
+  "completed_utc": "2026-09-26T18:18:21.179031+00:00"
+}

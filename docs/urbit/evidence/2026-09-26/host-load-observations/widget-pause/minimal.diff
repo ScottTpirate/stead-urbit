@@ -1,0 +1,12 @@
+--- shell.json
++++ shell.json (temporary)
+@@ -35,9 +35,6 @@
+           "id": "omarchy.tray"
+         },
+         {
+-          "id": "omarchy.agents"
+-        },
+-        {
+           "id": "omarchy.bluetooth"
+         },
+         {

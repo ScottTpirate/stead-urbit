@@ -1,14 +1,17 @@
 # Stead Urbit — experimental native implementation
 
-Status: **Phase 1 qualification remains open. The current core compiles and passes its save/load probe; full behavioral qualification is still pending. Browser login, a full Git forge and production access remain separate gates.**
+Status: **Phase 1 qualification remains open. The compiled core has passed its save/load probe; full behavioral qualification is still pending. Browser login, a full Git forge and production access remain separate gates.**
 
 Latest [executed results](docs/urbit/TEST_RESULTS.md): 53 native compilation and
 save/load checks pass, and the independent Git evaluation passes all 14 checks.
-Repository preservation and the Git reuse decision are complete. Full core,
-delivery and contributor-workflow qualification still keep Phases 0/1 open.
+Repository preservation and the Git reuse decision are complete. The frozen
+contributor-workflow comparison is complete with five of six tasks passing in
+each condition; full native core qualification still keeps Phase 1 open.
 The [September 26 checkpoint](docs/urbit/PHASE01_CHECKPOINT_20260926.md) records
-447 passing host tests, reviewed issue closures, an incomplete paired workflow
-evaluation and the retained thermal interruption of the full native run.
+472 passing host tests, reviewed issue closures, complete paired workflow
+results with explicit limitations, the scheduled-Gall pass and the retained
+thermal interruptions, contributor-runtime failure and full-journal load timeout.
+Phase 2 has not started.
 
 An independent derivative of `ScottTpirate/stead`, preserving that repository's main-line history through `3d47f0172a41beebb31f5c3a7df133cc1d4b1ead` (inspected September 12, 2026). The original repository is not modified.
 

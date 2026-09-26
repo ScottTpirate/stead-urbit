@@ -1,0 +1,47 @@
+{
+  "scope": "Exact helper source provenance. Presence is not execution or approval; linked run records establish which version was used. No edits to frozen bundles.",
+  "copies": [
+    {
+      "source": ".runtime/phase01-20260926/promote_phase1_nonnative.pre-bin.py",
+      "portable": "docs/urbit/evidence/2026-09-26/phase1-final-5208f32/support/promote_phase1_nonnative.pre-bin.py",
+      "bytes": 23808,
+      "sha256": "f404340164d926997b9d63991d0ae161a46c534892c6b07b183a8f4c7fa550c8"
+    },
+    {
+      "source": ".runtime/phase01-20260926/promote_phase1_nonnative.py",
+      "portable": "docs/urbit/evidence/2026-09-26/phase1-final-5208f32/support/promote_phase1_nonnative.py",
+      "bytes": 23817,
+      "sha256": "fe5d786d07f7e50ec8f381b29ba8533c7d942382eda28bd84508387bf749496a"
+    },
+    {
+      "source": ".runtime/phase01-20260926/promote_phase1_nonnative_v2.py",
+      "portable": "docs/urbit/evidence/2026-09-26/phase1-final-5208f32/support/promote_phase1_nonnative_v2.py",
+      "bytes": 26989,
+      "sha256": "2fc8a59186ee912f2c6e7606a67cf3717dd23813c850b811d84372575917d1ef"
+    },
+    {
+      "source": ".runtime/phase01-20260926/promote_phase1_nonnative_v3.py",
+      "portable": "docs/urbit/evidence/2026-09-26/phase1-final-5208f32/support/promote_phase1_nonnative_v3.py",
+      "bytes": 28352,
+      "sha256": "8cf2c4ca55bae7ce499bdfaecf1aa6bc92b857c14bcc34be4c52b57ae823d7fb"
+    },
+    {
+      "source": ".runtime/phase01-20260926/promote_phase1_nonnative_v4.py",
+      "portable": "docs/urbit/evidence/2026-09-26/phase1-final-5208f32/support/promote_phase1_nonnative_v4.py",
+      "bytes": 31621,
+      "sha256": "8ec61b5d51220a0032e42fa47a77a7644e9cbc5562260918f1654b306a4e104c"
+    },
+    {
+      "source": ".runtime/phase01-20260926/run_native_lifecycle.py",
+      "portable": "docs/urbit/evidence/2026-09-26/phase1-final-5208f32/support/run_native_lifecycle.py",
+      "bytes": 1793,
+      "sha256": "4787b1bd808e3c00f25fddb3018735f669d8b57d7da4c6f6b53ad444e77a8f24"
+    },
+    {
+      "source": ".runtime/phase01-20260926/retain_lifecycle.py",
+      "portable": "docs/urbit/evidence/2026-09-26/phase1-final-5208f32/support/retain_lifecycle.py",
+      "bytes": 3606,
+      "sha256": "8624c0379459f3e690bec0ddbf2b627c574b49c5f735c2be57c8d1eacfe18061"
+    }
+  ]
+}

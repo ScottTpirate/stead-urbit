@@ -1,0 +1,3695 @@
+~
+urbit 4.6
+boot: home is /state/live/nec
+loom: mapped 2048MB
+lite: arvo formula 4ce68411
+lite: core 641296f
+lite: final state 641296f
+boot: loading pill /runtime/downloads/brass-408k-2.pill
+boot: preparing filesystem from /kernel/pkg/arvo
+disk: loaded epoch 0i0
+loom: mapped 2048MB
+boot: protected loom
+live: logical boot
+boot: installed 2178 jets
+boot: parsing %brass pill
+--------------- bootstrap starting ----------------
+boot: 1-20
+1-b
+1-c (compiling compiler, wait a few minutes)
+took µs/2
+1-d
+took µs/7
+1-e
+ride: parsing
+ride: compiling
+ride: compiled
+took ms/8.773
+1-f
+took µs/3
+1-g
+took ms/1.916
+lull: 0vq.ccoqu
+zuse: 0v1b.4qafq
+vane: %ames: 0v1p.esf09
+vane: %behn: 0v1r.6d8ct
+vane: %clay: 0v1h.60kq1
+vane: %dill: 0v1l.85ao1
+vane: %eyre: 0v7.n7ntq
+vane: %gall: 0v1c.9mbvd
+vane: %iris: 0v1p.u1u45
+vane: %jael: 0vi.07o0h
+vane: %khan: 0vi.g4115
+vane: %lick: 0vt.n7tn5
+arvo: metamorphosis
+ames: metamorphosis on %call
+arvo: beginning upgrade
+arvo: compiling hoon
+ride: parsing
+ride: compiling
+ride: compiled
+took s/16.869.936
+ride: parsing
+ride: compiling
+ride: compiled
+arvo: compiling next arvo
+ride: parsing
+ride: compiling
+ride: compiled
+took s/1.061.154
+ride: parsing
+ride: compiling
+ride: compiled
+ride: parsing
+ride: compiling
+ride: compiled
+>   arvo: +load next
+lull: 0v6.j4rt0
+took s/12.449.410
+zuse: 0v1b.4qafq
+took s/5.569.159
+vane: %ames: 0v1t.vas10
+took s/12.215.400
+>   ames: larva %32 reload
+vane: %behn: 0v2.bvcbo
+took ms/282.218
+vane: %clay: 0v14.upunr
+took s/8.120.896
+vane: %dill: 0v1l.85ao1
+took ms/475.727
+vane: %eyre: 0v1q.5ouia
+took s/2.843.493
+vane: %gall: 0v1t.4a4g9
+took s/4.510.839
+vane: %iris: 0v1p.u1u45
+took ms/181.355
+vane: %jael: 0vi.07o0h
+took ms/863.271
+vane: %khan: 0vi.g4115
+took ms/98.618
+vane: %lick: 0vt.n7tn5
+took ms/85.622
+ames: migrating from state %32 to %33
+ames: migrating from state %33 to %34
+ames: migrating from state %34 to %35
+ames: migrating from state %35 to %36
+ames: migrating from state %36 to %37
+ames: metamorphosis on %call
+clay: kernel updated
+clay: rebuilding %base after kernel update
+gall: installing %acme
+gall: installing %azimuth
+gall: installing %dbug
+gall: installing %dojo
+gall: installing %eth-watcher
+gall: installing %hood
+drum: link [~nec %dojo]
+kiln: boot
+gall: installing %herm
+gall: installing %lens
+gall: installing %ping
+gall: installing %spider
+gall: installing %docket
+gall: installing %hark
+gall: installing %settings
+gall: installing %storage
+gall: installing %treaty
+gall: installing %vitals
+docket: fetching %http glob for %webterm desk
+docket: fetching %http glob for %landscape desk
+docket: fetching %http glob for %webterm desk
+docket: fetching %http glob for %landscape desk
+docket: fetching %http glob for %groups desk
+gall: installing %logs
+gall: installing %groups
+gall: installing %chat
+gall: installing %notify
+gall: installing %grouper
+gall: installing %groups-ui
+gall: installing %channels
+gall: installing %channels-server
+gall: installing %profile
+gall: installing %activity
+gall: installing %contacts
+gall: installing %reel
+gall: installing %bait
+gall: installing %growl
+gall: installing %bark
+gall: installing %genuine
+gall: installing %lanyard
+gall: installing %dumb-proxy
+gall: installing %expose
+gall: installing %metagrab
+gall: installing %gateway-status
+gall: installing %presence
+clay: base is always essential
+--------------- bootstrap complete ----------------
+disk: loaded epoch 0i0
+loom: mapped 2048MB
+boot: protected loom
+live: mapped: MB/220.905.472
+boot: installed 2178 jets
+vere: checking version compatibility
+lick: init mkdir /state/live/nec/.urb/dev
+mesa: forwarding enabled
+mdns: init failed, install avahi on this system for mdns support
+mesa: live on 31338 (localhost only)
+conn: listening on /state/live/nec/.urb/conn.sock
+ames: unix-duct received on %born
+http: web interface live on http://localhost:18082
+http: loopback live on http://localhost:12323
+pier (33): live
+docket: fetching %http glob for %landscape desk
+http: fail (0, 504): temporary failure
+http: fail (1, 504): temporary failure
+http: fail (2, 504): temporary failure
+http: fail (3, 504): temporary failure
+http: fail (4, 504): temporary failure
+http: fail (5, 504): temporary failure
+http: fail (6, 504): temporary failure
+http: fail (7, 504): temporary failure
+http: fail (8, 504): temporary failure
+http: fail (9, 504): temporary failure
+http: fail (10, 504): temporary failure
+http: fail (11, 504): temporary failure
+http: fail (12, 504): temporary failure
+http: fail (13, 504): temporary failure
+http: fail (14, 504): temporary failure
+http: fail (15, 504): temporary failure
+http: fail (16, 504): temporary failure
+http: fail (17, 504): temporary failure
+http: fail (18, 504): temporary failure
+http: fail (19, 504): temporary failure
+http: fail (20, 504): temporary failure
+http: fail (21, 504): temporary failure
+http: fail (22, 504): temporary failure
+http: fail (23, 504): temporary failure
+http: fail (24, 504): temporary failure
+http: fail (25, 504): temporary failure
+http: fail (26, 504): temporary failure
+docket: thread failed;
+%retry-too-many
+http: fail (27, 504): temporary failure
+http: fail (28, 504): temporary failure
+docket: thread failed;
+%retry-too-many
+http: fail (29, 504): temporary failure
+docket: thread failed;
+%retry-too-many
+~
+urbit 4.6
+boot: home is /state/live/nec
+loom: mapped 2048MB
+lite: arvo formula 4ce68411
+lite: core 641296f
+lite: final state 641296f
+disk: loaded epoch 0i0
+loom: mapped 2048MB
+boot: protected loom
+live: mapped: MB/222.543.872
+boot: installed 2178 jets
+vere: checking version compatibility
+mesa: forwarding enabled
+mdns: init failed, install avahi on this system for mdns support
+mesa: live on 31338 (localhost only)
+conn: listening on /state/live/nec/.urb/conn.sock
+ames: unix-duct received on %born
+http: web interface live on http://localhost:18082
+http: loopback live on http://localhost:12323
+pier (210): live
+~
+urbit 4.6
+boot: home is /state/live/nec
+loom: mapped 2048MB
+lite: arvo formula 4ce68411
+lite: core 641296f
+lite: final state 641296f
+disk: loaded epoch 0i0
+loom: mapped 2048MB
+boot: protected loom
+live: mapped: MB/222.543.872
+boot: installed 2178 jets
+vere: checking version compatibility
+mesa: forwarding enabled
+mdns: init failed, install avahi on this system for mdns support
+mesa: live on 31338 (localhost only)
+conn: listening on /state/live/nec/.urb/conn.sock
+ames: unix-duct received on %born
+http: web interface live on http://localhost:18082
+http: loopback live on http://localhost:12323
+pier (210): live
+%already-mounted
+[[p=~nec q=%base r=[%ud p=0]] s=/]
+~
+urbit 4.6
+boot: home is /state/live/nec
+loom: mapped 2048MB
+lite: arvo formula 4ce68411
+lite: core 641296f
+lite: final state 641296f
+disk: loaded epoch 0i0
+loom: mapped 2048MB
+boot: protected loom
+live: mapped: MB/222.543.872
+boot: installed 2178 jets
+vere: checking version compatibility
+mesa: forwarding enabled
+mdns: init failed, install avahi on this system for mdns support
+mesa: live on 31338 (localhost only)
+conn: listening on /state/live/nec/.urb/conn.sock
+ames: unix-duct received on %born
+http: web interface live on http://localhost:18082
+http: loopback live on http://localhost:12323
+pier (210): live
+! /sys/vane/gall/hoon:<[1.961 25].[1.961 65]>
+! /app/dojo/hoon:<[1.839 3].[1.852 20]>
+! /app/dojo/hoon:<[1.840 3].[1.852 20]>
+! /app/dojo/hoon:<[1.841 3].[1.852 20]>
+! /app/dojo/hoon:<[1.842 3].[1.852 20]>
+! /app/dojo/hoon:<[1.842 17].[1.842 35]>
+! take %fact failed, closing subscription
+[%dojo-lame %fact]
+! /sys/vane/gall/hoon:<[1.961 25].[1.961 65]>
+! /app/dojo/hoon:<[1.839 3].[1.852 20]>
+! /app/dojo/hoon:<[1.840 3].[1.852 20]>
+! /app/dojo/hoon:<[1.841 3].[1.852 20]>
+! /app/dojo/hoon:<[1.842 3].[1.852 20]>
+! /app/dojo/hoon:<[1.842 17].[1.842 35]>
+! take %kick failed
+[%dojo-lame %kick]
+error in %hood
+%fact
+! take %fact failed, closing subscription
+! /lib/sole/hoon:<[103 5].[103 7]>
+! [%receive-sync [%his 1 0] %own 0 0]
+! /lib/sole/hoon:<[102 5].[103 7]>
+! /lib/sole/hoon:<[101 3].[110 45]>
+! /lib/sole/hoon:<[100 3].[110 45]>
+! /lib/hood/drum/hoon:<[789 23].[789 52]>
+! /lib/hood/drum/hoon:<[789 5].[790 34]>
+! /lib/hood/drum/hoon:<[750 17].[750 31]>
+! /lib/hood/drum/hoon:<[746 5].[762 7]>
+! /lib/hood/drum/hoon:<[745 5].[762 7]>
+! /lib/hood/drum/hoon:<[755 40].[755 55]>
+! /lib/hood/drum/hoon:<[755 17].[755 56]>
+! /lib/hood/drum/hoon:<[754 17].[755 56]>
+! /lib/hood/drum/hoon:<[753 21].[755 56]>
+! /lib/hood/drum/hoon:<[753 17].[755 56]>
+! /lib/hood/drum/hoon:<[746 5].[762 7]>
+! /lib/hood/drum/hoon:<[745 5].[762 7]>
+! /lib/hood/drum/hoon:<[593 11].[593 37]>
+! /lib/hood/drum/hoon:<[593 3].[593 37]>
+! /lib/hood/drum/hoon:<[592 3].[593 37]>
+! /lib/hood/drum/hoon:<[160 3].[160 20]>
+! /lib/hood/drum/hoon:<[159 3].[160 20]>
+! /lib/hood/drum/hoon:<[158 3].[160 20]>
+! /lib/hood/drum/hoon:<[157 3].[160 20]>
+! /lib/hood/drum/hoon:<[283 7].[285 34]>
+! /lib/hood/drum/hoon:<[278 5].[286 6]>
+! /lib/hood/drum/hoon:<[276 3].[287 4]>
+! /app/hood/hoon:<[150 32].[150 65]>
+! /app/hood/hoon:<[150 16].[150 75]>
+! /app/hood/hoon:<[149 3].[153 5]>
+! /app/hood/hoon:<[148 3].[153 5]>
+! /sys/vane/gall/hoon:<[1.961 25].[1.961 65]>
+[%drum-quit ~nec p=~nec q=%dojo]
+drum: link [~nec %dojo]
+%lens-cancel
+%lens-cancel
+~
+urbit 4.6
+boot: home is /state/live/nec
+loom: mapped 2048MB
+lite: arvo formula 4ce68411
+lite: core 641296f
+lite: final state 641296f
+disk: loaded epoch 0i0
+loom: mapped 2048MB
+boot: protected loom
+live: mapped: MB/222.543.872
+boot: installed 2178 jets
+vere: checking version compatibility
+mesa: forwarding enabled
+mdns: init failed, install avahi on this system for mdns support
+mesa: live on 31338 (localhost only)
+conn: listening on /state/live/nec/.urb/conn.sock
+ames: unix-duct received on %born
+http: web interface live on http://localhost:18082
+http: loopback live on http://localhost:12323
+pier (210): live
+%already-mounted
+[[p=~nec q=%base r=[%ud p=0]] s=/]
+~
+urbit 4.6
+boot: home is /state/live/nec
+loom: mapped 2048MB
+lite: arvo formula 4ce68411
+lite: core 641296f
+lite: final state 641296f
+disk: loaded epoch 0i0
+loom: mapped 2048MB
+boot: protected loom
+live: mapped: MB/222.642.176
+boot: installed 2178 jets
+vere: checking version compatibility
+mesa: forwarding enabled
+mdns: init failed, install avahi on this system for mdns support
+mesa: live on 31338 (localhost only)
+conn: listening on /state/live/nec/.urb/conn.sock
+ames: unix-duct received on %born
+http: web interface live on http://localhost:18082
+http: loopback live on http://localhost:12323
+pier (255): live
+%already-mounted
+[[p=~nec q=%base r=[%ud p=0]] s=/]
+~
+urbit 4.6
+boot: home is /state/live/nec
+loom: mapped 2048MB
+lite: arvo formula 4ce68411
+lite: core 641296f
+lite: final state 641296f
+disk: loaded epoch 0i0
+loom: mapped 2048MB
+boot: protected loom
+live: mapped: MB/222.543.872
+boot: installed 2178 jets
+vere: checking version compatibility
+mesa: forwarding enabled
+mdns: init failed, install avahi on this system for mdns support
+mesa: live on 31338 (localhost only)
+conn: listening on /state/live/nec/.urb/conn.sock
+ames: unix-duct received on %born
+http: web interface live on http://localhost:18082
+http: loopback live on http://localhost:12323
+pier (210): live
+~
+urbit 4.6
+boot: home is /state/live/nec
+loom: mapped 2048MB
+lite: arvo formula 4ce68411
+lite: core 641296f
+lite: final state 641296f
+disk: loaded epoch 0i0
+loom: mapped 2048MB
+boot: protected loom
+live: mapped: MB/227.590.144
+boot: installed 2178 jets
+vere: checking version compatibility
+mesa: forwarding enabled
+mdns: init failed, install avahi on this system for mdns support
+mesa: live on 31338 (localhost only)
+conn: listening on /state/live/nec/.urb/conn.sock
+ames: unix-duct received on %born
+http: web interface live on http://localhost:18082
+http: loopback live on http://localhost:12323
+pier (251): live
+%already-mounted
+[[p=~nec q=%base r=[%ud p=0]] s=/]
+~
+urbit 4.6
+boot: home is /state/live/nec
+loom: mapped 2048MB
+lite: arvo formula 4ce68411
+lite: core 641296f
+lite: final state 641296f
+disk: loaded epoch 0i0
+loom: mapped 2048MB
+boot: protected loom
+live: mapped: MB/222.543.872
+boot: installed 2178 jets
+vere: checking version compatibility
+mesa: forwarding enabled
+mdns: init failed, install avahi on this system for mdns support
+mesa: live on 31338 (localhost only)
+conn: listening on /state/live/nec/.urb/conn.sock
+ames: unix-duct received on %born
+http: web interface live on http://localhost:18082
+http: loopback live on http://localhost:12323
+pier (210): live
+~
+urbit 4.6
+boot: home is /state/live/nec
+loom: mapped 2048MB
+lite: arvo formula 4ce68411
+lite: core 641296f
+lite: final state 641296f
+disk: loaded epoch 0i0
+loom: mapped 2048MB
+boot: protected loom
+live: mapped: MB/222.543.872
+boot: installed 2178 jets
+vere: checking version compatibility
+mesa: forwarding enabled
+mdns: init failed, install avahi on this system for mdns support
+mesa: live on 31338 (localhost only)
+conn: listening on /state/live/nec/.urb/conn.sock
+ames: unix-duct received on %born
+http: web interface live on http://localhost:18082
+http: loopback live on http://localhost:12323
+pier (210): live
+~
+urbit 4.6
+boot: home is /state/live/nec
+loom: mapped 2048MB
+lite: arvo formula 4ce68411
+lite: core 641296f
+lite: final state 641296f
+disk: loaded epoch 0i0
+loom: mapped 2048MB
+boot: protected loom
+live: mapped: MB/227.590.144
+boot: installed 2178 jets
+vere: checking version compatibility
+mesa: forwarding enabled
+mdns: init failed, install avahi on this system for mdns support
+mesa: live on 31338 (localhost only)
+conn: listening on /state/live/nec/.urb/conn.sock
+ames: unix-duct received on %born
+http: web interface live on http://localhost:18082
+http: loopback live on http://localhost:12323
+pier (706): live
+%already-mounted
+[[p=~nec q=%base r=[%ud p=0]] s=/]
+~
+urbit 4.6
+boot: home is /state/live/nec
+loom: mapped 2048MB
+lite: arvo formula 4ce68411
+lite: core 641296f
+lite: final state 641296f
+disk: loaded epoch 0i0
+loom: mapped 2048MB
+boot: protected loom
+live: mapped: MB/222.543.872
+boot: installed 2178 jets
+vere: checking version compatibility
+mesa: forwarding enabled
+mdns: init failed, install avahi on this system for mdns support
+mesa: live on 31338 (localhost only)
+conn: listening on /state/live/nec/.urb/conn.sock
+ames: unix-duct received on %born
+http: web interface live on http://localhost:18082
+http: loopback live on http://localhost:12323
+pier (210): live
+~
+urbit 4.6
+boot: home is /state/live/nec
+loom: mapped 2048MB
+lite: arvo formula 4ce68411
+lite: core 641296f
+lite: final state 641296f
+disk: loaded epoch 0i0
+loom: mapped 2048MB
+boot: protected loom
+live: mapped: MB/228.851.712
+boot: installed 2178 jets
+vere: checking version compatibility
+mesa: forwarding enabled
+mdns: init failed, install avahi on this system for mdns support
+mesa: live on 31338 (localhost only)
+conn: listening on /state/live/nec/.urb/conn.sock
+ames: unix-duct received on %born
+http: web interface live on http://localhost:18082
+http: loopback live on http://localhost:12323
+pier (300): live
+%already-mounted
+[[p=~nec q=%base r=[%ud p=0]] s=/]
+~
+urbit 4.6
+boot: home is /state/live/nec
+loom: mapped 2048MB
+lite: arvo formula 4ce68411
+lite: core 641296f
+lite: final state 641296f
+disk: loaded epoch 0i0
+loom: mapped 2048MB
+boot: protected loom
+live: mapped: MB/222.543.872
+boot: installed 2178 jets
+vere: checking version compatibility
+mesa: forwarding enabled
+mdns: init failed, install avahi on this system for mdns support
+mesa: live on 31338 (localhost only)
+conn: listening on /state/live/nec/.urb/conn.sock
+ames: unix-duct received on %born
+http: web interface live on http://localhost:18082
+http: loopback live on http://localhost:12323
+pier (210): live
+~
+urbit 4.6
+boot: home is /state/live/nec
+loom: mapped 2048MB
+lite: arvo formula 4ce68411
+lite: core 641296f
+lite: final state 641296f
+disk: loaded epoch 0i0
+loom: mapped 2048MB
+boot: protected loom
+live: mapped: MB/222.543.872
+boot: installed 2178 jets
+vere: checking version compatibility
+mesa: forwarding enabled
+mdns: init failed, install avahi on this system for mdns support
+mesa: live on 31338 (localhost only)
+conn: listening on /state/live/nec/.urb/conn.sock
+ames: unix-duct received on %born
+http: web interface live on http://localhost:18082
+http: loopback live on http://localhost:12323
+pier (210): live
+~
+urbit 4.6
+boot: home is /state/live/nec
+loom: mapped 2048MB
+lite: arvo formula 4ce68411
+lite: core 641296f
+lite: final state 641296f
+disk: loaded epoch 0i0
+loom: mapped 2048MB
+boot: protected loom
+live: mapped: MB/222.543.872
+boot: installed 2178 jets
+vere: checking version compatibility
+mesa: forwarding enabled
+mdns: init failed, install avahi on this system for mdns support
+mesa: live on 31338 (localhost only)
+conn: listening on /state/live/nec/.urb/conn.sock
+ames: unix-duct received on %born
+http: web interface live on http://localhost:18082
+http: loopback live on http://localhost:12323
+pier (210): live
+~
+urbit 4.6
+boot: home is /state/live/nec
+loom: mapped 2048MB
+lite: arvo formula 4ce68411
+lite: core 641296f
+lite: final state 641296f
+disk: loaded epoch 0i0
+loom: mapped 2048MB
+boot: protected loom
+live: mapped: MB/228.130.816
+boot: installed 2178 jets
+vere: checking version compatibility
+mesa: forwarding enabled
+mdns: init failed, install avahi on this system for mdns support
+mesa: live on 31338 (localhost only)
+conn: listening on /state/live/nec/.urb/conn.sock
+ames: unix-duct received on %born
+http: web interface live on http://localhost:18082
+http: loopback live on http://localhost:12323
+pier (361): live
+%already-mounted
+[[p=~nec q=%base r=[%ud p=0]] s=/]
+~
+urbit 4.6
+boot: home is /state/live/nec
+loom: mapped 2048MB
+lite: arvo formula 4ce68411
+lite: core 641296f
+lite: final state 641296f
+disk: loaded epoch 0i0
+loom: mapped 2048MB
+boot: protected loom
+live: mapped: MB/222.543.872
+boot: installed 2178 jets
+vere: checking version compatibility
+mesa: forwarding enabled
+mdns: init failed, install avahi on this system for mdns support
+mesa: live on 31338 (localhost only)
+conn: listening on /state/live/nec/.urb/conn.sock
+ames: unix-duct received on %born
+http: web interface live on http://localhost:18082
+http: loopback live on http://localhost:12323
+pier (210): live
+~
+urbit 4.6
+boot: home is /state/live/nec
+loom: mapped 2048MB
+lite: arvo formula 4ce68411
+lite: core 641296f
+lite: final state 641296f
+disk: loaded epoch 0i0
+loom: mapped 2048MB
+boot: protected loom
+live: mapped: MB/222.543.872
+boot: installed 2178 jets
+vere: checking version compatibility
+mesa: forwarding enabled
+mdns: init failed, install avahi on this system for mdns support
+mesa: live on 31338 (localhost only)
+conn: listening on /state/live/nec/.urb/conn.sock
+ames: unix-duct received on %born
+http: web interface live on http://localhost:18082
+http: loopback live on http://localhost:12323
+pier (210): live
+spider got sign for non-existent ~.khan-fyrd--0v2.m7vnf.3dknb.to5id.fsed8.tdv5m
+spider got sign for non-existent ~.khan-fyrd--0v7.eqp9c.n6t0q.3ue42.tfmjh.6fuhu
+spider got sign for non-existent ~.khan-fyrd--0v6.teauv.cg7sc.tk93t.e1vt9.3b8ne
+spider got sign for non-existent ~.khan-fyrd--0v7.9haaq.m28n6.f41nt.08k1f.rkdj0
+spider got sign for non-existent ~.khan-fyrd--0v3.qhjlt.q3b3r.rrllu.v85ga.39qvq
+spider got sign for non-existent ~.khan-fyrd--0v7.vpoce.0d10u.8nb9c.4p8jd.jcgc3
+spider got sign for non-existent ~.khan-fyrd--0v3.rq59a.nlmma.eu2a4.06m61.lisc9
+spider got sign for non-existent ~.khan-fyrd--0v3.qcvgc.tmsg6.g6gi2.99umk.6m7sh
+spider got sign for non-existent ~.khan-fyrd--0v3.83q18.t61p1.v0793.q696j.8h3st
+spider got sign for non-existent ~.khan-fyrd--0v4.jlltl.bklo1.17gf3.cpu4h.rhsd4
+spider got sign for non-existent ~.khan-fyrd--0v5.nbqab.hksg0.d8vk7.g0s6s.nbct4
+~
+urbit 4.6
+boot: home is /state/live/nec
+loom: mapped 2048MB
+lite: arvo formula 4ce68411
+lite: core 641296f
+lite: final state 641296f
+disk: loaded epoch 0i0
+loom: mapped 2048MB
+boot: protected loom
+live: mapped: MB/228.147.200
+boot: installed 2178 jets
+vere: checking version compatibility
+mesa: forwarding enabled
+mdns: init failed, install avahi on this system for mdns support
+mesa: live on 31338 (localhost only)
+conn: listening on /state/live/nec/.urb/conn.sock
+ames: unix-duct received on %born
+http: web interface live on http://localhost:18082
+http: loopback live on http://localhost:12323
+pier (410): live
+%already-mounted
+[[p=~nec q=%base r=[%ud p=0]] s=/]
+~
+urbit 4.6
+boot: home is /state/live/nec
+loom: mapped 2048MB
+lite: arvo formula 4ce68411
+lite: core 641296f
+lite: final state 641296f
+disk: loaded epoch 0i0
+loom: mapped 2048MB
+boot: protected loom
+live: mapped: MB/222.543.872
+boot: installed 2178 jets
+vere: checking version compatibility
+mesa: forwarding enabled
+mdns: init failed, install avahi on this system for mdns support
+mesa: live on 31338 (localhost only)
+conn: listening on /state/live/nec/.urb/conn.sock
+ames: unix-duct received on %born
+http: web interface live on http://localhost:18082
+http: loopback live on http://localhost:12323
+pier (210): live
+spider got sign for non-existent ~.khan-fyrd--0v7.i3eps.7h245.dopbn.aogan.j81u7
+spider got sign for non-existent ~.khan-fyrd--0v5.rkbdm.f3e52.ghnvf.kq4m9.40vl0
+spider got sign for non-existent ~.khan-fyrd--0v1.n0e71.u16pi.mn0p9.gfr64.p0p81
+spider got sign for non-existent ~.khan-fyrd--0v2.t6kc6.5fpj2.2guol.qvoid.tb591
+spider got sign for non-existent ~.khan-fyrd--0v2.ki4h2.lnnfb.akdon.e6s52.0b2dq
+spider got sign for non-existent ~.khan-fyrd--0v4.ff43k.cbs8k.vpedo.k30u5.kr1tv
+spider got sign for non-existent ~.khan-fyrd--0v1.4jvaf.5ca66.6v24k.e2gd6.n2tra
+spider got sign for non-existent ~.khan-fyrd--0v4.c34vm.asar7.rmevi.6n30q.8cjen
+spider got sign for non-existent ~.khan-fyrd--0v4vis5.t9pcs.l2d10.ce09u.4j4ju
+spider got sign for non-existent ~.khan-fyrd--0v4.2pv78.98pfq.urgj7.pt7i8.98uu6
+spider got sign for non-existent ~.khan-fyrd--0vcgd9g.tlrv4.ju4o3.td1th.o3248
+~
+urbit 4.6
+boot: home is /state/live/nec
+loom: mapped 2048MB
+lite: arvo formula 4ce68411
+lite: core 641296f
+lite: final state 641296f
+disk: loaded epoch 0i0
+loom: mapped 2048MB
+boot: protected loom
+live: mapped: MB/222.543.872
+boot: installed 2178 jets
+vere: checking version compatibility
+mesa: forwarding enabled
+mdns: init failed, install avahi on this system for mdns support
+mesa: live on 31338 (localhost only)
+conn: listening on /state/live/nec/.urb/conn.sock
+ames: unix-duct received on %born
+http: web interface live on http://localhost:18082
+http: loopback live on http://localhost:12323
+pier (210): live
+~
+urbit 4.6
+boot: home is /state/live/nec
+loom: mapped 2048MB
+lite: arvo formula 4ce68411
+lite: core 641296f
+lite: final state 641296f
+disk: loaded epoch 0i0
+loom: mapped 2048MB
+boot: protected loom
+live: mapped: MB/222.543.872
+boot: installed 2178 jets
+vere: checking version compatibility
+mesa: forwarding enabled
+mdns: init failed, install avahi on this system for mdns support
+mesa: live on 31338 (localhost only)
+conn: listening on /state/live/nec/.urb/conn.sock
+ames: unix-duct received on %born
+http: web interface live on http://localhost:18082
+http: loopback live on http://localhost:12323
+pier (210): live
+spider got sign for non-existent ~.khan-fyrd--0v7.brr2s.icovj.ccqp6.6iffn.us127
+spider got sign for non-existent ~.khan-fyrd--0v5.9tkg9.2l9r6.pvq6b.j8jir.gr8ll
+spider got sign for non-existent ~.khan-fyrd--0v1.ip2gc.itfe0.66adb.hthog.vnhpv
+spider got sign for non-existent ~.khan-fyrd--0v5.t17hk.2o1iq.0bjp9.othdg.61kcf
+spider got sign for non-existent ~.khan-fyrd--0v4.fbpm3.ricvt.0mmqs.g9h06.0289o
+spider got sign for non-existent ~.khan-fyrd--0vdkkao.trlds.54549.1bj84.3qfr5
+spider got sign for non-existent ~.khan-fyrd--0v6.limot.77l5l.bkjas.i4r6s.sikvv
+spider got sign for non-existent ~.khan-fyrd--0v2.9ufhp.eb5pm.s27eh.go88f.34amq
+spider got sign for non-existent ~.khan-fyrd--0v4.cke85.dlqkv.b5b0j.dflp1.ar0r2
+spider got sign for non-existent ~.khan-fyrd--0v1.jpvrp.m8s2o.jm9hf.3q532.j6kpg
+spider got sign for non-existent ~.khan-fyrd--0v1.ubnus.3nk0b.hm0eg.4on2b.6mp9o
+spider got sign for non-existent ~.khan-fyrd--0v7.htuj2.3qonc.1ao7t.bsvg1.h0nre
+~
+urbit 4.6
+boot: home is /state/live/nec
+loom: mapped 2048MB
+lite: arvo formula 4ce68411
+lite: core 641296f
+lite: final state 641296f
+disk: loaded epoch 0i0
+loom: mapped 2048MB
+boot: protected loom
+live: mapped: MB/228.147.200
+boot: installed 2178 jets
+vere: checking version compatibility
+mesa: forwarding enabled
+mdns: init failed, install avahi on this system for mdns support
+mesa: live on 31338 (localhost only)
+conn: listening on /state/live/nec/.urb/conn.sock
+ames: unix-duct received on %born
+http: web interface live on http://localhost:18082
+http: loopback live on http://localhost:12323
+pier (4264): live
+%already-mounted
+[[p=~nec q=%base r=[%ud p=0]] s=/]
+~
+urbit 4.6
+boot: home is /state/live/nec
+loom: mapped 2048MB
+lite: arvo formula 4ce68411
+lite: core 641296f
+lite: final state 641296f
+disk: loaded epoch 0i0
+loom: mapped 2048MB
+boot: protected loom
+live: mapped: MB/222.543.872
+boot: installed 2178 jets
+vere: checking version compatibility
+mesa: forwarding enabled
+mdns: init failed, install avahi on this system for mdns support
+mesa: live on 31338 (localhost only)
+conn: listening on /state/live/nec/.urb/conn.sock
+ames: unix-duct received on %born
+http: web interface live on http://localhost:18082
+http: loopback live on http://localhost:12323
+pier (210): live
+%already-mounted
+[[p=~nec q=%base r=[%ud p=0]] s=/]
+~
+urbit 4.6
+boot: home is /state/live/nec
+loom: mapped 2048MB
+lite: arvo formula 4ce68411
+lite: core 641296f
+lite: final state 641296f
+disk: loaded epoch 0i0
+loom: mapped 2048MB
+boot: protected loom
+live: mapped: MB/222.543.872
+boot: installed 2178 jets
+vere: checking version compatibility
+mesa: forwarding enabled
+mdns: init failed, install avahi on this system for mdns support
+mesa: live on 31338 (localhost only)
+conn: listening on /state/live/nec/.urb/conn.sock
+ames: unix-duct received on %born
+http: web interface live on http://localhost:18082
+http: loopback live on http://localhost:12323
+pier (210): live
+%already-mounted
+[[p=~nec q=%base r=[%ud p=0]] s=/]
+~
+urbit 4.6
+boot: home is /state/live/nec
+loom: mapped 2048MB
+lite: arvo formula 4ce68411
+lite: core 641296f
+lite: final state 641296f
+disk: loaded epoch 0i0
+loom: mapped 2048MB
+boot: protected loom
+live: mapped: MB/222.543.872
+boot: installed 2178 jets
+vere: checking version compatibility
+mesa: forwarding enabled
+mdns: init failed, install avahi on this system for mdns support
+mesa: live on 31338 (localhost only)
+conn: listening on /state/live/nec/.urb/conn.sock
+ames: unix-duct received on %born
+http: web interface live on http://localhost:18082
+http: loopback live on http://localhost:12323
+pier (210): live
+%already-mounted
+[[p=~nec q=%base r=[%ud p=0]] s=/]
+~
+urbit 4.6
+boot: home is /state/live/nec
+loom: mapped 2048MB
+lite: arvo formula 4ce68411
+lite: core 641296f
+lite: final state 641296f
+disk: loaded epoch 0i0
+loom: mapped 2048MB
+boot: protected loom
+live: mapped: MB/222.543.872
+boot: installed 2178 jets
+vere: checking version compatibility
+mesa: forwarding enabled
+mdns: init failed, install avahi on this system for mdns support
+mesa: live on 31338 (localhost only)
+conn: listening on /state/live/nec/.urb/conn.sock
+ames: unix-duct received on %born
+http: web interface live on http://localhost:18082
+http: loopback live on http://localhost:12323
+pier (210): live
+~
+urbit 4.6
+boot: home is /state/live/nec
+loom: mapped 2048MB
+lite: arvo formula 4ce68411
+lite: core 641296f
+lite: final state 641296f
+disk: loaded epoch 0i0
+loom: mapped 2048MB
+boot: protected loom
+live: mapped: MB/222.543.872
+boot: installed 2178 jets
+vere: checking version compatibility
+mesa: forwarding enabled
+mdns: init failed, install avahi on this system for mdns support
+mesa: live on 31338 (localhost only)
+conn: listening on /state/live/nec/.urb/conn.sock
+ames: unix-duct received on %born
+http: web interface live on http://localhost:18082
+http: loopback live on http://localhost:12323
+pier (240): live
+%already-mounted
+[[p=~nec q=%base r=[%ud p=0]] s=/]
+~
+urbit 4.6
+boot: home is /state/live/nec
+loom: mapped 2048MB
+lite: arvo formula 4ce68411
+lite: core 641296f
+lite: final state 641296f
+disk: loaded epoch 0i0
+loom: mapped 2048MB
+boot: protected loom
+live: mapped: MB/222.543.872
+boot: installed 2178 jets
+vere: checking version compatibility
+mesa: forwarding enabled
+mdns: init failed, install avahi on this system for mdns support
+mesa: live on 31338 (localhost only)
+conn: listening on /state/live/nec/.urb/conn.sock
+ames: unix-duct received on %born
+http: web interface live on http://localhost:18082
+http: loopback live on http://localhost:12323
+pier (210): live
+~
+urbit 4.6
+boot: home is /state/live/nec
+loom: mapped 2048MB
+lite: arvo formula 4ce68411
+lite: core 641296f
+lite: final state 641296f
+disk: loaded epoch 0i0
+loom: mapped 2048MB
+boot: protected loom
+live: mapped: MB/222.543.872
+boot: installed 2178 jets
+vere: checking version compatibility
+mesa: forwarding enabled
+mdns: init failed, install avahi on this system for mdns support
+mesa: live on 31338 (localhost only)
+conn: listening on /state/live/nec/.urb/conn.sock
+ames: unix-duct received on %born
+http: web interface live on http://localhost:18082
+http: loopback live on http://localhost:12323
+pier (240): live
+%already-mounted
+[[p=~nec q=%base r=[%ud p=0]] s=/]
+~
+urbit 4.6
+boot: home is /state/live/nec
+loom: mapped 2048MB
+lite: arvo formula 4ce68411
+lite: core 641296f
+lite: final state 641296f
+disk: loaded epoch 0i0
+loom: mapped 2048MB
+boot: protected loom
+live: mapped: MB/222.543.872
+boot: installed 2178 jets
+vere: checking version compatibility
+mesa: forwarding enabled
+mdns: init failed, install avahi on this system for mdns support
+mesa: live on 31338 (localhost only)
+conn: listening on /state/live/nec/.urb/conn.sock
+ames: unix-duct received on %born
+http: web interface live on http://localhost:18082
+http: loopback live on http://localhost:12323
+pier (210): live
+~
+urbit 4.6
+boot: home is /state/live/nec
+loom: mapped 2048MB
+lite: arvo formula 4ce68411
+lite: core 641296f
+lite: final state 641296f
+disk: loaded epoch 0i0
+loom: mapped 2048MB
+boot: protected loom
+live: mapped: MB/222.543.872
+boot: installed 2178 jets
+vere: checking version compatibility
+mesa: forwarding enabled
+mdns: init failed, install avahi on this system for mdns support
+mesa: live on 31338 (localhost only)
+conn: listening on /state/live/nec/.urb/conn.sock
+ames: unix-duct received on %born
+http: web interface live on http://localhost:18082
+http: loopback live on http://localhost:12323
+pier (240): live
+%already-mounted
+[[p=~nec q=%base r=[%ud p=0]] s=/]
+~
+urbit 4.6
+boot: home is /state/live/nec
+loom: mapped 2048MB
+lite: arvo formula 4ce68411
+lite: core 641296f
+lite: final state 641296f
+disk: loaded epoch 0i0
+loom: mapped 2048MB
+boot: protected loom
+live: mapped: MB/222.543.872
+boot: installed 2178 jets
+vere: checking version compatibility
+mesa: forwarding enabled
+mdns: init failed, install avahi on this system for mdns support
+mesa: live on 31338 (localhost only)
+conn: listening on /state/live/nec/.urb/conn.sock
+ames: unix-duct received on %born
+http: web interface live on http://localhost:18082
+http: loopback live on http://localhost:12323
+pier (210): live
+~
+urbit 4.6
+boot: home is /state/live/nec
+loom: mapped 2048MB
+lite: arvo formula 4ce68411
+lite: core 641296f
+lite: final state 641296f
+disk: loaded epoch 0i0
+loom: mapped 2048MB
+boot: protected loom
+live: mapped: MB/222.543.872
+boot: installed 2178 jets
+vere: checking version compatibility
+mesa: forwarding enabled
+mdns: init failed, install avahi on this system for mdns support
+mesa: live on 31338 (localhost only)
+conn: listening on /state/live/nec/.urb/conn.sock
+ames: unix-duct received on %born
+http: web interface live on http://localhost:18082
+http: loopback live on http://localhost:12323
+pier (240): live
+%already-mounted
+[[p=~nec q=%base r=[%ud p=0]] s=/]
+~
+urbit 4.6
+boot: home is /state/live/nec
+loom: mapped 2048MB
+lite: arvo formula 4ce68411
+lite: core 641296f
+lite: final state 641296f
+disk: loaded epoch 0i0
+loom: mapped 2048MB
+boot: protected loom
+live: mapped: MB/222.543.872
+boot: installed 2178 jets
+vere: checking version compatibility
+mesa: forwarding enabled
+mdns: init failed, install avahi on this system for mdns support
+mesa: live on 31338 (localhost only)
+conn: listening on /state/live/nec/.urb/conn.sock
+ames: unix-duct received on %born
+http: web interface live on http://localhost:18082
+http: loopback live on http://localhost:12323
+pier (210): live
+~
+urbit 4.6
+boot: home is /state/live/nec
+loom: mapped 2048MB
+lite: arvo formula 4ce68411
+lite: core 641296f
+lite: final state 641296f
+disk: loaded epoch 0i0
+loom: mapped 2048MB
+boot: protected loom
+live: mapped: MB/222.543.872
+boot: installed 2178 jets
+vere: checking version compatibility
+mesa: forwarding enabled
+mdns: init failed, install avahi on this system for mdns support
+mesa: live on 31338 (localhost only)
+conn: listening on /state/live/nec/.urb/conn.sock
+ames: unix-duct received on %born
+http: web interface live on http://localhost:18082
+http: loopback live on http://localhost:12323
+pier (240): live
+%already-mounted
+[[p=~nec q=%base r=[%ud p=0]] s=/]
+~
+urbit 4.6
+boot: home is /state/live/nec
+loom: mapped 2048MB
+lite: arvo formula 4ce68411
+lite: core 641296f
+lite: final state 641296f
+disk: loaded epoch 0i0
+loom: mapped 2048MB
+boot: protected loom
+live: mapped: MB/222.543.872
+boot: installed 2178 jets
+vere: checking version compatibility
+mesa: forwarding enabled
+mdns: init failed, install avahi on this system for mdns support
+mesa: live on 31338 (localhost only)
+conn: listening on /state/live/nec/.urb/conn.sock
+ames: unix-duct received on %born
+http: web interface live on http://localhost:18082
+http: loopback live on http://localhost:12323
+pier (210): live
+~
+urbit 4.6
+boot: home is /state/live/nec
+loom: mapped 2048MB
+lite: arvo formula 4ce68411
+lite: core 641296f
+lite: final state 641296f
+disk: loaded epoch 0i0
+loom: mapped 2048MB
+boot: protected loom
+live: mapped: MB/222.543.872
+boot: installed 2178 jets
+vere: checking version compatibility
+mesa: forwarding enabled
+mdns: init failed, install avahi on this system for mdns support
+mesa: live on 31338 (localhost only)
+conn: listening on /state/live/nec/.urb/conn.sock
+ames: unix-duct received on %born
+http: web interface live on http://localhost:18082
+http: loopback live on http://localhost:12323
+pier (240): live
+%already-mounted
+[[p=~nec q=%base r=[%ud p=0]] s=/]
+~
+urbit 4.6
+boot: home is /state/live/nec
+loom: mapped 2048MB
+lite: arvo formula 4ce68411
+lite: core 641296f
+lite: final state 641296f
+disk: loaded epoch 0i0
+loom: mapped 2048MB
+boot: protected loom
+live: mapped: MB/222.543.872
+boot: installed 2178 jets
+vere: checking version compatibility
+mesa: forwarding enabled
+mdns: init failed, install avahi on this system for mdns support
+mesa: live on 31338 (localhost only)
+conn: listening on /state/live/nec/.urb/conn.sock
+ames: unix-duct received on %born
+http: web interface live on http://localhost:18082
+http: loopback live on http://localhost:12323
+pier (210): live
+~
+urbit 4.6
+boot: home is /state/live/nec
+loom: mapped 2048MB
+lite: arvo formula 4ce68411
+lite: core 641296f
+lite: final state 641296f
+disk: loaded epoch 0i0
+loom: mapped 2048MB
+boot: protected loom
+live: mapped: MB/222.543.872
+boot: installed 2178 jets
+vere: checking version compatibility
+mesa: forwarding enabled
+mdns: init failed, install avahi on this system for mdns support
+mesa: live on 31338 (localhost only)
+conn: listening on /state/live/nec/.urb/conn.sock
+ames: unix-duct received on %born
+http: web interface live on http://localhost:18082
+http: loopback live on http://localhost:12323
+pier (240): live
+%already-mounted
+[[p=~nec q=%base r=[%ud p=0]] s=/]
+~
+urbit 4.6
+boot: home is /state/live/nec
+loom: mapped 2048MB
+lite: arvo formula 4ce68411
+lite: core 641296f
+lite: final state 641296f
+disk: loaded epoch 0i0
+loom: mapped 2048MB
+boot: protected loom
+live: mapped: MB/222.543.872
+boot: installed 2178 jets
+vere: checking version compatibility
+mesa: forwarding enabled
+mdns: init failed, install avahi on this system for mdns support
+mesa: live on 31338 (localhost only)
+conn: listening on /state/live/nec/.urb/conn.sock
+ames: unix-duct received on %born
+http: web interface live on http://localhost:18082
+http: loopback live on http://localhost:12323
+pier (210): live
+~
+urbit 4.6
+boot: home is /state/live/nec
+loom: mapped 2048MB
+lite: arvo formula 4ce68411
+lite: core 641296f
+lite: final state 641296f
+disk: loaded epoch 0i0
+loom: mapped 2048MB
+boot: protected loom
+live: mapped: MB/222.543.872
+boot: installed 2178 jets
+vere: checking version compatibility
+mesa: forwarding enabled
+mdns: init failed, install avahi on this system for mdns support
+mesa: live on 31338 (localhost only)
+conn: listening on /state/live/nec/.urb/conn.sock
+ames: unix-duct received on %born
+http: web interface live on http://localhost:18082
+http: loopback live on http://localhost:12323
+pier (240): live
+%already-mounted
+[[p=~nec q=%base r=[%ud p=0]] s=/]
+~
+urbit 4.6
+boot: home is /state/live/nec
+loom: mapped 2048MB
+lite: arvo formula 4ce68411
+lite: core 641296f
+lite: final state 641296f
+disk: loaded epoch 0i0
+loom: mapped 2048MB
+boot: protected loom
+live: mapped: MB/222.543.872
+boot: installed 2178 jets
+vere: checking version compatibility
+mesa: forwarding enabled
+mdns: init failed, install avahi on this system for mdns support
+mesa: live on 31338 (localhost only)
+conn: listening on /state/live/nec/.urb/conn.sock
+ames: unix-duct received on %born
+http: web interface live on http://localhost:18082
+http: loopback live on http://localhost:12323
+pier (210): live
+~
+urbit 4.6
+boot: home is /state/live/nec
+loom: mapped 2048MB
+lite: arvo formula 4ce68411
+lite: core 641296f
+lite: final state 641296f
+disk: loaded epoch 0i0
+loom: mapped 2048MB
+boot: protected loom
+live: mapped: MB/222.543.872
+boot: installed 2178 jets
+vere: checking version compatibility
+mesa: forwarding enabled
+mdns: init failed, install avahi on this system for mdns support
+mesa: live on 31338 (localhost only)
+conn: listening on /state/live/nec/.urb/conn.sock
+ames: unix-duct received on %born
+http: web interface live on http://localhost:18082
+http: loopback live on http://localhost:12323
+pier (210): live
+~
+urbit 4.6
+boot: home is /state/live/nec
+loom: mapped 2048MB
+lite: arvo formula 4ce68411
+lite: core 641296f
+lite: final state 641296f
+disk: loaded epoch 0i0
+loom: mapped 2048MB
+boot: protected loom
+live: mapped: MB/222.543.872
+boot: installed 2178 jets
+vere: checking version compatibility
+mesa: forwarding enabled
+mdns: init failed, install avahi on this system for mdns support
+mesa: live on 31338 (localhost only)
+conn: listening on /state/live/nec/.urb/conn.sock
+ames: unix-duct received on %born
+http: web interface live on http://localhost:18082
+http: loopback live on http://localhost:12323
+pier (210): live
+gall: installing %stead-observer
+spider got sign for non-existent ~.khan-fyrd--0v6.7qabi.njida.404mq.ce6ki.7k6tv
+spider got sign for non-existent ~.khan-fyrd--0v1.6eeic.a5j3i.nh3gh.7pvl7.8msjp
+spider got sign for non-existent ~.khan-fyrd--0v6.ai8ls.dgbmb.mdrk8.o44kr.j0jhb
+spider got sign for non-existent ~.khan-fyrd--0v2.28cr5.2ksk6.9cmv2.79pjl.vr36q
+spider got sign for non-existent ~.khan-fyrd--0v2.752se.obdaq.if1m9.f9qdt.otnj3
+spider got sign for non-existent ~.khan-fyrd--0v4.72btl.n8veg.pgpsq.olacj.mt1lr
+spider got sign for non-existent ~.khan-fyrd--0v1.ediko.fca89.n1v73.b3sic.br319
+spider got sign for non-existent ~.khan-fyrd--0v4.4j9nk.l47tt.s3so3.gcd3n.54ljn
+spider got sign for non-existent ~.khan-fyrd--0v2.f6v48.ivd8r.mgggq.899ur.kuknq
+spider got sign for non-existent ~.khan-fyrd--0v4.j1t1d.2gi7n.jnqd6.ksdb2.6ots2
+spider got sign for non-existent ~.khan-fyrd--0v1.jvkss.18lb6.6kdbo.d1sai.629rg
+~
+urbit 4.6
+boot: home is /state/live/nec
+loom: mapped 2048MB
+lite: arvo formula 4ce68411
+lite: core 641296f
+lite: final state 641296f
+disk: loaded epoch 0i0
+loom: mapped 2048MB
+boot: protected loom
+live: mapped: MB/228.556.800
+boot: installed 2178 jets
+vere: checking version compatibility
+mesa: forwarding enabled
+mdns: init failed, install avahi on this system for mdns support
+mesa: live on 31338 (localhost only)
+conn: listening on /state/live/nec/.urb/conn.sock
+ames: unix-duct received on %born
+http: web interface live on http://localhost:18082
+http: loopback live on http://localhost:12323
+pier (940): live
+%already-mounted
+[[p=~nec q=%base r=[%ud p=0]] s=/]
+~
+urbit 4.6
+boot: home is /state/live/nec
+loom: mapped 2048MB
+lite: arvo formula 4ce68411
+lite: core 641296f
+lite: final state 641296f
+disk: loaded epoch 0i0
+loom: mapped 2048MB
+boot: protected loom
+live: mapped: MB/222.543.872
+boot: installed 2178 jets
+vere: checking version compatibility
+mesa: forwarding enabled
+mdns: init failed, install avahi on this system for mdns support
+mesa: live on 31338 (localhost only)
+conn: listening on /state/live/nec/.urb/conn.sock
+ames: unix-duct received on %born
+http: web interface live on http://localhost:18082
+http: loopback live on http://localhost:12323
+pier (210): live
+~
+urbit 4.6
+boot: home is /state/live/nec
+loom: mapped 2048MB
+lite: arvo formula 4ce68411
+lite: core 641296f
+lite: final state 641296f
+disk: loaded epoch 0i0
+loom: mapped 2048MB
+boot: protected loom
+live: mapped: MB/222.543.872
+boot: installed 2178 jets
+vere: checking version compatibility
+mesa: forwarding enabled
+mdns: init failed, install avahi on this system for mdns support
+mesa: live on 31338 (localhost only)
+conn: listening on /state/live/nec/.urb/conn.sock
+ames: unix-duct received on %born
+http: web interface live on http://localhost:18082
+http: loopback live on http://localhost:12323
+pier (240): live
+%already-mounted
+[[p=~nec q=%base r=[%ud p=0]] s=/]
+~
+urbit 4.6
+boot: home is /state/live/nec
+loom: mapped 2048MB
+lite: arvo formula 4ce68411
+lite: core 641296f
+lite: final state 641296f
+disk: loaded epoch 0i0
+loom: mapped 2048MB
+boot: protected loom
+live: mapped: MB/222.543.872
+boot: installed 2178 jets
+vere: checking version compatibility
+mesa: forwarding enabled
+mdns: init failed, install avahi on this system for mdns support
+mesa: live on 31338 (localhost only)
+conn: listening on /state/live/nec/.urb/conn.sock
+ames: unix-duct received on %born
+http: web interface live on http://localhost:18082
+http: loopback live on http://localhost:12323
+pier (210): live
+~
+urbit 4.6
+boot: home is /state/live/nec
+loom: mapped 2048MB
+lite: arvo formula 4ce68411
+lite: core 641296f
+lite: final state 641296f
+disk: loaded epoch 0i0
+loom: mapped 2048MB
+boot: protected loom
+live: mapped: MB/222.543.872
+boot: installed 2178 jets
+vere: checking version compatibility
+mesa: forwarding enabled
+mdns: init failed, install avahi on this system for mdns support
+mesa: live on 31338 (localhost only)
+conn: listening on /state/live/nec/.urb/conn.sock
+ames: unix-duct received on %born
+http: web interface live on http://localhost:18082
+http: loopback live on http://localhost:12323
+pier (240): live
+%already-mounted
+[[p=~nec q=%base r=[%ud p=0]] s=/]
+~
+urbit 4.6
+boot: home is /state/live/nec
+loom: mapped 2048MB
+lite: arvo formula 4ce68411
+lite: core 641296f
+lite: final state 641296f
+disk: loaded epoch 0i0
+loom: mapped 2048MB
+boot: protected loom
+live: mapped: MB/222.543.872
+boot: installed 2178 jets
+vere: checking version compatibility
+mesa: forwarding enabled
+mdns: init failed, install avahi on this system for mdns support
+mesa: live on 31338 (localhost only)
+conn: listening on /state/live/nec/.urb/conn.sock
+ames: unix-duct received on %born
+http: web interface live on http://localhost:18082
+http: loopback live on http://localhost:12323
+pier (210): live
+~
+urbit 4.6
+boot: home is /state/live/nec
+loom: mapped 2048MB
+lite: arvo formula 4ce68411
+lite: core 641296f
+lite: final state 641296f
+disk: loaded epoch 0i0
+loom: mapped 2048MB
+boot: protected loom
+live: mapped: MB/222.543.872
+boot: installed 2178 jets
+vere: checking version compatibility
+mesa: forwarding enabled
+mdns: init failed, install avahi on this system for mdns support
+mesa: live on 31338 (localhost only)
+conn: listening on /state/live/nec/.urb/conn.sock
+ames: unix-duct received on %born
+http: web interface live on http://localhost:18082
+http: loopback live on http://localhost:12323
+pier (210): live
+~
+urbit 4.6
+boot: home is /state/live/nec
+loom: mapped 2048MB
+lite: arvo formula 4ce68411
+lite: core 641296f
+lite: final state 641296f
+disk: loaded epoch 0i0
+loom: mapped 2048MB
+boot: protected loom
+live: mapped: MB/222.543.872
+boot: installed 2178 jets
+vere: checking version compatibility
+mesa: forwarding enabled
+mdns: init failed, install avahi on this system for mdns support
+mesa: live on 31338 (localhost only)
+conn: listening on /state/live/nec/.urb/conn.sock
+ames: unix-duct received on %born
+http: web interface live on http://localhost:18082
+http: loopback live on http://localhost:12323
+pier (240): live
+%already-mounted
+[[p=~nec q=%base r=[%ud p=0]] s=/]
+~
+urbit 4.6
+boot: home is /state/live/nec
+loom: mapped 2048MB
+lite: arvo formula 4ce68411
+lite: core 641296f
+lite: final state 641296f
+disk: loaded epoch 0i0
+loom: mapped 2048MB
+boot: protected loom
+live: mapped: MB/222.543.872
+boot: installed 2178 jets
+vere: checking version compatibility
+mesa: forwarding enabled
+mdns: init failed, install avahi on this system for mdns support
+mesa: live on 31338 (localhost only)
+conn: listening on /state/live/nec/.urb/conn.sock
+ames: unix-duct received on %born
+http: web interface live on http://localhost:18082
+http: loopback live on http://localhost:12323
+pier (210): live
+~
+urbit 4.6
+boot: home is /state/live/nec
+loom: mapped 2048MB
+lite: arvo formula 4ce68411
+lite: core 641296f
+lite: final state 641296f
+disk: loaded epoch 0i0
+loom: mapped 2048MB
+boot: protected loom
+live: mapped: MB/222.543.872
+boot: installed 2178 jets
+vere: checking version compatibility
+mesa: forwarding enabled
+mdns: init failed, install avahi on this system for mdns support
+mesa: live on 31338 (localhost only)
+conn: listening on /state/live/nec/.urb/conn.sock
+ames: unix-duct received on %born
+http: web interface live on http://localhost:18082
+http: loopback live on http://localhost:12323
+pier (240): live
+%already-mounted
+[[p=~nec q=%base r=[%ud p=0]] s=/]
+~
+urbit 4.6
+boot: home is /state/live/nec
+loom: mapped 2048MB
+lite: arvo formula 4ce68411
+lite: core 641296f
+lite: final state 641296f
+disk: loaded epoch 0i0
+loom: mapped 2048MB
+boot: protected loom
+live: mapped: MB/222.543.872
+boot: installed 2178 jets
+vere: checking version compatibility
+mesa: forwarding enabled
+mdns: init failed, install avahi on this system for mdns support
+mesa: live on 31338 (localhost only)
+conn: listening on /state/live/nec/.urb/conn.sock
+ames: unix-duct received on %born
+http: web interface live on http://localhost:18082
+http: loopback live on http://localhost:12323
+pier (210): live
+~
+urbit 4.6
+boot: home is /state/live/nec
+loom: mapped 2048MB
+lite: arvo formula 4ce68411
+lite: core 641296f
+lite: final state 641296f
+disk: loaded epoch 0i0
+loom: mapped 2048MB
+boot: protected loom
+live: mapped: MB/222.543.872
+boot: installed 2178 jets
+vere: checking version compatibility
+mesa: forwarding enabled
+mdns: init failed, install avahi on this system for mdns support
+mesa: live on 31338 (localhost only)
+conn: listening on /state/live/nec/.urb/conn.sock
+ames: unix-duct received on %born
+http: web interface live on http://localhost:18082
+http: loopback live on http://localhost:12323
+pier (210): live
+%already-mounted
+[[p=~nec q=%base r=[%ud p=0]] s=/]
+~
+urbit 4.6
+boot: home is /state/live/nec
+loom: mapped 2048MB
+lite: arvo formula 4ce68411
+lite: core 641296f
+lite: final state 641296f
+disk: loaded epoch 0i0
+loom: mapped 2048MB
+boot: protected loom
+live: mapped: MB/222.543.872
+boot: installed 2178 jets
+vere: checking version compatibility
+mesa: forwarding enabled
+mdns: init failed, install avahi on this system for mdns support
+mesa: live on 31338 (localhost only)
+conn: listening on /state/live/nec/.urb/conn.sock
+ames: unix-duct received on %born
+http: web interface live on http://localhost:18082
+http: loopback live on http://localhost:12323
+pier (210): live
+~
+urbit 4.6
+boot: home is /state/live/nec
+loom: mapped 2048MB
+lite: arvo formula 4ce68411
+lite: core 641296f
+lite: final state 641296f
+disk: loaded epoch 0i0
+loom: mapped 2048MB
+boot: protected loom
+live: mapped: MB/222.543.872
+boot: installed 2178 jets
+vere: checking version compatibility
+mesa: forwarding enabled
+mdns: init failed, install avahi on this system for mdns support
+mesa: live on 31338 (localhost only)
+conn: listening on /state/live/nec/.urb/conn.sock
+ames: unix-duct received on %born
+http: web interface live on http://localhost:18082
+http: loopback live on http://localhost:12323
+pier (240): live
+%already-mounted
+[[p=~nec q=%base r=[%ud p=0]] s=/]
+~
+urbit 4.6
+boot: home is /state/live/nec
+loom: mapped 2048MB
+lite: arvo formula 4ce68411
+lite: core 641296f
+lite: final state 641296f
+disk: loaded epoch 0i0
+loom: mapped 2048MB
+boot: protected loom
+live: mapped: MB/222.543.872
+boot: installed 2178 jets
+vere: checking version compatibility
+mesa: forwarding enabled
+mdns: init failed, install avahi on this system for mdns support
+mesa: live on 31338 (localhost only)
+conn: listening on /state/live/nec/.urb/conn.sock
+ames: unix-duct received on %born
+http: web interface live on http://localhost:18082
+http: loopback live on http://localhost:12323
+pier (210): live
+~
+urbit 4.6
+boot: home is /state/live/nec
+loom: mapped 2048MB
+lite: arvo formula 4ce68411
+lite: core 641296f
+lite: final state 641296f
+disk: loaded epoch 0i0
+loom: mapped 2048MB
+boot: protected loom
+live: mapped: MB/222.543.872
+boot: installed 2178 jets
+vere: checking version compatibility
+mesa: forwarding enabled
+mdns: init failed, install avahi on this system for mdns support
+mesa: live on 31338 (localhost only)
+conn: listening on /state/live/nec/.urb/conn.sock
+ames: unix-duct received on %born
+http: web interface live on http://localhost:18082
+http: loopback live on http://localhost:12323
+pier (240): live
+%already-mounted
+[[p=~nec q=%base r=[%ud p=0]] s=/]
+~
+urbit 4.6
+boot: home is /state/live/nec
+loom: mapped 2048MB
+lite: arvo formula 4ce68411
+lite: core 641296f
+lite: final state 641296f
+disk: loaded epoch 0i0
+loom: mapped 2048MB
+boot: protected loom
+live: mapped: MB/222.543.872
+boot: installed 2178 jets
+vere: checking version compatibility
+mesa: forwarding enabled
+mdns: init failed, install avahi on this system for mdns support
+mesa: live on 31338 (localhost only)
+conn: listening on /state/live/nec/.urb/conn.sock
+ames: unix-duct received on %born
+http: web interface live on http://localhost:18082
+http: loopback live on http://localhost:12323
+pier (210): live
+~
+urbit 4.6
+boot: home is /state/live/nec
+loom: mapped 2048MB
+lite: arvo formula 4ce68411
+lite: core 641296f
+lite: final state 641296f
+disk: loaded epoch 0i0
+loom: mapped 2048MB
+boot: protected loom
+live: mapped: MB/222.543.872
+boot: installed 2178 jets
+vere: checking version compatibility
+mesa: forwarding enabled
+mdns: init failed, install avahi on this system for mdns support
+mesa: live on 31338 (localhost only)
+conn: listening on /state/live/nec/.urb/conn.sock
+ames: unix-duct received on %born
+http: web interface live on http://localhost:18082
+http: loopback live on http://localhost:12323
+pier (210): live
+~
+urbit 4.6
+boot: home is /state/live/nec
+loom: mapped 2048MB
+lite: arvo formula 4ce68411
+lite: core 641296f
+lite: final state 641296f
+disk: loaded epoch 0i0
+loom: mapped 2048MB
+boot: protected loom
+live: mapped: MB/222.543.872
+boot: installed 2178 jets
+vere: checking version compatibility
+mesa: forwarding enabled
+mdns: init failed, install avahi on this system for mdns support
+mesa: live on 31338 (localhost only)
+conn: listening on /state/live/nec/.urb/conn.sock
+ames: unix-duct received on %born
+http: web interface live on http://localhost:18082
+http: loopback live on http://localhost:12323
+pier (240): live
+%already-mounted
+[[p=~nec q=%base r=[%ud p=0]] s=/]
+~
+urbit 4.6
+boot: home is /state/live/nec
+loom: mapped 2048MB
+lite: arvo formula 4ce68411
+lite: core 641296f
+lite: final state 641296f
+disk: loaded epoch 0i0
+loom: mapped 2048MB
+boot: protected loom
+live: mapped: MB/222.543.872
+boot: installed 2178 jets
+vere: checking version compatibility
+mesa: forwarding enabled
+mdns: init failed, install avahi on this system for mdns support
+mesa: live on 31338 (localhost only)
+conn: listening on /state/live/nec/.urb/conn.sock
+ames: unix-duct received on %born
+http: web interface live on http://localhost:18082
+http: loopback live on http://localhost:12323
+pier (210): live
+~
+urbit 4.6
+boot: home is /state/live/nec
+loom: mapped 2048MB
+lite: arvo formula 4ce68411
+lite: core 641296f
+lite: final state 641296f
+disk: loaded epoch 0i0
+loom: mapped 2048MB
+boot: protected loom
+live: mapped: MB/222.543.872
+boot: installed 2178 jets
+vere: checking version compatibility
+mesa: forwarding enabled
+mdns: init failed, install avahi on this system for mdns support
+mesa: live on 31338 (localhost only)
+conn: listening on /state/live/nec/.urb/conn.sock
+ames: unix-duct received on %born
+http: web interface live on http://localhost:18082
+http: loopback live on http://localhost:12323
+pier (240): live
+%already-mounted
+[[p=~nec q=%base r=[%ud p=0]] s=/]
+~
+urbit 4.6
+boot: home is /state/live/nec
+loom: mapped 2048MB
+lite: arvo formula 4ce68411
+lite: core 641296f
+lite: final state 641296f
+disk: loaded epoch 0i0
+loom: mapped 2048MB
+boot: protected loom
+live: mapped: MB/222.543.872
+boot: installed 2178 jets
+vere: checking version compatibility
+mesa: forwarding enabled
+mdns: init failed, install avahi on this system for mdns support
+mesa: live on 31338 (localhost only)
+conn: listening on /state/live/nec/.urb/conn.sock
+ames: unix-duct received on %born
+http: web interface live on http://localhost:18082
+http: loopback live on http://localhost:12323
+pier (210): live
+%already-mounted
+[[p=~nec q=%base r=[%ud p=0]] s=/]
+~
+urbit 4.6
+boot: home is /state/live/nec
+loom: mapped 2048MB
+lite: arvo formula 4ce68411
+lite: core 641296f
+lite: final state 641296f
+disk: loaded epoch 0i0
+loom: mapped 2048MB
+boot: protected loom
+live: mapped: MB/222.543.872
+boot: installed 2178 jets
+vere: checking version compatibility
+mesa: forwarding enabled
+mdns: init failed, install avahi on this system for mdns support
+mesa: live on 31338 (localhost only)
+conn: listening on /state/live/nec/.urb/conn.sock
+ames: unix-duct received on %born
+http: web interface live on http://localhost:18082
+http: loopback live on http://localhost:12323
+pier (210): live
+~
+urbit 4.6
+boot: home is /state/live/nec
+loom: mapped 2048MB
+lite: arvo formula 4ce68411
+lite: core 641296f
+lite: final state 641296f
+disk: loaded epoch 0i0
+loom: mapped 2048MB
+boot: protected loom
+live: mapped: MB/222.543.872
+boot: installed 2178 jets
+vere: checking version compatibility
+mesa: forwarding enabled
+mdns: init failed, install avahi on this system for mdns support
+mesa: live on 31338 (localhost only)
+conn: listening on /state/live/nec/.urb/conn.sock
+ames: unix-duct received on %born
+http: web interface live on http://localhost:18082
+http: loopback live on http://localhost:12323
+pier (240): live
+%already-mounted
+[[p=~nec q=%base r=[%ud p=0]] s=/]
+~
+urbit 4.6
+boot: home is /state/live/nec
+loom: mapped 2048MB
+lite: arvo formula 4ce68411
+lite: core 641296f
+lite: final state 641296f
+disk: loaded epoch 0i0
+loom: mapped 2048MB
+boot: protected loom
+live: mapped: MB/222.543.872
+boot: installed 2178 jets
+vere: checking version compatibility
+mesa: forwarding enabled
+mdns: init failed, install avahi on this system for mdns support
+mesa: live on 31338 (localhost only)
+conn: listening on /state/live/nec/.urb/conn.sock
+ames: unix-duct received on %born
+http: web interface live on http://localhost:18082
+http: loopback live on http://localhost:12323
+pier (210): live
+~
+urbit 4.6
+boot: home is /state/live/nec
+loom: mapped 2048MB
+lite: arvo formula 4ce68411
+lite: core 641296f
+lite: final state 641296f
+disk: loaded epoch 0i0
+loom: mapped 2048MB
+boot: protected loom
+live: mapped: MB/222.543.872
+boot: installed 2178 jets
+vere: checking version compatibility
+mesa: forwarding enabled
+mdns: init failed, install avahi on this system for mdns support
+mesa: live on 31338 (localhost only)
+conn: listening on /state/live/nec/.urb/conn.sock
+ames: unix-duct received on %born
+http: web interface live on http://localhost:18082
+http: loopback live on http://localhost:12323
+pier (240): live
+%already-mounted
+[[p=~nec q=%base r=[%ud p=0]] s=/]
+~
+urbit 4.6
+boot: home is /state/live/nec
+loom: mapped 2048MB
+lite: arvo formula 4ce68411
+lite: core 641296f
+lite: final state 641296f
+disk: loaded epoch 0i0
+loom: mapped 2048MB
+boot: protected loom
+live: mapped: MB/222.543.872
+boot: installed 2178 jets
+vere: checking version compatibility
+mesa: forwarding enabled
+mdns: init failed, install avahi on this system for mdns support
+mesa: live on 31338 (localhost only)
+conn: listening on /state/live/nec/.urb/conn.sock
+ames: unix-duct received on %born
+http: web interface live on http://localhost:18082
+http: loopback live on http://localhost:12323
+pier (210): live
+~
+urbit 4.6
+boot: home is /state/live/nec
+loom: mapped 2048MB
+lite: arvo formula 4ce68411
+lite: core 641296f
+lite: final state 641296f
+disk: loaded epoch 0i0
+loom: mapped 2048MB
+boot: protected loom
+live: mapped: MB/222.543.872
+boot: installed 2178 jets
+vere: checking version compatibility
+mesa: forwarding enabled
+mdns: init failed, install avahi on this system for mdns support
+mesa: live on 31338 (localhost only)
+conn: listening on /state/live/nec/.urb/conn.sock
+ames: unix-duct received on %born
+http: web interface live on http://localhost:18082
+http: loopback live on http://localhost:12323
+pier (210): live
+%already-mounted
+[[p=~nec q=%base r=[%ud p=0]] s=/]
+~
+urbit 4.6
+boot: home is /state/live/nec
+loom: mapped 2048MB
+lite: arvo formula 4ce68411
+lite: core 641296f
+lite: final state 641296f
+disk: loaded epoch 0i0
+loom: mapped 2048MB
+boot: protected loom
+live: mapped: MB/222.543.872
+boot: installed 2178 jets
+vere: checking version compatibility
+mesa: forwarding enabled
+mdns: init failed, install avahi on this system for mdns support
+mesa: live on 31338 (localhost only)
+conn: listening on /state/live/nec/.urb/conn.sock
+ames: unix-duct received on %born
+http: web interface live on http://localhost:18082
+http: loopback live on http://localhost:12323
+pier (210): live
+%already-mounted
+[[p=~nec q=%base r=[%ud p=0]] s=/]
+~
+urbit 4.6
+boot: home is /state/live/nec
+loom: mapped 2048MB
+lite: arvo formula 4ce68411
+lite: core 641296f
+lite: final state 641296f
+disk: loaded epoch 0i0
+loom: mapped 2048MB
+boot: protected loom
+live: mapped: MB/222.543.872
+boot: installed 2178 jets
+vere: checking version compatibility
+mesa: forwarding enabled
+mdns: init failed, install avahi on this system for mdns support
+mesa: live on 31338 (localhost only)
+conn: listening on /state/live/nec/.urb/conn.sock
+ames: unix-duct received on %born
+http: web interface live on http://localhost:18082
+http: loopback live on http://localhost:12323
+pier (210): live
+~
+urbit 4.6
+boot: home is /state/live/nec
+loom: mapped 2048MB
+lite: arvo formula 4ce68411
+lite: core 641296f
+lite: final state 641296f
+disk: loaded epoch 0i0
+loom: mapped 2048MB
+boot: protected loom
+live: mapped: MB/222.543.872
+boot: installed 2178 jets
+vere: checking version compatibility
+mesa: forwarding enabled
+mdns: init failed, install avahi on this system for mdns support
+mesa: live on 31338 (localhost only)
+conn: listening on /state/live/nec/.urb/conn.sock
+ames: unix-duct received on %born
+http: web interface live on http://localhost:18082
+http: loopback live on http://localhost:12323
+pier (210): live
+%already-mounted
+[[p=~nec q=%base r=[%ud p=0]] s=/]
+~
+urbit 4.6
+boot: home is /state/live/nec
+loom: mapped 2048MB
+lite: arvo formula 4ce68411
+lite: core 641296f
+lite: final state 641296f
+disk: loaded epoch 0i0
+loom: mapped 2048MB
+boot: protected loom
+live: mapped: MB/222.543.872
+boot: installed 2178 jets
+vere: checking version compatibility
+mesa: forwarding enabled
+mdns: init failed, install avahi on this system for mdns support
+mesa: live on 31338 (localhost only)
+conn: listening on /state/live/nec/.urb/conn.sock
+ames: unix-duct received on %born
+http: web interface live on http://localhost:18082
+http: loopback live on http://localhost:12323
+pier (210): live
+%already-mounted
+[[p=~nec q=%base r=[%ud p=0]] s=/]
+~
+urbit 4.6
+boot: home is /state/live/nec
+loom: mapped 2048MB
+lite: arvo formula 4ce68411
+lite: core 641296f
+lite: final state 641296f
+disk: loaded epoch 0i0
+loom: mapped 2048MB
+boot: protected loom
+live: mapped: MB/222.543.872
+boot: installed 2178 jets
+vere: checking version compatibility
+mesa: forwarding enabled
+mdns: init failed, install avahi on this system for mdns support
+mesa: live on 31338 (localhost only)
+conn: listening on /state/live/nec/.urb/conn.sock
+ames: unix-duct received on %born
+http: web interface live on http://localhost:18082
+http: loopback live on http://localhost:12323
+pier (210): live
+~
+urbit 4.6
+boot: home is /state/live/nec
+loom: mapped 2048MB
+lite: arvo formula 4ce68411
+lite: core 641296f
+lite: final state 641296f
+disk: loaded epoch 0i0
+loom: mapped 2048MB
+boot: protected loom
+live: mapped: MB/222.543.872
+boot: installed 2178 jets
+vere: checking version compatibility
+mesa: forwarding enabled
+mdns: init failed, install avahi on this system for mdns support
+mesa: live on 31338 (localhost only)
+conn: listening on /state/live/nec/.urb/conn.sock
+ames: unix-duct received on %born
+http: web interface live on http://localhost:18082
+http: loopback live on http://localhost:12323
+pier (210): live
+%already-mounted
+[[p=~nec q=%base r=[%ud p=0]] s=/]
+~
+urbit 4.6
+boot: home is /state/live/nec
+loom: mapped 2048MB
+lite: arvo formula 4ce68411
+lite: core 641296f
+lite: final state 641296f
+disk: loaded epoch 0i0
+loom: mapped 2048MB
+boot: protected loom
+live: mapped: MB/222.658.560
+boot: installed 2178 jets
+vere: checking version compatibility
+mesa: forwarding enabled
+mdns: init failed, install avahi on this system for mdns support
+mesa: live on 31338 (localhost only)
+conn: listening on /state/live/nec/.urb/conn.sock
+ames: unix-duct received on %born
+http: web interface live on http://localhost:18082
+http: loopback live on http://localhost:12323
+pier (241): live
+%already-mounted
+[[p=~nec q=%base r=[%ud p=0]] s=/]
+~
+urbit 4.6
+boot: home is /state/live/nec
+loom: mapped 2048MB
+lite: arvo formula 4ce68411
+lite: core 641296f
+lite: final state 641296f
+disk: loaded epoch 0i0
+loom: mapped 2048MB
+boot: protected loom
+live: mapped: MB/222.543.872
+boot: installed 2178 jets
+vere: checking version compatibility
+mesa: forwarding enabled
+mdns: init failed, install avahi on this system for mdns support
+mesa: live on 31338 (localhost only)
+conn: listening on /state/live/nec/.urb/conn.sock
+ames: unix-duct received on %born
+http: web interface live on http://localhost:18082
+http: loopback live on http://localhost:12323
+pier (210): live
+~
+urbit 4.6
+boot: home is /state/live/nec
+loom: mapped 2048MB
+lite: arvo formula 4ce68411
+lite: core 641296f
+lite: final state 641296f
+disk: loaded epoch 0i0
+loom: mapped 2048MB
+boot: protected loom
+live: mapped: MB/222.543.872
+boot: installed 2178 jets
+vere: checking version compatibility
+mesa: forwarding enabled
+mdns: init failed, install avahi on this system for mdns support
+mesa: live on 31338 (localhost only)
+conn: listening on /state/live/nec/.urb/conn.sock
+ames: unix-duct received on %born
+http: web interface live on http://localhost:18082
+http: loopback live on http://localhost:12323
+pier (210): live
+%already-mounted
+[[p=~nec q=%base r=[%ud p=0]] s=/]
+~
+urbit 4.6
+boot: home is /state/live/nec
+loom: mapped 2048MB
+lite: arvo formula 4ce68411
+lite: core 641296f
+lite: final state 641296f
+disk: loaded epoch 0i0
+loom: mapped 2048MB
+boot: protected loom
+live: mapped: MB/222.543.872
+boot: installed 2178 jets
+vere: checking version compatibility
+mesa: forwarding enabled
+mdns: init failed, install avahi on this system for mdns support
+mesa: live on 31338 (localhost only)
+conn: listening on /state/live/nec/.urb/conn.sock
+ames: unix-duct received on %born
+http: web interface live on http://localhost:18082
+http: loopback live on http://localhost:12323
+pier (210): live
+~
+urbit 4.6
+boot: home is /state/live/nec
+loom: mapped 2048MB
+lite: arvo formula 4ce68411
+lite: core 641296f
+lite: final state 641296f
+disk: loaded epoch 0i0
+loom: mapped 2048MB
+boot: protected loom
+live: mapped: MB/222.543.872
+boot: installed 2178 jets
+vere: checking version compatibility
+mesa: forwarding enabled
+mdns: init failed, install avahi on this system for mdns support
+mesa: live on 31338 (localhost only)
+conn: listening on /state/live/nec/.urb/conn.sock
+ames: unix-duct received on %born
+http: web interface live on http://localhost:18082
+http: loopback live on http://localhost:12323
+pier (240): live
+%already-mounted
+[[p=~nec q=%base r=[%ud p=0]] s=/]
+~
+urbit 4.6
+boot: home is /state/live/nec
+loom: mapped 2048MB
+lite: arvo formula 4ce68411
+lite: core 641296f
+lite: final state 641296f
+disk: loaded epoch 0i0
+loom: mapped 2048MB
+boot: protected loom
+live: mapped: MB/222.543.872
+boot: installed 2178 jets
+vere: checking version compatibility
+mesa: forwarding enabled
+mdns: init failed, install avahi on this system for mdns support
+mesa: live on 31338 (localhost only)
+conn: listening on /state/live/nec/.urb/conn.sock
+ames: unix-duct received on %born
+http: web interface live on http://localhost:18082
+http: loopback live on http://localhost:12323
+pier (210): live
+~
+urbit 4.6
+boot: home is /state/live/nec
+loom: mapped 2048MB
+lite: arvo formula 4ce68411
+lite: core 641296f
+lite: final state 641296f
+disk: loaded epoch 0i0
+loom: mapped 2048MB
+boot: protected loom
+live: mapped: MB/222.543.872
+boot: installed 2178 jets
+vere: checking version compatibility
+mesa: forwarding enabled
+mdns: init failed, install avahi on this system for mdns support
+mesa: live on 31338 (localhost only)
+conn: listening on /state/live/nec/.urb/conn.sock
+ames: unix-duct received on %born
+http: web interface live on http://localhost:18082
+http: loopback live on http://localhost:12323
+pier (240): live
+%already-mounted
+[[p=~nec q=%base r=[%ud p=0]] s=/]
+~
+urbit 4.6
+boot: home is /state/live/nec
+loom: mapped 2048MB
+lite: arvo formula 4ce68411
+lite: core 641296f
+lite: final state 641296f
+disk: loaded epoch 0i0
+loom: mapped 2048MB
+boot: protected loom
+live: mapped: MB/222.543.872
+boot: installed 2178 jets
+vere: checking version compatibility
+mesa: forwarding enabled
+mdns: init failed, install avahi on this system for mdns support
+mesa: live on 31338 (localhost only)
+conn: listening on /state/live/nec/.urb/conn.sock
+ames: unix-duct received on %born
+http: web interface live on http://localhost:18082
+http: loopback live on http://localhost:12323
+pier (210): live
+~
+urbit 4.6
+boot: home is /state/live/nec
+loom: mapped 2048MB
+lite: arvo formula 4ce68411
+lite: core 641296f
+lite: final state 641296f
+disk: loaded epoch 0i0
+loom: mapped 2048MB
+boot: protected loom
+live: mapped: MB/222.543.872
+boot: installed 2178 jets
+vere: checking version compatibility
+mesa: forwarding enabled
+mdns: init failed, install avahi on this system for mdns support
+mesa: live on 31338 (localhost only)
+conn: listening on /state/live/nec/.urb/conn.sock
+ames: unix-duct received on %born
+http: web interface live on http://localhost:18082
+http: loopback live on http://localhost:12323
+pier (240): live
+%already-mounted
+[[p=~nec q=%base r=[%ud p=0]] s=/]
+~
+urbit 4.6
+boot: home is /state/live/nec
+loom: mapped 2048MB
+lite: arvo formula 4ce68411
+lite: core 641296f
+lite: final state 641296f
+disk: loaded epoch 0i0
+loom: mapped 2048MB
+boot: protected loom
+live: mapped: MB/222.543.872
+boot: installed 2178 jets
+vere: checking version compatibility
+mesa: forwarding enabled
+mdns: init failed, install avahi on this system for mdns support
+mesa: live on 31338 (localhost only)
+conn: listening on /state/live/nec/.urb/conn.sock
+ames: unix-duct received on %born
+http: web interface live on http://localhost:18082
+http: loopback live on http://localhost:12323
+pier (210): live
+~
+urbit 4.6
+boot: home is /state/live/nec
+loom: mapped 2048MB
+lite: arvo formula 4ce68411
+lite: core 641296f
+lite: final state 641296f
+disk: loaded epoch 0i0
+loom: mapped 2048MB
+boot: protected loom
+live: mapped: MB/222.543.872
+boot: installed 2178 jets
+vere: checking version compatibility
+mesa: forwarding enabled
+mdns: init failed, install avahi on this system for mdns support
+mesa: live on 31338 (localhost only)
+conn: listening on /state/live/nec/.urb/conn.sock
+ames: unix-duct received on %born
+http: web interface live on http://localhost:18082
+http: loopback live on http://localhost:12323
+pier (240): live
+%already-mounted
+[[p=~nec q=%base r=[%ud p=0]] s=/]
+~
+urbit 4.6
+boot: home is /state/live/nec
+loom: mapped 2048MB
+lite: arvo formula 4ce68411
+lite: core 641296f
+lite: final state 641296f
+disk: loaded epoch 0i0
+loom: mapped 2048MB
+boot: protected loom
+live: mapped: MB/222.543.872
+boot: installed 2178 jets
+vere: checking version compatibility
+mesa: forwarding enabled
+mdns: init failed, install avahi on this system for mdns support
+mesa: live on 31338 (localhost only)
+conn: listening on /state/live/nec/.urb/conn.sock
+ames: unix-duct received on %born
+http: web interface live on http://localhost:18082
+http: loopback live on http://localhost:12323
+pier (210): live
+~
+urbit 4.6
+boot: home is /state/live/nec
+loom: mapped 2048MB
+lite: arvo formula 4ce68411
+lite: core 641296f
+lite: final state 641296f
+disk: loaded epoch 0i0
+loom: mapped 2048MB
+boot: protected loom
+live: mapped: MB/222.543.872
+boot: installed 2178 jets
+vere: checking version compatibility
+mesa: forwarding enabled
+mdns: init failed, install avahi on this system for mdns support
+mesa: live on 31338 (localhost only)
+conn: listening on /state/live/nec/.urb/conn.sock
+ames: unix-duct received on %born
+http: web interface live on http://localhost:18082
+http: loopback live on http://localhost:12323
+pier (240): live
+%already-mounted
+[[p=~nec q=%base r=[%ud p=0]] s=/]
+~
+urbit 4.6
+boot: home is /state/live/nec
+loom: mapped 2048MB
+lite: arvo formula 4ce68411
+lite: core 641296f
+lite: final state 641296f
+disk: loaded epoch 0i0
+loom: mapped 2048MB
+boot: protected loom
+live: mapped: MB/222.543.872
+boot: installed 2178 jets
+vere: checking version compatibility
+mesa: forwarding enabled
+mdns: init failed, install avahi on this system for mdns support
+mesa: live on 31338 (localhost only)
+conn: listening on /state/live/nec/.urb/conn.sock
+ames: unix-duct received on %born
+http: web interface live on http://localhost:18082
+http: loopback live on http://localhost:12323
+pier (210): live
+~
+urbit 4.6
+boot: home is /state/live/nec
+loom: mapped 2048MB
+lite: arvo formula 4ce68411
+lite: core 641296f
+lite: final state 641296f
+disk: loaded epoch 0i0
+loom: mapped 2048MB
+boot: protected loom
+live: mapped: MB/222.543.872
+boot: installed 2178 jets
+vere: checking version compatibility
+mesa: forwarding enabled
+mdns: init failed, install avahi on this system for mdns support
+mesa: live on 31338 (localhost only)
+conn: listening on /state/live/nec/.urb/conn.sock
+ames: unix-duct received on %born
+http: web interface live on http://localhost:18082
+http: loopback live on http://localhost:12323
+pier (240): live
+%already-mounted
+[[p=~nec q=%base r=[%ud p=0]] s=/]
+~
+urbit 4.6
+boot: home is /state/live/nec
+loom: mapped 2048MB
+lite: arvo formula 4ce68411
+lite: core 641296f
+lite: final state 641296f
+disk: loaded epoch 0i0
+loom: mapped 2048MB
+boot: protected loom
+live: mapped: MB/222.543.872
+boot: installed 2178 jets
+vere: checking version compatibility
+mesa: forwarding enabled
+mdns: init failed, install avahi on this system for mdns support
+mesa: live on 31338 (localhost only)
+conn: listening on /state/live/nec/.urb/conn.sock
+ames: unix-duct received on %born
+http: web interface live on http://localhost:18082
+http: loopback live on http://localhost:12323
+pier (210): live
+~
+urbit 4.6
+boot: home is /state/live/nec
+loom: mapped 2048MB
+lite: arvo formula 4ce68411
+lite: core 641296f
+lite: final state 641296f
+disk: loaded epoch 0i0
+loom: mapped 2048MB
+boot: protected loom
+live: mapped: MB/222.543.872
+boot: installed 2178 jets
+vere: checking version compatibility
+mesa: forwarding enabled
+mdns: init failed, install avahi on this system for mdns support
+mesa: live on 31338 (localhost only)
+conn: listening on /state/live/nec/.urb/conn.sock
+ames: unix-duct received on %born
+http: web interface live on http://localhost:18082
+http: loopback live on http://localhost:12323
+pier (240): live
+%already-mounted
+[[p=~nec q=%base r=[%ud p=0]] s=/]
+~
+urbit 4.6
+boot: home is /state/live/nec
+loom: mapped 2048MB
+lite: arvo formula 4ce68411
+lite: core 641296f
+lite: final state 641296f
+disk: loaded epoch 0i0
+loom: mapped 2048MB
+boot: protected loom
+live: mapped: MB/222.543.872
+boot: installed 2178 jets
+vere: checking version compatibility
+mesa: forwarding enabled
+mdns: init failed, install avahi on this system for mdns support
+mesa: live on 31338 (localhost only)
+conn: listening on /state/live/nec/.urb/conn.sock
+ames: unix-duct received on %born
+http: web interface live on http://localhost:18082
+http: loopback live on http://localhost:12323
+pier (210): live
+~
+urbit 4.6
+boot: home is /state/live/nec
+loom: mapped 2048MB
+lite: arvo formula 4ce68411
+lite: core 641296f
+lite: final state 641296f
+disk: loaded epoch 0i0
+loom: mapped 2048MB
+boot: protected loom
+live: mapped: MB/222.543.872
+boot: installed 2178 jets
+vere: checking version compatibility
+mesa: forwarding enabled
+mdns: init failed, install avahi on this system for mdns support
+mesa: live on 31338 (localhost only)
+conn: listening on /state/live/nec/.urb/conn.sock
+ames: unix-duct received on %born
+http: web interface live on http://localhost:18082
+http: loopback live on http://localhost:12323
+pier (240): live
+%already-mounted
+[[p=~nec q=%base r=[%ud p=0]] s=/]
+~
+urbit 4.6
+boot: home is /state/live/nec
+loom: mapped 2048MB
+lite: arvo formula 4ce68411
+lite: core 641296f
+lite: final state 641296f
+disk: loaded epoch 0i0
+loom: mapped 2048MB
+boot: protected loom
+live: mapped: MB/222.543.872
+boot: installed 2178 jets
+vere: checking version compatibility
+mesa: forwarding enabled
+mdns: init failed, install avahi on this system for mdns support
+mesa: live on 31338 (localhost only)
+conn: listening on /state/live/nec/.urb/conn.sock
+ames: unix-duct received on %born
+http: web interface live on http://localhost:18082
+http: loopback live on http://localhost:12323
+pier (210): live
+~
+urbit 4.6
+boot: home is /state/live/nec
+loom: mapped 2048MB
+lite: arvo formula 4ce68411
+lite: core 641296f
+lite: final state 641296f
+disk: loaded epoch 0i0
+loom: mapped 2048MB
+boot: protected loom
+live: mapped: MB/222.543.872
+boot: installed 2178 jets
+vere: checking version compatibility
+mesa: forwarding enabled
+mdns: init failed, install avahi on this system for mdns support
+mesa: live on 31338 (localhost only)
+conn: listening on /state/live/nec/.urb/conn.sock
+ames: unix-duct received on %born
+http: web interface live on http://localhost:18082
+http: loopback live on http://localhost:12323
+pier (240): live
+%already-mounted
+[[p=~nec q=%base r=[%ud p=0]] s=/]
+~
+urbit 4.6
+boot: home is /state/live/nec
+loom: mapped 2048MB
+lite: arvo formula 4ce68411
+lite: core 641296f
+lite: final state 641296f
+disk: loaded epoch 0i0
+loom: mapped 2048MB
+boot: protected loom
+live: mapped: MB/222.543.872
+boot: installed 2178 jets
+vere: checking version compatibility
+mesa: forwarding enabled
+mdns: init failed, install avahi on this system for mdns support
+mesa: live on 31338 (localhost only)
+conn: listening on /state/live/nec/.urb/conn.sock
+ames: unix-duct received on %born
+http: web interface live on http://localhost:18082
+http: loopback live on http://localhost:12323
+pier (210): live
+~
+urbit 4.6
+boot: home is /state/live/nec
+loom: mapped 2048MB
+lite: arvo formula 4ce68411
+lite: core 641296f
+lite: final state 641296f
+disk: loaded epoch 0i0
+loom: mapped 2048MB
+boot: protected loom
+live: mapped: MB/222.543.872
+boot: installed 2178 jets
+vere: checking version compatibility
+mesa: forwarding enabled
+mdns: init failed, install avahi on this system for mdns support
+mesa: live on 31338 (localhost only)
+conn: listening on /state/live/nec/.urb/conn.sock
+ames: unix-duct received on %born
+http: web interface live on http://localhost:18082
+http: loopback live on http://localhost:12323
+pier (240): live
+%already-mounted
+[[p=~nec q=%base r=[%ud p=0]] s=/]
+~
+urbit 4.6
+boot: home is /state/live/nec
+loom: mapped 2048MB
+lite: arvo formula 4ce68411
+lite: core 641296f
+lite: final state 641296f
+disk: loaded epoch 0i0
+loom: mapped 2048MB
+boot: protected loom
+live: mapped: MB/222.543.872
+boot: installed 2178 jets
+vere: checking version compatibility
+mesa: forwarding enabled
+mdns: init failed, install avahi on this system for mdns support
+mesa: live on 31338 (localhost only)
+conn: listening on /state/live/nec/.urb/conn.sock
+ames: unix-duct received on %born
+http: web interface live on http://localhost:18082
+http: loopback live on http://localhost:12323
+pier (210): live
+~
+urbit 4.6
+boot: home is /state/live/nec
+loom: mapped 2048MB
+lite: arvo formula 4ce68411
+lite: core 641296f
+lite: final state 641296f
+disk: loaded epoch 0i0
+loom: mapped 2048MB
+boot: protected loom
+live: mapped: MB/222.543.872
+boot: installed 2178 jets
+vere: checking version compatibility
+mesa: forwarding enabled
+mdns: init failed, install avahi on this system for mdns support
+mesa: live on 31338 (localhost only)
+conn: listening on /state/live/nec/.urb/conn.sock
+ames: unix-duct received on %born
+http: web interface live on http://localhost:18082
+http: loopback live on http://localhost:12323
+pier (240): live
+%already-mounted
+[[p=~nec q=%base r=[%ud p=0]] s=/]
+~
+urbit 4.6
+boot: home is /state/live/nec
+loom: mapped 2048MB
+lite: arvo formula 4ce68411
+lite: core 641296f
+lite: final state 641296f
+disk: loaded epoch 0i0
+loom: mapped 2048MB
+boot: protected loom
+live: mapped: MB/222.543.872
+boot: installed 2178 jets
+vere: checking version compatibility
+mesa: forwarding enabled
+mdns: init failed, install avahi on this system for mdns support
+mesa: live on 31338 (localhost only)
+conn: listening on /state/live/nec/.urb/conn.sock
+ames: unix-duct received on %born
+http: web interface live on http://localhost:18082
+http: loopback live on http://localhost:12323
+pier (210): live
+~
+urbit 4.6
+boot: home is /state/live/nec
+loom: mapped 2048MB
+lite: arvo formula 4ce68411
+lite: core 641296f
+lite: final state 641296f
+disk: loaded epoch 0i0
+loom: mapped 2048MB
+boot: protected loom
+live: mapped: MB/222.543.872
+boot: installed 2178 jets
+vere: checking version compatibility
+mesa: forwarding enabled
+mdns: init failed, install avahi on this system for mdns support
+mesa: live on 31338 (localhost only)
+conn: listening on /state/live/nec/.urb/conn.sock
+ames: unix-duct received on %born
+http: web interface live on http://localhost:18082
+http: loopback live on http://localhost:12323
+pier (240): live
+%already-mounted
+[[p=~nec q=%base r=[%ud p=0]] s=/]
+~
+urbit 4.6
+boot: home is /state/live/nec
+loom: mapped 2048MB
+lite: arvo formula 4ce68411
+lite: core 641296f
+lite: final state 641296f
+disk: loaded epoch 0i0
+loom: mapped 2048MB
+boot: protected loom
+live: mapped: MB/222.543.872
+boot: installed 2178 jets
+vere: checking version compatibility
+mesa: forwarding enabled
+mdns: init failed, install avahi on this system for mdns support
+mesa: live on 31338 (localhost only)
+conn: listening on /state/live/nec/.urb/conn.sock
+ames: unix-duct received on %born
+http: web interface live on http://localhost:18082
+http: loopback live on http://localhost:12323
+pier (210): live
+~
+urbit 4.6
+boot: home is /state/live/nec
+loom: mapped 2048MB
+lite: arvo formula 4ce68411
+lite: core 641296f
+lite: final state 641296f
+disk: loaded epoch 0i0
+loom: mapped 2048MB
+boot: protected loom
+live: mapped: MB/222.543.872
+boot: installed 2178 jets
+vere: checking version compatibility
+mesa: forwarding enabled
+mdns: init failed, install avahi on this system for mdns support
+mesa: live on 31338 (localhost only)
+conn: listening on /state/live/nec/.urb/conn.sock
+ames: unix-duct received on %born
+http: web interface live on http://localhost:18082
+http: loopback live on http://localhost:12323
+pier (240): live
+%already-mounted
+[[p=~nec q=%base r=[%ud p=0]] s=/]
+~
+urbit 4.6
+boot: home is /state/live/nec
+loom: mapped 2048MB
+lite: arvo formula 4ce68411
+lite: core 641296f
+lite: final state 641296f
+disk: loaded epoch 0i0
+loom: mapped 2048MB
+boot: protected loom
+live: mapped: MB/222.543.872
+boot: installed 2178 jets
+vere: checking version compatibility
+mesa: forwarding enabled
+mdns: init failed, install avahi on this system for mdns support
+mesa: live on 31338 (localhost only)
+conn: listening on /state/live/nec/.urb/conn.sock
+ames: unix-duct received on %born
+http: web interface live on http://localhost:18082
+http: loopback live on http://localhost:12323
+pier (210): live
+~
+urbit 4.6
+boot: home is /state/live/nec
+loom: mapped 2048MB
+lite: arvo formula 4ce68411
+lite: core 641296f
+lite: final state 641296f
+disk: loaded epoch 0i0
+loom: mapped 2048MB
+boot: protected loom
+live: mapped: MB/222.543.872
+boot: installed 2178 jets
+vere: checking version compatibility
+mesa: forwarding enabled
+mdns: init failed, install avahi on this system for mdns support
+mesa: live on 31338 (localhost only)
+conn: listening on /state/live/nec/.urb/conn.sock
+ames: unix-duct received on %born
+http: web interface live on http://localhost:18082
+http: loopback live on http://localhost:12323
+pier (240): live
+%already-mounted
+[[p=~nec q=%base r=[%ud p=0]] s=/]
+~
+urbit 4.6
+boot: home is /state/live/nec
+loom: mapped 2048MB
+lite: arvo formula 4ce68411
+lite: core 641296f
+lite: final state 641296f
+disk: loaded epoch 0i0
+loom: mapped 2048MB
+boot: protected loom
+live: mapped: MB/222.543.872
+boot: installed 2178 jets
+vere: checking version compatibility
+mesa: forwarding enabled
+mdns: init failed, install avahi on this system for mdns support
+mesa: live on 31338 (localhost only)
+conn: listening on /state/live/nec/.urb/conn.sock
+ames: unix-duct received on %born
+http: web interface live on http://localhost:18082
+http: loopback live on http://localhost:12323
+pier (210): live
+~
+urbit 4.6
+boot: home is /state/live/nec
+loom: mapped 2048MB
+lite: arvo formula 4ce68411
+lite: core 641296f
+lite: final state 641296f
+disk: loaded epoch 0i0
+loom: mapped 2048MB
+boot: protected loom
+live: mapped: MB/222.543.872
+boot: installed 2178 jets
+vere: checking version compatibility
+mesa: forwarding enabled
+mdns: init failed, install avahi on this system for mdns support
+mesa: live on 31338 (localhost only)
+conn: listening on /state/live/nec/.urb/conn.sock
+ames: unix-duct received on %born
+http: web interface live on http://localhost:18082
+http: loopback live on http://localhost:12323
+pier (240): live
+%already-mounted
+[[p=~nec q=%base r=[%ud p=0]] s=/]
+~
+urbit 4.6
+boot: home is /state/live/nec
+loom: mapped 2048MB
+lite: arvo formula 4ce68411
+lite: core 641296f
+lite: final state 641296f
+disk: loaded epoch 0i0
+loom: mapped 2048MB
+boot: protected loom
+live: mapped: MB/222.543.872
+boot: installed 2178 jets
+vere: checking version compatibility
+mesa: forwarding enabled
+mdns: init failed, install avahi on this system for mdns support
+mesa: live on 31338 (localhost only)
+conn: listening on /state/live/nec/.urb/conn.sock
+ames: unix-duct received on %born
+http: web interface live on http://localhost:18082
+http: loopback live on http://localhost:12323
+pier (210): live
+~
+urbit 4.6
+boot: home is /state/live/nec
+loom: mapped 2048MB
+lite: arvo formula 4ce68411
+lite: core 641296f
+lite: final state 641296f
+disk: loaded epoch 0i0
+loom: mapped 2048MB
+boot: protected loom
+live: mapped: MB/222.543.872
+boot: installed 2178 jets
+vere: checking version compatibility
+mesa: forwarding enabled
+mdns: init failed, install avahi on this system for mdns support
+mesa: live on 31338 (localhost only)
+conn: listening on /state/live/nec/.urb/conn.sock
+ames: unix-duct received on %born
+http: web interface live on http://localhost:18082
+http: loopback live on http://localhost:12323
+pier (240): live
+%already-mounted
+[[p=~nec q=%base r=[%ud p=0]] s=/]
+~
+urbit 4.6
+boot: home is /state/live/nec
+loom: mapped 2048MB
+lite: arvo formula 4ce68411
+lite: core 641296f
+lite: final state 641296f
+disk: loaded epoch 0i0
+loom: mapped 2048MB
+boot: protected loom
+live: mapped: MB/222.543.872
+boot: installed 2178 jets
+vere: checking version compatibility
+mesa: forwarding enabled
+mdns: init failed, install avahi on this system for mdns support
+mesa: live on 31338 (localhost only)
+conn: listening on /state/live/nec/.urb/conn.sock
+ames: unix-duct received on %born
+http: web interface live on http://localhost:18082
+http: loopback live on http://localhost:12323
+pier (210): live
+gall: installing %stead-observer
+spider got sign for non-existent ~.khan-fyrd--0v5.5hro1.mu2nj.pos2t.g35bn.hkmta
+spider got sign for non-existent ~.khan-fyrd--0v4.dvi23.aqubh.ppkhg.vqmql.unai9
+spider got sign for non-existent ~.khan-fyrd--0v3.avftf.2flom.1ot1e.uc2pc.5tu7d
+spider got sign for non-existent ~.khan-fyrd--0v5.ted55.kfchs.ijq0s.7egt8.bbh7m
+spider got sign for non-existent ~.khan-fyrd--0v3.es0im.uk7en.be3i3.l5uq4.5d120
+spider got sign for non-existent ~.khan-fyrd--0v1.qdm51.6l658.egkvl.b6nq6.a6boo
+spider got sign for non-existent ~.khan-fyrd--0v1.709v1.pfufs.iqq37.2v78n.atavq
+spider got sign for non-existent ~.khan-fyrd--0v6.0p9h5.782mk.9q3hd.hclhj.itfu3
+~
+urbit 4.6
+boot: home is /state/live/nec
+loom: mapped 2048MB
+lite: arvo formula 4ce68411
+lite: core 641296f
+lite: final state 641296f
+disk: loaded epoch 0i0
+loom: mapped 2048MB
+boot: protected loom
+live: mapped: MB/222.543.872
+boot: installed 2178 jets
+vere: checking version compatibility
+mesa: forwarding enabled
+mdns: init failed, install avahi on this system for mdns support
+mesa: live on 31338 (localhost only)
+conn: listening on /state/live/nec/.urb/conn.sock
+ames: unix-duct received on %born
+http: web interface live on http://localhost:18082
+http: loopback live on http://localhost:12323
+pier (210): live
+%already-mounted
+[[p=~nec q=%base r=[%ud p=0]] s=/]
+~
+urbit 4.6
+boot: home is /state/live/nec
+loom: mapped 2048MB
+lite: arvo formula 4ce68411
+lite: core 641296f
+lite: final state 641296f
+disk: loaded epoch 0i0
+loom: mapped 2048MB
+boot: protected loom
+live: mapped: MB/222.543.872
+boot: installed 2178 jets
+vere: checking version compatibility
+mesa: forwarding enabled
+mdns: init failed, install avahi on this system for mdns support
+mesa: live on 31338 (localhost only)
+conn: listening on /state/live/nec/.urb/conn.sock
+ames: unix-duct received on %born
+http: web interface live on http://localhost:18082
+http: loopback live on http://localhost:12323
+pier (210): live
+~
+urbit 4.6
+boot: home is /state/live/nec
+loom: mapped 2048MB
+lite: arvo formula 4ce68411
+lite: core 641296f
+lite: final state 641296f
+disk: loaded epoch 0i0
+loom: mapped 2048MB
+boot: protected loom
+live: mapped: MB/222.543.872
+boot: installed 2178 jets
+vere: checking version compatibility
+mesa: forwarding enabled
+mdns: init failed, install avahi on this system for mdns support
+mesa: live on 31338 (localhost only)
+conn: listening on /state/live/nec/.urb/conn.sock
+ames: unix-duct received on %born
+http: web interface live on http://localhost:18082
+http: loopback live on http://localhost:12323
+pier (240): live
+%already-mounted
+[[p=~nec q=%base r=[%ud p=0]] s=/]
+~
+urbit 4.6
+boot: home is /state/live/nec
+loom: mapped 2048MB
+lite: arvo formula 4ce68411
+lite: core 641296f
+lite: final state 641296f
+disk: loaded epoch 0i0
+loom: mapped 2048MB
+boot: protected loom
+live: mapped: MB/222.543.872
+boot: installed 2178 jets
+vere: checking version compatibility
+mesa: forwarding enabled
+mdns: init failed, install avahi on this system for mdns support
+mesa: live on 31338 (localhost only)
+conn: listening on /state/live/nec/.urb/conn.sock
+ames: unix-duct received on %born
+http: web interface live on http://localhost:18082
+http: loopback live on http://localhost:12323
+pier (210): live
+~
+urbit 4.6
+boot: home is /state/live/nec
+loom: mapped 2048MB
+lite: arvo formula 4ce68411
+lite: core 641296f
+lite: final state 641296f
+disk: loaded epoch 0i0
+loom: mapped 2048MB
+boot: protected loom
+live: mapped: MB/222.543.872
+boot: installed 2178 jets
+vere: checking version compatibility
+mesa: forwarding enabled
+mdns: init failed, install avahi on this system for mdns support
+mesa: live on 31338 (localhost only)
+conn: listening on /state/live/nec/.urb/conn.sock
+ames: unix-duct received on %born
+http: web interface live on http://localhost:18082
+http: loopback live on http://localhost:12323
+pier (240): live
+%already-mounted
+[[p=~nec q=%base r=[%ud p=0]] s=/]
+~
+urbit 4.6
+boot: home is /state/live/nec
+loom: mapped 2048MB
+lite: arvo formula 4ce68411
+lite: core 641296f
+lite: final state 641296f
+disk: loaded epoch 0i0
+loom: mapped 2048MB
+boot: protected loom
+live: mapped: MB/222.543.872
+boot: installed 2178 jets
+vere: checking version compatibility
+mesa: forwarding enabled
+mdns: init failed, install avahi on this system for mdns support
+mesa: live on 31338 (localhost only)
+conn: listening on /state/live/nec/.urb/conn.sock
+ames: unix-duct received on %born
+http: web interface live on http://localhost:18082
+http: loopback live on http://localhost:12323
+pier (210): live
+~
+urbit 4.6
+boot: home is /state/live/nec
+loom: mapped 2048MB
+lite: arvo formula 4ce68411
+lite: core 641296f
+lite: final state 641296f
+disk: loaded epoch 0i0
+loom: mapped 2048MB
+boot: protected loom
+live: mapped: MB/222.543.872
+boot: installed 2178 jets
+vere: checking version compatibility
+mesa: forwarding enabled
+mdns: init failed, install avahi on this system for mdns support
+mesa: live on 31338 (localhost only)
+conn: listening on /state/live/nec/.urb/conn.sock
+ames: unix-duct received on %born
+http: web interface live on http://localhost:18082
+http: loopback live on http://localhost:12323
+pier (240): live
+%already-mounted
+[[p=~nec q=%base r=[%ud p=0]] s=/]
+~
+urbit 4.6
+boot: home is /state/live/nec
+loom: mapped 2048MB
+lite: arvo formula 4ce68411
+lite: core 641296f
+lite: final state 641296f
+disk: loaded epoch 0i0
+loom: mapped 2048MB
+boot: protected loom
+live: mapped: MB/222.543.872
+boot: installed 2178 jets
+vere: checking version compatibility
+mesa: forwarding enabled
+mdns: init failed, install avahi on this system for mdns support
+mesa: live on 31338 (localhost only)
+conn: listening on /state/live/nec/.urb/conn.sock
+ames: unix-duct received on %born
+http: web interface live on http://localhost:18082
+http: loopback live on http://localhost:12323
+pier (210): live
+~
+urbit 4.6
+boot: home is /state/live/nec
+loom: mapped 2048MB
+lite: arvo formula 4ce68411
+lite: core 641296f
+lite: final state 641296f
+disk: loaded epoch 0i0
+loom: mapped 2048MB
+boot: protected loom
+live: mapped: MB/222.543.872
+boot: installed 2178 jets
+vere: checking version compatibility
+mesa: forwarding enabled
+mdns: init failed, install avahi on this system for mdns support
+mesa: live on 31338 (localhost only)
+conn: listening on /state/live/nec/.urb/conn.sock
+ames: unix-duct received on %born
+http: web interface live on http://localhost:18082
+http: loopback live on http://localhost:12323
+pier (240): live
+%already-mounted
+[[p=~nec q=%base r=[%ud p=0]] s=/]
+~
+urbit 4.6
+boot: home is /state/live/nec
+loom: mapped 2048MB
+lite: arvo formula 4ce68411
+lite: core 641296f
+lite: final state 641296f
+disk: loaded epoch 0i0
+loom: mapped 2048MB
+boot: protected loom
+live: mapped: MB/222.543.872
+boot: installed 2178 jets
+vere: checking version compatibility
+mesa: forwarding enabled
+mdns: init failed, install avahi on this system for mdns support
+mesa: live on 31338 (localhost only)
+conn: listening on /state/live/nec/.urb/conn.sock
+ames: unix-duct received on %born
+http: web interface live on http://localhost:18082
+http: loopback live on http://localhost:12323
+pier (210): live
+~
+urbit 4.6
+boot: home is /state/live/nec
+loom: mapped 2048MB
+lite: arvo formula 4ce68411
+lite: core 641296f
+lite: final state 641296f
+disk: loaded epoch 0i0
+loom: mapped 2048MB
+boot: protected loom
+live: mapped: MB/222.543.872
+boot: installed 2178 jets
+vere: checking version compatibility
+mesa: forwarding enabled
+mdns: init failed, install avahi on this system for mdns support
+mesa: live on 31338 (localhost only)
+conn: listening on /state/live/nec/.urb/conn.sock
+ames: unix-duct received on %born
+http: web interface live on http://localhost:18082
+http: loopback live on http://localhost:12323
+pier (240): live
+%already-mounted
+[[p=~nec q=%base r=[%ud p=0]] s=/]
+~
+urbit 4.6
+boot: home is /state/live/nec
+loom: mapped 2048MB
+lite: arvo formula 4ce68411
+lite: core 641296f
+lite: final state 641296f
+disk: loaded epoch 0i0
+loom: mapped 2048MB
+boot: protected loom
+live: mapped: MB/222.543.872
+boot: installed 2178 jets
+vere: checking version compatibility
+mesa: forwarding enabled
+mdns: init failed, install avahi on this system for mdns support
+mesa: live on 31338 (localhost only)
+conn: listening on /state/live/nec/.urb/conn.sock
+ames: unix-duct received on %born
+http: web interface live on http://localhost:18082
+http: loopback live on http://localhost:12323
+pier (210): live
+~
+urbit 4.6
+boot: home is /state/live/nec
+loom: mapped 2048MB
+lite: arvo formula 4ce68411
+lite: core 641296f
+lite: final state 641296f
+disk: loaded epoch 0i0
+loom: mapped 2048MB
+boot: protected loom
+live: mapped: MB/222.543.872
+boot: installed 2178 jets
+vere: checking version compatibility
+mesa: forwarding enabled
+mdns: init failed, install avahi on this system for mdns support
+mesa: live on 31338 (localhost only)
+conn: listening on /state/live/nec/.urb/conn.sock
+ames: unix-duct received on %born
+http: web interface live on http://localhost:18082
+http: loopback live on http://localhost:12323
+pier (240): live
+%already-mounted
+[[p=~nec q=%base r=[%ud p=0]] s=/]
+~
+urbit 4.6
+boot: home is /state/live/nec
+loom: mapped 2048MB
+lite: arvo formula 4ce68411
+lite: core 641296f
+lite: final state 641296f
+disk: loaded epoch 0i0
+loom: mapped 2048MB
+boot: protected loom
+live: mapped: MB/222.543.872
+boot: installed 2178 jets
+vere: checking version compatibility
+mesa: forwarding enabled
+mdns: init failed, install avahi on this system for mdns support
+mesa: live on 31338 (localhost only)
+conn: listening on /state/live/nec/.urb/conn.sock
+ames: unix-duct received on %born
+http: web interface live on http://localhost:18082
+http: loopback live on http://localhost:12323
+pier (210): live
+~
+urbit 4.6
+boot: home is /state/live/nec
+loom: mapped 2048MB
+lite: arvo formula 4ce68411
+lite: core 641296f
+lite: final state 641296f
+disk: loaded epoch 0i0
+loom: mapped 2048MB
+boot: protected loom
+live: mapped: MB/222.543.872
+boot: installed 2178 jets
+vere: checking version compatibility
+mesa: forwarding enabled
+mdns: init failed, install avahi on this system for mdns support
+mesa: live on 31338 (localhost only)
+conn: listening on /state/live/nec/.urb/conn.sock
+ames: unix-duct received on %born
+http: web interface live on http://localhost:18082
+http: loopback live on http://localhost:12323
+pier (240): live
+%already-mounted
+[[p=~nec q=%base r=[%ud p=0]] s=/]
+~
+urbit 4.6
+boot: home is /state/live/nec
+loom: mapped 2048MB
+lite: arvo formula 4ce68411
+lite: core 641296f
+lite: final state 641296f
+disk: loaded epoch 0i0
+loom: mapped 2048MB
+boot: protected loom
+live: mapped: MB/222.543.872
+boot: installed 2178 jets
+vere: checking version compatibility
+mesa: forwarding enabled
+mdns: init failed, install avahi on this system for mdns support
+mesa: live on 31338 (localhost only)
+conn: listening on /state/live/nec/.urb/conn.sock
+ames: unix-duct received on %born
+http: web interface live on http://localhost:18082
+http: loopback live on http://localhost:12323
+pier (210): live
+~
+urbit 4.6
+boot: home is /state/live/nec
+loom: mapped 2048MB
+lite: arvo formula 4ce68411
+lite: core 641296f
+lite: final state 641296f
+disk: loaded epoch 0i0
+loom: mapped 2048MB
+boot: protected loom
+live: mapped: MB/222.543.872
+boot: installed 2178 jets
+vere: checking version compatibility
+mesa: forwarding enabled
+mdns: init failed, install avahi on this system for mdns support
+mesa: live on 31338 (localhost only)
+conn: listening on /state/live/nec/.urb/conn.sock
+ames: unix-duct received on %born
+http: web interface live on http://localhost:18082
+http: loopback live on http://localhost:12323
+pier (240): live
+%already-mounted
+[[p=~nec q=%base r=[%ud p=0]] s=/]
+~
+urbit 4.6
+boot: home is /state/live/nec
+loom: mapped 2048MB
+lite: arvo formula 4ce68411
+lite: core 641296f
+lite: final state 641296f
+disk: loaded epoch 0i0
+loom: mapped 2048MB
+boot: protected loom
+live: mapped: MB/222.543.872
+boot: installed 2178 jets
+vere: checking version compatibility
+mesa: forwarding enabled
+mdns: init failed, install avahi on this system for mdns support
+mesa: live on 31338 (localhost only)
+conn: listening on /state/live/nec/.urb/conn.sock
+ames: unix-duct received on %born
+http: web interface live on http://localhost:18082
+http: loopback live on http://localhost:12323
+pier (210): live
+~
+urbit 4.6
+boot: home is /state/live/nec
+loom: mapped 2048MB
+lite: arvo formula 4ce68411
+lite: core 641296f
+lite: final state 641296f
+disk: loaded epoch 0i0
+loom: mapped 2048MB
+boot: protected loom
+live: mapped: MB/222.543.872
+boot: installed 2178 jets
+vere: checking version compatibility
+mesa: forwarding enabled
+mdns: init failed, install avahi on this system for mdns support
+mesa: live on 31338 (localhost only)
+conn: listening on /state/live/nec/.urb/conn.sock
+ames: unix-duct received on %born
+http: web interface live on http://localhost:18082
+http: loopback live on http://localhost:12323
+pier (240): live
+%already-mounted
+[[p=~nec q=%base r=[%ud p=0]] s=/]
+~
+urbit 4.6
+boot: home is /state/live/nec
+loom: mapped 2048MB
+lite: arvo formula 4ce68411
+lite: core 641296f
+lite: final state 641296f
+disk: loaded epoch 0i0
+loom: mapped 2048MB
+boot: protected loom
+live: mapped: MB/222.543.872
+boot: installed 2178 jets
+vere: checking version compatibility
+mesa: forwarding enabled
+mdns: init failed, install avahi on this system for mdns support
+mesa: live on 31338 (localhost only)
+conn: listening on /state/live/nec/.urb/conn.sock
+ames: unix-duct received on %born
+http: web interface live on http://localhost:18082
+http: loopback live on http://localhost:12323
+pier (210): live
+~
+urbit 4.6
+boot: home is /state/live/nec
+loom: mapped 2048MB
+lite: arvo formula 4ce68411
+lite: core 641296f
+lite: final state 641296f
+disk: loaded epoch 0i0
+loom: mapped 2048MB
+boot: protected loom
+live: mapped: MB/222.543.872
+boot: installed 2178 jets
+vere: checking version compatibility
+mesa: forwarding enabled
+mdns: init failed, install avahi on this system for mdns support
+mesa: live on 31338 (localhost only)
+conn: listening on /state/live/nec/.urb/conn.sock
+ames: unix-duct received on %born
+http: web interface live on http://localhost:18082
+http: loopback live on http://localhost:12323
+pier (240): live
+%already-mounted
+[[p=~nec q=%base r=[%ud p=0]] s=/]
+~
+urbit 4.6
+boot: home is /state/live/nec
+loom: mapped 2048MB
+lite: arvo formula 4ce68411
+lite: core 641296f
+lite: final state 641296f
+disk: loaded epoch 0i0
+loom: mapped 2048MB
+boot: protected loom
+live: mapped: MB/222.543.872
+boot: installed 2178 jets
+vere: checking version compatibility
+mesa: forwarding enabled
+mdns: init failed, install avahi on this system for mdns support
+mesa: live on 31338 (localhost only)
+conn: listening on /state/live/nec/.urb/conn.sock
+ames: unix-duct received on %born
+http: web interface live on http://localhost:18082
+http: loopback live on http://localhost:12323
+pier (210): live
+~
+urbit 4.6
+boot: home is /state/live/nec
+loom: mapped 2048MB
+lite: arvo formula 4ce68411
+lite: core 641296f
+lite: final state 641296f
+disk: loaded epoch 0i0
+loom: mapped 2048MB
+boot: protected loom
+live: mapped: MB/222.543.872
+boot: installed 2178 jets
+vere: checking version compatibility
+mesa: forwarding enabled
+mdns: init failed, install avahi on this system for mdns support
+mesa: live on 31338 (localhost only)
+conn: listening on /state/live/nec/.urb/conn.sock
+ames: unix-duct received on %born
+http: web interface live on http://localhost:18082
+http: loopback live on http://localhost:12323
+pier (240): live
+%already-mounted
+[[p=~nec q=%base r=[%ud p=0]] s=/]
+~
+urbit 4.6
+boot: home is /state/live/nec
+loom: mapped 2048MB
+lite: arvo formula 4ce68411
+lite: core 641296f
+lite: final state 641296f
+disk: loaded epoch 0i0
+loom: mapped 2048MB
+boot: protected loom
+live: mapped: MB/222.543.872
+boot: installed 2178 jets
+vere: checking version compatibility
+mesa: forwarding enabled
+mdns: init failed, install avahi on this system for mdns support
+mesa: live on 31338 (localhost only)
+conn: listening on /state/live/nec/.urb/conn.sock
+ames: unix-duct received on %born
+http: web interface live on http://localhost:18082
+http: loopback live on http://localhost:12323
+pier (210): live
+~
+urbit 4.6
+boot: home is /state/live/nec
+loom: mapped 2048MB
+lite: arvo formula 4ce68411
+lite: core 641296f
+lite: final state 641296f
+disk: loaded epoch 0i0
+loom: mapped 2048MB
+boot: protected loom
+live: mapped: MB/222.543.872
+boot: installed 2178 jets
+vere: checking version compatibility
+mesa: forwarding enabled
+mdns: init failed, install avahi on this system for mdns support
+mesa: live on 31338 (localhost only)
+conn: listening on /state/live/nec/.urb/conn.sock
+ames: unix-duct received on %born
+http: web interface live on http://localhost:18082
+http: loopback live on http://localhost:12323
+pier (240): live
+%already-mounted
+[[p=~nec q=%base r=[%ud p=0]] s=/]
+~
+urbit 4.6
+boot: home is /state/live/nec
+loom: mapped 2048MB
+lite: arvo formula 4ce68411
+lite: core 641296f
+lite: final state 641296f
+disk: loaded epoch 0i0
+loom: mapped 2048MB
+boot: protected loom
+live: mapped: MB/222.543.872
+boot: installed 2178 jets
+vere: checking version compatibility
+mesa: forwarding enabled
+mdns: init failed, install avahi on this system for mdns support
+mesa: live on 31338 (localhost only)
+conn: listening on /state/live/nec/.urb/conn.sock
+ames: unix-duct received on %born
+http: web interface live on http://localhost:18082
+http: loopback live on http://localhost:12323
+pier (210): live
+%already-mounted
+[[p=~nec q=%base r=[%ud p=0]] s=/]
+~
+urbit 4.6
+boot: home is /state/live/nec
+loom: mapped 2048MB
+lite: arvo formula 4ce68411
+lite: core 641296f
+lite: final state 641296f
+disk: loaded epoch 0i0
+loom: mapped 2048MB
+boot: protected loom
+live: mapped: MB/222.543.872
+boot: installed 2178 jets
+vere: checking version compatibility
+mesa: forwarding enabled
+mdns: init failed, install avahi on this system for mdns support
+mesa: live on 31338 (localhost only)
+conn: listening on /state/live/nec/.urb/conn.sock
+ames: unix-duct received on %born
+http: web interface live on http://localhost:18082
+http: loopback live on http://localhost:12323
+pier (210): live
+~
+urbit 4.6
+boot: home is /state/live/nec
+loom: mapped 2048MB
+lite: arvo formula 4ce68411
+lite: core 641296f
+lite: final state 641296f
+disk: loaded epoch 0i0
+loom: mapped 2048MB
+boot: protected loom
+live: mapped: MB/222.543.872
+boot: installed 2178 jets
+vere: checking version compatibility
+mesa: forwarding enabled
+mdns: init failed, install avahi on this system for mdns support
+mesa: live on 31338 (localhost only)
+conn: listening on /state/live/nec/.urb/conn.sock
+ames: unix-duct received on %born
+http: web interface live on http://localhost:18082
+http: loopback live on http://localhost:12323
+pier (240): live
+%already-mounted
+[[p=~nec q=%base r=[%ud p=0]] s=/]
+~
+urbit 4.6
+boot: home is /state/live/nec
+loom: mapped 2048MB
+lite: arvo formula 4ce68411
+lite: core 641296f
+lite: final state 641296f
+disk: loaded epoch 0i0
+loom: mapped 2048MB
+boot: protected loom
+live: mapped: MB/222.543.872
+boot: installed 2178 jets
+vere: checking version compatibility
+mesa: forwarding enabled
+mdns: init failed, install avahi on this system for mdns support
+mesa: live on 31338 (localhost only)
+conn: listening on /state/live/nec/.urb/conn.sock
+ames: unix-duct received on %born
+http: web interface live on http://localhost:18082
+http: loopback live on http://localhost:12323
+pier (210): live
+~
+urbit 4.6
+boot: home is /state/live/nec
+loom: mapped 2048MB
+lite: arvo formula 4ce68411
+lite: core 641296f
+lite: final state 641296f
+disk: loaded epoch 0i0
+loom: mapped 2048MB
+boot: protected loom
+live: mapped: MB/222.543.872
+boot: installed 2178 jets
+vere: checking version compatibility
+mesa: forwarding enabled
+mdns: init failed, install avahi on this system for mdns support
+mesa: live on 31338 (localhost only)
+conn: listening on /state/live/nec/.urb/conn.sock
+ames: unix-duct received on %born
+http: web interface live on http://localhost:18082
+http: loopback live on http://localhost:12323
+pier (240): live
+%already-mounted
+[[p=~nec q=%base r=[%ud p=0]] s=/]
+~
+urbit 4.6
+boot: home is /state/live/nec
+loom: mapped 2048MB
+lite: arvo formula 4ce68411
+lite: core 641296f
+lite: final state 641296f
+disk: loaded epoch 0i0
+loom: mapped 2048MB
+boot: protected loom
+live: mapped: MB/222.543.872
+boot: installed 2178 jets
+vere: checking version compatibility
+mesa: forwarding enabled
+mdns: init failed, install avahi on this system for mdns support
+mesa: live on 31338 (localhost only)
+conn: listening on /state/live/nec/.urb/conn.sock
+ames: unix-duct received on %born
+http: web interface live on http://localhost:18082
+http: loopback live on http://localhost:12323
+pier (210): live
+~
+urbit 4.6
+boot: home is /state/live/nec
+loom: mapped 2048MB
+lite: arvo formula 4ce68411
+lite: core 641296f
+lite: final state 641296f
+disk: loaded epoch 0i0
+loom: mapped 2048MB
+boot: protected loom
+live: mapped: MB/222.543.872
+boot: installed 2178 jets
+vere: checking version compatibility
+mesa: forwarding enabled
+mdns: init failed, install avahi on this system for mdns support
+mesa: live on 31338 (localhost only)
+conn: listening on /state/live/nec/.urb/conn.sock
+ames: unix-duct received on %born
+http: web interface live on http://localhost:18082
+http: loopback live on http://localhost:12323
+pier (240): live
+%already-mounted
+[[p=~nec q=%base r=[%ud p=0]] s=/]
+~
+urbit 4.6
+boot: home is /state/live/nec
+loom: mapped 2048MB
+lite: arvo formula 4ce68411
+lite: core 641296f
+lite: final state 641296f
+disk: loaded epoch 0i0
+loom: mapped 2048MB
+boot: protected loom
+live: mapped: MB/222.543.872
+boot: installed 2178 jets
+vere: checking version compatibility
+mesa: forwarding enabled
+mdns: init failed, install avahi on this system for mdns support
+mesa: live on 31338 (localhost only)
+conn: listening on /state/live/nec/.urb/conn.sock
+ames: unix-duct received on %born
+http: web interface live on http://localhost:18082
+http: loopback live on http://localhost:12323
+pier (210): live
+~
+urbit 4.6
+boot: home is /state/live/nec
+loom: mapped 2048MB
+lite: arvo formula 4ce68411
+lite: core 641296f
+lite: final state 641296f
+disk: loaded epoch 0i0
+loom: mapped 2048MB
+boot: protected loom
+live: mapped: MB/222.543.872
+boot: installed 2178 jets
+vere: checking version compatibility
+mesa: forwarding enabled
+mdns: init failed, install avahi on this system for mdns support
+mesa: live on 31338 (localhost only)
+conn: listening on /state/live/nec/.urb/conn.sock
+ames: unix-duct received on %born
+http: web interface live on http://localhost:18082
+http: loopback live on http://localhost:12323
+pier (240): live
+%already-mounted
+[[p=~nec q=%base r=[%ud p=0]] s=/]
+~
+urbit 4.6
+boot: home is /state/live/nec
+loom: mapped 2048MB
+lite: arvo formula 4ce68411
+lite: core 641296f
+lite: final state 641296f
+disk: loaded epoch 0i0
+loom: mapped 2048MB
+boot: protected loom
+live: mapped: MB/222.543.872
+boot: installed 2178 jets
+vere: checking version compatibility
+mesa: forwarding enabled
+mdns: init failed, install avahi on this system for mdns support
+mesa: live on 31338 (localhost only)
+conn: listening on /state/live/nec/.urb/conn.sock
+ames: unix-duct received on %born
+http: web interface live on http://localhost:18082
+http: loopback live on http://localhost:12323
+pier (210): live
+~
+urbit 4.6
+boot: home is /state/live/nec
+loom: mapped 2048MB
+lite: arvo formula 4ce68411
+lite: core 641296f
+lite: final state 641296f
+disk: loaded epoch 0i0
+loom: mapped 2048MB
+boot: protected loom
+live: mapped: MB/222.543.872
+boot: installed 2178 jets
+vere: checking version compatibility
+mesa: forwarding enabled
+mdns: init failed, install avahi on this system for mdns support
+mesa: live on 31338 (localhost only)
+conn: listening on /state/live/nec/.urb/conn.sock
+ames: unix-duct received on %born
+http: web interface live on http://localhost:18082
+http: loopback live on http://localhost:12323
+pier (240): live
+%already-mounted
+[[p=~nec q=%base r=[%ud p=0]] s=/]
+~
+urbit 4.6
+boot: home is /state/live/nec
+loom: mapped 2048MB
+lite: arvo formula 4ce68411
+lite: core 641296f
+lite: final state 641296f
+disk: loaded epoch 0i0
+loom: mapped 2048MB
+boot: protected loom
+live: mapped: MB/222.543.872
+boot: installed 2178 jets
+vere: checking version compatibility
+mesa: forwarding enabled
+mdns: init failed, install avahi on this system for mdns support
+mesa: live on 31338 (localhost only)
+conn: listening on /state/live/nec/.urb/conn.sock
+ames: unix-duct received on %born
+http: web interface live on http://localhost:18082
+http: loopback live on http://localhost:12323
+pier (210): live
+gall: installing %stead-observer
+~
+urbit 4.6
+boot: home is /state/live/nec
+loom: mapped 2048MB
+lite: arvo formula 4ce68411
+lite: core 641296f
+lite: final state 641296f
+disk: loaded epoch 0i0
+loom: mapped 2048MB
+boot: protected loom
+live: mapped: MB/222.543.872
+boot: installed 2178 jets
+vere: checking version compatibility
+mesa: forwarding enabled
+mdns: init failed, install avahi on this system for mdns support
+mesa: live on 31338 (localhost only)
+conn: listening on /state/live/nec/.urb/conn.sock
+ames: unix-duct received on %born
+http: web interface live on http://localhost:18082
+http: loopback live on http://localhost:12323
+pier (210): live
+%already-mounted
+[[p=~nec q=%base r=[%ud p=0]] s=/]
+~
+urbit 4.6
+boot: home is /state/live/nec
+loom: mapped 2048MB
+lite: arvo formula 4ce68411
+lite: core 641296f
+lite: final state 641296f
+disk: loaded epoch 0i0
+loom: mapped 2048MB
+boot: protected loom
+live: mapped: MB/222.543.872
+boot: installed 2178 jets
+vere: checking version compatibility
+mesa: forwarding enabled
+mdns: init failed, install avahi on this system for mdns support
+mesa: live on 31338 (localhost only)
+conn: listening on /state/live/nec/.urb/conn.sock
+ames: unix-duct received on %born
+http: web interface live on http://localhost:18082
+http: loopback live on http://localhost:12323
+pier (210): live

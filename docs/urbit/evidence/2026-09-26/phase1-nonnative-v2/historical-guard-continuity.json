@@ -1,0 +1,66 @@
+{
+  "binding_observed_source_commit": "0d877cff4319de8d437f0da58d4518535f758c36",
+  "change_id": "add-prelaunch-resample-cancel-check-and-lease-publication",
+  "current_guard_sha256": "da16e2e0fd32eb5b90706b546a7ea8332a65807fc8279f3bd765dcc18aaad9b5",
+  "current_host_tests": {
+    "path": "docs/urbit/evidence/2026-09-26/phase1-nonnative-v2/source-dispositions.json",
+    "pointer": "/proofs/guard-negative-host-tests",
+    "sha256": "38e03c05e1c9e51b5c12c256c33c3c13da5122ca6b5641375d53fccc30067a27"
+  },
+  "current_source": {
+    "path": "scripts/urbit/execution_policy.py",
+    "pointer": "",
+    "sha256": "da16e2e0fd32eb5b90706b546a7ea8332a65807fc8279f3bd765dcc18aaad9b5"
+  },
+  "current_source_review": {
+    "path": "docs/urbit/evidence/2026-09-26/phase1-nonnative-v2/source-dispositions.json",
+    "pointer": "/proofs/guard-independent-source-review",
+    "sha256": "38e03c05e1c9e51b5c12c256c33c3c13da5122ca6b5641375d53fccc30067a27"
+  },
+  "delta_findings": [
+    "Whole historical/current source differs only by the exact nine-line insertion after the unique command_factory return boundary.",
+    "The added sample must satisfy the original preflight ceiling and original sensor inventory. Current cancellation is checked and a fresh lease is published before Popen.",
+    "Initial hot refusal, scope construction/readback, inherited lock, read-only lease and cleanup source are unchanged.",
+    "Original 93/81 C reports remain failed with launched=false and no exit code. The positive historical shim remains explicitly mocked at 45 C, with actual cpu.max 5000 10000 and namespace/read-only-lease log output.",
+    "Historical lock release is supported by the completed guarded lifetime and unchanged lock context; this reviewer did not recreate an additional historical lock probe.",
+    "No heat was manufactured and no old observation is attributed to the current source. Current source review and actual host tests are separate prerequisites."
+  ],
+  "final_source_binding_pending": false,
+  "historical_artifacts": {
+    "guard-real-hot-preflight-refusal": [
+      {
+        "path": "docs/urbit/evidence/2026-09-13/qualification/guard-real-preflight-93c.json",
+        "sha256": "ee5343d8baf6b148654401792409a93f8868a2332dbbe49fba1099846dd44dc4"
+      },
+      {
+        "path": "docs/urbit/evidence/2026-09-13/qualification/guard-real-start-81c.json",
+        "sha256": "78f5902e38dc5c20bbe89bd9ec415f67b72c1300167f6cc701972b04d67d426b"
+      }
+    ],
+    "guard-real-platform-mocked-sensors": [
+      {
+        "path": "docs/urbit/evidence/2026-09-13/qualification/guard-platform-mocked-sensors.json",
+        "sha256": "27d98c3dbed1aebdd1a8b23d344ceeec002c271508f7323fd07091fb8243dd46"
+      },
+      {
+        "path": "docs/urbit/evidence/2026-09-13/qualification/guard-platform-mocked-sensors.log",
+        "sha256": "27964c2ebe27f62166668998ba7aa42562226b78725c05ef684a7371deb24a55"
+      }
+    ]
+  },
+  "historical_guard_sha256": "7166d197a6e3879f21c22637f2bd3074ff90975c33a2149f6e07763e2eeaa04e",
+  "previous_review": {
+    "path": "docs/urbit/evidence/2026-09-26/phase1-nonnative/historical-guard-continuity.json",
+    "pointer": "",
+    "sha256": "aa20f96d3a7c1aa6d313dd97397a51dfef99fcd26a1af4a6dd23fb21e96541c0"
+  },
+  "previous_source": {
+    "path": "docs/urbit/evidence/2026-09-25/phase1-nonnative/historical-execution-policy.py.txt",
+    "pointer": "",
+    "sha256": "7166d197a6e3879f21c22637f2bd3074ff90975c33a2149f6e07763e2eeaa04e"
+  },
+  "protocol": "stead.historical-guard-continuity/1",
+  "reviewer": "/root/independent_review",
+  "scope": "Exactly the two frozen nonnative historical guard requirements. No native, thermal calibration, current execution or generic stale-evidence exemption.",
+  "status": "reviewed"
+}

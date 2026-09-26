@@ -3,9 +3,14 @@
 The original increment executed one home-owned synthetic project/work/document
 state machine and authorization together at `f52293f`. The v2 code now compiles
 and has passed 53 native compile/save-load probes. **Full v2 qualification remains
-open:** the latest full run at `8334a75` was thermally interrupted after 90 passed
-cases; populated migration, capacity, recovery and final reconciliation are still
-required. See the [current checkpoint](PHASE01_CHECKPOINT_20260926.md).
+open:** core05 at `5208f32` reached all 148 main cases (145 passes and
+three frozen deferrals), completed the seven delivery cases, and filled the
+4,096-event predecessor. A malformed-policy load then timed out without a native
+terminal response; seven capacity/predecessor recipes remain unexecuted. The
+preceding timeout-lifecycle correction passed 470 host tests and both focused
+native timeout/recovery cycles. Full-state validation and final reconciliation
+remain required. The new focused capacity diagnostic has not yet run.
+See the [current checkpoint](PHASE01_CHECKPOINT_20260926.md).
 The original minimum contracts remain byte-for-byte frozen under
 `specs/urbit/contract-freeze.json`; the narrow [v2 amendment](CONTRACT_AMENDMENT_2.md)
 has its own `specs/urbit/v2/contract-freeze.json`. The native desk is
@@ -70,8 +75,10 @@ transition, in batches of at most 32 commands, to produce an actual old-state
 vase; it does not assign a fabricated journal count. Migration reconstructs and
 checks content/policy projections while preserving original journal, receipt and
 Git bytes. These migration and corruption tests still need a completed qualifying
-run. Current save/load, process restart and the required controlled abrupt-crash
-recovery lane are separate checks. None establishes production backup recovery,
+run. Current save/load, predecessor migration and fenced process restart are
+separate required checks. The frozen Phase 1 restart gate requires a cleanly
+stopped process and a distinct replacement retaining the same pier. Abrupt-crash
+recovery has not been qualified and is not that gate. None establishes production backup recovery,
 a safe runtime rollback or same-identity live migration.
 
 V2 scopes local work IDs by project, documents by project/container, and grants by
@@ -92,8 +99,9 @@ These privacy/capacity changes require their actual native regressions; source
 review is not reproduction of either old vulnerability or proof of the fix. Real company data
 remains blocked pending the independent authentication, endpoint-isolation and
 backup reviews in the master directive. The current gate requires capacity-edge
-fill schedules, actual subscription evidence and controlled abrupt-crash recovery;
-the latter is not deferred from Phase 1. Production effects remain later work.
+fill schedules, actual subscription evidence and the specified fenced restart.
+See the [attributed restart-scope correction](reviews/PHASE1_RESTART_SCOPE_CORRECTION_20260926.md)
+for the controlling requirements and the preserved earlier wording. Production effects remain later work.
 There is no implemented external-effect
 subsystem to replay; this is a bounded source/N-A disposition, not effect-engine
 qualification. No representative latency or capacity claim is made.

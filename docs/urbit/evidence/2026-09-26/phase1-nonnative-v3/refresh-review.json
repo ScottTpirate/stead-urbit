@@ -1,0 +1,127 @@
+{
+  "harness_delta": {
+    "after": "        # The supported Linux profile may have a checkout deeper than sun_path.\n        # Resolve the same filesystem socket through an owned directory fd;\n        # do not move the socket or create a second authority endpoint.\n        directory = os.open(STATE, os.O_RDONLY | os.O_DIRECTORY | os.O_NOFOLLOW | os.O_CLOEXEC)\n        try:\n            client.connect(f'/proc/self/fd/{directory}/control.sock')\n        finally:\n            os.close(directory)\n",
+    "before": "        client.connect(str(STATE / 'control.sock'))\n",
+    "entire_source_equals_single_replacement": true,
+    "findings": [
+      "The existing STATE directory is opened read-only with O_DIRECTORY|O_NOFOLLOW|O_CLOEXEC. Connecting through /proc/self/fd/<fd>/control.sock reaches the same existing filesystem socket and supports long Linux checkout paths.",
+      "The directory descriptor remains open during connect and closes in finally on success or failure; the connected AF_UNIX socket remains valid afterward. No second listener or authority endpoint is created.",
+      "Existing socket timeout, operation JSON, newline framing, response byte bound, server-error handling, fixture provenance, locks, launch path and thermal guard are unchanged."
+    ]
+  },
+  "host_capture_audit": {
+    "additional_passed_test_id": "test_dev_flow.LifecycleTests.test_status_uses_real_socket_in_long_checkout_path",
+    "affinity": [
+      19
+    ],
+    "all_eight_output_hashes_verified": true,
+    "auditor": "/root/gall_schedule_review",
+    "cancellation": [],
+    "capture": {
+      "path": ".runtime/phase01-20260926/host-recapture-20260926t194252z-4c31da7e/host-current.json",
+      "pointer": "",
+      "sha256": "546cca4e017012a3e7bc2f5f36dc62a1a4ec5ba46a1dab32b16f24ea4d25489c"
+    },
+    "cpu_max": "5000 10000",
+    "executor": "/root",
+    "exit_code": 0,
+    "final_scope_inactive_empty_unloaded": true,
+    "mapped_delivery_ids_present": 2,
+    "mapped_guard_ids_present": 15,
+    "module_counts": {
+      "test_delivery_cases": 10,
+      "test_delivery_evidence_regressions": 11,
+      "test_delivery_suite": 10,
+      "test_dev_flow": 32,
+      "test_execution_policy": 6,
+      "test_harness_safety": 43,
+      "test_runtime_guard_adversarial": 26
+    },
+    "outer_elapsed_seconds": 4.337898258934729,
+    "passed_subtests": 162,
+    "same_sole_pid_before_after": true,
+    "scope": "Read-only audit of actual root-executed host tests; source and resource identity, exact records and logs were checked without rerunning the suites.",
+    "selected_ids_equal_prior_137_plus_exact_socket_test": true,
+    "source_before_after_and_frozen_git_blobs_equal": true,
+    "source_files": 156,
+    "unique_selected_started_finished_passed_ids": 138,
+    "unittest_seconds": 2.958,
+    "worker_elapsed_seconds": 3.681595574016683
+  },
+  "host_test_execution": false,
+  "native_execution": false,
+  "preservation": {
+    "historical_93c_81c_platform_unchanged": true,
+    "old_source_proofs_and_captures_unchanged": true,
+    "original_independent_review": {
+      "path": "docs/urbit/reviews/PHASE01_INDEPENDENT_REVIEW_20260925.md",
+      "pointer": "",
+      "sha256": "ae0edda0a91d5b89b1cd070c8685de8d73dbc190093563c8cd2d4dba1d51b717"
+    },
+    "previous_bundle_retention_index": {
+      "path": "docs/urbit/evidence/2026-09-26/phase1-nonnative-v2/retention-index.json",
+      "pointer": "",
+      "sha256": "efbb61216a98591fc075aeb74863fbaf1018598564e32b25eb1c16c2b710ce0b"
+    },
+    "previous_promotion_helper": {
+      "path": ".runtime/phase01-20260926/promote_phase1_nonnative_v2.py",
+      "pointer": "",
+      "sha256": "2fc8a59186ee912f2c6e7606a67cf3717dd23813c850b811d84372575917d1ef"
+    }
+  },
+  "previous_guard_proof": {
+    "path": "docs/urbit/evidence/2026-09-26/phase1-nonnative-v2/source-dispositions.json",
+    "pointer": "/proofs/guard-independent-source-review",
+    "sha256": "38e03c05e1c9e51b5c12c256c33c3c13da5122ca6b5641375d53fccc30067a27"
+  },
+  "previous_source_commit": "0d877cff4319de8d437f0da58d4518535f758c36",
+  "previous_source_files": {
+    "Makefile": "da78fc039ee0562efcf5b408a9b8ab24f243f5d2965991599548a76b42b8a0f8",
+    "scripts/urbit/digests.py": "88e6333bd6c764f48fb8939bafa77c9eb236c5b3586a19fe1a1f6e48e27dc08c",
+    "scripts/urbit/execution_policy.py": "da16e2e0fd32eb5b90706b546a7ea8332a65807fc8279f3bd765dcc18aaad9b5",
+    "scripts/urbit/harness.py": "c54f5d68491c3894c697fdb0da68a060c3293a4014c3f05d790d397f71306a92",
+    "scripts/urbit/namespace_check.py": "87950f4e7796fafb91807c36b9ea7d392d1d1840e5516d15d5fc6c5d476d0449",
+    "scripts/urbit/supervisor.py": "d157a974075d2e1cbfb1ae07609182a3232c5a3f16b75c3e9287652434d774d2",
+    "scripts/urbit/toolchain.py": "31234bbab1af217c885d8c081d7f438972f6ff1b6d89c93d10bdf49871b3ea16"
+  },
+  "protocol": "stead.nonnative-v3-refresh-review/1",
+  "qualification_acceptance": false,
+  "remaining": [
+    "Integrator must source-review and execute the separate v3 promotion helper; resulting artifacts need a separate retained-byte audit.",
+    "New current-source Gall/core results and all73 proof reconciliation remain required. Old0d877 executions are not rebound to554.",
+    "The external socket review retains its own pending clean contributor setup/status verification; this current138-test capture does not claim that full workflow."
+  ],
+  "reviewed_source_files": {
+    "Makefile": "da78fc039ee0562efcf5b408a9b8ab24f243f5d2965991599548a76b42b8a0f8",
+    "scripts/urbit/digests.py": "88e6333bd6c764f48fb8939bafa77c9eb236c5b3586a19fe1a1f6e48e27dc08c",
+    "scripts/urbit/execution_policy.py": "da16e2e0fd32eb5b90706b546a7ea8332a65807fc8279f3bd765dcc18aaad9b5",
+    "scripts/urbit/harness.py": "55683233cd65be353cc072d32e8414009552ccdc0db88beb700c2c7336079282",
+    "scripts/urbit/namespace_check.py": "87950f4e7796fafb91807c36b9ea7d392d1d1840e5516d15d5fc6c5d476d0449",
+    "scripts/urbit/supervisor.py": "d157a974075d2e1cbfb1ae07609182a3232c5a3f16b75c3e9287652434d774d2",
+    "scripts/urbit/toolchain.py": "31234bbab1af217c885d8c081d7f438972f6ff1b6d89c93d10bdf49871b3ea16"
+  },
+  "reviewer": "/root/gall_schedule_review",
+  "scope": "Independent source review of the single Linux RPC socket-path delta and retained-byte host audit only. Prior common guard, v2 workflow-root, receipt ordering, no-effect and host assertion-mapping reviews preserve their original attribution. This does not execute tests, approve historical native results for new source, or qualify a phase.",
+  "socket_regression_review": {
+    "findings": [
+      "The new regression independently binds a real AF_UNIX server using a restored temporary cwd, asserts the absolute socket path exceeds 108 bytes, checks stopped before the listener, then observes the actual status request and ready response.",
+      "The responder has bounded socket/join timeouts; the test verifies no errors or live responder remain, removes the socket and checks stopped afterward. It starts no supervisor, Hoon or fake ships."
+    ],
+    "observed_test_id": "test_dev_flow.LifecycleTests.test_status_uses_real_socket_in_long_checkout_path",
+    "scope": "Source review plus exact passed test record in the root-executed capture; not a fresh full contributor setup or native qualification.",
+    "source": {
+      "path": "tests/urbit/test_dev_flow.py",
+      "pointer": "",
+      "sha256": "27700da68611fe1864cea3969ff2807156fdd30fe8ed5c3a35bf437f7b7aef53"
+    }
+  },
+  "socket_review_attribution": "The retained record is authored by /root/core_acceptance_review. Its exact current harness/test hashes and bounded source approval were read independently; its prior make-check execution attribution and pending clean-setup recheck remain unchanged.",
+  "socket_source_review": {
+    "path": ".runtime/phase01-20260926/socket-path-source-review.json",
+    "pointer": "",
+    "sha256": "5d4b74455d035315541f4740af7eae1880407d42ff4d0a76d26e8fcf23032b56"
+  },
+  "source_commit": "55475f0565ceb38db9eb5bc057962967398aa5da",
+  "source_review_performed": true,
+  "status": "source-review-and-retained-host-audit-complete"
+}

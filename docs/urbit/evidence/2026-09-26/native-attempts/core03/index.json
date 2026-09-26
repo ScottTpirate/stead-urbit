@@ -1,0 +1,238 @@
+{
+  "protocol": "stead.retained-native-attempt/1",
+  "created_at": "2026-09-26T19:10:08.944599+00:00",
+  "source_commit": "0d877cff4319de8d437f0da58d4518535f758c36",
+  "status": "infrastructure-interrupted",
+  "qualifies_phase": false,
+  "run_id": "08c8770ba57ad7a65f45086571e3d293",
+  "observed_guard_reason": "GuardError: Thermal ceiling reached",
+  "observed_peak_cpu_c": 91,
+  "direct_checks_passed": 189,
+  "qa_case_disposition": {
+    "guard_interrupted": 1,
+    "not_run": 147
+  },
+  "limits": [
+    "Raw records remain unchanged. A guard-interrupted case is not an application assertion failure.",
+    "Ship/supervisor logs are exact cumulative files at this stop, not exclusive per-run transcripts.",
+    "Raw core execution_guard is null following interruption; the separately retained actual guard and source context are authoritative for lifecycle identity."
+  ],
+  "artifacts": [
+    {
+      "source": ".piers/fakes/logs/core-20260926T190623Z.json",
+      "path": "01-core-20260926T190623Z.json.gz",
+      "original_bytes": 1427355,
+      "original_sha256": "fe2acff52a1f9fd7dd34e95dd6c4aa9cf12f2c73f475a31f1530d6a6348914ce",
+      "bytes": 19478,
+      "sha256": "12886c81833354241ea67f5c92d1ff60263231e2c140e0e8721151c3ae9d13a7",
+      "compression": "gzip"
+    },
+    {
+      "source": ".piers/fakes/logs/core-20260926T190623Z-transport.jsonl.gz",
+      "path": "02-core-20260926T190623Z-transport.jsonl.gz",
+      "original_bytes": 2911,
+      "original_sha256": "98ec2494e148474765f79bc34121451beddf4fbad7d0f4c37b18369e848c5ce1",
+      "bytes": 2911,
+      "sha256": "98ec2494e148474765f79bc34121451beddf4fbad7d0f4c37b18369e848c5ce1",
+      "compression": null
+    },
+    {
+      "source": ".runtime/phase01-20260926/core03-lifecycle.json",
+      "path": "03-core03-lifecycle.json.gz",
+      "original_bytes": 684,
+      "original_sha256": "c9a91d19d22a6c28d8457bb3c5fd78cfca7a02190fda25d785ac6a28fcefeccb",
+      "bytes": 341,
+      "sha256": "825e62796ab1ef8737409583e6847a48c22e3842bb1d76d513b1cf90500beca3",
+      "compression": "gzip"
+    },
+    {
+      "source": ".runtime/phase01-20260925/start35.json",
+      "path": "04-start35.json.gz",
+      "original_bytes": 395,
+      "original_sha256": "76c1d726379c6b9fd6d23fca2923cc56350faeadb6fad83de7d57db7eab48357",
+      "bytes": 253,
+      "sha256": "8a63940027b0d8baa61c8f173f28c0d49eed2e5d8848aa6694adbce5404ce063",
+      "compression": "gzip"
+    },
+    {
+      "source": ".runtime/phase01-20260925/start35.log",
+      "path": "05-start35.log.gz",
+      "original_bytes": 453,
+      "original_sha256": "d4a6fa05a08fac8d605e73a0bc96fa34722cc06d8c1b855156b9b67b6fcd9348",
+      "bytes": 315,
+      "sha256": "77171f9d979b34cb49941ba58561d4a012ce4c0cb13c33cbb738e7a1711a6388",
+      "compression": "gzip"
+    },
+    {
+      "source": ".runtime/phase01-20260925/ready35.json",
+      "path": "06-ready35.json.gz",
+      "original_bytes": 400,
+      "original_sha256": "34539826851f5c25df9c906e0944178d86297ba0dd6827b710a69a4a1668816b",
+      "bytes": 258,
+      "sha256": "7fad43058c3219afa72864e830787650335f43e72c9c605fb088ee7331262893",
+      "compression": "gzip"
+    },
+    {
+      "source": ".runtime/phase01-20260925/ready35.log",
+      "path": "07-ready35.log.gz",
+      "original_bytes": 242,
+      "original_sha256": "6ade3d62b67dd2066207260ae96b6ef88847dbb824720cc7be7b132fee5510e9",
+      "bytes": 124,
+      "sha256": "01cedc45b27b73b7c8d5c8d2e0aa7bae317933250f77076dc26ab76b2428f17e",
+      "compression": "gzip"
+    },
+    {
+      "source": ".runtime/phase01-20260925/core03.json",
+      "path": "08-core03.json.gz",
+      "original_bytes": 400,
+      "original_sha256": "f486d225913e47450131d587615bc5d5bdde50cd21b84508be684895c9d7add1",
+      "bytes": 257,
+      "sha256": "30efc1e57e10c51d583fb6d0bea66ac06694f535c0ea6b399d0c3d13197a135a",
+      "compression": "gzip"
+    },
+    {
+      "source": ".runtime/phase01-20260925/core03.log",
+      "path": "09-core03.log.gz",
+      "original_bytes": 630,
+      "original_sha256": "e5cbe756bc18da65c830f944ea33f5b9c009daea982bc51a82616a4a2a6f01a9",
+      "bytes": 410,
+      "sha256": "794f03ce1486c778cb28efaf44cfd71f085d693001d249c4da08a17df9399df4",
+      "compression": "gzip"
+    },
+    {
+      "source": ".runtime/phase01-20260925/stop35.json",
+      "path": "10-stop35.json.gz",
+      "original_bytes": 394,
+      "original_sha256": "4ed23ffc892ff5973f596e3fb6cc033572ef5e636e69e744019eda5ac36ae55b",
+      "bytes": 253,
+      "sha256": "935e3021fad627ba37554e14f6711ee9c35b973aa8c9ff7126c038c4eb4f409c",
+      "compression": "gzip"
+    },
+    {
+      "source": ".runtime/phase01-20260925/stop35.log",
+      "path": "11-stop35.log.gz",
+      "original_bytes": 78,
+      "original_sha256": "7e0046a61997e91b4c00d40b33b385148d315de81c5f28722592072cb3fde000",
+      "bytes": 96,
+      "sha256": "12c671e095df8b045e620680c1b93956a87a91531f555b53cad5fd1a748b4a19",
+      "compression": "gzip"
+    },
+    {
+      "source": ".runtime/execution-runs/four-fakes-hl6y3bw7/.stead-disposable.json",
+      "path": "12-.stead-disposable.json.gz",
+      "original_bytes": 102,
+      "original_sha256": "1cda7edeed9504e231fa722c64eca8fd4b28e011c0984995a73e597d29020606",
+      "bytes": 114,
+      "sha256": "1216ec99196477da4f9cc84bdc6525f16eb8b4f5688843033922903d5418ac13",
+      "compression": "gzip"
+    },
+    {
+      "source": ".runtime/execution-runs/four-fakes-hl6y3bw7/control/STOP",
+      "path": "13-STOP.gz",
+      "original_bytes": 50,
+      "original_sha256": "7c7ab50d70a93b2892566d93d36d50548505ac58e767c0508ed5bccb2a23bcb2",
+      "bytes": 69,
+      "sha256": "0bae0f972e102b09d6c7a39569da1346de29f9aa0a7603f4625e5180becde7cd",
+      "compression": "gzip"
+    },
+    {
+      "source": ".runtime/execution-runs/four-fakes-hl6y3bw7/control/lease.json",
+      "path": "14-lease.json.gz",
+      "original_bytes": 1098,
+      "original_sha256": "e695a2838edcb611a129828b68aa231697f087a431989a48aa4678c902a78851",
+      "bytes": 523,
+      "sha256": "53522a021f5b0a300a02d31ccf13a9ff73ea30c3d9aa24f07d8dffd5b70f436c",
+      "compression": "gzip"
+    },
+    {
+      "source": ".runtime/execution-runs/four-fakes-hl6y3bw7/control/scope.json",
+      "path": "15-scope.json.gz",
+      "original_bytes": 232,
+      "original_sha256": "a30e0ac5474b31035d77a23e2fe91c4ae32cbaaa1bf7e03374d6b324c71cb241",
+      "bytes": 160,
+      "sha256": "e9d88e03f6b0e2ecbdb351a6d0215a315815d7a55274e52350b0fb696a3503a8",
+      "compression": "gzip"
+    },
+    {
+      "source": ".runtime/execution-runs/four-fakes-hl6y3bw7/control/source-context.json",
+      "path": "16-source-context.json.gz",
+      "original_bytes": 18248,
+      "original_sha256": "5c352e97a94345d4651077d07bbe1e14466551819b6718e0f6ceca10cccaaf8d",
+      "bytes": 6603,
+      "sha256": "baf9b388ba264c1df245f8577aa90d197d4ed29ccb460860a1bfe1837c3faaf1",
+      "compression": "gzip"
+    },
+    {
+      "source": ".runtime/execution-runs/four-fakes-hl6y3bw7/events.jsonl",
+      "path": "17-events.jsonl.gz",
+      "original_bytes": 47992,
+      "original_sha256": "6e0ebc048a1860a08306eb3b3579cc72b883f1c2a1baf40fa8ae8645f510dd2c",
+      "bytes": 3199,
+      "sha256": "92b7ac9edadbe70d82ca998587718867e3495a1c7452eff60b23a2374da4483c",
+      "compression": "gzip"
+    },
+    {
+      "source": ".runtime/execution-runs/four-fakes-hl6y3bw7/report.json",
+      "path": "18-report.json.gz",
+      "original_bytes": 50904,
+      "original_sha256": "11d6c4791b886d8b0b2967dc01811fc45eb62b9e72557f3e8220aa610cb9e526",
+      "bytes": 4295,
+      "sha256": "712476cfaa0e5bb38dafdd4b0c82ab62403f6e06f479f2653d4219ad8e52bb2a",
+      "compression": "gzip"
+    },
+    {
+      "source": ".piers/fakes/logs/zod.log",
+      "path": "19-zod.log.gz",
+      "original_bytes": 220827,
+      "original_sha256": "7676c298f7c0d06660ed12d2c9aac8d70c477f994e1e9b130fcdb5cd2fe010e8",
+      "bytes": 12514,
+      "sha256": "c13ba87957a49f50481c6d34362ae1d971e1813d96e0aa9517cb12cdf346b8fa",
+      "compression": "gzip"
+    },
+    {
+      "source": ".piers/fakes/logs/bus.log",
+      "path": "20-bus.log.gz",
+      "original_bytes": 196659,
+      "original_sha256": "cdbd75e3136077c8ebd4a7a75486ddc3bcf8e550c4fbe4214f2a74f18fce841b",
+      "bytes": 27266,
+      "sha256": "64a5129b13470271f0231b3cce8a9a1612b8d07537bff0f6dd4a460584dfc822",
+      "compression": "gzip"
+    },
+    {
+      "source": ".piers/fakes/logs/nec.log",
+      "path": "21-nec.log.gz",
+      "original_bytes": 112326,
+      "original_sha256": "a7b4a8965b297df4cf2b10040de5992e8a8ed85076c5cd995bb2b70112b05352",
+      "bytes": 4208,
+      "sha256": "3ca09bbcf227e7ee5d5df81546445fb6e7c7b16b56061cddfb9fab7aa028ac94",
+      "compression": "gzip"
+    },
+    {
+      "source": ".piers/fakes/logs/bud.log",
+      "path": "22-bud.log.gz",
+      "original_bytes": 214341,
+      "original_sha256": "70e101bc430aa77114ee103f44c7c1c0ccff2dfce5dd4bfd7180514cbef62927",
+      "bytes": 6462,
+      "sha256": "8dd327f459b4d30c3bdece4704f20dbca60d1cd825198edb2c7a59583b359a07",
+      "compression": "gzip"
+    },
+    {
+      "source": ".piers/fakes/logs/supervisor.log",
+      "path": "23-supervisor.log.gz",
+      "original_bytes": 387397,
+      "original_sha256": "eb82941dabf6a96a61612f627b71ba275b5de3319575f42ffcc989a172619ee1",
+      "bytes": 21344,
+      "sha256": "64bfbaf40bf51662b6acc78278f7ee9372eaf24fa6d99f262777b59743e0d39d",
+      "compression": "gzip"
+    },
+    {
+      "source": ".piers/fakes/unclean-live.json",
+      "path": "24-unclean-live.json.gz",
+      "original_bytes": 152,
+      "original_sha256": "b8e8d71180fb407075f097c61f945273ccef2ebb24a5c54a792bf34ef8fd6f76",
+      "bytes": 148,
+      "sha256": "55b52ae8499774acacd1d169873f38d24e4e52eef854dd0e6eef34adfdeb3c7f",
+      "compression": "gzip"
+    }
+  ]
+}

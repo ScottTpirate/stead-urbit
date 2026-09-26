@@ -25,6 +25,8 @@ data, and the browser application is not implemented yet.
 | `make core-check` | Reinstall edited Hoon into a fresh fake fixture and rerun compilation/probes | Shorter native feedback, separate from acceptance |
 | `make test` | Run the original four-identity counter smoke | Native allow/deny, failure propagation and restart |
 | `make core-test` | Run the full current Work/Docs qualification corpus | Business, access, delivery, migration and export evidence; missing requirements still fail |
+| `make delivery-check` | Run two bounded offline-home timeout/recovery cycles on a fresh fake fixture | Focused lifecycle regression only; never full Phase 1 acceptance |
+| `make capacity-check` | Run the eight capacity and predecessor recipes on a fresh fake fixture | Focused diagnostic; never full Phase 1 acceptance |
 | `make gall-schedule` | Run actual pinned Gall/app gates with a controlled queue and clock | The delayed old-leave case; no Ames/network identity claim |
 | `make skill-prequalify` | Run frozen workflow reference, oracle and mutant controls | Prerequisite for the separate skill evaluation; no participant result |
 | `make stop` | Stop the owned ships and release their lifecycle lock | Clean local shutdown |
@@ -73,6 +75,13 @@ the raw report. The independent gate reads the completed guard, exact native
 transport, scheduled-Gall evidence, and separately reviewed source/N/A proofs.
 Only that complete gate can support Phase 1 closure.
 
+The private fixture controls `migrate-legacy` and `load-bad-legacy` have a
+600-second native and 620-second host diagnostic ceiling so full-state
+validation can be measured. All other requests retain their existing 55/75-second
+bounds. A native timeout is never a malformed-state rejection. These ceilings
+are not latency targets or measured performance results. The full test caller
+waits within the unchanged outer guardian's 7,200-second execution budget.
+
 ## Host conditions
 
 The reviewed guard admits startup at at most 75 C and stops native execution at
@@ -87,7 +96,18 @@ the same 50 percent/10 ms CPU limit and one allowed CPU. This covers seed and
 toolchain hashing before the native guardian takes over. The integrated
 `make dev` passed all 53 native checks at `b9765bf` in 58 seconds, with
 committed, unchanged source inputs; see the [execution record](evidence/2026-09-25/dev-flow-and-gall-attempts/index.json).
-The successful independent Git audit used the same preparation limit. No fan or persistent power setting is required.
+The successful independent Git audit used the same preparation limit. These
+commands do not change fan or persistent power settings. The host must remain
+below the guard's limit throughout qualification. The September 26
+[host observations](evidence/2026-09-26/host-load-observations/index.json)
+show CPU spikes coinciding with the desktop agent-usage collector, including
+while Stead was stopped. This is correlation, not proof of a sole thermal cause.
+Host settings outside this repository require separate owner authorization.
+During the September 26 qualification window, the owner authorized temporarily
+pausing the agent-usage widget and restoring it after the native jobs. The
+[recorded window](evidence/2026-09-26/host-load-observations/restoration-and-window02/index.json)
+ended with the exact desktop configuration and all 34 fan values restored and
+verified; Chromium was paused by the owner, with no automated browser changes.
 
 `make dev` cleans up a failed/interrupted operation. A successful developer check
 leaves the supervised fake environment running for the next check; use `make stop`

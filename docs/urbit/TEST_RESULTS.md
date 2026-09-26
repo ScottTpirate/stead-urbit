@@ -1,6 +1,70 @@
 # Executed development evidence
 
-Current [September 26 handoff](PHASE01_CHECKPOINT_20260926.md): **447 host/static/mocked tests pass. Phases 0/1 remain open.** At `8334a75`, [workflow prequalification](evidence/2026-09-26/native-attempts/prequal11/index.json) passed all six reference tasks. The [actual paired evaluation](evidence/2026-09-26/workflow-evaluation/README.md) has five verified task passes in each condition, but T05 is invalid because a scorer bailout omitted two required mutants. Its real failed mutation observation is retained; a versioned repair and fresh pair are required. The [full core attempt](evidence/2026-09-26/native-attempts/core02/index.json) was interrupted by the unchanged thermal guard at 92 C after 90 passed cases; it is not acceptance. [Exact host logs](evidence/2026-09-26/host-check-8334a75/index.json) and [seven separately typed nonnative dispositions](evidence/2026-09-26/phase1-nonnative/retention-index.json) are retained.
+Current [September 26 handoff](PHASE01_CHECKPOINT_20260926.md): **472 host/static/mocked tests pass at `a1d35b2`. Phase 1 remains open; Phase 2 has not started.** The [reviewed capacity diagnostic and host record](evidence/2026-09-26/capacity-fix/index.json) preserve the full acceptance sequence, strengthen malformed-load rejection, and limit longer waits to two private fixture load operations. The 68.851-second wrapper (68.128-second unittest suite) does not execute Hoon; the new diagnostic is still unexecuted.
+
+At native source `0d877cff4319de8d437f0da58d4518535f758c36`,
+[prequal12](evidence/2026-09-26/native-attempts/prequal12/index.json) passed six
+reference tasks and 134 native checks. The [fresh paired v2 comparison](evidence/2026-09-26/workflow-evaluation-v2/README.md)
+is complete: both conditions passed T01–T04 and T06 and failed T05. Both missed
+the frozen `~bud` authorization mutation; all five mutation subjects and all
+submitted arms were collected. Independent review verified actual candidates,
+native outputs, guards, attempts, timing and the portable evidence. The 5/6 tie
+establishes no observed pass-count benefit. Full tool exposure, unavailable
+earlier incoming plaintext and timing overhead remain explicit limitations.
+
+The [scheduled Gall run](evidence/2026-09-26/phase1-current/retention-gall.json)
+passed 58 native checks at that source, including the delayed old leave and the
+intended negative-control tang. The [core03 attempt](evidence/2026-09-26/native-attempts/core03/index.json)
+passed 189 direct checks, then the thermal guard stopped at 91 C during the first
+QA case; its raw EOF failure and 147 not-run cases remain unchanged. Shutdown
+was clean. This does not establish the full core, migration/capacity or restart
+requirements. The harness path fix changes execution inputs. At the resulting
+`55475f0565ceb38db9eb5bc057962967398aa5da` source, the fresh
+[scheduled Gall run](evidence/2026-09-26/phase1-final/retention-gall.json) passed
+all 58 checks under a completed guard, and the independently audited
+[138-test host capture](evidence/2026-09-26/phase1-nonnative-v3/dispositions.json)
+supports seven typed nonnative dispositions. Those 138 tests overlap the 465-test
+suite. Final Phase 1 acceptance still needs a complete current core and
+independent reconciliation of all 73 obligations.
+
+[Core04](evidence/2026-09-26/native-attempts/core04/index.json) at `55475f0` reached
+all 148 main cases (145 passed, three frozen deferrals), then failed during delivery:
+494 direct checks passed, one failed, and capacity/predecessor recipes were not reached.
+The contributor runtime crashed with SIGSEGV after the offline-home case; the
+87 C peak did not trigger the thermal guard. Its complete failed transport, logs,
+guard and independent source diagnosis are retained. A five-second host timeout
+abandoned a request with a 55-second native timeout. The lifecycle correction
+was verified by [two focused native cycles](evidence/2026-09-26/native-attempts/deliverycheck02/index.json)
+at `5208f32`: 191 direct checks, exact native timeout responses, unchanged sender,
+post-recovery denial and completed cleanup, independently reviewed. Peak 65 C.
+The fresh [scheduled Gall run](evidence/2026-09-26/phase1-final-5208f32/gall/index.json)
+then passed all 58 checks at that same source. The [current 142-test host capture and seven typed dispositions](evidence/2026-09-26/phase1-nonnative-v4/dispositions.json)
+are also bound to `5208f32`; those tests overlap the full 470-test suite. The
+full core rerun and final 73-row reconciliation remain pending.
+
+[Core05](evidence/2026-09-26/native-attempts/core05/index.json) at `5208f32` then
+completed 145 QA cases plus the three frozen deferrals, 495 direct checks and
+seven delivery cases; delayed old leave remains the separately qualified Gall
+case. It reproduced predecessor privacy and filled 4,096 legitimate journal
+events. The policy-corruption load then reached the 75-second host timeout,
+with no native terminal response. The guard peaked at 69 C, and stopping the
+busy home required a forced exit. The failed live state and all raw evidence
+are preserved. Seven capacity/predecessor recipes remain unexecuted; Phase 1
+does not qualify. [Independent diagnosis](evidence/2026-09-26/native-attempts/core05/independent-diagnosis.json)
+also identified that malformed-load negatives must distinguish an actual
+unsupported-state rejection from the same generic terminal shape used by a
+Spider timeout. A focused capacity diagnostic and narrower rejection predicate
+are independently source-reviewed at `a1d35b2`; no runtime pass or acceptable migration latency is implied.
+
+Historical checkpoints below retain their original source-specific outcomes and
+open-gate descriptions; they are not statements of the latest issue status.
+
+Earlier at `8334a75`, [447 host tests](evidence/2026-09-26/host-check-8334a75/index.json)
+passed and [prequal11](evidence/2026-09-26/native-attempts/prequal11/index.json)
+admitted the [paired v1 evaluation](evidence/2026-09-26/workflow-evaluation/README.md).
+That comparison remains incomplete: its T05 scorer omitted two mutants.
+[Core02](evidence/2026-09-26/native-attempts/core02/index.json) stopped at 92 C after
+90 passed cases. Neither earlier attempt has been relabeled or combined with v2.
 
 Earlier September 26 continuation: issues #2–#6 and #24 are closed for their bounded
 bootstrap, toolchain, harness, Git-evaluation, contract and threat-map design

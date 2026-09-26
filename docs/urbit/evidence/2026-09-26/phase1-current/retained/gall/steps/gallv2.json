@@ -1,0 +1,11 @@
+{
+  "command": [
+    "make",
+    "gall-schedule"
+  ],
+  "source_commit": "0d877cff4319de8d437f0da58d4518535f758c36",
+  "working_tree": "?? docs/urbit/evidence/2026-09-26/native-attempts/prequal12/\n",
+  "started_utc": "2026-09-26T18:17:37.064156+00:00",
+  "elapsed_seconds": 40.442,
+  "exit": 0
+}

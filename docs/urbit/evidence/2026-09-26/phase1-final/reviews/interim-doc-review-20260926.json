@@ -1,0 +1,154 @@
+{
+  "blocking_findings": [],
+  "classification": "Read-only explanatory-document and proposed integration review while core04 is running; no native/host test execution or phase acceptance.",
+  "confirmed_boundaries": [
+    "Current Phase1 is explicitly open; Phase2 has not started, and no full-core or73-obligation acceptance is claimed.",
+    "The frozen manifest has73 requirements:66 native and7 typed nonnative. Current separation65 core plus1 scheduled-Gall remains intact.",
+    "Warm-home-restart explicitly means graceful fenced process replacement and excludes abrupt-crash proof. The corrected prose preserves separate save/load/migration checks and assigns no invented later milestone.",
+    "465 full host tests and the overlapping138-test capture are not added together. Historical447/464 and failed native prefixes remain source-specific.",
+    "The v2 comparison is complete5/6 per condition, with complete failed mutation evidence, unknown backend revision, full tool exposure, unavailable earlier plaintext and timing limitations retained.",
+    "Linux fake-ship testing needs no purchased identity, GPU or public server. Browser UI/session, hosted live-network and production recovery remain unimplemented/later owner-controlled work; no browser URL is offered.",
+    "Thermal75/90C and3s freshness remain unchanged. Collector correlation is not described as sole cause; approved temporary widget mitigation has a restoration obligation.",
+    "All relative Markdown links in the seven reviewed files resolve at review time. Portable trial hygiene and counts rely on the earlier exact artifact audit; no frozen participant answer was revisited here."
+  ],
+  "current_hashes_at_record": {
+    "README.md": "8fcefea89ed788b571fb4c523a5a73b53e4d7ca720ae31cf59ad72db5459f434",
+    "docs/urbit/DEVELOPER_GUIDE.md": "5a6c8ec4c0f6a1cfe7dbc6b207a0545bfd4ab96b8cc216eee25f86584e2fa7ce",
+    "docs/urbit/DEV_FLOW.md": "a841720d13aa118642594bdd2b6a02682a1877f9003774a0bc1003caf3ca717d",
+    "docs/urbit/NATIVE_CORE.md": "8b5e1d49dac68a3662626d05b2c5fd05b012f79880cc96e1413cabf86a3c52c8",
+    "docs/urbit/PHASE01_CHECKPOINT_20260926.md": "dba3aceda8819f2d194a79b6e04de223d339f778b205c3169678b6984904629a",
+    "docs/urbit/TEST_RESULTS.md": "b1f212acc1a42032440135c7892339abf3564530aa53045686e4a9d7b7777a37",
+    "docs/urbit/reviews/PHASE1_RESTART_SCOPE_CORRECTION_20260926.md": "77943d2433afafff43683c7d0921b32609fc750b509a89fa299e704d6c00f85e"
+  },
+  "evidence_metadata_checked": {
+    "fresh_gall": {
+      "all_true": true,
+      "checks": 58,
+      "guard_exit": 0,
+      "guard_run_id": "76d77d0ab2095d3a6f091a9aeb549241",
+      "guard_status": "completed",
+      "path": "docs/urbit/evidence/2026-09-26/phase1-final/retention-gall.json",
+      "qualification_review": "Not supplied by this metadata/doc review; final semantic lane review is separate.",
+      "sha256": "321abe82f59e0220ce01abfd61e79e59ff42899bf0cfa6ec59a46fc745d6326e",
+      "source_commit": "55475f0565ceb38db9eb5bc057962967398aa5da"
+    },
+    "host_capture": {
+      "observed_tests": 138,
+      "overlaps_full_suite": true,
+      "path": "docs/urbit/evidence/2026-09-26/phase1-nonnative-v3/host-current/host-current.json",
+      "source_before_after": "55475f0565ceb38db9eb5bc057962967398aa5da",
+      "status": "passed"
+    },
+    "nonnative_dispositions": {
+      "items": 7,
+      "path": "docs/urbit/evidence/2026-09-26/phase1-nonnative-v3/dispositions.json",
+      "sha256": "a4503dd9a76cb723aa5eb81168655a04e3da3665c37448fe7b924c614ef5dff6",
+      "status": "bound-nonnative-dispositions-only"
+    }
+  },
+  "files_changed_after_review": [
+    "docs/urbit/PHASE01_CHECKPOINT_20260926.md",
+    "docs/urbit/TEST_RESULTS.md"
+  ],
+  "head": "55475f0565ceb38db9eb5bc057962967398aa5da",
+  "integration_plan": {
+    "ancestor_chain_verified": [
+      {
+        "ref": "origin/main",
+        "sha": "4bb28c645ed155f842f5b9479a0919e743a89378"
+      },
+      {
+        "ref": "PR33",
+        "sha": "96971540cf70c557f01a5ef10db832ddee2e0130"
+      },
+      {
+        "ref": "PR34",
+        "sha": "77428f6c35eb0fe7b7e497b64c5a1eab92e943cd"
+      },
+      {
+        "ref": "PR35",
+        "sha": "aa93f41a3f15116878035941414125c163908b85"
+      },
+      {
+        "ref": "PR36",
+        "sha": "ce808a2cf9b87d44506e983f7dcebc94f0d2ed4b"
+      },
+      {
+        "ref": "PR41",
+        "sha": "87ea9e199a748a86daf1a9d95d4946e65b45c3ba"
+      },
+      {
+        "ref": "local aggregate",
+        "sha": "55475f0565ceb38db9eb5bc057962967398aa5da"
+      }
+    ],
+    "disposition": "Structurally sound only after actual current acceptance and final independent review. No merge/push/issue action performed by reviewer.",
+    "live_pr42": {
+      "base": "increment/local-dev-flow-20260924",
+      "draft": true,
+      "head": "0d877cff4319de8d437f0da58d4518535f758c36",
+      "state": "OPEN"
+    },
+    "live_read_repository": "ScottTpirate/stead-urbit",
+    "preservation": {
+      "local_main": "dd0f2c642eb07f60285ea93e984f60777d6a3205",
+      "local_native_core_qualification": "ce808a2cf9b87d44506e983f7dcebc94f0d2ed4b",
+      "old_review_ref": "review/pr-32@b52eeef9b0e14a332ecd92c67ff664b588b37c62",
+      "old_worktree_registration": "/tmp/stead-urbit-pr32-review; currently prunable because gitdir path is missing; no prune/reset performed",
+      "remote_native_core_qualification": "aa93f41a3f15116878035941414125c163908b85"
+    },
+    "required_sequence": [
+      "Keep current native lifetime/source/HEAD fixed until completion and evidence derivation.",
+      "After actual73-gate and independent review, publish the final source/evidence branch; re-read exact live PR42 head/base and main before integration.",
+      "Retarget aggregatePR42 to main and review the aggregate diff. Use a merge commit to preserve all source-bound ancestor identities; do not squash/rebase away tested commits.",
+      "Verify merge commit parents and containment of exactPR33/34/35/36/41 heads, then close the contained drafts with exact aggregate merge links.",
+      "Preserve local refs/worktree registration and avoid bulk-pushing the local/remote branch-name mismatch. Never write to original upstream.",
+      "Only then begin the authorized narrow Phase2 slice; metadata closure is not substitute acceptance."
+    ]
+  },
+  "native_or_host_tests_run_by_reviewer": false,
+  "native_run_under_integrator_control": "14ce5c35e6f14847ea2b5ff6fe9c76f2",
+  "optional_clarity": [
+    {
+      "file": "docs/urbit/PHASE01_CHECKPOINT_20260926.md",
+      "line": 87,
+      "suggestion": "Label the chain origin/main rather than main; local main remains preserved atdd0f2c6 while live origin/main is4bb28c6."
+    }
+  ],
+  "participant_candidates_revisited": false,
+  "phase_acceptance": false,
+  "protocol": "stead.interim-docs-integration-review/1",
+  "publication_corrections": [
+    {
+      "file": "docs/urbit/TEST_RESULTS.md",
+      "finding": "This paragraph still asks for fresh scheduled-Gall/host/source bindings. The checkpoint already records the new55475 Gall58/58 closed run and138-test/seven-disposition capture.",
+      "id": "DOC-01",
+      "lines": [
+        21,
+        22,
+        23
+      ],
+      "requested_change": "Describe these current inputs as retained and pending final reconciliation; keep core04/full73 qualification pending. Do not erase or relabel the earlier0d877 run.",
+      "severity": "minor current-status inconsistency"
+    }
+  ],
+  "recorded_at": "2026-09-26T20:07:35.007208+00:00",
+  "resource_scope": {
+    "affinity": [
+      19
+    ],
+    "control_group": "/user.slice/user-1000.slice/user@1000.service/app.slice/run-p1081524-i17873732.scope",
+    "cpu_max": "2000 10000"
+  },
+  "reviewed_files_sha256": {
+    "README.md": "8fcefea89ed788b571fb4c523a5a73b53e4d7ca720ae31cf59ad72db5459f434",
+    "docs/urbit/DEVELOPER_GUIDE.md": "5a6c8ec4c0f6a1cfe7dbc6b207a0545bfd4ab96b8cc216eee25f86584e2fa7ce",
+    "docs/urbit/DEV_FLOW.md": "a841720d13aa118642594bdd2b6a02682a1877f9003774a0bc1003caf3ca717d",
+    "docs/urbit/NATIVE_CORE.md": "8b5e1d49dac68a3662626d05b2c5fd05b012f79880cc96e1413cabf86a3c52c8",
+    "docs/urbit/PHASE01_CHECKPOINT_20260926.md": "255f5844f2320683ee8caa538ffdfbd1306c1cc93f85bb998966be921ac4a384",
+    "docs/urbit/TEST_RESULTS.md": "1a2c950509cccf8bc7ba33ef1e0c037252d2e12c872538fbd55a14b78a5111a9",
+    "docs/urbit/reviews/PHASE1_RESTART_SCOPE_CORRECTION_20260926.md": "77943d2433afafff43683c7d0921b32609fc750b509a89fa299e704d6c00f85e"
+  },
+  "reviewer": "/root/independent_review",
+  "tracked_files_changed_by_reviewer": false
+}

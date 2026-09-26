@@ -1,0 +1,681 @@
+{
+  "audit_resources": {
+    "affinity": [
+      19
+    ],
+    "control_group": "/user.slice/user-1000.slice/user@1000.service/app.slice/stead-nonnative-v3-portable-audit-55475f0-04.scope",
+    "cpu_max": "2000 10000"
+  },
+  "bundle": "docs/urbit/evidence/2026-09-26/phase1-nonnative-v3",
+  "captured_committed_source_files": 156,
+  "checks": [
+    "frozen-554-source",
+    "derivative-origin",
+    "derivative-origin",
+    "original-upstream-read-only",
+    "CPU20-percent-10ms-affinity19",
+    "unused-import-cache",
+    "independently-recomputed-repository-kernel-runtime-inputs",
+    "retained-copy:docs/urbit/evidence/2026-09-26/phase1-nonnative-v3/host-current/before.json",
+    "original-copy:docs/urbit/evidence/2026-09-26/phase1-nonnative-v3/host-current/before.json",
+    "retained-copy:docs/urbit/evidence/2026-09-26/phase1-nonnative-v3/host-current/capture-script.py",
+    "original-copy:docs/urbit/evidence/2026-09-26/phase1-nonnative-v3/host-current/capture-script.py",
+    "retained-copy:docs/urbit/evidence/2026-09-26/phase1-nonnative-v3/host-current/host-current.stderr.log",
+    "original-copy:docs/urbit/evidence/2026-09-26/phase1-nonnative-v3/host-current/host-current.stderr.log",
+    "retained-copy:docs/urbit/evidence/2026-09-26/phase1-nonnative-v3/host-current/host-current.stdout.log",
+    "original-copy:docs/urbit/evidence/2026-09-26/phase1-nonnative-v3/host-current/host-current.stdout.log",
+    "retained-copy:docs/urbit/evidence/2026-09-26/phase1-nonnative-v3/host-current/launch.json",
+    "original-copy:docs/urbit/evidence/2026-09-26/phase1-nonnative-v3/host-current/launch.json",
+    "retained-copy:docs/urbit/evidence/2026-09-26/phase1-nonnative-v3/host-current/selected-tests.json",
+    "original-copy:docs/urbit/evidence/2026-09-26/phase1-nonnative-v3/host-current/selected-tests.json",
+    "retained-copy:docs/urbit/evidence/2026-09-26/phase1-nonnative-v3/host-current/test-events.jsonl",
+    "original-copy:docs/urbit/evidence/2026-09-26/phase1-nonnative-v3/host-current/test-events.jsonl",
+    "retained-copy:docs/urbit/evidence/2026-09-26/phase1-nonnative-v3/host-current/worker.json",
+    "original-copy:docs/urbit/evidence/2026-09-26/phase1-nonnative-v3/host-current/worker.json",
+    "retained-copy:docs/urbit/evidence/2026-09-26/phase1-nonnative-v3/host-current/host-current.json",
+    "original-copy:docs/urbit/evidence/2026-09-26/phase1-nonnative-v3/host-current/host-current.json",
+    "retained-copy:docs/urbit/evidence/2026-09-26/phase1-nonnative-v3/refresh-review.json",
+    "original-copy:docs/urbit/evidence/2026-09-26/phase1-nonnative-v3/refresh-review.json",
+    "retained-copy:docs/urbit/evidence/2026-09-26/phase1-nonnative-v3/socket-path-source-review.json",
+    "original-copy:docs/urbit/evidence/2026-09-26/phase1-nonnative-v3/socket-path-source-review.json",
+    "generated-ref:docs/urbit/evidence/2026-09-26/phase1-nonnative-v3/dispositions.json",
+    "generated-ref:docs/urbit/evidence/2026-09-26/phase1-nonnative-v3/guard-source-proof-confirmation.json",
+    "generated-ref:docs/urbit/evidence/2026-09-26/phase1-nonnative-v3/historical-guard-continuity.json",
+    "generated-ref:docs/urbit/evidence/2026-09-26/phase1-nonnative-v3/host-audit-confirmation.json",
+    "generated-ref:docs/urbit/evidence/2026-09-26/phase1-nonnative-v3/nonnative-readiness.json",
+    "generated-ref:docs/urbit/evidence/2026-09-26/phase1-nonnative-v3/source-bindings.json",
+    "generated-ref:docs/urbit/evidence/2026-09-26/phase1-nonnative-v3/source-dispositions.json",
+    "no-link-bundle:docs/urbit/evidence/2026-09-26/phase1-nonnative-v3",
+    "complete-bundle:docs/urbit/evidence/2026-09-26/phase1-nonnative-v3",
+    "retained-copy:docs/urbit/evidence/2026-09-26/phase1-nonnative-v2/host-current/before.json",
+    "retained-copy:docs/urbit/evidence/2026-09-26/phase1-nonnative-v2/host-current/capture-script.py",
+    "retained-copy:docs/urbit/evidence/2026-09-26/phase1-nonnative-v2/host-current/host-current.stderr.log",
+    "retained-copy:docs/urbit/evidence/2026-09-26/phase1-nonnative-v2/host-current/host-current.stdout.log",
+    "retained-copy:docs/urbit/evidence/2026-09-26/phase1-nonnative-v2/host-current/launch.json",
+    "retained-copy:docs/urbit/evidence/2026-09-26/phase1-nonnative-v2/host-current/selected-tests.json",
+    "retained-copy:docs/urbit/evidence/2026-09-26/phase1-nonnative-v2/host-current/test-events.jsonl",
+    "retained-copy:docs/urbit/evidence/2026-09-26/phase1-nonnative-v2/host-current/worker.json",
+    "retained-copy:docs/urbit/evidence/2026-09-26/phase1-nonnative-v2/host-current/host-current.json",
+    "retained-copy:docs/urbit/evidence/2026-09-26/phase1-nonnative-v2/refresh-review.json",
+    "retained-copy:docs/urbit/evidence/2026-09-26/phase1-nonnative-v2/editor-source-review-handoff.json",
+    "generated-ref:docs/urbit/evidence/2026-09-26/phase1-nonnative-v2/dispositions.json",
+    "generated-ref:docs/urbit/evidence/2026-09-26/phase1-nonnative-v2/guard-source-proof-confirmation.json",
+    "generated-ref:docs/urbit/evidence/2026-09-26/phase1-nonnative-v2/historical-guard-continuity.json",
+    "generated-ref:docs/urbit/evidence/2026-09-26/phase1-nonnative-v2/host-audit-confirmation.json",
+    "generated-ref:docs/urbit/evidence/2026-09-26/phase1-nonnative-v2/nonnative-readiness.json",
+    "generated-ref:docs/urbit/evidence/2026-09-26/phase1-nonnative-v2/source-bindings.json",
+    "generated-ref:docs/urbit/evidence/2026-09-26/phase1-nonnative-v2/source-dispositions.json",
+    "no-link-bundle:docs/urbit/evidence/2026-09-26/phase1-nonnative-v2",
+    "complete-bundle:docs/urbit/evidence/2026-09-26/phase1-nonnative-v2",
+    "retained-copy:docs/urbit/evidence/2026-09-26/phase1-nonnative/host-current/before.json",
+    "retained-copy:docs/urbit/evidence/2026-09-26/phase1-nonnative/host-current/capture-script.py",
+    "retained-copy:docs/urbit/evidence/2026-09-26/phase1-nonnative/host-current/host-current.stderr.log",
+    "retained-copy:docs/urbit/evidence/2026-09-26/phase1-nonnative/host-current/host-current.stdout.log",
+    "retained-copy:docs/urbit/evidence/2026-09-26/phase1-nonnative/host-current/launch.json",
+    "retained-copy:docs/urbit/evidence/2026-09-26/phase1-nonnative/host-current/selected-tests.json",
+    "retained-copy:docs/urbit/evidence/2026-09-26/phase1-nonnative/host-current/test-events.jsonl",
+    "retained-copy:docs/urbit/evidence/2026-09-26/phase1-nonnative/host-current/worker.json",
+    "retained-copy:docs/urbit/evidence/2026-09-26/phase1-nonnative/host-current/host-current.json",
+    "retained-copy:docs/urbit/evidence/2026-09-26/phase1-nonnative/host-failed-cache-control/before.json",
+    "retained-copy:docs/urbit/evidence/2026-09-26/phase1-nonnative/host-failed-cache-control/capture-script.py",
+    "retained-copy:docs/urbit/evidence/2026-09-26/phase1-nonnative/host-failed-cache-control/host-current.stderr.log",
+    "retained-copy:docs/urbit/evidence/2026-09-26/phase1-nonnative/host-failed-cache-control/host-current.stdout.log",
+    "retained-copy:docs/urbit/evidence/2026-09-26/phase1-nonnative/host-failed-cache-control/launch.json",
+    "retained-copy:docs/urbit/evidence/2026-09-26/phase1-nonnative/host-failed-cache-control/selected-tests.json",
+    "retained-copy:docs/urbit/evidence/2026-09-26/phase1-nonnative/host-failed-cache-control/test-events.jsonl",
+    "retained-copy:docs/urbit/evidence/2026-09-26/phase1-nonnative/host-failed-cache-control/worker.json",
+    "retained-copy:docs/urbit/evidence/2026-09-26/phase1-nonnative/host-failed-cache-control/host-current.json",
+    "retained-copy:docs/urbit/evidence/2026-09-26/phase1-nonnative/host-failed-cache-control/unused-python-cache/tmp/stead-source-cache-nzzv_yr_/reviewer_fixture.cpython-314.pyc.bin",
+    "retained-copy:docs/urbit/evidence/2026-09-26/phase1-nonnative/guard-source-proof-proposed.json",
+    "retained-copy:docs/urbit/evidence/2026-09-26/phase1-nonnative/guard-source-proof-confirmation.json",
+    "generated-ref:docs/urbit/evidence/2026-09-26/phase1-nonnative/dispositions.json",
+    "generated-ref:docs/urbit/evidence/2026-09-26/phase1-nonnative/historical-guard-continuity.json",
+    "generated-ref:docs/urbit/evidence/2026-09-26/phase1-nonnative/host-audit-confirmation.json",
+    "generated-ref:docs/urbit/evidence/2026-09-26/phase1-nonnative/nonnative-readiness.json",
+    "generated-ref:docs/urbit/evidence/2026-09-26/phase1-nonnative/source-bindings.json",
+    "generated-ref:docs/urbit/evidence/2026-09-26/phase1-nonnative/source-dispositions.json",
+    "no-link-bundle:docs/urbit/evidence/2026-09-26/phase1-nonnative",
+    "complete-bundle:docs/urbit/evidence/2026-09-26/phase1-nonnative",
+    "unchanged-prior-v2-link",
+    "unchanged-prior-v1-link",
+    "exact-root-reported-dispositions",
+    "exact-seven-nonnative-IDs",
+    "current-reviewed-committed:native/core/desk/lib/stead-core.hoon",
+    "current-reviewed-committed:native/core/desk/app/stead-home.hoon",
+    "current-reviewed-committed:native/core/desk/lib/stead-core.hoon",
+    "current-reviewed-committed:Makefile",
+    "current-reviewed-committed:scripts/urbit/digests.py",
+    "current-reviewed-committed:scripts/urbit/execution_policy.py",
+    "current-reviewed-committed:scripts/urbit/harness.py",
+    "current-reviewed-committed:scripts/urbit/namespace_check.py",
+    "current-reviewed-committed:scripts/urbit/supervisor.py",
+    "current-reviewed-committed:scripts/urbit/toolchain.py",
+    "current-reviewed-committed:scripts/urbit/delivery_cases.py",
+    "whole-current-source-binding-map",
+    "exact-seven-dispositions-no-native-or-phase-pass",
+    "historical-proof-and-binding-unchanged:guard-real-hot-preflight-refusal",
+    "historical-proof-and-binding-unchanged:guard-real-platform-mocked-sensors",
+    "exact138-selection-prior137-plus-socket",
+    "exact-seven-module-counts",
+    "actual138-passes162-subtests",
+    "actual-record-event-linkage",
+    "actual-host-source-and-status",
+    "retained-host-resource-and-cleanup",
+    "original-reviewer-attribution:delivery-host-order-permutations",
+    "unchanged-named-assertion-mapping:delivery-host-order-permutations",
+    "current-host-executor-count:delivery-host-order-permutations",
+    "direct-current-assertion-records:fact-before-ack",
+    "direct-current-assertion-records:ack-before-fact",
+    "direct-current-assertion-records:kick-before-ack",
+    "direct-current-assertion-records:nack-is-not-accepted",
+    "direct-current-assertion-records:ack-without-result",
+    "direct-current-assertion-records:timeout-partial-missing-never-saved",
+    "original-reviewer-attribution:guard-independent-source-review",
+    "unchanged-named-assertion-mapping:guard-independent-source-review",
+    "original-reviewer-attribution:guard-negative-host-tests",
+    "unchanged-named-assertion-mapping:guard-negative-host-tests",
+    "current-host-executor-count:guard-negative-host-tests",
+    "direct-current-assertion-records:hot-preflight-no-launch",
+    "direct-current-assertion-records:missing-stale-sensors",
+    "direct-current-assertion-records:crossing-stops-own-scope",
+    "direct-current-assertion-records:bounded-shutdown",
+    "direct-current-assertion-records:preserved-logs",
+    "direct-current-assertion-records:nonpassing-final",
+    "direct-current-assertion-records:no-forced-seed",
+    "original-reviewer-attribution:no-effect-subsystem",
+    "unchanged-named-assertion-mapping:no-effect-subsystem",
+    "original-reviewer-attribution:receipt-lookup-order",
+    "unchanged-named-assertion-mapping:receipt-lookup-order",
+    "truthful-composite-review-roles",
+    "current-reviewed-harness-and-six-unchanged-guard-files",
+    "portable-composite-source-reference-chain",
+    "portable-host-audit-attribution",
+    "original-independent-review-unchanged",
+    "frozen-554-source",
+    "derivative-origin",
+    "derivative-origin",
+    "original-upstream-read-only",
+    "CPU20-percent-10ms-affinity19",
+    "audit-resources-unchanged",
+    "unredirected-output-parent"
+  ],
+  "counts": {
+    "missing": 66,
+    "not_applicable": 1,
+    "passed": 4,
+    "reviewed": 2
+  },
+  "dispositions": {
+    "path": "docs/urbit/evidence/2026-09-26/phase1-nonnative-v3/dispositions.json",
+    "pointer": "",
+    "sha256": "a4503dd9a76cb723aa5eb81168655a04e3da3665c37448fe7b924c614ef5dff6"
+  },
+  "elapsed_seconds": 2.551254,
+  "files": 19,
+  "historical_two_guard_bindings_unchanged": true,
+  "host_test_execution": false,
+  "host_tests_observed": 138,
+  "native_execution": false,
+  "native_passed": 0,
+  "native_required": 66,
+  "observed_artifacts": [
+    {
+      "bytes": 7814,
+      "path": "docs/urbit/evidence/2026-09-26/phase1-nonnative-v3/retention-index.json",
+      "sha256": "7984c453bbdaa60182f4e2d03b4fb2a356fa3657e6581ac05d7d7248e5625c8d"
+    },
+    {
+      "bytes": 20514,
+      "path": "docs/urbit/evidence/2026-09-26/phase1-nonnative-v3/host-current/before.json",
+      "sha256": "0abedc80aa30ce2506703ed05cb6b8f716bbad8c6b8987fcb85dbbe61dcefcd4"
+    },
+    {
+      "bytes": 20514,
+      "path": ".runtime/phase01-20260926/host-recapture-20260926t194252z-4c31da7e/before.json",
+      "sha256": "0abedc80aa30ce2506703ed05cb6b8f716bbad8c6b8987fcb85dbbe61dcefcd4"
+    },
+    {
+      "bytes": 21961,
+      "path": "docs/urbit/evidence/2026-09-26/phase1-nonnative-v3/host-current/capture-script.py",
+      "sha256": "a3612f3a27d8337e687fe95127cfca4f5327e4e6eb4542440fa99e4d4989059c"
+    },
+    {
+      "bytes": 21961,
+      "path": ".runtime/phase01-20260926/host-recapture-20260926t194252z-4c31da7e/capture-script.py",
+      "sha256": "a3612f3a27d8337e687fe95127cfca4f5327e4e6eb4542440fa99e4d4989059c"
+    },
+    {
+      "bytes": 22677,
+      "path": "docs/urbit/evidence/2026-09-26/phase1-nonnative-v3/host-current/host-current.stderr.log",
+      "sha256": "668add1af3b8fe77711f2034e568eaa5bc4811d906ca3589e0771ae62c735ebc"
+    },
+    {
+      "bytes": 22677,
+      "path": ".runtime/phase01-20260926/host-recapture-20260926t194252z-4c31da7e/host-current.stderr.log",
+      "sha256": "668add1af3b8fe77711f2034e568eaa5bc4811d906ca3589e0771ae62c735ebc"
+    },
+    {
+      "bytes": 0,
+      "path": "docs/urbit/evidence/2026-09-26/phase1-nonnative-v3/host-current/host-current.stdout.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "bytes": 0,
+      "path": ".runtime/phase01-20260926/host-recapture-20260926t194252z-4c31da7e/host-current.stdout.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "bytes": 1110,
+      "path": "docs/urbit/evidence/2026-09-26/phase1-nonnative-v3/host-current/launch.json",
+      "sha256": "01b02b495fde3fcb6ca07f873fcbc2bf4791e83329eefa62b98eae9821e2b1a3"
+    },
+    {
+      "bytes": 1110,
+      "path": ".runtime/phase01-20260926/host-recapture-20260926t194252z-4c31da7e/launch.json",
+      "sha256": "01b02b495fde3fcb6ca07f873fcbc2bf4791e83329eefa62b98eae9821e2b1a3"
+    },
+    {
+      "bytes": 14697,
+      "path": "docs/urbit/evidence/2026-09-26/phase1-nonnative-v3/host-current/selected-tests.json",
+      "sha256": "0f5da9f2336e8fe63a756c707bf7daa1b91e5fc7602a6215c67eb91ed1e12278"
+    },
+    {
+      "bytes": 14697,
+      "path": ".runtime/phase01-20260926/host-recapture-20260926t194252z-4c31da7e/selected-tests.json",
+      "sha256": "0f5da9f2336e8fe63a756c707bf7daa1b91e5fc7602a6215c67eb91ed1e12278"
+    },
+    {
+      "bytes": 106819,
+      "path": "docs/urbit/evidence/2026-09-26/phase1-nonnative-v3/host-current/test-events.jsonl",
+      "sha256": "a884a3d6f5bcd1970de83a23238eab51daa2e95ba3b4dd32dcd4de282ea015da"
+    },
+    {
+      "bytes": 106819,
+      "path": ".runtime/phase01-20260926/host-recapture-20260926t194252z-4c31da7e/test-events.jsonl",
+      "sha256": "a884a3d6f5bcd1970de83a23238eab51daa2e95ba3b4dd32dcd4de282ea015da"
+    },
+    {
+      "bytes": 115831,
+      "path": "docs/urbit/evidence/2026-09-26/phase1-nonnative-v3/host-current/worker.json",
+      "sha256": "ba63a76a540caf91ae6c2f76369ab86fb703348aded136457e4a66684ba63e4d"
+    },
+    {
+      "bytes": 115831,
+      "path": ".runtime/phase01-20260926/host-recapture-20260926t194252z-4c31da7e/worker.json",
+      "sha256": "ba63a76a540caf91ae6c2f76369ab86fb703348aded136457e4a66684ba63e4d"
+    },
+    {
+      "bytes": 118695,
+      "path": "docs/urbit/evidence/2026-09-26/phase1-nonnative-v3/host-current/host-current.json",
+      "sha256": "546cca4e017012a3e7bc2f5f36dc62a1a4ec5ba46a1dab32b16f24ea4d25489c"
+    },
+    {
+      "bytes": 118695,
+      "path": ".runtime/phase01-20260926/host-recapture-20260926t194252z-4c31da7e/host-current.json",
+      "sha256": "546cca4e017012a3e7bc2f5f36dc62a1a4ec5ba46a1dab32b16f24ea4d25489c"
+    },
+    {
+      "bytes": 8086,
+      "path": "docs/urbit/evidence/2026-09-26/phase1-nonnative-v3/refresh-review.json",
+      "sha256": "245df30b7b1142bcef46f72c6f1db3a5ea31464b2c610801b06309927578b82e"
+    },
+    {
+      "bytes": 8086,
+      "path": ".runtime/phase01-20260926/nonnative-v3-refresh-review.json",
+      "sha256": "245df30b7b1142bcef46f72c6f1db3a5ea31464b2c610801b06309927578b82e"
+    },
+    {
+      "bytes": 5189,
+      "path": "docs/urbit/evidence/2026-09-26/phase1-nonnative-v3/socket-path-source-review.json",
+      "sha256": "5d4b74455d035315541f4740af7eae1880407d42ff4d0a76d26e8fcf23032b56"
+    },
+    {
+      "bytes": 5189,
+      "path": ".runtime/phase01-20260926/socket-path-source-review.json",
+      "sha256": "5d4b74455d035315541f4740af7eae1880407d42ff4d0a76d26e8fcf23032b56"
+    },
+    {
+      "bytes": 5765,
+      "path": "docs/urbit/evidence/2026-09-26/phase1-nonnative-v3/dispositions.json",
+      "sha256": "a4503dd9a76cb723aa5eb81168655a04e3da3665c37448fe7b924c614ef5dff6"
+    },
+    {
+      "bytes": 2277,
+      "path": "docs/urbit/evidence/2026-09-26/phase1-nonnative-v3/guard-source-proof-confirmation.json",
+      "sha256": "a7e80d91ab2a5f93644c57d73bd5c1447b07a03d5d10f04f53a17b50e700aadd"
+    },
+    {
+      "bytes": 3761,
+      "path": "docs/urbit/evidence/2026-09-26/phase1-nonnative-v3/historical-guard-continuity.json",
+      "sha256": "dbb4535f8040fcfaa9e17730ee496252e8a15285b4d0ef9b582acc14192ff348"
+    },
+    {
+      "bytes": 965,
+      "path": "docs/urbit/evidence/2026-09-26/phase1-nonnative-v3/host-audit-confirmation.json",
+      "sha256": "ed2da755acd8260e600aff402186e9db97fd597aae15fcb95f03d98e01078fc5"
+    },
+    {
+      "bytes": 36647,
+      "path": "docs/urbit/evidence/2026-09-26/phase1-nonnative-v3/nonnative-readiness.json",
+      "sha256": "7b12aa0a1e4062bb0c139425cdf37d44c8bbe42bf5e7d50bf173d8bf32afe166"
+    },
+    {
+      "bytes": 24766,
+      "path": "docs/urbit/evidence/2026-09-26/phase1-nonnative-v3/source-bindings.json",
+      "sha256": "e4d1dc23119ba20f943da9a5aabbb3e8be643a188b5f798d5845c35faf0a8021"
+    },
+    {
+      "bytes": 33461,
+      "path": "docs/urbit/evidence/2026-09-26/phase1-nonnative-v3/source-dispositions.json",
+      "sha256": "8e4e8dfce6dd58eb1a90bff1a44690796320c7a425854fedbd8300faa1f14703"
+    },
+    {
+      "bytes": 7814,
+      "path": "docs/urbit/evidence/2026-09-26/phase1-nonnative-v2/retention-index.json",
+      "sha256": "efbb61216a98591fc075aeb74863fbaf1018598564e32b25eb1c16c2b710ce0b"
+    },
+    {
+      "bytes": 19971,
+      "path": "docs/urbit/evidence/2026-09-26/phase1-nonnative-v2/host-current/before.json",
+      "sha256": "50b5cf32e3e1f88c170f76bcd2a4083e0c288cb5d18b97f93c304a96bf73fb28"
+    },
+    {
+      "bytes": 21961,
+      "path": "docs/urbit/evidence/2026-09-26/phase1-nonnative-v2/host-current/capture-script.py",
+      "sha256": "a3612f3a27d8337e687fe95127cfca4f5327e4e6eb4542440fa99e4d4989059c"
+    },
+    {
+      "bytes": 22537,
+      "path": "docs/urbit/evidence/2026-09-26/phase1-nonnative-v2/host-current/host-current.stderr.log",
+      "sha256": "c5f24298cd4ce7c53be4b1438f6e173f5bd17b275bfd6cffcc0401df9aa4d92c"
+    },
+    {
+      "bytes": 0,
+      "path": "docs/urbit/evidence/2026-09-26/phase1-nonnative-v2/host-current/host-current.stdout.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "bytes": 1110,
+      "path": "docs/urbit/evidence/2026-09-26/phase1-nonnative-v2/host-current/launch.json",
+      "sha256": "18a0fb5e26b69a6f00291992469d51dab0de224acefcc2a0979bedadab34daff"
+    },
+    {
+      "bytes": 14610,
+      "path": "docs/urbit/evidence/2026-09-26/phase1-nonnative-v2/host-current/selected-tests.json",
+      "sha256": "1d66e2e912d7a10a84c5f2387157981351fafa6f458fa4522308bd9afc73c1a5"
+    },
+    {
+      "bytes": 106464,
+      "path": "docs/urbit/evidence/2026-09-26/phase1-nonnative-v2/host-current/test-events.jsonl",
+      "sha256": "f9dac86f95c53984070d86ee29be7765860326a626d5ce5b007394e93ba9af5b"
+    },
+    {
+      "bytes": 114275,
+      "path": "docs/urbit/evidence/2026-09-26/phase1-nonnative-v2/host-current/worker.json",
+      "sha256": "4a11b58bfc8d1dc0eee3489ac14d79137cea6eadb1a845f89829b7ef5e03f4eb"
+    },
+    {
+      "bytes": 117139,
+      "path": "docs/urbit/evidence/2026-09-26/phase1-nonnative-v2/host-current/host-current.json",
+      "sha256": "57d402c3bb5b481d892bd1a336abd186bd3490c80cc27f0dce37c25f9937161c"
+    },
+    {
+      "bytes": 7097,
+      "path": "docs/urbit/evidence/2026-09-26/phase1-nonnative-v2/refresh-review.json",
+      "sha256": "3d4c33fd59737a3d12b1838ca62c3843ab52c09d60f4294de6d51ef0932260cc"
+    },
+    {
+      "bytes": 2787,
+      "path": "docs/urbit/evidence/2026-09-26/phase1-nonnative-v2/editor-source-review-handoff.json",
+      "sha256": "5e69f7067c4953300b2ee6f9ee25826fff2f3b3eed4849127225fc6672ed2b7c"
+    },
+    {
+      "bytes": 5765,
+      "path": "docs/urbit/evidence/2026-09-26/phase1-nonnative-v2/dispositions.json",
+      "sha256": "1b4b3a3b3b210b0e49a4da05cb9a1fe193139f217c54e2f24b155d540576d2b7"
+    },
+    {
+      "bytes": 2272,
+      "path": "docs/urbit/evidence/2026-09-26/phase1-nonnative-v2/guard-source-proof-confirmation.json",
+      "sha256": "38eab49e1ca1d77969598744f6f8eaf91013de37cbe38093efff950936624dec"
+    },
+    {
+      "bytes": 3758,
+      "path": "docs/urbit/evidence/2026-09-26/phase1-nonnative-v2/historical-guard-continuity.json",
+      "sha256": "c80dd02de0022d67ecf42747de7ace9302b5409305aedbbf016b7c277efe71af"
+    },
+    {
+      "bytes": 965,
+      "path": "docs/urbit/evidence/2026-09-26/phase1-nonnative-v2/host-audit-confirmation.json",
+      "sha256": "f4100706c8d3a5d621c1e0b448ee86a60e0cca6aa346a57e4c8cdc0eac2afe76"
+    },
+    {
+      "bytes": 36647,
+      "path": "docs/urbit/evidence/2026-09-26/phase1-nonnative-v2/nonnative-readiness.json",
+      "sha256": "c0d8a647fa44a8567993019ae84e04f22fe6b99ffd6ee157d7ca4b2e8061b5f3"
+    },
+    {
+      "bytes": 24766,
+      "path": "docs/urbit/evidence/2026-09-26/phase1-nonnative-v2/source-bindings.json",
+      "sha256": "c71b17c9a81255b5a34f3891b868322ecc2929284d248e9dca8771709c414ef9"
+    },
+    {
+      "bytes": 32472,
+      "path": "docs/urbit/evidence/2026-09-26/phase1-nonnative-v2/source-dispositions.json",
+      "sha256": "38e03c05e1c9e51b5c12c256c33c3c13da5122ca6b5641375d53fccc30067a27"
+    },
+    {
+      "bytes": 12624,
+      "path": "docs/urbit/evidence/2026-09-26/phase1-nonnative/retention-index.json",
+      "sha256": "770c81d9ee8a8213f810af9c9d3f5fe8ea6e5be9ad1d7449bb7aed4ceddb1382"
+    },
+    {
+      "bytes": 19829,
+      "path": "docs/urbit/evidence/2026-09-26/phase1-nonnative/host-current/before.json",
+      "sha256": "35b0b8f08119ff23783916e3b7d2e9a8ef50cfc9879c952ad0e15344fa9ae241"
+    },
+    {
+      "bytes": 21961,
+      "path": "docs/urbit/evidence/2026-09-26/phase1-nonnative/host-current/capture-script.py",
+      "sha256": "a3612f3a27d8337e687fe95127cfca4f5327e4e6eb4542440fa99e4d4989059c"
+    },
+    {
+      "bytes": 22537,
+      "path": "docs/urbit/evidence/2026-09-26/phase1-nonnative/host-current/host-current.stderr.log",
+      "sha256": "4e667898af99e9d742cb738f6fa4f29403e75c9002ce88c8704471081e6a7a86"
+    },
+    {
+      "bytes": 0,
+      "path": "docs/urbit/evidence/2026-09-26/phase1-nonnative/host-current/host-current.stdout.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "bytes": 1110,
+      "path": "docs/urbit/evidence/2026-09-26/phase1-nonnative/host-current/launch.json",
+      "sha256": "d42a645a5322aa4d3957fd21058444ea0aff635aec865a549d26b2e6c28704bc"
+    },
+    {
+      "bytes": 14610,
+      "path": "docs/urbit/evidence/2026-09-26/phase1-nonnative/host-current/selected-tests.json",
+      "sha256": "1d66e2e912d7a10a84c5f2387157981351fafa6f458fa4522308bd9afc73c1a5"
+    },
+    {
+      "bytes": 106464,
+      "path": "docs/urbit/evidence/2026-09-26/phase1-nonnative/host-current/test-events.jsonl",
+      "sha256": "65f4dd2073cecd363550cb3611be0bd4ab28b35f25be95d9a5f5f53734c45190"
+    },
+    {
+      "bytes": 113992,
+      "path": "docs/urbit/evidence/2026-09-26/phase1-nonnative/host-current/worker.json",
+      "sha256": "44a5fb553923641dacc3bf2abca34fede97c591d83a37d464007d38a62950b86"
+    },
+    {
+      "bytes": 116856,
+      "path": "docs/urbit/evidence/2026-09-26/phase1-nonnative/host-current/host-current.json",
+      "sha256": "a6c3ce3878da93544609f71dfe847a6751395cd938c40b9a26993d35008e40c8"
+    },
+    {
+      "bytes": 19829,
+      "path": "docs/urbit/evidence/2026-09-26/phase1-nonnative/host-failed-cache-control/before.json",
+      "sha256": "145e312f244b13a35694b180cb117e34d1c94d9989ce959735ff4c759b2a04ff"
+    },
+    {
+      "bytes": 21426,
+      "path": "docs/urbit/evidence/2026-09-26/phase1-nonnative/host-failed-cache-control/capture-script.py",
+      "sha256": "196635fad48b02bb0bc10de6c3df0a31314f7df3383247a382feadc42937c98f"
+    },
+    {
+      "bytes": 23989,
+      "path": "docs/urbit/evidence/2026-09-26/phase1-nonnative/host-failed-cache-control/host-current.stderr.log",
+      "sha256": "50c75fe20273ce168b5056c91a7bc27ea36ad6b08f1425b80dab60719c7759ed"
+    },
+    {
+      "bytes": 0,
+      "path": "docs/urbit/evidence/2026-09-26/phase1-nonnative/host-failed-cache-control/host-current.stdout.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "bytes": 1110,
+      "path": "docs/urbit/evidence/2026-09-26/phase1-nonnative/host-failed-cache-control/launch.json",
+      "sha256": "084edba4d24ba5c74773788e40c4fe1c74ae9fd0de59cd485a99b288c120d787"
+    },
+    {
+      "bytes": 14610,
+      "path": "docs/urbit/evidence/2026-09-26/phase1-nonnative/host-failed-cache-control/selected-tests.json",
+      "sha256": "1d66e2e912d7a10a84c5f2387157981351fafa6f458fa4522308bd9afc73c1a5"
+    },
+    {
+      "bytes": 106464,
+      "path": "docs/urbit/evidence/2026-09-26/phase1-nonnative/host-failed-cache-control/test-events.jsonl",
+      "sha256": "c67f910ed2a40e43df74571b88150d7e32b4061b1a1590b9b6656ce491d3f9c3"
+    },
+    {
+      "bytes": 113862,
+      "path": "docs/urbit/evidence/2026-09-26/phase1-nonnative/host-failed-cache-control/worker.json",
+      "sha256": "016df3ec6f054f9fc31ad28d636bfbc90a22de5cc8b1798f0e523d5f6058dd6e"
+    },
+    {
+      "bytes": 116750,
+      "path": "docs/urbit/evidence/2026-09-26/phase1-nonnative/host-failed-cache-control/host-current.json",
+      "sha256": "7e64d81ca2f7bdfd555282499d24be457ff68c0ea37e5fee7a3ed88869d7947a"
+    },
+    {
+      "bytes": 172,
+      "path": "docs/urbit/evidence/2026-09-26/phase1-nonnative/host-failed-cache-control/unused-python-cache/tmp/stead-source-cache-nzzv_yr_/reviewer_fixture.cpython-314.pyc.bin",
+      "sha256": "6f52c60b0af4ac463862ca3f7b62862a5f143f1957fc7074ed7b101017144ab6"
+    },
+    {
+      "bytes": 12900,
+      "path": "docs/urbit/evidence/2026-09-26/phase1-nonnative/guard-source-proof-proposed.json",
+      "sha256": "dcd7b1634d0817f875448cc84e4414c3c3ebdc04dc2ef646f3c067689250e3f9"
+    },
+    {
+      "bytes": 3621,
+      "path": "docs/urbit/evidence/2026-09-26/phase1-nonnative/guard-source-proof-confirmation.json",
+      "sha256": "523292f26db197a0b48e6fa4f316308f95b51ec6f646cd4269325156fea2fefe"
+    },
+    {
+      "bytes": 5747,
+      "path": "docs/urbit/evidence/2026-09-26/phase1-nonnative/dispositions.json",
+      "sha256": "f0873e943303326ef350559c8554e832fd6bec7a4e444c790f4c4f19b6ff9251"
+    },
+    {
+      "bytes": 3760,
+      "path": "docs/urbit/evidence/2026-09-26/phase1-nonnative/historical-guard-continuity.json",
+      "sha256": "aa20f96d3a7c1aa6d313dd97397a51dfef99fcd26a1af4a6dd23fb21e96541c0"
+    },
+    {
+      "bytes": 1760,
+      "path": "docs/urbit/evidence/2026-09-26/phase1-nonnative/host-audit-confirmation.json",
+      "sha256": "1d9aabffa452409383def87f82e9f851eebc3c17d6d714fdf6d94a57217c1eb6"
+    },
+    {
+      "bytes": 36632,
+      "path": "docs/urbit/evidence/2026-09-26/phase1-nonnative/nonnative-readiness.json",
+      "sha256": "08c74907b16c6930185b1daa7772e4c9b5ba9e85bd6b28013f09c73dc6fef2ed"
+    },
+    {
+      "bytes": 24624,
+      "path": "docs/urbit/evidence/2026-09-26/phase1-nonnative/source-bindings.json",
+      "sha256": "bb7a822ed45c849e177b65bf82cc314d8ad17b1dfa5fec3438d32d5e744c30dd"
+    },
+    {
+      "bytes": 30997,
+      "path": "docs/urbit/evidence/2026-09-26/phase1-nonnative/source-dispositions.json",
+      "sha256": "87a2c38cb7288119c6b542d225e2e1cc25bb35798bb8592666f30c8aabbcdf2f"
+    },
+    {
+      "bytes": 30049,
+      "path": "specs/urbit/v2/qualification-gate.json",
+      "sha256": "f374349cc3ccd64993e3dade9a44e306854479c228b7f93d6559647006aee94c"
+    },
+    {
+      "bytes": 30949,
+      "path": "native/core/desk/lib/stead-core.hoon",
+      "sha256": "4c183ef6283030437af5e1433e3fbf80f414757bcede4cab1282fc71ff5f34de"
+    },
+    {
+      "bytes": 15070,
+      "path": "native/core/desk/app/stead-home.hoon",
+      "sha256": "3bfc0e45062ef0bc8572d5034a60b5b35f6502350f821129b5ba7a7cca0b2b9c"
+    },
+    {
+      "bytes": 1697,
+      "path": "Makefile",
+      "sha256": "da78fc039ee0562efcf5b408a9b8ab24f243f5d2965991599548a76b42b8a0f8"
+    },
+    {
+      "bytes": 4219,
+      "path": "scripts/urbit/digests.py",
+      "sha256": "88e6333bd6c764f48fb8939bafa77c9eb236c5b3586a19fe1a1f6e48e27dc08c"
+    },
+    {
+      "bytes": 23093,
+      "path": "scripts/urbit/execution_policy.py",
+      "sha256": "da16e2e0fd32eb5b90706b546a7ea8332a65807fc8279f3bd765dcc18aaad9b5"
+    },
+    {
+      "bytes": 20777,
+      "path": "scripts/urbit/harness.py",
+      "sha256": "55683233cd65be353cc072d32e8414009552ccdc0db88beb700c2c7336079282"
+    },
+    {
+      "bytes": 687,
+      "path": "scripts/urbit/namespace_check.py",
+      "sha256": "87950f4e7796fafb91807c36b9ea7d392d1d1840e5516d15d5fc6c5d476d0449"
+    },
+    {
+      "bytes": 26783,
+      "path": "scripts/urbit/supervisor.py",
+      "sha256": "d157a974075d2e1cbfb1ae07609182a3232c5a3f16b75c3e9287652434d774d2"
+    },
+    {
+      "bytes": 4431,
+      "path": "scripts/urbit/toolchain.py",
+      "sha256": "31234bbab1af217c885d8c081d7f438972f6ff1b6d89c93d10bdf49871b3ea16"
+    },
+    {
+      "bytes": 15740,
+      "path": "scripts/urbit/delivery_cases.py",
+      "sha256": "171edf429fc1677e3250bcebff4cd2fb55e762d767204afdae846f86deccc131"
+    },
+    {
+      "bytes": 11611,
+      "path": "docs/urbit/evidence/2026-09-13/qualification/bound-proofs.json",
+      "sha256": "c5edbf7c4b4f9774c6a69648b10d0cb80599a0cbf8ac132cc73441a5a069f31b"
+    },
+    {
+      "bytes": 22466,
+      "path": "docs/urbit/evidence/2026-09-25/phase1-nonnative/historical-execution-policy.py.txt",
+      "sha256": "7166d197a6e3879f21c22637f2bd3074ff90975c33a2149f6e07763e2eeaa04e"
+    },
+    {
+      "bytes": 1262,
+      "path": "docs/urbit/evidence/2026-09-13/qualification/guard-real-preflight-93c.json",
+      "sha256": "ee5343d8baf6b148654401792409a93f8868a2332dbbe49fba1099846dd44dc4"
+    },
+    {
+      "bytes": 1242,
+      "path": "docs/urbit/evidence/2026-09-13/qualification/guard-real-start-81c.json",
+      "sha256": "78f5902e38dc5c20bbe89bd9ec415f67b72c1300167f6cc701972b04d67d426b"
+    },
+    {
+      "bytes": 3739,
+      "path": "docs/urbit/evidence/2026-09-13/qualification/guard-platform-mocked-sensors.json",
+      "sha256": "27d98c3dbed1aebdd1a8b23d344ceeec002c271508f7323fd07091fb8243dd46"
+    },
+    {
+      "bytes": 142,
+      "path": "docs/urbit/evidence/2026-09-13/qualification/guard-platform-mocked-sensors.log",
+      "sha256": "27964c2ebe27f62166668998ba7aa42562226b78725c05ef684a7371deb24a55"
+    },
+    {
+      "bytes": 52698,
+      "path": "docs/urbit/reviews/PHASE01_INDEPENDENT_REVIEW_20260925.md",
+      "sha256": "ae0edda0a91d5b89b1cd070c8685de8d73dbc190093563c8cd2d4dba1d51b717"
+    }
+  ],
+  "overall_gate_status": "failed",
+  "passed_subtests": 162,
+  "phase_acceptance": false,
+  "prior_bundle_files_preserved": {
+    "v1": 28,
+    "v2": 19
+  },
+  "protocol": "stead.independent-nonnative-v3-portable-audit/1",
+  "retention_index": {
+    "path": "docs/urbit/evidence/2026-09-26/phase1-nonnative-v3/retention-index.json",
+    "pointer": "",
+    "sha256": "7984c453bbdaa60182f4e2d03b4fb2a356fa3657e6581ac05d7d7248e5625c8d"
+  },
+  "review_roles": {
+    "actual_host_executor": "/root",
+    "common_guard_and_original_mappings": "/root/independent_review",
+    "delta_confirmation_and_retained_host_audit": "/root/gall_schedule_review",
+    "socket_delta": "/root/core_acceptance_review"
+  },
+  "reviewer": "/root/gall_schedule_review",
+  "scope": "Read-only exact-byte/source/reference/attribution audit. Seven nonnative dispositions only; current native lanes and all73 final independent qualification remain separate.",
+  "source_commit": "55475f0565ceb38db9eb5bc057962967398aa5da",
+  "status": "cleared-with-bounded-scope"
+}

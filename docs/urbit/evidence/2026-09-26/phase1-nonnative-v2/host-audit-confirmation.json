@@ -1,0 +1,22 @@
+{
+  "auditor": "/root/gall_schedule_review",
+  "host_capture": {
+    "path": "docs/urbit/evidence/2026-09-26/phase1-nonnative-v2/host-current/host-current.json",
+    "pointer": "",
+    "sha256": "57d402c3bb5b481d892bd1a336abd186bd3490c80cc27f0dce37c25f9937161c"
+  },
+  "host_test_execution": false,
+  "native_execution": false,
+  "original_capture": {
+    "path": ".runtime/phase01-20260926/host-recapture-20260926t181203z-2193e0df/host-current.json",
+    "pointer": "",
+    "sha256": "57d402c3bb5b481d892bd1a336abd186bd3490c80cc27f0dce37c25f9937161c"
+  },
+  "protocol": "stead.retained-host-audit/2",
+  "scope": "Portable exact capture reference for the attributed independent retained-byte audit; no rerun or qualification claim.",
+  "source_audit": {
+    "path": "docs/urbit/evidence/2026-09-26/phase1-nonnative-v2/refresh-review.json",
+    "pointer": "/host_capture_audit",
+    "sha256": "3d4c33fd59737a3d12b1838ca62c3843ab52c09d60f4294de6d51ef0932260cc"
+  }
+}

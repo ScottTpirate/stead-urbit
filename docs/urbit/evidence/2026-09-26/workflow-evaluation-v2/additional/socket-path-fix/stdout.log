@@ -1,0 +1,11 @@
+python3 scripts/urbit/validate_plan.py
+PASS: 18 planning tasks, acyclic dependencies, required documents present.
+NOT TESTED HERE: Hoon compilation, live Urbit, GitHub publishing, security, performance, cloud deployment.
+python3 scripts/urbit/check_ecosystem.py
+PASS (planning only): 30 tasks, 7 milestones, 4 skill files.
+NOT VERIFIED: issue status, Hoon, skill effectiveness, live GitHub sync, security or release readiness.
+python3 scripts/urbit/contracts.py test
+PASS host reference contract checks; native parity and product authorization remain unimplemented
+python3 scripts/urbit/contracts_v2.py
+PASS v1 and v2 contract hashes; metadata only, not native qualification
+python3 -m unittest discover -s tests/urbit -p 'test_*.py'

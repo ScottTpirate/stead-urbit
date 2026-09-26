@@ -1,0 +1,17 @@
+systemd-run --user --scope --quiet -p CPUQuota=50% -p CPUQuotaPeriodSec=10ms -- taskset -c "$(python3 -c 'import os; print(max(os.sched_getaffinity(0)))')" python3 scripts/urbit/harness.py start
+{
+  "stage": "booting zod",
+  "ready": false,
+  "error": null,
+  "execution_guard": {
+    "run_id": "76d77d0ab2095d3a6f091a9aeb549241",
+    "generation": 4,
+    "state": "running"
+  },
+  "ships": {
+    "zod": {
+      "pid": 5,
+      "exit": null
+    }
+  }
+}

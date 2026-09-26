@@ -1,0 +1,37 @@
+{
+  "protocol": "stead.completed-host-load-observation/1",
+  "retained_at": "2026-09-26T20:02:55.426475+00:00",
+  "source": ".runtime/phase01-20260926/core-observation/observe-host-load.jsonl",
+  "source_bytes": 2433411,
+  "source_sha256": "7a39f7ca7af7673543bba6039a8e7f560b4479bab3639c7e275793a85ef0d84f",
+  "file": "observe-host-load.jsonl.gz",
+  "compressed_bytes": 89271,
+  "compressed_sha256": "ef780f07c6b61900f445ab9793226203c6ba8b9130f444ae24061b09677031aa",
+  "helper_sha256": "141e257109933340dc8999309846e145bd69e9f3731d1177d554965cddd8d046",
+  "whole_observation": {
+    "samples": 3486,
+    "first_utc": "2026-09-26T18:58:33.515296+00:00",
+    "last_utc": "2026-09-26T19:58:32.983509+00:00",
+    "max_sampled_cpu_c": 93.0,
+    "samples_with_collector": 17,
+    "samples_at_or_above_90c": 6
+  },
+  "after_authorized_widget_pause": {
+    "samples": 988,
+    "first_utc": "2026-09-26T19:41:29.546277+00:00",
+    "last_utc": "2026-09-26T19:58:32.983509+00:00",
+    "max_sampled_cpu_c": 82.0,
+    "samples_with_collector": 0,
+    "samples_at_or_above_90c": 0
+  },
+  "widget_pause_at": "2026-09-26T19:41:28.699994+00:00",
+  "sampler_exit": 0,
+  "sampler_final_elapsed_seconds": 3600.46,
+  "limits": [
+    "Observed correlation only; no claim of sole thermal cause.",
+    "One-second process samples omit exited short-lived processes and record only truncated comm names, not arguments or environments.",
+    "After-pause subset includes native and host checks and ends at the fixed one-hour sampler deadline; it is not the complete core04 run.",
+    "Native guardian has its own complete thermal and lifecycle record.",
+    "Widget restoration remains required after native work."
+  ]
+}

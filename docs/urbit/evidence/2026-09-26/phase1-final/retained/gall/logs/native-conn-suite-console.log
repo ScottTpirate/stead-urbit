@@ -1,0 +1,189 @@
+python3 scripts/urbit/harness.py test
+FAIL: Native smoke failed; retain evidence and fix before claiming success
+{
+  "classification": "local-real-native-fake-ships",
+  "status": "fail",
+  "error": "Expected destination rejection for bud: [32 %avow 1]\nloom: mapped 512MB\r\nlite: arvo formula 4ce68411\r\nlite: core 641296f\r\nlite: final state 641296f\r\neval (cue, newt):\n\r\n/sys/vane/gall/hoon:<[1.863 9].[1.863 37]>\r\n/app/stead-home/hoon:<[27 3].[50 5]>\r\n/app/stead-home/hoon:<[28 3].[50 5]>\r\n/app/stead-home/hoon:<[29 3].[50 5]>\r\n/app/stead-home/hoon:<[30 3].[50 5]>\r\n/app/stead-home/hoon:<[42 7].[49 31]>\r\n/app/stead-home/hoon:<[43 9].[44 11]>\r\nstead-smoke-denied\r\n/app/stead-home/hoon:<[44 9].[44 11]>\r\npoke-ack\r\npoke-fail\r\neval: bail: %thread-fail",
+  "elapsed_seconds": 23.029,
+  "toolchain_sha256": "4a209c10cf1756eb0f7357cc3eca8250bf66c239b4cd0ca31a8c0886d4d304ee",
+  "native_tree_sha256": "dff85b9af5429c096e38789f81f1e6097368c244e84d2d1b5b49a66a1f6fcf89",
+  "harness_tree_sha256": "b6b0cde30af2c0fbcf330697388c53c58c06150da2c674b9c8df3e63fdb571ea",
+  "commands": [
+    {
+      "utc": "2026-09-13T01:27:57Z",
+      "command": "shutdown zod",
+      "result": {
+        "exit_code": 0
+      }
+    },
+    {
+      "utc": "2026-09-13T01:27:59Z",
+      "command": "shutdown bus",
+      "result": {
+        "exit_code": 0
+      }
+    },
+    {
+      "utc": "2026-09-13T01:27:59Z",
+      "command": "shutdown nec",
+      "result": {
+        "exit_code": 0
+      }
+    },
+    {
+      "utc": "2026-09-13T01:28:00Z",
+      "command": "shutdown bud",
+      "result": {
+        "exit_code": 0
+      }
+    },
+    {
+      "utc": "2026-09-13T01:28:07Z",
+      "command": "launch zod",
+      "result": {
+        "argv": [
+          "/runtime/bin/vere-v4.6-linux-x86_64",
+          "-t",
+          "-L",
+          "--no-dock",
+          "--loom",
+          "31",
+          "-b",
+          "127.0.0.1",
+          "--http-port",
+          "18080",
+          "/state/live/zod"
+        ],
+        "pid": 35
+      }
+    },
+    {
+      "utc": "2026-09-13T01:28:11Z",
+      "command": "zod: zuse",
+      "result": "%408\n"
+    },
+    {
+      "utc": "2026-09-13T01:28:11Z",
+      "command": "launch bus",
+      "result": {
+        "argv": [
+          "/runtime/bin/vere-v4.6-linux-x86_64",
+          "-t",
+          "-L",
+          "--no-dock",
+          "--loom",
+          "31",
+          "-b",
+          "127.0.0.1",
+          "--http-port",
+          "18081",
+          "/state/live/bus"
+        ],
+        "pid": 42
+      }
+    },
+    {
+      "utc": "2026-09-13T01:28:13Z",
+      "command": "bus: zuse",
+      "result": "%408\n"
+    },
+    {
+      "utc": "2026-09-13T01:28:13Z",
+      "command": "launch nec",
+      "result": {
+        "argv": [
+          "/runtime/bin/vere-v4.6-linux-x86_64",
+          "-t",
+          "-L",
+          "--no-dock",
+          "--loom",
+          "31",
+          "-b",
+          "127.0.0.1",
+          "--http-port",
+          "18082",
+          "/state/live/nec"
+        ],
+        "pid": 49
+      }
+    },
+    {
+      "utc": "2026-09-13T01:28:15Z",
+      "command": "nec: zuse",
+      "result": "%408\n"
+    },
+    {
+      "utc": "2026-09-13T01:28:15Z",
+      "command": "launch bud",
+      "result": {
+        "argv": [
+          "/runtime/bin/vere-v4.6-linux-x86_64",
+          "-t",
+          "-L",
+          "--no-dock",
+          "--loom",
+          "31",
+          "-b",
+          "127.0.0.1",
+          "--http-port",
+          "18083",
+          "/state/live/bud"
+        ],
+        "pid": 56
+      }
+    },
+    {
+      "utc": "2026-09-13T01:28:17Z",
+      "command": "bud: zuse",
+      "result": "%408\n"
+    },
+    {
+      "utc": "2026-09-13T01:28:17Z",
+      "command": "zod: |commit %base",
+      "result": ">="
+    },
+    {
+      "utc": "2026-09-13T01:28:17Z",
+      "command": "bus: |commit %base",
+      "result": ">="
+    },
+    {
+      "utc": "2026-09-13T01:28:17Z",
+      "command": "nec: |commit %base",
+      "result": ">="
+    },
+    {
+      "utc": "2026-09-13T01:28:18Z",
+      "command": "bud: |commit %base",
+      "result": ">="
+    },
+    {
+      "utc": "2026-09-13T01:28:18Z",
+      "command": "zod: |start %stead-home",
+      "result": ">="
+    },
+    {
+      "utc": "2026-09-13T01:28:19Z",
+      "command": "zod: -stead-smoke ~zod [%assert 0]",
+      "result": {
+        "stdout": "[32 %avow 0 %noun %stead-smoke-ack]",
+        "stderr": "loom: mapped 512MB\r\nlite: arvo formula 4ce68411\r\nlite: core 641296f\r\nlite: final state 641296f\r\neval (cue, newt):",
+        "request": "[32 %fyrd [%base %stead-smoke %noun [%noun [~zod [%assert 0]]]]]",
+        "response_frame_sha256": "3530ab4116ee4a53b337d33da39aaffba6ad10029babade28d911ffb5ef8d9ce"
+      }
+    },
+    {
+      "utc": "2026-09-13T01:28:20Z",
+      "command": "bud: -stead-smoke ~zod [%advance ~bus 0]",
+      "result": {
+        "stdout": "[32 %avow 1]",
+        "stderr": "loom: mapped 512MB\r\nlite: arvo formula 4ce68411\r\nlite: core 641296f\r\nlite: final state 641296f\r\neval (cue, newt):\n\r\n/sys/vane/gall/hoon:<[1.863 9].[1.863 37]>\r\n/app/stead-home/hoon:<[27 3].[50 5]>\r\n/app/stead-home/hoon:<[28 3].[50 5]>\r\n/app/stead-home/hoon:<[29 3].[50 5]>\r\n/app/stead-home/hoon:<[30 3].[50 5]>\r\n/app/stead-home/hoon:<[42 7].[49 31]>\r\n/app/stead-home/hoon:<[43 9].[44 11]>\r\nstead-smoke-denied\r\n/app/stead-home/hoon:<[44 9].[44 11]>\r\npoke-ack\r\npoke-fail\r\neval: bail: %thread-fail",
+        "request": "[32 %fyrd [%base %stead-smoke %noun [%noun [~zod [%advance ~bus 0]]]]]",
+        "response_frame_sha256": "c63fb76ea742dd91ae9bf129fb0df8304bc9d26fee819c5f131b0b1701aa1f51"
+      }
+    }
+  ],
+  "scope": "synthetic counter only; not product/session/Git authorization",
+  "evidence_file": ".piers/fakes/logs/smoke-20260913T012820Z.json"
+}
+make: *** [Makefile:13: test] Error 1

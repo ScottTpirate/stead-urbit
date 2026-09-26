@@ -1,0 +1,8 @@
+python3 scripts/urbit/harness.py doctor
+PASS private network (loopback only, no internet route), no host home or Docker socket
+{
+  "host": "Linux-7.2.5-3-omarchy-x86_64-with-glibc2.44",
+  "python": "3.14.7",
+  "git": "2.55.0",
+  "running": null
+}
