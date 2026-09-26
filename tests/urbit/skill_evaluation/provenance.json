@@ -39,7 +39,7 @@
     "status": "pass"
   },
   "prepared_by": "/root/independent_review",
-  "protocol": "stead.skill-evaluation-provenance/1",
+  "protocol": "stead.skill-evaluation-provenance/2",
   "skills": [
     {
       "baseline_must_not_receive": true,
@@ -70,7 +70,7 @@
       "source_path": ".agents/skills/stead-urbit-release/SKILL.md"
     }
   ],
-  "status": "source_provenance_only_new_fixtures_unexecuted",
+  "status": "v2_source_proposal_unexecuted",
   "toolchain": {
     "boot_artifact_sha256": "b4babd14e9f1acbdb421b3c31c215ee637ad6691b7e382b99c6fd8991e623708",
     "extra_libraries": {
@@ -93,5 +93,17 @@
     "runtime_version": "4.6",
     "toolchain_lock_path": "specs/urbit/toolchain.lock.json",
     "toolchain_lock_sha256": "4a209c10cf1756eb0f7357cc3eca8250bf66c239b4cd0ca31a8c0886d4d304ee"
+  },
+  "v1_preserved_evidence": {
+    "no_v1_answer_reuse": true,
+    "path": "docs/urbit/evidence/2026-09-26/workflow-evaluation/index.json",
+    "reason": "both T05 mutation inventories truncated after outsider-granted survived",
+    "sha256": "2e27b941213b666e277d49e403c58940aa270d30a70319ace14e8dfe55e17f12",
+    "status": "incomplete"
+  },
+  "v2_control": {
+    "derivation": "Exact v1 reference test suite with its two outsider tests removed; preserves writer, stale, reader-spoof and writer-claim tests. Requires new actual native prequalification.",
+    "path": "reviewer/controls/T05-weak-tests.hoon",
+    "sha256": "2e51a43725cf25619a6ee414f38078bb83515a53c7ff0f4206e5588664549519"
   }
 }

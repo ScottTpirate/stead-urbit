@@ -10,6 +10,7 @@ import copy
 from contextlib import ExitStack
 import json
 from pathlib import Path
+import re
 import subprocess
 import sys
 import tempfile
@@ -22,6 +23,90 @@ import skill_evaluation_support as S
 from gall_schedule_proof import _jam
 
 PACKAGE = ROOT / 'tests/urbit/skill_evaluation'
+AUTHORED_HELPER = b':: AUTHORED host fixture, not executable native helper evidence\n'
+
+
+def noun_atom(text):
+    return int.from_bytes(text.encode(), 'little')
+
+
+def noun_tuple(*parts):
+    tail = parts[-1]
+    for part in reversed(parts[:-1]):
+        tail = (part, tail)
+    return tail
+
+
+def noun_list(parts):
+    tail = 0
+    for part in reversed(parts):
+        tail = (part, tail)
+    return tail
+
+
+def authored_t05_observation(label, arms, *, outcome, mutate=None):
+    correct = label.endswith('-correct')
+    failing = outcome in ('correct-failure', 'killed')
+    rows = [(noun_atom(arm), noun_list([noun_atom('AUTHORED assertion failure')])
+             if failing and i == 0 else 0) for i, arm in enumerate(arms)]
+    noun = noun_tuple(2, noun_atom(label), 0 if correct else 1,
+                      0 if outcome in ('correct-pass', 'killed') else 1, noun_list(rows))
+    if mutate:
+        noun = mutate(noun)
+    raw = _jam(noun)  # Separate reviewed codec creates authored host data only.
+    return {'label': label, 'actual_jam_hex': raw.hex(), 'actual_jam_sha256': S.digest(raw),
+            'actual_noun': 'AUTHORED HOST ENVELOPE, NOT NATIVE EVIDENCE', 'decode_stderr': ''}
+
+
+def authored_t05(content, task, *, tests=None, outcomes=None, prefix='T05', helper=AUTHORED_HELPER):
+    tests = tests or content['reviewer/reference/T05/tests/eval-coverage.hoon']
+    subject = content[task['immutable_subject']]
+    arms = [name for name in re.findall(rb'^\+\+ {2,}(test-[a-z0-9-]+)', tests, re.M)]
+    arms = [name.decode() for name in arms]
+    subjects = [('correct', subject)] + [(Path(path).stem, content['reviewer/' + path]) for path in task['mutants']]
+    outcomes = outcomes or ['correct-pass'] + ['killed'] * len(task['mutants'])
+    results, commands, generated = [], [], {}
+    for (name, actual), outcome in zip(subjects, outcomes, strict=True):
+        label = prefix + '-' + name
+        result = authored_t05_observation(label, arms, outcome=outcome)
+        expected = S.digest(S.t05_program(tests, actual, helper, label, correct=name == 'correct').encode())
+        generated[label + '.hoon'] = expected
+        commands.extend([{'kind': 'native-pure-evaluator', 'status': 'completed', 'label': label,
+            'input_sha256': expected, 'exit_code': 0, 'stdout': '[%skill-result '
+                + str(int.from_bytes(bytes.fromhex(result['actual_jam_hex']), 'little')) + ']', 'stderr': ''},
+            {'kind': 'native-observed-noun', 'status': 'completed', **result}])
+        results.append(result)
+    return dict(tests_source=tests, subject=subject, helper=helper, task=task, content=content,
+                results=results, commands=commands, generated=generated, label_prefix=prefix,
+                public=not task['mutants'])
+
+
+def upgrade_authored_receipt(report, content, oracles):
+    task = oracles['tasks'][4]
+    main = authored_t05(content, task)
+    weak = authored_t05(content, task, tests=content[S.T05_CONTROL_SOURCE],
+                        outcomes=S.T05_CONTROL_OUTCOMES, prefix=S.T05_CONTROL_PREFIX)
+    commands = [row for row in report['commands'] if not str(row.get('label', '')).startswith('T05-')]
+    before = next(i for i, row in enumerate(commands) if row['kind'] == 'native-dojo')
+    commands[before:before] = main['commands'] + weak['commands']
+    generated = report['generated_source_files_sha256']
+    generated.update(main['generated'] | weak['generated'])
+    report.update(package_version=2, commands=commands, generated_source_files_after=copy.deepcopy(generated),
+                  native_dependencies_sha256={'/kernel/pkg/base-dev/lib/test.hoon': S.digest(AUTHORED_HELPER)})
+    for name in ('main', 'weak'):
+        value = main if name == 'main' else weak
+        assessment = S.validate_t05_execution(**(value | {'commands': commands, 'generated': generated}))
+        if name == 'main':
+            report['tasks'][4].update(results=value['results'], t05_assessment=assessment)
+        else:
+            report['t05_continuation_control'] = {'test_source_sha256': S.digest(content[S.T05_CONTROL_SOURCE]),
+                'expected_outcomes': S.T05_CONTROL_OUTCOMES, 'results': value['results'], 't05_assessment': assessment}
+    report['checks'].extend({'name': name, 'passed': True} for name in (
+        'T05:complete-native-subject-inventory', 'T05:correct-and-all-mutants',
+        'T05:weak-control-complete-expected-failure'))
+    report['checks'].extend({'name': result['label'] + suffix, 'passed': True}
+        for result in weak['results'] for suffix in (':native-evaluator-success', ':exact-nonempty-result-frame'))
+    return report
 # Exact ANSI-stripped streams from retained failed prequal03 T02 starter,
 # 20260926T134510Z. This is observed output reused as a host parser fixture,
 # not a native rerun or a replacement for that attempt's failed final status.
@@ -91,7 +176,7 @@ def authored_receipt(content, oracles):
     for name in ('T03', 'T04'):
         names.update((name + ':ten-Gall-arms', name + ':only-authorized-arms-edited'))
     names.update('T05:original-arm-retained:' + arm for arm in oracles['tasks'][4]['preserved_test_arms'])
-    return {'tasks': rows, 'checks': [{'name': name, 'passed': True} for name in sorted(names)],
+    report = {'tasks': rows, 'checks': [{'name': name, 'passed': True} for name in sorted(names)],
             'commands': commands, 'failure_control': control,
             'prequalification_diagnostics': {'T03-initial-save-probe': initial}, 'candidate_files_sha256': references,
             'candidate_inputs_after': copy.deepcopy(references), 'generated_source_files_sha256': generated,
@@ -99,6 +184,7 @@ def authored_receipt(content, oracles):
             'evaluator_controls': {'status': 'passed', 'classification': 'real-native-evaluator',
                 'large_frame_bytes': 65537, 'large_frame_sha256': 'b' * 64, 'result_sha256': 'c' * 64,
                 'invalid_input': {'exit': 0, 'encoder_rejected': True, 'stdout_hex': '', 'stderr': 'AUTHORED rejection'}}}
+    return upgrade_authored_receipt(report, content, oracles)
 
 
 class PriorExecutionAdmission(unittest.TestCase):
@@ -110,10 +196,10 @@ class PriorExecutionAdmission(unittest.TestCase):
         report = authored_receipt(self.content, self.oracles)
         mutation(report)
         with self.assertRaises((ValueError, TypeError)):
-            S.validate_prequalification_execution(report, self.content, self.oracles)
+            S.validate_prequalification_execution(report, self.content, self.oracles, helper=AUTHORED_HELPER)
 
     def test_complete_authored_shape_only_is_accepted_as_structural_data(self):
-        S.validate_prequalification_execution(authored_receipt(self.content, self.oracles), self.content, self.oracles)
+        S.validate_prequalification_execution(authored_receipt(self.content, self.oracles), self.content, self.oracles, helper=AUTHORED_HELPER)
 
     def test_missing_empty_and_short_native_result_inventory_rejected(self):
         for name in range(6):
@@ -158,7 +244,7 @@ class PriorExecutionAdmission(unittest.TestCase):
         self.assertTrue(S.compiler_rejection(0, '', T02_ACTUAL_STDOUT))
         report = authored_receipt(self.content, self.oracles)
         report['commands'][1].update(stdout=T02_ACTUAL_STDOUT, stderr=T02_ACTUAL_STDERR)
-        S.validate_prequalification_execution(report, self.content, self.oracles)
+        S.validate_prequalification_execution(report, self.content, self.oracles, helper=AUTHORED_HELPER)
 
     def test_generic_bail_signal_timeout_and_result_do_not_replace_compiler_rejection(self):
         for code, stdout, stderr in ((0, '', T02_ACTUAL_STDERR), (0, 'timeout', 'eval: bail: %exit'),
@@ -214,6 +300,7 @@ class TypedInterfaceTests(unittest.TestCase):
             with self.subTest(function=function), self.assertRaisesRegex(ValueError, 'inventory cannot omit'):
                 function(unsupported)
 
+
     def test_both_frozen_references_retain_declared_interface(self):
         for task, leaf in (('T01', 'eval-add.hoon'), ('T02', 'eval-maybe.hoon')):
             source = (PACKAGE / 'reviewer/reference' / task / 'lib' / leaf).read_text()
@@ -228,6 +315,224 @@ class TypedInterfaceTests(unittest.TestCase):
                             source.replace('=@ud', '=*')):
                 with self.subTest(task=task, altered=altered):
                     self.assertFalse(S.declared_gate(altered, task))
+
+
+class T05CompleteBehavioralEvidence(unittest.TestCase):
+    """Authored host evidence only; no compiled candidate or killed native mutant."""
+    @classmethod
+    def setUpClass(cls):
+        cls.content, cls.oracles = S.verify_package(PACKAGE)
+        cls.task = cls.oracles['tasks'][4]
+
+    def fixture(self, **kwargs):
+        return authored_t05(self.content, self.task, **kwargs)
+
+    def replace(self, value, index, record):
+        value['results'][index] = record
+        value['commands'][2 * index].update(stdout='[%skill-result '
+            + str(int.from_bytes(bytes.fromhex(record['actual_jam_hex']), 'little')) + ']')
+        value['commands'][2 * index + 1] = {'kind': 'native-observed-noun', 'status': 'completed', **record}
+
+    def test_each_survivor_position_and_correct_failure_keep_every_subject_and_arm(self):
+        for position in range(5):
+            outcomes = ['correct-pass'] + ['killed'] * 4
+            outcomes[position] = 'correct-failure' if position == 0 else 'survived'
+            with self.subTest(position=position):
+                value = self.fixture(outcomes=outcomes)
+                assessment = S.validate_t05_execution(**value)
+                self.assertFalse(assessment['task_pass'])
+                self.assertTrue(assessment['complete'])
+                self.assertEqual([row['outcome'] for row in assessment['subjects']], outcomes)
+                self.assertEqual(len(assessment['subjects']), 5)
+                self.assertTrue(all([arm['name'] for arm in row['arm_results']] == assessment['arms']
+                                    for row in assessment['subjects']))
+
+    def test_all_passing_reference_shape_and_weak_middle_survivor_are_distinct(self):
+        self.assertTrue(S.validate_t05_execution(**self.fixture())['task_pass'])
+        weak = self.fixture(tests=self.content[S.T05_CONTROL_SOURCE], outcomes=S.T05_CONTROL_OUTCOMES,
+                            prefix=S.T05_CONTROL_PREFIX)
+        result = S.validate_t05_execution(**weak)
+        self.assertFalse(result['task_pass'])
+        self.assertEqual([row['outcome'] for row in result['subjects']], S.T05_CONTROL_OUTCOMES)
+        self.assertEqual(result['subjects'][-1]['subject'], 'claim-must-match')
+
+    def test_missing_duplicate_reordered_subjects_and_commands_are_invalid(self):
+        for field in ('results', 'commands'):
+            for mutation in ('missing', 'duplicate', 'reordered'):
+                with self.subTest(field=field, mutation=mutation):
+                    value = self.fixture()
+                    sequence = value[field]
+                    if mutation == 'missing':
+                        sequence.pop()
+                    elif mutation == 'duplicate':
+                        sequence.append(copy.deepcopy(sequence[-1]))
+                    else:
+                        sequence[0], sequence[-1] = sequence[-1], sequence[0]
+                    with self.assertRaises(ValueError):
+                        S.validate_t05_execution(**value)
+
+    def test_envelope_role_label_version_predicate_and_arm_inventory_are_derived(self):
+        arms = S.t05_arms(self.fixture()['tests_source'])
+        rows = [(noun_atom(arm), 0) for arm in arms]
+        cases = {
+            'version': noun_tuple(1, noun_atom('T05-correct'), 0, 0, noun_list(rows)),
+            'label': noun_tuple(2, noun_atom('T05-false'), 0, 0, noun_list(rows)),
+            'role': noun_tuple(2, noun_atom('T05-correct'), 1, 0, noun_list(rows)),
+            'predicate': noun_tuple(2, noun_atom('T05-correct'), 0, 1, noun_list(rows)),
+            'boolean': noun_tuple(2, noun_atom('T05-correct'), 0, 2, noun_list(rows)),
+            'missing': noun_tuple(2, noun_atom('T05-correct'), 0, 0, noun_list(rows[:-1])),
+            'duplicate': noun_tuple(2, noun_atom('T05-correct'), 0, 0, noun_list(rows + rows[:1])),
+            'reordered': noun_tuple(2, noun_atom('T05-correct'), 0, 0, noun_list(list(reversed(rows)))),
+        }
+        for label, noun in cases.items():
+            with self.subTest(label=label):
+                value = self.fixture()
+                record = authored_t05_observation('T05-correct', arms, outcome='correct-pass', mutate=lambda _: noun)
+                self.replace(value, 0, record)
+                with self.assertRaises(ValueError):
+                    S.validate_t05_execution(**value)
+
+    def test_malformed_tang_and_generic_bail_cannot_kill_mutants(self):
+        arms = S.t05_arms(self.fixture()['tests_source'])
+        malformed = [7, noun_list([(noun_atom('unknown'), 0)]),
+                     noun_list([(noun_atom('leaf'), noun_list([(1, 2)]))])]
+        for tang in malformed:
+            with self.subTest(tang=tang):
+                value = self.fixture()
+                noun = noun_tuple(2, noun_atom('T05-claimed-author'), 1, 0,
+                    noun_list([(noun_atom(arm), tang if i == 0 else 0) for i, arm in enumerate(arms)]))
+                record = authored_t05_observation('T05-claimed-author', arms, outcome='killed', mutate=lambda _: noun)
+                self.replace(value, 1, record)
+                with self.assertRaises(ValueError):
+                    S.validate_t05_execution(**value)
+        for mutation in ({'stderr': 'eval: bail: %exit'}, {'stdout': 'nest-fail'},
+                         {'exit_code': -9}, {'exit_code': True}, {'timed_out': True},
+                         {'status': 'failed'}, {'input_sha256': '0' * 64}):
+            with self.subTest(mutation=mutation):
+                value = self.fixture()
+                value['commands'][2].update(mutation)
+                with self.assertRaises(ValueError):
+                    S.validate_t05_execution(**value)
+
+    def test_raw_jam_hash_stdout_source_and_observation_linkage_lies_are_invalid(self):
+        mutations = (
+            lambda v: v['results'][0].update(actual_jam_sha256='0' * 64),
+            lambda v: v['commands'][0].update(stdout='[%skill-result 2]'),
+            lambda v: v['commands'].insert(1, {'kind': 'native-dojo', 'status': 'completed', 'stdout': 'unrelated'}),
+            lambda v: v['generated'].update({'T05-correct.hoon': '0' * 64}),
+            lambda v: v['generated'].update({'T05-invented.hoon': '0' * 64}),
+            lambda v: v.update(tests_source=v['tests_source'] + b'\n:: changed exact source\n'),
+            lambda v: v.update(subject=v['subject'] + b'\n'),
+            lambda v: v.update(helper=v['helper'] + b'\n'),
+        )
+        for mutation in mutations:
+            with self.subTest(mutation=mutation):
+                value = self.fixture()
+                mutation(value)
+                with self.assertRaises(ValueError):
+                    S.validate_t05_execution(**value)
+
+    def test_canonical_decoder_rejects_trailing_bad_references_and_resource_bombs(self):
+        raw = bytes.fromhex(self.fixture()['results'][0]['actual_jam_hex'])
+        for broken in (b'', b'\0', b'\x07', raw + b'\0', raw + b'\x01'):
+            with self.subTest(raw=broken[:12]), self.assertRaises(ValueError):
+                S._t05_cue(broken)
+        for constant, limit in (('MAX_JAM', 1), ('T05_MAX_DEPTH', 2),
+                                ('T05_MAX_NODES', 2), ('T05_MAX_EXPANDED', 2)):
+            with self.subTest(constant=constant), patch.object(S, constant, limit), self.assertRaises(ValueError):
+                S._t05_cue(raw)
+        for noun in (0, 1, (1, 1), ((1, 2), (1, 2)), (1, (2, (3, 0)))):
+            self.assertEqual(S._t05_jam(noun), _jam(noun))
+            self.assertEqual(S._t05_cue(_jam(noun)), noun)
+
+    def test_complete_arms_include_irregular_space_and_reject_duplicate_names(self):
+        value = self.fixture()
+        tests = value['tests_source'].replace(b'\n--', b'\n++   test-extra\n  (expect !>(=(1 1)))\n--')
+        assessment = S.validate_t05_execution(**self.fixture(tests=tests))
+        self.assertIn('test-extra', assessment['arms'])
+        duplicate = tests.replace(b'test-extra', b'test-writer')
+        with self.assertRaisesRegex(ValueError, '[Dd]uplicate'):
+            S.t05_program(duplicate, value['subject'], value['helper'], 'T05-correct', correct=True)
+
+    def test_runner_continues_all_five_after_each_valid_behavioral_failure(self):
+        for position in range(5):
+            outcomes = ['correct-pass'] + ['killed'] * 4
+            outcomes[position] = 'correct-failure' if position == 0 else 'survived'
+            value = self.fixture(outcomes=outcomes)
+            calls = []
+            def native(source, label):
+                calls.append(label)
+                return value['results'][len(calls) - 1]
+            result = S.run_t05_subjects(value['tests_source'], value['subject'], value['helper'],
+                                        self.task, self.content, native)
+            self.assertEqual(result, value['results'])
+            self.assertEqual(calls, [row['label'] for row in value['results']])
+
+    def test_runner_never_catches_timeout_guard_source_or_compile_errors_as_kills(self):
+        for failure in (TimeoutError('authored timeout'), subprocess.TimeoutExpired(['AUTHORED'], 30),
+                        RuntimeError('authored guard revoked'), ValueError('authored source changed'),
+                        AssertionError('authored native compiler bail')):
+            value, calls = self.fixture(), []
+            def native(source, label):
+                calls.append(label)
+                if len(calls) == 3:
+                    raise failure
+                return value['results'][len(calls) - 1]
+            retained = []
+            with self.subTest(failure=failure), self.assertRaises((TimeoutError, subprocess.TimeoutExpired, S.T05EvidenceError)):
+                S.run_t05_subjects(value['tests_source'], value['subject'], value['helper'], self.task,
+                                    self.content, native, results=retained)
+            self.assertEqual(len(calls), 3)
+            self.assertEqual(len(retained), 2)
+            self.assertNotIn('T05-everyone-granted', calls)
+
+    def test_runner_aborts_before_later_subject_after_malformed_native_result(self):
+        value, calls = self.fixture(), []
+        value['results'][1]['actual_jam_hex'] = '02'
+        value['results'][1]['actual_jam_sha256'] = S.digest(b'\x02')
+        def native(source, label):
+            calls.append(label)
+            return value['results'][len(calls) - 1]
+        with self.assertRaises(S.T05EvidenceError):
+            S.run_t05_subjects(value['tests_source'], value['subject'], value['helper'], self.task, self.content, native)
+        self.assertEqual(len(calls), 2)
+
+    def test_program_transports_behavioral_predicate_without_aggregate_assertion(self):
+        value = self.fixture()
+        source = S.t05_program(value['tests_source'], value['subject'], value['helper'], 'T05-correct', correct=True)
+        self.assertIn('=/  observed=(list [name=@t result=tang])', source)
+        self.assertIn('=/  passed=?  =(~ failures)', source)
+        self.assertIn("(jam [2 'T05-correct' %.y passed observed])", source)
+        self.assertNotIn('?>  =(~ failures)', source)
+        self.assertIn('?>  (lte (met 3 encoded) 262.144)', source)
+        self.assertLess(source.index('262.144'), source.index('[%skill-result encoded]'))
+
+    def test_public_only_correct_subject_cannot_accept_private_or_missing_inventory(self):
+        task = S.task_plan(self.oracles, 'T05')[0]
+        value = authored_t05(self.content, task)
+        assessment = S.validate_t05_execution(**value)
+        self.assertEqual([row['subject'] for row in assessment['subjects']], ['correct'])
+        value['public'] = False
+        with self.assertRaises(ValueError):
+            S.validate_t05_execution(**value)
+
+    def test_prequalification_requires_native_weak_control_full_results_and_exact_false_outcome(self):
+        mutations = (
+            lambda r: r.pop('t05_continuation_control'),
+            lambda r: r['t05_continuation_control']['results'].pop(),
+            lambda r: r['t05_continuation_control'].update(expected_outcomes=['correct-pass'] + ['killed'] * 4),
+            lambda r: r['t05_continuation_control']['t05_assessment'].update(task_pass=True),
+            lambda r: r.update(package_version=1),
+            lambda r: r['native_dependencies_sha256'].update({'/kernel/pkg/base-dev/lib/test.hoon': '0' * 64}),
+            lambda r: r.update(commands=[c for c in r['commands'] if not str(c.get('label', '')).startswith(S.T05_CONTROL_PREFIX)]),
+        )
+        for mutation in mutations:
+            with self.subTest(mutation=mutation):
+                report = authored_receipt(self.content, self.oracles)
+                mutation(report)
+                with self.assertRaises(ValueError):
+                    S.validate_prequalification_execution(report, self.content, self.oracles, helper=AUTHORED_HELPER)
+
 
 
 class InputAndNounBounds(unittest.TestCase):
@@ -384,7 +689,8 @@ class PublicFeedbackExecution(unittest.TestCase):
     def execute(self, task, *, condition='baseline', missing_prior=False,
                 compile_failure=False, cleanup_failure=False, private_all=False,
                 dojo_timeout=False, evaluator_timeout=False, prequalify=False,
-                extra_platform_file=False, bad_metadata=None):
+                extra_platform_file=False, bad_metadata=None, t05_outcomes=None,
+                t05_compile_label=None):
         with tempfile.TemporaryDirectory(prefix='stead-public-feedback-host-') as temp, ExitStack() as stack:
             root = Path(temp)
             candidate = root / 'candidate'
@@ -463,9 +769,21 @@ class PublicFeedbackExecution(unittest.TestCase):
                 if evaluator_timeout and record['label'].startswith(task):
                     record.update(status='failed', timed_out=True)
                     raise subprocess.TimeoutExpired(['AUTHORED-evaluator'], 30)
-                failed = compile_failure and record['label'].startswith(task)
+                failed = ((compile_failure and record['label'].startswith(task))
+                          or record['label'] == t05_compile_label)
+                stdout = '[%skill-result 2]'
+                if record['label'].startswith(('T05-', S.T05_CONTROL_PREFIX + '-')):
+                    control = record['label'].startswith(S.T05_CONTROL_PREFIX + '-')
+                    prefix = S.T05_CONTROL_PREFIX if control else 'T05'
+                    name = record['label'].removeprefix(prefix + '-')
+                    subjects = ['correct'] + [Path(path).stem for path in self.oracles['tasks'][4]['mutants']]
+                    outcomes = (S.T05_CONTROL_OUTCOMES if control else t05_outcomes
+                                or ['correct-pass'] + ['killed'] * 4)
+                    arms = [arm for arm in re.findall(r'^\+\+ {2,}(test-[a-z0-9-]+)', source, re.M)]
+                    observation = authored_t05_observation(record['label'], arms, outcome=outcomes[subjects.index(name)])
+                    stdout = '[%skill-result ' + str(int.from_bytes(bytes.fromhex(observation['actual_jam_hex']), 'little')) + ']'
                 record.update(status='completed', exit_code=1 if failed else 0,
-                              stdout='' if failed else '[%skill-result 2]',
+                              stdout='' if failed else stdout,
                               stderr='authored public compiler diagnostic' if failed else '')
                 return record['exit_code'], record['stdout'], record['stderr']
 
@@ -619,6 +937,44 @@ class PublicFeedbackExecution(unittest.TestCase):
         run = self.execute('T03', dojo_timeout=True)
         self.assertEqual(run['public']['status'], 'fail')
         self.assertTrue(run['public']['infrastructure_error'])
+
+    def test_private_t05_each_behavioral_failure_keeps_all_native_subjects_then_runs_t06(self):
+        for position in range(5):
+            outcomes = ['correct-pass'] + ['killed'] * 4
+            outcomes[position] = 'correct-failure' if position == 0 else 'survived'
+            with self.subTest(position=position):
+                run = self.execute('T05', private_all=True, t05_outcomes=outcomes)
+                report, row = run['private'], run['private']['tasks'][4]
+                self.assertEqual([r['status'] for r in report['tasks']], ['passed'] * 4 + ['failed', 'passed'])
+                self.assertEqual([r['outcome'] for r in row['t05_assessment']['subjects']], outcomes)
+                self.assertEqual(len(row['results']), 5)
+                self.assertEqual(row['expected_cases'], row['observed_cases'])
+                self.assertTrue(row['t05_assessment']['complete'])
+                self.assertFalse(row['t05_assessment']['task_pass'])
+                self.assertFalse(any(not c['passed'] for c in report['checks'] if c['name'].endswith(':native-evaluator-success')))
+                self.assertEqual(run['host']['all_stop'].call_count, 2)
+
+    def test_private_t05_compile_failure_is_invalid_and_aborts_before_remaining_subjects_and_t06(self):
+        run = self.execute('T05', private_all=True, t05_compile_label='T05-outsider-granted')
+        report = run['private']
+        self.assertEqual([r['status'] for r in report['tasks']], ['passed'] * 4 + ['failed', 'not_run'])
+        self.assertEqual(len(report['tasks'][4]['results']), 2)
+        self.assertNotIn('t05_assessment', report['tasks'][4])
+        self.assertEqual(report['native_execution_interrupted']['task'], 'T05')
+        self.assertNotIn('T05-everyone-granted', [name for name, _ in run['programs']])
+        self.assertEqual(run['host']['all_stop'].call_count, 2)
+
+    def test_prequalification_runs_separate_weak_control_and_public_feedback_does_not(self):
+        run = self.execute('T05', prequalify=True)
+        control = run['private']['t05_continuation_control']
+        self.assertEqual(run['private']['status'], 'pass', run['private'].get('error'))
+        self.assertEqual([r['status'] for r in run['private']['tasks']], ['passed'] * 6)
+        self.assertEqual([r['outcome'] for r in control['t05_assessment']['subjects']], S.T05_CONTROL_OUTCOMES)
+        self.assertEqual(len(control['results']), 5)
+        public = self.execute('T05')['public']
+        self.assertNotIn('t05_continuation_control', public)
+        self.assertNotIn(S.T05_CONTROL_PREFIX, json.dumps(public))
+        self.assertEqual([r['subject'] for r in public['tasks'][0]['t05_assessment']['subjects']], ['correct'])
 
 
 class FailureEvidence(unittest.TestCase):

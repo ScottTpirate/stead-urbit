@@ -1,9 +1,12 @@
 # Native Work/Docs and permissions slice
 
 The original increment executed one home-owned synthetic project/work/document
-state machine and authorization together at `f52293f`. The current v2 changes
-are source-reviewed but **uncompiled and unexecuted** after real thermal preflight
-refusals. The original minimum contracts remain byte-for-byte frozen under
+state machine and authorization together at `f52293f`. The v2 code now compiles
+and has passed 53 native compile/save-load probes. **Full v2 qualification remains
+open:** the latest full run at `8334a75` was thermally interrupted after 90 passed
+cases; populated migration, capacity, recovery and final reconciliation are still
+required. See the [current checkpoint](PHASE01_CHECKPOINT_20260926.md).
+The original minimum contracts remain byte-for-byte frozen under
 `specs/urbit/contract-freeze.json`; the narrow [v2 amendment](CONTRACT_AMENDMENT_2.md)
 has its own `specs/urbit/v2/contract-freeze.json`. The native desk is
 `native/core/desk`; the URB-020 counter remains separately available in
@@ -66,9 +69,10 @@ original `%1` format. The test-only predecessor builder calls the archived v1
 transition, in batches of at most 32 commands, to produce an actual old-state
 vase; it does not assign a fabricated journal count. Migration reconstructs and
 checks content/policy projections while preserving original journal, receipt and
-Git bytes. These new migration and corruption tests remain unexecuted. Current
-save/load and warm process restart are separate checks. None establishes abrupt-crash
-windows, production backups, a safe runtime rollback or same-identity live migration.
+Git bytes. These migration and corruption tests still need a completed qualifying
+run. Current save/load, process restart and the required controlled abrupt-crash
+recovery lane are separate checks. None establishes production backup recovery,
+a safe runtime rollback or same-identity live migration.
 
 V2 scopes local work IDs by project, documents by project/container, and grants by
 project. It removes the global resource-availability lookup. Public receipts use
@@ -88,8 +92,9 @@ These privacy/capacity changes require their actual native regressions; source
 review is not reproduction of either old vulnerability or proof of the fix. Real company data
 remains blocked pending the independent authentication, endpoint-isolation and
 backup reviews in the master directive. The current gate requires capacity-edge
-fill schedules and actual subscription evidence. Abrupt crash injection and
-production effects remain later work. There is no implemented external-effect
+fill schedules, actual subscription evidence and controlled abrupt-crash recovery;
+the latter is not deferred from Phase 1. Production effects remain later work.
+There is no implemented external-effect
 subsystem to replay; this is a bounded source/N-A disposition, not effect-engine
 qualification. No representative latency or capacity claim is made.
 

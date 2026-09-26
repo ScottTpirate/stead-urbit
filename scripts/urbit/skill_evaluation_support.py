@@ -31,12 +31,19 @@ import execution_policy
 import conn
 from digests import sha, source_sha
 
-PACKAGE_SHA = 'd78697102021b4b4837efd2d560668310fad5ab69fcbf98c7592a9cd0fff3e00'
+PACKAGE_SHA = '54369e5aba503a0d7abb1cf5cdd059a7b03888a368153c2d7d3b15c7b1afbc3a'
 TASKS = ('T01', 'T02', 'T03', 'T04', 'T05', 'T06')
 MAX_FILE = 65536
 MAX_TOTAL = 1024 * 1024
 MAX_OUTPUT = 1_000_000
 MAX_JAM = 262144
+# Separate bounds for the typed T05 result noun, not a change to Gall proofs.
+T05_MAX_DEPTH = 512
+T05_MAX_NODES = 65536
+T05_MAX_EXPANDED = 1048576
+T05_CONTROL_SOURCE = 'reviewer/controls/T05-weak-tests.hoon'
+T05_CONTROL_PREFIX = 'prequal-T05-continuation'
+T05_CONTROL_OUTCOMES = ['correct-pass', 'killed', 'survived', 'killed', 'killed']
 FAILURE_PREFIX = 65536
 ANSI = re.compile(r'\x1b\[[0-9;]*m')
 T06_PLATFORM_BASELINE = ('mar/noun.hoon', 'mar/hoon.hoon', 'mar/txt.hoon',
@@ -210,13 +217,317 @@ def hashes(mapping):
     return {name: digest(raw) for name, raw in sorted(mapping.items())}
 
 
+class T05EvidenceError(ValueError):
+    """Incomplete/invalid native evidence; never a candidate behavioral kill."""
+
+
+def _t05_require(passed, reason):
+    if not passed:
+        raise T05EvidenceError('T05 evidence: ' + reason)
+
+
+def _t05_mat(value):
+    if value == 0:
+        return 1, 1
+    bits = value.bit_length()
+    width = bits.bit_length()
+    return 2 * width + bits, ((1 << width)
+        | ((bits & ((1 << (width - 1)) - 1)) << (width + 1))
+        | (value << (2 * width)))
+
+
+def _t05_jam(noun):
+    """Bounded canonical jam, derived from the reviewed Gall proof codec.
+
+    This local codec keeps that proof's limits and import closure unchanged.
+    Wire encoding follows pinned ++jam/++cue; host fixtures are not native runs.
+    """
+    interned, identities, sizes = {}, {}, {}
+
+    def identify(value, depth=0):
+        _t05_require(depth <= T05_MAX_DEPTH, 'noun depth bound')
+        if type(value) is int:
+            _t05_require(0 <= value and value.bit_length() <= MAX_JAM * 8, 'noun atom bound')
+            key, size = ('atom', value), 1
+        else:
+            _t05_require(type(value) is tuple and len(value) == 2, 'invalid noun cell')
+            if id(value) in identities:
+                return identities[id(value)]
+            left, right = identify(value[0], depth + 1), identify(value[1], depth + 1)
+            key, size = ('cell', left, right), 1 + sizes[left] + sizes[right]
+        _t05_require(size <= T05_MAX_EXPANDED, 'expanded noun bound')
+        if key not in interned:
+            identifier = len(interned) + 1
+            _t05_require(identifier <= T05_MAX_NODES, 'noun node bound')
+            interned[key], sizes[identifier] = identifier, size
+        identifier = interned[key]
+        if type(value) is tuple:
+            identities[id(value)] = identifier
+        return identifier
+
+    identify(noun)
+    positions = {}
+
+    def pack(value, offset):
+        identifier = interned[('atom', value)] if type(value) is int else identities[id(value)]
+        previous = positions.get(identifier)
+        if previous is not None and not (type(value) is int
+                and value.bit_length() <= previous.bit_length()):
+            length, bits = _t05_mat(previous)
+            return length + 2, 3 | (bits << 2)
+        if previous is None:
+            positions[identifier] = offset
+        if type(value) is int:
+            length, bits = _t05_mat(value)
+            return length + 1, bits << 1
+        left_length, left = pack(value[0], offset + 2)
+        right_length, right = pack(value[1], offset + 2 + left_length)
+        length = 2 + left_length + right_length
+        _t05_require(length <= MAX_JAM * 8, 'encoded noun bound')
+        return length, 1 | (left << 2) | (right << (2 + left_length))
+
+    length, value = pack(noun, 0)
+    _t05_require(length <= MAX_JAM * 8, 'encoded noun bound')
+    return value.to_bytes((length + 7) // 8, 'little')
+
+
+def _t05_cue(raw):
+    _t05_require(type(raw) is bytes and 0 < len(raw) <= MAX_JAM and raw[-1] != 0,
+                 'noncanonical jam atom')
+    bits, positions, steps = int.from_bytes(raw, 'little'), {}, 0
+    limit = bits.bit_length()
+
+    def read(offset, count):
+        _t05_require(0 <= count <= MAX_JAM * 8 and offset + count <= limit,
+                     'truncated or oversized jam field')
+        return (bits >> offset) & ((1 << count) - 1)
+
+    def rub(offset):
+        width = 0
+        while read(offset + width, 1) == 0:
+            width += 1
+            _t05_require(width <= 22, 'jam length prefix bound')
+        if width == 0:
+            return 1, 0
+        length = (1 << (width - 1)) + read(offset + width + 1, width - 1)
+        return 2 * width + length, read(offset + 2 * width, length)
+
+    def unpack(offset, depth=0):
+        nonlocal steps
+        steps += 1
+        _t05_require(steps <= T05_MAX_NODES and depth <= T05_MAX_DEPTH, 'jam traversal bound')
+        if read(offset, 1) == 0:
+            size, atom = rub(offset + 1)
+            positions[offset] = atom, 1
+            return size + 1, atom, 1
+        if read(offset + 1, 1) == 1:
+            size, pointer = rub(offset + 2)
+            _t05_require(pointer < offset and pointer in positions, 'invalid jam backreference')
+            return size + 2, *positions[pointer]
+        left_size, left, left_count = unpack(offset + 2, depth + 1)
+        right_size, right, right_count = unpack(offset + 2 + left_size, depth + 1)
+        count = 1 + left_count + right_count
+        _t05_require(count <= T05_MAX_EXPANDED, 'expanded jam noun bound')
+        value = (left, right)
+        positions[offset] = value, count
+        return 2 + left_size + right_size, value, count
+
+    used, noun, _ = unpack(0)
+    _t05_require(used == limit and _t05_jam(noun) == raw, 'noncanonical or trailing jam')
+    return noun
+
+
+def _t05_parts(noun, count):
+    result = []
+    for _ in range(count - 1):
+        _t05_require(type(noun) is tuple and len(noun) == 2, 'missing tuple field')
+        result.append(noun[0])
+        noun = noun[1]
+    return result + [noun]
+
+
+def _t05_list(noun):
+    result = []
+    while noun != 0:
+        _t05_require(type(noun) is tuple and len(noun) == 2 and len(result) < T05_MAX_NODES,
+                     'malformed or oversized noun list')
+        result.append(noun[0])
+        noun = noun[1]
+    return result
+
+
+def _t05_cord(noun):
+    _t05_require(type(noun) is int and 0 < noun.bit_length() <= MAX_FILE * 8, 'cord bound')
+    return noun.to_bytes((noun.bit_length() + 7) // 8, 'little').decode('utf-8', errors='strict')
+
+
+def _t05_tang(noun):
+    """Validate pinned tang=(list tank), retaining full tang in the raw jam."""
+    tanks = _t05_list(noun)
+    pending, visited = list(tanks), 0
+    while pending:
+        tank = pending.pop()
+        visited += 1
+        _t05_require(visited <= T05_MAX_EXPANDED, 'expanded tank bound')
+        if type(tank) is int:  # $tank's cord branch, including the empty cord.
+            continue
+        tag, rest = _t05_parts(tank, 2)
+        tag = _t05_cord(tag)
+        if tag == 'leaf':
+            tapes = [rest]
+        else:
+            _t05_require(tag in ('palm', 'rose'), 'unknown tank variant')
+            separators, children = _t05_parts(rest, 2)
+            tapes = _t05_parts(separators, 4 if tag == 'palm' else 3)
+            pending.extend(_t05_list(children))
+        for tape in tapes:
+            _t05_require(all(type(char) is int for char in _t05_list(tape)), 'malformed tank tape')
+    return len(tanks)
+
+
+def t05_arms(tests_source):
+    _t05_require(type(tests_source) is bytes and 0 < len(tests_source) <= MAX_FILE,
+                 'test source byte bound')
+    header, body = tests_source.decode('utf-8', errors='strict').split('\n', 1)
+    _t05_require(header == '/+  *test, eval-authorization', 'exact test imports')
+    arms = [arm for arm in arm_names(body) if arm.startswith('test-')]
+    _t05_require(arms and len(arms) == len(set(arms)), 'empty or duplicate test arm inventory')
+    return arms
+
+
+def t05_program(tests_source, subject, helper, label, *, correct):
+    arms = t05_arms(tests_source)
+    _t05_require(all(type(raw) is bytes and 0 < len(raw) <= MAX_FILE
+                 and b'\0' not in raw and b'\r' not in raw for raw in (subject, helper)),
+                 'bounded LF subject/helper source')
+    _t05_require(re.fullmatch(r'[A-Za-z0-9-]+', label) is not None and type(correct) is bool,
+                 'invalid generated label or role')
+    body = tests_source.decode().split('\n', 1)[1]
+    prefix = ('=/  test\n' + helper.decode() + '\n=/  eval-authorization\n' + subject.decode()
+              + '\n=,  test\n=>\n' + body)
+    values = '~[' + ' '.join("['" + arm + "' " + arm + ']' for arm in arms) + ']'
+    predicate = '=(~ failures)' if correct else '?=(^ failures)'
+    role = '%.y' if correct else '%.n'
+    return (prefix + '\n=/  observed=(list [name=@t result=tang])  ' + values + '\n'
+            + '=/  failures  (skim observed |=([name=@t result=tang] !=(~ result)))\n'
+            + '=/  passed=?  ' + predicate + '\n'
+            + "=/  encoded=@  (jam [2 '" + label + "' " + role + ' passed observed])\n'
+            + '~|  [%stead-skill-t05-oversize (met 3 encoded)]\n'
+            + '?>  (lte (met 3 encoded) ' + format(MAX_JAM, ',').replace(',', '.') + ')\n'
+            + '^-  [@tas @ud]\n[%skill-result encoded]\n')
+
+
+def t05_subjects(subject, task, content, *, public=False):
+    _t05_require(subject == content[task['immutable_subject']], 'immutable subject bytes')
+    paths = task['mutants']
+    _t05_require(isinstance(paths, list) and (not paths if public else len(paths) == 4),
+                 'exact public/private subject count')
+    subjects = [('correct', subject)] + [(Path(path).stem, content['reviewer/' + path]) for path in paths]
+    _t05_require(len({label for label, _ in subjects}) == len(subjects), 'duplicate subject label')
+    return subjects
+
+
+def t05_observation(result, label, arms, *, correct):
+    _t05_require(valid_observation(result, label), 'invalid native observation: ' + label)
+    version, named, role, passed, observed = _t05_parts(_t05_cue(bytes.fromhex(result['actual_jam_hex'])), 5)
+    _t05_require(version == 2 and _t05_cord(named) == label and role == (0 if correct else 1)
+                 and type(passed) is int and passed in (0, 1), 'envelope header: ' + label)
+    rows = [_t05_parts(row, 2) for row in _t05_list(observed)]
+    _t05_require([_t05_cord(name) for name, _ in rows] == arms, 'complete ordered arm inventory: ' + label)
+    arm_results = [{'name': name, 'passed': tang == 0, 'tank_count': _t05_tang(tang)}
+                   for name, (_, tang) in zip(arms, rows, strict=True)]
+    failed = [row['name'] for row in arm_results if not row['passed']]
+    derived = not failed if correct else bool(failed)
+    _t05_require((passed == 0) == derived, 'native predicate disagrees with actual tangs: ' + label)
+    return {'label': label, 'actual_jam_sha256': result['actual_jam_sha256'],
+            'arm_results': arm_results, 'failed_arms': failed,
+            'outcome': ('correct-pass' if derived else 'correct-failure') if correct
+                       else ('killed' if derived else 'survived')}
+
+
+def run_t05_subjects(tests_source, subject, helper, task, content, native, *,
+                     label_prefix='T05', public=False, results=None):
+    """Keep evaluating after valid behavioral failures; never swallow a native error."""
+    arms = t05_arms(tests_source)
+    results = [] if results is None else results
+    _t05_require(results == [], 'results must start empty')
+    for name, actual in t05_subjects(subject, task, content, public=public):
+        label = label_prefix + '-' + name
+        try:
+            result = native(t05_program(tests_source, actual, helper, label, correct=name == 'correct'), label)
+            # Validate now, so malformed output cannot queue further native work.
+            t05_observation(result, label, arms, correct=name == 'correct')
+        except (TimeoutError, subprocess.TimeoutExpired):
+            raise
+        except Exception as error:
+            # Public compiler feedback remains an ordinary candidate failure.
+            # Private scoring cannot continue with missing native subject data.
+            if public:
+                raise
+            raise T05EvidenceError('Incomplete native subject ' + label + ': '
+                                   + type(error).__name__ + ': ' + str(error)) from error
+        results.append(result)
+    return results
+
+
+def validate_t05_execution(tests_source, subject, helper, task, content, results, commands, generated, *,
+                           label_prefix='T05', public=False):
+    """Derive complete T05 behavior from exact source, commands and bounded jam.
+
+    This pure admission function is not native execution. Callers separately
+    verify the enclosing package, candidate, source/guard and helper identity.
+    A complete behavioral failure returns task_pass=False. Incomplete, compiler,
+    framing, decode and binding failures raise ValueError and never kill a mutant.
+    """
+    arms = t05_arms(tests_source)
+    subjects = t05_subjects(subject, task, content, public=public)
+    labels = [label_prefix + '-' + name for name, _ in subjects]
+    _t05_require(isinstance(results, list) and [row.get('label') for row in results
+                 if isinstance(row, dict)] == labels, 'complete ordered subject results')
+    _t05_require(isinstance(commands, list) and all(isinstance(row, dict) for row in commands)
+                 and isinstance(generated, dict), 'command and generated-source inventory')
+    pure = [(i, row) for i, row in enumerate(commands) if row.get('kind') == 'native-pure-evaluator'
+            and str(row.get('label', '')).startswith(label_prefix + '-')]
+    observed = [(i, row) for i, row in enumerate(commands) if row.get('kind') == 'native-observed-noun'
+                and str(row.get('label', '')).startswith(label_prefix + '-')]
+    _t05_require([row.get('label') for _, row in pure] == labels
+                 and [row.get('label') for _, row in observed] == labels, 'complete ordered native commands')
+    _t05_require({name for name in generated if name.startswith(label_prefix + '-')}
+                 == {label + '.hoon' for label in labels}, 'complete generated source labels')
+    records = []
+    for (name, actual), label, result, (index, command), (after, observation) in zip(
+            subjects, labels, results, pure, observed, strict=True):
+        expected = digest(t05_program(tests_source, actual, helper, label, correct=name == 'correct').encode())
+        _t05_require(command.get('status') == 'completed' and type(command.get('exit_code')) is int
+                     and command['exit_code'] == 0 and command.get('input_sha256') == expected
+                     and generated.get(label + '.hoon') == expected,
+                     'native compilation/source binding: ' + label)
+        _t05_require(isinstance(command.get('stdout'), str) and isinstance(command.get('stderr'), str)
+                     and not command.get('timed_out')
+                     and not any('eval: bail:' in command[key] for key in ('stdout', 'stderr')),
+                     'native execution failure: ' + label)
+        _t05_require(after == index + 1 and observation == {
+            'kind': 'native-observed-noun', 'status': 'completed', **result},
+            'actual command/observation linkage: ' + label)
+        _t05_require(result_jam(command['stdout']).hex() == result.get('actual_jam_hex'),
+                     'stdout/observation jam disagreement: ' + label)
+        record = t05_observation(result, label, arms, correct=name == 'correct')
+        record.update(subject=name, subject_sha256=digest(actual), generated_source_sha256=expected,
+                      command_index=index, observation_index=after)
+        records.append(record)
+    return {'protocol': 'stead.skill-t05-result/2', 'complete': True,
+            'test_source_sha256': digest(tests_source), 'helper_sha256': digest(helper),
+            'arms': arms, 'subjects': records,
+            'task_pass': all(row['outcome'] in ('correct-pass', 'killed') for row in records)}
+
+
 def verify_package(root):
     content = files(root)
     freeze = json_bytes(content.pop('freeze.json'))
     actual = hashes(content)
     identity = digest(json.dumps(actual, sort_keys=True, separators=(',', ':')).encode())
     if (identity != PACKAGE_SHA or freeze.get('package_sha256') != PACKAGE_SHA
-            or freeze.get('files') != actual or freeze.get('file_count') != 39):
+            or freeze.get('files') != actual or freeze.get('file_count') != 40 or freeze.get('package_version') != 2):
         raise ValueError('Frozen skill corpus mismatch')
     oracles = json_bytes(content['reviewer/oracles.json'])
     if tuple(task['id'] for task in oracles['tasks']) != TASKS:
@@ -418,7 +729,26 @@ def prequalification_inventory(content, oracles):
     return inventory
 
 
-def validate_prequalification_execution(inner, content, oracles):
+def prequalification_test_helper(inner, content):
+    """Resolve only the frozen kernel dependency; never a report-selected path."""
+    pins = json_bytes(content['common/toolchain-pins.json'])
+    commit = pins['kernel_commit']
+    if not re.fullmatch(r'[a-f0-9]{40}', commit):
+        raise ValueError('Invalid frozen kernel identity')
+    kernel = Path('/kernel') if Path('/kernel').is_dir() else Path(__file__).resolve().parents[2] / '.runtime' / ('urbit-' + commit)
+    path = kernel / 'pkg/base-dev/lib/test.hoon'
+    if any(part.is_symlink() for part in (path, *path.parents)):
+        raise ValueError('Redirected native helper')
+    with os.fdopen(os.open(path, os.O_RDONLY | os.O_NOFOLLOW | os.O_NONBLOCK), 'rb') as stream:
+        if not stat.S_ISREG(os.fstat(stream.fileno()).st_mode):
+            raise ValueError('Nonregular native helper')
+        helper = stream.read(MAX_FILE + 1)
+    if not 0 < len(helper) <= MAX_FILE:
+        raise ValueError('Native helper byte bound')
+    return helper
+
+
+def validate_prequalification_execution(inner, content, oracles, *, helper=None):
     """Validate retained execution inventory, separately from source/guard binding.
 
     This admits a prior evaluator record; it is not an independent rerun or an
@@ -426,6 +756,10 @@ def validate_prequalification_execution(inner, content, oracles):
     empty and internally inconsistent records even when their files are hashed.
     """
     inventory = prequalification_inventory(content, oracles)
+    helper = prequalification_test_helper(inner, content) if helper is None else helper
+    if (inner.get('package_version') != 2 or inner.get('native_dependencies_sha256', {}).get(
+            '/kernel/pkg/base-dev/lib/test.hoon') != digest(helper)):
+        raise ValueError('Missing v2 package or actual pinned native helper binding')
     rows = inner.get('tasks')
     checks = inner.get('checks')
     commands = inner.get('commands')
@@ -454,7 +788,9 @@ def validate_prequalification_execution(inner, content, oracles):
                 'T06:repeat-empty-assembly', 'T06:pinned-platform-baseline',
                 'T06:exact-native-mounted-desk', 'T06:native-clean-generator-result',
                 'loaded-clay-metadata:skill-eval:desk.bill',
-                'loaded-clay-metadata:skill-eval:sys.kelvin'}
+                'loaded-clay-metadata:skill-eval:sys.kelvin',
+                'T05:complete-native-subject-inventory', 'T05:correct-and-all-mutants',
+                'T05:weak-control-complete-expected-failure'}
     diagnostics = inner.get('prequalification_diagnostics')
     initial_label = 'T03-initial-save-probe'
     if (not isinstance(diagnostics, dict) or set(diagnostics) != {initial_label}
@@ -488,6 +824,24 @@ def validate_prequalification_execution(inner, content, oracles):
                 raise ValueError('Missing or corrupt actual native noun: ' + label)
             else:
                 result_records.append(result)
+        if name == 'T05':
+            task = oracles['tasks'][4]
+            subject = content[task['immutable_subject']]
+            assessment = validate_t05_execution(content['reviewer/reference/T05/tests/eval-coverage.hoon'],
+                subject, helper, task, content, results, commands, generated)
+            if not assessment['task_pass'] or row.get('t05_assessment') != assessment:
+                raise ValueError('Reference T05 behavior or assessment disagrees')
+            control_t05 = inner.get('t05_continuation_control')
+            if (not isinstance(control_t05, dict) or control_t05.get('test_source_sha256') != digest(content[T05_CONTROL_SOURCE])
+                    or control_t05.get('expected_outcomes') != T05_CONTROL_OUTCOMES):
+                raise ValueError('Missing frozen weak T05 continuation control')
+            weak_results = control_t05.get('results')
+            weak = validate_t05_execution(content[T05_CONTROL_SOURCE], subject, helper, task, content,
+                weak_results, commands, generated, label_prefix=T05_CONTROL_PREFIX)
+            if (weak['task_pass'] is not False or control_t05.get('t05_assessment') != weak
+                    or [item['outcome'] for item in weak['subjects']] != T05_CONTROL_OUTCOMES):
+                raise ValueError('Weak T05 continuation control did not produce its complete expected failure')
+            result_records.extend(weak_results)
     control = inner.get('failure_control')
     control_label = 'deliberate-false-native-expectation'
     if (not valid_observation(control, control_label) or control['actual_jam_hex'] == '02'
@@ -497,7 +851,9 @@ def validate_prequalification_execution(inner, content, oracles):
     observed = [command for command in commands if command['kind'] == 'native-observed-noun']
     if observed != [{'kind': 'native-observed-noun', 'status': 'completed', **record} for record in result_records]:
         raise ValueError('Native observation command/result inventory mismatch')
-    pure_labels = [control_label] + inventory['T01']['labels'] + inventory['T02']['labels'] + inventory['T05']['labels']
+    weak_labels = [T05_CONTROL_PREFIX + '-' + name for name, _ in t05_subjects(
+        content[oracles['tasks'][4]['immutable_subject']], oracles['tasks'][4], content)]
+    pure_labels = [control_label] + inventory['T01']['labels'] + inventory['T02']['labels'] + inventory['T05']['labels'] + weak_labels
     pure = [command for command in commands if command['kind'] == 'native-pure-evaluator']
     if [command.get('label') for command in pure] != [control_label, 'T02-starter-rejection', *pure_labels[1:]]:
         raise ValueError('Missing actual evaluator/starter command inventory')
@@ -745,7 +1101,7 @@ def run(host, package_root, candidate_root, condition, *, prequalify=False,
     report_path = Path(host['STATE']) / 'logs' / ('skill-evaluation-' + token + '.json')
     work = Path(host['STATE']) / 'logs' / ('skill-evaluation-' + token + '-inputs')
     work.mkdir(exist_ok=False)
-    report = {'protocol': 'stead.skill-native-adapter/1', 'status': 'fail',
+    report = {'protocol': 'stead.skill-native-adapter/1', 'package_version': 2, 'status': 'fail',
               'classification': 'native-unit-and-pinned-gall-synthetic-routing',
               'condition': condition, 'prequalification': prequalify,
               'public_feedback': public, 'feedback_task': feedback_task, 'feedback_attempt': feedback_attempt,
@@ -917,6 +1273,7 @@ def run(host, package_root, candidate_root, condition, *, prequalify=False,
                 if name != 'T06':
                     install({path: raw for path, raw in selected.items() if path.endswith('.hoon')})
                 results = []
+                task_pass = True
                 if name in ('T01', 'T02'):
                     source = selected[task['editable_files'][0]].decode()
                     check(name + ':declared-public-interface', declared_gate(source, name))
@@ -957,18 +1314,37 @@ def run(host, package_root, candidate_root, condition, *, prequalify=False,
                     coverage = json_bytes(selected['coverage.json'])
                     check('T05:coverage-report', bool(coverage.get('missing_behavior')) and bool(coverage.get('why_existing_tests_miss_it'))
                           and set(coverage.get('added_arms', [])) == set(arms) - set(task['preserved_test_arms']))
-                    subjects = [('correct', subject)] + [(Path(path).stem, content['reviewer/' + path]) for path in task['mutants']]
-                    for label, actual_subject in subjects:
-                        prefix = '=/  test\n' + helper + '\n=/  eval-authorization\n' + actual_subject.decode() + '\n=,  test\n=>\n' + body
-                        values = '~[' + ' '.join("['" + arm + "' " + arm + ']' for arm in arms) + ']'
-                        program = prefix + '\n=/  observed=(list [@t tang])  ' + values + '\n'
-                        program += '=/  failures  (skim observed |=([name=@t result=tang] !=(~ result)))\n'
-                        program += ('?>  =(~ failures)\n' if label == 'correct' else '?>  ?=(^ failures)\n')
-                        program += '^-  [@tas @ud]\n[%skill-result (jam observed)]\n'
-                        results.append(native(program, 'T05-' + label))
                     row['expected_cases'] = list(arms)
+                    subjects = t05_subjects(subject, task, content, public=public)
                     row['mutants'] = [label for label, _ in subjects[1:]]
                     row['requires_independent_test_semantics_review'] = True
+                    # Retain progress even on malformed output or a timeout.
+                    row['results'] = results
+                    run_t05_subjects(selected['tests/eval-coverage.hoon'], subject, helper.encode(),
+                        task, content, native, public=public, results=results)
+                    assessment = validate_t05_execution(selected['tests/eval-coverage.hoon'], subject,
+                        helper.encode(), task, content, results, report['commands'],
+                        report['generated_source_files_sha256'], public=public)
+                    row['t05_assessment'] = assessment
+                    check('T05:complete-native-subject-inventory', assessment['complete'])
+                    task_pass = assessment['task_pass']
+                    # Behavioral failure is aggregated only after all subjects.
+                    report['checks'].append({'name': 'T05:correct-and-all-mutants', 'passed': task_pass})
+                    if prequalify:
+                        weak_results = []
+                        weak_source = content[T05_CONTROL_SOURCE]
+                        report['t05_continuation_control'] = {
+                            'test_source_sha256': digest(weak_source), 'expected_outcomes': T05_CONTROL_OUTCOMES,
+                            'classification': 'native-expected-behavioral-failure-control-not-a-seventh-task',
+                            'results': weak_results}
+                        run_t05_subjects(weak_source, subject, helper.encode(), task, content, native,
+                            label_prefix=T05_CONTROL_PREFIX, results=weak_results)
+                        weak = validate_t05_execution(weak_source, subject, helper.encode(), task, content,
+                            weak_results, report['commands'], report['generated_source_files_sha256'],
+                            label_prefix=T05_CONTROL_PREFIX)
+                        report['t05_continuation_control']['t05_assessment'] = weak
+                        check('T05:weak-control-complete-expected-failure', weak['task_pass'] is False
+                            and [item['outcome'] for item in weak['subjects']] == T05_CONTROL_OUTCOMES)
                 else:
                     expected = {path: content[source] for path, source in task['source_mapping'].items()}
                     check('T06:exact-supplied-bytes', all(selected[path] == raw for path, raw in expected.items()))
@@ -1011,16 +1387,19 @@ def run(host, package_root, candidate_root, condition, *, prequalify=False,
                     results.append({'label': 'T06-native-clean-generator', 'actual_noun': actual})
                     row['expected_cases'] = ['assembly-bytes', 'repeat-empty-assembly', 'native-clean-generator']
                 check(name + ':nonzero-native-results', bool(results) and bool(row['expected_cases']))
-                row.update(status='passed', classification=task['classification'], results=results,
+                row.update(status='passed' if task_pass else 'failed', classification=task['classification'], results=results,
                            observed_cases=list(row['expected_cases']))
+                if not task_pass:
+                    row['error'] = 'T05 complete native behavioral failure; all subjects and arms retained'
             except Exception as error:
                 row.update(status='failed', error=type(error).__name__ + ': ' + str(error))
-                if isinstance(error, (TimeoutError, subprocess.TimeoutExpired)):
+                if isinstance(error, (TimeoutError, subprocess.TimeoutExpired, T05EvidenceError)):
                     # A timed-out Lens request may still be evaluating inside
                     # the ship. Do not queue another task on that uncertain
                     # runtime; retain the failure and immediately enter cleanup.
                     report['native_execution_interrupted'] = {'task': name, 'error': row['error']}
-                    checkpoint(name + '-aborted-native-timeout')
+                    checkpoint(name + ('-aborted-invalid-native-evidence' if isinstance(error, T05EvidenceError)
+                                       else '-aborted-native-timeout'))
                     raise
                 host['execution_check']()
             checkpoint(name + '-finished')

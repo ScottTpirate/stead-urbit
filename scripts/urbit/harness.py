@@ -147,7 +147,7 @@ def sandbox(command, *, execution_control=None, execution_id=None):
     if execution_control is not None:
         args += ['--ro-bind', str(execution_control), '/execution',
                  '--setenv', 'STEAD_EXECUTION_ID', execution_id]
-    workflow = ROOT / '.runtime/workflow-evaluation'
+    workflow = ROOT / '.runtime/workflow-evaluation-v2'
     if workflow.exists():
         if workflow.is_symlink() or workflow.stat().st_uid != os.getuid() or workflow.stat().st_mode & 0o077:
             raise ValueError('Workflow input root must be owned and private')

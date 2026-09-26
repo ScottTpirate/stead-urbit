@@ -1,7 +1,10 @@
-# URB-170 six-task evaluation package
+# URB-170 six-task evaluation package — version 2
 
-This package freezes candidate inputs and independent scoring rules. It contains
-**no executed evaluation and no skill-effectiveness claim**. New starters,
+This version freezes unchanged participant inputs and repaired independent scoring rules.
+It contains **no executed v2 evaluation and no skill-effectiveness claim**.
+Version 1 remains preserved as an incomplete comparison: its scorer stopped at
+a surviving T05 mutant and omitted two required subjects. Both version 2
+conditions require fresh contexts and new answers; never retry the old candidates. New starters,
 reference solutions, mutants and oracles require native prequalification before
 participant launch. Historical compiled examples are identified separately in
 `provenance.json`; their success does not qualify these new fixtures.
@@ -66,7 +69,13 @@ is incomplete, never an application or skill pass/fail.
    a semantic assertion failure. Verify empty/missing arms, compile failure,
    timeout and malformed evaluator output are nonpassing. Do not call a build
    message a successful test run.
-5. If a fixture/oracle needs repair, update the package and hash manifest before
+5. Execute the frozen weak T05 continuation control against the correct subject
+   and all four mutants. It must pass the correct subject, kill claimed-author,
+   survive outsider-granted, and still execute and kill everyone-granted and
+   claim-must-match. Retain every test-arm tang and all five native commands.
+   This expected failed test suite is a control, separate from the six passing
+   reference tasks. Its missing/incorrect result blocks both participant launches.
+6. If a fixture/oracle needs repair, update the package and hash manifest before
    either participant starts. Once started, do not silently repair or reweight
    the corpus; invalidate/restart both conditions under a new package version.
 
@@ -92,6 +101,22 @@ against each separately compiled mutant. At least one assertion must fail for
 each mutant while the correct implementation passes all arms. No extra test
 arm may be skipped merely because it fails. Independently review that the added
 tests exercise sender/claimed-author behavior rather than inspect source text.
+
+Version 2 evaluates the correct subject and the four mutants in that frozen
+order. A native typed envelope retains the complete ordered `[arm tang]` list,
+subject label, role and derived pass predicate. A failed correct assertion or a
+surviving mutant does not bail out or skip subsequent subjects; aggregate the
+task outcome only after all five results exist. Missing, duplicated or reordered
+subjects/arms, compiler bails, malformed output, source mismatch or an interrupted
+run invalidate the task. A timeout or failed guard ends the run and starts
+cleanup immediately. These are not killed mutants. Public feedback executes
+only the correct subject and discloses no mutation or private-control results.
+
+The transported jam retains the existing 262,144-byte cap, enforced natively
+before decimal rendering. Its canonical host decoder additionally bounds noun
+depth to 512, encoded nodes to 65,536 and expanded nodes to 1,048,576. Exceeding
+a bound is invalid evidence, never a behavioral kill. Full tangs remain in the
+retained native jam; pretty noun text is diagnostic and does not drive scoring.
 
 T06 has no applications or frontend. It is a minimal development desk with a
 pure library and generator, not an OTA/release qualification. Assemble from an

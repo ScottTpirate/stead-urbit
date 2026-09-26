@@ -2,7 +2,7 @@
 
 ## Start with the working increment
 
-Read root AGENTS.md and AGENT_HANDOFF.md. Preserve the implementation agent's branch and uncommitted work. Use the exact native commands established by URB-010/020; the checked-in example lock is not executable pinning. A successful static validator does not prove a Hoon desk compiles.
+Read root AGENTS.md and AGENT_HANDOFF.md. Preserve the implementation agent's branch and uncommitted work. Use the pinned toolchain and guarded native commands established by URB-010/020; see [the local edit/build loop](DEV_FLOW.md). A successful static validator does not prove a Hoon desk compiles.
 
 Static checks shipped by this supplement:
 
@@ -57,13 +57,13 @@ The native `-test` thread discovers `test-` arms. Tests returning empty tang ind
 
 ## GitHub milestone fields
 
-The seven milestone definitions and all issue numbers are checked in. Native GitHub milestone objects were not created by this review environment. The local integrator can populate them using the authenticated GitHub CLI:
+The seven milestone definitions and all issue numbers are checked in. The live derivative repository now has all seven milestone objects and task assignments, verified September 26, 2026. The integrator can inspect or reconcile them using the authenticated GitHub CLI:
 
 ```sh
 python3 scripts/urbit/sync_milestones.py
 python3 scripts/urbit/sync_milestones.py --apply
 ```
 
-Default mode makes no network calls or writes. Apply mode targets only ScottTpirate/stead-urbit, checks every issue identity and existing assignment before mutations, creates missing titles, and preserves existing statuses/visibility/protection. It refuses conflicting assignments and is resumable after inspecting partial failures. Run with one coordinator: GitHub does not provide an atomic transaction over these objects, and another operator must not edit milestones concurrently. Tests use a mocked API; live synchronization has not been executed here. The CLI is an operator convenience, not a runtime dependency.
+Default mode makes no network calls or writes. Apply mode targets only ScottTpirate/stead-urbit, checks every issue identity and existing assignment before mutations, creates missing titles, and preserves existing statuses/visibility/protection. It refuses conflicting assignments and is resumable after inspecting partial failures. Run with one coordinator: GitHub does not provide an atomic transaction over these objects, and another operator must not edit milestones concurrently. The CLI tests use a mocked API; the observed live milestone state is separate evidence. The CLI is an operator convenience, not a runtime dependency.
 
 Schema references: https://docs.github.com/en/rest/issues/milestones ; https://cli.github.com/manual/gh_api .

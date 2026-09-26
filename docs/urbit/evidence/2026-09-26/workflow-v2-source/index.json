@@ -1,0 +1,73 @@
+{
+  "artifacts": [
+    {
+      "encoding": "gzip",
+      "file": "stdout.log.gz",
+      "original_local_path": ".runtime/phase01-20260926/host-v2-uncommitted/stdout.log",
+      "original_sha256": "a1b535d66e3f44c4702b8b357e06bbbe8d2eae441edd1c6b8dd896df2bcfcc20",
+      "sha256": "9d282b4ca3dbcd0d9e04b98c5fa30a29675a94ba15e0c770ab285c4f5baff822"
+    },
+    {
+      "encoding": "gzip",
+      "file": "stderr.log.gz",
+      "original_local_path": ".runtime/phase01-20260926/host-v2-uncommitted/stderr.log",
+      "original_sha256": "1a29cf8b871a8599456eb6626c763d934991d9fd0814ba26e922bb5686206b47",
+      "sha256": "5d2b0e7e39c18f06062fad3b1d2d8a87b2adf73987d3189743eaf821f9740fc3"
+    },
+    {
+      "encoding": "gzip",
+      "file": "result.json.gz",
+      "original_local_path": ".runtime/phase01-20260926/host-v2-uncommitted/result.json",
+      "original_sha256": "d77393717213eee9181d7bebca6bfb844324951e91662da77ae377c38a76e732",
+      "sha256": "68afb24515e4ee71b57bc141f2865fef446178c0de72fb11b7bbf8b13d372afb"
+    },
+    {
+      "encoding": "gzip",
+      "file": "focused-before-fix.json.gz",
+      "original_local_path": ".runtime/phase01-20260926/host-v2-uncommitted/focused-before-fix.json",
+      "original_sha256": "e139443bbf96adbbcef20f3d85618bb4a1233a9437f752253e46d8e5936a8039",
+      "sha256": "8e8c1082f52a65bc7d8419748baa430aff4284e947e19da9c944677e1d9feba0"
+    },
+    {
+      "encoding": "gzip",
+      "file": "SOURCE_REVIEW_HANDOFF.json.gz",
+      "original_local_path": ".runtime/workflow-v2-proposal/SOURCE_REVIEW_HANDOFF.json",
+      "original_sha256": "5e69f7067c4953300b2ee6f9ee25826fff2f3b3eed4849127225fc6672ed2b7c",
+      "sha256": "5cdb3682e7d1638dae67a776bd9de4d12c19adcc8b740f41df0fffd31d18b1af"
+    }
+  ],
+  "base_commit": "b7c2a10da7037476bc2e2d1c928a8e483e7101ff",
+  "classification": "host-static-mocked-and-independent-source-review",
+  "host_elapsed_seconds": 68.6661549230339,
+  "host_status": "passed",
+  "limits": [
+    "Host checks do not execute Hoon.",
+    "Source review is conditional on actual native v2 prequalification and fresh paired trials.",
+    "Focused failure summary transcribes observed tool output; full raw stream is retained in the parent session and not reconstructed."
+  ],
+  "native_v2_prequalification": "not_run",
+  "participants": "not_run",
+  "protocol": "stead.workflow-v2-source-checks/1",
+  "review": {
+    "author": "/root/independent_review",
+    "independent_reviewer": "/root/editor_tool_review",
+    "integrator_reviewer": "/root",
+    "one_line_test_fix": "Root changed duplicate assertion regex to [Dd]uplicate after actual ValueError diagnostic mismatch; editor independently cleared the exact one-line fix. Source behavior unchanged.",
+    "original_proposal_review": "See unchanged compressed SOURCE_REVIEW_HANDOFF.json",
+    "recorder": "/root",
+    "reviewer_authored_this_record": false
+  },
+  "source_files_sha256": {
+    "scripts/urbit/harness.py": "c54f5d68491c3894c697fdb0da68a060c3293a4014c3f05d790d397f71306a92",
+    "scripts/urbit/skill_evaluation_support.py": "67597ff220928b99ca1cf1e925bd86c903fa3d1399fd59e00825aec936965fe7",
+    "tests/urbit/skill_evaluation/README.md": "edd05520d2014c662fb7c992097da4f101f9109f76eaf72fa059c89de27c40d9",
+    "tests/urbit/skill_evaluation/freeze.json": "edfb008df1b9800d268327c90310fc486a488fab4a2ae0911079ba6c7b504431",
+    "tests/urbit/skill_evaluation/protocol.json": "d1d2ee0a328500634dac810dfe0cdcba59c7ece9dff96fe1dab04e6fe7fb5ac6",
+    "tests/urbit/skill_evaluation/provenance.json": "96f1f33b62eefb0747bbe94f88d633ba64afe07c1dbe7373f4b9ff190e289632",
+    "tests/urbit/skill_evaluation/result.schema.json": "7d563849c92d3779a0213bd5965ba2c61d320ba3d261587c950d6fca0ff4599f",
+    "tests/urbit/skill_evaluation/reviewer/controls/T05-weak-tests.hoon": "2e51a43725cf25619a6ee414f38078bb83515a53c7ff0f4206e5588664549519",
+    "tests/urbit/test_skill_evaluation_support.py": "6d50be4645fda79831820e6e5bf2fa8ab8a46d55e459856684fd33bba6dc3af3"
+  },
+  "tests": 464,
+  "v1_retained_incomplete": true
+}
