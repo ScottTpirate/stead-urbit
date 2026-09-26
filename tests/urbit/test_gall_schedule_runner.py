@@ -13,6 +13,26 @@ import gall_schedule as G
 
 
 class GallScheduleRunnerHostTests(unittest.TestCase):
+    def test_actual_native_dojo_tang_is_the_specific_runtime_control(self):
+        captured = json.loads((Path(__file__).parent / 'fixtures/gall-negative-dojo-tang.json').read_text())
+        self.assertTrue(G.intended_negative(captured['result'], captured['diagnostic']))
+        # An actual runtime error is required, not the hint string in arbitrary
+        # output, compiler source context, a success result, or a different count.
+        result = captured['result']
+        for altered in (
+            result.replace("2 '1'", "2 '10'"),
+            result.replace('pending-control', 'another-control'),
+            result.replace('dojo: generator failure', '%.y'),
+            result.replace('dojo: generator failure', 'nest-fail'),
+            result + "[%stead-core-result '7b7d']\n",
+            result.replace("[%stead-scheduled-gall-pending-control 2 '1']", ''),
+            'syntax error\n' + result,
+            result + 'x' * 65536,
+        ):
+            with self.subTest(output=altered[-120:]):
+                self.assertFalse(G.intended_negative(altered, captured['diagnostic']))
+        self.assertFalse(G.intended_negative(result, 'x' * 65537))
+
     def test_negative_control_requires_exact_expected_and_actual_counts(self):
         for text in ("[stead-scheduled-gall-pending-control 2 '1']",
                      '[%stead-scheduled-gall-pending-control 2 1]'):

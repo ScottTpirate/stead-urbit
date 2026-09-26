@@ -33,9 +33,22 @@ LOADED_CLOSURE = closure()
 
 
 def intended_negative(result, diagnostic):
-    return result.strip() == '~' and re.search(
-        r'(?<![\w-])stead-scheduled-gall-pending-control\s+2\s+(?:\x271\x27|1)(?=\s|\])',
-        diagnostic) is not None
+    if len(result) > 65536 or len(diagnostic) > 65536:
+        return False
+    hint = r'(?<![\w-])stead-scheduled-gall-pending-control\s+2\s+(?:\x271\x27|1)(?=\s|\])'
+    if result.strip() == '~':
+        return re.search(hint, diagnostic) is not None
+    # Pinned Dojo also returns the runtime tang directly, including its terminal
+    # failure line. Only this fixture's location frames and exact control hint
+    # are accepted: a compiler error or an arbitrary nonempty result is not it.
+    lines = result.strip().splitlines()
+    if len(lines) < 3 or lines[-1] != 'dojo: generator failure':
+        return False
+    control = r'\[%?stead-scheduled-gall-pending-control 2 (?:\x271\x27|1)\]'
+    frame = r'/(?:gen|lib)/stead-gall-schedule(?:-negative)?/hoon:<\[[0-9. ]+\]\.\[[0-9. ]+\]>'
+    return (sum(re.fullmatch(control, line) is not None for line in lines[:-1]) == 1
+            and any(re.fullmatch(frame, line) is not None for line in lines[:-1])
+            and all(re.fullmatch(control, line) or re.fullmatch(frame, line) for line in lines[:-1]))
 
 
 def inputs():
