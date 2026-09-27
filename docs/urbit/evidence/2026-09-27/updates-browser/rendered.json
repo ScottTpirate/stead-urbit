@@ -1,0 +1,88 @@
+{
+  "classification": "real-browser-with-mocked-home",
+  "node": "v24.21.0",
+  "browser": "155.0",
+  "checks": [
+    {
+      "name": "401-during-query-restores-usable-sign-in",
+      "passed": true
+    },
+    {
+      "name": "uncertain-resume-preserves-dirty-work-form",
+      "passed": true
+    },
+    {
+      "name": "uncertain-resume-preserves-original-pending-receipt",
+      "passed": true
+    },
+    {
+      "name": "refresh-adopts-current-project-role-and-authority",
+      "passed": true
+    },
+    {
+      "name": "activity-keeps-distinct-events-for-one-resource",
+      "passed": true
+    },
+    {
+      "name": "page-two-survives-foreground-actions-and-repeated-paginated-refresh",
+      "passed": true
+    },
+    {
+      "name": "updates-preserve-local-form-and-original-uncertain-save",
+      "passed": true
+    },
+    {
+      "name": "cancelled-quiet-refresh-does-not-leave-docs-loading",
+      "passed": true
+    },
+    {
+      "name": "revoked-update-scope-clears-protected-rendered-state",
+      "passed": true
+    },
+    {
+      "name": "document-page-two-survives-a-paginated-collection-selector",
+      "passed": true
+    },
+    {
+      "name": "repeated-confirmed-resume-retires-the-old-read-handles",
+      "passed": true
+    },
+    {
+      "name": "keyboard-controls-after-switching-between-two-user-pages",
+      "passed": true
+    }
+  ],
+  "qualifies_phase": false,
+  "requested_case": "",
+  "inputs_before": {
+    "package-lock.json": "8d7fe1eb2b5d38630989c0d9ee40d2815c643ad3f2f3e395fd197330466ea9c7",
+    "src/Markdown.tsx": "38f9d1066060236d7cdcc0ce23fcf94edcba63f0daa00246e7214ad96a9a20e9",
+    "src/SupportDetails.tsx": "4a55384f0ad0d31670a847e9737cbfdf86c15ba312c81851f855b577e9c6b07c",
+    "src/api.ts": "f1ed136655f1e497bf81d0a2ece5ed55660aa828b07cf838905abf730747164e",
+    "src/assets.d.ts": "da5bf71d48cf909584a01c80b445f730507068f5b34c920f352e2bfcf0315e4c",
+    "src/identity.css": "cacda5c0103bf4e6f2156810673809b8bc3fc495ec283160501988cc0a18e9e7",
+    "src/identity.ts": "95fd49a7550f42195de83d912269afdec0fa86c803eb499a349f58174f21adea",
+    "src/main.tsx": "4349269a4ebe769b4959886ac2e09e29c861bb3716dabbe162b0c0a35d8ff772",
+    "src/primitives.tsx": "f900568a7229e1a7dadbd0ae00496a7dec7757379c70ba577a814418ee639336",
+    "src/protocol.ts": "a8dee5b65f79ffe052869f19e9b508f7abcb30149ac82eaa31a47223796003c7",
+    "src/style.css": "826a67fe2126eef84057799d0a1de7d9fe4a0593b330459944fe8670f24ebf0b",
+    "src/support.ts": "811b4d5aa9dcb02e529fb7d7a386a585ab9269a9c3867ed573751b3b76f2b26c",
+    "tests/rendered.mjs": "4cf603c7042b0961f7df8c85c9891c631852e3bee2ba7e66da8608c9ec8ec039"
+  },
+  "status": "pass",
+  "inputs_after": {
+    "package-lock.json": "8d7fe1eb2b5d38630989c0d9ee40d2815c643ad3f2f3e395fd197330466ea9c7",
+    "src/Markdown.tsx": "38f9d1066060236d7cdcc0ce23fcf94edcba63f0daa00246e7214ad96a9a20e9",
+    "src/SupportDetails.tsx": "4a55384f0ad0d31670a847e9737cbfdf86c15ba312c81851f855b577e9c6b07c",
+    "src/api.ts": "f1ed136655f1e497bf81d0a2ece5ed55660aa828b07cf838905abf730747164e",
+    "src/assets.d.ts": "da5bf71d48cf909584a01c80b445f730507068f5b34c920f352e2bfcf0315e4c",
+    "src/identity.css": "cacda5c0103bf4e6f2156810673809b8bc3fc495ec283160501988cc0a18e9e7",
+    "src/identity.ts": "95fd49a7550f42195de83d912269afdec0fa86c803eb499a349f58174f21adea",
+    "src/main.tsx": "4349269a4ebe769b4959886ac2e09e29c861bb3716dabbe162b0c0a35d8ff772",
+    "src/primitives.tsx": "f900568a7229e1a7dadbd0ae00496a7dec7757379c70ba577a814418ee639336",
+    "src/protocol.ts": "a8dee5b65f79ffe052869f19e9b508f7abcb30149ac82eaa31a47223796003c7",
+    "src/style.css": "826a67fe2126eef84057799d0a1de7d9fe4a0593b330459944fe8670f24ebf0b",
+    "src/support.ts": "811b4d5aa9dcb02e529fb7d7a386a585ab9269a9c3867ed573751b3b76f2b26c",
+    "tests/rendered.mjs": "4cf603c7042b0961f7df8c85c9891c631852e3bee2ba7e66da8608c9ec8ec039"
+  }
+}

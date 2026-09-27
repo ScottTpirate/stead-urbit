@@ -1,0 +1,105 @@
+{
+  "format": 1,
+  "classification": "local-real-native-and-browser-development",
+  "qualifies_phase": false,
+  "source_commit": "61b275186a22cd17984d5b1cbd86d9678b8c0c93",
+  "native_checks": 707,
+  "native_pure_arms": 70,
+  "native_deliberate_failure_observed": true,
+  "native_elapsed_seconds": 555.482,
+  "browser_checks": 23,
+  "rendered_mocked_checks": 12,
+  "host_tests_run": 534,
+  "host_skipped": 1,
+  "host_suite_status": "pass",
+  "files": {
+    "native.json.gz": {
+      "original_path": ".runtime/phase02-complete-20260927/updates-native-browser-pass-2118/team-report.json",
+      "original_sha256": "734c6c5cafd9d5cc530f5155018fff9c91d72f2c52b5fb31826ebfc7d7426065",
+      "original_bytes": 769452,
+      "artifact_sha256": "2e5b0754e004b2ed3dda1898c8c33784bf04129b5347efd2842f5ac591262d3e",
+      "artifact_bytes": 78111,
+      "transform": "documented private control omission"
+    },
+    "guardian.json.gz": {
+      "original_path": ".runtime/execution-runs/four-fakes-jjcr52b9/report.json",
+      "original_sha256": "fac8d63b6b7f70ac6666931eff677adc3d36aeca72b2c586582e5ff4826e81f0",
+      "original_bytes": 480392,
+      "artifact_sha256": "a70adc381ac7b51107c1c207b7f0738bd0638c03c7e0f687a9f996413c226a64",
+      "artifact_bytes": 30429,
+      "transform": "gzip only"
+    },
+    "browser.json.gz": {
+      "original_path": ".runtime/browser-native-20260927T211830Z/browser-report.json",
+      "original_sha256": "4766c52f8db47cd3c4b76b50ae6af8da096dd3e98de84dd543560633c075312a",
+      "original_bytes": 247032,
+      "artifact_sha256": "86e4299ac0329926bb994f0506535d18d9f01a23a97d882729c3b985ddd10105",
+      "artifact_bytes": 4951,
+      "transform": "gzip only"
+    },
+    "transport.json": {
+      "original_path": ".runtime/browser-native-20260927T211830Z/transport-report.json",
+      "original_sha256": "b2561717e348fbba2c01ae1ee331623b5884b554b082cc5629daac27eb94e7d5",
+      "original_bytes": 2769,
+      "artifact_sha256": "b2561717e348fbba2c01ae1ee331623b5884b554b082cc5629daac27eb94e7d5",
+      "artifact_bytes": 2769,
+      "transform": "none"
+    },
+    "browser-process.json": {
+      "original_path": ".runtime/browser-native-20260927T211830Z/browser-process.json",
+      "original_sha256": "86f52399164738d1242cfe51f6785fa6619289358ad00088214a86e7d35b4d59",
+      "original_bytes": 560,
+      "artifact_sha256": "86f52399164738d1242cfe51f6785fa6619289358ad00088214a86e7d35b4d59",
+      "artifact_bytes": 560,
+      "transform": "none"
+    },
+    "host-passed.log": {
+      "original_path": ".runtime/phase02-complete-20260927/updates-host-full-final.log",
+      "original_sha256": "ebed186754fc972375a57d5a0480cdd9388f87735e90762a2115d2b16a254fdb",
+      "original_bytes": 648,
+      "artifact_sha256": "ebed186754fc972375a57d5a0480cdd9388f87735e90762a2115d2b16a254fdb",
+      "artifact_bytes": 648,
+      "transform": "none"
+    },
+    "browser-keyboard-failed.json.gz": {
+      "original_path": ".runtime/browser-native-20260927T204905Z/browser-report.json",
+      "original_sha256": "0b4b5ab4022ec3d8851d2da262f57e0f88acc344ff4c0a9f978f41369274ebf6",
+      "original_bytes": 182859,
+      "artifact_sha256": "64894ece2203b3d24d1dfacc770c3bfbed4e6e177c18001c109924b24586b789",
+      "artifact_bytes": 3939,
+      "transform": "gzip only"
+    },
+    "browser-keyboard-failed-transport.json": {
+      "original_path": ".runtime/browser-native-20260927T204905Z/transport-report.json",
+      "original_sha256": "281f2c9c8f4ed66861d95c2331822a6bf815ca34c210e439cb32ad40e9cb8cbb",
+      "original_bytes": 1648,
+      "artifact_sha256": "281f2c9c8f4ed66861d95c2331822a6bf815ca34c210e439cb32ad40e9cb8cbb",
+      "artifact_bytes": 1648,
+      "transform": "none"
+    },
+    "rendered.json": {
+      "original_path": ".runtime/rendered-keyboard-20260927T210148Z/report.json",
+      "original_sha256": "c605a7fd16899dffbcdb518b96f9c6379ed8eb292bf06070c7ed1700e0b9c3d2",
+      "original_bytes": 3863,
+      "artifact_sha256": "c605a7fd16899dffbcdb518b96f9c6379ed8eb292bf06070c7ed1700e0b9c3d2",
+      "artifact_bytes": 3863,
+      "transform": "none"
+    },
+    "rendered-process.json": {
+      "original_path": ".runtime/rendered-keyboard-20260927T210148Z/browser-process.json",
+      "original_sha256": "329d23fcaa8dadf2c92db650cc76191939271a54ff315c49a7b2a65affe96425",
+      "original_bytes": 560,
+      "artifact_sha256": "329d23fcaa8dadf2c92db650cc76191939271a54ff315c49a7b2a65affe96425",
+      "artifact_bytes": 560,
+      "transform": "none"
+    }
+  },
+  "remaining": [
+    "SDK3 actual public-only consumer",
+    "Disposable native CI execution and controls",
+    "Independent onboarding",
+    "Explicit unsupported native versions",
+    "Actual browser expiry and endpoint negatives",
+    "Actual localized time rendering"
+  ]
+}

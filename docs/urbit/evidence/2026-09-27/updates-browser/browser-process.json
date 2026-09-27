@@ -1,0 +1,19 @@
+{
+  "unit": "stead-browser-101c222771a7dbad0d255a8c2d04b901.service",
+  "status": "pass",
+  "cleanup": {
+    "process_reaped": true,
+    "cgroup": "/user.slice/user-1000.slice/user@1000.service/app.slice/stead-browser-101c222771a7dbad0d255a8c2d04b901.service",
+    "empty": true,
+    "state": "inactive"
+  },
+  "proof": {
+    "pid": 3076470,
+    "cgroup": "/user.slice/user-1000.slice/user@1000.service/app.slice/stead-browser-101c222771a7dbad0d255a8c2d04b901.service",
+    "cpu_max": "2500 10000",
+    "cpu_affinity": [
+      19
+    ]
+  },
+  "exit_code": 0
+}

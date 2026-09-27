@@ -1,0 +1,61 @@
+{
+  "protocol": "stead.independent-pr47-increment-review/1",
+  "reviewer": "/root/independent_review",
+  "recorded_at_utc": "2026-09-27T21:35:48.391958+00:00",
+  "source_commit": "61b275186a22cd17984d5b1cbd86d9678b8c0c93",
+  "status": "approved-for-bounded-updates-browser-increment",
+  "qualifies_phase": false,
+  "blocking_findings": [],
+  "reviewer_execution": "Read-only source, retained-byte and pure frame decoding audit under CPU20%/10ms/CPU19. No host tests, browser runs or native launches.",
+  "source_sha256": {
+    "scripts/urbit/native_units.py": "da525b37369c351105acf4c2cab8b914fa1d6ab19eb908a6f558c12544ca1d72",
+    "scripts/urbit/team_check.py": "1d1d9e25d76e4c78616156c26c6c6d4e58ffc87ed5204b9691006377b8a13f56",
+    "scripts/urbit/team_updates_check.py": "7e64efa3a7343e693503569a9a4f925b634aa624f1253e8c0773c304715345d8",
+    "scripts/urbit/harness.py": "5b3bd52ebf712191604137b565f04e406d04768493c6699d985603c7c6bbe0d9",
+    "web/dev/ingress.py": "2884cd9f161e2d0bb745a984aab03e49f8cae012ba6771e5d75deb5548b56646",
+    "web/dev/loopback_bridge.py": "a724bcfc4197adc796f580b43a751198cba8fbf4c1eeaba0221ffab01395fae2",
+    "web/app/tests/native.mjs": "e3c92bcfa2f7e607cb9f2cfd30b80c22f465196f30754a3645a9b28f1574feb1",
+    "web/app/tests/rendered.mjs": "4cf603c7042b0961f7df8c85c9891c631852e3bee2ba7e66da8608c9ec8ec039",
+    "web/app/browser-check.py": "acada9ccfb5bd6e6f0793572fdf0a5ca95e7d5350676ebad7716fa799b40ecb4",
+    "web/app/browser_process.py": "2d122b72e7a58d6f926eff59be1831fb3587611a8373be8a93bd3bbceb3b96c5",
+    "native/core/desk/lib/stead-views.hoon": "4c6889de98d37b40d9d112e0c77e93a1351f2f94e03ce2de20bdcef7e9d9245b",
+    "native/core/desk/lib/stead-updates.hoon": "205adbd403bfc814636e35062d5720611ef2192b87f18233bb471879ce3a1c56",
+    "specs/urbit/phase2-pure-units.json": "a9704375390ca4a967add5928f853aca4d122a431f424b49bce9e3d7ab09a0f1",
+    "docs/urbit/PHASE2_CONTRACT.md": "dd094c913af72550b0c8689b99a980842bfb2b6298b0bab87010f75e1877dddf"
+  },
+  "reviewed_artifact_sha256": {
+    "docs/urbit/evidence/2026-09-27/updates-browser/index.json": "e4b429fddf756cca8de58d96fa25c95f9c5c4a9caa6f3edf240f83d163ca0d87",
+    "docs/urbit/evidence/2026-09-27/updates-browser/README.md": "afdfb7c32292da1dfbba562cd63aab706aff4542a523caf1c2c7ecb27bb8e3bc",
+    "docs/urbit/evidence/2026-09-27/updates-browser/native.json.gz": "2e5b0754e004b2ed3dda1898c8c33784bf04129b5347efd2842f5ac591262d3e",
+    "docs/urbit/evidence/2026-09-27/updates-browser/guardian.json.gz": "a70adc381ac7b51107c1c207b7f0738bd0638c03c7e0f687a9f996413c226a64",
+    "docs/urbit/evidence/2026-09-27/updates-browser/browser.json.gz": "86e4299ac0329926bb994f0506535d18d9f01a23a97d882729c3b985ddd10105",
+    "docs/urbit/evidence/2026-09-27/updates-browser/transport.json": "b2561717e348fbba2c01ae1ee331623b5884b554b082cc5629daac27eb94e7d5",
+    "docs/urbit/evidence/2026-09-27/updates-browser/browser-process.json": "86f52399164738d1242cfe51f6785fa6619289358ad00088214a86e7d35b4d59",
+    "docs/urbit/evidence/2026-09-27/updates-browser/host-passed.log": "ebed186754fc972375a57d5a0480cdd9388f87735e90762a2115d2b16a254fdb",
+    "docs/urbit/evidence/2026-09-27/updates-browser/browser-keyboard-failed.json.gz": "64894ece2203b3d24d1dfacc770c3bfbed4e6e177c18001c109924b24586b789",
+    "docs/urbit/evidence/2026-09-27/updates-browser/browser-keyboard-failed-transport.json": "281f2c9c8f4ed66861d95c2331822a6bf815ca34c210e439cb32ad40e9cb8cbb",
+    "docs/urbit/evidence/2026-09-27/updates-browser/rendered.json": "c605a7fd16899dffbcdb518b96f9c6379ed8eb292bf06070c7ed1700e0b9c3d2",
+    "docs/urbit/evidence/2026-09-27/updates-browser/rendered-process.json": "329d23fcaa8dadf2c92db650cc76191939271a54ff315c49a7b2a65affe96425"
+  },
+  "private_original_native_sha256": "734c6c5cafd9d5cc530f5155018fff9c91d72f2c52b5fb31826ebfc7d7426065",
+  "private_original_guard_sha256": "fac8d63b6b7f70ac6666931eff677adc3d36aeca72b2c586582e5ff4826e81f0",
+  "checks_performed": [
+    "Native before/after bindings agree with actual current files; bound native source and runner files match Git 61b2751. Complete ingress tree also matches before/after, including ignored cache bytes. The supervised interpreter uses a private /tmp pycache_prefix; cache bytes are not claimed as committed source.",
+    "All four installed inventories match the same 76 native files. 310 named native Dojo readback/build results match their explicit positive expectations.",
+    "Six retained log slices match exact stopped zod.log offsets/bytes. Frozen inventory has 70 positive arms (19 session,14 HTTP,11 identity,25 updates,1 capacity) and one explicit failing control. Capacity native arm took65.342693s; whole unit exchange68.748s within its fixed180s deadline.",
+    "Independently decoded all54 retained business/query/update request and response frames and all6 official unit terminals. Framing, input/response hashes, reconstructed input/route requests, raw JSON and printed terminal linkage agree.",
+    "Native/browser execution IDs agree. Outer guard fb81ec00d8f3ba82a788c03a576e4576 completed exit0, cleanup[], reason null,1106.252s, CPU peak83C. Unchanged75C/90C policy and50%/10ms/CPU19. Native/browser systemd units independently read inactive/dead, not-found and empty ControlGroup.",
+    "Browser before/after controller/test/relay/native-tree/toolchain bindings match. All23 browser observations pass (22unique labels; approval repeats for account change);348 allowlisted response metadata rows have no capture-error or truncation flag. Wrong CA/hostname refusals and process/profile cleanup are retained.",
+    "All10 indexed portable artifacts match original/artifact sizes and hashes. Native filtering is exactly60 unit/business commands retained and647 controls omitted, with explicit annotation; other native fields are unchanged.",
+    "Portable metadata contains no credential values: request fields are names/lengths/format flags. All17 known owner-code/bootstrap-nonce/private-key values were absent in plain, hex and native-atom representations. No private-key PEM marker is present."
+  ],
+  "remaining_limits": [
+    "Increment approval only; SDK3 consumer, disposable native CI, independent onboarding and remaining Phase2 acceptance are not closed.",
+    "Portable native report deliberately omits owner configuration/bootstrap/Dojo controls. Its hash-bound private original was reviewed; the public subset is not a complete replay. Synthetic actor-bound watch/cursor IDs and synthetic content belong to the stopped disposable fixture.",
+    "Browser responses are allowlisted observations, not full raw HTTP bodies. Actual reviewed driver assertions support the named cases; omitted response bodies are not independently reconstructed.",
+    "The retained host log reports534 tests/one skip/OK and precedes the final keyboard-only two-test-file commit; it is not a structured exact-source capture. Host/native production inputs are unchanged by that commit. The12 rendered cases use a mock home; the earlier real keyboard failure remains retained.",
+    "Configured time zones do not prove localized date rendering. Browser expiry and additional endpoint negatives remain pending. Unconfirmed receipt recovery is limited to existing currently authorized scopes, not a never-created project/collection.",
+    "Local Firefox/Node, keyboard/layout and latency observations are not cross-browser, full accessibility, production custody/TLS or service-level claims."
+  ],
+  "recommendation": "Commit the reviewed evidence and this review; integrate PR47 as the scoped updates/browser increment while retaining remaining Phase2 obligations."
+}
