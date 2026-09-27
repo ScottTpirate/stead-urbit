@@ -4,7 +4,9 @@ No dates or effort estimates here are promises. Each phase exits on evidence, no
 
 September 26: Phases 0 and 1 are complete. The [Phase 1 native gate](PHASE1_ACCEPTANCE_20260926.md)
 passes all 73 requirements with independent semantic acceptance.
-Phase 2 starts with the public SDK and independent client under URB-180 / #21.
+Phase 2 is underway with the [public SDK package](../../sdk/README.md) under
+URB-180 / #21. Independent consumer compilation, API conformance and individual
+sessions follow; this first package increment does not close that issue.
 
 | Phase | Deliverable | Gate |
 |---|---|---|

@@ -144,6 +144,28 @@ hashes match. The [September 26 recovery record](evidence/2026-09-26/native-time
 retains an observed readiness failure and the subsequent verified reset. Do not
 delete a pier or treat a process snapshot as a replacement seed.
 
+## Phase 2 SDK package
+
+The first SDK increment builds and verifies the four public Hoon files without
+starting ships. From the repository root:
+
+```sh
+mkdir -p .runtime/sdk
+python3 scripts/package_sdk.py build --output .runtime/sdk/stead-sdk-v2.tar
+python3 scripts/package_sdk.py verify --archive .runtime/sdk/stead-sdk-v2.tar
+```
+
+Choose a new output name for a later build; existing files are preserved.
+The checked-in export lock fixes the public file list, hashes, notices and
+toolchain. A changed public file needs a reviewed pin update. The package command
+copies no private fixture client or home state, and verification never extracts
+an input archive. See [the package scope](../../sdk/README.md).
+
+This is host package verification. Compiling a separate native client from the
+published fragment, version negotiation, complete API conformance and the browser
+adapter remain later URB-180 work. No additional hosting or identity is needed
+to build or test this package locally.
+
 ## Phase 2 and later testing
 
 With the native core gate passing, add configurable synthetic teams/containers
