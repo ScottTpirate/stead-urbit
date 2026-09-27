@@ -1,16 +1,22 @@
 # Stead Urbit — experimental native implementation
 
-Status: **Phases 0 and 1 are complete. Phase 2 begins with the public SDK and
-independent client. Browser login, the full Git forge and production access have
+Status: **Phases 0 and 1 are complete. Phase 2 is underway with the public SDK
+package; an independent client follows. Browser login, the full Git forge and production access have
 separate gates.**
 
 The [Phase 1 acceptance record](docs/urbit/PHASE1_ACCEPTANCE_20260926.md) binds
 496 passing native core checks, all eight capacity/predecessor recipes, 58
 scheduled-Gall checks and 476 host tests to their exact source. The native run
 used `dd0e8c0`; its raw deferrals and failed earlier attempts remain preserved.
-Browser login, the full Git forge and production access have separate gates.
 See [executed results](docs/urbit/TEST_RESULTS.md) and the
 [local development loop](docs/urbit/DEV_FLOW.md).
+
+The first [SDK package](sdk/README.md) exports four pinned public Hoon files and
+their notices through an offline build/verification command. It is a developer
+library fragment; independent consumer compilation and the full API remain open
+under [URB-180 / #21](https://github.com/ScottTpirate/stead-urbit/issues/21).
+The [package execution and independent review](docs/urbit/evidence/2026-09-26/phase02-sdk/README.md)
+retain the verified archive, actual host results and corrected review findings.
 
 An independent derivative of `ScottTpirate/stead`, preserving that repository's main-line history through `3d47f0172a41beebb31f5c3a7df133cc1d4b1ead` (inspected September 12, 2026). The original repository is not modified.
 

@@ -20,6 +20,21 @@ The original widget configuration and effective widget were restored and
 verified at 00:32:50 UTC after the run. Fan settings were already restored;
 Chrome remained owner-controlled.
 
+## Phase 2 SDK package
+
+At `fcac1c081c0dd021eebe8b3cabe754a906ebe8c4`, `make check` passed **494
+host/static/mocked tests**, including 18 real filesystem/archive SDK tests.
+Actual CLI package build and verification passed, and independent review passed
+those 18 tests plus five additional adversarial controls with no remaining
+blockers. The 51,200-byte archive, exact source/input hashes, raw logs and prior
+review findings are retained in the [SDK evidence](evidence/2026-09-26/phase02-sdk/README.md).
+Earlier 490/493-test host passes were superseded by the independently found path
+race and descriptor leak; both are corrected and their failure records preserved.
+
+This is host package evidence. No native execution occurred for this increment,
+and no native qualification input changed from the accepted `dd0e8c0` source.
+Independent consumer compilation and full URB-180 / #21 acceptance remain open.
+
 ## Historical runs and diagnostic chronology
 
 The source-specific results and then-open gates below are historical. They are

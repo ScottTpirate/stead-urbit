@@ -1,0 +1,8 @@
+{
+  "source_commit": "ef17dbc75ecf19d195ec9a25f1aef6577ba430a2",
+  "classification": "capture-wrapper-setup-failure",
+  "native_execution": false,
+  "make_check_started": false,
+  "error": "FileNotFoundError reading absent cpuset.cpus.effective; cpu.max exists but cpuset controller file is absent",
+  "correction": "v2 recorder records absent controller files as null; taskset explicitly pins CPU 19"
+}

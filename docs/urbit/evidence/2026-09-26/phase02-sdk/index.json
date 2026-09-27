@@ -1,0 +1,157 @@
+{
+  "artifact": {
+    "bytes": 51200,
+    "path": "final/stead-sdk-v2.tar",
+    "sha256": "cb8097fc2036b7720d8ba9ade3fbc219073f828dbe7835756080f58269216d45"
+  },
+  "classification": "real-host-package-plus-host-static-mocked-suite",
+  "current_host_suite_tests": 494,
+  "independent_review_status": "accepted-for-bounded-offline-sdk-package-increment",
+  "limitations": [
+    "Package integrity relative to reviewed checkout, not publisher signature or native consumer qualification.",
+    "Prior passing host runs remain superseded by independently confirmed path-race and descriptor-leak findings.",
+    "One capture-wrapper setup failure occurred before make check; its original recorder and error record are retained.",
+    "A failed output may remain in its originally opened directory; no automatic deletion through potentially replaced names.",
+    "No native mount changes; earlier Phase1 results retain their dd0e8c0 execution identity.",
+    "URB-180 issue21 and all Phase2 acceptance remain open."
+  ],
+  "native_execution": false,
+  "native_source_baseline": "dd0e8c0ce8d1d00f15de6b07e2e26d368c5c3774",
+  "phase1_merge": "30369de652eb2ee9c3db862dfee3b88ccb9ea3a4",
+  "protocol": "stead.sdk-evidence-retention/1",
+  "records": [
+    {
+      "bytes": 55546,
+      "path": "final/host.json",
+      "retained_from": ".runtime/phase02-sdk-20260926/source-fcac1c0/host.json",
+      "sha256": "e9e538c7ec837f9b58ef7c5484d9cced71c73abafeb20c28ad07413070941c8c"
+    },
+    {
+      "bytes": 3737,
+      "path": "final/host.log",
+      "retained_from": ".runtime/phase02-sdk-20260926/source-fcac1c0/host.log",
+      "sha256": "3cea917cf7d2ec236d991de261943d83cd80081df2ca17fb2e196ff3b98641f7"
+    },
+    {
+      "bytes": 267,
+      "path": "final/build.log",
+      "retained_from": ".runtime/phase02-sdk-20260926/source-fcac1c0/build.log",
+      "sha256": "c5d41a2bfe7733865f7894377bf93a734adb83bce439b0dbd0c62779a7ba6d67"
+    },
+    {
+      "bytes": 268,
+      "path": "final/verify.log",
+      "retained_from": ".runtime/phase02-sdk-20260926/source-fcac1c0/verify.log",
+      "sha256": "51a73c983b995383e1ef7f143ea622a67deed3675be811ca2c23ecdb8d2ca294"
+    },
+    {
+      "bytes": 1938,
+      "path": "final/artifact.json",
+      "retained_from": ".runtime/phase02-sdk-20260926/source-fcac1c0/artifact.json",
+      "sha256": "398c462df46492d676b868e3ec16fbf0df0662e187f38fde653014159087d2ec"
+    },
+    {
+      "bytes": 51200,
+      "path": "final/stead-sdk-v2.tar",
+      "retained_from": ".runtime/phase02-sdk-20260926/source-fcac1c0/stead-sdk-v2.tar",
+      "sha256": "cb8097fc2036b7720d8ba9ade3fbc219073f828dbe7835756080f58269216d45"
+    },
+    {
+      "bytes": 4001,
+      "path": "final/capture.py",
+      "retained_from": ".runtime/phase02-sdk-20260926/capture-fcac1c0.py",
+      "sha256": "b6942363eada83cbf32cc298a7433508eedf6c44fce26f09a72635bb97c4c84e"
+    },
+    {
+      "bytes": 39948,
+      "path": "superseded/92e8ee6/host.json",
+      "retained_from": ".runtime/phase02-sdk-20260926/source-92e8ee6/host.json",
+      "sha256": "6354ecdd31fc523f58b98813429596b9eaf985efbf636b20e21a66dbbe7e37bd"
+    },
+    {
+      "bytes": 3733,
+      "path": "superseded/92e8ee6/host.log",
+      "retained_from": ".runtime/phase02-sdk-20260926/source-92e8ee6/host.log",
+      "sha256": "ba8ca718204e33feadafd0af61b6d4e82ba7a87eba1040da7c71b53b49ac67e6"
+    },
+    {
+      "bytes": 267,
+      "path": "superseded/92e8ee6/build.log",
+      "retained_from": ".runtime/phase02-sdk-20260926/source-92e8ee6/build.log",
+      "sha256": "0a9a6c4079690a191196e3f4563b7d3271eb3b125759255e08f9d3e16ffaa018"
+    },
+    {
+      "bytes": 268,
+      "path": "superseded/92e8ee6/verify.log",
+      "retained_from": ".runtime/phase02-sdk-20260926/source-92e8ee6/verify.log",
+      "sha256": "46992bff75ec645ddabfebaf2d439419493dbf767ec57b855bb33fef2b20fb05"
+    },
+    {
+      "bytes": 669,
+      "path": "superseded/92e8ee6/artifact.json",
+      "retained_from": ".runtime/phase02-sdk-20260926/source-92e8ee6/artifact.json",
+      "sha256": "93f95547c6de62d9334073b60308816a0fb94a73d399b17bd4548297247b9e01"
+    },
+    {
+      "bytes": 55547,
+      "path": "superseded/ef17dbc/host.json",
+      "retained_from": ".runtime/phase02-sdk-20260926/source-ef17dbc-v2/host.json",
+      "sha256": "d1d8fdfc4d2f2f0776267a13fd9efb1a5933b90353141bdbd837a5983273af05"
+    },
+    {
+      "bytes": 3736,
+      "path": "superseded/ef17dbc/host.log",
+      "retained_from": ".runtime/phase02-sdk-20260926/source-ef17dbc-v2/host.log",
+      "sha256": "5115db25c40a4aec8ba317c6dd57ecc71749846792942fc40a4cdb87b272bbc9"
+    },
+    {
+      "bytes": 267,
+      "path": "superseded/ef17dbc/build.log",
+      "retained_from": ".runtime/phase02-sdk-20260926/source-ef17dbc-v2/build.log",
+      "sha256": "b2eb2770890bede2676fea856c4c8226555429414b1a63630d29ebac9ab0b648"
+    },
+    {
+      "bytes": 268,
+      "path": "superseded/ef17dbc/verify.log",
+      "retained_from": ".runtime/phase02-sdk-20260926/source-ef17dbc-v2/verify.log",
+      "sha256": "b069b8c97a4653ac2d4dcb61f6a07e38bea94125d2160013705686e765018296"
+    },
+    {
+      "bytes": 1944,
+      "path": "superseded/ef17dbc/artifact.json",
+      "retained_from": ".runtime/phase02-sdk-20260926/source-ef17dbc-v2/artifact.json",
+      "sha256": "2a7782ad71178143328ff5dcce4cb56fa4dd80571a72aab8516631116d367bf7"
+    },
+    {
+      "bytes": 7036,
+      "path": "reviews/initial-92e8ee6.json",
+      "retained_from": ".runtime/phase02-sdk-20260926/independent-review.json",
+      "sha256": "5f20d3ad9fcebee6b8daafb66774ceb89c3e6c62a03e01b46b0151d202228594"
+    },
+    {
+      "bytes": 35067,
+      "path": "reviews/followup-ef17dbc.json",
+      "retained_from": ".runtime/phase02-sdk-20260926/independent-review-ef17dbc.json",
+      "sha256": "b42198f63f29b21870f141785590a6f97aa8d948518e878cda315db80d19140e"
+    },
+    {
+      "bytes": 41101,
+      "path": "reviews/final-fcac1c0.json",
+      "retained_from": ".runtime/phase02-sdk-20260926/independent-review-fcac1c0.json",
+      "sha256": "252377a33b29d9785ce942068a3d9a2973d9253c3fa0fde4b9c522e66a3df77b"
+    },
+    {
+      "bytes": 3964,
+      "path": "capture-setup-failure/capture.py",
+      "retained_from": ".runtime/phase02-sdk-20260926/capture-ef17dbc.py",
+      "sha256": "8547bd1dd7fc65b25b1befd1b2ffaa6c607801e7b6aa568c20029fe9a4a59113"
+    },
+    {
+      "bytes": 404,
+      "path": "capture-setup-failure/error.json",
+      "retained_from": ".runtime/phase02-sdk-20260926/source-ef17dbc/recorder-error.json",
+      "sha256": "bb9da99aa4c29fb472e19918f041b842758bf6bf542938f13836e10b21baecd5"
+    }
+  ],
+  "source_commit": "fcac1c081c0dd021eebe8b3cabe754a906ebe8c4"
+}
