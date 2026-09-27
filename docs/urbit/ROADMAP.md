@@ -2,6 +2,10 @@
 
 No dates or effort estimates here are promises. Each phase exits on evidence, not elapsed time.
 
+September 26: Phases 0 and 1 are complete. The [Phase 1 native gate](PHASE1_ACCEPTANCE_20260926.md)
+passes all 73 requirements with independent semantic acceptance.
+Phase 2 starts with the public SDK and independent client under URB-180 / #21.
+
 | Phase | Deliverable | Gate |
 |---|---|---|
 | 0 | Independent repo, pinned dependencies, four-fake-ship harness, Git feasibility audit, contributor workflow | Actual native smoke tests, recorded reuse decisions and executed baseline/assisted workflow evaluation |

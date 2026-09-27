@@ -1,0 +1,4083 @@
+{
+  "protocol": "stead.independent-phase1-final73-review/1",
+  "recorded_at": "2026-09-27T00:56:56.078307+00:00",
+  "reviewer": "/root/independent_review",
+  "implementation_owner": "/root",
+  "source_commit": "dd0e8c0ce8d1d00f15de6b07e2e26d368c5c3774",
+  "status": "accepted-for-bounded-phase1-qualification",
+  "phase1_acceptance_recommended": true,
+  "accepted_issue_scope": [
+    "URB-040 / derivative issue #7",
+    "URB-050 / derivative issue #8",
+    "M1 initial authoritative Work/Docs and explicit permission slice"
+  ],
+  "native_execution_performed": false,
+  "host_tests_executed": 0,
+  "retained_predicate_replay_performed": true,
+  "human_approval": false,
+  "github_approval": false,
+  "github_mutations_performed": false,
+  "source_or_gate_edits_performed": false,
+  "remotes_verified": "origin\thttps://github.com/ScottTpirate/stead-urbit.git (fetch)\norigin\thttps://github.com/ScottTpirate/stead-urbit.git (push)\nupstream\thttps://github.com/ScottTpirate/stead.git (fetch)\nupstream\tDISABLED_UPSTREAM_PUSH (push)\n",
+  "blocking_findings": [],
+  "scope": "Exact dd0e8c0 current fake-native Phase1 qualification: 65 core obligations, one separately scheduled Gall obligation and seven typed source/N/A/host dispositions. This independent review recommends phase acceptance and the already-authorized records-only publication/integration sequence; it is not a new native execution or a production authorization.",
+  "method": {
+    "source_and_semantics": "Read the frozen 73-row manifest and live derivative issues #7/#8; inspected the derivation mapping, pure retained-transport replay, codec/context/CAS/restart/export/delivery/capacity predicates, nonnative composites and actual source deltas. Freshly imported current helpers with bytecode writing disabled and an isolated cache prefix.",
+    "retained_replay": "Executed build_phase1_evidence.build in memory from the complete retained core07/Gall04/v7 bytes under the requested 20% CPU, 10ms period, CPU19 wrapper. All derived predicates and bindings agree with the retained result subject only to the explicitly recorded unordered compile-fact/anchor permutation. No Hoon, ship lifecycle, stock-Git materialization or test suite was invoked.",
+    "final_gate": "Separately reran qualification_gate.reconcile on the exact retained derived-v7 index, bindings and raw artifacts; its complete JSON result equals the retained qualification.json.",
+    "exact_inventory": "Verified all 73 unique IDs, kinds, scopes and required assertion names; every selected native derivation has nonempty checks/facts and actual admitted command references. Only the three exact frozen QA deferrals remain skipped, with their separate current native/source/N/A dispositions.",
+    "source_publication": "Independently compared all 156 host-tested working files with recorded SHA256 and git show dd0:path; all 128 native qualification bindings are an exact subset. This supports a later records-only publication commit without relabeling the executed native commit.",
+    "independent_raw_review": "Bound and inspected the separately authored gall_schedule_review core07 raw semantic/lifecycle/capacity/Git/observer review and the scheduled Gall review. Their native evidence ownership remains the root integrator; their review ownership is explicitly separate.",
+    "resource_scope": "Read-only audit wrappers requested CPUQuota=20%, CPUQuotaPeriodSec=10ms, AllowedCPUs=19 and taskset CPU19. This record does not claim a new native thermal or performance experiment."
+  },
+  "machine_audit": {
+    "artifacts": {
+      "docs/urbit/evidence/2026-09-26/phase1-final-dd0e8c0/core/guard.json": {
+        "path": "docs/urbit/evidence/2026-09-26/phase1-final-dd0e8c0/core/guard.json",
+        "sha256": "0ff4543b96a347567d2a9764d8e1bb2fa0d3c3b498a70c12049c356d129cb0d7"
+      },
+      "docs/urbit/evidence/2026-09-26/phase1-final-dd0e8c0/core/native.json": {
+        "path": "docs/urbit/evidence/2026-09-26/phase1-final-dd0e8c0/core/native.json",
+        "sha256": "07540f0f574c7edf7264c47205cd7814732a6288ea6495ba919edbb519d80de7"
+      },
+      "docs/urbit/evidence/2026-09-26/phase1-final-dd0e8c0/derived-v7/bindings.json": {
+        "path": "docs/urbit/evidence/2026-09-26/phase1-final-dd0e8c0/derived-v7/bindings.json",
+        "sha256": "8b684f6ccead339f57502863c19c131857721a4df9c2d0344e508c5096db17a0"
+      },
+      "docs/urbit/evidence/2026-09-26/phase1-final-dd0e8c0/derived-v7/index.json": {
+        "path": "docs/urbit/evidence/2026-09-26/phase1-final-dd0e8c0/derived-v7/index.json",
+        "sha256": "f4b9268a9203f5ce3c49cab7653b1f86639a34f32e8ad0dc6cfb74c19859131a"
+      },
+      "docs/urbit/evidence/2026-09-26/phase1-final-dd0e8c0/derived-v7/proofs.json": {
+        "path": "docs/urbit/evidence/2026-09-26/phase1-final-dd0e8c0/derived-v7/proofs.json",
+        "sha256": "732a012c42e7a85b48b03e0568b94ba491cec7e84a013bc546f240a8f8d45212"
+      },
+      "docs/urbit/evidence/2026-09-26/phase1-final-dd0e8c0/derived-v7/qualification.json": {
+        "path": "docs/urbit/evidence/2026-09-26/phase1-final-dd0e8c0/derived-v7/qualification.json",
+        "sha256": "5a00d09671c03fb17d0740f36b5d4631b43e7d84b47168d6a35b1e2f37c5bb68"
+      },
+      "docs/urbit/evidence/2026-09-26/phase1-final-dd0e8c0/gall/guard.json": {
+        "path": "docs/urbit/evidence/2026-09-26/phase1-final-dd0e8c0/gall/guard.json",
+        "sha256": "825b7e58f4f1e75efe67a6e4d667e7ca8932ecd76c8cc297d913b30b35cbb2c0"
+      },
+      "docs/urbit/evidence/2026-09-26/phase1-final-dd0e8c0/gall/native.json": {
+        "path": "docs/urbit/evidence/2026-09-26/phase1-final-dd0e8c0/gall/native.json",
+        "sha256": "7685c7937a5dc55c0d25769dae1e2f720fd9fb7ef6c67d525115d533d297d890"
+      },
+      "docs/urbit/evidence/2026-09-26/phase1-final-dd0e8c0/source-preservation.json": {
+        "path": "docs/urbit/evidence/2026-09-26/phase1-final-dd0e8c0/source-preservation.json",
+        "sha256": "f22cdc5dd33bb7a289b0b9a19c66f6fd6baa7513316f8be09a23fd8aafd94d88"
+      }
+    },
+    "derived_groups": 239,
+    "exact_reconcile_equal": true,
+    "gate_counts": {
+      "not_applicable": 1,
+      "passed": 70,
+      "reviewed": 2
+    },
+    "host_files_verified": 156,
+    "matrix": [
+      {
+        "anchor_refs": [
+          {
+            "path": "docs/urbit/evidence/2026-09-26/phase1-final-dd0e8c0/core/native.json",
+            "pointer": "/commands/109",
+            "sha256": "07540f0f574c7edf7264c47205cd7814732a6288ea6495ba919edbb519d80de7"
+          },
+          {
+            "path": "docs/urbit/evidence/2026-09-26/phase1-final-dd0e8c0/core/native.json",
+            "pointer": "/commands/114",
+            "sha256": "07540f0f574c7edf7264c47205cd7814732a6288ea6495ba919edbb519d80de7"
+          }
+        ],
+        "classification": "real-native-fake-ships",
+        "derivations": [
+          {
+            "fact_count": 4,
+            "pointer": "/derivations/qa~1one-shot~1empty-project-known-unknown:1",
+            "predicate_count": 1
+          }
+        ],
+        "execution_lane": "core",
+        "id": "delivery:empty-project-known-unknown:1",
+        "kind": "native",
+        "proof_artifact": {
+          "path": "docs/urbit/evidence/2026-09-26/phase1-final-dd0e8c0/derived-v7/proofs.json",
+          "pointer": "/proofs/delivery:empty-project-known-unknown:1",
+          "sha256": "732a012c42e7a85b48b03e0568b94ba491cec7e84a013bc546f240a8f8d45212"
+        },
+        "required_assertions": [
+          "one-shot-request-duct-only"
+        ],
+        "scope": "Actual observer request fact/kick plus an active foreign subscriber receiving no event; known valid mark and fault-free runtime evidence.",
+        "status": "passed",
+        "unique_fact_count": 4
+      },
+      {
+        "anchor_refs": [
+          {
+            "path": "docs/urbit/evidence/2026-09-26/phase1-final-dd0e8c0/core/native.json",
+            "pointer": "/commands/117",
+            "sha256": "07540f0f574c7edf7264c47205cd7814732a6288ea6495ba919edbb519d80de7"
+          },
+          {
+            "path": "docs/urbit/evidence/2026-09-26/phase1-final-dd0e8c0/core/native.json",
+            "pointer": "/commands/122",
+            "sha256": "07540f0f574c7edf7264c47205cd7814732a6288ea6495ba919edbb519d80de7"
+          }
+        ],
+        "classification": "real-native-fake-ships",
+        "derivations": [
+          {
+            "fact_count": 4,
+            "pointer": "/derivations/qa~1one-shot~1empty-project-known-unknown:2",
+            "predicate_count": 1
+          }
+        ],
+        "execution_lane": "core",
+        "id": "delivery:empty-project-known-unknown:2",
+        "kind": "native",
+        "proof_artifact": {
+          "path": "docs/urbit/evidence/2026-09-26/phase1-final-dd0e8c0/derived-v7/proofs.json",
+          "pointer": "/proofs/delivery:empty-project-known-unknown:2",
+          "sha256": "732a012c42e7a85b48b03e0568b94ba491cec7e84a013bc546f240a8f8d45212"
+        },
+        "required_assertions": [
+          "one-shot-request-duct-only"
+        ],
+        "scope": "Actual observer request fact/kick plus an active foreign subscriber receiving no event; known valid mark and fault-free runtime evidence.",
+        "status": "passed",
+        "unique_fact_count": 4
+      },
+      {
+        "anchor_refs": [
+          {
+            "path": "docs/urbit/evidence/2026-09-26/phase1-final-dd0e8c0/core/native.json",
+            "pointer": "/commands/139",
+            "sha256": "07540f0f574c7edf7264c47205cd7814732a6288ea6495ba919edbb519d80de7"
+          },
+          {
+            "path": "docs/urbit/evidence/2026-09-26/phase1-final-dd0e8c0/core/native.json",
+            "pointer": "/commands/144",
+            "sha256": "07540f0f574c7edf7264c47205cd7814732a6288ea6495ba919edbb519d80de7"
+          }
+        ],
+        "classification": "real-native-fake-ships",
+        "derivations": [
+          {
+            "fact_count": 4,
+            "pointer": "/derivations/qa~1one-shot~1outsider-private-project-existence:1",
+            "predicate_count": 1
+          }
+        ],
+        "execution_lane": "core",
+        "id": "delivery:outsider-private-project-existence:1",
+        "kind": "native",
+        "proof_artifact": {
+          "path": "docs/urbit/evidence/2026-09-26/phase1-final-dd0e8c0/derived-v7/proofs.json",
+          "pointer": "/proofs/delivery:outsider-private-project-existence:1",
+          "sha256": "732a012c42e7a85b48b03e0568b94ba491cec7e84a013bc546f240a8f8d45212"
+        },
+        "required_assertions": [
+          "one-shot-request-duct-only"
+        ],
+        "scope": "Actual observer request fact/kick plus an active foreign subscriber receiving no event; known valid mark and fault-free runtime evidence.",
+        "status": "passed",
+        "unique_fact_count": 4
+      },
+      {
+        "anchor_refs": [
+          {
+            "path": "docs/urbit/evidence/2026-09-26/phase1-final-dd0e8c0/core/native.json",
+            "pointer": "/commands/147",
+            "sha256": "07540f0f574c7edf7264c47205cd7814732a6288ea6495ba919edbb519d80de7"
+          },
+          {
+            "path": "docs/urbit/evidence/2026-09-26/phase1-final-dd0e8c0/core/native.json",
+            "pointer": "/commands/152",
+            "sha256": "07540f0f574c7edf7264c47205cd7814732a6288ea6495ba919edbb519d80de7"
+          }
+        ],
+        "classification": "real-native-fake-ships",
+        "derivations": [
+          {
+            "fact_count": 4,
+            "pointer": "/derivations/qa~1one-shot~1outsider-private-project-existence:2",
+            "predicate_count": 1
+          }
+        ],
+        "execution_lane": "core",
+        "id": "delivery:outsider-private-project-existence:2",
+        "kind": "native",
+        "proof_artifact": {
+          "path": "docs/urbit/evidence/2026-09-26/phase1-final-dd0e8c0/derived-v7/proofs.json",
+          "pointer": "/proofs/delivery:outsider-private-project-existence:2",
+          "sha256": "732a012c42e7a85b48b03e0568b94ba491cec7e84a013bc546f240a8f8d45212"
+        },
+        "required_assertions": [
+          "one-shot-request-duct-only"
+        ],
+        "scope": "Actual observer request fact/kick plus an active foreign subscriber receiving no event; known valid mark and fault-free runtime evidence.",
+        "status": "passed",
+        "unique_fact_count": 4
+      },
+      {
+        "anchor_refs": [
+          {
+            "path": "docs/urbit/evidence/2026-09-26/phase1-final-dd0e8c0/core/native.json",
+            "pointer": "/commands/189",
+            "sha256": "07540f0f574c7edf7264c47205cd7814732a6288ea6495ba919edbb519d80de7"
+          },
+          {
+            "path": "docs/urbit/evidence/2026-09-26/phase1-final-dd0e8c0/core/native.json",
+            "pointer": "/commands/194",
+            "sha256": "07540f0f574c7edf7264c47205cd7814732a6288ea6495ba919edbb519d80de7"
+          }
+        ],
+        "classification": "real-native-fake-ships",
+        "derivations": [
+          {
+            "fact_count": 4,
+            "pointer": "/derivations/qa~1one-shot~1reader-can-read-work:1",
+            "predicate_count": 1
+          }
+        ],
+        "execution_lane": "core",
+        "id": "delivery:reader-can-read-work:1",
+        "kind": "native",
+        "proof_artifact": {
+          "path": "docs/urbit/evidence/2026-09-26/phase1-final-dd0e8c0/derived-v7/proofs.json",
+          "pointer": "/proofs/delivery:reader-can-read-work:1",
+          "sha256": "732a012c42e7a85b48b03e0568b94ba491cec7e84a013bc546f240a8f8d45212"
+        },
+        "required_assertions": [
+          "one-shot-request-duct-only"
+        ],
+        "scope": "Actual observer request fact/kick plus an active foreign subscriber receiving no event; known valid mark and fault-free runtime evidence.",
+        "status": "passed",
+        "unique_fact_count": 4
+      },
+      {
+        "anchor_refs": [
+          {
+            "path": "docs/urbit/evidence/2026-09-26/phase1-final-dd0e8c0/core/native.json",
+            "pointer": "/commands/199",
+            "sha256": "07540f0f574c7edf7264c47205cd7814732a6288ea6495ba919edbb519d80de7"
+          },
+          {
+            "path": "docs/urbit/evidence/2026-09-26/phase1-final-dd0e8c0/core/native.json",
+            "pointer": "/commands/204",
+            "sha256": "07540f0f574c7edf7264c47205cd7814732a6288ea6495ba919edbb519d80de7"
+          }
+        ],
+        "classification": "real-native-fake-ships",
+        "derivations": [
+          {
+            "fact_count": 4,
+            "pointer": "/derivations/qa~1one-shot~1outsider-work-known-unknown:1",
+            "predicate_count": 1
+          }
+        ],
+        "execution_lane": "core",
+        "id": "delivery:outsider-work-known-unknown:1",
+        "kind": "native",
+        "proof_artifact": {
+          "path": "docs/urbit/evidence/2026-09-26/phase1-final-dd0e8c0/derived-v7/proofs.json",
+          "pointer": "/proofs/delivery:outsider-work-known-unknown:1",
+          "sha256": "732a012c42e7a85b48b03e0568b94ba491cec7e84a013bc546f240a8f8d45212"
+        },
+        "required_assertions": [
+          "one-shot-request-duct-only"
+        ],
+        "scope": "Actual observer request fact/kick plus an active foreign subscriber receiving no event; known valid mark and fault-free runtime evidence.",
+        "status": "passed",
+        "unique_fact_count": 4
+      },
+      {
+        "anchor_refs": [
+          {
+            "path": "docs/urbit/evidence/2026-09-26/phase1-final-dd0e8c0/core/native.json",
+            "pointer": "/commands/207",
+            "sha256": "07540f0f574c7edf7264c47205cd7814732a6288ea6495ba919edbb519d80de7"
+          },
+          {
+            "path": "docs/urbit/evidence/2026-09-26/phase1-final-dd0e8c0/core/native.json",
+            "pointer": "/commands/212",
+            "sha256": "07540f0f574c7edf7264c47205cd7814732a6288ea6495ba919edbb519d80de7"
+          }
+        ],
+        "classification": "real-native-fake-ships",
+        "derivations": [
+          {
+            "fact_count": 4,
+            "pointer": "/derivations/qa~1one-shot~1outsider-work-known-unknown:2",
+            "predicate_count": 1
+          }
+        ],
+        "execution_lane": "core",
+        "id": "delivery:outsider-work-known-unknown:2",
+        "kind": "native",
+        "proof_artifact": {
+          "path": "docs/urbit/evidence/2026-09-26/phase1-final-dd0e8c0/derived-v7/proofs.json",
+          "pointer": "/proofs/delivery:outsider-work-known-unknown:2",
+          "sha256": "732a012c42e7a85b48b03e0568b94ba491cec7e84a013bc546f240a8f8d45212"
+        },
+        "required_assertions": [
+          "one-shot-request-duct-only"
+        ],
+        "scope": "Actual observer request fact/kick plus an active foreign subscriber receiving no event; known valid mark and fault-free runtime evidence.",
+        "status": "passed",
+        "unique_fact_count": 4
+      },
+      {
+        "anchor_refs": [
+          {
+            "path": "docs/urbit/evidence/2026-09-26/phase1-final-dd0e8c0/core/native.json",
+            "pointer": "/commands/319",
+            "sha256": "07540f0f574c7edf7264c47205cd7814732a6288ea6495ba919edbb519d80de7"
+          },
+          {
+            "path": "docs/urbit/evidence/2026-09-26/phase1-final-dd0e8c0/core/native.json",
+            "pointer": "/commands/324",
+            "sha256": "07540f0f574c7edf7264c47205cd7814732a6288ea6495ba919edbb519d80de7"
+          }
+        ],
+        "classification": "real-native-fake-ships",
+        "derivations": [
+          {
+            "fact_count": 4,
+            "pointer": "/derivations/qa~1one-shot~1explicit-grant-allows-former-outsider:1",
+            "predicate_count": 1
+          }
+        ],
+        "execution_lane": "core",
+        "id": "delivery:explicit-grant-allows-former-outsider:1",
+        "kind": "native",
+        "proof_artifact": {
+          "path": "docs/urbit/evidence/2026-09-26/phase1-final-dd0e8c0/derived-v7/proofs.json",
+          "pointer": "/proofs/delivery:explicit-grant-allows-former-outsider:1",
+          "sha256": "732a012c42e7a85b48b03e0568b94ba491cec7e84a013bc546f240a8f8d45212"
+        },
+        "required_assertions": [
+          "one-shot-request-duct-only"
+        ],
+        "scope": "Actual observer request fact/kick plus an active foreign subscriber receiving no event; known valid mark and fault-free runtime evidence.",
+        "status": "passed",
+        "unique_fact_count": 4
+      },
+      {
+        "anchor_refs": [
+          {
+            "path": "docs/urbit/evidence/2026-09-26/phase1-final-dd0e8c0/core/native.json",
+            "pointer": "/commands/428",
+            "sha256": "07540f0f574c7edf7264c47205cd7814732a6288ea6495ba919edbb519d80de7"
+          },
+          {
+            "path": "docs/urbit/evidence/2026-09-26/phase1-final-dd0e8c0/core/native.json",
+            "pointer": "/commands/433",
+            "sha256": "07540f0f574c7edf7264c47205cd7814732a6288ea6495ba919edbb519d80de7"
+          }
+        ],
+        "classification": "real-native-fake-ships",
+        "derivations": [
+          {
+            "fact_count": 4,
+            "pointer": "/derivations/qa~1one-shot~1owner-reads-private-document:1",
+            "predicate_count": 1
+          }
+        ],
+        "execution_lane": "core",
+        "id": "delivery:owner-reads-private-document:1",
+        "kind": "native",
+        "proof_artifact": {
+          "path": "docs/urbit/evidence/2026-09-26/phase1-final-dd0e8c0/derived-v7/proofs.json",
+          "pointer": "/proofs/delivery:owner-reads-private-document:1",
+          "sha256": "732a012c42e7a85b48b03e0568b94ba491cec7e84a013bc546f240a8f8d45212"
+        },
+        "required_assertions": [
+          "one-shot-request-duct-only"
+        ],
+        "scope": "Actual observer request fact/kick plus an active foreign subscriber receiving no event; known valid mark and fault-free runtime evidence.",
+        "status": "passed",
+        "unique_fact_count": 4
+      },
+      {
+        "anchor_refs": [
+          {
+            "path": "docs/urbit/evidence/2026-09-26/phase1-final-dd0e8c0/core/native.json",
+            "pointer": "/commands/438",
+            "sha256": "07540f0f574c7edf7264c47205cd7814732a6288ea6495ba919edbb519d80de7"
+          },
+          {
+            "path": "docs/urbit/evidence/2026-09-26/phase1-final-dd0e8c0/core/native.json",
+            "pointer": "/commands/443",
+            "sha256": "07540f0f574c7edf7264c47205cd7814732a6288ea6495ba919edbb519d80de7"
+          }
+        ],
+        "classification": "real-native-fake-ships",
+        "derivations": [
+          {
+            "fact_count": 4,
+            "pointer": "/derivations/qa~1one-shot~1reader-private-document-known-unknown:1",
+            "predicate_count": 1
+          }
+        ],
+        "execution_lane": "core",
+        "id": "delivery:reader-private-document-known-unknown:1",
+        "kind": "native",
+        "proof_artifact": {
+          "path": "docs/urbit/evidence/2026-09-26/phase1-final-dd0e8c0/derived-v7/proofs.json",
+          "pointer": "/proofs/delivery:reader-private-document-known-unknown:1",
+          "sha256": "732a012c42e7a85b48b03e0568b94ba491cec7e84a013bc546f240a8f8d45212"
+        },
+        "required_assertions": [
+          "one-shot-request-duct-only"
+        ],
+        "scope": "Actual observer request fact/kick plus an active foreign subscriber receiving no event; known valid mark and fault-free runtime evidence.",
+        "status": "passed",
+        "unique_fact_count": 4
+      },
+      {
+        "anchor_refs": [
+          {
+            "path": "docs/urbit/evidence/2026-09-26/phase1-final-dd0e8c0/core/native.json",
+            "pointer": "/commands/446",
+            "sha256": "07540f0f574c7edf7264c47205cd7814732a6288ea6495ba919edbb519d80de7"
+          },
+          {
+            "path": "docs/urbit/evidence/2026-09-26/phase1-final-dd0e8c0/core/native.json",
+            "pointer": "/commands/451",
+            "sha256": "07540f0f574c7edf7264c47205cd7814732a6288ea6495ba919edbb519d80de7"
+          }
+        ],
+        "classification": "real-native-fake-ships",
+        "derivations": [
+          {
+            "fact_count": 4,
+            "pointer": "/derivations/qa~1one-shot~1reader-private-document-known-unknown:2",
+            "predicate_count": 1
+          }
+        ],
+        "execution_lane": "core",
+        "id": "delivery:reader-private-document-known-unknown:2",
+        "kind": "native",
+        "proof_artifact": {
+          "path": "docs/urbit/evidence/2026-09-26/phase1-final-dd0e8c0/derived-v7/proofs.json",
+          "pointer": "/proofs/delivery:reader-private-document-known-unknown:2",
+          "sha256": "732a012c42e7a85b48b03e0568b94ba491cec7e84a013bc546f240a8f8d45212"
+        },
+        "required_assertions": [
+          "one-shot-request-duct-only"
+        ],
+        "scope": "Actual observer request fact/kick plus an active foreign subscriber receiving no event; known valid mark and fault-free runtime evidence.",
+        "status": "passed",
+        "unique_fact_count": 4
+      },
+      {
+        "anchor_refs": [
+          {
+            "path": "docs/urbit/evidence/2026-09-26/phase1-final-dd0e8c0/core/native.json",
+            "pointer": "/commands/456",
+            "sha256": "07540f0f574c7edf7264c47205cd7814732a6288ea6495ba919edbb519d80de7"
+          },
+          {
+            "path": "docs/urbit/evidence/2026-09-26/phase1-final-dd0e8c0/core/native.json",
+            "pointer": "/commands/461",
+            "sha256": "07540f0f574c7edf7264c47205cd7814732a6288ea6495ba919edbb519d80de7"
+          }
+        ],
+        "classification": "real-native-fake-ships",
+        "derivations": [
+          {
+            "fact_count": 4,
+            "pointer": "/derivations/qa~1one-shot~1outsider-private-document-known-unknown:1",
+            "predicate_count": 1
+          }
+        ],
+        "execution_lane": "core",
+        "id": "delivery:outsider-private-document-known-unknown:1",
+        "kind": "native",
+        "proof_artifact": {
+          "path": "docs/urbit/evidence/2026-09-26/phase1-final-dd0e8c0/derived-v7/proofs.json",
+          "pointer": "/proofs/delivery:outsider-private-document-known-unknown:1",
+          "sha256": "732a012c42e7a85b48b03e0568b94ba491cec7e84a013bc546f240a8f8d45212"
+        },
+        "required_assertions": [
+          "one-shot-request-duct-only"
+        ],
+        "scope": "Actual observer request fact/kick plus an active foreign subscriber receiving no event; known valid mark and fault-free runtime evidence.",
+        "status": "passed",
+        "unique_fact_count": 4
+      },
+      {
+        "anchor_refs": [
+          {
+            "path": "docs/urbit/evidence/2026-09-26/phase1-final-dd0e8c0/core/native.json",
+            "pointer": "/commands/464",
+            "sha256": "07540f0f574c7edf7264c47205cd7814732a6288ea6495ba919edbb519d80de7"
+          },
+          {
+            "path": "docs/urbit/evidence/2026-09-26/phase1-final-dd0e8c0/core/native.json",
+            "pointer": "/commands/469",
+            "sha256": "07540f0f574c7edf7264c47205cd7814732a6288ea6495ba919edbb519d80de7"
+          }
+        ],
+        "classification": "real-native-fake-ships",
+        "derivations": [
+          {
+            "fact_count": 4,
+            "pointer": "/derivations/qa~1one-shot~1outsider-private-document-known-unknown:2",
+            "predicate_count": 1
+          }
+        ],
+        "execution_lane": "core",
+        "id": "delivery:outsider-private-document-known-unknown:2",
+        "kind": "native",
+        "proof_artifact": {
+          "path": "docs/urbit/evidence/2026-09-26/phase1-final-dd0e8c0/derived-v7/proofs.json",
+          "pointer": "/proofs/delivery:outsider-private-document-known-unknown:2",
+          "sha256": "732a012c42e7a85b48b03e0568b94ba491cec7e84a013bc546f240a8f8d45212"
+        },
+        "required_assertions": [
+          "one-shot-request-duct-only"
+        ],
+        "scope": "Actual observer request fact/kick plus an active foreign subscriber receiving no event; known valid mark and fault-free runtime evidence.",
+        "status": "passed",
+        "unique_fact_count": 4
+      },
+      {
+        "anchor_refs": [
+          {
+            "path": "docs/urbit/evidence/2026-09-26/phase1-final-dd0e8c0/core/native.json",
+            "pointer": "/commands/1810",
+            "sha256": "07540f0f574c7edf7264c47205cd7814732a6288ea6495ba919edbb519d80de7"
+          },
+          {
+            "path": "docs/urbit/evidence/2026-09-26/phase1-final-dd0e8c0/core/native.json",
+            "pointer": "/commands/762",
+            "sha256": "07540f0f574c7edf7264c47205cd7814732a6288ea6495ba919edbb519d80de7"
+          }
+        ],
+        "classification": "real-native-fake-ships",
+        "derivations": [
+          {
+            "fact_count": 40,
+            "pointer": "/derivations/capacity~1predecessor-privacy",
+            "predicate_count": 277
+          },
+          {
+            "fact_count": 6,
+            "pointer": "/derivations/qa~1private-activity-project-view-before",
+            "predicate_count": 14
+          },
+          {
+            "fact_count": 3,
+            "pointer": "/derivations/qa~1private-activity-retry-before",
+            "predicate_count": 10
+          },
+          {
+            "fact_count": 18,
+            "pointer": "/derivations/qa~1private-activity-export-before",
+            "predicate_count": 97
+          },
+          {
+            "fact_count": 11,
+            "pointer": "/derivations/qa~1same-local-document-in-other-private-container",
+            "predicate_count": 93
+          },
+          {
+            "fact_count": 6,
+            "pointer": "/derivations/qa~1private-activity-project-view-after",
+            "predicate_count": 14
+          },
+          {
+            "fact_count": 3,
+            "pointer": "/derivations/qa~1private-activity-retry-after",
+            "predicate_count": 10
+          },
+          {
+            "fact_count": 6,
+            "pointer": "/derivations/qa~1private-activity-recovery-after",
+            "predicate_count": 11
+          },
+          {
+            "fact_count": 18,
+            "pointer": "/derivations/qa~1private-activity-export-after",
+            "predicate_count": 97
+          },
+          {
+            "fact_count": 6,
+            "pointer": "/derivations/qa~1zod-reads-own-same-local-document",
+            "predicate_count": 15
+          },
+          {
+            "fact_count": 6,
+            "pointer": "/derivations/qa~1bus-cannot-read-same-local-document-other-container",
+            "predicate_count": 11
+          },
+          {
+            "fact_count": 23,
+            "pointer": "/derivations/qa~1private-other-container-id-does-not-block-bus-save",
+            "predicate_count": 164
+          },
+          {
+            "fact_count": 6,
+            "pointer": "/derivations/qa~1zod-original-document-unchanged-by-bus-same-id",
+            "predicate_count": 15
+          },
+          {
+            "fact_count": 6,
+            "pointer": "/derivations/qa~1bus-reads-own-document-same-id-as-private-zod",
+            "predicate_count": 15
+          },
+          {
+            "fact_count": 3,
+            "pointer": "/derivations/qa~1private-second-project-work-allocation",
+            "predicate_count": 46
+          },
+          {
+            "fact_count": 10,
+            "pointer": "/derivations/qa~1bus-second-project-work-known-unknown",
+            "predicate_count": 18
+          },
+          {
+            "fact_count": 3,
+            "pointer": "/derivations/qa~1private-other-project-id-does-not-block-bus-work",
+            "predicate_count": 47
+          },
+          {
+            "fact_count": 6,
+            "pointer": "/derivations/qa~1bus-reads-own-work-same-id-as-private-project",
+            "predicate_count": 14
+          },
+          {
+            "fact_count": 3,
+            "pointer": "/derivations/qa~1same-grant-local-id-private-project-first",
+            "predicate_count": 48
+          },
+          {
+            "fact_count": 3,
+            "pointer": "/derivations/qa~1other-project-grant-id-does-not-block-current-policy",
+            "predicate_count": 48
+          },
+          {
+            "fact_count": 3,
+            "pointer": "/derivations/qa~1contributor-creates-work",
+            "predicate_count": 27
+          },
+          {
+            "fact_count": 8,
+            "pointer": "/derivations/qa~1save-first-private-document",
+            "predicate_count": 62
+          },
+          {
+            "fact_count": 18,
+            "pointer": "/derivations/qa~1owner-export-materializes-home-created-objects",
+            "predicate_count": 97
+          },
+          {
+            "fact_count": 27,
+            "pointer": "/derivations/qa~1object-read-binds-retained-snapshot-and-container",
+            "predicate_count": 30
+          },
+          {
+            "fact_count": 6,
+            "pointer": "/derivations/qa~1historical-authorized-snapshot-remains-exact",
+            "predicate_count": 32
+          }
+        ],
+        "execution_lane": "core",
+        "id": "scoped-private-metadata",
+        "kind": "native",
+        "proof_artifact": {
+          "path": "docs/urbit/evidence/2026-09-26/phase1-final-dd0e8c0/derived-v7/proofs.json",
+          "pointer": "/proofs/scoped-private-metadata",
+          "sha256": "732a012c42e7a85b48b03e0568b94ba491cec7e84a013bc546f240a8f8d45212"
+        },
+        "required_assertions": [
+          "projection-timing-and-all-metadata-nondisclosure"
+        ],
+        "scope": "Reproduce former availability/activity oracles and verify scoped allocation, retry/recovery/normal receipt and authorized exports. Shared physical timing remains outside this bounded assertion.",
+        "status": "passed",
+        "unique_fact_count": 248
+      },
+      {
+        "anchor_refs": [
+          {
+            "path": "docs/urbit/evidence/2026-09-26/phase1-final-dd0e8c0/core/native.json",
+            "pointer": "/commands/661",
+            "sha256": "07540f0f574c7edf7264c47205cd7814732a6288ea6495ba919edbb519d80de7"
+          },
+          {
+            "path": "docs/urbit/evidence/2026-09-26/phase1-final-dd0e8c0/core/native.json",
+            "pointer": "/commands/666",
+            "sha256": "07540f0f574c7edf7264c47205cd7814732a6288ea6495ba919edbb519d80de7"
+          }
+        ],
+        "classification": "real-native-fake-ships",
+        "derivations": [
+          {
+            "fact_count": 4,
+            "pointer": "/derivations/qa~1one-shot~1reader-private-manifest-known-unknown:1",
+            "predicate_count": 1
+          }
+        ],
+        "execution_lane": "core",
+        "id": "delivery:reader-private-manifest-known-unknown:1",
+        "kind": "native",
+        "proof_artifact": {
+          "path": "docs/urbit/evidence/2026-09-26/phase1-final-dd0e8c0/derived-v7/proofs.json",
+          "pointer": "/proofs/delivery:reader-private-manifest-known-unknown:1",
+          "sha256": "732a012c42e7a85b48b03e0568b94ba491cec7e84a013bc546f240a8f8d45212"
+        },
+        "required_assertions": [
+          "one-shot-request-duct-only"
+        ],
+        "scope": "Actual observer request fact/kick plus an active foreign subscriber receiving no event; known valid mark and fault-free runtime evidence.",
+        "status": "passed",
+        "unique_fact_count": 4
+      },
+      {
+        "anchor_refs": [
+          {
+            "path": "docs/urbit/evidence/2026-09-26/phase1-final-dd0e8c0/core/native.json",
+            "pointer": "/commands/669",
+            "sha256": "07540f0f574c7edf7264c47205cd7814732a6288ea6495ba919edbb519d80de7"
+          },
+          {
+            "path": "docs/urbit/evidence/2026-09-26/phase1-final-dd0e8c0/core/native.json",
+            "pointer": "/commands/674",
+            "sha256": "07540f0f574c7edf7264c47205cd7814732a6288ea6495ba919edbb519d80de7"
+          }
+        ],
+        "classification": "real-native-fake-ships",
+        "derivations": [
+          {
+            "fact_count": 4,
+            "pointer": "/derivations/qa~1one-shot~1reader-private-manifest-known-unknown:2",
+            "predicate_count": 1
+          }
+        ],
+        "execution_lane": "core",
+        "id": "delivery:reader-private-manifest-known-unknown:2",
+        "kind": "native",
+        "proof_artifact": {
+          "path": "docs/urbit/evidence/2026-09-26/phase1-final-dd0e8c0/derived-v7/proofs.json",
+          "pointer": "/proofs/delivery:reader-private-manifest-known-unknown:2",
+          "sha256": "732a012c42e7a85b48b03e0568b94ba491cec7e84a013bc546f240a8f8d45212"
+        },
+        "required_assertions": [
+          "one-shot-request-duct-only"
+        ],
+        "scope": "Actual observer request fact/kick plus an active foreign subscriber receiving no event; known valid mark and fault-free runtime evidence.",
+        "status": "passed",
+        "unique_fact_count": 4
+      },
+      {
+        "anchor_refs": [
+          {
+            "path": "docs/urbit/evidence/2026-09-26/phase1-final-dd0e8c0/core/native.json",
+            "pointer": "/commands/708",
+            "sha256": "07540f0f574c7edf7264c47205cd7814732a6288ea6495ba919edbb519d80de7"
+          },
+          {
+            "path": "docs/urbit/evidence/2026-09-26/phase1-final-dd0e8c0/core/native.json",
+            "pointer": "/commands/718",
+            "sha256": "07540f0f574c7edf7264c47205cd7814732a6288ea6495ba919edbb519d80de7"
+          }
+        ],
+        "classification": "real-native-fake-ships",
+        "derivations": [
+          {
+            "fact_count": 4,
+            "pointer": "/derivations/qa~1one-shot~1object-read-binds-retained-snapshot-and-container:1",
+            "predicate_count": 1
+          }
+        ],
+        "execution_lane": "core",
+        "id": "delivery:object-read-binds-retained-snapshot-and-container:1",
+        "kind": "native",
+        "proof_artifact": {
+          "path": "docs/urbit/evidence/2026-09-26/phase1-final-dd0e8c0/derived-v7/proofs.json",
+          "pointer": "/proofs/delivery:object-read-binds-retained-snapshot-and-container:1",
+          "sha256": "732a012c42e7a85b48b03e0568b94ba491cec7e84a013bc546f240a8f8d45212"
+        },
+        "required_assertions": [
+          "one-shot-request-duct-only"
+        ],
+        "scope": "Actual observer request fact/kick plus an active foreign subscriber receiving no event; known valid mark and fault-free runtime evidence.",
+        "status": "passed",
+        "unique_fact_count": 4
+      },
+      {
+        "anchor_refs": [
+          {
+            "path": "docs/urbit/evidence/2026-09-26/phase1-final-dd0e8c0/core/native.json",
+            "pointer": "/commands/709",
+            "sha256": "07540f0f574c7edf7264c47205cd7814732a6288ea6495ba919edbb519d80de7"
+          },
+          {
+            "path": "docs/urbit/evidence/2026-09-26/phase1-final-dd0e8c0/core/native.json",
+            "pointer": "/commands/725",
+            "sha256": "07540f0f574c7edf7264c47205cd7814732a6288ea6495ba919edbb519d80de7"
+          }
+        ],
+        "classification": "real-native-fake-ships",
+        "derivations": [
+          {
+            "fact_count": 4,
+            "pointer": "/derivations/qa~1one-shot~1object-read-binds-retained-snapshot-and-container:2",
+            "predicate_count": 1
+          }
+        ],
+        "execution_lane": "core",
+        "id": "delivery:object-read-binds-retained-snapshot-and-container:2",
+        "kind": "native",
+        "proof_artifact": {
+          "path": "docs/urbit/evidence/2026-09-26/phase1-final-dd0e8c0/derived-v7/proofs.json",
+          "pointer": "/proofs/delivery:object-read-binds-retained-snapshot-and-container:2",
+          "sha256": "732a012c42e7a85b48b03e0568b94ba491cec7e84a013bc546f240a8f8d45212"
+        },
+        "required_assertions": [
+          "one-shot-request-duct-only"
+        ],
+        "scope": "Actual observer request fact/kick plus an active foreign subscriber receiving no event; known valid mark and fault-free runtime evidence.",
+        "status": "passed",
+        "unique_fact_count": 4
+      },
+      {
+        "anchor_refs": [
+          {
+            "path": "docs/urbit/evidence/2026-09-26/phase1-final-dd0e8c0/core/native.json",
+            "pointer": "/commands/710",
+            "sha256": "07540f0f574c7edf7264c47205cd7814732a6288ea6495ba919edbb519d80de7"
+          },
+          {
+            "path": "docs/urbit/evidence/2026-09-26/phase1-final-dd0e8c0/core/native.json",
+            "pointer": "/commands/732",
+            "sha256": "07540f0f574c7edf7264c47205cd7814732a6288ea6495ba919edbb519d80de7"
+          }
+        ],
+        "classification": "real-native-fake-ships",
+        "derivations": [
+          {
+            "fact_count": 4,
+            "pointer": "/derivations/qa~1one-shot~1object-read-binds-retained-snapshot-and-container:3",
+            "predicate_count": 1
+          }
+        ],
+        "execution_lane": "core",
+        "id": "delivery:object-read-binds-retained-snapshot-and-container:3",
+        "kind": "native",
+        "proof_artifact": {
+          "path": "docs/urbit/evidence/2026-09-26/phase1-final-dd0e8c0/derived-v7/proofs.json",
+          "pointer": "/proofs/delivery:object-read-binds-retained-snapshot-and-container:3",
+          "sha256": "732a012c42e7a85b48b03e0568b94ba491cec7e84a013bc546f240a8f8d45212"
+        },
+        "required_assertions": [
+          "one-shot-request-duct-only"
+        ],
+        "scope": "Actual observer request fact/kick plus an active foreign subscriber receiving no event; known valid mark and fault-free runtime evidence.",
+        "status": "passed",
+        "unique_fact_count": 4
+      },
+      {
+        "anchor_refs": [
+          {
+            "path": "docs/urbit/evidence/2026-09-26/phase1-final-dd0e8c0/core/native.json",
+            "pointer": "/commands/711",
+            "sha256": "07540f0f574c7edf7264c47205cd7814732a6288ea6495ba919edbb519d80de7"
+          },
+          {
+            "path": "docs/urbit/evidence/2026-09-26/phase1-final-dd0e8c0/core/native.json",
+            "pointer": "/commands/739",
+            "sha256": "07540f0f574c7edf7264c47205cd7814732a6288ea6495ba919edbb519d80de7"
+          }
+        ],
+        "classification": "real-native-fake-ships",
+        "derivations": [
+          {
+            "fact_count": 4,
+            "pointer": "/derivations/qa~1one-shot~1object-read-binds-retained-snapshot-and-container:4",
+            "predicate_count": 1
+          }
+        ],
+        "execution_lane": "core",
+        "id": "delivery:object-read-binds-retained-snapshot-and-container:4",
+        "kind": "native",
+        "proof_artifact": {
+          "path": "docs/urbit/evidence/2026-09-26/phase1-final-dd0e8c0/derived-v7/proofs.json",
+          "pointer": "/proofs/delivery:object-read-binds-retained-snapshot-and-container:4",
+          "sha256": "732a012c42e7a85b48b03e0568b94ba491cec7e84a013bc546f240a8f8d45212"
+        },
+        "required_assertions": [
+          "one-shot-request-duct-only"
+        ],
+        "scope": "Actual observer request fact/kick plus an active foreign subscriber receiving no event; known valid mark and fault-free runtime evidence.",
+        "status": "passed",
+        "unique_fact_count": 4
+      },
+      {
+        "anchor_refs": [
+          {
+            "path": "docs/urbit/evidence/2026-09-26/phase1-final-dd0e8c0/core/native.json",
+            "pointer": "/commands/712",
+            "sha256": "07540f0f574c7edf7264c47205cd7814732a6288ea6495ba919edbb519d80de7"
+          },
+          {
+            "path": "docs/urbit/evidence/2026-09-26/phase1-final-dd0e8c0/core/native.json",
+            "pointer": "/commands/746",
+            "sha256": "07540f0f574c7edf7264c47205cd7814732a6288ea6495ba919edbb519d80de7"
+          }
+        ],
+        "classification": "real-native-fake-ships",
+        "derivations": [
+          {
+            "fact_count": 4,
+            "pointer": "/derivations/qa~1one-shot~1object-read-binds-retained-snapshot-and-container:5",
+            "predicate_count": 1
+          }
+        ],
+        "execution_lane": "core",
+        "id": "delivery:object-read-binds-retained-snapshot-and-container:5",
+        "kind": "native",
+        "proof_artifact": {
+          "path": "docs/urbit/evidence/2026-09-26/phase1-final-dd0e8c0/derived-v7/proofs.json",
+          "pointer": "/proofs/delivery:object-read-binds-retained-snapshot-and-container:5",
+          "sha256": "732a012c42e7a85b48b03e0568b94ba491cec7e84a013bc546f240a8f8d45212"
+        },
+        "required_assertions": [
+          "one-shot-request-duct-only"
+        ],
+        "scope": "Actual observer request fact/kick plus an active foreign subscriber receiving no event; known valid mark and fault-free runtime evidence.",
+        "status": "passed",
+        "unique_fact_count": 4
+      },
+      {
+        "anchor_refs": [
+          {
+            "path": "docs/urbit/evidence/2026-09-26/phase1-final-dd0e8c0/core/native.json",
+            "pointer": "/commands/713",
+            "sha256": "07540f0f574c7edf7264c47205cd7814732a6288ea6495ba919edbb519d80de7"
+          },
+          {
+            "path": "docs/urbit/evidence/2026-09-26/phase1-final-dd0e8c0/core/native.json",
+            "pointer": "/commands/753",
+            "sha256": "07540f0f574c7edf7264c47205cd7814732a6288ea6495ba919edbb519d80de7"
+          }
+        ],
+        "classification": "real-native-fake-ships",
+        "derivations": [
+          {
+            "fact_count": 4,
+            "pointer": "/derivations/qa~1one-shot~1object-read-binds-retained-snapshot-and-container:6",
+            "predicate_count": 1
+          }
+        ],
+        "execution_lane": "core",
+        "id": "delivery:object-read-binds-retained-snapshot-and-container:6",
+        "kind": "native",
+        "proof_artifact": {
+          "path": "docs/urbit/evidence/2026-09-26/phase1-final-dd0e8c0/derived-v7/proofs.json",
+          "pointer": "/proofs/delivery:object-read-binds-retained-snapshot-and-container:6",
+          "sha256": "732a012c42e7a85b48b03e0568b94ba491cec7e84a013bc546f240a8f8d45212"
+        },
+        "required_assertions": [
+          "one-shot-request-duct-only"
+        ],
+        "scope": "Actual observer request fact/kick plus an active foreign subscriber receiving no event; known valid mark and fault-free runtime evidence.",
+        "status": "passed",
+        "unique_fact_count": 4
+      },
+      {
+        "classification": null,
+        "id": "no-effect-subsystem",
+        "kind": "not_applicable",
+        "proof_artifact": {
+          "path": "docs/urbit/evidence/2026-09-26/phase1-nonnative-v5/source-dispositions.json",
+          "pointer": "/proofs/no-effect-subsystem",
+          "sha256": "4e4a48a9a408650780a941fdb74b1cee525aeb15b1bb6a3c10ecc1c0c7b02065"
+        },
+        "required_assertions": [
+          "no-external-effects-replayed"
+        ],
+        "reviewed_source_files": {
+          "native/core/desk/app/stead-home.hoon": "3bfc0e45062ef0bc8572d5034a60b5b35f6502350f821129b5ba7a7cca0b2b9c",
+          "native/core/desk/lib/stead-core.hoon": "4c183ef6283030437af5e1433e3fbf80f414757bcede4cab1282fc71ff5f34de"
+        },
+        "reviewer": "/root/independent_review",
+        "scope": "This increment implements no external effect executor. This is not a replay-safety test or proof about future build/message/model/deployment effects.",
+        "status": "not_applicable"
+      },
+      {
+        "anchor_refs": [
+          {
+            "path": "docs/urbit/evidence/2026-09-26/phase1-final-dd0e8c0/core/native.json",
+            "pointer": "/commands/1029",
+            "sha256": "07540f0f574c7edf7264c47205cd7814732a6288ea6495ba919edbb519d80de7"
+          },
+          {
+            "path": "docs/urbit/evidence/2026-09-26/phase1-final-dd0e8c0/core/native.json",
+            "pointer": "/commands/1034",
+            "sha256": "07540f0f574c7edf7264c47205cd7814732a6288ea6495ba919edbb519d80de7"
+          }
+        ],
+        "classification": "real-native-fake-ships",
+        "derivations": [
+          {
+            "fact_count": 4,
+            "pointer": "/derivations/qa~1one-shot~1downgraded-reader-retains-work-read:1",
+            "predicate_count": 1
+          }
+        ],
+        "execution_lane": "core",
+        "id": "delivery:downgraded-reader-retains-work-read:1",
+        "kind": "native",
+        "proof_artifact": {
+          "path": "docs/urbit/evidence/2026-09-26/phase1-final-dd0e8c0/derived-v7/proofs.json",
+          "pointer": "/proofs/delivery:downgraded-reader-retains-work-read:1",
+          "sha256": "732a012c42e7a85b48b03e0568b94ba491cec7e84a013bc546f240a8f8d45212"
+        },
+        "required_assertions": [
+          "one-shot-request-duct-only"
+        ],
+        "scope": "Actual observer request fact/kick plus an active foreign subscriber receiving no event; known valid mark and fault-free runtime evidence.",
+        "status": "passed",
+        "unique_fact_count": 4
+      },
+      {
+        "classification": null,
+        "id": "receipt-lookup-order",
+        "kind": "source_review",
+        "proof_artifact": {
+          "path": "docs/urbit/evidence/2026-09-26/phase1-nonnative-v5/source-dispositions.json",
+          "pointer": "/proofs/receipt-lookup-order",
+          "sha256": "4e4a48a9a408650780a941fdb74b1cee525aeb15b1bb6a3c10ecc1c0c7b02065"
+        },
+        "required_assertions": [
+          "source-ordering-property"
+        ],
+        "reviewed_source_files": {
+          "native/core/desk/lib/stead-core.hoon": "4c183ef6283030437af5e1433e3fbf80f414757bcede4cab1282fc71ff5f34de"
+        },
+        "reviewer": "/root/independent_review",
+        "scope": "Current typed resource/action authorization must run before receipt lookup/decode; source digest must match the executed closure.",
+        "status": "reviewed"
+      },
+      {
+        "classification": null,
+        "id": "guard-independent-source-review",
+        "kind": "source_review",
+        "proof_artifact": {
+          "path": "docs/urbit/evidence/2026-09-26/phase1-nonnative-v6/source-dispositions.json",
+          "pointer": "/proofs/guard-independent-source-review",
+          "sha256": "4b174ed43e3a9ca6e44ecc16aeb3e64ecdeeb91f7e07e46eaee830b75eb97511"
+        },
+        "required_assertions": [
+          "guard-independent-source-review"
+        ],
+        "reviewed_source_files": {
+          "Makefile": "db4777fe8809b0a31e570de79c38faa4421a5e87cca70bb82b8173083b9c7784",
+          "scripts/urbit/digests.py": "88e6333bd6c764f48fb8939bafa77c9eb236c5b3586a19fe1a1f6e48e27dc08c",
+          "scripts/urbit/execution_policy.py": "da16e2e0fd32eb5b90706b546a7ea8332a65807fc8279f3bd765dcc18aaad9b5",
+          "scripts/urbit/harness.py": "d74d3ef74ea6c58bc1b15ea3c504f2eef7e980073e5260e7c566697b9a1261fe",
+          "scripts/urbit/namespace_check.py": "87950f4e7796fafb91807c36b9ea7d392d1d1840e5516d15d5fc6c5d476d0449",
+          "scripts/urbit/supervisor.py": "a0c840c2382cc5b97304c7696ef6069f78051ba4795a4d3c0729e0c236df1168",
+          "scripts/urbit/toolchain.py": "31234bbab1af217c885d8c081d7f438972f6ff1b6d89c93d10bdf49871b3ea16"
+        },
+        "reviewer": "/root/independent_review",
+        "scope": "Exact common source reviewed; thermal, lock, lease, scope, cleanup, fail status and seed boundaries remain conservative.",
+        "status": "reviewed"
+      },
+      {
+        "classification": null,
+        "id": "guard-negative-host-tests",
+        "kind": "host_mocked",
+        "proof_artifact": {
+          "path": "docs/urbit/evidence/2026-09-26/phase1-nonnative-v5/source-dispositions.json",
+          "pointer": "/proofs/guard-negative-host-tests",
+          "sha256": "4e4a48a9a408650780a941fdb74b1cee525aeb15b1bb6a3c10ecc1c0c7b02065"
+        },
+        "required_assertions": [
+          "hot-preflight-no-launch",
+          "missing-stale-sensors",
+          "crossing-stops-own-scope",
+          "bounded-shutdown",
+          "preserved-logs",
+          "nonpassing-final",
+          "no-forced-seed"
+        ],
+        "reviewed_source_files": {},
+        "reviewer": "/root/independent_review",
+        "scope": "Synthetic sensor/child failure tests only; unchanged75/90C and50%CPU limits.",
+        "status": "passed"
+      },
+      {
+        "classification": null,
+        "id": "guard-real-hot-preflight-refusal",
+        "kind": "real_host",
+        "proof_artifact": {
+          "path": "docs/urbit/evidence/2026-09-13/qualification/bound-proofs.json",
+          "pointer": "/proofs/4",
+          "sha256": "c5edbf7c4b4f9774c6a69648b10d0cb80599a0cbf8ac132cc73441a5a069f31b"
+        },
+        "required_assertions": [
+          "real-93c-refusal",
+          "real-81c-refusal"
+        ],
+        "reviewed_source_files": {},
+        "reviewer": null,
+        "scope": "Two retained real-host refusals:93C light shim and81C four-fake start; neither launched Vere.",
+        "status": "passed"
+      },
+      {
+        "classification": null,
+        "id": "guard-real-platform-mocked-sensors",
+        "kind": "real_platform_mocked_sensors",
+        "proof_artifact": {
+          "path": "docs/urbit/evidence/2026-09-13/qualification/bound-proofs.json",
+          "pointer": "/proofs/5",
+          "sha256": "c5edbf7c4b4f9774c6a69648b10d0cb80599a0cbf8ac132cc73441a5a069f31b"
+        },
+        "required_assertions": [
+          "scope-quota-readback",
+          "namespace-pass",
+          "lock-released-after-scope",
+          "readonly-lease"
+        ],
+        "reviewed_source_files": {},
+        "reviewer": null,
+        "scope": "Actual systemd/bwrap/namespace/lock lifetime with mocked cool sensors; no native/thermal qualification.",
+        "status": "passed"
+      },
+      {
+        "anchor_refs": [
+          {
+            "path": "docs/urbit/evidence/2026-09-26/phase1-final-dd0e8c0/core/native.json",
+            "pointer": "/commands/26",
+            "sha256": "07540f0f574c7edf7264c47205cd7814732a6288ea6495ba919edbb519d80de7"
+          },
+          {
+            "path": "docs/urbit/evidence/2026-09-26/phase1-final-dd0e8c0/core/native.json",
+            "pointer": "/commands/125",
+            "sha256": "07540f0f574c7edf7264c47205cd7814732a6288ea6495ba919edbb519d80de7"
+          }
+        ],
+        "classification": "real-native-fake-ships",
+        "derivations": [
+          {
+            "fact_count": 12,
+            "pointer": "/derivations/core~1compile",
+            "predicate_count": 7
+          },
+          {
+            "fact_count": 10,
+            "pointer": "/derivations/qa~1empty-project-known-unknown",
+            "predicate_count": 18
+          }
+        ],
+        "execution_lane": "core",
+        "id": "v2-native-compile",
+        "kind": "native",
+        "proof_artifact": {
+          "path": "docs/urbit/evidence/2026-09-26/phase1-final-dd0e8c0/derived-v7/proofs.json",
+          "pointer": "/proofs/v2-native-compile",
+          "sha256": "732a012c42e7a85b48b03e0568b94ba491cec7e84a013bc546f240a8f8d45212"
+        },
+        "required_assertions": [
+          "v2-native-compile"
+        ],
+        "scope": "Native compile/load of exact current Hoon closure including observer; compiler warnings/errors retained.",
+        "status": "passed",
+        "unique_fact_count": 22
+      },
+      {
+        "anchor_refs": [
+          {
+            "path": "docs/urbit/evidence/2026-09-26/phase1-final-dd0e8c0/core/native.json",
+            "pointer": "/commands/108",
+            "sha256": "07540f0f574c7edf7264c47205cd7814732a6288ea6495ba919edbb519d80de7"
+          },
+          {
+            "path": "docs/urbit/evidence/2026-09-26/phase1-final-dd0e8c0/core/native.json",
+            "pointer": "/commands/1271",
+            "sha256": "07540f0f574c7edf7264c47205cd7814732a6288ea6495ba919edbb519d80de7"
+          }
+        ],
+        "classification": "real-native-fake-ships",
+        "derivations": [
+          {
+            "fact_count": 10,
+            "pointer": "/derivations/qa~1empty-project-known-unknown",
+            "predicate_count": 18
+          },
+          {
+            "fact_count": 3,
+            "pointer": "/derivations/qa~1nonadministrator-cannot-create",
+            "predicate_count": 10
+          },
+          {
+            "fact_count": 3,
+            "pointer": "/derivations/qa~1team-ownership-is-explicit",
+            "predicate_count": 10
+          },
+          {
+            "fact_count": 3,
+            "pointer": "/derivations/qa~1create-project",
+            "predicate_count": 25
+          },
+          {
+            "fact_count": 3,
+            "pointer": "/derivations/qa~1duplicate-project-create",
+            "predicate_count": 10
+          },
+          {
+            "fact_count": 10,
+            "pointer": "/derivations/qa~1outsider-private-project-existence",
+            "predicate_count": 18
+          },
+          {
+            "fact_count": 6,
+            "pointer": "/derivations/qa~1native-peer-without-grant",
+            "predicate_count": 11
+          },
+          {
+            "fact_count": 6,
+            "pointer": "/derivations/qa~1reader-fixture-is-not-an-implicit-role",
+            "predicate_count": 11
+          },
+          {
+            "fact_count": 3,
+            "pointer": "/derivations/qa~1ungranted-contributor-cannot-create-work",
+            "predicate_count": 10
+          },
+          {
+            "fact_count": 3,
+            "pointer": "/derivations/qa~1explicit-contributor-grant",
+            "predicate_count": 27
+          },
+          {
+            "fact_count": 3,
+            "pointer": "/derivations/qa~1explicit-reader-grant",
+            "predicate_count": 27
+          },
+          {
+            "fact_count": 3,
+            "pointer": "/derivations/qa~1contributor-creates-work",
+            "predicate_count": 27
+          },
+          {
+            "fact_count": 6,
+            "pointer": "/derivations/qa~1reader-can-read-work",
+            "predicate_count": 14
+          },
+          {
+            "fact_count": 10,
+            "pointer": "/derivations/qa~1outsider-work-known-unknown",
+            "predicate_count": 18
+          },
+          {
+            "fact_count": 3,
+            "pointer": "/derivations/qa~1reader-cannot-write",
+            "predicate_count": 10
+          },
+          {
+            "fact_count": 3,
+            "pointer": "/derivations/qa~1outsider-cannot-write",
+            "predicate_count": 10
+          },
+          {
+            "fact_count": 3,
+            "pointer": "/derivations/qa~1work-create-duplicate",
+            "predicate_count": 10
+          },
+          {
+            "fact_count": 3,
+            "pointer": "/derivations/qa~1same-id-different-command",
+            "predicate_count": 10
+          },
+          {
+            "fact_count": 3,
+            "pointer": "/derivations/qa~1request-id-is-scoped-to-principal",
+            "predicate_count": 10
+          },
+          {
+            "fact_count": 6,
+            "pointer": "/derivations/qa~1receipt-recovery-is-scoped-to-principal",
+            "predicate_count": 11
+          },
+          {
+            "fact_count": 3,
+            "pointer": "/derivations/qa~1work-first-edit",
+            "predicate_count": 27
+          },
+          {
+            "fact_count": 3,
+            "pointer": "/derivations/qa~1second-independent-work",
+            "predicate_count": 28
+          },
+          {
+            "fact_count": 3,
+            "pointer": "/derivations/qa~1work-a-second-edit",
+            "predicate_count": 28
+          },
+          {
+            "fact_count": 3,
+            "pointer": "/derivations/qa~1work-b-revision-does-not-follow-work-a",
+            "predicate_count": 28
+          },
+          {
+            "fact_count": 3,
+            "pointer": "/derivations/qa~1stale-work-revision",
+            "predicate_count": 10
+          },
+          {
+            "fact_count": 3,
+            "pointer": "/derivations/qa~1future-epoch-mismatch",
+            "predicate_count": 10
+          },
+          {
+            "fact_count": 3,
+            "pointer": "/derivations/qa~1outsider-epoch-does-not-disclose-current-epoch",
+            "predicate_count": 10
+          },
+          {
+            "fact_count": 3,
+            "pointer": "/derivations/qa~1stale-policy-revision",
+            "predicate_count": 10
+          },
+          {
+            "fact_count": 3,
+            "pointer": "/derivations/qa~1contributor-cannot-grant",
+            "predicate_count": 10
+          },
+          {
+            "fact_count": 3,
+            "pointer": "/derivations/qa~1existing-grant-id-cannot-upgrade",
+            "predicate_count": 10
+          },
+          {
+            "fact_count": 3,
+            "pointer": "/derivations/qa~1revoke-contributor",
+            "predicate_count": 28
+          },
+          {
+            "fact_count": 3,
+            "pointer": "/derivations/qa~1revoked-equal-retry-hides-receipt",
+            "predicate_count": 10
+          },
+          {
+            "fact_count": 3,
+            "pointer": "/derivations/qa~1revoked-mismatched-retry-hides-reuse-result",
+            "predicate_count": 10
+          },
+          {
+            "fact_count": 6,
+            "pointer": "/derivations/qa~1revoked-receipt-recovery-hides-result",
+            "predicate_count": 11
+          },
+          {
+            "fact_count": 6,
+            "pointer": "/derivations/qa~1revoked-read-hides-retained-work",
+            "predicate_count": 11
+          },
+          {
+            "fact_count": 3,
+            "pointer": "/derivations/qa~1revoked-grant-id-is-a-tombstone",
+            "predicate_count": 10
+          },
+          {
+            "fact_count": 3,
+            "pointer": "/derivations/qa~1fresh-id-restores-bus-as-maintainer",
+            "predicate_count": 29
+          },
+          {
+            "fact_count": 3,
+            "pointer": "/derivations/qa~1reauthorized-retry-returns-historical-receipt",
+            "predicate_count": 10
+          },
+          {
+            "fact_count": 3,
+            "pointer": "/derivations/qa~1maintainer-cannot-create-maintainer",
+            "predicate_count": 10
+          },
+          {
+            "fact_count": 3,
+            "pointer": "/derivations/qa~1maintainer-cannot-revoke-maintainer",
+            "predicate_count": 10
+          },
+          {
+            "fact_count": 3,
+            "pointer": "/derivations/qa~1maintainer-can-grant-reader",
+            "predicate_count": 29
+          },
+          {
+            "fact_count": 6,
+            "pointer": "/derivations/qa~1explicit-grant-allows-former-outsider",
+            "predicate_count": 14
+          },
+          {
+            "fact_count": 3,
+            "pointer": "/derivations/qa~1maintainer-can-revoke-reader",
+            "predicate_count": 28
+          },
+          {
+            "fact_count": 6,
+            "pointer": "/derivations/qa~1revoked-temporary-reader-is-outsider-again",
+            "predicate_count": 11
+          },
+          {
+            "fact_count": 3,
+            "pointer": "/derivations/qa~1grant-id-cannot-downgrade-existing-maintainer",
+            "predicate_count": 10
+          },
+          {
+            "fact_count": 3,
+            "pointer": "/derivations/qa~1role-change-revokes-old-reader-id",
+            "predicate_count": 28
+          },
+          {
+            "fact_count": 3,
+            "pointer": "/derivations/qa~1role-change-uses-fresh-contributor-id",
+            "predicate_count": 29
+          },
+          {
+            "fact_count": 3,
+            "pointer": "/derivations/qa~1restore-reader-revokes-contributor-id",
+            "predicate_count": 28
+          },
+          {
+            "fact_count": 3,
+            "pointer": "/derivations/qa~1restore-reader-uses-fresh-id",
+            "predicate_count": 29
+          },
+          {
+            "fact_count": 3,
+            "pointer": "/derivations/qa~1expired-grant-cannot-be-admitted",
+            "predicate_count": 10
+          },
+          {
+            "fact_count": 3,
+            "pointer": "/derivations/qa~1grant-cannot-outlive-binding",
+            "predicate_count": 10
+          },
+          {
+            "fact_count": 8,
+            "pointer": "/derivations/qa~1save-first-private-document",
+            "predicate_count": 62
+          },
+          {
+            "fact_count": 11,
+            "pointer": "/derivations/qa~1save-second-private-document",
+            "predicate_count": 79
+          },
+          {
+            "fact_count": 8,
+            "pointer": "/derivations/qa~1save-administrator-private-document",
+            "predicate_count": 64
+          },
+          {
+            "fact_count": 3,
+            "pointer": "/derivations/qa~1work-resource-collides-with-project",
+            "predicate_count": 32
+          },
+          {
+            "fact_count": 3,
+            "pointer": "/derivations/qa~1work-resource-collides-with-document",
+            "predicate_count": 33
+          },
+          {
+            "fact_count": 3,
+            "pointer": "/derivations/qa~1work-resource-collides-with-organization",
+            "predicate_count": 34
+          },
+          {
+            "fact_count": 3,
+            "pointer": "/derivations/qa~1work-resource-collides-with-team",
+            "predicate_count": 35
+          },
+          {
+            "fact_count": 3,
+            "pointer": "/derivations/qa~1work-resource-collides-with-principal",
+            "predicate_count": 36
+          },
+          {
+            "fact_count": 3,
+            "pointer": "/derivations/qa~1work-resource-collides-with-binding",
+            "predicate_count": 37
+          },
+          {
+            "fact_count": 3,
+            "pointer": "/derivations/qa~1work-resource-collides-with-container",
+            "predicate_count": 38
+          },
+          {
+            "fact_count": 3,
+            "pointer": "/derivations/qa~1work-resource-collides-with-grant",
+            "predicate_count": 39
+          },
+          {
+            "fact_count": 14,
+            "pointer": "/derivations/qa~1document-resource-collides-with-work",
+            "predicate_count": 107
+          },
+          {
+            "fact_count": 6,
+            "pointer": "/derivations/qa~1owner-reads-private-document",
+            "predicate_count": 15
+          },
+          {
+            "fact_count": 10,
+            "pointer": "/derivations/qa~1reader-private-document-known-unknown",
+            "predicate_count": 18
+          },
+          {
+            "fact_count": 10,
+            "pointer": "/derivations/qa~1outsider-private-document-known-unknown",
+            "predicate_count": 18
+          },
+          {
+            "fact_count": 6,
+            "pointer": "/derivations/qa~1administrator-has-no-private-container-override",
+            "predicate_count": 11
+          },
+          {
+            "fact_count": 6,
+            "pointer": "/derivations/qa~1maintainer-has-no-other-owner-container-override",
+            "predicate_count": 11
+          },
+          {
+            "fact_count": 6,
+            "pointer": "/derivations/qa~1other-principal-cannot-recover-private-document-receipt",
+            "predicate_count": 11
+          },
+          {
+            "fact_count": 3,
+            "pointer": "/derivations/qa~1reader-cannot-save-private-document",
+            "predicate_count": 10
+          },
+          {
+            "fact_count": 3,
+            "pointer": "/derivations/qa~1maintainer-cannot-save-other-owner-document",
+            "predicate_count": 10
+          },
+          {
+            "fact_count": 3,
+            "pointer": "/derivations/qa~1save-cannot-move-document-to-other-container",
+            "predicate_count": 10
+          },
+          {
+            "fact_count": 3,
+            "pointer": "/derivations/qa~1administrator-cannot-move-another-owner-document",
+            "predicate_count": 10
+          },
+          {
+            "fact_count": 3,
+            "pointer": "/derivations/qa~1unknown-container-does-not-create-container",
+            "predicate_count": 10
+          },
+          {
+            "fact_count": 34,
+            "pointer": "/derivations/qa~1project-views-never-include-other-owner-private-metadata",
+            "predicate_count": 66
+          },
+          {
+            "fact_count": 3,
+            "pointer": "/derivations/qa~1duplicate-document-save-has-no-new-commit",
+            "predicate_count": 10
+          },
+          {
+            "fact_count": 17,
+            "pointer": "/derivations/qa~1edit-document-a-using-its-own-revision",
+            "predicate_count": 123
+          },
+          {
+            "fact_count": 20,
+            "pointer": "/derivations/qa~1edit-document-b-after-a-preserves-both",
+            "predicate_count": 139
+          },
+          {
+            "fact_count": 3,
+            "pointer": "/derivations/qa~1stale-document-save-is-atomic-rejection",
+            "predicate_count": 10
+          },
+          {
+            "fact_count": 3,
+            "pointer": "/derivations/qa~1document-request-id-payload-mismatch",
+            "predicate_count": 10
+          },
+          {
+            "fact_count": 3,
+            "pointer": "/derivations/qa~1frontmatter-wrong-id",
+            "predicate_count": 10
+          },
+          {
+            "fact_count": 3,
+            "pointer": "/derivations/qa~1frontmatter-duplicate-id",
+            "predicate_count": 10
+          },
+          {
+            "fact_count": 3,
+            "pointer": "/derivations/qa~1frontmatter-unknown-key",
+            "predicate_count": 10
+          },
+          {
+            "fact_count": 3,
+            "pointer": "/derivations/qa~1frontmatter-wrong-order",
+            "predicate_count": 10
+          },
+          {
+            "fact_count": 3,
+            "pointer": "/derivations/qa~1frontmatter-anchor",
+            "predicate_count": 10
+          },
+          {
+            "fact_count": 3,
+            "pointer": "/derivations/qa~1frontmatter-nested",
+            "predicate_count": 10
+          },
+          {
+            "fact_count": 3,
+            "pointer": "/derivations/qa~1frontmatter-missing-close",
+            "predicate_count": 10
+          },
+          {
+            "fact_count": 3,
+            "pointer": "/derivations/qa~1frontmatter-bom",
+            "predicate_count": 10
+          },
+          {
+            "fact_count": 3,
+            "pointer": "/derivations/qa~1frontmatter-published",
+            "predicate_count": 10
+          },
+          {
+            "fact_count": 3,
+            "pointer": "/derivations/qa~1frontmatter-unsupported-type",
+            "predicate_count": 10
+          },
+          {
+            "fact_count": 10,
+            "pointer": "/derivations/qa~1reader-private-manifest-known-unknown",
+            "predicate_count": 18
+          },
+          {
+            "fact_count": 6,
+            "pointer": "/derivations/qa~1administrator-cannot-export-other-owner-container",
+            "predicate_count": 11
+          },
+          {
+            "fact_count": 18,
+            "pointer": "/derivations/qa~1owner-export-materializes-home-created-objects",
+            "predicate_count": 97
+          },
+          {
+            "fact_count": 27,
+            "pointer": "/derivations/qa~1object-read-binds-retained-snapshot-and-container",
+            "predicate_count": 30
+          },
+          {
+            "fact_count": 6,
+            "pointer": "/derivations/qa~1historical-authorized-snapshot-remains-exact",
+            "predicate_count": 32
+          },
+          {
+            "fact_count": 63,
+            "pointer": "/derivations/qa~1restart-preserves-content-policy-objects-and-journal",
+            "predicate_count": 150
+          },
+          {
+            "fact_count": 3,
+            "pointer": "/derivations/qa~1accepted-retry-after-restart",
+            "predicate_count": 10
+          },
+          {
+            "fact_count": 6,
+            "pointer": "/derivations/qa~1denial-after-restart",
+            "predicate_count": 11
+          },
+          {
+            "fact_count": 18,
+            "pointer": "/derivations/qa~1export-after-restart-has-identical-git-bytes",
+            "predicate_count": 97
+          },
+          {
+            "fact_count": 3,
+            "pointer": "/derivations/qa~1remove-long-lived-bus-grant",
+            "predicate_count": 40
+          },
+          {
+            "fact_count": 4,
+            "pointer": "/derivations/qa~1admit-short-lived-maintainer",
+            "predicate_count": 43
+          },
+          {
+            "fact_count": 3,
+            "pointer": "/derivations/qa~1short-maintainer-cannot-issue-longer-authority",
+            "predicate_count": 10
+          },
+          {
+            "fact_count": 3,
+            "pointer": "/derivations/qa~1accept-work-before-expiry",
+            "predicate_count": 42
+          },
+          {
+            "fact_count": 24,
+            "pointer": "/derivations/qa~1wait-for-real-authority-expiry",
+            "predicate_count": 8
+          },
+          {
+            "fact_count": 3,
+            "pointer": "/derivations/qa~1expired-equal-retry-hides-receipt",
+            "predicate_count": 10
+          },
+          {
+            "fact_count": 6,
+            "pointer": "/derivations/qa~1expired-receipt-recovery-hides-result",
+            "predicate_count": 11
+          },
+          {
+            "fact_count": 6,
+            "pointer": "/derivations/qa~1expired-read-hides-retained-work",
+            "predicate_count": 11
+          },
+          {
+            "fact_count": 3,
+            "pointer": "/derivations/qa~1restore-with-new-unexpired-grant",
+            "predicate_count": 42
+          },
+          {
+            "fact_count": 3,
+            "pointer": "/derivations/qa~1expired-history-remains-idempotent-after-new-grant",
+            "predicate_count": 10
+          },
+          {
+            "fact_count": 3,
+            "pointer": "/derivations/qa~1revoke-creators-content-membership",
+            "predicate_count": 41
+          },
+          {
+            "fact_count": 6,
+            "pointer": "/derivations/qa~1organization-capability-does-not-read-project",
+            "predicate_count": 11
+          },
+          {
+            "fact_count": 3,
+            "pointer": "/derivations/qa~1revoked-creator-equal-retry-hides-receipt",
+            "predicate_count": 10
+          },
+          {
+            "fact_count": 3,
+            "pointer": "/derivations/qa~1revoked-creator-mismatched-retry-hides-reuse",
+            "predicate_count": 10
+          },
+          {
+            "fact_count": 6,
+            "pointer": "/derivations/qa~1revoked-creator-recovery-hides-receipt",
+            "predicate_count": 11
+          },
+          {
+            "fact_count": 3,
+            "pointer": "/derivations/qa~1policy-authority-retains-only-policy-receipt-scope",
+            "predicate_count": 10
+          },
+          {
+            "fact_count": 3,
+            "pointer": "/derivations/qa~1organization-policy-capability-restores-explicit-membership",
+            "predicate_count": 42
+          },
+          {
+            "fact_count": 3,
+            "pointer": "/derivations/qa~1restored-creator-retry-is-original-receipt",
+            "predicate_count": 10
+          },
+          {
+            "fact_count": 3,
+            "pointer": "/derivations/qa~1role-downgrade-revokes-maintainer",
+            "predicate_count": 41
+          },
+          {
+            "fact_count": 3,
+            "pointer": "/derivations/qa~1role-downgrade-uses-fresh-reader-grant",
+            "predicate_count": 42
+          },
+          {
+            "fact_count": 6,
+            "pointer": "/derivations/qa~1downgraded-reader-retains-work-read",
+            "predicate_count": 14
+          },
+          {
+            "fact_count": 3,
+            "pointer": "/derivations/qa~1downgraded-reader-cannot-retry-work-mutation",
+            "predicate_count": 10
+          },
+          {
+            "fact_count": 6,
+            "pointer": "/derivations/qa~1downgraded-reader-cannot-recover-write-receipt",
+            "predicate_count": 12
+          },
+          {
+            "fact_count": 3,
+            "pointer": "/derivations/qa~1downgraded-owner-cannot-retry-document-save",
+            "predicate_count": 10
+          },
+          {
+            "fact_count": 6,
+            "pointer": "/derivations/qa~1downgraded-owner-cannot-recover-document-save-receipt",
+            "predicate_count": 11
+          },
+          {
+            "fact_count": 3,
+            "pointer": "/derivations/qa~1restore-role-revokes-reader",
+            "predicate_count": 41
+          },
+          {
+            "fact_count": 3,
+            "pointer": "/derivations/qa~1restore-role-uses-fresh-maintainer",
+            "predicate_count": 42
+          },
+          {
+            "fact_count": 3,
+            "pointer": "/derivations/qa~1create-second-project-after-primary-journey",
+            "predicate_count": 42
+          },
+          {
+            "fact_count": 6,
+            "pointer": "/derivations/qa~1bus-cannot-read-second-project",
+            "predicate_count": 11
+          },
+          {
+            "fact_count": 3,
+            "pointer": "/derivations/qa~1other-project-event-does-not-shift-primary-sequence",
+            "predicate_count": 43
+          },
+          {
+            "fact_count": 6,
+            "pointer": "/derivations/qa~1private-activity-project-view-before",
+            "predicate_count": 14
+          },
+          {
+            "fact_count": 3,
+            "pointer": "/derivations/qa~1private-activity-retry-before",
+            "predicate_count": 10
+          },
+          {
+            "fact_count": 18,
+            "pointer": "/derivations/qa~1private-activity-export-before",
+            "predicate_count": 97
+          },
+          {
+            "fact_count": 11,
+            "pointer": "/derivations/qa~1same-local-document-in-other-private-container",
+            "predicate_count": 93
+          },
+          {
+            "fact_count": 6,
+            "pointer": "/derivations/qa~1private-activity-project-view-after",
+            "predicate_count": 14
+          },
+          {
+            "fact_count": 3,
+            "pointer": "/derivations/qa~1private-activity-retry-after",
+            "predicate_count": 10
+          },
+          {
+            "fact_count": 6,
+            "pointer": "/derivations/qa~1private-activity-recovery-after",
+            "predicate_count": 11
+          },
+          {
+            "fact_count": 18,
+            "pointer": "/derivations/qa~1private-activity-export-after",
+            "predicate_count": 97
+          },
+          {
+            "fact_count": 6,
+            "pointer": "/derivations/qa~1zod-reads-own-same-local-document",
+            "predicate_count": 15
+          },
+          {
+            "fact_count": 6,
+            "pointer": "/derivations/qa~1bus-cannot-read-same-local-document-other-container",
+            "predicate_count": 11
+          },
+          {
+            "fact_count": 23,
+            "pointer": "/derivations/qa~1private-other-container-id-does-not-block-bus-save",
+            "predicate_count": 164
+          },
+          {
+            "fact_count": 6,
+            "pointer": "/derivations/qa~1zod-original-document-unchanged-by-bus-same-id",
+            "predicate_count": 15
+          },
+          {
+            "fact_count": 6,
+            "pointer": "/derivations/qa~1bus-reads-own-document-same-id-as-private-zod",
+            "predicate_count": 15
+          },
+          {
+            "fact_count": 3,
+            "pointer": "/derivations/qa~1private-second-project-work-allocation",
+            "predicate_count": 46
+          },
+          {
+            "fact_count": 10,
+            "pointer": "/derivations/qa~1bus-second-project-work-known-unknown",
+            "predicate_count": 18
+          },
+          {
+            "fact_count": 3,
+            "pointer": "/derivations/qa~1private-other-project-id-does-not-block-bus-work",
+            "predicate_count": 47
+          },
+          {
+            "fact_count": 6,
+            "pointer": "/derivations/qa~1bus-reads-own-work-same-id-as-private-project",
+            "predicate_count": 14
+          },
+          {
+            "fact_count": 3,
+            "pointer": "/derivations/qa~1same-grant-local-id-private-project-first",
+            "predicate_count": 48
+          },
+          {
+            "fact_count": 3,
+            "pointer": "/derivations/qa~1other-project-grant-id-does-not-block-current-policy",
+            "predicate_count": 48
+          }
+        ],
+        "execution_lane": "core",
+        "id": "v2-ordered-journey",
+        "kind": "native",
+        "proof_artifact": {
+          "path": "docs/urbit/evidence/2026-09-26/phase1-final-dd0e8c0/derived-v7/proofs.json",
+          "pointer": "/proofs/v2-ordered-journey",
+          "sha256": "732a012c42e7a85b48b03e0568b94ba491cec7e84a013bc546f240a8f8d45212"
+        },
+        "required_assertions": [
+          "v2-ordered-journey"
+        ],
+        "scope": "All129 retained cases with explicit9 scoped-identity acceptance changes, exact native receipt/internal journal and atomicity assertions.",
+        "status": "passed",
+        "unique_fact_count": 871
+      },
+      {
+        "anchor_refs": [
+          {
+            "path": "docs/urbit/evidence/2026-09-26/phase1-final-dd0e8c0/core/native.json",
+            "pointer": "/commands/1272",
+            "sha256": "07540f0f574c7edf7264c47205cd7814732a6288ea6495ba919edbb519d80de7"
+          },
+          {
+            "path": "docs/urbit/evidence/2026-09-26/phase1-final-dd0e8c0/core/native.json",
+            "pointer": "/commands/1417",
+            "sha256": "07540f0f574c7edf7264c47205cd7814732a6288ea6495ba919edbb519d80de7"
+          }
+        ],
+        "classification": "real-native-fake-ships",
+        "derivations": [
+          {
+            "fact_count": 146,
+            "pointer": "/derivations/core~1codec",
+            "predicate_count": 159
+          }
+        ],
+        "execution_lane": "core",
+        "id": "v2-codec-and-home-rejection",
+        "kind": "native",
+        "proof_artifact": {
+          "path": "docs/urbit/evidence/2026-09-26/phase1-final-dd0e8c0/derived-v7/proofs.json",
+          "pointer": "/proofs/v2-codec-and-home-rejection",
+          "sha256": "732a012c42e7a85b48b03e0568b94ba491cec7e84a013bc546f240a8f8d45212"
+        },
+        "required_assertions": [
+          "v2-codec-and-home-rejection"
+        ],
+        "scope": "Six derived vectors and43 raw/Unicode/schema controls at native codec and actual home boundary; negative input leaves business state unchanged.",
+        "status": "passed",
+        "unique_fact_count": 146
+      },
+      {
+        "anchor_refs": [
+          {
+            "path": "docs/urbit/evidence/2026-09-26/phase1-final-dd0e8c0/core/native.json",
+            "pointer": "/commands/1418",
+            "sha256": "07540f0f574c7edf7264c47205cd7814732a6288ea6495ba919edbb519d80de7"
+          },
+          {
+            "path": "docs/urbit/evidence/2026-09-26/phase1-final-dd0e8c0/core/native.json",
+            "pointer": "/commands/1558",
+            "sha256": "07540f0f574c7edf7264c47205cd7814732a6288ea6495ba919edbb519d80de7"
+          }
+        ],
+        "classification": "real-native-fake-ships",
+        "derivations": [
+          {
+            "fact_count": 141,
+            "pointer": "/derivations/core~1contexts",
+            "predicate_count": 126
+          }
+        ],
+        "execution_lane": "core",
+        "id": "v2-context-controls",
+        "kind": "native",
+        "proof_artifact": {
+          "path": "docs/urbit/evidence/2026-09-26/phase1-final-dd0e8c0/derived-v7/proofs.json",
+          "pointer": "/proofs/v2-context-controls",
+          "sha256": "732a012c42e7a85b48b03e0568b94ba491cec7e84a013bc546f240a8f8d45212"
+        },
+        "required_assertions": [
+          "v2-context-controls"
+        ],
+        "scope": "All14 missing/expired/revoked/profile/sender controls against actual native authorization.",
+        "status": "passed",
+        "unique_fact_count": 141
+      },
+      {
+        "anchor_refs": [
+          {
+            "path": "docs/urbit/evidence/2026-09-26/phase1-final-dd0e8c0/core/native.json",
+            "pointer": "/commands/1568",
+            "sha256": "07540f0f574c7edf7264c47205cd7814732a6288ea6495ba919edbb519d80de7"
+          },
+          {
+            "path": "docs/urbit/evidence/2026-09-26/phase1-final-dd0e8c0/core/native.json",
+            "pointer": "/commands/1576",
+            "sha256": "07540f0f574c7edf7264c47205cd7814732a6288ea6495ba919edbb519d80de7"
+          }
+        ],
+        "classification": "real-native-fake-ships",
+        "derivations": [
+          {
+            "fact_count": 9,
+            "pointer": "/derivations/core~1concurrency",
+            "predicate_count": 9
+          }
+        ],
+        "execution_lane": "core",
+        "id": "v2-concurrent-cas",
+        "kind": "native",
+        "proof_artifact": {
+          "path": "docs/urbit/evidence/2026-09-26/phase1-final-dd0e8c0/derived-v7/proofs.json",
+          "pointer": "/proofs/v2-concurrent-cas",
+          "sha256": "732a012c42e7a85b48b03e0568b94ba491cec7e84a013bc546f240a8f8d45212"
+        },
+        "required_assertions": [
+          "v2-concurrent-cas"
+        ],
+        "scope": "Two simultaneous current-authorized work writes; one CAS wins and one conflicts; no double receipt/journal.",
+        "status": "passed",
+        "unique_fact_count": 9
+      },
+      {
+        "anchor_refs": [
+          {
+            "path": "docs/urbit/evidence/2026-09-26/phase1-final-dd0e8c0/core/native.json",
+            "pointer": "/commands/1810",
+            "sha256": "07540f0f574c7edf7264c47205cd7814732a6288ea6495ba919edbb519d80de7"
+          },
+          {
+            "path": "docs/urbit/evidence/2026-09-26/phase1-final-dd0e8c0/core/native.json",
+            "pointer": "/commands/1849",
+            "sha256": "07540f0f574c7edf7264c47205cd7814732a6288ea6495ba919edbb519d80de7"
+          }
+        ],
+        "classification": "real-native-fake-ships",
+        "derivations": [
+          {
+            "fact_count": 40,
+            "pointer": "/derivations/capacity~1predecessor-privacy",
+            "predicate_count": 277
+          }
+        ],
+        "execution_lane": "core",
+        "id": "legacy-private-project-probe-reproduced",
+        "kind": "native",
+        "proof_artifact": {
+          "path": "docs/urbit/evidence/2026-09-26/phase1-final-dd0e8c0/derived-v7/proofs.json",
+          "pointer": "/proofs/legacy-private-project-probe-reproduced",
+          "sha256": "732a012c42e7a85b48b03e0568b94ba491cec7e84a013bc546f240a8f8d45212"
+        },
+        "required_assertions": [
+          "legacy-private-project-probe-reproduced"
+        ],
+        "scope": "Provenance-bound v1 native accepted history reproduces hidden cross-project local-ID availability oracle.",
+        "status": "passed",
+        "unique_fact_count": 40
+      },
+      {
+        "anchor_refs": [
+          {
+            "path": "docs/urbit/evidence/2026-09-26/phase1-final-dd0e8c0/core/native.json",
+            "pointer": "/commands/1810",
+            "sha256": "07540f0f574c7edf7264c47205cd7814732a6288ea6495ba919edbb519d80de7"
+          },
+          {
+            "path": "docs/urbit/evidence/2026-09-26/phase1-final-dd0e8c0/core/native.json",
+            "pointer": "/commands/1849",
+            "sha256": "07540f0f574c7edf7264c47205cd7814732a6288ea6495ba919edbb519d80de7"
+          }
+        ],
+        "classification": "real-native-fake-ships",
+        "derivations": [
+          {
+            "fact_count": 40,
+            "pointer": "/derivations/capacity~1predecessor-privacy",
+            "predicate_count": 277
+          }
+        ],
+        "execution_lane": "core",
+        "id": "legacy-private-container-probe-reproduced",
+        "kind": "native",
+        "proof_artifact": {
+          "path": "docs/urbit/evidence/2026-09-26/phase1-final-dd0e8c0/derived-v7/proofs.json",
+          "pointer": "/proofs/legacy-private-container-probe-reproduced",
+          "sha256": "732a012c42e7a85b48b03e0568b94ba491cec7e84a013bc546f240a8f8d45212"
+        },
+        "required_assertions": [
+          "legacy-private-container-probe-reproduced"
+        ],
+        "scope": "Provenance-bound v1 native accepted history reproduces same-project other-owner document availability oracle.",
+        "status": "passed",
+        "unique_fact_count": 40
+      },
+      {
+        "anchor_refs": [
+          {
+            "path": "docs/urbit/evidence/2026-09-26/phase1-final-dd0e8c0/core/native.json",
+            "pointer": "/commands/138",
+            "sha256": "07540f0f574c7edf7264c47205cd7814732a6288ea6495ba919edbb519d80de7"
+          },
+          {
+            "path": "docs/urbit/evidence/2026-09-26/phase1-final-dd0e8c0/core/native.json",
+            "pointer": "/commands/1271",
+            "sha256": "07540f0f574c7edf7264c47205cd7814732a6288ea6495ba919edbb519d80de7"
+          }
+        ],
+        "classification": "real-native-fake-ships",
+        "derivations": [
+          {
+            "fact_count": 10,
+            "pointer": "/derivations/qa~1outsider-private-project-existence",
+            "predicate_count": 18
+          },
+          {
+            "fact_count": 10,
+            "pointer": "/derivations/qa~1outsider-work-known-unknown",
+            "predicate_count": 18
+          },
+          {
+            "fact_count": 3,
+            "pointer": "/derivations/qa~1create-second-project-after-primary-journey",
+            "predicate_count": 42
+          },
+          {
+            "fact_count": 6,
+            "pointer": "/derivations/qa~1bus-cannot-read-second-project",
+            "predicate_count": 11
+          },
+          {
+            "fact_count": 3,
+            "pointer": "/derivations/qa~1other-project-event-does-not-shift-primary-sequence",
+            "predicate_count": 43
+          },
+          {
+            "fact_count": 3,
+            "pointer": "/derivations/qa~1private-second-project-work-allocation",
+            "predicate_count": 46
+          },
+          {
+            "fact_count": 10,
+            "pointer": "/derivations/qa~1bus-second-project-work-known-unknown",
+            "predicate_count": 18
+          },
+          {
+            "fact_count": 3,
+            "pointer": "/derivations/qa~1private-other-project-id-does-not-block-bus-work",
+            "predicate_count": 47
+          },
+          {
+            "fact_count": 6,
+            "pointer": "/derivations/qa~1bus-reads-own-work-same-id-as-private-project",
+            "predicate_count": 14
+          },
+          {
+            "fact_count": 3,
+            "pointer": "/derivations/qa~1same-grant-local-id-private-project-first",
+            "predicate_count": 48
+          },
+          {
+            "fact_count": 3,
+            "pointer": "/derivations/qa~1other-project-grant-id-does-not-block-current-policy",
+            "predicate_count": 48
+          }
+        ],
+        "execution_lane": "core",
+        "id": "v2-cross-project-local-id",
+        "kind": "native",
+        "proof_artifact": {
+          "path": "docs/urbit/evidence/2026-09-26/phase1-final-dd0e8c0/derived-v7/proofs.json",
+          "pointer": "/proofs/v2-cross-project-local-id",
+          "sha256": "732a012c42e7a85b48b03e0568b94ba491cec7e84a013bc546f240a8f8d45212"
+        },
+        "required_assertions": [
+          "v2-cross-project-local-id"
+        ],
+        "scope": "Same work/grant local IDs allocate independently across current-authorized project scopes; outsider cannot read either hidden scope.",
+        "status": "passed",
+        "unique_fact_count": 60
+      },
+      {
+        "anchor_refs": [
+          {
+            "path": "docs/urbit/evidence/2026-09-26/phase1-final-dd0e8c0/core/native.json",
+            "pointer": "/commands/427",
+            "sha256": "07540f0f574c7edf7264c47205cd7814732a6288ea6495ba919edbb519d80de7"
+          },
+          {
+            "path": "docs/urbit/evidence/2026-09-26/phase1-final-dd0e8c0/core/native.json",
+            "pointer": "/commands/1231",
+            "sha256": "07540f0f574c7edf7264c47205cd7814732a6288ea6495ba919edbb519d80de7"
+          }
+        ],
+        "classification": "real-native-fake-ships",
+        "derivations": [
+          {
+            "fact_count": 6,
+            "pointer": "/derivations/qa~1owner-reads-private-document",
+            "predicate_count": 15
+          },
+          {
+            "fact_count": 10,
+            "pointer": "/derivations/qa~1reader-private-document-known-unknown",
+            "predicate_count": 18
+          },
+          {
+            "fact_count": 10,
+            "pointer": "/derivations/qa~1outsider-private-document-known-unknown",
+            "predicate_count": 18
+          },
+          {
+            "fact_count": 11,
+            "pointer": "/derivations/qa~1same-local-document-in-other-private-container",
+            "predicate_count": 93
+          },
+          {
+            "fact_count": 6,
+            "pointer": "/derivations/qa~1zod-reads-own-same-local-document",
+            "predicate_count": 15
+          },
+          {
+            "fact_count": 6,
+            "pointer": "/derivations/qa~1bus-cannot-read-same-local-document-other-container",
+            "predicate_count": 11
+          },
+          {
+            "fact_count": 23,
+            "pointer": "/derivations/qa~1private-other-container-id-does-not-block-bus-save",
+            "predicate_count": 164
+          },
+          {
+            "fact_count": 6,
+            "pointer": "/derivations/qa~1zod-original-document-unchanged-by-bus-same-id",
+            "predicate_count": 15
+          },
+          {
+            "fact_count": 6,
+            "pointer": "/derivations/qa~1bus-reads-own-document-same-id-as-private-zod",
+            "predicate_count": 15
+          }
+        ],
+        "execution_lane": "core",
+        "id": "v2-cross-container-local-id",
+        "kind": "native",
+        "proof_artifact": {
+          "path": "docs/urbit/evidence/2026-09-26/phase1-final-dd0e8c0/derived-v7/proofs.json",
+          "pointer": "/proofs/v2-cross-container-local-id",
+          "sha256": "732a012c42e7a85b48b03e0568b94ba491cec7e84a013bc546f240a8f8d45212"
+        },
+        "required_assertions": [
+          "v2-cross-container-local-id"
+        ],
+        "scope": "Same document local ID independently saves in private containers with no global lookup or disclosure.",
+        "status": "passed",
+        "unique_fact_count": 84
+      },
+      {
+        "anchor_refs": [
+          {
+            "path": "docs/urbit/evidence/2026-09-26/phase1-final-dd0e8c0/core/native.json",
+            "pointer": "/commands/185",
+            "sha256": "07540f0f574c7edf7264c47205cd7814732a6288ea6495ba919edbb519d80de7"
+          },
+          {
+            "path": "docs/urbit/evidence/2026-09-26/phase1-final-dd0e8c0/core/native.json",
+            "pointer": "/commands/1255",
+            "sha256": "07540f0f574c7edf7264c47205cd7814732a6288ea6495ba919edbb519d80de7"
+          }
+        ],
+        "classification": "real-native-fake-ships",
+        "derivations": [
+          {
+            "fact_count": 3,
+            "pointer": "/derivations/qa~1contributor-creates-work",
+            "predicate_count": 27
+          },
+          {
+            "fact_count": 8,
+            "pointer": "/derivations/qa~1save-first-private-document",
+            "predicate_count": 62
+          },
+          {
+            "fact_count": 23,
+            "pointer": "/derivations/qa~1private-other-container-id-does-not-block-bus-save",
+            "predicate_count": 164
+          },
+          {
+            "fact_count": 3,
+            "pointer": "/derivations/qa~1private-other-project-id-does-not-block-bus-work",
+            "predicate_count": 47
+          }
+        ],
+        "execution_lane": "core",
+        "id": "v2-public-receipt-normal",
+        "kind": "native",
+        "proof_artifact": {
+          "path": "docs/urbit/evidence/2026-09-26/phase1-final-dd0e8c0/derived-v7/proofs.json",
+          "pointer": "/proofs/v2-public-receipt-normal",
+          "sha256": "732a012c42e7a85b48b03e0568b94ba491cec7e84a013bc546f240a8f8d45212"
+        },
+        "required_assertions": [
+          "v2-public-receipt-normal"
+        ],
+        "scope": "New accepted Work/Docs receipts exclude journal sequence/hash/policy counters and carry exact typed scope.",
+        "status": "passed",
+        "unique_fact_count": 37
+      },
+      {
+        "anchor_refs": [
+          {
+            "path": "docs/urbit/evidence/2026-09-26/phase1-final-dd0e8c0/core/native.json",
+            "pointer": "/commands/584",
+            "sha256": "07540f0f574c7edf7264c47205cd7814732a6288ea6495ba919edbb519d80de7"
+          },
+          {
+            "path": "docs/urbit/evidence/2026-09-26/phase1-final-dd0e8c0/core/native.json",
+            "pointer": "/commands/1040",
+            "sha256": "07540f0f574c7edf7264c47205cd7814732a6288ea6495ba919edbb519d80de7"
+          }
+        ],
+        "classification": "real-native-fake-ships",
+        "derivations": [
+          {
+            "fact_count": 3,
+            "pointer": "/derivations/qa~1duplicate-document-save-has-no-new-commit",
+            "predicate_count": 10
+          },
+          {
+            "fact_count": 3,
+            "pointer": "/derivations/qa~1accepted-retry-after-restart",
+            "predicate_count": 10
+          },
+          {
+            "fact_count": 3,
+            "pointer": "/derivations/qa~1private-activity-retry-before",
+            "predicate_count": 10
+          },
+          {
+            "fact_count": 3,
+            "pointer": "/derivations/qa~1private-activity-retry-after",
+            "predicate_count": 10
+          },
+          {
+            "fact_count": 3,
+            "pointer": "/derivations/qa~1expired-history-remains-idempotent-after-new-grant",
+            "predicate_count": 10
+          },
+          {
+            "fact_count": 3,
+            "pointer": "/derivations/qa~1revoked-creator-mismatched-retry-hides-reuse",
+            "predicate_count": 10
+          },
+          {
+            "fact_count": 3,
+            "pointer": "/derivations/qa~1downgraded-reader-cannot-retry-work-mutation",
+            "predicate_count": 10
+          }
+        ],
+        "execution_lane": "core",
+        "id": "v2-public-receipt-retry",
+        "kind": "native",
+        "proof_artifact": {
+          "path": "docs/urbit/evidence/2026-09-26/phase1-final-dd0e8c0/derived-v7/proofs.json",
+          "pointer": "/proofs/v2-public-receipt-retry",
+          "sha256": "732a012c42e7a85b48b03e0568b94ba491cec7e84a013bc546f240a8f8d45212"
+        },
+        "required_assertions": [
+          "v2-public-receipt-retry"
+        ],
+        "scope": "Current-authorized equal retries return identical projected receipts despite unrelated private activity.",
+        "status": "passed",
+        "unique_fact_count": 21
+      },
+      {
+        "anchor_refs": [
+          {
+            "path": "docs/urbit/evidence/2026-09-26/phase1-final-dd0e8c0/core/native.json",
+            "pointer": "/commands/231",
+            "sha256": "07540f0f574c7edf7264c47205cd7814732a6288ea6495ba919edbb519d80de7"
+          },
+          {
+            "path": "docs/urbit/evidence/2026-09-26/phase1-final-dd0e8c0/core/native.json",
+            "pointer": "/commands/1609",
+            "sha256": "07540f0f574c7edf7264c47205cd7814732a6288ea6495ba919edbb519d80de7"
+          }
+        ],
+        "classification": "real-native-fake-ships",
+        "derivations": [
+          {
+            "fact_count": 6,
+            "pointer": "/derivations/qa~1receipt-recovery-is-scoped-to-principal",
+            "predicate_count": 11
+          },
+          {
+            "fact_count": 6,
+            "pointer": "/derivations/qa~1revoked-receipt-recovery-hides-result",
+            "predicate_count": 11
+          },
+          {
+            "fact_count": 6,
+            "pointer": "/derivations/qa~1other-principal-cannot-recover-private-document-receipt",
+            "predicate_count": 11
+          },
+          {
+            "fact_count": 6,
+            "pointer": "/derivations/qa~1expired-receipt-recovery-hides-result",
+            "predicate_count": 11
+          },
+          {
+            "fact_count": 6,
+            "pointer": "/derivations/qa~1revoked-creator-recovery-hides-receipt",
+            "predicate_count": 11
+          },
+          {
+            "fact_count": 3,
+            "pointer": "/derivations/qa~1policy-authority-retains-only-policy-receipt-scope",
+            "predicate_count": 10
+          },
+          {
+            "fact_count": 6,
+            "pointer": "/derivations/qa~1downgraded-reader-cannot-recover-write-receipt",
+            "predicate_count": 12
+          },
+          {
+            "fact_count": 6,
+            "pointer": "/derivations/qa~1downgraded-owner-cannot-recover-document-save-receipt",
+            "predicate_count": 11
+          },
+          {
+            "fact_count": 6,
+            "pointer": "/derivations/qa~1private-activity-recovery-after",
+            "predicate_count": 11
+          },
+          {
+            "fact_count": 13,
+            "pointer": "/derivations/delivery~1missing-channel-and-wrong-digest",
+            "predicate_count": 13
+          }
+        ],
+        "execution_lane": "core",
+        "id": "v2-public-receipt-recovery",
+        "kind": "native",
+        "proof_artifact": {
+          "path": "docs/urbit/evidence/2026-09-26/phase1-final-dd0e8c0/derived-v7/proofs.json",
+          "pointer": "/proofs/v2-public-receipt-recovery",
+          "sha256": "732a012c42e7a85b48b03e0568b94ba491cec7e84a013bc546f240a8f8d45212"
+        },
+        "required_assertions": [
+          "v2-public-receipt-recovery"
+        ],
+        "scope": "Recovery uses exact project/container/kind scope and excludes private journal/policy metadata.",
+        "status": "passed",
+        "unique_fact_count": 64
+      },
+      {
+        "anchor_refs": [
+          {
+            "path": "docs/urbit/evidence/2026-09-26/phase1-final-dd0e8c0/core/native.json",
+            "pointer": "/commands/688",
+            "sha256": "07540f0f574c7edf7264c47205cd7814732a6288ea6495ba919edbb519d80de7"
+          },
+          {
+            "path": "docs/urbit/evidence/2026-09-26/phase1-final-dd0e8c0/core/native.json",
+            "pointer": "/commands/1168",
+            "sha256": "07540f0f574c7edf7264c47205cd7814732a6288ea6495ba919edbb519d80de7"
+          }
+        ],
+        "classification": "real-native-fake-ships",
+        "derivations": [
+          {
+            "fact_count": 18,
+            "pointer": "/derivations/qa~1owner-export-materializes-home-created-objects",
+            "predicate_count": 97
+          },
+          {
+            "fact_count": 27,
+            "pointer": "/derivations/qa~1object-read-binds-retained-snapshot-and-container",
+            "predicate_count": 30
+          },
+          {
+            "fact_count": 6,
+            "pointer": "/derivations/qa~1historical-authorized-snapshot-remains-exact",
+            "predicate_count": 32
+          },
+          {
+            "fact_count": 18,
+            "pointer": "/derivations/qa~1export-after-restart-has-identical-git-bytes",
+            "predicate_count": 97
+          },
+          {
+            "fact_count": 18,
+            "pointer": "/derivations/qa~1private-activity-export-before",
+            "predicate_count": 97
+          },
+          {
+            "fact_count": 18,
+            "pointer": "/derivations/qa~1private-activity-export-after",
+            "predicate_count": 97
+          }
+        ],
+        "execution_lane": "core",
+        "id": "v2-public-export-projection",
+        "kind": "native",
+        "proof_artifact": {
+          "path": "docs/urbit/evidence/2026-09-26/phase1-final-dd0e8c0/derived-v7/proofs.json",
+          "pointer": "/proofs/v2-public-export-projection",
+          "sha256": "732a012c42e7a85b48b03e0568b94ba491cec7e84a013bc546f240a8f8d45212"
+        },
+        "required_assertions": [
+          "v2-public-export-projection"
+        ],
+        "scope": "Exports contain only authorized selected-container objects/history; no private project journal or unrelated container activity.",
+        "status": "passed",
+        "unique_fact_count": 105
+      },
+      {
+        "anchor_refs": [
+          {
+            "path": "docs/urbit/evidence/2026-09-26/phase1-final-dd0e8c0/core/native.json",
+            "pointer": "/commands/1850",
+            "sha256": "07540f0f574c7edf7264c47205cd7814732a6288ea6495ba919edbb519d80de7"
+          },
+          {
+            "path": "docs/urbit/evidence/2026-09-26/phase1-final-dd0e8c0/core/native.json",
+            "pointer": "/commands/2485",
+            "sha256": "07540f0f574c7edf7264c47205cd7814732a6288ea6495ba919edbb519d80de7"
+          }
+        ],
+        "classification": "real-native-fake-ships",
+        "derivations": [
+          {
+            "fact_count": 636,
+            "pointer": "/derivations/capacity~1exhaustion",
+            "predicate_count": 4780
+          }
+        ],
+        "execution_lane": "core",
+        "id": "legacy-revocation-exhaustion-reproduced",
+        "kind": "native",
+        "proof_artifact": {
+          "path": "docs/urbit/evidence/2026-09-26/phase1-final-dd0e8c0/derived-v7/proofs.json",
+          "pointer": "/proofs/legacy-revocation-exhaustion-reproduced",
+          "sha256": "732a012c42e7a85b48b03e0568b94ba491cec7e84a013bc546f240a8f8d45212"
+        },
+        "required_assertions": [
+          "legacy-revocation-exhaustion-reproduced"
+        ],
+        "scope": "Legitimate near4096 predecessor transition history reproduces blocked security revocation; no counter injection.",
+        "status": "passed",
+        "unique_fact_count": 636
+      },
+      {
+        "anchor_refs": [
+          {
+            "path": "docs/urbit/evidence/2026-09-26/phase1-final-dd0e8c0/core/native.json",
+            "pointer": "/commands/1850",
+            "sha256": "07540f0f574c7edf7264c47205cd7814732a6288ea6495ba919edbb519d80de7"
+          },
+          {
+            "path": "docs/urbit/evidence/2026-09-26/phase1-final-dd0e8c0/core/native.json",
+            "pointer": "/commands/2485",
+            "sha256": "07540f0f574c7edf7264c47205cd7814732a6288ea6495ba919edbb519d80de7"
+          }
+        ],
+        "classification": "real-native-fake-ships",
+        "derivations": [
+          {
+            "fact_count": 636,
+            "pointer": "/derivations/capacity~1exhaustion",
+            "predicate_count": 4780
+          }
+        ],
+        "execution_lane": "core",
+        "id": "v2-security-revoke-reserve",
+        "kind": "native",
+        "proof_artifact": {
+          "path": "docs/urbit/evidence/2026-09-26/phase1-final-dd0e8c0/derived-v7/proofs.json",
+          "pointer": "/proofs/v2-security-revoke-reserve",
+          "sha256": "732a012c42e7a85b48b03e0568b94ba491cec7e84a013bc546f240a8f8d45212"
+        },
+        "required_assertions": [
+          "v2-security-revoke-reserve"
+        ],
+        "scope": "At ordinary4096 capacity, final-authorized revoke still accepts atomically from reserved capacity.",
+        "status": "passed",
+        "unique_fact_count": 636
+      },
+      {
+        "anchor_refs": [
+          {
+            "path": "docs/urbit/evidence/2026-09-26/phase1-final-dd0e8c0/core/native.json",
+            "pointer": "/commands/1850",
+            "sha256": "07540f0f574c7edf7264c47205cd7814732a6288ea6495ba919edbb519d80de7"
+          },
+          {
+            "path": "docs/urbit/evidence/2026-09-26/phase1-final-dd0e8c0/core/native.json",
+            "pointer": "/commands/2485",
+            "sha256": "07540f0f574c7edf7264c47205cd7814732a6288ea6495ba919edbb519d80de7"
+          }
+        ],
+        "classification": "real-native-fake-ships",
+        "derivations": [
+          {
+            "fact_count": 636,
+            "pointer": "/derivations/capacity~1exhaustion",
+            "predicate_count": 4780
+          }
+        ],
+        "execution_lane": "core",
+        "id": "v2-cross-project-security-admin",
+        "kind": "native",
+        "proof_artifact": {
+          "path": "docs/urbit/evidence/2026-09-26/phase1-final-dd0e8c0/derived-v7/proofs.json",
+          "pointer": "/proofs/v2-cross-project-security-admin",
+          "sha256": "732a012c42e7a85b48b03e0568b94ba491cec7e84a013bc546f240a8f8d45212"
+        },
+        "required_assertions": [
+          "v2-cross-project-security-admin"
+        ],
+        "scope": "Another exhausted project cannot block explicit organization-policy administrator revocation in this project; all profile and current authority checks retained.",
+        "status": "passed",
+        "unique_fact_count": 636
+      },
+      {
+        "anchor_refs": [
+          {
+            "path": "docs/urbit/evidence/2026-09-26/phase1-final-dd0e8c0/core/native.json",
+            "pointer": "/commands/1850",
+            "sha256": "07540f0f574c7edf7264c47205cd7814732a6288ea6495ba919edbb519d80de7"
+          },
+          {
+            "path": "docs/urbit/evidence/2026-09-26/phase1-final-dd0e8c0/core/native.json",
+            "pointer": "/commands/2485",
+            "sha256": "07540f0f574c7edf7264c47205cd7814732a6288ea6495ba919edbb519d80de7"
+          }
+        ],
+        "classification": "real-native-fake-ships",
+        "derivations": [
+          {
+            "fact_count": 636,
+            "pointer": "/derivations/capacity~1exhaustion",
+            "predicate_count": 4780
+          }
+        ],
+        "execution_lane": "core",
+        "id": "v2-security-reserve-exhaustion",
+        "kind": "native",
+        "proof_artifact": {
+          "path": "docs/urbit/evidence/2026-09-26/phase1-final-dd0e8c0/derived-v7/proofs.json",
+          "pointer": "/proofs/v2-security-reserve-exhaustion",
+          "sha256": "732a012c42e7a85b48b03e0568b94ba491cec7e84a013bc546f240a8f8d45212"
+        },
+        "required_assertions": [
+          "v2-security-reserve-exhaustion"
+        ],
+        "scope": "All128 retained grants revoked through real transitions; project closes to subsequent reads/retries/recovery/writes; other projects retain security capacity.",
+        "status": "passed",
+        "unique_fact_count": 636
+      },
+      {
+        "anchor_refs": [
+          {
+            "path": "docs/urbit/evidence/2026-09-26/phase1-final-dd0e8c0/core/native.json",
+            "pointer": "/commands/26",
+            "sha256": "07540f0f574c7edf7264c47205cd7814732a6288ea6495ba919edbb519d80de7"
+          },
+          {
+            "path": "docs/urbit/evidence/2026-09-26/phase1-final-dd0e8c0/core/native.json",
+            "pointer": "/commands/104",
+            "sha256": "07540f0f574c7edf7264c47205cd7814732a6288ea6495ba919edbb519d80de7"
+          }
+        ],
+        "classification": "real-native-fake-ships",
+        "derivations": [
+          {
+            "fact_count": 12,
+            "pointer": "/derivations/core~1compile",
+            "predicate_count": 7
+          }
+        ],
+        "execution_lane": "core",
+        "id": "v2-security-counter-u64-edge",
+        "kind": "native",
+        "proof_artifact": {
+          "path": "docs/urbit/evidence/2026-09-26/phase1-final-dd0e8c0/derived-v7/proofs.json",
+          "pointer": "/proofs/v2-security-counter-u64-edge",
+          "sha256": "732a012c42e7a85b48b03e0568b94ba491cec7e84a013bc546f240a8f8d45212"
+        },
+        "required_assertions": [
+          "v2-security-counter-u64-edge"
+        ],
+        "scope": "Separately labeled synthetic u64 edge refuses/derives closure; not legitimate4096-history proof.",
+        "status": "passed",
+        "unique_fact_count": 12
+      },
+      {
+        "anchor_refs": [
+          {
+            "path": "docs/urbit/evidence/2026-09-26/phase1-final-dd0e8c0/core/native.json",
+            "pointer": "/commands/2486",
+            "sha256": "07540f0f574c7edf7264c47205cd7814732a6288ea6495ba919edbb519d80de7"
+          },
+          {
+            "path": "docs/urbit/evidence/2026-09-26/phase1-final-dd0e8c0/core/native.json",
+            "pointer": "/commands/3376",
+            "sha256": "07540f0f574c7edf7264c47205cd7814732a6288ea6495ba919edbb519d80de7"
+          }
+        ],
+        "classification": "real-native-fake-ships",
+        "derivations": [
+          {
+            "fact_count": 891,
+            "pointer": "/derivations/capacity~1resource-boundaries",
+            "predicate_count": 7839
+          }
+        ],
+        "execution_lane": "core",
+        "id": "boundary-projects",
+        "kind": "native",
+        "proof_artifact": {
+          "path": "docs/urbit/evidence/2026-09-26/phase1-final-dd0e8c0/derived-v7/proofs.json",
+          "pointer": "/proofs/boundary-projects",
+          "sha256": "732a012c42e7a85b48b03e0568b94ba491cec7e84a013bc546f240a8f8d45212"
+        },
+        "required_assertions": [
+          "boundary-projects"
+        ],
+        "scope": "16project boundary: new allocation fails atomically; no metadata for unauthorized requester.",
+        "status": "passed",
+        "unique_fact_count": 891
+      },
+      {
+        "anchor_refs": [
+          {
+            "path": "docs/urbit/evidence/2026-09-26/phase1-final-dd0e8c0/core/native.json",
+            "pointer": "/commands/2486",
+            "sha256": "07540f0f574c7edf7264c47205cd7814732a6288ea6495ba919edbb519d80de7"
+          },
+          {
+            "path": "docs/urbit/evidence/2026-09-26/phase1-final-dd0e8c0/core/native.json",
+            "pointer": "/commands/343",
+            "sha256": "07540f0f574c7edf7264c47205cd7814732a6288ea6495ba919edbb519d80de7"
+          }
+        ],
+        "classification": "real-native-fake-ships",
+        "derivations": [
+          {
+            "fact_count": 891,
+            "pointer": "/derivations/capacity~1resource-boundaries",
+            "predicate_count": 7839
+          },
+          {
+            "fact_count": 636,
+            "pointer": "/derivations/capacity~1exhaustion",
+            "predicate_count": 4780
+          },
+          {
+            "fact_count": 3,
+            "pointer": "/derivations/qa~1existing-grant-id-cannot-upgrade",
+            "predicate_count": 10
+          },
+          {
+            "fact_count": 3,
+            "pointer": "/derivations/qa~1revoked-grant-id-is-a-tombstone",
+            "predicate_count": 10
+          },
+          {
+            "fact_count": 3,
+            "pointer": "/derivations/qa~1grant-id-cannot-downgrade-existing-maintainer",
+            "predicate_count": 10
+          }
+        ],
+        "execution_lane": "core",
+        "id": "boundary-grants",
+        "kind": "native",
+        "proof_artifact": {
+          "path": "docs/urbit/evidence/2026-09-26/phase1-final-dd0e8c0/derived-v7/proofs.json",
+          "pointer": "/proofs/boundary-grants",
+          "sha256": "732a012c42e7a85b48b03e0568b94ba491cec7e84a013bc546f240a8f8d45212"
+        },
+        "required_assertions": [
+          "boundary-grants"
+        ],
+        "scope": "128retained-grant boundary/tombstones, current auth before capacity, no partial policy/receipt write.",
+        "status": "passed",
+        "unique_fact_count": 1536
+      },
+      {
+        "anchor_refs": [
+          {
+            "path": "docs/urbit/evidence/2026-09-26/phase1-final-dd0e8c0/core/native.json",
+            "pointer": "/commands/2486",
+            "sha256": "07540f0f574c7edf7264c47205cd7814732a6288ea6495ba919edbb519d80de7"
+          },
+          {
+            "path": "docs/urbit/evidence/2026-09-26/phase1-final-dd0e8c0/core/native.json",
+            "pointer": "/commands/1576",
+            "sha256": "07540f0f574c7edf7264c47205cd7814732a6288ea6495ba919edbb519d80de7"
+          }
+        ],
+        "classification": "real-native-fake-ships",
+        "derivations": [
+          {
+            "fact_count": 891,
+            "pointer": "/derivations/capacity~1resource-boundaries",
+            "predicate_count": 7839
+          },
+          {
+            "fact_count": 3,
+            "pointer": "/derivations/qa~1create-second-project-after-primary-journey",
+            "predicate_count": 42
+          },
+          {
+            "fact_count": 6,
+            "pointer": "/derivations/qa~1bus-cannot-read-second-project",
+            "predicate_count": 11
+          },
+          {
+            "fact_count": 3,
+            "pointer": "/derivations/qa~1other-project-event-does-not-shift-primary-sequence",
+            "predicate_count": 43
+          },
+          {
+            "fact_count": 3,
+            "pointer": "/derivations/qa~1private-second-project-work-allocation",
+            "predicate_count": 46
+          },
+          {
+            "fact_count": 3,
+            "pointer": "/derivations/qa~1private-other-project-id-does-not-block-bus-work",
+            "predicate_count": 47
+          },
+          {
+            "fact_count": 6,
+            "pointer": "/derivations/qa~1bus-reads-own-work-same-id-as-private-project",
+            "predicate_count": 14
+          },
+          {
+            "fact_count": 9,
+            "pointer": "/derivations/core~1concurrency",
+            "predicate_count": 9
+          }
+        ],
+        "execution_lane": "core",
+        "id": "boundary-work",
+        "kind": "native",
+        "proof_artifact": {
+          "path": "docs/urbit/evidence/2026-09-26/phase1-final-dd0e8c0/derived-v7/proofs.json",
+          "pointer": "/proofs/boundary-work",
+          "sha256": "732a012c42e7a85b48b03e0568b94ba491cec7e84a013bc546f240a8f8d45212"
+        },
+        "required_assertions": [
+          "boundary-work"
+        ],
+        "scope": "128work/project boundary; scoped collision cases included; revision updates within bound remain coherent.",
+        "status": "passed",
+        "unique_fact_count": 924
+      },
+      {
+        "anchor_refs": [
+          {
+            "path": "docs/urbit/evidence/2026-09-26/phase1-final-dd0e8c0/core/native.json",
+            "pointer": "/commands/2486",
+            "sha256": "07540f0f574c7edf7264c47205cd7814732a6288ea6495ba919edbb519d80de7"
+          },
+          {
+            "path": "docs/urbit/evidence/2026-09-26/phase1-final-dd0e8c0/core/native.json",
+            "pointer": "/commands/3376",
+            "sha256": "07540f0f574c7edf7264c47205cd7814732a6288ea6495ba919edbb519d80de7"
+          }
+        ],
+        "classification": "real-native-fake-ships",
+        "derivations": [
+          {
+            "fact_count": 891,
+            "pointer": "/derivations/capacity~1resource-boundaries",
+            "predicate_count": 7839
+          }
+        ],
+        "execution_lane": "core",
+        "id": "boundary-documents-tree",
+        "kind": "native",
+        "proof_artifact": {
+          "path": "docs/urbit/evidence/2026-09-26/phase1-final-dd0e8c0/derived-v7/proofs.json",
+          "pointer": "/proofs/boundary-documents-tree",
+          "sha256": "732a012c42e7a85b48b03e0568b94ba491cec7e84a013bc546f240a8f8d45212"
+        },
+        "required_assertions": [
+          "boundary-documents-tree"
+        ],
+        "scope": "32documents/container and tree entry bound; rejected save leaves objects/ref/pointer/journal/receipt unchanged.",
+        "status": "passed",
+        "unique_fact_count": 891
+      },
+      {
+        "anchor_refs": [
+          {
+            "path": "docs/urbit/evidence/2026-09-26/phase1-final-dd0e8c0/core/native.json",
+            "pointer": "/commands/2486",
+            "sha256": "07540f0f574c7edf7264c47205cd7814732a6288ea6495ba919edbb519d80de7"
+          },
+          {
+            "path": "docs/urbit/evidence/2026-09-26/phase1-final-dd0e8c0/core/native.json",
+            "pointer": "/commands/3376",
+            "sha256": "07540f0f574c7edf7264c47205cd7814732a6288ea6495ba919edbb519d80de7"
+          }
+        ],
+        "classification": "real-native-fake-ships",
+        "derivations": [
+          {
+            "fact_count": 891,
+            "pointer": "/derivations/capacity~1resource-boundaries",
+            "predicate_count": 7839
+          }
+        ],
+        "execution_lane": "core",
+        "id": "boundary-container-history",
+        "kind": "native",
+        "proof_artifact": {
+          "path": "docs/urbit/evidence/2026-09-26/phase1-final-dd0e8c0/derived-v7/proofs.json",
+          "pointer": "/proofs/boundary-container-history",
+          "sha256": "732a012c42e7a85b48b03e0568b94ba491cec7e84a013bc546f240a8f8d45212"
+        },
+        "required_assertions": [
+          "boundary-container-history"
+        ],
+        "scope": "128commits/container; failed129th save has no admitted Git objects/ref or receipt.",
+        "status": "passed",
+        "unique_fact_count": 891
+      },
+      {
+        "anchor_refs": [
+          {
+            "path": "docs/urbit/evidence/2026-09-26/phase1-final-dd0e8c0/core/native.json",
+            "pointer": "/commands/2486",
+            "sha256": "07540f0f574c7edf7264c47205cd7814732a6288ea6495ba919edbb519d80de7"
+          },
+          {
+            "path": "docs/urbit/evidence/2026-09-26/phase1-final-dd0e8c0/core/native.json",
+            "pointer": "/commands/3376",
+            "sha256": "07540f0f574c7edf7264c47205cd7814732a6288ea6495ba919edbb519d80de7"
+          }
+        ],
+        "classification": "real-native-fake-ships",
+        "derivations": [
+          {
+            "fact_count": 891,
+            "pointer": "/derivations/capacity~1resource-boundaries",
+            "predicate_count": 7839
+          }
+        ],
+        "execution_lane": "core",
+        "id": "boundary-object-bytes",
+        "kind": "native",
+        "proof_artifact": {
+          "path": "docs/urbit/evidence/2026-09-26/phase1-final-dd0e8c0/derived-v7/proofs.json",
+          "pointer": "/proofs/boundary-object-bytes",
+          "sha256": "732a012c42e7a85b48b03e0568b94ba491cec7e84a013bc546f240a8f8d45212"
+        },
+        "required_assertions": [
+          "boundary-object-bytes"
+        ],
+        "scope": "8388608canonical object bytes; boundary refusal admits no object, ref, pointer or journal.",
+        "status": "passed",
+        "unique_fact_count": 891
+      },
+      {
+        "anchor_refs": [
+          {
+            "path": "docs/urbit/evidence/2026-09-26/phase1-final-dd0e8c0/core/native.json",
+            "pointer": "/commands/1850",
+            "sha256": "07540f0f574c7edf7264c47205cd7814732a6288ea6495ba919edbb519d80de7"
+          },
+          {
+            "path": "docs/urbit/evidence/2026-09-26/phase1-final-dd0e8c0/core/native.json",
+            "pointer": "/commands/2485",
+            "sha256": "07540f0f574c7edf7264c47205cd7814732a6288ea6495ba919edbb519d80de7"
+          }
+        ],
+        "classification": "real-native-fake-ships",
+        "derivations": [
+          {
+            "fact_count": 636,
+            "pointer": "/derivations/capacity~1exhaustion",
+            "predicate_count": 4780
+          }
+        ],
+        "execution_lane": "core",
+        "id": "boundary-ordinary-journal-receipts",
+        "kind": "native",
+        "proof_artifact": {
+          "path": "docs/urbit/evidence/2026-09-26/phase1-final-dd0e8c0/derived-v7/proofs.json",
+          "pointer": "/proofs/boundary-ordinary-journal-receipts",
+          "sha256": "732a012c42e7a85b48b03e0568b94ba491cec7e84a013bc546f240a8f8d45212"
+        },
+        "required_assertions": [
+          "boundary-ordinary-journal-receipts"
+        ],
+        "scope": "4096ordinary accepted events/receipts reached by real bounded native batches; no off-by-one or implicit successful rejection.",
+        "status": "passed",
+        "unique_fact_count": 636
+      },
+      {
+        "anchor_refs": [
+          {
+            "path": "docs/urbit/evidence/2026-09-26/phase1-final-dd0e8c0/core/native.json",
+            "pointer": "/commands/1657",
+            "sha256": "07540f0f574c7edf7264c47205cd7814732a6288ea6495ba919edbb519d80de7"
+          },
+          {
+            "path": "docs/urbit/evidence/2026-09-26/phase1-final-dd0e8c0/core/native.json",
+            "pointer": "/commands/1797",
+            "sha256": "07540f0f574c7edf7264c47205cd7814732a6288ea6495ba919edbb519d80de7"
+          }
+        ],
+        "classification": "real-native-fake-ships",
+        "derivations": [
+          {
+            "fact_count": 141,
+            "pointer": "/derivations/delivery~1pending-quotas",
+            "predicate_count": 10
+          }
+        ],
+        "execution_lane": "core",
+        "id": "boundary-pending",
+        "kind": "native",
+        "proof_artifact": {
+          "path": "docs/urbit/evidence/2026-09-26/phase1-final-dd0e8c0/derived-v7/proofs.json",
+          "pointer": "/proofs/boundary-pending",
+          "sha256": "732a012c42e7a85b48b03e0568b94ba491cec7e84a013bc546f240a8f8d45212"
+        },
+        "required_assertions": [
+          "boundary-pending"
+        ],
+        "scope": "16per-sender/64total pending reservations; no hidden metadata or business state changes.",
+        "status": "passed",
+        "unique_fact_count": 141
+      },
+      {
+        "anchor_refs": [
+          {
+            "path": "docs/urbit/evidence/2026-09-26/phase1-final-dd0e8c0/core/native.json",
+            "pointer": "/commands/1577",
+            "sha256": "07540f0f574c7edf7264c47205cd7814732a6288ea6495ba919edbb519d80de7"
+          },
+          {
+            "path": "docs/urbit/evidence/2026-09-26/phase1-final-dd0e8c0/core/native.json",
+            "pointer": "/commands/1588",
+            "sha256": "07540f0f574c7edf7264c47205cd7814732a6288ea6495ba919edbb519d80de7"
+          }
+        ],
+        "classification": "real-native-fake-ships",
+        "derivations": [
+          {
+            "fact_count": 12,
+            "pointer": "/derivations/delivery~1known-mark-and-held-outsider",
+            "predicate_count": 9
+          }
+        ],
+        "execution_lane": "core",
+        "id": "delivery-positive-known-mark-control",
+        "kind": "native",
+        "proof_artifact": {
+          "path": "docs/urbit/evidence/2026-09-26/phase1-final-dd0e8c0/derived-v7/proofs.json",
+          "pointer": "/proofs/delivery-positive-known-mark-control",
+          "sha256": "732a012c42e7a85b48b03e0568b94ba491cec7e84a013bc546f240a8f8d45212"
+        },
+        "required_assertions": [
+          "delivery-positive-known-mark-control"
+        ],
+        "scope": "Actual valid stead-result-2 fact/control proves observer sees delivered leak metadata; zero-evidence claim fails if observer faults/runtime loses mark.",
+        "status": "passed",
+        "unique_fact_count": 12
+      },
+      {
+        "anchor_refs": [
+          {
+            "path": "docs/urbit/evidence/2026-09-26/phase1-final-dd0e8c0/core/native.json",
+            "pointer": "/commands/1610",
+            "sha256": "07540f0f574c7edf7264c47205cd7814732a6288ea6495ba919edbb519d80de7"
+          },
+          {
+            "path": "docs/urbit/evidence/2026-09-26/phase1-final-dd0e8c0/core/native.json",
+            "pointer": "/commands/1656",
+            "sha256": "07540f0f574c7edf7264c47205cd7814732a6288ea6495ba919edbb519d80de7"
+          }
+        ],
+        "classification": "real-native-fake-ships",
+        "derivations": [
+          {
+            "fact_count": 15,
+            "pointer": "/derivations/delivery~1leave-and-fresh-retry",
+            "predicate_count": 9
+          },
+          {
+            "fact_count": 32,
+            "pointer": "/derivations/delivery~1lazy-expiry-and-same-path-retirement",
+            "predicate_count": 13
+          }
+        ],
+        "execution_lane": "core",
+        "id": "delivery-ended-duct-no-late-fact",
+        "kind": "native",
+        "proof_artifact": {
+          "path": "docs/urbit/evidence/2026-09-26/phase1-final-dd0e8c0/derived-v7/proofs.json",
+          "pointer": "/proofs/delivery-ended-duct-no-late-fact",
+          "sha256": "732a012c42e7a85b48b03e0568b94ba491cec7e84a013bc546f240a8f8d45212"
+        },
+        "required_assertions": [
+          "delivery-ended-duct-no-late-fact"
+        ],
+        "scope": "Completed/cancelled/expired old ducts receive no later private fact; fresh exact registration is a distinct authorized attempt.",
+        "status": "passed",
+        "unique_fact_count": 47
+      },
+      {
+        "anchor_refs": [
+          {
+            "path": "docs/urbit/evidence/2026-09-26/phase1-final-dd0e8c0/core/native.json",
+            "pointer": "/commands/1625",
+            "sha256": "07540f0f574c7edf7264c47205cd7814732a6288ea6495ba919edbb519d80de7"
+          },
+          {
+            "path": "docs/urbit/evidence/2026-09-26/phase1-final-dd0e8c0/core/native.json",
+            "pointer": "/commands/1656",
+            "sha256": "07540f0f574c7edf7264c47205cd7814732a6288ea6495ba919edbb519d80de7"
+          }
+        ],
+        "classification": "real-native-fake-ships",
+        "derivations": [
+          {
+            "fact_count": 32,
+            "pointer": "/derivations/delivery~1lazy-expiry-and-same-path-retirement",
+            "predicate_count": 13
+          }
+        ],
+        "execution_lane": "core",
+        "id": "delivery-expired-same-path-reregistration",
+        "kind": "native",
+        "proof_artifact": {
+          "path": "docs/urbit/evidence/2026-09-26/phase1-final-dd0e8c0/derived-v7/proofs.json",
+          "pointer": "/proofs/delivery-expired-same-path-reregistration",
+          "sha256": "732a012c42e7a85b48b03e0568b94ba491cec7e84a013bc546f240a8f8d45212"
+        },
+        "required_assertions": [
+          "delivery-expired-same-path-reregistration"
+        ],
+        "scope": "After60s expired same path is retired; ACK+kick without fact means no result. A subsequent fresh registration has a live recipient.",
+        "status": "passed",
+        "unique_fact_count": 32
+      },
+      {
+        "anchor_refs": [
+          {
+            "path": "docs/urbit/evidence/2026-09-26/phase1-final-dd0e8c0/gall/native.json",
+            "pointer": "/commands/27",
+            "sha256": "7685c7937a5dc55c0d25769dae1e2f720fd9fb7ef6c67d525115d533d297d890"
+          },
+          {
+            "path": "docs/urbit/evidence/2026-09-26/phase1-final-dd0e8c0/gall/native.json",
+            "pointer": "/commands/28",
+            "sha256": "7685c7937a5dc55c0d25769dae1e2f720fd9fb7ef6c67d525115d533d297d890"
+          }
+        ],
+        "classification": "native-scheduled-gall",
+        "derivations": [
+          {
+            "fact_count": 2,
+            "pointer": "/derivations/schedule~1late-old-leave",
+            "predicate_count": 14
+          }
+        ],
+        "execution_lane": "gall_schedule",
+        "id": "delivery-late-old-leave",
+        "kind": "native",
+        "proof_artifact": {
+          "path": "docs/urbit/evidence/2026-09-26/phase1-final-dd0e8c0/derived-v7/proofs.json",
+          "pointer": "/proofs/delivery-late-old-leave",
+          "sha256": "732a012c42e7a85b48b03e0568b94ba491cec7e84a013bc546f240a8f8d45212"
+        },
+        "required_assertions": [
+          "delivery-late-old-leave"
+        ],
+        "scope": "Retired old duct leave cannot delete a new same-path reservation; actual native observer and pending state are recorded.",
+        "status": "passed",
+        "unique_fact_count": 2
+      },
+      {
+        "anchor_refs": [
+          {
+            "path": "docs/urbit/evidence/2026-09-26/phase1-final-dd0e8c0/core/native.json",
+            "pointer": "/commands/1625",
+            "sha256": "07540f0f574c7edf7264c47205cd7814732a6288ea6495ba919edbb519d80de7"
+          },
+          {
+            "path": "docs/urbit/evidence/2026-09-26/phase1-final-dd0e8c0/core/native.json",
+            "pointer": "/commands/1656",
+            "sha256": "07540f0f574c7edf7264c47205cd7814732a6288ea6495ba919edbb519d80de7"
+          }
+        ],
+        "classification": "real-native-fake-ships",
+        "derivations": [
+          {
+            "fact_count": 32,
+            "pointer": "/derivations/delivery~1lazy-expiry-and-same-path-retirement",
+            "predicate_count": 13
+          }
+        ],
+        "execution_lane": "core",
+        "id": "delivery-expiration-lazy",
+        "kind": "native",
+        "proof_artifact": {
+          "path": "docs/urbit/evidence/2026-09-26/phase1-final-dd0e8c0/derived-v7/proofs.json",
+          "pointer": "/proofs/delivery-expiration-lazy",
+          "sha256": "732a012c42e7a85b48b03e0568b94ba491cec7e84a013bc546f240a8f8d45212"
+        },
+        "required_assertions": [
+          "delivery-expiration-lazy"
+        ],
+        "scope": "Record real time and later triggering event; no claim of autonomous cleanup timer.",
+        "status": "passed",
+        "unique_fact_count": 32
+      },
+      {
+        "anchor_refs": [
+          {
+            "path": "docs/urbit/evidence/2026-09-26/phase1-final-dd0e8c0/core/native.json",
+            "pointer": "/commands/1610",
+            "sha256": "07540f0f574c7edf7264c47205cd7814732a6288ea6495ba919edbb519d80de7"
+          },
+          {
+            "path": "docs/urbit/evidence/2026-09-26/phase1-final-dd0e8c0/core/native.json",
+            "pointer": "/commands/1624",
+            "sha256": "07540f0f574c7edf7264c47205cd7814732a6288ea6495ba919edbb519d80de7"
+          }
+        ],
+        "classification": "real-native-fake-ships",
+        "derivations": [
+          {
+            "fact_count": 15,
+            "pointer": "/derivations/delivery~1leave-and-fresh-retry",
+            "predicate_count": 9
+          }
+        ],
+        "execution_lane": "core",
+        "id": "delivery-leave-cancels",
+        "kind": "native",
+        "proof_artifact": {
+          "path": "docs/urbit/evidence/2026-09-26/phase1-final-dd0e8c0/derived-v7/proofs.json",
+          "pointer": "/proofs/delivery-leave-cancels",
+          "sha256": "732a012c42e7a85b48b03e0568b94ba491cec7e84a013bc546f240a8f8d45212"
+        },
+        "required_assertions": [
+          "delivery-leave-cancels"
+        ],
+        "scope": "Current sender leave frees pending route without accepted business change; old route gets no content.",
+        "status": "passed",
+        "unique_fact_count": 15
+      },
+      {
+        "anchor_refs": [
+          {
+            "path": "docs/urbit/evidence/2026-09-26/phase1-final-dd0e8c0/core/native.json",
+            "pointer": "/commands/1577",
+            "sha256": "07540f0f574c7edf7264c47205cd7814732a6288ea6495ba919edbb519d80de7"
+          },
+          {
+            "path": "docs/urbit/evidence/2026-09-26/phase1-final-dd0e8c0/core/native.json",
+            "pointer": "/commands/1588",
+            "sha256": "07540f0f574c7edf7264c47205cd7814732a6288ea6495ba919edbb519d80de7"
+          }
+        ],
+        "classification": "real-native-fake-ships",
+        "derivations": [
+          {
+            "fact_count": 12,
+            "pointer": "/derivations/delivery~1known-mark-and-held-outsider",
+            "predicate_count": 9
+          }
+        ],
+        "execution_lane": "core",
+        "id": "delivery-same-path-private-readers",
+        "kind": "native",
+        "proof_artifact": {
+          "path": "docs/urbit/evidence/2026-09-26/phase1-final-dd0e8c0/derived-v7/proofs.json",
+          "pointer": "/proofs/delivery-same-path-private-readers",
+          "sha256": "732a012c42e7a85b48b03e0568b94ba491cec7e84a013bc546f240a8f8d45212"
+        },
+        "required_assertions": [
+          "delivery-same-path-private-readers"
+        ],
+        "scope": "Held outsider same-path duct receives no owner read content; outsider release only yields exact denial.",
+        "status": "passed",
+        "unique_fact_count": 12
+      },
+      {
+        "anchor_refs": [
+          {
+            "path": "docs/urbit/evidence/2026-09-26/phase1-final-dd0e8c0/core/native.json",
+            "pointer": "/commands/1589",
+            "sha256": "07540f0f574c7edf7264c47205cd7814732a6288ea6495ba919edbb519d80de7"
+          },
+          {
+            "path": "docs/urbit/evidence/2026-09-26/phase1-final-dd0e8c0/core/native.json",
+            "pointer": "/commands/1609",
+            "sha256": "07540f0f574c7edf7264c47205cd7814732a6288ea6495ba919edbb519d80de7"
+          }
+        ],
+        "classification": "real-native-fake-ships",
+        "derivations": [
+          {
+            "fact_count": 8,
+            "pointer": "/derivations/delivery~1wrong-sender-and-binding",
+            "predicate_count": 7
+          },
+          {
+            "fact_count": 13,
+            "pointer": "/derivations/delivery~1missing-channel-and-wrong-digest",
+            "predicate_count": 13
+          }
+        ],
+        "execution_lane": "core",
+        "id": "delivery-wrong-sender-digest",
+        "kind": "native",
+        "proof_artifact": {
+          "path": "docs/urbit/evidence/2026-09-26/phase1-final-dd0e8c0/derived-v7/proofs.json",
+          "pointer": "/proofs/delivery-wrong-sender-digest",
+          "sha256": "732a012c42e7a85b48b03e0568b94ba491cec7e84a013bc546f240a8f8d45212"
+        },
+        "required_assertions": [
+          "delivery-wrong-sender-digest"
+        ],
+        "scope": "Wrong source/binding/digest cannot reserve or consume another sender result.",
+        "status": "passed",
+        "unique_fact_count": 21
+      },
+      {
+        "anchor_refs": [
+          {
+            "path": "docs/urbit/evidence/2026-09-26/phase1-final-dd0e8c0/core/native.json",
+            "pointer": "/commands/1597",
+            "sha256": "07540f0f574c7edf7264c47205cd7814732a6288ea6495ba919edbb519d80de7"
+          },
+          {
+            "path": "docs/urbit/evidence/2026-09-26/phase1-final-dd0e8c0/core/native.json",
+            "pointer": "/commands/1609",
+            "sha256": "07540f0f574c7edf7264c47205cd7814732a6288ea6495ba919edbb519d80de7"
+          }
+        ],
+        "classification": "real-native-fake-ships",
+        "derivations": [
+          {
+            "fact_count": 13,
+            "pointer": "/derivations/delivery~1missing-channel-and-wrong-digest",
+            "predicate_count": 13
+          }
+        ],
+        "execution_lane": "core",
+        "id": "delivery-missing-channel",
+        "kind": "native",
+        "proof_artifact": {
+          "path": "docs/urbit/evidence/2026-09-26/phase1-final-dd0e8c0/derived-v7/proofs.json",
+          "pointer": "/proofs/delivery-missing-channel",
+          "sha256": "732a012c42e7a85b48b03e0568b94ba491cec7e84a013bc546f240a8f8d45212"
+        },
+        "required_assertions": [
+          "delivery-missing-channel"
+        ],
+        "scope": "Command may durably accept without a result channel; ACK alone cannot be shown Saved; current-authorized recovery required.",
+        "status": "passed",
+        "unique_fact_count": 13
+      },
+      {
+        "anchor_refs": [
+          {
+            "path": "docs/urbit/evidence/2026-09-26/phase1-final-dd0e8c0/core/native.json",
+            "pointer": "/commands/1798",
+            "sha256": "07540f0f574c7edf7264c47205cd7814732a6288ea6495ba919edbb519d80de7"
+          },
+          {
+            "path": "docs/urbit/evidence/2026-09-26/phase1-final-dd0e8c0/core/native.json",
+            "pointer": "/commands/1800",
+            "sha256": "07540f0f574c7edf7264c47205cd7814732a6288ea6495ba919edbb519d80de7"
+          }
+        ],
+        "classification": "real-native-fake-ships",
+        "derivations": [
+          {
+            "fact_count": 3,
+            "pointer": "/derivations/delivery~1home-unavailable",
+            "predicate_count": 7
+          }
+        ],
+        "execution_lane": "core",
+        "id": "delivery-home-unavailable",
+        "kind": "native",
+        "proof_artifact": {
+          "path": "docs/urbit/evidence/2026-09-26/phase1-final-dd0e8c0/derived-v7/proofs.json",
+          "pointer": "/proofs/delivery-home-unavailable",
+          "sha256": "732a012c42e7a85b48b03e0568b94ba491cec7e84a013bc546f240a8f8d45212"
+        },
+        "required_assertions": [
+          "delivery-home-unavailable"
+        ],
+        "scope": "Stopped/unreachable home produces unavailable/pending; no fabricated accepted receipt.",
+        "status": "passed",
+        "unique_fact_count": 3
+      },
+      {
+        "anchor_refs": [
+          {
+            "path": "docs/urbit/evidence/2026-09-26/phase1-final-dd0e8c0/core/native.json",
+            "pointer": "/commands/1610",
+            "sha256": "07540f0f574c7edf7264c47205cd7814732a6288ea6495ba919edbb519d80de7"
+          },
+          {
+            "path": "docs/urbit/evidence/2026-09-26/phase1-final-dd0e8c0/core/native.json",
+            "pointer": "/commands/1656",
+            "sha256": "07540f0f574c7edf7264c47205cd7814732a6288ea6495ba919edbb519d80de7"
+          }
+        ],
+        "classification": "real-native-fake-ships",
+        "derivations": [
+          {
+            "fact_count": 15,
+            "pointer": "/derivations/delivery~1leave-and-fresh-retry",
+            "predicate_count": 9
+          },
+          {
+            "fact_count": 32,
+            "pointer": "/derivations/delivery~1lazy-expiry-and-same-path-retirement",
+            "predicate_count": 13
+          }
+        ],
+        "execution_lane": "core",
+        "id": "delivery-late-response",
+        "kind": "native",
+        "proof_artifact": {
+          "path": "docs/urbit/evidence/2026-09-26/phase1-final-dd0e8c0/derived-v7/proofs.json",
+          "pointer": "/proofs/delivery-late-response",
+          "sha256": "732a012c42e7a85b48b03e0568b94ba491cec7e84a013bc546f240a8f8d45212"
+        },
+        "required_assertions": [
+          "delivery-late-response"
+        ],
+        "scope": "Late result on expired/cancelled route cannot become current Saved state or reopen old duct.",
+        "status": "passed",
+        "unique_fact_count": 47
+      },
+      {
+        "anchor_refs": [
+          {
+            "path": "docs/urbit/evidence/2026-09-26/phase1-final-dd0e8c0/core/native.json",
+            "pointer": "/commands/1559",
+            "sha256": "07540f0f574c7edf7264c47205cd7814732a6288ea6495ba919edbb519d80de7"
+          },
+          {
+            "path": "docs/urbit/evidence/2026-09-26/phase1-final-dd0e8c0/core/native.json",
+            "pointer": "/commands/1567",
+            "sha256": "07540f0f574c7edf7264c47205cd7814732a6288ea6495ba919edbb519d80de7"
+          }
+        ],
+        "classification": "real-native-fake-ships",
+        "derivations": [
+          {
+            "fact_count": 9,
+            "pointer": "/derivations/core~1roundtrip",
+            "predicate_count": 10
+          }
+        ],
+        "execution_lane": "core",
+        "id": "migration-current-roundtrip",
+        "kind": "native",
+        "proof_artifact": {
+          "path": "docs/urbit/evidence/2026-09-26/phase1-final-dd0e8c0/derived-v7/proofs.json",
+          "pointer": "/proofs/migration-current-roundtrip",
+          "sha256": "732a012c42e7a85b48b03e0568b94ba491cec7e84a013bc546f240a8f8d45212"
+        },
+        "required_assertions": [
+          "migration-current-roundtrip"
+        ],
+        "scope": "Current%2save/load preserves exact state; distinct from predecessor migration.",
+        "status": "passed",
+        "unique_fact_count": 9
+      },
+      {
+        "anchor_refs": [
+          {
+            "path": "docs/urbit/evidence/2026-09-26/phase1-final-dd0e8c0/core/native.json",
+            "pointer": "/commands/1850",
+            "sha256": "07540f0f574c7edf7264c47205cd7814732a6288ea6495ba919edbb519d80de7"
+          },
+          {
+            "path": "docs/urbit/evidence/2026-09-26/phase1-final-dd0e8c0/core/native.json",
+            "pointer": "/commands/2485",
+            "sha256": "07540f0f574c7edf7264c47205cd7814732a6288ea6495ba919edbb519d80de7"
+          }
+        ],
+        "classification": "real-native-fake-ships",
+        "derivations": [
+          {
+            "fact_count": 636,
+            "pointer": "/derivations/capacity~1exhaustion",
+            "predicate_count": 4780
+          }
+        ],
+        "execution_lane": "core",
+        "id": "migration-actual-v1-vase",
+        "kind": "native",
+        "proof_artifact": {
+          "path": "docs/urbit/evidence/2026-09-26/phase1-final-dd0e8c0/derived-v7/proofs.json",
+          "pointer": "/proofs/migration-actual-v1-vase",
+          "sha256": "732a012c42e7a85b48b03e0568b94ba491cec7e84a013bc546f240a8f8d45212"
+        },
+        "required_assertions": [
+          "migration-actual-v1-vase"
+        ],
+        "scope": "Actual provenance-built predecessor%1state migrates to%2without changing Git/audit bytes, grants or acceptance count; not OTA proof.",
+        "status": "passed",
+        "unique_fact_count": 636
+      },
+      {
+        "anchor_refs": [
+          {
+            "path": "docs/urbit/evidence/2026-09-26/phase1-final-dd0e8c0/core/native.json",
+            "pointer": "/commands/1850",
+            "sha256": "07540f0f574c7edf7264c47205cd7814732a6288ea6495ba919edbb519d80de7"
+          },
+          {
+            "path": "docs/urbit/evidence/2026-09-26/phase1-final-dd0e8c0/core/native.json",
+            "pointer": "/commands/2485",
+            "sha256": "07540f0f574c7edf7264c47205cd7814732a6288ea6495ba919edbb519d80de7"
+          }
+        ],
+        "classification": "real-native-fake-ships",
+        "derivations": [
+          {
+            "fact_count": 636,
+            "pointer": "/derivations/capacity~1exhaustion",
+            "predicate_count": 4780
+          }
+        ],
+        "execution_lane": "core",
+        "id": "migration-legacy-receipt-projection",
+        "kind": "native",
+        "proof_artifact": {
+          "path": "docs/urbit/evidence/2026-09-26/phase1-final-dd0e8c0/derived-v7/proofs.json",
+          "pointer": "/proofs/migration-legacy-receipt-projection",
+          "sha256": "732a012c42e7a85b48b03e0568b94ba491cec7e84a013bc546f240a8f8d45212"
+        },
+        "required_assertions": [
+          "migration-legacy-receipt-projection"
+        ],
+        "scope": "Retained v1 canonical digest/time/OID survive current-authorized v2 retry/recovery projection; unaccepted legacy command rejects.",
+        "status": "passed",
+        "unique_fact_count": 636
+      },
+      {
+        "anchor_refs": [
+          {
+            "path": "docs/urbit/evidence/2026-09-26/phase1-final-dd0e8c0/core/native.json",
+            "pointer": "/commands/1559",
+            "sha256": "07540f0f574c7edf7264c47205cd7814732a6288ea6495ba919edbb519d80de7"
+          },
+          {
+            "path": "docs/urbit/evidence/2026-09-26/phase1-final-dd0e8c0/core/native.json",
+            "pointer": "/commands/2485",
+            "sha256": "07540f0f574c7edf7264c47205cd7814732a6288ea6495ba919edbb519d80de7"
+          }
+        ],
+        "classification": "real-native-fake-ships",
+        "derivations": [
+          {
+            "fact_count": 9,
+            "pointer": "/derivations/core~1roundtrip",
+            "predicate_count": 10
+          },
+          {
+            "fact_count": 636,
+            "pointer": "/derivations/capacity~1exhaustion",
+            "predicate_count": 4780
+          }
+        ],
+        "execution_lane": "core",
+        "id": "migration-invalid-predecessors",
+        "kind": "native",
+        "proof_artifact": {
+          "path": "docs/urbit/evidence/2026-09-26/phase1-final-dd0e8c0/derived-v7/proofs.json",
+          "pointer": "/proofs/migration-invalid-predecessors",
+          "sha256": "732a012c42e7a85b48b03e0568b94ba491cec7e84a013bc546f240a8f8d45212"
+        },
+        "required_assertions": [
+          "migration-invalid-predecessors"
+        ],
+        "scope": "Counter/future/malformed predecessor rejects without active-state reset or partial conversion.",
+        "status": "passed",
+        "unique_fact_count": 645
+      },
+      {
+        "anchor_refs": [
+          {
+            "path": "docs/urbit/evidence/2026-09-26/phase1-final-dd0e8c0/core/native.json",
+            "pointer": "/commands/763",
+            "sha256": "07540f0f574c7edf7264c47205cd7814732a6288ea6495ba919edbb519d80de7"
+          },
+          {
+            "path": "docs/urbit/evidence/2026-09-26/phase1-final-dd0e8c0/core/native.json",
+            "pointer": "/commands/917",
+            "sha256": "07540f0f574c7edf7264c47205cd7814732a6288ea6495ba919edbb519d80de7"
+          }
+        ],
+        "classification": "real-native-fake-ships",
+        "derivations": [
+          {
+            "fact_count": 63,
+            "pointer": "/derivations/qa~1restart-preserves-content-policy-objects-and-journal",
+            "predicate_count": 150
+          },
+          {
+            "fact_count": 3,
+            "pointer": "/derivations/qa~1accepted-retry-after-restart",
+            "predicate_count": 10
+          },
+          {
+            "fact_count": 6,
+            "pointer": "/derivations/qa~1denial-after-restart",
+            "predicate_count": 11
+          },
+          {
+            "fact_count": 18,
+            "pointer": "/derivations/qa~1export-after-restart-has-identical-git-bytes",
+            "predicate_count": 97
+          }
+        ],
+        "execution_lane": "core",
+        "id": "warm-home-restart",
+        "kind": "native",
+        "proof_artifact": {
+          "path": "docs/urbit/evidence/2026-09-26/phase1-final-dd0e8c0/derived-v7/proofs.json",
+          "pointer": "/proofs/warm-home-restart",
+          "sha256": "732a012c42e7a85b48b03e0568b94ba491cec7e84a013bc546f240a8f8d45212"
+        },
+        "required_assertions": [
+          "warm-home-restart"
+        ],
+        "scope": "Graceful fenced process replacement retains accepted revisions, policy and canonical Git bytes; not abrupt crash.",
+        "status": "passed",
+        "unique_fact_count": 90
+      },
+      {
+        "anchor_refs": [
+          {
+            "path": "docs/urbit/evidence/2026-09-26/phase1-final-dd0e8c0/core/native.json",
+            "pointer": "/commands/0",
+            "sha256": "07540f0f574c7edf7264c47205cd7814732a6288ea6495ba919edbb519d80de7"
+          },
+          {
+            "path": "docs/urbit/evidence/2026-09-26/phase1-final-dd0e8c0/core/native.json",
+            "pointer": "/commands/1",
+            "sha256": "07540f0f574c7edf7264c47205cd7814732a6288ea6495ba919edbb519d80de7"
+          },
+          {
+            "path": "docs/urbit/evidence/2026-09-26/phase1-final-dd0e8c0/core/native.json",
+            "pointer": "/commands/2",
+            "sha256": "07540f0f574c7edf7264c47205cd7814732a6288ea6495ba919edbb519d80de7"
+          }
+        ],
+        "classification": "real-native-evaluator",
+        "derivations": [
+          {
+            "fact_count": 3,
+            "pointer": "/derivations/core~1evaluator",
+            "predicate_count": 3
+          }
+        ],
+        "execution_lane": "core",
+        "id": "evaluator-error-boundaries",
+        "kind": "native",
+        "proof_artifact": {
+          "path": "docs/urbit/evidence/2026-09-26/phase1-final-dd0e8c0/derived-v7/proofs.json",
+          "pointer": "/proofs/evaluator-error-boundaries",
+          "sha256": "732a012c42e7a85b48b03e0568b94ba491cec7e84a013bc546f240a8f8d45212"
+        },
+        "required_assertions": [
+          "evaluator-error-boundaries"
+        ],
+        "scope": "Pinned native evaluator errors and >64KiB framing regression cannot produce a successful native report.",
+        "status": "passed",
+        "unique_fact_count": 3
+      },
+      {
+        "classification": null,
+        "id": "delivery-host-order-permutations",
+        "kind": "host_mocked",
+        "proof_artifact": {
+          "path": "docs/urbit/evidence/2026-09-26/phase1-nonnative-v5/source-dispositions.json",
+          "pointer": "/proofs/delivery-host-order-permutations",
+          "sha256": "4e4a48a9a408650780a941fdb74b1cee525aeb15b1bb6a3c10ecc1c0c7b02065"
+        },
+        "required_assertions": [
+          "fact-before-ack",
+          "ack-before-fact",
+          "kick-before-ack",
+          "nack-is-not-accepted",
+          "ack-without-result",
+          "timeout-partial-missing-never-saved"
+        ],
+        "reviewed_source_files": {
+          "scripts/urbit/delivery_cases.py": "171edf429fc1677e3250bcebff4cd2fb55e762d767204afdae846f86deccc131"
+        },
+        "reviewer": "/root/independent_review",
+        "scope": "Host reducer preserves real acceptance only for exact correlated receipts; no live reordering claim.",
+        "status": "passed"
+      }
+    ],
+    "native_passed": 66,
+    "native_required": 66,
+    "source_commit": "dd0e8c0ce8d1d00f15de6b07e2e26d368c5c3774",
+    "source_files_verified": 128,
+    "status": "all73-retained-proofs-and-source-verified"
+  },
+  "supplemental_artifacts": [
+    {
+      "path": "docs/urbit/evidence/2026-09-26/phase1-final-dd0e8c0/reviews/core07-independent-review.json",
+      "sha256": "83d78b1c242adc3406c0d6cf0c38a3ca2da80b9a8a81d0ddb8dea5f9c94e0ccc",
+      "bytes": 67336
+    },
+    {
+      "path": "docs/urbit/evidence/2026-09-26/phase1-final-dd0e8c0/reviews/gall-final04-independent-review.json",
+      "sha256": "a0d5cfbdc487c6fac185deafc75752dd458eab20b6776c303b96e04aa12a7b44",
+      "bytes": 33228
+    },
+    {
+      "path": "docs/urbit/evidence/2026-09-26/phase1-final-dd0e8c0/reviews/nonnative-v5-dd0e8c0-portable-audit.json",
+      "sha256": "6ff66c7a6f6d4ec1fd294cba4cbdb1d60be357e17c38be55518daa0975ce5475",
+      "bytes": 30270
+    },
+    {
+      "path": "docs/urbit/evidence/2026-09-26/phase1-final-dd0e8c0/reviews/integration-readiness.json",
+      "sha256": "6e6e6c6a720a98d99c0671a94f2b937d438f2a1caa1e4d43ee2678f1716b0fc7",
+      "bytes": 46043
+    },
+    {
+      "path": "docs/urbit/evidence/2026-09-26/phase1-final-dd0e8c0/reviews/integration-readiness-publication-addendum.json",
+      "sha256": "612614a3911d65ad74d20aef30fd2332cae7559dbd365be6b0d410008b4712f1",
+      "bytes": 5001
+    },
+    {
+      "path": "docs/urbit/evidence/2026-09-26/phase1-final-dd0e8c0/source-preservation.json",
+      "sha256": "f22cdc5dd33bb7a289b0b9a19c66f6fd6baa7513316f8be09a23fd8aafd94d88",
+      "bytes": 24904
+    },
+    {
+      "path": "docs/urbit/evidence/2026-09-26/phase1-nonnative-v5/source-dispositions.json",
+      "sha256": "4e4a48a9a408650780a941fdb74b1cee525aeb15b1bb6a3c10ecc1c0c7b02065",
+      "bytes": 47093
+    },
+    {
+      "path": "docs/urbit/evidence/2026-09-26/phase1-nonnative-v5/dispositions.json",
+      "sha256": "a5e2e736cbc27912a8a0137ed3c2fbeeec87faa49a4061ae3fe5e44c09b06975",
+      "bytes": 5765
+    },
+    {
+      "path": "docs/urbit/evidence/2026-09-26/phase1-nonnative-v5/historical-guard-continuity.json",
+      "sha256": "2bd3b2007daf5e916680b36e48a51d66d8b15035f599ac4219be76b44fd70463",
+      "bytes": 3761
+    },
+    {
+      "path": "docs/urbit/evidence/2026-09-26/phase1-nonnative-v6/source-dispositions.json",
+      "sha256": "4b174ed43e3a9ca6e44ecc16aeb3e64ecdeeb91f7e07e46eaee830b75eb97511",
+      "bytes": 47239
+    },
+    {
+      "path": "docs/urbit/evidence/2026-09-26/phase1-nonnative-v6/dispositions.json",
+      "sha256": "9c5f64bd88b862e8cd9c15ca594184b7c7b3258a3b3d09fa86f26c2bdfa71e0d",
+      "bytes": 5765
+    },
+    {
+      "path": "docs/urbit/evidence/2026-09-26/phase1-nonnative-v6/scope-correction.json",
+      "sha256": "bc62a9c0b48f0970f35698c74ceba8b6f254801db70cd14c9bfa5de4ad764096",
+      "bytes": 1812
+    },
+    {
+      "path": "docs/urbit/evidence/2026-09-26/phase1-nonnative-v7/historical-guard-continuity.json",
+      "sha256": "a9ac599f5f5af6e186535f83410037c020cefc9639f2252d23c8990d91545d48",
+      "bytes": 3761
+    },
+    {
+      "path": "docs/urbit/evidence/2026-09-26/phase1-nonnative-v7/dispositions.json",
+      "sha256": "73c09bf39adb34dfeef6f5cfac4c35ac1b556f43dbb3fb283d495e3d4d1bb029",
+      "bytes": 5765
+    },
+    {
+      "path": "docs/urbit/evidence/2026-09-26/phase1-nonnative-v7/continuity-correction.json",
+      "sha256": "0f194161e325c00f60f75ae74d6280ea2dacb0e3e836251a7f7017708493cfa2",
+      "bytes": 1497
+    },
+    {
+      "path": "docs/urbit/evidence/2026-09-26/phase1-final-dd0e8c0/derived/qualification.json",
+      "sha256": "52722c11604a90d782e75313fd6c8be5bf613d8ac54c7b75828eefe7bca6d7bf",
+      "bytes": 266
+    },
+    {
+      "path": "docs/urbit/evidence/2026-09-26/phase1-final-dd0e8c0/derived-v6/qualification.json",
+      "sha256": "92b7b8b43e04d130ef8a3be225622bdbe495f31c91b7f8e658303fd4a696725a",
+      "bytes": 268
+    },
+    {
+      "path": "specs/urbit/v2/qualification-gate.json",
+      "sha256": "f374349cc3ccd64993e3dade9a44e306854479c228b7f93d6559647006aee94c",
+      "bytes": 30049
+    },
+    {
+      "path": "specs/urbit/backlog.json",
+      "sha256": "7a2395a19c77ec08d1ed7c96eae393be44f7c367b5065e3fbb0523262f4ba116",
+      "bytes": 8288
+    },
+    {
+      "path": "docs/urbit/MASTER_BUILD_DIRECTIVE.md",
+      "sha256": "30cd338df7f716b040f6337d5b3de97da1704c6b39c7a3124a95c40a7a1653ab",
+      "bytes": 17519
+    },
+    {
+      "path": "docs/urbit/evidence/2026-09-26/workflow-evaluation-v2/URB170_FINAL_ACCEPTANCE_REVIEW.json",
+      "sha256": "e645d2402957daa98016ff1b4e9bc937b45dfc413177604eb25c0756ad29ac34",
+      "bytes": 14011
+    },
+    {
+      "path": ".runtime/phase01-20260926/integration-preparation/integration-plan-core07.json",
+      "sha256": "78054aa6a2051c03eac8cdc4142b71257db74f75e4c7efc614cb7d764b28736f",
+      "bytes": 922
+    }
+  ],
+  "reviewed_documents": [
+    {
+      "path": "README.md",
+      "sha256": "3c9e9ad4486f7156d78cf17b6a10d697af575c2e75fbd6ba7a81451fdbe7e2e1",
+      "bytes": 3712
+    },
+    {
+      "path": "docs/urbit/DEV_FLOW.md",
+      "sha256": "f97ea21be6b899658d5a4ea9a2c49d9fd0bc30918a2f294327c9cf7c10076ce1",
+      "bytes": 11455
+    },
+    {
+      "path": "docs/urbit/NATIVE_CORE.md",
+      "sha256": "53bc351d1c382942db5e80d02b76ead7606e72a04d3fbe4096f89e33aba0fbdf",
+      "bytes": 7329
+    },
+    {
+      "path": "docs/urbit/PHASE01_CHECKPOINT_20260926.md",
+      "sha256": "9ac83c36a5a04363206d1facb4fd9c7740a44ccbac96cbebd4e5e7fd6a620039",
+      "bytes": 12925
+    },
+    {
+      "path": "docs/urbit/PHASE1_CLOSEOUT.md",
+      "sha256": "f1d8bb99bf6c076a50ab09b1489090493f7dbc97a6cdfb26f05ef546bc1b7fa0",
+      "bytes": 10057
+    },
+    {
+      "path": "docs/urbit/ROADMAP.md",
+      "sha256": "a7409ec0f9954558f3de1ac8c0058c21faee7aad089080431f46a339972b0b5c",
+      "bytes": 4298
+    },
+    {
+      "path": "docs/urbit/TEST_RESULTS.md",
+      "sha256": "3ad7bda23bb4cde2f1c7563e0f191d3417f73a675a26db53e99c3db81e709439",
+      "bytes": 28397
+    },
+    {
+      "path": "docs/urbit/PHASE1_ACCEPTANCE_20260926.md",
+      "sha256": "a62152fe45af58a446242f8f080be863ae45b08b706d220039945e6b25c5bddb",
+      "bytes": 4740
+    },
+    {
+      "path": "docs/urbit/reviews/PHASE1_RESTART_SCOPE_CORRECTION_20260926.md",
+      "sha256": "77943d2433afafff43683c7d0921b32609fc750b509a89fa299e704d6c00f85e",
+      "bytes": 2532
+    }
+  ],
+  "peer_review": {
+    "reviewer": "/root/gall_schedule_review",
+    "status": "accepted-for-bounded-complete-core-execution",
+    "unresolved_core_findings": [],
+    "record": "docs/urbit/evidence/2026-09-26/phase1-final-dd0e8c0/reviews/core07-independent-review.json",
+    "sha256": "83d78b1c242adc3406c0d6cf0c38a3ca2da80b9a8a81d0ddb8dea5f9c94e0ccc",
+    "verified_counts": {
+      "direct_checks": 496,
+      "qa": {
+        "incomplete": 3,
+        "passed": 145
+      },
+      "capacity": 12897,
+      "capacity_calls": 1567,
+      "native_batches": 175,
+      "exports": 13,
+      "raw_traces": 73
+    },
+    "distinction": "The peer accepts bounded complete core execution only. This record additionally verifies the corrected v7 73-row reconciliation and the seven external proof dispositions."
+  },
+  "semantic_findings": [
+    {
+      "subject": "Single complete source-bound run",
+      "finding": "The current core07 run supplies 496 direct checks, 145 passed QA cases plus three preserved typed deferrals, and all eight capacity/predecessor recipes with 12,897 assertions. This is one complete run at dd0, not assembled prefixes. The separate Gall04 lane contributes 58 native checks. The 476 host tests and overlapping selected 142-test capture retain their nonnative classification; per-requirement predicate counts in the matrix are reused and must not be summed as additional test executions."
+    },
+    {
+      "subject": "Current authorization and scoped receipts",
+      "finding": "The ordered native journey and context controls cover explicit contributor/reader/outsider permissions, no-grant known/unknown resources, stale policy/revision/binding/expiry conditions, revocation, role downgrade, retries and recovery. Protected denials preserve actual before/after state. Receipt normal/retry/recovery projections preserve principal/request/digest/time/Git identity while excluding private journal/policy counters. The separate source-order review verifies authorization occurs before receipt recovery. Unsupported identity/authority modes remain denied; no browser or delegated-agent product is inferred."
+    },
+    {
+      "subject": "Native canonical document/Git boundary",
+      "finding": "The retained Markdown/frontmatter, UTF8/envelope rejection, exact commit/tree/blob and snapshot bindings support the implemented native document boundary. The peer independently reconstructed all 13 native-derived exports, exact OIDs and file bodies, with 13 recorded stock-Git fsck exits zero. These establish portable native document export, not general clone/fetch/push Smart HTTP or a complete forge."
+    },
+    {
+      "subject": "Concurrent revision and restart semantics",
+      "finding": "The two different clients have exact command/response and barrier/interval sidecar bindings; their client-call intervals overlap and produce one accepted revision and one conflict, with a single journal/receipt delta. This is not simultaneous authoritative processing. Graceful home process replacement is PID57 to1550 after nonforced exit0, with protected state/retry/denial/export persistence. A separate unavailable-home cycle is PID1550 to3765 while sender busPID64 stays live and a specific native timeout precedes relaunch. Current save/load and predecessor migration are separately executed. No abrupt-crash, OS reboot or production failover claim is made."
+    },
+    {
+      "subject": "Legitimate predecessor/capacity transitions",
+      "finding": "The peer bound all 1,567 ordered capacity calls and 175 batches, the actual 4,096-transition predecessor, five specific atomic malformed-load rejections, valid full migration, current retry/recovery and the never-accepted legacy-command denial. Missing binding is covered separately by watch NACK, a real contributor poke with unchanged state, and the same command's native final-transition denial, followed by exact binding restoration. All 256 planned revokes execute in the two project reserves; six resource lanes reach native atomic refusal with current authorization controls. The object lane reaches 8,358,528 retained object bytes, accepts252 saves and rejects253 without changing protected state."
+    },
+    {
+      "subject": "Numeric edge and timing limits",
+      "finding": "The u64 edge probe uses explicitly synthetic native state and is not substituted for legitimate historical fills. Expensive full-state load calls use the already-reviewed private 600/620-second diagnostic ceilings; ordinary55/75-second bounds and outer7200-second guardian remain unchanged. Actual completed fixture timings do not establish production latency."
+    },
+    {
+      "subject": "Delivery and delayed old leave",
+      "finding": "Actual known-mark positive controls, separate business responses and real observer fact/kick/sentinel records support the 22 one-shot obligations and delivery requirements. The core ended-leave-attempt remains incomplete. Only the separately classified scheduled pinned-Gall execution closes delayed old leave: a captured actual old leave is delivered unchanged at its original duct after a distinct new registration; fresh pending/observer/history remain unchanged, with an actual exact retry and current-leave positive control plus specific wrong-pending negative control. Its fixed clock/direct queue are explicit; it is not four-process UDP/Ames timing. Omitted opaque vase/type bodies are native hash/size measurements, not independently reconstructed bytes."
+    },
+    {
+      "subject": "Evaluator and external source/N/A boundaries",
+      "finding": "Three actual retained pure-evaluator exchanges bind invalid-input rejection, a complete frame above64KiB and exact roundtrip output; they support only evaluator-error-boundaries. The no-effect disposition is N/A because this slice has no external effect executor, not evidence of external-effect replay safety. Guard/source/host dispositions preserve current exact source and independently attributed reviews; the two historical guard observations retain their original guard hash and exact artifacts under the narrow conservative prelaunch-delta continuity review."
+    },
+    {
+      "subject": "Raw failures and deferrals remain immutable",
+      "finding": "Earlier core/diagnostic/thermal failures, the original three QA deferrals and the core old-leave deferral are not rewritten as passes. The 25 historical skip mappings remain in the final manifest reconciliation. Current scope is established by the new complete run and separately typed proofs, never by a historical issue state, a partial prefix or a previous source's native success."
+    }
+  ],
+  "evidence_only_corrections": {
+    "exact_structural_comparison": true,
+    "v6": "Compared whole JSON documents: source-dispositions is exactly v5 except guard-independent-source-review's expanded scope prose is retained as review_scope and scope equals the unchanged manifest string. The v6 index changes only that one artifact reference.",
+    "v7": "Compared whole JSON documents: historical continuity is exactly v5 except current_source_review points to the same v6 proof used by the index. The v7 index changes only its continuity artifact reference.",
+    "supported_by": "The exact current seven-file composite and independently attributed earlier delta reviews remain unchanged. Both correction records' pending fields describe their preparation stage; this review supplies their final independent clearance.",
+    "failed_reconciliations_preserved": {
+      "docs/urbit/evidence/2026-09-26/phase1-final-dd0e8c0/derived/qualification.json": [
+        "ValueError: Typed proof scope differs from requirement"
+      ],
+      "docs/urbit/evidence/2026-09-26/phase1-final-dd0e8c0/derived-v6/qualification.json": [
+        "ValueError: Current guard prerequisite reference differs"
+      ]
+    },
+    "gate_source_native_changed": false,
+    "historical_guard_hash": "7166d197a6e3879f21c22637f2bd3074ff90975c33a2149f6e07763e2eeaa04e"
+  },
+  "reproducibility_observation": {
+    "material_to_acceptance": false,
+    "byte_reproducibility_claimed": false,
+    "retained_proofs_sha256": "732a012c42e7a85b48b03e0568b94ba491cec7e84a013bc546f240a8f8d45212",
+    "cause": "compile_facts iterates the existing DC.FAKES frozenset for observer-start facts; sampled final anchors can change order without changing the complete fact set.",
+    "observed_differences": [
+      {
+        "pointer": "/derivations/core/compile/facts/9/pointer",
+        "retained": "/commands/106",
+        "replayed": "/commands/103"
+      },
+      {
+        "pointer": "/derivations/core/compile/facts/10/pointer",
+        "retained": "/commands/103",
+        "replayed": "/commands/104"
+      },
+      {
+        "pointer": "/derivations/core/compile/facts/11/pointer",
+        "retained": "/commands/104",
+        "replayed": "/commands/106"
+      },
+      {
+        "pointer": "/proofs/v2-security-counter-u64-edge/native/1/pointer",
+        "retained": "/commands/104",
+        "replayed": "/commands/106"
+      }
+    ],
+    "disposition": "Fresh full JSON comparison found no other proof/predicate difference and no source-binding difference. Both sampled anchors are actual observer-start members of the same complete compile derivation. The native counter-edge probe and all assertion results are unchanged. Original derived-v7 bytes/hashes remain authoritative; no evidence was rewritten or native claim broadened.",
+    "audit_reader_history": "The first overly strict in-memory equality check stopped at this ordering difference. A subsequent complete diff isolated the four paths above and confirmed a passing fresh derivation. The separate exact retained G.reconcile comparison passed.",
+    "optional_followup": "A future source change may sort this enumeration for deterministic report bytes. It is not needed to establish the current observed predicates and was not applied."
+  },
+  "issue_criteria_review": {
+    "live_reads": [
+      {
+        "issue": 7,
+        "repository": "ScottTpirate/stead-urbit",
+        "url": "https://github.com/ScottTpirate/stead-urbit/issues/7",
+        "observed_state": "OPEN"
+      },
+      {
+        "issue": 8,
+        "repository": "ScottTpirate/stead-urbit",
+        "url": "https://github.com/ScottTpirate/stead-urbit/issues/8",
+        "observed_state": "OPEN"
+      }
+    ],
+    "URB040": "Native typed/versioned state, fixed transitions, stable IDs, conflict/duplicate/atomic denial behavior, populated save/load, distinct fenced process restart, supported predecessor migration and native Git-backed portable document exports are supported by the complete current evidence. Restart and upgrade are separate. Current document scope and unsupported full-forge/browser surfaces are explicit.",
+    "URB050": "Implemented native poke/watch/fact/read/export/private fixture paths are covered by final current authorization and actual negative outcomes. Current trusted owner-local fixture/scry boundaries remain explicit and are not sold as multi-user authenticated endpoints. Browser/HTTP sessions, broader delegated-agent modes, installed-app isolation and future Git endpoints retain their later gates.",
+    "Phase0": "Prior separate URB170 acceptance remains source-specific (paired0d877/setup55475f) with a5/6 tie, complete mutation inventories and explicit trace/tool/plaintext limitations. This review does not rerun or reopen participant evidence and does not claim skill efficacy."
+  },
+  "documentation_disposition": {
+    "status": "no-blocking-wording-finding",
+    "fixes_reviewed": "Acceptance text now correctly assigns replay to the evidence derivation and source/artifact admission to the gate; scope remains an acceptance candidate until final review. Historical closeouts/checkpoints are marked historical. Counts are not summed across overlapping classes.",
+    "permitted_final_update": "After retaining this review, change pending-independent-review wording to completed for the exact bounded Phase1 gate, while keeping integration pending until the actual merge is observed. A records-only edit does not create a new native execution.",
+    "source_binding_note": "Reviewed document hashes record this exact pre-publication wording; later status/link-only publication changes must be identified separately."
+  },
+  "integration_recommendation": {
+    "status": "proceed-with-already-authorized-preserving-integration",
+    "current_integration_performed": false,
+    "prerequisites_remaining": [
+      "Retain the exact two final independent reviews and all current evidence in a records-only commit, preserving the156 tested files and dd0 native source identity.",
+      "Refresh/retarget aggregate PR42 to derivative main, inspect the expanded ancestor range and exact publication head, then use the authorized merge-commit path without force or admin bypass.",
+      "Verify the observed remote merge contains the tested dd0 ancestor and all contained PR heads before closing still-open superseded drafts33/34/35/36/41 and reconciling issues7/8/M1 with exact acceptance/merge links.",
+      "Preserve local unique refs, registered worktree provenance, ignored disposable/native failure evidence and a verified Git backup before branch cleanup; do not use bulk push, reset/clean or reset a live fixture.",
+      "Begin Phase2 in a new branch after verified integration; the narrow public SDK plus independent consumer is the next bounded increment, with browser sessions/employee access separately unexecuted."
+    ],
+    "unchanged_limits": "No original-repository writes, purchasing, live identity provisioning, production deployment or confidential-data authorization follows."
+  },
+  "limitations": [
+    "Fake-ship native application behavior and a separately classified direct scheduled-Gall test, not live Urbit/Ames routing.",
+    "No browser/session/employee identity journey or general Git forge acceptance.",
+    "Graceful fenced process restart and versioned migration only; no abrupt-crash recovery or production backup/restore proof.",
+    "Source-specific historical guard observations are preserved under explicit narrow continuity, not re-executed against current source.",
+    "Nonnative selected142 tests overlap full476; derivation and recipe assertion counts are not additional independent runs.",
+    "Independent artifact/source review and pure replay, not a new native or host-test execution by this reviewer.",
+    "No human/GitHub approval or performed integration is asserted by this record."
+  ]
+}

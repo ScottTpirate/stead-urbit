@@ -1,0 +1,10 @@
+{
+  "classification": "retained-evidence-validation",
+  "errors": [
+    "ValueError: Typed proof scope differs from requirement"
+  ],
+  "historical_reports_unchanged": true,
+  "items": [],
+  "protocol": "stead.qualification-reconciliation/1",
+  "status": "failed"
+}

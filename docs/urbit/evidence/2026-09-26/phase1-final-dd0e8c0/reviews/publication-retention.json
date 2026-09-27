@@ -1,0 +1,23 @@
+{
+  "scope": "Exact independent reviews and cited integration plan; original review references are not rewritten.",
+  "artifacts": [
+    {
+      "source": ".runtime/phase01-20260926/core07-independent-review.json",
+      "path": "docs/urbit/evidence/2026-09-26/phase1-final-dd0e8c0/reviews/core07-independent-review.json",
+      "bytes": 67336,
+      "sha256": "83d78b1c242adc3406c0d6cf0c38a3ca2da80b9a8a81d0ddb8dea5f9c94e0ccc"
+    },
+    {
+      "source": ".runtime/phase01-20260926/phase1-final73-independent-review.json",
+      "path": "docs/urbit/evidence/2026-09-26/phase1-final-dd0e8c0/reviews/phase1-final73-independent-review.json",
+      "bytes": 170844,
+      "sha256": "d3827d08c59701b1f4419371b303c34e245de98280ce1548f0761a403cbd82bc"
+    },
+    {
+      "source": ".runtime/phase01-20260926/integration-preparation/integration-plan-core07.json",
+      "path": "docs/urbit/evidence/2026-09-26/phase1-final-dd0e8c0/support/integration-plan-core07.json",
+      "bytes": 922,
+      "sha256": "78054aa6a2051c03eac8cdc4142b71257db74f75e4c7efc614cb7d764b28736f"
+    }
+  ]
+}

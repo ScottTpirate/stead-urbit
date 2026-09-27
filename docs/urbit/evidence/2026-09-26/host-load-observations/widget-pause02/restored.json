@@ -1,0 +1,10 @@
+{
+  "protocol": "stead.authorized-widget-restoration/1",
+  "restored_at": "2026-09-26T22:21:22.797644+00:00",
+  "original_sha256": "c08515d119a67bf70c9672c52f5b2a90ef28c369bb3f4a3c957f770dea9d965f",
+  "exact_original_restored": true,
+  "mode_preserved": true,
+  "effective_shell_verification": "pending",
+  "fan_changes": false,
+  "chromium_changes": false
+}

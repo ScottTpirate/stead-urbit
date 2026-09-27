@@ -1,16 +1,13 @@
 # Native Work/Docs and permissions slice
 
-The original increment executed one home-owned synthetic project/work/document
-state machine and authorization together at `f52293f`. The v2 code now compiles
-and has passed 53 native compile/save-load probes. **Full v2 qualification remains
-open:** core05 at `5208f32` reached all 148 main cases (145 passes and
-three frozen deferrals), completed the seven delivery cases, and filled the
-4,096-event predecessor. A malformed-policy load then timed out without a native
-terminal response; seven capacity/predecessor recipes remain unexecuted. The
-preceding timeout-lifecycle correction passed 470 host tests and both focused
-native timeout/recovery cycles. Full-state validation and final reconciliation
-remain required. The new focused capacity diagnostic has not yet run.
-See the [current checkpoint](PHASE01_CHECKPOINT_20260926.md).
+The full v2 native execution at `dd0e8c0` passes 496 direct checks, all eight
+capacity/predecessor recipes and the separately scheduled 58-check Gall suite.
+The [73-requirement gate](evidence/2026-09-26/phase1-final-dd0e8c0/derived-v7/qualification.json)
+passes with independent semantic acceptance. The raw 145
+QA passes and three typed deferrals remain distinct from their separate
+manifest dispositions. See the [acceptance record](PHASE1_ACCEPTANCE_20260926.md)
+for exact evidence and limitations.
+
 The original minimum contracts remain byte-for-byte frozen under
 `specs/urbit/contract-freeze.json`; the narrow [v2 amendment](CONTRACT_AMENDMENT_2.md)
 has its own `specs/urbit/v2/contract-freeze.json`. The native desk is
@@ -74,7 +71,7 @@ original `%1` format. The test-only predecessor builder calls the archived v1
 transition, in batches of at most 32 commands, to produce an actual old-state
 vase; it does not assign a fabricated journal count. Migration reconstructs and
 checks content/policy projections while preserving original journal, receipt and
-Git bytes. These migration and corruption tests still need a completed qualifying
+Git bytes. These migration and corruption tests executed in the complete core07
 run. Current save/load, predecessor migration and fenced process restart are
 separate required checks. The frozen Phase 1 restart gate requires a cleanly
 stopped process and a distinct replacement retaining the same pier. Abrupt-crash
@@ -95,8 +92,8 @@ protected reads, retries and mutations. No ordinary workload consumes another
 project's security reserve. No history is erased and no administrator bypass is
 introduced. The derived bound is 6,144 retained acceptance records.
 
-These privacy/capacity changes require their actual native regressions; source
-review is not reproduction of either old vulnerability or proof of the fix. Real company data
+The complete core07 run executes the privacy/capacity regressions, including
+predecessor reproduction and current-state denial boundaries. Real company data
 remains blocked pending the independent authentication, endpoint-isolation and
 backup reviews in the master directive. The current gate requires capacity-edge
 fill schedules, actual subscription evidence and the specified fenced restart.

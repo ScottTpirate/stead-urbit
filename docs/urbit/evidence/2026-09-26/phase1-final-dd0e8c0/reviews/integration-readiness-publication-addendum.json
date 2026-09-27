@@ -1,0 +1,47 @@
+{
+  "actual_body_characters": 2459,
+  "actual_body_utf8_sha256": "4b6fae1c28011ea3731b0d63f717118b113e979115d4cd9bdb04cb05e4135fa1",
+  "actual_current_PR": {
+    "baseRefName": "increment/local-dev-flow-20260924",
+    "body": "Completes the contributor-workflow evaluation and corrects the native Work/Docs qualification harness. Phase 0/M0 is closed with all five issues complete. Phase 1 remains open; this PR remains a draft until a complete native run and final independent acceptance review pass.\n\nThe current pushed head is `dd0e8c0ce8d1d00f15de6b07e2e26d368c5c3774`. The latest correction tests a missing contributor binding at each real boundary: the result watch must reject, a contributor poke must leave protected state unchanged, and the native final transition must return the explicit authorization denial. Binding restoration and its full state comparison run even when the probe fails. No Hoon implementation, authorization policy or thermal limit changed.\n\nValidation at that source:\n\n- All 476 host/static/mocked tests passed; these do not establish native correctness.\n- A fresh 58-check native Gall schedule passed, including the delayed old-leave case and deliberately failing control; independent review cleared that bounded obligation.\n- Seven nonnative dispositions were refreshed and independently audited. They do not substitute for the 66 native requirements.\n- Full core06 ran for 1,159.787 seconds, recorded 313 passing direct checks and 145 QA passes plus three frozen deferrals, then stopped when the unchanged thermal guard sampled 92 C. No failed assertion was recorded before interruption; the remaining native lanes were not reached. This failed lifetime does not qualify Phase 1.\n\nThe previous capacity01 diagnostic verified five malformed-predecessor rejections and valid 4,096-event migration, then failed the missing-binding test expectation corrected here. All failed attempts and their exact source bindings are retained separately. No partial prefixes are combined into a passing run.\n\nThe newest native/host/review records and updated closeout notes are currently retained locally for the final evidence commit; published historical records retain their original source identities. The temporary desktop widget pause after core06 was restored and verified; no automated browser quota was applied.\n\nRemaining before integration: complete the full current core run, derive and independently review all 73 acceptance rows, publish the exact evidence, and review the final aggregate against main. Earlier stacked PRs remain preserved and will be reconciled only after that gate. No GitHub CI or human approval is claimed. Phase 2 has not started.\n",
+    "headRefOid": "dd0e8c0ce8d1d00f15de6b07e2e26d368c5c3774",
+    "isDraft": true,
+    "number": 42,
+    "state": "OPEN",
+    "url": "https://github.com/ScottTpirate/stead-urbit/pull/42"
+  },
+  "actual_publication_record": {
+    "bytes": 2633,
+    "path": ".runtime/phase01-20260926/publication-core06/result.json",
+    "sha256": "e68dccfdfe0506a07b4bc8fa094470da32bc0311078da44f98c7ab526062868b"
+  },
+  "exact_authored_body": {
+    "bytes": 2459,
+    "path": ".runtime/phase01-20260926/publication-core06/pr42.md",
+    "sha256": "4b6fae1c28011ea3731b0d63f717118b113e979115d4cd9bdb04cb05e4135fa1"
+  },
+  "exact_readback_equal": true,
+  "github_writes": false,
+  "native_execution": false,
+  "observed_at": "2026-09-26T23:02:39.929887+00:00",
+  "phase1_accepted": false,
+  "previous_review": {
+    "bytes": 46043,
+    "path": ".runtime/phase01-20260926/integration-preparation/independent-readiness-dd0e8c0.json",
+    "sha256": "6e6e6c6a720a98d99c0671a94f2b937d438f2a1caa1e4d43ee2678f1716b0fc7"
+  },
+  "protocol": "stead.integration-review-publication-addendum/1",
+  "review_finding": "Current body now distinguishes actualdd0 source476 host tests/current58 Gall, retained capacity01/core06 failures, Phase0 closed and Phase1/Phase2 pending. It explicitly says latest records are local pending an evidence commit. No current native fullcore pass, CI or human approval is overstated.",
+  "reviewer": "/root/independent_review",
+  "source_commit": "dd0e8c0ce8d1d00f15de6b07e2e26d368c5c3774",
+  "status": "previous-PR42-body-staleness-resolved",
+  "still_required": [
+    "Full current core and independently reviewed73-row reconciliation.",
+    "Review/commit/push local latest records and final result; preserve actual source bindings.",
+    "Update stale #7/#8 execution threads and final aggregate review/description after final acceptance.",
+    "Only then retarget/mergecommit/contained-draft closure and safe branch preservation."
+  ],
+  "supersedes_only": "The assertion in live-PR-and-issues that the current PR42 body still describes3f0/a1/472/unexecuted diagnostic. That was a true earlier observation; root refreshed the public body during this review. Other required final acceptance/publication/integration steps remain pending.",
+  "tests_executed": false,
+  "tracked_writes": false
+}

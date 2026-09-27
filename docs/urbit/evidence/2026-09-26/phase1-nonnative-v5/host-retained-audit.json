@@ -1,0 +1,164 @@
+{
+  "actual_resource_readbacks": {
+    "affinity": [
+      19
+    ],
+    "control_group": "/user.slice/user-1000.slice/user@1000.service/app.slice/stead-host-recapture-20260926t223038z-27246f4e.scope",
+    "cpu_max": "5000 10000",
+    "pids": [
+      1276213
+    ],
+    "scope": "stead-host-recapture-20260926t223038z-27246f4e.scope"
+  },
+  "all156_source_files_match_current_committed_git_blobs": true,
+  "all_output_hashes_verified": true,
+  "all_output_references": {
+    "before.json": {
+      "bytes": 19973,
+      "path": "before.json",
+      "sha256": "3914307d6f0a636fa0be24b28e986fdb9ac82a7ee83e52b24e67fa746e76b132"
+    },
+    "capture-script.py": {
+      "bytes": 21961,
+      "path": "capture-script.py",
+      "sha256": "a3612f3a27d8337e687fe95127cfca4f5327e4e6eb4542440fa99e4d4989059c"
+    },
+    "host-current.stderr.log": {
+      "bytes": 23437,
+      "path": "host-current.stderr.log",
+      "sha256": "82e5ade3b7a4ccd850b119d1fa667cb9b4acc79026874dd72d46c9130634ae46"
+    },
+    "host-current.stdout.log": {
+      "bytes": 0,
+      "path": "host-current.stdout.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "launch.json": {
+      "bytes": 1110,
+      "path": "launch.json",
+      "sha256": "a9c64c0858d30e18a3747ff56dbc9c6a85da462e79f4d2ccb901883c9cc7db94"
+    },
+    "selected-tests.json": {
+      "bytes": 15179,
+      "path": "selected-tests.json",
+      "sha256": "1b5f12129a614ca6483055caa61226a2a9149d717d47adc62fe13d52ee1b74d5"
+    },
+    "test-events.jsonl": {
+      "bytes": 114015,
+      "path": "test-events.jsonl",
+      "sha256": "5c1a7a56052c939c9481f9d88e71430f007ba62e882881906eb66216415b5a63"
+    },
+    "worker.json": {
+      "bytes": 117162,
+      "path": "worker.json",
+      "sha256": "fb3816cba51b300f371bd530df305d7b948d16bdcc08c978ed0763689631fac0"
+    }
+  },
+  "audit_resources": {
+    "affinity": [
+      19
+    ],
+    "configured_cpu_max": "2000 10000"
+  },
+  "capture": {
+    "path": ".runtime/phase01-20260926/host-recapture-20260926t223038z-27246f4e/host-current.json",
+    "pointer": "",
+    "sha256": "429407b2999f607716f75828baa70c97e75a8766f16dfad15046f40d171f36ed"
+  },
+  "capture_wrapper_same_reviewed_bytes": "a3612f3a27d8337e687fe95127cfca4f5327e4e6eb4542440fa99e4d4989059c",
+  "event_interval_seconds": 2.934514309,
+  "final_scope_completion": {
+    "ActiveState": "inactive",
+    "ControlGroup": "",
+    "LoadState": "not-found",
+    "Result": "success",
+    "exit_code": 0,
+    "stderr": "",
+    "stdout": "LoadState=not-found\nActiveState=inactive\nResult=success\nControlGroup=\n"
+  },
+  "full_host_check": {
+    "cpu_limit_in_actual_command": "20percent/10ms/CPU19",
+    "executor": "/root",
+    "limit": "Root-executed full476 retained metadata/logs were audited, not rerun; selected142 overlap476. Full-host20percent is recorded in its command; selected-host50percent has explicit cgroup readback.",
+    "log": {
+      "path": ".runtime/phase01-20260926/host-dd0e8c0/host.log",
+      "pointer": "",
+      "sha256": "45b9ced9b9d66b9f90e551ce18563721a1a292617c831817bbecb2db66136683"
+    },
+    "metadata": {
+      "path": ".runtime/phase01-20260926/host-dd0e8c0/result.json",
+      "pointer": "",
+      "sha256": "771522343edb63791ed4a479d1461651d25ec99a7bc481a34aa358d2b2270f02"
+    },
+    "observed_tests": 476,
+    "outer_seconds": 179.24200971098617,
+    "source_files_before_after_match_committed": true,
+    "unittest_seconds": 177.231
+  },
+  "held_idle_locks_recorded": [
+    ".runtime/native-execution.lock",
+    ".piers/fakes/lifecycle.lock"
+  ],
+  "host_test_execution": false,
+  "loader_cache_isolated_runner_cache_restored": true,
+  "mapped_assertion_ids": {
+    "delivery-host-order-permutations": [
+      "test_delivery_cases.DeliveryEvidenceHostTests.test_ack_nack_timeout_partial_missing_and_duplicate_never_saved",
+      "test_delivery_cases.DeliveryEvidenceHostTests.test_fact_ack_kick_host_permutations_require_exact_receipt"
+    ],
+    "guard-negative-host-tests": [
+      "test_dev_flow.LifecycleTests.test_failed_launched_supervisor_marks_fixture_and_blocks_next_start",
+      "test_execution_policy.ControlledChildExecution.test_clean_light_child_completion_is_not_labeled_native_pass",
+      "test_execution_policy.ControlledChildExecution.test_hot_preflight_never_launches_a_child",
+      "test_execution_policy.ControlledChildExecution.test_trip_with_child_exit_zero_stays_failed_and_preserves_crossing",
+      "test_execution_policy.ControlledChildExecution.test_uncooperative_owned_child_is_killed_within_bounded_cleanup",
+      "test_harness_safety.FixtureSafety.test_changed_seed_preserves_live_data",
+      "test_harness_safety.SupervisorLifecycleSafety.test_forced_state_is_never_promoted_to_a_clean_seed",
+      "test_harness_safety.SupervisorLifecycleSafety.test_normal_stop_watchdog_cannot_swallow_cleanup_failure",
+      "test_harness_safety.SupervisorLifecycleSafety.test_signal_and_wait_failures_do_not_abandon_other_children",
+      "test_harness_safety.SupervisorLifecycleSafety.test_supervisor_exit_is_nonzero_for_guard_or_initialization_failure",
+      "test_runtime_guard_adversarial.GuardFailureOutcomeTests.test_hot_or_missing_preflight_never_calls_factory_or_process",
+      "test_runtime_guard_adversarial.LeaseAdmissionTests.test_stale_and_future_freshly_written_leases_refuse",
+      "test_runtime_guard_adversarial.OwnedHostFilesTests.test_scope_signal_rejects_other_unit_without_systemctl",
+      "test_runtime_guard_adversarial.ThermalEvidenceTests.test_missing_or_renamed_hottest_sensor_refuses_continuation",
+      "test_runtime_guard_adversarial.ThermalEvidenceTests.test_stale_future_reversed_and_nonfinite_clocks_refuse"
+    ]
+  },
+  "module_counts": {
+    "test_delivery_cases": 10,
+    "test_delivery_evidence_regressions": 11,
+    "test_delivery_suite": 14,
+    "test_dev_flow": 32,
+    "test_execution_policy": 6,
+    "test_harness_safety": 43,
+    "test_runtime_guard_adversarial": 26
+  },
+  "native_execution": false,
+  "notes": [
+    "All142 IDs equal the unchanged v4 selected inventory, with complete ordered start/finish events and174 successful subtests attached to active parent tests.",
+    "The verbose stderr is byte-identical to v4 because both independently retained native-clock test intervals round to2.935s; distinct complete event timestamps and source inventories are verified. No log relabel or copied-run inference is made.",
+    "Future v5 promoter must validate composed5208\u2192a1\u21923f0\u2192dd0 source reviews, use this new audit path/hash, and retain historical2guard proofs unchanged."
+  ],
+  "observed_at": "2026-09-26T22:37:47.889335+00:00",
+  "outer_elapsed_seconds": 4.387359222979285,
+  "passed_subtests": 174,
+  "pending": [
+    "New dd0-specific v5 promoter source review/execution and portable-output audit",
+    "Complete current native fullcore/Gall and independent73 reconciliation"
+  ],
+  "protocol": "stead.nonnative-v5-retained-host-audit/1",
+  "qualification_acceptance": false,
+  "reviewer": "/root/independent_review",
+  "scope": "Read-only exact-byte and event/source/cleanup review of root-executed selected142 host capture. Sensor/systemd/child outcomes remain mocked where authored; Python/file/flock/cache/socket operations are real host controls. Not native qualification.",
+  "source_before_after_equal": true,
+  "source_commit": "dd0e8c0ce8d1d00f15de6b07e2e26d368c5c3774",
+  "source_review": {
+    "path": ".runtime/phase01-20260926/nonnative-v5-dd0e8c0-refresh-plan.json",
+    "pointer": "",
+    "sha256": "0d94170e03090044093dd2727b915eda093b6d2570813fe7cd4c4d6d1e416344"
+  },
+  "status": "reviewed-passed",
+  "unique_selected_started_finished_passed_ids": 142,
+  "unittest_seconds": 2.935,
+  "worker_elapsed_seconds": 3.7274799268925563
+}

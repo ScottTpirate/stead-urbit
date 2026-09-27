@@ -1,3 +1,7 @@
+Historical September 13 checkpoint. For the current executed gate and acceptance,
+read [Phase 1 acceptance](PHASE1_ACCEPTANCE_20260926.md). The original evidence
+and then-open statuses below are preserved unchanged.
+
 # Native qualification handoff — September 13, 2026
 
 **Phase 1 remains unqualified; Phase 2 team/browser implementation has not begun.**

@@ -1,0 +1,10 @@
+{
+  "protocol": "stead.authorized-widget-restoration/1",
+  "restored_at": "2026-09-26T22:54:54.312502+00:00",
+  "exact_original_restored": true,
+  "original_sha256": "c08515d119a67bf70c9672c52f5b2a90ef28c369bb3f4a3c957f770dea9d965f",
+  "mode_preserved": 384,
+  "fan_changes": false,
+  "chromium_changes": false,
+  "reason": "Native core06 ended after thermal guard stop; original widget restored during review work"
+}

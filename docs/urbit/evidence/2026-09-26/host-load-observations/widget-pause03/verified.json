@@ -1,0 +1,16 @@
+{
+  "verified_at": "2026-09-26T22:32:51.199920+00:00",
+  "method": "running shell listPlugins",
+  "widget": {
+    "id": "omarchy.agents",
+    "name": "Agents",
+    "kinds": [
+      "bar-widget"
+    ],
+    "enabled": false,
+    "active": false,
+    "canDisable": true,
+    "firstParty": true,
+    "clonedFrom": ""
+  }
+}

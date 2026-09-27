@@ -6,13 +6,20 @@ reader and outsider. They execute the real pinned runtime and Hoon, with separat
 state directories. They need no purchased identities, public server, GPU or cloud
 account. Fake ships do not join the live Urbit network.
 
-Use public/synthetic content. The application and its tests are still undergoing
-Phase 1 qualification. A passing compile check is not permission to use company
-data, and the browser application is not implemented yet.
+Use public/synthetic content. The complete native Phase 1 gate now passes;
+[acceptance and scope](PHASE1_ACCEPTANCE_20260926.md) are recorded separately.
+The browser application is not implemented yet, and these local tests do not
+authorize company data.
 
 ## Commands
 
 `make` prints help without downloading or starting anything.
+
+For GitHub CLI operations, explicitly pass `--repo ScottTpirate/stead-urbit`
+(or use the exact derivative repository API path). This fork's CLI can resolve
+an unqualified command to the original upstream repository even when `origin`
+points here. Verify origin's fetch and push URLs before writing; upstream remains
+read-only.
 
 | Command | Purpose | What it establishes |
 | --- | --- | --- |
@@ -75,12 +82,26 @@ the raw report. The independent gate reads the completed guard, exact native
 transport, scheduled-Gall evidence, and separately reviewed source/N/A proofs.
 Only that complete gate can support Phase 1 closure.
 
+Core07 completed that native schedule in 5,473.523 seconds (about 91 minutes)
+under the 50% CPU limit; capacity and predecessor work took 3,896.109 seconds
+within it. Filling 4,096 real historical events and the eight frozen boundary
+recipes makes full qualification much longer than the ordinary developer loop.
+Use `make check` for host changes and `make dev` / `make core-check` for native
+feedback. Reserve full `core-test`, scheduled Gall and evidence reconciliation
+for changes that affect the qualified native behavior or its execution inputs.
+Documentation-only changes do not need another full native run.
+
 The private fixture controls `migrate-legacy` and `load-bad-legacy` have a
 600-second native and 620-second host diagnostic ceiling so full-state
 validation can be measured. All other requests retain their existing 55/75-second
 bounds. A native timeout is never a malformed-state rejection. These ceilings
 are not latency targets or measured performance results. The full test caller
 waits within the unchanged outer guardian's 7,200-second execution budget.
+The [first focused diagnostic](evidence/2026-09-26/native-attempts/capacity01/independent-diagnosis.json)
+measured 117–119 seconds for full 4,096-event validation at the 50% CPU quota.
+It then failed a separate missing-binding test expectation. Those timings explain
+the earlier 75-second host timeout; they do not establish overall qualification
+or acceptable production latency.
 
 ## Host conditions
 
@@ -125,7 +146,7 @@ delete a pier or treat a process snapshot as a replacement seed.
 
 ## Phase 2 and later testing
 
-First qualify the native core, then add configurable synthetic teams/containers
+With the native core gate passing, add configurable synthetic teams/containers
 and an independently built public-API client. Next add individual sessions and a
 local browser journey with separate contributor, reader and outsider contexts.
 The user's identity ship approves a session; page bodies travel directly from

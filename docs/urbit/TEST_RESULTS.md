@@ -1,6 +1,30 @@
 # Executed development evidence
 
-Current [September 26 handoff](PHASE01_CHECKPOINT_20260926.md): **472 host/static/mocked tests pass at `a1d35b2`. Phase 1 remains open; Phase 2 has not started.** The [reviewed capacity diagnostic and host record](evidence/2026-09-26/capacity-fix/index.json) preserve the full acceptance sequence, strengthen malformed-load rejection, and limit longer waits to two private fixture load operations. The 68.851-second wrapper (68.128-second unittest suite) does not execute Hoon; the new diagnostic is still unexecuted.
+The [independently reviewed Phase 1 acceptance](PHASE1_ACCEPTANCE_20260926.md) now has a
+passing **73-requirement gate** at native source
+`dd0e8c0ce8d1d00f15de6b07e2e26d368c5c3774`. Independent review accepts this bounded phase with no blockers. Phases 0 and 1
+are complete; Phase 2 begins with URB-180 / #21.
+
+The complete [core07 run](evidence/2026-09-26/phase1-final-dd0e8c0/core/index.json)
+passed 496 direct native checks, 145 QA cases with three original typed deferrals,
+and all eight capacity/predecessor recipes (12,897 assertions within that run).
+Native execution took 5,473.523 seconds under the unchanged CPU50% guard; all
+ships stopped cleanly. The separate [Gall schedule](evidence/2026-09-26/phase1-final-dd0e8c0/gall/index.json)
+passed 58 native checks. **476 host/static/mocked tests** passed; the separately
+captured 142 tests overlap that count. These evidence classes are not combined
+into a native test count. The [final gate](evidence/2026-09-26/phase1-final-dd0e8c0/derived-v7/qualification.json)
+contains 66 native obligations and seven separately typed dispositions, with no
+missing requirement or errors. Earlier reconciliation failures are retained.
+
+The original widget configuration and effective widget were restored and
+verified at 00:32:50 UTC after the run. Fan settings were already restored;
+Chrome remained owner-controlled.
+
+## Historical runs and diagnostic chronology
+
+The source-specific results and then-open gates below are historical. They are
+preserved failures or earlier passes, not the current phase status. No failed
+prefix was combined with core07 to obtain acceptance.
 
 At native source `0d877cff4319de8d437f0da58d4518535f758c36`,
 [prequal12](evidence/2026-09-26/native-attempts/prequal12/index.json) passed six
@@ -55,6 +79,33 @@ also identified that malformed-load negatives must distinguish an actual
 unsupported-state rejection from the same generic terminal shape used by a
 Spider timeout. A focused capacity diagnostic and narrower rejection predicate
 are independently source-reviewed at `a1d35b2`; no runtime pass or acceptable migration latency is implied.
+
+[Capacity01](evidence/2026-09-26/native-attempts/capacity01/index.json) then executed
+at `3f0f377`, whose tested inputs match `a1d35b2`. It compiled the new client and
+verified all five malformed-predecessor rejections with unchanged current and
+predecessor states. The policy, grant and reachability cases took 117.390,
+117.346 and 118.649 seconds; valid 4,096-event migration took 117.208 seconds
+and preserved the exact history/content/binding hashes. These are measured call
+durations under the 50% CPU limit, not acceptable-latency claims.
+
+The diagnostic still **failed**: after deliberately dropping the contributor's
+binding, its result watch returned a specific native rejection rather than the
+JSON denial the test expected. The client waits for that watch before poking,
+so this attempt did not test the final mutation boundary. It recorded 4,483
+passing qualification checks and one failure; only one of eight complete recipes
+finished. The [independent diagnosis](evidence/2026-09-26/native-attempts/capacity01/independent-diagnosis.json)
+verifies the exact trace and successful cleanup. Binding restoration returned
+an ACK, but the old failing path skipped its final snapshot comparison. The
+correction moves that comparison into `finally`; no failed prefix transfers
+to the new full run.
+
+[Core06](evidence/2026-09-26/native-attempts/core06/index.json), at the corrected
+`dd0e8c0` source, was stopped by the unchanged thermal guard after 313 passing
+direct checks and 145 QA passes plus three frozen deferrals. No failed assertion
+was recorded before interruption. Native execution lasted 1,159.787 seconds;
+the incomplete result does not establish full Phase 1 acceptance. Exact logs,
+source bindings, transport and final guard are retained. The temporary widget
+pause was restored and verified afterward; no browser setting was changed.
 
 Historical checkpoints below retain their original source-specific outcomes and
 open-gate descriptions; they are not statements of the latest issue status.

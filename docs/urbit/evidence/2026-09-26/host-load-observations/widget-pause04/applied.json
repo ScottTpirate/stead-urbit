@@ -1,0 +1,11 @@
+{
+  "protocol": "stead.authorized-widget-pause/1",
+  "applied_at": "2026-09-26T23:01:16.793259+00:00",
+  "authorization": "Existing owner authorization: temporarily pause widget during native tests and restore afterward",
+  "before_sha256": "c08515d119a67bf70c9672c52f5b2a90ef28c369bb3f4a3c957f770dea9d965f",
+  "after_sha256": "5bdb84f2dab23e16d3b015bf911e8b7d5e9fcace8657e805a440c7559c2109ed",
+  "restore_required": true,
+  "original_local_backup": ".runtime/phase01-20260926/widget-pause-proposal/original.json",
+  "fan_changes": false,
+  "chromium_changes": false
+}

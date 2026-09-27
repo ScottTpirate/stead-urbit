@@ -1,20 +1,48 @@
 # Phase 0/1 checkpoint — September 26, 2026
 
-**Phase 0 acceptance evidence is complete; Phase 1 remains open. Phase 2 has not started.** The local aggregate branch
-`increment/phase01-closeout-20260925` is associated with draft
-[PR #42](https://github.com/ScottTpirate/stead-urbit/pull/42). The latest local
-closeout commits and retained evidence await publication. The latest completed full attempt, core05 at
+**Phases 0 and 1 are complete. The full Phase 1 gate passes all 73 requirements
+and independent review finds no blockers. Phase 2 begins with URB-180 / #21.**
+
+The [acceptance record](PHASE1_ACCEPTANCE_20260926.md) supersedes the pending
+native work described below. Core07 at `dd0e8c0` completed 496 direct native
+checks and all eight capacity/predecessor recipes, with clean shutdown. The
+separate 58-check Gall schedule and 476 host tests retain their distinct roles.
+The exact native, guard and source bytes are retained with the passing
+[final reconciliation](evidence/2026-09-26/phase1-final-dd0e8c0/derived-v7/qualification.json).
+The widget was restored at 00:32:50 UTC; fans were already restored and no
+browser setting was changed.
+
+## Historical checkpoint before core07
+
+The following account preserves the earlier blockers, attempts and planned
+integration sequence. Its pending statuses describe that earlier checkpoint.
+
+**Phase 0/M0 is closed with all five issues complete; Phase 1 remains open. Phase 2 has not started.**
+The aggregate branch `increment/phase01-closeout-20260925` is pushed through
+`dd0e8c0ce8d1d00f15de6b07e2e26d368c5c3774` in draft
+[PR #42](https://github.com/ScottTpirate/stead-urbit/pull/42). The latest native
+logs and closeout notes are retained locally pending a complete full rerun. Core06
+at `dd0e8c0` was thermally interrupted after 313 passing direct checks and 145 QA
+passes plus three frozen deferrals. Its exact failed result is retained; no
+partial-prefix combination qualifies. The preceding core05 at
 `5208f3273426e8fe76dc8622ffe93ace93982e17`, completed 145 main cases plus three
 frozen deferrals and seven delivery cases plus the scheduled-Gall deferral,
 then timed out validating a corrupted predecessor with 4,096 journal events.
 That timeout is a failure, not an expected rejection. The stopped failed state
-and exact evidence are preserved. The next focused capacity diagnostic requires
-specific native rejection context and measures bounded full-load duration;
-it has not yet been executed. Final 73-row reconciliation remains pending.
-Prior records retain their original source bindings.
-The independently reviewed diagnostic source is now
-`a1d35b27d8ee482b1854c7352ebc6eecf96a2b08`; [472 host tests pass](evidence/2026-09-26/capacity-fix/index.json).
-Its Hoon client change has not yet been compiled or executed.
+and exact evidence are preserved. The [focused capacity diagnostic](evidence/2026-09-26/native-attempts/capacity01/index.json)
+at `3f0f377` compiled the revised client and verified all five malformed-load
+rejections and valid 4,096-event migration. Full-state validations took
+117–119 seconds under the CPU50% quota. The diagnostic then failed an incorrect
+expectation of a JSON denial after the contributor's binding was removed;
+its result subscription was rejected before the client sent a poke.
+
+The [independently reviewed correction](evidence/2026-09-26/missing-binding-fix/index.json)
+at `dd0e8c0` requires that exact watch rejection, an actual contributor poke with
+unchanged protected state, and an explicit denial at the native final transition.
+It changes no Hoon, authorization rules or guard limits. All **476 host tests**
+pass, and a fresh **58-check native Gall schedule** passes at the same source.
+The full core rerun and final 73-row reconciliation remain pending. Prior
+records retain their original source bindings.
 No implementation PR has
 been merged and no GitHub CI or human approval is claimed.
 
@@ -52,10 +80,10 @@ documents the Linux edit/build/test loop and stopped-seed recovery.
 | Gate | Actual result | Remaining execution |
 | --- | --- | --- |
 | Workflow reference admission | [prequal12](evidence/2026-09-26/native-attempts/prequal12/index.json): all six references, 134 checks, 96 native commands and the complete weak-mutation continuation control passed at `0d877cff`; completed outer guard. | Completed prerequisite for the recorded v2 pair. |
-| URB-170, issue #20 | [Fresh paired v2 run](evidence/2026-09-26/workflow-evaluation-v2/README.md): complete one-shot private scoring, **5/6 per condition**. Both T05 suites missed the actual `~bud` mutant; all five subjects and every submitted test arm were retained. [Final acceptance review](evidence/2026-09-26/workflow-evaluation-v2/URB170_FINAL_ACCEPTANCE.md) also verifies all separate contributor-tooling criteria. | Publish reviewed closeout and reconcile issue/milestone metadata. The v1 comparison remains separately incomplete; no candidate repair, efficacy or isolation claim. |
-| URB-040/050, issues #7/#8 | [core05](evidence/2026-09-26/native-attempts/core05/index.json): 145 QA passes + three frozen deferrals; 495 direct checks and seven delivery cases passed. After reaching 4,096 predecessor events, the policy-corruption load timed out. The guard did not thermally stop (69 C peak); home shutdown required a forced exit. | Measure and verify full-state loads with specific rejection predicates, complete all eight capacity/predecessor recipes, then rerun/reconcile the full current-source schedule. No partial-prefix combination qualifies. |
-| Scheduled Gall | [58 native checks passed](evidence/2026-09-26/phase1-final-5208f32/gall/index.json) at `5208f32`, including the delayed old leave and deliberately wrong pending-count control. Closed outer guard and exact logs retained. | Include the independent semantic review in final reconciliation. Earlier `55475f0` and `0d877cff` passes remain separately retained. |
-| Phase 1 acceptance | Seven typed source/N-A/host dispositions are retained at `5208f32`; core05 failed, and the new diagnostic changes require fresh source bindings. | Bind 65 core + one scheduled-Gall native obligations and seven nonnative obligations to exact final inputs, derive the gate and independently review all 73 rows. |
+| URB-170, issue #20 | [Fresh paired v2 run](evidence/2026-09-26/workflow-evaluation-v2/README.md): complete one-shot private scoring, **5/6 per condition**. Both T05 suites missed the actual `~bud` mutant; all five subjects and every submitted test arm were retained. [Final acceptance review](evidence/2026-09-26/workflow-evaluation-v2/URB170_FINAL_ACCEPTANCE.md) also verifies all separate contributor-tooling criteria. | Published; issue #20 and M0 closed, 5/5 issues complete. The v1 comparison remains separately incomplete; no candidate repair, efficacy or isolation claim. |
+| URB-040/050, issues #7/#8 | Core05 reached 145 QA passes + three deferrals and seven delivery passes, then timed out. [Capacity01](evidence/2026-09-26/native-attempts/capacity01/independent-diagnosis.json) subsequently verified full-state validation, then failed the missing-binding test expectation. [Core06](evidence/2026-09-26/native-attempts/core06/index.json) at `dd0e8c0` was thermally interrupted after 313 direct checks and 145 QA passes. All failures are retained. | Complete full core rerun, including the corrected probe and all eight capacity/predecessor recipes. No partial-prefix combination qualifies. |
+| Scheduled Gall | [58 native checks passed](evidence/2026-09-26/phase1-final-dd0e8c0/gall/index.json) at `dd0e8c0`, including the delayed old leave and deliberately wrong pending-count control. Closed outer guard and exact logs retained. | [Independent semantic review](evidence/2026-09-26/phase1-final-dd0e8c0/reviews/gall-final04-independent-review.json) complete for this obligation; include it in final reconciliation. Earlier passes remain separately retained. |
+| Phase 1 acceptance | [Seven refreshed source/N-A/host dispositions](evidence/2026-09-26/phase1-nonnative-v5/dispositions.json) use the actual 142-test capture at `dd0e8c0`. Their separate readiness still reports 66 missing native obligations. [Independent portable audit](evidence/2026-09-26/phase1-final-dd0e8c0/reviews/nonnative-v5-dd0e8c0-portable-audit.json) verifies all seven; earlier records keep their bindings. | Bind 65 core + one scheduled-Gall native obligations and seven nonnative obligations to exact final inputs, derive the gate and independently review all 73 rows. |
 
 The original failed runs remain unchanged. This includes the earlier populated
 round-trip failure, workflow timeouts/size failures, thermal refusals, and the
@@ -97,6 +125,11 @@ local authentication, with original curves saved and a one-hour restoration limi
 After core05, [all 34 original fan values and the desktop configuration](evidence/2026-09-26/host-load-observations/restoration-and-window02/index.json)
 were restored and independently read back. The owner paused Chromium; no
 automated browser quota was applied. No security gate or thermal threshold changed.
+
+The later [widget pause03](evidence/2026-09-26/host-load-observations/widget-pause03/index.json)
+ended after core06's thermal interruption. The exact original configuration and
+effective running widget were restored and verified at 22:55 UTC. Fans remained
+at their original settings; Chromium remained under the owner's control.
 
 The paired v2 audit reconciled every observed wrapper call, final candidate
 hash, model setting and charged interval. Both conditions used the same observed

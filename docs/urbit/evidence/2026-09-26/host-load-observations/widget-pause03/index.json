@@ -1,0 +1,29 @@
+{
+  "scope": "Authorized temporary widget pause03 and verified restoration after thermal interruption of core06; no browser or fan change",
+  "artifacts": [
+    {
+      "source": ".runtime/phase01-20260926/widget-pause03/applied.json",
+      "path": "docs/urbit/evidence/2026-09-26/host-load-observations/widget-pause03/applied.json",
+      "bytes": 569,
+      "sha256": "7507da02ae1770c2dcb11d62b502ae43b016433fc6d27fdce043dc8979148c7c"
+    },
+    {
+      "source": ".runtime/phase01-20260926/widget-pause03/verified.json",
+      "path": "docs/urbit/evidence/2026-09-26/host-load-observations/widget-pause03/verified.json",
+      "bytes": 319,
+      "sha256": "de6666f714194c6102ebc30e75beb31969f44e3f45dc42cd493c13a6ca6f8356"
+    },
+    {
+      "source": ".runtime/phase01-20260926/widget-pause03/restored.json",
+      "path": "docs/urbit/evidence/2026-09-26/host-load-observations/widget-pause03/restored.json",
+      "bytes": 418,
+      "sha256": "72b7ccbdb4aefc0e9c361c37464694ce47d679bc0f064edbd37a08222ac439de"
+    },
+    {
+      "source": ".runtime/phase01-20260926/widget-pause03/restoration-verification.json",
+      "path": "docs/urbit/evidence/2026-09-26/host-load-observations/widget-pause03/restoration-verification.json",
+      "bytes": 486,
+      "sha256": "73da5168b269a3063146b837a5faebc6d46e37763d87e396dab6d8e030221f77"
+    }
+  ]
+}

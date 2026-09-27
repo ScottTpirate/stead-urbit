@@ -1,0 +1,24 @@
+{
+  "protocol": "stead.typed-proof-scope-correction/1",
+  "recorded_at": "2026-09-27T00:37:24.577760+00:00",
+  "source_commit": "dd0e8c0ce8d1d00f15de6b07e2e26d368c5c3774",
+  "independent_review_pending": true,
+  "native_execution_performed": false,
+  "source_or_gate_changed": false,
+  "historical_artifacts_unchanged": true,
+  "id": "guard-independent-source-review",
+  "before": {
+    "path": "docs/urbit/evidence/2026-09-26/phase1-nonnative-v5/source-dispositions.json",
+    "pointer": "/proofs/guard-independent-source-review",
+    "sha256": "4e4a48a9a408650780a941fdb74b1cee525aeb15b1bb6a3c10ecc1c0c7b02065"
+  },
+  "after": {
+    "path": "docs/urbit/evidence/2026-09-26/phase1-nonnative-v6/source-dispositions.json",
+    "pointer": "/proofs/guard-independent-source-review",
+    "sha256": "4b174ed43e3a9ca6e44ecc16aeb3e64ecdeeb91f7e07e46eaee830b75eb97511"
+  },
+  "scope": "Exact common source reviewed; thermal, lock, lease, scope, cleanup, fail status and seed boundaries remain conservative.",
+  "retained_review_scope": "Composite independent source review of exact common guard and four-fake lifecycle. Original common and prior changed-source findings retain their attributed source versions. The v5 fixed guarded diagnostic delta is reviewed by independent_review; its native lifetime and derivation delta is separately source-reviewed by gall_schedule_review. No native qualification.",
+  "change": "Only canonical scope field is aligned to the frozen manifest; expanded reviewer prose is retained as review_scope. The new disposition index repoints only this source-review proof. All source bindings, findings, reviews, assertions and remaining six disposition references are unchanged.",
+  "failed_reconciliation": "docs/urbit/evidence/2026-09-26/phase1-final-dd0e8c0/derived/qualification.json"
+}

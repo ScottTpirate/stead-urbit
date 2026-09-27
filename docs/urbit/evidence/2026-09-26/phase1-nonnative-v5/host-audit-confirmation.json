@@ -1,0 +1,22 @@
+{
+  "auditor": "/root/independent_review",
+  "host_capture": {
+    "path": "docs/urbit/evidence/2026-09-26/phase1-nonnative-v5/host-current/host-current.json",
+    "pointer": "",
+    "sha256": "429407b2999f607716f75828baa70c97e75a8766f16dfad15046f40d171f36ed"
+  },
+  "host_test_execution": false,
+  "native_execution": false,
+  "original_capture": {
+    "path": ".runtime/phase01-20260926/host-recapture-20260926t223038z-27246f4e/host-current.json",
+    "pointer": "",
+    "sha256": "429407b2999f607716f75828baa70c97e75a8766f16dfad15046f40d171f36ed"
+  },
+  "protocol": "stead.retained-host-audit/5",
+  "scope": "Portable exact capture reference for the actual independent retained-byte audit; no rerun or native qualification claim.",
+  "source_audit": {
+    "path": "docs/urbit/evidence/2026-09-26/phase1-nonnative-v5/host-retained-audit.json",
+    "pointer": "",
+    "sha256": "7ef6b1a42e879b9b854c5ec65c68650c1f0e6cf4f0f1e398d0912e5c03fc555e"
+  }
+}
