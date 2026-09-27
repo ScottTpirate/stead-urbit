@@ -16,6 +16,7 @@
 /=  approval-mark  /mar/stead-auth-approval-1
 /=  command3-mark  /mar/stead-command-3
 /=  query3-mark  /mar/stead-query-3
+/=  updates3-mark  /mar/stead-updates-3
 /=  result3-mark  /mar/stead-result-3
 :-  %say
 |=  *

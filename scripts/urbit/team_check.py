@@ -12,11 +12,12 @@ import native_install
 import native_tls
 import native_units
 import team_conn
+import team_updates_check
 from digests import sha, source_sha, tree_sha
 
 CODE = Path(__file__).parent
 DEPENDENCIES = ('team_check.py', 'team_conn.py', 'core_conn.py', 'native_install.py',
-                'team_lifecycle.py', 'native_peer_fence.py', 'native_tls.py', 'native_units.py', 'owned_child.py', 'execution_policy.py')
+                'team_lifecycle.py', 'native_peer_fence.py', 'native_tls.py', 'native_units.py', 'owned_child.py', 'execution_policy.py', 'team_updates_check.py')
 
 
 def closure():
@@ -82,7 +83,7 @@ def run(host):
     def call(ship, mode, value=None, *, target='zod', app='stead-home', route=None):
         host['execution_check']()
         raw = canonical(value) if value is not None else b''
-        if route is None and mode in ('command', 'query'):
+        if route is None and mode in ('command', 'query', 'updates'):
             digest = hashlib.sha256(value['protocol'].encode() + b'\0' + raw).hexdigest()
             binding = uid(202 + ('bus', 'nec').index(ship)) if ship in ('bus', 'nec') else uid(299)
             route = '/v3/result/~' + ship + '/' + binding + '/1/' + value['request_id'] + '/' + digest
@@ -123,7 +124,7 @@ def run(host):
             offset = log.stat().st_size
             terminal = ''
             try:
-                observed = native_units.run(binary, host['LIVE'] / 'zod/.urb/conn.sock', resolved)
+                observed = native_units.run(binary, host['LIVE'] / 'zod/.urb/conn.sock', resolved, timeout=entry.get('timeout_seconds', 60))
                 report['commands'].append({'ship': 'zod', 'native_test': observed})
                 terminal = observed['stdout']
             finally:
@@ -224,7 +225,7 @@ def run(host):
               and receipt.get('principal_id') == uid(102))
         check('duplicate-native-command-idempotent', call('bus', 'command', create) == receipt)
         check('ungranted-member-no-project', call('nec', 'query', query('project', project=uid(1))).get('error') == 'denied_or_not_found')
-        grant = mutation('policy.grant', uid(1), 1, {'grant_id': uid(21), 'principal_id': uid(103), 'role': 'reader', 'expires_at_ms': str(now + 600000)})
+        grant = mutation('policy.grant', uid(1), 1, {'grant_id': uid(21), 'principal_id': uid(103), 'role': 'reader', 'expires_at_ms': str(now + 3600000)})
         check('explicit-reader-grant-accepted', call('bus', 'command', grant).get('status') == 'accepted')
         check('granted-native-reader', call('nec', 'query', query('project', project=uid(1))).get('status') == 'read')
         work = mutation('work.create', uid(10), 0, {'title': 'Native task', 'description': 'Synthetic two-user control', 'type': 'task', 'status': 'todo', 'priority': 'medium'})
@@ -234,6 +235,7 @@ def run(host):
         check('actual-read-reflects-committed-work', len(rows) == 1 and next(iter(rows.values())).get('title') == 'Native task')
         stale = mutation('work.update', uid(10), 2, work['payload'])
         check('native-stale-revision-rejected', call('bus', 'command', stale).get('error') == 'revision_conflict')
+        restart_watch = team_updates_check.run(call, check, query, mutation, uid, now)
         report['restarts'] = {}
         for ship in host['SHIPS']:
             checkpoint('cold-restart-' + ship)
@@ -258,6 +260,9 @@ def run(host):
         check('restart-preserves-exact-command-receipt', call('bus', 'command', create) == receipt)
         rows = call('nec', 'query', query('work', project=uid(1))).get('rows', {})
         check('restart-preserves-authorized-work', len(rows) == 1 and next(iter(rows.values())).get('title') == 'Native task')
+        retired = call('nec', 'updates', restart_watch)
+        check('restart-invalidates-native-update-cursor-and-watch', retired.get('status') == 'refresh_required'
+              and retired.get('rows') == {} and retired.get('generation') == '' and retired.get('cursor') == '')
         # Private operator fixture material. Never put +code/cert keys in the
         # portable report, command transcript, UI bundle or support exports.
         operator = {'format': 1, 'classification': 'private-disposable-browser-fixture',

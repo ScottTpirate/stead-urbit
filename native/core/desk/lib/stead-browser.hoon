@@ -1,8 +1,8 @@
 ::  Pure browser API orchestration. The Gall owner enforces the Eyre boundary.
-/+  stead-codec, stead-team, stead-team-codec, stead-team-config, stead-session, stead-http, stead-projection, stead-views
+/+  stead-codec, stead-team, stead-team-codec, stead-team-config, stead-session, stead-http, stead-projection, stead-views, stead-updates, stead-update-codec
 =,  stead-codec
 |%
-+$  ephemeral  [auth=state:stead-session pages=state:stead-views]
++$  ephemeral  [auth=state:stead-session pages=state:stead-views updates=state:stead-updates]
 +$  result
   $:  status=@ud  bytes=@t  cookies=(list @t)  outgoing=(unit [ship=@p bytes=@t])
       db=state:stead-team  view=state:stead-projection  transient=ephemeral
@@ -65,7 +65,7 @@
   =/  raw  body.request
   ?:  =('/stead/api/capabilities' route)
     =/  input  (small raw ~['protocol'] 'stead.capabilities/3')
-    (reply db view transient 200 (canonical (object ~[['protocol' 'stead.capabilities/3'] ['profile' 'configured-team'] ['commands' 'stead.command/3'] ['queries' 'stead.query/3'] ['authentication' 'native-approved-browser/1'] ['max_request_bytes' '65536'] ['max_response_bytes' '262144'] ['page_size' '20'] ['runtime' runtime.config]])))
+    (reply db view transient 200 (canonical (object ~[['protocol' 'stead.capabilities/3'] ['profile' 'configured-team'] ['commands' 'stead.command/3'] ['queries' 'stead.query/3'] ['updates' 'stead.updates/3'] ['authentication' 'native-approved-browser/1'] ['max_request_bytes' '65536'] ['max_response_bytes' '262144'] ['page_size' '20'] ['runtime' runtime.config]])))
   ?:  =('/stead/auth/start' route)
     =/  input  (small raw ~['protocol' 'identity_ship'] 'stead.auth/1')
     =/  ship  (need (slaw %p (field input 'identity_ship')))
@@ -111,7 +111,8 @@
     =/  input  (small raw ~['protocol'] 'stead.auth/1')
     =/  resumed  (resume:stead-session auth.transient session.request identity.u.member home.config origin.config now entropy)
     ?.  =(%authenticated status.resumed)  (reply db view transient 401 (error:stead-team 'session_required'))
-    (reply db view transient(auth next.resumed) 200 (canonical (object ~[['protocol' 'stead.auth/1'] ['status' 'authenticated'] ['csrf' csrf.resumed]])))
+    =/  cleaned  (forget-session:stead-updates updates.transient pages.transient audit.u.actor)
+    (reply db view transient(auth next.resumed, pages pages.cleaned, updates next.cleaned) 200 (canonical (object ~[['protocol' 'stead.auth/1'] ['status' 'authenticated'] ['csrf' csrf.resumed]])))
   =/  authenticated  (authorize:stead-session auth.transient session.request csrf.request identity.u.member home.config origin.config now)
   ?~  authenticated
     (reply db view transient 403 ?:(=('/stead/api/command' route) (correlated-error raw 'invalid_csrf') (error:stead-team 'invalid_csrf')))
@@ -120,7 +121,8 @@
     =/  ended  (logout:stead-session auth.transient session.request csrf.request identity.u.member home.config origin.config now)
     ?>  =(%logged-out status.ended)
     =/  cursors  (malt (skip ~(tap by cursors.pages.transient) |=([key=@t val=cursor-record:stead-views] =(audit.u.actor audit.actor.val))))
-    =/  out  (reply db view transient(auth next.ended, pages pages.transient(cursors cursors)) 200 (canonical (object ~[['protocol' 'stead.auth/1'] ['status' 'logged_out']])))
+    =/  cleaned  (prune:stead-updates db next.ended updates.transient pages.transient(cursors cursors) now)
+    =/  out  (reply db view transient(auth next.ended, pages pages.cleaned, updates next.cleaned) 200 (canonical (object ~[['protocol' 'stead.auth/1'] ['status' 'logged_out']])))
     out(cookies ~[(cookie:stead-http | '' &) (cookie:stead-http & '' &)])
   ?:  =('/stead/api/command' route)
     =/  decoded  (mule |.((decode:stead-team-codec raw)))
@@ -130,7 +132,16 @@
       ?:  =(db next.result)  view
       ?>  ?=(^ journal.data.next.result)
       (append:stead-projection view i.journal.data.next.result)
-    (reply next.result projected transient 200 response.result)
+    =/  advanced=[next=state:stead-updates pages=state:stead-views]
+      ?:  (ready:stead-projection next.result projected)
+        (advance:stead-updates next.result auth.transient updates.transient pages.transient now)
+      [*state:stead-updates *state:stead-views]
+    (reply next.result projected transient(updates next.advanced, pages pages.advanced) 200 response.result)
+  ?:  =('/stead/api/updates' route)
+    =/  decoded  (mule |.((decode:stead-update-codec raw)))
+    ?:  ?=(%| -.decoded)  (reply db view transient 200 (error:stead-team 'invalid_update'))
+    =/  result  (execute:stead-updates db view auth.transient updates.transient pages.transient u.actor p.decoded now entropy)
+    (reply db view transient(updates next.result, pages pages.result) 200 response.result)
   ?:  =('/stead/api/query' route)
     =/  decoded  (mule |.((decode-query:stead-team-codec raw)))
     ?:  ?=(%| -.decoded)  (reply db view transient 200 (error:stead-team 'invalid_query'))

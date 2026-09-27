@@ -24,6 +24,22 @@ export interface View {
   cursor: string;
   rows: Record<string, Row>;
 }
+export type UpdateScope = Omit<Query, 'cursor'>;
+export interface UpdateInput extends Omit<UpdateScope, 'kind'> {
+  kind: ViewKind | '';
+  action: 'open' | 'poll' | 'cancel' | 'resume';
+  watch_id: string;
+  cursor: string;
+}
+export interface UpdateResult {
+  protocol: 'stead.update-result/3';
+  request_id: string;
+  status: 'watching' | 'updated' | 'resumed' | 'cancelled' | 'refresh_required';
+  watch_id: string;
+  cursor: string;
+  generation: string;
+  rows: Record<string, {sequence: string; generation: string}>;
+}
 export interface Command {
   protocol: 'stead.command/3';
   request_id: string;
@@ -88,6 +104,7 @@ export class HomeClient {
   private adopting = 0;
   private suspended = false;
   private inflight = new Set<AbortController>();
+  private retired = new Set<HomeWatch>();
   onInvalidated: () => void = () => {};
   private fence() {
     this.generation++;
@@ -95,7 +112,7 @@ export class HomeClient {
     this.inflight.clear();
   }
   clear() {
-    this.fence(); this.csrf = ''; this.identity = null; this.adopting = 0; this.suspended = false; this.onInvalidated();
+    this.fence(); this.csrf = ''; this.identity = null; this.adopting = 0; this.suspended = false; this.retired.clear(); this.onInvalidated();
   }
   private async post(path: string, body: unknown, authenticated: boolean, mutation = false, adoption = false): Promise<Record<string, unknown>> {
     if (authenticated && this.adopting && !adoption) throw new HomeError('session_changed');
@@ -161,6 +178,7 @@ export class HomeClient {
     const changed = !this.identity || ['principal_id', 'binding_id', 'binding_revision', 'identity_ship', 'session_audit_id'].some(key => this.identity![key] !== person[key]);
     if (changed) this.onInvalidated();
     this.identity = person;
+    this.retired.clear(); // Confirmed resume/consumption retires prior server read handles.
     this.suspended = false;
     return person;
   }
@@ -205,6 +223,53 @@ export class HomeClient {
     for (const row of Object.values(rows)) fields(row);
     return value as unknown as View;
   }
+  async updates(input: UpdateInput): Promise<UpdateResult> {
+    const request_id = newId();
+    const value = await this.post('/stead/api/updates', {protocol: 'stead.updates/3', request_id, ...input}, true);
+    const names = ['protocol', 'request_id', 'status', 'watch_id', 'cursor', 'generation', 'rows'];
+    if (Object.keys(value).length !== names.length || names.some(name => !Object.hasOwn(value, name))
+      || value.protocol !== 'stead.update-result/3' || value.request_id !== request_id) throw new HomeError('invalid_response');
+    const expected = {open: 'watching', poll: 'updated', cancel: 'cancelled', resume: 'resumed'}[input.action];
+    if (value.status !== expected && value.status !== 'refresh_required') throw new HomeError('invalid_response');
+    const terminal = value.status === 'cancelled' || value.status === 'refresh_required';
+    if (typeof value.watch_id !== 'string' || typeof value.cursor !== 'string' || typeof value.generation !== 'string'
+      || (terminal ? value.cursor !== '' || value.generation !== '' : !TOKEN.test(value.watch_id) || !TOKEN.test(value.cursor) || !TOKEN.test(value.generation))
+      || (input.action === 'poll' || input.action === 'cancel' ? value.watch_id !== input.watch_id : terminal && value.watch_id !== '')) throw new HomeError('invalid_response');
+    const rows = object(value.rows); const keys = Object.keys(rows);
+    if (keys.length > 16 || (value.status !== 'updated' && keys.length !== 0)
+      || keys.some((key, index) => key !== String(index))) throw new HomeError('invalid_response');
+    let previous: bigint | undefined;
+    for (const item of Object.values(rows)) {
+      const row = fields(item);
+      if (Object.keys(row).length !== 2 || !TOKEN.test(row.generation ?? '') || !DECIMAL.test(row.sequence ?? '')) throw new HomeError('invalid_response');
+      const sequence = BigInt(row.sequence!);
+      if (sequence === 0n || sequence > 2n ** 64n - 1n || (previous !== undefined && sequence !== previous + 1n)) throw new HomeError('invalid_response');
+      previous = sequence;
+    }
+    if (keys.length && (rows[keys.at(-1)!] as Fields).generation !== value.generation) throw new HomeError('invalid_response');
+    return value as unknown as UpdateResult;
+  }
+  async watch(scope: UpdateScope, resumeCursor = ''): Promise<HomeWatch | null> {
+    const partition = this.generation;
+    for (const watch of [...this.retired]) await this.retire(watch);
+    if (partition !== this.generation) throw new HomeError('session_changed');
+    const result = await this.updates({...scope, action: resumeCursor ? 'resume' : 'open', watch_id: '', cursor: resumeCursor});
+    if (partition !== this.generation) throw new HomeError('session_changed');
+    if (result.status === 'refresh_required') return null;
+    return new HomeWatch(this, scope, result, () => { if (partition !== this.generation) throw new HomeError('session_changed'); });
+  }
+  async retire(watch: HomeWatch): Promise<void> {
+    if (!this.retired.has(watch) && this.retired.size >= 4) throw new HomeError('updates_cleanup_pending');
+    this.retired.add(watch);
+    try { await watch.cancel(); this.retired.delete(watch); }
+    catch (error) {
+      // React cleanup can retire an old handle after confirmed adoption has
+      // already cleared this queue. It cannot cancel in the new partition or
+      // prevent the new partition from opening its own watch.
+      if (error instanceof HomeError && error.code === 'session_changed') { this.retired.delete(watch); return; }
+      throw error;
+    }
+  }
   private async receipt(value: unknown, command: Command): Promise<Receipt> {
     const row = fields(value);
     const digest = await commandDigest(command);
@@ -245,6 +310,49 @@ export class HomeClient {
     return this.receipt(row, command);
   }
 
+}
+export class HomeWatch {
+  private cursor: string;
+  private generation: string;
+  private lastSequence: bigint | undefined;
+  private inflight = false;
+  private closed = false;
+  private cancelled = false;
+  private cancelling: Promise<void> | null = null;
+  readonly id: string;
+  constructor(private client: HomeClient, readonly scope: UpdateScope, result: UpdateResult, private current: () => void) {
+    this.id = result.watch_id; this.cursor = result.cursor; this.generation = result.generation;
+  }
+  get resumeCursor() { return this.cursor; }
+  async poll(): Promise<UpdateResult> {
+    this.current();
+    if (this.closed) throw new HomeError('refresh_required');
+    if (this.inflight) throw new HomeError('update_in_progress');
+    this.inflight = true;
+    try {
+      const result = await this.client.updates({kind: '', project_id: '', container_id: '', resource_id: '', search: '', action: 'poll', watch_id: this.id, cursor: this.cursor});
+      this.current();
+      if (this.closed) throw new HomeError('refresh_required');
+      if (result.status === 'refresh_required') { this.closed = true; return result; }
+      if (result.cursor === this.cursor) throw new HomeError('invalid_response');
+      const rows = Object.values(result.rows);
+      if (rows.length && this.lastSequence !== undefined && BigInt(rows[0]!.sequence) !== this.lastSequence + 1n) throw new HomeError('invalid_response');
+      if (!rows.length && result.generation !== this.generation) throw new HomeError('invalid_response');
+      if (rows.length) this.lastSequence = BigInt(rows.at(-1)!.sequence);
+      this.cursor = result.cursor; this.generation = result.generation;
+      return result;
+    } finally { this.inflight = false; }
+  }
+  async cancel(): Promise<void> {
+    if (this.cancelled) return;
+    if (this.cancelling) return this.cancelling;
+    this.closed = true; this.current();
+    this.cancelling = (async () => {
+      await this.client.updates({kind: '', project_id: '', container_id: '', resource_id: '', search: '', action: 'cancel', watch_id: this.id, cursor: ''});
+      this.current(); this.cancelled = true;
+    })();
+    try { await this.cancelling; } finally { this.cancelling = null; }
+  }
 }
 export function command(project_id: string, resource_id: string, expected_revision: string,
   authority_epoch: string, operation: string, payload: Fields): Command {

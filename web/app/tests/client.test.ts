@@ -3,12 +3,22 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import { newId, commandDigest, canonical } from '../src/protocol';
 import { HomeClient, HomeError, command, type Fields } from '../src/api';
+import { supportDetails } from '../src/support';
 const id = (end: string) => `019939ba-4000-7000-8000-${end.padStart(12, '0')}`;
+test('support export excludes untrusted diagnostics and non-request secrets', () => {
+  const secret = 'private document body and cookie ' + 'a'.repeat(64);
+  const clean = JSON.parse(supportDetails(secret, secret));
+  assert.deepEqual(clean, {format: 'stead.support/1', app_version: '0.2.0', command_protocol: 'stead.command/3', diagnostic: 'unexpected_error'});
+  assert.deepEqual(JSON.parse(supportDetails('outcome_unknown', id('1'))), {...clean, diagnostic: 'outcome_unknown', request_id: id('1')});
+  for (const token of ['a'.repeat(64), '~bus', id('1').toUpperCase(), id('1') + '\nprivate']) assert.ok(!Object.hasOwn(JSON.parse(supportDetails('none', token)), 'request_id'));
+});
 const identity = (person: number): Fields => ({principal_id: id(String(100 + person)), binding_id: id(String(200 + person)), binding_revision: '1', identity_ship: person === 1 ? '~bus' : '~nec', session_audit_id: String(person).repeat(64), display_name: 'Synthetic person', organization_id: id('5'), team_id: id('6')});
 const request = {kind: 'identity' as const, project_id: '', container_id: '', resource_id: '', search: '', cursor: ''};
 const json = (value: unknown, status = 200) => new Response(JSON.stringify(value), {status, headers: {'content-type': 'application/json'}});
 let person = 1;
 let mode = '';
+let updateSequence = 0;
+let updateCursor = 100;
 let deferred: ((value: Response) => void) | undefined;
 let savedBody: Record<string, unknown> = {};
 const bodies: Record<string, unknown>[] = [];
@@ -35,6 +45,25 @@ globalThis.fetch = async (url, init) => {
   if (String(url).endsWith('/logout')) {
     if (mode === 'network') throw new TypeError('lost response');
     return json({status: 'logged_out'});
+  }
+  if (String(url).endsWith('/updates')) {
+    if (mode === 'updates-network') throw new TypeError('lost update response');
+    const terminal = raw.action === 'cancel' || mode === 'updates-refresh';
+    const status = mode === 'updates-refresh' ? 'refresh_required' : ({open: 'watching', poll: 'updated', resume: 'resumed', cancel: 'cancelled'} as Fields)[String(raw.action)];
+    const row: Record<string, unknown> = {protocol: 'stead.update-result/3', request_id: raw.request_id, status,
+      watch_id: raw.action === 'open' || raw.action === 'resume' ? 'a'.repeat(64) : raw.watch_id,
+      cursor: terminal ? '' : (++updateCursor).toString(16).padStart(64, '0'), generation: terminal ? '' : String(updateSequence).repeat(64), rows: {}};
+    if (raw.action === 'poll' && !terminal) {
+      updateSequence++;
+      row.generation = String(updateSequence).repeat(64);
+      row.rows = {'0': {sequence: String(updateSequence), generation: row.generation}};
+      if (mode === 'updates-reordered') row.rows = {'0': {sequence: '1', generation: row.generation}};
+      if (mode === 'updates-extra-row') row.rows = {'0': {sequence: String(updateSequence), generation: row.generation, body: 'unexpected'}};
+      if (mode === 'updates-reused-cursor') row.cursor = raw.cursor;
+    }
+    if (mode === 'updates-wrong-request') row.request_id = id('999');
+    if (mode === 'updates-too-many') row.rows = Object.fromEntries(Array.from({length: 17}, (_, i) => [String(i), {sequence: String(i + 2), generation: row.generation}]));
+    return json(row);
   }
   if (String(url).endsWith('/command')) {
     const payload = raw.payload as Fields;
@@ -172,4 +201,113 @@ test('bounded response parsing distinguishes malformed bytes from lost transport
 test('command hash matches an independent Python hashlib and canonical JSON vector', async () => {
   const value = {protocol: 'stead.command/3', request_id: id('301'), project_id: id('100'), resource_id: id('101'), expected_revision: '0', authority_epoch: '1', operation: 'work.create', payload: {title: 'é🙂', description: 'line\nnext', type: 'task', status: 'todo', priority: 'none'}};
   assert.equal(await commandDigest(value), '0346ca1b87d2430868d09419687891a2d6bd7bae364c92ce133a005a6871d880');
+});
+
+const updateScope = {kind: 'work' as const, project_id: id('1'), container_id: '', resource_id: '', search: ''};
+test('updates correlate and rotate cursors with contiguous bounded invalidations', async () => {
+  person = 1; mode = ''; updateSequence = 0; const client = new HomeClient(); await client.resume();
+  const watch = (await client.watch(updateScope))!; const original = watch.resumeCursor;
+  const first = await watch.poll(); assert.equal(first.rows['0']?.sequence, '1');
+  assert.notEqual(watch.resumeCursor, original);
+  for (const fault of ['updates-wrong-request', 'updates-too-many', 'updates-extra-row', 'updates-reordered', 'updates-reused-cursor']) {
+    updateSequence = 1; mode = fault; await rejects(watch.poll(), 'invalid_response');
+  }
+  mode = ''; await watch.cancel(); const before = bodies.length; await watch.cancel(); assert.equal(bodies.length, before);
+  await rejects(watch.poll(), 'refresh_required');
+});
+test('lost update and cancel responses keep the original cursor and explicit cleanup retry', async () => {
+  person = 1; mode = ''; updateSequence = 0; const client = new HomeClient(); await client.resume();
+  const watch = (await client.watch(updateScope))!; const original = watch.resumeCursor;
+  mode = 'updates-network'; const before = bodies.length; await rejects(watch.poll(), 'outcome_unknown');
+  assert.equal(bodies.length, before + 1); assert.equal(watch.resumeCursor, original);
+  await rejects(watch.cancel(), 'outcome_unknown');
+  mode = ''; await watch.cancel(); assert.equal(savedBody.action, 'cancel');
+});
+test('old update handles cannot cross session adoption or restart refresh', async () => {
+  person = 1; mode = ''; updateSequence = 0; const client = new HomeClient(); await client.resume();
+  const watch = (await client.watch(updateScope))!;
+  await client.resume(); const before = bodies.length;
+  await rejects(watch.poll(), 'session_changed'); assert.equal(bodies.length, before);
+  const current = (await client.watch(updateScope))!;
+  mode = 'updates-refresh'; const result = await current.poll(); assert.equal(result.status, 'refresh_required');
+  await rejects(current.poll(), 'refresh_required');
+  mode = '';
+});
+
+test('session adoption between validated update response and outer continuation fences publication', async () => {
+  for (const phase of ['open', 'poll']) {
+    person = 1; mode = ''; updateSequence = 0; const client = new HomeClient(); await client.resume();
+    const watch = phase === 'poll' ? (await client.watch(updateScope))! : null;
+    const original = client.updates.bind(client);
+    let release: (() => void) | undefined;
+    client.updates = async input => {
+      const result = await original(input);
+      await new Promise<void>(resolve => { release = resolve; });
+      return result;
+    };
+    const operation = watch ? watch.poll() : client.watch(updateScope);
+    const rejected = rejects(operation, 'session_changed');
+    while (!release) await new Promise(resolve => setImmediate(resolve));
+    const oldCursor = watch?.resumeCursor;
+    await client.resume(); release(); await rejected;
+    assert.equal(watch?.resumeCursor, oldCursor);
+  }
+});
+
+test('retired read cleanup blocks fresh opens until its failed cancellation is acknowledged', async () => {
+  person = 1; mode = ''; updateSequence = 0; const client = new HomeClient(); await client.resume();
+  const watch = (await client.watch(updateScope))!;
+  mode = 'updates-network'; await rejects(client.retire(watch), 'outcome_unknown');
+  const before = bodies.length;
+  await rejects(client.watch(updateScope), 'outcome_unknown');
+  assert.deepEqual(bodies.slice(before).map(body => body.action), ['cancel']);
+  mode = ''; const recovered = bodies.length;
+  const replacement = await client.watch(updateScope); assert.ok(replacement);
+  assert.deepEqual(bodies.slice(recovered).map(body => body.action), ['cancel', 'open']);
+  await rejects(watch.poll(), 'refresh_required');
+});
+
+test('concurrent retire coalesces cancellation and fences a delayed poll', async () => {
+  person = 1; mode = ''; updateSequence = 0; const client = new HomeClient(); await client.resume();
+  const watch = (await client.watch(updateScope))!; const original = client.updates.bind(client);
+  const released = new Map<string, () => void>();
+  client.updates = async input => {
+    const result = await original(input);
+    await new Promise<void>(resolve => released.set(input.action, resolve));
+    return result;
+  };
+  const old = watch.poll(); const rejected = rejects(old, 'refresh_required');
+  while (!released.has('poll')) await new Promise(resolve => setImmediate(resolve));
+  const before = bodies.length;
+  const one = client.retire(watch); const two = client.retire(watch);
+  while (!released.has('cancel')) await new Promise(resolve => setImmediate(resolve));
+  assert.deepEqual(bodies.slice(before).map(body => body.action), ['cancel']);
+  released.get('poll')!(); await rejected;
+  released.get('cancel')!(); await Promise.all([one, two]);
+  client.updates = original;
+  const after = bodies.length; await client.watch(updateScope);
+  assert.deepEqual(bodies.slice(after).map(body => body.action), ['open']);
+});
+
+test('failed session adoption cannot open while suspended and confirmed adoption permits a fresh watch', async () => {
+  person = 1; mode = ''; updateSequence = 0; const client = new HomeClient(); await client.resume();
+  const watch = (await client.watch(updateScope))!;
+  mode = 'updates-network'; await rejects(client.retire(watch), 'outcome_unknown');
+  mode = '500'; await rejects(client.resume(), 'outcome_unknown');
+  mode = ''; const before = bodies.length;
+  await rejects(client.watch(updateScope), 'resume_required');
+  assert.equal(bodies.length, before);
+  await client.resume(); const adopted = bodies.length; await client.watch(updateScope);
+  assert.deepEqual(bodies.slice(adopted).map(body => body.action), ['open']);
+});
+
+test('late React cleanup from the prior partition cannot suppress a resumed watch', async () => {
+  person = 1; mode = ''; updateSequence = 0; const client = new HomeClient(); await client.resume();
+  const old = (await client.watch(updateScope))!;
+  await client.resume(); const before = bodies.length;
+  const cleanup = client.retire(old);
+  const current = await client.watch(updateScope);
+  await cleanup;
+  assert.ok(current); assert.equal(bodies.length, before + 1);
+  assert.equal(bodies.at(-1).action, 'open');
 });

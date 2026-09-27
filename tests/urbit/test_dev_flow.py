@@ -472,7 +472,7 @@ class CompileEvidenceTests(unittest.TestCase):
         entries = self.inventory['suites'] + [self.inventory['negative_control']]
         for entry in entries:
             self.probes['`path`%' + entry['path']] = '/~zod/base/~2026.9.27' + entry['path']
-        def mocked_units(binary, socket_path, resolved):
+        def mocked_units(binary, socket_path, resolved, timeout=60):
             # Synthetic outputs exercise host result admission, never Hoon.
             entry = next(item for item in entries if resolved.endswith(item['path']))
             negative = entry is entries[-1]

@@ -131,7 +131,7 @@ challenges tied to its browser binding, cancels queued deliveries and kicks its
 watches. Expiration, rebinding, origin changes and restart also cancel delivery.
 
 Hard maxima: 32 challenges/four per principal; 64 sessions/four per principal;
-64 watches/four per session or native binding; 32 headers/8 KiB total;
+64 watches/four per principal across its sessions and native binding; 32 headers/8 KiB total;
 64 KiB request body; 256-byte origin; 64-byte lowercase-hex challenge, bearer,
 CSRF and cursor tokens; 512-byte URL. Reject excess before decoding. Reject
 duplicate Host, Origin, Content-Type or CSRF headers, duplicate cookie names,
@@ -176,9 +176,9 @@ never become owner cookies.
 `POST /stead/auth/resume` is the explicit exception for a reloaded browser that
 has its HttpOnly session cookie but has lost the in-memory CSRF value. It requires
 the same native TLS, exact Host/Origin, no-forwarding and bounded JSON checks.
-Resolve the current binding and existing session; rotate only CSRF using fresh
+Resolve the current binding and existing session; rotate CSRF using fresh
 Gall entropy and counter separation. Preserve bearer, audit ID, browser binding
-and original expiration. Return the new CSRF token only, no-store and without
+and original expiration. Cancel this session’s old read cursors and watches, whose in-memory handles a reloaded page has lost; preserve other sessions and all business state/receipts. Return the new CSRF token only, no-store and without
 CORS. Failure changes nothing. Other tabs must refresh their CSRF after rotation;
 a stale CSRF never causes automatic mutation replay. The authenticated identity
 view is a separate protected query after resumption.
@@ -277,7 +277,14 @@ revision, session audit ID or native sender, scope, filter, last position, view
 generation and epoch. No unsigned cursor state is trusted. Only changes visible
 in that scope advance its generation; unrelated private mutations do not affect
 shared cursors/counts. Access generations are principal/project/container scoped.
-Altered, stale, expired or rebound cursors require refresh.
+Altered, stale, expired or rebound cursors require refresh. The alpha supports
+one active pagination walk per exact authenticated actor (browser session or
+native binding). A successful fresh snapshot requiring pagination atomically
+supersedes that actor's previous query cursors; tabs/lists sharing the same
+session must refresh a superseded walk. Metadata and single-page reads preserve
+the active continuation. Update cursors and other actors are unaffected; failed
+reads preserve the previous walk. This keeps repeated live/manual refreshes and
+route changes within the shared cursor limit without increasing it.
 
 Each scope retains 64 minimal invalidations; each watch queues at most 16.
 Overflow emits refresh_required and closes the watch. Reauthorize at dequeue,
@@ -314,3 +321,13 @@ require consent and contain only bounded diagnostic codes/versions/correlation
 IDs by default, excluding cookies, keys, messages and content. Local fake ships
 qualify the local protocol/browser profile; live network custody, public hosting,
 production TLS deployment and confidential data remain separate later gates.
+
+### Unconfirmed receipt reads
+
+A missing receipt in an existing, currently authorized project returns an empty
+read for the caller's own principal. A supplied document collection must also
+remain visible. Empty rows mean outcome unknown, never proof of noncommitment;
+retrying still uses the original command and request ID. Known receipts retain
+final command authorization and exact collection matching. Unauthorized projects,
+inaccessible private or absent collections and revoked bindings remain denied. This does not
+authorize reads into a proposed project or collection that does not exist yet.

@@ -40,6 +40,7 @@
     %bootstrap  %stead-bootstrap-1
     %command  %stead-command-3
     %query  %stead-query-3
+    %updates  %stead-updates-3
     %approve  %stead-auth-approval-1
   ==
 ?:  ?|(=(%configure mode) =(%identity-config mode) =(%approve mode))
