@@ -80,19 +80,34 @@ def run(host):
         for ship in host['SHIPS']:
             host['launch'](ship)
             host['wait_ready'](ship)
-        sources = sorted(native.rglob('*.hoon'))
+        sources = sorted(path for path in native.rglob('*') if path.is_file())
         check('nonempty-native-source', bool(sources))
-        for source in sources:
-            target = host['LIVE'] / 'zod/base' / source.relative_to(native)
-            target.parent.mkdir(parents=True, exist_ok=True)
-            shutil.copyfile(source, target)
-            check('installed-bytes:' + str(source.relative_to(native)), sha(source) == sha(target))
-        command('|commit %base')
-        for source in sources:
-            literal = core_conn.atom(bytes.fromhex(sha(source))[::-1])
-            path = '/' + str(source.relative_to(native)).replace('.hoon', '/hoon')
-            expression = f'=/  raw=@t  .^(@t %cx /=base={path})  =({literal} (sha-256l:sha [(met 3 raw) (rev 3 (met 3 raw) raw)]))'
-            command(expression, '%.y')
+        # Import the raw asset mark before files using it. Unix/Clay commit
+        # acknowledgement precedes the completed import; wait on a nonthrowing
+        # directory scry before exact byte readback.
+        for group in ([p for p in sources if p.suffix == '.hoon'],
+                      [p for p in sources if p.suffix != '.hoon']):
+            if not group:
+                continue
+            for source in group:
+                target = host['LIVE'] / 'zod/base' / source.relative_to(native)
+                target.parent.mkdir(parents=True, exist_ok=True)
+                shutil.copyfile(source, target)
+                check('installed-bytes:' + str(source.relative_to(native)), sha(source) == sha(target))
+            command('|commit %base')
+            deadline = time.monotonic() + 60
+            for source in group:
+                literal = core_conn.atom(bytes.fromhex(sha(source))[::-1])
+                parts = [*source.relative_to(native).with_suffix('').parts, source.suffix[1:]]
+                path = '/' + '/'.join(parts)
+                exists = f'=/  arc=arch  .^(arch %cy /=base={path})  ?=(^ -.arc)'
+                while command(exists).strip() != '%.y':
+                    host['execution_check']()
+                    if time.monotonic() > deadline:
+                        raise TimeoutError('Clay import did not publish ' + str(source.relative_to(native)))
+                    time.sleep(.2)
+                expression = f'=/  raw=@t  .^(@t %cx /=base={path})  =({literal} (sha-256l:sha [(met 3 raw) (rev 3 (met 3 raw) raw)]))'
+                command(expression, '%.y')
         # Bind the actual seeded unit runner and typed input mark to the pin.
         for dependency in ('ted/test.hoon', 'mar/path.hoon'):
             pinned = (Path('/kernel/pkg/arvo') / dependency).resolve(strict=True)
@@ -101,17 +116,6 @@ def run(host):
             literal = core_conn.atom(bytes.fromhex(sha(pinned))[::-1])
             route = '/' + dependency.replace('.hoon', '/hoon')
             command(f'=/  raw=@t  .^(@t %cx /=base={route})  =({literal} (sha-256l:sha [(met 3 raw) (rev 3 (met 3 raw) raw)]))', '%.y')
-        for probe, expected in (
-                ('stead-build-probe', '%stead-builds-pass'),
-                ('stead-codec-probe', '%stead-codec-six-vectors-pass'),
-                ('stead-core-probe', '%stead-core-basic-and-counter-edge-pass'),
-                ('stead-reducers-probe', '%stead-native-reducers-pass'),
-                ('stead-save-probe', '%stead-save-format2-roundtrip-pass'),
-                ('stead-session-probe', '%stead-session-57-controls-pass'),
-                ('stead-http-probe', '%stead-http-49-controls-pass'),
-                ('stead-team-contract-probe', '%stead-team-contract-basic-pass'),
-                ('stead-team-authority-probe', '%stead-team-authority-basic-pass')):
-            command('+' + probe, expected)
         report['native_units'] = []
         def native_test(entry):
             resolved = command('`path`%' + entry['path']).strip()
@@ -146,6 +150,17 @@ def run(host):
             failure_marker=control['marker'])
         check('native-unit-deliberate-failure-observed', True)
         host['execution_check']()
+        for probe, expected in (
+                ('stead-build-probe', '%stead-builds-pass'),
+                ('stead-codec-probe', '%stead-codec-six-vectors-pass'),
+                ('stead-core-probe', '%stead-core-basic-and-counter-edge-pass'),
+                ('stead-reducers-probe', '%stead-native-reducers-pass'),
+                ('stead-save-probe', '%stead-save-format2-roundtrip-pass'),
+                ('stead-session-probe', '%stead-session-57-controls-pass'),
+                ('stead-http-probe', '%stead-http-49-controls-pass'),
+                ('stead-team-contract-probe', '%stead-team-contract-basic-pass'),
+                ('stead-team-authority-probe', '%stead-team-authority-basic-pass')):
+            command('+' + probe, expected)
         report['status'] = 'pass'
     except Exception as error:
         report['error'] = f'{type(error).__name__}: {error}'

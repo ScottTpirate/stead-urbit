@@ -49,7 +49,33 @@
   ?>  ?=(~ (headers ~[['Origin' origin] ['origin' origin]]))
   ?>  ?=(~ (headers ~[['Content-Type' 'application/json'] ['content-type' 'application/json']]))
   ?>  ?=(~ (headers ~[['X-Stead-CSRF' token] ['x-stead-csrf' token]]))
-  ?>  ?=(~ (headers ~[['Cookie' 'x=one'] ['cookie' 'x=two']]))
+  ?>  ?=(~ (validate request(header-list.request [['Cookie' 'x=one'] [['cookie' 'x=two'] heads]]) origin ~))
+  ~
+++  test-http-cookie-transport-fields
+  ^-  tang
+  =/  member  (cat 3 '__Host-stead-pending=' token)
+  =/  joined  request(header-list.request [['Cookie' (cat 3 'urbauth-~zod=0v123; ' member)] heads])
+  =/  split  request(header-list.request [['Cookie' 'urbauth-~zod=0v123'] [['cOoKiE' member] heads]])
+  =/  accepted  (validate split origin ~)
+  ?>  ?=(^ accepted)
+  ?>  =(token pending.u.accepted)
+  ?>  =(accepted (validate joined origin ~))
+  ?>  ?=(~ (validate request(header-list.request [['cookie' member] [['Cookie' member] heads]]) origin ~))
+  ?>  ?=(~ (validate request(header-list.request [['cookie' member] [['Cookie' '__Host-stead-pending=bad'] heads]]) origin ~))
+  ?>  ?=(~ (validate request(header-list.request [['cookie' 'x=one'] [['Cookie' 'x=two'] heads]]) origin ~))
+  ?>  ?=(~ (validate request(header-list.request [['cookie' 'x=one;'] [['Cookie' member] heads]]) origin ~))
+  ?>  ?=(~ (validate request(header-list.request [['cookie' 'x="bad"'] [['Cookie' member] heads]]) origin ~))
+  ?>  ?=(~ (validate request(header-list.request [['cookie' ''] [['Cookie' member] heads]]) origin ~))
+  ~
+++  test-http-split-cookie-limits
+  ^-  tang
+  =/  make-field  |=(n=@ud ['Cookie' (rap 3 ~['x' (scot %ud n) '=one'])])
+  ?>  ?=(^ (validate request(header-list.request (weld (turn (gulf 0 28) make-field) heads)) origin ~))
+  ?>  ?=(~ (validate request(header-list.request (weld (turn (gulf 0 29) make-field) heads)) origin ~))
+  =/  make-pair  |=(n=@ud (rap 3 ~[?:(=(n 0) '' '; ') 'x' (scot %ud n) '=one']))
+  ?>  ?=(^ (cookies (rap 3 (turn (gulf 0 31) make-pair))))
+  ?>  ?=(~ (cookies (rap 3 (turn (gulf 0 32) make-pair))))
+  ?>  ?=(~ (headers ~[['Cookie' (fil 3 8.180 97)] ['Cookie' 'x=one']]))
   ~
 ++  test-http-cookie-grammar
   ^-  tang

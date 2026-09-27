@@ -1,0 +1,75 @@
+{
+  "format": 1,
+  "classification": "local-real-native-and-browser-development",
+  "qualifies_phase": false,
+  "parent_commit": "d69697cdbc2fd79e5a9b650ca294508fca96a6e1",
+  "native_checks_passed": 618,
+  "native_pure_arms_passed": 44,
+  "deliberate_native_failure_observed": true,
+  "browser_checks_passed": 7,
+  "source_binding": "Exact native tree, harness and browser hashes are in native/transport reports; development worktree at execution, not a milestone gate.",
+  "remaining": "Full Phase 2 inventory, update transport, independent SDK3, full browser controls, hosted CI, onboarding and final qualification remain open.",
+  "files": {
+    "native.json.gz": {
+      "input_sha256": "94237059a83073267da4126ba06aef4948aebaef7c45bd9fe6caa90529f1e005",
+      "input_bytes": 447441
+    },
+    "guardian.json.gz": {
+      "input_sha256": "f259beca6d6d8c8e0309aaf955a90ddc8103f8fa62351e6ef30103e161f96eeb",
+      "input_bytes": 201386
+    },
+    "browser.json.gz": {
+      "input_sha256": "1253ff95af146530a894cd2193835eaa5407809de3da7a343069ae96ae2da741",
+      "input_bytes": 31637
+    },
+    "transport.json": {
+      "input_sha256": "9762fd818a688ab2600d152fec8818207aed9083a6abb0d36619454a72bd0bb8",
+      "input_bytes": 2769
+    },
+    "process.json": {
+      "input_sha256": "7238519a34ba2f32b5f88f6738ee9db7cc2255554324a6c25dc356d9301c6bf6",
+      "input_bytes": 560
+    },
+    "host-first-failed.log": {
+      "input_sha256": "bcb79b4e3ebda7d6593c550e0e2d5eeb5a646070d012ef20420fb74867e4eba1",
+      "input_bytes": 1375
+    },
+    "host-retry-failed.log": {
+      "input_sha256": "385b34adb20300a7709ef3f4ab16425e2e9cd82156ba74bdd9d35983acf7edd7",
+      "input_bytes": 2117
+    },
+    "host-passed.log": {
+      "input_sha256": "c7b8b6ec20bd9110c300887a51de3f5b6064b44701fa76798b4697d2556bde15",
+      "input_bytes": 632
+    },
+    "ingress-cpython314-cache.bin": {
+      "input_sha256": "7c2d07fcab337ea8bf157fae487ad7ad91f4017ad5e86c3f662c83c0a1d93184",
+      "input_bytes": 17695,
+      "original_path": "web/dev/__pycache__/ingress.cpython-314.pyc"
+    },
+    "configured-supervisor.jsonl": {
+      "input_sha256": "601fa701575a98c83aeef14de85e8b6631aa9d30e63a322f33be4c228449a143",
+      "input_bytes": 14176,
+      "original_path": ".piers/fakes/logs/supervisor.log",
+      "offsets_and_record_hashes": "independent-review.json#/configured_lifecycle/records"
+    },
+    "independent-review.json": {
+      "input_sha256": "d83b42307930872c323fc0e7fff8b4f3c957f7859a408fe82eefa5ad2e8fe2c0",
+      "input_bytes": 24612
+    }
+  },
+  "host_tests": {
+    "passed": 531,
+    "elapsed_seconds": 27.315,
+    "classification": "host-static-mocked-and-real-host-socket-controls; no native qualification"
+  },
+  "frontend_tests": {
+    "passed": 16,
+    "typescript": "passed",
+    "classification": "host mocked client and build controls; observed separately from real-browser run"
+  },
+  "browser_process_host_controls": {
+    "passed": 4,
+    "classification": "real systemd user service cleanup with authored child processes; no native acceptance"
+  }
+}

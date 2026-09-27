@@ -97,21 +97,23 @@ def validate_inventory(value: dict) -> dict:
     if not isinstance(value, dict) or type(value.get('format')) is not int or value.get('format') != 1 or value.get('classification') != 'pure-native-only':
         raise ValueError('Native inventory schema')
     suites = value.get('suites')
-    if not isinstance(suites, list) or len(suites) != 2:
-        raise ValueError('Exactly two native suites required')
+    definitions = {'/tests/stead-session': ('test-session-', 19),
+                   '/tests/stead-http': ('test-http-', 14),
+                   '/tests/stead-identity': ('test-identity-', 11)}
+    if not isinstance(suites, list) or len(suites) != len(definitions):
+        raise ValueError('Exactly three native suites required')
     paths = [entry.get('path') for entry in suites if isinstance(entry, dict)]
-    if set(paths) != {'/tests/stead-session', '/tests/stead-http'} or len(paths) != 2:
+    if set(paths) != set(definitions) or len(paths) != len(definitions):
         raise ValueError('Native suite paths')
     all_arms = []
     for entry in suites:
         names = entry.get('arms')
-        prefix = 'test-session-' if entry['path'].endswith('stead-session') else 'test-http-'
-        count = 19 if prefix == 'test-session-' else 12
+        prefix, count = definitions[entry['path']]
         if not isinstance(names, list) or len(names) != count or any(
                 not isinstance(name, str) or not re.fullmatch(prefix + r'[a-z0-9-]{1,64}', name) for name in names):
             raise ValueError('Native suite arms')
         all_arms.extend(names)
-    if len(all_arms) != 31 or len(set(all_arms)) != 31 or type(value.get('expected_arm_count')) is not int or value.get('expected_arm_count') != 31:
+    if len(all_arms) != 44 or len(set(all_arms)) != 44 or type(value.get('expected_arm_count')) is not int or value.get('expected_arm_count') != 44:
         raise ValueError('Native arm count and uniqueness')
     if value.get('negative_control') != {
             'path': '/controls/stead-unit-failure', 'arms': ['test-deliberate-failure'],

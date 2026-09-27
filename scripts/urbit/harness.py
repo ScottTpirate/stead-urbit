@@ -46,7 +46,7 @@ def guard(create=False):
         raise ValueError('Fixture escaped repository')
     if STATE.stat().st_uid != os.getuid() or STATE.stat().st_mode & 0o077:
         raise ValueError('Fixture must be owned by this user with mode 0700')
-    for name in ('live', 'seed', 'logs', 'control.sock', 'lifecycle.lock', 'unclean-live.json'):
+    for name in ('live', 'seed', 'logs', 'ingress', 'control.sock', 'lifecycle.lock', 'unclean-live.json'):
         if (STATE / name).is_symlink():
             raise ValueError(f'Refusing redirected fixture entry: {name}')
     return STATE
@@ -128,9 +128,11 @@ def wait_ready(timeout=1200):
     raise RuntimeError('Readiness timed out; inspect logs and make stop')
 
 
-def sandbox(command, *, execution_control=None, execution_id=None):
+def sandbox(command, *, execution_control=None, execution_id=None, configured=False):
     # Only fixture state is writable. No home, credentials, Docker socket or LAN.
     args = ['bwrap', '--unshare-all', '--new-session', '--ro-bind', '/usr', '/usr']
+    if configured:
+        args += ['--uid', '0', '--gid', '0', '--cap-add', 'CAP_NET_ADMIN', '--cap-add', 'CAP_SETPCAP']
     for name in ('bin', 'sbin', 'lib', 'lib64'):
         path = Path('/') / name
         if path.is_symlink():
@@ -139,6 +141,7 @@ def sandbox(command, *, execution_control=None, execution_id=None):
             args += ['--ro-bind', str(path), str(path)]
     args += ['--proc', '/proc', '--dev', '/dev', '--tmpfs', '/tmp', '--dir', '/etc',
              '--ro-bind', str(ROOT / 'scripts/urbit'), '/code',
+             '--ro-bind', str(ROOT / 'web/dev'), '/web-dev',
              '--ro-bind', str(ROOT / 'native'), '/native',
              '--ro-bind', str(ROOT / 'specs/urbit'), '/specs',
              '--ro-bind', str(ROOT / 'tests/urbit/native_gall_schedule'), '/native-tests/gall-schedule',
@@ -151,6 +154,8 @@ def sandbox(command, *, execution_control=None, execution_id=None):
              '--bind', str(STATE), '/state', '--chdir', '/state', '--clearenv',
              '--setenv', 'PATH', '/usr/bin:/bin', '--setenv', 'TERM', 'dumb',
              '--setenv', 'LANG', 'C.UTF-8']
+    if configured:
+        args += ['--setenv', 'STEAD_CONFIGURED', '1']
     if execution_control is not None:
         args += ['--ro-bind', str(execution_control), '/execution',
                  '--setenv', 'STEAD_EXECUTION_ID', execution_id]
@@ -186,13 +191,15 @@ def preflight():
     return result
 
 
-def guarded_supervisor():
+def guarded_supervisor(*, configured=False):
     guard()
     def command(control, run_id):
-        paths = ['scripts/urbit', 'native', 'specs/urbit',
+        paths = ['scripts/urbit', 'native', 'specs/urbit', 'web/dev',
                  'tests/urbit/native_gall_schedule', 'tests/urbit/skill_evaluation']
         scripts = source_inventory(ROOT / 'scripts/urbit')
         context = {
+            'profile': 'configured-team' if configured else 'legacy-fixture',
+            'host_network_namespace': os.readlink('/proc/self/ns/net'),
             'source_commit': subprocess.check_output(['git', 'rev-parse', 'HEAD'], cwd=ROOT, text=True).strip(),
             'dirty_paths': subprocess.check_output(['git', 'status', '--porcelain', '--', *paths], cwd=ROOT, text=True).splitlines(),
             'harness_sha256': source_sha(ROOT / 'scripts/urbit'),
@@ -229,7 +236,7 @@ def guarded_supervisor():
             raise ValueError('Source checkout changed during provenance capture')
         execution_policy.write_json(control / 'source-context.json', context)
         return sandbox(['/usr/bin/python3', '-X', 'pycache_prefix=/tmp/python-cache', '/code/supervisor.py'],
-                       execution_control=control, execution_id=run_id)
+                       execution_control=control, execution_id=run_id, configured=configured)
     report = execution_policy.run_guarded(
         command,
         root=ROOT, label='four-fakes', policy=execution_limits())
@@ -257,7 +264,7 @@ def doctor():
                       'git': toolchain.lock()['host_tools']['git'], 'running': running()}, indent=2))
 
 
-def start():
+def start(*, configured=False):
     guard(create=True)
     toolchain.verify()
     seed_manifest = STATE / 'seed/manifest.json'
@@ -267,6 +274,8 @@ def start():
             raise ValueError('Existing fixture toolchain differs; no automatic upgrade')
     current = running()
     if current is not None:
+        if current.get('profile', 'legacy-fixture') != ('configured-team' if configured else 'legacy-fixture'):
+            raise RuntimeError('A different fixture profile is active; stop it before switching')
         if not current.get('execution_guard'):
             raise RuntimeError('Loaded supervisor has no common guard; make stop before restart')
         print(json.dumps(current, indent=2))
@@ -283,7 +292,7 @@ def start():
             raise RuntimeError('Supervisor owns fixture; inspect logs, do not duplicate')
         fcntl.flock(gate, fcntl.LOCK_UN)
     with (STATE / 'logs/supervisor.log').open('ab') as output:
-        process = subprocess.Popen([sys.executable, str(Path(__file__).resolve()), '_guarded-supervisor'],
+        process = subprocess.Popen([sys.executable, str(Path(__file__).resolve()), '_guarded-supervisor', *(['--configured'] if configured else [])],
                                    stdin=subprocess.DEVNULL, stdout=output, stderr=output,
                                    start_new_session=True)
     for _ in range(100):
@@ -401,6 +410,14 @@ def gall_schedule():
         raise RuntimeError('Scheduled Gall native lane failed; inspect retained evidence')
 
 
+def team_check():
+    guard()
+    result = rpc('team-check', timeout=1800)
+    print(json.dumps(result, indent=2))
+    if result['status'] != 'pass':
+        raise RuntimeError('Configured Gall check failed; inspect retained evidence')
+
+
 def skill_evaluation(condition):
     guard()
     result = rpc('skill-evaluation', condition=condition, timeout=3600)
@@ -421,15 +438,15 @@ def skill_feedback(condition, task, attempt):
         raise RuntimeError('Public task feedback failed; retain its public and private execution records')
 
 
-def dev():
+def dev(*, configured=False):
     def interrupted(*_):
         raise KeyboardInterrupt('Developer command interrupted')
 
     previous = signal.signal(signal.SIGTERM, interrupted)
     try:
-        start()
+        start(configured=True) if configured else start()
         wait_ready()
-        core_check()
+        (team_check if configured else core_check)()
     except BaseException:
         # An interrupted developer operation must not leave a heavy run behind.
         try:
@@ -442,18 +459,23 @@ def dev():
         signal.signal(signal.SIGTERM, previous)
 
 
+def team_dev():
+    dev(configured=True)
+
+
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument('command', choices=['doctor', 'preflight', 'start', 'stop', 'reset', 'status',
-                        'wait-ready', 'dev', 'test', 'core-check', 'core-test', 'delivery-check', 'capacity-check', 'gall-schedule',
+                        'wait-ready', 'dev', 'team-dev', 'team-check', 'test', 'core-check', 'core-test', 'delivery-check', 'capacity-check', 'gall-schedule',
                         'skill-evaluation', 'skill-feedback', '_guarded-supervisor'])
     parser.add_argument('--condition', choices=['prequalification', 'baseline', 'local_skill_assisted'])
     parser.add_argument('--task', choices=['T01', 'T02', 'T03', 'T04', 'T05', 'T06'])
     parser.add_argument('--attempt', type=int, choices=[1, 2, 3])
+    parser.add_argument('--configured', action='store_true', help=argparse.SUPPRESS)
     args = parser.parse_args()
     try:
         if args.command == '_guarded-supervisor':
-            guarded_supervisor()
+            guarded_supervisor(configured=args.configured)
         elif args.command == 'skill-evaluation':
             if args.condition is None or args.task is not None or args.attempt is not None:
                 raise ValueError('Explicit workflow evaluation condition required')

@@ -41,13 +41,17 @@
   =.  size  (add size (add (met 3 key.i.rows) (met 3 value)))
   ?.  &((lte size 8.192) (gth (met 3 key.i.rows) 0))  ~
   =/  key  (lower key.i.rows)
-  ?:  ?|  (~(has by result) key)  =('forwarded' key)
+  ?:  ?|  &((~(has by result) key) !=('cookie' key))  =('forwarded' key)
           =('x-forwarded-' (cut 3 [0 12] key))
       ==
     ~
   ?.  (levy (rip 3 key) |=(c=@ ?|(&((gte c 97) (lte c 122)) &((gte c 48) (lte c 57)) =(c 45))))  ~
   ?.  (levy (rip 3 value) |=(c=@ &((gte c 32) !=(c 127))))  ~
-  $(rows t.rows, count +(count), result (~(put by result) key value))
+  ::  Browsers may split Cookie into separate transport fields. Validate the
+  ::  complete combined jar below: duplicate names never select a credential.
+  =/  prior  (~(get by result) key)
+  =/  combined  ?~(prior value (rap 3 ~[u.prior '; ' value]))
+  $(rows t.rows, count +(count), result (~(put by result) key combined))
 ++  cookie-pair
   |=  text=@t
   ^-  (unit [name=@t value=@t])
@@ -99,6 +103,10 @@
 ++  validate
   |=  [request=inbound-request:eyre origin=@t assets=(set @t)]
   ^-  (unit incoming)
+  (validate-routes request origin (~(put in assets) '/stead/') (silt ~['/stead/auth/start' '/stead/auth/status' '/stead/auth/consume' '/stead/auth/logout' '/stead/auth/resume' '/stead/api/capabilities' '/stead/api/command' '/stead/api/query' '/stead/api/updates']))
+++  validate-routes
+  |=  [request=inbound-request:eyre origin=@t assets=(set @t) posts=(set @t)]
+  ^-  (unit incoming)
   ?.  &(secure.request (origin-valid:stead-session origin))  ~
   =/  req  request.request
   ?.  (lte (met 3 url.req) 512)  ~
@@ -113,8 +121,7 @@
       ==
     ~
   ?:  =(%'GET' method.req)
-    ?.  ?|  =('/stead/' url.req)  (~(has in assets) url.req)
-        ==
+    ?.  (~(has in assets) url.req)
       ~
     ?.  ?~(body.req & =([0 0] u.body.req))  ~
     ?.  ?|  =('' (field values 'origin'))  =(origin (field values 'origin'))
@@ -122,7 +129,7 @@
       ~
     (some [url.req '' '' '' ''])
   ?.  =(%'POST' method.req)  ~
-  ?.  (~(has in (silt ~['/stead/auth/start' '/stead/auth/status' '/stead/auth/consume' '/stead/auth/logout' '/stead/auth/resume' '/stead/api/capabilities' '/stead/api/command' '/stead/api/query' '/stead/api/updates'])) url.req)  ~
+  ?.  (~(has in posts) url.req)  ~
   ?.  &(=(origin (field values 'origin')) =('application/json' (field values 'content-type')))  ~
   ?~  body.req  ~
   ?.  &((gth p.u.body.req 0) (lte p.u.body.req 65.536) =(p.u.body.req (met 3 q.u.body.req)))  ~

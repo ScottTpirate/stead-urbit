@@ -401,6 +401,8 @@ class SupervisorDeveloperTests(unittest.TestCase):
             copied = Path(temporary) / 'scripts/urbit'; copied.mkdir(parents=True)
             for source in Path(harness.__file__).parent.glob('*.py'):
                 shutil.copyfile(source, copied / source.name)
+            shutil.copytree(Path(harness.__file__).resolve().parents[2] / 'web/dev',
+                            Path(temporary) / 'web/dev', ignore=shutil.ignore_patterns('__pycache__'))
             script = '''
 import importlib, pathlib, sys
 from unittest.mock import patch
@@ -501,7 +503,7 @@ class CompileEvidenceTests(unittest.TestCase):
     def test_wrong_compiler_result_is_failure_with_retained_output(self):
         self.probes['+stead-build-probe'] = 'compile error'
         self.assertEqual(core_check.run(self.host)['status'], 'fail')
-        self.assertTrue(any(c['result'] == 'compile error' for c in self.report()['commands']))
+        self.assertTrue(any(c.get('result') == 'compile error' for c in self.report()['commands']))
 
     def test_required_save_load_probe_cannot_pass_on_empty_or_wrong_result(self):
         for output in ('', '~', '%stead-unsupported-state'):

@@ -1,0 +1,67 @@
+{
+  "classification": "local-real-browser-native-tls",
+  "status": "pass",
+  "qualifies_phase": false,
+  "inputs_before": {
+    "native_tree": "99ec18175e3c8fd0ddc9d33fe6dc7a4f8fa71d3d68057cbf8347595fe0997682",
+    "runner": "acada9ccfb5bd6e6f0793572fdf0a5ca95e7d5350676ebad7716fa799b40ecb4",
+    "process_owner": "2d122b72e7a58d6f926eff59be1831fb3587611a8373be8a93bd3bbceb3b96c5",
+    "browser_test": "81696b63f3910ac1c808420172ddbce4c688de4d2e3a9ae74050c67c856b2fc4",
+    "relay": "a724bcfc4197adc796f580b43a751198cba8fbf4c1eeaba0221ffab01395fae2",
+    "toolchain": "4a209c10cf1756eb0f7357cc3eca8250bf66c239b4cd0ca31a8c0886d4d304ee",
+    "execution_id": "f66fcb9510bc5606cde8bf1f34c9d6bf"
+  },
+  "tls": {
+    "zod": {
+      "hostname": "home.localhost",
+      "certificate_sha256": "d5da4e72dadbbbc52b5e83803fa3122dd68b46c0743feead670ed61dbfd12d38",
+      "protocol": "TLSv1.3"
+    },
+    "bus": {
+      "hostname": "bus.localhost",
+      "certificate_sha256": "8018cf3601991c947849d82d126a3d4097f28c57cf705a52234c5457299a47ed",
+      "protocol": "TLSv1.3"
+    },
+    "nec": {
+      "hostname": "nec.localhost",
+      "certificate_sha256": "70011378c8833536b3f8650d88f4e345303d0e543b2fe45832170d11ba4ac9ae",
+      "protocol": "TLSv1.3"
+    },
+    "bud": {
+      "hostname": "bud.localhost",
+      "certificate_sha256": "29a193cf74686940ee521d38e11559f944a05eaa752cee23c4e5560e757e83de",
+      "protocol": "TLSv1.3"
+    }
+  },
+  "wrong-ca-rejected": true,
+  "wrong-hostname-rejected": true,
+  "browser_process": {
+    "unit": "stead-browser-58a846b28be2c4298df2b6ac2a31ff24.service",
+    "status": "pass",
+    "cleanup": {
+      "process_reaped": true,
+      "cgroup": "/user.slice/user-1000.slice/user@1000.service/app.slice/stead-browser-58a846b28be2c4298df2b6ac2a31ff24.service",
+      "empty": true,
+      "state": "inactive"
+    },
+    "proof": {
+      "pid": 2859760,
+      "cgroup": "/user.slice/user-1000.slice/user@1000.service/app.slice/stead-browser-58a846b28be2c4298df2b6ac2a31ff24.service",
+      "cpu_max": "2500 10000",
+      "cpu_affinity": [
+        19
+      ]
+    },
+    "exit_code": 0
+  },
+  "private_profile": "removed after verified cgroup termination",
+  "inputs_after": {
+    "native_tree": "99ec18175e3c8fd0ddc9d33fe6dc7a4f8fa71d3d68057cbf8347595fe0997682",
+    "runner": "acada9ccfb5bd6e6f0793572fdf0a5ca95e7d5350676ebad7716fa799b40ecb4",
+    "process_owner": "2d122b72e7a58d6f926eff59be1831fb3587611a8373be8a93bd3bbceb3b96c5",
+    "browser_test": "81696b63f3910ac1c808420172ddbce4c688de4d2e3a9ae74050c67c856b2fc4",
+    "relay": "a724bcfc4197adc796f580b43a751198cba8fbf4c1eeaba0221ffab01395fae2",
+    "toolchain": "4a209c10cf1756eb0f7357cc3eca8250bf66c239b4cd0ca31a8c0886d4d304ee",
+    "execution_id": "f66fcb9510bc5606cde8bf1f34c9d6bf"
+  }
+}

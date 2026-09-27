@@ -117,7 +117,7 @@ class FixtureSafety(unittest.TestCase):
         harness.guard(create=True)
         outside = self.root / 'outside'
         outside.mkdir()
-        for name in ('live', 'seed', 'logs', 'control.sock', 'lifecycle.lock', harness.MARKER):
+        for name in ('live', 'seed', 'logs', 'ingress', 'control.sock', 'lifecycle.lock', harness.MARKER):
             with self.subTest(name=name):
                 entry = self.state / name
                 original = entry.read_bytes() if entry.is_file() else None
@@ -319,7 +319,7 @@ class QualificationSourceSafety(unittest.TestCase):
         self.root.mkdir()
         self.control = Path(self.temp.name) / 'control'
         self.control.mkdir(mode=0o700)
-        for name in ('scripts/urbit', 'native/core/desk', 'specs/urbit',
+        for name in ('scripts/urbit', 'native/core/desk', 'specs/urbit', 'web/dev',
                      'tests/urbit/native_gall_schedule', 'tests/urbit/skill_evaluation'):
             directory = self.root / name
             directory.mkdir(parents=True)
@@ -360,7 +360,7 @@ class QualificationSourceSafety(unittest.TestCase):
                 else original_read(p, *a, **kw)), patch.object(digests, 'source_sha',
                 side_effect=lambda p: original_digest(source.parent if p == Path('/code') else p)):
             spec.loader.exec_module(supervisor)
-        mounts = {'/code': 'scripts/urbit', '/native': 'native', '/specs': 'specs/urbit',
+        mounts = {'/code': 'scripts/urbit', '/native': 'native', '/specs': 'specs/urbit', '/web-dev': 'web/dev',
                   '/native-tests/gall-schedule': 'tests/urbit/native_gall_schedule',
                   '/native-tests/skill-evaluation': 'tests/urbit/skill_evaluation'}
         def mounted(value):
@@ -392,7 +392,7 @@ class QualificationSourceSafety(unittest.TestCase):
         with self.assertRaises(ValueError):
             self.qualify(context)
         extra.unlink()
-        for name in ('native/core/desk', 'specs/urbit', 'tests/urbit/native_gall_schedule',
+        for name in ('native/core/desk', 'specs/urbit', 'web/dev', 'tests/urbit/native_gall_schedule',
                      'tests/urbit/skill_evaluation'):
             with self.subTest(mount=name):
                 source = self.root / name / 'fixture.txt'
@@ -413,7 +413,7 @@ class QualificationSourceSafety(unittest.TestCase):
             self.qualify(context)
 
     def test_ignored_uncommitted_mounted_inputs_cannot_claim_exact_commit(self):
-        names = [root + '/ignored.hoon' for root in ('native/core/desk', 'specs/urbit',
+        names = [root + '/ignored.hoon' for root in ('native/core/desk', 'specs/urbit', 'web/dev',
             'tests/urbit/native_gall_schedule', 'tests/urbit/skill_evaluation')]
         names.append('native/core/desk/__pycache__/hidden.hoon')
         (self.root / '.git/info/exclude').write_text(''.join('/' + name + '\n' for name in names))
