@@ -13,10 +13,11 @@ import traceback
 
 import core_conn
 import execution_policy
+import native_units
 from digests import sha, source_sha, tree_sha
 
 CODE = Path(__file__).parent
-DEPENDENCIES = ('core_check.py', 'core_conn.py', 'conn.py', 'digests.py', 'execution_policy.py')
+DEPENDENCIES = ('core_check.py', 'core_conn.py', 'conn.py', 'digests.py', 'execution_policy.py', 'native_units.py')
 
 
 def closure():
@@ -35,7 +36,8 @@ def run(host):
 
     def inputs():
         return {'native': tree_sha(native), 'runner': closure(),
-                'harness': source_sha(CODE), 'toolchain': sha('/toolchain.json')}
+                'harness': source_sha(CODE), 'toolchain': sha('/toolchain.json'),
+                'native_unit_inventory': sha('/specs/phase2-pure-units.json')}
 
     before = inputs()
     report['inputs_before'] = before
@@ -60,8 +62,11 @@ def run(host):
         checkpoint('compile-and-probes')
         if expected is not None:
             check(source, result.strip() == expected)
+        return result
 
     try:
+        inventory = native_units.validate_inventory(json.loads(
+            Path('/specs/phase2-pure-units.json').read_text()))
         host['execution_check'](preflight=True)
         check('loaded-supervisor-source-matches', before['harness'] == host['LOADED_SOURCE_DIGEST'])
         check('loaded-compile-runner-source-matches', before['runner'] == LOADED_CLOSURE)
@@ -88,17 +93,62 @@ def run(host):
             path = '/' + str(source.relative_to(native)).replace('.hoon', '/hoon')
             expression = f'=/  raw=@t  .^(@t %cx /=base={path})  =({literal} (sha-256l:sha [(met 3 raw) (rev 3 (met 3 raw) raw)]))'
             command(expression, '%.y')
+        # Bind the actual seeded unit runner and typed input mark to the pin.
+        for dependency in ('ted/test.hoon', 'mar/path.hoon'):
+            pinned = (Path('/kernel/pkg/arvo') / dependency).resolve(strict=True)
+            if not pinned.is_relative_to('/kernel'):
+                raise ValueError('Pinned dependency escapes verified kernel tree')
+            literal = core_conn.atom(bytes.fromhex(sha(pinned))[::-1])
+            route = '/' + dependency.replace('.hoon', '/hoon')
+            command(f'=/  raw=@t  .^(@t %cx /=base={route})  =({literal} (sha-256l:sha [(met 3 raw) (rev 3 (met 3 raw) raw)]))', '%.y')
         for probe, expected in (
                 ('stead-build-probe', '%stead-builds-pass'),
                 ('stead-codec-probe', '%stead-codec-six-vectors-pass'),
                 ('stead-core-probe', '%stead-core-basic-and-counter-edge-pass'),
                 ('stead-reducers-probe', '%stead-native-reducers-pass'),
-                ('stead-save-probe', '%stead-save-format2-roundtrip-pass')):
+                ('stead-save-probe', '%stead-save-format2-roundtrip-pass'),
+                ('stead-session-probe', '%stead-session-57-controls-pass'),
+                ('stead-http-probe', '%stead-http-49-controls-pass')):
             command('+' + probe, expected)
+        report['native_units'] = []
+        def native_test(entry):
+            resolved = command('`path`%' + entry['path']).strip()
+            log = Path('/state/logs/zod.log')
+            offset = log.stat().st_size
+            terminal = ''
+            try:
+                observed = native_units.run(binary, host['LIVE'] / 'zod/.urb/conn.sock', resolved)
+                report['commands'].append({'ship': 'zod', 'native_test': observed})
+                terminal = observed['stdout']
+            finally:
+                with log.open('rb') as stream:
+                    stream.seek(offset)
+                    captured = stream.read(262145)
+                report.setdefault('native_unit_transcripts', []).append({
+                    'path': entry['path'], 'log_offset': offset, 'log_bytes': len(captured),
+                    'log_hex': captured.hex(), 'terminal': terminal})
+                checkpoint('native-unit-output')
+            if len(captured) > 262144:
+                raise ValueError('Native unit log byte bound')
+            return captured.decode('utf-8', errors='strict') + '\n' + terminal
+        for entry in inventory['suites']:
+            raw = native_test(entry)
+            observed = native_units.verify_output(raw, path=entry['path'],
+                                                  expected=entry['arms'], succeeds=True)
+            report['native_units'].append(observed)
+            check('native-unit-arms:' + entry['path'], True)
+        control = inventory['negative_control']
+        raw = native_test(control)
+        report['native_failure_control'] = native_units.verify_output(
+            raw, path=control['path'], expected=control['arms'], succeeds=False,
+            failure_marker=control['marker'])
+        check('native-unit-deliberate-failure-observed', True)
         host['execution_check']()
         report['status'] = 'pass'
     except Exception as error:
         report['error'] = f'{type(error).__name__}: {error}'
+        if hasattr(error, 'native_failure'):
+            report['native_failure'] = error.native_failure
         traceback.print_exc()
     report['inputs_after'] = inputs()
     if before != report['inputs_after']:

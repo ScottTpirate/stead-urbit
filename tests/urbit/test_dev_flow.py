@@ -437,13 +437,23 @@ class CompileEvidenceTests(unittest.TestCase):
         self.native = self.root / 'native'; self.native.mkdir()
         (self.native / 'synthetic.hoon').write_text('synthetic bytes, not compiled Hoon')
         self.logs = self.root / 'logs'; self.logs.mkdir()
+        (self.logs / 'zod.log').write_text('')
         self.pin = self.root / 'lock.json'; self.pin.write_text('{}')
+        self.inventory_path = self.root / 'phase2-pure-units.json'
+        shutil.copyfile(Path(__file__).resolve().parents[2] / 'specs/urbit/phase2-pure-units.json', self.inventory_path)
+        self.inventory = json.loads(self.inventory_path.read_text())
         self.stack = ExitStack(); self.addCleanup(self.stack.close)
         self.stack.enter_context(redirect_stderr(io.StringIO()))
         self.stack.enter_context(patch.object(core_check, 'Path', side_effect=lambda path:
-            {'/native/core/desk': self.native, '/state/logs': self.logs}.get(str(path), Path(path))))
+            {'/native/core/desk': self.native, '/state/logs': self.logs,
+             '/state/logs/zod.log': self.logs / 'zod.log',
+             '/specs/phase2-pure-units.json': self.inventory_path}.get(str(path), Path(path))))
+        resolve = Path.resolve
+        self.stack.enter_context(patch.object(Path, 'resolve', lambda path, *args, **kwargs:
+            path if path.is_relative_to('/kernel') else resolve(path, *args, **kwargs)))
         self.stack.enter_context(patch.object(core_check, 'sha', side_effect=lambda path:
-            digests.sha(self.pin if str(path) == '/toolchain.json' else path)))
+            digests.sha(self.pin if str(path) == '/toolchain.json' or str(path).startswith('/kernel/')
+                        else self.inventory_path if str(path) == '/specs/phase2-pure-units.json' else path)))
         self.closure = self.stack.enter_context(patch.object(core_check, 'closure', return_value={'test': 'current'}))
         self.stack.enter_context(patch.object(core_check, 'LOADED_CLOSURE', {'test': 'current'}))
         self.stack.enter_context(patch.object(core_check, 'source_sha', return_value='harness'))
@@ -452,7 +462,24 @@ class CompileEvidenceTests(unittest.TestCase):
                        '+stead-codec-probe': '%stead-codec-six-vectors-pass',
                        '+stead-core-probe': '%stead-core-basic-and-counter-edge-pass',
                        '+stead-reducers-probe': '%stead-native-reducers-pass',
-                       '+stead-save-probe': '%stead-save-format2-roundtrip-pass'}
+                       '+stead-save-probe': '%stead-save-format2-roundtrip-pass',
+                       '+stead-session-probe': '%stead-session-57-controls-pass',
+                       '+stead-http-probe': '%stead-http-49-controls-pass'}
+        entries = self.inventory['suites'] + [self.inventory['negative_control']]
+        for entry in entries:
+            self.probes['`path`%' + entry['path']] = '/~zod/base/~2026.9.27' + entry['path']
+        def mocked_units(binary, socket_path, resolved):
+            # Synthetic outputs exercise host result admission, never Hoon.
+            entry = next(item for item in entries if resolved.endswith(item['path']))
+            negative = entry is entries[-1]
+            with (self.logs / 'zod.log').open('a') as log:
+                log.write('built   ' + entry['path'] + '/hoon\n')
+                if negative:
+                    log.write(entry['marker'] + '\n')
+                for arm in entry['arms']:
+                    log.write(('FAILED ' if negative else 'OK ') + entry['path'] + '/' + arm + '\n')
+            return {'stdout': '[32 %avow 0 %noun ' + ('1' if negative else '0') + ']'}
+        self.stack.enter_context(patch.object(core_check.native_units, 'run', side_effect=mocked_units))
         self.host = {'SHIPS': ('zod', 'bus', 'nec', 'bud'), 'LIVE': self.root / 'live',
                      'LOCK': {'runtime': {'binary': 'synthetic-not-executed'}},
                      'LOADED_SOURCE_DIGEST': 'harness',
