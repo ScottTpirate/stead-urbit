@@ -20,8 +20,15 @@ Initial configuration is an owner-local operation accepted only on an empty,
 uninitialized home. It rejects nonempty v1/v2 fixtures; converting historical
 fixture IDs or reassigning their data is unsupported. At most 32 bindings (one
 per principal and ship) and eight explicit project creators are permitted.
+The local profile bounds ship identifiers to 128 bits, keeping retained actor
+metadata within its separate decoding limits.
 Binding/origin updates require the expected configuration revision. Binding
-revisions increase monotonically; rebinding invalidates that principal's
+revisions increase monotonically; at most 128 distinct principals may enter the
+non-resetting binding-revision history (32 may be configured concurrently).
+At most 256 binding IDs are retained with their immutable principal owner; an ID
+cannot be recycled to another person after removal.
+Removing a binding retains its high-water revision, and capacity rejects an
+update atomically; rebinding invalidates that principal's
 sessions, challenges, cursors and watches. Origin changes invalidate all
 ephemeral credentials. Accepted records retain their original attribution.
 Member routes cannot update configuration.
@@ -43,6 +50,24 @@ The public ports stay in the private namespace; Lens/Khan are never bridged.
 Actual upgrade `on-load` separately clears ephemeral state. `/zen/ver.non` alone
 is insufficient: pinned Vere derives it from a 31-bit time hash that may repeat.
 Unknown or malformed state fails closed. Old fixture execution continues to save its version-2 shape.
+
+Configured-state validation is consistency reconstruction, not independent proof
+of historical identity approval. Each internal journal entry retains the exact
+nonsecret authentication context, binding and credential expirations, and the
+live target binding for a grant. These details never appear in employee activity
+or public receipts. A private validator checks retained binding ownership and
+revision history, reconstructs each unique accepted command with the unchanged
+business authorization/revision/object checks, and compares the complete state.
+Historical membership, project-creation admission and browser approval remain
+assertions of that retained journal. Current membership may legitimately differ;
+equal binding revisions must still describe identical identities. Validation
+advances at most 16 accepted events per step. Aggregate noun admission is bounded
+before semantic traversals; individual maps, record sizes, object bytes and
+nested histories retain their business limits. No reconstructed registry serves
+requests. Failed or unfinished validation exposes no restored business state.
+An upgrade restarts validation from its target and never trusts a saved
+validation status. Continuations must bind to the current job and all business
+and configuration mutations remain quarantined until the final atomic commit.
 
 | Profile | Commands | Reads and results | Saved state |
 | --- | --- | --- | --- |
@@ -98,8 +123,10 @@ Expiration uses the home's native event clock in milliseconds, never a client
 clock. Approval binds the binding ID/revision and exact protocol, purpose, home,
 origin, principal and expiry shown by the helper. Consumption verifies and
 removes the challenge and creates the session atomically. Failed consumption
-cannot rotate a valid session. A new login invalidates the existing session
-identified by that browser's session cookie. Logout removes the session and
+cannot rotate a valid session. Starting a new login with a live session cookie requires an explicit, confirmed
+logout first. The unauthenticated start endpoint cannot invalidate a current
+session. The pure replacement transition remains reserved for a future
+authenticated switch flow. Logout removes the session and
 challenges tied to its browser binding, cancels queued deliveries and kicks its
 watches. Expiration, rebinding, origin changes and restart also cancel delivery.
 
@@ -198,7 +225,9 @@ Editing shared content still requires contributor permission. Container-wide
 Git reads use exactly the same confidentiality boundary.
 
 Typed relations name full scoped endpoints (kind/project/container/resource).
-Both endpoints must be visible at acceptance and query time. Resource deletion
+`blocks` connects work to work; `documents` connects a page to work;
+`related_to` permits either resource kind. Both endpoints must be visible at
+acceptance and query time. Resource deletion
 is an accepted tombstone, invalidating reads, projections and subscriptions;
 retained historical Git objects remain accessible only through authorized
 container-history exports. Deletion removes current views, not historical bytes:
@@ -214,7 +243,8 @@ Authorize every result before disclosing titles, snippets, counts or edges.
 Never expose the internal security journal as employee activity.
 
 Query cursors bind version, principal/binding, scope, filter, policy and a scoped
-view generation. Reject stale or altered cursors; private mutations in unrelated
+view generation (a domain-separated SHA-256 fingerprint of relevant membership
+and scope counters). Reject stale or altered cursors; private mutations in unrelated
 scopes do not change a member-visible cursor/count. Updates contain minimal
 authorized invalidation metadata, never private bodies. Recheck current access
 before each emission. Cancelled/revoked/expired watches cease delivery. Resume
@@ -222,13 +252,17 @@ is bounded and either replays the allowed retained window or requires a refresh.
 
 Limits: 16 projects, 128 work items/project, 32 containers/project,
 32 documents/container, 128 revisions/container, 256 relations/project,
-4,096 ordinary accepted events plus 128 security events/project and 8 MiB Git
+4,096 total ordinary accepted events plus 128 security events/project and 8 MiB Git
 objects. Existing stricter envelope/text limits remain. A projection batch
 processes at most 16 events; persisted checkpoints record predecessor digest
 and replay position. Duplicates cannot advance counters. Gap/poison stops before
 publishing partial views with a content-free diagnostic. Recovery rebuilds a
 separate view from the accepted journal and swaps only after full validation;
 never skip an invalid event. While rebuilding, queries report unavailable.
+
+Work list/search rows contain bounded previews; a work query with a resource ID
+returns exactly that authorized item for editing. Project policy CAS revisions
+appear only for current maintainers, with corresponding view invalidation.
 
 Queries return at most 20 rows in stable scoped resource-ID order; activity and
 inbox use scope-local accepted order, never a global sequence. Search is literal
