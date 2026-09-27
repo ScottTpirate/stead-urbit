@@ -1,0 +1,32 @@
+{
+  "classification": "failed-hosted-resource-control-and-reviewed-retry",
+  "native_execution": false,
+  "qualification": false,
+  "failed_run": "https://github.com/ScottTpirate/stead-urbit/actions/runs/36360059692",
+  "failed_controller_commit": "793390d50a4ffd4905847f8e39a398c7f3057bde",
+  "observed": {
+    "oidc_admission": true,
+    "limits_verified": true,
+    "failure": "Control failed before admission",
+    "guard_failure": "Native worker process failed",
+    "owned_cgroup_empty": true,
+    "opt_mode": "0777",
+    "var_lib_mode": "0755"
+  },
+  "retry_controller_commit": "225b97da0ed6019b028bb9ddf52ee3fdfe5d1888",
+  "source_review": {
+    "reviewer": "independent_review",
+    "disposition": "cleared; native consoles excluded; descriptor cleanup and failure publication retained",
+    "files": {
+      "scripts/ci/hosted.py": "f1d5cee85b2f50626e46c76978ef5be7382fdfa3f8a7f627e63a673cdc2076b5",
+      "tests/ci/test_hosted.py": "5f2c097684aa8ebd11a183769f8bb224b994ae6c7727e339af111d005c03ba2c"
+    }
+  },
+  "host_tests": {
+    "ran": 12,
+    "passed": 12,
+    "elapsed_seconds": 0.939,
+    "native_execution": false
+  },
+  "retry_status": "not_yet_executed"
+}
