@@ -115,9 +115,12 @@ def read_bounded(root, name, limit=MAX_FILE):
             if error.errno == errno.ELOOP:
                 raise ValueError('Symlink input is not permitted') from error
             raise
-        with os.fdopen(descriptor, 'rb') as stream:
-            require(stat.S_ISREG(os.fstat(stream.fileno()).st_mode), 'Input must be a regular file')
-            raw = stream.read(limit + 1)
+        try:
+            require(stat.S_ISREG(os.fstat(descriptor).st_mode), 'Input must be a regular file')
+            with os.fdopen(descriptor, 'rb', closefd=False) as stream:
+                raw = stream.read(limit + 1)
+        finally:
+            os.close(descriptor)
         check_binding()
     require(len(raw) <= limit, 'Input exceeds its byte limit: ' + str(name))
     return raw
@@ -195,8 +198,11 @@ def build(root, output):
             raise ValueError('Output already exists') from error
         # A failed write or changed path may leave this new file in the held
         # directory. Do not unlink through a name another writer may now own.
-        with os.fdopen(descriptor, 'wb') as stream:
-            stream.write(raw)
+        try:
+            with os.fdopen(descriptor, 'wb', closefd=False) as stream:
+                stream.write(raw)
+        finally:
+            os.close(descriptor)
         check_binding()
     return raw, manifest
 

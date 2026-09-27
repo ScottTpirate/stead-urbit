@@ -241,6 +241,13 @@ class SdkPackageTests(unittest.TestCase):
         with self.assertRaisesRegex(ValueError, 'byte limit'):
             SDK.archive_bytes(self.root)
 
+    def test_directory_input_is_rejected_without_leaking_descriptors(self):
+        before = set(Path('/proc/self/fd').iterdir())
+        for _ in range(20):
+            with self.assertRaisesRegex(ValueError, 'regular file'):
+                SDK.read_bounded(self.root, 'out')
+        self.assertEqual(set(Path('/proc/self/fd').iterdir()), before)
+
     def test_cli_build_verify_and_failure_status(self):
         command = [sys.executable, str(ROOT / 'scripts/package_sdk.py'), '--root', str(self.root)]
         for arguments in (['build', '--output', 'out/cli.tar'], ['verify', '--archive', 'out/cli.tar']):
