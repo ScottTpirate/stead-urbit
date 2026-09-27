@@ -1,0 +1,13 @@
+import { build } from 'esbuild';
+import { mkdir } from 'node:fs/promises';
+import { spawnSync } from 'node:child_process';
+import path from 'node:path';
+import { fileURLToPath } from 'node:url';
+const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
+const output = path.resolve(root, '../../.runtime/web-app-tests/client.test.mjs');
+await mkdir(path.dirname(output), { recursive: true });
+await build({absWorkingDir: root, entryPoints: ['tests/client.test.ts'], outfile: output,
+  bundle: true, platform: 'node', format: 'esm', target: 'node24'});
+const result = spawnSync(process.execPath, ['--test', output, path.join(root, 'tests/build.test.mjs')], {stdio: 'inherit'});
+if (result.error) throw result.error;
+process.exitCode = result.status ?? 1;

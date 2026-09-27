@@ -1,8 +1,8 @@
-::  Public/synthetic fake-ship profile. One mutation owner, no HTTP or scries.
-/+  default-agent, stead-core, stead-codec, stead-core-v1, stead-codec-v1
+::  One authoritative owner. Configured v3 and isolated legacy fixture v2.
+/+  default-agent, stead-core, stead-codec, stead-core-v1, stead-codec-v1, stead-team-owner
 =>
 |%
-+$  saved  [%stead-home $%([%1 db=state:stead-core-v1] [%2 db=state:stead-core])]
++$  saved  [%stead-home $%([%1 db=state:stead-core-v1] [%2 db=state:stead-core] [%3 team=saved:stead-team-owner])]
 +$  pending-entry  [sender=@p expires=@da]
 ++  now-ms
   |=  now=@da
@@ -102,6 +102,7 @@
 --
 =|  db=state:stead-core
 =.  initialized.db  |
+=/  owner  empty:stead-team-owner
 =|  pending=(map path pending-entry)
 ::  Disposable predecessor builder; never an employee interface or accepted home.
 =|  predecessor=state:stead-core-v1
@@ -113,26 +114,35 @@
 |_  =bowl:gall
 +*  this  .
     def  ~(. (default-agent this %|) bowl)
+    team  ~(. (driver:stead-team-owner owner) bowl)
+    configured  ?|(?=(^ current.registry.db.owner) ?=(^ restoring.owner))
 ++  on-init
-  ?>  =(our.bowl ~zod)
   `this
 ++  on-save
+  ?:  configured  !>([%stead-home %3 save:team])
   !>([%stead-home %2 db])
 ++  on-load
   |=  old=vase
   ~|  %stead-unsupported-state
   =/  restored  !<(saved old)
+  ?:  ?=([%stead-home %3 *] restored)
+    =/  [cards=(list card:agent:gall) next=state:stead-team-owner]  (load:team team.restored)
+    [cards this(owner next, pending ~)]
   =/  next=state:stead-core
-    ?:  =(%1 +<.restored)  (migrate-v1:stead-core db.restored)
+    ?:  ?=([%stead-home %1 *] restored)  (migrate-v1:stead-core db.restored)
     db.restored
   ::  Counter/future state is rejected; pending replies never survive an upgrade.
   =/  paths  (silt (turn ~(tap by sup.bowl) |=([duct [ship=@p route=path]] route)))
   =/  cards=(list card:agent:gall)
     (turn ~(tap in paths) |=(route=path [%give %kick [route ~] ~]))
-  [cards this(db next, pending ~)]
+  [cards this(db next, pending ~, owner empty:stead-team-owner)]
 ++  on-poke
   |=  [=mark =vase]
   ^-  (quip card:agent:gall _this)
+  ?:  ?|(configured =(%stead-team-config-1 mark))
+    ?>  ?|(configured !initialized.db)
+    =/  [cards=(list card:agent:gall) next=state:stead-team-owner]  (poke:team mark vase)
+    [cards this(owner next, pending ~)]
   ?:  =(%stead-fixture-1 mark)
     ~|  %stead-fixture-denied
     ?>  &(=(our.bowl ~zod) =(src.bowl our.bowl) !initialized.db)
@@ -143,7 +153,7 @@
     ?>  &(=(our.bowl ~zod) =(src.bowl our.bowl) initialized.db)
     =/  [op=@tas ship=@p key=@t value=@t]  !<([@tas @p @t @t] vase)
     ?:  =(%roundtrip op)  (on-load on-save)
-    ?:  =(%load-future op)  (on-load !>([%stead-home %3 db]))
+    ?:  =(%load-future op)  (on-load !>([%stead-home %4 db]))
     ?:  =(%load-counter op)  (on-load !>([%0 0]))
     ?:  =(%hold-outsider-read op)
       ?>  &(=(ship ~bud) (lte (met 3 key) 1.024))
@@ -267,6 +277,9 @@
 ++  on-watch
   |=  route=path
   ^-  (quip card:agent:gall _this)
+  ?:  configured
+    =/  [cards=(list card:agent:gall) next=state:stead-team-owner]  (watch:team route)
+    [cards this(owner next)]
   ~|  %stead-watch-denied
   ?>  (lte (lent route) 8)
   ?>  (levy route |=(segment=@t (lte (met 3 segment) 128)))
@@ -322,12 +335,20 @@
   ==
 ++  on-leave
   |=  route=path
+  ?:  configured
+    =/  [cards=(list card:agent:gall) next=state:stead-team-owner]  (leave:team route)
+    [cards this(owner next)]
   =/  found  (~(get by pending) route)
   ?~  found  `this
   ?.  =(src.bowl sender.u.found)  `this
   `this(pending (~(del by pending) route))
 ++  on-peek   on-peek:def
 ++  on-agent  on-agent:def
-++  on-arvo   on-arvo:def
+++  on-arvo
+  |=  [=wire =sign-arvo]
+  ?:  configured
+    =/  [cards=(list card:agent:gall) next=state:stead-team-owner]  (arvo:team wire sign-arvo)
+    [cards this(owner next)]
+  (on-arvo:def wire sign-arvo)
 ++  on-fail   on-fail:def
 --

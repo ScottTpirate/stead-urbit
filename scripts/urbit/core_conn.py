@@ -7,6 +7,7 @@ import socket
 import subprocess
 import tempfile
 import time
+import owned_child
 from conn import framed_length, read_exact
 
 
@@ -15,7 +16,7 @@ def evaluate(binary, flags, data):
     # anonymous file preserves the complete native frame/text; size stays bounded.
     with tempfile.TemporaryFile() as output, tempfile.TemporaryFile() as diagnostics:
         try:
-            result = subprocess.run([str(binary), 'eval', '--loom', '29', flags], input=data,
+            result = subprocess.run(owned_child.fixture_command([str(binary), 'eval', '--loom', '29', flags]), input=data,
                                     stdout=output, stderr=diagnostics, timeout=30, check=False)
         except subprocess.TimeoutExpired as error:
             output.seek(0)
@@ -135,6 +136,11 @@ def run(binary, socket_path, mode, route='/', raw=b'', *, control=None, timeout=
     parts = [atom(part.encode()) for part in route.split('/') if part]
     path_noun = '[' + ' '.join(parts) + ' ~]' if parts else '~'
     noun = f'[32 %fyrd [%base %stead-client %noun [%noun [~zod %{mode} {path_noun} {payload}]]]]'
+    return exchange(binary, socket_path, noun, timeout=timeout)
+
+
+def exchange(binary, socket_path, noun, *, timeout=75):
+    """Internal framed Khan exchange; callers own their finite input grammar."""
     trace = {'stage': 'encode', 'request': noun}
     received = bytearray()
     try:
@@ -172,7 +178,8 @@ def run(binary, socket_path, mode, route='/', raw=b'', *, control=None, timeout=
         details = re.sub(r'\x1b\[[0-9;]*m', '', decode_stderr.decode('utf-8', errors='strict')).strip()
         trace['stage'] = 'parse-terminal'
         return {'outcome': parse_response(output), 'stdout': output.strip(), 'stderr': details,
-                'request': noun, 'response_frame_sha256': hashlib.sha256(response).hexdigest()}
+                'request': noun, 'request_frame_hex': frame.hex(), 'response_frame_hex': response.hex(),
+                'response_frame_sha256': hashlib.sha256(response).hexdigest()}
     except Exception as error:
         trace.update(error=type(error).__name__ + ': ' + str(error), received_frame_hex=received.hex())
         if isinstance(error, subprocess.CalledProcessError):

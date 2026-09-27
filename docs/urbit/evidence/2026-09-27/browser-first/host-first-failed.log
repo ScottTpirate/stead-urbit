@@ -1,0 +1,15 @@
+.................................................................................................................................................................................................................................................F.................................................................................................................................................................................................................................................................................................
+======================================================================
+FAIL: test_failed_worker_start_leaves_no_worker_or_stream (test_loopback_bridge.LoopbackBridgeTests.test_failed_worker_start_leaves_no_worker_or_stream)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/skilgore/stead-urbit/tests/urbit/test_loopback_bridge.py", line 105, in test_failed_worker_start_leaves_no_worker_or_stream
+    self.assertEqual(self.bridge.streams, set())
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: Items in the first set but not the second:
+<socket.socket fd=15, family=1, type=1, proto=0, raddr=/tmp/stead-host-relay-_1g252ks/zod.tls.sock>
+
+----------------------------------------------------------------------
+Ran 531 tests in 27.495s
+
+FAILED (failures=1)

@@ -22,8 +22,10 @@ from conn import assert_result, run_thread
 import execution_policy
 import core_check
 import core_test
+import team_check
 import gall_schedule
 import skill_evaluation_support
+import team_lifecycle
 
 STATE = Path('/state')
 LIVE = STATE / 'live'
@@ -44,6 +46,7 @@ TERMINATION_LOCK = threading.Lock()
 TERMINATED = weakref.WeakSet()
 EVIDENCE = []
 LOADED_SOURCE_DIGEST = source_sha(Path('/code'))
+TEAM = None
 
 
 def qualified_source():
@@ -54,7 +57,7 @@ def qualified_source():
         raise ValueError('Qualification requires the exact committed source captured at startup')
     if context.get('script_files') != source_inventory(Path('/code')):
         raise ValueError('Helper file inventory changed after startup')
-    mounts = {'scripts/urbit': Path('/code'), 'native': Path('/native'), 'specs/urbit': Path('/specs'),
+    mounts = {'scripts/urbit': Path('/code'), 'native': Path('/native'), 'specs/urbit': Path('/specs'), 'web/dev': Path('/web-dev'),
               'tests/urbit/native_gall_schedule': Path('/native-tests/gall-schedule'),
               'tests/urbit/skill_evaluation': Path('/native-tests/skill-evaluation')}
     for name, digest in context['trees'].items():
@@ -108,6 +111,18 @@ def signal_children():
     return errors
 
 
+def peer_fence_failed(error):
+    # Called while the packet-controller lock may be held. Never take MUTEX or
+    # reenter that controller; interrupt only known owned Popen children.
+    STOP_REQUESTED.set()
+    signal_children()
+    if not NORMAL_STOP.is_set():
+        FORCED_STOP.set()
+        PROGRESS.update(stage='guard-stopped', ready=False, error=str(error))
+        record('native peer barrier failed', {'error': str(error)})
+    # The execution watcher performs ingress cleanup outside the packet lock.
+
+
 def execution_watch():
     previous = None
     while not STOP.wait(.25):
@@ -159,7 +174,7 @@ def persist_result_evidence(result):
         if field not in result:
             continue
         name = Path(result[field]).name
-        if not (name.startswith(('core-', 'smoke-', 'gall-schedule-', 'skill-evaluation-')) and name.endswith('.json')):
+        if not (name.startswith(('core-', 'team-', 'smoke-', 'gall-schedule-', 'skill-evaluation-')) and name.endswith('.json')):
             raise ValueError('Unexpected native evidence target')
         path = STATE / 'logs' / name
         evidence = execution_policy.read_json(path, maximum=16 * 1024 * 1024)
@@ -215,13 +230,18 @@ def wait_ready(ship, timeout=1200):
             if result.strip() != '%408':
                 raise RuntimeError(f'Unexpected kernel: {result}')
             record(f'{ship}: zuse', result)
-            return
         except (OSError, StopIteration, ValueError):
             time.sleep(1)
+            continue
+        if TEAM is not None:
+            # Once Lens is ready, a failed startup checkpoint is final. Never
+            # turn an observed awake app into a pass by waiting for it to sleep.
+            TEAM.suspension_checkpoint(ship, dojo)
+        return
     raise TimeoutError(f'{ship} did not become ready within {timeout}s')
 
 
-def launch(ship):
+def launch(ship, *, fresh=False):
     execution_check()
     pier = LIVE / ship
     if pier.is_symlink():
@@ -234,9 +254,13 @@ def launch(ship):
     command += [str(pier)]
     log = (STATE / 'logs' / f'{ship}.log').open('ab')
     LOGS[ship] = log
-    PROCESSES[ship] = subprocess.Popen(command, stdin=subprocess.DEVNULL,
-                                      stdout=log, stderr=log, close_fds=True,
-                                      pass_fds=(gate.fileno(),))
+    if TEAM is not None:
+        TEAM.launch(ship, command, lifetime_fd=gate.fileno(), log=log,
+                    register=lambda process: PROCESSES.__setitem__(ship, process), fresh=fresh)
+    else:
+        PROCESSES[ship] = subprocess.Popen(command, stdin=subprocess.DEVNULL,
+                                          stdout=log, stderr=log, close_fds=True,
+                                          pass_fds=(gate.fileno(),))
     record('launch ' + ship, {'argv': command, 'pid': PROCESSES[ship].pid})
 
 
@@ -247,6 +271,12 @@ def shutdown(ship, timeout=10):
     # TERM remains available before Lens starts. A nonzero startup/shutdown
     # result is unclean even when no escalation was needed.
     forced = False
+    barrier_error = None
+    if TEAM is not None:
+        try:
+            TEAM.block(ship)
+        except Exception as error:
+            barrier_error = error
     try:
         if process.poll() is None:
             terminate_once(process)
@@ -260,6 +290,8 @@ def shutdown(ship, timeout=10):
         record('shutdown ' + ship, {'exit_code': process.returncode, 'forced': forced})
         if forced or process.returncode != 0:
             raise RuntimeError(f'{ship} exit was not clean: {process.returncode}; forced={forced}')
+        if barrier_error is not None:
+            raise barrier_error
     except Exception:
         SHUTDOWN_FAILED.set()
         raise
@@ -274,7 +306,15 @@ def shutdown(ship, timeout=10):
 
 def all_stop():
     deadline = time.monotonic() + 15
-    errors = signal_children()
+    errors = []
+    if TEAM is not None:
+        TEAM.disarm_browser()
+        for ship in SHIPS:
+            try:
+                TEAM.block(ship)
+            except Exception as error:
+                errors.append(str(error))
+    errors.extend(signal_children())
     for ship in SHIPS:
         try:
             shutdown(ship, timeout=max(.05, deadline - time.monotonic()))
@@ -310,6 +350,13 @@ def initialize():
             if (SEED / 'manifest.json').exists():
                 if json.loads((SEED / 'manifest.json').read_text())['toolchain_sha256'] != sha('/toolchain.json'):
                     raise ValueError('Existing fixture toolchain differs')
+            if TEAM is not None:
+                if not (SEED / 'manifest.json').exists():
+                    raise ValueError('Configured lane requires verified clean seeds from make dev')
+                # team-check restores the verified seeds and starts its four
+                # children once. Restart tests then use captured saved states.
+                PROGRESS.update(stage='ready', ready=True)
+                return
             LIVE.mkdir(exist_ok=True)
             for ship in SHIPS:
                 PROGRESS['stage'] = 'booting ' + ship
@@ -427,6 +474,8 @@ def handle(connection):
                     raise ValueError('Invalid control envelope')
                 data += block
             request = json.loads(data)
+            if TEAM is not None and request.get('op') not in ('status', 'stop', 'team-check'):
+                raise ValueError('This configured fixture only accepts its reviewed team lane')
             if request == {'op': 'status'}:
                 try:
                     lease = execution_check()
@@ -475,7 +524,7 @@ def handle(connection):
                             all_stop()
                         else:
                             PROGRESS.update(stage='ready', ready=True, error=None)
-            elif request == {'op': 'core-check'}:
+            elif request in ({'op': 'core-check'}, {'op': 'team-check'}):
                 with MUTEX:
                     if not PROGRESS['ready']:
                         raise RuntimeError('Fixture not ready')
@@ -483,7 +532,8 @@ def handle(connection):
                     PROGRESS.update(stage='compiling', ready=False, error=None)
                     result = None
                     try:
-                        result = guarded_result(core_check.run(globals()))
+                        runner = core_check if request['op'] == 'core-check' else team_check
+                        result = guarded_result(runner.run(globals()))
                     finally:
                         if result is None or result['status'] != 'pass':
                             PROGRESS.update(stage='failed', ready=False,
@@ -574,6 +624,15 @@ if __name__ == '__main__':
     # This fd lives for the entire supervisor lifetime, including every child.
     gate = (STATE / 'lifecycle.lock').open('a+')
     fcntl.flock(gate, fcntl.LOCK_EX | fcntl.LOCK_NB)
+    context = execution_policy.read_json('/execution/source-context.json')
+    configured = os.environ.get('STEAD_CONFIGURED') == '1'
+    if (context.get('profile') == 'configured-team') != configured:
+        raise ValueError('Configured profile differs from protected source context')
+    PROGRESS['profile'] = 'configured-team' if configured else 'legacy-fixture'
+    if configured:
+        TEAM = team_lifecycle.TeamLifecycle(STATE / 'ingress' / os.environ['STEAD_EXECUTION_ID'],
+            context['host_network_namespace'], '/runtime/' + LOCK['runtime']['binary'],
+            execution_check, peer_fence_failed, record)
     for name in ('live', 'seed', 'logs', 'control.sock'):
         if (STATE / name).is_symlink():
             raise ValueError('Redirected fixture entry')
@@ -592,4 +651,10 @@ if __name__ == '__main__':
             except TimeoutError:
                 pass
     socket_path.unlink(missing_ok=True)
+    if TEAM is not None:
+        try:
+            TEAM.close()
+        except Exception as error:
+            SHUTDOWN_FAILED.set()
+            record('configured cleanup failed', {'error': str(error)})
     raise SystemExit(completion_code())

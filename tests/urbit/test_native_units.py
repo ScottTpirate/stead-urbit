@@ -80,10 +80,10 @@ class NativeUnitVerifierTests(unittest.TestCase):
             self.positive_check(self.positive + 'x' * 262144)
 
     def test_valid_inventory(self):
-        self.assertEqual(UNITS.validate_inventory(self.inventory)['expected_arm_count'], 31)
+        self.assertEqual(UNITS.validate_inventory(self.inventory)['expected_arm_count'], 44)
 
     def test_inventory_empty_or_missing_suite(self):
-        for suites in [[], self.inventory['suites'][:1]]:
+        for suites in [[], self.inventory['suites'][:1], self.inventory['suites'][:2]]:
             value = copy.deepcopy(self.inventory)
             value['suites'] = suites
             with self.assertRaises(ValueError):

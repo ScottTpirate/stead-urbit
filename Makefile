@@ -18,6 +18,10 @@ wait-ready:
 	python3 scripts/urbit/harness.py wait-ready
 dev:
 	$(PREP) python3 scripts/urbit/harness.py dev
+team-dev:
+	$(PREP) python3 scripts/urbit/harness.py team-dev
+team-check:
+	python3 scripts/urbit/harness.py team-check
 stop:
 	python3 scripts/urbit/harness.py stop
 reset:

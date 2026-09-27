@@ -134,8 +134,11 @@ Hard maxima: 32 challenges/four per principal; 64 sessions/four per principal;
 64 watches/four per session or native binding; 32 headers/8 KiB total;
 64 KiB request body; 256-byte origin; 64-byte lowercase-hex challenge, bearer,
 CSRF and cursor tokens; 512-byte URL. Reject excess before decoding. Reject
-duplicate Host, Origin, Content-Type, CSRF or Cookie headers, duplicate recognized
-cookie names, malformed cookies and all Forwarded or X-Forwarded-* headers.
+duplicate Host, Origin, Content-Type or CSRF headers, duplicate cookie names,
+malformed cookies and all Forwarded or X-Forwarded-* headers. Cookie transport
+fields may be split by a browser: combine them with `; ` within the same aggregate
+header count/byte limits, then validate the entire jar and reject every duplicate
+name (recognized or unknown). Never select one of several conflicting credentials.
 Unknown cookies confer nothing; never select among conflicting credentials.
 Cookies are `__Host-stead-pending` and `__Host-stead-session`, Secure, HttpOnly,
 SameSite=Strict, Path=/, no Domain. Clear both with matching attributes at logout.

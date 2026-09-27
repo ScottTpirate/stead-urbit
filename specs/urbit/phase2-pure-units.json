@@ -1,7 +1,7 @@
 {
   "format": 1,
   "classification": "pure-native-only",
-  "expected_arm_count": 31,
+  "expected_arm_count": 44,
   "suites": [
     {
       "path": "/tests/stead-session",
@@ -36,12 +36,30 @@
         "test-http-header-count",
         "test-http-header-bytes",
         "test-http-header-ambiguity",
+        "test-http-cookie-transport-fields",
+        "test-http-split-cookie-limits",
         "test-http-cookie-grammar",
         "test-http-cookie-identity",
         "test-http-body-framing",
         "test-http-token-format",
         "test-http-response-headers",
         "test-http-cookie-output"
+      ]
+    },
+    {
+      "path": "/tests/stead-identity",
+      "arms": [
+        "test-identity-configuration",
+        "test-identity-origin-isolation",
+        "test-identity-sender-and-metadata",
+        "test-identity-native-expiry",
+        "test-identity-owner-display",
+        "test-identity-duplicate-bounds",
+        "test-identity-single-use-approval",
+        "test-identity-code-origin-csrf",
+        "test-identity-acknowledgement",
+        "test-identity-http-route-isolation",
+        "test-identity-eyre-response-duct-binding"
       ]
     }
   ],
