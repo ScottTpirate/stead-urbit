@@ -1,0 +1,68 @@
+{
+  "classification": "actual-github-actions-runner-inventory",
+  "native_execution": false,
+  "qualifies_phase": false,
+  "run_url": "https://github.com/ScottTpirate/stead-urbit/actions/runs/36354248121",
+  "workflow_commit": "c1104814920a454ba5419248d4838b981e02312e",
+  "workflow_sha256": "d65533b62c902e4fe3f65356ba9fb350889d00551ca531de703641e14d2d897c",
+  "status": "success",
+  "observed": {
+    "apparmor_userns": "1",
+    "bubblewrap": {
+      "available": false
+    },
+    "cgroup_controllers": "cpuset cpu io memory hugetlb pids rdma misc dmem",
+    "classification": "hosted-runner-inventory-only",
+    "cpu_affinity": [
+      0,
+      1,
+      2,
+      3
+    ],
+    "git": {
+      "status": 0,
+      "version": [
+        "git version 2.55.0"
+      ]
+    },
+    "image": {
+      "ImageOS": "ubuntu24",
+      "ImageVersion": "20260920.314.1",
+      "RUNNER_ENVIRONMENT": "github-hosted"
+    },
+    "iproute": {
+      "status": 0,
+      "version": [
+        "ip utility, iproute2-6.1.0, libbpf 1.3.0"
+      ]
+    },
+    "kernel": "6.17.0-1022-azure",
+    "machine": "x86_64",
+    "memory_kib": 16373452,
+    "native_execution": false,
+    "openssl": {
+      "status": 0,
+      "version": [
+        "OpenSSL 3.0.13 30 Jan 2024 (Library: OpenSSL 3.0.13 30 Jan 2024)"
+      ]
+    },
+    "python": "3.12.3",
+    "qualification": false,
+    "system": "Linux",
+    "systemd": {
+      "status": 0,
+      "version": [
+        "systemd 255 (255.4-1ubuntu8.17)",
+        "+PAM +AUDIT +SELINUX +APPARMOR +IMA +SMACK +SECCOMP +GCRYPT -GNUTLS +OPENSSL +ACL +BLKID +CURL +ELFUTILS +FIDO2 +IDN2 -IDN +IPTC +KMOD +LIBCRYPTSETUP +LIBFDISK +PCRE2 -PWQUALITY +P11KIT +QRENCODE +TPM2 +BZIP2 +LZ4 +XZ +ZLIB +ZSTD -BPF_FRAMEWORK -XKBCOMMON +UTMP +SYSVINIT default-hierarchy=unified"
+      ]
+    },
+    "uid": 1001,
+    "unprivileged_userns": "1"
+  },
+  "limitations": [
+    "No native tests or sandbox launched.",
+    "Environment labels are not authenticated hosted admission.",
+    "Systemd/cgroup/user namespace usability and cleanup remain unexecuted."
+  ],
+  "independent_source_review": "gall_schedule_review cleared the exact workflow hash for inventory-only publication and execution."
+}
