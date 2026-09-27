@@ -41,6 +41,21 @@
     "host-passed.log": {
       "input_sha256": "c7b8b6ec20bd9110c300887a51de3f5b6064b44701fa76798b4697d2556bde15",
       "input_bytes": 632
+    },
+    "ingress-cpython314-cache.bin": {
+      "input_sha256": "7c2d07fcab337ea8bf157fae487ad7ad91f4017ad5e86c3f662c83c0a1d93184",
+      "input_bytes": 17695,
+      "original_path": "web/dev/__pycache__/ingress.cpython-314.pyc"
+    },
+    "configured-supervisor.jsonl": {
+      "input_sha256": "601fa701575a98c83aeef14de85e8b6631aa9d30e63a322f33be4c228449a143",
+      "input_bytes": 14176,
+      "original_path": ".piers/fakes/logs/supervisor.log",
+      "offsets_and_record_hashes": "independent-review.json#/configured_lifecycle/records"
+    },
+    "independent-review.json": {
+      "input_sha256": "d83b42307930872c323fc0e7fff8b4f3c957f7859a408fe82eefa5ad2e8fe2c0",
+      "input_bytes": 24612
     }
   },
   "host_tests": {

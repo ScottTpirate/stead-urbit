@@ -1,0 +1,576 @@
+{
+  "artifacts": {
+    "browser.json.gz": {
+      "decoded_bytes": 31637,
+      "decoded_sha256": "1253ff95af146530a894cd2193835eaa5407809de3da7a343069ae96ae2da741",
+      "stored_bytes": 1455,
+      "stored_sha256": "56f1f2ea84c340dc62e3c89e9fadee2e1ac3ff0e4f4340ffa47ef86525282341"
+    },
+    "guardian.json.gz": {
+      "decoded_bytes": 201386,
+      "decoded_sha256": "f259beca6d6d8c8e0309aaf955a90ddc8103f8fa62351e6ef30103e161f96eeb",
+      "stored_bytes": 13520,
+      "stored_sha256": "9105bb3a6136248c571cc8d4aa827c7d1a4bdc2f5ceb6d3619d22d5ad8dce373"
+    },
+    "host-first-failed.log": {
+      "decoded_bytes": 1375,
+      "decoded_sha256": "bcb79b4e3ebda7d6593c550e0e2d5eeb5a646070d012ef20420fb74867e4eba1",
+      "stored_bytes": 1375,
+      "stored_sha256": "bcb79b4e3ebda7d6593c550e0e2d5eeb5a646070d012ef20420fb74867e4eba1"
+    },
+    "host-passed.log": {
+      "decoded_bytes": 632,
+      "decoded_sha256": "c7b8b6ec20bd9110c300887a51de3f5b6064b44701fa76798b4697d2556bde15",
+      "stored_bytes": 632,
+      "stored_sha256": "c7b8b6ec20bd9110c300887a51de3f5b6064b44701fa76798b4697d2556bde15"
+    },
+    "host-retry-failed.log": {
+      "decoded_bytes": 2117,
+      "decoded_sha256": "385b34adb20300a7709ef3f4ab16425e2e9cd82156ba74bdd9d35983acf7edd7",
+      "stored_bytes": 2117,
+      "stored_sha256": "385b34adb20300a7709ef3f4ab16425e2e9cd82156ba74bdd9d35983acf7edd7"
+    },
+    "native.json.gz": {
+      "decoded_bytes": 447441,
+      "decoded_sha256": "94237059a83073267da4126ba06aef4948aebaef7c45bd9fe6caa90529f1e005",
+      "stored_bytes": 49483,
+      "stored_sha256": "584483081550f40da5a2f162f38603e2916401b7090d88042d6f331d1dc7b3f2"
+    },
+    "process.json": {
+      "decoded_bytes": 560,
+      "decoded_sha256": "7238519a34ba2f32b5f88f6738ee9db7cc2255554324a6c25dc356d9301c6bf6",
+      "stored_bytes": 560,
+      "stored_sha256": "7238519a34ba2f32b5f88f6738ee9db7cc2255554324a6c25dc356d9301c6bf6"
+    },
+    "transport.json": {
+      "decoded_bytes": 2769,
+      "decoded_sha256": "9762fd818a688ab2600d152fec8818207aed9083a6abb0d36619454a72bd0bb8",
+      "stored_bytes": 2769,
+      "stored_sha256": "9762fd818a688ab2600d152fec8818207aed9083a6abb0d36619454a72bd0bb8"
+    }
+  },
+  "blockers": [],
+  "browser": {
+    "checks": [
+      {
+        "journey_ms": 9280,
+        "name": "bus-individual-native-owner-approved-session",
+        "passed": true
+      },
+      {
+        "journey_ms": 9340,
+        "name": "nec-individual-native-owner-approved-session",
+        "passed": true
+      },
+      {
+        "name": "native-reader-work-view-without-write-control",
+        "passed": true
+      },
+      {
+        "name": "browser-command-committed-with-native-approved-attribution",
+        "passed": true,
+        "request_id": "01a0e437-d026-70ae-a8d0-2fe567085944"
+      },
+      {
+        "name": "second-individual-reads-committed-browser-work",
+        "passed": true
+      },
+      {
+        "name": "member-cookie-is-secure-httponly-host-only-and-not-owner-auth",
+        "passed": true
+      },
+      {
+        "name": "logout-clears-rendered-business-state",
+        "passed": true
+      }
+    ],
+    "firefox": "155.0",
+    "network_scope": "Trusted reviewed fixture pages with a four-origin HTTP filter; this is not a general network sandbox or production penetration test.",
+    "node": "v24.21.0",
+    "process": {
+      "cleanup": {
+        "cgroup": "/user.slice/user-1000.slice/user@1000.service/app.slice/stead-browser-58a846b28be2c4298df2b6ac2a31ff24.service",
+        "empty": true,
+        "process_reaped": true,
+        "state": "inactive"
+      },
+      "exit_code": 0,
+      "proof": {
+        "cgroup": "/user.slice/user-1000.slice/user@1000.service/app.slice/stead-browser-58a846b28be2c4298df2b6ac2a31ff24.service",
+        "cpu_affinity": [
+          19
+        ],
+        "cpu_max": "2500 10000",
+        "pid": 2859760
+      },
+      "status": "pass",
+      "unit": "stead-browser-58a846b28be2c4298df2b6ac2a31ff24.service"
+    },
+    "profile_removed": true,
+    "recorded_request_failures": 0,
+    "responses": 40,
+    "source_findings": [
+      "Separate contexts use serviceWorkers:block, actual certificate verification and exact personal-origin /~/login checks before owner-code fill and submit.",
+      "Allowlisted environment excludes raw debug/key logging; service owns detached descendants and checks actual cgroup/PID/CPU admission before launching the journey.",
+      "Both synthetic principals completed personal approval; actual command receipt was native-approved-browser/1 for ~bus, second member observed the committed title, and logout cleared visible business state.",
+      "Pinned Eyre guest urbauth presence is distinguished from owner authentication by actual boundary-probe owner_authenticated=no and secure=yes."
+    ],
+    "tls": {
+      "bud": {
+        "certificate_sha256": "29a193cf74686940ee521d38e11559f944a05eaa752cee23c4e5560e757e83de",
+        "hostname": "bud.localhost",
+        "protocol": "TLSv1.3"
+      },
+      "bus": {
+        "certificate_sha256": "8018cf3601991c947849d82d126a3d4097f28c57cf705a52234c5457299a47ed",
+        "hostname": "bus.localhost",
+        "protocol": "TLSv1.3"
+      },
+      "nec": {
+        "certificate_sha256": "70011378c8833536b3f8650d88f4e345303d0e543b2fe45832170d11ba4ac9ae",
+        "hostname": "nec.localhost",
+        "protocol": "TLSv1.3"
+      },
+      "zod": {
+        "certificate_sha256": "d5da4e72dadbbbc52b5e83803fa3122dd68b46c0743feead670ed61dbfd12d38",
+        "hostname": "home.localhost",
+        "protocol": "TLSv1.3"
+      }
+    },
+    "wrong_ca_rejected": true,
+    "wrong_hostname_rejected": true
+  },
+  "classification": "independent-source-and-retained-execution-review",
+  "configured_lifecycle": {
+    "artifact": "configured-supervisor.jsonl",
+    "bytes": 14176,
+    "original_path": ".piers/fakes/logs/supervisor.log",
+    "records": [
+      {
+        "bytes": 634,
+        "command": "configured launch zod",
+        "original_offset": 828790,
+        "retained_offset": 0,
+        "sha256": "4870bdf35ed3da48b4d5b7ab081a2ed064e19494855383174d8bd2b7e506fef1",
+        "utc": "2026-09-27T18:48:05Z"
+      },
+      {
+        "bytes": 121,
+        "command": "configured suspension zod",
+        "original_offset": 829732,
+        "retained_offset": 634,
+        "sha256": "b6fbeec16acfcfc18fb8afa7aeb6298fd291116ea11002d52b5781851c17f75e",
+        "utc": "2026-09-27T18:48:10Z"
+      },
+      {
+        "bytes": 639,
+        "command": "configured launch bus",
+        "original_offset": 829853,
+        "retained_offset": 755,
+        "sha256": "30e8863166817aa5c0a0d9b9ca1eaa80a17610c86143b3686144271fdaac6555",
+        "utc": "2026-09-27T18:49:05Z"
+      },
+      {
+        "bytes": 122,
+        "command": "configured suspension bus",
+        "original_offset": 830801,
+        "retained_offset": 1394,
+        "sha256": "212d54de196922d55b8ecd70a7bd83671e6a7967aee03c6348f8f7bf5f32816e",
+        "utc": "2026-09-27T18:49:09Z"
+      },
+      {
+        "bytes": 639,
+        "command": "configured launch nec",
+        "original_offset": 830923,
+        "retained_offset": 1516,
+        "sha256": "55323f183c9ed8f8d6fb2e9729d660f90d080922524c09371439f175d4025028",
+        "utc": "2026-09-27T18:49:54Z"
+      },
+      {
+        "bytes": 122,
+        "command": "configured suspension nec",
+        "original_offset": 831871,
+        "retained_offset": 2155,
+        "sha256": "ce85b15828107679b937c9720beab1d5b48394e49d8985502aa0043032b7c5da",
+        "utc": "2026-09-27T18:49:57Z"
+      },
+      {
+        "bytes": 639,
+        "command": "configured launch bud",
+        "original_offset": 831993,
+        "retained_offset": 2277,
+        "sha256": "9e66ea206c2823d6489be2e1488a95849009e91d287e06edfe460331d1d9b0c0",
+        "utc": "2026-09-27T18:50:43Z"
+      },
+      {
+        "bytes": 122,
+        "command": "configured suspension bud",
+        "original_offset": 832941,
+        "retained_offset": 2916,
+        "sha256": "7275e86c61717eb75e873e3b423f4e0de87488c3e33818170162b815c354b2a7",
+        "utc": "2026-09-27T18:50:47Z"
+      },
+      {
+        "bytes": 919,
+        "command": "configured admission zod",
+        "original_offset": 833063,
+        "retained_offset": 3038,
+        "sha256": "1235616e7717ce027e2eae8167f9a87762e540114e6b7a89e2a62f09d7769359",
+        "utc": "2026-09-27T18:51:53Z"
+      },
+      {
+        "bytes": 922,
+        "command": "configured admission bus",
+        "original_offset": 833982,
+        "retained_offset": 3957,
+        "sha256": "8ff0e4f1bc2ff1719f333b9c898c3734a4cafb7ae9a8079bc4adcc851efb2579",
+        "utc": "2026-09-27T18:51:56Z"
+      },
+      {
+        "bytes": 922,
+        "command": "configured admission nec",
+        "original_offset": 834904,
+        "retained_offset": 4879,
+        "sha256": "b30c5b6012f0e2da60b6a93e2969ec1c655205058abfef0cabc2d5b4efe154cd",
+        "utc": "2026-09-27T18:51:57Z"
+      },
+      {
+        "bytes": 922,
+        "command": "configured admission bud",
+        "original_offset": 835826,
+        "retained_offset": 5801,
+        "sha256": "2e9c52a389d29c295e270bfbd9d7cab4a8ccc92d4adae0913415dd6f730aa5f5",
+        "utc": "2026-09-27T18:51:59Z"
+      },
+      {
+        "bytes": 182,
+        "command": "configured restart expectation zod",
+        "original_offset": 836748,
+        "retained_offset": 6723,
+        "sha256": "e7a98b9c55e0172c957c97711a7f678bd4f86f5c99a3f2bfd7d2623e6f575be4",
+        "utc": "2026-09-27T18:52:37Z"
+      },
+      {
+        "bytes": 635,
+        "command": "configured launch zod",
+        "original_offset": 837034,
+        "retained_offset": 6905,
+        "sha256": "cea2967c54aa995f95ffc056c6a4c56df6cf6158a22f90740cff33320ac82a4c",
+        "utc": "2026-09-27T18:52:39Z"
+      },
+      {
+        "bytes": 121,
+        "command": "configured suspension zod",
+        "original_offset": 837978,
+        "retained_offset": 7540,
+        "sha256": "e357be42b4b8a0f851e8609ad038a7e5bbd517d150f2ab8c63ec98730dabfb37",
+        "utc": "2026-09-27T18:52:42Z"
+      },
+      {
+        "bytes": 923,
+        "command": "configured admission zod",
+        "original_offset": 838099,
+        "retained_offset": 7661,
+        "sha256": "74aa42b53a21b31d4be9be60f839444b761bd21420f0991e9ef1d85a458360be",
+        "utc": "2026-09-27T18:52:50Z"
+      },
+      {
+        "bytes": 182,
+        "command": "configured restart expectation bus",
+        "original_offset": 839022,
+        "retained_offset": 8584,
+        "sha256": "e4f6c795c40068982b8ca1f8c7e409a63fee378754758575f28151fc98fcfb8c",
+        "utc": "2026-09-27T18:52:51Z"
+      },
+      {
+        "bytes": 639,
+        "command": "configured launch bus",
+        "original_offset": 839308,
+        "retained_offset": 8766,
+        "sha256": "e81683eb83ec44a1aa6dc5bc1375c17bce469ef1a5e19217db714bb1fc38c721",
+        "utc": "2026-09-27T18:52:53Z"
+      },
+      {
+        "bytes": 121,
+        "command": "configured suspension bus",
+        "original_offset": 840256,
+        "retained_offset": 9405,
+        "sha256": "e00efff4a6ff812b1093ecde34a4bffdc802c11eaab3d0c0300c9dd77a46f8dd",
+        "utc": "2026-09-27T18:52:56Z"
+      },
+      {
+        "bytes": 922,
+        "command": "configured admission bus",
+        "original_offset": 840377,
+        "retained_offset": 9526,
+        "sha256": "50754c4c61fbbd6b15cb40533032c83e5ec52487892d709d286344fa4bd2b88a",
+        "utc": "2026-09-27T18:53:03Z"
+      },
+      {
+        "bytes": 182,
+        "command": "configured restart expectation nec",
+        "original_offset": 841299,
+        "retained_offset": 10448,
+        "sha256": "747aa1c6fb0c95491fee18938199ef74bdc6467d5b960fd8990b994d14c6ae48",
+        "utc": "2026-09-27T18:53:04Z"
+      },
+      {
+        "bytes": 639,
+        "command": "configured launch nec",
+        "original_offset": 841585,
+        "retained_offset": 10630,
+        "sha256": "d560c7ca7d77a88d503dd5c573d8d9dbbe6783912964b6d393a5038be21a904c",
+        "utc": "2026-09-27T18:53:06Z"
+      },
+      {
+        "bytes": 121,
+        "command": "configured suspension nec",
+        "original_offset": 842533,
+        "retained_offset": 11269,
+        "sha256": "8f79c65ce5792c845c3beb1b917f6b8a7cc7a10f209ad6207573484b4f0c6a49",
+        "utc": "2026-09-27T18:53:10Z"
+      },
+      {
+        "bytes": 922,
+        "command": "configured admission nec",
+        "original_offset": 842654,
+        "retained_offset": 11390,
+        "sha256": "8dd58c2d7d00173e5873e477a8c2f3965630c6bfcf61f29eca3feb764f5d2af9",
+        "utc": "2026-09-27T18:53:16Z"
+      },
+      {
+        "bytes": 182,
+        "command": "configured restart expectation bud",
+        "original_offset": 843576,
+        "retained_offset": 12312,
+        "sha256": "cb160018fa96cf2962d5960bd9e64227605fd4abc0659c5f36e25928ff89e334",
+        "utc": "2026-09-27T18:53:18Z"
+      },
+      {
+        "bytes": 639,
+        "command": "configured launch bud",
+        "original_offset": 843862,
+        "retained_offset": 12494,
+        "sha256": "5453fb43e923925ebd353a9d2e2744982395692964aaa8146ce1b6d229092d23",
+        "utc": "2026-09-27T18:53:19Z"
+      },
+      {
+        "bytes": 121,
+        "command": "configured suspension bud",
+        "original_offset": 844810,
+        "retained_offset": 13133,
+        "sha256": "751c9503effef3af2b4a2963a1f45fa2dc42bbdab1002d556f3848634b03d8c7",
+        "utc": "2026-09-27T18:53:23Z"
+      },
+      {
+        "bytes": 922,
+        "command": "configured admission bud",
+        "original_offset": 844931,
+        "retained_offset": 13254,
+        "sha256": "d7658dd1fc50877a8f023ee94705159e735b7688bbe6398efc09c5f0fb2c31e1",
+        "utc": "2026-09-27T18:53:29Z"
+      }
+    ],
+    "selection": "Exact original configured launch/suspension/admission/restart expectation JSONL records between 2026-09-27T18:48:01Z inclusive and 18:55:00Z exclusive; selected bytes preserve original order and line bytes, with original offsets and individual digests.",
+    "sha256": "601fa701575a98c83aeef14de85e8b6631aa9d30e63a322f33be4c228449a143"
+  },
+  "disposition": "accepted_for_initial_development_pr",
+  "execution_source_note": "These were worktree development runs based on d69697cdbc2fd79e5a9b650ca294508fca96a6e1. Exact relevant source blobs subsequently committed as 0593f4f match retained run hashes; the committed revision is not presented as the original execution HEAD.",
+  "format": 1,
+  "guard": {
+    "cleanup_errors": [],
+    "elapsed_seconds": 457.831,
+    "exit_code": 0,
+    "maximum_cpu_c": 83.0,
+    "maximum_read_seconds": 0.006260822061449289,
+    "post_run_readonly_observation": "Both exact native scope and browser service returned LoadState=not-found, ActiveState=inactive, SubState=dead, with absent cgroup paths.",
+    "reason": null,
+    "sample_count": 459,
+    "scope_proof": {
+      "cgroup": "/user.slice/user-1000.slice/user@1000.service/app.slice/stead-native-f66fcb9510bc5606cde8bf1f34c9d6bf.scope",
+      "cpu_affinity": [
+        19
+      ],
+      "cpu_max": "5000 10000",
+      "unit": "stead-native-f66fcb9510bc5606cde8bf1f34c9d6bf.scope"
+    },
+    "status": "completed"
+  },
+  "host": {
+    "execution_attribution": "Final host suite was executed by root; reviewer inspected retained logs and exact committed correction source without rerunning.",
+    "observed_final_tests": 531,
+    "observed_seconds": 27.315,
+    "retained_failures": [
+      "host-first-failed.log",
+      "host-retry-failed.log"
+    ],
+    "test_corrections": [
+      {
+        "finding": "Acquiring the existing bridge lock after EOF observes the completed same-lock failure cleanup; both empty worker/stream assertions remain. Production relay hash unchanged.",
+        "path": "tests/urbit/test_loopback_bridge.py",
+        "sha256": "aefcbce45313f2c6d1bc385ec8407ff7871bbfaa1c1256b7ad259e2e128aa4bd"
+      },
+      {
+        "finding": "ProcessLookupError while reading a disappearing /proc/PID/stat is a legitimate no-process result, like FileNotFoundError. The independent delayed/late nft transaction absence assertions remain.",
+        "path": "tests/urbit/host_network/fence-death-probe.py",
+        "sha256": "525cf807428f5dbcf47abda669fcdb6475875a24ec879d5e7b10ae1500ab89fe"
+      }
+    ]
+  },
+  "human_approval": false,
+  "limitations": [
+    "618 checks include file installation and Clay identity checks; this is not 618 distinct business/security scenarios.",
+    "This is a first local fake-ship development slice, not Phase 2 acceptance, production deployment, live-network routing, general security certification, or human usability evidence.",
+    "The tested cold-restart path is the fenced operator lifecycle. Abrupt crash/restore/upgrade coverage and all invalid startup/control cases require their own retained execution.",
+    "The initial browser journey does not qualify document publication/privacy, subscription transport, independent SDK3 consumer, hosted CI, onboarding, full revocation/expiry/recovery/conflict/accessibility matrix, or production performance.",
+    "The expanded updates candidate was already changing the worktree during review and is excluded; all source comparisons above bind immutable commit 0593f4f."
+  ],
+  "native": {
+    "all_call_input_frame_hashes_and_stdout_json_match": true,
+    "checks": 618,
+    "checks_unique": 618,
+    "commands": 614,
+    "failed_checks": 0,
+    "native_call_indexes": [
+      588,
+      589,
+      590,
+      591,
+      592,
+      593,
+      594,
+      595,
+      596,
+      597,
+      598,
+      599,
+      600,
+      601,
+      602,
+      603,
+      604,
+      605,
+      606,
+      607,
+      608,
+      609,
+      610,
+      611,
+      612,
+      613
+    ],
+    "native_checks_seconds": 337.109,
+    "native_clay_hash_checks": 280,
+    "negative_control": {
+      "arm": "test-deliberate-failure",
+      "marker": "stead-intentional-native-unit-failure",
+      "path": "/controls/stead-unit-failure",
+      "raw_transcript_matches": true,
+      "terminal": "[32 %avow 0 %noun 1]"
+    },
+    "restarts": {
+      "bud": {
+        "new_namespace_pid": 985,
+        "old_namespace_pid": 445,
+        "saved_vase_sha256": "4a6a3371af5ad484379ae4401099906b5f2b0d1079815281f954a2c95bac83a9",
+        "tls_certificate_sha256": "29a193cf74686940ee521d38e11559f944a05eaa752cee23c4e5560e757e83de"
+      },
+      "bus": {
+        "new_namespace_pid": 869,
+        "old_namespace_pid": 203,
+        "saved_vase_sha256": "a90afba8eecb340b68e3e7afdbc6510dd566acd58d2871946f19055d74df6c9b",
+        "tls_certificate_sha256": "8018cf3601991c947849d82d126a3d4097f28c57cf705a52234c5457299a47ed"
+      },
+      "nec": {
+        "new_namespace_pid": 927,
+        "old_namespace_pid": 323,
+        "saved_vase_sha256": "e444fb3eeb1974086b5db513348b5485285295b80898ae3cd9db7165902f1a22",
+        "tls_certificate_sha256": "70011378c8833536b3f8650d88f4e345303d0e543b2fe45832170d11ba4ac9ae"
+      },
+      "zod": {
+        "new_namespace_pid": 807,
+        "old_namespace_pid": 49,
+        "saved_vase_sha256": "85895028fd62fc544c04684ba7b150bf006e32c7a5d9c3050fe1af58a95f2bce",
+        "tls_certificate_sha256": "d5da4e72dadbbbc52b5e83803fa3122dd68b46c0743feead670ed61dbfd12d38"
+      }
+    },
+    "run_id": "f66fcb9510bc5606cde8bf1f34c9d6bf",
+    "semantic_findings": [
+      "Owner-local configuration succeeded; remote configuration was a specific stead-owner-required poke-fail and the unbound sender received a specific stead-current-member-required watch-ack-fail.",
+      "The native creator receipt attributes native-sender/1 and ~bus; exact duplicate and post-restart project.create receipts match.",
+      "An ungranted member and a reader mutation received denied_or_not_found; explicit reader grant and authorized write succeeded; a stale revision returned revision_conflict.",
+      "Authorized work rows before and after four cold restarts match; each restart used a distinct namespace PID and incarnation, retained the saved-vase fingerprint, and completed fresh suspension/bootstrap/admission."
+    ],
+    "source_install_checks": 280,
+    "unit_arms": 44,
+    "unit_groups": {
+      "stead-http": 14,
+      "stead-identity": 11,
+      "stead-session": 19
+    }
+  },
+  "privacy": {
+    "exact_four_disposable_owner_codes_absent_from_portable_text_and_hex": true,
+    "private_key_pem_markers_absent": true,
+    "private_profile_or_pier_not_packaged": true,
+    "scope": "Synthetic fixture identities and business data only. No claim of a general secret scanner or consent to publish other runtime artifacts.",
+    "selected_lifecycle_records_secret_scan_passed": true
+  },
+  "qualifies_phase": false,
+  "retained_cache": {
+    "artifact": "ingress-cpython314-cache.bin",
+    "bytes": 17695,
+    "code_object_equals_compile_of_committed_source": true,
+    "compiled_filename": "/home/skilgore/stead-urbit/web/dev/ingress.py",
+    "finding_resolution": "The original ingress aggregate included this ignored valid cache. Preserving it plus the exact two committed source files reproduces the historical digest; no divergent logic was found.",
+    "flags": 0,
+    "marshal_payload_equals_compile_of_committed_source": true,
+    "method": "marshal.loads of retained cache payload and compile(committed ingress.py, original co_filename, exec, dont_inherit=True, optimize=0); compared code objects and marshalled payloads without executing either. Original bytecode retained as a non-importable .bin.",
+    "original_path": "web/dev/__pycache__/ingress.cpython-314.pyc",
+    "python_magic_matches": true,
+    "sha256": "7c2d07fcab337ea8bf157fae487ad7ad91f4017ad5e86c3f662c83c0a1d93184",
+    "source_bytes": 9883,
+    "source_sha256": "2884cd9f161e2d0bb745a984aab03e49f8cae012ba6771e5d75deb5548b56646"
+  },
+  "reviewed_at_utc": "2026-09-27T19:07:20.368769+00:00",
+  "reviewed_commit": "0593f4f9a8a2034e7931a9d0e7c350d2a2f86958",
+  "reviewer": "/root/gall_schedule_review",
+  "scope": "Bounded initial configured native Gall and real Firefox/TLS development slice. Subscription worktree changes and Phase 2 closure are excluded. No tests, native processes, or implementation changes were executed by this reviewer.",
+  "source_bindings": {
+    "before_after_equal": true,
+    "browser_inputs": {
+      "browser_test": "81696b63f3910ac1c808420172ddbce4c688de4d2e3a9ae74050c67c856b2fc4",
+      "execution_id": "f66fcb9510bc5606cde8bf1f34c9d6bf",
+      "native_tree": "99ec18175e3c8fd0ddc9d33fe6dc7a4f8fa71d3d68057cbf8347595fe0997682",
+      "process_owner": "2d122b72e7a58d6f926eff59be1831fb3587611a8373be8a93bd3bbceb3b96c5",
+      "relay": "a724bcfc4197adc796f580b43a751198cba8fbf4c1eeaba0221ffab01395fae2",
+      "runner": "acada9ccfb5bd6e6f0793572fdf0a5ca95e7d5350676ebad7716fa799b40ecb4",
+      "toolchain": "4a209c10cf1756eb0f7357cc3eca8250bf66c239b4cd0ca31a8c0886d4d304ee"
+    },
+    "committed_blob_matches": true,
+    "harness_files": 27,
+    "harness_sha256": "7cae7ba75696eb4bf4d129418159576e7577e0f830dab733b0371c0e16e5f0e3",
+    "ingress_historical_files": {
+      "__pycache__/ingress.cpython-314.pyc": "7c2d07fcab337ea8bf157fae487ad7ad91f4017ad5e86c3f662c83c0a1d93184",
+      "ingress.py": "2884cd9f161e2d0bb745a984aab03e49f8cae012ba6771e5d75deb5548b56646",
+      "loopback_bridge.py": "a724bcfc4197adc796f580b43a751198cba8fbf4c1eeaba0221ffab01395fae2"
+    },
+    "ingress_historical_tree_sha256": "145abd360943a1eb328be595e0fdec613127a1b002eda19e93fc40670ccffd89",
+    "native_file_maps_equal_on_four_ships": true,
+    "native_files": 70,
+    "native_tree": "99ec18175e3c8fd0ddc9d33fe6dc7a4f8fa71d3d68057cbf8347595fe0997682",
+    "native_unit_inventory_sha256": "776e5a69b52844dabc687520ec0984d559b916f2273131470aa13f38ba6ea99d",
+    "runner_files": {
+      "core_conn.py": "b9172b903626e01d10ca7522a5f0399c2844db00c4987bf0018ef22b0e3e6162",
+      "execution_policy.py": "da16e2e0fd32eb5b90706b546a7ea8332a65807fc8279f3bd765dcc18aaad9b5",
+      "native_install.py": "9afb33b359ef71c1503bbb25616e445318298d850cd94672ecd5181b84018c11",
+      "native_peer_fence.py": "46eb0ad31254abdcedcdde14521e7e8ab3c640cfb156d18ca71b4a8bd7b21d48",
+      "native_tls.py": "0c76e4fcbe37fceee823a5ba1bf3080a2523149996c8471a1afed0341b45ebc5",
+      "native_units.py": "9d7281e86a15259f2f48aedd573c84c4d6760da7f495a207d25404c54e054477",
+      "owned_child.py": "14e55b05a51ee5b8dc1b8a330d744fe7cf44a63ee0d861d4ca4e5d2b5c4e2822",
+      "team_check.py": "052694f5a6201d760d321a61f92973302c6f067832032b6f828e3cfaeeb304b2",
+      "team_conn.py": "12c059e6fb66eff0373134ef499c453b7ae3794e5d16c04db582d6ebdf7d9e2c",
+      "team_lifecycle.py": "61137ade895dc327e101a75d7b621040a444df4fe149d8b2de2636180859d408"
+    }
+  }
+}
