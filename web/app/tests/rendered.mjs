@@ -22,6 +22,8 @@ async function inputs() {
   }
   return result;
 }
+const requestedCase = process.argv[2] ?? '';
+assert.ok(!requestedCase || /^[a-z0-9-]{1,100}$/u.test(requestedCase), 'Bounded case name');
 const inputsBefore = await inputs();
 await mkdir(output, {recursive: true});
 await build({absWorkingDir: root, entryPoints: ['src/main.tsx'], outfile: path.join(output, 'app.js'),
@@ -36,7 +38,7 @@ const server = createServer(async (request, response) => {
 await new Promise(resolve => server.listen(0, '127.0.0.1', resolve));
 const origin = `http://127.0.0.1:${server.address().port}`;
 const browser = await firefox.launch({headless: true});
-const report = {classification: 'real-browser-with-mocked-home', node: process.version, browser: browser.version(), checks: [], qualifies_phase: false, inputs_before: inputsBefore};
+const report = {classification: 'real-browser-with-mocked-home', node: process.version, browser: browser.version(), checks: [], qualifies_phase: false, requested_case: requestedCase, inputs_before: inputsBefore};
 const id = number => '019939ba-4000-7000-8000-' + String(number).padStart(12, '0');
 const person = {principal_id: id(102), binding_id: id(202), binding_revision: '1', identity_ship: '~bus',
   session_audit_id: 'a'.repeat(64), organization_id: id(5), team_id: id(6), display_name: 'Synthetic Alice', can_create: 'yes'};
@@ -158,6 +160,7 @@ async function fixture(run) {
   } finally { state.releaseWork?.(); await context.close(); }
 }
 async function check(name, run) {
+  if (requestedCase && name !== requestedCase) return;
   await fixture(run); report.checks.push({name, passed: true});
   console.log('PASS ' + name);
 }
@@ -320,6 +323,40 @@ try {
     }
     assert.equal(state.commands.length, 0);
   });
+  await check('keyboard-controls-after-switching-between-two-user-pages', async (page, state) => {
+    const other = await browser.newPage();
+    try {
+      await other.setContent('<button>Another user page</button>');
+      await other.getByRole('button').click();
+      const before = await page.evaluate(() => document.hasFocus());
+      await page.bringToFront();
+      const traversal = async (target) => {
+        await target.waitFor();
+        const focus = [];
+        for (let count = 0; count <= 80; count++) {
+          if (await target.evaluate(element => element === document.activeElement)) return;
+          const direction = await target.evaluate(element => document.activeElement && Boolean(document.activeElement.compareDocumentPosition(element) & Node.DOCUMENT_POSITION_PRECEDING) ? 'Shift+Tab' : 'Tab');
+          await page.keyboard.press(direction);
+          focus.push(await page.evaluate(() => ({tag: document.activeElement?.tagName, text: document.activeElement?.textContent?.slice(0,60)})));
+        }
+        console.log(JSON.stringify(focus));
+        throw new Error('Keyboard could not reach ' + String(target) + '; focus=' + await page.evaluate(() => document.hasFocus()));
+      };
+      const press = async target => { await traversal(target); await page.keyboard.press('Enter'); };
+      const text = async (name, value) => { await traversal(page.getByRole('textbox', {name, exact: true})); await page.keyboard.insertText(value); };
+      await press(page.getByRole('button', {name: '＋ New project', exact: true}));
+      await text('Title', 'Keyboard project'); await text('Project key', 'KEYBOARD');
+      await press(page.getByRole('button', {name: 'Cancel', exact: true}));
+      await press(page.getByRole('button', {name: 'Work', exact: true}));
+      await press(page.getByRole('button', {name: 'New work item', exact: true}));
+      await text('Title', 'Keyboard-created work'); await text('Description', 'Tokyo 東京 — Zoë');
+      await press(page.getByRole('button', {name: 'Save at home', exact: true}));
+      await page.getByRole('heading', {name: 'Keyboard-created work', exact: true}).waitFor();
+      assert.equal(state.commands.length, 1);
+      console.log('Keyboard tab focus before selection: ' + before);
+    } finally { await other.close(); }
+  });
+  assert.ok(report.checks.length > 0, 'At least one named browser case must execute');
   report.status = 'pass';
 } catch (error) {
   report.status = 'fail'; report.error = String(error); throw error;

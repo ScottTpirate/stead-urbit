@@ -36,12 +36,16 @@ async function restrict(context) {
 }
 function passed(name, extra = {}) { report.checks.push({name, passed: true, ...extra}); console.log('PASS ' + name); }
 async function keyboardTo(page, target) {
+  // Select the actual browser tab before sending physical keyboard events.
+  // No focus() shortcut: every control is still reached by Tab or Shift+Tab.
+  await page.bringToFront();
   await target.waitFor();
   for (let count = 0; count <= 80; count++) {
     if (await target.evaluate(element => document.activeElement === element)) return;
-    await page.keyboard.press('Tab');
+    const direction = await target.evaluate(element => document.activeElement && Boolean(document.activeElement.compareDocumentPosition(element) & Node.DOCUMENT_POSITION_PRECEDING) ? 'Shift+Tab' : 'Tab');
+    await page.keyboard.press(direction);
   }
-  throw new Error('Keyboard traversal did not reach the expected control');
+  throw new Error('Keyboard traversal did not reach ' + String(target) + '; document focus=' + await page.evaluate(() => document.hasFocus()));
 }
 async function keyboardText(page, target, value) {
   await keyboardTo(page, target); await page.keyboard.press('Control+A'); await page.keyboard.insertText(value);
