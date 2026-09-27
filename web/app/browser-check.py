@@ -3,6 +3,8 @@
 import hashlib
 import json
 import os
+import re
+import stat
 from pathlib import Path
 import socket
 import ssl
@@ -22,8 +24,34 @@ from digests import sha, tree_sha
 from loopback_bridge import LoopbackBridge, PORTS
 
 
+def private_json(path, maximum):
+    """Read one owned regular private file without following a final symlink."""
+    descriptor = os.open(path, os.O_RDONLY | os.O_NOFOLLOW | os.O_NONBLOCK)
+    try:
+        info = os.fstat(descriptor)
+        if (not stat.S_ISREG(info.st_mode) or info.st_uid != os.getuid()
+                or info.st_mode & 0o077 or not 0 < info.st_size <= maximum):
+            raise ValueError('Owned bounded private regular file required')
+        with os.fdopen(descriptor, 'rb', closefd=False) as stream:
+            data = stream.read(maximum + 1)
+        if len(data) != info.st_size:
+            raise ValueError('Private evidence changed while reading')
+    finally:
+        os.close(descriptor)
+    return json.loads(data), hashlib.sha256(data).hexdigest()
+
+
 def main():
     os.umask(0o077)
+    followup = None
+    if sys.argv[1:]:
+        if len(sys.argv) != 3 or sys.argv[1] != '--expiry-from' or not re.fullmatch(r'browser-native-[0-9]{8}T[0-9]{6}Z', sys.argv[2]):
+            raise ValueError('Only the fixed native-expiry followup is supported')
+        followup = ROOT / '.runtime' / sys.argv[2] / 'expiry-session.json'
+        parent = followup.parent.lstat()
+        if not stat.S_ISDIR(parent.st_mode) or parent.st_uid != os.getuid() or parent.st_mode & 0o077:
+            raise ValueError('Private bounded prior session evidence required')
+        private_json(followup, 8192)
     if os.environ.get('SSLKEYLOGFILE'):
         raise ValueError('TLS key logging must be absent from this private browser run')
     harness.guard()
@@ -46,12 +74,29 @@ def main():
                 or set(current.get('ships', {})) != set(PORTS)
                 or any(row['exit'] is not None for row in current['ships'].values())):
             raise ValueError('Owned configured fixture no longer ready')
-    output = ROOT / '.runtime' / ('browser-native-' + time.strftime('%Y%m%dT%H%M%SZ', time.gmtime()))
+    output = ROOT / '.runtime' / (('browser-expiry-' if followup else 'browser-native-') + time.strftime('%Y%m%dT%H%M%SZ', time.gmtime()))
     output.mkdir(mode=0o700)
     before = {'native_tree': tree_sha(ROOT / 'native/core/desk'), 'runner': sha(__file__),
               'process_owner': sha(ROOT / 'web/app/browser_process.py'),
               'browser_test': sha(ROOT / 'web/app/tests/native.mjs'), 'relay': sha(ROOT / 'web/dev/loopback_bridge.py'),
+              'boundary_test': sha(ROOT / 'web/app/tests/native-boundaries.mjs'),
+              'expiry_test': sha(ROOT / 'web/app/tests/native-expiry.mjs'),
               'toolchain': sha(ROOT / 'specs/urbit/toolchain.lock.json'), 'execution_id': run_id}
+    if followup:
+        session, session_sha = private_json(followup, 8192)
+        prior, prior_sha = private_json(followup.parent / 'transport-report.json', 262144)
+        journey, journey_sha = private_json(followup.parent / 'browser-report.json', 2 * 1024 * 1024)
+        if (prior.get('status') != 'pass' or journey.get('status') != 'pass'
+                or journey.get('execution_id') != run_id
+                or prior.get('inputs_before') != before or prior.get('inputs_after') != before
+                or prior.get('browser_process', {}).get('cleanup', {}).get('empty') is not True
+                or session.get('execution_id') != run_id or session.get('format') != 1):
+            raise ValueError('Expiry requires the same passed native browser source and fixture')
+        issued, captured = session.get('issued_before_ms'), session.get('captured_at_ms')
+        if (type(issued) is not int or type(captured) is not int or not 0 < issued <= captured <= issued + 120000
+                or not 28 * 60000 <= time.time() * 1000 - issued <= 29 * 60000):
+            raise ValueError('Natural expiry followup must start in its recorded window')
+        before.update(expiry_session=session_sha, parent_transport=prior_sha, parent_journey=journey_sha)
     report = {'classification': 'local-real-browser-native-tls', 'status': 'fail', 'qualifies_phase': False,
               'inputs_before': before, 'tls': {}}
     certificates = directory / 'certificates'
@@ -83,12 +128,18 @@ def main():
                     subprocess.run(['/usr/bin/certutil', '-d', 'sql:' + profile, *arguments], check=True,
                                    stdout=subprocess.PIPE, stderr=subprocess.PIPE, timeout=10)
                 command = [str(ROOT / '.runtime/node-v24.21.0-linux-x64/bin/node'),
-                           str(ROOT / 'web/app/tests/native.mjs'), profile, str(fixture), str(output)]
+                           str(ROOT / ('web/app/tests/native-expiry.mjs' if followup else 'web/app/tests/native.mjs')),
+                           profile, str(fixture), str(output), *([str(followup)] if followup else [])]
                 execution_policy.validate_sample(execution_policy.sample_temperatures(), execution_policy.Policy(), preflight=True)
                 def admitted():
                     healthy()
                     execution_policy.validate_sample(execution_policy.sample_temperatures(), execution_policy.Policy())
                 report['browser_process'] = browser_process.run(command, root=ROOT, output=output, healthy=admitted)
+                child, _ = private_json(output / 'browser-report.json', 2 * 1024 * 1024)
+                if child.get('status') != 'pass' or child.get('execution_id') != run_id:
+                    raise ValueError('Browser evidence did not pass for this fixture')
+                if followup and child.get('session_file_sha256') != before['expiry_session']:
+                    raise ValueError('Browser used different expiry session bytes')
             finally:
                 ownership = output / 'browser-process.json'
                 if ownership.exists() and json.loads(ownership.read_text()).get('cleanup', {}).get('empty') is True:
@@ -100,6 +151,12 @@ def main():
         report['inputs_after'] = dict(before, native_tree=tree_sha(ROOT / 'native/core/desk'),
             runner=sha(__file__), process_owner=sha(ROOT / 'web/app/browser_process.py'),
             browser_test=sha(ROOT / 'web/app/tests/native.mjs'), relay=sha(ROOT / 'web/dev/loopback_bridge.py'))
+        report['inputs_after']['boundary_test'] = sha(ROOT / 'web/app/tests/native-boundaries.mjs')
+        report['inputs_after']['expiry_test'] = sha(ROOT / 'web/app/tests/native-expiry.mjs')
+        if followup:
+            report['inputs_after'].update(expiry_session=private_json(followup, 8192)[1],
+                parent_transport=private_json(followup.parent / 'transport-report.json', 262144)[1],
+                parent_journey=private_json(followup.parent / 'browser-report.json', 2 * 1024 * 1024)[1])
         if before != report['inputs_after']:
             raise ValueError('Browser source changed during execution')
         report['status'] = 'pass'

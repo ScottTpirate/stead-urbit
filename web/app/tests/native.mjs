@@ -5,6 +5,7 @@ import {readFile, writeFile} from 'node:fs/promises';
 import {createHash, randomBytes} from 'node:crypto';
 import path from 'node:path';
 import {firefox} from 'playwright';
+import {endpointBoundaries} from './native-boundaries.mjs';
 const [profile, fixture, output] = process.argv.slice(2);
 assert.equal(process.version, 'v24.21.0');
 assert.ok(!process.env.SSLKEYLOGFILE);
@@ -146,6 +147,26 @@ async function signIn(context, ship, port) {
   await home.getByRole('button', {name: /GARDEN.*Garden α/u}).waitFor();
   passed(ship + '-individual-native-owner-approved-session', {journey_ms: Math.round(performance.now() - start)});
   return {home, personal};
+}
+async function localizedAcceptedTime(alice, bob, receipt) {
+  const times = [];
+  for (const person of [alice, bob]) {
+    await person.home.getByRole('button', {name: 'Activity', exact: true}).click();
+    const event = person.home.locator(`[data-event-request="${receipt.request_id}"]`);
+    await event.waitFor();
+    const time = event.locator('time');
+    const observed = {iso: await time.getAttribute('datetime'), display: await time.innerText()};
+    assert.equal(observed.iso, new Date(Number(receipt.accepted_at_ms)).toISOString());
+    const expected = await person.home.evaluate(milliseconds => new Intl.DateTimeFormat(undefined,
+      {year:'numeric',month:'short',day:'numeric',hour:'numeric',minute:'2-digit',timeZoneName:'short'})
+      .format(new Date(Number(milliseconds))), receipt.accepted_at_ms);
+    assert.equal(observed.display, expected);
+    times.push(observed);
+    await person.home.getByRole('button', {name: 'Work', exact: true}).click();
+  }
+  assert.equal(times[0].iso, times[1].iso);
+  assert.notEqual(times[0].display, times[1].display);
+  passed('native-accepted-event-renders-same-instant-in-two-local-timezones', {request_id: receipt.request_id, times});
 }
 async function acceptedClick(page, label) {
   const response = page.waitForResponse(value => value.url() === origin + '/stead/api/command');
@@ -306,6 +327,65 @@ async function conflictsAndRecovery(alice, bob) {
   await a.getByRole('heading', {name: 'Save awaiting confirmation', exact: true}).waitFor({state: 'detached'});
   passed('native-commit-with-injected-response-loss-recovers-original-receipt', {request_id: committed.request_id, fault: 'client-discards-real-native-response'});
 }
+async function unsentNewScopes(alice) {
+  const page = alice.home;
+  async function dropBeforeDelivery() {
+    await page.evaluate(() => {
+      const original = window.fetch;
+      window.fetch = async (...args) => {
+        if (String(args[0]) === '/stead/api/command') {
+          window.steadUnsentCommand = args[1].body; window.fetch = original;
+          throw new TypeError('Controlled failure before native delivery');
+        }
+        return original(...args);
+      };
+    });
+    await page.getByRole('button',{name:'Save at home',exact:true}).click();
+    await page.getByRole('heading',{name:'Save awaiting confirmation',exact:true}).waitFor();
+    return page.evaluate(() => window.steadUnsentCommand);
+  }
+  async function retry(original) {
+    const response = page.waitForResponse(row => row.url() === origin + '/stead/api/command');
+    await page.getByRole('button',{name:'Retry this request',exact:true}).click();
+    const observed = await response;
+    assert.equal(observed.request().postData(),original);
+    const receipt = await observed.json(); assert.equal(receipt.status,'accepted');
+    assert.equal(receipt.request_id,JSON.parse(original).request_id);
+    assert.equal(receipt.resource_revision,'1');
+    await page.getByRole('heading',{name:'Save awaiting confirmation',exact:true}).waitFor({state:'detached'});
+    return receipt;
+  }
+  // No project has been selected since sign-in. This exercises the actual
+  // first-project layout, where pending recovery must still be visible.
+  assert.equal(await page.getByRole('navigation',{name:'Project views'}).count(),0);
+  await page.getByRole('button',{name:'＋ New project',exact:true}).click();
+  await page.getByRole('textbox',{name:'Title',exact:true}).fill('Explicit new project retry');
+  await page.getByRole('textbox',{name:'Project key',exact:true}).fill('RETRY');
+  const proposed = await dropBeforeDelivery();
+  assert.equal(await page.getByRole('button',{name:'Check receipt',exact:true}).count(),0);
+  assert.equal(await page.getByRole('textbox',{name:'Title',exact:true}).inputValue(),'Explicit new project retry');
+  const created = await retry(proposed);
+  await page.getByRole('button',{name:/RETRY.*Explicit new project retry/u}).waitFor();
+  passed('unsent-project-visible-original-request-retry-with-no-selected-project',
+    {request_id:created.request_id,fault:'client-throws-before-native-delivery'});
+  await page.getByRole('button',{name:/GARDEN.*Garden α/u}).click();
+  await page.getByRole('button',{name:'Docs',exact:true}).click();
+  await page.getByRole('button',{name:'New collection',exact:true}).click();
+  await page.getByRole('textbox',{name:'Title',exact:true}).fill('Unsent private collection');
+  const collection = await dropBeforeDelivery();
+  const denied = page.waitForResponse(row => row.url() === origin + '/stead/api/query' && row.request().postDataJSON()?.kind === 'receipt');
+  const authority = page.waitForResponse(row => row.url() === origin + '/stead/api/query' && row.request().postDataJSON()?.kind === 'project');
+  await page.getByRole('button',{name:'Check receipt',exact:true}).click();
+  assert.equal((await (await denied).json()).error,'denied_or_not_found');
+  const current = await (await authority).json(); assert.equal(current.status,'read');
+  assert.ok(Object.values(current.rows).some(row => ['contributor','maintainer'].includes(row.role)));
+  await page.getByText('The home did not confirm the outcome. Check the receipt or retry the same request before making another change.',{exact:true}).waitFor();
+  assert.equal(await page.getByRole('textbox',{name:'Title',exact:true}).inputValue(),'Unsent private collection');
+  const accepted = await retry(collection);
+  await page.getByLabel('Collection',{exact:true}).selectOption({label:'Unsent private collection · Private drafts'});
+  passed('unsent-collection-receipt-remains-unconfirmed-after-current-parent-authorization',
+    {request_id:accepted.request_id,fault:'client-throws-before-native-delivery'});
+}
 async function keyboardAndLayout(alice, bob) {
   const page = alice.home;
   await keyboardPress(page, page.getByRole('button', {name: '＋ New project', exact: true}));
@@ -431,6 +511,7 @@ try {
   bobContext.setDefaultTimeout(25000);
   await restrict(bobContext);
   const bob = await signIn(bobContext, 'nec', 8445);
+  await unsentNewScopes(alice);
   for (const page of [alice.home, bob.home]) {
     await page.getByRole('button', {name: /GARDEN.*Garden α/u}).click();
     await page.getByRole('button', {name: 'Work', exact: true}).click();
@@ -451,6 +532,7 @@ try {
   passed('browser-command-committed-with-native-approved-attribution', {request_id: receipt.request_id});
   await bob.home.getByRole('heading', {name: 'Browser task — 東京', exact: true}).waitFor();
   passed('second-individual-receives-live-committed-browser-work');
+  await localizedAcceptedTime(alice, bob, receipt);
   await alice.home.screenshot({path: path.join(output, 'native-work.png'), fullPage: true});
   const cookies = await root.cookies(origin);
   const stead = cookies.find(cookie => cookie.name === '__Host-stead-session');
@@ -462,6 +544,7 @@ try {
   assert.equal(homeProvenance.secure, 'yes');
   assert.equal((await root.cookies('https://bus.localhost:8444')).some(cookie => cookie.name === '__Host-stead-session'), false);
   passed('member-cookie-is-secure-httponly-host-only-and-not-owner-auth');
+  await endpointBoundaries({browser, alice, material, pageIn, restrict, passed});
   report.asset_timing = {before_docs: await assetTiming(alice.home)};
   await docsJourney(alice, bob);
   await conflictsAndRecovery(alice, bob);
@@ -493,6 +576,19 @@ try {
   assert.equal(await switched.home.getByLabel('Collection', {exact: true}).getByRole('option', {name: /Private notebook/u}).count(), 0);
   assert.ok(!(await switched.home.locator('main').innerText()).includes('Unsaved logout canary'));
   passed('explicit-account-change-does-not-restore-former-private-state');
+  // Prepare a separate real session for a later natural-expiry check. Its
+  // private cookie stays local; no clock, lifetime or server policy is changed.
+  const expiryContext = await browser.newContext({ignoreHTTPSErrors:false, serviceWorkers:'block'});
+  await restrict(expiryContext);
+  const issuedBefore = Date.now();
+  await signIn(expiryContext, 'bus', 8444);
+  const expiryCookie = (await expiryContext.cookies(origin)).find(row => row.name === '__Host-stead-session');
+  assert.ok(expiryCookie?.secure && expiryCookie.httpOnly && expiryCookie.sameSite === 'Strict');
+  await writeFile(path.join(output,'expiry-session.json'), JSON.stringify({format:1, execution_id:material.execution_id,
+    origin, issued_before_ms:issuedBefore, captured_at_ms:Date.now(), cookie:expiryCookie}) + '\n', {flag:'wx',mode:0o600});
+  await expiryContext.close();
+  report.expiry_followup = {status:'prepared-not-executed', earliest_start_ms:issuedBefore + 28 * 60000,
+    latest_start_ms:issuedBefore + 29 * 60000, native_session_lifetime_seconds:1800};
   report.status = 'pass';
 } catch (error) {
   // No raw HTML, cookies, request bodies, or personal owner code in diagnostics.

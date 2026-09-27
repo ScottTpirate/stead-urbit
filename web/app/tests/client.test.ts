@@ -85,6 +85,14 @@ globalThis.fetch = async (url, init) => {
   }
   const headers = init?.headers as Record<string, string>;
   assert.equal(headers['X-Stead-CSRF'], String(person).repeat(64));
+  if (mode.startsWith('new-scope-') && raw.kind === 'receipt') return json({protocol:'stead.result/3',status:'rejected',error:'denied_or_not_found'});
+  if (mode.startsWith('new-scope-') && raw.kind === 'project') return mode === 'new-scope-revoked'
+    ? json({protocol:'stead.result/3',status:'rejected',error:'denied_or_not_found'})
+    : json({status:'read',...raw,protocol:'stead.query-result/3',authority_epoch:'1',generation:'0'.repeat(64),cursor:'',
+      rows:{'0':{project_id:raw.project_id,authority_epoch:'1',role:mode === 'new-scope-reader' ? 'reader' : 'contributor'}}});
+  if (mode.startsWith('new-scope-') && raw.kind === 'identity') return json({status:'read',...raw,
+    protocol:'stead.query-result/3',authority_epoch:'0',generation:'0'.repeat(64),cursor:'',
+    rows:{'0':{...identity(person),can_create:mode === 'new-scope-revoked' ? 'no' : 'yes'}}});
   return json({status: 'read', ...raw, protocol: 'stead.query-result/3',
     authority_epoch: '0', generation: '0'.repeat(64), cursor: '', rows: raw.kind === 'receipt' ? (receipts.has(String(raw.resource_id)) ? {'0': corrupt(receipts.get(String(raw.resource_id))!)} : {}) : {'0': identity(person)}});
 };
@@ -181,6 +189,24 @@ test('recovery checks complete document and container receipts against the origi
     }
     mode = ''; receipts.delete(value.request_id); await rejects(client.recover(value), 'outcome_unknown');
   }
+});
+test('missing proposed scope stays unconfirmed only while current creation authority remains', async () => {
+  const client = new HomeClient(); person = 1; mode = ''; await client.resume();
+  const collection = command(id('1'), id('27'), '0', '1', 'container.create', {title:'Unsent private collection',visibility:'private'});
+  const project = command(id('28'), id('28'), '0', '1', 'project.create', {title:'Unsent project',project_key:'NEW',preset:'general',organization_id:id('5'),owning_team_id:id('6')});
+  for (const value of [collection]) {
+    const unchanged = JSON.stringify(value);
+    mode = 'new-scope-allowed'; await rejects(client.recover(value),'outcome_unknown');
+    assert.equal(JSON.stringify(value),unchanged);
+    mode = 'new-scope-revoked'; await rejects(client.recover(value),'denied_or_not_found');
+  }
+  // An accepted project can later become inaccessible while its creator still
+  // has global creation permission. That denial must never become uncertainty.
+  mode = ''; await client.command(project);
+  mode = 'new-scope-allowed'; await rejects(client.recover(project),'denied_or_not_found');
+  mode = 'new-scope-reader'; await rejects(client.recover(collection),'denied_or_not_found');
+  mode = 'new-scope-allowed'; await rejects(client.recover({...collection,payload:{...collection.payload,visibility:'shared'}}),'denied_or_not_found');
+  mode = '';
 });
 test('a superseded adoption identity query cannot publish or clear a new identity', async () => {
   const client = new HomeClient(); person = 1; mode = ''; await client.resume();
