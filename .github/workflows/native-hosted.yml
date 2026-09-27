@@ -33,7 +33,10 @@ jobs:
           workflow = os.environ['STEAD_WORKFLOW']
           if not re.fullmatch(r'[0-9a-f]{40}', workflow):
               raise SystemExit('Full immutable commits required')
-          root = pathlib.Path('/opt/stead-ci-controller')
+          for location in ('/', '/opt', '/var', '/var/lib'):
+              info = pathlib.Path(location).lstat()
+              print(json.dumps({'ancestor': location, 'uid': info.st_uid, 'gid': info.st_gid, 'mode': oct(info.st_mode & 0o7777)}), flush=True)
+          root = pathlib.Path('/var/lib/stead-ci-controller')
           root.mkdir(mode=0o755)
           env = {'PATH': '/usr/bin:/bin', 'LANG': 'C.UTF-8', 'GIT_CONFIG_NOSYSTEM': '1',
                  'GIT_CONFIG_GLOBAL': '/dev/null', 'GIT_TERMINAL_PROMPT': '0', 'GIT_NO_REPLACE_OBJECTS': '1'}
@@ -72,9 +75,9 @@ jobs:
           dpkg-query --show --showformat='${Package} ${Version}\n' bubblewrap
           sudo python3 -I -B - <<'PY'
           import runpy, sys
-          sys.path.insert(0, '/opt/stead-ci-controller/scripts/urbit')
+          sys.path.insert(0, '/var/lib/stead-ci-controller/scripts/urbit')
           sys.argv = ['toolchain.py', 'fetch']
-          runpy.run_path('/opt/stead-ci-controller/scripts/urbit/toolchain.py', run_name='__main__')
+          runpy.run_path('/var/lib/stead-ci-controller/scripts/urbit/toolchain.py', run_name='__main__')
           PY
       - name: Authenticate admission and prove owned failure cleanup
         env:
@@ -82,10 +85,10 @@ jobs:
           STEAD_RUN_ID: ${{ github.run_id }}
           STEAD_ATTEMPT: ${{ github.run_attempt }}
         run: |
-          candidate=$(sudo cat /opt/stead-ci-controller/.runtime/candidate)
-          controller=$(sudo cat /opt/stead-ci-controller/.runtime/controller)
+          candidate=$(sudo cat /var/lib/stead-ci-controller/.runtime/candidate)
+          controller=$(sudo cat /var/lib/stead-ci-controller/.runtime/controller)
           for control in parent-death guardian-death changed-limits stale-lease; do
-            sudo --preserve-env=ACTIONS_ID_TOKEN_REQUEST_URL,ACTIONS_ID_TOKEN_REQUEST_TOKEN python3 -I -B /opt/stead-ci-controller/scripts/ci/hosted.py --workflow "$STEAD_WORKFLOW" --controller "$controller" --candidate "$candidate" --run-id "$STEAD_RUN_ID" --attempt "$STEAD_ATTEMPT" --control "$control"
+            sudo --preserve-env=ACTIONS_ID_TOKEN_REQUEST_URL,ACTIONS_ID_TOKEN_REQUEST_TOKEN python3 -I -B /var/lib/stead-ci-controller/scripts/ci/hosted.py --workflow "$STEAD_WORKFLOW" --controller "$controller" --candidate "$candidate" --run-id "$STEAD_RUN_ID" --attempt "$STEAD_ATTEMPT" --control "$control"
           done
       - name: Execute the isolated native job
         env:
@@ -93,14 +96,14 @@ jobs:
           STEAD_RUN_ID: ${{ github.run_id }}
           STEAD_ATTEMPT: ${{ github.run_attempt }}
         run: |
-          candidate=$(sudo cat /opt/stead-ci-controller/.runtime/candidate)
-          controller=$(sudo cat /opt/stead-ci-controller/.runtime/controller)
-          sudo --preserve-env=ACTIONS_ID_TOKEN_REQUEST_URL,ACTIONS_ID_TOKEN_REQUEST_TOKEN python3 -I -B /opt/stead-ci-controller/scripts/ci/hosted.py --workflow "$STEAD_WORKFLOW" --controller "$controller" --candidate "$candidate" --run-id "$STEAD_RUN_ID" --attempt "$STEAD_ATTEMPT"
+          candidate=$(sudo cat /var/lib/stead-ci-controller/.runtime/candidate)
+          controller=$(sudo cat /var/lib/stead-ci-controller/.runtime/controller)
+          sudo --preserve-env=ACTIONS_ID_TOKEN_REQUEST_URL,ACTIONS_ID_TOKEN_REQUEST_TOKEN python3 -I -B /var/lib/stead-ci-controller/scripts/ci/hosted.py --workflow "$STEAD_WORKFLOW" --controller "$controller" --candidate "$candidate" --run-id "$STEAD_RUN_ID" --attempt "$STEAD_ATTEMPT"
       - name: Publish bounded evidence only
         if: always()
         uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
         with:
           name: native-ci-evidence-${{ github.run_id }}-${{ github.run_attempt }}
-          path: /opt/stead-ci-controller/hosted-evidence/*.json
+          path: /var/lib/stead-ci-controller/hosted-evidence/*.json
           if-no-files-found: error
           retention-days: 7
