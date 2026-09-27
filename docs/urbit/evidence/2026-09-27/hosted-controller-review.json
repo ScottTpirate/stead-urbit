@@ -1,0 +1,38 @@
+{
+  "classification": "independent-source-review-and-host-checks-only",
+  "controller_commit": "793390d50a4ffd4905847f8e39a398c7f3057bde",
+  "files": {
+    "scripts/ci/hosted.py": "cb2c93157ae7858373d444bc340f51a120ae6a9913987a6776ec4fe1d59a51cc",
+    "scripts/ci/hosted_control.py": "3a71a13b5e6b50a8966805118fd47af7a5bb4f1c73908264bf75cc3897ec6994",
+    "scripts/ci/hosted_identity.py": "40c0892dffbd9879c6960537cea10bdb57e57c92bc34f18df1eb06d0a2611852",
+    "scripts/ci/hosted_lease.py": "4a1f49de1c8c1a2f622f557aa841b30547ff195064d1d1f21624c2cc1e967019",
+    "scripts/ci/worker.py": "375599cf6f22d3f671f748ec342709787ad3834260a74f878b46b731d56d84a9",
+    "scripts/urbit/supervisor.py": "8dd3eff199b13341c73f99634aaa44ecac4245c6ee7ce4bd4e79d56823288e99",
+    ".github/workflows/native-hosted.yml": "7e1f0e20083ae22860628e3ff91afd9cd6b4b429ee8b678483639b3b28e3e47e"
+  },
+  "independent_reviews": {
+    "guard_lifetime_and_isolation": "gall_schedule_review: source cleared; actual hosted controls unexecuted",
+    "oidc_workflow_and_separate_commit_binding": "independent_review: mechanism and final manifest/controller pin source-cleared; no execution"
+  },
+  "host_checks": {
+    "ci_unit_controls": {
+      "ran": 22,
+      "passed": 22,
+      "native_execution": false
+    },
+    "supervisor_lifecycle_controls": {
+      "ran": 35,
+      "passed": 35,
+      "native_execution": false
+    },
+    "workstation_execution_policy": {
+      "ran": 6,
+      "passed": 6,
+      "native_execution": false
+    }
+  },
+  "actual_hosted_resource_controls": "unexecuted",
+  "actual_hosted_native_suite": "unexecuted",
+  "qualification": false,
+  "manifest_sha256": "376a84a95b27b74aa6133fc1d1345af9870a41bffafcf1a22b41db745152d908"
+}

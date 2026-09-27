@@ -1,0 +1,106 @@
+name: Isolated native CI
+
+on:
+  workflow_dispatch:
+    inputs:
+      candidate:
+        description: Full candidate commit from this repository; blank tests the pinned reviewed controller
+        required: false
+        type: string
+
+permissions:
+  contents: read
+  id-token: write
+
+concurrency:
+  group: stead-manual-native-ci
+  cancel-in-progress: false
+
+jobs:
+  native:
+    if: github.repository_id == '1367847927' && github.ref == 'refs/heads/main'
+    runs-on: ubuntu-24.04
+    timeout-minutes: 125
+    steps:
+      - name: Capture the reviewed controller and candidate data
+        env:
+          STEAD_WORKFLOW: ${{ github.sha }}
+          STEAD_CANDIDATE: ${{ inputs.candidate }}
+        shell: bash
+        run: |
+          sudo --preserve-env=STEAD_WORKFLOW,STEAD_CANDIDATE python3 -I -B - <<'PY'
+          import json, os, pathlib, re, subprocess
+          workflow = os.environ['STEAD_WORKFLOW']
+          if not re.fullmatch(r'[0-9a-f]{40}', workflow):
+              raise SystemExit('Full immutable commits required')
+          root = pathlib.Path('/opt/stead-ci-controller')
+          root.mkdir(mode=0o755)
+          env = {'PATH': '/usr/bin:/bin', 'LANG': 'C.UTF-8', 'GIT_CONFIG_NOSYSTEM': '1',
+                 'GIT_CONFIG_GLOBAL': '/dev/null', 'GIT_TERMINAL_PROMPT': '0', 'GIT_NO_REPLACE_OBJECTS': '1'}
+          def git(*args):
+              return subprocess.run(['/usr/bin/git', '-C', str(root), *args], env=env, check=True, timeout=120, stdout=subprocess.PIPE).stdout
+          git('init', '--initial-branch=controller')
+          git('remote', 'add', 'origin', 'https://github.com/ScottTpirate/stead-urbit.git')
+          git('fetch', '--no-tags', '--depth=1', 'origin', workflow)
+          raw = git('show', workflow + ':specs/urbit/hosted-ci-controller.json')
+          if len(raw) > 4096:
+              raise SystemExit('Controller manifest too large')
+          def unique(pairs):
+              result = {}
+              for key, value in pairs:
+                  if key in result:
+                      raise SystemExit('Duplicate controller manifest field')
+                  result[key] = value
+              return result
+          manifest = json.loads(raw, object_pairs_hook=unique)
+          controller = manifest.get('controller_commit', '')
+          if manifest != {'format': 'stead.hosted-controller/1', 'repository': 'ScottTpirate/stead-urbit', 'controller_commit': controller}:
+              raise SystemExit('Invalid controller manifest')
+          candidate = os.environ.get('STEAD_CANDIDATE') or controller
+          if not all(re.fullmatch(r'[0-9a-f]{40}', value) for value in (controller, candidate)):
+              raise SystemExit('Full immutable commits required')
+          git('fetch', '--no-tags', '--depth=1', 'origin', controller, candidate)
+          git('checkout', '--detach', controller)
+          (root / '.runtime').mkdir(mode=0o700)
+          (root / '.runtime/candidate').write_text(candidate + '\n')
+          (root / '.runtime/controller').write_text(controller + '\n')
+          PY
+      - name: Install the disposable VM dependency and verify pinned downloads
+        run: |
+          sudo apt-get update -qq
+          sudo apt-get install --no-install-recommends -y bubblewrap
+          dpkg-query --show --showformat='${Package} ${Version}\n' bubblewrap
+          sudo python3 -I -B - <<'PY'
+          import runpy, sys
+          sys.path.insert(0, '/opt/stead-ci-controller/scripts/urbit')
+          sys.argv = ['toolchain.py', 'fetch']
+          runpy.run_path('/opt/stead-ci-controller/scripts/urbit/toolchain.py', run_name='__main__')
+          PY
+      - name: Authenticate admission and prove owned failure cleanup
+        env:
+          STEAD_WORKFLOW: ${{ github.sha }}
+          STEAD_RUN_ID: ${{ github.run_id }}
+          STEAD_ATTEMPT: ${{ github.run_attempt }}
+        run: |
+          candidate=$(sudo cat /opt/stead-ci-controller/.runtime/candidate)
+          controller=$(sudo cat /opt/stead-ci-controller/.runtime/controller)
+          for control in parent-death guardian-death changed-limits stale-lease; do
+            sudo --preserve-env=ACTIONS_ID_TOKEN_REQUEST_URL,ACTIONS_ID_TOKEN_REQUEST_TOKEN python3 -I -B /opt/stead-ci-controller/scripts/ci/hosted.py --workflow "$STEAD_WORKFLOW" --controller "$controller" --candidate "$candidate" --run-id "$STEAD_RUN_ID" --attempt "$STEAD_ATTEMPT" --control "$control"
+          done
+      - name: Execute the isolated native job
+        env:
+          STEAD_WORKFLOW: ${{ github.sha }}
+          STEAD_RUN_ID: ${{ github.run_id }}
+          STEAD_ATTEMPT: ${{ github.run_attempt }}
+        run: |
+          candidate=$(sudo cat /opt/stead-ci-controller/.runtime/candidate)
+          controller=$(sudo cat /opt/stead-ci-controller/.runtime/controller)
+          sudo --preserve-env=ACTIONS_ID_TOKEN_REQUEST_URL,ACTIONS_ID_TOKEN_REQUEST_TOKEN python3 -I -B /opt/stead-ci-controller/scripts/ci/hosted.py --workflow "$STEAD_WORKFLOW" --controller "$controller" --candidate "$candidate" --run-id "$STEAD_RUN_ID" --attempt "$STEAD_ATTEMPT"
+      - name: Publish bounded evidence only
+        if: always()
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
+        with:
+          name: native-ci-evidence-${{ github.run_id }}-${{ github.run_attempt }}
+          path: /opt/stead-ci-controller/hosted-evidence/*.json
+          if-no-files-found: error
+          retention-days: 7
