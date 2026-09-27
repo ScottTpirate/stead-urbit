@@ -8,7 +8,9 @@ account. Fake ships do not join the live Urbit network.
 
 Use public/synthetic content. The complete native Phase 1 gate now passes;
 [acceptance and scope](PHASE1_ACCEPTANCE_20260926.md) are recorded separately.
-The browser application is not implemented yet, and these local tests do not
+The first browser slice now runs against actual native TLS and individually
+approved member sessions; its [executed scope](evidence/2026-09-27/browser-first/README.md)
+is recorded separately. Phase 2 remains open, and these local tests do not
 authorize company data.
 
 ## Commands
@@ -30,6 +32,9 @@ read-only.
 | `make dev` | Start the guarded supervisor, wait for readiness, compile the core and run pure probes | Native compile/probe evidence when it actually passes |
 | `make status` | Report stopped, booting, compiling or ready state | Current lifecycle state; an unresponsive owner is not reported as stopped |
 | `make core-check` | Reinstall edited Hoon into a fresh fake fixture and rerun compilation/probes | Shorter native feedback, separate from acceptance |
+| `make team-dev` | Restore verified seeds, compile configured homes and personal helpers, then exercise four ships and cold restarts | Configured native development evidence; a successful run leaves the guarded fixture available |
+| `make team-check` | Repeat the configured four-ship development checks in the running matching supervisor | Replaces disposable test data; preserve any prior evidence first |
+| `python3 web/app/browser-check.py` | Run Firefox against the live configured fixture, using its own disposable certificate profile | Real browser/native TLS evidence for the cases actually executed |
 | `make test` | Run the original four-identity counter smoke | Native allow/deny, failure propagation and restart |
 | `make core-test` | Run the full current Work/Docs qualification corpus | Business, access, delivery, migration and export evidence; missing requirements still fail |
 | `make delivery-check` | Run two bounded offline-home timeout/recovery cycles on a fresh fake fixture | Focused lifecycle regression only; never full Phase 1 acceptance |
@@ -105,6 +110,14 @@ or acceptable production latency.
 
 ## Host conditions
 
+The Phase 2 unit inventory keeps ordinary suites at a 60-second host deadline.
+The separate global-update capacity suite has a fixed 180-second diagnostic
+deadline: it actually fills 64 watches/cursors/streams across current principals,
+then tests refusal and slot reclamation. A combined-suite attempt timed out at
+60 seconds and required forced cleanup; its failure is retained. The larger
+deadline is not a performance target or a passing result. It does not change
+the outer lifetime, CPU quota, thermal startup/stop limits, or response bounds.
+
 The reviewed guard admits startup at at most 75 C and stops native execution at
 90 C. It also requires fresh sensor evidence, one CPU of affinity and a transient
 50 percent CPU quota. These controls do not change persistent workstation settings.
@@ -166,20 +179,55 @@ published fragment, version negotiation, complete API conformance and the browse
 adapter remain later URB-180 work. No additional hosting or identity is needed
 to build or test this package locally.
 
+## Frontend build and browser feedback
+
+The frontend has its own pinned Node runtime and lockfile. From the repository
+root, after `make setup` and the lockfile's dependencies have been installed:
+
+```sh
+.runtime/node-v24.21.0-linux-x64/bin/node web/app/node_modules/typescript/bin/tsc --noEmit --project web/app
+.runtime/node-v24.21.0-linux-x64/bin/node web/app/tests/run.mjs
+.runtime/node-v24.21.0-linux-x64/bin/node web/app/build.mjs
+.runtime/node-v24.21.0-linux-x64/bin/node web/app/package-desk.mjs
+```
+
+TypeScript and client tests provide host feedback. The build emits a byte/hash
+manifest and split assets; packaging verifies that manifest and generates the
+native desk's exact route inventory. Stop the native fixture before packaging
+new assets. Content-addressed filenames change when their contents change;
+uncommitted replacements are permitted for development and cannot claim exact
+committed-source qualification.
+
+For native browser feedback, preserve the last run, stop, package the frontend,
+then run `make team-dev` and `python3 web/app/browser-check.py`. The configured
+lane needs the stopped clean seeds created by an initial `make dev`. Preserve
+those seeds when archiving failed live piers; `make reset` verifies their hashes
+before restoring them. Never use a partially executed live pier as a seed.
+
+The browser runner verifies native listener ownership, TLS CA/hostname/leaf,
+fixture and thermal health, and whole-browser process cleanup. Certificate
+trust is confined to its disposable Firefox profile; it does not change system
+trust. Its current tests use synthetic member approvals and are development
+checks, not a production deployment. Do not infer a full milestone pass from
+the first successful browser journey or from mocked rendered tests.
+
 ## Phase 2 and later testing
 
-With the native core gate passing, add configurable synthetic teams/containers
-and an independently built public-API client. Next add individual sessions and a
-local browser journey with separate contributor, reader and outsider contexts.
+The configured home, synthetic teams/containers, individual sessions and first
+local two-member browser journey are implemented. The full Phase 2 inventory
+adds private/shared Docs, conflicts and recovery, authorized updates, an
+independently built public-API client, native CI and onboarding acceptance.
 The user's identity ship approves a session; page bodies travel directly from
 the browser to the home. Owner administration credentials must not become the
-team login. A future frontend build/dev-server command will be documented only
-after it exists and has been exercised against that authorized API.
+team login. See the executed evidence and remaining
+[acceptance inventory](PHASE2_ACCEPTANCE.md) before choosing a test scope.
 
 For initial local browser testing the user needs only a supported browser and a
 short period to try the shared Work/Docs flow with synthetic content. Any local
 HTTPS certificate trust step must be explained before changing the browser's
-trust configuration. There is no browser URL to test at this checkpoint.
+trust configuration. The automated runner's loopback origins exist only while
+its owned relay and guarded fixture are healthy; they are not public deployments
+or persistent user-facing servers.
 
 Public hosting and real identities belong to a later live-network canary. They
 will require an owner-chosen host/budget, separate organization and tester

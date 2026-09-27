@@ -1,5 +1,5 @@
 ::  Configured-team Gall driver. Only stead-home owns and calls this state.
-/+  stead-codec, stead-core, stead-team, stead-team-config, stead-team-codec, stead-session, stead-http, stead-browser, stead-projection, stead-views, stead-restore, stead-eyre, stead-assets, server
+/+  stead-codec, stead-core, stead-team, stead-team-config, stead-team-codec, stead-session, stead-http, stead-browser, stead-projection, stead-views, stead-restore, stead-eyre, stead-assets, server, stead-updates, stead-update-codec
 =,  stead-codec
 |%
 +$  pending-entry  [actor=authentication:stead-team expires=@ud]
@@ -125,7 +125,7 @@
     ?>  available
     ?:  =(%stead-auth-approval-1 mark)
       [~ owner(transient (approve:stead-browser db.owner transient.owner src.bowl !<(@t vase) (now-ms now.bowl)))]
-    ?>  ?|  =(%stead-command-3 mark)  =(%stead-query-3 mark)
+    ?>  ?|  =(%stead-command-3 mark)  =(%stead-query-3 mark)  =(%stead-updates-3 mark)
         ==
     =/  actor  native-actor
     =/  raw  !<(@t vase)
@@ -134,7 +134,7 @@
     ?>  ?=([%o *] value)
     =/  request  (field p.value 'request_id')
     ?>  (uuid request)
-    =/  digest  (hash ?:(=(%stead-command-3 mark) 'stead.command/3' 'stead.query/3') (canonical value))
+    =/  digest  (hash ?:(=(%stead-command-3 mark) 'stead.command/3' ?:(=(%stead-query-3 mark) 'stead.query/3' 'stead.updates/3')) (canonical value))
     =/  route=path  [%v3 %result (scot %p src.bowl) binding.identity.actor (decimal revision.identity.actor) request digest ~]
     =/  reserved  (need (~(get by pending.owner) route))
     ?>  &(=(actor actor.reserved) (gth expires.reserved (now-ms now.bowl)))
@@ -146,7 +146,15 @@
           ?:  =(db.owner next.out)  view.owner
           ?>  ?=(^ journal.data.next.out)
           (append:stead-projection view.owner i.journal.data.next.out)
-        [response.out owner(db next.out, view view)]
+        =/  advanced=[next=state:stead-updates pages=state:stead-views]
+          ?:  (ready:stead-projection next.out view)
+            (advance:stead-updates next.out auth.transient.owner updates.transient.owner pages.transient.owner (now-ms now.bowl))
+          [*state:stead-updates *state:stead-views]
+        [response.out owner(db next.out, view view, transient transient.owner(updates next.advanced, pages pages.advanced))]
+      ?:  =(%stead-updates-3 mark)
+        =/  input  (decode:stead-update-codec raw)
+        =/  out  (execute:stead-updates db.owner view.owner auth.transient.owner updates.transient.owner pages.transient.owner actor input (now-ms now.bowl) eny.bowl)
+        [response.out owner(transient transient.owner(updates next.out, pages pages.out))]
       =/  query  (decode-query:stead-team-codec raw)
       =/  out  (execute:stead-views db.owner view.owner pages.transient.owner actor query (now-ms now.bowl) eny.bowl)
       [response.out owner(transient transient.owner(pages next.out))]

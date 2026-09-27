@@ -206,6 +206,7 @@ def guarded_supervisor(*, configured=False):
             'native_tree_sha256': tree_sha(ROOT / 'native/core/desk'), 'script_files': scripts}
         context['trees'] = {path: tree_sha(ROOT / path) for path in paths if path != 'scripts/urbit'}
         context['committed_files'] = {}
+        context['missing_committed_files'] = []
         context['committed_bytes_verified'] = not context['dirty_paths']
         listing = subprocess.check_output(['git', 'ls-tree', '-r', '-z', context['source_commit'], '--', *paths], cwd=ROOT)
         for entry in listing.split(b'\0'):
@@ -217,7 +218,14 @@ def guarded_supervisor(*, configured=False):
             source = ROOT / path
             if kind != 'blob' or mode not in ('100644', '100755') or source.is_symlink():
                 raise ValueError('Unsupported redirected qualification source')
-            raw = read_source(source)
+            try:
+                raw = read_source(source)
+            except FileNotFoundError:
+                # A development asset build may replace content-addressed files.
+                # Bind the actual trees above but never certify this as HEAD.
+                context['missing_committed_files'].append(path)
+                context['committed_bytes_verified'] = False
+                continue
             actual = hashlib.sha1(b'blob ' + str(len(raw)).encode() + b'\0' + raw).hexdigest()
             context['committed_bytes_verified'] &= actual == oid
             context['committed_files'][path] = hashlib.sha256(raw).hexdigest()

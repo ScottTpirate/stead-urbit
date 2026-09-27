@@ -83,20 +83,25 @@ def exercise(host_namespace):
         zod.terminate()
         zod.wait(timeout=2)
         deadline = time.monotonic() + 1.5
-        while controller.ready and time.monotonic() < deadline:
+        while True:
+            with controller.lock:
+                if not controller.ready:
+                    check('last-child-removes-ready', True)
+                    controller.verify(set())
+                    check('kernel-empty-after-last-child', True)
+                    break
+            assert time.monotonic() < deadline, 'Last child ready entry did not close'
             time.sleep(.02)
-        check('last-child-removes-ready', not controller.ready)
-        controller.verify(set())
-        check('kernel-empty-after-last-child', True)
         controller.release('bus', bus)
         controller.run('delete rule inet stead_fakes peer_input handle 5\ndelete rule inet stead_fakes peer_output handle 7\n')
         deadline = time.monotonic() + 1.5
         while not errors and time.monotonic() < deadline:
             time.sleep(.02)
-        check('both-missing-drop-rules-latch-failure', controller.closed.is_set() and bool(errors))
-        controller.verify(set())
-        check('failure-restores-full-deny-policy', controller.kernel_state == 'verified-empty')
-        raw = subprocess.check_output(['/usr/bin/nft', '-j', 'list', 'set', 'inet', 'stead_fakes', 'ready'])
+        with controller.lock:
+            check('both-missing-drop-rules-latch-failure', controller.closed.is_set() and bool(errors))
+            controller.verify(set())
+            check('failure-restores-full-deny-policy', controller.kernel_state == 'verified-empty')
+            raw = subprocess.check_output(['/usr/bin/nft', '-j', 'list', 'set', 'inet', 'stead_fakes', 'ready'])
         check('failure-clears-kernel-ready', not next(row['set'] for row in json.loads(raw)['nftables'] if 'set' in row).get('elem'))
         try:
             controller.release('bus', bus)

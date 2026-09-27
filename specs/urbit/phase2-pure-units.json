@@ -1,7 +1,7 @@
 {
   "format": 1,
   "classification": "pure-native-only",
-  "expected_arm_count": 44,
+  "expected_arm_count": 70,
   "suites": [
     {
       "path": "/tests/stead-session",
@@ -25,7 +25,8 @@
         "test-session-resume-rotation",
         "test-session-resume-denial",
         "test-session-resume-boundary"
-      ]
+      ],
+      "timeout_seconds": 60
     },
     {
       "path": "/tests/stead-http",
@@ -44,7 +45,8 @@
         "test-http-token-format",
         "test-http-response-headers",
         "test-http-cookie-output"
-      ]
+      ],
+      "timeout_seconds": 60
     },
     {
       "path": "/tests/stead-identity",
@@ -60,7 +62,46 @@
         "test-identity-acknowledgement",
         "test-identity-http-route-isolation",
         "test-identity-eyre-response-duct-binding"
-      ]
+      ],
+      "timeout_seconds": 60
+    },
+    {
+      "path": "/tests/stead-updates",
+      "arms": [
+        "test-updates-open-before-snapshot",
+        "test-updates-minimal-ordered-invalidation",
+        "test-updates-replay-requires-refresh",
+        "test-updates-resume-retains-suffix",
+        "test-updates-foreign-watch-isolation",
+        "test-updates-cursor-purpose-and-actor",
+        "test-updates-revoked-before-dequeue",
+        "test-updates-private-change-invisible",
+        "test-updates-owned-cancel-while-rebuilding",
+        "test-updates-expiry-before-dequeue",
+        "test-updates-overflow-terminal-and-caps",
+        "test-updates-sequence-exhaustion",
+        "test-updates-cursor-collision-rollback",
+        "test-updates-actor-watch-limit",
+        "test-updates-browser-session-revocation",
+        "test-updates-public-codec-admission",
+        "test-updates-delayed-old-watch-after-resume",
+        "test-updates-same-rank-access-churn",
+        "test-updates-sixteen-rows-seventeen-overflow",
+        "test-updates-closed-watches-still-bounded",
+        "test-updates-private-projection-isolation",
+        "test-updates-shared-pagination-cap",
+        "test-updates-resume-retires-only-own-handles",
+        "test-updates-paginated-refresh-reclaims-only-own-query-walk",
+        "test-updates-empty-receipt-is-unconfirmed-only-in-current-scope"
+      ],
+      "timeout_seconds": 60
+    },
+    {
+      "path": "/tests/stead-update-capacity",
+      "arms": [
+        "test-updates-global-watch-cursor-stream-caps"
+      ],
+      "timeout_seconds": 180
     }
   ],
   "negative_control": {

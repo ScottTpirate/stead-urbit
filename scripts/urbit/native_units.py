@@ -21,6 +21,9 @@ def run(binary, socket_path, resolved_path: str, timeout: float = 60) -> dict:
     import core_conn
     from conn import framed_length, read_exact
 
+    if isinstance(timeout, bool) or not isinstance(timeout, (int, float)) or not 0 < timeout <= 180:
+        raise ValueError('Bounded native unit deadline required')
+    started = time.monotonic()
     if not re.fullmatch(r'/~zod/base/~[0-9a-zA-Z.:-]+/(tests|controls)/stead-[a-z0-9-]+', resolved_path):
         raise ValueError('Resolved native unit beam required')
     atoms = ' '.join(core_conn.atom(part.encode()) for part in resolved_path.split('/')[1:])
@@ -34,7 +37,7 @@ def run(binary, socket_path, resolved_path: str, timeout: float = 60) -> dict:
             b'loom: mapped 512MB\nlite: arvo formula 4ce68411\n'
             b'lite: core 641296f\nlite: final state 641296f\n'
             + f'eval ({mode}, newt):\n'.encode())
-    trace = {'request': request, 'resolved_path': resolved_path, 'stage': 'encode'}
+    trace = {'request': request, 'resolved_path': resolved_path, 'timeout_seconds': timeout, 'stage': 'encode'}
     received = bytearray()
     try:
         frame, encode_stderr = core_conn.evaluate(binary, '-jn', request.encode())
@@ -69,6 +72,7 @@ def run(binary, socket_path, resolved_path: str, timeout: float = 60) -> dict:
         trace.update(decoded_hex=decoded.hex(), decode_stderr_hex=decode_stderr.hex())
         stdout = decoded.decode('utf-8', errors='strict').strip()
         observation = {'request': request, 'resolved_path': resolved_path, 'stdout': stdout,
+                       'timeout_seconds': timeout, 'elapsed_seconds': round(time.monotonic() - started, 3),
                        'encode_stderr': encode_stderr.decode('utf-8', errors='strict'),
                        'decode_stderr': decode_stderr.decode('utf-8', errors='strict'),
                        'response_frame_sha256': hashlib.sha256(response).hexdigest(),
@@ -79,7 +83,7 @@ def run(binary, socket_path, resolved_path: str, timeout: float = 60) -> dict:
         return observation
     except Exception as error:
         import subprocess
-        trace.update(error=type(error).__name__ + ': ' + str(error), received_frame_hex=received.hex())
+        trace.update(error=type(error).__name__ + ': ' + str(error), received_frame_hex=received.hex(), elapsed_seconds=round(time.monotonic() - started, 3))
         if isinstance(error, (subprocess.CalledProcessError, subprocess.TimeoutExpired)):
             trace.update(evaluator_output_hex=(error.output or b'').hex(),
                          evaluator_stderr_hex=(error.stderr or b'').hex())
@@ -97,23 +101,27 @@ def validate_inventory(value: dict) -> dict:
     if not isinstance(value, dict) or type(value.get('format')) is not int or value.get('format') != 1 or value.get('classification') != 'pure-native-only':
         raise ValueError('Native inventory schema')
     suites = value.get('suites')
-    definitions = {'/tests/stead-session': ('test-session-', 19),
-                   '/tests/stead-http': ('test-http-', 14),
-                   '/tests/stead-identity': ('test-identity-', 11)}
+    definitions = {'/tests/stead-session': ('test-session-', 19, 60),
+                   '/tests/stead-http': ('test-http-', 14, 60),
+                   '/tests/stead-identity': ('test-identity-', 11, 60),
+                   '/tests/stead-updates': ('test-updates-', 25, 60),
+                   '/tests/stead-update-capacity': ('test-updates-global-', 1, 180)}
     if not isinstance(suites, list) or len(suites) != len(definitions):
-        raise ValueError('Exactly three native suites required')
+        raise ValueError('Exactly five native suites required')
     paths = [entry.get('path') for entry in suites if isinstance(entry, dict)]
     if set(paths) != set(definitions) or len(paths) != len(definitions):
         raise ValueError('Native suite paths')
     all_arms = []
     for entry in suites:
         names = entry.get('arms')
-        prefix, count = definitions[entry['path']]
+        prefix, count, timeout = definitions[entry['path']]
+        if set(entry) != {'path', 'arms', 'timeout_seconds'} or type(entry.get('timeout_seconds')) is not int or entry['timeout_seconds'] != timeout:
+            raise ValueError('Native suite schema and fixed deadline')
         if not isinstance(names, list) or len(names) != count or any(
                 not isinstance(name, str) or not re.fullmatch(prefix + r'[a-z0-9-]{1,64}', name) for name in names):
             raise ValueError('Native suite arms')
         all_arms.extend(names)
-    if len(all_arms) != 44 or len(set(all_arms)) != 44 or type(value.get('expected_arm_count')) is not int or value.get('expected_arm_count') != 44:
+    if len(all_arms) != 70 or len(set(all_arms)) != 70 or type(value.get('expected_arm_count')) is not int or value.get('expected_arm_count') != 70:
         raise ValueError('Native arm count and uniqueness')
     if value.get('negative_control') != {
             'path': '/controls/stead-unit-failure', 'arms': ['test-deliberate-failure'],
@@ -135,7 +143,14 @@ def verify_output(raw: str, *, path: str, expected: list[str], succeeds: bool,
     lines = raw.replace('\r\n', '\n').splitlines()
     outcomes = []
     timing_arms = []
+    wrapped_timing = None
     for line in lines:
+        if wrapped_timing is not None:
+            if not re.fullmatch(r'  took (?:µs|ms|s)/[0-9]+(?:\.[0-9]+)*', line):
+                raise ValueError('Incomplete wrapped native timing record')
+            timing_arms.append(wrapped_timing)
+            wrapped_timing = None
+            continue
         if re.search(r'\b(?:CRASHED|build-fail|syntax error|nest-fail|mint-vain|find-fork|dojo-lame)\b', line) or line.lstrip().startswith('! '):
             raise ValueError('Unexpected native diagnostic')
         match = re.fullmatch(r'(OK|FAILED|CRASHED)\s+(/[^\s]+)', line.strip())
@@ -150,11 +165,19 @@ def verify_output(raw: str, *, path: str, expected: list[str], succeeds: bool,
         if timing:
             timing_arms.append(timing[1])
             continue
+        # Pinned Arvo's pretty printer wraps a long timing label at its margin.
+        # Accept only the observed two-line form, never a loose continuation.
+        wrapped = re.fullmatch(r'>     (test-[a-z0-9-]+)', line)
+        if wrapped:
+            wrapped_timing = wrapped[1]
+            continue
         if line.strip() in ('', 'built   ' + path + '/hoon', '[32 %avow 0 %noun 0]', '[32 %avow 0 %noun 1]'):
             continue
         if not succeeds and failure_marker is not None and line.strip() == failure_marker:
             continue
         raise ValueError('Unexpected native output record: ' + line[:200])
+    if wrapped_timing is not None:
+        raise ValueError('Truncated wrapped native timing record')
     observed = [name for name, _ in outcomes]
     if len(observed) != len(set(observed)) or set(observed) != set(expected):
         raise ValueError('Native discovered/executed arm mismatch')

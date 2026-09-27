@@ -1,0 +1,40 @@
+{
+  "classification": "local-real-browser-native-tls",
+  "status": "fail",
+  "qualifies_phase": false,
+  "inputs_before": {
+    "native_tree": "f9947e9c074e0684a47a49134da1b7fa4a6a69f54be091ab3affa94109bb2881",
+    "runner": "acada9ccfb5bd6e6f0793572fdf0a5ca95e7d5350676ebad7716fa799b40ecb4",
+    "process_owner": "2d122b72e7a58d6f926eff59be1831fb3587611a8373be8a93bd3bbceb3b96c5",
+    "browser_test": "d5766a463a35d35161bf6fc55affa9d190c4bc4b0bed98a819c3806db87945aa",
+    "relay": "a724bcfc4197adc796f580b43a751198cba8fbf4c1eeaba0221ffab01395fae2",
+    "toolchain": "4a209c10cf1756eb0f7357cc3eca8250bf66c239b4cd0ca31a8c0886d4d304ee",
+    "execution_id": "7cfadb775ebb0e59c155c7df7cf29e4a"
+  },
+  "tls": {
+    "zod": {
+      "hostname": "home.localhost",
+      "certificate_sha256": "ef94475558b1ea8eeb8ef1d5906f6d7de151fef2ed60fdaca3d9920f5a9c8b83",
+      "protocol": "TLSv1.3"
+    },
+    "bus": {
+      "hostname": "bus.localhost",
+      "certificate_sha256": "7747871de80129f4e6e4a6b91c4cb5f45a85e314b9b7b021bf94e8af17567245",
+      "protocol": "TLSv1.3"
+    },
+    "nec": {
+      "hostname": "nec.localhost",
+      "certificate_sha256": "81c2e41166915bc973d695d7ede9441da619e2e2ed16e3125e6ab2cbc0fc7a51",
+      "protocol": "TLSv1.3"
+    },
+    "bud": {
+      "hostname": "bud.localhost",
+      "certificate_sha256": "20e0c27b5de7c205e2a9cde28c66afe218511a7b9d1817f88138c9595ea24d8e",
+      "protocol": "TLSv1.3"
+    }
+  },
+  "wrong-ca-rejected": true,
+  "wrong-hostname-rejected": true,
+  "private_profile": "removed after verified cgroup termination",
+  "error": "RuntimeError: Native browser journey failed; see private retained evidence"
+}

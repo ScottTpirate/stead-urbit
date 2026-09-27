@@ -41,6 +41,15 @@ class NativeUnitVerifierTests(unittest.TestCase):
         with self.assertRaises(ValueError):
             self.positive_check('[32 %avow 0 %noun 0]\n')
 
+    def test_pinned_pretty_printer_wrapped_timing_requires_exact_complete_pair(self):
+        pair = '>     test-session-one\n  took s/2.530.773\n'
+        self.assertEqual(self.positive_check(self.positive + pair)['outcome'], 'passed')
+        for extra in [pair.splitlines()[0], pair.splitlines()[1], pair.replace('  took', 'took'),
+                      pair.replace('s/2.530.773', 'not-a-duration'), pair.replace('test-session-one', 'test-unknown'),
+                      pair + pair, pair.splitlines()[0] + '\nOK /tests/stead-session/test-session-one\n']:
+            with self.subTest(extra=extra), self.assertRaises(ValueError):
+                self.positive_check(self.positive + extra)
+
     def test_missing_duplicate_or_extra_arm_rejected(self):
         variants = [self.positive.replace('OK /tests/stead-session/test-session-two\n', ''),
                     self.positive + 'OK /tests/stead-session/test-session-one\n',
@@ -80,10 +89,22 @@ class NativeUnitVerifierTests(unittest.TestCase):
             self.positive_check(self.positive + 'x' * 262144)
 
     def test_valid_inventory(self):
-        self.assertEqual(UNITS.validate_inventory(self.inventory)['expected_arm_count'], 44)
+        self.assertEqual(UNITS.validate_inventory(self.inventory)['expected_arm_count'], 70)
+
+    def test_suite_deadlines_cannot_be_raised_or_omitted(self):
+        for index in range(len(self.inventory['suites'])):
+            for value in (0, 59, 61, 179, 181, True, '60', None):
+                candidate = copy.deepcopy(self.inventory)
+                candidate['suites'][index]['timeout_seconds'] = value
+                with self.subTest(index=index, value=value), self.assertRaises(ValueError):
+                    UNITS.validate_inventory(candidate)
+            candidate = copy.deepcopy(self.inventory)
+            del candidate['suites'][index]['timeout_seconds']
+            with self.assertRaises(ValueError):
+                UNITS.validate_inventory(candidate)
 
     def test_inventory_empty_or_missing_suite(self):
-        for suites in [[], self.inventory['suites'][:1], self.inventory['suites'][:2]]:
+        for suites in [[], self.inventory['suites'][:1], self.inventory['suites'][:2], self.inventory['suites'][:3]]:
             value = copy.deepcopy(self.inventory)
             value['suites'] = suites
             with self.assertRaises(ValueError):

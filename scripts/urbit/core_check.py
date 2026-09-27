@@ -123,7 +123,7 @@ def run(host):
             offset = log.stat().st_size
             terminal = ''
             try:
-                observed = native_units.run(binary, host['LIVE'] / 'zod/.urb/conn.sock', resolved)
+                observed = native_units.run(binary, host['LIVE'] / 'zod/.urb/conn.sock', resolved, timeout=entry.get('timeout_seconds', 60))
                 report['commands'].append({'ship': 'zod', 'native_test': observed})
                 terminal = observed['stdout']
             finally:

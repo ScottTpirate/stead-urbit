@@ -1,5 +1,6 @@
 """Real thread and process lifetime controls for owned native launches."""
 import json
+import select
 from pathlib import Path
 import subprocess
 import sys
@@ -11,12 +12,16 @@ import native_peer_fence
 
 def create_from_worker(launcher):
     result = []
-    worker = threading.Thread(target=lambda: result.append(launcher.spawn(['/usr/bin/sleep', '30'])))
+    worker = threading.Thread(target=lambda: result.append(launcher.spawn(
+        ['/usr/bin/python3', '-B', '-c', "import time; print('ready', flush=True); time.sleep(30)"],
+        stdout=subprocess.PIPE)))
     worker.start()
     worker.join(timeout=2)
     assert not worker.is_alive() and len(result) == 1
     process = result[0]
-    time.sleep(.06)
+    assert select.select([process.stdout], [], [], 2)[0], 'Child did not reach its unprivileged executable'
+    assert process.stdout.readline(32) == b'ready\n'
+    process.stdout.close()
     assert process.poll() is None, 'Child died with requesting worker'
     native_peer_fence.require_confined_child(process)
     return process

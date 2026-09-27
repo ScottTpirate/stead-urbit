@@ -4,7 +4,7 @@
 |%
 +$  row  [id=@t fields=object-map]
 +$  cursor-record
-  [actor=authentication:stead-team query=query:stead-team-codec generation=@t rank=@ud epoch=@ud offset=@ud expires=@ud]
+  [actor=authentication:stead-team query=query:stead-team-codec generation=@t rank=@ud epoch=@ud offset=@ud expires=@ud purpose=@t owner=@t access=@t]
 +$  state  [counter=@ud cursors=(map @t cursor-record)]
 +$  result  [response=@t next=state]
 ++  fields
@@ -37,7 +37,10 @@
     (subject:stead-team db actor project.query 'work' '' resource.query now)
   ?:  =('receipt' kind.query)
     =/  receipt  (~(get by receipts.data.db) [project.query principal.identity.actor resource.query])
-    ?~  receipt  |
+    ?~  receipt
+      ?|  =('' container.query)
+          (box-access:stead-team db actor project.query container.query now)
+      ==
     =/  cmd  (decode:stead-team-codec command.u.receipt)
     &((allowed:stead-team db actor cmd now) =(container.query (container:stead-team-codec cmd)))
   &
@@ -140,8 +143,9 @@
     =/  person  (~(got by members.config) ship.identity.actor)
     ~[['identity' (fields ~[['principal_id' principal.identity.actor] ['identity_ship' (scot %p ship.identity.actor)] ['binding_id' binding.identity.actor] ['binding_revision' (decimal revision.identity.actor)] ['session_audit_id' audit.actor] ['display_name' display.person] ['organization_id' organization.config] ['team_id' team.config] ['home' (scot %p home.config)] ['can_create' ?:((~(has in creators.config) principal.identity.actor) 'yes' 'no')]])]]
   ?:  =('receipt' kind.query)
-    =/  item  (~(got by receipts.data.db) [project.query principal.identity.actor resource.query])
-    =/  value  (need (parse-result bytes.item))
+    =/  item  (~(get by receipts.data.db) [project.query principal.identity.actor resource.query])
+    ?~  item  ~
+    =/  value  (need (parse-result bytes.u.item))
     ?>  ?=([%o *] value)
     ~[[resource.query p.value]]
   ?:  ?|(=('activity' kind.query) =('inbox' kind.query))
@@ -204,7 +208,7 @@
   ?:  &(!=('' cursor.query) ?=(~ continuation))  [(error:stead-team 'stale_cursor') prior]
   =/  valid
     ?~  continuation  &
-    ?&  =(actor actor.u.continuation)  =(filter query.u.continuation)
+    ?&  =('query' purpose.u.continuation)  =(actor actor.u.continuation)  =(filter query.u.continuation)
         =(gen generation.u.continuation)  =(rank rank.u.continuation)  =(epoch epoch.u.continuation)
     ==
   ?.  valid  [(error:stead-team 'stale_cursor') prior]
@@ -216,13 +220,18 @@
   =/  page  (scag 20 remaining)
   =/  token=@t  ''
   =/  more  (gth (lent remaining) 20)
+  ::  One pagination walk per exact actor. Fresh paginated snapshots supersede
+  ::  that actor's old query walks, but metadata reads and update cursors do not.
+  ::  Keep this staged until the full bounded response has encoded successfully.
+  =?  cursors.next  &(more =('' cursor.query))
+    (malt (skip ~(tap by cursors.next) |=([key=@t val=cursor-record] &(=('query' purpose.val) =(actor actor.val)))))
   ?:  &(more ?|((gte counter.next 18.446.744.073.709.551.615) (gte (lent ~(tap by cursors.next)) 64) (gte (lent (skim ~(tap by cursors.next) |=([key=@t val=cursor-record] =(principal.identity.actor principal.identity.actor.val)))) 4)))
     [(error:stead-team 'capacity_exceeded') prior]
   =?  next  more  next(counter +(counter.next))
   =?  token  more  (token:stead-session entropy counter.next 'stead.cursor/3')
-  ?:  &(more (~(has by cursors.next) token))  [(error:stead-team 'capacity_exceeded') prior]
+  ?:  &(more (~(has by cursors.prior) token))  [(error:stead-team 'capacity_exceeded') prior]
   =?  cursors.next  more
-    (~(put by cursors.next) token [actor filter gen rank epoch (add offset (lent page)) (min expires.actor (add now 300.000))])
+    (~(put by cursors.next) token [actor filter gen rank epoch (add offset (lent page)) (min expires.actor (add now 300.000)) 'query' '' ''])
   =/  response
     (fields ~[['protocol' 'stead.query-result/3'] ['status' 'read'] ['request_id' request.query] ['kind' kind.query] ['project_id' project.query] ['container_id' container.query] ['resource_id' resource.query] ['authority_epoch' (decimal epoch)] ['generation' gen] ['cursor' token]])
   =/  counter=@ud  0

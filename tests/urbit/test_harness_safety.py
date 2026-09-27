@@ -412,6 +412,22 @@ class QualificationSourceSafety(unittest.TestCase):
         with self.assertRaises(ValueError):
             self.qualify(context)
 
+    def test_deleted_committed_asset_is_development_only_even_if_git_hides_it(self):
+        source = 'native/core/desk/fixture.txt'
+        replacement = self.root / 'native/core/desk/new-asset.txt'
+        replacement.write_text('new authored development asset\n')
+        self.git('add', str(replacement))
+        self.git('commit', '-m', 'Keep a second committed asset')
+        self.git('update-index', '--assume-unchanged', source)
+        (self.root / source).unlink()
+        context = self.capture()
+        self.assertEqual(context['dirty_paths'], [])
+        self.assertEqual(context['missing_committed_files'], [source])
+        self.assertFalse(context['committed_bytes_verified'])
+        self.assertNotIn(source, context['committed_files'])
+        with self.assertRaises(ValueError):
+            self.qualify(context)
+
     def test_ignored_uncommitted_mounted_inputs_cannot_claim_exact_commit(self):
         names = [root + '/ignored.hoon' for root in ('native/core/desk', 'specs/urbit', 'web/dev',
             'tests/urbit/native_gall_schedule', 'tests/urbit/skill_evaluation')]
