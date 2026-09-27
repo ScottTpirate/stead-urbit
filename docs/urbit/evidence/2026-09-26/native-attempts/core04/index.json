@@ -1,0 +1,283 @@
+{
+  "protocol": "stead.retained-native-attempt/1",
+  "created_at": "2026-09-26T20:18:49.477849+00:00",
+  "source_commit": "55475f0565ceb38db9eb5bc057962967398aa5da",
+  "qualifies_phase": false,
+  "status": "delivery-failure-and-runtime-crash",
+  "guard_run_id": "14ce5c35e6f14847ea2b5ff6fe9c76f2",
+  "guard_status": "failed",
+  "guard_exit_code": 1,
+  "guard_cleanup": [],
+  "observed_peak_cpu_c": 87.0,
+  "thermal_stop": false,
+  "direct_checks_passed": 494,
+  "failed_direct_checks": [
+    "delivery-has-no-observed-failure"
+  ],
+  "qa_case_counts": {
+    "incomplete": 3,
+    "passed": 145
+  },
+  "delivery_cases": [
+    {
+      "name": "known-mark-and-held-outsider",
+      "status": "passed"
+    },
+    {
+      "name": "wrong-sender-and-binding",
+      "status": "passed"
+    },
+    {
+      "name": "missing-channel-and-wrong-digest",
+      "status": "passed"
+    },
+    {
+      "name": "leave-and-fresh-retry",
+      "status": "passed"
+    },
+    {
+      "name": "lazy-expiry-and-same-path-retirement",
+      "status": "passed"
+    },
+    {
+      "name": "pending-quotas",
+      "status": "passed"
+    },
+    {
+      "name": "home-unavailable",
+      "status": "passed"
+    },
+    {
+      "name": "ended-leave-attempt",
+      "status": "failed",
+      "error": "ConnectionRefusedError: [Errno 111] Connection refused"
+    }
+  ],
+  "capacity_predecessor_lane": "not reached",
+  "native_elapsed_seconds": 1743.636,
+  "bus_exit": -11,
+  "limits": [
+    "Exact original raw records retained; native report is failed and cannot qualify Phase1.",
+    "The current bus crash has no systemd core image; native stack and coredump metadata are diagnostic evidence only.",
+    "Ship logs are cumulative files at stopped runtime, not solely this run.",
+    "Crash cause is under investigation; no thermal-causation claim."
+  ],
+  "artifacts": [
+    {
+      "source": ".piers/fakes/logs/core-20260926T194741Z.json",
+      "path": "core.json.gz",
+      "original_bytes": 7121354,
+      "original_sha256": "0a5e20aee967a912ab95455edcb3aed4ade1d9fbad94a1558a8c2663d10a0423",
+      "bytes": 505352,
+      "sha256": "c00e8c7e2f1317c00b7e5cc1547ae18261578b5b0cdcd92aa8ea1b84fe94d58d",
+      "compression": "gzip"
+    },
+    {
+      "source": ".piers/fakes/logs/core-20260926T194741Z-transport.jsonl.gz",
+      "path": "core-20260926T194741Z-transport.jsonl.gz",
+      "original_bytes": 713585,
+      "original_sha256": "a67848bd9a816f7804de654431985f968fc3c27b08b46455902fe60bf9ca9dee",
+      "bytes": 713585,
+      "sha256": "a67848bd9a816f7804de654431985f968fc3c27b08b46455902fe60bf9ca9dee",
+      "compression": null
+    },
+    {
+      "source": ".runtime/phase01-20260926/core04-lifecycle.json",
+      "path": "lifecycle.json.gz",
+      "original_bytes": 587,
+      "original_sha256": "c4c054d1530c51c32abbcee491520541dda587dfa481af61e99cc2c1137b652f",
+      "bytes": 278,
+      "sha256": "720513015cf4f75d1d0e7b7c7bdbeaeb37ecb11e0a71fc7ed5229d461b88a7f1",
+      "compression": "gzip"
+    },
+    {
+      "source": ".runtime/execution-runs/four-fakes-888q1xwa/.stead-disposable.json",
+      "path": "guard/.stead-disposable.json.gz",
+      "original_bytes": 102,
+      "original_sha256": "802cc97a3ec4008f6b85be58a15f72436d08f700f982f0daecc8c2176aac585f",
+      "bytes": 112,
+      "sha256": "226ad6156561a9a893a74e6965630fc34bd5d229bea109e91c22614f55bbb93a",
+      "compression": "gzip"
+    },
+    {
+      "source": ".runtime/execution-runs/four-fakes-888q1xwa/control/STOP",
+      "path": "guard/control/STOP.gz",
+      "original_bytes": 50,
+      "original_sha256": "eae99002a34809e6547b54c72d698f0e096ed89f4bcd714fb8ccbab20ae18bd4",
+      "bytes": 68,
+      "sha256": "603a450e6168c9798a1f17ea67ddd546cdf31b7a858408da122abf07f4dca869",
+      "compression": "gzip"
+    },
+    {
+      "source": ".runtime/execution-runs/four-fakes-888q1xwa/control/lease.json",
+      "path": "guard/control/lease.json.gz",
+      "original_bytes": 1097,
+      "original_sha256": "2e34f9f72ccda994bb523bbfc8281dfe1de1bcd247358648d23d7ef2a1d5dd6b",
+      "bytes": 525,
+      "sha256": "a1d8ba0cb150493cf2719dc55b1e747b8ddd0525e7805922a2549235607f84aa",
+      "compression": "gzip"
+    },
+    {
+      "source": ".runtime/execution-runs/four-fakes-888q1xwa/control/scope.json",
+      "path": "guard/control/scope.json.gz",
+      "original_bytes": 232,
+      "original_sha256": "9b05ebc708c475ad09fa75583d57a59c2b7319d347a24b9e2afdcec0ad1376a4",
+      "bytes": 159,
+      "sha256": "fcc0026232cb5b544568e5fb1083b96f8b655efdb5dc49490a9e4042cc7c3cbd",
+      "compression": "gzip"
+    },
+    {
+      "source": ".runtime/execution-runs/four-fakes-888q1xwa/control/source-context.json",
+      "path": "guard/control/source-context.json.gz",
+      "original_bytes": 18248,
+      "original_sha256": "b69d1c69c8291da33e33569296cc3f5bf3e0ad149b91d02ed61ce9d37fcc6de4",
+      "bytes": 6600,
+      "sha256": "e223d9562a764fe4c2035989b1e88b480dfb96cf80be42af84f149daba3fe877",
+      "compression": "gzip"
+    },
+    {
+      "source": ".runtime/execution-runs/four-fakes-888q1xwa/events.jsonl",
+      "path": "guard/events.jsonl.gz",
+      "original_bytes": 754423,
+      "original_sha256": "d10da54a9884b6269bc7ef4517816dd6438a249335df92c0a6392541dd54c555",
+      "bytes": 43744,
+      "sha256": "43850403ac844b97d930a65419624c8178240aade645d79b9cb0c57510e66c51",
+      "compression": "gzip"
+    },
+    {
+      "source": ".runtime/execution-runs/four-fakes-888q1xwa/report.json",
+      "path": "guard/report.json.gz",
+      "original_bytes": 758975,
+      "original_sha256": "25b4e3dd5e3e7f97eac59bbab4ab32c3a681d76f22bfaa026d5d4d3d797a9b9a",
+      "bytes": 45031,
+      "sha256": "4340f4c0dc677b0d0fc717aec73a5c08c62b5c8924c69fce00802b48c403b6c2",
+      "compression": "gzip"
+    },
+    {
+      "source": ".runtime/phase01-20260925/start37.json",
+      "path": "steps/start37.json.gz",
+      "original_bytes": 944,
+      "original_sha256": "3de760c72fa17afde05a6782e9c9ad4dd2abbbea347e0bb85b361449ae281611",
+      "bytes": 457,
+      "sha256": "1b0b85df7b2cadb9ab07daaec8a319b0dd62538e3971fca11961310902276fea",
+      "compression": "gzip"
+    },
+    {
+      "source": ".runtime/phase01-20260925/start37.log",
+      "path": "steps/start37.log.gz",
+      "original_bytes": 453,
+      "original_sha256": "cb5c8ac5c2e895d83ae4c0a715f89dd5e00615b089bf24576f11cbaf10f5d8c8",
+      "bytes": 313,
+      "sha256": "6d6f08103ee33694a9546cb2f15f284fa511c82448acfce8f3a16de87236e40c",
+      "compression": "gzip"
+    },
+    {
+      "source": ".runtime/phase01-20260925/ready37.json",
+      "path": "steps/ready37.json.gz",
+      "original_bytes": 949,
+      "original_sha256": "cdaa631d0ea3a69332a2ba7487df2220a0a4ed2a46d01e005c156267421acd80",
+      "bytes": 462,
+      "sha256": "830e3fca68931bf3c9cb683efc6ddfcaa1c556127a70560514d7e23ae317667e",
+      "compression": "gzip"
+    },
+    {
+      "source": ".runtime/phase01-20260925/ready37.log",
+      "path": "steps/ready37.log.gz",
+      "original_bytes": 242,
+      "original_sha256": "6ade3d62b67dd2066207260ae96b6ef88847dbb824720cc7be7b132fee5510e9",
+      "bytes": 124,
+      "sha256": "01cedc45b27b73b7c8d5c8d2e0aa7bae317933250f77076dc26ab76b2428f17e",
+      "compression": "gzip"
+    },
+    {
+      "source": ".runtime/phase01-20260925/core04.json",
+      "path": "steps/core04.json.gz",
+      "original_bytes": 951,
+      "original_sha256": "9ddc98fc51d0cc3f5307cdca5fade3b4226413b8ed36b56df2d73f1f61036fd0",
+      "bytes": 462,
+      "sha256": "5283e04dd82b260d572edd06912b3e511e6248d509f6c5efc44d1e96078b3b4e",
+      "compression": "gzip"
+    },
+    {
+      "source": ".runtime/phase01-20260925/core04.log",
+      "path": "steps/core04.log.gz",
+      "original_bytes": 1118,
+      "original_sha256": "0dc83b4f02f4fb46e6ea0f000d2c72546e88615ec0ce11bb7c2681aec9f0df5a",
+      "bytes": 605,
+      "sha256": "7d3670d51e85bd56a27aa42f673145289810250b64e88b1a3eb89eecd92c6a70",
+      "compression": "gzip"
+    },
+    {
+      "source": ".runtime/phase01-20260925/stop37.json",
+      "path": "steps/stop37.json.gz",
+      "original_bytes": 1058,
+      "original_sha256": "f43040870628cb368ef8f24c5b74f837b624a71d83919ac4fff8c70ef08b4d8f",
+      "bytes": 475,
+      "sha256": "10613fabd09c7f30e55e74dac00ee55463d0d0b80a88ca7e882586e29113dd0a",
+      "compression": "gzip"
+    },
+    {
+      "source": ".runtime/phase01-20260925/stop37.log",
+      "path": "steps/stop37.log.gz",
+      "original_bytes": 124,
+      "original_sha256": "41a6c609e4c45672bc9ab80eef9c36c9345358ccd579da19e39d4bd4c0ce98db",
+      "bytes": 133,
+      "sha256": "bc3cc085e5863a044bdf59bb5dcaeec806a644b110aa81803d247946a8b5bcc0",
+      "compression": "gzip"
+    },
+    {
+      "source": ".piers/fakes/logs/zod.log",
+      "path": "logs/zod.log.gz",
+      "original_bytes": 225233,
+      "original_sha256": "55924081f3018c8947e17a1be9cec4d1b353bf430aedd1bfbf8fd3140b655319",
+      "bytes": 12700,
+      "sha256": "75a8245147a7e413471180e39044462de8b7475ba9196b1daecfba6336253c11",
+      "compression": "gzip"
+    },
+    {
+      "source": ".piers/fakes/logs/bus.log",
+      "path": "logs/bus.log.gz",
+      "original_bytes": 228742,
+      "original_sha256": "e51b89a4eb9e681dca62cb3d07c0793bd2333de8fa008ea399f7a03930c6c0f6",
+      "bytes": 35351,
+      "sha256": "8330a59907b4bafec037a4f952200ffda681ba2cfaa5bdad46f0c97eecca7873",
+      "compression": "gzip"
+    },
+    {
+      "source": ".piers/fakes/logs/nec.log",
+      "path": "logs/nec.log.gz",
+      "original_bytes": 115970,
+      "original_sha256": "d956ee7682f5dd0031ecc02abc9e815c5a32ca0d55517556887205e313acaec5",
+      "bytes": 4506,
+      "sha256": "5f578b25bbf3ea6ed5e9ca7328c07fc486316824259e0c4d4866aeccc45e6fcf",
+      "compression": "gzip"
+    },
+    {
+      "source": ".piers/fakes/logs/bud.log",
+      "path": "logs/bud.log.gz",
+      "original_bytes": 221384,
+      "original_sha256": "81cc6f45da1b4afa8d8e7ed67c70f4657f85c0d9424f9a9bbbe8668af4bbb779",
+      "bytes": 6966,
+      "sha256": "10fcd55379196705aef389be108bb36970f2b98268e837b8d229c109fbb0cb43",
+      "compression": "gzip"
+    },
+    {
+      "source": ".piers/fakes/logs/supervisor.log",
+      "path": "logs/supervisor.log.gz",
+      "original_bytes": 397539,
+      "original_sha256": "07ec81222493b48ac71ad15f1601f3489665c95cacf58ed9a1a20e3d689c58c9",
+      "bytes": 21944,
+      "sha256": "62db9515559483b3dea7ec64298b6c03908d5540400bf7963b00c67e8f98c536",
+      "compression": "gzip"
+    },
+    {
+      "source": ".piers/fakes/unclean-live.json",
+      "path": "unclean-live.json.gz",
+      "original_bytes": 152,
+      "original_sha256": "a8f9911fc6bf4dd260e6bd7043a3b81857268790c3be3fedfadb305884c56b6b",
+      "bytes": 144,
+      "sha256": "caa4d4115157301b0577073d75e4a9379248e7e38b5d48ca376c61ede30ffabc",
+      "compression": "gzip"
+    }
+  ]
+}

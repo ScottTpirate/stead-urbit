@@ -1,0 +1,42 @@
+{
+  "adapter_sha256": "67597ff220928b99ca1cf1e925bd86c903fa3d1399fd59e00825aec936965fe7",
+  "authored_test_methods": 58,
+  "checklist": {
+    "path": ".runtime/workflow-v2-participants/PAIRED_TRIAL_CHECKLIST.md",
+    "sha256": "7c58acdccbc6caf61af6d47d9825df48e4cc8f8aa9701960456a25cfda7a0cdd"
+  },
+  "harness_sha256": "c54f5d68491c3894c697fdb0da68a060c3293a4014c3f05d790d397f71306a92",
+  "independent_reviewer": "/root/editor_tool_review",
+  "independently_reviewed_parent_scorer": {
+    "path": ".runtime/workflow-v2-participants/final_score.py",
+    "reviewer": "/root/independent_review",
+    "scope": "Source-only v1-to-v2 delta review: complete failed/passed T05 admission, pinned helper binding, exact pure validator assessment and outcome check. No execution.",
+    "sha256": "a3fae8a56be2b1b5882c62eea6f97e863b4193576d8acaf17563310e388b498d"
+  },
+  "native_or_host_tests_executed_by_author": false,
+  "new_host_regressions": 17,
+  "package_sha256": "54369e5aba503a0d7abb1cf5cdd059a7b03888a368153c2d7d3b15c7b1afbc3a",
+  "patch_sha256": "e1838cc648c328689e7a672e763b21459f2edf7f3e7fba1753870e7bb1b8bd9c",
+  "protocol": "stead.workflow-v2-source-review-handoff/1",
+  "recorded_by": "/root/independent_review",
+  "remaining": [
+    "Integrator applies only nine reviewed changed paths after base-hash verification.",
+    "Run actual host regressions/full checks and commit exact source.",
+    "Complete guarded native v2 reference prequalification including full weak continuation control; independently review actual artifacts.",
+    "Use two fresh contexts with no v1 answers or private result exposure; separate v2 immutable snapshots and one-shot scoring.",
+    "Refresh other affected phase qualification/native/source bindings; URB-170 and Phase0/1 remain open as applicable."
+  ],
+  "review_findings": [
+    "No source/test-design blocker or parent-scorer API mismatch at exact hashes.",
+    "Bounded canonical codec agrees with pinned tank mold.",
+    "Complete five-subject outcomes are derived from exact generated sources, linked actual commands and full arm tangs.",
+    "Typed invalid evidence or timeout aborts; partial results remain retained.",
+    "Separate weak native continuation control required before fresh paired contexts; public T05 correct-only.",
+    "All indexed proposed bytes and40-payload freeze verified; public/common/assisted and task oracles unchanged."
+  ],
+  "review_source": "Actual received collaboration message on final independent source/test-design clearance; reviewer performed no tests or native execution.",
+  "reviewer_authored_this_file": false,
+  "status": "source_review_cleared_execution_pending",
+  "tests_sha256": "99f070716c4c63cd9811fc0854841a5ae6e61fd69388fc4b3bb5bd47c35a7192",
+  "tracked_source_modified_by_author": false
+}

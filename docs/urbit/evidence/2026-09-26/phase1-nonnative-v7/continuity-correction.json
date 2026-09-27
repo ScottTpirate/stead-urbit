@@ -1,0 +1,29 @@
+{
+  "protocol": "stead.typed-proof-continuity-reference-correction/1",
+  "recorded_at": "2026-09-27T00:38:26.162099+00:00",
+  "independent_review_pending": true,
+  "native_execution_performed": false,
+  "source_or_gate_changed": false,
+  "historical_artifacts_unchanged": true,
+  "before": {
+    "path": "docs/urbit/evidence/2026-09-26/phase1-nonnative-v5/historical-guard-continuity.json",
+    "pointer": "",
+    "sha256": "2bd3b2007daf5e916680b36e48a51d66d8b15035f599ac4219be76b44fd70463"
+  },
+  "after": {
+    "path": "docs/urbit/evidence/2026-09-26/phase1-nonnative-v7/historical-guard-continuity.json",
+    "pointer": "",
+    "sha256": "a9ac599f5f5af6e186535f83410037c020cefc9639f2252d23c8990d91545d48"
+  },
+  "previous_current_source_review": {
+    "path": "docs/urbit/evidence/2026-09-26/phase1-nonnative-v5/source-dispositions.json",
+    "pointer": "/proofs/guard-independent-source-review",
+    "sha256": "4e4a48a9a408650780a941fdb74b1cee525aeb15b1bb6a3c10ecc1c0c7b02065"
+  },
+  "current_source_review": {
+    "path": "docs/urbit/evidence/2026-09-26/phase1-nonnative-v6/source-dispositions.json",
+    "pointer": "/proofs/guard-independent-source-review",
+    "sha256": "4b174ed43e3a9ca6e44ecc16aeb3e64ecdeeb91f7e07e46eaee830b75eb97511"
+  },
+  "change": "Only the continuity current_source_review follows the canonical-scope proof reference used by the index. Historical executions, source findings, guard hashes, bindings, other proof references and acceptance rules remain unchanged."
+}

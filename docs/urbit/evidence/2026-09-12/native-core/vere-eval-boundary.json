@@ -1,0 +1,29 @@
+{
+  "classification": "local-real-native-eval-no-live-ships",
+  "utc": "2026-09-13T03:25:43Z",
+  "corpus_case": "envelope-over-65536-bytes",
+  "input_bytes": 65537,
+  "input_sha256": "9684df6b9de1a45fc99cb832edfb8f045f87794946355f599898d80b1342dbce",
+  "source_sha256": "460ecd9c37979d0974c2fdef74579d346b9af2bd7592e037ee7f82e868d90090",
+  "binary_sha256": "47ad302e8934271dfc00dcdab1d553c6d6460b105e3099ff47e0e4e4231bb26d",
+  "argv": [
+    ".runtime/bin/vere-v4.6-linux-x86_64",
+    "eval",
+    "--loom",
+    "29",
+    "-jn"
+  ],
+  "pipe": {
+    "exit": 0,
+    "observed_bytes": 65536,
+    "declared_bytes": 65590,
+    "expected_failure": "incomplete frame rejected, never sent to home"
+  },
+  "regular_file": {
+    "observed_bytes": 65590,
+    "declared_bytes": 65590,
+    "frame_sha256": "ee1efd978907f7f493003036401822f952da673c61953b9ab37448f95e4fb5fe"
+  },
+  "check": true,
+  "qualification": "Reproduces the pinned eval output-boundary bug and file-backed transport fix; native home rejection is checked separately by make core-test."
+}

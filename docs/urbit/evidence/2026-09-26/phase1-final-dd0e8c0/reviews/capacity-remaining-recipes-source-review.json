@@ -1,0 +1,144 @@
+{
+  "analysis": [
+    {
+      "finding": "Result watches require current sender bindings, not project grants. Bud and fully revoked zod/bus keep valid bindings in these recipes, allowing business denial responses. The corrected absent-binding probe remains a distinct watch-rejection, real-poke and final-transition case.",
+      "source": [
+        "native/core/desk/app/stead-home.hoon:273",
+        "native/core/desk/lib/stead-core.hoon:56",
+        "native/core/desk/ted/stead-client.hoon:46"
+      ],
+      "subject": "Result-channel authorization"
+    },
+    {
+      "finding": "Recipe counts agree with native limits: 16 projects; 128 work items per project; 128 retained grants including creator, hence 127 explicit grants; 32 documents per container; 128 container-history events. History boundary has 129 journal events including project creation. Object-byte candidates alternate two containers with at most 127 revisions each.",
+      "source": [
+        "scripts/urbit/qualification_cases.py:229",
+        "scripts/urbit/qualification_cases.py:639",
+        "native/core/desk/lib/stead-core.hoon:222",
+        "native/core/desk/lib/stead-core.hoon:279"
+      ],
+      "subject": "Resource recipe counts"
+    },
+    {
+      "finding": "Each project retains 127 contributor grants and its creator grant. Revocation removes contributor grants first and creator last. Authorization occurs before receipt lookup and capacity; retries before closure reuse receipts without consuming reserve. Closing one project leaves the other project reserve and grants independent. Predicted final counts are 4096 ordinary events and 128 security events per project, 4352 journal events total. Closed-project retry/recovery/mutation denials remain authorized-result-channel operations, not missing-binding watches.",
+      "source": [
+        "scripts/urbit/qualification_cases.py:169",
+        "scripts/urbit/qualification_cases.py:562",
+        "native/core/desk/lib/stead-core.hoon:96",
+        "native/core/desk/lib/stead-core.hoon:200",
+        "native/core/desk/lib/stead-core.hoon:461"
+      ],
+      "subject": "Post-migration security reserve"
+    },
+    {
+      "finding": "Fixture batches remain at most 32 commands and 65536 UTF-8 bytes. Maximum Markdown is 32768 bytes. These recipe snapshots have revision maps below the 512-entry parser bound; the large object bodies are represented by hashes and counts rather than copied wholesale into snapshot responses.",
+      "source": [
+        "scripts/urbit/qualification_cases.py:138",
+        "native/core/desk/app/stead-home.hoon:186",
+        "native/core/desk/lib/stead-codec.hoon:42",
+        "native/core/desk/lib/stead-codec.hoon:52",
+        "native/core/desk/lib/stead-codec.hoon:248"
+      ],
+      "subject": "Bounded payloads"
+    }
+  ],
+  "arithmetic": {
+    "classification": "Independent fixed-width source arithmetic, not a test run or observed native state",
+    "conclusion": "The 253rd candidate crosses the object limit before the history limit; the next blob alone already crosses it, so the driver does not depend on an overhead-only overflow.",
+    "limit_bytes": 8388608,
+    "method": "Sum exact Git object body lengths for alternating container histories: each blob 32768 bytes, each single-entry tree 67 bytes, commit bytes from current native tree/optional-parent/author/committer/message format with 36-byte UUIDs and ten-digit Unix seconds. Distinct content and successive parents prevent intended recipe object reuse. Git object headers are excluded, matching native object-bytes accounting.",
+    "performed_during_completed_review": true,
+    "projected_252_saves_bytes": 8358528,
+    "projected_252_saves_plus_next_blob_bytes": 8391296,
+    "projected_253_saves_bytes": 8391698,
+    "rerun_for_this_record": false,
+    "source": [
+      "native/core/desk/lib/stead-git.hoon:103",
+      "native/core/desk/lib/stead-git.hoon:116",
+      "native/core/desk/lib/stead-core.hoon:302",
+      "tests/urbit/test_qualification_cases.py:229"
+    ]
+  },
+  "disposition": "No blocking source discrepancy found; remaining runtime behavior is unexecuted in completed retained evidence.",
+  "limits": [
+    "No native run, host test, mutable native log inspection, source change, branch change or new acceptance gate.",
+    "Source predictions and arithmetic do not establish execution, phase acceptance or timeout adequacy.",
+    "Current core07 execution remains owned by the integrator and unchanged; this record does not inspect or accept it.",
+    "The arithmetic assumes the actual current ten-digit Unix-seconds timestamp and canonical 36-byte UUID fields.",
+    "Previously failed native runs retain their original failed dispositions."
+  ],
+  "native_execution_performed": false,
+  "protocol": "stead.independent-source-review/1",
+  "qualifies_phase": false,
+  "record_capture": {
+    "activity": "Recheck derivative remotes/HEAD and source byte hashes; serialize already completed review without rerunning analysis.",
+    "cpu_affinity": [
+      19
+    ],
+    "cpu_max": "2000 10000"
+  },
+  "recorded_at_utc": "2026-09-26T23:12:32.571945+00:00",
+  "remaining_risks": [
+    {
+      "finding": "Native-batch and snapshots retain 55-second native and 75-second host deadlines. Only migrate-legacy/load-bad-legacy receive 600/620 seconds. Post-migration 32-revocation batches and near-8MiB full-state hashing have not completed in the retained native evidence reviewed here. Bounded input sizes do not establish runtime completion. No measured failure currently warrants changing these deadlines or correctness predicates.",
+      "source": [
+        "native/core/desk/ted/stead-client.hoon:17",
+        "scripts/urbit/core_conn.py:118",
+        "scripts/urbit/qualification_cases.py:611",
+        "native/core/desk/app/stead-home.hoon:20"
+      ],
+      "subject": "Unmeasured normal-call deadlines"
+    }
+  ],
+  "reviewer": "/root/gall_schedule_review",
+  "scope": "Remaining capacity resource recipes and post-migration security reserve/revocation at frozen dd0e8c0.",
+  "source_commit": "dd0e8c0ce8d1d00f15de6b07e2e26d368c5c3774",
+  "source_files": {
+    "native/core/desk/app/stead-home.hoon": {
+      "bytes": 15070,
+      "matches_committed_blob": true,
+      "sha256": "3bfc0e45062ef0bc8572d5034a60b5b35f6502350f821129b5ba7a7cca0b2b9c"
+    },
+    "native/core/desk/lib/stead-codec.hoon": {
+      "bytes": 9532,
+      "matches_committed_blob": true,
+      "sha256": "56e3d574381bbf8cdf29ca192c70eff256009f89d782e3ffe859b19c1321cbd7"
+    },
+    "native/core/desk/lib/stead-core.hoon": {
+      "bytes": 30949,
+      "matches_committed_blob": true,
+      "sha256": "4c183ef6283030437af5e1433e3fbf80f414757bcede4cab1282fc71ff5f34de"
+    },
+    "native/core/desk/lib/stead-git.hoon": {
+      "bytes": 3935,
+      "matches_committed_blob": true,
+      "sha256": "826b83485429c02f577c9b462ee6cddd3ab8ea1a099d33b66893f863d54c54d7"
+    },
+    "native/core/desk/ted/stead-client.hoon": {
+      "bytes": 7232,
+      "matches_committed_blob": true,
+      "sha256": "a0420730b0ee1a56d46e22def0b570cf089a7de39810453010a3f77ff3f9c155"
+    },
+    "scripts/urbit/core_conn.py": {
+      "bytes": 9899,
+      "matches_committed_blob": true,
+      "sha256": "e178a5c0ce619031b8da64376b99b429ac0f90dded293ac60fa1137447d53614"
+    },
+    "scripts/urbit/core_test.py": {
+      "bytes": 34553,
+      "matches_committed_blob": true,
+      "sha256": "612ea14eeb83a047fce9bf542492c7d1ed38431015274703d20994b406ef392d"
+    },
+    "scripts/urbit/qualification_cases.py": {
+      "bytes": 42516,
+      "matches_committed_blob": true,
+      "sha256": "0383dd02dcb1e3cfa6ff9e93be5da49b2fee7bdee1a71dde7c2b6db303c3c3f9"
+    },
+    "tests/urbit/test_qualification_cases.py": {
+      "bytes": 36527,
+      "matches_committed_blob": true,
+      "sha256": "d0607db99a5921cd4eb43658bab10fc7d0ee802fbc17d75ae02281d27ab56bfc"
+    }
+  },
+  "tests_executed": false
+}

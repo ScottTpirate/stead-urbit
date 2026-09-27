@@ -1,0 +1,262 @@
+{
+  "approval_limit": "Independent AI source review and retained host execution, not human approval, native acceptance, merge permission or phase completion.",
+  "binding_rule": "Integrator may fill common commit/tree/runner/lock/corpus/freeze bindings only after checking all reviewed_source_files and host-current source_files_before/after against those actual committed bytes. Preserve the actual host-run base HEAD and uncommitted status; no rerun at the later commit is claimed. Changed reviewed/tested bytes require renewed review/testing. Null bindings fail admission.",
+  "historical_skips_unchanged": true,
+  "observed_head": "ffab82f8ac5251cb912236be60edc3d3fac3dfba",
+  "owner": "/root/independent_review",
+  "proofs": {
+    "delivery-host-order-permutations": {
+      "assertions": [
+        {
+          "name": "fact-before-ack",
+          "observed_test_ids": [
+            "test_delivery_cases.DeliveryEvidenceHostTests.test_fact_ack_kick_host_permutations_require_exact_receipt"
+          ],
+          "status": "passed"
+        },
+        {
+          "name": "ack-before-fact",
+          "observed_test_ids": [
+            "test_delivery_cases.DeliveryEvidenceHostTests.test_fact_ack_kick_host_permutations_require_exact_receipt"
+          ],
+          "status": "passed"
+        },
+        {
+          "name": "kick-before-ack",
+          "observed_test_ids": [
+            "test_delivery_cases.DeliveryEvidenceHostTests.test_fact_ack_kick_host_permutations_require_exact_receipt"
+          ],
+          "status": "passed"
+        },
+        {
+          "name": "nack-is-not-accepted",
+          "observed_test_ids": [
+            "test_delivery_cases.DeliveryEvidenceHostTests.test_ack_nack_timeout_partial_missing_and_duplicate_never_saved"
+          ],
+          "status": "passed"
+        },
+        {
+          "name": "ack-without-result",
+          "observed_test_ids": [
+            "test_delivery_cases.DeliveryEvidenceHostTests.test_ack_nack_timeout_partial_missing_and_duplicate_never_saved"
+          ],
+          "status": "passed"
+        },
+        {
+          "name": "timeout-partial-missing-never-saved",
+          "observed_test_ids": [
+            "test_delivery_cases.DeliveryEvidenceHostTests.test_ack_nack_timeout_partial_missing_and_duplicate_never_saved"
+          ],
+          "status": "passed"
+        }
+      ],
+      "bindings": null,
+      "evidence_limit": "Authored event records exercise the actual host reducer. No ordering was induced on live Gall/Ames. ACK alone is never business acceptance.",
+      "id": "delivery-host-order-permutations",
+      "kind": "host_mocked",
+      "native_execution": false,
+      "reviewed_source_files": {
+        "scripts/urbit/delivery_cases.py": "171edf429fc1677e3250bcebff4cd2fb55e762d767204afdae846f86deccc131"
+      },
+      "reviewer": "/root/independent_review",
+      "scope": "Host reducer preserves real acceptance only for exact correlated receipts; no live reordering claim.",
+      "status": "passed",
+      "underlying_artifacts": [
+        {
+          "path": "docs/urbit/evidence/2026-09-25/phase1-nonnative/host-current.json",
+          "sha256": "5cfe4d692e6898113a8e1ff1dba3c78ebc4832a1fc2eb621d63f50c967fe4772"
+        },
+        {
+          "path": "docs/urbit/evidence/2026-09-25/phase1-nonnative/host-current.stderr.log",
+          "sha256": "e178919098453e50282dc7e4b19630ce2c7e4288d2c92fb7722f9526e185bc26"
+        }
+      ]
+    },
+    "guard-independent-source-review": {
+      "assertions": [
+        {
+          "name": "guard-independent-source-review",
+          "status": "reviewed"
+        }
+      ],
+      "bindings": null,
+      "findings": [
+        "The common guard preserves 75 C start/90 C stop ceilings, 50 percent/10 ms quota, fresh stable CPU sensor inventory, one source-bound monotonic lease and one inherited no-follow lifetime lock.",
+        "Only the owned transient scope is signaled. Sensor, storage and cancellation failures retain a failed result and bounded TERM/KILL cleanup. Child exit zero cannot erase a guard trip.",
+        "The supervisor deduplicates TERM by process incarnation and latches nonzero, forced and collected cleanup failures. Normal-stop intent cannot turn an unclean exit into a successful completion.",
+        "Harness/supervisor require the disposable fixture identity, stopped seed hashes and exact toolchain. Failed launched scopes retain an unclean marker and cannot create a clean seed.",
+        "Actual Git blob bytes and full mounted inventories are checked twice. Read-only helpers use a fresh private Python cache; source reads reject redirected or special inputs.",
+        "The common guard differs from retained September 13 source only by the nine-line prelaunch resample, cancellation check and lease publication, adding refusal conditions.",
+        "The new Makefile start/dev preparation wrapper adds a transient 50 percent/10 ms scope and one currently allowed CPU. This reviewer inspected its source and did not execute that wrapper.",
+        "Urgit candidate/warm-seed execution and its license disposition are separately reviewed. This record reviews the shared guard and four-fake lifecycle, not unexamined candidate transcript semantics."
+      ],
+      "id": "guard-independent-source-review",
+      "kind": "source_review",
+      "native_execution": false,
+      "reviewed_source_files": {
+        "Makefile": "da78fc039ee0562efcf5b408a9b8ab24f243f5d2965991599548a76b42b8a0f8",
+        "scripts/urbit/digests.py": "88e6333bd6c764f48fb8939bafa77c9eb236c5b3586a19fe1a1f6e48e27dc08c",
+        "scripts/urbit/execution_policy.py": "da16e2e0fd32eb5b90706b546a7ea8332a65807fc8279f3bd765dcc18aaad9b5",
+        "scripts/urbit/harness.py": "6816cb078b781feb614f186f15526ebc183f6567a368d49e95e948a4b7d790ed",
+        "scripts/urbit/namespace_check.py": "87950f4e7796fafb91807c36b9ea7d392d1d1840e5516d15d5fc6c5d476d0449",
+        "scripts/urbit/supervisor.py": "b49275055befca8a39745a4c0a64c3de829213d1cdbf3c2ad83622997e19992d",
+        "scripts/urbit/toolchain.py": "31234bbab1af217c885d8c081d7f438972f6ff1b6d89c93d10bdf49871b3ea16"
+      },
+      "reviewer": "/root/independent_review",
+      "scope": "Exact common source reviewed; thermal, lock, lease, scope, cleanup, fail status and seed boundaries remain conservative.",
+      "status": "reviewed"
+    },
+    "guard-negative-host-tests": {
+      "assertions": [
+        {
+          "name": "hot-preflight-no-launch",
+          "observed_test_ids": [
+            "test_execution_policy.ControlledChildExecution.test_hot_preflight_never_launches_a_child",
+            "test_runtime_guard_adversarial.GuardFailureOutcomeTests.test_hot_or_missing_preflight_never_calls_factory_or_process"
+          ],
+          "status": "passed"
+        },
+        {
+          "name": "missing-stale-sensors",
+          "observed_test_ids": [
+            "test_runtime_guard_adversarial.ThermalEvidenceTests.test_missing_or_renamed_hottest_sensor_refuses_continuation",
+            "test_runtime_guard_adversarial.ThermalEvidenceTests.test_stale_future_reversed_and_nonfinite_clocks_refuse",
+            "test_runtime_guard_adversarial.LeaseAdmissionTests.test_stale_and_future_freshly_written_leases_refuse"
+          ],
+          "status": "passed"
+        },
+        {
+          "name": "crossing-stops-own-scope",
+          "observed_test_ids": [
+            "test_execution_policy.ControlledChildExecution.test_trip_with_child_exit_zero_stays_failed_and_preserves_crossing",
+            "test_runtime_guard_adversarial.OwnedHostFilesTests.test_scope_signal_rejects_other_unit_without_systemctl"
+          ],
+          "status": "passed"
+        },
+        {
+          "name": "bounded-shutdown",
+          "observed_test_ids": [
+            "test_execution_policy.ControlledChildExecution.test_uncooperative_owned_child_is_killed_within_bounded_cleanup",
+            "test_harness_safety.SupervisorLifecycleSafety.test_signal_and_wait_failures_do_not_abandon_other_children"
+          ],
+          "status": "passed"
+        },
+        {
+          "name": "preserved-logs",
+          "observed_test_ids": [
+            "test_execution_policy.ControlledChildExecution.test_clean_light_child_completion_is_not_labeled_native_pass",
+            "test_execution_policy.ControlledChildExecution.test_trip_with_child_exit_zero_stays_failed_and_preserves_crossing"
+          ],
+          "status": "passed"
+        },
+        {
+          "name": "nonpassing-final",
+          "observed_test_ids": [
+            "test_harness_safety.SupervisorLifecycleSafety.test_supervisor_exit_is_nonzero_for_guard_or_initialization_failure",
+            "test_harness_safety.SupervisorLifecycleSafety.test_normal_stop_watchdog_cannot_swallow_cleanup_failure",
+            "test_dev_flow.LifecycleTests.test_failed_launched_supervisor_marks_fixture_and_blocks_next_start"
+          ],
+          "status": "passed"
+        },
+        {
+          "name": "no-forced-seed",
+          "observed_test_ids": [
+            "test_harness_safety.SupervisorLifecycleSafety.test_forced_state_is_never_promoted_to_a_clean_seed",
+            "test_harness_safety.FixtureSafety.test_changed_seed_preserves_live_data"
+          ],
+          "status": "passed"
+        }
+      ],
+      "bindings": {
+        "guard_sha256": "da16e2e0fd32eb5b90706b546a7ea8332a65807fc8279f3bd765dcc18aaad9b5"
+      },
+      "evidence_limit": "Actual host execution; thermal and systemd responses are mocked. Python child, file, flock and cache operations are real host controls. The 127-test total includes delivery tests and is not additive to earlier overlapping runs.",
+      "id": "guard-negative-host-tests",
+      "kind": "host_mocked",
+      "native_execution": false,
+      "reviewer": "/root/independent_review",
+      "scope": "Synthetic sensor/child failure tests only; unchanged75/90C and50%CPU limits.",
+      "status": "passed",
+      "tests_observed": 127,
+      "underlying_artifacts": [
+        {
+          "path": "docs/urbit/evidence/2026-09-25/phase1-nonnative/host-current.json",
+          "sha256": "5cfe4d692e6898113a8e1ff1dba3c78ebc4832a1fc2eb621d63f50c967fe4772"
+        },
+        {
+          "path": "docs/urbit/evidence/2026-09-25/phase1-nonnative/host-current.stderr.log",
+          "sha256": "e178919098453e50282dc7e4b19630ce2c7e4288d2c92fb7722f9526e185bc26"
+        }
+      ]
+    },
+    "no-effect-subsystem": {
+      "assertions": [
+        {
+          "name": "no-external-effects-replayed",
+          "status": "not_applicable"
+        }
+      ],
+      "bindings": null,
+      "findings": [
+        "Pure library transitions return the new business state. The authoritative home retains it and emits bounded one-shot result facts/kicks.",
+        "on-save retains a versioned state; on-load validates supported saved state and clears pending reservations with kicks.",
+        "No external_effects_replayed counter was fabricated. This disposition does not prove replay safety of any future external executor."
+      ],
+      "id": "no-effect-subsystem",
+      "kind": "not_applicable",
+      "native_execution": false,
+      "reason": "The current synthetic Work/Docs slice has no build, model, deployment, purchase or message-effect executor. Bounded native result facts/kicks remain separately required delivery behavior.",
+      "reviewed_source_files": {
+        "native/core/desk/app/stead-home.hoon": "3bfc0e45062ef0bc8572d5034a60b5b35f6502350f821129b5ba7a7cca0b2b9c",
+        "native/core/desk/lib/stead-core.hoon": "4c183ef6283030437af5e1433e3fbf80f414757bcede4cab1282fc71ff5f34de"
+      },
+      "reviewer": "/root/independent_review",
+      "scope": "This increment implements no external effect executor. This is not a replay-safety test or proof about future build/message/model/deployment effects.",
+      "source_arms": [
+        "apply-command",
+        "on-save",
+        "on-load",
+        "on-poke",
+        "on-watch",
+        "on-leave"
+      ],
+      "status": "not_applicable"
+    },
+    "receipt-lookup-order": {
+      "assertions": [
+        {
+          "name": "source-ordering-property",
+          "status": "reviewed"
+        }
+      ],
+      "bindings": null,
+      "findings": [
+        "context requires initialized state, a current active unexpired binding, the permitted principal kind and the complete expected profile.",
+        "apply-command checks context, typed allowed/read-scope and authority epoch before duplicate receipt lookup at line 215.",
+        "read checks current context and typed project/resource/action/container scope before receipt lookup/decode at lines 336-342; stored resource, action, container and current allowed are checked before public projection.",
+        "Closed project, grant rank and private container ownership checks remain in read-scope/allowed. public-receipt uses a closed field inventory.",
+        "This is source ordering evidence only. Native denial, migration, restart, receipt recovery and delivery tests remain separate requirements."
+      ],
+      "id": "receipt-lookup-order",
+      "kind": "source_review",
+      "native_execution": false,
+      "reviewed_source_files": {
+        "native/core/desk/lib/stead-core.hoon": "4c183ef6283030437af5e1433e3fbf80f414757bcede4cab1282fc71ff5f34de"
+      },
+      "reviewer": "/root/independent_review",
+      "scope": "Current typed resource/action authorization must run before receipt lookup/decode; source digest must match the executed closure.",
+      "source_arms": [
+        "context",
+        "allowed",
+        "apply-command",
+        "read",
+        "read-scope",
+        "public-receipt"
+      ],
+      "status": "reviewed"
+    }
+  },
+  "protocol": "stead.source-dispositions/3",
+  "reviewed_at": "2026-09-25T11:57:24.763020+00:00",
+  "status": "pending-final-source-binding"
+}

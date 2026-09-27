@@ -1,0 +1,51 @@
+{
+  "protocol": "stead.host-load-correlation/1",
+  "created_at": "2026-09-26T19:14:36.335154+00:00",
+  "classification": "Read-only real-host observations; no native test or causal experiment",
+  "observations": [
+    {
+      "path": "initial.jsonl",
+      "bytes": 32234,
+      "sha256": "93adcbb1ad42a54a54ddca09626df0a82949b5ddeebac16c39cf4aa3b7755c19",
+      "samples": 42,
+      "source": ".runtime/phase01-20260926/observe-host-load.jsonl",
+      "observed_complete_line_prefix_bytes": 2452243,
+      "observed_complete_line_prefix_sha256": "859faf3e97e5b28964ca3cbcaf0e0d9bb39eb9b2c8c145f85ae0558a243f8d9f",
+      "selected_utc_ranges": [
+        [
+          "2026-09-26T18:07:54",
+          "2026-09-26T18:08:06"
+        ],
+        [
+          "2026-09-26T18:37:54",
+          "2026-09-26T18:38:07"
+        ],
+        [
+          "2026-09-26T18:52:54",
+          "2026-09-26T18:53:08"
+        ]
+      ]
+    },
+    {
+      "path": "core03.jsonl",
+      "bytes": 12361,
+      "sha256": "98ea665a6b36867f8d576c7ac4838062a6f3d1b1d65e321c2534770e7f3e6e07",
+      "samples": 15,
+      "source": ".runtime/phase01-20260926/core-observation/observe-host-load.jsonl",
+      "observed_complete_line_prefix_bytes": 647908,
+      "observed_complete_line_prefix_sha256": "16bdf45d28689c2e156132c40b8d72d5cc28ede16f556617d8aea86bcfe26327",
+      "selected_utc_ranges": [
+        [
+          "2026-09-26T19:07:54",
+          "2026-09-26T19:08:08"
+        ]
+      ]
+    }
+  ],
+  "limits": [
+    "Process samples can miss short-lived processes; comm is truncated by Linux. No arguments, environment, credentials or message contents were collected.",
+    "The omarchy-agent-u CPU activity coincides with the reported temperature spikes; this is correlation, not proof of sole thermal causation.",
+    "The first sampler completed its fixed one-hour lifetime. The second source remains append-only; its hash identifies only the observed complete-line byte prefix.",
+    "No fan or desktop configuration was changed. Pending unauthenticated fan boost was cancelled; both fans remained in automatic mode."
+  ]
+}

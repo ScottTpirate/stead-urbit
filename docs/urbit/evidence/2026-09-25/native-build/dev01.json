@@ -1,0 +1,10 @@
+{
+  "command": [
+    "make",
+    "dev"
+  ],
+  "source_commit": "87ea9e199a748a86daf1a9d95d4946e65b45c3ba",
+  "started_utc": "2026-09-25T09:40:01.953049+00:00",
+  "elapsed_seconds": 70.131,
+  "exit": 2
+}

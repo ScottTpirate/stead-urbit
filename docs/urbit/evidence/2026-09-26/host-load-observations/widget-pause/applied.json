@@ -1,0 +1,12 @@
+{
+  "protocol": "stead.authorized-widget-pause/1",
+  "applied_at": "2026-09-26T19:41:28.699994+00:00",
+  "authorization": "User: Temporarily pause the widget and restore it afterward",
+  "config": "/home/skilgore/.config/omarchy/shell.json",
+  "before_sha256": "c08515d119a67bf70c9672c52f5b2a90ef28c369bb3f4a3c957f770dea9d965f",
+  "after_sha256": "5bdb84f2dab23e16d3b015bf911e8b7d5e9fcace8657e805a440c7559c2109ed",
+  "only_change": "Remove omarchy.agents from bar.layout.right",
+  "restore_required": true,
+  "restore_rule": "Restore exact original only if current bytes still equal candidate-minimal; otherwise preserve later user changes and reinsert only authorized widget position.",
+  "fan_changes": false
+}

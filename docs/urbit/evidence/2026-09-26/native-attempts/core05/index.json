@@ -1,0 +1,230 @@
+{
+  "protocol": "stead.native-retention/1",
+  "source_commit": "5208f3273426e8fe76dc8622ffe93ace93982e17",
+  "native_status": "fail",
+  "native_classification": "local-real-native-fake-ships",
+  "native_elapsed_seconds": 2347.584,
+  "outer_guard_status": "failed",
+  "outer_guard_exit": 1,
+  "qualifies_phase": false,
+  "scope": "Exact execution only; full manifest and independent review are separate.",
+  "transformations": "Exact copies or deterministic gzip of complete bytes.",
+  "artifacts": [
+    {
+      "path": "docs/urbit/evidence/2026-09-26/native-attempts/core05/native.json",
+      "source": ".piers/fakes/logs/core-20260926T205140Z.json",
+      "bytes": 8311852,
+      "sha256": "bcbe1f7ec6e0afd533e764ab2101f395940ae820afc63fc270f0868998482e45",
+      "original_bytes": 8311852,
+      "original_sha256": "bcbe1f7ec6e0afd533e764ab2101f395940ae820afc63fc270f0868998482e45",
+      "encoding": "identity"
+    },
+    {
+      "path": "docs/urbit/evidence/2026-09-26/native-attempts/core05/guard.json",
+      "source": ".runtime/execution-runs/four-fakes-lbhrmjlk/report.json",
+      "bytes": 1025646,
+      "sha256": "5f15f7019c2ca5efb3d36fe7cf936f629301000da5ecc973deec72fecaf0f98c",
+      "original_bytes": 1025646,
+      "original_sha256": "5f15f7019c2ca5efb3d36fe7cf936f629301000da5ecc973deec72fecaf0f98c",
+      "encoding": "identity"
+    },
+    {
+      "path": "docs/urbit/evidence/2026-09-26/native-attempts/core05/guard/.stead-disposable.json.gz",
+      "source": ".runtime/execution-runs/four-fakes-lbhrmjlk/.stead-disposable.json",
+      "bytes": 115,
+      "sha256": "9fc1341e9b3e62da643e33cab6f11953b4bdd4bd808a4fdcbb0740187ba8cfda",
+      "original_bytes": 102,
+      "original_sha256": "ca44120bfed7d9ed70ef9c2cd5f825feaf3feb018a0559e9fd5ffb59f8401582",
+      "encoding": "gzip"
+    },
+    {
+      "path": "docs/urbit/evidence/2026-09-26/native-attempts/core05/guard/control/STOP.gz",
+      "source": ".runtime/execution-runs/four-fakes-lbhrmjlk/control/STOP",
+      "bytes": 68,
+      "sha256": "603a450e6168c9798a1f17ea67ddd546cdf31b7a858408da122abf07f4dca869",
+      "original_bytes": 50,
+      "original_sha256": "eae99002a34809e6547b54c72d698f0e096ed89f4bcd714fb8ccbab20ae18bd4",
+      "encoding": "gzip"
+    },
+    {
+      "path": "docs/urbit/evidence/2026-09-26/native-attempts/core05/guard/control/lease.json.gz",
+      "source": ".runtime/execution-runs/four-fakes-lbhrmjlk/control/lease.json",
+      "bytes": 528,
+      "sha256": "bf276d33f40560fe74f8190b9fc161d6c1f395e43772e1783a94a6e110cdf83b",
+      "original_bytes": 1099,
+      "original_sha256": "15924e341ab8e2c692d69d321397115f4efac743403fe6c52667d540fbbc0911",
+      "encoding": "gzip"
+    },
+    {
+      "path": "docs/urbit/evidence/2026-09-26/native-attempts/core05/guard/control/scope.json.gz",
+      "source": ".runtime/execution-runs/four-fakes-lbhrmjlk/control/scope.json",
+      "bytes": 159,
+      "sha256": "467d30b8130e0445a542de45237f33fb6a7dae78db6ad4791e19cb39c7597637",
+      "original_bytes": 232,
+      "original_sha256": "eb2eb64c685796f445dced3a4129309716bad79f87eb06081a02ca975f4d7fc9",
+      "encoding": "gzip"
+    },
+    {
+      "path": "docs/urbit/evidence/2026-09-26/native-attempts/core05/guard/control/source-context.json.gz",
+      "source": ".runtime/execution-runs/four-fakes-lbhrmjlk/control/source-context.json",
+      "bytes": 6598,
+      "sha256": "abf2ba801fdd7235716ba85a8d82d6097833db9c68bc1bdb63ed9a8d83eaf7e4",
+      "original_bytes": 18248,
+      "original_sha256": "dd3397cb193e307cab8856a831755fd96a3cec3182145694bdb63217a87c091f",
+      "encoding": "gzip"
+    },
+    {
+      "path": "docs/urbit/evidence/2026-09-26/native-attempts/core05/guard/events.jsonl.gz",
+      "source": ".runtime/execution-runs/four-fakes-lbhrmjlk/events.jsonl",
+      "bytes": 58838,
+      "sha256": "d2d53abfd040e0e205260a51158ba7615021a3e03d70ea9448117355844d6b7b",
+      "original_bytes": 1020478,
+      "original_sha256": "b3cad5b611303379fcaa2cc338707b4167a808e3132adadf8ea14b68a4e09657",
+      "encoding": "gzip"
+    },
+    {
+      "path": "docs/urbit/evidence/2026-09-26/native-attempts/core05/steps/core-test.json.gz",
+      "source": ".runtime/phase01-20260926/core05/core-test.json",
+      "bytes": 106,
+      "sha256": "43fda12343ed65864012cb9b234358a3b8a8c1c7d12d5a4ab9e8f85116fc57d6",
+      "original_bytes": 104,
+      "original_sha256": "104f172c0de160e4a5e0125340c92873d651b5dfbe43816e40b24eabb47d80c2",
+      "encoding": "gzip"
+    },
+    {
+      "path": "docs/urbit/evidence/2026-09-26/native-attempts/core05/steps/core-test.log.gz",
+      "source": ".runtime/phase01-20260926/core05/core-test.log",
+      "bytes": 613,
+      "sha256": "6e375eb41cde61ef1290cd1f81883c99fd2ec448ae3581a073166cbb2ea73491",
+      "original_bytes": 1144,
+      "original_sha256": "3aa6ef076d2bce88d73c7ea579103e674816e764f8cfb25b96f2293c63030134",
+      "encoding": "gzip"
+    },
+    {
+      "path": "docs/urbit/evidence/2026-09-26/native-attempts/core05/steps/lifecycle.json.gz",
+      "source": ".runtime/phase01-20260926/core05/lifecycle.json",
+      "bytes": 330,
+      "sha256": "f7d2cca2148f986a5d96aec7aa768a6a7e42ad744f705ee443b2740736b7d6a7",
+      "original_bytes": 826,
+      "original_sha256": "f1e7a5ea32c9bce8d34bcb716179446361f4303fdc7a0bca349bc4550c8ad594",
+      "encoding": "gzip"
+    },
+    {
+      "path": "docs/urbit/evidence/2026-09-26/native-attempts/core05/steps/start.json.gz",
+      "source": ".runtime/phase01-20260926/core05/start.json",
+      "bytes": 103,
+      "sha256": "786c03f9ca33393a5767d16cacecd7ac1e20862ddab54b9910ecd65f13908cda",
+      "original_bytes": 100,
+      "original_sha256": "6a987e3eeb7b3c8331419d1596194b18b166847f3b4918a73f1c2b623a9996d7",
+      "encoding": "gzip"
+    },
+    {
+      "path": "docs/urbit/evidence/2026-09-26/native-attempts/core05/steps/start.log.gz",
+      "source": ".runtime/phase01-20260926/core05/start.log",
+      "bytes": 314,
+      "sha256": "09113d2042551e21605a4dd4c8b193ef025dd8a0a580873b2d54924118d3a1d7",
+      "original_bytes": 453,
+      "original_sha256": "537d0a5b72b4df828b8b1f134c3063af99520e45ff556b91297f552e7a349f5d",
+      "encoding": "gzip"
+    },
+    {
+      "path": "docs/urbit/evidence/2026-09-26/native-attempts/core05/steps/stop.json.gz",
+      "source": ".runtime/phase01-20260926/core05/stop.json",
+      "bytes": 103,
+      "sha256": "f0d8fd9c221bfe6d09d41fd19b552e43c13469b537ffba6d62316513ba4b7c14",
+      "original_bytes": 100,
+      "original_sha256": "30a0456104897b4190b06e5470f8de1afda426891a919a14e3a827a933258828",
+      "encoding": "gzip"
+    },
+    {
+      "path": "docs/urbit/evidence/2026-09-26/native-attempts/core05/steps/stop.log.gz",
+      "source": ".runtime/phase01-20260926/core05/stop.log",
+      "bytes": 134,
+      "sha256": "1245365386b87a8957664a9a8ce511427687b863aa3a6c85cc10d71cadd0a079",
+      "original_bytes": 122,
+      "original_sha256": "d49186fabe827c3ae37d598b00ebf4ba3da6e19ef8612e5dd468bc90323729e8",
+      "encoding": "gzip"
+    },
+    {
+      "path": "docs/urbit/evidence/2026-09-26/native-attempts/core05/steps/wait-ready.json.gz",
+      "source": ".runtime/phase01-20260926/core05/wait-ready.json",
+      "bytes": 107,
+      "sha256": "2e1435e8fdb0902a8ade9ce2394e76baedea144aef022b3f35ca7f0cfb903faf",
+      "original_bytes": 104,
+      "original_sha256": "e7d0a57b2b76fb4256c824181e9a567730bc0f8196f8f27eca633fac9c39cb0d",
+      "encoding": "gzip"
+    },
+    {
+      "path": "docs/urbit/evidence/2026-09-26/native-attempts/core05/steps/wait-ready.log.gz",
+      "source": ".runtime/phase01-20260926/core05/wait-ready.log",
+      "bytes": 124,
+      "sha256": "01cedc45b27b73b7c8d5c8d2e0aa7bae317933250f77076dc26ab76b2428f17e",
+      "original_bytes": 242,
+      "original_sha256": "6ade3d62b67dd2066207260ae96b6ef88847dbb824720cc7be7b132fee5510e9",
+      "encoding": "gzip"
+    },
+    {
+      "path": "docs/urbit/evidence/2026-09-26/native-attempts/core05/logs/zod.log.gz",
+      "source": ".piers/fakes/logs/zod.log",
+      "bytes": 12863,
+      "sha256": "aad03da6524dc36eacb5543e0a002c29d413c447270ec37ab1547fe727bec078",
+      "original_bytes": 235001,
+      "original_sha256": "9d67820e55aa4e905380de470233307d617b62dd2eacf3e2b124140a86b8ed07",
+      "encoding": "gzip"
+    },
+    {
+      "path": "docs/urbit/evidence/2026-09-26/native-attempts/core05/logs/bus.log.gz",
+      "source": ".piers/fakes/logs/bus.log",
+      "bytes": 43083,
+      "sha256": "fb5493f33e509564c1150f4516a502e39f3f55a79742dd700556c239969d2d8e",
+      "original_bytes": 263557,
+      "original_sha256": "06956ebcadc8ae125e95e6a5ca1ef16b9fe6a562be48c918b6714b3f9d95b2d6",
+      "encoding": "gzip"
+    },
+    {
+      "path": "docs/urbit/evidence/2026-09-26/native-attempts/core05/logs/nec.log.gz",
+      "source": ".piers/fakes/logs/nec.log",
+      "bytes": 4834,
+      "sha256": "bab728285cb074f6f47afbe8f2d0e11828947558d78fc3a707184c335e56fc70",
+      "original_bytes": 122966,
+      "original_sha256": "7cdbdc089505386d93e1340b9f16473ee1149963feb81f06f7584240c4da310c",
+      "encoding": "gzip"
+    },
+    {
+      "path": "docs/urbit/evidence/2026-09-26/native-attempts/core05/logs/bud.log.gz",
+      "source": ".piers/fakes/logs/bud.log",
+      "bytes": 7479,
+      "sha256": "933430527db3adb849e0e94ced82db58a39e0b5d1228a2f5fb0adf268806cbf4",
+      "original_bytes": 234843,
+      "original_sha256": "270cdb7cca0eeac1a322d55c5189d375aa5607c8a279897e6deda7a82c1bab57",
+      "encoding": "gzip"
+    },
+    {
+      "path": "docs/urbit/evidence/2026-09-26/native-attempts/core05/logs/supervisor.log.gz",
+      "source": ".piers/fakes/logs/supervisor.log",
+      "bytes": 23605,
+      "sha256": "729554772871782be2a404df8e5e6b74f5ccb808b8aff9e98cdec7f733932e38",
+      "original_bytes": 423947,
+      "original_sha256": "69ae177edbb7e281a681c01a2e815fd0d60024480c086e5b5673d4d659dd25f4",
+      "encoding": "gzip"
+    },
+    {
+      "path": "docs/urbit/evidence/2026-09-26/native-attempts/core05/core-20260926T205140Z-transport.jsonl.gz",
+      "source": ".piers/fakes/logs/core-20260926T205140Z-transport.jsonl.gz",
+      "bytes": 1382249,
+      "sha256": "fe5c9991be17590301456ce3fd29ac7e90f1d2e79444af746923c472afd79686",
+      "original_bytes": 1382249,
+      "original_sha256": "fe5c9991be17590301456ce3fd29ac7e90f1d2e79444af746923c472afd79686",
+      "encoding": "identity"
+    },
+    {
+      "path": "docs/urbit/evidence/2026-09-26/native-attempts/core05/unclean-live.json.gz",
+      "source": ".piers/fakes/unclean-live.json",
+      "bytes": 142,
+      "sha256": "53b62eec5ec9475500e9c1cd2b09c6aec5621d484f382559504e8c87e673e79c",
+      "original_bytes": 152,
+      "original_sha256": "477f8c928194e53a14a4746cd6121c1723ecdfb7b0a8d1be914740ae11312e41",
+      "encoding": "gzip"
+    }
+  ]
+}

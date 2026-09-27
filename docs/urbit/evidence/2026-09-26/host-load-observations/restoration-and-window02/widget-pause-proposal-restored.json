@@ -1,0 +1,29 @@
+{
+  "protocol": "stead.authorized-widget-restoration/1",
+  "restored_at": "2026-09-26T21:33:20.094321+00:00",
+  "authorization": "User: Temporarily pause the widget and restore it afterward",
+  "exact_original_bytes_restored": true,
+  "original_sha256": "c08515d119a67bf70c9672c52f5b2a90ef28c369bb3f4a3c957f770dea9d965f",
+  "concurrent_changes_detected": false,
+  "effective_ipc_verification": "passed",
+  "full_desktop_configuration_published": false,
+  "verified_at": "2026-09-26T21:36:00.563747+00:00",
+  "widget": {
+    "id": "omarchy.agents",
+    "name": "Agents",
+    "kinds": [
+      "bar-widget"
+    ],
+    "enabled": true,
+    "active": false,
+    "canDisable": true,
+    "firstParty": true,
+    "clonedFrom": ""
+  },
+  "effective_layout_contains_widget": true,
+  "active_field_semantics": "Omarchy listPlugins active is true only for the selected bar provider, not bar widgets; enabled and effective layout establish widget restoration.",
+  "ipc_output_sha256": {
+    "plugins": "42dfa1effd650d0902a7fef055043cf0e173403857075d97bc032d13262bd421",
+    "config": "26bbb2ac92ab259cc74a77ec373f3122a87004511c4f99fea87361d15124e28b"
+  }
+}

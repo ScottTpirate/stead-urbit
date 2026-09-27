@@ -1,0 +1,14 @@
+python3 scripts/urbit/harness.py core-test
+{
+  "status": "pass",
+  "checks_passed": 413,
+  "checks_failed": [],
+  "error": null,
+  "qa_case_counts": {
+    "incomplete": 14,
+    "passed": 115
+  },
+  "qa_coverage_status": "incomplete",
+  "elapsed_seconds": 390.834,
+  "evidence_file": ".piers/fakes/logs/core-20260913T033528Z.json"
+}

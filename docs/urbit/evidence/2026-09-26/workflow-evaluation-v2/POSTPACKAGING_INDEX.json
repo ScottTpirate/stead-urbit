@@ -1,0 +1,34 @@
+{
+  "classification": "Later portable review and criterion mapping; separate from immutable original byte index",
+  "files": [
+    {
+      "bytes": 4602,
+      "path": "POSTPACKAGING_REVIEW.json",
+      "sha256": "f73faed3a27e69eca46e65048cacd5f5730781519873c6f6400d9613305c5d9a"
+    },
+    {
+      "bytes": 13837,
+      "path": "URB170_CRITERIA_REVIEW.json",
+      "sha256": "1ca4948a4d05009b0879749c7c097ab555a8d1584c6c155c12fe73236c2156b2"
+    },
+    {
+      "bytes": 4487,
+      "path": "README.md",
+      "sha256": "f004f8b0715c2b09e88c12a229e7e14956b8143f30d92c09c6e98429549793bb"
+    },
+    {
+      "bytes": 12740,
+      "path": "verify-portable.py",
+      "sha256": "acfa7229e6ce2ea8d30cc7b27dfa5cafc69acc2b393d6e19528fa534847dfb7f"
+    }
+  ],
+  "limits": [
+    "The immutable original archive/index retains its earlier stage labels.",
+    "This supplemental index records no new native or host test execution.",
+    "Other URB-170 setup/link/proposal criteria remain as explicitly classified by URB170_CRITERIA_REVIEW.json."
+  ],
+  "original_archive_unmodified": true,
+  "original_index_sha256": "a92e0b35fdb4dcbf25348999a107a07514c0efaf0ffed88497134f6a5b9d01d0",
+  "protocol": "stead.workflow-v2-postpackaging-records/1",
+  "recorded_at": "2026-09-26T19:36:50.315640+00:00"
+}

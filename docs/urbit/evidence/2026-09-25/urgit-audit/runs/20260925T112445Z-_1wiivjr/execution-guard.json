@@ -1,0 +1,96 @@
+{
+  "cleanup": [],
+  "elapsed_seconds": 1.404,
+  "events": [
+    {
+      "elapsed_seconds": 0.002,
+      "event": "preflight-sample",
+      "sample": {
+        "cpu_sensors": [
+          "thermal_zone3:TCPU",
+          "thermal_zone5:x86_pkg_temp"
+        ],
+        "finished": 745393.416772707,
+        "readings_c": {
+          "thermal_zone0:acpitz": 27.8,
+          "thermal_zone1:INT3400 Thermal": 20.0,
+          "thermal_zone2:SEN3": 43.05,
+          "thermal_zone3:TCPU": 51.0,
+          "thermal_zone4:TCPU_PCI": 48.0,
+          "thermal_zone5:x86_pkg_temp": 48.0,
+          "thermal_zone6:iwlwifi_1": 42.0
+        },
+        "started": 745393.414741
+      }
+    },
+    {
+      "elapsed_seconds": 0.002,
+      "event": "preflight-accepted",
+      "sample": {
+        "cpu_sensors": [
+          "thermal_zone3:TCPU",
+          "thermal_zone5:x86_pkg_temp"
+        ],
+        "finished": 745393.416772707,
+        "readings_c": {
+          "thermal_zone0:acpitz": 27.8,
+          "thermal_zone1:INT3400 Thermal": 20.0,
+          "thermal_zone2:SEN3": 43.05,
+          "thermal_zone3:TCPU": 51.0,
+          "thermal_zone4:TCPU_PCI": 48.0,
+          "thermal_zone5:x86_pkg_temp": 48.0,
+          "thermal_zone6:iwlwifi_1": 42.0
+        },
+        "started": 745393.414741
+      }
+    },
+    {
+      "elapsed_seconds": 1.403,
+      "event": "launch-sample",
+      "sample": {
+        "cpu_sensors": [
+          "thermal_zone3:TCPU",
+          "thermal_zone5:x86_pkg_temp"
+        ],
+        "finished": 745394.81790125,
+        "readings_c": {
+          "thermal_zone0:acpitz": 27.8,
+          "thermal_zone1:INT3400 Thermal": 20.0,
+          "thermal_zone2:SEN3": 43.05,
+          "thermal_zone3:TCPU": 81.0,
+          "thermal_zone4:TCPU_PCI": 81.0,
+          "thermal_zone5:x86_pkg_temp": 81.0,
+          "thermal_zone6:iwlwifi_1": 42.0
+        },
+        "started": 745394.816184216
+      }
+    },
+    {
+      "elapsed_seconds": 1.404,
+      "event": "final",
+      "reason": "GuardError: Start temperature exceeded",
+      "status": "failed"
+    }
+  ],
+  "exit_code": null,
+  "format": 1,
+  "guard_sha256": "da16e2e0fd32eb5b90706b546a7ea8332a65807fc8279f3bd765dcc18aaad9b5",
+  "label": "urgit",
+  "launched": false,
+  "policy": {
+    "cooperative_seconds": 10,
+    "cpu_period_us": 10000,
+    "cpu_quota_us": 5000,
+    "kill_seconds": 5,
+    "sample_seconds": 1,
+    "stale_seconds": 3,
+    "start_c": 75,
+    "stop_c": 90,
+    "terminate_seconds": 10
+  },
+  "reason": "GuardError: Start temperature exceeded",
+  "run_directory": "<REPO>/.runtime/execution-runs/urgit-2owea3yz",
+  "run_id": "b29371725f2ca43a6bd0f89212f0a4f0",
+  "scope": "stead-native-b29371725f2ca43a6bd0f89212f0a4f0.scope",
+  "status": "failed"
+}

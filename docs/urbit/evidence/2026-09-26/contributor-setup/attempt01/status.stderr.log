@@ -1,0 +1,2 @@
+FAIL: AF_UNIX path too long
+make: *** [Makefile:16: status] Error 1

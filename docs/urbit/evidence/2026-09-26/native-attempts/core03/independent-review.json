@@ -1,0 +1,260 @@
+{
+  "artifacts": {
+    ".piers/fakes/logs/bud.log": {
+      "original_bytes": 214341,
+      "original_sha256": "70e101bc430aa77114ee103f44c7c1c0ccff2dfce5dd4bfd7180514cbef62927",
+      "path": "docs/urbit/evidence/2026-09-26/native-attempts/core03/22-bud.log.gz",
+      "sha256": "8dd327f459b4d30c3bdece4704f20dbca60d1cd825198edb2c7a59583b359a07"
+    },
+    ".piers/fakes/logs/bus.log": {
+      "original_bytes": 196659,
+      "original_sha256": "cdbd75e3136077c8ebd4a7a75486ddc3bcf8e550c4fbe4214f2a74f18fce841b",
+      "path": "docs/urbit/evidence/2026-09-26/native-attempts/core03/20-bus.log.gz",
+      "sha256": "64a5129b13470271f0231b3cce8a9a1612b8d07537bff0f6dd4a460584dfc822"
+    },
+    ".piers/fakes/logs/core-20260926T190623Z-transport.jsonl.gz": {
+      "original_bytes": 2911,
+      "original_sha256": "98ec2494e148474765f79bc34121451beddf4fbad7d0f4c37b18369e848c5ce1",
+      "path": "docs/urbit/evidence/2026-09-26/native-attempts/core03/02-core-20260926T190623Z-transport.jsonl.gz",
+      "sha256": "98ec2494e148474765f79bc34121451beddf4fbad7d0f4c37b18369e848c5ce1"
+    },
+    ".piers/fakes/logs/core-20260926T190623Z.json": {
+      "original_bytes": 1427355,
+      "original_sha256": "fe2acff52a1f9fd7dd34e95dd6c4aa9cf12f2c73f475a31f1530d6a6348914ce",
+      "path": "docs/urbit/evidence/2026-09-26/native-attempts/core03/01-core-20260926T190623Z.json.gz",
+      "sha256": "12886c81833354241ea67f5c92d1ff60263231e2c140e0e8721151c3ae9d13a7"
+    },
+    ".piers/fakes/logs/nec.log": {
+      "original_bytes": 112326,
+      "original_sha256": "a7b4a8965b297df4cf2b10040de5992e8a8ed85076c5cd995bb2b70112b05352",
+      "path": "docs/urbit/evidence/2026-09-26/native-attempts/core03/21-nec.log.gz",
+      "sha256": "3ca09bbcf227e7ee5d5df81546445fb6e7c7b16b56061cddfb9fab7aa028ac94"
+    },
+    ".piers/fakes/logs/supervisor.log": {
+      "original_bytes": 387397,
+      "original_sha256": "eb82941dabf6a96a61612f627b71ba275b5de3319575f42ffcc989a172619ee1",
+      "path": "docs/urbit/evidence/2026-09-26/native-attempts/core03/23-supervisor.log.gz",
+      "sha256": "64bfbaf40bf51662b6acc78278f7ee9372eaf24fa6d99f262777b59743e0d39d"
+    },
+    ".piers/fakes/logs/zod.log": {
+      "original_bytes": 220827,
+      "original_sha256": "7676c298f7c0d06660ed12d2c9aac8d70c477f994e1e9b130fcdb5cd2fe010e8",
+      "path": "docs/urbit/evidence/2026-09-26/native-attempts/core03/19-zod.log.gz",
+      "sha256": "c13ba87957a49f50481c6d34362ae1d971e1813d96e0aa9517cb12cdf346b8fa"
+    },
+    ".piers/fakes/unclean-live.json": {
+      "original_bytes": 152,
+      "original_sha256": "b8e8d71180fb407075f097c61f945273ccef2ebb24a5c54a792bf34ef8fd6f76",
+      "path": "docs/urbit/evidence/2026-09-26/native-attempts/core03/24-unclean-live.json.gz",
+      "sha256": "55b52ae8499774acacd1d169873f38d24e4e52eef854dd0e6eef34adfdeb3c7f"
+    },
+    ".runtime/execution-runs/four-fakes-hl6y3bw7/.stead-disposable.json": {
+      "original_bytes": 102,
+      "original_sha256": "1cda7edeed9504e231fa722c64eca8fd4b28e011c0984995a73e597d29020606",
+      "path": "docs/urbit/evidence/2026-09-26/native-attempts/core03/12-.stead-disposable.json.gz",
+      "sha256": "1216ec99196477da4f9cc84bdc6525f16eb8b4f5688843033922903d5418ac13"
+    },
+    ".runtime/execution-runs/four-fakes-hl6y3bw7/control/STOP": {
+      "original_bytes": 50,
+      "original_sha256": "7c7ab50d70a93b2892566d93d36d50548505ac58e767c0508ed5bccb2a23bcb2",
+      "path": "docs/urbit/evidence/2026-09-26/native-attempts/core03/13-STOP.gz",
+      "sha256": "0bae0f972e102b09d6c7a39569da1346de29f9aa0a7603f4625e5180becde7cd"
+    },
+    ".runtime/execution-runs/four-fakes-hl6y3bw7/control/lease.json": {
+      "original_bytes": 1098,
+      "original_sha256": "e695a2838edcb611a129828b68aa231697f087a431989a48aa4678c902a78851",
+      "path": "docs/urbit/evidence/2026-09-26/native-attempts/core03/14-lease.json.gz",
+      "sha256": "53522a021f5b0a300a02d31ccf13a9ff73ea30c3d9aa24f07d8dffd5b70f436c"
+    },
+    ".runtime/execution-runs/four-fakes-hl6y3bw7/control/scope.json": {
+      "original_bytes": 232,
+      "original_sha256": "a30e0ac5474b31035d77a23e2fe91c4ae32cbaaa1bf7e03374d6b324c71cb241",
+      "path": "docs/urbit/evidence/2026-09-26/native-attempts/core03/15-scope.json.gz",
+      "sha256": "e9d88e03f6b0e2ecbdb351a6d0215a315815d7a55274e52350b0fb696a3503a8"
+    },
+    ".runtime/execution-runs/four-fakes-hl6y3bw7/control/source-context.json": {
+      "original_bytes": 18248,
+      "original_sha256": "5c352e97a94345d4651077d07bbe1e14466551819b6718e0f6ceca10cccaaf8d",
+      "path": "docs/urbit/evidence/2026-09-26/native-attempts/core03/16-source-context.json.gz",
+      "sha256": "baf9b388ba264c1df245f8577aa90d197d4ed29ccb460860a1bfe1837c3faaf1"
+    },
+    ".runtime/execution-runs/four-fakes-hl6y3bw7/events.jsonl": {
+      "original_bytes": 47992,
+      "original_sha256": "6e0ebc048a1860a08306eb3b3579cc72b883f1c2a1baf40fa8ae8645f510dd2c",
+      "path": "docs/urbit/evidence/2026-09-26/native-attempts/core03/17-events.jsonl.gz",
+      "sha256": "92b7ac9edadbe70d82ca998587718867e3495a1c7452eff60b23a2374da4483c"
+    },
+    ".runtime/execution-runs/four-fakes-hl6y3bw7/report.json": {
+      "original_bytes": 50904,
+      "original_sha256": "11d6c4791b886d8b0b2967dc01811fc45eb62b9e72557f3e8220aa610cb9e526",
+      "path": "docs/urbit/evidence/2026-09-26/native-attempts/core03/18-report.json.gz",
+      "sha256": "712476cfaa0e5bb38dafdd4b0c82ab62403f6e06f479f2653d4219ad8e52bb2a"
+    },
+    ".runtime/phase01-20260925/core03.json": {
+      "original_bytes": 400,
+      "original_sha256": "f486d225913e47450131d587615bc5d5bdde50cd21b84508be684895c9d7add1",
+      "path": "docs/urbit/evidence/2026-09-26/native-attempts/core03/08-core03.json.gz",
+      "sha256": "30efc1e57e10c51d583fb6d0bea66ac06694f535c0ea6b399d0c3d13197a135a"
+    },
+    ".runtime/phase01-20260925/core03.log": {
+      "original_bytes": 630,
+      "original_sha256": "e5cbe756bc18da65c830f944ea33f5b9c009daea982bc51a82616a4a2a6f01a9",
+      "path": "docs/urbit/evidence/2026-09-26/native-attempts/core03/09-core03.log.gz",
+      "sha256": "794f03ce1486c778cb28efaf44cfd71f085d693001d249c4da08a17df9399df4"
+    },
+    ".runtime/phase01-20260925/ready35.json": {
+      "original_bytes": 400,
+      "original_sha256": "34539826851f5c25df9c906e0944178d86297ba0dd6827b710a69a4a1668816b",
+      "path": "docs/urbit/evidence/2026-09-26/native-attempts/core03/06-ready35.json.gz",
+      "sha256": "7fad43058c3219afa72864e830787650335f43e72c9c605fb088ee7331262893"
+    },
+    ".runtime/phase01-20260925/ready35.log": {
+      "original_bytes": 242,
+      "original_sha256": "6ade3d62b67dd2066207260ae96b6ef88847dbb824720cc7be7b132fee5510e9",
+      "path": "docs/urbit/evidence/2026-09-26/native-attempts/core03/07-ready35.log.gz",
+      "sha256": "01cedc45b27b73b7c8d5c8d2e0aa7bae317933250f77076dc26ab76b2428f17e"
+    },
+    ".runtime/phase01-20260925/start35.json": {
+      "original_bytes": 395,
+      "original_sha256": "76c1d726379c6b9fd6d23fca2923cc56350faeadb6fad83de7d57db7eab48357",
+      "path": "docs/urbit/evidence/2026-09-26/native-attempts/core03/04-start35.json.gz",
+      "sha256": "8a63940027b0d8baa61c8f173f28c0d49eed2e5d8848aa6694adbce5404ce063"
+    },
+    ".runtime/phase01-20260925/start35.log": {
+      "original_bytes": 453,
+      "original_sha256": "d4a6fa05a08fac8d605e73a0bc96fa34722cc06d8c1b855156b9b67b6fcd9348",
+      "path": "docs/urbit/evidence/2026-09-26/native-attempts/core03/05-start35.log.gz",
+      "sha256": "77171f9d979b34cb49941ba58561d4a012ce4c0cb13c33cbb738e7a1711a6388"
+    },
+    ".runtime/phase01-20260925/stop35.json": {
+      "original_bytes": 394,
+      "original_sha256": "4ed23ffc892ff5973f596e3fb6cc033572ef5e636e69e744019eda5ac36ae55b",
+      "path": "docs/urbit/evidence/2026-09-26/native-attempts/core03/10-stop35.json.gz",
+      "sha256": "935e3021fad627ba37554e14f6711ee9c35b973aa8c9ff7126c038c4eb4f409c"
+    },
+    ".runtime/phase01-20260925/stop35.log": {
+      "original_bytes": 78,
+      "original_sha256": "7e0046a61997e91b4c00d40b33b385148d315de81c5f28722592072cb3fde000",
+      "path": "docs/urbit/evidence/2026-09-26/native-attempts/core03/11-stop35.log.gz",
+      "sha256": "12c671e095df8b045e620680c1b93956a87a91531f555b53cad5fd1a748b4a19"
+    },
+    ".runtime/phase01-20260926/core03-lifecycle.json": {
+      "original_bytes": 684,
+      "original_sha256": "c9a91d19d22a6c28d8457bb3c5fd78cfca7a02190fda25d785ac6a28fcefeccb",
+      "path": "docs/urbit/evidence/2026-09-26/native-attempts/core03/03-core03-lifecycle.json.gz",
+      "sha256": "825e62796ab1ef8737409583e6847a48c22e3842bb1d76d513b1cf90500beca3"
+    }
+  },
+  "guard": {
+    "cleanup_errors": [],
+    "cpu_affinity": [
+      19
+    ],
+    "cpu_max": "5000 10000",
+    "elapsed_seconds": 108.53,
+    "exit_code": 1,
+    "guard_stop_elapsed_seconds": 104.519,
+    "lease_state": "stopped",
+    "observed_peak_cpu_c": 91.0,
+    "policy": {
+      "cooperative_seconds": 10,
+      "cpu_period_us": 10000,
+      "cpu_quota_us": 5000,
+      "kill_seconds": 5,
+      "sample_seconds": 1,
+      "stale_seconds": 3,
+      "start_c": 75,
+      "stop_c": 90,
+      "terminate_seconds": 10
+    },
+    "reason": "GuardError: Thermal ceiling reached",
+    "scope_status": "LoadState=not-found\nActiveState=inactive\nSubState=dead",
+    "status": "failed"
+  },
+  "host_tests_launched": false,
+  "interpretation": [
+    "Thermal guard refused continued execution at measured CPU peak 91C using unchanged 75C start / 90C stop thresholds. This is a safety outcome, not qualification.",
+    "189 direct installation/source/compile/initialization checks and two initial snapshot assertions passed. The sole failed direct check is full-corpus completion; zero business cases completed.",
+    "The first QA case retains raw failed status and EOF-before-terminal-response error; 147 cases retain not_run. No returned business outcome or business predicate failed before interruption.",
+    "Guard-stop, terminal STOP latch, absent response frame and supervisor shutdown evidence support classifying this as an infrastructure interruption. The connection record has no independent per-exchange wall-clock timestamps, so it does not establish finer causal timing.",
+    "All four ships have recorded exit 0 and forced false after STOP; the guard reports no cleanup errors and the scope is inactive/not-found. The fixture still retains an unclean-run marker and requires the reviewed stopped-seed reset before reuse.",
+    "No Phase 1 gate obligation is accepted by this assessment. Restart, complete ordered journey, delivery, capacity, migration, concurrency and export lanes remain unexecuted in this attempt.",
+    "Ship/supervisor logs are exact cumulative retained files, not exclusive per-run logs. The assessment does not attribute prior diagnostics to this attempt or infer which process caused the thermal rise."
+  ],
+  "native_execution_performed": false,
+  "observed_at": "2026-09-26T19:12:55.869211+00:00",
+  "protocol": "stead.independent-native-interruption-review/1",
+  "qualifies_phase": false,
+  "raw_result": {
+    "direct_failed": [
+      {
+        "name": "all-qa-native-cases-executed-without-failure",
+        "passed": false
+      }
+    ],
+    "direct_passed": 189,
+    "elapsed_seconds": 99.591,
+    "error": "Execution guard interrupted result: Fixture stop is latched",
+    "execution_guard": null,
+    "first_case": {
+      "checks": [
+        {
+          "case": "empty-project-known-unknown",
+          "name": "snapshot-business-hash-present",
+          "status": "passed"
+        },
+        {
+          "case": "empty-project-known-unknown",
+          "name": "snapshot-required-counts-present",
+          "status": "passed"
+        }
+      ],
+      "error": "ValueError: EOF before complete terminal conn response",
+      "name": "empty-project-known-unknown",
+      "status": "failed"
+    },
+    "later_qualification_lanes_present": {
+      "delivery": false,
+      "execution_status": false,
+      "independent_closeout": false,
+      "qualification": false
+    },
+    "qa_case_counts": {
+      "failed": 1,
+      "not_run": 147
+    },
+    "received_terminal_frame_bytes": 0,
+    "status": "fail",
+    "terminal_failure_stage": "response-header",
+    "transport_records": 3
+  },
+  "retained_artifacts_verified": 24,
+  "retention_index": {
+    "path": "docs/urbit/evidence/2026-09-26/native-attempts/core03/index.json",
+    "sha256": "8a87061a11b6fcf6c2b7acf7a76d281ac1d8dea4056701a6f6d1ce0b657edbc3"
+  },
+  "reviewer": "/root/core_acceptance_review",
+  "run_id": "08c8770ba57ad7a65f45086571e3d293",
+  "source_commit": "0d877cff4319de8d437f0da58d4518535f758c36",
+  "source_verification": {
+    "committed_files_and_scripts_checked_against_git_blobs": 127,
+    "current_head_equals_before_after_and_guard_context": true,
+    "four_installed_and_clay_verified_maps_match_current_source": true,
+    "guard_context_committed_files": 127,
+    "guard_context_script_files": 33,
+    "harness_sha256": "3a6d867ad43be89f0d403a31728118b6a9ee7be8acad85000573f017f4cd9a6c",
+    "installed_hoon_files_per_ship": 22,
+    "loaded_runner_hashes_match_current": true,
+    "mounted_paths_clean": true,
+    "native_tree_sha256": "7b0257ba03b0de93de319d55c5523fa481c302772471645987818da543ac4621",
+    "runtime_binary_and_kernel_rehashed_by_this_audit": false,
+    "ships": [
+      "zod",
+      "bus",
+      "nec",
+      "bud"
+    ]
+  },
+  "status": "infrastructure-interruption-reviewed-no-phase-acceptance",
+  "validation_scope": "Bounded read-only raw artifact, current source, transcript and shutdown audit under CPUQuota50%, CPUQuotaPeriod10ms, CPU19. This audit launches no application runtime or tests."
+}

@@ -1,0 +1,44 @@
+{
+  "protocol": "stead.source-host-retention/1",
+  "source_commit": "dd0e8c0ce8d1d00f15de6b07e2e26d368c5c3774",
+  "scope": "Exact independently reviewed missing-binding native-test correction and full476 host suite; no native execution or phase acceptance is supplied by this bundle.",
+  "host_classification": "host-static-mocked-checks",
+  "native_execution": false,
+  "qualifies_phase": false,
+  "artifacts": [
+    {
+      "path": "docs/urbit/evidence/2026-09-26/missing-binding-fix/source-review.json",
+      "source": ".runtime/phase01-20260926/capacity01-fix-source-review.json",
+      "sha256": "0d9373bf03f39fbf994dd3ed9a0c188cad4e399ba17ebff17af41934f931ab8b",
+      "bytes": 7337
+    },
+    {
+      "path": "docs/urbit/evidence/2026-09-26/missing-binding-fix/host.json",
+      "source": ".runtime/phase01-20260926/host-dd0e8c0/result.json",
+      "sha256": "771522343edb63791ed4a479d1461651d25ec99a7bc481a34aa358d2b2270f02",
+      "bytes": 37496
+    },
+    {
+      "path": "docs/urbit/evidence/2026-09-26/missing-binding-fix/host.log",
+      "source": ".runtime/phase01-20260926/host-dd0e8c0/host.log",
+      "sha256": "45b9ced9b9d66b9f90e551ce18563721a1a292617c831817bbecb2db66136683",
+      "bytes": 3719
+    },
+    {
+      "path": "docs/urbit/evidence/2026-09-26/missing-binding-fix/source.patch",
+      "source_command": [
+        "git",
+        "diff",
+        "--binary",
+        "--full-index",
+        "3f0f3778997798f2ed208e206b46882a87340eb1",
+        "dd0e8c0ce8d1d00f15de6b07e2e26d368c5c3774",
+        "--",
+        "scripts/urbit/qualification_cases.py",
+        "tests/urbit/test_qualification_cases.py"
+      ],
+      "sha256": "ee46af377706c897993a4d5d5b21c6fee14f937e5537357fef0925eaafe27ec8",
+      "bytes": 12303
+    }
+  ]
+}

@@ -1,0 +1,178 @@
+diff --git a/scripts/urbit/qualification_cases.py b/scripts/urbit/qualification_cases.py
+index 75394ae5875d9b47ad0901c580025019cb902073..bebd112b9568ccc24a7139907cfb8a42d2d525db 100644
+--- a/scripts/urbit/qualification_cases.py
++++ b/scripts/urbit/qualification_cases.py
+@@ -465,10 +465,13 @@ class Driver:
+             last = self.apply_batch(batch, predecessor=predecessor)
+         return last
+ 
+-    def direct(self, entry):
++    def command(self, entry):
+         cmd = entry.command
+         route = f"/v2/result/~{entry.sender}/{BINDINGS[entry.sender]}/{cmd['project_id']}/{cmd['request_id']}/{entry.digest}"
+-        return self.invoke(entry.sender, 'command', route, entry.raw)['json']
++        return self.invoke(entry.sender, 'command', route, entry.raw)
++
++    def direct(self, entry):
++        return self.command(entry)['json']
+ 
+     def recover(self, entry, sender=None):
+         cmd = entry.command
+@@ -487,12 +490,38 @@ class Driver:
+         before = self.snapshot()
+         self.control('binding-drop', sender='bus')
+         try:
+-            self.denied_without_change(entry, 'bus', 'missing-current-binding-before-ordinary-capacity')
++            missing = self.snapshot()
++            self.check('fixture-removed-current-contributor-binding',
++                       missing['bindings_sha256'] != before['bindings_sha256'])
++            probe = Entry('bus', entry.command)
++            # No authenticated result subscription exists after this binding
++            # is removed. Its exact watch NACK cannot stand in for a mutation.
++            result = self.command(probe)
++            native = result.get('native', {})
++            stderr = native.get('stderr') if isinstance(native, dict) else None
++            lines = [line.strip() for line in stderr.splitlines() if line.strip()] if isinstance(stderr, str) else []
++            self.check('missing-binding-result-watch-specifically-denied',
++                result['raw'] is None and result['json'] is None
++                and isinstance(native, dict) and native.get('stdout') == '[32 %avow 1]'
++                and all(hint in lines for hint in ('stead-watch-denied', 'watch-ack', 'watch-ack-fail'))
++                and lines[-1:] == ['eval: bail: %thread-fail'] and 'timeout' not in lines)
++            self.unchanged(missing, self.snapshot(), 'missing-binding-watch-preserves-state')
++            # Deliver a real Gall poke without first registering a result watch.
++            # This ACK is transport completion only, never business acceptance.
++            ack = self.invoke('bus', 'poke', raw=probe.raw)
++            self.check('missing-binding-poke-transport-ack-only', ack['json'] == {})
++            self.unchanged(missing, self.snapshot(), 'missing-binding-real-poke-preserves-state')
++            # The existing owner-only fixture also exposes the actual native
++            # final transition result for this exact sender and command.
++            denial, after = self.apply_batch([probe], accepted=False, expected_error='denied_or_not_found')
++            self.check('missing-current-binding-before-ordinary-capacity', denial == {
++                'protocol': 'stead.result/2', 'status': 'rejected', 'error': 'denied_or_not_found'})
++            self.unchanged(missing, after, 'missing-binding-final-transition-preserves-state')
+         finally:
+             # Best effort only: a failed transport remains a failed run. No
+             # counters/receipts are fabricated to restore a passing result.
+             self.control('binding-restore', sender='bus')
+-        self.unchanged(before, self.snapshot(), 'exact-binding-restored-after-denied-capacity-probe')
++            self.unchanged(before, self.snapshot(), 'exact-binding-restored-after-denied-capacity-probe')
+ 
+     def reset_current(self):
+         self.control('legacy-init', value=self.fixture_raw.decode())
+diff --git a/tests/urbit/test_qualification_cases.py b/tests/urbit/test_qualification_cases.py
+index f83b9b859a3e5209f091075afdcb21e17c5b1fca..da6c85cf70c6ef9235a0055c148241215761d67d 100644
+--- a/tests/urbit/test_qualification_cases.py
++++ b/tests/urbit/test_qualification_cases.py
+@@ -408,19 +408,100 @@ class QualificationAdapterTests(unittest.TestCase):
+         self.assertEqual(sent.raw, self.entry.raw)
+         self.assertEqual(sent.digest, self.entry.digest)
+ 
+-    def test_missing_binding_probe_restores_only_fixture_binding_and_propagates_failure(self):
+-        events = []
+-        def control(operation, **kwargs):
+-            events.append((operation, kwargs['sender']))
+-        def refused(*args):
+-            events.append(('denial-assertion', args[1]))
+-            raise AssertionError('scripted wrong capacity error')
+-        with mock.patch.object(self.driver, 'snapshot', return_value=snapshot()), \
+-             mock.patch.object(self.driver, 'control', side_effect=control), \
+-             mock.patch.object(self.driver, 'denied_without_change', side_effect=refused), \
+-             self.assertRaisesRegex(AssertionError, 'scripted wrong capacity error'):
++    def watch_rejection(self):
++        # Host fixture matching the actual capacity01 missing-binding terminal.
++        return {'raw': None, 'json': None, 'native': {'stdout': '[32 %avow 1]',
++            'stderr': 'stead-watch-denied\nwatch-ack\nwatch-ack-fail\neval: bail: %thread-fail'}}
++
++    def test_missing_binding_requires_real_poke_and_explicit_final_gate_denial(self):
++        before = snapshot()
++        missing = snapshot(bindings_sha256='1' * 64, state_jam_sha256='1' * 64)
++        denial = {'protocol': 'stead.result/2', 'status': 'rejected', 'error': 'denied_or_not_found'}
++        with mock.patch.object(self.driver, 'snapshot', side_effect=[before, missing, missing, missing, before]), \
++             mock.patch.object(self.driver, 'control') as control, \
++             mock.patch.object(self.driver, 'command', return_value=self.watch_rejection()) as command, \
++             mock.patch.object(self.driver, 'invoke', return_value=terminal({})) as poke, \
++             mock.patch.object(self.driver, 'apply_batch', return_value=(denial, missing)) as batch:
+             self.driver.missing_binding_at_capacity(self.entry)
+-        self.assertEqual(events, [('binding-drop', 'bus'), ('denial-assertion', 'bus'), ('binding-restore', 'bus')])
++        probe = command.call_args.args[0]
++        self.assertEqual((probe.sender, probe.raw, probe.digest), ('bus', self.entry.raw, self.entry.digest))
++        poke.assert_called_once_with('bus', 'poke', raw=self.entry.raw)
++        batch.assert_called_once_with([probe], accepted=False, expected_error='denied_or_not_found')
++        self.assertEqual(control.call_args_list, [mock.call('binding-drop', sender='bus'),
++                                                 mock.call('binding-restore', sender='bus')])
++
++    def test_missing_binding_watch_timeout_or_unrelated_failure_cannot_qualify(self):
++        missing = snapshot(bindings_sha256='1' * 64)
++        good = self.watch_rejection()
++        variants = [terminal({}), terminal({'status': 'rejected'}), {'raw': None, 'json': None, 'native': {}},
++                    {**good, 'raw': 'unexpected body'}]
++        for hint in ('stead-watch-denied', 'watch-ack', 'watch-ack-fail', 'eval: bail: %thread-fail'):
++            variants.append({**good, 'native': {**good['native'],
++                'stderr': '\n'.join(line for line in good['native']['stderr'].splitlines() if line != hint)}})
++        variants.append({**good, 'native': {**good['native'],
++            'stderr': 'timeout\n' + good['native']['stderr']}})
++        for response in variants:
++            with self.subTest(response=response), \
++                 mock.patch.object(self.driver, 'snapshot', side_effect=[snapshot(), missing, snapshot()]), \
++                 mock.patch.object(self.driver, 'control') as control, \
++                 mock.patch.object(self.driver, 'command', return_value=response), \
++                 mock.patch.object(self.driver, 'invoke') as poke, \
++                 mock.patch.object(self.driver, 'apply_batch') as batch, \
++                 self.assertRaisesRegex(AssertionError, 'missing-binding-result-watch-specifically-denied'):
++                self.driver.missing_binding_at_capacity(self.entry)
++            poke.assert_not_called()
++            batch.assert_not_called()
++            self.assertEqual(control.call_args_list[-1], mock.call('binding-restore', sender='bus'))
++
++    def test_missing_binding_poke_business_body_or_mutation_cannot_qualify(self):
++        missing = snapshot(bindings_sha256='1' * 64)
++        for ack, after in ((terminal({'status': 'accepted'}), missing),
++                           (terminal({}), {**missing, 'receipts': '1'})):
++            snapshots = [snapshot(), missing, missing] + ([after] if ack['json'] == {} else []) + [snapshot()]
++            with self.subTest(ack=ack, after=after), \
++                 mock.patch.object(self.driver, 'snapshot', side_effect=snapshots), \
++                 mock.patch.object(self.driver, 'control') as control, \
++                 mock.patch.object(self.driver, 'command', return_value=self.watch_rejection()), \
++                 mock.patch.object(self.driver, 'invoke', return_value=ack), \
++                 mock.patch.object(self.driver, 'apply_batch') as batch, self.assertRaises(AssertionError):
++                self.driver.missing_binding_at_capacity(self.entry)
++            batch.assert_not_called()
++            self.assertEqual(control.call_args_list[-1], mock.call('binding-restore', sender='bus'))
++
++    def test_missing_binding_final_gate_or_transport_failure_restores_binding(self):
++        missing = snapshot(bindings_sha256='1' * 64)
++        denial = {'protocol': 'stead.result/2', 'status': 'rejected', 'error': 'denied_or_not_found'}
++        for failure in (RuntimeError('transport failed'),
++                        ({**denial, 'error': 'capacity_exceeded'}, missing),
++                        (denial, {**missing, 'journal_events': '1'})):
++            with self.subTest(failure=failure), \
++                 mock.patch.object(self.driver, 'snapshot', side_effect=[snapshot(), missing, missing, missing, snapshot()]), \
++                 mock.patch.object(self.driver, 'control') as control, \
++                 mock.patch.object(self.driver, 'command', return_value=self.watch_rejection()), \
++                 mock.patch.object(self.driver, 'invoke', return_value=terminal({})), \
++                 mock.patch.object(self.driver, 'apply_batch') as batch, self.assertRaises((AssertionError, RuntimeError)):
++                if isinstance(failure, Exception):
++                    batch.side_effect = failure
++                else:
++                    batch.return_value = failure
++                self.driver.missing_binding_at_capacity(self.entry)
++            self.assertEqual(control.call_args_list[-1], mock.call('binding-restore', sender='bus'))
++
++    def test_missing_binding_not_removed_or_not_restored_cannot_qualify(self):
++        before = snapshot()
++        missing = snapshot(bindings_sha256='1' * 64)
++        denial = {'protocol': 'stead.result/2', 'status': 'rejected', 'error': 'denied_or_not_found'}
++        for snapshots, failure in (([before, before, before], 'fixture-removed-current-contributor-binding'),
++                                   ([before, missing, missing, missing, missing], 'exact-binding-restored')):
++            with self.subTest(failure=failure), \
++                 mock.patch.object(self.driver, 'snapshot', side_effect=snapshots), \
++                 mock.patch.object(self.driver, 'control') as control, \
++                 mock.patch.object(self.driver, 'command', return_value=self.watch_rejection()), \
++                 mock.patch.object(self.driver, 'invoke', return_value=terminal({})), \
++                 mock.patch.object(self.driver, 'apply_batch', return_value=(denial, missing)), \
++                 self.assertRaisesRegex(AssertionError, failure):
++                self.driver.missing_binding_at_capacity(self.entry)
++            self.assertEqual(control.call_args_list[-1], mock.call('binding-restore', sender='bus'))
+ 
+     def test_receipt_must_match_version_identity_scope_and_closed_fields(self):
+         good = scripted_receipt(self.entry)

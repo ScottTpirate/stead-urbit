@@ -1,0 +1,135 @@
+{
+  "actual_lifecycle_counts": {
+    "baseline": {
+      "private_subjects": 5,
+      "published_public_attempts": 6,
+      "reserved_public_attempts": 7,
+      "wrapper_starts": 49
+    },
+    "local_skill_assisted": {
+      "private_subjects": 5,
+      "published_public_attempts": 7,
+      "reserved_public_attempts": 7,
+      "wrapper_starts": 57
+    }
+  },
+  "artifact_semantic_review_sha256": "400d2cb723aa287711ba9eca1e594903022c134db2509343423dacc28f5bc1e1",
+  "audited_lifecycle_trees": [
+    {
+      "files": 28,
+      "path": ".runtime/workflow-v2-participants/baseline/input/"
+    },
+    {
+      "files": 12,
+      "path": ".runtime/workflow-v2-participants/baseline/candidate/"
+    },
+    {
+      "files": 98,
+      "path": ".runtime/workflow-v2-participants/baseline/calls/"
+    },
+    {
+      "files": 14,
+      "path": ".runtime/workflow-v2-participants/baseline/timing/"
+    },
+    {
+      "files": 176,
+      "path": ".runtime/workflow-v2-participants/baseline/feedback-attempts/"
+    },
+    {
+      "files": 66,
+      "path": ".runtime/workflow-v2-participants/private-scores/baseline/"
+    },
+    {
+      "files": 12,
+      "path": ".runtime/workflow-evaluation-v2/baseline/"
+    },
+    {
+      "files": 33,
+      "path": ".runtime/workflow-v2-participants/local_skill_assisted/input/"
+    },
+    {
+      "files": 12,
+      "path": ".runtime/workflow-v2-participants/local_skill_assisted/candidate/"
+    },
+    {
+      "files": 114,
+      "path": ".runtime/workflow-v2-participants/local_skill_assisted/calls/"
+    },
+    {
+      "files": 16,
+      "path": ".runtime/workflow-v2-participants/local_skill_assisted/timing/"
+    },
+    {
+      "files": 182,
+      "path": ".runtime/workflow-v2-participants/local_skill_assisted/feedback-attempts/"
+    },
+    {
+      "files": 66,
+      "path": ".runtime/workflow-v2-participants/private-scores/local_skill_assisted/"
+    },
+    {
+      "files": 12,
+      "path": ".runtime/workflow-evaluation-v2/local_skill_assisted/"
+    },
+    {
+      "files": 30,
+      "path": ".runtime/workflow-evaluation-v2/feedback/"
+    },
+    {
+      "files": 2,
+      "path": ".runtime/workflow-v2-participants/parent-deliveries/"
+    },
+    {
+      "files": 3,
+      "path": ".runtime/workflow-v2-participants/filtered-traces-safe/"
+    },
+    {
+      "files": 4,
+      "path": ".runtime/workflow-v2-participants/support-versions/"
+    },
+    {
+      "files": 18,
+      "path": ".runtime/phase01-20260926/baseline-T06-1-infrastructure/"
+    },
+    {
+      "files": 54,
+      "path": "docs/urbit/evidence/2026-09-26/native-attempts/prequal12/"
+    }
+  ],
+  "checks": {
+    "all_exposed_report_bytes_match": true,
+    "all_members_rehashed": true,
+    "all_original_bytes_unchanged": true,
+    "archive_members": 1258,
+    "exposed_original_reports": 82,
+    "portable_outputs": 86,
+    "resolved_result_references": 468,
+    "uncompressed_bytes": 32451619
+  },
+  "classification": "Separate read-only archive member, original-byte, reference and lifecycle-inventory audit",
+  "hidden_reasoning_or_raw_rollouts_packaged": false,
+  "index_sha256": "a92e0b35fdb4dcbf25348999a107a07514c0efaf0ffed88497134f6a5b9d01d0",
+  "limits": [
+    "Original prepackaging pending-review labels are preserved; this is a later, separately attributed review.",
+    "Observed complete 5/6 tie is a completed local comparison, not a universal participant pass or efficacy claim.",
+    "All 15 encrypted deliveries match child descriptors; 12 earlier plaintexts remain unavailable and three are attributed integrator observations.",
+    "Complete context isolation or initial plaintext equality is not established; actual exposed-tool and path-typo limits remain explicit.",
+    "Full URB-170 closure also requires the separately mapped local-skill, upstream, editor, LF/frontmatter, sandbox and contributor-setup evidence."
+  ],
+  "native_or_test_suites_executed": false,
+  "protocol": "stead.workflow-v2-portable-final-review/1",
+  "qualifies_phase": false,
+  "recorded_at": "2026-09-26T19:32:04.596352+00:00",
+  "resource_scope": {
+    "affinity": [
+      19
+    ],
+    "control_group": "/user.slice/user-1000.slice/user@1000.service/app.slice/run-p1031134-i17803747.scope",
+    "cpu_max": "5000 10000"
+  },
+  "result_sha256": "04f208f6bd0bb20d39c9700b61a4843af7c4d87aba3956d00482997403bf18e4",
+  "reviewer": "/root/independent_review",
+  "source_commit": "0d877cff4319de8d437f0da58d4518535f758c36",
+  "status": "reviewed-complete-with-recorded-candidate-failures-and-provenance-limits",
+  "verifier_sha256": "acfa7229e6ce2ea8d30cc7b27dfa5cafc69acc2b393d6e19528fa534847dfb7f"
+}

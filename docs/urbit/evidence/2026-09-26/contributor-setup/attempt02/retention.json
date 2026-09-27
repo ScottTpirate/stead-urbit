@@ -1,0 +1,96 @@
+{
+  "protocol": "stead.exact-retained-files/1",
+  "status": "passed-clean-setup-no-native-execution",
+  "files": [
+    {
+      "file": "checkout.stderr.log",
+      "source": ".runtime/phase01-20260926/contributor-clean-setup-v2/checkout.stderr.log",
+      "sha256": "444c9fb40524b2e347d14f439a463caede99c7ad766c74a516401712d2c9a002",
+      "bytes": 80
+    },
+    {
+      "file": "checkout.stdout.log",
+      "source": ".runtime/phase01-20260926/contributor-clean-setup-v2/checkout.stdout.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "file": "clone.stderr.log",
+      "source": ".runtime/phase01-20260926/contributor-clean-setup-v2/clone.stderr.log",
+      "sha256": "54aa0d55a40d78f3860a489bd3624b2c1a6315d1b0c823f4a101441ad5e1e434",
+      "bytes": 107
+    },
+    {
+      "file": "clone.stdout.log",
+      "source": ".runtime/phase01-20260926/contributor-clean-setup-v2/clone.stdout.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "file": "doctor.stderr.log",
+      "source": ".runtime/phase01-20260926/contributor-clean-setup-v2/doctor.stderr.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "file": "doctor.stdout.log",
+      "source": ".runtime/phase01-20260926/contributor-clean-setup-v2/doctor.stdout.log",
+      "sha256": "0d97944d8f7ee194300c78829b7ece29f8a2937ac5e4673216002d813ea14106",
+      "bytes": 247
+    },
+    {
+      "file": "help.stderr.log",
+      "source": ".runtime/phase01-20260926/contributor-clean-setup-v2/help.stderr.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "file": "help.stdout.log",
+      "source": ".runtime/phase01-20260926/contributor-clean-setup-v2/help.stdout.log",
+      "sha256": "63d67e51985c54bd410c57ede612000777f4d3fbba43f5eb34ea6052cd486cb3",
+      "bytes": 1265
+    },
+    {
+      "file": "result.json",
+      "source": ".runtime/phase01-20260926/contributor-clean-setup-v2/result.json",
+      "sha256": "062ffa49bd874a75e36372055d5de693a9552625d418cdfc64215317f8deac50",
+      "bytes": 6469
+    },
+    {
+      "file": "setup.stderr.log",
+      "source": ".runtime/phase01-20260926/contributor-clean-setup-v2/setup.stderr.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "file": "setup.stdout.log",
+      "source": ".runtime/phase01-20260926/contributor-clean-setup-v2/setup.stdout.log",
+      "sha256": "73a420f1e7e24276553fd29d0a78abd3764e69d8d4f1ae71383b24ee98ba8b80",
+      "bytes": 490
+    },
+    {
+      "file": "status.stderr.log",
+      "source": ".runtime/phase01-20260926/contributor-clean-setup-v2/status.stderr.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "file": "status.stdout.log",
+      "source": ".runtime/phase01-20260926/contributor-clean-setup-v2/status.stdout.log",
+      "sha256": "5e65e0130def0002c00c134159bda19f2995e4e0083707d1e7ebbc5fa6aeefeb",
+      "bytes": 98
+    },
+    {
+      "file": "check_clean_setup.py",
+      "source": ".runtime/phase01-20260926/check_clean_setup.py",
+      "sha256": "d20b88a33189b1fc50bca966185d745d405ca24c93f50818fc7cdb83a88d0946",
+      "bytes": 5307
+    },
+    {
+      "file": "check_clean_setup_v2.py",
+      "source": ".runtime/phase01-20260926/check_clean_setup_v2.py",
+      "sha256": "7820fe46fc53108d8cf7b6386ba6a50a8cc0a2a0cdfd95889cf3446dfaedd5cd",
+      "bytes": 5310
+    }
+  ]
+}

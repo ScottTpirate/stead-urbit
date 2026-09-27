@@ -1,0 +1,11 @@
+{
+  "command": [
+    "make",
+    "gall-schedule"
+  ],
+  "source_commit": "55475f0565ceb38db9eb5bc057962967398aa5da",
+  "working_tree": " M README.md\n M docs/urbit/DEVELOPER_GUIDE.md\n M docs/urbit/DEV_FLOW.md\n M docs/urbit/NATIVE_CORE.md\n M docs/urbit/PHASE01_CHECKPOINT_20260926.md\n M docs/urbit/TEST_RESULTS.md\n?? docs/urbit/evidence/2026-09-26/host-load-observations/\n?? docs/urbit/evidence/2026-09-26/native-attempts/core03/\n?? docs/urbit/evidence/2026-09-26/native-attempts/prequal12/\n?? docs/urbit/evidence/2026-09-26/phase1-current/\n?? docs/urbit/evidence/2026-09-26/phase1-nonnative-v2/\n?? docs/urbit/reviews/PHASE1_RESTART_SCOPE_CORRECTION_20260926.md\n?? docs/urbit/reviews/URB170_UPSTREAM_FEEDBACK_PROPOSAL_20260926.md\n",
+  "started_utc": "2026-09-26T19:45:15.460771+00:00",
+  "elapsed_seconds": 42.016,
+  "exit": 0
+}

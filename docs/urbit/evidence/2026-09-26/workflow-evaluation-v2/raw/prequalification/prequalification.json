@@ -1,0 +1,10 @@
+{
+  "inner": {
+    "path": "/workflow/prequalification-inner.json",
+    "sha256": "65acad4b72ba9600acd4ab890499a572e149e1bbeadc5315d3812745bcedb8ea"
+  },
+  "guard": {
+    "path": "/workflow/prequalification-guard.json",
+    "sha256": "c433d7e4418a8f81a70a3d46f0baeb10caef13089e8268f8f1e74c9d7359e6fe"
+  }
+}

@@ -1,0 +1,95 @@
+{
+  "historical_guard_continuity": {
+    "path": "docs/urbit/evidence/2026-09-25/phase1-nonnative/historical-guard-continuity-pending.json",
+    "pointer": "",
+    "sha256": "b66548aaec507b4f9b03b41075033d664c4486e4ebf67cf2b8231af5c4786f88"
+  },
+  "items": [
+    {
+      "artifact": {
+        "path": "docs/urbit/evidence/2026-09-25/phase1-nonnative/source-dispositions-pending.json",
+        "pointer": "/proofs/receipt-lookup-order",
+        "sha256": "dd18bf2e8258c6a5f66a5e12f0279d70472cd33e670122a469ceeb7208772fe9"
+      },
+      "bindings": null,
+      "id": "receipt-lookup-order",
+      "kind": "source_review",
+      "status": "reviewed"
+    },
+    {
+      "artifact": {
+        "path": "docs/urbit/evidence/2026-09-25/phase1-nonnative/source-dispositions-pending.json",
+        "pointer": "/proofs/no-effect-subsystem",
+        "sha256": "dd18bf2e8258c6a5f66a5e12f0279d70472cd33e670122a469ceeb7208772fe9"
+      },
+      "bindings": null,
+      "id": "no-effect-subsystem",
+      "kind": "not_applicable",
+      "status": "not_applicable"
+    },
+    {
+      "artifact": {
+        "path": "docs/urbit/evidence/2026-09-25/phase1-nonnative/source-dispositions-pending.json",
+        "pointer": "/proofs/guard-independent-source-review",
+        "sha256": "dd18bf2e8258c6a5f66a5e12f0279d70472cd33e670122a469ceeb7208772fe9"
+      },
+      "bindings": null,
+      "id": "guard-independent-source-review",
+      "kind": "source_review",
+      "status": "reviewed"
+    },
+    {
+      "artifact": {
+        "path": "docs/urbit/evidence/2026-09-25/phase1-nonnative/source-dispositions-pending.json",
+        "pointer": "/proofs/guard-negative-host-tests",
+        "sha256": "dd18bf2e8258c6a5f66a5e12f0279d70472cd33e670122a469ceeb7208772fe9"
+      },
+      "bindings": {
+        "guard_sha256": "da16e2e0fd32eb5b90706b546a7ea8332a65807fc8279f3bd765dcc18aaad9b5"
+      },
+      "id": "guard-negative-host-tests",
+      "kind": "host_mocked",
+      "status": "passed"
+    },
+    {
+      "artifact": {
+        "path": "docs/urbit/evidence/2026-09-25/phase1-nonnative/source-dispositions-pending.json",
+        "pointer": "/proofs/delivery-host-order-permutations",
+        "sha256": "dd18bf2e8258c6a5f66a5e12f0279d70472cd33e670122a469ceeb7208772fe9"
+      },
+      "bindings": null,
+      "id": "delivery-host-order-permutations",
+      "kind": "host_mocked",
+      "status": "passed"
+    },
+    {
+      "artifact": {
+        "path": "docs/urbit/evidence/2026-09-13/qualification/bound-proofs.json",
+        "pointer": "/proofs/4",
+        "sha256": "c5edbf7c4b4f9774c6a69648b10d0cb80599a0cbf8ac132cc73441a5a069f31b"
+      },
+      "bindings": {
+        "guard_sha256": "7166d197a6e3879f21c22637f2bd3074ff90975c33a2149f6e07763e2eeaa04e"
+      },
+      "id": "guard-real-hot-preflight-refusal",
+      "kind": "real_host",
+      "status": "passed"
+    },
+    {
+      "artifact": {
+        "path": "docs/urbit/evidence/2026-09-13/qualification/bound-proofs.json",
+        "pointer": "/proofs/5",
+        "sha256": "c5edbf7c4b4f9774c6a69648b10d0cb80599a0cbf8ac132cc73441a5a069f31b"
+      },
+      "bindings": {
+        "guard_sha256": "7166d197a6e3879f21c22637f2bd3074ff90975c33a2149f6e07763e2eeaa04e"
+      },
+      "id": "guard-real-platform-mocked-sensors",
+      "kind": "real_platform_mocked_sensors",
+      "status": "passed"
+    }
+  ],
+  "protocol": "stead.current-nonnative-index/1",
+  "scope": "Seven nonnative dispositions only; null common bindings deliberately cannot pass final qualification.",
+  "status": "pending-final-source-binding"
+}

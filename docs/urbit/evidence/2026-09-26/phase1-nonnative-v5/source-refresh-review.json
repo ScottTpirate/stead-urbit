@@ -1,0 +1,988 @@
+{
+  "base_v4_commit": "5208f3273426e8fe76dc8622ffe93ace93982e17",
+  "blocking_source_findings": [],
+  "current_binding_correction_review": {
+    "path": ".runtime/phase01-20260926/capacity01-fix-source-review.json",
+    "pointer": "",
+    "sha256": "0d9373bf03f39fbf994dd3ed9a0c188cad4e399ba17ebff17af41934f931ab8b"
+  },
+  "current_common_bindings": {
+    "contract_freeze_sha256": "a2336e5060c71c7c16849b3151cc024a598d6cdf867561452eff1338e3232670",
+    "corpus_sha256": "95c915e2d0c93f358225274b34216fff0fe2efc09791905855b1e3f36aec368a",
+    "native_tree_sha256": "9ebf08805808c90d3b28f7ecf09db0899429b7c1d4b04903f68f6781778ff68d",
+    "runner_sha256": "612ea14eeb83a047fce9bf542492c7d1ed38431015274703d20994b406ef392d",
+    "runtime_lock_sha256": "4a209c10cf1756eb0f7357cc3eca8250bf66c239b4cd0ca31a8c0886d4d304ee",
+    "source_commit": "dd0e8c0ce8d1d00f15de6b07e2e26d368c5c3774"
+  },
+  "current_source_identity_snapshot": {
+    "contract_freeze_sha256": "a2336e5060c71c7c16849b3151cc024a598d6cdf867561452eff1338e3232670",
+    "corpus_sha256": "95c915e2d0c93f358225274b34216fff0fe2efc09791905855b1e3f36aec368a",
+    "execution_inputs": {
+      "core": {
+        "cases": "95c915e2d0c93f358225274b34216fff0fe2efc09791905855b1e3f36aec368a",
+        "fixture": "e693116efbc00b1131714f9eb7077ec678669d4fdb27ddfdce284461e0dffe74",
+        "freeze": "a2336e5060c71c7c16849b3151cc024a598d6cdf867561452eff1338e3232670",
+        "harness": "70370987fbd5c75e7b8562fcc43462435b122495387b8c32011ed9f6caee9696",
+        "native": "9ebf08805808c90d3b28f7ecf09db0899429b7c1d4b04903f68f6781778ff68d",
+        "previous_cases": "88d554aebc48e071f63db981263cacdfb144c16aa870046248134ba667362e4c",
+        "previous_freeze": "61d9a18f16b8b01629bd35177d5b801cc05cd8ddaf7f68c3cc1678faf642cf90",
+        "qualification_manifest": "f374349cc3ccd64993e3dade9a44e306854479c228b7f93d6559647006aee94c",
+        "runner": {
+          "core_cases_v2.py": "6db78c1712bee0c0e613b9ae6250a48871983e7c9a3a1f9a159da4517047e6ac",
+          "core_conn.py": "e178a5c0ce619031b8da64376b99b429ac0f90dded293ac60fa1137447d53614",
+          "core_export.py": "8c8fa9bb28e015ff07f83ed32ba1f80edef517295b3224e862f7c7dd2a36bb21",
+          "core_test.py": "612ea14eeb83a047fce9bf542492c7d1ed38431015274703d20994b406ef392d",
+          "delivery_cases.py": "171edf429fc1677e3250bcebff4cd2fb55e762d767204afdae846f86deccc131",
+          "delivery_suite.py": "0c2cff055ce3e9e7fe5b1ddb37f99bc1d7d7a8631b8376d4949d3f18020a357f",
+          "native_transcript.py": "d724f6820d58b926a055bd10fe4804fd10db917158804b478e37e1b80cf3b34f",
+          "qualification_cases.py": "0383dd02dcb1e3cfa6ff9e93be5da49b2fee7bdee1a71dde7c2b6db303c3c3f9",
+          "qualification_gate.py": "ce0d8d0d87e9556940143943d7107099bfeb5c36eec6744342e555bfd292a6ab"
+        },
+        "toolchain": "4a209c10cf1756eb0f7357cc3eca8250bf66c239b4cd0ca31a8c0886d4d304ee",
+        "v2_vectors": "26609938a3c3c19913276d3ed2f07f99b0ce8a2d0081c88812877cd21e2a6687",
+        "vectors": "3269fb0ebae091b9a022954e4ca876d318c5e06c4b6c69b7445628186d886592"
+      },
+      "gall_schedule": {
+        "corpus": "95c915e2d0c93f358225274b34216fff0fe2efc09791905855b1e3f36aec368a",
+        "fixtures": "063bc48eff37d8ed71dc30a7c89b177564925bea96d1569c6e40d0f77b8762fc",
+        "freeze": "a2336e5060c71c7c16849b3151cc024a598d6cdf867561452eff1338e3232670",
+        "gall": "31c4d615cbc32544a2b954de83e6c381346ec45f48b210fce7a1fab7a939ec4c",
+        "harness": "70370987fbd5c75e7b8562fcc43462435b122495387b8c32011ed9f6caee9696",
+        "native": "9ebf08805808c90d3b28f7ecf09db0899429b7c1d4b04903f68f6781778ff68d",
+        "overlay": "c2a99aa5e544f2e96d2b807665c8997c42d8751d290f14e4db5ae88c2cdb9759",
+        "runner": {
+          "core_conn.py": "e178a5c0ce619031b8da64376b99b429ac0f90dded293ac60fa1137447d53614",
+          "delivery_cases.py": "171edf429fc1677e3250bcebff4cd2fb55e762d767204afdae846f86deccc131",
+          "digests.py": "88e6333bd6c764f48fb8939bafa77c9eb236c5b3586a19fe1a1f6e48e27dc08c",
+          "gall_schedule.py": "e839771e23a44b1ac403df213fae2c83103a7750c36330de16322b3c0e913af2",
+          "gall_schedule_proof.py": "fe6564900c0b3b6ae5c0a75ea18788807024053f433d0f5fcb0b17f04566904b"
+        },
+        "toolchain": "4a209c10cf1756eb0f7357cc3eca8250bf66c239b4cd0ca31a8c0886d4d304ee"
+      }
+    },
+    "execution_lanes": {
+      "core": {
+        "contract_freeze_sha256": "a2336e5060c71c7c16849b3151cc024a598d6cdf867561452eff1338e3232670",
+        "corpus_sha256": "95c915e2d0c93f358225274b34216fff0fe2efc09791905855b1e3f36aec368a",
+        "installed_clay_tree_sha256": "9ebf08805808c90d3b28f7ecf09db0899429b7c1d4b04903f68f6781778ff68d",
+        "loaded_closure_sha256": "70370987fbd5c75e7b8562fcc43462435b122495387b8c32011ed9f6caee9696",
+        "native_tree_sha256": "9ebf08805808c90d3b28f7ecf09db0899429b7c1d4b04903f68f6781778ff68d",
+        "observer_sha256": "16589b4f9f51782d0907a7c186e3fcff6625c713bb64006f37330d6056645e45",
+        "runner_sha256": "612ea14eeb83a047fce9bf542492c7d1ed38431015274703d20994b406ef392d",
+        "runtime_lock_sha256": "4a209c10cf1756eb0f7357cc3eca8250bf66c239b4cd0ca31a8c0886d4d304ee",
+        "source_commit": "dd0e8c0ce8d1d00f15de6b07e2e26d368c5c3774"
+      },
+      "gall_schedule": {
+        "contract_freeze_sha256": "a2336e5060c71c7c16849b3151cc024a598d6cdf867561452eff1338e3232670",
+        "corpus_sha256": "95c915e2d0c93f358225274b34216fff0fe2efc09791905855b1e3f36aec368a",
+        "installed_clay_tree_sha256": "85f944f2fa466aeb0ba919efd1f9d8755bc38e2a89a32f38b711ac6faee6ea5b",
+        "loaded_closure_sha256": "70370987fbd5c75e7b8562fcc43462435b122495387b8c32011ed9f6caee9696",
+        "native_tree_sha256": "9ebf08805808c90d3b28f7ecf09db0899429b7c1d4b04903f68f6781778ff68d",
+        "observer_sha256": "16589b4f9f51782d0907a7c186e3fcff6625c713bb64006f37330d6056645e45",
+        "runner_sha256": "e839771e23a44b1ac403df213fae2c83103a7750c36330de16322b3c0e913af2",
+        "runtime_lock_sha256": "4a209c10cf1756eb0f7357cc3eca8250bf66c239b4cd0ca31a8c0886d4d304ee",
+        "source_commit": "dd0e8c0ce8d1d00f15de6b07e2e26d368c5c3774"
+      }
+    },
+    "guard_sha256": "da16e2e0fd32eb5b90706b546a7ea8332a65807fc8279f3bd765dcc18aaad9b5",
+    "implementation_owner": "/root",
+    "independent_reviewers": [
+      "/root/independent_review"
+    ],
+    "native_source_files": {
+      "app/stead-home.hoon": "3bfc0e45062ef0bc8572d5034a60b5b35f6502350f821129b5ba7a7cca0b2b9c",
+      "app/stead-observer.hoon": "16589b4f9f51782d0907a7c186e3fcff6625c713bb64006f37330d6056645e45",
+      "gen/stead-build-probe.hoon": "5b95dc5675894897cdf1bda25cbb9bf27100dd6bd305dfd836aad4ec06725d96",
+      "gen/stead-codec-probe.hoon": "77acef53149bfc517c30625ab902cc9dcf06faf10d2f5413759591df9cfb3ff6",
+      "gen/stead-core-probe.hoon": "ce41ca465d959dabde9c9dbfb0f39db4294ec5117b5b7d65c7b2f8a2a21f718c",
+      "gen/stead-reducers-probe.hoon": "a5c3b59ef426a2e1d44bb3b0084b222a26120ed999dd0744885bbe2a78c14471",
+      "gen/stead-save-probe.hoon": "84899440be705a00f1bd9a7da38c3f8499ca13562e110aef53c9fac40f8e2ffd",
+      "lib/stead-codec-v1.hoon": "ce4c7a69b03ee1761590c37e71ff49b9f63a1a2edd2aaa6dfbf75bc3c960584a",
+      "lib/stead-codec.hoon": "56e3d574381bbf8cdf29ca192c70eff256009f89d782e3ffe859b19c1321cbd7",
+      "lib/stead-core-v1.hoon": "879615a5547d06a09d382c2bac4c5cb20cdf03236ddfdab79c9f1da15bd33cb5",
+      "lib/stead-core.hoon": "4c183ef6283030437af5e1433e3fbf80f414757bcede4cab1282fc71ff5f34de",
+      "lib/stead-delivery.hoon": "178cac634471554dae9928f8c38248751329314391061976a436a22a7075548d",
+      "lib/stead-git.hoon": "826b83485429c02f577c9b462ee6cddd3ab8ea1a099d33b66893f863d54c54d7",
+      "mar/stead-command-1.hoon": "fcd87c92acc16c2883b1dd4900af5064d1da910af317e93c327455cd56d9553b",
+      "mar/stead-command-2.hoon": "fcd87c92acc16c2883b1dd4900af5064d1da910af317e93c327455cd56d9553b",
+      "mar/stead-control-1.hoon": "643d9d5221b5b43230f864f11b1d6830ad2b32ffd64644c77ea70c0fa1ea8c5e",
+      "mar/stead-fixture-1.hoon": "fcd87c92acc16c2883b1dd4900af5064d1da910af317e93c327455cd56d9553b",
+      "mar/stead-observer-1.hoon": "e30d449181f121ea403b8d38e12d3b925362591ee516092f254852af0631a684",
+      "mar/stead-result-1.hoon": "fcd87c92acc16c2883b1dd4900af5064d1da910af317e93c327455cd56d9553b",
+      "mar/stead-result-2.hoon": "fcd87c92acc16c2883b1dd4900af5064d1da910af317e93c327455cd56d9553b",
+      "ted/stead-client.hoon": "a0420730b0ee1a56d46e22def0b570cf089a7de39810453010a3f77ff3f9c155",
+      "tests/stead-git.hoon": "51518a1239373467864412e64ab92cfbc8258bd37783988b2ae6c17c6eac2d98"
+    },
+    "native_tree_sha256": "9ebf08805808c90d3b28f7ecf09db0899429b7c1d4b04903f68f6781778ff68d",
+    "observed_source": {
+      "committed_bytes_verified": true,
+      "derivation_files": {
+        "build_phase1_evidence.py": "c886c18fb25c0e381f346a6b7ec0387a784410acacfcac9ea72b6a5881708f7f",
+        "core_cases_v2.py": "6db78c1712bee0c0e613b9ae6250a48871983e7c9a3a1f9a159da4517047e6ac",
+        "core_conn.py": "e178a5c0ce619031b8da64376b99b429ac0f90dded293ac60fa1137447d53614",
+        "delivery_cases.py": "171edf429fc1677e3250bcebff4cd2fb55e762d767204afdae846f86deccc131",
+        "delivery_suite.py": "0c2cff055ce3e9e7fe5b1ddb37f99bc1d7d7a8631b8376d4949d3f18020a357f",
+        "digests.py": "88e6333bd6c764f48fb8939bafa77c9eb236c5b3586a19fe1a1f6e48e27dc08c",
+        "execution_policy.py": "da16e2e0fd32eb5b90706b546a7ea8332a65807fc8279f3bd765dcc18aaad9b5",
+        "gall_schedule_proof.py": "fe6564900c0b3b6ae5c0a75ea18788807024053f433d0f5fcb0b17f04566904b",
+        "native_transcript.py": "d724f6820d58b926a055bd10fe4804fd10db917158804b478e37e1b80cf3b34f",
+        "qualification_cases.py": "0383dd02dcb1e3cfa6ff9e93be5da49b2fee7bdee1a71dde7c2b6db303c3c3f9",
+        "qualification_gate.py": "ce0d8d0d87e9556940143943d7107099bfeb5c36eec6744342e555bfd292a6ab"
+      },
+      "errors": []
+    },
+    "observer_sha256": "16589b4f9f51782d0907a7c186e3fcff6625c713bb64006f37330d6056645e45",
+    "runner_sha256": "612ea14eeb83a047fce9bf542492c7d1ed38431015274703d20994b406ef392d",
+    "runtime_lock_sha256": "4a209c10cf1756eb0f7357cc3eca8250bf66c239b4cd0ca31a8c0886d4d304ee",
+    "schedule_source_files": {
+      "gen/stead-gall-schedule-negative.hoon": "b4e0b7e286c1f92feb95f369afce367bb0bb978508e200841e76b582792e4db7",
+      "gen/stead-gall-schedule.hoon": "172a78340a1bed71362745cdc00721db2d287c3f37cf42920e5752c24ba0d510",
+      "lib/stead-gall-schedule-inputs.hoon": "178ac9f2381d933e4eb2aa9dba1da68a2cd885cba91a13fe2f135eaf403da1ad",
+      "lib/stead-gall-schedule.hoon": "45df519bfaa206142a0954b7f3f234359ed5a9c6bbe2295e273fbe4aeab1e1ff"
+    },
+    "source_commit": "dd0e8c0ce8d1d00f15de6b07e2e26d368c5c3774",
+    "source_files": {
+      "Makefile": "db4777fe8809b0a31e570de79c38faa4421a5e87cca70bb82b8173083b9c7784",
+      "native/README.md": "00df76663c10fab63f00ac756eb4c9a2ef33d17545407f051c1063f02c1d4d67",
+      "native/core/desk/app/stead-home.hoon": "3bfc0e45062ef0bc8572d5034a60b5b35f6502350f821129b5ba7a7cca0b2b9c",
+      "native/core/desk/app/stead-observer.hoon": "16589b4f9f51782d0907a7c186e3fcff6625c713bb64006f37330d6056645e45",
+      "native/core/desk/gen/stead-build-probe.hoon": "5b95dc5675894897cdf1bda25cbb9bf27100dd6bd305dfd836aad4ec06725d96",
+      "native/core/desk/gen/stead-codec-probe.hoon": "77acef53149bfc517c30625ab902cc9dcf06faf10d2f5413759591df9cfb3ff6",
+      "native/core/desk/gen/stead-core-probe.hoon": "ce41ca465d959dabde9c9dbfb0f39db4294ec5117b5b7d65c7b2f8a2a21f718c",
+      "native/core/desk/gen/stead-reducers-probe.hoon": "a5c3b59ef426a2e1d44bb3b0084b222a26120ed999dd0744885bbe2a78c14471",
+      "native/core/desk/gen/stead-save-probe.hoon": "84899440be705a00f1bd9a7da38c3f8499ca13562e110aef53c9fac40f8e2ffd",
+      "native/core/desk/lib/stead-codec-v1.hoon": "ce4c7a69b03ee1761590c37e71ff49b9f63a1a2edd2aaa6dfbf75bc3c960584a",
+      "native/core/desk/lib/stead-codec.hoon": "56e3d574381bbf8cdf29ca192c70eff256009f89d782e3ffe859b19c1321cbd7",
+      "native/core/desk/lib/stead-core-v1.hoon": "879615a5547d06a09d382c2bac4c5cb20cdf03236ddfdab79c9f1da15bd33cb5",
+      "native/core/desk/lib/stead-core.hoon": "4c183ef6283030437af5e1433e3fbf80f414757bcede4cab1282fc71ff5f34de",
+      "native/core/desk/lib/stead-delivery.hoon": "178cac634471554dae9928f8c38248751329314391061976a436a22a7075548d",
+      "native/core/desk/lib/stead-git.hoon": "826b83485429c02f577c9b462ee6cddd3ab8ea1a099d33b66893f863d54c54d7",
+      "native/core/desk/mar/stead-command-1.hoon": "fcd87c92acc16c2883b1dd4900af5064d1da910af317e93c327455cd56d9553b",
+      "native/core/desk/mar/stead-command-2.hoon": "fcd87c92acc16c2883b1dd4900af5064d1da910af317e93c327455cd56d9553b",
+      "native/core/desk/mar/stead-control-1.hoon": "643d9d5221b5b43230f864f11b1d6830ad2b32ffd64644c77ea70c0fa1ea8c5e",
+      "native/core/desk/mar/stead-fixture-1.hoon": "fcd87c92acc16c2883b1dd4900af5064d1da910af317e93c327455cd56d9553b",
+      "native/core/desk/mar/stead-observer-1.hoon": "e30d449181f121ea403b8d38e12d3b925362591ee516092f254852af0631a684",
+      "native/core/desk/mar/stead-result-1.hoon": "fcd87c92acc16c2883b1dd4900af5064d1da910af317e93c327455cd56d9553b",
+      "native/core/desk/mar/stead-result-2.hoon": "fcd87c92acc16c2883b1dd4900af5064d1da910af317e93c327455cd56d9553b",
+      "native/core/desk/ted/stead-client.hoon": "a0420730b0ee1a56d46e22def0b570cf089a7de39810453010a3f77ff3f9c155",
+      "native/core/desk/tests/stead-git.hoon": "51518a1239373467864412e64ab92cfbc8258bd37783988b2ae6c17c6eac2d98",
+      "native/desk/app/stead-home.hoon": "6b4071c1d3906223a62bd1af6193b2a48942b751b46460fa96cea2f8b48a729b",
+      "native/desk/lib/stead-smoke.hoon": "a064e0b81fdaa1b0341d884aa71773d52c271c3223ff7e56d1e6566460dfdfd0",
+      "native/desk/ted/stead-smoke.hoon": "65a794e5165438fdbcd38c9a6586561f21f66db3b1eb2fbcb745aa5cb1782ea2",
+      "scripts/urbit/build_phase1_evidence.py": "c886c18fb25c0e381f346a6b7ec0387a784410acacfcac9ea72b6a5881708f7f",
+      "scripts/urbit/check_ecosystem.py": "28a86e6142a6a6477e1543385032cf0992e7be0e7d891cb1116a8fabdb8c984f",
+      "scripts/urbit/conn.py": "d590a41033bbea62bad6f5dc63c16fdb16c61c906c773c8f3c9c316b69dd3454",
+      "scripts/urbit/contracts.py": "7ccd0b9e664428487b25740bb2a75807de4c047c5d41544bfeff2d771b7bb8e2",
+      "scripts/urbit/contracts_v2.py": "42389543526318c92ad5496175b891db2c422bcb03bc0a103006345a5429cb37",
+      "scripts/urbit/core_cases.py": "2db9b3d6f71c8c4cadaeaa2b65eab88740b9785626231855e3ea1c7bc294530e",
+      "scripts/urbit/core_cases_v2.py": "6db78c1712bee0c0e613b9ae6250a48871983e7c9a3a1f9a159da4517047e6ac",
+      "scripts/urbit/core_check.py": "b732d7854142bbd4bed1644baaec65a42a9a832a01ba076bb817d1de57db22aa",
+      "scripts/urbit/core_conn.py": "e178a5c0ce619031b8da64376b99b429ac0f90dded293ac60fa1137447d53614",
+      "scripts/urbit/core_export.py": "8c8fa9bb28e015ff07f83ed32ba1f80edef517295b3224e862f7c7dd2a36bb21",
+      "scripts/urbit/core_test.py": "612ea14eeb83a047fce9bf542492c7d1ed38431015274703d20994b406ef392d",
+      "scripts/urbit/delivery_cases.py": "171edf429fc1677e3250bcebff4cd2fb55e762d767204afdae846f86deccc131",
+      "scripts/urbit/delivery_suite.py": "0c2cff055ce3e9e7fe5b1ddb37f99bc1d7d7a8631b8376d4949d3f18020a357f",
+      "scripts/urbit/dev_help.py": "185178949e9be531f3653830f02e0d6d22a7bd8ee5721a9063995052e813bc23",
+      "scripts/urbit/digests.py": "88e6333bd6c764f48fb8939bafa77c9eb236c5b3586a19fe1a1f6e48e27dc08c",
+      "scripts/urbit/execution_policy.py": "da16e2e0fd32eb5b90706b546a7ea8332a65807fc8279f3bd765dcc18aaad9b5",
+      "scripts/urbit/gall_schedule.py": "e839771e23a44b1ac403df213fae2c83103a7750c36330de16322b3c0e913af2",
+      "scripts/urbit/gall_schedule_proof.py": "fe6564900c0b3b6ae5c0a75ea18788807024053f433d0f5fcb0b17f04566904b",
+      "scripts/urbit/git_vectors.py": "7c1997350143d3e08ae8ad5f9e113e2c01d9cb94b7dd69ca1e38c4d9fbb25c40",
+      "scripts/urbit/harness.py": "d74d3ef74ea6c58bc1b15ea3c504f2eef7e980073e5260e7c566697b9a1261fe",
+      "scripts/urbit/namespace_check.py": "87950f4e7796fafb91807c36b9ea7d392d1d1840e5516d15d5fc6c5d476d0449",
+      "scripts/urbit/native_transcript.py": "d724f6820d58b926a055bd10fe4804fd10db917158804b478e37e1b80cf3b34f",
+      "scripts/urbit/qualification_cases.py": "0383dd02dcb1e3cfa6ff9e93be5da49b2fee7bdee1a71dde7c2b6db303c3c3f9",
+      "scripts/urbit/qualification_gate.py": "ce0d8d0d87e9556940143943d7107099bfeb5c36eec6744342e555bfd292a6ab",
+      "scripts/urbit/skill_evaluation_support.py": "67597ff220928b99ca1cf1e925bd86c903fa3d1399fd59e00825aec936965fe7",
+      "scripts/urbit/supervisor.py": "a0c840c2382cc5b97304c7696ef6069f78051ba4795a4d3c0729e0c236df1168",
+      "scripts/urbit/sync_milestones.py": "9cce588554d9224acab2c9176455321347dfa25eca0d82c14680f9f9de5a730a",
+      "scripts/urbit/toolchain.py": "31234bbab1af217c885d8c081d7f438972f6ff1b6d89c93d10bdf49871b3ea16",
+      "scripts/urbit/urgit_audit.py": "c16b32b67c450ccd1fab8efc739e7d272ef4dc96c82dff8f119107f30b3c28d5",
+      "scripts/urbit/urgit_eval/bootstrap.py": "49e9fe5665490c7eab60e4e07dd5c72769fbf3c95a771bbb4e1093a6e73d4b56",
+      "scripts/urbit/urgit_eval/evaluate.py": "cb26fca7fcc45bcc60da1d12b54a2ed92f6a3eda1c7b08c1665ea787e876e6e4",
+      "scripts/urbit/urgit_seed.py": "1df796d497290da0cf05faa919324fe318079fe910912e658adc88e599fd73b6",
+      "scripts/urbit/validate_plan.py": "575c8dcbf02cda7d4495bdf072e661c197a05f98fefc96f9f42f68315a126bdc",
+      "specs/urbit/backlog.json": "7a2395a19c77ec08d1ed7c96eae393be44f7c367b5065e3fbb0523262f4ba116",
+      "specs/urbit/command.schema.json": "968fbdcfa0dbff712e6282dafe87429332dbcc19d5a9dff914bba8a7a410210f",
+      "specs/urbit/contract-freeze.json": "61d9a18f16b8b01629bd35177d5b801cc05cd8ddaf7f68c3cc1678faf642cf90",
+      "specs/urbit/ecosystem.json": "7193c6fd85bd464a9bd14d6c833ba7083f2b0a5f5198cf5af4264239f8f1ba06",
+      "specs/urbit/fixtures/commands.json": "3269fb0ebae091b9a022954e4ca876d318c5e06c4b6c69b7445628186d886592",
+      "specs/urbit/fixtures/native-cases-v2.json": "95c915e2d0c93f358225274b34216fff0fe2efc09791905855b1e3f36aec368a",
+      "specs/urbit/fixtures/native-cases.json": "88d554aebc48e071f63db981263cacdfb144c16aa870046248134ba667362e4c",
+      "specs/urbit/native-api.json": "ee976ceaa975a7f67e58bea8cd7e03aa238b704985d06b0a96178ac087753056",
+      "specs/urbit/native-fixture.json": "e693116efbc00b1131714f9eb7077ec678669d4fdb27ddfdce284461e0dffe74",
+      "specs/urbit/policy-contract.json": "3e23cc5fd08240d85bd03a46d4cfb3569a6a30a1c543b2283bfb3b4ed08ec6d0",
+      "specs/urbit/smoke-corpus.json": "3a05090f8ff4aceddcd228145346564ce9ecf28af7016fd256eb911430dbbd9c",
+      "specs/urbit/toolchain.lock.example.json": "1dfb7d2817efe8906424765efc09d648eb94385aa2194d53c588a69db429df65",
+      "specs/urbit/toolchain.lock.json": "4a209c10cf1756eb0f7357cc3eca8250bf66c239b4cd0ca31a8c0886d4d304ee",
+      "specs/urbit/urgit-candidate.lock.json": "50a90b296fa40e5a9178999cb2709682884812a98e2b133f6261eb5ec3934561",
+      "specs/urbit/v2/command.schema.json": "ab2190b29216d9875390b313397c880838cc00378a9bc0178423e467a1820968",
+      "specs/urbit/v2/commands.json": "26609938a3c3c19913276d3ed2f07f99b0ce8a2d0081c88812877cd21e2a6687",
+      "specs/urbit/v2/contract-freeze.json": "a2336e5060c71c7c16849b3151cc024a598d6cdf867561452eff1338e3232670",
+      "specs/urbit/v2/native-api.json": "6702cea56f8a1418a7663850e70d1a77775a890f708754d0347d89e9c2ae3bd8",
+      "specs/urbit/v2/qualification-gate.json": "f374349cc3ccd64993e3dade9a44e306854479c228b7f93d6559647006aee94c",
+      "tests/urbit/native_gall_schedule/README.md": "7a946cc14252cf5fb8108a4f80525274f5a63419644e2e0689837953840a9b95",
+      "tests/urbit/native_gall_schedule/UPSTREAM_LICENSE.txt": "636518cb81359b1a79f273a4632a440bd4e8f614a087ba8cc502a9b99c7bd4dd",
+      "tests/urbit/native_gall_schedule/build_inputs.py": "f3d1ae16f626d02b08e6b623513cf731c8ac622eb9433f8a1cd3124865bc798c",
+      "tests/urbit/native_gall_schedule/desk/gen/stead-gall-schedule-negative.hoon": "b4e0b7e286c1f92feb95f369afce367bb0bb978508e200841e76b582792e4db7",
+      "tests/urbit/native_gall_schedule/desk/gen/stead-gall-schedule.hoon": "172a78340a1bed71362745cdc00721db2d287c3f37cf42920e5752c24ba0d510",
+      "tests/urbit/native_gall_schedule/desk/lib/stead-gall-schedule-inputs.hoon": "178ac9f2381d933e4eb2aa9dba1da68a2cd885cba91a13fe2f135eaf403da1ad",
+      "tests/urbit/native_gall_schedule/desk/lib/stead-gall-schedule.hoon": "45df519bfaa206142a0954b7f3f234359ed5a9c6bbe2295e273fbe4aeab1e1ff",
+      "tests/urbit/native_gall_schedule/inputs.json": "063bc48eff37d8ed71dc30a7c89b177564925bea96d1569c6e40d0f77b8762fc",
+      "tests/urbit/skill_evaluation/README.md": "edd05520d2014c662fb7c992097da4f101f9109f76eaf72fa059c89de27c40d9",
+      "tests/urbit/skill_evaluation/assisted/stead-gall-security.SKILL.md": "c5de6d6f494f65891e064276c1a9c65629ffe6276a0ade4929d9012901350fcc",
+      "tests/urbit/skill_evaluation/assisted/stead-hoon.SKILL.md": "5469b3567b908b3f9fc684f92376c379de2a611f6c60dc0cf770627583ba121a",
+      "tests/urbit/skill_evaluation/assisted/stead-native-tests.SKILL.md": "13622cf24e087573d63b7fc4850f49c44ed943cbf3ad8f0cf4fe4ed590774ba8",
+      "tests/urbit/skill_evaluation/assisted/stead-urbit-release.SKILL.md": "52e5f9ef225d4a9849386b50b9253abb801c12f02bfa60e839595c14430d3685",
+      "tests/urbit/skill_evaluation/common/smoke-agent.hoon": "6b4071c1d3906223a62bd1af6193b2a48942b751b46460fa96cea2f8b48a729b",
+      "tests/urbit/skill_evaluation/common/smoke-library.hoon": "a064e0b81fdaa1b0341d884aa71773d52c271c3223ff7e56d1e6566460dfdfd0",
+      "tests/urbit/skill_evaluation/common/toolchain-pins.json": "14beab5b84c694f792e8da8fa4f70b4c1057a4cfdefb6a5abd6f4a27dcb2d2bb",
+      "tests/urbit/skill_evaluation/freeze.json": "edfb008df1b9800d268327c90310fc486a488fab4a2ae0911079ba6c7b504431",
+      "tests/urbit/skill_evaluation/protocol.json": "d1d2ee0a328500634dac810dfe0cdcba59c7ece9dff96fe1dab04e6fe7fb5ac6",
+      "tests/urbit/skill_evaluation/provenance.json": "96f1f33b62eefb0747bbe94f88d633ba64afe07c1dbe7373f4b9ff190e289632",
+      "tests/urbit/skill_evaluation/public/BRIEF.md": "2319c2d29dae1e12101322989fd220766d00dcac29450f069f182706ec3f5a6d",
+      "tests/urbit/skill_evaluation/public/T01.md": "0dda7a86857f6c215c1df21f2833706626ed2ef900abdf5cdced3f5213410734",
+      "tests/urbit/skill_evaluation/public/T02.md": "5eadfc84fc011585041e6530d6bae3b23fd07d4fee875c8dee8e59ac1876fa93",
+      "tests/urbit/skill_evaluation/public/T03.md": "e578dac31e638007214d998681450b178508f8a739268898a300e30dfbeed474",
+      "tests/urbit/skill_evaluation/public/T04.md": "637378e6621963df863ad9d05044670d5420095910f1f536148e9c8227438317",
+      "tests/urbit/skill_evaluation/public/T05.md": "68e6dc2d8442afb45cb498d6ad95eace204ba9907ed76f5e7ce36eba34d7328c",
+      "tests/urbit/skill_evaluation/public/T06.md": "529dddf73e8c0f5f56b7ad53b33498e1a39990213a5ad5ec3e230bee95f5d02d",
+      "tests/urbit/skill_evaluation/public/starters/T01/lib/eval-add.hoon": "799b156bb4f62de674bfea4e3366f8ba50247c3437551389e4d9e8c2235ab4fb",
+      "tests/urbit/skill_evaluation/public/starters/T02/lib/eval-maybe.hoon": "1a7bf3b0eb667c9644a0b2281a325c370e6c5b018e10c41bb9dcac7f76901c3a",
+      "tests/urbit/skill_evaluation/public/starters/T03/app/eval-counter.hoon": "2b92ef35e94ba2a025e3110cd861d22fed961c22550ecc0b434f2760b6db9ab5",
+      "tests/urbit/skill_evaluation/public/starters/T04/app/eval-access.hoon": "3a23477c314317b3d69cd986f8db930ee9616a1a89834183e171104aebada34e",
+      "tests/urbit/skill_evaluation/public/starters/T05/lib/eval-authorization.hoon": "45688239f7e9050e75b84b863ecb087a50ba076b0f2a667ddc8e86dfc5e17e1f",
+      "tests/urbit/skill_evaluation/public/starters/T05/tests/eval-coverage.hoon": "8585fb5fc44c969c7b3c8d50eab65d13d450e24694e11dd9cf2693c35a18d4bd",
+      "tests/urbit/skill_evaluation/public/starters/T06/source/NOT_A_DESK_FILE.txt": "50bf151a9d4673224de6692606cc92b18210825607437480622b5f5292711f12",
+      "tests/urbit/skill_evaluation/public/starters/T06/source/desk.bill": "73cafed4c2cba0743097670a0615e4958fd6ddae0ea12b077bffcc3581e9afd2",
+      "tests/urbit/skill_evaluation/public/starters/T06/source/eval-desk-probe.hoon": "818d547c2319a5b72157d48f3e9f8e997b46c6633db109ae154154f0796d85c6",
+      "tests/urbit/skill_evaluation/public/starters/T06/source/eval-desk.hoon": "4c55f52fd8177ab0cc6a4fc4c379f08899f692211ecdc7dd9c1c8b7e39b8b475",
+      "tests/urbit/skill_evaluation/public/starters/T06/source/sys.kelvin": "0a66fa5dec5893d2e3a8e854c4d6c81d62882863e4c8574ce18da9daea5a7cc4",
+      "tests/urbit/skill_evaluation/result.schema.json": "7d563849c92d3779a0213bd5965ba2c61d320ba3d261587c950d6fca0ff4599f",
+      "tests/urbit/skill_evaluation/reviewer/T05/claim-must-match.hoon": "7ed9354a163651538904463f133d9e2d90e781a61028f62c3d6deb25f328c2d0",
+      "tests/urbit/skill_evaluation/reviewer/T05/claimed-author.hoon": "ebdb500fdffcc3ae0176ccf73219232dc88ac2ae708e3ceb4b1e4ea19d15e307",
+      "tests/urbit/skill_evaluation/reviewer/T05/everyone-granted.hoon": "a2b785e79ae75b02819064e91cb75e2304ba55aa33089aae5e9a0fdf959fb015",
+      "tests/urbit/skill_evaluation/reviewer/T05/outsider-granted.hoon": "d9bb871d3115c0ae656eb0e83138d6cc9716277baa7667253b3eec0dd3fe24d1",
+      "tests/urbit/skill_evaluation/reviewer/controls/T05-weak-tests.hoon": "2e51a43725cf25619a6ee414f38078bb83515a53c7ff0f4206e5588664549519",
+      "tests/urbit/skill_evaluation/reviewer/oracles.json": "06b540ba1275e7a5893d8ce62b03959a756af008a15265ea87d3a2c3d57b25b6",
+      "tests/urbit/skill_evaluation/reviewer/reference/T01/lib/eval-add.hoon": "732840938ec0935ed44d4ac68890d0013f642ce5d8a29703d2b4cee3e68bca65",
+      "tests/urbit/skill_evaluation/reviewer/reference/T02/lib/eval-maybe.hoon": "a980fdbe1dab53b6204f53efa261be3c05df9beb6620ee29f4d39e0e61706822",
+      "tests/urbit/skill_evaluation/reviewer/reference/T03/app/eval-counter.hoon": "2114502d5a16cf30e9780764d2ce76f8f0a3c0c42fdddecd3636fe84bbf03b83",
+      "tests/urbit/skill_evaluation/reviewer/reference/T04/app/eval-access.hoon": "6c65958126f15afd57e1f4d504c3bdade9700c5c82d799e18c75852cd6353f30",
+      "tests/urbit/skill_evaluation/reviewer/reference/T05/tests/eval-coverage.hoon": "3d69799d76422557bf915062b2bc7996a9bf8ef995e0e75cae713d9c497f57ee"
+    }
+  },
+  "doc_only_descendant_verified": false,
+  "execution_binding_changes": {
+    "execution_inputs": [
+      {
+        "new": "70370987fbd5c75e7b8562fcc43462435b122495387b8c32011ed9f6caee9696",
+        "old": "0fff67efcc792fd433dc065bbb5ebf877458cda015d424e86934b126c66d0c53",
+        "pointer": "/core/harness"
+      },
+      {
+        "new": "9ebf08805808c90d3b28f7ecf09db0899429b7c1d4b04903f68f6781778ff68d",
+        "old": "7b0257ba03b0de93de319d55c5523fa481c302772471645987818da543ac4621",
+        "pointer": "/core/native"
+      },
+      {
+        "new": "612ea14eeb83a047fce9bf542492c7d1ed38431015274703d20994b406ef392d",
+        "old": "4bba0828e7d5451338e176cafe66a02aaa0837c2291bb0dcd80aff5b9fb0c7cb",
+        "pointer": "/core/runner/core_test.py"
+      },
+      {
+        "new": "0383dd02dcb1e3cfa6ff9e93be5da49b2fee7bdee1a71dde7c2b6db303c3c3f9",
+        "old": "1d06a75fea124e2a17b27167c8402090532d8f30425d69ecde8441094b088c71",
+        "pointer": "/core/runner/qualification_cases.py"
+      },
+      {
+        "new": "70370987fbd5c75e7b8562fcc43462435b122495387b8c32011ed9f6caee9696",
+        "old": "0fff67efcc792fd433dc065bbb5ebf877458cda015d424e86934b126c66d0c53",
+        "pointer": "/gall_schedule/harness"
+      },
+      {
+        "new": "9ebf08805808c90d3b28f7ecf09db0899429b7c1d4b04903f68f6781778ff68d",
+        "old": "7b0257ba03b0de93de319d55c5523fa481c302772471645987818da543ac4621",
+        "pointer": "/gall_schedule/native"
+      }
+    ],
+    "execution_lanes": [
+      {
+        "new": "9ebf08805808c90d3b28f7ecf09db0899429b7c1d4b04903f68f6781778ff68d",
+        "old": "7b0257ba03b0de93de319d55c5523fa481c302772471645987818da543ac4621",
+        "pointer": "/core/installed_clay_tree_sha256"
+      },
+      {
+        "new": "70370987fbd5c75e7b8562fcc43462435b122495387b8c32011ed9f6caee9696",
+        "old": "0fff67efcc792fd433dc065bbb5ebf877458cda015d424e86934b126c66d0c53",
+        "pointer": "/core/loaded_closure_sha256"
+      },
+      {
+        "new": "9ebf08805808c90d3b28f7ecf09db0899429b7c1d4b04903f68f6781778ff68d",
+        "old": "7b0257ba03b0de93de319d55c5523fa481c302772471645987818da543ac4621",
+        "pointer": "/core/native_tree_sha256"
+      },
+      {
+        "new": "612ea14eeb83a047fce9bf542492c7d1ed38431015274703d20994b406ef392d",
+        "old": "4bba0828e7d5451338e176cafe66a02aaa0837c2291bb0dcd80aff5b9fb0c7cb",
+        "pointer": "/core/runner_sha256"
+      },
+      {
+        "new": "dd0e8c0ce8d1d00f15de6b07e2e26d368c5c3774",
+        "old": "5208f3273426e8fe76dc8622ffe93ace93982e17",
+        "pointer": "/core/source_commit"
+      },
+      {
+        "new": "85f944f2fa466aeb0ba919efd1f9d8755bc38e2a89a32f38b711ac6faee6ea5b",
+        "old": "3d7015ba7c1b2a8dd686bde86b5ae6be4a0aa6546a4afa1f4e9eef8b92702a4d",
+        "pointer": "/gall_schedule/installed_clay_tree_sha256"
+      },
+      {
+        "new": "70370987fbd5c75e7b8562fcc43462435b122495387b8c32011ed9f6caee9696",
+        "old": "0fff67efcc792fd433dc065bbb5ebf877458cda015d424e86934b126c66d0c53",
+        "pointer": "/gall_schedule/loaded_closure_sha256"
+      },
+      {
+        "new": "9ebf08805808c90d3b28f7ecf09db0899429b7c1d4b04903f68f6781778ff68d",
+        "old": "7b0257ba03b0de93de319d55c5523fa481c302772471645987818da543ac4621",
+        "pointer": "/gall_schedule/native_tree_sha256"
+      },
+      {
+        "new": "dd0e8c0ce8d1d00f15de6b07e2e26d368c5c3774",
+        "old": "5208f3273426e8fe76dc8622ffe93ace93982e17",
+        "pointer": "/gall_schedule/source_commit"
+      }
+    ],
+    "observed_source": [
+      {
+        "new": "0383dd02dcb1e3cfa6ff9e93be5da49b2fee7bdee1a71dde7c2b6db303c3c3f9",
+        "old": "1d06a75fea124e2a17b27167c8402090532d8f30425d69ecde8441094b088c71",
+        "pointer": "/derivation_files/qualification_cases.py"
+      }
+    ]
+  },
+  "guard_changed_source_files": {
+    "Makefile": {
+      "new": "db4777fe8809b0a31e570de79c38faa4421a5e87cca70bb82b8173083b9c7784",
+      "old": "496c1dcc50816777472c6d12cb2311fd22e66579fbc0091eeea7694f25e2e010"
+    },
+    "scripts/urbit/harness.py": {
+      "new": "d74d3ef74ea6c58bc1b15ea3c504f2eef7e980073e5260e7c566697b9a1261fe",
+      "old": "8dfe4725bbc534c61ec87ab4467d93314bd2ff8df15ab3a783481cef11e75b8a"
+    },
+    "scripts/urbit/supervisor.py": {
+      "new": "a0c840c2382cc5b97304c7696ef6069f78051ba4795a4d3c0729e0c236df1168",
+      "old": "a10e499fb3242f9715b15d8932c8bf663d559479b70f5b6b20f1d6a787f55444"
+    }
+  },
+  "guard_delta_findings": [
+    {
+      "claim": "capacity-check is an exact fixed supervised operation, with no user-selected native command/path. It retains marked owned-fixture admission and requires both status pass and qualifies_phase exactly false. The full-core RPC wait now7200 matches the unchanged outer guardian ceiling, rather than extending the guard.",
+      "files": [
+        "Makefile",
+        "scripts/urbit/harness.py"
+      ]
+    },
+    {
+      "claim": "Only exact delivery-check or capacity-check dictionaries enter the shared mutex branch. Existing ready check and fresh preflight precede ready=false and the eagerly loaded runner. An exception, failed result or guard invalidation stops all owned children and leaves failed readiness. Success returns ready only through guarded_result.",
+      "file": "scripts/urbit/supervisor.py"
+    },
+    {
+      "claim": "Mutually exclusive focused flags, explicit capacity-diagnostic classification, distinct filename and qualifies_phase=false prevent focused success from claiming complete qualification. Same source closure/evaluator/fresh-seed/install/Clay/probe checks precede execution; exact-source rechecks still follow. The full acceptance branch retains QA, codec/context/save-load/concurrency/delivery/capacity and pending independent closeout.",
+      "file": "scripts/urbit/core_test.py"
+    },
+    {
+      "claim": "Both success and failure raw call records and summaries retain actual monotonic timestamps. These measure the entire client call including encoding and transport; they are not proof of native CPU time or simultaneous authoritative processing.",
+      "file": "scripts/urbit/core_test.py"
+    },
+    {
+      "claim": "600-second native and620-second host waits select only mode control with migrate-legacy/load-bad-legacy operation. Normal calls retain55/75. The existing home owner-local control authorization and all migration/history checks are unchanged. A Spider timer cannot preempt a synchronous Gall event; finite host/outer guard and failure cleanup remain necessary.",
+      "files": [
+        "native/core/desk/ted/stead-client.hoon",
+        "scripts/urbit/qualification_cases.py",
+        "native/core/desk/app/stead-home.hoon"
+      ]
+    },
+    {
+      "claim": "Malformed-load acceptance now requires absent body/JSON, exact avow1, standalone stead-unsupported-state and poke-fail, final thread-fail and absence of standalone timeout. This closes the observed timeout-as-rejection ambiguity; missing/unrelated context and timeout still fail.",
+      "file": "scripts/urbit/qualification_cases.py"
+    },
+    {
+      "claim": "All four other composite guard-source files are byte-identical. Thermal75/90, freshness3seconds, resource limits, no-follow source/mount/lease boundaries, TERM deduplication, failure latch, seed safety and independent completed-guard checks are unchanged.",
+      "files": [
+        "scripts/urbit/execution_policy.py",
+        "scripts/urbit/digests.py",
+        "scripts/urbit/namespace_check.py",
+        "scripts/urbit/toolchain.py"
+      ]
+    },
+    {
+      "claim": "The new missing-binding capacity proof separates exact result-watch denial, a real bus Gall poke with transport ACK only and unchanged protected state, and the existing owner-only actual final apply-command invocation with the identical bus command and explicit denied_or_not_found. It does not replace mutation authorization with a watch NACK or transport ACK. Every exception after successful drop attempts exact original protected-state restoration; any failure remains failure.",
+      "files": [
+        "scripts/urbit/qualification_cases.py",
+        "tests/urbit/test_qualification_cases.py"
+      ],
+      "independent_delta_review": {
+        "path": ".runtime/phase01-20260926/capacity01-fix-source-review.json",
+        "pointer": "",
+        "sha256": "0d9373bf03f39fbf994dd3ed9a0c188cad4e399ba17ebff17af41934f931ab8b"
+      },
+      "independent_delta_reviewer": "/root/gall_schedule_review"
+    },
+    {
+      "claim": "Unchanged home on-poke calls actual apply-command using trusted Gall src before checking result-channel identity. Unchanged apply-command resolves current context before capacity and returns exact denial with unchanged db when binding is missing. The test-only batch calls the same reducer with explicit bus; it supplements the real bus poke rather than impersonating a delivered message.",
+      "files": [
+        "native/core/desk/app/stead-home.hoon",
+        "native/core/desk/lib/stead-core.hoon"
+      ]
+    }
+  ],
+  "guard_reviewed_source_files": {
+    "Makefile": "db4777fe8809b0a31e570de79c38faa4421a5e87cca70bb82b8173083b9c7784",
+    "scripts/urbit/digests.py": "88e6333bd6c764f48fb8939bafa77c9eb236c5b3586a19fe1a1f6e48e27dc08c",
+    "scripts/urbit/execution_policy.py": "da16e2e0fd32eb5b90706b546a7ea8332a65807fc8279f3bd765dcc18aaad9b5",
+    "scripts/urbit/harness.py": "d74d3ef74ea6c58bc1b15ea3c504f2eef7e980073e5260e7c566697b9a1261fe",
+    "scripts/urbit/namespace_check.py": "87950f4e7796fafb91807c36b9ea7d392d1d1840e5516d15d5fc6c5d476d0449",
+    "scripts/urbit/supervisor.py": "a0c840c2382cc5b97304c7696ef6069f78051ba4795a4d3c0729e0c236df1168",
+    "scripts/urbit/toolchain.py": "31234bbab1af217c885d8c081d7f438972f6ff1b6d89c93d10bdf49871b3ea16"
+  },
+  "host_capture": {
+    "available_capture": {
+      "path": ".runtime/phase01-20260926/host-recapture-20260926t223038z-27246f4e/host-current.json",
+      "pointer": "",
+      "sha256": "429407b2999f607716f75828baa70c97e75a8766f16dfad15046f40d171f36ed"
+    },
+    "available_capture_independently_audited_here": false,
+    "capture_requirements": [
+      "Use a new create-once output directory with the reviewed capture wrapper; do not edit or reuse old run files.",
+      "Acquire both idle lifetime/audit locks only after root confirms capacity01 cleanup and slot release. No source/HEAD changes through capture.",
+      "Record actual full verbose test IDs and start/result/stop events, all subtests, stdout/stderr and all eight output hashes.",
+      "Record exact before/after HEADdd0e8c0 if unchanged,156 source hashes and actual Git-byte identity/status, CPU50percent/10ms/CPU19 readback and closed outer scope.",
+      "Keep private source-fresh loader cache, then restore sys.pycache_prefix=None immediately before tests while dont_write_bytecode=True, preserving the real intentional stale-bytecode control.",
+      "Require nonempty exact142 inventory, all tests observed and passed, no skips/missing results, unchanged sources, successful outer exit and verified cleanup; inspect actual artifacts independently before promotion."
+    ],
+    "changed_inputs": {
+      "Makefile": {
+        "new": "db4777fe8809b0a31e570de79c38faa4421a5e87cca70bb82b8173083b9c7784",
+        "old": "496c1dcc50816777472c6d12cb2311fd22e66579fbc0091eeea7694f25e2e010"
+      },
+      "native/core/desk/ted/stead-client.hoon": {
+        "new": "a0420730b0ee1a56d46e22def0b570cf089a7de39810453010a3f77ff3f9c155",
+        "old": "e039355539b2aef4db0ac8137dae71984d9284abeaffd20a1d9fb110adb35c5f"
+      },
+      "scripts/urbit/core_test.py": {
+        "new": "612ea14eeb83a047fce9bf542492c7d1ed38431015274703d20994b406ef392d",
+        "old": "4bba0828e7d5451338e176cafe66a02aaa0837c2291bb0dcd80aff5b9fb0c7cb"
+      },
+      "scripts/urbit/dev_help.py": {
+        "new": "185178949e9be531f3653830f02e0d6d22a7bd8ee5721a9063995052e813bc23",
+        "old": "b0a820de1be14cf623dc93399297ad94145cccdb82661581c6d415abeccd58e3"
+      },
+      "scripts/urbit/harness.py": {
+        "new": "d74d3ef74ea6c58bc1b15ea3c504f2eef7e980073e5260e7c566697b9a1261fe",
+        "old": "8dfe4725bbc534c61ec87ab4467d93314bd2ff8df15ab3a783481cef11e75b8a"
+      },
+      "scripts/urbit/qualification_cases.py": {
+        "new": "0383dd02dcb1e3cfa6ff9e93be5da49b2fee7bdee1a71dde7c2b6db303c3c3f9",
+        "old": "1d06a75fea124e2a17b27167c8402090532d8f30425d69ecde8441094b088c71"
+      },
+      "scripts/urbit/supervisor.py": {
+        "new": "a0c840c2382cc5b97304c7696ef6069f78051ba4795a4d3c0729e0c236df1168",
+        "old": "a10e499fb3242f9715b15d8932c8bf663d559479b70f5b6b20f1d6a787f55444"
+      },
+      "tests/urbit/test_qualification_cases.py": {
+        "new": "d0607db99a5921cd4eb43658bab10fc7d0ee802fbc17d75ae02281d27ab56bfc",
+        "old": "830bf21624fed55522b633df8c19d9924217e291a585fdc8c4849ab2ab99ef4a"
+      }
+    },
+    "do_not_predeclare_pass_or_subtest_count": true,
+    "expected_modules": {
+      "test_delivery_cases": 10,
+      "test_delivery_evidence_regressions": 11,
+      "test_delivery_suite": 14,
+      "test_dev_flow": 32,
+      "test_execution_policy": 6,
+      "test_harness_safety": 43,
+      "test_runtime_guard_adversarial": 26
+    },
+    "expected_test_count_if_source_unchanged": 142,
+    "expected_test_ids_from_unchanged_selected_module_bytes": [
+      "test_execution_policy.ControlledChildExecution.test_child_keeps_exclusive_lock_after_parent_descriptor_closes",
+      "test_execution_policy.ControlledChildExecution.test_clean_light_child_completion_is_not_labeled_native_pass",
+      "test_execution_policy.ControlledChildExecution.test_existing_stop_never_launches_a_child",
+      "test_execution_policy.ControlledChildExecution.test_hot_preflight_never_launches_a_child",
+      "test_execution_policy.ControlledChildExecution.test_trip_with_child_exit_zero_stays_failed_and_preserves_crossing",
+      "test_execution_policy.ControlledChildExecution.test_uncooperative_owned_child_is_killed_within_bounded_cleanup",
+      "test_runtime_guard_adversarial.GuardFailureOutcomeTests.test_evidence_write_failure_after_preparation_prevents_child_launch",
+      "test_runtime_guard_adversarial.GuardFailureOutcomeTests.test_evidence_write_failure_still_signals_owned_running_child",
+      "test_runtime_guard_adversarial.GuardFailureOutcomeTests.test_hot_or_missing_preflight_never_calls_factory_or_process",
+      "test_runtime_guard_adversarial.GuardFailureOutcomeTests.test_operator_stop_before_launch_is_nonpassing_without_launch",
+      "test_runtime_guard_adversarial.LeaseAdmissionTests.test_current_owned_source_bound_lease_is_accepted",
+      "test_runtime_guard_adversarial.LeaseAdmissionTests.test_sandbox_cannot_accept_writable_control_mount",
+      "test_runtime_guard_adversarial.LeaseAdmissionTests.test_stale_and_future_freshly_written_leases_refuse",
+      "test_runtime_guard_adversarial.LeaseAdmissionTests.test_stop_file_and_stop_symlink_are_terminal_despite_running_lease",
+      "test_runtime_guard_adversarial.LeaseAdmissionTests.test_wrong_owner_source_policy_generation_or_stopped_lease_refuses",
+      "test_runtime_guard_adversarial.OwnedHostFilesTests.test_cgroup_and_affinity_readback_mismatch_refuses",
+      "test_runtime_guard_adversarial.OwnedHostFilesTests.test_control_reads_refuse_aliases_fifo_size_and_duplicate_keys",
+      "test_runtime_guard_adversarial.OwnedHostFilesTests.test_evidence_parent_symlink_cannot_redirect_host_write",
+      "test_runtime_guard_adversarial.OwnedHostFilesTests.test_final_entry_symlink_is_safely_replaced_or_refused",
+      "test_runtime_guard_adversarial.OwnedHostFilesTests.test_lock_contention_preserves_held_inode_and_file",
+      "test_runtime_guard_adversarial.OwnedHostFilesTests.test_lock_symlink_and_hardlink_refuse_without_touching_sentinel",
+      "test_runtime_guard_adversarial.OwnedHostFilesTests.test_scope_signal_rejects_other_unit_without_systemctl",
+      "test_runtime_guard_adversarial.OwnedHostFilesTests.test_shared_permissions_on_existing_lock_refuse",
+      "test_runtime_guard_adversarial.ThermalEvidenceTests.test_ambient_only_is_not_cpu_thermal_evidence",
+      "test_runtime_guard_adversarial.ThermalEvidenceTests.test_constructor_cannot_weaken_existing_limits",
+      "test_runtime_guard_adversarial.ThermalEvidenceTests.test_duplicate_cpu_inventory_refuses",
+      "test_runtime_guard_adversarial.ThermalEvidenceTests.test_missing_or_renamed_hottest_sensor_refuses_continuation",
+      "test_runtime_guard_adversarial.ThermalEvidenceTests.test_nonfinite_invalid_and_implausible_sensor_values_refuse",
+      "test_runtime_guard_adversarial.ThermalEvidenceTests.test_preflight_allows_ceiling_but_running_stops_at_ceiling",
+      "test_runtime_guard_adversarial.ThermalEvidenceTests.test_same_values_from_fresh_reads_are_valid",
+      "test_runtime_guard_adversarial.ThermalEvidenceTests.test_sampler_does_not_silently_drop_malformed_zone",
+      "test_runtime_guard_adversarial.ThermalEvidenceTests.test_stale_future_reversed_and_nonfinite_clocks_refuse",
+      "test_harness_safety.DigestSafety.test_directory_redirect_is_not_invisible_to_digest",
+      "test_harness_safety.DigestSafety.test_file_redirect_is_not_equivalent_to_original_bytes",
+      "test_harness_safety.DigestSafety.test_fresh_cache_prefix_executes_source_instead_of_old_host_bytecode",
+      "test_harness_safety.DigestSafety.test_helper_inventory_binds_new_files_and_excludes_only_cache_directory",
+      "test_harness_safety.DigestSafety.test_source_profile_covers_internal_aliases_and_their_targets",
+      "test_harness_safety.DigestSafety.test_source_profile_rejects_alias_outside_pinned_tree",
+      "test_harness_safety.DigestSafety.test_special_sources_refuse_without_waiting_for_fifo_writer",
+      "test_harness_safety.FixtureSafety.test_active_control_endpoint_blocks_reset",
+      "test_harness_safety.FixtureSafety.test_changed_seed_preserves_live_data",
+      "test_harness_safety.FixtureSafety.test_changed_toolchain_preserves_live_data",
+      "test_harness_safety.FixtureSafety.test_fixture_root_symlink_is_rejected",
+      "test_harness_safety.FixtureSafety.test_fixture_with_public_permissions_is_rejected",
+      "test_harness_safety.FixtureSafety.test_invalid_marker_is_not_permission_to_delete",
+      "test_harness_safety.FixtureSafety.test_parent_root_symlink_is_rejected",
+      "test_harness_safety.FixtureSafety.test_redirected_control_or_owned_entry_is_rejected",
+      "test_harness_safety.FixtureSafety.test_seed_directory_symlink_cannot_escape_digest_or_reset_guard",
+      "test_harness_safety.FixtureSafety.test_start_with_other_toolchain_cannot_launch_existing_piers",
+      "test_harness_safety.FixtureSafety.test_unmarked_fixture_is_not_deleted",
+      "test_harness_safety.FixtureSafety.test_unresponsive_supervisor_lock_still_blocks_reset",
+      "test_harness_safety.FixtureSafety.test_valid_stopped_hash_verified_seed_resets_all_four",
+      "test_harness_safety.QualificationSourceSafety.test_added_helper_and_changed_mounted_inputs_reject",
+      "test_harness_safety.QualificationSourceSafety.test_clean_committed_bytes_and_cache_admission",
+      "test_harness_safety.QualificationSourceSafety.test_clean_git_status_does_not_hide_changed_committed_bytes",
+      "test_harness_safety.QualificationSourceSafety.test_ignored_uncommitted_mounted_inputs_cannot_claim_exact_commit",
+      "test_harness_safety.SupervisorLifecycleSafety.test_cancelled_boot_never_polls_native_endpoint",
+      "test_harness_safety.SupervisorLifecycleSafety.test_forced_state_is_never_promoted_to_a_clean_seed",
+      "test_harness_safety.SupervisorLifecycleSafety.test_guard_stop_overwrites_a_just_written_passing_native_report",
+      "test_harness_safety.SupervisorLifecycleSafety.test_nonzero_child_exit_stays_unclean_after_normal_stop",
+      "test_harness_safety.SupervisorLifecycleSafety.test_normal_stop_watchdog_cannot_swallow_cleanup_failure",
+      "test_harness_safety.SupervisorLifecycleSafety.test_normal_stop_watchdog_does_not_label_a_clean_stop_as_forced",
+      "test_harness_safety.SupervisorLifecycleSafety.test_overlapping_shutdown_paths_send_term_once_per_process_incarnation",
+      "test_harness_safety.SupervisorLifecycleSafety.test_shutdown_failure_still_attempts_every_other_ship_and_reports_failure",
+      "test_harness_safety.SupervisorLifecycleSafety.test_signal_and_wait_failures_do_not_abandon_other_children",
+      "test_harness_safety.SupervisorLifecycleSafety.test_stale_guard_latches_cancellation_before_the_busy_test_mutex",
+      "test_harness_safety.SupervisorLifecycleSafety.test_stop_signals_cancellation_before_waiting_for_active_initialization",
+      "test_harness_safety.SupervisorLifecycleSafety.test_supervisor_exit_is_nonzero_for_guard_or_initialization_failure",
+      "test_harness_safety.SupplyChainSafety.test_archive_tampering_fails_before_executable_check",
+      "test_harness_safety.SupplyChainSafety.test_original_pinned_synthetic_fixture_verifies",
+      "test_harness_safety.SupplyChainSafety.test_partial_download_symlink_cannot_overwrite_outside_cache",
+      "test_harness_safety.SupplyChainSafety.test_protocol_corpus_tampering_fails_before_executable_check",
+      "test_harness_safety.SupplyChainSafety.test_redirected_download_directory_is_rejected",
+      "test_harness_safety.SupplyChainSafety.test_redirected_extracted_binary_parent_is_rejected",
+      "test_harness_safety.SupplyChainSafety.test_tampered_node_is_rejected_before_it_can_execute",
+      "test_dev_flow.CompileEvidenceTests.test_empty_sources_cannot_be_a_successful_build",
+      "test_dev_flow.CompileEvidenceTests.test_interrupted_native_work_retains_nonpassing_input_checkpoint",
+      "test_dev_flow.CompileEvidenceTests.test_late_guard_failure_overrides_successful_probes",
+      "test_dev_flow.CompileEvidenceTests.test_required_save_load_probe_cannot_pass_on_empty_or_wrong_result",
+      "test_dev_flow.CompileEvidenceTests.test_source_change_during_build_is_not_a_pass",
+      "test_dev_flow.CompileEvidenceTests.test_stale_loaded_runner_cannot_reset_or_execute_fixture",
+      "test_dev_flow.CompileEvidenceTests.test_success_is_explicitly_compile_scope_not_phase_acceptance",
+      "test_dev_flow.CompileEvidenceTests.test_wrong_compiler_result_is_failure_with_retained_output",
+      "test_dev_flow.LifecycleTests.test_dev_cleans_up_failed_compile",
+      "test_dev_flow.LifecycleTests.test_dev_cleans_up_start_failure_and_keyboard_interrupt",
+      "test_dev_flow.LifecycleTests.test_dev_preserves_original_failure_when_cleanup_also_fails",
+      "test_dev_flow.LifecycleTests.test_failed_launched_supervisor_marks_fixture_and_blocks_next_start",
+      "test_dev_flow.LifecycleTests.test_preflight_never_launches_or_creates_fixture",
+      "test_dev_flow.LifecycleTests.test_public_feedback_cli_uses_only_the_fixed_rpc",
+      "test_dev_flow.LifecycleTests.test_ready_requires_running_guard",
+      "test_dev_flow.LifecycleTests.test_status_distinguishes_stopped_from_unresponsive_owner",
+      "test_dev_flow.LifecycleTests.test_status_does_not_create_absent_fixture",
+      "test_dev_flow.LifecycleTests.test_status_does_not_mislabel_timeout_as_stopped",
+      "test_dev_flow.LifecycleTests.test_status_refuses_redirected_fixture",
+      "test_dev_flow.LifecycleTests.test_status_uses_real_socket_in_long_checkout_path",
+      "test_dev_flow.LifecycleTests.test_stop_does_not_swallow_other_control_failures",
+      "test_dev_flow.LifecycleTests.test_stop_socket_disappearance_still_requires_released_lifetime_lock",
+      "test_dev_flow.LifecycleTests.test_terminal_failure_never_retries_start",
+      "test_dev_flow.SupervisorDeveloperTests.test_failed_check_stops_children_and_clears_ready",
+      "test_dev_flow.SupervisorDeveloperTests.test_failed_public_compile_with_healthy_guard_remains_a_task_failure",
+      "test_dev_flow.SupervisorDeveloperTests.test_final_source_or_cleanup_failure_cannot_leave_green_feedback",
+      "test_dev_flow.SupervisorDeveloperTests.test_late_guard_failure_updates_both_reports_without_private_error_disclosure",
+      "test_dev_flow.SupervisorDeveloperTests.test_private_scoring_cannot_be_requested_with_public_task_parameters",
+      "test_dev_flow.SupervisorDeveloperTests.test_public_prequalification_references_cannot_escape_workflow_mount",
+      "test_dev_flow.SupervisorDeveloperTests.test_public_rpc_rejects_broadened_keys_paths_conditions_and_attempts",
+      "test_dev_flow.SupervisorDeveloperTests.test_public_rpc_resolves_one_fixed_read_only_snapshot_and_finishes_lifetime",
+      "test_dev_flow.SupervisorDeveloperTests.test_shared_module_edit_after_eager_import_changes_supervisor_binding",
+      "test_delivery_cases.DeliveryEvidenceHostTests.test_ack_nack_timeout_partial_missing_and_duplicate_never_saved",
+      "test_delivery_cases.DeliveryEvidenceHostTests.test_counter_without_event_and_multiple_facts_fail",
+      "test_delivery_cases.DeliveryEvidenceHostTests.test_fact_ack_kick_host_permutations_require_exact_receipt",
+      "test_delivery_cases.DeliveryEvidenceHostTests.test_fault_wrong_lane_mark_source_digest_and_terminal_fact_fail",
+      "test_delivery_cases.DeliveryEvidenceHostTests.test_foreign_leak_or_unacknowledged_subscriber_fails",
+      "test_delivery_cases.DeliveryEvidenceHostTests.test_held_same_path_sentinel_needs_owner_control_record",
+      "test_delivery_cases.DeliveryEvidenceHostTests.test_missing_raw_query_runtime_errors_and_sentinel_fail",
+      "test_delivery_cases.DeliveryEvidenceHostTests.test_old_host_constants_cannot_stand_in_for_native_events",
+      "test_delivery_cases.DeliveryEvidenceHostTests.test_owner_control_is_bounded_and_cannot_return_business_acceptance",
+      "test_delivery_cases.DeliveryEvidenceHostTests.test_well_formed_authored_trace_verifies_shape_only",
+      "test_delivery_evidence_regressions.DeliveryEvidenceRegressionTests.test_correct_late_ack_after_kick_remains_valid",
+      "test_delivery_evidence_regressions.DeliveryEvidenceRegressionTests.test_different_ship_clock_order_is_not_assumed",
+      "test_delivery_evidence_regressions.DeliveryEvidenceRegressionTests.test_global_event_serial_gaps_are_valid",
+      "test_delivery_evidence_regressions.DeliveryEvidenceRegressionTests.test_read_only_proof_cannot_include_poke_work",
+      "test_delivery_evidence_regressions.DeliveryEvidenceRegressionTests.test_request_envelope_must_be_an_object",
+      "test_delivery_evidence_regressions.DeliveryEvidenceRegressionTests.test_request_probe_identity_is_required",
+      "test_delivery_evidence_regressions.DeliveryEvidenceRegressionTests.test_request_route_is_required",
+      "test_delivery_evidence_regressions.DeliveryEvidenceRegressionTests.test_reserved_sentinel_requires_complete_route",
+      "test_delivery_evidence_regressions.DeliveryEvidenceRegressionTests.test_sentinel_after_snapshot_must_still_be_active",
+      "test_delivery_evidence_regressions.DeliveryEvidenceRegressionTests.test_sentinel_cannot_have_requested_leave",
+      "test_delivery_evidence_regressions.DeliveryEvidenceRegressionTests.test_terminal_marker_cannot_reverse_after_kick",
+      "test_delivery_suite.DeliveryScheduleHostTests.test_absent_native_callbacks_keep_all8_cases_unrun_and_failed",
+      "test_delivery_suite.DeliveryScheduleHostTests.test_bad_evidence_sink_reference_is_not_silent_transcript_loss",
+      "test_delivery_suite.DeliveryScheduleHostTests.test_call_requires_frame_and_consistent_json_before_qualifying_native",
+      "test_delivery_suite.DeliveryScheduleHostTests.test_home_lifecycle_drains_before_restart_and_rejects_dead_sender",
+      "test_delivery_suite.DeliveryScheduleHostTests.test_home_lifecycle_leaves_home_offline_after_transport_failure",
+      "test_delivery_suite.DeliveryScheduleHostTests.test_missing_real_log_adapter_refuses_before_any_observer_action",
+      "test_delivery_suite.DeliveryScheduleHostTests.test_only_specific_drained_native_timeout_is_expected_unavailability",
+      "test_delivery_suite.DeliveryScheduleHostTests.test_partial_callbacks_do_not_begin_native_mutations",
+      "test_delivery_suite.DeliveryScheduleHostTests.test_pending64_actual_ducts_and_per_sender_counts",
+      "test_delivery_suite.DeliveryScheduleHostTests.test_pending_snapshot_cannot_hide_wrong_sender_or_native_record",
+      "test_delivery_suite.DeliveryScheduleHostTests.test_probe_pool_never_reuses_or_exceeds80",
+      "test_delivery_suite.DeliveryScheduleHostTests.test_read_pair_records_actual_trace_shape_and_cancels_foreign_probe",
+      "test_delivery_suite.DeliveryScheduleHostTests.test_unavailable_home_rejects_business_output_ack_and_unrelated_bails",
+      "test_delivery_suite.DeliveryScheduleHostTests.test_unavailable_home_rejects_transport_and_programming_failures"
+    ],
+    "full_suite_evidence": {
+      "path": ".runtime/phase01-20260926/host-dd0e8c0/result.json",
+      "pointer": "",
+      "sha256": "771522343edb63791ed4a479d1461651d25ec99a7bc481a34aa358d2b2270f02"
+    },
+    "full_suite_log": {
+      "path": ".runtime/phase01-20260926/host-dd0e8c0/host.log",
+      "pointer": "",
+      "sha256": "45b9ced9b9d66b9f90e551ce18563721a1a292617c831817bbecb2db66136683"
+    },
+    "full_suite_observation": {
+      "all_match_actual_committed_bytes": true,
+      "command": [
+        "systemd-run",
+        "--user",
+        "--scope",
+        "--quiet",
+        "--unit=stead-host-dd0e8c0.scope",
+        "-p",
+        "CPUQuota=20%",
+        "-p",
+        "CPUQuotaPeriodSec=10ms",
+        "-p",
+        "RuntimeMaxSec=300s",
+        "--",
+        "taskset",
+        "-c",
+        "19",
+        "make",
+        "check"
+      ],
+      "executor": "/root",
+      "native_execution": false,
+      "reviewer_reran_tests": false,
+      "source_files": 156,
+      "tests": 476,
+      "unittest_seconds": 177.231,
+      "wrapper_seconds": 179.24200971098617
+    },
+    "full_suite_relation": "Actual476 root-executed host tests at dd0 overlap selected142; five new missing-binding tests replace one old test, net+4 outside the seven selected modules. No additive count or reviewer execution claim.",
+    "new_tests_outside_selection": [
+      "QualificationAdapterTests.test_load_rejection_requires_specific_context_and_no_timeout",
+      "QualificationAdapterTests.test_missing_binding_final_gate_or_transport_failure_restores_binding",
+      "QualificationAdapterTests.test_missing_binding_not_removed_or_not_restored_cannot_qualify",
+      "QualificationAdapterTests.test_missing_binding_poke_business_body_or_mutation_cannot_qualify",
+      "QualificationAdapterTests.test_missing_binding_requires_real_poke_and_explicit_final_gate_denial",
+      "QualificationAdapterTests.test_missing_binding_watch_timeout_or_unrelated_failure_cannot_qualify",
+      "QualificationAdapterTests.test_only_private_full_load_controls_get_bulk_wait"
+    ],
+    "old_host_source_file_count": 156,
+    "removed_tests_outside_selection": [
+      "QualificationAdapterTests.test_missing_binding_probe_restores_only_fixture_binding_and_propagates_failure"
+    ],
+    "required_after_native_lifetime_closes": true,
+    "same_selected_test_module_bytes": true
+  },
+  "implementation_source_commit": "dd0e8c0ce8d1d00f15de6b07e2e26d368c5c3774",
+  "native_execution_performed": false,
+  "observed_head": "dd0e8c0ce8d1d00f15de6b07e2e26d368c5c3774",
+  "old_refs": [
+    {
+      "bytes": 5765,
+      "path": "docs/urbit/evidence/2026-09-26/phase1-nonnative-v4/dispositions.json",
+      "sha256": "2ef0e381b9b0918a6e2ba9f46fb74887af6246fccba1f4e1a3e2cdb11c519c52"
+    },
+    {
+      "bytes": 38382,
+      "path": "docs/urbit/evidence/2026-09-26/phase1-nonnative-v4/source-dispositions.json",
+      "sha256": "f46141acdc9a6ef56f461d3424b4b695aaaea1a515a96bb913e0f95930f08b2d"
+    },
+    {
+      "bytes": 24766,
+      "path": "docs/urbit/evidence/2026-09-26/phase1-nonnative-v4/source-bindings.json",
+      "sha256": "32d17727a152382893d34ca62d6877e1bf4fe12dae89c5c86872b2ce978b2f21"
+    },
+    {
+      "bytes": 3761,
+      "path": "docs/urbit/evidence/2026-09-26/phase1-nonnative-v4/historical-guard-continuity.json",
+      "sha256": "c1a9e9ce34fc0f5b668f33dfd37a0de4e6269363e8951601f71c7d90f6a24b9f"
+    },
+    {
+      "bytes": 9303,
+      "path": "docs/urbit/evidence/2026-09-26/phase1-nonnative-v4/retention-index.json",
+      "sha256": "a7a4855532e729003161890a262d91c92052dc7ee8229411b7dfc2772513facc"
+    }
+  ],
+  "phase_qualification": false,
+  "pre_handoff_preparation_note": "Exhaustive test-method delta outside the seven selected modules was added before final handoff; seven added and one removed relative to v4, net+6. This is static source inventory, not a test execution.",
+  "prior_independent_delta_review": {
+    "bytes": 6506,
+    "path": "docs/urbit/evidence/2026-09-26/capacity-fix/source-review.json",
+    "sha256": "751de4e1e472e7869588e1b116f502250921019f7e1a30369621dbf7e8ca5d90"
+  },
+  "prior_promoter_source_review": {
+    "path": ".runtime/phase01-20260926/nonnative-v5-promoter-source-review.json",
+    "pointer": "",
+    "sha256": "51652a0e27fae1a0d436114c9676a78784fa31707c089df21ca8211d03b98686"
+  },
+  "prior_refresh_plan": {
+    "path": ".runtime/phase01-20260926/nonnative-v5-refresh-plan.json",
+    "pointer": "",
+    "sha256": "0a17e1e86de473591e5844541ea7876f2582bd66492daff4a137656330017ad8"
+  },
+  "protocol": "stead.independent-nonnative-v5-refresh-plan/1",
+  "recorded_at": "2026-09-26T22:33:56.282775+00:00",
+  "resources": "CPU20percent/10ms/CPU19 bounded read-only metadata scopes; only this ignored plan written.",
+  "reviewer": "/root/independent_review",
+  "scope": "Read-only composition of v4-to-a1 capacity-diagnostic review, a1-to3f0 exact tested-input identity, and3f0-to-dd0e missing-binding protocol correction. Original plans/helpers/reviews are preserved. Actual selected capture is available but independent retained-byte audit and v5 promotion remain separate.",
+  "separate_native_gaps": [
+    "capacity01 is retained as failed and cannot acquire missing watch/poke/batch evidence from this code change. The new correction is source-reviewed; native execution remains separate.",
+    "Current-source complete capacity diagnostic, complete full-core sequence, matching scheduled-Gall and independent73 reconciliation remain required. Do not splice failed prefixes or treat a focused capacity pass as full qualification.",
+    "These source/N-A/host dispositions do not certify native save-load, migration, result delivery, runtime latency or application authorization."
+  ],
+  "seven_disposition_plan": [
+    {
+      "action": "Retain exact existing stead-core findings/reviewer; refresh all common bindings and supersedes to v4. New client does not alter authoritative receipt lookup ordering.",
+      "id": "receipt-lookup-order",
+      "semantic_status": "unchanged reviewed source bytes"
+    },
+    {
+      "action": "Retain bounded no-external-effect scope and exact home/core hashes; refresh common bindings/supersedes. Diagnostic timing is not a new product effect executor.",
+      "id": "no-effect-subsystem",
+      "semantic_status": "unchanged N/A home/core bytes"
+    },
+    {
+      "action": "Replace only current reviewed Makefile/harness/supervisor hashes, append these v5 findings and exact751de4 reviewer record. Preserve all old findings and original author/reviewer attributions. Bind new current source and create an independent composite confirmation after host evidence is audited. Append the exact separate0d9373 binding-test review and its two-file patch chain; the seven guard composite hashes themselves are unchanged from3f0.",
+      "id": "guard-independent-source-review",
+      "semantic_status": "new3-file composite delta reviewed here; no source blocker"
+    },
+    {
+      "action": "Fresh actual142 selected run required for current claim. Replace current host/log/inventory/events/audit references with exact new files; preserve original assertion-to-test mapping. Guard-only binding stays da16e2e0; actual source records identifydd0e. Preserve test classifications and overlap476 limit.",
+      "id": "guard-negative-host-tests",
+      "semantic_status": "guard hash unchanged, imported execution code changed"
+    },
+    {
+      "action": "Retain reducer findings and original mapping. Point to fresh actual142 host evidence and audit and rebind common fields, while retaining host/mock scope and no live Gall/Ames-order claim.",
+      "id": "delivery-host-order-permutations",
+      "semantic_status": "delivery_cases source and selected tests unchanged"
+    },
+    {
+      "action": "Keep original bound-proofs pointer4 and historical7166 guard hash, actual93/81C artifact hashes and outcomes. Refresh only the narrow continuity current source-review/current host-test refs and binding_observed_source_commit; do not manufacture heat or relabel original execution.",
+      "id": "guard-real-hot-preflight-refusal",
+      "semantic_status": "original exact historical proof remains unchanged"
+    },
+    {
+      "action": "Keep original bound-proofs pointer5, historical7166 guard hash and original45C mocked-sensor platform/log hashes. The same exactnine-line historical/current guard delta remains unchanged; refresh current continuity prerequisites only.",
+      "id": "guard-real-platform-mocked-sensors",
+      "semantic_status": "original exact historical proof remains unchanged"
+    }
+  ],
+  "since_3f0_binding_changes": {
+    "execution_inputs": [
+      {
+        "new": "70370987fbd5c75e7b8562fcc43462435b122495387b8c32011ed9f6caee9696",
+        "old": "13b998e0f54aee10a96573c762cbf3be24c5ecb0095453aeccb21b5f50c5cd1a",
+        "pointer": "/core/harness"
+      },
+      {
+        "new": "0383dd02dcb1e3cfa6ff9e93be5da49b2fee7bdee1a71dde7c2b6db303c3c3f9",
+        "old": "208fc2e2d9448d5ea745bf51acefec0d06b84efdde814a8b9c73dcc3fbc70555",
+        "pointer": "/core/runner/qualification_cases.py"
+      },
+      {
+        "new": "70370987fbd5c75e7b8562fcc43462435b122495387b8c32011ed9f6caee9696",
+        "old": "13b998e0f54aee10a96573c762cbf3be24c5ecb0095453aeccb21b5f50c5cd1a",
+        "pointer": "/gall_schedule/harness"
+      }
+    ],
+    "execution_lanes": [
+      {
+        "new": "70370987fbd5c75e7b8562fcc43462435b122495387b8c32011ed9f6caee9696",
+        "old": "13b998e0f54aee10a96573c762cbf3be24c5ecb0095453aeccb21b5f50c5cd1a",
+        "pointer": "/core/loaded_closure_sha256"
+      },
+      {
+        "new": "dd0e8c0ce8d1d00f15de6b07e2e26d368c5c3774",
+        "old": "3f0f3778997798f2ed208e206b46882a87340eb1",
+        "pointer": "/core/source_commit"
+      },
+      {
+        "new": "70370987fbd5c75e7b8562fcc43462435b122495387b8c32011ed9f6caee9696",
+        "old": "13b998e0f54aee10a96573c762cbf3be24c5ecb0095453aeccb21b5f50c5cd1a",
+        "pointer": "/gall_schedule/loaded_closure_sha256"
+      },
+      {
+        "new": "dd0e8c0ce8d1d00f15de6b07e2e26d368c5c3774",
+        "old": "3f0f3778997798f2ed208e206b46882a87340eb1",
+        "pointer": "/gall_schedule/source_commit"
+      }
+    ],
+    "observed_source": [
+      {
+        "new": "0383dd02dcb1e3cfa6ff9e93be5da49b2fee7bdee1a71dde7c2b6db303c3c3f9",
+        "old": "208fc2e2d9448d5ea745bf51acefec0d06b84efdde814a8b9c73dcc3fbc70555",
+        "pointer": "/derivation_files/qualification_cases.py"
+      }
+    ]
+  },
+  "source_inventory": {
+    "added": [],
+    "changed": {
+      "Makefile": {
+        "new": "db4777fe8809b0a31e570de79c38faa4421a5e87cca70bb82b8173083b9c7784",
+        "old": "496c1dcc50816777472c6d12cb2311fd22e66579fbc0091eeea7694f25e2e010"
+      },
+      "native/core/desk/ted/stead-client.hoon": {
+        "new": "a0420730b0ee1a56d46e22def0b570cf089a7de39810453010a3f77ff3f9c155",
+        "old": "e039355539b2aef4db0ac8137dae71984d9284abeaffd20a1d9fb110adb35c5f"
+      },
+      "scripts/urbit/core_test.py": {
+        "new": "612ea14eeb83a047fce9bf542492c7d1ed38431015274703d20994b406ef392d",
+        "old": "4bba0828e7d5451338e176cafe66a02aaa0837c2291bb0dcd80aff5b9fb0c7cb"
+      },
+      "scripts/urbit/dev_help.py": {
+        "new": "185178949e9be531f3653830f02e0d6d22a7bd8ee5721a9063995052e813bc23",
+        "old": "b0a820de1be14cf623dc93399297ad94145cccdb82661581c6d415abeccd58e3"
+      },
+      "scripts/urbit/harness.py": {
+        "new": "d74d3ef74ea6c58bc1b15ea3c504f2eef7e980073e5260e7c566697b9a1261fe",
+        "old": "8dfe4725bbc534c61ec87ab4467d93314bd2ff8df15ab3a783481cef11e75b8a"
+      },
+      "scripts/urbit/qualification_cases.py": {
+        "new": "0383dd02dcb1e3cfa6ff9e93be5da49b2fee7bdee1a71dde7c2b6db303c3c3f9",
+        "old": "1d06a75fea124e2a17b27167c8402090532d8f30425d69ecde8441094b088c71"
+      },
+      "scripts/urbit/supervisor.py": {
+        "new": "a0c840c2382cc5b97304c7696ef6069f78051ba4795a4d3c0729e0c236df1168",
+        "old": "a10e499fb3242f9715b15d8932c8bf663d559479b70f5b6b20f1d6a787f55444"
+      }
+    },
+    "current_count": 128,
+    "makefile_rule": "B.expected_inputs has127 runtime-root files. Preserve the existing promoter explicit committed Makefile binding to obtain128; do not mistakenly drop Makefile.",
+    "removed": [],
+    "v4_count": 128
+  },
+  "source_review_chain": [
+    {
+      "base_commit": "5208f3273426e8fe76dc8622ffe93ace93982e17",
+      "candidate_commit": "a1d35b27d8ee482b1854c7352ebc6eecf96a2b08",
+      "note": "Validate this original eight-file patch at a1, not against later dd0.",
+      "patch_sha256": "abd059529087172addea70f01b56f2b41ec3f622e5a57de53ca295adff98722b",
+      "review": {
+        "path": "docs/urbit/evidence/2026-09-26/capacity-fix/source-review.json",
+        "pointer": "",
+        "sha256": "751de4e1e472e7869588e1b116f502250921019f7e1a30369621dbf7e8ca5d90"
+      }
+    },
+    {
+      "base_commit": "a1d35b27d8ee482b1854c7352ebc6eecf96a2b08",
+      "candidate_commit": "3f0f3778997798f2ed208e206b46882a87340eb1",
+      "tested_input_diff_empty": true
+    },
+    {
+      "base_commit": "3f0f3778997798f2ed208e206b46882a87340eb1",
+      "candidate_commit": "dd0e8c0ce8d1d00f15de6b07e2e26d368c5c3774",
+      "patch": {
+        "bytes": 12303,
+        "command": [
+          "git",
+          "diff",
+          "--binary",
+          "--full-index",
+          "3f0f3778997798f2ed208e206b46882a87340eb1",
+          "dd0e8c0ce8d1d00f15de6b07e2e26d368c5c3774",
+          "--",
+          "scripts/urbit/qualification_cases.py",
+          "tests/urbit/test_qualification_cases.py"
+        ],
+        "files": {
+          "scripts/urbit/qualification_cases.py": {
+            "after_bytes": 42516,
+            "after_sha256": "0383dd02dcb1e3cfa6ff9e93be5da49b2fee7bdee1a71dde7c2b6db303c3c3f9",
+            "before_sha256": "208fc2e2d9448d5ea745bf51acefec0d06b84efdde814a8b9c73dcc3fbc70555"
+          },
+          "tests/urbit/test_qualification_cases.py": {
+            "after_bytes": 36527,
+            "after_sha256": "d0607db99a5921cd4eb43658bab10fc7d0ee802fbc17d75ae02281d27ab56bfc",
+            "before_sha256": "3005feabca29b876a364f601b38c38772af340d05f9c1bd6677e3a551adb55cd"
+          }
+        },
+        "sha256": "ee46af377706c897993a4d5d5b21c6fee14f937e5537357fef0925eaafe27ec8"
+      },
+      "review": {
+        "path": ".runtime/phase01-20260926/capacity01-fix-source-review.json",
+        "pointer": "",
+        "sha256": "0d9373bf03f39fbf994dd3ed9a0c188cad4e399ba17ebff17af41934f931ab8b"
+      }
+    }
+  ],
+  "status": "source-review-complete-current-host-recapture-and-promotion-pending",
+  "tests_executed": false,
+  "tracked_writes_performed": false,
+  "unchanged_common_hashes": {
+    "contract_freeze_sha256": "a2336e5060c71c7c16849b3151cc024a598d6cdf867561452eff1338e3232670",
+    "corpus_sha256": "95c915e2d0c93f358225274b34216fff0fe2efc09791905855b1e3f36aec368a",
+    "guard_sha256": "da16e2e0fd32eb5b90706b546a7ea8332a65807fc8279f3bd765dcc18aaad9b5",
+    "observer_sha256": "16589b4f9f51782d0907a7c186e3fcff6625c713bb64006f37330d6056645e45",
+    "runtime_lock_sha256": "4a209c10cf1756eb0f7357cc3eca8250bf66c239b4cd0ca31a8c0886d4d304ee"
+  },
+  "unchanged_historical_guard_items": [
+    {
+      "artifact": {
+        "path": "docs/urbit/evidence/2026-09-13/qualification/bound-proofs.json",
+        "pointer": "/proofs/4",
+        "sha256": "c5edbf7c4b4f9774c6a69648b10d0cb80599a0cbf8ac132cc73441a5a069f31b"
+      },
+      "bindings": {
+        "guard_sha256": "7166d197a6e3879f21c22637f2bd3074ff90975c33a2149f6e07763e2eeaa04e"
+      },
+      "id": "guard-real-hot-preflight-refusal",
+      "kind": "real_host",
+      "status": "passed"
+    },
+    {
+      "artifact": {
+        "path": "docs/urbit/evidence/2026-09-13/qualification/bound-proofs.json",
+        "pointer": "/proofs/5",
+        "sha256": "c5edbf7c4b4f9774c6a69648b10d0cb80599a0cbf8ac132cc73441a5a069f31b"
+      },
+      "bindings": {
+        "guard_sha256": "7166d197a6e3879f21c22637f2bd3074ff90975c33a2149f6e07763e2eeaa04e"
+      },
+      "id": "guard-real-platform-mocked-sensors",
+      "kind": "real_platform_mocked_sensors",
+      "status": "passed"
+    }
+  ],
+  "v5_promotion_steps": [
+    "Use a NEW promote_phase1_nonnative_v5_dd0e8c0.py; preserve earlier85d638 promoter and its51652a review unchanged. Set currentHEADdd0 and new distinct host-audit path; OLD remains v4 and DEST v5 only if nonexistent.",
+    "Validate original eight-file review at5208\u2192a1; prove a1\u21923f0 tested-input equality; validate exact binary/full-index3f0\u2192dd0 two-file patchee46af and both before/after file hashes. Do not demand that the earlier751de4 patch equal5208\u2192dd0.",
+    "Require actual current selected142 capture and independent v5 retained-host audit bound to this new plan, the exact142 IDs and observed subtests, all156 source files and cleanup. Preserve476 full-host bytes at their actualdd0 source and CPU20percent command, separately from the50percent selected capture.",
+    "Recompute expected inputs plus committed Makefile; refresh all new qualification_cases/shared closure/derivation bindings while preserving unchanged native tree/core runner/guard files. Update composite attribution without rewriting old review claims.",
+    "Retain fresh raw outputs, both independent source reviews, new plan/audit and exact source-to-portable helper mappings. The two original historical proofs remain byte-identical; update only narrow current continuity prerequisites.",
+    "Pure metadata admission must still produce exactly seven admitted typed requirements,66native missing,0nativepassed and overallfailed. Audit generated portable artifacts before final integration."
+  ]
+}

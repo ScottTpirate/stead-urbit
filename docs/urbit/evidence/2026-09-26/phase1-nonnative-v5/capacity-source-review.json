@@ -1,0 +1,55 @@
+{
+  "approved_source_properties": [
+    "The Hoon client selects600 seconds only when mode is control and the already-existing control tuple mold decodes an operation of migrate-legacy or load-bad-legacy. Noncontrol raw JSON is not cue-decoded by the selector; other operations retain55 seconds. The Boolean mold, head selection and conditional @dr duration agree with pinned Hoon grammar; this is source reasoning, not compilation.",
+    "The host qualification adapter supplies620 seconds only for those two operations. It otherwise retains the existing75-second core_conn deadline. Authorization at the home owner-local control boundary remains unchanged.",
+    "The strengthened negative predicate requires raw/json absent, actual avow1 terminal, standalone stead-unsupported-state and poke-fail context, the terminal thread-fail line, and no standalone timeout. The observed pinned timeout shape and bare/missing/wrong-context results are rejecting authored fixtures; none are called native tests.",
+    "Actual call start and finish monotonic nanoseconds and elapsed seconds are added before result retention on both success and failure; the exact sidecar and bound summary receive the observed values. They include encoder/transport/decoder time and are not pure Hoon CPU measurements.",
+    "The capacity helper is an exact extraction of the prior full-run qualification block. The original full default stage body is AST-identical after expanding its one capacity() call, and the old delivery-only body is AST-identical. No QA, codec, context, save/load, concurrency, delivery, capacity or closeout predicate was removed or reordered.",
+    "The new capacity-check runs the same eight recipes after the existing committed-source, evaluator, fresh-seed, installed-byte, Clay and compiler probes. Success requires the nested capacity report to be native_qualified with all eight recipes executed, nonempty passing evidence through its existing driver, and supported predecessor1.",
+    "The focused report is separately classified local-real-native-capacity-diagnostic with qualifies_phase=false and core-capacity-check filename. It does not set full execution_complete, deferred QA closeout or a phase result; the current full reconciler cannot admit it as core evidence.",
+    "The exact capacity-check RPC stays behind the supervisor mutex, ready/preflight checks and guarded_result. Failure stops owned ships and clears readiness. The make/harness command checks both pass and explicit false phase qualification.",
+    "The full and diagnostic RPC waits are7200 seconds, matching the existing outer execution-policy ceiling rather than extending it. Thermal75/90, CPU50percent/10ms, final guard/cleanup checks and no-forced-seed behavior are unchanged.",
+    "Native app/reducer/migration validation, frozen recipes/contracts/manifests and guard code are unchanged. No early policy shortcut, skipped history validation, lower capacity, fabricated predecessor state, or timeout-as-rejection allowance was introduced."
+  ],
+  "base_commit": "5208f3273426e8fe76dc8622ffe93ace93982e17",
+  "blocking_findings": [],
+  "host_tests_launched_by_reviewer": false,
+  "limits": [
+    "The negative-control correction is source-reviewed against the actual core05 receipt-mismatch tang and the actual offline-home timeout shape. This is not a newly executed native rejection.",
+    "Integrator host suite was running during review; this record makes no independent test execution or final test-count claim.",
+    "The additional working-tree documentation changes are outside this narrow code review.",
+    "The source-controlled delivery and guard evidence remain separately attributed."
+  ],
+  "native_execution_performed": false,
+  "observed_at": "2026-09-26T21:46:21.428234+00:00",
+  "pending_native_validation": [
+    "Compile the actual revised Hoon client on the pinned runtime; this review executed no compiler.",
+    "At a new committed source, run the guarded focused diagnostic and retain all eight real recipe outcomes, exact transport timing and closed guard/lifecycle. A timeout, wrong terminal or forced stop remains failure.",
+    "Verify all five malformed predecessor variants are specific on-load rejections with unchanged current/predecessor state, and the actual4096-entry positive migration completes with exact preserved hashes and subsequent security-reserve behavior.",
+    "600/620 seconds is a finite diagnostic ceiling, not a measured duration or performance claim. If full validation still cannot complete, preserve that failure and investigate before changing any correctness predicate.",
+    "Complete subsequent current-source full-core/Gall and independent73-item reconciliation separately; prior5208 native artifacts remain historical."
+  ],
+  "protocol": "stead.independent-capacity-diagnostic-source-review/1",
+  "qualifies_phase": false,
+  "reviewed_patch_sha256": "abd059529087172addea70f01b56f2b41ec3f622e5a57de53ca295adff98722b",
+  "reviewed_source_files_sha256": {
+    "Makefile": "db4777fe8809b0a31e570de79c38faa4421a5e87cca70bb82b8173083b9c7784",
+    "native/core/desk/ted/stead-client.hoon": "a0420730b0ee1a56d46e22def0b570cf089a7de39810453010a3f77ff3f9c155",
+    "scripts/urbit/core_test.py": "612ea14eeb83a047fce9bf542492c7d1ed38431015274703d20994b406ef392d",
+    "scripts/urbit/dev_help.py": "185178949e9be531f3653830f02e0d6d22a7bd8ee5721a9063995052e813bc23",
+    "scripts/urbit/harness.py": "d74d3ef74ea6c58bc1b15ea3c504f2eef7e980073e5260e7c566697b9a1261fe",
+    "scripts/urbit/qualification_cases.py": "208fc2e2d9448d5ea745bf51acefec0d06b84efdde814a8b9c73dcc3fbc70555",
+    "scripts/urbit/supervisor.py": "a0c840c2382cc5b97304c7696ef6069f78051ba4795a4d3c0729e0c236df1168",
+    "tests/urbit/test_qualification_cases.py": "3005feabca29b876a364f601b38c38772af340d05f9c1bd6677e3a551adb55cd"
+  },
+  "reviewer": "/root/gall_schedule_review",
+  "scope": "Admission of the bounded capacity/migration measurement diagnostic only. No compiler, performance, runtime or Phase 1 acceptance.",
+  "source_only_checks": [
+    "Scoped git diff --check passed.",
+    "Python AST comparison of default full-run stage body passed after exact helper expansion.",
+    "Python AST comparison of existing delivery-only body passed.",
+    "Reviewed eight file hashes rechecked unchanged before writing this record.",
+    "No delta in app/reducer, guard, core transport, evidence builder/gate or specs."
+  ],
+  "status": "source-review-approved-for-focused-guarded-native-diagnostic"
+}

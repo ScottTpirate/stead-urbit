@@ -1,0 +1,11 @@
+{
+  "verified_at": "2026-09-26T21:34:51.612502+00:00",
+  "all_34_original_values_match": true,
+  "profile_unchanged": true,
+  "helper_restoration": {
+    "time": "2026-09-26T21:33:23Z",
+    "event": "restored",
+    "exact_original_values": true,
+    "failures": []
+  }
+}

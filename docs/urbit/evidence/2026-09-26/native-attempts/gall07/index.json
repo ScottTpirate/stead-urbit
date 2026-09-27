@@ -1,0 +1,122 @@
+{
+  "protocol": "stead.native-attempt/1",
+  "label": "gall07",
+  "source_commit": "738e76305fb544ecc8250a784efe0edc8d228cfe",
+  "native_status": "fail",
+  "native_error": "Execution guard interrupted result: Fixture stop is latched",
+  "native_elapsed_seconds": 9.558,
+  "outer_guard_status": "failed",
+  "outer_guard_reason": "GuardError: Thermal ceiling reached",
+  "outer_guard_exit": 1,
+  "qualifies_phase": false,
+  "transformations": [
+    "gzip compression only; decompressed bytes unchanged"
+  ],
+  "artifacts": [
+    {
+      "file": "gall-schedule-20260926T133518Z-a6b0bfda8427.json.gz",
+      "sha256": "b084de9a3f8e97bd523db7f6615aee2b48f38ca7a1ee20bfc8d80b71e10fe05e",
+      "original_local_path": ".piers/fakes/logs/gall-schedule-20260926T133518Z-a6b0bfda8427.json",
+      "original_sha256": "fa93edf8a7335f72c4d851913280b2756ab80bbc35685e42025e0c1b34e48944",
+      "encoding": "gzip"
+    },
+    {
+      "file": "outer-guard.json.gz",
+      "sha256": "790393a2af8cc768595d9f30a6fd32f8ee88c6b4b4c885604f3f953f271e9af0",
+      "original_local_path": ".runtime/execution-runs/four-fakes-zbezymtg/report.json",
+      "original_sha256": "2f59ab2719d68704e7536c9725ed8ef190b3598b8c4eb781c1902d676998538e",
+      "encoding": "gzip"
+    },
+    {
+      "file": "source-context.json.gz",
+      "sha256": "69f40a6c12480d38e71def22b7b8850ab5bde9f45b5fb61010cdab7217c9d4aa",
+      "original_local_path": ".runtime/execution-runs/four-fakes-zbezymtg/control/source-context.json",
+      "original_sha256": "cd8ac42820a50fac9b0e1cbbd5161a9b9c17e8df3ee0255ba5174b1343b72f7e",
+      "encoding": "gzip"
+    },
+    {
+      "file": "gall07.json.gz",
+      "sha256": "55ef3f80121b371710e0183a273ceca123866b1f2254099c2f72aff0bc0c057b",
+      "original_local_path": ".runtime/phase01-20260925/gall07.json",
+      "original_sha256": "dce780bc94f5acfd8d5cf80bb8bac81dc866b76f254322b09eff4619fc96511d",
+      "encoding": "gzip"
+    },
+    {
+      "file": "gall07.log.gz",
+      "sha256": "89e83b80d358b6cc9ecb216fb7dbaca4b798f54b60388a9dd3a59b98bd485d12",
+      "original_local_path": ".runtime/phase01-20260925/gall07.log",
+      "original_sha256": "b732e7240c05a63bea65cab68c464133c9772aca66d50693aeebaac36bd46ea8",
+      "encoding": "gzip"
+    },
+    {
+      "file": "gall07-zod.log.gz",
+      "sha256": "e63bf672820ed4be700f0e84f9b271d4403de978ad5ea1e1898d01d7c1408ddf",
+      "original_local_path": ".runtime/phase01-20260925/gall07-zod.log",
+      "original_sha256": "7de3448c110c8aaaf4bdf9e384a68b424dab434cf83e79238fbcefa9016b45f8",
+      "encoding": "gzip"
+    },
+    {
+      "file": "start19.json.gz",
+      "sha256": "9cf7216055442da8751ce4acf279d0675ea957cdf67a5480d60134e28527be55",
+      "original_local_path": ".runtime/phase01-20260925/start19.json",
+      "original_sha256": "15d6ee89e392ca85a7e1ed7a0177dba829354e1b0a734a20f93e1cfd531fc818",
+      "encoding": "gzip"
+    },
+    {
+      "file": "start19.log.gz",
+      "sha256": "4d3ca257085e4bc9c2ebaf11be5aea535c56e12186fa4786aab3f87b02034e4c",
+      "original_local_path": ".runtime/phase01-20260925/start19.log",
+      "original_sha256": "ae0df1eceeb869e06e2aa77f12ab25b8aab036b3c12b282d1f9435738a5d61f5",
+      "encoding": "gzip"
+    },
+    {
+      "file": "ready19.json.gz",
+      "sha256": "d3d930b990811e9c650911bf5dfe383a7a03110981b915027eb12d9e1ff2cdbd",
+      "original_local_path": ".runtime/phase01-20260925/ready19.json",
+      "original_sha256": "29b2c9ef0d8768a5859855498793b3fd1ea4c78b73dbffe17b86c919263f480d",
+      "encoding": "gzip"
+    },
+    {
+      "file": "ready19.log.gz",
+      "sha256": "01cedc45b27b73b7c8d5c8d2e0aa7bae317933250f77076dc26ab76b2428f17e",
+      "original_local_path": ".runtime/phase01-20260925/ready19.log",
+      "original_sha256": "6ade3d62b67dd2066207260ae96b6ef88847dbb824720cc7be7b132fee5510e9",
+      "encoding": "gzip"
+    },
+    {
+      "file": "stop19.json.gz",
+      "sha256": "d2617234578d4f44309c2b6d7a743bf235beaeb4f5e45660564d40a3dca082d3",
+      "original_local_path": ".runtime/phase01-20260925/stop19.json",
+      "original_sha256": "13744d975677ecd774e3047b3aa252829c14b2546273ff17a25b31c73a38325b",
+      "encoding": "gzip"
+    },
+    {
+      "file": "stop19.log.gz",
+      "sha256": "12c671e095df8b045e620680c1b93956a87a91531f555b53cad5fd1a748b4a19",
+      "original_local_path": ".runtime/phase01-20260925/stop19.log",
+      "original_sha256": "7e0046a61997e91b4c00d40b33b385148d315de81c5f28722592072cb3fde000",
+      "encoding": "gzip"
+    },
+    {
+      "file": "reset20.json.gz",
+      "sha256": "f81db4956f592d979119538996a4c084fa136417d19d9f578b560842fce90a86",
+      "original_local_path": ".runtime/phase01-20260925/reset20.json",
+      "original_sha256": "dd8a6404aec6295aa837731fd2b612bfd86efee018c8de03f6ec8ced4d89126f",
+      "encoding": "gzip"
+    },
+    {
+      "file": "reset20.log.gz",
+      "sha256": "f881934e094a5ba8c507279e050f290402ae6d979b64fdc64a2714336c108cca",
+      "original_local_path": ".runtime/phase01-20260925/reset20.log",
+      "original_sha256": "20a4f83e68b491f063b2573def36659991a7d8456eb5c92f4624dabdce7e290a",
+      "encoding": "gzip"
+    },
+    {
+      "file": "pre-reset20-unclean-live.json.gz",
+      "sha256": "86ae4850e686150d3867b48c4704260916b7c8e4271949c1486927101b3614f0",
+      "original_local_path": ".runtime/phase01-20260925/pre-reset20-unclean-live.json",
+      "original_sha256": "a9645cb72bbf7a91db1bfc1cfaff409a1cf3a7588d2cf265734537a1ef45fab3",
+      "encoding": "gzip"
+    }
+  ]
+}

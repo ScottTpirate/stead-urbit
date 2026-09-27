@@ -1,0 +1,40 @@
+{
+  "current_delta_review": {
+    "path": "docs/urbit/evidence/2026-09-26/phase1-nonnative-v2/refresh-review.json",
+    "pointer": "",
+    "sha256": "3d4c33fd59737a3d12b1838ca62c3843ab52c09d60f4294de6d51ef0932260cc"
+  },
+  "current_delta_reviewer": "/root/gall_schedule_review",
+  "editor_source_review_handoff": {
+    "path": "docs/urbit/evidence/2026-09-26/phase1-nonnative-v2/editor-source-review-handoff.json",
+    "pointer": "",
+    "sha256": "5e69f7067c4953300b2ee6f9ee25826fff2f3b3eed4849127225fc6672ed2b7c"
+  },
+  "host_test_execution": false,
+  "independently_confirmed_files": {
+    "Makefile": "da78fc039ee0562efcf5b408a9b8ab24f243f5d2965991599548a76b42b8a0f8",
+    "scripts/urbit/digests.py": "88e6333bd6c764f48fb8939bafa77c9eb236c5b3586a19fe1a1f6e48e27dc08c",
+    "scripts/urbit/execution_policy.py": "da16e2e0fd32eb5b90706b546a7ea8332a65807fc8279f3bd765dcc18aaad9b5",
+    "scripts/urbit/harness.py": "c54f5d68491c3894c697fdb0da68a060c3293a4014c3f05d790d397f71306a92",
+    "scripts/urbit/namespace_check.py": "87950f4e7796fafb91807c36b9ea7d392d1d1840e5516d15d5fc6c5d476d0449",
+    "scripts/urbit/supervisor.py": "d157a974075d2e1cbfb1ae07609182a3232c5a3f16b75c3e9287652434d774d2",
+    "scripts/urbit/toolchain.py": "31234bbab1af217c885d8c081d7f438972f6ff1b6d89c93d10bdf49871b3ea16"
+  },
+  "native_execution": false,
+  "original_common_guard_reviewer": "/root/independent_review",
+  "previous_composite_confirmation": {
+    "path": "docs/urbit/evidence/2026-09-26/phase1-nonnative/guard-source-proof-confirmation.json",
+    "pointer": "",
+    "sha256": "523292f26db197a0b48e6fa4f316308f95b51ec6f646cd4269325156fea2fefe"
+  },
+  "previous_composite_proof": {
+    "path": "docs/urbit/evidence/2026-09-26/phase1-nonnative/source-dispositions.json",
+    "pointer": "/proofs/guard-independent-source-review",
+    "sha256": "87a2c38cb7288119c6b542d225e2e1cc25bb35798bb8592666f30c8aabbcdf2f"
+  },
+  "protocol": "stead.guard-source-composite-refresh/2",
+  "qualification_acceptance": false,
+  "recorded_by": "/root/gall_schedule_review",
+  "scope": "Exact single changed-source delta plus unchanged prior common review; no impersonation of the original reviewer or new approval of historical executions.",
+  "source_commit": "0d877cff4319de8d437f0da58d4518535f758c36"
+}

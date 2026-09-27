@@ -1,0 +1,47 @@
+{
+  "base_head": "ffab82f8ac5251cb912236be60edc3d3fac3dfba",
+  "classification": "host-only-authored-raw-evidence-and-real-python-thread-tests",
+  "command": [
+    "/usr/bin/python3",
+    "-m",
+    "unittest",
+    "-v",
+    "test_phase1_evidence_builder"
+  ],
+  "elapsed_seconds": 0.4393321929965168,
+  "environment_overrides": {
+    "PYTHONDONTWRITEBYTECODE": "1",
+    "PYTHONPATH": "tests/urbit"
+  },
+  "executor": "/root/independent_review",
+  "exit_code": 0,
+  "native_execution": false,
+  "outputs": {
+    "concurrency-host.stderr.log": {
+      "path": "docs/urbit/evidence/2026-09-25/phase1-nonnative/concurrency-host.stderr.log",
+      "sha256": "7a5a084ce050325ce491c01d31f6196f7d386eac857a91fb19fc8faf4919e439"
+    },
+    "concurrency-host.stdout.log": {
+      "path": "docs/urbit/evidence/2026-09-25/phase1-nonnative/concurrency-host.stdout.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    }
+  },
+  "protocol": "stead.host-execution/1",
+  "scope": "No runtime or ships. Timing records in decoder cases are authored; producer tests actually coordinate two lightweight Python callbacks and retain failure paths.",
+  "source_files_after": {
+    "scripts/urbit/build_phase1_evidence.py": "1eb8f8dad1199ce9f3cf6667ef3f26e20774ab3eb50d54590e5b0b30e4b8fb63",
+    "scripts/urbit/core_test.py": "dcf5ead9d3969322dfe880427090b108e0729e40d4a29aaadd4bc1dcf77c0916",
+    "tests/urbit/test_phase1_evidence_builder.py": "73ec54971d7d50ed96cf858109078f6e270d8a4b9fa587ea6dad080705f70900"
+  },
+  "source_files_before": {
+    "scripts/urbit/build_phase1_evidence.py": "1eb8f8dad1199ce9f3cf6667ef3f26e20774ab3eb50d54590e5b0b30e4b8fb63",
+    "scripts/urbit/core_test.py": "dcf5ead9d3969322dfe880427090b108e0729e40d4a29aaadd4bc1dcf77c0916",
+    "tests/urbit/test_phase1_evidence_builder.py": "73ec54971d7d50ed96cf858109078f6e270d8a4b9fa587ea6dad080705f70900"
+  },
+  "source_files_unchanged": true,
+  "source_uncommitted": true,
+  "started_at": "2026-09-25T12:10:44.495976+00:00",
+  "status": "passed",
+  "tests_observed": 26,
+  "unittest_seconds": 0.328
+}

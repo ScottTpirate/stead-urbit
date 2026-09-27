@@ -1,0 +1,112 @@
+{
+  "protocol": "stead.integration-source-review/1",
+  "recorded_at_utc": "2026-09-13T15:36:47Z",
+  "status": "reviewed",
+  "reviewer": "/root/qa_review",
+  "role": "Independent QA review of root-owned integration wiring; QA owns the referenced recipe and observer fixtures and does not claim independent authorship review of its own full implementation.",
+  "human_approval": false,
+  "native_executions_during_review": 0,
+  "source_commit": null,
+  "source_commit_reason": "Final source checkpoint was pending when this disposition was recorded; exact file hashes bind the reviewed bytes.",
+  "core_test_sha256": "054160ae4b779ca74dab99382f0c612476eeb746fbbe4726e9b66760f9de06f8",
+  "reviewed_source_files": {
+    "scripts/urbit/core_test.py": "054160ae4b779ca74dab99382f0c612476eeb746fbbe4726e9b66760f9de06f8",
+    "scripts/urbit/core_conn.py": "78b15b167a4d09eaee9cf1e1e6f0283ca0a3f542626c614ad5f997640ce9642c",
+    "scripts/urbit/native_transcript.py": "d724f6820d58b926a055bd10fe4804fd10db917158804b478e37e1b80cf3b34f",
+    "scripts/urbit/supervisor.py": "5f10e9e9d6914c5709276e5fc6d0d94281d562e7062ce01638dcb6c2dc2197f2",
+    "scripts/urbit/execution_policy.py": "7166d197a6e3879f21c22637f2bd3074ff90975c33a2149f6e07763e2eeaa04e",
+    "tests/urbit/test_native_transcript.py": "e9ec39d8cdfeed58d42c30f2aef9bda8a5bb597bebb53331c94a5ee05328ba3f",
+    "tests/urbit/test_core_report.py": "e7585acd6e72e9a73fc24f5e42cf31c94507fcc3234aa8544a75fc2e10f247c2"
+  },
+  "recipe_interface_files": {
+    "scripts/urbit/core_cases_v2.py": "eaaf9035eed9ca7e99823c8698cfc9c1a9fbf6c9503dec75f82bcfdd593d0e6a",
+    "scripts/urbit/delivery_cases.py": "904c11b2b83a9c54036ad2c8046b38f3dafaedb8a4f76e9f661cf36aa01ba560",
+    "scripts/urbit/delivery_suite.py": "35980a0e9dd2be0eda54cc0d1ac5582012e75359e0faf39a05005bd8eb08b180",
+    "scripts/urbit/qualification_cases.py": "d8b3eddd5497b131166c3096b437c317dc825a4459b5fe024943ec124bd545fc",
+    "scripts/urbit/qualification_gate.py": "4d11a0de57f24875634f3e6c276952cb76b8703df75be04b8adeffe2b1c80bd7",
+    "specs/urbit/fixtures/native-cases-v2.json": "95c915e2d0c93f358225274b34216fff0fe2efc09791905855b1e3f36aec368a",
+    "specs/urbit/v2/commands.json": "26609938a3c3c19913276d3ed2f07f99b0ce8a2d0081c88812877cd21e2a6687",
+    "specs/urbit/v2/qualification-gate.json": "f374349cc3ccd64993e3dade9a44e306854479c228b7f93d6559647006aee94c"
+  },
+  "scope": [
+    "Read-only integration review of callback signatures, actor/route inference for object reads, 148-case ordering and subsequent work CAS revision 4 to 5.",
+    "Common execution checks before native actions, supervisor cancellation and guarded final-result persistence; prior guard source disposition remains separate.",
+    "Actual Clay byte-check recipe, source tree and runner closure comparisons, lock/corpus/freeze bindings, and retained evaluator failure and greater-than-64-KiB framing controls.",
+    "Delivery schedule followed by eight capacity/predecessor recipes, with required incomplete assertions kept nonpassing and independent offline qualification separated from execution.",
+    "Bounded compressed transport sidecar, actual four-ship runtime-log delta recipe, and final aggregate report admission. These are source checks, not newly executed native evidence."
+  ],
+  "fixed_findings": [
+    {
+      "id": "delivery-sink-path",
+      "status": "fixed-and-source-rechecked",
+      "before": "Transcript.append returned artifact and record hashes, but delivery_sink omitted the nonempty path required by Suite.call; the first delivery-suite call would fail its evidence-reference check.",
+      "after": "delivery_sink supplies .piers/fakes/logs/ plus the actual sidecar artifact name, alongside the exact record SHA-256 and line reference.",
+      "verification": "Read-back plus host-only execution of the exact nested delivery_sink source against a temporary gzip Transcript and a scripted Suite callback; stored record digest and reference matched."
+    },
+    {
+      "id": "v2-positive-codec-vectors",
+      "status": "fixed-and-source-rechecked",
+      "before": "The integration bound and scheduled only the six original v1 positive vectors, omitting the six v2 vectors named by the v2 corpus.",
+      "after": "Both six-vector files are bound and scheduled separately. Together with the 43 additional corpus vectors, the source schedules 55 codec vectors and uses the command protocol followed by a NUL byte as the digest domain.",
+      "verification": "Read-back of both input hashes and codec loop, and AST inspection of the NUL byte literal. The new native codec lane was not executed."
+    },
+    {
+      "id": "aggregate-report-bound",
+      "status": "fixed-and-source-rechecked",
+      "before": "The aggregate report was written without a size cap although supervisor result admission reads at most 16 MiB; a large diagnostic/observation aggregate could fail final persistence.",
+      "after": "bounded_report admits at most 16 MiB, otherwise emits an explicit failed summary retaining the exact transport sidecar reference and the original aggregate length/digest. Omitted aggregate assertions confer no qualification.",
+      "verification": "Read-back and independent host-only small/oversized report assertions. The two new test_core_report tests were read but were not independently rerun by this reviewer."
+    }
+  ],
+  "host_observations": [
+    {
+      "classification": "host-only-temporary-files",
+      "command": "PYTHONDONTWRITEBYTECODE=1 python3 -m unittest discover -s tests/urbit -p test_native_transcript.py -v",
+      "result": "passed",
+      "tests": 7,
+      "reported_elapsed_seconds": 0.120,
+      "raw_output_artifact": null,
+      "retention": "Tool-output-only observation; raw output was not retained as a repository artifact."
+    },
+    {
+      "classification": "host-only-scripted-callback-and-temporary-files",
+      "command": "PYTHONDONTWRITEBYTECODE=1 python3 -",
+      "input_description": "Ad hoc Python input extracted the exact delivery_sink AST into a temporary Transcript, called Suite.call with a scripted empty JSON outcome, checked path and gzip record SHA-256, then checked unchanged small-report admission and explicit failure plus original hash for a 4096-byte oversized report under a 1024-byte test bound.",
+      "result": "passed",
+      "raw_output_artifact": null,
+      "retention": "Tool-output-only observation; the ad hoc stdin and raw output were not retained as standalone repository artifacts."
+    }
+  ],
+  "planned_observer_bounds": {
+    "classification": "source-recipe-arithmetic-not-native-measurement",
+    "paired_read_observations": 73,
+    "probe_counts_after_148_case_corpus": {
+      "bus": 50,
+      "bud": 32,
+      "nec": 32,
+      "zod": 32
+    },
+    "expected_final_probe_counts_after_delivery_schedule": {
+      "bus": 76,
+      "bud": 51,
+      "nec": 49,
+      "zod": 49
+    },
+    "probe_limit_per_ship": 80,
+    "event_limit_per_ship": 256,
+    "limitation": "Counts assume the declared successful event schedule. Unexpected extra signs must fault the bounded observer rather than be silently dropped or treated as a pass."
+  },
+  "evidence_limits": [
+    "Successful native transport records retain exact decoded response/request text and native frame digests; they do not retain complete successful wire-frame bytes. Failed exchanges retain observed partial/full frames and available diagnostics.",
+    "Observer facts are signs delivered to on-agent on the tested marks/routes. Zero observer facts does not prove that a peer runtime received or persisted no invalid input bytes.",
+    "No native compilation, fake-ship start/restart, native acceptance, measured capacity or thermal qualification was executed during this review.",
+    "No implementation, source recipe, or green host check converts the 25 historical skips into executed native evidence."
+  ],
+  "required_remaining_gap": {
+    "name": "delayed-inbound-old-leave",
+    "status": "incomplete",
+    "reason": "The supported leave-ended fixture emits a real local leave card on the retained original wire. Pinned Gall can reject/drop it locally after the outgoing subscription has ended. A local control ACK is not evidence that a delayed old leave reached the home. Actual reordered inbound leave behavior remains unexecuted and required.",
+    "phase_qualification": "nonpassing"
+  },
+  "disposition": "No additional blocker was identified within this bounded integration source review after the three fixes. Current native and phase qualification remain unexecuted/nonpassing; this disposition does not approve a merge, deployment, live identity or phase completion."
+}

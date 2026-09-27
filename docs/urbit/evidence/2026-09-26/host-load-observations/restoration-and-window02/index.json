@@ -1,0 +1,87 @@
+{
+  "protocol": "stead.host-observation-restoration/1",
+  "widget_exact_original_restored": true,
+  "widget_effective_layout_verified": true,
+  "fan_34_values_restored_and_verified": true,
+  "power_profile_unchanged": true,
+  "chromium_mutations_performed": false,
+  "monitor_finished": true,
+  "samples": 3035,
+  "quiet_window_observed_peak_c": 83.0,
+  "native_phase_qualification": false,
+  "limitations": "Host samples establish timing and correlation only; no sole-cause claim. Full desktop config and process arguments/environment are not published.",
+  "artifacts": [
+    {
+      "path": "docs/urbit/evidence/2026-09-26/host-load-observations/restoration-and-window02/widget-pause-proposal-restored.json",
+      "source": ".runtime/phase01-20260926/widget-pause-proposal/restored.json",
+      "sha256": "58701dec1e219655d93e3f2fa11a427e35023cb9ea52e6ef75c579079eb1e7ef",
+      "original_sha256": "58701dec1e219655d93e3f2fa11a427e35023cb9ea52e6ef75c579079eb1e7ef",
+      "original_bytes": 1144,
+      "encoding": "identity"
+    },
+    {
+      "path": "docs/urbit/evidence/2026-09-26/host-load-observations/restoration-and-window02/cooling-window03-fan-session.py",
+      "source": ".runtime/phase01-20260926/cooling-window03/fan-session.py",
+      "sha256": "1e15cf6c0a75f8761a7c8444d0b0efd99ee33eff077343b043875414c47dc9db",
+      "original_sha256": "1e15cf6c0a75f8761a7c8444d0b0efd99ee33eff077343b043875414c47dc9db",
+      "original_bytes": 4717,
+      "encoding": "identity"
+    },
+    {
+      "path": "docs/urbit/evidence/2026-09-26/host-load-observations/restoration-and-window02/cooling-window03-original.json",
+      "source": ".runtime/phase01-20260926/cooling-window03/original.json",
+      "sha256": "416c9b3da18443b2c725d26db2d2aa279704325801ed6bbdf6cc6aadf841fb3d",
+      "original_sha256": "416c9b3da18443b2c725d26db2d2aa279704325801ed6bbdf6cc6aadf841fb3d",
+      "original_bytes": 1224,
+      "encoding": "identity"
+    },
+    {
+      "path": "docs/urbit/evidence/2026-09-26/host-load-observations/restoration-and-window02/cooling-window03-applied-verification.json",
+      "source": ".runtime/phase01-20260926/cooling-window03/applied-verification.json",
+      "sha256": "49f469b4f11136c616c97ccf48fc95c44fc90e0cad171b8e2eba3dd3918ff421",
+      "original_sha256": "49f469b4f11136c616c97ccf48fc95c44fc90e0cad171b8e2eba3dd3918ff421",
+      "original_bytes": 205,
+      "encoding": "identity"
+    },
+    {
+      "path": "docs/urbit/evidence/2026-09-26/host-load-observations/restoration-and-window02/cooling-window03-events.jsonl.gz",
+      "source": ".runtime/phase01-20260926/cooling-window03/events.jsonl",
+      "sha256": "a9a2bff395463d1069d7cf163cd3afac46e90347e69394a5edfe902d8c8b7082",
+      "original_sha256": "ec86d4c08b8f82003034f7b34050072543eefe3022f71895b7f51457eba90a33",
+      "original_bytes": 61945,
+      "encoding": "gzip"
+    },
+    {
+      "path": "docs/urbit/evidence/2026-09-26/host-load-observations/restoration-and-window02/cooling-window03-restoration-verification.json",
+      "source": ".runtime/phase01-20260926/cooling-window03/restoration-verification.json",
+      "sha256": "24793f0bf84cca50ff97fd99775a9ca5c7b97c795c43c9758753b58feea4e91e",
+      "original_sha256": "24793f0bf84cca50ff97fd99775a9ca5c7b97c795c43c9758753b58feea4e91e",
+      "original_bytes": 271,
+      "encoding": "identity"
+    },
+    {
+      "path": "docs/urbit/evidence/2026-09-26/host-load-observations/restoration-and-window02/host-observation02-observe_host_load.py",
+      "source": ".runtime/phase01-20260926/host-observation02/observe_host_load.py",
+      "sha256": "141e257109933340dc8999309846e145bd69e9f3731d1177d554965cddd8d046",
+      "original_sha256": "141e257109933340dc8999309846e145bd69e9f3731d1177d554965cddd8d046",
+      "original_bytes": 2059,
+      "encoding": "identity"
+    },
+    {
+      "path": "docs/urbit/evidence/2026-09-26/host-load-observations/restoration-and-window02/host-observation02-observe-host-load.jsonl.gz",
+      "source": ".runtime/phase01-20260926/host-observation02/observe-host-load.jsonl",
+      "sha256": "847dae41124ce5ccf3ccae44499f0d998189f82b654edb60a23a8d2b71292717",
+      "original_sha256": "ce84e2cbf86dd76c2e1a810cafdcb4e1f0ff4d9a8f8688664170422d73fc21e4",
+      "original_bytes": 2360551,
+      "encoding": "gzip"
+    },
+    {
+      "path": "docs/urbit/evidence/2026-09-26/host-load-observations/restoration-and-window02/browser-cpu-proposal-owner-choice.json",
+      "source": ".runtime/phase01-20260926/browser-cpu-proposal/owner-choice.json",
+      "sha256": "dfc3580fcc4cdcca900ab9c3ddd97ccb797d7900eecf0bb641c8f3b639744518",
+      "original_sha256": "dfc3580fcc4cdcca900ab9c3ddd97ccb797d7900eecf0bb641c8f3b639744518",
+      "original_bytes": 131,
+      "encoding": "identity"
+    }
+  ]
+}

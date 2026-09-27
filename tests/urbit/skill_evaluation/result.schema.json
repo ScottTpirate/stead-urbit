@@ -1,0 +1,258 @@
+{
+  "$defs": {
+    "artifact": {
+      "properties": {
+        "classification": {
+          "type": "string"
+        },
+        "path": {
+          "type": "string"
+        },
+        "sha256": {
+          "pattern": "^[a-f0-9]{64}$",
+          "type": "string"
+        }
+      },
+      "required": [
+        "path",
+        "sha256",
+        "classification"
+      ],
+      "type": "object"
+    },
+    "condition": {
+      "properties": {
+        "active_seconds": {
+          "minimum": 0,
+          "type": "number"
+        },
+        "condition": {
+          "enum": [
+            "baseline",
+            "local_skill_assisted"
+          ]
+        },
+        "context_contamination": {
+          "items": {
+            "type": "string"
+          },
+          "type": "array"
+        },
+        "context_id": {
+          "type": "string"
+        },
+        "infrastructure_seconds": {
+          "minimum": 0,
+          "type": "number"
+        },
+        "input_files_sha256": {
+          "type": "object"
+        },
+        "model": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "settings": {
+          "type": "object"
+        },
+        "skill_files_sha256": {
+          "type": "object"
+        },
+        "tasks": {
+          "items": {
+            "$ref": "#/$defs/task"
+          },
+          "type": "array"
+        }
+      },
+      "required": [
+        "condition",
+        "context_id",
+        "model",
+        "settings",
+        "input_files_sha256",
+        "skill_files_sha256",
+        "context_contamination",
+        "active_seconds",
+        "infrastructure_seconds",
+        "tasks"
+      ],
+      "type": "object"
+    },
+    "task": {
+      "properties": {
+        "artifacts": {
+          "items": {
+            "$ref": "#/$defs/artifact"
+          },
+          "type": "array"
+        },
+        "assertions": {
+          "items": {
+            "required": [
+              "id",
+              "status",
+              "actual",
+              "expected",
+              "artifact"
+            ],
+            "type": "object"
+          },
+          "type": "array"
+        },
+        "attempts": {
+          "items": {
+            "required": [
+              "number",
+              "candidate_files_sha256",
+              "public_feedback_artifacts",
+              "observed_outcome"
+            ],
+            "type": "object"
+          },
+          "type": "array"
+        },
+        "bindings": {
+          "required": [
+            "source_commit",
+            "runtime_lock_sha256",
+            "installed_clay_tree_sha256",
+            "loaded_closure_sha256",
+            "oracle_sha256",
+            "evaluator_sha256",
+            "guard_report_sha256"
+          ],
+          "type": "object"
+        },
+        "candidate_files_sha256": {
+          "type": "object"
+        },
+        "classification": {
+          "type": "string"
+        },
+        "compile_outcome": {
+          "enum": [
+            "not_run",
+            "failed",
+            "passed",
+            "invalid"
+          ]
+        },
+        "expected_cases": {
+          "items": {
+            "type": "string"
+          },
+          "type": "array"
+        },
+        "id": {
+          "enum": [
+            "T01",
+            "T02",
+            "T03",
+            "T04",
+            "T05",
+            "T06"
+          ]
+        },
+        "observed_cases": {
+          "items": {
+            "type": "string"
+          },
+          "type": "array"
+        },
+        "runtime_outcome": {
+          "enum": [
+            "not_run",
+            "failed",
+            "passed",
+            "invalid"
+          ]
+        },
+        "status": {
+          "enum": [
+            "not_run",
+            "refused",
+            "interrupted",
+            "invalid",
+            "failed",
+            "passed"
+          ]
+        }
+      },
+      "required": [
+        "id",
+        "status",
+        "attempts",
+        "candidate_files_sha256",
+        "bindings",
+        "classification",
+        "compile_outcome",
+        "runtime_outcome",
+        "expected_cases",
+        "observed_cases",
+        "assertions",
+        "artifacts"
+      ],
+      "type": "object"
+    }
+  },
+  "description": "Shape only. A schema validator cannot establish passing behavior, complete inventories, equal conditions, truthful native execution, current source binding or independent acceptance. Missing execution remains incomplete. Version 2 requires complete ordered T05 subject and arm evidence even for behavioral failure; missing cases invalidate the task.",
+  "properties": {
+    "conditions": {
+      "items": {
+        "$ref": "#/$defs/condition"
+      },
+      "type": "array"
+    },
+    "independent_review": {
+      "type": [
+        "object",
+        "null"
+      ]
+    },
+    "limits": {
+      "items": {
+        "type": "string"
+      },
+      "type": "array"
+    },
+    "package_sha256": {
+      "pattern": "^[a-f0-9]{64}$",
+      "type": "string"
+    },
+    "package_version": {
+      "const": 2
+    },
+    "prequalification_artifacts": {
+      "items": {
+        "$ref": "#/$defs/artifact"
+      },
+      "type": "array"
+    },
+    "protocol": {
+      "const": "stead.skill-evaluation-result/2"
+    },
+    "status": {
+      "enum": [
+        "not_run",
+        "incomplete",
+        "invalid",
+        "completed"
+      ]
+    }
+  },
+  "required": [
+    "protocol",
+    "status",
+    "package_sha256",
+    "prequalification_artifacts",
+    "conditions",
+    "independent_review",
+    "limits",
+    "package_version"
+  ],
+  "title": "URB-170 observed evaluation record, not a passing-result template",
+  "type": "object"
+}

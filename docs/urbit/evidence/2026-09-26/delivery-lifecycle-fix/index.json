@@ -1,0 +1,43 @@
+{
+  "source_commit": "5208f3273426e8fe76dc8622ffe93ace93982e17",
+  "scope": "Reviewed host/native lifecycle correction; final470 host tests passed. No Hoon or guard change. Native execution and full phase qualification are separate.",
+  "native_execution_claimed": false,
+  "artifacts": [
+    {
+      "path": "source-review.json",
+      "source": ".runtime/phase01-20260926/delivery-lifecycle-fix-review.json",
+      "bytes": 7254,
+      "sha256": "0c3fd4c76fd96b4351be98b67334c2a8682c931020fef76b575f8688dab0a795"
+    },
+    {
+      "path": "host-final.json",
+      "source": ".runtime/phase01-20260926/host-5208f32/result.json",
+      "bytes": 575,
+      "sha256": "3e83f810a8fadfa8cf9ee7695061761d7be5ba09df88473887b99e205c82de79"
+    },
+    {
+      "path": "host-final.log",
+      "source": ".runtime/phase01-20260926/host-5208f32/host.log",
+      "bytes": 3712,
+      "sha256": "8802873e4b153b33bd06ada7bc9b2c454da2fd0b2c0f630bb230e7ac8c4a802f"
+    },
+    {
+      "path": "host-before-builder-correction.json",
+      "source": ".runtime/phase01-20260926/delivery-lifecycle-fix/host.json",
+      "bytes": 537,
+      "sha256": "5367d21c9458855c0de636563cffcb8a28a353b4e3758e512954da485c9fe3b0"
+    },
+    {
+      "path": "host-before-builder-correction.log",
+      "source": ".runtime/phase01-20260926/delivery-lifecycle-fix/host.log",
+      "bytes": 3711,
+      "sha256": "a655381441170fd8a50dc6832d7286c676585e04fe53ce4e850cdd6b3a540549"
+    },
+    {
+      "path": "host-before-builder-correction.patch",
+      "source": ".runtime/phase01-20260926/delivery-lifecycle-fix/tested.patch",
+      "bytes": 33987,
+      "sha256": "7ac476a21868e351369083b8f393a801e989fba39b6b2ef99c399e266484f60d"
+    }
+  ]
+}

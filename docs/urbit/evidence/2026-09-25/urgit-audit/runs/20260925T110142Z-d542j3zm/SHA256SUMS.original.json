@@ -1,0 +1,9 @@
+{
+  "bootstrap.json": "ce0e500a41261eb67c9fc4352760f060df333d82afd3d91176fcac51924fe675",
+  "console.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+  "execution-guard.json": "5051e8a991e20537fff33588fde20d60e7eb5c3814e945fea6cbc7cbbcb52abd",
+  "provenance.json": "920d4e97202c7c095c04d7e44752cb79822519b318e9ac0b181de273e10fc818",
+  "report.json": "ba9e0cd3265fe55b21ed8d39ac104566f411f5f77447c78ac916fe2661ea2c6a",
+  "sandbox-command.json": "cf42b6fc98fd2f791ad812b47cc77c7b438499d303fd58ca8a76f063b4764773",
+  "thermal.jsonl": "ae85e1648204db0ea033cb20214b653375735470a4e0ca2a96f79f0c8ea397ef"
+}

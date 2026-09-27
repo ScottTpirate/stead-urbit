@@ -1,0 +1,28 @@
+{
+  "files": [
+    {
+      "bytes": 4467,
+      "path": "additional/skill-links-20260926.json",
+      "sha256": "4d692f03e2b2b6726e20806cfe8ce51840b753fc146c1bf0e21189333b745f87"
+    },
+    {
+      "bytes": 1970,
+      "path": "additional/URB170_UPSTREAM_FEEDBACK_PROPOSAL_20260926.md",
+      "sha256": "afba76f4b4fc36ca9bb841fc9a1c0a6a0b4c27be479781986cf64d42d670597e"
+    },
+    {
+      "bytes": 2520,
+      "path": "UPSTREAM_LINK_REVIEW.json",
+      "sha256": "70cde511aca50beab6fb5d83a9a8be1416857a62e9890643c1c163e41d0f4f2d"
+    }
+  ],
+  "limits": [
+    "Later criterion review; no participant, native or test rerun.",
+    "Clean contributor setup remains pending a reviewed completed attempt."
+  ],
+  "original_archive_and_records_unmodified": true,
+  "original_index_sha256": "a92e0b35fdb4dcbf25348999a107a07514c0efaf0ffed88497134f6a5b9d01d0",
+  "previous_postpackaging_index_sha256": "5795d9b24d95f625907a1471af49bee74d63dbab16cc21f20fb8bbec0286efb7",
+  "protocol": "stead.workflow-v2-postpackaging-addendum-index/1",
+  "recorded_at": "2026-09-26T19:39:45.623499+00:00"
+}

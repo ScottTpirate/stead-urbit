@@ -1,0 +1,635 @@
+{
+  "M1_membership": {
+    "exit": "Versioned native state, explicit authorization, conflict/idempotency and cold-restart tests. Minimal canonical Git-backed document persistence is required; the full forge arrives later.",
+    "id": "M1",
+    "phase": "1",
+    "tasks": [
+      "URB-030",
+      "URB-040",
+      "URB-050",
+      "URB-210"
+    ],
+    "title": "M1 - Authoritative Work and Docs"
+  },
+  "ancestry": {
+    "all_observed_local_and_remote_refs_contained": true,
+    "all_six_open_PR_heads_ancestors_of_candidate": true,
+    "left_right_origin_main_vs_head": "0\t52",
+    "local_unique_commits_outside_candidate": 0,
+    "origin_main": "4bb28c645ed155f842f5b9479a0919e743a89378",
+    "refs": [
+      {
+        "ancestor_of_current_head": true,
+        "commits_not_in_current_head": 0,
+        "ref": "refs/heads/increment/local-dev-flow-20260924",
+        "sha": "87ea9e199a748a86daf1a9d95d4946e65b45c3ba"
+      },
+      {
+        "ancestor_of_current_head": true,
+        "commits_not_in_current_head": 0,
+        "ref": "refs/heads/increment/native-core-qualification",
+        "sha": "ce808a2cf9b87d44506e983f7dcebc94f0d2ed4b"
+      },
+      {
+        "ancestor_of_current_head": true,
+        "commits_not_in_current_head": 0,
+        "ref": "refs/heads/increment/phase01-closeout-20260925",
+        "sha": "dd0e8c0ce8d1d00f15de6b07e2e26d368c5c3774"
+      },
+      {
+        "ancestor_of_current_head": true,
+        "commits_not_in_current_head": 0,
+        "ref": "refs/heads/increment/urb-010-030",
+        "sha": "96971540cf70c557f01a5ef10db832ddee2e0130"
+      },
+      {
+        "ancestor_of_current_head": true,
+        "commits_not_in_current_head": 0,
+        "ref": "refs/heads/increment/urb-040-050",
+        "sha": "77428f6c35eb0fe7b7e497b64c5a1eab92e943cd"
+      },
+      {
+        "ancestor_of_current_head": true,
+        "commits_not_in_current_head": 0,
+        "ref": "refs/heads/main",
+        "sha": "dd0f2c642eb07f60285ea93e984f60777d6a3205"
+      },
+      {
+        "ancestor_of_current_head": true,
+        "commits_not_in_current_head": 0,
+        "ref": "refs/heads/review/pr-32",
+        "sha": "b52eeef9b0e14a332ecd92c67ff664b588b37c62"
+      },
+      {
+        "ancestor_of_current_head": true,
+        "commits_not_in_current_head": 0,
+        "ref": "refs/remotes/origin/HEAD",
+        "sha": "4bb28c645ed155f842f5b9479a0919e743a89378"
+      },
+      {
+        "ancestor_of_current_head": true,
+        "commits_not_in_current_head": 0,
+        "ref": "refs/remotes/origin/increment/local-dev-flow-20260924",
+        "sha": "87ea9e199a748a86daf1a9d95d4946e65b45c3ba"
+      },
+      {
+        "ancestor_of_current_head": true,
+        "commits_not_in_current_head": 0,
+        "ref": "refs/remotes/origin/increment/native-core-qualification",
+        "sha": "aa93f41a3f15116878035941414125c163908b85"
+      },
+      {
+        "ancestor_of_current_head": true,
+        "commits_not_in_current_head": 0,
+        "ref": "refs/remotes/origin/increment/phase01-closeout-20260925",
+        "sha": "dd0e8c0ce8d1d00f15de6b07e2e26d368c5c3774"
+      },
+      {
+        "ancestor_of_current_head": true,
+        "commits_not_in_current_head": 0,
+        "ref": "refs/remotes/origin/increment/urb-010-030",
+        "sha": "96971540cf70c557f01a5ef10db832ddee2e0130"
+      },
+      {
+        "ancestor_of_current_head": true,
+        "commits_not_in_current_head": 0,
+        "ref": "refs/remotes/origin/increment/urb-040-050",
+        "sha": "77428f6c35eb0fe7b7e497b64c5a1eab92e943cd"
+      },
+      {
+        "ancestor_of_current_head": true,
+        "commits_not_in_current_head": 0,
+        "ref": "refs/remotes/origin/main",
+        "sha": "4bb28c645ed155f842f5b9479a0919e743a89378"
+      },
+      {
+        "ancestor_of_current_head": true,
+        "commits_not_in_current_head": 0,
+        "ref": "refs/remotes/origin/planning/ecosystem-readiness-20260912",
+        "sha": "b52eeef9b0e14a332ecd92c67ff664b588b37c62"
+      },
+      {
+        "ancestor_of_current_head": true,
+        "commits_not_in_current_head": 0,
+        "ref": "refs/remotes/origin/review/delivery-evidence-20260913",
+        "sha": "ce808a2cf9b87d44506e983f7dcebc94f0d2ed4b"
+      }
+    ]
+  },
+  "audit_resources": {
+    "affinity": [
+      19
+    ],
+    "cpu_max": "2000 10000"
+  },
+  "current_acceptance_boundary": {
+    "M0": "Closed5/5 in live milestone; source-specific URB170 pair0d877 and clean setup554 remain accepted for their bounded criteria. No participant re-evaluation needed for these later unrelated source changes.",
+    "M1": "Open2/4. URB030/#6 and URB210/#24 are design/test-contract acceptances, not current native qualification. URB040/#7 and URB050/#8 remain open.",
+    "current_Gall": "58 real-native-scheduled-Gall checks atdd0 with exact current closure70370987, completed outer guard and independent reviewer a0d5cfbd. Only delivery-late-old-leave; simulated queue/clock, actual pinned Gall/home/observer, no Ames/UDP claim. Reuse only if final source inputs match.",
+    "current_core": "Core06 retained fail/thermal interruption atdd0; no successful-prefix splicing from capacity01/core05/core06. All required current core obligations still need one completed qualifying lane.",
+    "current_host": "Root-executed476 atdd0; overlapping selected142/174subtests and exact128/156 input bindings independently audited. No native result inferred.",
+    "nonnative": "Seven typed dispositions v5 independently admissible, overallstandalone gate failed66missing0native. Historical two guard records retain original source hash and narrow continuity.",
+    "phase2": "Not admitted until M1 acceptance/integration under current user sequence. No browser/session/Git-forge/live/deployment acceptance implied."
+  },
+  "git_ref_or_worktree_changes": false,
+  "github_writes": false,
+  "limitations": [
+    "Review uses current derivative GitHub metadata and exact existing independent records; it does not rerun host/native/participant work or certify unexecuted core results.",
+    "The latest documentation is being maintained by integrator; final wording and all new artifact links require a final publication review after results stabilize."
+  ],
+  "live_main_protection": {
+    "commit": "4bb28c645ed155f842f5b9479a0919e743a89378",
+    "name": "main",
+    "protected": false,
+    "protection": {
+      "enabled": false,
+      "required_status_checks": {
+        "checks": [],
+        "contexts": [],
+        "enforcement_level": "off"
+      }
+    }
+  },
+  "live_milestones": [
+    {
+      "closed_at": "2026-09-26T21:55:10Z",
+      "closed_issues": 5,
+      "description": "Actual native allow/deny smoke test, pinned inputs and Git reuse decision. Skills qualification follows the first harness; it does not block that first run.",
+      "number": 1,
+      "open_issues": 0,
+      "state": "closed",
+      "title": "M0 - Reproducible native development"
+    },
+    {
+      "closed_at": null,
+      "closed_issues": 2,
+      "description": "Versioned native state, explicit authorization, conflict/idempotency and cold-restart tests. Minimal canonical Git-backed document persistence is required; the full forge arrives later.",
+      "number": 2,
+      "open_issues": 2,
+      "state": "open",
+      "title": "M1 - Authoritative Work and Docs"
+    },
+    {
+      "closed_at": null,
+      "closed_issues": 0,
+      "description": "Independent sessions, real multi-user Work/Docs journey, private search/activity, stable API sample and native CI; Work+Docs acceptance precedes Code activation.",
+      "number": 3,
+      "open_issues": 6,
+      "state": "open",
+      "title": "M2 - Usable team alpha"
+    },
+    {
+      "closed_at": null,
+      "closed_issues": 0,
+      "description": "Ordinary Git fidelity, exact-revision reviews, scoped agents and isolated builds under bounded workload.",
+      "number": 4,
+      "open_issues": 4,
+      "state": "open",
+      "title": "M3 - Native software collaboration"
+    },
+    {
+      "closed_at": null,
+      "closed_issues": 0,
+      "description": "Real desk install/upgrade, verified exports/restore, measured canary, private-data controls and loss-aware import.",
+      "number": 5,
+      "open_issues": 6,
+      "state": "open",
+      "title": "M4 - Installable and recoverable beta"
+    },
+    {
+      "closed_at": null,
+      "closed_issues": 0,
+      "description": "Explicit replicas, fenced home migration and one native source of truth with optional one-way GitHub mirror. Browser-only identity scope is declared accurately.",
+      "number": 6,
+      "open_issues": 3,
+      "state": "open",
+      "title": "M5 - Federation and self-dogfooding"
+    },
+    {
+      "closed_at": null,
+      "closed_issues": 0,
+      "description": "Independent adopters and app integration, backup maintainer, tested security reporting and documented supported profiles. Dogfooding alone is insufficient.",
+      "number": 7,
+      "open_issues": 2,
+      "state": "open",
+      "title": "M6 - Supported ecosystem release"
+    }
+  ],
+  "live_pull_requests": [
+    {
+      "baseRefName": "increment/local-dev-flow-20260924",
+      "headRefName": "increment/phase01-closeout-20260925",
+      "headRefOid": "dd0e8c0ce8d1d00f15de6b07e2e26d368c5c3774",
+      "isDraft": true,
+      "number": 42,
+      "title": "Qualify contributor workflow and diagnose full-state native acceptance",
+      "url": "https://github.com/ScottTpirate/stead-urbit/pull/42"
+    },
+    {
+      "baseRefName": "review/delivery-evidence-20260913",
+      "headRefName": "increment/local-dev-flow-20260924",
+      "headRefOid": "87ea9e199a748a86daf1a9d95d4946e65b45c3ba",
+      "isDraft": true,
+      "number": 41,
+      "title": "Add local developer workflow and harden native test cleanup",
+      "url": "https://github.com/ScottTpirate/stead-urbit/pull/41"
+    },
+    {
+      "baseRefName": "increment/native-core-qualification",
+      "headRefName": "review/delivery-evidence-20260913",
+      "headRefOid": "ce808a2cf9b87d44506e983f7dcebc94f0d2ed4b",
+      "isDraft": true,
+      "number": 36,
+      "title": "Harden delivery evidence correlation and sentinel checks before native qualification",
+      "url": "https://github.com/ScottTpirate/stead-urbit/pull/36"
+    },
+    {
+      "baseRefName": "increment/urb-040-050",
+      "headRefName": "increment/native-core-qualification",
+      "headRefOid": "aa93f41a3f15116878035941414125c163908b85",
+      "isDraft": true,
+      "number": 35,
+      "title": "Guard native execution and amend core privacy and revocation",
+      "url": "https://github.com/ScottTpirate/stead-urbit/pull/35"
+    },
+    {
+      "baseRefName": "increment/urb-010-030",
+      "headRefName": "increment/urb-040-050",
+      "headRefOid": "77428f6c35eb0fe7b7e497b64c5a1eab92e943cd",
+      "isDraft": true,
+      "number": 34,
+      "title": "Implement native Work/Docs and home-owned authorization",
+      "url": "https://github.com/ScottTpirate/stead-urbit/pull/34"
+    },
+    {
+      "baseRefName": "main",
+      "headRefName": "increment/urb-010-030",
+      "headRefOid": "96971540cf70c557f01a5ef10db832ddee2e0130",
+      "isDraft": true,
+      "number": 33,
+      "title": "Verify the native development harness and freeze first-slice contracts",
+      "url": "https://github.com/ScottTpirate/stead-urbit/pull/33"
+    }
+  ],
+  "live_relevant_issues": [
+    {
+      "closedAt": "2026-09-26T14:05:50Z",
+      "milestone": {
+        "description": "Versioned native state, explicit authorization, conflict/idempotency and cold-restart tests. Minimal canonical Git-backed document persistence is required; the full forge arrives later.",
+        "dueOn": null,
+        "number": 2,
+        "title": "M1 - Authoritative Work and Docs"
+      },
+      "number": 24,
+      "state": "CLOSED",
+      "title": "[URB-210] Maintain native threat model, identity lifecycle and data-custody controls",
+      "url": "https://github.com/ScottTpirate/stead-urbit/issues/24"
+    },
+    {
+      "closedAt": "2026-09-26T21:55:08Z",
+      "milestone": {
+        "description": "Actual native allow/deny smoke test, pinned inputs and Git reuse decision. Skills qualification follows the first harness; it does not block that first run.",
+        "dueOn": null,
+        "number": 1,
+        "title": "M0 - Reproducible native development"
+      },
+      "number": 20,
+      "state": "CLOSED",
+      "title": "[URB-170] Qualify Hoon skills, editor tooling and contributor workflow",
+      "url": "https://github.com/ScottTpirate/stead-urbit/issues/20"
+    },
+    {
+      "closedAt": null,
+      "milestone": {
+        "description": "Versioned native state, explicit authorization, conflict/idempotency and cold-restart tests. Minimal canonical Git-backed document persistence is required; the full forge arrives later.",
+        "dueOn": null,
+        "number": 2,
+        "title": "M1 - Authoritative Work and Docs"
+      },
+      "number": 8,
+      "state": "OPEN",
+      "title": "[URB-050] Implement and adversarially test authorization",
+      "url": "https://github.com/ScottTpirate/stead-urbit/issues/8"
+    },
+    {
+      "closedAt": null,
+      "milestone": {
+        "description": "Versioned native state, explicit authorization, conflict/idempotency and cold-restart tests. Minimal canonical Git-backed document persistence is required; the full forge arrives later.",
+        "dueOn": null,
+        "number": 2,
+        "title": "M1 - Authoritative Work and Docs"
+      },
+      "number": 7,
+      "state": "OPEN",
+      "title": "[URB-040] Implement home state and Work/Docs transitions",
+      "url": "https://github.com/ScottTpirate/stead-urbit/issues/7"
+    },
+    {
+      "closedAt": "2026-09-26T14:05:48Z",
+      "milestone": {
+        "description": "Versioned native state, explicit authorization, conflict/idempotency and cold-restart tests. Minimal canonical Git-backed document persistence is required; the full forge arrives later.",
+        "dueOn": null,
+        "number": 2,
+        "title": "M1 - Authoritative Work and Docs"
+      },
+      "number": 6,
+      "state": "CLOSED",
+      "title": "[URB-030] Freeze principal, project, command and policy contracts",
+      "url": "https://github.com/ScottTpirate/stead-urbit/issues/6"
+    },
+    {
+      "closedAt": "2026-09-25T11:40:06Z",
+      "milestone": {
+        "description": "Actual native allow/deny smoke test, pinned inputs and Git reuse decision. Skills qualification follows the first harness; it does not block that first run.",
+        "dueOn": null,
+        "number": 1,
+        "title": "M0 - Reproducible native development"
+      },
+      "number": 5,
+      "state": "CLOSED",
+      "title": "[URB-025] Audit native Git dependency license and conformance",
+      "url": "https://github.com/ScottTpirate/stead-urbit/issues/5"
+    },
+    {
+      "closedAt": "2026-09-26T14:05:46Z",
+      "milestone": {
+        "description": "Actual native allow/deny smoke test, pinned inputs and Git reuse decision. Skills qualification follows the first harness; it does not block that first run.",
+        "dueOn": null,
+        "number": 1,
+        "title": "M0 - Reproducible native development"
+      },
+      "number": 4,
+      "state": "CLOSED",
+      "title": "[URB-020] Build isolated four-fake-ship development harness",
+      "url": "https://github.com/ScottTpirate/stead-urbit/issues/4"
+    },
+    {
+      "closedAt": "2026-09-25T11:45:29Z",
+      "milestone": {
+        "description": "Actual native allow/deny smoke test, pinned inputs and Git reuse decision. Skills qualification follows the first harness; it does not block that first run.",
+        "dueOn": null,
+        "number": 1,
+        "title": "M0 - Reproducible native development"
+      },
+      "number": 3,
+      "state": "CLOSED",
+      "title": "[URB-010] Pin runtime, kernel, boot artifacts and frontend toolchain",
+      "url": "https://github.com/ScottTpirate/stead-urbit/issues/3"
+    },
+    {
+      "closedAt": "2026-09-25T11:40:04Z",
+      "milestone": {
+        "description": "Actual native allow/deny smoke test, pinned inputs and Git reuse decision. Skills qualification follows the first harness; it does not block that first run.",
+        "dueOn": null,
+        "number": 1,
+        "title": "M0 - Reproducible native development"
+      },
+      "number": 2,
+      "state": "CLOSED",
+      "title": "[URB-000] Verify repository isolation and preserved Stead baseline",
+      "url": "https://github.com/ScottTpirate/stead-urbit/issues/2"
+    }
+  ],
+  "live_remote_heads": {
+    "refs/heads/increment/local-dev-flow-20260924": "87ea9e199a748a86daf1a9d95d4946e65b45c3ba",
+    "refs/heads/increment/native-core-qualification": "aa93f41a3f15116878035941414125c163908b85",
+    "refs/heads/increment/phase01-closeout-20260925": "dd0e8c0ce8d1d00f15de6b07e2e26d368c5c3774",
+    "refs/heads/increment/urb-010-030": "96971540cf70c557f01a5ef10db832ddee2e0130",
+    "refs/heads/increment/urb-040-050": "77428f6c35eb0fe7b7e497b64c5a1eab92e943cd",
+    "refs/heads/main": "4bb28c645ed155f842f5b9479a0919e743a89378",
+    "refs/heads/planning/ecosystem-readiness-20260912": "b52eeef9b0e14a332ecd92c67ff664b588b37c62",
+    "refs/heads/review/delivery-evidence-20260913": "ce808a2cf9b87d44506e983f7dcebc94f0d2ed4b"
+  },
+  "live_repository_merge_settings": {
+    "allow_merge_commit": true,
+    "default_branch": "main",
+    "delete_branch_on_merge": false,
+    "full_name": "ScottTpirate/stead-urbit"
+  },
+  "merge_approved_by_this_record": false,
+  "native_execution_performed": false,
+  "no_additional_gate_inferred": [
+    "No new implementation/security requirement beyond the controlling current Phase1 criteria was identified in this bounded review. Full-source/raw-result independent acceptance remains required.",
+    "Controlled abrupt crash, production failover/restore, browser origins/sessions, hosted identities and full Git forge are not silently added to the frozen current gate. Current native restart remains the explicitly graceful fenced process replacement.",
+    "Git-backed Docs is still required and represented by bounded canonical Git objects/OIDs/refs and app-independent export recovery in the current core; rejected Urgit production adoption does not erase that requirement or require a full forge.",
+    "Empty GitHub check rollup and unprotected main are observed configuration, not CI passes. Native CI belongs toM2/URB110 and is not newly imposed as a missingM1 gate.",
+    "The user already authorized finishing repository/PR/issues thenPhase2; no duplicate generic merge permission prompt is required. This review itself performs no integration and claims no human approval."
+  ],
+  "observed_at": "2026-09-26T23:01:36.935895+00:00",
+  "phase2_membership": {
+    "exit": "Independent sessions, real multi-user Work/Docs journey, private search/activity, stable API sample and native CI; Work+Docs acceptance precedes Code activation.",
+    "id": "M2",
+    "phase": "2",
+    "tasks": [
+      "URB-060",
+      "URB-070",
+      "URB-110",
+      "URB-180",
+      "URB-190",
+      "URB-260"
+    ],
+    "title": "M2 - Usable team alpha"
+  },
+  "planned_safe_integration_sequence": [
+    "Finish current native and73-row acceptance first; keepPR42draft until the exact reviewed result is publishable.",
+    "Preserve the fresh inventory and all uncommitted/untracked work before checkout/ref cleanup. Publish the reviewed records-only checkpoint on the aggregate branch; preserve actual execution commits and exact bytes.",
+    "Retarget aggregatePR42 from increment/local-dev-flow-20260924 to main. Recheck the full main-to-aggregate diff, current mergeability/base and final source/evidence review after retargeting.",
+    "Use a merge commit, matching the exact reviewed head. Do not squash/rebase, merge old stacked drafts individually or bulk-push all local branches. The repository currently permits merge commits and does not auto-delete branches.",
+    "After merge, verify remote main is the actual merge commit with parent1 the observed pre-merge main and parent2 the reviewed aggregate head; verify all six PR head SHAs and executed source commits remain ancestors.",
+    "Query actual states of#33/#34/#35/#36/#41 after merge. If GitHub did not mark a contained PR merged, close it as superseded with an exact PR42/merge link; do not describe a merely closed PR as independently merged.",
+    "Close#7/#8 andM1 only with exact passed acceptance/review/merge links. M0/#20 remain closed with their existing source-specific limits.",
+    "Fast-forward localmain to verified remote merge only after preserving/committing working changes; start a new narrow Phase2 branch from that integrated commit."
+  ],
+  "pr42_observation": {
+    "baseRefName": "increment/local-dev-flow-20260924",
+    "body": "Completes the contributor-workflow evaluation and corrects the native Work/Docs qualification harness. Phase 0/M0 is closed with all five issues complete. Phase 1 remains open; this PR remains a draft until a complete native run and final independent acceptance review pass.\n\nThe current pushed head is `dd0e8c0ce8d1d00f15de6b07e2e26d368c5c3774`. The latest correction tests a missing contributor binding at each real boundary: the result watch must reject, a contributor poke must leave protected state unchanged, and the native final transition must return the explicit authorization denial. Binding restoration and its full state comparison run even when the probe fails. No Hoon implementation, authorization policy or thermal limit changed.\n\nValidation at that source:\n\n- All 476 host/static/mocked tests passed; these do not establish native correctness.\n- A fresh 58-check native Gall schedule passed, including the delayed old-leave case and deliberately failing control; independent review cleared that bounded obligation.\n- Seven nonnative dispositions were refreshed and independently audited. They do not substitute for the 66 native requirements.\n- Full core06 ran for 1,159.787 seconds, recorded 313 passing direct checks and 145 QA passes plus three frozen deferrals, then stopped when the unchanged thermal guard sampled 92 C. No failed assertion was recorded before interruption; the remaining native lanes were not reached. This failed lifetime does not qualify Phase 1.\n\nThe previous capacity01 diagnostic verified five malformed-predecessor rejections and valid 4,096-event migration, then failed the missing-binding test expectation corrected here. All failed attempts and their exact source bindings are retained separately. No partial prefixes are combined into a passing run.\n\nThe newest native/host/review records and updated closeout notes are currently retained locally for the final evidence commit; published historical records retain their original source identities. The temporary desktop widget pause after core06 was restored and verified; no automated browser quota was applied.\n\nRemaining before integration: complete the full current core run, derive and independently review all 73 acceptance rows, publish the exact evidence, and review the final aggregate against main. Earlier stacked PRs remain preserved and will be reconciled only after that gate. No GitHub CI or human approval is claimed. Phase 2 has not started.\n",
+    "headRefOid": "dd0e8c0ce8d1d00f15de6b07e2e26d368c5c3774",
+    "isDraft": true,
+    "mergeStateStatus": "CLEAN",
+    "mergeable": "MERGEABLE",
+    "number": 42,
+    "reviewDecision": "",
+    "reviews": [
+      {
+        "author": {
+          "login": "ScottTpirate"
+        },
+        "authorAssociation": "OWNER",
+        "body": "Independent agent source review is recorded for the native compiler/save-format corrections, Git audit import boundary, evidence builder, concurrent-call proof, bounded Gall projection and exact negative tang, workflow public-feedback isolation, fail-fast timeout handling and the latest T03 diagnostics. Reviewed records are in `docs/urbit/reviews/PHASE01_INDEPENDENT_REVIEW_20260925.md` and the linked specialist reviews. This comment records agent review; it is not a human approval or GitHub CI result.\n\nAt native-helper commit `b2ec89c258c5544a3344c3665a81700b9e7075b4`, the plan/ecosystem/contract checks and 445 host/static/mocked tests pass. The separate initial-save probe and 262144-byte native pre-render bound are source-reviewed but not yet successfully executed: subsequent reference runs stopped before their tasks with `Stale, future or reversed thermal sample` or the real 96 C ceiling. The earlier T03 timeout remains unresolved; no later task was queued after that timeout.\n\nRequired before acceptance/integration: successful current-source six-task reference and paired workflow evaluation; full native core and corrected scheduled-Gall run; exact 66 native plus seven typed evidence reconciliation and final independent semantic review. Earlier failures stay failed. Keep this PR draft and Phases 0/1 open; Phase 2 is not admitted yet. The [checkpoint](https://github.com/ScottTpirate/stead-urbit/blob/a68a5a7b12c2f87396ca666807e22a170d82a3f1/docs/urbit/PHASE01_CHECKPOINT_20260926.md) contains the preserved PR ancestry and concrete next commands. Final artifact review verified all 99 original gzip records and 171 workflow archive members, followed by the two retained supervisor excerpts and corrected wording. Checkpoint commit: `a68a5a7b12c2f87396ca666807e22a170d82a3f1`.\n",
+        "commit": {
+          "oid": "a68a5a7b12c2f87396ca666807e22a170d82a3f1"
+        },
+        "id": "PRR_kwDOUYez988AAAABPXhQsw",
+        "includesCreatedEdit": false,
+        "reactionGroups": [],
+        "state": "COMMENTED",
+        "submittedAt": "2026-09-26T14:47:33Z"
+      },
+      {
+        "author": {
+          "login": "ScottTpirate"
+        },
+        "authorAssociation": "OWNER",
+        "body": "Independent agent review is recorded for candidate `3f0f3778997798f2ed208e206b46882a87340eb1`. Its tested implementation bytes are identical to `a1d35b27d8ee482b1854c7352ebc6eecf96a2b08`; the later commit adds documentation/evidence only.\n\n[Source review](https://github.com/ScottTpirate/stead-urbit/blob/3f0f3778997798f2ed208e206b46882a87340eb1/docs/urbit/evidence/2026-09-26/capacity-fix/source-review.json) verifies the unchanged full acceptance sequence, exact private load budget restriction and stronger rejection predicate. [Publication review](https://github.com/ScottTpirate/stead-urbit/blob/3f0f3778997798f2ed208e206b46882a87340eb1/docs/urbit/evidence/2026-09-26/capacity-fix/publication-review.json) verifies the 472 host-test result, retained failure/restoration and complete Phase 0 evidence.\n\nThis clears publication and the bounded URB-170/M0 closure only. Core05 failed; the new native diagnostic has not run. Phase 1 acceptance, implementation merge and Phase 2 remain pending. These are independent agent reviews, not a human approval or GitHub CI result.\n",
+        "commit": {
+          "oid": "3f0f3778997798f2ed208e206b46882a87340eb1"
+        },
+        "id": "PRR_kwDOUYez988AAAABPYztsA",
+        "includesCreatedEdit": false,
+        "reactionGroups": [],
+        "state": "COMMENTED",
+        "submittedAt": "2026-09-26T21:55:07Z"
+      }
+    ],
+    "statusCheckRollup": [],
+    "title": "Qualify contributor workflow and diagnose full-state native acceptance",
+    "url": "https://github.com/ScottTpirate/stead-urbit/pull/42"
+  },
+  "preservation_and_cleanup": {
+    "current_branch": "increment/phase01-closeout-20260925",
+    "old_review_worktree_path_exists": false,
+    "requirements": [
+      "No reset --hard, git clean or deletion of dirty/untracked evidence. Current inventory is a time-specific snapshot and must be refreshed before cleanup.",
+      "All7 local branch targets and8 remote targets are contained indd0, but preserve recorded exact refs/SHAs until verified mergedmain reaches them. Local native-core-qualification pointsce808a2 while its remote pointsaa93f41; never force bulk branch synchronization.",
+      "Before optional branch deletion, check zero commits outside integratedmain and no live worktree attachment, then preserve old target in the review/archive. Branch deletion is separate from closing draftPRs; retaining branches is acceptable.",
+      "The absent /tmp/stead-urbit-pr32-review has stale registered metadata. Preserve its b52eeef ref and gitdir metadata, confirm absence/no unique work, and use dry-run before any metadata-only prune; do not force-remove a live checkout.",
+      "Ignored .runtime/.piers, failed-pier preservation, caches and clean-setup clones are not branch-cleanup targets. Keep required original artifacts/failed states or verified portable equivalents; any disposable fixture reset remains exclusively through the marked guarded harness with no live duplicate identity.",
+      "No checkout or Git ref change while a guarded native lifetime or derivation owns frozen source. Verify owned processes/scopes stopped and locks released before lifecycle cleanup."
+    ],
+    "stashes": "",
+    "working_tree_status": "M README.md\n M docs/urbit/DEV_FLOW.md\n M docs/urbit/NATIVE_CORE.md\n M docs/urbit/PHASE01_CHECKPOINT_20260926.md\n M docs/urbit/TEST_RESULTS.md\n?? docs/urbit/evidence/2026-09-26/host-load-observations/widget-pause02/applied.json\n?? docs/urbit/evidence/2026-09-26/host-load-observations/widget-pause02/index.json\n?? docs/urbit/evidence/2026-09-26/host-load-observations/widget-pause02/restoration-verification.json\n?? docs/urbit/evidence/2026-09-26/host-load-observations/widget-pause02/restored.json\n?? docs/urbit/evidence/2026-09-26/host-load-observations/widget-pause02/verified.json\n?? docs/urbit/evidence/2026-09-26/host-load-observations/widget-pause03/applied.json\n?? docs/urbit/evidence/2026-09-26/host-load-observations/widget-pause03/index.json\n?? docs/urbit/evidence/2026-09-26/host-load-observations/widget-pause03/restoration-verification.json\n?? docs/urbit/evidence/2026-09-26/host-load-observations/widget-pause03/restored.json\n?? docs/urbit/evidence/2026-09-26/host-load-observations/widget-pause03/verified.json\n?? docs/urbit/evidence/2026-09-26/missing-binding-fix/host.json\n?? docs/urbit/evidence/2026-09-26/missing-binding-fix/host.log\n?? docs/urbit/evidence/2026-09-26/missing-binding-fix/index.json\n?? docs/urbit/evidence/2026-09-26/missing-binding-fix/source-review.json\n?? docs/urbit/evidence/2026-09-26/missing-binding-fix/source.patch\n?? docs/urbit/evidence/2026-09-26/native-attempts/capacity01/core-20260926T215629Z-transport.jsonl.gz\n?? docs/urbit/evidence/2026-09-26/native-attempts/capacity01/guard.json\n?? docs/urbit/evidence/2026-09-26/native-attempts/capacity01/guard/.stead-disposable.json.gz\n?? docs/urbit/evidence/2026-09-26/native-attempts/capacity01/guard/control/STOP.gz\n?? docs/urbit/evidence/2026-09-26/native-attempts/capacity01/guard/control/lease.json.gz\n?? docs/urbit/evidence/2026-09-26/native-attempts/capacity01/guard/control/scope.json.gz\n?? docs/urbit/evidence/2026-09-26/native-attempts/capacity01/guard/control/source-context.json.gz\n?? docs/urbit/evidence/2026-09-26/native-attempts/capacity01/guard/events.jsonl.gz\n?? docs/urbit/evidence/2026-09-26/native-attempts/capacity01/independent-diagnosis.json\n?? docs/urbit/evidence/2026-09-26/native-attempts/capacity01/index.json\n?? docs/urbit/evidence/2026-09-26/native-attempts/capacity01/logs/bud.log.gz\n?? docs/urbit/evidence/2026-09-26/native-attempts/capacity01/logs/bus.log.gz\n?? docs/urbit/evidence/2026-09-26/native-attempts/capacity01/logs/nec.log.gz\n?? docs/urbit/evidence/2026-09-26/native-attempts/capacity01/logs/supervisor.log.gz\n?? docs/urbit/evidence/2026-09-26/native-attempts/capacity01/logs/zod.log.gz\n?? docs/urbit/evidence/2026-09-26/native-attempts/capacity01/native.json\n?? docs/urbit/evidence/2026-09-26/native-attempts/capacity01/steps/capacity-check.json.gz\n?? docs/urbit/evidence/2026-09-26/native-attempts/capacity01/steps/capacity-check.log.gz\n?? docs/urbit/evidence/2026-09-26/native-attempts/capacity01/steps/lifecycle.json.gz\n?? docs/urbit/evidence/2026-09-26/native-attempts/capacity01/steps/start.json.gz\n?? docs/urbit/evidence/2026-09-26/native-attempts/capacity01/steps/start.log.gz\n?? docs/urbit/evidence/2026-09-26/native-attempts/capacity01/steps/stop.json.gz\n?? docs/urbit/evidence/2026-09-26/native-attempts/capacity01/steps/stop.log.gz\n?? docs/urbit/evidence/2026-09-26/native-attempts/capacity01/steps/wait-ready.json.gz\n?? docs/urbit/evidence/2026-09-26/native-attempts/capacity01/steps/wait-ready.log.gz\n?? docs/urbit/evidence/2026-09-26/native-attempts/core06/core-20260926T223412Z-transport.jsonl.gz\n?? docs/urbit/evidence/2026-09-26/native-attempts/core06/guard.json\n?? docs/urbit/evidence/2026-09-26/native-attempts/core06/guard/.stead-disposable.json.gz\n?? docs/urbit/evidence/2026-09-26/native-attempts/core06/guard/control/STOP.gz\n?? docs/urbit/evidence/2026-09-26/native-attempts/core06/guard/control/lease.json.gz\n?? docs/urbit/evidence/2026-09-26/native-attempts/core06/guard/control/scope.json.gz\n?? docs/urbit/evidence/2026-09-26/native-attempts/core06/guard/control/source-context.json.gz\n?? docs/urbit/evidence/2026-09-26/native-attempts/core06/guard/events.jsonl.gz\n?? docs/urbit/evidence/2026-09-26/native-attempts/core06/index.json\n?? docs/urbit/evidence/2026-09-26/native-attempts/core06/logs/bud.log.gz\n?? docs/urbit/evidence/2026-09-26/native-attempts/core06/logs/bus.log.gz\n?? docs/urbit/evidence/2026-09-26/native-attempts/core06/logs/nec.log.gz\n?? docs/urbit/evidence/2026-09-26/native-attempts/core06/logs/supervisor.log.gz\n?? docs/urbit/evidence/2026-09-26/native-attempts/core06/logs/zod.log.gz\n?? docs/urbit/evidence/2026-09-26/native-attempts/core06/native.json\n?? docs/urbit/evidence/2026-09-26/native-attempts/core06/steps/core-test.json.gz\n?? docs/urbit/evidence/2026-09-26/native-attempts/core06/steps/core-test.log.gz\n?? docs/urbit/evidence/2026-09-26/native-attempts/core06/steps/lifecycle.json.gz\n?? docs/urbit/evidence/2026-09-26/native-attempts/core06/steps/start.json.gz\n?? docs/urbit/evidence/2026-09-26/native-attempts/core06/steps/start.log.gz\n?? docs/urbit/evidence/2026-09-26/native-attempts/core06/steps/stop.json.gz\n?? docs/urbit/evidence/2026-09-26/native-attempts/core06/steps/stop.log.gz\n?? docs/urbit/evidence/2026-09-26/native-attempts/core06/steps/wait-ready.json.gz\n?? docs/urbit/evidence/2026-09-26/native-attempts/core06/steps/wait-ready.log.gz\n?? docs/urbit/evidence/2026-09-26/native-attempts/core06/unclean-live.json.gz\n?? docs/urbit/evidence/2026-09-26/phase1-final-dd0e8c0/gall/guard.json\n?? docs/urbit/evidence/2026-09-26/phase1-final-dd0e8c0/gall/guard/.stead-disposable.json.gz\n?? docs/urbit/evidence/2026-09-26/phase1-final-dd0e8c0/gall/guard/control/STOP.gz\n?? docs/urbit/evidence/2026-09-26/phase1-final-dd0e8c0/gall/guard/control/lease.json.gz\n?? docs/urbit/evidence/2026-09-26/phase1-final-dd0e8c0/gall/guard/control/scope.json.gz\n?? docs/urbit/evidence/2026-09-26/phase1-final-dd0e8c0/gall/guard/control/source-context.json.gz\n?? docs/urbit/evidence/2026-09-26/phase1-final-dd0e8c0/gall/guard/events.jsonl.gz\n?? docs/urbit/evidence/2026-09-26/phase1-final-dd0e8c0/gall/index.json\n?? docs/urbit/evidence/2026-09-26/phase1-final-dd0e8c0/gall/logs/bud.log.gz\n?? docs/urbit/evidence/2026-09-26/phase1-final-dd0e8c0/gall/logs/bus.log.gz\n?? docs/urbit/evidence/2026-09-26/phase1-final-dd0e8c0/gall/logs/nec.log.gz\n?? docs/urbit/evidence/2026-09-26/phase1-final-dd0e8c0/gall/logs/supervisor.log.gz\n?? docs/urbit/evidence/2026-09-26/phase1-final-dd0e8c0/gall/logs/zod.log.gz\n?? docs/urbit/evidence/2026-09-26/phase1-final-dd0e8c0/gall/native.json\n?? docs/urbit/evidence/2026-09-26/phase1-final-dd0e8c0/gall/steps/gall-schedule.json.gz\n?? docs/urbit/evidence/2026-09-26/phase1-final-dd0e8c0/gall/steps/gall-schedule.log.gz\n?? docs/urbit/evidence/2026-09-26/phase1-final-dd0e8c0/gall/steps/lifecycle.json.gz\n?? docs/urbit/evidence/2026-09-26/phase1-final-dd0e8c0/gall/steps/start.json.gz\n?? docs/urbit/evidence/2026-09-26/phase1-final-dd0e8c0/gall/steps/start.log.gz\n?? docs/urbit/evidence/2026-09-26/phase1-final-dd0e8c0/gall/steps/stop.json.gz\n?? docs/urbit/evidence/2026-09-26/phase1-final-dd0e8c0/gall/steps/stop.log.gz\n?? docs/urbit/evidence/2026-09-26/phase1-final-dd0e8c0/gall/steps/wait-ready.json.gz\n?? docs/urbit/evidence/2026-09-26/phase1-final-dd0e8c0/gall/steps/wait-ready.log.gz\n?? docs/urbit/evidence/2026-09-26/phase1-final-dd0e8c0/reviews/gall-final04-independent-review.json\n?? docs/urbit/evidence/2026-09-26/phase1-final-dd0e8c0/reviews/nonnative-v5-dd0e8c0-portable-audit.json\n?? docs/urbit/evidence/2026-09-26/phase1-final-dd0e8c0/support/nonnative-v5-dd0e8c0-promoter-source-review.json\n?? docs/urbit/evidence/2026-09-26/phase1-final-dd0e8c0/support/nonnative-v5-promoter-source-review.json\n?? docs/urbit/evidence/2026-09-26/phase1-final-dd0e8c0/support/nonnative-v5-refresh-plan.json\n?? docs/urbit/evidence/2026-09-26/phase1-final-dd0e8c0/support/promote_phase1_nonnative_v5.py\n?? docs/urbit/evidence/2026-09-26/phase1-final-dd0e8c0/support/retention-map.json\n?? docs/urbit/evidence/2026-09-26/phase1-nonnative-v5/binding-correction-source-review.json\n?? docs/urbit/evidence/2026-09-26/phase1-nonnative-v5/capacity-source-review.json\n?? docs/urbit/evidence/2026-09-26/phase1-nonnative-v5/dispositions.json\n?? docs/urbit/evidence/2026-09-26/phase1-nonnative-v5/full-host/host.log\n?? docs/urbit/evidence/2026-09-26/phase1-nonnative-v5/full-host/result.json\n?? docs/urbit/evidence/2026-09-26/phase1-nonnative-v5/guard-source-proof-confirmation.json\n?? docs/urbit/evidence/2026-09-26/phase1-nonnative-v5/historical-guard-continuity.json\n?? docs/urbit/evidence/2026-09-26/phase1-nonnative-v5/host-audit-confirmation.json\n?? docs/urbit/evidence/2026-09-26/phase1-nonnative-v5/host-current/before.json\n?? docs/urbit/evidence/2026-09-26/phase1-nonnative-v5/host-current/capture-script.py\n?? docs/urbit/evidence/2026-09-26/phase1-nonnative-v5/host-current/host-current.json\n?? docs/urbit/evidence/2026-09-26/phase1-nonnative-v5/host-current/host-current.stderr.log\n?? docs/urbit/evidence/2026-09-26/phase1-nonnative-v5/host-current/host-current.stdout.log\n?? docs/urbit/evidence/2026-09-26/phase1-nonnative-v5/host-current/launch.json\n?? docs/urbit/evidence/2026-09-26/phase1-nonnative-v5/host-current/selected-tests.json\n?? docs/urbit/evidence/2026-09-26/phase1-nonnative-v5/host-current/test-events.jsonl\n?? docs/urbit/evidence/2026-09-26/phase1-nonnative-v5/host-current/worker.json\n?? docs/urbit/evidence/2026-09-26/phase1-nonnative-v5/host-retained-audit.json\n?? docs/urbit/evidence/2026-09-26/phase1-nonnative-v5/nonnative-readiness.json\n?? docs/urbit/evidence/2026-09-26/phase1-nonnative-v5/retention-index.json\n?? docs/urbit/evidence/2026-09-26/phase1-nonnative-v5/source-bindings.json\n?? docs/urbit/evidence/2026-09-26/phase1-nonnative-v5/source-dispositions.json\n?? docs/urbit/evidence/2026-09-26/phase1-nonnative-v5/source-refresh-review.json\n?? docs/urbit/evidence/2026-09-26/phase1-nonnative-v5/support/promote-script.py",
+    "worktrees": "worktree /home/skilgore/stead-urbit\nHEAD dd0e8c0ce8d1d00f15de6b07e2e26d368c5c3774\nbranch refs/heads/increment/phase01-closeout-20260925\n\nworktree /tmp/stead-urbit-pr32-review\nHEAD b52eeef9b0e14a332ecd92c67ff664b588b37c62\nbranch refs/heads/review/pr-32\nprunable gitdir file points to non-existent location"
+  },
+  "protocol": "stead.independent-integration-readiness-review/1",
+  "qualification_acceptance": false,
+  "read_only_github_scope": "Every GitHub read used --repo ScottTpirate/stead-urbit or exact repos/ScottTpirate/stead-urbit API path. No defaults changed, no original-repository writes, and no GitHub mutations.",
+  "remaining_acceptance_and_review_actions": [
+    {
+      "action": "Complete full current core under unchanged guard, including all148 main cases with only the three exact typed deferrals, direct codec/context/receipt tests, delivery schedules, all8 capacity/predecessor recipes, actual save/load, graceful fenced process replacement and ordinary-Git recovery. Earlier thermal, segfault, timeout and protocol-expectation failures remain failed.",
+      "id": "full-current-core",
+      "type": "native acceptance"
+    },
+    {
+      "action": "At the executed source freeze, derive exactly65 core +1 scheduled-Gall +7typed obligations from retained raw reports/commands/source contexts/closed guards, then independently review every requirement and negative control. Warm restart needs nonforced old exit0, distinct replacement PID, protected-state/retry/denial/Git identity; save/load alone does not satisfy it.",
+      "id": "all73-independent",
+      "type": "derived evidence and independent semantic review"
+    },
+    {
+      "action": "Review/commit/push current uncommitted docs and exact evidence, including failure history, current Gall, v5 dispositions/audit and final native gate when available. Any records-only descendant must show tested input byte equality while preserving actual execution source commits. Do not relabel native source to a later documentation commit.",
+      "id": "record-publication",
+      "type": "records and review"
+    },
+    {
+      "action": "Rewrite PR42 body/title for final implementation and exact current outcome. Its current body still describes3f0/a1,472tests and unexecuted diagnostic despite currentdd0 head476, actualcapacity01/Gall04/core06. Append current bounded status/evidence to stale #7/#8 execution threads; close only after actual acceptance. Record final independent agent review against actual aggregate published head, without inventing human or CI approval.",
+      "id": "live-PR-and-issues",
+      "type": "tracking accuracy"
+    },
+    {
+      "action": "Recheck live origin/main, aggregate head, clean tested inputs and protected work inventory immediately before integration. If source changed, obtain renewed relevant tests/review; if only records changed, retain byte-equivalence witness. Any base/source conflict resolution needs review before merge.",
+      "id": "final-integration-snapshot",
+      "type": "race and preservation"
+    }
+  ],
+  "remote_urls": {
+    "origin_fetch": "https://github.com/ScottTpirate/stead-urbit.git",
+    "origin_push": "https://github.com/ScottTpirate/stead-urbit.git",
+    "upstream_fetch": "https://github.com/ScottTpirate/stead.git",
+    "upstream_push": "DISABLED_UPSTREAM_PUSH"
+  },
+  "reviewed_artifacts": [
+    {
+      "bytes": 3960,
+      "path": "AGENTS.md",
+      "sha256": "662a3971c6c78f71084eaba5e5b31883c4cfb2c2ee9968894c6145b988c51a20"
+    },
+    {
+      "bytes": 2809,
+      "path": "docs/urbit/AGENT_HANDOFF.md",
+      "sha256": "e00fe02a6ec269db8e42aadda9d53fc9e181d9db3cff4f3c66a38f62db014927"
+    },
+    {
+      "bytes": 17519,
+      "path": "docs/urbit/MASTER_BUILD_DIRECTIVE.md",
+      "sha256": "30cd338df7f716b040f6337d5b3de97da1704c6b39c7a3124a95c40a7a1653ab"
+    },
+    {
+      "bytes": 8976,
+      "path": "docs/urbit/ECOSYSTEM_PLAN.md",
+      "sha256": "b4054941b3729d9f7bea5ebd277580111406f4b1dea74ebeddb76c327878442e"
+    },
+    {
+      "bytes": 8288,
+      "path": "specs/urbit/backlog.json",
+      "sha256": "7a2395a19c77ec08d1ed7c96eae393be44f7c367b5065e3fbb0523262f4ba116"
+    },
+    {
+      "bytes": 7788,
+      "path": "specs/urbit/ecosystem.json",
+      "sha256": "7193c6fd85bd464a9bd14d6c833ba7083f2b0a5f5198cf5af4264239f8f1ba06"
+    },
+    {
+      "bytes": 30049,
+      "path": "specs/urbit/v2/qualification-gate.json",
+      "sha256": "f374349cc3ccd64993e3dade9a44e306854479c228b7f93d6559647006aee94c"
+    },
+    {
+      "bytes": 2532,
+      "path": "docs/urbit/reviews/PHASE1_RESTART_SCOPE_CORRECTION_20260926.md",
+      "sha256": "77943d2433afafff43683c7d0921b32609fc750b509a89fa299e704d6c00f85e"
+    },
+    {
+      "bytes": 14011,
+      "path": "docs/urbit/evidence/2026-09-26/workflow-evaluation-v2/URB170_FINAL_ACCEPTANCE_REVIEW.json",
+      "sha256": "e645d2402957daa98016ff1b4e9bc937b45dfc413177604eb25c0756ad29ac34"
+    },
+    {
+      "bytes": 8383,
+      "path": "docs/urbit/reviews/URB030_210_DESIGN_REVIEW_20260926.md",
+      "sha256": "7fa12d5ec931aa3424db8863cc4113f292953a25b24d4b8ccc11b4639d0ceccc"
+    },
+    {
+      "bytes": 6506,
+      "path": "docs/urbit/evidence/2026-09-26/capacity-fix/source-review.json",
+      "sha256": "751de4e1e472e7869588e1b116f502250921019f7e1a30369621dbf7e8ca5d90"
+    },
+    {
+      "bytes": 7337,
+      "path": "docs/urbit/evidence/2026-09-26/missing-binding-fix/source-review.json",
+      "sha256": "0d9373bf03f39fbf994dd3ed9a0c188cad4e399ba17ebff17af41934f931ab8b"
+    },
+    {
+      "bytes": 37496,
+      "path": "docs/urbit/evidence/2026-09-26/missing-binding-fix/host.json",
+      "sha256": "771522343edb63791ed4a479d1461651d25ec99a7bc481a34aa358d2b2270f02"
+    },
+    {
+      "bytes": 10719,
+      "path": "docs/urbit/evidence/2026-09-26/native-attempts/core06/index.json",
+      "sha256": "864944bab66b6366ccf066aac9001b0ea5f015350b032c04165305f0cba0757f"
+    },
+    {
+      "bytes": 33228,
+      "path": "docs/urbit/evidence/2026-09-26/phase1-final-dd0e8c0/reviews/gall-final04-independent-review.json",
+      "sha256": "a0d5cfbdc487c6fac185deafc75752dd458eab20b6776c303b96e04aa12a7b44"
+    },
+    {
+      "bytes": 5765,
+      "path": "docs/urbit/evidence/2026-09-26/phase1-nonnative-v5/dispositions.json",
+      "sha256": "a5e2e736cbc27912a8a0137ed3c2fbeeec87faa49a4061ae3fe5e44c09b06975"
+    },
+    {
+      "bytes": 30270,
+      "path": ".runtime/phase01-20260926/nonnative-v5-dd0e8c0-portable-audit.json",
+      "sha256": "6ff66c7a6f6d4ec1fd294cba4cbdb1d60be357e17c38be55518daa0975ce5475"
+    },
+    {
+      "bytes": 10187,
+      "path": ".runtime/phase01-20260926/integration-preparation/inventory-dd0-core06.json",
+      "sha256": "b9b3f9b82e95ed1c435efc41deafd459fced523aa5f38ac0e28747e32b57a874"
+    }
+  ],
+  "reviewer": "/root/independent_review",
+  "source_commit": "dd0e8c0ce8d1d00f15de6b07e2e26d368c5c3774",
+  "status": "integration-plan-source-ready-acceptance-and-publication-pending",
+  "tests_executed": false
+}

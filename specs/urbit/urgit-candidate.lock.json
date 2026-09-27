@@ -1,0 +1,49 @@
+{
+  "format": 1,
+  "profile": "isolated-native-git-candidate-evaluation-only",
+  "resolved_on": "2026-09-12",
+  "candidate": {
+    "repository": "yapishu/urgit",
+    "commit": "9cec0371b02269efcdbd8580c42e883e69b82000",
+    "url": "https://codeload.github.com/yapishu/urgit/tar.gz/9cec0371b02269efcdbd8580c42e883e69b82000",
+    "sha256": "facf578b6edccbdb5b748ff16eabcbeaf10c4ca0dbc8c6073bedb0cbee7e5ee3",
+    "archive_root": "urgit-9cec0371b02269efcdbd8580c42e883e69b82000",
+    "license_declared": "MIT",
+    "license_evidence": "desk/desk.docket-0:7",
+    "license_introduced_commit": "ca0d1396bdb17559a9fda2a959f4059a79945de6",
+    "reuse_disposition": "local evaluation under explicit app MIT declaration; no tracked vendoring or production admission; redistribution notice and provenance audit remains open"
+  },
+  "skeleton": {
+    "repository": "urbit/urbit",
+    "commit": "0f94550b941dfe046d9dff4a541330bd084e8cd1",
+    "url": "https://raw.githubusercontent.com/urbit/urbit/0f94550b941dfe046d9dff4a541330bd084e8cd1/pkg/base-dev/lib/skeleton.hoon",
+    "sha256": "c7c654a91c5dc1a535d4a76b019ec175955e52961b1ddff70ad49121208d20f5",
+    "license_url": "https://raw.githubusercontent.com/urbit/urbit/0f94550b941dfe046d9dff4a541330bd084e8cd1/LICENSE.txt",
+    "license_sha256": "b5d62c0a6f6b17ff490de29606527bf77b6509998ef07048488d659e2b719e52"
+  },
+  "runtime_lock": "specs/urbit/toolchain.lock.json",
+  "fake_identity": "zod",
+  "limits": {
+    "maximum_download_bytes": 4194304,
+    "maximum_archive_files": 500,
+    "maximum_source_bytes": 33554432,
+    "maximum_file_bytes": 2097152,
+    "loom_exponent": 31,
+    "cpu_count": 1,
+    "boot_timeout_seconds": 1200,
+    "command_timeout_seconds": 300,
+    "total_timeout_seconds": 2100,
+    "start_temperature_c": 75,
+    "stop_temperature_c": 90
+  },
+  "excluded_claims": [
+    "Stead Git integration or production admission",
+    "concurrent server CAS",
+    "revocation while ingestion is staged",
+    "private-project endpoint isolation",
+    "frontend or Zig build",
+    "live Urbit networking or deployment",
+    "SHA-256 repositories, LFS, partial/shallow clone qualification",
+    "crash-during-push recovery or load capacity"
+  ]
+}

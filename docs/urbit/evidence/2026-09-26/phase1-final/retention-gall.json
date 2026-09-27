@@ -1,0 +1,162 @@
+{
+  "protocol": "stead.exact-gall-retention/1",
+  "source_commit": "55475f0565ceb38db9eb5bc057962967398aa5da",
+  "guard_run_id": "76d77d0ab2095d3a6f091a9aeb549241",
+  "files": [
+    {
+      "source": ".piers/fakes/logs/gall-schedule-20260926T194515Z-f8b9dbec2ebf.json",
+      "file": "native/gall-schedule.json",
+      "sha256": "f93ed418bab6f47deba177c2d5e33c0f195a616ba56be404266fb947a4f0fdbf",
+      "bytes": 223619
+    },
+    {
+      "source": ".runtime/execution-runs/four-fakes-yrf1doq_/report.json",
+      "file": "native/gall-schedule-guard.json",
+      "sha256": "ada4b8726b9e0d7d660dae1eb5a7555b9e9da837f3240323cfc9ad950f83c9da",
+      "bytes": 30318
+    },
+    {
+      "source": ".runtime/phase01-20260926/gall-final01-lifecycle.json",
+      "file": "retained/gall/lifecycle.json",
+      "sha256": "a4f1d3fdf95ff360a33fe4bbdb468022e9bbd0b3c0460533b611a14babe238f4",
+      "bytes": 543
+    },
+    {
+      "source": ".runtime/execution-runs/four-fakes-yrf1doq_/.stead-disposable.json",
+      "file": "retained/gall/guard/.stead-disposable.json",
+      "sha256": "17797f459e08ff8f706d80ceae2e4fe1c9de98dd1031a82573cd5772bfe64b66",
+      "bytes": 102
+    },
+    {
+      "source": ".runtime/execution-runs/four-fakes-yrf1doq_/events.jsonl",
+      "file": "retained/gall/guard/events.jsonl",
+      "sha256": "fe1187c54926ff1e9cce6d4c4d889577094f772770b4e6b2beb3518cf95c6ec1",
+      "bytes": 27237
+    },
+    {
+      "source": ".runtime/execution-runs/four-fakes-yrf1doq_/control/source-context.json",
+      "file": "retained/gall/guard/control/source-context.json",
+      "sha256": "b69d1c69c8291da33e33569296cc3f5bf3e0ad149b91d02ed61ce9d37fcc6de4",
+      "bytes": 18248
+    },
+    {
+      "source": ".runtime/execution-runs/four-fakes-yrf1doq_/control/scope.json",
+      "file": "retained/gall/guard/control/scope.json",
+      "sha256": "e41201feab51540780efccb7e0c2af9a817f01fd0338c1ae8d10cec8b14086e5",
+      "bytes": 232
+    },
+    {
+      "source": ".runtime/execution-runs/four-fakes-yrf1doq_/control/lease.json",
+      "file": "retained/gall/guard/control/lease.json",
+      "sha256": "8f07b1034735f123af897cd468e1216ec85ecf561c2b8cf91e436840b5f66250",
+      "bytes": 1063
+    },
+    {
+      "source": ".runtime/execution-runs/four-fakes-yrf1doq_/control/STOP",
+      "file": "retained/gall/guard/control/STOP",
+      "sha256": "7d3b42bbed97fbe07fdd87226f47c82456368c7336a1de0dd0629653265c5b26",
+      "bytes": 17
+    },
+    {
+      "source": ".runtime/phase01-20260925/start36.json",
+      "file": "retained/gall/steps/start36.json",
+      "sha256": "fd8dfe34007459091e7a347286400dfd39e05f6968cbd4ebe3610d771b35312a",
+      "bytes": 831
+    },
+    {
+      "source": ".runtime/phase01-20260925/start36.log",
+      "file": "retained/gall/steps/start36.log",
+      "sha256": "7e31adad740447db498c387f460d4cde74c4c19a7dd957b6fb1b47ecd304c8e8",
+      "bytes": 453
+    },
+    {
+      "source": ".runtime/phase01-20260925/ready36.json",
+      "file": "retained/gall/steps/ready36.json",
+      "sha256": "6225e2da533815d3554419c63a61fca59705e50a011d0a4720db618e12546dbb",
+      "bytes": 836
+    },
+    {
+      "source": ".runtime/phase01-20260925/ready36.log",
+      "file": "retained/gall/steps/ready36.log",
+      "sha256": "6ade3d62b67dd2066207260ae96b6ef88847dbb824720cc7be7b132fee5510e9",
+      "bytes": 242
+    },
+    {
+      "source": ".runtime/phase01-20260925/gall-final01.json",
+      "file": "retained/gall/steps/gall-final01.json",
+      "sha256": "758db8165a4f3977a8c2faa4733e6bde2841acf1aead970c9edde11e48d4f749",
+      "bytes": 840
+    },
+    {
+      "source": ".runtime/phase01-20260925/gall-final01.log",
+      "file": "retained/gall/steps/gall-final01.log",
+      "sha256": "4462fdc8107f93ad61f37b25bd16c2a4b846f8d3b88858f9637c1de1434d96c7",
+      "bytes": 962
+    },
+    {
+      "source": ".runtime/phase01-20260925/stop36.json",
+      "file": "retained/gall/steps/stop36.json",
+      "sha256": "109d5656f125c30e9bbc7dcc9e82e362bdfc231335312b7c288875d5922630f9",
+      "bytes": 894
+    },
+    {
+      "source": ".runtime/phase01-20260925/stop36.log",
+      "file": "retained/gall/steps/stop36.log",
+      "sha256": "fe8b2280abb0c0a09259c5211aa3dc729b9b42caa2afdaa7431a4d4936ba213c",
+      "bytes": 141
+    },
+    {
+      "source": ".piers/fakes/logs/supervisor.log",
+      "file": "retained/gall/logs/supervisor.log",
+      "sha256": "170ea65b85fb161e79a2e8afada56b3b329673b7b8a6141359cb2d49158c7e58",
+      "bytes": 391656
+    },
+    {
+      "source": ".piers/fakes/logs/zod.log",
+      "file": "retained/gall/logs/zod.log",
+      "sha256": "6b10e5027ea3f427883e64231ddef30508d45af6760cede56736951a904d64f0",
+      "bytes": 222417
+    },
+    {
+      "source": ".piers/fakes/logs/bus.log",
+      "file": "retained/gall/logs/bus.log",
+      "sha256": "5bf3b669a3d6d0390921b62ef8729c597f5a08dd8454920626340b41ecf22a39",
+      "bytes": 197981
+    },
+    {
+      "source": ".piers/fakes/logs/nec.log",
+      "file": "retained/gall/logs/nec.log",
+      "sha256": "3b101db3d6d94e252f4f4369991488dd8e65d75755bc42c99d7f6ae886f27114",
+      "bytes": 113648
+    },
+    {
+      "source": ".piers/fakes/logs/bud.log",
+      "file": "retained/gall/logs/bud.log",
+      "sha256": "8b2ce90d27023bbc4daf7492d32a40265a21972ecf4a39fd027ff1f887d18dfe",
+      "bytes": 216889
+    },
+    {
+      "source": ".piers/fakes/logs/first-native-suite-console.log",
+      "file": "retained/gall/logs/first-native-suite-console.log",
+      "sha256": "964abaf3da59861fc53fa43f717768be88e5d050fd40763f0206c78ac1e15ad9",
+      "bytes": 3984
+    },
+    {
+      "source": ".piers/fakes/logs/native-conn-suite-console.log",
+      "file": "retained/gall/logs/native-conn-suite-console.log",
+      "sha256": "9ddd638eb71d85e8f634475b24673ee418c8a0327b2ec664f8bc9fdec832819d",
+      "bytes": 5844
+    },
+    {
+      "source": ".piers/fakes/logs/native-conn-fixed-suite-console.log",
+      "file": "retained/gall/logs/native-conn-fixed-suite-console.log",
+      "sha256": "107bfc8a593a3a3ba2009009dc011049dcbdede954a32cbd9c05d19ba8e67a6f",
+      "bytes": 12666
+    }
+  ],
+  "phase_acceptance": false,
+  "limits": [
+    "Lifecycle started_at field contains completion time; actual start is retained steps/start36.json started_utc. Exact original field and bytes are preserved.",
+    "No test rerun or source change during retention."
+  ]
+}

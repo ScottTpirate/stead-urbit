@@ -1,0 +1,39 @@
+python3 scripts/urbit/validate_plan.py
+PASS: 18 planning tasks, acyclic dependencies, required documents present.
+NOT TESTED HERE: Hoon compilation, live Urbit, GitHub publishing, security, performance, cloud deployment.
+python3 scripts/urbit/check_ecosystem.py
+PASS (planning only): 30 tasks, 7 milestones, 4 skill files.
+NOT VERIFIED: issue status, Hoon, skill effectiveness, live GitHub sync, security or release readiness.
+python3 scripts/urbit/contracts.py test
+test_admin_grant_does_not_grant_content_access (test_contracts.Contracts.test_admin_grant_does_not_grant_content_access) ... ok
+test_caller_cannot_attach_actor_or_decision (test_contracts.Contracts.test_caller_cannot_attach_actor_or_decision) ... ok
+test_changed_payload_under_same_id_has_different_digest (test_contracts.Contracts.test_changed_payload_under_same_id_has_different_digest) ... ok
+test_duplicate_keys_and_non_json_numbers_rejected (test_contracts.Contracts.test_duplicate_keys_and_non_json_numbers_rejected) ... ok
+test_each_policy_dimension_required_and_denies_win (test_contracts.Contracts.test_each_policy_dimension_required_and_denies_win) ... ok
+test_fixed_work_ontology_and_closed_payload (test_contracts.Contracts.test_fixed_work_ontology_and_closed_payload) ... ok
+test_golden_canonical_bytes_and_digests (test_contracts.Contracts.test_golden_canonical_bytes_and_digests) ... ok
+test_grant_and_revoke_cannot_escalate_role (test_contracts.Contracts.test_grant_and_revoke_cannot_escalate_role) ... ok
+test_hierarchy_role_and_ship_do_not_fill_evidence (test_contracts.Contracts.test_hierarchy_role_and_ship_do_not_fill_evidence) ... ok
+test_ids_are_canonical_and_never_hostnames (test_contracts.Contracts.test_ids_are_canonical_and_never_hostnames) ... ok
+test_key_order_and_whitespace_are_not_new_commands (test_contracts.Contracts.test_key_order_and_whitespace_are_not_new_commands) ... ok
+test_markdown_encoding_and_envelope_limits (test_contracts.Contracts.test_markdown_encoding_and_envelope_limits) ... ok
+test_missing_fields_and_unsupported_version_fail (test_contracts.Contracts.test_missing_fields_and_unsupported_version_fail) ... ok
+test_project_grant_schema_cannot_create_org_administrator (test_contracts.Contracts.test_project_grant_schema_cannot_create_org_administrator) ... ok
+test_project_key_preserves_ten_character_prefix_limit (test_contracts.Contracts.test_project_key_preserves_ten_character_prefix_limit) ... ok
+test_revision_and_epoch_bounds (test_contracts.Contracts.test_revision_and_epoch_bounds) ... ok
+test_role_bundles_have_explicit_project_scope (test_contracts.Contracts.test_role_bundles_have_explicit_project_scope) ... ok
+test_utf8_byte_limits_not_only_character_counts (test_contracts.Contracts.test_utf8_byte_limits_not_only_character_counts) ... ok
+
+----------------------------------------------------------------------
+Ran 18 tests in 0.018s
+
+OK
+PASS host reference contract checks; native parity and product authorization remain unimplemented
+python3 scripts/urbit/contracts_v2.py
+PASS v1 and v2 contract hashes; metadata only, not native qualification
+python3 -m unittest discover -s tests/urbit -p 'test_*.py'
+......................................................................................................................................................................................................................................................................................................................................................................................................................................................................................
+----------------------------------------------------------------------
+Ran 470 tests in 67.979s
+
+OK

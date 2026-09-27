@@ -1,0 +1,54 @@
+{
+  "protocol": "stead.exact-support-retention/1",
+  "scope": "Exact provenance copies only. The 3f0 proposal and its review remain historical/unexecuted; current v5 artifacts are unchanged.",
+  "copies": [
+    {
+      "source": {
+        "path": ".runtime/phase01-20260926/nonnative-v5-refresh-plan.json",
+        "sha256": "0a17e1e86de473591e5844541ea7876f2582bd66492daff4a137656330017ad8",
+        "bytes": 63518
+      },
+      "retained": {
+        "path": "docs/urbit/evidence/2026-09-26/phase1-final-dd0e8c0/support/nonnative-v5-refresh-plan.json",
+        "sha256": "0a17e1e86de473591e5844541ea7876f2582bd66492daff4a137656330017ad8",
+        "bytes": 63518
+      }
+    },
+    {
+      "source": {
+        "path": ".runtime/phase01-20260926/nonnative-v5-promoter-source-review.json",
+        "sha256": "51652a0e27fae1a0d436114c9676a78784fa31707c089df21ca8211d03b98686",
+        "bytes": 4715
+      },
+      "retained": {
+        "path": "docs/urbit/evidence/2026-09-26/phase1-final-dd0e8c0/support/nonnative-v5-promoter-source-review.json",
+        "sha256": "51652a0e27fae1a0d436114c9676a78784fa31707c089df21ca8211d03b98686",
+        "bytes": 4715
+      }
+    },
+    {
+      "source": {
+        "path": ".runtime/phase01-20260926/promote_phase1_nonnative_v5.py",
+        "sha256": "85d638b79bedfb3522b9e215c1e344602d21ee358750432564b0f8e2f8e85c1f",
+        "bytes": 31722
+      },
+      "retained": {
+        "path": "docs/urbit/evidence/2026-09-26/phase1-final-dd0e8c0/support/promote_phase1_nonnative_v5.py",
+        "sha256": "85d638b79bedfb3522b9e215c1e344602d21ee358750432564b0f8e2f8e85c1f",
+        "bytes": 31722
+      }
+    },
+    {
+      "source": {
+        "path": ".runtime/phase01-20260926/nonnative-v5-dd0e8c0-promoter-source-review.json",
+        "sha256": "9581e98f9e75e9463cb4bc07fdcba7833c6e40cf14e2b241a1784aaeb6a6852d",
+        "bytes": 3738
+      },
+      "retained": {
+        "path": "docs/urbit/evidence/2026-09-26/phase1-final-dd0e8c0/support/nonnative-v5-dd0e8c0-promoter-source-review.json",
+        "sha256": "9581e98f9e75e9463cb4bc07fdcba7833c6e40cf14e2b241a1784aaeb6a6852d",
+        "bytes": 3738
+      }
+    }
+  ]
+}

@@ -1,0 +1,32 @@
+{
+  "protocol": "stead.socket-path-fix-host-check/1",
+  "classification": "host/static/mocked suite plus actual local Unix socket regression; no Hoon execution",
+  "base_commit": "0d877cff4319de8d437f0da58d4518535f758c36",
+  "source_files_sha256": {
+    "scripts/urbit/harness.py": "55683233cd65be353cc072d32e8414009552ccdc0db88beb700c2c7336079282",
+    "tests/urbit/test_dev_flow.py": "27700da68611fe1864cea3969ff2807156fdd30fe8ed5c3a35bf437f7b7aef53"
+  },
+  "started_at": "2026-09-26T19:36:00.148586+00:00",
+  "command": [
+    "make",
+    "check"
+  ],
+  "affinity": [
+    19
+  ],
+  "exit_code": 0,
+  "elapsed_seconds": 68.70657145499717,
+  "finished_at": "2026-09-26T19:37:08.855182+00:00",
+  "logs": [
+    {
+      "path": "stdout.log",
+      "sha256": "a1b535d66e3f44c4702b8b357e06bbbe8d2eae441edd1c6b8dd896df2bcfcc20",
+      "bytes": 734
+    },
+    {
+      "path": "stderr.log",
+      "sha256": "58a4ce4e070ec4f1e86808600a3d290c615542da79a07034176e976028d351a6",
+      "bytes": 2973
+    }
+  ]
+}

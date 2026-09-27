@@ -1,0 +1,32 @@
+{
+  "source_commit": "a1d35b27d8ee482b1854c7352ebc6eecf96a2b08",
+  "host_tests": 472,
+  "native_execution_performed": false,
+  "phase_qualification": false,
+  "files": [
+    {
+      "file": "source-review.json",
+      "source": ".runtime/phase01-20260926/capacity-fix/source-review.json",
+      "sha256": "751de4e1e472e7869588e1b116f502250921019f7e1a30369621dbf7e8ca5d90",
+      "bytes": 6506
+    },
+    {
+      "file": "host.json",
+      "source": ".runtime/phase01-20260926/host-a1d35b2/result.json",
+      "sha256": "3e8187edaee1d11cae5abce4587bb71beece7c3993879aa05a2e9e21d5f2779b",
+      "bytes": 575
+    },
+    {
+      "file": "host.log",
+      "source": ".runtime/phase01-20260926/host-a1d35b2/host.log",
+      "sha256": "dbcfbb940261da5e3d9a7f82fbce2ec6d92e3198f2f7175a7cef58b5f7f582f3",
+      "bytes": 3714
+    },
+    {
+      "file": "source.patch",
+      "source": "git diff 5208f327 a1d35b27 -- eight reviewed files",
+      "sha256": "abd059529087172addea70f01b56f2b41ec3f622e5a57de53ca295adff98722b",
+      "bytes": 19823
+    }
+  ]
+}

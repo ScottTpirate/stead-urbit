@@ -1,0 +1,21 @@
+{
+  "classification": "host-static-and-mocked-checks",
+  "source_commit": "b0e1a4cf17a34f7cb27520b08ed5547e8dc43974",
+  "command": [
+    "make",
+    "check"
+  ],
+  "exit_code": 0,
+  "suite_tests": 433,
+  "suite_elapsed_seconds": 21.888,
+  "wrapper_elapsed_seconds": 22.11543241108302,
+  "native_execution_performed": false,
+  "artifact": {
+    "file": "make-check.log.gz",
+    "sha256": "ad17b02805e8e6a904f9ed4e4e9d848597b600d51d5b1cb8318264de2d7d37ad",
+    "original_local_path": ".runtime/phase01-20260925/host-feedback-projection.log",
+    "original_sha256": "145c0b1729e7e2b9fcecf4bc5eceb9655b8b299afcafd8c98c9535f73b7ebe47",
+    "encoding": "gzip"
+  },
+  "scope": "Executed before the separate native diagnostic/stop-race fixes. Their focused tests and native reruns are separate evidence."
+}

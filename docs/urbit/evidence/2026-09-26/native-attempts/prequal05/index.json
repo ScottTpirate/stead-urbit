@@ -1,0 +1,102 @@
+{
+  "protocol": "stead.native-attempt/1",
+  "label": "prequal05",
+  "source_commit": "decfe35b875af736a2077d7df7b0a3519dcef07f",
+  "native_status": "fail",
+  "native_error": "Execution guard interrupted result: Fixture stop is latched",
+  "native_elapsed_seconds": 29.121,
+  "outer_guard_status": "failed",
+  "outer_guard_reason": "Owned sandbox exited unsuccessfully",
+  "outer_guard_exit": 1,
+  "qualifies_phase": false,
+  "scope": "Exact individual execution record; phase acceptance requires separate reconciliation and review.",
+  "transformations": [
+    "gzip compression only; decompressed bytes unchanged"
+  ],
+  "artifacts": [
+    {
+      "file": "skill-evaluation-20260926T140733Z-prequalification.json.gz",
+      "sha256": "06f7905b6d01896ef734dc5a9f611a93e8ee2395abd5ae3099843d1ec4c3d683",
+      "original_local_path": ".piers/fakes/logs/skill-evaluation-20260926T140733Z-prequalification.json",
+      "original_sha256": "77a598aaf127ae8542089429ea91f1ad50fd8af3f886bc2e6cd25366b8d7f1f2",
+      "encoding": "gzip"
+    },
+    {
+      "file": "outer-guard.json.gz",
+      "sha256": "a6019920c5634eff866bca1dd456eeff13724801a6f8cf6186f803fbb6e1051a",
+      "original_local_path": ".runtime/execution-runs/four-fakes-p4h280hs/report.json",
+      "original_sha256": "02d389031fb318a21a2ba42170a9ae416a357b4dd979a3337833f91c20b63b91",
+      "encoding": "gzip"
+    },
+    {
+      "file": "source-context.json.gz",
+      "sha256": "021f69ac3bf233d96ea50122ea4df1055a791738c2294b9d1288eeba842b0327",
+      "original_local_path": ".runtime/execution-runs/four-fakes-p4h280hs/control/source-context.json",
+      "original_sha256": "848e819bf43ff49c1d3dc5fd8a15186546f01e05dc26bce42a30651b51de3737",
+      "encoding": "gzip"
+    },
+    {
+      "file": "prequal05.json.gz",
+      "sha256": "9f85fbad7cbd91fd4a2d2e879567590df5ca8c1edeac95b05f549a3faf55ef28",
+      "original_local_path": ".runtime/phase01-20260925/prequal05.json",
+      "original_sha256": "e5ce98131636155f65f634c50478704b185ade0baf16a5df506d0217d79957cb",
+      "encoding": "gzip"
+    },
+    {
+      "file": "prequal05.log.gz",
+      "sha256": "e8488c9772e0444595b4e00e1ffe4b375af078c33bc531cbfe6de38e68134276",
+      "original_local_path": ".runtime/phase01-20260925/prequal05.log",
+      "original_sha256": "0aab21b8e44becc6bde623c23aa43334732c78e7cda91af24728580861a5449f",
+      "encoding": "gzip"
+    },
+    {
+      "file": "prequal05-zod.log.gz",
+      "sha256": "27c3ba70fe43bf32be2cf2d10975fed33d48379cac63a8b9d1e5b08c4f63d569",
+      "original_local_path": ".runtime/phase01-20260925/prequal05-zod.log",
+      "original_sha256": "41c7479fc946f8b71b095f841040252194ecb516f70cb0c7dc75ce2f2f432110",
+      "encoding": "gzip"
+    },
+    {
+      "file": "start23.json.gz",
+      "sha256": "180354ba3cf470b21b9ea10d70d6bcc068defbba3fec361d5f2d049df1167989",
+      "original_local_path": ".runtime/phase01-20260925/start23.json",
+      "original_sha256": "646ff1b5715e7e1f4d4cb5b06284eca3d4ea78b9be365327c4a6c05556fbbdec",
+      "encoding": "gzip"
+    },
+    {
+      "file": "start23.log.gz",
+      "sha256": "beee5aabe800cb132744ee3b63516dfef51773dfb0cc5f98c7e62640f8979541",
+      "original_local_path": ".runtime/phase01-20260925/start23.log",
+      "original_sha256": "be33ee304d97d346334405af5895873dcb163cbabf8981b26a2c4844acd851eb",
+      "encoding": "gzip"
+    },
+    {
+      "file": "ready23.json.gz",
+      "sha256": "1051fce33c932f52c9e5b0161dbf8b8a9396db03b3e658644a590f5c1d56103c",
+      "original_local_path": ".runtime/phase01-20260925/ready23.json",
+      "original_sha256": "c4745ca4c7ae229c74296775027622d2f44f7db64680ee87fc3c2ff63a2183cc",
+      "encoding": "gzip"
+    },
+    {
+      "file": "ready23.log.gz",
+      "sha256": "01cedc45b27b73b7c8d5c8d2e0aa7bae317933250f77076dc26ab76b2428f17e",
+      "original_local_path": ".runtime/phase01-20260925/ready23.log",
+      "original_sha256": "6ade3d62b67dd2066207260ae96b6ef88847dbb824720cc7be7b132fee5510e9",
+      "encoding": "gzip"
+    },
+    {
+      "file": "stop23.json.gz",
+      "sha256": "623ed7596034048950f69fc216b623aa7481ff4bdb28248edd00fa4590760e3f",
+      "original_local_path": ".runtime/phase01-20260925/stop23.json",
+      "original_sha256": "5ee207a5010fb6adeb5b6b1872ba9c2c407838ff0e675af01f0b913559c37a01",
+      "encoding": "gzip"
+    },
+    {
+      "file": "stop23.log.gz",
+      "sha256": "12c671e095df8b045e620680c1b93956a87a91531f555b53cad5fd1a748b4a19",
+      "original_local_path": ".runtime/phase01-20260925/stop23.log",
+      "original_sha256": "7e0046a61997e91b4c00d40b33b385148d315de81c5f28722592072cb3fde000",
+      "encoding": "gzip"
+    }
+  ]
+}

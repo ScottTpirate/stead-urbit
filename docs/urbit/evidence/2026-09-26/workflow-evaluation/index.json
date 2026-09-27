@@ -1,0 +1,1397 @@
+{
+  "archive_format": "gzip mtime0; sorted PAX tar regular files with uid/gid0, empty names, mode0400, mtime0; no links",
+  "archive_members": 1166,
+  "archive_uncompressed_bytes": 30289657,
+  "omitted": [
+    "Raw Codex rollout files, hidden reasoning, hidden system/developer content, unrelated sessions, tool caches, live/seed piers, empty lock files, unrelated isolation/probe workspaces."
+  ],
+  "outputs": [
+    {
+      "bytes": 4971,
+      "path": "docs/urbit/evidence/2026-09-26/workflow-evaluation/README.md",
+      "sha256": "47efd6f06102cb3fe72f4332f0f4a7d563c9592f9f2a7a452bdf726f46d3f811"
+    },
+    {
+      "bytes": 32159,
+      "path": "docs/urbit/evidence/2026-09-26/workflow-evaluation/build_evidence.py",
+      "sha256": "9878a81606b65e48effef6ea52ba97d45b9ea7140172978cb737e357fcbc6ecb"
+    },
+    {
+      "bytes": 1500050,
+      "path": "docs/urbit/evidence/2026-09-26/workflow-evaluation/evidence.tar.gz",
+      "sha256": "7029749c4e036e4d7fe0e01579aea7dba337e1c3054a09dcb9c56f659b8f9f2b"
+    },
+    {
+      "bytes": 2329,
+      "path": "docs/urbit/evidence/2026-09-26/workflow-evaluation/independent-review-disposition.json",
+      "sha256": "157123b875ed5fa55e9fe5941266a79ecfe6dd95cfef5464dc60abb950e050db"
+    },
+    {
+      "bytes": 565719,
+      "path": "docs/urbit/evidence/2026-09-26/workflow-evaluation/members.json",
+      "sha256": "4b0221783503b2a5f655dce850a9a99c0976afc2dc47299dd841afbd59c5f41d"
+    },
+    {
+      "bytes": 56967,
+      "path": "docs/urbit/evidence/2026-09-26/workflow-evaluation/raw/prequalification/prequalification-guard.json",
+      "sha256": "d21062baa5af0df085543830c06141ba4d295e30c1745f3fa29582cc68b0f3d8"
+    },
+    {
+      "bytes": 896283,
+      "path": "docs/urbit/evidence/2026-09-26/workflow-evaluation/raw/prequalification/prequalification-inner.json",
+      "sha256": "390c4bb639dbe46d559f211ca95ac20bcaf169a1078d023c3ca2c1370438fb39"
+    },
+    {
+      "bytes": 307,
+      "path": "docs/urbit/evidence/2026-09-26/workflow-evaluation/raw/prequalification/prequalification.json",
+      "sha256": "e0278edf00480e19d44f0690a66eae58163a0b07a967f417f7d92001e40a8381"
+    },
+    {
+      "bytes": 50560,
+      "path": "docs/urbit/evidence/2026-09-26/workflow-evaluation/raw/private/baseline/guard.json",
+      "sha256": "d0a00a4d003cbed9ef4a23b2ce774c84594ebcc265a07a1d5475016a1afa0f20"
+    },
+    {
+      "bytes": 875712,
+      "path": "docs/urbit/evidence/2026-09-26/workflow-evaluation/raw/private/baseline/native-inner.json",
+      "sha256": "3bc3107217b91ebb0039bc9e773687b8bdc8b34532a02f149eeba56da921379f"
+    },
+    {
+      "bytes": 21735,
+      "path": "docs/urbit/evidence/2026-09-26/workflow-evaluation/raw/private/baseline/score-result.json",
+      "sha256": "a7d2f3b591f63cbcfaca68e4b15c05a8390619bb843e22754c20d1e22750c6db"
+    },
+    {
+      "bytes": 18110,
+      "path": "docs/urbit/evidence/2026-09-26/workflow-evaluation/raw/private/baseline/source-context.json",
+      "sha256": "edbcd628266e39334ddcf12b974d14ebbc548119201d6f2720a366e36bb1cf37"
+    },
+    {
+      "bytes": 47975,
+      "path": "docs/urbit/evidence/2026-09-26/workflow-evaluation/raw/private/local_skill_assisted/guard.json",
+      "sha256": "812cbc0f595e698d85a1e01d2a52d6708180738daeb748928fd3fe8937ab79cc"
+    },
+    {
+      "bytes": 879339,
+      "path": "docs/urbit/evidence/2026-09-26/workflow-evaluation/raw/private/local_skill_assisted/native-inner.json",
+      "sha256": "74978a1039f0667c06accf04204861086327742b864717569d29f379131281ba"
+    },
+    {
+      "bytes": 21831,
+      "path": "docs/urbit/evidence/2026-09-26/workflow-evaluation/raw/private/local_skill_assisted/score-result.json",
+      "sha256": "78ebddee0e82ddcf44e70c33e82df7c997da1c75557e22ee6e817f18505af9c7"
+    },
+    {
+      "bytes": 18110,
+      "path": "docs/urbit/evidence/2026-09-26/workflow-evaluation/raw/private/local_skill_assisted/source-context.json",
+      "sha256": "edbcd628266e39334ddcf12b974d14ebbc548119201d6f2720a366e36bb1cf37"
+    },
+    {
+      "bytes": 1722,
+      "path": "docs/urbit/evidence/2026-09-26/workflow-evaluation/raw/public/baseline/T01/1/guard.json",
+      "sha256": "252842023eb57b32b1404440ae00cd944917a7a1e32f87f15c8d518329f6a223"
+    },
+    {
+      "bytes": 15454,
+      "path": "docs/urbit/evidence/2026-09-26/workflow-evaluation/raw/public/baseline/T01/1/result.json",
+      "sha256": "475757e03fc2f21f5360e771bac380b9bdc4c2ab75cbdf8baa78fc9f22250967"
+    },
+    {
+      "bytes": 18110,
+      "path": "docs/urbit/evidence/2026-09-26/workflow-evaluation/raw/public/baseline/T01/1/source-context.json",
+      "sha256": "edbcd628266e39334ddcf12b974d14ebbc548119201d6f2720a366e36bb1cf37"
+    },
+    {
+      "bytes": 29024,
+      "path": "docs/urbit/evidence/2026-09-26/workflow-evaluation/raw/public/baseline/T01/2/guard.json",
+      "sha256": "cf113ea9aa5bdc892828d2bc4f841c815bec8b3538c85894349a983997f37464"
+    },
+    {
+      "bytes": 7450,
+      "path": "docs/urbit/evidence/2026-09-26/workflow-evaluation/raw/public/baseline/T01/2/native-inner.json.gz",
+      "sha256": "12e0d8295f65bc8884f6ca8c8308f3a8ef8ac6fe3a718eb767ccc0db84fc7e17"
+    },
+    {
+      "bytes": 5569,
+      "path": "docs/urbit/evidence/2026-09-26/workflow-evaluation/raw/public/baseline/T01/2/public.json",
+      "sha256": "4b10b4e37ecee7b9254346f7c2964cfffb50d58631027fa965ab3ebe52b37531"
+    },
+    {
+      "bytes": 15759,
+      "path": "docs/urbit/evidence/2026-09-26/workflow-evaluation/raw/public/baseline/T01/2/result.json",
+      "sha256": "5e07614f34d6fed98c70c64a609e15a962fd8f04e401d4a260d629cf6f3fa769"
+    },
+    {
+      "bytes": 18110,
+      "path": "docs/urbit/evidence/2026-09-26/workflow-evaluation/raw/public/baseline/T01/2/source-context.json",
+      "sha256": "edbcd628266e39334ddcf12b974d14ebbc548119201d6f2720a366e36bb1cf37"
+    },
+    {
+      "bytes": 28158,
+      "path": "docs/urbit/evidence/2026-09-26/workflow-evaluation/raw/public/baseline/T02/1/guard.json",
+      "sha256": "a6851b8c30520b54b2fa8e3207b2774a76d972d69289f183d5864425832fa358"
+    },
+    {
+      "bytes": 7463,
+      "path": "docs/urbit/evidence/2026-09-26/workflow-evaluation/raw/public/baseline/T02/1/native-inner.json.gz",
+      "sha256": "2a7038e846ca3413daa6e1b95cd14c539678208f269bfca319dd60509542e113"
+    },
+    {
+      "bytes": 5544,
+      "path": "docs/urbit/evidence/2026-09-26/workflow-evaluation/raw/public/baseline/T02/1/public.json",
+      "sha256": "8c619678d1b04a345cb41714bb8b243eb551c6a9300c67f2e3ae8ab55043a937"
+    },
+    {
+      "bytes": 15761,
+      "path": "docs/urbit/evidence/2026-09-26/workflow-evaluation/raw/public/baseline/T02/1/result.json",
+      "sha256": "731749641f1dfc800ea672fd9ac9978f97428cb0125ec1ba8679576b1f4aacac"
+    },
+    {
+      "bytes": 18110,
+      "path": "docs/urbit/evidence/2026-09-26/workflow-evaluation/raw/public/baseline/T02/1/source-context.json",
+      "sha256": "edbcd628266e39334ddcf12b974d14ebbc548119201d6f2720a366e36bb1cf37"
+    },
+    {
+      "bytes": 27732,
+      "path": "docs/urbit/evidence/2026-09-26/workflow-evaluation/raw/public/baseline/T03/1/guard.json",
+      "sha256": "7136ee803a89770b0eb64dea06f6cefb037850dbd999c51a0090f54ed2f85c8c"
+    },
+    {
+      "bytes": 7082,
+      "path": "docs/urbit/evidence/2026-09-26/workflow-evaluation/raw/public/baseline/T03/1/native-inner.json.gz",
+      "sha256": "0dda6966d02e99282ba59b9f4b817a1aae62619907efbb341a05c2f1536bae9b"
+    },
+    {
+      "bytes": 2320,
+      "path": "docs/urbit/evidence/2026-09-26/workflow-evaluation/raw/public/baseline/T03/1/public.json",
+      "sha256": "6949c30f1cc02f237b7f08dd13b97c9de9863e4de3a80a100c2d90e1ff4cad64"
+    },
+    {
+      "bytes": 15763,
+      "path": "docs/urbit/evidence/2026-09-26/workflow-evaluation/raw/public/baseline/T03/1/result.json",
+      "sha256": "df278411bcef2e00b3f923c48c0e5014d67508eabcb4a5fea33310ffabdc8d16"
+    },
+    {
+      "bytes": 18110,
+      "path": "docs/urbit/evidence/2026-09-26/workflow-evaluation/raw/public/baseline/T03/1/source-context.json",
+      "sha256": "edbcd628266e39334ddcf12b974d14ebbc548119201d6f2720a366e36bb1cf37"
+    },
+    {
+      "bytes": 26865,
+      "path": "docs/urbit/evidence/2026-09-26/workflow-evaluation/raw/public/baseline/T03/2/guard.json",
+      "sha256": "c37e71558be4984d11c157823ce3031735789b37d82c6e56ff7cb3b05b9a481b"
+    },
+    {
+      "bytes": 7748,
+      "path": "docs/urbit/evidence/2026-09-26/workflow-evaluation/raw/public/baseline/T03/2/native-inner.json.gz",
+      "sha256": "a4388f4d474a971d8d58b6c6439c13779c1bba4c74f7fe436468bdfc8b4fe661"
+    },
+    {
+      "bytes": 4101,
+      "path": "docs/urbit/evidence/2026-09-26/workflow-evaluation/raw/public/baseline/T03/2/public.json",
+      "sha256": "c614b9a1959696f17dfe8da74a5fcc4c0164907b0126a3a250629b18431a576c"
+    },
+    {
+      "bytes": 15763,
+      "path": "docs/urbit/evidence/2026-09-26/workflow-evaluation/raw/public/baseline/T03/2/result.json",
+      "sha256": "dc9694a027dc66d92320d6948640927782fce1b2311330f5898d6276dcdb60a4"
+    },
+    {
+      "bytes": 18110,
+      "path": "docs/urbit/evidence/2026-09-26/workflow-evaluation/raw/public/baseline/T03/2/source-context.json",
+      "sha256": "edbcd628266e39334ddcf12b974d14ebbc548119201d6f2720a366e36bb1cf37"
+    },
+    {
+      "bytes": 27729,
+      "path": "docs/urbit/evidence/2026-09-26/workflow-evaluation/raw/public/baseline/T04/1/guard.json",
+      "sha256": "7eb885c0205e3902ae96f6f2271cadf2f50be3acc21af9d47056f8a0672c41c1"
+    },
+    {
+      "bytes": 7929,
+      "path": "docs/urbit/evidence/2026-09-26/workflow-evaluation/raw/public/baseline/T04/1/native-inner.json.gz",
+      "sha256": "b14ab2a209977c829cd0dcfa8bacc1d084dffc14d99ad76fa71d10f76d68f193"
+    },
+    {
+      "bytes": 4468,
+      "path": "docs/urbit/evidence/2026-09-26/workflow-evaluation/raw/public/baseline/T04/1/public.json",
+      "sha256": "e5b564d221ac646aa2fd302dde52e1bb8ab52f5622269f1b990a6a2ee91f4267"
+    },
+    {
+      "bytes": 15762,
+      "path": "docs/urbit/evidence/2026-09-26/workflow-evaluation/raw/public/baseline/T04/1/result.json",
+      "sha256": "40ff1537bb3b5840fde27c4ba9fd3ac34eda6eb9ea1a75ac26f5c755941934a2"
+    },
+    {
+      "bytes": 18110,
+      "path": "docs/urbit/evidence/2026-09-26/workflow-evaluation/raw/public/baseline/T04/1/source-context.json",
+      "sha256": "edbcd628266e39334ddcf12b974d14ebbc548119201d6f2720a366e36bb1cf37"
+    },
+    {
+      "bytes": 27301,
+      "path": "docs/urbit/evidence/2026-09-26/workflow-evaluation/raw/public/baseline/T05/1/guard.json",
+      "sha256": "8f6e01691e5a0d517bb62f4b7a4ca2509f83a4ed5e7cba237df668779a9cab07"
+    },
+    {
+      "bytes": 9271,
+      "path": "docs/urbit/evidence/2026-09-26/workflow-evaluation/raw/public/baseline/T05/1/native-inner.json.gz",
+      "sha256": "c2e66b4e8d16033aca7f37b5d9bf02f2e71e9c1dcb44822b025f4f94369a92ea"
+    },
+    {
+      "bytes": 8771,
+      "path": "docs/urbit/evidence/2026-09-26/workflow-evaluation/raw/public/baseline/T05/1/public.json",
+      "sha256": "13713b6c2121d18c5a5537031f906676ec8ffe30315a5df37109a2b8fb1ef258"
+    },
+    {
+      "bytes": 15958,
+      "path": "docs/urbit/evidence/2026-09-26/workflow-evaluation/raw/public/baseline/T05/1/result.json",
+      "sha256": "90d1842643854e28aede5314a0284afd745ee0f77619aa660b41c8ae22a22aaa"
+    },
+    {
+      "bytes": 18110,
+      "path": "docs/urbit/evidence/2026-09-26/workflow-evaluation/raw/public/baseline/T05/1/source-context.json",
+      "sha256": "edbcd628266e39334ddcf12b974d14ebbc548119201d6f2720a366e36bb1cf37"
+    },
+    {
+      "bytes": 25149,
+      "path": "docs/urbit/evidence/2026-09-26/workflow-evaluation/raw/public/baseline/T06/1/guard.json",
+      "sha256": "5f559f26eaef904c4333a0f156ef355a4ef54e854597aa82981118065ac9d4ae"
+    },
+    {
+      "bytes": 8357,
+      "path": "docs/urbit/evidence/2026-09-26/workflow-evaluation/raw/public/baseline/T06/1/native-inner.json.gz",
+      "sha256": "98eee8604d5c6b5b8ef07158d808c4f39628cf5aa3b0a57815334b9fcdeaf3fe"
+    },
+    {
+      "bytes": 3953,
+      "path": "docs/urbit/evidence/2026-09-26/workflow-evaluation/raw/public/baseline/T06/1/public.json",
+      "sha256": "d0a60ea7d3b1496b0f8f61c57e147df423ebcc6ad59ae5d578d2f03d875f631a"
+    },
+    {
+      "bytes": 16140,
+      "path": "docs/urbit/evidence/2026-09-26/workflow-evaluation/raw/public/baseline/T06/1/result.json",
+      "sha256": "1db9de2bdaa2548b52e0698edf7e335c91069f4a96ac0745abdf9a9a8c79f330"
+    },
+    {
+      "bytes": 18110,
+      "path": "docs/urbit/evidence/2026-09-26/workflow-evaluation/raw/public/baseline/T06/1/source-context.json",
+      "sha256": "edbcd628266e39334ddcf12b974d14ebbc548119201d6f2720a366e36bb1cf37"
+    },
+    {
+      "bytes": 25583,
+      "path": "docs/urbit/evidence/2026-09-26/workflow-evaluation/raw/public/local_skill_assisted/T01/1/guard.json",
+      "sha256": "f5242c53b49cbfd22704f544dc35f983ccea3c1b3554649cdf229f87288a0dac"
+    },
+    {
+      "bytes": 7456,
+      "path": "docs/urbit/evidence/2026-09-26/workflow-evaluation/raw/public/local_skill_assisted/T01/1/native-inner.json.gz",
+      "sha256": "0c4d4f25694bbce3d4c93587b54b01eb535a9e1fd5906f0bd08145fee7516a6b"
+    },
+    {
+      "bytes": 5605,
+      "path": "docs/urbit/evidence/2026-09-26/workflow-evaluation/raw/public/local_skill_assisted/T01/1/public.json",
+      "sha256": "54daeee12e8d2f430b0e1ab7db48fb3fc4eb622c00ffc45780fe8d080f442a7a"
+    },
+    {
+      "bytes": 15795,
+      "path": "docs/urbit/evidence/2026-09-26/workflow-evaluation/raw/public/local_skill_assisted/T01/1/result.json",
+      "sha256": "221443ec246d64025568d9d5b7a85e703e4f5bec1dcd060dd7f15493a4f53db3"
+    },
+    {
+      "bytes": 18110,
+      "path": "docs/urbit/evidence/2026-09-26/workflow-evaluation/raw/public/local_skill_assisted/T01/1/source-context.json",
+      "sha256": "edbcd628266e39334ddcf12b974d14ebbc548119201d6f2720a366e36bb1cf37"
+    },
+    {
+      "bytes": 29020,
+      "path": "docs/urbit/evidence/2026-09-26/workflow-evaluation/raw/public/local_skill_assisted/T02/1/guard.json",
+      "sha256": "d2a69fff87f3e0b2958b081ae28e0a818b39693d6e6eb40e4b623cd2360d95bc"
+    },
+    {
+      "bytes": 7470,
+      "path": "docs/urbit/evidence/2026-09-26/workflow-evaluation/raw/public/local_skill_assisted/T02/1/native-inner.json.gz",
+      "sha256": "185c2cbc659f481a10b61bcaab00a6dfb56ca586c207185083007db43ba9de33"
+    },
+    {
+      "bytes": 5580,
+      "path": "docs/urbit/evidence/2026-09-26/workflow-evaluation/raw/public/local_skill_assisted/T02/1/public.json",
+      "sha256": "e93388e54e975d6c84ef608e44ceabd87c87cf72ae73284edbc7e557c6238c9b"
+    },
+    {
+      "bytes": 15797,
+      "path": "docs/urbit/evidence/2026-09-26/workflow-evaluation/raw/public/local_skill_assisted/T02/1/result.json",
+      "sha256": "8c85a1252f89b05241a43186dd2ebb29a32054968afa68da03bf46a90e416206"
+    },
+    {
+      "bytes": 18110,
+      "path": "docs/urbit/evidence/2026-09-26/workflow-evaluation/raw/public/local_skill_assisted/T02/1/source-context.json",
+      "sha256": "edbcd628266e39334ddcf12b974d14ebbc548119201d6f2720a366e36bb1cf37"
+    },
+    {
+      "bytes": 26873,
+      "path": "docs/urbit/evidence/2026-09-26/workflow-evaluation/raw/public/local_skill_assisted/T03/1/guard.json",
+      "sha256": "258d73919c1c87e70dba304a6c5a3ab15190db2df9608a831dc00bb569c22c6a"
+    },
+    {
+      "bytes": 7753,
+      "path": "docs/urbit/evidence/2026-09-26/workflow-evaluation/raw/public/local_skill_assisted/T03/1/native-inner.json.gz",
+      "sha256": "fc87dc14945a88fb1cdc7c96cb51e70395f043a78e6e16631936fce5392f6bc2"
+    },
+    {
+      "bytes": 4113,
+      "path": "docs/urbit/evidence/2026-09-26/workflow-evaluation/raw/public/local_skill_assisted/T03/1/public.json",
+      "sha256": "a139d1ac94208e15849a2fb2e997eb7af4d60651f6fd275c9ca1ebe64a9fe74b"
+    },
+    {
+      "bytes": 15799,
+      "path": "docs/urbit/evidence/2026-09-26/workflow-evaluation/raw/public/local_skill_assisted/T03/1/result.json",
+      "sha256": "d7ae8954f123a78950962fc5300f9bb10aaea178116595f4fc4b1174dfe3e2ab"
+    },
+    {
+      "bytes": 18110,
+      "path": "docs/urbit/evidence/2026-09-26/workflow-evaluation/raw/public/local_skill_assisted/T03/1/source-context.json",
+      "sha256": "edbcd628266e39334ddcf12b974d14ebbc548119201d6f2720a366e36bb1cf37"
+    },
+    {
+      "bytes": 26872,
+      "path": "docs/urbit/evidence/2026-09-26/workflow-evaluation/raw/public/local_skill_assisted/T04/1/guard.json",
+      "sha256": "e1fd3a8d32e2a5f1c5ff99cd273dfd889dfdb4e54725e890162f9c4d8af74212"
+    },
+    {
+      "bytes": 7932,
+      "path": "docs/urbit/evidence/2026-09-26/workflow-evaluation/raw/public/local_skill_assisted/T04/1/native-inner.json.gz",
+      "sha256": "4a8d54cb9bfb7caed1ee3e40f08ee4f7cae5fa4a595e3280a6099f303f28950b"
+    },
+    {
+      "bytes": 4480,
+      "path": "docs/urbit/evidence/2026-09-26/workflow-evaluation/raw/public/local_skill_assisted/T04/1/public.json",
+      "sha256": "1662f5f707f83721c4cf267519b93d1f0740d0d1f233f8b96eee33e2487c4aa2"
+    },
+    {
+      "bytes": 15798,
+      "path": "docs/urbit/evidence/2026-09-26/workflow-evaluation/raw/public/local_skill_assisted/T04/1/result.json",
+      "sha256": "ab8bd41ac45ea753831d9724b019ae0c97dca3ca3d66e93a9cf97c75fb44fe59"
+    },
+    {
+      "bytes": 18110,
+      "path": "docs/urbit/evidence/2026-09-26/workflow-evaluation/raw/public/local_skill_assisted/T04/1/source-context.json",
+      "sha256": "edbcd628266e39334ddcf12b974d14ebbc548119201d6f2720a366e36bb1cf37"
+    },
+    {
+      "bytes": 28590,
+      "path": "docs/urbit/evidence/2026-09-26/workflow-evaluation/raw/public/local_skill_assisted/T05/1/guard.json",
+      "sha256": "9f840777af22dcb96eb16323d9a434c1942dd5dc3142efeee4eb9f2954078715"
+    },
+    {
+      "bytes": 9829,
+      "path": "docs/urbit/evidence/2026-09-26/workflow-evaluation/raw/public/local_skill_assisted/T05/1/native-inner.json.gz",
+      "sha256": "145842e85d8717d46cc723a1d5820448493a800dfcb19e84a4831c2945849655"
+    },
+    {
+      "bytes": 10294,
+      "path": "docs/urbit/evidence/2026-09-26/workflow-evaluation/raw/public/local_skill_assisted/T05/1/public.json",
+      "sha256": "66bf3d07fc337620f0b6767516ba2e9c3fd1e4c9575ebc12a64f044f154320d4"
+    },
+    {
+      "bytes": 15994,
+      "path": "docs/urbit/evidence/2026-09-26/workflow-evaluation/raw/public/local_skill_assisted/T05/1/result.json",
+      "sha256": "946c6a05305186fce2ccf217dc1d0c6ed9514dc6e7f4c0e99cdf8dba4599be79"
+    },
+    {
+      "bytes": 18110,
+      "path": "docs/urbit/evidence/2026-09-26/workflow-evaluation/raw/public/local_skill_assisted/T05/1/source-context.json",
+      "sha256": "edbcd628266e39334ddcf12b974d14ebbc548119201d6f2720a366e36bb1cf37"
+    },
+    {
+      "bytes": 26870,
+      "path": "docs/urbit/evidence/2026-09-26/workflow-evaluation/raw/public/local_skill_assisted/T06/1/guard.json",
+      "sha256": "61a73a7c3a7e417370e7f95d322dfefe38380ba4324aaacc952ac43f39773508"
+    },
+    {
+      "bytes": 8367,
+      "path": "docs/urbit/evidence/2026-09-26/workflow-evaluation/raw/public/local_skill_assisted/T06/1/native-inner.json.gz",
+      "sha256": "7aa40caeda3e27444bf92c0159471144a78f33c84ef7351c639082f3044469d3"
+    },
+    {
+      "bytes": 3965,
+      "path": "docs/urbit/evidence/2026-09-26/workflow-evaluation/raw/public/local_skill_assisted/T06/1/public.json",
+      "sha256": "21cb3e5d44b2df994e2e10ae3233e75f6db6c34894e71dee984983844778388d"
+    },
+    {
+      "bytes": 16176,
+      "path": "docs/urbit/evidence/2026-09-26/workflow-evaluation/raw/public/local_skill_assisted/T06/1/result.json",
+      "sha256": "d8f79487c25f0400de9dd4e5a86131072376842ba3c42a1b4b67a713271bccf5"
+    },
+    {
+      "bytes": 18110,
+      "path": "docs/urbit/evidence/2026-09-26/workflow-evaluation/raw/public/local_skill_assisted/T06/1/source-context.json",
+      "sha256": "edbcd628266e39334ddcf12b974d14ebbc548119201d6f2720a366e36bb1cf37"
+    },
+    {
+      "bytes": 256864,
+      "path": "docs/urbit/evidence/2026-09-26/workflow-evaluation/result.json",
+      "sha256": "b97f8c0a2c264eb66946464e55b11217d242b7231e00ffeb3bcd6db6a9ca5ab2"
+    }
+  ],
+  "package_sha256": "d78697102021b4b4837efd2d560668310fad5ab69fcbf98c7592a9cd0fff3e00",
+  "packaging_resources": {
+    "affinity": [
+      19
+    ],
+    "control_group": "/user.slice/user-1000.slice/user@1000.service/app.slice/stead-workflow-v1-package-20260926.scope",
+    "cpu_max": "5000 10000"
+  },
+  "path_rule": "Output paths are repository-relative. Archive member names preserve original repository-relative paths under payload/. Extract only into a separate empty directory, never over a live workspace.",
+  "prepared_by": "/root/independent_review",
+  "prequalification": [
+    {
+      "bytes": 307,
+      "classification": "completed-reference-prequalification",
+      "decoded_bytes": 307,
+      "decoded_sha256": "e0278edf00480e19d44f0690a66eae58163a0b07a967f417f7d92001e40a8381",
+      "original_path": ".runtime/workflow-evaluation/prequalification.json",
+      "path": "docs/urbit/evidence/2026-09-26/workflow-evaluation/raw/prequalification/prequalification.json",
+      "sha256": "e0278edf00480e19d44f0690a66eae58163a0b07a967f417f7d92001e40a8381"
+    },
+    {
+      "bytes": 896283,
+      "classification": "completed-reference-prequalification",
+      "decoded_bytes": 896283,
+      "decoded_sha256": "390c4bb639dbe46d559f211ca95ac20bcaf169a1078d023c3ca2c1370438fb39",
+      "original_path": ".runtime/workflow-evaluation/prequalification-inner.json",
+      "path": "docs/urbit/evidence/2026-09-26/workflow-evaluation/raw/prequalification/prequalification-inner.json",
+      "sha256": "390c4bb639dbe46d559f211ca95ac20bcaf169a1078d023c3ca2c1370438fb39"
+    },
+    {
+      "bytes": 56967,
+      "classification": "completed-reference-prequalification",
+      "decoded_bytes": 56967,
+      "decoded_sha256": "d21062baa5af0df085543830c06141ba4d295e30c1745f3fa29582cc68b0f3d8",
+      "original_path": ".runtime/workflow-evaluation/prequalification-guard.json",
+      "path": "docs/urbit/evidence/2026-09-26/workflow-evaluation/raw/prequalification/prequalification-guard.json",
+      "sha256": "d21062baa5af0df085543830c06141ba4d295e30c1745f3fa29582cc68b0f3d8"
+    },
+    {
+      "classification": "previous-portable-prequalification-index",
+      "path": "docs/urbit/evidence/2026-09-26/native-attempts/prequal11/index.json",
+      "sha256": "96b148b8876a827d37d287b4c7c0284cf302f57639a5359161c109a69217f894"
+    }
+  ],
+  "private_scores": [
+    {
+      "condition": "baseline",
+      "guard": {
+        "bytes": 50560,
+        "classification": "actual-outer-guard",
+        "decoded_bytes": 50560,
+        "decoded_sha256": "d0a00a4d003cbed9ef4a23b2ce774c84594ebcc265a07a1d5475016a1afa0f20",
+        "original_path": ".runtime/execution-runs/four-fakes-fmqwbqhh/report.json",
+        "path": "docs/urbit/evidence/2026-09-26/workflow-evaluation/raw/private/baseline/guard.json",
+        "sha256": "d0a00a4d003cbed9ef4a23b2ce774c84594ebcc265a07a1d5475016a1afa0f20"
+      },
+      "report": {
+        "bytes": 875712,
+        "classification": "actual-private-native-report",
+        "decoded_bytes": 875712,
+        "decoded_sha256": "3bc3107217b91ebb0039bc9e773687b8bdc8b34532a02f149eeba56da921379f",
+        "original_path": ".runtime/workflow-participants/private-scores/baseline/native-inner.json",
+        "path": "docs/urbit/evidence/2026-09-26/workflow-evaluation/raw/private/baseline/native-inner.json",
+        "sha256": "3bc3107217b91ebb0039bc9e773687b8bdc8b34532a02f149eeba56da921379f"
+      },
+      "score": {
+        "bytes": 21735,
+        "classification": "parent-one-shot-score-admission",
+        "decoded_bytes": 21735,
+        "decoded_sha256": "a7d2f3b591f63cbcfaca68e4b15c05a8390619bb843e22754c20d1e22750c6db",
+        "original_path": ".runtime/workflow-participants/private-scores/baseline/score-result.json",
+        "path": "docs/urbit/evidence/2026-09-26/workflow-evaluation/raw/private/baseline/score-result.json",
+        "sha256": "a7d2f3b591f63cbcfaca68e4b15c05a8390619bb843e22754c20d1e22750c6db"
+      },
+      "source_context": {
+        "bytes": 18110,
+        "classification": "actual-source-context",
+        "decoded_bytes": 18110,
+        "decoded_sha256": "edbcd628266e39334ddcf12b974d14ebbc548119201d6f2720a366e36bb1cf37",
+        "original_path": ".runtime/execution-runs/four-fakes-fmqwbqhh/control/source-context.json",
+        "path": "docs/urbit/evidence/2026-09-26/workflow-evaluation/raw/private/baseline/source-context.json",
+        "sha256": "edbcd628266e39334ddcf12b974d14ebbc548119201d6f2720a366e36bb1cf37"
+      },
+      "tasks_passed": 5,
+      "tasks_total": 6
+    },
+    {
+      "condition": "local_skill_assisted",
+      "guard": {
+        "bytes": 47975,
+        "classification": "actual-outer-guard",
+        "decoded_bytes": 47975,
+        "decoded_sha256": "812cbc0f595e698d85a1e01d2a52d6708180738daeb748928fd3fe8937ab79cc",
+        "original_path": ".runtime/execution-runs/four-fakes-wzly8svb/report.json",
+        "path": "docs/urbit/evidence/2026-09-26/workflow-evaluation/raw/private/local_skill_assisted/guard.json",
+        "sha256": "812cbc0f595e698d85a1e01d2a52d6708180738daeb748928fd3fe8937ab79cc"
+      },
+      "report": {
+        "bytes": 879339,
+        "classification": "actual-private-native-report",
+        "decoded_bytes": 879339,
+        "decoded_sha256": "74978a1039f0667c06accf04204861086327742b864717569d29f379131281ba",
+        "original_path": ".runtime/workflow-participants/private-scores/local_skill_assisted/native-inner.json",
+        "path": "docs/urbit/evidence/2026-09-26/workflow-evaluation/raw/private/local_skill_assisted/native-inner.json",
+        "sha256": "74978a1039f0667c06accf04204861086327742b864717569d29f379131281ba"
+      },
+      "score": {
+        "bytes": 21831,
+        "classification": "parent-one-shot-score-admission",
+        "decoded_bytes": 21831,
+        "decoded_sha256": "78ebddee0e82ddcf44e70c33e82df7c997da1c75557e22ee6e817f18505af9c7",
+        "original_path": ".runtime/workflow-participants/private-scores/local_skill_assisted/score-result.json",
+        "path": "docs/urbit/evidence/2026-09-26/workflow-evaluation/raw/private/local_skill_assisted/score-result.json",
+        "sha256": "78ebddee0e82ddcf44e70c33e82df7c997da1c75557e22ee6e817f18505af9c7"
+      },
+      "source_context": {
+        "bytes": 18110,
+        "classification": "actual-source-context",
+        "decoded_bytes": 18110,
+        "decoded_sha256": "edbcd628266e39334ddcf12b974d14ebbc548119201d6f2720a366e36bb1cf37",
+        "original_path": ".runtime/execution-runs/four-fakes-wzly8svb/control/source-context.json",
+        "path": "docs/urbit/evidence/2026-09-26/workflow-evaluation/raw/private/local_skill_assisted/source-context.json",
+        "sha256": "edbcd628266e39334ddcf12b974d14ebbc548119201d6f2720a366e36bb1cf37"
+      },
+      "tasks_passed": 5,
+      "tasks_total": 6
+    }
+  ],
+  "protocol": "stead.workflow-evaluation-evidence/1",
+  "public_attempts": [
+    {
+      "candidate_files_sha256": {
+        "lib/eval-add.hoon": "5d5c1cd4cd431d0635211eb45caeb4277c36b1d6aa19f3b3996c20487b432651"
+      },
+      "condition": "baseline",
+      "finished_at": "2026-09-26T16:54:38.869510+00:00",
+      "guard": {
+        "bytes": 1722,
+        "classification": "actual-outer-guard",
+        "decoded_bytes": 1722,
+        "decoded_sha256": "252842023eb57b32b1404440ae00cd944917a7a1e32f87f15c8d518329f6a223",
+        "original_path": ".runtime/execution-runs/four-fakes-q0u5l6sy/report.json",
+        "path": "docs/urbit/evidence/2026-09-26/workflow-evaluation/raw/public/baseline/T01/1/guard.json",
+        "sha256": "252842023eb57b32b1404440ae00cd944917a7a1e32f87f15c8d518329f6a223"
+      },
+      "lifecycle": {
+        "bytes": 15454,
+        "classification": "actual-public-attempt-lifecycle",
+        "decoded_bytes": 15454,
+        "decoded_sha256": "475757e03fc2f21f5360e771bac380b9bdc4c2ab75cbdf8baa78fc9f22250967",
+        "original_path": ".runtime/workflow-participants/baseline/feedback-attempts/T01/1/result.json",
+        "path": "docs/urbit/evidence/2026-09-26/workflow-evaluation/raw/public/baseline/T01/1/result.json",
+        "sha256": "475757e03fc2f21f5360e771bac380b9bdc4c2ab75cbdf8baa78fc9f22250967"
+      },
+      "native_execution": "not-launched",
+      "native_report": null,
+      "number": 1,
+      "observation_limit": "No candidate compile/runtime observation or public feedback file exists for this reservation.",
+      "observed_outcome": "refused",
+      "public_feedback_artifacts": [],
+      "source_context": {
+        "bytes": 18110,
+        "classification": "actual-source-context",
+        "decoded_bytes": 18110,
+        "decoded_sha256": "edbcd628266e39334ddcf12b974d14ebbc548119201d6f2720a366e36bb1cf37",
+        "original_path": ".runtime/execution-runs/four-fakes-q0u5l6sy/control/source-context.json",
+        "path": "docs/urbit/evidence/2026-09-26/workflow-evaluation/raw/public/baseline/T01/1/source-context.json",
+        "sha256": "edbcd628266e39334ddcf12b974d14ebbc548119201d6f2720a366e36bb1cf37"
+      },
+      "started_at": "2026-09-26T16:54:37.492141+00:00",
+      "task": "T01"
+    },
+    {
+      "candidate_files_sha256": {
+        "lib/eval-add.hoon": "5d5c1cd4cd431d0635211eb45caeb4277c36b1d6aa19f3b3996c20487b432651"
+      },
+      "condition": "baseline",
+      "finished_at": "2026-09-26T17:12:45.164165+00:00",
+      "guard": {
+        "bytes": 29024,
+        "classification": "actual-outer-guard",
+        "decoded_bytes": 29024,
+        "decoded_sha256": "cf113ea9aa5bdc892828d2bc4f841c815bec8b3538c85894349a983997f37464",
+        "original_path": ".runtime/execution-runs/four-fakes-v9u5iijf/report.json",
+        "path": "docs/urbit/evidence/2026-09-26/workflow-evaluation/raw/public/baseline/T01/2/guard.json",
+        "sha256": "cf113ea9aa5bdc892828d2bc4f841c815bec8b3538c85894349a983997f37464"
+      },
+      "lifecycle": {
+        "bytes": 15759,
+        "classification": "actual-public-attempt-lifecycle",
+        "decoded_bytes": 15759,
+        "decoded_sha256": "5e07614f34d6fed98c70c64a609e15a962fd8f04e401d4a260d629cf6f3fa769",
+        "original_path": ".runtime/workflow-participants/baseline/feedback-attempts/T01/2/result.json",
+        "path": "docs/urbit/evidence/2026-09-26/workflow-evaluation/raw/public/baseline/T01/2/result.json",
+        "sha256": "5e07614f34d6fed98c70c64a609e15a962fd8f04e401d4a260d629cf6f3fa769"
+      },
+      "native_execution": "completed",
+      "native_report": {
+        "bytes": 7450,
+        "classification": "actual-public-native-report",
+        "decoded_bytes": 764432,
+        "decoded_sha256": "912dc78d8826fd9d5d6200c72c680f331c46e5c1d7fd32d1fc519608e6d1d6c3",
+        "original_path": ".runtime/workflow-participants/baseline/feedback-attempts/T01/2/internal.json",
+        "path": "docs/urbit/evidence/2026-09-26/workflow-evaluation/raw/public/baseline/T01/2/native-inner.json.gz",
+        "sha256": "12e0d8295f65bc8884f6ca8c8308f3a8ef8ac6fe3a718eb767ccc0db84fc7e17"
+      },
+      "number": 2,
+      "observed_outcome": "pass",
+      "public_feedback_artifacts": [
+        {
+          "bytes": 5569,
+          "classification": "actually-published-public-only-feedback",
+          "decoded_bytes": 5569,
+          "decoded_sha256": "4b10b4e37ecee7b9254346f7c2964cfffb50d58631027fa965ab3ebe52b37531",
+          "original_path": ".runtime/workflow-participants/baseline/feedback-attempts/T01/2/public.json",
+          "path": "docs/urbit/evidence/2026-09-26/workflow-evaluation/raw/public/baseline/T01/2/public.json",
+          "sha256": "4b10b4e37ecee7b9254346f7c2964cfffb50d58631027fa965ab3ebe52b37531"
+        }
+      ],
+      "source_context": {
+        "bytes": 18110,
+        "classification": "actual-source-context",
+        "decoded_bytes": 18110,
+        "decoded_sha256": "edbcd628266e39334ddcf12b974d14ebbc548119201d6f2720a366e36bb1cf37",
+        "original_path": ".runtime/execution-runs/four-fakes-v9u5iijf/control/source-context.json",
+        "path": "docs/urbit/evidence/2026-09-26/workflow-evaluation/raw/public/baseline/T01/2/source-context.json",
+        "sha256": "edbcd628266e39334ddcf12b974d14ebbc548119201d6f2720a366e36bb1cf37"
+      },
+      "started_at": "2026-09-26T17:11:46.429614+00:00",
+      "task": "T01"
+    },
+    {
+      "candidate_files_sha256": {
+        "lib/eval-maybe.hoon": "a980fdbe1dab53b6204f53efa261be3c05df9beb6620ee29f4d39e0e61706822"
+      },
+      "condition": "baseline",
+      "finished_at": "2026-09-26T17:17:00.215913+00:00",
+      "guard": {
+        "bytes": 28158,
+        "classification": "actual-outer-guard",
+        "decoded_bytes": 28158,
+        "decoded_sha256": "a6851b8c30520b54b2fa8e3207b2774a76d972d69289f183d5864425832fa358",
+        "original_path": ".runtime/execution-runs/four-fakes-k5soe985/report.json",
+        "path": "docs/urbit/evidence/2026-09-26/workflow-evaluation/raw/public/baseline/T02/1/guard.json",
+        "sha256": "a6851b8c30520b54b2fa8e3207b2774a76d972d69289f183d5864425832fa358"
+      },
+      "lifecycle": {
+        "bytes": 15761,
+        "classification": "actual-public-attempt-lifecycle",
+        "decoded_bytes": 15761,
+        "decoded_sha256": "731749641f1dfc800ea672fd9ac9978f97428cb0125ec1ba8679576b1f4aacac",
+        "original_path": ".runtime/workflow-participants/baseline/feedback-attempts/T02/1/result.json",
+        "path": "docs/urbit/evidence/2026-09-26/workflow-evaluation/raw/public/baseline/T02/1/result.json",
+        "sha256": "731749641f1dfc800ea672fd9ac9978f97428cb0125ec1ba8679576b1f4aacac"
+      },
+      "native_execution": "completed",
+      "native_report": {
+        "bytes": 7463,
+        "classification": "actual-public-native-report",
+        "decoded_bytes": 764406,
+        "decoded_sha256": "30b7f245027a9a6096e28252dbd573bcb142fc4121dde929587ceac46a5031ff",
+        "original_path": ".runtime/workflow-participants/baseline/feedback-attempts/T02/1/internal.json",
+        "path": "docs/urbit/evidence/2026-09-26/workflow-evaluation/raw/public/baseline/T02/1/native-inner.json.gz",
+        "sha256": "2a7038e846ca3413daa6e1b95cd14c539678208f269bfca319dd60509542e113"
+      },
+      "number": 1,
+      "observed_outcome": "pass",
+      "public_feedback_artifacts": [
+        {
+          "bytes": 5544,
+          "classification": "actually-published-public-only-feedback",
+          "decoded_bytes": 5544,
+          "decoded_sha256": "8c619678d1b04a345cb41714bb8b243eb551c6a9300c67f2e3ae8ab55043a937",
+          "original_path": ".runtime/workflow-participants/baseline/feedback-attempts/T02/1/public.json",
+          "path": "docs/urbit/evidence/2026-09-26/workflow-evaluation/raw/public/baseline/T02/1/public.json",
+          "sha256": "8c619678d1b04a345cb41714bb8b243eb551c6a9300c67f2e3ae8ab55043a937"
+        }
+      ],
+      "source_context": {
+        "bytes": 18110,
+        "classification": "actual-source-context",
+        "decoded_bytes": 18110,
+        "decoded_sha256": "edbcd628266e39334ddcf12b974d14ebbc548119201d6f2720a366e36bb1cf37",
+        "original_path": ".runtime/execution-runs/four-fakes-k5soe985/control/source-context.json",
+        "path": "docs/urbit/evidence/2026-09-26/workflow-evaluation/raw/public/baseline/T02/1/source-context.json",
+        "sha256": "edbcd628266e39334ddcf12b974d14ebbc548119201d6f2720a366e36bb1cf37"
+      },
+      "started_at": "2026-09-26T17:16:03.714679+00:00",
+      "task": "T02"
+    },
+    {
+      "candidate_files_sha256": {
+        "app/eval-counter.hoon": "6d91c847935b55c884d56ac92a44d21188f165593968da380225de7ecf4551da"
+      },
+      "condition": "baseline",
+      "finished_at": "2026-09-26T16:57:57.163977+00:00",
+      "guard": {
+        "bytes": 27732,
+        "classification": "actual-outer-guard",
+        "decoded_bytes": 27732,
+        "decoded_sha256": "7136ee803a89770b0eb64dea06f6cefb037850dbd999c51a0090f54ed2f85c8c",
+        "original_path": ".runtime/execution-runs/four-fakes-6wt1ztsm/report.json",
+        "path": "docs/urbit/evidence/2026-09-26/workflow-evaluation/raw/public/baseline/T03/1/guard.json",
+        "sha256": "7136ee803a89770b0eb64dea06f6cefb037850dbd999c51a0090f54ed2f85c8c"
+      },
+      "lifecycle": {
+        "bytes": 15763,
+        "classification": "actual-public-attempt-lifecycle",
+        "decoded_bytes": 15763,
+        "decoded_sha256": "df278411bcef2e00b3f923c48c0e5014d67508eabcb4a5fea33310ffabdc8d16",
+        "original_path": ".runtime/workflow-participants/baseline/feedback-attempts/T03/1/result.json",
+        "path": "docs/urbit/evidence/2026-09-26/workflow-evaluation/raw/public/baseline/T03/1/result.json",
+        "sha256": "df278411bcef2e00b3f923c48c0e5014d67508eabcb4a5fea33310ffabdc8d16"
+      },
+      "native_execution": "completed",
+      "native_report": {
+        "bytes": 7082,
+        "classification": "actual-public-native-report",
+        "decoded_bytes": 761397,
+        "decoded_sha256": "e63222903066db5428de2b213298bc480ef91de76b94810a5e6a32c92d5d3e74",
+        "original_path": ".runtime/workflow-participants/baseline/feedback-attempts/T03/1/internal.json",
+        "path": "docs/urbit/evidence/2026-09-26/workflow-evaluation/raw/public/baseline/T03/1/native-inner.json.gz",
+        "sha256": "0dda6966d02e99282ba59b9f4b817a1aae62619907efbb341a05c2f1536bae9b"
+      },
+      "number": 1,
+      "observed_outcome": "fail",
+      "public_feedback_artifacts": [
+        {
+          "bytes": 2320,
+          "classification": "actually-published-public-only-feedback",
+          "decoded_bytes": 2320,
+          "decoded_sha256": "6949c30f1cc02f237b7f08dd13b97c9de9863e4de3a80a100c2d90e1ff4cad64",
+          "original_path": ".runtime/workflow-participants/baseline/feedback-attempts/T03/1/public.json",
+          "path": "docs/urbit/evidence/2026-09-26/workflow-evaluation/raw/public/baseline/T03/1/public.json",
+          "sha256": "6949c30f1cc02f237b7f08dd13b97c9de9863e4de3a80a100c2d90e1ff4cad64"
+        }
+      ],
+      "source_context": {
+        "bytes": 18110,
+        "classification": "actual-source-context",
+        "decoded_bytes": 18110,
+        "decoded_sha256": "edbcd628266e39334ddcf12b974d14ebbc548119201d6f2720a366e36bb1cf37",
+        "original_path": ".runtime/execution-runs/four-fakes-6wt1ztsm/control/source-context.json",
+        "path": "docs/urbit/evidence/2026-09-26/workflow-evaluation/raw/public/baseline/T03/1/source-context.json",
+        "sha256": "edbcd628266e39334ddcf12b974d14ebbc548119201d6f2720a366e36bb1cf37"
+      },
+      "started_at": "2026-09-26T16:57:00.315021+00:00",
+      "task": "T03"
+    },
+    {
+      "candidate_files_sha256": {
+        "app/eval-counter.hoon": "bb7cc2737e5be050f837b156b024849d131803a6b1ab84e68973bd53c21c6a9c"
+      },
+      "condition": "baseline",
+      "finished_at": "2026-09-26T17:01:05.929799+00:00",
+      "guard": {
+        "bytes": 26865,
+        "classification": "actual-outer-guard",
+        "decoded_bytes": 26865,
+        "decoded_sha256": "c37e71558be4984d11c157823ce3031735789b37d82c6e56ff7cb3b05b9a481b",
+        "original_path": ".runtime/execution-runs/four-fakes-vos9aie3/report.json",
+        "path": "docs/urbit/evidence/2026-09-26/workflow-evaluation/raw/public/baseline/T03/2/guard.json",
+        "sha256": "c37e71558be4984d11c157823ce3031735789b37d82c6e56ff7cb3b05b9a481b"
+      },
+      "lifecycle": {
+        "bytes": 15763,
+        "classification": "actual-public-attempt-lifecycle",
+        "decoded_bytes": 15763,
+        "decoded_sha256": "dc9694a027dc66d92320d6948640927782fce1b2311330f5898d6276dcdb60a4",
+        "original_path": ".runtime/workflow-participants/baseline/feedback-attempts/T03/2/result.json",
+        "path": "docs/urbit/evidence/2026-09-26/workflow-evaluation/raw/public/baseline/T03/2/result.json",
+        "sha256": "dc9694a027dc66d92320d6948640927782fce1b2311330f5898d6276dcdb60a4"
+      },
+      "native_execution": "completed",
+      "native_report": {
+        "bytes": 7748,
+        "classification": "actual-public-native-report",
+        "decoded_bytes": 763158,
+        "decoded_sha256": "1c9b381da754da53b1602f9a5fb0300760564a5eaea58de89a482c0e01de154d",
+        "original_path": ".runtime/workflow-participants/baseline/feedback-attempts/T03/2/internal.json",
+        "path": "docs/urbit/evidence/2026-09-26/workflow-evaluation/raw/public/baseline/T03/2/native-inner.json.gz",
+        "sha256": "a4388f4d474a971d8d58b6c6439c13779c1bba4c74f7fe436468bdfc8b4fe661"
+      },
+      "number": 2,
+      "observed_outcome": "pass",
+      "public_feedback_artifacts": [
+        {
+          "bytes": 4101,
+          "classification": "actually-published-public-only-feedback",
+          "decoded_bytes": 4101,
+          "decoded_sha256": "c614b9a1959696f17dfe8da74a5fcc4c0164907b0126a3a250629b18431a576c",
+          "original_path": ".runtime/workflow-participants/baseline/feedback-attempts/T03/2/public.json",
+          "path": "docs/urbit/evidence/2026-09-26/workflow-evaluation/raw/public/baseline/T03/2/public.json",
+          "sha256": "c614b9a1959696f17dfe8da74a5fcc4c0164907b0126a3a250629b18431a576c"
+        }
+      ],
+      "source_context": {
+        "bytes": 18110,
+        "classification": "actual-source-context",
+        "decoded_bytes": 18110,
+        "decoded_sha256": "edbcd628266e39334ddcf12b974d14ebbc548119201d6f2720a366e36bb1cf37",
+        "original_path": ".runtime/execution-runs/four-fakes-vos9aie3/control/source-context.json",
+        "path": "docs/urbit/evidence/2026-09-26/workflow-evaluation/raw/public/baseline/T03/2/source-context.json",
+        "sha256": "edbcd628266e39334ddcf12b974d14ebbc548119201d6f2720a366e36bb1cf37"
+      },
+      "started_at": "2026-09-26T17:00:12.451603+00:00",
+      "task": "T03"
+    },
+    {
+      "candidate_files_sha256": {
+        "app/eval-access.hoon": "f0825d062b7473a89777809d0664f2d04115f212a5a131144aedd60d8a640da5"
+      },
+      "condition": "baseline",
+      "finished_at": "2026-09-26T17:04:13.782109+00:00",
+      "guard": {
+        "bytes": 27729,
+        "classification": "actual-outer-guard",
+        "decoded_bytes": 27729,
+        "decoded_sha256": "7eb885c0205e3902ae96f6f2271cadf2f50be3acc21af9d47056f8a0672c41c1",
+        "original_path": ".runtime/execution-runs/four-fakes-qxom0awr/report.json",
+        "path": "docs/urbit/evidence/2026-09-26/workflow-evaluation/raw/public/baseline/T04/1/guard.json",
+        "sha256": "7eb885c0205e3902ae96f6f2271cadf2f50be3acc21af9d47056f8a0672c41c1"
+      },
+      "lifecycle": {
+        "bytes": 15762,
+        "classification": "actual-public-attempt-lifecycle",
+        "decoded_bytes": 15762,
+        "decoded_sha256": "40ff1537bb3b5840fde27c4ba9fd3ac34eda6eb9ea1a75ac26f5c755941934a2",
+        "original_path": ".runtime/workflow-participants/baseline/feedback-attempts/T04/1/result.json",
+        "path": "docs/urbit/evidence/2026-09-26/workflow-evaluation/raw/public/baseline/T04/1/result.json",
+        "sha256": "40ff1537bb3b5840fde27c4ba9fd3ac34eda6eb9ea1a75ac26f5c755941934a2"
+      },
+      "native_execution": "completed",
+      "native_report": {
+        "bytes": 7929,
+        "classification": "actual-public-native-report",
+        "decoded_bytes": 763514,
+        "decoded_sha256": "334e41911c95a4de7d664d595d5c45410580382b5020b0bf603511d4e40a8466",
+        "original_path": ".runtime/workflow-participants/baseline/feedback-attempts/T04/1/internal.json",
+        "path": "docs/urbit/evidence/2026-09-26/workflow-evaluation/raw/public/baseline/T04/1/native-inner.json.gz",
+        "sha256": "b14ab2a209977c829cd0dcfa8bacc1d084dffc14d99ad76fa71d10f76d68f193"
+      },
+      "number": 1,
+      "observed_outcome": "pass",
+      "public_feedback_artifacts": [
+        {
+          "bytes": 4468,
+          "classification": "actually-published-public-only-feedback",
+          "decoded_bytes": 4468,
+          "decoded_sha256": "e5b564d221ac646aa2fd302dde52e1bb8ab52f5622269f1b990a6a2ee91f4267",
+          "original_path": ".runtime/workflow-participants/baseline/feedback-attempts/T04/1/public.json",
+          "path": "docs/urbit/evidence/2026-09-26/workflow-evaluation/raw/public/baseline/T04/1/public.json",
+          "sha256": "e5b564d221ac646aa2fd302dde52e1bb8ab52f5622269f1b990a6a2ee91f4267"
+        }
+      ],
+      "source_context": {
+        "bytes": 18110,
+        "classification": "actual-source-context",
+        "decoded_bytes": 18110,
+        "decoded_sha256": "edbcd628266e39334ddcf12b974d14ebbc548119201d6f2720a366e36bb1cf37",
+        "original_path": ".runtime/execution-runs/four-fakes-qxom0awr/control/source-context.json",
+        "path": "docs/urbit/evidence/2026-09-26/workflow-evaluation/raw/public/baseline/T04/1/source-context.json",
+        "sha256": "edbcd628266e39334ddcf12b974d14ebbc548119201d6f2720a366e36bb1cf37"
+      },
+      "started_at": "2026-09-26T17:03:17.927382+00:00",
+      "task": "T04"
+    },
+    {
+      "candidate_files_sha256": {
+        "coverage.json": "5f957acc384dacbb10dc7162b4889d00764c682a8d1c58f6e92da72c4a09b573",
+        "lib/eval-authorization.hoon": "45688239f7e9050e75b84b863ecb087a50ba076b0f2a667ddc8e86dfc5e17e1f",
+        "tests/eval-coverage.hoon": "7e0c34aa107a734749b7a93d4f71d51aa118e6f41fbaa5035556aa6ea8d58eb4"
+      },
+      "condition": "baseline",
+      "finished_at": "2026-09-26T17:07:33.687762+00:00",
+      "guard": {
+        "bytes": 27301,
+        "classification": "actual-outer-guard",
+        "decoded_bytes": 27301,
+        "decoded_sha256": "8f6e01691e5a0d517bb62f4b7a4ca2509f83a4ed5e7cba237df668779a9cab07",
+        "original_path": ".runtime/execution-runs/four-fakes-kg6rul48/report.json",
+        "path": "docs/urbit/evidence/2026-09-26/workflow-evaluation/raw/public/baseline/T05/1/guard.json",
+        "sha256": "8f6e01691e5a0d517bb62f4b7a4ca2509f83a4ed5e7cba237df668779a9cab07"
+      },
+      "lifecycle": {
+        "bytes": 15958,
+        "classification": "actual-public-attempt-lifecycle",
+        "decoded_bytes": 15958,
+        "decoded_sha256": "90d1842643854e28aede5314a0284afd745ee0f77619aa660b41c8ae22a22aaa",
+        "original_path": ".runtime/workflow-participants/baseline/feedback-attempts/T05/1/result.json",
+        "path": "docs/urbit/evidence/2026-09-26/workflow-evaluation/raw/public/baseline/T05/1/result.json",
+        "sha256": "90d1842643854e28aede5314a0284afd745ee0f77619aa660b41c8ae22a22aaa"
+      },
+      "native_execution": "completed",
+      "native_report": {
+        "bytes": 9271,
+        "classification": "actual-public-native-report",
+        "decoded_bytes": 767964,
+        "decoded_sha256": "71f259092d7c64177fe9544feaa666c4d3e546d20dc1c0ba94a96da1e4bb9e19",
+        "original_path": ".runtime/workflow-participants/baseline/feedback-attempts/T05/1/internal.json",
+        "path": "docs/urbit/evidence/2026-09-26/workflow-evaluation/raw/public/baseline/T05/1/native-inner.json.gz",
+        "sha256": "c2e66b4e8d16033aca7f37b5d9bf02f2e71e9c1dcb44822b025f4f94369a92ea"
+      },
+      "number": 1,
+      "observed_outcome": "pass",
+      "public_feedback_artifacts": [
+        {
+          "bytes": 8771,
+          "classification": "actually-published-public-only-feedback",
+          "decoded_bytes": 8771,
+          "decoded_sha256": "13713b6c2121d18c5a5537031f906676ec8ffe30315a5df37109a2b8fb1ef258",
+          "original_path": ".runtime/workflow-participants/baseline/feedback-attempts/T05/1/public.json",
+          "path": "docs/urbit/evidence/2026-09-26/workflow-evaluation/raw/public/baseline/T05/1/public.json",
+          "sha256": "13713b6c2121d18c5a5537031f906676ec8ffe30315a5df37109a2b8fb1ef258"
+        }
+      ],
+      "source_context": {
+        "bytes": 18110,
+        "classification": "actual-source-context",
+        "decoded_bytes": 18110,
+        "decoded_sha256": "edbcd628266e39334ddcf12b974d14ebbc548119201d6f2720a366e36bb1cf37",
+        "original_path": ".runtime/execution-runs/four-fakes-kg6rul48/control/source-context.json",
+        "path": "docs/urbit/evidence/2026-09-26/workflow-evaluation/raw/public/baseline/T05/1/source-context.json",
+        "sha256": "edbcd628266e39334ddcf12b974d14ebbc548119201d6f2720a366e36bb1cf37"
+      },
+      "started_at": "2026-09-26T17:06:39.192711+00:00",
+      "task": "T05"
+    },
+    {
+      "candidate_files_sha256": {
+        "assembly.json": "af23f6f92bb1c89aaec6be259a230e903478ee43d8b2c5851cb9616194a74cf4",
+        "desk/desk.bill": "73cafed4c2cba0743097670a0615e4958fd6ddae0ea12b077bffcc3581e9afd2",
+        "desk/gen/eval-desk-probe.hoon": "818d547c2319a5b72157d48f3e9f8e997b46c6633db109ae154154f0796d85c6",
+        "desk/lib/eval-desk.hoon": "4c55f52fd8177ab0cc6a4fc4c379f08899f692211ecdc7dd9c1c8b7e39b8b475",
+        "desk/sys.kelvin": "0a66fa5dec5893d2e3a8e854c4d6c81d62882863e4c8574ce18da9daea5a7cc4"
+      },
+      "condition": "baseline",
+      "finished_at": "2026-09-26T17:10:51.925493+00:00",
+      "guard": {
+        "bytes": 25149,
+        "classification": "actual-outer-guard",
+        "decoded_bytes": 25149,
+        "decoded_sha256": "5f559f26eaef904c4333a0f156ef355a4ef54e854597aa82981118065ac9d4ae",
+        "original_path": ".runtime/execution-runs/four-fakes-76qb8n72/report.json",
+        "path": "docs/urbit/evidence/2026-09-26/workflow-evaluation/raw/public/baseline/T06/1/guard.json",
+        "sha256": "5f559f26eaef904c4333a0f156ef355a4ef54e854597aa82981118065ac9d4ae"
+      },
+      "lifecycle": {
+        "bytes": 16140,
+        "classification": "actual-public-attempt-lifecycle",
+        "decoded_bytes": 16140,
+        "decoded_sha256": "1db9de2bdaa2548b52e0698edf7e335c91069f4a96ac0745abdf9a9a8c79f330",
+        "original_path": ".runtime/workflow-participants/baseline/feedback-attempts/T06/1/result.json",
+        "path": "docs/urbit/evidence/2026-09-26/workflow-evaluation/raw/public/baseline/T06/1/result.json",
+        "sha256": "1db9de2bdaa2548b52e0698edf7e335c91069f4a96ac0745abdf9a9a8c79f330"
+      },
+      "native_execution": "completed",
+      "native_report": {
+        "bytes": 8357,
+        "classification": "actual-public-native-report",
+        "decoded_bytes": 766034,
+        "decoded_sha256": "ee293ffaaa183de68fdbdeee6aff29f68ff04959bd7bbffbae3960d7bb889b3c",
+        "original_path": ".runtime/workflow-participants/baseline/feedback-attempts/T06/1/internal.json",
+        "path": "docs/urbit/evidence/2026-09-26/workflow-evaluation/raw/public/baseline/T06/1/native-inner.json.gz",
+        "sha256": "98eee8604d5c6b5b8ef07158d808c4f39628cf5aa3b0a57815334b9fcdeaf3fe"
+      },
+      "number": 1,
+      "observed_outcome": "pass",
+      "public_feedback_artifacts": [
+        {
+          "bytes": 3953,
+          "classification": "actually-published-public-only-feedback",
+          "decoded_bytes": 3953,
+          "decoded_sha256": "d0a60ea7d3b1496b0f8f61c57e147df423ebcc6ad59ae5d578d2f03d875f631a",
+          "original_path": ".runtime/workflow-participants/baseline/feedback-attempts/T06/1/public.json",
+          "path": "docs/urbit/evidence/2026-09-26/workflow-evaluation/raw/public/baseline/T06/1/public.json",
+          "sha256": "d0a60ea7d3b1496b0f8f61c57e147df423ebcc6ad59ae5d578d2f03d875f631a"
+        }
+      ],
+      "source_context": {
+        "bytes": 18110,
+        "classification": "actual-source-context",
+        "decoded_bytes": 18110,
+        "decoded_sha256": "edbcd628266e39334ddcf12b974d14ebbc548119201d6f2720a366e36bb1cf37",
+        "original_path": ".runtime/execution-runs/four-fakes-76qb8n72/control/source-context.json",
+        "path": "docs/urbit/evidence/2026-09-26/workflow-evaluation/raw/public/baseline/T06/1/source-context.json",
+        "sha256": "edbcd628266e39334ddcf12b974d14ebbc548119201d6f2720a366e36bb1cf37"
+      },
+      "started_at": "2026-09-26T17:10:02.427108+00:00",
+      "task": "T06"
+    },
+    {
+      "candidate_files_sha256": {
+        "lib/eval-add.hoon": "5d5c1cd4cd431d0635211eb45caeb4277c36b1d6aa19f3b3996c20487b432651"
+      },
+      "condition": "local_skill_assisted",
+      "finished_at": "2026-09-26T16:56:40.259510+00:00",
+      "guard": {
+        "bytes": 25583,
+        "classification": "actual-outer-guard",
+        "decoded_bytes": 25583,
+        "decoded_sha256": "f5242c53b49cbfd22704f544dc35f983ccea3c1b3554649cdf229f87288a0dac",
+        "original_path": ".runtime/execution-runs/four-fakes-7h5p6o1x/report.json",
+        "path": "docs/urbit/evidence/2026-09-26/workflow-evaluation/raw/public/local_skill_assisted/T01/1/guard.json",
+        "sha256": "f5242c53b49cbfd22704f544dc35f983ccea3c1b3554649cdf229f87288a0dac"
+      },
+      "lifecycle": {
+        "bytes": 15795,
+        "classification": "actual-public-attempt-lifecycle",
+        "decoded_bytes": 15795,
+        "decoded_sha256": "221443ec246d64025568d9d5b7a85e703e4f5bec1dcd060dd7f15493a4f53db3",
+        "original_path": ".runtime/workflow-participants/local_skill_assisted/feedback-attempts/T01/1/result.json",
+        "path": "docs/urbit/evidence/2026-09-26/workflow-evaluation/raw/public/local_skill_assisted/T01/1/result.json",
+        "sha256": "221443ec246d64025568d9d5b7a85e703e4f5bec1dcd060dd7f15493a4f53db3"
+      },
+      "native_execution": "completed",
+      "native_report": {
+        "bytes": 7456,
+        "classification": "actual-public-native-report",
+        "decoded_bytes": 764481,
+        "decoded_sha256": "da3dcee80a552b0272ddd43bfc0f21085658815824e5526c357b13fe679474fc",
+        "original_path": ".runtime/workflow-participants/local_skill_assisted/feedback-attempts/T01/1/internal.json",
+        "path": "docs/urbit/evidence/2026-09-26/workflow-evaluation/raw/public/local_skill_assisted/T01/1/native-inner.json.gz",
+        "sha256": "0c4d4f25694bbce3d4c93587b54b01eb535a9e1fd5906f0bd08145fee7516a6b"
+      },
+      "number": 1,
+      "observed_outcome": "pass",
+      "public_feedback_artifacts": [
+        {
+          "bytes": 5605,
+          "classification": "actually-published-public-only-feedback",
+          "decoded_bytes": 5605,
+          "decoded_sha256": "54daeee12e8d2f430b0e1ab7db48fb3fc4eb622c00ffc45780fe8d080f442a7a",
+          "original_path": ".runtime/workflow-participants/local_skill_assisted/feedback-attempts/T01/1/public.json",
+          "path": "docs/urbit/evidence/2026-09-26/workflow-evaluation/raw/public/local_skill_assisted/T01/1/public.json",
+          "sha256": "54daeee12e8d2f430b0e1ab7db48fb3fc4eb622c00ffc45780fe8d080f442a7a"
+        }
+      ],
+      "source_context": {
+        "bytes": 18110,
+        "classification": "actual-source-context",
+        "decoded_bytes": 18110,
+        "decoded_sha256": "edbcd628266e39334ddcf12b974d14ebbc548119201d6f2720a366e36bb1cf37",
+        "original_path": ".runtime/execution-runs/four-fakes-7h5p6o1x/control/source-context.json",
+        "path": "docs/urbit/evidence/2026-09-26/workflow-evaluation/raw/public/local_skill_assisted/T01/1/source-context.json",
+        "sha256": "edbcd628266e39334ddcf12b974d14ebbc548119201d6f2720a366e36bb1cf37"
+      },
+      "started_at": "2026-09-26T16:55:49.791052+00:00",
+      "task": "T01"
+    },
+    {
+      "candidate_files_sha256": {
+        "lib/eval-maybe.hoon": "a980fdbe1dab53b6204f53efa261be3c05df9beb6620ee29f4d39e0e61706822"
+      },
+      "condition": "local_skill_assisted",
+      "finished_at": "2026-09-26T16:59:27.707500+00:00",
+      "guard": {
+        "bytes": 29020,
+        "classification": "actual-outer-guard",
+        "decoded_bytes": 29020,
+        "decoded_sha256": "d2a69fff87f3e0b2958b081ae28e0a818b39693d6e6eb40e4b623cd2360d95bc",
+        "original_path": ".runtime/execution-runs/four-fakes-8j6y_bab/report.json",
+        "path": "docs/urbit/evidence/2026-09-26/workflow-evaluation/raw/public/local_skill_assisted/T02/1/guard.json",
+        "sha256": "d2a69fff87f3e0b2958b081ae28e0a818b39693d6e6eb40e4b623cd2360d95bc"
+      },
+      "lifecycle": {
+        "bytes": 15797,
+        "classification": "actual-public-attempt-lifecycle",
+        "decoded_bytes": 15797,
+        "decoded_sha256": "8c85a1252f89b05241a43186dd2ebb29a32054968afa68da03bf46a90e416206",
+        "original_path": ".runtime/workflow-participants/local_skill_assisted/feedback-attempts/T02/1/result.json",
+        "path": "docs/urbit/evidence/2026-09-26/workflow-evaluation/raw/public/local_skill_assisted/T02/1/result.json",
+        "sha256": "8c85a1252f89b05241a43186dd2ebb29a32054968afa68da03bf46a90e416206"
+      },
+      "native_execution": "completed",
+      "native_report": {
+        "bytes": 7470,
+        "classification": "actual-public-native-report",
+        "decoded_bytes": 764454,
+        "decoded_sha256": "0f0c62c4aaab2c70c3938b92137a5c1eb857846d92ce262050e0b582fe8192b7",
+        "original_path": ".runtime/workflow-participants/local_skill_assisted/feedback-attempts/T02/1/internal.json",
+        "path": "docs/urbit/evidence/2026-09-26/workflow-evaluation/raw/public/local_skill_assisted/T02/1/native-inner.json.gz",
+        "sha256": "185c2cbc659f481a10b61bcaab00a6dfb56ca586c207185083007db43ba9de33"
+      },
+      "number": 1,
+      "observed_outcome": "pass",
+      "public_feedback_artifacts": [
+        {
+          "bytes": 5580,
+          "classification": "actually-published-public-only-feedback",
+          "decoded_bytes": 5580,
+          "decoded_sha256": "e93388e54e975d6c84ef608e44ceabd87c87cf72ae73284edbc7e557c6238c9b",
+          "original_path": ".runtime/workflow-participants/local_skill_assisted/feedback-attempts/T02/1/public.json",
+          "path": "docs/urbit/evidence/2026-09-26/workflow-evaluation/raw/public/local_skill_assisted/T02/1/public.json",
+          "sha256": "e93388e54e975d6c84ef608e44ceabd87c87cf72ae73284edbc7e557c6238c9b"
+        }
+      ],
+      "source_context": {
+        "bytes": 18110,
+        "classification": "actual-source-context",
+        "decoded_bytes": 18110,
+        "decoded_sha256": "edbcd628266e39334ddcf12b974d14ebbc548119201d6f2720a366e36bb1cf37",
+        "original_path": ".runtime/execution-runs/four-fakes-8j6y_bab/control/source-context.json",
+        "path": "docs/urbit/evidence/2026-09-26/workflow-evaluation/raw/public/local_skill_assisted/T02/1/source-context.json",
+        "sha256": "edbcd628266e39334ddcf12b974d14ebbc548119201d6f2720a366e36bb1cf37"
+      },
+      "started_at": "2026-09-26T16:58:28.642022+00:00",
+      "task": "T02"
+    },
+    {
+      "candidate_files_sha256": {
+        "app/eval-counter.hoon": "bb7cc2737e5be050f837b156b024849d131803a6b1ab84e68973bd53c21c6a9c"
+      },
+      "condition": "local_skill_assisted",
+      "finished_at": "2026-09-26T17:02:42.944061+00:00",
+      "guard": {
+        "bytes": 26873,
+        "classification": "actual-outer-guard",
+        "decoded_bytes": 26873,
+        "decoded_sha256": "258d73919c1c87e70dba304a6c5a3ab15190db2df9608a831dc00bb569c22c6a",
+        "original_path": ".runtime/execution-runs/four-fakes-zyx3p37m/report.json",
+        "path": "docs/urbit/evidence/2026-09-26/workflow-evaluation/raw/public/local_skill_assisted/T03/1/guard.json",
+        "sha256": "258d73919c1c87e70dba304a6c5a3ab15190db2df9608a831dc00bb569c22c6a"
+      },
+      "lifecycle": {
+        "bytes": 15799,
+        "classification": "actual-public-attempt-lifecycle",
+        "decoded_bytes": 15799,
+        "decoded_sha256": "d7ae8954f123a78950962fc5300f9bb10aaea178116595f4fc4b1174dfe3e2ab",
+        "original_path": ".runtime/workflow-participants/local_skill_assisted/feedback-attempts/T03/1/result.json",
+        "path": "docs/urbit/evidence/2026-09-26/workflow-evaluation/raw/public/local_skill_assisted/T03/1/result.json",
+        "sha256": "d7ae8954f123a78950962fc5300f9bb10aaea178116595f4fc4b1174dfe3e2ab"
+      },
+      "native_execution": "completed",
+      "native_report": {
+        "bytes": 7753,
+        "classification": "actual-public-native-report",
+        "decoded_bytes": 763182,
+        "decoded_sha256": "9173c5cd8094ae5625c9ff7e0911cb5c951b5dbb43c2637b29e55d33cd2e341e",
+        "original_path": ".runtime/workflow-participants/local_skill_assisted/feedback-attempts/T03/1/internal.json",
+        "path": "docs/urbit/evidence/2026-09-26/workflow-evaluation/raw/public/local_skill_assisted/T03/1/native-inner.json.gz",
+        "sha256": "fc87dc14945a88fb1cdc7c96cb51e70395f043a78e6e16631936fce5392f6bc2"
+      },
+      "number": 1,
+      "observed_outcome": "pass",
+      "public_feedback_artifacts": [
+        {
+          "bytes": 4113,
+          "classification": "actually-published-public-only-feedback",
+          "decoded_bytes": 4113,
+          "decoded_sha256": "a139d1ac94208e15849a2fb2e997eb7af4d60651f6fd275c9ca1ebe64a9fe74b",
+          "original_path": ".runtime/workflow-participants/local_skill_assisted/feedback-attempts/T03/1/public.json",
+          "path": "docs/urbit/evidence/2026-09-26/workflow-evaluation/raw/public/local_skill_assisted/T03/1/public.json",
+          "sha256": "a139d1ac94208e15849a2fb2e997eb7af4d60651f6fd275c9ca1ebe64a9fe74b"
+        }
+      ],
+      "source_context": {
+        "bytes": 18110,
+        "classification": "actual-source-context",
+        "decoded_bytes": 18110,
+        "decoded_sha256": "edbcd628266e39334ddcf12b974d14ebbc548119201d6f2720a366e36bb1cf37",
+        "original_path": ".runtime/execution-runs/four-fakes-zyx3p37m/control/source-context.json",
+        "path": "docs/urbit/evidence/2026-09-26/workflow-evaluation/raw/public/local_skill_assisted/T03/1/source-context.json",
+        "sha256": "edbcd628266e39334ddcf12b974d14ebbc548119201d6f2720a366e36bb1cf37"
+      },
+      "started_at": "2026-09-26T17:01:49.413105+00:00",
+      "task": "T03"
+    },
+    {
+      "candidate_files_sha256": {
+        "app/eval-access.hoon": "1c25d3cd4d5af10467cad97b6879ef6d90baf9c512ce0c770511493e74d0ec4e"
+      },
+      "condition": "local_skill_assisted",
+      "finished_at": "2026-09-26T17:06:10.649380+00:00",
+      "guard": {
+        "bytes": 26872,
+        "classification": "actual-outer-guard",
+        "decoded_bytes": 26872,
+        "decoded_sha256": "e1fd3a8d32e2a5f1c5ff99cd273dfd889dfdb4e54725e890162f9c4d8af74212",
+        "original_path": ".runtime/execution-runs/four-fakes-w5gg_4jk/report.json",
+        "path": "docs/urbit/evidence/2026-09-26/workflow-evaluation/raw/public/local_skill_assisted/T04/1/guard.json",
+        "sha256": "e1fd3a8d32e2a5f1c5ff99cd273dfd889dfdb4e54725e890162f9c4d8af74212"
+      },
+      "lifecycle": {
+        "bytes": 15798,
+        "classification": "actual-public-attempt-lifecycle",
+        "decoded_bytes": 15798,
+        "decoded_sha256": "ab8bd41ac45ea753831d9724b019ae0c97dca3ca3d66e93a9cf97c75fb44fe59",
+        "original_path": ".runtime/workflow-participants/local_skill_assisted/feedback-attempts/T04/1/result.json",
+        "path": "docs/urbit/evidence/2026-09-26/workflow-evaluation/raw/public/local_skill_assisted/T04/1/result.json",
+        "sha256": "ab8bd41ac45ea753831d9724b019ae0c97dca3ca3d66e93a9cf97c75fb44fe59"
+      },
+      "native_execution": "completed",
+      "native_report": {
+        "bytes": 7932,
+        "classification": "actual-public-native-report",
+        "decoded_bytes": 763538,
+        "decoded_sha256": "acbc05e5e9ba613a8590133c981f42167dcfd0418942a4bdcf24c9a9f8565fcb",
+        "original_path": ".runtime/workflow-participants/local_skill_assisted/feedback-attempts/T04/1/internal.json",
+        "path": "docs/urbit/evidence/2026-09-26/workflow-evaluation/raw/public/local_skill_assisted/T04/1/native-inner.json.gz",
+        "sha256": "4a8d54cb9bfb7caed1ee3e40f08ee4f7cae5fa4a595e3280a6099f303f28950b"
+      },
+      "number": 1,
+      "observed_outcome": "pass",
+      "public_feedback_artifacts": [
+        {
+          "bytes": 4480,
+          "classification": "actually-published-public-only-feedback",
+          "decoded_bytes": 4480,
+          "decoded_sha256": "1662f5f707f83721c4cf267519b93d1f0740d0d1f233f8b96eee33e2487c4aa2",
+          "original_path": ".runtime/workflow-participants/local_skill_assisted/feedback-attempts/T04/1/public.json",
+          "path": "docs/urbit/evidence/2026-09-26/workflow-evaluation/raw/public/local_skill_assisted/T04/1/public.json",
+          "sha256": "1662f5f707f83721c4cf267519b93d1f0740d0d1f233f8b96eee33e2487c4aa2"
+        }
+      ],
+      "source_context": {
+        "bytes": 18110,
+        "classification": "actual-source-context",
+        "decoded_bytes": 18110,
+        "decoded_sha256": "edbcd628266e39334ddcf12b974d14ebbc548119201d6f2720a366e36bb1cf37",
+        "original_path": ".runtime/execution-runs/four-fakes-w5gg_4jk/control/source-context.json",
+        "path": "docs/urbit/evidence/2026-09-26/workflow-evaluation/raw/public/local_skill_assisted/T04/1/source-context.json",
+        "sha256": "edbcd628266e39334ddcf12b974d14ebbc548119201d6f2720a366e36bb1cf37"
+      },
+      "started_at": "2026-09-26T17:05:17.182116+00:00",
+      "task": "T04"
+    },
+    {
+      "candidate_files_sha256": {
+        "coverage.json": "26499ae4e4a09db8750b3a1899aeeeed721edb1775ea9c7bef1a8021730bc2e6",
+        "lib/eval-authorization.hoon": "45688239f7e9050e75b84b863ecb087a50ba076b0f2a667ddc8e86dfc5e17e1f",
+        "tests/eval-coverage.hoon": "c5489863594ca60568ec9cbe2be4045ff8420c2063f32852994b36e0a9d4d958"
+      },
+      "condition": "local_skill_assisted",
+      "finished_at": "2026-09-26T17:09:41.213119+00:00",
+      "guard": {
+        "bytes": 28590,
+        "classification": "actual-outer-guard",
+        "decoded_bytes": 28590,
+        "decoded_sha256": "9f840777af22dcb96eb16323d9a434c1942dd5dc3142efeee4eb9f2954078715",
+        "original_path": ".runtime/execution-runs/four-fakes-3pfmh7uj/report.json",
+        "path": "docs/urbit/evidence/2026-09-26/workflow-evaluation/raw/public/local_skill_assisted/T05/1/guard.json",
+        "sha256": "9f840777af22dcb96eb16323d9a434c1942dd5dc3142efeee4eb9f2954078715"
+      },
+      "lifecycle": {
+        "bytes": 15994,
+        "classification": "actual-public-attempt-lifecycle",
+        "decoded_bytes": 15994,
+        "decoded_sha256": "946c6a05305186fce2ccf217dc1d0c6ed9514dc6e7f4c0e99cdf8dba4599be79",
+        "original_path": ".runtime/workflow-participants/local_skill_assisted/feedback-attempts/T05/1/result.json",
+        "path": "docs/urbit/evidence/2026-09-26/workflow-evaluation/raw/public/local_skill_assisted/T05/1/result.json",
+        "sha256": "946c6a05305186fce2ccf217dc1d0c6ed9514dc6e7f4c0e99cdf8dba4599be79"
+      },
+      "native_execution": "completed",
+      "native_report": {
+        "bytes": 9829,
+        "classification": "actual-public-native-report",
+        "decoded_bytes": 769499,
+        "decoded_sha256": "190e99a980622c98c9665217d8dd1bf1862e0a5b07aa91f8a700de357f75df63",
+        "original_path": ".runtime/workflow-participants/local_skill_assisted/feedback-attempts/T05/1/internal.json",
+        "path": "docs/urbit/evidence/2026-09-26/workflow-evaluation/raw/public/local_skill_assisted/T05/1/native-inner.json.gz",
+        "sha256": "145842e85d8717d46cc723a1d5820448493a800dfcb19e84a4831c2945849655"
+      },
+      "number": 1,
+      "observed_outcome": "pass",
+      "public_feedback_artifacts": [
+        {
+          "bytes": 10294,
+          "classification": "actually-published-public-only-feedback",
+          "decoded_bytes": 10294,
+          "decoded_sha256": "66bf3d07fc337620f0b6767516ba2e9c3fd1e4c9575ebc12a64f044f154320d4",
+          "original_path": ".runtime/workflow-participants/local_skill_assisted/feedback-attempts/T05/1/public.json",
+          "path": "docs/urbit/evidence/2026-09-26/workflow-evaluation/raw/public/local_skill_assisted/T05/1/public.json",
+          "sha256": "66bf3d07fc337620f0b6767516ba2e9c3fd1e4c9575ebc12a64f044f154320d4"
+        }
+      ],
+      "source_context": {
+        "bytes": 18110,
+        "classification": "actual-source-context",
+        "decoded_bytes": 18110,
+        "decoded_sha256": "edbcd628266e39334ddcf12b974d14ebbc548119201d6f2720a366e36bb1cf37",
+        "original_path": ".runtime/execution-runs/four-fakes-3pfmh7uj/control/source-context.json",
+        "path": "docs/urbit/evidence/2026-09-26/workflow-evaluation/raw/public/local_skill_assisted/T05/1/source-context.json",
+        "sha256": "edbcd628266e39334ddcf12b974d14ebbc548119201d6f2720a366e36bb1cf37"
+      },
+      "started_at": "2026-09-26T17:08:43.702681+00:00",
+      "task": "T05"
+    },
+    {
+      "candidate_files_sha256": {
+        "assembly.json": "af23f6f92bb1c89aaec6be259a230e903478ee43d8b2c5851cb9616194a74cf4",
+        "desk/desk.bill": "73cafed4c2cba0743097670a0615e4958fd6ddae0ea12b077bffcc3581e9afd2",
+        "desk/gen/eval-desk-probe.hoon": "818d547c2319a5b72157d48f3e9f8e997b46c6633db109ae154154f0796d85c6",
+        "desk/lib/eval-desk.hoon": "4c55f52fd8177ab0cc6a4fc4c379f08899f692211ecdc7dd9c1c8b7e39b8b475",
+        "desk/sys.kelvin": "0a66fa5dec5893d2e3a8e854c4d6c81d62882863e4c8574ce18da9daea5a7cc4"
+      },
+      "condition": "local_skill_assisted",
+      "finished_at": "2026-09-26T17:14:15.486054+00:00",
+      "guard": {
+        "bytes": 26870,
+        "classification": "actual-outer-guard",
+        "decoded_bytes": 26870,
+        "decoded_sha256": "61a73a7c3a7e417370e7f95d322dfefe38380ba4324aaacc952ac43f39773508",
+        "original_path": ".runtime/execution-runs/four-fakes-84b54ij7/report.json",
+        "path": "docs/urbit/evidence/2026-09-26/workflow-evaluation/raw/public/local_skill_assisted/T06/1/guard.json",
+        "sha256": "61a73a7c3a7e417370e7f95d322dfefe38380ba4324aaacc952ac43f39773508"
+      },
+      "lifecycle": {
+        "bytes": 16176,
+        "classification": "actual-public-attempt-lifecycle",
+        "decoded_bytes": 16176,
+        "decoded_sha256": "d8f79487c25f0400de9dd4e5a86131072376842ba3c42a1b4b67a713271bccf5",
+        "original_path": ".runtime/workflow-participants/local_skill_assisted/feedback-attempts/T06/1/result.json",
+        "path": "docs/urbit/evidence/2026-09-26/workflow-evaluation/raw/public/local_skill_assisted/T06/1/result.json",
+        "sha256": "d8f79487c25f0400de9dd4e5a86131072376842ba3c42a1b4b67a713271bccf5"
+      },
+      "native_execution": "completed",
+      "native_report": {
+        "bytes": 8367,
+        "classification": "actual-public-native-report",
+        "decoded_bytes": 766058,
+        "decoded_sha256": "ea80fadd18e6783f072e0ae8d7a3bfef4e951301af7443aace954a50d27b8c42",
+        "original_path": ".runtime/workflow-participants/local_skill_assisted/feedback-attempts/T06/1/internal.json",
+        "path": "docs/urbit/evidence/2026-09-26/workflow-evaluation/raw/public/local_skill_assisted/T06/1/native-inner.json.gz",
+        "sha256": "7aa40caeda3e27444bf92c0159471144a78f33c84ef7351c639082f3044469d3"
+      },
+      "number": 1,
+      "observed_outcome": "pass",
+      "public_feedback_artifacts": [
+        {
+          "bytes": 3965,
+          "classification": "actually-published-public-only-feedback",
+          "decoded_bytes": 3965,
+          "decoded_sha256": "21cb3e5d44b2df994e2e10ae3233e75f6db6c34894e71dee984983844778388d",
+          "original_path": ".runtime/workflow-participants/local_skill_assisted/feedback-attempts/T06/1/public.json",
+          "path": "docs/urbit/evidence/2026-09-26/workflow-evaluation/raw/public/local_skill_assisted/T06/1/public.json",
+          "sha256": "21cb3e5d44b2df994e2e10ae3233e75f6db6c34894e71dee984983844778388d"
+        }
+      ],
+      "source_context": {
+        "bytes": 18110,
+        "classification": "actual-source-context",
+        "decoded_bytes": 18110,
+        "decoded_sha256": "edbcd628266e39334ddcf12b974d14ebbc548119201d6f2720a366e36bb1cf37",
+        "original_path": ".runtime/execution-runs/four-fakes-84b54ij7/control/source-context.json",
+        "path": "docs/urbit/evidence/2026-09-26/workflow-evaluation/raw/public/local_skill_assisted/T06/1/source-context.json",
+        "sha256": "edbcd628266e39334ddcf12b974d14ebbc548119201d6f2720a366e36bb1cf37"
+      },
+      "started_at": "2026-09-26T17:13:22.033037+00:00",
+      "task": "T06"
+    }
+  ],
+  "recorded_at": "2026-09-26T17:40:42.128357+00:00",
+  "source_and_native_tests_executed_by_packager": false,
+  "source_commit": "8334a75cad4c2b063147e7e3352cdf76da0d5893",
+  "status": "v1-incomplete-T05-invalid-two-missing-mutants",
+  "verification": {
+    "all_selected_originals_unchanged": true,
+    "archive_all_members_rehashed": true,
+    "note": "Artifact checks only; no Hoon, native, host-test or participant rerun.",
+    "result_schema_shape": true
+  }
+}

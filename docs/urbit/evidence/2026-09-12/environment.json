@@ -1,0 +1,22 @@
+{
+  "recorded_utc": "2026-09-13T01:41:51Z",
+  "classification": "local-real-host-measurement",
+  "platform": "Linux-7.1.9-arch1-2-x86_64-with-glibc2.44",
+  "architecture": "x86_64",
+  "python": "3.14.7",
+  "cpu": {
+    "model": "12th Gen Intel(R) Core(TM) i9-12900H"
+  },
+  "memory": {
+    "MemTotal": "65486196 kB",
+    "MemAvailable": "43967092 kB"
+  },
+  "git": "git version 2.55.0",
+  "git_binary_sha256": "93473c28694fd72bd889364107cd2770514de59780885a6a4aafca4d602e30ad",
+  "bubblewrap": "bubblewrap 0.12.0",
+  "source_head_at_measurement": "846337a069e7c30de7dd3643ab0db886dc9ebc3d",
+  "toolchain_sha256": "4a209c10cf1756eb0f7357cc3eca8250bf66c239b4cd0ca31a8c0886d4d304ee",
+  "native_smoke_tree_sha256": "dff85b9af5429c096e38789f81f1e6097368c244e84d2d1b5b49a66a1f6fcf89",
+  "harness_source_sha256": "36e141574825b284e6877d6947a58cb4710d65abebb91ac19d518bfd5506e93e",
+  "performance_claim": "No representative Work/Docs/import p50/p95, load, RPO/RTO or enterprise capacity benchmark executed. Smoke wall time is test execution time only."
+}

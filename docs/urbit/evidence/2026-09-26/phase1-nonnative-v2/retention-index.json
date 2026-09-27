@@ -1,0 +1,198 @@
+{
+  "copies": [
+    {
+      "bytes": 19971,
+      "retained": {
+        "path": "docs/urbit/evidence/2026-09-26/phase1-nonnative-v2/host-current/before.json",
+        "pointer": "",
+        "sha256": "50b5cf32e3e1f88c170f76bcd2a4083e0c288cb5d18b97f93c304a96bf73fb28"
+      },
+      "source": {
+        "path": ".runtime/phase01-20260926/host-recapture-20260926t181203z-2193e0df/before.json",
+        "pointer": "",
+        "sha256": "50b5cf32e3e1f88c170f76bcd2a4083e0c288cb5d18b97f93c304a96bf73fb28"
+      }
+    },
+    {
+      "bytes": 21961,
+      "retained": {
+        "path": "docs/urbit/evidence/2026-09-26/phase1-nonnative-v2/host-current/capture-script.py",
+        "pointer": "",
+        "sha256": "a3612f3a27d8337e687fe95127cfca4f5327e4e6eb4542440fa99e4d4989059c"
+      },
+      "source": {
+        "path": ".runtime/phase01-20260926/host-recapture-20260926t181203z-2193e0df/capture-script.py",
+        "pointer": "",
+        "sha256": "a3612f3a27d8337e687fe95127cfca4f5327e4e6eb4542440fa99e4d4989059c"
+      }
+    },
+    {
+      "bytes": 22537,
+      "retained": {
+        "path": "docs/urbit/evidence/2026-09-26/phase1-nonnative-v2/host-current/host-current.stderr.log",
+        "pointer": "",
+        "sha256": "c5f24298cd4ce7c53be4b1438f6e173f5bd17b275bfd6cffcc0401df9aa4d92c"
+      },
+      "source": {
+        "path": ".runtime/phase01-20260926/host-recapture-20260926t181203z-2193e0df/host-current.stderr.log",
+        "pointer": "",
+        "sha256": "c5f24298cd4ce7c53be4b1438f6e173f5bd17b275bfd6cffcc0401df9aa4d92c"
+      }
+    },
+    {
+      "bytes": 0,
+      "retained": {
+        "path": "docs/urbit/evidence/2026-09-26/phase1-nonnative-v2/host-current/host-current.stdout.log",
+        "pointer": "",
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "source": {
+        "path": ".runtime/phase01-20260926/host-recapture-20260926t181203z-2193e0df/host-current.stdout.log",
+        "pointer": "",
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      }
+    },
+    {
+      "bytes": 1110,
+      "retained": {
+        "path": "docs/urbit/evidence/2026-09-26/phase1-nonnative-v2/host-current/launch.json",
+        "pointer": "",
+        "sha256": "18a0fb5e26b69a6f00291992469d51dab0de224acefcc2a0979bedadab34daff"
+      },
+      "source": {
+        "path": ".runtime/phase01-20260926/host-recapture-20260926t181203z-2193e0df/launch.json",
+        "pointer": "",
+        "sha256": "18a0fb5e26b69a6f00291992469d51dab0de224acefcc2a0979bedadab34daff"
+      }
+    },
+    {
+      "bytes": 14610,
+      "retained": {
+        "path": "docs/urbit/evidence/2026-09-26/phase1-nonnative-v2/host-current/selected-tests.json",
+        "pointer": "",
+        "sha256": "1d66e2e912d7a10a84c5f2387157981351fafa6f458fa4522308bd9afc73c1a5"
+      },
+      "source": {
+        "path": ".runtime/phase01-20260926/host-recapture-20260926t181203z-2193e0df/selected-tests.json",
+        "pointer": "",
+        "sha256": "1d66e2e912d7a10a84c5f2387157981351fafa6f458fa4522308bd9afc73c1a5"
+      }
+    },
+    {
+      "bytes": 106464,
+      "retained": {
+        "path": "docs/urbit/evidence/2026-09-26/phase1-nonnative-v2/host-current/test-events.jsonl",
+        "pointer": "",
+        "sha256": "f9dac86f95c53984070d86ee29be7765860326a626d5ce5b007394e93ba9af5b"
+      },
+      "source": {
+        "path": ".runtime/phase01-20260926/host-recapture-20260926t181203z-2193e0df/test-events.jsonl",
+        "pointer": "",
+        "sha256": "f9dac86f95c53984070d86ee29be7765860326a626d5ce5b007394e93ba9af5b"
+      }
+    },
+    {
+      "bytes": 114275,
+      "retained": {
+        "path": "docs/urbit/evidence/2026-09-26/phase1-nonnative-v2/host-current/worker.json",
+        "pointer": "",
+        "sha256": "4a11b58bfc8d1dc0eee3489ac14d79137cea6eadb1a845f89829b7ef5e03f4eb"
+      },
+      "source": {
+        "path": ".runtime/phase01-20260926/host-recapture-20260926t181203z-2193e0df/worker.json",
+        "pointer": "",
+        "sha256": "4a11b58bfc8d1dc0eee3489ac14d79137cea6eadb1a845f89829b7ef5e03f4eb"
+      }
+    },
+    {
+      "bytes": 117139,
+      "retained": {
+        "path": "docs/urbit/evidence/2026-09-26/phase1-nonnative-v2/host-current/host-current.json",
+        "pointer": "",
+        "sha256": "57d402c3bb5b481d892bd1a336abd186bd3490c80cc27f0dce37c25f9937161c"
+      },
+      "source": {
+        "path": ".runtime/phase01-20260926/host-recapture-20260926t181203z-2193e0df/host-current.json",
+        "pointer": "",
+        "sha256": "57d402c3bb5b481d892bd1a336abd186bd3490c80cc27f0dce37c25f9937161c"
+      }
+    },
+    {
+      "bytes": 7097,
+      "retained": {
+        "path": "docs/urbit/evidence/2026-09-26/phase1-nonnative-v2/refresh-review.json",
+        "pointer": "",
+        "sha256": "3d4c33fd59737a3d12b1838ca62c3843ab52c09d60f4294de6d51ef0932260cc"
+      },
+      "source": {
+        "path": ".runtime/phase01-20260926/nonnative-v2-refresh-review.json",
+        "pointer": "",
+        "sha256": "3d4c33fd59737a3d12b1838ca62c3843ab52c09d60f4294de6d51ef0932260cc"
+      }
+    },
+    {
+      "bytes": 2787,
+      "retained": {
+        "path": "docs/urbit/evidence/2026-09-26/phase1-nonnative-v2/editor-source-review-handoff.json",
+        "pointer": "",
+        "sha256": "5e69f7067c4953300b2ee6f9ee25826fff2f3b3eed4849127225fc6672ed2b7c"
+      },
+      "source": {
+        "path": ".runtime/workflow-v2-proposal/SOURCE_REVIEW_HANDOFF.json",
+        "pointer": "",
+        "sha256": "5e69f7067c4953300b2ee6f9ee25826fff2f3b3eed4849127225fc6672ed2b7c"
+      }
+    }
+  ],
+  "existing_reviews_unchanged": true,
+  "generated_artifacts": [
+    {
+      "path": "docs/urbit/evidence/2026-09-26/phase1-nonnative-v2/dispositions.json",
+      "pointer": "",
+      "sha256": "1b4b3a3b3b210b0e49a4da05cb9a1fe193139f217c54e2f24b155d540576d2b7"
+    },
+    {
+      "path": "docs/urbit/evidence/2026-09-26/phase1-nonnative-v2/guard-source-proof-confirmation.json",
+      "pointer": "",
+      "sha256": "38eab49e1ca1d77969598744f6f8eaf91013de37cbe38093efff950936624dec"
+    },
+    {
+      "path": "docs/urbit/evidence/2026-09-26/phase1-nonnative-v2/historical-guard-continuity.json",
+      "pointer": "",
+      "sha256": "c80dd02de0022d67ecf42747de7ace9302b5409305aedbbf016b7c277efe71af"
+    },
+    {
+      "path": "docs/urbit/evidence/2026-09-26/phase1-nonnative-v2/host-audit-confirmation.json",
+      "pointer": "",
+      "sha256": "f4100706c8d3a5d621c1e0b448ee86a60e0cca6aa346a57e4c8cdc0eac2afe76"
+    },
+    {
+      "path": "docs/urbit/evidence/2026-09-26/phase1-nonnative-v2/nonnative-readiness.json",
+      "pointer": "",
+      "sha256": "c0d8a647fa44a8567993019ae84e04f22fe6b99ffd6ee157d7ca4b2e8061b5f3"
+    },
+    {
+      "path": "docs/urbit/evidence/2026-09-26/phase1-nonnative-v2/source-bindings.json",
+      "pointer": "",
+      "sha256": "c71b17c9a81255b5a34f3891b868322ecc2929284d248e9dca8771709c414ef9"
+    },
+    {
+      "path": "docs/urbit/evidence/2026-09-26/phase1-nonnative-v2/source-dispositions.json",
+      "pointer": "",
+      "sha256": "38e03c05e1c9e51b5c12c256c33c3c13da5122ca6b5641375d53fccc30067a27"
+    }
+  ],
+  "historical_reports_unchanged": true,
+  "host_test_execution": false,
+  "independent_acceptance_performed": false,
+  "native_execution": false,
+  "prepared_by": "/root/gall_schedule_review",
+  "previous_retention_index": {
+    "path": "docs/urbit/evidence/2026-09-26/phase1-nonnative/retention-index.json",
+    "pointer": "",
+    "sha256": "770c81d9ee8a8213f810af9c9d3f5fe8ea6e5be9ad1d7449bb7aed4ceddb1382"
+  },
+  "protocol": "stead.nonnative-evidence-retention/1",
+  "scope": "New current capture/review copies and typed bindings only; all prior captures, failed cache control and historical guard artifacts remain unchanged.",
+  "source_commit": "0d877cff4319de8d437f0da58d4518535f758c36"
+}

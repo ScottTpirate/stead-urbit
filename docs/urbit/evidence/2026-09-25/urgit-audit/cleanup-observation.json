@@ -1,0 +1,20 @@
+{
+  "locks": {
+    "lifecycle.lock": "nonblocking exclusive acquisition succeeded, then released",
+    "native-execution.lock": "nonblocking exclusive acquisition succeeded, then released"
+  },
+  "native_slot_released": true,
+  "process_inventory": {
+    "matching_Vere_or_Urbit_commands": []
+  },
+  "raw_source": "Independent reviewer tool observation; supplemental record, not an original evaluator artifact.",
+  "scope": "Independent observation immediately after the passing wrapper completed and before releasing the native slot; not a claim about later unrelated work.",
+  "systemctl_inventory": {
+    "exit_code": 0,
+    "matching_units": [],
+    "patterns": [
+      "stead-native-*",
+      "stead-urgit-driver-*"
+    ]
+  }
+}

@@ -1,0 +1,122 @@
+{
+  "adapter_coverage_review": {
+    "adapter": {
+      "path": "scripts/urbit/skill_evaluation_support.py",
+      "pointer": "",
+      "sha256": "67597ff220928b99ca1cf1e925bd86c903fa3d1399fd59e00825aec936965fe7"
+    },
+    "authored_test_methods": 58,
+    "execution_limit": "These source-reviewed adapter regressions are not among the seven modules in the 137-test capture. Actual adapter tests and v2 native prequalification need their own retained evidence.",
+    "findings": [
+      "Every correct/mutant position has a complete ordered subject/arm result, exact generated-source and adjacent command/observation linkage, bounded canonical jam and typed tang validation.",
+      "Valid behavioral failure remains false and continues the remaining subjects and T06; compiler, timeout, malformed, guard and source failures abort incomplete native scoring.",
+      "Prequalification requires the separate five-subject weak control with outcomes correct-pass/killed/survived/killed/killed; public feedback still exposes only the correct subject."
+    ],
+    "new_authored_regressions": 17,
+    "test_delta_from_editor_proposal": "The single expected-error regex changes from 'duplicate' to '[Dd]uplicate', retaining required ValueError/duplicate semantics.",
+    "tests": {
+      "path": "tests/urbit/test_skill_evaluation_support.py",
+      "pointer": "",
+      "sha256": "6d50be4645fda79831820e6e5bf2fa8ab8a46d55e459856684fd33bba6dc3af3"
+    }
+  },
+  "editor_confirmation_provenance": "Actual retained editor_tool_review clearance recorded by independent_review, independently confirmed to this reviewer in a collaboration message. The editor did not author that handoff JSON. Its current harness and adapter hashes match; it is not a current test-execution record.",
+  "editor_source_handoff": {
+    "path": ".runtime/workflow-v2-proposal/SOURCE_REVIEW_HANDOFF.json",
+    "pointer": "",
+    "sha256": "5e69f7067c4953300b2ee6f9ee25826fff2f3b3eed4849127225fc6672ed2b7c"
+  },
+  "harness_delta": {
+    "after": "    workflow = ROOT / '.runtime/workflow-evaluation-v2'\n",
+    "before": "    workflow = ROOT / '.runtime/workflow-evaluation'\n",
+    "entire_source_equals_single_replacement": true,
+    "findings": [
+      "Only the fixed workflow mount source changes from the v1 directory to the separate v2 directory. The destination remains /workflow and the mount remains read-only.",
+      "Existing ownership, private-mode and no-symlink checks, unshare-all namespace, clear environment, fixed source mounts, fixture lifetime and guard controls are unchanged. No participant-selected path or new write permission is admitted."
+    ]
+  },
+  "host_capture_audit": {
+    "affinity": [
+      19
+    ],
+    "all_eight_output_hashes_verified": true,
+    "auditor": "/root/gall_schedule_review",
+    "cancellation": [],
+    "capture": {
+      "path": ".runtime/phase01-20260926/host-recapture-20260926t181203z-2193e0df/host-current.json",
+      "pointer": "",
+      "sha256": "57d402c3bb5b481d892bd1a336abd186bd3490c80cc27f0dce37c25f9937161c"
+    },
+    "cpu_max": "5000 10000",
+    "executor": "/root",
+    "exit_code": 0,
+    "final_scope_inactive_empty_unloaded": true,
+    "mapped_delivery_ids_present": 2,
+    "mapped_guard_ids_present": 15,
+    "module_counts": {
+      "test_delivery_cases": 10,
+      "test_delivery_evidence_regressions": 11,
+      "test_delivery_suite": 10,
+      "test_dev_flow": 31,
+      "test_execution_policy": 6,
+      "test_harness_safety": 43,
+      "test_runtime_guard_adversarial": 26
+    },
+    "outer_elapsed_seconds": 4.288267928990535,
+    "passed_subtests": 162,
+    "same_sole_pid_before_after": true,
+    "scope": "Read-only audit of actual root-executed host tests; not a rerun, native execution, heat or platform requalification.",
+    "source_before_after_and_frozen_git_blobs_equal": true,
+    "source_files": 156,
+    "unique_selected_started_finished_passed_ids": 137,
+    "unittest_seconds": 2.913,
+    "worker_elapsed_seconds": 3.64048606203869
+  },
+  "host_test_execution": false,
+  "native_execution": false,
+  "preservation": {
+    "historical_93c_81c_platform_unchanged": true,
+    "old_failed_cache_control_and_prior_127_and_137_unchanged": true,
+    "original_independent_review": {
+      "path": "docs/urbit/reviews/PHASE01_INDEPENDENT_REVIEW_20260925.md",
+      "pointer": "",
+      "sha256": "ae0edda0a91d5b89b1cd070c8685de8d73dbc190093563c8cd2d4dba1d51b717"
+    },
+    "previous_bundle_retention_index": {
+      "path": "docs/urbit/evidence/2026-09-26/phase1-nonnative/retention-index.json",
+      "pointer": "",
+      "sha256": "770c81d9ee8a8213f810af9c9d3f5fe8ea6e5be9ad1d7449bb7aed4ceddb1382"
+    }
+  },
+  "previous_guard_proof": {
+    "path": "docs/urbit/evidence/2026-09-26/phase1-nonnative/source-dispositions.json",
+    "pointer": "/proofs/guard-independent-source-review",
+    "sha256": "87a2c38cb7288119c6b542d225e2e1cc25bb35798bb8592666f30c8aabbcdf2f"
+  },
+  "previous_source_commit": "8334a75cad4c2b063147e7e3352cdf76da0d5893",
+  "previous_source_files": {
+    "Makefile": "da78fc039ee0562efcf5b408a9b8ab24f243f5d2965991599548a76b42b8a0f8",
+    "scripts/urbit/digests.py": "88e6333bd6c764f48fb8939bafa77c9eb236c5b3586a19fe1a1f6e48e27dc08c",
+    "scripts/urbit/execution_policy.py": "da16e2e0fd32eb5b90706b546a7ea8332a65807fc8279f3bd765dcc18aaad9b5",
+    "scripts/urbit/harness.py": "a63615cabf3c01698cec27bc6ae3f1381cc22be08d0c33859c992d96b8035c04",
+    "scripts/urbit/namespace_check.py": "87950f4e7796fafb91807c36b9ea7d392d1d1840e5516d15d5fc6c5d476d0449",
+    "scripts/urbit/supervisor.py": "d157a974075d2e1cbfb1ae07609182a3232c5a3f16b75c3e9287652434d774d2",
+    "scripts/urbit/toolchain.py": "31234bbab1af217c885d8c081d7f438972f6ff1b6d89c93d10bdf49871b3ea16"
+  },
+  "protocol": "stead.nonnative-v2-refresh-review/1",
+  "qualification_acceptance": false,
+  "reviewed_source_files": {
+    "Makefile": "da78fc039ee0562efcf5b408a9b8ab24f243f5d2965991599548a76b42b8a0f8",
+    "scripts/urbit/digests.py": "88e6333bd6c764f48fb8939bafa77c9eb236c5b3586a19fe1a1f6e48e27dc08c",
+    "scripts/urbit/execution_policy.py": "da16e2e0fd32eb5b90706b546a7ea8332a65807fc8279f3bd765dcc18aaad9b5",
+    "scripts/urbit/harness.py": "c54f5d68491c3894c697fdb0da68a060c3293a4014c3f05d790d397f71306a92",
+    "scripts/urbit/namespace_check.py": "87950f4e7796fafb91807c36b9ea7d392d1d1840e5516d15d5fc6c5d476d0449",
+    "scripts/urbit/supervisor.py": "d157a974075d2e1cbfb1ae07609182a3232c5a3f16b75c3e9287652434d774d2",
+    "scripts/urbit/toolchain.py": "31234bbab1af217c885d8c081d7f438972f6ff1b6d89c93d10bdf49871b3ea16"
+  },
+  "reviewer": "/root/gall_schedule_review",
+  "scope": "Independent source review of the single harness workflow-root delta and retained-byte host audit only. The prior common guard, receipt ordering, no-effect and host assertion-mapping reviews retain their original reviewer attribution. This does not execute tests or qualify native or paired-workflow obligations.",
+  "source_commit": "0d877cff4319de8d437f0da58d4518535f758c36",
+  "source_review_performed": true,
+  "status": "source-review-and-retained-host-audit-complete"
+}

@@ -1,0 +1,15 @@
+{
+  "protocol": "stead.contract-freeze/2",
+  "status": "frozen_for_bounded_phase1_qualification",
+  "date": "2026-09-13",
+  "previous_manifest_sha256": "61d9a18f16b8b01629bd35177d5b801cc05cd8ddaf7f68c3cc1678faf642cf90",
+  "review": "Independent Hoon design review and QA adversarial design review; execution remains required",
+  "approval_limit": "No native qualification, merge or release approval",
+  "files": {
+    "docs/urbit/CONTRACT_AMENDMENT_2.md": "f9793a947b4ba69e9099ec0cd68ed004602cb0ffe6fbbf79f9f464cb256315c6",
+    "specs/urbit/v2/command.schema.json": "ab2190b29216d9875390b313397c880838cc00378a9bc0178423e467a1820968",
+    "specs/urbit/v2/native-api.json": "6702cea56f8a1418a7663850e70d1a77775a890f708754d0347d89e9c2ae3bd8",
+    "scripts/urbit/contracts_v2.py": "42389543526318c92ad5496175b891db2c422bcb03bc0a103006345a5429cb37",
+    "tests/urbit/test_contracts_v2.py": "5a066d225795a409ac8b2a290454c642245902e78efa0bc67442b94e25adaa38"
+  }
+}

@@ -1,0 +1,11 @@
+{
+  "command": [
+    "make",
+    "dev"
+  ],
+  "source_commit": "7a741b6c009a8a9fde57eeb9309853ba9164ea64",
+  "working_tree": "?? tests/urbit/skill_evaluation/\n",
+  "started_utc": "2026-09-25T09:57:32.571934+00:00",
+  "elapsed_seconds": 58.704,
+  "exit": 2
+}

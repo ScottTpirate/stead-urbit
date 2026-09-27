@@ -1,0 +1,219 @@
+{
+  "blocking_findings": [],
+  "closed_guard": {
+    "artifact": {
+      "path": "docs/urbit/evidence/2026-09-26/native-attempts/deliverycheck02/guard.json",
+      "sha256": "894a134ab8c9fc863938b29984fc873faf0439def56b37cd5217c7776d1f6188"
+    },
+    "cleanup": [],
+    "exit_code": 0,
+    "final_clean_ship_stops": [
+      {
+        "command": "shutdown zod",
+        "result": {
+          "exit_code": 0,
+          "forced": false
+        },
+        "utc": "2026-09-26T20:44:58Z"
+      },
+      {
+        "command": "shutdown bus",
+        "result": {
+          "exit_code": 0,
+          "forced": false
+        },
+        "utc": "2026-09-26T20:44:58Z"
+      },
+      {
+        "command": "shutdown nec",
+        "result": {
+          "exit_code": 0,
+          "forced": false
+        },
+        "utc": "2026-09-26T20:44:58Z"
+      },
+      {
+        "command": "shutdown bud",
+        "result": {
+          "exit_code": 0,
+          "forced": false
+        },
+        "utc": "2026-09-26T20:44:58Z"
+      }
+    ],
+    "lease_state": "stopped",
+    "peak_recorded_cpu_c": 65.0,
+    "policy": {
+      "cooperative_seconds": 10,
+      "cpu_period_us": 10000,
+      "cpu_quota_us": 5000,
+      "kill_seconds": 5,
+      "sample_seconds": 1,
+      "stale_seconds": 3,
+      "start_c": 75,
+      "stop_c": 90,
+      "terminate_seconds": 10
+    },
+    "policy_sha256": "dbbd9dc1af8fdc946b78f8cfe741411e3bf83f832f554c20cd2c8cef447b2f23",
+    "run_id": "3e5c3e7b39ed1c5db0a2a976411b578b",
+    "scope_proof": {
+      "cgroup": "/user.slice/user-1000.slice/user@1000.service/app.slice/stead-native-3e5c3e7b39ed1c5db0a2a976411b578b.scope",
+      "cpu_affinity": [
+        19
+      ],
+      "cpu_max": "5000 10000",
+      "unit": "stead-native-3e5c3e7b39ed1c5db0a2a976411b578b.scope"
+    },
+    "scope_state_observation": "LoadState=not-found\nActiveState=inactive\nSubState=dead\nControlGroup=\n",
+    "status": "completed",
+    "thermal_stop": false
+  },
+  "host_tests_launched_by_reviewer": false,
+  "limitations": [
+    "This is the two-cycle empty-fixture diagnostic only. It does not execute or qualify the full QA, ended-leave, capacity, predecessor, or 73-requirement Phase 1 gate.",
+    "The exact strict native timeout output is now observed twice. This supports the bounded drain-and-restart behavior at this source, but does not establish the earlier Vere SIGSEGV root cause.",
+    "The reviewer launched no native process or host test suite; semantic replay consumed only retained records. Full host validation is reviewed separately.",
+    "Transport retention stores exact decoded native exchanges and response-frame digests; this review does not invent missing raw response-frame bytes.",
+    "Source and input bytes were independently rebound to commit 5208; pinned runtime download bytes were not rehashed by this diagnostic review."
+  ],
+  "native_execution_performed_by_reviewer": false,
+  "native_report": {
+    "path": "docs/urbit/evidence/2026-09-26/native-attempts/deliverycheck02/native.json",
+    "sha256": "13cb44723b76f20c5480dacb8c9b6e6d67a0903a3b00299ddd9600a4020c0dc7"
+  },
+  "native_summary": {
+    "classification": "local-real-native-delivery-lifecycle",
+    "elapsed_seconds": 227.027,
+    "exact_evaluator_controls_validated": true,
+    "offline_and_recovery_assertions_independently_replayed": true,
+    "qualifies_phase": false,
+    "reported_direct_checks": 191,
+    "reported_direct_failures": [],
+    "status": "pass"
+  },
+  "observed_at": "2026-09-26T20:49:18.722332+00:00",
+  "observed_native_timeout_cycles": [
+    {
+      "all_protected_snapshot_fields_unchanged": true,
+      "home_stopped_through_terminal": true,
+      "name": "home-unavailable-1",
+      "native_timeout_predicate": true,
+      "old_home_pid": 60,
+      "recovered_read": {
+        "error": "denied_or_not_found",
+        "protocol": "stead.result/2",
+        "status": "rejected"
+      },
+      "recovered_read_transcript_line": 5,
+      "replacement_home_pid": 98,
+      "response_frame_sha256": "25b15bbf85cc737ceeef4fafb1f81ade6fabb6a1d5ca39805a99b205116860a8",
+      "restart_utc": "2026-09-26T20:43:48Z",
+      "same_live_sender_pid": 67,
+      "sender_probe": {
+        "dojo": "zuse",
+        "result": "%408\n",
+        "ship": "bus"
+      },
+      "stderr": "loom: mapped 512MB\r\nlite: arvo formula 4ce68411\r\nlite: core 641296f\r\nlite: final state 641296f\r\neval (cue, newt):\n\r\ntimeout\r\neval: bail: %thread-fail",
+      "stdout": "[32 %avow 1]",
+      "stop_to_terminal_seconds_from_utc": 55.0,
+      "stop_utc": "2026-09-26T20:42:53Z",
+      "terminal_record_sha256": "0e2285e14a8fd236433606be7dd97eb6dc3a14cec2458729f057d0f336ee974a",
+      "terminal_transcript_line": 3,
+      "terminal_utc": "2026-09-26T20:43:48Z",
+      "unchanged_state_jam_sha256": "867589b68f14a986eb5fdcc5775ecabb2ba1d1f4a921250e0314365e00bd322c"
+    },
+    {
+      "all_protected_snapshot_fields_unchanged": true,
+      "home_stopped_through_terminal": true,
+      "name": "home-unavailable-2",
+      "native_timeout_predicate": true,
+      "old_home_pid": 98,
+      "recovered_read": {
+        "error": "denied_or_not_found",
+        "protocol": "stead.result/2",
+        "status": "rejected"
+      },
+      "recovered_read_transcript_line": 9,
+      "replacement_home_pid": 113,
+      "response_frame_sha256": "25b15bbf85cc737ceeef4fafb1f81ade6fabb6a1d5ca39805a99b205116860a8",
+      "restart_utc": "2026-09-26T20:44:53Z",
+      "same_live_sender_pid": 67,
+      "sender_probe": {
+        "dojo": "zuse",
+        "result": "%408\n",
+        "ship": "bus"
+      },
+      "stderr": "loom: mapped 512MB\r\nlite: arvo formula 4ce68411\r\nlite: core 641296f\r\nlite: final state 641296f\r\neval (cue, newt):\n\r\ntimeout\r\neval: bail: %thread-fail",
+      "stdout": "[32 %avow 1]",
+      "stop_to_terminal_seconds_from_utc": 56.0,
+      "stop_utc": "2026-09-26T20:43:57Z",
+      "terminal_record_sha256": "0e2285e14a8fd236433606be7dd97eb6dc3a14cec2458729f057d0f336ee974a",
+      "terminal_transcript_line": 7,
+      "terminal_utc": "2026-09-26T20:44:53Z",
+      "unchanged_state_jam_sha256": "867589b68f14a986eb5fdcc5775ecabb2ba1d1f4a921250e0314365e00bd322c"
+    }
+  ],
+  "outer_lifecycle": {
+    "all_steps_exit_zero": true,
+    "artifact": {
+      "path": "docs/urbit/evidence/2026-09-26/native-attempts/deliverycheck02/steps/lifecycle.json.gz",
+      "sha256": "b43ff3067d8cc28a59a1192f72b3fcad60b0bff50cba3c77c7181e507904823a"
+    },
+    "elapsed_seconds": 246.8954634029651,
+    "finished_at": "2026-09-26T20:44:59.010701+00:00"
+  },
+  "protocol": "stead.independent-delivery-lifecycle-native-review/1",
+  "qualifies_phase": false,
+  "remote_urls_verified_before_record_write": {
+    "origin": {
+      "fetch": "https://github.com/ScottTpirate/stead-urbit.git",
+      "push": "https://github.com/ScottTpirate/stead-urbit.git"
+    },
+    "upstream": {
+      "fetch": "https://github.com/ScottTpirate/stead.git",
+      "push": "DISABLED_UPSTREAM_PUSH"
+    }
+  },
+  "retained_artifacts_verified": 23,
+  "retention_index": {
+    "path": "docs/urbit/evidence/2026-09-26/native-attempts/deliverycheck02/index.json",
+    "sha256": "de13d7aac5a9c45285ec62a536d71f6c63ea1166a17ff26386e1628155c92566"
+  },
+  "review_scope": "Read-only semantic replay and exact-byte audit of completed deliverycheck02; no Phase 1 acceptance.",
+  "reviewer": "/root/core_acceptance_review",
+  "source_binding": {
+    "actual_mounted_inventory_matches_commit": true,
+    "committed_files_verified": 127,
+    "guard_sha256": "da16e2e0fd32eb5b90706b546a7ea8332a65807fc8279f3bd765dcc18aaad9b5",
+    "inputs_before_equal_after_and_current": true,
+    "installed_and_clay_verified_files_per_ship": {
+      "bud": 22,
+      "bus": 22,
+      "nec": 22,
+      "zod": 22
+    },
+    "loaded_closure_sha256": "0fff67efcc792fd433dc065bbb5ebf877458cda015d424e86934b126c66d0c53",
+    "native_tree_sha256": "7b0257ba03b0de93de319d55c5523fa481c302772471645987818da543ac4621",
+    "runtime_lock_sha256": "4a209c10cf1756eb0f7357cc3eca8250bf66c239b4cd0ca31a8c0886d4d304ee",
+    "source_context": {
+      "path": "docs/urbit/evidence/2026-09-26/native-attempts/deliverycheck02/guard/control/source-context.json.gz",
+      "sha256": "abf2ba801fdd7235716ba85a8d82d6097833db9c68bc1bdb63ed9a8d83eaf7e4"
+    }
+  },
+  "source_commit": "5208f3273426e8fe76dc8622ffe93ace93982e17",
+  "source_review": {
+    "path": ".runtime/phase01-20260926/delivery-lifecycle-fix-review.json",
+    "sha256": "0c3fd4c76fd96b4351be98b67334c2a8682c931020fef76b575f8688dab0a795"
+  },
+  "status": "focused-native-diagnostic-verified",
+  "transport": {
+    "all_native_commands_replayed": true,
+    "complete_response_frames_bound_by_digest": true,
+    "path": "docs/urbit/evidence/2026-09-26/native-attempts/deliverycheck02/core-20260926T204110Z-transport.jsonl.gz",
+    "records": 9,
+    "sha256": "c695703119d0c8cc61247f9d53fc0ff9057714aca8080d70a92b279f7fd52dd2",
+    "uncompressed_bytes": 27604,
+    "uncompressed_sha256": "b9ef14b5d22497a2eb641610b64ce9c56f9f1d5c6796064fd983d211194bab32"
+  }
+}

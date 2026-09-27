@@ -1,0 +1,39 @@
+{
+  "dispositions": {
+    "clean-contributor-setup": "still pending: first actual clean attempt found an AF_UNIX length error after setup/doctor passed; final corrected-source clean setup is not inferred.",
+    "reference-links": "supported: exact four frozen skill source hashes and exact six-URL inventory match the retained actual root HTTP200 observations; local guidance paths exist. The reviewer inspected the retained observation, not a second independent HTTP execution.",
+    "upstream-intake-and-repair-proposal": "supported within reference-only scope: the independent reviewer directly opened the exact pinned LICENSE and Gall skill. MIT notice and mismatched untagged-save/tagged-load pattern are confirmed. The separately authored proposal recommends consistent envelopes and native roundtrip/rejection validation; it remains unsent and uncompiled."
+  },
+  "evidence": [
+    {
+      "bytes": 4467,
+      "path": "additional/skill-links-20260926.json",
+      "sha256": "4d692f03e2b2b6726e20806cfe8ce51840b753fc146c1bf0e21189333b745f87"
+    },
+    {
+      "bytes": 1970,
+      "path": "additional/URB170_UPSTREAM_FEEDBACK_PROPOSAL_20260926.md",
+      "sha256": "afba76f4b4fc36ca9bb841fc9a1c0a6a0b4c27be479781986cf64d42d670597e"
+    }
+  ],
+  "native_or_host_tests_executed": false,
+  "paired_source_commit_unchanged": "0d877cff4319de8d437f0da58d4518535f758c36",
+  "phase_qualified": false,
+  "primary_upstream_sources": [
+    {
+      "title": "Pinned MIT license",
+      "url": "https://raw.githubusercontent.com/thelifeandtimes/running-urbit/90912c1425573de37110a65627c6ab4bf125586c/LICENSE"
+    },
+    {
+      "title": "Pinned Gall skill",
+      "url": "https://raw.githubusercontent.com/thelifeandtimes/running-urbit/90912c1425573de37110a65627c6ab4bf125586c/skills/gall-agents/SKILL.md"
+    }
+  ],
+  "prior_criterion_map_sha256": "1ca4948a4d05009b0879749c7c097ab555a8d1584c6c155c12fe73236c2156b2",
+  "protocol": "stead.urb170-criterion-addendum/1",
+  "recorded_at": "2026-09-26T19:39:45.618143+00:00",
+  "reviewer": "/root/independent_review",
+  "scope": "Later source/retained-link-observation review only; original comparison/archive and earlier stage records unchanged.",
+  "upstream_observation": "The minimal save has no version wrapper, while load demands a tagged version and assigns the whole old noun. The later example saves a tag and restores its payload. The MIT notice identifies 2026 drake. These are source observations, not a compiler result.",
+  "whole_issue_closure_recommended": false
+}

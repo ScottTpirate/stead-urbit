@@ -1,0 +1,33 @@
+{
+  "classification": "host-static-and-mocked-checks; not Hoon execution",
+  "source_commit": "b2ec89c258c5544a3344c3665a81700b9e7075b4",
+  "command": "make check in a transient CPU50%/10ms scope on CPU19",
+  "exit_code": 0,
+  "suite_tests": 445,
+  "suite_elapsed_seconds": 65.579,
+  "wrapper_elapsed_seconds": 66.29686029499862,
+  "native_execution_performed": false,
+  "artifacts": [
+    {
+      "file": "stdout.log.gz",
+      "sha256": "9d282b4ca3dbcd0d9e04b98c5fa30a29675a94ba15e0c770ab285c4f5baff822",
+      "original_local_path": ".runtime/phase01-20260926/host-final/stdout.log",
+      "original_sha256": "a1b535d66e3f44c4702b8b357e06bbbe8d2eae441edd1c6b8dd896df2bcfcc20",
+      "encoding": "gzip"
+    },
+    {
+      "file": "stderr.log.gz",
+      "sha256": "6eca4be487fbda21a3517d3db96890ca49236c875f0ba8ea0d79e7d831f97bef",
+      "original_local_path": ".runtime/phase01-20260926/host-final/stderr.log",
+      "original_sha256": "2a3b5c32e0cdc7e01d95c5640f5b8cd60d43c3bf69eb064e95834054a6663839",
+      "encoding": "gzip"
+    },
+    {
+      "file": "result.json.gz",
+      "sha256": "80d5bfed2eff818c549917ee2c3f07356bec7ab41cdc7b8a9a28896889081258",
+      "original_local_path": ".runtime/phase01-20260926/host-final/result.json",
+      "original_sha256": "cd3077ee92edef20ff1bc54515cd4d9460be6ee34953f7c5b81978d56ac0ad1f",
+      "encoding": "gzip"
+    }
+  ]
+}

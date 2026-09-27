@@ -1,0 +1,21 @@
+{
+  "argv": [
+    "python3",
+    "scripts/urbit/qualification_gate.py",
+    "--manifest",
+    "specs/urbit/v2/qualification-gate.json",
+    "--evidence",
+    "docs/urbit/evidence/2026-09-13/qualification/evidence-index.json",
+    "--bindings",
+    "docs/urbit/evidence/2026-09-13/qualification/bindings.json",
+    "--output",
+    "docs/urbit/evidence/2026-09-13/qualification/current-gate.json"
+  ],
+  "exit_code": 1,
+  "expected_exit_code": 1,
+  "stdout": "FAILED current gate: 0/66 native requirements supported\n",
+  "stderr": "",
+  "elapsed_seconds": 0.036004,
+  "classification": "local-host-evidence-verification-not-native",
+  "gate_sha256": "60b7d62a842cbcfaab46ac3d0365f277bcac4a56ea4a41c486ce8d76071630d6"
+}

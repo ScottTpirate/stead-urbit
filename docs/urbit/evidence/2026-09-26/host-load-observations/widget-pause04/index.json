@@ -1,0 +1,29 @@
+{
+  "scope": "Authorized temporary widget pause04 and verified restoration after completed core07; no browser or fan change",
+  "artifacts": [
+    {
+      "source": ".runtime/phase01-20260926/widget-pause04/applied.json",
+      "path": "docs/urbit/evidence/2026-09-26/host-load-observations/widget-pause04/applied.json",
+      "bytes": 569,
+      "sha256": "ca70778353605c60138589c05dab3b959e551d03c38030823be5750419610b36"
+    },
+    {
+      "source": ".runtime/phase01-20260926/widget-pause04/verified.json",
+      "path": "docs/urbit/evidence/2026-09-26/host-load-observations/widget-pause04/verified.json",
+      "bytes": 433,
+      "sha256": "3977bc85a6947075f8c5335745cd62b637365b90bd6030bab7402fbfef05d5fa"
+    },
+    {
+      "source": ".runtime/phase01-20260926/widget-pause04/restored.json",
+      "path": "docs/urbit/evidence/2026-09-26/host-load-observations/widget-pause04/restored.json",
+      "bytes": 382,
+      "sha256": "735055bb721720c8d67d85303210e477b4305322efb47ef431790e68b34916df"
+    },
+    {
+      "source": ".runtime/phase01-20260926/widget-pause04/restoration-verification.json",
+      "path": "docs/urbit/evidence/2026-09-26/host-load-observations/widget-pause04/restoration-verification.json",
+      "bytes": 486,
+      "sha256": "12f34832f0e5c236431f5ba5e4501a85943ae231e4701156799c854300f61965"
+    }
+  ]
+}

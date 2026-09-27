@@ -1,0 +1,677 @@
+{
+  "audit_resources": {
+    "affinity": [
+      19
+    ],
+    "control_group": "/user.slice/user-1000.slice/user@1000.service/app.slice/stead-gall-audit-5208f32.scope",
+    "cpu_max": "2000 10000"
+  },
+  "business_history_unchanged": true,
+  "captured_leave_bytes": 149,
+  "captured_leave_sha256": "c70e73d17e3d3592546e5e6f7f923f1ba1f02d73c65066852ce2a83eb5c7e891",
+  "checks": [
+    "frozen-current-HEAD",
+    "derivative-origin",
+    "derivative-origin",
+    "original-upstream-read-only",
+    "audit-CPU20-percent-10ms-affinity19",
+    "unused-import-cache",
+    "exact-22-retained-artifact-index",
+    "retained-path-inside-Gall-bundle",
+    "retained-digest:docs/urbit/evidence/2026-09-26/phase1-final-5208f32/gall/native.json",
+    "expanded-exact-digest:docs/urbit/evidence/2026-09-26/phase1-final-5208f32/gall/native.json",
+    "immutable-original-equal:docs/urbit/evidence/2026-09-26/phase1-final-5208f32/gall/native.json",
+    "retained-path-inside-Gall-bundle",
+    "retained-digest:docs/urbit/evidence/2026-09-26/phase1-final-5208f32/gall/guard.json",
+    "expanded-exact-digest:docs/urbit/evidence/2026-09-26/phase1-final-5208f32/gall/guard.json",
+    "immutable-original-equal:docs/urbit/evidence/2026-09-26/phase1-final-5208f32/gall/guard.json",
+    "retained-path-inside-Gall-bundle",
+    "retained-digest:docs/urbit/evidence/2026-09-26/phase1-final-5208f32/gall/guard/.stead-disposable.json.gz",
+    "zero-gzip-mtime:docs/urbit/evidence/2026-09-26/phase1-final-5208f32/gall/guard/.stead-disposable.json.gz",
+    "expanded-exact-digest:docs/urbit/evidence/2026-09-26/phase1-final-5208f32/gall/guard/.stead-disposable.json.gz",
+    "immutable-original-equal:docs/urbit/evidence/2026-09-26/phase1-final-5208f32/gall/guard/.stead-disposable.json.gz",
+    "retained-path-inside-Gall-bundle",
+    "retained-digest:docs/urbit/evidence/2026-09-26/phase1-final-5208f32/gall/guard/control/STOP.gz",
+    "zero-gzip-mtime:docs/urbit/evidence/2026-09-26/phase1-final-5208f32/gall/guard/control/STOP.gz",
+    "expanded-exact-digest:docs/urbit/evidence/2026-09-26/phase1-final-5208f32/gall/guard/control/STOP.gz",
+    "immutable-original-equal:docs/urbit/evidence/2026-09-26/phase1-final-5208f32/gall/guard/control/STOP.gz",
+    "retained-path-inside-Gall-bundle",
+    "retained-digest:docs/urbit/evidence/2026-09-26/phase1-final-5208f32/gall/guard/control/lease.json.gz",
+    "zero-gzip-mtime:docs/urbit/evidence/2026-09-26/phase1-final-5208f32/gall/guard/control/lease.json.gz",
+    "expanded-exact-digest:docs/urbit/evidence/2026-09-26/phase1-final-5208f32/gall/guard/control/lease.json.gz",
+    "immutable-original-equal:docs/urbit/evidence/2026-09-26/phase1-final-5208f32/gall/guard/control/lease.json.gz",
+    "retained-path-inside-Gall-bundle",
+    "retained-digest:docs/urbit/evidence/2026-09-26/phase1-final-5208f32/gall/guard/control/scope.json.gz",
+    "zero-gzip-mtime:docs/urbit/evidence/2026-09-26/phase1-final-5208f32/gall/guard/control/scope.json.gz",
+    "expanded-exact-digest:docs/urbit/evidence/2026-09-26/phase1-final-5208f32/gall/guard/control/scope.json.gz",
+    "immutable-original-equal:docs/urbit/evidence/2026-09-26/phase1-final-5208f32/gall/guard/control/scope.json.gz",
+    "retained-path-inside-Gall-bundle",
+    "retained-digest:docs/urbit/evidence/2026-09-26/phase1-final-5208f32/gall/guard/control/source-context.json.gz",
+    "zero-gzip-mtime:docs/urbit/evidence/2026-09-26/phase1-final-5208f32/gall/guard/control/source-context.json.gz",
+    "expanded-exact-digest:docs/urbit/evidence/2026-09-26/phase1-final-5208f32/gall/guard/control/source-context.json.gz",
+    "immutable-original-equal:docs/urbit/evidence/2026-09-26/phase1-final-5208f32/gall/guard/control/source-context.json.gz",
+    "retained-path-inside-Gall-bundle",
+    "retained-digest:docs/urbit/evidence/2026-09-26/phase1-final-5208f32/gall/guard/events.jsonl.gz",
+    "zero-gzip-mtime:docs/urbit/evidence/2026-09-26/phase1-final-5208f32/gall/guard/events.jsonl.gz",
+    "expanded-exact-digest:docs/urbit/evidence/2026-09-26/phase1-final-5208f32/gall/guard/events.jsonl.gz",
+    "immutable-original-equal:docs/urbit/evidence/2026-09-26/phase1-final-5208f32/gall/guard/events.jsonl.gz",
+    "retained-path-inside-Gall-bundle",
+    "retained-digest:docs/urbit/evidence/2026-09-26/phase1-final-5208f32/gall/steps/gall-schedule.json.gz",
+    "zero-gzip-mtime:docs/urbit/evidence/2026-09-26/phase1-final-5208f32/gall/steps/gall-schedule.json.gz",
+    "expanded-exact-digest:docs/urbit/evidence/2026-09-26/phase1-final-5208f32/gall/steps/gall-schedule.json.gz",
+    "immutable-original-equal:docs/urbit/evidence/2026-09-26/phase1-final-5208f32/gall/steps/gall-schedule.json.gz",
+    "retained-path-inside-Gall-bundle",
+    "retained-digest:docs/urbit/evidence/2026-09-26/phase1-final-5208f32/gall/steps/gall-schedule.log.gz",
+    "zero-gzip-mtime:docs/urbit/evidence/2026-09-26/phase1-final-5208f32/gall/steps/gall-schedule.log.gz",
+    "expanded-exact-digest:docs/urbit/evidence/2026-09-26/phase1-final-5208f32/gall/steps/gall-schedule.log.gz",
+    "immutable-original-equal:docs/urbit/evidence/2026-09-26/phase1-final-5208f32/gall/steps/gall-schedule.log.gz",
+    "retained-path-inside-Gall-bundle",
+    "retained-digest:docs/urbit/evidence/2026-09-26/phase1-final-5208f32/gall/steps/lifecycle.json.gz",
+    "zero-gzip-mtime:docs/urbit/evidence/2026-09-26/phase1-final-5208f32/gall/steps/lifecycle.json.gz",
+    "expanded-exact-digest:docs/urbit/evidence/2026-09-26/phase1-final-5208f32/gall/steps/lifecycle.json.gz",
+    "immutable-original-equal:docs/urbit/evidence/2026-09-26/phase1-final-5208f32/gall/steps/lifecycle.json.gz",
+    "retained-path-inside-Gall-bundle",
+    "retained-digest:docs/urbit/evidence/2026-09-26/phase1-final-5208f32/gall/steps/start.json.gz",
+    "zero-gzip-mtime:docs/urbit/evidence/2026-09-26/phase1-final-5208f32/gall/steps/start.json.gz",
+    "expanded-exact-digest:docs/urbit/evidence/2026-09-26/phase1-final-5208f32/gall/steps/start.json.gz",
+    "immutable-original-equal:docs/urbit/evidence/2026-09-26/phase1-final-5208f32/gall/steps/start.json.gz",
+    "retained-path-inside-Gall-bundle",
+    "retained-digest:docs/urbit/evidence/2026-09-26/phase1-final-5208f32/gall/steps/start.log.gz",
+    "zero-gzip-mtime:docs/urbit/evidence/2026-09-26/phase1-final-5208f32/gall/steps/start.log.gz",
+    "expanded-exact-digest:docs/urbit/evidence/2026-09-26/phase1-final-5208f32/gall/steps/start.log.gz",
+    "immutable-original-equal:docs/urbit/evidence/2026-09-26/phase1-final-5208f32/gall/steps/start.log.gz",
+    "retained-path-inside-Gall-bundle",
+    "retained-digest:docs/urbit/evidence/2026-09-26/phase1-final-5208f32/gall/steps/stop.json.gz",
+    "zero-gzip-mtime:docs/urbit/evidence/2026-09-26/phase1-final-5208f32/gall/steps/stop.json.gz",
+    "expanded-exact-digest:docs/urbit/evidence/2026-09-26/phase1-final-5208f32/gall/steps/stop.json.gz",
+    "immutable-original-equal:docs/urbit/evidence/2026-09-26/phase1-final-5208f32/gall/steps/stop.json.gz",
+    "retained-path-inside-Gall-bundle",
+    "retained-digest:docs/urbit/evidence/2026-09-26/phase1-final-5208f32/gall/steps/stop.log.gz",
+    "zero-gzip-mtime:docs/urbit/evidence/2026-09-26/phase1-final-5208f32/gall/steps/stop.log.gz",
+    "expanded-exact-digest:docs/urbit/evidence/2026-09-26/phase1-final-5208f32/gall/steps/stop.log.gz",
+    "immutable-original-equal:docs/urbit/evidence/2026-09-26/phase1-final-5208f32/gall/steps/stop.log.gz",
+    "retained-path-inside-Gall-bundle",
+    "retained-digest:docs/urbit/evidence/2026-09-26/phase1-final-5208f32/gall/steps/wait-ready.json.gz",
+    "zero-gzip-mtime:docs/urbit/evidence/2026-09-26/phase1-final-5208f32/gall/steps/wait-ready.json.gz",
+    "expanded-exact-digest:docs/urbit/evidence/2026-09-26/phase1-final-5208f32/gall/steps/wait-ready.json.gz",
+    "immutable-original-equal:docs/urbit/evidence/2026-09-26/phase1-final-5208f32/gall/steps/wait-ready.json.gz",
+    "retained-path-inside-Gall-bundle",
+    "retained-digest:docs/urbit/evidence/2026-09-26/phase1-final-5208f32/gall/steps/wait-ready.log.gz",
+    "zero-gzip-mtime:docs/urbit/evidence/2026-09-26/phase1-final-5208f32/gall/steps/wait-ready.log.gz",
+    "expanded-exact-digest:docs/urbit/evidence/2026-09-26/phase1-final-5208f32/gall/steps/wait-ready.log.gz",
+    "immutable-original-equal:docs/urbit/evidence/2026-09-26/phase1-final-5208f32/gall/steps/wait-ready.log.gz",
+    "retained-path-inside-Gall-bundle",
+    "retained-digest:docs/urbit/evidence/2026-09-26/phase1-final-5208f32/gall/logs/zod.log.gz",
+    "zero-gzip-mtime:docs/urbit/evidence/2026-09-26/phase1-final-5208f32/gall/logs/zod.log.gz",
+    "expanded-exact-digest:docs/urbit/evidence/2026-09-26/phase1-final-5208f32/gall/logs/zod.log.gz",
+    "retained-path-inside-Gall-bundle",
+    "retained-digest:docs/urbit/evidence/2026-09-26/phase1-final-5208f32/gall/logs/bus.log.gz",
+    "zero-gzip-mtime:docs/urbit/evidence/2026-09-26/phase1-final-5208f32/gall/logs/bus.log.gz",
+    "expanded-exact-digest:docs/urbit/evidence/2026-09-26/phase1-final-5208f32/gall/logs/bus.log.gz",
+    "retained-path-inside-Gall-bundle",
+    "retained-digest:docs/urbit/evidence/2026-09-26/phase1-final-5208f32/gall/logs/nec.log.gz",
+    "zero-gzip-mtime:docs/urbit/evidence/2026-09-26/phase1-final-5208f32/gall/logs/nec.log.gz",
+    "expanded-exact-digest:docs/urbit/evidence/2026-09-26/phase1-final-5208f32/gall/logs/nec.log.gz",
+    "retained-path-inside-Gall-bundle",
+    "retained-digest:docs/urbit/evidence/2026-09-26/phase1-final-5208f32/gall/logs/bud.log.gz",
+    "zero-gzip-mtime:docs/urbit/evidence/2026-09-26/phase1-final-5208f32/gall/logs/bud.log.gz",
+    "expanded-exact-digest:docs/urbit/evidence/2026-09-26/phase1-final-5208f32/gall/logs/bud.log.gz",
+    "retained-path-inside-Gall-bundle",
+    "retained-digest:docs/urbit/evidence/2026-09-26/phase1-final-5208f32/gall/logs/supervisor.log.gz",
+    "zero-gzip-mtime:docs/urbit/evidence/2026-09-26/phase1-final-5208f32/gall/logs/supervisor.log.gz",
+    "expanded-exact-digest:docs/urbit/evidence/2026-09-26/phase1-final-5208f32/gall/logs/supervisor.log.gz",
+    "exact-retained-bundle-inventory",
+    "17-immutable-originals-five-mutable-logs-not-read",
+    "independently-observed-current-source-and-pinned-toolchain",
+    "actual-guard-current-source-hash",
+    "exact-current-lane-inputs-installed-Clay-and-completed-guard",
+    "actual-native-positive-and-specific-runtime-negative",
+    "fourteen-host-reconstructed-semantic-assertions",
+    "58-checks-29-commands-26-installed-sources",
+    "ordered-native-commands-and-Clay-comparisons",
+    "exact-retained-zod-command-slice:0",
+    "exact-retained-zod-command-slice:1",
+    "exact-retained-zod-command-slice:2",
+    "exact-retained-zod-command-slice:3",
+    "exact-retained-zod-command-slice:4",
+    "exact-retained-zod-command-slice:5",
+    "exact-retained-zod-command-slice:6",
+    "exact-retained-zod-command-slice:7",
+    "exact-retained-zod-command-slice:8",
+    "exact-retained-zod-command-slice:9",
+    "exact-retained-zod-command-slice:10",
+    "exact-retained-zod-command-slice:11",
+    "exact-retained-zod-command-slice:12",
+    "exact-retained-zod-command-slice:13",
+    "exact-retained-zod-command-slice:14",
+    "exact-retained-zod-command-slice:15",
+    "exact-retained-zod-command-slice:16",
+    "exact-retained-zod-command-slice:17",
+    "exact-retained-zod-command-slice:18",
+    "exact-retained-zod-command-slice:19",
+    "exact-retained-zod-command-slice:20",
+    "exact-retained-zod-command-slice:21",
+    "exact-retained-zod-command-slice:22",
+    "exact-retained-zod-command-slice:23",
+    "exact-retained-zod-command-slice:24",
+    "exact-retained-zod-command-slice:25",
+    "exact-retained-zod-command-slice:26",
+    "exact-retained-zod-command-slice:27",
+    "exact-retained-zod-command-slice:28",
+    "exact-149-byte-old-leave-distinct-nonces-and-ducts",
+    "actual-equality:pending_before:pending_after",
+    "actual-equality:incoming_before:incoming_after",
+    "actual-equality:observer_before:observer_after",
+    "actual-equality:old_observer_retired:old_observer_after",
+    "actual-equality:old_observer_retired:old_observer_completed",
+    "actual-equality:business_committed:business_after_leave",
+    "actual-equality:business_committed:business_completed",
+    "actual-equality:business_committed:business_final",
+    "fresh-fact-kick-old-no-fact-and-positive-live-leave",
+    "specific-wrong-pending-count-tang",
+    "startup-context-complete-current-committed-inputs",
+    "exact-final-completed-guard-event-stream",
+    "final-stopped-lease-and-stop-marker",
+    "actual-native-resource-readback",
+    "unchanged-native-thermal-thresholds",
+    "closed-owned-Gall-scope-now",
+    "four-actual-ordered-lifecycle-steps-exit-zero",
+    "lifecycle-timestamps-and-duration-consistent",
+    "recorded-Gall-lifetime-lock-release",
+    "retention-labels-match-actual-reports",
+    "reviewed-exact-nine-file-source-delta",
+    "Gall-app-fixture-runner-proof-guard-unchanged",
+    "frozen-current-HEAD",
+    "derivative-origin",
+    "derivative-origin",
+    "original-upstream-read-only",
+    "audit-CPU20-percent-10ms-affinity19",
+    "unchanged-audit-resource-bounds",
+    "unredirected-output-parent"
+  ],
+  "current_execution_inputs": {
+    "corpus": "95c915e2d0c93f358225274b34216fff0fe2efc09791905855b1e3f36aec368a",
+    "fixtures": "063bc48eff37d8ed71dc30a7c89b177564925bea96d1569c6e40d0f77b8762fc",
+    "freeze": "a2336e5060c71c7c16849b3151cc024a598d6cdf867561452eff1338e3232670",
+    "gall": "31c4d615cbc32544a2b954de83e6c381346ec45f48b210fce7a1fab7a939ec4c",
+    "harness": "0fff67efcc792fd433dc065bbb5ebf877458cda015d424e86934b126c66d0c53",
+    "native": "7b0257ba03b0de93de319d55c5523fa481c302772471645987818da543ac4621",
+    "overlay": "c2a99aa5e544f2e96d2b807665c8997c42d8751d290f14e4db5ae88c2cdb9759",
+    "runner": {
+      "core_conn.py": "e178a5c0ce619031b8da64376b99b429ac0f90dded293ac60fa1137447d53614",
+      "delivery_cases.py": "171edf429fc1677e3250bcebff4cd2fb55e762d767204afdae846f86deccc131",
+      "digests.py": "88e6333bd6c764f48fb8939bafa77c9eb236c5b3586a19fe1a1f6e48e27dc08c",
+      "gall_schedule.py": "e839771e23a44b1ac403df213fae2c83103a7750c36330de16322b3c0e913af2",
+      "gall_schedule_proof.py": "fe6564900c0b3b6ae5c0a75ea18788807024053f433d0f5fcb0b17f04566904b"
+    },
+    "toolchain": "4a209c10cf1756eb0f7357cc3eca8250bf66c239b4cd0ca31a8c0886d4d304ee"
+  },
+  "current_live_leave_counts": [
+    "1",
+    "0"
+  ],
+  "current_source_file_count": 127,
+  "elapsed_seconds": 2.499728,
+  "exact_retained_zod_log_slices": 29,
+  "fresh_fact_kick_counts": [
+    "1",
+    "1"
+  ],
+  "fresh_pending_after_old_leave": "1",
+  "guard": {
+    "bytes": 31181,
+    "path": "docs/urbit/evidence/2026-09-26/phase1-final-5208f32/gall/guard.json",
+    "sha256": "fd820a0f8e099b1597a5788045ad68c8f491b4beef34d3714f0194391520ae61"
+  },
+  "guard_run_id": "583fc3bf3f4d27614ade4979b9d57304",
+  "immutable_originals_compared": [
+    ".piers/fakes/logs/gall-schedule-20260926T205039Z-ff6184bba70e.json",
+    ".runtime/execution-runs/four-fakes-wak46j1y/report.json",
+    ".runtime/execution-runs/four-fakes-wak46j1y/.stead-disposable.json",
+    ".runtime/execution-runs/four-fakes-wak46j1y/control/STOP",
+    ".runtime/execution-runs/four-fakes-wak46j1y/control/lease.json",
+    ".runtime/execution-runs/four-fakes-wak46j1y/control/scope.json",
+    ".runtime/execution-runs/four-fakes-wak46j1y/control/source-context.json",
+    ".runtime/execution-runs/four-fakes-wak46j1y/events.jsonl",
+    ".runtime/phase01-20260926/gall-final03/gall-schedule.json",
+    ".runtime/phase01-20260926/gall-final03/gall-schedule.log",
+    ".runtime/phase01-20260926/gall-final03/lifecycle.json",
+    ".runtime/phase01-20260926/gall-final03/start.json",
+    ".runtime/phase01-20260926/gall-final03/start.log",
+    ".runtime/phase01-20260926/gall-final03/stop.json",
+    ".runtime/phase01-20260926/gall-final03/stop.log",
+    ".runtime/phase01-20260926/gall-final03/wait-ready.json",
+    ".runtime/phase01-20260926/gall-final03/wait-ready.log"
+  ],
+  "lifecycle": {
+    "all_steps_exit_zero": true,
+    "elapsed_seconds": 62.69122371007688,
+    "finished_at": "2026-09-26T20:51:25.939802+00:00",
+    "source_commit": "5208f3273426e8fe76dc8622ffe93ace93982e17",
+    "started_at": "2026-09-26T20:50:23.248595+00:00",
+    "steps": [
+      {
+        "command": [
+          "make",
+          "start"
+        ],
+        "elapsed_seconds": 2.0343353200005367,
+        "exit": 0
+      },
+      {
+        "command": [
+          "make",
+          "wait-ready"
+        ],
+        "elapsed_seconds": 14.088254528003745,
+        "exit": 0
+      },
+      {
+        "command": [
+          "make",
+          "gall-schedule"
+        ],
+        "elapsed_seconds": 42.46199748001527,
+        "exit": 0
+      },
+      {
+        "command": [
+          "make",
+          "stop"
+        ],
+        "elapsed_seconds": 4.1057231719605625,
+        "exit": 0
+      }
+    ],
+    "target": "gall-schedule"
+  },
+  "logs_scope": "Retained logs were decoded and hashed as opaque complete artifacts. Only the actual report-indexed zod slices and current named lifecycle/control records support this lane. Current mutable logs and participant workspaces/answers were not read.",
+  "mutable_originals_not_reread": [
+    ".piers/fakes/logs/zod.log",
+    ".piers/fakes/logs/bus.log",
+    ".piers/fakes/logs/nec.log",
+    ".piers/fakes/logs/bud.log",
+    ".piers/fakes/logs/supervisor.log"
+  ],
+  "native_checks": 58,
+  "native_elapsed_seconds": 42.38,
+  "native_execution_performed": false,
+  "native_scope_final_observation": {
+    "ActiveState": "inactive",
+    "ControlGroup": "",
+    "LoadState": "not-found",
+    "Result": "success"
+  },
+  "native_semantic_assertions": [
+    {
+      "name": "bounded-native-schedule-scope",
+      "status": "passed"
+    },
+    {
+      "name": "canonical-jam-record-integrity",
+      "status": "passed"
+    },
+    {
+      "name": "bounded-tagged-poke-projections-with-explicit-opaque-measurements",
+      "status": "passed"
+    },
+    {
+      "name": "captured-emitted-old-leave-delivered-unchanged",
+      "status": "passed"
+    },
+    {
+      "name": "distinct-old-and-fresh-nonce-ducts",
+      "status": "passed"
+    },
+    {
+      "name": "old-home-duct-retired-before-fresh-watch",
+      "status": "passed"
+    },
+    {
+      "name": "fresh-pending-and-incoming-duct-unchanged",
+      "status": "passed"
+    },
+    {
+      "name": "fresh-and-retired-observers-unchanged",
+      "status": "passed"
+    },
+    {
+      "name": "business-history-unchanged-after-old-leave",
+      "status": "passed"
+    },
+    {
+      "name": "fresh-exact-correlated-fact-and-kick",
+      "status": "passed"
+    },
+    {
+      "name": "retired-old-observer-no-private-fact",
+      "status": "passed"
+    },
+    {
+      "name": "exact-retry-preserves-business-history",
+      "status": "passed"
+    },
+    {
+      "name": "current-live-leave-removes-reservation",
+      "status": "passed"
+    },
+    {
+      "name": "delivery-late-old-leave",
+      "status": "passed"
+    }
+  ],
+  "negative_command_pointer": "/commands/28",
+  "new_duct_sha256": "72ac2b5855a2b271a5d423458141446f71cde9e53fdea0d0ddf01bfa4251d9db",
+  "new_nonce": "2",
+  "observed_artifacts": [
+    {
+      "bytes": 9994,
+      "path": "docs/urbit/evidence/2026-09-26/phase1-final-5208f32/gall/index.json",
+      "sha256": "3da85136f44c5f0d143271fa4940e13b86132d65118cf2feaf19c5f11c2e8936"
+    },
+    {
+      "bytes": 223618,
+      "path": "docs/urbit/evidence/2026-09-26/phase1-final-5208f32/gall/native.json",
+      "sha256": "6f0a616c5bebad1ed02d193caa47c8c7babb29813bc9cdc2084314c0d13b6edf"
+    },
+    {
+      "bytes": 223618,
+      "path": ".piers/fakes/logs/gall-schedule-20260926T205039Z-ff6184bba70e.json",
+      "sha256": "6f0a616c5bebad1ed02d193caa47c8c7babb29813bc9cdc2084314c0d13b6edf"
+    },
+    {
+      "bytes": 31181,
+      "path": "docs/urbit/evidence/2026-09-26/phase1-final-5208f32/gall/guard.json",
+      "sha256": "fd820a0f8e099b1597a5788045ad68c8f491b4beef34d3714f0194391520ae61"
+    },
+    {
+      "bytes": 31181,
+      "path": ".runtime/execution-runs/four-fakes-wak46j1y/report.json",
+      "sha256": "fd820a0f8e099b1597a5788045ad68c8f491b4beef34d3714f0194391520ae61"
+    },
+    {
+      "bytes": 113,
+      "path": "docs/urbit/evidence/2026-09-26/phase1-final-5208f32/gall/guard/.stead-disposable.json.gz",
+      "sha256": "eca35f13addd6fe9eb1d0d7f00333bb705fd6e46960965cfb2bf7434802e1d17"
+    },
+    {
+      "bytes": 102,
+      "path": ".runtime/execution-runs/four-fakes-wak46j1y/.stead-disposable.json",
+      "sha256": "6cde9a4dcc637fb92bf07f7060cfdbf9d678658182d51464326388c15ec242a8"
+    },
+    {
+      "bytes": 37,
+      "path": "docs/urbit/evidence/2026-09-26/phase1-final-5208f32/gall/guard/control/STOP.gz",
+      "sha256": "16be664e0d262b4d3392a7c4cb73f66a2dcae4fc06acd75f4b7cebde6a5da18d"
+    },
+    {
+      "bytes": 17,
+      "path": ".runtime/execution-runs/four-fakes-wak46j1y/control/STOP",
+      "sha256": "7d3b42bbed97fbe07fdd87226f47c82456368c7336a1de0dd0629653265c5b26"
+    },
+    {
+      "bytes": 503,
+      "path": "docs/urbit/evidence/2026-09-26/phase1-final-5208f32/gall/guard/control/lease.json.gz",
+      "sha256": "15cddfec8cb90015f9a0568f74428e3a9ba5ae25ca8c9a1628544f14ea34fc53"
+    },
+    {
+      "bytes": 1063,
+      "path": ".runtime/execution-runs/four-fakes-wak46j1y/control/lease.json",
+      "sha256": "1d294a2a93f06c81fabe6b41c7405d84e76bf3dd38f409121e153146b47e5d4a"
+    },
+    {
+      "bytes": 160,
+      "path": "docs/urbit/evidence/2026-09-26/phase1-final-5208f32/gall/guard/control/scope.json.gz",
+      "sha256": "02992e9a48ee9416182e0652e44837444afc3229387258f3f6f2ecc0cfc60e1d"
+    },
+    {
+      "bytes": 232,
+      "path": ".runtime/execution-runs/four-fakes-wak46j1y/control/scope.json",
+      "sha256": "91725f988f26bf6d8814746aaef7e2a1c5776788b3ef2cd24c28dd19bfedf337"
+    },
+    {
+      "bytes": 6598,
+      "path": "docs/urbit/evidence/2026-09-26/phase1-final-5208f32/gall/guard/control/source-context.json.gz",
+      "sha256": "abf2ba801fdd7235716ba85a8d82d6097833db9c68bc1bdb63ed9a8d83eaf7e4"
+    },
+    {
+      "bytes": 18248,
+      "path": ".runtime/execution-runs/four-fakes-wak46j1y/control/source-context.json",
+      "sha256": "dd3397cb193e307cab8856a831755fd96a3cec3182145694bdb63217a87c091f"
+    },
+    {
+      "bytes": 2093,
+      "path": "docs/urbit/evidence/2026-09-26/phase1-final-5208f32/gall/guard/events.jsonl.gz",
+      "sha256": "71ad4fa132d9a2a36c52a6c7d87ae3fb6067919869663cf65153244a67128a74"
+    },
+    {
+      "bytes": 28098,
+      "path": ".runtime/execution-runs/four-fakes-wak46j1y/events.jsonl",
+      "sha256": "55b314e939399744f8921d9225abe348ac822d357a04454bdffb1ad4eee857c4"
+    },
+    {
+      "bytes": 111,
+      "path": "docs/urbit/evidence/2026-09-26/phase1-final-5208f32/gall/steps/gall-schedule.json.gz",
+      "sha256": "3cad4f371b708db5c688dc244a4f988193d1d3521a2785aa8178a0f22a7f6a9b"
+    },
+    {
+      "bytes": 108,
+      "path": ".runtime/phase01-20260926/gall-final03/gall-schedule.json",
+      "sha256": "31efeec83bd54265cc4945a20a2bb5faf1f44cccb4b836f81419fa3b0842702f"
+    },
+    {
+      "bytes": 556,
+      "path": "docs/urbit/evidence/2026-09-26/phase1-final-5208f32/gall/steps/gall-schedule.log.gz",
+      "sha256": "20b8ae4625805eac5e82420e66a9b7a142a3f59ee3dcee16ef01da2b5db42f5e"
+    },
+    {
+      "bytes": 961,
+      "path": ".runtime/phase01-20260926/gall-final03/gall-schedule.log",
+      "sha256": "627c11359b92627f2e872b43881b38f528ef60b62ef6a2a3696052fd83871bb8"
+    },
+    {
+      "bytes": 327,
+      "path": "docs/urbit/evidence/2026-09-26/phase1-final-5208f32/gall/steps/lifecycle.json.gz",
+      "sha256": "99b2951c1df69c7bd69496d7e3a1c2c7e52547ffde286fef8cf3b1457bf5271a"
+    },
+    {
+      "bytes": 835,
+      "path": ".runtime/phase01-20260926/gall-final03/lifecycle.json",
+      "sha256": "dd7bdc9313c4277d0517bb2a89b3df3d06c8920d9a25dcbad3e4a3dfae0e4464"
+    },
+    {
+      "bytes": 103,
+      "path": "docs/urbit/evidence/2026-09-26/phase1-final-5208f32/gall/steps/start.json.gz",
+      "sha256": "fc5b1367b429efc368fbfc9b3da9a9e9f4ecf4d9e69f7185912ca17214f0e550"
+    },
+    {
+      "bytes": 101,
+      "path": ".runtime/phase01-20260926/gall-final03/start.json",
+      "sha256": "0d78b7a45c901cddc774b59cf0cd3469e7dee9d41aa58e89bb7b8e54a333f82e"
+    },
+    {
+      "bytes": 315,
+      "path": "docs/urbit/evidence/2026-09-26/phase1-final-5208f32/gall/steps/start.log.gz",
+      "sha256": "38ec1ce7d81b0693840471431491f7bdeb1c5d808a22bbfe0f9ab6b3c4971943"
+    },
+    {
+      "bytes": 453,
+      "path": ".runtime/phase01-20260926/gall-final03/start.log",
+      "sha256": "86de356a0f94660358f1b1e3faf6d99a9ff425e897de2ca048c8730d1947e4d4"
+    },
+    {
+      "bytes": 103,
+      "path": "docs/urbit/evidence/2026-09-26/phase1-final-5208f32/gall/steps/stop.json.gz",
+      "sha256": "089de81418262f1e3932bf1571bb888b56d205b2067ad3fed6edd636fa3f85eb"
+    },
+    {
+      "bytes": 100,
+      "path": ".runtime/phase01-20260926/gall-final03/stop.json",
+      "sha256": "bef75c96925fb97b39603de9b6c92180b4ad24087864e42a6cd2e4b051f071bc"
+    },
+    {
+      "bytes": 132,
+      "path": "docs/urbit/evidence/2026-09-26/phase1-final-5208f32/gall/steps/stop.log.gz",
+      "sha256": "3515bb00ab4541684f1f9147aacb7e7157ed671b8d21b6ef4cf9f013b859c7f8"
+    },
+    {
+      "bytes": 141,
+      "path": ".runtime/phase01-20260926/gall-final03/stop.log",
+      "sha256": "fe8b2280abb0c0a09259c5211aa3dc729b9b42caa2afdaa7431a4d4936ba213c"
+    },
+    {
+      "bytes": 109,
+      "path": "docs/urbit/evidence/2026-09-26/phase1-final-5208f32/gall/steps/wait-ready.json.gz",
+      "sha256": "c9f2c8dc2f1e00c938242950eb3fa298e679bc7d46c094f46b6984246f636e46"
+    },
+    {
+      "bytes": 106,
+      "path": ".runtime/phase01-20260926/gall-final03/wait-ready.json",
+      "sha256": "b2db865c8932b5e4b312d89acb874164299809cc139e127d422dc299ab9e8a23"
+    },
+    {
+      "bytes": 124,
+      "path": "docs/urbit/evidence/2026-09-26/phase1-final-5208f32/gall/steps/wait-ready.log.gz",
+      "sha256": "01cedc45b27b73b7c8d5c8d2e0aa7bae317933250f77076dc26ab76b2428f17e"
+    },
+    {
+      "bytes": 242,
+      "path": ".runtime/phase01-20260926/gall-final03/wait-ready.log",
+      "sha256": "6ade3d62b67dd2066207260ae96b6ef88847dbb824720cc7be7b132fee5510e9"
+    },
+    {
+      "bytes": 12783,
+      "path": "docs/urbit/evidence/2026-09-26/phase1-final-5208f32/gall/logs/zod.log.gz",
+      "sha256": "f07c0d2da66b53bc5373bffdcb8feeecf01af08821d4a91de419ae89dc896cb8"
+    },
+    {
+      "bytes": 35447,
+      "path": "docs/urbit/evidence/2026-09-26/phase1-final-5208f32/gall/logs/bus.log.gz",
+      "sha256": "d7f2cdbe76a5ee589ad9e3777558977ad3388b6bcb9369e4db8af17d014a4edd"
+    },
+    {
+      "bytes": 4552,
+      "path": "docs/urbit/evidence/2026-09-26/phase1-final-5208f32/gall/logs/nec.log.gz",
+      "sha256": "5d8ec5bdf22f36d681f13ef7ca823d6d9c8462f248f8b4b297454f2a4fdd1db2"
+    },
+    {
+      "bytes": 7040,
+      "path": "docs/urbit/evidence/2026-09-26/phase1-final-5208f32/gall/logs/bud.log.gz",
+      "sha256": "54e67488b76269c689a0f5aed873877a3662601c741ab50788fe5e7b850f7e39"
+    },
+    {
+      "bytes": 23175,
+      "path": "docs/urbit/evidence/2026-09-26/phase1-final-5208f32/gall/logs/supervisor.log.gz",
+      "sha256": "23e785d70ed9c716f9a18fd736a3aedd0125e754b8d7ab7577ff310881113194"
+    },
+    {
+      "bytes": 15070,
+      "path": "native/core/desk/app/stead-home.hoon",
+      "sha256": "3bfc0e45062ef0bc8572d5034a60b5b35f6502350f821129b5ba7a7cca0b2b9c"
+    },
+    {
+      "bytes": 9909,
+      "path": "native/core/desk/app/stead-observer.hoon",
+      "sha256": "16589b4f9f51782d0907a7c186e3fcff6625c713bb64006f37330d6056645e45"
+    },
+    {
+      "bytes": 17712,
+      "path": "tests/urbit/native_gall_schedule/desk/lib/stead-gall-schedule.hoon",
+      "sha256": "45df519bfaa206142a0954b7f3f234359ed5a9c6bbe2295e273fbe4aeab1e1ff"
+    },
+    {
+      "bytes": 8417,
+      "path": "scripts/urbit/gall_schedule.py",
+      "sha256": "e839771e23a44b1ac403df213fae2c83103a7750c36330de16322b3c0e913af2"
+    },
+    {
+      "bytes": 31672,
+      "path": "scripts/urbit/gall_schedule_proof.py",
+      "sha256": "fe6564900c0b3b6ae5c0a75ea18788807024053f433d0f5fcb0b17f04566904b"
+    },
+    {
+      "bytes": 23093,
+      "path": "scripts/urbit/execution_policy.py",
+      "sha256": "da16e2e0fd32eb5b90706b546a7ea8332a65807fc8279f3bd765dcc18aaad9b5"
+    }
+  ],
+  "old_duct_sha256": "4bd60eb2869d8f14125e3d0cfba584fb9ff5461b8ddba7dd2e87697cefe4a085",
+  "old_nonce": "1",
+  "opaque_native_poke_measurements": {
+    "independently_reconstructed": false,
+    "records": {
+      "fresh_poke_moves": {
+        "omitted_type_jam_bytes": "1367496",
+        "omitted_type_jam_sha256": "b77719c4fdc16c0e0a7709ccae628abba543cbc2d77c41f4ec8350c2777b9f4a",
+        "original_moves_jam_bytes": "1376721",
+        "original_moves_jam_sha256": "83818960f1fb9f1a9fc57c44dedd91f038d231af2e67d2e4749faedeabcb040c",
+        "original_poke_jam_bytes": "1376550",
+        "original_poke_jam_sha256": "82861c875075cb9679c01345bffd7c1191ff47b4fb41537bb84b3998ef94fb1b"
+      },
+      "old_poke_moves": {
+        "omitted_type_jam_bytes": "1367496",
+        "omitted_type_jam_sha256": "b77719c4fdc16c0e0a7709ccae628abba543cbc2d77c41f4ec8350c2777b9f4a",
+        "original_moves_jam_bytes": "1376721",
+        "original_moves_jam_sha256": "2109f6f0cd0cb3c9ae97dd50218803882423c857b19cb930b9d7e4a5c5e99592",
+        "original_poke_jam_bytes": "1376550",
+        "original_poke_jam_sha256": "6de73ed50b285d08841c0d87b61c4bb1548153adaf486ce9c646056dbc70c741"
+      }
+    },
+    "scope": "native hash-and-size only; omitted bytes not reconstructed"
+  },
+  "phase_acceptance": false,
+  "positive_command_pointer": "/commands/27",
+  "projection_limit": "Full poke vase/type hashes and sizes are opaque measurements from native execution, not independently reconstructed types. Exact leave/gift nouns and projected poke mark/body/route remain host-validated; delivered native values are unchanged.",
+  "protocol": "stead.independent-current-Gall-retention-audit/2",
+  "raw_report": {
+    "bytes": 223618,
+    "path": "docs/urbit/evidence/2026-09-26/phase1-final-5208f32/gall/native.json",
+    "sha256": "6f0a616c5bebad1ed02d193caa47c8c7babb29813bc9cdc2084314c0d13b6edf"
+  },
+  "receipt_sha256": "5c66bc226a44811c62e3c8c2258971d85ace3e507acfc0afef7825583e964ab1",
+  "retained_artifacts": 22,
+  "retention_index": {
+    "bytes": 9994,
+    "path": "docs/urbit/evidence/2026-09-26/phase1-final-5208f32/gall/index.json",
+    "sha256": "3da85136f44c5f0d143271fa4940e13b86132d65118cf2feaf19c5f11c2e8936"
+  },
+  "retired_old_facts": "0",
+  "reviewer": "/root/gall_schedule_review",
+  "scope": "Exact native-scheduled-gall delivery-late-old-leave obligation only: simulated delivery queue/fixed clock, actual pinned Gall/home/observer. No Ames/UDP, other native obligations, or overall Phase 1 acceptance.",
+  "source_Clay_comparisons": 26,
+  "source_commit": "5208f3273426e8fe76dc8622ffe93ace93982e17",
+  "source_context": {
+    "decoded_sha256": "dd3397cb193e307cab8856a831755fd96a3cec3182145694bdb63217a87c091f",
+    "path": "docs/urbit/evidence/2026-09-26/phase1-final-5208f32/gall/guard/control/source-context.json.gz"
+  },
+  "source_delta_review": {
+    "files": [
+      "Makefile",
+      "scripts/urbit/build_phase1_evidence.py",
+      "scripts/urbit/core_test.py",
+      "scripts/urbit/delivery_suite.py",
+      "scripts/urbit/dev_help.py",
+      "scripts/urbit/harness.py",
+      "scripts/urbit/supervisor.py",
+      "tests/urbit/test_delivery_suite.py",
+      "tests/urbit/test_phase1_evidence_builder.py"
+    ],
+    "finding": "No Gall-lane source blocker. Delta adds a separate guarded delivery-check and strengthens core offline-home terminal/identity evidence; the changed eager helper closure is bound to this fresh run. Full-core behavior is not accepted by this review.",
+    "from": "55475f0565ceb38db9eb5bc057962967398aa5da",
+    "to": "5208f3273426e8fe76dc8622ffe93ace93982e17",
+    "unchanged_anchors": {
+      "native/core/desk/app/stead-home.hoon": "3bfc0e45062ef0bc8572d5034a60b5b35f6502350f821129b5ba7a7cca0b2b9c",
+      "native/core/desk/app/stead-observer.hoon": "16589b4f9f51782d0907a7c186e3fcff6625c713bb64006f37330d6056645e45",
+      "scripts/urbit/execution_policy.py": "da16e2e0fd32eb5b90706b546a7ea8332a65807fc8279f3bd765dcc18aaad9b5",
+      "scripts/urbit/gall_schedule.py": "e839771e23a44b1ac403df213fae2c83103a7750c36330de16322b3c0e913af2",
+      "scripts/urbit/gall_schedule_proof.py": "fe6564900c0b3b6ae5c0a75ea18788807024053f433d0f5fcb0b17f04566904b",
+      "tests/urbit/native_gall_schedule/desk/lib/stead-gall-schedule.hoon": "45df519bfaa206142a0954b7f3f234359ed5a9c6bbe2295e273fbe4aeab1e1ff"
+    }
+  },
+  "status": "cleared-with-bounded-scope",
+  "test_execution_performed": false,
+  "wrong_count_runtime_control": {
+    "expected": 2,
+    "observed": 1
+  }
+}

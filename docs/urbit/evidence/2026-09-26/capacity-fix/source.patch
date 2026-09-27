@@ -1,0 +1,325 @@
+diff --git a/Makefile b/Makefile
+index eb5a229..1880642 100644
+--- a/Makefile
++++ b/Makefile
+@@ -1,7 +1,7 @@
+ .DEFAULT_GOAL := help
+ # Bound seed/toolchain verification before the inner native guardian launches.
+ PREP = systemd-run --user --scope --quiet -p CPUQuota=50% -p CPUQuotaPeriodSec=10ms -- taskset -c "$$(python3 -c 'import os; print(max(os.sched_getaffinity(0)))')"
+-.PHONY: help setup doctor preflight dev start status wait-ready stop reset check test core-check core-test delivery-check gall-schedule skill-prequalify plan-check contracts-check
++.PHONY: help setup doctor preflight dev start status wait-ready stop reset check test core-check core-test delivery-check capacity-check gall-schedule skill-prequalify plan-check contracts-check
+ help:
+ 	@python3 scripts/urbit/dev_help.py
+ setup:
+@@ -30,6 +30,8 @@ core-check:
+ 	python3 scripts/urbit/harness.py core-check
+ delivery-check:
+ 	python3 scripts/urbit/harness.py delivery-check
++capacity-check:
++	python3 scripts/urbit/harness.py capacity-check
+ gall-schedule:
+ 	python3 scripts/urbit/harness.py gall-schedule
+ skill-prequalify:
+diff --git a/native/core/desk/ted/stead-client.hoon b/native/core/desk/ted/stead-client.hoon
+index f796cf4..b90bc33 100644
+--- a/native/core/desk/ted/stead-client.hoon
++++ b/native/core/desk/ted/stead-client.hoon
+@@ -5,10 +5,16 @@
+ ^-  thread:spider
+ |=  arg=vase
+ =/  [~ target=@p mode=@tas route=path raw=@t]  ;;([~ @p @tas path @t] q.arg)
++=/  load-control=?
++  ?.  =(%control mode)  |
++  =/  val  ;;([@tas @p @t @t] (cue raw))
++  ?|  =(%migrate-legacy -.val)  =(%load-bad-legacy -.val)
++  ==
+ =/  m  (strand ,vase)
+ =/  n  (strand ,~)
+ ^-  form:m
+-%+  (set-timeout:strandio ,vase)  ~s55
++::  Full-state fixture validation can occupy one event; normal calls stay 55s.
++%+  (set-timeout:strandio ,vase)  ?:(load-control ~s600 ~s55)
+ ;<  =bowl:spider  bind:m  get-bowl:strandio
+ ?:  =(%observe mode)
+   ;<  ~  bind:m  (poke:strandio [our.bowl %stead-observer] %stead-observer-1 !>(raw))
+diff --git a/scripts/urbit/core_test.py b/scripts/urbit/core_test.py
+index 062873c..05e6178 100644
+--- a/scripts/urbit/core_test.py
++++ b/scripts/urbit/core_test.py
+@@ -145,7 +145,9 @@ def home_unavailable(host, attempt, call):
+             'sender': observations, 'attempt': outcome, 'native': host['EVIDENCE'][begin:]}
+ 
+ 
+-def run(host, *, delivery_only=False):
++def run(host, *, delivery_only=False, capacity_only=False):
++    if delivery_only and capacity_only:
++        raise ValueError('Select only one focused diagnostic')
+     started = time.monotonic()
+     run_id = time.strftime('%Y%m%dT%H%M%SZ', time.gmtime())
+     report = {'status': 'fail', 'classification': 'local-real-native-fake-ships',
+@@ -159,6 +161,9 @@ def run(host, *, delivery_only=False):
+     if delivery_only:
+         report.update(classification='local-real-native-delivery-lifecycle', qualifies_phase=False,
+                       scope='Two offline-home native timeouts and sender recovery; no phase qualification.')
++    elif capacity_only:
++        report.update(classification='local-real-native-capacity-diagnostic', qualifies_phase=False,
++                      scope='All eight capacity/predecessor recipes; no full phase qualification.')
+     before_inputs = inputs()
+     report['inputs_before'] = before_inputs
+     report['installed_files'] = {str(path.relative_to('/native/core/desk')): sha(path)
+@@ -197,10 +202,14 @@ def run(host, *, delivery_only=False):
+ 
+     def call(ship, mode, route='/', raw=b'', **kwargs):
+         host['execution_check']()
++        started_ns = time.monotonic_ns()
+         try:
+             result = core_conn.run(binary, host['LIVE'] / ship / '.urb/conn.sock', mode, route, raw, **kwargs)
+         except Exception as error:
++            finished_ns = time.monotonic_ns()
+             failure = {'ship': ship, 'mode': mode, 'route': route, 'status': 'failed',
++                       'started_ns': started_ns, 'finished_ns': finished_ns,
++                       'elapsed_seconds': (finished_ns - started_ns) / 1_000_000_000,
+                        'input_sha256': hashlib.sha256(raw).hexdigest(),
+                        'error': type(error).__name__ + ': ' + str(error),
+                        'transport': getattr(error, 'native_failure', None)}
+@@ -208,14 +217,17 @@ def run(host, *, delivery_only=False):
+                 reference = transcript.append(failure)
+             report['commands'].append({key: value for key, value in failure.items() if key != 'transport'} | {'transcript': reference})
+             raise
++        finished_ns = time.monotonic_ns()
+         record = {'ship':ship, 'mode':mode, 'route':route, 'input_sha256':hashlib.sha256(raw).hexdigest(),
++                  'started_ns': started_ns, 'finished_ns': finished_ns,
++                  'elapsed_seconds': (finished_ns - started_ns) / 1_000_000_000,
+                   'input_bytes':len(raw), **result}
+         # Keep exact large framing/control evidence once, outside the bounded
+         # summary. Callback consumers receive hashes plus the evidence location.
+         with transcript_lock:
+             reference = transcript.append(record)
+         summary = {key: record[key] for key in ('ship', 'mode', 'route', 'input_sha256',
+-                   'input_bytes', 'response_frame_sha256')}
++                   'input_bytes', 'response_frame_sha256', 'started_ns', 'finished_ns', 'elapsed_seconds')}
+         summary.update(transcript=reference,
+                        stdout=record['stdout'] if len(record['stdout']) <= 1024 else '<see exact transcript>',
+                        stderr=record['stderr'], request_sha256=hashlib.sha256(record['request'].encode()).hexdigest())
+@@ -443,6 +455,15 @@ def run(host, *, delivery_only=False):
+         check('sender-cannot-reserve-another-result-route', denied['json'] is None and 'stead-watch-denied' in denied['native']['stderr'])
+         check('concurrent-reads-and-wrong-route-preserve-state', same(after,snapshot()))
+ 
++    def capacity():
++        report['qualification'] = qualification_cases.run(call,
++            classification='local-real-native-fake-ships', provenance=before_inputs)
++        check('native-capacity-and-predecessor-qualification', report['qualification']['status'] == 'passed'
++              and report['qualification']['native_qualified']
++              and len(report['qualification']['recipes']) == 8
++              and all(lane['status'] == 'executed' for lane in report['qualification']['recipes'].values()))
++        report['supported_predecessor_versions'] = [1]
++
+     try:
+         report['source_commit'] = host['qualified_source']()
+         host['execution_check'](preflight=True)
+@@ -489,6 +510,9 @@ def run(host, *, delivery_only=False):
+                 recovered = call('bus', 'read', delivery_suite.receipt_route(suite.command))
+                 check('post-timeout-protected-read:' + str(repetition + 1), recovered['json'] == core_cases.DENIAL)
+             report['status'] = 'pass'
++        elif capacity_only:
++            capacity()
++            report['status'] = 'pass'
+         else:
+             report['qa'] = core_cases.run(corpus, call, snapshot, restart, export, object_matrix,
+                                          trusted_now_ms=trusted_now_ms, wait_until=wait_until,
+@@ -526,13 +550,7 @@ def run(host, *, delivery_only=False):
+                 classification='real-native-fake-ships', probe_pool=probes, sink=delivery_sink)
+             check('delivery-has-no-observed-failure', all(case['status'] in ('passed', 'incomplete')
+                   for case in report['delivery']['cases']))
+-            report['qualification'] = qualification_cases.run(call,
+-                classification='local-real-native-fake-ships', provenance=before_inputs)
+-            check('native-capacity-and-predecessor-qualification', report['qualification']['status'] == 'passed'
+-                  and report['qualification']['native_qualified']
+-                  and len(report['qualification']['recipes']) == 8
+-                  and all(lane['status'] == 'executed' for lane in report['qualification']['recipes'].values()))
+-            report['supported_predecessor_versions'] = [1]
++            capacity()
+             # Independent artifact verification is a distinct closeout operation
+             # over the completed guarded report. This runner cannot approve itself.
+             report['independent_closeout'] = {
+@@ -559,11 +577,12 @@ def run(host, *, delivery_only=False):
+     report['native_tree_sha256'] = before_inputs['native']
+     report['toolchain_sha256'] = before_inputs['toolchain']
+     report['transport_artifact'] = transcript.close()
+-    path = Path('/state/logs') / (('core-delivery-check-' if delivery_only else 'core-') + run_id + '.json')
++    prefix = 'core-delivery-check-' if delivery_only else 'core-capacity-check-' if capacity_only else 'core-'
++    path = Path('/state/logs') / (prefix + run_id + '.json')
+     report, payload = bounded_report(report)
+     path.write_bytes(payload)
+     return {'status':report['status'], 'checks_passed':sum(c['passed'] for c in report['checks']),
+             'checks_failed':[c for c in report['checks'] if not c['passed']], 'error':report.get('error'),
+             'qa_case_counts':report.get('qa',{}).get('case_counts'), 'qa_coverage_status':report.get('qa_coverage_status'),
+             'elapsed_seconds':report['elapsed_seconds'], 'evidence_file':'.piers/fakes/logs/' + path.name,
+-            **({'qualifies_phase':False} if delivery_only else {})}
++            **({'qualifies_phase':False} if delivery_only or capacity_only else {})}
+diff --git a/scripts/urbit/dev_help.py b/scripts/urbit/dev_help.py
+index d35a16b..f93f2c4 100644
+--- a/scripts/urbit/dev_help.py
++++ b/scripts/urbit/dev_help.py
+@@ -12,6 +12,7 @@ print('''Stead Urbit local development (Linux, synthetic fake ships)
+   make test        Run the original four-ship native smoke suite
+   make core-test   Execute the full native corpus; independent qualification follows
+   make delivery-check  Check native offline-home timeouts and sender recovery
++  make capacity-check  Diagnose all native capacity/migration recipes (not phase acceptance)
+   make gall-schedule  Run the pinned Gall reordered-leave qualification lane
+   make skill-prequalify  Validate frozen workflow references before evaluation
+   make stop        Gracefully stop the owned fake ships and guard
+diff --git a/scripts/urbit/harness.py b/scripts/urbit/harness.py
+index 9cabc58..92e9ebe 100644
+--- a/scripts/urbit/harness.py
++++ b/scripts/urbit/harness.py
+@@ -359,7 +359,9 @@ def test():
+ 
+ def core_test():
+     guard()
+-    result = rpc('core-test', timeout=3600)
++    # Wait within the existing outer guard's two-hour ceiling; do not abandon
++    # a legitimate bounded load while its owned supervisor is still running.
++    result = rpc('core-test', timeout=7200)
+     print(json.dumps(result, indent=2))
+     if result['status'] not in ('pass', 'execution_complete'):
+         raise RuntimeError('Native core acceptance failed; retained evidence is not a pass')
+@@ -375,6 +377,14 @@ def delivery_check():
+         raise RuntimeError('Native delivery lifecycle check failed; inspect retained evidence')
+ 
+ 
++def capacity_check():
++    guard()
++    result = rpc('capacity-check', timeout=7200)
++    print(json.dumps(result, indent=2))
++    if result['status'] != 'pass' or result.get('qualifies_phase') is not False:
++        raise RuntimeError('Native capacity diagnostic failed; inspect retained evidence')
++
++
+ def core_check():
+     guard()
+     result = rpc('core-check', timeout=1800)
+@@ -435,7 +445,7 @@ def dev():
+ if __name__ == '__main__':
+     parser = argparse.ArgumentParser(description=__doc__)
+     parser.add_argument('command', choices=['doctor', 'preflight', 'start', 'stop', 'reset', 'status',
+-                        'wait-ready', 'dev', 'test', 'core-check', 'core-test', 'delivery-check', 'gall-schedule',
++                        'wait-ready', 'dev', 'test', 'core-check', 'core-test', 'delivery-check', 'capacity-check', 'gall-schedule',
+                         'skill-evaluation', 'skill-feedback', '_guarded-supervisor'])
+     parser.add_argument('--condition', choices=['prequalification', 'baseline', 'local_skill_assisted'])
+     parser.add_argument('--task', choices=['T01', 'T02', 'T03', 'T04', 'T05', 'T06'])
+diff --git a/scripts/urbit/qualification_cases.py b/scripts/urbit/qualification_cases.py
+index a9dced2..75394ae 100644
+--- a/scripts/urbit/qualification_cases.py
++++ b/scripts/urbit/qualification_cases.py
+@@ -371,10 +371,19 @@ class Driver:
+         return result
+ 
+     def control(self, operation, sender='zod', key='', value='', *, negative=False):
+-        result = self.invoke('zod', 'control', control=(operation, sender, key, value))
++        # Only the private fixture's bounded full-state loads get this budget.
++        # It permits measuring validation; exceeding it is still a failure.
++        wait = {'timeout': 620} if operation in ('migrate-legacy', 'load-bad-legacy') else {}
++        result = self.invoke('zod', 'control', control=(operation, sender, key, value), **wait)
+         if negative:
++            native = result.get('native', {})
++            stderr = native.get('stderr') if isinstance(native, dict) else None
++            lines = [line.strip() for line in stderr.splitlines() if line.strip()] if isinstance(stderr, str) else []
+             self.check('native-control-specific-nack:' + operation,
+-                result['json'] is None and result.get('native', {}).get('stdout') == '[32 %avow 1]')
++                result['raw'] is None and result['json'] is None
++                and isinstance(native, dict) and native.get('stdout') == '[32 %avow 1]'
++                and 'stead-unsupported-state' in lines and 'poke-fail' in lines
++                and lines[-1:] == ['eval: bail: %thread-fail'] and 'timeout' not in lines)
+         else:
+             self.check('native-control-terminal-ack:' + operation, result['json'] == {})
+         return result
+diff --git a/scripts/urbit/supervisor.py b/scripts/urbit/supervisor.py
+index 538ec00..2a7801a 100644
+--- a/scripts/urbit/supervisor.py
++++ b/scripts/urbit/supervisor.py
+@@ -457,18 +457,21 @@ def handle(connection):
+                         raise RuntimeError('Fixture not ready')
+                     execution_check(preflight=True)
+                     result = guarded_result(core_test.run(globals()))
+-            elif request == {'op': 'delivery-check'}:
++            elif request in ({'op': 'delivery-check'}, {'op': 'capacity-check'}):
+                 with MUTEX:
+                     if not PROGRESS['ready']:
+                         raise RuntimeError('Fixture not ready')
+                     execution_check(preflight=True)
+-                    PROGRESS.update(stage='delivery-check', ready=False, error=None)
++                    diagnostic = request['op']
++                    PROGRESS.update(stage=diagnostic, ready=False, error=None)
+                     result = None
+                     try:
+-                        result = guarded_result(core_test.run(globals(), delivery_only=True))
++                        result = guarded_result(core_test.run(globals(),
++                            delivery_only=diagnostic == 'delivery-check',
++                            capacity_only=diagnostic == 'capacity-check'))
+                     finally:
+                         if result is None or result['status'] != 'pass':
+-                            PROGRESS.update(stage='failed', ready=False, error='Native delivery lifecycle check failed')
++                            PROGRESS.update(stage='failed', ready=False, error='Native ' + diagnostic + ' failed')
+                             all_stop()
+                         else:
+                             PROGRESS.update(stage='ready', ready=True, error=None)
+diff --git a/tests/urbit/test_qualification_cases.py b/tests/urbit/test_qualification_cases.py
+index 22f9321..f83b9b8 100644
+--- a/tests/urbit/test_qualification_cases.py
++++ b/tests/urbit/test_qualification_cases.py
+@@ -326,14 +326,52 @@ class QualificationAdapterTests(unittest.TestCase):
+                 self.assertTrue(all(recipe['status'] == 'unexecuted' for recipe in report['recipes'].values()))
+ 
+     def test_control_timeout_ack_or_missing_value_is_not_expected_nack(self):
++        # Pinned native timeout shape observed in deliverycheck02: the stdout
++        # is identical to a poke failure, so stdout alone is not a predicate.
++        timeout = ('loom: mapped 512MB\nlite: arvo formula 4ce68411\n'
++                   'lite: core 641296f\nlite: final state 641296f\n'
++                   'eval (cue, newt):\ntimeout\neval: bail: %thread-fail')
+         for result in (terminal({}), {'raw': None, 'json': None, 'native': {}},
+-                       {'raw': None, 'json': None, 'native': {'stdout': 'timeout'}}):
++                       {'raw': None, 'json': None, 'native': {'stdout': 'timeout'}},
++                       {'raw': None, 'json': None, 'native': {'stdout': '[32 %avow 1]'}},
++                       {'raw': None, 'json': None, 'native': {'stdout': '[32 %avow 1]', 'stderr': timeout}}):
+             self.call.return_value = result
+             with self.assertRaises(AssertionError):
+                 self.driver.control('load-bad-legacy', negative=True)
+-        self.call.return_value = {'raw': None, 'json': None, 'native': {'stdout': '[32 %avow 1]'}}
++        # Host adapter fixture matching the observed core05 rejection hints;
++        # this is not a newly executed native response.
++        self.call.return_value = {'raw': None, 'json': None, 'native': {
++            'stdout': '[32 %avow 1]',
++            'stderr': 'stead-unsupported-state\npoke-fail\neval: bail: %thread-fail'}}
+         self.driver.control('load-bad-legacy', negative=True)
+ 
++    def test_load_rejection_requires_specific_context_and_no_timeout(self):
++        good = 'stead-unsupported-state\npoke-fail\neval: bail: %thread-fail'
++        for stderr in (good.replace('stead-unsupported-state', 'unrelated-hint'),
++                       good.replace('poke-fail', 'watch-fail'),
++                       good.replace('eval: bail: %thread-fail', 'different-terminal'),
++                       good.replace('poke-fail', 'poke-fail\ntimeout'), None):
++            with self.subTest(stderr=stderr):
++                self.call.return_value = {'raw': None, 'json': None, 'native': {
++                    'stdout': '[32 %avow 1]', 'stderr': stderr}}
++                with self.assertRaises(AssertionError):
++                    self.driver.control('load-bad-legacy', negative=True)
++        self.call.return_value = {'raw': 'unexpected body', 'json': None, 'native': {
++            'stdout': '[32 %avow 1]', 'stderr': good}}
++        with self.assertRaises(AssertionError):
++            self.driver.control('load-bad-legacy', negative=True)
++
++    def test_only_private_full_load_controls_get_bulk_wait(self):
++        for operation in ('migrate-legacy', 'load-bad-legacy', 'legacy-batch',
++                          'native-batch', 'profile', 'roundtrip', 'load-future'):
++            with self.subTest(operation=operation):
++                self.call.reset_mock()
++                self.call.return_value = terminal({})
++                self.driver.control(operation)
++                kwargs = {'timeout': 620} if operation in ('migrate-legacy', 'load-bad-legacy') else {}
++                self.call.assert_called_once_with('zod', 'control', '/', b'',
++                    control=(operation, 'zod', '', ''), **kwargs)
++
+     def test_inconsistent_oversized_and_wrong_json_fail(self):
+         for result in ({'raw': '{}', 'json': {'status': 'accepted'}},
+                        {'raw': ' ' * 262145, 'json': {}}, {'raw': 'invalid', 'json': {}},

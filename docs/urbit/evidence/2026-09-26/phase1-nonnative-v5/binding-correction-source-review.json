@@ -1,0 +1,124 @@
+{
+  "authored_regression_review": {
+    "cases": [
+      "Positive three-boundary sender/byte equality and restoration order",
+      "Missing/wrong watch evidence, unrelated body or timeout rejected before poke/batch",
+      "Poke business-acceptance body or changed protected state rejected",
+      "Final capacity error, state mutation or transport exception fails and attempts restoration",
+      "Unchanged binding after drop or failure to restore original snapshot rejected"
+    ],
+    "parent_reported_execution": "Parent reported the first33 targeted host tests passed; final added restoration test/full makecheck were pending at task assignment. This review does not assert their execution result.",
+    "scope": "Synthetic host callback tests; reviewed source, not executed by this reviewer."
+  },
+  "base_commit": "3f0f3778997798f2ed208e206b46882a87340eb1",
+  "candidate_commit": "dd0e8c0ce8d1d00f15de6b07e2e26d368c5c3774",
+  "created_at": "2026-09-26T22:29:45.326026+00:00",
+  "disposition": "No blocking source finding. Safe to validate with the unchanged guarded native lane; current Phase1 remains unqualified.",
+  "independent_ast_checks": {
+    "all_other_adapter_test_method_AST_unchanged": true,
+    "all_other_qualification_module_AST_unchanged": true,
+    "changed_Driver_methods_exactly": [
+      "command",
+      "direct",
+      "missing_binding_at_capacity"
+    ],
+    "new_test_or_helper_methods": [
+      "test_missing_binding_final_gate_or_transport_failure_restores_binding",
+      "test_missing_binding_not_removed_or_not_restored_cannot_qualify",
+      "test_missing_binding_poke_business_body_or_mutation_cannot_qualify",
+      "test_missing_binding_requires_real_poke_and_explicit_final_gate_denial",
+      "test_missing_binding_watch_timeout_or_unrelated_failure_cannot_qualify",
+      "watch_rejection"
+    ],
+    "removed_test_methods": [
+      "test_missing_binding_probe_restores_only_fixture_binding_and_propagates_failure"
+    ]
+  },
+  "patch": {
+    "bytes": 12303,
+    "command": [
+      "git",
+      "diff",
+      "--binary",
+      "--full-index",
+      "3f0f3778997798f2ed208e206b46882a87340eb1",
+      "dd0e8c0ce8d1d00f15de6b07e2e26d368c5c3774",
+      "--",
+      "scripts/urbit/qualification_cases.py",
+      "tests/urbit/test_qualification_cases.py"
+    ],
+    "files": {
+      "scripts/urbit/qualification_cases.py": {
+        "after_bytes": 42516,
+        "after_sha256": "0383dd02dcb1e3cfa6ff9e93be5da49b2fee7bdee1a71dde7c2b6db303c3c3f9",
+        "before_sha256": "208fc2e2d9448d5ea745bf51acefec0d06b84efdde814a8b9c73dcc3fbc70555"
+      },
+      "tests/urbit/test_qualification_cases.py": {
+        "after_bytes": 36527,
+        "after_sha256": "d0607db99a5921cd4eb43658bab10fc7d0ee802fbc17d75ae02281d27ab56bfc",
+        "before_sha256": "3005feabca29b876a364f601b38c38772af340d05f9c1bd6677e3a551adb55cd"
+      }
+    },
+    "sha256": "ee46af377706c897993a4d5d5b21c6fee14f937e5537357fef0925eaafe27ec8"
+  },
+  "preserved_limits": [
+    "No native application, Hoon client, thermal guard, toolchain, frozen contract, gate manifest, timeout or capacity recipe changes in this commit.",
+    "Initial binding-drop occurs before try; if its own transport fails after an uncertain mutation, this path fails without certifying restoration. The patch makes no successful-cleanup claim for that path.",
+    "Snapshot equality binds the native protected db projection/hash, not outer fixture-only response text or Gall queue internals.",
+    "Fresh current-source full native/qualification evidence is still required; successful diagnostic execution alone cannot close Phase1."
+  ],
+  "prior_evidence": {
+    "path": ".runtime/phase01-20260926/capacity01-independent-diagnosis.json",
+    "sha256": "349ea742e88bf4454b1bf52f575738d4d33d02d1dae1492d9b5e3ee3530a002c",
+    "unchanged": true
+  },
+  "protocol": "stead.independent-source-review/1",
+  "qualifies_phase": false,
+  "review_execution": {
+    "affinity": [
+      19
+    ],
+    "cpu_max": "2000 10000",
+    "native_executed": false,
+    "scope": "stead-capacity01-fix-review-20260926a.scope",
+    "tests_executed": false,
+    "tracked_writes": false
+  },
+  "review_wording_note": "Final wording states the host predicate precisely: decoded embedded response equality is required; a separate embedded-byte canonicality check is not claimed.",
+  "reviewer": "/root/gall_schedule_review",
+  "scope": "Independent source review of the exact two-file missing-binding capacity-test correction; no test execution or new native execution by reviewer.",
+  "semantics_reviewed": [
+    {
+      "finding": "command() exposes the preexisting invoke envelope; direct() still returns exactly envelope.json. Existing direct business-denial checks remain strict.",
+      "source": "scripts/urbit/qualification_cases.py:468-475"
+    },
+    {
+      "finding": "After owner binding-drop, the binding hash must change. Exact same bus Entry bytes/digest are sent through command mode; null raw/json, exact avow1, all observed watch-denial markers, final thread-fail and no timeout are required. Watch failure cannot be treated as a business denial.",
+      "source": "scripts/urbit/qualification_cases.py:489-508"
+    },
+    {
+      "finding": "Actual bus poke sends the same raw command without a watch. Only terminal JSON{} is accepted as transport ACK; dropped protected-state equality is required afterward. invoke already requires a real native terminal-frame digest for the native classification and bounded consistent raw/JSON for any body.",
+      "source": "scripts/urbit/qualification_cases.py:509-514"
+    },
+    {
+      "finding": "Existing owner-only native-batch is invoked with one identical bus probe, accepted=False and expected_error=denied_or_not_found. Existing apply_batch requires an actual parsed embedded final response matching the exact denial and unchanged state; the caller also compares the resulting state to the earlier dropped snapshot.",
+      "source": "scripts/urbit/qualification_cases.py:515-521"
+    },
+    {
+      "finding": "Every exception after successful drop enters finally, which restores bus binding and compares the complete original protected snapshot there. Probe failure still propagates; inability to restore/verify also fails.",
+      "source": "scripts/urbit/qualification_cases.py:522-526"
+    },
+    {
+      "finding": "Unchanged owner-only fixture calls actual apply-command using explicit bus/current state; unchanged real poke uses trusted Gall src.bowl. Missing result channel does not bypass final transition authorization. No Hoon changes were made.",
+      "source": "native/core/desk/app/stead-home.hoon:141-144,186-203,246-266,273-280"
+    },
+    {
+      "finding": "Unchanged final reducer resolves current binding before policy/scope, receipt lookup, CAS and capacity. This patch does not weaken authorization or reinterpret a transport ACK as a committed outcome.",
+      "source": "native/core/desk/lib/stead-core.hoon:200-225"
+    },
+    {
+      "finding": "Retained evidence replay uses the same qualification Driver. Fresh actual watch/poke/control/read records must satisfy the revised predicates; existing failed capacity01 remains incomplete/failed and cannot gain missing exchanges from this code change.",
+      "source": "scripts/urbit/build_phase1_evidence.py:229-249,579-596"
+    }
+  ]
+}

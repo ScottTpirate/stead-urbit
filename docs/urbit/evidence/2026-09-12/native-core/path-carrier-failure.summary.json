@@ -1,0 +1,14 @@
+{
+  "source_file": ".piers/fakes/logs/core-20260913T024751Z.json",
+  "raw_sha256": "a6a4d7f29111eb6a2a625630ede2ec08f388733798f31264fd2ab6650bb8a95d",
+  "compressed_sha256": "277692d16f547884d6d75cf7fb3f2be2e0576bde296765f3ec883921265d3198",
+  "classification": "local-real-native-fake-ships",
+  "status": "fail",
+  "error": "Invalid Newt header",
+  "elapsed_seconds": 25.219,
+  "native_tree_sha256": "9581e36c9f3805139a252978ac7e176f3b97e9407fe4c40c1e07551f38a90445",
+  "toolchain_sha256": "4a209c10cf1756eb0f7357cc3eca8250bf66c239b4cd0ca31a8c0886d4d304ee",
+  "checks": [],
+  "qa_case_counts": null,
+  "qa_check_counts": null
+}

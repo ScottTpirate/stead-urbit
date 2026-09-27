@@ -1,0 +1,13 @@
+{
+  "bootstrap.json": "85b76afbc55aba2a033c8ecf66d9300d773c091de1c687f5d31e015470aee7ea",
+  "commands.jsonl": "0f4d5c1ac8b4ca5a45a9541d8e242e54a9f12fd486885fdd16d12783fdf136cf",
+  "console.log": "643bbf678ae921547daba0395e834696dd9874b908bfbcba0c456c340e3c92ac",
+  "evaluator-report.json": "d763cc81e850534b2e2f1874ad26ee5596c3a8550d8d96d620366351d9db244b",
+  "execution-guard.json": "7af8e9c37e65c9c856bc0565dc282e1791ba347a60296d503b185598d115613c",
+  "native.log": "3e2b89ea3ad6db1583a98182fba55d4f1359e734413ad0c063a8182a5852de02",
+  "provenance.json": "6a00ce7180f308aae1217f2ec5f987d0d8929dbc07c0f5f0d88600a8897846f3",
+  "report.json": "85a240ed411e048662b40c5a61dd27eba33a9700a4642fd5a25088c18e3bd84e",
+  "sandbox-command.json": "f57b782e882d9790e38cb83fde43aaec244df2f3eea7c4a81917af56f225cd7c",
+  "status.json": "9b2bf1723be8d3f31974570d8bbc7238d36261d7fd043991b8869e0b2bd236f5",
+  "thermal.jsonl": "ab3069932639701ab90d242fc3dedb3d20eae22ff4eebea70c004539f07af545"
+}

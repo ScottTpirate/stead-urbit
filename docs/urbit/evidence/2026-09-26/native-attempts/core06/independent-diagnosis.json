@@ -1,0 +1,547 @@
+{
+  "cleanup": {
+    "STOP_marker": {
+      "reason": "GuardError: Thermal ceiling reached"
+    },
+    "guard_escalation_records": [],
+    "guard_report_has_scope_proof": false,
+    "lease_state": "stopped",
+    "lifecycle": {
+      "all_steps_exit_zero": false,
+      "elapsed_seconds": 1168.9121623389656,
+      "finished_at": "2026-09-26T22:53:33.370375+00:00",
+      "source_commit": "dd0e8c0ce8d1d00f15de6b07e2e26d368c5c3774",
+      "started_at": "2026-09-26T22:34:04.458231+00:00",
+      "steps": [
+        {
+          "command": [
+            "make",
+            "start"
+          ],
+          "elapsed_seconds": 2.042381128994748,
+          "exit": 0
+        },
+        {
+          "command": [
+            "make",
+            "wait-ready"
+          ],
+          "elapsed_seconds": 6.078619652078487,
+          "exit": 0
+        },
+        {
+          "command": [
+            "make",
+            "core-test"
+          ],
+          "elapsed_seconds": 1160.1751452380558,
+          "exit": 2
+        },
+        {
+          "command": [
+            "make",
+            "stop"
+          ],
+          "elapsed_seconds": 0.6150775939458981,
+          "exit": 0
+        }
+      ],
+      "target": "core-test"
+    },
+    "lifetime_lock_release_retained": true,
+    "native_scope_final_observation": {
+      "ActiveState": "inactive",
+      "ControlGroup": "",
+      "LoadState": "not-found",
+      "Result": "success"
+    },
+    "retained_scope_readback": {
+      "cgroup": "/user.slice/user-1000.slice/user@1000.service/app.slice/stead-native-d8966aea1e4edf5c5a564f1fb832cfd6.scope",
+      "cpu_affinity": [
+        19
+      ],
+      "cpu_max": "5000 10000",
+      "unit": "stead-native-d8966aea1e4edf5c5a564f1fb832cfd6.scope"
+    },
+    "retained_shutdown_records": [
+      {
+        "line_sha256": "9b5650abb8601959764146b9b47b67f12a7d29be8878ac39ad77419afa6cd27d",
+        "record": {
+          "command": "shutdown zod",
+          "result": {
+            "exit_code": 0,
+            "forced": false
+          },
+          "utc": "2026-09-26T22:53:32Z"
+        },
+        "supervisor_log_line": 3524
+      },
+      {
+        "line_sha256": "fb17f9c0f3e30e1c7e50b73d62d385ed8370d392ca203bda57594351bdac571a",
+        "record": {
+          "command": "shutdown bus",
+          "result": {
+            "exit_code": 0,
+            "forced": false
+          },
+          "utc": "2026-09-26T22:53:32Z"
+        },
+        "supervisor_log_line": 3525
+      },
+      {
+        "line_sha256": "f5d6666ce2e4ba08551b10f250324347e176e2d84fc7e7cbbca7c3f581e81823",
+        "record": {
+          "command": "shutdown nec",
+          "result": {
+            "exit_code": 0,
+            "forced": false
+          },
+          "utc": "2026-09-26T22:53:32Z"
+        },
+        "supervisor_log_line": 3526
+      },
+      {
+        "line_sha256": "1e57a8a157ef9ffbe447aff550eacb0c969407c84642137057f841d013ce7628",
+        "record": {
+          "command": "shutdown bud",
+          "result": {
+            "exit_code": 0,
+            "forced": false
+          },
+          "utc": "2026-09-26T22:53:32Z"
+        },
+        "supervisor_log_line": 3527
+      },
+      {
+        "line_sha256": "9b5650abb8601959764146b9b47b67f12a7d29be8878ac39ad77419afa6cd27d",
+        "record": {
+          "command": "shutdown zod",
+          "result": {
+            "exit_code": 0,
+            "forced": false
+          },
+          "utc": "2026-09-26T22:53:32Z"
+        },
+        "supervisor_log_line": 3528
+      },
+      {
+        "line_sha256": "fb17f9c0f3e30e1c7e50b73d62d385ed8370d392ca203bda57594351bdac571a",
+        "record": {
+          "command": "shutdown bus",
+          "result": {
+            "exit_code": 0,
+            "forced": false
+          },
+          "utc": "2026-09-26T22:53:32Z"
+        },
+        "supervisor_log_line": 3529
+      },
+      {
+        "line_sha256": "f5d6666ce2e4ba08551b10f250324347e176e2d84fc7e7cbbca7c3f581e81823",
+        "record": {
+          "command": "shutdown nec",
+          "result": {
+            "exit_code": 0,
+            "forced": false
+          },
+          "utc": "2026-09-26T22:53:32Z"
+        },
+        "supervisor_log_line": 3530
+      },
+      {
+        "line_sha256": "1e57a8a157ef9ffbe447aff550eacb0c969407c84642137057f841d013ce7628",
+        "record": {
+          "command": "shutdown bud",
+          "result": {
+            "exit_code": 0,
+            "forced": false
+          },
+          "utc": "2026-09-26T22:53:32Z"
+        },
+        "supervisor_log_line": 3531
+      }
+    ],
+    "scope": "Two idempotent rounds record all four ships exit0/forcedfalse at22:53:32Z. Cooperative process cleanup does not make this a qualifying lifetime.",
+    "scope_proof_note": "Failed guard report omits its success-only scope_proof field; actual startup scope.json independently retains CPU5000/10000 and affinity19.",
+    "unclean_live_marker": {
+      "guard_report": "/home/skilgore/stead-urbit/.runtime/execution-runs/four-fakes-nan5zjof/report.json",
+      "reason": "GuardError: Thermal ceiling reached"
+    }
+  },
+  "created_at": "2026-09-26T23:02:29.512136+00:00",
+  "disposition": "Verified thermal-guard interruption; no recorded test assertion failure. Incomplete execution remains failed and cannot qualify Phase1.",
+  "last_actual_activity": {
+    "lane": "codec continuation after the148 QA cases",
+    "last_completed_assertion": "codec-no-business-change:array-payload",
+    "last_retained_native_exchange": {
+      "decoded_response": {
+        "error": "invalid_command",
+        "status": "rejected"
+      },
+      "elapsed_seconds": 0.740053054,
+      "finished_ns": 873119477241808,
+      "input_bytes": 381,
+      "input_sha256": "b6ab0cbf4cfa185ecf27e531f89377e3a69074af25fad74d295e94d6c5ed1a0d",
+      "mode": "codec",
+      "response_frame_sha256": "67a1295715b192905a098e1a2b0d6629402b13f6adb79d7693a703f04b341497",
+      "ship": "bus",
+      "started_ns": 873118737188754,
+      "transport": {
+        "artifact": "core-20260926T223412Z-transport.jsonl.gz",
+        "line": 1568,
+        "record_bytes": 1762,
+        "record_sha256": "cf35affbbb73da3794d6818c7d2e365a16dc8ca237e865f0426e5c8612df6a34"
+      },
+      "vector": "nested-payload-value"
+    },
+    "later_continuations_not_reached": [
+      "remaining codec vectors",
+      "separate context mutation lane",
+      "separate unsupported-state/save-load controls",
+      "separate concurrent-writer/read controls",
+      "delivery schedules",
+      "eight capacity/predecessor recipes",
+      "independent closeout"
+    ],
+    "not_counted_as_test_pass": "The native rejection was retained, then post-call execution_check at core_test.py:235 raised before codec:nested-payload-value was asserted. No subsequent home poke or unchanged-state check is credited."
+  },
+  "native_or_tests_executed_by_reviewer": false,
+  "native_report": {
+    "QA_assertions_passed": 3952,
+    "QA_case_counts": {
+      "incomplete": 3,
+      "passed": 145
+    },
+    "QA_required_typed_skips": [
+      {
+        "case": "project-views-never-include-other-owner-private-metadata",
+        "name": "projection-timing-and-all-metadata-nondisclosure",
+        "reason": "Required typed current evidence missing: scoped-private-metadata",
+        "status": "skipped"
+      },
+      {
+        "case": "restart-preserves-content-policy-objects-and-journal",
+        "name": "no-external-effects-replayed",
+        "reason": "Required typed current evidence missing: no-effect-subsystem",
+        "status": "skipped"
+      },
+      {
+        "case": "downgraded-reader-cannot-recover-write-receipt",
+        "name": "source-ordering-property",
+        "reason": "Required typed current evidence missing: receipt-lookup-order",
+        "status": "skipped"
+      }
+    ],
+    "QA_status": "incomplete",
+    "direct_checks_failed": [],
+    "direct_checks_passed": 313,
+    "elapsed_seconds": 1159.787,
+    "error": "Execution guard interrupted result: Fixture stop is latched",
+    "execution_complete": false,
+    "path": "docs/urbit/evidence/2026-09-26/native-attempts/core06/native.json",
+    "sha256": "53ff3f9d5d91da074af2a3b0abb034b61c471d2f5334c8c317b235465e06d637",
+    "status": "fail"
+  },
+  "phase_acceptance": false,
+  "protocol": "stead.independent-core-interruption-diagnosis/1",
+  "retention": {
+    "artifact_count": 24,
+    "artifacts": [
+      {
+        "bytes": 6801413,
+        "decoded_bytes": 6801413,
+        "decoded_sha256": "53ff3f9d5d91da074af2a3b0abb034b61c471d2f5334c8c317b235465e06d637",
+        "immutable_original_compared": true,
+        "path": "docs/urbit/evidence/2026-09-26/native-attempts/core06/native.json",
+        "sha256": "53ff3f9d5d91da074af2a3b0abb034b61c471d2f5334c8c317b235465e06d637"
+      },
+      {
+        "bytes": 507000,
+        "decoded_bytes": 507000,
+        "decoded_sha256": "5ae1f27d0c74f32185c72c7d5c3408f9278910dc522f29ae8723e0b60ce1af80",
+        "immutable_original_compared": true,
+        "path": "docs/urbit/evidence/2026-09-26/native-attempts/core06/guard.json",
+        "sha256": "5ae1f27d0c74f32185c72c7d5c3408f9278910dc522f29ae8723e0b60ce1af80"
+      },
+      {
+        "bytes": 114,
+        "decoded_bytes": 102,
+        "decoded_sha256": "699295e381a98d11741d5e71e9fc9b7b0cd57a3ed1996e2c24f1237f0fadd43e",
+        "immutable_original_compared": true,
+        "path": "docs/urbit/evidence/2026-09-26/native-attempts/core06/guard/.stead-disposable.json.gz",
+        "sha256": "7364c0c792fd69e965bc13d2cbd10e4d400ce1f51413a1a751a14a0816f787c2"
+      },
+      {
+        "bytes": 69,
+        "decoded_bytes": 50,
+        "decoded_sha256": "7c7ab50d70a93b2892566d93d36d50548505ac58e767c0508ed5bccb2a23bcb2",
+        "immutable_original_compared": true,
+        "path": "docs/urbit/evidence/2026-09-26/native-attempts/core06/guard/control/STOP.gz",
+        "sha256": "0bae0f972e102b09d6c7a39569da1346de29f9aa0a7603f4625e5180becde7cd"
+      },
+      {
+        "bytes": 524,
+        "decoded_bytes": 1099,
+        "decoded_sha256": "5d1bea27e035779665054ea0ac4833c8b2a797a018a2078d4c5df8fbef20d810",
+        "immutable_original_compared": true,
+        "path": "docs/urbit/evidence/2026-09-26/native-attempts/core06/guard/control/lease.json.gz",
+        "sha256": "ecfcfb24a65e018e5d1237d782f67c0af8fba61909eee7f1d034d64db18ee60f"
+      },
+      {
+        "bytes": 159,
+        "decoded_bytes": 232,
+        "decoded_sha256": "db643da558d61afec6124631f2c5c9a37f1b73cbed4c4c6c861bfd9daff78cf1",
+        "immutable_original_compared": true,
+        "path": "docs/urbit/evidence/2026-09-26/native-attempts/core06/guard/control/scope.json.gz",
+        "sha256": "0643d02fde96df6a6ba98cd490086d9ee4805f02b3492b72b0d8ed08c5ca1a2a"
+      },
+      {
+        "bytes": 6600,
+        "decoded_bytes": 18248,
+        "decoded_sha256": "5801030c72c5eeb402164bd5d6f51874f6345654ba349974bbd4114eb9d64541",
+        "immutable_original_compared": true,
+        "path": "docs/urbit/evidence/2026-09-26/native-attempts/core06/guard/control/source-context.json.gz",
+        "sha256": "265a66fae5c2c52c8180fc10dadf74139f59da39fa57569df9edfc1f6ec7ccd8"
+      },
+      {
+        "bytes": 29531,
+        "decoded_bytes": 503030,
+        "decoded_sha256": "778f8d904db71b997abc48529a57956debf0af2d8464d7ae016904405867ac7e",
+        "immutable_original_compared": true,
+        "path": "docs/urbit/evidence/2026-09-26/native-attempts/core06/guard/events.jsonl.gz",
+        "sha256": "84dab66cdffaf9d7c8b7685f77aeba6a9392699e9bd507e4f084fe1a62326621"
+      },
+      {
+        "bytes": 108,
+        "decoded_bytes": 105,
+        "decoded_sha256": "ede76b631801c35c2a306c030ed0666bff935d88045334f78501975591367ad9",
+        "immutable_original_compared": true,
+        "path": "docs/urbit/evidence/2026-09-26/native-attempts/core06/steps/core-test.json.gz",
+        "sha256": "afd61d7b82518d5afdb2d51f2061978a93c48bf3193cedb38408ce674a590fe1"
+      },
+      {
+        "bytes": 363,
+        "decoded_bytes": 544,
+        "decoded_sha256": "2e3cfe3133af50300f0ff3f6df9c4358f4916c5514d1ca639e7e628505983352",
+        "immutable_original_compared": true,
+        "path": "docs/urbit/evidence/2026-09-26/native-attempts/core06/steps/core-test.log.gz",
+        "sha256": "f37676de2889c32adaebde5ec1b00d38257911263e7eed320fd1331ef93e6918"
+      },
+      {
+        "bytes": 332,
+        "decoded_bytes": 828,
+        "decoded_sha256": "4b190a6a9f446998befd6718cb2021b485a16796aa59431a5fa185e106cb4875",
+        "immutable_original_compared": true,
+        "path": "docs/urbit/evidence/2026-09-26/native-attempts/core06/steps/lifecycle.json.gz",
+        "sha256": "8967d12025005f320e1766e86d6052486f162fb09ab1cf6e2a9af694b0f0e1b6"
+      },
+      {
+        "bytes": 103,
+        "decoded_bytes": 100,
+        "decoded_sha256": "8fef7ad7d6e4a9d82c4302d8237bfd22a7817f7905830e303b7ce9aaacfffb89",
+        "immutable_original_compared": true,
+        "path": "docs/urbit/evidence/2026-09-26/native-attempts/core06/steps/start.json.gz",
+        "sha256": "5a8dd63d3164317ebe021d63e2bd60583046601392818d986fdd9116cb91351b"
+      },
+      {
+        "bytes": 313,
+        "decoded_bytes": 453,
+        "decoded_sha256": "33612e92a1d8d55848752d50e1ca934064aa891c10c1c6832b69602d01b50968",
+        "immutable_original_compared": true,
+        "path": "docs/urbit/evidence/2026-09-26/native-attempts/core06/steps/start.log.gz",
+        "sha256": "5d89740a1003dd70345065b5211bdde04d5c29f402e4533e2d442a1e01e05606"
+      },
+      {
+        "bytes": 102,
+        "decoded_bytes": 100,
+        "decoded_sha256": "0141a9573fa23dce25feaba1c8275b134137e35356da428979d5d6c9a8b32639",
+        "immutable_original_compared": true,
+        "path": "docs/urbit/evidence/2026-09-26/native-attempts/core06/steps/stop.json.gz",
+        "sha256": "4963975a0ed5d9b5d70ac52751e33da87c6809d42ca56127889990e3fda14ceb"
+      },
+      {
+        "bytes": 132,
+        "decoded_bytes": 141,
+        "decoded_sha256": "fe8b2280abb0c0a09259c5211aa3dc729b9b42caa2afdaa7431a4d4936ba213c",
+        "immutable_original_compared": true,
+        "path": "docs/urbit/evidence/2026-09-26/native-attempts/core06/steps/stop.log.gz",
+        "sha256": "3515bb00ab4541684f1f9147aacb7e7157ed671b8d21b6ef4cf9f013b859c7f8"
+      },
+      {
+        "bytes": 107,
+        "decoded_bytes": 105,
+        "decoded_sha256": "113e2b3f4f0a6a2b0446cf6e795d0a91258fd2bc7e4d8ef3a483b6dd02cc9a76",
+        "immutable_original_compared": true,
+        "path": "docs/urbit/evidence/2026-09-26/native-attempts/core06/steps/wait-ready.json.gz",
+        "sha256": "4d279381188e6e006b8828ad36e20fe64c98d5287d5136cf4b6755c798333e1e"
+      },
+      {
+        "bytes": 124,
+        "decoded_bytes": 242,
+        "decoded_sha256": "6ade3d62b67dd2066207260ae96b6ef88847dbb824720cc7be7b132fee5510e9",
+        "immutable_original_compared": true,
+        "path": "docs/urbit/evidence/2026-09-26/native-attempts/core06/steps/wait-ready.log.gz",
+        "sha256": "01cedc45b27b73b7c8d5c8d2e0aa7bae317933250f77076dc26ab76b2428f17e"
+      },
+      {
+        "bytes": 12915,
+        "decoded_bytes": 239998,
+        "decoded_sha256": "c662c1651644f31d982f3b707f4f3055af9def5eeee7e715a23424025b99def4",
+        "immutable_original_compared": false,
+        "path": "docs/urbit/evidence/2026-09-26/native-attempts/core06/logs/zod.log.gz",
+        "sha256": "e3f352f907b10c06ae4611cf47b71b2ed46899ab029d638492a272e4933959fb"
+      },
+      {
+        "bytes": 48416,
+        "decoded_bytes": 287374,
+        "decoded_sha256": "f16599dbc545146992c06e561e095dd636d78d26a2252eabde5d96cd0216ec10",
+        "immutable_original_compared": false,
+        "path": "docs/urbit/evidence/2026-09-26/native-attempts/core06/logs/bus.log.gz",
+        "sha256": "87156c7822d97f6eaaa6fb91ba93232402fab0be1129107b48a300d68df9faee"
+      },
+      {
+        "bytes": 5116,
+        "decoded_bytes": 127887,
+        "decoded_sha256": "d92896d93cb5b03d4abe1299e5abffa9f31c22b336c26e03b465d73e53324dec",
+        "immutable_original_compared": false,
+        "path": "docs/urbit/evidence/2026-09-26/native-attempts/core06/logs/nec.log.gz",
+        "sha256": "405e7ff7daf85ff538af4640124488656026a3fda2393a452c8642812fc67aed"
+      },
+      {
+        "bytes": 7877,
+        "decoded_bytes": 244794,
+        "decoded_sha256": "a8ea22aa172b488f499fb496a744d7ce78ea82a46f346ffc93e97117cee10958",
+        "immutable_original_compared": false,
+        "path": "docs/urbit/evidence/2026-09-26/native-attempts/core06/logs/bud.log.gz",
+        "sha256": "e0c10712e74fa081fe30ab6274c4563a5428415c1b197d79d45f5049ad0cdddd"
+      },
+      {
+        "bytes": 24307,
+        "decoded_bytes": 438661,
+        "decoded_sha256": "9cc97ac120d0ffcdaeea4018e3aad792e24773e16466e36b2e2e7d315cce8be1",
+        "immutable_original_compared": false,
+        "path": "docs/urbit/evidence/2026-09-26/native-attempts/core06/logs/supervisor.log.gz",
+        "sha256": "91ee8f514eb725e69118825ff2667e55f6f67ab417dda775848d556430a8b668"
+      },
+      {
+        "bytes": 597178,
+        "decoded_bytes": 597178,
+        "decoded_sha256": "10f009491e451adb113090816b13a3e04bb8f3123795d1fa5eea43f473f22dcb",
+        "immutable_original_compared": true,
+        "path": "docs/urbit/evidence/2026-09-26/native-attempts/core06/core-20260926T223412Z-transport.jsonl.gz",
+        "sha256": "10f009491e451adb113090816b13a3e04bb8f3123795d1fa5eea43f473f22dcb"
+      },
+      {
+        "bytes": 145,
+        "decoded_bytes": 152,
+        "decoded_sha256": "a1b91f5716d718848adb187ef196fca9111e494299ae58c27ba9f729c67dac37",
+        "immutable_original_compared": false,
+        "path": "docs/urbit/evidence/2026-09-26/native-attempts/core06/unclean-live.json.gz",
+        "sha256": "e783db6c02b0fdfc2f3e8d7b3e204958e1a89ca21633cbad2c8c5e008bb917f5"
+      }
+    ],
+    "immutable_originals_compared": 18,
+    "index_sha256": "864944bab66b6366ccf066aac9001b0ea5f015350b032c04165305f0cba0757f",
+    "mutable_originals_not_read": "Five live log paths and the live unclean marker; exact retained copies alone were read and hashed."
+  },
+  "review_execution": {
+    "affinity": [
+      19
+    ],
+    "audit_adapter_note": "Initial readonly formatter reached verification but raised KeyError on the absent success-only guard scope_proof field before writing a report. This run reverified all inputs and records the omission explicitly.",
+    "browser_or_host_mutations": false,
+    "cpu_max": "2000 10000",
+    "elapsed_seconds": 3.188795,
+    "native_launches": 0,
+    "scope": "stead-core06-audit-20260926b.scope",
+    "tests_launched": 0,
+    "tracked_writes": false
+  },
+  "reviewer": "/root/gall_schedule_review",
+  "source": {
+    "actual_guard_source_sha256": "da16e2e0fd32eb5b90706b546a7ea8332a65807fc8279f3bd765dcc18aaad9b5",
+    "all_four_reported_installed_and_Clay_manifests_match_independent_committed_inventory": true,
+    "committed_source_file_count": 127,
+    "independently_derived_complete_execution_inputs_match": true,
+    "inputs_before_after_equal": true,
+    "installed_manifest_files": 22,
+    "scope": "Current repository bytes/Git blobs and pinned kernel/runtime derived independently. The failed guard was not admitted as a passing lane.",
+    "source_commit_before_after_equal": true,
+    "source_context_decoded_sha256": "5801030c72c5eeb402164bd5d6f51874f6345654ba349974bbd4114eb9d64541"
+  },
+  "source_commit": "dd0e8c0ce8d1d00f15de6b07e2e26d368c5c3774",
+  "thermal_attribution": {
+    "causal_limit": "Observed thermal ceiling crossing caused the terminal guard latch. These records do not identify which host workload caused the temperature rise or authorize browser/host-setting mutation.",
+    "event_stream_decoded_sha256": "778f8d904db71b997abc48529a57956debf0af2d8464d7ae016904405867ac7e",
+    "first_ceiling_crossing": true,
+    "guard_exit_code": 1,
+    "guard_report_sha256": "5ae1f27d0c74f32185c72c7d5c3408f9278910dc522f29ae8723e0b60ce1af80",
+    "guard_run_id": "d8966aea1e4edf5c5a564f1fb832cfd6",
+    "guard_status": "failed",
+    "guard_stop_event": {
+      "elapsed_seconds": 1166.548,
+      "event": "guard-stop",
+      "reason": "GuardError: Thermal ceiling reached"
+    },
+    "guard_stop_pointer": "/events/1167",
+    "peak_c": 92.0,
+    "peak_event": {
+      "elapsed_seconds": 1166.548,
+      "event": "sample",
+      "sample": {
+        "cpu_sensors": [
+          "thermal_zone3:TCPU",
+          "thermal_zone5:x86_pkg_temp"
+        ],
+        "finished": 873119.191965812,
+        "readings_c": {
+          "thermal_zone0:acpitz": 27.8,
+          "thermal_zone1:INT3400 Thermal": 20.0,
+          "thermal_zone2:SEN3": 43.05,
+          "thermal_zone3:TCPU": 92.0,
+          "thermal_zone4:TCPU_PCI": 92.0,
+          "thermal_zone5:x86_pkg_temp": 92.0,
+          "thermal_zone6:iwlwifi_1": 44.0
+        },
+        "started": 873119.189405407
+      }
+    },
+    "peak_event_record_sha256": "60c248eb8ff12465060ec408e7f86f68622d5c36c55a21d004e75f731f09bdb7",
+    "peak_event_stream_line": 1167,
+    "peak_guard_pointer": "/events/1166",
+    "peak_read_latency_seconds": 0.0025604049442335963,
+    "reason": "GuardError: Thermal ceiling reached",
+    "supervisor_latched_stop": {
+      "command": "execution guard stopped",
+      "result": {
+        "error": "Execution STOP is terminal"
+      },
+      "utc": "2026-09-26T22:53:31Z"
+    },
+    "unchanged_policy": {
+      "cooperative_seconds": 10,
+      "cpu_period_us": 10000,
+      "cpu_quota_us": 5000,
+      "kill_seconds": 5,
+      "sample_seconds": 1,
+      "stale_seconds": 3,
+      "start_c": 75,
+      "stop_c": 90,
+      "terminate_seconds": 10
+    }
+  },
+  "transport_integrity": {
+    "all_reported_record_digest_and_exact_summary_bindings_verified": true,
+    "artifact": {
+      "encoding": "gzip-jsonl",
+      "file": "core-20260926T223412Z-transport.jsonl.gz",
+      "records": 1568,
+      "scope": "Exact synthetic decoded transport/input records; native frame digests retained",
+      "sha256": "10f009491e451adb113090816b13a3e04bb8f3123795d1fa5eea43f473f22dcb",
+      "uncompressed_bytes": 8573963,
+      "uncompressed_sha256": "186c990d62e73f54ab31343f2e3ca3287fe8616b203a00d85d377094c613db77"
+    },
+    "scope": "Host read-only validation of saved exact records; no new native execution or phase admission.",
+    "validate_transport_passed": true
+  }
+}

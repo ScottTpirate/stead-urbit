@@ -1,0 +1,31 @@
+{
+  "protocol": "stead.authorized-host-change-retention/1",
+  "scope": "Exact records of the second temporary owner-authorized widget pause during capacity01, followed by verified original-byte restoration and effective enabled/layout readback. No fan or Chromium mutation. The later pause03 is separate and not declared restored by this record.",
+  "private_original_configuration": "Retained only in the local authorized backup; never included in this bundle. Records bind its hash.",
+  "artifacts": [
+    {
+      "path": "docs/urbit/evidence/2026-09-26/host-load-observations/widget-pause02/applied.json",
+      "source": ".runtime/phase01-20260926/widget-pause02/applied.json",
+      "sha256": "ac834ebdeeb10d77921829b4cc0c63070f09c7334dd706657b7fecc4cedb54cc",
+      "bytes": 569
+    },
+    {
+      "path": "docs/urbit/evidence/2026-09-26/host-load-observations/widget-pause02/verified.json",
+      "source": ".runtime/phase01-20260926/widget-pause02/verified.json",
+      "sha256": "9ec8d0c7c4cca490be91bf8decf546444c067d14092400ef778f8b9886ae8d3d",
+      "bytes": 319
+    },
+    {
+      "path": "docs/urbit/evidence/2026-09-26/host-load-observations/widget-pause02/restored.json",
+      "source": ".runtime/phase01-20260926/widget-pause02/restored.json",
+      "sha256": "18b8b0e4f151af8d228ea2f94dd9b75dbf95e16641a2eb268ff50c5da56c6b6b",
+      "bytes": 359
+    },
+    {
+      "path": "docs/urbit/evidence/2026-09-26/host-load-observations/widget-pause02/restoration-verification.json",
+      "source": ".runtime/phase01-20260926/widget-pause02/restoration-verification.json",
+      "sha256": "cf7cfb20aa49b002f5fa7bff743d782aa153f20b1ffa58b059539cbc0c14bb29",
+      "bytes": 486
+    }
+  ]
+}

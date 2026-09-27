@@ -1,0 +1,74 @@
+{
+  "schema": 1,
+  "observed_at_utc": "2026-09-25T10:15:47.338284+00:00",
+  "repository": "urbit/hoon-language-server",
+  "commit": "1024fbf219007e58605ae06c9314235abfdb42bd",
+  "tree": "cfe7cc5ec4ab7f56731a86b76a85746b3ad4499f",
+  "default_branch": "master",
+  "license_file": "upstream/LICENSE",
+  "files": [
+    {
+      "path": "LICENSE",
+      "bytes": 1072,
+      "git_blob": "9b7c50ba42e9336f53e3ecf0afe70870b483bb29",
+      "sha256": "0870f414944a06f72724f8635c438324dc42fc4728d8b0f2f325fc48de7e5e6a",
+      "url": "https://github.com/urbit/hoon-language-server/blob/1024fbf219007e58605ae06c9314235abfdb42bd/LICENSE"
+    },
+    {
+      "path": "README.md",
+      "bytes": 2741,
+      "git_blob": "8a059e66030ac01688b313c5ba3deb42a7e6d5fe",
+      "sha256": "a0c1ed3b2b79c8210394740eeb54aeee61d2c13d3664ed784da193340f9843eb",
+      "url": "https://github.com/urbit/hoon-language-server/blob/1024fbf219007e58605ae06c9314235abfdb42bd/README.md"
+    },
+    {
+      "path": "package.json",
+      "bytes": 1035,
+      "git_blob": "a5cd78f844e9a503bfca9b189ebe47460ad5d02f",
+      "sha256": "367887910212676fdfa2cf015085738b8705be8a980ae5a4244d4d539c3d2346",
+      "url": "https://github.com/urbit/hoon-language-server/blob/1024fbf219007e58605ae06c9314235abfdb42bd/package.json"
+    },
+    {
+      "path": "package-lock.json",
+      "bytes": 41454,
+      "git_blob": "63440947fe33f7c67e5fe4622da5233f2e0e9711",
+      "sha256": "dd1dbe486ae38233dc0883f5c3886846d070f77debeae281fa857c5aa053f190",
+      "url": "https://github.com/urbit/hoon-language-server/blob/1024fbf219007e58605ae06c9314235abfdb42bd/package-lock.json"
+    },
+    {
+      "path": "tsconfig.json",
+      "bytes": 287,
+      "git_blob": "8a507747b589ed57dabf3e5f9a6cd1aec52fa357",
+      "sha256": "56051fe70a0a5b0875c8c13ade8c0ded9a592fb4762af8e143bee138c3e0d88e",
+      "url": "https://github.com/urbit/hoon-language-server/blob/1024fbf219007e58605ae06c9314235abfdb42bd/tsconfig.json"
+    },
+    {
+      "path": "bin/index.js",
+      "bytes": 49,
+      "git_blob": "25487269162a050f3c647d932146c5e7f9845f88",
+      "sha256": "98deeef9f05dd10a5af1a0106ed96dccb3af3700e7069338f44f93e17453ca65",
+      "url": "https://github.com/urbit/hoon-language-server/blob/1024fbf219007e58605ae06c9314235abfdb42bd/bin/index.js"
+    },
+    {
+      "path": "src/server.ts",
+      "bytes": 5725,
+      "git_blob": "1ca705ba71e124969c0e7bbd30f2c8dd74c02ee8",
+      "sha256": "d6e2caf17d83ba982b5846dd304aeb4edef9dd36211ba00bf745015ceaf71ca2",
+      "url": "https://github.com/urbit/hoon-language-server/blob/1024fbf219007e58605ae06c9314235abfdb42bd/src/server.ts"
+    },
+    {
+      "path": "src/util.ts",
+      "bytes": 846,
+      "git_blob": "3d20ea03f46dbd67ef5436c24d81c248ebab1b29",
+      "sha256": "a06e0803d362f189b107d7374faa7b65c8db31f01031b7c4e04a196f0e9ae230",
+      "url": "https://github.com/urbit/hoon-language-server/blob/1024fbf219007e58605ae06c9314235abfdb42bd/src/util.ts"
+    },
+    {
+      "path": "src/marks.ts",
+      "bytes": 522,
+      "git_blob": "3e6d0fe9bb78e38b294a5cfa14aec5ef102cbd66",
+      "sha256": "5fa731b7078cd93d06a9ca4d71ec5233b2289fbdc192506ec364df77c6ed1ccd",
+      "url": "https://github.com/urbit/hoon-language-server/blob/1024fbf219007e58605ae06c9314235abfdb42bd/src/marks.ts"
+    }
+  ]
+}

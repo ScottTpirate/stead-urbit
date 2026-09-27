@@ -1,0 +1,635 @@
+{
+  "protocol": "stead.native-and-host-source-preservation/1",
+  "recorded_at": "2026-09-27T00:45:11.908390+00:00",
+  "executed_source_commit": "dd0e8c0ce8d1d00f15de6b07e2e26d368c5c3774",
+  "purpose": "Records-only acceptance publication retains exact native and host-tested source bytes; native execution is never relabeled to the later documentation commit.",
+  "all_working_bytes_equal_executed_commit": true,
+  "files": [
+    {
+      "path": "Makefile",
+      "sha256": "db4777fe8809b0a31e570de79c38faa4421a5e87cca70bb82b8173083b9c7784"
+    },
+    {
+      "path": "native/README.md",
+      "sha256": "00df76663c10fab63f00ac756eb4c9a2ef33d17545407f051c1063f02c1d4d67"
+    },
+    {
+      "path": "native/core/desk/app/stead-home.hoon",
+      "sha256": "3bfc0e45062ef0bc8572d5034a60b5b35f6502350f821129b5ba7a7cca0b2b9c"
+    },
+    {
+      "path": "native/core/desk/app/stead-observer.hoon",
+      "sha256": "16589b4f9f51782d0907a7c186e3fcff6625c713bb64006f37330d6056645e45"
+    },
+    {
+      "path": "native/core/desk/gen/stead-build-probe.hoon",
+      "sha256": "5b95dc5675894897cdf1bda25cbb9bf27100dd6bd305dfd836aad4ec06725d96"
+    },
+    {
+      "path": "native/core/desk/gen/stead-codec-probe.hoon",
+      "sha256": "77acef53149bfc517c30625ab902cc9dcf06faf10d2f5413759591df9cfb3ff6"
+    },
+    {
+      "path": "native/core/desk/gen/stead-core-probe.hoon",
+      "sha256": "ce41ca465d959dabde9c9dbfb0f39db4294ec5117b5b7d65c7b2f8a2a21f718c"
+    },
+    {
+      "path": "native/core/desk/gen/stead-reducers-probe.hoon",
+      "sha256": "a5c3b59ef426a2e1d44bb3b0084b222a26120ed999dd0744885bbe2a78c14471"
+    },
+    {
+      "path": "native/core/desk/gen/stead-save-probe.hoon",
+      "sha256": "84899440be705a00f1bd9a7da38c3f8499ca13562e110aef53c9fac40f8e2ffd"
+    },
+    {
+      "path": "native/core/desk/lib/stead-codec-v1.hoon",
+      "sha256": "ce4c7a69b03ee1761590c37e71ff49b9f63a1a2edd2aaa6dfbf75bc3c960584a"
+    },
+    {
+      "path": "native/core/desk/lib/stead-codec.hoon",
+      "sha256": "56e3d574381bbf8cdf29ca192c70eff256009f89d782e3ffe859b19c1321cbd7"
+    },
+    {
+      "path": "native/core/desk/lib/stead-core-v1.hoon",
+      "sha256": "879615a5547d06a09d382c2bac4c5cb20cdf03236ddfdab79c9f1da15bd33cb5"
+    },
+    {
+      "path": "native/core/desk/lib/stead-core.hoon",
+      "sha256": "4c183ef6283030437af5e1433e3fbf80f414757bcede4cab1282fc71ff5f34de"
+    },
+    {
+      "path": "native/core/desk/lib/stead-delivery.hoon",
+      "sha256": "178cac634471554dae9928f8c38248751329314391061976a436a22a7075548d"
+    },
+    {
+      "path": "native/core/desk/lib/stead-git.hoon",
+      "sha256": "826b83485429c02f577c9b462ee6cddd3ab8ea1a099d33b66893f863d54c54d7"
+    },
+    {
+      "path": "native/core/desk/mar/stead-command-1.hoon",
+      "sha256": "fcd87c92acc16c2883b1dd4900af5064d1da910af317e93c327455cd56d9553b"
+    },
+    {
+      "path": "native/core/desk/mar/stead-command-2.hoon",
+      "sha256": "fcd87c92acc16c2883b1dd4900af5064d1da910af317e93c327455cd56d9553b"
+    },
+    {
+      "path": "native/core/desk/mar/stead-control-1.hoon",
+      "sha256": "643d9d5221b5b43230f864f11b1d6830ad2b32ffd64644c77ea70c0fa1ea8c5e"
+    },
+    {
+      "path": "native/core/desk/mar/stead-fixture-1.hoon",
+      "sha256": "fcd87c92acc16c2883b1dd4900af5064d1da910af317e93c327455cd56d9553b"
+    },
+    {
+      "path": "native/core/desk/mar/stead-observer-1.hoon",
+      "sha256": "e30d449181f121ea403b8d38e12d3b925362591ee516092f254852af0631a684"
+    },
+    {
+      "path": "native/core/desk/mar/stead-result-1.hoon",
+      "sha256": "fcd87c92acc16c2883b1dd4900af5064d1da910af317e93c327455cd56d9553b"
+    },
+    {
+      "path": "native/core/desk/mar/stead-result-2.hoon",
+      "sha256": "fcd87c92acc16c2883b1dd4900af5064d1da910af317e93c327455cd56d9553b"
+    },
+    {
+      "path": "native/core/desk/ted/stead-client.hoon",
+      "sha256": "a0420730b0ee1a56d46e22def0b570cf089a7de39810453010a3f77ff3f9c155"
+    },
+    {
+      "path": "native/core/desk/tests/stead-git.hoon",
+      "sha256": "51518a1239373467864412e64ab92cfbc8258bd37783988b2ae6c17c6eac2d98"
+    },
+    {
+      "path": "native/desk/app/stead-home.hoon",
+      "sha256": "6b4071c1d3906223a62bd1af6193b2a48942b751b46460fa96cea2f8b48a729b"
+    },
+    {
+      "path": "native/desk/lib/stead-smoke.hoon",
+      "sha256": "a064e0b81fdaa1b0341d884aa71773d52c271c3223ff7e56d1e6566460dfdfd0"
+    },
+    {
+      "path": "native/desk/ted/stead-smoke.hoon",
+      "sha256": "65a794e5165438fdbcd38c9a6586561f21f66db3b1eb2fbcb745aa5cb1782ea2"
+    },
+    {
+      "path": "scripts/urbit/build_phase1_evidence.py",
+      "sha256": "c886c18fb25c0e381f346a6b7ec0387a784410acacfcac9ea72b6a5881708f7f"
+    },
+    {
+      "path": "scripts/urbit/check_ecosystem.py",
+      "sha256": "28a86e6142a6a6477e1543385032cf0992e7be0e7d891cb1116a8fabdb8c984f"
+    },
+    {
+      "path": "scripts/urbit/conn.py",
+      "sha256": "d590a41033bbea62bad6f5dc63c16fdb16c61c906c773c8f3c9c316b69dd3454"
+    },
+    {
+      "path": "scripts/urbit/contracts.py",
+      "sha256": "7ccd0b9e664428487b25740bb2a75807de4c047c5d41544bfeff2d771b7bb8e2"
+    },
+    {
+      "path": "scripts/urbit/contracts_v2.py",
+      "sha256": "42389543526318c92ad5496175b891db2c422bcb03bc0a103006345a5429cb37"
+    },
+    {
+      "path": "scripts/urbit/core_cases.py",
+      "sha256": "2db9b3d6f71c8c4cadaeaa2b65eab88740b9785626231855e3ea1c7bc294530e"
+    },
+    {
+      "path": "scripts/urbit/core_cases_v2.py",
+      "sha256": "6db78c1712bee0c0e613b9ae6250a48871983e7c9a3a1f9a159da4517047e6ac"
+    },
+    {
+      "path": "scripts/urbit/core_check.py",
+      "sha256": "b732d7854142bbd4bed1644baaec65a42a9a832a01ba076bb817d1de57db22aa"
+    },
+    {
+      "path": "scripts/urbit/core_conn.py",
+      "sha256": "e178a5c0ce619031b8da64376b99b429ac0f90dded293ac60fa1137447d53614"
+    },
+    {
+      "path": "scripts/urbit/core_export.py",
+      "sha256": "8c8fa9bb28e015ff07f83ed32ba1f80edef517295b3224e862f7c7dd2a36bb21"
+    },
+    {
+      "path": "scripts/urbit/core_test.py",
+      "sha256": "612ea14eeb83a047fce9bf542492c7d1ed38431015274703d20994b406ef392d"
+    },
+    {
+      "path": "scripts/urbit/delivery_cases.py",
+      "sha256": "171edf429fc1677e3250bcebff4cd2fb55e762d767204afdae846f86deccc131"
+    },
+    {
+      "path": "scripts/urbit/delivery_suite.py",
+      "sha256": "0c2cff055ce3e9e7fe5b1ddb37f99bc1d7d7a8631b8376d4949d3f18020a357f"
+    },
+    {
+      "path": "scripts/urbit/dev_help.py",
+      "sha256": "185178949e9be531f3653830f02e0d6d22a7bd8ee5721a9063995052e813bc23"
+    },
+    {
+      "path": "scripts/urbit/digests.py",
+      "sha256": "88e6333bd6c764f48fb8939bafa77c9eb236c5b3586a19fe1a1f6e48e27dc08c"
+    },
+    {
+      "path": "scripts/urbit/execution_policy.py",
+      "sha256": "da16e2e0fd32eb5b90706b546a7ea8332a65807fc8279f3bd765dcc18aaad9b5"
+    },
+    {
+      "path": "scripts/urbit/gall_schedule.py",
+      "sha256": "e839771e23a44b1ac403df213fae2c83103a7750c36330de16322b3c0e913af2"
+    },
+    {
+      "path": "scripts/urbit/gall_schedule_proof.py",
+      "sha256": "fe6564900c0b3b6ae5c0a75ea18788807024053f433d0f5fcb0b17f04566904b"
+    },
+    {
+      "path": "scripts/urbit/git_vectors.py",
+      "sha256": "7c1997350143d3e08ae8ad5f9e113e2c01d9cb94b7dd69ca1e38c4d9fbb25c40"
+    },
+    {
+      "path": "scripts/urbit/harness.py",
+      "sha256": "d74d3ef74ea6c58bc1b15ea3c504f2eef7e980073e5260e7c566697b9a1261fe"
+    },
+    {
+      "path": "scripts/urbit/namespace_check.py",
+      "sha256": "87950f4e7796fafb91807c36b9ea7d392d1d1840e5516d15d5fc6c5d476d0449"
+    },
+    {
+      "path": "scripts/urbit/native_transcript.py",
+      "sha256": "d724f6820d58b926a055bd10fe4804fd10db917158804b478e37e1b80cf3b34f"
+    },
+    {
+      "path": "scripts/urbit/qualification_cases.py",
+      "sha256": "0383dd02dcb1e3cfa6ff9e93be5da49b2fee7bdee1a71dde7c2b6db303c3c3f9"
+    },
+    {
+      "path": "scripts/urbit/qualification_gate.py",
+      "sha256": "ce0d8d0d87e9556940143943d7107099bfeb5c36eec6744342e555bfd292a6ab"
+    },
+    {
+      "path": "scripts/urbit/skill_evaluation_support.py",
+      "sha256": "67597ff220928b99ca1cf1e925bd86c903fa3d1399fd59e00825aec936965fe7"
+    },
+    {
+      "path": "scripts/urbit/supervisor.py",
+      "sha256": "a0c840c2382cc5b97304c7696ef6069f78051ba4795a4d3c0729e0c236df1168"
+    },
+    {
+      "path": "scripts/urbit/sync_milestones.py",
+      "sha256": "9cce588554d9224acab2c9176455321347dfa25eca0d82c14680f9f9de5a730a"
+    },
+    {
+      "path": "scripts/urbit/toolchain.py",
+      "sha256": "31234bbab1af217c885d8c081d7f438972f6ff1b6d89c93d10bdf49871b3ea16"
+    },
+    {
+      "path": "scripts/urbit/urgit_audit.py",
+      "sha256": "c16b32b67c450ccd1fab8efc739e7d272ef4dc96c82dff8f119107f30b3c28d5"
+    },
+    {
+      "path": "scripts/urbit/urgit_eval/bootstrap.py",
+      "sha256": "49e9fe5665490c7eab60e4e07dd5c72769fbf3c95a771bbb4e1093a6e73d4b56"
+    },
+    {
+      "path": "scripts/urbit/urgit_eval/evaluate.py",
+      "sha256": "cb26fca7fcc45bcc60da1d12b54a2ed92f6a3eda1c7b08c1665ea787e876e6e4"
+    },
+    {
+      "path": "scripts/urbit/urgit_seed.py",
+      "sha256": "1df796d497290da0cf05faa919324fe318079fe910912e658adc88e599fd73b6"
+    },
+    {
+      "path": "scripts/urbit/validate_plan.py",
+      "sha256": "575c8dcbf02cda7d4495bdf072e661c197a05f98fefc96f9f42f68315a126bdc"
+    },
+    {
+      "path": "specs/urbit/backlog.json",
+      "sha256": "7a2395a19c77ec08d1ed7c96eae393be44f7c367b5065e3fbb0523262f4ba116"
+    },
+    {
+      "path": "specs/urbit/command.schema.json",
+      "sha256": "968fbdcfa0dbff712e6282dafe87429332dbcc19d5a9dff914bba8a7a410210f"
+    },
+    {
+      "path": "specs/urbit/contract-freeze.json",
+      "sha256": "61d9a18f16b8b01629bd35177d5b801cc05cd8ddaf7f68c3cc1678faf642cf90"
+    },
+    {
+      "path": "specs/urbit/ecosystem.json",
+      "sha256": "7193c6fd85bd464a9bd14d6c833ba7083f2b0a5f5198cf5af4264239f8f1ba06"
+    },
+    {
+      "path": "specs/urbit/fixtures/commands.json",
+      "sha256": "3269fb0ebae091b9a022954e4ca876d318c5e06c4b6c69b7445628186d886592"
+    },
+    {
+      "path": "specs/urbit/fixtures/native-cases-v2.json",
+      "sha256": "95c915e2d0c93f358225274b34216fff0fe2efc09791905855b1e3f36aec368a"
+    },
+    {
+      "path": "specs/urbit/fixtures/native-cases.json",
+      "sha256": "88d554aebc48e071f63db981263cacdfb144c16aa870046248134ba667362e4c"
+    },
+    {
+      "path": "specs/urbit/native-api.json",
+      "sha256": "ee976ceaa975a7f67e58bea8cd7e03aa238b704985d06b0a96178ac087753056"
+    },
+    {
+      "path": "specs/urbit/native-fixture.json",
+      "sha256": "e693116efbc00b1131714f9eb7077ec678669d4fdb27ddfdce284461e0dffe74"
+    },
+    {
+      "path": "specs/urbit/policy-contract.json",
+      "sha256": "3e23cc5fd08240d85bd03a46d4cfb3569a6a30a1c543b2283bfb3b4ed08ec6d0"
+    },
+    {
+      "path": "specs/urbit/smoke-corpus.json",
+      "sha256": "3a05090f8ff4aceddcd228145346564ce9ecf28af7016fd256eb911430dbbd9c"
+    },
+    {
+      "path": "specs/urbit/toolchain.lock.example.json",
+      "sha256": "1dfb7d2817efe8906424765efc09d648eb94385aa2194d53c588a69db429df65"
+    },
+    {
+      "path": "specs/urbit/toolchain.lock.json",
+      "sha256": "4a209c10cf1756eb0f7357cc3eca8250bf66c239b4cd0ca31a8c0886d4d304ee"
+    },
+    {
+      "path": "specs/urbit/urgit-candidate.lock.json",
+      "sha256": "50a90b296fa40e5a9178999cb2709682884812a98e2b133f6261eb5ec3934561"
+    },
+    {
+      "path": "specs/urbit/v2/command.schema.json",
+      "sha256": "ab2190b29216d9875390b313397c880838cc00378a9bc0178423e467a1820968"
+    },
+    {
+      "path": "specs/urbit/v2/commands.json",
+      "sha256": "26609938a3c3c19913276d3ed2f07f99b0ce8a2d0081c88812877cd21e2a6687"
+    },
+    {
+      "path": "specs/urbit/v2/contract-freeze.json",
+      "sha256": "a2336e5060c71c7c16849b3151cc024a598d6cdf867561452eff1338e3232670"
+    },
+    {
+      "path": "specs/urbit/v2/native-api.json",
+      "sha256": "6702cea56f8a1418a7663850e70d1a77775a890f708754d0347d89e9c2ae3bd8"
+    },
+    {
+      "path": "specs/urbit/v2/qualification-gate.json",
+      "sha256": "f374349cc3ccd64993e3dade9a44e306854479c228b7f93d6559647006aee94c"
+    },
+    {
+      "path": "tests/urbit/fixtures/gall-negative-dojo-tang.json",
+      "sha256": "ca61768a16fce533d43beb71ed924d386c8451d9a24ed820435c706756d176be"
+    },
+    {
+      "path": "tests/urbit/native_gall_schedule/README.md",
+      "sha256": "7a946cc14252cf5fb8108a4f80525274f5a63419644e2e0689837953840a9b95"
+    },
+    {
+      "path": "tests/urbit/native_gall_schedule/UPSTREAM_LICENSE.txt",
+      "sha256": "636518cb81359b1a79f273a4632a440bd4e8f614a087ba8cc502a9b99c7bd4dd"
+    },
+    {
+      "path": "tests/urbit/native_gall_schedule/build_inputs.py",
+      "sha256": "f3d1ae16f626d02b08e6b623513cf731c8ac622eb9433f8a1cd3124865bc798c"
+    },
+    {
+      "path": "tests/urbit/native_gall_schedule/desk/gen/stead-gall-schedule-negative.hoon",
+      "sha256": "b4e0b7e286c1f92feb95f369afce367bb0bb978508e200841e76b582792e4db7"
+    },
+    {
+      "path": "tests/urbit/native_gall_schedule/desk/gen/stead-gall-schedule.hoon",
+      "sha256": "172a78340a1bed71362745cdc00721db2d287c3f37cf42920e5752c24ba0d510"
+    },
+    {
+      "path": "tests/urbit/native_gall_schedule/desk/lib/stead-gall-schedule-inputs.hoon",
+      "sha256": "178ac9f2381d933e4eb2aa9dba1da68a2cd885cba91a13fe2f135eaf403da1ad"
+    },
+    {
+      "path": "tests/urbit/native_gall_schedule/desk/lib/stead-gall-schedule.hoon",
+      "sha256": "45df519bfaa206142a0954b7f3f234359ed5a9c6bbe2295e273fbe4aeab1e1ff"
+    },
+    {
+      "path": "tests/urbit/native_gall_schedule/inputs.json",
+      "sha256": "063bc48eff37d8ed71dc30a7c89b177564925bea96d1569c6e40d0f77b8762fc"
+    },
+    {
+      "path": "tests/urbit/skill_evaluation/README.md",
+      "sha256": "edd05520d2014c662fb7c992097da4f101f9109f76eaf72fa059c89de27c40d9"
+    },
+    {
+      "path": "tests/urbit/skill_evaluation/assisted/stead-gall-security.SKILL.md",
+      "sha256": "c5de6d6f494f65891e064276c1a9c65629ffe6276a0ade4929d9012901350fcc"
+    },
+    {
+      "path": "tests/urbit/skill_evaluation/assisted/stead-hoon.SKILL.md",
+      "sha256": "5469b3567b908b3f9fc684f92376c379de2a611f6c60dc0cf770627583ba121a"
+    },
+    {
+      "path": "tests/urbit/skill_evaluation/assisted/stead-native-tests.SKILL.md",
+      "sha256": "13622cf24e087573d63b7fc4850f49c44ed943cbf3ad8f0cf4fe4ed590774ba8"
+    },
+    {
+      "path": "tests/urbit/skill_evaluation/assisted/stead-urbit-release.SKILL.md",
+      "sha256": "52e5f9ef225d4a9849386b50b9253abb801c12f02bfa60e839595c14430d3685"
+    },
+    {
+      "path": "tests/urbit/skill_evaluation/common/smoke-agent.hoon",
+      "sha256": "6b4071c1d3906223a62bd1af6193b2a48942b751b46460fa96cea2f8b48a729b"
+    },
+    {
+      "path": "tests/urbit/skill_evaluation/common/smoke-library.hoon",
+      "sha256": "a064e0b81fdaa1b0341d884aa71773d52c271c3223ff7e56d1e6566460dfdfd0"
+    },
+    {
+      "path": "tests/urbit/skill_evaluation/common/toolchain-pins.json",
+      "sha256": "14beab5b84c694f792e8da8fa4f70b4c1057a4cfdefb6a5abd6f4a27dcb2d2bb"
+    },
+    {
+      "path": "tests/urbit/skill_evaluation/freeze.json",
+      "sha256": "edfb008df1b9800d268327c90310fc486a488fab4a2ae0911079ba6c7b504431"
+    },
+    {
+      "path": "tests/urbit/skill_evaluation/protocol.json",
+      "sha256": "d1d2ee0a328500634dac810dfe0cdcba59c7ece9dff96fe1dab04e6fe7fb5ac6"
+    },
+    {
+      "path": "tests/urbit/skill_evaluation/provenance.json",
+      "sha256": "96f1f33b62eefb0747bbe94f88d633ba64afe07c1dbe7373f4b9ff190e289632"
+    },
+    {
+      "path": "tests/urbit/skill_evaluation/public/BRIEF.md",
+      "sha256": "2319c2d29dae1e12101322989fd220766d00dcac29450f069f182706ec3f5a6d"
+    },
+    {
+      "path": "tests/urbit/skill_evaluation/public/T01.md",
+      "sha256": "0dda7a86857f6c215c1df21f2833706626ed2ef900abdf5cdced3f5213410734"
+    },
+    {
+      "path": "tests/urbit/skill_evaluation/public/T02.md",
+      "sha256": "5eadfc84fc011585041e6530d6bae3b23fd07d4fee875c8dee8e59ac1876fa93"
+    },
+    {
+      "path": "tests/urbit/skill_evaluation/public/T03.md",
+      "sha256": "e578dac31e638007214d998681450b178508f8a739268898a300e30dfbeed474"
+    },
+    {
+      "path": "tests/urbit/skill_evaluation/public/T04.md",
+      "sha256": "637378e6621963df863ad9d05044670d5420095910f1f536148e9c8227438317"
+    },
+    {
+      "path": "tests/urbit/skill_evaluation/public/T05.md",
+      "sha256": "68e6dc2d8442afb45cb498d6ad95eace204ba9907ed76f5e7ce36eba34d7328c"
+    },
+    {
+      "path": "tests/urbit/skill_evaluation/public/T06.md",
+      "sha256": "529dddf73e8c0f5f56b7ad53b33498e1a39990213a5ad5ec3e230bee95f5d02d"
+    },
+    {
+      "path": "tests/urbit/skill_evaluation/public/starters/T01/lib/eval-add.hoon",
+      "sha256": "799b156bb4f62de674bfea4e3366f8ba50247c3437551389e4d9e8c2235ab4fb"
+    },
+    {
+      "path": "tests/urbit/skill_evaluation/public/starters/T02/lib/eval-maybe.hoon",
+      "sha256": "1a7bf3b0eb667c9644a0b2281a325c370e6c5b018e10c41bb9dcac7f76901c3a"
+    },
+    {
+      "path": "tests/urbit/skill_evaluation/public/starters/T03/app/eval-counter.hoon",
+      "sha256": "2b92ef35e94ba2a025e3110cd861d22fed961c22550ecc0b434f2760b6db9ab5"
+    },
+    {
+      "path": "tests/urbit/skill_evaluation/public/starters/T04/app/eval-access.hoon",
+      "sha256": "3a23477c314317b3d69cd986f8db930ee9616a1a89834183e171104aebada34e"
+    },
+    {
+      "path": "tests/urbit/skill_evaluation/public/starters/T05/lib/eval-authorization.hoon",
+      "sha256": "45688239f7e9050e75b84b863ecb087a50ba076b0f2a667ddc8e86dfc5e17e1f"
+    },
+    {
+      "path": "tests/urbit/skill_evaluation/public/starters/T05/tests/eval-coverage.hoon",
+      "sha256": "8585fb5fc44c969c7b3c8d50eab65d13d450e24694e11dd9cf2693c35a18d4bd"
+    },
+    {
+      "path": "tests/urbit/skill_evaluation/public/starters/T06/source/NOT_A_DESK_FILE.txt",
+      "sha256": "50bf151a9d4673224de6692606cc92b18210825607437480622b5f5292711f12"
+    },
+    {
+      "path": "tests/urbit/skill_evaluation/public/starters/T06/source/desk.bill",
+      "sha256": "73cafed4c2cba0743097670a0615e4958fd6ddae0ea12b077bffcc3581e9afd2"
+    },
+    {
+      "path": "tests/urbit/skill_evaluation/public/starters/T06/source/eval-desk-probe.hoon",
+      "sha256": "818d547c2319a5b72157d48f3e9f8e997b46c6633db109ae154154f0796d85c6"
+    },
+    {
+      "path": "tests/urbit/skill_evaluation/public/starters/T06/source/eval-desk.hoon",
+      "sha256": "4c55f52fd8177ab0cc6a4fc4c379f08899f692211ecdc7dd9c1c8b7e39b8b475"
+    },
+    {
+      "path": "tests/urbit/skill_evaluation/public/starters/T06/source/sys.kelvin",
+      "sha256": "0a66fa5dec5893d2e3a8e854c4d6c81d62882863e4c8574ce18da9daea5a7cc4"
+    },
+    {
+      "path": "tests/urbit/skill_evaluation/result.schema.json",
+      "sha256": "7d563849c92d3779a0213bd5965ba2c61d320ba3d261587c950d6fca0ff4599f"
+    },
+    {
+      "path": "tests/urbit/skill_evaluation/reviewer/T05/claim-must-match.hoon",
+      "sha256": "7ed9354a163651538904463f133d9e2d90e781a61028f62c3d6deb25f328c2d0"
+    },
+    {
+      "path": "tests/urbit/skill_evaluation/reviewer/T05/claimed-author.hoon",
+      "sha256": "ebdb500fdffcc3ae0176ccf73219232dc88ac2ae708e3ceb4b1e4ea19d15e307"
+    },
+    {
+      "path": "tests/urbit/skill_evaluation/reviewer/T05/everyone-granted.hoon",
+      "sha256": "a2b785e79ae75b02819064e91cb75e2304ba55aa33089aae5e9a0fdf959fb015"
+    },
+    {
+      "path": "tests/urbit/skill_evaluation/reviewer/T05/outsider-granted.hoon",
+      "sha256": "d9bb871d3115c0ae656eb0e83138d6cc9716277baa7667253b3eec0dd3fe24d1"
+    },
+    {
+      "path": "tests/urbit/skill_evaluation/reviewer/controls/T05-weak-tests.hoon",
+      "sha256": "2e51a43725cf25619a6ee414f38078bb83515a53c7ff0f4206e5588664549519"
+    },
+    {
+      "path": "tests/urbit/skill_evaluation/reviewer/oracles.json",
+      "sha256": "06b540ba1275e7a5893d8ce62b03959a756af008a15265ea87d3a2c3d57b25b6"
+    },
+    {
+      "path": "tests/urbit/skill_evaluation/reviewer/reference/T01/lib/eval-add.hoon",
+      "sha256": "732840938ec0935ed44d4ac68890d0013f642ce5d8a29703d2b4cee3e68bca65"
+    },
+    {
+      "path": "tests/urbit/skill_evaluation/reviewer/reference/T02/lib/eval-maybe.hoon",
+      "sha256": "a980fdbe1dab53b6204f53efa261be3c05df9beb6620ee29f4d39e0e61706822"
+    },
+    {
+      "path": "tests/urbit/skill_evaluation/reviewer/reference/T03/app/eval-counter.hoon",
+      "sha256": "2114502d5a16cf30e9780764d2ce76f8f0a3c0c42fdddecd3636fe84bbf03b83"
+    },
+    {
+      "path": "tests/urbit/skill_evaluation/reviewer/reference/T04/app/eval-access.hoon",
+      "sha256": "6c65958126f15afd57e1f4d504c3bdade9700c5c82d799e18c75852cd6353f30"
+    },
+    {
+      "path": "tests/urbit/skill_evaluation/reviewer/reference/T05/tests/eval-coverage.hoon",
+      "sha256": "3d69799d76422557bf915062b2bc7996a9bf8ef995e0e75cae713d9c497f57ee"
+    },
+    {
+      "path": "tests/urbit/test_conn.py",
+      "sha256": "82afc05af9022a5519473aa8f2b1c323297d140931a461c74403ac6f3753b47b"
+    },
+    {
+      "path": "tests/urbit/test_contracts.py",
+      "sha256": "ce9ccec4a42a21ec973d13e33ec27d6581041c2cd9cb70b73e0a01b203c3cc75"
+    },
+    {
+      "path": "tests/urbit/test_contracts_v2.py",
+      "sha256": "5a066d225795a409ac8b2a290454c642245902e78efa0bc67442b94e25adaa38"
+    },
+    {
+      "path": "tests/urbit/test_core_cases.py",
+      "sha256": "d802c2d1eaeb58d9101f3f8f1663e3a4f639aa87e3087e97563e2ede4c5bf464"
+    },
+    {
+      "path": "tests/urbit/test_core_cases_v2.py",
+      "sha256": "baba80530b8316f55270c7f37b45402fa2ed4a73e61d21d465a6c62fdcefc381"
+    },
+    {
+      "path": "tests/urbit/test_core_conn.py",
+      "sha256": "fdca369149ed4eea7e8af94491b0835dfe4828faa38ffa9f571a30fb22a81d37"
+    },
+    {
+      "path": "tests/urbit/test_core_export.py",
+      "sha256": "f7f88f1d204697ee1107727c41b7405627986ee0d7fac849f884c12d5e24a392"
+    },
+    {
+      "path": "tests/urbit/test_core_report.py",
+      "sha256": "e7585acd6e72e9a73fc24f5e42cf31c94507fcc3234aa8544a75fc2e10f247c2"
+    },
+    {
+      "path": "tests/urbit/test_delivery_cases.py",
+      "sha256": "ce34d65a3ecf48b1f85f903b23d8587f73b9fb1fac1812d33991f68ee95ac677"
+    },
+    {
+      "path": "tests/urbit/test_delivery_evidence_regressions.py",
+      "sha256": "f33f843b0cd54a8881eda7821905374e88af6b91afc75e095154f5ab5a515532"
+    },
+    {
+      "path": "tests/urbit/test_delivery_suite.py",
+      "sha256": "23b899e41c008c0317f6366cdf12e1de2eac38cc676d916215d245a5eda56c6e"
+    },
+    {
+      "path": "tests/urbit/test_dev_flow.py",
+      "sha256": "27700da68611fe1864cea3969ff2807156fdd30fe8ed5c3a35bf437f7b7aef53"
+    },
+    {
+      "path": "tests/urbit/test_ecosystem.py",
+      "sha256": "1b178a6ca09a64fe90cd72f5bd15cd9a0a3de48cd405ff95b09758fcc6d1138d"
+    },
+    {
+      "path": "tests/urbit/test_execution_policy.py",
+      "sha256": "4c37ec810eae1afa2f2fd2df9ad3e65bba93b01f3fbc6ea4558c6127c4312a9f"
+    },
+    {
+      "path": "tests/urbit/test_gall_schedule_proof.py",
+      "sha256": "e5f49ab05707209098d1127e6343c4027c29de6d7706cd05d6b3eadf14aeeb3a"
+    },
+    {
+      "path": "tests/urbit/test_gall_schedule_runner.py",
+      "sha256": "a5cf8c9829b1a4308c273900b30f7fe4faee702b18092a1ea96eab40fc13164b"
+    },
+    {
+      "path": "tests/urbit/test_harness_safety.py",
+      "sha256": "16aee0f67ce3fa95fa5248677753df005edaa6c3cc96716361cb5cd44a51054e"
+    },
+    {
+      "path": "tests/urbit/test_native_cases.py",
+      "sha256": "743eda70bc73a4760019bf08506379082f375af00f5b0a2ab0b120a340450624"
+    },
+    {
+      "path": "tests/urbit/test_native_transcript.py",
+      "sha256": "e9ec39d8cdfeed58d42c30f2aef9bda8a5bb597bebb53331c94a5ee05328ba3f"
+    },
+    {
+      "path": "tests/urbit/test_phase1_evidence_builder.py",
+      "sha256": "5ea0b18e89888983c08fb8b8a7ec0321c91fb4e653035cd3a5cb18f6dd945cc4"
+    },
+    {
+      "path": "tests/urbit/test_phase1_reconciliation.py",
+      "sha256": "850dff88548529ef74555733c0b23616a4fb823d1cc57896e048f8adbc5b815b"
+    },
+    {
+      "path": "tests/urbit/test_qualification_cases.py",
+      "sha256": "d0607db99a5921cd4eb43658bab10fc7d0ee802fbc17d75ae02281d27ab56bfc"
+    },
+    {
+      "path": "tests/urbit/test_qualification_gate.py",
+      "sha256": "b6fb3f4a090b226bc6baa27cedb6db82160808802563e83773a32c711cc343c2"
+    },
+    {
+      "path": "tests/urbit/test_runtime_guard_adversarial.py",
+      "sha256": "1d95245c8cd91c10952f2adc3b4b7e1983c155ef555e3d3d03697554dad57fe6"
+    },
+    {
+      "path": "tests/urbit/test_skill_evaluation_support.py",
+      "sha256": "6d50be4645fda79831820e6e5bf2fa8ab8a46d55e459856684fd33bba6dc3af3"
+    },
+    {
+      "path": "tests/urbit/test_urgit_audit_safety.py",
+      "sha256": "deae841f9a52b44eb8ea95c3f9a23ab3170acaf8c36ab6d06d273fc21dac0872"
+    },
+    {
+      "path": "tests/urbit/test_urgit_seed.py",
+      "sha256": "dd25a69e2b8ef2b085e8b51bc1bc9b1c06277c85bf62ad369eda655fcc20a710"
+    }
+  ],
+  "native_binding_artifact": "docs/urbit/evidence/2026-09-26/phase1-final-dd0e8c0/derived-v7/bindings.json",
+  "host_artifact": "docs/urbit/evidence/2026-09-26/missing-binding-fix/host.json"
+}

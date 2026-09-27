@@ -1,0 +1,40 @@
+{
+  "current_delta_review": {
+    "path": "docs/urbit/evidence/2026-09-26/phase1-nonnative-v4/source-refresh-review.json",
+    "pointer": "",
+    "sha256": "9df4ca622f2b1f381b9533bd3a708c3dc062177fc030d8ab70dabc34d8ffb566"
+  },
+  "current_delta_reviewer": "/root/independent_review",
+  "host_test_execution": false,
+  "independent_lifecycle_source_review": {
+    "path": "docs/urbit/evidence/2026-09-26/phase1-nonnative-v4/delivery-lifecycle-source-review.json",
+    "pointer": "",
+    "sha256": "0c3fd4c76fd96b4351be98b67334c2a8682c931020fef76b575f8688dab0a795"
+  },
+  "independently_confirmed_files": {
+    "Makefile": "496c1dcc50816777472c6d12cb2311fd22e66579fbc0091eeea7694f25e2e010",
+    "scripts/urbit/digests.py": "88e6333bd6c764f48fb8939bafa77c9eb236c5b3586a19fe1a1f6e48e27dc08c",
+    "scripts/urbit/execution_policy.py": "da16e2e0fd32eb5b90706b546a7ea8332a65807fc8279f3bd765dcc18aaad9b5",
+    "scripts/urbit/harness.py": "8dfe4725bbc534c61ec87ab4467d93314bd2ff8df15ab3a783481cef11e75b8a",
+    "scripts/urbit/namespace_check.py": "87950f4e7796fafb91807c36b9ea7d392d1d1840e5516d15d5fc6c5d476d0449",
+    "scripts/urbit/supervisor.py": "a10e499fb3242f9715b15d8932c8bf663d559479b70f5b6b20f1d6a787f55444",
+    "scripts/urbit/toolchain.py": "31234bbab1af217c885d8c081d7f438972f6ff1b6d89c93d10bdf49871b3ea16"
+  },
+  "native_execution": false,
+  "original_common_guard_reviewer": "/root/independent_review",
+  "previous_composite_confirmation": {
+    "path": "docs/urbit/evidence/2026-09-26/phase1-nonnative-v3/guard-source-proof-confirmation.json",
+    "pointer": "",
+    "sha256": "a7e80d91ab2a5f93644c57d73bd5c1447b07a03d5d10f04f53a17b50e700aadd"
+  },
+  "previous_composite_proof": {
+    "path": "docs/urbit/evidence/2026-09-26/phase1-nonnative-v3/source-dispositions.json",
+    "pointer": "/proofs/guard-independent-source-review",
+    "sha256": "8e4e8dfce6dd58eb1a90bff1a44690796320c7a425854fedbd8300faa1f14703"
+  },
+  "protocol": "stead.guard-source-composite-refresh/4",
+  "qualification_acceptance": false,
+  "recorded_by": "/root/independent_review",
+  "scope": "Three changed composite-source files plus unchanged prior common review, with original attribution. No new approval of historical native executions or focused native predicate.",
+  "source_commit": "5208f3273426e8fe76dc8622ffe93ace93982e17"
+}

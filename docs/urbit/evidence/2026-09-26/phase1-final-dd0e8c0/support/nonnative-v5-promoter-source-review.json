@@ -1,0 +1,45 @@
+{
+  "blocking_findings": [],
+  "findings": [
+    "New capture/audit CLI arguments require canonical repository-relative paths in the fixed work area plus exact64-character hashes. Bounded no-follow regular singly-linked reads, original input rechecks, anchored create-once output and explicit --promote remain intact.",
+    "Capture admission requires the unchanged exact142-test identity list and seven module counts,174 observed successful subtests, complete actual start/finish/result inventories, matched raw stdout/stderr and all eight output hashes. These are required future observations, not a current execution claim.",
+    "Before/after capture and worker inputs must match all156 committed source blobs at3f0, source must remain clean, cache controls must preserve the intentional bytecode negative, resource readback must be50percent/10ms/CPU19, and outer cleanup must be inactive/unloaded/success.",
+    "The future v5 retained-host audit is mandatory and hash bound to this exact capture and refresh plan, with actual independent reviewer identity and no reviewer test/native-execution claim.",
+    "The separately retained full472 execution stays at actual a1 source. The new3f0 binding additionally requires no diff across Makefile/scripts/native/specs/tests; it never changes the original full-host metadata.",
+    "The exact root-authored eight-file patch and current hashes are checked against the independent751de4 capacity source review. All seven common guard review files are checked; precisely Makefile/harness/supervisor change, and the old three hashes are verified against5208 Git bytes.",
+    "New composite/retention metadata is recorded/prepared by /root. Current delta/source/host reviewers remain independently attributed, old source findings and confirmations remain explicitly historical, and no generated mechanical record claims an independently executed test or new native approval.",
+    "The two historical guard items are copied unchanged with original guard hash and artifact refs. Only the narrow continuity current-review/current-host/source-binding refs advance. Whole-source continuity admission is still required.",
+    "Current source bindings are recomputed from pinned builder/gate bytes and explicit committed reviewed extras including Makefile. The gate requires seven supplied typed records, no errors, overallfailed,native_required66,native_passed0 and every other rowmissing before any destination write.",
+    "The generated schema retains the original observed_head/reviewed_at as historical review metadata while explicitly setting binding_observed_source_commit and promotion provenance to the new source. This is source-history attribution, not a claimed old test run at3f0."
+  ],
+  "future_required_audit_protocol": "stead.nonnative-v5-retained-host-audit/1",
+  "generator_executed": false,
+  "head": "3f0f3778997798f2ed208e206b46882a87340eb1",
+  "implementation_source": "a1d35b27d8ee482b1854c7352ebc6eecf96a2b08",
+  "native_execution_performed": false,
+  "pending": [
+    "Actual current selected142 capture after native lifetime/locks are released.",
+    "Independent retained-byte audit with exact observed results and required v5 fields; never prefill a passing audit.",
+    "Root execution of this unchanged generator only after actual inputs are admitted.",
+    "Independent portable-output/hash/pointer audit; retain exact generator and execution command/source-to-portable mapping."
+  ],
+  "performed": [
+    "Read469 source lines and complete v4-to-v5 diff.",
+    "Parsed source AST only; did not import, run or invoke the generator, its prepare function or metadata gates.",
+    "Independently rehashed all13 fixed pinned inputs; all match.",
+    "Checked capture/admission, exact-source, attribution, historical carryover and final readiness source paths."
+  ],
+  "protocol": "stead.independent-nonnative-promoter-source-review/1",
+  "qualifies_phase1": false,
+  "recorded_at": "2026-09-26T22:20:58.033824+00:00",
+  "resource_scope": "CPU20percent/10ms/CPU19 read-only audit; only this ignored review record written",
+  "reviewed_source": {
+    "path": ".runtime/phase01-20260926/promote_phase1_nonnative_v5.py",
+    "sha256": "85d638b79bedfb3522b9e215c1e344602d21ee358750432564b0f8e2f8e85c1f"
+  },
+  "reviewer": "/root/independent_review",
+  "scope": "Read-only full helper plus v4-to-v5 delta review. The v5 changes were authored by /root; this reviewer authored the unchanged v4 base, which retains its earlier integrator review rather than receiving a fabricated new independent base approval.",
+  "status": "source-review-cleared-awaiting-actual-capture-audit-and-promotion",
+  "tests_executed": false,
+  "tracked_files_changed": false
+}

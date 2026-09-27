@@ -1,0 +1,118 @@
+{
+  "classification": "real-host-cooling-restoration-and-native-fixture-reset-records",
+  "qualifies_phase": false,
+  "native_jobs_running": false,
+  "original_fan_settings_restored": true,
+  "original_value_count": 34,
+  "no_native_thermal_maximum_c": 96,
+  "scope": "No temperature ceiling, power profile, other workload or original Stead repository changed. Native acceptance remains pending.",
+  "artifacts": [
+    {
+      "file": "fan-session.py.gz",
+      "sha256": "e0fb4736761a49edac5567fcd8e5e07c20cafe3de6cf11aac6087ddaf7eb477b",
+      "original_local_path": ".runtime/phase01-20260926/cooling/fan-session.py",
+      "original_sha256": "387156fb7eec29b70f18fca764b6ffee439f15672c22de2943d8b7dd23f8bf51",
+      "encoding": "gzip"
+    },
+    {
+      "file": "original.json.gz",
+      "sha256": "853c18bee02559687849819d41a19e02f91665db65385bd335230ed7177a76be",
+      "original_local_path": ".runtime/phase01-20260926/cooling/original.json",
+      "original_sha256": "416c9b3da18443b2c725d26db2d2aa279704325801ed6bbdf6cc6aadf841fb3d",
+      "encoding": "gzip"
+    },
+    {
+      "file": "events.jsonl.gz",
+      "sha256": "f3d43445dc6d472f3b573445a3579929d5d388d3abbece6241b8774021e4d0d7",
+      "original_local_path": ".runtime/phase01-20260926/cooling/events.jsonl",
+      "original_sha256": "54df411faa458b045fc8da9edd9d5491372d74ac460b54dbfe73393298272a57",
+      "encoding": "gzip"
+    },
+    {
+      "file": "no-native-samples02.json.gz",
+      "sha256": "195543e40aaa949335607cf878dd0c9fe4726fd3f68f858959ef9f2abea53beb",
+      "original_local_path": ".runtime/phase01-20260926/cooling/no-native-samples02.json",
+      "original_sha256": "f46238d4c1288a6fad43c84101933fad3a990c77c7bff78dfa1b9c0b8166c642",
+      "encoding": "gzip"
+    },
+    {
+      "file": "restoration-verification.json.gz",
+      "sha256": "151d36bc7ef531dd7c752cdda6df141f5620d0d2e3eb35e6920b6374a0ee4414",
+      "original_local_path": ".runtime/phase01-20260926/cooling/restoration-verification.json",
+      "original_sha256": "f1ef6fd37b1ef69ebc0d275e3925373c20a03e4fb4cb28180030caee18cfa232",
+      "encoding": "gzip"
+    },
+    {
+      "file": "reset27.json.gz",
+      "sha256": "ff9298a423761b4e1a38b4037bf7b99534c135218e5e60b704c5d049af0087f5",
+      "original_local_path": ".runtime/phase01-20260925/reset27.json",
+      "original_sha256": "9fd198c6e8988b7bf5515616a0f4346303c12cd93c81e21245acd59f204a13cd",
+      "encoding": "gzip"
+    },
+    {
+      "file": "reset27.log.gz",
+      "sha256": "f881934e094a5ba8c507279e050f290402ae6d979b64fdc64a2714336c108cca",
+      "original_local_path": ".runtime/phase01-20260925/reset27.log",
+      "original_sha256": "20a4f83e68b491f063b2573def36659991a7d8456eb5c92f4624dabdce7e290a",
+      "encoding": "gzip"
+    },
+    {
+      "file": "pre-reset27-unclean-live.json.gz",
+      "sha256": "6a6f3ad4a592ecf35aa319483e194746c0c871a4dc79d7aca45dd71084b1a6f6",
+      "original_local_path": ".runtime/phase01-20260925/pre-reset27-unclean-live.json",
+      "original_sha256": "08af98a704833b8b7d11de2c1f76e5f0a201190025f4e646662a933f5ae054d2",
+      "encoding": "gzip"
+    },
+    {
+      "file": "reset28.json.gz",
+      "sha256": "3b8c5bfbce714a4ed5b3c94d83db48cd0d8f68b25da5a2155414b766dacaa214",
+      "original_local_path": ".runtime/phase01-20260925/reset28.json",
+      "original_sha256": "f21dc779887b5d168cc787de06c0e75b8d765fa1d876d7b8dca7629f5c78d602",
+      "encoding": "gzip"
+    },
+    {
+      "file": "reset28.log.gz",
+      "sha256": "f881934e094a5ba8c507279e050f290402ae6d979b64fdc64a2714336c108cca",
+      "original_local_path": ".runtime/phase01-20260925/reset28.log",
+      "original_sha256": "20a4f83e68b491f063b2573def36659991a7d8456eb5c92f4624dabdce7e290a",
+      "encoding": "gzip"
+    },
+    {
+      "file": "pre-reset28-unclean-live.json.gz",
+      "sha256": "96d2ceaed106c371dea4f5c7225f10fe66b51f236540a284543936ea02321141",
+      "original_local_path": ".runtime/phase01-20260925/pre-reset28-unclean-live.json",
+      "original_sha256": "528a59ce6b67e5911a090aa34d4100dc2ebba5dd0d19b290004fcad01884e065",
+      "encoding": "gzip"
+    },
+    {
+      "file": "prequal05-supervisor-excerpt.jsonl.gz",
+      "sha256": "0c8f4c45822ba158bf9601a8130077339b82b204b6ac1dc861f96c19e912edb5",
+      "original_local_path": ".piers/fakes/logs/supervisor.log",
+      "original_sha256": "a41b930b319d947a335bb5c718776005d9a92be1ca47cce2f721b9ca19d72d30",
+      "encoding": "gzip",
+      "selection": "unchanged byte slice of original supervisor log; not a full-log copy",
+      "original_line_start_inclusive": 1688,
+      "original_line_end_inclusive": 1696,
+      "original_byte_start_inclusive": 213397,
+      "original_byte_end_exclusive": 214592,
+      "full_original_sha256_at_capture": "7728f1e52586484351ab9d1495be528fec14550dc22fce1ac51144848760dd01",
+      "full_original_bytes_at_capture": 228189,
+      "observed_error": "Stale, future or reversed thermal sample"
+    },
+    {
+      "file": "prequal07-supervisor-excerpt.jsonl.gz",
+      "sha256": "2b576d623b4bf5026fb213519ca0c5ae26135d8163c3fe341b9ad9b315eac53f",
+      "original_local_path": ".piers/fakes/logs/supervisor.log",
+      "original_sha256": "ae8ff8001fa5acef601253b537fd755cc5ae871921fdf39de8ed951ffe3c64be",
+      "encoding": "gzip",
+      "selection": "unchanged byte slice of original supervisor log; not a full-log copy",
+      "original_line_start_inclusive": 1755,
+      "original_line_end_inclusive": 1763,
+      "original_byte_start_inclusive": 221682,
+      "original_byte_end_exclusive": 222649,
+      "full_original_sha256_at_capture": "7728f1e52586484351ab9d1495be528fec14550dc22fce1ac51144848760dd01",
+      "full_original_bytes_at_capture": 228189,
+      "observed_error": "Stale, future or reversed thermal sample"
+    }
+  ]
+}

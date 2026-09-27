@@ -1,0 +1,1 @@
+{"cgroup": "/user.slice/user-1000.slice/user@1000.service/app.slice/stead-native-313bb1dbe31823a6d33b946c4aecf751.scope", "cpu_affinity": [19], "cpu_max": "5000 10000", "unit": "stead-native-313bb1dbe31823a6d33b946c4aecf751.scope"}

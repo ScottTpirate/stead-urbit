@@ -1,0 +1,25 @@
+{
+  "prepared_at": "2026-09-27T00:48:18.047969+00:00",
+  "remote": "https://github.com/ScottTpirate/stead-urbit.git",
+  "native_executed_commit": "dd0e8c0ce8d1d00f15de6b07e2e26d368c5c3774",
+  "gate": "docs/urbit/evidence/2026-09-26/phase1-final-dd0e8c0/derived-v7/qualification.json",
+  "gate_sha256": "5a00d09671c03fb17d0740f36b5d4631b43e7d84b47168d6a35b1e2f37c5bb68",
+  "ready_for_mutation": false,
+  "pending": "Final independent native and 73-row review; records-only publication commit",
+  "intended_aggregate_pr": 42,
+  "intended_base": "main",
+  "merge_strategy": "merge commit; tested ancestor retained; no force or admin bypass",
+  "contained_stacked_prs": [
+    33,
+    34,
+    35,
+    36,
+    41
+  ],
+  "issues": [
+    7,
+    8
+  ],
+  "milestone": 2,
+  "cleanup_condition": "Remote merge observed, exact tested source bytes verified, and every removed reference retained in main or verified local Git bundle"
+}

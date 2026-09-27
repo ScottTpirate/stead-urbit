@@ -1,0 +1,6 @@
+python3 scripts/urbit/toolchain.py fetch
+Downloading https://github.com/urbit/vere/releases/download/vere-v4.6/linux-x86_64.tgz
+Downloading https://codeload.github.com/urbit/urbit/tar.gz/5a187fededc4582a34fcd6055c67bb63e0917b94
+Downloading https://media.githubusercontent.com/media/urbit/urbit/5a187fededc4582a34fcd6055c67bb63e0917b94/bin/brass.pill
+Downloading https://nodejs.org/dist/v24.21.0/node-v24.21.0-linux-x64.tar.xz
+PASS pinned downloads, binary, Arvo tree, Git and Node versions

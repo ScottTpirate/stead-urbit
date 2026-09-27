@@ -1,0 +1,377 @@
+{
+  "protocol": "stead.independent-publication-review/1",
+  "reviewer": "/root/independent_review",
+  "observed_at": "2026-09-26T21:53:09.044944+00:00",
+  "source_commit": "a1d35b27d8ee482b1854c7352ebc6eecf96a2b08",
+  "status": "publication-cleared-for-draft-pr-and-urb170-m0-closeout-only",
+  "blocking_findings": [],
+  "scope": "Read-only publication honesty, retained-byte integrity, source-review binding and bounded issue acceptance. This is not a new native/compiler/runtime execution or a complete review of candidate code semantics.",
+  "resources": "Read-only audits under CPU20percent/10ms/CPU19. No host tests or native jobs launched; only this ignored review record written.",
+  "host_tests_executed_by_reviewer": false,
+  "native_execution_performed": false,
+  "tracked_writes_performed": false,
+  "remotes_verified": {
+    "origin": "https://github.com/ScottTpirate/stead-urbit.git",
+    "upstream_fetch": "https://github.com/ScottTpirate/stead.git",
+    "upstream_push": "DISABLED_UPSTREAM_PUSH"
+  },
+  "documents": [
+    {
+      "path": "README.md",
+      "sha256": "89fcb7ebff4b952c9e94db0eb06f95fb420bba7f545905fdc1e9b46aad56e798",
+      "bytes": 4006
+    },
+    {
+      "path": "docs/urbit/DEVELOPER_GUIDE.md",
+      "sha256": "5a6c8ec4c0f6a1cfe7dbc6b207a0545bfd4ab96b8cc216eee25f86584e2fa7ce",
+      "bytes": 6457
+    },
+    {
+      "path": "docs/urbit/DEV_FLOW.md",
+      "sha256": "3b0867899bfdabf131cf77e590f07029d8455e71781dcd1f08dc703711b55998",
+      "bytes": 10093
+    },
+    {
+      "path": "docs/urbit/NATIVE_CORE.md",
+      "sha256": "73f0f513b73e833c39275c5f1fcc7c36d6fc42aba6a39a2e5ddb1c58ac57f37a",
+      "bytes": 7659
+    },
+    {
+      "path": "docs/urbit/PHASE01_CHECKPOINT_20260926.md",
+      "sha256": "3e2936d2e986fe4d1382e7a8204ef5014d0624186f6f2277f3f2f080a714e993",
+      "bytes": 10496
+    },
+    {
+      "path": "docs/urbit/TEST_RESULTS.md",
+      "sha256": "53baa8fdbb5807751567d59321f133d209db84d7e200902af117473442c8f437",
+      "bytes": 25483
+    },
+    {
+      "path": "docs/urbit/reviews/PHASE1_RESTART_SCOPE_CORRECTION_20260926.md",
+      "sha256": "77943d2433afafff43683c7d0921b32609fc750b509a89fa299e704d6c00f85e",
+      "bytes": 2532
+    },
+    {
+      "path": "docs/urbit/reviews/URB170_UPSTREAM_FEEDBACK_PROPOSAL_20260926.md",
+      "sha256": "afba76f4b4fc36ca9bb841fc9a1c0a6a0b4c27be479781986cf64d42d670597e",
+      "bytes": 1970
+    }
+  ],
+  "local_markdown_links_checked": 106,
+  "missing_local_links": [],
+  "retained_bundles": [
+    {
+      "index": {
+        "path": "docs/urbit/evidence/2026-09-26/native-attempts/core05/index.json",
+        "sha256": "c626c8d451fd53973678aa91922015b5165ac8b1b5fbf77c56422e6bd3f67640",
+        "bytes": 10725
+      },
+      "artifact_count": 24,
+      "files": [
+        {
+          "path": "docs/urbit/evidence/2026-09-26/native-attempts/core05/native.json",
+          "sha256": "bcbe1f7ec6e0afd533e764ab2101f395940ae820afc63fc270f0868998482e45",
+          "bytes": 8311852
+        },
+        {
+          "path": "docs/urbit/evidence/2026-09-26/native-attempts/core05/guard.json",
+          "sha256": "5f15f7019c2ca5efb3d36fe7cf936f629301000da5ecc973deec72fecaf0f98c",
+          "bytes": 1025646
+        },
+        {
+          "path": "docs/urbit/evidence/2026-09-26/native-attempts/core05/guard/.stead-disposable.json.gz",
+          "sha256": "9fc1341e9b3e62da643e33cab6f11953b4bdd4bd808a4fdcbb0740187ba8cfda",
+          "bytes": 115
+        },
+        {
+          "path": "docs/urbit/evidence/2026-09-26/native-attempts/core05/guard/control/STOP.gz",
+          "sha256": "603a450e6168c9798a1f17ea67ddd546cdf31b7a858408da122abf07f4dca869",
+          "bytes": 68
+        },
+        {
+          "path": "docs/urbit/evidence/2026-09-26/native-attempts/core05/guard/control/lease.json.gz",
+          "sha256": "bf276d33f40560fe74f8190b9fc161d6c1f395e43772e1783a94a6e110cdf83b",
+          "bytes": 528
+        },
+        {
+          "path": "docs/urbit/evidence/2026-09-26/native-attempts/core05/guard/control/scope.json.gz",
+          "sha256": "467d30b8130e0445a542de45237f33fb6a7dae78db6ad4791e19cb39c7597637",
+          "bytes": 159
+        },
+        {
+          "path": "docs/urbit/evidence/2026-09-26/native-attempts/core05/guard/control/source-context.json.gz",
+          "sha256": "abf2ba801fdd7235716ba85a8d82d6097833db9c68bc1bdb63ed9a8d83eaf7e4",
+          "bytes": 6598
+        },
+        {
+          "path": "docs/urbit/evidence/2026-09-26/native-attempts/core05/guard/events.jsonl.gz",
+          "sha256": "d2d53abfd040e0e205260a51158ba7615021a3e03d70ea9448117355844d6b7b",
+          "bytes": 58838
+        },
+        {
+          "path": "docs/urbit/evidence/2026-09-26/native-attempts/core05/steps/core-test.json.gz",
+          "sha256": "43fda12343ed65864012cb9b234358a3b8a8c1c7d12d5a4ab9e8f85116fc57d6",
+          "bytes": 106
+        },
+        {
+          "path": "docs/urbit/evidence/2026-09-26/native-attempts/core05/steps/core-test.log.gz",
+          "sha256": "6e375eb41cde61ef1290cd1f81883c99fd2ec448ae3581a073166cbb2ea73491",
+          "bytes": 613
+        },
+        {
+          "path": "docs/urbit/evidence/2026-09-26/native-attempts/core05/steps/lifecycle.json.gz",
+          "sha256": "f7d2cca2148f986a5d96aec7aa768a6a7e42ad744f705ee443b2740736b7d6a7",
+          "bytes": 330
+        },
+        {
+          "path": "docs/urbit/evidence/2026-09-26/native-attempts/core05/steps/start.json.gz",
+          "sha256": "786c03f9ca33393a5767d16cacecd7ac1e20862ddab54b9910ecd65f13908cda",
+          "bytes": 103
+        },
+        {
+          "path": "docs/urbit/evidence/2026-09-26/native-attempts/core05/steps/start.log.gz",
+          "sha256": "09113d2042551e21605a4dd4c8b193ef025dd8a0a580873b2d54924118d3a1d7",
+          "bytes": 314
+        },
+        {
+          "path": "docs/urbit/evidence/2026-09-26/native-attempts/core05/steps/stop.json.gz",
+          "sha256": "f0d8fd9c221bfe6d09d41fd19b552e43c13469b537ffba6d62316513ba4b7c14",
+          "bytes": 103
+        },
+        {
+          "path": "docs/urbit/evidence/2026-09-26/native-attempts/core05/steps/stop.log.gz",
+          "sha256": "1245365386b87a8957664a9a8ce511427687b863aa3a6c85cc10d71cadd0a079",
+          "bytes": 134
+        },
+        {
+          "path": "docs/urbit/evidence/2026-09-26/native-attempts/core05/steps/wait-ready.json.gz",
+          "sha256": "2e1435e8fdb0902a8ade9ce2394e76baedea144aef022b3f35ca7f0cfb903faf",
+          "bytes": 107
+        },
+        {
+          "path": "docs/urbit/evidence/2026-09-26/native-attempts/core05/steps/wait-ready.log.gz",
+          "sha256": "01cedc45b27b73b7c8d5c8d2e0aa7bae317933250f77076dc26ab76b2428f17e",
+          "bytes": 124
+        },
+        {
+          "path": "docs/urbit/evidence/2026-09-26/native-attempts/core05/logs/zod.log.gz",
+          "sha256": "aad03da6524dc36eacb5543e0a002c29d413c447270ec37ab1547fe727bec078",
+          "bytes": 12863
+        },
+        {
+          "path": "docs/urbit/evidence/2026-09-26/native-attempts/core05/logs/bus.log.gz",
+          "sha256": "fb5493f33e509564c1150f4516a502e39f3f55a79742dd700556c239969d2d8e",
+          "bytes": 43083
+        },
+        {
+          "path": "docs/urbit/evidence/2026-09-26/native-attempts/core05/logs/nec.log.gz",
+          "sha256": "bab728285cb074f6f47afbe8f2d0e11828947558d78fc3a707184c335e56fc70",
+          "bytes": 4834
+        },
+        {
+          "path": "docs/urbit/evidence/2026-09-26/native-attempts/core05/logs/bud.log.gz",
+          "sha256": "933430527db3adb849e0e94ced82db58a39e0b5d1228a2f5fb0adf268806cbf4",
+          "bytes": 7479
+        },
+        {
+          "path": "docs/urbit/evidence/2026-09-26/native-attempts/core05/logs/supervisor.log.gz",
+          "sha256": "729554772871782be2a404df8e5e6b74f5ccb808b8aff9e98cdec7f733932e38",
+          "bytes": 23605
+        },
+        {
+          "path": "docs/urbit/evidence/2026-09-26/native-attempts/core05/core-20260926T205140Z-transport.jsonl.gz",
+          "sha256": "fe5c9991be17590301456ce3fd29ac7e90f1d2e79444af746923c472afd79686",
+          "bytes": 1382249
+        },
+        {
+          "path": "docs/urbit/evidence/2026-09-26/native-attempts/core05/unclean-live.json.gz",
+          "sha256": "53b62eec5ec9475500e9c1cd2b09c6aec5621d484f382559504e8c87e673e79c",
+          "bytes": 142
+        }
+      ],
+      "stored_and_decoded_hashes_verified": true
+    },
+    {
+      "index": {
+        "path": "docs/urbit/evidence/2026-09-26/host-load-observations/restoration-and-window02/index.json",
+        "sha256": "b444695879bad2671dd80a95bb06917566e6370410bed9aac22fa994cef7b9ac",
+        "bytes": 4770
+      },
+      "artifact_count": 9,
+      "files": [
+        {
+          "path": "docs/urbit/evidence/2026-09-26/host-load-observations/restoration-and-window02/widget-pause-proposal-restored.json",
+          "sha256": "58701dec1e219655d93e3f2fa11a427e35023cb9ea52e6ef75c579079eb1e7ef",
+          "bytes": 1144
+        },
+        {
+          "path": "docs/urbit/evidence/2026-09-26/host-load-observations/restoration-and-window02/cooling-window03-fan-session.py",
+          "sha256": "1e15cf6c0a75f8761a7c8444d0b0efd99ee33eff077343b043875414c47dc9db",
+          "bytes": 4717
+        },
+        {
+          "path": "docs/urbit/evidence/2026-09-26/host-load-observations/restoration-and-window02/cooling-window03-original.json",
+          "sha256": "416c9b3da18443b2c725d26db2d2aa279704325801ed6bbdf6cc6aadf841fb3d",
+          "bytes": 1224
+        },
+        {
+          "path": "docs/urbit/evidence/2026-09-26/host-load-observations/restoration-and-window02/cooling-window03-applied-verification.json",
+          "sha256": "49f469b4f11136c616c97ccf48fc95c44fc90e0cad171b8e2eba3dd3918ff421",
+          "bytes": 205
+        },
+        {
+          "path": "docs/urbit/evidence/2026-09-26/host-load-observations/restoration-and-window02/cooling-window03-events.jsonl.gz",
+          "sha256": "a9a2bff395463d1069d7cf163cd3afac46e90347e69394a5edfe902d8c8b7082",
+          "bytes": 2444
+        },
+        {
+          "path": "docs/urbit/evidence/2026-09-26/host-load-observations/restoration-and-window02/cooling-window03-restoration-verification.json",
+          "sha256": "24793f0bf84cca50ff97fd99775a9ca5c7b97c795c43c9758753b58feea4e91e",
+          "bytes": 271
+        },
+        {
+          "path": "docs/urbit/evidence/2026-09-26/host-load-observations/restoration-and-window02/host-observation02-observe_host_load.py",
+          "sha256": "141e257109933340dc8999309846e145bd69e9f3731d1177d554965cddd8d046",
+          "bytes": 2059
+        },
+        {
+          "path": "docs/urbit/evidence/2026-09-26/host-load-observations/restoration-and-window02/host-observation02-observe-host-load.jsonl.gz",
+          "sha256": "847dae41124ce5ccf3ccae44499f0d998189f82b654edb60a23a8d2b71292717",
+          "bytes": 93008
+        },
+        {
+          "path": "docs/urbit/evidence/2026-09-26/host-load-observations/restoration-and-window02/browser-cpu-proposal-owner-choice.json",
+          "sha256": "dfc3580fcc4cdcca900ab9c3ddd97ccb797d7900eecf0bb641c8f3b639744518",
+          "bytes": 131
+        }
+      ],
+      "stored_and_decoded_hashes_verified": true
+    }
+  ],
+  "capacity_bundle": {
+    "index": {
+      "path": "docs/urbit/evidence/2026-09-26/capacity-fix/index.json",
+      "sha256": "978a1decb32f3ffc238d1b265f967822bae83ed063744d9c6fb3225f80937afb",
+      "bytes": 1046
+    },
+    "files": [
+      {
+        "path": "docs/urbit/evidence/2026-09-26/capacity-fix/source-review.json",
+        "sha256": "751de4e1e472e7869588e1b116f502250921019f7e1a30369621dbf7e8ca5d90",
+        "bytes": 6506
+      },
+      {
+        "path": "docs/urbit/evidence/2026-09-26/capacity-fix/host.json",
+        "sha256": "3e8187edaee1d11cae5abce4587bb71beece7c3993879aa05a2e9e21d5f2779b",
+        "bytes": 575
+      },
+      {
+        "path": "docs/urbit/evidence/2026-09-26/capacity-fix/host.log",
+        "sha256": "dbcfbb940261da5e3d9a7f82fbce2ec6d92e3198f2f7175a7cef58b5f7f582f3",
+        "bytes": 3714
+      },
+      {
+        "path": "docs/urbit/evidence/2026-09-26/capacity-fix/source.patch",
+        "sha256": "abd059529087172addea70f01b56f2b41ec3f622e5a57de53ca295adff98722b",
+        "bytes": 19823
+      }
+    ],
+    "reviewed_source_hashes_match_head_and_worktree": {
+      "Makefile": "db4777fe8809b0a31e570de79c38faa4421a5e87cca70bb82b8173083b9c7784",
+      "native/core/desk/ted/stead-client.hoon": "a0420730b0ee1a56d46e22def0b570cf089a7de39810453010a3f77ff3f9c155",
+      "scripts/urbit/core_test.py": "612ea14eeb83a047fce9bf542492c7d1ed38431015274703d20994b406ef392d",
+      "scripts/urbit/dev_help.py": "185178949e9be531f3653830f02e0d6d22a7bd8ee5721a9063995052e813bc23",
+      "scripts/urbit/harness.py": "d74d3ef74ea6c58bc1b15ea3c504f2eef7e980073e5260e7c566697b9a1261fe",
+      "scripts/urbit/qualification_cases.py": "208fc2e2d9448d5ea745bf51acefec0d06b84efdde814a8b9c73dcc3fbc70555",
+      "scripts/urbit/supervisor.py": "a0c840c2382cc5b97304c7696ef6069f78051ba4795a4d3c0729e0c236df1168",
+      "tests/urbit/test_qualification_cases.py": "3005feabca29b876a364f601b38c38772af340d05f9c1bd6677e3a551adb55cd"
+    },
+    "exact_patch_sha256": "abd059529087172addea70f01b56f2b41ec3f622e5a57de53ca295adff98722b",
+    "source_review_author": "/root/gall_schedule_review",
+    "source_review_status": "source-review-approved-for-focused-guarded-native-diagnostic"
+  },
+  "host_execution_review": {
+    "executor": "integrator/root; not this reviewer",
+    "tests": 472,
+    "suite_seconds": 68.128,
+    "wrapper_seconds": 68.85068006301299,
+    "exit": 0,
+    "classification": "host-static-mocked-no-native",
+    "committed_tested_inputs_unchanged": true
+  },
+  "core05_review": {
+    "source_commit": "5208f3273426e8fe76dc8622ffe93ace93982e17",
+    "status": "fail",
+    "direct_checks": {
+      "passed": 495,
+      "failed": 1
+    },
+    "qa": "145 passed plus three frozen deferrals",
+    "delivery": "seven passed plus scheduled-Gall deferral",
+    "capacity": "one reported recipe executed; seven unexecuted; policy-corruption load failed at host75s without a native terminal",
+    "guard": "failed owned process exit; peak69C; not a thermal stop; forced zod cleanup and unclean marker retained",
+    "independent_diagnosis": {
+      "path": "docs/urbit/evidence/2026-09-26/native-attempts/core05/independent-diagnosis.json",
+      "sha256": "8050bb5b1a581c61dcff20054fbf3fe94720c8cd92d98cc2a98ef91c191e2aa8",
+      "bytes": 8125
+    },
+    "diagnosis_attribution": "/root/gall_schedule_review; selected semantic review was performed by that reviewer, not rerun as native work here"
+  },
+  "restoration_review": {
+    "retained_original_fan_value_count": 34,
+    "recorded_all_34_values_match": true,
+    "recorded_widget_exact_original_and_effective_layout_restored": true,
+    "recorded_chromium_mutations_performed": false,
+    "boundary": "Exact retained readback/restoration records reviewed; no fresh hardware, desktop or browser operation by this reviewer. Host correlation does not establish sole causation."
+  },
+  "urb170": {
+    "unchanged_prior_acceptance_files": [
+      {
+        "path": "docs/urbit/evidence/2026-09-26/workflow-evaluation-v2/URB170_FINAL_ACCEPTANCE_REVIEW.json",
+        "sha256": "e645d2402957daa98016ff1b4e9bc937b45dfc413177604eb25c0756ad29ac34",
+        "bytes": 14011
+      },
+      {
+        "path": "docs/urbit/evidence/2026-09-26/workflow-evaluation-v2/URB170_FINAL_ACCEPTANCE.md",
+        "sha256": "5634fafa76a8baa0f543d747264acb2b375f9721a85c6aa3b63287be336292a4",
+        "bytes": 2097
+      },
+      {
+        "path": "docs/urbit/evidence/2026-09-26/workflow-evaluation-v2/FINAL_ACCEPTANCE_INDEX.json",
+        "sha256": "1880feb9571a3b50187b2e060c9eb0cefd67345f60653dbbf82435c37cce9614",
+        "bytes": 7904
+      }
+    ],
+    "native_trial_source": "0d877cff4319de8d437f0da58d4518535f758c36",
+    "clean_setup_source": "55475f0565ceb38db9eb5bc057962967398aa5da",
+    "live_issue20_observed": "OPEN",
+    "live_m0_issues_observed": {
+      "2": "CLOSED",
+      "3": "CLOSED",
+      "4": "CLOSED",
+      "5": "CLOSED",
+      "20": "OPEN"
+    },
+    "acceptance": "All eight previously reviewed scoped criteria remain supported at their actual sources; complete5of6 tie with full failed T05 inventories is an actual comparison, not improvement. No participant candidate or trace revisited in this publication review. Earlier plaintext, full-tool exposure, clean-existing-Linux and optional-editor rejection limits remain explicit."
+  },
+  "resolved_wording_findings": [
+    "Checkpoint chronology now puts deliverycheck01 thermal interruption before temporary boost and core05 restoration.",
+    "TEST_RESULTS now labels a1d35b2 candidate independently source-reviewed and native unexecuted.",
+    "Current472 host result links retained a1d35b2 bytes; earlier470 and overlapping142 retain5208 source identity."
+  ],
+  "publication_disposition": [
+    "Push only the current aggregate branch source/docs/evidence to existing draftPR42 after the docs-only commit and exact tested-input recheck. Origin only; upstream remains read-only.",
+    "Then close only issue20 and M0 using exact published acceptance links; previously closed M0 issues remain as recorded.",
+    "Keep issues7/8, M1, aggregate implementation merge and Phase2 open/unstarted. No native a1d35b2 pass is claimed.",
+    "Do not relabel0d877/554/5208 native or contributor results as the new publication commit. A docs-only descendant may reference exact unchanged source bytes; its changed client still needs real compilation/focused/full qualification.",
+    "Preserve branch/worktree/local unique references and retained failed state; do not bulk-push or delete drafts/branches as part of this publication."
+  ],
+  "qualifies_phase1": false,
+  "authorizes_implementation_merge": false,
+  "authorizes_phase2": false,
+  "limitations": [
+    "This bounded review rehashed37 newly indexed artifacts plus diagnosis and unchanged final URB170 acceptance records; it does not repeat every earlier portable archive audit.",
+    "The new Hoon diagnostic is source-reviewed only.600/620 seconds is a finite private-operation measurement ceiling, not measured latency or a passing migration result.",
+    "All73 final requirements remain unqualified; prior scheduled-Gall and seven nonnative dispositions require correct final-source integration."
+  ]
+}

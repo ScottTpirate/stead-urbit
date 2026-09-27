@@ -1,0 +1,212 @@
+{
+  "protocol": "stead.native-retention/1",
+  "source_commit": "5208f3273426e8fe76dc8622ffe93ace93982e17",
+  "native_status": "pass",
+  "native_classification": "native-scheduled-gall",
+  "native_elapsed_seconds": 42.38,
+  "outer_guard_status": "completed",
+  "outer_guard_exit": 0,
+  "qualifies_phase": false,
+  "scope": "Exact execution only; full manifest and independent review are separate.",
+  "transformations": "Exact copies or deterministic gzip of complete bytes.",
+  "artifacts": [
+    {
+      "path": "docs/urbit/evidence/2026-09-26/phase1-final-5208f32/gall/native.json",
+      "source": ".piers/fakes/logs/gall-schedule-20260926T205039Z-ff6184bba70e.json",
+      "bytes": 223618,
+      "sha256": "6f0a616c5bebad1ed02d193caa47c8c7babb29813bc9cdc2084314c0d13b6edf",
+      "original_bytes": 223618,
+      "original_sha256": "6f0a616c5bebad1ed02d193caa47c8c7babb29813bc9cdc2084314c0d13b6edf",
+      "encoding": "identity"
+    },
+    {
+      "path": "docs/urbit/evidence/2026-09-26/phase1-final-5208f32/gall/guard.json",
+      "source": ".runtime/execution-runs/four-fakes-wak46j1y/report.json",
+      "bytes": 31181,
+      "sha256": "fd820a0f8e099b1597a5788045ad68c8f491b4beef34d3714f0194391520ae61",
+      "original_bytes": 31181,
+      "original_sha256": "fd820a0f8e099b1597a5788045ad68c8f491b4beef34d3714f0194391520ae61",
+      "encoding": "identity"
+    },
+    {
+      "path": "docs/urbit/evidence/2026-09-26/phase1-final-5208f32/gall/guard/.stead-disposable.json.gz",
+      "source": ".runtime/execution-runs/four-fakes-wak46j1y/.stead-disposable.json",
+      "bytes": 113,
+      "sha256": "eca35f13addd6fe9eb1d0d7f00333bb705fd6e46960965cfb2bf7434802e1d17",
+      "original_bytes": 102,
+      "original_sha256": "6cde9a4dcc637fb92bf07f7060cfdbf9d678658182d51464326388c15ec242a8",
+      "encoding": "gzip"
+    },
+    {
+      "path": "docs/urbit/evidence/2026-09-26/phase1-final-5208f32/gall/guard/control/STOP.gz",
+      "source": ".runtime/execution-runs/four-fakes-wak46j1y/control/STOP",
+      "bytes": 37,
+      "sha256": "16be664e0d262b4d3392a7c4cb73f66a2dcae4fc06acd75f4b7cebde6a5da18d",
+      "original_bytes": 17,
+      "original_sha256": "7d3b42bbed97fbe07fdd87226f47c82456368c7336a1de0dd0629653265c5b26",
+      "encoding": "gzip"
+    },
+    {
+      "path": "docs/urbit/evidence/2026-09-26/phase1-final-5208f32/gall/guard/control/lease.json.gz",
+      "source": ".runtime/execution-runs/four-fakes-wak46j1y/control/lease.json",
+      "bytes": 503,
+      "sha256": "15cddfec8cb90015f9a0568f74428e3a9ba5ae25ca8c9a1628544f14ea34fc53",
+      "original_bytes": 1063,
+      "original_sha256": "1d294a2a93f06c81fabe6b41c7405d84e76bf3dd38f409121e153146b47e5d4a",
+      "encoding": "gzip"
+    },
+    {
+      "path": "docs/urbit/evidence/2026-09-26/phase1-final-5208f32/gall/guard/control/scope.json.gz",
+      "source": ".runtime/execution-runs/four-fakes-wak46j1y/control/scope.json",
+      "bytes": 160,
+      "sha256": "02992e9a48ee9416182e0652e44837444afc3229387258f3f6f2ecc0cfc60e1d",
+      "original_bytes": 232,
+      "original_sha256": "91725f988f26bf6d8814746aaef7e2a1c5776788b3ef2cd24c28dd19bfedf337",
+      "encoding": "gzip"
+    },
+    {
+      "path": "docs/urbit/evidence/2026-09-26/phase1-final-5208f32/gall/guard/control/source-context.json.gz",
+      "source": ".runtime/execution-runs/four-fakes-wak46j1y/control/source-context.json",
+      "bytes": 6598,
+      "sha256": "abf2ba801fdd7235716ba85a8d82d6097833db9c68bc1bdb63ed9a8d83eaf7e4",
+      "original_bytes": 18248,
+      "original_sha256": "dd3397cb193e307cab8856a831755fd96a3cec3182145694bdb63217a87c091f",
+      "encoding": "gzip"
+    },
+    {
+      "path": "docs/urbit/evidence/2026-09-26/phase1-final-5208f32/gall/guard/events.jsonl.gz",
+      "source": ".runtime/execution-runs/four-fakes-wak46j1y/events.jsonl",
+      "bytes": 2093,
+      "sha256": "71ad4fa132d9a2a36c52a6c7d87ae3fb6067919869663cf65153244a67128a74",
+      "original_bytes": 28098,
+      "original_sha256": "55b314e939399744f8921d9225abe348ac822d357a04454bdffb1ad4eee857c4",
+      "encoding": "gzip"
+    },
+    {
+      "path": "docs/urbit/evidence/2026-09-26/phase1-final-5208f32/gall/steps/gall-schedule.json.gz",
+      "source": ".runtime/phase01-20260926/gall-final03/gall-schedule.json",
+      "bytes": 111,
+      "sha256": "3cad4f371b708db5c688dc244a4f988193d1d3521a2785aa8178a0f22a7f6a9b",
+      "original_bytes": 108,
+      "original_sha256": "31efeec83bd54265cc4945a20a2bb5faf1f44cccb4b836f81419fa3b0842702f",
+      "encoding": "gzip"
+    },
+    {
+      "path": "docs/urbit/evidence/2026-09-26/phase1-final-5208f32/gall/steps/gall-schedule.log.gz",
+      "source": ".runtime/phase01-20260926/gall-final03/gall-schedule.log",
+      "bytes": 556,
+      "sha256": "20b8ae4625805eac5e82420e66a9b7a142a3f59ee3dcee16ef01da2b5db42f5e",
+      "original_bytes": 961,
+      "original_sha256": "627c11359b92627f2e872b43881b38f528ef60b62ef6a2a3696052fd83871bb8",
+      "encoding": "gzip"
+    },
+    {
+      "path": "docs/urbit/evidence/2026-09-26/phase1-final-5208f32/gall/steps/lifecycle.json.gz",
+      "source": ".runtime/phase01-20260926/gall-final03/lifecycle.json",
+      "bytes": 327,
+      "sha256": "99b2951c1df69c7bd69496d7e3a1c2c7e52547ffde286fef8cf3b1457bf5271a",
+      "original_bytes": 835,
+      "original_sha256": "dd7bdc9313c4277d0517bb2a89b3df3d06c8920d9a25dcbad3e4a3dfae0e4464",
+      "encoding": "gzip"
+    },
+    {
+      "path": "docs/urbit/evidence/2026-09-26/phase1-final-5208f32/gall/steps/start.json.gz",
+      "source": ".runtime/phase01-20260926/gall-final03/start.json",
+      "bytes": 103,
+      "sha256": "fc5b1367b429efc368fbfc9b3da9a9e9f4ecf4d9e69f7185912ca17214f0e550",
+      "original_bytes": 101,
+      "original_sha256": "0d78b7a45c901cddc774b59cf0cd3469e7dee9d41aa58e89bb7b8e54a333f82e",
+      "encoding": "gzip"
+    },
+    {
+      "path": "docs/urbit/evidence/2026-09-26/phase1-final-5208f32/gall/steps/start.log.gz",
+      "source": ".runtime/phase01-20260926/gall-final03/start.log",
+      "bytes": 315,
+      "sha256": "38ec1ce7d81b0693840471431491f7bdeb1c5d808a22bbfe0f9ab6b3c4971943",
+      "original_bytes": 453,
+      "original_sha256": "86de356a0f94660358f1b1e3faf6d99a9ff425e897de2ca048c8730d1947e4d4",
+      "encoding": "gzip"
+    },
+    {
+      "path": "docs/urbit/evidence/2026-09-26/phase1-final-5208f32/gall/steps/stop.json.gz",
+      "source": ".runtime/phase01-20260926/gall-final03/stop.json",
+      "bytes": 103,
+      "sha256": "089de81418262f1e3932bf1571bb888b56d205b2067ad3fed6edd636fa3f85eb",
+      "original_bytes": 100,
+      "original_sha256": "bef75c96925fb97b39603de9b6c92180b4ad24087864e42a6cd2e4b051f071bc",
+      "encoding": "gzip"
+    },
+    {
+      "path": "docs/urbit/evidence/2026-09-26/phase1-final-5208f32/gall/steps/stop.log.gz",
+      "source": ".runtime/phase01-20260926/gall-final03/stop.log",
+      "bytes": 132,
+      "sha256": "3515bb00ab4541684f1f9147aacb7e7157ed671b8d21b6ef4cf9f013b859c7f8",
+      "original_bytes": 141,
+      "original_sha256": "fe8b2280abb0c0a09259c5211aa3dc729b9b42caa2afdaa7431a4d4936ba213c",
+      "encoding": "gzip"
+    },
+    {
+      "path": "docs/urbit/evidence/2026-09-26/phase1-final-5208f32/gall/steps/wait-ready.json.gz",
+      "source": ".runtime/phase01-20260926/gall-final03/wait-ready.json",
+      "bytes": 109,
+      "sha256": "c9f2c8dc2f1e00c938242950eb3fa298e679bc7d46c094f46b6984246f636e46",
+      "original_bytes": 106,
+      "original_sha256": "b2db865c8932b5e4b312d89acb874164299809cc139e127d422dc299ab9e8a23",
+      "encoding": "gzip"
+    },
+    {
+      "path": "docs/urbit/evidence/2026-09-26/phase1-final-5208f32/gall/steps/wait-ready.log.gz",
+      "source": ".runtime/phase01-20260926/gall-final03/wait-ready.log",
+      "bytes": 124,
+      "sha256": "01cedc45b27b73b7c8d5c8d2e0aa7bae317933250f77076dc26ab76b2428f17e",
+      "original_bytes": 242,
+      "original_sha256": "6ade3d62b67dd2066207260ae96b6ef88847dbb824720cc7be7b132fee5510e9",
+      "encoding": "gzip"
+    },
+    {
+      "path": "docs/urbit/evidence/2026-09-26/phase1-final-5208f32/gall/logs/zod.log.gz",
+      "source": ".piers/fakes/logs/zod.log",
+      "bytes": 12783,
+      "sha256": "f07c0d2da66b53bc5373bffdcb8feeecf01af08821d4a91de419ae89dc896cb8",
+      "original_bytes": 232185,
+      "original_sha256": "3e3a65259a6eb045980b9e9c5ef6a8a4ee4be2c32ce59e7f8f6ad4a7e3ec0a00",
+      "encoding": "gzip"
+    },
+    {
+      "path": "docs/urbit/evidence/2026-09-26/phase1-final-5208f32/gall/logs/bus.log.gz",
+      "source": ".piers/fakes/logs/bus.log",
+      "bytes": 35447,
+      "sha256": "d7f2cdbe76a5ee589ad9e3777558977ad3388b6bcb9369e4db8af17d014a4edd",
+      "original_bytes": 233545,
+      "original_sha256": "ee62c8bb837f603a00b4c2b0abf6ed108bc82597c2d44a86cb867a0a6e9c94c1",
+      "encoding": "gzip"
+    },
+    {
+      "path": "docs/urbit/evidence/2026-09-26/phase1-final-5208f32/gall/logs/nec.log.gz",
+      "source": ".piers/fakes/logs/nec.log",
+      "bytes": 4552,
+      "sha256": "5d8ec5bdf22f36d681f13ef7ca823d6d9c8462f248f8b4b297454f2a4fdd1db2",
+      "original_bytes": 120638,
+      "original_sha256": "181919fecb846db13b6f4686df5328c4ac4de706c00e32b9a6fb5f5d017f6de4",
+      "encoding": "gzip"
+    },
+    {
+      "path": "docs/urbit/evidence/2026-09-26/phase1-final-5208f32/gall/logs/bud.log.gz",
+      "source": ".piers/fakes/logs/bud.log",
+      "bytes": 7040,
+      "sha256": "54e67488b76269c689a0f5aed873877a3662601c741ab50788fe5e7b850f7e39",
+      "original_bytes": 230392,
+      "original_sha256": "e8560b61cbfc97fdc0b2aa9933c00457989c4b3991f9cfa3787f2d56bfc1b92a",
+      "encoding": "gzip"
+    },
+    {
+      "path": "docs/urbit/evidence/2026-09-26/phase1-final-5208f32/gall/logs/supervisor.log.gz",
+      "source": ".piers/fakes/logs/supervisor.log",
+      "bytes": 23175,
+      "sha256": "23e785d70ed9c716f9a18fd736a3aedd0125e754b8d7ab7577ff310881113194",
+      "original_bytes": 416897,
+      "original_sha256": "667596a3586796b4ba8db28a3130128fc733b89ec6c1d09f446730ca2c710507",
+      "encoding": "gzip"
+    }
+  ]
+}

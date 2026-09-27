@@ -1,0 +1,39 @@
+{
+  "command": [
+    "systemd-run",
+    "--user",
+    "--scope",
+    "--quiet",
+    "--unit=stead-host-recapture-20260926t181203z-2193e0df.scope",
+    "-p",
+    "CPUQuota=50%",
+    "-p",
+    "CPUQuotaPeriodSec=10ms",
+    "-p",
+    "RuntimeMaxSec=300s",
+    "--",
+    "taskset",
+    "-c",
+    "19",
+    "/usr/bin/python3",
+    "-B",
+    "-X",
+    "pycache_prefix=/home/skilgore/stead-urbit/.runtime/phase01-20260926/host-recapture-20260926t181203z-2193e0df/unused-python-cache",
+    "/home/skilgore/stead-urbit/.runtime/phase01-20260926/host-recapture-20260926t181203z-2193e0df/capture-script.py",
+    "--worker",
+    "/home/skilgore/stead-urbit/.runtime/phase01-20260926/host-recapture-20260926t181203z-2193e0df",
+    "--repo",
+    "/home/skilgore/stead-urbit",
+    "--unit",
+    "stead-host-recapture-20260926t181203z-2193e0df.scope",
+    "--executor",
+    "/root"
+  ],
+  "environment_overrides": {
+    "PYTHONDONTWRITEBYTECODE": "1",
+    "PYTHONPATH": "tests/urbit"
+  },
+  "started_at": "2026-09-26T18:12:03.501486Z",
+  "status": "running",
+  "unit": "stead-host-recapture-20260926t181203z-2193e0df.scope"
+}

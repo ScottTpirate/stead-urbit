@@ -1,0 +1,100 @@
+{
+  "approved_source_properties": [
+    "The offline-home call now retains its live AF_UNIX channel for the existing75-second transport limit and requires a fully decoded native timeout before home restart. The native Hoon55-second timeout is unchanged.",
+    "Expected unavailable evidence requires raw/json absent, exact [32 %avow1] output, a complete-frame digest, and the exact seven nonblank native diagnostic lines with a standalone timeout cause. Local timeout, refusal, EOF and arbitrary bails are no longer caught as expected remote unavailability.",
+    "home_unavailable checks the same bus Popen object and live PID before home stop, after the drained terminal and after home restart; it obtains a real bus zuse result. A transport error or failed terminal predicate propagates before any home relaunch.",
+    "The evidence builder recomputes the same native-timeout predicate from retained transport bytes, requires exact outcome equality and the now bound lifecycle segment; it does not rely only on the producer pass label.",
+    "The original complete qualification stage block is structurally AST-identical in delivery_only=False. No ordered QA, context, concurrency, delivery, migration/capacity or independent-closeout stage was removed or reordered.",
+    "The new fixed delivery-check RPC remains behind disposable-fixture, loaded-source, guard and supervisor-mutex controls. It runs two cycles on an empty initialized fixture, verifies a protected read after each, labels qualifies_phase=false and uses a distinct classification/report basename.",
+    "The focused report cannot satisfy the full gate: it lacks full QA/capacity/deferred-closeout evidence, uses different classification and status pass rather than execution_complete, and explicitly denies phase qualification.",
+    "No Hoon, frozen qualification manifest, toolchain pin or thermal guard change is present. The diagnostic retains the same source installation and native framing controls."
+  ],
+  "base_commit": "55475f0565ceb38db9eb5bc057962967398aa5da",
+  "blocking_findings": [],
+  "head_observed_at_review": "5208f3273426e8fe76dc8622ffe93ace93982e17",
+  "host_tests_launched_by_reviewer": false,
+  "host_validation": {
+    "integrator_tool_output_only": [
+      {
+        "independently_executed": false,
+        "portable_transcript_retained": false,
+        "seconds": 0.005,
+        "status": "passed",
+        "suite": "focused delivery host suite",
+        "tests": 14
+      },
+      {
+        "exit_code": 0,
+        "independently_executed": false,
+        "portable_transcript_retained": false,
+        "seconds": 1.118,
+        "status": "passed",
+        "suite": "focused builder after identity-binding correction",
+        "tests": 27
+      }
+    ],
+    "portable_full_run_before_final_builder_correction": {
+      "applies_to_final_builder_correction": false,
+      "classification": "host-static-mocked-no-native",
+      "exit_code": 0,
+      "log": {
+        "path": ".runtime/phase01-20260926/delivery-lifecycle-fix/host.log",
+        "sha256": "a655381441170fd8a50dc6832d7286c676585e04fe53ce4e850cdd6b3a540549"
+      },
+      "outer_seconds": 68.50333159393631,
+      "result": {
+        "path": ".runtime/phase01-20260926/delivery-lifecycle-fix/host.json",
+        "sha256": "5367d21c9458855c0de636563cffcb8a28a353b4e3758e512954da485c9fe3b0"
+      },
+      "tested_patch": {
+        "path": ".runtime/phase01-20260926/delivery-lifecycle-fix/tested.patch",
+        "sha256": "7ac476a21868e351369083b8f393a801e989fba39b6b2ef99c399e266484f60d"
+      },
+      "unittest_count": 469,
+      "unittest_seconds": 67.756
+    },
+    "reviewer_read_only_structural_checks": [
+      "Existing full qualification block AST unchanged in nondiagnostic branch.",
+      "No native/gate/guard delta from55475f0.",
+      "git diff --check passed."
+    ]
+  },
+  "limits": [
+    "No claim that the earlier SIGSEGV root cause is proven or repaired.",
+    "No native runtime or host test was launched by this reviewer.",
+    "Prior source-bound results remain historical and are not rebound to this implementation.",
+    "The reviewed diagnostic is not a substitute for the frozen ended-leave or fullPhase1 obligations."
+  ],
+  "native_execution_performed": false,
+  "observed_at": "2026-09-26T20:34:15.103195+00:00",
+  "pending_native_admission": [
+    "The seven-line native timeout diagnostic has not yet been observed in this new execution path. It is a strict source-derived expectation, not an executed reference. Preserve the actual result even if the predicate rejects it.",
+    "Run the focused guarded diagnostic at committed source; require both complete native timeouts, unchanged live sender identity, successful subsequent protected reads and clean outer guard/cleanup. Any crash, missing output or local transport timeout fails.",
+    "Retain and independently review exact native output before calling this fix runtime-verified. Then capture the final source host suite and rerun complete current-source qualification and applicable source-bound lanes."
+  ],
+  "protocol": "stead.independent-delivery-lifecycle-fix-review/1",
+  "qualifies_phase": false,
+  "resolved_findings": [
+    {
+      "classification": "evidence-lifecycle-identity-binding",
+      "id": "R1",
+      "initial_issue": "The first unavailable_lifecycle implementation matched a contiguous segment without binding its stop/replacement and preceding current home/sender identities; lifecycle() could independently match another earlier restart.",
+      "resolution": "The final reviewed helper requires one exact segment, its clean nonforced stop and replacement PID, and the last preceding zod/bus lifecycle event to be each matching launch. The exact segment excludes intervening sender lifecycle operations.",
+      "validation": "Added targeted malformed-history cases for wrong old/new PID, forced shutdown, sender replacement/shutdown, prior home shutdown and duplicate segment. Integrator reports the27-test builder suite passed; no separate portable run log exists."
+    }
+  ],
+  "reviewed_patch_sha256": "ffd637de2c0198d829549f64e51b3a42e6f1fa77d7eeae617e2f1e6d6e70932f",
+  "reviewed_source_files_sha256": {
+    "Makefile": "496c1dcc50816777472c6d12cb2311fd22e66579fbc0091eeea7694f25e2e010",
+    "scripts/urbit/build_phase1_evidence.py": "c886c18fb25c0e381f346a6b7ec0387a784410acacfcac9ea72b6a5881708f7f",
+    "scripts/urbit/core_test.py": "4bba0828e7d5451338e176cafe66a02aaa0837c2291bb0dcd80aff5b9fb0c7cb",
+    "scripts/urbit/delivery_suite.py": "0c2cff055ce3e9e7fe5b1ddb37f99bc1d7d7a8631b8376d4949d3f18020a357f",
+    "scripts/urbit/dev_help.py": "b0a820de1be14cf623dc93399297ad94145cccdb82661581c6d415abeccd58e3",
+    "scripts/urbit/harness.py": "8dfe4725bbc534c61ec87ab4467d93314bd2ff8df15ab3a783481cef11e75b8a",
+    "scripts/urbit/supervisor.py": "a10e499fb3242f9715b15d8932c8bf663d559479b70f5b6b20f1d6a787f55444",
+    "tests/urbit/test_delivery_suite.py": "23b899e41c008c0317f6366cdf12e1de2eac38cc676d916215d245a5eda56c6e",
+    "tests/urbit/test_phase1_evidence_builder.py": "5ea0b18e89888983c08fb8b8a7ec0321c91fb4e653035cd3a5cb18f6dd945cc4"
+  },
+  "reviewer": "/root/core_acceptance_review",
+  "status": "source-review-approved-for-focused-guarded-native-diagnostic"
+}

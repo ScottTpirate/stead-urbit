@@ -1,0 +1,281 @@
+{
+  "protocol": "stead.bound-qualification-proofs/2",
+  "proofs": [
+    {
+      "id": "receipt-lookup-order",
+      "kind": "source_review",
+      "status": "reviewed",
+      "reviewer": "/root/qa_review",
+      "assertions": [
+        {
+          "name": "source-ordering-property",
+          "status": "reviewed"
+        }
+      ],
+      "scope": "Exact-source review of current binding/profile/expiry and typed action scope before receipt lookup/decode. apply-command: context then allowed/read-scope then epoch then duplicate lookup. read receipt: context then typed route/read-scope before receipts lookup; stored operation/resource/container and allowed are rechecked before public projection. This is source ordering evidence only; native denial/observer behavior remains required.",
+      "reviewed_source_files": {
+        "native/core/desk/lib/stead-core.hoon": "9ad77eba9c2bb5e916af74c62250761513278bdbfbb729ec3919edb04d2b5da4"
+      },
+      "source_arms": [
+        "context",
+        "allowed",
+        "apply-command",
+        "read",
+        "read-scope",
+        "public-receipt"
+      ],
+      "bindings": {
+        "source_commit": "54734c85b1afc544c331dc80409dfa8f585ae977",
+        "native_tree_sha256": "a16e6ca6125797fce156aa9e36721432f9152cae5514708d2632464d42f77b7d",
+        "runtime_lock_sha256": "4a209c10cf1756eb0f7357cc3eca8250bf66c239b4cd0ca31a8c0886d4d304ee",
+        "corpus_sha256": "95c915e2d0c93f358225274b34216fff0fe2efc09791905855b1e3f36aec368a",
+        "contract_freeze_sha256": "a2336e5060c71c7c16849b3151cc024a598d6cdf867561452eff1338e3232670",
+        "runner_sha256": "2df9e36455150e832067bc384f28740eab99781989f776138957e5289ea6a3d4"
+      },
+      "native_execution": "not_executed"
+    },
+    {
+      "id": "no-effect-subsystem",
+      "kind": "not_applicable",
+      "status": "not_applicable",
+      "reviewer": "/root/qa_review",
+      "assertions": [
+        {
+          "name": "no-external-effects-replayed",
+          "status": "not_applicable"
+        }
+      ],
+      "scope": "The current Work/Docs home implements pure transitions plus native response facts/kicks and synthetic owner fixture controls. There is no build, model, deployment, purchase or message-effect executor in this slice.",
+      "reason": "An external-effect executor is absent. Do not invent external_effects_replayed=0; this disposition makes no claim about replay safety of future effect execution or about native response delivery, which has separate mandatory tests.",
+      "reviewed_source_files": {
+        "native/core/desk/app/stead-home.hoon": "122bb4d8b7b27f25eddb8652e5552a7f46298e156cdc3e73023044b6ce78ed6b",
+        "native/core/desk/lib/stead-core.hoon": "9ad77eba9c2bb5e916af74c62250761513278bdbfbb729ec3919edb04d2b5da4"
+      },
+      "source_arms": [
+        "state",
+        "transition",
+        "on-save",
+        "on-load",
+        "on-poke",
+        "on-watch",
+        "on-leave"
+      ],
+      "bindings": {
+        "source_commit": "54734c85b1afc544c331dc80409dfa8f585ae977",
+        "native_tree_sha256": "a16e6ca6125797fce156aa9e36721432f9152cae5514708d2632464d42f77b7d",
+        "runtime_lock_sha256": "4a209c10cf1756eb0f7357cc3eca8250bf66c239b4cd0ca31a8c0886d4d304ee",
+        "corpus_sha256": "95c915e2d0c93f358225274b34216fff0fe2efc09791905855b1e3f36aec368a",
+        "contract_freeze_sha256": "a2336e5060c71c7c16849b3151cc024a598d6cdf867561452eff1338e3232670",
+        "runner_sha256": "2df9e36455150e832067bc384f28740eab99781989f776138957e5289ea6a3d4"
+      },
+      "native_execution": "not_executed"
+    },
+    {
+      "id": "guard-independent-source-review",
+      "kind": "source_review",
+      "status": "reviewed",
+      "reviewer": "/root/qa_review",
+      "assertions": [
+        {
+          "name": "guard-independent-source-review",
+          "status": "reviewed"
+        }
+      ],
+      "scope": "Bounded independent review of host-owned thermal sampler,75Cpreflight/90Cstop thresholds, fresh stable CPU sensor inventory, shared no-follow flock, read-only source/generation-bound lease,50%/10ms transient scope, bounded targeted cleanup, supervisor forced/init failure exit status, and refusal to create clean seeds from interrupted state. Native execution remains unqualified; real mocked-sensor shim and hot refusal are separately labeled artifacts.",
+      "reviewed_source_files": {
+        "scripts/urbit/execution_policy.py": "7166d197a6e3879f21c22637f2bd3074ff90975c33a2149f6e07763e2eeaa04e",
+        "scripts/urbit/harness.py": "abfb8ae6237dc39ca3d35b4e023faba40c2f405b694aa4f914b88df072a456c3",
+        "scripts/urbit/supervisor.py": "5f10e9e9d6914c5709276e5fc6d0d94281d562e7062ce01638dcb6c2dc2197f2",
+        "scripts/urbit/urgit_audit.py": "eb78a0b8b8879b03fc2d7aeef88db345f8cd8cf137a63b977e4d875886b03e4a"
+      },
+      "review_findings_fixed": [
+        "Lease-write failure must not bypass targeted TERM/KILL cleanup",
+        "Null sensor inventory must fail closed",
+        "Forced/init supervisor shutdown must exit nonzero"
+      ],
+      "native_execution": "not_executed",
+      "bindings": {
+        "source_commit": "54734c85b1afc544c331dc80409dfa8f585ae977",
+        "native_tree_sha256": "a16e6ca6125797fce156aa9e36721432f9152cae5514708d2632464d42f77b7d",
+        "runtime_lock_sha256": "4a209c10cf1756eb0f7357cc3eca8250bf66c239b4cd0ca31a8c0886d4d304ee",
+        "corpus_sha256": "95c915e2d0c93f358225274b34216fff0fe2efc09791905855b1e3f36aec368a",
+        "contract_freeze_sha256": "a2336e5060c71c7c16849b3151cc024a598d6cdf867561452eff1338e3232670",
+        "runner_sha256": "2df9e36455150e832067bc384f28740eab99781989f776138957e5289ea6a3d4"
+      }
+    },
+    {
+      "id": "guard-negative-host-tests",
+      "kind": "host_mocked",
+      "status": "passed",
+      "assertions": [
+        {
+          "name": "hot-preflight-no-launch",
+          "status": "passed"
+        },
+        {
+          "name": "missing-stale-sensors",
+          "status": "passed"
+        },
+        {
+          "name": "crossing-stops-own-scope",
+          "status": "passed"
+        },
+        {
+          "name": "bounded-shutdown",
+          "status": "passed"
+        },
+        {
+          "name": "preserved-logs",
+          "status": "passed"
+        },
+        {
+          "name": "nonpassing-final",
+          "status": "passed"
+        },
+        {
+          "name": "no-forced-seed",
+          "status": "passed"
+        }
+      ],
+      "bindings": {
+        "guard_sha256": "7166d197a6e3879f21c22637f2bd3074ff90975c33a2149f6e07763e2eeaa04e"
+      },
+      "scope": "Synthetic sensor/child failure tests only; unchanged75/90C and50%CPU limits.",
+      "underlying_artifacts": [
+        {
+          "path": "docs/urbit/evidence/2026-09-13/qualification/root-lightweight-final.json",
+          "sha256": "67045bfe4ceacfa6d434690933d8448d72b87668a888364117797f3007215dd7"
+        },
+        {
+          "path": "docs/urbit/evidence/2026-09-13/qualification/unit-tests-final.log",
+          "sha256": "9aa71d1ff5714c40c7cf4e606d98862871744fa70098977d7f02e942149ee588"
+        }
+      ],
+      "native_execution": false
+    },
+    {
+      "id": "guard-real-hot-preflight-refusal",
+      "kind": "real_host",
+      "status": "passed",
+      "assertions": [
+        {
+          "name": "real-93c-refusal",
+          "status": "passed"
+        },
+        {
+          "name": "real-81c-refusal",
+          "status": "passed"
+        }
+      ],
+      "bindings": {
+        "guard_sha256": "7166d197a6e3879f21c22637f2bd3074ff90975c33a2149f6e07763e2eeaa04e"
+      },
+      "scope": "Two retained real-host refusals:93C light shim and81C four-fake start; neither launched Vere.",
+      "underlying_artifacts": [
+        {
+          "path": "docs/urbit/evidence/2026-09-13/qualification/guard-real-preflight-93c.json",
+          "sha256": "ee5343d8baf6b148654401792409a93f8868a2332dbbe49fba1099846dd44dc4"
+        },
+        {
+          "path": "docs/urbit/evidence/2026-09-13/qualification/guard-real-start-81c.json",
+          "sha256": "78f5902e38dc5c20bbe89bd9ec415f67b72c1300167f6cc701972b04d67d426b"
+        }
+      ],
+      "native_execution": false
+    },
+    {
+      "id": "guard-real-platform-mocked-sensors",
+      "kind": "real_platform_mocked_sensors",
+      "status": "passed",
+      "assertions": [
+        {
+          "name": "scope-quota-readback",
+          "status": "passed"
+        },
+        {
+          "name": "namespace-pass",
+          "status": "passed"
+        },
+        {
+          "name": "lock-released-after-scope",
+          "status": "passed"
+        },
+        {
+          "name": "readonly-lease",
+          "status": "passed"
+        }
+      ],
+      "bindings": {
+        "guard_sha256": "7166d197a6e3879f21c22637f2bd3074ff90975c33a2149f6e07763e2eeaa04e"
+      },
+      "scope": "Actual systemd/bwrap/namespace/lock lifetime with mocked cool sensors; no native/thermal qualification.",
+      "underlying_artifacts": [
+        {
+          "path": "docs/urbit/evidence/2026-09-13/qualification/guard-platform-mocked-sensors.json",
+          "sha256": "27d98c3dbed1aebdd1a8b23d344ceeec002c271508f7323fd07091fb8243dd46"
+        },
+        {
+          "path": "docs/urbit/evidence/2026-09-13/qualification/guard-platform-mocked-sensors.log",
+          "sha256": "27964c2ebe27f62166668998ba7aa42562226b78725c05ef684a7371deb24a55"
+        }
+      ],
+      "native_execution": false
+    },
+    {
+      "id": "delivery-host-order-permutations",
+      "kind": "host_mocked",
+      "status": "passed",
+      "assertions": [
+        {
+          "name": "fact-before-ack",
+          "status": "passed"
+        },
+        {
+          "name": "ack-before-fact",
+          "status": "passed"
+        },
+        {
+          "name": "kick-before-ack",
+          "status": "passed"
+        },
+        {
+          "name": "nack-is-not-accepted",
+          "status": "passed"
+        },
+        {
+          "name": "ack-without-result",
+          "status": "passed"
+        },
+        {
+          "name": "timeout-partial-missing-never-saved",
+          "status": "passed"
+        }
+      ],
+      "bindings": {
+        "source_commit": "54734c85b1afc544c331dc80409dfa8f585ae977",
+        "native_tree_sha256": "a16e6ca6125797fce156aa9e36721432f9152cae5514708d2632464d42f77b7d",
+        "runtime_lock_sha256": "4a209c10cf1756eb0f7357cc3eca8250bf66c239b4cd0ca31a8c0886d4d304ee",
+        "corpus_sha256": "95c915e2d0c93f358225274b34216fff0fe2efc09791905855b1e3f36aec368a",
+        "contract_freeze_sha256": "a2336e5060c71c7c16849b3151cc024a598d6cdf867561452eff1338e3232670",
+        "runner_sha256": "2df9e36455150e832067bc384f28740eab99781989f776138957e5289ea6a3d4"
+      },
+      "scope": "Host reducer preserves real acceptance only for exact correlated receipts; no live reordering claim.",
+      "underlying_artifacts": [
+        {
+          "path": "docs/urbit/evidence/2026-09-13/qualification/root-lightweight-final.json",
+          "sha256": "67045bfe4ceacfa6d434690933d8448d72b87668a888364117797f3007215dd7"
+        },
+        {
+          "path": "docs/urbit/evidence/2026-09-13/qualification/unit-tests-final.log",
+          "sha256": "9aa71d1ff5714c40c7cf4e606d98862871744fa70098977d7f02e942149ee588"
+        },
+        {
+          "path": "docs/urbit/evidence/2026-09-13/qualification/qa-delivery-host-output.txt",
+          "sha256": "9aa0bd5ca8f89ee12b6770d6d3116c6b38b0532c405c4c5bfa7ce56df83cde26"
+        }
+      ],
+      "native_execution": false
+    }
+  ],
+  "source_binding_rule": "Exact source_commit bytes checked against every final host input; no installed/loaded native evidence supplied."
+}

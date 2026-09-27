@@ -1,0 +1,4741 @@
+~
+urbit 4.6
+boot: home is /state/live/bus
+loom: mapped 2048MB
+lite: arvo formula 4ce68411
+lite: core 641296f
+lite: final state 641296f
+boot: loading pill /runtime/downloads/brass-408k-2.pill
+boot: preparing filesystem from /kernel/pkg/arvo
+disk: loaded epoch 0i0
+loom: mapped 2048MB
+boot: protected loom
+live: logical boot
+boot: installed 2178 jets
+boot: parsing %brass pill
+--------------- bootstrap starting ----------------
+boot: 1-20
+1-b
+1-c (compiling compiler, wait a few minutes)
+took µs/3
+1-d
+took µs/6
+1-e
+ride: parsing
+ride: compiling
+ride: compiled
+took ms/8.752
+1-f
+took µs/2
+1-g
+took ms/1.738
+lull: 0vq.ccoqu
+zuse: 0v1b.4qafq
+vane: %ames: 0v1p.esf09
+vane: %behn: 0v1r.6d8ct
+vane: %clay: 0v1h.60kq1
+vane: %dill: 0v1l.85ao1
+vane: %eyre: 0v7.n7ntq
+vane: %gall: 0v1c.9mbvd
+vane: %iris: 0v1p.u1u45
+vane: %jael: 0vi.07o0h
+vane: %khan: 0vi.g4115
+vane: %lick: 0vt.n7tn5
+arvo: metamorphosis
+ames: metamorphosis on %call
+arvo: beginning upgrade
+arvo: compiling hoon
+ride: parsing
+ride: compiling
+ride: compiled
+took s/17.117.612
+ride: parsing
+ride: compiling
+ride: compiled
+arvo: compiling next arvo
+ride: parsing
+ride: compiling
+ride: compiled
+took s/1.089.734
+ride: parsing
+ride: compiling
+ride: compiled
+ride: parsing
+ride: compiling
+ride: compiled
+>   arvo: +load next
+lull: 0v6.j4rt0
+took s/12.563.388
+zuse: 0v1b.4qafq
+took s/5.704.346
+vane: %ames: 0v1t.vas10
+took s/12.287.310
+>   ames: larva %32 reload
+vane: %behn: 0v2.bvcbo
+took ms/283.625
+vane: %clay: 0v14.upunr
+took s/7.886.476
+vane: %dill: 0v1l.85ao1
+took ms/479.376
+vane: %eyre: 0v1q.5ouia
+took s/2.788.500
+vane: %gall: 0v1t.4a4g9
+took s/4.450.254
+vane: %iris: 0v1p.u1u45
+took ms/189.111
+vane: %jael: 0vi.07o0h
+took ms/871.603
+vane: %khan: 0vi.g4115
+took ms/104.441
+vane: %lick: 0vt.n7tn5
+took ms/88.294
+ames: migrating from state %32 to %33
+ames: migrating from state %33 to %34
+ames: migrating from state %34 to %35
+ames: migrating from state %35 to %36
+ames: migrating from state %36 to %37
+ames: metamorphosis on %call
+clay: kernel updated
+clay: rebuilding %base after kernel update
+gall: installing %acme
+gall: installing %azimuth
+gall: installing %dbug
+gall: installing %dojo
+gall: installing %eth-watcher
+gall: installing %hood
+drum: link [~bus %dojo]
+kiln: boot
+gall: installing %herm
+gall: installing %lens
+gall: installing %ping
+gall: installing %spider
+gall: installing %docket
+gall: installing %hark
+gall: installing %settings
+gall: installing %storage
+gall: installing %treaty
+gall: installing %vitals
+docket: fetching %http glob for %webterm desk
+docket: fetching %http glob for %landscape desk
+docket: fetching %http glob for %webterm desk
+docket: fetching %http glob for %landscape desk
+docket: fetching %http glob for %groups desk
+gall: installing %logs
+gall: installing %groups
+gall: installing %chat
+gall: installing %notify
+gall: installing %grouper
+gall: installing %groups-ui
+gall: installing %channels
+gall: installing %channels-server
+gall: installing %profile
+gall: installing %activity
+gall: installing %contacts
+gall: installing %reel
+gall: installing %bait
+gall: installing %growl
+gall: installing %bark
+gall: installing %genuine
+gall: installing %lanyard
+gall: installing %dumb-proxy
+gall: installing %expose
+gall: installing %metagrab
+gall: installing %gateway-status
+gall: installing %presence
+clay: base is always essential
+--------------- bootstrap complete ----------------
+disk: loaded epoch 0i0
+loom: mapped 2048MB
+boot: protected loom
+live: mapped: MB/220.905.472
+boot: installed 2178 jets
+vere: checking version compatibility
+lick: init mkdir /state/live/bus/.urb/dev
+mesa: forwarding enabled
+mdns: init failed, install avahi on this system for mdns support
+mesa: live on 31519 (localhost only)
+conn: listening on /state/live/bus/.urb/conn.sock
+ames: unix-duct received on %born
+http: web interface live on http://localhost:18081
+http: loopback live on http://localhost:12322
+pier (33): live
+docket: fetching %http glob for %landscape desk
+http: fail (0, 504): temporary failure
+http: fail (1, 504): temporary failure
+http: fail (2, 504): temporary failure
+http: fail (3, 504): temporary failure
+http: fail (4, 504): temporary failure
+http: fail (5, 504): temporary failure
+http: fail (6, 504): temporary failure
+http: fail (7, 504): temporary failure
+http: fail (8, 504): temporary failure
+http: fail (9, 504): temporary failure
+http: fail (10, 504): temporary failure
+http: fail (11, 504): temporary failure
+http: fail (12, 504): temporary failure
+http: fail (13, 504): temporary failure
+http: fail (14, 504): temporary failure
+http: fail (15, 504): temporary failure
+http: fail (16, 504): temporary failure
+http: fail (17, 504): temporary failure
+http: fail (18, 504): temporary failure
+http: fail (19, 504): temporary failure
+http: fail (20, 504): temporary failure
+http: fail (21, 504): temporary failure
+http: fail (22, 504): temporary failure
+http: fail (23, 504): temporary failure
+http: fail (24, 504): temporary failure
+http: fail (25, 504): temporary failure
+http: fail (26, 504): temporary failure
+docket: thread failed;
+%retry-too-many
+http: fail (27, 504): temporary failure
+http: fail (28, 504): temporary failure
+docket: thread failed;
+%retry-too-many
+http: fail (29, 504): temporary failure
+docket: thread failed;
+%retry-too-many
+~
+urbit 4.6
+boot: home is /state/live/bus
+loom: mapped 2048MB
+lite: arvo formula 4ce68411
+lite: core 641296f
+lite: final state 641296f
+disk: loaded epoch 0i0
+loom: mapped 2048MB
+boot: protected loom
+live: mapped: MB/222.756.864
+boot: installed 2178 jets
+vere: checking version compatibility
+mesa: forwarding enabled
+mdns: init failed, install avahi on this system for mdns support
+mesa: live on 31519 (localhost only)
+conn: listening on /state/live/bus/.urb/conn.sock
+ames: unix-duct received on %born
+http: web interface live on http://localhost:18081
+http: loopback live on http://localhost:12322
+pier (229): live
+~
+urbit 4.6
+boot: home is /state/live/bus
+loom: mapped 2048MB
+lite: arvo formula 4ce68411
+lite: core 641296f
+lite: final state 641296f
+disk: loaded epoch 0i0
+loom: mapped 2048MB
+boot: protected loom
+live: mapped: MB/222.756.864
+boot: installed 2178 jets
+vere: checking version compatibility
+mesa: forwarding enabled
+mdns: init failed, install avahi on this system for mdns support
+mesa: live on 31519 (localhost only)
+conn: listening on /state/live/bus/.urb/conn.sock
+ames: unix-duct received on %born
+http: web interface live on http://localhost:18081
+http: loopback live on http://localhost:12322
+pier (229): live
+%already-mounted
+[[p=~bus q=%base r=[%ud p=0]] s=/]
+~
+urbit 4.6
+boot: home is /state/live/bus
+loom: mapped 2048MB
+lite: arvo formula 4ce68411
+lite: core 641296f
+lite: final state 641296f
+disk: loaded epoch 0i0
+loom: mapped 2048MB
+boot: protected loom
+live: mapped: MB/222.756.864
+boot: installed 2178 jets
+vere: checking version compatibility
+mesa: forwarding enabled
+mdns: init failed, install avahi on this system for mdns support
+mesa: live on 31519 (localhost only)
+conn: listening on /state/live/bus/.urb/conn.sock
+ames: unix-duct received on %born
+http: web interface live on http://localhost:18081
+http: loopback live on http://localhost:12322
+pier (229): live
+~
+urbit 4.6
+boot: home is /state/live/bus
+loom: mapped 2048MB
+lite: arvo formula 4ce68411
+lite: core 641296f
+lite: final state 641296f
+disk: loaded epoch 0i0
+loom: mapped 2048MB
+boot: protected loom
+live: mapped: MB/222.756.864
+boot: installed 2178 jets
+vere: checking version compatibility
+mesa: forwarding enabled
+mdns: init failed, install avahi on this system for mdns support
+mesa: live on 31519 (localhost only)
+conn: listening on /state/live/bus/.urb/conn.sock
+ames: unix-duct received on %born
+http: web interface live on http://localhost:18081
+http: loopback live on http://localhost:12322
+pier (229): live
+%already-mounted
+[[p=~bus q=%base r=[%ud p=0]] s=/]
+~
+urbit 4.6
+boot: home is /state/live/bus
+loom: mapped 2048MB
+lite: arvo formula 4ce68411
+lite: core 641296f
+lite: final state 641296f
+disk: loaded epoch 0i0
+loom: mapped 2048MB
+boot: protected loom
+live: mapped: MB/222.756.864
+boot: installed 2178 jets
+vere: checking version compatibility
+mesa: forwarding enabled
+mdns: init failed, install avahi on this system for mdns support
+mesa: live on 31519 (localhost only)
+conn: listening on /state/live/bus/.urb/conn.sock
+ames: unix-duct received on %born
+http: web interface live on http://localhost:18081
+http: loopback live on http://localhost:12322
+pier (271): live
+%already-mounted
+[[p=~bus q=%base r=[%ud p=0]] s=/]
+~
+urbit 4.6
+boot: home is /state/live/bus
+loom: mapped 2048MB
+lite: arvo formula 4ce68411
+lite: core 641296f
+lite: final state 641296f
+disk: loaded epoch 0i0
+loom: mapped 2048MB
+boot: protected loom
+live: mapped: MB/222.756.864
+boot: installed 2178 jets
+vere: checking version compatibility
+mesa: forwarding enabled
+mdns: init failed, install avahi on this system for mdns support
+mesa: live on 31519 (localhost only)
+conn: listening on /state/live/bus/.urb/conn.sock
+ames: unix-duct received on %born
+http: web interface live on http://localhost:18081
+http: loopback live on http://localhost:12322
+pier (229): live
+~
+urbit 4.6
+boot: home is /state/live/bus
+loom: mapped 2048MB
+lite: arvo formula 4ce68411
+lite: core 641296f
+lite: final state 641296f
+disk: loaded epoch 0i0
+loom: mapped 2048MB
+boot: protected loom
+live: mapped: MB/227.573.760
+boot: installed 2178 jets
+vere: checking version compatibility
+mesa: forwarding enabled
+mdns: init failed, install avahi on this system for mdns support
+mesa: live on 31519 (localhost only)
+conn: listening on /state/live/bus/.urb/conn.sock
+ames: unix-duct received on %born
+http: web interface live on http://localhost:18081
+http: loopback live on http://localhost:12322
+pier (269): live
+%already-mounted
+[[p=~bus q=%base r=[%ud p=0]] s=/]
+~
+urbit 4.6
+boot: home is /state/live/bus
+loom: mapped 2048MB
+lite: arvo formula 4ce68411
+lite: core 641296f
+lite: final state 641296f
+disk: loaded epoch 0i0
+loom: mapped 2048MB
+boot: protected loom
+live: mapped: MB/222.756.864
+boot: installed 2178 jets
+vere: checking version compatibility
+mesa: forwarding enabled
+mdns: init failed, install avahi on this system for mdns support
+mesa: live on 31519 (localhost only)
+conn: listening on /state/live/bus/.urb/conn.sock
+ames: unix-duct received on %born
+http: web interface live on http://localhost:18081
+http: loopback live on http://localhost:12322
+pier (229): live
+~
+urbit 4.6
+boot: home is /state/live/bus
+loom: mapped 2048MB
+lite: arvo formula 4ce68411
+lite: core 641296f
+lite: final state 641296f
+disk: loaded epoch 0i0
+loom: mapped 2048MB
+boot: protected loom
+live: mapped: MB/222.756.864
+boot: installed 2178 jets
+vere: checking version compatibility
+mesa: forwarding enabled
+mdns: init failed, install avahi on this system for mdns support
+mesa: live on 31519 (localhost only)
+conn: listening on /state/live/bus/.urb/conn.sock
+ames: unix-duct received on %born
+http: web interface live on http://localhost:18081
+http: loopback live on http://localhost:12322
+pier (229): live
+~
+urbit 4.6
+boot: home is /state/live/bus
+loom: mapped 2048MB
+lite: arvo formula 4ce68411
+lite: core 641296f
+lite: final state 641296f
+disk: loaded epoch 0i0
+loom: mapped 2048MB
+boot: protected loom
+live: mapped: MB/227.573.760
+boot: installed 2178 jets
+vere: checking version compatibility
+mesa: forwarding enabled
+mdns: init failed, install avahi on this system for mdns support
+mesa: live on 31519 (localhost only)
+conn: listening on /state/live/bus/.urb/conn.sock
+ames: unix-duct received on %born
+http: web interface live on http://localhost:18081
+http: loopback live on http://localhost:12322
+pier (693): live
+%already-mounted
+[[p=~bus q=%base r=[%ud p=0]] s=/]
+~
+urbit 4.6
+boot: home is /state/live/bus
+loom: mapped 2048MB
+lite: arvo formula 4ce68411
+lite: core 641296f
+lite: final state 641296f
+disk: loaded epoch 0i0
+loom: mapped 2048MB
+boot: protected loom
+live: mapped: MB/222.756.864
+boot: installed 2178 jets
+vere: checking version compatibility
+mesa: forwarding enabled
+mdns: init failed, install avahi on this system for mdns support
+mesa: live on 31519 (localhost only)
+conn: listening on /state/live/bus/.urb/conn.sock
+ames: unix-duct received on %born
+http: web interface live on http://localhost:18081
+http: loopback live on http://localhost:12322
+pier (229): live
+~
+urbit 4.6
+boot: home is /state/live/bus
+loom: mapped 2048MB
+lite: arvo formula 4ce68411
+lite: core 641296f
+lite: final state 641296f
+disk: loaded epoch 0i0
+loom: mapped 2048MB
+boot: protected loom
+live: mapped: MB/228.868.096
+boot: installed 2178 jets
+vere: checking version compatibility
+mesa: forwarding enabled
+mdns: init failed, install avahi on this system for mdns support
+mesa: live on 31519 (localhost only)
+conn: listening on /state/live/bus/.urb/conn.sock
+ames: unix-duct received on %born
+http: web interface live on http://localhost:18081
+http: loopback live on http://localhost:12322
+pier (324): live
+%already-mounted
+[[p=~bus q=%base r=[%ud p=0]] s=/]
+~
+urbit 4.6
+boot: home is /state/live/bus
+loom: mapped 2048MB
+lite: arvo formula 4ce68411
+lite: core 641296f
+lite: final state 641296f
+disk: loaded epoch 0i0
+loom: mapped 2048MB
+boot: protected loom
+live: mapped: MB/222.756.864
+boot: installed 2178 jets
+vere: checking version compatibility
+mesa: forwarding enabled
+mdns: init failed, install avahi on this system for mdns support
+mesa: live on 31519 (localhost only)
+conn: listening on /state/live/bus/.urb/conn.sock
+ames: unix-duct received on %born
+http: web interface live on http://localhost:18081
+http: loopback live on http://localhost:12322
+pier (229): live
+~
+urbit 4.6
+boot: home is /state/live/bus
+loom: mapped 2048MB
+lite: arvo formula 4ce68411
+lite: core 641296f
+lite: final state 641296f
+disk: loaded epoch 0i0
+loom: mapped 2048MB
+boot: protected loom
+live: mapped: MB/222.756.864
+boot: installed 2178 jets
+vere: checking version compatibility
+mesa: forwarding enabled
+mdns: init failed, install avahi on this system for mdns support
+mesa: live on 31519 (localhost only)
+conn: listening on /state/live/bus/.urb/conn.sock
+ames: unix-duct received on %born
+http: web interface live on http://localhost:18081
+http: loopback live on http://localhost:12322
+pier (229): live
+~
+urbit 4.6
+boot: home is /state/live/bus
+loom: mapped 2048MB
+lite: arvo formula 4ce68411
+lite: core 641296f
+lite: final state 641296f
+disk: loaded epoch 0i0
+loom: mapped 2048MB
+boot: protected loom
+live: mapped: MB/222.756.864
+boot: installed 2178 jets
+vere: checking version compatibility
+mesa: forwarding enabled
+mdns: init failed, install avahi on this system for mdns support
+mesa: live on 31519 (localhost only)
+conn: listening on /state/live/bus/.urb/conn.sock
+ames: unix-duct received on %born
+http: web interface live on http://localhost:18081
+http: loopback live on http://localhost:12322
+pier (229): live
+~
+urbit 4.6
+boot: home is /state/live/bus
+loom: mapped 2048MB
+lite: arvo formula 4ce68411
+lite: core 641296f
+lite: final state 641296f
+disk: loaded epoch 0i0
+loom: mapped 2048MB
+boot: protected loom
+live: mapped: MB/228.114.432
+boot: installed 2178 jets
+vere: checking version compatibility
+mesa: forwarding enabled
+mdns: init failed, install avahi on this system for mdns support
+mesa: live on 31519 (localhost only)
+conn: listening on /state/live/bus/.urb/conn.sock
+ames: unix-duct received on %born
+http: web interface live on http://localhost:18081
+http: loopback live on http://localhost:12322
+pier (384): live
+%already-mounted
+[[p=~bus q=%base r=[%ud p=0]] s=/]
+~
+urbit 4.6
+boot: home is /state/live/bus
+loom: mapped 2048MB
+lite: arvo formula 4ce68411
+lite: core 641296f
+lite: final state 641296f
+disk: loaded epoch 0i0
+loom: mapped 2048MB
+boot: protected loom
+live: mapped: MB/222.756.864
+boot: installed 2178 jets
+vere: checking version compatibility
+mesa: forwarding enabled
+mdns: init failed, install avahi on this system for mdns support
+mesa: live on 31519 (localhost only)
+conn: listening on /state/live/bus/.urb/conn.sock
+ames: unix-duct received on %born
+http: web interface live on http://localhost:18081
+http: loopback live on http://localhost:12322
+pier (229): live
+~
+urbit 4.6
+boot: home is /state/live/bus
+loom: mapped 2048MB
+lite: arvo formula 4ce68411
+lite: core 641296f
+lite: final state 641296f
+disk: loaded epoch 0i0
+loom: mapped 2048MB
+boot: protected loom
+live: mapped: MB/222.756.864
+boot: installed 2178 jets
+vere: checking version compatibility
+mesa: forwarding enabled
+mdns: init failed, install avahi on this system for mdns support
+mesa: live on 31519 (localhost only)
+conn: listening on /state/live/bus/.urb/conn.sock
+ames: unix-duct received on %born
+http: web interface live on http://localhost:18081
+http: loopback live on http://localhost:12322
+pier (229): live
+spider got sign for non-existent ~.khan-fyrd--0v7.acgk2.0lddn.n5fqd.ijiq1.be919
+spider got sign for non-existent ~.khan-fyrd--0v4.bohdg.od51d.odl7h.pmvhs.cl5gl
+spider got sign for non-existent ~.khan-fyrd--0v4.v6vgd.3ke1v.dv623.6ee3i.as987
+spider got sign for non-existent ~.khan-fyrd--0v6.lm7ha.r8t7e.j3lel.e0nnl.9bdt3
+spider got sign for non-existent ~.khan-fyrd--0v3.n9rlu.hjpia.82v2n.ssdjp.sklm0
+spider got sign for non-existent ~.khan-fyrd--0v3.li8sc.3bucg.6ea62.0aadk.bngbl
+spider got sign for non-existent ~.khan-fyrd--0v4.nlese.b2soo.mg6j4.bufr3.eguf3
+spider got sign for non-existent ~.khan-fyrd--0v7.5p2kq.so52l.p2cu6.rqtac.d53du
+spider got sign for non-existent ~.khan-fyrd--0v1dk53.80t14.7uf3b.76s1f.ckj0r
+spider got sign for non-existent ~.khan-fyrd--0v1.7aqio.20uqp.cllle.0bb3d.cj9g3
+spider got sign for non-existent ~.khan-fyrd--0v2.mjo4q.sn386.9u6ed.0tivo.m6haa
+spider got sign for non-existent ~.khan-fyrd--0v1.q8vv4.vvjdd.k83tq.1u205.t7b1c
+spider got sign for non-existent ~.khan-fyrd--0vandn4.at87n.70lg4.idloc.7fgr0
+spider got sign for non-existent ~.khan-fyrd--0vnh3t2.bjmho.kbca7.vffh8.5tmfd
+spider got sign for non-existent ~.khan-fyrd--0v6.kjpus.irf5a.776bo.80t9c.aobu6
+spider got sign for non-existent ~.khan-fyrd--0v4.878ln.ig71t.4j228.spq1m.2jm9q
+spider got sign for non-existent ~.khan-fyrd--0v2.83pdu.r00ua.uec6o.toc2r.9l8tq
+spider got sign for non-existent ~.khan-fyrd--0v4.v9lmr.5rd0k.613l1.ticbs.ptmoq
+spider got sign for non-existent ~.khan-fyrd--0v6.b9uhd.j43dt.7lh19.4jiln.54bb0
+spider got sign for non-existent ~.khan-fyrd--0v2.gv4ab.dd2j3.bqtoj.gh853.6p8kb
+spider got sign for non-existent ~.khan-fyrd--0v2.chhuh.3va17.5bg03.fecnj.laua3
+spider got sign for non-existent ~.khan-fyrd--0v5.nkma5.s7dmq.9bpfe.8t7an.na00q
+spider got sign for non-existent ~.khan-fyrd--0v5.3f3ml.8uhfu.gkpev.lifgd.mgr3t
+spider got sign for non-existent ~.khan-fyrd--0v2.2kfpj.am8jf.i6g8f.e46ca.ebqa0
+spider got sign for non-existent ~.khan-fyrd--0v7.c1mpv.e5qcu.dr0eu.5ubbq.l751j
+spider got sign for non-existent ~.khan-fyrd--0v1.uurc8.sa23p.t6fu1.hh03s.48sd4
+spider got sign for non-existent ~.khan-fyrd--0v7.5s02f.60a3a.s913e.mg8d0.j8vi6
+spider got sign for non-existent ~.khan-fyrd--0vflp06.q6s08.jj2cg.rshd8.mq86t
+spider got sign for non-existent ~.khan-fyrd--0v7.aerul.tdalm.cak4l.fp8di.4j16u
+spider got sign for non-existent ~.khan-fyrd--0v6.93fku.li7hq.o1pgn.o59pe.45g12
+spider got sign for non-existent ~.khan-fyrd--0v5.prlhi.2o89u.ti3pu.apj88.qau6f
+spider got sign for non-existent ~.khan-fyrd--0v3.ma4j2.uka0a.r5c6s.gts7k.8s1u5
+spider got sign for non-existent ~.khan-fyrd--0v7.a2qoi.9btef.qjs89.alfid.a5mij
+spider got sign for non-existent ~.khan-fyrd--0v5.i7veh.j6llu.aivbj.6hoph.q5vms
+spider got sign for non-existent ~.khan-fyrd--0v1.2bdai.kpg2k.svhjv.vjoa3.6nrg9
+spider got sign for non-existent ~.khan-fyrd--0v4.q1sce.rv702.9ngsr.nercd.9m953
+spider got sign for non-existent ~.khan-fyrd--0v5.ahomm.ek5fs.utalb.lp568.j61jr
+spider got sign for non-existent ~.khan-fyrd--0v6.plkf4.2dfvn.ajo0j.73eun.2v971
+spider got sign for non-existent ~.khan-fyrd--0v1.mqdkq.5o80b.ku7mh.j9pss.n6cq4
+spider got sign for non-existent ~.khan-fyrd--0v4.ima56.76etl.oj1b1.h36g0.5turo
+spider got sign for non-existent ~.khan-fyrd--0v7.56oi0.l09en.b6g3r.huflp.8iapd
+spider got sign for non-existent ~.khan-fyrd--0v2.cersj.m4luo.k7gkm.7vgcd.osf14
+spider got sign for non-existent ~.khan-fyrd--0v1.eq57r.fqjeb.6ramj.it9jp.kor1c
+spider got sign for non-existent ~.khan-fyrd--0v6.av433.a9alf.eahdm.unrfl.r3rs4
+spider got sign for non-existent ~.khan-fyrd--0v6.67vjo.1f54e.2hb25.bav9u.853l3
+spider got sign for non-existent ~.khan-fyrd--0v6.gjvsh.95afj.oal1r.2v478.em66o
+spider got sign for non-existent ~.khan-fyrd--0v5.b05gn.6ajat.ugsnf.30o0c.sgfh2
+spider got sign for non-existent ~.khan-fyrd--0v3.0lcja.eccpl.vd2cn.bodj6.rc2rm
+spider got sign for non-existent ~.khan-fyrd--0v4.tdc4v.v4vhd.4u00t.s9pc0.3v315
+spider got sign for non-existent ~.khan-fyrd--0v3i7fg.vnplb.0ohab.iulak.4pept
+spider got sign for non-existent ~.khan-fyrd--0vbkpbm.rqlpu.as059.4qirr.4dmbr
+spider got sign for non-existent ~.khan-fyrd--0v3.8t6ru.pl4li.1uqfe.cctvg.shosr
+spider got sign for non-existent ~.khan-fyrd--0v4.mja69.mp148.i8v17.i45n7.jjlf9
+spider got sign for non-existent ~.khan-fyrd--0v2.fetmf.4c1gb.1a7s7.jkhk6.71jrr
+spider got sign for non-existent ~.khan-fyrd--0v1.4se9f.0afv6.q3p8s.asbr2.g66tr
+spider got sign for non-existent ~.khan-fyrd--0v6.f2ann.evfbi.fqsv0.j7i8d.hs6s3
+spider got sign for non-existent ~.khan-fyrd--0v7.f1pq4.peiqk.sfjea.19pus.84acd
+spider got sign for non-existent ~.khan-fyrd--0vlohls.bd10c.tt525.8dmku.5641r
+spider got sign for non-existent ~.khan-fyrd--0v3.2j4tn.nfkpc.g9dph.0nc8i.ao2gt
+spider got sign for non-existent ~.khan-fyrd--0v2.ia6kh.ff851.48nmn.05uqm.jbi99
+spider got sign for non-existent ~.khan-fyrd--0v4.mulg6.6vffc.4mf34.c90l6.1ov82
+spider got sign for non-existent ~.khan-fyrd--0v1.peh2k.7h8oe.9eh7t.nadmm.0s3va
+spider got sign for non-existent ~.khan-fyrd--0v1.mbv8g.rktdm.hqflk.eekjv.2e3v8
+spider got sign for non-existent ~.khan-fyrd--0v2.655qk.gf3s0.ma6nn.7ercu.2qvl2
+spider got sign for non-existent ~.khan-fyrd--0v3.blbvm.vdqgc.24rdb.0ob1u.4hkm0
+spider got sign for non-existent ~.khan-fyrd--0v32k3h.o3kbe.hq73k.2vkuj.i0tn7
+spider got sign for non-existent ~.khan-fyrd--0v1.6pav1.k2cqv.pcn03.fbvua.sgoeq
+spider got sign for non-existent ~.khan-fyrd--0v2.v4iuj.pct7i.89lhn.ki96o.6eb7i
+spider got sign for non-existent ~.khan-fyrd--0v3.c2978.n7icm.qkvk5.ge2oa.el3mt
+spider got sign for non-existent ~.khan-fyrd--0v5.m73nb.rhko9.lqdjc.hi76o.4kfro
+spider got sign for non-existent ~.khan-fyrd--0v1.g5qe2.e1f0f.ltura.hjjrh.6htgj
+spider got sign for non-existent ~.khan-fyrd--0v4.k01v2.oldnu.2tes7.bgo7p.3jeuh
+spider got sign for non-existent ~.khan-fyrd--0v5.as9bq.cfmsr.g2sec.9nd45.eft26
+spider got sign for non-existent ~.khan-fyrd--0v1.rggtf.7r2mj.mrdn6.712uv.t0nl6
+spider got sign for non-existent ~.khan-fyrd--0v1.6ja4l.6unvh.rlfjg.nn7lt.qs3ag
+spider got sign for non-existent ~.khan-fyrd--0v6.u68gf.as5pg.p4n83.ev1bd.inq6g
+spider got sign for non-existent ~.khan-fyrd--0v4.o4tff.c9hc8.f6hdn.p6vl9.0adp8
+spider got sign for non-existent ~.khan-fyrd--0v6.rq562.lukj1.k7vmv.8csau.mo2im
+spider got sign for non-existent ~.khan-fyrd--0v2.b9q7h.koofp.e6n6f.cq002.j7p4e
+spider got sign for non-existent ~.khan-fyrd--0vpqj0q.vafsd.5aeqi.j8d79.f84cj
+spider got sign for non-existent ~.khan-fyrd--0v9l5ub.i7jrg.290o8.kngqs.8mcc3
+spider got sign for non-existent ~.khan-fyrd--0v7.l08ga.unepe.h6t6a.gkfn0.43f6j
+spider got sign for non-existent ~.khan-fyrd--0v7.3s6nt.6brd8.4kihu.3m25c.dm1jb
+spider got sign for non-existent ~.khan-fyrd--0v2.88u8v.d4a3p.25f0q.53b2v.0j4lt
+spider got sign for non-existent ~.khan-fyrd--0v6.ad7kq.qv51k.nekv7.a0fng.q0m6j
+spider got sign for non-existent ~.khan-fyrd--0v4.b55rh.a6g0r.mhbqt.okek9.f53ti
+spider got sign for non-existent ~.khan-fyrd--0v4.nb5ei.o0j4e.9pduq.5tcuh.mo5j6
+spider got sign for non-existent ~.khan-fyrd--0v1dp20.1hnho.24kgh.c1l98.rd7fp
+spider got sign for non-existent ~.khan-fyrd--0v1.8qak5.5jnvr.tuojm.17qqh.d6o3p
+spider got sign for non-existent ~.khan-fyrd--0v7.r8dv5.d5an1.dkv2j.h1s77.md00d
+spider got sign for non-existent ~.khan-fyrd--0v3.dqifn.idhhc.b86vs.cd030.s9oiv
+spider got sign for non-existent ~.khan-fyrd--0v6.duamp.9ulr1.rj4cs.m80tj.4hacg
+spider got sign for non-existent ~.khan-fyrd--0v3.1e8ou.6itf8.2hv9b.9jvde.402em
+spider got sign for non-existent ~.khan-fyrd--0v1.cd9sk.l4qaq.o4mc6.eb6q3.6ekmo
+spider got sign for non-existent ~.khan-fyrd--0v5.v73l7.kefgi.3ntvc.vg2n4.1be1k
+spider got sign for non-existent ~.khan-fyrd--0vc02il.dmvqt.qb9bm.n32mo.doepm
+spider got sign for non-existent ~.khan-fyrd--0v6.5khqk.jasjm.hn0mq.pibjc.b3oo1
+spider got sign for non-existent ~.khan-fyrd--0v2.3h1ht.1j0fn.ick22.vorbc.iaab1
+spider got sign for non-existent ~.khan-fyrd--0v1.3q51e.hrtfs.h0iqv.7rmau.6cvt1
+spider got sign for non-existent ~.khan-fyrd--0v7.7jf7k.kici1.nbfk0.vmnka.ov91o
+spider got sign for non-existent ~.khan-fyrd--0v489d2.673eu.8er2c.nco3j.p703d
+spider got sign for non-existent ~.khan-fyrd--0v5.viib1.o5hr0.hrdrp.4qsmo.mql2n
+spider got sign for non-existent ~.khan-fyrd--0v6.j8r12.f6c0b.029tg.o026a.r4r1b
+spider got sign for non-existent ~.khan-fyrd--0v5.ktmcv.ieh4f.eagl7.podop.7muq1
+spider got sign for non-existent ~.khan-fyrd--0v3.dl2ks.19dt8.18met.7rovr.4qvoe
+spider got sign for non-existent ~.khan-fyrd--0v7.7t788.0f2bp.21gb0.ngu7c.tk8ur
+spider got sign for non-existent ~.khan-fyrd--0v3.g012o.ftuur.h1j1n.otom5.7vknq
+spider got sign for non-existent ~.khan-fyrd--0v7.oqefj.j54au.i4mki.567ro.3eis6
+spider got sign for non-existent ~.khan-fyrd--0v7.sputv.2v37q.ucq5h.ns29t.halut
+spider got sign for non-existent ~.khan-fyrd--0v3.ufl2q.m7gnp.pp3o0.p2ebi.m1asb
+spider got sign for non-existent ~.khan-fyrd--0v7.9srp7.e5ou3.91qhh.nneso.o2cj9
+spider got sign for non-existent ~.khan-fyrd--0v3.2toq3.k94sg.e8a6f.98pha.k3hgu
+spider got sign for non-existent ~.khan-fyrd--0v5.58o27.adgej.u444k.2f9k9.j5isc
+spider got sign for non-existent ~.khan-fyrd--0v7.ajegq.hkgnn.6k4ma.is5oa.q9s9d
+spider got sign for non-existent ~.khan-fyrd--0v6.ftg8o.k1q0p.63s1t.vlc8l.a7qs2
+spider got sign for non-existent ~.khan-fyrd--0v3.rfjjd.3paa4.9ie73.fkt6e.07vgr
+spider got sign for non-existent ~.khan-fyrd--0vfkkvr.dcga2.4g91t.5gr9d.1skvb
+spider got sign for non-existent ~.khan-fyrd--0vi7hfi.hint7.3sse0.79rae.l5h7e
+spider got sign for non-existent ~.khan-fyrd--0v3.eq9oi.40071.6jn4v.8dcv7.d4g09
+spider got sign for non-existent ~.khan-fyrd--0v6.56lcg.fem3o.om8ve.73gbf.vn0i2
+spider got sign for non-existent ~.khan-fyrd--0v2.aneer.6u83r.7thvs.v8ch5.d1ljp
+spider got sign for non-existent ~.khan-fyrd--0v2nedh.pfu6c.25b6m.ctcdb.orta2
+spider got sign for non-existent ~.khan-fyrd--0v7.d61af.lv7vr.ckcln.evbs7.a1d81
+spider got sign for non-existent ~.khan-fyrd--0v4.7k5em.16t60.p7e7q.jcbaj.upv7c
+spider got sign for non-existent ~.khan-fyrd--0v7.tu1d1.psu5t.edo03.7hvr6.hdc57
+spider got sign for non-existent ~.khan-fyrd--0v5.9f6pm.gr2ii.eu39v.1o1k8.qpsha
+spider got sign for non-existent ~.khan-fyrd--0v7.l7mrh.9ufh9.s75if.bclq3.lc86g
+spider got sign for non-existent ~.khan-fyrd--0v3.tigrc.p44q5.bjhl4.n0p4q.0kstn
+spider got sign for non-existent ~.khan-fyrd--0v3.ak7ou.r5qub.1lqpv.9ibtp.d3rhp
+spider got sign for non-existent ~.khan-fyrd--0v1.3234a.9map1.05trj.c52h8.01ded
+spider got sign for non-existent ~.khan-fyrd--0v2.v98n9.5ef48.81jsj.krl2u.hgsf4
+spider got sign for non-existent ~.khan-fyrd--0v2.nrciq.1cdnv.vh02n.ibos9.scatm
+spider got sign for non-existent ~.khan-fyrd--0v5.u32gt.q0e62.hq6dv.1i0g0.5u12p
+spider got sign for non-existent ~.khan-fyrd--0v5.483fm.s4efv.75eju.t6prc.abeo8
+spider got sign for non-existent ~.khan-fyrd--0v5.5802q.1pb12.90j3q.d8c22.5efa3
+spider got sign for non-existent ~.khan-fyrd--0v1n1t.ds0lt.9ltde.2ovab.hfkjv
+spider got sign for non-existent ~.khan-fyrd--0v2.mcscf.n2nv7.0rgqh.h0cgo.5r8n2
+spider got sign for non-existent ~.khan-fyrd--0v1.n42n5.5q3lj.97c87.7h32v.rifl7
+spider got sign for non-existent ~.khan-fyrd--0v3.f0nt8.c4otq.n1d03.obanh.uq1ie
+spider got sign for non-existent ~.khan-fyrd--0v4.vt5u1.8nlsi.hq2p6.2bcu5.ecmc2
+spider got sign for non-existent ~.khan-fyrd--0v2.7quvh.r4tgf.0a1qn.7d22c.7m7r3
+spider got sign for non-existent ~.khan-fyrd--0v6.tie5m.4trku.fs5oo.51frh.mp9h2
+spider got sign for non-existent ~.khan-fyrd--0v5.od45m.d63if.c35tl.4de92.fv8it
+spider got sign for non-existent ~.khan-fyrd--0v7.p5hbk.55fbd.9i8gi.id99v.tq64d
+spider got sign for non-existent ~.khan-fyrd--0v5.4hmoq.5a8f7.rna5q.5483g.7dhq6
+spider got sign for non-existent ~.khan-fyrd--0v3.tf07a.eiamq.gp02s.jv9k6.oebbk
+spider got sign for non-existent ~.khan-fyrd--0v5.2bp5c.2om6b.i7vh2.ua4v2.oo51k
+spider got sign for non-existent ~.khan-fyrd--0v5.h1oj6.r0765.rt1ku.7f15d.8nmqb
+spider got sign for non-existent ~.khan-fyrd--0v7.qpd4a.5v03i.ukggl.m2ssu.8ergr
+spider got sign for non-existent ~.khan-fyrd--0v5.i9jh0.r8kca.7itcj.6b24s.612bv
+spider got sign for non-existent ~.khan-fyrd--0v4.ub122.3ooqs.mp4fn.t5ujp.jsjb3
+spider got sign for non-existent ~.khan-fyrd--0v5.rk4ii.38n33.arbjk.0ne95.dh6i7
+spider got sign for non-existent ~.khan-fyrd--0v3.hmmkl.pntks.dqml6.ve1av.eotti
+spider got sign for non-existent ~.khan-fyrd--0v5.1au7c.7vvd8.5eorr.9a4vk.fd3rn
+spider got sign for non-existent ~.khan-fyrd--0v6.65c7r.28h6l.u3dj0.6niil.e1otl
+spider got sign for non-existent ~.khan-fyrd--0v1.194tv.d2mbt.8278k.6rgvs.13gbg
+spider got sign for non-existent ~.khan-fyrd--0vj1q8d.h0jk3.7on6a.q2b5o.7t0vg
+spider got sign for non-existent ~.khan-fyrd--0v5.12uih.qanop.5cel6.n26ft.c68fo
+spider got sign for non-existent ~.khan-fyrd--0v5.glau4.u7mbp.m3jpb.v447u.brdq5
+spider got sign for non-existent ~.khan-fyrd--0v7.h2r68.p12nh.pmf90.91s28.lr8nt
+spider got sign for non-existent ~.khan-fyrd--0v5.1ib1q.t0hug.8ce89.v33om.gd4au
+spider got sign for non-existent ~.khan-fyrd--0v1.84m97.ms8d6.q27nv.th7e1.arocm
+spider got sign for non-existent ~.khan-fyrd--0v4.8ut94.albot.qrlut.o8rad.upstn
+spider got sign for non-existent ~.khan-fyrd--0v28oh5.k2qaa.267o6.bgav0.4godc
+spider got sign for non-existent ~.khan-fyrd--0v7.gm9h9.n43hr.u89j7.c0o5m.nr77k
+spider got sign for non-existent ~.khan-fyrd--0v1.3e8dc.ga5hm.ososs.aljdi.gl81d
+spider got sign for non-existent ~.khan-fyrd--0v6.eban1.8caqd.cgggt.lum4s.ltt5g
+spider got sign for non-existent ~.khan-fyrd--0v7.fb97r.gpi8r.8hgp0.gc406.iqhli
+spider got sign for non-existent ~.khan-fyrd--0v4.o79p0.9l95r.2d3ek.ri9h6.qnfqg
+spider got sign for non-existent ~.khan-fyrd--0v4.fncpf.k45sc.4dtia.jnlvk.iogs7
+spider got sign for non-existent ~.khan-fyrd--0v5.t39to.anh9u.5h6k6.v0j5o.ggq8j
+spider got sign for non-existent ~.khan-fyrd--0v7.glt7f.h8mr0.7bchk.on7e3.gasdr
+spider got sign for non-existent ~.khan-fyrd--0v6.qlt68.20n40.9cg8s.1dnef.mcgmm
+spider got sign for non-existent ~.khan-fyrd--0v7.1chu5.aoj3m.nkvro.leqc3.j53b4
+spider got sign for non-existent ~.khan-fyrd--0v1.rcpui.p6t7o.jgt4v.kkecd.a6fds
+spider got sign for non-existent ~.khan-fyrd--0v5.hhbc2.2rqac.27sv1.o198q.f22jf
+spider got sign for non-existent ~.khan-fyrd--0v7.tshvv.shr9l.r95dv.b3t9f.9jjhp
+spider got sign for non-existent ~.khan-fyrd--0v1.2o026.mh7dt.0s2o1.orjrv.e8mc4
+spider got sign for non-existent ~.khan-fyrd--0v7.e92kn.hr4tm.4lndf.ejn5q.ianoe
+~
+urbit 4.6
+boot: home is /state/live/bus
+loom: mapped 2048MB
+lite: arvo formula 4ce68411
+lite: core 641296f
+lite: final state 641296f
+disk: loaded epoch 0i0
+loom: mapped 2048MB
+boot: protected loom
+live: mapped: MB/228.147.200
+boot: installed 2178 jets
+vere: checking version compatibility
+mesa: forwarding enabled
+mdns: init failed, install avahi on this system for mdns support
+mesa: live on 31519 (localhost only)
+conn: listening on /state/live/bus/.urb/conn.sock
+ames: unix-duct received on %born
+http: web interface live on http://localhost:18081
+http: loopback live on http://localhost:12322
+pier (1823): live
+%already-mounted
+[[p=~bus q=%base r=[%ud p=0]] s=/]
+~
+urbit 4.6
+boot: home is /state/live/bus
+loom: mapped 2048MB
+lite: arvo formula 4ce68411
+lite: core 641296f
+lite: final state 641296f
+disk: loaded epoch 0i0
+loom: mapped 2048MB
+boot: protected loom
+live: mapped: MB/222.756.864
+boot: installed 2178 jets
+vere: checking version compatibility
+mesa: forwarding enabled
+mdns: init failed, install avahi on this system for mdns support
+mesa: live on 31519 (localhost only)
+conn: listening on /state/live/bus/.urb/conn.sock
+ames: unix-duct received on %born
+http: web interface live on http://localhost:18081
+http: loopback live on http://localhost:12322
+pier (229): live
+spider got sign for non-existent ~.khan-fyrd--0v5.3vmoo.l3q4o.3fil9.ebfdt.qupni
+spider got sign for non-existent ~.khan-fyrd--0v2.rqt0r.a8egj.1tc5m.boqd1.1a7f2
+spider got sign for non-existent ~.khan-fyrd--0v3.4upju.167j5.q4foh.5oa8u.b75qa
+spider got sign for non-existent ~.khan-fyrd--0v7.rca37.l59op.vftrg.g64d0.rp4ng
+spider got sign for non-existent ~.khan-fyrd--0v2.h6291.7run8.93cin.qnu6v.v83iu
+spider got sign for non-existent ~.khan-fyrd--0v6.dt1el.muevl.du0q9.qmo5e.8f407
+spider got sign for non-existent ~.khan-fyrd--0v2.ivi3l.k1rck.a2orj.akb3s.r0o0k
+spider got sign for non-existent ~.khan-fyrd--0v5.7jhq6.5cu29.opa08.cj4ip.inh61
+spider got sign for non-existent ~.khan-fyrd--0v3.lfng2.fcv4n.6hqho.fjbf4.04gqt
+spider got sign for non-existent ~.khan-fyrd--0v4.1sju5.cu8ne.0bavi.98od7.lcuam
+spider got sign for non-existent ~.khan-fyrd--0v4.4sjm0.7g4oh.nhsds.rcfd9.ip88e
+spider got sign for non-existent ~.khan-fyrd--0v7.dht0e.r380l.7o72p.fk7go.84mti
+spider got sign for non-existent ~.khan-fyrd--0v7.eg4sp.kjn8o.slfbk.orrgp.hkn49
+spider got sign for non-existent ~.khan-fyrd--0v3.og4if.vdf35.3nno7.4g1f0.ujj2o
+spider got sign for non-existent ~.khan-fyrd--0v3.7abj1.qo9v2.d7s9n.okfib.oj7b5
+spider got sign for non-existent ~.khan-fyrd--0v7.3v9jk.4pt95.59avd.p4ugu.1o8ua
+spider got sign for non-existent ~.khan-fyrd--0v6.58lfu.k158a.7gmep.iots5.7h4s9
+spider got sign for non-existent ~.khan-fyrd--0v6.mjidb.3n02q.shi4s.fu26c.i3tp2
+spider got sign for non-existent ~.khan-fyrd--0v4.qn043.a9ir4.d8vsr.050vb.hvcre
+spider got sign for non-existent ~.khan-fyrd--0v5.2eu18.crvqk.ne4jp.lg2ql.8cr6b
+spider got sign for non-existent ~.khan-fyrd--0v7.5tpnv.h13rn.ceblh.1nevl.0ome8
+spider got sign for non-existent ~.khan-fyrd--0v1.kv3he.uvvm7.i0rqb.aqk4f.k3ca1
+spider got sign for non-existent ~.khan-fyrd--0v2.5hvsv.s432e.h780t.ap3dj.0delo
+spider got sign for non-existent ~.khan-fyrd--0v4.ttpko.fn6qb.lu69f.0t0ao.qnolj
+spider got sign for non-existent ~.khan-fyrd--0v6.vn0ma.bt6oi.20ptr.66dvd.70lhh
+spider got sign for non-existent ~.khan-fyrd--0v1.s1u5g.2830p.3dv1l.mf7k3.2bcfc
+spider got sign for non-existent ~.khan-fyrd--0v7.dbgmq.9tdfp.j3t5n.c9j6h.bbh36
+spider got sign for non-existent ~.khan-fyrd--0v3.0rn8c.m99vg.uu1f5.np26n.36tbl
+spider got sign for non-existent ~.khan-fyrd--0v4.tqff7.t335m.nr93b.p4ei0.hev3e
+spider got sign for non-existent ~.khan-fyrd--0v4.au73b.i95iq.hfss1.e8ccv.vus9g
+spider got sign for non-existent ~.khan-fyrd--0v3.2kf4l.adec4.mmroj.b1rau.flmhf
+spider got sign for non-existent ~.khan-fyrd--0v1.u3bc8.4dhcj.47meg.jq60a.902g4
+spider got sign for non-existent ~.khan-fyrd--0v6.90uhc.eenqi.dr4eo.elrfm.g4clq
+spider got sign for non-existent ~.khan-fyrd--0v1.eh2rg.5todb.rcg4a.g8p0j.lm8r4
+spider got sign for non-existent ~.khan-fyrd--0v8m2v9.fk3ab.1ccsi.iq2s8.4ubla
+spider got sign for non-existent ~.khan-fyrd--0v7.jirpm.pv5aa.se5dn.2ff4c.leu24
+spider got sign for non-existent ~.khan-fyrd--0v7m5hn.tmpsi.csbsc.kqiti.dv15e
+spider got sign for non-existent ~.khan-fyrd--0v7.j88ou.f3d0n.eoloi.bm0dq.10jjf
+spider got sign for non-existent ~.khan-fyrd--0v4.2n0mb.o8ls2.aan4q.cj01j.aqb8j
+spider got sign for non-existent ~.khan-fyrd--0v5.9ntjk.7pot4.0pu0b.4o4l5.55ke9
+spider got sign for non-existent ~.khan-fyrd--0v5.sdurl.ap8b1.kb53c.qn1o5.lg1p9
+spider got sign for non-existent ~.khan-fyrd--0v3.i3ldb.m0a2a.si6i4.de23e.4fni0
+spider got sign for non-existent ~.khan-fyrd--0v7.qm51b.1hpaj.f8p09.p2pct.8sbeg
+spider got sign for non-existent ~.khan-fyrd--0v7.4l3f5.4e00j.vlduh.mhveb.tpfdc
+spider got sign for non-existent ~.khan-fyrd--0v7.nlrvd.efoof.pokab.n13i3.m49id
+spider got sign for non-existent ~.khan-fyrd--0vj0n5l.u0371.oig4g.r9bg8.7bges
+spider got sign for non-existent ~.khan-fyrd--0v3.kc978.0tv6t.8vfmh.cg99m.qhva1
+spider got sign for non-existent ~.khan-fyrd--0v4.6c803.b93bb.cq46p.ktcsa.pk8l1
+spider got sign for non-existent ~.khan-fyrd--0v7.aj0ob.7tu0f.4340i.2ha3s.4tlnf
+spider got sign for non-existent ~.khan-fyrd--0v7.hknvj.eq6m0.542i9.9cqua.9v6qh
+spider got sign for non-existent ~.khan-fyrd--0v1.v07hv.2h1g0.17tua.28eur.muq44
+spider got sign for non-existent ~.khan-fyrd--0v3.u8eq6.11hns.jhbit.pnog6.89ift
+spider got sign for non-existent ~.khan-fyrd--0v5.o5us3.def2d.3g35b.ljocg.jcajd
+spider got sign for non-existent ~.khan-fyrd--0v6.h4afe.uepi1.u37ib.h3e8g.h9bkg
+spider got sign for non-existent ~.khan-fyrd--0v6.91t6g.5516j.onbjd.m251a.dpvur
+spider got sign for non-existent ~.khan-fyrd--0vbrq7n.rn9ap.uatv0.eus4r.orfvg
+spider got sign for non-existent ~.khan-fyrd--0vl0mip.cmldk.gbvdr.5kql2.15ibr
+spider got sign for non-existent ~.khan-fyrd--0v6.c218a.3jhqf.9jpkp.4pq76.r1tg0
+spider got sign for non-existent ~.khan-fyrd--0v5.l9f5d.b5drm.ormm5.l7vuu.3c0g7
+spider got sign for non-existent ~.khan-fyrd--0v4.1jmf3.5p6h5.3v1et.p1anb.uhhra
+spider got sign for non-existent ~.khan-fyrd--0v6.j6cgj.gdb32.vkrdr.k0nhb.3qn91
+spider got sign for non-existent ~.khan-fyrd--0v2.vtd54.0goqd.ndu31.hd16q.ssdnp
+spider got sign for non-existent ~.khan-fyrd--0vdu7lo.23e9k.uahub.s19rt.64bss
+spider got sign for non-existent ~.khan-fyrd--0v1.lkeh4.on0ee.gtldf.4h012.ja1d2
+spider got sign for non-existent ~.khan-fyrd--0v1.eukjn.e0t67.hrrpb.u9jcv.10st8
+spider got sign for non-existent ~.khan-fyrd--0v6.r8euj.t98ct.ir57n.j570d.pkup6
+spider got sign for non-existent ~.khan-fyrd--0v1.runcu.fd3fj.d35ec.5hlel.6c1rs
+spider got sign for non-existent ~.khan-fyrd--0v5.2vkib.pd2r9.im9es.fj674.78iq5
+spider got sign for non-existent ~.khan-fyrd--0v2.seuvm.vt1gd.5f0m3.4ci5u.c2odi
+spider got sign for non-existent ~.khan-fyrd--0v8mrbe.a78e2.vvcqv.2v525.bpv20
+spider got sign for non-existent ~.khan-fyrd--0v2.mrph1.qos23.u1nks.ki85i.8c9st
+spider got sign for non-existent ~.khan-fyrd--0v7.f9tj5.s9ffb.50ddc.bjl6f.domvf
+spider got sign for non-existent ~.khan-fyrd--0v7.k1f1a.ib9fr.vs6pd.so5k3.uocsu
+spider got sign for non-existent ~.khan-fyrd--0v1.vds9h.4dp2s.469st.i64jp.mbdmb
+spider got sign for non-existent ~.khan-fyrd--0vl8j0j.98i62.u8bq5.fuffu.guf79
+spider got sign for non-existent ~.khan-fyrd--0v3.ev3n9.2d43k.pc5vd.9ftro.bsqeq
+spider got sign for non-existent ~.khan-fyrd--0v3.8444o.dronv.o0268.tcs47.a2r8b
+spider got sign for non-existent ~.khan-fyrd--0v87pv.22gdk.8kigq.o50uh.0vmgt
+spider got sign for non-existent ~.khan-fyrd--0v1.v8rd2.ji9bf.hhmqh.sggqn.rsc22
+spider got sign for non-existent ~.khan-fyrd--0v1.klavu.40a99.tlh4q.9gcq6.g5reo
+spider got sign for non-existent ~.khan-fyrd--0v1.14vdi.7oc2j.1ldmn.bsji3.5oj1k
+spider got sign for non-existent ~.khan-fyrd--0v2.uhrbe.tega1.jn7b9.90osh.eo73j
+spider got sign for non-existent ~.khan-fyrd--0v6.qo6di.h9e79.jbtko.rqs6v.7ss4m
+spider got sign for non-existent ~.khan-fyrd--0v5.d3fi8.bj4cn.0cr1n.uthbu.r54b9
+spider got sign for non-existent ~.khan-fyrd--0v7.mmgte.q0opa.6an1k.rk0t0.5epnu
+spider got sign for non-existent ~.khan-fyrd--0v5.s05qe.oekg6.2haii.be13e.pd6gj
+spider got sign for non-existent ~.khan-fyrd--0v2.kd8s0.l8hl3.r2fqh.sen1v.hrim2
+spider got sign for non-existent ~.khan-fyrd--0v4.cejvi.58k25.kjupg.5i8m1.l9tqh
+spider got sign for non-existent ~.khan-fyrd--0v6.ehfc9.l48or.flibl.avr7t.huonh
+spider got sign for non-existent ~.khan-fyrd--0vamat7.sckml.t6od5.ogvbr.1bq1f
+spider got sign for non-existent ~.khan-fyrd--0v7.4dpvp.3e11b.013h5.4ruv9.903sl
+spider got sign for non-existent ~.khan-fyrd--0v4.fpmcb.7io0i.v5c9r.lpnd9.6sq31
+spider got sign for non-existent ~.khan-fyrd--0vdmgl5.3a2gh.lgca1.r7q9r.575rk
+spider got sign for non-existent ~.khan-fyrd--0v3.l5h8s.bvln2.svh29.9js06.hm0p1
+spider got sign for non-existent ~.khan-fyrd--0v3.tg4ek.7lkjh.kbm34.nnn6v.i92qb
+spider got sign for non-existent ~.khan-fyrd--0v1.4ka82.4jrv1.2abcf.mvj6v.voqdk
+spider got sign for non-existent ~.khan-fyrd--0v7.n0p05.henjc.6bb3l.m4q7o.9ckjj
+spider got sign for non-existent ~.khan-fyrd--0v6.bmkfn.2schm.lrogq.d4hhl.ljmpb
+spider got sign for non-existent ~.khan-fyrd--0v6.4d9jc.tcmq1.phc86.o3ltj.3dipb
+spider got sign for non-existent ~.khan-fyrd--0v5.q8sjk.2l7mn.emmj9.1e8jt.jvk7k
+spider got sign for non-existent ~.khan-fyrd--0v7.g0t7e.12nt2.cdktt.sp88v.888a3
+spider got sign for non-existent ~.khan-fyrd--0viiigd.o0c54.2avg2.nfgma.c8mbj
+spider got sign for non-existent ~.khan-fyrd--0v5.6h7ps.e0f1e.1omqg.tk3fs.q66g0
+spider got sign for non-existent ~.khan-fyrd--0v3.2ilug.r4bkj.sd0ff.jf6r1.7uq0l
+spider got sign for non-existent ~.khan-fyrd--0v6.nfu05.7v64l.f9n2u.432j1.uo07d
+spider got sign for non-existent ~.khan-fyrd--0v1.2sdli.q63ha.6vn36.j38qb.qao34
+spider got sign for non-existent ~.khan-fyrd--0v3.2h960.8ebka.q3u85.i6nof.fdobf
+spider got sign for non-existent ~.khan-fyrd--0v3aop9.2c01t.2hhlg.q1unt.h4rpu
+spider got sign for non-existent ~.khan-fyrd--0v1.omuv3.j1sd9.13e6p.v389h.vkm55
+spider got sign for non-existent ~.khan-fyrd--0v6.1ipam.iimqc.d7brj.hf0v7.72eti
+spider got sign for non-existent ~.khan-fyrd--0v4.n2kk4.219n4.7smce.2ts9a.51706
+spider got sign for non-existent ~.khan-fyrd--0v2.eerm3.i34k8.bb1en.qn142.uetp5
+spider got sign for non-existent ~.khan-fyrd--0v5.ru3s4.3sgo3.lki6u.nf2kc.187qc
+spider got sign for non-existent ~.khan-fyrd--0v7.8nnre.ng7gp.apsls.oabct.sfa77
+spider got sign for non-existent ~.khan-fyrd--0vc0o44.90fsi.8hpdn.858d9.jrl0m
+spider got sign for non-existent ~.khan-fyrd--0v1.0fral.a5ofb.qifp5.hultk.221sr
+spider got sign for non-existent ~.khan-fyrd--0vlfjk.bu0n6.e7o8q.7d04t.kl5nr
+spider got sign for non-existent ~.khan-fyrd--0volf8c.hq48u.sbfgg.no6re.7bedl
+spider got sign for non-existent ~.khan-fyrd--0v7.6i91h.250ib.q3nrd.8b81u.oogvt
+spider got sign for non-existent ~.khan-fyrd--0v3.95kor.jnfrt.ui791.mf0k6.k9sfj
+spider got sign for non-existent ~.khan-fyrd--0v5.ab0sn.5g1ju.ij4a0.7bf2b.hra3t
+spider got sign for non-existent ~.khan-fyrd--0v617jr.qfu8n.1k1gk.snem0.9b3vr
+spider got sign for non-existent ~.khan-fyrd--0vbigfo.0220r.r4rer.rgncl.20vqd
+spider got sign for non-existent ~.khan-fyrd--0v1.ritv4.5bneq.imtg4.mh513.o66t1
+spider got sign for non-existent ~.khan-fyrd--0v3.9ao2d.4kcep.8pm78.i8rfe.a2phi
+spider got sign for non-existent ~.khan-fyrd--0v2.u1k93.d68em.0pehg.amn8v.d9tjj
+spider got sign for non-existent ~.khan-fyrd--0v6dcc6.prtk1.98efr.3pm6d.nm40l
+spider got sign for non-existent ~.khan-fyrd--0v4.il59o.0290g.spldv.m1v5q.8i9hg
+spider got sign for non-existent ~.khan-fyrd--0v5.44kqi.euavb.7o74d.ebqci.q3m4j
+spider got sign for non-existent ~.khan-fyrd--0v2.oil3j.rftbh.q98lu.8sq3i.ol2eq
+spider got sign for non-existent ~.khan-fyrd--0v5.j2gq6.8mb3r.ultnm.5m7b6.bjfdb
+spider got sign for non-existent ~.khan-fyrd--0v6.nj41g.tm0kj.flogc.ajkn8.u2c50
+spider got sign for non-existent ~.khan-fyrd--0v2.idljs.ahtue.3r0s9.albd5.qddvh
+spider got sign for non-existent ~.khan-fyrd--0vl9ali.v8j9h.f51vs.jivhi.03otk
+spider got sign for non-existent ~.khan-fyrd--0v4.npni8.aesta.fc3ep.u0qv9.gafb7
+spider got sign for non-existent ~.khan-fyrd--0v7.dldk9.erge9.82j36.3tpgt.ll92k
+spider got sign for non-existent ~.khan-fyrd--0v1.vnsfh.sbbv2.0aq3v.ejv3g.catqg
+spider got sign for non-existent ~.khan-fyrd--0v6.51js5.v7ui2.c399b.o90km.60qgt
+spider got sign for non-existent ~.khan-fyrd--0v3.aojqq.g5368.hoc4q.5tkje.go9u0
+spider got sign for non-existent ~.khan-fyrd--0v2.cmje4.ed77p.d9lji.aklat.16jau
+spider got sign for non-existent ~.khan-fyrd--0v1.pg4fg.f0v23.erb96.rjput.v84v4
+spider got sign for non-existent ~.khan-fyrd--0v6.dl3go.phq96.hkeul.iij06.4p5s0
+spider got sign for non-existent ~.khan-fyrd--0v2.bpuso.3okue.pc90o.q6hlo.qsfft
+spider got sign for non-existent ~.khan-fyrd--0v7.jo2eq.5jjed.1min2.k4ig7.4jojs
+spider got sign for non-existent ~.khan-fyrd--0v3.8urci.igel0.74m5i.r7pk5.g1t9p
+spider got sign for non-existent ~.khan-fyrd--0v5.0bg5p.s7g28.hfjua.3lqm4.nr4sm
+spider got sign for non-existent ~.khan-fyrd--0v1.j8v6i.190st.pb71q.3lf12.g9hi2
+spider got sign for non-existent ~.khan-fyrd--0v3.pk7nr.s88ni.0iu4e.3qqmt.cbfcm
+spider got sign for non-existent ~.khan-fyrd--0v7.q86k2.5bfvu.v27rc.b7m2s.1h4gl
+spider got sign for non-existent ~.khan-fyrd--0v4.b761t.lmtel.f0t0q.m6ks7.4hq4b
+spider got sign for non-existent ~.khan-fyrd--0v4.a6ddc.n3soc.sfpdu.99uds.oa32g
+spider got sign for non-existent ~.khan-fyrd--0v7.vloji.bavan.7iql7.hrib1.hmmut
+spider got sign for non-existent ~.khan-fyrd--0v3.i1pg9.uq31e.pn33p.p00fn.n5f2u
+spider got sign for non-existent ~.khan-fyrd--0v2.58ib3.4vgg1.ob45q.sromv.82824
+spider got sign for non-existent ~.khan-fyrd--0v2.8f7qp.ralgh.4d6r8.geuog.gtdt3
+spider got sign for non-existent ~.khan-fyrd--0v5.klfsv.odh98.df2ra.n4d1l.2a3oq
+spider got sign for non-existent ~.khan-fyrd--0v5.o9bet.5b816.c0625.p2sbo.d7fdb
+spider got sign for non-existent ~.khan-fyrd--0v7.hauft.uk3t0.cgf3b.9np45.d8q5l
+spider got sign for non-existent ~.khan-fyrd--0v3.k1ri7.gsvc4.ehs2h.3om49.fesum
+spider got sign for non-existent ~.khan-fyrd--0vsbrbs.afr0q.a2vkj.3ooat.7ik25
+spider got sign for non-existent ~.khan-fyrd--0v4.ijsp4.asetb.fiimp.e685b.j3mjr
+spider got sign for non-existent ~.khan-fyrd--0vt31bd.ea9q2.1hnfb.n12ai.1lcud
+spider got sign for non-existent ~.khan-fyrd--0v3.f5nl7.vq09m.rh8mr.99ntr.4bkvk
+spider got sign for non-existent ~.khan-fyrd--0v6.t5u4c.lv8nt.ujuf2.7qs13.bicln
+spider got sign for non-existent ~.khan-fyrd--0v2.4u8ms.em8h5.5ckn7.kf626.vsjma
+spider got sign for non-existent ~.khan-fyrd--0vebhgu.7c5om.30p4s.qg43a.buodv
+spider got sign for non-existent ~.khan-fyrd--0v6.ddtcn.mhicu.d08v2.9dssv.n30l0
+spider got sign for non-existent ~.khan-fyrd--0v4.blre0.bmv2s.9p6ue.daeen.f2kp0
+spider got sign for non-existent ~.khan-fyrd--0v78igo.jmmnl.01dvl.0jrod.8f482
+spider got sign for non-existent ~.khan-fyrd--0v7.jmqfn.a39ka.qcui9.d18kn.8p05h
+spider got sign for non-existent ~.khan-fyrd--0v4.dfa2l.e35q1.5iolg.s48v4.pcjgn
+spider got sign for non-existent ~.khan-fyrd--0v1.htinq.ojqgc.3nkdh.fcbpt.s3h80
+spider got sign for non-existent ~.khan-fyrd--0v7.qndmt.k2ht9.te5j1.so6ni.kbouc
+spider got sign for non-existent ~.khan-fyrd--0v3.4iesj.qptck.a64lo.63vpl.ob060
+spider got sign for non-existent ~.khan-fyrd--0v4.4sf6k.5lmfj.lnkgd.b40in.cfkrm
+spider got sign for non-existent ~.khan-fyrd--0v1.uohjo.cc2tq.oqq5j.a0cac.nn5l1
+spider got sign for non-existent ~.khan-fyrd--0v7.t77h8.nvd33.uf83r.mnuub.7ijp9
+spider got sign for non-existent ~.khan-fyrd--0v6.lu9f6.581ff.fp9nr.fcm0j.966ds
+spider got sign for non-existent ~.khan-fyrd--0v4.ci9os.322ei.gh5dk.3nhc2.mtbei
+spider got sign for non-existent ~.khan-fyrd--0v5.ekf0t.n2291.1mble.lluu9.h4785
+spider got sign for non-existent ~.khan-fyrd--0v1.5212r.21msr.9gk9t.8ft2j.sb6am
+spider got sign for non-existent ~.khan-fyrd--0vg2jm8.cl3od.b1s2e.v38ma.3fmln
+spider got sign for non-existent ~.khan-fyrd--0v2.itr3p.b7es1.isca8.a3mb4.so2kt
+spider got sign for non-existent ~.khan-fyrd--0v3.ao68t.tu141.io6ak.7pu5r.n9t1f
+spider got sign for non-existent ~.khan-fyrd--0v6.g95mu.ecs0k.nn6bh.c912c.3fgvn
+spider got sign for non-existent ~.khan-fyrd--0v6.1ke0h.pmann.kpcka.cabe4.0d1pm
+spider got sign for non-existent ~.khan-fyrd--0v1.hqosb.0m68j.gt43b.umt1f.iu17j
+spider got sign for non-existent ~.khan-fyrd--0v3.guqrv.pc2am.cmbpp.1ejt0.13omt
+spider got sign for non-existent ~.khan-fyrd--0v1.18vk6.kfggc.f6o50.hho1p.jld5b
+spider got sign for non-existent ~.khan-fyrd--0vqftij.pi7cp.rfuh5.uct80.6hu5q
+spider got sign for non-existent ~.khan-fyrd--0v1.i0ujp.4gait.dntnj.c50v9.rekvs
+spider got sign for non-existent ~.khan-fyrd--0v3.ke3it.sdrrn.ejfe3.iv33t.o1qc9
+spider got sign for non-existent ~.khan-fyrd--0v4.suhi5.3oj1r.csceo.1sv5b.lhod9
+spider got sign for non-existent ~.khan-fyrd--0v1.httes.f748d.itc2s.2qi2e.500dl
+spider got sign for non-existent ~.khan-fyrd--0v1.tind4.rfqre.mk4j9.9b8pb.0lcss
+spider got sign for non-existent ~.khan-fyrd--0v1.5be2e.809g9.ff5ni.ocqhs.r7ggr
+spider got sign for non-existent ~.khan-fyrd--0vfpjka.ejttn.r8ga4.qsc9b.ughfh
+~
+urbit 4.6
+boot: home is /state/live/bus
+loom: mapped 2048MB
+lite: arvo formula 4ce68411
+lite: core 641296f
+lite: final state 641296f
+disk: loaded epoch 0i0
+loom: mapped 2048MB
+boot: protected loom
+live: mapped: MB/222.756.864
+boot: installed 2178 jets
+vere: checking version compatibility
+mesa: forwarding enabled
+mdns: init failed, install avahi on this system for mdns support
+mesa: live on 31519 (localhost only)
+conn: listening on /state/live/bus/.urb/conn.sock
+ames: unix-duct received on %born
+http: web interface live on http://localhost:18081
+http: loopback live on http://localhost:12322
+pier (229): live
+~
+urbit 4.6
+boot: home is /state/live/bus
+loom: mapped 2048MB
+lite: arvo formula 4ce68411
+lite: core 641296f
+lite: final state 641296f
+disk: loaded epoch 0i0
+loom: mapped 2048MB
+boot: protected loom
+live: mapped: MB/222.756.864
+boot: installed 2178 jets
+vere: checking version compatibility
+mesa: forwarding enabled
+mdns: init failed, install avahi on this system for mdns support
+mesa: live on 31519 (localhost only)
+conn: listening on /state/live/bus/.urb/conn.sock
+ames: unix-duct received on %born
+http: web interface live on http://localhost:18081
+http: loopback live on http://localhost:12322
+pier (229): live
+spider got sign for non-existent ~.khan-fyrd--0v3.7damm.ssqiu.qa0ut.48tnq.e05do
+spider got sign for non-existent ~.khan-fyrd--0v1.cugda.c4b4n.9esoc.a6g5r.6i4lv
+spider got sign for non-existent ~.khan-fyrd--0v4.hgqdj.7n4hd.0122k.5m7uf.l86jg
+spider got sign for non-existent ~.khan-fyrd--0v3.2t8rj.2896d.1ndli.8g20l.72gg1
+spider got sign for non-existent ~.khan-fyrd--0v7.2d05c.b84b8.999vn.53noi.77kgl
+spider got sign for non-existent ~.khan-fyrd--0v6.1me2c.lfmjo.ip9pd.vjl6q.ss5q3
+spider got sign for non-existent ~.khan-fyrd--0v7.spmhi.4fo8a.kkjl4.ooj8i.q9emp
+spider got sign for non-existent ~.khan-fyrd--0v2.3k42i.c8bqm.uf308.amo28.8auem
+spider got sign for non-existent ~.khan-fyrd--0v5.ja3k2.d35n0.s77rb.7dsdr.akkuh
+spider got sign for non-existent ~.khan-fyrd--0v3.0eshe.4p5p1.cl7o7.dd781.jnl86
+spider got sign for non-existent ~.khan-fyrd--0v5.h7ti8.ddf3e.8gk8c.0po7a.uf6p7
+spider got sign for non-existent ~.khan-fyrd--0v7.nb78a.75oq5.vs916.j8019.fr4j5
+spider got sign for non-existent ~.khan-fyrd--0v4.a838j.s374g.nq5e6.hino6.pma2v
+spider got sign for non-existent ~.khan-fyrd--0v2.l1os2.e1835.456nn.ouk5a.gs2f6
+spider got sign for non-existent ~.khan-fyrd--0v1.7s7q6.483pv.gthqa.revdm.vv3c2
+spider got sign for non-existent ~.khan-fyrd--0v3.9ra2a.ke2s7.bho26.c7df1.0r4a5
+spider got sign for non-existent ~.khan-fyrd--0v2.pqvga.vm6hl.jqsga.8s0jo.c5tc0
+spider got sign for non-existent ~.khan-fyrd--0v5.aqo31.f2rte.0ihsn.lrel3.h6s0c
+spider got sign for non-existent ~.khan-fyrd--0v4.rmm1q.d2hu9.spdl5.vhukb.05n9t
+spider got sign for non-existent ~.khan-fyrd--0v6.0j1lv.ff2j5.e3lni.oj6pf.fn5fo
+spider got sign for non-existent ~.khan-fyrd--0v3.7iukd.1jagi.e1si5.7qd21.b58h6
+spider got sign for non-existent ~.khan-fyrd--0v5.u3onl.r3pf5.c5alb.vc543.3brjv
+spider got sign for non-existent ~.khan-fyrd--0v2.he7d7.b4oac.dpp41.0vqr4.31v23
+spider got sign for non-existent ~.khan-fyrd--0v5.c11d4.risj2.rou1j.dvegl.n7mmq
+spider got sign for non-existent ~.khan-fyrd--0v2.hlesg.jam8q.3cc1h.kr93v.ittc5
+spider got sign for non-existent ~.khan-fyrd--0v2.9nscq.tj3ol.o2ojq.j9c8j.tqabm
+spider got sign for non-existent ~.khan-fyrd--0v5.s9eve.mos1k.jj66a.4dvd7.k4d83
+spider got sign for non-existent ~.khan-fyrd--0v5.87bqk.6pd4k.kqt08.8c16r.kagod
+spider got sign for non-existent ~.khan-fyrd--0v4.0gvtq.bups2.jtrn3.d0ndj.h4goj
+spider got sign for non-existent ~.khan-fyrd--0v6.tcec6.gkhea.l7k3n.aa14t.g5mve
+spider got sign for non-existent ~.khan-fyrd--0vdnsti.eg6v0.1pe6d.9651c.3ni04
+spider got sign for non-existent ~.khan-fyrd--0v3.f4nt3.hjnlg.b6c18.1f9fv.hc6gv
+spider got sign for non-existent ~.khan-fyrd--0v3.sbr7j.m0far.1sf0l.sfh9m.7rkt2
+spider got sign for non-existent ~.khan-fyrd--0v6.4q1g0.phhgb.si6o0.8b65l.s3rbd
+spider got sign for non-existent ~.khan-fyrd--0v3.8pr8n.m053t.nmn6d.4naeo.6tjt4
+spider got sign for non-existent ~.khan-fyrd--0v2.u88sg.23hlu.qsos1.4jc44.4gqht
+spider got sign for non-existent ~.khan-fyrd--0v4.ai5k8.nansh.ujpqo.4710i.te58k
+spider got sign for non-existent ~.khan-fyrd--0v7.j0b2r.9h3v5.rpcdn.lqsp7.m76vj
+spider got sign for non-existent ~.khan-fyrd--0v1.c7830.vnn1k.imvvd.padkj.57gov
+spider got sign for non-existent ~.khan-fyrd--0v2.cg300.6d7dm.qg166.7o44l.hr7er
+spider got sign for non-existent ~.khan-fyrd--0v2.q7i7m.m1a2u.aqel2.aq6eh.lfue4
+spider got sign for non-existent ~.khan-fyrd--0v1.9ho73.prc9r.o1h5p.mafb7.64meg
+spider got sign for non-existent ~.khan-fyrd--0v3.aueoq.6ehvu.d4vp1.t618n.seb83
+spider got sign for non-existent ~.khan-fyrd--0v5.e089n.q38d3.akndu.7peer.kgo9p
+spider got sign for non-existent ~.khan-fyrd--0v3.tsvak.g0jib.j1kmn.5vs2r.g1j9s
+spider got sign for non-existent ~.khan-fyrd--0v1.c41lo.u97uh.60l8b.qbjbe.cjjrr
+spider got sign for non-existent ~.khan-fyrd--0v7.andih.o9q2e.7bhm9.ev41s.u3mna
+spider got sign for non-existent ~.khan-fyrd--0v3.jsitt.d7qjh.obvuh.s3843.q74hg
+spider got sign for non-existent ~.khan-fyrd--0v2.pkvuj.2a6n0.cq2dd.8lc8p.o8bie
+spider got sign for non-existent ~.khan-fyrd--0v3.gqk0o.ci1vj.ls9sm.jrmeg.pr6td
+spider got sign for non-existent ~.khan-fyrd--0v1setc.3uphd.n7r38.g8qhc.0f4vs
+spider got sign for non-existent ~.khan-fyrd--0v2kudo.5mc4f.hcglv.9h32h.6o8oe
+spider got sign for non-existent ~.khan-fyrd--0v5.fs8hv.tl2k1.f585m.nvaq2.g3c0p
+spider got sign for non-existent ~.khan-fyrd--0v2.i2b7j.20ti5.7q5md.sjcsq.6sj2j
+spider got sign for non-existent ~.khan-fyrd--0v3.ea3d4.ech54.96813.2t0bi.vi1kb
+spider got sign for non-existent ~.khan-fyrd--0v7.nc9sm.v7lna.7tmnk.2jcrt.oak75
+spider got sign for non-existent ~.khan-fyrd--0v3.nsql8.6ed11.0mbnl.2t4av.50mr1
+spider got sign for non-existent ~.khan-fyrd--0v3.fe6ac.9v6ep.lmhhi.rfudu.60c4m
+spider got sign for non-existent ~.khan-fyrd--0vjsin1.55dj3.dovd2.ddeh2.8je1n
+spider got sign for non-existent ~.khan-fyrd--0v7.j3r7i.7sr83.nogmm.dj206.jr6ef
+spider got sign for non-existent ~.khan-fyrd--0vl5hcj.s403v.srl4b.57v25.s25uk
+spider got sign for non-existent ~.khan-fyrd--0v1.l3se6.pq40t.pm5hn.tiq9e.3jkgn
+spider got sign for non-existent ~.khan-fyrd--0v1.ml53a.10ijp.g0sqq.atqh4.rprrq
+spider got sign for non-existent ~.khan-fyrd--0v5.u0vt4.uhi43.7f4v5.pu07m.gbaki
+spider got sign for non-existent ~.khan-fyrd--0v4.ck1vi.fe2v9.cbs86.jo72q.7lhnh
+spider got sign for non-existent ~.khan-fyrd--0v1.10f0c.a6hu4.je4vd.ium4e.jfqer
+spider got sign for non-existent ~.khan-fyrd--0v5.bp7ob.t1vdh.51j1r.jnglg.qf7f1
+spider got sign for non-existent ~.khan-fyrd--0v1.r53n9.1cfop.4mdbd.omnst.isa5a
+spider got sign for non-existent ~.khan-fyrd--0v6.oel64.sk8mg.no1gc.h50p5.t6stp
+spider got sign for non-existent ~.khan-fyrd--0v1.bb0io.caf3g.fmath.gvqhb.ig7v9
+spider got sign for non-existent ~.khan-fyrd--0v7.874jv.s85j3.sbjpg.k899a.khopt
+spider got sign for non-existent ~.khan-fyrd--0v2.io3kt.k8n7f.8vbhq.ojj0a.m3bnl
+spider got sign for non-existent ~.khan-fyrd--0v4.2epst.1tl0e.pb0er.kmfju.7884k
+spider got sign for non-existent ~.khan-fyrd--0v6.9v8ql.67els.qe3q6.c9fl0.7bvgj
+spider got sign for non-existent ~.khan-fyrd--0v5.173ta.56opn.hi1nc.oee4b.0a748
+spider got sign for non-existent ~.khan-fyrd--0v2.rjtf9.vlb2f.jjnlg.5vqo1.mautl
+spider got sign for non-existent ~.khan-fyrd--0v7.dmgm7.1k6ts.6s2kn.jdaip.utf85
+spider got sign for non-existent ~.khan-fyrd--0vec4dh.9du51.2c8rk.umvsa.ea61t
+spider got sign for non-existent ~.khan-fyrd--0v6.5g3g6.45ipk.3hn5u.vipad.79m71
+spider got sign for non-existent ~.khan-fyrd--0v5.fqmgs.scqb7.hle3p.dbauj.iri6j
+spider got sign for non-existent ~.khan-fyrd--0v7.ubkci.rmsjo.d3q1v.qn8v7.2fja4
+spider got sign for non-existent ~.khan-fyrd--0v2.9v086.6ncm2.f8465.q85d6.ohtpj
+spider got sign for non-existent ~.khan-fyrd--0v6.7qnb1.nlhe5.l9kot.e2pg1.7c2vo
+spider got sign for non-existent ~.khan-fyrd--0v5.2lfg5.286pt.71efk.pen8h.4f9kq
+spider got sign for non-existent ~.khan-fyrd--0v2.q4v9p.a7rd6.nv122.t2s8l.faso5
+spider got sign for non-existent ~.khan-fyrd--0v1.ts4ib.9ecca.39q8j.q7di1.msd6q
+spider got sign for non-existent ~.khan-fyrd--0vvsnm0.9afp0.cib7t.k042r.g934r
+spider got sign for non-existent ~.khan-fyrd--0v7.vibi3.57prb.u06sh.3vq1m.nb3uq
+spider got sign for non-existent ~.khan-fyrd--0v6.ndhoa.6p888.olrbh.9mo3d.v1or0
+spider got sign for non-existent ~.khan-fyrd--0v1.fij0r.cdfm0.86ac8.cqvbk.qufar
+spider got sign for non-existent ~.khan-fyrd--0v3.i3b8f.bsg4h.llgqn.b8upm.ro9db
+spider got sign for non-existent ~.khan-fyrd--0v7.njun2.2u4kj.9arsg.vtj7f.35log
+spider got sign for non-existent ~.khan-fyrd--0v6.8g94c.1ik90.pa421.gku6h.16c67
+spider got sign for non-existent ~.khan-fyrd--0vq4hl7.uaskh.jmukc.dfo99.g1eub
+spider got sign for non-existent ~.khan-fyrd--0v7.0jka2.99u3h.sbb6r.s1don.somue
+spider got sign for non-existent ~.khan-fyrd--0v6.0rgr8.jirde.8cjgt.1j9ac.nvabr
+spider got sign for non-existent ~.khan-fyrd--0v7.gbpb2.c99sq.ic89v.s40hm.4o1e9
+spider got sign for non-existent ~.khan-fyrd--0vom40.r99j2.tb8s5.iq4jj.r0011
+spider got sign for non-existent ~.khan-fyrd--0v1.vp8ho.fmo3h.6rii5.8t0b9.77ks6
+spider got sign for non-existent ~.khan-fyrd--0v1.rqqce.vfno5.3o2vm.t2vta.b0vpk
+spider got sign for non-existent ~.khan-fyrd--0vdd45v.l9mad.f1nop.2rud5.23tms
+spider got sign for non-existent ~.khan-fyrd--0v4.ppi9b.doj8d.c4m00.g617e.7kkro
+spider got sign for non-existent ~.khan-fyrd--0v5.q67bo.08vug.im4uk.o3h2v.sne90
+spider got sign for non-existent ~.khan-fyrd--0v6.uq1gm.m9le2.lq064.o0kcp.80le4
+spider got sign for non-existent ~.khan-fyrd--0v4.4san0.gjp6g.mrs4f.ng1qm.05m96
+spider got sign for non-existent ~.khan-fyrd--0v6.94vr0.mafeg.30oju.p7pi6.drtc6
+spider got sign for non-existent ~.khan-fyrd--0v1.ambks.asg3r.le3pg.e4d0s.p681d
+spider got sign for non-existent ~.khan-fyrd--0v1.dv8ch.e3op3.aiput.bg3jm.njd8j
+spider got sign for non-existent ~.khan-fyrd--0v7.um28t.1p18u.l9c1g.smj56.aiajp
+spider got sign for non-existent ~.khan-fyrd--0v5.4ojrq.kcjjt.482fq.gmrqq.a015d
+spider got sign for non-existent ~.khan-fyrd--0v7.rvqks.4enrb.edduj.6qtn9.d91sp
+spider got sign for non-existent ~.khan-fyrd--0v3.k7ugf.lpkqb.6c3nt.bdm5o.gua85
+spider got sign for non-existent ~.khan-fyrd--0vvavqu.nn89n.hjg9c.crk47.cca94
+spider got sign for non-existent ~.khan-fyrd--0v7.i7n90.saoea.jolkg.k76mf.hl62u
+spider got sign for non-existent ~.khan-fyrd--0v2.3t591.ks97g.ulonm.ofk9s.0utos
+spider got sign for non-existent ~.khan-fyrd--0v3.nth8b.ca57c.davae.bm4a1.v8tba
+spider got sign for non-existent ~.khan-fyrd--0v1.65iqr.2d8sm.gmdfe.5vq17.un0ag
+spider got sign for non-existent ~.khan-fyrd--0v1.k0r28.9v63m.0b6ev.imp0p.5tceg
+spider got sign for non-existent ~.khan-fyrd--0v5.e7kjm.gmqat.nk7ii.7snav.rkcqu
+spider got sign for non-existent ~.khan-fyrd--0v1.htkfl.mki78.avu8c.9ktc8.m74iu
+spider got sign for non-existent ~.khan-fyrd--0v5.1m0bt.fdp71.13en9.5t35h.isml8
+spider got sign for non-existent ~.khan-fyrd--0v4.gbsrt.3hce7.hkad9.tpvll.cm5al
+spider got sign for non-existent ~.khan-fyrd--0v7.4tsrj.eatha.64bcg.bv06q.f01a4
+spider got sign for non-existent ~.khan-fyrd--0v4.n3rbi.95qr7.32jrc.1i6gh.pgkpf
+spider got sign for non-existent ~.khan-fyrd--0v3.tan60.l6d24.fc0sa.96v8j.6co6n
+spider got sign for non-existent ~.khan-fyrd--0v7.mqhop.f3v4h.f323q.ps9o8.tpsvf
+spider got sign for non-existent ~.khan-fyrd--0v1.dq3uk.em4g7.m9bs8.dannk.ta6ir
+spider got sign for non-existent ~.khan-fyrd--0ve78jt.1pdqs.aalfs.rbqbv.1u987
+spider got sign for non-existent ~.khan-fyrd--0v1.dc57k.tgp52.uc8lh.saumo.dfsgj
+spider got sign for non-existent ~.khan-fyrd--0v1.cdl4p.7b6f0.2al8s.49b92.4hbhg
+spider got sign for non-existent ~.khan-fyrd--0v6.gcrrv.4c6ds.u86ah.8gsgo.ns2dr
+spider got sign for non-existent ~.khan-fyrd--0v1.6qi8i.g74o4.4e5hg.n4rv8.p3tvm
+spider got sign for non-existent ~.khan-fyrd--0v7.qcbac.scepf.21ltn.dvfei.46a2d
+spider got sign for non-existent ~.khan-fyrd--0v76hcc.3jiob.1635u.gls8i.h8rtc
+spider got sign for non-existent ~.khan-fyrd--0v2.jb7h7.6o394.dg3n3.t09cr.u2got
+spider got sign for non-existent ~.khan-fyrd--0v5.3rmb2.qlgmp.qt5cs.envsq.i3qnd
+spider got sign for non-existent ~.khan-fyrd--0vjvdqq.3s6t7.2ab38.37r9r.b641c
+spider got sign for non-existent ~.khan-fyrd--0v3.fo2ho.1d1m7.6pp9a.u8b8c.gk8rf
+spider got sign for non-existent ~.khan-fyrd--0v7.n6ag0.l4h82.hvig2.mpogm.mcmoa
+spider got sign for non-existent ~.khan-fyrd--0v1.f9h6m.5h0ii.6stpi.rn5gk.7eup2
+spider got sign for non-existent ~.khan-fyrd--0v5.t4l4t.dlira.klsii.g3bbf.ktjbf
+spider got sign for non-existent ~.khan-fyrd--0v7.2b00h.orn25.ha0at.qvreb.vf1g4
+spider got sign for non-existent ~.khan-fyrd--0v6.7use0.oe6fc.crrrn.kqb7u.o9lmr
+spider got sign for non-existent ~.khan-fyrd--0v5.ab8mp.ukhhr.gmrn2.9fojk.dmqmp
+spider got sign for non-existent ~.khan-fyrd--0v7.gejnf.fok2g.bm5c1.ci9ui.vsqo8
+spider got sign for non-existent ~.khan-fyrd--0v5.86ii2.ooa4g.1v84p.4uqsk.t4pta
+spider got sign for non-existent ~.khan-fyrd--0v3.lc7qm.forjn.kth9j.mkr68.jh0v3
+spider got sign for non-existent ~.khan-fyrd--0v2.bcqr7.p13dl.3lpa7.fs9le.33j2r
+spider got sign for non-existent ~.khan-fyrd--0vc369o.00tv2.vi4ks.fv1hn.dkcsv
+spider got sign for non-existent ~.khan-fyrd--0v7.s8org.jd459.j8uh6.mn4qe.9nvjl
+spider got sign for non-existent ~.khan-fyrd--0v4.472g8.89s23.t4g3j.uh82o.9rcdq
+spider got sign for non-existent ~.khan-fyrd--0v4.ok39o.qt3un.m5ubr.glj13.rkppi
+spider got sign for non-existent ~.khan-fyrd--0v6.vsrq0.mparn.10odb.ms28v.id6a4
+spider got sign for non-existent ~.khan-fyrd--0v8ptlp.7tbi5.i8ckb.jl5hn.fkk01
+spider got sign for non-existent ~.khan-fyrd--0v2.si9mv.6qg1r.v8amf.fcjlt.upblu
+spider got sign for non-existent ~.khan-fyrd--0v4.3i2of.hlgp8.8bghf.3b1u8.qvu2d
+spider got sign for non-existent ~.khan-fyrd--0v6.500sr.h8p6s.j7eje.g3hrn.djmuu
+spider got sign for non-existent ~.khan-fyrd--0v7.1m5ke.nt01d.oil2p.skdmv.riqj7
+spider got sign for non-existent ~.khan-fyrd--0v1.ko7cm.c8t0f.g6p9i.3k60n.tasf5
+spider got sign for non-existent ~.khan-fyrd--0v6.c60e4.d56s6.o7vvb.3qbua.l4kti
+spider got sign for non-existent ~.khan-fyrd--0v5.7cmsi.2n4uu.l3k4h.9hvhk.vlb56
+spider got sign for non-existent ~.khan-fyrd--0v2b8q3.cdkju.828jc.pemne.r1ieh
+spider got sign for non-existent ~.khan-fyrd--0v3.sb56g.2nk7i.9v1v1.vcp14.ol5b9
+spider got sign for non-existent ~.khan-fyrd--0vpb0.emvob.4labi.6kh0k.d0due
+spider got sign for non-existent ~.khan-fyrd--0v2.ud6s1.o53ji.9lr9r.91n19.1o1g0
+spider got sign for non-existent ~.khan-fyrd--0v4.isngm.kas2k.7tb1l.i69ua.qmht9
+spider got sign for non-existent ~.khan-fyrd--0vf61lg.ktejm.2uvcb.jr17r.9kvsv
+spider got sign for non-existent ~.khan-fyrd--0v3ll2d.7nr59.0to9g.0ap9t.1j1qc
+spider got sign for non-existent ~.khan-fyrd--0v3.o5sv4.5l0b3.97t4c.3hkdd.s4ufh
+spider got sign for non-existent ~.khan-fyrd--0vss39f.2j75d.0dsbo.mdhgt.277mp
+spider got sign for non-existent ~.khan-fyrd--0v7.r61ud.dpl0g.vmsln.0uvha.6ko3i
+spider got sign for non-existent ~.khan-fyrd--0v3.lbroq.bb9tl.57o8v.87ulu.9cqio
+spider got sign for non-existent ~.khan-fyrd--0v4.7079b.dhr6n.t9t8u.n8ejq.qhhcq
+spider got sign for non-existent ~.khan-fyrd--0v4.ll4i9.2i03e.hpjcp.5ct62.rr420
+spider got sign for non-existent ~.khan-fyrd--0v5.o1lu5.fqvfu.tfnno.8vrj4.i1726
+spider got sign for non-existent ~.khan-fyrd--0v4.sqb7g.7gsv4.sptoh.dv985.1or1t
+spider got sign for non-existent ~.khan-fyrd--0v3.eekge.2uo9i.3mpq7.kbasv.65fuf
+spider got sign for non-existent ~.khan-fyrd--0v5.9ci84.jt8lp.4hl05.g8m6d.mvh0p
+spider got sign for non-existent ~.khan-fyrd--0v1.1p5ri.faur2.2uamr.cs4br.ihbdr
+spider got sign for non-existent ~.khan-fyrd--0v5amhc.ha1g7.vc6ck.1iu7j.723mv
+spider got sign for non-existent ~.khan-fyrd--0v3.bhavo.1qpc6.4b4bi.ite31.aqgjb
+spider got sign for non-existent ~.khan-fyrd--0v6.d32o0.qespm.ebhh3.rgbia.ffjb4
+spider got sign for non-existent ~.khan-fyrd--0v2.dvhgi.46pil.kq67k.muekk.dod01
+spider got sign for non-existent ~.khan-fyrd--0v5.6031c.ckrhc.q9a9n.anuu6.fjdh0
+spider got sign for non-existent ~.khan-fyrd--0v5.3358c.v5g8b.p26ge.aps74.2dm31
+spider got sign for non-existent ~.khan-fyrd--0v7.6ft4i.smnre.fvuis.o2197.icbsp
+spider got sign for non-existent ~.khan-fyrd--0v7.ih8ht.ks358.bj404.2vfh2.o635n
+spider got sign for non-existent ~.khan-fyrd--0v4.tmcuk.cj7s7.mljrl.a12fh.1nev1
+spider got sign for non-existent ~.khan-fyrd--0v7tmvo.riuhs.j4lq6.qriuh.bnoug
+spider got sign for non-existent ~.khan-fyrd--0v3.klne4.kcspl.0urqi.fksfq.5uhfq
+spider got sign for non-existent ~.khan-fyrd--0v5.pt41i.lea7a.8uqem.qsb3c.n63cl
+spider got sign for non-existent ~.khan-fyrd--0v5.noudc.ptcli.ce3dp.qepf2.r8b9b
+spider got sign for non-existent ~.khan-fyrd--0v2.8cnvb.sjigs.rkoru.tt17n.gn82q
+spider got sign for non-existent ~.khan-fyrd--0vr6cid.ievet.1p2q4.gtkq5.sph23
+spider got sign for non-existent ~.khan-fyrd--0v7.5j0or.khesp.hja2c.e7lck.dqf6n
+spider got sign for non-existent ~.khan-fyrd--0v4.d1uso.ne50n.a60b9.j18lg.nfnhb
+spider got sign for non-existent ~.khan-fyrd--0v5.g4es4.fq8cf.rpi8d.a0u9k.c6553
+spider got sign for non-existent ~.khan-fyrd--0v7.fer6u.rgh7t.kn2b4.umbhi.72o4t
+spider got sign for non-existent ~.khan-fyrd--0v1.6f56d.vco6v.l4na7.65vfu.9u4lr
+spider got sign for non-existent ~.khan-fyrd--0v3.e4eg0.tikok.g1hn5.le3c0.dmfva
+spider got sign for non-existent ~.khan-fyrd--0v5.dqcse.rihqb.70dne.kspjs.am1p4
+spider got sign for non-existent ~.khan-fyrd--0v4.kr0j4.ha7u3.abj34.clihl.ht3ua
+spider got sign for non-existent ~.khan-fyrd--0v2.ieudl.m9hmg.83cpp.p2n4b.0p0t1
+spider got sign for non-existent ~.khan-fyrd--0v5.spjfk.6k6i6.s8788.plnmc.u4891
+spider got sign for non-existent ~.khan-fyrd--0v3.k3qmv.18flg.6g1ts.pdg2s.n33ep
+spider got sign for non-existent ~.khan-fyrd--0v3.m03vr.ht1hp.1tufv.teur8.bt97n
+spider got sign for non-existent ~.khan-fyrd--0vvonuo.9ri1e.15i5e.veqfa.m6e76
+spider got sign for non-existent ~.khan-fyrd--0v3.0q814.ngfb6.sdvgq.h5ghj.qk6ta
+spider got sign for non-existent ~.khan-fyrd--0v4.3ojpd.h7em3.3e6ob.qtm2r.fjp80
+spider got sign for non-existent ~.khan-fyrd--0v2.2pk02.ag2c0.vor16.gutqu.sa6q3
+spider got sign for non-existent ~.khan-fyrd--0v6.hjhij.cipvm.vak5k.nif2q.augba
+spider got sign for non-existent ~.khan-fyrd--0v2.fdi9e.bu5il.vi9kq.e3gl3.gq58c
+spider got sign for non-existent ~.khan-fyrd--0v6ru41.it3rs.ui7bp.h31r0.m63e5
+spider got sign for non-existent ~.khan-fyrd--0v2.5jbfb.os4nc.fhcio.jbu78.mhs24
+spider got sign for non-existent ~.khan-fyrd--0v1.pcev2.ra2gt.edo6t.qsfc7.2s301
+spider got sign for non-existent ~.khan-fyrd--0v2.rs0du.4v8bu.tvcjv.03fmi.07781
+spider got sign for non-existent ~.khan-fyrd--0v2.t773g.qj9cf.t80c8.gvhbd.vbnm2
+spider got sign for non-existent ~.khan-fyrd--0v4.nbhja.1873a.1f4jf.jv0pr.395ao
+spider got sign for non-existent ~.khan-fyrd--0v7.0o7tv.rv5ec.p4q7f.ponio.3iuai
+spider got sign for non-existent ~.khan-fyrd--0v3.hci6u.aqcgt.j5rul.dlt09.71p58
+spider got sign for non-existent ~.khan-fyrd--0v4.1n1f9.53hgo.o979d.ih99u.ic9e9
+spider got sign for non-existent ~.khan-fyrd--0v6.qjcln.2sf38.aa94p.nkmc5.q5ovm
+spider got sign for non-existent ~.khan-fyrd--0v3.rm1vf.lnfpv.p4pm0.bl76n.2fap6
+spider got sign for non-existent ~.khan-fyrd--0v5.nkiv2.6pngp.de1as.ecf6c.2ot3u
+spider got sign for non-existent ~.khan-fyrd--0v2.56flr.fip6j.89mld.1lctm.er3or
+spider got sign for non-existent ~.khan-fyrd--0v2.6g51i.8dphn.smv9j.3qdhl.17sed
+spider got sign for non-existent ~.khan-fyrd--0v3.mc5l0.qs5h1.04ktl.g2m7r.3699m
+spider got sign for non-existent ~.khan-fyrd--0v1.e7kgo.l410m.buc9i.404fr.70kbv
+spider got sign for non-existent ~.khan-fyrd--0v3.g6k6e.u5ab2.thrhb.br3r3.r4rq7
+spider got sign for non-existent ~.khan-fyrd--0v2.rvuug.ob2ib.a9sbm.2pn80.c45su
+spider got sign for non-existent ~.khan-fyrd--0v2.iumgb.qhi93.osb7d.i5g4g.eglk1
+spider got sign for non-existent ~.khan-fyrd--0v1.u3p5i.m8vct.8c00b.nbd61.fpa4d
+spider got sign for non-existent ~.khan-fyrd--0v2.6fjga.0gaja.h9pj4.5dsri.o95b8
+spider got sign for non-existent ~.khan-fyrd--0v2.59r23.r3d69.53ns8.kmj0l.f5g5e
+spider got sign for non-existent ~.khan-fyrd--0v6.egit4.4k49j.000mj.41ljk.oji9q
+spider got sign for non-existent ~.khan-fyrd--0v3.nekle.uqd4l.0na1d.dc5jt.nmlqh
+spider got sign for non-existent ~.khan-fyrd--0v3.rpjng.6svv6.jevmi.qeu1c.oef9o
+spider got sign for non-existent ~.khan-fyrd--0v6.if77u.neup5.i2ceu.ishcg.1a19f
+spider got sign for non-existent ~.khan-fyrd--0v7.md24c.lai8a.dp063.cersg.h4vi3
+spider got sign for non-existent ~.khan-fyrd--0v7.hv2hf.98j0k.1n7nq.hq0vg.sjca9
+spider got sign for non-existent ~.khan-fyrd--0v3.i8oll.h8bb0.h1aog.08gv6.p68pl
+spider got sign for non-existent ~.khan-fyrd--0v6.873f9.ds1ng.g1is8.6a4k0.qi78f
+spider got sign for non-existent ~.khan-fyrd--0v46vcg.juob0.57b78.5a7ce.uq1mv
+spider got sign for non-existent ~.khan-fyrd--0vbllct.a8ign.qq7hd.srvuf.rp8a7
+spider got sign for non-existent ~.khan-fyrd--0v7.vfppu.sj04p.oipph.cn0k4.25j81
+spider got sign for non-existent ~.khan-fyrd--0v7.03lpr.28ap9.4evia.infpf.6vh0e
+spider got sign for non-existent ~.khan-fyrd--0v7.kg4pi.len0o.mjd6c.l6rnk.mfchq
+spider got sign for non-existent ~.khan-fyrd--0v7.ov48c.c6f1g.11epg.hqvc6.vaogq
+spider got sign for non-existent ~.khan-fyrd--0v2.4bval.gglf6.qodsh.kf6p7.almj1
+spider got sign for non-existent ~.khan-fyrd--0v2.spnko.1tatp.e8sn5.iqsug.v90dn
+spider got sign for non-existent ~.khan-fyrd--0v16phi.3cnrj.7ochc.u8kq6.ctuag
+spider got sign for non-existent ~.khan-fyrd--0v4.sgdlj.riqq7.0ocuv.k001r.5308i
+spider got sign for non-existent ~.khan-fyrd--0v1.ni3kp.qocvi.rahci.f6qbr.ki0sg
+~
+urbit 4.6
+boot: home is /state/live/bus
+loom: mapped 2048MB
+lite: arvo formula 4ce68411
+lite: core 641296f
+lite: final state 641296f
+disk: loaded epoch 0i0
+loom: mapped 2048MB
+boot: protected loom
+live: mapped: MB/228.147.200
+boot: installed 2178 jets
+vere: checking version compatibility
+mesa: forwarding enabled
+mdns: init failed, install avahi on this system for mdns support
+mesa: live on 31519 (localhost only)
+conn: listening on /state/live/bus/.urb/conn.sock
+ames: unix-duct received on %born
+http: web interface live on http://localhost:18081
+http: loopback live on http://localhost:12322
+pier (6073): live
+%already-mounted
+[[p=~bus q=%base r=[%ud p=0]] s=/]
+~
+urbit 4.6
+boot: home is /state/live/bus
+loom: mapped 2048MB
+lite: arvo formula 4ce68411
+lite: core 641296f
+lite: final state 641296f
+disk: loaded epoch 0i0
+loom: mapped 2048MB
+boot: protected loom
+live: mapped: MB/222.756.864
+boot: installed 2178 jets
+vere: checking version compatibility
+mesa: forwarding enabled
+mdns: init failed, install avahi on this system for mdns support
+mesa: live on 31519 (localhost only)
+conn: listening on /state/live/bus/.urb/conn.sock
+ames: unix-duct received on %born
+http: web interface live on http://localhost:18081
+http: loopback live on http://localhost:12322
+pier (229): live
+%already-mounted
+[[p=~bus q=%base r=[%ud p=0]] s=/]
+~
+urbit 4.6
+boot: home is /state/live/bus
+loom: mapped 2048MB
+lite: arvo formula 4ce68411
+lite: core 641296f
+lite: final state 641296f
+disk: loaded epoch 0i0
+loom: mapped 2048MB
+boot: protected loom
+live: mapped: MB/222.756.864
+boot: installed 2178 jets
+vere: checking version compatibility
+loom: external fault: 0x588 (0x200000000 : 0x280000000)
+
+Stacktrace:
+0   u3m_stacktrace                      pkg/noun/manage.c:870
+1   u3m_fault                           pkg/noun/manage.c:2315
+2   sigsegv_handler                     .zig-cache/p/N-V-__8AAHQhHwCCMyKUtQhO0AMsY182In-wQIwXVhenOql5/src/handler-unix.c:269
+3   -                                   /home/runner/work/_temp/d95d56a1-5c86-4115-9d59-87f908994288/zig-x86_64-linux-0.15.2/lib/libc/musl/src/signal/x86_64/restore.s:
+4   _lord_plea_ripe                     pkg/vere/lord.c:276
+5   _lord_on_plea                       pkg/vere/lord.c:569
+6   _newt_meat_poke                     pkg/vere/newt.c:70
+7   _newt_read_cb                       pkg/vere/newt.c:200
+8   uv__read                            .zig-cache/p/N-V-__8AAH34QwB6wi5eQK_lFbfDGSN3hRE8l-6Ep198ZsGg/src/unix/stream.c:1148
+9   uv__stream_io                       .zig-cache/p/N-V-__8AAH34QwB6wi5eQK_lFbfDGSN3hRE8l-6Ep198ZsGg/src/unix/stream.c:1208
+10  uv__io_poll                         .zig-cache/p/N-V-__8AAH34QwB6wi5eQK_lFbfDGSN3hRE8l-6Ep198ZsGg/src/unix/linux.c:1565
+11  uv_run                              .zig-cache/p/N-V-__8AAH34QwB6wi5eQK_lFbfDGSN3hRE8l-6Ep198ZsGg/src/unix/core.c:460
+12  u3_king_commence                    pkg/vere/king.c:1093
+13  main                                pkg/vere/main.c:3389
+14  libc_start_main_stage2              /home/runner/work/_temp/d95d56a1-5c86-4115-9d59-87f908994288/zig-x86_64-linux-0.15.2/lib/libc/musl/src/env/__libc_start_main.c:
+
+~
+urbit 4.6
+boot: home is /state/live/bus
+loom: mapped 2048MB
+lite: arvo formula 4ce68411
+lite: core 641296f
+lite: final state 641296f
+disk: loaded epoch 0i0
+loom: mapped 2048MB
+boot: protected loom
+live: mapped: MB/222.756.864
+boot: installed 2178 jets
+vere: checking version compatibility
+mesa: forwarding enabled
+mdns: init failed, install avahi on this system for mdns support
+mesa: live on 31519 (localhost only)
+conn: listening on /state/live/bus/.urb/conn.sock
+ames: unix-duct received on %born
+http: web interface live on http://localhost:18081
+http: loopback live on http://localhost:12322
+pier (229): live
+%already-mounted
+[[p=~bus q=%base r=[%ud p=0]] s=/]
+~
+urbit 4.6
+boot: home is /state/live/bus
+loom: mapped 2048MB
+lite: arvo formula 4ce68411
+lite: core 641296f
+lite: final state 641296f
+disk: loaded epoch 0i0
+loom: mapped 2048MB
+boot: protected loom
+live: mapped: MB/222.756.864
+boot: installed 2178 jets
+vere: checking version compatibility
+mesa: forwarding enabled
+mdns: init failed, install avahi on this system for mdns support
+mesa: live on 31519 (localhost only)
+conn: listening on /state/live/bus/.urb/conn.sock
+ames: unix-duct received on %born
+http: web interface live on http://localhost:18081
+http: loopback live on http://localhost:12322
+pier (229): live
+%already-mounted
+[[p=~bus q=%base r=[%ud p=0]] s=/]
+~
+urbit 4.6
+boot: home is /state/live/bus
+loom: mapped 2048MB
+lite: arvo formula 4ce68411
+lite: core 641296f
+lite: final state 641296f
+disk: loaded epoch 0i0
+loom: mapped 2048MB
+boot: protected loom
+live: mapped: MB/222.756.864
+boot: installed 2178 jets
+vere: checking version compatibility
+mesa: forwarding enabled
+mdns: init failed, install avahi on this system for mdns support
+mesa: live on 31519 (localhost only)
+conn: listening on /state/live/bus/.urb/conn.sock
+ames: unix-duct received on %born
+http: web interface live on http://localhost:18081
+http: loopback live on http://localhost:12322
+pier (229): live
+~
+urbit 4.6
+boot: home is /state/live/bus
+loom: mapped 2048MB
+lite: arvo formula 4ce68411
+lite: core 641296f
+lite: final state 641296f
+disk: loaded epoch 0i0
+loom: mapped 2048MB
+boot: protected loom
+live: mapped: MB/222.756.864
+boot: installed 2178 jets
+vere: checking version compatibility
+mesa: forwarding enabled
+mdns: init failed, install avahi on this system for mdns support
+mesa: live on 31519 (localhost only)
+conn: listening on /state/live/bus/.urb/conn.sock
+ames: unix-duct received on %born
+http: web interface live on http://localhost:18081
+http: loopback live on http://localhost:12322
+pier (259): live
+%already-mounted
+[[p=~bus q=%base r=[%ud p=0]] s=/]
+~
+urbit 4.6
+boot: home is /state/live/bus
+loom: mapped 2048MB
+lite: arvo formula 4ce68411
+lite: core 641296f
+lite: final state 641296f
+disk: loaded epoch 0i0
+loom: mapped 2048MB
+boot: protected loom
+live: mapped: MB/222.756.864
+boot: installed 2178 jets
+vere: checking version compatibility
+mesa: forwarding enabled
+mdns: init failed, install avahi on this system for mdns support
+mesa: live on 31519 (localhost only)
+conn: listening on /state/live/bus/.urb/conn.sock
+ames: unix-duct received on %born
+http: web interface live on http://localhost:18081
+http: loopback live on http://localhost:12322
+pier (229): live
+~
+urbit 4.6
+boot: home is /state/live/bus
+loom: mapped 2048MB
+lite: arvo formula 4ce68411
+lite: core 641296f
+lite: final state 641296f
+disk: loaded epoch 0i0
+loom: mapped 2048MB
+boot: protected loom
+live: mapped: MB/222.756.864
+boot: installed 2178 jets
+vere: checking version compatibility
+mesa: forwarding enabled
+mdns: init failed, install avahi on this system for mdns support
+mesa: live on 31519 (localhost only)
+conn: listening on /state/live/bus/.urb/conn.sock
+ames: unix-duct received on %born
+http: web interface live on http://localhost:18081
+http: loopback live on http://localhost:12322
+pier (259): live
+%already-mounted
+[[p=~bus q=%base r=[%ud p=0]] s=/]
+~
+urbit 4.6
+boot: home is /state/live/bus
+loom: mapped 2048MB
+lite: arvo formula 4ce68411
+lite: core 641296f
+lite: final state 641296f
+disk: loaded epoch 0i0
+loom: mapped 2048MB
+boot: protected loom
+live: mapped: MB/222.756.864
+boot: installed 2178 jets
+vere: checking version compatibility
+mesa: forwarding enabled
+mdns: init failed, install avahi on this system for mdns support
+mesa: live on 31519 (localhost only)
+conn: listening on /state/live/bus/.urb/conn.sock
+ames: unix-duct received on %born
+http: web interface live on http://localhost:18081
+http: loopback live on http://localhost:12322
+pier (229): live
+~
+urbit 4.6
+boot: home is /state/live/bus
+loom: mapped 2048MB
+lite: arvo formula 4ce68411
+lite: core 641296f
+lite: final state 641296f
+disk: loaded epoch 0i0
+loom: mapped 2048MB
+boot: protected loom
+live: mapped: MB/222.756.864
+boot: installed 2178 jets
+vere: checking version compatibility
+mesa: forwarding enabled
+mdns: init failed, install avahi on this system for mdns support
+mesa: live on 31519 (localhost only)
+conn: listening on /state/live/bus/.urb/conn.sock
+ames: unix-duct received on %born
+http: web interface live on http://localhost:18081
+http: loopback live on http://localhost:12322
+pier (259): live
+%already-mounted
+[[p=~bus q=%base r=[%ud p=0]] s=/]
+~
+urbit 4.6
+boot: home is /state/live/bus
+loom: mapped 2048MB
+lite: arvo formula 4ce68411
+lite: core 641296f
+lite: final state 641296f
+disk: loaded epoch 0i0
+loom: mapped 2048MB
+boot: protected loom
+live: mapped: MB/222.756.864
+boot: installed 2178 jets
+vere: checking version compatibility
+mesa: forwarding enabled
+mdns: init failed, install avahi on this system for mdns support
+mesa: live on 31519 (localhost only)
+conn: listening on /state/live/bus/.urb/conn.sock
+ames: unix-duct received on %born
+http: web interface live on http://localhost:18081
+http: loopback live on http://localhost:12322
+pier (229): live
+~
+urbit 4.6
+boot: home is /state/live/bus
+loom: mapped 2048MB
+lite: arvo formula 4ce68411
+lite: core 641296f
+lite: final state 641296f
+disk: loaded epoch 0i0
+loom: mapped 2048MB
+boot: protected loom
+live: mapped: MB/222.756.864
+boot: installed 2178 jets
+vere: checking version compatibility
+mesa: forwarding enabled
+mdns: init failed, install avahi on this system for mdns support
+mesa: live on 31519 (localhost only)
+conn: listening on /state/live/bus/.urb/conn.sock
+ames: unix-duct received on %born
+http: web interface live on http://localhost:18081
+http: loopback live on http://localhost:12322
+pier (259): live
+%already-mounted
+[[p=~bus q=%base r=[%ud p=0]] s=/]
+~
+urbit 4.6
+boot: home is /state/live/bus
+loom: mapped 2048MB
+lite: arvo formula 4ce68411
+lite: core 641296f
+lite: final state 641296f
+disk: loaded epoch 0i0
+loom: mapped 2048MB
+boot: protected loom
+live: mapped: MB/222.756.864
+boot: installed 2178 jets
+vere: checking version compatibility
+mesa: forwarding enabled
+mdns: init failed, install avahi on this system for mdns support
+mesa: live on 31519 (localhost only)
+conn: listening on /state/live/bus/.urb/conn.sock
+ames: unix-duct received on %born
+http: web interface live on http://localhost:18081
+http: loopback live on http://localhost:12322
+pier (229): live
+~
+urbit 4.6
+boot: home is /state/live/bus
+loom: mapped 2048MB
+lite: arvo formula 4ce68411
+lite: core 641296f
+lite: final state 641296f
+disk: loaded epoch 0i0
+loom: mapped 2048MB
+boot: protected loom
+live: mapped: MB/222.756.864
+boot: installed 2178 jets
+vere: checking version compatibility
+mesa: forwarding enabled
+mdns: init failed, install avahi on this system for mdns support
+mesa: live on 31519 (localhost only)
+conn: listening on /state/live/bus/.urb/conn.sock
+ames: unix-duct received on %born
+http: web interface live on http://localhost:18081
+http: loopback live on http://localhost:12322
+pier (259): live
+%already-mounted
+[[p=~bus q=%base r=[%ud p=0]] s=/]
+~
+urbit 4.6
+boot: home is /state/live/bus
+loom: mapped 2048MB
+lite: arvo formula 4ce68411
+lite: core 641296f
+lite: final state 641296f
+disk: loaded epoch 0i0
+loom: mapped 2048MB
+boot: protected loom
+live: mapped: MB/222.756.864
+boot: installed 2178 jets
+vere: checking version compatibility
+mesa: forwarding enabled
+mdns: init failed, install avahi on this system for mdns support
+mesa: live on 31519 (localhost only)
+conn: listening on /state/live/bus/.urb/conn.sock
+ames: unix-duct received on %born
+http: web interface live on http://localhost:18081
+http: loopback live on http://localhost:12322
+pier (229): live
+~
+urbit 4.6
+boot: home is /state/live/bus
+loom: mapped 2048MB
+lite: arvo formula 4ce68411
+lite: core 641296f
+lite: final state 641296f
+disk: loaded epoch 0i0
+loom: mapped 2048MB
+boot: protected loom
+live: mapped: MB/222.756.864
+boot: installed 2178 jets
+vere: checking version compatibility
+mesa: forwarding enabled
+mdns: init failed, install avahi on this system for mdns support
+mesa: live on 31519 (localhost only)
+conn: listening on /state/live/bus/.urb/conn.sock
+ames: unix-duct received on %born
+http: web interface live on http://localhost:18081
+http: loopback live on http://localhost:12322
+pier (259): live
+%already-mounted
+[[p=~bus q=%base r=[%ud p=0]] s=/]
+~
+urbit 4.6
+boot: home is /state/live/bus
+loom: mapped 2048MB
+lite: arvo formula 4ce68411
+lite: core 641296f
+lite: final state 641296f
+disk: loaded epoch 0i0
+loom: mapped 2048MB
+boot: protected loom
+live: mapped: MB/222.756.864
+boot: installed 2178 jets
+vere: checking version compatibility
+mesa: forwarding enabled
+mdns: init failed, install avahi on this system for mdns support
+mesa: live on 31519 (localhost only)
+conn: listening on /state/live/bus/.urb/conn.sock
+ames: unix-duct received on %born
+http: web interface live on http://localhost:18081
+http: loopback live on http://localhost:12322
+pier (229): live
+~
+urbit 4.6
+boot: home is /state/live/bus
+loom: mapped 2048MB
+lite: arvo formula 4ce68411
+lite: core 641296f
+lite: final state 641296f
+disk: loaded epoch 0i0
+loom: mapped 2048MB
+boot: protected loom
+live: mapped: MB/222.756.864
+boot: installed 2178 jets
+vere: checking version compatibility
+mesa: forwarding enabled
+mdns: init failed, install avahi on this system for mdns support
+mesa: live on 31519 (localhost only)
+conn: listening on /state/live/bus/.urb/conn.sock
+ames: unix-duct received on %born
+http: web interface live on http://localhost:18081
+http: loopback live on http://localhost:12322
+pier (259): live
+%already-mounted
+[[p=~bus q=%base r=[%ud p=0]] s=/]
+~
+urbit 4.6
+boot: home is /state/live/bus
+loom: mapped 2048MB
+lite: arvo formula 4ce68411
+lite: core 641296f
+lite: final state 641296f
+disk: loaded epoch 0i0
+loom: mapped 2048MB
+boot: protected loom
+live: mapped: MB/222.756.864
+boot: installed 2178 jets
+vere: checking version compatibility
+mesa: forwarding enabled
+mdns: init failed, install avahi on this system for mdns support
+mesa: live on 31519 (localhost only)
+conn: listening on /state/live/bus/.urb/conn.sock
+ames: unix-duct received on %born
+http: web interface live on http://localhost:18081
+http: loopback live on http://localhost:12322
+pier (229): live
+~
+urbit 4.6
+boot: home is /state/live/bus
+loom: mapped 2048MB
+lite: arvo formula 4ce68411
+lite: core 641296f
+lite: final state 641296f
+disk: loaded epoch 0i0
+loom: mapped 2048MB
+boot: protected loom
+live: mapped: MB/222.756.864
+boot: installed 2178 jets
+vere: checking version compatibility
+mesa: forwarding enabled
+mdns: init failed, install avahi on this system for mdns support
+mesa: live on 31519 (localhost only)
+conn: listening on /state/live/bus/.urb/conn.sock
+ames: unix-duct received on %born
+http: web interface live on http://localhost:18081
+http: loopback live on http://localhost:12322
+pier (259): live
+%already-mounted
+[[p=~bus q=%base r=[%ud p=0]] s=/]
+~
+urbit 4.6
+boot: home is /state/live/bus
+loom: mapped 2048MB
+lite: arvo formula 4ce68411
+lite: core 641296f
+lite: final state 641296f
+disk: loaded epoch 0i0
+loom: mapped 2048MB
+boot: protected loom
+live: mapped: MB/222.756.864
+boot: installed 2178 jets
+vere: checking version compatibility
+mesa: forwarding enabled
+mdns: init failed, install avahi on this system for mdns support
+mesa: live on 31519 (localhost only)
+conn: listening on /state/live/bus/.urb/conn.sock
+ames: unix-duct received on %born
+http: web interface live on http://localhost:18081
+http: loopback live on http://localhost:12322
+pier (229): live
+~
+urbit 4.6
+boot: home is /state/live/bus
+loom: mapped 2048MB
+lite: arvo formula 4ce68411
+lite: core 641296f
+lite: final state 641296f
+disk: loaded epoch 0i0
+loom: mapped 2048MB
+boot: protected loom
+live: mapped: MB/222.756.864
+boot: installed 2178 jets
+vere: checking version compatibility
+mesa: forwarding enabled
+mdns: init failed, install avahi on this system for mdns support
+mesa: live on 31519 (localhost only)
+conn: listening on /state/live/bus/.urb/conn.sock
+ames: unix-duct received on %born
+http: web interface live on http://localhost:18081
+http: loopback live on http://localhost:12322
+pier (229): live
+~
+urbit 4.6
+boot: home is /state/live/bus
+loom: mapped 2048MB
+lite: arvo formula 4ce68411
+lite: core 641296f
+lite: final state 641296f
+disk: loaded epoch 0i0
+loom: mapped 2048MB
+boot: protected loom
+live: mapped: MB/222.756.864
+boot: installed 2178 jets
+vere: checking version compatibility
+mesa: forwarding enabled
+mdns: init failed, install avahi on this system for mdns support
+mesa: live on 31519 (localhost only)
+conn: listening on /state/live/bus/.urb/conn.sock
+ames: unix-duct received on %born
+http: web interface live on http://localhost:18081
+http: loopback live on http://localhost:12322
+pier (229): live
+gall: installing %stead-observer
+spider got sign for non-existent ~.khan-fyrd--0v5.hlsnt.pd4g4.r8p8i.1n62i.q1gel
+spider got sign for non-existent ~.khan-fyrd--0v2pbtm.400gn.u0qfp.r7hfv.mj0ut
+spider got sign for non-existent ~.khan-fyrd--0v1.ii4oi.l4jb3.5p1dj.s17gn.gjdbt
+spider got sign for non-existent ~.khan-fyrd--0vjdlop.hf7db.pni4g.pfjrn.t5jqi
+spider got sign for non-existent ~.khan-fyrd--0v5.jeqvl.ffnn6.95fug.jgl7i.ut5lq
+spider got sign for non-existent ~.khan-fyrd--0v3.h916r.lqal7.dj19u.tk2lb.3ma80
+spider got sign for non-existent ~.khan-fyrd--0v3.kkhdv.1vp40.n2dol.c9klu.agmnk
+spider got sign for non-existent ~.khan-fyrd--0v4.9ucre.0505p.pfo38.340uu.6v7k3
+spider got sign for non-existent ~.khan-fyrd--0v2.jb1vi.17o4c.u2kgb.gonl5.n83mk
+spider got sign for non-existent ~.khan-fyrd--0v7.qska1.0sd8e.j2ccq.a7r13.0f07g
+spider got sign for non-existent ~.khan-fyrd--0v1.op9qg.0hs3g.s1342.3p3al.18cat
+spider got sign for non-existent ~.khan-fyrd--0v3.52tr9.dvcd8.03bbm.euqm5.6oscr
+spider got sign for non-existent ~.khan-fyrd--0v1.ne6it.bsv0u.0sjrf.3cj5o.6id2c
+spider got sign for non-existent ~.khan-fyrd--0v5.gphg3.552nd.46ids.6o9qo.pt74g
+spider got sign for non-existent ~.khan-fyrd--0v7.n0cb2.u1639.h63ba.tr26h.t0sfv
+spider got sign for non-existent ~.khan-fyrd--0v7.s1b5h.uo9bh.7fmou.64tbg.fg9ue
+spider got sign for non-existent ~.khan-fyrd--0v4.2ouca.6k90r.7egv7.4oerf.fsidn
+spider got sign for non-existent ~.khan-fyrd--0v3.mddal.uq4mm.a7m5i.t96nn.dun31
+spider got sign for non-existent ~.khan-fyrd--0v1.srij0.15t81.v78e1.ivno7.sn71q
+spider got sign for non-existent ~.khan-fyrd--0v3.9m9cq.ulqfs.vc1v9.bdd62.nqjbp
+spider got sign for non-existent ~.khan-fyrd--0v7.l1kvr.hkbg8.nem40.9cd6q.bmpqo
+spider got sign for non-existent ~.khan-fyrd--0v1.hj5p0.ptnpv.fhh28.asmki.h34o1
+spider got sign for non-existent ~.khan-fyrd--0v7.abt1o.jkq86.ak5dd.cpa5i.nb58p
+spider got sign for non-existent ~.khan-fyrd--0v3.2h538.khglh.qpj3b.j3u8q.10ln7
+spider got sign for non-existent ~.khan-fyrd--0v1.5lq1c.th2bu.1ael1.qn7at.j8img
+spider got sign for non-existent ~.khan-fyrd--0v1.vh9mc.s7g0a.tnqjg.j8td7.181mt
+spider got sign for non-existent ~.khan-fyrd--0v3.68bta.jp95l.dsp2l.gv1vg.8k2aa
+spider got sign for non-existent ~.khan-fyrd--0v6.tehdt.h22f5.jeab7.462de.qm7a6
+spider got sign for non-existent ~.khan-fyrd--0viomq9.uv2of.7hk39.pca8q.1vhmp
+spider got sign for non-existent ~.khan-fyrd--0v4.kh47f.a6s5r.8g8fh.t5bt7.h9dui
+spider got sign for non-existent ~.khan-fyrd--0v1.52891.jimo6.uh699.2ofsc.2h9hl
+spider got sign for non-existent ~.khan-fyrd--0v2.cv76u.otm65.9g9b0.7sjt3.dq16f
+spider got sign for non-existent ~.khan-fyrd--0v1.coaah.ejm54.ims06.90n3m.aago5
+spider got sign for non-existent ~.khan-fyrd--0v2.3lr4a.fmibj.ferqk.1rpfh.s4ha8
+spider got sign for non-existent ~.khan-fyrd--0vce0hu.cdps8.r6bnu.3knjg.36g2c
+spider got sign for non-existent ~.khan-fyrd--0v5.a0t0o.1asln.4dvmb.6e5vh.ccpmv
+spider got sign for non-existent ~.khan-fyrd--0v1.ocqn2.odlcm.n5tra.diru6.g5usj
+spider got sign for non-existent ~.khan-fyrd--0v5.d8238.a0kbp.aonv7.k08dp.gsovm
+spider got sign for non-existent ~.khan-fyrd--0v3.q2nsp.9dsol.48uon.1v2ul.9q85g
+spider got sign for non-existent ~.khan-fyrd--0v4.98i1u.lbhmi.6mqjq.p6715.pv7u7
+spider got sign for non-existent ~.khan-fyrd--0v1.2htc2.vent2.r344f.545r1.mt3jk
+spider got sign for non-existent ~.khan-fyrd--0v7.ft6te.q8ont.utinn.lk8n2.fll0a
+spider got sign for non-existent ~.khan-fyrd--0v5.8q6so.h3oq4.6bcc9.ghkt5.66clt
+spider got sign for non-existent ~.khan-fyrd--0v1.d2f19.nt6u9.sujei.61o27.ir8oh
+spider got sign for non-existent ~.khan-fyrd--0v2.s4fbf.iugct.h3s4r.8rvde.u9ch9
+spider got sign for non-existent ~.khan-fyrd--0v6.bistm.qq8bf.32eh5.jll1g.t5p5a
+spider got sign for non-existent ~.khan-fyrd--0v6.d2h0a.panr4.oga5s.ht5he.u4l0c
+spider got sign for non-existent ~.khan-fyrd--0v52e20.0inl2.96bmn.so3q7.chhlt
+spider got sign for non-existent ~.khan-fyrd--0v1.ls0jo.d065r.cuaeb.57jki.dpg0b
+spider got sign for non-existent ~.khan-fyrd--0v2.lnm29.95mpr.5lvs7.v8alg.m70fg
+spider got sign for non-existent ~.khan-fyrd--0v3.s11st.birli.u77bs.vfsl4.agod0
+spider got sign for non-existent ~.khan-fyrd--0v6.jh5ii.ubv9b.obfif.p0bk1.lnth1
+spider got sign for non-existent ~.khan-fyrd--0v6.7ei8d.gg5ki.2c8hk.97na7.rk40o
+spider got sign for non-existent ~.khan-fyrd--0v2.o8npv.cveu7.dobio.1l205.i721e
+spider got sign for non-existent ~.khan-fyrd--0v5pgc0.3gd4j.vutkh.c6mgh.3ps3d
+spider got sign for non-existent ~.khan-fyrd--0v5.rso0j.lk9hd.57koh.n9tiv.cvloi
+spider got sign for non-existent ~.khan-fyrd--0v2.mlvmc.tssdu.el8dt.nmrl4.kk9ck
+spider got sign for non-existent ~.khan-fyrd--0v6.dmr0t.oscqq.dd4cu.2d925.vfs3l
+spider got sign for non-existent ~.khan-fyrd--0v1.4niv3.bnuqe.uj394.22g68.s6p63
+spider got sign for non-existent ~.khan-fyrd--0v1.q4e06.847q8.csa87.4jsmi.ti2s8
+spider got sign for non-existent ~.khan-fyrd--0v7.9j41q.8hmco.ubo2u.3v4du.6sjok
+spider got sign for non-existent ~.khan-fyrd--0v2.37gqm.b59tk.74mto.500ac.6o9qf
+spider got sign for non-existent ~.khan-fyrd--0v1.dmfv0.fs2ah.he9aa.f6i5p.hij0n
+spider got sign for non-existent ~.khan-fyrd--0v6.1e7e4.grovk.dgkr1.h601m.603c4
+spider got sign for non-existent ~.khan-fyrd--0v3.keku9.k5hou.trc73.tu5gk.r0806
+spider got sign for non-existent ~.khan-fyrd--0v1.67slm.c4qc7.lr6me.5gv8t.58edm
+spider got sign for non-existent ~.khan-fyrd--0v6.hkimt.fsoi7.soq6t.pl9me.nml2v
+spider got sign for non-existent ~.khan-fyrd--0v4.bgqb2.6hca5.gen4h.0pkav.lri1d
+spider got sign for non-existent ~.khan-fyrd--0v3.8shj0.i9gl0.ur4ql.va8kl.7g7av
+spider got sign for non-existent ~.khan-fyrd--0v6.0rhjo.2e21k.lbets.m6thj.59elt
+spider got sign for non-existent ~.khan-fyrd--0v7.2julv.6j72m.bilk2.vvqce.f45gm
+spider got sign for non-existent ~.khan-fyrd--0v2.gpt21.ubqqa.h9vku.h20uj.nf3gj
+spider got sign for non-existent ~.khan-fyrd--0v1.o5u13.utul1.v75ak.1l3b4.9luik
+spider got sign for non-existent ~.khan-fyrd--0v1.sdk1s.v7i84.hem47.ds708.bcmnq
+spider got sign for non-existent ~.khan-fyrd--0v7.p26ka.elpbs.fakbp.iqrr5.r303u
+spider got sign for non-existent ~.khan-fyrd--0vvg3il.kj0om.739it.7b1ll.cbhfp
+spider got sign for non-existent ~.khan-fyrd--0v1.vp25p.fksbe.4b8tl.3l9r0.3n8l3
+spider got sign for non-existent ~.khan-fyrd--0v2.vup79.5v8cf.d0lf7.u9fr7.fg5n6
+spider got sign for non-existent ~.khan-fyrd--0v2.sfc2i.9tbv5.ioq33.dso9s.atmg3
+spider got sign for non-existent ~.khan-fyrd--0v5.gr0oc.0j938.dm302.7ufho.ei23i
+spider got sign for non-existent ~.khan-fyrd--0v7.ei917.62qdt.c8mhl.7cvk1.btcno
+spider got sign for non-existent ~.khan-fyrd--0v7.lfrol.32leu.dhg56.g09po.9dmks
+spider got sign for non-existent ~.khan-fyrd--0vpp2g0.lqi59.lt1v6.hiven.pa8qk
+spider got sign for non-existent ~.khan-fyrd--0v6.tppl9.7c51p.55n0k.d4qh6.viakt
+spider got sign for non-existent ~.khan-fyrd--0v2.al3lj.4hn4t.g8ipv.a46l7.l7ssi
+spider got sign for non-existent ~.khan-fyrd--0v4.ul4bu.8n37d.gpe6l.gm6pl.e2a4i
+spider got sign for non-existent ~.khan-fyrd--0v4.a2vka.qkdn9.6idai.6a98a.tsmnk
+spider got sign for non-existent ~.khan-fyrd--0v3.hpp0t.04ccl.sn66s.5sh9t.0otjg
+spider got sign for non-existent ~.khan-fyrd--0v6.ou8da.8aita.l23kh.v5al4.d4gka
+spider got sign for non-existent ~.khan-fyrd--0v2.6jo56.r0p73.j7su3.tkhun.5b04i
+spider got sign for non-existent ~.khan-fyrd--0v7.4lv9p.cstv0.of3rc.hr6ki.21blm
+spider got sign for non-existent ~.khan-fyrd--0v4010r.jqttt.88pff.9qflq.f454j
+spider got sign for non-existent ~.khan-fyrd--0v1.8tche.srupl.v15re.v71fd.irhoh
+spider got sign for non-existent ~.khan-fyrd--0v3.ct30l.fs2f2.3uofd.iruj6.7dfgk
+spider got sign for non-existent ~.khan-fyrd--0v1.70jio.0iks6.ar2mh.dn1b8.s5tu3
+spider got sign for non-existent ~.khan-fyrd--0v6.nujk8.m7l7l.pg927.vpt5u.88dum
+spider got sign for non-existent ~.khan-fyrd--0vher9j.ffpbg.u2lnv.rq14f.n07ch
+spider got sign for non-existent ~.khan-fyrd--0v2.ufo05.ig77o.30bun.r6k8n.n34v8
+spider got sign for non-existent ~.khan-fyrd--0v5.e4ok4.hrg6j.0a7ls.apud8.jr3k8
+spider got sign for non-existent ~.khan-fyrd--0v6.hte0j.0s3uo.9op5v.fnlfk.48k7m
+spider got sign for non-existent ~.khan-fyrd--0v7.quqop.drik4.sqduk.fipvk.j8ofa
+spider got sign for non-existent ~.khan-fyrd--0v28ud0.9hrqf.dcnkp.5ld38.55n43
+spider got sign for non-existent ~.khan-fyrd--0v1.el1n8.cg4sm.8ihl7.4ofqr.2mc89
+spider got sign for non-existent ~.khan-fyrd--0v1.q6sno.7rshq.shhqg.n7sik.2752m
+spider got sign for non-existent ~.khan-fyrd--0v5.fgjr3.kphqq.2senm.4f1rc.op28j
+spider got sign for non-existent ~.khan-fyrd--0v5.ef1ai.827ro.uah4t.mihd8.gg3oe
+spider got sign for non-existent ~.khan-fyrd--0v1.cl33t.mblj9.8hdu1.a4ol1.d8i93
+spider got sign for non-existent ~.khan-fyrd--0v1nlbv.3is47.8gphn.1hn65.7ag4t
+spider got sign for non-existent ~.khan-fyrd--0v5.nihmb.bssbp.p036a.g2uco.fafg6
+spider got sign for non-existent ~.khan-fyrd--0v8idc4.m8en6.218g1.hd6sk.83184
+spider got sign for non-existent ~.khan-fyrd--0v6.2ft5a.3u257.l81p3.6cn3m.ta6nv
+spider got sign for non-existent ~.khan-fyrd--0vmntni.vdj1f.d3ker.kkkq1.p3rlb
+spider got sign for non-existent ~.khan-fyrd--0v7.6eipn.7t6lt.9mo75.aj77m.999vt
+spider got sign for non-existent ~.khan-fyrd--0v6.c86c2.f1otp.s80vt.qhi52.m1r4i
+spider got sign for non-existent ~.khan-fyrd--0v3.k7u58.3irfa.085lp.3epil.d1tr0
+spider got sign for non-existent ~.khan-fyrd--0v3.rel91.ne2mt.aroet.6tniu.dquh3
+spider got sign for non-existent ~.khan-fyrd--0v6.vmte9.n50r5.onoa3.rl6mr.ups07
+spider got sign for non-existent ~.khan-fyrd--0v7.hjj9h.s4qet.0bkdq.i1ffg.ln42v
+spider got sign for non-existent ~.khan-fyrd--0v4.ddh4l.ghoqe.9h9ps.i4or9.f5gto
+spider got sign for non-existent ~.khan-fyrd--0vmngit.hmmcc.9fsq4.rdbkl.oec2i
+spider got sign for non-existent ~.khan-fyrd--0v7.83kib.dagsu.l0bpq.r8i6t.n9qlv
+spider got sign for non-existent ~.khan-fyrd--0v4.bk0dt.8pofu.0tntq.lpub6.ptgjf
+spider got sign for non-existent ~.khan-fyrd--0v6.8hfg6.e9fs2.hlif5.33ob6.jgmq7
+spider got sign for non-existent ~.khan-fyrd--0v7.4j9mt.6bn93.i6934.70jj9.k6h37
+spider got sign for non-existent ~.khan-fyrd--0v3.7mnlb.5jfd0.u7ht1.ibc68.dsi35
+spider got sign for non-existent ~.khan-fyrd--0v3.9ropp.4eqo6.heg9v.igaf9.c0h2f
+spider got sign for non-existent ~.khan-fyrd--0v4.luhsj.gsgco.6ck9i.ka0pt.lls3f
+spider got sign for non-existent ~.khan-fyrd--0v2.eviul.tp2hd.sk0et.lj69k.m5eqd
+spider got sign for non-existent ~.khan-fyrd--0v1.m62io.avoq1.01ctu.3hnok.ah0bc
+spider got sign for non-existent ~.khan-fyrd--0v6.12bol.jptu8.fmicj.70fqh.umtge
+spider got sign for non-existent ~.khan-fyrd--0v2.dhis2.rogf9.r8irn.225rr.7ikmh
+spider got sign for non-existent ~.khan-fyrd--0v5.0h595.9uf2i.8ctir.fdfn2.4dv1k
+spider got sign for non-existent ~.khan-fyrd--0v5.42csu.6672f.v9drf.6ka75.qi7f4
+spider got sign for non-existent ~.khan-fyrd--0v1.326om.bmcdo.7icnu.3ds43.6qal1
+spider got sign for non-existent ~.khan-fyrd--0vkv6l1.7iiqe.khq0f.lob1i.6e5f9
+spider got sign for non-existent ~.khan-fyrd--0v2.i2ncp.96bfg.3c8u3.k0f3n.hpmfh
+spider got sign for non-existent ~.khan-fyrd--0vlkbcd.s89la.p6v4n.5gm1a.o5lbt
+spider got sign for non-existent ~.khan-fyrd--0vn1v6m.46of8.l1ejm.4uiia.ck605
+spider got sign for non-existent ~.khan-fyrd--0v1.ha71o.9oilc.lpu8j.n5qkb.4rohr
+spider got sign for non-existent ~.khan-fyrd--0v4.s22i9.77667.bd0bv.0c03b.idmca
+spider got sign for non-existent ~.khan-fyrd--0v5.ba9ac.rqm58.kh97g.k88hu.a605o
+spider got sign for non-existent ~.khan-fyrd--0v7.o27hb.uluns.0vd84.mqla4.42tki
+spider got sign for non-existent ~.khan-fyrd--0v5.p2o20.bnr26.bj44s.50cfn.o5usa
+spider got sign for non-existent ~.khan-fyrd--0v5.n496e.iptjr.pcdcq.acjkg.g20ml
+spider got sign for non-existent ~.khan-fyrd--0v4.gj5cu.qj78r.mmplu.s3160.e1bdp
+spider got sign for non-existent ~.khan-fyrd--0v1.rv9fd.ult44.gk350.sq7q1.cc364
+spider got sign for non-existent ~.khan-fyrd--0v1.cu9s5.63b3j.jdrqc.t8ph7.aukq4
+spider got sign for non-existent ~.khan-fyrd--0v2.kbb2v.s629n.9ic1v.ba20a.vd8ae
+spider got sign for non-existent ~.khan-fyrd--0v2.126hv.33ubq.pcu4v.vmn7f.ilfmh
+spider got sign for non-existent ~.khan-fyrd--0vmjodi.01oh7.rm7fn.81r3i.ri48s
+spider got sign for non-existent ~.khan-fyrd--0v4.hegmc.ip2u1.0jco7.ngbvj.afrko
+spider got sign for non-existent ~.khan-fyrd--0v6.91ci2.32ec6.q96v1.r371j.vbc8m
+spider got sign for non-existent ~.khan-fyrd--0v6.o7ktf.6ehg6.qg8i5.tm1cr.nmgff
+spider got sign for non-existent ~.khan-fyrd--0v7.7tb3u.ep730.h0rid.8v6k7.n3hu6
+spider got sign for non-existent ~.khan-fyrd--0vl0ug0.65774.p5s7d.qihsa.prkle
+spider got sign for non-existent ~.khan-fyrd--0v2.jeq78.dg569.8q1mg.k1sam.sl4q1
+spider got sign for non-existent ~.khan-fyrd--0vdd4ls.71kbr.dm86b.srh9a.445um
+spider got sign for non-existent ~.khan-fyrd--0v1.el4se.91jvj.i3vc9.o2bsp.ea0bt
+spider got sign for non-existent ~.khan-fyrd--0vc3pkn.so01t.557j0.7b39a.vgts8
+spider got sign for non-existent ~.khan-fyrd--0v1.67d9g.osi4b.ndmvu.tmv7p.1pvuo
+spider got sign for non-existent ~.khan-fyrd--0v1.ha2v9.npa1k.eqr4t.as581.o22ko
+spider got sign for non-existent ~.khan-fyrd--0v3.qfapu.j4g7i.5jfj1.m5qf6.t0ufh
+spider got sign for non-existent ~.khan-fyrd--0v5.d3aia.sjok1.a1dvc.bekjd.maq5i
+spider got sign for non-existent ~.khan-fyrd--0v6.76omi.gclrj.dklsr.nehfi.lh8d1
+spider got sign for non-existent ~.khan-fyrd--0v2.521e2.u7vns.7mkhg.ks40r.asb8j
+spider got sign for non-existent ~.khan-fyrd--0v5.ctp47.dbqtc.b80n2.cc39d.9s540
+spider got sign for non-existent ~.khan-fyrd--0v5.p1etc.rr2lg.st78i.1gn6m.kpvgq
+spider got sign for non-existent ~.khan-fyrd--0vm8h5p.it9h3.g0pqv.g8117.i0fpi
+spider got sign for non-existent ~.khan-fyrd--0v4.o5m95.0pcgk.vkkph.l4idt.9fuf7
+spider got sign for non-existent ~.khan-fyrd--0v4.2s459.ckquj.n3ced.pkm9p.li5ro
+spider got sign for non-existent ~.khan-fyrd--0vht6q2.88cj9.jr5em.edv09.3bg51
+spider got sign for non-existent ~.khan-fyrd--0v5.q4c94.ht1lp.hhs8d.u47ss.6ojgv
+spider got sign for non-existent ~.khan-fyrd--0v4.rb6ep.0cvbu.1rdc5.saj3b.cqrv5
+spider got sign for non-existent ~.khan-fyrd--0v7.0crqu.nomc2.9a57a.jl7g3.1m06t
+spider got sign for non-existent ~.khan-fyrd--0v2.ha2r7.9a6rq.52ss7.fgls8.f0tn3
+spider got sign for non-existent ~.khan-fyrd--0v7.h8siv.ag3br.gv2ni.3c8fk.7ou31
+spider got sign for non-existent ~.khan-fyrd--0v5.4n7c1.iqj0i.6jmkr.vf4ct.qkhfo
+spider got sign for non-existent ~.khan-fyrd--0v5.a9ik9.mc5u0.e0rvn.26vv0.falv9
+spider got sign for non-existent ~.khan-fyrd--0v1.lo601.v4r18.brv1s.v885v.jc580
+spider got sign for non-existent ~.khan-fyrd--0v1.7gj1r.iqn0c.nvap3.66d8s.54kde
+spider got sign for non-existent ~.khan-fyrd--0v3.otvlt.vr491.jjuio.c8uql.bh4qu
+spider got sign for non-existent ~.khan-fyrd--0v5.4tu4d.afl5i.djiip.ellr5.4i8lt
+spider got sign for non-existent ~.khan-fyrd--0v5.j8us3.t2rsl.qj952.t0rd1.thead
+spider got sign for non-existent ~.khan-fyrd--0v7.tn44t.8c04p.ml34n.br9bm.anlok
+spider got sign for non-existent ~.khan-fyrd--0v7.jv70t.flpmo.9jtl7.isghg.b2s4b
+spider got sign for non-existent ~.khan-fyrd--0vd5enl.lm352.9lqth.1lhkj.p5ebt
+spider got sign for non-existent ~.khan-fyrd--0vmq2vs.m7s9k.t46l6.msi7s.80lnf
+spider got sign for non-existent ~.khan-fyrd--0v7.pv3ql.stj51.dmo5s.1reoq.ikibl
+spider got sign for non-existent ~.khan-fyrd--0vglgj1.40vlf.uhi8l.j18qj.lt6c4
+spider got sign for non-existent ~.khan-fyrd--0v4.boal7.9qtl3.oveeu.bn09q.hdmsm
+spider got sign for non-existent ~.khan-fyrd--0v1.nhqq7.uefpb.84mc8.ebnpm.vpbdl
+spider got sign for non-existent ~.khan-fyrd--0v3.s27sr.pqtmv.ihs3o.qd0fg.7685a
+spider got sign for non-existent ~.khan-fyrd--0v2.5m6ml.acdu2.6dth8.fgfng.tht70
+spider got sign for non-existent ~.khan-fyrd--0v7.chvt1.mhqkp.0gif6.v9htq.9i97a
+spider got sign for non-existent ~.khan-fyrd--0v3.2kl3k.08gd0.01ca3.cjtqq.u5apf
+spider got sign for non-existent ~.khan-fyrd--0v2.oigv2.a7t78.n4ju7.btnqr.7p408
+spider got sign for non-existent ~.khan-fyrd--0v2.j5roh.1or9n.0vupa.ats5d.6qr91
+spider got sign for non-existent ~.khan-fyrd--0vgo469.ori5n.u9dpp.vkf12.dss4e
+spider got sign for non-existent ~.khan-fyrd--0v4.n9p73.rvmrv.cmt4b.ukqqf.84416
+spider got sign for non-existent ~.khan-fyrd--0v6r2qg.lnt62.hk4qj.u0u8g.b9n1r
+spider got sign for non-existent ~.khan-fyrd--0v4.rd49o.tkhea.dncut.agbf5.ps87b
+spider got sign for non-existent ~.khan-fyrd--0v5.krvik.ek1eg.savsc.gc255.rmoai
+spider got sign for non-existent ~.khan-fyrd--0v5.gbfr5.evpd6.5ni30.399v4.5ll2e
+spider got sign for non-existent ~.khan-fyrd--0v3.2257l.3knn7.2ur9v.4n0is.qpuih
+spider got sign for non-existent ~.khan-fyrd--0v3.e97jm.vbdjd.qi4u2.j3gh0.l8v6d
+spider got sign for non-existent ~.khan-fyrd--0v2.gt848.35183.g1t9g.8gcif.23p1t
+spider got sign for non-existent ~.khan-fyrd--0v1.a5adp.icrcu.p7qc1.6tbn7.acb8g
+spider got sign for non-existent ~.khan-fyrd--0v1.12nip.kk0ar.apq1l.7qiit.03f0j
+spider got sign for non-existent ~.khan-fyrd--0vvkji0.sgvpi.lrlje.3fe6h.ob134
+spider got sign for non-existent ~.khan-fyrd--0v4.414mb.8bhpq.ejd86.983k6.86jf8
+spider got sign for non-existent ~.khan-fyrd--0v7.qs72f.miv89.gbfkb.7jccp.b3ido
+spider got sign for non-existent ~.khan-fyrd--0v6.0j72e.bcb6o.0tepa.c23pf.ksj2s
+spider got sign for non-existent ~.khan-fyrd--0vpa11.3ge93.qtol2.cr66q.c51ce
+spider got sign for non-existent ~.khan-fyrd--0v5.1okdj.2rlq9.n7q0q.dbibq.leh2f
+spider got sign for non-existent ~.khan-fyrd--0v7.ltb1i.n67i3.vht5g.6igfp.975db
+spider got sign for non-existent ~.khan-fyrd--0v4.mg4e2.4n8fo.qgce3.rfoie.onu14
+spider got sign for non-existent ~.khan-fyrd--0v6.dve55.ful9a.efkjg.38t3l.4h8u8
+spider got sign for non-existent ~.khan-fyrd--0v3.jp8hn.h2tmt.lcb1m.mche7.h05r3
+spider got sign for non-existent ~.khan-fyrd--0v6.g7gcb.2c2mc.o8gjc.t2okp.ucmqj
+spider got sign for non-existent ~.khan-fyrd--0v3.12m51.g53o1.807od.vnk6d.p733j
+spider got sign for non-existent ~.khan-fyrd--0v5.cnm63.5d7rn.f33od.hsr3f.hr1bn
+spider got sign for non-existent ~.khan-fyrd--0v3.p7qjo.65fil.m5224.sftkt.gop6p
+spider got sign for non-existent ~.khan-fyrd--0v5.f18s3.h9q6r.bu77f.77860.3prnj
+spider got sign for non-existent ~.khan-fyrd--0v3.k50qj.lveg5.98l4g.3on5r.nbejv
+spider got sign for non-existent ~.khan-fyrd--0v3.3qoj3.ehqcu.63e8l.i9iur.35in0
+spider got sign for non-existent ~.khan-fyrd--0v4.fvrjc.ig42k.3k4l3.90ing.j446t
+spider got sign for non-existent ~.khan-fyrd--0v7.trihp.enni7.n0kj0.f9gc0.bm5hd
+spider got sign for non-existent ~.khan-fyrd--0v2.64q40.lsent.nu10q.clpu5.3bcg6
+spider got sign for non-existent ~.khan-fyrd--0v45o4j.9efd1.76a48.rrdk7.j6ebg
+spider got sign for non-existent ~.khan-fyrd--0v6.4ibkq.hvjti.3giq1.2rq4j.tt2eu
+spider got sign for non-existent ~.khan-fyrd--0v5.nl6dn.itskk.dfs8h.d0mo6.0ekii
+spider got sign for non-existent ~.khan-fyrd--0v4.h71jm.ijjfb.gurta.86pvg.1l9lq
+spider got sign for non-existent ~.khan-fyrd--0vfs6lj.01cb6.le1r1.hjjuv.nttvg
+spider got sign for non-existent ~.khan-fyrd--0v7.1uaeo.a49rf.2m48s.1aanc.p1sig
+spider got sign for non-existent ~.khan-fyrd--0v2.9rl40.3rtcf.v6flf.j6iv0.g4vv9
+spider got sign for non-existent ~.khan-fyrd--0v5.pvhu1.tqq6n.0p8u4.eglvf.mn7ud
+spider got sign for non-existent ~.khan-fyrd--0v7.fh3ek.4194g.sru3k.9mln4.agd7m
+spider got sign for non-existent ~.khan-fyrd--0v7.m3k97.s0clb.6hihq.gd5h5.vjteg
+spider got sign for non-existent ~.khan-fyrd--0v2.hl29i.flqpi.ske87.gsgfi.uutnd
+spider got sign for non-existent ~.khan-fyrd--0v3.u88jv.73hqn.ebbg4.7r1oj.5djhc
+spider got sign for non-existent ~.khan-fyrd--0v6.boe6f.oneve.7559c.6757g.o3kc2
+spider got sign for non-existent ~.khan-fyrd--0v4.bh3fb.2kgp9.3tv76.dnh5b.qepiu
+spider got sign for non-existent ~.khan-fyrd--0v7.jiele.4qb0a.52a9i.mlr8h.edcb9
+spider got sign for non-existent ~.khan-fyrd--0v7.cl80d.jg8m1.hrfhu.ci5gu.6kojh
+spider got sign for non-existent ~.khan-fyrd--0v2.ojk6r.6hhjk.6nqsv.btbl8.6vc4r
+spider got sign for non-existent ~.khan-fyrd--0v7.nuc3p.98o0t.bet9e.6gjfr.841u5
+spider got sign for non-existent ~.khan-fyrd--0v2.a5ddk.15lqc.cd3ll.h35du.ujr16
+spider got sign for non-existent ~.khan-fyrd--0v6.9sepm.lucs9.loe0b.ksd7n.6jojp
+spider got sign for non-existent ~.khan-fyrd--0v1.uvqr4.lr7md.12dic.cd0l7.kjd02
+spider got sign for non-existent ~.khan-fyrd--0v3.4qkeg.gh21b.of5bc.j457s.tprs0
+spider got sign for non-existent ~.khan-fyrd--0v6.bfre4.7v3eh.nbsfs.53fen.bsup4
+spider got sign for non-existent ~.khan-fyrd--0v3.k89gj.vch95.sqc17.7vg20.8h4rd
+spider got sign for non-existent ~.khan-fyrd--0v7.u2om3.6ijmh.hs3l6.d4ku3.du7ba
+spider got sign for non-existent ~.khan-fyrd--0vljio6.uvdhf.auql6.phemm.mme9q
+spider got sign for non-existent ~.khan-fyrd--0v6.ffjdg.29qp4.qb5f1.dssfi.0uat7
+spider got sign for non-existent ~.khan-fyrd--0v1.o8msa.h7hn7.ipbht.88g4k.4qj07
+spider got sign for non-existent ~.khan-fyrd--0v5.noi8d.h3moe.i01at.9gqak.hr2oa
+spider got sign for non-existent ~.khan-fyrd--0v1.vje49.ier5n.69ems.pdg2v.ppvu3
+spider got sign for non-existent ~.khan-fyrd--0v5.e0d94.fv1io.9g6i8.5op1n.ckf4q
+spider got sign for non-existent ~.khan-fyrd--0v1.7ns1h.unffo.tmtku.dg0fj.lb73f
+spider got sign for non-existent ~.khan-fyrd--0v5.qua5c.810ik.18q1g.oolno.3gspg
+spider got sign for non-existent ~.khan-fyrd--0v7.jjqom.r18kh.4q5au.sq178.2ph6d
+spider got sign for non-existent ~.khan-fyrd--0v5.5c40c.ldk2f.3u3nj.ctn6q.fqrop
+spider got sign for non-existent ~.khan-fyrd--0v1.oscs9.7ng9t.5jscc.utufk.1jht3
+spider got sign for non-existent ~.khan-fyrd--0vlruqm.du2th.ee3pk.btruk.mgjot
+spider got sign for non-existent ~.khan-fyrd--0vn18sn.jnq8a.mpd24.9u376.o526p
+spider got sign for non-existent ~.khan-fyrd--0v4.1o626.t1aiu.fscvo.qa9f2.bmoo3
+spider got sign for non-existent ~.khan-fyrd--0v51ts2.vftuh.nvlh0.dnqfj.4v32r
+spider got sign for non-existent ~.khan-fyrd--0v3.la3rg.286rp.avs4r.0cs65.o244n
+spider got sign for non-existent ~.khan-fyrd--0v4.vuqna.rahgt.k2er2.qeku3.v93vu
+spider got sign for non-existent ~.khan-fyrd--0v1.od5ur.hniqp.p74vm.bejqu.l9hdb
+spider got sign for non-existent ~.khan-fyrd--0v4.fbits.ulvjg.iqrs6.34cal.p75t7
+spider got sign for non-existent ~.khan-fyrd--0v1.862ef.35vci.2lk72.atrr9.sm0ct
+spider got sign for non-existent ~.khan-fyrd--0v7.a2a7h.ljkn3.kuspb.puhmu.1k4fs
+spider got sign for non-existent ~.khan-fyrd--0v5.sh7n5.8rlnq.akaeo.8j9b5.kngok
+spider got sign for non-existent ~.khan-fyrd--0v1.fe2pj.d06ls.psbsn.2jo6j.blsqg
+spider got sign for non-existent ~.khan-fyrd--0v1.jcc2k.luvth.tiikf.knrjt.45u6i
+spider got sign for non-existent ~.khan-fyrd--0v4.e1737.8tnrm.tk0na.i0kh1.565se
+spider got sign for non-existent ~.khan-fyrd--0v7.f8bqn.6crmv.953fa.23a83.rhopr
+spider got sign for non-existent ~.khan-fyrd--0v5.56h41.k63n2.091r4.n5ucj.mv127
+spider got sign for non-existent ~.khan-fyrd--0v6.ilo7k.66np1.n4ind.2i3um.0i6kn
+spider got sign for non-existent ~.khan-fyrd--0v4.ma9im.nekpd.5iuft.f9icj.igs9u
+spider got sign for non-existent ~.khan-fyrd--0v3.a4r4g.co691.hfksa.pbnkk.gm9lq
+spider got sign for non-existent ~.khan-fyrd--0v3.j6ggi.8j3lt.i6q21.9abif.jjb3k
+spider got sign for non-existent ~.khan-fyrd--0v4.dktbl.jku7p.gjgss.lngui.r30fl
+spider got sign for non-existent ~.khan-fyrd--0vuo63.ih6cg.u5geo.92qmr.fmlj4
+spider got sign for non-existent ~.khan-fyrd--0vgace4.7p7oi.bs809.3dhq8.1j3vd
+spider got sign for non-existent ~.khan-fyrd--0v5.j39eg.bs9k0.5075d.k3rg4.71hoj
+spider got sign for non-existent ~.khan-fyrd--0v2.n7d3b.o6den.5jprf.m3f56.mbubh
+spider got sign for non-existent ~.khan-fyrd--0v7.7nans.6nb0q.vfq9p.kv43e.361m7
+spider got sign for non-existent ~.khan-fyrd--0v2.rqmu5.t8h5i.4n6fs.9fdrf.38ujj
+spider got sign for non-existent ~.khan-fyrd--0v4.6h2t8.6utie.dlu25.4cc05.14so1
+spider got sign for non-existent ~.khan-fyrd--0vvhm25.0srgb.qnk2t.nmm6a.jd5um
+spider got sign for non-existent ~.khan-fyrd--0v7.tnlvu.k1pcq.rsdsa.aegg3.5sqgu
+spider got sign for non-existent ~.khan-fyrd--0v2.fp4up.ntaaa.2tjla.bl6f2.8bvpb
+spider got sign for non-existent ~.khan-fyrd--0v3.ior4n.f3nt2.aqi2v.eosnm.qgqt2
+spider got sign for non-existent ~.khan-fyrd--0v6.959i2.f4nbg.a9gl6.fmb98.9geo7
+spider got sign for non-existent ~.khan-fyrd--0v3.4k32a.efipk.iptkb.28qt5.60b94
+spider got sign for non-existent ~.khan-fyrd--0v5.i1s23.21tcb.h8fgn.iaol3.doh3a
+spider got sign for non-existent ~.khan-fyrd--0v2.olv53.d9nnt.lr436.t705b.027ph
+spider got sign for non-existent ~.khan-fyrd--0v7.h8q7r.g1rmr.4saq2.n0tor.nqr0a
+spider got sign for non-existent ~.khan-fyrd--0v7.7gsj0.h360o.6m8eg.o32iq.hm3u4
+spider got sign for non-existent ~.khan-fyrd--0v5.7626m.1f54c.csbj9.aqng2.pdi29
+spider got sign for non-existent ~.khan-fyrd--0v4.e1go4.vq07f.imllh.7ep7a.k31l7
+spider got sign for non-existent ~.khan-fyrd--0v6.b5rhi.44p71.ad7re.hb1dh.vg8e5
+spider got sign for non-existent ~.khan-fyrd--0v6.6o60k.lsd2b.7qoo3.52ubv.ndtdo
+spider got sign for non-existent ~.khan-fyrd--0v6.4gtsu.9s7dh.5pdv6.1g23d.7jn6v
+spider got sign for non-existent ~.khan-fyrd--0v1.27kbe.4t3i3.v8uru.0o9dv.mcnlf
+spider got sign for non-existent ~.khan-fyrd--0v5.o3iuo.23iu3.blre6.gmu3m.ioad3
+spider got sign for non-existent ~.khan-fyrd--0v7.6m89n.f10ki.6mjb7.tancr.5j18s
+spider got sign for non-existent ~.khan-fyrd--0v5.hgd3r.pql39.unogh.m3jve.6k9bn
+spider got sign for non-existent ~.khan-fyrd--0v9l0ae.lngjp.00sjr.8oqb7.kg00a
+spider got sign for non-existent ~.khan-fyrd--0vhf8ir.rpeke.kteut.g48vs.e2g58
+spider got sign for non-existent ~.khan-fyrd--0v4.6kvb0.os799.dnpcv.416aj.dssci
+spider got sign for non-existent ~.khan-fyrd--0v1.7kp9a.u824q.rmo28.vmup8.bfsjv
+spider got sign for non-existent ~.khan-fyrd--0v2.nasvu.1dj4t.82lj8.49cqk.c6k6q
+spider got sign for non-existent ~.khan-fyrd--0v4.g53pk.08sm3.upps1.dq088.mtnco
+spider got sign for non-existent ~.khan-fyrd--0v2.5tu9d.d7ns4.ait4h.vsr73.r2dfk
+spider got sign for non-existent ~.khan-fyrd--0v5.ahen9.tsvb5.uub9v.m1rfs.etlta
+spider got sign for non-existent ~.khan-fyrd--0vnq7lo.untsv.35nql.l8pq1.07s0q
+spider got sign for non-existent ~.khan-fyrd--0v5.skb9i.cpnep.d06ho.g4inp.bduq4
+spider got sign for non-existent ~.khan-fyrd--0v7.475bl.pmvee.v1jth.l04p0.sp18e
+spider got sign for non-existent ~.khan-fyrd--0v2.5eo9h.o6qij.k0kfg.2d7ft.o6s8b
+spider got sign for non-existent ~.khan-fyrd--0v5.bokgc.72283.5e483.aostg.10t8a
+spider got sign for non-existent ~.khan-fyrd--0v2.imaik.dfipa.jsa2g.vpcmt.5n5hq
+spider got sign for non-existent ~.khan-fyrd--0v2.cuk4g.hgurn.g4tgk.17u42.pv809
+spider got sign for non-existent ~.khan-fyrd--0v2.nnl20.qo1qh.d76qj.80l9l.gb5oe
+spider got sign for non-existent ~.khan-fyrd--0v6.jpauh.p56ni.afjr6.5ti6d.ovs60
+spider got sign for non-existent ~.khan-fyrd--0v7.7nsvv.fhnt1.l2r5p.bqtso.4q14i
+spider got sign for non-existent ~.khan-fyrd--0v6.i2q58.mqpfl.odqsg.ijrnu.mvdfh
+spider got sign for non-existent ~.khan-fyrd--0v5.8ked4.pqo4l.pah66.79ggp.ml4k5
+spider got sign for non-existent ~.khan-fyrd--0v3.l43kp.cfpig.phfcv.ju8np.opgdd
+spider got sign for non-existent ~.khan-fyrd--0v3.8c76b.6f110.l0d42.b2942.rqmep
+spider got sign for non-existent ~.khan-fyrd--0v1.af7cc.1ubfr.rcg2q.oc2af.q0ffd
+spider got sign for non-existent ~.khan-fyrd--0v7.s0rs8.ubjcg.0ntlb.kpk46.csit1
+spider got sign for non-existent ~.khan-fyrd--0v6.2aum6.0snv2.as0ga.7s26m.nmrpu
+spider got sign for non-existent ~.khan-fyrd--0v2770d.8q6te.9fr0e.olpms.m8va0
+spider got sign for non-existent ~.khan-fyrd--0v4.4s0q2.ru445.lr01b.48lhm.r9gur
+spider got sign for non-existent ~.khan-fyrd--0v3.hi3p3.t8mcv.t0rdf.us631.qdd2u
+spider got sign for non-existent ~.khan-fyrd--0v2.95sfu.hi1j7.vig14.6m276.ej533
+spider got sign for non-existent ~.khan-fyrd--0v1.aiij5.6u44l.dcsip.9t28n.gehvh
+spider got sign for non-existent ~.khan-fyrd--0vmqq81.se379.3kigq.jjgas.r8qic
+spider got sign for non-existent ~.khan-fyrd--0v5.953tu.bfj4g.2a5qp.bl9a0.pq8ap
+spider got sign for non-existent ~.khan-fyrd--0v5.vuqri.m4jpn.8h98r.pm2up.t0glr
+spider got sign for non-existent ~.khan-fyrd--0v517lp.73fkq.euill.6veo3.hk89b
+spider got sign for non-existent ~.khan-fyrd--0v1.da9be.gf5kf.0nnak.453kl.evkt0
+~
+urbit 4.6
+boot: home is /state/live/bus
+loom: mapped 2048MB
+lite: arvo formula 4ce68411
+lite: core 641296f
+lite: final state 641296f
+disk: loaded epoch 0i0
+loom: mapped 2048MB
+boot: protected loom
+live: mapped: MB/228.622.336
+boot: installed 2178 jets
+vere: checking version compatibility
+mesa: forwarding enabled
+mdns: init failed, install avahi on this system for mdns support
+mesa: live on 31519 (localhost only)
+conn: listening on /state/live/bus/.urb/conn.sock
+ames: unix-duct received on %born
+http: web interface live on http://localhost:18081
+http: loopback live on http://localhost:12322
+pier (4098): live
+%already-mounted
+[[p=~bus q=%base r=[%ud p=0]] s=/]
+~
+urbit 4.6
+boot: home is /state/live/bus
+loom: mapped 2048MB
+lite: arvo formula 4ce68411
+lite: core 641296f
+lite: final state 641296f
+disk: loaded epoch 0i0
+loom: mapped 2048MB
+boot: protected loom
+live: mapped: MB/222.756.864
+boot: installed 2178 jets
+vere: checking version compatibility
+mesa: forwarding enabled
+mdns: init failed, install avahi on this system for mdns support
+mesa: live on 31519 (localhost only)
+conn: listening on /state/live/bus/.urb/conn.sock
+ames: unix-duct received on %born
+http: web interface live on http://localhost:18081
+http: loopback live on http://localhost:12322
+pier (229): live
+~
+urbit 4.6
+boot: home is /state/live/bus
+loom: mapped 2048MB
+lite: arvo formula 4ce68411
+lite: core 641296f
+lite: final state 641296f
+disk: loaded epoch 0i0
+loom: mapped 2048MB
+boot: protected loom
+live: mapped: MB/222.756.864
+boot: installed 2178 jets
+vere: checking version compatibility
+mesa: forwarding enabled
+mdns: init failed, install avahi on this system for mdns support
+mesa: live on 31519 (localhost only)
+conn: listening on /state/live/bus/.urb/conn.sock
+ames: unix-duct received on %born
+http: web interface live on http://localhost:18081
+http: loopback live on http://localhost:12322
+pier (259): live
+%already-mounted
+[[p=~bus q=%base r=[%ud p=0]] s=/]
+~
+urbit 4.6
+boot: home is /state/live/bus
+loom: mapped 2048MB
+lite: arvo formula 4ce68411
+lite: core 641296f
+lite: final state 641296f
+disk: loaded epoch 0i0
+loom: mapped 2048MB
+boot: protected loom
+live: mapped: MB/222.756.864
+boot: installed 2178 jets
+vere: checking version compatibility
+mesa: forwarding enabled
+mdns: init failed, install avahi on this system for mdns support
+mesa: live on 31519 (localhost only)
+conn: listening on /state/live/bus/.urb/conn.sock
+ames: unix-duct received on %born
+http: web interface live on http://localhost:18081
+http: loopback live on http://localhost:12322
+pier (229): live
+~
+urbit 4.6
+boot: home is /state/live/bus
+loom: mapped 2048MB
+lite: arvo formula 4ce68411
+lite: core 641296f
+lite: final state 641296f
+disk: loaded epoch 0i0
+loom: mapped 2048MB
+boot: protected loom
+live: mapped: MB/222.756.864
+boot: installed 2178 jets
+vere: checking version compatibility
+mesa: forwarding enabled
+mdns: init failed, install avahi on this system for mdns support
+mesa: live on 31519 (localhost only)
+conn: listening on /state/live/bus/.urb/conn.sock
+ames: unix-duct received on %born
+http: web interface live on http://localhost:18081
+http: loopback live on http://localhost:12322
+pier (259): live
+%already-mounted
+[[p=~bus q=%base r=[%ud p=0]] s=/]
+~
+urbit 4.6
+boot: home is /state/live/bus
+loom: mapped 2048MB
+lite: arvo formula 4ce68411
+lite: core 641296f
+lite: final state 641296f
+disk: loaded epoch 0i0
+loom: mapped 2048MB
+boot: protected loom
+live: mapped: MB/222.756.864
+boot: installed 2178 jets
+vere: checking version compatibility
+mesa: forwarding enabled
+mdns: init failed, install avahi on this system for mdns support
+mesa: live on 31519 (localhost only)
+conn: listening on /state/live/bus/.urb/conn.sock
+ames: unix-duct received on %born
+http: web interface live on http://localhost:18081
+http: loopback live on http://localhost:12322
+pier (229): live
+~
+urbit 4.6
+boot: home is /state/live/bus
+loom: mapped 2048MB
+lite: arvo formula 4ce68411
+lite: core 641296f
+lite: final state 641296f
+disk: loaded epoch 0i0
+loom: mapped 2048MB
+boot: protected loom
+live: mapped: MB/222.756.864
+boot: installed 2178 jets
+vere: checking version compatibility
+mesa: forwarding enabled
+mdns: init failed, install avahi on this system for mdns support
+mesa: live on 31519 (localhost only)
+conn: listening on /state/live/bus/.urb/conn.sock
+ames: unix-duct received on %born
+http: web interface live on http://localhost:18081
+http: loopback live on http://localhost:12322
+pier (229): live
+~
+urbit 4.6
+boot: home is /state/live/bus
+loom: mapped 2048MB
+lite: arvo formula 4ce68411
+lite: core 641296f
+lite: final state 641296f
+disk: loaded epoch 0i0
+loom: mapped 2048MB
+boot: protected loom
+live: mapped: MB/222.756.864
+boot: installed 2178 jets
+vere: checking version compatibility
+mesa: forwarding enabled
+mdns: init failed, install avahi on this system for mdns support
+mesa: live on 31519 (localhost only)
+conn: listening on /state/live/bus/.urb/conn.sock
+ames: unix-duct received on %born
+http: web interface live on http://localhost:18081
+http: loopback live on http://localhost:12322
+pier (259): live
+%already-mounted
+[[p=~bus q=%base r=[%ud p=0]] s=/]
+~
+urbit 4.6
+boot: home is /state/live/bus
+loom: mapped 2048MB
+lite: arvo formula 4ce68411
+lite: core 641296f
+lite: final state 641296f
+disk: loaded epoch 0i0
+loom: mapped 2048MB
+boot: protected loom
+live: mapped: MB/222.756.864
+boot: installed 2178 jets
+vere: checking version compatibility
+mesa: forwarding enabled
+mdns: init failed, install avahi on this system for mdns support
+mesa: live on 31519 (localhost only)
+conn: listening on /state/live/bus/.urb/conn.sock
+ames: unix-duct received on %born
+http: web interface live on http://localhost:18081
+http: loopback live on http://localhost:12322
+pier (229): live
+~
+urbit 4.6
+boot: home is /state/live/bus
+loom: mapped 2048MB
+lite: arvo formula 4ce68411
+lite: core 641296f
+lite: final state 641296f
+disk: loaded epoch 0i0
+loom: mapped 2048MB
+boot: protected loom
+live: mapped: MB/222.756.864
+boot: installed 2178 jets
+vere: checking version compatibility
+mesa: forwarding enabled
+mdns: init failed, install avahi on this system for mdns support
+mesa: live on 31519 (localhost only)
+conn: listening on /state/live/bus/.urb/conn.sock
+ames: unix-duct received on %born
+http: web interface live on http://localhost:18081
+http: loopback live on http://localhost:12322
+pier (259): live
+%already-mounted
+[[p=~bus q=%base r=[%ud p=0]] s=/]
+~
+urbit 4.6
+boot: home is /state/live/bus
+loom: mapped 2048MB
+lite: arvo formula 4ce68411
+lite: core 641296f
+lite: final state 641296f
+disk: loaded epoch 0i0
+loom: mapped 2048MB
+boot: protected loom
+live: mapped: MB/222.756.864
+boot: installed 2178 jets
+vere: checking version compatibility
+mesa: forwarding enabled
+mdns: init failed, install avahi on this system for mdns support
+mesa: live on 31519 (localhost only)
+conn: listening on /state/live/bus/.urb/conn.sock
+ames: unix-duct received on %born
+http: web interface live on http://localhost:18081
+http: loopback live on http://localhost:12322
+pier (229): live
+~
+urbit 4.6
+boot: home is /state/live/bus
+loom: mapped 2048MB
+lite: arvo formula 4ce68411
+lite: core 641296f
+lite: final state 641296f
+disk: loaded epoch 0i0
+loom: mapped 2048MB
+boot: protected loom
+live: mapped: MB/222.756.864
+boot: installed 2178 jets
+vere: checking version compatibility
+mesa: forwarding enabled
+mdns: init failed, install avahi on this system for mdns support
+mesa: live on 31519 (localhost only)
+conn: listening on /state/live/bus/.urb/conn.sock
+ames: unix-duct received on %born
+http: web interface live on http://localhost:18081
+http: loopback live on http://localhost:12322
+pier (229): live
+%already-mounted
+[[p=~bus q=%base r=[%ud p=0]] s=/]
+~
+urbit 4.6
+boot: home is /state/live/bus
+loom: mapped 2048MB
+lite: arvo formula 4ce68411
+lite: core 641296f
+lite: final state 641296f
+disk: loaded epoch 0i0
+loom: mapped 2048MB
+boot: protected loom
+live: mapped: MB/222.756.864
+boot: installed 2178 jets
+vere: checking version compatibility
+mesa: forwarding enabled
+mdns: init failed, install avahi on this system for mdns support
+mesa: live on 31519 (localhost only)
+conn: listening on /state/live/bus/.urb/conn.sock
+ames: unix-duct received on %born
+http: web interface live on http://localhost:18081
+http: loopback live on http://localhost:12322
+pier (229): live
+~
+urbit 4.6
+boot: home is /state/live/bus
+loom: mapped 2048MB
+lite: arvo formula 4ce68411
+lite: core 641296f
+lite: final state 641296f
+disk: loaded epoch 0i0
+loom: mapped 2048MB
+boot: protected loom
+live: mapped: MB/222.756.864
+boot: installed 2178 jets
+vere: checking version compatibility
+mesa: forwarding enabled
+mdns: init failed, install avahi on this system for mdns support
+mesa: live on 31519 (localhost only)
+conn: listening on /state/live/bus/.urb/conn.sock
+ames: unix-duct received on %born
+http: web interface live on http://localhost:18081
+http: loopback live on http://localhost:12322
+pier (259): live
+%already-mounted
+[[p=~bus q=%base r=[%ud p=0]] s=/]
+~
+urbit 4.6
+boot: home is /state/live/bus
+loom: mapped 2048MB
+lite: arvo formula 4ce68411
+lite: core 641296f
+lite: final state 641296f
+disk: loaded epoch 0i0
+loom: mapped 2048MB
+boot: protected loom
+live: mapped: MB/222.756.864
+boot: installed 2178 jets
+vere: checking version compatibility
+mesa: forwarding enabled
+mdns: init failed, install avahi on this system for mdns support
+mesa: live on 31519 (localhost only)
+conn: listening on /state/live/bus/.urb/conn.sock
+ames: unix-duct received on %born
+http: web interface live on http://localhost:18081
+http: loopback live on http://localhost:12322
+pier (229): live
+~
+urbit 4.6
+boot: home is /state/live/bus
+loom: mapped 2048MB
+lite: arvo formula 4ce68411
+lite: core 641296f
+lite: final state 641296f
+disk: loaded epoch 0i0
+loom: mapped 2048MB
+boot: protected loom
+live: mapped: MB/222.756.864
+boot: installed 2178 jets
+vere: checking version compatibility
+mesa: forwarding enabled
+mdns: init failed, install avahi on this system for mdns support
+mesa: live on 31519 (localhost only)
+conn: listening on /state/live/bus/.urb/conn.sock
+ames: unix-duct received on %born
+http: web interface live on http://localhost:18081
+http: loopback live on http://localhost:12322
+pier (259): live
+%already-mounted
+[[p=~bus q=%base r=[%ud p=0]] s=/]
+~
+urbit 4.6
+boot: home is /state/live/bus
+loom: mapped 2048MB
+lite: arvo formula 4ce68411
+lite: core 641296f
+lite: final state 641296f
+disk: loaded epoch 0i0
+loom: mapped 2048MB
+boot: protected loom
+live: mapped: MB/222.756.864
+boot: installed 2178 jets
+vere: checking version compatibility
+mesa: forwarding enabled
+mdns: init failed, install avahi on this system for mdns support
+mesa: live on 31519 (localhost only)
+conn: listening on /state/live/bus/.urb/conn.sock
+ames: unix-duct received on %born
+http: web interface live on http://localhost:18081
+http: loopback live on http://localhost:12322
+pier (229): live
+~
+urbit 4.6
+boot: home is /state/live/bus
+loom: mapped 2048MB
+lite: arvo formula 4ce68411
+lite: core 641296f
+lite: final state 641296f
+disk: loaded epoch 0i0
+loom: mapped 2048MB
+boot: protected loom
+live: mapped: MB/222.756.864
+boot: installed 2178 jets
+vere: checking version compatibility
+mesa: forwarding enabled
+mdns: init failed, install avahi on this system for mdns support
+mesa: live on 31519 (localhost only)
+conn: listening on /state/live/bus/.urb/conn.sock
+ames: unix-duct received on %born
+http: web interface live on http://localhost:18081
+http: loopback live on http://localhost:12322
+pier (229): live
+~
+urbit 4.6
+boot: home is /state/live/bus
+loom: mapped 2048MB
+lite: arvo formula 4ce68411
+lite: core 641296f
+lite: final state 641296f
+disk: loaded epoch 0i0
+loom: mapped 2048MB
+boot: protected loom
+live: mapped: MB/222.756.864
+boot: installed 2178 jets
+vere: checking version compatibility
+mesa: forwarding enabled
+mdns: init failed, install avahi on this system for mdns support
+mesa: live on 31519 (localhost only)
+conn: listening on /state/live/bus/.urb/conn.sock
+ames: unix-duct received on %born
+http: web interface live on http://localhost:18081
+http: loopback live on http://localhost:12322
+pier (259): live
+%already-mounted
+[[p=~bus q=%base r=[%ud p=0]] s=/]
+~
+urbit 4.6
+boot: home is /state/live/bus
+loom: mapped 2048MB
+lite: arvo formula 4ce68411
+lite: core 641296f
+lite: final state 641296f
+disk: loaded epoch 0i0
+loom: mapped 2048MB
+boot: protected loom
+live: mapped: MB/222.756.864
+boot: installed 2178 jets
+vere: checking version compatibility
+mesa: forwarding enabled
+mdns: init failed, install avahi on this system for mdns support
+mesa: live on 31519 (localhost only)
+conn: listening on /state/live/bus/.urb/conn.sock
+ames: unix-duct received on %born
+http: web interface live on http://localhost:18081
+http: loopback live on http://localhost:12322
+pier (229): live
+~
+urbit 4.6
+boot: home is /state/live/bus
+loom: mapped 2048MB
+lite: arvo formula 4ce68411
+lite: core 641296f
+lite: final state 641296f
+disk: loaded epoch 0i0
+loom: mapped 2048MB
+boot: protected loom
+live: mapped: MB/222.756.864
+boot: installed 2178 jets
+vere: checking version compatibility
+mesa: forwarding enabled
+mdns: init failed, install avahi on this system for mdns support
+mesa: live on 31519 (localhost only)
+conn: listening on /state/live/bus/.urb/conn.sock
+ames: unix-duct received on %born
+http: web interface live on http://localhost:18081
+http: loopback live on http://localhost:12322
+pier (259): live
+%already-mounted
+[[p=~bus q=%base r=[%ud p=0]] s=/]
+~
+urbit 4.6
+boot: home is /state/live/bus
+loom: mapped 2048MB
+lite: arvo formula 4ce68411
+lite: core 641296f
+lite: final state 641296f
+disk: loaded epoch 0i0
+loom: mapped 2048MB
+boot: protected loom
+live: mapped: MB/222.756.864
+boot: installed 2178 jets
+vere: checking version compatibility
+mesa: forwarding enabled
+mdns: init failed, install avahi on this system for mdns support
+mesa: live on 31519 (localhost only)
+conn: listening on /state/live/bus/.urb/conn.sock
+ames: unix-duct received on %born
+http: web interface live on http://localhost:18081
+http: loopback live on http://localhost:12322
+pier (229): live
+%already-mounted
+[[p=~bus q=%base r=[%ud p=0]] s=/]
+~
+urbit 4.6
+boot: home is /state/live/bus
+loom: mapped 2048MB
+lite: arvo formula 4ce68411
+lite: core 641296f
+lite: final state 641296f
+disk: loaded epoch 0i0
+loom: mapped 2048MB
+boot: protected loom
+live: mapped: MB/222.756.864
+boot: installed 2178 jets
+vere: checking version compatibility
+mesa: forwarding enabled
+mdns: init failed, install avahi on this system for mdns support
+mesa: live on 31519 (localhost only)
+conn: listening on /state/live/bus/.urb/conn.sock
+ames: unix-duct received on %born
+http: web interface live on http://localhost:18081
+http: loopback live on http://localhost:12322
+pier (229): live
+~
+urbit 4.6
+boot: home is /state/live/bus
+loom: mapped 2048MB
+lite: arvo formula 4ce68411
+lite: core 641296f
+lite: final state 641296f
+disk: loaded epoch 0i0
+loom: mapped 2048MB
+boot: protected loom
+live: mapped: MB/222.756.864
+boot: installed 2178 jets
+vere: checking version compatibility
+mesa: forwarding enabled
+mdns: init failed, install avahi on this system for mdns support
+mesa: live on 31519 (localhost only)
+conn: listening on /state/live/bus/.urb/conn.sock
+ames: unix-duct received on %born
+http: web interface live on http://localhost:18081
+http: loopback live on http://localhost:12322
+pier (259): live
+%already-mounted
+[[p=~bus q=%base r=[%ud p=0]] s=/]
+~
+urbit 4.6
+boot: home is /state/live/bus
+loom: mapped 2048MB
+lite: arvo formula 4ce68411
+lite: core 641296f
+lite: final state 641296f
+disk: loaded epoch 0i0
+loom: mapped 2048MB
+boot: protected loom
+live: mapped: MB/222.756.864
+boot: installed 2178 jets
+vere: checking version compatibility
+mesa: forwarding enabled
+mdns: init failed, install avahi on this system for mdns support
+mesa: live on 31519 (localhost only)
+conn: listening on /state/live/bus/.urb/conn.sock
+ames: unix-duct received on %born
+http: web interface live on http://localhost:18081
+http: loopback live on http://localhost:12322
+pier (229): live
+~
+urbit 4.6
+boot: home is /state/live/bus
+loom: mapped 2048MB
+lite: arvo formula 4ce68411
+lite: core 641296f
+lite: final state 641296f
+disk: loaded epoch 0i0
+loom: mapped 2048MB
+boot: protected loom
+live: mapped: MB/222.756.864
+boot: installed 2178 jets
+vere: checking version compatibility
+mesa: forwarding enabled
+mdns: init failed, install avahi on this system for mdns support
+mesa: live on 31519 (localhost only)
+conn: listening on /state/live/bus/.urb/conn.sock
+ames: unix-duct received on %born
+http: web interface live on http://localhost:18081
+http: loopback live on http://localhost:12322
+pier (259): live
+%already-mounted
+[[p=~bus q=%base r=[%ud p=0]] s=/]
+~
+urbit 4.6
+boot: home is /state/live/bus
+loom: mapped 2048MB
+lite: arvo formula 4ce68411
+lite: core 641296f
+lite: final state 641296f
+disk: loaded epoch 0i0
+loom: mapped 2048MB
+boot: protected loom
+live: mapped: MB/222.756.864
+boot: installed 2178 jets
+vere: checking version compatibility
+mesa: forwarding enabled
+mdns: init failed, install avahi on this system for mdns support
+mesa: live on 31519 (localhost only)
+conn: listening on /state/live/bus/.urb/conn.sock
+ames: unix-duct received on %born
+http: web interface live on http://localhost:18081
+http: loopback live on http://localhost:12322
+pier (229): live
+~
+urbit 4.6
+boot: home is /state/live/bus
+loom: mapped 2048MB
+lite: arvo formula 4ce68411
+lite: core 641296f
+lite: final state 641296f
+disk: loaded epoch 0i0
+loom: mapped 2048MB
+boot: protected loom
+live: mapped: MB/222.756.864
+boot: installed 2178 jets
+vere: checking version compatibility
+mesa: forwarding enabled
+mdns: init failed, install avahi on this system for mdns support
+mesa: live on 31519 (localhost only)
+conn: listening on /state/live/bus/.urb/conn.sock
+ames: unix-duct received on %born
+http: web interface live on http://localhost:18081
+http: loopback live on http://localhost:12322
+pier (229): live
+%already-mounted
+[[p=~bus q=%base r=[%ud p=0]] s=/]
+~
+urbit 4.6
+boot: home is /state/live/bus
+loom: mapped 2048MB
+lite: arvo formula 4ce68411
+lite: core 641296f
+lite: final state 641296f
+disk: loaded epoch 0i0
+loom: mapped 2048MB
+boot: protected loom
+live: mapped: MB/222.756.864
+boot: installed 2178 jets
+vere: checking version compatibility
+mesa: forwarding enabled
+mdns: init failed, install avahi on this system for mdns support
+mesa: live on 31519 (localhost only)
+conn: listening on /state/live/bus/.urb/conn.sock
+ames: unix-duct received on %born
+http: web interface live on http://localhost:18081
+http: loopback live on http://localhost:12322
+~
+urbit 4.6
+boot: home is /state/live/bus
+loom: mapped 2048MB
+lite: arvo formula 4ce68411
+lite: core 641296f
+lite: final state 641296f
+disk: loaded epoch 0i0
+loom: mapped 2048MB
+boot: protected loom
+live: mapped: MB/222.756.864
+boot: installed 2178 jets
+vere: checking version compatibility
+mesa: forwarding enabled
+mdns: init failed, install avahi on this system for mdns support
+mesa: live on 31519 (localhost only)
+conn: listening on /state/live/bus/.urb/conn.sock
+ames: unix-duct received on %born
+http: web interface live on http://localhost:18081
+http: loopback live on http://localhost:12322
+pier (229): live
+%already-mounted
+[[p=~bus q=%base r=[%ud p=0]] s=/]
+~
+urbit 4.6
+boot: home is /state/live/bus
+loom: mapped 2048MB
+lite: arvo formula 4ce68411
+lite: core 641296f
+lite: final state 641296f
+disk: loaded epoch 0i0
+loom: mapped 2048MB
+boot: protected loom
+live: mapped: MB/222.756.864
+boot: installed 2178 jets
+vere: checking version compatibility
+mesa: forwarding enabled
+mdns: init failed, install avahi on this system for mdns support
+mesa: live on 31519 (localhost only)
+conn: listening on /state/live/bus/.urb/conn.sock
+ames: unix-duct received on %born
+http: web interface live on http://localhost:18081
+http: loopback live on http://localhost:12322
+pier (229): live
+~
+urbit 4.6
+boot: home is /state/live/bus
+loom: mapped 2048MB
+lite: arvo formula 4ce68411
+lite: core 641296f
+lite: final state 641296f
+disk: loaded epoch 0i0
+loom: mapped 2048MB
+boot: protected loom
+live: mapped: MB/222.756.864
+boot: installed 2178 jets
+vere: checking version compatibility
+mesa: forwarding enabled
+mdns: init failed, install avahi on this system for mdns support
+mesa: live on 31519 (localhost only)
+conn: listening on /state/live/bus/.urb/conn.sock
+ames: unix-duct received on %born
+http: web interface live on http://localhost:18081
+http: loopback live on http://localhost:12322
+pier (229): live
+%already-mounted
+[[p=~bus q=%base r=[%ud p=0]] s=/]
+~
+urbit 4.6
+boot: home is /state/live/bus
+loom: mapped 2048MB
+lite: arvo formula 4ce68411
+lite: core 641296f
+lite: final state 641296f
+disk: loaded epoch 0i0
+loom: mapped 2048MB
+boot: protected loom
+live: mapped: MB/222.756.864
+boot: installed 2178 jets
+vere: checking version compatibility
+mesa: forwarding enabled
+mdns: init failed, install avahi on this system for mdns support
+mesa: live on 31519 (localhost only)
+conn: listening on /state/live/bus/.urb/conn.sock
+ames: unix-duct received on %born
+http: web interface live on http://localhost:18081
+http: loopback live on http://localhost:12322
+pier (229): live
+%already-mounted
+[[p=~bus q=%base r=[%ud p=0]] s=/]
+~
+urbit 4.6
+boot: home is /state/live/bus
+loom: mapped 2048MB
+lite: arvo formula 4ce68411
+lite: core 641296f
+lite: final state 641296f
+disk: loaded epoch 0i0
+loom: mapped 2048MB
+boot: protected loom
+live: mapped: MB/222.756.864
+boot: installed 2178 jets
+vere: checking version compatibility
+mesa: forwarding enabled
+mdns: init failed, install avahi on this system for mdns support
+mesa: live on 31519 (localhost only)
+conn: listening on /state/live/bus/.urb/conn.sock
+ames: unix-duct received on %born
+http: web interface live on http://localhost:18081
+http: loopback live on http://localhost:12322
+pier (229): live
+~
+urbit 4.6
+boot: home is /state/live/bus
+loom: mapped 2048MB
+lite: arvo formula 4ce68411
+lite: core 641296f
+lite: final state 641296f
+disk: loaded epoch 0i0
+loom: mapped 2048MB
+boot: protected loom
+live: mapped: MB/222.756.864
+boot: installed 2178 jets
+vere: checking version compatibility
+mesa: forwarding enabled
+mdns: init failed, install avahi on this system for mdns support
+mesa: live on 31519 (localhost only)
+conn: listening on /state/live/bus/.urb/conn.sock
+ames: unix-duct received on %born
+http: web interface live on http://localhost:18081
+http: loopback live on http://localhost:12322
+pier (229): live
+%already-mounted
+[[p=~bus q=%base r=[%ud p=0]] s=/]
+~
+urbit 4.6
+boot: home is /state/live/bus
+loom: mapped 2048MB
+lite: arvo formula 4ce68411
+lite: core 641296f
+lite: final state 641296f
+disk: loaded epoch 0i0
+loom: mapped 2048MB
+boot: protected loom
+live: mapped: MB/222.756.864
+boot: installed 2178 jets
+vere: checking version compatibility
+mesa: forwarding enabled
+mdns: init failed, install avahi on this system for mdns support
+mesa: live on 31519 (localhost only)
+conn: listening on /state/live/bus/.urb/conn.sock
+ames: unix-duct received on %born
+http: web interface live on http://localhost:18081
+http: loopback live on http://localhost:12322
+pier (260): live
+%already-mounted
+[[p=~bus q=%base r=[%ud p=0]] s=/]
+~
+urbit 4.6
+boot: home is /state/live/bus
+loom: mapped 2048MB
+lite: arvo formula 4ce68411
+lite: core 641296f
+lite: final state 641296f
+disk: loaded epoch 0i0
+loom: mapped 2048MB
+boot: protected loom
+live: mapped: MB/222.756.864
+boot: installed 2178 jets
+vere: checking version compatibility
+mesa: forwarding enabled
+mdns: init failed, install avahi on this system for mdns support
+mesa: live on 31519 (localhost only)
+conn: listening on /state/live/bus/.urb/conn.sock
+ames: unix-duct received on %born
+http: web interface live on http://localhost:18081
+http: loopback live on http://localhost:12322
+pier (229): live
+~
+urbit 4.6
+boot: home is /state/live/bus
+loom: mapped 2048MB
+lite: arvo formula 4ce68411
+lite: core 641296f
+lite: final state 641296f
+disk: loaded epoch 0i0
+loom: mapped 2048MB
+boot: protected loom
+live: mapped: MB/222.756.864
+boot: installed 2178 jets
+vere: checking version compatibility
+mesa: forwarding enabled
+mdns: init failed, install avahi on this system for mdns support
+mesa: live on 31519 (localhost only)
+conn: listening on /state/live/bus/.urb/conn.sock
+ames: unix-duct received on %born
+http: web interface live on http://localhost:18081
+http: loopback live on http://localhost:12322
+pier (229): live
+%already-mounted
+[[p=~bus q=%base r=[%ud p=0]] s=/]
+~
+urbit 4.6
+boot: home is /state/live/bus
+loom: mapped 2048MB
+lite: arvo formula 4ce68411
+lite: core 641296f
+lite: final state 641296f
+disk: loaded epoch 0i0
+loom: mapped 2048MB
+boot: protected loom
+live: mapped: MB/222.756.864
+boot: installed 2178 jets
+vere: checking version compatibility
+mesa: forwarding enabled
+mdns: init failed, install avahi on this system for mdns support
+mesa: live on 31519 (localhost only)
+conn: listening on /state/live/bus/.urb/conn.sock
+ames: unix-duct received on %born
+http: web interface live on http://localhost:18081
+http: loopback live on http://localhost:12322
+pier (229): live
+~
+urbit 4.6
+boot: home is /state/live/bus
+loom: mapped 2048MB
+lite: arvo formula 4ce68411
+lite: core 641296f
+lite: final state 641296f
+disk: loaded epoch 0i0
+loom: mapped 2048MB
+boot: protected loom
+live: mapped: MB/222.756.864
+boot: installed 2178 jets
+vere: checking version compatibility
+mesa: forwarding enabled
+mdns: init failed, install avahi on this system for mdns support
+mesa: live on 31519 (localhost only)
+conn: listening on /state/live/bus/.urb/conn.sock
+ames: unix-duct received on %born
+http: web interface live on http://localhost:18081
+http: loopback live on http://localhost:12322
+pier (259): live
+%already-mounted
+[[p=~bus q=%base r=[%ud p=0]] s=/]
+~
+urbit 4.6
+boot: home is /state/live/bus
+loom: mapped 2048MB
+lite: arvo formula 4ce68411
+lite: core 641296f
+lite: final state 641296f
+disk: loaded epoch 0i0
+loom: mapped 2048MB
+boot: protected loom
+live: mapped: MB/222.756.864
+boot: installed 2178 jets
+vere: checking version compatibility
+mesa: forwarding enabled
+mdns: init failed, install avahi on this system for mdns support
+mesa: live on 31519 (localhost only)
+conn: listening on /state/live/bus/.urb/conn.sock
+ames: unix-duct received on %born
+http: web interface live on http://localhost:18081
+http: loopback live on http://localhost:12322
+pier (229): live
+~
+urbit 4.6
+boot: home is /state/live/bus
+loom: mapped 2048MB
+lite: arvo formula 4ce68411
+lite: core 641296f
+lite: final state 641296f
+disk: loaded epoch 0i0
+loom: mapped 2048MB
+boot: protected loom
+live: mapped: MB/222.756.864
+boot: installed 2178 jets
+vere: checking version compatibility
+mesa: forwarding enabled
+mdns: init failed, install avahi on this system for mdns support
+mesa: live on 31519 (localhost only)
+conn: listening on /state/live/bus/.urb/conn.sock
+ames: unix-duct received on %born
+http: web interface live on http://localhost:18081
+http: loopback live on http://localhost:12322
+pier (259): live
+%already-mounted
+[[p=~bus q=%base r=[%ud p=0]] s=/]
+~
+urbit 4.6
+boot: home is /state/live/bus
+loom: mapped 2048MB
+lite: arvo formula 4ce68411
+lite: core 641296f
+lite: final state 641296f
+disk: loaded epoch 0i0
+loom: mapped 2048MB
+boot: protected loom
+live: mapped: MB/222.756.864
+boot: installed 2178 jets
+vere: checking version compatibility
+mesa: forwarding enabled
+mdns: init failed, install avahi on this system for mdns support
+mesa: live on 31519 (localhost only)
+conn: listening on /state/live/bus/.urb/conn.sock
+ames: unix-duct received on %born
+http: web interface live on http://localhost:18081
+http: loopback live on http://localhost:12322
+pier (229): live
+~
+urbit 4.6
+boot: home is /state/live/bus
+loom: mapped 2048MB
+lite: arvo formula 4ce68411
+lite: core 641296f
+lite: final state 641296f
+disk: loaded epoch 0i0
+loom: mapped 2048MB
+boot: protected loom
+live: mapped: MB/222.756.864
+boot: installed 2178 jets
+vere: checking version compatibility
+mesa: forwarding enabled
+mdns: init failed, install avahi on this system for mdns support
+mesa: live on 31519 (localhost only)
+conn: listening on /state/live/bus/.urb/conn.sock
+ames: unix-duct received on %born
+http: web interface live on http://localhost:18081
+http: loopback live on http://localhost:12322
+pier (259): live
+%already-mounted
+[[p=~bus q=%base r=[%ud p=0]] s=/]
+~
+urbit 4.6
+boot: home is /state/live/bus
+loom: mapped 2048MB
+lite: arvo formula 4ce68411
+lite: core 641296f
+lite: final state 641296f
+disk: loaded epoch 0i0
+loom: mapped 2048MB
+boot: protected loom
+live: mapped: MB/222.756.864
+boot: installed 2178 jets
+vere: checking version compatibility
+mesa: forwarding enabled
+mdns: init failed, install avahi on this system for mdns support
+mesa: live on 31519 (localhost only)
+conn: listening on /state/live/bus/.urb/conn.sock
+ames: unix-duct received on %born
+http: web interface live on http://localhost:18081
+http: loopback live on http://localhost:12322
+pier (229): live
+~
+urbit 4.6
+boot: home is /state/live/bus
+loom: mapped 2048MB
+lite: arvo formula 4ce68411
+lite: core 641296f
+lite: final state 641296f
+disk: loaded epoch 0i0
+loom: mapped 2048MB
+boot: protected loom
+live: mapped: MB/222.756.864
+boot: installed 2178 jets
+vere: checking version compatibility
+mesa: forwarding enabled
+mdns: init failed, install avahi on this system for mdns support
+mesa: live on 31519 (localhost only)
+conn: listening on /state/live/bus/.urb/conn.sock
+ames: unix-duct received on %born
+http: web interface live on http://localhost:18081
+http: loopback live on http://localhost:12322
+pier (259): live
+%already-mounted
+[[p=~bus q=%base r=[%ud p=0]] s=/]
+~
+urbit 4.6
+boot: home is /state/live/bus
+loom: mapped 2048MB
+lite: arvo formula 4ce68411
+lite: core 641296f
+lite: final state 641296f
+disk: loaded epoch 0i0
+loom: mapped 2048MB
+boot: protected loom
+live: mapped: MB/222.756.864
+boot: installed 2178 jets
+vere: checking version compatibility
+mesa: forwarding enabled
+mdns: init failed, install avahi on this system for mdns support
+mesa: live on 31519 (localhost only)
+conn: listening on /state/live/bus/.urb/conn.sock
+ames: unix-duct received on %born
+http: web interface live on http://localhost:18081
+http: loopback live on http://localhost:12322
+pier (229): live
+~
+urbit 4.6
+boot: home is /state/live/bus
+loom: mapped 2048MB
+lite: arvo formula 4ce68411
+lite: core 641296f
+lite: final state 641296f
+disk: loaded epoch 0i0
+loom: mapped 2048MB
+boot: protected loom
+live: mapped: MB/222.756.864
+boot: installed 2178 jets
+vere: checking version compatibility
+mesa: forwarding enabled
+mdns: init failed, install avahi on this system for mdns support
+mesa: live on 31519 (localhost only)
+conn: listening on /state/live/bus/.urb/conn.sock
+ames: unix-duct received on %born
+http: web interface live on http://localhost:18081
+http: loopback live on http://localhost:12322
+pier (259): live
+%already-mounted
+[[p=~bus q=%base r=[%ud p=0]] s=/]
+~
+urbit 4.6
+boot: home is /state/live/bus
+loom: mapped 2048MB
+lite: arvo formula 4ce68411
+lite: core 641296f
+lite: final state 641296f
+disk: loaded epoch 0i0
+loom: mapped 2048MB
+boot: protected loom
+live: mapped: MB/222.756.864
+boot: installed 2178 jets
+vere: checking version compatibility
+mesa: forwarding enabled
+mdns: init failed, install avahi on this system for mdns support
+mesa: live on 31519 (localhost only)
+conn: listening on /state/live/bus/.urb/conn.sock
+ames: unix-duct received on %born
+http: web interface live on http://localhost:18081
+http: loopback live on http://localhost:12322
+pier (229): live
+~
+urbit 4.6
+boot: home is /state/live/bus
+loom: mapped 2048MB
+lite: arvo formula 4ce68411
+lite: core 641296f
+lite: final state 641296f
+disk: loaded epoch 0i0
+loom: mapped 2048MB
+boot: protected loom
+live: mapped: MB/222.756.864
+boot: installed 2178 jets
+vere: checking version compatibility
+mesa: forwarding enabled
+mdns: init failed, install avahi on this system for mdns support
+mesa: live on 31519 (localhost only)
+conn: listening on /state/live/bus/.urb/conn.sock
+ames: unix-duct received on %born
+http: web interface live on http://localhost:18081
+http: loopback live on http://localhost:12322
+pier (259): live
+%already-mounted
+[[p=~bus q=%base r=[%ud p=0]] s=/]
+~
+urbit 4.6
+boot: home is /state/live/bus
+loom: mapped 2048MB
+lite: arvo formula 4ce68411
+lite: core 641296f
+lite: final state 641296f
+disk: loaded epoch 0i0
+loom: mapped 2048MB
+boot: protected loom
+live: mapped: MB/222.756.864
+boot: installed 2178 jets
+vere: checking version compatibility
+mesa: forwarding enabled
+mdns: init failed, install avahi on this system for mdns support
+mesa: live on 31519 (localhost only)
+conn: listening on /state/live/bus/.urb/conn.sock
+ames: unix-duct received on %born
+http: web interface live on http://localhost:18081
+http: loopback live on http://localhost:12322
+pier (229): live
+~
+urbit 4.6
+boot: home is /state/live/bus
+loom: mapped 2048MB
+lite: arvo formula 4ce68411
+lite: core 641296f
+lite: final state 641296f
+disk: loaded epoch 0i0
+loom: mapped 2048MB
+boot: protected loom
+live: mapped: MB/222.756.864
+boot: installed 2178 jets
+vere: checking version compatibility
+mesa: forwarding enabled
+mdns: init failed, install avahi on this system for mdns support
+mesa: live on 31519 (localhost only)
+conn: listening on /state/live/bus/.urb/conn.sock
+ames: unix-duct received on %born
+http: web interface live on http://localhost:18081
+http: loopback live on http://localhost:12322
+pier (259): live
+%already-mounted
+[[p=~bus q=%base r=[%ud p=0]] s=/]
+~
+urbit 4.6
+boot: home is /state/live/bus
+loom: mapped 2048MB
+lite: arvo formula 4ce68411
+lite: core 641296f
+lite: final state 641296f
+disk: loaded epoch 0i0
+loom: mapped 2048MB
+boot: protected loom
+live: mapped: MB/222.756.864
+boot: installed 2178 jets
+vere: checking version compatibility
+mesa: forwarding enabled
+mdns: init failed, install avahi on this system for mdns support
+mesa: live on 31519 (localhost only)
+conn: listening on /state/live/bus/.urb/conn.sock
+ames: unix-duct received on %born
+http: web interface live on http://localhost:18081
+http: loopback live on http://localhost:12322
+pier (229): live
+~
+urbit 4.6
+boot: home is /state/live/bus
+loom: mapped 2048MB
+lite: arvo formula 4ce68411
+lite: core 641296f
+lite: final state 641296f
+disk: loaded epoch 0i0
+loom: mapped 2048MB
+boot: protected loom
+live: mapped: MB/222.756.864
+boot: installed 2178 jets
+vere: checking version compatibility
+mesa: forwarding enabled
+mdns: init failed, install avahi on this system for mdns support
+mesa: live on 31519 (localhost only)
+conn: listening on /state/live/bus/.urb/conn.sock
+ames: unix-duct received on %born
+http: web interface live on http://localhost:18081
+http: loopback live on http://localhost:12322
+pier (259): live
+%already-mounted
+[[p=~bus q=%base r=[%ud p=0]] s=/]
+~
+urbit 4.6
+boot: home is /state/live/bus
+loom: mapped 2048MB
+lite: arvo formula 4ce68411
+lite: core 641296f
+lite: final state 641296f
+disk: loaded epoch 0i0
+loom: mapped 2048MB
+boot: protected loom
+live: mapped: MB/222.756.864
+boot: installed 2178 jets
+vere: checking version compatibility
+mesa: forwarding enabled
+mdns: init failed, install avahi on this system for mdns support
+mesa: live on 31519 (localhost only)
+conn: listening on /state/live/bus/.urb/conn.sock
+ames: unix-duct received on %born
+http: web interface live on http://localhost:18081
+http: loopback live on http://localhost:12322
+pier (229): live
+~
+urbit 4.6
+boot: home is /state/live/bus
+loom: mapped 2048MB
+lite: arvo formula 4ce68411
+lite: core 641296f
+lite: final state 641296f
+disk: loaded epoch 0i0
+loom: mapped 2048MB
+boot: protected loom
+live: mapped: MB/222.756.864
+boot: installed 2178 jets
+vere: checking version compatibility
+mesa: forwarding enabled
+mdns: init failed, install avahi on this system for mdns support
+mesa: live on 31519 (localhost only)
+conn: listening on /state/live/bus/.urb/conn.sock
+ames: unix-duct received on %born
+http: web interface live on http://localhost:18081
+http: loopback live on http://localhost:12322
+pier (259): live
+%already-mounted
+[[p=~bus q=%base r=[%ud p=0]] s=/]
+~
+urbit 4.6
+boot: home is /state/live/bus
+loom: mapped 2048MB
+lite: arvo formula 4ce68411
+lite: core 641296f
+lite: final state 641296f
+disk: loaded epoch 0i0
+loom: mapped 2048MB
+boot: protected loom
+live: mapped: MB/222.756.864
+boot: installed 2178 jets
+vere: checking version compatibility
+mesa: forwarding enabled
+mdns: init failed, install avahi on this system for mdns support
+mesa: live on 31519 (localhost only)
+conn: listening on /state/live/bus/.urb/conn.sock
+ames: unix-duct received on %born
+http: web interface live on http://localhost:18081
+http: loopback live on http://localhost:12322
+pier (229): live
+~
+urbit 4.6
+boot: home is /state/live/bus
+loom: mapped 2048MB
+lite: arvo formula 4ce68411
+lite: core 641296f
+lite: final state 641296f
+disk: loaded epoch 0i0
+loom: mapped 2048MB
+boot: protected loom
+live: mapped: MB/222.756.864
+boot: installed 2178 jets
+vere: checking version compatibility
+mesa: forwarding enabled
+mdns: init failed, install avahi on this system for mdns support
+mesa: live on 31519 (localhost only)
+conn: listening on /state/live/bus/.urb/conn.sock
+ames: unix-duct received on %born
+http: web interface live on http://localhost:18081
+http: loopback live on http://localhost:12322
+pier (259): live
+%already-mounted
+[[p=~bus q=%base r=[%ud p=0]] s=/]
+~
+urbit 4.6
+boot: home is /state/live/bus
+loom: mapped 2048MB
+lite: arvo formula 4ce68411
+lite: core 641296f
+lite: final state 641296f
+disk: loaded epoch 0i0
+loom: mapped 2048MB
+boot: protected loom
+live: mapped: MB/222.756.864
+boot: installed 2178 jets
+vere: checking version compatibility
+mesa: forwarding enabled
+mdns: init failed, install avahi on this system for mdns support
+mesa: live on 31519 (localhost only)
+conn: listening on /state/live/bus/.urb/conn.sock
+ames: unix-duct received on %born
+http: web interface live on http://localhost:18081
+http: loopback live on http://localhost:12322
+pier (229): live
+~
+urbit 4.6
+boot: home is /state/live/bus
+loom: mapped 2048MB
+lite: arvo formula 4ce68411
+lite: core 641296f
+lite: final state 641296f
+disk: loaded epoch 0i0
+loom: mapped 2048MB
+boot: protected loom
+live: mapped: MB/222.756.864
+boot: installed 2178 jets
+vere: checking version compatibility
+mesa: forwarding enabled
+mdns: init failed, install avahi on this system for mdns support
+mesa: live on 31519 (localhost only)
+conn: listening on /state/live/bus/.urb/conn.sock
+ames: unix-duct received on %born
+http: web interface live on http://localhost:18081
+http: loopback live on http://localhost:12322
+pier (259): live
+%already-mounted
+[[p=~bus q=%base r=[%ud p=0]] s=/]
+~
+urbit 4.6
+boot: home is /state/live/bus
+loom: mapped 2048MB
+lite: arvo formula 4ce68411
+lite: core 641296f
+lite: final state 641296f
+disk: loaded epoch 0i0
+loom: mapped 2048MB
+boot: protected loom
+live: mapped: MB/222.756.864
+boot: installed 2178 jets
+vere: checking version compatibility
+mesa: forwarding enabled
+mdns: init failed, install avahi on this system for mdns support
+mesa: live on 31519 (localhost only)
+conn: listening on /state/live/bus/.urb/conn.sock
+ames: unix-duct received on %born
+http: web interface live on http://localhost:18081
+http: loopback live on http://localhost:12322
+pier (229): live
+~
+urbit 4.6
+boot: home is /state/live/bus
+loom: mapped 2048MB
+lite: arvo formula 4ce68411
+lite: core 641296f
+lite: final state 641296f
+disk: loaded epoch 0i0
+loom: mapped 2048MB
+boot: protected loom
+live: mapped: MB/222.756.864
+boot: installed 2178 jets
+vere: checking version compatibility
+mesa: forwarding enabled
+mdns: init failed, install avahi on this system for mdns support
+mesa: live on 31519 (localhost only)
+conn: listening on /state/live/bus/.urb/conn.sock
+ames: unix-duct received on %born
+http: web interface live on http://localhost:18081
+http: loopback live on http://localhost:12322
+pier (259): live
+%already-mounted
+[[p=~bus q=%base r=[%ud p=0]] s=/]
+~
+urbit 4.6
+boot: home is /state/live/bus
+loom: mapped 2048MB
+lite: arvo formula 4ce68411
+lite: core 641296f
+lite: final state 641296f
+disk: loaded epoch 0i0
+loom: mapped 2048MB
+boot: protected loom
+live: mapped: MB/222.756.864
+boot: installed 2178 jets
+vere: checking version compatibility
+mesa: forwarding enabled
+mdns: init failed, install avahi on this system for mdns support
+mesa: live on 31519 (localhost only)
+conn: listening on /state/live/bus/.urb/conn.sock
+ames: unix-duct received on %born
+http: web interface live on http://localhost:18081
+http: loopback live on http://localhost:12322
+pier (229): live
+~
+urbit 4.6
+boot: home is /state/live/bus
+loom: mapped 2048MB
+lite: arvo formula 4ce68411
+lite: core 641296f
+lite: final state 641296f
+disk: loaded epoch 0i0
+loom: mapped 2048MB
+boot: protected loom
+live: mapped: MB/222.756.864
+boot: installed 2178 jets
+vere: checking version compatibility
+mesa: forwarding enabled
+mdns: init failed, install avahi on this system for mdns support
+mesa: live on 31519 (localhost only)
+conn: listening on /state/live/bus/.urb/conn.sock
+ames: unix-duct received on %born
+http: web interface live on http://localhost:18081
+http: loopback live on http://localhost:12322
+pier (259): live
+%already-mounted
+[[p=~bus q=%base r=[%ud p=0]] s=/]
+~
+urbit 4.6
+boot: home is /state/live/bus
+loom: mapped 2048MB
+lite: arvo formula 4ce68411
+lite: core 641296f
+lite: final state 641296f
+disk: loaded epoch 0i0
+loom: mapped 2048MB
+boot: protected loom
+live: mapped: MB/222.756.864
+boot: installed 2178 jets
+vere: checking version compatibility
+mesa: forwarding enabled
+mdns: init failed, install avahi on this system for mdns support
+mesa: live on 31519 (localhost only)
+conn: listening on /state/live/bus/.urb/conn.sock
+ames: unix-duct received on %born
+http: web interface live on http://localhost:18081
+http: loopback live on http://localhost:12322
+pier (229): live
+~
+urbit 4.6
+boot: home is /state/live/bus
+loom: mapped 2048MB
+lite: arvo formula 4ce68411
+lite: core 641296f
+lite: final state 641296f
+disk: loaded epoch 0i0
+loom: mapped 2048MB
+boot: protected loom
+live: mapped: MB/222.756.864
+boot: installed 2178 jets
+vere: checking version compatibility
+mesa: forwarding enabled
+mdns: init failed, install avahi on this system for mdns support
+mesa: live on 31519 (localhost only)
+conn: listening on /state/live/bus/.urb/conn.sock
+ames: unix-duct received on %born
+http: web interface live on http://localhost:18081
+http: loopback live on http://localhost:12322
+pier (259): live
+%already-mounted
+[[p=~bus q=%base r=[%ud p=0]] s=/]
+~
+urbit 4.6
+boot: home is /state/live/bus
+loom: mapped 2048MB
+lite: arvo formula 4ce68411
+lite: core 641296f
+lite: final state 641296f
+disk: loaded epoch 0i0
+loom: mapped 2048MB
+boot: protected loom
+live: mapped: MB/222.756.864
+boot: installed 2178 jets
+vere: checking version compatibility
+mesa: forwarding enabled
+mdns: init failed, install avahi on this system for mdns support
+mesa: live on 31519 (localhost only)
+conn: listening on /state/live/bus/.urb/conn.sock
+ames: unix-duct received on %born
+http: web interface live on http://localhost:18081
+http: loopback live on http://localhost:12322
+pier (229): live
+~
+urbit 4.6
+boot: home is /state/live/bus
+loom: mapped 2048MB
+lite: arvo formula 4ce68411
+lite: core 641296f
+lite: final state 641296f
+disk: loaded epoch 0i0
+loom: mapped 2048MB
+boot: protected loom
+live: mapped: MB/222.756.864
+boot: installed 2178 jets
+vere: checking version compatibility
+mesa: forwarding enabled
+mdns: init failed, install avahi on this system for mdns support
+mesa: live on 31519 (localhost only)
+conn: listening on /state/live/bus/.urb/conn.sock
+ames: unix-duct received on %born
+http: web interface live on http://localhost:18081
+http: loopback live on http://localhost:12322
+pier (259): live
+%already-mounted
+[[p=~bus q=%base r=[%ud p=0]] s=/]
+~
+urbit 4.6
+boot: home is /state/live/bus
+loom: mapped 2048MB
+lite: arvo formula 4ce68411
+lite: core 641296f
+lite: final state 641296f
+disk: loaded epoch 0i0
+loom: mapped 2048MB
+boot: protected loom
+live: mapped: MB/222.756.864
+boot: installed 2178 jets
+vere: checking version compatibility
+mesa: forwarding enabled
+mdns: init failed, install avahi on this system for mdns support
+mesa: live on 31519 (localhost only)
+conn: listening on /state/live/bus/.urb/conn.sock
+ames: unix-duct received on %born
+http: web interface live on http://localhost:18081
+http: loopback live on http://localhost:12322
+pier (229): live
+~
+urbit 4.6
+boot: home is /state/live/bus
+loom: mapped 2048MB
+lite: arvo formula 4ce68411
+lite: core 641296f
+lite: final state 641296f
+disk: loaded epoch 0i0
+loom: mapped 2048MB
+boot: protected loom
+live: mapped: MB/222.756.864
+boot: installed 2178 jets
+vere: checking version compatibility
+mesa: forwarding enabled
+mdns: init failed, install avahi on this system for mdns support
+mesa: live on 31519 (localhost only)
+conn: listening on /state/live/bus/.urb/conn.sock
+ames: unix-duct received on %born
+http: web interface live on http://localhost:18081
+http: loopback live on http://localhost:12322
+pier (259): live
+%already-mounted
+[[p=~bus q=%base r=[%ud p=0]] s=/]
+~
+urbit 4.6
+boot: home is /state/live/bus
+loom: mapped 2048MB
+lite: arvo formula 4ce68411
+lite: core 641296f
+lite: final state 641296f
+disk: loaded epoch 0i0
+loom: mapped 2048MB
+boot: protected loom
+live: mapped: MB/222.756.864
+boot: installed 2178 jets
+vere: checking version compatibility
+mesa: forwarding enabled
+mdns: init failed, install avahi on this system for mdns support
+mesa: live on 31519 (localhost only)
+conn: listening on /state/live/bus/.urb/conn.sock
+ames: unix-duct received on %born
+http: web interface live on http://localhost:18081
+http: loopback live on http://localhost:12322
+pier (229): live
+gall: installing %stead-observer
+spider got sign for non-existent ~.khan-fyrd--0v7.bkuf8.2oln3.40qi0.ungpj.80fq2
+spider got sign for non-existent ~.khan-fyrd--0v3.0he0v.cu2p0.9qeam.gp93n.52pd6
+spider got sign for non-existent ~.khan-fyrd--0v7.grtci.qp4s8.rr13p.3s8jn.i5ufn
+spider got sign for non-existent ~.khan-fyrd--0v1.6pc8m.m13dv.998fn.dsktb.7n5hp
+spider got sign for non-existent ~.khan-fyrd--0v6.3jfns.uve6r.73p3o.mlilp.ugevr
+spider got sign for non-existent ~.khan-fyrd--0v1.rk84j.02llv.n2dpb.qu6fm.couvn
+spider got sign for non-existent ~.khan-fyrd--0v2.kg2jd.oogiu.uvq1i.mvsi7.75uhi
+spider got sign for non-existent ~.khan-fyrd--0v3.bo1nv.0oe9o.ak3gq.1u5e4.71j23
+spider got sign for non-existent ~.khan-fyrd--0v1.rmu8v.b2053.uogo1.kfj26.e9ss4
+spider got sign for non-existent ~.khan-fyrd--0v3.cd2tl.uk4ln.c1acb.i7bvn.k19ut
+spider got sign for non-existent ~.khan-fyrd--0v4.bso99.3nkij.nut3m.ogjr8.gm6fq
+spider got sign for non-existent ~.khan-fyrd--0v7.p9d5o.7jjrh.cl90u.hq9s0.g2846
+spider got sign for non-existent ~.khan-fyrd--0v4.s3h7h.srjmk.tvo0s.dbtep.ei1ot
+spider got sign for non-existent ~.khan-fyrd--0v6.aj7ts.2lekf.krjmb.8sik8.h0p1l
+spider got sign for non-existent ~.khan-fyrd--0v2.ehjqp.m0lte.24fgl.l1g90.11d93
+spider got sign for non-existent ~.khan-fyrd--0v2.ulrsv.95c83.nn2s3.lg21c.6i7jk
+spider got sign for non-existent ~.khan-fyrd--0v4.c0p43.nekim.amc4k.revvl.5pucu
+spider got sign for non-existent ~.khan-fyrd--0v2.fhfp6.baee4.ikt9o.hs9a7.93o1e
+spider got sign for non-existent ~.khan-fyrd--0vf8tod.m4u2u.m09ed.rock5.fr2a1
+spider got sign for non-existent ~.khan-fyrd--0v5.hu03l.431gb.qq1a4.2tcfn.tf5m7
+spider got sign for non-existent ~.khan-fyrd--0v4.hf4he.sbi1e.rj6u3.99brq.j2gju
+spider got sign for non-existent ~.khan-fyrd--0v4.lkb7f.oem5i.fcl2f.bdo5g.2fo5m
+spider got sign for non-existent ~.khan-fyrd--0v2.dvme7.lubar.nl3vj.3ou4f.0ovgj
+spider got sign for non-existent ~.khan-fyrd--0v2.e221v.ujteo.udonr.ajr2r.h21f6
+spider got sign for non-existent ~.khan-fyrd--0v3.52vqr.9vvvt.4jf23.9lu19.stvgv
+spider got sign for non-existent ~.khan-fyrd--0v7.464vf.mnbij.e2kid.0t5f4.75neg
+spider got sign for non-existent ~.khan-fyrd--0v4.4tr1t.mvni4.vq7ob.htkta.rrhtv
+spider got sign for non-existent ~.khan-fyrd--0vaa501.laevv.8f45q.lbiur.8ap83
+spider got sign for non-existent ~.khan-fyrd--0v2.vffkt.foftd.agi9d.tagiq.6tgdf
+spider got sign for non-existent ~.khan-fyrd--0v6.kvc2u.inoqs.avfou.dncqu.bkenm
+spider got sign for non-existent ~.khan-fyrd--0v1.pbl99.a8ina.rhkn0.5osq9.pln7n
+spider got sign for non-existent ~.khan-fyrd--0v1.l2sr8.8uh9j.bektr.8im3n.s1hal
+spider got sign for non-existent ~.khan-fyrd--0v4.agp7s.9cds1.evg4s.idsdj.q4ffr
+spider got sign for non-existent ~.khan-fyrd--0v5.62u6b.cosqo.tkivi.baiu8.7k88m
+spider got sign for non-existent ~.khan-fyrd--0v1.brdv3.3qlgk.c37p8.p1ir9.t21c7
+spider got sign for non-existent ~.khan-fyrd--0vc5v54.64tet.sprq1.25oep.2hke8
+spider got sign for non-existent ~.khan-fyrd--0v7.6evh0.lv8bu.bem77.joi18.3akip
+spider got sign for non-existent ~.khan-fyrd--0vrr3vi.66k3p.d4v4d.17e5m.djq3j
+spider got sign for non-existent ~.khan-fyrd--0v6.g78ue.gihpf.9of8e.br15p.4vnhg
+spider got sign for non-existent ~.khan-fyrd--0v4.454km.rihvl.rrfo0.3fldi.nqtc4
+spider got sign for non-existent ~.khan-fyrd--0v5.uj1ms.2iffi.mnrto.3gs2p.9kfj0
+spider got sign for non-existent ~.khan-fyrd--0v4.8usig.ib4ia.igbln.3058a.tqamu
+spider got sign for non-existent ~.khan-fyrd--0v7.kee2k.06utu.btju6.b5l0c.9qf1g
+spider got sign for non-existent ~.khan-fyrd--0v2.qaath.rb3l3.unskf.epcnh.9javd
+spider got sign for non-existent ~.khan-fyrd--0v30fvb.jgjhn.mmigg.2v94o.92oiq
+spider got sign for non-existent ~.khan-fyrd--0v5.fc3d0.mlljq.55f32.2ii26.kqc79
+spider got sign for non-existent ~.khan-fyrd--0v5.8ouf1.fdece.ven74.mvma4.gpigo
+spider got sign for non-existent ~.khan-fyrd--0v1.q5ljd.hiatc.2cmht.1udqg.94u7f
+spider got sign for non-existent ~.khan-fyrd--0v3.0t91r.6tuf0.8epci.mt7jf.mq1lp
+spider got sign for non-existent ~.khan-fyrd--0v3.2u0iv.hd4no.0d86q.6pfo1.6aemf
+spider got sign for non-existent ~.khan-fyrd--0v5.a796e.1nf4r.h1cgd.i8kuo.0rae5
+spider got sign for non-existent ~.khan-fyrd--0v6.ku11b.0ipre.usccp.c82r6.m99v2
+spider got sign for non-existent ~.khan-fyrd--0v5.go5t9.40n5a.aqp5l.5ggaj.mk3ag
+spider got sign for non-existent ~.khan-fyrd--0v6.si4s5.c0efp.j57hu.cvl7j.rg5ou
+spider got sign for non-existent ~.khan-fyrd--0vhr7lm.m15pq.0lvup.g0to2.9rgo6
+spider got sign for non-existent ~.khan-fyrd--0v5.j6fv0.kh0h2.tdc56.eheqg.qsd5p
+spider got sign for non-existent ~.khan-fyrd--0v2.lb6h2.r6cdu.8jaaa.75e39.ptl2b
+spider got sign for non-existent ~.khan-fyrd--0v5.urk2l.s5sjh.pc2ku.5i55n.of7an
+spider got sign for non-existent ~.khan-fyrd--0v2.rnsof.ptp4m.0g6p4.m2fuv.l6ajd
+spider got sign for non-existent ~.khan-fyrd--0v5.a148i.mabdo.84iu7.mhn0i.kljg2
+spider got sign for non-existent ~.khan-fyrd--0v5.n20ri.150sl.l81vc.02tg3.ts9ni
+spider got sign for non-existent ~.khan-fyrd--0v4.dacdf.6u7uo.kmf44.3eh2o.gq2d1
+spider got sign for non-existent ~.khan-fyrd--0v5.861mr.14619.3hg9h.srlll.ahi1j
+spider got sign for non-existent ~.khan-fyrd--0v1.b61nn.53enu.kvp3d.jnqb3.t2jcv
+spider got sign for non-existent ~.khan-fyrd--0v5.6agq6.atmcn.v990c.b7q7n.cluqv
+spider got sign for non-existent ~.khan-fyrd--0v6.58rqv.l6jn2.7dkpg.avl0c.sompe
+spider got sign for non-existent ~.khan-fyrd--0v7.3dsn1.o1qa2.j8n0b.c7qb5.d6ng8
+spider got sign for non-existent ~.khan-fyrd--0v4.mfgmm.2rbqt.svbij.298uc.bdvqo
+spider got sign for non-existent ~.khan-fyrd--0v6.6ei6j.t5sjt.gbdc4.bvc18.nu1va
+spider got sign for non-existent ~.khan-fyrd--0v7.4mjmj.gu2r5.1nsma.levuc.5u8lu
+spider got sign for non-existent ~.khan-fyrd--0v7.f6rg1.h8d1r.scmt4.4thit.5ak1v
+spider got sign for non-existent ~.khan-fyrd--0v3.9memm.jmlmq.jkau3.8rs03.hfr8s
+spider got sign for non-existent ~.khan-fyrd--0v7.97hhb.9kf72.kcp9s.nj1eb.234sf
+spider got sign for non-existent ~.khan-fyrd--0v6.1l50a.oebre.r3ef5.es7g1.2hrv2
+spider got sign for non-existent ~.khan-fyrd--0vesp31.h4ch5.b1gj6.f80am.iq0gj
+spider got sign for non-existent ~.khan-fyrd--0vj23s8.1dovb.sl152.okffn.44v30
+spider got sign for non-existent ~.khan-fyrd--0v1.ulkg0.b43gc.uq6fb.jgim2.a9ijf
+spider got sign for non-existent ~.khan-fyrd--0v5.1jotk.2lo35.9vomn.hbbjg.kvjk8
+spider got sign for non-existent ~.khan-fyrd--0v2.h5k4k.6bm15.5leut.ggdjf.0492r
+spider got sign for non-existent ~.khan-fyrd--0v7.lacbl.i6rki.ee5m7.04ldf.bipcc
+spider got sign for non-existent ~.khan-fyrd--0v5.okujg.prj5u.5dqtq.99lre.3utvi
+spider got sign for non-existent ~.khan-fyrd--0v7.e43fi.rup3j.fpu4i.gvn59.30tp1
+spider got sign for non-existent ~.khan-fyrd--0v6.2fo8l.b1tal.3qiu9.am1g2.h1guh
+spider got sign for non-existent ~.khan-fyrd--0v2.60n9o.pkild.pqepa.dbonu.t88hp
+spider got sign for non-existent ~.khan-fyrd--0v2.1aq8l.ivjt4.ejdtn.620b7.1mgus
+spider got sign for non-existent ~.khan-fyrd--0v5.40q86.qh65v.5gvcp.2c980.3hjl0
+spider got sign for non-existent ~.khan-fyrd--0v5.6d3lr.d9glr.1tk15.451pj.9pnsn
+spider got sign for non-existent ~.khan-fyrd--0v5.10tgb.4jiva.vsu0n.gvlb0.c2h8j
+spider got sign for non-existent ~.khan-fyrd--0v7.9ov4v.a2b6t.e5vnp.i1h88.o16ht
+spider got sign for non-existent ~.khan-fyrd--0v5.1p5h5.rdpul.jkhl9.sp2ii.k8kkr
+spider got sign for non-existent ~.khan-fyrd--0v5.kfm6e.e8r14.bl6lj.lqlb7.t48kn
+spider got sign for non-existent ~.khan-fyrd--0v2.ovjs8.j96mv.2aoav.9m61o.9m5ud
+spider got sign for non-existent ~.khan-fyrd--0v3.harvm.mtofc.p4lrl.ata5t.ato81
+spider got sign for non-existent ~.khan-fyrd--0v4.se9rj.07bbi.nm94a.srglp.hg18m
+spider got sign for non-existent ~.khan-fyrd--0v6.ctjif.ubh10.2uocn.rh14p.31n2k
+~
+urbit 4.6
+boot: home is /state/live/bus
+loom: mapped 2048MB
+lite: arvo formula 4ce68411
+lite: core 641296f
+lite: final state 641296f
+disk: loaded epoch 0i0
+loom: mapped 2048MB
+boot: protected loom
+live: mapped: MB/222.756.864
+boot: installed 2178 jets
+vere: checking version compatibility
+mesa: forwarding enabled
+mdns: init failed, install avahi on this system for mdns support
+mesa: live on 31519 (localhost only)
+conn: listening on /state/live/bus/.urb/conn.sock
+ames: unix-duct received on %born
+http: web interface live on http://localhost:18081
+http: loopback live on http://localhost:12322
+pier (229): live
+%already-mounted
+[[p=~bus q=%base r=[%ud p=0]] s=/]
+~
+urbit 4.6
+boot: home is /state/live/bus
+loom: mapped 2048MB
+lite: arvo formula 4ce68411
+lite: core 641296f
+lite: final state 641296f
+disk: loaded epoch 0i0
+loom: mapped 2048MB
+boot: protected loom
+live: mapped: MB/222.756.864
+boot: installed 2178 jets
+vere: checking version compatibility
+mesa: forwarding enabled
+mdns: init failed, install avahi on this system for mdns support
+mesa: live on 31519 (localhost only)
+conn: listening on /state/live/bus/.urb/conn.sock
+ames: unix-duct received on %born
+http: web interface live on http://localhost:18081
+http: loopback live on http://localhost:12322
+pier (229): live
+~
+urbit 4.6
+boot: home is /state/live/bus
+loom: mapped 2048MB
+lite: arvo formula 4ce68411
+lite: core 641296f
+lite: final state 641296f
+disk: loaded epoch 0i0
+loom: mapped 2048MB
+boot: protected loom
+live: mapped: MB/222.756.864
+boot: installed 2178 jets
+vere: checking version compatibility
+mesa: forwarding enabled
+mdns: init failed, install avahi on this system for mdns support
+mesa: live on 31519 (localhost only)
+conn: listening on /state/live/bus/.urb/conn.sock
+ames: unix-duct received on %born
+http: web interface live on http://localhost:18081
+http: loopback live on http://localhost:12322
+pier (259): live
+%already-mounted
+[[p=~bus q=%base r=[%ud p=0]] s=/]
+~
+urbit 4.6
+boot: home is /state/live/bus
+loom: mapped 2048MB
+lite: arvo formula 4ce68411
+lite: core 641296f
+lite: final state 641296f
+disk: loaded epoch 0i0
+loom: mapped 2048MB
+boot: protected loom
+live: mapped: MB/222.756.864
+boot: installed 2178 jets
+vere: checking version compatibility
+mesa: forwarding enabled
+mdns: init failed, install avahi on this system for mdns support
+mesa: live on 31519 (localhost only)
+conn: listening on /state/live/bus/.urb/conn.sock
+ames: unix-duct received on %born
+http: web interface live on http://localhost:18081
+http: loopback live on http://localhost:12322
+pier (229): live
+~
+urbit 4.6
+boot: home is /state/live/bus
+loom: mapped 2048MB
+lite: arvo formula 4ce68411
+lite: core 641296f
+lite: final state 641296f
+disk: loaded epoch 0i0
+loom: mapped 2048MB
+boot: protected loom
+live: mapped: MB/222.756.864
+boot: installed 2178 jets
+vere: checking version compatibility
+mesa: forwarding enabled
+mdns: init failed, install avahi on this system for mdns support
+mesa: live on 31519 (localhost only)
+conn: listening on /state/live/bus/.urb/conn.sock
+ames: unix-duct received on %born
+http: web interface live on http://localhost:18081
+http: loopback live on http://localhost:12322
+pier (259): live
+%already-mounted
+[[p=~bus q=%base r=[%ud p=0]] s=/]
+~
+urbit 4.6
+boot: home is /state/live/bus
+loom: mapped 2048MB
+lite: arvo formula 4ce68411
+lite: core 641296f
+lite: final state 641296f
+disk: loaded epoch 0i0
+loom: mapped 2048MB
+boot: protected loom
+live: mapped: MB/222.756.864
+boot: installed 2178 jets
+vere: checking version compatibility
+mesa: forwarding enabled
+mdns: init failed, install avahi on this system for mdns support
+mesa: live on 31519 (localhost only)
+conn: listening on /state/live/bus/.urb/conn.sock
+ames: unix-duct received on %born
+http: web interface live on http://localhost:18081
+http: loopback live on http://localhost:12322
+pier (229): live
+~
+urbit 4.6
+boot: home is /state/live/bus
+loom: mapped 2048MB
+lite: arvo formula 4ce68411
+lite: core 641296f
+lite: final state 641296f
+disk: loaded epoch 0i0
+loom: mapped 2048MB
+boot: protected loom
+live: mapped: MB/222.756.864
+boot: installed 2178 jets
+vere: checking version compatibility
+mesa: forwarding enabled
+mdns: init failed, install avahi on this system for mdns support
+mesa: live on 31519 (localhost only)
+conn: listening on /state/live/bus/.urb/conn.sock
+ames: unix-duct received on %born
+http: web interface live on http://localhost:18081
+http: loopback live on http://localhost:12322
+pier (259): live
+%already-mounted
+[[p=~bus q=%base r=[%ud p=0]] s=/]
+~
+urbit 4.6
+boot: home is /state/live/bus
+loom: mapped 2048MB
+lite: arvo formula 4ce68411
+lite: core 641296f
+lite: final state 641296f
+disk: loaded epoch 0i0
+loom: mapped 2048MB
+boot: protected loom
+live: mapped: MB/222.756.864
+boot: installed 2178 jets
+vere: checking version compatibility
+mesa: forwarding enabled
+mdns: init failed, install avahi on this system for mdns support
+mesa: live on 31519 (localhost only)
+conn: listening on /state/live/bus/.urb/conn.sock
+ames: unix-duct received on %born
+http: web interface live on http://localhost:18081
+http: loopback live on http://localhost:12322
+pier (229): live
+~
+urbit 4.6
+boot: home is /state/live/bus
+loom: mapped 2048MB
+lite: arvo formula 4ce68411
+lite: core 641296f
+lite: final state 641296f
+disk: loaded epoch 0i0
+loom: mapped 2048MB
+boot: protected loom
+live: mapped: MB/222.756.864
+boot: installed 2178 jets
+vere: checking version compatibility
+mesa: forwarding enabled
+mdns: init failed, install avahi on this system for mdns support
+mesa: live on 31519 (localhost only)
+conn: listening on /state/live/bus/.urb/conn.sock
+ames: unix-duct received on %born
+http: web interface live on http://localhost:18081
+http: loopback live on http://localhost:12322
+pier (259): live
+%already-mounted
+[[p=~bus q=%base r=[%ud p=0]] s=/]
+~
+urbit 4.6
+boot: home is /state/live/bus
+loom: mapped 2048MB
+lite: arvo formula 4ce68411
+lite: core 641296f
+lite: final state 641296f
+disk: loaded epoch 0i0
+loom: mapped 2048MB
+boot: protected loom
+live: mapped: MB/222.756.864
+boot: installed 2178 jets
+vere: checking version compatibility
+mesa: forwarding enabled
+mdns: init failed, install avahi on this system for mdns support
+mesa: live on 31519 (localhost only)
+conn: listening on /state/live/bus/.urb/conn.sock
+ames: unix-duct received on %born
+http: web interface live on http://localhost:18081
+http: loopback live on http://localhost:12322
+pier (229): live
+~
+urbit 4.6
+boot: home is /state/live/bus
+loom: mapped 2048MB
+lite: arvo formula 4ce68411
+lite: core 641296f
+lite: final state 641296f
+disk: loaded epoch 0i0
+loom: mapped 2048MB
+boot: protected loom
+live: mapped: MB/222.756.864
+boot: installed 2178 jets
+vere: checking version compatibility
+mesa: forwarding enabled
+mdns: init failed, install avahi on this system for mdns support
+mesa: live on 31519 (localhost only)
+conn: listening on /state/live/bus/.urb/conn.sock
+ames: unix-duct received on %born
+http: web interface live on http://localhost:18081
+http: loopback live on http://localhost:12322
+pier (259): live
+%already-mounted
+[[p=~bus q=%base r=[%ud p=0]] s=/]
+~
+urbit 4.6
+boot: home is /state/live/bus
+loom: mapped 2048MB
+lite: arvo formula 4ce68411
+lite: core 641296f
+lite: final state 641296f
+disk: loaded epoch 0i0
+loom: mapped 2048MB
+boot: protected loom
+live: mapped: MB/222.756.864
+boot: installed 2178 jets
+vere: checking version compatibility
+mesa: forwarding enabled
+mdns: init failed, install avahi on this system for mdns support
+mesa: live on 31519 (localhost only)
+conn: listening on /state/live/bus/.urb/conn.sock
+ames: unix-duct received on %born
+http: web interface live on http://localhost:18081
+http: loopback live on http://localhost:12322
+pier (229): live
+~
+urbit 4.6
+boot: home is /state/live/bus
+loom: mapped 2048MB
+lite: arvo formula 4ce68411
+lite: core 641296f
+lite: final state 641296f
+disk: loaded epoch 0i0
+loom: mapped 2048MB
+boot: protected loom
+live: mapped: MB/222.756.864
+boot: installed 2178 jets
+vere: checking version compatibility
+mesa: forwarding enabled
+mdns: init failed, install avahi on this system for mdns support
+mesa: live on 31519 (localhost only)
+conn: listening on /state/live/bus/.urb/conn.sock
+ames: unix-duct received on %born
+http: web interface live on http://localhost:18081
+http: loopback live on http://localhost:12322
+pier (259): live
+%already-mounted
+[[p=~bus q=%base r=[%ud p=0]] s=/]
+~
+urbit 4.6
+boot: home is /state/live/bus
+loom: mapped 2048MB
+lite: arvo formula 4ce68411
+lite: core 641296f
+lite: final state 641296f
+disk: loaded epoch 0i0
+loom: mapped 2048MB
+boot: protected loom
+live: mapped: MB/222.756.864
+boot: installed 2178 jets
+vere: checking version compatibility
+mesa: forwarding enabled
+mdns: init failed, install avahi on this system for mdns support
+mesa: live on 31519 (localhost only)
+conn: listening on /state/live/bus/.urb/conn.sock
+ames: unix-duct received on %born
+http: web interface live on http://localhost:18081
+http: loopback live on http://localhost:12322
+pier (229): live
+~
+urbit 4.6
+boot: home is /state/live/bus
+loom: mapped 2048MB
+lite: arvo formula 4ce68411
+lite: core 641296f
+lite: final state 641296f
+disk: loaded epoch 0i0
+loom: mapped 2048MB
+boot: protected loom
+live: mapped: MB/222.756.864
+boot: installed 2178 jets
+vere: checking version compatibility
+mesa: forwarding enabled
+mdns: init failed, install avahi on this system for mdns support
+mesa: live on 31519 (localhost only)
+conn: listening on /state/live/bus/.urb/conn.sock
+ames: unix-duct received on %born
+http: web interface live on http://localhost:18081
+http: loopback live on http://localhost:12322
+pier (259): live
+%already-mounted
+[[p=~bus q=%base r=[%ud p=0]] s=/]
+~
+urbit 4.6
+boot: home is /state/live/bus
+loom: mapped 2048MB
+lite: arvo formula 4ce68411
+lite: core 641296f
+lite: final state 641296f
+disk: loaded epoch 0i0
+loom: mapped 2048MB
+boot: protected loom
+live: mapped: MB/222.756.864
+boot: installed 2178 jets
+vere: checking version compatibility
+mesa: forwarding enabled
+mdns: init failed, install avahi on this system for mdns support
+mesa: live on 31519 (localhost only)
+conn: listening on /state/live/bus/.urb/conn.sock
+ames: unix-duct received on %born
+http: web interface live on http://localhost:18081
+http: loopback live on http://localhost:12322
+pier (229): live
+~
+urbit 4.6
+boot: home is /state/live/bus
+loom: mapped 2048MB
+lite: arvo formula 4ce68411
+lite: core 641296f
+lite: final state 641296f
+disk: loaded epoch 0i0
+loom: mapped 2048MB
+boot: protected loom
+live: mapped: MB/222.756.864
+boot: installed 2178 jets
+vere: checking version compatibility
+mesa: forwarding enabled
+mdns: init failed, install avahi on this system for mdns support
+mesa: live on 31519 (localhost only)
+conn: listening on /state/live/bus/.urb/conn.sock
+ames: unix-duct received on %born
+http: web interface live on http://localhost:18081
+http: loopback live on http://localhost:12322
+pier (259): live
+%already-mounted
+[[p=~bus q=%base r=[%ud p=0]] s=/]
+~
+urbit 4.6
+boot: home is /state/live/bus
+loom: mapped 2048MB
+lite: arvo formula 4ce68411
+lite: core 641296f
+lite: final state 641296f
+disk: loaded epoch 0i0
+loom: mapped 2048MB
+boot: protected loom
+live: mapped: MB/222.756.864
+boot: installed 2178 jets
+vere: checking version compatibility
+mesa: forwarding enabled
+mdns: init failed, install avahi on this system for mdns support
+mesa: live on 31519 (localhost only)
+conn: listening on /state/live/bus/.urb/conn.sock
+ames: unix-duct received on %born
+http: web interface live on http://localhost:18081
+http: loopback live on http://localhost:12322
+pier (229): live
+~
+urbit 4.6
+boot: home is /state/live/bus
+loom: mapped 2048MB
+lite: arvo formula 4ce68411
+lite: core 641296f
+lite: final state 641296f
+disk: loaded epoch 0i0
+loom: mapped 2048MB
+boot: protected loom
+live: mapped: MB/222.756.864
+boot: installed 2178 jets
+vere: checking version compatibility
+mesa: forwarding enabled
+mdns: init failed, install avahi on this system for mdns support
+mesa: live on 31519 (localhost only)
+conn: listening on /state/live/bus/.urb/conn.sock
+ames: unix-duct received on %born
+http: web interface live on http://localhost:18081
+http: loopback live on http://localhost:12322
+pier (259): live
+%already-mounted
+[[p=~bus q=%base r=[%ud p=0]] s=/]
+~
+urbit 4.6
+boot: home is /state/live/bus
+loom: mapped 2048MB
+lite: arvo formula 4ce68411
+lite: core 641296f
+lite: final state 641296f
+disk: loaded epoch 0i0
+loom: mapped 2048MB
+boot: protected loom
+live: mapped: MB/222.756.864
+boot: installed 2178 jets
+vere: checking version compatibility
+mesa: forwarding enabled
+mdns: init failed, install avahi on this system for mdns support
+mesa: live on 31519 (localhost only)
+conn: listening on /state/live/bus/.urb/conn.sock
+ames: unix-duct received on %born
+http: web interface live on http://localhost:18081
+http: loopback live on http://localhost:12322
+pier (229): live
+~
+urbit 4.6
+boot: home is /state/live/bus
+loom: mapped 2048MB
+lite: arvo formula 4ce68411
+lite: core 641296f
+lite: final state 641296f
+disk: loaded epoch 0i0
+loom: mapped 2048MB
+boot: protected loom
+live: mapped: MB/222.756.864
+boot: installed 2178 jets
+vere: checking version compatibility
+mesa: forwarding enabled
+mdns: init failed, install avahi on this system for mdns support
+mesa: live on 31519 (localhost only)
+conn: listening on /state/live/bus/.urb/conn.sock
+ames: unix-duct received on %born
+http: web interface live on http://localhost:18081
+http: loopback live on http://localhost:12322
+pier (259): live
+%already-mounted
+[[p=~bus q=%base r=[%ud p=0]] s=/]
+~
+urbit 4.6
+boot: home is /state/live/bus
+loom: mapped 2048MB
+lite: arvo formula 4ce68411
+lite: core 641296f
+lite: final state 641296f
+disk: loaded epoch 0i0
+loom: mapped 2048MB
+boot: protected loom
+live: mapped: MB/222.756.864
+boot: installed 2178 jets
+vere: checking version compatibility
+mesa: forwarding enabled
+mdns: init failed, install avahi on this system for mdns support
+mesa: live on 31519 (localhost only)
+conn: listening on /state/live/bus/.urb/conn.sock
+ames: unix-duct received on %born
+http: web interface live on http://localhost:18081
+http: loopback live on http://localhost:12322
+pier (229): live
+~
+urbit 4.6
+boot: home is /state/live/bus
+loom: mapped 2048MB
+lite: arvo formula 4ce68411
+lite: core 641296f
+lite: final state 641296f
+disk: loaded epoch 0i0
+loom: mapped 2048MB
+boot: protected loom
+live: mapped: MB/222.756.864
+boot: installed 2178 jets
+vere: checking version compatibility
+mesa: forwarding enabled
+mdns: init failed, install avahi on this system for mdns support
+mesa: live on 31519 (localhost only)
+conn: listening on /state/live/bus/.urb/conn.sock
+ames: unix-duct received on %born
+http: web interface live on http://localhost:18081
+http: loopback live on http://localhost:12322
+pier (259): live
+%already-mounted
+[[p=~bus q=%base r=[%ud p=0]] s=/]
+~
+urbit 4.6
+boot: home is /state/live/bus
+loom: mapped 2048MB
+lite: arvo formula 4ce68411
+lite: core 641296f
+lite: final state 641296f
+disk: loaded epoch 0i0
+loom: mapped 2048MB
+boot: protected loom
+live: mapped: MB/222.756.864
+boot: installed 2178 jets
+vere: checking version compatibility
+mesa: forwarding enabled
+mdns: init failed, install avahi on this system for mdns support
+mesa: live on 31519 (localhost only)
+conn: listening on /state/live/bus/.urb/conn.sock
+ames: unix-duct received on %born
+http: web interface live on http://localhost:18081
+http: loopback live on http://localhost:12322
+pier (229): live
+~
+urbit 4.6
+boot: home is /state/live/bus
+loom: mapped 2048MB
+lite: arvo formula 4ce68411
+lite: core 641296f
+lite: final state 641296f
+disk: loaded epoch 0i0
+loom: mapped 2048MB
+boot: protected loom
+live: mapped: MB/222.756.864
+boot: installed 2178 jets
+vere: checking version compatibility
+mesa: forwarding enabled
+mdns: init failed, install avahi on this system for mdns support
+mesa: live on 31519 (localhost only)
+conn: listening on /state/live/bus/.urb/conn.sock
+ames: unix-duct received on %born
+http: web interface live on http://localhost:18081
+http: loopback live on http://localhost:12322
+pier (259): live
+%already-mounted
+[[p=~bus q=%base r=[%ud p=0]] s=/]
+~
+urbit 4.6
+boot: home is /state/live/bus
+loom: mapped 2048MB
+lite: arvo formula 4ce68411
+lite: core 641296f
+lite: final state 641296f
+disk: loaded epoch 0i0
+loom: mapped 2048MB
+boot: protected loom
+live: mapped: MB/222.756.864
+boot: installed 2178 jets
+vere: checking version compatibility
+loom: external fault: 0x588 (0x200000000 : 0x280000000)
+
+Stacktrace:
+0   u3m_stacktrace                      pkg/noun/manage.c:870
+1   u3m_fault                           pkg/noun/manage.c:2315
+2   sigsegv_handler                     .zig-cache/p/N-V-__8AAHQhHwCCMyKUtQhO0AMsY182In-wQIwXVhenOql5/src/handler-unix.c:269
+3   -                                   /home/runner/work/_temp/d95d56a1-5c86-4115-9d59-87f908994288/zig-x86_64-linux-0.15.2/lib/libc/musl/src/signal/x86_64/restore.s:
+4   _lord_plea_ripe                     pkg/vere/lord.c:276
+5   _lord_on_plea                       pkg/vere/lord.c:569
+6   _newt_meat_poke                     pkg/vere/newt.c:70
+7   _newt_read_cb                       pkg/vere/newt.c:200
+8   uv__read                            .zig-cache/p/N-V-__8AAH34QwB6wi5eQK_lFbfDGSN3hRE8l-6Ep198ZsGg/src/unix/stream.c:1148
+9   uv__stream_io                       .zig-cache/p/N-V-__8AAH34QwB6wi5eQK_lFbfDGSN3hRE8l-6Ep198ZsGg/src/unix/stream.c:1208
+10  uv__io_poll                         .zig-cache/p/N-V-__8AAH34QwB6wi5eQK_lFbfDGSN3hRE8l-6Ep198ZsGg/src/unix/linux.c:1565
+11  uv_run                              .zig-cache/p/N-V-__8AAH34QwB6wi5eQK_lFbfDGSN3hRE8l-6Ep198ZsGg/src/unix/core.c:460
+12  u3_king_commence                    pkg/vere/king.c:1093
+13  main                                pkg/vere/main.c:3389
+14  libc_start_main_stage2              /home/runner/work/_temp/d95d56a1-5c86-4115-9d59-87f908994288/zig-x86_64-linux-0.15.2/lib/libc/musl/src/env/__libc_start_main.c:
+
+~
+urbit 4.6
+boot: home is /state/live/bus
+loom: mapped 2048MB
+lite: arvo formula 4ce68411
+lite: core 641296f
+lite: final state 641296f
+disk: loaded epoch 0i0
+loom: mapped 2048MB
+boot: protected loom
+live: mapped: MB/222.756.864
+boot: installed 2178 jets
+vere: checking version compatibility
+mesa: forwarding enabled
+mdns: init failed, install avahi on this system for mdns support
+mesa: live on 31519 (localhost only)
+conn: listening on /state/live/bus/.urb/conn.sock
+ames: unix-duct received on %born
+http: web interface live on http://localhost:18081
+http: loopback live on http://localhost:12322
+pier (229): live
+%already-mounted
+[[p=~bus q=%base r=[%ud p=0]] s=/]
+~
+urbit 4.6
+boot: home is /state/live/bus
+loom: mapped 2048MB
+lite: arvo formula 4ce68411
+lite: core 641296f
+lite: final state 641296f
+disk: loaded epoch 0i0
+loom: mapped 2048MB
+boot: protected loom
+live: mapped: MB/222.756.864
+boot: installed 2178 jets
+vere: checking version compatibility
+mesa: forwarding enabled
+mdns: init failed, install avahi on this system for mdns support
+mesa: live on 31519 (localhost only)
+conn: listening on /state/live/bus/.urb/conn.sock
+ames: unix-duct received on %born
+http: web interface live on http://localhost:18081
+http: loopback live on http://localhost:12322
+pier (229): live
+~
+urbit 4.6
+boot: home is /state/live/bus
+loom: mapped 2048MB
+lite: arvo formula 4ce68411
+lite: core 641296f
+lite: final state 641296f
+disk: loaded epoch 0i0
+loom: mapped 2048MB
+boot: protected loom
+live: mapped: MB/222.756.864
+boot: installed 2178 jets
+vere: checking version compatibility
+mesa: forwarding enabled
+mdns: init failed, install avahi on this system for mdns support
+mesa: live on 31519 (localhost only)
+conn: listening on /state/live/bus/.urb/conn.sock
+ames: unix-duct received on %born
+http: web interface live on http://localhost:18081
+http: loopback live on http://localhost:12322
+pier (259): live
+%already-mounted
+[[p=~bus q=%base r=[%ud p=0]] s=/]
+~
+urbit 4.6
+boot: home is /state/live/bus
+loom: mapped 2048MB
+lite: arvo formula 4ce68411
+lite: core 641296f
+lite: final state 641296f
+disk: loaded epoch 0i0
+loom: mapped 2048MB
+boot: protected loom
+live: mapped: MB/222.756.864
+boot: installed 2178 jets
+vere: checking version compatibility
+mesa: forwarding enabled
+mdns: init failed, install avahi on this system for mdns support
+mesa: live on 31519 (localhost only)
+conn: listening on /state/live/bus/.urb/conn.sock
+ames: unix-duct received on %born
+http: web interface live on http://localhost:18081
+http: loopback live on http://localhost:12322
+pier (229): live
+~
+urbit 4.6
+boot: home is /state/live/bus
+loom: mapped 2048MB
+lite: arvo formula 4ce68411
+lite: core 641296f
+lite: final state 641296f
+disk: loaded epoch 0i0
+loom: mapped 2048MB
+boot: protected loom
+live: mapped: MB/222.756.864
+boot: installed 2178 jets
+vere: checking version compatibility
+mesa: forwarding enabled
+mdns: init failed, install avahi on this system for mdns support
+mesa: live on 31519 (localhost only)
+conn: listening on /state/live/bus/.urb/conn.sock
+ames: unix-duct received on %born
+http: web interface live on http://localhost:18081
+http: loopback live on http://localhost:12322
+pier (259): live
+%already-mounted
+[[p=~bus q=%base r=[%ud p=0]] s=/]
+~
+urbit 4.6
+boot: home is /state/live/bus
+loom: mapped 2048MB
+lite: arvo formula 4ce68411
+lite: core 641296f
+lite: final state 641296f
+disk: loaded epoch 0i0
+loom: mapped 2048MB
+boot: protected loom
+live: mapped: MB/222.756.864
+boot: installed 2178 jets
+vere: checking version compatibility
+mesa: forwarding enabled
+mdns: init failed, install avahi on this system for mdns support
+mesa: live on 31519 (localhost only)
+conn: listening on /state/live/bus/.urb/conn.sock
+ames: unix-duct received on %born
+http: web interface live on http://localhost:18081
+http: loopback live on http://localhost:12322
+pier (229): live
+~
+urbit 4.6
+boot: home is /state/live/bus
+loom: mapped 2048MB
+lite: arvo formula 4ce68411
+lite: core 641296f
+lite: final state 641296f
+disk: loaded epoch 0i0
+loom: mapped 2048MB
+boot: protected loom
+live: mapped: MB/222.756.864
+boot: installed 2178 jets
+vere: checking version compatibility
+mesa: forwarding enabled
+mdns: init failed, install avahi on this system for mdns support
+mesa: live on 31519 (localhost only)
+conn: listening on /state/live/bus/.urb/conn.sock
+ames: unix-duct received on %born
+http: web interface live on http://localhost:18081
+http: loopback live on http://localhost:12322
+pier (259): live
+%already-mounted
+[[p=~bus q=%base r=[%ud p=0]] s=/]
+~
+urbit 4.6
+boot: home is /state/live/bus
+loom: mapped 2048MB
+lite: arvo formula 4ce68411
+lite: core 641296f
+lite: final state 641296f
+disk: loaded epoch 0i0
+loom: mapped 2048MB
+boot: protected loom
+live: mapped: MB/222.756.864
+boot: installed 2178 jets
+vere: checking version compatibility
+mesa: forwarding enabled
+mdns: init failed, install avahi on this system for mdns support
+mesa: live on 31519 (localhost only)
+conn: listening on /state/live/bus/.urb/conn.sock
+ames: unix-duct received on %born
+http: web interface live on http://localhost:18081
+http: loopback live on http://localhost:12322
+pier (229): live
+~
+urbit 4.6
+boot: home is /state/live/bus
+loom: mapped 2048MB
+lite: arvo formula 4ce68411
+lite: core 641296f
+lite: final state 641296f
+disk: loaded epoch 0i0
+loom: mapped 2048MB
+boot: protected loom
+live: mapped: MB/222.756.864
+boot: installed 2178 jets
+vere: checking version compatibility
+mesa: forwarding enabled
+mdns: init failed, install avahi on this system for mdns support
+mesa: live on 31519 (localhost only)
+conn: listening on /state/live/bus/.urb/conn.sock
+ames: unix-duct received on %born
+http: web interface live on http://localhost:18081
+http: loopback live on http://localhost:12322
+pier (259): live
+%already-mounted
+[[p=~bus q=%base r=[%ud p=0]] s=/]
+~
+urbit 4.6
+boot: home is /state/live/bus
+loom: mapped 2048MB
+lite: arvo formula 4ce68411
+lite: core 641296f
+lite: final state 641296f
+disk: loaded epoch 0i0
+loom: mapped 2048MB
+boot: protected loom
+live: mapped: MB/222.756.864
+boot: installed 2178 jets
+vere: checking version compatibility
+mesa: forwarding enabled
+mdns: init failed, install avahi on this system for mdns support
+mesa: live on 31519 (localhost only)
+conn: listening on /state/live/bus/.urb/conn.sock
+ames: unix-duct received on %born
+http: web interface live on http://localhost:18081
+http: loopback live on http://localhost:12322
+pier (229): live
+~
+urbit 4.6
+boot: home is /state/live/bus
+loom: mapped 2048MB
+lite: arvo formula 4ce68411
+lite: core 641296f
+lite: final state 641296f
+disk: loaded epoch 0i0
+loom: mapped 2048MB
+boot: protected loom
+live: mapped: MB/222.756.864
+boot: installed 2178 jets
+vere: checking version compatibility
+mesa: forwarding enabled
+mdns: init failed, install avahi on this system for mdns support
+mesa: live on 31519 (localhost only)
+conn: listening on /state/live/bus/.urb/conn.sock
+ames: unix-duct received on %born
+http: web interface live on http://localhost:18081
+http: loopback live on http://localhost:12322
+pier (259): live
+%already-mounted
+[[p=~bus q=%base r=[%ud p=0]] s=/]
+~
+urbit 4.6
+boot: home is /state/live/bus
+loom: mapped 2048MB
+lite: arvo formula 4ce68411
+lite: core 641296f
+lite: final state 641296f
+disk: loaded epoch 0i0
+loom: mapped 2048MB
+boot: protected loom
+live: mapped: MB/222.756.864
+boot: installed 2178 jets
+vere: checking version compatibility
+mesa: forwarding enabled
+mdns: init failed, install avahi on this system for mdns support
+mesa: live on 31519 (localhost only)
+conn: listening on /state/live/bus/.urb/conn.sock
+ames: unix-duct received on %born
+http: web interface live on http://localhost:18081
+http: loopback live on http://localhost:12322
+pier (229): live
+gall: installing %stead-observer
+~
+urbit 4.6
+boot: home is /state/live/bus
+loom: mapped 2048MB
+lite: arvo formula 4ce68411
+lite: core 641296f
+lite: final state 641296f
+disk: loaded epoch 0i0
+loom: mapped 2048MB
+boot: protected loom
+live: mapped: MB/222.756.864
+boot: installed 2178 jets
+vere: checking version compatibility
+mesa: forwarding enabled
+mdns: init failed, install avahi on this system for mdns support
+mesa: live on 31519 (localhost only)
+conn: listening on /state/live/bus/.urb/conn.sock
+ames: unix-duct received on %born
+http: web interface live on http://localhost:18081
+http: loopback live on http://localhost:12322
+pier (229): live
+%already-mounted
+[[p=~bus q=%base r=[%ud p=0]] s=/]
+~
+urbit 4.6
+boot: home is /state/live/bus
+loom: mapped 2048MB
+lite: arvo formula 4ce68411
+lite: core 641296f
+lite: final state 641296f
+disk: loaded epoch 0i0
+loom: mapped 2048MB
+boot: protected loom
+live: mapped: MB/222.756.864
+boot: installed 2178 jets
+vere: checking version compatibility
+mesa: forwarding enabled
+mdns: init failed, install avahi on this system for mdns support
+mesa: live on 31519 (localhost only)
+conn: listening on /state/live/bus/.urb/conn.sock
+ames: unix-duct received on %born
+http: web interface live on http://localhost:18081
+http: loopback live on http://localhost:12322
+pier (229): live

@@ -1,0 +1,7 @@
+Audit directory: <REPO>/.runtime/urgit-evaluations/20260925T111141Z-ukilsapn
+{
+  "audit_directory": "<REPO>/.runtime/urgit-evaluations/20260925T111141Z-ukilsapn",
+  "status": "failed",
+  "checks_passed": 1,
+  "sandbox_exit_code": 1
+}

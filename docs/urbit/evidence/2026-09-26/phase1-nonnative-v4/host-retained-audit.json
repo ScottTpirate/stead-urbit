@@ -1,0 +1,120 @@
+{
+  "actual_resource_readbacks": {
+    "affinity": [
+      19
+    ],
+    "control_group": "/user.slice/user-1000.slice/user@1000.service/app.slice/stead-host-recapture-20260926t204028z-b96bdc45.scope",
+    "cpu_max": "5000 10000",
+    "pids": [
+      1126216
+    ],
+    "scope": "stead-host-recapture-20260926t204028z-b96bdc45.scope"
+  },
+  "all156_source_files_match_current_committed_git_blobs": true,
+  "all_output_hashes_verified": true,
+  "audit_resources": {
+    "affinity": [
+      19
+    ],
+    "cpu_max": "2000 10000"
+  },
+  "capture": {
+    "path": ".runtime/phase01-20260926/host-recapture-20260926t204028z-b96bdc45/host-current.json",
+    "pointer": "",
+    "sha256": "7a42fd5e031820b0c7a933147887d7dac71b2d3226f412b23f329e5167b53d8e"
+  },
+  "final_scope_completion": {
+    "ActiveState": "inactive",
+    "ControlGroup": "",
+    "LoadState": "not-found",
+    "Result": "success",
+    "exit_code": 0,
+    "stderr": "",
+    "stdout": "LoadState=not-found\nActiveState=inactive\nResult=success\nControlGroup=\n"
+  },
+  "full_host_check": {
+    "executor": "/root",
+    "limit": "Actual root-executed log and metadata were read and hash checked; the selected142 overlap these470. Not a reviewer execution or native test.",
+    "log": {
+      "path": ".runtime/phase01-20260926/host-5208f32/host.log",
+      "pointer": "",
+      "sha256": "8802873e4b153b33bd06ada7bc9b2c454da2fd0b2c0f630bb230e7ac8c4a802f"
+    },
+    "metadata": {
+      "path": ".runtime/phase01-20260926/host-5208f32/result.json",
+      "pointer": "",
+      "sha256": "3e83f810a8fadfa8cf9ee7695061761d7be5ba09df88473887b99e205c82de79"
+    },
+    "observed_tests": 470,
+    "outer_seconds": 68.66922525595874,
+    "unittest_seconds": 67.979
+  },
+  "host_test_execution": false,
+  "loader_cache_isolated_runner_cache_restored": true,
+  "mapped_assertion_ids": {
+    "delivery-host-order-permutations": [
+      "test_delivery_cases.DeliveryEvidenceHostTests.test_ack_nack_timeout_partial_missing_and_duplicate_never_saved",
+      "test_delivery_cases.DeliveryEvidenceHostTests.test_fact_ack_kick_host_permutations_require_exact_receipt"
+    ],
+    "guard-negative-host-tests": [
+      "test_dev_flow.LifecycleTests.test_failed_launched_supervisor_marks_fixture_and_blocks_next_start",
+      "test_execution_policy.ControlledChildExecution.test_clean_light_child_completion_is_not_labeled_native_pass",
+      "test_execution_policy.ControlledChildExecution.test_hot_preflight_never_launches_a_child",
+      "test_execution_policy.ControlledChildExecution.test_trip_with_child_exit_zero_stays_failed_and_preserves_crossing",
+      "test_execution_policy.ControlledChildExecution.test_uncooperative_owned_child_is_killed_within_bounded_cleanup",
+      "test_harness_safety.FixtureSafety.test_changed_seed_preserves_live_data",
+      "test_harness_safety.SupervisorLifecycleSafety.test_forced_state_is_never_promoted_to_a_clean_seed",
+      "test_harness_safety.SupervisorLifecycleSafety.test_normal_stop_watchdog_cannot_swallow_cleanup_failure",
+      "test_harness_safety.SupervisorLifecycleSafety.test_signal_and_wait_failures_do_not_abandon_other_children",
+      "test_harness_safety.SupervisorLifecycleSafety.test_supervisor_exit_is_nonzero_for_guard_or_initialization_failure",
+      "test_runtime_guard_adversarial.GuardFailureOutcomeTests.test_hot_or_missing_preflight_never_calls_factory_or_process",
+      "test_runtime_guard_adversarial.LeaseAdmissionTests.test_stale_and_future_freshly_written_leases_refuse",
+      "test_runtime_guard_adversarial.OwnedHostFilesTests.test_scope_signal_rejects_other_unit_without_systemctl",
+      "test_runtime_guard_adversarial.ThermalEvidenceTests.test_missing_or_renamed_hottest_sensor_refuses_continuation",
+      "test_runtime_guard_adversarial.ThermalEvidenceTests.test_stale_future_reversed_and_nonfinite_clocks_refuse"
+    ]
+  },
+  "module_counts": {
+    "test_delivery_cases": 10,
+    "test_delivery_evidence_regressions": 11,
+    "test_delivery_suite": 14,
+    "test_dev_flow": 32,
+    "test_execution_policy": 6,
+    "test_harness_safety": 43,
+    "test_runtime_guard_adversarial": 26
+  },
+  "native_execution": false,
+  "new_inventory_added": [
+    "test_delivery_suite.DeliveryScheduleHostTests.test_home_lifecycle_drains_before_restart_and_rejects_dead_sender",
+    "test_delivery_suite.DeliveryScheduleHostTests.test_home_lifecycle_leaves_home_offline_after_transport_failure",
+    "test_delivery_suite.DeliveryScheduleHostTests.test_only_specific_drained_native_timeout_is_expected_unavailability",
+    "test_delivery_suite.DeliveryScheduleHostTests.test_unavailable_home_rejects_business_output_ack_and_unrelated_bails",
+    "test_delivery_suite.DeliveryScheduleHostTests.test_unavailable_home_rejects_transport_and_programming_failures"
+  ],
+  "observed_at": "2026-09-26T20:44:58.716368+00:00",
+  "old138_inventory_removed": [
+    "test_delivery_suite.DeliveryScheduleHostTests.test_unavailable_home_does_not_green_adapter_programming_errors"
+  ],
+  "outer_elapsed_seconds": 4.384997920016758,
+  "passed_subtests": 174,
+  "pending": [
+    "Create-once v4 promotion and retained-byte review",
+    "Current native focused predicate, fullcore/applicable Gall and independent73 gate"
+  ],
+  "preparation_note": "An initial read-only audit stopped on an incorrect before.json field name before any output write; the actual field source_files_before is now checked. No test rerun or evidence mutation occurred.",
+  "protocol": "stead.nonnative-v4-retained-host-audit/1",
+  "qualification_acceptance": false,
+  "reviewer": "/root/independent_review",
+  "scope": "Read-only exact-byte audit of actual root-executed host capture. Guard/sensor/child answers remain mocked where labeled; Python/file/flock/socket/cache controls are host execution only. No current native outcome is inferred.",
+  "source_before_after_equal": true,
+  "source_commit": "5208f3273426e8fe76dc8622ffe93ace93982e17",
+  "source_review": {
+    "path": ".runtime/phase01-20260926/nonnative-v4-source-review.json",
+    "pointer": "",
+    "sha256": "9df4ca622f2b1f381b9533bd3a708c3dc062177fc030d8ab70dabc34d8ffb566"
+  },
+  "status": "reviewed-passed",
+  "unique_selected_started_finished_passed_ids": 142,
+  "unittest_seconds": 2.935,
+  "worker_elapsed_seconds": 3.718028748058714
+}

@@ -1,0 +1,74 @@
+{
+  "protocol": "stead.synthetic-counter/0",
+  "scope": "URB-020 only; not product authorization or accepted receipts",
+  "cases": [
+    {
+      "ship": "zod",
+      "command": "-stead-smoke ~zod [%assert 0]",
+      "positive": true
+    },
+    {
+      "ship": "bud",
+      "command": "-stead-smoke ~zod [%advance ~bus 0]",
+      "positive": false,
+      "rejection": "%stead-smoke-denied"
+    },
+    {
+      "ship": "nec",
+      "command": "-stead-smoke ~zod [%advance ~bus 0]",
+      "positive": false,
+      "rejection": "%stead-smoke-denied"
+    },
+    {
+      "ship": "zod",
+      "command": "-stead-smoke ~zod [%assert 0]",
+      "positive": true
+    },
+    {
+      "ship": "bus",
+      "command": "-stead-smoke ~zod [%advance ~bud 0]",
+      "positive": true
+    },
+    {
+      "ship": "bus",
+      "command": "-stead-smoke ~zod [%advance ~bus 0]",
+      "positive": false,
+      "rejection": "%stead-smoke-stale"
+    },
+    {
+      "ship": "zod",
+      "command": "-stead-smoke ~zod [%assert 1]",
+      "positive": true
+    },
+    {
+      "restart": "zod"
+    },
+    {
+      "ship": "zod",
+      "command": "-stead-smoke ~zod [%assert 1]",
+      "positive": true
+    },
+    {
+      "ship": "bud",
+      "command": "-stead-smoke ~zod [%advance ~bus 1]",
+      "positive": false,
+      "rejection": "%stead-smoke-denied"
+    },
+    {
+      "ship": "bus",
+      "command": "-stead-smoke ~zod [%advance ~bus 1]",
+      "positive": true
+    },
+    {
+      "ship": "zod",
+      "command": "-stead-smoke ~zod [%assert 2]",
+      "positive": true
+    },
+    {
+      "ship": "zod",
+      "command": "-stead-smoke ~zod [%assert 999]",
+      "positive": false,
+      "rejection": "%stead-smoke-assertion"
+    }
+  ]
+}

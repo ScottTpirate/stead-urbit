@@ -1,0 +1,133 @@
+{
+  "assisted_skills": [
+    "stead-hoon",
+    "stead-gall-security",
+    "stead-native-tests",
+    "stead-urbit-release"
+  ],
+  "budgets": {
+    "active_seconds_per_condition": 1800,
+    "exclude_native_queue_and_guard_wait_from_active_time": true,
+    "final_private_scoring_runs_per_task": 1,
+    "public_feedback_submissions_per_task": 3
+  },
+  "conditions": [
+    "baseline",
+    "local_skill_assisted"
+  ],
+  "contexts": {
+    "cross_condition_answer_access": false,
+    "fork_history": false,
+    "fresh_per_condition": true,
+    "same_exact_model_and_settings": true
+  },
+  "infrastructure_statuses": [
+    "not_run",
+    "refused",
+    "interrupted",
+    "invalid"
+  ],
+  "invalidations": [
+    "oracle_or_other_condition_answer_exposed",
+    "baseline_skill_text_exposed",
+    "changed_corpus_after_participant_start",
+    "unequal_unreported_context_or_budget",
+    "stale_loaded_source",
+    "missing_expected_test",
+    "missing_failure_control",
+    "unbound_native_artifact"
+  ],
+  "issue": "https://github.com/ScottTpirate/stead-urbit/issues/20",
+  "native_execution": "Integrator only, existing guarded disposable fake harness; adapter integration and all runs still required",
+  "package_version": 2,
+  "participant_launch_authorized_by_package": false,
+  "prequalification_continuation_control": {
+    "all_five_subjects_and_every_discovered_arm_required": true,
+    "classification": "native-expected-behavioral-failure-control-not-a-seventh-task",
+    "expected_ordered_outcomes": [
+      "correct-pass",
+      "killed",
+      "survived",
+      "killed",
+      "killed"
+    ],
+    "source": "reviewer/controls/T05-weak-tests.hoon"
+  },
+  "private_inputs": [
+    "reviewer",
+    "README.md",
+    "result.schema.json"
+  ],
+  "protocol": "stead.skill-evaluation/2",
+  "public_inputs": [
+    "public",
+    "common"
+  ],
+  "scoring": {
+    "T05_behavioral_failure_does_not_abort_remaining_subjects": true,
+    "T05_complete_subject_order": [
+      "correct",
+      "claimed-author",
+      "outsider-granted",
+      "everyone-granted",
+      "claim-must-match"
+    ],
+    "T05_full_tang_envelope": "[2 label=@t correct=? passed=? observed=(list [name=@t result=tang])]",
+    "T05_host_noun_bounds": {
+      "depth": 512,
+      "encoded_nodes": 65536,
+      "expanded_nodes": 1048576
+    },
+    "T05_infrastructure_failure_aborts_subject_loop": true,
+    "T05_native_jam_byte_bound": 262144,
+    "claim_general_improvement": false,
+    "no_post_private_feedback_repair": true,
+    "report_compile_and_runtime_separately": true,
+    "retain_all_attempts": true,
+    "task_pass": "all required actual native and applicable file assertions pass",
+    "zero_missing_or_skipped_cases": true
+  },
+  "skill_routing": {
+    "T01": [
+      "stead-hoon"
+    ],
+    "T02": [
+      "stead-hoon"
+    ],
+    "T03": [
+      "stead-hoon",
+      "stead-gall-security",
+      "stead-native-tests"
+    ],
+    "T04": [
+      "stead-hoon",
+      "stead-gall-security",
+      "stead-native-tests"
+    ],
+    "T05": [
+      "stead-native-tests"
+    ],
+    "T06": [
+      "stead-hoon",
+      "stead-native-tests",
+      "stead-urbit-release"
+    ]
+  },
+  "status": "prepared_v2_not_native_prequalified_not_executed",
+  "task_order": [
+    "T01",
+    "T02",
+    "T03",
+    "T04",
+    "T05",
+    "T06"
+  ],
+  "test_owner": "/root/independent_review",
+  "version_change": {
+    "fresh_both_contexts_required": true,
+    "participant_public_common_skills_bytes_unchanged": true,
+    "reason": "v1 adapter stopped after a surviving T05 mutant and omitted two required subjects",
+    "reuse_previous_answers_or_private_runs": false,
+    "supersedes_package_sha256": "d78697102021b4b4837efd2d560668310fad5ab69fcbf98c7592a9cd0fff3e00"
+  }
+}

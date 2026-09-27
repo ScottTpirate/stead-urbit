@@ -1,0 +1,12 @@
+{
+  "commands.jsonl": "e3e1be6a89547ec6a01fa4bda2c682323087781ab85acf208eff3930024da2dd",
+  "console.log": "aeb8e8c0fb8e46fd7e5edf975a8007b8ec4c5c3377e6e1acb7f66e568cd27137",
+  "evaluator-report.json": "a4d83e9b295d6e0880019b9f48641b23fa21e126f90211df54c06f98be525789",
+  "execution-guard.json": "f8aedb6a165d52ba18d42a1b889a1ae01de89d08029620771e41b9843215a479",
+  "native.log": "09fafd6ce7266853eb6765d6d72454c4a4f1a340c0475ba6f23603aac92cd6d3",
+  "provenance.json": "ebbf0f026851c6ed6ceeb2f02bdadadbf567ac91cb90fbc180bd397db81a8e61",
+  "report.json": "66b064b9650660757057cd69fa1b5fffeaea249a76c6ba3e019dace2833880a3",
+  "sandbox-command.json": "f5312db3447f98516dcb9c4fba67ca8719c9d885a55ac44aac45fecb900b7e2f",
+  "status.json": "9b2bf1723be8d3f31974570d8bbc7238d36261d7fd043991b8869e0b2bd236f5",
+  "thermal.jsonl": "3bc61ae4e20565ca7629c585c36d9d5a205bd05adf6c7b8d45edc05b21b11bf5"
+}

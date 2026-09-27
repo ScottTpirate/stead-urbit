@@ -1,0 +1,14 @@
+test_artifact_reader_rejects_outside_symlink_and_nonfile (test_qualification_gate.QualificationGateHostTests.test_artifact_reader_rejects_outside_symlink_and_nonfile) ... ok
+test_digest_pointer_proof_binding_and_missing_reader_fail (test_qualification_gate.QualificationGateHostTests.test_digest_pointer_proof_binding_and_missing_reader_fail) ... ok
+test_empty_duplicate_unknown_and_optionalized_native_names_fail (test_qualification_gate.QualificationGateHostTests.test_empty_duplicate_unknown_and_optionalized_native_names_fail) ... ok
+test_missing_current_native_evidence_is_failed_not_green_incomplete (test_qualification_gate.QualificationGateHostTests.test_missing_current_native_evidence_is_failed_not_green_incomplete) ... ok
+test_native_proof_cannot_be_mocked_unexecuted_guard_stopped_or_zero_assertion (test_qualification_gate.QualificationGateHostTests.test_native_proof_cannot_be_mocked_unexecuted_guard_stopped_or_zero_assertion) ... ok
+test_nonempty_complete_mock_format_is_not_relabelled (test_qualification_gate.QualificationGateHostTests.test_nonempty_complete_mock_format_is_not_relabelled) ... ok
+test_real_manifest_retains_all25_skips_and_explicit_gate_names (test_qualification_gate.QualificationGateHostTests.test_real_manifest_retains_all25_skips_and_explicit_gate_names) ... ok
+test_source_and_absent_effect_dispositions_stay_distinct (test_qualification_gate.QualificationGateHostTests.test_source_and_absent_effect_dispositions_stay_distinct) ... ok
+test_wrong_source_lock_corpus_or_loaded_closure_fails (test_qualification_gate.QualificationGateHostTests.test_wrong_source_lock_corpus_or_loaded_closure_fails) ... ok
+
+----------------------------------------------------------------------
+Ran 9 tests in 0.002s
+
+OK

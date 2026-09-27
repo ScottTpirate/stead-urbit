@@ -1,0 +1,10 @@
+test_max_wire_and_bad_terminal_failure_is_retained_exactly (__main__.IndependentWrapperReview.test_max_wire_and_bad_terminal_failure_is_retained_exactly) ... ok
+test_nonzero_and_timeout_preserve_bounded_both_streams (__main__.IndependentWrapperReview.test_nonzero_and_timeout_preserve_bounded_both_streams) ... ok
+test_oversized_stdout_and_stderr_keep_prefix_and_fail (__main__.IndependentWrapperReview.test_oversized_stdout_and_stderr_keep_prefix_and_fail) ... ok
+test_real_tempfiles_preserve_both_streams (__main__.IndependentWrapperReview.test_real_tempfiles_preserve_both_streams) ... ok
+test_rotation_after_open_refuses_same_observation (__main__.IndependentWrapperReview.test_rotation_after_open_refuses_same_observation) ... ok
+
+----------------------------------------------------------------------
+Ran 5 tests in 0.037s
+
+OK

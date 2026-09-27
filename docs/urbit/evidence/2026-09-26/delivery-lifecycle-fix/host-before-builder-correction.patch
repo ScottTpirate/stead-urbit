@@ -1,0 +1,545 @@
+diff --git a/Makefile b/Makefile
+index 329fc82..eb5a229 100644
+--- a/Makefile
++++ b/Makefile
+@@ -1,7 +1,7 @@
+ .DEFAULT_GOAL := help
+ # Bound seed/toolchain verification before the inner native guardian launches.
+ PREP = systemd-run --user --scope --quiet -p CPUQuota=50% -p CPUQuotaPeriodSec=10ms -- taskset -c "$$(python3 -c 'import os; print(max(os.sched_getaffinity(0)))')"
+-.PHONY: help setup doctor preflight dev start status wait-ready stop reset check test core-check core-test gall-schedule skill-prequalify plan-check contracts-check
++.PHONY: help setup doctor preflight dev start status wait-ready stop reset check test core-check core-test delivery-check gall-schedule skill-prequalify plan-check contracts-check
+ help:
+ 	@python3 scripts/urbit/dev_help.py
+ setup:
+@@ -28,6 +28,8 @@ core-test:
+ 	python3 scripts/urbit/harness.py core-test
+ core-check:
+ 	python3 scripts/urbit/harness.py core-check
++delivery-check:
++	python3 scripts/urbit/harness.py delivery-check
+ gall-schedule:
+ 	python3 scripts/urbit/harness.py gall-schedule
+ skill-prequalify:
+diff --git a/scripts/urbit/build_phase1_evidence.py b/scripts/urbit/build_phase1_evidence.py
+index 2818852..29295a6 100644
+--- a/scripts/urbit/build_phase1_evidence.py
++++ b/scripts/urbit/build_phase1_evidence.py
+@@ -287,6 +287,27 @@ def lifecycle(report, evidence):
+     require(len(stops) == 1 and stops[0]['result'] == {'exit_code': 0, 'forced': False}, 'Missing graceful native shutdown')
+ 
+ 
++def unavailable_lifecycle(report, evidence):
++    rows = evidence.get('native', [])
++    all_rows = report.get('lifecycle', [])
++    require(rows and any(all_rows[i:i + len(rows)] == rows for i in range(len(all_rows))),
++            'Offline-home lifecycle is not an exact retained segment')
++    require([row.get('command') for row in rows] == [
++        'unavailable sender liveness', 'shutdown zod', 'unavailable native terminal',
++        'unavailable sender liveness', 'launch zod', 'zod: zuse',
++        'unavailable sender probe', 'unavailable sender liveness'], 'Offline-home lifecycle order')
++    require([rows[i]['result'] for i in (0, 3, 7)] == evidence.get('sender'), 'Sender liveness observations differ')
++    native = evidence['attempt']['response']['native']
++    require(rows[2]['result'] == {key: native[key] for key in ('response_frame_sha256', 'stdout')},
++            'Home restarted before the retained native terminal')
++    require(rows[6]['result'] == {'ship': 'bus', 'dojo': 'zuse', 'result': '%408\n'},
++            'Missing actual contributor readiness after home recovery')
++    pid = evidence['sender'][0]['pid']
++    launches = [row for row in all_rows if row.get('command') == 'launch bus'
++                and row.get('result', {}).get('pid') == pid]
++    require(len(launches) == 1, 'Sender incarnation lacks a retained native launch')
++
++
+ def concurrent_records(retained, requests, results):
+     """Verify the exact two observed call intervals, never infer overlap from CAS."""
+     release = retained.report.get('concurrent_release')
+@@ -771,7 +792,8 @@ def replay_delivery(retained, corpus, start):
+         evidence = copy.deepcopy(cases['home-unavailable']['unavailability'])
+         lifecycle(retained.report, evidence)
+         actual = attempt(replay.call)
+-        require(actual == evidence['attempt'], 'Unavailable outcome differs from retained transport exception')
++        require(actual == evidence['attempt'], 'Unavailable outcome differs from retained native terminal')
++        unavailable_lifecycle(retained.report, evidence)
+         return evidence
+ 
+     class RecordedSuite(DS.Suite):
+diff --git a/scripts/urbit/core_test.py b/scripts/urbit/core_test.py
+index c2aed53..062873c 100644
+--- a/scripts/urbit/core_test.py
++++ b/scripts/urbit/core_test.py
+@@ -108,7 +108,44 @@ def concurrent_writes(call, requests, report, record_interval):
+     return results
+ 
+ 
+-def run(host):
++def home_unavailable(host, attempt, call):
++    """Drain the native terminal before restart; do not reuse a failed sender."""
++    begin = len(host['EVIDENCE'])
++    sender = host['PROCESSES']['bus']
++    observations = []
++
++    def sender_alive(phase):
++        host['execution_check']()
++        row = {'phase': phase, 'ship': 'bus', 'pid': sender.pid, 'exit': sender.poll()}
++        host['record']('unavailable sender liveness', row)
++        observations.append(row)
++        if host['PROCESSES']['bus'] is not sender or row['exit'] is not None:
++            raise RuntimeError('Contributor exited or was replaced during offline-home delivery')
++
++    sender_alive('before-stop')
++    old_pid = host['PROCESSES']['zod'].pid
++    host['shutdown']('zod')
++    stopped = host['PROCESSES']['zod'].returncode
++    # If the transport fails, leave home stopped and fail the run. Restarting it
++    # would let a queued remote reply race a locally abandoned Khan connection.
++    outcome = attempt(call)
++    host['record']('unavailable native terminal', {
++        'response_frame_sha256': outcome['response']['native']['response_frame_sha256'],
++        'stdout': outcome['response']['native']['stdout']})
++    sender_alive('after-terminal')
++    host['launch']('zod')
++    host['wait_ready']('zod')
++    alive = host['dojo']('bus', 'zuse')
++    host['record']('unavailable sender probe', {'ship': 'bus', 'dojo': 'zuse', 'result': alive})
++    if alive.strip() != '%408':
++        raise RuntimeError('Contributor kernel probe failed after home recovery')
++    sender_alive('after-restart')
++    return {'old_pid': old_pid, 'old_exit': stopped,
++            'replacement_pid': host['PROCESSES']['zod'].pid,
++            'sender': observations, 'attempt': outcome, 'native': host['EVIDENCE'][begin:]}
++
++
++def run(host, *, delivery_only=False):
+     started = time.monotonic()
+     run_id = time.strftime('%Y%m%dT%H%M%SZ', time.gmtime())
+     report = {'status': 'fail', 'classification': 'local-real-native-fake-ships',
+@@ -119,6 +156,9 @@ def run(host):
+                   'Native document objects exported through stock Git; no Smart HTTP forge.',
+                   'Source recipes are unqualified until their exact native outcomes and independent evidence are present.',
+                   'No provisioning, shared-container lifecycle, browser sessions, HTTPS UI or live identity.']}
++    if delivery_only:
++        report.update(classification='local-real-native-delivery-lifecycle', qualifies_phase=False,
++                      scope='Two offline-home native timeouts and sender recovery; no phase qualification.')
+     before_inputs = inputs()
+     report['inputs_before'] = before_inputs
+     report['installed_files'] = {str(path.relative_to('/native/core/desk')): sha(path)
+@@ -262,20 +302,7 @@ def run(host):
+                                          route or native.get('route'), result)
+ 
+     def unavailable_home(attempt):
+-        begin = len(host['EVIDENCE'])
+-        old_pid = host['PROCESSES']['zod'].pid
+-        host['shutdown']('zod')
+-        stopped = host['PROCESSES']['zod'].returncode
+-        try:
+-            outcome = attempt(call)
+-        finally:
+-            # No forced/crashed fixture is resumed or promoted to a clean seed.
+-            host['execution_check']()
+-            host['launch']('zod')
+-            host['wait_ready']('zod')
+-        return {'old_pid': old_pid, 'old_exit': stopped,
+-                'replacement_pid': host['PROCESSES']['zod'].pid,
+-                'attempt': outcome, 'native': host['EVIDENCE'][begin:]}
++        return home_unavailable(host, attempt, call)
+ 
+     def delivery_sink(record):
+         # Suite arguments can include the exact request bytes positionally.
+@@ -450,58 +477,71 @@ def run(host):
+         for ship in host['SHIPS']:
+             command(ship, '|start %stead-observer')
+         check('fixture-initialized-once', call('zod','fixture',raw=Path('/specs/native-fixture.json').read_bytes())['json'] == {})
+-        report['qa'] = core_cases.run(corpus, call, snapshot, restart, export, object_matrix,
+-                                     trusted_now_ms=trusted_now_ms, wait_until=wait_until,
+-                                     classification='local-real-native-fake-ships', include_second_project=True,
+-                                     include_scoped_privacy=True, delivery_evidence=delivery_evidence,
+-                                     defer_phase1_reviews=True)
+-        outcomes = report['qa']['case_counts']
+-        expected_cases = [c['name'] for c in corpus['ordered_cases']]
+-        for lane in ('real_expiry_continuation','source_review_continuation','separate_project_journal_lane', 'scoped_privacy_lane'):
+-            expected_cases.extend(c['name'] for c in corpus[lane]['cases'])
+-        check('all-qa-native-cases-executed-without-failure', len(expected_cases)==148
+-              and [c['name'] for c in report['qa']['cases']]==expected_cases
+-              and sum(outcomes.values())==len(expected_cases)
+-              and not outcomes.get('failed') and not outcomes.get('not_run'))
+-        # Required missing assertions keep the current report nonpassing.
+-        report['qa_coverage_status'] = report['qa']['status']
+-        print('core: ordered, expiry, authorization and export outcomes complete', flush=True)
+-        codec()
+-        contexts()
+-        before = snapshot()
+-        for op in ('load-future','load-counter'):
+-            result = control((op,'bus','',''),succeeds=False)
+-            check('unsupported-state-specific-rejection:' + op, 'stead-unsupported-state' in result['native']['stderr'])
+-            check('unsupported-state-preserves-data:' + op, same(before,snapshot()))
+-        control(('roundtrip','bus','',''))
+-        check('native-on-save-on-load-roundtrip', same(before,snapshot()))
+-        control(('binding-drop','bus','',''),succeeds=False,sender='bud')
+-        check('outsider-cannot-use-fixture-control', same(before,snapshot()))
+-        concurrency()
+-        report['delivery'] = delivery_suite.run(corpus, call, snapshot=snapshot,
+-            pending_snapshot=lambda: call('zod', 'read', '/v1/pending-snapshot'),
+-            control=lambda *value: control(value), trusted_now_ms=trusted_now_ms,
+-            wait_until=wait_until, unavailable_home=unavailable_home, pause=pause,
+-            runtime_errors=runtime_logs, provenance=before_inputs,
+-            classification='real-native-fake-ships', probe_pool=probes, sink=delivery_sink)
+-        check('delivery-has-no-observed-failure', all(case['status'] in ('passed', 'incomplete')
+-              for case in report['delivery']['cases']))
+-        report['qualification'] = qualification_cases.run(call,
+-            classification='local-real-native-fake-ships', provenance=before_inputs)
+-        check('native-capacity-and-predecessor-qualification', report['qualification']['status'] == 'passed'
+-              and report['qualification']['native_qualified']
+-              and len(report['qualification']['recipes']) == 8
+-              and all(lane['status'] == 'executed' for lane in report['qualification']['recipes'].values()))
+-        report['supported_predecessor_versions'] = [1]
+-        # Independent artifact verification is a distinct closeout operation
+-        # over the completed guarded report. This runner cannot approve itself.
+-        report['independent_closeout'] = {
+-            'status': 'pending', 'manifest_sha256': before_inputs['qualification_manifest'],
+-            'command': 'python3 scripts/urbit/qualification_gate.py --manifest specs/urbit/v2/qualification-gate.json --evidence EVIDENCE_INDEX --bindings EXACT_BINDINGS --output CURRENT_GATE',
+-            'scope': 'A native execution result does not close the phase or approve a merge.'}
+-        report['deferred_qa_requirements'] = qualification_gate.deferred_execution(report)
+-        report['execution_status'] = 'completed-awaiting-independent-qualification'
+-        report['status'] = 'execution_complete'
++        if delivery_only:
++            # This focused diagnostic uses an empty initialized fixture. It
++            # never executes or qualifies the frozen full acceptance schedule.
++            report['delivery_probe'] = []
++            for repetition in range(2):
++                suite = delivery_suite.Suite(corpus, snapshot=snapshot, unavailable_home=unavailable_home)
++                suite.current = {'name': 'home-unavailable-' + str(repetition + 1), 'assertions': []}
++                report['delivery_probe'].append(suite.current)
++                suite.unavailable()
++                recovered = call('bus', 'read', delivery_suite.receipt_route(suite.command))
++                check('post-timeout-protected-read:' + str(repetition + 1), recovered['json'] == core_cases.DENIAL)
++            report['status'] = 'pass'
++        else:
++            report['qa'] = core_cases.run(corpus, call, snapshot, restart, export, object_matrix,
++                                         trusted_now_ms=trusted_now_ms, wait_until=wait_until,
++                                         classification='local-real-native-fake-ships', include_second_project=True,
++                                         include_scoped_privacy=True, delivery_evidence=delivery_evidence,
++                                         defer_phase1_reviews=True)
++            outcomes = report['qa']['case_counts']
++            expected_cases = [c['name'] for c in corpus['ordered_cases']]
++            for lane in ('real_expiry_continuation','source_review_continuation','separate_project_journal_lane', 'scoped_privacy_lane'):
++                expected_cases.extend(c['name'] for c in corpus[lane]['cases'])
++            check('all-qa-native-cases-executed-without-failure', len(expected_cases)==148
++                  and [c['name'] for c in report['qa']['cases']]==expected_cases
++                  and sum(outcomes.values())==len(expected_cases)
++                  and not outcomes.get('failed') and not outcomes.get('not_run'))
++            # Required missing assertions keep the current report nonpassing.
++            report['qa_coverage_status'] = report['qa']['status']
++            print('core: ordered, expiry, authorization and export outcomes complete', flush=True)
++            codec()
++            contexts()
++            before = snapshot()
++            for op in ('load-future','load-counter'):
++                result = control((op,'bus','',''),succeeds=False)
++                check('unsupported-state-specific-rejection:' + op, 'stead-unsupported-state' in result['native']['stderr'])
++                check('unsupported-state-preserves-data:' + op, same(before,snapshot()))
++            control(('roundtrip','bus','',''))
++            check('native-on-save-on-load-roundtrip', same(before,snapshot()))
++            control(('binding-drop','bus','',''),succeeds=False,sender='bud')
++            check('outsider-cannot-use-fixture-control', same(before,snapshot()))
++            concurrency()
++            report['delivery'] = delivery_suite.run(corpus, call, snapshot=snapshot,
++                pending_snapshot=lambda: call('zod', 'read', '/v1/pending-snapshot'),
++                control=lambda *value: control(value), trusted_now_ms=trusted_now_ms,
++                wait_until=wait_until, unavailable_home=unavailable_home, pause=pause,
++                runtime_errors=runtime_logs, provenance=before_inputs,
++                classification='real-native-fake-ships', probe_pool=probes, sink=delivery_sink)
++            check('delivery-has-no-observed-failure', all(case['status'] in ('passed', 'incomplete')
++                  for case in report['delivery']['cases']))
++            report['qualification'] = qualification_cases.run(call,
++                classification='local-real-native-fake-ships', provenance=before_inputs)
++            check('native-capacity-and-predecessor-qualification', report['qualification']['status'] == 'passed'
++                  and report['qualification']['native_qualified']
++                  and len(report['qualification']['recipes']) == 8
++                  and all(lane['status'] == 'executed' for lane in report['qualification']['recipes'].values()))
++            report['supported_predecessor_versions'] = [1]
++            # Independent artifact verification is a distinct closeout operation
++            # over the completed guarded report. This runner cannot approve itself.
++            report['independent_closeout'] = {
++                'status': 'pending', 'manifest_sha256': before_inputs['qualification_manifest'],
++                'command': 'python3 scripts/urbit/qualification_gate.py --manifest specs/urbit/v2/qualification-gate.json --evidence EVIDENCE_INDEX --bindings EXACT_BINDINGS --output CURRENT_GATE',
++                'scope': 'A native execution result does not close the phase or approve a merge.'}
++            report['deferred_qa_requirements'] = qualification_gate.deferred_execution(report)
++            report['execution_status'] = 'completed-awaiting-independent-qualification'
++            report['status'] = 'execution_complete'
+     except Exception as exc:
+         report['error'] = f'{type(exc).__name__}: {exc}'
+         traceback.print_exc()
+@@ -519,10 +559,11 @@ def run(host):
+     report['native_tree_sha256'] = before_inputs['native']
+     report['toolchain_sha256'] = before_inputs['toolchain']
+     report['transport_artifact'] = transcript.close()
+-    path = Path('/state/logs') / ('core-' + run_id + '.json')
++    path = Path('/state/logs') / (('core-delivery-check-' if delivery_only else 'core-') + run_id + '.json')
+     report, payload = bounded_report(report)
+     path.write_bytes(payload)
+     return {'status':report['status'], 'checks_passed':sum(c['passed'] for c in report['checks']),
+             'checks_failed':[c for c in report['checks'] if not c['passed']], 'error':report.get('error'),
+             'qa_case_counts':report.get('qa',{}).get('case_counts'), 'qa_coverage_status':report.get('qa_coverage_status'),
+-            'elapsed_seconds':report['elapsed_seconds'], 'evidence_file':'.piers/fakes/logs/' + path.name}
++            'elapsed_seconds':report['elapsed_seconds'], 'evidence_file':'.piers/fakes/logs/' + path.name,
++            **({'qualifies_phase':False} if delivery_only else {})}
+diff --git a/scripts/urbit/delivery_suite.py b/scripts/urbit/delivery_suite.py
+index f9acfa0..e3ea28b 100644
+--- a/scripts/urbit/delivery_suite.py
++++ b/scripts/urbit/delivery_suite.py
+@@ -10,9 +10,9 @@ from __future__ import annotations
+ 
+ from concurrent.futures import ThreadPoolExecutor
+ import copy
+-import errno
+ import hashlib
+ import json
++import re
+ import threading
+ import time
+ 
+@@ -56,6 +56,19 @@ def receipt_route(command):
+     return f"/v2/receipt/{command['project_id']}/{container}/{command['resource_id']}/{command['operation']}/{command['request_id']}"
+ 
+ 
++def native_timeout(response):
++    """Accept only a completely drained Spider timeout, never a socket failure."""
++    native = response.get('native', {})
++    lines = [line.strip() for line in native.get('stderr', '').splitlines() if line.strip()]
++    return (response.get('raw') is None and response.get('json') is None
++            and native.get('stdout') == '[32 %avow 1]'
++            and bool(C.HEX64.fullmatch(native.get('response_frame_sha256', '')))
++            and len(lines) == 7 and lines[0] == 'loom: mapped 512MB'
++            and all(re.fullmatch(prefix + r'[0-9a-f]+', line)
++                    for prefix, line in zip(('lite: arvo formula ', 'lite: core ', 'lite: final state '), lines[1:4]))
++            and lines[4:] == ['eval (cue, newt):', 'timeout', 'eval: bail: %thread-fail'])
++
++
+ def correlated(command, ship):
+     kind='policy' if command['operation'].startswith('policy.') else command['operation'].split('.')[0]
+     return {'request_id':command['request_id'],'canonical_sha256':C.command_digest(C.canonical(command)),
+@@ -315,22 +328,24 @@ class Suite:
+     def unavailable(self):
+         before=self.snap();route=receipt_route(self.command)
+         def attempt(bounded_call):
+-            try:
+-                response=bounded_call('bus','read',route=route,raw=b'',timeout=5)
+-                return {'response':response,'supported_failure':None,
+-                        'saved':isinstance(response.get('json'),dict) and response['json'].get('status')=='accepted'}
+-            except TimeoutError as error:
+-                return {'exception':type(error).__name__+': '+str(error),'supported_failure':'timeout','saved':False}
+-            except OSError as error:
+-                if error.errno not in (errno.ECONNREFUSED,errno.EHOSTUNREACH,errno.ENETUNREACH,errno.ETIMEDOUT):
+-                    raise
+-                return {'exception':type(error).__name__+': '+str(error),'supported_failure':'unreachable','errno':error.errno,'saved':False}
++            # stead-client owns a 55-second native timeout. Keep its socket and
++            # the offline home unchanged until the terminal response is drained.
++            # Local timeout/EOF/refusal means broken infrastructure, not success.
++            response=bounded_call('bus','read',route=route,raw=b'',timeout=75)
++            D.require(native_timeout(response), 'Expected the complete specific native timeout')
++            return {'response':response,'supported_failure':'native-timeout','saved':False}
+         evidence=self.unavailable_home(attempt)
++        self.current['unavailability']=evidence
+         self.check('actual-home-unavailability-lifecycle',isinstance(evidence,dict) and bool(evidence.get('native')) and evidence.get('old_exit')==0 and evidence.get('old_pid')!=evidence.get('replacement_pid') and bool(evidence.get('old_pid')) and bool(evidence.get('replacement_pid')))
++        sender=evidence.get('sender',[])
++        self.check('same-live-sender-through-home-unavailability',len(sender)==3
++                   and [row.get('phase') for row in sender]==['before-stop','after-terminal','after-restart']
++                   and all(row.get('ship')=='bus' and type(row.get('pid')) is int and row['pid']>0
++                           and row.get('exit') is None and row['pid']==sender[0]['pid'] for row in sender))
+         during=evidence.get('attempt',{})
+         self.check('unavailable-home-never-saved',during.get('saved') is False
+-                   and during.get('supported_failure') in ('timeout','unreachable') and 'exception'in during)
+-        self.current['unavailability']=evidence;self.same(before)
++                   and during.get('supported_failure')=='native-timeout' and native_timeout(during.get('response',{})))
++        self.same(before)
+ 
+     def ended_leave(self):
+         before=self.snap();D.require(self.old_completed is not None,'Prior completed duct required')
+diff --git a/scripts/urbit/dev_help.py b/scripts/urbit/dev_help.py
+index 810ab99..d35a16b 100644
+--- a/scripts/urbit/dev_help.py
++++ b/scripts/urbit/dev_help.py
+@@ -11,6 +11,7 @@ print('''Stead Urbit local development (Linux, synthetic fake ships)
+   make core-check  Recompile core and run pure probes on a fresh fake fixture
+   make test        Run the original four-ship native smoke suite
+   make core-test   Execute the full native corpus; independent qualification follows
++  make delivery-check  Check native offline-home timeouts and sender recovery
+   make gall-schedule  Run the pinned Gall reordered-leave qualification lane
+   make skill-prequalify  Validate frozen workflow references before evaluation
+   make stop        Gracefully stop the owned fake ships and guard
+diff --git a/scripts/urbit/harness.py b/scripts/urbit/harness.py
+index 6a1652d..9cabc58 100644
+--- a/scripts/urbit/harness.py
++++ b/scripts/urbit/harness.py
+@@ -367,6 +367,14 @@ def core_test():
+         print('Native execution completed; independent phase qualification remains required.')
+ 
+ 
++def delivery_check():
++    guard()
++    result = rpc('delivery-check', timeout=1800)
++    print(json.dumps(result, indent=2))
++    if result['status'] != 'pass' or result.get('qualifies_phase') is not False:
++        raise RuntimeError('Native delivery lifecycle check failed; inspect retained evidence')
++
++
+ def core_check():
+     guard()
+     result = rpc('core-check', timeout=1800)
+@@ -427,7 +435,7 @@ def dev():
+ if __name__ == '__main__':
+     parser = argparse.ArgumentParser(description=__doc__)
+     parser.add_argument('command', choices=['doctor', 'preflight', 'start', 'stop', 'reset', 'status',
+-                        'wait-ready', 'dev', 'test', 'core-check', 'core-test', 'gall-schedule',
++                        'wait-ready', 'dev', 'test', 'core-check', 'core-test', 'delivery-check', 'gall-schedule',
+                         'skill-evaluation', 'skill-feedback', '_guarded-supervisor'])
+     parser.add_argument('--condition', choices=['prequalification', 'baseline', 'local_skill_assisted'])
+     parser.add_argument('--task', choices=['T01', 'T02', 'T03', 'T04', 'T05', 'T06'])
+diff --git a/scripts/urbit/supervisor.py b/scripts/urbit/supervisor.py
+index 328a040..538ec00 100644
+--- a/scripts/urbit/supervisor.py
++++ b/scripts/urbit/supervisor.py
+@@ -457,6 +457,21 @@ def handle(connection):
+                         raise RuntimeError('Fixture not ready')
+                     execution_check(preflight=True)
+                     result = guarded_result(core_test.run(globals()))
++            elif request == {'op': 'delivery-check'}:
++                with MUTEX:
++                    if not PROGRESS['ready']:
++                        raise RuntimeError('Fixture not ready')
++                    execution_check(preflight=True)
++                    PROGRESS.update(stage='delivery-check', ready=False, error=None)
++                    result = None
++                    try:
++                        result = guarded_result(core_test.run(globals(), delivery_only=True))
++                    finally:
++                        if result is None or result['status'] != 'pass':
++                            PROGRESS.update(stage='failed', ready=False, error='Native delivery lifecycle check failed')
++                            all_stop()
++                        else:
++                            PROGRESS.update(stage='ready', ready=True, error=None)
+             elif request == {'op': 'core-check'}:
+                 with MUTEX:
+                     if not PROGRESS['ready']:
+diff --git a/tests/urbit/test_delivery_suite.py b/tests/urbit/test_delivery_suite.py
+index 2f2f628..d134ec4 100644
+--- a/tests/urbit/test_delivery_suite.py
++++ b/tests/urbit/test_delivery_suite.py
+@@ -8,11 +8,13 @@ import json
+ from pathlib import Path
+ import sys
+ import unittest
++from unittest.mock import Mock
+ 
+ ROOT=Path(__file__).resolve().parents[2]
+ sys.path.insert(0,str(ROOT/'scripts/urbit'))
+ import delivery_suite as S
+ import delivery_cases as D
++import core_test
+ from test_delivery_cases import record,RAW,ROUTE,wrap
+ 
+ CORPUS=json.loads((ROOT/'specs/urbit/fixtures/native-cases-v2.json').read_bytes())
+@@ -103,22 +105,88 @@ class DeliveryScheduleHostTests(unittest.TestCase):
+         suite=S.Suite(CORPUS,lambda *a,**k:result,sink=lambda row:{'sha256':'unverified'})
+         with self.assertRaises(D.ObservationError):suite.call('bus','observe',raw=b'{}')
+ 
+-    def test_unavailable_home_does_not_green_adapter_programming_errors(self):
+-        def check(error,allowed):
+-            suite=S.Suite(CORPUS);suite.current={'name':'mock-unavailable','assertions':[]}
+-            suite.snap=lambda:{'state_jam_sha256':'a'*64};suite.same=lambda before:before
+-            def lifecycle(attempt):
+-                def bounded(*args,**kwargs):raise error
+-                return {'native':{'mock':True},'old_pid':101,'old_exit':0,'replacement_pid':102,'attempt':attempt(bounded)}
+-            suite.unavailable_home=lifecycle
+-            if allowed:
+-                suite.unavailable();self.assertTrue(all(x['status']=='passed' for x in suite.current['assertions']))
+-            else:
+-                with self.assertRaises(type(error)):suite.unavailable()
+-        for error in (ValueError('bad fixture'),AssertionError('adapter defect'),FileNotFoundError('missing executable')):
+-            with self.subTest(error=error):check(error,False)
+-        check(TimeoutError('mock bounded native timeout'),True)
+-        check(OSError(errno.EHOSTUNREACH,'mock route unavailable'),True)
++    @staticmethod
++    def timeout_response():
++        return {'raw':None,'json':None,'native':{'stdout':'[32 %avow 1]',
++            'response_frame_sha256':'a'*64, 'stderr':
++            'loom: mapped 512MB\r\nlite: arvo formula 4ce68411\r\nlite: core 641296f\r\n'
++            'lite: final state 641296f\r\neval (cue, newt):\n\r\ntimeout\r\neval: bail: %thread-fail'}}
++
++    def unavailable_suite(self, response=None, error=None, sender_pid=101):
++        suite=S.Suite(CORPUS);suite.current={'name':'mock-unavailable','assertions':[]}
++        suite.snap=lambda:{'state_jam_sha256':'a'*64};suite.same=lambda before:before
++        def lifecycle(attempt):
++            def bounded(*args,**kwargs):
++                self.assertEqual(kwargs['timeout'],75)
++                if error is not None:raise error
++                return response
++            sender=[{'ship':'bus','phase':phase,'pid':101 if index<2 else sender_pid,'exit':None}
++                    for index,phase in enumerate(('before-stop','after-terminal','after-restart'))]
++            return {'native':{'mock':True},'old_pid':201,'old_exit':0,'replacement_pid':202,
++                    'sender':sender,'attempt':attempt(bounded)}
++        suite.unavailable_home=lifecycle
++        return suite
++
++    def test_only_specific_drained_native_timeout_is_expected_unavailability(self):
++        suite=self.unavailable_suite(self.timeout_response());suite.unavailable()
++        self.assertTrue(all(x['status']=='passed' for x in suite.current['assertions']))
++        self.assertEqual(suite.current['unavailability']['attempt']['supported_failure'],'native-timeout')
++
++    def test_unavailable_home_rejects_transport_and_programming_failures(self):
++        for error in (ValueError('bad fixture'),AssertionError('adapter defect'),FileNotFoundError('missing executable'),
++                      TimeoutError('local socket deadline'),ConnectionRefusedError(errno.ECONNREFUSED,'sender died'),
++                      OSError(errno.EHOSTUNREACH,'route unavailable'),EOFError('truncated terminal')):
++            with self.subTest(error=error),self.assertRaises(type(error)):
++                self.unavailable_suite(error=error).unavailable()
++
++    def test_unavailable_home_rejects_business_output_ack_and_unrelated_bails(self):
++        bad=[]
++        for field,value in (('stdout','[32 %avow 0]'),('response_frame_sha256',''),
++                            ('stderr','timeout'),('stderr','poke-fail\ntimeout\neval: bail: %thread-fail')):
++            response=self.timeout_response();response['native'][field]=value;bad.append(response)
++        response=self.timeout_response();response['json']={'status':'accepted'};response['raw']='{}';bad.append(response)
++        response=self.timeout_response();response['native']['stderr']=response['native']['stderr'].replace('\r\ntimeout', '\r\nnot-timeout');bad.append(response)
++        for response in bad:
++            with self.subTest(response=response),self.assertRaises(D.ObservationError):
++                self.unavailable_suite(response).unavailable()
++        with self.assertRaisesRegex(D.ObservationError,'same-live-sender'):
++            self.unavailable_suite(self.timeout_response(),sender_pid=102).unavailable()
++
++    def test_home_lifecycle_leaves_home_offline_after_transport_failure(self):
++        events=[];bus=Mock(pid=101);bus.poll.return_value=None
++        zod=Mock(pid=201,returncode=0)
++        host={'EVIDENCE':[], 'PROCESSES':{'bus':bus,'zod':zod},
++              'execution_check':Mock(), 'shutdown':Mock(side_effect=lambda ship:events.append('stop')),
++              'launch':Mock(), 'wait_ready':Mock(), 'dojo':Mock(return_value='%408\n')}
++        host['record']=lambda command,result:host['EVIDENCE'].append({'command':command,'result':result})
++        def attempt(call):
++            self.assertEqual(events,['stop'])
++            raise TimeoutError('unfinished native request')
++        with self.assertRaises(TimeoutError):core_test.home_unavailable(host,attempt,Mock())
++        host['launch'].assert_not_called();host['dojo'].assert_not_called()
++
++    def test_home_lifecycle_drains_before_restart_and_rejects_dead_sender(self):
++        for died in (False,True):
++            with self.subTest(died=died):
++                events=[];bus=Mock(pid=101);bus.poll.side_effect=[None, -11 if died else None, None]
++                processes={'bus':bus,'zod':Mock(pid=201,returncode=0)}
++                def launch(ship):
++                    events.append('restart');processes[ship]=Mock(pid=202,returncode=None)
++                host={'EVIDENCE':[], 'PROCESSES':processes, 'execution_check':Mock(),
++                      'shutdown':lambda ship:events.append('stop'), 'launch':Mock(side_effect=launch),
++                      'wait_ready':Mock(), 'dojo':Mock(return_value='%408\n')}
++                host['record']=lambda command,result:host['EVIDENCE'].append({'command':command,'result':result})
++                def attempt(call):
++                    events.append('terminal');return {'response':self.timeout_response()}
++                if died:
++                    with self.assertRaisesRegex(RuntimeError,'Contributor exited'):
++                        core_test.home_unavailable(host,attempt,Mock())
++                    host['launch'].assert_not_called()
++                else:
++                    result=core_test.home_unavailable(host,attempt,Mock())
++                    self.assertEqual(events,['stop','terminal','restart'])
++                    self.assertEqual(result['replacement_pid'],202)
++                    self.assertEqual([x['pid'] for x in result['sender']],[101]*3)
+ 
+ 
+ if __name__=='__main__':

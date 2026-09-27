@@ -1,0 +1,190 @@
+{
+  "protocol": "stead.transcript-review/1",
+  "reviewer": "/root/urgit_audit",
+  "implementation_owner": "/root",
+  "review_date": "2026-09-13",
+  "status": "reviewed",
+  "classification": "independent host-only source review and temporary-file/mocked-process tests",
+  "approval_limit": "No native qualification, Hoon compilation, live identity, merge, release, or deployment approval.",
+  "native_processes_launched": 0,
+  "base_head": "77428f6c35eb0fe7b7e497b64c5a1eab92e943cd",
+  "source_uncommitted_at_review": true,
+  "reviewed_source_files": {
+    "scripts/urbit/native_transcript.py": "d724f6820d58b926a055bd10fe4804fd10db917158804b478e37e1b80cf3b34f",
+    "tests/urbit/test_native_transcript.py": "e9ec39d8cdfeed58d42c30f2aef9bda8a5bb597bebb53331c94a5ee05328ba3f",
+    "scripts/urbit/core_conn.py": "78b15b167a4d09eaee9cf1e1e6f0283ca0a3f542626c614ad5f997640ce9642c",
+    "tests/urbit/test_core_conn.py": "830adbcab8414bf2801f350899893abc8572e2b377368159cfa9bc3af06c9cd1"
+  },
+  "source_after_retained_replay": {
+    "scripts/urbit/native_transcript.py": "d724f6820d58b926a055bd10fe4804fd10db917158804b478e37e1b80cf3b34f",
+    "tests/urbit/test_native_transcript.py": "e9ec39d8cdfeed58d42c30f2aef9bda8a5bb597bebb53331c94a5ee05328ba3f",
+    "scripts/urbit/core_conn.py": "78b15b167a4d09eaee9cf1e1e6f0283ca0a3f542626c614ad5f997640ce9642c",
+    "tests/urbit/test_core_conn.py": "830adbcab8414bf2801f350899893abc8572e2b377368159cfa9bc3af06c9cd1"
+  },
+  "sources_unchanged": true,
+  "closing_disposition": {
+    "status": "no_remaining_blocker_in_bounded_review_scope",
+    "scope": "Synthetic raw transcript retention, runtime-log continuity/diagnostic detection, native-client framing and failure propagation. The complete core_test orchestration and actual runtime execution are separate gates.",
+    "verified_properties": [
+      "Existing transcript files are not overwritten; line/total retention limits refuse and earlier complete evidence survives.",
+      "All-ship log reads retain exact deltas and use descriptor identity, full-prefix digest, bounded partial-line carry, and post-read pathname identity to reject uncertain continuity.",
+      "Signals/nonzero evaluator exits, silent missing output, malformed/partial frames and non-JSON constants cannot become a passing evaluator/control result.",
+      "Partial received frames, evaluator failures, timeouts and diagnostic prefixes remain attached to failed exchanges.",
+      "The 24 MiB raw-record budget retains the bounded failed-exchange representation; native wire limits remain unchanged."
+    ],
+    "limits": [
+      "Runtime log diagnostics use a conservative pattern filter; zero matches are not proof of absence of every possible runtime fault.",
+      "Retained stdout/stderr prefixes are bounded. Temporary-file writes have no hard disk quota.",
+      "Host-written fixture files and mocked outputs test adapter behavior. No native evaluator, Hoon compiler, Gall observer or four-ship behavior was executed in this review.",
+      "The independent phase gate still requires exact current commit, source, loaded closure, Clay, toolchain, corpus and actual native evidence."
+    ]
+  },
+  "original_review_runs": [
+    {
+      "argv": [
+        "python3",
+        "-m",
+        "unittest",
+        "discover",
+        "-s",
+        "tests/urbit",
+        "-p",
+        "test_native_transcript.py",
+        "-v"
+      ],
+      "environment": {
+        "PYTHONDONTWRITEBYTECODE": "1"
+      },
+      "tests": 7,
+      "status": "passed",
+      "reported_elapsed_seconds": 0.125,
+      "raw_output_path": null,
+      "recording": "Observed tool output; not captured as a file at execution."
+    },
+    {
+      "argv": [
+        "python3",
+        "-m",
+        "unittest",
+        "discover",
+        "-s",
+        "tests/urbit",
+        "-p",
+        "test_core_conn.py",
+        "-v"
+      ],
+      "environment": {
+        "PYTHONDONTWRITEBYTECODE": "1"
+      },
+      "tests": 11,
+      "status": "passed",
+      "reported_elapsed_seconds": 0.004,
+      "raw_output_path": null,
+      "recording": "Observed tool output; not captured as a file at execution."
+    },
+    {
+      "execution": "Four independent tempfile wrapper tests originally executed through python3 stdin",
+      "tests": 4,
+      "status": "passed",
+      "reported_elapsed_seconds": 0.037,
+      "raw_output_path": null,
+      "recording": "Observed tool output only. Reconstructed reproducible source and fresh replay output are retained below."
+    },
+    {
+      "execution": "Independent real-tempfile rotation-after-open probe with mocked fstat scheduling point",
+      "status": "passed",
+      "observed_error": "Runtime log rotated during observation",
+      "raw_output_path": null,
+      "recording": "Observed tool output only. The same probe is the fifth test of the retained replay below."
+    }
+  ],
+  "retained_replay": {
+    "argv": [
+      "/usr/bin/python3",
+      "docs/urbit/evidence/2026-09-13/qualification/transcript-review-host-checks.py"
+    ],
+    "cwd": "/home/skilgore/stead-urbit",
+    "environment": {
+      "PYTHONDONTWRITEBYTECODE": "1"
+    },
+    "started_utc": "2026-09-13T14:28:28.215824+00:00",
+    "elapsed_seconds": 0.114897,
+    "returncode": 0,
+    "expected_tests": 5,
+    "status": "passed",
+    "script_path": "docs/urbit/evidence/2026-09-13/qualification/transcript-review-host-checks.py",
+    "script_sha256": "68cdff237e29f700831ef96da720fb71733564cfc2c11e7d96b839d15ab4fa23",
+    "output_path": "docs/urbit/evidence/2026-09-13/qualification/transcript-review-host-checks.log",
+    "output_sha256": "4e33dc8fdffec5f5c8047ead1bb2a095bbb648a96228edb4514f947cd90c8085",
+    "output_bytes": 833,
+    "recording": "Fresh raw combined stdout/stderr captured directly to the named file; this is not the original inline run output.",
+    "environment_observed": {
+      "python": "3.14.7 (main, Aug 10 2026, 07:46:56) [GCC 16.1.1 20260728]",
+      "platform": "Linux-7.1.9-arch1-2-x86_64-with-glibc2.44"
+    },
+    "benchmark_claim": null
+  },
+  "initial_review_source_hashes": {
+    "scripts/urbit/native_transcript.py": "b6ea166167c7e8ac96e1d83501d04ded04a6eb9bf2f5c3a25857134f663f63d8",
+    "scripts/urbit/core_conn.py": "cc0155d1e521b7ef153a3d1a4748b6c729641776db5a107eb96934672a8d20d6"
+  },
+  "initial_failure_reproductions": [
+    {
+      "finding": "Split runtime diagnostic missed",
+      "host_input": "Append need- then mark stead-result-2\\n across two observations of actual temporary bus.log among all four log files.",
+      "observed_before_fix": {
+        "first_errors": 0,
+        "second_errors": 0
+      },
+      "repair": "Bounded incomplete-line carry joins the diagnostic across observations."
+    },
+    {
+      "finding": "Copy-truncate/regrow skipped a runtime diagnostic",
+      "host_input": "Capture a 100-byte bus.log cursor; replace its contents in place with need-mark plus padding to 101 bytes.",
+      "observed_before_fix": {
+        "errors": 0,
+        "retained_new_bytes": 1
+      },
+      "repair": "Verify the exact prior prefix digest, not only inode and current length."
+    },
+    {
+      "finding": "Invalid-input evaluator crash classified as expected rejection",
+      "host_input": "Mock CalledProcessError(-11) for malformed evaluator input, followed by matching positive framing-control outputs.",
+      "observed_before_fix": {
+        "status": "passed",
+        "invalid_input": {
+          "encoder_rejected": true,
+          "exit": -11
+        }
+      },
+      "repair": "Propagate every signal/nonzero evaluator exit as failure; require diagnostic evidence for the known zero-exit parse control."
+    },
+    {
+      "finding": "Non-JSON numeric constant accepted",
+      "host_input": "Framed bytes {\"status\":\"accepted\",\"value\":NaN}.",
+      "observed_before_fix": {
+        "invalid_json_accepted": true,
+        "value_was_nan": true
+      },
+      "repair": "Reject NaN, Infinity and -Infinity through parse_constant."
+    },
+    {
+      "finding": "Valid-sized failed transport trace exceeded raw-record retention bound",
+      "host_input": "Mock a 1,000,000-byte Newt body and 1,000,000-byte malformed evaluator output.",
+      "observed_before_fix": {
+        "record_bytes": 4000625,
+        "retention_refused": true,
+        "retained_records": 0
+      },
+      "repair": "Derive a separate 24 MiB evidence-record budget from existing byte bounds and JSON/hex expansion; keep wire limits unchanged."
+    }
+  ],
+  "initial_reproduction_recording": {
+    "raw_output_paths": [],
+    "statement": "These initial observations were tool transcripts and were not retained as standalone files. They are reported as reviewer observations, not attached raw artifacts. Initial source hashes were collected during review, not a before/after manifest for every inline reproduction.",
+    "source_findings_without_old_runtime_reproduction": [
+      "Open/stat pathname race required descriptor fstat and a post-read pathname check; the repaired interleaving was exercised by the retained rotation test.",
+      "Failed exchanges raised before returning normal records; source repair attaches stage/raw prefixes and root callback retains the failure record."
+    ]
+  }
+}

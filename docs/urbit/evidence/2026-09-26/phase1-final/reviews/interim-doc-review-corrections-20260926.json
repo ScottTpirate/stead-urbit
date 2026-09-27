@@ -1,0 +1,23 @@
+{
+  "native_or_host_tests_executed": false,
+  "phase_acceptance": false,
+  "prior_review_sha256": "177d8dfbde751633681e052b5f4cde2fad5aa33213ed764b3758ca74fe35c7bc",
+  "protocol": "stead.interim-doc-review-correction/1",
+  "recorded_at": "2026-09-26T20:08:23.167257+00:00",
+  "remaining_required_work": [
+    "Completed current native core result, exact final proof derivation and independent73-row semantic acceptance review before merge/Phase2.",
+    "Publish final reviewed branch and recheck live PR42/main state before the planned aggregate merge commit."
+  ],
+  "resolved": [
+    "DOC-01: TEST_RESULTS now retains the historical0d877 Gall result separately, identifies fresh55475 Gall58 and138-host/seven-proof evidence, and leaves current core/full73 acceptance pending.",
+    "Checkpoint now labels the actual integration base origin/main4bb28c6 and preserves local branch/worktree-ref boundaries."
+  ],
+  "reviewed_files_sha256": {
+    "docs/urbit/PHASE01_CHECKPOINT_20260926.md": "dba3aceda8819f2d194a79b6e04de223d339f778b205c3169678b6984904629a",
+    "docs/urbit/TEST_RESULTS.md": "b1f212acc1a42032440135c7892339abf3564530aa53045686e4a9d7b7777a37"
+  },
+  "reviewer": "/root/independent_review",
+  "scope": "Narrow read-only follow-up of the two requested documentation corrections. No whole-phase acceptance or review of still-running core04.",
+  "status": "no_remaining_interim_doc_or_integration_plan_blocker",
+  "tracked_files_edited": false
+}

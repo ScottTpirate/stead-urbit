@@ -1,0 +1,102 @@
+{
+  "protocol": "stead.native-attempt/1",
+  "label": "prequal07",
+  "source_commit": "b2ec89c258c5544a3344c3665a81700b9e7075b4",
+  "native_status": "fail",
+  "native_error": "Execution guard interrupted result: Fixture stop is latched",
+  "native_elapsed_seconds": 23.451,
+  "outer_guard_status": "failed",
+  "outer_guard_reason": "Owned sandbox exited unsuccessfully",
+  "outer_guard_exit": 1,
+  "qualifies_phase": false,
+  "scope": "Exact individual execution record; phase acceptance requires separate reconciliation and review.",
+  "transformations": [
+    "gzip compression only; decompressed bytes unchanged"
+  ],
+  "artifacts": [
+    {
+      "file": "skill-evaluation-20260926T142624Z-prequalification.json.gz",
+      "sha256": "ce3fa7f2a36cafb15ab1213c53b9216f66154625cded5b6fb793f29337a52a45",
+      "original_local_path": ".piers/fakes/logs/skill-evaluation-20260926T142624Z-prequalification.json",
+      "original_sha256": "4cbfe0451b3688aed864c20abdf5edf87e937cc2d70ea80b590869ed9d8758b2",
+      "encoding": "gzip"
+    },
+    {
+      "file": "outer-guard.json.gz",
+      "sha256": "c81b8d718b225b8d91b5d8fe18d9540e56ead0daad19c26c5c43f2c5bd5992ce",
+      "original_local_path": ".runtime/execution-runs/four-fakes-hmre6x2l/report.json",
+      "original_sha256": "d8ec71845ca737a52f5327b1971a077932474c4b5b90819e27960cd082657dd4",
+      "encoding": "gzip"
+    },
+    {
+      "file": "source-context.json.gz",
+      "sha256": "09545e386069ace5c56e0e18c4974c176cd7938fcd4f6cfffaf490ae05c673f0",
+      "original_local_path": ".runtime/execution-runs/four-fakes-hmre6x2l/control/source-context.json",
+      "original_sha256": "90068ff16ba4b87999acfc137186b97b779b7b7463d4f1637f4af83c65f45553",
+      "encoding": "gzip"
+    },
+    {
+      "file": "prequal07.json.gz",
+      "sha256": "8a39a3474f390d3f1f411f4c3f3318954539a575d1828dd4f230516531d050ed",
+      "original_local_path": ".runtime/phase01-20260925/prequal07.json",
+      "original_sha256": "d9397c2ada43a8292ab996932b2ac191e1a73145dcfa612e42c507dbca415a1e",
+      "encoding": "gzip"
+    },
+    {
+      "file": "prequal07.log.gz",
+      "sha256": "58ec0f88ffe687616a707618de3e2a3c59f9836602923f1750d23bab170d49cf",
+      "original_local_path": ".runtime/phase01-20260925/prequal07.log",
+      "original_sha256": "af2c7a3594ccff238a0ff469d6e6c7aee802b61dd89261fa63b41fc6658b7b9c",
+      "encoding": "gzip"
+    },
+    {
+      "file": "prequal07-zod.log.gz",
+      "sha256": "0bf5f09709d78cb1f72e5c6281f07283dcf044772b4eccf928409f79e238340d",
+      "original_local_path": ".runtime/phase01-20260925/prequal07-zod.log",
+      "original_sha256": "95c722f38c2a9cb67cfb635d711c75eced5c7e42c696c78bb60dbcc11ecd5b18",
+      "encoding": "gzip"
+    },
+    {
+      "file": "start26.json.gz",
+      "sha256": "9863683709afcb3547c51c3ec1561e23956e54ed87637cee5a3056c4b37fddae",
+      "original_local_path": ".runtime/phase01-20260925/start26.json",
+      "original_sha256": "c5ed48235d91515a508a1aa0a83122b12f8392a5e58f61d0978f815cd78913cb",
+      "encoding": "gzip"
+    },
+    {
+      "file": "start26.log.gz",
+      "sha256": "1bce6937d69edee98c526349db6bf9bc89a5667d6a59e73bab13bf977f08752d",
+      "original_local_path": ".runtime/phase01-20260925/start26.log",
+      "original_sha256": "84e63a16425f39988146ed74b7e7afa4ce6d0d7f54349b608e8072d1c07ffb2c",
+      "encoding": "gzip"
+    },
+    {
+      "file": "ready26.json.gz",
+      "sha256": "d81a9a61903fc295f7169fdddae20c6d86ef5cecc947044f70caf1316e107a8f",
+      "original_local_path": ".runtime/phase01-20260925/ready26.json",
+      "original_sha256": "f11112ded18031f46a9862fd504ed0cf88e04082e631b31b49da38d7bff0fa4d",
+      "encoding": "gzip"
+    },
+    {
+      "file": "ready26.log.gz",
+      "sha256": "01cedc45b27b73b7c8d5c8d2e0aa7bae317933250f77076dc26ab76b2428f17e",
+      "original_local_path": ".runtime/phase01-20260925/ready26.log",
+      "original_sha256": "6ade3d62b67dd2066207260ae96b6ef88847dbb824720cc7be7b132fee5510e9",
+      "encoding": "gzip"
+    },
+    {
+      "file": "stop26.json.gz",
+      "sha256": "a93d145a7b13298ff449436d8488526c11b2193350713d713824a4ded7893057",
+      "original_local_path": ".runtime/phase01-20260925/stop26.json",
+      "original_sha256": "2c578eb742e50ae34829a14a7a3858f067ea771b663f194be3e9ac8716df53fc",
+      "encoding": "gzip"
+    },
+    {
+      "file": "stop26.log.gz",
+      "sha256": "12c671e095df8b045e620680c1b93956a87a91531f555b53cad5fd1a748b4a19",
+      "original_local_path": ".runtime/phase01-20260925/stop26.log",
+      "original_sha256": "7e0046a61997e91b4c00d40b33b385148d315de81c5f28722592072cb3fde000",
+      "encoding": "gzip"
+    }
+  ]
+}

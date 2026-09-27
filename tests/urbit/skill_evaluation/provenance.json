@@ -1,0 +1,109 @@
+{
+  "additional_syntax_references": [
+    {
+      "purpose": "Pinned test helper invocation pattern; no copied test result",
+      "source_path": "native/core/desk/tests/stead-git.hoon",
+      "source_sha256": "51518a1239373467864412e64ab92cfbc8258bd37783988b2ae6c17c6eac2d98"
+    },
+    {
+      "purpose": "Existing generator source layout; new generator needs actual native qualification",
+      "source_path": "native/core/desk/gen/stead-build-probe.hoon",
+      "source_sha256": "5b95dc5675894897cdf1bda25cbb9bf27100dd6bd305dfd836aad4ec06725d96"
+    }
+  ],
+  "common_examples": [
+    {
+      "native_evidence_path": "docs/urbit/evidence/2026-09-12/native-smoke-independent-pass.json",
+      "path": "common/smoke-library.hoon",
+      "scope": "Historically compiled synthetic counter/sender example; no new fixture pass implied",
+      "sha256": "a064e0b81fdaa1b0341d884aa71773d52c271c3223ff7e56d1e6566460dfdfd0",
+      "source_commit": "96971540cf70c557f01a5ef10db832ddee2e0130",
+      "source_path": "native/desk/lib/stead-smoke.hoon"
+    },
+    {
+      "native_evidence_path": "docs/urbit/evidence/2026-09-12/native-smoke-independent-pass.json",
+      "path": "common/smoke-agent.hoon",
+      "scope": "Historically compiled synthetic counter/sender example; no new fixture pass implied",
+      "sha256": "6b4071c1d3906223a62bd1af6193b2a48942b751b46460fa96cea2f8b48a729b",
+      "source_commit": "96971540cf70c557f01a5ef10db832ddee2e0130",
+      "source_path": "native/desk/app/stead-home.hoon"
+    }
+  ],
+  "historical_example_evidence": {
+    "classification": "local-real-native-fake-ships",
+    "limits": "Historical native compilation/execution of these source examples; new tasks, mutations, reference solutions and adapters are not yet compiled or executed.",
+    "native_tree_sha256": "dff85b9af5429c096e38789f81f1e6097368c244e84d2d1b5b49a66a1f6fcf89",
+    "path": "docs/urbit/evidence/2026-09-12/native-smoke-independent-pass.json",
+    "runtime_lock_sha256": "4a209c10cf1756eb0f7357cc3eca8250bf66c239b4cd0ca31a8c0886d4d304ee",
+    "sha256": "a711f2ff234ed78bc0b16ca90f7724537aaf88d91d3fab2e586daf3719826227",
+    "status": "pass"
+  },
+  "prepared_by": "/root/independent_review",
+  "protocol": "stead.skill-evaluation-provenance/2",
+  "skills": [
+    {
+      "baseline_must_not_receive": true,
+      "name": "stead-hoon",
+      "path": "assisted/stead-hoon.SKILL.md",
+      "sha256": "5469b3567b908b3f9fc684f92376c379de2a611f6c60dc0cf770627583ba121a",
+      "source_path": ".agents/skills/stead-hoon/SKILL.md"
+    },
+    {
+      "baseline_must_not_receive": true,
+      "name": "stead-gall-security",
+      "path": "assisted/stead-gall-security.SKILL.md",
+      "sha256": "c5de6d6f494f65891e064276c1a9c65629ffe6276a0ade4929d9012901350fcc",
+      "source_path": ".agents/skills/stead-gall-security/SKILL.md"
+    },
+    {
+      "baseline_must_not_receive": true,
+      "name": "stead-native-tests",
+      "path": "assisted/stead-native-tests.SKILL.md",
+      "sha256": "13622cf24e087573d63b7fc4850f49c44ed943cbf3ad8f0cf4fe4ed590774ba8",
+      "source_path": ".agents/skills/stead-native-tests/SKILL.md"
+    },
+    {
+      "baseline_must_not_receive": true,
+      "name": "stead-urbit-release",
+      "path": "assisted/stead-urbit-release.SKILL.md",
+      "sha256": "52e5f9ef225d4a9849386b50b9253abb801c12f02bfa60e839595c14430d3685",
+      "source_path": ".agents/skills/stead-urbit-release/SKILL.md"
+    }
+  ],
+  "status": "v2_source_proposal_unexecuted",
+  "toolchain": {
+    "boot_artifact_sha256": "b4babd14e9f1acbdb421b3c31c215ee637ad6691b7e382b99c6fd8991e623708",
+    "extra_libraries": {
+      "T03": [
+        "default-agent"
+      ],
+      "T04": [
+        "default-agent"
+      ],
+      "T05": [
+        "test"
+      ]
+    },
+    "kelvin": 408,
+    "kernel_commit": "5a187fededc4582a34fcd6055c67bb63e0917b94",
+    "kernel_source_tree_sha256": "33b397d659f7686be86d12f59c968f7613a5dc2851916ca512b6f18aa0ec231b",
+    "network_acquisition": "not part of participant task",
+    "protocol": "stead.skill-evaluation-pins/1",
+    "runtime_binary_sha256": "47ad302e8934271dfc00dcdab1d553c6d6460b105e3099ff47e0e4e4231bb26d",
+    "runtime_version": "4.6",
+    "toolchain_lock_path": "specs/urbit/toolchain.lock.json",
+    "toolchain_lock_sha256": "4a209c10cf1756eb0f7357cc3eca8250bf66c239b4cd0ca31a8c0886d4d304ee"
+  },
+  "v1_preserved_evidence": {
+    "no_v1_answer_reuse": true,
+    "path": "docs/urbit/evidence/2026-09-26/workflow-evaluation/index.json",
+    "reason": "both T05 mutation inventories truncated after outsider-granted survived",
+    "sha256": "2e27b941213b666e277d49e403c58940aa270d30a70319ace14e8dfe55e17f12",
+    "status": "incomplete"
+  },
+  "v2_control": {
+    "derivation": "Exact v1 reference test suite with its two outsider tests removed; preserves writer, stale, reader-spoof and writer-claim tests. Requires new actual native prequalification.",
+    "path": "reviewer/controls/T05-weak-tests.hoon",
+    "sha256": "2e51a43725cf25619a6ee414f38078bb83515a53c7ff0f4206e5588664549519"
+  }
+}

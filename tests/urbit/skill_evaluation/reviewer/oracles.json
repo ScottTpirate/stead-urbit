@@ -1,0 +1,130 @@
+{
+  "protocol": "stead.skill-evaluation-oracles/1",
+  "status": "unexecuted_requires_native_prequalification",
+  "test_owner": "/root/independent_review",
+  "required_prequalification": ["all reference solutions compile", "all reference cases pass actual native execution", "T02 starter fails compilation", "all T05 mutants compile", "T05 reference tests fail behaviorally for each mutant", "false native assertion fails", "missing/empty/timeout/malformed output is rejected"],
+  "failure_control": {"id": "deliberate-false-native-expectation", "helper": "pinned base-dev test", "expression": "(expect !>(=(1 2)))", "expected": "nonempty native tang and nonpassing assertion result, not a compile error"},
+  "tasks": [
+    {
+      "id": "T01",
+      "editable_files": ["lib/eval-add.hoon"],
+      "classification": "native_pure_gate",
+      "arm": "add-u8:eval-add",
+      "cases": [
+        {"id": "public-sum", "sample": "[2 3]", "expected": "[~ 5]", "public": true},
+        {"id": "public-overflow", "sample": "[255 1]", "expected": "~", "public": true},
+        {"id": "zero", "sample": "[0 0]", "expected": "[~ 0]"},
+        {"id": "left-boundary", "sample": "[255 0]", "expected": "[~ 255]"},
+        {"id": "right-boundary", "sample": "[0 255]", "expected": "[~ 255]"},
+        {"id": "exact-sum-boundary", "sample": "[128 127]", "expected": "[~ 255]"},
+        {"id": "sum-over-boundary", "sample": "[128 128]", "expected": "~"},
+        {"id": "left-outside", "sample": "[256 0]", "expected": "~"},
+        {"id": "right-outside", "sample": "[0 256]", "expected": "~"},
+        {"id": "both-outside", "sample": "[300 400]", "expected": "~"},
+        {"id": "large-atom", "sample": "[18.446.744.073.709.551.615 0]", "expected": "~"}
+      ]
+    },
+    {
+      "id": "T02",
+      "editable_files": ["lib/eval-maybe.hoon"],
+      "classification": "native_compile_repair_and_pure_gate",
+      "arm": "maybe-count:eval-maybe",
+      "must_preserve_declared_output_mold": "(unit @ud)",
+      "cases": [
+        {"id": "public-off", "sample": "[%.n 7]", "expected": "~", "public": true},
+        {"id": "public-on", "sample": "[%.y 7]", "expected": "[~ 7]", "public": true},
+        {"id": "on-zero-is-some", "sample": "[%.y 0]", "expected": "[~ 0]"},
+        {"id": "off-zero-is-none", "sample": "[%.n 0]", "expected": "~"},
+        {"id": "on-different", "sample": "[%.y 421]", "expected": "[~ 421]"},
+        {"id": "on-large", "sample": "[%.y 18.446.744.073.709.551.615]", "expected": "[~ 18.446.744.073.709.551.615]"},
+        {"id": "off-large", "sample": "[%.n 18.446.744.073.709.551.615]", "expected": "~"}
+      ]
+    },
+    {
+      "id": "T03",
+      "editable_files": ["app/eval-counter.hoon"],
+      "editable_arms": ["on-save", "on-load"],
+      "classification": "native_actual_agent_save_load",
+      "not_claimed": ["cold_process_restart", "installed_app_upgrade", "crash_recovery"],
+      "required_agent_arm_count": 10,
+      "initial_saved_noun": "[%1 0 0]",
+      "prior_state_for_rejected_load": "[%1 5 2]",
+      "required_cards_on_success": [],
+      "cases": [
+        {"id": "public-v0", "load_noun": "[%0 7]", "saved_noun": "[%1 7 0]", "public": true},
+        {"id": "public-v1", "load_noun": "[%1 9 3]", "saved_noun": "[%1 9 3]", "public": true},
+        {"id": "v0-zero", "load_noun": "[%0 0]", "saved_noun": "[%1 0 0]"},
+        {"id": "v0-boundary", "load_noun": "[%0 65.535]", "saved_noun": "[%1 65.535 0]"},
+        {"id": "v1-boundaries", "load_noun": "[%1 65.535 65.535]", "saved_noun": "[%1 65.535 65.535]"},
+        {"id": "repeat-roundtrip", "load_noun": "[%1 21 8]", "saved_noun": "[%1 21 8]", "repeat_load_saved_output": true},
+        {"id": "future-version", "load_noun": "[%2 9 3]", "expect_native_rejection": true},
+        {"id": "untagged", "load_noun": "9", "expect_native_rejection": true},
+        {"id": "missing-field", "load_noun": "[%1 9]", "expect_native_rejection": true},
+        {"id": "count-cell", "load_noun": "[%0 [9 1]]", "expect_native_rejection": true},
+        {"id": "count-too-large", "load_noun": "[%0 65.536]", "expect_native_rejection": true},
+        {"id": "revision-too-large", "load_noun": "[%1 9 65.536]", "expect_native_rejection": true}
+      ]
+    },
+    {
+      "id": "T04",
+      "editable_files": ["app/eval-access.hoon"],
+      "editable_arms": ["on-poke", "on-watch"],
+      "classification": "native_pinned_gall_dispatch",
+      "not_claimed": ["live_network_routing", "browser_identity", "cross_app_isolation"],
+      "required_agent_arm_count": 10,
+      "home": "~zod",
+      "initial_saved_noun": "[%0 0]",
+      "common_invariants": ["record real Gall sender and ACK/NACK", "record real fact/kick cards", "no denied fact", "denials and reads preserve saved state", "only supported exact path", "no application scry API"],
+      "public_scenario": [
+        {"kind": "poke", "sender": "~bus", "mark": "noun", "noun": "[%set ~bus 3]", "outcome": "ack", "saved_noun": "[%0 3]"},
+        {"kind": "watch", "sender": "~nec", "path": "/value", "outcome": "ack", "facts": [{"mark": "noun", "noun": "3"}], "kicks": 1, "saved_noun": "[%0 3]"}
+      ],
+      "private_scenario": [
+        {"id": "writer-claim-ignored", "kind": "poke", "sender": "~bus", "mark": "noun", "noun": "[%set ~bud 7]", "outcome": "ack", "saved_noun": "[%0 7]"},
+        {"id": "reader-spoof", "kind": "poke", "sender": "~nec", "mark": "noun", "noun": "[%set ~bus 9]", "outcome": "nack", "hint": "eval-denied", "saved_noun": "[%0 7]"},
+        {"id": "outsider-spoof", "kind": "poke", "sender": "~bud", "mark": "noun", "noun": "[%set ~bus 9]", "outcome": "nack", "hint": "eval-denied", "saved_noun": "[%0 7]"},
+        {"id": "owner-no-content-grant", "kind": "poke", "sender": "~zod", "mark": "noun", "noun": "[%set ~bus 9]", "outcome": "nack", "hint": "eval-denied", "saved_noun": "[%0 7]"},
+        {"id": "wrong-mark", "kind": "poke", "sender": "~bus", "mark": "json", "noun": "[%set ~bus 9]", "outcome": "nack", "hint": "eval-mark", "saved_noun": "[%0 7]"},
+        {"id": "oversized-value", "kind": "poke", "sender": "~bus", "mark": "noun", "noun": "[%set ~bus 256]", "outcome": "nack", "hint": "eval-limit", "saved_noun": "[%0 7]"},
+        {"id": "wrong-command", "kind": "poke", "sender": "~bus", "mark": "noun", "noun": "[%reset ~bus 9]", "outcome": "nack", "native_decode_failure": true, "saved_noun": "[%0 7]"},
+        {"id": "writer-read", "kind": "watch", "sender": "~bus", "path": "/value", "outcome": "ack", "facts": [{"mark": "noun", "noun": "7"}], "kicks": 1, "saved_noun": "[%0 7]"},
+        {"id": "reader-read", "kind": "watch", "sender": "~nec", "path": "/value", "outcome": "ack", "facts": [{"mark": "noun", "noun": "7"}], "kicks": 1, "saved_noun": "[%0 7]"},
+        {"id": "outsider-read-denied", "kind": "watch", "sender": "~bud", "path": "/value", "outcome": "nack", "hint": "eval-denied", "facts": [], "saved_noun": "[%0 7]"},
+        {"id": "owner-read-denied", "kind": "watch", "sender": "~zod", "path": "/value", "outcome": "nack", "hint": "eval-denied", "facts": [], "saved_noun": "[%0 7]"},
+        {"id": "wrong-path", "kind": "watch", "sender": "~bus", "path": "/other", "outcome": "nack", "hint": "eval-path", "facts": [], "saved_noun": "[%0 7]"},
+        {"id": "path-prefix-not-match", "kind": "watch", "sender": "~bus", "path": "/value/extra", "outcome": "nack", "hint": "eval-path", "facts": [], "saved_noun": "[%0 7]"},
+        {"id": "maximum-accepted", "kind": "poke", "sender": "~bus", "mark": "noun", "noun": "[%set ~nec 255]", "outcome": "ack", "saved_noun": "[%0 255]"},
+        {"id": "last-value-observed", "kind": "watch", "sender": "~nec", "path": "/value", "outcome": "ack", "facts": [{"mark": "noun", "noun": "255"}], "kicks": 1, "saved_noun": "[%0 255]"}
+      ]
+    },
+    {
+      "id": "T05",
+      "editable_files": ["tests/eval-coverage.hoon", "coverage.json"],
+      "classification": "native_tests_and_behavioral_mutation",
+      "immutable_subject": "public/starters/T05/lib/eval-authorization.hoon",
+      "preserved_test_arms": ["test-writer", "test-stale"],
+      "minimum_added_test_arms": 2,
+      "require_nonempty_discovered_expected_inventory": true,
+      "all_correct_subject_tests_must_pass": true,
+      "mutants": ["T05/claimed-author.hoon", "T05/outsider-granted.hoon", "T05/everyone-granted.hoon", "T05/claim-must-match.hoon"],
+      "every_mutant_must_compile_and_have_a_semantic_assertion_failure": true,
+      "independent_source_review_required": ["reader and outsider denial exercised", "spoofed claimed-author cannot replace sender", "valid writer remains allowed when claimed differs", "no source-text/mutant-name oracle", "both original tests and all added tests execute"]
+    },
+    {
+      "id": "T06",
+      "editable_files": ["desk/lib/eval-desk.hoon", "desk/gen/eval-desk-probe.hoon", "desk/sys.kelvin", "desk/desk.bill", "assembly.json"],
+      "classification": "host_exact_assembly_plus_native_clean_build",
+      "source_mapping": {"desk/lib/eval-desk.hoon": "public/starters/T06/source/eval-desk.hoon", "desk/gen/eval-desk-probe.hoon": "public/starters/T06/source/eval-desk-probe.hoon", "desk/sys.kelvin": "public/starters/T06/source/sys.kelvin", "desk/desk.bill": "public/starters/T06/source/desk.bill"},
+      "require_exact_bytes_regular_files_no_extras": true,
+      "assemble_from_empty_twice_identically": true,
+      "manifest_protocol": "stead.eval-assembly/1",
+      "kernel_commit": "5a187fededc4582a34fcd6055c67bb63e0917b94",
+      "kelvin": 408,
+      "dependencies": [],
+      "native_generator": "eval-desk-probe",
+      "expected_noun": "42",
+      "reject_reused_loaded_generator": true,
+      "not_claimed": ["OTA_install", "frontend", "production_release", "recovery"]
+    }
+  ]
+}

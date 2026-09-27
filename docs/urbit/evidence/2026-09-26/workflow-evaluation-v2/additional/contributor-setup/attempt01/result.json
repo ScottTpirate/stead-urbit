@@ -1,0 +1,165 @@
+{
+  "protocol": "stead.clean-contributor-setup/1",
+  "source_commit": "0d877cff4319de8d437f0da58d4518535f758c36",
+  "started_at": "2026-09-26T19:32:10.823301+00:00",
+  "classification": "real pinned network downloads and local namespace setup; no Hoon execution",
+  "scope": {
+    "cpu_max": "5000 10000",
+    "affinity": [
+      19
+    ],
+    "control_group": "/user.slice/user-1000.slice/user@1000.service/app.slice/run-p1031310-i17834372.scope"
+  },
+  "steps": [
+    {
+      "name": "clone",
+      "command": [
+        "git",
+        "clone",
+        "--no-local",
+        "--no-hardlinks",
+        "--no-checkout",
+        "--single-branch",
+        "--branch",
+        "increment/phase01-closeout-20260925",
+        "/home/skilgore/stead-urbit",
+        "/home/skilgore/stead-urbit/.runtime/phase01-20260926/contributor-clean-setup/checkout"
+      ],
+      "cwd": ".",
+      "exit_code": 0,
+      "elapsed_seconds": 0.5983186720404774,
+      "stdout": {
+        "file": "clone.stdout.log",
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "stderr": {
+        "file": "clone.stderr.log",
+        "bytes": 104,
+        "sha256": "fbdcc6506d68c2e3d23974e82fa23937e9a652e2cdf442f0a9e8ca9639f238fb"
+      }
+    },
+    {
+      "name": "checkout",
+      "command": [
+        "git",
+        "checkout",
+        "--detach",
+        "0d877cff4319de8d437f0da58d4518535f758c36"
+      ],
+      "cwd": ".runtime/phase01-20260926/contributor-clean-setup/checkout",
+      "exit_code": 0,
+      "elapsed_seconds": 0.17246828693896532,
+      "stdout": {
+        "file": "checkout.stdout.log",
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "stderr": {
+        "file": "checkout.stderr.log",
+        "bytes": 102,
+        "sha256": "2114a99125d31c9a805d09cad37e5ae70671ca5bfd5324003119eb6ef5f1dde1"
+      }
+    },
+    {
+      "name": "help",
+      "command": [
+        "make"
+      ],
+      "cwd": ".runtime/phase01-20260926/contributor-clean-setup/checkout",
+      "exit_code": 0,
+      "elapsed_seconds": 0.027892841026186943,
+      "stdout": {
+        "file": "help.stdout.log",
+        "bytes": 1265,
+        "sha256": "63d67e51985c54bd410c57ede612000777f4d3fbba43f5eb34ea6052cd486cb3"
+      },
+      "stderr": {
+        "file": "help.stderr.log",
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      }
+    },
+    {
+      "name": "setup",
+      "command": [
+        "make",
+        "setup"
+      ],
+      "cwd": ".runtime/phase01-20260926/contributor-clean-setup/checkout",
+      "exit_code": 0,
+      "elapsed_seconds": 12.198450051015243,
+      "stdout": {
+        "file": "setup.stdout.log",
+        "bytes": 490,
+        "sha256": "73a420f1e7e24276553fd29d0a78abd3764e69d8d4f1ae71383b24ee98ba8b80"
+      },
+      "stderr": {
+        "file": "setup.stderr.log",
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      }
+    },
+    {
+      "name": "doctor",
+      "command": [
+        "make",
+        "doctor"
+      ],
+      "cwd": ".runtime/phase01-20260926/contributor-clean-setup/checkout",
+      "exit_code": 0,
+      "elapsed_seconds": 0.8263404829194769,
+      "stdout": {
+        "file": "doctor.stdout.log",
+        "bytes": 247,
+        "sha256": "0d97944d8f7ee194300c78829b7ece29f8a2937ac5e4673216002d813ea14106"
+      },
+      "stderr": {
+        "file": "doctor.stderr.log",
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      }
+    },
+    {
+      "name": "status",
+      "command": [
+        "make",
+        "status"
+      ],
+      "cwd": ".runtime/phase01-20260926/contributor-clean-setup/checkout",
+      "exit_code": 2,
+      "elapsed_seconds": 0.17939753201790154,
+      "stdout": {
+        "file": "status.stdout.log",
+        "bytes": 40,
+        "sha256": "b8c8c83c71f36cdc58be7fdb4d44e31bf0f03b62955c76a9cf3fd492e055aa2e"
+      },
+      "stderr": {
+        "file": "status.stderr.log",
+        "bytes": 68,
+        "sha256": "a63898c9969f3f415e9dc615aa1939a2ef0d58b1bc81a605306f8a482d0b5dda"
+      }
+    }
+  ],
+  "status": "failed",
+  "native_ships_started": false,
+  "limits": [
+    "Uses existing Linux host prerequisites; not a fresh OS installation.",
+    "No source edits, native boot, participant trial, user study or Phase 1 acceptance.",
+    "Source clone is local; GitHub clone authentication is not exercised."
+  ],
+  "initial": {
+    "tracked_clean": true,
+    "runtime_absent": true,
+    "piers_absent": true,
+    "tree": "0a4873ced8d414057d8d54fdcd241fb4e7fd4e95",
+    "remotes": [
+      "origin\thttps://github.com/ScottTpirate/stead-urbit.git (fetch)",
+      "origin\thttps://github.com/ScottTpirate/stead-urbit.git (push)",
+      "upstream\thttps://github.com/ScottTpirate/stead.git (fetch)",
+      "upstream\tDISABLED_UPSTREAM_PUSH (push)"
+    ]
+  },
+  "error": "RuntimeError: status failed with exit 2",
+  "finished_at": "2026-09-26T19:32:25.154713+00:00"
+}

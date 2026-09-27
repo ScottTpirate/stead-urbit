@@ -1,0 +1,4 @@
+booting one pinned fake ship on one CPU
+stopping the disposable fake ship
+failed
+{"status": "failed", "checks": 0, "runtime_exit_code": 1}

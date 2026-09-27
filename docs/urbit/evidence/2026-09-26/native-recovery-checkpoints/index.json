@@ -1,0 +1,119 @@
+{
+  "classification": "real-local-native-lifecycle-and-admission-records",
+  "qualifies_phase": false,
+  "scope": "Retains cancellation22, verified clean-seed reset23/24/26 and start24 refusal. Reset replaces disposable synthetic state only. No failed native attempt is promoted to a pass.",
+  "artifacts": [
+    {
+      "file": "reset23.json.gz",
+      "sha256": "554b171c5f8e497bfbadcc02627d51d0a13df0adede582ca4e3e91b29b7bc1b8",
+      "original_local_path": ".runtime/phase01-20260925/reset23.json",
+      "original_sha256": "534aeae382d316e35e698cb096c959a986b254fe75d483faecb8b53888a94fef",
+      "encoding": "gzip"
+    },
+    {
+      "file": "reset23.log.gz",
+      "sha256": "f881934e094a5ba8c507279e050f290402ae6d979b64fdc64a2714336c108cca",
+      "original_local_path": ".runtime/phase01-20260925/reset23.log",
+      "original_sha256": "20a4f83e68b491f063b2573def36659991a7d8456eb5c92f4624dabdce7e290a",
+      "encoding": "gzip"
+    },
+    {
+      "file": "pre-reset23-unclean-live.json.gz",
+      "sha256": "1168542158490ac616390fde75e49f3497367df8903191e0bfa68ded3584f286",
+      "original_local_path": ".runtime/phase01-20260925/pre-reset23-unclean-live.json",
+      "original_sha256": "5cadc364689dd81d6e87689aa594e9ffbbd09bef3eca284d4f52f5dacd1d2838",
+      "encoding": "gzip"
+    },
+    {
+      "file": "reset24.json.gz",
+      "sha256": "e0c32e234abeb4431b3fd01b87ef267299eb2c981709a55549572f3437369028",
+      "original_local_path": ".runtime/phase01-20260925/reset24.json",
+      "original_sha256": "962bfac28bd3e7e5c429abd3fb6fcf9cc97677fb076abf38925e901bff5c4536",
+      "encoding": "gzip"
+    },
+    {
+      "file": "reset24.log.gz",
+      "sha256": "f881934e094a5ba8c507279e050f290402ae6d979b64fdc64a2714336c108cca",
+      "original_local_path": ".runtime/phase01-20260925/reset24.log",
+      "original_sha256": "20a4f83e68b491f063b2573def36659991a7d8456eb5c92f4624dabdce7e290a",
+      "encoding": "gzip"
+    },
+    {
+      "file": "pre-reset24-unclean-live.json.gz",
+      "sha256": "774f0445e126ad30666d3a94d1bff22e6ee821fd26ef341a462b97fcf6358a86",
+      "original_local_path": ".runtime/phase01-20260925/pre-reset24-unclean-live.json",
+      "original_sha256": "0abe10f68b92072bfd63eb36d127f9b8503cb25a51d071d848db2d700592e69b",
+      "encoding": "gzip"
+    },
+    {
+      "file": "reset26.json.gz",
+      "sha256": "c2cedecdcfdfb3877da786b978826a1b67adee8b60eaf220e7096568a4fbaa39",
+      "original_local_path": ".runtime/phase01-20260925/reset26.json",
+      "original_sha256": "bd6e5700d040e76dca9d277e1d4d5c71c7093336beff53b72468bfb50ccb417a",
+      "encoding": "gzip"
+    },
+    {
+      "file": "reset26.log.gz",
+      "sha256": "f881934e094a5ba8c507279e050f290402ae6d979b64fdc64a2714336c108cca",
+      "original_local_path": ".runtime/phase01-20260925/reset26.log",
+      "original_sha256": "20a4f83e68b491f063b2573def36659991a7d8456eb5c92f4624dabdce7e290a",
+      "encoding": "gzip"
+    },
+    {
+      "file": "pre-reset26-unclean-live.json.gz",
+      "sha256": "f866486036f8f55f91f9dafae2d0e3a5424bcef68d8d933b962349ebbe40368f",
+      "original_local_path": ".runtime/phase01-20260925/pre-reset26-unclean-live.json",
+      "original_sha256": "3f39e5b7247f4688a017138e3aa8bca380818f369e0a472fa7e205f1723ee4c0",
+      "encoding": "gzip"
+    },
+    {
+      "file": "cancel22.json.gz",
+      "sha256": "6173fc536d0b8236552f1579d9dbcda5fc2e6740f9ac302af91b45031c4d8c57",
+      "original_local_path": ".runtime/phase01-20260925/cancel22.json",
+      "original_sha256": "10f47f3f0c472236be596a013855e36f8978643cc222e727cd5f09d72f7d51b5",
+      "encoding": "gzip"
+    },
+    {
+      "file": "cancel22.log.gz",
+      "sha256": "e371dfbaa9d801d1a4bebab069415617c79707c0dc0e7d3ea5f43a31175bad3b",
+      "original_local_path": ".runtime/phase01-20260925/cancel22.log",
+      "original_sha256": "92ebca6b16a00fa1b4d538eba76a800f79cbe641c1e9f69382305b97105660ad",
+      "encoding": "gzip"
+    },
+    {
+      "file": "start24.json.gz",
+      "sha256": "a0f18bbfbabfc6b587423de687f05762bb6bb88de0ea77cae19181d086704c20",
+      "original_local_path": ".runtime/phase01-20260925/start24.json",
+      "original_sha256": "a58ebce0acc8c6110d0e0626e07cf29d4a7ca80a1e5f3a892894a63dd38a4ff1",
+      "encoding": "gzip"
+    },
+    {
+      "file": "start24.log.gz",
+      "sha256": "81129d5733c6bf8f47c883841753cffeaa70c2e30acd834811752da6f8b6007e",
+      "original_local_path": ".runtime/phase01-20260925/start24.log",
+      "original_sha256": "d7717e225104ae6a8b6f5b9df4f6cb45a65f014892dd4e4a56f059a509ee369d",
+      "encoding": "gzip"
+    },
+    {
+      "file": "stop24.json.gz",
+      "sha256": "667ee9c2d7fa0fc425e188c7b0aa5c865bfea631ac19763d3d55a3dbc6ff842e",
+      "original_local_path": ".runtime/phase01-20260925/stop24.json",
+      "original_sha256": "62d960a0869df348f4e9044c6664a3c8086b589f73f9026b0667023c5a4d7a1f",
+      "encoding": "gzip"
+    },
+    {
+      "file": "stop24.log.gz",
+      "sha256": "12c671e095df8b045e620680c1b93956a87a91531f555b53cad5fd1a748b4a19",
+      "original_local_path": ".runtime/phase01-20260925/stop24.log",
+      "original_sha256": "7e0046a61997e91b4c00d40b33b385148d315de81c5f28722592072cb3fde000",
+      "encoding": "gzip"
+    },
+    {
+      "file": "start24-refused-guard.json.gz",
+      "sha256": "9f9bf9a17090a6268038a17228b0e755ec58771099002c1faec4c277bdbb27bc",
+      "original_local_path": ".runtime/execution-runs/four-fakes-a4fqjmzz/report.json",
+      "original_sha256": "00abc8c2fa1e5b928deff2e89451cf4c039dfbab4e6c4fdfbf4c7484d45f4c7d",
+      "encoding": "gzip"
+    }
+  ]
+}

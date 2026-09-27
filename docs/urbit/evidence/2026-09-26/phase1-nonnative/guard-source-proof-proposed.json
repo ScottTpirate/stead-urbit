@@ -1,0 +1,254 @@
+{
+  "host_evidence_gap": {
+    "captured_tests": 127,
+    "changed_captured_inputs": {
+      "scripts/urbit/core_test.py": {
+        "captured_sha256": "fc46acabdedce6b597015624dc9ad333f9179fd98c1578cba2c88ad4c7dde27d",
+        "current_sha256": "dcf5ead9d3969322dfe880427090b108e0729e40d4a29aaadd4bc1dcf77c0916"
+      },
+      "scripts/urbit/gall_schedule.py": {
+        "captured_sha256": "3b6793a00deb41b8ad8e4d4a0a8e250943811708b3dc0210b9b9ebc7fa9ce491",
+        "current_sha256": "e839771e23a44b1ac403df213fae2c83103a7750c36330de16322b3c0e913af2"
+      },
+      "scripts/urbit/gall_schedule_proof.py": {
+        "captured_sha256": "77a138ff10ea96daf33694e6d82201a4c6d16a3740ec0a6d05f3f37b4076af55",
+        "current_sha256": "fe6564900c0b3b6ae5c0a75ea18788807024053f433d0f5fcb0b17f04566904b"
+      },
+      "scripts/urbit/harness.py": {
+        "captured_sha256": "6816cb078b781feb614f186f15526ebc183f6567a368d49e95e948a4b7d790ed",
+        "current_sha256": "a63615cabf3c01698cec27bc6ae3f1381cc22be08d0c33859c992d96b8035c04"
+      },
+      "scripts/urbit/skill_evaluation_support.py": {
+        "captured_sha256": "dccf7e5919cf59b1633504b93ee3be65f29e26f786bf2f9ac0d7a97a6e2bd0ce",
+        "current_sha256": "289295fd2650fe8a22f6e69a7657440ef8a43dd65791a78b7da9f4d509d20ded"
+      },
+      "scripts/urbit/supervisor.py": {
+        "captured_sha256": "b49275055befca8a39745a4c0a64c3de829213d1cdbf3c2ad83622997e19992d",
+        "current_sha256": "d157a974075d2e1cbfb1ae07609182a3232c5a3f16b75c3e9287652434d774d2"
+      },
+      "tests/urbit/test_dev_flow.py": {
+        "captured_sha256": "f200a9590255bb46589a65acc10b5e7eb84b304789b64382e775f1bcee4d5dfa",
+        "current_sha256": "4ca41c49a993bdc12032ec1b0e3df3a9bcd46923627603ee169e88e28dbdb66e"
+      }
+    },
+    "current_test_source_read": {
+      "tests/urbit/test_dev_flow.py": "4ca41c49a993bdc12032ec1b0e3df3a9bcd46923627603ee169e88e28dbdb66e"
+    },
+    "previous_artifact": {
+      "path": "docs/urbit/evidence/2026-09-25/phase1-nonnative/host-current.json",
+      "sha256": "5cfe4d692e6898113a8e1ff1dba3c78ebc4832a1fc2eb621d63f50c967fe4772"
+    },
+    "recapture_command_after_final_source_freeze": [
+      "python3",
+      "-m",
+      "unittest",
+      "-v",
+      "test_execution_policy",
+      "test_runtime_guard_adversarial",
+      "test_harness_safety",
+      "test_dev_flow",
+      "test_delivery_cases",
+      "test_delivery_evidence_regressions",
+      "test_delivery_suite"
+    ],
+    "recapture_environment": {
+      "PYTHONDONTWRITEBYTECODE": "1",
+      "PYTHONPATH": "tests/urbit"
+    },
+    "tests_executed_for_this_refresh": 0
+  },
+  "host_test_execution": false,
+  "native_execution": false,
+  "observed_head": "a68a5a7b12c2f87396ca666807e22a170d82a3f1",
+  "prepared_at": "2026-09-26T16:27:49.158077+00:00",
+  "prepared_by": "/root/independent_review",
+  "previous_proof": {
+    "observed_head": "ffab82f8ac5251cb912236be60edc3d3fac3dfba",
+    "path": "docs/urbit/evidence/2026-09-25/phase1-nonnative/source-dispositions-pending.json",
+    "pointer": "/proofs/guard-independent-source-review",
+    "sha256": "dd18bf2e8258c6a5f66a5e12f0279d70472cd33e670122a469ceeb7208772fe9"
+  },
+  "proposed_proof": {
+    "assertions": [
+      {
+        "name": "guard-independent-source-review",
+        "status": "reviewed"
+      }
+    ],
+    "bindings": null,
+    "execution_limit": "No host tests, native process, participant or qualification run was started for this refresh. Existing authored host regressions were read, not rerun.",
+    "findings": [
+      {
+        "claim": "The stop-socket race catches only FileNotFoundError and ConnectionRefusedError. It still waits for exclusive acquisition of the kernel-held lifetime lock, and a held lock fails. It does not treat socket disappearance, a PID lookup or an RPC status as proof of clean guard completion.",
+        "lines": [
+          293,
+          315
+        ],
+        "source": "scripts/urbit/harness.py"
+      },
+      {
+        "claim": "The new public-feedback command accepts only two named candidate conditions, T01 through T06 and an actual integer attempt1 through3. The supervisor admits an exact RPC-key set and constructs the read-only candidate path itself; no new caller-selected path or raw native operation is exposed.",
+        "sources": {
+          "scripts/urbit/harness.py": [
+            387,
+            397
+          ],
+          "scripts/urbit/supervisor.py": [
+            490,
+            519
+          ]
+        }
+      },
+      {
+        "claim": "Workflow evaluation and public feedback retain exact committed-source admission before execution and recheck source afterward. Every admitted operation clears readiness and finishes this owned lifetime, including prequalification admission failure before a result exists.",
+        "lines": [
+          496,
+          543
+        ],
+        "source": "scripts/urbit/supervisor.py"
+      },
+      {
+        "claim": "Late guard failure, final source mismatch and cleanup failure keep a failed result and invalidate both private and public evidence. Detailed private failures are not copied into public feedback. An ordinary failed public compilation under a healthy guard remains an application task failure, not fabricated infrastructure failure.",
+        "sources": {
+          "scripts/urbit/supervisor.py": [
+            141,
+            176,
+            522,
+            543
+          ],
+          "tests/urbit/test_dev_flow.py": [
+            285,
+            329
+          ]
+        }
+      },
+      {
+        "claim": "These deltas do not alter the common thermal policy, freshness validation, owned scope, no-follow lease/lock, read-only source mounts, actual Git-byte verification, private Python cache, TERM deduplication, shutdown-failure latch or seed promotion checks. Exactly five other previously reviewed source files remain byte-identical, and the unchanged surrounding lifecycle code was reread.",
+        "scope": "Source semantics only; final completed outer guard is still independently required.",
+        "unchanged_files": [
+          "Makefile",
+          "scripts/urbit/digests.py",
+          "scripts/urbit/execution_policy.py",
+          "scripts/urbit/namespace_check.py",
+          "scripts/urbit/toolchain.py"
+        ]
+      }
+    ],
+    "id": "guard-independent-source-review",
+    "independence": {
+      "changed_delta_author": "/root/independent_review",
+      "changed_delta_independent_reviewer": "/root/editor_tool_review",
+      "common_guard_reviewer": "/root/independent_review",
+      "final_composite_confirmation": "pending integrator-requested independent reviewer confirmation",
+      "prior_independent_records": [
+        {
+          "approved_sources": {
+            "scripts/urbit/harness.py": "aa798c754b3fc62da384ac14fdf43fba04205f88ffc3fd106ca4ff692855c5df",
+            "scripts/urbit/supervisor.py": "d157a974075d2e1cbfb1ae07609182a3232c5a3f16b75c3e9287652434d774d2"
+          },
+          "lines": [
+            552,
+            622
+          ],
+          "path": "docs/urbit/reviews/PHASE01_INDEPENDENT_REVIEW_20260925.md",
+          "reviewed_commits": [
+            "b0e1a4c"
+          ],
+          "section": "Public workflow feedback and observed pretty-output correction (September 26)",
+          "sha256": "ae0edda0a91d5b89b1cd070c8685de8d73dbc190093563c8cd2d4dba1d51b717"
+        },
+        {
+          "approved_sources": {
+            "scripts/urbit/harness.py": "a63615cabf3c01698cec27bc6ae3f1381cc22be08d0c33859c992d96b8035c04"
+          },
+          "lines": [
+            668,
+            704
+          ],
+          "path": "docs/urbit/reviews/PHASE01_INDEPENDENT_REVIEW_20260925.md",
+          "reviewed_commits": [
+            "97e8628"
+          ],
+          "section": "Observed compiler stream and stop-socket race corrections (September 26)",
+          "sha256": "ae0edda0a91d5b89b1cd070c8685de8d73dbc190093563c8cd2d4dba1d51b717"
+        }
+      ],
+      "self_read_is_not_independent_delta_approval": true
+    },
+    "kind": "source_review",
+    "native_execution": false,
+    "reviewed_source_files": {
+      "Makefile": "da78fc039ee0562efcf5b408a9b8ab24f243f5d2965991599548a76b42b8a0f8",
+      "scripts/urbit/digests.py": "88e6333bd6c764f48fb8939bafa77c9eb236c5b3586a19fe1a1f6e48e27dc08c",
+      "scripts/urbit/execution_policy.py": "da16e2e0fd32eb5b90706b546a7ea8332a65807fc8279f3bd765dcc18aaad9b5",
+      "scripts/urbit/harness.py": "a63615cabf3c01698cec27bc6ae3f1381cc22be08d0c33859c992d96b8035c04",
+      "scripts/urbit/namespace_check.py": "87950f4e7796fafb91807c36b9ea7d392d1d1840e5516d15d5fc6c5d476d0449",
+      "scripts/urbit/supervisor.py": "d157a974075d2e1cbfb1ae07609182a3232c5a3f16b75c3e9287652434d774d2",
+      "scripts/urbit/toolchain.py": "31234bbab1af217c885d8c081d7f438972f6ff1b6d89c93d10bdf49871b3ea16"
+    },
+    "reviewer": "/root/independent_review",
+    "scope": "Composite source review of the exact common guard and four-fake lifecycle. Unchanged common guard is independently reviewed by /root/independent_review; author-owned public-feedback/stop-race deltas rely explicitly on /root/editor_tool_review independent approvals. This is a proposed replacement, not final qualification.",
+    "status": "reviewed"
+  },
+  "protocol": "stead.guard-source-review-proposal/1",
+  "remaining_actions": [
+    "Retain the independent reviewer confirmation of this composite attribution and exact current changed bytes; do not label this author self-read an independent approval.",
+    "After the integrator releases the native lifetime and final source is frozen, capture current guard/delivery host execution with exact before/after actual source hashes, commands, complete test IDs, raw stdout/stderr, duration, exit and clean/dirty state. Preserve the old127-test artifact unchanged.",
+    "Promote the reviewed proposal into a portable source-disposition record and hash its exact bytes. Verify all seven reviewed files still equal the proposed hashes before filling common final bindings from the actual qualification input inventory.",
+    "Refresh the source-proof, host-proof and historical-continuity reference hashes bottom-up. Historical93C/81C refusal and mocked-platform artifacts keep their original guard source; do not rebind them to the hardened guard.",
+    "The four null common bindings in dispositions-pending.json remain deliberately nonpassing until final actual source/runner/lock/corpus bindings are available. This proposal neither closes the seven obligations nor qualifies any native requirement."
+  ],
+  "source_comparison": [
+    {
+      "changed": false,
+      "current_sha256": "da78fc039ee0562efcf5b408a9b8ab24f243f5d2965991599548a76b42b8a0f8",
+      "path": "Makefile",
+      "previous_and_current_git_bytes_verified": true,
+      "previous_sha256": "da78fc039ee0562efcf5b408a9b8ab24f243f5d2965991599548a76b42b8a0f8"
+    },
+    {
+      "changed": false,
+      "current_sha256": "88e6333bd6c764f48fb8939bafa77c9eb236c5b3586a19fe1a1f6e48e27dc08c",
+      "path": "scripts/urbit/digests.py",
+      "previous_and_current_git_bytes_verified": true,
+      "previous_sha256": "88e6333bd6c764f48fb8939bafa77c9eb236c5b3586a19fe1a1f6e48e27dc08c"
+    },
+    {
+      "changed": false,
+      "current_sha256": "da16e2e0fd32eb5b90706b546a7ea8332a65807fc8279f3bd765dcc18aaad9b5",
+      "path": "scripts/urbit/execution_policy.py",
+      "previous_and_current_git_bytes_verified": true,
+      "previous_sha256": "da16e2e0fd32eb5b90706b546a7ea8332a65807fc8279f3bd765dcc18aaad9b5"
+    },
+    {
+      "changed": true,
+      "current_sha256": "a63615cabf3c01698cec27bc6ae3f1381cc22be08d0c33859c992d96b8035c04",
+      "path": "scripts/urbit/harness.py",
+      "previous_and_current_git_bytes_verified": true,
+      "previous_sha256": "6816cb078b781feb614f186f15526ebc183f6567a368d49e95e948a4b7d790ed"
+    },
+    {
+      "changed": false,
+      "current_sha256": "87950f4e7796fafb91807c36b9ea7d392d1d1840e5516d15d5fc6c5d476d0449",
+      "path": "scripts/urbit/namespace_check.py",
+      "previous_and_current_git_bytes_verified": true,
+      "previous_sha256": "87950f4e7796fafb91807c36b9ea7d392d1d1840e5516d15d5fc6c5d476d0449"
+    },
+    {
+      "changed": true,
+      "current_sha256": "d157a974075d2e1cbfb1ae07609182a3232c5a3f16b75c3e9287652434d774d2",
+      "path": "scripts/urbit/supervisor.py",
+      "previous_and_current_git_bytes_verified": true,
+      "previous_sha256": "b49275055befca8a39745a4c0a64c3de829213d1cdbf3c2ad83622997e19992d"
+    },
+    {
+      "changed": false,
+      "current_sha256": "31234bbab1af217c885d8c081d7f438972f6ff1b6d89c93d10bdf49871b3ea16",
+      "path": "scripts/urbit/toolchain.py",
+      "previous_and_current_git_bytes_verified": true,
+      "previous_sha256": "31234bbab1af217c885d8c081d7f438972f6ff1b6d89c93d10bdf49871b3ea16"
+    }
+  ],
+  "status": "pending-independent-composite-confirmation-and-final-binding",
+  "tracked_writes": false
+}

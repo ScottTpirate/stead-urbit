@@ -1,0 +1,25 @@
+{
+  "format": 1,
+  "scope": "real local pure Hoon plus stock Git; no mounted desk/Gall/HTTP/live-network qualification",
+  "ignored_run": ".runtime/git-object-vectors/20260913T022039Z-dq41to78",
+  "base_commit": "96971540cf70c557f01a5ef10db832ddee2e0130",
+  "copy_transform": "Host repository paths replaced with <repo>, uname nodename with <development-host>; no credentials or private input used. Original source hashes remain unchanged.",
+  "files": {
+    "commands.jsonl": {
+      "original_sha256": "e403b8163d0046bd25c887cd07d0ffd6972f3b8ba5e9cd67d6fafbccad11ad61",
+      "copied_sha256": "b8eabb3a3f56acb184ecd21f0a23c6e1ed55abdc250b1cd2c6804f1d13a37faf",
+      "copied_bytes": 45329
+    },
+    "objects.json": {
+      "original_sha256": "45ee7a16cb1ea229dbb17c1865ac08234f9a1681dfd57fe6a57fb777c1b81c7e",
+      "copied_sha256": "45ee7a16cb1ea229dbb17c1865ac08234f9a1681dfd57fe6a57fb777c1b81c7e",
+      "copied_bytes": 8782
+    },
+    "report.json": {
+      "original_sha256": "a40231fefdb860c486fc8bb78e8896106062915abe84801ab8b46e34ae656ebe",
+      "copied_sha256": "2f1b8e93ee6236d13432649245386200be7991d05d7b62c71a069cc4a56b805f",
+      "copied_bytes": 7900
+    }
+  },
+  "original_manifest_sha256": "b4b598c8049867f4ec512177c0fab023bdfd1a1a4a914191499d0ff906706a58"
+}

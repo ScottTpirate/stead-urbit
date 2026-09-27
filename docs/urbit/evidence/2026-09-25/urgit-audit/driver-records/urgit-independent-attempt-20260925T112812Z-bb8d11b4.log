@@ -1,0 +1,8 @@
+{"outer_scope_readback": {"unit": "stead-urgit-driver-7b0679d88f3eaf78dce4763ef763c128.scope", "cgroup": "/user.slice/user-<UID>.slice/user@<UID>.service/app.slice/stead-urgit-driver-7b0679d88f3eaf78dce4763ef763c128.scope", "cpu_max": "5000 10000", "cpu_affinity": [19], "driver_command": ["python3", "scripts/urbit/urgit_audit.py"]}}
+Audit directory: <REPO>/.runtime/urgit-evaluations/20260925T112813Z-p7thco40
+{
+  "audit_directory": "<REPO>/.runtime/urgit-evaluations/20260925T112813Z-p7thco40",
+  "status": "passed",
+  "checks_passed": 14,
+  "sandbox_exit_code": 0
+}

@@ -1,0 +1,23 @@
+{
+  "boot_artifact_sha256": "b4babd14e9f1acbdb421b3c31c215ee637ad6691b7e382b99c6fd8991e623708",
+  "extra_libraries": {
+    "T03": [
+      "default-agent"
+    ],
+    "T04": [
+      "default-agent"
+    ],
+    "T05": [
+      "test"
+    ]
+  },
+  "kelvin": 408,
+  "kernel_commit": "5a187fededc4582a34fcd6055c67bb63e0917b94",
+  "kernel_source_tree_sha256": "33b397d659f7686be86d12f59c968f7613a5dc2851916ca512b6f18aa0ec231b",
+  "network_acquisition": "not part of participant task",
+  "protocol": "stead.skill-evaluation-pins/1",
+  "runtime_binary_sha256": "47ad302e8934271dfc00dcdab1d553c6d6460b105e3099ff47e0e4e4231bb26d",
+  "runtime_version": "4.6",
+  "toolchain_lock_path": "specs/urbit/toolchain.lock.json",
+  "toolchain_lock_sha256": "4a209c10cf1756eb0f7357cc3eca8250bf66c239b4cd0ca31a8c0886d4d304ee"
+}

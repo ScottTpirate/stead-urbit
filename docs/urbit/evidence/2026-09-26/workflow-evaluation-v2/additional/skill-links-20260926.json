@@ -1,0 +1,119 @@
+{
+  "protocol": "stead.skill-reference-link-check/1",
+  "classification": "actual bounded public HTTP GET plus local reference presence; no code execution",
+  "skills": [
+    {
+      "path": ".agents/skills/stead-gall-security/SKILL.md",
+      "sha256": "c5de6d6f494f65891e064276c1a9c65629ffe6276a0ade4929d9012901350fcc",
+      "external_links": [
+        "https://docs.urbit.org/urbit-os/base/threads",
+        "https://docs.urbit.org/build-on-urbit/userspace/dist"
+      ],
+      "local_links": [
+        {
+          "path": "docs/urbit/ECOSYSTEM_PLAN.md",
+          "exists": true
+        }
+      ]
+    },
+    {
+      "path": ".agents/skills/stead-hoon/SKILL.md",
+      "sha256": "5469b3567b908b3f9fc684f92376c379de2a611f6c60dc0cf770627583ba121a",
+      "external_links": [
+        "https://docs.urbit.org/hoon/why-hoon",
+        "https://docs.urbit.org/build-on-urbit/environment",
+        "https://docs.urbit.org/build-on-urbit/userspace/unit-tests"
+      ],
+      "local_links": []
+    },
+    {
+      "path": ".agents/skills/stead-native-tests/SKILL.md",
+      "sha256": "13622cf24e087573d63b7fc4850f49c44ed943cbf3ad8f0cf4fe4ed590774ba8",
+      "external_links": [
+        "https://docs.urbit.org/build-on-urbit/userspace/unit-tests",
+        "https://docs.urbit.org/build-on-urbit/environment"
+      ],
+      "local_links": [
+        {
+          "path": "docs/urbit/STEAD_CARRYOVER.md",
+          "exists": true
+        }
+      ]
+    },
+    {
+      "path": ".agents/skills/stead-urbit-release/SKILL.md",
+      "sha256": "52e5f9ef225d4a9849386b50b9253abb801c12f02bfa60e839595c14430d3685",
+      "external_links": [
+        "https://docs.urbit.org/build-on-urbit/userspace/dist",
+        "https://github.com/urbit/desk-skeleton"
+      ],
+      "local_links": [
+        {
+          "path": "docs/urbit/ECOSYSTEM_PLAN.md",
+          "exists": true
+        }
+      ]
+    }
+  ],
+  "external": [
+    {
+      "url": "https://docs.urbit.org/build-on-urbit/environment",
+      "checked_at": "2026-09-26T19:35:30.324224+00:00",
+      "status": 200,
+      "final_url": "https://docs.urbit.org/build-on-urbit/environment",
+      "content_type": "text/html; charset=utf-8",
+      "bytes": 775940,
+      "sha256": "c96d963cf0b10bec10db854f38fcec94309465fdba64a0207bead7e9f5096b68"
+    },
+    {
+      "url": "https://docs.urbit.org/build-on-urbit/userspace/dist",
+      "checked_at": "2026-09-26T19:35:30.535254+00:00",
+      "status": 200,
+      "final_url": "https://docs.urbit.org/build-on-urbit/userspace/dist",
+      "content_type": "text/html; charset=utf-8",
+      "bytes": 643348,
+      "sha256": "17a25a66bdf41ee2187b800e3bcbace1ab28fae0c9f153a9617707113a9a097b"
+    },
+    {
+      "url": "https://docs.urbit.org/build-on-urbit/userspace/unit-tests",
+      "checked_at": "2026-09-26T19:35:30.914541+00:00",
+      "status": 200,
+      "final_url": "https://docs.urbit.org/build-on-urbit/userspace/unit-tests",
+      "content_type": "text/html; charset=utf-8",
+      "bytes": 615422,
+      "sha256": "abe999c02356fb38e70084d5ca49f31660cffcb6084182fc47cdaa4b32559c20"
+    },
+    {
+      "url": "https://docs.urbit.org/hoon/why-hoon",
+      "checked_at": "2026-09-26T19:35:31.179071+00:00",
+      "status": 200,
+      "final_url": "https://docs.urbit.org/hoon/why-hoon",
+      "content_type": "text/html; charset=utf-8",
+      "bytes": 689917,
+      "sha256": "0e5f8bca9db08e9ae855b3b3bbcbd40fa83ad5bf82c149f873e1fe5f2f001371"
+    },
+    {
+      "url": "https://docs.urbit.org/urbit-os/base/threads",
+      "checked_at": "2026-09-26T19:35:31.380065+00:00",
+      "status": 200,
+      "final_url": "https://docs.urbit.org/urbit-os/base/threads",
+      "content_type": "text/html; charset=utf-8",
+      "bytes": 626532,
+      "sha256": "f9fa0a01285bdc243f242059f5bf5ace799b3d5c1198498e906b8b2f6ee3ae90"
+    },
+    {
+      "url": "https://github.com/urbit/desk-skeleton",
+      "checked_at": "2026-09-26T19:35:31.643724+00:00",
+      "status": 200,
+      "final_url": "https://github.com/urbit/desk-skeleton",
+      "content_type": "text/html; charset=utf-8",
+      "bytes": 269239,
+      "sha256": "13f011212994f91a644f75b2497a67ac9544af85ab247370f6ff35b0d4c095af"
+    }
+  ],
+  "all_reachable": true,
+  "limits": [
+    "Current reachability is not version compatibility, content security, native execution or permanent URL availability.",
+    "Only public reference URLs in the four local skills were requested; no credentials supplied or response bodies published."
+  ]
+}

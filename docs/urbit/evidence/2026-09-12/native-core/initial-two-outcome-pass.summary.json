@@ -1,0 +1,23 @@
+{
+  "source_file": ".piers/fakes/logs/core-20260913T025145Z.json",
+  "raw_sha256": "b73f0232cc8082ac3ad0b9d4df22756e775cfafc02dc0aaab9ccb5129873ef44",
+  "compressed_sha256": "46bdcba13527581b2b811deed9f405b9a75657e54a5a25b44a2d30cf5ecc80cb",
+  "classification": "local-real-native-fake-ships",
+  "status": "pass",
+  "error": null,
+  "elapsed_seconds": 25.798,
+  "native_tree_sha256": "c39a2f96767a53a71fcf2c22397e01babbaba72ccfff2cd42fa9be1425bacfeb",
+  "toolchain_sha256": "4a209c10cf1756eb0f7357cc3eca8250bf66c239b4cd0ca31a8c0886d4d304ee",
+  "checks": [
+    {
+      "name": "native-project-created",
+      "passed": true
+    },
+    {
+      "name": "native-outsider-project-denied",
+      "passed": true
+    }
+  ],
+  "qa_case_counts": null,
+  "qa_check_counts": null
+}

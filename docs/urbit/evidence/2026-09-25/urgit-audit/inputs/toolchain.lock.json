@@ -1,0 +1,76 @@
+{
+  "boot_artifact": {
+    "archive": "brass-408k-2.pill",
+    "checksum_authority": "Git LFS pointer in pinned kernel commit",
+    "sha256": "b4babd14e9f1acbdb421b3c31c215ee637ad6691b7e382b99c6fd8991e623708",
+    "size": 23389629,
+    "source_overlay": "kernel pkg/arvo supplied with -A; pill alone is not claimed to contain final kernel",
+    "url": "https://media.githubusercontent.com/media/urbit/urbit/5a187fededc4582a34fcd6055c67bb63e0917b94/bin/brass.pill"
+  },
+  "compatibility_evidence": "docs/urbit/TEST_RESULTS.md",
+  "desk_dependencies": {
+    "imports": [
+      "default-agent",
+      "skeleton",
+      "spider",
+      "strandio"
+    ],
+    "profile": "mounted disposable base desk; no distribution desk yet",
+    "source": "kernel pkg/arvo"
+  },
+  "format": 1,
+  "frontend": {
+    "archive": "node-v24.21.0-linux-x64.tar.xz",
+    "binary_sha256": "7fde7b8afa198da66257f42ee2001d874c7355631e6d1579a5fb5ef1f246df4c",
+    "checksum_authority": "official Node SHASUMS256.txt; signature verification not performed",
+    "directory": "node-v24.21.0-linux-x64",
+    "lock_sha256": "7db4246a48ff04da8e01bef0ec1cdccf5297867e5e343b06531eebdfa36e511e",
+    "lockfile": "web/toolchain/package-lock.json",
+    "node": "24.21.0",
+    "npm": "11.19.0",
+    "sha256": "fd8e59d5a511510f6a298afb548f18c7d2b1be404d8b4a27d94fbe49f56cb2d6",
+    "status": "toolchain_only_no_ui_no_build",
+    "url": "https://nodejs.org/dist/v24.21.0/node-v24.21.0-linux-x64.tar.xz"
+  },
+  "host_tools": {
+    "bubblewrap_tested": "0.12.0",
+    "git": "2.55.0",
+    "python_minimum": "3.12",
+    "python_tested": "3.14.7"
+  },
+  "kernel": {
+    "archive": "urbit-408k-2.tar.gz",
+    "checksum_authority": "locally measured archive at immutable Git commit; not a signed upstream build attestation",
+    "commit": "5a187fededc4582a34fcd6055c67bb63e0917b94",
+    "directory": "urbit-5a187fededc4582a34fcd6055c67bb63e0917b94",
+    "kelvin": 408,
+    "release": "408k-2",
+    "repository": "urbit/urbit",
+    "sha256": "7f6f41388f456d1e94850a51b60b15e3148ede103ebb03b8acad470ed27beb31",
+    "source_tree_sha256": "33b397d659f7686be86d12f59c968f7613a5dc2851916ca512b6f18aa0ec231b",
+    "url": "https://codeload.github.com/urbit/urbit/tar.gz/5a187fededc4582a34fcd6055c67bb63e0917b94"
+  },
+  "profile": "linux-x86_64-fake-only",
+  "protocol_corpus": {
+    "path": "specs/urbit/smoke-corpus.json",
+    "sha256": "3a05090f8ff4aceddcd228145346564ce9ecf28af7016fd256eb911430dbbd9c"
+  },
+  "resolved_on": "2026-09-12",
+  "runtime": {
+    "archive": "vere-v4.6-linux-x86_64.tgz",
+    "binary": "bin/vere-v4.6-linux-x86_64",
+    "binary_sha256": "47ad302e8934271dfc00dcdab1d553c6d6460b105e3099ff47e0e4e4231bb26d",
+    "checksum_authority": "GitHub release asset digest",
+    "commit": "8ddc4b786979574dbfcb655e3db1b634f658d0de",
+    "release": "vere-v4.6",
+    "repository": "urbit/vere",
+    "sha256": "f332e96d66cb767f847fbf15e04b4f953fd078e610b449fbbc26629ea312a3ae",
+    "url": "https://github.com/urbit/vere/releases/download/vere-v4.6/linux-x86_64.tgz",
+    "version": "4.6"
+  },
+  "urgit": {
+    "commit": "9cec0371b02269efcdbd8580c42e883e69b82000",
+    "repository": "yapishu/urgit",
+    "status": "independent_candidate_evaluation_only_not_runtime_dependency"
+  }
+}

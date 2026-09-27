@@ -1,0 +1,78 @@
+urbit 4.6
+boot: home is /state/live/zod
+loom: mapped 2048MB
+lite: arvo formula 4ce68411
+lite: core 641296f
+lite: final state 641296f
+disk: loaded epoch 0i0
+loom: mapped 2048MB
+boot: protected loom
+live: mapped: MB/223.019.008
+boot: installed 2178 jets
+vere: checking version compatibility
+mesa: forwarding enabled
+mdns: init failed, install avahi on this system for mdns support
+mesa: live on 31337 (localhost only)
+conn: listening on /state/live/zod/.urb/conn.sock
+ames: unix-duct received on %born
+http: web interface live on http://localhost:18080
+http: loopback live on http://localhost:12321
+pier (287): live
+clay: read-at-tako fail [desk=%base care=%a case=[%da p=~2026.09.24..23.59.59..1190] path=/gen/stead-build-probe/hoon]
+/sys/vane/clay/hoon:<[4.378 29].[4.378 33]>
+/sys/vane/clay/hoon:<[4.384 9].[4.403 11]>
+/sys/vane/clay/hoon:<[4.385 9].[4.403 11]>
+/sys/vane/clay/hoon:<[4.386 15].[4.386 36]>
+clay: %a build failed [%base 0v1e.mkn4r.u0vu2.tgkmq.h9iku.f3qrm.hpl9u.v2p6c.4u3ps.1lims.deoai /gen/stead-build-probe/hoon]
+/lib/stead-core/hoon::[3 1].[653 3]>
+/lib/stead-core/hoon::[4 1].[653 3]>
+/lib/stead-core/hoon::[505 3].[647 98]>
+/lib/stead-core/hoon::[506 3].[647 98]>
+/lib/stead-core/hoon::[508 3].[647 98]>
+/lib/stead-core/hoon::[511 3].[647 98]>
+/lib/stead-core/hoon::[512 3].[647 98]>
+/lib/stead-core/hoon::[515 3].[647 98]>
+/lib/stead-core/hoon::[516 3].[647 98]>
+/lib/stead-core/hoon::[517 3].[647 98]>
+/lib/stead-core/hoon::[522 3].[647 98]>
+/lib/stead-core/hoon::[523 3].[647 98]>
+/lib/stead-core/hoon::[524 3].[647 98]>
+/lib/stead-core/hoon::[525 3].[647 98]>
+/lib/stead-core/hoon::[526 3].[647 98]>
+/lib/stead-core/hoon::[527 3].[647 98]>
+/lib/stead-core/hoon::[528 3].[647 98]>
+/lib/stead-core/hoon::[529 3].[647 98]>
+/lib/stead-core/hoon::[530 3].[647 98]>
+/lib/stead-core/hoon::[531 3].[647 98]>
+/lib/stead-core/hoon::[532 3].[647 98]>
+/lib/stead-core/hoon::[541 3].[647 98]>
+/lib/stead-core/hoon::[542 3].[647 98]>
+/lib/stead-core/hoon::[549 3].[647 98]>
+/lib/stead-core/hoon::[550 3].[647 98]>
+/lib/stead-core/hoon::[551 3].[647 98]>
+/lib/stead-core/hoon::[552 3].[647 98]>
+/lib/stead-core/hoon::[553 3].[647 98]>
+/lib/stead-core/hoon::[554 3].[647 98]>
+/lib/stead-core/hoon::[555 3].[647 98]>
+/lib/stead-core/hoon::[556 3].[647 98]>
+/lib/stead-core/hoon::[557 3].[647 98]>
+/lib/stead-core/hoon::[558 3].[647 98]>
+/lib/stead-core/hoon::[559 3].[647 98]>
+/lib/stead-core/hoon::[560 3].[647 98]>
+/lib/stead-core/hoon::[561 3].[647 98]>
+/lib/stead-core/hoon::[562 3].[647 98]>
+/lib/stead-core/hoon::[563 3].[647 98]>
+/lib/stead-core/hoon::[564 3].[647 98]>
+/lib/stead-core/hoon::[565 3].[647 98]>
+/lib/stead-core/hoon::[566 3].[647 98]>
+/lib/stead-core/hoon::[567 3].[647 98]>
+/lib/stead-core/hoon::[568 3].[647 98]>
+/lib/stead-core/hoon::[569 3].[647 98]>
+/lib/stead-core/hoon::[570 3].[647 98]>
+/lib/stead-core/hoon::[571 3].[647 98]>
+/lib/stead-core/hoon::[571 7].[571 220]>
+mull-grow
+-need.[i=@t t=%~]
+-have.%~
+nest-fail
+dojo: %writ fail [i=%~.hand t=/gen/stead-build-probe]

@@ -1,0 +1,11 @@
+{
+  "command": [
+    "make",
+    "dev"
+  ],
+  "source_commit": "a0f5fe218ecc9b909e7a2d5b54bc87198cb8bd08",
+  "working_tree": " M scripts/urbit/core_conn.py\n M scripts/urbit/core_test.py\n M scripts/urbit/qualification_gate.py\n M tests/urbit/test_core_conn.py\n M tests/urbit/test_phase1_reconciliation.py\n?? scripts/urbit/build_phase1_evidence.py\n",
+  "started_utc": "2026-09-25T11:32:32.444045+00:00",
+  "elapsed_seconds": 58.605,
+  "exit": 2
+}

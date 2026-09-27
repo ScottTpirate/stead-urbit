@@ -1,0 +1,91 @@
+{
+  "source_file": ".piers/fakes/logs/core-20260913T031350Z.json",
+  "raw_sha256": "eab2e8e6e5067ee2db5a187c903294342cfc6ad84721727fec005e1c0b6a6870",
+  "compressed_sha256": "a5953bb0f19aba18d9b6ad9ebeedcccc2cd6532f89f90a57fce02c80088d6cec",
+  "classification": "local-real-native-fake-ships",
+  "status": "fail",
+  "error": "AssertionError: zod:+stead-build-probe",
+  "elapsed_seconds": 16.313,
+  "native_tree_sha256": "8dca0c32f8a08cf1eb72b39af30b5e5585afe443997693fc91af79e262354a9b",
+  "toolchain_sha256": "4a209c10cf1756eb0f7357cc3eca8250bf66c239b4cd0ca31a8c0886d4d304ee",
+  "checks": [
+    {
+      "name": "loaded-supervisor-source-matches",
+      "passed": true
+    },
+    {
+      "name": "loaded-core-runner-source-matches",
+      "passed": true
+    },
+    {
+      "name": "frozen-contract-manifest-matches-corpus",
+      "passed": true
+    },
+    {
+      "name": "installed-byte-match:zod:app/stead-home.hoon",
+      "passed": true
+    },
+    {
+      "name": "installed-byte-match:zod:gen/stead-build-probe.hoon",
+      "passed": true
+    },
+    {
+      "name": "installed-byte-match:zod:gen/stead-codec-probe.hoon",
+      "passed": true
+    },
+    {
+      "name": "installed-byte-match:zod:gen/stead-core-probe.hoon",
+      "passed": true
+    },
+    {
+      "name": "installed-byte-match:zod:gen/stead-reducers-probe.hoon",
+      "passed": true
+    },
+    {
+      "name": "installed-byte-match:zod:lib/stead-codec.hoon",
+      "passed": true
+    },
+    {
+      "name": "installed-byte-match:zod:lib/stead-core.hoon",
+      "passed": true
+    },
+    {
+      "name": "installed-byte-match:zod:lib/stead-delivery.hoon",
+      "passed": true
+    },
+    {
+      "name": "installed-byte-match:zod:lib/stead-git.hoon",
+      "passed": true
+    },
+    {
+      "name": "installed-byte-match:zod:mar/stead-command-1.hoon",
+      "passed": true
+    },
+    {
+      "name": "installed-byte-match:zod:mar/stead-control-1.hoon",
+      "passed": true
+    },
+    {
+      "name": "installed-byte-match:zod:mar/stead-fixture-1.hoon",
+      "passed": true
+    },
+    {
+      "name": "installed-byte-match:zod:mar/stead-result-1.hoon",
+      "passed": true
+    },
+    {
+      "name": "installed-byte-match:zod:ted/stead-client.hoon",
+      "passed": true
+    },
+    {
+      "name": "installed-byte-match:zod:tests/stead-git.hoon",
+      "passed": true
+    },
+    {
+      "name": "zod:+stead-build-probe",
+      "passed": false
+    }
+  ],
+  "qa_case_counts": null,
+  "qa_check_counts": null
+}

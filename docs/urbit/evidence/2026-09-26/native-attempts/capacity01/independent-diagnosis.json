@@ -1,0 +1,520 @@
+{
+  "created_at": "2026-09-26T22:27:01.751693+00:00",
+  "disposition": "Failed diagnostic correctly remains failed; the missing-binding expectation is a harness boundary mismatch, not evidence of accepted unauthorized mutation. Three-boundary correction is acceptable subject to exact-source implementation review and fresh native execution.",
+  "failure": {
+    "after_drop_snapshot": {
+      "artifact": "docs/urbit/evidence/2026-09-26/native-attempts/capacity01/core-20260926T215629Z-transport.jsonl.gz",
+      "line": 599,
+      "record_bytes": 11709,
+      "record_sha256": "e77127f3f013a1c8a15aa4d03a32712853e984d6c9b2d1d692538c57744375bb"
+    },
+    "before_drop_snapshot": {
+      "artifact": "docs/urbit/evidence/2026-09-26/native-attempts/capacity01/core-20260926T215629Z-transport.jsonl.gz",
+      "line": 597,
+      "record_bytes": 11709,
+      "record_sha256": "7d4c18f6bcbaf3ee290e249d2b213cab6e198f23a4b59670205a4b1f615e492e"
+    },
+    "binding_drop": {
+      "artifact": "docs/urbit/evidence/2026-09-26/native-attempts/capacity01/core-20260926T215629Z-transport.jsonl.gz",
+      "line": 598,
+      "record_bytes": 656,
+      "record_sha256": "6f26f7f6be56661bb4847f067a722f813e9aeb7e2f70311b113b48660424ec3e"
+    },
+    "cause": "qualification_cases.denied_without_change expected a business JSON denial from direct(); client command mode cannot dispatch its poke once missing context causes watch refusal. Correctly no result channel or JSON business result exists.",
+    "check": "missing-current-binding-before-ordinary-capacity",
+    "command_digest": "4b11741f8bf0e4b9d4f443c4cae4c6aa39d3c2d2b9845f327bdcc37817d74fb3",
+    "elapsed_seconds": 2.119788358,
+    "missing_observations": [
+      "No post-watch protected-state snapshot was executed after the failed assertion.",
+      "No post-restore snapshot was executed because the original assertion re-raised past line495.",
+      "No bus command poke occurred in this command-mode attempt: client waits for successful watch ACK first."
+    ],
+    "native_failure_location": "native/core/desk/app/stead-home.hoon:275",
+    "only_binding_and_full_state_hashes_change_during_drop": true,
+    "request_bytes": 389,
+    "request_sha256": "f1c8acc698fe4dd6f06124be024ab8b7146ea4453fdffa61bafdd8f39b72337d",
+    "restore_ack": {
+      "artifact": "docs/urbit/evidence/2026-09-26/native-attempts/capacity01/core-20260926T215629Z-transport.jsonl.gz",
+      "line": 601,
+      "record_bytes": 658,
+      "record_sha256": "0766a4d58702a3b272135f2433552febba7c7281e08f802ee1be9a834dc52206"
+    },
+    "sender": "bus",
+    "stderr_markers": [
+      "stead-watch-denied",
+      "watch-ack",
+      "watch-ack-fail",
+      "eval: bail: %thread-fail"
+    ],
+    "stdout": "[32 %avow 1]",
+    "transport": {
+      "artifact": "docs/urbit/evidence/2026-09-26/native-attempts/capacity01/core-20260926T215629Z-transport.jsonl.gz",
+      "line": 600,
+      "record_bytes": 2639,
+      "record_sha256": "254a28b59aaad5184cf0b49a67455e4704031a490418ea5c3afcceb9405f5c90"
+    }
+  },
+  "migration_facts": {
+    "full_counts": {
+      "documents": "1",
+      "grants": "256",
+      "journal_events": "4096",
+      "object_bytes": "447",
+      "objects": "3",
+      "projects": "2",
+      "receipts": "4096",
+      "work_items": "2"
+    },
+    "malformed_loads": [
+      {
+        "current_unchanged_snapshot": {
+          "artifact": "docs/urbit/evidence/2026-09-26/native-attempts/capacity01/core-20260926T215629Z-transport.jsonl.gz",
+          "line": 573,
+          "record_bytes": 4357,
+          "record_sha256": "aed4a0692c77cbd76b0c14281b403f81b9a0c779e9349208abed33b9ef2dd03f"
+        },
+        "elapsed_seconds": 0.739305659,
+        "key": "receipts",
+        "native_error": "stead-unsupported-state / poke-fail / terminal thread-fail",
+        "predecessor_unchanged_snapshot": {
+          "artifact": "docs/urbit/evidence/2026-09-26/native-attempts/capacity01/core-20260926T215629Z-transport.jsonl.gz",
+          "line": 574,
+          "record_bytes": 11723,
+          "record_sha256": "e686c7d863623d2a975df3002ce019a62a905574f868bc60a64d8e5a8448fc1e"
+        },
+        "source_failure_line": 488,
+        "transport": {
+          "artifact": "docs/urbit/evidence/2026-09-26/native-attempts/capacity01/core-20260926T215629Z-transport.jsonl.gz",
+          "line": 572,
+          "record_bytes": 1951,
+          "record_sha256": "6453ebd517acc46a953a085328b9d22eaa37186048860b0d23d0b1a637fe9866"
+        }
+      },
+      {
+        "current_unchanged_snapshot": {
+          "artifact": "docs/urbit/evidence/2026-09-26/native-attempts/capacity01/core-20260926T215629Z-transport.jsonl.gz",
+          "line": 576,
+          "record_bytes": 4357,
+          "record_sha256": "49cb9837f448efffde1ccc7ced33dddc2a9007e61c0bf8cc14682a5cc55178bf"
+        },
+        "elapsed_seconds": 117.389828494,
+        "key": "policy",
+        "native_error": "stead-unsupported-state / poke-fail / terminal thread-fail",
+        "predecessor_unchanged_snapshot": {
+          "artifact": "docs/urbit/evidence/2026-09-26/native-attempts/capacity01/core-20260926T215629Z-transport.jsonl.gz",
+          "line": 577,
+          "record_bytes": 11723,
+          "record_sha256": "66f5ce0a20ae9e82778d9313f64eddf39c4452f4d9f0b4a1d450e576fa29db4d"
+        },
+        "source_failure_line": 546,
+        "transport": {
+          "artifact": "docs/urbit/evidence/2026-09-26/native-attempts/capacity01/core-20260926T215629Z-transport.jsonl.gz",
+          "line": 575,
+          "record_bytes": 44686,
+          "record_sha256": "8f3a16a4fbc7e897f0b8dc890e1e5b4258cef981f3550c9acefe2f01f7978f0d"
+        }
+      },
+      {
+        "current_unchanged_snapshot": {
+          "artifact": "docs/urbit/evidence/2026-09-26/native-attempts/capacity01/core-20260926T215629Z-transport.jsonl.gz",
+          "line": 579,
+          "record_bytes": 4357,
+          "record_sha256": "6705922c2ee177833ab5c841069a07f897315ef4fe21586dc5d9ebe3cc949aa3"
+        },
+        "elapsed_seconds": 117.346084482,
+        "key": "grant",
+        "native_error": "stead-unsupported-state / poke-fail / terminal thread-fail",
+        "predecessor_unchanged_snapshot": {
+          "artifact": "docs/urbit/evidence/2026-09-26/native-attempts/capacity01/core-20260926T215629Z-transport.jsonl.gz",
+          "line": 580,
+          "record_bytes": 11723,
+          "record_sha256": "790f3319bea0df8ce905285a82e67de47d760febfc301d1d95e5899499658a4c"
+        },
+        "source_failure_line": 547,
+        "transport": {
+          "artifact": "docs/urbit/evidence/2026-09-26/native-attempts/capacity01/core-20260926T215629Z-transport.jsonl.gz",
+          "line": 578,
+          "record_bytes": 44683,
+          "record_sha256": "e1ff71f519d075b12947ca54a179027e2b70894eac3b954a1f6443b1b8bdad71"
+        }
+      },
+      {
+        "current_unchanged_snapshot": {
+          "artifact": "docs/urbit/evidence/2026-09-26/native-attempts/capacity01/core-20260926T215629Z-transport.jsonl.gz",
+          "line": 582,
+          "record_bytes": 4357,
+          "record_sha256": "331ba08e37047d7721570cfa12886dfc29d8c15b3cad7de0914a0ca605764b3c"
+        },
+        "elapsed_seconds": 118.649068456,
+        "key": "reachable",
+        "native_error": "stead-unsupported-state / poke-fail / terminal thread-fail",
+        "predecessor_unchanged_snapshot": {
+          "artifact": "docs/urbit/evidence/2026-09-26/native-attempts/capacity01/core-20260926T215629Z-transport.jsonl.gz",
+          "line": 583,
+          "record_bytes": 11723,
+          "record_sha256": "df3ea70946ba795479e1346f2322e85d140b59c51a6dea16fd3bfe7c73faf270"
+        },
+        "source_failure_line": 547,
+        "transport": {
+          "artifact": "docs/urbit/evidence/2026-09-26/native-attempts/capacity01/core-20260926T215629Z-transport.jsonl.gz",
+          "line": 581,
+          "record_bytes": 44693,
+          "record_sha256": "2d67b26d109c415998a3dc340d0689480a3cc831021266bf0ffd0ea36b3e4aea"
+        }
+      },
+      {
+        "current_unchanged_snapshot": {
+          "artifact": "docs/urbit/evidence/2026-09-26/native-attempts/capacity01/core-20260926T215629Z-transport.jsonl.gz",
+          "line": 585,
+          "record_bytes": 4357,
+          "record_sha256": "881cc6e1c0c1dd539e473336a7c4d22af56fb1defe2fc308daae1014edc26c5c"
+        },
+        "elapsed_seconds": 0.749061024,
+        "key": "initialized",
+        "native_error": "stead-unsupported-state / poke-fail / terminal thread-fail",
+        "predecessor_unchanged_snapshot": {
+          "artifact": "docs/urbit/evidence/2026-09-26/native-attempts/capacity01/core-20260926T215629Z-transport.jsonl.gz",
+          "line": 586,
+          "record_bytes": 11723,
+          "record_sha256": "49742ae43dfc7310c5bc3f36caef0445f13df3cfa9b497b8da66dc01298e9299"
+        },
+        "source_failure_line": 491,
+        "transport": {
+          "artifact": "docs/urbit/evidence/2026-09-26/native-attempts/capacity01/core-20260926T215629Z-transport.jsonl.gz",
+          "line": 584,
+          "record_bytes": 2103,
+          "record_sha256": "e4eafbb67eec759153f706a1b80f9768763103dbd4e1468f4ee772f5820f16cb"
+        }
+      }
+    ],
+    "measurement_scope": "Actual host-call wall intervals include encode/transport/decode; not pure Hoon CPU time. All three expensive malformed loads and the positive migration finished under the existing600/620-second diagnostic limits. No validator optimization is indicated by these measurements.",
+    "positive_migration": {
+      "elapsed_seconds": 117.207791628,
+      "exact_preserved_hashes_and_counts_equal": true,
+      "ordinary_count": "4096",
+      "post_snapshot": {
+        "artifact": "docs/urbit/evidence/2026-09-26/native-attempts/capacity01/core-20260926T215629Z-transport.jsonl.gz",
+        "line": 588,
+        "record_bytes": 11709,
+        "record_sha256": "9f6354f3ca374549987b29b2a5ac9c6c2b315703d38186d7b14672592e377bfd"
+      },
+      "security_counts": {
+        "019939ba-4000-7000-8000-000000000001": "0",
+        "019939ba-4000-7000-8000-200000000002": "0"
+      },
+      "terminal_ack": {},
+      "transport": {
+        "artifact": "docs/urbit/evidence/2026-09-26/native-attempts/capacity01/core-20260926T215629Z-transport.jsonl.gz",
+        "line": 587,
+        "record_bytes": 660,
+        "record_sha256": "63340a7191c9aaadaae063cde36f60e02673f7b44d7d40b67dd428ae9a9215f6"
+      }
+    },
+    "predecessor_full_snapshot": {
+      "artifact": "docs/urbit/evidence/2026-09-26/native-attempts/capacity01/core-20260926T215629Z-transport.jsonl.gz",
+      "line": 570,
+      "record_bytes": 11723,
+      "record_sha256": "682ee53bc0395ae18684f785dcb3bb05d64c5509c3e48ce2abf53eac7be835a1"
+    }
+  },
+  "proposed_correction": {
+    "claims_allowed": [
+      "Watch rejection proves denied result registration only.",
+      "Real bus poke plus protected-state equality proves actual sender mutation attempt has no persisted business effect; its ACK is not business success.",
+      "Owner-only fixture batch is explicitly controlled reducer evidence using the same native final authorization gate; it is not proof of arbitrary caller-authenticated sender delegation."
+    ],
+    "disposition": "Design acceptable without Hoon, authority, frozen recipe or timeout changes",
+    "gate_handling": "Keep generic direct-command denial strict. Update producer/replay together through shared Driver; immutable historical failed artifacts remain failed. Frozen73 requirements and contracts remain unchanged.",
+    "required_negative_acceptance": [
+      "Bare avow1, timeout, missing/wrong watch markers, missing terminal frame/raw linkage must reject.",
+      "Poke failure/missing ACK, altered command bytes/sender, or changed protected-state snapshot must reject.",
+      "Fixture batch accepted, capacity_exceeded or any result other than exact denied_or_not_found must reject.",
+      "Missing binding restoration, changed original snapshot, or any exception must remain a failed run."
+    ],
+    "source_boundaries": [
+      "native/core/desk/ted/stead-client.hoon:32-34 mode=poke sends actual Gall poke",
+      "native/core/desk/ted/stead-client.hoon:46-50 command mode watches before poke",
+      "native/core/desk/app/stead-home.hoon:141-144 control mark is owner-local on zod only",
+      "native/core/desk/app/stead-home.hoon:186-203 native-batch decodes the same command and calls actual apply-command(db, ship, current time, cmd)",
+      "native/core/desk/app/stead-home.hoon:246-266 production poke calls the same final reducer with trusted src.bowl; absent binding yields no business result channel",
+      "native/core/desk/lib/stead-core.hoon:200-225 actual context/auth checks precede receipt/CAS/capacity",
+      "native/core/desk/app/stead-home.hoon:273-280 result watch requires current context and matching sender/binding"
+    ],
+    "steps": [
+      "Capture complete original snapshot; owner-local binding-drop for bus; capture dropped-state snapshot and establish unchanged business state with changed binding/full-state hashes.",
+      "Execute same exact bus command-mode request and require terminal avow1, null raw/JSON, exact stead-watch-denied/watch-ack/watch-ack-fail/final thread-fail markers and no timeout; verify dropped protected state unchanged.",
+      "Send the exact same command bytes using real bus mode=poke; require actual transport ACK {} only, then verify dropped protected state unchanged.",
+      "Use existing owner-local native-batch with one exact same command and explicit sender bus while binding remains absent; require actual stead.result/2 rejected denied_or_not_found and unchanged protected state.",
+      "Restore binding in finally; capture post-restore snapshot/equality inside that path so failed assertions also retain restoration evidence; preserve any original failure as failure."
+    ]
+  },
+  "protocol": "stead.independent-capacity-diagnosis/1",
+  "qualifies_phase": false,
+  "raw_execution": {
+    "classification": "local-real-native-capacity-diagnostic",
+    "elapsed_seconds": 1279.519,
+    "guard_cleanup": [],
+    "guard_exit_code": 0,
+    "guard_policy": {
+      "cooperative_seconds": 10,
+      "cpu_period_us": 10000,
+      "cpu_quota_us": 5000,
+      "kill_seconds": 5,
+      "sample_seconds": 1,
+      "stale_seconds": 3,
+      "start_c": 75,
+      "stop_c": 90,
+      "terminate_seconds": 10
+    },
+    "guard_run_id": "6421cea5df6c48dae7daf79a2d0261f1",
+    "guard_scope_proof": {
+      "cgroup": "/user.slice/user-1000.slice/user@1000.service/app.slice/stead-native-6421cea5df6c48dae7daf79a2d0261f1.scope",
+      "cpu_affinity": [
+        19
+      ],
+      "cpu_max": "5000 10000",
+      "unit": "stead-native-6421cea5df6c48dae7daf79a2d0261f1.scope"
+    },
+    "guard_sha256": "185dca16222e5adaa9fdb04243cd7573cb769bed224c8633ed7945cdac03b8ce",
+    "guard_status": "completed",
+    "native_sha256": "68fd8f9d0089a596531d64008598339e9f106a7062c1c1c1e244192bfdba2f3d",
+    "outer_step_exit_codes": [
+      0,
+      0,
+      2,
+      0
+    ],
+    "qualification_failed_checks": [
+      {
+        "name": "missing-current-binding-before-ordinary-capacity",
+        "passed": false
+      }
+    ],
+    "qualification_passed_checks": 4483,
+    "qualification_status": "failed",
+    "recipe_statuses": {
+      "documents": "unexecuted",
+      "grants": "unexecuted",
+      "history": "unexecuted",
+      "object_bytes": "unexecuted",
+      "projects": "unexecuted",
+      "v1-exhaustion-migration-security-reserve": "unexecuted",
+      "v1-private-identity-and-sequence-reproduction": "executed",
+      "work_items": "unexecuted"
+    },
+    "status": "fail",
+    "stop_lock_release_retained": true
+  },
+  "retention": {
+    "all23_stored_and_decoded_hashes_verified": true,
+    "artifacts": [
+      {
+        "immutable_original_compared": true,
+        "original_sha256": "68fd8f9d0089a596531d64008598339e9f106a7062c1c1c1e244192bfdba2f3d",
+        "path": "docs/urbit/evidence/2026-09-26/native-attempts/capacity01/native.json",
+        "sha256": "68fd8f9d0089a596531d64008598339e9f106a7062c1c1c1e244192bfdba2f3d",
+        "stored_and_decoded_bytes_verified": true
+      },
+      {
+        "immutable_original_compared": true,
+        "original_sha256": "185dca16222e5adaa9fdb04243cd7573cb769bed224c8633ed7945cdac03b8ce",
+        "path": "docs/urbit/evidence/2026-09-26/native-attempts/capacity01/guard.json",
+        "sha256": "185dca16222e5adaa9fdb04243cd7573cb769bed224c8633ed7945cdac03b8ce",
+        "stored_and_decoded_bytes_verified": true
+      },
+      {
+        "immutable_original_compared": true,
+        "original_sha256": "b3edb7ec1a6d3d274c1e3c337302451bca6277039f03beaaefa9d85b583b98d0",
+        "path": "docs/urbit/evidence/2026-09-26/native-attempts/capacity01/guard/.stead-disposable.json.gz",
+        "sha256": "24c3724220d61f086946862ee955a2cbb6494ade61ad79a5c452a8eb12bbfc65",
+        "stored_and_decoded_bytes_verified": true
+      },
+      {
+        "immutable_original_compared": true,
+        "original_sha256": "7d3b42bbed97fbe07fdd87226f47c82456368c7336a1de0dd0629653265c5b26",
+        "path": "docs/urbit/evidence/2026-09-26/native-attempts/capacity01/guard/control/STOP.gz",
+        "sha256": "16be664e0d262b4d3392a7c4cb73f66a2dcae4fc06acd75f4b7cebde6a5da18d",
+        "stored_and_decoded_bytes_verified": true
+      },
+      {
+        "immutable_original_compared": true,
+        "original_sha256": "3c6812e74fb1fa2ce87af0654a28c61eae8f37d188074d6d4a0ca20e7da33bb8",
+        "path": "docs/urbit/evidence/2026-09-26/native-attempts/capacity01/guard/control/lease.json.gz",
+        "sha256": "e1e638ecc130da82d55882199190b7a73e9bd31e2487e6b94edd9fbd8810a452",
+        "stored_and_decoded_bytes_verified": true
+      },
+      {
+        "immutable_original_compared": true,
+        "original_sha256": "26aa5480646be10cfa13df20dcd299e75ec6ad3a3190956c7f7e2023d1956d50",
+        "path": "docs/urbit/evidence/2026-09-26/native-attempts/capacity01/guard/control/scope.json.gz",
+        "sha256": "debb8b8b301fd9193b10f86ae0537701ae9ec9ed0c954cf906d8da89bdae9076",
+        "stored_and_decoded_bytes_verified": true
+      },
+      {
+        "immutable_original_compared": true,
+        "original_sha256": "c8ef33f1292e39fdc9720a758fefd080ac623cd246594db7cb592207a44986b8",
+        "path": "docs/urbit/evidence/2026-09-26/native-attempts/capacity01/guard/control/source-context.json.gz",
+        "sha256": "5333a7ff21a2decdad57cb13d358bbbb547de17aa7c92939ca194f6e0d19d88e",
+        "stored_and_decoded_bytes_verified": true
+      },
+      {
+        "immutable_original_compared": true,
+        "original_sha256": "190c07dc3df54b1d1bdc01f0d6c5e1b2e4758817766f0870794403986d2658b7",
+        "path": "docs/urbit/evidence/2026-09-26/native-attempts/capacity01/guard/events.jsonl.gz",
+        "sha256": "2aa4df7b509169e5276823c4277f8cea79954c6897f0c2c410a9a3bfa79599a1",
+        "stored_and_decoded_bytes_verified": true
+      },
+      {
+        "immutable_original_compared": true,
+        "original_sha256": "29601094fdebd3bde5c552d780ac126e885a3d0d3040f15b12d1e4416431db10",
+        "path": "docs/urbit/evidence/2026-09-26/native-attempts/capacity01/steps/capacity-check.json.gz",
+        "sha256": "fe4968fd0a69538b54271a5ff7c2ecb84b3f0a5ff53b14982bb94611cba91974",
+        "stored_and_decoded_bytes_verified": true
+      },
+      {
+        "immutable_original_compared": true,
+        "original_sha256": "a8d052891ab946b2fcd12ca12f9dfa6be3f9c439c3d7cccb7ef0014fde5dc4f7",
+        "path": "docs/urbit/evidence/2026-09-26/native-attempts/capacity01/steps/capacity-check.log.gz",
+        "sha256": "596bc75d1c9c0a57a1705e7f7e1067fb2fcbad5ec843396ba924a56e114ef108",
+        "stored_and_decoded_bytes_verified": true
+      },
+      {
+        "immutable_original_compared": true,
+        "original_sha256": "3afb7d32a76772cdba911eb956cbf11c2b7e231529b691a931db113fda94da50",
+        "path": "docs/urbit/evidence/2026-09-26/native-attempts/capacity01/steps/lifecycle.json.gz",
+        "sha256": "97c9bdc62647e21979837c478fa5492672f3eaaf1f01e30f61b1e3cd03a53de0",
+        "stored_and_decoded_bytes_verified": true
+      },
+      {
+        "immutable_original_compared": true,
+        "original_sha256": "785e037fe0f9d927a6ccb8918f29b3af0da6db5dca850e013e3258ac14bd0200",
+        "path": "docs/urbit/evidence/2026-09-26/native-attempts/capacity01/steps/start.json.gz",
+        "sha256": "d27e71d8a43bdda70b3f199ea8e697e1c98fbb401432562f6c7cda86d2552649",
+        "stored_and_decoded_bytes_verified": true
+      },
+      {
+        "immutable_original_compared": true,
+        "original_sha256": "7e7cd6a7ad57a946923124f117abe1a4e30d697ae519f7f47cdfc059b5334c6b",
+        "path": "docs/urbit/evidence/2026-09-26/native-attempts/capacity01/steps/start.log.gz",
+        "sha256": "df92f0d1c79f8efe94c2c136b4bd621de614f3807dd86b08de9b3219645a3d98",
+        "stored_and_decoded_bytes_verified": true
+      },
+      {
+        "immutable_original_compared": true,
+        "original_sha256": "3bfd0ae9870452a833044c963c29f7aa6f3bd44df09a8ee3362b2420debae1fd",
+        "path": "docs/urbit/evidence/2026-09-26/native-attempts/capacity01/steps/stop.json.gz",
+        "sha256": "6a7eb967f19d3f7f01f06c163f2f82dae11261ea74998132b0955531d75c2d27",
+        "stored_and_decoded_bytes_verified": true
+      },
+      {
+        "immutable_original_compared": true,
+        "original_sha256": "fe8b2280abb0c0a09259c5211aa3dc729b9b42caa2afdaa7431a4d4936ba213c",
+        "path": "docs/urbit/evidence/2026-09-26/native-attempts/capacity01/steps/stop.log.gz",
+        "sha256": "3515bb00ab4541684f1f9147aacb7e7157ed671b8d21b6ef4cf9f013b859c7f8",
+        "stored_and_decoded_bytes_verified": true
+      },
+      {
+        "immutable_original_compared": true,
+        "original_sha256": "7e98db156a022e5010667419e3bb313dfd3ddb7ba25b996a3db1196253ad58c1",
+        "path": "docs/urbit/evidence/2026-09-26/native-attempts/capacity01/steps/wait-ready.json.gz",
+        "sha256": "84635040d06ceac0f80d289118a48b46f4d876bfeead848ada2564535f16b5d3",
+        "stored_and_decoded_bytes_verified": true
+      },
+      {
+        "immutable_original_compared": true,
+        "original_sha256": "6ade3d62b67dd2066207260ae96b6ef88847dbb824720cc7be7b132fee5510e9",
+        "path": "docs/urbit/evidence/2026-09-26/native-attempts/capacity01/steps/wait-ready.log.gz",
+        "sha256": "01cedc45b27b73b7c8d5c8d2e0aa7bae317933250f77076dc26ab76b2428f17e",
+        "stored_and_decoded_bytes_verified": true
+      },
+      {
+        "immutable_original_compared": false,
+        "original_sha256": "de02f32719e0ff1c972b7535de1b146317a5d6323e5a3835312c74dd719dea61",
+        "path": "docs/urbit/evidence/2026-09-26/native-attempts/capacity01/logs/zod.log.gz",
+        "sha256": "ba9eceeaccfbafacb68812b242fd2f112cd5de106b1d95ea6592af4df792ee79",
+        "stored_and_decoded_bytes_verified": true
+      },
+      {
+        "immutable_original_compared": false,
+        "original_sha256": "7fb95bbf6a7f46a04a0bd9d9a65b4b397e51c77f2f1a6e28d3facaa8408102c6",
+        "path": "docs/urbit/evidence/2026-09-26/native-attempts/capacity01/logs/bus.log.gz",
+        "sha256": "01e7bdbee813b0fcb1ce704715e655741d2d6e6d85df6fe64b0c0c7f36acf614",
+        "stored_and_decoded_bytes_verified": true
+      },
+      {
+        "immutable_original_compared": false,
+        "original_sha256": "8aa2aeb8c169a5f73f6e09b5fb648e50872bf9d14f28c4d4207ebeba22a49001",
+        "path": "docs/urbit/evidence/2026-09-26/native-attempts/capacity01/logs/nec.log.gz",
+        "sha256": "20bdbec49a9439ca5f9a484db1b61edfb759f837aa0ee72f5d3731437633b86e",
+        "stored_and_decoded_bytes_verified": true
+      },
+      {
+        "immutable_original_compared": false,
+        "original_sha256": "d3075f04de51d613362220a15b5722a1aaf6aff8d526dd9583253dc39ea2a436",
+        "path": "docs/urbit/evidence/2026-09-26/native-attempts/capacity01/logs/bud.log.gz",
+        "sha256": "0ab79246da46fcdedf14be91df74f491664ee71536507200d8379ec6b57401b4",
+        "stored_and_decoded_bytes_verified": true
+      },
+      {
+        "immutable_original_compared": false,
+        "original_sha256": "8d54a9255ac2a17e42b443386084a78f7eb7b7de7ed80807e0ec720e841fe635",
+        "path": "docs/urbit/evidence/2026-09-26/native-attempts/capacity01/logs/supervisor.log.gz",
+        "sha256": "fb3265d284548f2b5e67e78e7c62981d34f71fc9f7b7a1a51e166e533d3c0ac1",
+        "stored_and_decoded_bytes_verified": true
+      },
+      {
+        "immutable_original_compared": true,
+        "original_sha256": "5e413f587e76c931dfa4d699964170cf5afa40250581cf341526b238ea4f4c0b",
+        "path": "docs/urbit/evidence/2026-09-26/native-attempts/capacity01/core-20260926T215629Z-transport.jsonl.gz",
+        "sha256": "5e413f587e76c931dfa4d699964170cf5afa40250581cf341526b238ea4f4c0b",
+        "stored_and_decoded_bytes_verified": true
+      }
+    ],
+    "immutable_originals_compared": 18,
+    "index_sha256": "4443e3c5bc6e92b38b81dd639e6a961d97cf57f46402f8e0057ed7c7dcdf89fe",
+    "mutable_logs": "Five retained full log snapshots verified against retained hashes; current mutable originals deliberately not used as provenance."
+  },
+  "review_execution": {
+    "affinity": [
+      19
+    ],
+    "cpu_max": "2000 10000",
+    "new_native_or_tests_executed": false,
+    "unit": "stead-capacity01-audit-20260926a.scope",
+    "writes": "This new ignored diagnostic review only; old artifacts and source untouched."
+  },
+  "reviewer": "/root/gall_schedule_review",
+  "scope": "Retained native evidence and source review; no tests/native execution by reviewer; no phase acceptance. Proposed correction reviewed as design only, not an implemented patch.",
+  "source_commit": "3f0f3778997798f2ed208e206b46882a87340eb1",
+  "source_review": {
+    "all_four_reported_installed_and_clay_manifests_equal_exact_committed_source": true,
+    "installed_manifest_files": 22,
+    "raw_inputs_before_after_equal": true,
+    "source_context_committed_file_hashes_verified_against_actual_commit": 127,
+    "source_files": {
+      "docs/urbit/CONTRACTS.md": "f43c64e71c4356a62be0e7f9e4f42de569d9916311f883aa44196388a0a5cb2e",
+      "docs/urbit/CONTRACT_AMENDMENT_2.md": "f9793a947b4ba69e9099ec0cd68ed004602cb0ffe6fbbf79f9f464cb256315c6",
+      "native/core/desk/app/stead-home.hoon": "3bfc0e45062ef0bc8572d5034a60b5b35f6502350f821129b5ba7a7cca0b2b9c",
+      "native/core/desk/lib/stead-core.hoon": "4c183ef6283030437af5e1433e3fbf80f414757bcede4cab1282fc71ff5f34de",
+      "native/core/desk/ted/stead-client.hoon": "a0420730b0ee1a56d46e22def0b570cf089a7de39810453010a3f77ff3f9c155",
+      "scripts/urbit/build_phase1_evidence.py": "c886c18fb25c0e381f346a6b7ec0387a784410acacfcac9ea72b6a5881708f7f",
+      "scripts/urbit/qualification_cases.py": "208fc2e2d9448d5ea745bf51acefec0d06b84efdde814a8b9c73dcc3fbc70555",
+      "scripts/urbit/qualification_gate.py": "ce0d8d0d87e9556940143943d7107099bfeb5c36eec6744342e555bfd292a6ab",
+      "specs/urbit/v2/native-api.json": "6702cea56f8a1418a7663850e70d1a77775a890f708754d0347d89e9c2ae3bd8",
+      "specs/urbit/v2/qualification-gate.json": "f374349cc3ccd64993e3dade9a44e306854479c228b7f93d6559647006aee94c"
+    }
+  },
+  "transport": {
+    "artifact": {
+      "encoding": "gzip-jsonl",
+      "file": "core-20260926T215629Z-transport.jsonl.gz",
+      "records": 601,
+      "scope": "Exact synthetic decoded transport/input records; native frame digests retained",
+      "sha256": "5e413f587e76c931dfa4d699964170cf5afa40250581cf341526b238ea4f4c0b",
+      "uncompressed_bytes": 8866630,
+      "uncompressed_sha256": "0e2561fe39ea08c85ac4f4c3cce6f610ea6f0dca5a9b67e0ed18c879c7340d9e"
+    },
+    "validate_transport_passed": true,
+    "validation_is_host_readonly_evidence_integrity_not_native_execution": true
+  }
+}

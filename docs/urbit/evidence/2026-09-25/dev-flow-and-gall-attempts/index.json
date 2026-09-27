@@ -1,0 +1,194 @@
+{
+  "protocol": "stead.native-development-attempts/1",
+  "qualifies_phase": false,
+  "scope": "Actual Makefile dev integration and three compiler-failing scheduled Gall attempts. Guard completion is cleanup evidence, not a native pass.",
+  "results": [
+    {
+      "classification": "local-real-native-compile-probes",
+      "status": "pass",
+      "source_commit": null,
+      "elapsed_seconds": 50.038,
+      "error": null,
+      "report": "core-check-20260925T115115Z.json.gz",
+      "checks_passed": 53,
+      "guard": "guard-661f86b893b1e5cd8b23426fc0b44a90.json.gz",
+      "source_context": "dev11-source-context.json.gz",
+      "source_commit_from_wrapper": "b9765bf60d1a560ee453b3ee4c721714f3232991"
+    },
+    {
+      "classification": "native-scheduled-gall",
+      "status": "fail",
+      "source_commit": "b9765bf60d1a560ee453b3ee4c721714f3232991",
+      "elapsed_seconds": 27.071,
+      "error": "AssertionError: positive-native-result-shape",
+      "report": "gall-schedule-20260925T115219Z-8bd64d6095af.json.gz",
+      "checks_passed": 56,
+      "guard": "guard-661f86b893b1e5cd8b23426fc0b44a90.json.gz"
+    },
+    {
+      "classification": "native-scheduled-gall",
+      "status": "fail",
+      "source_commit": "3fb6282c94f9aea6742b90aba341efb7e36b9715",
+      "elapsed_seconds": 35.535,
+      "error": "AssertionError: positive-native-result-shape",
+      "report": "gall-schedule-20260925T115450Z-d6a4ae43b3ba.json.gz",
+      "checks_passed": 56,
+      "guard": "guard-1ba58dd3c160b373e94874ccbd15d309.json.gz"
+    },
+    {
+      "classification": "native-scheduled-gall",
+      "status": "fail",
+      "source_commit": "ffab82f8ac5251cb912236be60edc3d3fac3dfba",
+      "elapsed_seconds": 33.053,
+      "error": "AssertionError: positive-native-result-shape",
+      "report": "gall-schedule-20260925T115659Z-c0bc12193591.json.gz",
+      "checks_passed": 56,
+      "guard": "guard-3280090dc0eb13349bc35ff11577afdf.json.gz"
+    }
+  ],
+  "transformations": [
+    "gzip compression; decompressed bytes unchanged"
+  ],
+  "artifacts": [
+    {
+      "file": "core-check-20260925T115115Z.json.gz",
+      "sha256": "3c4894c75cae60ec4c53d4bb5284f8181d74254691eb9feac1915703d43165c0",
+      "encoding": "gzip",
+      "original_local_path": ".piers/fakes/logs/core-check-20260925T115115Z.json",
+      "original_sha256": "fb55a62456b6ba32664a49feeca6c5b057f19909a55ef3b21e65b1b3ded59f8e"
+    },
+    {
+      "file": "guard-661f86b893b1e5cd8b23426fc0b44a90.json.gz",
+      "sha256": "9b2b613e4ea9fe8120894e9a9e6cfbba97f8dbfa60cd3b6a007f67d2b02f21d5",
+      "encoding": "gzip",
+      "original_local_path": ".runtime/execution-runs/four-fakes-vaigyxgg/report.json",
+      "original_sha256": "be73fb1eadd5796b8b37d6db28340c90e126a64b6b7489dcace8768a2d620d32"
+    },
+    {
+      "file": "gall-schedule-20260925T115219Z-8bd64d6095af.json.gz",
+      "sha256": "1638c4bafc01a5b74807a74b0b61616105311818095f4f59df151ee30049d519",
+      "encoding": "gzip",
+      "original_local_path": ".piers/fakes/logs/gall-schedule-20260925T115219Z-8bd64d6095af.json",
+      "original_sha256": "c18ee323c845b8eb287f1c74b010e138f7ba5d3abdeb0735aa0ac2df0c07f6cb"
+    },
+    {
+      "file": "gall-schedule-20260925T115450Z-d6a4ae43b3ba.json.gz",
+      "sha256": "6c5ceb1fabe21ebdf2c7eda3cc5fc23087108b2fcb639ec3d8cf5edc6f7e99ca",
+      "encoding": "gzip",
+      "original_local_path": ".piers/fakes/logs/gall-schedule-20260925T115450Z-d6a4ae43b3ba.json",
+      "original_sha256": "1127f00fcc54f932c63c791a0fe217c133e72da70aa7cc7aad7dcd826763f0fa"
+    },
+    {
+      "file": "guard-1ba58dd3c160b373e94874ccbd15d309.json.gz",
+      "sha256": "c7c288663466e83526139197f799eddedd31c85225556d1bfff9314c51103b1a",
+      "encoding": "gzip",
+      "original_local_path": ".runtime/execution-runs/four-fakes-zm3qkpt5/report.json",
+      "original_sha256": "1e02dac19ce004967b3b44595563127b77aabc2cbda9b79e7289213f3a62859b"
+    },
+    {
+      "file": "gall-schedule-20260925T115659Z-c0bc12193591.json.gz",
+      "sha256": "71224f038c9be92063fbaec5b7fdb92135d477cb3e2adb0acef6bee6e1b9a0f9",
+      "encoding": "gzip",
+      "original_local_path": ".piers/fakes/logs/gall-schedule-20260925T115659Z-c0bc12193591.json",
+      "original_sha256": "d3ee54568c94ecc3402b2db93b012b5fde2f1f58ba86d2de506d4d5c1a0983c5"
+    },
+    {
+      "file": "guard-3280090dc0eb13349bc35ff11577afdf.json.gz",
+      "sha256": "c060738368e7d52c40b2e3aac98d7f5879039273bb9f1f4b02ec44a7f4c80b4a",
+      "encoding": "gzip",
+      "original_local_path": ".runtime/execution-runs/four-fakes-5qmv_3mv/report.json",
+      "original_sha256": "c647d105dd7711074dfa49c16a3080a56b7193818ab0bec775940cc1b8902b9a"
+    },
+    {
+      "file": "dev11.json.gz",
+      "sha256": "37d80fc33b084bcf24f23d6d402817f23fa1086b89843cb9f18e27d00c590003",
+      "encoding": "gzip",
+      "original_local_path": ".runtime/phase01-20260925/dev11.json",
+      "original_sha256": "da4d21d2ddbab679a4ef265d37c948dcb1d68fe6c769affacd5dc6e321d5621e"
+    },
+    {
+      "file": "dev11.log.gz",
+      "sha256": "00dea6050be25e9f82595ef544496d758e0be424dc31e562c2f9f3acb4185678",
+      "encoding": "gzip",
+      "original_local_path": ".runtime/phase01-20260925/dev11.log",
+      "original_sha256": "661b56781719a3278e003bd1bc4688b97b54dd6c4b3fae316584eb874fa7d444"
+    },
+    {
+      "file": "dev11-zod.log.gz",
+      "sha256": "28122b58c91d818c39cf387cd711fa313ee4f89212b4847a5660dda997132fd1",
+      "encoding": "gzip",
+      "original_local_path": ".runtime/phase01-20260925/dev11-zod.log",
+      "original_sha256": "c8131f851efff57c9ec6a1fa8e11f8bdd8076181715906257504b54db39dbce2"
+    },
+    {
+      "file": "gall01.json.gz",
+      "sha256": "11a8ec0a18ad5cdd21446d52b1ebeae2501bc92ec1d25a55c7898f852c764f71",
+      "encoding": "gzip",
+      "original_local_path": ".runtime/phase01-20260925/gall01.json",
+      "original_sha256": "f11ee69d0eac4ebf2a8273325fc9e3d397dbe612ae37c6cdbd26ebe8f0f9647d"
+    },
+    {
+      "file": "gall01.log.gz",
+      "sha256": "7074137b980b7e36301e06b34a604e1dfa10531aebc41fd61a393b569066be85",
+      "encoding": "gzip",
+      "original_local_path": ".runtime/phase01-20260925/gall01.log",
+      "original_sha256": "1fd3513ddac20472dc4cd778b929a9194095ce61073bee2e073bf9f1b9b9f7e2"
+    },
+    {
+      "file": "gall01-zod.log.gz",
+      "sha256": "47924a319dbdc6aad00718950c15726ef4f7812ab5e09ae71007d1a313cc4002",
+      "encoding": "gzip",
+      "original_local_path": ".runtime/phase01-20260925/gall01-zod.log",
+      "original_sha256": "9c6dd1ce07c55ab4b746a24cb924018729745f42589ff9baa30a39b52830f647"
+    },
+    {
+      "file": "gall02.json.gz",
+      "sha256": "a9e5e523ed9c4e8bada54fc906a51c12692cbe4fef3768f78c42e830a6889cd6",
+      "encoding": "gzip",
+      "original_local_path": ".runtime/phase01-20260925/gall02.json",
+      "original_sha256": "63ef25f6c92d6362e645dcda2a10423b748b5616de570334a04ed9545ddba740"
+    },
+    {
+      "file": "gall02.log.gz",
+      "sha256": "fb5c1638506417fd19c6573c00a377fec0bacc9857bef56f234822d0359a4b07",
+      "encoding": "gzip",
+      "original_local_path": ".runtime/phase01-20260925/gall02.log",
+      "original_sha256": "b654be050c74a54d25833bf9833077e8d57206517a0a2c65ba85b09c40e82c8c"
+    },
+    {
+      "file": "gall02-zod.log.gz",
+      "sha256": "1e448b03e05c034da5884daa3b35194a7a8cd2d3fedeb4d7da0d750c4f257edc",
+      "encoding": "gzip",
+      "original_local_path": ".runtime/phase01-20260925/gall02-zod.log",
+      "original_sha256": "37e3be23bec78cfea1a75856b74ae796c585314345c31f87604519680ca2a8a5"
+    },
+    {
+      "file": "gall03.json.gz",
+      "sha256": "950633843fc21168faf722d60acacd0484e67bfb9e2f282459e2147bb61b5427",
+      "encoding": "gzip",
+      "original_local_path": ".runtime/phase01-20260925/gall03.json",
+      "original_sha256": "7fc0246f54da91a8bc10eaed4a0070a11b8bc36c45a49f74575ba50225856833"
+    },
+    {
+      "file": "gall03.log.gz",
+      "sha256": "17172ad9b0ec2877736f2b43d05d1ef6b1bb6893423a0f092877b0a275e26baf",
+      "encoding": "gzip",
+      "original_local_path": ".runtime/phase01-20260925/gall03.log",
+      "original_sha256": "e2b69bc44a6dea3cff585a853ddc9708f34d5b03eabaa5ed0d1494712fb6f030"
+    },
+    {
+      "file": "gall03-zod.log.gz",
+      "sha256": "628382627e8a699745f6214d36e350661706788f52756222d57df0ead3dcbcb7",
+      "encoding": "gzip",
+      "original_local_path": ".runtime/phase01-20260925/gall03-zod.log",
+      "original_sha256": "d709b7871c549053eaac336d92cd486e9e754093e3948b95e8c0e1620d3b5f37"
+    },
+    {
+      "file": "dev11-source-context.json.gz",
+      "sha256": "63f27a853e5ddbdc36f9cd622cecb27e4c463f165ecbd5e61656127a5ceae09e",
+      "encoding": "gzip",
+      "original_local_path": ".runtime/execution-runs/four-fakes-vaigyxgg/control/source-context.json",
+      "original_sha256": "3d630a3a4e94e452c8d35c0f2a1a8e378cdf542733b6e7b7248e849cd6aa263a"
+    }
+  ]
+}

@@ -1,0 +1,6 @@
+python3 scripts/urbit/harness.py status
+{
+  "stage": "stopped",
+  "ready": false,
+  "ships": {}
+}

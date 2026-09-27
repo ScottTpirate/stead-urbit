@@ -1,0 +1,17 @@
+{
+  "command": [
+    "coredumpctl",
+    "info",
+    "1053896"
+  ],
+  "exit": 0,
+  "selected_fields": [
+    "           PID: 1053896 (vere-v4.6-linux)",
+    "        Signal: 11 (SEGV) si_code: SEGV_MAPERR",
+    "     Timestamp: Sat 2026-09-26 16:16:43 EDT (13min ago)",
+    "  Command Line: /runtime/bin/vere-v4.6-linux-x86_64 -t -L --no-dock --loom 31 -b 127.0.0.1 --http-port 18081 /state/live/bus",
+    "       Storage: none"
+  ],
+  "limits": "No core image was generated; the precise native crash instruction remains unverified.",
+  "captured_at": "2026-09-26T20:30:10.826799+00:00"
+}

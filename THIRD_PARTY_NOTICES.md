@@ -249,3 +249,39 @@ AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
 LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
+
+
+## NOTICE-URBIT-MIT — native development references
+
+The original Stead notices above are preserved historical material. Their registry
+is archived at `reference/stead/docs/governance/dependency-approvals.yaml`; those
+legacy approvals do not approve this derivative's dependencies.
+
+Native development uses Urbit source at
+`5a187fededc4582a34fcd6055c67bb63e0917b94`. The Gall/thread scaffold follows its
+MIT-licensed application interfaces and examples; project state/permission logic
+is newly authored. Required source dependencies remain pinned downloads in the
+ignored runtime cache, not a silently vendored production desk. Preserve this
+notice with any later distributed desk containing Urbit source.
+
+The MIT License (MIT)
+
+Copyright (c) 2015 Urbit
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.

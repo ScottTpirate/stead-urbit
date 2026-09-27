@@ -1,0 +1,118 @@
+{
+  "protocol": "stead.native-attempt/1",
+  "label": "gall08",
+  "source_commit": "738e76305fb544ecc8250a784efe0edc8d228cfe",
+  "native_status": "fail",
+  "native_error": "AssertionError: wrong-pending-count-is-specific-runtime-failure",
+  "native_elapsed_seconds": 42.783,
+  "positive_validation": {
+    "status": "passed",
+    "assertions": 14
+  },
+  "negative": "Specific expected runtime failure returned in Dojo result tang; harness expected legacy empty result plus log hint and rejected this actual format.",
+  "outer_guard_status": "completed",
+  "outer_guard_reason": null,
+  "outer_guard_exit": 0,
+  "subsequent_prequal02": "Refused before execution: Fixture not ready. No native prequalification report or pass.",
+  "qualifies_phase": false,
+  "artifacts": [
+    {
+      "file": "gall-schedule-20260926T134045Z-68331d53702a.json.gz",
+      "sha256": "54b80631dc52d7f6522f181c777cf73c03c1335acc8ead639e3b53cf24687272",
+      "original_local_path": ".piers/fakes/logs/gall-schedule-20260926T134045Z-68331d53702a.json",
+      "original_sha256": "76e3e2ba3940d29114ba9393ec5193c54dfcc5bb6af412938094e767703db607",
+      "encoding": "gzip"
+    },
+    {
+      "file": "outer-guard.json.gz",
+      "sha256": "420b3625bbae9b6224c19598157762ea45f8f22b17f5857a5d59b9b3709f4cc1",
+      "original_local_path": ".runtime/execution-runs/four-fakes-vnycy8gs/report.json",
+      "original_sha256": "eabc8ccb692900209e40f6e7d23429b667627f7f5f2a7b3221a60189d69ce0f0",
+      "encoding": "gzip"
+    },
+    {
+      "file": "source-context.json.gz",
+      "sha256": "69f40a6c12480d38e71def22b7b8850ab5bde9f45b5fb61010cdab7217c9d4aa",
+      "original_local_path": ".runtime/execution-runs/four-fakes-vnycy8gs/control/source-context.json",
+      "original_sha256": "cd8ac42820a50fac9b0e1cbbd5161a9b9c17e8df3ee0255ba5174b1343b72f7e",
+      "encoding": "gzip"
+    },
+    {
+      "file": "gall08.json.gz",
+      "sha256": "7c274be3eda78b43d2f4ec74cabed29474e0054fc32c1984fbf98ec71f17c159",
+      "original_local_path": ".runtime/phase01-20260925/gall08.json",
+      "original_sha256": "e13a7db5095b30bc3db7be04d430522ce87c3318d84e9e54ac8f0f71c3938f0d",
+      "encoding": "gzip"
+    },
+    {
+      "file": "gall08.log.gz",
+      "sha256": "ffeb54e16e84489fc9c8a5c5231b15f241e98d07972517ceb9e15de40eb529b3",
+      "original_local_path": ".runtime/phase01-20260925/gall08.log",
+      "original_sha256": "ca605c4db634d040073df3f1a9021a2a13e53703c721f6051ea29b9172ee370e",
+      "encoding": "gzip"
+    },
+    {
+      "file": "gall08-zod.log.gz",
+      "sha256": "1745b75c507b2cad2d5744de9c3b59d8043d8904f38d572017cd0be4243321c8",
+      "original_local_path": ".runtime/phase01-20260925/gall08-zod.log",
+      "original_sha256": "7b6e7e923c1777c30c84149d4feb421d3f2300427cb6eacc7dc253fe22ace781",
+      "encoding": "gzip"
+    },
+    {
+      "file": "start20.json.gz",
+      "sha256": "78fe1a7078055f3b7ee160af615a3314487b43b6a25b8955c94c8a30c6539b95",
+      "original_local_path": ".runtime/phase01-20260925/start20.json",
+      "original_sha256": "7a74d92019fbc438912ca8fc9a05785331f14bca42c65122cb835b6e35e8b67a",
+      "encoding": "gzip"
+    },
+    {
+      "file": "start20.log.gz",
+      "sha256": "f08ddfd0dad30629355311ebdc2f6bc9057546df4b43d040d9cd6f5c26fc994a",
+      "original_local_path": ".runtime/phase01-20260925/start20.log",
+      "original_sha256": "07a0bb2ac28511caf5f3a515758260aabfa9eaff945de3a0badf18deb98edfe7",
+      "encoding": "gzip"
+    },
+    {
+      "file": "ready20.json.gz",
+      "sha256": "a606997d12a788a09ed211983cf33cac6f695b8d889aebca6ef4a38713ceca71",
+      "original_local_path": ".runtime/phase01-20260925/ready20.json",
+      "original_sha256": "e39b11630d7dea4e2a4b30b9e9052f7735fc5a9ca12b8f1e35b80cc6aeb56399",
+      "encoding": "gzip"
+    },
+    {
+      "file": "ready20.log.gz",
+      "sha256": "01cedc45b27b73b7c8d5c8d2e0aa7bae317933250f77076dc26ab76b2428f17e",
+      "original_local_path": ".runtime/phase01-20260925/ready20.log",
+      "original_sha256": "6ade3d62b67dd2066207260ae96b6ef88847dbb824720cc7be7b132fee5510e9",
+      "encoding": "gzip"
+    },
+    {
+      "file": "stop20.json.gz",
+      "sha256": "ccca36d18434df78aac50ed2c219514a50f3f9ce9061354a05bfba8df2d6a358",
+      "original_local_path": ".runtime/phase01-20260925/stop20.json",
+      "original_sha256": "591c37297dc27a8f1fb2e3759b1f3a5297ada7d368919f894b35c8d8e5de1d7f",
+      "encoding": "gzip"
+    },
+    {
+      "file": "stop20.log.gz",
+      "sha256": "3515bb00ab4541684f1f9147aacb7e7157ed671b8d21b6ef4cf9f013b859c7f8",
+      "original_local_path": ".runtime/phase01-20260925/stop20.log",
+      "original_sha256": "fe8b2280abb0c0a09259c5211aa3dc729b9b42caa2afdaa7431a4d4936ba213c",
+      "encoding": "gzip"
+    },
+    {
+      "file": "prequal02.json.gz",
+      "sha256": "fe4575d44fa5d63242ae8e9f07c4e68d0b97141b144b29764874b11f5b8d3c79",
+      "original_local_path": ".runtime/phase01-20260925/prequal02.json",
+      "original_sha256": "4de16f38f15ef567f04a6b0745b265c040ddb09a16c2094958bd5dd170107d60",
+      "encoding": "gzip"
+    },
+    {
+      "file": "prequal02.log.gz",
+      "sha256": "c5fea68165c1166a9a13779ec310e514991da7acbd250c2b6bbf9c312d9b5fac",
+      "original_local_path": ".runtime/phase01-20260925/prequal02.log",
+      "original_sha256": "116e7841dee747f119e2b1fb4b91576f180debdaa98d225f8b70fa31bad91028",
+      "encoding": "gzip"
+    }
+  ]
+}

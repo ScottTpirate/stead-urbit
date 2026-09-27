@@ -1,0 +1,70 @@
+{
+  "source_commit": "c299f19acf0f7afb368d22c85f91c60f3af8515b",
+  "classification": "real-native-fake-ships",
+  "status": "failed",
+  "qualifies_phase": false,
+  "elapsed_seconds": 1485.876,
+  "checks_passed": 473,
+  "error": "AssertionError: owner-control:roundtrip",
+  "qa_cases": {
+    "passed": 145,
+    "incomplete": 3
+  },
+  "qa_checks": {
+    "passed": 3952,
+    "skipped": 3
+  },
+  "unexecuted": [
+    "concurrency after roundtrip",
+    "dedicated delivery suite",
+    "predecessor and capacity qualification recipes"
+  ],
+  "scope": "Actual failed run; three missing typed dispositions and v2 saved-mold rejection retained. Guardian completed cleanly, which does not make native tests pass.",
+  "artifacts": [
+    {
+      "original": ".piers/fakes/logs/core-20260925T100137Z.json",
+      "path": "docs/urbit/evidence/2026-09-25/native-core-first-run/core-20260925T100137Z.json.gz",
+      "original_sha256": "84a539f820b1f825b63b888a9c3414c291ea7a287134cb006b7ba32eabbc48f2",
+      "sha256": "472a325e49fb5a62172adee3595c93b1fb8693b821d5af08da91da53f5ab9003",
+      "original_bytes": 5478973,
+      "bytes": 445749,
+      "encoding": "gzip exact original bytes"
+    },
+    {
+      "original": ".piers/fakes/logs/core-20260925T100137Z-transport.jsonl.gz",
+      "path": "docs/urbit/evidence/2026-09-25/native-core-first-run/core-20260925T100137Z-transport.jsonl.gz",
+      "original_sha256": "a1309afeef68ff10b37b3f15031cb610372c99639b859408564d672793c8afc2",
+      "sha256": "a1309afeef68ff10b37b3f15031cb610372c99639b859408564d672793c8afc2",
+      "original_bytes": 613878,
+      "bytes": 613878,
+      "encoding": "unchanged"
+    },
+    {
+      "original": ".runtime/phase01-20260925/core01.json",
+      "path": "docs/urbit/evidence/2026-09-25/native-core-first-run/core01.json",
+      "original_sha256": "ce4c9794f1bc0eec75f78096b337c598395274eb863ed1646c694d8d941eee0d",
+      "sha256": "ce4c9794f1bc0eec75f78096b337c598395274eb863ed1646c694d8d941eee0d",
+      "original_bytes": 267,
+      "bytes": 267,
+      "encoding": "unchanged"
+    },
+    {
+      "original": ".runtime/phase01-20260925/core01.log",
+      "path": "docs/urbit/evidence/2026-09-25/native-core-first-run/core01.log",
+      "original_sha256": "6a6377047f499c2e7fec0a979c6236e1e58bb9f39f344ecf388b12d31f681ab5",
+      "sha256": "6a6377047f499c2e7fec0a979c6236e1e58bb9f39f344ecf388b12d31f681ab5",
+      "original_bytes": 1096,
+      "bytes": 1096,
+      "encoding": "unchanged"
+    },
+    {
+      "original": ".runtime/execution-runs/four-fakes-akioaczx/report.json",
+      "path": "docs/urbit/evidence/2026-09-25/native-core-first-run/execution-guard.json.gz",
+      "original_sha256": "af6b46d5a8799b78ed192e11dc193920d949c5ca26df68cad192d1bbb9447fdc",
+      "sha256": "7024c7fcb07628b945935efcb40400f15060e9ee193be85d087b6fc2feb5c9d1",
+      "original_bytes": 730358,
+      "bytes": 42927,
+      "encoding": "gzip exact original bytes"
+    }
+  ]
+}

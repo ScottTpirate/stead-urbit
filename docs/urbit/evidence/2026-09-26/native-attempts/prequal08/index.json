@@ -1,0 +1,102 @@
+{
+  "protocol": "stead.native-attempt/1",
+  "label": "prequal08",
+  "source_commit": "b2ec89c258c5544a3344c3665a81700b9e7075b4",
+  "native_status": "fail",
+  "native_error": "Execution guard interrupted result: Fixture stop is latched",
+  "native_elapsed_seconds": 30.872,
+  "outer_guard_status": "failed",
+  "outer_guard_reason": "GuardError: Thermal ceiling reached",
+  "outer_guard_exit": 1,
+  "qualifies_phase": false,
+  "scope": "Exact individual execution record; phase acceptance requires separate reconciliation and review.",
+  "transformations": [
+    "gzip compression only; decompressed bytes unchanged"
+  ],
+  "artifacts": [
+    {
+      "file": "skill-evaluation-20260926T142912Z-prequalification.json.gz",
+      "sha256": "f495b59c3717505423c4a47926b338a726d9bc08c37f3719f03373ae9428bb35",
+      "original_local_path": ".piers/fakes/logs/skill-evaluation-20260926T142912Z-prequalification.json",
+      "original_sha256": "171106118fb7353e36d400177376a9e62ff833356b694e4c74ec15dcd4b2f527",
+      "encoding": "gzip"
+    },
+    {
+      "file": "outer-guard.json.gz",
+      "sha256": "d99a4b32adaca366c7360be225a7ad288fb1b20899c932f5b9d706409cea4e27",
+      "original_local_path": ".runtime/execution-runs/four-fakes-tte_ipgm/report.json",
+      "original_sha256": "4d1953b77d5e77d7ba2bc8da78ae3d4bfe6c155387aabbda8415e9378f46d2f1",
+      "encoding": "gzip"
+    },
+    {
+      "file": "source-context.json.gz",
+      "sha256": "09545e386069ace5c56e0e18c4974c176cd7938fcd4f6cfffaf490ae05c673f0",
+      "original_local_path": ".runtime/execution-runs/four-fakes-tte_ipgm/control/source-context.json",
+      "original_sha256": "90068ff16ba4b87999acfc137186b97b779b7b7463d4f1637f4af83c65f45553",
+      "encoding": "gzip"
+    },
+    {
+      "file": "prequal08.json.gz",
+      "sha256": "64b2e52eccebcaa3dace166dcb9164436f2a9d14c655943ca2b34224bb5effb0",
+      "original_local_path": ".runtime/phase01-20260925/prequal08.json",
+      "original_sha256": "a792e03bae12608642e6003b7902c35808dab642d7fc3112a97fa1c9a6fb0734",
+      "encoding": "gzip"
+    },
+    {
+      "file": "prequal08.log.gz",
+      "sha256": "4fb98f688caadc034e3bea7fbb69b413dc16c8630cb843b2200068dde306ab5c",
+      "original_local_path": ".runtime/phase01-20260925/prequal08.log",
+      "original_sha256": "1245eaf30b28f6093b3eed023f2bd689d108be6abd79ddeeae3e8ce2c5ffeadd",
+      "encoding": "gzip"
+    },
+    {
+      "file": "prequal08-zod.log.gz",
+      "sha256": "511fefc907f027d16dfd4c6f88def39a975886262fecfebb913c14fe44eb254d",
+      "original_local_path": ".runtime/phase01-20260925/prequal08-zod.log",
+      "original_sha256": "78f061c1ecbbeecfb6890ec88ff4c734d88bd868da67a4341e5e333f2a1074cb",
+      "encoding": "gzip"
+    },
+    {
+      "file": "start27.json.gz",
+      "sha256": "1673834273ac85e9a1453661aa35183aa5480b54fadfa8fd82fa67b8dc9db8dc",
+      "original_local_path": ".runtime/phase01-20260925/start27.json",
+      "original_sha256": "62ec8eecc3cfa97ce1e240b4600c0c30c48552244b2a18758de212094cfdd4cc",
+      "encoding": "gzip"
+    },
+    {
+      "file": "start27.log.gz",
+      "sha256": "107ab0f5f12425a626ab25fdfb41eee78f331642294eb16ba422c69280f1ea3f",
+      "original_local_path": ".runtime/phase01-20260925/start27.log",
+      "original_sha256": "81230f835ab0f0ad776acf6d3f85f520a0710182a95c74278d0d1ef6bf3d576c",
+      "encoding": "gzip"
+    },
+    {
+      "file": "ready27.json.gz",
+      "sha256": "af4aedbfda3227e3955ff47ff3d5723bfcf864d9a63a5d4688882e46dca7aa4f",
+      "original_local_path": ".runtime/phase01-20260925/ready27.json",
+      "original_sha256": "8d4777dfe70bcdfdea9c60c79031b5f8fd86125dedfbb3f77c4156ac916a5a1d",
+      "encoding": "gzip"
+    },
+    {
+      "file": "ready27.log.gz",
+      "sha256": "01cedc45b27b73b7c8d5c8d2e0aa7bae317933250f77076dc26ab76b2428f17e",
+      "original_local_path": ".runtime/phase01-20260925/ready27.log",
+      "original_sha256": "6ade3d62b67dd2066207260ae96b6ef88847dbb824720cc7be7b132fee5510e9",
+      "encoding": "gzip"
+    },
+    {
+      "file": "stop27.json.gz",
+      "sha256": "6822afdeaf75b9a87fd18574dedf270e0660364ae39d79e69fa0a7180b1e2f66",
+      "original_local_path": ".runtime/phase01-20260925/stop27.json",
+      "original_sha256": "fbc38bdc450027dfc8277e1beb65f696d52a463af7379f47a247c2d8faf7e568",
+      "encoding": "gzip"
+    },
+    {
+      "file": "stop27.log.gz",
+      "sha256": "12c671e095df8b045e620680c1b93956a87a91531f555b53cad5fd1a748b4a19",
+      "original_local_path": ".runtime/phase01-20260925/stop27.log",
+      "original_sha256": "7e0046a61997e91b4c00d40b33b385148d315de81c5f28722592072cb3fde000",
+      "encoding": "gzip"
+    }
+  ]
+}

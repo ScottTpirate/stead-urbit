@@ -1,0 +1,6 @@
+python3 scripts/urbit/harness.py wait-ready
+{"stage": "booting zod", "ready": false}
+{"stage": "booting bus", "ready": false}
+{"stage": "booting nec", "ready": false}
+{"stage": "booting bud", "ready": false}
+{"stage": "ready", "ready": true}

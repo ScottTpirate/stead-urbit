@@ -1,0 +1,129 @@
+{
+  "source_commit": "5208f3273426e8fe76dc8622ffe93ace93982e17",
+  "status": "thermal-stop-during-startup",
+  "native_gall_test_executed": false,
+  "peak_c": 91,
+  "qualifies_phase": false,
+  "artifacts": [
+    {
+      "path": "docs/urbit/evidence/2026-09-26/native-attempts/gall-final02-startup/steps/lifecycle.json.gz",
+      "source": ".runtime/phase01-20260926/gall-final02/lifecycle.json",
+      "original_sha256": "89d24eaa8c537df2f2f1988fef022d9130ebb876ffbbc60ebd26efca32f34002",
+      "sha256": "522675ab95f2fb0971a635c1d348c528dd6c6715827c51a953735c95569a2d18"
+    },
+    {
+      "path": "docs/urbit/evidence/2026-09-26/native-attempts/gall-final02-startup/steps/start.json.gz",
+      "source": ".runtime/phase01-20260926/gall-final02/start.json",
+      "original_sha256": "75c46be5d07e7b772c828b7d6c3c6faf25ad7751d3ef926fa9b0307180c247e8",
+      "sha256": "8d7b78d32567a3a779e73bb75d655d74db79c886bba3eaab31b50f94e05a8a09"
+    },
+    {
+      "path": "docs/urbit/evidence/2026-09-26/native-attempts/gall-final02-startup/steps/start.log.gz",
+      "source": ".runtime/phase01-20260926/gall-final02/start.log",
+      "original_sha256": "0cffcb6d23d07c75c13c928818869c9f37633c074fd0a198737c175683f0f446",
+      "sha256": "164ae37a2cbb302f79ec651244957b8f9a152d4c91f7e58b9f372f4b77240be5"
+    },
+    {
+      "path": "docs/urbit/evidence/2026-09-26/native-attempts/gall-final02-startup/steps/stop.json.gz",
+      "source": ".runtime/phase01-20260926/gall-final02/stop.json",
+      "original_sha256": "02ecd99e447464de63ab9b4fead8ed06dcf20fa917ab5beceff6ec2227359379",
+      "sha256": "5359447420ce7187a52d2dadc626fac61c66021b86eed19cd3c0ce9f5c388903"
+    },
+    {
+      "path": "docs/urbit/evidence/2026-09-26/native-attempts/gall-final02-startup/steps/stop.log.gz",
+      "source": ".runtime/phase01-20260926/gall-final02/stop.log",
+      "original_sha256": "fe8b2280abb0c0a09259c5211aa3dc729b9b42caa2afdaa7431a4d4936ba213c",
+      "sha256": "3515bb00ab4541684f1f9147aacb7e7157ed671b8d21b6ef4cf9f013b859c7f8"
+    },
+    {
+      "path": "docs/urbit/evidence/2026-09-26/native-attempts/gall-final02-startup/steps/wait-ready.json.gz",
+      "source": ".runtime/phase01-20260926/gall-final02/wait-ready.json",
+      "original_sha256": "494d4204789301ce20ee8256e434d0d2b04409e74cbcd88578cbcbf6fc5427ad",
+      "sha256": "eb4170697d750b21502aae072a7164a97f3c2ab20bd6900ff5b15bf4510b8b66"
+    },
+    {
+      "path": "docs/urbit/evidence/2026-09-26/native-attempts/gall-final02-startup/steps/wait-ready.log.gz",
+      "source": ".runtime/phase01-20260926/gall-final02/wait-ready.log",
+      "original_sha256": "4c3fabf4eba9871def0fbc9085489a7e300b188418736b2d44776f7242cd0002",
+      "sha256": "a2add5155f857792f9ecb09fa7af42b346179bfdd2f62d6cca03ef89c19b93e4"
+    },
+    {
+      "path": "docs/urbit/evidence/2026-09-26/native-attempts/gall-final02-startup/guard/.stead-disposable.json.gz",
+      "source": ".runtime/execution-runs/four-fakes-ybm2pg8s/.stead-disposable.json",
+      "original_sha256": "a9b80a1c21467d932b3c915f8bcbee6df11458d14a415a298348f318f254422b",
+      "sha256": "47361547ccc8247ce30b2967cd9b238c79769fbbd0512295baec3de4c4c5f479"
+    },
+    {
+      "path": "docs/urbit/evidence/2026-09-26/native-attempts/gall-final02-startup/guard/control/STOP.gz",
+      "source": ".runtime/execution-runs/four-fakes-ybm2pg8s/control/STOP",
+      "original_sha256": "7c7ab50d70a93b2892566d93d36d50548505ac58e767c0508ed5bccb2a23bcb2",
+      "sha256": "0bae0f972e102b09d6c7a39569da1346de29f9aa0a7603f4625e5180becde7cd"
+    },
+    {
+      "path": "docs/urbit/evidence/2026-09-26/native-attempts/gall-final02-startup/guard/control/lease.json.gz",
+      "source": ".runtime/execution-runs/four-fakes-ybm2pg8s/control/lease.json",
+      "original_sha256": "25ee10b646d37360935088b8748e503ace9e992ddd9ef474e8210bde36bf620a",
+      "sha256": "48732807bb03c3d73dbfbffc3a7372d1aa8eb2acfba2bd0a15d4fc3da260c87f"
+    },
+    {
+      "path": "docs/urbit/evidence/2026-09-26/native-attempts/gall-final02-startup/guard/control/scope.json.gz",
+      "source": ".runtime/execution-runs/four-fakes-ybm2pg8s/control/scope.json",
+      "original_sha256": "2a13e05998eebba54de9d463bcbded95b31c631865616a647bb1b40b9aaa6918",
+      "sha256": "2011c69b409a25cdc0c6af1b2fd7685b69fcbac76f4b48303b9b13995a20705b"
+    },
+    {
+      "path": "docs/urbit/evidence/2026-09-26/native-attempts/gall-final02-startup/guard/control/source-context.json.gz",
+      "source": ".runtime/execution-runs/four-fakes-ybm2pg8s/control/source-context.json",
+      "original_sha256": "dd3397cb193e307cab8856a831755fd96a3cec3182145694bdb63217a87c091f",
+      "sha256": "abf2ba801fdd7235716ba85a8d82d6097833db9c68bc1bdb63ed9a8d83eaf7e4"
+    },
+    {
+      "path": "docs/urbit/evidence/2026-09-26/native-attempts/gall-final02-startup/guard/events.jsonl.gz",
+      "source": ".runtime/execution-runs/four-fakes-ybm2pg8s/events.jsonl",
+      "original_sha256": "430d4d3e1d994430e1af3234ace28f5c393629353306503cc9056442030cffb0",
+      "sha256": "6681312748a4cf5a802496f0c57492e637467cef79723779d5f0812d0d55e71c"
+    },
+    {
+      "path": "docs/urbit/evidence/2026-09-26/native-attempts/gall-final02-startup/guard/report.json.gz",
+      "source": ".runtime/execution-runs/four-fakes-ybm2pg8s/report.json",
+      "original_sha256": "391b628d64ea208d96f7606b2e7880f9745e804e8bead64fbe2ed59e522640aa",
+      "sha256": "16c5927ede500aa8e1180ef90935b9e41acb76b61ba77a594ec6805b84c5221f"
+    },
+    {
+      "path": "docs/urbit/evidence/2026-09-26/native-attempts/gall-final02-startup/logs/zod.log.gz",
+      "source": ".piers/fakes/logs/zod.log",
+      "original_sha256": "a6d4d16534da7ca4df751ae461b0e84894a67a18e4e80ba565551a31fe122dd9",
+      "sha256": "52277fb9c85ba09c40263eb1553bb0eced7c06b02976adf111d06aa15948c04d"
+    },
+    {
+      "path": "docs/urbit/evidence/2026-09-26/native-attempts/gall-final02-startup/logs/bus.log.gz",
+      "source": ".piers/fakes/logs/bus.log",
+      "original_sha256": "7d2daa3290358e89a5fde05455fb1799e76d04d31d682d72d0120726e4b15f40",
+      "sha256": "95b391f4e80e64e4ce77e05bffb6758eb68ae536e382ebd6bb76fb3d83cb42e6"
+    },
+    {
+      "path": "docs/urbit/evidence/2026-09-26/native-attempts/gall-final02-startup/logs/nec.log.gz",
+      "source": ".piers/fakes/logs/nec.log",
+      "original_sha256": "31b0291d5a3c6e41c24e0019e4db824ae5ec63b526eba610a90ec85ca55d68d4",
+      "sha256": "633627ae6e98aa299ef59fdd8bae857ed5b5d81e90d6a9e8cf64a266a7733f1d"
+    },
+    {
+      "path": "docs/urbit/evidence/2026-09-26/native-attempts/gall-final02-startup/logs/bud.log.gz",
+      "source": ".piers/fakes/logs/bud.log",
+      "original_sha256": "e48dff31f7b0a33eeea3d0b0d3385817861cd86055a6ae9768cd90165ef846a1",
+      "sha256": "7f79a9c40c5cdb651972151f60234a9063ccd0a18c3e186937e2a4230fd533ce"
+    },
+    {
+      "path": "docs/urbit/evidence/2026-09-26/native-attempts/gall-final02-startup/logs/supervisor.log.gz",
+      "source": ".piers/fakes/logs/supervisor.log",
+      "original_sha256": "98ad6cf6530bb1b7208e02067f731febbc829846aae68e42ca935e00bb3ffa25",
+      "sha256": "e2baa80cef224a3ca7aa279e66d6174ed98f28ddb3903d7d7dbd8fd7b32c56b1"
+    },
+    {
+      "path": "docs/urbit/evidence/2026-09-26/native-attempts/gall-final02-startup/unclean-live.json.gz",
+      "source": ".piers/fakes/unclean-live.json",
+      "original_sha256": "f1c6283ed23f8e1280695a6acf02fb343a5663be1e6562ef329fa2ba70479c6e",
+      "sha256": "d8b762de10a1229bdfafd1aa59d60aa84aeb80a4346dfddd6d27fd8bcdd046bc"
+    }
+  ]
+}

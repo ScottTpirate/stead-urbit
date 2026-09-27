@@ -1,0 +1,1601 @@
+{
+  "executions": {
+    "core": {
+      "path": "docs/urbit/evidence/2026-09-26/phase1-final-dd0e8c0/core/native.json",
+      "pointer": "",
+      "sha256": "07540f0f574c7edf7264c47205cd7814732a6288ea6495ba919edbb519d80de7"
+    },
+    "gall_schedule": {
+      "path": "docs/urbit/evidence/2026-09-26/phase1-final-dd0e8c0/gall/native.json",
+      "pointer": "",
+      "sha256": "7685c7937a5dc55c0d25769dae1e2f720fd9fb7ef6c67d525115d533d297d890"
+    }
+  },
+  "guards": {
+    "core": {
+      "path": "docs/urbit/evidence/2026-09-26/phase1-final-dd0e8c0/core/guard.json",
+      "pointer": "",
+      "sha256": "0ff4543b96a347567d2a9764d8e1bb2fa0d3c3b498a70c12049c356d129cb0d7"
+    },
+    "gall_schedule": {
+      "path": "docs/urbit/evidence/2026-09-26/phase1-final-dd0e8c0/gall/guard.json",
+      "pointer": "",
+      "sha256": "825b7e58f4f1e75efe67a6e4d667e7ca8932ecd76c8cc297d913b30b35cbb2c0"
+    }
+  },
+  "historical_guard_continuity": {
+    "path": "docs/urbit/evidence/2026-09-26/phase1-nonnative-v5/historical-guard-continuity.json",
+    "pointer": "",
+    "sha256": "2bd3b2007daf5e916680b36e48a51d66d8b15035f599ac4219be76b44fd70463"
+  },
+  "items": [
+    {
+      "artifact": {
+        "path": "docs/urbit/evidence/2026-09-26/phase1-final-dd0e8c0/derived-v6/proofs.json",
+        "pointer": "/proofs/delivery:empty-project-known-unknown:1",
+        "sha256": "c7fa44026425580fadb1d3eac8866f1448ae0528d3d82899992208cd9ea6cc3c"
+      },
+      "bindings": {
+        "contract_freeze_sha256": "a2336e5060c71c7c16849b3151cc024a598d6cdf867561452eff1338e3232670",
+        "corpus_sha256": "95c915e2d0c93f358225274b34216fff0fe2efc09791905855b1e3f36aec368a",
+        "installed_clay_tree_sha256": "9ebf08805808c90d3b28f7ecf09db0899429b7c1d4b04903f68f6781778ff68d",
+        "loaded_closure_sha256": "70370987fbd5c75e7b8562fcc43462435b122495387b8c32011ed9f6caee9696",
+        "native_tree_sha256": "9ebf08805808c90d3b28f7ecf09db0899429b7c1d4b04903f68f6781778ff68d",
+        "observer_sha256": "16589b4f9f51782d0907a7c186e3fcff6625c713bb64006f37330d6056645e45",
+        "runner_sha256": "612ea14eeb83a047fce9bf542492c7d1ed38431015274703d20994b406ef392d",
+        "runtime_lock_sha256": "4a209c10cf1756eb0f7357cc3eca8250bf66c239b4cd0ca31a8c0886d4d304ee",
+        "source_commit": "dd0e8c0ce8d1d00f15de6b07e2e26d368c5c3774"
+      },
+      "execution_lane": "core",
+      "id": "delivery:empty-project-known-unknown:1",
+      "kind": "native",
+      "status": "passed"
+    },
+    {
+      "artifact": {
+        "path": "docs/urbit/evidence/2026-09-26/phase1-final-dd0e8c0/derived-v6/proofs.json",
+        "pointer": "/proofs/delivery:empty-project-known-unknown:2",
+        "sha256": "c7fa44026425580fadb1d3eac8866f1448ae0528d3d82899992208cd9ea6cc3c"
+      },
+      "bindings": {
+        "contract_freeze_sha256": "a2336e5060c71c7c16849b3151cc024a598d6cdf867561452eff1338e3232670",
+        "corpus_sha256": "95c915e2d0c93f358225274b34216fff0fe2efc09791905855b1e3f36aec368a",
+        "installed_clay_tree_sha256": "9ebf08805808c90d3b28f7ecf09db0899429b7c1d4b04903f68f6781778ff68d",
+        "loaded_closure_sha256": "70370987fbd5c75e7b8562fcc43462435b122495387b8c32011ed9f6caee9696",
+        "native_tree_sha256": "9ebf08805808c90d3b28f7ecf09db0899429b7c1d4b04903f68f6781778ff68d",
+        "observer_sha256": "16589b4f9f51782d0907a7c186e3fcff6625c713bb64006f37330d6056645e45",
+        "runner_sha256": "612ea14eeb83a047fce9bf542492c7d1ed38431015274703d20994b406ef392d",
+        "runtime_lock_sha256": "4a209c10cf1756eb0f7357cc3eca8250bf66c239b4cd0ca31a8c0886d4d304ee",
+        "source_commit": "dd0e8c0ce8d1d00f15de6b07e2e26d368c5c3774"
+      },
+      "execution_lane": "core",
+      "id": "delivery:empty-project-known-unknown:2",
+      "kind": "native",
+      "status": "passed"
+    },
+    {
+      "artifact": {
+        "path": "docs/urbit/evidence/2026-09-26/phase1-final-dd0e8c0/derived-v6/proofs.json",
+        "pointer": "/proofs/delivery:outsider-private-project-existence:1",
+        "sha256": "c7fa44026425580fadb1d3eac8866f1448ae0528d3d82899992208cd9ea6cc3c"
+      },
+      "bindings": {
+        "contract_freeze_sha256": "a2336e5060c71c7c16849b3151cc024a598d6cdf867561452eff1338e3232670",
+        "corpus_sha256": "95c915e2d0c93f358225274b34216fff0fe2efc09791905855b1e3f36aec368a",
+        "installed_clay_tree_sha256": "9ebf08805808c90d3b28f7ecf09db0899429b7c1d4b04903f68f6781778ff68d",
+        "loaded_closure_sha256": "70370987fbd5c75e7b8562fcc43462435b122495387b8c32011ed9f6caee9696",
+        "native_tree_sha256": "9ebf08805808c90d3b28f7ecf09db0899429b7c1d4b04903f68f6781778ff68d",
+        "observer_sha256": "16589b4f9f51782d0907a7c186e3fcff6625c713bb64006f37330d6056645e45",
+        "runner_sha256": "612ea14eeb83a047fce9bf542492c7d1ed38431015274703d20994b406ef392d",
+        "runtime_lock_sha256": "4a209c10cf1756eb0f7357cc3eca8250bf66c239b4cd0ca31a8c0886d4d304ee",
+        "source_commit": "dd0e8c0ce8d1d00f15de6b07e2e26d368c5c3774"
+      },
+      "execution_lane": "core",
+      "id": "delivery:outsider-private-project-existence:1",
+      "kind": "native",
+      "status": "passed"
+    },
+    {
+      "artifact": {
+        "path": "docs/urbit/evidence/2026-09-26/phase1-final-dd0e8c0/derived-v6/proofs.json",
+        "pointer": "/proofs/delivery:outsider-private-project-existence:2",
+        "sha256": "c7fa44026425580fadb1d3eac8866f1448ae0528d3d82899992208cd9ea6cc3c"
+      },
+      "bindings": {
+        "contract_freeze_sha256": "a2336e5060c71c7c16849b3151cc024a598d6cdf867561452eff1338e3232670",
+        "corpus_sha256": "95c915e2d0c93f358225274b34216fff0fe2efc09791905855b1e3f36aec368a",
+        "installed_clay_tree_sha256": "9ebf08805808c90d3b28f7ecf09db0899429b7c1d4b04903f68f6781778ff68d",
+        "loaded_closure_sha256": "70370987fbd5c75e7b8562fcc43462435b122495387b8c32011ed9f6caee9696",
+        "native_tree_sha256": "9ebf08805808c90d3b28f7ecf09db0899429b7c1d4b04903f68f6781778ff68d",
+        "observer_sha256": "16589b4f9f51782d0907a7c186e3fcff6625c713bb64006f37330d6056645e45",
+        "runner_sha256": "612ea14eeb83a047fce9bf542492c7d1ed38431015274703d20994b406ef392d",
+        "runtime_lock_sha256": "4a209c10cf1756eb0f7357cc3eca8250bf66c239b4cd0ca31a8c0886d4d304ee",
+        "source_commit": "dd0e8c0ce8d1d00f15de6b07e2e26d368c5c3774"
+      },
+      "execution_lane": "core",
+      "id": "delivery:outsider-private-project-existence:2",
+      "kind": "native",
+      "status": "passed"
+    },
+    {
+      "artifact": {
+        "path": "docs/urbit/evidence/2026-09-26/phase1-final-dd0e8c0/derived-v6/proofs.json",
+        "pointer": "/proofs/delivery:reader-can-read-work:1",
+        "sha256": "c7fa44026425580fadb1d3eac8866f1448ae0528d3d82899992208cd9ea6cc3c"
+      },
+      "bindings": {
+        "contract_freeze_sha256": "a2336e5060c71c7c16849b3151cc024a598d6cdf867561452eff1338e3232670",
+        "corpus_sha256": "95c915e2d0c93f358225274b34216fff0fe2efc09791905855b1e3f36aec368a",
+        "installed_clay_tree_sha256": "9ebf08805808c90d3b28f7ecf09db0899429b7c1d4b04903f68f6781778ff68d",
+        "loaded_closure_sha256": "70370987fbd5c75e7b8562fcc43462435b122495387b8c32011ed9f6caee9696",
+        "native_tree_sha256": "9ebf08805808c90d3b28f7ecf09db0899429b7c1d4b04903f68f6781778ff68d",
+        "observer_sha256": "16589b4f9f51782d0907a7c186e3fcff6625c713bb64006f37330d6056645e45",
+        "runner_sha256": "612ea14eeb83a047fce9bf542492c7d1ed38431015274703d20994b406ef392d",
+        "runtime_lock_sha256": "4a209c10cf1756eb0f7357cc3eca8250bf66c239b4cd0ca31a8c0886d4d304ee",
+        "source_commit": "dd0e8c0ce8d1d00f15de6b07e2e26d368c5c3774"
+      },
+      "execution_lane": "core",
+      "id": "delivery:reader-can-read-work:1",
+      "kind": "native",
+      "status": "passed"
+    },
+    {
+      "artifact": {
+        "path": "docs/urbit/evidence/2026-09-26/phase1-final-dd0e8c0/derived-v6/proofs.json",
+        "pointer": "/proofs/delivery:outsider-work-known-unknown:1",
+        "sha256": "c7fa44026425580fadb1d3eac8866f1448ae0528d3d82899992208cd9ea6cc3c"
+      },
+      "bindings": {
+        "contract_freeze_sha256": "a2336e5060c71c7c16849b3151cc024a598d6cdf867561452eff1338e3232670",
+        "corpus_sha256": "95c915e2d0c93f358225274b34216fff0fe2efc09791905855b1e3f36aec368a",
+        "installed_clay_tree_sha256": "9ebf08805808c90d3b28f7ecf09db0899429b7c1d4b04903f68f6781778ff68d",
+        "loaded_closure_sha256": "70370987fbd5c75e7b8562fcc43462435b122495387b8c32011ed9f6caee9696",
+        "native_tree_sha256": "9ebf08805808c90d3b28f7ecf09db0899429b7c1d4b04903f68f6781778ff68d",
+        "observer_sha256": "16589b4f9f51782d0907a7c186e3fcff6625c713bb64006f37330d6056645e45",
+        "runner_sha256": "612ea14eeb83a047fce9bf542492c7d1ed38431015274703d20994b406ef392d",
+        "runtime_lock_sha256": "4a209c10cf1756eb0f7357cc3eca8250bf66c239b4cd0ca31a8c0886d4d304ee",
+        "source_commit": "dd0e8c0ce8d1d00f15de6b07e2e26d368c5c3774"
+      },
+      "execution_lane": "core",
+      "id": "delivery:outsider-work-known-unknown:1",
+      "kind": "native",
+      "status": "passed"
+    },
+    {
+      "artifact": {
+        "path": "docs/urbit/evidence/2026-09-26/phase1-final-dd0e8c0/derived-v6/proofs.json",
+        "pointer": "/proofs/delivery:outsider-work-known-unknown:2",
+        "sha256": "c7fa44026425580fadb1d3eac8866f1448ae0528d3d82899992208cd9ea6cc3c"
+      },
+      "bindings": {
+        "contract_freeze_sha256": "a2336e5060c71c7c16849b3151cc024a598d6cdf867561452eff1338e3232670",
+        "corpus_sha256": "95c915e2d0c93f358225274b34216fff0fe2efc09791905855b1e3f36aec368a",
+        "installed_clay_tree_sha256": "9ebf08805808c90d3b28f7ecf09db0899429b7c1d4b04903f68f6781778ff68d",
+        "loaded_closure_sha256": "70370987fbd5c75e7b8562fcc43462435b122495387b8c32011ed9f6caee9696",
+        "native_tree_sha256": "9ebf08805808c90d3b28f7ecf09db0899429b7c1d4b04903f68f6781778ff68d",
+        "observer_sha256": "16589b4f9f51782d0907a7c186e3fcff6625c713bb64006f37330d6056645e45",
+        "runner_sha256": "612ea14eeb83a047fce9bf542492c7d1ed38431015274703d20994b406ef392d",
+        "runtime_lock_sha256": "4a209c10cf1756eb0f7357cc3eca8250bf66c239b4cd0ca31a8c0886d4d304ee",
+        "source_commit": "dd0e8c0ce8d1d00f15de6b07e2e26d368c5c3774"
+      },
+      "execution_lane": "core",
+      "id": "delivery:outsider-work-known-unknown:2",
+      "kind": "native",
+      "status": "passed"
+    },
+    {
+      "artifact": {
+        "path": "docs/urbit/evidence/2026-09-26/phase1-final-dd0e8c0/derived-v6/proofs.json",
+        "pointer": "/proofs/delivery:explicit-grant-allows-former-outsider:1",
+        "sha256": "c7fa44026425580fadb1d3eac8866f1448ae0528d3d82899992208cd9ea6cc3c"
+      },
+      "bindings": {
+        "contract_freeze_sha256": "a2336e5060c71c7c16849b3151cc024a598d6cdf867561452eff1338e3232670",
+        "corpus_sha256": "95c915e2d0c93f358225274b34216fff0fe2efc09791905855b1e3f36aec368a",
+        "installed_clay_tree_sha256": "9ebf08805808c90d3b28f7ecf09db0899429b7c1d4b04903f68f6781778ff68d",
+        "loaded_closure_sha256": "70370987fbd5c75e7b8562fcc43462435b122495387b8c32011ed9f6caee9696",
+        "native_tree_sha256": "9ebf08805808c90d3b28f7ecf09db0899429b7c1d4b04903f68f6781778ff68d",
+        "observer_sha256": "16589b4f9f51782d0907a7c186e3fcff6625c713bb64006f37330d6056645e45",
+        "runner_sha256": "612ea14eeb83a047fce9bf542492c7d1ed38431015274703d20994b406ef392d",
+        "runtime_lock_sha256": "4a209c10cf1756eb0f7357cc3eca8250bf66c239b4cd0ca31a8c0886d4d304ee",
+        "source_commit": "dd0e8c0ce8d1d00f15de6b07e2e26d368c5c3774"
+      },
+      "execution_lane": "core",
+      "id": "delivery:explicit-grant-allows-former-outsider:1",
+      "kind": "native",
+      "status": "passed"
+    },
+    {
+      "artifact": {
+        "path": "docs/urbit/evidence/2026-09-26/phase1-final-dd0e8c0/derived-v6/proofs.json",
+        "pointer": "/proofs/delivery:owner-reads-private-document:1",
+        "sha256": "c7fa44026425580fadb1d3eac8866f1448ae0528d3d82899992208cd9ea6cc3c"
+      },
+      "bindings": {
+        "contract_freeze_sha256": "a2336e5060c71c7c16849b3151cc024a598d6cdf867561452eff1338e3232670",
+        "corpus_sha256": "95c915e2d0c93f358225274b34216fff0fe2efc09791905855b1e3f36aec368a",
+        "installed_clay_tree_sha256": "9ebf08805808c90d3b28f7ecf09db0899429b7c1d4b04903f68f6781778ff68d",
+        "loaded_closure_sha256": "70370987fbd5c75e7b8562fcc43462435b122495387b8c32011ed9f6caee9696",
+        "native_tree_sha256": "9ebf08805808c90d3b28f7ecf09db0899429b7c1d4b04903f68f6781778ff68d",
+        "observer_sha256": "16589b4f9f51782d0907a7c186e3fcff6625c713bb64006f37330d6056645e45",
+        "runner_sha256": "612ea14eeb83a047fce9bf542492c7d1ed38431015274703d20994b406ef392d",
+        "runtime_lock_sha256": "4a209c10cf1756eb0f7357cc3eca8250bf66c239b4cd0ca31a8c0886d4d304ee",
+        "source_commit": "dd0e8c0ce8d1d00f15de6b07e2e26d368c5c3774"
+      },
+      "execution_lane": "core",
+      "id": "delivery:owner-reads-private-document:1",
+      "kind": "native",
+      "status": "passed"
+    },
+    {
+      "artifact": {
+        "path": "docs/urbit/evidence/2026-09-26/phase1-final-dd0e8c0/derived-v6/proofs.json",
+        "pointer": "/proofs/delivery:reader-private-document-known-unknown:1",
+        "sha256": "c7fa44026425580fadb1d3eac8866f1448ae0528d3d82899992208cd9ea6cc3c"
+      },
+      "bindings": {
+        "contract_freeze_sha256": "a2336e5060c71c7c16849b3151cc024a598d6cdf867561452eff1338e3232670",
+        "corpus_sha256": "95c915e2d0c93f358225274b34216fff0fe2efc09791905855b1e3f36aec368a",
+        "installed_clay_tree_sha256": "9ebf08805808c90d3b28f7ecf09db0899429b7c1d4b04903f68f6781778ff68d",
+        "loaded_closure_sha256": "70370987fbd5c75e7b8562fcc43462435b122495387b8c32011ed9f6caee9696",
+        "native_tree_sha256": "9ebf08805808c90d3b28f7ecf09db0899429b7c1d4b04903f68f6781778ff68d",
+        "observer_sha256": "16589b4f9f51782d0907a7c186e3fcff6625c713bb64006f37330d6056645e45",
+        "runner_sha256": "612ea14eeb83a047fce9bf542492c7d1ed38431015274703d20994b406ef392d",
+        "runtime_lock_sha256": "4a209c10cf1756eb0f7357cc3eca8250bf66c239b4cd0ca31a8c0886d4d304ee",
+        "source_commit": "dd0e8c0ce8d1d00f15de6b07e2e26d368c5c3774"
+      },
+      "execution_lane": "core",
+      "id": "delivery:reader-private-document-known-unknown:1",
+      "kind": "native",
+      "status": "passed"
+    },
+    {
+      "artifact": {
+        "path": "docs/urbit/evidence/2026-09-26/phase1-final-dd0e8c0/derived-v6/proofs.json",
+        "pointer": "/proofs/delivery:reader-private-document-known-unknown:2",
+        "sha256": "c7fa44026425580fadb1d3eac8866f1448ae0528d3d82899992208cd9ea6cc3c"
+      },
+      "bindings": {
+        "contract_freeze_sha256": "a2336e5060c71c7c16849b3151cc024a598d6cdf867561452eff1338e3232670",
+        "corpus_sha256": "95c915e2d0c93f358225274b34216fff0fe2efc09791905855b1e3f36aec368a",
+        "installed_clay_tree_sha256": "9ebf08805808c90d3b28f7ecf09db0899429b7c1d4b04903f68f6781778ff68d",
+        "loaded_closure_sha256": "70370987fbd5c75e7b8562fcc43462435b122495387b8c32011ed9f6caee9696",
+        "native_tree_sha256": "9ebf08805808c90d3b28f7ecf09db0899429b7c1d4b04903f68f6781778ff68d",
+        "observer_sha256": "16589b4f9f51782d0907a7c186e3fcff6625c713bb64006f37330d6056645e45",
+        "runner_sha256": "612ea14eeb83a047fce9bf542492c7d1ed38431015274703d20994b406ef392d",
+        "runtime_lock_sha256": "4a209c10cf1756eb0f7357cc3eca8250bf66c239b4cd0ca31a8c0886d4d304ee",
+        "source_commit": "dd0e8c0ce8d1d00f15de6b07e2e26d368c5c3774"
+      },
+      "execution_lane": "core",
+      "id": "delivery:reader-private-document-known-unknown:2",
+      "kind": "native",
+      "status": "passed"
+    },
+    {
+      "artifact": {
+        "path": "docs/urbit/evidence/2026-09-26/phase1-final-dd0e8c0/derived-v6/proofs.json",
+        "pointer": "/proofs/delivery:outsider-private-document-known-unknown:1",
+        "sha256": "c7fa44026425580fadb1d3eac8866f1448ae0528d3d82899992208cd9ea6cc3c"
+      },
+      "bindings": {
+        "contract_freeze_sha256": "a2336e5060c71c7c16849b3151cc024a598d6cdf867561452eff1338e3232670",
+        "corpus_sha256": "95c915e2d0c93f358225274b34216fff0fe2efc09791905855b1e3f36aec368a",
+        "installed_clay_tree_sha256": "9ebf08805808c90d3b28f7ecf09db0899429b7c1d4b04903f68f6781778ff68d",
+        "loaded_closure_sha256": "70370987fbd5c75e7b8562fcc43462435b122495387b8c32011ed9f6caee9696",
+        "native_tree_sha256": "9ebf08805808c90d3b28f7ecf09db0899429b7c1d4b04903f68f6781778ff68d",
+        "observer_sha256": "16589b4f9f51782d0907a7c186e3fcff6625c713bb64006f37330d6056645e45",
+        "runner_sha256": "612ea14eeb83a047fce9bf542492c7d1ed38431015274703d20994b406ef392d",
+        "runtime_lock_sha256": "4a209c10cf1756eb0f7357cc3eca8250bf66c239b4cd0ca31a8c0886d4d304ee",
+        "source_commit": "dd0e8c0ce8d1d00f15de6b07e2e26d368c5c3774"
+      },
+      "execution_lane": "core",
+      "id": "delivery:outsider-private-document-known-unknown:1",
+      "kind": "native",
+      "status": "passed"
+    },
+    {
+      "artifact": {
+        "path": "docs/urbit/evidence/2026-09-26/phase1-final-dd0e8c0/derived-v6/proofs.json",
+        "pointer": "/proofs/delivery:outsider-private-document-known-unknown:2",
+        "sha256": "c7fa44026425580fadb1d3eac8866f1448ae0528d3d82899992208cd9ea6cc3c"
+      },
+      "bindings": {
+        "contract_freeze_sha256": "a2336e5060c71c7c16849b3151cc024a598d6cdf867561452eff1338e3232670",
+        "corpus_sha256": "95c915e2d0c93f358225274b34216fff0fe2efc09791905855b1e3f36aec368a",
+        "installed_clay_tree_sha256": "9ebf08805808c90d3b28f7ecf09db0899429b7c1d4b04903f68f6781778ff68d",
+        "loaded_closure_sha256": "70370987fbd5c75e7b8562fcc43462435b122495387b8c32011ed9f6caee9696",
+        "native_tree_sha256": "9ebf08805808c90d3b28f7ecf09db0899429b7c1d4b04903f68f6781778ff68d",
+        "observer_sha256": "16589b4f9f51782d0907a7c186e3fcff6625c713bb64006f37330d6056645e45",
+        "runner_sha256": "612ea14eeb83a047fce9bf542492c7d1ed38431015274703d20994b406ef392d",
+        "runtime_lock_sha256": "4a209c10cf1756eb0f7357cc3eca8250bf66c239b4cd0ca31a8c0886d4d304ee",
+        "source_commit": "dd0e8c0ce8d1d00f15de6b07e2e26d368c5c3774"
+      },
+      "execution_lane": "core",
+      "id": "delivery:outsider-private-document-known-unknown:2",
+      "kind": "native",
+      "status": "passed"
+    },
+    {
+      "artifact": {
+        "path": "docs/urbit/evidence/2026-09-26/phase1-final-dd0e8c0/derived-v6/proofs.json",
+        "pointer": "/proofs/scoped-private-metadata",
+        "sha256": "c7fa44026425580fadb1d3eac8866f1448ae0528d3d82899992208cd9ea6cc3c"
+      },
+      "bindings": {
+        "contract_freeze_sha256": "a2336e5060c71c7c16849b3151cc024a598d6cdf867561452eff1338e3232670",
+        "corpus_sha256": "95c915e2d0c93f358225274b34216fff0fe2efc09791905855b1e3f36aec368a",
+        "installed_clay_tree_sha256": "9ebf08805808c90d3b28f7ecf09db0899429b7c1d4b04903f68f6781778ff68d",
+        "loaded_closure_sha256": "70370987fbd5c75e7b8562fcc43462435b122495387b8c32011ed9f6caee9696",
+        "native_tree_sha256": "9ebf08805808c90d3b28f7ecf09db0899429b7c1d4b04903f68f6781778ff68d",
+        "observer_sha256": "16589b4f9f51782d0907a7c186e3fcff6625c713bb64006f37330d6056645e45",
+        "runner_sha256": "612ea14eeb83a047fce9bf542492c7d1ed38431015274703d20994b406ef392d",
+        "runtime_lock_sha256": "4a209c10cf1756eb0f7357cc3eca8250bf66c239b4cd0ca31a8c0886d4d304ee",
+        "source_commit": "dd0e8c0ce8d1d00f15de6b07e2e26d368c5c3774"
+      },
+      "execution_lane": "core",
+      "id": "scoped-private-metadata",
+      "kind": "native",
+      "status": "passed"
+    },
+    {
+      "artifact": {
+        "path": "docs/urbit/evidence/2026-09-26/phase1-final-dd0e8c0/derived-v6/proofs.json",
+        "pointer": "/proofs/delivery:reader-private-manifest-known-unknown:1",
+        "sha256": "c7fa44026425580fadb1d3eac8866f1448ae0528d3d82899992208cd9ea6cc3c"
+      },
+      "bindings": {
+        "contract_freeze_sha256": "a2336e5060c71c7c16849b3151cc024a598d6cdf867561452eff1338e3232670",
+        "corpus_sha256": "95c915e2d0c93f358225274b34216fff0fe2efc09791905855b1e3f36aec368a",
+        "installed_clay_tree_sha256": "9ebf08805808c90d3b28f7ecf09db0899429b7c1d4b04903f68f6781778ff68d",
+        "loaded_closure_sha256": "70370987fbd5c75e7b8562fcc43462435b122495387b8c32011ed9f6caee9696",
+        "native_tree_sha256": "9ebf08805808c90d3b28f7ecf09db0899429b7c1d4b04903f68f6781778ff68d",
+        "observer_sha256": "16589b4f9f51782d0907a7c186e3fcff6625c713bb64006f37330d6056645e45",
+        "runner_sha256": "612ea14eeb83a047fce9bf542492c7d1ed38431015274703d20994b406ef392d",
+        "runtime_lock_sha256": "4a209c10cf1756eb0f7357cc3eca8250bf66c239b4cd0ca31a8c0886d4d304ee",
+        "source_commit": "dd0e8c0ce8d1d00f15de6b07e2e26d368c5c3774"
+      },
+      "execution_lane": "core",
+      "id": "delivery:reader-private-manifest-known-unknown:1",
+      "kind": "native",
+      "status": "passed"
+    },
+    {
+      "artifact": {
+        "path": "docs/urbit/evidence/2026-09-26/phase1-final-dd0e8c0/derived-v6/proofs.json",
+        "pointer": "/proofs/delivery:reader-private-manifest-known-unknown:2",
+        "sha256": "c7fa44026425580fadb1d3eac8866f1448ae0528d3d82899992208cd9ea6cc3c"
+      },
+      "bindings": {
+        "contract_freeze_sha256": "a2336e5060c71c7c16849b3151cc024a598d6cdf867561452eff1338e3232670",
+        "corpus_sha256": "95c915e2d0c93f358225274b34216fff0fe2efc09791905855b1e3f36aec368a",
+        "installed_clay_tree_sha256": "9ebf08805808c90d3b28f7ecf09db0899429b7c1d4b04903f68f6781778ff68d",
+        "loaded_closure_sha256": "70370987fbd5c75e7b8562fcc43462435b122495387b8c32011ed9f6caee9696",
+        "native_tree_sha256": "9ebf08805808c90d3b28f7ecf09db0899429b7c1d4b04903f68f6781778ff68d",
+        "observer_sha256": "16589b4f9f51782d0907a7c186e3fcff6625c713bb64006f37330d6056645e45",
+        "runner_sha256": "612ea14eeb83a047fce9bf542492c7d1ed38431015274703d20994b406ef392d",
+        "runtime_lock_sha256": "4a209c10cf1756eb0f7357cc3eca8250bf66c239b4cd0ca31a8c0886d4d304ee",
+        "source_commit": "dd0e8c0ce8d1d00f15de6b07e2e26d368c5c3774"
+      },
+      "execution_lane": "core",
+      "id": "delivery:reader-private-manifest-known-unknown:2",
+      "kind": "native",
+      "status": "passed"
+    },
+    {
+      "artifact": {
+        "path": "docs/urbit/evidence/2026-09-26/phase1-final-dd0e8c0/derived-v6/proofs.json",
+        "pointer": "/proofs/delivery:object-read-binds-retained-snapshot-and-container:1",
+        "sha256": "c7fa44026425580fadb1d3eac8866f1448ae0528d3d82899992208cd9ea6cc3c"
+      },
+      "bindings": {
+        "contract_freeze_sha256": "a2336e5060c71c7c16849b3151cc024a598d6cdf867561452eff1338e3232670",
+        "corpus_sha256": "95c915e2d0c93f358225274b34216fff0fe2efc09791905855b1e3f36aec368a",
+        "installed_clay_tree_sha256": "9ebf08805808c90d3b28f7ecf09db0899429b7c1d4b04903f68f6781778ff68d",
+        "loaded_closure_sha256": "70370987fbd5c75e7b8562fcc43462435b122495387b8c32011ed9f6caee9696",
+        "native_tree_sha256": "9ebf08805808c90d3b28f7ecf09db0899429b7c1d4b04903f68f6781778ff68d",
+        "observer_sha256": "16589b4f9f51782d0907a7c186e3fcff6625c713bb64006f37330d6056645e45",
+        "runner_sha256": "612ea14eeb83a047fce9bf542492c7d1ed38431015274703d20994b406ef392d",
+        "runtime_lock_sha256": "4a209c10cf1756eb0f7357cc3eca8250bf66c239b4cd0ca31a8c0886d4d304ee",
+        "source_commit": "dd0e8c0ce8d1d00f15de6b07e2e26d368c5c3774"
+      },
+      "execution_lane": "core",
+      "id": "delivery:object-read-binds-retained-snapshot-and-container:1",
+      "kind": "native",
+      "status": "passed"
+    },
+    {
+      "artifact": {
+        "path": "docs/urbit/evidence/2026-09-26/phase1-final-dd0e8c0/derived-v6/proofs.json",
+        "pointer": "/proofs/delivery:object-read-binds-retained-snapshot-and-container:2",
+        "sha256": "c7fa44026425580fadb1d3eac8866f1448ae0528d3d82899992208cd9ea6cc3c"
+      },
+      "bindings": {
+        "contract_freeze_sha256": "a2336e5060c71c7c16849b3151cc024a598d6cdf867561452eff1338e3232670",
+        "corpus_sha256": "95c915e2d0c93f358225274b34216fff0fe2efc09791905855b1e3f36aec368a",
+        "installed_clay_tree_sha256": "9ebf08805808c90d3b28f7ecf09db0899429b7c1d4b04903f68f6781778ff68d",
+        "loaded_closure_sha256": "70370987fbd5c75e7b8562fcc43462435b122495387b8c32011ed9f6caee9696",
+        "native_tree_sha256": "9ebf08805808c90d3b28f7ecf09db0899429b7c1d4b04903f68f6781778ff68d",
+        "observer_sha256": "16589b4f9f51782d0907a7c186e3fcff6625c713bb64006f37330d6056645e45",
+        "runner_sha256": "612ea14eeb83a047fce9bf542492c7d1ed38431015274703d20994b406ef392d",
+        "runtime_lock_sha256": "4a209c10cf1756eb0f7357cc3eca8250bf66c239b4cd0ca31a8c0886d4d304ee",
+        "source_commit": "dd0e8c0ce8d1d00f15de6b07e2e26d368c5c3774"
+      },
+      "execution_lane": "core",
+      "id": "delivery:object-read-binds-retained-snapshot-and-container:2",
+      "kind": "native",
+      "status": "passed"
+    },
+    {
+      "artifact": {
+        "path": "docs/urbit/evidence/2026-09-26/phase1-final-dd0e8c0/derived-v6/proofs.json",
+        "pointer": "/proofs/delivery:object-read-binds-retained-snapshot-and-container:3",
+        "sha256": "c7fa44026425580fadb1d3eac8866f1448ae0528d3d82899992208cd9ea6cc3c"
+      },
+      "bindings": {
+        "contract_freeze_sha256": "a2336e5060c71c7c16849b3151cc024a598d6cdf867561452eff1338e3232670",
+        "corpus_sha256": "95c915e2d0c93f358225274b34216fff0fe2efc09791905855b1e3f36aec368a",
+        "installed_clay_tree_sha256": "9ebf08805808c90d3b28f7ecf09db0899429b7c1d4b04903f68f6781778ff68d",
+        "loaded_closure_sha256": "70370987fbd5c75e7b8562fcc43462435b122495387b8c32011ed9f6caee9696",
+        "native_tree_sha256": "9ebf08805808c90d3b28f7ecf09db0899429b7c1d4b04903f68f6781778ff68d",
+        "observer_sha256": "16589b4f9f51782d0907a7c186e3fcff6625c713bb64006f37330d6056645e45",
+        "runner_sha256": "612ea14eeb83a047fce9bf542492c7d1ed38431015274703d20994b406ef392d",
+        "runtime_lock_sha256": "4a209c10cf1756eb0f7357cc3eca8250bf66c239b4cd0ca31a8c0886d4d304ee",
+        "source_commit": "dd0e8c0ce8d1d00f15de6b07e2e26d368c5c3774"
+      },
+      "execution_lane": "core",
+      "id": "delivery:object-read-binds-retained-snapshot-and-container:3",
+      "kind": "native",
+      "status": "passed"
+    },
+    {
+      "artifact": {
+        "path": "docs/urbit/evidence/2026-09-26/phase1-final-dd0e8c0/derived-v6/proofs.json",
+        "pointer": "/proofs/delivery:object-read-binds-retained-snapshot-and-container:4",
+        "sha256": "c7fa44026425580fadb1d3eac8866f1448ae0528d3d82899992208cd9ea6cc3c"
+      },
+      "bindings": {
+        "contract_freeze_sha256": "a2336e5060c71c7c16849b3151cc024a598d6cdf867561452eff1338e3232670",
+        "corpus_sha256": "95c915e2d0c93f358225274b34216fff0fe2efc09791905855b1e3f36aec368a",
+        "installed_clay_tree_sha256": "9ebf08805808c90d3b28f7ecf09db0899429b7c1d4b04903f68f6781778ff68d",
+        "loaded_closure_sha256": "70370987fbd5c75e7b8562fcc43462435b122495387b8c32011ed9f6caee9696",
+        "native_tree_sha256": "9ebf08805808c90d3b28f7ecf09db0899429b7c1d4b04903f68f6781778ff68d",
+        "observer_sha256": "16589b4f9f51782d0907a7c186e3fcff6625c713bb64006f37330d6056645e45",
+        "runner_sha256": "612ea14eeb83a047fce9bf542492c7d1ed38431015274703d20994b406ef392d",
+        "runtime_lock_sha256": "4a209c10cf1756eb0f7357cc3eca8250bf66c239b4cd0ca31a8c0886d4d304ee",
+        "source_commit": "dd0e8c0ce8d1d00f15de6b07e2e26d368c5c3774"
+      },
+      "execution_lane": "core",
+      "id": "delivery:object-read-binds-retained-snapshot-and-container:4",
+      "kind": "native",
+      "status": "passed"
+    },
+    {
+      "artifact": {
+        "path": "docs/urbit/evidence/2026-09-26/phase1-final-dd0e8c0/derived-v6/proofs.json",
+        "pointer": "/proofs/delivery:object-read-binds-retained-snapshot-and-container:5",
+        "sha256": "c7fa44026425580fadb1d3eac8866f1448ae0528d3d82899992208cd9ea6cc3c"
+      },
+      "bindings": {
+        "contract_freeze_sha256": "a2336e5060c71c7c16849b3151cc024a598d6cdf867561452eff1338e3232670",
+        "corpus_sha256": "95c915e2d0c93f358225274b34216fff0fe2efc09791905855b1e3f36aec368a",
+        "installed_clay_tree_sha256": "9ebf08805808c90d3b28f7ecf09db0899429b7c1d4b04903f68f6781778ff68d",
+        "loaded_closure_sha256": "70370987fbd5c75e7b8562fcc43462435b122495387b8c32011ed9f6caee9696",
+        "native_tree_sha256": "9ebf08805808c90d3b28f7ecf09db0899429b7c1d4b04903f68f6781778ff68d",
+        "observer_sha256": "16589b4f9f51782d0907a7c186e3fcff6625c713bb64006f37330d6056645e45",
+        "runner_sha256": "612ea14eeb83a047fce9bf542492c7d1ed38431015274703d20994b406ef392d",
+        "runtime_lock_sha256": "4a209c10cf1756eb0f7357cc3eca8250bf66c239b4cd0ca31a8c0886d4d304ee",
+        "source_commit": "dd0e8c0ce8d1d00f15de6b07e2e26d368c5c3774"
+      },
+      "execution_lane": "core",
+      "id": "delivery:object-read-binds-retained-snapshot-and-container:5",
+      "kind": "native",
+      "status": "passed"
+    },
+    {
+      "artifact": {
+        "path": "docs/urbit/evidence/2026-09-26/phase1-final-dd0e8c0/derived-v6/proofs.json",
+        "pointer": "/proofs/delivery:object-read-binds-retained-snapshot-and-container:6",
+        "sha256": "c7fa44026425580fadb1d3eac8866f1448ae0528d3d82899992208cd9ea6cc3c"
+      },
+      "bindings": {
+        "contract_freeze_sha256": "a2336e5060c71c7c16849b3151cc024a598d6cdf867561452eff1338e3232670",
+        "corpus_sha256": "95c915e2d0c93f358225274b34216fff0fe2efc09791905855b1e3f36aec368a",
+        "installed_clay_tree_sha256": "9ebf08805808c90d3b28f7ecf09db0899429b7c1d4b04903f68f6781778ff68d",
+        "loaded_closure_sha256": "70370987fbd5c75e7b8562fcc43462435b122495387b8c32011ed9f6caee9696",
+        "native_tree_sha256": "9ebf08805808c90d3b28f7ecf09db0899429b7c1d4b04903f68f6781778ff68d",
+        "observer_sha256": "16589b4f9f51782d0907a7c186e3fcff6625c713bb64006f37330d6056645e45",
+        "runner_sha256": "612ea14eeb83a047fce9bf542492c7d1ed38431015274703d20994b406ef392d",
+        "runtime_lock_sha256": "4a209c10cf1756eb0f7357cc3eca8250bf66c239b4cd0ca31a8c0886d4d304ee",
+        "source_commit": "dd0e8c0ce8d1d00f15de6b07e2e26d368c5c3774"
+      },
+      "execution_lane": "core",
+      "id": "delivery:object-read-binds-retained-snapshot-and-container:6",
+      "kind": "native",
+      "status": "passed"
+    },
+    {
+      "artifact": {
+        "path": "docs/urbit/evidence/2026-09-26/phase1-final-dd0e8c0/derived-v6/proofs.json",
+        "pointer": "/proofs/delivery:downgraded-reader-retains-work-read:1",
+        "sha256": "c7fa44026425580fadb1d3eac8866f1448ae0528d3d82899992208cd9ea6cc3c"
+      },
+      "bindings": {
+        "contract_freeze_sha256": "a2336e5060c71c7c16849b3151cc024a598d6cdf867561452eff1338e3232670",
+        "corpus_sha256": "95c915e2d0c93f358225274b34216fff0fe2efc09791905855b1e3f36aec368a",
+        "installed_clay_tree_sha256": "9ebf08805808c90d3b28f7ecf09db0899429b7c1d4b04903f68f6781778ff68d",
+        "loaded_closure_sha256": "70370987fbd5c75e7b8562fcc43462435b122495387b8c32011ed9f6caee9696",
+        "native_tree_sha256": "9ebf08805808c90d3b28f7ecf09db0899429b7c1d4b04903f68f6781778ff68d",
+        "observer_sha256": "16589b4f9f51782d0907a7c186e3fcff6625c713bb64006f37330d6056645e45",
+        "runner_sha256": "612ea14eeb83a047fce9bf542492c7d1ed38431015274703d20994b406ef392d",
+        "runtime_lock_sha256": "4a209c10cf1756eb0f7357cc3eca8250bf66c239b4cd0ca31a8c0886d4d304ee",
+        "source_commit": "dd0e8c0ce8d1d00f15de6b07e2e26d368c5c3774"
+      },
+      "execution_lane": "core",
+      "id": "delivery:downgraded-reader-retains-work-read:1",
+      "kind": "native",
+      "status": "passed"
+    },
+    {
+      "artifact": {
+        "path": "docs/urbit/evidence/2026-09-26/phase1-final-dd0e8c0/derived-v6/proofs.json",
+        "pointer": "/proofs/v2-native-compile",
+        "sha256": "c7fa44026425580fadb1d3eac8866f1448ae0528d3d82899992208cd9ea6cc3c"
+      },
+      "bindings": {
+        "contract_freeze_sha256": "a2336e5060c71c7c16849b3151cc024a598d6cdf867561452eff1338e3232670",
+        "corpus_sha256": "95c915e2d0c93f358225274b34216fff0fe2efc09791905855b1e3f36aec368a",
+        "installed_clay_tree_sha256": "9ebf08805808c90d3b28f7ecf09db0899429b7c1d4b04903f68f6781778ff68d",
+        "loaded_closure_sha256": "70370987fbd5c75e7b8562fcc43462435b122495387b8c32011ed9f6caee9696",
+        "native_tree_sha256": "9ebf08805808c90d3b28f7ecf09db0899429b7c1d4b04903f68f6781778ff68d",
+        "observer_sha256": "16589b4f9f51782d0907a7c186e3fcff6625c713bb64006f37330d6056645e45",
+        "runner_sha256": "612ea14eeb83a047fce9bf542492c7d1ed38431015274703d20994b406ef392d",
+        "runtime_lock_sha256": "4a209c10cf1756eb0f7357cc3eca8250bf66c239b4cd0ca31a8c0886d4d304ee",
+        "source_commit": "dd0e8c0ce8d1d00f15de6b07e2e26d368c5c3774"
+      },
+      "execution_lane": "core",
+      "id": "v2-native-compile",
+      "kind": "native",
+      "status": "passed"
+    },
+    {
+      "artifact": {
+        "path": "docs/urbit/evidence/2026-09-26/phase1-final-dd0e8c0/derived-v6/proofs.json",
+        "pointer": "/proofs/v2-ordered-journey",
+        "sha256": "c7fa44026425580fadb1d3eac8866f1448ae0528d3d82899992208cd9ea6cc3c"
+      },
+      "bindings": {
+        "contract_freeze_sha256": "a2336e5060c71c7c16849b3151cc024a598d6cdf867561452eff1338e3232670",
+        "corpus_sha256": "95c915e2d0c93f358225274b34216fff0fe2efc09791905855b1e3f36aec368a",
+        "installed_clay_tree_sha256": "9ebf08805808c90d3b28f7ecf09db0899429b7c1d4b04903f68f6781778ff68d",
+        "loaded_closure_sha256": "70370987fbd5c75e7b8562fcc43462435b122495387b8c32011ed9f6caee9696",
+        "native_tree_sha256": "9ebf08805808c90d3b28f7ecf09db0899429b7c1d4b04903f68f6781778ff68d",
+        "observer_sha256": "16589b4f9f51782d0907a7c186e3fcff6625c713bb64006f37330d6056645e45",
+        "runner_sha256": "612ea14eeb83a047fce9bf542492c7d1ed38431015274703d20994b406ef392d",
+        "runtime_lock_sha256": "4a209c10cf1756eb0f7357cc3eca8250bf66c239b4cd0ca31a8c0886d4d304ee",
+        "source_commit": "dd0e8c0ce8d1d00f15de6b07e2e26d368c5c3774"
+      },
+      "execution_lane": "core",
+      "id": "v2-ordered-journey",
+      "kind": "native",
+      "status": "passed"
+    },
+    {
+      "artifact": {
+        "path": "docs/urbit/evidence/2026-09-26/phase1-final-dd0e8c0/derived-v6/proofs.json",
+        "pointer": "/proofs/v2-codec-and-home-rejection",
+        "sha256": "c7fa44026425580fadb1d3eac8866f1448ae0528d3d82899992208cd9ea6cc3c"
+      },
+      "bindings": {
+        "contract_freeze_sha256": "a2336e5060c71c7c16849b3151cc024a598d6cdf867561452eff1338e3232670",
+        "corpus_sha256": "95c915e2d0c93f358225274b34216fff0fe2efc09791905855b1e3f36aec368a",
+        "installed_clay_tree_sha256": "9ebf08805808c90d3b28f7ecf09db0899429b7c1d4b04903f68f6781778ff68d",
+        "loaded_closure_sha256": "70370987fbd5c75e7b8562fcc43462435b122495387b8c32011ed9f6caee9696",
+        "native_tree_sha256": "9ebf08805808c90d3b28f7ecf09db0899429b7c1d4b04903f68f6781778ff68d",
+        "observer_sha256": "16589b4f9f51782d0907a7c186e3fcff6625c713bb64006f37330d6056645e45",
+        "runner_sha256": "612ea14eeb83a047fce9bf542492c7d1ed38431015274703d20994b406ef392d",
+        "runtime_lock_sha256": "4a209c10cf1756eb0f7357cc3eca8250bf66c239b4cd0ca31a8c0886d4d304ee",
+        "source_commit": "dd0e8c0ce8d1d00f15de6b07e2e26d368c5c3774"
+      },
+      "execution_lane": "core",
+      "id": "v2-codec-and-home-rejection",
+      "kind": "native",
+      "status": "passed"
+    },
+    {
+      "artifact": {
+        "path": "docs/urbit/evidence/2026-09-26/phase1-final-dd0e8c0/derived-v6/proofs.json",
+        "pointer": "/proofs/v2-context-controls",
+        "sha256": "c7fa44026425580fadb1d3eac8866f1448ae0528d3d82899992208cd9ea6cc3c"
+      },
+      "bindings": {
+        "contract_freeze_sha256": "a2336e5060c71c7c16849b3151cc024a598d6cdf867561452eff1338e3232670",
+        "corpus_sha256": "95c915e2d0c93f358225274b34216fff0fe2efc09791905855b1e3f36aec368a",
+        "installed_clay_tree_sha256": "9ebf08805808c90d3b28f7ecf09db0899429b7c1d4b04903f68f6781778ff68d",
+        "loaded_closure_sha256": "70370987fbd5c75e7b8562fcc43462435b122495387b8c32011ed9f6caee9696",
+        "native_tree_sha256": "9ebf08805808c90d3b28f7ecf09db0899429b7c1d4b04903f68f6781778ff68d",
+        "observer_sha256": "16589b4f9f51782d0907a7c186e3fcff6625c713bb64006f37330d6056645e45",
+        "runner_sha256": "612ea14eeb83a047fce9bf542492c7d1ed38431015274703d20994b406ef392d",
+        "runtime_lock_sha256": "4a209c10cf1756eb0f7357cc3eca8250bf66c239b4cd0ca31a8c0886d4d304ee",
+        "source_commit": "dd0e8c0ce8d1d00f15de6b07e2e26d368c5c3774"
+      },
+      "execution_lane": "core",
+      "id": "v2-context-controls",
+      "kind": "native",
+      "status": "passed"
+    },
+    {
+      "artifact": {
+        "path": "docs/urbit/evidence/2026-09-26/phase1-final-dd0e8c0/derived-v6/proofs.json",
+        "pointer": "/proofs/v2-concurrent-cas",
+        "sha256": "c7fa44026425580fadb1d3eac8866f1448ae0528d3d82899992208cd9ea6cc3c"
+      },
+      "bindings": {
+        "contract_freeze_sha256": "a2336e5060c71c7c16849b3151cc024a598d6cdf867561452eff1338e3232670",
+        "corpus_sha256": "95c915e2d0c93f358225274b34216fff0fe2efc09791905855b1e3f36aec368a",
+        "installed_clay_tree_sha256": "9ebf08805808c90d3b28f7ecf09db0899429b7c1d4b04903f68f6781778ff68d",
+        "loaded_closure_sha256": "70370987fbd5c75e7b8562fcc43462435b122495387b8c32011ed9f6caee9696",
+        "native_tree_sha256": "9ebf08805808c90d3b28f7ecf09db0899429b7c1d4b04903f68f6781778ff68d",
+        "observer_sha256": "16589b4f9f51782d0907a7c186e3fcff6625c713bb64006f37330d6056645e45",
+        "runner_sha256": "612ea14eeb83a047fce9bf542492c7d1ed38431015274703d20994b406ef392d",
+        "runtime_lock_sha256": "4a209c10cf1756eb0f7357cc3eca8250bf66c239b4cd0ca31a8c0886d4d304ee",
+        "source_commit": "dd0e8c0ce8d1d00f15de6b07e2e26d368c5c3774"
+      },
+      "execution_lane": "core",
+      "id": "v2-concurrent-cas",
+      "kind": "native",
+      "status": "passed"
+    },
+    {
+      "artifact": {
+        "path": "docs/urbit/evidence/2026-09-26/phase1-final-dd0e8c0/derived-v6/proofs.json",
+        "pointer": "/proofs/legacy-private-project-probe-reproduced",
+        "sha256": "c7fa44026425580fadb1d3eac8866f1448ae0528d3d82899992208cd9ea6cc3c"
+      },
+      "bindings": {
+        "contract_freeze_sha256": "a2336e5060c71c7c16849b3151cc024a598d6cdf867561452eff1338e3232670",
+        "corpus_sha256": "95c915e2d0c93f358225274b34216fff0fe2efc09791905855b1e3f36aec368a",
+        "installed_clay_tree_sha256": "9ebf08805808c90d3b28f7ecf09db0899429b7c1d4b04903f68f6781778ff68d",
+        "loaded_closure_sha256": "70370987fbd5c75e7b8562fcc43462435b122495387b8c32011ed9f6caee9696",
+        "native_tree_sha256": "9ebf08805808c90d3b28f7ecf09db0899429b7c1d4b04903f68f6781778ff68d",
+        "observer_sha256": "16589b4f9f51782d0907a7c186e3fcff6625c713bb64006f37330d6056645e45",
+        "runner_sha256": "612ea14eeb83a047fce9bf542492c7d1ed38431015274703d20994b406ef392d",
+        "runtime_lock_sha256": "4a209c10cf1756eb0f7357cc3eca8250bf66c239b4cd0ca31a8c0886d4d304ee",
+        "source_commit": "dd0e8c0ce8d1d00f15de6b07e2e26d368c5c3774"
+      },
+      "execution_lane": "core",
+      "id": "legacy-private-project-probe-reproduced",
+      "kind": "native",
+      "status": "passed"
+    },
+    {
+      "artifact": {
+        "path": "docs/urbit/evidence/2026-09-26/phase1-final-dd0e8c0/derived-v6/proofs.json",
+        "pointer": "/proofs/legacy-private-container-probe-reproduced",
+        "sha256": "c7fa44026425580fadb1d3eac8866f1448ae0528d3d82899992208cd9ea6cc3c"
+      },
+      "bindings": {
+        "contract_freeze_sha256": "a2336e5060c71c7c16849b3151cc024a598d6cdf867561452eff1338e3232670",
+        "corpus_sha256": "95c915e2d0c93f358225274b34216fff0fe2efc09791905855b1e3f36aec368a",
+        "installed_clay_tree_sha256": "9ebf08805808c90d3b28f7ecf09db0899429b7c1d4b04903f68f6781778ff68d",
+        "loaded_closure_sha256": "70370987fbd5c75e7b8562fcc43462435b122495387b8c32011ed9f6caee9696",
+        "native_tree_sha256": "9ebf08805808c90d3b28f7ecf09db0899429b7c1d4b04903f68f6781778ff68d",
+        "observer_sha256": "16589b4f9f51782d0907a7c186e3fcff6625c713bb64006f37330d6056645e45",
+        "runner_sha256": "612ea14eeb83a047fce9bf542492c7d1ed38431015274703d20994b406ef392d",
+        "runtime_lock_sha256": "4a209c10cf1756eb0f7357cc3eca8250bf66c239b4cd0ca31a8c0886d4d304ee",
+        "source_commit": "dd0e8c0ce8d1d00f15de6b07e2e26d368c5c3774"
+      },
+      "execution_lane": "core",
+      "id": "legacy-private-container-probe-reproduced",
+      "kind": "native",
+      "status": "passed"
+    },
+    {
+      "artifact": {
+        "path": "docs/urbit/evidence/2026-09-26/phase1-final-dd0e8c0/derived-v6/proofs.json",
+        "pointer": "/proofs/v2-cross-project-local-id",
+        "sha256": "c7fa44026425580fadb1d3eac8866f1448ae0528d3d82899992208cd9ea6cc3c"
+      },
+      "bindings": {
+        "contract_freeze_sha256": "a2336e5060c71c7c16849b3151cc024a598d6cdf867561452eff1338e3232670",
+        "corpus_sha256": "95c915e2d0c93f358225274b34216fff0fe2efc09791905855b1e3f36aec368a",
+        "installed_clay_tree_sha256": "9ebf08805808c90d3b28f7ecf09db0899429b7c1d4b04903f68f6781778ff68d",
+        "loaded_closure_sha256": "70370987fbd5c75e7b8562fcc43462435b122495387b8c32011ed9f6caee9696",
+        "native_tree_sha256": "9ebf08805808c90d3b28f7ecf09db0899429b7c1d4b04903f68f6781778ff68d",
+        "observer_sha256": "16589b4f9f51782d0907a7c186e3fcff6625c713bb64006f37330d6056645e45",
+        "runner_sha256": "612ea14eeb83a047fce9bf542492c7d1ed38431015274703d20994b406ef392d",
+        "runtime_lock_sha256": "4a209c10cf1756eb0f7357cc3eca8250bf66c239b4cd0ca31a8c0886d4d304ee",
+        "source_commit": "dd0e8c0ce8d1d00f15de6b07e2e26d368c5c3774"
+      },
+      "execution_lane": "core",
+      "id": "v2-cross-project-local-id",
+      "kind": "native",
+      "status": "passed"
+    },
+    {
+      "artifact": {
+        "path": "docs/urbit/evidence/2026-09-26/phase1-final-dd0e8c0/derived-v6/proofs.json",
+        "pointer": "/proofs/v2-cross-container-local-id",
+        "sha256": "c7fa44026425580fadb1d3eac8866f1448ae0528d3d82899992208cd9ea6cc3c"
+      },
+      "bindings": {
+        "contract_freeze_sha256": "a2336e5060c71c7c16849b3151cc024a598d6cdf867561452eff1338e3232670",
+        "corpus_sha256": "95c915e2d0c93f358225274b34216fff0fe2efc09791905855b1e3f36aec368a",
+        "installed_clay_tree_sha256": "9ebf08805808c90d3b28f7ecf09db0899429b7c1d4b04903f68f6781778ff68d",
+        "loaded_closure_sha256": "70370987fbd5c75e7b8562fcc43462435b122495387b8c32011ed9f6caee9696",
+        "native_tree_sha256": "9ebf08805808c90d3b28f7ecf09db0899429b7c1d4b04903f68f6781778ff68d",
+        "observer_sha256": "16589b4f9f51782d0907a7c186e3fcff6625c713bb64006f37330d6056645e45",
+        "runner_sha256": "612ea14eeb83a047fce9bf542492c7d1ed38431015274703d20994b406ef392d",
+        "runtime_lock_sha256": "4a209c10cf1756eb0f7357cc3eca8250bf66c239b4cd0ca31a8c0886d4d304ee",
+        "source_commit": "dd0e8c0ce8d1d00f15de6b07e2e26d368c5c3774"
+      },
+      "execution_lane": "core",
+      "id": "v2-cross-container-local-id",
+      "kind": "native",
+      "status": "passed"
+    },
+    {
+      "artifact": {
+        "path": "docs/urbit/evidence/2026-09-26/phase1-final-dd0e8c0/derived-v6/proofs.json",
+        "pointer": "/proofs/v2-public-receipt-normal",
+        "sha256": "c7fa44026425580fadb1d3eac8866f1448ae0528d3d82899992208cd9ea6cc3c"
+      },
+      "bindings": {
+        "contract_freeze_sha256": "a2336e5060c71c7c16849b3151cc024a598d6cdf867561452eff1338e3232670",
+        "corpus_sha256": "95c915e2d0c93f358225274b34216fff0fe2efc09791905855b1e3f36aec368a",
+        "installed_clay_tree_sha256": "9ebf08805808c90d3b28f7ecf09db0899429b7c1d4b04903f68f6781778ff68d",
+        "loaded_closure_sha256": "70370987fbd5c75e7b8562fcc43462435b122495387b8c32011ed9f6caee9696",
+        "native_tree_sha256": "9ebf08805808c90d3b28f7ecf09db0899429b7c1d4b04903f68f6781778ff68d",
+        "observer_sha256": "16589b4f9f51782d0907a7c186e3fcff6625c713bb64006f37330d6056645e45",
+        "runner_sha256": "612ea14eeb83a047fce9bf542492c7d1ed38431015274703d20994b406ef392d",
+        "runtime_lock_sha256": "4a209c10cf1756eb0f7357cc3eca8250bf66c239b4cd0ca31a8c0886d4d304ee",
+        "source_commit": "dd0e8c0ce8d1d00f15de6b07e2e26d368c5c3774"
+      },
+      "execution_lane": "core",
+      "id": "v2-public-receipt-normal",
+      "kind": "native",
+      "status": "passed"
+    },
+    {
+      "artifact": {
+        "path": "docs/urbit/evidence/2026-09-26/phase1-final-dd0e8c0/derived-v6/proofs.json",
+        "pointer": "/proofs/v2-public-receipt-retry",
+        "sha256": "c7fa44026425580fadb1d3eac8866f1448ae0528d3d82899992208cd9ea6cc3c"
+      },
+      "bindings": {
+        "contract_freeze_sha256": "a2336e5060c71c7c16849b3151cc024a598d6cdf867561452eff1338e3232670",
+        "corpus_sha256": "95c915e2d0c93f358225274b34216fff0fe2efc09791905855b1e3f36aec368a",
+        "installed_clay_tree_sha256": "9ebf08805808c90d3b28f7ecf09db0899429b7c1d4b04903f68f6781778ff68d",
+        "loaded_closure_sha256": "70370987fbd5c75e7b8562fcc43462435b122495387b8c32011ed9f6caee9696",
+        "native_tree_sha256": "9ebf08805808c90d3b28f7ecf09db0899429b7c1d4b04903f68f6781778ff68d",
+        "observer_sha256": "16589b4f9f51782d0907a7c186e3fcff6625c713bb64006f37330d6056645e45",
+        "runner_sha256": "612ea14eeb83a047fce9bf542492c7d1ed38431015274703d20994b406ef392d",
+        "runtime_lock_sha256": "4a209c10cf1756eb0f7357cc3eca8250bf66c239b4cd0ca31a8c0886d4d304ee",
+        "source_commit": "dd0e8c0ce8d1d00f15de6b07e2e26d368c5c3774"
+      },
+      "execution_lane": "core",
+      "id": "v2-public-receipt-retry",
+      "kind": "native",
+      "status": "passed"
+    },
+    {
+      "artifact": {
+        "path": "docs/urbit/evidence/2026-09-26/phase1-final-dd0e8c0/derived-v6/proofs.json",
+        "pointer": "/proofs/v2-public-receipt-recovery",
+        "sha256": "c7fa44026425580fadb1d3eac8866f1448ae0528d3d82899992208cd9ea6cc3c"
+      },
+      "bindings": {
+        "contract_freeze_sha256": "a2336e5060c71c7c16849b3151cc024a598d6cdf867561452eff1338e3232670",
+        "corpus_sha256": "95c915e2d0c93f358225274b34216fff0fe2efc09791905855b1e3f36aec368a",
+        "installed_clay_tree_sha256": "9ebf08805808c90d3b28f7ecf09db0899429b7c1d4b04903f68f6781778ff68d",
+        "loaded_closure_sha256": "70370987fbd5c75e7b8562fcc43462435b122495387b8c32011ed9f6caee9696",
+        "native_tree_sha256": "9ebf08805808c90d3b28f7ecf09db0899429b7c1d4b04903f68f6781778ff68d",
+        "observer_sha256": "16589b4f9f51782d0907a7c186e3fcff6625c713bb64006f37330d6056645e45",
+        "runner_sha256": "612ea14eeb83a047fce9bf542492c7d1ed38431015274703d20994b406ef392d",
+        "runtime_lock_sha256": "4a209c10cf1756eb0f7357cc3eca8250bf66c239b4cd0ca31a8c0886d4d304ee",
+        "source_commit": "dd0e8c0ce8d1d00f15de6b07e2e26d368c5c3774"
+      },
+      "execution_lane": "core",
+      "id": "v2-public-receipt-recovery",
+      "kind": "native",
+      "status": "passed"
+    },
+    {
+      "artifact": {
+        "path": "docs/urbit/evidence/2026-09-26/phase1-final-dd0e8c0/derived-v6/proofs.json",
+        "pointer": "/proofs/v2-public-export-projection",
+        "sha256": "c7fa44026425580fadb1d3eac8866f1448ae0528d3d82899992208cd9ea6cc3c"
+      },
+      "bindings": {
+        "contract_freeze_sha256": "a2336e5060c71c7c16849b3151cc024a598d6cdf867561452eff1338e3232670",
+        "corpus_sha256": "95c915e2d0c93f358225274b34216fff0fe2efc09791905855b1e3f36aec368a",
+        "installed_clay_tree_sha256": "9ebf08805808c90d3b28f7ecf09db0899429b7c1d4b04903f68f6781778ff68d",
+        "loaded_closure_sha256": "70370987fbd5c75e7b8562fcc43462435b122495387b8c32011ed9f6caee9696",
+        "native_tree_sha256": "9ebf08805808c90d3b28f7ecf09db0899429b7c1d4b04903f68f6781778ff68d",
+        "observer_sha256": "16589b4f9f51782d0907a7c186e3fcff6625c713bb64006f37330d6056645e45",
+        "runner_sha256": "612ea14eeb83a047fce9bf542492c7d1ed38431015274703d20994b406ef392d",
+        "runtime_lock_sha256": "4a209c10cf1756eb0f7357cc3eca8250bf66c239b4cd0ca31a8c0886d4d304ee",
+        "source_commit": "dd0e8c0ce8d1d00f15de6b07e2e26d368c5c3774"
+      },
+      "execution_lane": "core",
+      "id": "v2-public-export-projection",
+      "kind": "native",
+      "status": "passed"
+    },
+    {
+      "artifact": {
+        "path": "docs/urbit/evidence/2026-09-26/phase1-final-dd0e8c0/derived-v6/proofs.json",
+        "pointer": "/proofs/legacy-revocation-exhaustion-reproduced",
+        "sha256": "c7fa44026425580fadb1d3eac8866f1448ae0528d3d82899992208cd9ea6cc3c"
+      },
+      "bindings": {
+        "contract_freeze_sha256": "a2336e5060c71c7c16849b3151cc024a598d6cdf867561452eff1338e3232670",
+        "corpus_sha256": "95c915e2d0c93f358225274b34216fff0fe2efc09791905855b1e3f36aec368a",
+        "installed_clay_tree_sha256": "9ebf08805808c90d3b28f7ecf09db0899429b7c1d4b04903f68f6781778ff68d",
+        "loaded_closure_sha256": "70370987fbd5c75e7b8562fcc43462435b122495387b8c32011ed9f6caee9696",
+        "native_tree_sha256": "9ebf08805808c90d3b28f7ecf09db0899429b7c1d4b04903f68f6781778ff68d",
+        "observer_sha256": "16589b4f9f51782d0907a7c186e3fcff6625c713bb64006f37330d6056645e45",
+        "runner_sha256": "612ea14eeb83a047fce9bf542492c7d1ed38431015274703d20994b406ef392d",
+        "runtime_lock_sha256": "4a209c10cf1756eb0f7357cc3eca8250bf66c239b4cd0ca31a8c0886d4d304ee",
+        "source_commit": "dd0e8c0ce8d1d00f15de6b07e2e26d368c5c3774"
+      },
+      "execution_lane": "core",
+      "id": "legacy-revocation-exhaustion-reproduced",
+      "kind": "native",
+      "status": "passed"
+    },
+    {
+      "artifact": {
+        "path": "docs/urbit/evidence/2026-09-26/phase1-final-dd0e8c0/derived-v6/proofs.json",
+        "pointer": "/proofs/v2-security-revoke-reserve",
+        "sha256": "c7fa44026425580fadb1d3eac8866f1448ae0528d3d82899992208cd9ea6cc3c"
+      },
+      "bindings": {
+        "contract_freeze_sha256": "a2336e5060c71c7c16849b3151cc024a598d6cdf867561452eff1338e3232670",
+        "corpus_sha256": "95c915e2d0c93f358225274b34216fff0fe2efc09791905855b1e3f36aec368a",
+        "installed_clay_tree_sha256": "9ebf08805808c90d3b28f7ecf09db0899429b7c1d4b04903f68f6781778ff68d",
+        "loaded_closure_sha256": "70370987fbd5c75e7b8562fcc43462435b122495387b8c32011ed9f6caee9696",
+        "native_tree_sha256": "9ebf08805808c90d3b28f7ecf09db0899429b7c1d4b04903f68f6781778ff68d",
+        "observer_sha256": "16589b4f9f51782d0907a7c186e3fcff6625c713bb64006f37330d6056645e45",
+        "runner_sha256": "612ea14eeb83a047fce9bf542492c7d1ed38431015274703d20994b406ef392d",
+        "runtime_lock_sha256": "4a209c10cf1756eb0f7357cc3eca8250bf66c239b4cd0ca31a8c0886d4d304ee",
+        "source_commit": "dd0e8c0ce8d1d00f15de6b07e2e26d368c5c3774"
+      },
+      "execution_lane": "core",
+      "id": "v2-security-revoke-reserve",
+      "kind": "native",
+      "status": "passed"
+    },
+    {
+      "artifact": {
+        "path": "docs/urbit/evidence/2026-09-26/phase1-final-dd0e8c0/derived-v6/proofs.json",
+        "pointer": "/proofs/v2-cross-project-security-admin",
+        "sha256": "c7fa44026425580fadb1d3eac8866f1448ae0528d3d82899992208cd9ea6cc3c"
+      },
+      "bindings": {
+        "contract_freeze_sha256": "a2336e5060c71c7c16849b3151cc024a598d6cdf867561452eff1338e3232670",
+        "corpus_sha256": "95c915e2d0c93f358225274b34216fff0fe2efc09791905855b1e3f36aec368a",
+        "installed_clay_tree_sha256": "9ebf08805808c90d3b28f7ecf09db0899429b7c1d4b04903f68f6781778ff68d",
+        "loaded_closure_sha256": "70370987fbd5c75e7b8562fcc43462435b122495387b8c32011ed9f6caee9696",
+        "native_tree_sha256": "9ebf08805808c90d3b28f7ecf09db0899429b7c1d4b04903f68f6781778ff68d",
+        "observer_sha256": "16589b4f9f51782d0907a7c186e3fcff6625c713bb64006f37330d6056645e45",
+        "runner_sha256": "612ea14eeb83a047fce9bf542492c7d1ed38431015274703d20994b406ef392d",
+        "runtime_lock_sha256": "4a209c10cf1756eb0f7357cc3eca8250bf66c239b4cd0ca31a8c0886d4d304ee",
+        "source_commit": "dd0e8c0ce8d1d00f15de6b07e2e26d368c5c3774"
+      },
+      "execution_lane": "core",
+      "id": "v2-cross-project-security-admin",
+      "kind": "native",
+      "status": "passed"
+    },
+    {
+      "artifact": {
+        "path": "docs/urbit/evidence/2026-09-26/phase1-final-dd0e8c0/derived-v6/proofs.json",
+        "pointer": "/proofs/v2-security-reserve-exhaustion",
+        "sha256": "c7fa44026425580fadb1d3eac8866f1448ae0528d3d82899992208cd9ea6cc3c"
+      },
+      "bindings": {
+        "contract_freeze_sha256": "a2336e5060c71c7c16849b3151cc024a598d6cdf867561452eff1338e3232670",
+        "corpus_sha256": "95c915e2d0c93f358225274b34216fff0fe2efc09791905855b1e3f36aec368a",
+        "installed_clay_tree_sha256": "9ebf08805808c90d3b28f7ecf09db0899429b7c1d4b04903f68f6781778ff68d",
+        "loaded_closure_sha256": "70370987fbd5c75e7b8562fcc43462435b122495387b8c32011ed9f6caee9696",
+        "native_tree_sha256": "9ebf08805808c90d3b28f7ecf09db0899429b7c1d4b04903f68f6781778ff68d",
+        "observer_sha256": "16589b4f9f51782d0907a7c186e3fcff6625c713bb64006f37330d6056645e45",
+        "runner_sha256": "612ea14eeb83a047fce9bf542492c7d1ed38431015274703d20994b406ef392d",
+        "runtime_lock_sha256": "4a209c10cf1756eb0f7357cc3eca8250bf66c239b4cd0ca31a8c0886d4d304ee",
+        "source_commit": "dd0e8c0ce8d1d00f15de6b07e2e26d368c5c3774"
+      },
+      "execution_lane": "core",
+      "id": "v2-security-reserve-exhaustion",
+      "kind": "native",
+      "status": "passed"
+    },
+    {
+      "artifact": {
+        "path": "docs/urbit/evidence/2026-09-26/phase1-final-dd0e8c0/derived-v6/proofs.json",
+        "pointer": "/proofs/v2-security-counter-u64-edge",
+        "sha256": "c7fa44026425580fadb1d3eac8866f1448ae0528d3d82899992208cd9ea6cc3c"
+      },
+      "bindings": {
+        "contract_freeze_sha256": "a2336e5060c71c7c16849b3151cc024a598d6cdf867561452eff1338e3232670",
+        "corpus_sha256": "95c915e2d0c93f358225274b34216fff0fe2efc09791905855b1e3f36aec368a",
+        "installed_clay_tree_sha256": "9ebf08805808c90d3b28f7ecf09db0899429b7c1d4b04903f68f6781778ff68d",
+        "loaded_closure_sha256": "70370987fbd5c75e7b8562fcc43462435b122495387b8c32011ed9f6caee9696",
+        "native_tree_sha256": "9ebf08805808c90d3b28f7ecf09db0899429b7c1d4b04903f68f6781778ff68d",
+        "observer_sha256": "16589b4f9f51782d0907a7c186e3fcff6625c713bb64006f37330d6056645e45",
+        "runner_sha256": "612ea14eeb83a047fce9bf542492c7d1ed38431015274703d20994b406ef392d",
+        "runtime_lock_sha256": "4a209c10cf1756eb0f7357cc3eca8250bf66c239b4cd0ca31a8c0886d4d304ee",
+        "source_commit": "dd0e8c0ce8d1d00f15de6b07e2e26d368c5c3774"
+      },
+      "execution_lane": "core",
+      "id": "v2-security-counter-u64-edge",
+      "kind": "native",
+      "status": "passed"
+    },
+    {
+      "artifact": {
+        "path": "docs/urbit/evidence/2026-09-26/phase1-final-dd0e8c0/derived-v6/proofs.json",
+        "pointer": "/proofs/boundary-projects",
+        "sha256": "c7fa44026425580fadb1d3eac8866f1448ae0528d3d82899992208cd9ea6cc3c"
+      },
+      "bindings": {
+        "contract_freeze_sha256": "a2336e5060c71c7c16849b3151cc024a598d6cdf867561452eff1338e3232670",
+        "corpus_sha256": "95c915e2d0c93f358225274b34216fff0fe2efc09791905855b1e3f36aec368a",
+        "installed_clay_tree_sha256": "9ebf08805808c90d3b28f7ecf09db0899429b7c1d4b04903f68f6781778ff68d",
+        "loaded_closure_sha256": "70370987fbd5c75e7b8562fcc43462435b122495387b8c32011ed9f6caee9696",
+        "native_tree_sha256": "9ebf08805808c90d3b28f7ecf09db0899429b7c1d4b04903f68f6781778ff68d",
+        "observer_sha256": "16589b4f9f51782d0907a7c186e3fcff6625c713bb64006f37330d6056645e45",
+        "runner_sha256": "612ea14eeb83a047fce9bf542492c7d1ed38431015274703d20994b406ef392d",
+        "runtime_lock_sha256": "4a209c10cf1756eb0f7357cc3eca8250bf66c239b4cd0ca31a8c0886d4d304ee",
+        "source_commit": "dd0e8c0ce8d1d00f15de6b07e2e26d368c5c3774"
+      },
+      "execution_lane": "core",
+      "id": "boundary-projects",
+      "kind": "native",
+      "status": "passed"
+    },
+    {
+      "artifact": {
+        "path": "docs/urbit/evidence/2026-09-26/phase1-final-dd0e8c0/derived-v6/proofs.json",
+        "pointer": "/proofs/boundary-grants",
+        "sha256": "c7fa44026425580fadb1d3eac8866f1448ae0528d3d82899992208cd9ea6cc3c"
+      },
+      "bindings": {
+        "contract_freeze_sha256": "a2336e5060c71c7c16849b3151cc024a598d6cdf867561452eff1338e3232670",
+        "corpus_sha256": "95c915e2d0c93f358225274b34216fff0fe2efc09791905855b1e3f36aec368a",
+        "installed_clay_tree_sha256": "9ebf08805808c90d3b28f7ecf09db0899429b7c1d4b04903f68f6781778ff68d",
+        "loaded_closure_sha256": "70370987fbd5c75e7b8562fcc43462435b122495387b8c32011ed9f6caee9696",
+        "native_tree_sha256": "9ebf08805808c90d3b28f7ecf09db0899429b7c1d4b04903f68f6781778ff68d",
+        "observer_sha256": "16589b4f9f51782d0907a7c186e3fcff6625c713bb64006f37330d6056645e45",
+        "runner_sha256": "612ea14eeb83a047fce9bf542492c7d1ed38431015274703d20994b406ef392d",
+        "runtime_lock_sha256": "4a209c10cf1756eb0f7357cc3eca8250bf66c239b4cd0ca31a8c0886d4d304ee",
+        "source_commit": "dd0e8c0ce8d1d00f15de6b07e2e26d368c5c3774"
+      },
+      "execution_lane": "core",
+      "id": "boundary-grants",
+      "kind": "native",
+      "status": "passed"
+    },
+    {
+      "artifact": {
+        "path": "docs/urbit/evidence/2026-09-26/phase1-final-dd0e8c0/derived-v6/proofs.json",
+        "pointer": "/proofs/boundary-work",
+        "sha256": "c7fa44026425580fadb1d3eac8866f1448ae0528d3d82899992208cd9ea6cc3c"
+      },
+      "bindings": {
+        "contract_freeze_sha256": "a2336e5060c71c7c16849b3151cc024a598d6cdf867561452eff1338e3232670",
+        "corpus_sha256": "95c915e2d0c93f358225274b34216fff0fe2efc09791905855b1e3f36aec368a",
+        "installed_clay_tree_sha256": "9ebf08805808c90d3b28f7ecf09db0899429b7c1d4b04903f68f6781778ff68d",
+        "loaded_closure_sha256": "70370987fbd5c75e7b8562fcc43462435b122495387b8c32011ed9f6caee9696",
+        "native_tree_sha256": "9ebf08805808c90d3b28f7ecf09db0899429b7c1d4b04903f68f6781778ff68d",
+        "observer_sha256": "16589b4f9f51782d0907a7c186e3fcff6625c713bb64006f37330d6056645e45",
+        "runner_sha256": "612ea14eeb83a047fce9bf542492c7d1ed38431015274703d20994b406ef392d",
+        "runtime_lock_sha256": "4a209c10cf1756eb0f7357cc3eca8250bf66c239b4cd0ca31a8c0886d4d304ee",
+        "source_commit": "dd0e8c0ce8d1d00f15de6b07e2e26d368c5c3774"
+      },
+      "execution_lane": "core",
+      "id": "boundary-work",
+      "kind": "native",
+      "status": "passed"
+    },
+    {
+      "artifact": {
+        "path": "docs/urbit/evidence/2026-09-26/phase1-final-dd0e8c0/derived-v6/proofs.json",
+        "pointer": "/proofs/boundary-documents-tree",
+        "sha256": "c7fa44026425580fadb1d3eac8866f1448ae0528d3d82899992208cd9ea6cc3c"
+      },
+      "bindings": {
+        "contract_freeze_sha256": "a2336e5060c71c7c16849b3151cc024a598d6cdf867561452eff1338e3232670",
+        "corpus_sha256": "95c915e2d0c93f358225274b34216fff0fe2efc09791905855b1e3f36aec368a",
+        "installed_clay_tree_sha256": "9ebf08805808c90d3b28f7ecf09db0899429b7c1d4b04903f68f6781778ff68d",
+        "loaded_closure_sha256": "70370987fbd5c75e7b8562fcc43462435b122495387b8c32011ed9f6caee9696",
+        "native_tree_sha256": "9ebf08805808c90d3b28f7ecf09db0899429b7c1d4b04903f68f6781778ff68d",
+        "observer_sha256": "16589b4f9f51782d0907a7c186e3fcff6625c713bb64006f37330d6056645e45",
+        "runner_sha256": "612ea14eeb83a047fce9bf542492c7d1ed38431015274703d20994b406ef392d",
+        "runtime_lock_sha256": "4a209c10cf1756eb0f7357cc3eca8250bf66c239b4cd0ca31a8c0886d4d304ee",
+        "source_commit": "dd0e8c0ce8d1d00f15de6b07e2e26d368c5c3774"
+      },
+      "execution_lane": "core",
+      "id": "boundary-documents-tree",
+      "kind": "native",
+      "status": "passed"
+    },
+    {
+      "artifact": {
+        "path": "docs/urbit/evidence/2026-09-26/phase1-final-dd0e8c0/derived-v6/proofs.json",
+        "pointer": "/proofs/boundary-container-history",
+        "sha256": "c7fa44026425580fadb1d3eac8866f1448ae0528d3d82899992208cd9ea6cc3c"
+      },
+      "bindings": {
+        "contract_freeze_sha256": "a2336e5060c71c7c16849b3151cc024a598d6cdf867561452eff1338e3232670",
+        "corpus_sha256": "95c915e2d0c93f358225274b34216fff0fe2efc09791905855b1e3f36aec368a",
+        "installed_clay_tree_sha256": "9ebf08805808c90d3b28f7ecf09db0899429b7c1d4b04903f68f6781778ff68d",
+        "loaded_closure_sha256": "70370987fbd5c75e7b8562fcc43462435b122495387b8c32011ed9f6caee9696",
+        "native_tree_sha256": "9ebf08805808c90d3b28f7ecf09db0899429b7c1d4b04903f68f6781778ff68d",
+        "observer_sha256": "16589b4f9f51782d0907a7c186e3fcff6625c713bb64006f37330d6056645e45",
+        "runner_sha256": "612ea14eeb83a047fce9bf542492c7d1ed38431015274703d20994b406ef392d",
+        "runtime_lock_sha256": "4a209c10cf1756eb0f7357cc3eca8250bf66c239b4cd0ca31a8c0886d4d304ee",
+        "source_commit": "dd0e8c0ce8d1d00f15de6b07e2e26d368c5c3774"
+      },
+      "execution_lane": "core",
+      "id": "boundary-container-history",
+      "kind": "native",
+      "status": "passed"
+    },
+    {
+      "artifact": {
+        "path": "docs/urbit/evidence/2026-09-26/phase1-final-dd0e8c0/derived-v6/proofs.json",
+        "pointer": "/proofs/boundary-object-bytes",
+        "sha256": "c7fa44026425580fadb1d3eac8866f1448ae0528d3d82899992208cd9ea6cc3c"
+      },
+      "bindings": {
+        "contract_freeze_sha256": "a2336e5060c71c7c16849b3151cc024a598d6cdf867561452eff1338e3232670",
+        "corpus_sha256": "95c915e2d0c93f358225274b34216fff0fe2efc09791905855b1e3f36aec368a",
+        "installed_clay_tree_sha256": "9ebf08805808c90d3b28f7ecf09db0899429b7c1d4b04903f68f6781778ff68d",
+        "loaded_closure_sha256": "70370987fbd5c75e7b8562fcc43462435b122495387b8c32011ed9f6caee9696",
+        "native_tree_sha256": "9ebf08805808c90d3b28f7ecf09db0899429b7c1d4b04903f68f6781778ff68d",
+        "observer_sha256": "16589b4f9f51782d0907a7c186e3fcff6625c713bb64006f37330d6056645e45",
+        "runner_sha256": "612ea14eeb83a047fce9bf542492c7d1ed38431015274703d20994b406ef392d",
+        "runtime_lock_sha256": "4a209c10cf1756eb0f7357cc3eca8250bf66c239b4cd0ca31a8c0886d4d304ee",
+        "source_commit": "dd0e8c0ce8d1d00f15de6b07e2e26d368c5c3774"
+      },
+      "execution_lane": "core",
+      "id": "boundary-object-bytes",
+      "kind": "native",
+      "status": "passed"
+    },
+    {
+      "artifact": {
+        "path": "docs/urbit/evidence/2026-09-26/phase1-final-dd0e8c0/derived-v6/proofs.json",
+        "pointer": "/proofs/boundary-ordinary-journal-receipts",
+        "sha256": "c7fa44026425580fadb1d3eac8866f1448ae0528d3d82899992208cd9ea6cc3c"
+      },
+      "bindings": {
+        "contract_freeze_sha256": "a2336e5060c71c7c16849b3151cc024a598d6cdf867561452eff1338e3232670",
+        "corpus_sha256": "95c915e2d0c93f358225274b34216fff0fe2efc09791905855b1e3f36aec368a",
+        "installed_clay_tree_sha256": "9ebf08805808c90d3b28f7ecf09db0899429b7c1d4b04903f68f6781778ff68d",
+        "loaded_closure_sha256": "70370987fbd5c75e7b8562fcc43462435b122495387b8c32011ed9f6caee9696",
+        "native_tree_sha256": "9ebf08805808c90d3b28f7ecf09db0899429b7c1d4b04903f68f6781778ff68d",
+        "observer_sha256": "16589b4f9f51782d0907a7c186e3fcff6625c713bb64006f37330d6056645e45",
+        "runner_sha256": "612ea14eeb83a047fce9bf542492c7d1ed38431015274703d20994b406ef392d",
+        "runtime_lock_sha256": "4a209c10cf1756eb0f7357cc3eca8250bf66c239b4cd0ca31a8c0886d4d304ee",
+        "source_commit": "dd0e8c0ce8d1d00f15de6b07e2e26d368c5c3774"
+      },
+      "execution_lane": "core",
+      "id": "boundary-ordinary-journal-receipts",
+      "kind": "native",
+      "status": "passed"
+    },
+    {
+      "artifact": {
+        "path": "docs/urbit/evidence/2026-09-26/phase1-final-dd0e8c0/derived-v6/proofs.json",
+        "pointer": "/proofs/boundary-pending",
+        "sha256": "c7fa44026425580fadb1d3eac8866f1448ae0528d3d82899992208cd9ea6cc3c"
+      },
+      "bindings": {
+        "contract_freeze_sha256": "a2336e5060c71c7c16849b3151cc024a598d6cdf867561452eff1338e3232670",
+        "corpus_sha256": "95c915e2d0c93f358225274b34216fff0fe2efc09791905855b1e3f36aec368a",
+        "installed_clay_tree_sha256": "9ebf08805808c90d3b28f7ecf09db0899429b7c1d4b04903f68f6781778ff68d",
+        "loaded_closure_sha256": "70370987fbd5c75e7b8562fcc43462435b122495387b8c32011ed9f6caee9696",
+        "native_tree_sha256": "9ebf08805808c90d3b28f7ecf09db0899429b7c1d4b04903f68f6781778ff68d",
+        "observer_sha256": "16589b4f9f51782d0907a7c186e3fcff6625c713bb64006f37330d6056645e45",
+        "runner_sha256": "612ea14eeb83a047fce9bf542492c7d1ed38431015274703d20994b406ef392d",
+        "runtime_lock_sha256": "4a209c10cf1756eb0f7357cc3eca8250bf66c239b4cd0ca31a8c0886d4d304ee",
+        "source_commit": "dd0e8c0ce8d1d00f15de6b07e2e26d368c5c3774"
+      },
+      "execution_lane": "core",
+      "id": "boundary-pending",
+      "kind": "native",
+      "status": "passed"
+    },
+    {
+      "artifact": {
+        "path": "docs/urbit/evidence/2026-09-26/phase1-final-dd0e8c0/derived-v6/proofs.json",
+        "pointer": "/proofs/delivery-positive-known-mark-control",
+        "sha256": "c7fa44026425580fadb1d3eac8866f1448ae0528d3d82899992208cd9ea6cc3c"
+      },
+      "bindings": {
+        "contract_freeze_sha256": "a2336e5060c71c7c16849b3151cc024a598d6cdf867561452eff1338e3232670",
+        "corpus_sha256": "95c915e2d0c93f358225274b34216fff0fe2efc09791905855b1e3f36aec368a",
+        "installed_clay_tree_sha256": "9ebf08805808c90d3b28f7ecf09db0899429b7c1d4b04903f68f6781778ff68d",
+        "loaded_closure_sha256": "70370987fbd5c75e7b8562fcc43462435b122495387b8c32011ed9f6caee9696",
+        "native_tree_sha256": "9ebf08805808c90d3b28f7ecf09db0899429b7c1d4b04903f68f6781778ff68d",
+        "observer_sha256": "16589b4f9f51782d0907a7c186e3fcff6625c713bb64006f37330d6056645e45",
+        "runner_sha256": "612ea14eeb83a047fce9bf542492c7d1ed38431015274703d20994b406ef392d",
+        "runtime_lock_sha256": "4a209c10cf1756eb0f7357cc3eca8250bf66c239b4cd0ca31a8c0886d4d304ee",
+        "source_commit": "dd0e8c0ce8d1d00f15de6b07e2e26d368c5c3774"
+      },
+      "execution_lane": "core",
+      "id": "delivery-positive-known-mark-control",
+      "kind": "native",
+      "status": "passed"
+    },
+    {
+      "artifact": {
+        "path": "docs/urbit/evidence/2026-09-26/phase1-final-dd0e8c0/derived-v6/proofs.json",
+        "pointer": "/proofs/delivery-ended-duct-no-late-fact",
+        "sha256": "c7fa44026425580fadb1d3eac8866f1448ae0528d3d82899992208cd9ea6cc3c"
+      },
+      "bindings": {
+        "contract_freeze_sha256": "a2336e5060c71c7c16849b3151cc024a598d6cdf867561452eff1338e3232670",
+        "corpus_sha256": "95c915e2d0c93f358225274b34216fff0fe2efc09791905855b1e3f36aec368a",
+        "installed_clay_tree_sha256": "9ebf08805808c90d3b28f7ecf09db0899429b7c1d4b04903f68f6781778ff68d",
+        "loaded_closure_sha256": "70370987fbd5c75e7b8562fcc43462435b122495387b8c32011ed9f6caee9696",
+        "native_tree_sha256": "9ebf08805808c90d3b28f7ecf09db0899429b7c1d4b04903f68f6781778ff68d",
+        "observer_sha256": "16589b4f9f51782d0907a7c186e3fcff6625c713bb64006f37330d6056645e45",
+        "runner_sha256": "612ea14eeb83a047fce9bf542492c7d1ed38431015274703d20994b406ef392d",
+        "runtime_lock_sha256": "4a209c10cf1756eb0f7357cc3eca8250bf66c239b4cd0ca31a8c0886d4d304ee",
+        "source_commit": "dd0e8c0ce8d1d00f15de6b07e2e26d368c5c3774"
+      },
+      "execution_lane": "core",
+      "id": "delivery-ended-duct-no-late-fact",
+      "kind": "native",
+      "status": "passed"
+    },
+    {
+      "artifact": {
+        "path": "docs/urbit/evidence/2026-09-26/phase1-final-dd0e8c0/derived-v6/proofs.json",
+        "pointer": "/proofs/delivery-expired-same-path-reregistration",
+        "sha256": "c7fa44026425580fadb1d3eac8866f1448ae0528d3d82899992208cd9ea6cc3c"
+      },
+      "bindings": {
+        "contract_freeze_sha256": "a2336e5060c71c7c16849b3151cc024a598d6cdf867561452eff1338e3232670",
+        "corpus_sha256": "95c915e2d0c93f358225274b34216fff0fe2efc09791905855b1e3f36aec368a",
+        "installed_clay_tree_sha256": "9ebf08805808c90d3b28f7ecf09db0899429b7c1d4b04903f68f6781778ff68d",
+        "loaded_closure_sha256": "70370987fbd5c75e7b8562fcc43462435b122495387b8c32011ed9f6caee9696",
+        "native_tree_sha256": "9ebf08805808c90d3b28f7ecf09db0899429b7c1d4b04903f68f6781778ff68d",
+        "observer_sha256": "16589b4f9f51782d0907a7c186e3fcff6625c713bb64006f37330d6056645e45",
+        "runner_sha256": "612ea14eeb83a047fce9bf542492c7d1ed38431015274703d20994b406ef392d",
+        "runtime_lock_sha256": "4a209c10cf1756eb0f7357cc3eca8250bf66c239b4cd0ca31a8c0886d4d304ee",
+        "source_commit": "dd0e8c0ce8d1d00f15de6b07e2e26d368c5c3774"
+      },
+      "execution_lane": "core",
+      "id": "delivery-expired-same-path-reregistration",
+      "kind": "native",
+      "status": "passed"
+    },
+    {
+      "artifact": {
+        "path": "docs/urbit/evidence/2026-09-26/phase1-final-dd0e8c0/derived-v6/proofs.json",
+        "pointer": "/proofs/delivery-late-old-leave",
+        "sha256": "c7fa44026425580fadb1d3eac8866f1448ae0528d3d82899992208cd9ea6cc3c"
+      },
+      "bindings": {
+        "contract_freeze_sha256": "a2336e5060c71c7c16849b3151cc024a598d6cdf867561452eff1338e3232670",
+        "corpus_sha256": "95c915e2d0c93f358225274b34216fff0fe2efc09791905855b1e3f36aec368a",
+        "installed_clay_tree_sha256": "85f944f2fa466aeb0ba919efd1f9d8755bc38e2a89a32f38b711ac6faee6ea5b",
+        "loaded_closure_sha256": "70370987fbd5c75e7b8562fcc43462435b122495387b8c32011ed9f6caee9696",
+        "native_tree_sha256": "9ebf08805808c90d3b28f7ecf09db0899429b7c1d4b04903f68f6781778ff68d",
+        "observer_sha256": "16589b4f9f51782d0907a7c186e3fcff6625c713bb64006f37330d6056645e45",
+        "runner_sha256": "e839771e23a44b1ac403df213fae2c83103a7750c36330de16322b3c0e913af2",
+        "runtime_lock_sha256": "4a209c10cf1756eb0f7357cc3eca8250bf66c239b4cd0ca31a8c0886d4d304ee",
+        "source_commit": "dd0e8c0ce8d1d00f15de6b07e2e26d368c5c3774"
+      },
+      "execution_lane": "gall_schedule",
+      "id": "delivery-late-old-leave",
+      "kind": "native",
+      "status": "passed"
+    },
+    {
+      "artifact": {
+        "path": "docs/urbit/evidence/2026-09-26/phase1-final-dd0e8c0/derived-v6/proofs.json",
+        "pointer": "/proofs/delivery-expiration-lazy",
+        "sha256": "c7fa44026425580fadb1d3eac8866f1448ae0528d3d82899992208cd9ea6cc3c"
+      },
+      "bindings": {
+        "contract_freeze_sha256": "a2336e5060c71c7c16849b3151cc024a598d6cdf867561452eff1338e3232670",
+        "corpus_sha256": "95c915e2d0c93f358225274b34216fff0fe2efc09791905855b1e3f36aec368a",
+        "installed_clay_tree_sha256": "9ebf08805808c90d3b28f7ecf09db0899429b7c1d4b04903f68f6781778ff68d",
+        "loaded_closure_sha256": "70370987fbd5c75e7b8562fcc43462435b122495387b8c32011ed9f6caee9696",
+        "native_tree_sha256": "9ebf08805808c90d3b28f7ecf09db0899429b7c1d4b04903f68f6781778ff68d",
+        "observer_sha256": "16589b4f9f51782d0907a7c186e3fcff6625c713bb64006f37330d6056645e45",
+        "runner_sha256": "612ea14eeb83a047fce9bf542492c7d1ed38431015274703d20994b406ef392d",
+        "runtime_lock_sha256": "4a209c10cf1756eb0f7357cc3eca8250bf66c239b4cd0ca31a8c0886d4d304ee",
+        "source_commit": "dd0e8c0ce8d1d00f15de6b07e2e26d368c5c3774"
+      },
+      "execution_lane": "core",
+      "id": "delivery-expiration-lazy",
+      "kind": "native",
+      "status": "passed"
+    },
+    {
+      "artifact": {
+        "path": "docs/urbit/evidence/2026-09-26/phase1-final-dd0e8c0/derived-v6/proofs.json",
+        "pointer": "/proofs/delivery-leave-cancels",
+        "sha256": "c7fa44026425580fadb1d3eac8866f1448ae0528d3d82899992208cd9ea6cc3c"
+      },
+      "bindings": {
+        "contract_freeze_sha256": "a2336e5060c71c7c16849b3151cc024a598d6cdf867561452eff1338e3232670",
+        "corpus_sha256": "95c915e2d0c93f358225274b34216fff0fe2efc09791905855b1e3f36aec368a",
+        "installed_clay_tree_sha256": "9ebf08805808c90d3b28f7ecf09db0899429b7c1d4b04903f68f6781778ff68d",
+        "loaded_closure_sha256": "70370987fbd5c75e7b8562fcc43462435b122495387b8c32011ed9f6caee9696",
+        "native_tree_sha256": "9ebf08805808c90d3b28f7ecf09db0899429b7c1d4b04903f68f6781778ff68d",
+        "observer_sha256": "16589b4f9f51782d0907a7c186e3fcff6625c713bb64006f37330d6056645e45",
+        "runner_sha256": "612ea14eeb83a047fce9bf542492c7d1ed38431015274703d20994b406ef392d",
+        "runtime_lock_sha256": "4a209c10cf1756eb0f7357cc3eca8250bf66c239b4cd0ca31a8c0886d4d304ee",
+        "source_commit": "dd0e8c0ce8d1d00f15de6b07e2e26d368c5c3774"
+      },
+      "execution_lane": "core",
+      "id": "delivery-leave-cancels",
+      "kind": "native",
+      "status": "passed"
+    },
+    {
+      "artifact": {
+        "path": "docs/urbit/evidence/2026-09-26/phase1-final-dd0e8c0/derived-v6/proofs.json",
+        "pointer": "/proofs/delivery-same-path-private-readers",
+        "sha256": "c7fa44026425580fadb1d3eac8866f1448ae0528d3d82899992208cd9ea6cc3c"
+      },
+      "bindings": {
+        "contract_freeze_sha256": "a2336e5060c71c7c16849b3151cc024a598d6cdf867561452eff1338e3232670",
+        "corpus_sha256": "95c915e2d0c93f358225274b34216fff0fe2efc09791905855b1e3f36aec368a",
+        "installed_clay_tree_sha256": "9ebf08805808c90d3b28f7ecf09db0899429b7c1d4b04903f68f6781778ff68d",
+        "loaded_closure_sha256": "70370987fbd5c75e7b8562fcc43462435b122495387b8c32011ed9f6caee9696",
+        "native_tree_sha256": "9ebf08805808c90d3b28f7ecf09db0899429b7c1d4b04903f68f6781778ff68d",
+        "observer_sha256": "16589b4f9f51782d0907a7c186e3fcff6625c713bb64006f37330d6056645e45",
+        "runner_sha256": "612ea14eeb83a047fce9bf542492c7d1ed38431015274703d20994b406ef392d",
+        "runtime_lock_sha256": "4a209c10cf1756eb0f7357cc3eca8250bf66c239b4cd0ca31a8c0886d4d304ee",
+        "source_commit": "dd0e8c0ce8d1d00f15de6b07e2e26d368c5c3774"
+      },
+      "execution_lane": "core",
+      "id": "delivery-same-path-private-readers",
+      "kind": "native",
+      "status": "passed"
+    },
+    {
+      "artifact": {
+        "path": "docs/urbit/evidence/2026-09-26/phase1-final-dd0e8c0/derived-v6/proofs.json",
+        "pointer": "/proofs/delivery-wrong-sender-digest",
+        "sha256": "c7fa44026425580fadb1d3eac8866f1448ae0528d3d82899992208cd9ea6cc3c"
+      },
+      "bindings": {
+        "contract_freeze_sha256": "a2336e5060c71c7c16849b3151cc024a598d6cdf867561452eff1338e3232670",
+        "corpus_sha256": "95c915e2d0c93f358225274b34216fff0fe2efc09791905855b1e3f36aec368a",
+        "installed_clay_tree_sha256": "9ebf08805808c90d3b28f7ecf09db0899429b7c1d4b04903f68f6781778ff68d",
+        "loaded_closure_sha256": "70370987fbd5c75e7b8562fcc43462435b122495387b8c32011ed9f6caee9696",
+        "native_tree_sha256": "9ebf08805808c90d3b28f7ecf09db0899429b7c1d4b04903f68f6781778ff68d",
+        "observer_sha256": "16589b4f9f51782d0907a7c186e3fcff6625c713bb64006f37330d6056645e45",
+        "runner_sha256": "612ea14eeb83a047fce9bf542492c7d1ed38431015274703d20994b406ef392d",
+        "runtime_lock_sha256": "4a209c10cf1756eb0f7357cc3eca8250bf66c239b4cd0ca31a8c0886d4d304ee",
+        "source_commit": "dd0e8c0ce8d1d00f15de6b07e2e26d368c5c3774"
+      },
+      "execution_lane": "core",
+      "id": "delivery-wrong-sender-digest",
+      "kind": "native",
+      "status": "passed"
+    },
+    {
+      "artifact": {
+        "path": "docs/urbit/evidence/2026-09-26/phase1-final-dd0e8c0/derived-v6/proofs.json",
+        "pointer": "/proofs/delivery-missing-channel",
+        "sha256": "c7fa44026425580fadb1d3eac8866f1448ae0528d3d82899992208cd9ea6cc3c"
+      },
+      "bindings": {
+        "contract_freeze_sha256": "a2336e5060c71c7c16849b3151cc024a598d6cdf867561452eff1338e3232670",
+        "corpus_sha256": "95c915e2d0c93f358225274b34216fff0fe2efc09791905855b1e3f36aec368a",
+        "installed_clay_tree_sha256": "9ebf08805808c90d3b28f7ecf09db0899429b7c1d4b04903f68f6781778ff68d",
+        "loaded_closure_sha256": "70370987fbd5c75e7b8562fcc43462435b122495387b8c32011ed9f6caee9696",
+        "native_tree_sha256": "9ebf08805808c90d3b28f7ecf09db0899429b7c1d4b04903f68f6781778ff68d",
+        "observer_sha256": "16589b4f9f51782d0907a7c186e3fcff6625c713bb64006f37330d6056645e45",
+        "runner_sha256": "612ea14eeb83a047fce9bf542492c7d1ed38431015274703d20994b406ef392d",
+        "runtime_lock_sha256": "4a209c10cf1756eb0f7357cc3eca8250bf66c239b4cd0ca31a8c0886d4d304ee",
+        "source_commit": "dd0e8c0ce8d1d00f15de6b07e2e26d368c5c3774"
+      },
+      "execution_lane": "core",
+      "id": "delivery-missing-channel",
+      "kind": "native",
+      "status": "passed"
+    },
+    {
+      "artifact": {
+        "path": "docs/urbit/evidence/2026-09-26/phase1-final-dd0e8c0/derived-v6/proofs.json",
+        "pointer": "/proofs/delivery-home-unavailable",
+        "sha256": "c7fa44026425580fadb1d3eac8866f1448ae0528d3d82899992208cd9ea6cc3c"
+      },
+      "bindings": {
+        "contract_freeze_sha256": "a2336e5060c71c7c16849b3151cc024a598d6cdf867561452eff1338e3232670",
+        "corpus_sha256": "95c915e2d0c93f358225274b34216fff0fe2efc09791905855b1e3f36aec368a",
+        "installed_clay_tree_sha256": "9ebf08805808c90d3b28f7ecf09db0899429b7c1d4b04903f68f6781778ff68d",
+        "loaded_closure_sha256": "70370987fbd5c75e7b8562fcc43462435b122495387b8c32011ed9f6caee9696",
+        "native_tree_sha256": "9ebf08805808c90d3b28f7ecf09db0899429b7c1d4b04903f68f6781778ff68d",
+        "observer_sha256": "16589b4f9f51782d0907a7c186e3fcff6625c713bb64006f37330d6056645e45",
+        "runner_sha256": "612ea14eeb83a047fce9bf542492c7d1ed38431015274703d20994b406ef392d",
+        "runtime_lock_sha256": "4a209c10cf1756eb0f7357cc3eca8250bf66c239b4cd0ca31a8c0886d4d304ee",
+        "source_commit": "dd0e8c0ce8d1d00f15de6b07e2e26d368c5c3774"
+      },
+      "execution_lane": "core",
+      "id": "delivery-home-unavailable",
+      "kind": "native",
+      "status": "passed"
+    },
+    {
+      "artifact": {
+        "path": "docs/urbit/evidence/2026-09-26/phase1-final-dd0e8c0/derived-v6/proofs.json",
+        "pointer": "/proofs/delivery-late-response",
+        "sha256": "c7fa44026425580fadb1d3eac8866f1448ae0528d3d82899992208cd9ea6cc3c"
+      },
+      "bindings": {
+        "contract_freeze_sha256": "a2336e5060c71c7c16849b3151cc024a598d6cdf867561452eff1338e3232670",
+        "corpus_sha256": "95c915e2d0c93f358225274b34216fff0fe2efc09791905855b1e3f36aec368a",
+        "installed_clay_tree_sha256": "9ebf08805808c90d3b28f7ecf09db0899429b7c1d4b04903f68f6781778ff68d",
+        "loaded_closure_sha256": "70370987fbd5c75e7b8562fcc43462435b122495387b8c32011ed9f6caee9696",
+        "native_tree_sha256": "9ebf08805808c90d3b28f7ecf09db0899429b7c1d4b04903f68f6781778ff68d",
+        "observer_sha256": "16589b4f9f51782d0907a7c186e3fcff6625c713bb64006f37330d6056645e45",
+        "runner_sha256": "612ea14eeb83a047fce9bf542492c7d1ed38431015274703d20994b406ef392d",
+        "runtime_lock_sha256": "4a209c10cf1756eb0f7357cc3eca8250bf66c239b4cd0ca31a8c0886d4d304ee",
+        "source_commit": "dd0e8c0ce8d1d00f15de6b07e2e26d368c5c3774"
+      },
+      "execution_lane": "core",
+      "id": "delivery-late-response",
+      "kind": "native",
+      "status": "passed"
+    },
+    {
+      "artifact": {
+        "path": "docs/urbit/evidence/2026-09-26/phase1-final-dd0e8c0/derived-v6/proofs.json",
+        "pointer": "/proofs/migration-current-roundtrip",
+        "sha256": "c7fa44026425580fadb1d3eac8866f1448ae0528d3d82899992208cd9ea6cc3c"
+      },
+      "bindings": {
+        "contract_freeze_sha256": "a2336e5060c71c7c16849b3151cc024a598d6cdf867561452eff1338e3232670",
+        "corpus_sha256": "95c915e2d0c93f358225274b34216fff0fe2efc09791905855b1e3f36aec368a",
+        "installed_clay_tree_sha256": "9ebf08805808c90d3b28f7ecf09db0899429b7c1d4b04903f68f6781778ff68d",
+        "loaded_closure_sha256": "70370987fbd5c75e7b8562fcc43462435b122495387b8c32011ed9f6caee9696",
+        "native_tree_sha256": "9ebf08805808c90d3b28f7ecf09db0899429b7c1d4b04903f68f6781778ff68d",
+        "observer_sha256": "16589b4f9f51782d0907a7c186e3fcff6625c713bb64006f37330d6056645e45",
+        "runner_sha256": "612ea14eeb83a047fce9bf542492c7d1ed38431015274703d20994b406ef392d",
+        "runtime_lock_sha256": "4a209c10cf1756eb0f7357cc3eca8250bf66c239b4cd0ca31a8c0886d4d304ee",
+        "source_commit": "dd0e8c0ce8d1d00f15de6b07e2e26d368c5c3774"
+      },
+      "execution_lane": "core",
+      "id": "migration-current-roundtrip",
+      "kind": "native",
+      "status": "passed"
+    },
+    {
+      "artifact": {
+        "path": "docs/urbit/evidence/2026-09-26/phase1-final-dd0e8c0/derived-v6/proofs.json",
+        "pointer": "/proofs/migration-actual-v1-vase",
+        "sha256": "c7fa44026425580fadb1d3eac8866f1448ae0528d3d82899992208cd9ea6cc3c"
+      },
+      "bindings": {
+        "contract_freeze_sha256": "a2336e5060c71c7c16849b3151cc024a598d6cdf867561452eff1338e3232670",
+        "corpus_sha256": "95c915e2d0c93f358225274b34216fff0fe2efc09791905855b1e3f36aec368a",
+        "installed_clay_tree_sha256": "9ebf08805808c90d3b28f7ecf09db0899429b7c1d4b04903f68f6781778ff68d",
+        "loaded_closure_sha256": "70370987fbd5c75e7b8562fcc43462435b122495387b8c32011ed9f6caee9696",
+        "native_tree_sha256": "9ebf08805808c90d3b28f7ecf09db0899429b7c1d4b04903f68f6781778ff68d",
+        "observer_sha256": "16589b4f9f51782d0907a7c186e3fcff6625c713bb64006f37330d6056645e45",
+        "runner_sha256": "612ea14eeb83a047fce9bf542492c7d1ed38431015274703d20994b406ef392d",
+        "runtime_lock_sha256": "4a209c10cf1756eb0f7357cc3eca8250bf66c239b4cd0ca31a8c0886d4d304ee",
+        "source_commit": "dd0e8c0ce8d1d00f15de6b07e2e26d368c5c3774"
+      },
+      "execution_lane": "core",
+      "id": "migration-actual-v1-vase",
+      "kind": "native",
+      "status": "passed"
+    },
+    {
+      "artifact": {
+        "path": "docs/urbit/evidence/2026-09-26/phase1-final-dd0e8c0/derived-v6/proofs.json",
+        "pointer": "/proofs/migration-legacy-receipt-projection",
+        "sha256": "c7fa44026425580fadb1d3eac8866f1448ae0528d3d82899992208cd9ea6cc3c"
+      },
+      "bindings": {
+        "contract_freeze_sha256": "a2336e5060c71c7c16849b3151cc024a598d6cdf867561452eff1338e3232670",
+        "corpus_sha256": "95c915e2d0c93f358225274b34216fff0fe2efc09791905855b1e3f36aec368a",
+        "installed_clay_tree_sha256": "9ebf08805808c90d3b28f7ecf09db0899429b7c1d4b04903f68f6781778ff68d",
+        "loaded_closure_sha256": "70370987fbd5c75e7b8562fcc43462435b122495387b8c32011ed9f6caee9696",
+        "native_tree_sha256": "9ebf08805808c90d3b28f7ecf09db0899429b7c1d4b04903f68f6781778ff68d",
+        "observer_sha256": "16589b4f9f51782d0907a7c186e3fcff6625c713bb64006f37330d6056645e45",
+        "runner_sha256": "612ea14eeb83a047fce9bf542492c7d1ed38431015274703d20994b406ef392d",
+        "runtime_lock_sha256": "4a209c10cf1756eb0f7357cc3eca8250bf66c239b4cd0ca31a8c0886d4d304ee",
+        "source_commit": "dd0e8c0ce8d1d00f15de6b07e2e26d368c5c3774"
+      },
+      "execution_lane": "core",
+      "id": "migration-legacy-receipt-projection",
+      "kind": "native",
+      "status": "passed"
+    },
+    {
+      "artifact": {
+        "path": "docs/urbit/evidence/2026-09-26/phase1-final-dd0e8c0/derived-v6/proofs.json",
+        "pointer": "/proofs/migration-invalid-predecessors",
+        "sha256": "c7fa44026425580fadb1d3eac8866f1448ae0528d3d82899992208cd9ea6cc3c"
+      },
+      "bindings": {
+        "contract_freeze_sha256": "a2336e5060c71c7c16849b3151cc024a598d6cdf867561452eff1338e3232670",
+        "corpus_sha256": "95c915e2d0c93f358225274b34216fff0fe2efc09791905855b1e3f36aec368a",
+        "installed_clay_tree_sha256": "9ebf08805808c90d3b28f7ecf09db0899429b7c1d4b04903f68f6781778ff68d",
+        "loaded_closure_sha256": "70370987fbd5c75e7b8562fcc43462435b122495387b8c32011ed9f6caee9696",
+        "native_tree_sha256": "9ebf08805808c90d3b28f7ecf09db0899429b7c1d4b04903f68f6781778ff68d",
+        "observer_sha256": "16589b4f9f51782d0907a7c186e3fcff6625c713bb64006f37330d6056645e45",
+        "runner_sha256": "612ea14eeb83a047fce9bf542492c7d1ed38431015274703d20994b406ef392d",
+        "runtime_lock_sha256": "4a209c10cf1756eb0f7357cc3eca8250bf66c239b4cd0ca31a8c0886d4d304ee",
+        "source_commit": "dd0e8c0ce8d1d00f15de6b07e2e26d368c5c3774"
+      },
+      "execution_lane": "core",
+      "id": "migration-invalid-predecessors",
+      "kind": "native",
+      "status": "passed"
+    },
+    {
+      "artifact": {
+        "path": "docs/urbit/evidence/2026-09-26/phase1-final-dd0e8c0/derived-v6/proofs.json",
+        "pointer": "/proofs/warm-home-restart",
+        "sha256": "c7fa44026425580fadb1d3eac8866f1448ae0528d3d82899992208cd9ea6cc3c"
+      },
+      "bindings": {
+        "contract_freeze_sha256": "a2336e5060c71c7c16849b3151cc024a598d6cdf867561452eff1338e3232670",
+        "corpus_sha256": "95c915e2d0c93f358225274b34216fff0fe2efc09791905855b1e3f36aec368a",
+        "installed_clay_tree_sha256": "9ebf08805808c90d3b28f7ecf09db0899429b7c1d4b04903f68f6781778ff68d",
+        "loaded_closure_sha256": "70370987fbd5c75e7b8562fcc43462435b122495387b8c32011ed9f6caee9696",
+        "native_tree_sha256": "9ebf08805808c90d3b28f7ecf09db0899429b7c1d4b04903f68f6781778ff68d",
+        "observer_sha256": "16589b4f9f51782d0907a7c186e3fcff6625c713bb64006f37330d6056645e45",
+        "runner_sha256": "612ea14eeb83a047fce9bf542492c7d1ed38431015274703d20994b406ef392d",
+        "runtime_lock_sha256": "4a209c10cf1756eb0f7357cc3eca8250bf66c239b4cd0ca31a8c0886d4d304ee",
+        "source_commit": "dd0e8c0ce8d1d00f15de6b07e2e26d368c5c3774"
+      },
+      "execution_lane": "core",
+      "id": "warm-home-restart",
+      "kind": "native",
+      "status": "passed"
+    },
+    {
+      "artifact": {
+        "path": "docs/urbit/evidence/2026-09-26/phase1-final-dd0e8c0/derived-v6/proofs.json",
+        "pointer": "/proofs/evaluator-error-boundaries",
+        "sha256": "c7fa44026425580fadb1d3eac8866f1448ae0528d3d82899992208cd9ea6cc3c"
+      },
+      "bindings": {
+        "contract_freeze_sha256": "a2336e5060c71c7c16849b3151cc024a598d6cdf867561452eff1338e3232670",
+        "corpus_sha256": "95c915e2d0c93f358225274b34216fff0fe2efc09791905855b1e3f36aec368a",
+        "installed_clay_tree_sha256": "9ebf08805808c90d3b28f7ecf09db0899429b7c1d4b04903f68f6781778ff68d",
+        "loaded_closure_sha256": "70370987fbd5c75e7b8562fcc43462435b122495387b8c32011ed9f6caee9696",
+        "native_tree_sha256": "9ebf08805808c90d3b28f7ecf09db0899429b7c1d4b04903f68f6781778ff68d",
+        "observer_sha256": "16589b4f9f51782d0907a7c186e3fcff6625c713bb64006f37330d6056645e45",
+        "runner_sha256": "612ea14eeb83a047fce9bf542492c7d1ed38431015274703d20994b406ef392d",
+        "runtime_lock_sha256": "4a209c10cf1756eb0f7357cc3eca8250bf66c239b4cd0ca31a8c0886d4d304ee",
+        "source_commit": "dd0e8c0ce8d1d00f15de6b07e2e26d368c5c3774"
+      },
+      "execution_lane": "core",
+      "id": "evaluator-error-boundaries",
+      "kind": "native",
+      "status": "passed"
+    },
+    {
+      "artifact": {
+        "path": "docs/urbit/evidence/2026-09-26/phase1-nonnative-v5/source-dispositions.json",
+        "pointer": "/proofs/receipt-lookup-order",
+        "sha256": "4e4a48a9a408650780a941fdb74b1cee525aeb15b1bb6a3c10ecc1c0c7b02065"
+      },
+      "bindings": {
+        "contract_freeze_sha256": "a2336e5060c71c7c16849b3151cc024a598d6cdf867561452eff1338e3232670",
+        "corpus_sha256": "95c915e2d0c93f358225274b34216fff0fe2efc09791905855b1e3f36aec368a",
+        "native_tree_sha256": "9ebf08805808c90d3b28f7ecf09db0899429b7c1d4b04903f68f6781778ff68d",
+        "runner_sha256": "612ea14eeb83a047fce9bf542492c7d1ed38431015274703d20994b406ef392d",
+        "runtime_lock_sha256": "4a209c10cf1756eb0f7357cc3eca8250bf66c239b4cd0ca31a8c0886d4d304ee",
+        "source_commit": "dd0e8c0ce8d1d00f15de6b07e2e26d368c5c3774"
+      },
+      "id": "receipt-lookup-order",
+      "kind": "source_review",
+      "status": "reviewed"
+    },
+    {
+      "artifact": {
+        "path": "docs/urbit/evidence/2026-09-26/phase1-nonnative-v5/source-dispositions.json",
+        "pointer": "/proofs/no-effect-subsystem",
+        "sha256": "4e4a48a9a408650780a941fdb74b1cee525aeb15b1bb6a3c10ecc1c0c7b02065"
+      },
+      "bindings": {
+        "contract_freeze_sha256": "a2336e5060c71c7c16849b3151cc024a598d6cdf867561452eff1338e3232670",
+        "corpus_sha256": "95c915e2d0c93f358225274b34216fff0fe2efc09791905855b1e3f36aec368a",
+        "native_tree_sha256": "9ebf08805808c90d3b28f7ecf09db0899429b7c1d4b04903f68f6781778ff68d",
+        "runner_sha256": "612ea14eeb83a047fce9bf542492c7d1ed38431015274703d20994b406ef392d",
+        "runtime_lock_sha256": "4a209c10cf1756eb0f7357cc3eca8250bf66c239b4cd0ca31a8c0886d4d304ee",
+        "source_commit": "dd0e8c0ce8d1d00f15de6b07e2e26d368c5c3774"
+      },
+      "id": "no-effect-subsystem",
+      "kind": "not_applicable",
+      "status": "not_applicable"
+    },
+    {
+      "artifact": {
+        "path": "docs/urbit/evidence/2026-09-26/phase1-nonnative-v6/source-dispositions.json",
+        "pointer": "/proofs/guard-independent-source-review",
+        "sha256": "4b174ed43e3a9ca6e44ecc16aeb3e64ecdeeb91f7e07e46eaee830b75eb97511"
+      },
+      "bindings": {
+        "contract_freeze_sha256": "a2336e5060c71c7c16849b3151cc024a598d6cdf867561452eff1338e3232670",
+        "corpus_sha256": "95c915e2d0c93f358225274b34216fff0fe2efc09791905855b1e3f36aec368a",
+        "native_tree_sha256": "9ebf08805808c90d3b28f7ecf09db0899429b7c1d4b04903f68f6781778ff68d",
+        "runner_sha256": "612ea14eeb83a047fce9bf542492c7d1ed38431015274703d20994b406ef392d",
+        "runtime_lock_sha256": "4a209c10cf1756eb0f7357cc3eca8250bf66c239b4cd0ca31a8c0886d4d304ee",
+        "source_commit": "dd0e8c0ce8d1d00f15de6b07e2e26d368c5c3774"
+      },
+      "id": "guard-independent-source-review",
+      "kind": "source_review",
+      "status": "reviewed"
+    },
+    {
+      "artifact": {
+        "path": "docs/urbit/evidence/2026-09-26/phase1-nonnative-v5/source-dispositions.json",
+        "pointer": "/proofs/guard-negative-host-tests",
+        "sha256": "4e4a48a9a408650780a941fdb74b1cee525aeb15b1bb6a3c10ecc1c0c7b02065"
+      },
+      "bindings": {
+        "guard_sha256": "da16e2e0fd32eb5b90706b546a7ea8332a65807fc8279f3bd765dcc18aaad9b5"
+      },
+      "id": "guard-negative-host-tests",
+      "kind": "host_mocked",
+      "status": "passed"
+    },
+    {
+      "artifact": {
+        "path": "docs/urbit/evidence/2026-09-26/phase1-nonnative-v5/source-dispositions.json",
+        "pointer": "/proofs/delivery-host-order-permutations",
+        "sha256": "4e4a48a9a408650780a941fdb74b1cee525aeb15b1bb6a3c10ecc1c0c7b02065"
+      },
+      "bindings": {
+        "contract_freeze_sha256": "a2336e5060c71c7c16849b3151cc024a598d6cdf867561452eff1338e3232670",
+        "corpus_sha256": "95c915e2d0c93f358225274b34216fff0fe2efc09791905855b1e3f36aec368a",
+        "native_tree_sha256": "9ebf08805808c90d3b28f7ecf09db0899429b7c1d4b04903f68f6781778ff68d",
+        "runner_sha256": "612ea14eeb83a047fce9bf542492c7d1ed38431015274703d20994b406ef392d",
+        "runtime_lock_sha256": "4a209c10cf1756eb0f7357cc3eca8250bf66c239b4cd0ca31a8c0886d4d304ee",
+        "source_commit": "dd0e8c0ce8d1d00f15de6b07e2e26d368c5c3774"
+      },
+      "id": "delivery-host-order-permutations",
+      "kind": "host_mocked",
+      "status": "passed"
+    },
+    {
+      "artifact": {
+        "path": "docs/urbit/evidence/2026-09-13/qualification/bound-proofs.json",
+        "pointer": "/proofs/4",
+        "sha256": "c5edbf7c4b4f9774c6a69648b10d0cb80599a0cbf8ac132cc73441a5a069f31b"
+      },
+      "bindings": {
+        "guard_sha256": "7166d197a6e3879f21c22637f2bd3074ff90975c33a2149f6e07763e2eeaa04e"
+      },
+      "id": "guard-real-hot-preflight-refusal",
+      "kind": "real_host",
+      "status": "passed"
+    },
+    {
+      "artifact": {
+        "path": "docs/urbit/evidence/2026-09-13/qualification/bound-proofs.json",
+        "pointer": "/proofs/5",
+        "sha256": "c5edbf7c4b4f9774c6a69648b10d0cb80599a0cbf8ac132cc73441a5a069f31b"
+      },
+      "bindings": {
+        "guard_sha256": "7166d197a6e3879f21c22637f2bd3074ff90975c33a2149f6e07763e2eeaa04e"
+      },
+      "id": "guard-real-platform-mocked-sensors",
+      "kind": "real_platform_mocked_sensors",
+      "status": "passed"
+    }
+  ],
+  "manifest": {
+    "path": "specs/urbit/v2/qualification-gate.json",
+    "pointer": "",
+    "sha256": "f374349cc3ccd64993e3dade9a44e306854479c228b7f93d6559647006aee94c"
+  }
+}

@@ -2,7 +2,7 @@
 
 ## Start with the working increment
 
-Read root AGENTS.md and AGENT_HANDOFF.md. Preserve the implementation agent's branch and uncommitted work. Use the exact native commands established by URB-010/020; the checked-in example lock is not executable pinning. A successful static validator does not prove a Hoon desk compiles.
+Read root AGENTS.md and AGENT_HANDOFF.md. Preserve the implementation agent's branch and uncommitted work. Use the pinned toolchain and guarded native commands established by URB-010/020; see [the local edit/build loop](DEV_FLOW.md). A successful static validator does not prove a Hoon desk compiles.
 
 Static checks shipped by this supplement:
 
@@ -25,7 +25,7 @@ The legacy validator currently expects planned statuses; changing execution trac
 
 They live in `.agents/skills/<name>/SKILL.md`. Current Codex documentation supports this repository-scoped location. Other agent tools may need a reviewed adapter to their discovery path; do not duplicate divergent instructions or globally install the pack by default. AGENTS.md describes the repository rules, while skills provide task-specific workflows. Neither is an enforced security boundary.
 
-These skills are original project guidance with references, not vendored third-party implementation and not validated Hoon source. Metadata validation is implemented; actual skill effectiveness remains URB-170 work. Do not claim a better pass rate before running the evaluation.
+These skills are original project guidance with references, not vendored third-party implementation and not validated Hoon source. The [completed frozen comparison](evidence/2026-09-26/workflow-evaluation-v2/README.md) recorded five of six tasks passing in both conditions. Both missed the same authorization mutant. This one pair establishes no observed pass-rate benefit, general effectiveness or complete tool isolation; the report retains its input and timing limitations.
 
 ## Community material worth evaluating
 
@@ -35,11 +35,11 @@ The sampled Gall skill's minimal example serializes untagged state but attempts 
 
 Intake process: exact commit and license; inspect all instructions/scripts; validate every copied code example against our pinned compiler; run denied/failure cases; retain required notices; compare against a held-out task corpus; approve only the useful subset. Disable automatic execution from comments, docs, retrieved pages or unknown SKILL.md files. conn.sock/dojo interaction tools get disposable fake ships only, no production identity material.
 
-A six-task evaluation should include typed function compilation, type-error repair, save/load migration, denied poke/watch, missing-test detection and clean desk assembly. Record model/version, toolchain, attempts, baseline versus skill-assisted results and failures. Structural skill validity is not functional qualification.
+The six-task evaluation covers typed function compilation, type-error repair, save/load migration, denied poke/watch, missing-test detection and clean desk assembly. Its report records the observed model/settings, pinned toolchain, attempts, baseline and assisted outcomes, and failures. Structural skill validity remains separate from functional execution.
 
 ## Editor and build ergonomics
 
-The official Hoon language server is a candidate editor aid requiring communication with a ship-side agent. Test it only on the supported fake environment, using safe local credentials and no secret command history. Supported editor/plugin versions must be pinned or listed as optional/untested. Compiler and actual unit/integration tests remain authoritative.
+The [optional Hoon language-server review](reviews/URB170_EDITOR_TOOL_REVIEW_20260925.md) rejected the pinned candidate for adoption: its bridge source failed the pinned Node parser check before any ship connection. No editor package or agent was installed, and native compatibility is unqualified. Any future editor evaluation must use disposable fake ships and pin its inputs. Compiler and actual unit/integration tests remain authoritative.
 
 Hoon uses LF source files; scope editor/Git settings to new source, not historical or byte-fidelity fixtures. Do not mass-normalize Markdown frontmatter, imported Git, symlinks or golden binary data. Keep dependencies reproducible; use the desk skeleton's source/developer-package separation without floating `peru reup` in CI.
 
@@ -57,13 +57,13 @@ The native `-test` thread discovers `test-` arms. Tests returning empty tang ind
 
 ## GitHub milestone fields
 
-The seven milestone definitions and all issue numbers are checked in. Native GitHub milestone objects were not created by this review environment. The local integrator can populate them using the authenticated GitHub CLI:
+The seven milestone definitions and all issue numbers are checked in. The live derivative repository now has all seven milestone objects and task assignments, verified September 26, 2026. The integrator can inspect or reconcile them using the authenticated GitHub CLI:
 
 ```sh
 python3 scripts/urbit/sync_milestones.py
 python3 scripts/urbit/sync_milestones.py --apply
 ```
 
-Default mode makes no network calls or writes. Apply mode targets only ScottTpirate/stead-urbit, checks every issue identity and existing assignment before mutations, creates missing titles, and preserves existing statuses/visibility/protection. It refuses conflicting assignments and is resumable after inspecting partial failures. Run with one coordinator: GitHub does not provide an atomic transaction over these objects, and another operator must not edit milestones concurrently. Tests use a mocked API; live synchronization has not been executed here. The CLI is an operator convenience, not a runtime dependency.
+Default mode makes no network calls or writes. Apply mode targets only ScottTpirate/stead-urbit, checks every issue identity and existing assignment before mutations, creates missing titles, and preserves existing statuses/visibility/protection. It refuses conflicting assignments and is resumable after inspecting partial failures. Run with one coordinator: GitHub does not provide an atomic transaction over these objects, and another operator must not edit milestones concurrently. The CLI tests use a mocked API; the observed live milestone state is separate evidence. The CLI is an operator convenience, not a runtime dependency.
 
 Schema references: https://docs.github.com/en/rest/issues/milestones ; https://cli.github.com/manual/gh_api .
