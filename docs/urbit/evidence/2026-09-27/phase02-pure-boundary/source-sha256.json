@@ -1,0 +1,12 @@
+{
+  "scripts/urbit/core_check.py": "9052b00e0e6e8d4d83ed05fdc1af6d1a6011d5151fda08971b61c86cc439e215",
+  "scripts/urbit/native_units.py": "62cfdb0ec44035be9e6070f5133010ff4595a96e2de251d35f5e8d153c091eb4",
+  "specs/urbit/phase2-pure-units.json": "87c59b68c48209c61dc1d9b02c77441ea9f2ef9de1c993a74cb5006caf270881",
+  "native/core/desk/lib/stead-session.hoon": "ec331d4534cc19fc76f6b9ad590ec326d74e09f0b846b36f866e6351bdcbbb27",
+  "native/core/desk/lib/stead-http.hoon": "c05da43f309a15b428592f128e06a765f0a639f125a4e71c42503e16eafe5ef6",
+  "native/core/desk/tests/stead-session.hoon": "6d347254dee5a3b98294bab1cfbbd138238ca10527b9e35a4184aae8e32756bf",
+  "native/core/desk/tests/stead-http.hoon": "df20f4960d398cc32784c3777feb49057b51bcc9142fab1168a62dbf36f88fb1",
+  "native/core/desk/controls/stead-unit-failure.hoon": "5dcb2b2e2e048a5cab8bf9422a67c47f86041aba10c7184affd622065b385010",
+  "native/core/desk/gen/stead-session-probe.hoon": "5311db1dd1a5e379ada848ab2dc6fcb0e391219d834831f144f35be23932d7a2",
+  "native/core/desk/gen/stead-http-probe.hoon": "21ee280b381f05980cd57b95708079dcfc912717fc874f7ce5f965d4048e390a"
+}

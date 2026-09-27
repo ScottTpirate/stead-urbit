@@ -1,0 +1,63 @@
+{
+  "format": 1,
+  "classification": "pure-native-only",
+  "expected_arm_count": 31,
+  "suites": [
+    {
+      "path": "/tests/stead-session",
+      "arms": [
+        "test-session-token-separation",
+        "test-session-origin-actor-admission",
+        "test-session-approval-binding",
+        "test-session-challenge-expiry",
+        "test-session-consumption-possession",
+        "test-session-consumption-replay",
+        "test-session-current-authorization",
+        "test-session-session-expiry",
+        "test-session-challenge-limits",
+        "test-session-session-limits",
+        "test-session-consume-rollback",
+        "test-session-replace-rollback",
+        "test-session-replace-isolation",
+        "test-session-logout-cleanup",
+        "test-session-binding-cleanup",
+        "test-session-empty-state-denial",
+        "test-session-resume-rotation",
+        "test-session-resume-denial",
+        "test-session-resume-boundary"
+      ]
+    },
+    {
+      "path": "/tests/stead-http",
+      "arms": [
+        "test-http-transport-flags-forwarding",
+        "test-http-host-origin",
+        "test-http-route-method",
+        "test-http-header-count",
+        "test-http-header-bytes",
+        "test-http-header-ambiguity",
+        "test-http-cookie-grammar",
+        "test-http-cookie-identity",
+        "test-http-body-framing",
+        "test-http-token-format",
+        "test-http-response-headers",
+        "test-http-cookie-output"
+      ]
+    }
+  ],
+  "negative_control": {
+    "path": "/controls/stead-unit-failure",
+    "arms": [
+      "test-deliberate-failure"
+    ],
+    "marker": "stead-intentional-native-unit-failure"
+  },
+  "scope_excludes": [
+    "Eyre provenance and actual TLS",
+    "native identity approval transport",
+    "browser sessions and user journeys",
+    "saved-state restart and migrations",
+    "final business authorization",
+    "CI execution"
+  ]
+}
