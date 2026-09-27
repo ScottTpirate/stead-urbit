@@ -134,11 +134,14 @@
     ?>  ?=([%o *] value)
     =/  request  (field p.value 'request_id')
     ?>  (uuid request)
-    =/  digest  (hash ?:(=(%stead-command-3 mark) 'stead.command/3' ?:(=(%stead-query-3 mark) 'stead.query/3' 'stead.updates/3')) (canonical value))
+    =/  domain  ?:(=(%stead-command-3 mark) 'stead.command/3' ?:(=(%stead-query-3 mark) 'stead.query/3' 'stead.updates/3'))
+    =/  digest  (hash domain (canonical value))
     =/  route=path  [%v3 %result (scot %p src.bowl) binding.identity.actor (decimal revision.identity.actor) request digest ~]
     =/  reserved  (need (~(get by pending.owner) route))
     ?>  &(=(actor actor.reserved) (gth expires.reserved (now-ms now.bowl)))
     =/  outcome
+      =/  unsupported  (version-error:stead-team-codec value domain)
+      ?^  unsupported  [u.unsupported owner]
       ?:  =(%stead-command-3 mark)
         =/  cmd  (decode:stead-team-codec raw)
         =/  out  (apply-command:stead-team db.owner actor cmd (now-ms now.bowl))

@@ -70,8 +70,8 @@ def run(host):
         if not condition:
             raise AssertionError(name)
 
-    def command(ship, source, expected=None):
-        result = host['dojo'](ship, source)
+    def command(ship, source, expected=None, *, timeout=None):
+        result = host['dojo'](ship, source, **({'timeout': timeout} if timeout is not None else {}))
         report['commands'].append({'ship': ship, 'dojo': source, 'result': result})
         checkpoint('native-command')
         if expected is not None:
@@ -84,7 +84,8 @@ def run(host):
         host['execution_check']()
         raw = canonical(value) if value is not None else b''
         if route is None and mode in ('command', 'query', 'updates'):
-            digest = hashlib.sha256(value['protocol'].encode() + b'\0' + raw).hexdigest()
+            domain = {'command': 'stead.command/3', 'query': 'stead.query/3', 'updates': 'stead.updates/3'}[mode]
+            digest = hashlib.sha256(domain.encode() + b'\0' + raw).hexdigest()
             binding = uid(202 + ('bus', 'nec').index(ship)) if ship in ('bus', 'nec') else uid(299)
             route = '/v3/result/~' + ship + '/' + binding + '/1/' + value['request_id'] + '/' + digest
         result = team_conn.run(binary, host['LIVE'] / ship / '.urb/conn.sock', mode,
@@ -176,6 +177,8 @@ def run(host):
             command(ship, '+stead-build-probe', '%stead-builds-pass')
             if ship == 'zod':
                 pure_units()
+                command('zod', '+stead-team-contract-probe', '%stead-team-contract-basic-pass')
+                command('zod', '+stead-team-authority-probe', '%stead-team-authority-basic-pass', timeout=300)
         command('zod', '|start %stead-home')
         command('zod', '|start %stead-http-boundary-probe')
         for ship in ('bus', 'nec', 'bud'):
@@ -218,7 +221,35 @@ def run(host):
         check('current-native-member-read', identity is not None and identity.get('status') == 'read')
         check('native-outsider-denied', denied(call('bud', 'query', query('identity')),
               'watch-ack-fail', 'stead-current-member-required'))
+        capabilities = call('bus', 'query', query('capabilities'))
+        check('native-public-capabilities-current-member', capabilities.get('rows') == {'capabilities': {
+            'protocol': 'stead.capabilities/3', 'profile': 'configured-team', 'commands': 'stead.command/3',
+            'queries': 'stead.query/3', 'updates': 'stead.updates/3', 'authentication': 'native-sender/1',
+            'max_request_bytes': '65536', 'max_response_bytes': '262144', 'page_size': '20', 'runtime': 'isolated-fake'}})
+        check('native-capabilities-unbound-sender-denied', denied(call('bud', 'query', query('capabilities')),
+              'watch-ack-fail', 'stead-current-member-required'))
         create = mutation('project.create', uid(1), 0, {'organization_id': uid(5), 'owning_team_id': uid(6), 'title': 'Garden α', 'project_key': 'GARDEN', 'preset': 'general'})
+        for mode in ('command', 'query', 'updates'):
+            domain = {'command': 'stead.command/3', 'query': 'stead.query/3', 'updates': 'stead.updates/3'}[mode]
+            for version in ('1', '2', '999'):
+                seed = create if mode == 'command' else query('projects')
+                if mode == 'updates':
+                    seed = {**seed, 'action': 'open', 'watch_id': ''}
+                bad = {**seed, 'protocol': domain.rsplit('/', 1)[0] + '/' + version}
+                outcome = call('bus', mode, bad)
+                check('native-' + mode + '-version-' + version + '-correlated-rejection', outcome == {
+                    'protocol': 'stead.result/3', 'status': 'rejected', 'error': 'unsupported_version',
+                    'request_id': bad['request_id'],
+                    'canonical_sha256': hashlib.sha256(domain.encode() + b'\0' + canonical(bad)).hexdigest()})
+        legacy = {**create, 'protocol': 'stead.command/2'}
+        legacy_digest = hashlib.sha256(b'stead.command/2\0' + canonical(legacy)).hexdigest()
+        legacy_route = '/v2/result/~bus/' + uid(102) + '/' + uid(1) + '/' + legacy['request_id'] + '/' + legacy_digest
+        for mode, kind in (('legacy-poke', 'poke-fail'), ('legacy-watch', 'watch-ack-fail')):
+            outcome = call('bus', mode, legacy, route=legacy_route)
+            check('native-' + mode + '-configured-home-refuses-v2-carrier',
+                  outcome.get('protocol') == 'stead.test-terminal/1' and outcome.get('status') == 'failed'
+                  and outcome.get('kind') == kind and bool(outcome.get('trace_jam_hex')))
+        check('native-unsupported-commands-do-not-create-project', call('bus', 'query', query('projects')).get('rows') == {})
         receipt = call('bus', 'command', create)
         check('explicit-creator-project-accepted', receipt is not None and receipt.get('status') == 'accepted'
               and receipt.get('identity_ship') == '~bus' and receipt.get('authentication') == 'native-sender/1'

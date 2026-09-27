@@ -41,12 +41,16 @@
     %command  %stead-command-3
     %query  %stead-query-3
     %updates  %stead-updates-3
+    %legacy-poke  %stead-command-2
+    %legacy-watch  %stead-command-2
     %approve  %stead-auth-approval-1
   ==
-?:  ?|(=(%configure mode) =(%identity-config mode) =(%approve mode))
+?:  ?|(=(%configure mode) =(%identity-config mode) =(%approve mode) =(%legacy-poke mode))
   ;<  ~  bind:m  (poke:strandio [target app] mark !>(raw))
   (pure:m !>([%stead-core-result (bytes-hex:stead-codec '{}')]))
 ;<  ~  bind:m  (watch:strandio /result [target app] route)
+?:  =(%legacy-watch mode)
+  (pure:m !>([%stead-core-result (bytes-hex:stead-codec '{}')]))
 ;<  ~  bind:m  (send-raw-card:strandio [%pass /command %agent [target app] %poke mark !>(raw)])
 =/  state=progress:stead-delivery  [| | ~]
 |=  tin=strand-input:strand

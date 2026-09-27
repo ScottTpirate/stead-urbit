@@ -124,6 +124,19 @@
     =/  cleaned  (prune:stead-updates db next.ended updates.transient pages.transient(cursors cursors) now)
     =/  out  (reply db view transient(auth next.ended, pages pages.cleaned, updates next.cleaned) 200 (canonical (object ~[['protocol' 'stead.auth/1'] ['status' 'logged_out']])))
     out(cookies ~[(cookie:stead-http | '' &) (cookie:stead-http & '' &)])
+  :: Correlate version rejection only after current session and CSRF admission.
+  =/  domain
+    ?+  route  ''
+      '/stead/api/command'  'stead.command/3'
+      '/stead/api/query'  'stead.query/3'
+      '/stead/api/updates'  'stead.updates/3'
+    ==
+  =/  unsupported=(unit @t)
+    ?:  =('' domain)  ~
+    =/  attempted  (mule |.((version-error:stead-team-codec (need (parse raw)) domain)))
+    ?:  ?=(%| -.attempted)  ~
+    p.attempted
+  ?^  unsupported  (reply db view transient 200 u.unsupported)
   ?:  =('/stead/api/command' route)
     =/  decoded  (mule |.((decode:stead-team-codec raw)))
     ?:  ?=(%| -.decoded)  (reply db view transient 200 (correlated-error raw 'invalid_command'))
