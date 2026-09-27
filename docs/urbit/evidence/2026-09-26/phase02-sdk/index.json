@@ -1,7 +1,7 @@
 {
   "artifact": {
     "bytes": 51200,
-    "path": "stead-sdk-v2.tar",
+    "path": "final/stead-sdk-v2.tar",
     "sha256": "cb8097fc2036b7720d8ba9ade3fbc219073f828dbe7835756080f58269216d45"
   },
   "classification": "real-host-package-plus-host-static-mocked-suite",
