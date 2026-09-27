@@ -337,7 +337,10 @@ def copy_seed_to_live():
             raise ValueError('Seed integrity failure: ' + ship)
     if LIVE.is_symlink():
         raise ValueError('Refusing redirected live directory')
-    shutil.rmtree(LIVE)
+    # Preservation may have moved the stopped live directory aside. Verified
+    # seeds are sufficient to create the next disposable fixture from nothing.
+    if LIVE.exists():
+        shutil.rmtree(LIVE)
     LIVE.mkdir()
     for ship in SHIPS:
         shutil.copytree(SEED / ship, LIVE / ship, symlinks=True)

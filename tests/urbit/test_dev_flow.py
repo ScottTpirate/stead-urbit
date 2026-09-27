@@ -237,6 +237,37 @@ class SupervisorDeveloperTests(unittest.TestCase):
             spec.loader.exec_module(self.supervisor)
         self.supervisor.PROGRESS.update(stage='ready', ready=True)
 
+    def test_verified_seeds_restore_without_a_prior_live_directory(self):
+        module = self.supervisor
+        with tempfile.TemporaryDirectory(prefix='stead-seed-restore-') as directory, ExitStack() as stack:
+            root = Path(directory)
+            seed, live = root / 'seed', root / 'live'
+            seed.mkdir()
+            for ship in module.SHIPS:
+                (seed / ship).mkdir()
+                (seed / ship / 'synthetic-state').write_text(ship)
+            manifest = {'toolchain_sha256': 'a' * 64,
+                'ships': {ship: digests.tree_sha(seed / ship) for ship in module.SHIPS}}
+            (seed / 'manifest.json').write_text(json.dumps(manifest))
+            stack.enter_context(patch.object(module, 'SEED', seed))
+            stack.enter_context(patch.object(module, 'LIVE', live))
+            stack.enter_context(patch.object(module, 'execution_check'))
+            stack.enter_context(patch.object(module, 'sha', return_value='a' * 64))
+            self.assertFalse(live.exists())
+            module.copy_seed_to_live()
+            self.assertEqual({ship: digests.tree_sha(live / ship) for ship in module.SHIPS}, manifest['ships'])
+            # Corruption and a running identity must still fail before replacing
+            # any existing state; missing-directory support changes neither gate.
+            (live / 'preserved').write_text('keep')
+            (seed / 'zod' / 'synthetic-state').write_text('corrupt')
+            with self.assertRaisesRegex(ValueError, 'Seed integrity failure'):
+                module.copy_seed_to_live()
+            self.assertEqual((live / 'preserved').read_text(), 'keep')
+            with patch.object(module, 'PROCESSES', {'zod': Mock(poll=lambda: None)}):
+                with self.assertRaisesRegex(RuntimeError, 'fake ship is live'):
+                    module.copy_seed_to_live()
+            self.assertEqual((live / 'preserved').read_text(), 'keep')
+
     def dispatch(self, request):
         server, client = socket.socketpair()
         with client:
