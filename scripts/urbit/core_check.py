@@ -57,7 +57,7 @@ def run(host):
             raise AssertionError(name)
 
     def command(source, expected=None):
-        result = host['dojo']('zod', source)
+        result = host['dojo']('zod', source, timeout=300) if source == '+stead-team-authority-probe' else host['dojo']('zod', source)
         report['commands'].append({'ship': 'zod', 'dojo': source, 'result': result})
         checkpoint('compile-and-probes')
         if expected is not None:
@@ -108,7 +108,9 @@ def run(host):
                 ('stead-reducers-probe', '%stead-native-reducers-pass'),
                 ('stead-save-probe', '%stead-save-format2-roundtrip-pass'),
                 ('stead-session-probe', '%stead-session-57-controls-pass'),
-                ('stead-http-probe', '%stead-http-49-controls-pass')):
+                ('stead-http-probe', '%stead-http-49-controls-pass'),
+                ('stead-team-contract-probe', '%stead-team-contract-basic-pass'),
+                ('stead-team-authority-probe', '%stead-team-authority-basic-pass')):
             command('+' + probe, expected)
         report['native_units'] = []
         def native_test(entry):

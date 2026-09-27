@@ -464,7 +464,9 @@ class CompileEvidenceTests(unittest.TestCase):
                        '+stead-reducers-probe': '%stead-native-reducers-pass',
                        '+stead-save-probe': '%stead-save-format2-roundtrip-pass',
                        '+stead-session-probe': '%stead-session-57-controls-pass',
-                       '+stead-http-probe': '%stead-http-49-controls-pass'}
+                       '+stead-http-probe': '%stead-http-49-controls-pass',
+                       '+stead-team-contract-probe': '%stead-team-contract-basic-pass',
+                       '+stead-team-authority-probe': '%stead-team-authority-basic-pass'}
         entries = self.inventory['suites'] + [self.inventory['negative_control']]
         for entry in entries:
             self.probes['`path`%' + entry['path']] = '/~zod/base/~2026.9.27' + entry['path']
@@ -484,7 +486,7 @@ class CompileEvidenceTests(unittest.TestCase):
                      'LOCK': {'runtime': {'binary': 'synthetic-not-executed'}},
                      'LOADED_SOURCE_DIGEST': 'harness',
                      **{name: Mock() for name in ('execution_check', 'all_stop', 'copy_seed_to_live', 'launch', 'wait_ready')}}
-        self.host['dojo'] = Mock(side_effect=lambda ship, source: self.probes.get(source, '%.y'))
+        self.host['dojo'] = Mock(side_effect=lambda ship, source, **options: self.probes.get(source, '%.y'))
 
     def report(self):
         return json.loads(next(self.logs.glob('*.json')).read_text())
