@@ -123,10 +123,16 @@ def run(host):
             log = Path('/state/logs/zod.log')
             offset = log.stat().st_size
             terminal = ''
+            unit_started = time.monotonic()
+            host['record']('native unit start', {'path': entry['path'], 'expected_arms': len(entry['arms'])})
             try:
                 observed = native_units.run(binary, host['LIVE'] / 'zod/.urb/conn.sock', resolved, timeout=entry.get('timeout_seconds', 60))
                 report['commands'].append({'ship': 'zod', 'native_test': observed})
                 terminal = observed['stdout']
+            except Exception as error:
+                if hasattr(error, 'native_failure'):
+                    report['commands'].append({'ship': 'zod', 'native_test_failure': error.native_failure})
+                raise
             finally:
                 with log.open('rb') as stream:
                     stream.seek(offset)
@@ -134,6 +140,8 @@ def run(host):
                 report.setdefault('native_unit_transcripts', []).append({'path': entry['path'],
                     'log_offset': offset, 'log_bytes': len(captured), 'log_hex': captured.hex(), 'terminal': terminal})
                 checkpoint('native-unit-output')
+                host['record']('native unit captured', {'path': entry['path'], 'log_bytes': len(captured),
+                    'elapsed_seconds': round(time.monotonic() - unit_started, 3), 'terminal_present': bool(terminal)})
             if len(captured) > 262144:
                 raise ValueError('Native unit log byte bound')
             negative = entry == inventory['negative_control']

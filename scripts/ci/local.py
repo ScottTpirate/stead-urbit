@@ -294,10 +294,12 @@ def main():
     collection = {'overflow': False, 'error': None}
     def collect():
         try:
-            with os.fdopen(read_fd, 'rb') as source:
-                while chunk := source.read(65536):
+            with os.fdopen(read_fd, 'rb') as source, (job / 'console.partial.log').open('xb') as progress:
+                while chunk := source.read1(65536):
                     if len(captured) + len(chunk) <= MAX_TREE:
                         captured.extend(chunk)
+                        progress.write(chunk)
+                        progress.flush()
                     else:
                         collection['overflow'] = True
                         stopped.set()

@@ -144,7 +144,14 @@ def verify_output(raw: str, *, path: str, expected: list[str], succeeds: bool,
     outcomes = []
     timing_arms = []
     wrapped_timing = None
-    for line in lines:
+    driver_diagnostics = []
+    for index, line in enumerate(lines):
+        # Observed pinned Vere UDP callback output can interleave with -test
+        # while the fresh CI peer fence is closed. Retain it separately; it
+        # establishes no test outcome and cannot satisfy any required record.
+        if line == 'ames: send fail: operation not permitted':
+            driver_diagnostics.append({'line': index + 1, 'message': line})
+            continue
         if wrapped_timing is not None:
             if not re.fullmatch(r'  took (?:µs|ms|s)/[0-9]+(?:\.[0-9]+)*', line):
                 raise ValueError('Incomplete wrapped native timing record')
@@ -197,4 +204,5 @@ def verify_output(raw: str, *, path: str, expected: list[str], succeeds: bool,
                          sum(line.strip() == failure_marker for line in lines) != 1):
         raise ValueError('Missing deliberate native failure message')
     return {'path': path, 'expected': expected, 'observed': observed,
-            'outcome': 'passed' if succeeds else 'expected-failure', 'raw_output': raw}
+            'outcome': 'passed' if succeeds else 'expected-failure', 'raw_output': raw,
+            'driver_diagnostics': driver_diagnostics}

@@ -10,6 +10,7 @@ from pathlib import Path
 import signal
 import shutil
 import socket
+import stat
 import subprocess
 import sys
 import threading
@@ -90,7 +91,21 @@ def fresh_seeds(host):
                 close_fds=True, pass_fds=(host.gate.fileno(),))
             host.PROCESSES[ship] = child
             host.record('CI fresh boot ' + ship, {'argv': arguments, 'pid': child.pid})
-            host.wait_ready(ship)
+            boot_started = time.monotonic()
+            progress_done = threading.Event()
+            def progress():
+                while not progress_done.wait(30):
+                    host.record('CI fresh boot progress', {'ship': ship, 'pid': child.pid,
+                        'elapsed_seconds': round(time.monotonic() - boot_started, 3),
+                        'log_bytes': os.fstat(log.fileno()).st_size})
+            progress_thread = threading.Thread(target=progress, daemon=True)
+            progress_thread.start()
+            try:
+                host.wait_ready(ship)
+            finally:
+                progress_done.set()
+                progress_thread.join(timeout=2)
+                require(not progress_thread.is_alive(), 'Fresh boot progress thread did not finish')
             state = dict(line.split(':', 1) for line in Path('/proc', str(child.pid), 'status').read_text().splitlines() if ':' in line)
             require(all(int(state[name].strip(), 16) == 0 for name in ('CapInh', 'CapPrm', 'CapEff', 'CapBnd', 'CapAmb'))
                     and state['NoNewPrivs'].strip() == '1', 'Fresh runtime kept privileges')
@@ -172,6 +187,30 @@ def main():
         result['status'] = 'pass'
     except BaseException as error:
         result['error'] = type(error).__name__ + ': ' + str(error)[:2000]
+        # Failures still destroy the owned namespace; retain bounded raw tails
+        # privately before its temporary pier logs disappear. Never call a
+        # truncated tail complete or export it without credential redaction.
+        result['failure_logs'] = {}
+        for ship in ('zod', 'bus', 'nec', 'bud'):
+            log_path = Path('/state/logs') / (ship + '.log')
+            try:
+                descriptor = os.open(log_path, os.O_RDONLY | os.O_NOFOLLOW | os.O_NONBLOCK)
+                try:
+                    info = os.fstat(descriptor)
+                    require(stat.S_ISREG(info.st_mode), 'Native diagnostic log is not regular')
+                    size = info.st_size
+                    with os.fdopen(descriptor, 'rb', closefd=False) as stream:
+                        stream.seek(max(0, size - 262144))
+                        tail = stream.read(min(size, 262144))
+                    require(len(tail) == min(size, 262144), 'Native diagnostic log changed during capture')
+                finally:
+                    os.close(descriptor)
+                result['failure_logs'][ship] = {'bytes_total': size, 'tail_offset': max(0, size - 262144),
+                    'tail_sha256': hashlib.sha256(tail).hexdigest(), 'tail_hex': tail.hex(), 'truncated': size > len(tail)}
+            except FileNotFoundError:
+                result['failure_logs'][ship] = {'absent': True}
+            except Exception as capture_error:
+                result['failure_logs'][ship] = {'capture_error': type(capture_error).__name__}
     finally:
         if host is not None:
             host.NORMAL_STOP.set()
