@@ -424,6 +424,40 @@ def control_frame(job, prefix, run_id):
     return value
 
 
+def control_diagnostic(job, case):
+    """Only the fixed pre-native control can publish its bounded console.
+
+    This entry runs no candidate code, Hoon, identity login or credential
+    exchange. Native worker consoles must never enter this diagnostic path.
+    """
+    if case is None:
+        return None
+    require(case in ('parent-death', 'guardian-death', 'changed-limits', 'stale-lease'),
+        'Unknown diagnostic control')
+    try:
+        descriptor = os.open(job / 'console.private.log', os.O_RDONLY | os.O_NOFOLLOW | os.O_NONBLOCK)
+    except FileNotFoundError:
+        return {'absent': True}
+    try:
+        info = os.fstat(descriptor)
+        require(stat.S_ISREG(info.st_mode) and info.st_nlink == 1, 'Invalid control diagnostic file')
+        with os.fdopen(descriptor, 'rb', closefd=False) as source:
+            raw = source.read(8193)
+    finally:
+        os.close(descriptor)
+    return {'classification': 'pre-native-control-only', 'bytes_total': info.st_size,
+        'truncated': len(raw) > 8192, 'text': raw[:8192].decode('utf-8', errors='replace')}
+
+
+def capture_control_diagnostic(job, case):
+    try:
+        return control_diagnostic(job, case)
+    except Exception as error:
+        # A diagnostic error must not prevent the failed primary result and
+        # independently observed cleanup from being published.
+        return {'capture_error': type(error).__name__}
+
+
 def execute_control(case, process, job, context):
     started = time.monotonic()
     deadline = time.monotonic() + 40
@@ -649,6 +683,8 @@ def main():
             result['status'] = 'fail'
         if job is not None:
             if result['status'] != 'pass':
+                if args.control:
+                    result['control_diagnostic'] = capture_control_diagnostic(job, args.control)
                 result['service_diagnostics'] = {}
                 for name in ('caller-stderr.private.log', 'service-stderr.private.log'):
                     path = job / name

@@ -3,6 +3,7 @@ import base64
 import copy
 import hashlib
 import json
+import os
 from pathlib import Path
 import subprocess
 import sys
@@ -149,6 +150,33 @@ class HostedLeaseControls(unittest.TestCase):
 
 
 class LauncherControls(unittest.TestCase):
+    def test_control_diagnostic_excludes_native_and_bounds_public_bytes(self):
+        with tempfile.TemporaryDirectory() as folder:
+            root = Path(folder)
+            self.assertIsNone(hosted.control_diagnostic(root, None))
+            path = root / 'console.private.log'
+            path.write_bytes(b'x' * 9000)
+            result = hosted.control_diagnostic(root, 'parent-death')
+            self.assertTrue(result['truncated'])
+            self.assertEqual(len(result['text']), 8192)
+            self.assertEqual(result['bytes_total'], 9000)
+            path.unlink()
+            path.symlink_to(root / 'absent')
+            with self.assertRaises(OSError):
+                hosted.control_diagnostic(root, 'parent-death')
+            with self.assertRaises(ValueError):
+                hosted.control_diagnostic(root, 'native')
+            self.assertEqual(hosted.capture_control_diagnostic(root, 'parent-death'), {'capture_error': 'OSError'})
+            path.unlink()
+            path.mkdir()
+            descriptors = len(list(Path('/proc/self/fd').iterdir()))
+            self.assertEqual(hosted.capture_control_diagnostic(root, 'parent-death'), {'capture_error': 'ValueError'})
+            self.assertEqual(len(list(Path('/proc/self/fd').iterdir())), descriptors)
+            path.rmdir()
+            os.mkfifo(path)
+            self.assertEqual(hosted.capture_control_diagnostic(root, 'parent-death'), {'capture_error': 'ValueError'})
+            self.assertEqual(len(list(Path('/proc/self/fd').iterdir())), descriptors)
+
     def test_real_child_is_reaped_when_collector_thread_cannot_start(self):
         observed = []
         real = subprocess.Popen
