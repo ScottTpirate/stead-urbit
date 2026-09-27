@@ -1,0 +1,1 @@
+{"status": "passed", "operation": "build", "classification": "real-host-offline-package", "native_execution": false, "sha256": "cb8097fc2036b7720d8ba9ade3fbc219073f828dbe7835756080f58269216d45", "bytes": 51200, "public_hoon_files": 4, "sdk_version": "0.1.0-preview"}

@@ -1,0 +1,45 @@
+{
+  "artifact": {
+    "bytes": 51200,
+    "path": "stead-sdk-v2.tar",
+    "sha256": "cb8097fc2036b7720d8ba9ade3fbc219073f828dbe7835756080f58269216d45"
+  },
+  "classification": "real-host-offline-package",
+  "head_unchanged_after_cli": true,
+  "inputs_unchanged_after_cli": true,
+  "native_execution": false,
+  "operations": [
+    {
+      "command": [
+        "python3",
+        "scripts/package_sdk.py",
+        "build",
+        "--output",
+        ".runtime/phase02-sdk-20260926/source-fcac1c0/stead-sdk-v2.tar"
+      ],
+      "elapsed_seconds": 0.28850608691573143,
+      "exit_code": 0,
+      "log_sha256": "c5d41a2bfe7733865f7894377bf93a734adb83bce439b0dbd0c62779a7ba6d67",
+      "started_at": "2026-09-27T01:39:40.663983+00:00",
+      "stderr": "",
+      "stdout": "{\"status\": \"passed\", \"operation\": \"build\", \"classification\": \"real-host-offline-package\", \"native_execution\": false, \"sha256\": \"cb8097fc2036b7720d8ba9ade3fbc219073f828dbe7835756080f58269216d45\", \"bytes\": 51200, \"public_hoon_files\": 4, \"sdk_version\": \"0.1.0-preview\"}\n"
+    },
+    {
+      "command": [
+        "python3",
+        "scripts/package_sdk.py",
+        "verify",
+        "--archive",
+        ".runtime/phase02-sdk-20260926/source-fcac1c0/stead-sdk-v2.tar"
+      ],
+      "elapsed_seconds": 0.2888324740342796,
+      "exit_code": 0,
+      "log_sha256": "51a73c983b995383e1ef7f143ea622a67deed3675be811ca2c23ecdb8d2ca294",
+      "started_at": "2026-09-27T01:39:40.952700+00:00",
+      "stderr": "",
+      "stdout": "{\"status\": \"passed\", \"operation\": \"verify\", \"classification\": \"real-host-offline-package\", \"native_execution\": false, \"sha256\": \"cb8097fc2036b7720d8ba9ade3fbc219073f828dbe7835756080f58269216d45\", \"bytes\": 51200, \"public_hoon_files\": 4, \"sdk_version\": \"0.1.0-preview\"}\n"
+    }
+  ],
+  "protocol": "stead.sdk-artifact-capture/1",
+  "source_commit": "fcac1c081c0dd021eebe8b3cabe754a906ebe8c4"
+}

@@ -1,0 +1,61 @@
+{
+  "protocol": "stead.independent-sdk-package-review/1",
+  "reviewer": "/root/independent_review",
+  "source_commit": "92e8ee6a09c48f936ee3743d5a756fd875ba3279",
+  "base_commit": "30369de",
+  "status": "changes-requested",
+  "native_execution_performed": false,
+  "github_writes_performed": false,
+  "scope": "Bounded offline four-file public SDK library-fragment packaging only; no independent consumer or full URB-180 acceptance.",
+  "reviewed_source_sha256": {
+    "scripts/package_sdk.py": "11e7acc4e1cecb20b6ce48cfedf0ab91bab4901953a7a23bfb9b9959d151b405",
+    "sdk/README.md": "76fe5fba90e6d44052dfe9adf5ee7e1d247f21ca814f6cecbb9aacc364f24c8a",
+    "sdk/export-lock.json": "c2ee378c43b7e80922428036d4d3b7ee003108ad71d39d610494f13b47584932",
+    "tests/urbit/test_sdk_package.py": "11990251af49771c0f676ca0855d7eb0867b4a52a4ce334e1588bc01968b2a7c",
+    "README.md": "c45e548effe2fde187bdb38e9869c945f01a36272aa97f96bfe2691fbe87f99f",
+    "docs/urbit/DEV_FLOW.md": "e2d1222695ca59fb583ffc4a9d3c2f6d9c27c315665f7f5e83f1807a4e9a0b98",
+    "docs/urbit/ROADMAP.md": "e99148cfb8ab6eca832913405468729a894b904559f1991597d46a517bde780d"
+  },
+  "blocking_findings": [
+    {
+      "id": "SDK-PATH-PARENT-RACE",
+      "priority": "P2",
+      "file": "scripts/package_sdk.py",
+      "lines": [
+        49,
+        68,
+        69,
+        141,
+        142
+      ],
+      "finding": "checked_path validates parent names with lstat, then read_bounded/build reopen an absolute pathname. O_NOFOLLOW applies only to the final leaf. Replacing a checked directory with a symlink before open redirects the read or output create.",
+      "reproduced": "A deterministic disposable fixture renamed checkout/out to held-out and replaced out with a symlink to a separate outside directory after checked_path returned. SDK.build succeeded and wrote the exact 51,200-byte archive into outside/race.tar; held-out had no output. The existing outside sentinel remained unchanged. The mock schedules a real filesystem race and does not replace os.open or synthesize archive success.",
+      "actual_archive_sha256": "3ab58e67971b029a51fcfa554efdc788c2631f3d3175cefcda6e45ec0cdbe5ee",
+      "fix": "Walk root/parents using owned directory descriptors, O_DIRECTORY|O_NOFOLLOW, and leaf open relative to the final descriptor. Apply to reads and output creation; retain O_EXCL output preservation and byte limits. Add an actual parent-swap regression.",
+      "acceptance": "After this bounded correction, rerun the focused package controls and review the exact changed packager/test bytes. Existing static symlink tests alone do not exercise the race."
+    }
+  ],
+  "accepted_aspects": [
+    "The fixed seven-payload allowlist is four public Hoon files plus complete root license, notices and SDK README; manifest is the eighth archive member. No recursive desk copy or private fixture/state/client export.",
+    "All declared payload lengths/SHA256 match the reviewed commit; the four Hoon files and both notice files exactly match declared native baseline dd0e8c0. README has its own pinned bytes. No native source or qualification mount changed.",
+    "USTAR member ordering/ownership/modes/times are explicit. Bounded whole-byte comparison never parses, extracts or executes an untrusted archive; corrupt/trailing/hostile archives fail.",
+    "The Apache license and complete preserved Urbit MIT notice travel unchanged. Historical notice entries are explicitly not new dependency adoption.",
+    "SDK/docs correctly identify a library fragment and checkout-relative integrity, not a publisher signature, independent client compilation, full stable API, release desk, employee identity or URB-180 completion. Live derivative issue21 remains open.",
+    "Existing output files are rejected using O_EXCL; observed race concerns parent traversal, not overwriting the preserved sentinel."
+  ],
+  "independent_host_execution": {
+    "tests": 14,
+    "passed": 14,
+    "elapsed_unittest_seconds": 1.051,
+    "resource_wrapper": "systemd user scope CPU20%, period10ms, CPU19 with taskset19; Python -B",
+    "command": "unittest discovery tests/urbit/test_sdk_package.py followed by the separately described deterministic temporary-filesystem race control",
+    "additional_control": "output_parent_swap_escape_reproduced",
+    "transcript": "test_changed_source_rejected_before_output (test_sdk_package.SdkPackageTests.test_changed_source_rejected_before_output) ... ok\ntest_cli_build_verify_and_failure_status (test_sdk_package.SdkPackageTests.test_cli_build_verify_and_failure_status) ... ok\ntest_corruption_and_trailing_data_rejected (test_sdk_package.SdkPackageTests.test_corruption_and_trailing_data_rejected) ... ok\ntest_duplicate_lock_key_rejected (test_sdk_package.SdkPackageTests.test_duplicate_lock_key_rejected) ... ok\ntest_exact_public_surface_and_notices (test_sdk_package.SdkPackageTests.test_exact_public_surface_and_notices) ... ok\ntest_hostile_archive_is_not_extracted (test_sdk_package.SdkPackageTests.test_hostile_archive_is_not_extracted) ... ok\ntest_missing_license_rejected (test_sdk_package.SdkPackageTests.test_missing_license_rejected) ... ok\ntest_outputs_cannot_overwrite_or_escape (test_sdk_package.SdkPackageTests.test_outputs_cannot_overwrite_or_escape) ... ok\ntest_oversized_inputs_rejected (test_sdk_package.SdkPackageTests.test_oversized_inputs_rejected) ... ok\ntest_private_export_cannot_be_added_to_lock (test_sdk_package.SdkPackageTests.test_private_export_cannot_be_added_to_lock) ... ok\ntest_reproducible_across_metadata_and_output_names (test_sdk_package.SdkPackageTests.test_reproducible_across_metadata_and_output_names) ... ok\ntest_symlink_input_and_parent_rejected (test_sdk_package.SdkPackageTests.test_symlink_input_and_parent_rejected) ... ok\ntest_toolchain_drift_rejected (test_sdk_package.SdkPackageTests.test_toolchain_drift_rejected) ... ok\ntest_unsupported_versions_rejected (test_sdk_package.SdkPackageTests.test_unsupported_versions_rejected) ... ok\n\n----------------------------------------------------------------------\nRan 14 tests in 1.051s\n\nOK\n{\"host_tests\": 14, \"host_tests_passed\": true, \"output_parent_swap_escape_reproduced\": true, \"source_changed\": false, \"native_execution\": false, \"archive_sha256\": \"3ab58e67971b029a51fcfa554efdc788c2631f3d3175cefcda6e45ec0cdbe5ee\", \"archive_bytes\": 51200, \"scope\": \"Deterministic actual filesystem substitution between checked_path return and os.open, within disposable temporary fixture; mock controls scheduling only.\"}\n"
+  },
+  "limitations": [
+    "Host packaging tests only; no Hoon/native process, consumer, session, updater or deployment was executed by this review.",
+    "The source identity field is provenance pinned by the reviewed lock. Verification is relative to trusted checkout/code, not an independent publisher authenticity proof.",
+    "This review recommends the minimal path fix; it does not expand this increment into deferred API/consumer implementation."
+  ],
+  "recorded_at": "2026-09-27 01:28:09 UTC"
+}

@@ -1,0 +1,318 @@
+{
+  "protocol": "stead.independent-sdk-package-review/1",
+  "recorded_at": "2026-09-27 01:34:42 UTC",
+  "reviewer": "/root/independent_review",
+  "source_commit": "ef17dbc75ecf19d195ec9a25f1aef6577ba430a2",
+  "prior_review": {
+    "path": ".runtime/phase02-sdk-20260926/independent-review.json",
+    "sha256": "5f20d3ad9fcebee6b8daafb66774ceb89c3e6c62a03e01b46b0151d202228594",
+    "preserved_unchanged": true
+  },
+  "status": "changes-requested",
+  "reviewed_source_sha256": {
+    "README.md": "c45e548effe2fde187bdb38e9869c945f01a36272aa97f96bfe2691fbe87f99f",
+    "docs/urbit/DEV_FLOW.md": "e2d1222695ca59fb583ffc4a9d3c2f6d9c27c315665f7f5e83f1807a4e9a0b98",
+    "docs/urbit/ROADMAP.md": "e99148cfb8ab6eca832913405468729a894b904559f1991597d46a517bde780d",
+    "scripts/package_sdk.py": "d3da580a1908362c3c93f4912b8c956da4ad3accbbbdacf13225e22ef1a168b1",
+    "sdk/README.md": "618ddf97a1c5f19e338d3a942f8013bc376f28a443b820d11740dd273ffa2262",
+    "sdk/export-lock.json": "c3de85d950d7ff0aa1fb042bc1dd46c96b9e39329da02b91a6044b9c17bd7c04",
+    "tests/urbit/test_sdk_package.py": "ae762acabccb42e1f48dd0c9d5ba4848830ba7d7a20895c28a5041d0167b045b"
+  },
+  "reviewed_scope": "Read-only source review of 92e8..ef17 directory-descriptor correction and complete seven-file SDK slice versus 30369de; independent host execution only.",
+  "resolved_findings": [
+    {
+      "id": "SDK-PATH-PARENT-RACE",
+      "status": "resolved-at-reviewed-source",
+      "evidence": "All three actual parent-swap tests pass. Additional real root-directory replacement is rejected, output remains in originally held directory, replacement path remains empty, and descriptors close."
+    }
+  ],
+  "blocking_findings": [
+    {
+      "id": "SDK-NONREGULAR-INPUT-FD-LEAK",
+      "priority": "P2",
+      "file": "scripts/package_sdk.py",
+      "line": 118,
+      "observed": "read_bounded(root, 'out') opens an actual directory, then os.fdopen(..., 'rb') raises IsADirectoryError before the with suite obtains ownership. Independent /proc/self/fd inventory gained descriptor 5.",
+      "impact": "Rejected directory inputs leak one descriptor per call in a long-lived importing process; the command process eventually closes it at exit.",
+      "requested_fix": "Keep explicit ownership until fdopen has successfully constructed the stream. Close descriptor on type or fdopen construction failure, then transfer ownership to the stream; add an actual directory-leaf descriptor-inventory regression.",
+      "reproduction_scope": "Actual disposable filesystem directory and unmodified read_bounded; no mocked open/read/close for this failing control."
+    }
+  ],
+  "accepted_aspects": [
+    "The fixed seven-file allowlist excludes private fixture client, state and administrative source.",
+    "All seven export pins match actual bytes; six unchanged payloads excluding SDK README match the recorded dd0 native/notices baseline.",
+    "Canonical eight-member USTAR output and complete byte comparison preserve deterministic packaging without archive extraction or execution.",
+    "Root and parent handles plus before/after directory identity checks reject the tested parent and root swaps.",
+    "O_EXCL retains existing output; an injected ENOSPC after 31 real bytes raises without success and preserves the residual file instead of unlinking a possibly replaced name.",
+    "SDK README, root README, developer flow and roadmap accurately leave independent consumer compilation, full API and #21 open."
+  ],
+  "independent_host_execution": {
+    "command": "git remote -v\nsystemd-run --user --scope --quiet -p CPUQuota=20% -p CPUQuotaPeriodSec=10ms -p AllowedCPUs=19 taskset -c 19 python3 -B - <<'PY'\nimport contextlib, errno, hashlib, importlib.util, io, json, os, pathlib, subprocess, tempfile, unittest\nfrom unittest import mock\nROOT=pathlib.Path.cwd()\nCOMMIT='ef17dbc75ecf19d195ec9a25f1aef6577ba430a2'\nPATHS=['scripts/package_sdk.py','sdk/README.md','sdk/export-lock.json','tests/urbit/test_sdk_package.py','README.md','docs/urbit/DEV_FLOW.md','docs/urbit/ROADMAP.md']\ndef binding():\n    result={}\n    for path in PATHS:\n        raw=(ROOT/path).read_bytes()\n        committed=subprocess.run(['git','show',COMMIT+':'+path],check=True,capture_output=True).stdout\n        assert raw==committed,path\n        result[path]=hashlib.sha256(raw).hexdigest()\n    assert subprocess.check_output(['git','rev-parse','HEAD'],text=True).strip()==COMMIT\n    return result\nbefore=binding()\nspec=importlib.util.spec_from_file_location('review_sdk_tests',ROOT/'tests/urbit/test_sdk_package.py')\nT=importlib.util.module_from_spec(spec);spec.loader.exec_module(T);SDK=T.SDK\nobserved=[]\ndef fd_set():\n    # os.listdir closes its own transient directory descriptor before this caller rechecks it.\n    return {int(x) for x in os.listdir('/proc/self/fd') if os.path.exists('/proc/self/fd/'+x)}\nclass IndependentSdkControls(unittest.TestCase):\n    def setUp(self):\n        self.temp=tempfile.TemporaryDirectory(prefix='stead-sdk-independent-')\n        self.addCleanup(self.temp.cleanup)\n        self.base=pathlib.Path(self.temp.name);self.root=self.base/'checkout';self.root.mkdir()\n        for name in [*SDK.EXPORTS,'sdk/export-lock.json','specs/urbit/toolchain.lock.json']:\n            p=self.root/name;p.parent.mkdir(parents=True,exist_ok=True);p.write_bytes((ROOT/name).read_bytes())\n        (self.root/'out').mkdir()\n    def test_checkout_root_replacement_is_detected(self):\n        expected,_=SDK.archive_bytes(self.root);real_open=os.open;before_fds=fd_set()\n        held=self.base/'held-checkout'\n        def swapped(name,flags,*args,**kw):\n            if name=='root-swap.tar' and kw.get('dir_fd') is not None:\n                self.root.rename(held);self.root.mkdir();(self.root/'out').mkdir()\n            return real_open(name,flags,*args,**kw)\n        with mock.patch.object(SDK.os,'open',side_effect=swapped):\n            with self.assertRaisesRegex(ValueError,'Checkout directory changed'):\n                SDK.build(self.root,'out/root-swap.tar')\n        self.assertFalse((self.root/'out/root-swap.tar').exists())\n        self.assertEqual((held/'out/root-swap.tar').read_bytes(),expected)\n        self.assertEqual(fd_set(),before_fds)\n        observed.append({'control':'root-directory-replacement','result':'rejected','held_bytes':len(expected),'replacement_output_absent':True,'descriptors_closed':True})\n    def test_mid_walk_failures_close_descriptors(self):\n        before_fds=fd_set()\n        for _ in range(12):\n            with self.assertRaises(FileNotFoundError): SDK.read_bounded(self.root,'native/missing/leaf')\n        self.assertEqual(fd_set(),before_fds)\n        observed.append({'control':'missing-intermediate-parent','iterations':12,'result':'rejected','descriptors_closed':True})\n    def test_injected_write_failure_preserves_residue_and_closes_descriptors(self):\n        real_fdopen=os.fdopen;before_fds=fd_set();expected,_=SDK.archive_bytes(self.root)\n        @contextlib.contextmanager\n        def fail_write(fd,mode):\n            with real_fdopen(fd,mode) as stream:\n                if mode!='wb':\n                    yield stream\n                    return\n                class Writer:\n                    def write(self,data):\n                        stream.write(data[:31]);stream.flush()\n                        raise OSError(errno.ENOSPC,'authored write-failure control')\n                yield Writer()\n        with mock.patch.object(SDK.os,'fdopen',side_effect=fail_write):\n            with self.assertRaises(OSError) as caught: SDK.build(self.root,'out/partial.tar')\n        self.assertEqual(caught.exception.errno,errno.ENOSPC)\n        self.assertEqual((self.root/'out/partial.tar').read_bytes(),expected[:31])\n        self.assertEqual(fd_set(),before_fds)\n        with self.assertRaisesRegex(ValueError,'Output already exists'):SDK.build(self.root,'out/partial.tar')\n        self.assertEqual((self.root/'out/partial.tar').read_bytes(),expected[:31])\n        self.assertEqual(fd_set(),before_fds)\n        observed.append({'control':'injected-ENOSPC-after-real-prefix-write','classification':'authored-failure-injection-with-real-filesystem','residual_bytes':31,'result':'exception-no-success','overwrite_refused':True,'descriptors_closed':True})\n    def test_fifo_input_is_rejected_without_blocking(self):\n        os.mkfifo(self.root/'out/pipe');before_fds=fd_set()\n        with self.assertRaisesRegex(ValueError,'regular file'):SDK.read_bounded(self.root,'out/pipe')\n        self.assertEqual(fd_set(),before_fds)\n        observed.append({'control':'actual-FIFO-input','result':'rejected','descriptors_closed':True})\n    def test_nonregular_directory_leaf_is_rejected_and_closed(self):\n        before_fds=fd_set()\n        with self.assertRaises((ValueError,IsADirectoryError)):SDK.read_bounded(self.root,'out')\n        self.assertEqual(fd_set(),before_fds)\n        observed.append({'control':'actual-directory-input','result':'rejected','descriptors_closed':True})\nclass RecordingResult(unittest.TextTestResult):\n    def startTest(self,test):\n        observed.append({'test_started':test.id()});super().startTest(test)\n    def addSuccess(self,test):\n        observed.append({'test_passed':test.id()});super().addSuccess(test)\nsuite=unittest.TestSuite([unittest.defaultTestLoader.loadTestsFromModule(T),unittest.defaultTestLoader.loadTestsFromTestCase(IndependentSdkControls)])\nresult=unittest.TextTestRunner(verbosity=2,resultclass=RecordingResult).run(suite)\nafter=binding();assert before==after\nlock=json.loads((ROOT/'sdk/export-lock.json').read_bytes())\nfor path,pin in lock['files'].items():\n    raw=(ROOT/path).read_bytes();assert len(raw)==pin['bytes'] and hashlib.sha256(raw).hexdigest()==pin['sha256']\n    if path!='sdk/README.md': assert raw==subprocess.check_output(['git','show',lock['native_source_commit']+':'+path])\narchive,manifest=SDK.archive_bytes(ROOT)\nprint(json.dumps({'protocol':'stead.independent-sdk-host-controls/1','head':COMMIT,'source_before':before,'source_after':after,'tests_run':result.testsRun,'passed':result.wasSuccessful(),'failures':len(result.failures),'errors':len(result.errors),'skipped':len(result.skipped),'observations':observed,'archive_bytes':len(archive),'archive_sha256':hashlib.sha256(archive).hexdigest(),'native_execution':False,'payload_pins_and_six_dd0_source_equalities_verified':True,'manifest':manifest},sort_keys=True))\nraise SystemExit(0 if result.wasSuccessful() else 1)\nPY",
+    "combined_output": "origin\thttps://github.com/ScottTpirate/stead-urbit.git (fetch)\norigin\thttps://github.com/ScottTpirate/stead-urbit.git (push)\nupstream\thttps://github.com/ScottTpirate/stead.git (fetch)\nupstream\tDISABLED_UPSTREAM_PUSH (push)\ntest_changed_source_rejected_before_output (review_sdk_tests.SdkPackageTests.test_changed_source_rejected_before_output) ... ok\ntest_cli_build_verify_and_failure_status (review_sdk_tests.SdkPackageTests.test_cli_build_verify_and_failure_status) ... ok\ntest_corruption_and_trailing_data_rejected (review_sdk_tests.SdkPackageTests.test_corruption_and_trailing_data_rejected) ... ok\ntest_duplicate_lock_key_rejected (review_sdk_tests.SdkPackageTests.test_duplicate_lock_key_rejected) ... ok\ntest_exact_public_surface_and_notices (review_sdk_tests.SdkPackageTests.test_exact_public_surface_and_notices) ... ok\ntest_hostile_archive_is_not_extracted (review_sdk_tests.SdkPackageTests.test_hostile_archive_is_not_extracted) ... ok\ntest_missing_license_rejected (review_sdk_tests.SdkPackageTests.test_missing_license_rejected) ... ok\ntest_outputs_cannot_overwrite_or_escape (review_sdk_tests.SdkPackageTests.test_outputs_cannot_overwrite_or_escape) ... ok\ntest_oversized_inputs_rejected (review_sdk_tests.SdkPackageTests.test_oversized_inputs_rejected) ... ok\ntest_parent_replaced_with_directory_is_also_rejected (review_sdk_tests.SdkPackageTests.test_parent_replaced_with_directory_is_also_rejected) ... ok\ntest_parent_swap_during_output_cannot_escape_or_report_success (review_sdk_tests.SdkPackageTests.test_parent_swap_during_output_cannot_escape_or_report_success) ... ok\ntest_parent_swap_during_read_cannot_redirect_input (review_sdk_tests.SdkPackageTests.test_parent_swap_during_read_cannot_redirect_input) ... ok\ntest_private_export_cannot_be_added_to_lock (review_sdk_tests.SdkPackageTests.test_private_export_cannot_be_added_to_lock) ... ok\ntest_reproducible_across_metadata_and_output_names (review_sdk_tests.SdkPackageTests.test_reproducible_across_metadata_and_output_names) ... ok\ntest_symlink_input_and_parent_rejected (review_sdk_tests.SdkPackageTests.test_symlink_input_and_parent_rejected) ... ok\ntest_toolchain_drift_rejected (review_sdk_tests.SdkPackageTests.test_toolchain_drift_rejected) ... ok\ntest_unsupported_versions_rejected (review_sdk_tests.SdkPackageTests.test_unsupported_versions_rejected) ... ok\ntest_checkout_root_replacement_is_detected (__main__.IndependentSdkControls.test_checkout_root_replacement_is_detected) ... ok\ntest_fifo_input_is_rejected_without_blocking (__main__.IndependentSdkControls.test_fifo_input_is_rejected_without_blocking) ... ok\ntest_injected_write_failure_preserves_residue_and_closes_descriptors (__main__.IndependentSdkControls.test_injected_write_failure_preserves_residue_and_closes_descriptors) ... ok\ntest_mid_walk_failures_close_descriptors (__main__.IndependentSdkControls.test_mid_walk_failures_close_descriptors) ... ok\ntest_nonregular_directory_leaf_is_rejected_and_closed (__main__.IndependentSdkControls.test_nonregular_directory_leaf_is_rejected_and_closed) ... FAIL\n\n======================================================================\nFAIL: test_nonregular_directory_leaf_is_rejected_and_closed (__main__.IndependentSdkControls.test_nonregular_directory_leaf_is_rejected_and_closed)\n----------------------------------------------------------------------\nTraceback (most recent call last):\n  File \"<stdin>\", line 80, in test_nonregular_directory_leaf_is_rejected_and_closed\nAssertionError: Items in the first set but not the second:\n5\n\n----------------------------------------------------------------------\nRan 22 tests in 1.200s\n\nFAILED (failures=1)\n{\"archive_bytes\": 51200, \"archive_sha256\": \"22565adad253b36d66a3a4e1af3b978f4452a1b797bcc9e6aafdba3b8d4cb6a2\", \"errors\": 0, \"failures\": 1, \"head\": \"ef17dbc75ecf19d195ec9a25f1aef6577ba430a2\", \"manifest\": {\"api_version\": 2, \"command_protocol\": \"stead.command/2\", \"export_lock_sha256\": \"c3de85d950d7ff0aa1fb042bc1dd46c96b9e39329da02b91a6044b9c17bd7c04\", \"files\": [{\"bytes\": 10030, \"path\": \"LICENSE\", \"sha256\": \"a268d7b43f15fc12307b291a01c5761d177a8848521fd3f6f9949e2e89680c05\", \"source\": \"LICENSE\"}, {\"bytes\": 3560, \"path\": \"README.md\", \"sha256\": \"618ddf97a1c5f19e338d3a942f8013bc376f28a443b820d11740dd273ffa2262\", \"source\": \"sdk/README.md\"}, {\"bytes\": 13933, \"path\": \"THIRD_PARTY_NOTICES.md\", \"sha256\": \"3c02a6d5d517e54c2c69bf9e4d830c97fef68a717248d0cbbf9cdce7686c3197\", \"source\": \"THIRD_PARTY_NOTICES.md\"}, {\"bytes\": 9532, \"path\": \"desk-dev/lib/stead-codec.hoon\", \"sha256\": \"56e3d574381bbf8cdf29ca192c70eff256009f89d782e3ffe859b19c1321cbd7\", \"source\": \"native/core/desk/lib/stead-codec.hoon\"}, {\"bytes\": 556, \"path\": \"desk-dev/lib/stead-delivery.hoon\", \"sha256\": \"178cac634471554dae9928f8c38248751329314391061976a436a22a7075548d\", \"source\": \"native/core/desk/lib/stead-delivery.hoon\"}, {\"bytes\": 171, \"path\": \"desk-dev/mar/stead-command-2.hoon\", \"sha256\": \"fcd87c92acc16c2883b1dd4900af5064d1da910af317e93c327455cd56d9553b\", \"source\": \"native/core/desk/mar/stead-command-2.hoon\"}, {\"bytes\": 171, \"path\": \"desk-dev/mar/stead-result-2.hoon\", \"sha256\": \"fcd87c92acc16c2883b1dd4900af5064d1da910af317e93c327455cd56d9553b\", \"source\": \"native/core/desk/mar/stead-result-2.hoon\"}], \"kernel_commit\": \"5a187fededc4582a34fcd6055c67bb63e0917b94\", \"kernel_kelvin\": 408, \"kind\": \"desk-dev-library-fragment\", \"native_source_commit\": \"dd0e8c0ce8d1d00f15de6b07e2e26d368c5c3774\", \"packager_sha256\": \"d3da580a1908362c3c93f4912b8c956da4ad3accbbbdacf13225e22ef1a168b1\", \"protocol\": \"stead.sdk-package/1\", \"qualification\": \"Package integrity only; independent consumer compilation and full API conformance remain unexecuted.\", \"receipt_protocol\": \"stead.receipt/2\", \"runtime_lock_sha256\": \"4a209c10cf1756eb0f7357cc3eca8250bf66c239b4cd0ca31a8c0886d4d304ee\", \"runtime_version\": \"4.6\", \"sdk_version\": \"0.1.0-preview\"}, \"native_execution\": false, \"observations\": [{\"test_started\": \"review_sdk_tests.SdkPackageTests.test_changed_source_rejected_before_output\"}, {\"test_passed\": \"review_sdk_tests.SdkPackageTests.test_changed_source_rejected_before_output\"}, {\"test_started\": \"review_sdk_tests.SdkPackageTests.test_cli_build_verify_and_failure_status\"}, {\"test_passed\": \"review_sdk_tests.SdkPackageTests.test_cli_build_verify_and_failure_status\"}, {\"test_started\": \"review_sdk_tests.SdkPackageTests.test_corruption_and_trailing_data_rejected\"}, {\"test_passed\": \"review_sdk_tests.SdkPackageTests.test_corruption_and_trailing_data_rejected\"}, {\"test_started\": \"review_sdk_tests.SdkPackageTests.test_duplicate_lock_key_rejected\"}, {\"test_passed\": \"review_sdk_tests.SdkPackageTests.test_duplicate_lock_key_rejected\"}, {\"test_started\": \"review_sdk_tests.SdkPackageTests.test_exact_public_surface_and_notices\"}, {\"test_passed\": \"review_sdk_tests.SdkPackageTests.test_exact_public_surface_and_notices\"}, {\"test_started\": \"review_sdk_tests.SdkPackageTests.test_hostile_archive_is_not_extracted\"}, {\"test_passed\": \"review_sdk_tests.SdkPackageTests.test_hostile_archive_is_not_extracted\"}, {\"test_started\": \"review_sdk_tests.SdkPackageTests.test_missing_license_rejected\"}, {\"test_passed\": \"review_sdk_tests.SdkPackageTests.test_missing_license_rejected\"}, {\"test_started\": \"review_sdk_tests.SdkPackageTests.test_outputs_cannot_overwrite_or_escape\"}, {\"test_passed\": \"review_sdk_tests.SdkPackageTests.test_outputs_cannot_overwrite_or_escape\"}, {\"test_started\": \"review_sdk_tests.SdkPackageTests.test_oversized_inputs_rejected\"}, {\"test_passed\": \"review_sdk_tests.SdkPackageTests.test_oversized_inputs_rejected\"}, {\"test_started\": \"review_sdk_tests.SdkPackageTests.test_parent_replaced_with_directory_is_also_rejected\"}, {\"test_passed\": \"review_sdk_tests.SdkPackageTests.test_parent_replaced_with_directory_is_also_rejected\"}, {\"test_started\": \"review_sdk_tests.SdkPackageTests.test_parent_swap_during_output_cannot_escape_or_report_success\"}, {\"test_passed\": \"review_sdk_tests.SdkPackageTests.test_parent_swap_during_output_cannot_escape_or_report_success\"}, {\"test_started\": \"review_sdk_tests.SdkPackageTests.test_parent_swap_during_read_cannot_redirect_input\"}, {\"test_passed\": \"review_sdk_tests.SdkPackageTests.test_parent_swap_during_read_cannot_redirect_input\"}, {\"test_started\": \"review_sdk_tests.SdkPackageTests.test_private_export_cannot_be_added_to_lock\"}, {\"test_passed\": \"review_sdk_tests.SdkPackageTests.test_private_export_cannot_be_added_to_lock\"}, {\"test_started\": \"review_sdk_tests.SdkPackageTests.test_reproducible_across_metadata_and_output_names\"}, {\"test_passed\": \"review_sdk_tests.SdkPackageTests.test_reproducible_across_metadata_and_output_names\"}, {\"test_started\": \"review_sdk_tests.SdkPackageTests.test_symlink_input_and_parent_rejected\"}, {\"test_passed\": \"review_sdk_tests.SdkPackageTests.test_symlink_input_and_parent_rejected\"}, {\"test_started\": \"review_sdk_tests.SdkPackageTests.test_toolchain_drift_rejected\"}, {\"test_passed\": \"review_sdk_tests.SdkPackageTests.test_toolchain_drift_rejected\"}, {\"test_started\": \"review_sdk_tests.SdkPackageTests.test_unsupported_versions_rejected\"}, {\"test_passed\": \"review_sdk_tests.SdkPackageTests.test_unsupported_versions_rejected\"}, {\"test_started\": \"__main__.IndependentSdkControls.test_checkout_root_replacement_is_detected\"}, {\"control\": \"root-directory-replacement\", \"descriptors_closed\": true, \"held_bytes\": 51200, \"replacement_output_absent\": true, \"result\": \"rejected\"}, {\"test_passed\": \"__main__.IndependentSdkControls.test_checkout_root_replacement_is_detected\"}, {\"test_started\": \"__main__.IndependentSdkControls.test_fifo_input_is_rejected_without_blocking\"}, {\"control\": \"actual-FIFO-input\", \"descriptors_closed\": true, \"result\": \"rejected\"}, {\"test_passed\": \"__main__.IndependentSdkControls.test_fifo_input_is_rejected_without_blocking\"}, {\"test_started\": \"__main__.IndependentSdkControls.test_injected_write_failure_preserves_residue_and_closes_descriptors\"}, {\"classification\": \"authored-failure-injection-with-real-filesystem\", \"control\": \"injected-ENOSPC-after-real-prefix-write\", \"descriptors_closed\": true, \"overwrite_refused\": true, \"residual_bytes\": 31, \"result\": \"exception-no-success\"}, {\"test_passed\": \"__main__.IndependentSdkControls.test_injected_write_failure_preserves_residue_and_closes_descriptors\"}, {\"test_started\": \"__main__.IndependentSdkControls.test_mid_walk_failures_close_descriptors\"}, {\"control\": \"missing-intermediate-parent\", \"descriptors_closed\": true, \"iterations\": 12, \"result\": \"rejected\"}, {\"test_passed\": \"__main__.IndependentSdkControls.test_mid_walk_failures_close_descriptors\"}, {\"test_started\": \"__main__.IndependentSdkControls.test_nonregular_directory_leaf_is_rejected_and_closed\"}], \"passed\": false, \"payload_pins_and_six_dd0_source_equalities_verified\": true, \"protocol\": \"stead.independent-sdk-host-controls/1\", \"skipped\": 0, \"source_after\": {\"README.md\": \"c45e548effe2fde187bdb38e9869c945f01a36272aa97f96bfe2691fbe87f99f\", \"docs/urbit/DEV_FLOW.md\": \"e2d1222695ca59fb583ffc4a9d3c2f6d9c27c315665f7f5e83f1807a4e9a0b98\", \"docs/urbit/ROADMAP.md\": \"e99148cfb8ab6eca832913405468729a894b904559f1991597d46a517bde780d\", \"scripts/package_sdk.py\": \"d3da580a1908362c3c93f4912b8c956da4ad3accbbbdacf13225e22ef1a168b1\", \"sdk/README.md\": \"618ddf97a1c5f19e338d3a942f8013bc376f28a443b820d11740dd273ffa2262\", \"sdk/export-lock.json\": \"c3de85d950d7ff0aa1fb042bc1dd46c96b9e39329da02b91a6044b9c17bd7c04\", \"tests/urbit/test_sdk_package.py\": \"ae762acabccb42e1f48dd0c9d5ba4848830ba7d7a20895c28a5041d0167b045b\"}, \"source_before\": {\"README.md\": \"c45e548effe2fde187bdb38e9869c945f01a36272aa97f96bfe2691fbe87f99f\", \"docs/urbit/DEV_FLOW.md\": \"e2d1222695ca59fb583ffc4a9d3c2f6d9c27c315665f7f5e83f1807a4e9a0b98\", \"docs/urbit/ROADMAP.md\": \"e99148cfb8ab6eca832913405468729a894b904559f1991597d46a517bde780d\", \"scripts/package_sdk.py\": \"d3da580a1908362c3c93f4912b8c956da4ad3accbbbdacf13225e22ef1a168b1\", \"sdk/README.md\": \"618ddf97a1c5f19e338d3a942f8013bc376f28a443b820d11740dd273ffa2262\", \"sdk/export-lock.json\": \"c3de85d950d7ff0aa1fb042bc1dd46c96b9e39329da02b91a6044b9c17bd7c04\", \"tests/urbit/test_sdk_package.py\": \"ae762acabccb42e1f48dd0c9d5ba4848830ba7d7a20895c28a5041d0167b045b\"}, \"tests_run\": 22}\n",
+    "exit_code": 1,
+    "unittest_seconds": 1.2,
+    "committed_tests": 17,
+    "additional_controls": 5,
+    "passed": 21,
+    "failed": 1,
+    "skipped": 0,
+    "resource_configuration": "systemd user scope CPUQuota=20%, CPUQuotaPeriodSec=10ms, AllowedCPUs=19, taskset CPU19; no separate readback retained",
+    "structured_observations": {
+      "archive_bytes": 51200,
+      "archive_sha256": "22565adad253b36d66a3a4e1af3b978f4452a1b797bcc9e6aafdba3b8d4cb6a2",
+      "errors": 0,
+      "failures": 1,
+      "head": "ef17dbc75ecf19d195ec9a25f1aef6577ba430a2",
+      "manifest": {
+        "api_version": 2,
+        "command_protocol": "stead.command/2",
+        "export_lock_sha256": "c3de85d950d7ff0aa1fb042bc1dd46c96b9e39329da02b91a6044b9c17bd7c04",
+        "files": [
+          {
+            "bytes": 10030,
+            "path": "LICENSE",
+            "sha256": "a268d7b43f15fc12307b291a01c5761d177a8848521fd3f6f9949e2e89680c05",
+            "source": "LICENSE"
+          },
+          {
+            "bytes": 3560,
+            "path": "README.md",
+            "sha256": "618ddf97a1c5f19e338d3a942f8013bc376f28a443b820d11740dd273ffa2262",
+            "source": "sdk/README.md"
+          },
+          {
+            "bytes": 13933,
+            "path": "THIRD_PARTY_NOTICES.md",
+            "sha256": "3c02a6d5d517e54c2c69bf9e4d830c97fef68a717248d0cbbf9cdce7686c3197",
+            "source": "THIRD_PARTY_NOTICES.md"
+          },
+          {
+            "bytes": 9532,
+            "path": "desk-dev/lib/stead-codec.hoon",
+            "sha256": "56e3d574381bbf8cdf29ca192c70eff256009f89d782e3ffe859b19c1321cbd7",
+            "source": "native/core/desk/lib/stead-codec.hoon"
+          },
+          {
+            "bytes": 556,
+            "path": "desk-dev/lib/stead-delivery.hoon",
+            "sha256": "178cac634471554dae9928f8c38248751329314391061976a436a22a7075548d",
+            "source": "native/core/desk/lib/stead-delivery.hoon"
+          },
+          {
+            "bytes": 171,
+            "path": "desk-dev/mar/stead-command-2.hoon",
+            "sha256": "fcd87c92acc16c2883b1dd4900af5064d1da910af317e93c327455cd56d9553b",
+            "source": "native/core/desk/mar/stead-command-2.hoon"
+          },
+          {
+            "bytes": 171,
+            "path": "desk-dev/mar/stead-result-2.hoon",
+            "sha256": "fcd87c92acc16c2883b1dd4900af5064d1da910af317e93c327455cd56d9553b",
+            "source": "native/core/desk/mar/stead-result-2.hoon"
+          }
+        ],
+        "kernel_commit": "5a187fededc4582a34fcd6055c67bb63e0917b94",
+        "kernel_kelvin": 408,
+        "kind": "desk-dev-library-fragment",
+        "native_source_commit": "dd0e8c0ce8d1d00f15de6b07e2e26d368c5c3774",
+        "packager_sha256": "d3da580a1908362c3c93f4912b8c956da4ad3accbbbdacf13225e22ef1a168b1",
+        "protocol": "stead.sdk-package/1",
+        "qualification": "Package integrity only; independent consumer compilation and full API conformance remain unexecuted.",
+        "receipt_protocol": "stead.receipt/2",
+        "runtime_lock_sha256": "4a209c10cf1756eb0f7357cc3eca8250bf66c239b4cd0ca31a8c0886d4d304ee",
+        "runtime_version": "4.6",
+        "sdk_version": "0.1.0-preview"
+      },
+      "native_execution": false,
+      "observations": [
+        {
+          "test_started": "review_sdk_tests.SdkPackageTests.test_changed_source_rejected_before_output"
+        },
+        {
+          "test_passed": "review_sdk_tests.SdkPackageTests.test_changed_source_rejected_before_output"
+        },
+        {
+          "test_started": "review_sdk_tests.SdkPackageTests.test_cli_build_verify_and_failure_status"
+        },
+        {
+          "test_passed": "review_sdk_tests.SdkPackageTests.test_cli_build_verify_and_failure_status"
+        },
+        {
+          "test_started": "review_sdk_tests.SdkPackageTests.test_corruption_and_trailing_data_rejected"
+        },
+        {
+          "test_passed": "review_sdk_tests.SdkPackageTests.test_corruption_and_trailing_data_rejected"
+        },
+        {
+          "test_started": "review_sdk_tests.SdkPackageTests.test_duplicate_lock_key_rejected"
+        },
+        {
+          "test_passed": "review_sdk_tests.SdkPackageTests.test_duplicate_lock_key_rejected"
+        },
+        {
+          "test_started": "review_sdk_tests.SdkPackageTests.test_exact_public_surface_and_notices"
+        },
+        {
+          "test_passed": "review_sdk_tests.SdkPackageTests.test_exact_public_surface_and_notices"
+        },
+        {
+          "test_started": "review_sdk_tests.SdkPackageTests.test_hostile_archive_is_not_extracted"
+        },
+        {
+          "test_passed": "review_sdk_tests.SdkPackageTests.test_hostile_archive_is_not_extracted"
+        },
+        {
+          "test_started": "review_sdk_tests.SdkPackageTests.test_missing_license_rejected"
+        },
+        {
+          "test_passed": "review_sdk_tests.SdkPackageTests.test_missing_license_rejected"
+        },
+        {
+          "test_started": "review_sdk_tests.SdkPackageTests.test_outputs_cannot_overwrite_or_escape"
+        },
+        {
+          "test_passed": "review_sdk_tests.SdkPackageTests.test_outputs_cannot_overwrite_or_escape"
+        },
+        {
+          "test_started": "review_sdk_tests.SdkPackageTests.test_oversized_inputs_rejected"
+        },
+        {
+          "test_passed": "review_sdk_tests.SdkPackageTests.test_oversized_inputs_rejected"
+        },
+        {
+          "test_started": "review_sdk_tests.SdkPackageTests.test_parent_replaced_with_directory_is_also_rejected"
+        },
+        {
+          "test_passed": "review_sdk_tests.SdkPackageTests.test_parent_replaced_with_directory_is_also_rejected"
+        },
+        {
+          "test_started": "review_sdk_tests.SdkPackageTests.test_parent_swap_during_output_cannot_escape_or_report_success"
+        },
+        {
+          "test_passed": "review_sdk_tests.SdkPackageTests.test_parent_swap_during_output_cannot_escape_or_report_success"
+        },
+        {
+          "test_started": "review_sdk_tests.SdkPackageTests.test_parent_swap_during_read_cannot_redirect_input"
+        },
+        {
+          "test_passed": "review_sdk_tests.SdkPackageTests.test_parent_swap_during_read_cannot_redirect_input"
+        },
+        {
+          "test_started": "review_sdk_tests.SdkPackageTests.test_private_export_cannot_be_added_to_lock"
+        },
+        {
+          "test_passed": "review_sdk_tests.SdkPackageTests.test_private_export_cannot_be_added_to_lock"
+        },
+        {
+          "test_started": "review_sdk_tests.SdkPackageTests.test_reproducible_across_metadata_and_output_names"
+        },
+        {
+          "test_passed": "review_sdk_tests.SdkPackageTests.test_reproducible_across_metadata_and_output_names"
+        },
+        {
+          "test_started": "review_sdk_tests.SdkPackageTests.test_symlink_input_and_parent_rejected"
+        },
+        {
+          "test_passed": "review_sdk_tests.SdkPackageTests.test_symlink_input_and_parent_rejected"
+        },
+        {
+          "test_started": "review_sdk_tests.SdkPackageTests.test_toolchain_drift_rejected"
+        },
+        {
+          "test_passed": "review_sdk_tests.SdkPackageTests.test_toolchain_drift_rejected"
+        },
+        {
+          "test_started": "review_sdk_tests.SdkPackageTests.test_unsupported_versions_rejected"
+        },
+        {
+          "test_passed": "review_sdk_tests.SdkPackageTests.test_unsupported_versions_rejected"
+        },
+        {
+          "test_started": "__main__.IndependentSdkControls.test_checkout_root_replacement_is_detected"
+        },
+        {
+          "control": "root-directory-replacement",
+          "descriptors_closed": true,
+          "held_bytes": 51200,
+          "replacement_output_absent": true,
+          "result": "rejected"
+        },
+        {
+          "test_passed": "__main__.IndependentSdkControls.test_checkout_root_replacement_is_detected"
+        },
+        {
+          "test_started": "__main__.IndependentSdkControls.test_fifo_input_is_rejected_without_blocking"
+        },
+        {
+          "control": "actual-FIFO-input",
+          "descriptors_closed": true,
+          "result": "rejected"
+        },
+        {
+          "test_passed": "__main__.IndependentSdkControls.test_fifo_input_is_rejected_without_blocking"
+        },
+        {
+          "test_started": "__main__.IndependentSdkControls.test_injected_write_failure_preserves_residue_and_closes_descriptors"
+        },
+        {
+          "classification": "authored-failure-injection-with-real-filesystem",
+          "control": "injected-ENOSPC-after-real-prefix-write",
+          "descriptors_closed": true,
+          "overwrite_refused": true,
+          "residual_bytes": 31,
+          "result": "exception-no-success"
+        },
+        {
+          "test_passed": "__main__.IndependentSdkControls.test_injected_write_failure_preserves_residue_and_closes_descriptors"
+        },
+        {
+          "test_started": "__main__.IndependentSdkControls.test_mid_walk_failures_close_descriptors"
+        },
+        {
+          "control": "missing-intermediate-parent",
+          "descriptors_closed": true,
+          "iterations": 12,
+          "result": "rejected"
+        },
+        {
+          "test_passed": "__main__.IndependentSdkControls.test_mid_walk_failures_close_descriptors"
+        },
+        {
+          "test_started": "__main__.IndependentSdkControls.test_nonregular_directory_leaf_is_rejected_and_closed"
+        }
+      ],
+      "passed": false,
+      "payload_pins_and_six_dd0_source_equalities_verified": true,
+      "protocol": "stead.independent-sdk-host-controls/1",
+      "skipped": 0,
+      "source_after": {
+        "README.md": "c45e548effe2fde187bdb38e9869c945f01a36272aa97f96bfe2691fbe87f99f",
+        "docs/urbit/DEV_FLOW.md": "e2d1222695ca59fb583ffc4a9d3c2f6d9c27c315665f7f5e83f1807a4e9a0b98",
+        "docs/urbit/ROADMAP.md": "e99148cfb8ab6eca832913405468729a894b904559f1991597d46a517bde780d",
+        "scripts/package_sdk.py": "d3da580a1908362c3c93f4912b8c956da4ad3accbbbdacf13225e22ef1a168b1",
+        "sdk/README.md": "618ddf97a1c5f19e338d3a942f8013bc376f28a443b820d11740dd273ffa2262",
+        "sdk/export-lock.json": "c3de85d950d7ff0aa1fb042bc1dd46c96b9e39329da02b91a6044b9c17bd7c04",
+        "tests/urbit/test_sdk_package.py": "ae762acabccb42e1f48dd0c9d5ba4848830ba7d7a20895c28a5041d0167b045b"
+      },
+      "source_before": {
+        "README.md": "c45e548effe2fde187bdb38e9869c945f01a36272aa97f96bfe2691fbe87f99f",
+        "docs/urbit/DEV_FLOW.md": "e2d1222695ca59fb583ffc4a9d3c2f6d9c27c315665f7f5e83f1807a4e9a0b98",
+        "docs/urbit/ROADMAP.md": "e99148cfb8ab6eca832913405468729a894b904559f1991597d46a517bde780d",
+        "scripts/package_sdk.py": "d3da580a1908362c3c93f4912b8c956da4ad3accbbbdacf13225e22ef1a168b1",
+        "sdk/README.md": "618ddf97a1c5f19e338d3a942f8013bc376f28a443b820d11740dd273ffa2262",
+        "sdk/export-lock.json": "c3de85d950d7ff0aa1fb042bc1dd46c96b9e39329da02b91a6044b9c17bd7c04",
+        "tests/urbit/test_sdk_package.py": "ae762acabccb42e1f48dd0c9d5ba4848830ba7d7a20895c28a5041d0167b045b"
+      },
+      "tests_run": 22
+    }
+  },
+  "native_execution_performed": false,
+  "github_writes_performed": false,
+  "source_edits_performed": false,
+  "limitations": [
+    "This is an offline library package review, not independent Hoon consumer compilation, full URB-180 conformance, application installation or release approval.",
+    "Residual files after failed writes or path changes are deliberate and documented; they must be inspected before reuse.",
+    "The verifier proves equality to the trusted checkout and reviewed export lock, not publisher authenticity or a sandbox against an arbitrary same-user process replacing the trusted root before acquisition.",
+    "The test process exited with failure and released its leaked test descriptor at process exit. No persistent native or background process was started."
+  ]
+}
