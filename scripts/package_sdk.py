@@ -7,6 +7,8 @@ or a native consumer-conformance test.
 from __future__ import annotations
 
 import argparse
+from contextlib import contextmanager
+import errno
 import hashlib
 import io
 import json
@@ -46,30 +48,77 @@ def unique(pairs):
     return result
 
 
-def checked_path(root, name, *, output=False):
+def open_directory(name, *, dir_fd=None):
+    try:
+        return os.open(name, os.O_RDONLY | os.O_DIRECTORY | os.O_NOFOLLOW | os.O_CLOEXEC,
+                       dir_fd=dir_fd)
+    except OSError as error:
+        if error.errno in (errno.ELOOP, errno.ENOTDIR):
+            raise ValueError('Symlink or non-directory parent is not permitted') from error
+        raise
+
+
+def walk_directories(root_fd, parts):
+    descriptor = os.dup(root_fd)
+    try:
+        for part in parts:
+            child = open_directory(part, dir_fd=descriptor)
+            os.close(descriptor)
+            descriptor = child
+        return descriptor
+    except BaseException:
+        os.close(descriptor)
+        raise
+
+
+def identity(descriptor):
+    info = os.fstat(descriptor)
+    return info.st_dev, info.st_ino
+
+
+@contextmanager
+def held_parent(root, name):
     relative = Path(name)
     require(not relative.is_absolute() and bool(relative.parts)
             and '..' not in relative.parts, 'Path must be relative to the checkout')
     root = Path(root).resolve(strict=True)
-    current = root
-    for index, part in enumerate(relative.parts):
-        current /= part
-        last = index == len(relative.parts) - 1
-        if output and last:
-            require(not current.exists() and not current.is_symlink(), 'Output already exists')
-            break
-        mode = current.lstat().st_mode
-        require(not stat.S_ISLNK(mode), 'Symlink input or parent is not permitted')
-        require(stat.S_ISREG(mode) if last else stat.S_ISDIR(mode), 'Wrong input file type')
-    return current
+    root_fd = open_directory(root)
+    try:
+        parent_fd = walk_directories(root_fd, relative.parts[:-1])
+        try:
+            def check_binding():
+                current_root = open_directory(root)
+                try:
+                    require(identity(current_root) == identity(root_fd), 'Checkout directory changed')
+                    current_parent = walk_directories(current_root, relative.parts[:-1])
+                    try:
+                        require(identity(current_parent) == identity(parent_fd), 'Parent directory changed')
+                    finally:
+                        os.close(current_parent)
+                finally:
+                    os.close(current_root)
+
+            check_binding()
+            yield parent_fd, relative.name, check_binding
+        finally:
+            os.close(parent_fd)
+    finally:
+        os.close(root_fd)
 
 
 def read_bounded(root, name, limit=MAX_FILE):
-    path = checked_path(root, name)
-    descriptor = os.open(path, os.O_RDONLY | os.O_NOFOLLOW | os.O_NONBLOCK)
-    with os.fdopen(descriptor, 'rb') as stream:
-        require(stat.S_ISREG(os.fstat(stream.fileno()).st_mode), 'Input must be a regular file')
-        raw = stream.read(limit + 1)
+    with held_parent(root, name) as (parent_fd, leaf, check_binding):
+        try:
+            descriptor = os.open(leaf, os.O_RDONLY | os.O_NOFOLLOW | os.O_NONBLOCK | os.O_CLOEXEC,
+                                 dir_fd=parent_fd)
+        except OSError as error:
+            if error.errno == errno.ELOOP:
+                raise ValueError('Symlink input is not permitted') from error
+            raise
+        with os.fdopen(descriptor, 'rb') as stream:
+            require(stat.S_ISREG(os.fstat(stream.fileno()).st_mode), 'Input must be a regular file')
+            raw = stream.read(limit + 1)
+        check_binding()
     require(len(raw) <= limit, 'Input exceeds its byte limit: ' + str(name))
     return raw
 
@@ -138,10 +187,17 @@ def archive_bytes(root=ROOT):
 
 def build(root, output):
     raw, manifest = archive_bytes(root)
-    target = checked_path(root, output, output=True)
-    descriptor = os.open(target, os.O_WRONLY | os.O_CREAT | os.O_EXCL | os.O_NOFOLLOW, 0o600)
-    with os.fdopen(descriptor, 'wb') as stream:
-        stream.write(raw)
+    with held_parent(root, output) as (parent_fd, leaf, check_binding):
+        try:
+            descriptor = os.open(leaf, os.O_WRONLY | os.O_CREAT | os.O_EXCL | os.O_NOFOLLOW | os.O_CLOEXEC,
+                                 0o600, dir_fd=parent_fd)
+        except FileExistsError as error:
+            raise ValueError('Output already exists') from error
+        # A failed write or changed path may leave this new file in the held
+        # directory. Do not unlink through a name another writer may now own.
+        with os.fdopen(descriptor, 'wb') as stream:
+            stream.write(raw)
+        check_binding()
     return raw, manifest
 
 

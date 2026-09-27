@@ -34,6 +34,9 @@ python3 scripts/package_sdk.py verify --archive .runtime/sdk/stead-sdk-v2.tar
 ```
 
 The output must be new; the command refuses replacement of an existing file.
+Inputs and outputs use directory handles and reject changed parent paths. A
+failed write can leave a new incomplete file in the originally opened directory;
+it is never reported as a successful package and must be inspected before reuse.
 Verification compares every archive byte to the canonical package derived from
 the checkout's reviewed `sdk/export-lock.json`. It never extracts or executes
 the supplied archive. This verifies integrity relative to that checkout, not a

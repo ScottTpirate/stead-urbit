@@ -26,8 +26,8 @@
       "sha256": "fcd87c92acc16c2883b1dd4900af5064d1da910af317e93c327455cd56d9553b"
     },
     "sdk/README.md": {
-      "bytes": 3322,
-      "sha256": "76fe5fba90e6d44052dfe9adf5ee7e1d247f21ca814f6cecbb9aacc364f24c8a"
+      "bytes": 3560,
+      "sha256": "618ddf97a1c5f19e338d3a942f8013bc376f28a443b820d11740dd273ffa2262"
     }
   },
   "kernel_kelvin": 408,

@@ -11,6 +11,7 @@ import sys
 import tarfile
 import tempfile
 import unittest
+from unittest import mock
 
 ROOT = Path(__file__).resolve().parents[2]
 SPEC = importlib.util.spec_from_file_location('sdk_package_under_test', ROOT / 'scripts/package_sdk.py')
@@ -159,6 +160,7 @@ class SdkPackageTests(unittest.TestCase):
             with self.subTest(name=name), self.assertRaises(ValueError):
                 SDK.build(self.root, name)
         self.assertEqual(existing.read_bytes(), b'preserve')
+
         (self.root / 'alias').symlink_to(self.root / 'out', target_is_directory=True)
         with self.assertRaisesRegex(ValueError, 'Symlink'):
             SDK.build(self.root, 'alias/package.tar')
@@ -166,6 +168,70 @@ class SdkPackageTests(unittest.TestCase):
         with self.assertRaises(ValueError):
             SDK.build(self.root, 'out/link.tar')
         self.assertEqual(existing.read_bytes(), b'preserve')
+
+    def test_parent_swap_during_read_cannot_redirect_input(self):
+        original = self.root / 'out/payload.bin'
+        original.write_bytes(b'inside checkout')
+        expected_identity = (original.stat().st_dev, original.stat().st_ino)
+        with tempfile.TemporaryDirectory(prefix='stead-sdk-outside-') as outside:
+            outside = Path(outside)
+            sentinel = outside / 'payload.bin'
+            sentinel.write_bytes(b'outside sentinel')
+            real_open = os.open
+            opened = []
+
+            def swap_then_open(name, flags, *args, **kwargs):
+                if name == 'payload.bin' and kwargs.get('dir_fd') is not None:
+                    (self.root / 'out').rename(self.root / 'held-out')
+                    (self.root / 'out').symlink_to(outside, target_is_directory=True)
+                    descriptor = real_open(name, flags, *args, **kwargs)
+                    opened.append(SDK.identity(descriptor))
+                    return descriptor
+                return real_open(name, flags, *args, **kwargs)
+
+            with mock.patch.object(SDK.os, 'open', side_effect=swap_then_open):
+                with self.assertRaisesRegex(ValueError, 'Symlink|changed'):
+                    SDK.read_bounded(self.root, 'out/payload.bin')
+            self.assertEqual(opened, [expected_identity])
+            self.assertEqual(sentinel.read_bytes(), b'outside sentinel')
+
+    def test_parent_swap_during_output_cannot_escape_or_report_success(self):
+        expected, _ = SDK.archive_bytes(self.root)
+        with tempfile.TemporaryDirectory(prefix='stead-sdk-outside-') as outside:
+            outside = Path(outside)
+            sentinel = outside / 'untouched.txt'
+            sentinel.write_bytes(b'outside sentinel')
+            real_open = os.open
+
+            def swap_then_open(name, flags, *args, **kwargs):
+                if name == 'package.tar' and kwargs.get('dir_fd') is not None:
+                    (self.root / 'out').rename(self.root / 'held-out')
+                    (self.root / 'out').symlink_to(outside, target_is_directory=True)
+                return real_open(name, flags, *args, **kwargs)
+
+            with mock.patch.object(SDK.os, 'open', side_effect=swap_then_open):
+                with self.assertRaisesRegex(ValueError, 'Symlink|changed'):
+                    SDK.build(self.root, 'out/package.tar')
+            self.assertFalse((outside / 'package.tar').exists())
+            self.assertEqual(sentinel.read_bytes(), b'outside sentinel')
+            self.assertEqual((self.root / 'held-out/package.tar').read_bytes(), expected)
+
+    def test_parent_replaced_with_directory_is_also_rejected(self):
+        original = self.root / 'out/payload.bin'
+        original.write_bytes(b'inside checkout')
+        real_open = os.open
+
+        def swap_then_open(name, flags, *args, **kwargs):
+            if name == 'payload.bin' and kwargs.get('dir_fd') is not None:
+                (self.root / 'out').rename(self.root / 'held-out')
+                (self.root / 'out').mkdir()
+                (self.root / 'out/payload.bin').write_bytes(b'replacement')
+            return real_open(name, flags, *args, **kwargs)
+
+        with mock.patch.object(SDK.os, 'open', side_effect=swap_then_open):
+            with self.assertRaisesRegex(ValueError, 'Parent directory changed'):
+                SDK.read_bounded(self.root, 'out/payload.bin')
+        self.assertEqual((self.root / 'out/payload.bin').read_bytes(), b'replacement')
 
     def test_oversized_inputs_rejected(self):
         (self.root / 'out/large.tar').write_bytes(b'x' * (SDK.MAX_ARCHIVE + 1))
