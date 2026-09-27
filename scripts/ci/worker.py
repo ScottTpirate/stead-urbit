@@ -27,10 +27,10 @@ def require(condition, message):
         raise ValueError(message)
 
 
-def admission():
+def admission(provider=None):
     deadline = time.monotonic() + 15
     while not Path('/execution/ci-admission.json').exists():
-        execution_policy.require_lease(read_only=True)
+        provider.require() if provider is not None else execution_policy.require_lease(read_only=True)
         require(time.monotonic() < deadline, 'CI resource admission absent')
         time.sleep(.05)
     value = execution_policy.read_json('/execution/ci-admission.json')
@@ -129,7 +129,10 @@ def fresh_seeds(host):
         launcher.close()
 
 
-def wait_start_temperature(host):
+def wait_start_temperature(host, hosted=False):
+    if hosted:
+        host.execution_check(preflight=True)
+        return
     deadline = time.monotonic() + 300
     while True:
         lease = host.execution_check()
@@ -139,7 +142,7 @@ def wait_start_temperature(host):
         time.sleep(1)
 
 
-def main():
+def main(*, hosted=False):
     os.umask(0o077)
     os.environ['STEAD_CONFIGURED'] = '1'
     inputs = execution_policy.read_json('/ci-inputs.json', maximum=1024 * 1024)
@@ -149,7 +152,11 @@ def main():
     host = None
     watcher = None
     try:
-        result['admission'] = admission()
+        provider = None
+        if hosted:
+            from hosted_lease import HostedProvider
+            provider = HostedProvider()
+        result['admission'] = admission(provider)
         result['mounts_before'] = mounted_inputs(inputs)
         result['isolation'] = isolation(inputs)
         pins = json.loads(Path('/toolchain.json').read_text())
@@ -158,6 +165,8 @@ def main():
         negative.runtime_pin(Path('/runtime/downloads') / pins['boot_artifact']['archive'], pins['boot_artifact']['sha256'])
         require(tree_sha(Path('/kernel'), source_links=True) == pins['kernel']['source_tree_sha256'], 'Kernel cache poisoned')
         import supervisor as host
+        if provider is not None:
+            host.select_execution_provider(provider)
         for sig in (signal.SIGTERM, signal.SIGINT):
             signal.signal(sig, lambda *_: host.STOP_REQUESTED.set())
         Path('/state/logs').mkdir(mode=0o700)
@@ -171,7 +180,7 @@ def main():
         host.TEAM = host.team_lifecycle.TeamLifecycle(Path('/state/ingress') / result['run_id'],
             inputs['host_network_namespace'], '/runtime/' + pins['runtime']['binary'],
             host.execution_check, host.peer_fence_failed, host.record)
-        wait_start_temperature(host)
+        wait_start_temperature(host, hosted)
         with host.MUTEX:
             summary = host.guarded_result(host.team_check.run(vars(host)))
         report_path = Path('/state/logs') / Path(summary['evidence_file']).name
@@ -240,4 +249,5 @@ def main():
 
 
 if __name__ == '__main__':
-    raise SystemExit(main())
+    require(sys.argv[1:] in ([], ['--hosted']), 'Unknown trusted worker profile')
+    raise SystemExit(main(hosted=sys.argv[1:] == ['--hosted']))
