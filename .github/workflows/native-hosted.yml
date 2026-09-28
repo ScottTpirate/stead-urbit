@@ -79,6 +79,25 @@ jobs:
           sys.argv = ['toolchain.py', 'fetch']
           runpy.run_path('/var/lib/stead-ci-controller/scripts/urbit/toolchain.py', run_name='__main__')
           PY
+      - name: Record namespace prerequisites
+        run: |
+          sudo python3 -I -B - <<'PY'
+          import json, pathlib
+          def bounded(path, maximum):
+              with path.open() as source:
+                  text = source.read(maximum + 1)
+              if len(text) > maximum:
+                  raise SystemExit('Platform observation exceeds bound: ' + str(path))
+              return text
+          for name in ('/proc/sys/kernel/apparmor_restrict_unprivileged_userns', '/proc/sys/kernel/apparmor_restrict_unprivileged_unconfined', '/etc/apparmor.d/bwrap'):
+              path = pathlib.Path(name)
+              print(json.dumps({'path': name, 'text': bounded(path, 8192) if path.is_file() else None}))
+          for name in ('/usr/bin/ip', '/usr/sbin/ip', '/usr/bin/nft', '/usr/sbin/nft'):
+              path = pathlib.Path(name)
+              print(json.dumps({'path': name, 'exists': path.is_file(), 'resolved': str(path.resolve())}))
+          profiles = bounded(pathlib.Path('/sys/kernel/security/apparmor/profiles'), 1048576)
+          print(json.dumps({'bwrap_profiles': [line for line in profiles.splitlines() if 'bwrap' in line][:16]}))
+          PY
       - name: Authenticate admission and prove owned failure cleanup
         env:
           STEAD_WORKFLOW: ${{ github.sha }}
@@ -99,6 +118,10 @@ jobs:
           candidate=$(sudo cat /var/lib/stead-ci-controller/.runtime/candidate)
           controller=$(sudo cat /var/lib/stead-ci-controller/.runtime/controller)
           sudo --preserve-env=ACTIONS_ID_TOKEN_REQUEST_URL,ACTIONS_ID_TOKEN_REQUEST_TOKEN python3 -I -B /var/lib/stead-ci-controller/scripts/ci/hosted.py --workflow "$STEAD_WORKFLOW" --controller "$controller" --candidate "$candidate" --run-id "$STEAD_RUN_ID" --attempt "$STEAD_ATTEMPT"
+      - name: Record Bubblewrap kernel denial diagnostics
+        if: failure()
+        run: |
+          sudo journalctl -k --no-pager --output=cat --grep='apparmor=.*comm="bwrap"' --lines=8
       - name: Publish bounded evidence only
         if: always()
         uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
