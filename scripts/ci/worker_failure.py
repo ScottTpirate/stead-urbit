@@ -20,6 +20,10 @@ LOG_MARKERS = {'http_live': b'http: live', 'http_loopback': b'http: loopback',
                'pier_ready': b'pier: ready', 'ames_live': b'ames: live',
                'loom_mapped': b'loom: mapped', 'assertion': b'Assertion',
                'out_of_memory': b'out of memory', 'permission_denied': b'Permission denied'}
+MIGRATION_MARKERS = ('find-fork', 'nest-fail', 'build-fail', 'dojo-lame', 'exit',
+                     'stead-ci-migration-load', 'stead-ci-migration-preserved-state',
+                     'stead-ci-migration-grants', 'stead-ci-migration-document-denial',
+                     'stead-ci-migration-roundtrip', 'stead-ci-migration-rejections')
 
 
 def choice(value, values):
@@ -141,6 +145,22 @@ def project(raw, inputs, *, run_id):
     installed = native.get('installed', {})
     require(isinstance(installed, dict), 'Failure install shape')
     result['native']['installed_counts'] = {ship: count(installed.get(ship), 512) for ship in SHIPS}
+    migration = value.get('migration', {})
+    require(isinstance(migration, dict), 'Failure migration shape')
+    output = migration.get('output')
+    require(output is None or isinstance(output, str) and len(output) <= 1_000_000,
+            'Failure migration output bound')
+    encoded = output.encode('utf-8', errors='strict') if output is not None else b''
+    require(len(encoded) <= 1_000_000, 'Failure migration output byte bound')
+    # Only the exact migration response contributes these observations. Earlier
+    # deliberate compiler failures in the shared native log cannot taint them.
+    result['migration'] = {
+        'present': output is not None,
+        'output_bytes': len(encoded),
+        'output_sha256': hashlib.sha256(encoded).hexdigest() if output is not None else None,
+        'markers': {name: bool(re.search(rb'(?<![a-z0-9-])' + name.encode('ascii')
+                                         + rb'(?![a-z0-9-])', encoded))
+                    for name in MIGRATION_MARKERS}}
     logs = value.get('failure_logs', {})
     require(isinstance(logs, dict), 'Failure log shape')
     result['log_observations'] = {}

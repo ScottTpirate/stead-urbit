@@ -28,25 +28,35 @@
 =.  old  next.applied
 =/  context=bowl:gall  *bowl:gall
 =/  initial  ~(. home-agent context(our ~zod, src ~zod, now ~2026.9.25))
+~|  %stead-ci-migration-load
 =+  [cards after]=(on-load:initial !>([%stead-home %1 old]))
 ?>  =(~ cards)
 =/  loaded  !<([%stead-home %2 db=state:stead-core] on-save:after)
 =/  current  db.loaded
+~|  %stead-ci-migration-preserved-state
 ?>  &(=(bindings.old bindings.current) =(projects.old projects.current))
 ?>  &(=(works.old works.current) =(journal.old journal.current))
 ?>  &(=(receipts.old receipts.current) =(objects.old objects.current))
 ?>  &(=(reachable.old reachable.current) =(object-bytes.old object-bytes.current))
 ?>  =(containers.old containers.current)
-?>  =(1 (lent ~(tap by grants.current)))
+~|  %stead-ci-migration-grants
+::  Creation reserves an explicit creator grant; revoke retains the member grant.
+?>  =(2 (lent ~(tap by grants.current)))
 ?>  =(1 (lent ~(tap by documents.current)))
+=/  creator  (~(got by grants.current) (scope-key:stead-core '019939ba-4000-7000-8000-000000000001' '019939ba-4000-7000-8000-000000002710'))
+?>  =((~(got by grants.old) '019939ba-4000-7000-8000-000000002710') creator)
+?>  !revoked.creator
 =/  grant  (~(got by grants.current) (scope-key:stead-core '019939ba-4000-7000-8000-000000000001' '019939ba-4000-7000-8000-000000000008'))
 ?>  revoked.grant
 ?>  =((~(got by grants.old) '019939ba-4000-7000-8000-000000000008') grant)
+~|  %stead-ci-migration-document-denial
 =/  doc  (~(got by documents.current) ['019939ba-4000-7000-8000-000000000001' (scope-key:stead-core '019939ba-4000-7000-8000-000000000004' '019939ba-4000-7000-8000-000000000402')])
 ?>  =((~(got by documents.old) ['019939ba-4000-7000-8000-000000000001' '019939ba-4000-7000-8000-000000000402']) doc)
 ?>  =((error:stead-core 'denied_or_not_found') (read:stead-core current ~bus now [%v2 %project '019939ba-4000-7000-8000-000000000001' ~]))
+~|  %stead-ci-migration-roundtrip
 =+  [again-cards again]=(on-load:initial on-save:after)
 ?>  &(=(~ again-cards) =(q.on-save:after q.on-save:again))
+~|  %stead-ci-migration-rejections
 =/  future  (mule |.((on-load:initial !>([%stead-home %4 current]))))
 ?>  ?=(%| -.future)
 =/  corrupt  (mule |.((on-load:initial !>([%stead-home %1 old(journal ~)]))))
