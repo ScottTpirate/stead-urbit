@@ -5,6 +5,7 @@ workers must have no capabilities. Lens/Khan/state remain inside the trusted
 four-ship fixture boundary. This module is never run in the host net namespace.
 """
 from __future__ import annotations
+import copy
 import json
 import os
 from pathlib import Path
@@ -117,7 +118,7 @@ def require_policy(rows):
             if value.get('json_schema_version') != 1:
                 raise ValueError('Native peer nft schema version')
             continue
-        value = dict(value)
+        value = copy.deepcopy(value)
         value.pop('handle', None)
         if key == 'set':
             value.pop('elem', None)
@@ -129,7 +130,14 @@ def require_policy(rows):
                         raise ValueError('Native peer counter shape')
                     expression['counter'] = {}
         observed.append({key: value})
-    if metadata != 1 or observed != expected:
+    # nft 1.0.9 lists sets before chains; newer versions list chains first.
+    # Declaration display order is immaterial. Preserve every exact field,
+    # multiplicity and rule sequence; never sort or coalesce packet rules.
+    declaration_key = lambda row: json.dumps(row, sort_keys=True)
+    declarations = sorted((row for row in observed if 'rule' not in row), key=declaration_key)
+    rules = [row for row in observed if 'rule' in row]
+    if (metadata != 1 or declarations != sorted(expected[:4], key=declaration_key)
+            or rules != expected[4:]):
         raise ValueError('Native peer packet rules changed')
 
 
