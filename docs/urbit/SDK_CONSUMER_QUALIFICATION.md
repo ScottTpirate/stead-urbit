@@ -2,8 +2,9 @@
 
 This is a reviewed implementation boundary for URB-180 / #21, not a compiled or
 executed consumer. The public [SDK v3](../../sdk/v3/README.md) and package/source
-checker exist. The isolated builder, artifact transfer and runtime loader remain
-to be implemented and tested.
+checker exist. The host input preparer below assembles the verified public
+files. The isolated builder, artifact transfer and runtime loader remain to be
+implemented and tested.
 
 ## Source and execution boundary
 
@@ -12,6 +13,21 @@ pinned kernel/runtime/pill and fixed reviewed build runner. No Home state, priva
 client, broad native-source mount, existing pier or seed enters it. Package
 admission must call `scripts/check_sdk_source.py` and bind every export to the
 declared Git commit; archive integrity alone does not establish that source.
+
+Prepare the input directory without starting Urbit:
+
+```sh
+python3 scripts/prepare_sdk_consumer.py \
+  --archive .runtime/sdk/stead-sdk-v3.tar \
+  --output .runtime/sdk-builder-first
+```
+
+Build the archive first using the [development flow](DEV_FLOW.md#phase-2-sdk-package).
+The output name must be new. The preparer runs the package/Git source check,
+copies only the exact public archive members and declared toolchain, and writes
+`inputs.json` after byte readback. Existing or partial directories are preserved
+and refused. This is input preparation; it does not prove isolation, compile a
+consumer or allow mounting the whole checkout into a future builder.
 
 Compile the sample and four named marks at one absolute Clay case captured by
 `get-beak:strandio`. Retain the complete sample vase, including captured payload,
