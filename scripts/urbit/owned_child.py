@@ -38,12 +38,11 @@ def fixture_command(argv):
     # The separate SDK authority namespace retains the caller's nonzero UID
     # so a nested consumer can map it without retaining CAP_SETFCAP. Its pure
     # evaluators still use exactly the same parent-bound, capability-free path.
-    if os.environ.get('STEAD_OWNED_EVALUATORS') == '1':
-        return command(argv)
-    if os.environ.get('STEAD_CONFIGURED') != '1':
-        return argv
-    if os.getuid() != 0:
+    configured = os.environ.get('STEAD_CONFIGURED') == '1'
+    if configured and os.getuid() != 0:
         raise ValueError('Configured evaluator must run inside the owned namespace')
+    if not configured and os.environ.get('STEAD_OWNED_EVALUATORS') != '1':
+        return argv
     return command(argv)
 
 
@@ -106,8 +105,14 @@ def main():
         if arguments[0] != nft_binary():
             raise ValueError('Only the namespace packet controller retains capabilities')
     else:
-        arguments = ['/usr/bin/setpriv', '--bounding-set=-all', '--inh-caps=-all',
-                     '--ambient-caps=-all', '--no-new-privs', '--', *arguments]
+        state = dict(line.split(':', 1) for line in Path('/proc/self/status').read_text().splitlines() if ':' in line)
+        already_empty = all(state[name].strip() == '0000000000000000'
+                            for name in ('CapInh', 'CapPrm', 'CapEff', 'CapBnd', 'CapAmb'))
+        # Linux can reject PR_CAPBSET_DROP after CAP_SETPCAP itself is gone,
+        # even when every capability is already absent. Do not add privilege
+        # just to repeat that operation; retain NNP and the parent-death bind.
+        caps = [] if already_empty else ['--bounding-set=-all', '--inh-caps=-all', '--ambient-caps=-all']
+        arguments = ['/usr/bin/setpriv', *caps, '--no-new-privs', '--', *arguments]
     os.execv(arguments[0], arguments)
 
 

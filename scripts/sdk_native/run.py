@@ -35,6 +35,8 @@ def system_mounts():
 
 
 def run(archive):
+    if os.getuid() == 0:
+        raise ValueError('SDK qualification requires a nonroot local caller')
     if subprocess.check_output(['git', 'remote', 'get-url', '--push', 'origin'], cwd=ROOT, text=True).strip() != 'https://github.com/ScottTpirate/stead-urbit.git':
         raise ValueError('Derivative origin required')
     lock = toolchain.verify()
@@ -59,6 +61,7 @@ def run(archive):
         raise ValueError('Prepared public bytes differ from the verified package')
     before = {name: source_inventory(ROOT / name) for name in ('scripts/sdk_native', 'scripts/urbit', 'native/core/desk')}
     context = {'profile': 'independent-public-sdk-two-fresh-fakes',
+               'caller_uid': os.getuid(), 'caller_gid': os.getgid(),
                'source_commit': subprocess.check_output(['git', 'rev-parse', 'HEAD'], cwd=ROOT, text=True).strip(),
                'dirty_paths': subprocess.check_output(['git', 'status', '--porcelain', '--', 'scripts/sdk_native', 'scripts/urbit', 'native/core/desk'], cwd=ROOT, text=True).splitlines(),
                'sources': before, 'toolchain_sha256': sha(toolchain.LOCK_PATH),

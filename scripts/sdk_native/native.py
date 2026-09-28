@@ -171,6 +171,9 @@ class Native:
         if len(matches) != 1 or matches[0][9] not in inodes:
             raise ValueError('Exclusive owned fake Ames socket absent')
         return {'capabilities': caps, 'udp': endpoint,
+                'uid_map': Path(f'/proc/{pid}/uid_map').read_text().split(),
+                'gid_map': Path(f'/proc/{pid}/gid_map').read_text().split(),
+                'uid': int(status['Uid'].split()[0]), 'gid': int(status['Gid'].split()[0]),
                 'namespaces': {name: os.readlink(f'/proc/{pid}/ns/{name}') for name in ('net', 'pid', 'mnt', 'user')},
                 'lens_ports': [int(line.split()[0]) for line in (self.pier / '.http.ports').read_text().splitlines() if 'loopback' in line]}
 

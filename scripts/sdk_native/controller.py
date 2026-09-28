@@ -148,6 +148,7 @@ def main():
         outer_ns = {name: os.readlink('/proc/self/ns/' + name) for name in host_ns}
         check('authority-controller-separated-from-host', all(outer_ns[name] != host_ns[name] for name in host_ns))
         context = report['context']
+        check('authority-uses-nonroot-caller-id', os.getuid() == context['caller_uid'] != 0 and os.getgid() == context['caller_gid'])
         check('runner-and-package-at-admission', inventory('/runner') == context['runner'] and inventory('/public') == context['public'])
         check('authority-at-admission', inventory('/native') == context['sources']['native/core/desk'])
         execution_policy.write_json('/state/consumer-context.json', {'runner': context['runner'], 'public': context['public']})
