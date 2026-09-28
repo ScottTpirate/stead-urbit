@@ -58,7 +58,17 @@ isolated builder lifecycle, artifact transfer integration and runtime consumer
 still need implementation and native execution. A fixed native build-thread
 source is now prepared and independently reviewed: one absolute Clay case,
 complete sample/mark vases, bounded binary exports and staged-only metadata.
-It is not installed by any runner and has not compiled or executed; see the
+It is not installed by an executing runner and has not compiled or executed.
+Commit `32df210` adds its exact bytes from the reviewed controller checkout to
+input receipt v2; package-selected roots cannot substitute their own hook.
+Thirteen host controls passed, and actual CLI preparation produced 16 verified
+files plus receipt SHA-256
+`75da2f6c8269802e4c5ea3558a0b3d0072e4fd0770feb14db9d403a6b973cd4e`.
+Commit `df3962f` adds a bounded staged-response parser with strict inventory,
+decimal, digest and size checks and immutable metadata. Six synthetic controls
+passed; it does not authenticate the response or authorize artifact transfer.
+All 58 SDK host controls passed together in 5.314 seconds. The source changes
+received independent review; see the
 [reviewed qualification boundary](SDK_CONSUMER_QUALIFICATION.md).
 
 ## Actual hosted observations
