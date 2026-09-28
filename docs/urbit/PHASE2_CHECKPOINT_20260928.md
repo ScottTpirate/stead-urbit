@@ -258,5 +258,59 @@ reviews cleared the corrections for native execution; neither is acceptance.
 Hosted run `36416743910` completed with failure after 1,707.854 seconds. All 755
 team checks passed and the supported migration passed; failure occurred next in
 the native-controls stage. Its bounded artifact `10968932347` records unchanged
-inputs and verified empty host cleanup. Further diagnosis of that control remains
-required; this run does not qualify CI.
+inputs and verified empty host cleanup. This run does not qualify CI.
+
+## Native failure controls and runtime repair candidate
+
+The new focused `make ci-controls-dev` lane uses one stopped-seed fake to run
+the same trusted native failure controls locally. Its results are diagnostics,
+not complete team or hosted qualification. The first actual run at source
+`c85cb4579babdaae793172893d433b1978330215` passed all 166 setup checks and 162
+commands, then rejected the observed compiler diagnostic. The native compiler
+correctly rejected the deliberately undefined name; the checker expected a
+different diagnostic. Reviewed commit `f7452c444f0ff1fe9f28edd25679775cb0370b06`
+matches both exact pinned diagnostic lines, retains the false native verdict
+requirement and adds closed control failure categories. Fifty-two host CI
+controls passed, including the retained actual compiler-output fixture.
+
+The second real run at `f7452c4` passed missing-arm, compiler-failure and finite
+timer controls. The 50 ms deadline produced the expected response-header timeout
+with zero received bytes. The next recovery call reached EOF: the owned Vere
+process exited `-11` without forced termination, and cleanup correctly failed.
+The failed diagnostic took 44.457 seconds. The runtime log and system crash
+metadata confirm SIGSEGV; no core image was retained, so the precise memory
+fault is not proven. Both failed runs, the crashed disposable state and the
+original stopped seeds are preserved. The
+[bounded observations](evidence/2026-09-28/runtime-disconnect/observation.json)
+retain exact input/report hashes and failure boundaries.
+
+Upstream's official [newt fix](https://github.com/urbit/vere/commit/c0a35c6f6302baf536a13522afd1ac89ea8c7776)
+describes a closely matching early-disconnect failure. Independent source review
+verified that its parent file matches released 4.6 byte-for-byte. An isolated
+candidate applies only that hunk to 4.6, preserves the MIT notice, and uses pinned
+Zig 0.15.2 with the original package hashes. Full extracted source/compiler bytes
+are checked against the downloaded archives; compilation has no network, home
+or credentials, uses a read-only dependency cache, and retains the existing
+single-owner 50% CPU and 75/90°C guard. The project runtime pin is unchanged.
+Compilation, a real unchanged disconnect replay, subsequent runtime adoption,
+hosted CI and Phase 2 acceptance are separate gates. None is established merely
+by this candidate preparation or source review.
+
+The local source build was stopped at 92°C after 158.420 seconds by the unchanged
+90°C ceiling. Source/compiler inputs remained unchanged; no completed binary
+was produced. [PR #71](https://github.com/ScottTpirate/stead-urbit/pull/71) adds a
+separate manually dispatched build on a standard disposable public GitHub runner.
+Only the pinned public runtime/compiler/dependency sources enter the offline,
+unprivileged, capability-free containers. Their CPU, memory, tasks, writable
+storage, logs and deadlines are bounded and checked. This workflow does not run
+application code or replace the existing native CI gates.
+
+Independent source review cleared that build lane; eight host controls passed
+in 0.012 seconds. Actual run `36485432542` stopped before the first compiler
+invocation: Docker's local logging driver rejects its default compression with
+a single retained file. Its artifact `10999355695` retained the exact error,
+verified container removal and tmpfs cleanup. The reviewed one-line correction
+in [PR #72](https://github.com/ScottTpirate/stead-urbit/pull/72) explicitly disables
+compression while retaining the same single 4 MiB log bound. Eight host controls
+passed in 0.011 seconds. A fresh hosted build and the real runtime recovery test
+are still required.

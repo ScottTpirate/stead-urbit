@@ -1,0 +1,128 @@
+{
+  "format": "stead.runtime-disconnect-observation/1",
+  "status": "failed-controls",
+  "qualifies_phase": false,
+  "runtime_binary_sha256": "47ad302e8934271dfc00dcdab1d553c6d6460b105e3099ff47e0e4e4231bb26d",
+  "runs": [
+    {
+      "status": "fail",
+      "classification": "local-real-native-ci-controls-diagnostic",
+      "qualifies_phase": false,
+      "stage": "failed",
+      "error": "ValueError: Specific compiler failure absent",
+      "cleanup": true,
+      "cleanup_error": null,
+      "elapsed_seconds": 40.492,
+      "inputs_before": {
+        "ci": "19030d055cd2f62da74613b56ada878cc334d2439df00cf9149266e34c3e02d7",
+        "harness": "e6ea937fd32539860f800d0f0fd87f5b9e7f257279376fd2372401924c4e7080",
+        "native": "ea6b5f69d2cc37b132893b718c059b12861fd9048aaa4ec626a50661a24f6f2d"
+      },
+      "inputs_after": {
+        "ci": "19030d055cd2f62da74613b56ada878cc334d2439df00cf9149266e34c3e02d7",
+        "harness": "e6ea937fd32539860f800d0f0fd87f5b9e7f257279376fd2372401924c4e7080",
+        "native": "ea6b5f69d2cc37b132893b718c059b12861fd9048aaa4ec626a50661a24f6f2d"
+      },
+      "private_report_sha256": "46169011c384602e26104171f0136cb7c4424beb87ec821944d6f447b6b593f3",
+      "checks": 166,
+      "checks_passed": 166,
+      "commands": 162,
+      "observed_control_stages": [
+        "compiler",
+        "missing-arm"
+      ],
+      "guard": {
+        "status": "failed",
+        "run_id": "d0729037fa69c1bf76e79020fc5ecc27",
+        "guard_sha256": "da16e2e0fd32eb5b90706b546a7ea8332a65807fc8279f3bd765dcc18aaad9b5",
+        "reason": "Owned sandbox exited unsuccessfully",
+        "exit_code": 1,
+        "elapsed_seconds": 45.354,
+        "policy": {
+          "cooperative_seconds": 10,
+          "cpu_period_us": 10000,
+          "cpu_quota_us": 5000,
+          "kill_seconds": 5,
+          "sample_seconds": 1,
+          "stale_seconds": 3,
+          "start_c": 75,
+          "stop_c": 90,
+          "terminate_seconds": 10
+        },
+        "report_sha256": "825525671fbb0e64507dff5154684da5f475e82895216c1ab349c6b0fdbff3bd"
+      },
+      "source": {
+        "source_commit": "c85cb4579babdaae793172893d433b1978330215",
+        "committed_bytes_verified": true,
+        "dirty_paths": []
+      }
+    },
+    {
+      "status": "fail",
+      "classification": "local-real-native-ci-controls-diagnostic",
+      "qualifies_phase": false,
+      "stage": "failed",
+      "error": "ValueError: EOF before complete terminal conn response",
+      "cleanup": false,
+      "cleanup_error": "RuntimeError: zod exit was not clean: -11; forced=False",
+      "elapsed_seconds": 44.457,
+      "inputs_before": {
+        "ci": "3cd335659ec904d85790627db36ed925c54eea247ae6f09618021156c13ed009",
+        "harness": "e6ea937fd32539860f800d0f0fd87f5b9e7f257279376fd2372401924c4e7080",
+        "native": "ea6b5f69d2cc37b132893b718c059b12861fd9048aaa4ec626a50661a24f6f2d"
+      },
+      "inputs_after": {
+        "ci": "3cd335659ec904d85790627db36ed925c54eea247ae6f09618021156c13ed009",
+        "harness": "e6ea937fd32539860f800d0f0fd87f5b9e7f257279376fd2372401924c4e7080",
+        "native": "ea6b5f69d2cc37b132893b718c059b12861fd9048aaa4ec626a50661a24f6f2d"
+      },
+      "private_report_sha256": "30a64d11d02fc569d8778a92e71f10f63d193b160a1a5f37221c895cd0df3f11",
+      "checks": 166,
+      "checks_passed": 166,
+      "commands": 162,
+      "observed_control_stages": [
+        "compiler",
+        "missing-arm",
+        "timer-positive",
+        "timer-timeout"
+      ],
+      "guard": {
+        "status": "failed",
+        "run_id": "96f817c4a6a528598dee2121fd90196b",
+        "guard_sha256": "da16e2e0fd32eb5b90706b546a7ea8332a65807fc8279f3bd765dcc18aaad9b5",
+        "reason": "Owned sandbox exited unsuccessfully",
+        "exit_code": 1,
+        "elapsed_seconds": 48.366,
+        "policy": {
+          "cooperative_seconds": 10,
+          "cpu_period_us": 10000,
+          "cpu_quota_us": 5000,
+          "kill_seconds": 5,
+          "sample_seconds": 1,
+          "stale_seconds": 3,
+          "start_c": 75,
+          "stop_c": 90,
+          "terminate_seconds": 10
+        },
+        "report_sha256": "fca8825416c46ea04dc11d72efa03a43ef07fad814dc124d6ce65a1f2df0c2dc"
+      },
+      "source": {
+        "source_commit": "f7452c444f0ff1fe9f28edd25679775cb0370b06",
+        "committed_bytes_verified": true,
+        "dirty_paths": []
+      }
+    }
+  ],
+  "native_observation": "After the successful finite timer and observed empty-header client timeout, the recovery call ended at EOF and the owned Vere child exited -11 without forced termination.",
+  "diagnosis": "SIGSEGV verified; precise fault mechanism inferred from official newt fix because no core image was retained.",
+  "candidate_fix": {
+    "repository": "urbit/vere",
+    "base_commit": "8ddc4b786979574dbfcb655e3db1b634f658d0de",
+    "upstream_commit": "c0a35c6f6302baf536a13522afd1ac89ea8c7776",
+    "file": "pkg/vere/newt.c",
+    "original_sha256": "f18f203e823ad64433e2fb57a5959189c6cdec624a2a1d448738ee8354e0a833",
+    "patched_sha256": "7926e9b0f83387595ad65b689a56439c73c48b35ce0c9226ecce2001d27f8e0b",
+    "adopted": false,
+    "native_replay": "not-yet-executed"
+  }
+}
