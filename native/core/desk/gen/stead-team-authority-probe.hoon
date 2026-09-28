@@ -445,7 +445,7 @@
   (projection-pump forged-agent forged-cards |)
 ?>  =(completed (saved-owner fixed-agent))
 :: Compare complete native query pages, cursor state and access after recovery.
-=/  kinds  ~['work' 'search' 'activity' 'inbox']
+=/  kinds=(list @t)  ~['work' 'search' 'activity' 'inbox']
 =/  restored-db  db.completed
 =/  restored-view  projection.completed
 =;  ignored=*

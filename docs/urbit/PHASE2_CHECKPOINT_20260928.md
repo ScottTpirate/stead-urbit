@@ -331,7 +331,9 @@ continue; required acceptance checks are not removed or reported as passed.
 The configured recovery probe's first native compilation found a missing
 nonempty-journal refinement. Reviewed commit `af87ec3` adds it; its actual retry
 passed 168 setup/unit checks but failed compilation on the test bowl's entropy
-literal (`@ud` where Gall requires `@uvJ`). Both original logs and failed reports
-are retained. The two fixture literals now have explicit entropy auras while
-preserving their numeric values. Successful recompilation and the actual
-interrupted-projection assertions are still pending.
+literal (`@ud` where Gall requires `@uvJ`). The next retry at `39b5799` again
+passed 168 setup/unit checks, then identified an inferred fixed tuple where the
+four-query loop required a list. All failed reports and compiler logs are
+retained. The reviewed corrections preserve the same entropy values and four
+query kinds, adding their explicit types without removing assertions. Successful
+recompilation and the actual interrupted-projection assertions are still pending.
