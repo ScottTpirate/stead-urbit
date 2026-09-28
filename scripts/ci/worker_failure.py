@@ -69,6 +69,21 @@ def error_kind(value):
              'Native TLS certificate or child mismatch': 'tls-certificate-child',
              'Stale bootstrap completion': 'bootstrap-stale',
              'Bootstrap does not match this live child incarnation': 'bootstrap-incarnation'}
+    exact.update({
+        'Missing arm fixture failed before discovery':'control-missing-arm-fixture',
+        'Specific compiler failure absent':'control-compiler-diagnostic',
+        'Compiler control failed outside native compilation':'control-compiler-terminal',
+        'Unexpected missing arm refusal':'control-missing-arm-refusal',
+        'Missing native arm accepted':'control-missing-arm-accepted',
+        'Finite timer positive control failed':'control-timer-positive',
+        'Timeout occurred before the native request':'control-timeout-stage',
+        'Native timer ignored client timeout':'control-timeout-absent',
+        'Runtime did not recover after client timeout':'control-timeout-recovery',
+        'Original native frame invalid':'control-source-frame',
+        'Injected malformed native frame accepted':'control-injected-frame',
+        'Native discovered/executed arm mismatch':'control-arm-inventory',
+        'Native test build failed':'control-build',
+    })
     if message in exact:
         reason = exact[message]
     elif re.fullmatch(r'(zod|bus|nec|bud) did not become ready within [0-9]{1,4}s', message):

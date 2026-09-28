@@ -16,6 +16,15 @@ def require(condition, message):
         raise ValueError(message)
 
 
+def compiler_diagnostic(diagnostic):
+    """Exact pinned -test undefined-name failure, not an incidental log word."""
+    if not isinstance(diagnostic, str) or not 0 < len(diagnostic.encode('utf-8')) <= 262144:
+        return False
+    lines = diagnostic.replace('\r\n', '\n').splitlines()
+    return ('-find.stead-ci-deliberately-undefined' in lines
+            and 'FAILED  /controls/stead-ci-compiler/hoon (build)' in lines)
+
+
 def runtime_pin(path, expected):
     require(not path.is_symlink() and path.is_file() and sha(path) == expected,
             'Missing or changed runtime pin')
@@ -121,8 +130,7 @@ def native(host, report, *, progress=None):
     compiler = unit('/controls/stead-ci-compiler')
     checkpoint('compiler', compiler)
     diagnostics = bytes.fromhex(compiler['log_hex']).decode('utf-8')
-    require('stead-ci-deliberately-undefined' in diagnostics
-            and re.search(r'\b(find-fork|build-fail|dojo-lame)\b', diagnostics), 'Specific compiler failure absent')
+    require(compiler_diagnostic(diagnostics), 'Specific compiler failure absent')
     require(compiler.get('native_test', {}).get('stdout') == '[32 %avow 0 %noun 1]'
             or compiler.get('native_failure', {}).get('stage') == 'parse-terminal', 'Compiler control failed outside native compilation')
     request = '[32 %fyrd [%base %stead-ci-delay %noun [%noun ~]]]'
