@@ -51,9 +51,17 @@ and verify the mounted-desk mapping before expecting `<name>.jam` files in the
 owned builder filesystem. Its
 small `stead.sdk-build-staged/1` response has `export_queued` status, builder,
 desk, absolute case and exactly five artifact entries. Byte counts are canonical
-decimal strings and SHA-256 values are lowercase hex. A future controller must
-validate this response and convert its closed decimal counts to the reader's
-integer pins; it must not trust a manifest supplied beside artifact files.
+decimal strings and SHA-256 values are lowercase hex. The prepared
+[`sdk_build_receipt.py`](../../scripts/sdk_build_receipt.py) parser accepts at
+most 8 KiB from the retained terminal response, requires the fixed `~wes`/`base`
+context and exact schema/inventory, rejects duplicate keys and noncanonical
+size strings, and applies the artifact reader's byte/digest bounds. It returns
+immutable metadata with fresh integer pin copies. The reported Clay case remains
+an opaque bounded field, not a proof of installed source identity. The parser
+does not authenticate the response, verify export materialization or authorize
+transfer before cleanup; those remain controller obligations. Never supply it
+with a manifest read from beside the artifact files. Its six synthetic controls
+are not native build evidence.
 
 This source is not installed by the team runner and has no executable builder
 entry point yet. Review of pinned APIs or source does not prove compilation,
