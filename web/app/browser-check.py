@@ -64,14 +64,17 @@ def main():
     output = ROOT / '.runtime' / (('browser-expiry-' if followup else 'browser-native-') + time.strftime('%Y%m%dT%H%M%SZ', time.gmtime()))
     output.mkdir(mode=0o700)
     before = browser_admission.browser_inputs(ROOT, status)
+    cases = browser_admission.browser_cases(ROOT)
     if followup:
         session, session_sha = private_json(followup, 8192)
         prior, prior_sha = private_json(followup.parent / 'transport-report.json', 262144)
         journey, journey_sha = private_json(followup.parent / 'browser-report.json', 2 * 1024 * 1024)
+        browser_admission.verify_browser(prior, journey, before, cases)
         if (prior.get('status') != 'pass' or journey.get('status') != 'pass'
                 or journey.get('execution_id') != run_id
                 or prior.get('inputs_before') != before or prior.get('inputs_after') != before
                 or prior.get('browser_process', {}).get('cleanup', {}).get('empty') is not True
+                or prior.get('journey_sha256') != journey_sha
                 or session.get('execution_id') != run_id or session.get('format') != 1):
             raise ValueError('Expiry requires the same passed native browser source and fixture')
         issued, captured = session.get('issued_before_ms'), session.get('captured_at_ms')
@@ -118,8 +121,7 @@ def main():
                     execution_policy.validate_sample(execution_policy.sample_temperatures(), execution_policy.Policy())
                 report['browser_process'] = browser_process.run(command, root=ROOT, output=output, healthy=admitted)
                 child, child_sha = private_json(output / 'browser-report.json', 2 * 1024 * 1024)
-                if child.get('status') != 'pass' or child.get('execution_id') != run_id:
-                    raise ValueError('Browser evidence did not pass for this fixture')
+                browser_admission.verify_journey(child, run_id, cases, expiry=bool(followup))
                 if followup and child.get('session_file_sha256') != before['expiry_session']:
                     raise ValueError('Browser used different expiry session bytes')
                 report['journey_sha256'] = child_sha

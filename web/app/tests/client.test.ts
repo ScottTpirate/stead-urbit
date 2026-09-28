@@ -80,6 +80,7 @@ globalThis.fetch = async (url, init) => {
     if (mode === 'wrong-actor') receipt.principal_id = id('999');
     if (mode === 'uncorrelated-reject') return json({protocol: 'stead.result/3', status: 'rejected', error: 'revision_conflict'});
     if (mode === 'correlated-reject') return json({protocol: 'stead.result/3', status: 'rejected', error: 'revision_conflict', request_id: raw.request_id, canonical_sha256: await commandDigest(raw)});
+    if (mode === 'csrf-reject') return json({protocol: 'stead.result/3', status: 'rejected', error: 'invalid_csrf', request_id: raw.request_id, canonical_sha256: await commandDigest(raw)},403);
     receipts.set(String(raw.request_id), receipt);
     return json(corrupt(receipt));
   }
@@ -144,6 +145,20 @@ test('failed logout retains a retry path; confirmed logout clears it', async () 
   mode = 'network'; await rejects(client.logout(), 'logout_unconfirmed');
   mode = ''; await client.query(request); await client.logout();
   await rejects(client.query(request), 'session_required');
+});
+
+test('a correlated CSRF refusal does not invalidate identity or the original recoverable receipt', async () => {
+  const client = new HomeClient(); person = 1; mode = ''; await client.resume();
+  const value = command(id('1'),id('29'),'0','1','work.create',{title:'CSRF retry control',description:'',type:'task',status:'todo',priority:'none'});
+  const original = JSON.stringify(value);
+  const accepted = await client.command(value);
+  let clears = 0; client.onInvalidated = () => clears++;
+  mode = 'csrf-reject'; await rejects(client.command(value),'invalid_csrf');
+  assert.equal(clears,0);
+  assert.equal(JSON.stringify(value),original);
+  mode = ''; await client.resume();
+  assert.deepEqual(await client.recover(value),accepted);
+  assert.equal(clears,0);
 });
 
 test('unconfirmed resume retains the identity partition and fences calls until explicit recovery', async () => {

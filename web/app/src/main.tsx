@@ -232,7 +232,9 @@ function App() {
     setPending(value); setNotice('Pending confirmation from home…');
     try { await completed(value, await client.command(value)); }
     catch (failure) {
-      if (failure instanceof HomeError && !['outcome_unknown', 'invalid_response', 'session_changed', 'resume_required'].includes(failure.code)) setPending(null);
+      // A stale CSRF token rejects this attempt, not an earlier uncertain save.
+      // Keep the original request through explicit resume and receipt recovery.
+      if (failure instanceof HomeError && !['outcome_unknown', 'invalid_response', 'session_changed', 'resume_required', 'invalid_csrf'].includes(failure.code)) setPending(null);
       throw failure;
     }
   }

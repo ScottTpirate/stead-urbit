@@ -30,8 +30,10 @@ class BrowserAdmissionTests(unittest.TestCase):
         self.expected = {'execution_id': 'a' * 32, 'native_prerequisite': self.reference, 'runner': 'e' * 64}
         self.transport = {'classification': 'local-real-browser-native-tls', 'status': 'pass',
             'inputs_before': self.expected, 'inputs_after': self.expected, 'browser_process': {'cleanup': {'empty': True}}}
+        self.cases = admission.browser_cases(ROOT)
         self.journey = {'classification': 'real-browser-native-gall', 'status': 'pass', 'execution_id': 'a' * 32,
-            'checks': [{'name': 'synthetic-control', 'passed': True}]}
+            'response_capture_complete':True, 'response_capture_error':False,
+            'checks': [{'name': name, 'passed': True} for name, count in self.cases['journey'].items() for _ in range(count)]}
 
     def test_unready_failed_foreign_and_missing_live_binding_refused(self):
         self.assertEqual(admission.live_reference(self.status), self.reference)
@@ -60,16 +62,55 @@ class BrowserAdmissionTests(unittest.TestCase):
             admission.verify_native(self.native, self.status, self.inputs, {})
 
     def test_browser_requires_matching_transport_journey_and_completed_cleanup(self):
-        admission.verify_browser(self.transport, self.journey, self.expected)
+        admission.verify_browser(self.transport, self.journey, self.expected, self.cases)
         for delta in ({'status':'fail'}, {'classification':'rendered-mock'}, {'inputs_before':{}},
                 {'inputs_after':{}}, {'browser_process':{'cleanup':{'empty':False}}}):
             with self.subTest(delta=delta), self.assertRaises(ValueError):
-                admission.verify_browser({**self.transport, **delta}, self.journey, self.expected)
+                admission.verify_browser({**self.transport, **delta}, self.journey, self.expected, self.cases)
         for delta in ({'status':'fail'}, {'execution_id':'b'*32}, {'checks':[]}, {'classification':'mock'}):
             with self.subTest(delta=delta), self.assertRaises(ValueError):
-                admission.verify_browser(self.transport, {**self.journey, **delta}, self.expected)
+                admission.verify_browser(self.transport, {**self.journey, **delta}, self.expected, self.cases)
         with self.assertRaises(ValueError):
-            admission.verify_browser(self.transport, self.journey, {**self.expected,'native_prerequisite':{**self.reference,'sha256':'f'*64}})
+            admission.verify_browser(self.transport, self.journey, {**self.expected,'native_prerequisite':{**self.reference,'sha256':'f'*64}}, self.cases)
+
+    def test_truncated_duplicate_unknown_or_failed_case_cannot_qualify_journey(self):
+        original = self.journey['checks']
+        altered = [original[:1], original[:-1], original + [original[0]],
+                   original[:-1] + [{'name':'unrecognized-case','passed':True}],
+                   original[:-1] + [{**original[-1],'passed':False}]]
+        for rows in altered:
+            with self.subTest(count=len(rows)), self.assertRaises(ValueError):
+                admission.verify_journey({**self.journey,'checks':rows},'a'*32,self.cases)
+        # Sign-in is repeated for explicit account change and expiry preparation.
+        name = 'bus-individual-native-owner-approved-session'
+        self.assertEqual(self.cases['journey'][name], 2)
+        omitted_repeat = [row for row in original if row['name'] != name] + [{'name':name,'passed':True}]
+        with self.assertRaisesRegex(ValueError,'inventory differs'):
+            admission.verify_journey({**self.journey,'checks':omitted_repeat},'a'*32,self.cases)
+
+    def test_capture_failure_refuses_otherwise_complete_journey(self):
+        for change in ({'response_capture_error':True},{'responses_truncated':True},{'response_capture_complete':False}):
+            with self.subTest(change=change), self.assertRaisesRegex(ValueError,'capture'):
+                admission.verify_journey({**self.journey,**change},'a'*32,self.cases)
+
+    def test_natural_expiry_has_its_own_complete_capture_and_case_inventory(self):
+        expiry = {'classification':'real-browser-native-natural-session-expiry','status':'pass',
+            'execution_id':'a'*32,'capture_errors':[],'capture_truncated':False,'capture_complete':True,
+            'checks':[{'name':name,'passed':True} for name in self.cases['natural_expiry']]}
+        admission.verify_journey(expiry,'a'*32,self.cases,expiry=True)
+        for change in ({'checks':expiry['checks'][:-1]}, {'checks':self.journey['checks']},
+                {'capture_errors':['TimeoutError']},{'capture_truncated':True},{'capture_complete':False},{'execution_id':'b'*32}):
+            with self.subTest(change=list(change)), self.assertRaises(ValueError):
+                admission.verify_journey({**expiry,**change},'a'*32,self.cases,expiry=True)
+        with self.assertRaises(ValueError):
+            admission.verify_journey(expiry,'a'*32,self.cases)
+
+    def test_empty_malformed_or_boolean_count_inventory_is_refused(self):
+        for change in ({'journey':{}},{'natural_expiry':{}},{'format':True},
+                {'journey':{'case':True}},{'journey':{'../case':1}},{'natural_expiry':{'case':5}}):
+            with patch.object(admission,'read_source',return_value=json.dumps({**self.cases,**change}).encode()), \
+                    self.subTest(change=change), self.assertRaises(ValueError):
+                admission.browser_cases(ROOT)
 
     def test_actual_report_bytes_must_match_the_live_supervisor_digest(self):
         with tempfile.TemporaryDirectory(dir=ROOT / '.runtime') as folder:
@@ -96,7 +137,8 @@ class BrowserAdmissionTests(unittest.TestCase):
             (output / 'transport-report.json').write_text(json.dumps({**self.transport,'journey_sha256':hashlib.sha256(raw).hexdigest()}))
             for path in output.iterdir(): path.chmod(0o600)
             with patch.object(admission, 'require_native', return_value=self.reference), \
-                    patch.object(admission, 'browser_inputs', return_value=self.expected):
+                    patch.object(admission, 'browser_inputs', return_value=self.expected), \
+                    patch.object(admission, 'browser_cases', return_value=self.cases):
                 result = admission.require_browser(root, root, self.status, name)
                 self.assertEqual(result['journey_sha256'], hashlib.sha256(raw).hexdigest())
                 for bad in ('../'+name, 'browser-expiry-20260927T120000Z', name+'/'):

@@ -8,6 +8,7 @@ import os
 from pathlib import Path
 import re
 import stat
+from collections import Counter
 
 import execution_policy
 import team_check
@@ -102,7 +103,9 @@ def browser_inputs(root, status):
     names = {'runner': 'web/app/browser-check.py', 'process_owner': 'web/app/browser_process.py',
         'browser_test': 'web/app/tests/native.mjs', 'boundary_test': 'web/app/tests/native-boundaries.mjs',
         'expiry_test': 'web/app/tests/native-expiry.mjs', 'relay': 'web/dev/loopback_bridge.py',
-        'toolchain': 'specs/urbit/toolchain.lock.json', 'admission': 'web/app/browser_admission.py'}
+        'toolchain': 'specs/urbit/toolchain.lock.json', 'admission': 'web/app/browser_admission.py',
+        'browser_cases': 'specs/urbit/phase2-browser-cases.json',
+        'response_capture': 'web/app/tests/response-capture.mjs'}
     return {**{key: sha(root / name) for key, name in names.items()},
         'frontend_manifest': frontend_binding(root),
         'native_tree': tree_sha(root / 'native/core/desk'),
@@ -128,15 +131,43 @@ def frontend_binding(root):
     return hashlib.sha256(raw).hexdigest()
 
 
-def verify_browser(transport, journey, expected):
+def browser_cases(root):
+    value = json.loads(read_source(Path(root) / 'specs/urbit/phase2-browser-cases.json', maximum=16384), object_pairs_hook=unique)
+    require(isinstance(value, dict) and set(value) == {'format', 'classification', 'journey', 'natural_expiry'}
+        and type(value['format']) is int and value['format'] == 1
+        and value['classification'] == 'native-browser-case-inventory', 'Browser case inventory schema')
+    for name in ('journey', 'natural_expiry'):
+        cases = value[name]
+        require(isinstance(cases, dict) and 0 < len(cases) <= 64 and all(
+            re.fullmatch(r'[a-z][a-z0-9-]{0,159}', case) and type(count) is int and 1 <= count <= 4
+            for case, count in cases.items()), 'Nonempty bounded browser case inventory required')
+    return value
+
+
+def verify_journey(journey, run_id, cases, *, expiry=False):
+    classification = 'real-browser-native-natural-session-expiry' if expiry else 'real-browser-native-gall'
+    require(isinstance(journey, dict) and journey.get('classification') == classification
+        and journey.get('status') == 'pass' and journey.get('execution_id') == run_id
+        and passing_checks(journey.get('checks')), 'Passed native browser journey for this execution is required')
+    observed = Counter(row['name'] for row in journey['checks'])
+    require(observed == cases['natural_expiry' if expiry else 'journey'], 'Browser case inventory differs')
+    if expiry:
+        require(journey.get('capture_complete') is True and journey.get('capture_errors') == []
+            and journey.get('capture_truncated') is False,
+            'Complete natural-expiry capture required')
+    else:
+        require(journey.get('response_capture_complete') is True
+            and journey.get('response_capture_error') is False
+            and journey.get('responses_truncated', False) is False, 'Complete native browser capture required')
+
+
+def verify_browser(transport, journey, expected, cases):
     require(transport.get('classification') == 'local-real-browser-native-tls'
         and transport.get('status') == 'pass' and transport.get('inputs_before') == expected
         and transport.get('inputs_after') == expected
         and transport.get('browser_process', {}).get('cleanup', {}).get('empty') is True,
         'Passed browser transport with matching source and complete cleanup is required')
-    require(journey.get('classification') == 'real-browser-native-gall' and journey.get('status') == 'pass'
-        and journey.get('execution_id') == expected['execution_id'] and passing_checks(journey.get('checks')),
-        'Passed native browser journey for this execution is required')
+    verify_journey(journey, expected['execution_id'], cases)
 
 
 def require_browser(root, state, status, name):
@@ -149,6 +180,6 @@ def require_browser(root, state, status, name):
     transport, transport_sha = private_json(folder / 'transport-report.json', 262144)
     journey, journey_sha = private_json(folder / 'browser-report.json', 2 * 1024 * 1024)
     require(transport.get('journey_sha256') == journey_sha, 'Browser journey differs from transport binding')
-    verify_browser(transport, journey, browser_inputs(root, status))
+    verify_browser(transport, journey, browser_inputs(root, status), browser_cases(root))
     return {'native': native, 'browser_run': name, 'transport_sha256': transport_sha,
         'journey_sha256': journey_sha, 'execution_id': status['execution_guard']['run_id']}

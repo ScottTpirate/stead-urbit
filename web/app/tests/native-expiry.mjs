@@ -6,6 +6,7 @@ import {createHash} from 'node:crypto';
 import https from 'node:https';
 import path from 'node:path';
 import {firefox} from 'playwright';
+import {ResponseCapture} from './response-capture.mjs';
 const [profile, fixture, output, sessionFile] = process.argv.slice(2);
 assert.equal(process.version,'v24.21.0');
 const material = JSON.parse(await readFile(fixture,'utf8'));
@@ -56,7 +57,7 @@ function unchangedBearer() {
   });
 }
 const context = await firefox.launchPersistentContext(profile,{headless:true,ignoreHTTPSErrors:false,serviceWorkers:'block'});
-const pending = new Set();
+const capture = new ResponseCapture();
 try {
   const liveBearer = await unchangedBearer(); report.bearer_controls.push(liveBearer);
   assert.equal(liveBearer.status,403); assert.equal(liveBearer.error,'invalid_csrf');
@@ -65,16 +66,16 @@ try {
   await context.addCookies([cookie]);
   const page = await context.newPage(); page.setDefaultTimeout(25000);
   page.on('response',response => {
+    if (!capture.accepting) return;
     const pathname = new URL(response.url()).pathname;
     if (!['/stead/auth/resume','/stead/api/updates'].includes(pathname)) return;
-    if (report.http.length + pending.size >= 128) { report.capture_truncated = true; return; }
+    if (report.http.length + capture.pending >= 128) { report.capture_truncated = true; return; }
     const received = Date.now();
-    const task = (async () => {
+    capture.track(async () => {
       const bytes = await response.body(); assert.ok(bytes.length <= 262144);
       const value = JSON.parse(bytes);
       report.http.push({path:pathname,status:response.status(),outcome:value.status ?? '',error:value.error ?? '',at_ms:received});
-    })().catch(error => { report.capture_errors.push(error.constructor.name); });
-    pending.add(task); void task.finally(() => pending.delete(task));
+    });
   });
   await page.goto(origin + '/stead/');
   await page.getByRole('button',{name:/GARDEN.*Garden α/u}).click();
@@ -88,7 +89,8 @@ try {
   await page.locator('#project-content[data-live-updates="connected"]').waitFor();
   report.checks.push({name:'real-session-still-authorized-before-expiry-with-private-draft',passed:true,at_ms:Date.now()});
   await page.getByRole('button',{name:'Request sign-in',exact:true}).waitFor({timeout:240000});
-  await Promise.all([...pending]);
+  await capture.drain();
+  if (capture.failures) report.capture_errors = ['response_capture_failed'];
   assert.deepEqual(report.capture_errors,[]); assert.equal(report.capture_truncated,false);
   assert.ok(report.http.some(row => row.path === '/stead/auth/resume' && row.status === 200 && row.outcome === 'authenticated'));
   const expiry = report.http.find(row => row.path === '/stead/api/updates' && row.status === 401 && row.error === 'session_required');
@@ -113,7 +115,9 @@ try {
   report.error_type = error.constructor.name;
   throw new Error('Natural native expiry check failed; inspect private evidence');
 } finally {
-  await Promise.allSettled([...pending]);
+  const captureSummary = await capture.close();
+  report.capture_complete = captureSummary.complete;
+  if (captureSummary.failures) report.capture_errors = ['response_capture_failed'];
   if (report.capture_errors.length || report.capture_truncated) report.status = 'fail';
   try { await writeFile(output + '/browser-report.json',JSON.stringify(report,null,2)+'\n',{flag:'wx',mode:0o600}); }
   finally { await context.close(); }

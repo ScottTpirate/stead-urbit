@@ -6,6 +6,7 @@ import {createHash, randomBytes} from 'node:crypto';
 import path from 'node:path';
 import {firefox} from 'playwright';
 import {endpointBoundaries} from './native-boundaries.mjs';
+import {ResponseCapture} from './response-capture.mjs';
 const [profile, fixture, output] = process.argv.slice(2);
 assert.equal(process.version, 'v24.21.0');
 assert.ok(!process.env.SSLKEYLOGFILE);
@@ -26,7 +27,7 @@ const browser = root.browser();
 const report = {classification: 'real-browser-native-gall', status: 'fail', qualifies_phase: false,
   node: process.version, browser: browser.version(), execution_id: material.execution_id, checks: [], responses: [], failures: []};
 report.assets = {manifest_sha256: createHash('sha256').update(manifestBytes).digest('hex'), markdown: {path: '/stead/assets/' + lazyAsset, ...manifest.files[lazyAsset]}};
-const responseTasks = new Set();
+const responseCapture = new ResponseCapture();
 const pages = [];
 const origins = new Set([origin, 'https://bus.localhost:8444', 'https://nec.localhost:8445', 'https://bud.localhost:8446']);
 async function restrict(context) {
@@ -67,7 +68,8 @@ async function inertPreview(page) {
 async function pageIn(context) {
   const page = await context.newPage(); pages.push(page);
   page.on('response', response => {
-    const task = (async () => {
+    if (!responseCapture.accepting) return;
+    responseCapture.track(async () => {
     const url = new URL(response.url());
     if (!origins.has(url.origin) || !url.pathname.startsWith('/stead/')) return;
     if (report.responses.length >= 1000) { report.responses_truncated = true; return; }
@@ -85,16 +87,15 @@ async function pageIn(context) {
         })};
     }
     if (response.headers()['content-type']?.startsWith('application/json')) {
-      const value = await response.json().catch(() => ({}));
+      const value = await response.json();
       for (const key of ['protocol', 'status', 'error']) {
         if (typeof value[key] === 'string' && /^[a-z0-9._/-]{1,64}$/u.test(value[key])) row[key === 'status' ? 'result_status' : key] = value[key];
       }
     }
-    })();
-    responseTasks.add(task);
-    void task.finally(() => responseTasks.delete(task)).catch(() => { report.response_capture_error = true; });
+    });
   });
   page.on('requestfailed', request => {
+    if (!responseCapture.accepting) return;
     const url = new URL(request.url());
     if (origins.has(url.origin) && report.failures.length < 100) report.failures.push({origin: url.origin, path: url.pathname,
       failure: request.failure()?.errorText?.replace(/[^a-zA-Z0-9_: -]/gu, '').slice(0, 120)});
@@ -314,9 +315,58 @@ async function conflictsAndRecovery(alice, bob) {
   });
   const observed = a.waitForResponse(response => response.url() === origin + '/stead/api/command');
   await a.getByRole('button', {name: 'Save at home', exact: true}).click();
-  const committed = await (await observed).json(); assert.equal(committed.status, 'accepted');
+  const acceptedResponse = await observed;
+  const originalCommand = acceptedResponse.request().postData();
+  const committed = await acceptedResponse.json(); assert.equal(committed.status, 'accepted');
   await a.getByRole('heading', {name: 'Save awaiting confirmation', exact: true}).waitFor();
   await b.getByRole('heading', {name: 'Committed response deliberately lost', exact: true}).waitFor();
+  // A second tab sharing the real cookie rotates CSRF through actual resume.
+  const other = await pageIn(a.context());
+  try {
+    await other.goto(origin + '/stead/');
+    await other.getByRole('button', {name: /UPDATES.*Update controls/u}).waitFor();
+    await a.locator('#project-content[data-live-updates="unavailable"]').waitFor();
+    const retried = a.waitForResponse(response => response.url() === origin + '/stead/api/command');
+    await a.getByRole('button', {name: 'Retry this request', exact: true}).click();
+    const refusedResponse = await retried;
+    assert.equal(refusedResponse.status(), 403);
+    assert.equal(refusedResponse.request().postData(), originalCommand);
+    const refused = await refusedResponse.json();
+    assert.equal(refused.error, 'invalid_csrf');
+    assert.equal(refused.request_id, committed.request_id);
+    assert.equal(refused.canonical_sha256, committed.canonical_sha256);
+    await a.getByText('Another tab refreshed your session. Resume this tab, then explicitly retry your request.', {exact:true}).waitFor();
+    await a.getByRole('heading', {name:'Save awaiting confirmation',exact:true}).waitFor();
+    assert.equal(await a.getByRole('textbox',{name:'Title',exact:true}).inputValue(), 'Committed response deliberately lost');
+    // Discard a real resume response, preserving the original uncertain save.
+    await a.evaluate(() => {
+      const original = window.fetch;
+      window.fetch = async (...args) => {
+        const response = await original(...args);
+        if (String(args[0]) === '/stead/auth/resume') {
+          await response.arrayBuffer(); window.fetch = original;
+          throw new TypeError('Controlled loss after real resume response');
+        }
+        return response;
+      };
+    });
+    const resume = a.waitForResponse(response => response.url() === origin + '/stead/auth/resume');
+    await a.getByRole('button',{name:'Resume this tab',exact:true}).click();
+    assert.equal((await resume).status(),200);
+    await a.getByText('The home did not confirm the outcome. Check the receipt or retry the same request before making another change.',{exact:true}).waitFor();
+    const attempts = [];
+    const capture = request => { if (request.url() === origin + '/stead/api/command') attempts.push(request.postData()); };
+    a.on('request',capture);
+    try {
+      await a.getByRole('button',{name:'Retry this request',exact:true}).click();
+      await a.getByText('Session resumption was not confirmed. Your local changes are still here. Resume this tab before choosing what to retry.',{exact:true}).waitFor();
+      assert.deepEqual(attempts,[]);
+    } finally { a.off('request',capture); }
+    await a.getByRole('heading',{name:'Save awaiting confirmation',exact:true}).waitFor();
+    await a.getByRole('button',{name:'Resume this tab',exact:true}).click();
+    await a.getByText('Session resumed. Choose whether to retry your pending request.',{exact:true}).waitFor();
+    await a.getByRole('heading',{name:'Save awaiting confirmation',exact:true}).waitFor();
+  } finally { await other.close(); }
   const recovered = a.waitForResponse(response => response.url() === origin + '/stead/api/query' && response.request().postDataJSON()?.kind === 'receipt');
   await a.getByRole('button', {name: 'Check receipt', exact: true}).click();
   const recoveredResponse = await recovered;
@@ -326,6 +376,7 @@ async function conflictsAndRecovery(alice, bob) {
   await a.getByText(`Saved at home · revision ${committed.resource_revision}`, {exact: true}).waitFor();
   await a.getByRole('heading', {name: 'Save awaiting confirmation', exact: true}).waitFor({state: 'detached'});
   passed('native-commit-with-injected-response-loss-recovers-original-receipt', {request_id: committed.request_id, fault: 'client-discards-real-native-response'});
+  passed('two-tab-csrf-rotation-and-unconfirmed-resume-retain-original-pending-receipt', {request_id: committed.request_id, fault:'client-discards-real-resume-response'});
 }
 async function unsentNewScopes(alice) {
   const page = alice.home;
@@ -600,7 +651,11 @@ try {
   }
   throw new Error(report.error);
 } finally {
-  await Promise.allSettled([...responseTasks]);
+  const capture = await responseCapture.close();
+  report.response_capture_complete = capture.complete;
+  report.response_capture_error = capture.failures > 0;
+  if (report.response_capture_error || report.responses_truncated) report.status = 'fail';
   await writeFile(path.join(output, 'browser-report.json'), JSON.stringify(report, null, 2) + '\n');
   await root.close();
+  assert.equal(report.status, 'pass');
 }
