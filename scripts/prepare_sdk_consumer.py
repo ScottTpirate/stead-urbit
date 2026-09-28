@@ -118,8 +118,15 @@ def prepare(root, archive, output):
     files['toolchain.json'] = read_bounded(root, 'specs/urbit/toolchain.lock.json')
     require(hashlib.sha256(files['toolchain.json']).hexdigest() == manifest['runtime_lock_sha256'],
             'SDK toolchain changed after source verification')
-    receipt = {'protocol':'stead.sdk-builder-inputs/1', 'classification':'real-host-sdk-input-preparation',
+    # The fixed build runner belongs to this reviewed controller checkout, not
+    # the package/root selected by --root. No arbitrary package hook executes.
+    runner_source = 'scripts/sdk_native/build.hoon'
+    runner_target = 'runner/ted/stead-sdk-build.hoon'
+    files[runner_target] = read_bounded(ROOT, runner_source)
+    receipt = {'protocol':'stead.sdk-builder-inputs/2', 'classification':'real-host-sdk-input-preparation',
         'native_execution':False, 'independent_consumer_execution':False,
+        'build_runner':{'source':runner_source, 'destination':runner_target,
+                        'status':'uncompiled-source-preparation'},
         'preparer_sha256':hashlib.sha256(Path(__file__).read_bytes()).hexdigest(),
         'source_checker_sha256':hashlib.sha256(Path(check_sdk_source.__file__).read_bytes()).hexdigest(),
         'source_binding':binding,

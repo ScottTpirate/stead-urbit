@@ -26,8 +26,12 @@ python3 scripts/prepare_sdk_consumer.py \
 
 Build the archive first using the [development flow](DEV_FLOW.md#phase-2-sdk-package).
 The output name must be new. The preparer runs the package/Git source check,
-copies only the exact public archive members and declared toolchain, and writes
-`inputs.json` after byte readback. Existing or partial directories are preserved
+copies the exact public archive members, declared toolchain and one fixed build
+thread from the reviewed controller checkout, then writes version-2 `inputs.json`
+after byte readback. A package-selected `--root` cannot replace that runner;
+there is no package hook fallback. The 16 input files include
+`runner/ted/stead-sdk-build.hoon`. Earlier version-1 receipts without the runner
+remain input-only historical records. Existing or partial directories are preserved
 and refused. This is input preparation; it does not prove isolation, compile a
 consumer or allow mounting the whole checkout into a future builder.
 

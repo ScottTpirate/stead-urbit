@@ -27,19 +27,25 @@ class SdkInputTests(unittest.TestCase):
     def run_prepare(self):
         return prepare.prepare(self.root, 'sdk.tar', self.output)
 
-    def test_only_public_archive_members_and_declared_toolchain_are_prepared(self):
-        for name in ('native/core/desk/app/stead-home.hoon', 'private-fixture.hoon', '.runtime/production-pier/key'):
+    def test_public_exports_pins_and_fixed_controller_runner_are_prepared(self):
+        for name in ('native/core/desk/app/stead-home.hoon', 'private-fixture.hoon', '.runtime/production-pier/key',
+                     'scripts/sdk_native/build.hoon'):
             path = self.root / name
             path.parent.mkdir(parents=True, exist_ok=True)
             path.write_text('PRIVATE-CONTROL-DO-NOT-COPY')
         receipt = self.run_prepare()
         output = self.root / self.output
         self.assertEqual(receipt['classification'], 'real-host-sdk-input-preparation')
+        self.assertEqual(receipt['protocol'], 'stead.sdk-builder-inputs/2')
         self.assertFalse(receipt['native_execution'])
         self.assertFalse(receipt['independent_consumer_execution'])
         self.assertEqual(receipt['source_checker_sha256'],
             hashlib.sha256((ROOT / 'scripts/check_sdk_source.py').read_bytes()).hexdigest())
-        self.assertEqual(len(receipt['files']), 15)
+        self.assertEqual(len(receipt['files']), 16)
+        runner = 'runner/ted/stead-sdk-build.hoon'
+        self.assertEqual(receipt['build_runner'], {'source':'scripts/sdk_native/build.hoon',
+            'destination':runner, 'status':'uncompiled-source-preparation'})
+        self.assertEqual((output / runner).read_bytes(), (ROOT / 'scripts/sdk_native/build.hoon').read_bytes())
         actual = {str(path.relative_to(output)) for path in output.rglob('*') if path.is_file()}
         self.assertEqual(actual, set(receipt['files']) | {'inputs.json'})
         self.assertEqual(json.loads((output / 'inputs.json').read_bytes()), receipt)
@@ -49,6 +55,13 @@ class SdkInputTests(unittest.TestCase):
             self.assertNotIn(b'PRIVATE-CONTROL-DO-NOT-COPY', body)
             self.assertEqual({'bytes':len(body), 'sha256':hashlib.sha256(body).hexdigest()}, pin)
             self.assertEqual(stat.S_IMODE((output / name).stat().st_mode), 0o600)
+
+    def test_missing_fixed_controller_runner_refuses_before_creating_output(self):
+        # The input root contains no reviewed controller runner. There must be
+        # no fallback to a package-supplied hook or a partial ready receipt.
+        with patch.object(prepare, 'ROOT', self.root), self.assertRaises(FileNotFoundError):
+            self.run_prepare()
+        self.assertFalse((self.root / self.output).exists())
 
     def test_existing_partial_directory_is_preserved(self):
         output = self.root / self.output
