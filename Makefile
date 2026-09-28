@@ -21,6 +21,8 @@ dev:
 	$(PREP) python3 scripts/urbit/harness.py dev
 team-dev:
 	$(PREP) python3 scripts/urbit/harness.py team-dev
+migration-dev:
+	$(PREP) python3 scripts/urbit/harness.py migration-dev
 team-check:
 	python3 scripts/urbit/harness.py team-check
 stop:

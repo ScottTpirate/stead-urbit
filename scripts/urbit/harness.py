@@ -143,6 +143,7 @@ def sandbox(command, *, execution_control=None, execution_id=None, configured=Fa
              '--ro-bind', str(ROOT / 'scripts/urbit'), '/code',
              '--ro-bind', str(ROOT / 'web/dev'), '/web-dev',
              '--ro-bind', str(ROOT / 'native'), '/native',
+             '--ro-bind', str(ROOT / 'scripts/ci/migration.hoon'), '/migration.hoon',
              '--ro-bind', str(ROOT / 'specs/urbit'), '/specs',
              '--ro-bind', str(ROOT / 'tests/urbit/native_gall_schedule'), '/native-tests/gall-schedule',
              '--ro-bind', str(ROOT / 'tests/urbit/skill_evaluation'), '/native-tests/skill-evaluation',
@@ -191,7 +192,7 @@ def preflight():
     return result
 
 
-def guarded_supervisor(*, configured=False):
+def guarded_supervisor(*, configured=False, migration_only=False):
     guard()
     def command(control, run_id):
         paths = ['scripts/urbit', 'native', 'specs/urbit', 'web/dev',
@@ -203,11 +204,14 @@ def guarded_supervisor(*, configured=False):
             'source_commit': subprocess.check_output(['git', 'rev-parse', 'HEAD'], cwd=ROOT, text=True).strip(),
             'dirty_paths': subprocess.check_output(['git', 'status', '--porcelain', '--', *paths], cwd=ROOT, text=True).splitlines(),
             'harness_sha256': source_sha(ROOT / 'scripts/urbit'),
+            'migration_sha256': toolchain.sha(ROOT / 'scripts/ci/migration.hoon'),
             'native_tree_sha256': tree_sha(ROOT / 'native/core/desk'), 'script_files': scripts}
         context['trees'] = {path: tree_sha(ROOT / path) for path in paths if path != 'scripts/urbit'}
         context['committed_files'] = {}
         context['missing_committed_files'] = []
         context['committed_bytes_verified'] = not context['dirty_paths']
+        migration_blob = subprocess.check_output(['git', 'show', context['source_commit'] + ':scripts/ci/migration.hoon'], cwd=ROOT)
+        context['committed_bytes_verified'] &= hashlib.sha256(migration_blob).hexdigest() == context['migration_sha256']
         listing = subprocess.check_output(['git', 'ls-tree', '-r', '-z', context['source_commit'], '--', *paths], cwd=ROOT)
         for entry in listing.split(b'\0'):
             if not entry:
@@ -243,8 +247,13 @@ def guarded_supervisor(*, configured=False):
                 or subprocess.check_output(['git', 'status', '--porcelain', '--', *paths], cwd=ROOT, text=True).splitlines() != context['dirty_paths']):
             raise ValueError('Source checkout changed during provenance capture')
         execution_policy.write_json(control / 'source-context.json', context)
-        return sandbox(['/usr/bin/python3', '-X', 'pycache_prefix=/tmp/python-cache', '/code/supervisor.py'],
-                       execution_control=control, execution_id=run_id, configured=configured)
+        command = sandbox(['/usr/bin/python3', '-X', 'pycache_prefix=/tmp/python-cache', '/code/supervisor.py'],
+                          execution_control=control, execution_id=run_id, configured=configured)
+        if migration_only:
+            if not configured:
+                raise ValueError('Migration diagnostic requires the configured owner')
+            command[command.index('--'):command.index('--')] = ['--setenv', 'STEAD_DIAGNOSTIC', 'migration']
+        return command
     report = execution_policy.run_guarded(
         command,
         root=ROOT, label='four-fakes', policy=execution_limits())
@@ -471,10 +480,23 @@ def team_dev():
     dev(configured=True)
 
 
+def migration_dev():
+    # Foreground guardian owns the whole one-shot lifetime, including SIGTERM.
+    # It never adopts or sends stop to an existing background fixture.
+    guard(create=True)
+    if running() is not None:
+        raise RuntimeError('Stop the existing fixture before starting the migration diagnostic')
+    if (STATE / 'unclean-live.json').exists():
+        raise RuntimeError('Preserve the interrupted fixture and make reset before the diagnostic')
+    toolchain.verify()
+    (STATE / 'logs').mkdir(exist_ok=True)
+    guarded_supervisor(configured=True, migration_only=True)
+
+
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument('command', choices=['doctor', 'preflight', 'start', 'stop', 'reset', 'status',
-                        'wait-ready', 'dev', 'team-dev', 'team-check', 'test', 'core-check', 'core-test', 'delivery-check', 'capacity-check', 'gall-schedule',
+                        'wait-ready', 'dev', 'team-dev', 'team-check', 'migration-dev', 'test', 'core-check', 'core-test', 'delivery-check', 'capacity-check', 'gall-schedule',
                         'skill-evaluation', 'skill-feedback', '_guarded-supervisor'])
     parser.add_argument('--condition', choices=['prequalification', 'baseline', 'local_skill_assisted'])
     parser.add_argument('--task', choices=['T01', 'T02', 'T03', 'T04', 'T05', 'T06'])

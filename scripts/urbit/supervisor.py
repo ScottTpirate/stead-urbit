@@ -21,6 +21,7 @@ from digests import sha, source_sha, tree_sha, source_inventory, read_source
 from conn import assert_result, run_thread
 import execution_policy
 import core_check
+import migration_check
 import core_test
 import team_check
 import gall_schedule
@@ -53,7 +54,8 @@ def qualified_source():
     context = execution_policy.read_json('/execution/source-context.json')
     if (context.get('dirty_paths') != [] or context.get('committed_bytes_verified') is not True
             or not context.get('committed_files') or context.get('harness_sha256') != LOADED_SOURCE_DIGEST
-            or context.get('native_tree_sha256') != tree_sha(Path('/native/core/desk'))):
+            or context.get('native_tree_sha256') != tree_sha(Path('/native/core/desk'))
+            or context.get('migration_sha256') != sha('/migration.hoon')):
         raise ValueError('Qualification requires the exact committed source captured at startup')
     if context.get('script_files') != source_inventory(Path('/code')):
         raise ValueError('Helper file inventory changed after startup')
@@ -204,7 +206,7 @@ def persist_result_evidence(result):
         if field not in result:
             continue
         name = Path(result[field]).name
-        if not (name.startswith(('core-', 'team-', 'smoke-', 'gall-schedule-', 'skill-evaluation-')) and name.endswith('.json')):
+        if not (name.startswith(('core-', 'team-', 'smoke-', 'gall-schedule-', 'skill-evaluation-', 'migration-check-')) and name.endswith('.json')):
             raise ValueError('Unexpected native evidence target')
         path = STATE / 'logs' / name
         evidence = execution_policy.read_json(path, maximum=16 * 1024 * 1024)
@@ -386,6 +388,19 @@ def initialize():
             if TEAM is not None:
                 if not (SEED / 'manifest.json').exists():
                     raise ValueError('Configured lane requires verified clean seeds from make dev')
+                if os.environ.get('STEAD_DIAGNOSTIC') == 'migration':
+                    # One foreground-owned diagnostic, not another public RPC.
+                    # It always ends this lifetime and never admits a browser.
+                    result = guarded_result(migration_check.run(globals()))
+                    record('migration diagnostic', result)
+                    if result['status'] != 'pass':
+                        INITIALIZATION_FAILED.set()
+                    NORMAL_STOP.set()
+                    STOP_REQUESTED.set()
+                    all_stop()
+                    PROGRESS.update(stage='diagnostic-stopped', ready=False)
+                    STOP.set()
+                    return
                 # team-check restores the verified seeds and starts its four
                 # children once. Restart tests then use captured saved states.
                 PROGRESS.update(stage='ready', ready=True)

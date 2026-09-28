@@ -154,6 +154,15 @@ class LifecycleTests(unittest.TestCase):
                         harness.dev()
                     stop.assert_called_once()
 
+    def test_migration_diagnostic_refuses_existing_fixture_without_stopping_it(self):
+        harness.guard(create=True)
+        with patch.object(harness, 'running', return_value={'ready': True}), \
+                patch.object(harness, 'start') as start, patch.object(harness, 'stop') as stop:
+            with self.assertRaisesRegex(RuntimeError, 'Stop the existing'):
+                harness.migration_dev()
+            start.assert_not_called()
+            stop.assert_not_called()
+
     def test_public_feedback_cli_uses_only_the_fixed_rpc(self):
         harness.guard(create=True)
         with patch.object(harness, 'rpc', return_value={'status': 'pass'}) as rpc:
@@ -334,6 +343,31 @@ class SupervisorDeveloperTests(unittest.TestCase):
                     self.assertEqual(persisted['status'],'fail')
                     self.assertNotIn('team_evidence',module.PROGRESS)
                     self.assertFalse(module.PROGRESS['ready']); stop.assert_called_once()
+
+    def test_one_shot_migration_ends_its_lifetime_without_browser_readiness(self):
+        module = self.supervisor
+        with tempfile.TemporaryDirectory() as directory, ExitStack() as stack:
+            seed = Path(directory)
+            (seed / 'manifest.json').write_text('{"toolchain_sha256":"pin"}')
+            stack.enter_context(patch.object(module, 'SEED', seed))
+            stack.enter_context(patch.object(module, 'TEAM', object()))
+            stack.enter_context(patch.object(module, 'sha', return_value='pin'))
+            stack.enter_context(patch.object(module, 'execution_check'))
+            stack.enter_context(patch.object(module, 'record'))
+            stack.enter_context(patch.object(module, 'guarded_result', side_effect=lambda value: value))
+            run = stack.enter_context(patch.object(module.migration_check, 'run'))
+            stop = stack.enter_context(patch.object(module, 'all_stop'))
+            stack.enter_context(patch.dict(os.environ, {'STEAD_DIAGNOSTIC': 'migration'}))
+            for outcome in ('pass', 'fail'):
+                module.INITIALIZATION_FAILED.clear()
+                module.PROGRESS.update(stage='starting', ready=False)
+                run.return_value = {'status': outcome}
+                module.initialize()
+                self.assertFalse(module.PROGRESS['ready'])
+                self.assertTrue(module.NORMAL_STOP.is_set())
+                self.assertTrue(module.STOP.is_set())
+                self.assertEqual(module.INITIALIZATION_FAILED.is_set(), outcome == 'fail')
+            self.assertEqual(stop.call_count, 2)
 
     def feedback_mocks(self, stack, *, proof=None, outcome=None):
         module = self.supervisor
