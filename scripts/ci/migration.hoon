@@ -31,7 +31,8 @@
 ~|  %stead-ci-migration-load
 =+  [cards after]=(on-load:initial !>([%stead-home %1 old]))
 ?>  =(~ cards)
-=/  loaded  !<([%stead-home %2 db=state:stead-core] on-save:after)
+=/  saved=vase  on-save:after
+=/  loaded  !<([%stead-home %2 db=state:stead-core] saved)
 =/  current  db.loaded
 ~|  %stead-ci-migration-preserved-state
 ?>  &(=(bindings.old bindings.current) =(projects.old projects.current))
@@ -54,8 +55,9 @@
 ?>  =((~(got by documents.old) ['019939ba-4000-7000-8000-000000000001' '019939ba-4000-7000-8000-000000000402']) doc)
 ?>  =((error:stead-core 'denied_or_not_found') (read:stead-core current ~bus now [%v2 %project '019939ba-4000-7000-8000-000000000001' ~]))
 ~|  %stead-ci-migration-roundtrip
-=+  [again-cards again]=(on-load:initial on-save:after)
-?>  &(=(~ again-cards) =(q.on-save:after q.on-save:again))
+=+  [again-cards again]=(on-load:initial saved)
+=/  reloaded=vase  on-save:again
+?>  &(=(~ again-cards) =(q.saved q.reloaded))
 ~|  %stead-ci-migration-rejections
 =/  future  (mule |.((on-load:initial !>([%stead-home %4 current]))))
 ?>  ?=(%| -.future)
