@@ -118,10 +118,20 @@ jobs:
           candidate=$(sudo cat /var/lib/stead-ci-controller/.runtime/candidate)
           controller=$(sudo cat /var/lib/stead-ci-controller/.runtime/controller)
           sudo --preserve-env=ACTIONS_ID_TOKEN_REQUEST_URL,ACTIONS_ID_TOKEN_REQUEST_TOKEN python3 -I -B /var/lib/stead-ci-controller/scripts/ci/hosted.py --workflow "$STEAD_WORKFLOW" --controller "$controller" --candidate "$candidate" --run-id "$STEAD_RUN_ID" --attempt "$STEAD_ATTEMPT"
-      - name: Record Bubblewrap kernel denial diagnostics
+      - name: Record namespace kernel denial diagnostics
         if: failure()
         run: |
-          sudo journalctl -k --no-pager --output=cat --grep='apparmor=.*comm="bwrap"' --lines=8
+          sudo python3 -I -B - <<'PY'
+          import json, subprocess
+          result = subprocess.run(['/usr/bin/journalctl', '-k', '--no-pager', '--output=cat',
+              '--grep=apparmor=.*comm="(bwrap|python3)"', '--lines=32'],
+              capture_output=True, text=True, timeout=10)
+          print(json.dumps({'classification': 'kernel-diagnostic-only', 'exit_code': result.returncode,
+              'stdout': result.stdout[:32768], 'stderr': result.stderr[:2048],
+              'truncated': len(result.stdout) > 32768 or len(result.stderr) > 2048}))
+          if result.returncode not in (0, 1):
+              raise SystemExit('Kernel diagnostic collection failed')
+          PY
       - name: Publish bounded evidence only
         if: always()
         uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
