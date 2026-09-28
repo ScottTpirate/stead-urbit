@@ -35,6 +35,11 @@ def command(argv, *, privileged=False):
 
 
 def fixture_command(argv):
+    # The separate SDK authority namespace retains the caller's nonzero UID
+    # so a nested consumer can map it without retaining CAP_SETFCAP. Its pure
+    # evaluators still use exactly the same parent-bound, capability-free path.
+    if os.environ.get('STEAD_OWNED_EVALUATORS') == '1':
+        return command(argv)
     if os.environ.get('STEAD_CONFIGURED') != '1':
         return argv
     if os.getuid() != 0:

@@ -23,7 +23,7 @@ CONSUMER_HELPERS = ('core_conn.py', 'conn.py', 'owned_child.py')
 
 
 def system_mounts():
-    command = ['bwrap', '--unshare-all', '--new-session', '--die-with-parent', '--uid', '0', '--gid', '0',
+    command = ['bwrap', '--unshare-all', '--new-session', '--die-with-parent',
                '--cap-drop', 'ALL', '--ro-bind', '/usr', '/usr']
     for name in ('bin', 'sbin', 'lib', 'lib64'):
         path = Path('/') / name
@@ -99,7 +99,7 @@ def run(archive):
             command += ['--ro-bind', str(source), target]
         command += ['--bind', str(state), '/state', '--chdir', '/state', '--clearenv',
                     '--setenv', 'PATH', '/usr/bin:/bin', '--setenv', 'LANG', 'C.UTF-8',
-                    '--setenv', 'STEAD_EXECUTION_ID', run_id, '--setenv', 'STEAD_CONFIGURED', '1',
+                    '--setenv', 'STEAD_EXECUTION_ID', run_id, '--setenv', 'STEAD_OWNED_EVALUATORS', '1',
                     '--', '/usr/bin/python3', '-B', '/controller/controller.py']
         return command
 
