@@ -29,6 +29,8 @@ read-only.
 | `make doctor` | Check pins, prerequisites and real namespace isolation | Whether this Linux host supports the harness |
 | `make preflight` | Read current temperature admission without launching ships | A current sample, not a promise that a later launch will pass |
 | `make check` | Run planning, both contract freezes and host tests | Host/static/mocked results only |
+| `make frontend-check` | Run pinned TypeScript and client tests with bounded CPU | Host frontend results; starts no ships or browser |
+| `make frontend-build` | Bundle the frontend and record asset hashes | Build output only; does not install into a running ship |
 | `make dev` | Start the guarded supervisor, wait for readiness, compile the core and run pure probes | Native compile/probe evidence when it actually passes |
 | `make status` | Report stopped, booting, compiling or ready state | Current lifecycle state; an unresponsive owner is not reported as stopped |
 | `make core-check` | Reinstall edited Hoon into a fresh fake fixture and rerun compilation/probes | Shorter native feedback, separate from acceptance |
@@ -159,24 +161,29 @@ delete a pier or treat a process snapshot as a replacement seed.
 
 ## Phase 2 SDK package
 
-The first SDK increment builds and verifies the four public Hoon files without
-starting ships. From the repository root:
+The current v3 SDK exports four public libraries, four marks, a sample consumer,
+API documentation and notices. Build and bind it to its declared Git source
+without starting ships. From the repository root:
 
 ```sh
 mkdir -p .runtime/sdk
-python3 scripts/package_sdk.py build --output .runtime/sdk/stead-sdk-v2.tar
-python3 scripts/package_sdk.py verify --archive .runtime/sdk/stead-sdk-v2.tar
+python3 scripts/package_sdk_v3.py build --archive .runtime/sdk/stead-sdk-v3.tar
+python3 scripts/package_sdk_v3.py verify --archive .runtime/sdk/stead-sdk-v3.tar
+python3 scripts/check_sdk_source.py --archive .runtime/sdk/stead-sdk-v3.tar
 ```
 
 Choose a new output name for a later build; existing files are preserved.
 The checked-in export lock fixes the public file list, hashes, notices and
 toolchain. A changed public file needs a reviewed pin update. The package command
 copies no private fixture client or home state, and verification never extracts
-an input archive. See [the package scope](../../sdk/README.md).
+an input archive. The source checker additionally reads the exact commit's Git
+blobs with replacement objects and lazy fetching disabled. Run it only against
+a reviewed checkout; repository Git configuration is not sandboxed. The v2
+package and lock remain available separately. See [the v3 package scope](../../sdk/v3/README.md).
 
 This is host package verification. Compiling a separate native client from the
-published fragment, version negotiation, complete API conformance and the browser
-adapter remain later URB-180 work. No additional hosting or identity is needed
+published fragment, version negotiation and complete independent API conformance
+remain unfinished URB-180 work. No additional hosting or identity is needed
 to build or test this package locally.
 
 ## Frontend build and browser feedback
@@ -185,9 +192,15 @@ The frontend has its own pinned Node runtime and lockfile. From the repository
 root, after `make setup` and the lockfile's dependencies have been installed:
 
 ```sh
-.runtime/node-v24.21.0-linux-x64/bin/node web/app/node_modules/typescript/bin/tsc --noEmit --project web/app
-.runtime/node-v24.21.0-linux-x64/bin/node web/app/tests/run.mjs
-.runtime/node-v24.21.0-linux-x64/bin/node web/app/build.mjs
+make frontend-check
+make frontend-build
+```
+
+These commands use the pinned Node binary and the existing 50% CPU preparation
+limit. They start no native fixture or browser. After preserving and stopping
+any running fixture, package the verified build into the development desk:
+
+```sh
 .runtime/node-v24.21.0-linux-x64/bin/node web/app/package-desk.mjs
 ```
 
@@ -210,6 +223,30 @@ trust is confined to its disposable Firefox profile; it does not change system
 trust. Its current tests use synthetic member approvals and are development
 checks, not a production deployment. Do not infer a full milestone pass from
 the first successful browser journey or from mocked rendered tests.
+
+## Hosted native CI while the workstation is busy
+
+The reviewed workflow is manual. It runs on a disposable GitHub-hosted Ubuntu
+worker with synthetic fake ships; it does not start local Urbit processes.
+After pushing a candidate commit to the derivative repository:
+
+```sh
+gh workflow run native-hosted.yml --repo ScottTpirate/stead-urbit --ref main --field candidate="$(git rev-parse HEAD)"
+gh run list --repo ScottTpirate/stead-urbit --workflow native-hosted.yml --limit 5
+```
+
+Main's immutable manifest selects the reviewed controller. The candidate supplies
+only allowed product blobs; changing a runner, test or SDK consumer needs its
+own reviewed controller update. Omitting `candidate` tests the pinned controller.
+The job first proves admission and failure cleanup, then runs native compilation,
+units, multi-ship behavior and negative controls. A dispatch or a green admission
+step is not a passing native result. Download and independently review its bounded
+evidence before treating a completed run as acceptance.
+
+Hosted tests do not satisfy the local rendered browser, natural session-expiry
+or independent human onboarding gates. Keep the local native/browser lanes
+paused when the workstation cannot meet their existing thermal admission; the
+hosted profile does not change those limits.
 
 ## Phase 2 and later testing
 

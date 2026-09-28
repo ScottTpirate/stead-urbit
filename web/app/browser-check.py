@@ -3,6 +3,8 @@
 import hashlib
 import json
 import os
+import re
+import stat
 from pathlib import Path
 import socket
 import ssl
@@ -18,18 +20,29 @@ sys.path.insert(0, str(ROOT / 'web/dev'))
 import harness
 import execution_policy
 import browser_process
-from digests import sha, tree_sha
+import browser_admission
+from browser_admission import private_json
 from loopback_bridge import LoopbackBridge, PORTS
 
 
 def main():
     os.umask(0o077)
+    followup = None
+    if sys.argv[1:]:
+        if len(sys.argv) != 3 or sys.argv[1] != '--expiry-from' or not re.fullmatch(r'browser-native-[0-9]{8}T[0-9]{6}Z', sys.argv[2]):
+            raise ValueError('Only the fixed native-expiry followup is supported')
+        followup = ROOT / '.runtime' / sys.argv[2] / 'expiry-session.json'
+        parent = followup.parent.lstat()
+        if not stat.S_ISDIR(parent.st_mode) or parent.st_uid != os.getuid() or parent.st_mode & 0o077:
+            raise ValueError('Private bounded prior session evidence required')
+        private_json(followup, 8192)
     if os.environ.get('SSLKEYLOGFILE'):
         raise ValueError('TLS key logging must be absent from this private browser run')
     harness.guard()
     status = harness.rpc('status')
     if status.get('profile') != 'configured-team' or not status.get('ready'):
         raise ValueError('Complete make team-dev before the real browser journey')
+    prerequisite = browser_admission.require_native(ROOT, harness.STATE, status)
     run_id = status['execution_guard']['run_id']
     directory = harness.STATE / 'ingress' / run_id
     fixture = directory / 'browser-fixture.json'
@@ -46,12 +59,29 @@ def main():
                 or set(current.get('ships', {})) != set(PORTS)
                 or any(row['exit'] is not None for row in current['ships'].values())):
             raise ValueError('Owned configured fixture no longer ready')
-    output = ROOT / '.runtime' / ('browser-native-' + time.strftime('%Y%m%dT%H%M%SZ', time.gmtime()))
+        if browser_admission.live_reference(current) != prerequisite:
+            raise ValueError('Native prerequisite changed during the browser journey')
+    output = ROOT / '.runtime' / (('browser-expiry-' if followup else 'browser-native-') + time.strftime('%Y%m%dT%H%M%SZ', time.gmtime()))
     output.mkdir(mode=0o700)
-    before = {'native_tree': tree_sha(ROOT / 'native/core/desk'), 'runner': sha(__file__),
-              'process_owner': sha(ROOT / 'web/app/browser_process.py'),
-              'browser_test': sha(ROOT / 'web/app/tests/native.mjs'), 'relay': sha(ROOT / 'web/dev/loopback_bridge.py'),
-              'toolchain': sha(ROOT / 'specs/urbit/toolchain.lock.json'), 'execution_id': run_id}
+    before = browser_admission.browser_inputs(ROOT, status)
+    cases = browser_admission.browser_cases(ROOT)
+    if followup:
+        session, session_sha = private_json(followup, 8192)
+        prior, prior_sha = private_json(followup.parent / 'transport-report.json', 262144)
+        journey, journey_sha = private_json(followup.parent / 'browser-report.json', 2 * 1024 * 1024)
+        browser_admission.verify_browser(prior, journey, before, cases)
+        if (prior.get('status') != 'pass' or journey.get('status') != 'pass'
+                or journey.get('execution_id') != run_id
+                or prior.get('inputs_before') != before or prior.get('inputs_after') != before
+                or prior.get('browser_process', {}).get('cleanup', {}).get('empty') is not True
+                or prior.get('journey_sha256') != journey_sha
+                or session.get('execution_id') != run_id or session.get('format') != 1):
+            raise ValueError('Expiry requires the same passed native browser source and fixture')
+        issued, captured = session.get('issued_before_ms'), session.get('captured_at_ms')
+        if (type(issued) is not int or type(captured) is not int or not 0 < issued <= captured <= issued + 120000
+                or not 28 * 60000 <= time.time() * 1000 - issued <= 29 * 60000):
+            raise ValueError('Natural expiry followup must start in its recorded window')
+        before.update(expiry_session=session_sha, parent_transport=prior_sha, parent_journey=journey_sha)
     report = {'classification': 'local-real-browser-native-tls', 'status': 'fail', 'qualifies_phase': False,
               'inputs_before': before, 'tls': {}}
     certificates = directory / 'certificates'
@@ -83,12 +113,18 @@ def main():
                     subprocess.run(['/usr/bin/certutil', '-d', 'sql:' + profile, *arguments], check=True,
                                    stdout=subprocess.PIPE, stderr=subprocess.PIPE, timeout=10)
                 command = [str(ROOT / '.runtime/node-v24.21.0-linux-x64/bin/node'),
-                           str(ROOT / 'web/app/tests/native.mjs'), profile, str(fixture), str(output)]
+                           str(ROOT / ('web/app/tests/native-expiry.mjs' if followup else 'web/app/tests/native.mjs')),
+                           profile, str(fixture), str(output), *([str(followup)] if followup else [])]
                 execution_policy.validate_sample(execution_policy.sample_temperatures(), execution_policy.Policy(), preflight=True)
                 def admitted():
                     healthy()
                     execution_policy.validate_sample(execution_policy.sample_temperatures(), execution_policy.Policy())
                 report['browser_process'] = browser_process.run(command, root=ROOT, output=output, healthy=admitted)
+                child, child_sha = private_json(output / 'browser-report.json', 2 * 1024 * 1024)
+                browser_admission.verify_journey(child, run_id, cases, expiry=bool(followup))
+                if followup and child.get('session_file_sha256') != before['expiry_session']:
+                    raise ValueError('Browser used different expiry session bytes')
+                report['journey_sha256'] = child_sha
             finally:
                 ownership = output / 'browser-process.json'
                 if ownership.exists() and json.loads(ownership.read_text()).get('cleanup', {}).get('empty') is True:
@@ -97,9 +133,14 @@ def main():
                 else:
                     report['private_profile'] = 'retained; termination not proven'
             healthy()
-        report['inputs_after'] = dict(before, native_tree=tree_sha(ROOT / 'native/core/desk'),
-            runner=sha(__file__), process_owner=sha(ROOT / 'web/app/browser_process.py'),
-            browser_test=sha(ROOT / 'web/app/tests/native.mjs'), relay=sha(ROOT / 'web/dev/loopback_bridge.py'))
+        current = harness.rpc('status', timeout=2)
+        if browser_admission.require_native(ROOT, harness.STATE, current) != prerequisite:
+            raise ValueError('Native prerequisite changed before browser closeout')
+        report['inputs_after'] = browser_admission.browser_inputs(ROOT, current)
+        if followup:
+            report['inputs_after'].update(expiry_session=private_json(followup, 8192)[1],
+                parent_transport=private_json(followup.parent / 'transport-report.json', 262144)[1],
+                parent_journey=private_json(followup.parent / 'browser-report.json', 2 * 1024 * 1024)[1])
         if before != report['inputs_after']:
             raise ValueError('Browser source changed during execution')
         report['status'] = 'pass'

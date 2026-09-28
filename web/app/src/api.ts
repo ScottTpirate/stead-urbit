@@ -302,9 +302,29 @@ export class HomeClient {
     return this.receipt(row, command);
   }
   async recover(command: Command): Promise<Receipt> {
-    const view = await this.query({kind: 'receipt', project_id: command.project_id,
-      container_id: command.operation === 'container.create' ? command.resource_id : command.payload.container_id ?? '',
-      resource_id: command.request_id, search: '', cursor: ''});
+    let view: View;
+    try {
+      view = await this.query({kind: 'receipt', project_id: command.project_id,
+        container_id: command.operation === 'container.create' ? command.resource_id : command.payload.container_id ?? '',
+        resource_id: command.request_id, search: '', cursor: ''});
+    } catch (error) {
+      // A proposed collection may not exist because its first request
+      // never arrived. Keep it unconfirmed only while fresh authority still
+      // permits creation; never turn an inaccessible scope into a saved result.
+      if (error instanceof HomeError && error.code === 'denied_or_not_found') {
+        if (command.operation === 'container.create') {
+          const current = await this.query({kind:'project',project_id:command.project_id,container_id:'',resource_id:'',search:'',cursor:''});
+          const projects = Object.values(current.rows);
+          const project = projects[0];
+          if (projects.length === 1 && project?.project_id === command.project_id
+              && project.authority_epoch === command.authority_epoch
+              && (project.role === 'maintainer' || (project.role === 'contributor' && command.payload.visibility === 'private'))) {
+            throw new HomeError('outcome_unknown');
+          }
+        }
+      }
+      throw error;
+    }
     const row = Object.values(view.rows)[0];
     if (!row) throw new HomeError('outcome_unknown');
     return this.receipt(row, command);

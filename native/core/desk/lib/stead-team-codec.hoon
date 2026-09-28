@@ -4,6 +4,20 @@
 |%
 +$  query
   [request=@t kind=@t project=@t container=@t resource=@t search=@t cursor=@t]
+++  version-error
+  |=  [value=json domain=@t]
+  ^-  (unit @t)
+  ?>  ?=([%o *] value)
+  ?:  =(domain (field p.value 'protocol'))  ~
+  =/  request  (field p.value 'request_id')
+  ?>  (uuid request)
+  :-  ~
+  %-  canonical
+  %-  object
+  :~  ['protocol' 'stead.result/3']  ['status' 'rejected']
+      ['request_id' request]  ['canonical_sha256' (hash domain (canonical value))]
+      ['error' 'unsupported_version']
+  ==
 ++  opaque
   |=  text=@t
   ^-  ?
@@ -122,7 +136,7 @@
   ?>  (uuid req)
   ?>  ?|  =('' cursor)  (opaque cursor)
       ==
-  ?>  ?|  ?&  (~(has in (silt ~['identity' 'projects'])) kind)
+  ?>  ?|  ?&  (~(has in (silt ~['identity' 'capabilities' 'projects'])) kind)
               =('' project)  =('' container)  =('' resource)  =('' search)
           ==
           ?&  (uuid project)

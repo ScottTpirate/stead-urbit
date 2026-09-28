@@ -1,7 +1,8 @@
 .DEFAULT_GOAL := help
 # Bound seed/toolchain verification before the inner native guardian launches.
 PREP = systemd-run --user --scope --quiet -p CPUQuota=50% -p CPUQuotaPeriodSec=10ms -- taskset -c "$$(python3 -c 'import os; print(max(os.sched_getaffinity(0)))')"
-.PHONY: help setup doctor preflight dev start status wait-ready stop reset check test core-check core-test delivery-check capacity-check gall-schedule skill-prequalify plan-check contracts-check
+NODE = .runtime/node-v24.21.0-linux-x64/bin/node
+.PHONY: help setup doctor preflight dev start status wait-ready stop reset check test core-check core-test delivery-check capacity-check gall-schedule skill-prequalify plan-check contracts-check team-dev team-check frontend-check frontend-build
 help:
 	@python3 scripts/urbit/dev_help.py
 setup:
@@ -46,6 +47,11 @@ check:
 	python3 scripts/urbit/contracts.py test
 	python3 scripts/urbit/contracts_v2.py
 	python3 -m unittest discover -s tests/urbit -p 'test_*.py'
+frontend-check:
+	$(PREP) $(NODE) web/app/node_modules/typescript/bin/tsc --noEmit --project web/app
+	$(PREP) $(NODE) web/app/tests/run.mjs
+frontend-build:
+	$(PREP) $(NODE) web/app/build.mjs
 plan-check:
 	python3 scripts/urbit/validate_plan.py
 contracts-check:

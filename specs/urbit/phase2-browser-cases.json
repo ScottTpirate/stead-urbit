@@ -1,0 +1,43 @@
+{
+  "format": 1,
+  "classification": "native-browser-case-inventory",
+  "journey": {
+    "actual-browser-offline-preserves-draft-and-requires-explicit-original-request-retry": 1,
+    "browser-command-committed-with-native-approved-attribution": 1,
+    "browser-links-published-page-to-authorized-work": 1,
+    "bus-individual-native-owner-approved-session": 2,
+    "explicit-account-change-does-not-restore-former-private-state": 1,
+    "explicit-support-download-matches-reviewed-content-free-preview": 1,
+    "keyboard-project-and-work-creation-general-profile-unicode-long-title": 1,
+    "keyboard-principal-signin-approval-error-recovery-and-live-status": 1,
+    "logout-clears-rendered-business-state": 1,
+    "member-cookie-is-secure-httponly-host-only-and-not-owner-auth": 1,
+    "member-session-cannot-promote-raw-eyre-channel-or-scry-to-home-authority": 1,
+    "native-accepted-event-renders-same-instant-in-two-local-timezones": 1,
+    "native-browser-assets-measured-and-no-business-data-in-url-or-storage": 1,
+    "native-commit-with-injected-response-loss-recovers-original-receipt": 1,
+    "native-grant-revocation-clears-rendered-project-and-local-draft": 1,
+    "native-long-content-at-small-large-layouts-and-distinct-timezones": 1,
+    "native-private-markdown-saves-have-git-oids-and-inert-preview": 1,
+    "native-reader-work-view-without-write-control": 1,
+    "nec-individual-native-owner-approved-session": 2,
+    "new-general-project-does-not-implicitly-grant-another-member": 1,
+    "organization-owner-cookie-does-not-create-member-session-or-raw-home-read": 1,
+    "private-canary-search-owner-positive-reader-negative": 1,
+    "private-doc-edits-preserve-reader-projections-and-only-publication-invalidates": 1,
+    "reader-projections-exclude-private-page-canary": 1,
+    "second-individual-receives-live-committed-browser-work": 1,
+    "selected-page-published-without-private-collection-or-unselected-page": 1,
+    "shared-doc-edit-reloads-exact-markdown-revision-and-new-git-receipt": 1,
+    "two-native-principals-conflict-compare-explicit-rebase-and-live-refresh": 1,
+    "two-tab-csrf-rotation-and-unconfirmed-resume-retain-original-pending-receipt": 1,
+    "unbound-individual-browser-cannot-start-a-member-session": 1,
+    "unsent-collection-receipt-remains-unconfirmed-after-current-parent-authorization": 1,
+    "unsent-project-visible-original-request-retry-with-no-selected-project": 1
+  },
+  "natural_expiry": {
+    "natural-expiry-clears-rendered-protected-view-and-draft": 1,
+    "real-session-still-authorized-before-expiry-with-private-draft": 1,
+    "unchanged-expired-bearer-rejected-by-real-native-authorization": 1
+  }
+}

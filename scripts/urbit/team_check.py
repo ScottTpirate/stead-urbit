@@ -45,6 +45,22 @@ def configuration(now):
             'project_creators': {uid(102): 'yes'}}
 
 
+def capabilities_match(value, request_id):
+    """The public query contract has opaque row keys, not resource-name keys."""
+    if not isinstance(value, dict) or not isinstance(value.get('rows'), dict):
+        return False
+    return (all(value.get(key) == expected for key, expected in {
+        'protocol': 'stead.query-result/3', 'status': 'read', 'request_id': request_id,
+        'kind': 'capabilities', 'project_id': '', 'container_id': '', 'resource_id': '',
+        'authority_epoch': '0', 'cursor': ''}.items())
+        and isinstance(value.get('generation'), str) and bool(value['generation'])
+        and list(value['rows'].values()) == [{
+            'protocol': 'stead.capabilities/3', 'profile': 'configured-team', 'commands': 'stead.command/3',
+            'queries': 'stead.query/3', 'updates': 'stead.updates/3', 'authentication': 'native-sender/1',
+            'max_request_bytes': '65536', 'max_response_bytes': '262144', 'page_size': '20',
+            'runtime': 'isolated-fake'}])
+
+
 def run(host):
     started = time.monotonic()
     report = {'status': 'fail', 'classification': 'local-real-configured-gall-development',
@@ -70,8 +86,8 @@ def run(host):
         if not condition:
             raise AssertionError(name)
 
-    def command(ship, source, expected=None):
-        result = host['dojo'](ship, source)
+    def command(ship, source, expected=None, *, timeout=None):
+        result = host['dojo'](ship, source, **({'timeout': timeout} if timeout is not None else {}))
         report['commands'].append({'ship': ship, 'dojo': source, 'result': result})
         checkpoint('native-command')
         if expected is not None:
@@ -84,7 +100,8 @@ def run(host):
         host['execution_check']()
         raw = canonical(value) if value is not None else b''
         if route is None and mode in ('command', 'query', 'updates'):
-            digest = hashlib.sha256(value['protocol'].encode() + b'\0' + raw).hexdigest()
+            domain = {'command': 'stead.command/3', 'query': 'stead.query/3', 'updates': 'stead.updates/3'}[mode]
+            digest = hashlib.sha256(domain.encode() + b'\0' + raw).hexdigest()
             binding = uid(202 + ('bus', 'nec').index(ship)) if ship in ('bus', 'nec') else uid(299)
             route = '/v3/result/~' + ship + '/' + binding + '/1/' + value['request_id'] + '/' + digest
         result = team_conn.run(binary, host['LIVE'] / ship / '.urb/conn.sock', mode,
@@ -123,10 +140,16 @@ def run(host):
             log = Path('/state/logs/zod.log')
             offset = log.stat().st_size
             terminal = ''
+            unit_started = time.monotonic()
+            host['record']('native unit start', {'path': entry['path'], 'expected_arms': len(entry['arms'])})
             try:
                 observed = native_units.run(binary, host['LIVE'] / 'zod/.urb/conn.sock', resolved, timeout=entry.get('timeout_seconds', 60))
                 report['commands'].append({'ship': 'zod', 'native_test': observed})
                 terminal = observed['stdout']
+            except Exception as error:
+                if hasattr(error, 'native_failure'):
+                    report['commands'].append({'ship': 'zod', 'native_test_failure': error.native_failure})
+                raise
             finally:
                 with log.open('rb') as stream:
                     stream.seek(offset)
@@ -134,6 +157,8 @@ def run(host):
                 report.setdefault('native_unit_transcripts', []).append({'path': entry['path'],
                     'log_offset': offset, 'log_bytes': len(captured), 'log_hex': captured.hex(), 'terminal': terminal})
                 checkpoint('native-unit-output')
+                host['record']('native unit captured', {'path': entry['path'], 'log_bytes': len(captured),
+                    'elapsed_seconds': round(time.monotonic() - unit_started, 3), 'terminal_present': bool(terminal)})
             if len(captured) > 262144:
                 raise ValueError('Native unit log byte bound')
             negative = entry == inventory['negative_control']
@@ -176,6 +201,8 @@ def run(host):
             command(ship, '+stead-build-probe', '%stead-builds-pass')
             if ship == 'zod':
                 pure_units()
+                command('zod', '+stead-team-contract-probe', '%stead-team-contract-basic-pass')
+                command('zod', '+stead-team-authority-probe', '%stead-team-authority-basic-pass', timeout=300)
         command('zod', '|start %stead-home')
         command('zod', '|start %stead-http-boundary-probe')
         for ship in ('bus', 'nec', 'bud'):
@@ -218,7 +245,34 @@ def run(host):
         check('current-native-member-read', identity is not None and identity.get('status') == 'read')
         check('native-outsider-denied', denied(call('bud', 'query', query('identity')),
               'watch-ack-fail', 'stead-current-member-required'))
+        capabilities_query = query('capabilities')
+        capabilities = call('bus', 'query', capabilities_query)
+        check('native-public-capabilities-current-member',
+              capabilities_match(capabilities, capabilities_query['request_id']))
+        check('native-capabilities-unbound-sender-denied', denied(call('bud', 'query', query('capabilities')),
+              'watch-ack-fail', 'stead-current-member-required'))
         create = mutation('project.create', uid(1), 0, {'organization_id': uid(5), 'owning_team_id': uid(6), 'title': 'Garden α', 'project_key': 'GARDEN', 'preset': 'general'})
+        for mode in ('command', 'query', 'updates'):
+            domain = {'command': 'stead.command/3', 'query': 'stead.query/3', 'updates': 'stead.updates/3'}[mode]
+            for version in ('1', '2', '999'):
+                seed = create if mode == 'command' else query('projects')
+                if mode == 'updates':
+                    seed = {**seed, 'action': 'open', 'watch_id': ''}
+                bad = {**seed, 'protocol': domain.rsplit('/', 1)[0] + '/' + version}
+                outcome = call('bus', mode, bad)
+                check('native-' + mode + '-version-' + version + '-correlated-rejection', outcome == {
+                    'protocol': 'stead.result/3', 'status': 'rejected', 'error': 'unsupported_version',
+                    'request_id': bad['request_id'],
+                    'canonical_sha256': hashlib.sha256(domain.encode() + b'\0' + canonical(bad)).hexdigest()})
+        legacy = {**create, 'protocol': 'stead.command/2'}
+        legacy_digest = hashlib.sha256(b'stead.command/2\0' + canonical(legacy)).hexdigest()
+        legacy_route = '/v2/result/~bus/' + uid(102) + '/' + uid(1) + '/' + legacy['request_id'] + '/' + legacy_digest
+        for mode, kind in (('legacy-poke', 'poke-fail'), ('legacy-watch', 'watch-ack-fail')):
+            outcome = call('bus', mode, legacy, route=legacy_route)
+            check('native-' + mode + '-configured-home-refuses-v2-carrier',
+                  outcome.get('protocol') == 'stead.test-terminal/1' and outcome.get('status') == 'failed'
+                  and outcome.get('kind') == kind and bool(outcome.get('trace_jam_hex')))
+        check('native-unsupported-commands-do-not-create-project', call('bus', 'query', query('projects')).get('rows') == {})
         receipt = call('bus', 'command', create)
         check('explicit-creator-project-accepted', receipt is not None and receipt.get('status') == 'accepted'
               and receipt.get('identity_ship') == '~bus' and receipt.get('authentication') == 'native-sender/1'

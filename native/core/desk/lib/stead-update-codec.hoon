@@ -28,7 +28,7 @@
     [request action watch cursor query]
   ?>  =('' watch)
   ?>  ?:(=('resume' action) (opaque:stead-team-codec cursor) =('' cursor))
-  ?>  &(!=('identity' kind.query) !=('receipt' kind.query))
+  ?>  &(!=('identity' kind.query) !=('capabilities' kind.query) !=('receipt' kind.query))
   =/  encoded
     %-  canonical
     %-  object

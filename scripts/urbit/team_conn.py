@@ -4,7 +4,8 @@ import re
 import core_conn
 
 SHIPS = ('zod', 'bus', 'nec', 'bud')
-MODES = ('configure', 'identity-config', 'bootstrap', 'command', 'query', 'updates', 'approve')
+MODES = ('configure', 'identity-config', 'bootstrap', 'command', 'query', 'updates', 'approve',
+         'legacy-poke', 'legacy-watch')
 
 
 def run(binary, socket_path, mode, route='/', raw=b'', *, target='zod', app='stead-home', timeout=75):

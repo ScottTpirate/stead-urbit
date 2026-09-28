@@ -237,12 +237,84 @@ class SupervisorDeveloperTests(unittest.TestCase):
             spec.loader.exec_module(self.supervisor)
         self.supervisor.PROGRESS.update(stage='ready', ready=True)
 
+    def test_verified_seeds_restore_without_a_prior_live_directory(self):
+        module = self.supervisor
+        with tempfile.TemporaryDirectory(prefix='stead-seed-restore-') as directory, ExitStack() as stack:
+            root = Path(directory)
+            seed, live = root / 'seed', root / 'live'
+            seed.mkdir()
+            for ship in module.SHIPS:
+                (seed / ship).mkdir()
+                (seed / ship / 'synthetic-state').write_text(ship)
+            manifest = {'toolchain_sha256': 'a' * 64,
+                'ships': {ship: digests.tree_sha(seed / ship) for ship in module.SHIPS}}
+            (seed / 'manifest.json').write_text(json.dumps(manifest))
+            stack.enter_context(patch.object(module, 'SEED', seed))
+            stack.enter_context(patch.object(module, 'LIVE', live))
+            stack.enter_context(patch.object(module, 'execution_check'))
+            stack.enter_context(patch.object(module, 'sha', return_value='a' * 64))
+            self.assertFalse(live.exists())
+            module.copy_seed_to_live()
+            self.assertEqual({ship: digests.tree_sha(live / ship) for ship in module.SHIPS}, manifest['ships'])
+            # Corruption and a running identity must still fail before replacing
+            # any existing state; missing-directory support changes neither gate.
+            (live / 'preserved').write_text('keep')
+            (seed / 'zod' / 'synthetic-state').write_text('corrupt')
+            with self.assertRaisesRegex(ValueError, 'Seed integrity failure'):
+                module.copy_seed_to_live()
+            self.assertEqual((live / 'preserved').read_text(), 'keep')
+            with patch.object(module, 'PROCESSES', {'zod': Mock(poll=lambda: None)}):
+                with self.assertRaisesRegex(RuntimeError, 'fake ship is live'):
+                    module.copy_seed_to_live()
+            self.assertEqual((live / 'preserved').read_text(), 'keep')
+
     def dispatch(self, request):
         server, client = socket.socketpair()
         with client:
             client.sendall(json.dumps(request).encode() + b'\n')
             self.supervisor.handle(server)
             return json.loads(client.recv(65536))
+
+    def test_team_reference_is_final_guarded_evidence_and_never_survives_failed_rerun(self):
+        # Native execution is mocked; report writes and the status reference are
+        # real, covering ordering and late guard failure without starting ships.
+        module = self.supervisor
+        for outcome in ('pass', 'fail', 'late-guard-failure'):
+            with self.subTest(outcome=outcome), tempfile.TemporaryDirectory() as folder, ExitStack() as stack:
+                state = Path(folder); (state / 'logs').mkdir()
+                path = state / 'logs/team-check-20260927T120000Z.json'
+                module.PROGRESS.update(stage='ready', ready=True, team_evidence={'stale': True})
+                stack.enter_context(patch.object(module, 'STATE', state))
+                lease = {'run_id':'synthetic-control','generation':1,'guard_sha256':'a'*64,
+                    'policy_sha256':'b'*64,'policy':{'synthetic':True}}
+                calls = 0
+                def guard(**kwargs):
+                    nonlocal calls
+                    calls += 1
+                    if calls == 2 and outcome == 'late-guard-failure':
+                        raise execution_policy.GuardError('synthetic late refusal')
+                    return lease
+                def native(host):
+                    self.assertNotIn('team_evidence',module.PROGRESS)
+                    self.assertFalse(module.PROGRESS['ready'])
+                    result = {'status':'fail' if outcome == 'fail' else 'pass',
+                        'evidence_file':'.piers/fakes/logs/'+path.name}
+                    execution_policy.write_json(path,{**result,'execution_guard':{'not-final':True}})
+                    return result
+                stack.enter_context(patch.object(module, 'execution_check', side_effect=guard))
+                stack.enter_context(patch.object(module.team_check, 'run', side_effect=native))
+                stop = stack.enter_context(patch.object(module,'all_stop'))
+                response = self.dispatch({'op':'team-check'})
+                self.assertTrue(response['ok'],response)
+                persisted = execution_policy.read_json(path)
+                if outcome == 'pass':
+                    self.assertEqual(persisted['execution_guard'],lease)
+                    self.assertEqual(module.PROGRESS['team_evidence'],{'file':path.name,'sha256':digests.sha(path)})
+                    self.assertTrue(module.PROGRESS['ready']); stop.assert_not_called()
+                else:
+                    self.assertEqual(persisted['status'],'fail')
+                    self.assertNotIn('team_evidence',module.PROGRESS)
+                    self.assertFalse(module.PROGRESS['ready']); stop.assert_called_once()
 
     def feedback_mocks(self, stack, *, proof=None, outcome=None):
         module = self.supervisor
