@@ -36,6 +36,23 @@ failed runs and their evidence before another run; an interrupted state is not
 a clean seed. A cold restart must pass suspension, fresh bootstrap and ingress
 checks before browsers or peer messages are admitted.
 
+For the independent human trial, first complete the current automated browser
+journey on the same running `make team-dev` fixture. Preserve the printed
+`browser-native-YYYYMMDDTHHMMSSZ` directory name. Then launch:
+
+```sh
+python3 web/app/onboarding.py --launch --browser-run browser-native-YYYYMMDDTHHMMSSZ
+```
+
+Replace the example name with the actual passed run. Admission checks the live
+supervisor's native-report digest, exact installed source, packaged frontend,
+and the automated browser evidence and cleanup. A stale or failed prerequisite
+is refused. Do not edit or repackage between those checks and the trial.
+Provide only the [task](onboarding-task.md) and [member quickstart](member.md),
+then let the participant work without coaching. The launcher opens a disposable
+personal Firefox profile; its report awaits independent review and does not
+automatically close the milestone. Local thermal admission remains required.
+
 Support reports are opt-in downloads with a visible preview. Ask for that report
 and a description of the action, not cookies, identity codes or private page
 bodies. Reconcile an uncertain save using its original request ID. A rollback

@@ -36,8 +36,27 @@ export function acceptedReceipt(command, row, person) {
       || row.authentication !== 'native-approved-browser/1' || row.authentication_strength !== 'native-approved-browser'
       || !uint.test(row.accepted_at_ms) || BigInt(row.accepted_at_ms) === 0n || BigInt(row.accepted_at_ms) > 2n ** 64n - 1n
       || (resourceKind === 'document' ? !/^[0-9a-f]{40}$/u.test(row.git_commit_oid) : row.git_commit_oid !== '')) throw new Error('receipt_correlation');
-  return Object.fromEntries(['request_id','project_id','resource_id','container_id','operation',
+  const evidence = Object.fromEntries(['request_id','project_id','resource_id','container_id','operation',
     'resource_revision','canonical_sha256','git_commit_oid','accepted_at_ms'].map(key => [key, row[key]]));
+  if (command.operation === 'container.create') {
+    if (command.expected_revision !== '0' || !['private','shared'].includes(command.payload.visibility)) throw new Error('receipt_correlation');
+    evidence.visibility = command.payload.visibility;
+  }
+  return evidence;
+}
+export function collectionReadback(query, value, accepted) {
+  if (accepted.operation !== 'container.create' || !['private','shared'].includes(accepted.visibility)
+      || query.protocol !== 'stead.query/3' || query.kind !== 'containers' || query.project_id !== accepted.project_id
+      || query.container_id !== '' || query.resource_id !== '' || value.protocol !== 'stead.query-result/3'
+      || value.kind !== query.kind || value.status !== 'read'
+      || ['request_id','project_id','container_id','resource_id'].some(key => value[key] !== query[key])
+      || !value.rows || Array.isArray(value.rows) || Object.keys(value.rows).length > 20) throw new Error('collection_correlation');
+  const rows = Object.values(value.rows).filter(row => row.resource_id === accepted.resource_id);
+  if (!rows.length) return null;
+  if (rows.length !== 1 || rows[0].kind !== 'container' || rows[0].container_id !== accepted.container_id
+      || rows[0].resource_revision !== accepted.resource_revision || rows[0].visibility !== accepted.visibility) throw new Error('collection_correlation');
+  return {project_id:query.project_id, container_id:accepted.container_id, resource_revision:accepted.resource_revision,
+    accepted_request_id:accepted.request_id, query_request_id:query.request_id, visibility:rows[0].visibility};
 }
 export function personalIdentity(query, value) {
   if (query.protocol !== 'stead.query/3' || query.kind !== 'identity' || value.protocol !== 'stead.query-result/3'

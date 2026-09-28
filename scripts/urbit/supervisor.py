@@ -532,13 +532,19 @@ def handle(connection):
                     if not PROGRESS['ready']:
                         raise RuntimeError('Fixture not ready')
                     execution_check(preflight=True)
+                    if request['op'] == 'team-check':
+                        PROGRESS.pop('team_evidence', None)
                     PROGRESS.update(stage='compiling', ready=False, error=None)
                     result = None
                     try:
                         runner = core_check if request['op'] == 'core-check' else team_check
                         result = guarded_result(runner.run(globals()))
+                        if request['op'] == 'team-check' and result['status'] == 'pass':
+                            name = Path(result['evidence_file']).name
+                            PROGRESS['team_evidence'] = {'file': name, 'sha256': sha(STATE / 'logs' / name)}
                     finally:
                         if result is None or result['status'] != 'pass':
+                            PROGRESS.pop('team_evidence', None)
                             PROGRESS.update(stage='failed', ready=False,
                                             error='Native compilation/probes failed; make stop before retry')
                             all_stop()

@@ -2,7 +2,7 @@
 import assert from 'node:assert/strict';
 import {readFile, writeFile, rename} from 'node:fs/promises';
 import {firefox} from 'playwright';
-import {acceptedReceipt, personalIdentity, sha, scope, workBody} from './onboarding-evidence.mjs';
+import {acceptedReceipt, collectionReadback, personalIdentity, sha, scope, workBody} from './onboarding-evidence.mjs';
 const [profile, input, output] = process.argv.slice(2);
 assert.equal(process.version, 'v24.21.0');
 assert.ok(!process.env.SSLKEYLOGFILE);
@@ -16,7 +16,7 @@ const escape = value => value.replace(/[&<>"']/gu, char => ({'&':'&amp;','<':'&l
 const report = {classification: 'independent-human-local-native-browser', status: 'incomplete',
   qualifies_phase: false, participant: 'human-user', maintainer_coaching: 'not-attested',
   execution_id: material.execution_id, started_at: null, elapsed_ms: null,
-  accepted: [], reads: [], failures: [], readbacks: [], feedback: null, signed_out: false,
+  accepted: [], reads: [], failures: [], readbacks: [], collection_readbacks: [], feedback: null, signed_out: false,
   source: {task: sha(task), guide: sha(guide)}};
 const context = await firefox.launchPersistentContext(profile, {headless: false, ignoreHTTPSErrors: false,
   serviceWorkers: 'block', locale: 'en-US', timezoneId: 'America/New_York', viewport: {width: 1180, height: 850}});
@@ -69,10 +69,17 @@ async function observe(response) {
       || value.kind !== sent.kind || ['project_id','resource_id','container_id'].some(key => value[key] !== sent[key])
       || !value.rows || Array.isArray(value.rows) || Object.keys(value.rows).length > 20) throw new Error('query_correlation');
   if (sent.kind === 'identity') person = personalIdentity(sent, value);
+  if (sent.kind === 'containers') {
+    for (const accepted of report.accepted.filter(row => row.operation === 'container.create' && row.project_id === sent.project_id)) {
+      const matched = collectionReadback(sent, value, accepted);
+      if (matched && report.collection_readbacks.length < 64) report.collection_readbacks.push({...matched, response_sha256:sha(bytes)});
+    }
+  }
   if (report.reads.length < 256) report.reads.push({kind: sent.kind, request_id: sent.request_id,
     project_id: sent.project_id, container_id: sent.container_id, resource_id: sent.resource_id, response_sha256: sha(bytes),
     observed_rows: Object.values(value.rows).map(row => ({resource_id: evidenceId(row.resource_id),
-      container_id: evidenceId(row.container_id), request_id: evidenceId(row.request_id)}))});
+      container_id: evidenceId(row.container_id), request_id: evidenceId(row.request_id),
+      visibility: ['private','shared'].includes(row.visibility) ? row.visibility : ''}))});
   if (['work','document'].includes(sent.kind) && sent.resource_id) {
     for (const row of Object.values(value.rows)) {
       if (row.kind !== sent.kind || row.resource_id !== sent.resource_id || row.container_id !== sent.container_id) continue;
@@ -89,7 +96,7 @@ context.on('response', response => {
   const url = new URL(response.url());
   if (!started || finished || url.origin !== material.origin || !['/stead/api/command','/stead/api/query','/stead/auth/logout'].includes(url.pathname)) return;
   const task = observe(response).catch(error => failure(['request_bound','response_bound','receipt_count','receipt_shape',
-    'receipt_correlation','identity_correlation','identity_actor','query_correlation'].includes(error.message) ? error.message : 'observer_error'))
+    'receipt_correlation','identity_correlation','identity_actor','query_correlation','collection_correlation'].includes(error.message) ? error.message : 'observer_error'))
     .then(checkpoint).catch(() => { failure('evidence_write_failed'); finished = true; report.status = 'evidence-incomplete'; resolveFinished(); });
   pending.add(task); task.finally(() => pending.delete(task));
 });

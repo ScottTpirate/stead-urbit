@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 """Launch a private, bounded, human-operated browser on the native fake fixture."""
 from __future__ import annotations
+import argparse
 import hashlib
 import json
 import os
@@ -17,6 +18,7 @@ ROOT = Path(__file__).resolve().parents[2]
 sys.path.insert(0, str(ROOT / 'scripts/urbit'))
 sys.path.insert(0, str(ROOT / 'web/dev'))
 import browser_process
+import browser_admission
 import execution_policy
 import harness
 from digests import sha, tree_sha
@@ -24,8 +26,10 @@ from loopback_bridge import LoopbackBridge, PORTS
 
 
 def main():
-    if sys.argv[1:] != ['--launch']:
-        raise SystemExit('Usage: python3 web/app/onboarding.py --launch (after make team-dev and automated checks)')
+    parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument('--launch', action='store_true', required=True)
+    parser.add_argument('--browser-run', required=True, help='Passed browser-native-YYYYMMDDTHHMMSSZ directory name')
+    args = parser.parse_args()
     os.umask(0o077)
     # Validate the one display socket before creating a profile or opening ports.
     browser_process.clean_environment(ROOT, headed=True)
@@ -33,6 +37,7 @@ def main():
     status = harness.rpc('status')
     if status.get('profile') != 'configured-team' or not status.get('ready'):
         raise ValueError('The configured disposable team must be ready')
+    prerequisites = browser_admission.require_browser(ROOT, harness.STATE, status, args.browser_run)
     run_id = status['execution_guard']['run_id']
     directory = harness.STATE / 'ingress' / run_id
     fixture = directory / 'browser-fixture.json'
@@ -50,9 +55,11 @@ def main():
                 or set(current.get('ships', {})) != set(PORTS)
                 or any(row['exit'] is not None for row in current['ships'].values())):
             raise ValueError('The owned configured fixture is no longer ready')
+        if browser_admission.live_reference(current) != prerequisites['native']:
+            raise ValueError('Native prerequisite changed during the human trial')
         execution_policy.validate_sample(execution_policy.sample_temperatures(), execution_policy.Policy())
 
-    source_paths = ('web/app/onboarding.py', 'web/app/browser_process.py', 'web/app/tests/onboarding.mjs',
+    source_paths = ('web/app/onboarding.py', 'web/app/browser_process.py', 'web/app/browser_admission.py', 'web/app/tests/onboarding.mjs',
         'web/app/tests/onboarding-evidence.mjs', 'web/dev/loopback_bridge.py',
         'docs/urbit/quickstarts/member.md', 'docs/urbit/quickstarts/onboarding-task.md',
         'specs/urbit/toolchain.lock.json', 'web/app/dist/manifest.json')
@@ -64,7 +71,8 @@ def main():
     before = inputs()
     output = Path(tempfile.mkdtemp(prefix='onboarding-' + time.strftime('%Y%m%dT%H%M%SZ', time.gmtime()) + '-', dir=ROOT / '.runtime'))
     report = {'classification': 'human-local-browser-native-tls-transport', 'status': 'fail',
-              'qualifies_phase': False, 'execution_id': run_id, 'inputs_before': before, 'tls': {}}
+              'qualifies_phase': False, 'execution_id': run_id, 'inputs_before': before, 'tls': {},
+              'prerequisites': prerequisites}
     profile, personal = None, output / 'personal-fixture.json'
     try:
         certificates = directory / 'certificates'
@@ -101,6 +109,8 @@ def main():
         report['inputs_after'] = inputs()
         if before != report['inputs_after']:
             raise ValueError('Source changed during the human trial')
+        if browser_admission.require_browser(ROOT, harness.STATE, harness.rpc('status', timeout=2), args.browser_run) != prerequisites:
+            raise ValueError('Automated prerequisites changed during the human trial')
         report['status'] = 'captured-for-review'
     except Exception as error:
         report['error_type'] = type(error).__name__

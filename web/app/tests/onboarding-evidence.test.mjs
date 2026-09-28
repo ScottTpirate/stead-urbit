@@ -1,7 +1,7 @@
 // Synthetic verifier controls; these do not execute the human onboarding gate.
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import {acceptedReceipt, canonical, personalIdentity, sha, scope, workBody} from './onboarding-evidence.mjs';
+import {acceptedReceipt, canonical, collectionReadback, personalIdentity, sha, scope, workBody} from './onboarding-evidence.mjs';
 const id = suffix => '019939ba-4000-7000-8000-' + suffix.padStart(12,'0');
 const person = {principal_id:id('66'),binding_id:id('ca'),binding_revision:'1',identity_ship:'~bus',session_audit_id:'a'.repeat(64)};
 const command = {protocol:'stead.command/3',request_id:id('301'),project_id:id('302'),resource_id:id('303'),
@@ -58,4 +58,30 @@ test('readback scope and full Work body prevent cross-scope or list-preview matc
     assert.notEqual(workBody(command.payload),workBody({...command.payload,[key]:'changed'}));
     const missing = {...command.payload}; delete missing[key]; assert.throws(() => workBody(missing));
   }
+});
+test('collection privacy evidence binds accepted creation to the exact project, collection and revision', () => {
+  const create = {...command,operation:'container.create',expected_revision:'0',payload:{title:'Omitted private title',visibility:'private'}};
+  const row = {...receipt,operation:create.operation,resource_kind:'container',resource_revision:'1',container_id:create.resource_id,
+    canonical_sha256:sha(Buffer.concat([Buffer.from('stead.command/3\0'),Buffer.from(canonical(create))]))};
+  const accepted = acceptedReceipt(create,row,person);
+  assert.equal(accepted.visibility,'private'); assert.equal('title' in accepted,false);
+  const query = {protocol:'stead.query/3',request_id:id('504'),kind:'containers',project_id:create.project_id,container_id:'',resource_id:''};
+  const box = {kind:'container',resource_id:create.resource_id,container_id:create.resource_id,resource_revision:'1',visibility:'private',title:'Omitted private title'};
+  const result = {...query,protocol:'stead.query-result/3',status:'read',rows:{one:box}};
+  const matched = collectionReadback(query,result,accepted);
+  assert.equal(matched.accepted_request_id,accepted.request_id);
+  assert.equal(matched.visibility,'private'); assert.equal('title' in matched,false);
+  for (const delta of [{kind:'work'},{container_id:id('505')},{resource_revision:'2'},{visibility:'shared'}]) {
+    assert.throws(() => collectionReadback(query,{...result,rows:{one:{...box,...delta}}},accepted));
+  }
+  assert.equal(collectionReadback(query,{...result,rows:{one:{...box,resource_id:id('506'),container_id:id('506')}}},accepted),null);
+  assert.throws(() => collectionReadback(query,{...result,rows:{one:box,two:box}},accepted));
+  for (const delta of [{request_id:id('507')},{project_id:id('508')},{kind:'documents'},{container_id:id('509')}]) {
+    assert.throws(() => collectionReadback(query,{...result,...delta},accepted));
+  }
+  const shared = {...create,payload:{...create.payload,visibility:'shared'}};
+  assert.throws(() => acceptedReceipt(shared,row,person));
+  const sharedAccepted = acceptedReceipt(shared,{...row,canonical_sha256:sha(Buffer.concat([Buffer.from('stead.command/3\0'),Buffer.from(canonical(shared))]))},person);
+  assert.equal(collectionReadback(query,{...result,rows:{one:{...box,visibility:'shared'}}},sharedAccepted).visibility,'shared');
+  assert.throws(() => collectionReadback(query,result,sharedAccepted));
 });
