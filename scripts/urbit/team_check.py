@@ -45,6 +45,22 @@ def configuration(now):
             'project_creators': {uid(102): 'yes'}}
 
 
+def capabilities_match(value, request_id):
+    """The public query contract has opaque row keys, not resource-name keys."""
+    if not isinstance(value, dict) or not isinstance(value.get('rows'), dict):
+        return False
+    return (all(value.get(key) == expected for key, expected in {
+        'protocol': 'stead.query-result/3', 'status': 'read', 'request_id': request_id,
+        'kind': 'capabilities', 'project_id': '', 'container_id': '', 'resource_id': '',
+        'authority_epoch': '0', 'cursor': ''}.items())
+        and isinstance(value.get('generation'), str) and bool(value['generation'])
+        and list(value['rows'].values()) == [{
+            'protocol': 'stead.capabilities/3', 'profile': 'configured-team', 'commands': 'stead.command/3',
+            'queries': 'stead.query/3', 'updates': 'stead.updates/3', 'authentication': 'native-sender/1',
+            'max_request_bytes': '65536', 'max_response_bytes': '262144', 'page_size': '20',
+            'runtime': 'isolated-fake'}])
+
+
 def run(host):
     started = time.monotonic()
     report = {'status': 'fail', 'classification': 'local-real-configured-gall-development',
@@ -229,11 +245,10 @@ def run(host):
         check('current-native-member-read', identity is not None and identity.get('status') == 'read')
         check('native-outsider-denied', denied(call('bud', 'query', query('identity')),
               'watch-ack-fail', 'stead-current-member-required'))
-        capabilities = call('bus', 'query', query('capabilities'))
-        check('native-public-capabilities-current-member', capabilities.get('rows') == {'capabilities': {
-            'protocol': 'stead.capabilities/3', 'profile': 'configured-team', 'commands': 'stead.command/3',
-            'queries': 'stead.query/3', 'updates': 'stead.updates/3', 'authentication': 'native-sender/1',
-            'max_request_bytes': '65536', 'max_response_bytes': '262144', 'page_size': '20', 'runtime': 'isolated-fake'}})
+        capabilities_query = query('capabilities')
+        capabilities = call('bus', 'query', capabilities_query)
+        check('native-public-capabilities-current-member',
+              capabilities_match(capabilities, capabilities_query['request_id']))
         check('native-capabilities-unbound-sender-denied', denied(call('bud', 'query', query('capabilities')),
               'watch-ack-fail', 'stead-current-member-required'))
         create = mutation('project.create', uid(1), 0, {'organization_id': uid(5), 'owning_team_id': uid(6), 'title': 'Garden α', 'project_key': 'GARDEN', 'preset': 'general'})
