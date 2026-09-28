@@ -166,9 +166,10 @@ def unrelated(account):
         preexec_fn=confine, start_new_session=True, env={'PATH': '/usr/bin:/bin', 'LANG': 'C.UTF-8'})
     try:
         stdout, stderr = process.communicate(timeout=5)
-        require(process.returncode == 0 and not stderr and 0 < len(stdout) <= 8192,
-            'Unrelated AppArmor probe did not produce bounded evidence')
-        return json.loads(stdout)
+        return {'classification': 'pre-native-unrelated-control-only', 'exit_code': process.returncode,
+            'stdout': stdout[:8192].decode('utf-8', errors='replace'),
+            'stderr': stderr[:8192].decode('utf-8', errors='replace'),
+            'truncated': len(stdout) > 8192 or len(stderr) > 8192}
     finally:
         # The fixed probe performs its ioctl itself and starts no descendants.
         if process.poll() is None:
@@ -176,3 +177,10 @@ def unrelated(account):
         process.wait(timeout=2)
         process.stdout.close()
         process.stderr.close()
+
+
+def verify_probe(result, uid):
+    require(result['classification'] == 'pre-native-unrelated-control-only'
+        and result['exit_code'] == 0 and not result['stderr'] and not result['truncated']
+        and result['stdout'], 'Unrelated AppArmor probe did not produce bounded evidence')
+    return verify_unrelated(json.loads(result['stdout']), uid)

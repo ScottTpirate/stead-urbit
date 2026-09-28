@@ -616,7 +616,7 @@ def main():
         subprocess.run(['/usr/sbin/useradd', '--system', '--user-group', '--no-create-home', '--shell', '/usr/sbin/nologin', username], check=True, capture_output=True, timeout=10)
         account = pwd.getpwnam(username)
         result['unrelated_profile_control'] = hosted_apparmor.unrelated(account)
-        hosted_apparmor.verify_unrelated(result['unrelated_profile_control'], account.pw_uid)
+        result['unrelated_profile_observation'] = hosted_apparmor.verify_probe(result['unrelated_profile_control'], account.pw_uid)
         job = Path(tempfile.mkdtemp(prefix='stead-hosted-', dir='/var/lib'))
         os.chown(job, 0, account.pw_gid)
         os.chmod(job, 0o750)

@@ -209,6 +209,13 @@ class LauncherControls(unittest.TestCase):
 
 
 class AppArmorControls(unittest.TestCase):
+    def test_probe_failure_cannot_become_capability_denial_evidence(self):
+        good = {'classification': 'pre-native-unrelated-control-only', 'exit_code': 0,
+            'stdout': '{}', 'stderr': '', 'truncated': False}
+        for delta in ({'exit_code': 1}, {'stderr': 'Traceback'}, {'truncated': True}, {'stdout': ''}):
+            with self.subTest(delta=delta), self.assertRaisesRegex(ValueError, 'bounded evidence'):
+                apparmor.verify_probe({**good, **delta}, 991)
+
     def test_unrelated_control_requires_real_namespace_or_capability_denial(self):
         value = {'before': {'uid': 991, 'label': 'unconfined', 'nnp': '1', 'cap_eff': '0000000000000000'},
             'transition': 0, 'transition_errno': 0, 'after_transition': 'unconfined//&' + apparmor.PROFILE,
