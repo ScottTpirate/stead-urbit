@@ -1,0 +1,59 @@
+{
+  "admission_sha256": "272e254b7c2ae8f97d587caba9b1cf7e032cbd8ef4c95288047974af19e7f4f5",
+  "artifact": {
+    "digest": "sha256:52044211dda050daac326d8ae4ac4adc4d7f7a56e0e0c0509316bbef06a6ee35",
+    "id": 11000036578,
+    "name": "runtime-candidate-36485873646-1",
+    "size_in_bytes": 149619604
+  },
+  "attempt": "1",
+  "base_commit": "8ddc4b786979574dbfcb655e3db1b634f658d0de",
+  "binary": {
+    "bytes": 23703328,
+    "file": "vere-v4.6-newt-candidate",
+    "sha256": "f7f0d3b3c0480fc10f887dfbc09bde56a81d723a803541c7886c538a0675d833"
+  },
+  "classification": "real-github-actions-build-and-byte-verification",
+  "containers_completed_and_removed": 26,
+  "format": "stead.runtime-build-observation/1",
+  "independent_review": {
+    "disposition": "cleared for existing guarded local regression; not native acceptance",
+    "reviewer_type": "separate assistant",
+    "scope": "artifact and input bytes, source recipe, cleanup records and experimental local runner"
+  },
+  "input_archives_verified": 27,
+  "manifest_sha256": "240ab23982aa62037380e8ccc11802c2ac6929e344c81a728219a2f4306f914d",
+  "package_cache_unchanged": true,
+  "patch_file": "pkg/vere/newt.c",
+  "patch_sha256": "7926e9b0f83387595ad65b689a56439c73c48b35ce0c9226ecce2001d27f8e0b",
+  "qualifies_phase": false,
+  "retained_file_hashes": {
+    "hosted-36485873646-1/artifact.json": "00daec6a9696bb9936a6e88e8ae63f4f2535a694407b1c8f1f9280c43c192f69",
+    "hosted-36485873646-1/artifact.zip": "52044211dda050daac326d8ae4ac4adc4d7f7a56e0e0c0509316bbef06a6ee35",
+    "hosted-36485873646-1/build-inputs.tar": "e6f5184a227d632a8d7b81a1b6403fbc2ccf5dcbaab1d37191bb38ccc87167e6",
+    "hosted-36485873646-1/report.json": "41ef3ca7823305f353bc649e0512d02d04f254c40f9244b2eb9a216c5807fdb2",
+    "hosted-36485873646-1/run.json": "404fc8f1880f3fa8f77021a60d786db6193efc4bfdfce90f7fd515d76481794a"
+  },
+  "run_id": "36485873646",
+  "run_url": "https://github.com/ScottTpirate/stead-urbit/actions/runs/36485873646",
+  "source_and_compiler_unchanged": true,
+  "source_bundle_sha256": "e6f5184a227d632a8d7b81a1b6403fbc2ccf5dcbaab1d37191bb38ccc87167e6",
+  "status": "pass",
+  "tmpfs_cleanup": [
+    {
+      "path": "build-state",
+      "unmounted": true
+    },
+    {
+      "path": "import-state",
+      "unmounted": true
+    }
+  ],
+  "unexecuted": [
+    "candidate runtime regression",
+    "runtime pin adoption",
+    "complete hosted native CI",
+    "Phase 2 acceptance"
+  ],
+  "workflow": "825aebf719d1fd99bfc51457cc023ce36edda089"
+}

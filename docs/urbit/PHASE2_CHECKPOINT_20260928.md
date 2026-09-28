@@ -312,5 +312,26 @@ a single retained file. Its artifact `10999355695` retained the exact error,
 verified container removal and tmpfs cleanup. The reviewed one-line correction
 in [PR #72](https://github.com/ScottTpirate/stead-urbit/pull/72) explicitly disables
 compression while retaining the same single 4 MiB log bound. Eight host controls
-passed in 0.011 seconds. A fresh hosted build and the real runtime recovery test
-are still required.
+passed in 0.011 seconds.
+
+[Build run 36485873646](https://github.com/ScottTpirate/stead-urbit/actions/runs/36485873646)
+completed successfully at workflow `825aebf719d1fd99bfc51457cc023ce36edda089`.
+The downloaded artifact matches GitHub's SHA-256. All 27 input archives, exact
+workflow recipe bytes, binary correspondence, 26 completed containers and their
+cleanup were verified locally and independently reviewed. The
+[bounded build record](evidence/2026-09-28/runtime-disconnect/build.json)
+retains the actual hashes. The experimental binary is
+`f7f0d3b3c0480fc10f887dfbc09bde56a81d723a803541c7886c538a0675d833`.
+The project toolchain is unchanged. Native recovery, runtime adoption and complete
+native CI remain pending; this successful build does not qualify Phase 2.
+Additional runtime fault investigation is paused following the owner's request
+to avoid repeated platform safety interruptions. Ordinary application checks
+continue; required acceptance checks are not removed or reported as passed.
+
+The configured recovery probe's first native compilation found a missing
+nonempty-journal refinement. Reviewed commit `af87ec3` adds it; its actual retry
+passed 168 setup/unit checks but failed compilation on the test bowl's entropy
+literal (`@ud` where Gall requires `@uvJ`). Both original logs and failed reports
+are retained. The two fixture literals now have explicit entropy auras while
+preserving their numeric values. Successful recompilation and the actual
+interrupted-projection assertions are still pending.

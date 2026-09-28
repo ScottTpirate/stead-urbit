@@ -399,7 +399,7 @@
 ?>  ?=([%o *] parsed-config)
 =/  next-config  (canonical:stead-codec [%o (~(put by p.parsed-config) 'expected_revision' [%s '1'])])
 =/  context=bowl:gall  *bowl:gall
-=.  context  context(our ~zod, src ~zod, now (add ~1970.1.1 (mul 2 ~s1)), eny 17, act 5)
+=.  context  context(our ~zod, src ~zod, now (add ~1970.1.1 (mul 2 ~s1)), eny `@uvJ`17, act 5)
 =/  initial-agent  ~(. home-agent context)
 =/  [load-cards=(list card:agent:gall) loaded-agent=agent:gall]
   (on-load:initial-agent !>([%stead-home %3 [target expected-view]]))
@@ -413,7 +413,7 @@
 ?>  =(16 (lent entries.shadow.projection.partial-saved))
 ?>  (quarantined partial-agent next-config alice)
 =/  partial-vase=vase  on-save:partial-agent
-=/  reload-initial  ~(. home-agent context(eny 37, act 6))
+=/  reload-initial  ~(. home-agent context(eny `@uvJ`37, act 6))
 =/  [reload-cards=(list card:agent:gall) reloaded-agent=agent:gall]
   (on-load:reload-initial partial-vase)
 ?>  (quarantined reloaded-agent next-config alice)
