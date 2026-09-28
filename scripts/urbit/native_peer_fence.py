@@ -159,12 +159,12 @@ class NativePeerFence:
 
     @staticmethod
     def run(source):
-        completed = subprocess.run(owned_child.command(['/usr/bin/nft', '-f', '-'], privileged=True), input=source.encode(), capture_output=True, timeout=1)
+        completed = subprocess.run(owned_child.command([owned_child.nft_binary(), '-f', '-'], privileged=True), input=source.encode(), capture_output=True, timeout=1)
         if completed.returncode != 0 or completed.stdout or completed.stderr:
             raise RuntimeError('Native peer rule transaction failed')
 
     def verify(self, ports):
-        completed = subprocess.run(owned_child.command(['/usr/bin/nft', '-j', 'list', 'table', 'inet', TABLE], privileged=True), capture_output=True, timeout=1)
+        completed = subprocess.run(owned_child.command([owned_child.nft_binary(), '-j', 'list', 'table', 'inet', TABLE], privileged=True), capture_output=True, timeout=1)
         if completed.returncode != 0 or completed.stderr or len(completed.stdout) > 16384:
             raise RuntimeError('Native peer rule readback failed')
         rows = json.loads(completed.stdout)['nftables']

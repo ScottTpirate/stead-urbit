@@ -14,11 +14,13 @@ import threading
 import time
 
 import execution_policy
+import hosted_apparmor
 
 POLICY = {'profile': 'github-hosted-native/1', 'cpu_max': '20000 10000',
           'memory_max': 12 * 1024**3, 'memory_swap_max': 0, 'pids_max': 256,
           'sample_seconds': 1, 'stale_seconds': 3, 'deadline_seconds': 7200,
-          'thermal': 'provider-managed-unmeasured'}
+          'thermal': 'provider-managed-unmeasured', 'apparmor_profile': hosted_apparmor.PROFILE,
+          'apparmor_policy_sha256': hosted_apparmor.POLICY_SHA256}
 
 
 def require(condition, message):
@@ -52,10 +54,13 @@ def validate(value, *, run_id, now, guard_sha256, cpus):
     service = value.get('service', {})
     expected_service = {'KillMode': 'control-group', 'ExitType': 'main', 'RemainAfterExit': 'no',
         'Restart': 'no', 'OOMPolicy': 'kill', 'RuntimeMaxUSec': '2h', 'TimeoutStopUSec': '15s',
-        'Delegate': 'no', 'memory.oom.group': '1'}
+        'Delegate': 'no', 'memory.oom.group': '1', 'AppArmorProfile': hosted_apparmor.PROFILE}
     require(set(service) == {*expected_service, 'MainPID'}
             and all(service.get(key) == item for key, item in expected_service.items())
             and re.fullmatch(r'[1-9][0-9]{0,9}', service.get('MainPID', '')), 'Hosted service lifetime differs')
+    require(value.get('apparmor') == {'profile': hosted_apparmor.PROFILE,
+        'policy_sha256': hosted_apparmor.POLICY_SHA256,
+        'settings': dict.fromkeys(hosted_apparmor.SYSCTLS, '1')}, 'Hosted AppArmor observation differs')
     return value
 
 
@@ -63,7 +68,7 @@ def progression(previous, value):
     if previous is None:
         return
     immutable = ('run_id', 'started', 'deadline', 'cpus', 'unit', 'cgroup', 'service',
-        'policy', 'guard_sha256', 'policy_sha256', 'authenticated_host')
+        'policy', 'guard_sha256', 'policy_sha256', 'authenticated_host', 'apparmor')
     require(all(value[key] == previous[key] for key in immutable), 'Hosted lifetime identity changed')
     require(value['generation'] >= previous['generation']
             and value['observed_at'] >= previous['observed_at'], 'Hosted heartbeat moved backwards')
@@ -88,6 +93,7 @@ class HostedProvider:
             return self._require()
 
     def _require(self):
+        hosted_apparmor.require_label()
         require(not (self.control / 'STOP').exists(), 'Hosted execution stop is terminal')
         require(sorted(os.sched_getaffinity(0)) == self.cpus, 'Hosted affinity changed')
         value = validate(execution_policy.read_json(self.control / 'lease.json'),

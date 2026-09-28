@@ -17,6 +17,7 @@ sys.path[:0] = [str(ROOT / 'scripts/ci'), str(ROOT / 'scripts/urbit')]
 import hosted_identity as identity
 import hosted_lease as lease
 import hosted
+import hosted_apparmor as apparmor
 
 
 class IdentityControls(unittest.TestCase):
@@ -112,7 +113,9 @@ class HostedLeaseControls(unittest.TestCase):
             'resource_events': {'oom': 0, 'oom_kill': 0, 'pids_max': 0}, 'authenticated_host': True,
             'service': {'KillMode': 'control-group', 'ExitType': 'main', 'RemainAfterExit': 'no',
                 'Restart': 'no', 'OOMPolicy': 'kill', 'RuntimeMaxUSec': '2h', 'TimeoutStopUSec': '15s',
-                'Delegate': 'no', 'memory.oom.group': '1', 'MainPID': '123'}}
+                'Delegate': 'no', 'memory.oom.group': '1', 'MainPID': '123', 'AppArmorProfile': apparmor.PROFILE},
+            'apparmor': {'profile': apparmor.PROFILE, 'policy_sha256': apparmor.POLICY_SHA256,
+                'settings': dict.fromkeys(apparmor.SYSCTLS, '1')}}
 
     def validate(self, value=None, now=102):
         return lease.validate(self.value if value is None else value, run_id='a' * 32, now=now,
@@ -127,7 +130,8 @@ class HostedLeaseControls(unittest.TestCase):
             {'state': 'stopped'}, {'run_id': 'c' * 32}, {'authenticated_host': False},
             {'cpus': [0, 2]}, {'limits': {}}, {'generation': 0}, {'guard_sha256': 'd' * 64},
             {'deadline': 7400}, {'resource_events': {'oom': 1, 'oom_kill': 0, 'pids_max': 0}},
-            {'cgroup': '/system.slice/foreign.service'}):
+            {'cgroup': '/system.slice/foreign.service'}, {'apparmor': {}},
+            {'apparmor': {**self.value['apparmor'], 'settings': dict.fromkeys(apparmor.SYSCTLS, '0')}}):
             with self.subTest(change=change), self.assertRaises(Exception):
                 self.validate({**self.value, **change})
         with self.assertRaises(Exception):
@@ -202,6 +206,33 @@ class LauncherControls(unittest.TestCase):
             self.assertIsNone(hosted.control_frame(root, 'STEAD_HOSTED_CONTROL_READY ', 'abc'))
             path.write_text(path.read_text() + '\n')
             self.assertEqual(hosted.control_frame(root, 'STEAD_HOSTED_CONTROL_READY ', 'abc'), {'run_id': 'abc'})
+
+
+class AppArmorControls(unittest.TestCase):
+    def test_unrelated_control_requires_real_namespace_or_capability_denial(self):
+        value = {'before': {'uid': 991, 'label': 'unconfined', 'nnp': '1', 'cap_eff': '0000000000000000'},
+            'transition': 0, 'transition_errno': 0, 'after_transition': 'unconfined//&' + apparmor.PROFILE,
+            'unshare': 0, 'unshare_errno': 0, 'after_unshare': 'unprivileged_userns',
+            'network_errno': 1, 'cap_eff_after': '0000000000001000', 'nnp_after': '1'}
+        self.assertEqual(apparmor.verify_unrelated(value, 991), value)
+        for delta in ({'after_transition': apparmor.PROFILE + ' (unconfined)'},
+                      {'network_errno': 0}, {'network_errno': 2}, {'cap_eff_after': '0000000000000000'},
+                      {'nnp_after': '0'}, {'transition': -1, 'transition_errno': 2}, {'unshare': -1, 'unshare_errno': 12}):
+            with self.subTest(delta=delta), self.assertRaises(ValueError):
+                apparmor.verify_unrelated({**value, **delta}, 991)
+
+    def test_actual_label_and_mandatory_service_profile(self):
+        with patch.object(apparmor, 'label', return_value='unconfined'):
+            with self.assertRaisesRegex(ValueError, 'label differs'):
+                apparmor.require_label()
+        with patch.object(hosted, 'hosted_apparmor', apparmor, create=True), \
+                patch.object(hosted, 'local', SimpleNamespace(MEMORY=12 * 1024**3, TASKS=256), create=True):
+            context = {'unit': 'stead-hosted-' + 'a' * 32 + '.service', 'cpus': [0, 1]}
+            command = hosted.service_command(Path('/fixed'), context)
+            self.assertIn('--property=AppArmorProfile=' + apparmor.PROFILE, command)
+            self.assertNotIn('--property=AppArmorProfile=-' + apparmor.PROFILE, command)
+            command = hosted.service_command(Path('/fixed'), {**context, 'control_case': 'missing-profile'})
+            self.assertIn('--property=AppArmorProfile=' + apparmor.PROFILE + '-missing', command)
 
 
 class WorkflowBindingControls(unittest.TestCase):

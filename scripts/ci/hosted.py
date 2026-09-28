@@ -26,6 +26,7 @@ ROOT = Path(__file__).resolve().parents[2]
 CAPTURED = None
 CONTROLLER_FILES = None
 AUTH_ENVIRONMENT = None
+CONTROL_CASES = ('missing-profile', 'wrong-profile', 'parent-death', 'guardian-death', 'changed-limits', 'stale-lease')
 
 
 def require(condition, message):
@@ -36,7 +37,7 @@ def require(condition, message):
 def bootstrap():
     """Load only fresh, captured Git source; never working-tree pyc or locks."""
     global CAPTURED, CONTROLLER_FILES, AUTH_ENVIRONMENT
-    global execution_policy, hosted_identity, hosted_lease, local, canonical, verify, POLICY
+    global execution_policy, hosted_identity, hosted_lease, hosted_apparmor, local, canonical, verify, POLICY
     require(os.getuid() == 0 and sys.flags.isolated and sys.dont_write_bytecode, 'Root isolated controller required')
     regular_root(ROOT)
     AUTH_ENVIRONMENT = {key: os.environ.get(key, '') for key in (
@@ -86,9 +87,11 @@ def bootstrap():
     import execution_policy as execution_module
     import hosted_identity as identity_module
     import hosted_lease as lease_module
+    import hosted_apparmor as apparmor_module
     import local as local_module
     from worker_result import canonical as canonical_function, verify as verify_function
     execution_policy, hosted_identity, hosted_lease = execution_module, identity_module, lease_module
+    hosted_apparmor = apparmor_module
     local, canonical, verify = local_module, canonical_function, verify_function
     local.ROOT = ROOT  # Git is data in the original root-owned checkout.
     POLICY = hosted_lease.POLICY
@@ -148,7 +151,7 @@ def share_tree(root, gid):
 
 def readback(unit):
     result = subprocess.run(['/usr/bin/systemctl', 'show', unit,
-        '--property=LoadState,ActiveState,ControlGroup,MainPID,Result,KillMode,ExitType,RemainAfterExit,Restart,OOMPolicy,RuntimeMaxUSec,TimeoutStopUSec,Delegate'],
+        '--property=LoadState,ActiveState,ControlGroup,MainPID,Result,KillMode,ExitType,RemainAfterExit,Restart,OOMPolicy,RuntimeMaxUSec,TimeoutStopUSec,Delegate,AppArmorProfile,ExecMainCode,ExecMainStatus'],
         capture_output=True, text=True, timeout=3)
     require(result.returncode == 0, 'Hosted unit readback failed')
     return dict(line.split('=', 1) for line in result.stdout.splitlines() if '=' in line)
@@ -165,6 +168,8 @@ def cpu_set(raw):
 
 
 def observe(job, context):
+    apparmor = hosted_apparmor.observe()
+    hosted_apparmor.require_label()
     unit = context['unit']
     expected = '/system.slice/' + unit
     require(Path('/proc/self/cgroup').read_text().splitlines() == ['0::' + expected], 'Guardian cgroup differs')
@@ -173,7 +178,8 @@ def observe(job, context):
     require(service.get('ActiveState') == 'active' and service.get('MainPID') == str(os.getpid())
             and service.get('ControlGroup') == expected, 'Guardian service identity differs')
     expected_service = {'KillMode': 'control-group', 'ExitType': 'main', 'RemainAfterExit': 'no',
-        'Restart': 'no', 'OOMPolicy': 'kill', 'RuntimeMaxUSec': '2h', 'TimeoutStopUSec': '15s', 'Delegate': 'no'}
+        'Restart': 'no', 'OOMPolicy': 'kill', 'RuntimeMaxUSec': '2h', 'TimeoutStopUSec': '15s', 'Delegate': 'no',
+        'AppArmorProfile': hosted_apparmor.PROFILE}
     require(all(service.get(key) == value for key, value in expected_service.items()), 'Guardian service policy differs')
     require((cg / 'memory.oom.group').read_text().strip() == '1', 'Whole-cgroup OOM policy absent')
     limits = {key: (cg / key).read_text().strip() for key in ('cpu.max', 'memory.max', 'memory.swap.max', 'pids.max')}
@@ -193,6 +199,7 @@ def observe(job, context):
     require(events == {'oom': 0, 'oom_kill': 0, 'pids_max': 0}, 'Hosted resource event')
     require(hashlib.sha256(Path(__file__).read_bytes()).hexdigest() == context['guard_sha256'], 'Guardian source changed')
     return {'unit': unit, 'cgroup': expected, 'limits': limits, 'resource_events': events, 'cpus': context['cpus'],
+        'apparmor': apparmor,
         'service': {**expected_service, 'MainPID': str(os.getpid()), 'memory.oom.group': '1'}}
 
 
@@ -232,6 +239,7 @@ def child(job, parent):
     libc = ctypes.CDLL(None, use_errno=True)
     require(libc.prctl(1, signal.SIGKILL, 0, 0, 0) == 0 and os.getppid() == parent, 'Worker parent lifetime unavailable')
     require(libc.prctl(38, 1, 0, 0, 0) == 0, 'Worker no-new-privileges unavailable')
+    hosted_apparmor.require_label()
     os.environ.clear()
     os.environ.update(PATH='/usr/bin:/bin', LANG='C.UTF-8')
     command = sandbox_command(job, context)
@@ -332,10 +340,16 @@ def guardian(job):
 def service_command(job, context):
     cpus, unit = context['cpus'], context['unit']
     require(re.fullmatch(r'stead-hosted-[0-9a-f]{32}\.service', unit), 'Unowned service name')
+    profile = hosted_apparmor.PROFILE
+    if context.get('control_case') == 'missing-profile':
+        profile += '-missing'
+    elif context.get('control_case') == 'wrong-profile':
+        profile = 'unconfined'
     properties = {'CPUQuota': '200%', 'CPUQuotaPeriodSec': '10ms', 'CPUAffinity': ' '.join(map(str, cpus)),
         'AllowedCPUs': ' '.join(map(str, cpus)), 'MemoryMax': str(local.MEMORY), 'MemorySwapMax': '0',
         'TasksMax': str(local.TASKS), 'RuntimeMaxSec': '7200', 'TimeoutStopSec': '15',
-        'KillMode': 'control-group', 'ExitType': 'main', 'RemainAfterExit': 'no', 'Restart': 'no', 'OOMPolicy': 'kill'}
+        'KillMode': 'control-group', 'ExitType': 'main', 'RemainAfterExit': 'no', 'Restart': 'no', 'OOMPolicy': 'kill',
+        'AppArmorProfile': profile}
     command = ['/usr/bin/systemd-run', '--quiet', '--wait', '--pipe', '--service-type=exec', '--unit=' + unit]
     command += ['--property=' + key + '=' + value for key, value in properties.items()]
     return [*command, '/usr/bin/python3', '-I', '-B', str(Path(__file__)), '_guardian', str(job)]
@@ -432,7 +446,7 @@ def control_diagnostic(job, case):
     """
     if case is None:
         return None
-    require(case in ('parent-death', 'guardian-death', 'changed-limits', 'stale-lease'),
+    require(case in CONTROL_CASES,
         'Unknown diagnostic control')
     try:
         descriptor = os.open(job / 'console.private.log', os.O_RDONLY | os.O_NOFOLLOW | os.O_NONBLOCK)
@@ -460,13 +474,29 @@ def capture_control_diagnostic(job, case):
 
 def execute_control(case, process, job, context):
     started = time.monotonic()
+    if case in ('missing-profile', 'wrong-profile'):
+        require(process.wait(timeout=15) != 0, 'Invalid AppArmor admission falsely succeeded')
+        state = readback(context['unit'])
+        require(state.get('ActiveState') == 'failed', 'Invalid-profile service did not fail')
+        require(not (job / 'control/ci-admission.json').exists(), 'Invalid profile reached worker admission')
+        if case == 'missing-profile':
+            require(state.get('AppArmorProfile') == hosted_apparmor.PROFILE + '-missing'
+                and state.get('ExecMainCode') == '1' and state.get('ExecMainStatus') == '231',
+                'Missing profile did not fail in systemd AppArmor setup')
+        else:
+            guard = execution_policy.read_json(job / 'guard.json')
+            require(state.get('AppArmorProfile') == 'unconfined'
+                and guard.get('error') == 'ValueError: AppArmor task label differs'
+                and guard.get('exit_code') is None, 'Wrong profile did not fail before worker launch')
+        return {'case': case, 'status': 'pass', 'native_execution': False, 'admitted': False,
+            'after': state, 'elapsed_seconds': round(time.monotonic() - started, 3)}
     deadline = time.monotonic() + 40
     ready = None
     while ready is None:
         require(process.poll() is None and time.monotonic() < deadline, 'Control failed before admission')
         ready = control_frame(job, 'STEAD_HOSTED_CONTROL_READY ', context['run_id'])
         time.sleep(.1)
-    require(ready['detached_descendant'] is True and ready['isolation'] == {
+    require(ready['detached_descendant'] is True and ready.get('peer_fence_verified') is True and ready['isolation'] == {
         'private_network': True, 'host_credentials_absent': True, 'fresh_state': True,
         'external_route_absent': True}, 'Control isolation incomplete')
     unit = context['unit']
@@ -552,7 +582,7 @@ def main():
     parser.add_argument('--candidate', required=True)
     parser.add_argument('--run-id', required=True)
     parser.add_argument('--attempt', required=True)
-    parser.add_argument('--control', choices=('parent-death', 'guardian-death', 'changed-limits', 'stale-lease'))
+    parser.add_argument('--control', choices=CONTROL_CASES)
     args = parser.parse_args()
     require(os.getuid() == 0 and sys.flags.isolated and sys.dont_write_bytecode, 'Root isolated controller required')
     os.umask(0o077)
@@ -582,8 +612,11 @@ def main():
     process = None
     account = job = inputs = None
     try:
+        result['apparmor_setup'] = hosted_apparmor.prepare(regular_root)
         subprocess.run(['/usr/sbin/useradd', '--system', '--user-group', '--no-create-home', '--shell', '/usr/sbin/nologin', username], check=True, capture_output=True, timeout=10)
         account = pwd.getpwnam(username)
+        result['unrelated_profile_control'] = hosted_apparmor.unrelated(account)
+        hosted_apparmor.verify_unrelated(result['unrelated_profile_control'], account.pw_uid)
         job = Path(tempfile.mkdtemp(prefix='stead-hosted-', dir='/var/lib'))
         os.chown(job, 0, account.pw_gid)
         os.chmod(job, 0o750)

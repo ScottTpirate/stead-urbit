@@ -100,10 +100,32 @@ Hosted thermal management is provider-managed and unmeasured. The workstation
 profile retains its 75/90 C guard unchanged; there is no environment-variable
 thermal bypass.
 
+The Ubuntu hosted profile also provisions one named AppArmor `userns`
+allowance, selected by the privileged systemd service before its worker UID
+drop and no-new-privileges setting. This is not an AppArmor confinement
+sandbox: the namespace, read-only mounts, native capability drops and cgroup
+controls remain essential. The VM keeps `apparmor_restrict_unprivileged_userns`
+at 1 and hardens `apparmor_restrict_unprivileged_unconfined` only from 0 to 1
+(or retains 1). No setting is lowered. Both settings, exact policy bytes and
+guardian/launcher/worker labels are checked before and during execution.
+
+The fixed pre-native controls must prove missing/wrong service-profile
+refusal, unrelated unprivileged profile-transition and namespace-capability
+denial, successful owned namespace setup, and all four lifetime/resource
+failures. Setup records original/final settings, policy hash and parser/kernel
+versions. This configuration applies only to the new disposable hosted VM;
+the workstation is unchanged. Actual execution is still required.
+
+Primary platform references: [Ubuntu namespace restrictions](https://discourse.ubuntu.com/t/understanding-apparmor-user-namespace-restriction/58007),
+[AppArmor parser](https://manpages.ubuntu.com/manpages/noble/man8/apparmor_parser.8.html),
+[profile transitions](https://manpages.ubuntu.com/manpages/noble/man2/aa_change_profile.2.html),
+and [systemd service profiles](https://github.com/systemd/systemd/blob/v255/man/systemd.exec.xml).
+
 Only bounded input identities and verified result summaries are uploaded for
 seven days. Private raw console tails, disposable credentials, piers and tokens
 are excluded. Bounded credential-free launcher/service tracebacks are included
-on setup failure; candidate console remains private. This profile is **not yet qualified**: passing host identity and
+on setup failure. Fixed pre-native control consoles have a separate 8 KiB
+diagnostic bound; native candidate consoles remain private. This profile is **not yet qualified**: passing host identity and
 lease controls does not establish real hosted isolation, failure cleanup or
 native acceptance. Record those actual runs separately before closing URB-110.
 

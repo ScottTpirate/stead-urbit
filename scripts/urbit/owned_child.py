@@ -11,6 +11,22 @@ import sys
 import threading
 
 
+def nft_binary():
+    # Fixed distribution paths inside the existing read-only /usr mount; never
+    # search an inherited PATH for a capability-bearing packet controller.
+    if not os.statvfs('/usr').f_flag & os.ST_RDONLY:
+        raise ValueError('Namespace system tools must be read-only')
+    for name in ('/usr/bin/nft', '/usr/sbin/nft'):
+        path = Path(name)
+        if path.is_file():
+            info = path.stat()
+            # Host UID0 is intentionally unmapped in this user namespace.
+            if info.st_mode & 0o022 or not os.access(path, os.X_OK):
+                raise ValueError('Namespace packet controller mode differs')
+            return name
+    raise ValueError('Namespace packet controller is unavailable')
+
+
 def command(argv, *, privileged=False):
     if not argv:
         raise ValueError('Nonempty owned command required')
@@ -82,7 +98,7 @@ def main():
     if os.getppid() != parent:
         raise RuntimeError('Controller exited before child admission')
     if mode == 'controller':
-        if arguments[0] != '/usr/bin/nft':
+        if arguments[0] != nft_binary():
             raise ValueError('Only the namespace packet controller retains capabilities')
     else:
         arguments = ['/usr/bin/setpriv', '--bounding-set=-all', '--inh-caps=-all',
