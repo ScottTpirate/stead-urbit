@@ -105,6 +105,7 @@ def browser_inputs(root, status):
         'expiry_test': 'web/app/tests/native-expiry.mjs', 'relay': 'web/dev/loopback_bridge.py',
         'toolchain': 'specs/urbit/toolchain.lock.json', 'admission': 'web/app/browser_admission.py',
         'browser_cases': 'specs/urbit/phase2-browser-cases.json',
+        'docs_controls': 'web/app/tests/native-docs-controls.mjs',
         'response_capture': 'web/app/tests/response-capture.mjs'}
     return {**{key: sha(root / name) for key, name in names.items()},
         'frontend_manifest': frontend_binding(root),
