@@ -1,0 +1,11 @@
+clay: read-at-tako fail [desk=%base care=%a case=[%da p=~2026.09.28..12.17.39..3a42] path=/controls/stead-ci-compiler/hoon]
+/sys/vane/clay/hoon:<[4.378 29].[4.378 33]>
+/sys/vane/clay/hoon:<[4.384 9].[4.403 11]>
+/sys/vane/clay/hoon:<[4.385 9].[4.403 11]>
+/sys/vane/clay/hoon:<[4.386 15].[4.386 36]>
+clay: %a build failed [%base 0v19.bifmd.556k8.esahq.mp60o.4mu40.9vkb3.fujom.l0f2l.1l47i.v06p4 /controls/stead-ci-compiler/hoon]
+/controls/stead-ci-compiler/hoon::[2 1].[6 3]>
+/controls/stead-ci-compiler/hoon::[4 3].[5 34]>
+/controls/stead-ci-compiler/hoon::[5 3].[5 34]>
+-find.stead-ci-deliberately-undefined
+FAILED  /controls/stead-ci-compiler/hoon (build)

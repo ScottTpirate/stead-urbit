@@ -18,6 +18,14 @@ import owned_child
 
 
 class FailureProjectionTests(unittest.TestCase):
+    def test_native_control_reason_is_closed_and_discards_appended_content(self):
+        for message, reason in (('Specific compiler failure absent','control-compiler-diagnostic'),
+                ('Native timer ignored client timeout','control-timeout-absent'),
+                ('Missing arm fixture failed before discovery','control-missing-arm-fixture')):
+            self.assertEqual(failure.error_kind('ValueError: '+message),{'class':'ValueError','reason':reason})
+            self.assertEqual(failure.error_kind('ValueError: '+message+' private content'),
+                {'class':'ValueError','reason':'unrecognized'})
+
     def setUp(self):
         self.run = 'a' * 32
         self.inputs = {'expected_native_inputs': {'native': 'b' * 64}}

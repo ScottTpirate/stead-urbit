@@ -1,5 +1,6 @@
 """Verify the worker's actual rejection observations, with closed case inventory."""
 import errno
+from negative import compiler_diagnostic
 import hashlib
 import re
 
@@ -73,8 +74,7 @@ def verify_controls(value, inputs):
     log = bytes.fromhex(compiler['log_hex'])
     require(0 < len(log) <= 262144, 'Compiler log bound')
     diagnostic = log.decode('utf-8')
-    require('stead-ci-deliberately-undefined' in diagnostic and
-        re.search(r'\b(find-fork|build-fail|dojo-lame)\b', diagnostic), 'Compiler diagnostic missing')
+    require(compiler_diagnostic(diagnostic), 'Compiler diagnostic missing')
     if 'native_test' in compiler:
         require(set(compiler) == {'path', 'log_hex', 'native_test'}, 'Compiler execution schema')
         complete(compiler['native_test'], (32, (_atom('avow'), (0, (_atom('noun'), 1)))))

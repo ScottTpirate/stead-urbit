@@ -140,7 +140,7 @@ class ResultTests(unittest.TestCase):
                 'refusal': 'Native discovered/executed arm mismatch',
                 'log_hex': b'built   /controls/stead-ci-missing/hoon\nOK /controls/stead-ci-missing/test-ci-renamed\n'.hex()},
             'compiler_failure': {'path': '/controls/stead-ci-compiler',
-                'log_hex': b'find-fork stead-ci-deliberately-undefined\n'.hex(), 'error': 'Unexpected terminal',
+                'log_hex': b'-find.stead-ci-deliberately-undefined\nFAILED  /controls/stead-ci-compiler/hoon (build)\n'.hex(), 'error': 'Unexpected terminal',
                 'native_failure': unit_request('/controls/stead-ci-compiler') | {'stage': 'parse-terminal', 'received_frame_hex': compiler_frame.hex()}},
             'timer_positive': timer, 'timer_recovered': copy.deepcopy(timer),
             'timer_timeout': {'deadline_seconds': .05, 'elapsed_seconds': .1, 'native_failure': {
