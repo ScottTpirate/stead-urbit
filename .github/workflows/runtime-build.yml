@@ -1,0 +1,74 @@
+name: Experimental runtime build
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: stead-runtime-build
+  cancel-in-progress: false
+
+jobs:
+  build:
+    if: github.repository_id == '1367847927' && github.ref == 'refs/heads/main'
+    runs-on: ubuntu-24.04
+    timeout-minutes: 55
+    steps:
+      - name: Capture the exact reviewed workflow source
+        env:
+          STEAD_WORKFLOW: ${{ github.sha }}
+        run: |
+          sudo --preserve-env=STEAD_WORKFLOW python3 -I -B - <<'PY'
+          import os, pathlib, re, subprocess
+          commit = os.environ['STEAD_WORKFLOW']
+          if not re.fullmatch(r'[0-9a-f]{40}', commit):
+              raise SystemExit('Full immutable workflow commit required')
+          root = pathlib.Path('/var/lib/stead-runtime-build')
+          root.mkdir(mode=0o755)
+          env = {'PATH':'/usr/bin:/bin','LANG':'C.UTF-8','GIT_CONFIG_NOSYSTEM':'1',
+                 'GIT_CONFIG_GLOBAL':'/dev/null','GIT_TERMINAL_PROMPT':'0','GIT_NO_REPLACE_OBJECTS':'1'}
+          def git(*args):
+              subprocess.run(['git','-C',str(root),*args],env=env,check=True,timeout=120)
+          git('init','--initial-branch=build')
+          git('remote','add','origin','https://github.com/ScottTpirate/stead-urbit.git')
+          git('fetch','--no-tags','--depth=1','origin',commit)
+          git('checkout','--detach',commit)
+          PY
+      - name: Build the pinned repair in offline disposable containers
+        env:
+          STEAD_WORKFLOW: ${{ github.sha }}
+          STEAD_RUN_ID: ${{ github.run_id }}
+          STEAD_ATTEMPT: ${{ github.run_attempt }}
+        run: |
+          sudo --preserve-env=STEAD_WORKFLOW,STEAD_RUN_ID,STEAD_ATTEMPT python3 -I -B /var/lib/stead-runtime-build/scripts/runtime_build/hosted.py
+      - name: Clean owned containers after interruption
+        if: always()
+        env:
+          STEAD_WORKFLOW: ${{ github.sha }}
+          STEAD_RUN_ID: ${{ github.run_id }}
+          STEAD_ATTEMPT: ${{ github.run_attempt }}
+        run: |
+          python3 -I -B - <<'PY'
+          import json, os, re, subprocess
+          workflow=os.environ['STEAD_WORKFLOW']
+          ids=subprocess.check_output(['docker','ps','-aq','--filter','label=stead.runtime.workflow='+workflow],text=True).splitlines()
+          if len(ids)>32: raise SystemExit('Owned container count bound')
+          prefix='stead-runtime-'+os.environ['STEAD_RUN_ID']+'-'+os.environ['STEAD_ATTEMPT']+'-'
+          for cid in ids:
+              if not re.fullmatch(r'[0-9a-f]{12,64}',cid): raise SystemExit('Container identity bound')
+              value=json.loads(subprocess.check_output(['docker','inspect',cid]))[0]
+              if not value['Name'].removeprefix('/').startswith(prefix):
+                  raise SystemExit('Container ownership differs')
+              subprocess.run(['docker','rm','--force',cid],check=True,timeout=20)
+          PY
+      - name: Retain experimental binary and complete source inputs
+        if: always()
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
+        with:
+          name: runtime-candidate-${{ github.run_id }}-${{ github.run_attempt }}
+          path: /var/lib/stead-runtime-build/runtime-build-evidence/*
+          if-no-files-found: error
+          compression-level: 0
+          retention-days: 14

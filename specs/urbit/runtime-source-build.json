@@ -1,0 +1,228 @@
+{
+  "format": "stead.vere-source-build/1",
+  "base_commit": "8ddc4b786979574dbfcb655e3db1b634f658d0de",
+  "patch_commit": "c0a35c6f6302baf536a13522afd1ac89ea8c7776",
+  "patch_file": "pkg/vere/newt.c",
+  "patch_sha256": "7926e9b0f83387595ad65b689a56439c73c48b35ce0c9226ecce2001d27f8e0b",
+  "downloads": [
+    {
+      "file": "zig-0.15.2.tar.xz",
+      "url": "https://ziglang.org/download/0.15.2/zig-x86_64-linux-0.15.2.tar.xz",
+      "bytes": 53733924,
+      "sha256": "02aa270f183da276e5b5920b1dac44a63f1a49e55050ebde3aecc9eb82f93239",
+      "authority": "official Zig release index"
+    },
+    {
+      "file": "vere-4.6.tar.gz",
+      "url": "https://codeload.github.com/urbit/vere/tar.gz/8ddc4b786979574dbfcb655e3db1b634f658d0de",
+      "bytes": 5421036,
+      "sha256": "d432b0c019a328bfcb905b252d1801926379f5d82baf2bcdf0c95a10174250d3",
+      "authority": "locally measured immutable official source archive"
+    }
+  ],
+  "packages": [
+    {
+      "url": "http://deb.debian.org/debian/pool/main/libn/libnatpmp/libnatpmp_20230423.orig.tar.gz",
+      "download_url": "https://deb.debian.org/debian/pool/main/libn/libnatpmp/libnatpmp_20230423.orig.tar.gz",
+      "zig_hash": "N-V-__8AAKudAQA_d3eW8d8dskxBlLzGBg0qe-4u6ohSfCM2",
+      "file": "dep-00.tar.gz",
+      "sha256": "0684ed2c8406437e7519a1bd20ea83780db871b3a3a5d752311ba3e889dbfc70",
+      "bytes": 26506
+    },
+    {
+      "url": "https://dbus.freedesktop.org/releases/dbus/dbus-1.14.8.tar.xz",
+      "download_url": "https://dbus.freedesktop.org/releases/dbus/dbus-1.14.8.tar.xz",
+      "zig_hash": "N-V-__8AAEB_jACD3zKb7YOxOD4R_51AA41kNzD31hDwAmCN",
+      "file": "dep-01.tar.xz",
+      "sha256": "a6bd5bac5cf19f0c3c594bdae2565a095696980a683a0ef37cb6212e093bde35",
+      "bytes": 1371236
+    },
+    {
+      "url": "https://dist.libuv.org/dist/v1.50.0/libuv-v1.50.0.tar.gz",
+      "download_url": "https://dist.libuv.org/dist/v1.50.0/libuv-v1.50.0.tar.gz",
+      "zig_hash": "N-V-__8AAH34QwB6wi5eQK_lFbfDGSN3hRE8l-6Ep198ZsGg",
+      "file": "dep-02.tar.gz",
+      "sha256": "6dc2b39aa7fa66c04e2e015bf47738b84e1c6b86b8987d57dd432d149d77ee25",
+      "bytes": 1340083
+    },
+    {
+      "url": "https://ftp.fr.openbsd.org/pub/OpenBSD/distfiles/gmp-6.3.0.tar.xz",
+      "download_url": "https://ftp.gnu.org/gnu/gmp/gmp-6.3.0.tar.xz",
+      "zig_hash": "N-V-__8AAE5fAwHUYgLBeqNatYSKf3qBK3l8nwdpjyY8igK0",
+      "file": "dep-03.tar.xz",
+      "sha256": "a3c2b80201b89e68616f4ad30bc66aee4927c3ce50e33929ca819d5c43538898",
+      "bytes": 2094196
+    },
+    {
+      "url": "https://ftp.fr.openbsd.org/pub/OpenBSD/distfiles/libsigsegv-2.14.tar.gz",
+      "download_url": "https://ftp.gnu.org/gnu/libsigsegv/libsigsegv-2.14.tar.gz",
+      "zig_hash": "N-V-__8AAHQhHwCCMyKUtQhO0AMsY182In-wQIwXVhenOql5",
+      "file": "dep-04.tar.gz",
+      "sha256": "cdac3941803364cf81a908499beb79c200ead60b6b5b40cad124fd1e06caa295",
+      "bytes": 464658
+    },
+    {
+      "url": "https://github.com/DLTcollab/sse2neon/archive/refs/tags/v1.5.1.tar.gz",
+      "download_url": "https://github.com/DLTcollab/sse2neon/archive/refs/tags/v1.5.1.tar.gz",
+      "zig_hash": "N-V-__8AAPihCgDO1A74r0pFZaoafeZ41DR435smSDwGLbLb",
+      "file": "dep-05.tar.gz",
+      "sha256": "4001e2dfb14fcf3831211581ed83bcc83cf6a3a69f638dcbaa899044a351bb2a",
+      "bytes": 101446
+    },
+    {
+      "url": "https://github.com/LMDB/lmdb/archive/40d3741b7d40ba4c75cb91dd9987ce692d376d71.tar.gz",
+      "download_url": "https://github.com/LMDB/lmdb/archive/40d3741b7d40ba4c75cb91dd9987ce692d376d71.tar.gz",
+      "zig_hash": "N-V-__8AAJnhCAB47uREmMoPc3nE2qhAxU_JOiwXhg4qIWa4",
+      "file": "dep-06.tar.gz",
+      "sha256": "b80ed032246adda023132bda5fca1f8629201bcc828355fb5007fcf59f598fb6",
+      "bytes": 156960
+    },
+    {
+      "url": "https://github.com/allyourcodebase/zlib/archive/61e7df7e996ec5a5f13a653db3c419adb340d6ef.tar.gz",
+      "download_url": "https://github.com/allyourcodebase/zlib/archive/61e7df7e996ec5a5f13a653db3c419adb340d6ef.tar.gz",
+      "zig_hash": "zlib-1.3.1-ZZQ7lbYMAAB1hTSOKSXAKAgHsfDcyWNH_37ojw5WSpgR",
+      "file": "dep-07.tar.gz",
+      "sha256": "1fe3349e342a8bb3bbcf7c82a1dd4abdad8ef27a7e61be3ffbc0be5aca43a657",
+      "bytes": 1919
+    },
+    {
+      "url": "https://github.com/bitcoin-core/secp256k1/archive/refs/tags/v0.5.1.tar.gz",
+      "download_url": "https://github.com/bitcoin-core/secp256k1/archive/refs/tags/v0.5.1.tar.gz",
+      "zig_hash": "N-V-__8AAJ4DSwC7aDpt90TmGPWKAI6q4-titwp4M0zsZ2vY",
+      "file": "dep-08.tar.gz",
+      "sha256": "081f4730becba2715a6b0fd198fedd9e649a6caaa6a7d6d3cf0f9fa7483f2cf1",
+      "bytes": 1962518
+    },
+    {
+      "url": "https://github.com/curl/curl/releases/download/curl-8_9_1/curl-8.9.1.tar.gz",
+      "download_url": "https://github.com/curl/curl/releases/download/curl-8_9_1/curl-8.9.1.tar.gz",
+      "zig_hash": "N-V-__8AAFnEQQHzY3X3pCO43EGxRhLWhfSOAwsl0PbraQER",
+      "file": "dep-09.tar.gz",
+      "sha256": "291124a007ee5111997825940b3876b3048f7d31e73e9caa681b80fe48b2dcd5",
+      "bytes": 4200000
+    },
+    {
+      "url": "https://github.com/dfoxfranke/libaes_siv/archive/9681279cfaa6e6399bb7ca3afbbc27fc2e19df4b.tar.gz",
+      "download_url": "https://github.com/dfoxfranke/libaes_siv/archive/9681279cfaa6e6399bb7ca3afbbc27fc2e19df4b.tar.gz",
+      "zig_hash": "N-V-__8AADRgAQComAaFJaS9o75BOcaFVew6nO8D7ZTGMRXd",
+      "file": "dep-10.tar.gz",
+      "sha256": "1916a428dff480e06b09dc0fb1c9d849c048f838dc9b8d141452233b508f6bb1",
+      "bytes": 21974
+    },
+    {
+      "url": "https://github.com/gpakosz/whereami/archive/ba364cd54fd431c76c045393b6522b4bff547f50.tar.gz",
+      "download_url": "https://github.com/gpakosz/whereami/archive/ba364cd54fd431c76c045393b6522b4bff547f50.tar.gz",
+      "zig_hash": "N-V-__8AALQtAQBEQG8__NumxBzcv4ws_jGX2zVgxvG6p6gs",
+      "file": "dep-11.tar.gz",
+      "sha256": "1d8744177f37e8386ec2f6c5992592399040cb93535ed4fd253e1976f889a744",
+      "bytes": 15290
+    },
+    {
+      "url": "https://github.com/ianlancetaylor/libbacktrace/archive/4ead348bb45f753121ca0bd44170ff8352d4c514.tar.gz",
+      "download_url": "https://github.com/ianlancetaylor/libbacktrace/archive/4ead348bb45f753121ca0bd44170ff8352d4c514.tar.gz",
+      "zig_hash": "N-V-__8AADzSKgBaRtVnvQd2FZXVZ4ehq7SHwyHiBL8xSONl",
+      "file": "dep-12.tar.gz",
+      "sha256": "609c17352ec38eaf5ff6618fcbfb38cd8fa0e94a15a0d9aa259df514bbf47fcd",
+      "bytes": 683836
+    },
+    {
+      "url": "https://github.com/lathiat/avahi/releases/download/v0.8/avahi-0.8.tar.gz",
+      "download_url": "https://github.com/lathiat/avahi/releases/download/v0.8/avahi-0.8.tar.gz",
+      "zig_hash": "N-V-__8AAOLVeQDfYsiL0A86OXqDtfyLSrZXiEu8RSplOJJ5",
+      "file": "dep-13.tar.gz",
+      "sha256": "060309d7a333d38d951bc27598c677af1796934dbd98e1024e7ad8de798fedda",
+      "bytes": 1591458
+    },
+    {
+      "url": "https://github.com/libexpat/libexpat/releases/download/R_2_5_0/expat-2.5.0.tar.xz",
+      "download_url": "https://github.com/libexpat/libexpat/releases/download/R_2_5_0/expat-2.5.0.tar.xz",
+      "zig_hash": "N-V-__8AABFoMgCxh01WjWFoh4nrLx8v4e0G9muwSAAA32Rc",
+      "file": "dep-14.tar.xz",
+      "sha256": "ef2420f0232c087801abf705e89ae65f6257df6b7931d37846a193ef2e8cdcbe",
+      "bytes": 460560
+    },
+    {
+      "url": "https://github.com/libunwind/libunwind/archive/7cc4c20fbcf65a9c855fb9d950fad8d0e29b092e.tar.gz",
+      "download_url": "https://github.com/libunwind/libunwind/archive/7cc4c20fbcf65a9c855fb9d950fad8d0e29b092e.tar.gz",
+      "zig_hash": "N-V-__8AAA54RADHKA70ncWBovi6ApxYOAQQubuxcBr6y6Ey",
+      "file": "dep-15.tar.gz",
+      "sha256": "ff58864101781cc0df0c51f77a9d13addb9df3c5a972197c98434c88d6b30d57",
+      "bytes": 665634
+    },
+    {
+      "url": "https://github.com/openssl/openssl/releases/download/OpenSSL_1_1_1w/openssl-1.1.1w.tar.gz",
+      "download_url": "https://github.com/openssl/openssl/releases/download/OpenSSL_1_1_1w/openssl-1.1.1w.tar.gz",
+      "zig_hash": "N-V-__8AANidegJCsKafw97uPGA7EQRvFWkwRuXPz1aFjgKL",
+      "file": "dep-16.tar.gz",
+      "sha256": "cf3098950cb4d853ad95c0841f1f9c6d3dc102dccfcacd521d93925208b76ac8",
+      "bytes": 9893384
+    },
+    {
+      "url": "https://github.com/pkova/h2o/archive/3bbfe369a5c31d38cc1717e5281ca6af89ecf787.tar.gz",
+      "download_url": "https://github.com/pkova/h2o/archive/3bbfe369a5c31d38cc1717e5281ca6af89ecf787.tar.gz",
+      "zig_hash": "N-V-__8AAJ2XqALM9jST2Gu4TIdjPNY2QB8rnmKeepeqr076",
+      "file": "dep-17.tar.gz",
+      "sha256": "87d8a3040c922f6736fa3ada578baf9848e6aa1bb47db473c07e3cda79525f96",
+      "bytes": 16260839
+    },
+    {
+      "url": "https://github.com/skeeto/pdjson/archive/67108d883061043e55d0fb13961ac1b6fc8a485c.tar.gz",
+      "download_url": "https://github.com/skeeto/pdjson/archive/67108d883061043e55d0fb13961ac1b6fc8a485c.tar.gz",
+      "zig_hash": "N-V-__8AADC9AACneJx7RTm9Hui7GCYJ2Qdv8Z_CUCbJphyi",
+      "file": "dep-18.tar.gz",
+      "sha256": "928913d44d9021d69c0d23a8f59ed67028e5abf1ae7910f79c23a7af4e779b92",
+      "bytes": 11577
+    },
+    {
+      "url": "https://github.com/ucb-bar/berkeley-softfloat-3/archive/5c06db33fc1e2130f67c045327b0ec949032df1d.tar.gz",
+      "download_url": "https://github.com/ucb-bar/berkeley-softfloat-3/archive/5c06db33fc1e2130f67c045327b0ec949032df1d.tar.gz",
+      "zig_hash": "N-V-__8AAJjNHACk0uvy2j8WATPrbK9KmbnnuYeYIN6PO9nl",
+      "file": "dep-19.tar.gz",
+      "sha256": "15ad5841e88fe09422a8e31a0ef3fe126ecf678f52c9a3882f3373d47752aebe",
+      "bytes": 148536
+    },
+    {
+      "url": "https://github.com/urbit/SoftBLAS/archive/cbffb33f19ea02f9ffbd184d445123c57929ec53.tar.gz",
+      "download_url": "https://github.com/urbit/SoftBLAS/archive/cbffb33f19ea02f9ffbd184d445123c57929ec53.tar.gz",
+      "zig_hash": "N-V-__8AAJD5MgBhfBHYae8jFlcaQw9R-TRw4tcUFB3rO9-q",
+      "file": "dep-20.tar.gz",
+      "sha256": "1fc6c978708982d2f50405670b6fb6b1344936b22935d0037724c8de0fbfffbc",
+      "bytes": 3089655
+    },
+    {
+      "url": "https://github.com/urbit/urcrypt/archive/6c93535d46adffcd1495f904bac91d43b2d6d555.tar.gz",
+      "download_url": "https://github.com/urbit/urcrypt/archive/6c93535d46adffcd1495f904bac91d43b2d6d555.tar.gz",
+      "zig_hash": "N-V-__8AAEPPSQAFB28-gqWMJB7_zp5ZIS8wIN4boyLzAWRb",
+      "file": "dep-21.tar.gz",
+      "sha256": "2025aa33ac90018dd85f53d0488e3f685cb41b7349bd0e3dc72fd53e720c036f",
+      "bytes": 1705754
+    },
+    {
+      "url": "https://github.com/urbit/wasm3/archive/be8cbeafa8b2301350484ecb494ed0288589d985.tar.gz",
+      "download_url": "https://github.com/urbit/wasm3/archive/be8cbeafa8b2301350484ecb494ed0288589d985.tar.gz",
+      "zig_hash": "N-V-__8AAHEiSQD6ts4e3wCZ7CFp6FAQU4Dg5kBTwgSQpIDY",
+      "file": "dep-22.tar.gz",
+      "sha256": "0c5c9da48dd72d1dd5e72231866f2fbb7f673d9d66fc7cc7df19b0776a61a30f",
+      "bytes": 2602688
+    },
+    {
+      "url": "https://github.com/wolfpld/tracy/archive/v0.12.2.tar.gz",
+      "download_url": "https://github.com/wolfpld/tracy/archive/v0.12.2.tar.gz",
+      "zig_hash": "N-V-__8AANptPwE8EYOS5w6KRzVyfllpOBthYRcuuQvYhhxb",
+      "file": "dep-23.tar.gz",
+      "sha256": "09617765ba5ff1aa6da128d9ba3c608166c5ef05ac28e2bb77f791269d444952",
+      "bytes": 4781217
+    },
+    {
+      "url": "https://github.com/madler/zlib/archive/refs/tags/v1.3.1.tar.gz",
+      "download_url": "https://github.com/madler/zlib/archive/refs/tags/v1.3.1.tar.gz",
+      "zig_hash": "N-V-__8AAB0eQwD-0MdOEBmz7intriBReIsIDNlukNVoNu6o",
+      "file": "dep-24.tar.gz",
+      "sha256": "17e88863f3600672ab49182f217281b6fc4d3c762bde361935e436a95214d05c",
+      "bytes": 1572744
+    }
+  ],
+  "target": "x86_64-linux-musl",
+  "optimization": "ReleaseFast",
+  "qualifies_phase": false
+}
