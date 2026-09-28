@@ -100,10 +100,10 @@ def run():
                 # compilation are required; a generic timeout cannot pass.
                 if native.dojo('=/  arc=arch  .^(arch %cy /=base=/lib/stead-core/hoon)  ?=(^ -.arc)').strip() != '%.n':
                     raise ValueError('Private library unexpectedly available')
-                if native.dojo('+stead-sdk-public').strip() != '%sdk-import-control-compiled':
+                if native.dojo('+stead-sdk-public ~').strip() != '%sdk-import-control-compiled':
                     raise ValueError('Public import control did not compile')
                 offset = native.logpath.stat().st_size
-                rejected = native.dojo('+stead-sdk-private')
+                rejected = native.dojo('+stead-sdk-private ~')
                 with native.logpath.open('rb') as log:
                     log.seek(offset)
                     trace = log.read(262145)
