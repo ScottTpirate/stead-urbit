@@ -3,8 +3,8 @@
 This is a reviewed implementation boundary for URB-180 / #21, not a compiled or
 executed consumer. The public [SDK v3](../../sdk/v3/README.md) and package/source
 checker exist. The host input preparer below assembles the verified public
-files. The isolated builder, artifact transfer and runtime loader remain to be
-implemented and tested.
+files. A host artifact-reader primitive is also prepared. The isolated builder,
+transfer integration and runtime loader remain to be implemented and tested.
 
 ## Source and execution boundary
 
@@ -38,8 +38,21 @@ Wait boundedly for the exported regular files to materialize with exact sizes
 and digests. Stop and reap the builder, verify owned cleanup, then re-read and
 verify the bytes before releasing them. Bind package/source, installed Clay
 bytes, runner, toolchain, artifact inventory, lengths and hashes to the observed
-run. Artifact sizes are unmeasured; choose explicit reviewed bounds before
-execution and fail closed on excess.
+run. Artifact sizes are unmeasured. The prepared `scripts/sdk_artifacts.py` reader
+bounds each binary artifact to 16 MiB and their total to 64 MiB. It requires
+exactly `sample.jam` and the four separately named `stead-*-3.jam` mark files,
+exact external size/digest pins, private owned regular files with no links,
+and stable held-directory readback. It returns immutable verified bytes for
+transfer; later consumers must use those bytes, not reopen the input paths.
+These are new binary-transfer bounds, not changes to the existing JSON or
+evaluator limits. Exceeding a bound fails; there is no truncation or fallback.
+
+The future controller must supply pins from its retained builder observations
+after verified builder stop/reap/cleanup. Never obtain expected pins from an
+untrusted manifest beside the artifacts. The reader does not authenticate
+the caller's pins, prove builder isolation/cleanup, decode jam, or qualify a
+consumer. Synthetic-file host controls cover readback and rejection only;
+no compiled-artifact transfer has run yet.
 
 A separate runtime caller receives only compiled artifacts and the fixed loader,
 with neither sample nor private-client source. Validate length and digest before
