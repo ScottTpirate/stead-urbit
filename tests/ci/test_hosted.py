@@ -218,38 +218,37 @@ class AppArmorControls(unittest.TestCase):
 
     def test_unrelated_control_requires_real_namespace_or_capability_denial(self):
         before = {'uid': 991, 'gid': 992, 'label': 'unconfined', 'nnp': '1', 'cap_eff': '0000000000000000',
-            'user_ns': 'user:[1]', 'net_ns': 'net:[2]'}
-        mapped = {'uid': 0, 'gid': 0, 'label': 'unprivileged_userns', 'nnp': '1', 'cap_eff': '0000000000001000',
-            'user_ns': 'user:[3]', 'net_ns': 'net:[4]', 'uid_map': [[0, 991, 1]], 'gid_map': [[0, 992, 1]]}
-        write = {'family': 'AF_INET', 'socket_errno': 0, 'flags_read_errno': 0, 'flags_before': 0,
-            'flags_write_errno': 1, 'before_write': mapped}
-        value = {'before': before, 'after': mapped, 'mapped': mapped,
-            'pid': 100, 'started_ns': 1, 'stage_started_ns': 2, 'finished_ns': 3, 'stage': 'flags-write',
+            'user_ns': 'user:[1]', 'net_ns': 'net:[2]', 'mnt_ns': 'mnt:[5]'}
+        middle = {'uid': 65534, 'gid': 65534, 'label': apparmor.PROFILE + '//&unprivileged_userns (mixed)',
+            'nnp': '1', 'cap_eff': '0000000000200000', 'user_ns': 'user:[3]', 'net_ns': 'net:[4]',
+            'mnt_ns': 'mnt:[5]', 'uid_map': [], 'gid_map': []}
+        value = {'protocol': apparmor.PROBE_PROTOCOL, 'before': before, 'after': middle,
+            'before_mount': middle, 'after_unshare': middle,
+            'pid': 100, 'started_ns': 1, 'stage_started_ns': 2, 'finished_ns': 4, 'stage': 'mount-unshare',
             'transition': 0, 'transition_errno': 0, 'after_transition': 'unconfined//&' + apparmor.PROFILE,
-            'unshare': 0, 'unshare_errno': 0, 'network_attempts': [write]}
-        self.assertEqual(apparmor.verify_unrelated(value, 991, 992), value)
-        fallback = {**value, 'network_attempts': [
-            {'family': 'AF_INET', 'failed_stage': 'socket-create', 'errno': 13}, {**write, 'family': 'AF_UNIX'}]}
-        self.assertEqual(apparmor.verify_unrelated(fallback, 991, 992), fallback)
+            'unshare_flags': 0x50000000, 'unshare': 0, 'unshare_errno': 0,
+            'mount_flags': 0x20000, 'mount_unshare': -1, 'mount_errno': 1, 'mount_finished_ns': 3}
+        self.assertEqual(apparmor.verify_unrelated(value, 991, 992)['observed_control'], 'sys-admin-unshare-denied')
         namespace_denied = {**value, 'stage': 'unshare', 'unshare': -1, 'unshare_errno': 1,
-            'after': {**before, 'label': value['after_transition']}, 'network_attempts': []}
-        self.assertEqual(apparmor.verify_unrelated(namespace_denied, 991, 992), namespace_denied)
+            'after': {**before, 'label': value['after_transition']}}
+        del namespace_denied['mount_unshare']
+        self.assertEqual(apparmor.verify_unrelated(namespace_denied, 991, 992)['observed_control'], 'namespace-create-denied')
         for delta in ({'after_transition': apparmor.PROFILE + ' (unconfined)'},
-                      {'stage': 'socket-create'}, {'stage': 'flags-read'}, {'probe_error': {'errno': 13}},
+                      {'stage': 'mapping'}, {'stage': 'socket-create'}, {'probe_error': {'errno': 13}},
                       {'snapshot_error': 'PermissionError'}, {'pid': 0}, {'finished_ns': 0},
-                      {'after': {**mapped, 'cap_eff': '0000000000000000'}},
-                      {'after': {**mapped, 'nnp': '0'}}, {'after': {**mapped, 'net_ns': 'net:[2]'}},
-                      {'mapped': {**mapped, 'uid_map': [[0, 0, 1]]}}, {'mapped': {**mapped, 'gid': 65534}},
+                      {'protocol': 'earlier-ioctl'}, {'unshare_flags': 0x10000000},
+                      {'mount_flags': 0x10020000}, {'mount_unshare': 0}, {'mount_errno': 2}, {'mount_finished_ns': 1},
+                      {'after': {**middle, 'cap_eff': '0000000000000000'}},
+                      {'after': {**middle, 'nnp': '0'}}, {'after': {**middle, 'net_ns': 'net:[2]'}},
+                      {'after': {**middle, 'mnt_ns': 'mnt:[6]'}}, {'before_mount': {**middle, 'cap_eff': '0'}},
                       {'transition': -1, 'transition_errno': 2}, {'unshare': -1, 'unshare_errno': 12}):
             with self.subTest(delta=delta), self.assertRaises(ValueError):
                 apparmor.verify_unrelated({**value, **delta}, 991, 992)
-        for attempts in ([], [{'family': 'AF_INET', 'failed_stage': 'socket-create', 'errno': 13}],
-                [{**write, 'flags_write_errno': 0}], [{**write, 'flags_write_errno': 2}],
-                [{**write, 'flags_before': 1}], [{**write, 'flags_read_errno': 13}],
-                [{**write, 'before_write': {**mapped, 'cap_eff': '0'}}],
-                [{**write, 'flags_write_errno': 0}, {**write, 'family': 'AF_UNIX'}]):
-            with self.subTest(attempts=attempts), self.assertRaises(ValueError):
-                apparmor.verify_unrelated({**value, 'network_attempts': attempts}, 991, 992)
+        for delta in ({'cap_eff': '0'}, {'label': 'unconfined'}, {'user_ns': 'user:[1]'}):
+            altered = {**middle, **delta}
+            with self.subTest(delta=delta), self.assertRaises(ValueError):
+                apparmor.verify_unrelated({**value, 'before_mount': altered, 'after_unshare': altered,
+                    'after': altered}, 991, 992)
 
     def test_actual_label_and_mandatory_service_profile(self):
         with patch.object(apparmor, 'label', return_value='unconfined'):

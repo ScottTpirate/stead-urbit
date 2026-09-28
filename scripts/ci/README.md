@@ -116,6 +116,13 @@ failures. Setup records original/final settings, policy hash and parser/kernel
 versions. This configuration applies only to the new disposable hosted VM;
 the workstation is unchanged. Actual execution is still required.
 
+Unrelated-control revision 2 attempts a direct `CLONE_NEWNS` call after entering
+a new user/network namespace, with SYS_ADMIN present and no intervening exec,
+mapping, socket or mount operation. Its accepted outcome is an actual namespace
+creation or SYS_ADMIN-use refusal, not a NET_ADMIN/ioctl result. Exact PID,
+times, namespace identities, labels and capabilities are retained; attributing
+the refusal to AppArmor specifically also requires matching kernel audit data.
+
 Primary platform references: [Ubuntu namespace restrictions](https://discourse.ubuntu.com/t/understanding-apparmor-user-namespace-restriction/58007),
 [AppArmor parser](https://manpages.ubuntu.com/manpages/noble/man8/apparmor_parser.8.html),
 [profile transitions](https://manpages.ubuntu.com/manpages/noble/man2/aa_change_profile.2.html),

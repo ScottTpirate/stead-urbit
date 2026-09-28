@@ -98,11 +98,12 @@ def prepare(regular_root):
         'abi_4_0_text_sha256': hashlib.sha256(abi.encode()).hexdigest()}
 
 
-# No native/runtime code or candidate input enters this fixed negative probe.
-# It tests actual capability use after a profile transition, not only its exit.
-# Earlier mapping/socket failures remain diagnostics, never ioctl evidence.
+# This fixed probe creates namespaces but never modifies mounts, opens network
+# sockets, writes mappings, execs or starts descendants. Revision 2 measures a
+# direct SYS_ADMIN namespace-operation refusal, not the earlier ioctl probe.
+PROBE_PROTOCOL = 'stead.hosted-unrelated-namespace/2'
 UNRELATED_PROBE = r'''
-import ctypes, fcntl, json, os, pathlib, socket, struct, sys, time
+import ctypes, json, os, sys, time
 def read(path):
     with open(path) as stream:
         text = stream.read(8193)
@@ -114,15 +115,16 @@ def snapshot():
     return {'uid': os.getuid(), 'gid': os.getgid(), 'label': read('/proc/self/attr/current'),
         'nnp': state['NoNewPrivs'].strip(), 'cap_eff': state['CapEff'].strip(),
         'user_ns': os.readlink('/proc/self/ns/user'), 'net_ns': os.readlink('/proc/self/ns/net'),
+        'mnt_ns': os.readlink('/proc/self/ns/mnt'),
         'uid_map': [list(map(int, line.split())) for line in read('/proc/self/uid_map').splitlines()],
         'gid_map': [list(map(int, line.split())) for line in read('/proc/self/gid_map').splitlines()]}
-value = {'pid': os.getpid(), 'started_ns': time.time_ns(), 'stage': 'initial', 'network_attempts': []}
+value = {'protocol': 'stead.hosted-unrelated-namespace/2', 'pid': os.getpid(),
+    'started_ns': time.time_ns(), 'stage': 'initial'}
 def stage(name):
     value['stage'] = name
     value['stage_started_ns'] = time.time_ns()
 try:
     value['before'] = snapshot()
-    uid, gid = os.getuid(), os.getgid()
     aa = ctypes.CDLL('libapparmor.so.1', use_errno=True)
     aa.aa_change_profile.argtypes = [ctypes.c_char_p]
     stage('transition')
@@ -132,51 +134,19 @@ try:
     value['after_transition'] = read('/proc/self/attr/current')
     libc = ctypes.CDLL(None, use_errno=True)
     stage('unshare')
+    value['unshare_flags'] = 0x10000000 | 0x40000000
     ctypes.set_errno(0)
-    value['unshare'] = libc.unshare(0x10000000 | 0x40000000)
+    value['unshare'] = libc.unshare(value['unshare_flags'])
     value['unshare_errno'] = ctypes.get_errno()
     value['after_unshare'] = snapshot()
     if value['unshare'] == 0:
-        stage('mapping')
-        pathlib.Path('/proc/self/setgroups').write_text('deny\n')
-        pathlib.Path('/proc/self/uid_map').write_text('0 ' + str(uid) + ' 1\n')
-        pathlib.Path('/proc/self/gid_map').write_text('0 ' + str(gid) + ' 1\n')
-        value['mapped'] = snapshot()
-        mapped = value['mapped']
-        if (mapped['uid'] != 0 or mapped['gid'] != 0 or mapped['uid_map'] != [[0, uid, 1]]
-                or mapped['gid_map'] != [[0, gid, 1]] or mapped['nnp'] != '1'
-                or not int(mapped['cap_eff'], 16) & (1 << 12)):
-            raise ValueError('Mapped namespace identity differs')
-        # Device ioctls also work through AF_UNIX. Both sockets are created
-        # inside the new namespace; neither is bound or connected anywhere.
-        for family, number in (('AF_INET', socket.AF_INET), ('AF_UNIX', socket.AF_UNIX)):
-            attempt = {'family': family, 'started_ns': time.time_ns()}
-            value['network_attempts'].append(attempt)
-            try:
-                stage('socket-create')
-                with socket.socket(number, socket.SOCK_DGRAM) as channel:
-                    attempt['socket_errno'] = 0
-                    stage('flags-read')
-                    current = fcntl.ioctl(channel.fileno(), 0x8913, struct.pack('16sH14x', b'lo', 0))
-                    flags = struct.unpack_from('H', current, 16)[0]
-                    attempt['flags_read_errno'] = 0
-                    attempt['flags_before'] = flags
-                    if flags & 1:
-                        raise ValueError('New network namespace loopback is already up')
-                    attempt['before_write'] = snapshot()
-                    stage('flags-write')
-                    try:
-                        fcntl.ioctl(channel.fileno(), 0x8914, struct.pack('16sH14x', b'lo', flags | 1))
-                        attempt['flags_write_errno'] = 0
-                    except OSError as error:
-                        attempt['flags_write_errno'] = error.errno
-            except OSError as error:
-                attempt['failed_stage'] = value['stage']
-                attempt['errno'] = error.errno
-            finally:
-                attempt['finished_ns'] = time.time_ns()
-            if 'flags_write_errno' in attempt:
-                break
+        value['before_mount'] = snapshot()
+        value['mount_flags'] = 0x00020000
+        stage('mount-unshare')
+        ctypes.set_errno(0)
+        value['mount_unshare'] = libc.unshare(value['mount_flags'])
+        value['mount_errno'] = ctypes.get_errno()
+        value['mount_finished_ns'] = time.time_ns()
 except Exception as error:
     value['probe_error'] = {'type': type(error).__name__, 'errno': getattr(error, 'errno', None),
         'message': str(error)[:256]}
@@ -192,6 +162,7 @@ finally:
 
 def verify_unrelated(value, uid, gid):
     import errno
+    require(value['protocol'] == PROBE_PROTOCOL, 'Unrelated control protocol differs')
     require(not value.get('probe_error') and not value.get('snapshot_error'), 'Unrelated control stopped before the intended check')
     before, after = value['before'], value['after']
     require({key: before[key] for key in ('uid', 'gid', 'label', 'nnp', 'cap_eff')}
@@ -199,31 +170,27 @@ def verify_unrelated(value, uid, gid):
             'cap_eff': '0000000000000000'}, 'Unrelated control initial identity differs')
     require(type(value['pid']) is int and value['pid'] > 0
         and value['started_ns'] <= value['stage_started_ns'] <= value['finished_ns'], 'Unrelated control observation identity differs')
-    require(value['transition'] == 0 or (value['transition'] == -1
+    require((value['transition'] == 0 and value['transition_errno'] == 0) or (value['transition'] == -1
         and value['transition_errno'] in (errno.EPERM, errno.EACCES)), 'Unexpected profile transition failure')
     require(all(label != PROFILE + ' (unconfined)' for label in
         (value['after_transition'], after['label'])), 'Unrelated task acquired CI allowance')
-    refused_namespace = value['stage'] == 'unshare' and value['unshare'] == -1 and value['unshare_errno'] in (errno.EPERM, errno.EACCES)
-    # No exec occurs after unshare: lost capabilities cannot explain refusal.
-    mapped = value.get('mapped', {})
-    correct_mapping = (mapped.get('uid_map') == [[0, uid, 1]] and mapped.get('gid_map') == [[0, gid, 1]]
-        and after.get('uid_map') == [[0, uid, 1]] and after.get('gid_map') == [[0, gid, 1]]
-        and mapped.get('uid') == mapped.get('gid') == after['uid'] == after['gid'] == 0
-        and mapped.get('nnp') == '1' and int(mapped.get('cap_eff', '0'), 16) & (1 << 12))
-    attempts = value['network_attempts']
-    require([item['family'] for item in attempts] in ([], ['AF_INET'], ['AF_INET', 'AF_UNIX']),
-        'Unrelated control socket sequence differs')
-    require(not any(item.get('flags_write_errno') == 0 for item in attempts), 'Unrelated privileged write succeeded')
-    refused_writes = [item for item in attempts if item.get('flags_write_errno') in (errno.EPERM, errno.EACCES)
-        and item.get('socket_errno') == item.get('flags_read_errno') == 0 and not item['flags_before'] & 1
-        and item['before_write'] == mapped]
-    refused_capability = (value['stage'] == 'flags-write' and value['unshare'] == 0 and correct_mapping
+    require(value['unshare_flags'] == 0x50000000 and after['nnp'] == '1', 'Unrelated control namespace flags or NNP differ')
+    refused_namespace = (value['stage'] == 'unshare' and value['unshare'] == -1
+        and value['unshare_errno'] in (errno.EPERM, errno.EACCES) and 'mount_unshare' not in value
+        and all(before[key] == after[key] for key in ('user_ns', 'net_ns', 'mnt_ns')))
+    # The second call uses only CLONE_NEWNS: Linux checks SYS_ADMIN in the
+    # current (new) user namespace. No mapping or exec can confound that check.
+    middle = value.get('before_mount', {})
+    restricted = ('unprivileged_userns (enforce)', PROFILE + '//&unprivileged_userns (mixed)')
+    refused_capability = (value['stage'] == 'mount-unshare' and value['unshare'] == 0
+        and value['unshare_errno'] == 0 and value.get('mount_flags') == 0x00020000
+        and value.get('mount_unshare') == -1 and value.get('mount_errno') in (errno.EPERM, errno.EACCES)
+        and middle == value['after_unshare'] == after and middle.get('label') in restricted
         and before['user_ns'] != after['user_ns'] and before['net_ns'] != after['net_ns']
-        and int(after['cap_eff'], 16) & (1 << 12)
-        and mapped == after and len(refused_writes) == 1)
-    require(after['nnp'] == '1', 'Unrelated control lost no-new-privileges')
+        and before['mnt_ns'] == after['mnt_ns'] and int(after['cap_eff'], 16) & (1 << 21)
+        and value['stage_started_ns'] <= value['mount_finished_ns'] <= value['finished_ns'])
     require(refused_namespace or refused_capability, 'Unrelated namespace capability was not denied')
-    return value
+    return {**value, 'observed_control': 'namespace-create-denied' if refused_namespace else 'sys-admin-unshare-denied'}
 
 
 def unrelated(account):
@@ -246,7 +213,7 @@ def unrelated(account):
             'stderr': stderr[:8192].decode('utf-8', errors='replace'),
             'truncated': len(stdout) > 8192 or len(stderr) > 8192}
     finally:
-        # The fixed probe performs its ioctl itself and starts no descendants.
+        # The fixed probe performs its syscalls itself and starts no descendants.
         if process.poll() is None:
             process.kill()
         process.wait(timeout=2)
