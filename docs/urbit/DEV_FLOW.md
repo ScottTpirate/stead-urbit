@@ -36,6 +36,7 @@ read-only.
 | `make core-check` | Reinstall edited Hoon into a fresh fake fixture and rerun compilation/probes | Shorter native feedback, separate from acceptance |
 | `make team-dev` | Restore verified seeds, compile configured homes and personal helpers, then exercise four ships and cold restarts | Configured native development evidence; a successful run leaves the guarded fixture available |
 | `make team-check` | Repeat the configured four-ship development checks in the running matching supervisor | Replaces disposable test data; preserve any prior evidence first |
+| `make sdk-dev SDK_ARCHIVE=<archive>` | Compile and exercise a public-only consumer in two fresh isolated fake ships | Independent SDK candidate; retain actual run status and cleanup |
 | `make migration-dev` | Run the exact trusted CI migration generator on one guarded fake ship, then stop | Focused diagnostic with private compiler evidence; not full CI acceptance |
 | `python3 web/app/browser-check.py` | Run Firefox against the live configured fixture, using its own disposable certificate profile | Real browser/native TLS evidence for the cases actually executed |
 | `make test` | Run the original four-identity counter smoke | Native allow/deny, failure propagation and restart |

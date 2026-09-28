@@ -14,6 +14,7 @@ print('''Stead Urbit local development (Linux, synthetic fake ships)
   make team-dev    Compile and check the configured four-ship Work/Docs fixture
   make team-check  Repeat configured checks in the matching guarded fixture
   make migration-dev  Run only the trusted CI migration probe, then stop
+  make sdk-dev SDK_ARCHIVE=<archive>  Check a separately packaged native consumer
   make test        Run the original four-ship native smoke suite
   make core-test   Execute the full native corpus; independent qualification follows
   make delivery-check  Check native offline-home timeouts and sender recovery

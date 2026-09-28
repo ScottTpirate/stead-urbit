@@ -160,14 +160,42 @@ seconds. This source defect is not the observed original failure's proven cause.
 [Retry 36374379219](https://github.com/ScottTpirate/stead-urbit/actions/runs/36374379219)
 uses workflow `f38cffe728752631614f4abff54e9db961b28fff`, that controller, and candidate
 `4b73991fa245e4cf413a218c34fae55e1834a366`; its native product bytes match the prior
-candidate. The result is pending. It does not qualify the combined supervisor
-or new ingress code, which the separately pinned controller does not execute.
+candidate. The run failed after 755 passing team checks and the admission/cleanup
+controls. A focused local reproduction observed the same 57-byte response and
+SHA-256 `48df5b0bbd1d0e0772e0fb7c2ac35b554110c6ac2553644b144a96a82bd9506b`:
+`%generator-build-fail`. Actual compiler output identified incorrect import
+ordering, then an ambiguous `q.on-save` access. The corrected generator imports
+libraries before the agent and names the saved vases explicitly. All 22
+assertions remain. Source `e59d72fea049642c6626a556582b9b79ea0e790e` passed
+`make migration-dev`: 160 checks, the exact supported-migration marker,
+59.372 seconds inside the diagnostic and clean owned cleanup. The migration
+file SHA-256 is `bf7f09814c6a61469ac34bb9bfa017f8a8991dbd067b3d7c70ebba66ad366c23`.
+That historical source context retained `committed_bytes_verified=false` because
+two untracked Python cache files existed in the web helper mount. All committed
+source and installed native files matched; this focused result is not a complete
+committed-tree or CI qualification. The cache files were preserved and the entry
+points now disable cache writes before loading those helpers.
+
+[PR #69](https://github.com/ScottTpirate/stead-urbit/pull/69) pins reviewed controller
+`99879c516b0481d1013051672658bf85fe030428`. The fresh
+[run 36412165213](https://github.com/ScottTpirate/stead-urbit/actions/runs/36412165213)
+uses main `9a6fec9a6030d381f1fa846bd9bb4ec8779cd382` and candidate
+`2a525948b5b369a05bcf1c2a783a9dbc5c361390`. Its result is pending. This controller
+still does not execute the combined local supervisor or new ingress code.
+
+The updated browser client eliminates duplicate identity reads and scope
+snapshots, submits search explicitly and serializes unfinished watch opens.
+Pinned TypeScript and 35 host client/build controls passed; all 16 real Firefox
+checks against a mocked Home passed with unchanged input digests. Native timing
+instrumentation is prepared but has not run against this new client. Generated
+assets were verified and packaged in `cf19d00`; this is build evidence, not
+native browser acceptance.
 
 ## Remaining execution
 
-The user needs K4 running. Local native/browser qualification and the human
-trial remain paused. Stead is stopped; no K4, fan or desktop settings were changed
-for this preparation. Local admission still requires 75°C or lower and stops at 90°C.
+The user has paused K4 and requested completion of Stead. Guarded local work has
+resumed. No K4, fan or desktop settings were changed by this continuation.
+Local admission still requires 75°C or lower and stops at 90°C.
 
 The remaining gates are a complete hosted native compile/unit/multi-ship/migration
 run, the independent SDK consumer, fresh local native/browser journeys including

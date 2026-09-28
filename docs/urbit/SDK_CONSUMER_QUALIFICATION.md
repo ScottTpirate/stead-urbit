@@ -1,148 +1,94 @@
 # Independent SDK consumer qualification
 
-This is a reviewed implementation boundary for URB-180 / #21, not a compiled or
-executed consumer. The public [SDK v3](../../sdk/v3/README.md) and package/source
-checker exist. The host input preparer below assembles the verified public
-files. A host artifact-reader primitive and native build-thread source are also
-prepared. The thread has not been compiled or executed. The isolated builder
-lifecycle, transfer integration and runtime loader remain to be implemented
-and tested.
+The executable candidate is `make sdk-dev SDK_ARCHIVE=<verified archive>`.
+It is implemented for guarded local qualification; native compilation and the
+complete conformance run are still unexecuted. This document is not acceptance.
 
-## Source and execution boundary
+## Current source and execution boundary
 
-A fresh isolated fake builder receives only the verified public SDK archive,
-pinned kernel/runtime/pill and fixed reviewed build runner. No Home state, private
-client, broad native-source mount, existing pier or seed enters it. Package
-admission must call `scripts/check_sdk_source.py` and bind every export to the
-declared Git commit; archive integrity alone does not establish that source.
+The runner verifies the public v3 package against its declared Git source and
+prepares private, immutable input copies. It creates a fresh `~bus` consumer from
+the pinned pill, runtime and kernel. Only the public desk, explicit fixed test
+runners and three generic native framing/process helpers enter its filesystem.
+No Home source, state, pier, seed, private client or host credentials enter it.
+Package and runner inventories are checked against their expected hashes before
+launch, inside the consumer, and at closure.
 
-Prepare the input directory without starting Urbit:
+The public sample and all four carrier marks must compile. An otherwise matching
+public-import generator must succeed while importing private `stead-core` must
+fail for the actual missing dependency. The runner captures an absolute Clay
+case, checks the installed bytes, and keeps that same fresh consumer alive.
+Runtime calls compile the public sample at that immutable case, cast its full
+vase to the pinned `thread:spider` type and invoke that gate with the public
+arguments. This preserves the sample's captured subject. The current invocation
+wrapper is checked before every call; current and captured installed files are
+read back at closure.
+
+Only after compilation and isolation controls does the trusted controller boot a
+separate fresh synthetic `~zod` Home. It installs the actual bound product desk,
+including assets, and executes the unchanged owner-local configuration and
+bootstrap exchange. It never restores Home state or restarts either identity.
+This native-only profile does not substitute for configured browser/TLS or
+cold-restart qualification.
+
+The consumer has separate user, mount, PID and network namespaces. Both sides
+have loopback only. A private controller socket carries bounded framed results
+and fixed-peer UDP datagrams. The relay exposes exactly the fake Ames pair
+31337/31519 and accepts packets only from its expected owned local native port;
+it cannot forward TCP, arbitrary addresses, HTTP, Lens or filesystem sockets.
+Live TCP and abstract-socket controls, absent filesystem paths and namespace
+identities are recorded. A numeric port occupied by the consumer's own Lens is
+not evidence that Home's different network namespace is reachable.
+
+One existing foreground thermal/cgroup guardian owns both namespaces and all
+children. The independent lease watchdog remains active during blocking calls.
+It closes admission and signals owned children after guard loss or unexpected
+exit. Vere and evaluator children have parent-death binding, no capabilities and
+no-new-privileges. Shutdown attempts are independent; failed cleanup remains a
+failure. The host retains the final owned-cgroup evidence. A run never qualifies
+from exit status or a compiler message alone.
+
+## Running the candidate
+
+Build the public package as described in [DEV_FLOW](DEV_FLOW.md#phase-2-sdk-package),
+then use a stopped workstation fixture:
 
 ```sh
-python3 scripts/prepare_sdk_consumer.py \
-  --archive .runtime/sdk/stead-sdk-v3.tar \
-  --output .runtime/sdk-builder-first
+make sdk-dev SDK_ARCHIVE=.runtime/sdk/stead-sdk-v3.tar
 ```
 
-Build the archive first using the [development flow](DEV_FLOW.md#phase-2-sdk-package).
-The output name must be new. The preparer runs the package/Git source check,
-copies the exact public archive members, declared toolchain and one fixed build
-thread from the reviewed controller checkout, then writes version-2 `inputs.json`
-after byte readback. A package-selected `--root` cannot replace that runner;
-there is no package hook fallback. The 16 input files include
-`runner/ted/stead-sdk-build.hoon`. Earlier version-1 receipts without the runner
-remain input-only historical records. Existing or partial directories are preserved
-and refused. This is input preparation; it does not prove isolation, compile a
-consumer or allow mounting the whole checkout into a future builder.
+Every attempt gets new `.runtime/sdk-builder-native-*` inputs and
+`.runtime/sdk-consumer-*` private evidence; partial runs are preserved, never
+reused as seeds. The 75°C startup and 90°C stop limits, one-heavy-run lock, 50%
+CPU quota and pinned CPU remain unchanged. The profile requires no purchased
+identity, remote server or host configuration changes.
 
-Compile the sample and four named marks at one absolute Clay case captured by
-`get-beak:strandio`. Retain the complete sample vase, including captured payload,
-jammed directly. The mark builder returns `dais:clay`; retain its typed vase
-separately and preserve each logical mark name even when source bytes match.
+The finite cases cover real capabilities/version negotiation, allowed Work
+creation/readback, denied existing scope, exact duplicate receipt, altered
+request reuse, revision conflict, malformed/oversized client input, native
+malformed envelope, watch cancellation/resume, delayed/replayed cursors and
+revocation before queued delivery. Closed validators require exact public
+response shapes and receipt correlation. A normalized unconfirmed SDK outcome
+is never counted as an authoritative business denial; subsequent reads verify
+that negative inputs did not mutate accepted state.
 
-Prepared [build-thread source](../../scripts/sdk_native/build.hoon) uses only
-pinned kernel interfaces and the public `stead-codec` export. It captures one
-absolute Clay case, calls `build-file-hard` for the sample and `build-mark` for
-each named carrier, and jams the complete sample vase plus four typed `dais`
-vases. It queues five fixed `/tmp/stead-sdk/<name>/jam` paths in the captured Clay desk
-through `%info`, after the same per-file/total binary bounds used by the reader.
-These are Clay paths, not host `/tmp` paths. The future controller must establish
-and verify the mounted-desk mapping before expecting `<name>.jam` files in the
-owned builder filesystem. Its
-small `stead.sdk-build-staged/1` response has `export_queued` status, builder,
-desk, absolute case and exactly five artifact entries. Byte counts are canonical
-decimal strings and SHA-256 values are lowercase hex. The prepared
-[`sdk_build_receipt.py`](../../scripts/sdk_build_receipt.py) parser accepts at
-most 8 KiB from the retained terminal response, requires the fixed `~wes`/`base`
-context and exact schema/inventory, rejects duplicate keys and noncanonical
-size strings, and applies the artifact reader's byte/digest bounds. It returns
-immutable metadata with fresh integer pin copies. The reported Clay case remains
-an opaque bounded field, not a proof of installed source identity. The parser
-does not authenticate the response, verify export materialization or authorize
-transfer before cleanup; those remain controller obligations. Never supply it
-with a manifest read from beside the artifact files. Its six synthetic controls
-are not native build evidence.
+Report package/source/toolchain hashes, installed and invoked source, actual
+consumer identity, correlation, observations, negative controls and cleanup.
+Separate real native execution from the host socket and synthetic corrupted-reply
+controls. Source review is not compiler or runtime evidence.
 
-This source is not installed by the team runner and has no executable builder
-entry point yet. Review of pinned APIs or source does not prove compilation,
-public-only isolation, artifact materialization, stop/reap, retained-gate
-execution or a receipt. The future runtime caller must not receive this compiler
-thread or the public sample source; only verified compiled bytes and the fixed
-loader belong there. Compiled sizes have not been measured.
+## Earlier transfer preparation
 
-Wait boundedly for the exported regular files to materialize with exact sizes
-and digests. Stop and reap the builder, verify owned cleanup, then re-read and
-verify the bytes before releasing them. Bind package/source, installed Clay
-bytes, runner, toolchain, artifact inventory, lengths and hashes to the observed
-run. Artifact sizes are unmeasured. The prepared `scripts/sdk_artifacts.py` reader
-bounds each binary artifact to 16 MiB and their total to 64 MiB. It requires
-exactly `sample.jam` and the four separately named `stead-*-3.jam` mark files,
-exact external size/digest pins, private owned regular files with no links,
-and stable held-directory readback. It returns immutable verified bytes for
-transfer; later consumers must use those bytes, not reopen the input paths.
-These are new binary-transfer bounds, not changes to the existing JSON or
-evaluator limits. Exceeding a bound fails; there is no truncation or fallback.
+The earlier five-jammed-artifact builder/loader proposal was never executed.
+Its prepared `build.hoon`, artifact reader, staged metadata parser and host tests
+remain in the repository with their original unexecuted status. They are not
+called by this qualification lane and are not needed by the governing Phase 2
+public-package consumer gate. The current same-consumer lifecycle avoids that
+additional transfer boundary while preserving independent compilation and exact
+public-source custody. Historical preparation receipts do not prove this lane.
 
-The future controller must supply pins from its retained builder observations
-after verified builder stop/reap/cleanup. Never obtain expected pins from an
-untrusted manifest beside the artifacts. The reader does not authenticate
-the caller's pins, prove builder isolation/cleanup, decode jam, or qualify a
-consumer. Synthetic-file host controls cover readback and rejection only;
-no compiled-artifact transfer has run yet.
-
-A separate runtime caller receives only compiled artifacts and the fixed loader,
-with neither sample nor private-client source. Validate length and digest before
-cue, canonical re-jam equality, and the sample's `thread:spider` type. Expected
-digests come from the retained builder manifest, never an accompanying untrusted
-request. Invoke the
-retained gate directly with its input vase. Calling the named sample through
-Spider would compile source again and would not prove this boundary. The actual
-receipt must identify the runtime caller, not the builder.
-
-Compiled mark validation does not install marks into Gall. Bind the Home's
-installed mark bytes to the same public exports and test the actual carrier.
-
-## Pinned interfaces reviewed
-
-The references below are from kernel commit
-`5a187fededc4582a34fcd6055c67bb63e0917b94`:
-
-- [strandio](https://github.com/urbit/urbit/blob/5a187fededc4582a34fcd6055c67bb63e0917b94/pkg/arvo/lib/strandio.hoon)
-  provides `build-file-hard`, `build-mark`, `get-beak` and `read-file`.
-- [jam-all-desks](https://github.com/urbit/urbit/blob/5a187fededc4582a34fcd6055c67bb63e0917b94/pkg/arvo/ted/jam-all-desks.hoon)
-  demonstrates binary export through Clay `%info`. This path has no `%mere`
-  merge acknowledgment; verify actual file bytes instead.
-- The pinned `jam` and `mime` marks carry binary data. A `%mime` import with
-  explicit `[length atom]` preserves the byte boundary, including trailing zeros.
-  The proposed loader composition still requires native compilation.
-- [Spider's slam-thread](https://github.com/urbit/urbit/blob/5a187fededc4582a34fcd6055c67bb63e0917b94/pkg/arvo/app/spider.hoon)
-  applies a `vase -> shed` gate directly. Name only the fixed loader in `%fyrd`,
-  account for Khan's unit wrapper, and retain the runtime strand bowl.
-
-Existing helpers need narrow alternatives: `core_conn.exchange` pretty-prints
-and expects `%stead-core-result`; `native_install.install` assumes raw `@t` bodies;
-the ordinary team installer includes private client source on every ship. Keep
-the current one-megabyte conn/evaluator limits unchanged. Clay's existing binary
-export path avoids rendering the full compiled type through those text helpers.
-
-## Required native observations
-
-First resolve the remote-fact compatibility concern with one harmless public
-query from a distinct ship. Capture the actual fact's mark/wire, the comparison
-of its vase type with `%noun`, bounded type/payload sizes and digests, and the
-`mule` outcome around the sample's exact `!<(@t ...)` expression before its failure
-normalizer. A timeout or absent fact proves nothing. The concern is from source
-review; do not change either client on the claim that a runtime failure occurred.
-
-Then require public-only compilation and direct retained-vase execution with
-authorized Work creation/readback and denied scope, actual caller identity and
-correlated business receipts. Native controls must reject an altered payload
-with its original digest, a valid jam with the wrong type and correctly bound
-control digest, truncated/trailing/noncanonical/oversized bytes, missing or
-misnamed marks, and changed loader bindings. A deliberate private import must
-fail inside the SDK-only builder alongside the successful public build.
-
-Complete the issue's malformed input, unsupported version, replay, watch
-cancellation, revocation, stale cursor and reordered-update cases through this
-consumer. Existing private-client tests and package verification are separate
-evidence and cannot substitute for these calls.
+Pinned interfaces are in kernel commit
+`5a187fededc4582a34fcd6055c67bb63e0917b94`: `lib/strandio.hoon` supplies
+`get-beak`, `build-file-hard` and `build-mark`; `app/spider.hoon` supplies the
+full-vase thread cast/slam example; `sys/vane/khan.hoon` supplies the `%fyrd`
+unit-input convention. Actual native compilation is still required.
