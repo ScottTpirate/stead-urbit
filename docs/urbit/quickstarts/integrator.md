@@ -10,12 +10,20 @@ the exact archive using the pinned package command:
 ```sh
 python3 scripts/package_sdk_v3.py build --archive .runtime/stead-sdk-v3.tar
 python3 scripts/package_sdk_v3.py verify --archive .runtime/stead-sdk-v3.tar
+python3 scripts/check_sdk_source.py --archive .runtime/stead-sdk-v3.tar
 ```
 
 The parent directory must already exist and build refuses to overwrite an
 archive. Verification checks package bytes, not a publisher signature or native
-compatibility. Use the native consumer evidence associated with that exact
-source, archive and Kelvin/runtime pair.
+compatibility. The source check also requires the declared commit in the local
+Git object store and matches each public export and the toolchain lock to its
+exact regular Git blob; it does not fetch missing history. Use the native consumer
+evidence associated with that exact source, archive and Kelvin/runtime pair.
+Git must support `--no-lazy-fetch`;
+older Git versions fail closed instead of attempting to retrieve missing objects.
+Use a reviewed local repository: this check suppresses default global/system Git
+configuration, but repository/worktree configuration and explicit includes still
+apply. It is not a sandbox for arbitrary Git metadata.
 
 Install only the exported fragment and its declared pinned kernel dependencies
 in the client development desk. The operator supplies your own home, binding ID
