@@ -14,14 +14,16 @@ def verify_controls(value, inputs):
     files = value['filesystem_controls']
     require(set(files) == {'classification', 'seed_before', 'seed_poisoned', 'seed_after',
         'seed_refusal', 'runtime_expected', 'runtime_after', 'owned_truncated_sha256',
-        'cache_write_errno', 'cache_pin_refused'}, 'Filesystem control inventory')
+        'cache_mount_read_only', 'cache_write_errno', 'cache_pin_refused'}, 'Filesystem control inventory')
     require(files['classification'] == 'real-disposable-filesystem-controls'
         and files['seed_before'] == files['seed_after'] == value['fresh_seeds']['ships']['zod']
         and files['seed_poisoned'] != files['seed_before']
         and files['seed_refusal'] == 'Seed integrity failure: zod'
         and files['runtime_expected'] == files['runtime_after'] == inputs['runtime_binary_sha256']
         and files['owned_truncated_sha256'] != files['runtime_expected']
-        and files['cache_write_errno'] == errno.EROFS and files['cache_pin_refused'] is True,
+        and files['cache_mount_read_only'] is True
+        and type(files['cache_write_errno']) is int
+        and files['cache_write_errno'] in (errno.EROFS, errno.EACCES) and files['cache_pin_refused'] is True,
         'Filesystem rejection/restoration evidence incomplete')
     for key in ('seed_before', 'seed_poisoned', 'seed_after', 'runtime_expected', 'runtime_after', 'owned_truncated_sha256'):
         require(re.fullmatch(r'[0-9a-f]{64}', files[key]), 'Control digest shape')

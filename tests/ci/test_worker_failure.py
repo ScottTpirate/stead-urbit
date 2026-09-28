@@ -67,6 +67,16 @@ class FailureProjectionTests(unittest.TestCase):
             with self.subTest(change=change), self.assertRaises(ValueError):
                 self.project(self.value | change)
 
+    def test_filesystem_diagnostics_are_exact_closed_categories(self):
+        for message, reason in [('Unexpected seed refusal', 'seed-refusal'),
+                                ('Unexpected cache write refusal', 'cache-errno'),
+                                ('Cache mount is writable', 'cache-mount')]:
+            with self.subTest(message=message):
+                self.assertEqual(failure.error_kind('ValueError: ' + message),
+                                 {'class': 'ValueError', 'reason': reason})
+                self.assertEqual(failure.error_kind('ValueError: ' + message + self.secret)['reason'],
+                                 'unrecognized')
+
     def test_empty_duplicate_truncated_nonfinal_invalid_utf8_and_oversized_frames_refused(self):
         raw = self.frame()
         duplicate = raw.replace(b'"status": "fail"', b'"status": "fail", "status": "fail"')

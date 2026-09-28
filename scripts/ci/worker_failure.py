@@ -38,7 +38,19 @@ def error_kind(value):
     exact = {'Native team suite failed': 'team-suite', 'Fresh base mount absent': 'base-mount',
              'Supported predecessor migration failed': 'migration',
              'Kernel cache poisoned': 'kernel-pin', 'Native lifetime interrupted': 'lifetime',
-             'Unclean owned native exit': 'unclean-exit'}
+             'Unclean owned native exit': 'unclean-exit',
+             'Cache mount is writable': 'cache-mount',
+             'Shared runtime cache is writable': 'cache-write',
+             'Cache write refusal was not read-only enforcement': 'cache-errno',
+             'Unexpected cache write refusal': 'cache-errno',
+             'Missing or changed runtime pin': 'runtime-pin',
+             'Seed control needs stopped ships': 'seed-live',
+             'Seed poison did not change identity': 'seed-poison',
+             'Unexpected seed refusal': 'seed-refusal',
+             'Poisoned seed was accepted': 'seed-accepted',
+             'Seed restoration differs': 'seed-restoration',
+             'Unexpected cache refusal': 'cache-pin-refusal',
+             'Truncated runtime cache accepted': 'cache-pin-accepted'}
     if message in exact:
         reason = exact[message]
     elif re.fullmatch(r'(zod|bus|nec|bud) did not become ready within [0-9]{1,4}s', message):

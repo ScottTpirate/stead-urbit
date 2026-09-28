@@ -56,7 +56,9 @@ be refused), an intentional undefined Hoon symbol, and a finite two-second
 native timer against a 50 ms client deadline with successful calls before and
 after. Seed corruption is confined to the stopped disposable seed and restored
 before use. A truncated owned copy is rejected by the real runtime pin checker;
-an attempted write-open of the shared runtime must fail with EROFS. Corrupt and
+the shared runtime mount must be read-only and its write-open must fail with
+EROFS or EACCES. File permissions can reject the open before the mount check;
+EACCES on a writable mount is explicitly refused. Corrupt and
 truncated output checks inject faults into the retained actual native frame and
 are labeled parser fault injection, not runtime-emitted corruption.
 
