@@ -5,6 +5,7 @@ workers must have no capabilities. Lens/Khan/state remain inside the trusted
 four-ship fixture boundary. This module is never run in the host net namespace.
 """
 from __future__ import annotations
+import copy
 import json
 import os
 from pathlib import Path
@@ -17,19 +18,16 @@ PORTS = {'zod': 31337, 'bus': 31519, 'nec': 31338, 'bud': 31339}
 DROP_CAPABILITIES = ['setpriv', '--bounding-set=-all', '--inh-caps=-all',
                      '--ambient-caps=-all', '--no-new-privs', '--']
 TABLE = 'stead_fakes'
-POLICY = '''create table inet stead_fakes {
-  set ready { type inet_service; flags timeout; timeout 2s; }
-  chain peer_input {
-    type filter hook input priority -300; policy accept;
-    iifname "lo" ip saddr 127.0.0.1 ip daddr 127.0.0.1 udp sport @ready udp dport @ready accept
-    meta l4proto udp counter drop
-  }
-  chain peer_output {
-    type filter hook output priority -300; policy accept;
-    oifname "lo" ip saddr 127.0.0.1 ip daddr 127.0.0.1 udp sport @ready udp dport @ready accept
-    meta l4proto udp counter drop
-  }
-}
+# Explicit statements share one atomic transaction. nftables 1.0.9 accepts a
+# nested `create table` body but creates only the table; exact readback rejects it.
+POLICY = '''create table inet stead_fakes
+add set inet stead_fakes ready { type inet_service; flags timeout; timeout 2s; }
+add chain inet stead_fakes peer_input { type filter hook input priority -300; policy accept; }
+add chain inet stead_fakes peer_output { type filter hook output priority -300; policy accept; }
+add rule inet stead_fakes peer_input iifname "lo" ip saddr 127.0.0.1 ip daddr 127.0.0.1 udp sport @ready udp dport @ready accept
+add rule inet stead_fakes peer_input meta l4proto udp counter drop
+add rule inet stead_fakes peer_output oifname "lo" ip saddr 127.0.0.1 ip daddr 127.0.0.1 udp sport @ready udp dport @ready accept
+add rule inet stead_fakes peer_output meta l4proto udp counter drop
 '''
 
 
@@ -120,7 +118,7 @@ def require_policy(rows):
             if value.get('json_schema_version') != 1:
                 raise ValueError('Native peer nft schema version')
             continue
-        value = dict(value)
+        value = copy.deepcopy(value)
         value.pop('handle', None)
         if key == 'set':
             value.pop('elem', None)
@@ -132,7 +130,14 @@ def require_policy(rows):
                         raise ValueError('Native peer counter shape')
                     expression['counter'] = {}
         observed.append({key: value})
-    if metadata != 1 or observed != expected:
+    # nft 1.0.9 lists sets before chains; newer versions list chains first.
+    # Declaration display order is immaterial. Preserve every exact field,
+    # multiplicity and rule sequence; never sort or coalesce packet rules.
+    declaration_key = lambda row: json.dumps(row, sort_keys=True)
+    declarations = sorted((row for row in observed if 'rule' not in row), key=declaration_key)
+    rules = [row for row in observed if 'rule' in row]
+    if (metadata != 1 or declarations != sorted(expected[:4], key=declaration_key)
+            or rules != expected[4:]):
         raise ValueError('Native peer packet rules changed')
 
 
@@ -159,12 +164,12 @@ class NativePeerFence:
 
     @staticmethod
     def run(source):
-        completed = subprocess.run(owned_child.command(['/usr/bin/nft', '-f', '-'], privileged=True), input=source.encode(), capture_output=True, timeout=1)
+        completed = subprocess.run(owned_child.command([owned_child.nft_binary(), '-f', '-'], privileged=True), input=source.encode(), capture_output=True, timeout=1)
         if completed.returncode != 0 or completed.stdout or completed.stderr:
             raise RuntimeError('Native peer rule transaction failed')
 
     def verify(self, ports):
-        completed = subprocess.run(owned_child.command(['/usr/bin/nft', '-j', 'list', 'table', 'inet', TABLE], privileged=True), capture_output=True, timeout=1)
+        completed = subprocess.run(owned_child.command([owned_child.nft_binary(), '-j', 'list', 'table', 'inet', TABLE], privileged=True), capture_output=True, timeout=1)
         if completed.returncode != 0 or completed.stderr or len(completed.stdout) > 16384:
             raise RuntimeError('Native peer rule readback failed')
         rows = json.loads(completed.stdout)['nftables']

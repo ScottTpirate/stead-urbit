@@ -74,10 +74,41 @@ def qualified_source():
     return context['source_commit']
 
 
+class WorkstationProvider:
+    @staticmethod
+    def require(preflight=False):
+        return execution_policy.require_lease(preflight=preflight, read_only=True)
+
+    @staticmethod
+    def observed(value):
+        return value['sample']['finished']
+
+    @staticmethod
+    def summary(value):
+        return {key: value[key] for key in (
+            'run_id', 'generation', 'guard_sha256', 'policy_sha256', 'policy')}
+
+
+EXECUTION_PROVIDER = WorkstationProvider()
+PROVIDER_SELECTED = False
+
+
+def select_execution_provider(provider):
+    """Trusted entry point only, before a watcher or native child starts."""
+    global EXECUTION_PROVIDER, PROVIDER_SELECTED
+    if PROVIDER_SELECTED or PROCESSES or TEAM is not None or STOP_REQUESTED.is_set():
+        raise execution_policy.GuardError('Execution provider already selected or active')
+    provider.require(preflight=True)
+    EXECUTION_PROVIDER = provider
+    PROVIDER_SELECTED = True
+
+
 def execution_check(preflight=False):
+    global PROVIDER_SELECTED
+    PROVIDER_SELECTED = True
     if STOP_REQUESTED.is_set():
         raise execution_policy.GuardError('Fixture stop is latched')
-    return execution_policy.require_lease(preflight=preflight, read_only=True)
+    return EXECUTION_PROVIDER.require(preflight=preflight)
 
 
 def completion_code():
@@ -129,7 +160,7 @@ def execution_watch():
         try:
             lease = execution_check()
             if previous is not None and (lease['generation'] < previous['generation']
-                    or lease['sample']['finished'] < previous['sample']['finished']):
+                    or EXECUTION_PROVIDER.observed(lease) < EXECUTION_PROVIDER.observed(previous)):
                 raise execution_policy.GuardError('Execution lease moved backwards')
             previous = lease
         except Exception as error:
@@ -158,8 +189,7 @@ def execution_watch():
 def guarded_result(result):
     try:
         lease = execution_check()
-        result['execution_guard'] = {key: lease[key] for key in (
-            'run_id', 'generation', 'guard_sha256', 'policy_sha256', 'policy')}
+        result['execution_guard'] = EXECUTION_PROVIDER.summary(lease)
     except Exception as error:
         result.update(status='fail', error='Execution guard interrupted result: ' + str(error),
                       feedback_infrastructure_failure=True)

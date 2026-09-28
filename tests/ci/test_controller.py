@@ -106,7 +106,8 @@ class ResultTests(unittest.TestCase):
         self.value['filesystem_controls'] = {'classification': 'real-disposable-filesystem-controls',
             'seed_before': h, 'seed_poisoned': 'c' * 64, 'seed_after': h,
             'seed_refusal': 'Seed integrity failure: zod', 'runtime_expected': h, 'runtime_after': h,
-            'owned_truncated_sha256': 'd' * 64, 'cache_write_errno': 30, 'cache_pin_refused': True}
+            'owned_truncated_sha256': 'd' * 64, 'cache_mount_read_only': True,
+            'cache_write_errno': 30, 'cache_pin_refused': True}
         missing = copy.deepcopy(commands[0]['native_test'])
         missing['resolved_path'] = '/~zod/base/~2026.9.27/controls/stead-ci-missing'
         def unit_request(path):
@@ -155,6 +156,19 @@ class ResultTests(unittest.TestCase):
 
     def test_complete_mock_record_only_tests_parser(self):
         self.assertEqual(self.verify(self.value), self.value)
+
+    def test_cache_permission_refusal_requires_readonly_mount(self):
+        self.value['filesystem_controls']['cache_write_errno'] = 13
+        self.assertEqual(self.verify(self.value), self.value)
+        for key, replacement in [('cache_mount_read_only', False), ('cache_mount_read_only', 1),
+                                 ('cache_write_errno', True), ('cache_write_errno', 1)]:
+            altered = copy.deepcopy(self.value)
+            altered['filesystem_controls'][key] = replacement
+            with self.subTest(key=key, replacement=replacement), self.assertRaises(ValueError):
+                self.verify(altered)
+        del self.value['filesystem_controls']['cache_mount_read_only']
+        with self.assertRaises(ValueError):
+            self.verify(self.value)
 
     def test_empty_failed_missing_or_other_source_records_are_refused(self):
         changes = [('status', 'fail'), ('run_id', 'c' * 32), ('cleanup', False),
@@ -219,7 +233,7 @@ class ResultTests(unittest.TestCase):
                 self.verify(altered)
         for field, key, replacement in (
             ('filesystem_controls', 'seed_after', 'e' * 64),
-            ('filesystem_controls', 'cache_write_errno', 13),
+            ('filesystem_controls', 'cache_write_errno', 1),
             ('negative_controls', 'missing_arm', {}),
             ('negative_controls', 'timer_timeout', {}),
             ('negative_controls', 'compiler_failure', {})):

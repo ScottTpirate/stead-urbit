@@ -3,6 +3,7 @@ from __future__ import annotations
 
 import errno
 import hashlib
+import os
 from pathlib import Path
 import re
 import time
@@ -18,6 +19,18 @@ def require(condition, message):
 def runtime_pin(path, expected):
     require(not path.is_symlink() and path.is_file() and sha(path) == expected,
             'Missing or changed runtime pin')
+
+
+def readonly_cache(runtime):
+    # DAC can refuse the write-open before Linux checks the mount flags. Both
+    # observations are necessary: EACCES alone also occurs on writable mounts.
+    require(os.statvfs(runtime).f_flag & os.ST_RDONLY, 'Cache mount is writable')
+    try:
+        with runtime.open('r+b'):
+            raise ValueError('Shared runtime cache is writable')
+    except OSError as error:
+        require(error.errno in (errno.EROFS, errno.EACCES), 'Unexpected cache write refusal')
+        return {'cache_mount_read_only': True, 'cache_write_errno': error.errno}
 
 
 def seed_and_cache(host, pins):
@@ -43,11 +56,7 @@ def seed_and_cache(host, pins):
     runtime = Path('/runtime') / pins['runtime']['binary']
     expected = pins['runtime']['binary_sha256']
     runtime_pin(runtime, expected)
-    try:
-        with runtime.open('r+b'):
-            raise ValueError('Shared runtime cache is writable')
-    except OSError as error:
-        require(error.errno == errno.EROFS, 'Cache write refusal was not read-only enforcement')
+    cache = readonly_cache(runtime)
     # A truncated owned copy exercises the same pin verifier without modifying
     # the shared runtime artifact or executing the poisoned bytes.
     scratch = Path('/state/ci-poisoned-cache')
@@ -66,8 +75,7 @@ def seed_and_cache(host, pins):
     return {'classification': 'real-disposable-filesystem-controls',
         'seed_before': before, 'seed_poisoned': poisoned, 'seed_after': tree_sha(host.SEED / 'zod'),
         'seed_refusal': refusal, 'runtime_expected': expected, 'runtime_after': sha(runtime),
-        'owned_truncated_sha256': truncated, 'cache_write_errno': errno.EROFS,
-        'cache_pin_refused': True}
+        'owned_truncated_sha256': truncated, **cache, 'cache_pin_refused': True}
 
 
 def native(host, report):

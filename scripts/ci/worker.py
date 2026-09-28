@@ -20,6 +20,7 @@ sys.path[:0] = ['/code', '/ci']
 import execution_policy
 from digests import sha, source_inventory, tree_sha
 from worker_result import PREFIX, canonical
+from worker_failure import capture_snapshot
 
 
 def require(condition, message):
@@ -27,10 +28,10 @@ def require(condition, message):
         raise ValueError(message)
 
 
-def admission():
+def admission(provider=None):
     deadline = time.monotonic() + 15
     while not Path('/execution/ci-admission.json').exists():
-        execution_policy.require_lease(read_only=True)
+        provider.require() if provider is not None else execution_policy.require_lease(read_only=True)
         require(time.monotonic() < deadline, 'CI resource admission absent')
         time.sleep(.05)
     value = execution_policy.read_json('/execution/ci-admission.json')
@@ -73,13 +74,15 @@ def isolation(inputs):
     return {'private_network': True, 'host_credentials_absent': True, 'fresh_state': True, 'external_route_absent': True}
 
 
-def fresh_seeds(host):
+def fresh_seeds(host, progress):
     """Boot each pin from nothing, with no capabilities and an owned parent."""
     import owned_child
     launcher = owned_child.ChildLauncher()
     host.LIVE.mkdir(mode=0o700)
+    primary_error = None
     try:
         for index, ship in enumerate(host.SHIPS):
+            progress.update(stage='fresh-boot', ship=ship)
             host.execution_check()
             arguments = ['/runtime/' + host.LOCK['runtime']['binary'], '-t', '-L', '--no-dock',
                 '--loom', '31', '-b', '127.0.0.1', '--http-port', str(18080 + index),
@@ -93,14 +96,15 @@ def fresh_seeds(host):
             host.record('CI fresh boot ' + ship, {'argv': arguments, 'pid': child.pid})
             boot_started = time.monotonic()
             progress_done = threading.Event()
-            def progress():
+            def boot_progress():
                 while not progress_done.wait(30):
                     host.record('CI fresh boot progress', {'ship': ship, 'pid': child.pid,
                         'elapsed_seconds': round(time.monotonic() - boot_started, 3),
                         'log_bytes': os.fstat(log.fileno()).st_size})
-            progress_thread = threading.Thread(target=progress, daemon=True)
+            progress_thread = threading.Thread(target=boot_progress, daemon=True)
             progress_thread.start()
             try:
+                progress['stage'] = 'fresh-ready'
                 host.wait_ready(ship)
             finally:
                 progress_done.set()
@@ -109,27 +113,45 @@ def fresh_seeds(host):
             state = dict(line.split(':', 1) for line in Path('/proc', str(child.pid), 'status').read_text().splitlines() if ':' in line)
             require(all(int(state[name].strip(), 16) == 0 for name in ('CapInh', 'CapPrm', 'CapEff', 'CapBnd', 'CapAmb'))
                     and state['NoNewPrivs'].strip() == '1', 'Fresh runtime kept privileges')
+            progress['stage'] = 'fresh-mount'
             host.dojo(ship, '|mount %base')
             deadline = time.monotonic() + 60
             while not (host.LIVE / ship / 'base').is_dir():
                 host.execution_check()
                 require(time.monotonic() < deadline, 'Fresh base mount absent')
                 time.sleep(.2)
+        progress.update(stage='fresh-stop', ship=None)
         host.all_stop()
         host.execution_check()
         host.SEED.mkdir(mode=0o700)
         manifest = {'format': 1, 'toolchain_sha256': sha('/toolchain.json'), 'ships': {}}
         for ship in host.SHIPS:
+            progress.update(stage='fresh-copy', ship=ship)
             shutil.copytree(host.LIVE / ship, host.SEED / ship, symlinks=True)
             manifest['ships'][ship] = tree_sha(host.SEED / ship)
         execution_policy.write_json(host.SEED / 'manifest.json', manifest)
         return manifest
+    except BaseException as error:
+        primary_error = error
+        progress['initiating_error'] = type(error).__name__ + ': ' + str(error)[:2000]
+        progress['pre_cleanup'] = capture_snapshot(host)
+        raise
     finally:
-        host.all_stop()
-        launcher.close()
+        cleanup_error = None
+        for close in (host.all_stop, launcher.close):
+            try:
+                close()
+            except BaseException as error:
+                cleanup_error = error
+                progress.setdefault('seed_cleanup_errors', []).append(type(error).__name__ + ': ' + str(error)[:2000])
+        if cleanup_error is not None and primary_error is None:
+            raise cleanup_error
 
 
-def wait_start_temperature(host):
+def wait_start_temperature(host, hosted=False):
+    if hosted:
+        host.execution_check(preflight=True)
+        return
     deadline = time.monotonic() + 300
     while True:
         lease = host.execution_check()
@@ -139,7 +161,7 @@ def wait_start_temperature(host):
         time.sleep(1)
 
 
-def main():
+def main(*, hosted=False):
     os.umask(0o077)
     os.environ['STEAD_CONFIGURED'] = '1'
     inputs = execution_policy.read_json('/ci-inputs.json', maximum=1024 * 1024)
@@ -148,16 +170,27 @@ def main():
               'run_id': os.environ['STEAD_EXECUTION_ID'], 'cleanup': False}
     host = None
     watcher = None
+    progress = {'stage': 'admission', 'ship': None}
     try:
-        result['admission'] = admission()
+        provider = None
+        if hosted:
+            from hosted_lease import HostedProvider
+            provider = HostedProvider()
+        result['admission'] = admission(provider)
+        progress['stage'] = 'mounts'
         result['mounts_before'] = mounted_inputs(inputs)
+        progress['stage'] = 'isolation'
         result['isolation'] = isolation(inputs)
+        progress['stage'] = 'pins'
         pins = json.loads(Path('/toolchain.json').read_text())
         import negative
         negative.runtime_pin(Path('/runtime') / pins['runtime']['binary'], pins['runtime']['binary_sha256'])
         negative.runtime_pin(Path('/runtime/downloads') / pins['boot_artifact']['archive'], pins['boot_artifact']['sha256'])
         require(tree_sha(Path('/kernel'), source_links=True) == pins['kernel']['source_tree_sha256'], 'Kernel cache poisoned')
+        progress['stage'] = 'supervisor'
         import supervisor as host
+        if provider is not None:
+            host.select_execution_provider(provider)
         for sig in (signal.SIGTERM, signal.SIGINT):
             signal.signal(sig, lambda *_: host.STOP_REQUESTED.set())
         Path('/state/logs').mkdir(mode=0o700)
@@ -166,25 +199,32 @@ def main():
         watcher = threading.Thread(target=host.execution_watch, daemon=True)
         watcher.start()
         # Fresh -F boot for each distinct identity; no host pier or seed enters.
-        result['fresh_seeds'] = fresh_seeds(host)
+        result['fresh_seeds'] = fresh_seeds(host, progress)
+        progress.update(stage='filesystem-controls', ship=None)
         result['filesystem_controls'] = negative.seed_and_cache(host, pins)
+        progress['stage'] = 'team-lifecycle'
         host.TEAM = host.team_lifecycle.TeamLifecycle(Path('/state/ingress') / result['run_id'],
             inputs['host_network_namespace'], '/runtime/' + pins['runtime']['binary'],
             host.execution_check, host.peer_fence_failed, host.record)
-        wait_start_temperature(host)
+        wait_start_temperature(host, hosted)
+        progress['stage'] = 'team-check'
         with host.MUTEX:
             summary = host.guarded_result(host.team_check.run(vars(host)))
         report_path = Path('/state/logs') / Path(summary['evidence_file']).name
         result['native'] = execution_policy.read_json(report_path, maximum=4 * 1024 * 1024)
         require(summary['status'] == 'pass', 'Native team suite failed')
+        progress['stage'] = 'migration'
         observed = host.dojo('zod', '+stead-ci-migration-probe', timeout=180)
         result['migration'] = {'source_sha256': sha('/native/core/desk/gen/stead-ci-migration-probe.hoon'), 'output': observed}
         require(observed.strip() == '%stead-ci-supported-migration-pass', 'Supported predecessor migration failed')
+        progress['stage'] = 'native-controls'
         result['negative_controls'] = negative.native(host, result['native'])
+        progress['stage'] = 'final-inputs'
         result['mounts_after'] = mounted_inputs(inputs)
         require(result['mounts_before'] == result['mounts_after'], 'CI input changed during execution')
         host.execution_check()
         result['status'] = 'pass'
+        progress['stage'] = 'complete'
     except BaseException as error:
         result['error'] = type(error).__name__ + ': ' + str(error)[:2000]
         # Failures still destroy the owned namespace; retain bounded raw tails
@@ -212,6 +252,8 @@ def main():
             except Exception as capture_error:
                 result['failure_logs'][ship] = {'capture_error': type(capture_error).__name__}
     finally:
+        if 'pre_cleanup' not in progress:
+            progress['pre_cleanup'] = capture_snapshot(host)
         if host is not None:
             host.NORMAL_STOP.set()
             host.STOP_REQUESTED.set()
@@ -235,9 +277,12 @@ def main():
                     host.gate.close()
         # Native stdout is confined to pier logs. Only trusted Python emits this
         # framed final result; no candidate file or exit code stands in for it.
+        if result['status'] != 'pass':
+            result['diagnostic'] = progress
         print(PREFIX + canonical(result).decode(), flush=True)
     return 0 if result['status'] == 'pass' and result['cleanup'] else 1
 
 
 if __name__ == '__main__':
-    raise SystemExit(main())
+    require(sys.argv[1:] in ([], ['--hosted']), 'Unknown trusted worker profile')
+    raise SystemExit(main(hosted=sys.argv[1:] == ['--hosted']))

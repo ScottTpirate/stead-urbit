@@ -237,6 +237,25 @@ class SupervisorDeveloperTests(unittest.TestCase):
             spec.loader.exec_module(self.supervisor)
         self.supervisor.PROGRESS.update(stage='ready', ready=True)
 
+    def test_execution_provider_freezes_on_first_use(self):
+        module = self.supervisor
+        with patch.object(module.execution_policy, 'require_lease', return_value={'source': 'workstation'}) as thermal:
+            self.assertEqual(module.execution_check(preflight=True), {'source': 'workstation'})
+            thermal.assert_called_once_with(preflight=True, read_only=True)
+        provider = Mock()
+        with self.assertRaisesRegex(module.execution_policy.GuardError, 'already selected'):
+            module.select_execution_provider(provider)
+        provider.require.assert_not_called()
+
+    def test_explicit_provider_selects_once_before_any_child(self):
+        module = self.supervisor
+        provider = Mock()
+        provider.require.return_value = {'source': 'separately-admitted-provider'}
+        module.select_execution_provider(provider)
+        self.assertEqual(module.execution_check(), {'source': 'separately-admitted-provider'})
+        with self.assertRaisesRegex(module.execution_policy.GuardError, 'already selected'):
+            module.select_execution_provider(provider)
+
     def test_verified_seeds_restore_without_a_prior_live_directory(self):
         module = self.supervisor
         with tempfile.TemporaryDirectory(prefix='stead-seed-restore-') as directory, ExitStack() as stack:
