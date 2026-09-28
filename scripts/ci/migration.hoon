@@ -1,6 +1,6 @@
 :: Trusted CI fixture: real predecessor transitions followed by actual agent on-load.
-/=  home-agent  /app/stead-home
 /+  stead-core-v1, stead-codec-v1, stead-core, stead-codec
+/=  home-agent  /app/stead-home
 :-  %say
 |=  *
 :-  %noun
