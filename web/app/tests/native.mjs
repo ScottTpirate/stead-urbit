@@ -31,6 +31,7 @@ const report = {classification: 'real-browser-native-gall', status: 'fail', qual
 report.assets = {manifest_sha256: createHash('sha256').update(manifestBytes).digest('hex'), markdown: {path: '/stead/assets/' + lazyAsset, ...manifest.files[lazyAsset]}};
 const responseCapture = new ResponseCapture();
 const pages = [];
+let gitFixture;
 const requestCounts = new WeakMap();
 const counts = page => ({...requestCounts.get(page)});
 const difference = (before, after) => Object.fromEntries(Object.entries(after)
@@ -267,6 +268,7 @@ async function docsJourney(alice, bob) {
   const content = '# Selected Tokyo 東京\n\nA shared explanation.\n\n<script>window.steadXss=1</script>\n\n<img src=x onerror="window.steadXss=2">\n\n[Unsafe](javascript:window.steadXss=3)\n';
   let selected;
   const privateIds = [];
+  const privateDocuments = [];
   for (const body of [content, '# UNSELECTED-PRIVATE-CANARY\n\nThis page must stay private.\n']) {
     const previewStart = performance.now(), previewRequests = counts(a);
     await a.getByRole('button', {name: 'New page', exact: true}).click();
@@ -279,6 +281,7 @@ async function docsJourney(alice, bob) {
     await editor.fill(draft);
     const receipt = await acceptedClick(a, 'Save page');
     privateIds.push(receipt.resource_id, receipt.container_id);
+    privateDocuments.push({receipt, markdown: draft});
     assert.match(receipt.git_commit_oid, /^[0-9a-f]{40}$/u);
     selected ??= {id: receipt.resource_id, markdown: draft, container: receipt.container_id,
       revision:receipt.resource_revision, oid:receipt.git_commit_oid};
@@ -366,6 +369,15 @@ async function docsJourney(alice, bob) {
   await b.getByRole('button', {name:'Discard local changes and close', exact:true}).click();
   passed('shared-doc-edit-reloads-exact-markdown-revision-and-new-git-receipt',
     {request_id:editedShared.request_id, git_commit_oid:editedShared.git_commit_oid});
+  gitFixture = {format: 'stead.browser-git-fixture/1', execution_id: material.execution_id,
+    project_id: published.project_id,
+    source: {container_id: selected.container,
+      commits: [editedPrivate.git_commit_oid, privateDocuments[1].receipt.git_commit_oid, privateDocuments[0].receipt.git_commit_oid],
+      files: {[selected.id + '.md']: selected.markdown,
+        [privateDocuments[1].receipt.resource_id + '.md']: privateDocuments[1].markdown}},
+    destination: {container_id: published.container_id, document_id: published.resource_id,
+      published_head: published.git_commit_oid, edited_head: editedShared.git_commit_oid,
+      published_markdown: shared, edited_markdown: sharedEdit}};
   for (const page of [a, b]) {
     await page.getByRole('navigation', {name: 'Project views'}).getByRole('button', {name: 'Search', exact: true}).click();
     await page.getByRole('textbox', {name: 'Search this project', exact: true}).fill('UNSELECTED-PRIVATE-CANARY');
@@ -773,6 +785,11 @@ try {
   await expiryContext.close();
   report.expiry_followup = {status:'prepared-not-executed', earliest_start_ms:issuedBefore + 28 * 60000,
     latest_start_ms:issuedBefore + 29 * 60000, native_session_lifetime_seconds:1800};
+  assert.ok(gitFixture);
+  const gitBytes = Buffer.from(JSON.stringify(gitFixture) + '\n');
+  assert.ok(gitBytes.length <= 131072);
+  await writeFile(path.join(output, 'git-fixture.json'), gitBytes, {flag:'wx', mode:0o600});
+  report.git_fixture_sha256 = createHash('sha256').update(gitBytes).digest('hex');
   report.status = 'pass';
 } catch (error) {
   // No raw HTML, cookies, request bodies, or personal owner code in diagnostics.

@@ -24,6 +24,7 @@ import core_check
 import migration_check
 import core_test
 import team_check
+import team_git
 import gall_schedule
 import skill_evaluation_support
 import team_lifecycle
@@ -522,7 +523,7 @@ def handle(connection):
                     raise ValueError('Invalid control envelope')
                 data += block
             request = json.loads(data)
-            if TEAM is not None and request.get('op') not in ('status', 'stop', 'team-check'):
+            if TEAM is not None and request.get('op') not in ('status', 'stop', 'team-check', 'team-git-check'):
                 raise ValueError('This configured fixture only accepts its reviewed team lane')
             if request == {'op': 'status'}:
                 try:
@@ -592,6 +593,22 @@ def handle(connection):
                             PROGRESS.pop('team_evidence', None)
                             PROGRESS.update(stage='failed', ready=False,
                                             error='Native compilation/probes failed; make stop before retry')
+                            all_stop()
+                        else:
+                            PROGRESS.update(stage='ready', ready=True, error=None)
+            elif set(request) == {'op', 'fixture', 'sha256'} and request['op'] == 'team-git-check':
+                with MUTEX:
+                    if TEAM is None or not PROGRESS['ready'] or not PROGRESS.get('team_evidence'):
+                        raise RuntimeError('Passed configured fixture required')
+                    execution_check(preflight=True)
+                    PROGRESS.update(stage='team-git-check', ready=False, error=None)
+                    result = None
+                    try:
+                        result = guarded_result(team_git.run(globals(), request['fixture'], request['sha256']))
+                        result['sha256'] = sha(STATE / 'logs' / Path(result['evidence_file']).name)
+                    finally:
+                        if result is None or result['status'] != 'pass':
+                            PROGRESS.update(stage='failed', ready=False, error='Configured native Git verification failed')
                             all_stop()
                         else:
                             PROGRESS.update(stage='ready', ready=True, error=None)

@@ -27,11 +27,26 @@ class BrowserAdmissionTests(unittest.TestCase):
             'installed': {ship: self.installed for ship in self.status['ships']},
             'checks': [{'name': 'synthetic-control', 'passed': True}],
             'restarts': {ship: {'passed': True} for ship in self.status['ships']}}
-        self.expected = {'execution_id': 'a' * 32, 'native_prerequisite': self.reference, 'runner': 'e' * 64}
+        self.expected = {'execution_id': 'a' * 32, 'native_prerequisite': self.reference, 'runner': 'e' * 64,
+            'native_tree':'c'*64,'harness':'d'*64}
         self.transport = {'classification': 'local-real-browser-native-tls', 'status': 'pass',
-            'inputs_before': self.expected, 'inputs_after': self.expected, 'browser_process': {'cleanup': {'empty': True}}}
+            'inputs_before': self.expected, 'inputs_after': self.expected, 'browser_process': {'cleanup': {'empty': True}},
+            'stock_git': {'status':'pass','evidence_file':'.piers/fakes/logs/team-git-20260927T120000Z.json',
+                'sha256':'1'*64,'fixture_sha256':'2'*64}}
+        self.git = {'status':'pass','classification':'actual-stock-git-from-configured-v3-native-stores',
+            'fixture_sha256':'2'*64,'execution_id':'a'*32,'native_prerequisite':self.reference,
+            'execution_guard':{'run_id':'a'*32},
+            'inputs_before':{'native':'c'*64,'harness':'d'*64},'inputs_after':{'native':'c'*64,'harness':'d'*64},
+            'checks':{'exact_receipt_oids':True,'exact_markdown_and_trees':True,
+                'destination_only_ancestry':True,'private_history_excluded':True},
+            'exports':{key:{'objects':3,'head':'3'*40,'commands':[{'returncode':0,'arguments':args} for args in (
+                ['init','--bare','--template=','--object-format=sha1'], ['symbolic-ref','HEAD','refs/heads/main'],
+                ['update-ref','refs/heads/main','3'*40], ['fsck','--full','--strict'],
+                ['rev-list','--parents','3'*40], ['ls-tree','-rz','3'*40], ['--version'],
+                ['hash-object','-w','-t','blob','--stdin'], ['cat-file','blob','4'*40])]} for key in ('source','published','edited')}}
         self.cases = admission.browser_cases(ROOT)
         self.journey = {'classification': 'real-browser-native-gall', 'status': 'pass', 'execution_id': 'a' * 32,
+            'git_fixture_sha256':'2'*64,
             'response_capture_complete':True, 'response_capture_error':False,
             'checks': [{'name': name, 'passed': True} for name, count in self.cases['journey'].items() for _ in range(count)]}
 
@@ -64,7 +79,8 @@ class BrowserAdmissionTests(unittest.TestCase):
     def test_browser_requires_matching_transport_journey_and_completed_cleanup(self):
         admission.verify_browser(self.transport, self.journey, self.expected, self.cases)
         for delta in ({'status':'fail'}, {'classification':'rendered-mock'}, {'inputs_before':{}},
-                {'inputs_after':{}}, {'browser_process':{'cleanup':{'empty':False}}}):
+                {'inputs_after':{}}, {'browser_process':{'cleanup':{'empty':False}}}, {'stock_git':{}},
+                {'stock_git':{**self.transport['stock_git'],'fixture_sha256':'3'*64}}):
             with self.subTest(delta=delta), self.assertRaises(ValueError):
                 admission.verify_browser({**self.transport, **delta}, self.journey, self.expected, self.cases)
         for delta in ({'status':'fail'}, {'execution_id':'b'*32}, {'checks':[]}, {'classification':'mock'}):
@@ -133,6 +149,10 @@ class BrowserAdmissionTests(unittest.TestCase):
             name = 'browser-native-20260927T120000Z'
             output = root / '.runtime' / name; output.mkdir(mode=0o700)
             raw = json.dumps(self.journey).encode()
+            git_folder = root/'logs'; git_folder.mkdir(parents=True)
+            git_raw = json.dumps(self.git).encode(); (git_folder/'team-git-20260927T120000Z.json').write_bytes(git_raw)
+            (git_folder/'team-git-20260927T120000Z.json').chmod(0o600)
+            self.transport['stock_git']['sha256'] = hashlib.sha256(git_raw).hexdigest()
             (output / 'browser-report.json').write_bytes(raw)
             (output / 'transport-report.json').write_text(json.dumps({**self.transport,'journey_sha256':hashlib.sha256(raw).hexdigest()}))
             for path in output.iterdir(): path.chmod(0o600)
@@ -146,6 +166,33 @@ class BrowserAdmissionTests(unittest.TestCase):
                 (output / 'browser-report.json').write_bytes(raw+b'\n')
                 with self.assertRaisesRegex(ValueError, 'transport binding'):
                     admission.require_browser(root,root,self.status,name)
+
+    def test_native_git_evidence_must_match_fixture_run_prerequisite_and_real_exports(self):
+        with tempfile.TemporaryDirectory(dir=ROOT / '.runtime') as folder:
+            state=Path(folder); output=state/'logs'; output.mkdir(parents=True)
+            path=output/'team-git-20260927T120000Z.json'
+            reference=dict(self.transport['stock_git'])
+            for change in ({}, {'status':'fail'}, {'execution_id':'b'*32}, {'native_prerequisite':{}},
+                    {'fixture_sha256':'3'*64}, {'checks':{}}, {'exports':{}},
+                    {'exports':{key:{'objects':0,'commands':[]} for key in self.git['exports']}}):
+                raw=json.dumps({**self.git,**change}).encode();path.write_bytes(raw);path.chmod(0o600)
+                reference['sha256']=hashlib.sha256(raw).hexdigest()
+                if not change: admission.require_git(state,reference,self.expected)
+                else:
+                    with self.subTest(change=change), self.assertRaises(ValueError):
+                        admission.require_git(state,reference,self.expected)
+            with self.assertRaises(ValueError):
+                admission.require_git(state,{**reference,'sha256':'0'*64},self.expected)
+            for control in ('omit-fsck','failed-operation','omit-history','omit-tree','omit-cat-file'):
+                altered=copy.deepcopy(self.git)
+                commands=altered['exports']['source']['commands']
+                if control=='failed-operation': commands[0]['returncode']=1
+                else:
+                    command={'omit-fsck':'fsck','omit-history':'rev-list','omit-tree':'ls-tree','omit-cat-file':'cat-file'}[control]
+                    altered['exports']['source']['commands']=[row for row in commands if row['arguments'][0]!=command]
+                raw=json.dumps(altered).encode();path.write_bytes(raw);reference['sha256']=hashlib.sha256(raw).hexdigest()
+                with self.subTest(control=control), self.assertRaises(ValueError):
+                    admission.require_git(state,reference,self.expected)
 
     def test_redirected_parent_duplicate_keys_and_public_file_refused(self):
         with tempfile.TemporaryDirectory(dir=ROOT / '.runtime') as folder:

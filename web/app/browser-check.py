@@ -71,6 +71,7 @@ def main():
         prior, prior_sha = private_json(followup.parent / 'transport-report.json', 262144)
         journey, journey_sha = private_json(followup.parent / 'browser-report.json', 2 * 1024 * 1024)
         browser_admission.verify_browser(prior, journey, before, cases)
+        browser_admission.require_git(harness.STATE, prior['stock_git'], before)
         if (prior.get('status') != 'pass' or journey.get('status') != 'pass'
                 or journey.get('execution_id') != run_id
                 or prior.get('inputs_before') != before or prior.get('inputs_after') != before
@@ -134,6 +135,17 @@ def main():
                 else:
                     report['private_profile'] = 'retained; termination not proven'
             healthy()
+        if not followup:
+            _, fixture_sha = private_json(output / 'git-fixture.json', 131072)
+            if child.get('git_fixture_sha256') != fixture_sha:
+                raise ValueError('Browser Git fixture differs from its journey binding')
+            name = output.name.replace('browser-native-', 'browser-git-') + '.json'
+            target = harness.STATE / 'logs' / name
+            with target.open('xb') as stream:
+                stream.write((output / 'git-fixture.json').read_bytes())
+            observed_git = harness.rpc('team-git-check', fixture=name, sha256=fixture_sha, timeout=300)
+            report['stock_git'] = {key: observed_git[key] for key in ('status', 'evidence_file', 'sha256', 'fixture_sha256')}
+            browser_admission.require_git(harness.STATE, report['stock_git'], before)
         current = harness.rpc('status', timeout=2)
         if browser_admission.require_native(ROOT, harness.STATE, current) != prerequisite:
             raise ValueError('Native prerequisite changed before browser closeout')

@@ -110,6 +110,7 @@ def browser_inputs(root, status):
     return {**{key: sha(root / name) for key, name in names.items()},
         'frontend_manifest': frontend_binding(root),
         'native_tree': tree_sha(root / 'native/core/desk'),
+        'harness': source_sha(root / 'scripts/urbit'),
         'execution_id': status['execution_guard']['run_id'], 'native_prerequisite': dict(live_reference(status))}
 
 
@@ -169,6 +170,48 @@ def verify_browser(transport, journey, expected, cases):
         and transport.get('browser_process', {}).get('cleanup', {}).get('empty') is True,
         'Passed browser transport with matching source and complete cleanup is required')
     verify_journey(journey, expected['execution_id'], cases)
+    reference = transport.get('stock_git', {})
+    require(set(reference) == {'status', 'evidence_file', 'sha256', 'fixture_sha256'}
+        and reference['status'] == 'pass'
+        and re.fullmatch(r'\.piers/fakes/logs/team-git-[0-9]{8}T[0-9]{6}Z\.json', str(reference['evidence_file']))
+        and re.fullmatch(r'[0-9a-f]{64}', str(reference['sha256']))
+        and re.fullmatch(r'[0-9a-f]{64}', str(reference['fixture_sha256']))
+        and reference['fixture_sha256'] == journey.get('git_fixture_sha256'),
+        'Passed native stock Git verification bound to the browser fixture is required')
+
+
+def require_git(state, reference, expected):
+    name = reference.get('evidence_file', '')
+    require(re.fullmatch(r'\.piers/fakes/logs/team-git-[0-9]{8}T[0-9]{6}Z\.json', name),
+            'Fixed native Git evidence file required')
+    report, digest = private_json(Path(state) / 'logs' / Path(name).name, 262144)
+    require(digest == reference.get('sha256') and report.get('status') == 'pass'
+        and report.get('classification') == 'actual-stock-git-from-configured-v3-native-stores'
+        and report.get('fixture_sha256') == reference.get('fixture_sha256')
+        and report.get('execution_id') == expected['execution_id']
+        and report.get('execution_guard', {}).get('run_id') == expected['execution_id']
+        and report.get('native_prerequisite') == expected['native_prerequisite']
+        and report.get('inputs_before') == {'native':expected['native_tree'], 'harness':expected['harness']}
+        and report.get('inputs_after') == report.get('inputs_before')
+        and report.get('checks') == {'exact_receipt_oids': True, 'exact_markdown_and_trees': True,
+            'destination_only_ancestry': True, 'private_history_excluded': True},
+        'Native Git evidence is missing, failed, stale or changed')
+    exports = report.get('exports', {})
+    require(set(exports) == {'source', 'published', 'edited'}
+        and all(type(item.get('objects')) is int and item['objects'] > 0
+            and item.get('commands') and all(command.get('returncode') == 0 for command in item['commands'])
+            for item in exports.values()), 'Executed nonempty stock Git exports required')
+    for item in exports.values():
+        head = item.get('head')
+        require(re.fullmatch(r'[0-9a-f]{40}', str(head)), 'Observed Git snapshot required')
+        arguments = [row.get('arguments') for row in item['commands']]
+        require(all(required in arguments for required in (
+            ['init', '--bare', '--template=', '--object-format=sha1'],
+            ['symbolic-ref', 'HEAD', 'refs/heads/main'], ['update-ref', 'refs/heads/main', head],
+            ['fsck', '--full', '--strict'], ['rev-list', '--parents', head], ['ls-tree', '-rz', head], ['--version']))
+            and any(isinstance(args,list) and args[:3] == ['hash-object','-w','-t'] for args in arguments)
+            and any(isinstance(args,list) and args[:2] == ['cat-file','blob'] for args in arguments),
+            'Required stock Git operations are missing')
 
 
 def require_browser(root, state, status, name):
@@ -182,5 +225,6 @@ def require_browser(root, state, status, name):
     journey, journey_sha = private_json(folder / 'browser-report.json', 2 * 1024 * 1024)
     require(transport.get('journey_sha256') == journey_sha, 'Browser journey differs from transport binding')
     verify_browser(transport, journey, browser_inputs(root, status), browser_cases(root))
+    require_git(state, transport['stock_git'], browser_inputs(root, status))
     return {'native': native, 'browser_run': name, 'transport_sha256': transport_sha,
         'journey_sha256': journey_sha, 'execution_id': status['execution_guard']['run_id']}

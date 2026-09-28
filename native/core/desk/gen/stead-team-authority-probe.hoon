@@ -1,4 +1,5 @@
-/+  stead-team, stead-team-codec, stead-team-config, stead-codec, stead-core, stead-git, stead-projection, stead-views, stead-browser, stead-http, stead-restore
+/+  stead-team, stead-team-codec, stead-team-config, stead-codec, stead-core, stead-git, stead-projection, stead-views, stead-browser, stead-http, stead-restore, stead-team-owner
+/=  home-agent  /app/stead-home
 =>
 |%
 ++  id
@@ -23,6 +24,52 @@
   =/  value  (need (parse-result:stead-codec response.out))
   ?>  ?=([%o *] value)
   =('accepted' (field:stead-codec p.value 'status'))
+++  saved-owner
+  |=  app=agent:gall
+  ^-  saved:stead-team-owner
+  =/  captured=vase  on-save:app
+  =/  decoded  !<([%stead-home %3 team=saved:stead-team-owner] captured)
+  team.decoded
+++  wake-wire
+  |=  cards=(list card:agent:gall)
+  ^-  wire
+  =/  waiting
+    %+  skim  cards
+    |=(card=card:agent:gall ?=([%pass [%stead-rebuild @ ~] %arvo %b %wait @] card))
+  ?>  ?=(^ waiting)
+  ?>  ?=(~ t.waiting)
+  ?>  ?=([%pass [%stead-rebuild @ ~] %arvo %b %wait @] i.waiting)
+  =/  [%pass route=wire *]  i.waiting
+  route
+++  projection-pump
+  |=  [app=agent:gall cards=(list card:agent:gall) partial=?]
+  ^-  [app=agent:gall cards=(list card:agent:gall)]
+  =/  turns=@ud  0
+  |-
+  =/  saved  (saved-owner app)
+  =/  done
+    ?:  partial
+      ?&(rebuilding.projection.saved ?=(^ remaining.projection.saved) =(16 (lent entries.shadow.projection.saved)))
+    (ready:stead-projection db.saved projection.saved)
+  ?:  done  [app cards]
+  ?>  (lth turns 128)
+  =/  route  (wake-wire cards)
+  =/  [next-cards=(list card:agent:gall) next=agent:gall]
+    (on-arvo:app route [%behn %wake ~])
+  $(app next, cards next-cards, turns +(turns))
+++  quarantined
+  |=  [app=agent:gall config=@t actor=authentication:stead-team]
+  ^-  ?
+  =/  captured=vase  on-save:app
+  =/  old  (saved-owner app)
+  ?>  !(ready:stead-projection db.old projection.old)
+  =/  configuring  (mule |.((on-poke:app %stead-team-config-1 !>(config))))
+  ?>  ?=(%| -.configuring)
+  =/  query=query:stead-team-codec  [(id 901) 'work' (id 100) '' '' '' '']
+  =/  result  (execute:stead-views db.old projection.old *state:stead-views actor query 2.000 701)
+  ?>  =((error:stead-team 'projection_unavailable') response.result)
+  =/  after=vase  on-save:app
+  =(q.captured q.after)
 ++  finish-restore
   |=  job=job:stead-restore
   ^-  job:stead-restore
@@ -37,7 +84,8 @@
 :-  %say
 |=  *
 ~&  %stead-team-probe-start
-=/  initial  (configure:stead-team empty:stead-team '{"protocol":"stead.team-config/1","expected_revision":"0","home":"~zod","origin":"https://home.test","organization_id":"019939ba-4000-7000-8000-000000000005","team_id":"019939ba-4000-7000-8000-000000000006","custody":"local-disposable","runtime":"isolated-fake","bindings":{"~bus":{"principal_id":"019939ba-4000-7000-8000-000000000102","binding_id":"019939ba-4000-7000-8000-000000000202","binding_revision":"1","active":"yes","expires_at_ms":"9999999","display_name":"Alice"},"~nec":{"principal_id":"019939ba-4000-7000-8000-000000000103","binding_id":"019939ba-4000-7000-8000-000000000203","binding_revision":"1","active":"yes","expires_at_ms":"9999999","display_name":"Zoë"}},"project_creators":{"019939ba-4000-7000-8000-000000000102":"yes"}}' ~zod 1.000)
+=/  config-raw  '{"protocol":"stead.team-config/1","expected_revision":"0","home":"~zod","origin":"https://home.test","organization_id":"019939ba-4000-7000-8000-000000000005","team_id":"019939ba-4000-7000-8000-000000000006","custody":"local-disposable","runtime":"isolated-fake","bindings":{"~bus":{"principal_id":"019939ba-4000-7000-8000-000000000102","binding_id":"019939ba-4000-7000-8000-000000000202","binding_revision":"1","active":"yes","expires_at_ms":"9999999","display_name":"Alice"},"~nec":{"principal_id":"019939ba-4000-7000-8000-000000000103","binding_id":"019939ba-4000-7000-8000-000000000203","binding_revision":"1","active":"yes","expires_at_ms":"9999999","display_name":"Zoë"}},"project_creators":{"019939ba-4000-7000-8000-000000000102":"yes"}}'
+=/  initial  (configure:stead-team empty:stead-team config-raw ~zod 1.000)
 =/  alice  (need (native-context:stead-team initial ~bus 1.001))
 =/  bob  (need (native-context:stead-team initial ~nec 1.001))
 ?>  ?=(~ (native-context:stead-team initial ~bud 1.001))
@@ -338,4 +386,87 @@
 =/  too-large-ship  (actor-json:stead-team identity.alice(ship `@p`(bex 128)))
 =/  oversized-actor  (mule |.((decode-actor:stead-team too-large-ship)))
 ?>  =(%| -.oversized-actor)
-[%noun %stead-team-authority-basic-pass]
+:: Actual configured Gall save/load during an incomplete 16-event projection batch.
+~&  %stead-projection-interrupted-load-start
+=/  revoked-many
+  (apply-command:stead-team many alice (command 750 100 2 'policy.revoke' ~[['grant_id' (id 501)]]) 1.040)
+?>  (accepted revoked-many)
+=/  target  next.revoked-many
+=/  expected-view  (append:stead-projection indexed i.journal.data.target)
+?>  (ready:stead-projection target expected-view)
+=/  parsed-config  (need (parse-result:stead-codec config-raw))
+?>  ?=([%o *] parsed-config)
+=/  next-config  (canonical:stead-codec [%o (~(put by p.parsed-config) 'expected_revision' [%s '1'])])
+=/  context=bowl:gall  *bowl:gall
+=.  context  context(our ~zod, src ~zod, now (add ~1970.1.1 (mul 2 ~s1)), eny 17, act 5)
+=/  initial-agent  ~(. home-agent context)
+=/  [load-cards=(list card:agent:gall) loaded-agent=agent:gall]
+  (on-load:initial-agent !>([%stead-home %3 [target expected-view]]))
+?>  (quarantined loaded-agent next-config alice)
+=/  [partial-agent=agent:gall partial-cards=(list card:agent:gall)]
+  (projection-pump loaded-agent load-cards &)
+=/  partial-saved  (saved-owner partial-agent)
+?>  =(target db.partial-saved)
+?>  &(rebuilding.projection.partial-saved ?=(^ remaining.projection.partial-saved))
+?>  =(~ entries.visible.projection.partial-saved)
+?>  =(16 (lent entries.shadow.projection.partial-saved))
+?>  (quarantined partial-agent next-config alice)
+=/  partial-vase=vase  on-save:partial-agent
+=/  reload-initial  ~(. home-agent context(eny 37, act 6))
+=/  [reload-cards=(list card:agent:gall) reloaded-agent=agent:gall]
+  (on-load:reload-initial partial-vase)
+?>  (quarantined reloaded-agent next-config alice)
+?>  !=((wake-wire partial-cards) (wake-wire reload-cards))
+=/  [ignored-cards=(list card:agent:gall) ignored-agent=agent:gall]
+  (on-arvo:reloaded-agent (wake-wire partial-cards) [%behn %wake ~])
+?>  =(~ ignored-cards)
+?>  =((saved-owner reloaded-agent) (saved-owner ignored-agent))
+=/  [complete-agent=agent:gall complete-cards=(list card:agent:gall)]
+  (projection-pump reloaded-agent reload-cards |)
+=/  completed  (saved-owner complete-agent)
+?>  =(target db.completed)
+?>  =(expected-view projection.completed)
+?>  =(~ complete-cards)
+:: The same configuration is valid after actual recovery, not an invalid-input NACK.
+=/  [reconfigure-cards=(list card:agent:gall) reconfigured=agent:gall]
+  (on-poke:complete-agent %stead-team-config-1 !>(next-config))
+=/  reconfigured-save  (saved-owner reconfigured)
+=/  reconfigured-current  (need current.registry.db.reconfigured-save)
+?>  =(2 revision.reconfigured-current)
+?>  ?=(^ reconfigure-cards)
+:: A claimed completed saved projection cannot bypass restore or inject rows.
+=/  forged=saved:stead-team-owner
+  [target expected-view(visible *index:stead-projection, rebuilding |, remaining ~)]
+=/  [forged-cards=(list card:agent:gall) forged-agent=agent:gall]
+  (on-load:reload-initial !>([%stead-home %3 forged]))
+?>  (quarantined forged-agent next-config alice)
+=/  [fixed-agent=agent:gall fixed-cards=(list card:agent:gall)]
+  (projection-pump forged-agent forged-cards |)
+?>  =(completed (saved-owner fixed-agent))
+:: Compare complete native query pages, cursor state and access after recovery.
+=/  kinds  ~['work' 'search' 'activity' 'inbox']
+=/  restored-db  db.completed
+=/  restored-view  projection.completed
+=;  ignored=*
+  [%noun %stead-team-authority-basic-pass]
+|-
+?~  kinds  ~
+=/  query=query:stead-team-codec  [(id 902) i.kinds (id 100) '' '' '' '']
+=/  expected  (execute:stead-views target expected-view *state:stead-views alice query 2.000 701)
+=/  actual  (execute:stead-views restored-db restored-view *state:stead-views alice query 2.000 701)
+?>  =(expected actual)
+=/  envelope  (need (parse-result:stead-codec response.expected))
+?>  ?=([%o *] envelope)
+?>  =('read' (field:stead-codec p.envelope 'status'))
+=/  continuation  (field:stead-codec p.envelope 'cursor')
+=/  denied  (execute:stead-views restored-db restored-view *state:stead-views bob query 2.000 703)
+?>  =((error:stead-team 'denied_or_not_found') response.denied)
+?:  !=('' continuation)
+  =/  next-query  query(cursor continuation)
+  =/  last-page  (execute:stead-views target expected-view next.expected alice next-query 2.001 702)
+  ?>  =(last-page (execute:stead-views restored-db restored-view next.actual alice next-query 2.001 702))
+  =/  last-json  (need (parse-result:stead-codec response.last-page))
+  ?>  ?=([%o *] last-json)
+  ?>  =('' (field:stead-codec p.last-json 'cursor'))
+  $(kinds t.kinds)
+$(kinds t.kinds)

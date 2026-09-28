@@ -180,8 +180,16 @@ points now disable cache writes before loading those helpers.
 `99879c516b0481d1013051672658bf85fe030428`. The fresh
 [run 36412165213](https://github.com/ScottTpirate/stead-urbit/actions/runs/36412165213)
 uses main `9a6fec9a6030d381f1fa846bd9bb4ec8779cd382` and candidate
-`2a525948b5b369a05bcf1c2a783a9dbc5c361390`. Its result is pending. This controller
-still does not execute the combined local supervisor or new ingress code.
+`2a525948b5b369a05bcf1c2a783a9dbc5c361390`. It failed after 1,644.320 seconds:
+673 passing checks, zero failed checks and 681 recorded commands. All four ships
+had 80 installed files; migration was not reached. Input identity, collector EOF,
+clean owned child exits and empty cgroup were verified. The counters match the
+third ship's bootstrap acknowledgment followed by admission; that location is a
+source-derived inference because the exact failing operation was not retained.
+There is no evidence establishing a thermal or frontend cause. Reviewed controller
+`a27c6218eb7a97294b6d8c7192f3e1aa656244d4` adds closed admission location/error
+categories and preserves the initiating exception through both rollback attempts.
+Fifty host CI controls and 11 lifecycle controls passed; none is native acceptance.
 
 The updated browser client eliminates duplicate identity reads and scope
 snapshots, submits search explicitly and serializes unfinished watch opens.
@@ -190,6 +198,32 @@ checks against a mocked Home passed with unchanged input digests. Native timing
 instrumentation is prepared but has not run against this new client. Generated
 assets were verified and packaged in `cf19d00`; this is build evidence, not
 native browser acceptance.
+
+## Executable independent SDK candidate
+
+The current lane supersedes the earlier unexecuted artifact-transfer proposal:
+it compiles and invokes the public package in the same fresh isolated consumer,
+with a separate synthetic Home created only after compilation and isolation
+checks. The private authority implementation is unavailable in the consumer.
+Commits `a9b9156` through `ad8d305` implement and independently review this lane.
+Twelve real bounded socket-relay controls, nine synthetic result validators and
+38 development-flow controls passed. A lightweight actual Linux control verified
+separate namespaces, zero capability sets, no-new-privileges, mapped host file
+ownership and owned-evaluator SIGKILL/reaping after creator loss. A separate mocked
+control confirms the configured fixture's UID restriction cannot be bypassed.
+
+Three retained attempts failed before native startup: a missing explicit user
+namespace option, a rejected nested UID mapping, then a redundant capability-drop
+operation after all capabilities were already absent. The reviewed correction
+retains the nonroot caller outside, maps the consumer inside and never adds
+capabilities. The fourth attempt booted and imported the public files, then failed
+because the naked import-control gates needed a noun argument. Commit `2ea590a`
+adds that required argument after pinned Dojo source review. The fifth attempt
+was stopped at 92°C by the unchanged 90°C thermal ceiling after 437.748 seconds;
+it did not qualify public compilation. Both failures and their private evidence
+are retained. Native SDK compilation and complete conformance remain unqualified
+until actual results and cleanup are independently reviewed. See
+[SDK consumer qualification](SDK_CONSUMER_QUALIFICATION.md).
 
 ## Remaining execution
 
@@ -203,3 +237,26 @@ natural session expiry, and the uncoached human trial. Review their exact-source
 results against [PHASE2_ACCEPTANCE](PHASE2_ACCEPTANCE.md), then integrate the
 reviewed PRs and reconcile the six issues. Linux fake ships suffice for this
 phase; no purchased identity or separate public Urbit server is required.
+
+## Configured history and recovery acceptance preparation
+
+Independent review identified missing configured-v3 stock Git and interrupted
+projection save/load checks. A private fixed fixture observation now reads the
+actual stored object bytes, preserving lengths, then uses ordinary Git hash-object,
+fsck, rev-list, ls-tree and cat-file. Browser receipts bind source/publication/edit
+heads and Markdown; complete destination ancestry excludes private canaries and
+source history. This is synthetic owner observation, not a public export API.
+The actual Home probe now saves and reloads during an incomplete 16-event batch,
+checks quarantine, retired wakes, discarded forged views, exact final pages and
+revoked access. These new Hoon/browser checks remain unexecuted.
+
+Eight host controls passed in 0.126 seconds (synthetic observations with real Git,
+mocked-native RPC persistence/late-guard failure and source-binding controls),
+and 12 browser-evidence controls passed in 0.008 seconds. Two independent source
+reviews cleared the corrections for native execution; neither is acceptance.
+
+Hosted run `36416743910` completed with failure after 1,707.854 seconds. All 755
+team checks passed and the supported migration passed; failure occurred next in
+the native-controls stage. Its bounded artifact `10968932347` records unchanged
+inputs and verified empty host cleanup. Further diagnosis of that control remains
+required; this run does not qualify CI.
