@@ -36,6 +36,8 @@ def error_kind(value):
     kind, _, message = value.partition(': ')
     reason = 'unrecognized'
     exact = {'Native team suite failed': 'team-suite', 'Fresh base mount absent': 'base-mount',
+             'native-public-capabilities-current-member': 'capabilities-member',
+             'native-capabilities-unbound-sender-denied': 'capabilities-denial',
              'Supported predecessor migration failed': 'migration',
              'Kernel cache poisoned': 'kernel-pin', 'Native lifetime interrupted': 'lifetime',
              'Unclean owned native exit': 'unclean-exit',

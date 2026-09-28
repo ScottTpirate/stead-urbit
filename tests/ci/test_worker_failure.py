@@ -77,6 +77,18 @@ class FailureProjectionTests(unittest.TestCase):
                 self.assertEqual(failure.error_kind('ValueError: ' + message + self.secret)['reason'],
                                  'unrecognized')
 
+    def test_capabilities_assertions_are_closed_codes_without_native_values(self):
+        for name, reason in [('native-public-capabilities-current-member', 'capabilities-member'),
+                             ('native-capabilities-unbound-sender-denied', 'capabilities-denial')]:
+            value = copy.deepcopy(self.value)
+            value['native']['error'] = 'AssertionError: ' + name
+            self.assertEqual(self.project(value)['native']['error'],
+                             {'class': 'AssertionError', 'reason': reason})
+            value['native']['error'] += self.secret
+            result = self.project(value)
+            self.assertEqual(result['native']['error']['reason'], 'unrecognized')
+            self.assertNotIn(self.secret, json.dumps(result))
+
     def test_empty_duplicate_truncated_nonfinal_invalid_utf8_and_oversized_frames_refused(self):
         raw = self.frame()
         duplicate = raw.replace(b'"status": "fail"', b'"status": "fail", "status": "fail"')
