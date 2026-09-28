@@ -392,6 +392,7 @@
   (apply-command:stead-team many alice (command 750 100 2 'policy.revoke' ~[['grant_id' (id 501)]]) 1.040)
 ?>  (accepted revoked-many)
 =/  target  next.revoked-many
+?>  ?=(^ journal.data.target)
 =/  expected-view  (append:stead-projection indexed i.journal.data.target)
 ?>  (ready:stead-projection target expected-view)
 =/  parsed-config  (need (parse-result:stead-codec config-raw))
