@@ -1,9 +1,11 @@
 """Real package/Git/filesystem controls, not SDK compilation or isolation."""
 import hashlib
 import json
+import os
 from pathlib import Path
 import stat
 import sys
+import tempfile
 import unittest
 from unittest.mock import patch
 
@@ -164,6 +166,22 @@ class SdkInputTests(unittest.TestCase):
         with patch.object(prepare, 'write_new', side_effect=mutate), \
              self.assertRaisesRegex(ValueError, 'readback differs'):
             self.run_prepare()
+
+    def test_repository_filesystem_directory_opened_before_entries_is_read_fresh(self):
+        # The real CLI exposed this on the repository filesystem, while the
+        # source fixtures in /tmp did not. Keep this control on that filesystem.
+        (ROOT / '.runtime').mkdir(mode=0o700, exist_ok=True)
+        with tempfile.TemporaryDirectory(prefix='sdk-enumeration-', dir=ROOT / '.runtime') as directory:
+            descriptor = prepare.open_directory(directory)
+            try:
+                files = {'sdk/public.hoon':b'owned public control', 'toolchain.json':b'{}'}
+                for name, raw in files.items():
+                    prepare.write_new(descriptor, name, raw)
+                prepare.verify_directory(descriptor, files)
+                prepare.write_new(descriptor, 'inputs.json', b'{}')
+                prepare.verify_directory(descriptor, files | {'inputs.json':b'{}'})
+            finally:
+                os.close(descriptor)
 
 
 if __name__ == '__main__':

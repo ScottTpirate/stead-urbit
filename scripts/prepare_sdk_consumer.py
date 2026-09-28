@@ -74,25 +74,32 @@ def verify_directory(root_fd, files):
         require(info.st_uid == os.getuid() and stat.S_IMODE(info.st_mode) == 0o700,
                 'Prepared directory is not private and owned')
         seen = set()
-        with os.scandir(descriptor) as entries:
-            for entry in entries:
-                require(entry.name in branch and entry.name not in seen, 'Unexpected prepared input')
-                seen.add(entry.name)
-                expected = branch[entry.name]
-                if isinstance(expected, dict):
-                    child = open_directory(entry.name, dir_fd=descriptor)
-                    try:
-                        visit(child, expected)
-                    finally:
-                        os.close(child)
-                else:
-                    child = os.open(entry.name, os.O_RDONLY | os.O_NOFOLLOW | os.O_NONBLOCK | os.O_CLOEXEC, dir_fd=descriptor)
-                    with os.fdopen(child, 'rb') as source:
-                        info = os.fstat(source.fileno())
-                        require(stat.S_ISREG(info.st_mode) and info.st_nlink == 1
-                                and info.st_uid == os.getuid() and stat.S_IMODE(info.st_mode) == 0o600
-                                and info.st_size == len(expected), 'Prepared input metadata differs')
-                        require(source.read(len(expected) + 1) == expected, 'Prepared input readback differs')
+        # The repository filesystem reproduced an empty first enumeration on
+        # a descriptor opened before its entries were created. Obtain a fresh
+        # directory description relative to the held inode for each readback.
+        scan = open_directory('.', dir_fd=descriptor)
+        try:
+            with os.scandir(scan) as entries:
+                for entry in entries:
+                    require(entry.name in branch and entry.name not in seen, 'Unexpected prepared input')
+                    seen.add(entry.name)
+                    expected = branch[entry.name]
+                    if isinstance(expected, dict):
+                        child = open_directory(entry.name, dir_fd=descriptor)
+                        try:
+                            visit(child, expected)
+                        finally:
+                            os.close(child)
+                    else:
+                        child = os.open(entry.name, os.O_RDONLY | os.O_NOFOLLOW | os.O_NONBLOCK | os.O_CLOEXEC, dir_fd=descriptor)
+                        with os.fdopen(child, 'rb') as source:
+                            info = os.fstat(source.fileno())
+                            require(stat.S_ISREG(info.st_mode) and info.st_nlink == 1
+                                    and info.st_uid == os.getuid() and stat.S_IMODE(info.st_mode) == 0o600
+                                    and info.st_size == len(expected), 'Prepared input metadata differs')
+                            require(source.read(len(expected) + 1) == expected, 'Prepared input readback differs')
+        finally:
+            os.close(scan)
         require(seen == set(branch), 'Prepared input inventory differs')
     visit(root_fd, expected)
 
