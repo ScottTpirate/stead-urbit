@@ -20,7 +20,7 @@ LOG_MARKERS = {'http_live': b'http: live', 'http_loopback': b'http: loopback',
                'pier_ready': b'pier: ready', 'ames_live': b'ames: live',
                'loom_mapped': b'loom: mapped', 'assertion': b'Assertion',
                'out_of_memory': b'out of memory', 'permission_denied': b'Permission denied'}
-MIGRATION_MARKERS = ('find-fork', 'nest-fail', 'build-fail', 'dojo-lame', 'exit',
+MIGRATION_MARKERS = ('find-fork', 'nest-fail', 'build-fail', 'generator-build-fail', 'dojo-lame', 'exit',
                      'stead-ci-migration-load', 'stead-ci-migration-preserved-state',
                      'stead-ci-migration-grants', 'stead-ci-migration-document-denial',
                      'stead-ci-migration-roundtrip', 'stead-ci-migration-rejections')

@@ -114,6 +114,11 @@ class FailureProjectionTests(unittest.TestCase):
         self.assertFalse(observed['markers']['find-fork'])
         value['migration']['output'] = 'not-nest-fail-private'
         self.assertFalse(self.project(value)['migration']['markers']['nest-fail'])
+        value['migration']['output'] = '%generator-build-fail'
+        self.assertTrue(self.project(value)['migration']['markers']['generator-build-fail'])
+        self.assertFalse(self.project(value)['migration']['markers']['build-fail'])
+        value['migration']['output'] = 'private-generator-build-fail-private'
+        self.assertFalse(self.project(value)['migration']['markers']['generator-build-fail'])
         self.assertFalse(self.project()['migration']['present'])
 
     def test_migration_output_shapes_and_byte_bounds_fail_closed(self):
