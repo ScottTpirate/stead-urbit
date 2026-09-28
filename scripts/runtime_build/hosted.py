@@ -106,7 +106,7 @@ def container(image, name, argv, mounts, workflow, deadline):
         '--memory=4294967296','--memory-swap=4294967296','--pids-limit=256',
         '--restart=no','--init','--stop-timeout=10','--workdir=/source','--env=LANG=C.UTF-8','--env=PATH=/usr/bin:/bin',
         '--tmpfs=/tmp:rw,nosuid,nodev,noexec,size=268435456',
-        '--log-driver=local','--log-opt=max-size=4m','--log-opt=max-file=1']
+        '--log-driver=local','--log-opt=max-size=4m','--log-opt=max-file=1','--log-opt=compress=false']
     for path,target,writable in mounts:
         command += ['--mount','type=bind,src='+str(path)+',dst='+target+('' if writable else ',readonly')]
     cid = run(command+[image,*argv]).decode().strip()
