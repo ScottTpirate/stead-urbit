@@ -17,19 +17,16 @@ PORTS = {'zod': 31337, 'bus': 31519, 'nec': 31338, 'bud': 31339}
 DROP_CAPABILITIES = ['setpriv', '--bounding-set=-all', '--inh-caps=-all',
                      '--ambient-caps=-all', '--no-new-privs', '--']
 TABLE = 'stead_fakes'
-POLICY = '''create table inet stead_fakes {
-  set ready { type inet_service; flags timeout; timeout 2s; }
-  chain peer_input {
-    type filter hook input priority -300; policy accept;
-    iifname "lo" ip saddr 127.0.0.1 ip daddr 127.0.0.1 udp sport @ready udp dport @ready accept
-    meta l4proto udp counter drop
-  }
-  chain peer_output {
-    type filter hook output priority -300; policy accept;
-    oifname "lo" ip saddr 127.0.0.1 ip daddr 127.0.0.1 udp sport @ready udp dport @ready accept
-    meta l4proto udp counter drop
-  }
-}
+# Explicit statements share one atomic transaction. nftables 1.0.9 accepts a
+# nested `create table` body but creates only the table; exact readback rejects it.
+POLICY = '''create table inet stead_fakes
+add set inet stead_fakes ready { type inet_service; flags timeout; timeout 2s; }
+add chain inet stead_fakes peer_input { type filter hook input priority -300; policy accept; }
+add chain inet stead_fakes peer_output { type filter hook output priority -300; policy accept; }
+add rule inet stead_fakes peer_input iifname "lo" ip saddr 127.0.0.1 ip daddr 127.0.0.1 udp sport @ready udp dport @ready accept
+add rule inet stead_fakes peer_input meta l4proto udp counter drop
+add rule inet stead_fakes peer_output oifname "lo" ip saddr 127.0.0.1 ip daddr 127.0.0.1 udp sport @ready udp dport @ready accept
+add rule inet stead_fakes peer_output meta l4proto udp counter drop
 '''
 
 
