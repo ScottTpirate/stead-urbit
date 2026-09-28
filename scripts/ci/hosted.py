@@ -205,7 +205,7 @@ def observe(job, context):
 
 def sandbox_command(job, context):
     base, pins = job / 'controller', context['pins']
-    command = ['/usr/bin/bwrap', '--unshare-all', '--new-session', '--uid', '0', '--gid', '0',
+    command = ['/usr/bin/bwrap', '--unshare-all', '--die-with-parent', '--new-session', '--uid', '0', '--gid', '0',
         '--cap-add', 'CAP_NET_ADMIN', '--cap-add', 'CAP_SETPCAP', '--ro-bind', '/usr', '/usr']
     for name in ('bin', 'sbin', 'lib', 'lib64'):
         path = Path('/') / name
@@ -256,7 +256,7 @@ def guardian(job):
         signal.signal(signum, lambda *_: stopped.set())
     started, generation = time.monotonic(), 0
     process, reader = None, None
-    collection = {'overflow': False, 'error': None}
+    collection = {'overflow': False, 'error': None, 'eof': False, 'completed': False}
     result = {'status': 'fail', 'run_id': context['run_id'], 'classification': 'github-hosted-native-guard',
         'thermal': POLICY['thermal'], 'policy': POLICY, 'collector': collection}
 
@@ -301,11 +301,18 @@ def guardian(job):
                         else:
                             collection['overflow'] = True
                             stopped.set()
+                    collection['eof'] = True
             except BaseException as error:
                 collection['error'] = type(error).__name__
                 stopped.set()
             finally:
-                process.stdout.close()
+                try:
+                    process.stdout.close()
+                except BaseException as error:
+                    collection['error'] = type(error).__name__
+                    stopped.set()
+                finally:
+                    collection['completed'] = True
         reader = threading.Thread(target=collect, daemon=True)
         reader.start()
         while process.poll() is None:
@@ -317,24 +324,52 @@ def guardian(job):
     except BaseException as error:
         result['error'] = type(error).__name__ + ': ' + str(error)[:1000]
     finally:
-        write(control / 'STOP', {'stopped': True}, shared=True, gid=context['gid'])
-        if process is not None and process.poll() is None:
-            process.terminate()
-            try:
-                process.wait(timeout=10)
-            except subprocess.TimeoutExpired:
-                process.kill()
-                process.wait(timeout=5)
+        cleanup_errors = []
+        try:
+            write(control / 'STOP', {'stopped': True}, shared=True, gid=context['gid'])
+        except BaseException as error:
+            cleanup_errors.append('Stop receipt: ' + type(error).__name__)
+        try:
+            if process is not None and process.poll() is None:
+                process.terminate()
+                try:
+                    process.wait(timeout=10)
+                except subprocess.TimeoutExpired:
+                    process.kill()
+                    process.wait(timeout=5)
+        except BaseException as error:
+            cleanup_errors.append('Child termination: ' + type(error).__name__)
         if reader:
-            reader.join(timeout=5)
-            if reader.is_alive():
-                result.update(status='fail', error='Output collector did not finish')
+            try:
+                reader.join(timeout=5)
+            except RuntimeError as error:
+                cleanup_errors.append('Collector join: ' + type(error).__name__)
+            if reader.is_alive() or not collection['completed'] or not collection['eof']:
+                cleanup_errors.append('Output collector did not finish with EOF')
+        if process is not None and (reader is None or reader.ident is None):
+            try:
+                process.stdout.close()
+            except BaseException as error:
+                cleanup_errors.append('Unstarted collector pipe close: ' + type(error).__name__)
         if collection['overflow'] or collection['error']:
+            cleanup_errors.append('Output collection failed')
+        if cleanup_errors:
             result['status'] = 'fail'
-        result.update(elapsed_seconds=round(time.monotonic() - started, 3), generations=generation,
+            # Preserve the refusal that triggered shutdown. Cleanup remains an
+            # independent gate; an expected refusal cannot hide incomplete EOF.
+            result.setdefault('error', 'Hosted cleanup failed')
+        result.update(cleanup_errors=cleanup_errors,
+            child_terminated=process is not None and process.returncode is not None,
+            elapsed_seconds=round(time.monotonic() - started, 3), generations=generation,
             exit_code=process.returncode if process else None)
         write(job / 'guard.json', result)
     return 0 if result['status'] == 'pass' else 1
+
+
+def require_collected_child(guard):
+    require(guard.get('collector') == {'overflow': False, 'error': None, 'eof': True, 'completed': True}
+        and guard.get('cleanup_errors') == [] and guard.get('child_terminated') is True
+        and type(guard.get('exit_code')) is int, 'Incomplete hosted child cleanup')
 
 
 def service_command(job, context):
@@ -549,6 +584,10 @@ def execute_control(case, process, job, context):
         require(time.monotonic() < deadline, 'Control did not clean up all owned descendants')
         time.sleep(.1)
     require(process.returncode != 0, 'Interrupted control falsely exited successfully')
+    if case != 'guardian-death':
+        # A killed guardian cannot publish a final receipt; that separate case
+        # relies on the independent service/cgroup observations above.
+        require_collected_child(execution_policy.read_json(job / 'guard.json'))
     if case in ('parent-death', 'changed-limits'):
         guard = execution_policy.read_json(job / 'guard.json')
         expected = 'ValueError: ' + ('Hosted caller ended' if case == 'parent-death' else 'Hosted kernel limits changed')
@@ -658,6 +697,7 @@ def main():
             require(process.returncode == 0, 'Hosted service failed')
             result['guard'] = execution_policy.read_json(job / 'guard.json')
             require(result['guard']['status'] == 'pass', 'Hosted guardian failed')
+            require_collected_child(result['guard'])
             raw = (job / 'console.private.log').read_bytes()
             worker = verify(raw, inputs, run_id=run_id,
                 inventory=json.loads(controller['specs/urbit/phase2-pure-units.json']))
