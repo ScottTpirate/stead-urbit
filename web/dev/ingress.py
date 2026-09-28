@@ -47,9 +47,19 @@ class TLSIngress:
         self.threads = set()
         self.server = socket.socket(socket.AF_UNIX)
         try:
-            self.server.bind(str(self.path))
-            os.chmod(self.path, 0o600)
-            self.inode = self.path.stat().st_ino
+            # Linux sun_path is shorter than supported checkout paths. Bind
+            # the same filesystem endpoint through an owned directory fd,
+            # as the loopback bridge already does when connecting to it.
+            directory = os.open(self.directory, os.O_RDONLY | os.O_DIRECTORY | os.O_NOFOLLOW | os.O_CLOEXEC)
+            try:
+                info = os.fstat(directory)
+                if info.st_uid != os.getuid() or stat.S_IMODE(info.st_mode) != 0o700:
+                    raise ValueError('Ingress directory must be owned and mode 0700')
+                self.server.bind(f'/proc/self/fd/{directory}/{self.path.name}')
+                os.chmod(self.path.name, 0o600, dir_fd=directory)
+                self.inode = os.stat(self.path.name, dir_fd=directory, follow_symlinks=False).st_ino
+            finally:
+                os.close(directory)
             self.server.listen(self.MAX_CONNECTIONS)
             self.server.settimeout(.1)
         except BaseException:

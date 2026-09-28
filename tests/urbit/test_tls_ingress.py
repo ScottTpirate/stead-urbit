@@ -1,6 +1,7 @@
 """Real host sockets/child lifetimes; dummy byte backend, not TLS/Eyre evidence."""
 from pathlib import Path
 import importlib.util
+import os
 import socket
 import subprocess
 import sys
@@ -19,7 +20,8 @@ class IngressTests(unittest.TestCase):
     def setUp(self):
         directory = ROOT / '.runtime/ingress-host-tests'
         directory.mkdir(parents=True, exist_ok=True)
-        self.temp = tempfile.TemporaryDirectory(dir=directory)
+        # Exercise a real sun_path overflow even from a short checkout path.
+        self.temp = tempfile.TemporaryDirectory(prefix='nested-' + 'x' * 80, dir=directory)
         self.addCleanup(self.temp.cleanup)
         self.calls = []
         self.back = socket.socket()
@@ -29,9 +31,10 @@ class IngressTests(unittest.TestCase):
         self.guard_failed = False
         self.peers = set()
         self.worker = threading.Thread(target=self.echo, daemon=True); self.worker.start()
-        self.fence = ingress.TLSIngress(self.temp.name, 'zod', self.guard, connect=self.connect)
-        self.addCleanup(self.cleanup)
+        self.fence = None
         self.children = []
+        self.addCleanup(self.cleanup)
+        self.fence = ingress.TLSIngress(self.temp.name, 'zod', self.guard, connect=self.connect)
         self.first = self.child()
         self.nonce = self.fence.bind_child(self.first)
 
@@ -71,7 +74,9 @@ class IngressTests(unittest.TestCase):
                 peer.close(); self.peers.discard(peer)
 
     def cleanup(self):
-        self.fence.close(); self.stop.set(); self.back.close()
+        if self.fence is not None:
+            self.fence.close()
+        self.stop.set(); self.back.close()
         for peer in tuple(self.peers): peer.close()
         self.worker.join(timeout=2)
         for process in self.children:
@@ -81,7 +86,12 @@ class IngressTests(unittest.TestCase):
 
     def peer(self):
         client = socket.socket(socket.AF_UNIX); client.settimeout(2)
-        client.connect(str(self.fence.path)); self.addCleanup(client.close)
+        self.addCleanup(client.close)
+        directory = os.open(self.fence.path.parent, os.O_RDONLY | os.O_DIRECTORY | os.O_NOFOLLOW | os.O_CLOEXEC)
+        try:
+            client.connect(f'/proc/self/fd/{directory}/{self.fence.path.name}')
+        finally:
+            os.close(directory)
         return client
 
     def ack(self, nonce=None, **extra):
@@ -92,12 +102,34 @@ class IngressTests(unittest.TestCase):
         except (ConnectionResetError, BrokenPipeError): pass
 
     def test_no_backend_bytes_before_bootstrap_then_exact_raw_relay(self):
+        self.assertGreater(len(os.fsencode(self.fence.path)), 107)
         peer = self.peer(); peer.sendall(b'pre-bootstrap'); self.closed(peer)
         self.assertEqual(self.calls, [])
         self.fence.arm(self.first, self.nonce, self.ack())
         peer = self.peer(); data = b'\x16\x03\x01synthetic-opaque-bytes'; peer.sendall(data)
         self.assertEqual(peer.recv(100), data)
         self.assertEqual(self.calls, [('127.0.0.1', 18443)])
+
+    def test_existing_socket_is_preserved_when_second_bind_is_refused(self):
+        inode = self.fence.path.stat().st_ino
+        with self.assertRaises(OSError):
+            ingress.TLSIngress(self.temp.name, 'zod', self.guard, connect=self.connect)
+        self.assertEqual(self.fence.path.stat().st_ino, inode)
+        self.fence.arm(self.first, self.nonce, self.ack())
+        peer = self.peer(); peer.sendall(b'original')
+        self.assertEqual(peer.recv(20), b'original')
+
+    def test_shared_or_redirected_directory_cannot_admit_a_listener(self):
+        path = Path(self.temp.name) / 'other'
+        path.mkdir(mode=0o750)
+        path.chmod(0o750)
+        with self.assertRaisesRegex(ValueError, 'mode 0700'):
+            ingress.TLSIngress(path, 'bus', self.guard)
+        path.rmdir()
+        path.symlink_to(self.temp.name, target_is_directory=True)
+        with self.assertRaisesRegex(ValueError, 'Private existing'):
+            ingress.TLSIngress(path, 'bus', self.guard)
+        path.unlink()
 
     def test_stale_ack_cannot_reopen_a_new_child_or_reuse_an_accepted_nonce(self):
         self.fence.arm(self.first, self.nonce, self.ack())
