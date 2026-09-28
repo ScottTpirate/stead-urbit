@@ -4,6 +4,7 @@ import assert from 'node:assert/strict';
 import {readFile, writeFile} from 'node:fs/promises';
 import {createHash, randomBytes} from 'node:crypto';
 import path from 'node:path';
+import os from 'node:os';
 import {firefox} from 'playwright';
 import {endpointBoundaries} from './native-boundaries.mjs';
 import {ResponseCapture} from './response-capture.mjs';
@@ -30,6 +31,14 @@ const report = {classification: 'real-browser-native-gall', status: 'fail', qual
 report.assets = {manifest_sha256: createHash('sha256').update(manifestBytes).digest('hex'), markdown: {path: '/stead/assets/' + lazyAsset, ...manifest.files[lazyAsset]}};
 const responseCapture = new ResponseCapture();
 const pages = [];
+const requestCounts = new WeakMap();
+const counts = page => ({...requestCounts.get(page)});
+const difference = (before, after) => Object.fromEntries(Object.entries(after)
+  .map(([key, value]) => [key, value - (before[key] ?? 0)]).filter(([, value]) => value));
+report.performance_environment = {platform: os.platform(), architecture: os.arch(),
+  cpu_models: [...new Set(os.cpus().map(cpu => cpu.model))], logical_cpus: os.cpus().length,
+  memory_bytes: os.totalmem(), load_average_at_start: os.loadavg(),
+  scope: 'Synthetic Work/Docs journey; request counts include concurrent polling in the same page. Heterogeneous save samples are not a capacity percentile.'};
 const origins = new Set([origin, 'https://bus.localhost:8444', 'https://nec.localhost:8445', 'https://bud.localhost:8446']);
 async function restrict(context) {
   await context.route('**/*', route => {
@@ -68,6 +77,14 @@ async function inertPreview(page) {
 }
 async function pageIn(context) {
   const page = await context.newPage(); pages.push(page);
+  const requests = {}; requestCounts.set(page, requests);
+  page.on('request', request => {
+    const url = new URL(request.url());
+    if (url.origin !== origin || !url.pathname.startsWith('/stead/')) return;
+    const route = ['/stead/api/query', '/stead/api/command', '/stead/api/updates', '/stead/auth/resume'].includes(url.pathname)
+      ? url.pathname : url.pathname.startsWith('/stead/assets/') ? 'assets' : 'other-stead';
+    requests[route] = (requests[route] ?? 0) + 1;
+  });
   page.on('response', response => {
     if (!responseCapture.accepting) return;
     responseCapture.track(async () => {
@@ -193,20 +210,49 @@ async function localizedAcceptedTime(alice, bob, receipt) {
   passed('native-accepted-event-renders-same-instant-in-two-local-timezones', {request_id: receipt.request_id, times});
 }
 async function acceptedClick(page, label) {
-  const response = page.waitForResponse(value => value.url() === origin + '/stead/api/command');
+  const response = page.waitForResponse(value => value.url() === origin + '/stead/api/command')
+    .then(async observed => ({observed, result: await observed.json(), accepted: performance.now(), throughAccepted: counts(page)}));
+  const before = counts(page);
   const start = performance.now();
   await page.getByRole('button', {name: label, exact: true}).click();
-  const result = await (await response).json();
+  const {observed, result, accepted, throughAccepted} = await response;
+  const sent = observed.request().postDataJSON();
+  for (const key of ['request_id', 'operation', 'project_id', 'resource_id']) assert.equal(result[key], sent[key]);
   assert.equal(result.status, 'accepted');
   assert.equal(result.authentication, 'native-approved-browser/1');
   await page.getByText(`Saved at home · revision ${result.resource_revision}`, {exact: true}).waitFor();
   report.timings ??= [];
-  report.timings.push({operation: result.operation, request_id: result.request_id, confirmation_ms: Math.round(performance.now() - start)});
+  report.timings.push({operation: result.operation, request_id: result.request_id,
+    request_body_bytes: Buffer.byteLength(observed.request().postData()),
+    accepted_response_ms: Math.round(accepted - start), confirmation_ms: Math.round(performance.now() - start),
+    requests_through_acceptance: difference(before, throughAccepted), requests_through_confirmation: difference(before, counts(page))});
   return result;
+}
+async function usefulView(page, label, queryKind, visible) {
+  // Finish the previous scope before measuring the new navigation. Capture a
+  // newly issued request, never a late response from an earlier scope.
+  await page.locator('#project-content[data-live-updates="connected"]').waitFor();
+  await page.waitForFunction(() => ![...document.querySelectorAll('button')].find(button => button.textContent === 'Refresh')?.disabled);
+  const request = page.waitForRequest(value => value.url() === origin + '/stead/api/query'
+    && value.postDataJSON()?.kind === queryKind);
+  const before = counts(page), start = performance.now();
+  await page.getByRole('button', {name: label, exact: true}).click();
+  const sentRequest = await request, response = await sentRequest.response();
+  assert.ok(response); assert.equal(response.status(), 200);
+  const view = await response.json(), sent = sentRequest.postDataJSON();
+  for (const key of ['request_id', 'kind', 'project_id', 'container_id', 'resource_id']) assert.equal(view[key], sent[key]);
+  assert.equal(view.status, 'read');
+  await visible.waitFor();
+  await page.locator('#project-content[data-live-updates="connected"]').waitFor();
+  report.navigation_timings ??= [];
+  report.navigation_timings.push({view: label === 'Docs' ? 'Docs collection selector' : label,
+    query_kind: queryKind, useful_content_ms: Math.round(performance.now() - start),
+    returned_rows: Object.keys(view.rows).length, returned_rows_bytes: Buffer.byteLength(JSON.stringify(view.rows)),
+    requests: difference(before, counts(page))});
 }
 async function docsJourney(alice, bob) {
   const a = alice.home, b = bob.home;
-  await a.getByRole('button', {name: 'Docs', exact: true}).click();
+  await usefulView(a, 'Docs', 'containers', a.getByRole('heading', {name: 'Choose a collection', exact: true}));
   async function collection(title, visibility) {
     await a.getByRole('button', {name: 'New collection', exact: true}).click();
     await a.getByRole('textbox', {name: 'Title', exact: true}).fill(title);
@@ -222,7 +268,12 @@ async function docsJourney(alice, bob) {
   let selected;
   const privateIds = [];
   for (const body of [content, '# UNSELECTED-PRIVATE-CANARY\n\nThis page must stay private.\n']) {
+    const previewStart = performance.now(), previewRequests = counts(a);
     await a.getByRole('button', {name: 'New page', exact: true}).click();
+    await a.getByRole('article', {name: 'Document content', exact: true}).getByRole('heading', {name: 'Untitled', exact: true}).waitFor();
+    report.preview_timings ??= [];
+    report.preview_timings.push({content: 'new Untitled draft', first_preview: report.preview_timings.length === 0,
+      useful_content_ms: Math.round(performance.now() - previewStart), requests: difference(previewRequests, counts(a))});
     const editor = a.getByRole('textbox', {name: 'Markdown source', exact: true});
     const draft = (await editor.inputValue()).replace('# Untitled\n', body);
     await editor.fill(draft);
@@ -650,17 +701,14 @@ try {
   await unsentNewScopes(alice);
   for (const page of [alice.home, bob.home]) {
     await page.getByRole('button', {name: /GARDEN.*Garden α/u}).click();
-    await page.getByRole('button', {name: 'Work', exact: true}).click();
-    await page.getByRole('heading', {name: 'Native task', exact: true}).waitFor();
+    await usefulView(page, 'Work', 'work', page.getByRole('heading', {name: 'Native task', exact: true}));
   }
   assert.equal(await bob.home.getByRole('button', {name: 'New work item', exact: true}).count(), 0);
   passed('native-reader-work-view-without-write-control');
   await alice.home.getByRole('button', {name: 'New work item', exact: true}).click();
   await alice.home.getByRole('textbox', {name: 'Title', exact: true}).fill('Browser task — 東京');
   await alice.home.getByRole('textbox', {name: 'Description', exact: true}).fill('Created through the actual TLS browser boundary.');
-  const result = alice.home.waitForResponse(response => response.url() === origin + '/stead/api/command');
-  await alice.home.getByRole('button', {name: 'Save at home', exact: true}).click();
-  const receipt = await (await result).json();
+  const receipt = await acceptedClick(alice.home, 'Save at home');
   assert.equal(receipt.status, 'accepted');
   assert.equal(receipt.authentication, 'native-approved-browser/1');
   assert.equal(receipt.identity_ship, '~bus');

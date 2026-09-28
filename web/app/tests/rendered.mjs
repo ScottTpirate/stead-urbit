@@ -51,7 +51,8 @@ async function fixture(run) {
   const consoleErrors = [];
   page.on('console', message => { if (message.type() === 'error') consoleErrors.push(message.text()); });
   const state = {failure: '', resumeFailure: false, loseCommand: false, commands: [], recoveryIds: [], receipts: new Map(),
-    watches: new Map(), pages: new Map(), sequence: 0, token: 0, polls: 0, opens: 0, denied: false, holdWork: false, releaseWork: null,
+    watches: new Map(), pages: new Map(), requests: [], sequence: 0, token: 0, polls: 0, opens: 0, denied: false,
+    holdOpen: false, releaseOpen: null, holdWork: false, releaseWork: null,
     project: {kind: 'project', resource_id: id(1), project_id: id(1), title: 'Garden', project_key: 'GARDEN', preset: 'general', authority_epoch: '1', resource_revision: '1', policy_revision: '1', role: 'maintainer'},
     work: [], activity: [], containers: [], documents: []};
   await page.route(origin + '/stead/**', async route => {
@@ -59,6 +60,7 @@ async function fixture(run) {
     if (request.method() !== 'POST') return route.continue();
     const value = request.postDataJSON();
     const pathname = new URL(request.url()).pathname;
+    state.requests.push({path: pathname, kind: value.kind, action: value.action, search: value.search});
     const send = (body, status = 200) => route.fulfill({status, contentType: 'application/json', body: JSON.stringify(body)});
     if (pathname.endsWith('/capabilities')) return send({protocol: 'stead.capabilities/3', profile: 'configured-team'});
     if (pathname.endsWith('/resume')) {
@@ -86,6 +88,10 @@ async function fixture(run) {
         assert.ok(state.watches.size + state.pages.size < 4, 'mock shared cursor cap');
         const watch = {id: token(), cursor: token(), sequence: state.sequence};
         state.watches.set(watch.id, watch);
+        if (state.holdOpen) {
+          state.holdOpen = false;
+          await new Promise(resolve => { state.releaseOpen = resolve; });
+        }
         return send({protocol: 'stead.update-result/3', request_id: value.request_id, status: 'watching', watch_id: watch.id, cursor: watch.cursor, generation: generation(), rows: {}});
       }
       assert.equal(value.action, 'poll'); state.polls++;
@@ -157,7 +163,7 @@ async function fixture(run) {
     await writeFile(path.join(output, 'failure.html'), await page.content());
     await page.screenshot({path: path.join(output, 'failure.png'), fullPage: true});
     throw error;
-  } finally { state.releaseWork?.(); await context.close(); }
+  } finally { state.releaseWork?.(); state.releaseOpen?.(); await context.close(); }
 }
 async function check(name, run) {
   if (requestedCase && name !== requestedCase) return;
@@ -171,6 +177,72 @@ async function workForm(page) {
   await page.getByRole('textbox', {name: 'Description', exact: true}).fill('Unsaved synthetic text');
 }
 try {
+  await check('authentication-reuses-validated-identity-and-opens-before-one-snapshot', async (page, state) => {
+    assert.equal(state.requests.filter(row => row.kind === 'identity').length, 1);
+    assert.deepEqual(state.requests.filter(row => row.path === '/stead/api/query' && row.kind === 'project').map(row => row.path), ['/stead/api/query']);
+    const open = state.requests.findIndex(row => row.action === 'open');
+    const snapshot = state.requests.findIndex(row => row.path === '/stead/api/query' && row.kind === 'project');
+    assert.ok(open >= 0 && snapshot > open);
+  });
+  await check('typing-search-keeps-current-watch-until-explicit-submit', async (page, state) => {
+    await page.getByRole('navigation', {name: 'Project views'}).getByRole('button', {name: 'Search', exact: true}).click();
+    await page.getByRole('button', {name: 'Refresh', exact: true}).waitFor({state: 'visible'});
+    await page.waitForFunction(() => document.querySelector('#project-content')?.dataset.liveUpdates === 'connected'
+      && ![...document.querySelectorAll('button')].find(button => button.textContent === 'Refresh')?.disabled);
+    const before = state.requests.length, opens = state.opens;
+    await page.getByRole('textbox', {name: 'Search this project', exact: true}).pressSequentially('garden');
+    await page.evaluate(() => new Promise(resolve => requestAnimationFrame(() => requestAnimationFrame(resolve))));
+    assert.equal(state.opens, opens);
+    assert.equal(state.requests.slice(before).filter(row => row.path === '/stead/api/query').length, 0);
+    for (let attempt = 0; attempt < 2; attempt++) {
+      const start = state.requests.length, previous = state.opens;
+      const searched = page.waitForResponse(response => response.url().endsWith('/stead/api/query')
+        && response.request().postDataJSON()?.kind === 'search' && response.request().postDataJSON()?.search === 'garden');
+      await page.getByRole('button', {name: 'Search', exact: true}).last().click();
+      await (await searched).finished();
+      await page.waitForFunction(() => document.querySelector('#project-content')?.dataset.liveUpdates === 'connected'
+        && ![...document.querySelectorAll('button')].find(button => button.textContent === 'Refresh')?.disabled);
+      const requests = state.requests.slice(start);
+      assert.equal(state.opens, previous + 1);
+      assert.deepEqual(requests.filter(row => row.path === '/stead/api/query').map(row => row.kind), ['project', 'search']);
+      assert.ok(requests.findIndex(row => row.action === 'open') < requests.findIndex(row => row.kind === 'project'));
+    }
+  });
+  await check('selected-tab-and-refresh-each-open-before-one-snapshot', async (page, state) => {
+    for (const label of ['Work', 'Work', 'Refresh']) {
+      const start = state.requests.length, opens = state.opens;
+      const snapshot = page.waitForResponse(response => response.url().endsWith('/stead/api/query')
+        && response.request().postDataJSON()?.kind === 'work');
+      await page.getByRole('button', {name: label, exact: true}).click();
+      await (await snapshot).finished();
+      await page.waitForFunction(() => document.querySelector('#project-content')?.dataset.liveUpdates === 'connected'
+        && ![...document.querySelectorAll('button')].find(button => button.textContent === 'Refresh')?.disabled);
+      const requests = state.requests.slice(start);
+      assert.equal(state.opens, opens + 1);
+      assert.deepEqual(requests.filter(row => row.path === '/stead/api/query').map(row => row.kind), ['project', 'work']);
+      assert.ok(requests.findIndex(row => row.action === 'open') < requests.findIndex(row => row.kind === 'project'));
+    }
+  });
+  await check('rapid-scope-changes-retire-one-delayed-open-before-latest-snapshot', async (page, state) => {
+    const start = state.requests.length, opens = state.opens;
+    state.holdOpen = true;
+    await page.getByRole('button', {name: 'Work', exact: true}).click();
+    const deadline = Date.now() + 10000;
+    while (!state.releaseOpen && Date.now() < deadline) await page.waitForTimeout(20);
+    assert.ok(state.releaseOpen, 'first open reached the controlled response hold');
+    for (const label of ['Docs', 'Activity', 'Inbox', 'Work', 'Search']) {
+      await page.getByRole('navigation', {name: 'Project views'}).getByRole('button', {name: label, exact: true}).click();
+    }
+    assert.equal(state.opens, opens + 1, 'new scopes wait for ownership of the outstanding open');
+    const snapshot = page.waitForResponse(response => response.url().endsWith('/stead/api/query')
+      && response.request().postDataJSON()?.kind === 'search');
+    state.releaseOpen(); state.releaseOpen = null;
+    await (await snapshot).finished();
+    await page.locator('#project-content[data-live-updates="connected"]').waitFor();
+    assert.equal(state.opens, opens + 2);
+    assert.equal(state.watches.size, 1);
+    assert.deepEqual(state.requests.slice(start).filter(row => row.path === '/stead/api/query').map(row => row.kind), ['project', 'search']);
+  });
   await check('401-during-query-restores-usable-sign-in', async (page, state) => {
     state.failure = 'expired';
     await page.getByRole('button', {name: 'Refresh', exact: true}).click();

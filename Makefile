@@ -1,4 +1,6 @@
 .DEFAULT_GOAL := help
+# Host checks must not add untracked bytecode to a source-bound native mount.
+export PYTHONDONTWRITEBYTECODE := 1
 # Bound seed/toolchain verification before the inner native guardian launches.
 PREP = systemd-run --user --scope --quiet -p CPUQuota=50% -p CPUQuotaPeriodSec=10ms -- taskset -c "$$(python3 -c 'import os; print(max(os.sched_getaffinity(0)))')"
 NODE = .runtime/node-v24.21.0-linux-x64/bin/node
