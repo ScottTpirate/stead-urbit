@@ -106,7 +106,7 @@ jobs:
         run: |
           candidate=$(sudo cat /var/lib/stead-ci-controller/.runtime/candidate)
           controller=$(sudo cat /var/lib/stead-ci-controller/.runtime/controller)
-          for control in parent-death guardian-death changed-limits stale-lease; do
+          for control in missing-profile wrong-profile parent-death guardian-death changed-limits stale-lease; do
             sudo --preserve-env=ACTIONS_ID_TOKEN_REQUEST_URL,ACTIONS_ID_TOKEN_REQUEST_TOKEN python3 -I -B /var/lib/stead-ci-controller/scripts/ci/hosted.py --workflow "$STEAD_WORKFLOW" --controller "$controller" --candidate "$candidate" --run-id "$STEAD_RUN_ID" --attempt "$STEAD_ATTEMPT" --control "$control"
           done
       - name: Execute the isolated native job
