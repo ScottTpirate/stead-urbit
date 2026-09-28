@@ -21,7 +21,7 @@ from results import validate
 
 
 def consumer_command():
-    args = ['bwrap', '--unshare-all', '--new-session', '--die-with-parent', '--disable-userns', '--uid', '0', '--gid', '0',
+    args = ['bwrap', '--unshare-all', '--unshare-user', '--new-session', '--die-with-parent', '--disable-userns', '--uid', '0', '--gid', '0',
             '--cap-drop', 'ALL', '--ro-bind', '/usr', '/usr']
     for name in ('bin', 'sbin', 'lib', 'lib64'):
         path = Path('/') / name
