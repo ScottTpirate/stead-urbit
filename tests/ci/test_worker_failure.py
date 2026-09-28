@@ -1,0 +1,138 @@
+"""Synthetic failed-worker disclosure/admission controls; no native claim."""
+import copy
+import hashlib
+import json
+from pathlib import Path
+import sys
+import tempfile
+from types import SimpleNamespace
+import unittest
+from unittest.mock import Mock, patch
+
+ROOT = Path(__file__).resolve().parents[2]
+sys.path[:0] = [str(ROOT / 'scripts/ci'), str(ROOT / 'scripts/urbit')]
+import worker_failure as failure
+import worker_result
+import worker
+import owned_child
+
+
+class FailureProjectionTests(unittest.TestCase):
+    def setUp(self):
+        self.run = 'a' * 32
+        self.inputs = {'expected_native_inputs': {'native': 'b' * 64}}
+        self.secret = 'PRIVATE_SESSION_AND_DOJO_VALUE_123'
+        self.value = {'format': 'stead.local-ci-worker/1', 'status': 'fail', 'run_id': self.run,
+                      'inputs_sha256': hashlib.sha256(worker_result.canonical(self.inputs)).hexdigest(),
+                      'cleanup': True, 'error': 'TimeoutError: zod did not become ready within 1200s',
+                      'diagnostic': {'stage': 'fresh-ready', 'ship': 'zod', 'pre_cleanup': {
+                          'zod': {'started': True, 'exit_code': None, 'ports_present': True,
+                                  'conn_present': True, 'kernel_ready_observed': False}}},
+                      'native': {'error': 'ValueError: ' + self.secret,
+                          'checks': [{'name': self.secret, 'passed': True}, {'name': self.secret, 'passed': False}],
+                          'commands': [{'dojo': self.secret, 'result': self.secret}],
+                          'inputs_before': self.inputs['expected_native_inputs'],
+                          'inputs_after': self.inputs['expected_native_inputs'],
+                          'native_failure': {'stage': 'response-header', 'error': self.secret,
+                                             'request': self.secret, 'response_frame_hex': self.secret}},
+                      'failure_logs': {'zod': {'bytes_total': 100, 'tail_hex': (self.secret + '\nhttp: live').encode().hex(),
+                                               'truncated': False}}}
+
+    def frame(self, value=None):
+        return (self.secret + '\n' + worker_result.PREFIX + json.dumps(self.value if value is None else value) + '\n').encode()
+
+    def project(self, value=None):
+        return failure.project(self.frame(value), self.inputs, run_id=self.run)
+
+    def test_closed_projection_retains_location_but_no_private_text(self):
+        result = self.project()
+        encoded = json.dumps(result)
+        for secret in (self.secret, self.secret.encode().hex(), self.value['error']):
+            self.assertNotIn(secret, encoded)
+        self.assertEqual(result['stage'], 'fresh-ready')
+        self.assertEqual(result['ship'], 'zod')
+        self.assertEqual(result['error'], {'class': 'TimeoutError', 'reason': 'ready-timeout'})
+        self.assertEqual(result['native']['error']['reason'], 'unrecognized')
+        self.assertEqual(result['native']['checks_passed'], 1)
+        self.assertEqual(result['native']['checks_failed'], 1)
+        self.assertEqual(result['native']['frame_stage'], 'response-header')
+        self.assertTrue(result['native']['inputs_match'])
+        self.assertTrue(result['log_observations']['zod']['markers']['http_live'])
+        self.assertFalse(result['qualifies_phase'])
+        self.assertNotIn('status', result)
+
+    def test_wrong_run_input_format_or_pass_are_not_diagnostic_admission(self):
+        for change in ({'status': 'pass'}, {'run_id': 'c' * 32}, {'inputs_sha256': 'd' * 64},
+                       {'format': 'stead-other/1'}):
+            with self.subTest(change=change), self.assertRaises(ValueError):
+                self.project(self.value | change)
+
+    def test_empty_duplicate_truncated_nonfinal_invalid_utf8_and_oversized_frames_refused(self):
+        raw = self.frame()
+        duplicate = raw.replace(b'"status": "fail"', b'"status": "fail", "status": "fail"')
+        for altered in (b'', raw + raw, raw[:-2], raw + b'after\n', b'\xff' + raw, duplicate,
+                        b'x' * (32 * 1024**2 + 1)):
+            with self.subTest(length=len(altered)), self.assertRaises((ValueError, UnicodeError)):
+                failure.project(altered, self.inputs, run_id=self.run)
+
+    def test_free_text_or_bad_numeric_fields_cannot_escape_projection(self):
+        value = copy.deepcopy(self.value)
+        value['diagnostic'].update(stage=self.secret, ship=self.secret)
+        value['diagnostic']['pre_cleanup']['zod'].update(exit_code=True, started=self.secret)
+        value['native']['native_failure']['stage'] = self.secret
+        value['native']['inputs_after'] = {}
+        value['failure_logs']['zod'].update(bytes_total=True)
+        value['cleanup_error'] = self.secret + ': ' + self.secret
+        result = self.project(value)
+        self.assertNotIn(self.secret, json.dumps(result))
+        self.assertEqual(result['stage'], 'unrecognized')
+        self.assertIsNone(result['pre_cleanup']['zod']['exit_code'])
+        self.assertFalse(result['pre_cleanup']['zod']['started'])
+        self.assertIsNone(result['log_observations']['zod']['bytes_total'])
+        self.assertFalse(result['native']['inputs_match'])
+
+    def test_malformed_or_unbounded_private_shapes_refused(self):
+        for change in ({'diagnostic': []}, {'native': []}, {'native': {'checks': [None] * 2001}},
+                       {'failure_logs': {'zod': {'tail_hex': '00' * 262145}}},
+                       {'failure_logs': {'zod': {'tail_hex': 'xx'}}}):
+            with self.subTest(keys=list(change)), self.assertRaises(ValueError):
+                self.project(self.value | change)
+
+    def test_diagnostic_snapshot_failure_cannot_prevent_cleanup(self):
+        with patch.object(failure, 'snapshot', side_effect=OSError(self.secret)):
+            self.assertEqual(failure.capture_snapshot(object()), {})
+
+    def test_failed_frame_is_not_successful_verification(self):
+        with self.assertRaises(ValueError):
+            worker_result.verify(self.frame(), self.inputs, run_id=self.run, inventory={})
+
+    def test_boot_error_survives_cleanup_error_and_launcher_is_closed(self):
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            (root / 'logs').mkdir()
+            child = Mock(pid=123)
+            launcher = Mock()
+            launcher.spawn.return_value = child
+            host = SimpleNamespace(LIVE=root / 'live', STATE=root, SHIPS=('zod',),
+                LOCK={'runtime': {'binary': 'unused'}, 'boot_artifact': {'archive': 'unused'}},
+                LOGS={}, PROCESSES={}, EVIDENCE=[], gate=Mock(), execution_check=Mock(), record=Mock(),
+                wait_ready=Mock(side_effect=TimeoutError('zod did not become ready within 1200s')),
+                all_stop=Mock(side_effect=OSError(self.secret)))
+            progress = {}
+            try:
+                with patch.object(owned_child, 'ChildLauncher', return_value=launcher), \
+                     patch.object(worker, 'capture_snapshot', return_value={'observed': True}):
+                    with self.assertRaisesRegex(TimeoutError, 'did not become ready'):
+                        worker.fresh_seeds(host, progress)
+                launcher.close.assert_called_once()
+                self.assertEqual(progress['stage'], 'fresh-ready')
+                self.assertEqual(progress['pre_cleanup'], {'observed': True})
+                self.assertTrue(progress['initiating_error'].startswith('TimeoutError:'))
+                self.assertEqual(len(progress['seed_cleanup_errors']), 1)
+            finally:
+                for log in host.LOGS.values():
+                    log.close()
+
+
+if __name__ == '__main__':
+    unittest.main()

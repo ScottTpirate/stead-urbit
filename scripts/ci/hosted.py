@@ -758,6 +758,18 @@ def main():
             if result['status'] != 'pass':
                 if args.control:
                     result['control_diagnostic'] = capture_control_diagnostic(job, args.control)
+                elif inputs is not None:
+                    try:
+                        from worker_failure import project
+                        # Collector EOF is required even for diagnostic parsing.
+                        # This projection cannot produce or replace acceptance.
+                        require_collected_child(result.get('guard', {}))
+                        with (job / 'console.private.log').open('rb') as source:
+                            raw = source.read(32 * 1024**2 + 1)
+                        result['worker_diagnostic'] = project(raw, inputs, run_id=run_id)
+                    except Exception:
+                        result['worker_diagnostic'] = {'classification': 'failed-worker-diagnostic-unavailable',
+                                                       'qualifies_phase': False}
                 result['service_diagnostics'] = {}
                 for name in ('caller-stderr.private.log', 'service-stderr.private.log'):
                     path = job / name
