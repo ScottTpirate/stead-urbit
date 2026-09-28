@@ -214,19 +214,42 @@ class AppArmorControls(unittest.TestCase):
             'stdout': '{}', 'stderr': '', 'truncated': False}
         for delta in ({'exit_code': 1}, {'stderr': 'Traceback'}, {'truncated': True}, {'stdout': ''}):
             with self.subTest(delta=delta), self.assertRaisesRegex(ValueError, 'bounded evidence'):
-                apparmor.verify_probe({**good, **delta}, 991)
+                apparmor.verify_probe({**good, **delta}, 991, 992)
 
     def test_unrelated_control_requires_real_namespace_or_capability_denial(self):
-        value = {'before': {'uid': 991, 'label': 'unconfined', 'nnp': '1', 'cap_eff': '0000000000000000'},
+        before = {'uid': 991, 'gid': 992, 'label': 'unconfined', 'nnp': '1', 'cap_eff': '0000000000000000',
+            'user_ns': 'user:[1]', 'net_ns': 'net:[2]'}
+        mapped = {'uid': 0, 'gid': 0, 'label': 'unprivileged_userns', 'nnp': '1', 'cap_eff': '0000000000001000',
+            'user_ns': 'user:[3]', 'net_ns': 'net:[4]', 'uid_map': [[0, 991, 1]], 'gid_map': [[0, 992, 1]]}
+        write = {'family': 'AF_INET', 'socket_errno': 0, 'flags_read_errno': 0, 'flags_before': 0,
+            'flags_write_errno': 1, 'before_write': mapped}
+        value = {'before': before, 'after': mapped, 'mapped': mapped,
+            'pid': 100, 'started_ns': 1, 'stage_started_ns': 2, 'finished_ns': 3, 'stage': 'flags-write',
             'transition': 0, 'transition_errno': 0, 'after_transition': 'unconfined//&' + apparmor.PROFILE,
-            'unshare': 0, 'unshare_errno': 0, 'after_unshare': 'unprivileged_userns',
-            'network_errno': 1, 'cap_eff_after': '0000000000001000', 'nnp_after': '1'}
-        self.assertEqual(apparmor.verify_unrelated(value, 991), value)
+            'unshare': 0, 'unshare_errno': 0, 'network_attempts': [write]}
+        self.assertEqual(apparmor.verify_unrelated(value, 991, 992), value)
+        fallback = {**value, 'network_attempts': [
+            {'family': 'AF_INET', 'failed_stage': 'socket-create', 'errno': 13}, {**write, 'family': 'AF_UNIX'}]}
+        self.assertEqual(apparmor.verify_unrelated(fallback, 991, 992), fallback)
+        namespace_denied = {**value, 'stage': 'unshare', 'unshare': -1, 'unshare_errno': 1,
+            'after': {**before, 'label': value['after_transition']}, 'network_attempts': []}
+        self.assertEqual(apparmor.verify_unrelated(namespace_denied, 991, 992), namespace_denied)
         for delta in ({'after_transition': apparmor.PROFILE + ' (unconfined)'},
-                      {'network_errno': 0}, {'network_errno': 2}, {'cap_eff_after': '0000000000000000'},
-                      {'nnp_after': '0'}, {'transition': -1, 'transition_errno': 2}, {'unshare': -1, 'unshare_errno': 12}):
+                      {'stage': 'socket-create'}, {'stage': 'flags-read'}, {'probe_error': {'errno': 13}},
+                      {'snapshot_error': 'PermissionError'}, {'pid': 0}, {'finished_ns': 0},
+                      {'after': {**mapped, 'cap_eff': '0000000000000000'}},
+                      {'after': {**mapped, 'nnp': '0'}}, {'after': {**mapped, 'net_ns': 'net:[2]'}},
+                      {'mapped': {**mapped, 'uid_map': [[0, 0, 1]]}}, {'mapped': {**mapped, 'gid': 65534}},
+                      {'transition': -1, 'transition_errno': 2}, {'unshare': -1, 'unshare_errno': 12}):
             with self.subTest(delta=delta), self.assertRaises(ValueError):
-                apparmor.verify_unrelated({**value, **delta}, 991)
+                apparmor.verify_unrelated({**value, **delta}, 991, 992)
+        for attempts in ([], [{'family': 'AF_INET', 'failed_stage': 'socket-create', 'errno': 13}],
+                [{**write, 'flags_write_errno': 0}], [{**write, 'flags_write_errno': 2}],
+                [{**write, 'flags_before': 1}], [{**write, 'flags_read_errno': 13}],
+                [{**write, 'before_write': {**mapped, 'cap_eff': '0'}}],
+                [{**write, 'flags_write_errno': 0}, {**write, 'family': 'AF_UNIX'}]):
+            with self.subTest(attempts=attempts), self.assertRaises(ValueError):
+                apparmor.verify_unrelated({**value, 'network_attempts': attempts}, 991, 992)
 
     def test_actual_label_and_mandatory_service_profile(self):
         with patch.object(apparmor, 'label', return_value='unconfined'):
