@@ -1,0 +1,52 @@
+{
+  "classification": "independent-source-review-and-host-checks-only",
+  "controller_commit": "7024601680bf5456ecb712ee0bff5eee8d215901",
+  "files": {
+    "scripts/ci/hosted.py": "083806b87cef7dca2d87ed976696032802123bc0167caf43bd9d044e3d5cbdc5",
+    "scripts/ci/hosted_apparmor.py": "b17e1bacf5b5cd8614f2122c388923c505763e5ce4542dd07928a5263cfae701",
+    "scripts/ci/hosted_control.py": "0c2bd63d160212ca5eb85c771f2d4fa9f5206f8028cb8a53578dd05f5f86adee",
+    "scripts/ci/hosted_lease.py": "a0da1a8138c0c9eb62a75c5b3032b00e7d2a8eb6a027e5c8c02ddb8daf6495f9",
+    "scripts/urbit/owned_child.py": "cce9b04160045879cf58f99edafe16351e839dc2489af40d6bc52176a0ff639e",
+    "scripts/urbit/native_peer_fence.py": "2c85ce0374fda55ee398d8bffc850c168cd7d0c94f1243c23c80eebdd1cec619",
+    "tests/ci/test_hosted.py": "f972320f8e088b8cc3710c0cd1c403a56e16b6bb15bf237f5895116ea76d106c",
+    "scripts/ci/README.md": "b555ee2621ea272ccc9ef129bc6e34de90ae761e66e62cd98dbad8909cc87fb5",
+    ".github/workflows/native-hosted.yml": "3522a39391a55f9575107476b754d136dc81a27c8fc4adbd240d633ceb3bb96d"
+  },
+  "reviewer": "independent_review",
+  "disposition": "cleared after fixing user-namespace UID interpretation and same-process capability-denial probe",
+  "host_tests": {
+    "ci": {
+      "passed": 25,
+      "elapsed_seconds": 0.961
+    },
+    "network_and_process": {
+      "passed": 4,
+      "elapsed_seconds": 9.342
+    },
+    "native_execution": false
+  },
+  "failed_hosted_run": "https://github.com/ScottTpirate/stead-urbit/actions/runs/36360618246",
+  "observed_failure": {
+    "apparmor_profile": "unprivileged_userns",
+    "denied_capabilities": [
+      "setpcap",
+      "net_admin"
+    ],
+    "denied_pid": 4403,
+    "audit_epoch_seconds": [
+      "1790553701.513",
+      "1790553701.514"
+    ],
+    "native_execution": false
+  },
+  "platform_change": {
+    "scope": "new disposable authenticated hosted VM only",
+    "userns_restriction": "retain 1",
+    "unprivileged_unconfined_restriction": "only 0 to 1, or retain 1",
+    "service_profile": "stead-hosted-ci-userns-v1",
+    "app_armor_confinement_claim": false,
+    "kernel_compiled_policy_hash_verified": false
+  },
+  "actual_retry": "unexecuted",
+  "qualification": false
+}
