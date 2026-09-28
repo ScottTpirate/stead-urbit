@@ -97,6 +97,31 @@ class FailureProjectionTests(unittest.TestCase):
             with self.subTest(length=len(altered)), self.assertRaises((ValueError, UnicodeError)):
                 failure.project(altered, self.inputs, run_id=self.run)
 
+    def test_migration_diagnostics_are_bounded_closed_and_separate_from_logs(self):
+        value = copy.deepcopy(self.value)
+        output = self.secret + '\n%stead-ci-migration-grants\nnest-fail'
+        value['migration'] = {'output': output, 'source_sha256': self.secret}
+        value['failure_logs']['zod']['tail_hex'] = b'find-fork\n%stead-ci-migration-roundtrip'.hex()
+        result = self.project(value)
+        self.assertNotIn(self.secret, json.dumps(result))
+        observed = result['migration']
+        self.assertTrue(observed['present'])
+        self.assertEqual(observed['output_bytes'], len(output.encode()))
+        self.assertEqual(observed['output_sha256'], hashlib.sha256(output.encode()).hexdigest())
+        self.assertTrue(observed['markers']['stead-ci-migration-grants'])
+        self.assertTrue(observed['markers']['nest-fail'])
+        self.assertFalse(observed['markers']['stead-ci-migration-roundtrip'])
+        self.assertFalse(observed['markers']['find-fork'])
+        value['migration']['output'] = 'not-nest-fail-private'
+        self.assertFalse(self.project(value)['migration']['markers']['nest-fail'])
+        self.assertFalse(self.project()['migration']['present'])
+
+    def test_migration_output_shapes_and_byte_bounds_fail_closed(self):
+        for migration in ([], {'output': []}, {'output': 1}, {'output': 'x' * 1_000_001},
+                          {'output': '\u96ea' * 333334}):
+            with self.subTest(shape=type(migration).__name__), self.assertRaises(ValueError):
+                self.project(self.value | {'migration': migration})
+
     def test_free_text_or_bad_numeric_fields_cannot_escape_projection(self):
         value = copy.deepcopy(self.value)
         value['diagnostic'].update(stage=self.secret, ship=self.secret)
