@@ -54,8 +54,11 @@ the sample and four named compiled mark artifacts, requiring external retained
 pins and returning exact verified bytes. Ten filesystem controls with synthetic
 bytes passed; independent review cleared that helper. It does not authenticate
 its pins, prove builder cleanup, decode jam or qualify a consumer. The independent
-builder, artifact transfer integration and runtime consumer still need
-implementation and native execution; see the
+isolated builder lifecycle, artifact transfer integration and runtime consumer
+still need implementation and native execution. A fixed native build-thread
+source is now prepared and independently reviewed: one absolute Clay case,
+complete sample/mark vases, bounded binary exports and staged-only metadata.
+It is not installed by any runner and has not compiled or executed; see the
 [reviewed qualification boundary](SDK_CONSUMER_QUALIFICATION.md).
 
 ## Actual hosted observations
@@ -114,8 +117,41 @@ run remains failed evidence.
 [Retry 36371977543](https://github.com/ScottTpirate/stead-urbit/actions/runs/36371977543)
 uses workflow `699b99176b4903bcfe4f312e7fc2370993fc6ab8`, reviewed controller
 `87d14e5f779dbc84a49208b7192201432cd841c3` and candidate
-`1c8ef7b19b7e4a433ba76c018595634e7ff311dc`. Admission/lifetime controls passed;
-the native result is pending at this checkpoint.
+`1c8ef7b19b7e4a433ba76c018595634e7ff311dc`. All six admission/lifetime controls
+and all 755 team checks passed. The worker then failed at the supported-predecessor
+migration gate after 1,381.953 seconds. Input identity, collector EOF, child
+termination and empty owned cgroup were verified. The diagnostic establishes
+the stage and failed output assertion, but does not expose the exact compiler
+or Hoon assertion cause. Later native controls did not run. This remains an
+overall failed run; the capabilities correction has cleared its earlier check.
+
+## Combined preparation and next retry
+
+[Draft #67](https://github.com/ScottTpirate/stead-urbit/pull/67) combines the
+reviewed SDK/onboarding and hosted-controller branches without replacing main's
+reviewed workflow. Its initial host suite found six setup errors from Linux's
+Unix-socket path limit in the nested checkout. Reviewed commit `4b73991` binds
+the same endpoint through an owned private directory descriptor. Eight focused
+socket controls passed; the corrected full host suite ran 584 tests in 119.077
+seconds with one explicit skip and no failures. The skip is for an optional
+retained historical failure artifact absent from this new worktree, not a native
+qualification case. Twenty-two contract checks and
+frozen source checks also passed. These are host/static/mocked checks, not native
+TLS or browser evidence. The original failed suite is retained.
+
+Source review of the migration probe established a wrong count: project creation
+reserves a creator grant, and revoking the separate member grant retains it.
+Reviewed controller `2e491771575a13da0d34c28a1cba5ec98e68e1cc` requires both grants
+and their exact migrated values, preserving the other assertions. It adds bounded
+failed-only byte/hash/closed marker observations from the exact migration
+response; raw text stays private. Forty-eight host CI controls passed in 1.691
+seconds. This source defect is not the observed original failure's proven cause.
+[PR #68](https://github.com/ScottTpirate/stead-urbit/pull/68) pins the correction.
+[Retry 36374379219](https://github.com/ScottTpirate/stead-urbit/actions/runs/36374379219)
+uses workflow `f38cffe728752631614f4abff54e9db961b28fff`, that controller, and candidate
+`4b73991fa245e4cf413a218c34fae55e1834a366`; its native product bytes match the prior
+candidate. The result is pending. It does not qualify the combined supervisor
+or new ingress code, which the separately pinned controller does not execute.
 
 ## Remaining execution
 
