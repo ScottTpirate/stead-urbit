@@ -331,6 +331,8 @@ def run(host):
         report['error'] = type(error).__name__ + ': ' + str(error)
         if hasattr(error, 'native_failure'):
             report['native_failure'] = error.native_failure
+        if hasattr(error, 'admission_failure'):
+            report['admission_failure'] = error.admission_failure
         traceback.print_exc()
     report['inputs_after'] = inputs()
     if before != report['inputs_after']:

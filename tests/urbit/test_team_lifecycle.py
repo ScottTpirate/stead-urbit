@@ -164,3 +164,37 @@ class TeamLifecycleTests(unittest.TestCase):
         self.manager.peers.release.assert_not_called()
         self.manager.ingress['zod'].disarm.assert_called_with(child)
         self.manager.peers.block.assert_called_with('zod')
+
+    def test_admission_original_error_survives_both_rollback_failures(self):
+        child = Mock(); child.poll.return_value = None
+        self.manager.children['nec'] = child
+        self.manager.boots['nec'] = {'process': child, 'fresh': True, 'suspended': True,
+                                     'acknowledged': False, 'nonce': 'private'}
+        original = ValueError('Bootstrap does not match this live child incarnation')
+        self.manager.ingress['nec'].arm.side_effect = original
+        self.manager.ingress['nec'].disarm.side_effect = OSError('private disarm failure')
+        self.manager.peers.block.side_effect = RuntimeError('private block failure')
+        with patch.object(self.manager, 'exists_on_base', return_value=True):
+            with self.assertRaises(ValueError) as raised:
+                self.manager.admit('nec', {'nonce': 'private'}, Mock())
+        self.assertIs(raised.exception, original)
+        observed = original.admission_failure
+        self.assertEqual((observed['ship'], observed['mode'], observed['step']), ('nec', 'initial', 'ingress-arm'))
+        self.assertEqual(len(observed['rollback_errors']), 2)
+        self.manager.peers.release.assert_not_called()
+        self.manager.peers.block.assert_called_once_with('nec')
+        self.assertFalse(self.manager.boots['nec']['acknowledged'])
+
+    def test_failed_inventory_is_located_and_both_fences_are_attempted(self):
+        child = Mock(); child.poll.return_value = None
+        self.manager.children['bus'] = child
+        self.manager.boots['bus'] = {'process': child, 'fresh': False, 'suspended': True,
+                                     'acknowledged': False, 'nonce': 'private'}
+        with patch.object(self.manager, 'exists_on_base', side_effect=ValueError('Native app inventory did not return a boolean')):
+            with self.assertRaises(ValueError) as raised:
+                self.manager.admit('bus', {}, Mock())
+        self.assertEqual(raised.exception.admission_failure['step'], 'app-inventory')
+        self.assertEqual(raised.exception.admission_failure['mode'], 'restart')
+        self.manager.ingress['bus'].disarm.assert_called_once_with(child)
+        self.manager.peers.block.assert_called_once_with('bus')
+        self.manager.peers.release.assert_not_called()

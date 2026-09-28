@@ -12,9 +12,13 @@ STAGES = ('admission', 'mounts', 'isolation', 'pins', 'supervisor', 'fresh-boot'
           'fresh-ready', 'fresh-mount', 'fresh-stop', 'fresh-copy', 'filesystem-controls',
           'team-lifecycle', 'team-check', 'migration', 'native-controls', 'final-inputs', 'complete')
 FRAME_STAGES = ('encode', 'connect', 'send', 'response-header', 'response-body', 'decode', 'parse-terminal')
+ADMISSION_STEPS = ('startup-checkpoint', 'app-inventory', 'tls-verify', 'ingress-arm', 'peer-release', 'record')
+ADMISSION_CHECKS = tuple(ship + '-' + name for ship in SHIPS for name in
+                         ('owner-bootstrap-acknowledged', 'owned-peer-admission', 'restart-fresh-bootstrap'))
 ERROR_CLASSES = ('ValueError', 'RuntimeError', 'TimeoutError', 'AssertionError', 'OSError',
                  'FileNotFoundError', 'PermissionError', 'InterruptedError', 'KeyError',
-                 'TypeError', 'JSONDecodeError', 'BrokenPipeError', 'ConnectionRefusedError')
+                 'TypeError', 'JSONDecodeError', 'BrokenPipeError', 'ConnectionRefusedError',
+                 'SSLError', 'SSLCertVerificationError')
 LOG_MARKERS = {'http_live': b'http: live', 'http_loopback': b'http: loopback',
                'boot_installed': b'boot: installed', 'boot_complete': b'boot: complete',
                'pier_ready': b'pier: ready', 'ames_live': b'ames: live',
@@ -56,7 +60,15 @@ def error_kind(value):
              'Poisoned seed was accepted': 'seed-accepted',
              'Seed restoration differs': 'seed-restoration',
              'Unexpected cache refusal': 'cache-pin-refusal',
-             'Truncated runtime cache accepted': 'cache-pin-accepted'}
+             'Truncated runtime cache accepted': 'cache-pin-accepted',
+             'Missing fresh owned startup checkpoint': 'admission-checkpoint',
+             'Native app inventory did not return a boolean': 'app-inventory-response',
+             'Missing configured application on verified desk': 'app-inventory-absent',
+             'TLS listener is not exclusively owned by the current native child': 'tls-listener-ownership',
+             'Native TLS child exited': 'tls-child-exit',
+             'Native TLS certificate or child mismatch': 'tls-certificate-child',
+             'Stale bootstrap completion': 'bootstrap-stale',
+             'Bootstrap does not match this live child incarnation': 'bootstrap-incarnation'}
     if message in exact:
         reason = exact[message]
     elif re.fullmatch(r'(zod|bus|nec|bud) did not become ready within [0-9]{1,4}s', message):
@@ -142,6 +154,20 @@ def project(raw, inputs, *, run_id):
     trace = native.get('native_failure', {})
     require(isinstance(trace, dict), 'Failure native trace shape')
     result['native']['frame_stage'] = choice(trace.get('stage'), FRAME_STAGES)
+    admission = native.get('admission_failure', {})
+    require(isinstance(admission, dict), 'Failure admission shape')
+    rollbacks = admission.get('rollback_errors', [])
+    require(isinstance(rollbacks, list) and len(rollbacks) <= 2, 'Failure admission rollback bound')
+    result['native']['admission'] = {
+        'ship': choice(admission.get('ship'), SHIPS),
+        'mode': choice(admission.get('mode'), ('initial', 'restart')),
+        'step': choice(admission.get('step'), ADMISSION_STEPS),
+        'error': error_kind(admission.get('error')),
+        'rollback_errors': [error_kind(error) for error in rollbacks],
+        'last_completed_check': next((row['name'] for row in reversed(checks)
+                                     if isinstance(row, dict) and row.get('passed') is True
+                                     and isinstance(row.get('name'), str)
+                                     and row['name'] in ADMISSION_CHECKS), 'unrecognized')}
     installed = native.get('installed', {})
     require(isinstance(installed, dict), 'Failure install shape')
     result['native']['installed_counts'] = {ship: count(installed.get(ship), 512) for ship in SHIPS}

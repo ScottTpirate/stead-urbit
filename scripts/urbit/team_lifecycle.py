@@ -165,21 +165,35 @@ class TeamLifecycle:
     def admit(self, ship, acknowledgement, dojo):
         entry = self.boots[ship]
         process = entry['process']
-        if not entry['suspended'] or entry['acknowledged'] or process is not self.children[ship]:
-            raise ValueError('Missing fresh owned startup checkpoint')
-        if not self.exists_on_base(ship, dojo):
-            raise ValueError('Missing configured application on verified desk')
+        location = {'ship': ship, 'mode': 'initial' if entry.get('fresh') else 'restart',
+                    'step': 'startup-checkpoint', 'rollback_errors': []}
         try:
+            if not entry['suspended'] or entry['acknowledged'] or process is not self.children[ship]:
+                raise ValueError('Missing fresh owned startup checkpoint')
+            location['step'] = 'app-inventory'
+            if not self.exists_on_base(ship, dojo):
+                raise ValueError('Missing configured application on verified desk')
+            location['step'] = 'tls-verify'
             tls = native_tls.verify(process, self.certificates, ship, self.guard)
             # arm validates the exact one-use nonce, native ACK and live pidfd.
+            location['step'] = 'ingress-arm'
             self.ingress[ship].arm(process, entry['nonce'], acknowledgement)
+            location['step'] = 'peer-release'
             proof = self.peers.release(ship, process)
             entry['acknowledged'] = True
+            location['step'] = 'record'
             self.record('configured admission ' + ship, {'pid': process.pid,
                         'incarnation': acknowledgement['incarnation'], 'peer_proof': proof, 'tls': tls})
-        except BaseException:
-            self.ingress[ship].disarm(process)
-            self.peers.block(ship)
+        except BaseException as error:
+            location['error'] = type(error).__name__ + ': ' + str(error)[:2000]
+            # Preserve the initiating error and attempt both fail-closed actions
+            # even if one rollback operation fails. Public projection is closed.
+            for rollback in (lambda: self.ingress[ship].disarm(process), lambda: self.peers.block(ship)):
+                try:
+                    rollback()
+                except BaseException as cleanup_error:
+                    location['rollback_errors'].append(type(cleanup_error).__name__ + ': ' + str(cleanup_error)[:2000])
+            error.admission_failure = location
             raise
 
     def block(self, ship):

@@ -67,6 +67,35 @@ class FailureProjectionTests(unittest.TestCase):
             with self.subTest(change=change), self.assertRaises(ValueError):
                 self.project(self.value | change)
 
+    def test_admission_location_is_closed_and_preserves_original_and_rollback_codes(self):
+        value = copy.deepcopy(self.value)
+        value['native']['checks'] += [{'name': 'nec-owner-bootstrap-acknowledged', 'passed': True},
+                                     {'name': 'nec-owned-peer-admission', 'passed': False}]
+        value['native']['admission_failure'] = {
+            'ship': 'nec', 'mode': 'initial', 'step': 'tls-verify',
+            'error': 'ValueError: TLS listener is not exclusively owned by the current native child',
+            'rollback_errors': ['OSError: ' + self.secret], 'nonce': self.secret}
+        result = self.project(value)
+        admission = result['native']['admission']
+        self.assertEqual(admission['last_completed_check'], 'nec-owner-bootstrap-acknowledged')
+        self.assertEqual(admission['error']['reason'], 'tls-listener-ownership')
+        self.assertEqual(admission['rollback_errors'], [{'class': 'OSError', 'reason': 'unrecognized'}])
+        self.assertNotIn(self.secret, json.dumps(result))
+        for key in ('ship', 'mode', 'step', 'error'):
+            value['native']['admission_failure'][key] = self.secret
+        value['native']['checks'][-2]['name'] += self.secret
+        result = self.project(value)
+        self.assertNotIn(self.secret, json.dumps(result))
+        self.assertEqual(result['native']['admission']['last_completed_check'], 'unrecognized')
+        self.assertEqual(result['native']['admission']['step'], 'unrecognized')
+
+    def test_admission_projection_rejects_unbounded_or_malformed_shapes(self):
+        for admission in ([], {'rollback_errors': {}}, {'rollback_errors': ['private'] * 3}):
+            value = copy.deepcopy(self.value)
+            value['native']['admission_failure'] = admission
+            with self.subTest(admission=admission), self.assertRaises(ValueError):
+                self.project(value)
+
     def test_filesystem_diagnostics_are_exact_closed_categories(self):
         for message, reason in [('Unexpected seed refusal', 'seed-refusal'),
                                 ('Unexpected cache write refusal', 'cache-errno'),
