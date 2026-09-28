@@ -5,7 +5,7 @@ export PYTHONDONTWRITEBYTECODE := 1
 PREP = systemd-run --user --scope --quiet -p CPUQuota=50% -p CPUQuotaPeriodSec=10ms -- taskset -c "$$(python3 -c 'import os; print(max(os.sched_getaffinity(0)))')"
 NODE = .runtime/node-v24.21.0-linux-x64/bin/node
 SDK_ARCHIVE ?= .runtime/sdk/stead-sdk-v3.tar
-.PHONY: help setup doctor preflight dev start status wait-ready stop reset check test core-check core-test delivery-check capacity-check gall-schedule skill-prequalify plan-check contracts-check team-dev team-check migration-dev sdk-dev frontend-check frontend-build
+.PHONY: help setup doctor preflight dev start status wait-ready stop reset check test core-check core-test delivery-check capacity-check gall-schedule skill-prequalify plan-check contracts-check team-dev team-check migration-dev ci-controls-dev sdk-dev frontend-check frontend-build
 help:
 	@python3 scripts/urbit/dev_help.py
 setup:
@@ -26,6 +26,8 @@ team-dev:
 	$(PREP) python3 scripts/urbit/harness.py team-dev
 migration-dev:
 	$(PREP) python3 scripts/urbit/harness.py migration-dev
+ci-controls-dev:
+	$(PREP) python3 scripts/urbit/harness.py ci-controls-dev
 sdk-dev:
 	$(PREP) python3 scripts/sdk_native/run.py --archive "$(SDK_ARCHIVE)"
 team-check:

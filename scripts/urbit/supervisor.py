@@ -22,6 +22,7 @@ from conn import assert_result, run_thread
 import execution_policy
 import core_check
 import migration_check
+import ci_controls_check
 import core_test
 import team_check
 import team_git
@@ -61,6 +62,7 @@ def qualified_source():
     if context.get('script_files') != source_inventory(Path('/code')):
         raise ValueError('Helper file inventory changed after startup')
     mounts = {'scripts/urbit': Path('/code'), 'native': Path('/native'), 'specs/urbit': Path('/specs'), 'web/dev': Path('/web-dev'),
+              'scripts/ci': Path('/ci'),
               'tests/urbit/native_gall_schedule': Path('/native-tests/gall-schedule'),
               'tests/urbit/skill_evaluation': Path('/native-tests/skill-evaluation')}
     for name, digest in context['trees'].items():
@@ -389,11 +391,12 @@ def initialize():
             if TEAM is not None:
                 if not (SEED / 'manifest.json').exists():
                     raise ValueError('Configured lane requires verified clean seeds from make dev')
-                if os.environ.get('STEAD_DIAGNOSTIC') == 'migration':
+                if os.environ.get('STEAD_DIAGNOSTIC') in ('migration', 'controls'):
                     # One foreground-owned diagnostic, not another public RPC.
                     # It always ends this lifetime and never admits a browser.
-                    result = guarded_result(migration_check.run(globals()))
-                    record('migration diagnostic', result)
+                    runner = ci_controls_check if os.environ['STEAD_DIAGNOSTIC'] == 'controls' else migration_check
+                    result = guarded_result(runner.run(globals()))
+                    record(os.environ['STEAD_DIAGNOSTIC'] + ' diagnostic', result)
                     if result['status'] != 'pass':
                         INITIALIZATION_FAILED.set()
                     NORMAL_STOP.set()

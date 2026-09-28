@@ -144,6 +144,7 @@ def sandbox(command, *, execution_control=None, execution_id=None, configured=Fa
              '--ro-bind', str(ROOT / 'web/dev'), '/web-dev',
              '--ro-bind', str(ROOT / 'native'), '/native',
              '--ro-bind', str(ROOT / 'scripts/ci/migration.hoon'), '/migration.hoon',
+             '--ro-bind', str(ROOT / 'scripts/ci'), '/ci',
              '--ro-bind', str(ROOT / 'specs/urbit'), '/specs',
              '--ro-bind', str(ROOT / 'tests/urbit/native_gall_schedule'), '/native-tests/gall-schedule',
              '--ro-bind', str(ROOT / 'tests/urbit/skill_evaluation'), '/native-tests/skill-evaluation',
@@ -192,11 +193,11 @@ def preflight():
     return result
 
 
-def guarded_supervisor(*, configured=False, migration_only=False):
+def guarded_supervisor(*, configured=False, migration_only=False, controls_only=False):
     guard()
     def command(control, run_id):
         paths = ['scripts/urbit', 'native', 'specs/urbit', 'web/dev',
-                 'tests/urbit/native_gall_schedule', 'tests/urbit/skill_evaluation']
+                 'tests/urbit/native_gall_schedule', 'tests/urbit/skill_evaluation', 'scripts/ci']
         scripts = source_inventory(ROOT / 'scripts/urbit')
         context = {
             'profile': 'configured-team' if configured else 'legacy-fixture',
@@ -249,10 +250,10 @@ def guarded_supervisor(*, configured=False, migration_only=False):
         execution_policy.write_json(control / 'source-context.json', context)
         command = sandbox(['/usr/bin/python3', '-X', 'pycache_prefix=/tmp/python-cache', '/code/supervisor.py'],
                           execution_control=control, execution_id=run_id, configured=configured)
-        if migration_only:
+        if migration_only or controls_only:
             if not configured:
                 raise ValueError('Migration diagnostic requires the configured owner')
-            command[command.index('--'):command.index('--')] = ['--setenv', 'STEAD_DIAGNOSTIC', 'migration']
+            command[command.index('--'):command.index('--')] = ['--setenv', 'STEAD_DIAGNOSTIC', 'controls' if controls_only else 'migration']
         return command
     report = execution_policy.run_guarded(
         command,
@@ -493,10 +494,19 @@ def migration_dev():
     guarded_supervisor(configured=True, migration_only=True)
 
 
+def ci_controls_dev():
+    guard(create=True)
+    if running() is not None or (STATE / 'unclean-live.json').exists():
+        raise RuntimeError('Stop and preserve/reset the interrupted fixture before CI controls')
+    toolchain.verify()
+    (STATE / 'logs').mkdir(exist_ok=True)
+    guarded_supervisor(configured=True, controls_only=True)
+
+
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument('command', choices=['doctor', 'preflight', 'start', 'stop', 'reset', 'status',
-                        'wait-ready', 'dev', 'team-dev', 'team-check', 'migration-dev', 'test', 'core-check', 'core-test', 'delivery-check', 'capacity-check', 'gall-schedule',
+                        'wait-ready', 'dev', 'team-dev', 'team-check', 'migration-dev', 'ci-controls-dev', 'test', 'core-check', 'core-test', 'delivery-check', 'capacity-check', 'gall-schedule',
                         'skill-evaluation', 'skill-feedback', '_guarded-supervisor'])
     parser.add_argument('--condition', choices=['prequalification', 'baseline', 'local_skill_assisted'])
     parser.add_argument('--task', choices=['T01', 'T02', 'T03', 'T04', 'T05', 'T06'])

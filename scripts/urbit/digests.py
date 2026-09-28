@@ -79,11 +79,11 @@ def source_sha(root):
     # modules too: a cached import must never acquire a newer file's identity.
     # Planning/contracts/Urgit programs are not part of this process closure.
     names = ('conn.py', 'digests.py', 'execution_policy.py', 'harness.py', 'namespace_check.py',
-             'supervisor.py', 'toolchain.py', 'core_check.py', 'migration_check.py', 'core_test.py', 'core_conn.py',
+             'supervisor.py', 'toolchain.py', 'core_check.py', 'migration_check.py', 'ci_controls_check.py', 'core_test.py', 'core_conn.py',
              'core_cases_v2.py', 'core_export.py', 'delivery_cases.py', 'delivery_suite.py',
              'qualification_cases.py', 'qualification_gate.py', 'native_transcript.py',
              'gall_schedule.py', 'gall_schedule_proof.py', 'skill_evaluation_support.py',
-             'team_check.py', 'team_git.py', 'team_updates_check.py', 'team_conn.py', 'native_install.py',
+             'team_check.py', 'team_git.py', 'team_updates_check.py', 'team_conn.py', 'native_install.py', 'native_units.py',
              'team_lifecycle.py', 'native_peer_fence.py', 'native_tls.py', 'owned_child.py')
     entries = [sha(root / name) + '  ' + name + '\n' for name in names]
     return hashlib.sha256(''.join(entries).encode()).hexdigest()

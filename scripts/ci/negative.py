@@ -78,7 +78,7 @@ def seed_and_cache(host, pins):
         'owned_truncated_sha256': truncated, **cache, 'cache_pin_refused': True}
 
 
-def native(host, report):
+def native(host, report, *, progress=None):
     import core_conn
     import native_units
     from conn import framed_length
@@ -86,6 +86,9 @@ def native(host, report):
     binary = '/runtime/' + host.LOCK['runtime']['binary']
     socket = host.LIVE / 'zod/.urb/conn.sock'
     log = Path('/state/logs/zod.log')
+    def checkpoint(stage, observation):
+        if progress is not None:
+            progress(stage, observation)
 
     def unit(path):
         host.execution_check()
@@ -103,6 +106,8 @@ def native(host, report):
         return result | {'path': path, 'log_hex': captured.hex()}
 
     missing = unit('/controls/stead-ci-missing')
+    checkpoint('missing-arm', missing)
+    require('native_test' in missing, 'Missing arm fixture failed before discovery')
     terminal = missing['native_test']['stdout']
     raw = bytes.fromhex(missing['log_hex']).decode('utf-8') + '\n' + terminal
     native_units.verify_output(raw, path=missing['path'], expected=['test-ci-renamed'], succeeds=True)
@@ -114,6 +119,7 @@ def native(host, report):
     else:
         raise ValueError('Missing native arm accepted')
     compiler = unit('/controls/stead-ci-compiler')
+    checkpoint('compiler', compiler)
     diagnostics = bytes.fromhex(compiler['log_hex']).decode('utf-8')
     require('stead-ci-deliberately-undefined' in diagnostics
             and re.search(r'\b(find-fork|build-fail|dojo-lame)\b', diagnostics), 'Specific compiler failure absent')
@@ -121,12 +127,14 @@ def native(host, report):
             or compiler.get('native_failure', {}).get('stage') == 'parse-terminal', 'Compiler control failed outside native compilation')
     request = '[32 %fyrd [%base %stead-ci-delay %noun [%noun ~]]]'
     positive = core_conn.exchange(binary, socket, request, timeout=60)
+    checkpoint('timer-positive', positive)
     require(positive['outcome']['json'] == {}, 'Finite timer positive control failed')
     started = time.monotonic()
     try:
         core_conn.exchange(binary, socket, request, timeout=.05)
     except TimeoutError as error:
         trace = getattr(error, 'native_failure', {})
+        checkpoint('timer-timeout', trace)
         require(trace.get('stage') == 'response-header' and trace.get('received_frame_hex') == '', 'Timeout occurred before the native request')
         timeout = {'deadline_seconds': .05, 'elapsed_seconds': round(time.monotonic() - started, 3), 'native_failure': trace}
     else:
@@ -134,8 +142,12 @@ def native(host, report):
     # The timed-out request is finite. A subsequent successful timer proves the
     # ship remains responsive; whole-job cleanup still reaps every child.
     recovered = core_conn.exchange(binary, socket, request, timeout=60)
+    checkpoint('timer-recovered', recovered)
     require(recovered['outcome']['json'] == {}, 'Runtime did not recover after client timeout')
-    frame = bytes.fromhex(report['commands'][next(i for i, row in enumerate(report['commands']) if 'native_test' in row)]['native_test']['response_frame_hex'])
+    positive_unit = (missing['native_test'] if report is None else
+        next(row['native_test'] for row in report['commands'] if 'native_test' in row))
+    frame = bytes.fromhex(positive_unit['response_frame_hex'])
+    checkpoint('frame-original', {'hex':frame.hex()})
     expected = (32, (_atom('avow'), (0, (_atom('noun'), 0))))
     require(len(frame) == 5 + framed_length(frame[:5]) and _cue(frame[5:]) == expected, 'Original native frame invalid')
     wrong = _jam((32, (_atom('avow'), (0, (_atom('noun'), 1)))))
@@ -148,6 +160,7 @@ def native(host, report):
             refused[name] = {'injected_hex': altered.hex(), 'refusal': str(error)}
         else:
             raise ValueError('Injected malformed native frame accepted')
+    checkpoint('frame-injections', refused)
     return {'classification': 'real-native-controls-and-labeled-frame-fault-injection',
         'missing_arm': missing, 'compiler_failure': compiler,
         'timer_positive': positive, 'timer_timeout': timeout, 'timer_recovered': recovered,

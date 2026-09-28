@@ -320,7 +320,7 @@ class QualificationSourceSafety(unittest.TestCase):
         self.control = Path(self.temp.name) / 'control'
         self.control.mkdir(mode=0o700)
         for name in ('scripts/urbit', 'native/core/desk', 'specs/urbit', 'web/dev',
-                     'tests/urbit/native_gall_schedule', 'tests/urbit/skill_evaluation'):
+                     'tests/urbit/native_gall_schedule', 'tests/urbit/skill_evaluation', 'scripts/ci'):
             directory = self.root / name
             directory.mkdir(parents=True)
             if name == 'scripts/urbit':
@@ -328,6 +328,7 @@ class QualificationSourceSafety(unittest.TestCase):
                     shutil.copyfile(source, directory / source.name)
             else:
                 (directory / 'fixture.txt').write_text('authored host fixture\n')
+        (self.root / 'scripts/ci/migration.hoon').write_text('synthetic migration source; never compiled\n')
         (self.root / '.gitignore').write_text('__pycache__/\n')
         self.git('init', '-q')
         self.git('add', '.')
@@ -361,6 +362,7 @@ class QualificationSourceSafety(unittest.TestCase):
                 side_effect=lambda p: original_digest(source.parent if p == Path('/code') else p)):
             spec.loader.exec_module(supervisor)
         mounts = {'/code': 'scripts/urbit', '/native': 'native', '/specs': 'specs/urbit', '/web-dev': 'web/dev',
+                  '/ci': 'scripts/ci', '/migration.hoon': 'scripts/ci/migration.hoon',
                   '/native-tests/gall-schedule': 'tests/urbit/native_gall_schedule',
                   '/native-tests/skill-evaluation': 'tests/urbit/skill_evaluation'}
         def mounted(value):
@@ -370,6 +372,7 @@ class QualificationSourceSafety(unittest.TestCase):
                     return self.root / relative / path.relative_to(prefix)
             return path
         with patch.object(supervisor, 'Path', side_effect=mounted), \
+                patch.object(supervisor, 'sha', side_effect=lambda path: digests.sha(mounted(path))), \
                 patch.object(supervisor, 'LOADED_SOURCE_DIGEST', context['harness_sha256']), \
                 patch.object(supervisor.execution_policy, 'read_json', return_value=context):
             return supervisor.qualified_source()
@@ -430,7 +433,7 @@ class QualificationSourceSafety(unittest.TestCase):
 
     def test_ignored_uncommitted_mounted_inputs_cannot_claim_exact_commit(self):
         names = [root + '/ignored.hoon' for root in ('native/core/desk', 'specs/urbit', 'web/dev',
-            'tests/urbit/native_gall_schedule', 'tests/urbit/skill_evaluation')]
+            'tests/urbit/native_gall_schedule', 'tests/urbit/skill_evaluation', 'scripts/ci')]
         names.append('native/core/desk/__pycache__/hidden.hoon')
         (self.root / '.git/info/exclude').write_text(''.join('/' + name + '\n' for name in names))
         for name in names:
