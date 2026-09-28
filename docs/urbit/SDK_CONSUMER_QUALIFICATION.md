@@ -3,8 +3,10 @@
 This is a reviewed implementation boundary for URB-180 / #21, not a compiled or
 executed consumer. The public [SDK v3](../../sdk/v3/README.md) and package/source
 checker exist. The host input preparer below assembles the verified public
-files. A host artifact-reader primitive is also prepared. The isolated builder,
-transfer integration and runtime loader remain to be implemented and tested.
+files. A host artifact-reader primitive and native build-thread source are also
+prepared. The thread has not been compiled or executed. The isolated builder
+lifecycle, transfer integration and runtime loader remain to be implemented
+and tested.
 
 ## Source and execution boundary
 
@@ -33,6 +35,28 @@ Compile the sample and four named marks at one absolute Clay case captured by
 `get-beak:strandio`. Retain the complete sample vase, including captured payload,
 jammed directly. The mark builder returns `dais:clay`; retain its typed vase
 separately and preserve each logical mark name even when source bytes match.
+
+Prepared [build-thread source](../../scripts/sdk_native/build.hoon) uses only
+pinned kernel interfaces and the public `stead-codec` export. It captures one
+absolute Clay case, calls `build-file-hard` for the sample and `build-mark` for
+each named carrier, and jams the complete sample vase plus four typed `dais`
+vases. It queues five fixed `/tmp/stead-sdk/<name>/jam` paths in the captured Clay desk
+through `%info`, after the same per-file/total binary bounds used by the reader.
+These are Clay paths, not host `/tmp` paths. The future controller must establish
+and verify the mounted-desk mapping before expecting `<name>.jam` files in the
+owned builder filesystem. Its
+small `stead.sdk-build-staged/1` response has `export_queued` status, builder,
+desk, absolute case and exactly five artifact entries. Byte counts are canonical
+decimal strings and SHA-256 values are lowercase hex. A future controller must
+validate this response and convert its closed decimal counts to the reader's
+integer pins; it must not trust a manifest supplied beside artifact files.
+
+This source is not installed by the team runner and has no executable builder
+entry point yet. Review of pinned APIs or source does not prove compilation,
+public-only isolation, artifact materialization, stop/reap, retained-gate
+execution or a receipt. The future runtime caller must not receive this compiler
+thread or the public sample source; only verified compiled bytes and the fixed
+loader belong there. Compiled sizes have not been measured.
 
 Wait boundedly for the exported regular files to materialize with exact sizes
 and digests. Stop and reap the builder, verify owned cleanup, then re-read and
