@@ -9,6 +9,7 @@ import execution_policy
 from hosted_lease import HostedProvider
 import worker
 import native_peer_fence
+import owned_child
 
 provider = HostedProvider()
 worker.admission(provider)
@@ -16,8 +17,21 @@ inputs = execution_policy.read_json('/ci-inputs.json', maximum=1024 * 1024)
 worker.mounted_inputs(inputs)
 isolation = worker.isolation(inputs)
 failures = []
-fence = native_peer_fence.NativePeerFence(inputs['host_network_namespace'], provider.require,
-    lambda error: failures.append(type(error).__name__))
+try:
+    fence = native_peer_fence.NativePeerFence(inputs['host_network_namespace'], provider.require,
+        lambda error: failures.append(type(error).__name__))
+except Exception:
+    # Fixed synthetic policy only, before any candidate/native process starts.
+    # Preserve the refusal; readback is diagnostic data, never admission.
+    for arguments in (['--version'], ['-j', 'list', 'table', 'inet', native_peer_fence.TABLE]):
+        result = subprocess.run(owned_child.command([owned_child.nft_binary(), *arguments], privileged=True),
+            capture_output=True, timeout=2)
+        print('STEAD_HOSTED_CONTROL_PACKET_DIAGNOSTIC ' + json.dumps({
+            'arguments': arguments, 'exit_code': result.returncode,
+            'stdout': result.stdout[:4096].decode('utf-8', errors='replace'),
+            'stderr': result.stderr[:1024].decode('utf-8', errors='replace'),
+            'truncated': len(result.stdout) > 4096 or len(result.stderr) > 1024}), flush=True)
+    raise
 fence.close()
 worker.require(not failures and not fence.monitor.is_alive(), 'Pre-native packet controller failed')
 child = subprocess.Popen(['/usr/bin/python3', '-I', '-B', '-c', 'import time; time.sleep(60)'],
