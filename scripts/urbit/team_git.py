@@ -7,6 +7,7 @@ import re
 import stat
 import subprocess
 
+import core_conn
 import owned_child
 import execution_policy
 from digests import source_sha, tree_sha
@@ -33,7 +34,11 @@ def observe(dojo, project, container, head, oid=None):
     require(UUID.fullmatch(project) and UUID.fullmatch(container) and OID.fullmatch(head)
             and (oid is None or OID.fullmatch(oid)), 'Fixed synthetic Git input grammar')
     mode = 'manifest' if oid is None else 'object'
-    expression = f"+stead-team-git-export [%{mode} '{project}' '{container}' 0x{head} 0x{oid or '0'}]"
+    # Git OIDs stay exact lowercase hex strings outside the typed Hoon call.
+    # Its @ux literals require grouped digits and no leading numeric zeroes.
+    head_atom = core_conn.atom(int(head, 16).to_bytes(20, 'little'))
+    object_atom = core_conn.atom(int(oid or '0', 16).to_bytes(20, 'little'))
+    expression = f"+stead-team-git-export [%{mode} '{project}' '{container}' {head_atom} {object_atom}]"
     result = dojo('zod', expression)
     require(isinstance(result, str) and len(result) <= 524288, 'Native Git observation bound')
     token = ''.join(result.split())

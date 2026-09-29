@@ -132,6 +132,24 @@ class TeamGitTests(unittest.TestCase):
             with self.subTest(bad=bad), self.assertRaises(ValueError):
                 subject.observe(lambda *_:bad,uid(1),uid(2),'a'*40)
 
+    def test_observation_emits_typed_hoon_literals_without_changing_git_ids(self):
+        # The actual first browser read failed at digit five of an ungrouped
+        # head literal. Exercise that shape and both leading/trailing zeroes.
+        head = '0123456789abcdef0123456789abcdef01234560'
+        oid = 'fedcba9876543210fedcba9876543210fedcba00'
+        expected = {'protocol': 'synthetic'}
+        reply = '0x' + format(int.from_bytes(json.dumps(expected).encode(), 'little'), 'x')
+        dojo = Mock(return_value=reply)
+        self.assertEqual(subject.observe(dojo, uid(1), uid(2), head, oid), expected)
+        dojo.assert_called_once_with('zod',
+            f"+stead-team-git-export [%object '{uid(1)}' '{uid(2)}' "
+            "0x123.4567.89ab.cdef.0123.4567.89ab.cdef.0123.4560 "
+            "0xfedc.ba98.7654.3210.fedc.ba98.7654.3210.fedc.ba00]")
+        dojo.reset_mock()
+        subject.observe(dojo, uid(1), uid(2), '0' * 39 + '1')
+        dojo.assert_called_once_with('zod',
+            f"+stead-team-git-export [%manifest '{uid(1)}' '{uid(2)}' 0x1 0x0]")
+
     def test_private_fixture_binds_exact_single_owned_regular_file(self):
         path=self.root/'input.json';raw=b'{"fixture":"synthetic"}'
         path.write_bytes(raw);path.chmod(0o600)
