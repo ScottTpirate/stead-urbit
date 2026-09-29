@@ -2,7 +2,7 @@
 from __future__ import annotations
 
 
-def run(call, check, query, mutation, uid, now):
+def run(call, check, query, mutation, uid, now, git_probe):
     sequence = 8000
     project = uid(2)
 
@@ -31,6 +31,8 @@ def run(call, check, query, mutation, uid, now):
         command = mutation(operation, resource, revision, payload, project=project)
         result = call('bus', 'command', command)
         check('updates-fixture-' + operation, result.get('status') == 'accepted')
+        if operation == 'document.save':
+            git_probe(project, payload['container_id'], result['git_commit_oid'])
         return command
 
     accepted('project.create', project, 0, {'organization_id': uid(5), 'owning_team_id': uid(6),

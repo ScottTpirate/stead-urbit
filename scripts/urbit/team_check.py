@@ -13,12 +13,13 @@ import native_install
 import native_tls
 import native_units
 import team_conn
+import team_git
 import team_updates_check
 from digests import sha, source_sha, tree_sha
 
 CODE = Path(__file__).parent
 DEPENDENCIES = ('team_check.py', 'team_conn.py', 'core_conn.py', 'native_install.py',
-                'team_lifecycle.py', 'native_peer_fence.py', 'native_tls.py', 'native_units.py', 'owned_child.py', 'execution_policy.py', 'team_updates_check.py')
+                'team_lifecycle.py', 'native_peer_fence.py', 'native_tls.py', 'native_units.py', 'owned_child.py', 'execution_policy.py', 'team_updates_check.py', 'team_git.py')
 
 
 def closure():
@@ -333,7 +334,12 @@ def run(host):
         check('actual-read-reflects-committed-work', len(rows) == 1 and next(iter(rows.values())).get('title') == 'Native task')
         stale = mutation('work.update', uid(10), 2, work['payload'])
         check('native-stale-revision-rejected', call('bus', 'command', stale).get('error') == 'revision_conflict')
-        restart_watch = team_updates_check.run(call, check, query, mutation, uid, now)
+        def git_probe(project, container, head):
+            observed = team_git.probe(command, project, container, head)
+            report.setdefault('git_export_probes', []).append(observed)
+            check('native-git-export-manifest-and-commit-' + str(len(report['git_export_probes'])), True)
+
+        restart_watch = team_updates_check.run(call, check, query, mutation, uid, now, git_probe)
         report['restarts'] = {}
         for ship in host['SHIPS']:
             checkpoint('cold-restart-' + ship)

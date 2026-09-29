@@ -132,6 +132,40 @@ class TeamGitTests(unittest.TestCase):
             with self.subTest(bad=bad), self.assertRaises(ValueError):
                 subject.observe(lambda *_:bad,uid(1),uid(2),'a'*40)
 
+    def test_early_probe_binds_manifest_and_commit_to_accepted_receipt(self):
+        graph = Observed()
+        head = graph.snapshot({uid(3)+'.md': b'# Native fixture\n'})
+        read = graph.reader(uid(2), head)
+        replies = [subject.core_conn.atom(json.dumps(read(oid)).encode()) for oid in (None, head)]
+        dojo = Mock(side_effect=replies)
+        result = subject.probe(dojo, uid(1), uid(2), head)
+        self.assertEqual(result, {'project_id': uid(1), 'container_id': uid(2), 'head': head,
+            'declared_objects': 3, 'commit_bytes': len(graph.objects[head][1]), 'commit_sha1': head})
+        self.assertEqual(dojo.call_count, 2)
+        self.assertIn('%manifest', dojo.call_args_list[0].args[1])
+        self.assertIn('%object', dojo.call_args_list[1].args[1])
+
+    def test_early_probe_rejects_wrong_scope_bounds_kind_and_commit_bytes(self):
+        graph = Observed()
+        head = graph.snapshot({uid(3)+'.md': b'# Native fixture\n'})
+        read = graph.reader(uid(2), head)
+        for change in ('project', 'container', 'head', 'manifest-kind', 'manifest-bound',
+                       'object-head', 'object-kind', 'zero-length', 'length', 'digest'):
+            manifest, value = read(None), read(head)
+            if change == 'project': manifest['project_id'] = uid(8)
+            elif change == 'container': manifest['container_id'] = uid(8)
+            elif change == 'head': manifest['snapshot_commit_oid'] = '0'*40
+            elif change == 'manifest-kind': manifest['objects'][head] = 'blob'
+            elif change == 'manifest-bound': manifest['objects'].update({f'{n:040x}':'blob' for n in range(513)})
+            elif change == 'object-head': value['oid'] = '0'*40
+            elif change == 'object-kind': value['kind'] = 'blob'
+            elif change == 'zero-length': value.update(byte_length='0', hex='')
+            elif change == 'length': value['byte_length'] = str(int(value['byte_length'])+1)
+            elif change == 'digest': value['hex'] = '00' + value['hex'][2:]
+            replies = [subject.core_conn.atom(json.dumps(item).encode()) for item in (manifest, value)]
+            with self.subTest(change=change), self.assertRaises(ValueError):
+                subject.probe(Mock(side_effect=replies), uid(1), uid(2), head)
+
     def test_observation_emits_typed_hoon_literals_without_changing_git_ids(self):
         # The actual first browser read failed at digit five of an ungrouped
         # head literal. Exercise that shape and both leading/trailing zeroes.

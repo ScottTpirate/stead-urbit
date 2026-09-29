@@ -51,6 +51,36 @@ def observe(dojo, project, container, head, oid=None):
     return value
 
 
+def probe(dojo, project, container, head):
+    """Exercise the native manifest and commit paths before browser startup.
+
+    This binds the observed commit to an actual accepted receipt. It does not
+    replace stock Git verification of the complete browser-created histories.
+    """
+    manifest = observe(dojo, project, container, head)
+    require(set(manifest) == {'protocol', 'project_id', 'container_id', 'snapshot_commit_oid', 'objects'}
+            and manifest['protocol'] == 'stead.fixture-git/3' and manifest['project_id'] == project
+            and manifest['container_id'] == container and manifest['snapshot_commit_oid'] == head,
+            'Native Git probe manifest correlation')
+    objects = manifest['objects']
+    require(isinstance(objects, dict) and 1 <= len(objects) <= 512
+            and all(OID.fullmatch(oid) and kind in KINDS for oid, kind in objects.items())
+            and objects.get(head) == 'commit', 'Native Git probe manifest bounds')
+    value = observe(dojo, project, container, head, head)
+    require(set(value) == {'protocol', 'snapshot_commit_oid', 'oid', 'kind', 'byte_length', 'hex'}
+            and value['protocol'] == 'stead.fixture-git-object/3' and value['snapshot_commit_oid'] == head
+            and value['oid'] == head and value['kind'] == 'commit', 'Native Git probe object correlation')
+    size, encoded = value['byte_length'], value['hex']
+    require(isinstance(size, str) and re.fullmatch(r'[1-9][0-9]{0,4}', size)
+            and int(size) <= 65536 and isinstance(encoded, str) and len(encoded) == int(size) * 2
+            and re.fullmatch(r'(?:[0-9a-f]{2})+', encoded), 'Native Git probe object byte grammar')
+    body = bytes.fromhex(encoded)
+    require(hashlib.sha1(f'commit {len(body)}\0'.encode() + body).hexdigest() == head,
+            'Native Git probe commit differs from accepted receipt')
+    return {'project_id': project, 'container_id': container, 'head': head,
+            'declared_objects': len(objects), 'commit_bytes': len(body), 'commit_sha1': head}
+
+
 def materialize(read, directory, project, container, head):
     """Traverse independently; bytes come only from the native observation hook."""
     require(UUID.fullmatch(project) and UUID.fullmatch(container) and OID.fullmatch(head), 'Git scope grammar')

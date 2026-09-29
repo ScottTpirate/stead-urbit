@@ -1,12 +1,18 @@
 :: Owned synthetic qualification only: inspect stored bytes, never author Git.
 /+  stead-codec, stead-git, stead-team-owner
 :-  %say
-|=  [^ [[mode=@tas project=@t container=@t head=@ux oid=@ux] ~] ~]
+|=  [[now=@da eny=@uvJ bec=beak] [[mode=@tas project=@t container=@t head=@ux oid=@ux] ~] ~]
 :-  %noun
 ^-  @ux
 ?>  &((uuid:stead-codec project) (uuid:stead-codec container))
 ?>  &((lte (met 0 head) 160) (lte (met 0 oid) 160))
-=/  egg=egg-any:gall  .^(egg-any:gall %gv /=stead-home=/$)
+=/  egg=egg-any:gall
+  .^  egg-any:gall  %gv
+    (scot %p p.bec)
+    %stead-home
+    (scot %da now)
+    /$
+  ==
 ?>  ?=([%20 %live *] egg)
 =/  saved=vase  +.old-state.egg
 =/  loaded  !<([%stead-home %3 team=saved:stead-team-owner] saved)
