@@ -162,6 +162,8 @@ async function signIn(context, ship, port, keyboard = false) {
   const personalOrigin = `https://${ship}.localhost:${port}`;
   await personal.goto(personalOrigin + '/stead-identity/');
   await activate(personal, personal.getByRole('link', {name: 'Sign in to my ship', exact: true}));
+  // Physical Enter does not wait for the resulting document navigation.
+  await personal.waitForURL(url => url.origin === personalOrigin && url.pathname === '/~/login');
   function requireOwnerLogin() {
     const url = new URL(personal.url());
     assert.equal(url.origin, personalOrigin);
