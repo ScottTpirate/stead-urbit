@@ -15,6 +15,15 @@ from bridge import Bridge
 from native import Native, inventory
 
 
+def verify_private_import(rejected, trace):
+    # This pinned Clay diagnostic was observed alongside the specific generator
+    # build failure. A generic failure or a different missing import cannot pass.
+    if (rejected.splitlines() != ['/gen/stead-sdk-private/hoon', '%generator-build-fail']
+            or len(trace) > 262144
+            or b'clay: no files match /lib/stead-core/hoon' not in trace.splitlines()):
+        raise ValueError('Private import did not fail for its unavailable dependency')
+
+
 def isolation(ports, abstract):
     absent = ('/native', '/code', '/helpers', '/controller', '/seed', '/home-state',
               '/home/skilgore', '/root/.gitconfig', '/run/docker.sock', '/var/run/docker.sock')
@@ -107,9 +116,7 @@ def run():
                 with native.logpath.open('rb') as log:
                     log.seek(offset)
                     trace = log.read(262145)
-                if (len(trace) > 262144 or '%generator-build-fail' not in rejected
-                        or b'file-not-found' not in trace or b'stead-core' not in trace):
-                    raise ValueError('Private import did not fail for its unavailable dependency')
+                verify_private_import(rejected, trace)
                 start = time.monotonic()
                 compiled = native.exchange('stead-sdk-qualify', '~', timeout=180)
                 if (compiled.get('protocol') != 'stead.sdk-compile/1' or compiled.get('status') != 'compiled'

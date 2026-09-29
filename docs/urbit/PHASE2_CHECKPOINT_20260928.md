@@ -499,3 +499,23 @@ checkout produced a manifest byte-identical to the root build:
 `cf46ab5c9fc334b8642c90b1b10c38e659847cbd1eb754865692be3f6e15ccd0`.
 The generated package was corrected to those normal-install bytes; frontend
 source and the observed browser behaviors did not change.
+
+## SDK import-control observation
+
+The fresh SDK run at `cd75365364d8cb9a25d36d175c2c2b3840fb6806` failed after
+655.696 seconds without a thermal stop. The public-import generator compiled;
+the private generator failed, and Clay reported `no files match` for the exact
+private library. The runner expected `file-not-found`, so its assertion failed
+before public sample/mark compilation, Home boot or any SDK call. Four initial
+checks were recorded; inputs were unchanged and the controller was reaped, but
+consumer cleanup reported a failed bridge. The
+[bounded observation](evidence/2026-09-29/phase2-preparation/sdk-import-diagnostic.json)
+retains those facts and private evidence hashes without promoting the attempt.
+
+The correction checks the exact generator response and complete observed Clay
+missing-library line within the same bounded log segment. The existing absent
+private-library check and successful public-import control remain mandatory.
+Four host replay/regression tests passed; generic failure, timeout, the wrong
+generator/dependency, an incidental mention and oversized output are rejected.
+The complete 85-test SDK host suite then passed in 13.118 seconds, including
+the existing Linux namespace/process controls. A new native run is still required.

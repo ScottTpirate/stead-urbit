@@ -1,8 +1,16 @@
 # Independent SDK consumer qualification
 
 The executable candidate is `make sdk-dev SDK_ARCHIVE=<verified archive>`.
-It is implemented for guarded local qualification; native compilation and the
-complete conformance run are still unexecuted. This document is not acceptance.
+It is implemented for guarded local qualification; public sample/mark compilation
+and the complete conformance run have not yet qualified. This document is not
+acceptance.
+
+The September 29 run at `cd75365` booted its fresh consumer and compiled the
+public-import control. Clay then refused the unavailable private dependency,
+but the runner expected a different diagnostic string and failed before compiling
+the public sample/marks. The [retained observation](evidence/2026-09-29/phase2-preparation/sdk-import-diagnostic.json)
+records that unsuccessful run. The corrected check requires the exact observed
+generator failure and missing-library line; generic failures remain rejected.
 
 ## Current source and execution boundary
 

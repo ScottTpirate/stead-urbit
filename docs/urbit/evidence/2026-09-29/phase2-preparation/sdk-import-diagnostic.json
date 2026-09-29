@@ -1,0 +1,68 @@
+{
+  "classification": "actual-native-sdk-failed-import-diagnostic",
+  "guard": {
+    "cleanup": [],
+    "elapsed_seconds": 655.696,
+    "exit_code": 1,
+    "policy": {
+      "cooperative_seconds": 10,
+      "cpu_period_us": 10000,
+      "cpu_quota_us": 5000,
+      "kill_seconds": 5,
+      "sample_seconds": 1,
+      "stale_seconds": 3,
+      "start_c": 75,
+      "stop_c": 90,
+      "terminate_seconds": 10
+    },
+    "reason": "Owned sandbox exited unsuccessfully",
+    "run_id": "e63685732be810c18cecd429a33824cb",
+    "status": "failed"
+  },
+  "interpretation": "The private generator failed and Clay named the absent private library. The runner expected a different diagnostic string. Public sample/four-mark compilation, Home boot and SDK calls were not reached. This failed run is not qualification.",
+  "local_run": ".runtime/sdk-consumer-20260929-033118",
+  "observed": {
+    "consumer_identity": "~bus",
+    "error": "ValueError: SDK controller result: {'error': 'ValueError: Private import did not fail for its unavailable dependency'}",
+    "generator_response": "/gen/stead-sdk-private/hoon\n%generator-build-fail\n",
+    "kernel_kelvin": "%408",
+    "missing_dependency_line": "clay: no files match /lib/stead-core/hoon",
+    "public_import_response": "%sdk-import-control-compiled\n",
+    "recorded_checks": 4,
+    "sdk_calls": 0
+  },
+  "package_sha256": "de41150e113c1df26804ffa7466f6018f2bfbf3b509715f2d971f6001f6ef6ac",
+  "peak_sampled_cpu_c": 85.0,
+  "qualifies_phase": false,
+  "retained_private_inputs": {
+    "consumer/bus.log": {
+      "bytes": 4699,
+      "sha256": "2d5a0bff3e153f1c7e9604e080cd112e07fe9cd5f60a279342d756c8e2ec3cd0"
+    },
+    "consumer/failure.json": {
+      "bytes": 4941,
+      "sha256": "402de0a6d0fb1aa2be258323c90aeb48d9e81e0acbb095f020998b3b5fd43129"
+    },
+    "host-report.json": {
+      "bytes": 287462,
+      "sha256": "fb452a4fec0debe96a3d6667151de84f2cedade9d1e3cf20f4d3a8d3e3818349"
+    },
+    "report.json": {
+      "bytes": 22457,
+      "sha256": "c108e5af1f4890dd9d7cb6f46b00494d01910c39bd2e01cbd02212e31f92003c"
+    }
+  },
+  "source_commit": "cd75365364d8cb9a25d36d175c2c2b3840fb6806",
+  "sources_unchanged": true,
+  "status": "fail",
+  "toolchain_sha256": "ae185adaec12b5aa0b2d48e2198ae65583902512ffd9d148706810c4819c650c",
+  "worker_cleanup": {
+    "consumer_error": "SDK bridge failed",
+    "controller_reaped": true,
+    "datagrams": {
+      "dropped": 0,
+      "received": 0,
+      "sent": 0
+    }
+  }
+}
