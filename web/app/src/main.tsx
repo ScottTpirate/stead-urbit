@@ -1,7 +1,7 @@
 import { newId } from './protocol';
 import { StrictMode, Suspense, lazy, useEffect, useRef, useState, type FormEvent } from 'react';
 import { createRoot } from 'react-dom/client';
-import { HomeClient, HomeError, command, type Command, type Fields, type HomeWatch, type Query, type Row, type ViewKind } from './api';
+import { HomeClient, HomeError, command, type Command, type Fields, type HomeWatch, type Query, type Row, type UpdateScope, type ViewKind } from './api';
 import { Button, EmptyState, LoadingState, Surface, TextField } from './primitives';
 import { SupportDetails } from './SupportDetails';
 import { AcceptedTime } from './AcceptedTime';
@@ -10,6 +10,7 @@ const Markdown = lazy(() => import('./Markdown').then(module => ({ default: modu
 const client = new HomeClient();
 const blankQuery = (kind: ViewKind, project_id = '', container_id = '', resource_id = '', search = '', cursor = ''): Query =>
   ({ kind, project_id, container_id, resource_id, search, cursor });
+const scopeKey = (session: string | undefined, scope: UpdateScope) => JSON.stringify([session, scope.kind, scope.project_id, scope.container_id, scope.resource_id, scope.search]);
 const messages: Record<string, string> = {
   search_too_long: 'Search is limited to 128 UTF-8 bytes. Shorten the phrase.',
   logout_unconfirmed: 'Sign-out was not confirmed. Keep this tab open and retry Sign out; your server session may still be active.',
@@ -57,11 +58,13 @@ function App() {
   const [pending, setPending] = useState<Command | null>(null);
   const comparisonScope = `${identity?.session_audit_id}/${project?.project_id}/${container?.container_id ?? ''}/${editor?.id ?? work?.resource_id ?? ''}`;
   const activeQuery = useRef(0);
+  const displayedSnapshot = useRef<{scope: string; generation: string} | null>(null);
   const openingWatch = useRef<Promise<void> | null>(null);
   const heading = useRef<HTMLHeadingElement>(null);
   const [online, setOnline] = useState(navigator.onLine);
   const clearViews = () => {
     activeQuery.current++;
+    displayedSnapshot.current = null;
     setLoading(false);
     setProjects([]); setProject(null); setContainers([]); setContainer(null); setRows([]);
     setSearch(''); setSearchDraft(''); setCursor(''); setEditor(null); setWork(null); setForm(''); setPending(null); setTargets([]); setTargetFilter(''); setConfirmation(null); setCurrentVersion(null); setNotice('');
@@ -146,10 +149,12 @@ function App() {
         const boxes = await collections(project.project_id!);
         if (generation !== activeQuery.current || !applies()) return false;
         setContainers(boxes);
-        if (!nextContainer) { setRows([]); setCursor(''); return true; }
+        if (!nextContainer) { displayedSnapshot.current = null; setRows([]); setCursor(''); return true; }
       }
-      const view = nextTab === 'project' ? metadata : await client.query(blankQuery(nextTab, project.project_id, nextTab === 'documents' ? nextContainer?.container_id ?? '' : '', '', nextTab === 'search' ? term : '', nextCursor));
+      const query = blankQuery(nextTab, project.project_id, nextTab === 'documents' ? nextContainer?.container_id ?? '' : '', '', nextTab === 'search' ? term : '', nextCursor);
+      const view = nextTab === 'project' ? metadata : await client.query(query);
       if (generation !== activeQuery.current || !applies()) return false;
+      displayedSnapshot.current = {scope: scopeKey(identity?.session_audit_id, query), generation: view.generation};
       setRows(Object.values(view.rows)); setCursor(view.cursor); if (announce) setNotice('View refreshed from home.');
       return true;
     } finally { if (announce && generation === activeQuery.current) setLoading(false); }
@@ -162,8 +167,11 @@ function App() {
     let watch: HomeWatch | null = null;
     let timer: ReturnType<typeof setTimeout> | undefined;
     let pendingRefresh = false;
+    let pendingGeneration: string | null = null;
     setLoading(true);
     const scope = {kind: tab === 'documents' && !container ? 'containers' as const : tab, project_id: project.project_id!, container_id: tab === 'documents' ? container?.container_id ?? '' : '', resource_id: '', search: tab === 'search' ? search : ''};
+    const alreadyShown = (generation: string) => displayedSnapshot.current?.scope === scopeKey(identity.session_audit_id, scope)
+      && displayedSnapshot.current.generation === generation;
     const refreshScope = async (initial = false) => {
       const applied = await refresh(tab, container, '', search, () => active && !actionBusy.current, false);
       if (applied && active) {
@@ -188,17 +196,22 @@ function App() {
       if (!active || !watch) return;
       if (actionBusy.current) { schedule(poll, 200); return; }
       try {
+        // A foreground save may have loaded this exact scoped generation
+        // while a queued invalidation waited. The authenticated poll remains.
+        if (pendingGeneration && alreadyShown(pendingGeneration)) pendingRefresh = false;
         if (pendingRefresh) {
           if (!await refreshScope()) { schedule(poll, 200); return; }
           pendingRefresh = false;
           if (active) setNotice('Shared changes loaded from home.');
         }
+        pendingGeneration = null;
         const update = await watch.poll();
         if (!active) return;
         if (update.status === 'refresh_required') {
           watch = null; setUpdatesConnected(false); schedule(connect, 0); return;
         }
-        pendingRefresh = Object.keys(update.rows).length > 0;
+        pendingRefresh = Object.keys(update.rows).length > 0 && !alreadyShown(update.generation);
+        pendingGeneration = pendingRefresh ? update.generation : null;
         schedule(poll, pendingRefresh ? 0 : 2000);
       } catch (failure) { failed(failure); }
     }
@@ -237,6 +250,7 @@ function App() {
   useEffect(() => { if (project) heading.current?.focus(); }, [project?.project_id]);
   function reloadScope() {
     activeQuery.current++;
+    displayedSnapshot.current = null;
     setError(''); setLoading(true);
     setUpdatesRevision(value => value + 1);
   }
@@ -375,7 +389,7 @@ function App() {
           {currentVersion && currentVersion.scope === comparisonScope && <Surface className="comparison"><h2>Current saved revision {currentVersion.row.resource_revision}</h2><pre>{currentVersion.row.markdown ?? `${currentVersion.row.title}\n${currentVersion.row.description}`}</pre><p>Your local text has not changed. Choose its base revision before saving again.</p><Button disabled={busy || !!pending} onClick={() => { if (currentVersion.scope !== comparisonScope) { setCurrentVersion(null); return; } if (editor) setEditor({...editor, revision: currentVersion.row.resource_revision!, head: currentVersion.row.container_head ?? '', dirty: true}); else if (work) setWork(currentVersion.row); setCurrentVersion(null); setNotice('Local edits kept. Review them, then explicitly save against the current revision.'); }}>Keep my edits using this revision</Button><Button onClick={() => setCurrentVersion(null)}>Close comparison</Button></Surface>}
           {confirmation && <Surface className="confirmation"><h2>Delete {confirmation.label}?</h2><p>This removes it from current views. Authorized historical Git exports retain earlier page versions; this does not erase copies others already hold.</p><div className="actions"><Button disabled={busy || !!pending || !!form || !!editor?.dirty} onClick={() => void action(() => save(confirmation.command))}>Confirm deletion</Button><Button disabled={busy} onClick={() => setConfirmation(null)}>Keep it</Button></div></Surface>}
           {editor && container ? <Surface className="document-editor"><div className="editor-heading"><h2>{draftMode ? 'Private draft' : 'Shared page'}</h2><span>{editor.dirty ? 'Local changes · not saved' : `Saved revision ${editor.revision}`}</span></div><label className="editor-label" htmlFor="markdown">Markdown source</label><textarea id="markdown" value={editor.text} readOnly={!canEdit || busy || !!pending || !!form} onChange={event => setEditor({ ...editor, text: event.target.value, dirty: true })} spellCheck/>
-          <div className="actions"><Button variant="primary" disabled={!canEdit || !editor.dirty || busy || !!pending || !!form} onClick={() => void action(() => save(command(project.project_id!, editor.id, editor.revision, project.authority_epoch!, 'document.save', { container_id: container.container_id!, markdown: editor.text })))}>Save page</Button>{canEdit && !editor.dirty && editor.revision !== '0' && draftMode && <Button disabled={busy || !!pending || !!form} onClick={() => void action(async () => { setContainers(await collections(project.project_id!)); setForm('publish'); })}>Publish selected page</Button>}{canEdit && editor.revision !== '0' && <Button disabled={busy || !!pending || !!form || editor.dirty} onClick={() => setConfirmation({label: 'this page', command: command(project.project_id!, editor.id, editor.revision, project.authority_epoch!, 'document.delete', {container_id: container.container_id!, expected_head: editor.head})})}>Delete page</Button>}<Button disabled={busy || !!pending || !!form} onClick={() => { setEditor(null); setError(''); }}>Discard local changes and close</Button></div><h3>Preview</h3><Suspense fallback={<p>Loading preview…</p>}><Markdown text={editor.text}/></Suspense></Surface> : <>
+          <div className="actions"><Button variant="primary" disabled={!canEdit || !editor.dirty || busy || !!pending || !!form} onClick={() => void action(() => save(command(project.project_id!, editor.id, editor.revision, project.authority_epoch!, 'document.save', { container_id: container.container_id!, markdown: editor.text })))}>Save page</Button>{canEdit && !editor.dirty && editor.revision !== '0' && draftMode && <Button disabled={busy || !!pending || !!form} onClick={() => void action(async () => { setContainers(await collections(project.project_id!)); setForm('publish'); })}>Publish selected page</Button>}{canEdit && editor.revision !== '0' && <Button disabled={busy || !!pending || !!form || editor.dirty} onClick={() => setConfirmation({label: 'this page', command: command(project.project_id!, editor.id, editor.revision, project.authority_epoch!, 'document.delete', {container_id: container.container_id!, expected_head: editor.head})})}>Delete page</Button>}<Button disabled={busy || !!pending || !!form} onClick={() => { setEditor(null); setError(''); }}>Discard local changes and close</Button></div><h3>Preview</h3><Suspense fallback={<p>Loading preview…</p>}><Markdown key={comparisonScope} text={editor.text}/></Suspense></Surface> : <>
           {loading ? <LoadingState label="Loading authorized view"/> : rows.length === 0 ? <EmptyState title={tab === 'documents' && !container ? 'Choose a collection' : 'Nothing here yet'} description={tab === 'documents' ? 'Private drafts stay private until you explicitly publish a page.' : 'This view contains only resources you are allowed to access.'}/> : <div className="rows">{rows.map((row,index) => <Surface key={row.request_id ? `event/${row.request_id}` : `${row.kind ?? tab}/${row.project_id ?? project.project_id}/${row.container_id ?? ''}/${row.resource_id ?? index}`} className="resource-row"><div><span className="row-kind">{row.kind ?? row.type ?? tab}</span><h2>{row.title ?? row.summary ?? row.operation ?? row.resource_id}</h2>{row.description && <p>{row.description}</p>}{row.snippet && row.snippet !== row.description && <p>{row.snippet}</p>}<span className="muted">{row.status}{row.priority ? ` · ${row.priority}` : ''}</span>{row.kind === 'activity' && <p className="muted" data-event-request={row.request_id}>{row.principal_id === identity.principal_id ? 'You' : `Member ${row.principal_id}`} · <AcceptedTime milliseconds={row.accepted_at_ms ?? ''}/></p>}</div><div className="actions">{tab === 'documents' && <Button disabled={busy || !!pending || !!form || !!editor?.dirty} onClick={() => void action(() => openDocument(row))}>Open page</Button>}{tab === 'work' && canEdit && <Button disabled={busy || !!pending || !!form || !!editor?.dirty} onClick={() => void action(() => openWork(row))}>Edit</Button>}{canEdit && (tab === 'work' || tab === 'relations') && <Button disabled={busy || !!pending || !!form || !!editor?.dirty} onClick={() => setConfirmation({label: tab === 'work' ? 'this work item' : 'this link', command: command(project.project_id!, row.resource_id!, row.resource_revision!, project.authority_epoch!, tab === 'work' ? 'work.delete' : 'relation.delete', {})})}>Delete</Button>}</div></Surface>)}</div>}
           {cursor && <Button disabled={busy || loading || !updatesConnected} onClick={() => void action(() => refresh(tab, container, cursor))}>Next page</Button>}</>}
           </>}

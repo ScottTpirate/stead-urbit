@@ -3,3 +3,5 @@
 .skip-link{position:absolute;left:-9999px}.skip-link:focus{position:relative;left:0;padding:1rem;display:block;background:white;color:#193b31}
 
 .resource-row>div{min-width:0;max-width:100%}.resource-row h2,.resource-row p,.project-heading h1{overflow-wrap:anywhere}.support{max-width:40rem;margin-top:12px}.support summary{cursor:pointer;font-size:13px}.support p{font-size:13px;line-height:1.6}.support pre{white-space:pre-wrap;overflow-wrap:anywhere;font-size:12px}.comparison pre{white-space:pre-wrap;overflow-wrap:anywhere}
+
+.markdown-plain { white-space: pre-wrap; overflow-wrap: anywhere; font: inherit; max-height: 60vh; overflow: auto; }
