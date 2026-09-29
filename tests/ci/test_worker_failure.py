@@ -18,6 +18,25 @@ import owned_child
 
 
 class FailureProjectionTests(unittest.TestCase):
+    def test_bootstrap_failures_use_fixed_codes_without_response_content(self):
+        examples = [(ship + '-' + assertion, ship + '-' + reason)
+                    for ship in failure.SHIPS
+                    for assertion, reason in (('owner-bootstrap-acknowledged', 'initial-bootstrap'),
+                                              ('restart-fresh-bootstrap', 'restart-bootstrap'))]
+        examples += [('Native bootstrap readiness not acknowledged', 'bootstrap-readiness'),
+                     ('Native bootstrap acknowledgement differs', 'bootstrap-ack'),
+                     ('Native bootstrap owner changed', 'bootstrap-owner-changed'),
+                     ('Native bootstrap readiness budget exhausted', 'bootstrap-budget'),
+                     ('Native bootstrap acknowledgement arrived after deadline', 'bootstrap-late')]
+        for message, reason in examples:
+            with self.subTest(message=message):
+                self.value['native']['error'] = 'AssertionError: ' + message
+                self.assertEqual(self.project()['native']['error']['reason'], reason)
+                self.value['native']['error'] += self.secret
+                projected = self.project()
+                self.assertEqual(projected['native']['error']['reason'], 'unrecognized')
+                self.assertNotIn(self.secret, json.dumps(projected))
+
     def test_native_control_reason_is_closed_and_discards_appended_content(self):
         for message, reason in (('Specific compiler failure absent','control-compiler-diagnostic'),
                 ('Native timer ignored client timeout','control-timeout-absent'),

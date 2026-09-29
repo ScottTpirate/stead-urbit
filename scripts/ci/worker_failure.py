@@ -70,6 +70,11 @@ def error_kind(value):
              'Stale bootstrap completion': 'bootstrap-stale',
              'Bootstrap does not match this live child incarnation': 'bootstrap-incarnation'}
     exact.update({
+        'Native bootstrap owner changed': 'bootstrap-owner-changed',
+        'Native bootstrap readiness budget exhausted': 'bootstrap-budget',
+        'Native bootstrap acknowledgement arrived after deadline': 'bootstrap-late',
+        'Native bootstrap acknowledgement differs': 'bootstrap-ack',
+        'Native bootstrap readiness not acknowledged': 'bootstrap-readiness',
         'Missing arm fixture failed before discovery':'control-missing-arm-fixture',
         'Specific compiler failure absent':'control-compiler-diagnostic',
         'Compiler control failed outside native compilation':'control-compiler-terminal',
@@ -84,6 +89,9 @@ def error_kind(value):
         'Native discovered/executed arm mismatch':'control-arm-inventory',
         'Native test build failed':'control-build',
     })
+    for ship in SHIPS:
+        exact[ship + '-owner-bootstrap-acknowledged'] = ship + '-initial-bootstrap'
+        exact[ship + '-restart-fresh-bootstrap'] = ship + '-restart-bootstrap'
     if message in exact:
         reason = exact[message]
     elif re.fullmatch(r'(zod|bus|nec|bud) did not become ready within [0-9]{1,4}s', message):

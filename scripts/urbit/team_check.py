@@ -3,6 +3,7 @@ from __future__ import annotations
 import hashlib
 import json
 from pathlib import Path
+import re
 import time
 import traceback
 import urllib.request
@@ -61,6 +62,51 @@ def capabilities_match(value, request_id):
             'runtime': 'isolated-fake'}])
 
 
+def bootstrap_ready(team, ship, call, guard):
+    """Wait for an actual owner-local ACK without releasing startup fencing."""
+    entry = team.boots[ship]
+    process, nonce = entry['process'], entry['nonce']
+    deadline = time.monotonic() + 180
+
+    def current():
+        guard()
+        if (team.boots.get(ship) is not entry or team.children.get(ship) is not process
+                or entry.get('process') is not process
+                or entry.get('nonce') != nonce or entry.get('acknowledged')
+                or not entry.get('suspended') or process.poll() is not None):
+            raise ValueError('Native bootstrap owner changed')
+
+    for _ in range(3):
+        current()
+        # Keep the existing exchange limits: encode 30s, transport 75s,
+        # decode 30s. This is an admission deadline, not a new process timer.
+        if deadline - time.monotonic() < 135:
+            raise TimeoutError('Native bootstrap readiness budget exhausted')
+        value = call(ship, 'bootstrap', {'protocol': 'stead.bootstrap/1', 'nonce': nonce},
+                     route='/bootstrap/' + nonce, target=ship,
+                     app='stead-home' if ship == 'zod' else 'stead-identity', timeout=75)
+        current()
+        if time.monotonic() >= deadline:
+            raise TimeoutError('Native bootstrap acknowledgement arrived after deadline')
+        if (isinstance(value, dict)
+                and set(value) == {'protocol', 'status', 'home', 'nonce', 'incarnation'}
+                and value['protocol'] == 'stead.bootstrap/1' and value['status'] == 'ready'
+                and value['home'] == '~' + ship and value['nonce'] == nonce
+                and isinstance(value['incarnation'], str)
+                and re.fullmatch(r'[0-9a-f]{64}', value['incarnation'])):
+            return value
+        if not (isinstance(value, dict)
+                and set(value) == {'protocol', 'status', 'kind', 'trace', 'trace_jam_hex'}
+                and value['protocol'] == 'stead.test-terminal/1' and value['status'] == 'failed'
+                and value['kind'] == 'poke-fail' and isinstance(value['trace'], str)
+                and isinstance(value['trace_jam_hex'], str)
+                and re.fullmatch(r'(?:[0-9a-f]{2})+', value['trace_jam_hex'])):
+            raise ValueError('Native bootstrap acknowledgement differs')
+        # call() has already retained the completed refusal and native frame.
+        time.sleep(.1)
+    raise TimeoutError('Native bootstrap readiness not acknowledged')
+
+
 def run(host):
     started = time.monotonic()
     report = {'status': 'fail', 'classification': 'local-real-configured-gall-development',
@@ -96,7 +142,7 @@ def run(host):
 
     binary = '/runtime/' + host['LOCK']['runtime']['binary']
 
-    def call(ship, mode, value=None, *, target='zod', app='stead-home', route=None):
+    def call(ship, mode, value=None, *, target='zod', app='stead-home', route=None, timeout=75):
         host['execution_check']()
         raw = canonical(value) if value is not None else b''
         if route is None and mode in ('command', 'query', 'updates'):
@@ -105,7 +151,7 @@ def run(host):
             binding = uid(202 + ('bus', 'nec').index(ship)) if ship in ('bus', 'nec') else uid(299)
             route = '/v3/result/~' + ship + '/' + binding + '/1/' + value['request_id'] + '/' + digest
         result = team_conn.run(binary, host['LIVE'] / ship / '.urb/conn.sock', mode,
-                               route or '/', raw, target=target, app=app)
+                               route or '/', raw, target=target, app=app, timeout=timeout)
         observed = {key: result[key] for key in ('stdout', 'stderr', 'response_frame_sha256',
                     'request', 'request_frame_hex', 'response_frame_hex', 'outcome')}
         report['commands'].append({'ship': ship, 'mode': mode, 'app': app, 'target': target,
@@ -232,9 +278,7 @@ def run(host):
                   target=ship, app='stead-identity') == {})
         for ship in host['SHIPS']:
             nonce = team.boots[ship]['nonce']
-            app = 'stead-home' if ship == 'zod' else 'stead-identity'
-            boot = call(ship, 'bootstrap', {'protocol': 'stead.bootstrap/1', 'nonce': nonce},
-                        route='/bootstrap/' + nonce, target=ship, app=app)
+            boot = bootstrap_ready(team, ship, call, host['execution_check'])
             check(ship + '-owner-bootstrap-acknowledged', boot is not None and boot.get('nonce') == nonce
                   and boot.get('home') == '~' + ship and boot.get('status') == 'ready')
             team.admit(ship, boot, host['dojo'])
@@ -303,9 +347,7 @@ def run(host):
                   and team.boots[ship]['present'] and team.saved_fingerprint(ship, host['dojo']) == saved)
             team.reinstall(ship, host['dojo'])
             nonce = team.boots[ship]['nonce']
-            app = 'stead-home' if ship == 'zod' else 'stead-identity'
-            boot = call(ship, 'bootstrap', {'protocol': 'stead.bootstrap/1', 'nonce': nonce},
-                        route='/bootstrap/' + nonce, target=ship, app=app)
+            boot = bootstrap_ready(team, ship, call, host['execution_check'])
             check(ship + '-restart-fresh-bootstrap', boot is not None and nonce != old['nonce']
                   and boot.get('nonce') == nonce and boot.get('status') == 'ready')
             team.admit(ship, boot, host['dojo'])

@@ -14,9 +14,12 @@ failed after all six native suites and 776 passing observations, with one failed
 team assertion. Its public report does not name that assertion. Input identity,
 collector completion and clean owned shutdown were verified. The
 [failed evidence](evidence/2026-09-29/ci-36529027820/index.json) remains separate
-from earlier passing CI. Local configured-team reproduction is running at
-`4ddb822`; native browser, natural expiry, human onboarding and final integration
-remain open.
+from earlier passing CI. Local configured-team reproduction at `4ddb822`
+confirmed the exact Home bootstrap readiness refusal after restart. Its selected
+[failed evidence](evidence/2026-09-29/team-bootstrap-4ddb822/index.json) and clean
+whole-lifetime shutdown are retained. A bounded fixture correction is prepared;
+fresh native/hosted checks, browser, natural expiry, human onboarding and final
+integration remain open.
 
 Local native compilation at `4452750` already passed all 71 positive arms,
 including the added bounded projection replay, and its complete guard lifetime
@@ -779,3 +782,29 @@ unchanged at 25% in 17.022 seconds before the complete successful rerun. No
 source, native deadline, thermal ceiling or native CPU quota was relaxed.
 All three exact logs are retained in the
 [host evidence index](evidence/2026-09-29/host-final-cf63289/index.json).
+
+## Configured restart readiness reproduced
+
+Local `make team-dev` at `4ddb822` failed `zod-restart-fresh-bootstrap` after
+744 passing observations in 958.935 seconds. All six native suites completed.
+The native terminal was an explicit `poke-fail` at `stead-team-owner.hoon`
+line 69: restoration must be absent and the projection must be ready. Gall
+activation did not establish that combined readiness condition. The trace does
+not distinguish which term remained incomplete. This identifies the local
+failure; the corresponding hosted location remains a source-order inference.
+
+Inputs were unchanged. Automatic shutdown completed; the guard ended after
+966.780 seconds with exit zero, no cleanup errors and its owned cgroup absent.
+The full report remains private because it contains transient handles. The
+[selected failure record](evidence/2026-09-29/team-bootstrap-4ddb822/index.json)
+publishes its hash, bounded source locations and exact guard evidence.
+
+The fixture correction requires an exact owner acknowledgment and preserves
+each completed refusal. It retries only explicit native poke refusals, using the
+same owned process and ingress-bound nonce, at most three times. The admission
+window is 180 seconds; a new exchange needs the full existing 30/75/30-second
+encode/transport/decode budget. Late acknowledgments, transport errors, wrong
+responses and ownership changes fail. Existing admission remains responsible
+for releasing access. No native, thermal or whole-lifetime limit is relaxed.
+The public CI diagnostic now uses fixed codes for these bootstrap failures.
+Actual corrected native execution is still required.

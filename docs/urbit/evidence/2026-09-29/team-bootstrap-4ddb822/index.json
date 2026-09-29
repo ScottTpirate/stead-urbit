@@ -1,0 +1,67 @@
+{
+  "format": 1,
+  "classification": "failed-local-configured-native-bootstrap",
+  "qualifies_phase": false,
+  "source_commit": "4ddb822c12aa26264105c140aab44007f6aed2ef",
+  "status": "fail",
+  "error": "AssertionError: zod-restart-fresh-bootstrap",
+  "elapsed_seconds": 958.935,
+  "checks_passed": 744,
+  "checks_recorded": 745,
+  "failed_checks": [
+    "zod-restart-fresh-bootstrap"
+  ],
+  "native_suites_recorded": 6,
+  "inputs_match": true,
+  "last_call": {
+    "ship": "zod",
+    "mode": "bootstrap",
+    "app": "stead-home",
+    "target": "zod"
+  },
+  "terminal": {
+    "protocol": "stead.test-terminal/1",
+    "status": "failed",
+    "kind": "poke-fail"
+  },
+  "source_locations": [
+    "/lib/stead-team-owner/hoon:<[121 5].[169 7]>",
+    "/lib/stead-team-owner/hoon:<[122 5].[169 7]>",
+    "/lib/stead-team-owner/hoon:<[123 5].[169 7]>",
+    "/lib/stead-team-owner/hoon:<[123 37].[123 60]>",
+    "/lib/stead-team-owner/hoon:<[64 5].[82 27]>",
+    "/lib/stead-team-owner/hoon:<[65 5].[82 27]>",
+    "/lib/stead-team-owner/hoon:<[66 5].[82 27]>",
+    "/lib/stead-team-owner/hoon:<[67 5].[82 27]>",
+    "/lib/stead-team-owner/hoon:<[68 5].[82 27]>",
+    "/lib/stead-team-owner/hoon:<[69 5].[82 27]>"
+  ],
+  "native_owner_source": {
+    "path": "native/core/desk/lib/stead-team-owner.hoon",
+    "sha256": "6eb5574bc82633c174884c2935f91cdc6b0a96f604c25b43859d050b60aef535"
+  },
+  "observed_cause": "The actual terminal locates the refusal at stead-team-owner.hoon line69, which requires restoration absent and projection ready. Gall activation alone did not establish this readiness. The trace does not distinguish the two terms of the combined condition.",
+  "guard": {
+    "status": "completed",
+    "run_id": "6f9fc37ae1f6eb4b9822f941a19a5ffd",
+    "elapsed_seconds": 966.78,
+    "exit_code": 0,
+    "reason": null,
+    "cleanup": []
+  },
+  "owned_cgroup_absent_at_readback": true,
+  "private_original": {
+    "path": ".piers/fakes/logs/team-check-20260929T063702Z.json",
+    "bytes": 1119160,
+    "sha256": "5ac3a88b72b2670afb4e71af706a575dfd9b769256806041e95c054e89949345"
+  },
+  "files": {
+    "guard-report.json": {
+      "path": "guard-report.json.gz",
+      "raw_bytes": 422323,
+      "raw_sha256": "cc8e81e0353b08402a8ae98657062163d32673ec74fdce2b1f7b7734769f321e",
+      "gzip_sha256": "f702074e4ecc1b9871d9a62fdf421766b0af230b811a18646a4153b862e498e7"
+    }
+  },
+  "scope": "Failed configured native execution with clean whole-lifetime shutdown. Native/browser/human acceptance remains open. Raw report contains transient handles and remains private."
+}
