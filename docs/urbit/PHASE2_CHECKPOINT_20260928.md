@@ -17,8 +17,10 @@ collector completion and clean owned shutdown were verified. The
 from earlier passing CI. Local configured-team reproduction at `4ddb822`
 confirmed the exact Home bootstrap readiness refusal after restart. Its selected
 [failed evidence](evidence/2026-09-29/team-bootstrap-4ddb822/index.json) and clean
-whole-lifetime shutdown are retained. A bounded fixture correction is prepared;
-fresh native/hosted checks, browser, natural expiry, human onboarding and final
+whole-lifetime shutdown are retained. The independently reviewed correction is
+pushed at `f5e79f4`; its full host checks pass. Hosted qualification is running. A local retry was interrupted by the 90C
+guard before restart checks; its state was preserved and verified seeds restored.
+Browser, natural expiry, human onboarding and final
 integration remain open.
 
 Local native compilation at `4452750` already passed all 71 positive arms,
@@ -808,3 +810,36 @@ responses and ownership changes fail. Existing admission remains responsible
 for releasing access. No native, thermal or whole-lifetime limit is relaxed.
 The public CI diagnostic now uses fixed codes for these bootstrap failures.
 Actual corrected native execution is still required.
+
+The correction was independently reviewed and pushed at
+`f5e79f4682cf7a78fb2a7e5b9729c76e175aff41`. The full host suite passed 671
+of 672 tests with one optional artifact skip in 121.892 seconds; all 53 CI host
+controls passed in 1.813 seconds. Exact tested files and both logs are retained
+in the [host evidence](evidence/2026-09-29/bootstrap-host-f5e79f4/index.json).
+
+[PR #78](https://github.com/ScottTpirate/stead-urbit/pull/78) merged only the reviewed
+controller pin into main `199414291da7cbeebbb8915bfc1187e990d77348`.
+[Run 36535031127](https://github.com/ScottTpirate/stead-urbit/actions/runs/36535031127)
+uses controller/candidate `f5e79f4682cf7a78fb2a7e5b9729c76e175aff41`.
+The hosted run remains pending. The first matching local attempt ended in the
+thermal interruption described below; it is not passing evidence.
+
+The first local retry on `f5e79f4` was thermally interrupted before the corrected
+bootstrap path. Five suites and 166 checks had completed. At 238.112 seconds,
+the guard observed TCPU at 93C and stopped execution under the unchanged 90C
+ceiling. Its final failed record closed at 249.160 seconds, with supervised
+SIGTERM cleanup and no remaining owned cgroup. The interrupted fixture's marker
+and stopped state were preserved, then `make reset` restored verified clean
+seeds. The [thermal record](evidence/2026-09-29/team-thermal-f5e79f4/index.json)
+remains failed/unqualified. A later preflight at 77C refused startup; no other
+workload was stopped. Hosted CI continues independently.
+
+Independent read-only review confirms that the SDK result at `7f113a1` retains
+its recorded scope for the unchanged SDK execution path at `f5e79f4`. All actual
+SDK runner/consumer, authority Hoon, public package and pinned runtime inputs
+match. The broad inventory does contain one changed but unused team-runner file;
+this is execution-input equivalence, not a claim of a new SDK run.
+
+After the reset, a later preflight observed 61C and admitted another local
+`make team-dev` attempt on unchanged `f5e79f4`. This second attempt is running;
+no startup limit, thermal ceiling or workload setting was changed.

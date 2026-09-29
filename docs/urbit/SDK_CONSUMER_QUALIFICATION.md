@@ -10,6 +10,13 @@ The [selected public evidence](evidence/2026-09-29/sdk-native-7f113a1/index.json
 binds the exact package, source, compiled Clay case, assertions and retained
 private originals. This qualifies the recorded SDK cases, not all of Phase 2.
 
+Read-only review confirms that `f5e79f4` preserves this SDK lane's executed
+source, public package, authority Hoon and pinned runtime inputs. Subsequent
+configured-team bootstrap and CI diagnostic changes do not execute in this
+lane. `team_check.py` was present in the broad captured/mounted inventory but
+unused; that inventory is therefore not wholly unchanged. This cross-reference
+records execution-input equivalence, not a new SDK run.
+
 The September 29 run at `cd75365` booted its fresh consumer and compiled the
 public-import control. Clay then refused the unavailable private dependency,
 but the runner expected a different diagnostic string and failed before compiling
