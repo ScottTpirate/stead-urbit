@@ -567,3 +567,30 @@ inputs. Both native children exited cleanly and were reaped, and the consumer
 controller exited zero. The overall run remains failed. Correct the test fixture
 to use a distinct individual control member; do not relax the product's separation
 between the organization Home and individual principals.
+
+## Distinct SDK control-member fixture prepared
+
+The corrected runner gives the control member a fresh `~nec` identity alongside
+Home in the trusted namespace. The independent public consumer remains `~bus`
+in its separate namespace. Owner-local configuration binds only those two
+individuals; business control requests use `~nec`'s actual native socket and
+validate its receipt identity. Only seven exact adapter dependencies are installed
+on the control member. Product Hoon and the public package are unchanged.
+
+The runner preserves the invocation sample used by the pinned Khan `%fyrd`
+path, requires a correlated bootstrap acknowledgement before admission, preserves
+bounded readiness failures and attempts shutdown of both trusted children
+independently. A read-only isolation check between trusted cold boots avoids
+spanning the consumer's request-wait limit. The cancellation case opens a fresh
+live watch before cancelling, checks that it cannot deliver data, then repeats
+cancellation.
+
+All 100 SDK host tests passed in 11.589 seconds with 25% of one pinned CPU. They
+include actual Linux namespace/process checks and mocked fixture/dispatch,
+readiness and cleanup controls. The full `make check` then passed planning and
+contract checks and 658 of 659 discovered tests in 118.111 seconds, with one
+optional retained-local-artifact test skipped. These suites overlap. Independent
+source review cleared the corrected fixture for a fresh guarded native attempt.
+The [host evidence](evidence/2026-09-29/sdk-fixture-host/index.json) records exact
+reviewed source hashes and logs. Native conformance remains unexecuted; previous
+failed runs remain failed, and Phase 2 remains open.

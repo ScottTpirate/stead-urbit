@@ -31,6 +31,19 @@ class SDKResultTests(unittest.TestCase):
         request, reply = self.command()
         RESULTS.validate('command', request, reply)
 
+    def test_distinct_control_member_receipt(self):
+        request, reply = self.command()
+        reply.update(principal_id=PREFIX + f'{104:012x}', binding_id=PREFIX + f'{204:012x}', identity_ship='~nec')
+        RESULTS.validate('command', request, reply, '~nec')
+        with self.assertRaises(ValueError):
+            RESULTS.validate('command', request, reply, '~bus')
+
+    def test_home_cannot_be_validated_as_a_member(self):
+        request, reply = self.command()
+        for actor in ('~zod', '~bud', ''):
+            with self.subTest(actor=actor), self.assertRaises(ValueError):
+                RESULTS.validate('command', request, reply, actor)
+
     def test_receipt_wrong_correlation_identity_scope_revision_and_extra_fields(self):
         request, reply = self.command()
         for field in ('request_id', 'canonical_sha256', 'project_id', 'resource_id', 'operation', 'authority_epoch',

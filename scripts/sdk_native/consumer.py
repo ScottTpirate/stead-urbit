@@ -24,9 +24,20 @@ def verify_private_import(rejected, trace):
         raise ValueError('Private import did not fail for its unavailable dependency')
 
 
+def invoke_sample(clay_case, value):
+    if (set(value) != {'mode', 'raw', 'binding'} or value['mode'] not in ('command', 'query', 'updates')
+            or not isinstance(value['raw'], str) or len(value['raw'].encode()) > 65537
+            or not re.fullmatch(r'[0-9a-f-]{36}', value['binding'])):
+        raise ValueError('SDK call input grammar')
+    # The pinned Khan %fyrd path lifts this sample into the unit expected by
+    # invoke.hoon. Supplying a unit marker here would wrap the sample twice.
+    return (f"[{clay_case} ~zod {core_conn.atom(value['binding'].encode())} "
+            f"1 %{value['mode']} {core_conn.atom(value['raw'].encode())}]")
+
+
 def isolation(ports, abstract):
     absent = ('/native', '/code', '/helpers', '/controller', '/seed', '/home-state',
-              '/home/skilgore', '/root/.gitconfig', '/run/docker.sock', '/var/run/docker.sock')
+              '/state/zod', '/state/nec', '/home/skilgore', '/root/.gitconfig', '/run/docker.sock', '/var/run/docker.sock')
     if any(Path(name).exists() for name in absent):
         raise ValueError('Private authority or host path entered the consumer')
     addresses = json.loads(subprocess.check_output(['/usr/bin/ip', '-j', 'address']))
@@ -138,14 +149,9 @@ def run():
                 bridge.admit()
                 result = {'admitted': True, 'proof': native.proof()}
             elif operation == 'call' and compiled and not stopped:
-                if (set(value) != {'mode', 'raw', 'binding'} or value['mode'] not in ('command', 'query', 'updates')
-                        or not isinstance(value['raw'], str) or len(value['raw'].encode()) > 65537
-                        or not re.fullmatch(r'[0-9a-f-]{36}', value['binding'])):
-                    raise ValueError('SDK call input grammar')
+                noun = invoke_sample(compiled['clay_case'], value)
                 if not bridge.opened.is_set():
                     raise ValueError('SDK consumer transport is not admitted')
-                noun = (f"[{compiled['clay_case']} ~zod {core_conn.atom(value['binding'].encode())} "
-                        f"1 %{value['mode']} {core_conn.atom(value['raw'].encode())}]")
                 native.readback({'ted/stead-sdk-invoke.hoon': installed['ted/stead-sdk-invoke.hoon']})
                 result = native.exchange('stead-sdk-invoke', noun)
             elif operation == 'stop' and native is not None and not stopped and value == {}:

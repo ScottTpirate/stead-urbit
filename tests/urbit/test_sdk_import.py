@@ -16,6 +16,19 @@ TRACE = OBSERVED['observed']['missing_dependency_line'].encode() + b'\r\n'
 
 
 class SDKImportTests(unittest.TestCase):
+    def test_invocation_preserves_fyrd_sample_case_binding_mode_and_bytes(self):
+        value = {'mode': 'query', 'raw': '{}', 'binding': '019939ba-4000-7000-8000-0000000000ca'}
+        self.assertEqual(CONSUMER.invoke_sample('~2026.9.29..00.00.00', value),
+            '[~2026.9.29..00.00.00 ~zod '
+            '0x6163.3030.3030.3030.3030.3030.2d30.3030.382d.3030.3037.2d30.3030.342d.6162.3933.3939.3130 '
+            '1 %query 0x7d7b]')
+
+    def test_invocation_rejects_extra_fields_unknown_mode_and_oversized_carrier(self):
+        value = {'mode': 'query', 'raw': '{}', 'binding': '019939ba-4000-7000-8000-0000000000ca'}
+        for change in ({'mode': 'configure'}, {'extra': 'field'}, {'raw': 'x' * 65538}, {'binding': 'bad'}):
+            with self.subTest(change=list(change)), self.assertRaises(ValueError):
+                CONSUMER.invoke_sample('~2026.9.29..00.00.00', value | change)
+
     def test_retained_pinned_clay_failure(self):
         CONSUMER.verify_private_import(RESPONSE, TRACE)
 

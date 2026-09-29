@@ -1,9 +1,10 @@
 # Independent SDK consumer qualification
 
 The executable candidate is `make sdk-dev SDK_ARCHIVE=<verified archive>`.
-It is implemented for guarded local qualification; public sample/mark compilation
-and the complete conformance run have not yet qualified. This document is not
-acceptance.
+It is implemented for guarded local qualification. The public sample and four
+carrier marks compiled at `8a2702a`, but that run failed before business calls.
+The corrected three-identity fixture has not yet run natively. This document is
+not acceptance.
 
 The September 29 run at `cd75365` booted its fresh consumer and compiled the
 public-import control. Clay then refused the unavailable private dependency,
@@ -11,6 +12,14 @@ but the runner expected a different diagnostic string and failed before compilin
 the public sample/marks. The [retained observation](evidence/2026-09-29/phase2-preparation/sdk-import-diagnostic.json)
 records that unsuccessful run. The corrected check requires the exact observed
 generator failure and missing-library line; generic failures remain rejected.
+
+The subsequent `8a2702a` run passed those controls and public sample/mark
+compilation, then failed because its trusted configuration used Home as an
+individual member. Product rules correctly rejected it. The
+[retained fixture observation](evidence/2026-09-29/phase2-preparation/sdk-member-fixture.json)
+records zero SDK business calls and clean shutdown of both native children.
+The corrected fixture uses a distinct individual control member; it preserves
+the product's separation between the organization Home and its members.
 
 ## Current source and execution boundary
 
@@ -34,8 +43,17 @@ read back at closure.
 
 Only after compilation and isolation controls does the trusted controller boot a
 separate fresh synthetic `~zod` Home. It installs the actual bound product desk,
-including assets, and executes the unchanged owner-local configuration and
-bootstrap exchange. It never restores Home state or restarts either identity.
+including assets, then boots a fresh `~nec` control member in the trusted
+namespace. That member receives only the seven exact adapter/codec/carrier files
+needed to send its own native requests. Configuration stays owner-local; it binds
+the two individuals `~bus` and `~nec`, never Home. Control business requests use
+`~nec`'s actual socket and require receipts bound to that sender.
+
+Admission requires the actual correlated bootstrap acknowledgement after
+configuration. An explicit native poke refusal can be retried at most three
+times within 180 seconds; timeouts or mismatched acknowledgements fail. An
+isolation check between trusted cold boots keeps the consumer's existing bounded
+request wait active. The fixture never restores state or restarts an identity.
 This native-only profile does not substitute for configured browser/TLS or
 cold-restart qualification.
 
@@ -84,6 +102,14 @@ Report package/source/toolchain hashes, installed and invoked source, actual
 consumer identity, correlation, observations, negative controls and cleanup.
 Separate real native execution from the host socket and synthetic corrupted-reply
 controls. Source review is not compiler or runtime evidence.
+
+The fixture correction passed 100 SDK host tests in 11.589 seconds on September
+29, including actual Linux namespace/process controls and mocked native dispatch,
+readiness and cleanup controls. The invocation test preserves the raw sample;
+the pinned Khan `%fyrd` path supplies its required unit wrapper. The conformance schedule now
+cancels a newly opened live watch, verifies that it cannot dequeue data, and
+then checks repeated cancellation. These host results do not qualify native
+conformance; the fresh three-identity run remains required.
 
 ## Earlier transfer preparation
 

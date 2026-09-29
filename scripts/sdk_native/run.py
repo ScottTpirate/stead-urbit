@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Run the independently packaged native SDK in two disposable fake namespaces."""
+"""Run the public SDK consumer and a separate Home/control-member fixture."""
 import argparse
 import hashlib
 import json
@@ -60,7 +60,7 @@ def run(archive):
     if source_inventory(ROOT / prepared / 'sdk') != expected_public:
         raise ValueError('Prepared public bytes differ from the verified package')
     before = {name: source_inventory(ROOT / name) for name in ('scripts/sdk_native', 'scripts/urbit', 'native/core/desk')}
-    context = {'profile': 'independent-public-sdk-two-fresh-fakes',
+    context = {'profile': 'independent-public-sdk-three-fresh-fakes',
                'caller_uid': os.getuid(), 'caller_gid': os.getgid(),
                'source_commit': subprocess.check_output(['git', 'rev-parse', 'HEAD'], cwd=ROOT, text=True).strip(),
                'dirty_paths': subprocess.check_output(['git', 'status', '--porcelain', '--', 'scripts/sdk_native', 'scripts/urbit', 'native/core/desk'], cwd=ROOT, text=True).splitlines(),

@@ -8,6 +8,7 @@ UINT = re.compile(r'(?:0|[1-9][0-9]{0,19})')
 RECEIPT = set('protocol status request_id canonical_sha256 project_id resource_id resource_kind container_id resource_revision authority_epoch operation principal_id binding_id binding_revision identity_ship authentication authentication_strength session_audit_id runtime accepted_at_ms git_commit_oid'.split())
 QUERY = set('protocol status request_id kind project_id container_id resource_id authority_epoch generation cursor rows'.split())
 UPDATE = set('protocol status request_id watch_id cursor generation rows'.split())
+ACTORS = {'~bus': (102, 202), '~nec': (104, 204)}
 
 
 def require(condition, message):
@@ -24,6 +25,7 @@ def canonical(value):
 
 
 def validate(mode, request, value, actor='~bus'):
+    require(actor in ACTORS, 'fixed individual fixture actor')
     require(isinstance(value, dict) and 0 < len(canonical(value).encode()) <= 262144, 'bounded object')
     if value.get('protocol') == 'stead.sdk-error/1':
         require(value == {'protocol': 'stead.sdk-error/1', 'status': 'failed', 'error': 'request_unconfirmed'}, 'unconfirmed SDK shape')
@@ -33,7 +35,7 @@ def validate(mode, request, value, actor='~bus'):
         require(mode == 'command' and set(value) == RECEIPT and all(isinstance(v, str) for v in value.values()), 'receipt fields')
         expected = {key: request[key] for key in ('request_id', 'project_id', 'resource_id', 'operation', 'authority_epoch')}
         prefix = '019939ba-4000-7000-8000-'
-        principal, binding = (102, 202) if actor == '~bus' else (104, 204)
+        principal, binding = ACTORS[actor]
         expected.update(status='accepted', canonical_sha256=hashlib.sha256(('stead.command/3\0' + canonical(request)).encode()).hexdigest(),
             resource_revision=str(int(request['expected_revision']) + 1), container_id='', git_commit_oid='',
             principal_id=prefix + f'{principal:012x}', binding_id=prefix + f'{binding:012x}', binding_revision='1',

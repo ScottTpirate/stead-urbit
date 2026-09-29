@@ -3,7 +3,9 @@ import hashlib
 import json
 import os
 from pathlib import Path
+import re
 import secrets
+import shutil
 import signal
 import socket
 import subprocess
@@ -18,6 +20,97 @@ from bridge import Bridge
 from native import Native, inventory, sha
 from cases import run as conformance, canonical, uid
 from results import validate
+
+
+CONTROL_FILES = ('ted/stead-team-client.hoon', 'lib/stead-codec.hoon', 'lib/stead-delivery.hoon',
+                 'mar/stead-command-3.hoon', 'mar/stead-query-3.hoon',
+                 'mar/stead-result-3.hoon', 'mar/stead-updates-3.hoon')
+
+
+def fixture_config(now):
+    if type(now) is not int or not 0 < now < 2**64 - 7200000:
+        raise ValueError('Native fixture time differs')
+    return {'protocol': 'stead.team-config/1', 'expected_revision': '0', 'home': '~zod',
+        'origin': 'https://home.localhost:8443', 'organization_id': uid(5), 'team_id': uid(6),
+        'custody': 'local-disposable', 'runtime': 'isolated-fake',
+        'bindings': {'~' + ship: {'principal_id': uid(principal), 'binding_id': uid(binding), 'binding_revision': '1',
+                    'active': 'yes', 'expires_at_ms': str(now + 7200000), 'display_name': name}
+                    for ship, principal, binding, name in (('bus', 102, 202, 'Public consumer'), ('nec', 104, 204, 'Control member'))},
+        'project_creators': {uid(102): 'yes', uid(104): 'yes'}}
+
+
+def fixture_call(home, control, mode, value, route=None, *, timeout=75):
+    if home is None or home.ship != 'zod':
+        raise ValueError('Fixed Home required')
+    raw = canonical(value).encode()
+    business = mode in ('command', 'query', 'updates')
+    if business:
+        if control is None or control is home or control.ship != 'nec':
+            raise ValueError('Distinct individual control member required')
+        if route is not None:
+            raise ValueError('Business result route is derived from the actual member')
+        sender = control
+        digest = hashlib.sha256(('stead.' + mode + '/3').encode() + b'\0' + raw).hexdigest()
+        route = '/v3/result/~nec/' + uid(204) + '/1/' + value['request_id'] + '/' + digest
+    elif mode in ('configure', 'bootstrap') and route is not None:
+        sender = home
+    else:
+        raise ValueError('Unsupported trusted fixture operation')
+    result = team_conn.run(sender.binary, sender.pier / '.urb/conn.sock', mode, route, raw, timeout=timeout)
+    sender.commands.append({'owner_mode': mode, 'result': result})
+    if result['outcome'] is None:
+        raise ValueError('Fixture operation did not return a result')
+    value_out = result['outcome']['json']
+    if business:
+        validate(mode, value, value_out, '~nec')
+    return value_out
+
+
+def bootstrap_home(home, control, guard, attempts):
+    # Configuration schedules projection work. Admission waits for the actual
+    # bootstrap ACK; only an explicit native poke refusal can be retried.
+    deadline = time.monotonic() + 180
+    for _ in range(3):
+        guard()
+        remaining = deadline - time.monotonic()
+        if remaining <= 0:
+            break
+        nonce = secrets.token_hex(32)
+        value = fixture_call(home, control, 'bootstrap', {'protocol': 'stead.bootstrap/1', 'nonce': nonce},
+                             '/bootstrap/' + nonce, timeout=min(75, remaining))
+        attempts.append({'nonce': nonce, 'response_sha256': hashlib.sha256(canonical(value).encode()).hexdigest(),
+                         **{key: value.get(key) for key in ('protocol', 'status', 'kind')}})
+        if time.monotonic() >= deadline:
+            raise TimeoutError('Native bootstrap acknowledgement arrived after deadline')
+        if (set(value) == {'protocol', 'status', 'home', 'nonce', 'incarnation'}
+                and value['protocol'] == 'stead.bootstrap/1' and value['status'] == 'ready'
+                and value['home'] == '~zod' and value['nonce'] == nonce
+                and isinstance(value['incarnation'], str) and re.fullmatch(r'[0-9a-f]{64}', value['incarnation'])):
+            return value
+        if not (value.get('protocol') == 'stead.test-terminal/1' and value.get('status') == 'failed'
+                and value.get('kind') == 'poke-fail'):
+            raise ValueError('Native bootstrap acknowledgement differs')
+        time.sleep(.1)
+    raise TimeoutError('Native bootstrap readiness not acknowledged')
+
+
+def close_native(role, native, cleanup, directory=Path('/state')):
+    if native is None:
+        return True
+    clean = True
+    try:
+        cleanup[role] = native.stop()
+        if not cleanup[role]['clean']:
+            raise RuntimeError(role + ' native cleanup was not clean')
+    except BaseException as error:
+        clean = False
+        cleanup[role + '_error'] = str(error)
+    try:
+        (directory / (role + '-transcript.json')).write_text(json.dumps(native.commands))
+    except BaseException as error:
+        clean = False
+        cleanup[role + '_transcript_error'] = str(error)
+    return clean
 
 
 def consumer_command():
@@ -44,11 +137,11 @@ def main():
     stopped = threading.Event()
     signal.signal(signal.SIGTERM, lambda *_: stopped.set())
     signal.signal(signal.SIGINT, lambda *_: stopped.set())
-    report = {'status': 'fail', 'classification': 'real-native-public-sdk-two-fresh-fakes',
+    report = {'status': 'fail', 'classification': 'real-native-public-sdk-three-fresh-fakes',
               'qualifies_phase': False, 'checks': [], 'calls': []}
     path = Path('/state/report.json')
     started = time.monotonic()
-    home = process = bridge = None
+    home = control = process = bridge = None
     log = None
     child_done = False
     cleaning = threading.Event()
@@ -76,8 +169,10 @@ def main():
         while not watchdog_stop.wait(.25):
             try:
                 guard()
-                if not cleaning.is_set() and home is not None and home.process is not None and home.process.poll() is not None:
-                    raise RuntimeError('SDK authority child exited unexpectedly')
+                if not cleaning.is_set():
+                    for native in (home, control):
+                        if native is not None and native.process is not None and native.process.poll() is not None:
+                            raise RuntimeError('SDK trusted native child exited unexpectedly')
                 if not cleaning.is_set() and bridge is not None:
                     bridge.check()
             except BaseException as error:
@@ -85,7 +180,8 @@ def main():
                 # No native exchange, protocol lock or cleanup wait here.
                 if bridge is not None:
                     bridge.opened.clear()
-                for child in (process, home.process if home is not None else None):
+                for child in (process, home.process if home is not None else None,
+                              control.process if control is not None else None):
                     try:
                         if child is not None and child.poll() is None:
                             child.terminate()
@@ -110,18 +206,7 @@ def main():
         return response['result']
 
     def owner(mode, value, route=None):
-        raw = canonical(value).encode()
-        if route is None:
-            digest = hashlib.sha256(('stead.' + mode + '/3').encode() + b'\0' + raw).hexdigest()
-            route = '/v3/result/~zod/' + uid(204) + '/1/' + value['request_id'] + '/' + digest
-        result = team_conn.run(home.binary, home.pier / '.urb/conn.sock', mode, route, raw)
-        home.commands.append({'owner_mode': mode, 'result': result})
-        if result['outcome'] is None:
-            raise ValueError('Owner operation did not return a result')
-        value_out = result['outcome']['json']
-        if mode in ('command', 'query', 'updates'):
-            validate(mode, value, value_out, '~zod')
-        return value_out
+        return fixture_call(home, control, mode, value, route)
 
     def sdk(mode, value):
         raw = value if isinstance(value, str) else canonical(value)
@@ -162,7 +247,8 @@ def main():
         checkpoint('fresh-public-consumer-compile')
         compiled = rpc('compile', timeout=1500)
         report['consumer_build'] = compiled
-        check('public-compilation-precedes-home', not Path('/state/zod').exists() and home is None)
+        check('public-compilation-precedes-home', not Path('/state/zod').exists()
+              and not Path('/state/nec').exists() and home is None and control is None)
         check('public-sample-and-four-marks-compiled', compiled['compiled']['status'] == 'compiled')
         isolation = rpc('isolation', {'ports': [23451], 'abstract': abstract_name})
         report['consumer_isolation_before_home'] = isolation
@@ -173,33 +259,50 @@ def main():
         check('fresh-home-has-no-stead-app', home.dojo('(lien ~(tap in .^((set [@tas ?]) %ge /=base=/$)) |=([name=@tas live=?] =(name %stead-home)))').strip() == '%.n')
         report['home_installed'] = home.install('/native')
         home.dojo('|start %stead-home')
-        now = int(home.dojo('(div (mul 1.000 (sub now ~1970.1.1)) ~s1)').strip().replace('.', ''))
-        config = {'protocol': 'stead.team-config/1', 'expected_revision': '0', 'home': '~zod',
-            'origin': 'https://home.localhost:8443', 'organization_id': uid(5), 'team_id': uid(6),
-            'custody': 'local-disposable', 'runtime': 'isolated-fake',
-            'bindings': {'~' + ship: {'principal_id': uid(principal), 'binding_id': uid(binding), 'binding_revision': '1',
-                        'active': 'yes', 'expires_at_ms': str(now + 7200000), 'display_name': name}
-                        for ship, principal, binding, name in (('bus', 102, 202, 'Public consumer'), ('zod', 104, 204, 'Synthetic owner'))},
-            'project_creators': {uid(102): 'yes', uid(104): 'yes'}}
-        check('owner-local-configuration', owner('configure', config, '/') == {})
-        nonce = secrets.token_hex(32)
-        boot = owner('bootstrap', {'protocol': 'stead.bootstrap/1', 'nonce': nonce}, '/bootstrap/' + nonce)
-        check('real-home-bootstrap-and-assets', boot.get('status') == 'ready' and boot.get('home') == '~zod' and boot.get('nonce') == nonce)
         report['home_proof'] = home.proof()
         own_ports = set(compiled['boot']['proof']['lens_ports']) | {18081}
         home_ports = set(report['home_proof']['lens_ports']) | {18080}
-        # A numeric loopback port can name the consumer's own control listener;
-        # prove separate namespace ownership and also test live Home-only ports.
-        ports = [23451, *sorted(home_ports - own_ports)]
-        report['consumer_isolation_after_home'] = rpc('isolation', {'ports': ports, 'abstract': abstract_name})
+        # This existing read-only RPC also keeps the consumer's bounded request
+        # wait from spanning two sequential trusted cold boots.
+        report['consumer_isolation_after_home'] = rpc('isolation', {
+            'ports': [23451, *sorted(home_ports - own_ports)], 'abstract': abstract_name})
         check('control-ingress-stays-in-home-namespace', report['consumer_isolation_after_home']['abstract_denied']
               and report['home_proof']['namespaces']['net'] != isolation['native']['namespaces']['net'])
+        checkpoint('fresh-control-member')
+        control = Native('nec', 31338, guard)
+        report['control_member_boot'] = control.start()
+        check('control-member-is-individual', control.dojo('our').strip() == '~nec')
+        staging = Path('/state/control-install')
+        staging.mkdir()
+        for name in CONTROL_FILES:
+            target = staging / name
+            target.parent.mkdir(parents=True, exist_ok=True)
+            shutil.copyfile(Path('/native') / name, target)
+        report['control_member_installed'] = control.install(staging)
+        check('control-member-installed-exact-adapter', report['control_member_installed']
+              == {name: before[name] for name in CONTROL_FILES})
+        now = int(home.dojo('(div (mul 1.000 (sub now ~1970.1.1)) ~s1)').strip().replace('.', ''))
+        check('owner-local-configuration', owner('configure', fixture_config(now), '/') == {})
+        report['bootstrap_attempts'] = []
+        boot = bootstrap_home(home, control, guard, report['bootstrap_attempts'])
+        check('real-home-bootstrap-and-assets', boot.get('status') == 'ready' and boot.get('home') == '~zod'
+              and boot.get('nonce') == report['bootstrap_attempts'][-1]['nonce'])
+        report['control_member_proof'] = control.proof()
+        control_ports = set(report['control_member_proof']['lens_ports']) | {18082}
+        # A numeric loopback port can name the consumer's own control listener;
+        # prove separate namespace ownership and also test live Home-only ports.
+        ports = [23451, *sorted((home_ports | control_ports) - own_ports)]
+        report['consumer_isolation_after_control_member'] = rpc('isolation', {'ports': ports, 'abstract': abstract_name})
+        check('control-member-stays-in-trusted-namespace', report['consumer_isolation_after_control_member']['abstract_denied']
+              and report['control_member_proof']['namespaces'] == report['home_proof']['namespaces'])
         # The trusted relay owns only the fixed two UDP aliases. No queued
         # pre-admission data is released; discarded fake discovery can retry.
         report['consumer_admission'] = rpc('open')
         bridge.admit()
         checkpoint('public-native-conformance')
         conformance(sdk, owner, check, now)
+        check('control-member-source-unchanged', inventory(staging) == report['control_member_installed']
+              and control.readback(report['control_member_installed']))
         report['status'] = 'pass'
     except BaseException as error:
         report['error'] = type(error).__name__ + ': ' + str(error)
@@ -245,19 +348,9 @@ def main():
             except BaseException as error:
                 report['status'] = 'fail'
                 cleanup['bridge_error'] = str(error)
-        if home is not None:
-            try:
-                cleanup['home'] = home.stop()
-                if not cleanup['home']['clean']:
-                    raise RuntimeError('Home native cleanup was not clean')
-            except BaseException as error:
+        for role, native in (('control_member', control), ('home', home)):
+            if not close_native(role, native, cleanup):
                 report['status'] = 'fail'
-                cleanup['home_error'] = str(error)
-            try:
-                Path('/state/home-transcript.json').write_text(json.dumps(home.commands))
-            except BaseException as error:
-                report['status'] = 'fail'
-                cleanup['transcript_error'] = str(error)
         tcp.close()
         abstract.close()
         if log is not None:

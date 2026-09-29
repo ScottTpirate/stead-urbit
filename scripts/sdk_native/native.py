@@ -1,4 +1,4 @@
-"""Fixed fresh fake-ship operations shared by the two trusted SDK controllers."""
+"""Fixed fresh fake-ship operations shared by the trusted SDK controllers."""
 import hashlib
 import json
 import os
@@ -35,9 +35,11 @@ def inventory(directory):
 
 class Native:
     def __init__(self, ship, port, guard):
-        if (ship, port) not in (('zod', 31337), ('bus', 31519)):
+        ports = {'zod': (31337, 18080), 'bus': (31519, 18081), 'nec': (31338, 18082)}
+        if ship not in ports or ports[ship][0] != port:
             raise ValueError('Fixed fresh synthetic identity required')
         self.ship, self.port, self.guard = ship, port, guard
+        self.http_port = ports[ship][1]
         self.pier = Path('/state') / ship
         if self.pier.exists() or self.pier.is_symlink():
             raise ValueError('SDK qualification requires a new empty pier')
@@ -54,7 +56,7 @@ class Native:
     def start(self):
         self.guard()
         argv = [self.binary, '-t', '-L', '--no-dock', '--loom', '31',
-                '-b', '127.0.0.1', '-p', str(self.port), '--http-port', '18080' if self.ship == 'zod' else '18081',
+                '-b', '127.0.0.1', '-p', str(self.port), '--http-port', str(self.http_port),
                 '-F', self.ship, '-B', '/runtime/downloads/' + self.lock['boot_artifact']['archive'],
                 '-A', '/kernel/pkg/arvo', '-c', str(self.pier)]
         self.process = self.launcher.spawn(argv, stdin=subprocess.DEVNULL,

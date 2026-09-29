@@ -1,6 +1,7 @@
 """Finite public-SDK conformance cases; no simulated business state."""
 import hashlib
 import json
+from results import ACTORS
 
 
 def uid(number):
@@ -35,7 +36,7 @@ def run(sdk, owner, check, now):
 
     def accepted(value, result, actor='~bus'):
         digest = hashlib.sha256(b'stead.command/3\0' + canonical(value).encode()).hexdigest()
-        principal, binding = (102, 202) if actor == '~bus' else (104, 204)
+        principal, binding = ACTORS[actor]
         check('accepted:' + value['operation'] + ':' + value['request_id'],
             result.get('protocol') == 'stead.receipt/3' and result.get('status') == 'accepted' and result.get('request_id') == value['request_id']
             and result.get('identity_ship') == actor and result.get('authentication') == 'native-sender/1'
@@ -101,11 +102,11 @@ def run(sdk, owner, check, now):
 
     # An actual independent owner creates and explicitly grants a second scope.
     owned = command('project.create', uid(2), 0, project_payload | {'project_key': 'SDKOWNER'}, uid(2))
-    accepted(owned, owner('command', owned), '~zod')
+    accepted(owned, owner('command', owned), '~nec')
     check('existing-ungranted-scope-denied', sdk('query', query('project', uid(2))).get('error') == 'denied_or_not_found')
     grant = command('policy.grant', uid(2), 1, {'grant_id': uid(22), 'principal_id': uid(102),
         'role': 'contributor', 'expires_at_ms': str(now + 3600000)}, uid(2))
-    accepted(grant, owner('command', grant), '~zod')
+    accepted(grant, owner('command', grant), '~nec')
     handle = sdk('updates', update('open', kind='work', project_id=uid(2)))
     check('public-watch-open', handle.get('status') == 'watching' and len(handle.get('watch_id', '')) == 64
           and len(handle.get('cursor', '')) == 64 and handle.get('rows') == {})
@@ -113,7 +114,7 @@ def run(sdk, owner, check, now):
     check('watch-before-snapshot-matches-generation', snapshot.get('status') == 'read'
           and snapshot.get('generation') == handle.get('generation') and snapshot.get('rows') == {})
     queued = command('work.create', uid(12), 0, work_payload, uid(2))
-    accepted(queued, owner('command', queued), '~zod')
+    accepted(queued, owner('command', queued), '~nec')
     observed = sdk('updates', update('poll', handle))
     check('public-watch-delivers-authorized-invalidation', observed.get('status') == 'updated'
           and observed.get('rows', {}).get('0', {}).get('sequence') == '1'
@@ -128,13 +129,18 @@ def run(sdk, owner, check, now):
     check('public-new-handle-still-live', current.get('status') == 'updated')
     replay = sdk('updates', update('poll', resumed))
     check('public-replayed-cursor-requires-refresh', replay.get('status') == 'refresh_required' and replay.get('rows') == {})
-    check('public-watch-cancellation-idempotent', sdk('updates', update('cancel', current)).get('status') == 'cancelled'
-          and sdk('updates', update('cancel', current)).get('status') == 'cancelled')
+    cancellable = sdk('updates', update('open', kind='work', project_id=uid(2)))
+    check('public-cancel-target-is-live', cancellable.get('status') == 'watching')
+    check('public-live-watch-cancelled', sdk('updates', update('cancel', cancellable)).get('status') == 'cancelled')
+    cancelled = sdk('updates', update('poll', cancellable))
+    check('cancelled-public-watch-cannot-dequeue', cancelled.get('status') == 'refresh_required'
+          and cancelled.get('rows') == {} and cancelled.get('cursor') == '' and cancelled.get('generation') == '')
+    check('public-watch-cancellation-idempotent', sdk('updates', update('cancel', cancellable)).get('status') == 'cancelled')
     revoked = sdk('updates', update('open', kind='work', project_id=uid(2)))
     queued = command('work.update', uid(12), 1, work_payload | {'title': 'Queued before revocation'}, uid(2))
-    accepted(queued, owner('command', queued), '~zod')
+    accepted(queued, owner('command', queued), '~nec')
     revoke = command('policy.revoke', uid(2), 2, {'grant_id': uid(22)}, uid(2))
-    accepted(revoke, owner('command', revoke), '~zod')
+    accepted(revoke, owner('command', revoke), '~nec')
     final = sdk('updates', update('poll', revoked))
     check('revoked-public-subscriber-discards-queued-data', final.get('status') == 'refresh_required'
           and final.get('rows') == {} and final.get('cursor') == '' and final.get('generation') == '')
