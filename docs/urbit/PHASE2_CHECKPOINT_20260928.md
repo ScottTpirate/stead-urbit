@@ -761,3 +761,20 @@ merged the reviewed hosted-controller pin into main at
 is executing controller/candidate `7f113a1573e78de3d6c839508cfd8abd286be17b`.
 Independent evidence review cleared the local pass and closed guard; actual
 hosted and SDK outcomes remain pending.
+
+## Final host check passed; lower-CPU attempt retained
+
+The final `make check` at `cf63289` passed planning/contract checks and 660 of 661
+discovered tests in 172.791 seconds at 25% of CPU 19. One optional retained local
+artifact check was skipped; the authored reader checks still executed. These
+are host/static/mocked and actual Linux namespace/process controls, separate
+from Hoon and browser qualification.
+
+An earlier attempt on unchanged source at 10% of the same CPU failed one host
+network-control test after its peer barrier closed; 659 passed and one was
+skipped in 439.450 seconds. The initiating monitor error was not captured, so
+CPU pressure remains an inference. The five focused controls then passed
+unchanged at 25% in 17.022 seconds before the complete successful rerun. No
+source, native deadline, thermal ceiling or native CPU quota was relaxed.
+All three exact logs are retained in the
+[host evidence index](evidence/2026-09-29/host-final-cf63289/index.json).

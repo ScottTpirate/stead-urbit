@@ -1,0 +1,67 @@
+{
+  "format": 1,
+  "classification": "host-static-mocked-and-linux-control-tests",
+  "qualifies_phase": false,
+  "source_commit": "cf632895fae1094529e6b946b4cd7cb5b1d6caf7",
+  "source_dirty_before": false,
+  "source_dirty_after": false,
+  "cpu_affinity": [
+    19
+  ],
+  "files": {
+    "failed-10pct.log": {
+      "path": "failed-10pct.log.gz",
+      "raw_bytes": 7519,
+      "raw_sha256": "7ab5d38fca2c1dad8922f101edd46850ad9779dc9d8debf70e5ae8b3e7c36117",
+      "gzip_sha256": "6039fb85a3c68f66562e022a20d29caa51fb3212029b3f24dab9f59351ee8219"
+    },
+    "peer-focused-25pct.log": {
+      "path": "peer-focused-25pct.log.gz",
+      "raw_bytes": 926,
+      "raw_sha256": "74bc2bea655df1157ac41f833157701bf324cb52b1e7c67e728b78ce09e57535",
+      "gzip_sha256": "42f776e4cd8eaccdbd48e9f12091954b82516ff5112ae94c36d9c39c781f647a"
+    },
+    "passed-25pct.log": {
+      "path": "passed-25pct.log.gz",
+      "raw_bytes": 6048,
+      "raw_sha256": "94f895e2b9e47b7ef83ef35c3c212037f3f449d210db94903c9399765a0c71ae",
+      "gzip_sha256": "76a6450896677eda009ba769cb87863c6708ca5445e46ab7363ca624a1d3b512"
+    }
+  },
+  "runs": [
+    {
+      "command": "make check",
+      "cpu_quota": "10%",
+      "status": "fail",
+      "tests_discovered": 661,
+      "passed": 659,
+      "failed": 1,
+      "skipped": 1,
+      "seconds": 439.45,
+      "failed_test": "test_native_peer_fence.NativePeerFenceTests.test_actual_udp_admission_revocation_and_full_policy_failure",
+      "observed_error": "ValueError: Native peer barrier closed",
+      "cause": "The initiating monitor error was not retained. CPU pressure is a possible explanation, not a confirmed diagnosis."
+    },
+    {
+      "command": "python3 -B -m unittest discover -s tests/urbit -p test_native_peer_fence.py -v",
+      "cpu_quota": "25%",
+      "status": "pass",
+      "tests_discovered": 5,
+      "passed": 5,
+      "seconds": 17.022
+    },
+    {
+      "command": "make check",
+      "cpu_quota": "25%",
+      "status": "pass",
+      "tests_discovered": 661,
+      "passed": 660,
+      "failed": 0,
+      "skipped": 1,
+      "seconds": 172.791
+    }
+  ],
+  "skip": "One optional retained-local-artifact test was skipped; authored reader tests execute.",
+  "scope": "Planning and frozen contract checks also passed. Tests include mocks and real disposable Linux namespace/process controls; no Hoon or browser qualification. The focused five are included in the full suite. No source, native guard deadline, thermal ceiling or native CPU limit changed between runs.",
+  "execution_metadata_provenance": "CPU quotas, affinity and before/after clean-source checks were observed in integrator commands. The retained logs independently establish test outcomes and elapsed times."
+}
