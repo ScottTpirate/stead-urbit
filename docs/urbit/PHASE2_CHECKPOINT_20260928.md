@@ -370,3 +370,38 @@ Package verification and exact Git-source checks passed. All 81 SDK host
 controls passed in 11.600 seconds, including existing actual Linux namespace
 controls. Independent review cleared both metadata updates; public Hoon exports
 are unchanged, and native consumer execution remains pending.
+
+## Acceptance review and clean browser setup, 2026-09-29
+
+Independent review found three gaps in the prepared Phase 2 coverage: deletion
+while subscribed, the 64-row retained-history boundary, and fresh contributor
+browser prerequisites. Reviewed commit `d89330ec0da287eae5b1c86e7e2389d33152f9ac`
+adds Work/document/relation deletion with active native watches, surviving-object
+and dangling-link readback, old-cursor rejection and private-delete invisibility.
+A pure native arm drives 65 accepted updates while polling, checks ordered
+delivery and exact retained sequences 1–64 then 2–65. The strict inventory now
+requires 71 positive arms, including 26 update arms, and the unchanged deliberate
+failure control. Seventeen host inventory controls and 52 host CI controls passed.
+The added Hoon and configured deletion checks still need actual native execution.
+
+The contributor guide now gives the locked npm installation, a repository-local
+cache, pinned Playwright Firefox provisioning, and separate Linux host requirements.
+A fresh isolated dependency directory, empty npm cache and empty browser directory
+passed installation, TypeScript, all 35 client/build checks and a production build.
+The 12 resulting assets (296,911 bytes total) exactly match the current packaged
+build. Firefox 155.0 ran one existing rendered case against a mocked Home with
+unchanged inputs and verified empty browser cgroup. The host certificate tool
+created an empty private test database. The first build attempt retained a missing
+LICENSE error caused by the operator's partial fixture copy; copying the original
+repository LICENSE unchanged resolved it. This is verified browser setup and
+mocked-Home readiness, not native/browser acceptance. See the
+[bounded setup observation](evidence/2026-09-29/phase2-preparation/clean-browser-setup.json).
+
+The first fresh local four-ship startup on the repaired runtime stopped at the
+unchanged 90°C ceiling after 843.490 seconds while booting the second ship. No
+application checks ran and no clean seed was created. The entire stopped fixture
+and failure evidence were preserved without modifying their contents. See the
+[failed startup observation](evidence/2026-09-29/phase2-preparation/cold-start.json).
+This remains failed execution evidence; successful dependency setup does not
+qualify it. The next independent SDK attempt and hosted runs must retain their
+actual results before any milestone closure.
