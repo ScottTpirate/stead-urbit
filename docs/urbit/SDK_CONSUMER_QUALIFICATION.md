@@ -20,8 +20,8 @@ records execution-input equivalence, not a new SDK run.
 At `874a773`, the shared `execution_policy.py` reader is an actually used SDK
 dependency and has changed. The equivalence statement above does not extend to
 this revision. The SDK runner, consumer, public package, business authority
-Hoon and runtime are unchanged; the only later native desk edit is the unused
-synthetic browser probe. The reader's five real atomic-replacement host controls
+Hoon and runtime are unchanged; at that revision the later native desk edit is
+the unused synthetic browser probe. The reader's five real atomic-replacement host controls
 are retained in the [host evidence](evidence/2026-09-29/atomic-reader-host/index.json).
 
 Independent review permits composing the retained SDK result with qualification
@@ -34,7 +34,13 @@ same read-only execution directory, lease reader, writer, policy checks and
 owned guardian. The new retry branch has not executed inside an SDK run. This
 is not a new SDK pass, and it is not unchanged-input equivalence. The subsequent
 `04262a2` correction changes only the browser's ordinary-Git observation driver,
-which the SDK lane does not execute. Changes to the SDK consumer, mounts,
+which the SDK lane does not execute. At `e7c81fd`, the Git export generator and
+early build probe change. The SDK installs and checks these files as desk data,
+but neither compiles nor invokes them. Independent review confirmed the SDK's
+actual invocation inventory is unaffected. The broad installed-file inventory
+is different; this is an explicit scope assessment, not unchanged-inventory
+equivalence or a new SDK run. Fresh configured and CI qualification of the
+affected generator path is still pending. Changes to the SDK consumer, mounts,
 watchdog or execution path require affected-lane execution.
 
 The September 29 run at `cd75365` booted its fresh consumer and compiled the

@@ -2,7 +2,7 @@
 
 Recorded 2026-09-28 UTC; updated 2026-09-29 UTC. Phase 2 is incomplete. Its six
 milestone issues (#9, #10, #14, #21, #22 and #29) remain open. The reviewed Git
-observation correction is pushed at `04262a2f511e26b75e08812068174f345deb2fee`.
+observation corrections are pushed at `e7c81fdc833f9966d65c58e0d18024acab66592c`.
 The earlier Phase 0/1 record remains tied to its own source.
 
 The configured team at `874a773` passed all 757 native checks in 1,011.104
@@ -21,7 +21,23 @@ hexadecimal atom, which produced a recorded syntax error and then timed out.
 [The failed closeout](evidence/2026-09-29/browser-git-failure-874a773/index.json)
 remains failed. The small formatter correction preserves exact Git OIDs and
 object bytes; nine focused host tests and independent source review passed.
-Fresh configured/native browser and Git execution are still required.
+The next configured run at `04262a2` passed 757 checks in 1,018.569 seconds,
+including the positive unit inventory, deliberate failure and four cold
+restarts. Its whole guard closed after 1,592.213 seconds with exit zero, no
+cleanup errors and no remaining owned cgroup. Independent review verified the
+[native evidence](evidence/2026-09-29/team-native-04262a2/index.json).
+Firefox again passed all 34 journey observations, but the subsequent Git
+observation exposed a generator return-aura mismatch (`@t` versus `@ux`).
+The [failed closeout](evidence/2026-09-29/browser-git-aura-failure-04262a2/index.json)
+remains failed; no Git objects were materialized.
+
+The two-line correction at `e7c81fd` explicitly casts the existing bytes through
+the base atom type and imports this helper into the early build probe. It
+preserves exact Git object bytes and makes this compiler error detectable
+before the later browser journey. Independent source review passed. Fresh
+configured native execution is in progress; the early actual native build probe
+has compiled successfully. Browser and Git execution follow a passing native
+run. Full acceptance is still pending.
 
 The independent SDK at `7f113a1` passed 64 assertions and 41 public API calls,
 with exact package/source binding and clean shutdown. The shared reader change
@@ -37,7 +53,11 @@ arms, the deliberately failing control, migration and negative controls. The
 cleanup. Independent review reconciled the exact inputs and all six resource
 controls. [Hosted evidence](evidence/2026-09-29/ci-36540906136/index.json) remains
 bound to that source; the subsequent browser Git formatter is outside its
-executed path. Its predecessor
+executed path. The later `e7c81fd` build-probe change does execute in CI, so a
+fresh [run 36548243535](https://github.com/ScottTpirate/stead-urbit/actions/runs/36548243535)
+is qualifying controller/candidate `e7c81fd` under workflow
+`96102116a7b5b42db53999618e70479e08ef5a79`. Reviewed pin-only PR #80 is merged;
+the new run is not yet a pass. The earlier run's predecessor
 [36535031127](https://github.com/ScottTpirate/stead-urbit/actions/runs/36535031127)
 failed after 677 passing checks at ingress admission; the initiating retirement
 cause was not recorded. Its [failed evidence](evidence/2026-09-29/ci-36535031127/index.json)

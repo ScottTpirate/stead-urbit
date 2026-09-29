@@ -1,0 +1,191 @@
+{
+  "format": 1,
+  "classification": "failed-real-browser-native-git-closeout",
+  "qualifies_phase": false,
+  "source_commit": "04262a2f511e26b75e08812068174f345deb2fee",
+  "run": "browser-native-20260929T085828Z",
+  "status": "fail",
+  "browser_journey_status": "pass",
+  "browser_observations": 34,
+  "checks": [
+    {
+      "name": "bus-individual-native-owner-approved-session",
+      "passed": true
+    },
+    {
+      "name": "keyboard-principal-signin-approval-error-recovery-and-live-status",
+      "passed": true
+    },
+    {
+      "name": "nec-individual-native-owner-approved-session",
+      "passed": true
+    },
+    {
+      "name": "unsent-project-visible-original-request-retry-with-no-selected-project",
+      "passed": true
+    },
+    {
+      "name": "unsent-collection-receipt-remains-unconfirmed-after-current-parent-authorization",
+      "passed": true
+    },
+    {
+      "name": "native-reader-work-view-without-write-control",
+      "passed": true
+    },
+    {
+      "name": "browser-command-committed-with-native-approved-attribution",
+      "passed": true
+    },
+    {
+      "name": "second-individual-receives-live-committed-browser-work",
+      "passed": true
+    },
+    {
+      "name": "native-accepted-event-renders-same-instant-in-two-local-timezones",
+      "passed": true
+    },
+    {
+      "name": "member-cookie-is-secure-httponly-host-only-and-not-owner-auth",
+      "passed": true
+    },
+    {
+      "name": "member-session-cannot-promote-raw-eyre-channel-or-scry-to-home-authority",
+      "passed": true
+    },
+    {
+      "name": "unbound-individual-browser-cannot-start-a-member-session",
+      "passed": true
+    },
+    {
+      "name": "organization-owner-cookie-does-not-create-member-session-or-raw-home-read",
+      "passed": true
+    },
+    {
+      "name": "native-private-markdown-saves-have-git-oids-and-inert-preview",
+      "passed": true
+    },
+    {
+      "name": "private-doc-edits-preserve-reader-projections-and-only-publication-invalidates",
+      "passed": true
+    },
+    {
+      "name": "selected-page-published-without-private-collection-or-unselected-page",
+      "passed": true
+    },
+    {
+      "name": "shared-doc-edit-reloads-exact-markdown-revision-and-new-git-receipt",
+      "passed": true
+    },
+    {
+      "name": "private-canary-search-owner-positive-reader-negative",
+      "passed": true
+    },
+    {
+      "name": "reader-projections-exclude-private-page-canary",
+      "passed": true
+    },
+    {
+      "name": "browser-links-published-page-to-authorized-work",
+      "passed": true
+    },
+    {
+      "name": "two-native-principals-conflict-compare-explicit-rebase-and-live-refresh",
+      "passed": true
+    },
+    {
+      "name": "native-commit-with-injected-response-loss-recovers-original-receipt",
+      "passed": true
+    },
+    {
+      "name": "two-tab-csrf-rotation-and-unconfirmed-resume-retain-original-pending-receipt",
+      "passed": true
+    },
+    {
+      "name": "explicit-support-download-matches-reviewed-content-free-preview",
+      "passed": true
+    },
+    {
+      "name": "actual-browser-offline-preserves-draft-and-requires-explicit-original-request-retry",
+      "passed": true
+    },
+    {
+      "name": "keyboard-project-and-work-creation-general-profile-unicode-long-title",
+      "passed": true
+    },
+    {
+      "name": "native-long-content-at-small-large-layouts-and-distinct-timezones",
+      "passed": true
+    },
+    {
+      "name": "new-general-project-does-not-implicitly-grant-another-member",
+      "passed": true
+    },
+    {
+      "name": "native-grant-revocation-clears-rendered-project-and-local-draft",
+      "passed": true
+    },
+    {
+      "name": "native-browser-assets-measured-and-no-business-data-in-url-or-storage",
+      "passed": true
+    },
+    {
+      "name": "logout-clears-rendered-business-state",
+      "passed": true
+    },
+    {
+      "name": "nec-individual-native-owner-approved-session",
+      "passed": true
+    },
+    {
+      "name": "explicit-account-change-does-not-restore-former-private-state",
+      "passed": true
+    },
+    {
+      "name": "bus-individual-native-owner-approved-session",
+      "passed": true
+    }
+  ],
+  "browser": "155.0",
+  "node": "v24.21.0",
+  "response_capture_complete": true,
+  "response_capture_error": false,
+  "browser_cleanup": {
+    "process_reaped": true,
+    "cgroup": "/user.slice/user-1000.slice/user@1000.service/app.slice/stead-browser-8f89779d3c4a487f7faf8a79b313ac2b.service",
+    "empty": true,
+    "state": "inactive"
+  },
+  "error": "RuntimeError: Native Git observation is not one atom",
+  "native_prerequisite": {
+    "file": "team-check-20260929T084051Z.json",
+    "sha256": "463a7a1dbcf61650232405f08b138ac8bebde0d32d407e9e63538ddf0a499835"
+  },
+  "private_files": {
+    "browser-report.json": {
+      "path": ".runtime/browser-native-20260929T085828Z/browser-report.json",
+      "bytes": 287662,
+      "sha256": "3a49c473d6d8587063b0012ce32c3e23f940916263b88e32eb4d1f14da9f1a02"
+    },
+    "transport-report.json": {
+      "path": ".runtime/browser-native-20260929T085828Z/transport-report.json",
+      "bytes": 3229,
+      "sha256": "900f8458a9153d628467778910636c3a03b63a562413d09aaf3ea7e5f3a37f7e"
+    },
+    "browser-process.json": {
+      "path": ".runtime/browser-native-20260929T085828Z/browser-process.json",
+      "bytes": 579,
+      "sha256": "f78d1ed12de7e842bb5e1d23271f3d3b2c10ca8f62dcbe09076d8c187b8e635d"
+    },
+    "git-fixture.json": {
+      "path": ".runtime/browser-native-20260929T085828Z/git-fixture.json",
+      "bytes": 1820,
+      "sha256": "d1377537969441c852fe1c7b69f1c6fa7f337bbdaac7c1b2f816494f551e2281"
+    },
+    "team-git-20260929T085828Z.json": {
+      "path": ".piers/fakes/logs/team-git-20260929T085828Z.json",
+      "bytes": 728,
+      "sha256": "20e1b698314adbd6fece46414817d718b08fe02879223854d0c966c5d38e06df"
+    }
+  },
+  "diagnosis": "The canonical command parsed. Compiling stead-team-git-export then failed at its final return: the declared result aura is @ux, but canonical JSON bytes have aura @t. The retained native log records -need.@ux, -have.@t and nest-fail at line44. No manifest or Git objects were accepted. The failed fixture was stopped and preserved; its prepared cookie is not eligible for an expiry follow-up."
+}
