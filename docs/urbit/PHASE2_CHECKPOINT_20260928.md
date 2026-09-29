@@ -34,10 +34,16 @@ remains failed; no Git objects were materialized.
 The two-line correction at `e7c81fd` explicitly casts the existing bytes through
 the base atom type and imports this helper into the early build probe. It
 preserves exact Git object bytes and makes this compiler error detectable
-before the later browser journey. Independent source review passed. Fresh
-configured native execution is in progress; the early actual native build probe
-has compiled successfully. Browser and Git execution follow a passing native
-run. Full acceptance is still pending.
+before the later browser journey. Independent source review passed. The
+configured run at `e7c81fd` then passed all 757 checks in 1,008.301 seconds,
+including the early build probe and four cold restarts. Its browser attempt
+stopped at the unchanged thermal ceiling after 14 progress observations, without
+a final journey report. The native guard closed cleanly after 1,445.583 seconds;
+stopped piers, logs, ingress and browser evidence were preserved.
+[This failed browser attempt](evidence/2026-09-29/browser-thermal-e7c81fd/index.json)
+does not qualify browser, Git or expiry. A new configured run is restoring the
+same verified clean seeds for a fresh browser attempt. Full acceptance remains
+pending.
 
 The independent SDK at `7f113a1` passed 64 assertions and 41 public API calls,
 with exact package/source binding and clean shutdown. The shared reader change

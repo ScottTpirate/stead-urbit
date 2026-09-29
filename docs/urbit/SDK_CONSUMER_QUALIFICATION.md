@@ -39,8 +39,11 @@ early build probe change. The SDK installs and checks these files as desk data,
 but neither compiles nor invokes them. Independent review confirmed the SDK's
 actual invocation inventory is unaffected. The broad installed-file inventory
 is different; this is an explicit scope assessment, not unchanged-inventory
-equivalence or a new SDK run. Fresh configured and CI qualification of the
-affected generator path is still pending. Changes to the SDK consumer, mounts,
+equivalence or a new SDK run. The affected helper compiled through the early
+probe in the 757-check configured run at `e7c81fd`; its
+[closed native lifetime](evidence/2026-09-29/browser-thermal-e7c81fd/index.json)
+is separate from the subsequent thermal-stopped browser attempt. Fresh CI and
+ordinary-Git runtime qualification remain pending. Changes to the SDK consumer, mounts,
 watchdog or execution path require affected-lane execution.
 
 The September 29 run at `cd75365` booted its fresh consumer and compiled the
