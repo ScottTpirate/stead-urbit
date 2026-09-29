@@ -2,7 +2,7 @@
 
 Recorded 2026-09-28 UTC; updated 2026-09-29 UTC. Phase 2 is incomplete. Its six
 milestone issues (#9, #10, #14, #21, #22 and #29) remain open. The reviewed Git
-observation corrections are pushed at `e7c81fdc833f9966d65c58e0d18024acab66592c`.
+observation corrections are pushed at `d9115056a04fd86cf55a07fd0d8a0bf0be84caaf`.
 The earlier Phase 0/1 record remains tied to its own source.
 
 The configured team at `874a773` passed all 757 native checks in 1,011.104
@@ -41,9 +41,21 @@ stopped at the unchanged thermal ceiling after 14 progress observations, without
 a final journey report. The native guard closed cleanly after 1,445.583 seconds;
 stopped piers, logs, ingress and browser evidence were preserved.
 [This failed browser attempt](evidence/2026-09-29/browser-thermal-e7c81fd/index.json)
-does not qualify browser, Git or expiry. A new configured run is restoring the
-same verified clean seeds for a fresh browser attempt. Full acceptance remains
-pending.
+does not qualify browser, Git or expiry. The clean-seed retry passed 757 native
+checks in 1,019.822 seconds and all 34 browser journey observations. Its separate
+Git closeout still failed: the export generator's relative scry shorthand resolved
+to `/gv/gen/stead-home/hoon/`, instead of the current ship, agent and event time.
+No Git objects were materialized. Its native guard closed cleanly after 2,089.860
+seconds. The [retained failure and bounded timings](evidence/2026-09-29/browser-git-scry-failure-e7c81fd/index.json)
+remain failed evidence; the prepared expiry session is ineligible for reuse.
+
+The reviewed correction at `d911505` supplies the current event's explicit scry
+components. Three mandatory native probes now request a manifest and commit at
+actual accepted document-save OIDs before the browser journey. They verify bounded
+bytes, declared kind/length and ordinary Git object identity; the complete browser
+Git history checks remain required. Eleven focused Git host tests and 54 CI host
+controls passed. Those host tests use synthetic native replies. The fresh configured
+native run, browser/Git closeout and full acceptance remain pending.
 
 The independent SDK at `7f113a1` passed 64 assertions and 41 public API calls,
 with exact package/source binding and clean shutdown. The shared reader change
@@ -68,7 +80,11 @@ inventory, migration/negative-control attestation, all six resource controls
 and seven empty final cgroups. The guard completed after 1,687.212 seconds with
 exit zero and complete output collection. The
 [new exact hosted evidence](evidence/2026-09-29/ci-36548243535/index.json)
-retains all 14 public artifact members and their bindings. The earlier run's predecessor
+retains all 14 public artifact members and their bindings. The subsequent `d911505`
+changes affect executed CI paths, so this pass does not transfer. Reviewed pin-only
+PR #81 is merged; fresh [run 36555130587](https://github.com/ScottTpirate/stead-urbit/actions/runs/36555130587)
+is running with controller/candidate `d911505` under workflow
+`e61670c26c108f82e9812786f1693eb741a280fc`. The earlier run's predecessor
 [36535031127](https://github.com/ScottTpirate/stead-urbit/actions/runs/36535031127)
 failed after 677 passing checks at ingress admission; the initiating retirement
 cause was not recorded. Its [failed evidence](evidence/2026-09-29/ci-36535031127/index.json)

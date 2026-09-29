@@ -1,0 +1,588 @@
+{
+  "format": 1,
+  "classification": "failed-real-browser-native-git-closeout",
+  "qualifies_phase": false,
+  "source_commit": "e7c81fdc833f9966d65c58e0d18024acab66592c",
+  "run": "browser-native-20260929T095530Z",
+  "status": "fail",
+  "error": "RuntimeError: timed out",
+  "browser_journey_status": "pass",
+  "browser_observations": 34,
+  "browser": "155.0",
+  "node": "v24.21.0",
+  "response_capture_complete": true,
+  "response_capture_error": false,
+  "browser_cleanup": {
+    "process_reaped": true,
+    "cgroup": "/user.slice/user-1000.slice/user@1000.service/app.slice/stead-browser-537db1d6e6c994049d35e1b7e4bb1298.service",
+    "empty": true,
+    "state": "inactive"
+  },
+  "checks": [
+    {
+      "name": "bus-individual-native-owner-approved-session",
+      "passed": true
+    },
+    {
+      "name": "keyboard-principal-signin-approval-error-recovery-and-live-status",
+      "passed": true
+    },
+    {
+      "name": "nec-individual-native-owner-approved-session",
+      "passed": true
+    },
+    {
+      "name": "unsent-project-visible-original-request-retry-with-no-selected-project",
+      "passed": true
+    },
+    {
+      "name": "unsent-collection-receipt-remains-unconfirmed-after-current-parent-authorization",
+      "passed": true
+    },
+    {
+      "name": "native-reader-work-view-without-write-control",
+      "passed": true
+    },
+    {
+      "name": "browser-command-committed-with-native-approved-attribution",
+      "passed": true
+    },
+    {
+      "name": "second-individual-receives-live-committed-browser-work",
+      "passed": true
+    },
+    {
+      "name": "native-accepted-event-renders-same-instant-in-two-local-timezones",
+      "passed": true
+    },
+    {
+      "name": "member-cookie-is-secure-httponly-host-only-and-not-owner-auth",
+      "passed": true
+    },
+    {
+      "name": "member-session-cannot-promote-raw-eyre-channel-or-scry-to-home-authority",
+      "passed": true
+    },
+    {
+      "name": "unbound-individual-browser-cannot-start-a-member-session",
+      "passed": true
+    },
+    {
+      "name": "organization-owner-cookie-does-not-create-member-session-or-raw-home-read",
+      "passed": true
+    },
+    {
+      "name": "native-private-markdown-saves-have-git-oids-and-inert-preview",
+      "passed": true
+    },
+    {
+      "name": "private-doc-edits-preserve-reader-projections-and-only-publication-invalidates",
+      "passed": true
+    },
+    {
+      "name": "selected-page-published-without-private-collection-or-unselected-page",
+      "passed": true
+    },
+    {
+      "name": "shared-doc-edit-reloads-exact-markdown-revision-and-new-git-receipt",
+      "passed": true
+    },
+    {
+      "name": "private-canary-search-owner-positive-reader-negative",
+      "passed": true
+    },
+    {
+      "name": "reader-projections-exclude-private-page-canary",
+      "passed": true
+    },
+    {
+      "name": "browser-links-published-page-to-authorized-work",
+      "passed": true
+    },
+    {
+      "name": "two-native-principals-conflict-compare-explicit-rebase-and-live-refresh",
+      "passed": true
+    },
+    {
+      "name": "native-commit-with-injected-response-loss-recovers-original-receipt",
+      "passed": true
+    },
+    {
+      "name": "two-tab-csrf-rotation-and-unconfirmed-resume-retain-original-pending-receipt",
+      "passed": true
+    },
+    {
+      "name": "explicit-support-download-matches-reviewed-content-free-preview",
+      "passed": true
+    },
+    {
+      "name": "actual-browser-offline-preserves-draft-and-requires-explicit-original-request-retry",
+      "passed": true
+    },
+    {
+      "name": "keyboard-project-and-work-creation-general-profile-unicode-long-title",
+      "passed": true
+    },
+    {
+      "name": "native-long-content-at-small-large-layouts-and-distinct-timezones",
+      "passed": true
+    },
+    {
+      "name": "new-general-project-does-not-implicitly-grant-another-member",
+      "passed": true
+    },
+    {
+      "name": "native-grant-revocation-clears-rendered-project-and-local-draft",
+      "passed": true
+    },
+    {
+      "name": "native-browser-assets-measured-and-no-business-data-in-url-or-storage",
+      "passed": true
+    },
+    {
+      "name": "logout-clears-rendered-business-state",
+      "passed": true
+    },
+    {
+      "name": "nec-individual-native-owner-approved-session",
+      "passed": true
+    },
+    {
+      "name": "explicit-account-change-does-not-restore-former-private-state",
+      "passed": true
+    },
+    {
+      "name": "bus-individual-native-owner-approved-session",
+      "passed": true
+    }
+  ],
+  "native_prerequisite": {
+    "file": "team-check-20260929T093808Z.json",
+    "sha256": "3500579367bf598436d5c49adfa2acdf0e1499465374eb0092ec9f88e78f5336"
+  },
+  "native": {
+    "status": "pass",
+    "checks_recorded": 757,
+    "checks_passed": 757,
+    "elapsed_seconds": 1019.822,
+    "inputs_match": true,
+    "native_positive_arms": 71,
+    "native_expected_failure_arms": 1
+  },
+  "guard": {
+    "run_id": "a44b30350df89a43b58dc0153d3e3f11",
+    "status": "completed",
+    "exit_code": 0,
+    "elapsed_seconds": 2089.86,
+    "reason": null,
+    "cleanup": []
+  },
+  "owned_cgroup_absent_at_readback": true,
+  "diagnosis": "The first manifest observation timed out before materialization. Current native diagnostics show bail: 4 and /gv/gen/stead-home/hoon/. Source review against the pinned Dojo/Gall interfaces establishes that the shorthand selected a source path instead of the current event ship/time. This is separate from the corrected earlier atom syntax and aura errors. The stopped fixture was preserved; its session is ineligible for expiry follow-up.",
+  "private_files": {
+    ".piers/fakes/logs/team-check-20260929T093808Z.json": {
+      "bytes": 1160233,
+      "sha256": "3500579367bf598436d5c49adfa2acdf0e1499465374eb0092ec9f88e78f5336"
+    },
+    ".runtime/execution-runs/four-fakes-8qcacgtt/report.json": {
+      "bytes": 908602,
+      "sha256": "9c9782fdf03f9ebfe548938b9ac217df1390df660691edb8cef1d504cbb0221f"
+    },
+    ".piers/fakes/logs/team-git-20260929T095530Z.json": {
+      "bytes": 701,
+      "sha256": "1c582f61a04d31f8b2f3798afd19a75599e27ff2487dec95b2733912ae5fd909"
+    },
+    ".runtime/browser-native-20260929T095530Z/browser-report.json": {
+      "bytes": 284517,
+      "sha256": "014bb89d892d44f448db1dc69afa52d96aeecf9ac3b04a178ce8a226083063d8"
+    },
+    ".runtime/browser-native-20260929T095530Z/transport-report.json": {
+      "bytes": 3200,
+      "sha256": "564b806825b2929b9ba49dd9cccf0967f3b9b0e720b8334122312ccaaf40ff9d"
+    },
+    ".runtime/browser-native-20260929T095530Z/browser-process.json": {
+      "bytes": 579,
+      "sha256": "f95cd42fec0b0b4892c7673bc6fa43b8aeb51a1d04e608214896bb022bccb5c3"
+    },
+    ".runtime/browser-native-20260929T095530Z/git-fixture.json": {
+      "bytes": 1820,
+      "sha256": "13c313189114b79692fe708931aacc03a672cba6db4ee8dd98737632c3161081"
+    },
+    ".runtime/phase02-complete-20260927/team-e7c81fd-757-browser34-git-scry-20260929/preservation.json": {
+      "bytes": 1515,
+      "sha256": "a96d718fd5a85857ec5f2c7b8c5210e711b1012a19d90e0c878cf809d237e4be"
+    }
+  },
+  "files": {
+    "guard-report.json": {
+      "path": "guard-report.json.gz",
+      "raw_bytes": 908602,
+      "raw_sha256": "9c9782fdf03f9ebfe548938b9ac217df1390df660691edb8cef1d504cbb0221f",
+      "gzip_sha256": "5088756107ffa68811c60b2650534e876eaa2efc463cbecca0c6285d6ae56e77"
+    }
+  },
+  "request_failure_count": 5,
+  "request_failure_scope": "Five retained browser request-failure observations need individual attribution; a passed journey does not by itself classify their initiating causes.",
+  "measurements": {
+    "environment": {
+      "platform": "linux",
+      "architecture": "x64",
+      "cpu_models": [
+        "12th Gen Intel(R) Core(TM) i9-12900H"
+      ],
+      "logical_cpus": 20,
+      "memory_bytes": 67057082368,
+      "load_average_at_start": [
+        1.59,
+        1.32,
+        1.24
+      ],
+      "scope": "Synthetic Work/Docs journey; request counts include concurrent polling in the same page. Heterogeneous save samples are not a capacity percentile."
+    },
+    "native_guard_policy": {
+      "cooperative_seconds": 10,
+      "cpu_period_us": 10000,
+      "cpu_quota_us": 5000,
+      "kill_seconds": 5,
+      "sample_seconds": 1,
+      "stale_seconds": 3,
+      "start_c": 75,
+      "stop_c": 90,
+      "terminate_seconds": 10
+    },
+    "browser_resource_proof": {
+      "pid": 1921137,
+      "cgroup": "/user.slice/user-1000.slice/user@1000.service/app.slice/stead-browser-537db1d6e6c994049d35e1b7e4bb1298.service",
+      "cpu_max": "2500 10000",
+      "cpu_affinity": [
+        19
+      ]
+    },
+    "assets": {
+      "manifest_sha256": "cf46ab5c9fc334b8642c90b1b10c38e659847cbd1eb754865692be3f6e15ccd0",
+      "markdown": {
+        "path": "/stead/assets/chunk-BUZSU6Y5.js",
+        "bytes": 1293,
+        "sha256": "8d946a739bd61004103e6b8a2e010f18974c814c1e8e4583fafa7b3171a66e77"
+      }
+    },
+    "asset_timing": {
+      "before_docs": [
+        {
+          "path": "/stead/assets/app.css",
+          "encoded_body_bytes": 2351,
+          "decoded_body_bytes": 7424,
+          "transfer_bytes": 2651,
+          "duration_ms": 793
+        },
+        {
+          "path": "/stead/assets/app.js",
+          "encoded_body_bytes": 258065,
+          "decoded_body_bytes": 258065,
+          "transfer_bytes": 258365,
+          "duration_ms": 819
+        },
+        {
+          "path": "/stead/assets/chunk-E5WJYM75.js",
+          "encoded_body_bytes": 8345,
+          "decoded_body_bytes": 8345,
+          "transfer_bytes": 8645,
+          "duration_ms": 555
+        },
+        {
+          "path": "/stead/assets/chunk-SQE76S5B.js",
+          "encoded_body_bytes": 577,
+          "decoded_body_bytes": 577,
+          "transfer_bytes": 877,
+          "duration_ms": 563
+        }
+      ],
+      "after_first_preview": [
+        {
+          "path": "/stead/assets/app.css",
+          "encoded_body_bytes": 2351,
+          "decoded_body_bytes": 7424,
+          "transfer_bytes": 2651,
+          "duration_ms": 793
+        },
+        {
+          "path": "/stead/assets/app.js",
+          "encoded_body_bytes": 258065,
+          "decoded_body_bytes": 258065,
+          "transfer_bytes": 258365,
+          "duration_ms": 819
+        },
+        {
+          "path": "/stead/assets/chunk-E5WJYM75.js",
+          "encoded_body_bytes": 8345,
+          "decoded_body_bytes": 8345,
+          "transfer_bytes": 8645,
+          "duration_ms": 555
+        },
+        {
+          "path": "/stead/assets/chunk-SQE76S5B.js",
+          "encoded_body_bytes": 577,
+          "decoded_body_bytes": 577,
+          "transfer_bytes": 877,
+          "duration_ms": 563
+        },
+        {
+          "path": "/stead/assets/chunk-BUZSU6Y5.js",
+          "encoded_body_bytes": 1293,
+          "decoded_body_bytes": 1293,
+          "transfer_bytes": 1593,
+          "duration_ms": 378
+        }
+      ],
+      "after_docs": [
+        {
+          "path": "/stead/assets/app.css",
+          "encoded_body_bytes": 2351,
+          "decoded_body_bytes": 7424,
+          "transfer_bytes": 2651,
+          "duration_ms": 793
+        },
+        {
+          "path": "/stead/assets/app.js",
+          "encoded_body_bytes": 258065,
+          "decoded_body_bytes": 258065,
+          "transfer_bytes": 258365,
+          "duration_ms": 819
+        },
+        {
+          "path": "/stead/assets/chunk-E5WJYM75.js",
+          "encoded_body_bytes": 8345,
+          "decoded_body_bytes": 8345,
+          "transfer_bytes": 8645,
+          "duration_ms": 555
+        },
+        {
+          "path": "/stead/assets/chunk-SQE76S5B.js",
+          "encoded_body_bytes": 577,
+          "decoded_body_bytes": 577,
+          "transfer_bytes": 877,
+          "duration_ms": 563
+        },
+        {
+          "path": "/stead/assets/chunk-BUZSU6Y5.js",
+          "encoded_body_bytes": 1293,
+          "decoded_body_bytes": 1293,
+          "transfer_bytes": 1593,
+          "duration_ms": 378
+        }
+      ]
+    },
+    "navigation_timings": [
+      {
+        "view": "Work",
+        "query_kind": "work",
+        "useful_content_ms": 2557,
+        "returned_rows": 1,
+        "returned_rows_bytes": 270,
+        "requests": {
+          "/stead/api/query": 2,
+          "/stead/api/updates": 2
+        }
+      },
+      {
+        "view": "Work",
+        "query_kind": "work",
+        "useful_content_ms": 4218,
+        "returned_rows": 1,
+        "returned_rows_bytes": 270,
+        "requests": {
+          "/stead/api/query": 2,
+          "/stead/api/updates": 2
+        }
+      },
+      {
+        "view": "Docs collection selector",
+        "query_kind": "containers",
+        "useful_content_ms": 4769,
+        "returned_rows": 1,
+        "returned_rows_bytes": 236,
+        "requests": {
+          "/stead/api/query": 2,
+          "/stead/api/updates": 3
+        }
+      }
+    ],
+    "preview_timings": [
+      {
+        "content": "new Untitled draft",
+        "first_preview": true,
+        "useful_content_ms": 7062,
+        "requests": {
+          "assets": 1,
+          "/stead/api/query": 3,
+          "/stead/api/updates": 2
+        }
+      },
+      {
+        "content": "new Untitled draft",
+        "first_preview": false,
+        "useful_content_ms": 352,
+        "requests": {}
+      }
+    ],
+    "saves": [
+      {
+        "operation": "work.create",
+        "request_body_bytes": 418,
+        "accepted_response_ms": 1042,
+        "confirmation_ms": 3938,
+        "requests_through_acceptance": {
+          "/stead/api/query": 1,
+          "/stead/api/command": 1
+        },
+        "requests_through_confirmation": {
+          "/stead/api/query": 2,
+          "/stead/api/command": 1,
+          "/stead/api/updates": 1
+        }
+      },
+      {
+        "operation": "container.create",
+        "request_body_bytes": 324,
+        "accepted_response_ms": 1019,
+        "confirmation_ms": 2923,
+        "requests_through_acceptance": {
+          "/stead/api/command": 1
+        },
+        "requests_through_confirmation": {
+          "/stead/api/query": 1,
+          "/stead/api/command": 1,
+          "/stead/api/updates": 1
+        }
+      },
+      {
+        "operation": "container.create",
+        "request_body_bytes": 329,
+        "accepted_response_ms": 1862,
+        "confirmation_ms": 2751,
+        "requests_through_acceptance": {
+          "/stead/api/command": 1
+        },
+        "requests_through_confirmation": {
+          "/stead/api/query": 1,
+          "/stead/api/command": 1,
+          "/stead/api/updates": 1
+        }
+      },
+      {
+        "operation": "document.save",
+        "request_body_bytes": 594,
+        "accepted_response_ms": 3321,
+        "confirmation_ms": 6850,
+        "requests_through_acceptance": {
+          "/stead/api/command": 1
+        },
+        "requests_through_confirmation": {
+          "/stead/api/query": 3,
+          "/stead/api/command": 1,
+          "/stead/api/updates": 1
+        }
+      },
+      {
+        "operation": "document.save",
+        "request_body_bytes": 480,
+        "accepted_response_ms": 2130,
+        "confirmation_ms": 5580,
+        "requests_through_acceptance": {
+          "/stead/api/command": 1
+        },
+        "requests_through_confirmation": {
+          "/stead/api/query": 3,
+          "/stead/api/command": 1,
+          "/stead/api/updates": 1
+        }
+      },
+      {
+        "operation": "document.save",
+        "request_body_bytes": 637,
+        "accepted_response_ms": 1753,
+        "confirmation_ms": 5201,
+        "requests_through_acceptance": {
+          "/stead/api/command": 1
+        },
+        "requests_through_confirmation": {
+          "/stead/api/query": 3,
+          "/stead/api/command": 1,
+          "/stead/api/updates": 1
+        }
+      },
+      {
+        "operation": "document.publish",
+        "request_body_bytes": 608,
+        "accepted_response_ms": 2829,
+        "confirmation_ms": 7360,
+        "requests_through_acceptance": {
+          "/stead/api/command": 1,
+          "/stead/api/updates": 1
+        },
+        "requests_through_confirmation": {
+          "/stead/api/query": 3,
+          "/stead/api/command": 1,
+          "/stead/api/updates": 1
+        }
+      },
+      {
+        "operation": "document.save",
+        "request_body_bytes": 692,
+        "accepted_response_ms": 1310,
+        "confirmation_ms": 5760,
+        "requests_through_acceptance": {
+          "/stead/api/query": 1,
+          "/stead/api/command": 1
+        },
+        "requests_through_confirmation": {
+          "/stead/api/query": 3,
+          "/stead/api/command": 1,
+          "/stead/api/updates": 1
+        }
+      },
+      {
+        "operation": "relation.create",
+        "request_body_bytes": 646,
+        "accepted_response_ms": 1941,
+        "confirmation_ms": 3812,
+        "requests_through_acceptance": {
+          "/stead/api/command": 1
+        },
+        "requests_through_confirmation": {
+          "/stead/api/query": 3,
+          "/stead/api/command": 1
+        }
+      },
+      {
+        "operation": "work.update",
+        "request_body_bytes": 392,
+        "accepted_response_ms": 1997,
+        "confirmation_ms": 3877,
+        "requests_through_acceptance": {
+          "/stead/api/query": 1,
+          "/stead/api/command": 1
+        },
+        "requests_through_confirmation": {
+          "/stead/api/query": 2,
+          "/stead/api/command": 1,
+          "/stead/api/updates": 1
+        }
+      },
+      {
+        "operation": "work.update",
+        "request_body_bytes": 391,
+        "accepted_response_ms": 2032,
+        "confirmation_ms": 4951,
+        "requests_through_acceptance": {
+          "/stead/api/command": 1
+        },
+        "requests_through_confirmation": {
+          "/stead/api/query": 3,
+          "/stead/api/command": 1
+        }
+      }
+    ],
+    "scope": "Actual synthetic local native Firefox observations from this journey. The outer Git gate later failed. Cumulative asset snapshots overlap and must not be summed together. These heterogeneous observations are not latency percentiles, maximum-capacity or production measurements."
+  }
+}

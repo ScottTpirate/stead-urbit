@@ -45,8 +45,18 @@ probe in the 757-check configured run at `e7c81fd`; its
 is separate from the subsequent thermal-stopped browser attempt. Fresh
 [CI at the same source](evidence/2026-09-29/ci-36548243535/index.json) also passed,
 including the changed build probe. Ordinary-Git runtime qualification remains
-pending. Changes to the SDK consumer, mounts,
-watchdog or execution path require affected-lane execution.
+pending.
+
+At `d9115056`, the corrected Git export generator changes the SDK lane's
+installed-file inventory, but not its compiled or invoked paths. The new
+receipt-bound Git probes execute through the configured-team runner, which the
+SDK controller does not use. The recorded `7f113a1` SDK result therefore remains
+composed with the reviewed, closed `874a773` shared-guard qualification. This is
+neither unchanged whole-input equivalence nor a new SDK execution; the reader
+retry branch remains unexecuted inside the SDK lane. Fresh configured/CI probes
+and browser stock-Git verification qualify their affected paths separately.
+Changes to the SDK consumer, mounts, watchdog or execution path require
+affected-lane execution.
 
 The September 29 run at `cd75365` booted its fresh consumer and compiled the
 public-import control. Clay then refused the unavailable private dependency,
