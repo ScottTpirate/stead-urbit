@@ -206,10 +206,12 @@ blobs with replacement objects and lazy fetching disabled. Run it only against
 a reviewed checkout; repository Git configuration is not sandboxed. The v2
 package and lock remain available separately. See [the v3 package scope](../../sdk/v3/README.md).
 
-This is host package verification. Compiling a separate native client from the
-published fragment, version negotiation and complete independent API conformance
-remain unfinished URB-180 work. No additional hosting or identity is needed
-to build or test this package locally.
+These packaging commands provide host verification. The separate
+[independent native run](SDK_CONSUMER_QUALIFICATION.md) at `7f113a1` passed all
+64 recorded checks and 41 public calls, including compilation and version
+negotiation, with clean shutdown. Changed SDK execution inputs need their own
+native qualification. No additional hosting or identity is needed to build or
+test this package locally; full Phase 2 integration remains open.
 
 ## Frontend build and browser feedback
 
