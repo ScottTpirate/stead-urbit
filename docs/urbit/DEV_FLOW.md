@@ -8,10 +8,10 @@ account. Fake ships do not join the live Urbit network.
 
 Use public/synthetic content. The complete native Phase 1 gate now passes;
 [acceptance and scope](PHASE1_ACCEPTANCE_20260926.md) are recorded separately.
-The first browser slice now runs against actual native TLS and individually
-approved member sessions; its [executed scope](evidence/2026-09-27/browser-first/README.md)
-is recorded separately. Phase 2 remains open, and these local tests do not
-authorize company data.
+The [current Phase 2 qualification](PHASE2_QUALIFICATION_20260929.md) records
+passing native, browser/Git, SDK, hosted CI and session-expiry evidence. The
+reviewed implementation is integrated; the independent human Work/Docs trial
+remains open. These local tests do not authorize company data.
 
 ## Runtime pin
 
@@ -211,7 +211,8 @@ These packaging commands provide host verification. The separate
 64 recorded checks and 41 public calls, including compilation and version
 negotiation, with clean shutdown. Changed SDK execution inputs need their own
 native qualification. No additional hosting or identity is needed to build or
-test this package locally; full Phase 2 integration remains open.
+test this package locally. SDK acceptance is integrated; Phase 2 remains open
+for the independent human Work/Docs trial.
 
 ## Frontend build and browser feedback
 
@@ -317,10 +318,10 @@ hosted profile does not change those limits.
 
 ## Phase 2 and later testing
 
-The configured home, synthetic teams/containers, individual sessions and first
-local two-member browser journey are implemented. The full Phase 2 inventory
-adds private/shared Docs, conflicts and recovery, authorized updates, an
-independently built public-API client, native CI and onboarding acceptance.
+The integrated configured home, synthetic teams/containers and individual
+sessions have passing evidence for the two-member Work/Docs browser journey,
+private/shared Docs, conflicts and recovery, authorized updates, the independent
+public-API client and native CI. Human onboarding acceptance remains open.
 The user's identity ship approves a session; page bodies travel directly from
 the browser to the home. Owner administration credentials must not become the
 team login. See the executed evidence and remaining

@@ -8,8 +8,9 @@ September 29: The Phase 2 candidate has passing configured native, real
 browser/stock-Git, independent SDK, hosted native CI and natural session-expiry
 evidence. Its local native lifetime is closed and the stopped fixture preserved.
 The [current qualification record](PHASE2_QUALIFICATION_20260929.md) binds each
-result to its source and scope. The uncoached human Work/Docs trial and reviewed
-integration remain open; Phase 2 is not complete. The
+result to its source and scope. [PR #67](https://github.com/ScottTpirate/stead-urbit/pull/67)
+integrated the reviewed implementation; five of six M2 issues are closed. The
+uncoached human Work/Docs trial remains open in #29; Phase 2 is not complete. The
 [preparation checkpoint](PHASE2_CHECKPOINT_20260928.md) retains earlier failed
 attempts and their historical limits.
 

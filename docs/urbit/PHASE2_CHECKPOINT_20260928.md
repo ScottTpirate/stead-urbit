@@ -1,8 +1,11 @@
 # Phase 2 preparation checkpoint
 
 The [September 29 qualification record](PHASE2_QUALIFICATION_20260929.md) now
-tracks the latest native, browser/Git and hosted CI passes. The notes below
-preserve their historical preparation status and failed attempts.
+tracks the latest native, browser/Git, hosted CI and natural-expiry passes.
+[PR #67](https://github.com/ScottTpirate/stead-urbit/pull/67) subsequently integrated
+the implementation; five M2 issues are closed and the human trial in #29 remains
+open. The following pre-integration notes preserve their historical preparation
+status and failed attempts, including statements that were pending at that time.
 
 Recorded 2026-09-28 UTC; updated 2026-09-29 UTC. Phase 2 is incomplete. Its six
 milestone issues (#9, #10, #14, #21, #22 and #29) remain open. The reviewed Git
