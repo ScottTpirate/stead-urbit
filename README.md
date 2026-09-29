@@ -1,10 +1,9 @@
 # Stead Urbit — experimental native implementation
 
-Status: **Phases 0 and 1 are complete. The Phase 2 candidate includes individual
-sessions, Work/Docs UI, SDK v3 and disposable native CI. Independent native SDK
-conformance passed; current configured/hosted, browser and human onboarding
-qualification remain open.** See the
-[current preparation checkpoint](docs/urbit/PHASE2_CHECKPOINT_20260928.md).
+Status: **Phases 0 and 1 are complete. Phase 2 has passing configured native,
+browser/stock-Git, SDK and hosted CI components. Natural session expiry, the
+independent human trial and final cleanup/integration remain open.** See the
+[current qualification record](docs/urbit/PHASE2_QUALIFICATION_20260929.md).
 
 The [Phase 1 acceptance record](docs/urbit/PHASE1_ACCEPTANCE_20260926.md) binds
 496 passing native core checks, all eight capacity/predecessor recipes, 58

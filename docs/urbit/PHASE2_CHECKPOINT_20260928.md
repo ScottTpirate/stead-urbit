@@ -1,5 +1,9 @@
 # Phase 2 preparation checkpoint
 
+The [September 29 qualification record](PHASE2_QUALIFICATION_20260929.md) now
+tracks the latest native, browser/Git and hosted CI passes. The notes below
+preserve their historical preparation status and failed attempts.
+
 Recorded 2026-09-28 UTC; updated 2026-09-29 UTC. Phase 2 is incomplete. Its six
 milestone issues (#9, #10, #14, #21, #22 and #29) remain open. The reviewed Git
 observation corrections are pushed at `d9115056a04fd86cf55a07fd0d8a0bf0be84caaf`.

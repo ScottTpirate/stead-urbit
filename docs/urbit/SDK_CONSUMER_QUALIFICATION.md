@@ -44,8 +44,8 @@ probe in the 757-check configured run at `e7c81fd`; its
 [closed native lifetime](evidence/2026-09-29/browser-thermal-e7c81fd/index.json)
 is separate from the subsequent thermal-stopped browser attempt. Fresh
 [CI at the same source](evidence/2026-09-29/ci-36548243535/index.json) also passed,
-including the changed build probe. Ordinary-Git runtime qualification remains
-pending.
+including the changed build probe. That revision did not qualify ordinary-Git
+runtime behavior.
 
 At `d9115056`, the corrected Git export generator changes the SDK lane's
 installed-file inventory, but not its compiled or invoked paths. The new
@@ -55,6 +55,10 @@ composed with the reviewed, closed `874a773` shared-guard qualification. This is
 neither unchanged whole-input equivalence nor a new SDK execution; the reader
 retry branch remains unexecuted inside the SDK lane. Fresh configured/CI probes
 and browser stock-Git verification qualify their affected paths separately.
+Those affected paths passed at `d9115056`: 760 local native checks, 792 hosted
+observations and the browser-created stock-Git histories. The
+[current qualification record](PHASE2_QUALIFICATION_20260929.md) retains their
+actual scope and the remaining overall phase gates.
 Changes to the SDK consumer, mounts, watchdog or execution path require
 affected-lane execution.
 
