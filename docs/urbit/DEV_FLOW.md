@@ -13,6 +13,20 @@ approved member sessions; its [executed scope](evidence/2026-09-27/browser-first
 is recorded separately. Phase 2 remains open, and these local tests do not
 authorize company data.
 
+## Runtime pin
+
+The current development pin is Vere 4.6 with the single upstream newt repair
+recorded in `specs/urbit/toolchain.lock.json`. `make setup` downloads its roughly
+9.7 MB verified binary archive once. Ordinary Hoon or frontend edits do not
+rebuild Vere. The complete source/compiler/dependency inputs, patch, notices,
+recipe and build observations accompany the development prerelease.
+
+The unchanged runtime regression passed with same-process recovery and clean
+exit. Full application, SDK, browser and hosted CI results must bind to this new
+binary; old-runtime results do not transfer. Existing fixtures with the old
+lock remain rejected. Preserve them and create fresh disposable seeds for this
+pin; do not edit their manifests or copy a production pier.
+
 ## Commands
 
 `make` prints help without downloading or starting anything.

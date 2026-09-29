@@ -1,0 +1,38 @@
+{
+  "admission_sha256": "272e254b7c2ae8f97d587caba9b1cf7e032cbd8ef4c95288047974af19e7f4f5",
+  "binary_sha256": "f7f0d3b3c0480fc10f887dfbc09bde56a81d723a803541c7886c538a0675d833",
+  "checks_passed": 13,
+  "classification": "real-native-controls-with-separately-labeled-frame-controls",
+  "cleanup": true,
+  "controls": {
+    "compiler_failure": "native rejection observed",
+    "frame_controls": "labeled injected malformed frames rejected",
+    "missing_arm": "native arm inventory mismatch rejected",
+    "timer_positive": "passed",
+    "timer_recovered": "passed",
+    "timer_timeout": "response-header timeout with zero received bytes"
+  },
+  "elapsed_seconds": 15.819,
+  "format": "stead.runtime-regression-observation/1",
+  "guard_run_id": "1774f73f1d1d3a48b40354af1fe097de",
+  "guard_status": "completed",
+  "inputs_unchanged": true,
+  "kernel_responded_after_recovery": true,
+  "qualifies_phase": false,
+  "remaining": [
+    "new runtime application, SDK and browser qualification",
+    "complete native CI",
+    "human onboarding"
+  ],
+  "reports": {
+    "host-report.json": "c32064215260b9d231d105e3dc73468863a9ce3859f0bf7924bc33e8c7bdc085",
+    "report.json": "470393a3b47ca17ab505068ca2e5d51e6da4124ba8887b06e81e0dba4bc54c38"
+  },
+  "runner_sha256": "0e7ca048a5b338675cdac11608fd9af58d49221530e8f43781eef19b59c97ef0",
+  "runtime_exit": {
+    "exit_code": 0,
+    "forced": false
+  },
+  "same_process_recovery": true,
+  "status": "pass"
+}

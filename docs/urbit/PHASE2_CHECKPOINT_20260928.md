@@ -1,6 +1,6 @@
 # Phase 2 preparation checkpoint
 
-Recorded 2026-09-28 UTC. Phase 2 is incomplete. Its six milestone issues
+Recorded 2026-09-28 UTC; updated 2026-09-29 UTC. Phase 2 is incomplete. Its six milestone issues
 (#9, #10, #14, #21, #22 and #29) remain open. The Phase 0/1 acceptance record
 remains tied to its recorded source; it does not qualify the newer candidate.
 
@@ -337,3 +337,27 @@ four-query loop required a list. All failed reports and compiler logs are
 retained. The reviewed corrections preserve the same entropy values and four
 query kinds, adding their explicit types without removing assertions. Successful
 recompilation and the actual interrupted-projection assertions are still pending.
+
+## Development runtime adopted; fresh qualification pending
+
+At `79aebc1`, all 731 configured native checks passed in 833.013 seconds,
+including the corrected recovery probe, all 70 expected unit arms and the
+native deliberate-failure control. Committed source and inputs matched.
+The supervisor later reached the thermal ceiling at 1,793.62 seconds while
+left ready. The [observation](evidence/2026-09-28/team-recovery/observation.json)
+retains both outcomes; the overall lifetime remains unqualified.
+
+The existing reviewed regression passed all 13 checks in 15.819 seconds on the
+repaired runtime. The same process recovered and exited zero without force;
+its guard completed and inputs were unchanged. Independent review cleared
+development pin adoption. The
+[regression observation](evidence/2026-09-28/runtime-disconnect/native-regression.json)
+is separate from the historical build-stage snapshot.
+
+The [development prerelease](https://github.com/ScottTpirate/stead-urbit/releases/tag/runtime-v4.6-newt-c0a35c6)
+retains the binary, complete source/compiler/dependency inputs, notices, recipe
+and observations. GitHub asset digests matched, and actual `make setup` fetched
+and verified the published archive. Forty-four host harness checks passed in
+3.699 seconds; planning validators passed. Old fixtures remain preserved;
+fresh seeds, current SDK/native/browser/Git/performance/expiry checks, human
+onboarding and a complete hosted native CI run are still required.
