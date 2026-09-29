@@ -31,8 +31,8 @@
     }
   },
   "kernel_kelvin": 408,
-  "native_source_commit": "dd0e8c0ce8d1d00f15de6b07e2e26d368c5c3774",
+  "native_source_commit": "d3b2b97ee7a4c343f3e4472dc05c479e2de11cfb",
   "protocol": "stead.sdk-exports/1",
-  "runtime_lock_sha256": "4a209c10cf1756eb0f7357cc3eca8250bf66c239b4cd0ca31a8c0886d4d304ee",
+  "runtime_lock_sha256": "ae185adaec12b5aa0b2d48e2198ae65583902512ffd9d148706810c4819c650c",
   "sdk_version": "0.1.0-preview"
 }

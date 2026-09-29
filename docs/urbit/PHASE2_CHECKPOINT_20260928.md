@@ -361,3 +361,12 @@ and verified the published archive. Forty-four host harness checks passed in
 3.699 seconds; planning validators passed. Old fixtures remain preserved;
 fresh seeds, current SDK/native/browser/Git/performance/expiry checks, human
 onboarding and a complete hosted native CI run are still required.
+
+The v2/v3 package locks now bind unchanged public exports to source
+`d3b2b97ee7a4c343f3e4472dc05c479e2de11cfb` and the new runtime lock.
+The rebuilt v3 archive is 81,920 bytes, SHA-256
+`de41150e113c1df26804ffa7466f6018f2bfbf3b509715f2d971f6001f6ef6ac`.
+Package verification and exact Git-source checks passed. All 81 SDK host
+controls passed in 11.600 seconds, including existing actual Linux namespace
+controls. Independent review cleared both metadata updates; public Hoon exports
+are unchanged, and native consumer execution remains pending.
