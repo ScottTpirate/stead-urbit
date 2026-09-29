@@ -10,15 +10,32 @@ import os
 from pathlib import Path
 import secrets
 import select
+import re
+import stat
 import subprocess
 import sys
 import time
 
 
-def clean_environment(root):
-    return {'PATH': '/usr/bin:/bin', 'HOME': str(Path.home()), 'LANG': 'C.UTF-8',
+def clean_environment(root, *, headed=False):
+    environment = {'PATH': '/usr/bin:/bin', 'HOME': str(Path.home()), 'LANG': 'C.UTF-8',
             'XDG_RUNTIME_DIR': '/run/user/' + str(os.getuid()),
             'PLAYWRIGHT_BROWSERS_PATH': str(Path(root) / '.runtime/playwright')}
+    if headed:
+        # The private Firefox may connect only to this user's existing Wayland
+        # socket. Do not inherit debug hooks, preload libraries or TLS key logs.
+        display = os.environ.get('WAYLAND_DISPLAY', '')
+        if not re.fullmatch(r'wayland-[0-9]{1,4}', display):
+            raise ValueError('A local Wayland display is required for the human test')
+        runtime = Path(environment['XDG_RUNTIME_DIR'])
+        info = runtime.lstat()
+        socket_info = (runtime / display).lstat()
+        if (not stat.S_ISDIR(info.st_mode) or info.st_uid != os.getuid()
+                or stat.S_IMODE(info.st_mode) != 0o700
+                or not stat.S_ISSOCK(socket_info.st_mode) or socket_info.st_uid != os.getuid()):
+            raise ValueError('The Wayland display must belong to this local user')
+        environment.update(WAYLAND_DISPLAY=display, MOZ_ENABLE_WAYLAND='1')
+    return environment
 
 
 def properties(unit):
@@ -38,7 +55,7 @@ def group_empty(group):
         return True
 
 
-def run(command, *, root, output, healthy, timeout=600):
+def run(command, *, root, output, healthy, timeout=600, headed=False):
     if not command or not 0 < timeout <= 600:
         raise ValueError('Bounded browser command required')
     root, output = Path(root), Path(output)
@@ -46,9 +63,9 @@ def run(command, *, root, output, healthy, timeout=600):
     description = 'Stead owned browser ' + unit
     if properties(unit).get('LoadState') != 'not-found':
         raise RuntimeError('Browser unit already exists')
-    environment = clean_environment(root)
+    environment = clean_environment(root, headed=headed)
     proof_file = output / (unit + '.json')
-    record = {'unit': unit, 'status': 'fail', 'cleanup': None}
+    record = {'unit': unit, 'status': 'fail', 'cleanup': None, 'headed': headed}
     cpu = max(os.sched_getaffinity(0))
     argv = ['/usr/bin/systemd-run', '--user', '--quiet', '--wait', '--pipe',
         '--unit=' + unit, '--description=' + description, '--service-type=exec',

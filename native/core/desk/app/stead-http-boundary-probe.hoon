@@ -13,11 +13,19 @@
   on-init
 ++  on-watch
   |=  route=path
+  ?:  =(/public-control route)
+    :_  this
+    :~  [%give %fact ~ [%json !>((object:stead-codec ~[['public_control' 'yes']]))]]
+        [%give %kick ~ ~]
+    ==
   ?>  ?=([%http-response @ ~] route)
   ?>  (response-source:stead-eyre sup.bowl src.bowl i.t.route)
   `this
 ++  on-poke
   |=  [=mark =vase]
+  ?:  =(%json mark)
+    ?>  =((object:stead-codec ~[['public_control' 'yes']]) !<(json vase))
+    `this
   ?>  =(%handle-http-request mark)
   =/  [id=@ta request=inbound-request:eyre]  !<([@ta inbound-request:eyre] vase)
   ?>  (response-source:stead-eyre sup.bowl src.bowl id)
@@ -32,7 +40,12 @@
   ~&  [%stead-http-boundary src.bowl sap.bowl matched]
   [(give-simple-payload:app:server id [[200 ~[['content-type' 'application/json'] ['cache-control' 'no-store']]] [~ [(met 3 text) text]]]) this]
 ++  on-leave  on-leave:def
-++  on-peek  on-peek:def
+++  on-peek
+  |=  route=path
+  ^-  (unit (unit cage))
+  ?:  =(/x/public-control route)
+    ``json+!>((object:stead-codec ~[['public_control' 'yes']]))
+  (on-peek:def route)
 ++  on-agent  on-agent:def
 ++  on-arvo
   |=  [=wire =sign-arvo]

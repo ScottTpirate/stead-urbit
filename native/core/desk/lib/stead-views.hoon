@@ -25,7 +25,7 @@
   |=  [db=state:stead-team actor=authentication:stead-team query=query:stead-team-codec now=@ud]
   ^-  ?
   ?.  (current:stead-team db actor now)  |
-  ?:  ?|(=('identity' kind.query) =('projects' kind.query))  &
+  ?:  ?|(=('identity' kind.query) =('capabilities' kind.query) =('projects' kind.query))  &
   ?.  (gth (role:stead-team db actor project.query now) 0)  |
   ?:  ?|(=('documents' kind.query) =('document' kind.query))
     ?&  (box-access:stead-team db actor project.query container.query now)
@@ -138,6 +138,9 @@
 ++  rows
   |=  [db=state:stead-team index=index:stead-projection actor=authentication:stead-team query=query:stead-team-codec now=@ud]
   ^-  (list row)
+  ?:  =('capabilities' kind.query)
+    =/  config  (need current.registry.db)
+    ~[['capabilities' (fields ~[['protocol' 'stead.capabilities/3'] ['profile' 'configured-team'] ['commands' 'stead.command/3'] ['queries' 'stead.query/3'] ['updates' 'stead.updates/3'] ['authentication' method.actor] ['max_request_bytes' '65536'] ['max_response_bytes' '262144'] ['page_size' '20'] ['runtime' runtime.config]])]]
   ?:  =('identity' kind.query)
     =/  config  (need current.registry.db)
     =/  person  (~(got by members.config) ship.identity.actor)

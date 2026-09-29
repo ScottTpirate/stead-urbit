@@ -1,0 +1,114 @@
+{
+  "classification": "real-browser-with-mocked-home",
+  "node": "v24.21.0",
+  "browser": "155.0",
+  "checks": [
+    {
+      "name": "authentication-reuses-validated-identity-and-opens-before-one-snapshot",
+      "passed": true
+    },
+    {
+      "name": "saved-snapshot-coalesces-own-invalidation-but-keeps-remote-refresh-and-revocation",
+      "passed": true
+    },
+    {
+      "name": "dense-markdown-preview-keeps-full-inert-text-and-bounded-dom",
+      "passed": true
+    },
+    {
+      "name": "typing-search-keeps-current-watch-until-explicit-submit",
+      "passed": true
+    },
+    {
+      "name": "selected-tab-and-refresh-each-open-before-one-snapshot",
+      "passed": true
+    },
+    {
+      "name": "rapid-scope-changes-retire-one-delayed-open-before-latest-snapshot",
+      "passed": true
+    },
+    {
+      "name": "401-during-query-restores-usable-sign-in",
+      "passed": true
+    },
+    {
+      "name": "uncertain-resume-preserves-dirty-work-form",
+      "passed": true
+    },
+    {
+      "name": "uncertain-resume-preserves-original-pending-receipt",
+      "passed": true
+    },
+    {
+      "name": "refresh-adopts-current-project-role-and-authority",
+      "passed": true
+    },
+    {
+      "name": "activity-keeps-distinct-events-for-one-resource",
+      "passed": true
+    },
+    {
+      "name": "page-two-survives-foreground-actions-and-repeated-paginated-refresh",
+      "passed": true
+    },
+    {
+      "name": "updates-preserve-local-form-and-original-uncertain-save",
+      "passed": true
+    },
+    {
+      "name": "cancelled-quiet-refresh-does-not-leave-docs-loading",
+      "passed": true
+    },
+    {
+      "name": "revoked-update-scope-clears-protected-rendered-state",
+      "passed": true
+    },
+    {
+      "name": "document-page-two-survives-a-paginated-collection-selector",
+      "passed": true
+    },
+    {
+      "name": "repeated-confirmed-resume-retires-the-old-read-handles",
+      "passed": true
+    },
+    {
+      "name": "keyboard-controls-after-switching-between-two-user-pages",
+      "passed": true
+    }
+  ],
+  "qualifies_phase": false,
+  "requested_case": "",
+  "inputs_before": {
+    "package-lock.json": "8d7fe1eb2b5d38630989c0d9ee40d2815c643ad3f2f3e395fd197330466ea9c7",
+    "src/AcceptedTime.tsx": "83d8df590acb5108514495fc9e8e4249f479e6e2db9781af2d6d2a4bc221df71",
+    "src/Markdown.tsx": "8437c57ac14240e6221ab737cc25d490c66330711024e96da906936a4c251434",
+    "src/SupportDetails.tsx": "4a55384f0ad0d31670a847e9737cbfdf86c15ba312c81851f855b577e9c6b07c",
+    "src/api.ts": "5110d0eb99f3166da2e169f4ee270278a915ecfd100e40895f8132b989652216",
+    "src/assets.d.ts": "da5bf71d48cf909584a01c80b445f730507068f5b34c920f352e2bfcf0315e4c",
+    "src/identity.css": "cacda5c0103bf4e6f2156810673809b8bc3fc495ec283160501988cc0a18e9e7",
+    "src/identity.ts": "95fd49a7550f42195de83d912269afdec0fa86c803eb499a349f58174f21adea",
+    "src/main.tsx": "494e1e73aefb1a0b845d668185cfe205a18681fb56446c195ae127fb1ce5e0f7",
+    "src/primitives.tsx": "f900568a7229e1a7dadbd0ae00496a7dec7757379c70ba577a814418ee639336",
+    "src/protocol.ts": "a8dee5b65f79ffe052869f19e9b508f7abcb30149ac82eaa31a47223796003c7",
+    "src/style.css": "e4f4ad0d3e86641f2e63e2d55c3acd717ae530e28366a97583315a408ac1d3a5",
+    "src/support.ts": "811b4d5aa9dcb02e529fb7d7a386a585ab9269a9c3867ed573751b3b76f2b26c",
+    "tests/rendered.mjs": "fb0e88144752cec97445372017ec8b00d97c58008300a0e64284aa7f1d2eda3d"
+  },
+  "status": "pass",
+  "inputs_after": {
+    "package-lock.json": "8d7fe1eb2b5d38630989c0d9ee40d2815c643ad3f2f3e395fd197330466ea9c7",
+    "src/AcceptedTime.tsx": "83d8df590acb5108514495fc9e8e4249f479e6e2db9781af2d6d2a4bc221df71",
+    "src/Markdown.tsx": "8437c57ac14240e6221ab737cc25d490c66330711024e96da906936a4c251434",
+    "src/SupportDetails.tsx": "4a55384f0ad0d31670a847e9737cbfdf86c15ba312c81851f855b577e9c6b07c",
+    "src/api.ts": "5110d0eb99f3166da2e169f4ee270278a915ecfd100e40895f8132b989652216",
+    "src/assets.d.ts": "da5bf71d48cf909584a01c80b445f730507068f5b34c920f352e2bfcf0315e4c",
+    "src/identity.css": "cacda5c0103bf4e6f2156810673809b8bc3fc495ec283160501988cc0a18e9e7",
+    "src/identity.ts": "95fd49a7550f42195de83d912269afdec0fa86c803eb499a349f58174f21adea",
+    "src/main.tsx": "494e1e73aefb1a0b845d668185cfe205a18681fb56446c195ae127fb1ce5e0f7",
+    "src/primitives.tsx": "f900568a7229e1a7dadbd0ae00496a7dec7757379c70ba577a814418ee639336",
+    "src/protocol.ts": "a8dee5b65f79ffe052869f19e9b508f7abcb30149ac82eaa31a47223796003c7",
+    "src/style.css": "e4f4ad0d3e86641f2e63e2d55c3acd717ae530e28366a97583315a408ac1d3a5",
+    "src/support.ts": "811b4d5aa9dcb02e529fb7d7a386a585ab9269a9c3867ed573751b3b76f2b26c",
+    "tests/rendered.mjs": "fb0e88144752cec97445372017ec8b00d97c58008300a0e64284aa7f1d2eda3d"
+  }
+}

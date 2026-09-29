@@ -1,0 +1,173 @@
+{
+  "format": 1,
+  "classification": "exact-hosted-native-ci-artifact",
+  "qualifies_phase": false,
+  "run_id": 36555130587,
+  "attempt": 1,
+  "run_url": "https://github.com/ScottTpirate/stead-urbit/actions/runs/36555130587",
+  "status": "pass",
+  "workflow_commit": "e61670c26c108f82e9812786f1693eb741a280fc",
+  "controller_commit": "d9115056a04fd86cf55a07fd0d8a0bf0be84caaf",
+  "candidate_commit": "d9115056a04fd86cf55a07fd0d8a0bf0be84caaf",
+  "runtime_binary_sha256": "f7f0d3b3c0480fc10f887dfbc09bde56a81d723a803541c7886c538a0675d833",
+  "native_check_observations": 792,
+  "distinct_check_names": 779,
+  "counts_overlap": "Repeated observations retain their original names; arm counts, probes and control counts overlap and are not additive totals.",
+  "native_positive_arms": 71,
+  "native_expected_failing_arms": 1,
+  "supported_migration": "pass",
+  "additional_negative_controls": "pass",
+  "admission_and_lifetime_controls": [
+    {
+      "case": "changed-limits",
+      "status": "pass",
+      "cleanup_empty": true
+    },
+    {
+      "case": "guardian-death",
+      "status": "pass",
+      "cleanup_empty": true
+    },
+    {
+      "case": "missing-profile",
+      "status": "pass",
+      "cleanup_empty": true
+    },
+    {
+      "case": "parent-death",
+      "status": "pass",
+      "cleanup_empty": true
+    },
+    {
+      "case": "stale-lease",
+      "status": "pass",
+      "cleanup_empty": true
+    },
+    {
+      "case": "wrong-profile",
+      "status": "pass",
+      "cleanup_empty": true
+    }
+  ],
+  "guard": {
+    "status": "pass",
+    "exit_code": 0,
+    "elapsed_seconds": 1889.794,
+    "child_terminated": true,
+    "cleanup_errors": []
+  },
+  "cleanup": {
+    "all_seven_owned_cgroups_empty": true,
+    "collector_complete_eof": true
+  },
+  "input_digest_semantics": {
+    "raw_file_sha256": "455613d01df1204cfd267f97b5bd7ca9ee838c3833e71136f345b723bb161327",
+    "canonical_json_sha256": "6e8ffbc1582b6c58287779a9a71c7b3b97f18fde45bd37e0ce6e11ed69cadeb7",
+    "verification_inputs_sha256": "6e8ffbc1582b6c58287779a9a71c7b3b97f18fde45bd37e0ce6e11ed69cadeb7",
+    "canonical_encoding": "sort_keys=True,separators=(comma,colon),ensure_ascii=False"
+  },
+  "captured_files": {
+    "controller_files": 217,
+    "candidate_product_files": 49,
+    "composed_files": 85
+  },
+  "artifact": {
+    "id": 11029411120,
+    "bytes": 114637,
+    "sha256": "6ca1f1761e172b6775b2442a812ef3ec7d5e7f53157fe96047a877f59df8e35f"
+  },
+  "files": {
+    "control-changed-limits-inputs.json": {
+      "bytes": 54126,
+      "file": "control-changed-limits-inputs.json.gz",
+      "sha256": "455613d01df1204cfd267f97b5bd7ca9ee838c3833e71136f345b723bb161327",
+      "gzip_sha256": "22f6faa93029695cbf25ea1f80c2a263c02bd4b05c8f277536031c7587d47b5c"
+    },
+    "control-changed-limits-report.json": {
+      "bytes": 9383,
+      "file": "control-changed-limits-report.json.gz",
+      "sha256": "5ab2ccb5f640981712d7ebea1ed1e5d7fdf52a9ab4208e8db4668beded5529d7",
+      "gzip_sha256": "3005aa219dba155f81d88fc358ad7c78b48f00dd316c411643b599c16af182d4"
+    },
+    "control-guardian-death-inputs.json": {
+      "bytes": 54126,
+      "file": "control-guardian-death-inputs.json.gz",
+      "sha256": "455613d01df1204cfd267f97b5bd7ca9ee838c3833e71136f345b723bb161327",
+      "gzip_sha256": "22f6faa93029695cbf25ea1f80c2a263c02bd4b05c8f277536031c7587d47b5c"
+    },
+    "control-guardian-death-report.json": {
+      "bytes": 8191,
+      "file": "control-guardian-death-report.json.gz",
+      "sha256": "51ee4d40850e276a2f0416ce3893417cebd28f9bf2fb91f1c7dcf3eddcf9d7f5",
+      "gzip_sha256": "44c1be6011aa60291f370da0c1627d00751514cbf03c7a1c0d7e60eed036b2d6"
+    },
+    "control-missing-profile-inputs.json": {
+      "bytes": 54126,
+      "file": "control-missing-profile-inputs.json.gz",
+      "sha256": "455613d01df1204cfd267f97b5bd7ca9ee838c3833e71136f345b723bb161327",
+      "gzip_sha256": "22f6faa93029695cbf25ea1f80c2a263c02bd4b05c8f277536031c7587d47b5c"
+    },
+    "control-missing-profile-report.json": {
+      "bytes": 7154,
+      "file": "control-missing-profile-report.json.gz",
+      "sha256": "6620ae29be95c8eb9cb1fc5186b12a23341431466f7bcdb73b1ad2eb5b15ea95",
+      "gzip_sha256": "2cbfc4b071059f0e5cf4f72df4e41075e5d820561c4f8217ceef92f3ed6791d3"
+    },
+    "control-parent-death-inputs.json": {
+      "bytes": 54126,
+      "file": "control-parent-death-inputs.json.gz",
+      "sha256": "455613d01df1204cfd267f97b5bd7ca9ee838c3833e71136f345b723bb161327",
+      "gzip_sha256": "22f6faa93029695cbf25ea1f80c2a263c02bd4b05c8f277536031c7587d47b5c"
+    },
+    "control-parent-death-report.json": {
+      "bytes": 9313,
+      "file": "control-parent-death-report.json.gz",
+      "sha256": "fa199c4308cb22d0e0df3d5b3edea04ef326ee8da1d10443e0bdc142df66a155",
+      "gzip_sha256": "650731ed41ea16c496aca092e6043a32626f16495f675923ee57c6ed95b7f52d"
+    },
+    "control-stale-lease-inputs.json": {
+      "bytes": 54126,
+      "file": "control-stale-lease-inputs.json.gz",
+      "sha256": "455613d01df1204cfd267f97b5bd7ca9ee838c3833e71136f345b723bb161327",
+      "gzip_sha256": "22f6faa93029695cbf25ea1f80c2a263c02bd4b05c8f277536031c7587d47b5c"
+    },
+    "control-stale-lease-report.json": {
+      "bytes": 9557,
+      "file": "control-stale-lease-report.json.gz",
+      "sha256": "2826d2d73f3ddb55566d2168713019be63b97b7817ae6b89f6657491aba7c3d3",
+      "gzip_sha256": "b1db7052c457fa058565eb7d473f4b3430220d8611a16940d22b1521e934c8c4"
+    },
+    "control-wrong-profile-inputs.json": {
+      "bytes": 54126,
+      "file": "control-wrong-profile-inputs.json.gz",
+      "sha256": "455613d01df1204cfd267f97b5bd7ca9ee838c3833e71136f345b723bb161327",
+      "gzip_sha256": "22f6faa93029695cbf25ea1f80c2a263c02bd4b05c8f277536031c7587d47b5c"
+    },
+    "control-wrong-profile-report.json": {
+      "bytes": 7932,
+      "file": "control-wrong-profile-report.json.gz",
+      "sha256": "4ee395a1327274f5982b71f080c7708cb42e64fbe6a56613e2c684d601d1b301",
+      "gzip_sha256": "5b580be0f49ae1894ce012788c487c0b9fa53362c7328cb6d3ff8c27e2a1236d"
+    },
+    "inputs.json": {
+      "bytes": 54126,
+      "file": "inputs.json.gz",
+      "sha256": "455613d01df1204cfd267f97b5bd7ca9ee838c3833e71136f345b723bb161327",
+      "gzip_sha256": "22f6faa93029695cbf25ea1f80c2a263c02bd4b05c8f277536031c7587d47b5c"
+    },
+    "report.json": {
+      "bytes": 160056,
+      "file": "report.json.gz",
+      "sha256": "11597f05e48c624acb2e441a630c5830a5a2009abc21f609fc71bd7b2c7d5002",
+      "gzip_sha256": "8b6e9846497d0d8ff6d0e84e024ffa52867c7180b9bd11848c57acf7912a989b"
+    }
+  },
+  "independent_review": "Read-only reconciliation verified all 217 controller, 49 product and 85 composed files; 81 installed files per ship; six retained transcripts containing exactly 71 positive arms and the deliberately failing control; four early build probes and three receipt-bound Git manifest/commit checks; six resource controls, complete collector EOF and seven empty final cgroups. GitHub artifact size/digest and all 14 exact members match. Migration and additional native controls remain the pinned private-output verifier attestation; absent private bytes were not independently replayed.",
+  "evidence_boundary": "This hosted lane executed d9115056, including the three receipt-bound Git manifest/commit probes. The pinned controller verified private worker output; its retained digest does not recreate private transcript bytes absent from the public artifact. Migration and additional native controls remain that verifier attestation until separately supported by retained bytes. Browser, full stock Git, expiry and SDK qualification bind their own executed inputs separately.",
+  "remaining": [
+    "Natural session expiry on the same passing local fixture",
+    "Uncoached human Work/Docs trial",
+    "Clean local fixture lifetime closeout",
+    "Final reviewed integration and milestone reconciliation"
+  ]
+}

@@ -1,0 +1,14 @@
+{
+  "classification": "preserved-failed-local-cold-start",
+  "source_commit": "4be1ebf5940cbe0fb18554c40aebdf28baec0bd8",
+  "fixture": ".runtime/phase02-complete-20260927/fresh-runtime-thermal-fixture-20260929",
+  "guard_report": ".runtime/execution-runs/four-fakes-5vz4lahf/report.json",
+  "guard_report_sha256": "347c49ca2810a20247ecd9533d32fdaf78e9c649d70b185359e47618839cee02",
+  "status": "failed",
+  "reason": "GuardError: Thermal ceiling reached",
+  "elapsed_seconds": 843.49,
+  "application_checks_executed": false,
+  "clean_seed_created": false,
+  "fixture_contents_modified": false,
+  "qualifies_phase": false
+}

@@ -21,8 +21,11 @@ from digests import sha, source_sha, tree_sha, source_inventory, read_source
 from conn import assert_result, run_thread
 import execution_policy
 import core_check
+import migration_check
+import ci_controls_check
 import core_test
 import team_check
+import team_git
 import gall_schedule
 import skill_evaluation_support
 import team_lifecycle
@@ -53,11 +56,13 @@ def qualified_source():
     context = execution_policy.read_json('/execution/source-context.json')
     if (context.get('dirty_paths') != [] or context.get('committed_bytes_verified') is not True
             or not context.get('committed_files') or context.get('harness_sha256') != LOADED_SOURCE_DIGEST
-            or context.get('native_tree_sha256') != tree_sha(Path('/native/core/desk'))):
+            or context.get('native_tree_sha256') != tree_sha(Path('/native/core/desk'))
+            or context.get('migration_sha256') != sha('/migration.hoon')):
         raise ValueError('Qualification requires the exact committed source captured at startup')
     if context.get('script_files') != source_inventory(Path('/code')):
         raise ValueError('Helper file inventory changed after startup')
     mounts = {'scripts/urbit': Path('/code'), 'native': Path('/native'), 'specs/urbit': Path('/specs'), 'web/dev': Path('/web-dev'),
+              'scripts/ci': Path('/ci'),
               'tests/urbit/native_gall_schedule': Path('/native-tests/gall-schedule'),
               'tests/urbit/skill_evaluation': Path('/native-tests/skill-evaluation')}
     for name, digest in context['trees'].items():
@@ -74,10 +79,41 @@ def qualified_source():
     return context['source_commit']
 
 
+class WorkstationProvider:
+    @staticmethod
+    def require(preflight=False):
+        return execution_policy.require_lease(preflight=preflight, read_only=True)
+
+    @staticmethod
+    def observed(value):
+        return value['sample']['finished']
+
+    @staticmethod
+    def summary(value):
+        return {key: value[key] for key in (
+            'run_id', 'generation', 'guard_sha256', 'policy_sha256', 'policy')}
+
+
+EXECUTION_PROVIDER = WorkstationProvider()
+PROVIDER_SELECTED = False
+
+
+def select_execution_provider(provider):
+    """Trusted entry point only, before a watcher or native child starts."""
+    global EXECUTION_PROVIDER, PROVIDER_SELECTED
+    if PROVIDER_SELECTED or PROCESSES or TEAM is not None or STOP_REQUESTED.is_set():
+        raise execution_policy.GuardError('Execution provider already selected or active')
+    provider.require(preflight=True)
+    EXECUTION_PROVIDER = provider
+    PROVIDER_SELECTED = True
+
+
 def execution_check(preflight=False):
+    global PROVIDER_SELECTED
+    PROVIDER_SELECTED = True
     if STOP_REQUESTED.is_set():
         raise execution_policy.GuardError('Fixture stop is latched')
-    return execution_policy.require_lease(preflight=preflight, read_only=True)
+    return EXECUTION_PROVIDER.require(preflight=preflight)
 
 
 def completion_code():
@@ -129,7 +165,7 @@ def execution_watch():
         try:
             lease = execution_check()
             if previous is not None and (lease['generation'] < previous['generation']
-                    or lease['sample']['finished'] < previous['sample']['finished']):
+                    or EXECUTION_PROVIDER.observed(lease) < EXECUTION_PROVIDER.observed(previous)):
                 raise execution_policy.GuardError('Execution lease moved backwards')
             previous = lease
         except Exception as error:
@@ -158,8 +194,7 @@ def execution_watch():
 def guarded_result(result):
     try:
         lease = execution_check()
-        result['execution_guard'] = {key: lease[key] for key in (
-            'run_id', 'generation', 'guard_sha256', 'policy_sha256', 'policy')}
+        result['execution_guard'] = EXECUTION_PROVIDER.summary(lease)
     except Exception as error:
         result.update(status='fail', error='Execution guard interrupted result: ' + str(error),
                       feedback_infrastructure_failure=True)
@@ -174,7 +209,7 @@ def persist_result_evidence(result):
         if field not in result:
             continue
         name = Path(result[field]).name
-        if not (name.startswith(('core-', 'team-', 'smoke-', 'gall-schedule-', 'skill-evaluation-')) and name.endswith('.json')):
+        if not (name.startswith(('core-', 'team-', 'smoke-', 'gall-schedule-', 'skill-evaluation-', 'migration-check-')) and name.endswith('.json')):
             raise ValueError('Unexpected native evidence target')
         path = STATE / 'logs' / name
         evidence = execution_policy.read_json(path, maximum=16 * 1024 * 1024)
@@ -337,7 +372,10 @@ def copy_seed_to_live():
             raise ValueError('Seed integrity failure: ' + ship)
     if LIVE.is_symlink():
         raise ValueError('Refusing redirected live directory')
-    shutil.rmtree(LIVE)
+    # Preservation may have moved the stopped live directory aside. Verified
+    # seeds are sufficient to create the next disposable fixture from nothing.
+    if LIVE.exists():
+        shutil.rmtree(LIVE)
     LIVE.mkdir()
     for ship in SHIPS:
         shutil.copytree(SEED / ship, LIVE / ship, symlinks=True)
@@ -353,6 +391,20 @@ def initialize():
             if TEAM is not None:
                 if not (SEED / 'manifest.json').exists():
                     raise ValueError('Configured lane requires verified clean seeds from make dev')
+                if os.environ.get('STEAD_DIAGNOSTIC') in ('migration', 'controls'):
+                    # One foreground-owned diagnostic, not another public RPC.
+                    # It always ends this lifetime and never admits a browser.
+                    runner = ci_controls_check if os.environ['STEAD_DIAGNOSTIC'] == 'controls' else migration_check
+                    result = guarded_result(runner.run(globals()))
+                    record(os.environ['STEAD_DIAGNOSTIC'] + ' diagnostic', result)
+                    if result['status'] != 'pass':
+                        INITIALIZATION_FAILED.set()
+                    NORMAL_STOP.set()
+                    STOP_REQUESTED.set()
+                    all_stop()
+                    PROGRESS.update(stage='diagnostic-stopped', ready=False)
+                    STOP.set()
+                    return
                 # team-check restores the verified seeds and starts its four
                 # children once. Restart tests then use captured saved states.
                 PROGRESS.update(stage='ready', ready=True)
@@ -474,7 +526,7 @@ def handle(connection):
                     raise ValueError('Invalid control envelope')
                 data += block
             request = json.loads(data)
-            if TEAM is not None and request.get('op') not in ('status', 'stop', 'team-check'):
+            if TEAM is not None and request.get('op') not in ('status', 'stop', 'team-check', 'team-git-check'):
                 raise ValueError('This configured fixture only accepts its reviewed team lane')
             if request == {'op': 'status'}:
                 try:
@@ -529,15 +581,37 @@ def handle(connection):
                     if not PROGRESS['ready']:
                         raise RuntimeError('Fixture not ready')
                     execution_check(preflight=True)
+                    if request['op'] == 'team-check':
+                        PROGRESS.pop('team_evidence', None)
                     PROGRESS.update(stage='compiling', ready=False, error=None)
                     result = None
                     try:
                         runner = core_check if request['op'] == 'core-check' else team_check
                         result = guarded_result(runner.run(globals()))
+                        if request['op'] == 'team-check' and result['status'] == 'pass':
+                            name = Path(result['evidence_file']).name
+                            PROGRESS['team_evidence'] = {'file': name, 'sha256': sha(STATE / 'logs' / name)}
                     finally:
                         if result is None or result['status'] != 'pass':
+                            PROGRESS.pop('team_evidence', None)
                             PROGRESS.update(stage='failed', ready=False,
                                             error='Native compilation/probes failed; make stop before retry')
+                            all_stop()
+                        else:
+                            PROGRESS.update(stage='ready', ready=True, error=None)
+            elif set(request) == {'op', 'fixture', 'sha256'} and request['op'] == 'team-git-check':
+                with MUTEX:
+                    if TEAM is None or not PROGRESS['ready'] or not PROGRESS.get('team_evidence'):
+                        raise RuntimeError('Passed configured fixture required')
+                    execution_check(preflight=True)
+                    PROGRESS.update(stage='team-git-check', ready=False, error=None)
+                    result = None
+                    try:
+                        result = guarded_result(team_git.run(globals(), request['fixture'], request['sha256']))
+                        result['sha256'] = sha(STATE / 'logs' / Path(result['evidence_file']).name)
+                    finally:
+                        if result is None or result['status'] != 'pass':
+                            PROGRESS.update(stage='failed', ready=False, error='Configured native Git verification failed')
                             all_stop()
                         else:
                             PROGRESS.update(stage='ready', ready=True, error=None)

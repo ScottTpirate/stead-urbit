@@ -1,0 +1,17 @@
+{
+  "classification": "exact-historical-source-fixtures-not-execution-evidence",
+  "files": {
+    "execution-policy-54734c8.py.gz": {
+      "source_commit": "54734c85b1afc544c331dc80409dfa8f585ae977",
+      "source_path": "scripts/urbit/execution_policy.py",
+      "raw_bytes": 22466,
+      "raw_sha256": "7166d197a6e3879f21c22637f2bd3074ff90975c33a2149f6e07763e2eeaa04e"
+    },
+    "execution-policy-209bd33.py.gz": {
+      "source_commit": "209bd33f047ef3dbc686557c1c70b8137080d337",
+      "source_path": "scripts/urbit/execution_policy.py",
+      "raw_bytes": 23093,
+      "raw_sha256": "da16e2e0fd32eb5b90706b546a7ea8332a65807fc8279f3bd765dcc18aaad9b5"
+    }
+  }
+}

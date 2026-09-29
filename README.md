@@ -1,8 +1,9 @@
 # Stead Urbit — experimental native implementation
 
-Status: **Phases 0 and 1 are complete. Phase 2 is underway with the public SDK
-package; an independent client follows. Browser login, the full Git forge and production access have
-separate gates.**
+Status: **Phases 0 and 1 are complete. Phase 2 has passing configured native,
+browser/stock-Git, SDK, hosted CI and natural session-expiry components. The
+independent human trial and final integration remain open.** See the
+[current qualification record](docs/urbit/PHASE2_QUALIFICATION_20260929.md).
 
 The [Phase 1 acceptance record](docs/urbit/PHASE1_ACCEPTANCE_20260926.md) binds
 496 passing native core checks, all eight capacity/predecessor recipes, 58
@@ -11,12 +12,15 @@ used `dd0e8c0`; its raw deferrals and failed earlier attempts remain preserved.
 See [executed results](docs/urbit/TEST_RESULTS.md) and the
 [local development loop](docs/urbit/DEV_FLOW.md).
 
-The first [SDK package](sdk/README.md) exports four pinned public Hoon files and
-their notices through an offline build/verification command. It is a developer
-library fragment; independent consumer compilation and the full API remain open
-under [URB-180 / #21](https://github.com/ScottTpirate/stead-urbit/issues/21).
-The [package execution and independent review](docs/urbit/evidence/2026-09-26/phase02-sdk/README.md)
-retain the verified archive, actual host results and corrected review findings.
+Use [SDK v3](sdk/v3/README.md) for the configured-team candidate; [SDK v2](sdk/README.md)
+is the earlier fixture interface. These are developer fragments, not application
+installations. The v3 public sample and four marks compiled in an independent
+fresh consumer; its 64 checks and 41 public calls passed at `7f113a1`, with exact
+input review and clean shutdown. The full Phase 2 integration, including
+[URB-180 / #21](https://github.com/ScottTpirate/stead-urbit/issues/21), remains open.
+The [first package's execution and review](docs/urbit/evidence/2026-09-26/phase02-sdk/README.md)
+remain historical v2 evidence. Current package/source checks do not substitute
+for [independent native consumer qualification](docs/urbit/SDK_CONSUMER_QUALIFICATION.md).
 
 An independent derivative of `ScottTpirate/stead`, preserving that repository's main-line history through `3d47f0172a41beebb31f5c3a7df133cc1d4b1ead` (inspected September 12, 2026). The original repository is not modified.
 

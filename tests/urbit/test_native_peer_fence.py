@@ -25,7 +25,7 @@ class NativePeerFenceTests(unittest.TestCase):
                     '--chdir', '/probes', '--clearenv', '--setenv', 'PATH', '/usr/bin:/bin',
                     '--setenv', 'PYTHONPATH', '/code', '--', '/usr/bin/python3', '-B',
                     '/probes/' + name, *([os.readlink('/proc/self/ns/net')]
-                                        if name in ('fence-exercise.py', 'fence-close-probe.py') else [])]
+                                        if name in ('fence-exercise.py', 'fence-close-probe.py', 'fence-atomic-probe.py') else [])]
         completed = subprocess.run(command, capture_output=True, text=True, timeout=15)
         self.assertEqual(completed.returncode, 0, completed.stdout + completed.stderr)
         self.assertEqual(completed.stderr, '')
@@ -48,3 +48,6 @@ class NativePeerFenceTests(unittest.TestCase):
 
     def test_failed_close_notifies_cleanup_and_restores_policy(self):
         self.execute('fence-close-probe.py', 'real-host-private-network-close-failure', 3)
+
+    def test_invalid_transaction_never_installs_a_partial_policy(self):
+        self.execute('fence-atomic-probe.py', 'real-host-private-network-atomicity', 2)

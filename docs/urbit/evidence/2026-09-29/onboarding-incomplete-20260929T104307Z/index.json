@@ -1,0 +1,71 @@
+{
+  "accepted_operations": 0,
+  "browser_cleanup": {
+    "cgroup": "/user.slice/user-1000.slice/user@1000.service/app.slice/stead-browser-9aee9f2b8840db69dfa87fa58265eadb.service",
+    "empty": true,
+    "process_reaped": true,
+    "state": "inactive"
+  },
+  "captured_failures": 0,
+  "cause": "not-established; absence of captured qualifying actions does not establish why they were absent",
+  "classification": "independent-human-trial-capture-without-task-completion",
+  "coaching_attestation": "not-submitted",
+  "elapsed_ms": 540034,
+  "format": 1,
+  "independent_review": "Source/prerequisite bindings, zero qualifying observations, missing participant report, whole browser cleanup and private profile removal verified read-only. Launcher exit zero establishes capture and cleanup only.",
+  "inputs_after_equal_before": true,
+  "inputs_before": {
+    "files": {
+      "docs/urbit/quickstarts/member.md": "36aac736f7a4d422d9f7f6cf340583e3a4484670b99f6598f61d4fc63aafa6d6",
+      "docs/urbit/quickstarts/onboarding-task.md": "9814a361235c5f1ad2b6c30400aaa404aa1eb6203fdfb3f0e612279dc5c555fa",
+      "specs/urbit/toolchain.lock.json": "ae185adaec12b5aa0b2d48e2198ae65583902512ffd9d148706810c4819c650c",
+      "web/app/browser_admission.py": "2c0b01ba03cd9d70ee2b42c05ff0841668832511a0ed5c4d3fc3052586d878fb",
+      "web/app/browser_process.py": "cd8c4d151d1d20ce68d96cac2e3a4d33af9440d58815fc193793cc248ccd0ae4",
+      "web/app/dist/manifest.json": "cf46ab5c9fc334b8642c90b1b10c38e659847cbd1eb754865692be3f6e15ccd0",
+      "web/app/onboarding.py": "9c43c0f110ab78c815b5948460797042b14e91f4f071a316d2d34dc4b2fe8f2b",
+      "web/app/tests/onboarding-evidence.mjs": "00b3a7e587df4a5b70c8f9bdd1f23556e67f596c7eeb1ab9adade8fbe5a3b019",
+      "web/app/tests/onboarding.mjs": "7d7f1a25cb9fbe6538ca14c35d95822c75bf6703d7222ae637bbd12c455d73c1",
+      "web/dev/loopback_bridge.py": "a724bcfc4197adc796f580b43a751198cba8fbf4c1eeaba0221ffab01395fae2"
+    },
+    "native_tree": "557976ac8f2f941946c15b9f687fcbef51b0f265b5e1c945cb9e924ba547be02"
+  },
+  "launcher_status": "captured-for-review",
+  "owned_cgroup_absent_at_readback": true,
+  "participant_feedback": "not-submitted",
+  "prerequisites": {
+    "browser_run": "browser-native-20260929T103521Z",
+    "execution_id": "b673d9d0a3bdf8c8746d461706b6e186",
+    "journey_sha256": "b582e00f8eef0bf458f2b1bbc315bc625dc6b4151e1563a29754c53d506de68e",
+    "native": {
+      "file": "team-check-20260929T101805Z.json",
+      "sha256": "5b7612e8759a995d03aa9e3fef9f5253c56cb8491f7593a9b30d6c4b79e0c514"
+    },
+    "transport_sha256": "80f78b7741121cdb02c87ec09fb2212173738ab93b0443acb00d20f284909d72"
+  },
+  "private_files": {
+    ".runtime/onboarding-20260929T104307Z-0dzk5r7j/browser-process.json": {
+      "bytes": 578,
+      "sha256": "a957bd8a89e5fe7be9dc1bfda572fb16e324d468ec660a0865b445220f6186a2"
+    },
+    ".runtime/onboarding-20260929T104307Z-0dzk5r7j/onboarding-report.json": {
+      "bytes": 666,
+      "sha256": "37f7048015d3816f418ebdfc6f1887bfcd40aea11695b18b940e3a5ad8f065bf"
+    },
+    ".runtime/onboarding-20260929T104307Z-0dzk5r7j/ready.json": {
+      "bytes": 132,
+      "sha256": "f96c1a9dc55ca54a391465da1647a1b10aa28164597f37ad583aba7251c0468e"
+    },
+    ".runtime/onboarding-20260929T104307Z-0dzk5r7j/transport-report.json": {
+      "bytes": 4193,
+      "sha256": "ecae2f2a8b6ec03b80842e4a4c84430ce8bc4af485fabb7ab7cca6433ff6d5e2"
+    }
+  },
+  "private_profile_and_personal_fixture_removed": true,
+  "qualifies_phase": false,
+  "readbacks": 0,
+  "reads": 0,
+  "remaining": "A completed uncoached Work/Docs trial with correlated accepted saves, readbacks and participant feedback.",
+  "source_commit": "d9115056a04fd86cf55a07fd0d8a0bf0be84caaf",
+  "started_at": "2026-09-29T10:43:32.399Z",
+  "status": "deadline-incomplete"
+}

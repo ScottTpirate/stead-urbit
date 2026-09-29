@@ -51,7 +51,8 @@ async function fixture(run) {
   const consoleErrors = [];
   page.on('console', message => { if (message.type() === 'error') consoleErrors.push(message.text()); });
   const state = {failure: '', resumeFailure: false, loseCommand: false, commands: [], recoveryIds: [], receipts: new Map(),
-    watches: new Map(), pages: new Map(), sequence: 0, token: 0, polls: 0, opens: 0, denied: false, holdWork: false, releaseWork: null,
+    watches: new Map(), pages: new Map(), requests: [], sequence: 0, token: 0, polls: 0, opens: 0, denied: false,
+    holdOpen: false, releaseOpen: null, holdWork: false, releaseWork: null, invalidateCommands: false,
     project: {kind: 'project', resource_id: id(1), project_id: id(1), title: 'Garden', project_key: 'GARDEN', preset: 'general', authority_epoch: '1', resource_revision: '1', policy_revision: '1', role: 'maintainer'},
     work: [], activity: [], containers: [], documents: []};
   await page.route(origin + '/stead/**', async route => {
@@ -59,6 +60,7 @@ async function fixture(run) {
     if (request.method() !== 'POST') return route.continue();
     const value = request.postDataJSON();
     const pathname = new URL(request.url()).pathname;
+    state.requests.push({path: pathname, kind: value.kind, action: value.action, search: value.search});
     const send = (body, status = 200) => route.fulfill({status, contentType: 'application/json', body: JSON.stringify(body)});
     if (pathname.endsWith('/capabilities')) return send({protocol: 'stead.capabilities/3', profile: 'configured-team'});
     if (pathname.endsWith('/resume')) {
@@ -86,6 +88,10 @@ async function fixture(run) {
         assert.ok(state.watches.size + state.pages.size < 4, 'mock shared cursor cap');
         const watch = {id: token(), cursor: token(), sequence: state.sequence};
         state.watches.set(watch.id, watch);
+        if (state.holdOpen) {
+          state.holdOpen = false;
+          await new Promise(resolve => { state.releaseOpen = resolve; });
+        }
         return send({protocol: 'stead.update-result/3', request_id: value.request_id, status: 'watching', watch_id: watch.id, cursor: watch.cursor, generation: generation(), rows: {}});
       }
       assert.equal(value.action, 'poll'); state.polls++;
@@ -106,6 +112,7 @@ async function fixture(run) {
         session_audit_id: person.session_audit_id, runtime: 'isolated-fake', accepted_at_ms: '1790519400000', git_commit_oid: ''};
       state.receipts.set(value.request_id, receipt);
       state.work = [{...value.payload, kind: 'work', resource_id: value.resource_id, project_id: value.project_id, resource_revision: '1'}];
+      if (state.invalidateCommands) state.sequence++;
       return state.loseCommand ? route.abort('failed') : send(receipt);
     }
     assert.equal(pathname, '/stead/api/query');
@@ -127,6 +134,7 @@ async function fixture(run) {
     if (value.kind === 'activity') rows = state.activity;
     if (value.kind === 'containers') rows = state.containers;
     if (value.kind === 'documents') rows = state.documents;
+    if (value.kind === 'document') rows = state.documents.filter(row => row.resource_id === value.resource_id);
     if (value.kind === 'receipt') {
       state.recoveryIds.push(value.resource_id);
       rows = state.receipts.has(value.resource_id) ? [state.receipts.get(value.resource_id)] : [];
@@ -157,7 +165,7 @@ async function fixture(run) {
     await writeFile(path.join(output, 'failure.html'), await page.content());
     await page.screenshot({path: path.join(output, 'failure.png'), fullPage: true});
     throw error;
-  } finally { state.releaseWork?.(); await context.close(); }
+  } finally { state.releaseWork?.(); state.releaseOpen?.(); await context.close(); }
 }
 async function check(name, run) {
   if (requestedCase && name !== requestedCase) return;
@@ -171,6 +179,122 @@ async function workForm(page) {
   await page.getByRole('textbox', {name: 'Description', exact: true}).fill('Unsaved synthetic text');
 }
 try {
+  await check('authentication-reuses-validated-identity-and-opens-before-one-snapshot', async (page, state) => {
+    assert.equal(state.requests.filter(row => row.kind === 'identity').length, 1);
+    assert.deepEqual(state.requests.filter(row => row.path === '/stead/api/query' && row.kind === 'project').map(row => row.path), ['/stead/api/query']);
+    const open = state.requests.findIndex(row => row.action === 'open');
+    const snapshot = state.requests.findIndex(row => row.path === '/stead/api/query' && row.kind === 'project');
+    assert.ok(open >= 0 && snapshot > open);
+  });
+  await check('saved-snapshot-coalesces-own-invalidation-but-keeps-remote-refresh-and-revocation', async (page, state) => {
+    await workForm(page);
+    await page.locator('#project-content[data-live-updates="connected"]').waitFor();
+    state.invalidateCommands = true;
+    const reads = () => state.requests.filter(row => row.path === '/stead/api/query').length;
+    const beforeSave = reads();
+    await page.getByRole('button', {name: 'Save at home', exact: true}).click();
+    await page.getByRole('heading', {name: 'Keep this local title', exact: true}).waitFor();
+    const afterSave = beforeSave + 2;
+    assert.equal(reads(), afterSave, 'save reads metadata and Work exactly once');
+    for (let n = 0; n < 2; n++) {
+      const response = await page.waitForResponse(response => response.url().endsWith('/stead/api/updates') && response.request().postDataJSON()?.action === 'poll');
+      await response.finished();
+    }
+    await page.evaluate(() => new Promise(resolve => requestAnimationFrame(() => requestAnimationFrame(resolve))));
+    assert.equal(reads(), afterSave, 'the accepted snapshot already includes this invalidation');
+    state.work[0].title = 'Changed by another member'; state.sequence++;
+    await page.getByRole('heading', {name: 'Changed by another member', exact: true}).waitFor();
+    assert.equal(reads(), afterSave + 2, 'a new generation still reads metadata and Work');
+    state.denied = true;
+    await page.getByRole('heading', {name: 'Garden', exact: true}).waitFor({state: 'detached'});
+    assert.equal(await page.getByRole('heading', {name: 'Changed by another member', exact: true}).count(), 0);
+  });
+  await check('dense-markdown-preview-keeps-full-inert-text-and-bounded-dom', async (page, state) => {
+    const body = '<script>window.steadPreviewExecuted=true</script>\n' + '\n'.repeat(31000) + 'Tokyo 東京';
+    const markdown = `---\nid: ${id(301)}\ntype: page\nstate: draft\n---\n` + body;
+    state.containers = [{kind: 'container', resource_id: id(200), container_id: id(200), title: 'Private notes', visibility: 'private', container_head: ''}];
+    state.documents = [{kind: 'document', resource_id: id(301), container_id: id(200), title: 'Dense note', resource_revision: '1', markdown}];
+    await page.getByRole('button', {name: 'Docs', exact: true}).click();
+    await page.getByLabel('Collection', {exact: true}).selectOption(id(200));
+    await page.getByRole('button', {name: 'Open page', exact: true}).click();
+    const editor = page.getByRole('textbox', {name: 'Markdown source', exact: true});
+    const preview = page.getByRole('article', {name: 'Document content', exact: true});
+    await preview.locator('pre').waitFor();
+    assert.equal(await editor.inputValue(), markdown);
+    assert.equal(await preview.textContent(), body);
+    assert.ok(await preview.locator('*').count() < 1024);
+    assert.equal(await preview.locator('script,img,iframe,object,embed').count(), 0);
+    assert.equal(await page.evaluate(() => window.steadPreviewExecuted), undefined);
+    await editor.fill(markdown + ' edited');
+    await page.waitForFunction(() => document.querySelector('article.markdown')?.textContent.endsWith(' edited'));
+    assert.equal(await editor.inputValue(), markdown + ' edited');
+    assert.equal(state.commands.length, 0, 'rendering does not save or normalize the draft');
+    await page.getByRole('button', {name: 'Discard local changes and close', exact: true}).click();
+    state.documents = [{...state.documents[0], resource_id: id(302), title: 'Second note', markdown: `---\nid: ${id(302)}\ntype: page\nstate: draft\n---\n# Second body`}];
+    await page.getByRole('button', {name: 'Refresh', exact: true}).click();
+    await page.getByRole('button', {name: 'Open page', exact: true}).click();
+    await preview.getByRole('heading', {name: 'Second body', exact: true}).waitFor();
+    assert.equal((await preview.textContent()).includes('steadPreviewExecuted'), false);
+  });
+  await check('typing-search-keeps-current-watch-until-explicit-submit', async (page, state) => {
+    await page.getByRole('navigation', {name: 'Project views'}).getByRole('button', {name: 'Search', exact: true}).click();
+    await page.getByRole('button', {name: 'Refresh', exact: true}).waitFor({state: 'visible'});
+    await page.waitForFunction(() => document.querySelector('#project-content')?.dataset.liveUpdates === 'connected'
+      && ![...document.querySelectorAll('button')].find(button => button.textContent === 'Refresh')?.disabled);
+    const before = state.requests.length, opens = state.opens;
+    await page.getByRole('textbox', {name: 'Search this project', exact: true}).pressSequentially('garden');
+    await page.evaluate(() => new Promise(resolve => requestAnimationFrame(() => requestAnimationFrame(resolve))));
+    assert.equal(state.opens, opens);
+    assert.equal(state.requests.slice(before).filter(row => row.path === '/stead/api/query').length, 0);
+    for (let attempt = 0; attempt < 2; attempt++) {
+      const start = state.requests.length, previous = state.opens;
+      const searched = page.waitForResponse(response => response.url().endsWith('/stead/api/query')
+        && response.request().postDataJSON()?.kind === 'search' && response.request().postDataJSON()?.search === 'garden');
+      await page.getByRole('button', {name: 'Search', exact: true}).last().click();
+      await (await searched).finished();
+      await page.waitForFunction(() => document.querySelector('#project-content')?.dataset.liveUpdates === 'connected'
+        && ![...document.querySelectorAll('button')].find(button => button.textContent === 'Refresh')?.disabled);
+      const requests = state.requests.slice(start);
+      assert.equal(state.opens, previous + 1);
+      assert.deepEqual(requests.filter(row => row.path === '/stead/api/query').map(row => row.kind), ['project', 'search']);
+      assert.ok(requests.findIndex(row => row.action === 'open') < requests.findIndex(row => row.kind === 'project'));
+    }
+  });
+  await check('selected-tab-and-refresh-each-open-before-one-snapshot', async (page, state) => {
+    for (const label of ['Work', 'Work', 'Refresh']) {
+      const start = state.requests.length, opens = state.opens;
+      const snapshot = page.waitForResponse(response => response.url().endsWith('/stead/api/query')
+        && response.request().postDataJSON()?.kind === 'work');
+      await page.getByRole('button', {name: label, exact: true}).click();
+      await (await snapshot).finished();
+      await page.waitForFunction(() => document.querySelector('#project-content')?.dataset.liveUpdates === 'connected'
+        && ![...document.querySelectorAll('button')].find(button => button.textContent === 'Refresh')?.disabled);
+      const requests = state.requests.slice(start);
+      assert.equal(state.opens, opens + 1);
+      assert.deepEqual(requests.filter(row => row.path === '/stead/api/query').map(row => row.kind), ['project', 'work']);
+      assert.ok(requests.findIndex(row => row.action === 'open') < requests.findIndex(row => row.kind === 'project'));
+    }
+  });
+  await check('rapid-scope-changes-retire-one-delayed-open-before-latest-snapshot', async (page, state) => {
+    const start = state.requests.length, opens = state.opens;
+    state.holdOpen = true;
+    await page.getByRole('button', {name: 'Work', exact: true}).click();
+    const deadline = Date.now() + 10000;
+    while (!state.releaseOpen && Date.now() < deadline) await page.waitForTimeout(20);
+    assert.ok(state.releaseOpen, 'first open reached the controlled response hold');
+    for (const label of ['Docs', 'Activity', 'Inbox', 'Work', 'Search']) {
+      await page.getByRole('navigation', {name: 'Project views'}).getByRole('button', {name: label, exact: true}).click();
+    }
+    assert.equal(state.opens, opens + 1, 'new scopes wait for ownership of the outstanding open');
+    const snapshot = page.waitForResponse(response => response.url().endsWith('/stead/api/query')
+      && response.request().postDataJSON()?.kind === 'search');
+    state.releaseOpen(); state.releaseOpen = null;
+    await (await snapshot).finished();
+    await page.locator('#project-content[data-live-updates="connected"]').waitFor();
+    assert.equal(state.opens, opens + 2);
+    assert.equal(state.watches.size, 1);
+    assert.deepEqual(state.requests.slice(start).filter(row => row.path === '/stead/api/query').map(row => row.kind), ['project', 'search']);
+  });
   await check('401-during-query-restores-usable-sign-in', async (page, state) => {
     state.failure = 'expired';
     await page.getByRole('button', {name: 'Refresh', exact: true}).click();

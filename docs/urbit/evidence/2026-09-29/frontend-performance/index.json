@@ -1,0 +1,72 @@
+{
+  "additional_focused_run": "Strengthened own-invalidation regression counts reads before Save and requires exactly two through subsequent polls.",
+  "build": {
+    "app_js_bytes": 258065,
+    "files": 12,
+    "manifest_sha256": "cf46ab5c9fc334b8642c90b1b10c38e659847cbd1eb754865692be3f6e15ccd0",
+    "native_inventory_sha256": "ff16df0cc198e71b4ad3cf753b188873eabebf58f5d4c6f0f404c00d40e2c7df",
+    "packaged_readback": "12 assets verified against emitted bytes",
+    "reproducibility": "Normal locked npm installations in the root and integration checkout produced byte-identical manifests and assets.",
+    "total_bytes": 297673
+  },
+  "classification": "frontend-performance-source-and-mocked-browser-regression",
+  "cpu_affinity": [
+    19
+  ],
+  "cpu_quota_percent": 25,
+  "files": {
+    "focused-browser-process.json": {
+      "bytes": 579,
+      "sha256": "06eaa6883d3ff34e32b2e567c859461fda333f4fdeb80996b0db4ac32f6817f9"
+    },
+    "focused-runner-report.json": {
+      "bytes": 3023,
+      "sha256": "940b0198c6de7a5890f950659d0332ddb10b7263be4428c05ed4f685aeb229d0"
+    },
+    "full-browser-process.json": {
+      "bytes": 579,
+      "sha256": "56aeaa199fd82cf33e6b312a8e8a92df13411c80f648387d04ef107df7b9f166"
+    },
+    "full-runner-report.json": {
+      "bytes": 4753,
+      "sha256": "17c1060d864f398ff4e4a0e6baaa90d2ae473eb2d5f73cfeea506d285d882bf9"
+    },
+    "normal-build-manifest.json": {
+      "bytes": 1690,
+      "sha256": "cf46ab5c9fc334b8642c90b1b10c38e659847cbd1eb754865692be3f6e15ccd0"
+    },
+    "symlink-build-manifest.json": {
+      "bytes": 1690,
+      "sha256": "cf4921e1e5e7c17ce13f20913b71ba3ffeec97b93baa051e067927c2cfd2b881"
+    }
+  },
+  "frontend_host_checks_passed": 35,
+  "frontend_source_commit": "815550b29b21765d4029f1982d6fda05a2f7e240",
+  "historical_build": {
+    "classification": "operator temporary symlink dependency layout",
+    "manifest_sha256": "cf4921e1e5e7c17ce13f20913b71ba3ffeec97b93baa051e067927c2cfd2b881",
+    "outcome": "Different chunk names from the normal documented installation; retained as build-only history and replaced by normal-install packaging."
+  },
+  "independent_review": "Frontend source, strengthened regression and both browser cleanup reports cleared; normal-install packaging has separate final readback review.",
+  "limitations": [
+    "Mocked Home does not qualify native authorization, TLS, business outcomes or native latency",
+    "No native useful-content/save timing or p95 result is claimed",
+    "Prior full rendered run used the same product bytes with the pre-strengthening test; the one changed test was then rerun separately"
+  ],
+  "observed_behavior": [
+    "A local save followed by its own invalidation adds only one project metadata and one Work read",
+    "Later remote generation refreshes and revocation clears rendered protected data",
+    "Near-limit newline-dense Markdown preserves the whole inert body with bounded DOM and unchanged editor source",
+    "Switching documents does not retain the prior deferred preview"
+  ],
+  "product_source": {
+    "web/app/src/Markdown.tsx": "8437c57ac14240e6221ab737cc25d490c66330711024e96da906936a4c251434",
+    "web/app/src/main.tsx": "494e1e73aefb1a0b845d668185cfe205a18681fb56446c195ae127fb1ce5e0f7",
+    "web/app/src/style.css": "e4f4ad0d3e86641f2e63e2d55c3acd717ae530e28366a97583315a408ac1d3a5"
+  },
+  "qualifies_phase": false,
+  "rendered_cases_passed": 18,
+  "runtime": "pinned Node 24.21.0 and real Firefox with mocked Home",
+  "status": "pass",
+  "type_check": "passed"
+}

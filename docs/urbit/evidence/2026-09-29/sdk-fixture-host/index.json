@@ -1,0 +1,56 @@
+{
+  "format": 1,
+  "classification": "host-static-mocked-and-linux-process-controls",
+  "native_execution": false,
+  "base_commit": "0d46faa7dffcf4fb96e47466e9da0dda1ae46d14",
+  "source_sha256": {
+    "scripts/sdk_native/cases.py": "3bbe3fc6924de525c2b1a49260125fb0afb7ebe87d9849e35e6fa15a9b29f11a",
+    "scripts/sdk_native/consumer.py": "8b026eedb60f65541268472a723bdf53c2cf61627bf020404939e2a833af8ea5",
+    "scripts/sdk_native/controller.py": "7ebea3e7644b1474b694c37d3b8ebb0458dcddb9b982eb3b383b1ce0af3c1818",
+    "scripts/sdk_native/native.py": "44018860a029a79b32866e532241571d8b9483f86d2893a7226d7bd34424f5a1",
+    "scripts/sdk_native/results.py": "3071228144887522972beb12b4b6f1ca6d3337e80b9a8bfbd5d4099d346da4f3",
+    "scripts/sdk_native/run.py": "d152e818d576493578c6ade97d80429bb181c525aedb8718663dbad47e2b486c",
+    "tests/urbit/test_sdk_fixture.py": "0226c364a30e7270e5763c14d6f6c2f18d4229a0ca6249b4305593a0288d3bf8",
+    "tests/urbit/test_sdk_import.py": "bd8b95c82c0ddb8091a31f460d7b19b545298677af990b493329646c14b3b1b9",
+    "tests/urbit/test_sdk_results.py": "221b7ebd7bb8a70f2f60fc25b2ce29b4af0b4b202e147d07f38475b6e76b4e33"
+  },
+  "review": {
+    "reviewer": "independent_review",
+    "decision": "source-cleared-for-guarded-native-attempt",
+    "native_execution_claimed": false
+  },
+  "runs": [
+    {
+      "name": "sdk",
+      "command": "python3 -B -m unittest discover -s tests/urbit -p 'test_sdk_*.py'",
+      "cpu_quota_percent": 25,
+      "cpu": 19,
+      "exit_code": 0,
+      "discovered": 100,
+      "passed": 100,
+      "skipped": 0,
+      "unittest_seconds": 11.589,
+      "log": "sdk.log.gz",
+      "raw_bytes": 2333,
+      "raw_sha256": "c18e8167ee21002a3f49b5784a789dfa0f6bb85d09be92eba1071f205bc6e19b",
+      "gzip_sha256": "b0dc2f1e03cc5558e78f26a10e0cf8912727e3940af07bc28e07905fcc63632a"
+    },
+    {
+      "name": "full",
+      "command": "make check",
+      "cpu_quota_percent": 25,
+      "cpu": 19,
+      "exit_code": 0,
+      "discovered": 659,
+      "passed": 658,
+      "skipped": 1,
+      "unittest_seconds": 118.111,
+      "log": "full.log.gz",
+      "raw_bytes": 6046,
+      "raw_sha256": "47f898912b4c98b278e5474c4b69c0cb3388d26fcea30f6cdb58d4f959fe18b2",
+      "gzip_sha256": "cbedf48b789147d99fd5ea2456d7498ddd162f385bbc9ccdb10203d546081fc1"
+    }
+  ],
+  "skip_reason": "Optional retained local failure artifact absent; authored reader tests still execute",
+  "counts_overlap": true
+}

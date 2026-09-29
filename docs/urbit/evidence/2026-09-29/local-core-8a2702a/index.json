@@ -1,0 +1,52 @@
+{
+  "format": 1,
+  "classification": "local-real-native-compile-probes",
+  "qualifies_phase": false,
+  "source_commit": "8a2702a577b355acbbc621a38be51348b59e02a5",
+  "check_observations": 175,
+  "positive_native_arms": 71,
+  "counts_overlap": true,
+  "native_failure_control_outcome": "expected-failure",
+  "core_seconds": 364.377,
+  "inputs_unchanged": true,
+  "guard": {
+    "run_id": "2dd5a35f6b7a7761bbede6117f91c37c",
+    "status": "completed",
+    "exit_code": 0,
+    "elapsed_seconds": 2992.228,
+    "cleanup_errors": [],
+    "owned_cgroup_absent_after_stop": true
+  },
+  "scope_excludes": [
+    "new 68-event recovery assertions added after this source",
+    "configured four-ship acceptance",
+    "SDK business conformance",
+    "native browser and human onboarding"
+  ],
+  "files": {
+    "core-report.json": {
+      "path": "core-report.json.gz",
+      "raw_bytes": 851060,
+      "raw_sha256": "e130771db6d770bbb4937a8808f7c6432e3d5aa356ab146ac8764814e60f640b",
+      "gzip_sha256": "8d0e0e0174ca73b18f242477eff17dd71e144f9ab1c2e3c020843f86b8bc6cdd"
+    },
+    "guard-report.json": {
+      "path": "guard-report.json.gz",
+      "raw_bytes": 1298712,
+      "raw_sha256": "9b5a9b66f92264f823877a04592b6016f2ef0ac332693031db251d959f5aff92",
+      "gzip_sha256": "d184ce6400a9c8aa179c558d85891b8a81acb3bbd585e1a5672c8f71d2d8d6ad"
+    },
+    "seed-manifest.json": {
+      "path": "seed-manifest.json.gz",
+      "raw_bytes": 441,
+      "raw_sha256": "423ef7d16969fbcab7597742748342672c238d7400ddd39f050fdae5d57bbb28",
+      "gzip_sha256": "6ff99795e018bcd20414b8b2fc1c670dc87e5b566bcaf5c4d3ae7d5b6ba2c4d8"
+    },
+    "stop.log": {
+      "path": "stop.log.gz",
+      "raw_bytes": 141,
+      "raw_sha256": "fe8b2280abb0c0a09259c5211aa3dc729b9b42caa2afdaa7431a4d4936ba213c",
+      "gzip_sha256": "3515bb00ab4541684f1f9147aacb7e7157ed671b8d21b6ef4cf9f013b859c7f8"
+    }
+  }
+}

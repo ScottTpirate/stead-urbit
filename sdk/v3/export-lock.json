@@ -1,0 +1,62 @@
+{
+  "api_version": 3,
+  "files": {
+    "LICENSE": {
+      "bytes": 10030,
+      "sha256": "a268d7b43f15fc12307b291a01c5761d177a8848521fd3f6f9949e2e89680c05"
+    },
+    "THIRD_PARTY_NOTICES.md": {
+      "bytes": 13933,
+      "sha256": "3c02a6d5d517e54c2c69bf9e4d830c97fef68a717248d0cbbf9cdce7686c3197"
+    },
+    "native/core/desk/lib/stead-codec.hoon": {
+      "bytes": 9532,
+      "sha256": "56e3d574381bbf8cdf29ca192c70eff256009f89d782e3ffe859b19c1321cbd7"
+    },
+    "native/core/desk/lib/stead-delivery.hoon": {
+      "bytes": 556,
+      "sha256": "178cac634471554dae9928f8c38248751329314391061976a436a22a7075548d"
+    },
+    "native/core/desk/lib/stead-team-codec.hoon": {
+      "bytes": 7169,
+      "sha256": "2dec1ef4ed37d952d49498b5c94b7ca613eeea71818fb7b0811ec1ccf1baf1e1"
+    },
+    "native/core/desk/lib/stead-update-codec.hoon": {
+      "bytes": 1753,
+      "sha256": "632fc4d5a92c6db834454314c3b40bb57e348c6eaaa9a0767e9da126e659c02a"
+    },
+    "native/core/desk/mar/stead-command-3.hoon": {
+      "bytes": 171,
+      "sha256": "fcd87c92acc16c2883b1dd4900af5064d1da910af317e93c327455cd56d9553b"
+    },
+    "native/core/desk/mar/stead-query-3.hoon": {
+      "bytes": 171,
+      "sha256": "fcd87c92acc16c2883b1dd4900af5064d1da910af317e93c327455cd56d9553b"
+    },
+    "native/core/desk/mar/stead-result-3.hoon": {
+      "bytes": 171,
+      "sha256": "fcd87c92acc16c2883b1dd4900af5064d1da910af317e93c327455cd56d9553b"
+    },
+    "native/core/desk/mar/stead-updates-3.hoon": {
+      "bytes": 171,
+      "sha256": "fcd87c92acc16c2883b1dd4900af5064d1da910af317e93c327455cd56d9553b"
+    },
+    "sdk/v3/API.md": {
+      "bytes": 13809,
+      "sha256": "ff3a33f3f1a00b16ea806b7e888883f9487b3747f956cdbe8fe06cea74c067ee"
+    },
+    "sdk/v3/README.md": {
+      "bytes": 3319,
+      "sha256": "a9e79b4faab41cc436404030c665cd716594584c6e76ff5f687aad14590c4d40"
+    },
+    "sdk/v3/desk-dev/ted/stead-sdk-call.hoon": {
+      "bytes": 3140,
+      "sha256": "ab1460c4ec0a1debcaaffbc5a8a789647e54a4672a1ca891b802104a75399487"
+    }
+  },
+  "kernel_kelvin": 408,
+  "native_source_commit": "d3b2b97ee7a4c343f3e4472dc05c479e2de11cfb",
+  "protocol": "stead.sdk-exports/1",
+  "runtime_lock_sha256": "ae185adaec12b5aa0b2d48e2198ae65583902512ffd9d148706810c4819c650c",
+  "sdk_version": "0.2.0-alpha"
+}

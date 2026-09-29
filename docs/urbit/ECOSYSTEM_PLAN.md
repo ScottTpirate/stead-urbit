@@ -56,7 +56,12 @@ Keep arbitrary build/model execution off the authority host. Bind job and artifa
 
 Before a stable claim, two independent teams must operate the candidate and at least one separate Urbit app must integrate through the published SDK. A nonauthor must install, upgrade, recover and export using the docs. A backup accountable maintainer must reproduce/verify a release and exercise a recovery/security drill. No maintainers, adopters, SLAs or security contacts are invented by this plan.
 
-The repository is currently private. Public source/community launch requires an owner-approved visibility decision, history/license/secret review and a verified private vulnerability reporting route. Keep essential security free and open source; preserve notices and reviewed dependency scope.
+The owner made the repository public during Phase 2 CI preparation (visibility
+verified 2026-09-28 UTC). That visibility change does not complete URB-270:
+history/license/secret review, a verified private vulnerability reporting route,
+maintainer backup and release-key recovery remain separate release gates. Keep
+essential security free and open source; preserve notices and reviewed
+dependency scope.
 
 Defer global consensus, blockchain-per-edit, active-active project authority, arbitrary plugin marketplaces and native arbitrary-language build farms. Do not accumulate optional dependencies just because they exist in Urbit.
 

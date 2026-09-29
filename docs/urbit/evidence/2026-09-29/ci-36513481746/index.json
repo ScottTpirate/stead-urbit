@@ -1,0 +1,134 @@
+{
+  "attempt": 1,
+  "candidate_commit": "d89330ec0da287eae5b1c86e7e2389d33152f9ac",
+  "classification": "actual-github-hosted-native-ci-failure",
+  "cleanup": {
+    "active_state": "failed",
+    "empty": true,
+    "unit": "stead-hosted-7c9c500104c6176cf6a1a3d834554a86.service",
+    "verified": true
+  },
+  "collector": {
+    "completed": true,
+    "eof": true,
+    "error": null,
+    "overflow": false
+  },
+  "controller_commit": "d89330ec0da287eae5b1c86e7e2389d33152f9ac",
+  "files": {
+    "control-changed-limits-inputs.json": {
+      "bytes": 54041,
+      "file": "control-changed-limits-inputs.json.gz",
+      "gzip_sha256": "ca89d6372f9a24ab5d9c9ff153b951b2a039b63a82e3139f127ed48f52eb6fde",
+      "sha256": "8c4d6365878997dc8dd1b8acbac5ef613d0270bd7ebccae68485057091659284"
+    },
+    "control-changed-limits-report.json": {
+      "bytes": 9382,
+      "file": "control-changed-limits-report.json.gz",
+      "gzip_sha256": "141e321ba426ac2f1439bc7b84407ca6a7eb4358ea5b47b9116899bd004c3288",
+      "sha256": "001b43b788ad1f8975a2f89dcbfd35aacb268ba3fac0f9d04169376f2556de31"
+    },
+    "control-guardian-death-inputs.json": {
+      "bytes": 54041,
+      "file": "control-guardian-death-inputs.json.gz",
+      "gzip_sha256": "ca89d6372f9a24ab5d9c9ff153b951b2a039b63a82e3139f127ed48f52eb6fde",
+      "sha256": "8c4d6365878997dc8dd1b8acbac5ef613d0270bd7ebccae68485057091659284"
+    },
+    "control-guardian-death-report.json": {
+      "bytes": 8191,
+      "file": "control-guardian-death-report.json.gz",
+      "gzip_sha256": "0cc44c8959ae836401c15d7724e395ddeebe86276a26ece46f7c2c848ac1c6a7",
+      "sha256": "393074adf5b6c49e2076fcb6ff9e6155c6f716b64a803261494cca86bcbdacfc"
+    },
+    "control-missing-profile-inputs.json": {
+      "bytes": 54041,
+      "file": "control-missing-profile-inputs.json.gz",
+      "gzip_sha256": "ca89d6372f9a24ab5d9c9ff153b951b2a039b63a82e3139f127ed48f52eb6fde",
+      "sha256": "8c4d6365878997dc8dd1b8acbac5ef613d0270bd7ebccae68485057091659284"
+    },
+    "control-missing-profile-report.json": {
+      "bytes": 7154,
+      "file": "control-missing-profile-report.json.gz",
+      "gzip_sha256": "52f62c64421245042385967c79e8ec279bbb47ef6afaf40d32098bf29f447c37",
+      "sha256": "33b04c0eb209bc414f532da9ddd485e99a494484f8e318aec0abd37c56badb03"
+    },
+    "control-parent-death-inputs.json": {
+      "bytes": 54041,
+      "file": "control-parent-death-inputs.json.gz",
+      "gzip_sha256": "ca89d6372f9a24ab5d9c9ff153b951b2a039b63a82e3139f127ed48f52eb6fde",
+      "sha256": "8c4d6365878997dc8dd1b8acbac5ef613d0270bd7ebccae68485057091659284"
+    },
+    "control-parent-death-report.json": {
+      "bytes": 9313,
+      "file": "control-parent-death-report.json.gz",
+      "gzip_sha256": "58b0ee99f10ec2e21912c3886f8c8cc0dba9e9e89863f72b0144366396bcd941",
+      "sha256": "a69847d67dab8d9d1f5c09005f5bdb8fe91aa40bc4686f91008418670d074163"
+    },
+    "control-stale-lease-inputs.json": {
+      "bytes": 54041,
+      "file": "control-stale-lease-inputs.json.gz",
+      "gzip_sha256": "ca89d6372f9a24ab5d9c9ff153b951b2a039b63a82e3139f127ed48f52eb6fde",
+      "sha256": "8c4d6365878997dc8dd1b8acbac5ef613d0270bd7ebccae68485057091659284"
+    },
+    "control-stale-lease-report.json": {
+      "bytes": 9558,
+      "file": "control-stale-lease-report.json.gz",
+      "gzip_sha256": "3d4ff21e5bfe7876c0611627658058c04e7948a99102eac468e9b32da90e507a",
+      "sha256": "921034c1b5049c08bfc18030359968a93a87f40e1b757b3851ccb38b89450347"
+    },
+    "control-wrong-profile-inputs.json": {
+      "bytes": 54041,
+      "file": "control-wrong-profile-inputs.json.gz",
+      "gzip_sha256": "ca89d6372f9a24ab5d9c9ff153b951b2a039b63a82e3139f127ed48f52eb6fde",
+      "sha256": "8c4d6365878997dc8dd1b8acbac5ef613d0270bd7ebccae68485057091659284"
+    },
+    "control-wrong-profile-report.json": {
+      "bytes": 7932,
+      "file": "control-wrong-profile-report.json.gz",
+      "gzip_sha256": "676a10d9a9cbd3479744d496cc6b3dde182b8f54934f047a33514b7d4300c64a",
+      "sha256": "06ae4f57fe3a005223930177f23e5bb1f11df1529d019a76b0f12c0dec43aa3d"
+    },
+    "inputs.json": {
+      "bytes": 54041,
+      "file": "inputs.json.gz",
+      "gzip_sha256": "ca89d6372f9a24ab5d9c9ff153b951b2a039b63a82e3139f127ed48f52eb6fde",
+      "sha256": "8c4d6365878997dc8dd1b8acbac5ef613d0270bd7ebccae68485057091659284"
+    },
+    "report.json": {
+      "bytes": 11201,
+      "file": "report.json.gz",
+      "gzip_sha256": "949d7ffb073ec49db3e958377a713b30b53e3217b0a04359cf5363296765449e",
+      "sha256": "37393d764fee2600baf877d5fe11b279e01e9d9b673a67ef369b6a9cd716685f"
+    }
+  },
+  "guard_elapsed_seconds": 1179.878,
+  "guard_exit_code": 1,
+  "inputs_match": true,
+  "native_checks_failed": 0,
+  "native_checks_passed": 172,
+  "native_commands_recorded": 175,
+  "native_error": {
+    "class": "TimeoutError",
+    "reason": "unrecognized"
+  },
+  "native_frame_stage": "response-header",
+  "native_suites_recorded": 3,
+  "native_transcripts_recorded": 4,
+  "qualifies_phase": false,
+  "resource_controls_passed": [
+    "changed-limits",
+    "guardian-death",
+    "missing-profile",
+    "parent-death",
+    "stale-lease",
+    "wrong-profile"
+  ],
+  "retained_scope": "Worker cleanup failed; verified empty host cgroup does not relabel the native run as passed. Later configured deletion, migration and negative controls did not qualify.",
+  "reviewed_inference": "Three completed suites and four finally-captured transcripts place the timeout in the fourth inventory suite, /tests/stead-updates. The public projection cannot identify an individual arm or distinguish compilation time from execution.",
+  "run_id": "36513481746",
+  "run_url": "https://github.com/ScottTpirate/stead-urbit/actions/runs/36513481746",
+  "status": "fail",
+  "worker_cleanup": false,
+  "worker_stage": "team-check",
+  "workflow_commit": "536ca5158d7276bffae04b21b50680d2d08659bd"
+}

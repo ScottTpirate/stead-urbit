@@ -1,0 +1,54 @@
+{
+  "format": 1,
+  "classification": "frontend-build-only",
+  "files": {
+    "index.html": {
+      "bytes": 307,
+      "sha256": "4ad0a8c304f247405c5314f49b27fac259aa8f52458868bfe6e5f79760ad7a95"
+    },
+    "identity.html": {
+      "bytes": 355,
+      "sha256": "08a1794a61e7ed673d2e66de355cda8680a87a9dff4de7245ac987909ce7b1ed"
+    },
+    "NOTICE.txt": {
+      "bytes": 13478,
+      "sha256": "1f7ace5da42d050917f462ec832cca5f88550cafed6f4bbfe680886a033efdab"
+    },
+    "app.js.LEGAL.txt": {
+      "bytes": 934,
+      "sha256": "b0f578720c3cda257868108d7295bb78a4535609648dccc4116da960f61520a8"
+    },
+    "app.js": {
+      "bytes": 258065,
+      "sha256": "9c8acc6d803fe4337d6a1bff40fc635fe123c9ded901f52954a669550d5fb868"
+    },
+    "identity.js": {
+      "bytes": 5542,
+      "sha256": "2620951f45589c393f7a9dd8ddd24a5cbe82a8ce84699216da05eb7fc9c9ffe6"
+    },
+    "chunk-KS3NW5UH.js": {
+      "bytes": 1293,
+      "sha256": "6c9c39ff5e8dfb33fde1e7eab73278b066f0aaba030918ced7610c6f267fdc66"
+    },
+    "chunk-M3BTALDO.js.LEGAL.txt": {
+      "bytes": 623,
+      "sha256": "bc5112824c7d9bce98cf1667c0d7e5db217c1ccce14a21ef3b9c0a06f2bc40d5"
+    },
+    "chunk-M3BTALDO.js": {
+      "bytes": 8345,
+      "sha256": "0e31fab7cf6c399f805dc874f264885c9238ce6fb0635c3b3f0089deaf679f7f"
+    },
+    "chunk-SQE76S5B.js": {
+      "bytes": 577,
+      "sha256": "11247d28c5c2fb3d976002c2b55fecb6ba19fd88153e11d2c7af5832fd6ff331"
+    },
+    "app.css": {
+      "bytes": 7424,
+      "sha256": "d40c8d95a0e8908ae9c2b279e1d6481bf191711a8794312c8b15e8a12c9a27c8"
+    },
+    "identity.css": {
+      "bytes": 730,
+      "sha256": "6016a28499433ab016b68e48afe0515cacc0032d24bb1b1da1dca0563a466be0"
+    }
+  }
+}

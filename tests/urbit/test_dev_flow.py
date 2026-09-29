@@ -154,6 +154,39 @@ class LifecycleTests(unittest.TestCase):
                         harness.dev()
                     stop.assert_called_once()
 
+    def test_dev_waits_for_four_cold_boots_within_guard_lifetime(self):
+        harness.guard(create=True)
+        stages = [{'stage': 'booting ' + ship, 'ready': False} for ship in ('zod', 'bus', 'nec', 'bud')]
+        stages.append({'stage': 'ready', 'ready': True, 'execution_guard': {'state': 'running'}})
+        with patch.object(harness, 'start'), patch.object(harness, 'rpc', side_effect=stages), \
+                patch.object(harness.time, 'monotonic', side_effect=[0, 0, 650, 1300, 1950, 2600]), \
+                patch.object(harness.time, 'sleep'), patch.object(harness, 'core_check') as check, \
+                patch.object(harness, 'stop') as stop:
+            harness.dev()
+            check.assert_called_once()
+            stop.assert_not_called()
+
+    def test_dev_stops_waiting_at_existing_guard_lifetime(self):
+        harness.guard(create=True)
+        with patch.object(harness, 'start'), \
+                patch.object(harness, 'rpc', return_value={'stage': 'booting zod', 'ready': False}), \
+                patch.object(harness.time, 'monotonic', side_effect=[0, 0, 7201]), \
+                patch.object(harness.time, 'sleep'), patch.object(harness, 'core_check') as check, \
+                patch.object(harness, 'stop') as stop:
+            with self.assertRaisesRegex(RuntimeError, 'Readiness timed out'):
+                harness.dev()
+            check.assert_not_called()
+            stop.assert_called_once()
+
+    def test_migration_diagnostic_refuses_existing_fixture_without_stopping_it(self):
+        harness.guard(create=True)
+        with patch.object(harness, 'running', return_value={'ready': True}), \
+                patch.object(harness, 'start') as start, patch.object(harness, 'stop') as stop:
+            with self.assertRaisesRegex(RuntimeError, 'Stop the existing'):
+                harness.migration_dev()
+            start.assert_not_called()
+            stop.assert_not_called()
+
     def test_public_feedback_cli_uses_only_the_fixed_rpc(self):
         harness.guard(create=True)
         with patch.object(harness, 'rpc', return_value={'status': 'pass'}) as rpc:
@@ -237,12 +270,128 @@ class SupervisorDeveloperTests(unittest.TestCase):
             spec.loader.exec_module(self.supervisor)
         self.supervisor.PROGRESS.update(stage='ready', ready=True)
 
+    def test_execution_provider_freezes_on_first_use(self):
+        module = self.supervisor
+        with patch.object(module.execution_policy, 'require_lease', return_value={'source': 'workstation'}) as thermal:
+            self.assertEqual(module.execution_check(preflight=True), {'source': 'workstation'})
+            thermal.assert_called_once_with(preflight=True, read_only=True)
+        provider = Mock()
+        with self.assertRaisesRegex(module.execution_policy.GuardError, 'already selected'):
+            module.select_execution_provider(provider)
+        provider.require.assert_not_called()
+
+    def test_explicit_provider_selects_once_before_any_child(self):
+        module = self.supervisor
+        provider = Mock()
+        provider.require.return_value = {'source': 'separately-admitted-provider'}
+        module.select_execution_provider(provider)
+        self.assertEqual(module.execution_check(), {'source': 'separately-admitted-provider'})
+        with self.assertRaisesRegex(module.execution_policy.GuardError, 'already selected'):
+            module.select_execution_provider(provider)
+
+    def test_verified_seeds_restore_without_a_prior_live_directory(self):
+        module = self.supervisor
+        with tempfile.TemporaryDirectory(prefix='stead-seed-restore-') as directory, ExitStack() as stack:
+            root = Path(directory)
+            seed, live = root / 'seed', root / 'live'
+            seed.mkdir()
+            for ship in module.SHIPS:
+                (seed / ship).mkdir()
+                (seed / ship / 'synthetic-state').write_text(ship)
+            manifest = {'toolchain_sha256': 'a' * 64,
+                'ships': {ship: digests.tree_sha(seed / ship) for ship in module.SHIPS}}
+            (seed / 'manifest.json').write_text(json.dumps(manifest))
+            stack.enter_context(patch.object(module, 'SEED', seed))
+            stack.enter_context(patch.object(module, 'LIVE', live))
+            stack.enter_context(patch.object(module, 'execution_check'))
+            stack.enter_context(patch.object(module, 'sha', return_value='a' * 64))
+            self.assertFalse(live.exists())
+            module.copy_seed_to_live()
+            self.assertEqual({ship: digests.tree_sha(live / ship) for ship in module.SHIPS}, manifest['ships'])
+            # Corruption and a running identity must still fail before replacing
+            # any existing state; missing-directory support changes neither gate.
+            (live / 'preserved').write_text('keep')
+            (seed / 'zod' / 'synthetic-state').write_text('corrupt')
+            with self.assertRaisesRegex(ValueError, 'Seed integrity failure'):
+                module.copy_seed_to_live()
+            self.assertEqual((live / 'preserved').read_text(), 'keep')
+            with patch.object(module, 'PROCESSES', {'zod': Mock(poll=lambda: None)}):
+                with self.assertRaisesRegex(RuntimeError, 'fake ship is live'):
+                    module.copy_seed_to_live()
+            self.assertEqual((live / 'preserved').read_text(), 'keep')
+
     def dispatch(self, request):
         server, client = socket.socketpair()
         with client:
             client.sendall(json.dumps(request).encode() + b'\n')
             self.supervisor.handle(server)
             return json.loads(client.recv(65536))
+
+    def test_team_reference_is_final_guarded_evidence_and_never_survives_failed_rerun(self):
+        # Native execution is mocked; report writes and the status reference are
+        # real, covering ordering and late guard failure without starting ships.
+        module = self.supervisor
+        for outcome in ('pass', 'fail', 'late-guard-failure'):
+            with self.subTest(outcome=outcome), tempfile.TemporaryDirectory() as folder, ExitStack() as stack:
+                state = Path(folder); (state / 'logs').mkdir()
+                path = state / 'logs/team-check-20260927T120000Z.json'
+                module.PROGRESS.update(stage='ready', ready=True, team_evidence={'stale': True})
+                stack.enter_context(patch.object(module, 'STATE', state))
+                lease = {'run_id':'synthetic-control','generation':1,'guard_sha256':'a'*64,
+                    'policy_sha256':'b'*64,'policy':{'synthetic':True}}
+                calls = 0
+                def guard(**kwargs):
+                    nonlocal calls
+                    calls += 1
+                    if calls == 2 and outcome == 'late-guard-failure':
+                        raise execution_policy.GuardError('synthetic late refusal')
+                    return lease
+                def native(host):
+                    self.assertNotIn('team_evidence',module.PROGRESS)
+                    self.assertFalse(module.PROGRESS['ready'])
+                    result = {'status':'fail' if outcome == 'fail' else 'pass',
+                        'evidence_file':'.piers/fakes/logs/'+path.name}
+                    execution_policy.write_json(path,{**result,'execution_guard':{'not-final':True}})
+                    return result
+                stack.enter_context(patch.object(module, 'execution_check', side_effect=guard))
+                stack.enter_context(patch.object(module.team_check, 'run', side_effect=native))
+                stop = stack.enter_context(patch.object(module,'all_stop'))
+                response = self.dispatch({'op':'team-check'})
+                self.assertTrue(response['ok'],response)
+                persisted = execution_policy.read_json(path)
+                if outcome == 'pass':
+                    self.assertEqual(persisted['execution_guard'],lease)
+                    self.assertEqual(module.PROGRESS['team_evidence'],{'file':path.name,'sha256':digests.sha(path)})
+                    self.assertTrue(module.PROGRESS['ready']); stop.assert_not_called()
+                else:
+                    self.assertEqual(persisted['status'],'fail')
+                    self.assertNotIn('team_evidence',module.PROGRESS)
+                    self.assertFalse(module.PROGRESS['ready']); stop.assert_called_once()
+
+    def test_one_shot_migration_ends_its_lifetime_without_browser_readiness(self):
+        module = self.supervisor
+        with tempfile.TemporaryDirectory() as directory, ExitStack() as stack:
+            seed = Path(directory)
+            (seed / 'manifest.json').write_text('{"toolchain_sha256":"pin"}')
+            stack.enter_context(patch.object(module, 'SEED', seed))
+            stack.enter_context(patch.object(module, 'TEAM', object()))
+            stack.enter_context(patch.object(module, 'sha', return_value='pin'))
+            stack.enter_context(patch.object(module, 'execution_check'))
+            stack.enter_context(patch.object(module, 'record'))
+            stack.enter_context(patch.object(module, 'guarded_result', side_effect=lambda value: value))
+            run = stack.enter_context(patch.object(module.migration_check, 'run'))
+            stop = stack.enter_context(patch.object(module, 'all_stop'))
+            stack.enter_context(patch.dict(os.environ, {'STEAD_DIAGNOSTIC': 'migration'}))
+            for outcome in ('pass', 'fail'):
+                module.INITIALIZATION_FAILED.clear()
+                module.PROGRESS.update(stage='starting', ready=False)
+                run.return_value = {'status': outcome}
+                module.initialize()
+                self.assertFalse(module.PROGRESS['ready'])
+                self.assertTrue(module.NORMAL_STOP.is_set())
+                self.assertTrue(module.STOP.is_set())
+                self.assertEqual(module.INITIALIZATION_FAILED.is_set(), outcome == 'fail')
+            self.assertEqual(stop.call_count, 2)
 
     def feedback_mocks(self, stack, *, proof=None, outcome=None):
         module = self.supervisor

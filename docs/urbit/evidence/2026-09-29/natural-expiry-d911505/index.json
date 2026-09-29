@@ -1,0 +1,115 @@
+{
+  "bearer_controls": [
+    {
+      "at_ms": 1790680226973,
+      "error": "invalid_csrf",
+      "status": 403
+    },
+    {
+      "at_ms": 1790680346866,
+      "error": "session_required",
+      "status": 401
+    }
+  ],
+  "browser_cleanup": {
+    "cgroup": "/user.slice/user-1000.slice/user@1000.service/app.slice/stead-browser-a66618ba76bea45c4804e858e1b37373.service",
+    "empty": true,
+    "process_reaped": true,
+    "state": "inactive"
+  },
+  "browser_exit_code": 0,
+  "checks": [
+    {
+      "at_ms": 1790680245023,
+      "name": "real-session-still-authorized-before-expiry-with-private-draft",
+      "passed": true
+    },
+    {
+      "at_ms": 1790680346866,
+      "name": "unchanged-expired-bearer-rejected-by-real-native-authorization",
+      "passed": true
+    },
+    {
+      "at_ms": 1790680343207,
+      "name": "natural-expiry-clears-rendered-protected-view-and-draft",
+      "passed": true
+    }
+  ],
+  "classification": "real-browser-native-natural-session-expiry",
+  "execution_id": "b673d9d0a3bdf8c8746d461706b6e186",
+  "final_native_lifetime": "../local-native-browser-d911505/index.json",
+  "format": 1,
+  "http_capture": {
+    "capture_complete": true,
+    "capture_errors": [],
+    "capture_truncated": false,
+    "first_session_required_response_utc": "2026-09-29T11:12:23.207Z",
+    "last_authorized_response_utc": "2026-09-29T11:12:20.584Z",
+    "observations": 38,
+    "status_counts": {
+      "200": 37,
+      "401": 1
+    }
+  },
+  "independent_review": "Exact native and parent-journey prerequisites, before/after/current source inventories, unchanged private session digest, all three expected cases, full response capture, actual unchanged-bearer rejection and browser cleanup independently reconciled.",
+  "inputs_after_equal_before": true,
+  "inputs_before": {
+    "admission": "2c0b01ba03cd9d70ee2b42c05ff0841668832511a0ed5c4d3fc3052586d878fb",
+    "boundary_test": "f9519aa7b7b749c806ce4f797eb73f7e8da3a350bf91be83dd1e8242c7ebf3f1",
+    "browser_cases": "5a356b3678ed2dfab30003899d72afb534a5357ebc58fa3a7939c2e916b39295",
+    "browser_test": "bf9fec033978aec79bcf54a6380236983bd4f3073be57f6e10b1f35f2e44c5db",
+    "docs_controls": "770db1306409e111e6052eb59d76d72fdf93b4219974d62818c3aa0212cdb1f3",
+    "execution_id": "b673d9d0a3bdf8c8746d461706b6e186",
+    "expiry_session": "e4931799f51180bb91f4526b8191f73e3f0c76d294900399dfb8f4ee1c85ef3f",
+    "expiry_test": "d42687db1d128224534462195c321ece6b12f241635c3156a837a4cde74769ff",
+    "frontend_manifest": "cf46ab5c9fc334b8642c90b1b10c38e659847cbd1eb754865692be3f6e15ccd0",
+    "harness": "37be01e5551285654e2a03fd2c4be17901219b5f8bd14b95b38a1bfa5df1e6f1",
+    "native_prerequisite": {
+      "file": "team-check-20260929T101805Z.json",
+      "sha256": "5b7612e8759a995d03aa9e3fef9f5253c56cb8491f7593a9b30d6c4b79e0c514"
+    },
+    "native_tree": "557976ac8f2f941946c15b9f687fcbef51b0f265b5e1c945cb9e924ba547be02",
+    "parent_journey": "b582e00f8eef0bf458f2b1bbc315bc625dc6b4151e1563a29754c53d506de68e",
+    "parent_transport": "80f78b7741121cdb02c87ec09fb2212173738ab93b0443acb00d20f284909d72",
+    "process_owner": "cd8c4d151d1d20ce68d96cac2e3a4d33af9440d58815fc193793cc248ccd0ae4",
+    "relay": "a724bcfc4197adc796f580b43a751198cba8fbf4c1eeaba0221ffab01395fae2",
+    "response_capture": "4b1fd5c75926bb0c7057a1712f6551e610a39e4214251bf2c4ceac80c9cfa033",
+    "runner": "d13051e7837dd5987a8e55d3c3f134efb19a9b75f1e31dec5fae5eae5a0c3d7c",
+    "toolchain": "ae185adaec12b5aa0b2d48e2198ae65583902512ffd9d148706810c4819c650c"
+  },
+  "owned_cgroup_absent_at_readback": true,
+  "private_files": {
+    ".runtime/browser-expiry-20260929T111015Z/browser-process.json": {
+      "bytes": 579,
+      "sha256": "fcea87fcca231bf4c451123027dc2f4c00704b74bdbdf62fdbe2866083948f53"
+    },
+    ".runtime/browser-expiry-20260929T111015Z/browser-report.json": {
+      "bytes": 6716,
+      "sha256": "36e4116448be3281d883c1c5a4301a32f76deeaf6e74a666d4b0114366f1dd1c"
+    },
+    ".runtime/browser-expiry-20260929T111015Z/transport-report.json": {
+      "bytes": 5174,
+      "sha256": "c5ceca7481ddc06ad3b6426c9903e4afc538e45b75134be2d9e71c8ce71b284f"
+    },
+    ".runtime/phase02-complete-20260927/expiry-schedule-d911505-20260929.json": {
+      "bytes": 525,
+      "sha256": "cf3db9f7ec4a6a33717c61a593f8f078bf70a94ee0956e3288f9f1e973842cd6"
+    }
+  },
+  "private_profile_removed": true,
+  "qualifies_phase": false,
+  "remaining": "Completed uncoached human Work/Docs trial and reviewed integration remain required.",
+  "session": {
+    "native_ttl_seconds": 1800,
+    "original_cookie_expiry_utc": "2026-09-29T11:12:22.054Z",
+    "private_session_file_sha256": "e4931799f51180bb91f4526b8191f73e3f0c76d294900399dfb8f4ee1c85ef3f",
+    "resume_changes_csrf_without_extending_expiry": true,
+    "unchanged_cookie_and_native_ttl_verified": true
+  },
+  "source_commit": "d9115056a04fd86cf55a07fd0d8a0bf0be84caaf",
+  "status": "pass",
+  "tls": {
+    "wrong_ca_rejected": true,
+    "wrong_hostname_rejected": true
+  }
+}

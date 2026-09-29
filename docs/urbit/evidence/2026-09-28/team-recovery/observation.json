@@ -1,0 +1,83 @@
+{
+  "boundary": "Application checks and the recovery probe passed on the original runtime. The later thermal stop leaves the overall fixture lifetime unqualified. Results do not transfer to the repaired runtime.",
+  "check_elapsed_seconds": 833.013,
+  "checks_passed": 731,
+  "checks_status": "pass",
+  "classification": "local-real-configured-gall-development",
+  "committed_bytes_verified": true,
+  "format": "stead.configured-native-observation/1",
+  "inputs": {
+    "harness": "e6ea937fd32539860f800d0f0fd87f5b9e7f257279376fd2372401924c4e7080",
+    "ingress": "a063ce179538853bf3fd62ab9679a9b878022929d9b663245f9cbb449dafd281",
+    "native": "192fea7714a6423409450b1546350d5c4ad6cd47eae96846b4e2664af7c42ec3",
+    "native_unit_inventory": "a9704375390ca4a967add5928f853aca4d122a431f424b49bce9e3d7ab09a0f1",
+    "runner": {
+      "core_conn.py": "b9172b903626e01d10ca7522a5f0399c2844db00c4987bf0018ef22b0e3e6162",
+      "execution_policy.py": "da16e2e0fd32eb5b90706b546a7ea8332a65807fc8279f3bd765dcc18aaad9b5",
+      "native_install.py": "9afb33b359ef71c1503bbb25616e445318298d850cd94672ecd5181b84018c11",
+      "native_peer_fence.py": "a3e4442c9912a75a8cf077e49c242729153d36c6746e356250dac878e2f61772",
+      "native_tls.py": "0c76e4fcbe37fceee823a5ba1bf3080a2523149996c8471a1afed0341b45ebc5",
+      "native_units.py": "0e65e7046f6eba57ddca5c7ef2afac31f249767ea5fb1fdf9eef371ba31b6f0b",
+      "owned_child.py": "a01fc92a0b5f000f5ddee505d475127681ac47ea9a7aa4d8b450594cd50ec229",
+      "team_check.py": "4610a436def678e57f99ab97351785f78a419709be33e254dabe37dcb5ebbad1",
+      "team_conn.py": "6fe519e24f8964952765de135a48e5aa285295b20ee36db14a62881240e23374",
+      "team_lifecycle.py": "17cae4fcafd69e85845574aa72a439dcb280061a7cd4b9112f0d7bb086252547",
+      "team_updates_check.py": "7e64efa3a7343e693503569a9a4f925b634aa624f1253e8c0773c304715345d8"
+    },
+    "toolchain": "4a209c10cf1756eb0f7357cc3eca8250bf66c239b4cd0ca31a8c0886d4d304ee"
+  },
+  "inputs_unchanged": true,
+  "lifetime": {
+    "elapsed_seconds": 1793.62,
+    "exit_code": 1,
+    "reason": "GuardError: Thermal ceiling reached",
+    "run_id": "77c94960e43efd979a5a49838294d118",
+    "status": "failed"
+  },
+  "native_units": [
+    {
+      "expected_arms": 19,
+      "observed_arms": 19,
+      "outcome": "passed",
+      "path": "/tests/stead-session"
+    },
+    {
+      "expected_arms": 14,
+      "observed_arms": 14,
+      "outcome": "passed",
+      "path": "/tests/stead-http"
+    },
+    {
+      "expected_arms": 11,
+      "observed_arms": 11,
+      "outcome": "passed",
+      "path": "/tests/stead-identity"
+    },
+    {
+      "expected_arms": 25,
+      "observed_arms": 25,
+      "outcome": "passed",
+      "path": "/tests/stead-updates"
+    },
+    {
+      "expected_arms": 1,
+      "observed_arms": 1,
+      "outcome": "passed",
+      "path": "/tests/stead-update-capacity"
+    },
+    {
+      "expected_arms": 1,
+      "observed_arms": 1,
+      "outcome": "expected-failure",
+      "path": "/controls/stead-unit-failure"
+    }
+  ],
+  "qualifies_phase": false,
+  "report_hashes": {
+    "guard": "db963f740f974ab5eba4df9a09a58978818b148fc82e36983699069c32e3e1f9",
+    "source_context": "0cf2b4a5012932930eb42c338cedcff7060b8441d230292729907f0946e842a1",
+    "team_check": "40cb34ddfc74f797fe99bdc7021e57760d4876decf07c975b9add8b7db6bdeeb"
+  },
+  "source_commit": "79aebc1386f1b8408191dbdc9eafbd9e601b29db",
+  "status": "not-qualified"
+}

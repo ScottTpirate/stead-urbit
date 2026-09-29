@@ -1,0 +1,44 @@
+{
+  "format": 1,
+  "classification": "host-sdk-case-atom-regression",
+  "qualifies_phase": false,
+  "source_commit": "445275019a7f84e1e586520a90729295f3e0171d",
+  "files": {
+    "focused.log": {
+      "path": "focused.log.gz",
+      "raw_bytes": 1282,
+      "raw_sha256": "82c2db281e64e4a7e9e315a18420a7587838ae191835bc9db59537a82278e478",
+      "gzip_sha256": "6d33c9fd249e5396173e82b5e4215957fc2780c541275c190da78032c8825143"
+    },
+    "sdk-suite.log": {
+      "path": "sdk-suite.log.gz",
+      "raw_bytes": 17289,
+      "raw_sha256": "45e30baf159d4589b71d9637fdf19d7a2a37e3e71303df8b4f6521166b1e78dd",
+      "gzip_sha256": "8840ac8890e06c1c5b0e2da9684df41be5a54fe0e4178d448e23467bb563fb0a"
+    }
+  },
+  "source_sha256": {
+    "scripts/sdk_native/consumer.py": "a8ed1b0c0f863b7a67546495632f95504873e3a27b61a3af25431138b786f47e",
+    "scripts/sdk_native/qualify.hoon": "b3a45b851c4e5326c37bd7f0ca8e541a86b8d4f563a8191f1fb9dd0c1057c709",
+    "tests/urbit/test_sdk_import.py": "1d83a511ede617a8a81d456c69320558d6ffd9bd479ff3ce7e553e8d3f6067c4"
+  },
+  "results": {
+    "focused": {
+      "tests": 8,
+      "passed": 8,
+      "seconds": 0.001
+    },
+    "sdk_suite": {
+      "tests": 102,
+      "passed": 102,
+      "seconds": 13.222
+    }
+  },
+  "environment": {
+    "cpu_quota": "25%",
+    "cpu_affinity": [
+      19
+    ]
+  },
+  "scope": "Host tests include mocks and actual Linux namespace/process controls. Suites overlap. The corrected native qualifier and public conformance calls remain unexecuted."
+}

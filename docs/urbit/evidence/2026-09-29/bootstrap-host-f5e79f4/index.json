@@ -1,0 +1,54 @@
+{
+  "format": 1,
+  "classification": "host-static-mocked-and-linux-control-tests",
+  "qualifies_phase": false,
+  "tested_file_commit": "f5e79f4682cf7a78fb2a7e5b9729c76e175aff41",
+  "execution_source": "The working tree based on 7f876f3, before committing the independently reviewed correction as f5e79f4. Exact changed code/test bytes match that ensuing commit.",
+  "changed_code_and_test_files": {
+    "scripts/urbit/team_check.py": "45a7078fea812a0a1b4354dbf62bb589d017488d554a32c0148bbf6757fe30d0",
+    "scripts/ci/worker_failure.py": "6ff19dea413d97e63aad391ddfa515426cb456e683be5a8fbfd481daa0ead697",
+    "tests/urbit/test_team_bootstrap.py": "badd60e471b2bfb4fa00b9ca1b1aceaec6f1fc5dd9396155eb3e3594f12c6667",
+    "tests/ci/test_worker_failure.py": "9ef348026d1b38bbabf4e90ed29ec122636e3486887c00719ce6505d25faabe5"
+  },
+  "cpu_quota": "25%",
+  "cpu_affinity": [
+    19
+  ],
+  "execution_metadata_provenance": "CPU limits and source/file identity were observed by the integrator; the retained logs independently establish test outcomes and times.",
+  "runs": [
+    {
+      "command": "make check",
+      "status": "pass",
+      "tests_discovered": 672,
+      "passed": 671,
+      "failed": 0,
+      "skipped": 1,
+      "seconds": 121.892
+    },
+    {
+      "command": "python3 -B -m unittest discover -s tests/ci -p 'test_*.py'",
+      "status": "pass",
+      "tests_discovered": 53,
+      "passed": 53,
+      "failed": 0,
+      "skipped": 0,
+      "seconds": 1.813
+    }
+  ],
+  "skip": "Optional retained-local-artifact test; authored reader controls execute.",
+  "files": {
+    "host.log": {
+      "path": "host.log.gz",
+      "raw_bytes": 6059,
+      "raw_sha256": "78915e7d9f6fe1e8ea19af5fa2736b033b755b2adf26f5fa8100bfffabcb5de5",
+      "gzip_sha256": "15c0c879a184bf6343278a896ffbf48fa8ff9f823e393b3959be4ba3315e684e"
+    },
+    "ci-host.log": {
+      "path": "ci-host.log.gz",
+      "raw_bytes": 152,
+      "raw_sha256": "fc67c2dc87ce6d3c7a5f5899a5956e0731f4aff2ba840841fd18bdb2a45652a9",
+      "gzip_sha256": "c563ce182973f2b71486a72911ce3f4c8583d86ed46c7779881ae635609ed9e0"
+    }
+  },
+  "scope": "Planning/contract checks also passed. These results include mocked calls and real disposable Linux process/namespace controls. They do not execute Hoon or qualify native browser/onboarding. The 11 focused bootstrap tests and 16 focused CI diagnostic tests overlap these suites."
+}

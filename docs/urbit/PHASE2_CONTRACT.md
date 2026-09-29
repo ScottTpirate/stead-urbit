@@ -72,12 +72,19 @@ and configuration mutations remain quarantined until the final atomic commit.
 | Profile | Commands | Reads and results | Saved state |
 | --- | --- | --- | --- |
 | Legacy fixture | command/2; command/1 only for authorized existing receipt recovery | existing v2 scoped routes, receipt/2 and owner-local fixture controls | save 2, load 1 or 2 |
-| Configured team | command/3; /1 and /2 return unsupported_version | query/3, updates/3, receipt/3 and capabilities; all fixture/v1/v2 routes denied | save/load 3 |
+| Configured team | command/3; older envelope versions on the v3 carrier return unsupported_version after authorization | query/3, updates/3, receipt/3 and capabilities; all fixture/v1/v2 routes denied | save/load 3 |
 | Empty installation | owner-local configure only | no business reads | 2 until configured |
 
-SDK v2 continues to support legacy homes; it must report unsupported_version
-against a configured home. No silent translation of authority/container
-semantics. A v3 SDK is a new package with independent vectors. Historical
+SDK v2 continues to support legacy homes. Its legacy watch/mark carrier is
+denied by a configured home, without a v3 result path to return a structured
+error. A v3 client can discover supported versions using the authorized
+`capabilities` query (or the bounded HTTP capabilities endpoint), and receives
+an exact request/digest-correlated `unsupported_version` for /1, /2 or unknown
+envelope versions on the v3 carrier. Watch admission still requires a current
+native sender and binding; browser version errors follow session/CSRF checks.
+Never turn an arbitrary transport failure into proof of a peer version.
+No silent translation of authority/container semantics. A v3 SDK is a new
+package with independent vectors. Historical
 receipts are read projections, never reexecuted commands.
 
 The final home authorization context contains principal ID, binding ID/revision,

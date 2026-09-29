@@ -68,6 +68,10 @@ useful regression evidence but cannot satisfy this section.
 4. Enforce global/per-actor watch and cursor caps, 16-row watch queue and 64-row
    retained scope window. Overflow closes the watch with refresh_required.
    Restart/configuration/bootstrap require fresh views and watches.
+   Check each 16-event projection batch across the 68-event accepted-journal
+   fixture, actual Home save/load during replay, rejected stale job wakeups,
+   closed incomplete views and complete authorized page equality after recovery.
+   This is bounded replay evidence, not maximum-capacity or import-latency proof.
 5. Build a native consumer solely from the exported developer package and pinned
    declared dependencies, with private implementation fixtures unavailable.
    Execute allowed Work creation/read and denied scope through that package.

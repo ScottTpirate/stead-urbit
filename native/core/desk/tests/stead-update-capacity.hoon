@@ -1,4 +1,5 @@
-/+  stead-updates, stead-update-codec, stead-update-security, stead-team, stead-team-codec, stead-team-config, stead-codec, stead-core, stead-git, stead-projection, stead-views, stead-session, stead-browser
+/+  stead-updates, stead-update-codec, stead-update-security, stead-team, stead-team-codec, stead-team-config, stead-codec, stead-core, stead-git, stead-projection, stead-views, stead-session, stead-browser, stead-team-owner
+/=  home-agent  /app/stead-home
 =>
 |%
 ++  id
@@ -37,7 +38,125 @@
   ?:  (ready:stead-projection db view)  view
   ?>  &(!poisoned.view rebuilding.view)
   $(view (batch:stead-projection db view))
-++  wire
+++  saved-owner
+  |=  app=agent:gall
+  ^-  saved:stead-team-owner
+  =/  captured=vase  on-save:app
+  =/  decoded  !<([%stead-home %3 team=saved:stead-team-owner] captured)
+  team.decoded
+++  wake-wire
+  |=  cards=(list card:agent:gall)
+  ^-  wire
+  =/  waiting
+    %+  skim  cards
+    |=(card=card:agent:gall ?=([%pass [%stead-rebuild @ ~] %arvo %b %wait @] card))
+  ?>  ?=(^ waiting)
+  ?>  ?=(~ t.waiting)
+  ?>  ?=([%pass [%stead-rebuild @ ~] %arvo %b %wait @] i.waiting)
+  =/  [%pass route=wire *]  i.waiting
+  route
+++  bounded-pump
+  |=  [app=agent:gall cards=(list card:agent:gall) actor=authentication:stead-team stop=@ud]
+  ^-  [app=agent:gall cards=(list card:agent:gall)]
+  =/  turns=@ud  0
+  |-
+  =/  saved  (saved-owner app)
+  =/  done
+    ?:  =(stop 0)  (ready:stead-projection db.saved projection.saved)
+    ?&(rebuilding.projection.saved ?=(^ remaining.projection.saved) =(stop (lent entries.shadow.projection.saved)))
+  ?:  done  [app cards]
+  ?>  (lth turns 32)
+  ?>  !(ready:stead-projection db.saved projection.saved)
+  ?>  =(~ entries.visible.projection.saved)
+  =/  input=query:stead-team-codec  [(id 990) 'work' (id 100) '' '' '' '']
+  =/  unavailable  (execute:stead-views db.saved projection.saved *state:stead-views actor input 2.000 990)
+  ?>  =((error:stead-team 'projection_unavailable') response.unavailable)
+  =/  [next-cards=(list card:agent:gall) next=agent:gall]
+    (on-arvo:app (wake-wire cards) [%behn %wake ~])
+  =/  observed  (saved-owner next)
+  ::  Each actual projection wake consumes at most sixteen accepted events.
+  =/  bounded
+    ?.  &(rebuilding.projection.saved ?=(^ remaining.projection.saved))
+      ?.  ?=(^ remaining.projection.observed)
+        !(ready:stead-projection db.observed projection.observed)
+      ?&  rebuilding.projection.observed
+          !poisoned.projection.observed
+          =(68 (lent remaining.projection.observed))
+          =(~ entries.shadow.projection.observed)
+          =(~ entries.visible.projection.observed)
+      ==
+    ?>  !poisoned.projection.observed
+    =/  left  (lent remaining.projection.saved)
+    =/  consumed  (min 16 left)
+    ?>  =((sub left consumed) (lent remaining.projection.observed))
+    =/  count  (add (lent entries.shadow.projection.saved) consumed)
+    ?:  rebuilding.projection.observed
+      =((lent entries.shadow.projection.observed) count)
+    ?&  =(~ entries.shadow.projection.observed)
+        =((lent entries.visible.projection.observed) count)
+    ==
+  ?>  bounded
+  $(app next, cards next-cards, turns +(turns))
+++  same-pages
+  |=  [db=state:stead-team expected=state:stead-projection actual=state:stead-projection actor=authentication:stead-team kind=@t]
+  ^-  ?
+  =/  input=query:stead-team-codec  [(id 991) kind (id 100) '' '' '' '']
+  =/  left=state:stead-views  *state:stead-views
+  =/  right=state:stead-views  *state:stead-views
+  =/  page=@ud  0
+  |-
+  ?>  (lth page 8)
+  =/  wanted  (execute:stead-views db expected left actor input (add 2.000 page) (add 800 page))
+  =/  observed  (execute:stead-views db actual right actor input (add 2.000 page) (add 800 page))
+  ?>  =(wanted observed)
+  ?>  =('read' (field response.observed 'status'))
+  =/  continuation  (field response.observed 'cursor')
+  ?:  =('' continuation)  &
+  $(input input(cursor continuation), left next.wanted, right next.observed, page +(page))
+++  bounded-recovery
+  |=  [db=state:stead-team expected=state:stead-projection actor=authentication:stead-team member=authentication:stead-team]
+  ^-  state:stead-projection
+  ?>  =(68 (lent journal.data.db))
+  ?>  ?=(^ journal.data.db)
+  =/  context=bowl:gall  *bowl:gall
+  =.  context  context(our ~zod, src ~zod, now (add ~1970.1.1 (mul 2 ~s1)), eny `@uvJ`17, act 5)
+  =/  initial-agent  ~(. home-agent context)
+  =/  [load-cards=(list card:agent:gall) loaded=agent:gall]
+    (on-load:initial-agent !>([%stead-home %3 [db expected]]))
+  =/  [partial=agent:gall partial-cards=(list card:agent:gall)]
+    (bounded-pump loaded load-cards actor 32)
+  =/  checkpoint  (saved-owner partial)
+  ?>  =(db db.checkpoint)
+  ?>  =(32 (lent entries.shadow.projection.checkpoint))
+  ?>  =(36 (lent remaining.projection.checkpoint))
+  =/  partial-vase=vase  on-save:partial
+  =/  reload-initial  ~(. home-agent context(eny `@uvJ`37, act 6))
+  =/  [reload-cards=(list card:agent:gall) reloaded=agent:gall]
+    (on-load:reload-initial partial-vase)
+  ::  Load starts a new authenticated reconstruction; it does not trust shadow.
+  ?>  !=((wake-wire partial-cards) (wake-wire reload-cards))
+  =/  [ignored-cards=(list card:agent:gall) ignored=agent:gall]
+    (on-arvo:reloaded (wake-wire partial-cards) [%behn %wake ~])
+  ?>  =(~ ignored-cards)
+  ?>  =((saved-owner reloaded) (saved-owner ignored))
+  =/  [finished=agent:gall finished-cards=(list card:agent:gall)]
+    (bounded-pump reloaded reload-cards actor 0)
+  =/  completed  (saved-owner finished)
+  ?>  =(db db.completed)
+  ?>  =(expected projection.completed)
+  ?>  =(~ finished-cards)
+  ?>  (levy `(list @t)`~['work' 'search' 'activity' 'inbox'] |=(kind=@t &((same-pages db expected projection.completed actor kind) (same-pages db expected projection.completed member kind))))
+  ::  Valid duplicates remain idempotent; gaps and corrupt data never promote.
+  ?>  =(expected (append:stead-projection expected i.journal.data.db))
+  =/  chronological  (flop journal.data.db)
+  =/  staged  (begin:stead-projection db *state:stead-projection)
+  =/  gapped  (batch:stead-projection db staged(remaining [(snag 0 chronological) (snag 2 chronological) ~]))
+  ?>  &(poisoned.gapped =(~ entries.visible.gapped))
+  =/  first-row  (snag 0 chronological)
+  =/  corrupt  (batch:stead-projection db staged(remaining [first-row(bytes 'bad') ~]))
+  ?>  &(poisoned.corrupt =(~ entries.visible.corrupt))
+  projection.completed
+++  update-wire
   |=  input=envelope:stead-update-codec
   %-  canonical:stead-codec
   %-  object:stead-codec
@@ -123,7 +242,7 @@
     ?:  =(index 64)  out
     =/  actor  (need (native-context:stead-team data (add 256 (div index 4)) 1.010))
     =/  input  (envelope 701 'open' '' '' scope(kind (snag (mod index 4) `(list @t)`~['work' 'search' 'activity' 'inbox'])))
-    ?>  =(input (decode:stead-update-codec (wire input)))
+    ?>  =(input (decode:stead-update-codec (update-wire input)))
     =/  next  (execute:stead-updates data projection *state:stead-session next.out pages.out actor input 1.010 (add 100 index))
     ?>  =('watching' (field response.next 'status'))
     $(index +(index), out next)
@@ -150,4 +269,43 @@
   ?>  =('watching' (field response.admitted 'status'))
   ?>  =(64 (lent ~(tap by watches.next.admitted)))
   ~
+++  test-updates-retained-history-sixty-four-then-trim
+  ^-  tang
+  =/  data  db
+  =/  projection  view
+  =/  prior  next.first
+  =/  pages  pages.first
+  =/  current  cursor
+  =/  n=@ud  1
+  |-
+  ?>  (lte n 65)
+  =/  cmd  (command (add 900 n) 101 n 'work.update' ~[['title' 'Retained history'] ['description' (decimal:stead-codec n)] ['type' 'task'] ['status' 'todo'] ['priority' 'none']])
+  =/  changed  (apply-command:stead-team data alice cmd (add 1.100 n))
+  ?>  (accepted changed)
+  ?>  ?=(^ journal.data.next.changed)
+  =/  next-view  (append:stead-projection projection i.journal.data.next.changed)
+  ?>  (ready:stead-projection next.changed next-view)
+  =/  advanced  (advance:stead-updates next.changed *state:stead-session prior pages (add 1.100 n))
+  =/  out  (execute:stead-updates next.changed next-view *state:stead-session next.advanced pages.advanced bob poll(cursor current) (add 1.100 n) (add 500 n))
+  ?>  =('updated' (field response.out 'status'))
+  =/  rows  (~(got by (value response.out)) 'rows')
+  ?>  ?=([%o *] rows)
+  ?>  =(1 (lent ~(tap by p.rows)))
+  =/  item  (~(got by p.rows) '0')
+  ?>  ?=([%o *] item)
+  ?>  =((decimal:stead-codec n) (field:stead-codec p.item 'sequence'))
+  ?>  =(1 (lent ~(tap by streams.next.out)))
+  ?>  =(1 (lent ~(tap by watches.next.out)))
+  ?>  =(1 (lent ~(tap by cursors.pages.out)))
+  =/  row  (~(got by watches.next.out) watch)
+  ?>  !closed.row
+  =/  stream  (~(got by streams.next.out) stream.row)
+  =/  retained  (flop (turn rows.stream |=(item=invalidation:stead-updates sequence.item)))
+  ?>  ?:(=(n 64) =(retained (gulf 1 64)) &)
+  ?:  =(n 65)
+    ?>  =(retained (gulf 2 65))
+    ?>  =(next-view (indexed next.changed))
+    ?>  =(next-view (bounded-recovery next.changed next-view alice bob))
+    ~
+  $(data next.changed, projection next-view, prior next.out, pages pages.out, current (field response.out 'cursor'), n +(n))
 --

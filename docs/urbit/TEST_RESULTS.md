@@ -1,5 +1,10 @@
 # Executed development evidence
 
+The [current Phase 2 qualification record](PHASE2_QUALIFICATION_20260929.md)
+separates the passing configured native, browser/Git, SDK, hosted CI and natural
+session-expiry components from the remaining human trial and integration gates.
+The dated records below retain their original execution scope.
+
 The [independently reviewed Phase 1 acceptance](PHASE1_ACCEPTANCE_20260926.md) now has a
 passing **73-requirement gate** at native source
 `dd0e8c0ce8d1d00f15de6b07e2e26d368c5c3774`. Independent review accepts this bounded phase with no blockers. Phases 0 and 1

@@ -1,0 +1,68 @@
+{
+  "format": 1,
+  "classification": "passed-local-configured-native-team",
+  "qualifies_phase": false,
+  "status": "pass",
+  "checks_passed": 757,
+  "checks_recorded": 757,
+  "native_suites_recorded": 6,
+  "inputs_match": true,
+  "cold_restart_passes": {
+    "bud": true,
+    "bus": true,
+    "nec": true,
+    "zod": true
+  },
+  "owned_cgroup_absent_at_readback": true,
+  "scope": "Configured native behavior passed at the recorded source; its whole lifetime closed cleanly. The subsequent browser journey passed 34 observations but the Git readback failed; browser and human gates remain separate.",
+  "source_commit": "874a77334533c36d7f7cb4974eb601e76cb77751",
+  "elapsed_seconds": 1011.104,
+  "inputs": {
+    "harness": "3dba290549824ae5862f0308d48b9051f1c4da2d2871b3a97f6cc1895fbf9fc7",
+    "ingress": "338ddee6e8cb26572005b4efacb18a37dca0cceb56d5d34ee9e4d11b47fee8fc",
+    "native": "5e4cc3b83165952a0eb6cf587f7fc708f61e03d8ef46816c1702765f0c5ec873",
+    "native_unit_inventory": "b951b99f455b9efa55e6297dac0e4b80e84b822f9618c67bf37bb2083c546c16",
+    "runner": {
+      "core_conn.py": "b9172b903626e01d10ca7522a5f0399c2844db00c4987bf0018ef22b0e3e6162",
+      "execution_policy.py": "8d52b799a3a7bff73f38e029b57fe0cfafd156b7c61184173860c21600ce41c0",
+      "native_install.py": "9afb33b359ef71c1503bbb25616e445318298d850cd94672ecd5181b84018c11",
+      "native_peer_fence.py": "a3e4442c9912a75a8cf077e49c242729153d36c6746e356250dac878e2f61772",
+      "native_tls.py": "0c76e4fcbe37fceee823a5ba1bf3080a2523149996c8471a1afed0341b45ebc5",
+      "native_units.py": "6d2e5f933f1254d3af7562f84efa4d77782f67a9d5e2d1c3a0e31070f4440264",
+      "owned_child.py": "a01fc92a0b5f000f5ddee505d475127681ac47ea9a7aa4d8b450594cd50ec229",
+      "team_check.py": "45a7078fea812a0a1b4354dbf62bb589d017488d554a32c0148bbf6757fe30d0",
+      "team_conn.py": "6fe519e24f8964952765de135a48e5aa285295b20ee36db14a62881240e23374",
+      "team_lifecycle.py": "4002e359d316e834d2679663755935bfe5c5d864903056beb2f1432976e5543e",
+      "team_updates_check.py": "9a296bda49a198f399ecfee6436717f3192cd712078eaad76131e2435ed11ca2"
+    },
+    "toolchain": "ae185adaec12b5aa0b2d48e2198ae65583902512ffd9d148706810c4819c650c"
+  },
+  "installed_counts": {
+    "bud": 77,
+    "bus": 77,
+    "nec": 77,
+    "zod": 77
+  },
+  "reviewed_observation": "Independent review verified all six unit transcripts, 71 positive arms, the deliberately failing control, 110 native-call transcripts, exact installed source and all four cold restarts. Home restart had one explicit readiness refusal before its valid acknowledgment.",
+  "guard": {
+    "run_id": "942fb5999d1c6fa26bc04dabcf49898e",
+    "status": "completed",
+    "exit_code": 0,
+    "elapsed_seconds": 1679.486,
+    "reason": null,
+    "cleanup": []
+  },
+  "private_original": {
+    "path": ".piers/fakes/logs/team-check-20260929T080604Z.json",
+    "bytes": 1160215,
+    "sha256": "fb1ea422786ccdff036d3f6b0e2cc138b706602aa41a9cbc410b0a57156b9f71"
+  },
+  "files": {
+    "guard-report.json": {
+      "path": "guard-report.json.gz",
+      "raw_bytes": 730891,
+      "raw_sha256": "3624bec08e0efb18fec1b91bcb16329c623ee56502f1005e7c71eb6bc5afa137",
+      "gzip_sha256": "a3dd7751832e303b26ddbb54b3f30d1b13ae84cc56b40b85f9ba46db7f35b68b"
+    }
+  }
+}

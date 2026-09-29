@@ -1,18 +1,30 @@
 {
   "format": 1,
   "profile": "linux-x86_64-fake-only",
-  "resolved_on": "2026-09-12",
+  "resolved_on": "2026-09-29",
   "runtime": {
-    "repository": "urbit/vere",
-    "release": "vere-v4.6",
+    "repository": "ScottTpirate/stead-urbit",
+    "release": "runtime-v4.6-newt-c0a35c6",
     "version": "4.6",
+    "source_repository": "urbit/vere",
     "commit": "8ddc4b786979574dbfcb655e3db1b634f658d0de",
-    "url": "https://github.com/urbit/vere/releases/download/vere-v4.6/linux-x86_64.tgz",
-    "archive": "vere-v4.6-linux-x86_64.tgz",
-    "sha256": "f332e96d66cb767f847fbf15e04b4f953fd078e610b449fbbc26629ea312a3ae",
-    "binary": "bin/vere-v4.6-linux-x86_64",
-    "binary_sha256": "47ad302e8934271dfc00dcdab1d553c6d6460b105e3099ff47e0e4e4231bb26d",
-    "checksum_authority": "GitHub release asset digest"
+    "upstream_patch_commit": "c0a35c6f6302baf536a13522afd1ac89ea8c7776",
+    "url": "https://github.com/ScottTpirate/stead-urbit/releases/download/runtime-v4.6-newt-c0a35c6/vere-v4.6-newt-linux-x86_64.tgz",
+    "archive": "vere-v4.6-newt-linux-x86_64.tgz",
+    "sha256": "d00669a0bdc9fe0be15d519bdf508208b0676f84e1a9f02be12ecc03f4576a01",
+    "binary": "bin/vere-v4.6-newt-linux-x86_64",
+    "binary_sha256": "f7f0d3b3c0480fc10f887dfbc09bde56a81d723a803541c7886c538a0675d833",
+    "checksum_authority": "Locally packaged verified hosted build; exact build and native regression evidence below; not a signed upstream release",
+    "build_workflow_commit": "825aebf719d1fd99bfc51457cc023ce36edda089",
+    "build_run_url": "https://github.com/ScottTpirate/stead-urbit/actions/runs/36485873646",
+    "source_bundle": {
+      "url": "https://github.com/ScottTpirate/stead-urbit/releases/download/runtime-v4.6-newt-c0a35c6/build-inputs.tar",
+      "sha256": "e6f5184a227d632a8d7b81a1b6403fbc2ccf5dcbaab1d37191bb38ccc87167e6"
+    },
+    "source_manifest": "specs/urbit/runtime-source-build.json",
+    "build_evidence": "docs/urbit/evidence/2026-09-28/runtime-disconnect/build.json",
+    "regression_evidence": "docs/urbit/evidence/2026-09-28/runtime-disconnect/native-regression.json",
+    "profile": "development-fake-ships-only"
   },
   "kernel": {
     "repository": "urbit/urbit",

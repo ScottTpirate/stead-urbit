@@ -1,0 +1,92 @@
+{
+  "browser_cleanup": {
+    "cgroup": "/user.slice/user-1000.slice/user@1000.service/app.slice/stead-browser-0b6387148df2cfa133bfe51a8c5ca94a.service",
+    "empty": true,
+    "process_reaped": true,
+    "state": "inactive"
+  },
+  "browser_progress_observations": [
+    "bus-individual-native-owner-approved-session",
+    "keyboard-principal-signin-approval-error-recovery-and-live-status",
+    "nec-individual-native-owner-approved-session",
+    "unsent-project-visible-original-request-retry-with-no-selected-project",
+    "unsent-collection-receipt-remains-unconfirmed-after-current-parent-authorization",
+    "native-reader-work-view-without-write-control",
+    "browser-command-committed-with-native-approved-attribution",
+    "second-individual-receives-live-committed-browser-work",
+    "native-accepted-event-renders-same-instant-in-two-local-timezones",
+    "member-cookie-is-secure-httponly-host-only-and-not-owner-auth",
+    "member-session-cannot-promote-raw-eyre-channel-or-scry-to-home-authority",
+    "unbound-individual-browser-cannot-start-a-member-session",
+    "organization-owner-cookie-does-not-create-member-session-or-raw-home-read",
+    "native-private-markdown-saves-have-git-oids-and-inert-preview"
+  ],
+  "classification": "failed-browser-thermal-stop-after-passed-configured-native",
+  "error": "GuardError: Thermal ceiling reached",
+  "files": {
+    "guard-report.json": {
+      "gzip_sha256": "103a14f26a921373f0495833d85b3037f5740e02b891f41a96fbaf5f34fdb901",
+      "path": "guard-report.json.gz",
+      "raw_bytes": 629579,
+      "raw_sha256": "df356e55f249a4ce52dc4f8e0c4973facde7e8177c551e6de19d8777685d6024"
+    }
+  },
+  "final_browser_journey_report_present": false,
+  "format": 1,
+  "guard": {
+    "cleanup": [],
+    "elapsed_seconds": 1445.583,
+    "exit_code": 0,
+    "reason": null,
+    "run_id": "449d198b8d5d2d27a77624254546b23a",
+    "status": "completed"
+  },
+  "native": {
+    "checks_passed": 757,
+    "checks_recorded": 757,
+    "elapsed_seconds": 1008.301,
+    "inputs_match": true,
+    "installed_counts": {
+      "bud": 77,
+      "bus": 77,
+      "nec": 77,
+      "zod": 77
+    },
+    "native_expected_failure_arms": 1,
+    "native_positive_arms": 71,
+    "scope": "The completed configured native lane passed independently; browser progress is not a completed journey, Git or expiry result.",
+    "status": "pass"
+  },
+  "native_prerequisite": {
+    "file": "team-check-20260929T091234Z.json",
+    "sha256": "fdb6cf7ee51809a42f6e344a604b3287d4205406a79dda050e0f88a8ad0f653a"
+  },
+  "owned_cgroup_absent_at_readback": true,
+  "private_files": {
+    ".piers/fakes/logs/team-check-20260929T091234Z.json": {
+      "bytes": 1160220,
+      "sha256": "fdb6cf7ee51809a42f6e344a604b3287d4205406a79dda050e0f88a8ad0f653a"
+    },
+    ".runtime/browser-native-20260929T092958Z/browser-console.log": {
+      "bytes": 932,
+      "sha256": "243b7c8c67e492fcf837f15d8e8a5a0e4523e3404316033ea85d7b9f8183e4e4"
+    },
+    ".runtime/browser-native-20260929T092958Z/browser-process.json": {
+      "bytes": 561,
+      "sha256": "e480d9d51c7cf688033d4213d6a734f2d0ecf39dda4ca9980aa0718aa0616ff0"
+    },
+    ".runtime/browser-native-20260929T092958Z/transport-report.json": {
+      "bytes": 2485,
+      "sha256": "b8b7e84a385fdfd497a87f7ca92eaaac2e474c6e7e1de6bb705fc50bb1319e1b"
+    },
+    ".runtime/phase02-complete-20260927/team-e7c81fd-757-browser-thermal-20260929/preservation.json": {
+      "bytes": 1189,
+      "sha256": "98a612a8436f0e52f8a76bd49cbbf00d87961fc799c2f395dd908741d33356ac"
+    }
+  },
+  "qualifies_phase": false,
+  "run": "browser-native-20260929T092958Z",
+  "scope": "The browser thermal guard stopped this attempt. All 14 PASS lines are progress only: there is no final journey report or complete response capture. The native fixture was stopped cleanly and its stopped piers, logs, ingress and browser evidence preserved before restoring verified clean seeds. The 75 C startup and 90 C stop limits remain unchanged.",
+  "source_commit": "e7c81fdc833f9966d65c58e0d18024acab66592c",
+  "status": "fail"
+}

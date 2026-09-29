@@ -1,0 +1,1243 @@
+{
+  "browser": {
+    "browser": "155.0",
+    "checks": [
+      {
+        "name": "bus-individual-native-owner-approved-session",
+        "passed": true
+      },
+      {
+        "name": "keyboard-principal-signin-approval-error-recovery-and-live-status",
+        "passed": true
+      },
+      {
+        "name": "nec-individual-native-owner-approved-session",
+        "passed": true
+      },
+      {
+        "name": "unsent-project-visible-original-request-retry-with-no-selected-project",
+        "passed": true
+      },
+      {
+        "name": "unsent-collection-receipt-remains-unconfirmed-after-current-parent-authorization",
+        "passed": true
+      },
+      {
+        "name": "native-reader-work-view-without-write-control",
+        "passed": true
+      },
+      {
+        "name": "browser-command-committed-with-native-approved-attribution",
+        "passed": true
+      },
+      {
+        "name": "second-individual-receives-live-committed-browser-work",
+        "passed": true
+      },
+      {
+        "name": "native-accepted-event-renders-same-instant-in-two-local-timezones",
+        "passed": true
+      },
+      {
+        "name": "member-cookie-is-secure-httponly-host-only-and-not-owner-auth",
+        "passed": true
+      },
+      {
+        "name": "member-session-cannot-promote-raw-eyre-channel-or-scry-to-home-authority",
+        "passed": true
+      },
+      {
+        "name": "unbound-individual-browser-cannot-start-a-member-session",
+        "passed": true
+      },
+      {
+        "name": "organization-owner-cookie-does-not-create-member-session-or-raw-home-read",
+        "passed": true
+      },
+      {
+        "name": "native-private-markdown-saves-have-git-oids-and-inert-preview",
+        "passed": true
+      },
+      {
+        "name": "private-doc-edits-preserve-reader-projections-and-only-publication-invalidates",
+        "passed": true
+      },
+      {
+        "name": "selected-page-published-without-private-collection-or-unselected-page",
+        "passed": true
+      },
+      {
+        "name": "shared-doc-edit-reloads-exact-markdown-revision-and-new-git-receipt",
+        "passed": true
+      },
+      {
+        "name": "private-canary-search-owner-positive-reader-negative",
+        "passed": true
+      },
+      {
+        "name": "reader-projections-exclude-private-page-canary",
+        "passed": true
+      },
+      {
+        "name": "browser-links-published-page-to-authorized-work",
+        "passed": true
+      },
+      {
+        "name": "two-native-principals-conflict-compare-explicit-rebase-and-live-refresh",
+        "passed": true
+      },
+      {
+        "name": "native-commit-with-injected-response-loss-recovers-original-receipt",
+        "passed": true
+      },
+      {
+        "name": "two-tab-csrf-rotation-and-unconfirmed-resume-retain-original-pending-receipt",
+        "passed": true
+      },
+      {
+        "name": "explicit-support-download-matches-reviewed-content-free-preview",
+        "passed": true
+      },
+      {
+        "name": "actual-browser-offline-preserves-draft-and-requires-explicit-original-request-retry",
+        "passed": true
+      },
+      {
+        "name": "keyboard-project-and-work-creation-general-profile-unicode-long-title",
+        "passed": true
+      },
+      {
+        "name": "native-long-content-at-small-large-layouts-and-distinct-timezones",
+        "passed": true
+      },
+      {
+        "name": "new-general-project-does-not-implicitly-grant-another-member",
+        "passed": true
+      },
+      {
+        "name": "native-grant-revocation-clears-rendered-project-and-local-draft",
+        "passed": true
+      },
+      {
+        "name": "native-browser-assets-measured-and-no-business-data-in-url-or-storage",
+        "passed": true
+      },
+      {
+        "name": "logout-clears-rendered-business-state",
+        "passed": true
+      },
+      {
+        "name": "nec-individual-native-owner-approved-session",
+        "passed": true
+      },
+      {
+        "name": "explicit-account-change-does-not-restore-former-private-state",
+        "passed": true
+      },
+      {
+        "name": "bus-individual-native-owner-approved-session",
+        "passed": true
+      }
+    ],
+    "inputs_after_equal_before": true,
+    "node": "v24.21.0",
+    "private_profile": "removed after verified cgroup termination",
+    "process": {
+      "cleanup": {
+        "cgroup": "/user.slice/user-1000.slice/user@1000.service/app.slice/stead-browser-394c97c7eeef7ee859add597d97cd586.service",
+        "empty": true,
+        "process_reaped": true,
+        "state": "inactive"
+      },
+      "exit_code": 0,
+      "headed": false,
+      "proof": {
+        "cgroup": "/user.slice/user-1000.slice/user@1000.service/app.slice/stead-browser-394c97c7eeef7ee859add597d97cd586.service",
+        "cpu_affinity": [
+          19
+        ],
+        "cpu_max": "2500 10000",
+        "pid": 1984300
+      },
+      "status": "pass",
+      "unit": "stead-browser-394c97c7eeef7ee859add597d97cd586.service"
+    },
+    "request_failure_count": 5,
+    "request_failure_scope": "Two owned-channel cancellations and one offline command are attributable to test controls. Query and updates aborts have no firm initiating-stage attribution. All five are retained; this is not a zero-failure network claim.",
+    "response_capture_complete": true,
+    "response_capture_error": false,
+    "response_capture_truncated": false,
+    "response_count": 493,
+    "source_inputs": {
+      "admission": "2c0b01ba03cd9d70ee2b42c05ff0841668832511a0ed5c4d3fc3052586d878fb",
+      "boundary_test": "f9519aa7b7b749c806ce4f797eb73f7e8da3a350bf91be83dd1e8242c7ebf3f1",
+      "browser_cases": "5a356b3678ed2dfab30003899d72afb534a5357ebc58fa3a7939c2e916b39295",
+      "browser_test": "bf9fec033978aec79bcf54a6380236983bd4f3073be57f6e10b1f35f2e44c5db",
+      "docs_controls": "770db1306409e111e6052eb59d76d72fdf93b4219974d62818c3aa0212cdb1f3",
+      "execution_id": "b673d9d0a3bdf8c8746d461706b6e186",
+      "expiry_test": "d42687db1d128224534462195c321ece6b12f241635c3156a837a4cde74769ff",
+      "frontend_manifest": "cf46ab5c9fc334b8642c90b1b10c38e659847cbd1eb754865692be3f6e15ccd0",
+      "harness": "37be01e5551285654e2a03fd2c4be17901219b5f8bd14b95b38a1bfa5df1e6f1",
+      "native_prerequisite": {
+        "file": "team-check-20260929T101805Z.json",
+        "sha256": "5b7612e8759a995d03aa9e3fef9f5253c56cb8491f7593a9b30d6c4b79e0c514"
+      },
+      "native_tree": "557976ac8f2f941946c15b9f687fcbef51b0f265b5e1c945cb9e924ba547be02",
+      "process_owner": "cd8c4d151d1d20ce68d96cac2e3a4d33af9440d58815fc193793cc248ccd0ae4",
+      "relay": "a724bcfc4197adc796f580b43a751198cba8fbf4c1eeaba0221ffab01395fae2",
+      "response_capture": "4b1fd5c75926bb0c7057a1712f6551e610a39e4214251bf2c4ceac80c9cfa033",
+      "runner": "d13051e7837dd5987a8e55d3c3f134efb19a9b75f1e31dec5fae5eae5a0c3d7c",
+      "toolchain": "ae185adaec12b5aa0b2d48e2198ae65583902512ffd9d148706810c4819c650c"
+    },
+    "status": "pass",
+    "tls": {
+      "bud": {
+        "certificate_sha256": "1f0a93cf7f50cc1c8f18780acc66e080fbb145418791a0f273ed0010b9118dc3",
+        "hostname": "bud.localhost",
+        "protocol": "TLSv1.3"
+      },
+      "bus": {
+        "certificate_sha256": "5cf66c53d507ddcc367a7bcbe2da29ae1d34c0e7a3b5b7deb14c3a4d784dc938",
+        "hostname": "bus.localhost",
+        "protocol": "TLSv1.3"
+      },
+      "nec": {
+        "certificate_sha256": "c2f3e53745851ab576f712a760758249eab078e8da6bbe0f26b9a7a833675116",
+        "hostname": "nec.localhost",
+        "protocol": "TLSv1.3"
+      },
+      "zod": {
+        "certificate_sha256": "c8a6af552d96f889b4cce3079db3c52af15b80b05e485768adc7461e62c47c50",
+        "hostname": "home.localhost",
+        "protocol": "TLSv1.3"
+      }
+    },
+    "wrong_ca_rejected": true,
+    "wrong_hostname_rejected": true
+  },
+  "classification": "selected-local-configured-native-browser-git-qualification",
+  "commands": {
+    "browser": "python3 -B web/app/browser-check.py",
+    "native": "make team-dev"
+  },
+  "execution_id": "b673d9d0a3bdf8c8746d461706b6e186",
+  "format": 1,
+  "git": {
+    "checks": {
+      "destination_only_ancestry": true,
+      "exact_markdown_and_trees": true,
+      "exact_receipt_oids": true,
+      "private_history_excluded": true
+    },
+    "classification": "actual-stock-git-from-configured-v3-native-stores",
+    "exports": {
+      "edited": {
+        "all_commands_exit_zero": true,
+        "commands_count": 14,
+        "file_count": 1,
+        "git_version": "git version 2.55.0",
+        "head": "efc90920d3e6d6c85d8c7a5d5c45e328c4ffb8f0",
+        "object_bytes": 1365,
+        "objects": 6,
+        "stock_commands": [
+          [
+            "init",
+            "--bare",
+            "--template=",
+            "--object-format=sha1"
+          ],
+          [
+            "hash-object",
+            "-w",
+            "-t",
+            "commit",
+            "--stdin"
+          ],
+          [
+            "hash-object",
+            "-w",
+            "-t",
+            "tree",
+            "--stdin"
+          ],
+          [
+            "hash-object",
+            "-w",
+            "-t",
+            "blob",
+            "--stdin"
+          ],
+          [
+            "hash-object",
+            "-w",
+            "-t",
+            "commit",
+            "--stdin"
+          ],
+          [
+            "hash-object",
+            "-w",
+            "-t",
+            "tree",
+            "--stdin"
+          ],
+          [
+            "hash-object",
+            "-w",
+            "-t",
+            "blob",
+            "--stdin"
+          ],
+          [
+            "symbolic-ref",
+            "HEAD",
+            "refs/heads/main"
+          ],
+          [
+            "update-ref",
+            "refs/heads/main",
+            "efc90920d3e6d6c85d8c7a5d5c45e328c4ffb8f0"
+          ],
+          [
+            "fsck",
+            "--full",
+            "--strict"
+          ],
+          [
+            "rev-list",
+            "--parents",
+            "efc90920d3e6d6c85d8c7a5d5c45e328c4ffb8f0"
+          ],
+          [
+            "ls-tree",
+            "-rz",
+            "efc90920d3e6d6c85d8c7a5d5c45e328c4ffb8f0"
+          ],
+          [
+            "cat-file",
+            "blob",
+            "989798ae98bca6856edce612ec6d0b191762e72c"
+          ],
+          [
+            "--version"
+          ]
+        ]
+      },
+      "published": {
+        "all_commands_exit_zero": true,
+        "commands_count": 11,
+        "file_count": 1,
+        "git_version": "git version 2.55.0",
+        "head": "96f9268f148ff0fa0681b31804726eb74febe209",
+        "object_bytes": 634,
+        "objects": 3,
+        "stock_commands": [
+          [
+            "init",
+            "--bare",
+            "--template=",
+            "--object-format=sha1"
+          ],
+          [
+            "hash-object",
+            "-w",
+            "-t",
+            "commit",
+            "--stdin"
+          ],
+          [
+            "hash-object",
+            "-w",
+            "-t",
+            "tree",
+            "--stdin"
+          ],
+          [
+            "hash-object",
+            "-w",
+            "-t",
+            "blob",
+            "--stdin"
+          ],
+          [
+            "symbolic-ref",
+            "HEAD",
+            "refs/heads/main"
+          ],
+          [
+            "update-ref",
+            "refs/heads/main",
+            "96f9268f148ff0fa0681b31804726eb74febe209"
+          ],
+          [
+            "fsck",
+            "--full",
+            "--strict"
+          ],
+          [
+            "rev-list",
+            "--parents",
+            "96f9268f148ff0fa0681b31804726eb74febe209"
+          ],
+          [
+            "ls-tree",
+            "-rz",
+            "96f9268f148ff0fa0681b31804726eb74febe209"
+          ],
+          [
+            "cat-file",
+            "blob",
+            "4da4735ddc55b1c00645a0e8d98fc4d191bdd1e1"
+          ],
+          [
+            "--version"
+          ]
+        ]
+      },
+      "source": {
+        "all_commands_exit_zero": true,
+        "commands_count": 18,
+        "file_count": 2,
+        "git_version": "git version 2.55.0",
+        "head": "b2352cc6cab74bc70cbcbf1ce8e90eb36c88cdd2",
+        "object_bytes": 1932,
+        "objects": 9,
+        "stock_commands": [
+          [
+            "init",
+            "--bare",
+            "--template=",
+            "--object-format=sha1"
+          ],
+          [
+            "hash-object",
+            "-w",
+            "-t",
+            "commit",
+            "--stdin"
+          ],
+          [
+            "hash-object",
+            "-w",
+            "-t",
+            "tree",
+            "--stdin"
+          ],
+          [
+            "hash-object",
+            "-w",
+            "-t",
+            "blob",
+            "--stdin"
+          ],
+          [
+            "hash-object",
+            "-w",
+            "-t",
+            "blob",
+            "--stdin"
+          ],
+          [
+            "hash-object",
+            "-w",
+            "-t",
+            "commit",
+            "--stdin"
+          ],
+          [
+            "hash-object",
+            "-w",
+            "-t",
+            "tree",
+            "--stdin"
+          ],
+          [
+            "hash-object",
+            "-w",
+            "-t",
+            "blob",
+            "--stdin"
+          ],
+          [
+            "hash-object",
+            "-w",
+            "-t",
+            "commit",
+            "--stdin"
+          ],
+          [
+            "hash-object",
+            "-w",
+            "-t",
+            "tree",
+            "--stdin"
+          ],
+          [
+            "symbolic-ref",
+            "HEAD",
+            "refs/heads/main"
+          ],
+          [
+            "update-ref",
+            "refs/heads/main",
+            "b2352cc6cab74bc70cbcbf1ce8e90eb36c88cdd2"
+          ],
+          [
+            "fsck",
+            "--full",
+            "--strict"
+          ],
+          [
+            "rev-list",
+            "--parents",
+            "b2352cc6cab74bc70cbcbf1ce8e90eb36c88cdd2"
+          ],
+          [
+            "ls-tree",
+            "-rz",
+            "b2352cc6cab74bc70cbcbf1ce8e90eb36c88cdd2"
+          ],
+          [
+            "cat-file",
+            "blob",
+            "4fb22da0f7bf01535a48b3d851651c3f132d5005"
+          ],
+          [
+            "cat-file",
+            "blob",
+            "89500776a0533f2acffd1e69541e90a1cb8dfacc"
+          ],
+          [
+            "--version"
+          ]
+        ]
+      }
+    },
+    "fixture_sha256": "19f8a983f93d95426f3723c62fc1924fe0f76286689754a227bcc8426fc33bb8",
+    "inputs_after_equal_before": true,
+    "inputs_before": {
+      "harness": "37be01e5551285654e2a03fd2c4be17901219b5f8bd14b95b38a1bfa5df1e6f1",
+      "native": "557976ac8f2f941946c15b9f687fcbef51b0f265b5e1c945cb9e924ba547be02"
+    },
+    "native_prerequisite": {
+      "file": "team-check-20260929T101805Z.json",
+      "sha256": "5b7612e8759a995d03aa9e3fef9f5253c56cb8491f7593a9b30d6c4b79e0c514"
+    },
+    "scope": "Owned synthetic Lens observation; not a public export or Git transport API.",
+    "status": "pass"
+  },
+  "measurements": {
+    "asset_timing": {
+      "after_docs": [
+        {
+          "decoded_body_bytes": 7424,
+          "duration_ms": 903,
+          "encoded_body_bytes": 2351,
+          "path": "/stead/assets/app.css",
+          "transfer_bytes": 2651
+        },
+        {
+          "decoded_body_bytes": 258065,
+          "duration_ms": 920,
+          "encoded_body_bytes": 258065,
+          "path": "/stead/assets/app.js",
+          "transfer_bytes": 258365
+        },
+        {
+          "decoded_body_bytes": 8345,
+          "duration_ms": 470,
+          "encoded_body_bytes": 8345,
+          "path": "/stead/assets/chunk-E5WJYM75.js",
+          "transfer_bytes": 8645
+        },
+        {
+          "decoded_body_bytes": 577,
+          "duration_ms": 491,
+          "encoded_body_bytes": 577,
+          "path": "/stead/assets/chunk-SQE76S5B.js",
+          "transfer_bytes": 877
+        },
+        {
+          "decoded_body_bytes": 1293,
+          "duration_ms": 278,
+          "encoded_body_bytes": 1293,
+          "path": "/stead/assets/chunk-BUZSU6Y5.js",
+          "transfer_bytes": 1593
+        }
+      ],
+      "after_first_preview": [
+        {
+          "decoded_body_bytes": 7424,
+          "duration_ms": 903,
+          "encoded_body_bytes": 2351,
+          "path": "/stead/assets/app.css",
+          "transfer_bytes": 2651
+        },
+        {
+          "decoded_body_bytes": 258065,
+          "duration_ms": 920,
+          "encoded_body_bytes": 258065,
+          "path": "/stead/assets/app.js",
+          "transfer_bytes": 258365
+        },
+        {
+          "decoded_body_bytes": 8345,
+          "duration_ms": 470,
+          "encoded_body_bytes": 8345,
+          "path": "/stead/assets/chunk-E5WJYM75.js",
+          "transfer_bytes": 8645
+        },
+        {
+          "decoded_body_bytes": 577,
+          "duration_ms": 491,
+          "encoded_body_bytes": 577,
+          "path": "/stead/assets/chunk-SQE76S5B.js",
+          "transfer_bytes": 877
+        },
+        {
+          "decoded_body_bytes": 1293,
+          "duration_ms": 278,
+          "encoded_body_bytes": 1293,
+          "path": "/stead/assets/chunk-BUZSU6Y5.js",
+          "transfer_bytes": 1593
+        }
+      ],
+      "before_docs": [
+        {
+          "decoded_body_bytes": 7424,
+          "duration_ms": 903,
+          "encoded_body_bytes": 2351,
+          "path": "/stead/assets/app.css",
+          "transfer_bytes": 2651
+        },
+        {
+          "decoded_body_bytes": 258065,
+          "duration_ms": 920,
+          "encoded_body_bytes": 258065,
+          "path": "/stead/assets/app.js",
+          "transfer_bytes": 258365
+        },
+        {
+          "decoded_body_bytes": 8345,
+          "duration_ms": 470,
+          "encoded_body_bytes": 8345,
+          "path": "/stead/assets/chunk-E5WJYM75.js",
+          "transfer_bytes": 8645
+        },
+        {
+          "decoded_body_bytes": 577,
+          "duration_ms": 491,
+          "encoded_body_bytes": 577,
+          "path": "/stead/assets/chunk-SQE76S5B.js",
+          "transfer_bytes": 877
+        }
+      ]
+    },
+    "assets": {
+      "manifest_sha256": "cf46ab5c9fc334b8642c90b1b10c38e659847cbd1eb754865692be3f6e15ccd0",
+      "markdown": {
+        "bytes": 1293,
+        "path": "/stead/assets/chunk-BUZSU6Y5.js",
+        "sha256": "8d946a739bd61004103e6b8a2e010f18974c814c1e8e4583fafa7b3171a66e77"
+      }
+    },
+    "browser_resource_proof": {
+      "cgroup": "/user.slice/user-1000.slice/user@1000.service/app.slice/stead-browser-394c97c7eeef7ee859add597d97cd586.service",
+      "cpu_affinity": [
+        19
+      ],
+      "cpu_max": "2500 10000",
+      "pid": 1984300
+    },
+    "environment": {
+      "architecture": "x64",
+      "cpu_models": [
+        "12th Gen Intel(R) Core(TM) i9-12900H"
+      ],
+      "load_average_at_start": [
+        1.14,
+        1.49,
+        1.27
+      ],
+      "logical_cpus": 20,
+      "memory_bytes": 67057082368,
+      "platform": "linux",
+      "scope": "Synthetic Work/Docs journey; request counts include concurrent polling in the same page. Heterogeneous save samples are not a capacity percentile."
+    },
+    "native_guard_policy": {
+      "cooperative_seconds": 10,
+      "cpu_period_us": 10000,
+      "cpu_quota_us": 5000,
+      "kill_seconds": 5,
+      "sample_seconds": 1,
+      "stale_seconds": 3,
+      "start_c": 75,
+      "stop_c": 90,
+      "terminate_seconds": 10
+    },
+    "navigation_timings": [
+      {
+        "query_kind": "work",
+        "requests": {
+          "/stead/api/query": 2,
+          "/stead/api/updates": 2
+        },
+        "returned_rows": 1,
+        "returned_rows_bytes": 270,
+        "useful_content_ms": 2630,
+        "view": "Work"
+      },
+      {
+        "query_kind": "work",
+        "requests": {
+          "/stead/api/query": 2,
+          "/stead/api/updates": 2
+        },
+        "returned_rows": 1,
+        "returned_rows_bytes": 270,
+        "useful_content_ms": 3400,
+        "view": "Work"
+      },
+      {
+        "query_kind": "containers",
+        "requests": {
+          "/stead/api/query": 2,
+          "/stead/api/updates": 2
+        },
+        "returned_rows": 1,
+        "returned_rows_bytes": 236,
+        "useful_content_ms": 4232,
+        "view": "Docs collection selector"
+      }
+    ],
+    "preview_timings": [
+      {
+        "content": "new Untitled draft",
+        "first_preview": true,
+        "requests": {
+          "/stead/api/query": 3,
+          "/stead/api/updates": 1,
+          "assets": 1
+        },
+        "useful_content_ms": 6872
+      },
+      {
+        "content": "new Untitled draft",
+        "first_preview": false,
+        "requests": {},
+        "useful_content_ms": 170
+      }
+    ],
+    "saves": [
+      {
+        "accepted_response_ms": 1080,
+        "confirmation_ms": 4253,
+        "operation": "work.create",
+        "request_body_bytes": 418,
+        "requests_through_acceptance": {
+          "/stead/api/command": 1
+        },
+        "requests_through_confirmation": {
+          "/stead/api/command": 1,
+          "/stead/api/query": 2
+        }
+      },
+      {
+        "accepted_response_ms": 1102,
+        "confirmation_ms": 3003,
+        "operation": "container.create",
+        "request_body_bytes": 324,
+        "requests_through_acceptance": {
+          "/stead/api/command": 1
+        },
+        "requests_through_confirmation": {
+          "/stead/api/command": 1,
+          "/stead/api/query": 1,
+          "/stead/api/updates": 1
+        }
+      },
+      {
+        "accepted_response_ms": 1841,
+        "confirmation_ms": 2751,
+        "operation": "container.create",
+        "request_body_bytes": 329,
+        "requests_through_acceptance": {
+          "/stead/api/command": 1
+        },
+        "requests_through_confirmation": {
+          "/stead/api/command": 1,
+          "/stead/api/query": 1,
+          "/stead/api/updates": 1
+        }
+      },
+      {
+        "accepted_response_ms": 2122,
+        "confirmation_ms": 5580,
+        "operation": "document.save",
+        "request_body_bytes": 594,
+        "requests_through_acceptance": {
+          "/stead/api/command": 1
+        },
+        "requests_through_confirmation": {
+          "/stead/api/command": 1,
+          "/stead/api/query": 3,
+          "/stead/api/updates": 1
+        }
+      },
+      {
+        "accepted_response_ms": 2090,
+        "confirmation_ms": 5134,
+        "operation": "document.save",
+        "request_body_bytes": 480,
+        "requests_through_acceptance": {
+          "/stead/api/command": 1
+        },
+        "requests_through_confirmation": {
+          "/stead/api/command": 1,
+          "/stead/api/query": 3
+        }
+      },
+      {
+        "accepted_response_ms": 2011,
+        "confirmation_ms": 5511,
+        "operation": "document.save",
+        "request_body_bytes": 637,
+        "requests_through_acceptance": {
+          "/stead/api/command": 1
+        },
+        "requests_through_confirmation": {
+          "/stead/api/command": 1,
+          "/stead/api/query": 3,
+          "/stead/api/updates": 1
+        }
+      },
+      {
+        "accepted_response_ms": 2698,
+        "confirmation_ms": 7359,
+        "operation": "document.publish",
+        "request_body_bytes": 608,
+        "requests_through_acceptance": {
+          "/stead/api/command": 1
+        },
+        "requests_through_confirmation": {
+          "/stead/api/command": 1,
+          "/stead/api/query": 3
+        }
+      },
+      {
+        "accepted_response_ms": 1151,
+        "confirmation_ms": 5758,
+        "operation": "document.save",
+        "request_body_bytes": 692,
+        "requests_through_acceptance": {
+          "/stead/api/command": 1
+        },
+        "requests_through_confirmation": {
+          "/stead/api/command": 1,
+          "/stead/api/query": 3,
+          "/stead/api/updates": 1
+        }
+      },
+      {
+        "accepted_response_ms": 1919,
+        "confirmation_ms": 3801,
+        "operation": "relation.create",
+        "request_body_bytes": 646,
+        "requests_through_acceptance": {
+          "/stead/api/command": 1
+        },
+        "requests_through_confirmation": {
+          "/stead/api/command": 1,
+          "/stead/api/query": 3
+        }
+      },
+      {
+        "accepted_response_ms": 2342,
+        "confirmation_ms": 5310,
+        "operation": "work.update",
+        "request_body_bytes": 392,
+        "requests_through_acceptance": {
+          "/stead/api/command": 1
+        },
+        "requests_through_confirmation": {
+          "/stead/api/command": 1,
+          "/stead/api/query": 2,
+          "/stead/api/updates": 1
+        }
+      },
+      {
+        "accepted_response_ms": 1731,
+        "confirmation_ms": 4710,
+        "operation": "work.update",
+        "request_body_bytes": 391,
+        "requests_through_acceptance": {
+          "/stead/api/command": 1,
+          "/stead/api/query": 1
+        },
+        "requests_through_confirmation": {
+          "/stead/api/command": 1,
+          "/stead/api/query": 2,
+          "/stead/api/updates": 1
+        }
+      }
+    ],
+    "scope": "Observed finite samples under the declared CPU and thermal controls. Cumulative asset snapshots overlap; do not sum them as disjoint transfers. No percentile, production SLA, maximum-capacity or import-latency claim."
+  },
+  "native": {
+    "checks_passed": 760,
+    "checks_recorded": 760,
+    "cold_restarts": {
+      "bud": {
+        "passed": true,
+        "replacement_incarnation_change_independently_reviewed": true,
+        "saved_vase_sha256": "7a8589af1e2b81669cd058b0e0c79687016c8bc62ff5f7f528de4ff9b3ffabe4"
+      },
+      "bus": {
+        "passed": true,
+        "replacement_incarnation_change_independently_reviewed": true,
+        "saved_vase_sha256": "a145d1ae8dca2ea5cff00393f883dc902f2420a8c33809cf6901008dad91e317"
+      },
+      "nec": {
+        "passed": true,
+        "replacement_incarnation_change_independently_reviewed": true,
+        "saved_vase_sha256": "9ee11647937c517e998c008843afb5afe913590c432665cb63a559319d0d731d"
+      },
+      "zod": {
+        "passed": true,
+        "replacement_incarnation_change_independently_reviewed": true,
+        "saved_vase_sha256": "40afb8628bd3c6503a2e39fe36f7f6fb8bd0330fab3325ccf73a17d4b29beca1"
+      }
+    },
+    "elapsed_seconds": 1002.739,
+    "final_guard_lifetime": {
+      "cleanup": [],
+      "elapsed_seconds": 4133.055,
+      "exit_code": 0,
+      "file": ".runtime/execution-runs/four-fakes-bl246_hk/report.json",
+      "owned_cgroup_absent": true,
+      "reason": null,
+      "scope_proof": {
+        "cgroup": "/user.slice/user-1000.slice/user@1000.service/app.slice/stead-native-b673d9d0a3bdf8c8746d461706b6e186.scope",
+        "cpu_affinity": [
+          19
+        ],
+        "cpu_max": "5000 10000",
+        "unit": "stead-native-b673d9d0a3bdf8c8746d461706b6e186.scope"
+      },
+      "sha256": "42ea7838f5ce7050817b0fdd608f57eb7debdb10782e1ea864166a2d7f75f9c4",
+      "status": "completed",
+      "stopped_fixture_preserved_under_lifecycle_lock": true
+    },
+    "git_export_probes": [
+      {
+        "commit_bytes": 285,
+        "commit_sha1": "364a1a89b0b6398fdfb69ab64e8a8c20753206b5",
+        "container_id": "019939ba-4000-7000-8000-000000000029",
+        "declared_objects": 3,
+        "head": "364a1a89b0b6398fdfb69ab64e8a8c20753206b5",
+        "project_id": "019939ba-4000-7000-8000-000000000002"
+      },
+      {
+        "commit_bytes": 333,
+        "commit_sha1": "6660a43dedcf14440fddb0e189a8159e44c7184d",
+        "container_id": "019939ba-4000-7000-8000-000000000029",
+        "declared_objects": 6,
+        "head": "6660a43dedcf14440fddb0e189a8159e44c7184d",
+        "project_id": "019939ba-4000-7000-8000-000000000002"
+      },
+      {
+        "commit_bytes": 285,
+        "commit_sha1": "01350829c45a1bce71b6cbe41159d232deb698e8",
+        "container_id": "019939ba-4000-7000-8000-000000000028",
+        "declared_objects": 3,
+        "head": "01350829c45a1bce71b6cbe41159d232deb698e8",
+        "project_id": "019939ba-4000-7000-8000-000000000002"
+      }
+    ],
+    "guard_policy": {
+      "cooperative_seconds": 10,
+      "cpu_period_us": 10000,
+      "cpu_quota_us": 5000,
+      "kill_seconds": 5,
+      "sample_seconds": 1,
+      "stale_seconds": 3,
+      "start_c": 75,
+      "stop_c": 90,
+      "terminate_seconds": 10
+    },
+    "inputs_after_equal_before": true,
+    "inputs_before": {
+      "harness": "37be01e5551285654e2a03fd2c4be17901219b5f8bd14b95b38a1bfa5df1e6f1",
+      "ingress": "338ddee6e8cb26572005b4efacb18a37dca0cceb56d5d34ee9e4d11b47fee8fc",
+      "native": "557976ac8f2f941946c15b9f687fcbef51b0f265b5e1c945cb9e924ba547be02",
+      "native_unit_inventory": "b951b99f455b9efa55e6297dac0e4b80e84b822f9618c67bf37bb2083c546c16",
+      "runner": {
+        "core_conn.py": "b9172b903626e01d10ca7522a5f0399c2844db00c4987bf0018ef22b0e3e6162",
+        "execution_policy.py": "8d52b799a3a7bff73f38e029b57fe0cfafd156b7c61184173860c21600ce41c0",
+        "native_install.py": "9afb33b359ef71c1503bbb25616e445318298d850cd94672ecd5181b84018c11",
+        "native_peer_fence.py": "a3e4442c9912a75a8cf077e49c242729153d36c6746e356250dac878e2f61772",
+        "native_tls.py": "0c76e4fcbe37fceee823a5ba1bf3080a2523149996c8471a1afed0341b45ebc5",
+        "native_units.py": "6d2e5f933f1254d3af7562f84efa4d77782f67a9d5e2d1c3a0e31070f4440264",
+        "owned_child.py": "a01fc92a0b5f000f5ddee505d475127681ac47ea9a7aa4d8b450594cd50ec229",
+        "team_check.py": "58a50f0e001a84382ef0947331ab5aea4c17b9ea3c0815d52f4e48e78be5686b",
+        "team_conn.py": "6fe519e24f8964952765de135a48e5aa285295b20ee36db14a62881240e23374",
+        "team_git.py": "c0e341b24cc4fc2c11a3368b23e58e618f63d23dc4004d9541e34c2ce79b9b62",
+        "team_lifecycle.py": "4002e359d316e834d2679663755935bfe5c5d864903056beb2f1432976e5543e",
+        "team_updates_check.py": "3e8b90c0146a1843c5be638a484aeedc61d74c7ce463ac6ca9e4e30ee0a42cf8"
+      },
+      "toolchain": "ae185adaec12b5aa0b2d48e2198ae65583902512ffd9d148706810c4819c650c"
+    },
+    "installed_files_per_ship": {
+      "bud": 77,
+      "bus": 77,
+      "nec": 77,
+      "zod": 77
+    },
+    "native_exchange_count_independently_reviewed": 110,
+    "native_unit_suites": [
+      {
+        "driver_diagnostics": [],
+        "expected": [
+          "test-session-token-separation",
+          "test-session-origin-actor-admission",
+          "test-session-approval-binding",
+          "test-session-challenge-expiry",
+          "test-session-consumption-possession",
+          "test-session-consumption-replay",
+          "test-session-current-authorization",
+          "test-session-session-expiry",
+          "test-session-challenge-limits",
+          "test-session-session-limits",
+          "test-session-consume-rollback",
+          "test-session-replace-rollback",
+          "test-session-replace-isolation",
+          "test-session-logout-cleanup",
+          "test-session-binding-cleanup",
+          "test-session-empty-state-denial",
+          "test-session-resume-rotation",
+          "test-session-resume-denial",
+          "test-session-resume-boundary"
+        ],
+        "observed": [
+          "test-session-token-separation",
+          "test-session-session-limits",
+          "test-session-session-expiry",
+          "test-session-resume-rotation",
+          "test-session-resume-denial",
+          "test-session-resume-boundary",
+          "test-session-replace-rollback",
+          "test-session-replace-isolation",
+          "test-session-origin-actor-admission",
+          "test-session-logout-cleanup",
+          "test-session-empty-state-denial",
+          "test-session-current-authorization",
+          "test-session-consumption-replay",
+          "test-session-consumption-possession",
+          "test-session-consume-rollback",
+          "test-session-challenge-limits",
+          "test-session-challenge-expiry",
+          "test-session-binding-cleanup",
+          "test-session-approval-binding"
+        ],
+        "outcome": "passed",
+        "path": "/tests/stead-session"
+      },
+      {
+        "driver_diagnostics": [],
+        "expected": [
+          "test-http-transport-flags-forwarding",
+          "test-http-host-origin",
+          "test-http-route-method",
+          "test-http-header-count",
+          "test-http-header-bytes",
+          "test-http-header-ambiguity",
+          "test-http-cookie-transport-fields",
+          "test-http-split-cookie-limits",
+          "test-http-cookie-grammar",
+          "test-http-cookie-identity",
+          "test-http-body-framing",
+          "test-http-token-format",
+          "test-http-response-headers",
+          "test-http-cookie-output"
+        ],
+        "observed": [
+          "test-http-transport-flags-forwarding",
+          "test-http-token-format",
+          "test-http-split-cookie-limits",
+          "test-http-route-method",
+          "test-http-response-headers",
+          "test-http-host-origin",
+          "test-http-header-count",
+          "test-http-header-bytes",
+          "test-http-header-ambiguity",
+          "test-http-cookie-transport-fields",
+          "test-http-cookie-output",
+          "test-http-cookie-identity",
+          "test-http-cookie-grammar",
+          "test-http-body-framing"
+        ],
+        "outcome": "passed",
+        "path": "/tests/stead-http"
+      },
+      {
+        "driver_diagnostics": [],
+        "expected": [
+          "test-identity-configuration",
+          "test-identity-origin-isolation",
+          "test-identity-sender-and-metadata",
+          "test-identity-native-expiry",
+          "test-identity-owner-display",
+          "test-identity-duplicate-bounds",
+          "test-identity-single-use-approval",
+          "test-identity-code-origin-csrf",
+          "test-identity-acknowledgement",
+          "test-identity-http-route-isolation",
+          "test-identity-eyre-response-duct-binding"
+        ],
+        "observed": [
+          "test-identity-single-use-approval",
+          "test-identity-sender-and-metadata",
+          "test-identity-owner-display",
+          "test-identity-origin-isolation",
+          "test-identity-native-expiry",
+          "test-identity-http-route-isolation",
+          "test-identity-eyre-response-duct-binding",
+          "test-identity-duplicate-bounds",
+          "test-identity-configuration",
+          "test-identity-code-origin-csrf",
+          "test-identity-acknowledgement"
+        ],
+        "outcome": "passed",
+        "path": "/tests/stead-identity"
+      },
+      {
+        "driver_diagnostics": [],
+        "expected": [
+          "test-updates-open-before-snapshot",
+          "test-updates-minimal-ordered-invalidation",
+          "test-updates-replay-requires-refresh",
+          "test-updates-resume-retains-suffix",
+          "test-updates-foreign-watch-isolation",
+          "test-updates-cursor-purpose-and-actor",
+          "test-updates-revoked-before-dequeue",
+          "test-updates-private-change-invisible",
+          "test-updates-owned-cancel-while-rebuilding",
+          "test-updates-expiry-before-dequeue",
+          "test-updates-overflow-terminal-and-caps",
+          "test-updates-sequence-exhaustion",
+          "test-updates-cursor-collision-rollback",
+          "test-updates-actor-watch-limit",
+          "test-updates-browser-session-revocation",
+          "test-updates-public-codec-admission",
+          "test-updates-delayed-old-watch-after-resume",
+          "test-updates-same-rank-access-churn",
+          "test-updates-sixteen-rows-seventeen-overflow",
+          "test-updates-closed-watches-still-bounded",
+          "test-updates-private-projection-isolation",
+          "test-updates-shared-pagination-cap",
+          "test-updates-resume-retires-only-own-handles",
+          "test-updates-paginated-refresh-reclaims-only-own-query-walk",
+          "test-updates-empty-receipt-is-unconfirmed-only-in-current-scope"
+        ],
+        "observed": [
+          "test-updates-sixteen-rows-seventeen-overflow",
+          "test-updates-shared-pagination-cap",
+          "test-updates-sequence-exhaustion",
+          "test-updates-same-rank-access-churn",
+          "test-updates-revoked-before-dequeue",
+          "test-updates-resume-retires-only-own-handles",
+          "test-updates-resume-retains-suffix",
+          "test-updates-replay-requires-refresh",
+          "test-updates-public-codec-admission",
+          "test-updates-private-projection-isolation",
+          "test-updates-private-change-invisible",
+          "test-updates-paginated-refresh-reclaims-only-own-query-walk",
+          "test-updates-owned-cancel-while-rebuilding",
+          "test-updates-overflow-terminal-and-caps",
+          "test-updates-open-before-snapshot",
+          "test-updates-minimal-ordered-invalidation",
+          "test-updates-foreign-watch-isolation",
+          "test-updates-expiry-before-dequeue",
+          "test-updates-empty-receipt-is-unconfirmed-only-in-current-scope",
+          "test-updates-delayed-old-watch-after-resume",
+          "test-updates-cursor-purpose-and-actor",
+          "test-updates-cursor-collision-rollback",
+          "test-updates-closed-watches-still-bounded",
+          "test-updates-browser-session-revocation",
+          "test-updates-actor-watch-limit"
+        ],
+        "outcome": "passed",
+        "path": "/tests/stead-updates"
+      },
+      {
+        "driver_diagnostics": [],
+        "expected": [
+          "test-updates-global-watch-cursor-stream-caps",
+          "test-updates-retained-history-sixty-four-then-trim"
+        ],
+        "observed": [
+          "test-updates-retained-history-sixty-four-then-trim",
+          "test-updates-global-watch-cursor-stream-caps"
+        ],
+        "outcome": "passed",
+        "path": "/tests/stead-update-capacity"
+      },
+      {
+        "driver_diagnostics": [],
+        "expected": [
+          "test-deliberate-failure"
+        ],
+        "observed": [
+          "test-deliberate-failure"
+        ],
+        "outcome": "expected-failure",
+        "path": "/controls/stead-unit-failure"
+      }
+    ],
+    "stage": "completed",
+    "status": "pass"
+  },
+  "natural_expiry": "../natural-expiry-d911505/index.json",
+  "private_files": {
+    ".piers/fakes/logs/team-check-20260929T101805Z.json": {
+      "bytes": 1172006,
+      "sha256": "5b7612e8759a995d03aa9e3fef9f5253c56cb8491f7593a9b30d6c4b79e0c514"
+    },
+    ".piers/fakes/logs/team-git-20260929T103521Z.json": {
+      "bytes": 12893,
+      "sha256": "e41174bb49802eafaefbca102a8a0f3b17b437580437abe424ab297de1a560dd"
+    },
+    ".runtime/browser-native-20260929T103521Z/browser-process.json": {
+      "bytes": 579,
+      "sha256": "58098414338f08a4c950df169db5da2c1064931dee8f6872a505d59bb8310743"
+    },
+    ".runtime/browser-native-20260929T103521Z/browser-report.json": {
+      "bytes": 286687,
+      "sha256": "b582e00f8eef0bf458f2b1bbc315bc625dc6b4151e1563a29754c53d506de68e"
+    },
+    ".runtime/browser-native-20260929T103521Z/git-fixture.json": {
+      "bytes": 1820,
+      "sha256": "19f8a983f93d95426f3723c62fc1924fe0f76286689754a227bcc8426fc33bb8"
+    },
+    ".runtime/browser-native-20260929T103521Z/transport-report.json": {
+      "bytes": 4918,
+      "sha256": "80f78b7741121cdb02c87ec09fb2212173738ab93b0443acb00d20f284909d72"
+    },
+    ".runtime/execution-runs/four-fakes-bl246_hk/report.json": {
+      "bytes": 1793814,
+      "sha256": "42ea7838f5ce7050817b0fdd608f57eb7debdb10782e1ea864166a2d7f75f9c4"
+    },
+    ".runtime/phase02-complete-20260927/team-d911505-760-browser34-git43-expiry3-20260929/closeout.json": {
+      "bytes": 1208,
+      "sha256": "1581fe9d478661649dc212b6216568ace8ac0ca2534ffff528dd23d944e666e1"
+    }
+  },
+  "qualifies_phase": false,
+  "remaining": [
+    "completed independent human trial and review",
+    "final integration and issue reconciliation"
+  ],
+  "scope": "Actual pinned four-fake-ship native execution, real Firefox with native TLS and stock Git. The whole guarded lifetime closed cleanly; separately recorded natural expiry passed. Human trial and final Phase 2 reconciliation remain pending. No production, live-network, maximum-capacity or production-latency claim.",
+  "source_commit": "d9115056a04fd86cf55a07fd0d8a0bf0be84caaf",
+  "status": "component-passes-with-final-gates-pending"
+}

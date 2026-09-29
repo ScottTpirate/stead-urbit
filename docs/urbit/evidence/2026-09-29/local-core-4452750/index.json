@@ -1,0 +1,42 @@
+{
+  "format": 1,
+  "classification": "local-real-native-compile-probes",
+  "qualifies_phase": false,
+  "source_commit": "445275019a7f84e1e586520a90729295f3e0171d",
+  "status": "pass",
+  "checks_passed": 175,
+  "checks_recorded": 175,
+  "core_seconds": 401.954,
+  "inputs_match": true,
+  "expected_positive_arms": 71,
+  "guard": {
+    "status": "completed",
+    "run_id": "d7b33f1166f2472727ebcdf4afa9b73c",
+    "exit_code": 0,
+    "reason": null,
+    "elapsed_seconds": 439.916,
+    "cleanup": []
+  },
+  "owned_cgroup_absent_at_readback": true,
+  "files": {
+    "core-report.json": {
+      "path": "core-report.json.gz",
+      "raw_bytes": 851059,
+      "raw_sha256": "424cacf559be13aeca20e9ff1957078194d673e28374b731c311d9c9d1c65ed8",
+      "gzip_sha256": "ee25115bd0868eaec01eb2d0f47bdd96819a8303959e6308a7405869717859c9"
+    },
+    "guard-report.json": {
+      "path": "guard-report.json.gz",
+      "raw_bytes": 194556,
+      "raw_sha256": "f2ef97ac4dd7cf6b242190974a84b4569e123d442927ae3d76716e6839c53a65",
+      "gzip_sha256": "7f539fd7411d7153572e399fb22b2562c6b70760747ea8198d9caf1ba54e5850"
+    },
+    "stop.log": {
+      "path": "stop.log.gz",
+      "raw_bytes": 141,
+      "raw_sha256": "fe8b2280abb0c0a09259c5211aa3dc729b9b42caa2afdaa7431a4d4936ba213c",
+      "gzip_sha256": "3515bb00ab4541684f1f9147aacb7e7157ed671b8d21b6ef4cf9f013b859c7f8"
+    }
+  },
+  "scope": "All expected positive native arms, deliberately failing control and compile/authority probes on the exact captured inputs. This includes the expanded five-batch Home reconstruction assertion. It does not qualify configured four-ship, independent SDK, browser, human or hosted CI acceptance."
+}

@@ -3,6 +3,7 @@ from __future__ import annotations
 import hashlib
 import json
 from pathlib import Path
+import re
 import time
 import traceback
 import urllib.request
@@ -12,12 +13,13 @@ import native_install
 import native_tls
 import native_units
 import team_conn
+import team_git
 import team_updates_check
 from digests import sha, source_sha, tree_sha
 
 CODE = Path(__file__).parent
 DEPENDENCIES = ('team_check.py', 'team_conn.py', 'core_conn.py', 'native_install.py',
-                'team_lifecycle.py', 'native_peer_fence.py', 'native_tls.py', 'native_units.py', 'owned_child.py', 'execution_policy.py', 'team_updates_check.py')
+                'team_lifecycle.py', 'native_peer_fence.py', 'native_tls.py', 'native_units.py', 'owned_child.py', 'execution_policy.py', 'team_updates_check.py', 'team_git.py')
 
 
 def closure():
@@ -45,6 +47,67 @@ def configuration(now):
             'project_creators': {uid(102): 'yes'}}
 
 
+def capabilities_match(value, request_id):
+    """The public query contract has opaque row keys, not resource-name keys."""
+    if not isinstance(value, dict) or not isinstance(value.get('rows'), dict):
+        return False
+    return (all(value.get(key) == expected for key, expected in {
+        'protocol': 'stead.query-result/3', 'status': 'read', 'request_id': request_id,
+        'kind': 'capabilities', 'project_id': '', 'container_id': '', 'resource_id': '',
+        'authority_epoch': '0', 'cursor': ''}.items())
+        and isinstance(value.get('generation'), str) and bool(value['generation'])
+        and list(value['rows'].values()) == [{
+            'protocol': 'stead.capabilities/3', 'profile': 'configured-team', 'commands': 'stead.command/3',
+            'queries': 'stead.query/3', 'updates': 'stead.updates/3', 'authentication': 'native-sender/1',
+            'max_request_bytes': '65536', 'max_response_bytes': '262144', 'page_size': '20',
+            'runtime': 'isolated-fake'}])
+
+
+def bootstrap_ready(team, ship, call, guard):
+    """Wait for an actual owner-local ACK without releasing startup fencing."""
+    entry = team.boots[ship]
+    process, nonce = entry['process'], entry['nonce']
+    deadline = time.monotonic() + 180
+
+    def current():
+        guard()
+        if (team.boots.get(ship) is not entry or team.children.get(ship) is not process
+                or entry.get('process') is not process
+                or entry.get('nonce') != nonce or entry.get('acknowledged')
+                or not entry.get('suspended') or process.poll() is not None):
+            raise ValueError('Native bootstrap owner changed')
+
+    for _ in range(3):
+        current()
+        # Keep the existing exchange limits: encode 30s, transport 75s,
+        # decode 30s. This is an admission deadline, not a new process timer.
+        if deadline - time.monotonic() < 135:
+            raise TimeoutError('Native bootstrap readiness budget exhausted')
+        value = call(ship, 'bootstrap', {'protocol': 'stead.bootstrap/1', 'nonce': nonce},
+                     route='/bootstrap/' + nonce, target=ship,
+                     app='stead-home' if ship == 'zod' else 'stead-identity', timeout=75)
+        current()
+        if time.monotonic() >= deadline:
+            raise TimeoutError('Native bootstrap acknowledgement arrived after deadline')
+        if (isinstance(value, dict)
+                and set(value) == {'protocol', 'status', 'home', 'nonce', 'incarnation'}
+                and value['protocol'] == 'stead.bootstrap/1' and value['status'] == 'ready'
+                and value['home'] == '~' + ship and value['nonce'] == nonce
+                and isinstance(value['incarnation'], str)
+                and re.fullmatch(r'[0-9a-f]{64}', value['incarnation'])):
+            return value
+        if not (isinstance(value, dict)
+                and set(value) == {'protocol', 'status', 'kind', 'trace', 'trace_jam_hex'}
+                and value['protocol'] == 'stead.test-terminal/1' and value['status'] == 'failed'
+                and value['kind'] == 'poke-fail' and isinstance(value['trace'], str)
+                and isinstance(value['trace_jam_hex'], str)
+                and re.fullmatch(r'(?:[0-9a-f]{2})+', value['trace_jam_hex'])):
+            raise ValueError('Native bootstrap acknowledgement differs')
+        # call() has already retained the completed refusal and native frame.
+        time.sleep(.1)
+    raise TimeoutError('Native bootstrap readiness not acknowledged')
+
+
 def run(host):
     started = time.monotonic()
     report = {'status': 'fail', 'classification': 'local-real-configured-gall-development',
@@ -70,8 +133,8 @@ def run(host):
         if not condition:
             raise AssertionError(name)
 
-    def command(ship, source, expected=None):
-        result = host['dojo'](ship, source)
+    def command(ship, source, expected=None, *, timeout=None):
+        result = host['dojo'](ship, source, **({'timeout': timeout} if timeout is not None else {}))
         report['commands'].append({'ship': ship, 'dojo': source, 'result': result})
         checkpoint('native-command')
         if expected is not None:
@@ -80,15 +143,16 @@ def run(host):
 
     binary = '/runtime/' + host['LOCK']['runtime']['binary']
 
-    def call(ship, mode, value=None, *, target='zod', app='stead-home', route=None):
+    def call(ship, mode, value=None, *, target='zod', app='stead-home', route=None, timeout=75):
         host['execution_check']()
         raw = canonical(value) if value is not None else b''
         if route is None and mode in ('command', 'query', 'updates'):
-            digest = hashlib.sha256(value['protocol'].encode() + b'\0' + raw).hexdigest()
+            domain = {'command': 'stead.command/3', 'query': 'stead.query/3', 'updates': 'stead.updates/3'}[mode]
+            digest = hashlib.sha256(domain.encode() + b'\0' + raw).hexdigest()
             binding = uid(202 + ('bus', 'nec').index(ship)) if ship in ('bus', 'nec') else uid(299)
             route = '/v3/result/~' + ship + '/' + binding + '/1/' + value['request_id'] + '/' + digest
         result = team_conn.run(binary, host['LIVE'] / ship / '.urb/conn.sock', mode,
-                               route or '/', raw, target=target, app=app)
+                               route or '/', raw, target=target, app=app, timeout=timeout)
         observed = {key: result[key] for key in ('stdout', 'stderr', 'response_frame_sha256',
                     'request', 'request_frame_hex', 'response_frame_hex', 'outcome')}
         report['commands'].append({'ship': ship, 'mode': mode, 'app': app, 'target': target,
@@ -123,10 +187,16 @@ def run(host):
             log = Path('/state/logs/zod.log')
             offset = log.stat().st_size
             terminal = ''
+            unit_started = time.monotonic()
+            host['record']('native unit start', {'path': entry['path'], 'expected_arms': len(entry['arms'])})
             try:
                 observed = native_units.run(binary, host['LIVE'] / 'zod/.urb/conn.sock', resolved, timeout=entry.get('timeout_seconds', 60))
                 report['commands'].append({'ship': 'zod', 'native_test': observed})
                 terminal = observed['stdout']
+            except Exception as error:
+                if hasattr(error, 'native_failure'):
+                    report['commands'].append({'ship': 'zod', 'native_test_failure': error.native_failure})
+                raise
             finally:
                 with log.open('rb') as stream:
                     stream.seek(offset)
@@ -134,6 +204,8 @@ def run(host):
                 report.setdefault('native_unit_transcripts', []).append({'path': entry['path'],
                     'log_offset': offset, 'log_bytes': len(captured), 'log_hex': captured.hex(), 'terminal': terminal})
                 checkpoint('native-unit-output')
+                host['record']('native unit captured', {'path': entry['path'], 'log_bytes': len(captured),
+                    'elapsed_seconds': round(time.monotonic() - unit_started, 3), 'terminal_present': bool(terminal)})
             if len(captured) > 262144:
                 raise ValueError('Native unit log byte bound')
             negative = entry == inventory['negative_control']
@@ -176,6 +248,8 @@ def run(host):
             command(ship, '+stead-build-probe', '%stead-builds-pass')
             if ship == 'zod':
                 pure_units()
+                command('zod', '+stead-team-contract-probe', '%stead-team-contract-basic-pass')
+                command('zod', '+stead-team-authority-probe', '%stead-team-authority-basic-pass', timeout=300)
         command('zod', '|start %stead-home')
         command('zod', '|start %stead-http-boundary-probe')
         for ship in ('bus', 'nec', 'bud'):
@@ -205,9 +279,7 @@ def run(host):
                   target=ship, app='stead-identity') == {})
         for ship in host['SHIPS']:
             nonce = team.boots[ship]['nonce']
-            app = 'stead-home' if ship == 'zod' else 'stead-identity'
-            boot = call(ship, 'bootstrap', {'protocol': 'stead.bootstrap/1', 'nonce': nonce},
-                        route='/bootstrap/' + nonce, target=ship, app=app)
+            boot = bootstrap_ready(team, ship, call, host['execution_check'])
             check(ship + '-owner-bootstrap-acknowledged', boot is not None and boot.get('nonce') == nonce
                   and boot.get('home') == '~' + ship and boot.get('status') == 'ready')
             team.admit(ship, boot, host['dojo'])
@@ -218,7 +290,34 @@ def run(host):
         check('current-native-member-read', identity is not None and identity.get('status') == 'read')
         check('native-outsider-denied', denied(call('bud', 'query', query('identity')),
               'watch-ack-fail', 'stead-current-member-required'))
+        capabilities_query = query('capabilities')
+        capabilities = call('bus', 'query', capabilities_query)
+        check('native-public-capabilities-current-member',
+              capabilities_match(capabilities, capabilities_query['request_id']))
+        check('native-capabilities-unbound-sender-denied', denied(call('bud', 'query', query('capabilities')),
+              'watch-ack-fail', 'stead-current-member-required'))
         create = mutation('project.create', uid(1), 0, {'organization_id': uid(5), 'owning_team_id': uid(6), 'title': 'Garden α', 'project_key': 'GARDEN', 'preset': 'general'})
+        for mode in ('command', 'query', 'updates'):
+            domain = {'command': 'stead.command/3', 'query': 'stead.query/3', 'updates': 'stead.updates/3'}[mode]
+            for version in ('1', '2', '999'):
+                seed = create if mode == 'command' else query('projects')
+                if mode == 'updates':
+                    seed = {**seed, 'action': 'open', 'watch_id': ''}
+                bad = {**seed, 'protocol': domain.rsplit('/', 1)[0] + '/' + version}
+                outcome = call('bus', mode, bad)
+                check('native-' + mode + '-version-' + version + '-correlated-rejection', outcome == {
+                    'protocol': 'stead.result/3', 'status': 'rejected', 'error': 'unsupported_version',
+                    'request_id': bad['request_id'],
+                    'canonical_sha256': hashlib.sha256(domain.encode() + b'\0' + canonical(bad)).hexdigest()})
+        legacy = {**create, 'protocol': 'stead.command/2'}
+        legacy_digest = hashlib.sha256(b'stead.command/2\0' + canonical(legacy)).hexdigest()
+        legacy_route = '/v2/result/~bus/' + uid(102) + '/' + uid(1) + '/' + legacy['request_id'] + '/' + legacy_digest
+        for mode, kind in (('legacy-poke', 'poke-fail'), ('legacy-watch', 'watch-ack-fail')):
+            outcome = call('bus', mode, legacy, route=legacy_route)
+            check('native-' + mode + '-configured-home-refuses-v2-carrier',
+                  outcome.get('protocol') == 'stead.test-terminal/1' and outcome.get('status') == 'failed'
+                  and outcome.get('kind') == kind and bool(outcome.get('trace_jam_hex')))
+        check('native-unsupported-commands-do-not-create-project', call('bus', 'query', query('projects')).get('rows') == {})
         receipt = call('bus', 'command', create)
         check('explicit-creator-project-accepted', receipt is not None and receipt.get('status') == 'accepted'
               and receipt.get('identity_ship') == '~bus' and receipt.get('authentication') == 'native-sender/1'
@@ -235,7 +334,12 @@ def run(host):
         check('actual-read-reflects-committed-work', len(rows) == 1 and next(iter(rows.values())).get('title') == 'Native task')
         stale = mutation('work.update', uid(10), 2, work['payload'])
         check('native-stale-revision-rejected', call('bus', 'command', stale).get('error') == 'revision_conflict')
-        restart_watch = team_updates_check.run(call, check, query, mutation, uid, now)
+        def git_probe(project, container, head):
+            observed = team_git.probe(command, project, container, head)
+            report.setdefault('git_export_probes', []).append(observed)
+            check('native-git-export-manifest-and-commit-' + str(len(report['git_export_probes'])), True)
+
+        restart_watch = team_updates_check.run(call, check, query, mutation, uid, now, git_probe)
         report['restarts'] = {}
         for ship in host['SHIPS']:
             checkpoint('cold-restart-' + ship)
@@ -249,9 +353,7 @@ def run(host):
                   and team.boots[ship]['present'] and team.saved_fingerprint(ship, host['dojo']) == saved)
             team.reinstall(ship, host['dojo'])
             nonce = team.boots[ship]['nonce']
-            app = 'stead-home' if ship == 'zod' else 'stead-identity'
-            boot = call(ship, 'bootstrap', {'protocol': 'stead.bootstrap/1', 'nonce': nonce},
-                        route='/bootstrap/' + nonce, target=ship, app=app)
+            boot = bootstrap_ready(team, ship, call, host['execution_check'])
             check(ship + '-restart-fresh-bootstrap', boot is not None and nonce != old['nonce']
                   and boot.get('nonce') == nonce and boot.get('status') == 'ready')
             team.admit(ship, boot, host['dojo'])
@@ -277,6 +379,8 @@ def run(host):
         report['error'] = type(error).__name__ + ': ' + str(error)
         if hasattr(error, 'native_failure'):
             report['native_failure'] = error.native_failure
+        if hasattr(error, 'admission_failure'):
+            report['admission_failure'] = error.admission_failure
         traceback.print_exc()
     report['inputs_after'] = inputs()
     if before != report['inputs_after']:

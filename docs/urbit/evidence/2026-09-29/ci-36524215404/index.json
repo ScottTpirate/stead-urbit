@@ -1,0 +1,126 @@
+{
+  "format": 1,
+  "classification": "failed-hosted-native-run",
+  "qualifies_phase": false,
+  "run_url": "https://github.com/ScottTpirate/stead-urbit/actions/runs/36524215404",
+  "attempt": 1,
+  "workflow_commit": "0ecdbec7995e9d69564ecbe48f59011cebf7173f",
+  "controller_commit": "8077dff20c2aa7c784810ce861171068e89ba7fc",
+  "candidate_commit": "8077dff20c2aa7c784810ce861171068e89ba7fc",
+  "observed": {
+    "stage": "team-check",
+    "checks_passed": 173,
+    "checks_failed": 0,
+    "checks_recorded": 173,
+    "suites_recorded": 4,
+    "transcripts_recorded": 5,
+    "native_error": {
+      "class": "ValueError",
+      "reason": "unrecognized"
+    },
+    "inputs_match": true,
+    "worker_cleanup": true,
+    "guard_exit_code": 1,
+    "guard_seconds": 1341.414,
+    "collector": {
+      "completed": true,
+      "eof": true,
+      "error": null,
+      "overflow": false
+    },
+    "guard_cleanup_errors": [],
+    "host_cleanup": {
+      "active_state": "failed",
+      "empty": true,
+      "unit": "stead-hosted-b8f229a5adb63adb1cd68baf3d81adcc.service",
+      "verified": true
+    }
+  },
+  "limitation": "The public diagnostic locates the failure while running or validating the fifth native suite; the exact native or output-validation cause is not retained. Recorded passing checks do not qualify the failed run.",
+  "files": {
+    "control-changed-limits-inputs.json": {
+      "path": "control-changed-limits-inputs.json.gz",
+      "raw_bytes": 54043,
+      "raw_sha256": "86f50584901279096ee7db1f68668834dcc5781aa2cc093ee3489be2bedb64ed",
+      "gzip_sha256": "ae3d55fa40790f41a0029b461ac239cd174d1ea34d6b8ff84bbf8aa9203a025d"
+    },
+    "control-changed-limits-report.json": {
+      "path": "control-changed-limits-report.json.gz",
+      "raw_bytes": 9383,
+      "raw_sha256": "a5ac1a41915da932fe2b06e54b2d22a25c9655552efa204fe9d2ed8171c93ac0",
+      "gzip_sha256": "07e55c9fdba4dfc72ec69bc6cde0b7d13fd5af2fb91d94a55211db326a928c5e"
+    },
+    "control-guardian-death-inputs.json": {
+      "path": "control-guardian-death-inputs.json.gz",
+      "raw_bytes": 54043,
+      "raw_sha256": "86f50584901279096ee7db1f68668834dcc5781aa2cc093ee3489be2bedb64ed",
+      "gzip_sha256": "ae3d55fa40790f41a0029b461ac239cd174d1ea34d6b8ff84bbf8aa9203a025d"
+    },
+    "control-guardian-death-report.json": {
+      "path": "control-guardian-death-report.json.gz",
+      "raw_bytes": 8191,
+      "raw_sha256": "59beaa0ba3e579dfb7e3fc8fb9fa4cf79d5861a74e07871cfcda52c55c78b397",
+      "gzip_sha256": "347e6555affa17d5f93142dbaa6522adede78d11f298b1583cd01c1185aae845"
+    },
+    "control-missing-profile-inputs.json": {
+      "path": "control-missing-profile-inputs.json.gz",
+      "raw_bytes": 54043,
+      "raw_sha256": "86f50584901279096ee7db1f68668834dcc5781aa2cc093ee3489be2bedb64ed",
+      "gzip_sha256": "ae3d55fa40790f41a0029b461ac239cd174d1ea34d6b8ff84bbf8aa9203a025d"
+    },
+    "control-missing-profile-report.json": {
+      "path": "control-missing-profile-report.json.gz",
+      "raw_bytes": 7154,
+      "raw_sha256": "54b6ddb87239f2010311c745c894af8764867e671db1b64a4df1dcd9ec107d47",
+      "gzip_sha256": "0ebc43712338801bd8748a1e03006c3a516b0e25f18b3d4ce6919bde94937d90"
+    },
+    "control-parent-death-inputs.json": {
+      "path": "control-parent-death-inputs.json.gz",
+      "raw_bytes": 54043,
+      "raw_sha256": "86f50584901279096ee7db1f68668834dcc5781aa2cc093ee3489be2bedb64ed",
+      "gzip_sha256": "ae3d55fa40790f41a0029b461ac239cd174d1ea34d6b8ff84bbf8aa9203a025d"
+    },
+    "control-parent-death-report.json": {
+      "path": "control-parent-death-report.json.gz",
+      "raw_bytes": 9313,
+      "raw_sha256": "1685fd648f7ad6366b5841e19309fafc4b92c814ac939be5201e3f6ce0e2e9d9",
+      "gzip_sha256": "873338b550b7b6b3e3d4bb920cbf1c2d019cfcbf13b0034f74e136d8f274f385"
+    },
+    "control-stale-lease-inputs.json": {
+      "path": "control-stale-lease-inputs.json.gz",
+      "raw_bytes": 54043,
+      "raw_sha256": "86f50584901279096ee7db1f68668834dcc5781aa2cc093ee3489be2bedb64ed",
+      "gzip_sha256": "ae3d55fa40790f41a0029b461ac239cd174d1ea34d6b8ff84bbf8aa9203a025d"
+    },
+    "control-stale-lease-report.json": {
+      "path": "control-stale-lease-report.json.gz",
+      "raw_bytes": 9558,
+      "raw_sha256": "af87869f7ec2f498fb8351d2a52420698ee4c97774d2a8cb52616c8281041cea",
+      "gzip_sha256": "185a800e740723fd5e5dd427b12659d6a17de8869759ccb6b72d9a621aa40eac"
+    },
+    "control-wrong-profile-inputs.json": {
+      "path": "control-wrong-profile-inputs.json.gz",
+      "raw_bytes": 54043,
+      "raw_sha256": "86f50584901279096ee7db1f68668834dcc5781aa2cc093ee3489be2bedb64ed",
+      "gzip_sha256": "ae3d55fa40790f41a0029b461ac239cd174d1ea34d6b8ff84bbf8aa9203a025d"
+    },
+    "control-wrong-profile-report.json": {
+      "path": "control-wrong-profile-report.json.gz",
+      "raw_bytes": 7930,
+      "raw_sha256": "afebb5c0b799ba11b39368f2c119227f5d848f6c4098734922262476db4db8c2",
+      "gzip_sha256": "09cbcd9324599466c1f8d3cc2a9877978c74f62781b296686aac7ab26e8d2d10"
+    },
+    "inputs.json": {
+      "path": "inputs.json.gz",
+      "raw_bytes": 54043,
+      "raw_sha256": "86f50584901279096ee7db1f68668834dcc5781aa2cc093ee3489be2bedb64ed",
+      "gzip_sha256": "ae3d55fa40790f41a0029b461ac239cd174d1ea34d6b8ff84bbf8aa9203a025d"
+    },
+    "report.json": {
+      "path": "report.json.gz",
+      "raw_bytes": 11195,
+      "raw_sha256": "40e5486e68f0183d07e016db029d8d1fd5f31706846792045ad72ae38c69342e",
+      "gzip_sha256": "a9484fff6628803db837d832a195cdb3e5a14ca404351e87fb5243a6fac8ce25"
+    }
+  }
+}

@@ -41,6 +41,24 @@ class NativeUnitVerifierTests(unittest.TestCase):
         with self.assertRaises(ValueError):
             self.positive_check('[32 %avow 0 %noun 0]\n')
 
+    def test_exact_driver_diagnostic_retained_without_supplying_test_evidence(self):
+        warning = 'ames: send fail: operation not permitted\n'
+        raw = warning + self.positive + '>     test-session-one\n' + warning + '  took ms/1\n'
+        result = self.positive_check(raw)
+        self.assertEqual(result['raw_output'], raw)
+        self.assertEqual(result['driver_diagnostics'], [
+            {'line': 1, 'message': warning.strip()}, {'line': 7, 'message': warning.strip()}])
+        self.assertEqual(self.negative_check(warning + self.negative)['outcome'], 'expected-failure')
+        for broken in [warning, self.positive.replace('OK /tests/stead-session/test-session-two\n', ''),
+                       self.positive.replace('OK ', 'FAILED '), self.positive.replace('%noun 0', '%noun 1'),
+                       self.positive + 'nest-fail\n', self.positive + '>     test-session-one\n']:
+            with self.subTest(raw=broken), self.assertRaises(ValueError):
+                self.positive_check(broken + warning)
+        for altered in [warning.rstrip() + ' trailing\n', ' ' + warning, warning.upper(),
+                        warning.replace('operation not permitted', 'different error')]:
+            with self.subTest(altered=altered), self.assertRaises(ValueError):
+                self.positive_check(self.positive + altered)
+
     def test_pinned_pretty_printer_wrapped_timing_requires_exact_complete_pair(self):
         pair = '>     test-session-one\n  took s/2.530.773\n'
         self.assertEqual(self.positive_check(self.positive + pair)['outcome'], 'passed')
@@ -89,7 +107,7 @@ class NativeUnitVerifierTests(unittest.TestCase):
             self.positive_check(self.positive + 'x' * 262144)
 
     def test_valid_inventory(self):
-        self.assertEqual(UNITS.validate_inventory(self.inventory)['expected_arm_count'], 70)
+        self.assertEqual(UNITS.validate_inventory(self.inventory)['expected_arm_count'], 71)
 
     def test_suite_deadlines_cannot_be_raised_or_omitted(self):
         for index in range(len(self.inventory['suites'])):
@@ -122,6 +140,13 @@ class NativeUnitVerifierTests(unittest.TestCase):
             value['suites'][0]['arms'][0] = value['suites'][int(cross)]['arms'][1]
             with self.assertRaises(ValueError):
                 UNITS.validate_inventory(value)
+
+    def test_capacity_inventory_keeps_history_boundary_with_valid_arm_prefix(self):
+        value = copy.deepcopy(self.inventory)
+        capacity = next(suite for suite in value['suites'] if suite['path'] == '/tests/stead-update-capacity')
+        capacity['arms'][1] = 'test-updates-other-boundary'
+        with self.assertRaises(ValueError):
+            UNITS.validate_inventory(value)
 
     def test_inventory_count_mismatch(self):
         value = copy.deepcopy(self.inventory)

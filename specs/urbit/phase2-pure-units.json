@@ -1,7 +1,7 @@
 {
   "format": 1,
   "classification": "pure-native-only",
-  "expected_arm_count": 70,
+  "expected_arm_count": 71,
   "suites": [
     {
       "path": "/tests/stead-session",
@@ -99,7 +99,8 @@
     {
       "path": "/tests/stead-update-capacity",
       "arms": [
-        "test-updates-global-watch-cursor-stream-caps"
+        "test-updates-global-watch-cursor-stream-caps",
+        "test-updates-retained-history-sixty-four-then-trim"
       ],
       "timeout_seconds": 180
     }

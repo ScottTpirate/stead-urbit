@@ -4,9 +4,14 @@ No dates or effort estimates here are promises. Each phase exits on evidence, no
 
 September 26: Phases 0 and 1 are complete. The [Phase 1 native gate](PHASE1_ACCEPTANCE_20260926.md)
 passes all 73 requirements with independent semantic acceptance.
-Phase 2 is underway with the [public SDK package](../../sdk/README.md) under
-URB-180 / #21. Independent consumer compilation, API conformance and individual
-sessions follow; this first package increment does not close that issue.
+September 29: The Phase 2 candidate has passing configured native, real
+browser/stock-Git, independent SDK, hosted native CI and natural session-expiry
+evidence. Its local native lifetime is closed and the stopped fixture preserved.
+The [current qualification record](PHASE2_QUALIFICATION_20260929.md) binds each
+result to its source and scope. The uncoached human Work/Docs trial and reviewed
+integration remain open; Phase 2 is not complete. The
+[preparation checkpoint](PHASE2_CHECKPOINT_20260928.md) retains earlier failed
+attempts and their historical limits.
 
 | Phase | Deliverable | Gate |
 |---|---|---|

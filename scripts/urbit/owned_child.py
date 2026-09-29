@@ -11,6 +11,22 @@ import sys
 import threading
 
 
+def nft_binary():
+    # Fixed distribution paths inside the existing read-only /usr mount; never
+    # search an inherited PATH for a capability-bearing packet controller.
+    if not os.statvfs('/usr').f_flag & os.ST_RDONLY:
+        raise ValueError('Namespace system tools must be read-only')
+    for name in ('/usr/bin/nft', '/usr/sbin/nft'):
+        path = Path(name)
+        if path.is_file():
+            info = path.stat()
+            # Host UID0 is intentionally unmapped in this user namespace.
+            if info.st_mode & 0o022 or not os.access(path, os.X_OK):
+                raise ValueError('Namespace packet controller mode differs')
+            return name
+    raise ValueError('Namespace packet controller is unavailable')
+
+
 def command(argv, *, privileged=False):
     if not argv:
         raise ValueError('Nonempty owned command required')
@@ -19,10 +35,14 @@ def command(argv, *, privileged=False):
 
 
 def fixture_command(argv):
-    if os.environ.get('STEAD_CONFIGURED') != '1':
-        return argv
-    if os.getuid() != 0:
+    # The separate SDK authority namespace retains the caller's nonzero UID
+    # so a nested consumer can map it without retaining CAP_SETFCAP. Its pure
+    # evaluators still use exactly the same parent-bound, capability-free path.
+    configured = os.environ.get('STEAD_CONFIGURED') == '1'
+    if configured and os.getuid() != 0:
         raise ValueError('Configured evaluator must run inside the owned namespace')
+    if not configured and os.environ.get('STEAD_OWNED_EVALUATORS') != '1':
+        return argv
     return command(argv)
 
 
@@ -82,11 +102,17 @@ def main():
     if os.getppid() != parent:
         raise RuntimeError('Controller exited before child admission')
     if mode == 'controller':
-        if arguments[0] != '/usr/bin/nft':
+        if arguments[0] != nft_binary():
             raise ValueError('Only the namespace packet controller retains capabilities')
     else:
-        arguments = ['/usr/bin/setpriv', '--bounding-set=-all', '--inh-caps=-all',
-                     '--ambient-caps=-all', '--no-new-privs', '--', *arguments]
+        state = dict(line.split(':', 1) for line in Path('/proc/self/status').read_text().splitlines() if ':' in line)
+        already_empty = all(state[name].strip() == '0000000000000000'
+                            for name in ('CapInh', 'CapPrm', 'CapEff', 'CapBnd', 'CapAmb'))
+        # Linux can reject PR_CAPBSET_DROP after CAP_SETPCAP itself is gone,
+        # even when every capability is already absent. Do not add privilege
+        # just to repeat that operation; retain NNP and the parent-death bind.
+        caps = [] if already_empty else ['--bounding-set=-all', '--inh-caps=-all', '--ambient-caps=-all']
+        arguments = ['/usr/bin/setpriv', *caps, '--no-new-privs', '--', *arguments]
     os.execv(arguments[0], arguments)
 
 

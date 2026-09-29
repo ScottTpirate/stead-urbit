@@ -1,0 +1,63 @@
+{
+  "format": 1,
+  "classification": "thermally-interrupted-local-native-attempt",
+  "qualifies_phase": false,
+  "source_commit": "f5e79f4682cf7a78fb2a7e5b9729c76e175aff41",
+  "native_status": "fail",
+  "native_error": "Execution guard interrupted result: Fixture stop is latched",
+  "native_seconds": 244.678,
+  "checks_recorded": 166,
+  "checks_passed": 166,
+  "native_suites_recorded": 5,
+  "inputs_match": true,
+  "guard": {
+    "status": "failed",
+    "run_id": "e97e54a278678f5291f5584a4f3c83e4",
+    "elapsed_seconds": 249.16,
+    "exit_code": -15,
+    "reason": "GuardError: Thermal ceiling reached",
+    "cleanup": [
+      {
+        "returncode": 0,
+        "signal": "SIGTERM",
+        "stderr": ""
+      }
+    ]
+  },
+  "peak_sample": {
+    "elapsed_seconds": 238.112,
+    "event": "sample",
+    "sample": {
+      "cpu_sensors": [
+        "thermal_zone3:TCPU",
+        "thermal_zone5:x86_pkg_temp"
+      ],
+      "finished": 1075799.911797912,
+      "readings_c": {
+        "thermal_zone0:acpitz": 27.8,
+        "thermal_zone1:INT3400 Thermal": 20.0,
+        "thermal_zone2:SEN3": 44.05,
+        "thermal_zone3:TCPU": 93.0,
+        "thermal_zone4:TCPU_PCI": 79.0,
+        "thermal_zone5:x86_pkg_temp": 79.0,
+        "thermal_zone6:iwlwifi_1": 44.0
+      },
+      "started": 1075799.909975956
+    }
+  },
+  "owned_cgroup_absent_at_readback": true,
+  "private_original": {
+    "path": ".piers/fakes/logs/team-check-20260929T070737Z.json",
+    "bytes": 104940,
+    "sha256": "ace524cdfd66773560d7e78979de342dc8a5ff5c8db4b691805f3fba0930ba69"
+  },
+  "files": {
+    "guard-report.json": {
+      "path": "guard-report.json.gz",
+      "raw_bytes": 112239,
+      "raw_sha256": "d0934130aef315cf77546fd88bf11caa161c5b5037ecd808d7df4f0f4de09f6c",
+      "gzip_sha256": "890bde69f9fb80014878f334071b2b054be08ea304f5fb889b09951ca0fa909a"
+    }
+  },
+  "scope": "The unchanged 90C guard stopped this attempt before configured restart/bootstrap qualification. The failed result is not acceptance. An unclean disposable-state marker was retained, stopped fake state preserved, and restoration from verified clean seeds prepared for retry. No other workload or desktop setting was changed."
+}

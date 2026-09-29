@@ -1,0 +1,39 @@
+{
+  "format": 1,
+  "classification": "failed-local-native-replay-reproduction",
+  "qualifies_phase": false,
+  "source_commit": "2d4b68afcd68099cf603725b4587f8864be71f5c",
+  "status": "fail",
+  "native_error": "ValueError: Unexpected native output record: clay: read-at-tako fail [desk=%base care=%a case=[%da p=~2026.09.29..05.46.00..33b5] path=/tests/stead-update-capacity/hoon]",
+  "compiler_observation": "nest-fail at [56 29].[56 38]: need @t; have [%stead-rebuild @ta ~]",
+  "failed_suite": "/tests/stead-update-capacity",
+  "elapsed_seconds": 94.068,
+  "recorded_checks": 164,
+  "passed_checks": 164,
+  "suites_completed": 4,
+  "inputs_match": true,
+  "guard": {
+    "status": "completed",
+    "run_id": "e1a8e87aa9aaf40a880f49aaa0408ebc",
+    "exit_code": 0,
+    "reason": null,
+    "elapsed_seconds": 104.586,
+    "cleanup": []
+  },
+  "owned_cgroup_absent_at_readback": true,
+  "files": {
+    "core-report.json": {
+      "path": "core-report.json.gz",
+      "raw_bytes": 848487,
+      "raw_sha256": "930167b39d436c70e01bde6ae3f095b0e1817a883aae6c298e61cfd11b8163de",
+      "gzip_sha256": "ddfc6f7a11caeed8fc224df253e8140fc6fcf4bab23920597f895870cc41d4bc"
+    },
+    "guard-report.json": {
+      "path": "guard-report.json.gz",
+      "raw_bytes": 49701,
+      "raw_sha256": "42c0bd22c07324a3026ef7be9052446b5f14b266a3456370298cef0989f4bb9c",
+      "gzip_sha256": "63ea44e3d90bd8ef6100fa414269dc7db072d61c9a4b544a6a4a4e3824dca1dc"
+    }
+  },
+  "limitation": "The local serializer named wire shadows the global wire mold needed by the added recovery helper. The failed compiler run is not qualified by clean guard shutdown."
+}
