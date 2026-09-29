@@ -41,4 +41,4 @@
   ==
 =/  bytes  (canonical:stead-codec value)
 ?>  (lte (met 3 bytes) 196.608)
-bytes
+`@ux``@`bytes
