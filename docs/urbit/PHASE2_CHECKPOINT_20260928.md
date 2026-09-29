@@ -4,13 +4,18 @@ Recorded 2026-09-28 UTC; updated 2026-09-29 UTC. Phase 2 is incomplete. Its six 
 (#9, #10, #14, #21, #22 and #29) remain open. The Phase 0/1 acceptance record
 remains tied to its recorded source; it does not qualify the newer candidate.
 
-The latest hosted run, [36517682428](https://github.com/ScottTpirate/stead-urbit/actions/runs/36517682428),
+The latest completed hosted run, [36517682428](https://github.com/ScottTpirate/stead-urbit/actions/runs/36517682428),
 passed the expanded native inventory and independent evidence review on `cd75365`.
 The local SDK run at `8a2702a` compiled its public sample and four marks, then
 failed because its trusted fixture registered Home as an individual member.
 Product rules correctly refused that configuration. SDK business calls, the
 current native-browser journey and the unaided human trial remain open. The
 sections below retain earlier observations rather than superseding their failures.
+
+The reviewed SDK correction is now running natively at `6e5d194`. A subsequent
+closure audit added bounded projection-replay assertions to the existing history
+test; [run 36524215404](https://github.com/ScottTpirate/stead-urbit/actions/runs/36524215404)
+is executing them on controller/candidate `8077dff`. Both results are pending.
 
 ## Ready for the next qualification window
 
@@ -615,3 +620,25 @@ Eighteen host inventory tests passed in 0.078 seconds. The new Hoon assertions a
 not yet compiled or executed. They test bounded replay across five batches; they
 do not establish the 6,144-event maximum, large Git import latency or percentile
 performance. A new reviewed controller and actual native execution are required.
+
+## Fresh local fixture and core run passed
+
+The first four-ship initialization at `8a2702a` created clean stopped seeds for
+the pinned toolchain. Its subsequent core check passed 175 observations,
+including all 71 native unit arms and the deliberate failure control. These
+counts overlap. The core check took 364.377 seconds; its bound inputs were
+unchanged. The complete guarded lifetime took 2,992.228 seconds, ended with exit
+zero and no cleanup errors, and its owned cgroup was absent after clean shutdown.
+Exact reports, seed hashes and the stop result are retained in the
+[local evidence index](evidence/2026-09-29/local-core-8a2702a/index.json).
+
+This qualifies the recorded local compile/probe scope only. It does not cover
+the later 68-event recovery assertions, configured four-ship acceptance,
+SDK business calls or browser/human testing. The root checkout advanced only
+after shutdown; the new SDK attempt uses `6e5d194` and fresh independent piers.
+
+Reviewed [PR #76](https://github.com/ScottTpirate/stead-urbit/pull/76) merged only
+the controller-pin update into main at `0ecdbec`. Its new hosted run is bound to
+controller/candidate `8077dff20c2aa7c784810ce861171068e89ba7fc`. The native inventory
+remains 71 arms. Its actual result is required before the added assertions
+qualify; the previous hosted pass remains bound to its earlier recorded inputs.
