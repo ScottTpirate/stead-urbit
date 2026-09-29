@@ -341,6 +341,39 @@
   ?>  (accepted changed)
   =/  out  (advance:stead-updates next.changed *state:stead-session prior pages 1.011)
   $(data next.changed, prior next.out, pages pages.out, index +(index))
+++  test-updates-retained-history-sixty-four-then-trim
+  ^-  tang
+  =/  data  db
+  =/  prior  next.first
+  =/  pages  pages.first
+  =/  current  cursor
+  =/  n=@ud  1
+  |-
+  ?>  (lte n 65)
+  =/  cmd  (command (add 900 n) 101 n 'work.update' ~[['title' 'Retained history'] ['description' (decimal:stead-codec n)] ['type' 'task'] ['status' 'todo'] ['priority' 'none']])
+  =/  changed  (apply-command:stead-team data alice cmd (add 1.100 n))
+  ?>  (accepted changed)
+  =/  advanced  (advance:stead-updates next.changed *state:stead-session prior pages (add 1.100 n))
+  =/  out  (execute:stead-updates next.changed (indexed next.changed) *state:stead-session next.advanced pages.advanced bob poll(cursor current) (add 1.100 n) (add 500 n))
+  ?>  =('updated' (field response.out 'status'))
+  =/  rows  (~(got by (value response.out)) 'rows')
+  ?>  ?=([%o *] rows)
+  ?>  =(1 (lent ~(tap by p.rows)))
+  =/  item  (~(got by p.rows) '0')
+  ?>  ?=([%o *] item)
+  ?>  =((decimal:stead-codec n) (field:stead-codec p.item 'sequence'))
+  ?>  =(1 (lent ~(tap by streams.next.out)))
+  ?>  =(1 (lent ~(tap by watches.next.out)))
+  ?>  =(1 (lent ~(tap by cursors.pages.out)))
+  =/  row  (~(got by watches.next.out) watch)
+  ?>  !closed.row
+  =/  stream  (~(got by streams.next.out) stream.row)
+  =/  retained  (flop (turn rows.stream |=(item=invalidation:stead-updates sequence.item)))
+  ?>  ?:(=(n 64) =(retained (gulf 1 64)) &)
+  ?:  =(n 65)
+    ?>  =(retained (gulf 2 65))
+    ~
+  $(data next.changed, prior next.out, pages pages.out, current (field response.out 'cursor'), n +(n))
 ++  test-updates-sixteen-rows-seventeen-overflow
   ^-  tang
   =/  sixteen  (queued 16 next.first pages.first)

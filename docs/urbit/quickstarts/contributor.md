@@ -16,6 +16,20 @@ tests and metadata checks; it does not compile Hoon. A refused prerequisite
 needs fixing before continuing. Do not substitute an arbitrary runtime or boot
 image to make the command start.
 
+Prepare the browser dependencies before starting the native fixture. From the
+repository root, use the pinned Node and npm installed by `make setup`:
+
+```sh
+.runtime/node-v24.21.0-linux-x64/bin/node .runtime/node-v24.21.0-linux-x64/lib/node_modules/npm/bin/npm-cli.js ci --prefix web/app --cache "$PWD/.runtime/npm-cache" --ignore-scripts --include=optional
+PLAYWRIGHT_BROWSERS_PATH="$PWD/.runtime/playwright" .runtime/node-v24.21.0-linux-x64/bin/node web/app/node_modules/playwright/cli.js install --no-remove firefox
+```
+
+The host also needs `/usr/bin/certutil` (the `nss` package on Arch), Firefox's
+shared-library dependencies, user namespaces and user systemd/cgroups. Browser
+files stay under `.runtime/playwright`, with trust confined to each disposable
+test profile. See [browser preparation](../DEV_FLOW.md#frontend-build-and-browser-feedback)
+for the boundary between repository installation and host prerequisites.
+
 For a configured native development fixture:
 
 ```sh
@@ -53,8 +67,7 @@ For frontend edits, use the pinned Node executable installed by setup:
 .runtime/node-v24.21.0-linux-x64/bin/node web/app/package-desk.mjs
 ```
 
-Install the exact locked frontend dependencies as described in
-[`DEV_FLOW.md`](../DEV_FLOW.md) before these commands. The build bundles and
+Use the locked frontend dependencies installed above. The build bundles and
 splits the frontend; packaging writes the content-addressed native desk assets.
 Stop the fixture before packaging or changing native/harness inputs. Preserve
 the previous stopped state and evidence before another disposable run. Keep the

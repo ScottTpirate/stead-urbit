@@ -107,7 +107,7 @@ class NativeUnitVerifierTests(unittest.TestCase):
             self.positive_check(self.positive + 'x' * 262144)
 
     def test_valid_inventory(self):
-        self.assertEqual(UNITS.validate_inventory(self.inventory)['expected_arm_count'], 70)
+        self.assertEqual(UNITS.validate_inventory(self.inventory)['expected_arm_count'], 71)
 
     def test_suite_deadlines_cannot_be_raised_or_omitted(self):
         for index in range(len(self.inventory['suites'])):

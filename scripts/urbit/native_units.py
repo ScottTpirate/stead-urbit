@@ -104,7 +104,7 @@ def validate_inventory(value: dict) -> dict:
     definitions = {'/tests/stead-session': ('test-session-', 19, 60),
                    '/tests/stead-http': ('test-http-', 14, 60),
                    '/tests/stead-identity': ('test-identity-', 11, 60),
-                   '/tests/stead-updates': ('test-updates-', 25, 60),
+                   '/tests/stead-updates': ('test-updates-', 26, 60),
                    '/tests/stead-update-capacity': ('test-updates-global-', 1, 180)}
     if not isinstance(suites, list) or len(suites) != len(definitions):
         raise ValueError('Exactly five native suites required')
@@ -121,7 +121,7 @@ def validate_inventory(value: dict) -> dict:
                 not isinstance(name, str) or not re.fullmatch(prefix + r'[a-z0-9-]{1,64}', name) for name in names):
             raise ValueError('Native suite arms')
         all_arms.extend(names)
-    if len(all_arms) != 70 or len(set(all_arms)) != 70 or type(value.get('expected_arm_count')) is not int or value.get('expected_arm_count') != 70:
+    if len(all_arms) != 71 or len(set(all_arms)) != 71 or type(value.get('expected_arm_count')) is not int or value.get('expected_arm_count') != 71:
         raise ValueError('Native arm count and uniqueness')
     if value.get('negative_control') != {
             'path': '/controls/stead-unit-failure', 'arms': ['test-deliberate-failure'],

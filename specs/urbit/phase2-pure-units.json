@@ -1,7 +1,7 @@
 {
   "format": 1,
   "classification": "pure-native-only",
-  "expected_arm_count": 70,
+  "expected_arm_count": 71,
   "suites": [
     {
       "path": "/tests/stead-session",
@@ -87,6 +87,7 @@
         "test-updates-delayed-old-watch-after-resume",
         "test-updates-same-rank-access-churn",
         "test-updates-sixteen-rows-seventeen-overflow",
+        "test-updates-retained-history-sixty-four-then-trim",
         "test-updates-closed-watches-still-bounded",
         "test-updates-private-projection-isolation",
         "test-updates-shared-pagination-cap",

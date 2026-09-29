@@ -6,15 +6,15 @@ def run(call, check, query, mutation, uid, now):
     sequence = 8000
     project = uid(2)
 
-    def updates(action, *, watch='', cursor='', kind='', scope=''):
+    def updates(action, *, watch='', cursor='', kind='', scope='', container=''):
         nonlocal sequence
         sequence += 1
         return {'protocol': 'stead.updates/3', 'request_id': uid(sequence),
                 'action': action, 'watch_id': watch, 'cursor': cursor, 'kind': kind,
-                'project_id': scope, 'container_id': '', 'resource_id': '', 'search': ''}
+                'project_id': scope, 'container_id': container, 'resource_id': '', 'search': ''}
 
-    def opened(ship='nec', kind='work'):
-        result = call(ship, 'updates', updates('open', kind=kind, scope=project))
+    def opened(ship='nec', kind='work', container=''):
+        result = call(ship, 'updates', updates('open', kind=kind, scope=project, container=container))
         check('updates-open-' + ship + '-' + kind, result.get('status') == 'watching'
               and len(result.get('watch_id', '')) == 64 and len(result.get('cursor', '')) == 64
               and result.get('rows') == {})
@@ -82,15 +82,76 @@ def run(call, check, query, mutation, uid, now):
     check('updates-cancel-after-replay-idempotent', cancel(suffix).get('status') == 'cancelled'
           and cancel(suffix).get('status') == 'cancelled')
 
+    def deleted_invalidation(handle, label):
+        row = poll(handle)
+        check('updates-delete-invalidates-' + label, row.get('status') == 'updated'
+              and len(row.get('rows', {})) == 1
+              and row.get('generation') != handle['generation']
+              and all(set(item) == {'sequence', 'generation'} for item in row['rows'].values()))
+        return row
+
+    # Deletion is an accepted change, not loss of the project's read grant.
+    # A subscribed member must refresh away the tombstone and dangling links.
+    accepted('work.create', uid(12), 0, payload | {'title': 'Work to delete'})
+    deleting_work = opened()
+    before_delete = deleting_work
+    accepted('work.delete', uid(12), 1, {})
+    deleting_work = deleted_invalidation(deleting_work, 'work')
+    remaining = call('nec', 'query', query('work', project=project))
+    check('updates-deleted-work-absent-with-survivor', remaining.get('status') == 'read'
+          and [row.get('resource_id') for row in remaining.get('rows', {}).values()] == [uid(11)])
+    replay = poll(before_delete)
+    check('updates-delete-cursor-replay-requires-refresh', replay.get('status') == 'refresh_required'
+          and replay.get('rows') == {} and replay.get('generation') == '' and replay.get('cursor') == '')
+    check('updates-delete-watch-still-cancellable', cancel(deleting_work).get('status') == 'cancelled')
+
+    accepted('container.create', uid(41), 0, {'title': 'Deletion controls', 'visibility': 'shared'})
+    for document in (51, 52):
+        markdown = f'---\nid: {uid(document)}\ntype: page\nstate: published\n---\nSynthetic deletion control\n'
+        accepted('document.save', uid(document), 0, {'container_id': uid(41), 'markdown': markdown})
+    def link(resource, source_kind, source, target):
+        accepted('relation.create', uid(resource), 0, {'type': 'related_to',
+            'source_project_id': project, 'source_kind': source_kind,
+            'source_container_id': uid(41) if source_kind == 'document' else '', 'source_id': uid(source),
+            'target_project_id': project, 'target_kind': 'document',
+            'target_container_id': uid(41), 'target_id': uid(target)})
+    link(61, 'work', 11, 51)
+    link(62, 'document', 51, 52)
+    relation_watch = opened(kind='relations')
+    accepted('relation.delete', uid(61), 1, {})
+    relation_watch = deleted_invalidation(relation_watch, 'relation')
+    remaining = call('nec', 'query', query('relations', project=project))
+    check('updates-deleted-relation-absent-with-survivor', remaining.get('status') == 'read'
+          and [row.get('resource_id') for row in remaining.get('rows', {}).values()] == [uid(62)])
+    document_watch = opened(kind='documents', container=uid(41))
+    documents = call('nec', 'query', query('documents', project=project, container=uid(41)))
+    source = next(row for row in documents['rows'].values() if row['resource_id'] == uid(51))
+    accepted('document.delete', uid(51), 1, {'container_id': uid(41), 'expected_head': source['container_head']})
+    document_watch = deleted_invalidation(document_watch, 'document')
+    relation_watch = deleted_invalidation(relation_watch, 'document-relations')
+    remaining = call('nec', 'query', query('documents', project=project, container=uid(41)))
+    check('updates-deleted-document-absent-with-survivor', remaining.get('status') == 'read'
+          and [row.get('resource_id') for row in remaining.get('rows', {}).values()] == [uid(52)])
+    remaining_links = call('nec', 'query', query('relations', project=project))
+    check('updates-deleted-document-hides-dangling-link', remaining_links.get('status') == 'read'
+          and remaining_links.get('rows') == {})
+    for handle in (document_watch, relation_watch):
+        check('updates-delete-cancelled', cancel(handle).get('status') == 'cancelled')
+
     # A private container is visible to its owner only; no counter, body or
     # invalidation can escape through the other member's broad projections.
     watches = {kind: opened(kind=kind) for kind in ('work', 'search', 'activity', 'relations')}
     full = call('nec', 'updates', updates('open', kind='inbox', scope=project))
     check('updates-four-watch-cap-at-native-boundary', full.get('error') == 'capacity_exceeded')
     accepted('container.create', uid(40), 0, {'title': 'PRIVATE-UPDATE-CANARY', 'visibility': 'private'})
+    markdown = f'---\nid: {uid(53)}\ntype: page\nstate: draft\n---\nPRIVATE-DELETE-CANARY\n'
+    accepted('document.save', uid(53), 0, {'container_id': uid(40), 'markdown': markdown})
+    private = call('bus', 'query', query('document', project=project, container=uid(40), resource=uid(53)))
+    source = next(iter(private['rows'].values()))
+    accepted('document.delete', uid(53), 1, {'container_id': uid(40), 'expected_head': source['container_head']})
     for kind, handle in watches.items():
         row = poll(handle)
-        check('updates-private-container-invisible-' + kind, row.get('status') == 'updated'
+        check('updates-private-create-and-delete-invisible-' + kind, row.get('status') == 'updated'
               and row.get('rows') == {} and row.get('generation') == handle['generation'])
         watches[kind] = row
     # Queue visible work, then revoke before dequeue. Neither queued content nor

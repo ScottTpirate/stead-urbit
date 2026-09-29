@@ -206,7 +206,26 @@ to build or test this package locally.
 ## Frontend build and browser feedback
 
 The frontend has its own pinned Node runtime and lockfile. From the repository
-root, after `make setup` and the lockfile's dependencies have been installed:
+root, run `make setup`, then install the exact locked dependencies and the
+Firefox revision selected by that locked Playwright package:
+
+```sh
+.runtime/node-v24.21.0-linux-x64/bin/node .runtime/node-v24.21.0-linux-x64/lib/node_modules/npm/bin/npm-cli.js ci --prefix web/app --cache "$PWD/.runtime/npm-cache" --ignore-scripts --include=optional
+PLAYWRIGHT_BROWSERS_PATH="$PWD/.runtime/playwright" .runtime/node-v24.21.0-linux-x64/bin/node web/app/node_modules/playwright/cli.js install --no-remove firefox
+```
+
+The optional packages include esbuild's platform binary; lifecycle scripts are
+disabled. These commands write only repository dependencies and browser files.
+They do not install system packages or modify the system certificate store.
+The Linux host must already provide `/usr/bin/certutil`, Firefox's shared-library
+dependencies, user namespaces, and usable user systemd/cgroups. On Arch,
+`certutil` is supplied by `nss`; other distributions use different packages.
+Do not use Playwright's `install-deps` as a portable Linux setup command: it
+invokes distribution package management. Resolve missing host prerequisites
+before starting a native fixture. A headed human trial also needs the current
+user's local display socket.
+
+After dependency installation:
 
 ```sh
 make frontend-check
