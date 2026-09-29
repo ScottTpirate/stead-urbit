@@ -1,0 +1,102 @@
+{
+  "format": 1,
+  "classification": "failed-real-browser-native-tls",
+  "qualifies_phase": false,
+  "native_source_commit": "f5e79f4682cf7a78fb2a7e5b9729c76e175aff41",
+  "runs": [
+    {
+      "run": "browser-native-20260929T073508Z",
+      "status": "fail",
+      "checks_passed": 0,
+      "passed_check_names": [],
+      "error": "AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:\n+ actual - expected\n\n+ '/stead-identity/'\n- '/~/login'\n",
+      "browser": "155.0",
+      "node": "v24.21.0",
+      "browser_test_sha256": "0020bbde0e2128ae5c8a529e70058d1208def23e778484d48b91ed020f4dadf4",
+      "boundary_test_sha256": "f0c1ed5900493813a3dec3cd9447307cc78cd372a1edeb2f06baa03f2b7ad0ca",
+      "native_prerequisite": {
+        "file": "team-check-20260929T071722Z.json",
+        "sha256": "59839406120e84d09101c640666103107076207186ecec270ab956cc8a0ecad0"
+      },
+      "response_capture_complete": true,
+      "response_capture_error": false,
+      "cleanup": {
+        "process_reaped": true,
+        "cgroup": "/user.slice/user-1000.slice/user@1000.service/app.slice/stead-browser-27372b0590a655d9625d58e65f9e0f11.service",
+        "empty": true,
+        "state": "failed"
+      },
+      "private_files": {
+        "browser-report.json": {
+          "path": ".runtime/browser-native-20260929T073508Z/browser-report.json",
+          "bytes": 6159,
+          "sha256": "91f865103ec7da2797201aa68a8e2e5fc5bd97ce9137d4e46acb9386dc588bcd"
+        },
+        "transport-report.json": {
+          "path": ".runtime/browser-native-20260929T073508Z/transport-report.json",
+          "bytes": 2524,
+          "sha256": "cc8727640a272a9cc698da970a72c753a623885edbb0d7940de7c5850a4d516d"
+        },
+        "browser-process.json": {
+          "path": ".runtime/browser-native-20260929T073508Z/browser-process.json",
+          "bytes": 577,
+          "sha256": "cde8330f7e541b4cc360865b699ded8cdda4875201eaf851a60990a442ca5c6d"
+        }
+      }
+    },
+    {
+      "run": "browser-native-20260929T074254Z",
+      "status": "fail",
+      "checks_passed": 12,
+      "passed_check_names": [
+        "bus-individual-native-owner-approved-session",
+        "keyboard-principal-signin-approval-error-recovery-and-live-status",
+        "nec-individual-native-owner-approved-session",
+        "unsent-project-visible-original-request-retry-with-no-selected-project",
+        "unsent-collection-receipt-remains-unconfirmed-after-current-parent-authorization",
+        "native-reader-work-view-without-write-control",
+        "browser-command-committed-with-native-approved-attribution",
+        "second-individual-receives-live-committed-browser-work",
+        "native-accepted-event-renders-same-instant-in-two-local-timezones",
+        "member-cookie-is-secure-httponly-host-only-and-not-owner-auth",
+        "member-session-cannot-promote-raw-eyre-channel-or-scry-to-home-authority",
+        "unbound-individual-browser-cannot-start-a-member-session"
+      ],
+      "error": "Error: page.evaluate: JSON.parse: unexpected character at line 1 column 1 of the JSON data",
+      "browser": "155.0",
+      "node": "v24.21.0",
+      "browser_test_sha256": "28140cc23005cf23d48decbcd3e0e46c5e9163a2af3a30bfd8c7d6882320dba1",
+      "boundary_test_sha256": "f0c1ed5900493813a3dec3cd9447307cc78cd372a1edeb2f06baa03f2b7ad0ca",
+      "native_prerequisite": {
+        "file": "team-check-20260929T071722Z.json",
+        "sha256": "59839406120e84d09101c640666103107076207186ecec270ab956cc8a0ecad0"
+      },
+      "response_capture_complete": true,
+      "response_capture_error": false,
+      "cleanup": {
+        "process_reaped": true,
+        "cgroup": "/user.slice/user-1000.slice/user@1000.service/app.slice/stead-browser-b59a85c66e805ffc896040f19ba9d574.service",
+        "empty": true,
+        "state": "failed"
+      },
+      "private_files": {
+        "browser-report.json": {
+          "path": ".runtime/browser-native-20260929T074254Z/browser-report.json",
+          "bytes": 60232,
+          "sha256": "1638021dd7d4e485f508075d57971cdd51240c8b00d18e00930ca0f5b0c7007b"
+        },
+        "transport-report.json": {
+          "path": ".runtime/browser-native-20260929T074254Z/transport-report.json",
+          "bytes": 2524,
+          "sha256": "d839a55b1d568dc30328161b7243c5d808c3b0ae9157645d59725faa47d17027"
+        },
+        "browser-process.json": {
+          "path": ".runtime/browser-native-20260929T074254Z/browser-process.json",
+          "bytes": 577,
+          "sha256": "d2b5960ab6907e6b65c2da962f09986e073d2c68f7ccaffcf4dc7d24956feb60"
+        }
+      }
+    }
+  ],
+  "scope": "First run stopped before login navigation completed; zero completed cases. The corrected separately bound runner at de7d00f completed 12 cases before an unrecorded scry response failed JSON decoding. Pinned-source review found a synthetic probe path mismatch and a separate expected-status mismatch. These diagnoses require actual renewed native/browser execution. Both private Firefox cgroups were reaped and empty. The fake fixture was stopped and preserved before resetting test state."
+}

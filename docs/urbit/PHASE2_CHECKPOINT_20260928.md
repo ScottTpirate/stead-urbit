@@ -9,19 +9,27 @@ actual API calls, with unchanged inputs and clean shutdown of all children and
 the outer guard. Its [selected evidence](evidence/2026-09-29/sdk-native-7f113a1/index.json)
 keeps nonces, handles and raw native diagnostics private.
 
-The latest hosted [run 36529027820](https://github.com/ScottTpirate/stead-urbit/actions/runs/36529027820)
-failed after all six native suites and 776 passing observations, with one failed
-team assertion. Its public report does not name that assertion. Input identity,
-collector completion and clean owned shutdown were verified. The
-[failed evidence](evidence/2026-09-29/ci-36529027820/index.json) remains separate
-from earlier passing CI. Local configured-team reproduction at `4ddb822`
-confirmed the exact Home bootstrap readiness refusal after restart. Its selected
-[failed evidence](evidence/2026-09-29/team-bootstrap-4ddb822/index.json) and clean
-whole-lifetime shutdown are retained. The independently reviewed correction is
-pushed at `f5e79f4`; its full host checks pass. Hosted qualification is running. A local retry was interrupted by the 90C
-guard before restart checks; its state was preserved and verified seeds restored.
-Browser, natural expiry, human onboarding and final
-integration remain open.
+The configured team at `f5e79f4` passed all 757 checks in 1014.291 seconds,
+including all four cold restarts and one observed Home readiness refusal followed
+by a valid acknowledgment. Its whole lifetime closed cleanly after 1765.663
+seconds, with exit zero, no cleanup errors and no remaining owned cgroup.
+[Native evidence](evidence/2026-09-29/team-native-f5e79f4/index.json) is separate
+from the two failed browser attempts: the first stopped before login navigation
+completed; the corrected runner passed 12 cases before a synthetic public-scry
+probe mismatch stopped the journey. Both browser cgroups were reaped.
+[Browser failure records](evidence/2026-09-29/browser-failures-f5e79f4/index.json)
+retain the exact original hashes and independently bound runner inputs.
+
+The latest hosted [run 36535031127](https://github.com/ScottTpirate/stead-urbit/actions/runs/36535031127)
+failed after 677 passing checks at initial Home ingress admission. Its native
+bootstrap acknowledgment succeeded, but ingress no longer held the corresponding
+binding. The first retirement cause was not retained. All six resource controls,
+input identity, collector completion and owned cleanup were verified.
+[Failed CI evidence](evidence/2026-09-29/ci-36535031127/index.json) remains failed.
+A host test separately reproduced an atomic-file reader race; its responsibility
+for this particular CI failure is unproven. The bounded reader correction and
+first-retirement diagnostics require renewed native qualification. Browser,
+natural expiry, human onboarding and final integration remain open.
 
 Local native compilation at `4452750` already passed all 71 positive arms,
 including the added bounded projection replay, and its complete guard lifetime
@@ -843,3 +851,33 @@ this is execution-input equivalence, not a claim of a new SDK run.
 After the reset, a later preflight observed 61C and admitted another local
 `make team-dev` attempt on unchanged `f5e79f4`. This second attempt is running;
 no startup limit, thermal ceiling or workload setting was changed.
+
+## Atomic control reads and browser probe correction
+
+An actual atomic replacement between opening and inspecting a heartbeat file
+can leave the open inode with zero links. The previous reader rejected that
+snapshot. The corrected reader discards it and reopens the same anchored,
+no-follow pathname at most three times. Hard links, nonregular or oversized
+files, parse failures and every lease identity, freshness and policy check
+remain refusals. The ingress diagnostic retains the first closed retirement
+code through later monitor observations and rollback; no credential or raw
+exception text enters the public diagnostic.
+
+The first full host run found two historical test fixtures deriving an old guard
+from the current implementation. The fixtures now retain exact Git source blobs
+from `54734c8` and `209bd33`, independently of current source. Historical
+acceptance rules and original evidence remain unchanged. The focused 21-test
+historical suite passes. The complete rerun passed 679 of 680 tests, with one
+optional artifact skip, in 173.899 seconds. All 54 CI host controls passed in
+2.409 seconds. The [exact host logs and tested source hashes](evidence/2026-09-29/atomic-reader-host/index.json)
+retain the initial failures as well. These are host checks, separate from
+native/browser qualification.
+
+Pinned Gall removes the trailing conversion mark before an app peek; the public
+synthetic probe must match `/x/public-control`. Gall turns a default-agent peek
+bail into `[~ ~]`, which pinned Eyre maps to HTTP 404. The corrected browser
+control keeps exact response requirements and records fixed operation labels,
+status, bounded content type, byte count and complete-body hashes before asserting.
+The partial fake-ship state was preserved after clean shutdown. Fresh installed
+source and a new browser journey are required; these edits are not passing
+native/browser evidence.

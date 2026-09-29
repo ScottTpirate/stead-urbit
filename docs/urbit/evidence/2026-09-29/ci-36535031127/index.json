@@ -1,0 +1,147 @@
+{
+  "format": 1,
+  "classification": "failed-hosted-native-run",
+  "qualifies_phase": false,
+  "run_url": "https://github.com/ScottTpirate/stead-urbit/actions/runs/36535031127",
+  "attempt": 1,
+  "workflow_commit": "199414291da7cbeebbb8915bfc1187e990d77348",
+  "controller_commit": "f5e79f4682cf7a78fb2a7e5b9729c76e175aff41",
+  "candidate_commit": "f5e79f4682cf7a78fb2a7e5b9729c76e175aff41",
+  "observed": {
+    "native": {
+      "admission": {
+        "error": {
+          "class": "ValueError",
+          "reason": "bootstrap-stale"
+        },
+        "last_completed_check": "zod-owner-bootstrap-acknowledged",
+        "mode": "initial",
+        "rollback_errors": [],
+        "ship": "zod",
+        "step": "ingress-arm"
+      },
+      "checks_failed": 0,
+      "checks_passed": 677,
+      "checks_recorded": 677,
+      "commands_recorded": 687,
+      "error": {
+        "class": "ValueError",
+        "reason": "bootstrap-stale"
+      },
+      "frame_stage": "unrecognized",
+      "inputs_match": true,
+      "installed_counts": {
+        "bud": 81,
+        "bus": 81,
+        "nec": 81,
+        "zod": 81
+      },
+      "present": true,
+      "suites_recorded": 6,
+      "transcripts_recorded": 6
+    },
+    "worker_cleanup": true,
+    "guard_exit_code": 1,
+    "guard_seconds": 1764.324,
+    "collector": {
+      "completed": true,
+      "eof": true,
+      "error": null,
+      "overflow": false
+    },
+    "guard_cleanup_errors": [],
+    "host_cleanup": {
+      "active_state": "failed",
+      "empty": true,
+      "unit": "stead-hosted-542052f2212645cb4b38e5008076a8fb.service",
+      "verified": true
+    }
+  },
+  "files": {
+    "control-changed-limits-inputs.json": {
+      "path": "control-changed-limits-inputs.json.gz",
+      "raw_bytes": 54043,
+      "raw_sha256": "9d77ddd2accd113f04504d5024e770e426958fad1173c8a55079ca4646353a93",
+      "gzip_sha256": "87c2fbcd13e1f88950df0bfec0605589187b33263be0ad9f7d0189fd890f45cd"
+    },
+    "control-changed-limits-report.json": {
+      "path": "control-changed-limits-report.json.gz",
+      "raw_bytes": 9385,
+      "raw_sha256": "f9b77555bd2de0f7433478b48cf8a68301ce67510a499eb89bccd81bcff37178",
+      "gzip_sha256": "3c48c2c4e94f8b4b0670283a80c72541f2cf559cd09f71a63212526f61838101"
+    },
+    "control-guardian-death-inputs.json": {
+      "path": "control-guardian-death-inputs.json.gz",
+      "raw_bytes": 54043,
+      "raw_sha256": "9d77ddd2accd113f04504d5024e770e426958fad1173c8a55079ca4646353a93",
+      "gzip_sha256": "87c2fbcd13e1f88950df0bfec0605589187b33263be0ad9f7d0189fd890f45cd"
+    },
+    "control-guardian-death-report.json": {
+      "path": "control-guardian-death-report.json.gz",
+      "raw_bytes": 8192,
+      "raw_sha256": "4ef5b4cf79212f3aa6859312fba68c83d0ca738385e62be750db837a82a487dc",
+      "gzip_sha256": "50b78c6b27501f18b5f8a8daac6862b0911ded5a928de868432b6373e3bcc9b0"
+    },
+    "control-missing-profile-inputs.json": {
+      "path": "control-missing-profile-inputs.json.gz",
+      "raw_bytes": 54043,
+      "raw_sha256": "9d77ddd2accd113f04504d5024e770e426958fad1173c8a55079ca4646353a93",
+      "gzip_sha256": "87c2fbcd13e1f88950df0bfec0605589187b33263be0ad9f7d0189fd890f45cd"
+    },
+    "control-missing-profile-report.json": {
+      "path": "control-missing-profile-report.json.gz",
+      "raw_bytes": 7154,
+      "raw_sha256": "76993936a9aac3dfae634ce6a7864b5a929e26909065f785836920e7b66f9ae3",
+      "gzip_sha256": "cdc26db8cc0bb5b69972985091d641046cdf2d7711e3dff3675aea990c489dee"
+    },
+    "control-parent-death-inputs.json": {
+      "path": "control-parent-death-inputs.json.gz",
+      "raw_bytes": 54043,
+      "raw_sha256": "9d77ddd2accd113f04504d5024e770e426958fad1173c8a55079ca4646353a93",
+      "gzip_sha256": "87c2fbcd13e1f88950df0bfec0605589187b33263be0ad9f7d0189fd890f45cd"
+    },
+    "control-parent-death-report.json": {
+      "path": "control-parent-death-report.json.gz",
+      "raw_bytes": 9314,
+      "raw_sha256": "67b6d7e44ceded317043ac558d17df73b9c6e2c2395adf2e993dc2ffb43f8165",
+      "gzip_sha256": "4dac564b395627f7bb926f1aa39fb6d9232ea47ecde5e92a13e8620b1bf6e39f"
+    },
+    "control-stale-lease-inputs.json": {
+      "path": "control-stale-lease-inputs.json.gz",
+      "raw_bytes": 54043,
+      "raw_sha256": "9d77ddd2accd113f04504d5024e770e426958fad1173c8a55079ca4646353a93",
+      "gzip_sha256": "87c2fbcd13e1f88950df0bfec0605589187b33263be0ad9f7d0189fd890f45cd"
+    },
+    "control-stale-lease-report.json": {
+      "path": "control-stale-lease-report.json.gz",
+      "raw_bytes": 9559,
+      "raw_sha256": "adfca2202cf5e4891283f1cb13f6ad700f2234376a7debb40ec8c76732161c4a",
+      "gzip_sha256": "29db5ad2218d0400a3462ee921c255ca46d944bbd7b3f4281bf8883e108eb6e5"
+    },
+    "control-wrong-profile-inputs.json": {
+      "path": "control-wrong-profile-inputs.json.gz",
+      "raw_bytes": 54043,
+      "raw_sha256": "9d77ddd2accd113f04504d5024e770e426958fad1173c8a55079ca4646353a93",
+      "gzip_sha256": "87c2fbcd13e1f88950df0bfec0605589187b33263be0ad9f7d0189fd890f45cd"
+    },
+    "control-wrong-profile-report.json": {
+      "path": "control-wrong-profile-report.json.gz",
+      "raw_bytes": 7932,
+      "raw_sha256": "775d2f998e4af14ba25d791b7b2b4a10ddc60cab16bb564c0c2634db8e5d15d5",
+      "gzip_sha256": "75c1593b3a13530c30b54e568cab04c2a212ef62d97ce52711f30fb1d0898941"
+    },
+    "inputs.json": {
+      "path": "inputs.json.gz",
+      "raw_bytes": 54043,
+      "raw_sha256": "9d77ddd2accd113f04504d5024e770e426958fad1173c8a55079ca4646353a93",
+      "gzip_sha256": "87c2fbcd13e1f88950df0bfec0605589187b33263be0ad9f7d0189fd890f45cd"
+    },
+    "report.json": {
+      "path": "report.json.gz",
+      "raw_bytes": 11201,
+      "raw_sha256": "174129152c4d048a82b8c5d827dbe6ff65b181e11df0e20524e7aab50c323fb3",
+      "gzip_sha256": "bf8089c42c556e2cc02d5f7cd8afe558e14558253a4cc12219c6db25f748538d"
+    }
+  },
+  "limitation": "677 checks passed before initial Home ingress admission failed bootstrap-stale. The earlier native acknowledgment succeeded. The initiating retirement cause was not retained; no nonce expiry timer exists. A separately reproduced atomic-file reader race is a possible cause, not established as the cause of this run."
+}

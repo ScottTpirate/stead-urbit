@@ -1,0 +1,75 @@
+{
+  "format": 1,
+  "classification": "host-static-mocked-and-linux-process-controls",
+  "qualifies_phase": false,
+  "tested_working_tree_base_commit": "de7d00f9befe35af52f48a97e165a316f4d201fb",
+  "source_files_sha256": {
+    "native/core/desk/app/stead-http-boundary-probe.hoon": "f3bba8405fad34983fa40c47e9ccffa9f9a40c1f5a75d3b459e81589896a0943",
+    "scripts/ci/worker_failure.py": "e7092a96229059bcd870f673dfa8ece327c77abe42b25d9600a680e52723633d",
+    "scripts/urbit/execution_policy.py": "8d52b799a3a7bff73f38e029b57fe0cfafd156b7c61184173860c21600ce41c0",
+    "scripts/urbit/team_lifecycle.py": "4002e359d316e834d2679663755935bfe5c5d864903056beb2f1432976e5543e",
+    "tests/ci/test_worker_failure.py": "6c72e3dfaad0601d9e339e287380cc5eca3423546fee0d8fa93ee778f4d06630",
+    "tests/urbit/fixtures/phase1-guard/execution-policy-209bd33.py.gz": "9eb3317a8ef084a6b61e01803efe6934d2d18231dcd0ea812d92b32087028dfa",
+    "tests/urbit/fixtures/phase1-guard/execution-policy-54734c8.py.gz": "a6ed593f39a8eeb06d855072c7073d5959a0c4ca563a9ee4397d8763d820832a",
+    "tests/urbit/fixtures/phase1-guard/provenance.json": "f2edb4078daebbe1728971cfd5aef3e8eb48093939406741b60142edecff48b4",
+    "tests/urbit/test_control_reader.py": "4ffdd3bedfc6ecfd3f25d70025e6c2bd941c3cc395e2c16f36cd56a6539a27da",
+    "tests/urbit/test_phase1_reconciliation.py": "d37e00db440b6491e27f61232a1b339403eb849d06b7b0c40421076866e7b0b9",
+    "tests/urbit/test_team_lifecycle.py": "02f80678de52d2298357577a1c4c02f09e1e06d959bfbe248638c5a793a842b1",
+    "tests/urbit/test_tls_ingress.py": "56df593e4655784ce6f2b92753177cdaf4b32f93aae38645102041ba494e7d69",
+    "web/app/tests/native-boundaries.mjs": "ed069a239fa09d2953611aa40525ff6ddf7022e52f664ce06de10b85b8c031e2",
+    "web/app/tests/native.mjs": "bf9fec033978aec79bcf54a6380236983bd4f3073be57f6e10b1f35f2e44c5db",
+    "web/dev/ingress.py": "132e36be468fad615c9b013abd2159149dbfc76de5ead4173dbb15753bb42e78"
+  },
+  "make_check": {
+    "discovered": 680,
+    "passed": 679,
+    "skipped": 1,
+    "seconds": 173.899
+  },
+  "ci_host": {
+    "passed": 54,
+    "seconds": 2.409
+  },
+  "initial_make_check": {
+    "discovered": 680,
+    "passed": 677,
+    "failed": 2,
+    "skipped": 1,
+    "seconds": 161.38,
+    "reason": "Historical test fixture incorrectly derived old guard bytes from current source; corrected to exact retained Git versions without changing qualification rules."
+  },
+  "limits": {
+    "cpu_percent_of_one_core": 25,
+    "cpu_affinity": [
+      19
+    ]
+  },
+  "files": {
+    "initial-failure.log": {
+      "path": "initial-failure.log.gz",
+      "raw_bytes": 8938,
+      "raw_sha256": "fbc9f244c5e0ee8ff800190a244b762519f17cf344e3190576fa6742cdf5d7dc",
+      "gzip_sha256": "019d384ab8b899d8484d80be3801f72a6204886e0dba17b9a99d8dcdb802e746"
+    },
+    "make-check.log": {
+      "path": "make-check.log.gz",
+      "raw_bytes": 6067,
+      "raw_sha256": "c44eab4f05be3ce2f4b726d5c037f8f418b9916cfb6c4a774e4585fffb02beae",
+      "gzip_sha256": "3ba01f140e3290dfe97a99788e2f26dcc2e792b284c1ec952195732a5d951fa7"
+    },
+    "ci-host.log": {
+      "path": "ci-host.log.gz",
+      "raw_bytes": 153,
+      "raw_sha256": "2ef4926497e7485ccd1936f1a16f063b33fda421b650e0d411d9f1ac74436492",
+      "gzip_sha256": "2440e17e27f67224cd9970a3cd012563d4c9449dbdf58f428389c44d56f6ed50"
+    }
+  },
+  "scope": "Five real atomic-replacement controls reproduce and exercise the bounded reader. Actual host sockets/process and Linux namespace controls remain separately labeled from mocked native responses. No Hoon compilation, browser journey or actual hosted CI pass is claimed. The historical CI initiating cause remains unproven.",
+  "post_host_checks": {
+    "scope": "After the full host run, browser assertions were changed to exact boolean shape/value predicates with fixed messages, preventing raw response content in diagnostic errors. Both browser scripts passed pinned Node syntax checks; this does not claim another host or native/browser run.",
+    "previous_boundary_test_sha256": "ed069a239fa09d2953611aa40525ff6ddf7022e52f664ce06de10b85b8c031e2",
+    "final_boundary_test_sha256": "f9519aa7b7b749c806ce4f797eb73f7e8da3a350bf91be83dd1e8242c7ebf3f1",
+    "node": "v24.21.0",
+    "command": "node --check web/app/tests/native-boundaries.mjs; node --check web/app/tests/native.mjs"
+  }
+}
