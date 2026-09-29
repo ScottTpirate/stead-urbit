@@ -270,6 +270,24 @@ trust. Its current tests use synthetic member approvals and are development
 checks, not a production deployment. Do not infer a full milestone pass from
 the first successful browser journey or from mocked rendered tests.
 
+The automated journey also checks the saved Docs through ordinary Git. Wait
+for the outer runner's passing result: passing browser steps alone do not
+complete that gate. Its successful run prepares a separate session for natural
+expiry. Keep the same fixture and source running, and start the follow-up in
+the window recorded under `expiry_followup` in its private `browser-report.json`:
+
+```sh
+python3 -B web/app/browser-check.py --expiry-from browser-native-YYYYMMDDTHHMMSSZ
+```
+
+Replace the example directory name with the actual passing run. The follow-up
+observes the unchanged 30-minute session lifetime, including rejection of the
+original expired credential. It cannot reuse a failed or stopped fixture.
+Run the [human trial](quickstarts/operator.md) only when the participant is
+ready; its disposable window lasts nine minutes. Serialize the browser runners
+because they use the same local relay ports. Preserve the reports and finish
+with `make stop`, checking the closed native guard as well as browser cleanup.
+
 ## Hosted native CI while the workstation is busy
 
 The reviewed workflow is manual. It runs on a disposable GitHub-hosted Ubuntu
@@ -282,8 +300,11 @@ gh run list --repo ScottTpirate/stead-urbit --workflow native-hosted.yml --limit
 ```
 
 Main's immutable manifest selects the reviewed controller. The candidate supplies
-only allowed product blobs; changing a runner, test or SDK consumer needs its
-own reviewed controller update. Omitting `candidate` tests the pinned controller.
+only allowed product blobs; changes to a runner or test executed by the hosted
+lane need their own reviewed controller update. SDK and local browser lanes bind
+their own executed inputs separately. Reusing a prior hosted result requires
+reviewed evidence that its executed paths are unchanged; it never becomes a
+new run at the later source. Omitting `candidate` tests the pinned controller.
 The job first proves admission and failure cleanup, then runs native compilation,
 units, multi-ship behavior and negative controls. A dispatch or a green admission
 step is not a passing native result. Download and independently review its bounded
