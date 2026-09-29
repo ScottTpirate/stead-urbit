@@ -2,7 +2,8 @@
 
 The [current Phase 2 qualification record](PHASE2_QUALIFICATION_20260929.md)
 separates the passing configured native, browser/Git, SDK, hosted CI and natural
-session-expiry components from the remaining human trial and integration gates.
+session-expiry components from the remaining human trial gate. The reviewed
+implementation is integrated through [PR #67](https://github.com/ScottTpirate/stead-urbit/pull/67).
 The dated records below retain their original execution scope.
 
 The [independently reviewed Phase 1 acceptance](PHASE1_ACCEPTANCE_20260926.md) now has a

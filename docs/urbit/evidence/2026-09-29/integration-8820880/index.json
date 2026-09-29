@@ -1,0 +1,95 @@
+{
+  "branches_and_worktrees_preserved": true,
+  "classification": "reviewed-implementation-integration-with-human-acceptance-pending",
+  "constituent_prs": [
+    {
+      "headRefOid": "fe274e44d909f23794e264adb7a2dddbf78d5e2b",
+      "mergedAt": null,
+      "number": 48,
+      "state": "CLOSED"
+    },
+    {
+      "headRefOid": "a7363d61ededdb75d1e5010bd59bb61315ea2b13",
+      "mergedAt": null,
+      "number": 50,
+      "state": "CLOSED"
+    },
+    {
+      "headRefOid": "f002bdc726d7668e6050c49a3c971612fb1824b1",
+      "mergedAt": null,
+      "number": 51,
+      "state": "CLOSED"
+    }
+  ],
+  "constituent_reconciliation": "PR50 head is an ancestor; PR48 has one equivalent nonancestor patch; PR51 has three equivalent nonancestor patches plus seven final files exactly represented in integrated ancestor 6e5d1948319467a0f93adbf5e40c55393a3cefc6. Later diagnostic/test additions are independently reviewed. These drafts were closed as incorporated, not individually merged.",
+  "executed_application_source": "d9115056a04fd86cf55a07fd0d8a0bf0be84caaf",
+  "format": 1,
+  "issues": [
+    {
+      "closed_at": "2026-09-29T11:35:48Z",
+      "number": 9,
+      "state": "closed",
+      "state_reason": "completed",
+      "url": "https://github.com/ScottTpirate/stead-urbit/issues/9"
+    },
+    {
+      "closed_at": "2026-09-29T11:35:51Z",
+      "number": 10,
+      "state": "closed",
+      "state_reason": "completed",
+      "url": "https://github.com/ScottTpirate/stead-urbit/issues/10"
+    },
+    {
+      "closed_at": "2026-09-29T11:35:54Z",
+      "number": 14,
+      "state": "closed",
+      "state_reason": "completed",
+      "url": "https://github.com/ScottTpirate/stead-urbit/issues/14"
+    },
+    {
+      "closed_at": "2026-09-29T11:35:57Z",
+      "number": 21,
+      "state": "closed",
+      "state_reason": "completed",
+      "url": "https://github.com/ScottTpirate/stead-urbit/issues/21"
+    },
+    {
+      "closed_at": "2026-09-29T11:36:00Z",
+      "number": 22,
+      "state": "closed",
+      "state_reason": "completed",
+      "url": "https://github.com/ScottTpirate/stead-urbit/issues/22"
+    },
+    {
+      "closed_at": null,
+      "number": 29,
+      "state": "open",
+      "state_reason": null,
+      "url": "https://github.com/ScottTpirate/stead-urbit/issues/29"
+    }
+  ],
+  "merge_commit": "88208808d1507055ff512ea4a312dd05ffb7c479",
+  "milestone": {
+    "closed_issues": 5,
+    "number": 3,
+    "open_issues": 1,
+    "state": "open",
+    "title": "M2 - Usable team alpha"
+  },
+  "pull_request": 67,
+  "qualifies_phase": false,
+  "recorded_at": "2026-09-29T11:40:03.502884+00:00",
+  "remaining": "Complete the uncoached human Work/Docs trial with accepted operations, readbacks, feedback and independent review before closing URB-260/#29 or Phase 2.",
+  "repository": "ScottTpirate/stead-urbit",
+  "reviewed_head": "0e9ea39af8ba18eff3dd1095681693f1c7123c6c",
+  "runtime_state": "Owned native and browser processes stopped; stopped fixture preserved. Temporary widget configuration and fan settings restored, with fan values covered by the privileged readback attestation.",
+  "same_executable_git_trees": {
+    ".agents": "07e0b7fa96e3d5b8cd15c720bcb537176b8ea386",
+    "native": "a78548b1bbf7ed14501521c603af688bf6cea9ad",
+    "scripts": "b8da93993a5e7f0afd8719c228b3e6e3810dea9d",
+    "sdk": "e2efa69fb4e857769c60536c300b53c298a48781",
+    "web": "8185866a3426126315882ff4efbae94aa9ef8984"
+  },
+  "source_scope": "Reviewed executable paths match the tested application source; documentation/evidence and the reviewed CI controller pin differ. SDK composition keeps its separately documented shared-guard boundary.",
+  "status": "implementation-integrated-phase-incomplete"
+}

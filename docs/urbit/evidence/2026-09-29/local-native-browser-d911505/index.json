@@ -526,6 +526,12 @@
     "scope": "Owned synthetic Lens observation; not a public export or Git transport API.",
     "status": "pass"
   },
+  "integration": {
+    "executed_application_source": "d9115056a04fd86cf55a07fd0d8a0bf0be84caaf",
+    "merge_commit": "88208808d1507055ff512ea4a312dd05ffb7c479",
+    "pull_request": "https://github.com/ScottTpirate/stead-urbit/pull/67",
+    "scope": "Reviewed executable source equivalence; documentation and CI controller pin differ. No new test execution is claimed."
+  },
   "measurements": {
     "asset_timing": {
       "after_docs": [
@@ -1234,10 +1240,9 @@
   },
   "qualifies_phase": false,
   "remaining": [
-    "completed independent human trial and review",
-    "final integration and issue reconciliation"
+    "completed independent human trial and review"
   ],
-  "scope": "Actual pinned four-fake-ship native execution, real Firefox with native TLS and stock Git. The whole guarded lifetime closed cleanly; separately recorded natural expiry passed. Human trial and final Phase 2 reconciliation remain pending. No production, live-network, maximum-capacity or production-latency claim.",
+  "scope": "Actual pinned four-fake-ship native execution, real Firefox with native TLS and stock Git. The whole guarded lifetime closed cleanly; separately recorded natural expiry passed. Implementation is integrated; human acceptance remains pending. No production, live-network, maximum-capacity or production-latency claim.",
   "source_commit": "d9115056a04fd86cf55a07fd0d8a0bf0be84caaf",
   "status": "component-passes-with-final-gates-pending"
 }

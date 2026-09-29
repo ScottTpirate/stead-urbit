@@ -2,7 +2,7 @@
 
 Status: **Phases 0 and 1 are complete. Phase 2 has passing configured native,
 browser/stock-Git, SDK, hosted CI and natural session-expiry components. The
-independent human trial and final integration remain open.** See the
+implementation is integrated; the independent human trial remains open.** See the
 [current qualification record](docs/urbit/PHASE2_QUALIFICATION_20260929.md).
 
 The [Phase 1 acceptance record](docs/urbit/PHASE1_ACCEPTANCE_20260926.md) binds
@@ -16,8 +16,10 @@ Use [SDK v3](sdk/v3/README.md) for the configured-team candidate; [SDK v2](sdk/R
 is the earlier fixture interface. These are developer fragments, not application
 installations. The v3 public sample and four marks compiled in an independent
 fresh consumer; its 64 checks and 41 public calls passed at `7f113a1`, with exact
-input review and clean shutdown. The full Phase 2 integration, including
-[URB-180 / #21](https://github.com/ScottTpirate/stead-urbit/issues/21), remains open.
+input review and clean shutdown.
+[URB-180 / #21](https://github.com/ScottTpirate/stead-urbit/issues/21) is integrated
+through [PR #67](https://github.com/ScottTpirate/stead-urbit/pull/67); full Phase 2
+acceptance still requires the independent human trial.
 The [first package's execution and review](docs/urbit/evidence/2026-09-26/phase02-sdk/README.md)
 remain historical v2 evidence. Current package/source checks do not substitute
 for [independent native consumer qualification](docs/urbit/SDK_CONSUMER_QUALIFICATION.md).

@@ -77,6 +77,12 @@
     "runner": "d13051e7837dd5987a8e55d3c3f134efb19a9b75f1e31dec5fae5eae5a0c3d7c",
     "toolchain": "ae185adaec12b5aa0b2d48e2198ae65583902512ffd9d148706810c4819c650c"
   },
+  "integration": {
+    "executed_application_source": "d9115056a04fd86cf55a07fd0d8a0bf0be84caaf",
+    "merge_commit": "88208808d1507055ff512ea4a312dd05ffb7c479",
+    "pull_request": "https://github.com/ScottTpirate/stead-urbit/pull/67",
+    "scope": "Reviewed executable source equivalence; documentation and CI controller pin differ. No new test execution is claimed."
+  },
   "owned_cgroup_absent_at_readback": true,
   "private_files": {
     ".runtime/browser-expiry-20260929T111015Z/browser-process.json": {
@@ -98,7 +104,7 @@
   },
   "private_profile_removed": true,
   "qualifies_phase": false,
-  "remaining": "Completed uncoached human Work/Docs trial and reviewed integration remain required.",
+  "remaining": "Completed uncoached human Work/Docs trial and independent review remain required.",
   "session": {
     "native_ttl_seconds": 1800,
     "original_cookie_expiry_utc": "2026-09-29T11:12:22.054Z",

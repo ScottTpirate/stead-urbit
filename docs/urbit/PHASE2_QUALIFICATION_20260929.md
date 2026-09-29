@@ -2,8 +2,13 @@
 
 Status on September 29, 2026: **incomplete**. The configured native, browser,
 stock-Git, SDK, current hosted CI and natural session-expiry components have
-passing evidence. A completed independent human trial and reviewed integration
-remain required. The six M2 issues remain open.
+passing evidence. [PR #67](https://github.com/ScottTpirate/stead-urbit/pull/67)
+integrated the reviewed implementation as
+`88208808d1507055ff512ea4a312dd05ffb7c479`. The
+[integration readback](evidence/2026-09-29/integration-8820880/index.json) retains
+issue/PR states and source equivalence. Five M2 issues are closed;
+[#29](https://github.com/ScottTpirate/stead-urbit/issues/29) remains open for a
+completed independent human Work/Docs trial.
 
 The current local and hosted application candidate is
 `d9115056a04fd86cf55a07fd0d8a0bf0be84caaf`. It uses the pinned Vere 4.6 development
@@ -71,19 +76,19 @@ later canary work.
 
 ## Milestone reconciliation
 
-| Issue | Remaining acceptance work |
+| Issue | Disposition and evidence scope |
 | --- | --- |
-| [URB-060 / #9](https://github.com/ScottTpirate/stead-urbit/issues/9) | Reviewed integration of the bounded local team-alpha sessions and expiry evidence. |
-| [URB-070 / #10](https://github.com/ScottTpirate/stead-urbit/issues/10) | Reviewed integration of the qualified browser journey. |
-| [URB-110 / #14](https://github.com/ScottTpirate/stead-urbit/issues/14) | Reviewed integration of the published current passing CI record. |
-| [URB-180 / #21](https://github.com/ScottTpirate/stead-urbit/issues/21) | Integrate the qualified SDK composition and browser adapter. |
-| [URB-190 / #22](https://github.com/ScottTpirate/stead-urbit/issues/22) | Integrate the executed replay/privacy/update and browser cases. |
-| [URB-260 / #29](https://github.com/ScottTpirate/stead-urbit/issues/29) | Completed uncoached human Work/Docs trial with accepted saves, readbacks and participant feedback. |
+| [URB-060 / #9](https://github.com/ScottTpirate/stead-urbit/issues/9) | Closed after integration of the bounded local team-alpha sessions and expiry evidence; no production or live-network session claim. |
+| [URB-070 / #10](https://github.com/ScottTpirate/stead-urbit/issues/10) | Closed after integration of the qualified browser journey, stock-Git histories and measured timing scope. |
+| [URB-110 / #14](https://github.com/ScottTpirate/stead-urbit/issues/14) | Closed after integration of the published current CI record, retaining its verifier-attestation boundary. |
+| [URB-180 / #21](https://github.com/ScottTpirate/stead-urbit/issues/21) | Closed after integration of the qualified SDK composition and browser adapter; no new SDK execution claim. |
+| [URB-190 / #22](https://github.com/ScottTpirate/stead-urbit/issues/22) | Closed after integration of the executed replay/privacy/update and browser cases; bounded 68-event replay, not maximum-capacity qualification. |
+| [URB-260 / #29](https://github.com/ScottTpirate/stead-urbit/issues/29) | Open: completed uncoached human Work/Docs trial with accepted saves, readbacks and participant feedback. |
 
 The owned native lifetime is closed, and its stopped fixture and evidence are
 preserved. Temporary fan settings and the paused widget configuration were
-restored to their recorded originals. Final acceptance must retain failed attempts,
-merge the reviewed integration and reconcile the constituent PRs without deleting
-unintegrated work. [Earlier checkpoints](PHASE2_CHECKPOINT_20260928.md) preserve
+restored to their recorded originals. The implementation is integrated;
+constituent PR reconciliation preserves the branches and worktrees. Human trial
+completion and independent review are required before closing Phase 2. [Earlier checkpoints](PHASE2_CHECKPOINT_20260928.md) preserve
 the failed compiler, Git-helper, thermal and CI attempts as failures. Local team
 alpha acceptance does not authorize a production deployment.
