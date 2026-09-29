@@ -463,3 +463,39 @@ existing capacity suite: 25 ordinary update arms and two capacity arms preserve
 71 positive arms overall. Ordinary 60-second and capacity 180-second deadlines
 remain unchanged. Eighteen host inventory controls passed; actual native
 execution of this correction is still required.
+
+## Frontend repeated-work and preview correction
+
+Reviewed commit `815550b29b21765d4029f1982d6fda05a2f7e240` retains the displayed
+snapshot's exact session/scope generation. Authenticated update polls still run,
+rotate their cursors and process expiry/revocation; only an invalidation already
+represented by that snapshot avoids another metadata/view read. Later remote
+generations still refresh. The Markdown preview is memoized and deferred within
+a component keyed to its identity/document scope. Dense structure switches to
+a keyboard-scrollable, inert complete-body text view before creating thousands
+of React elements. The editor retains the exact canonical text.
+
+TypeScript and 35 host frontend/build controls passed. All 18 real Firefox cases
+against a mocked Home passed with matching source digests and verified empty
+browser cgroups. The save regression was then strengthened to count from before
+Save, requiring exactly two additional reads through subsequent own-invalidation
+polls; its focused rerun passed. The same case still loads a later member change
+and clears the view on revocation. A near-limit newline-dense page preserved
+its complete inert body and editor text with bounded DOM; changing documents
+did not retain its previous deferred preview. The
+[retained frontend evidence](evidence/2026-09-29/frontend-performance/index.json)
+separates these mocked-Home results from native acceptance.
+
+The actual production build packages 12 verified assets totaling 297,673 bytes,
+including the 258,065-byte app. Independent review matched every packaged byte
+and all 17 asset routes against the generated manifest. Native useful-content,
+save, preview and transfer timings remain unexecuted for this source; these
+structural improvements are not a measured native latency or p95 claim.
+
+A cross-checkout rebuild found that the operator's temporary shared dependency
+symlink gave esbuild different chunk names. That first build manifest is retained
+as history. Installing the same locked packages normally in the integration
+checkout produced a manifest byte-identical to the root build:
+`cf46ab5c9fc334b8642c90b1b10c38e659847cbd1eb754865692be3f6e15ccd0`.
+The generated package was corrected to those normal-install bytes; frontend
+source and the observed browser behaviors did not change.
