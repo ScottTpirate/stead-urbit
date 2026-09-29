@@ -156,7 +156,7 @@
   =/  corrupt  (batch:stead-projection db staged(remaining [first-row(bytes 'bad') ~]))
   ?>  &(poisoned.corrupt =(~ entries.visible.corrupt))
   projection.completed
-++  wire
+++  update-wire
   |=  input=envelope:stead-update-codec
   %-  canonical:stead-codec
   %-  object:stead-codec
@@ -242,7 +242,7 @@
     ?:  =(index 64)  out
     =/  actor  (need (native-context:stead-team data (add 256 (div index 4)) 1.010))
     =/  input  (envelope 701 'open' '' '' scope(kind (snag (mod index 4) `(list @t)`~['work' 'search' 'activity' 'inbox'])))
-    ?>  =(input (decode:stead-update-codec (wire input)))
+    ?>  =(input (decode:stead-update-codec (update-wire input)))
     =/  next  (execute:stead-updates data projection *state:stead-session next.out pages.out actor input 1.010 (add 100 index))
     ?>  =('watching' (field response.next 'status'))
     $(index +(index), out next)

@@ -24,6 +24,7 @@
       ['consumer' (scot %p our)]
       ['desk' syd]
       ['clay_case' (scot %da p.case)]
+      ['clay_case_atom' (scot %ux p.case)]
       ['marks' 'stead-command-3,stead-query-3,stead-result-3,stead-updates-3']
   ==
 (pure:m !>([%stead-core-result (bytes-hex:stead-codec response)]))

@@ -24,7 +24,15 @@ def verify_private_import(rejected, trace):
         raise ValueError('Private import did not fail for its unavailable dependency')
 
 
-def invoke_sample(clay_case, value):
+def captured_case_atom(compiled):
+    atom = compiled.get('clay_case_atom') if isinstance(compiled, dict) else None
+    if not isinstance(atom, str) or not re.fullmatch(r'0x[1-9a-f][0-9a-f]{0,3}(?:\.[0-9a-f]{4}){0,7}', atom):
+        raise ValueError('SDK captured Clay case atom grammar')
+    return atom
+
+
+def invoke_sample(compiled, value):
+    clay_case = captured_case_atom(compiled)
     if (set(value) != {'mode', 'raw', 'binding'} or value['mode'] not in ('command', 'query', 'updates')
             or not isinstance(value['raw'], str) or len(value['raw'].encode()) > 65537
             or not re.fullmatch(r'[0-9a-f-]{36}', value['binding'])):
@@ -135,6 +143,7 @@ def run():
                         or not re.fullmatch(r'~[0-9.]+[a-z0-9.~]*', compiled.get('clay_case', ''))
                         or compiled.get('marks') != 'stead-command-3,stead-query-3,stead-result-3,stead-updates-3'):
                     raise ValueError('Native SDK compile receipt differs')
+                captured_case_atom(compiled)
                 result = {'boot': boot, 'compiled': compiled, 'compile_seconds': round(time.monotonic() - start, 3),
                           'installed': installed, 'private_import': {'output': rejected, 'log_hex': trace.hex()}}
             elif operation == 'isolation' and native is not None and not stopped:
@@ -149,7 +158,7 @@ def run():
                 bridge.admit()
                 result = {'admitted': True, 'proof': native.proof()}
             elif operation == 'call' and compiled and not stopped:
-                noun = invoke_sample(compiled['clay_case'], value)
+                noun = invoke_sample(compiled, value)
                 if not bridge.opened.is_set():
                     raise ValueError('SDK consumer transport is not admitted')
                 native.readback({'ted/stead-sdk-invoke.hoon': installed['ted/stead-sdk-invoke.hoon']})
