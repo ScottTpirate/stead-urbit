@@ -333,8 +333,12 @@ class Phase1ReconciliationHostTests(unittest.TestCase):
     def historical_fixture(self, *, current_extra=b''):
         """Authored review wrapper around unchanged real historical records."""
         fixture = AuthoredFixture()
-        actual = (ROOT / 'scripts/urbit/execution_policy.py').read_bytes()
-        old = actual.replace(G.GUARD_LAUNCH_ADDITION, b'', 1)
+        # Freeze this historical continuity scenario independently of today's
+        # guard. Both sources are exact Git blobs, never reconstructed hashes.
+        sources = ROOT / 'tests/urbit/fixtures/phase1-guard'
+        actual = gzip.decompress((sources / 'execution-policy-209bd33.py.gz').read_bytes())
+        old = gzip.decompress((sources / 'execution-policy-54734c8.py.gz').read_bytes())
+        self.assertEqual(digest(actual), 'da16e2e0fd32eb5b90706b546a7ea8332a65807fc8279f3bd765dcc18aaad9b5')
         self.assertEqual(digest(old), '7166d197a6e3879f21c22637f2bd3074ff90975c33a2149f6e07763e2eeaa04e')
         current = actual + current_extra
         guard_sha = digest(current)

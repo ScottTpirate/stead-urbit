@@ -160,16 +160,25 @@ def write_json(path, value):
 def read_json(path, maximum=65536):
     path = Path(path)
     with directory_fd(path.parent) as parent:
-        descriptor = os.open(path.name, os.O_RDONLY | os.O_NOFOLLOW | os.O_NONBLOCK, dir_fd=parent)
-        try:
-            info = os.fstat(descriptor)
-            if not stat.S_ISREG(info.st_mode) or info.st_nlink != 1 or info.st_size > maximum:
-                raise GuardError('Control input must be bounded and singly linked')
-            raw = os.read(descriptor, maximum + 1)
-            if len(raw) > maximum:
-                raise GuardError('Oversized control input')
-        finally:
-            os.close(descriptor)
+        for attempt in range(3):
+            descriptor = os.open(path.name, os.O_RDONLY | os.O_NOFOLLOW | os.O_NONBLOCK, dir_fd=parent)
+            try:
+                info = os.fstat(descriptor)
+                if not stat.S_ISREG(info.st_mode) or info.st_nlink > 1 or info.st_size > maximum:
+                    raise GuardError('Control input must be bounded and singly linked')
+                if info.st_nlink == 0:
+                    # An atomic writer may retire this inode between open and
+                    # fstat. Discard it and reopen the same anchored pathname;
+                    # never validate or return bytes from the retired inode.
+                    if attempt == 2:
+                        raise GuardError('Control input replaced during every bounded read')
+                    continue
+                raw = os.read(descriptor, maximum + 1)
+                if len(raw) > maximum:
+                    raise GuardError('Oversized control input')
+                break
+            finally:
+                os.close(descriptor)
     def unique(pairs):
         value = {}
         for key, item in pairs:

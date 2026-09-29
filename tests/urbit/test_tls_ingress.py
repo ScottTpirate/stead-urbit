@@ -7,6 +7,7 @@ import subprocess
 import sys
 import tempfile
 import threading
+import time
 import unittest
 from unittest.mock import patch
 
@@ -165,6 +166,37 @@ class IngressTests(unittest.TestCase):
         self.assertNotEqual(fresh, self.nonce)
         self.fence.arm(self.first, fresh, self.ack(fresh))
         peer = self.peer(); peer.sendall(b'fresh'); self.assertEqual(peer.recv(10), b'fresh')
+
+    def test_first_monitor_refusal_survives_recovery_rollback_and_snapshot_mutation(self):
+        raised = threading.Event()
+        def once():
+            if threading.current_thread() is self.fence.monitor and not raised.is_set():
+                raised.set()
+                raise ValueError('Control input must be bounded and singly linked')
+        with patch.object(self.fence, 'guard', side_effect=once):
+            deadline = time.monotonic() + 2
+            while not self.fence.retirement() and time.monotonic() < deadline:
+                time.sleep(.01)
+            expected = {'cause': 'guard-refusal', 'error': 'control-input'}
+            self.assertEqual(self.fence.retirement(), expected)
+            with self.assertRaisesRegex(ValueError, 'Stale bootstrap'):
+                self.fence.arm(self.first, self.nonce, self.ack())
+            self.fence.disarm(self.first)
+            observed = self.fence.retirement(); observed['cause'] = 'changed'
+            self.assertEqual(self.fence.retirement(), expected)
+        self.assertFalse(self.fence.armed)
+        self.closed(self.peer()); self.assertEqual(self.calls, [])
+        fresh = self.fence.bind_child(self.first)
+        self.assertNotEqual(fresh, self.nonce)
+        self.assertEqual(self.fence.retirement(), {})
+
+    def test_retirement_never_retains_unknown_exception_text(self):
+        with patch.object(self.fence, 'guard', side_effect=ValueError('PRIVATE_GUARD_DETAIL')):
+            with self.assertRaises(ValueError):
+                self.fence.arm(self.first, self.nonce, self.ack())
+        self.assertEqual(self.fence.retirement(), {'cause': 'guard-refusal', 'error': 'unrecognized'})
+        self.fence.close()
+        self.assertEqual(self.fence.retirement(), {'cause': 'guard-refusal', 'error': 'unrecognized'})
 
     def test_relay_thread_start_failure_releases_all_owned_sockets(self):
         self.fence.arm(self.first, self.nonce, self.ack())

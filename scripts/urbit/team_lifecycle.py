@@ -186,6 +186,10 @@ class TeamLifecycle:
                         'incarnation': acknowledgement['incarnation'], 'peer_proof': proof, 'tls': tls})
         except BaseException as error:
             location['error'] = type(error).__name__ + ': ' + str(error)[:2000]
+            try:
+                location['ingress_retirement'] = self.ingress[ship].retirement()
+            except BaseException:
+                location['ingress_retirement'] = {}
             # Preserve the initiating error and attempt both fail-closed actions
             # even if one rollback operation fails. Public projection is closed.
             for rollback in (lambda: self.ingress[ship].disarm(process), lambda: self.peers.block(ship)):

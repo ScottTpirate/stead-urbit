@@ -17,6 +17,16 @@ import time
 
 PUBLIC_TLS = {'zod': 18443, 'bus': 18444, 'nec': 18445, 'bud': 18446}
 TOKEN = re.compile(r'[0-9a-f]{64}\Z')
+RETIREMENT_ERRORS = {
+    'Control input must be bounded and singly linked': 'control-input',
+    'Control input replaced during every bounded read': 'control-replaced',
+    'Hosted lease stale, future, reversed or expired': 'lease-clock',
+    'Hosted heartbeat moved backwards': 'lease-backwards',
+    'Hosted heartbeat changed without a generation': 'lease-generation',
+    'Hosted execution stop is terminal': 'lease-stopped',
+    'Hosted affinity changed': 'affinity-changed',
+    'Fixture stop is latched': 'fixture-stopped',
+}
 
 
 class TLSIngress:
@@ -40,6 +50,7 @@ class TLSIngress:
         self.process = None
         self.pidfd = None
         self.nonce = None
+        self._retirement = None
         self.incarnation = None
         self.armed = False
         self.acknowledged = False
@@ -70,9 +81,12 @@ class TLSIngress:
         self.acceptor.start()
         self.monitor.start()
 
-    def _disarm(self, *, retire=True):
+    def _disarm(self, *, retire=True, cause='explicit-disarm', error=None):
         self.armed = False
         if retire:
+            if self.nonce is not None and self._retirement is None:
+                self._retirement = {'cause': cause,
+                    'error': 'none' if error is None else RETIREMENT_ERRORS.get(str(error), 'unrecognized')}
             self.nonce = None
             self.acknowledged = True
         self.incarnation = None
@@ -97,6 +111,7 @@ class TLSIngress:
             self.pidfd = os.pidfd_open(process.pid)
             self.process = process  # Popen identity, never a reusable numeric PID.
             self.nonce = secrets.token_hex(32)
+            self._retirement = None
             self.acknowledged = False
             return self.nonce
 
@@ -111,8 +126,8 @@ class TLSIngress:
         with self.lock:
             try:
                 self.guard()
-            except Exception:
-                self._disarm()
+            except Exception as error:
+                self._disarm(cause='guard-refusal', error=error)
                 raise
             if process is not self.process or nonce != self.nonce:
                 raise ValueError('Stale bootstrap completion')
@@ -124,7 +139,7 @@ class TLSIngress:
                     or acknowledgement['nonce'] != nonce
                     or not isinstance(acknowledgement['incarnation'], str)
                     or not TOKEN.fullmatch(acknowledgement['incarnation'])):
-                self._disarm()
+                self._disarm(cause='invalid-ack')
                 raise ValueError('Bootstrap does not match this live child incarnation')
             self._disarm(retire=False)  # Existing streams cannot span a second bootstrap.
             self.incarnation = acknowledgement['incarnation']
@@ -136,15 +151,23 @@ class TLSIngress:
             if process is None or process is self.process:
                 self._disarm()
 
+    def retirement(self):
+        with self.lock:
+            return dict(self._retirement or {})
+
     def _monitor(self):
         while not self.closed.wait(.05):
             with self.lock:
                 try:
                     self.guard()
+                except Exception as error:
+                    self._disarm(cause='guard-refusal', error=error)
+                    continue
+                try:
                     if not self._live():
-                        self._disarm()
-                except Exception:
-                    self._disarm()
+                        self._disarm(cause='child-not-live')
+                except Exception as error:
+                    self._disarm(cause='liveness-error', error=error)
 
     def _accept(self):
         while not self.closed.is_set():
@@ -230,7 +253,7 @@ class TLSIngress:
     def close(self):
         self.closed.set()
         with self.lock:
-            self._disarm()
+            self._disarm(cause='close')
             self.server.close()
             if self.pidfd is not None:
                 os.close(self.pidfd)

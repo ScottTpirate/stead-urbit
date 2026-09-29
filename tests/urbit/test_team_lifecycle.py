@@ -38,6 +38,8 @@ class TeamLifecycleTests(unittest.TestCase):
         self.tls_verification.start()
         self.addCleanup(self.tls_verification.stop)
         self.manager.ingress = {name: Mock() for name in team_lifecycle.APPS}
+        for ingress in self.manager.ingress.values():
+            ingress.retirement.return_value = {}
         self.manager.peers = SimpleNamespace(lock=threading.RLock(), closed=threading.Event(), block=Mock(), release=Mock())
         def block(ship):
             if self.manager.peers.closed.is_set():
@@ -171,6 +173,8 @@ class TeamLifecycleTests(unittest.TestCase):
         self.manager.boots['nec'] = {'process': child, 'fresh': True, 'suspended': True,
                                      'acknowledged': False, 'nonce': 'private'}
         original = ValueError('Bootstrap does not match this live child incarnation')
+        retirement = {'cause': 'guard-refusal', 'error': 'control-input'}
+        self.manager.ingress['nec'].retirement.return_value = retirement
         self.manager.ingress['nec'].arm.side_effect = original
         self.manager.ingress['nec'].disarm.side_effect = OSError('private disarm failure')
         self.manager.peers.block.side_effect = RuntimeError('private block failure')
@@ -179,11 +183,29 @@ class TeamLifecycleTests(unittest.TestCase):
                 self.manager.admit('nec', {'nonce': 'private'}, Mock())
         self.assertIs(raised.exception, original)
         observed = original.admission_failure
+        self.assertEqual(observed['ingress_retirement'], retirement)
         self.assertEqual((observed['ship'], observed['mode'], observed['step']), ('nec', 'initial', 'ingress-arm'))
         self.assertEqual(len(observed['rollback_errors']), 2)
         self.manager.peers.release.assert_not_called()
         self.manager.peers.block.assert_called_once_with('nec')
         self.assertFalse(self.manager.boots['nec']['acknowledged'])
+
+    def test_retirement_observation_failure_cannot_skip_cleanup_or_replace_cause(self):
+        child = Mock(); child.poll.return_value = None
+        self.manager.children['zod'] = child
+        self.manager.boots['zod'] = {'process': child, 'suspended': True, 'acknowledged': False, 'nonce': 'private'}
+        original = ValueError('Stale bootstrap completion')
+        self.manager.ingress['zod'].arm.side_effect = original
+        for observation in (RuntimeError('observation failed'), KeyboardInterrupt(), SystemExit()):
+            self.manager.ingress['zod'].retirement.side_effect = observation
+            with self.subTest(error=type(observation).__name__), \
+                    patch.object(self.manager, 'exists_on_base', return_value=True), self.assertRaises(ValueError) as raised:
+                self.manager.admit('zod', {}, Mock())
+            self.assertIs(raised.exception, original)
+            self.assertEqual(original.admission_failure['ingress_retirement'], {})
+            self.manager.ingress['zod'].disarm.assert_called_with(child)
+            self.manager.peers.block.assert_called_with('zod')
+            self.manager.peers.release.assert_not_called()
 
     def test_failed_inventory_is_located_and_both_fences_are_attempted(self):
         child = Mock(); child.poll.return_value = None

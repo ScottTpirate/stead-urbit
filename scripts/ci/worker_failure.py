@@ -181,12 +181,20 @@ def project(raw, inputs, *, run_id):
     require(isinstance(admission, dict), 'Failure admission shape')
     rollbacks = admission.get('rollback_errors', [])
     require(isinstance(rollbacks, list) and len(rollbacks) <= 2, 'Failure admission rollback bound')
+    retirement = admission.get('ingress_retirement', {})
+    require(isinstance(retirement, dict), 'Failure ingress retirement shape')
     result['native']['admission'] = {
         'ship': choice(admission.get('ship'), SHIPS),
         'mode': choice(admission.get('mode'), ('initial', 'restart')),
         'step': choice(admission.get('step'), ADMISSION_STEPS),
         'error': error_kind(admission.get('error')),
         'rollback_errors': [error_kind(error) for error in rollbacks],
+        'ingress_retirement': {
+            'cause': choice(retirement.get('cause'), ('guard-refusal', 'child-not-live', 'liveness-error',
+                                                     'explicit-disarm', 'invalid-ack', 'close')),
+            'error': choice(retirement.get('error'), ('none', 'control-input', 'control-replaced',
+                'lease-clock', 'lease-backwards', 'lease-generation', 'lease-stopped',
+                'affinity-changed', 'fixture-stopped'))},
         'last_completed_check': next((row['name'] for row in reversed(checks)
                                      if isinstance(row, dict) and row.get('passed') is True
                                      and isinstance(row.get('name'), str)

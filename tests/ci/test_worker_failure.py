@@ -18,6 +18,20 @@ import owned_child
 
 
 class FailureProjectionTests(unittest.TestCase):
+    def test_first_ingress_retirement_uses_only_closed_codes(self):
+        self.value['native']['admission_failure'] = {'ingress_retirement': {
+            'cause': 'guard-refusal', 'error': 'control-input', 'extra': self.secret}}
+        observed = self.project()['native']['admission']['ingress_retirement']
+        self.assertEqual(observed, {'cause': 'guard-refusal', 'error': 'control-input'})
+        self.assertNotIn(self.secret, json.dumps(self.project()))
+        self.value['native']['admission_failure']['ingress_retirement'] = {'cause': self.secret, 'error': self.secret}
+        self.assertEqual(self.project()['native']['admission']['ingress_retirement'],
+                         {'cause': 'unrecognized', 'error': 'unrecognized'})
+        for bad in (None, [], self.secret):
+            self.value['native']['admission_failure']['ingress_retirement'] = bad
+            with self.subTest(value=bad), self.assertRaises(ValueError):
+                self.project()
+
     def test_bootstrap_failures_use_fixed_codes_without_response_content(self):
         examples = [(ship + '-' + assertion, ship + '-' + reason)
                     for ship in failure.SHIPS
