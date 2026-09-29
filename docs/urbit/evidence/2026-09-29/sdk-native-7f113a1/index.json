@@ -1,0 +1,1116 @@
+{
+  "format": 1,
+  "classification": "selected-public-summary-of-real-independent-native-sdk-run",
+  "qualifies_phase": false,
+  "source_commit": "7f113a1573e78de3d6c839508cfd8abd286be17b",
+  "committed_bytes_verified": true,
+  "dirty_paths": [],
+  "status": "pass",
+  "elapsed_seconds": 2105.787,
+  "toolchain_sha256": "ae185adaec12b5aa0b2d48e2198ae65583902512ffd9d148706810c4819c650c",
+  "package_binding": {
+    "classification": "real-host-sdk-package-and-git-source-binding",
+    "files": [
+      {
+        "bytes": 13809,
+        "git_blob_oid": "561e97c54d0a0f0c76968ce382f3c93fbe6ebef0",
+        "sha256": "ff3a33f3f1a00b16ea806b7e888883f9487b3747f956cdbe8fe06cea74c067ee",
+        "source": "sdk/v3/API.md"
+      },
+      {
+        "bytes": 10030,
+        "git_blob_oid": "0d4cf8cfa2c39ca649fb3df63d082e6f3230c493",
+        "sha256": "a268d7b43f15fc12307b291a01c5761d177a8848521fd3f6f9949e2e89680c05",
+        "source": "LICENSE"
+      },
+      {
+        "bytes": 3319,
+        "git_blob_oid": "48771b5539e4625df76fca92bd80a3c4ed2e76a8",
+        "sha256": "a9e79b4faab41cc436404030c665cd716594584c6e76ff5f687aad14590c4d40",
+        "source": "sdk/v3/README.md"
+      },
+      {
+        "bytes": 13933,
+        "git_blob_oid": "8865f147233afa67e644573df5edf8019107388a",
+        "sha256": "3c02a6d5d517e54c2c69bf9e4d830c97fef68a717248d0cbbf9cdce7686c3197",
+        "source": "THIRD_PARTY_NOTICES.md"
+      },
+      {
+        "bytes": 9532,
+        "git_blob_oid": "d6dab574d28230a9faaffea54ca1959c8cdffc9a",
+        "sha256": "56e3d574381bbf8cdf29ca192c70eff256009f89d782e3ffe859b19c1321cbd7",
+        "source": "native/core/desk/lib/stead-codec.hoon"
+      },
+      {
+        "bytes": 556,
+        "git_blob_oid": "2ef4a5ffedabc2ba6503510266c19411eb663dfe",
+        "sha256": "178cac634471554dae9928f8c38248751329314391061976a436a22a7075548d",
+        "source": "native/core/desk/lib/stead-delivery.hoon"
+      },
+      {
+        "bytes": 7169,
+        "git_blob_oid": "c015f66e84401bae85d5945016530fa23e0061dd",
+        "sha256": "2dec1ef4ed37d952d49498b5c94b7ca613eeea71818fb7b0811ec1ccf1baf1e1",
+        "source": "native/core/desk/lib/stead-team-codec.hoon"
+      },
+      {
+        "bytes": 1753,
+        "git_blob_oid": "c9374a872de442f1c914263e8ff9aca010c1ee25",
+        "sha256": "632fc4d5a92c6db834454314c3b40bb57e348c6eaaa9a0767e9da126e659c02a",
+        "source": "native/core/desk/lib/stead-update-codec.hoon"
+      },
+      {
+        "bytes": 171,
+        "git_blob_oid": "3377a2e65ddd6970020917e072dbe9f9d3dd3b13",
+        "sha256": "fcd87c92acc16c2883b1dd4900af5064d1da910af317e93c327455cd56d9553b",
+        "source": "native/core/desk/mar/stead-command-3.hoon"
+      },
+      {
+        "bytes": 171,
+        "git_blob_oid": "3377a2e65ddd6970020917e072dbe9f9d3dd3b13",
+        "sha256": "fcd87c92acc16c2883b1dd4900af5064d1da910af317e93c327455cd56d9553b",
+        "source": "native/core/desk/mar/stead-query-3.hoon"
+      },
+      {
+        "bytes": 171,
+        "git_blob_oid": "3377a2e65ddd6970020917e072dbe9f9d3dd3b13",
+        "sha256": "fcd87c92acc16c2883b1dd4900af5064d1da910af317e93c327455cd56d9553b",
+        "source": "native/core/desk/mar/stead-result-3.hoon"
+      },
+      {
+        "bytes": 171,
+        "git_blob_oid": "3377a2e65ddd6970020917e072dbe9f9d3dd3b13",
+        "sha256": "fcd87c92acc16c2883b1dd4900af5064d1da910af317e93c327455cd56d9553b",
+        "source": "native/core/desk/mar/stead-updates-3.hoon"
+      },
+      {
+        "bytes": 3140,
+        "git_blob_oid": "082268803f7678a88341796a9c129b33c062a839",
+        "sha256": "ab1460c4ec0a1debcaaffbc5a8a789647e54a4672a1ca891b802104a75399487",
+        "source": "sdk/v3/desk-dev/ted/stead-sdk-call.hoon"
+      },
+      {
+        "bytes": 4223,
+        "git_blob_oid": "e4052e8131fe01181a837f0fe80f04bfa32c4db2",
+        "sha256": "ae185adaec12b5aa0b2d48e2198ae65583902512ffd9d148706810c4819c650c",
+        "source": "specs/urbit/toolchain.lock.json"
+      }
+    ],
+    "independent_consumer_execution": false,
+    "native_execution": false,
+    "package_bytes": 81920,
+    "package_sha256": "de41150e113c1df26804ffa7466f6018f2bfbf3b509715f2d971f6001f6ef6ac",
+    "source_commit": "d3b2b97ee7a4c343f3e4472dc05c479e2de11cfb",
+    "status": "pass"
+  },
+  "source_trees": {
+    "native/core/desk": {
+      "app/stead-home.hoon": "40d8609fe3e78bf7f88e0445b9b0ade4d2cf44306e132fee6f62c4371e80b525",
+      "app/stead-http-boundary-probe.hoon": "f5be57795cae8add26ddf0680e10ccbc01f47174c5b8e5364c48402656b38d57",
+      "app/stead-identity.hoon": "02a791614422dba8fb4b6f003df0ecac2c9e79fb1dc7dbd45e536b6d3a313863",
+      "app/stead-observer.hoon": "16589b4f9f51782d0907a7c186e3fcff6625c713bb64006f37330d6056645e45",
+      "controls/stead-unit-failure.hoon": "5dcb2b2e2e048a5cab8bf9422a67c47f86041aba10c7184affd622065b385010",
+      "gen/stead-build-probe.hoon": "d7fa57496b7d6b9e0211d69c878d8b9e786ff891a134886ca755e5aaf9fa7c27",
+      "gen/stead-codec-probe.hoon": "77acef53149bfc517c30625ab902cc9dcf06faf10d2f5413759591df9cfb3ff6",
+      "gen/stead-core-probe.hoon": "ce41ca465d959dabde9c9dbfb0f39db4294ec5117b5b7d65c7b2f8a2a21f718c",
+      "gen/stead-http-probe.hoon": "21ee280b381f05980cd57b95708079dcfc912717fc874f7ce5f965d4048e390a",
+      "gen/stead-reducers-probe.hoon": "a5c3b59ef426a2e1d44bb3b0084b222a26120ed999dd0744885bbe2a78c14471",
+      "gen/stead-save-probe.hoon": "84899440be705a00f1bd9a7da38c3f8499ca13562e110aef53c9fac40f8e2ffd",
+      "gen/stead-session-probe.hoon": "5311db1dd1a5e379ada848ab2dc6fcb0e391219d834831f144f35be23932d7a2",
+      "gen/stead-team-authority-probe.hoon": "6b5238c02e5a3693c1d7c7fee9301aa5295254d1f9066671c10663bcb91bc7ee",
+      "gen/stead-team-contract-probe.hoon": "e19078be07de187059a16de511fdda6510f43adcc4b9b8f921b31718ee6b3bc0",
+      "gen/stead-team-git-export.hoon": "4488142c15f5d4b606bd119a1eeb66f9883f02ffbe3487392d168addd94828e6",
+      "lib/stead-assets.hoon": "e5493f5d45e3a588b98520ee9f0772683a9c277eec083d49b238cc8986a789b3",
+      "lib/stead-browser.hoon": "acbbb8f91e4e03b3867afdca6c0fc1b863fbaa3d8091f24af98f665de3ae693d",
+      "lib/stead-codec-v1.hoon": "ce4c7a69b03ee1761590c37e71ff49b9f63a1a2edd2aaa6dfbf75bc3c960584a",
+      "lib/stead-codec.hoon": "56e3d574381bbf8cdf29ca192c70eff256009f89d782e3ffe859b19c1321cbd7",
+      "lib/stead-core-v1.hoon": "879615a5547d06a09d382c2bac4c5cb20cdf03236ddfdab79c9f1da15bd33cb5",
+      "lib/stead-core.hoon": "4c183ef6283030437af5e1433e3fbf80f414757bcede4cab1282fc71ff5f34de",
+      "lib/stead-delivery.hoon": "178cac634471554dae9928f8c38248751329314391061976a436a22a7075548d",
+      "lib/stead-eyre.hoon": "33c2f7dcfacf519e047eb35073d58db44c9d39d4aea0eb72b5f7e6964ec451c3",
+      "lib/stead-git.hoon": "826b83485429c02f577c9b462ee6cddd3ab8ea1a099d33b66893f863d54c54d7",
+      "lib/stead-http.hoon": "5e24e594cc1cd8bab3327654e92d1119f455a160da2b274cf3f0b5be0f167686",
+      "lib/stead-identity-core.hoon": "98d3bdeb30d8ab27a09e4bf52539c80084ff573c0d616240991218a974a97c6f",
+      "lib/stead-identity-owner.hoon": "55b23f8e263c671ab0c9dacf5c5f5321397f6cc4b1f4b4586b178480ba97389b",
+      "lib/stead-projection.hoon": "958b3c51d1bbf09ac98d98271c301892f399e171fece430142fbf3b3fa2d80e5",
+      "lib/stead-restore.hoon": "8205bf00a163d13682949554cd4ac8051087bbfae0d14c75253a7fe8aee313da",
+      "lib/stead-session.hoon": "ec331d4534cc19fc76f6b9ad590ec326d74e09f0b846b36f866e6351bdcbbb27",
+      "lib/stead-team-codec.hoon": "2dec1ef4ed37d952d49498b5c94b7ca613eeea71818fb7b0811ec1ccf1baf1e1",
+      "lib/stead-team-config.hoon": "0e3126f52177381ef0690fa1dac5e78f9dbf82aa8c5d5bb163f3dad8d55cf44e",
+      "lib/stead-team-owner.hoon": "6eb5574bc82633c174884c2935f91cdc6b0a96f604c25b43859d050b60aef535",
+      "lib/stead-team.hoon": "9c461b328731fc62f163acf01b46d0726690a41d68f55a29e5a32d478b75da7c",
+      "lib/stead-update-codec.hoon": "632fc4d5a92c6db834454314c3b40bb57e348c6eaaa9a0767e9da126e659c02a",
+      "lib/stead-update-security.hoon": "a2f05df6cac1df41e57b8fa7cf0c70789deb9a883e8619aa6f79f061b40a5f86",
+      "lib/stead-updates.hoon": "205adbd403bfc814636e35062d5720611ef2192b87f18233bb471879ce3a1c56",
+      "lib/stead-views.hoon": "e988ef8ca19ed30a1d30f6fe2d4729fd61825a1b425e2cbe74588191de173ef6",
+      "mar/stead-asset.hoon": "82f4e3037c43ad2acb4a5ead30b74e8c2abdc8d0d215d417789029c8d4a419ce",
+      "mar/stead-auth-approval-1.hoon": "fcd87c92acc16c2883b1dd4900af5064d1da910af317e93c327455cd56d9553b",
+      "mar/stead-auth-challenge-1.hoon": "fcd87c92acc16c2883b1dd4900af5064d1da910af317e93c327455cd56d9553b",
+      "mar/stead-bootstrap-1.hoon": "fcd87c92acc16c2883b1dd4900af5064d1da910af317e93c327455cd56d9553b",
+      "mar/stead-command-1.hoon": "fcd87c92acc16c2883b1dd4900af5064d1da910af317e93c327455cd56d9553b",
+      "mar/stead-command-2.hoon": "fcd87c92acc16c2883b1dd4900af5064d1da910af317e93c327455cd56d9553b",
+      "mar/stead-command-3.hoon": "fcd87c92acc16c2883b1dd4900af5064d1da910af317e93c327455cd56d9553b",
+      "mar/stead-control-1.hoon": "643d9d5221b5b43230f864f11b1d6830ad2b32ffd64644c77ea70c0fa1ea8c5e",
+      "mar/stead-fixture-1.hoon": "fcd87c92acc16c2883b1dd4900af5064d1da910af317e93c327455cd56d9553b",
+      "mar/stead-identity-config-1.hoon": "fcd87c92acc16c2883b1dd4900af5064d1da910af317e93c327455cd56d9553b",
+      "mar/stead-observer-1.hoon": "e30d449181f121ea403b8d38e12d3b925362591ee516092f254852af0631a684",
+      "mar/stead-query-3.hoon": "fcd87c92acc16c2883b1dd4900af5064d1da910af317e93c327455cd56d9553b",
+      "mar/stead-result-1.hoon": "fcd87c92acc16c2883b1dd4900af5064d1da910af317e93c327455cd56d9553b",
+      "mar/stead-result-2.hoon": "fcd87c92acc16c2883b1dd4900af5064d1da910af317e93c327455cd56d9553b",
+      "mar/stead-result-3.hoon": "fcd87c92acc16c2883b1dd4900af5064d1da910af317e93c327455cd56d9553b",
+      "mar/stead-team-config-1.hoon": "fcd87c92acc16c2883b1dd4900af5064d1da910af317e93c327455cd56d9553b",
+      "mar/stead-updates-3.hoon": "fcd87c92acc16c2883b1dd4900af5064d1da910af317e93c327455cd56d9553b",
+      "ted/stead-client.hoon": "a0420730b0ee1a56d46e22def0b570cf089a7de39810453010a3f77ff3f9c155",
+      "ted/stead-local-tls.hoon": "2e32b120e8d838eba65b67974abc1fe182fe8ce543ffc36715ce1f48a563511d",
+      "ted/stead-team-client.hoon": "1c7d4abd0323c1020d99b7bd8109969cdc15423c3cd8b9fdc5a28bd9b074066d",
+      "tests/stead-git.hoon": "51518a1239373467864412e64ab92cfbc8258bd37783988b2ae6c17c6eac2d98",
+      "tests/stead-http.hoon": "45b2eae7e33bda63c9d1d63407e6c71caab9a707d712ff4ac4828c21f45a9359",
+      "tests/stead-identity.hoon": "7160f70c150e08b4dff11981700f2a2b8c5f4dc62da9d560571861e66bc73975",
+      "tests/stead-session.hoon": "6d347254dee5a3b98294bab1cfbbd138238ca10527b9e35a4184aae8e32756bf",
+      "tests/stead-update-capacity.hoon": "bbb427b0365eaecd4d92b17080e0c39f47bda807ff7f6d130bb565f17275e6a0",
+      "tests/stead-updates.hoon": "48b079324cd4b0c5987a8fa453a6649967422889f14c5406ff93708a1819bad7",
+      "web/stead/asset-08a1794a61e7ed673d2e66de355cda8680a87a9dff4de7245ac987909ce7b1ed.stead-asset": "08a1794a61e7ed673d2e66de355cda8680a87a9dff4de7245ac987909ce7b1ed",
+      "web/stead/asset-0e31fab7cf6c399f805dc874f264885c9238ce6fb0635c3b3f0089deaf679f7f.stead-asset": "0e31fab7cf6c399f805dc874f264885c9238ce6fb0635c3b3f0089deaf679f7f",
+      "web/stead/asset-11247d28c5c2fb3d976002c2b55fecb6ba19fd88153e11d2c7af5832fd6ff331.stead-asset": "11247d28c5c2fb3d976002c2b55fecb6ba19fd88153e11d2c7af5832fd6ff331",
+      "web/stead/asset-1f7ace5da42d050917f462ec832cca5f88550cafed6f4bbfe680886a033efdab.stead-asset": "1f7ace5da42d050917f462ec832cca5f88550cafed6f4bbfe680886a033efdab",
+      "web/stead/asset-2620951f45589c393f7a9dd8ddd24a5cbe82a8ce84699216da05eb7fc9c9ffe6.stead-asset": "2620951f45589c393f7a9dd8ddd24a5cbe82a8ce84699216da05eb7fc9c9ffe6",
+      "web/stead/asset-4ad0a8c304f247405c5314f49b27fac259aa8f52458868bfe6e5f79760ad7a95.stead-asset": "4ad0a8c304f247405c5314f49b27fac259aa8f52458868bfe6e5f79760ad7a95",
+      "web/stead/asset-6016a28499433ab016b68e48afe0515cacc0032d24bb1b1da1dca0563a466be0.stead-asset": "6016a28499433ab016b68e48afe0515cacc0032d24bb1b1da1dca0563a466be0",
+      "web/stead/asset-8d946a739bd61004103e6b8a2e010f18974c814c1e8e4583fafa7b3171a66e77.stead-asset": "8d946a739bd61004103e6b8a2e010f18974c814c1e8e4583fafa7b3171a66e77",
+      "web/stead/asset-a7d5845e127be9d15b4ff9eafbd86ed244c485f9594c1bde22aa2dacdb0838f6.stead-asset": "a7d5845e127be9d15b4ff9eafbd86ed244c485f9594c1bde22aa2dacdb0838f6",
+      "web/stead/asset-b0f578720c3cda257868108d7295bb78a4535609648dccc4116da960f61520a8.stead-asset": "b0f578720c3cda257868108d7295bb78a4535609648dccc4116da960f61520a8",
+      "web/stead/asset-bc5112824c7d9bce98cf1667c0d7e5db217c1ccce14a21ef3b9c0a06f2bc40d5.stead-asset": "bc5112824c7d9bce98cf1667c0d7e5db217c1ccce14a21ef3b9c0a06f2bc40d5",
+      "web/stead/asset-d40c8d95a0e8908ae9c2b279e1d6481bf191711a8794312c8b15e8a12c9a27c8.stead-asset": "d40c8d95a0e8908ae9c2b279e1d6481bf191711a8794312c8b15e8a12c9a27c8",
+      "web/stead/inventory.hoon": "ff16df0cc198e71b4ad3cf753b188873eabebf58f5d4c6f0f404c00d40e2c7df"
+    },
+    "scripts/sdk_native": {
+      "bridge.py": "212c17c950ce469bc35bf49ed00cd676af98bb6eaa62953c1d7082ae59bc55f6",
+      "build.hoon": "ad9b2a9960819b7e5f8196816764a3b649c7dfd93a1f8670aa5c04e31a9db73f",
+      "cases.py": "3bbe3fc6924de525c2b1a49260125fb0afb7ebe87d9849e35e6fa15a9b29f11a",
+      "consumer.py": "a8ed1b0c0f863b7a67546495632f95504873e3a27b61a3af25431138b786f47e",
+      "controller.py": "7ebea3e7644b1474b694c37d3b8ebb0458dcddb9b982eb3b383b1ce0af3c1818",
+      "invoke.hoon": "0454e9c1601c401092f561d4baca4ab989f8ea9155dc8802f8b5e673016c42ad",
+      "native.py": "44018860a029a79b32866e532241571d8b9483f86d2893a7226d7bd34424f5a1",
+      "private-import.hoon": "e14a6e9393a905aa20ba300062e51aca0fcfc6b7ec1106b936d92a70891d236b",
+      "public-import.hoon": "d9dd66166d3d6510151a31047974c3627e58bbf1b5a1f6ca673ef64bf45a76a7",
+      "qualify.hoon": "b3a45b851c4e5326c37bd7f0ca8e541a86b8d4f563a8191f1fb9dd0c1057c709",
+      "results.py": "3071228144887522972beb12b4b6f1ca6d3337e80b9a8bfbd5d4099d346da4f3",
+      "run.py": "d152e818d576493578c6ade97d80429bb181c525aedb8718663dbad47e2b486c"
+    },
+    "scripts/urbit": {
+      "build_phase1_evidence.py": "c886c18fb25c0e381f346a6b7ec0387a784410acacfcac9ea72b6a5881708f7f",
+      "check_ecosystem.py": "28a86e6142a6a6477e1543385032cf0992e7be0e7d891cb1116a8fabdb8c984f",
+      "ci_controls_check.py": "68f1576c0cccb4d6d811612af21ce7c0447360f3ee6ddc105362838a95b36625",
+      "conn.py": "d590a41033bbea62bad6f5dc63c16fdb16c61c906c773c8f3c9c316b69dd3454",
+      "contracts.py": "7ccd0b9e664428487b25740bb2a75807de4c047c5d41544bfeff2d771b7bb8e2",
+      "contracts_v2.py": "42389543526318c92ad5496175b891db2c422bcb03bc0a103006345a5429cb37",
+      "core_cases.py": "2db9b3d6f71c8c4cadaeaa2b65eab88740b9785626231855e3ea1c7bc294530e",
+      "core_cases_v2.py": "6db78c1712bee0c0e613b9ae6250a48871983e7c9a3a1f9a159da4517047e6ac",
+      "core_check.py": "cfe8f5893e90568a80495687f7e51ed4af487f4afa916ef4f2f89b3a114100d7",
+      "core_conn.py": "b9172b903626e01d10ca7522a5f0399c2844db00c4987bf0018ef22b0e3e6162",
+      "core_export.py": "8c8fa9bb28e015ff07f83ed32ba1f80edef517295b3224e862f7c7dd2a36bb21",
+      "core_test.py": "612ea14eeb83a047fce9bf542492c7d1ed38431015274703d20994b406ef392d",
+      "delivery_cases.py": "171edf429fc1677e3250bcebff4cd2fb55e762d767204afdae846f86deccc131",
+      "delivery_suite.py": "0c2cff055ce3e9e7fe5b1ddb37f99bc1d7d7a8631b8376d4949d3f18020a357f",
+      "dev_help.py": "2b95fc50073f7a4ad3624bda8de0163d874f9b95d89efe245021d5a5c4a66141",
+      "digests.py": "3f228383f3539bdefdd17d5c8bae8485bc0164545e32f221d03c8742616af6c7",
+      "execution_policy.py": "da16e2e0fd32eb5b90706b546a7ea8332a65807fc8279f3bd765dcc18aaad9b5",
+      "gall_schedule.py": "e839771e23a44b1ac403df213fae2c83103a7750c36330de16322b3c0e913af2",
+      "gall_schedule_proof.py": "fe6564900c0b3b6ae5c0a75ea18788807024053f433d0f5fcb0b17f04566904b",
+      "git_vectors.py": "7c1997350143d3e08ae8ad5f9e113e2c01d9cb94b7dd69ca1e38c4d9fbb25c40",
+      "harness.py": "3929e595af7832747b8e600daa6b89857c33bf3603326764af0f41d811f5723d",
+      "migration_check.py": "6b80f8e93b09d70f003aed6e5e08ed1bafefdd95dd559106a8f63b2db6455583",
+      "namespace_check.py": "87950f4e7796fafb91807c36b9ea7d392d1d1840e5516d15d5fc6c5d476d0449",
+      "native_install.py": "9afb33b359ef71c1503bbb25616e445318298d850cd94672ecd5181b84018c11",
+      "native_peer_fence.py": "a3e4442c9912a75a8cf077e49c242729153d36c6746e356250dac878e2f61772",
+      "native_tls.py": "0c76e4fcbe37fceee823a5ba1bf3080a2523149996c8471a1afed0341b45ebc5",
+      "native_transcript.py": "d724f6820d58b926a055bd10fe4804fd10db917158804b478e37e1b80cf3b34f",
+      "native_units.py": "6d2e5f933f1254d3af7562f84efa4d77782f67a9d5e2d1c3a0e31070f4440264",
+      "owned_child.py": "a01fc92a0b5f000f5ddee505d475127681ac47ea9a7aa4d8b450594cd50ec229",
+      "qualification_cases.py": "0383dd02dcb1e3cfa6ff9e93be5da49b2fee7bdee1a71dde7c2b6db303c3c3f9",
+      "qualification_gate.py": "ce0d8d0d87e9556940143943d7107099bfeb5c36eec6744342e555bfd292a6ab",
+      "skill_evaluation_support.py": "67597ff220928b99ca1cf1e925bd86c903fa3d1399fd59e00825aec936965fe7",
+      "supervisor.py": "221711874a3d804e9386af3ad3936edc67aa9613a57a1fc249002604ea743440",
+      "sync_milestones.py": "9cce588554d9224acab2c9176455321347dfa25eca0d82c14680f9f9de5a730a",
+      "team_check.py": "4610a436def678e57f99ab97351785f78a419709be33e254dabe37dcb5ebbad1",
+      "team_conn.py": "6fe519e24f8964952765de135a48e5aa285295b20ee36db14a62881240e23374",
+      "team_git.py": "d2c1f872b98ef90c0f7974ed4b6aa99271d8b42a7e375b39caf58ed4fe1c13f0",
+      "team_lifecycle.py": "17cae4fcafd69e85845574aa72a439dcb280061a7cd4b9112f0d7bb086252547",
+      "team_updates_check.py": "9a296bda49a198f399ecfee6436717f3192cd712078eaad76131e2435ed11ca2",
+      "toolchain.py": "31234bbab1af217c885d8c081d7f438972f6ff1b6d89c93d10bdf49871b3ea16",
+      "urgit_audit.py": "c16b32b67c450ccd1fab8efc739e7d272ef4dc96c82dff8f119107f30b3c28d5",
+      "urgit_eval/bootstrap.py": "49e9fe5665490c7eab60e4e07dd5c72769fbf3c95a771bbb4e1093a6e73d4b56",
+      "urgit_eval/evaluate.py": "cb26fca7fcc45bcc60da1d12b54a2ed92f6a3eda1c7b08c1665ea787e876e6e4",
+      "urgit_seed.py": "1df796d497290da0cf05faa919324fe318079fe910912e658adc88e599fd73b6",
+      "validate_plan.py": "575c8dcbf02cda7d4495bdf072e661c197a05f98fefc96f9f42f68315a126bdc"
+    }
+  },
+  "public_files": {
+    "API.md": "ff3a33f3f1a00b16ea806b7e888883f9487b3747f956cdbe8fe06cea74c067ee",
+    "LICENSE": "a268d7b43f15fc12307b291a01c5761d177a8848521fd3f6f9949e2e89680c05",
+    "README.md": "a9e79b4faab41cc436404030c665cd716594584c6e76ff5f687aad14590c4d40",
+    "THIRD_PARTY_NOTICES.md": "3c02a6d5d517e54c2c69bf9e4d830c97fef68a717248d0cbbf9cdce7686c3197",
+    "desk-dev/lib/stead-codec.hoon": "56e3d574381bbf8cdf29ca192c70eff256009f89d782e3ffe859b19c1321cbd7",
+    "desk-dev/lib/stead-delivery.hoon": "178cac634471554dae9928f8c38248751329314391061976a436a22a7075548d",
+    "desk-dev/lib/stead-team-codec.hoon": "2dec1ef4ed37d952d49498b5c94b7ca613eeea71818fb7b0811ec1ccf1baf1e1",
+    "desk-dev/lib/stead-update-codec.hoon": "632fc4d5a92c6db834454314c3b40bb57e348c6eaaa9a0767e9da126e659c02a",
+    "desk-dev/mar/stead-command-3.hoon": "fcd87c92acc16c2883b1dd4900af5064d1da910af317e93c327455cd56d9553b",
+    "desk-dev/mar/stead-query-3.hoon": "fcd87c92acc16c2883b1dd4900af5064d1da910af317e93c327455cd56d9553b",
+    "desk-dev/mar/stead-result-3.hoon": "fcd87c92acc16c2883b1dd4900af5064d1da910af317e93c327455cd56d9553b",
+    "desk-dev/mar/stead-updates-3.hoon": "fcd87c92acc16c2883b1dd4900af5064d1da910af317e93c327455cd56d9553b",
+    "desk-dev/ted/stead-sdk-call.hoon": "ab1460c4ec0a1debcaaffbc5a8a789647e54a4672a1ca891b802104a75399487",
+    "manifest.json": "000c27a3d688e4e3e0a31465e86742369b61cee6fa5ad26f572aba1e483d7f26"
+  },
+  "runner_files": {
+    "bridge.py": "212c17c950ce469bc35bf49ed00cd676af98bb6eaa62953c1d7082ae59bc55f6",
+    "conn.py": "d590a41033bbea62bad6f5dc63c16fdb16c61c906c773c8f3c9c316b69dd3454",
+    "consumer.py": "a8ed1b0c0f863b7a67546495632f95504873e3a27b61a3af25431138b786f47e",
+    "core_conn.py": "b9172b903626e01d10ca7522a5f0399c2844db00c4987bf0018ef22b0e3e6162",
+    "invoke.hoon": "0454e9c1601c401092f561d4baca4ab989f8ea9155dc8802f8b5e673016c42ad",
+    "native.py": "44018860a029a79b32866e532241571d8b9483f86d2893a7226d7bd34424f5a1",
+    "owned_child.py": "a01fc92a0b5f000f5ddee505d475127681ac47ea9a7aa4d8b450594cd50ec229",
+    "private-import.hoon": "e14a6e9393a905aa20ba300062e51aca0fcfc6b7ec1106b936d92a70891d236b",
+    "public-import.hoon": "d9dd66166d3d6510151a31047974c3627e58bbf1b5a1f6ca673ef64bf45a76a7",
+    "qualify.hoon": "b3a45b851c4e5326c37bd7f0ca8e541a86b8d4f563a8191f1fb9dd0c1057c709"
+  },
+  "compiled": {
+    "clay_case": "~2026.09.29..06.09.56..1694",
+    "clay_case_atom": "0x8000.000d.3959.63b4.1694.0000.0000.0000",
+    "consumer": "~bus",
+    "desk": "base",
+    "marks": "stead-command-3,stead-query-3,stead-result-3,stead-updates-3",
+    "protocol": "stead.sdk-compile/1",
+    "status": "compiled"
+  },
+  "compile_seconds": 1.935,
+  "checks": [
+    {
+      "name": "authority-controller-separated-from-host",
+      "passed": true
+    },
+    {
+      "name": "authority-uses-nonroot-caller-id",
+      "passed": true
+    },
+    {
+      "name": "runner-and-package-at-admission",
+      "passed": true
+    },
+    {
+      "name": "authority-at-admission",
+      "passed": true
+    },
+    {
+      "name": "public-compilation-precedes-home",
+      "passed": true
+    },
+    {
+      "name": "public-sample-and-four-marks-compiled",
+      "passed": true
+    },
+    {
+      "name": "consumer-has-separate-network-user-mount-pid",
+      "passed": true
+    },
+    {
+      "name": "fresh-home-has-no-stead-app",
+      "passed": true
+    },
+    {
+      "name": "control-ingress-stays-in-home-namespace",
+      "passed": true
+    },
+    {
+      "name": "control-member-is-individual",
+      "passed": true
+    },
+    {
+      "name": "control-member-installed-exact-adapter",
+      "passed": true
+    },
+    {
+      "name": "owner-local-configuration",
+      "passed": true
+    },
+    {
+      "name": "real-home-bootstrap-and-assets",
+      "passed": true
+    },
+    {
+      "name": "control-member-stays-in-trusted-namespace",
+      "passed": true
+    },
+    {
+      "name": "public-capabilities-from-current-native-member",
+      "passed": true
+    },
+    {
+      "name": "command-unsupported-version-1-correlated",
+      "passed": true
+    },
+    {
+      "name": "command-unsupported-version-2-correlated",
+      "passed": true
+    },
+    {
+      "name": "command-unsupported-version-999-correlated",
+      "passed": true
+    },
+    {
+      "name": "query-unsupported-version-1-correlated",
+      "passed": true
+    },
+    {
+      "name": "query-unsupported-version-2-correlated",
+      "passed": true
+    },
+    {
+      "name": "query-unsupported-version-999-correlated",
+      "passed": true
+    },
+    {
+      "name": "updates-unsupported-version-1-correlated",
+      "passed": true
+    },
+    {
+      "name": "updates-unsupported-version-2-correlated",
+      "passed": true
+    },
+    {
+      "name": "updates-unsupported-version-999-correlated",
+      "passed": true
+    },
+    {
+      "name": "rejected-version-created-no-project",
+      "passed": true
+    },
+    {
+      "name": "accepted:project.create:019939ba-4000-7000-8000-000000009c42",
+      "passed": true
+    },
+    {
+      "name": "actual-public-caller-principal",
+      "passed": true
+    },
+    {
+      "name": "same-command-recovers-exact-receipt",
+      "passed": true
+    },
+    {
+      "name": "request-id-reuse-with-changed-bytes-rejected",
+      "passed": true
+    },
+    {
+      "name": "accepted:work.create:019939ba-4000-7000-8000-000000009c4f",
+      "passed": true
+    },
+    {
+      "name": "allowed-work-authoritative-readback",
+      "passed": true
+    },
+    {
+      "name": "accepted:work.update:019939ba-4000-7000-8000-000000009c51",
+      "passed": true
+    },
+    {
+      "name": "accepted-update-has-exact-id-revision-and-payload",
+      "passed": true
+    },
+    {
+      "name": "public-stale-save-revision-conflict",
+      "passed": true
+    },
+    {
+      "name": "public-client-malformed-json-fails-closed",
+      "passed": true
+    },
+    {
+      "name": "public-client-oversized-input-fails-closed",
+      "passed": true
+    },
+    {
+      "name": "well-formed-invalid-envelope-fails-closed",
+      "passed": true
+    },
+    {
+      "name": "negative-inputs-and-conflict-preserve-exact-work-rows",
+      "passed": true
+    },
+    {
+      "name": "unknown-scope-content-free",
+      "passed": true
+    },
+    {
+      "name": "accepted:project.create:019939ba-4000-7000-8000-000000009c57",
+      "passed": true
+    },
+    {
+      "name": "existing-ungranted-scope-denied",
+      "passed": true
+    },
+    {
+      "name": "accepted:policy.grant:019939ba-4000-7000-8000-000000009c59",
+      "passed": true
+    },
+    {
+      "name": "public-watch-open",
+      "passed": true
+    },
+    {
+      "name": "watch-before-snapshot-matches-generation",
+      "passed": true
+    },
+    {
+      "name": "accepted:work.create:019939ba-4000-7000-8000-000000009c5c",
+      "passed": true
+    },
+    {
+      "name": "public-watch-delivers-authorized-invalidation",
+      "passed": true
+    },
+    {
+      "name": "watch-cursor-not-a-query-cursor",
+      "passed": true
+    },
+    {
+      "name": "public-resume-replaces-handle",
+      "passed": true
+    },
+    {
+      "name": "reordered-old-handle-cannot-dequeue-current-watch",
+      "passed": true
+    },
+    {
+      "name": "public-new-handle-still-live",
+      "passed": true
+    },
+    {
+      "name": "public-replayed-cursor-requires-refresh",
+      "passed": true
+    },
+    {
+      "name": "public-cancel-target-is-live",
+      "passed": true
+    },
+    {
+      "name": "public-live-watch-cancelled",
+      "passed": true
+    },
+    {
+      "name": "cancelled-public-watch-cannot-dequeue",
+      "passed": true
+    },
+    {
+      "name": "public-watch-cancellation-idempotent",
+      "passed": true
+    },
+    {
+      "name": "accepted:work.update:019939ba-4000-7000-8000-000000009c68",
+      "passed": true
+    },
+    {
+      "name": "accepted:policy.revoke:019939ba-4000-7000-8000-000000009c69",
+      "passed": true
+    },
+    {
+      "name": "revoked-public-subscriber-discards-queued-data",
+      "passed": true
+    },
+    {
+      "name": "revoked-member-query-denied",
+      "passed": true
+    },
+    {
+      "name": "owner-readback-before-denied-mutation",
+      "passed": true
+    },
+    {
+      "name": "revoked-member-mutation-denied",
+      "passed": true
+    },
+    {
+      "name": "denied-mutation-preserves-exact-authority-rows",
+      "passed": true
+    },
+    {
+      "name": "control-member-source-unchanged",
+      "passed": true
+    },
+    {
+      "name": "consumer-source-unchanged",
+      "passed": true
+    }
+  ],
+  "checks_passed": 64,
+  "calls_recorded": 41,
+  "calls": [
+    {
+      "ordinal": 1,
+      "mode": "query",
+      "elapsed_ms": 6158.265,
+      "input_bytes": 177,
+      "input_sha256": "d467a29843d4df29b5dc014e96046f6cf13a3abd50e758486f092ffbc9a1481f",
+      "selected_result": {
+        "protocol": "stead.query-result/3",
+        "status": "read"
+      }
+    },
+    {
+      "ordinal": 2,
+      "mode": "command",
+      "elapsed_ms": 1232.109,
+      "input_bytes": 452,
+      "input_sha256": "b98c287fd8ec84af74d81224ea7666985319252124059db244bed74f007129f5",
+      "selected_result": {
+        "protocol": "stead.result/3",
+        "status": "rejected",
+        "error": "unsupported_version"
+      }
+    },
+    {
+      "ordinal": 3,
+      "mode": "command",
+      "elapsed_ms": 1208.742,
+      "input_bytes": 452,
+      "input_sha256": "8688ab05b7091906147049a7c54c0194d79e634fdd525277ffc116d31f254c07",
+      "selected_result": {
+        "protocol": "stead.result/3",
+        "status": "rejected",
+        "error": "unsupported_version"
+      }
+    },
+    {
+      "ordinal": 4,
+      "mode": "command",
+      "elapsed_ms": 1177.706,
+      "input_bytes": 454,
+      "input_sha256": "5f78af049baf41c3a2f2532bbc7e336f005c191b253358a3c474c025c37a83bf",
+      "selected_result": {
+        "protocol": "stead.result/3",
+        "status": "rejected",
+        "error": "unsupported_version"
+      }
+    },
+    {
+      "ordinal": 5,
+      "mode": "query",
+      "elapsed_ms": 1224.933,
+      "input_bytes": 173,
+      "input_sha256": "b80a0549172ac4160cf25ecb74e545ce3bd0dc1ded48c421d7b26a74d7f7f822",
+      "selected_result": {
+        "protocol": "stead.result/3",
+        "status": "rejected",
+        "error": "unsupported_version"
+      }
+    },
+    {
+      "ordinal": 6,
+      "mode": "query",
+      "elapsed_ms": 1250.644,
+      "input_bytes": 173,
+      "input_sha256": "a50036b532360cd2f660ea5ed5bb5bcced04747584331a328a529356fd1562f4",
+      "selected_result": {
+        "protocol": "stead.result/3",
+        "status": "rejected",
+        "error": "unsupported_version"
+      }
+    },
+    {
+      "ordinal": 7,
+      "mode": "query",
+      "elapsed_ms": 1179.18,
+      "input_bytes": 175,
+      "input_sha256": "08bf1d1f166acc83cb789185e8a86b0b2a1631b4671d88965add8922cf5c5010",
+      "selected_result": {
+        "protocol": "stead.result/3",
+        "status": "rejected",
+        "error": "unsupported_version"
+      }
+    },
+    {
+      "ordinal": 8,
+      "mode": "updates",
+      "elapsed_ms": 1169.013,
+      "input_bytes": 205,
+      "input_sha256": "ef4f61e3d0b4c01406dd0004351524807bca222aeee6e35b6d5a62bc293f4bb4",
+      "selected_result": {
+        "protocol": "stead.result/3",
+        "status": "rejected",
+        "error": "unsupported_version"
+      }
+    },
+    {
+      "ordinal": 9,
+      "mode": "updates",
+      "elapsed_ms": 1207.869,
+      "input_bytes": 205,
+      "input_sha256": "3c83ccb01f862c074029e65026a1c25aca633072004cd5fdf784d2a564ecd1e1",
+      "selected_result": {
+        "protocol": "stead.result/3",
+        "status": "rejected",
+        "error": "unsupported_version"
+      }
+    },
+    {
+      "ordinal": 10,
+      "mode": "updates",
+      "elapsed_ms": 1308.446,
+      "input_bytes": 207,
+      "input_sha256": "5ac0cd420b0bba32db9e4601ca478572bac207ba806330dc3b7881bd5cf21c0e",
+      "selected_result": {
+        "protocol": "stead.result/3",
+        "status": "rejected",
+        "error": "unsupported_version"
+      }
+    },
+    {
+      "ordinal": 11,
+      "mode": "query",
+      "elapsed_ms": 1398.906,
+      "input_bytes": 173,
+      "input_sha256": "05384d5f4b3e520e4fbd8ea006d2d82f803f41f381ba0ae691489c7e721abda9",
+      "selected_result": {
+        "protocol": "stead.query-result/3",
+        "status": "read"
+      }
+    },
+    {
+      "ordinal": 12,
+      "mode": "command",
+      "elapsed_ms": 1353.926,
+      "input_bytes": 452,
+      "input_sha256": "993b5a93b921b59644912caea0823ef44ddff1e6297fca0e3c7d4ffe11d9cb10",
+      "selected_result": {
+        "protocol": "stead.receipt/3",
+        "status": "accepted",
+        "operation": "project.create",
+        "identity_ship": "~bus",
+        "authentication": "native-sender/1",
+        "resource_revision": "1"
+      }
+    },
+    {
+      "ordinal": 13,
+      "mode": "command",
+      "elapsed_ms": 1526.866,
+      "input_bytes": 452,
+      "input_sha256": "993b5a93b921b59644912caea0823ef44ddff1e6297fca0e3c7d4ffe11d9cb10",
+      "selected_result": {
+        "protocol": "stead.receipt/3",
+        "status": "accepted",
+        "operation": "project.create",
+        "identity_ship": "~bus",
+        "authentication": "native-sender/1",
+        "resource_revision": "1"
+      }
+    },
+    {
+      "ordinal": 14,
+      "mode": "command",
+      "elapsed_ms": 1930.993,
+      "input_bytes": 455,
+      "input_sha256": "d6122bb22f0ed82551787b9fd4578a43c7b996282df48f9e421912444dfb9a94",
+      "selected_result": {
+        "protocol": "stead.result/3",
+        "status": "rejected",
+        "error": "request_id_reuse"
+      }
+    },
+    {
+      "ordinal": 15,
+      "mode": "command",
+      "elapsed_ms": 1668.172,
+      "input_bytes": 393,
+      "input_sha256": "cb31693e48c01b719c1c19ac44f3bdd752d48306d3ee7246de2907ecbb15eb70",
+      "selected_result": {
+        "protocol": "stead.receipt/3",
+        "status": "accepted",
+        "operation": "work.create",
+        "identity_ship": "~bus",
+        "authentication": "native-sender/1",
+        "resource_revision": "1"
+      }
+    },
+    {
+      "ordinal": 16,
+      "mode": "query",
+      "elapsed_ms": 3417.715,
+      "input_bytes": 205,
+      "input_sha256": "7eda07ee89fadcdad003a06aeb79e328fd41c2a44ff915166268b33a4d17a68f",
+      "selected_result": {
+        "protocol": "stead.query-result/3",
+        "status": "read"
+      }
+    },
+    {
+      "ordinal": 17,
+      "mode": "command",
+      "elapsed_ms": 1547.316,
+      "input_bytes": 401,
+      "input_sha256": "279d9fac45cd9ed406e933dae53733d793e72dba9ebcfc2bb3eb5908c0648e25",
+      "selected_result": {
+        "protocol": "stead.receipt/3",
+        "status": "accepted",
+        "operation": "work.update",
+        "identity_ship": "~bus",
+        "authentication": "native-sender/1",
+        "resource_revision": "2"
+      }
+    },
+    {
+      "ordinal": 18,
+      "mode": "query",
+      "elapsed_ms": 1455.47,
+      "input_bytes": 205,
+      "input_sha256": "6ca6108b20e130a5cd9b6c198ceb6e34695126a2cc16bc686ed6fb7dab9b0760",
+      "selected_result": {
+        "protocol": "stead.query-result/3",
+        "status": "read"
+      }
+    },
+    {
+      "ordinal": 19,
+      "mode": "command",
+      "elapsed_ms": 1361.668,
+      "input_bytes": 393,
+      "input_sha256": "17fa8ed5bf81fa0519a39cf1baddc86fd112284be216c373e28b96692ba3388b",
+      "selected_result": {
+        "protocol": "stead.result/3",
+        "status": "rejected",
+        "error": "revision_conflict"
+      }
+    },
+    {
+      "ordinal": 20,
+      "mode": "command",
+      "elapsed_ms": 1018.172,
+      "input_bytes": 1,
+      "input_sha256": "021fb596db81e6d02bf3d2586ee3981fe519f275c0ac9ca76bbcf2ebb4097d96",
+      "selected_result": {
+        "protocol": "stead.sdk-error/1",
+        "status": "failed",
+        "error": "request_unconfirmed"
+      }
+    },
+    {
+      "ordinal": 21,
+      "mode": "command",
+      "elapsed_ms": 7948.66,
+      "input_bytes": 65537,
+      "input_sha256": "1abe08ebecf1c18cab71f6fe28aaddf20268f85bad78bb9a72f88ca47c874662",
+      "selected_result": {
+        "protocol": "stead.sdk-error/1",
+        "status": "failed",
+        "error": "request_unconfirmed"
+      }
+    },
+    {
+      "ordinal": 22,
+      "mode": "command",
+      "elapsed_ms": 1368.335,
+      "input_bytes": 411,
+      "input_sha256": "6aa81bbed5f603408a1ac936e0ec568b2b9e8fd3be48f4e25c28fc520faa9692",
+      "selected_result": {
+        "protocol": "stead.sdk-error/1",
+        "status": "failed",
+        "error": "request_unconfirmed"
+      }
+    },
+    {
+      "ordinal": 23,
+      "mode": "query",
+      "elapsed_ms": 1397.695,
+      "input_bytes": 205,
+      "input_sha256": "3df20c5965614486008e11fbb3753a6fbbc07c310c7778d13ceb4355fdd690b6",
+      "selected_result": {
+        "protocol": "stead.query-result/3",
+        "status": "read"
+      }
+    },
+    {
+      "ordinal": 24,
+      "mode": "query",
+      "elapsed_ms": 1387.409,
+      "input_bytes": 208,
+      "input_sha256": "8d909982e7d1840f337159c86e3e3336e390a482917b55947a6213bf5b8e529e",
+      "selected_result": {
+        "protocol": "stead.result/3",
+        "status": "rejected",
+        "error": "denied_or_not_found"
+      }
+    },
+    {
+      "ordinal": 25,
+      "mode": "query",
+      "elapsed_ms": 1389.532,
+      "input_bytes": 208,
+      "input_sha256": "fe5505796263272d0c31ba870ab577d428a8197e83fbf261fa845c259825ca69",
+      "selected_result": {
+        "protocol": "stead.result/3",
+        "status": "rejected",
+        "error": "denied_or_not_found"
+      }
+    },
+    {
+      "ordinal": 26,
+      "mode": "updates",
+      "elapsed_ms": 1705.201,
+      "input_bytes": 237,
+      "input_sha256": "b7e0c8d0809bf7bca964b308e267c8be983866f437418743f90b6bfa72397968",
+      "selected_result": {
+        "protocol": "stead.update-result/3",
+        "status": "watching"
+      }
+    },
+    {
+      "ordinal": 27,
+      "mode": "query",
+      "elapsed_ms": 1597.73,
+      "input_bytes": 205,
+      "input_sha256": "5cd48f270c2dd91ffb4d4880fa1080b6708898d654d9e1458046a8f2d3d30daf",
+      "selected_result": {
+        "protocol": "stead.query-result/3",
+        "status": "read"
+      }
+    },
+    {
+      "ordinal": 28,
+      "mode": "updates",
+      "elapsed_ms": 1559.455,
+      "input_bytes": 325,
+      "input_sha256": "6b605118db9f9fe31e3d0dc3adc648b1c6e6329fce14f70162e64fc7a8728682",
+      "selected_result": {
+        "protocol": "stead.update-result/3",
+        "status": "updated"
+      }
+    },
+    {
+      "ordinal": 29,
+      "mode": "query",
+      "elapsed_ms": 1617.283,
+      "input_bytes": 269,
+      "input_sha256": "d7af1a35c37c85e66e1ddf1c5300fda588515553dd8646f90281be4ced0b17b2",
+      "selected_result": {
+        "protocol": "stead.result/3",
+        "status": "rejected",
+        "error": "stale_cursor"
+      }
+    },
+    {
+      "ordinal": 30,
+      "mode": "updates",
+      "elapsed_ms": 1652.137,
+      "input_bytes": 303,
+      "input_sha256": "ff325a517fd8bbea087f0f389560daf89994a30cf9d0e10f51412edcc0ac1148",
+      "selected_result": {
+        "protocol": "stead.update-result/3",
+        "status": "resumed"
+      }
+    },
+    {
+      "ordinal": 31,
+      "mode": "updates",
+      "elapsed_ms": 1588.985,
+      "input_bytes": 325,
+      "input_sha256": "0a341768a8e47ed383f237dd1d0e57c3c11e92d03726393e71f9feb11ace6dda",
+      "selected_result": {
+        "protocol": "stead.update-result/3",
+        "status": "refresh_required"
+      }
+    },
+    {
+      "ordinal": 32,
+      "mode": "updates",
+      "elapsed_ms": 1616.963,
+      "input_bytes": 325,
+      "input_sha256": "d5619087eb265aa3fb679b477353b13c65254a690daf29d3434990e5bfd7a8e8",
+      "selected_result": {
+        "protocol": "stead.update-result/3",
+        "status": "updated"
+      }
+    },
+    {
+      "ordinal": 33,
+      "mode": "updates",
+      "elapsed_ms": 1597.683,
+      "input_bytes": 325,
+      "input_sha256": "50cc39f5a49a95461b18e0fcc7e5c802e35ef3014ba4414b202e814db654c28f",
+      "selected_result": {
+        "protocol": "stead.update-result/3",
+        "status": "refresh_required"
+      }
+    },
+    {
+      "ordinal": 34,
+      "mode": "updates",
+      "elapsed_ms": 1725.167,
+      "input_bytes": 237,
+      "input_sha256": "c4ce9ce33095aa09946e1746114c41994dcd9288d085e8a93726787cd22bb89e",
+      "selected_result": {
+        "protocol": "stead.update-result/3",
+        "status": "watching"
+      }
+    },
+    {
+      "ordinal": 35,
+      "mode": "updates",
+      "elapsed_ms": 1451.999,
+      "input_bytes": 263,
+      "input_sha256": "04404d60b97197be8bbac7bee540b2695e89a028f3050c0c83df29acccb7f545",
+      "selected_result": {
+        "protocol": "stead.update-result/3",
+        "status": "cancelled"
+      }
+    },
+    {
+      "ordinal": 36,
+      "mode": "updates",
+      "elapsed_ms": 1617.392,
+      "input_bytes": 325,
+      "input_sha256": "bae0870a088469c14ca2801cd34bf5bba03991daacf21410a1d675cd41454ab9",
+      "selected_result": {
+        "protocol": "stead.update-result/3",
+        "status": "refresh_required"
+      }
+    },
+    {
+      "ordinal": 37,
+      "mode": "updates",
+      "elapsed_ms": 1427.502,
+      "input_bytes": 263,
+      "input_sha256": "78c01360524181b17c0bef0b72e63a1c7951ad51568d070e9e4cb6d14e1e5fc1",
+      "selected_result": {
+        "protocol": "stead.update-result/3",
+        "status": "cancelled"
+      }
+    },
+    {
+      "ordinal": 38,
+      "mode": "updates",
+      "elapsed_ms": 1529.404,
+      "input_bytes": 237,
+      "input_sha256": "0067db23956b6d1bd2c19f084abc4e8e535b043b4d0aa91016363cd72723626f",
+      "selected_result": {
+        "protocol": "stead.update-result/3",
+        "status": "watching"
+      }
+    },
+    {
+      "ordinal": 39,
+      "mode": "updates",
+      "elapsed_ms": 1628.481,
+      "input_bytes": 325,
+      "input_sha256": "1fa95b1f5442bd1acc8a35d70d5f6fd9e88f560fe7a585fc0d1f1e38656912a1",
+      "selected_result": {
+        "protocol": "stead.update-result/3",
+        "status": "refresh_required"
+      }
+    },
+    {
+      "ordinal": 40,
+      "mode": "query",
+      "elapsed_ms": 2607.766,
+      "input_bytes": 205,
+      "input_sha256": "90c3192451fbe0182b8b92b18877cad27355bea2a30fc5068e5838956425858b",
+      "selected_result": {
+        "protocol": "stead.result/3",
+        "status": "rejected",
+        "error": "denied_or_not_found"
+      }
+    },
+    {
+      "ordinal": 41,
+      "mode": "command",
+      "elapsed_ms": 1568.783,
+      "input_bytes": 393,
+      "input_sha256": "eca908996ae4b58f78d804a173b937bea09838b899922e9702bb4d4787f79c9e",
+      "selected_result": {
+        "protocol": "stead.result/3",
+        "status": "rejected",
+        "error": "denied_or_not_found"
+      }
+    }
+  ],
+  "authority_inputs_unchanged": true,
+  "watchdog_errors": [],
+  "cleanup": {
+    "consumer": {
+      "cleanup": {
+        "clean": true,
+        "exit_code": 0,
+        "forced": false,
+        "premature": false,
+        "reaped": true
+      },
+      "command_count": 142,
+      "datagrams": {
+        "received": 246,
+        "sent": 247
+      },
+      "inputs_unchanged": true,
+      "installed_unchanged": true,
+      "transcript_sha256": "e966d7842b975fb2770538901e7fe5e32efe790036047d7888fa727b6b650020"
+    },
+    "control_member": {
+      "clean": true,
+      "exit_code": 0,
+      "forced": false,
+      "premature": false,
+      "reaped": true
+    },
+    "controller_exit": 0,
+    "controller_reaped": true,
+    "datagrams": {
+      "dropped": 0,
+      "received": 247,
+      "sent": 246
+    },
+    "home": {
+      "clean": true,
+      "exit_code": 0,
+      "forced": false,
+      "premature": false,
+      "reaped": true
+    }
+  },
+  "guard": {
+    "status": "completed",
+    "exit_code": 0,
+    "run_id": "01cf07df05f0d87509a80e130f1e3a44",
+    "elapsed_seconds": 2106.881,
+    "cleanup": [],
+    "reason": null
+  },
+  "owned_cgroup_absent_at_readback": true,
+  "originals": {
+    "report.json": {
+      "private": true,
+      "bytes": 64688,
+      "sha256": "f85464471afde3f8dcc5cd60df6ac3f77b280de46f7d7bf62bcec5d729b80dcc"
+    },
+    "host-report.json": {
+      "private": true,
+      "bytes": 915469,
+      "sha256": "54eba53b48c31dd4ca75943106060cd8dbd22737849592c62fe488167e491fe3"
+    },
+    "home-transcript.json": {
+      "private": true,
+      "bytes": 35888,
+      "sha256": "0283d68c8dca22aab9ad4c81c52dd5e9b5773867a6ef3c1f9e88c221e9d6d3d7"
+    },
+    "control_member-transcript.json": {
+      "private": true,
+      "bytes": 65340,
+      "sha256": "a984fd174e72ecffea4b36edaaa8d7ce380194332fe300b3ae0e1b5d3289a5b2"
+    }
+  },
+  "files": {
+    "guard-report.json": {
+      "path": "guard-report.json.gz",
+      "raw_bytes": 915284,
+      "raw_sha256": "abc9f6542962ac2ef4968f55a5624a13f03c6b49c8c8a5b259746e0dc8032c43",
+      "gzip_sha256": "6d9cdd2d4bda750f2b97bd9e7473260b3fb651d70be3a0029a70af413629329e"
+    }
+  },
+  "scope": "Fresh independent public-only consumer, separate synthetic Home and individual control member. All 64 assertions and 41 actual calls completed; this does not qualify configured browser, natural expiry, human onboarding or hosted CI. Timings are observations from the recorded restricted local fixture, not production latency targets. Raw reports and transcripts remain private; this selected summary omits nonces, handles, cursors and native diagnostic bytes."
+}

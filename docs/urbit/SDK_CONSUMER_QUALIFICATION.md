@@ -1,10 +1,14 @@
 # Independent SDK consumer qualification
 
 The executable candidate is `make sdk-dev SDK_ARCHIVE=<verified archive>`.
-It is implemented for guarded local qualification. The public sample and four
-carrier marks compiled at `8a2702a`, but that run failed before business calls.
-The corrected three-identity fixture has not yet run natively. This document is
-not acceptance.
+The corrected three-identity fixture passed its bounded native conformance run
+at `7f113a1573e78de3d6c839508cfd8abd286be17b`: all 64 assertions and 41 actual
+calls completed in 2,105.787 seconds. The sample and four carrier marks compiled
+from the public package before Home booted. All three ships and the controller
+exited cleanly; the outer guard completed with exit zero and no cleanup errors.
+The [selected public evidence](evidence/2026-09-29/sdk-native-7f113a1/index.json)
+binds the exact package, source, compiled Clay case, assertions and retained
+private originals. This qualifies the recorded SDK cases, not all of Phase 2.
 
 The September 29 run at `cd75365` booted its fresh consumer and compiled the
 public-import control. Clay then refused the unavailable private dependency,
@@ -108,8 +112,9 @@ The fixture correction passed 100 SDK host tests in 11.589 seconds on September
 readiness and cleanup controls. The invocation test preserves the raw sample;
 the pinned Khan `%fyrd` path supplies its required unit wrapper. The conformance schedule now
 cancels a newly opened live watch, verifies that it cannot dequeue data, and
-then checks repeated cancellation. These host results do not qualify native
-conformance; the fresh three-identity run remains required.
+then checks repeated cancellation. These host results are separate from the
+subsequent actual native conformance run recorded above. Earlier failed attempts
+remain failed evidence.
 
 ## Earlier transfer preparation
 
@@ -125,4 +130,4 @@ Pinned interfaces are in kernel commit
 `5a187fededc4582a34fcd6055c67bb63e0917b94`: `lib/strandio.hoon` supplies
 `get-beak`, `build-file-hard` and `build-mark`; `app/spider.hoon` supplies the
 full-vase thread cast/slam example; `sys/vane/khan.hoon` supplies the `%fyrd`
-unit-input convention. Actual native compilation is still required.
+unit-input convention. The successful run above compiled these exact interfaces.

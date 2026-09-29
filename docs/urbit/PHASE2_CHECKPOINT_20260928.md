@@ -4,24 +4,25 @@ Recorded 2026-09-28 UTC; updated 2026-09-29 UTC. Phase 2 is incomplete. Its six 
 (#9, #10, #14, #21, #22 and #29) remain open. The Phase 0/1 acceptance record
 remains tied to its recorded source; it does not qualify the newer candidate.
 
-The most recent passing hosted run, [36517682428](https://github.com/ScottTpirate/stead-urbit/actions/runs/36517682428),
-passed the expanded native inventory and independent evidence review on `cd75365`.
-The local SDK run at `8a2702a` compiled its public sample and four marks, then
-failed because its trusted fixture registered Home as an individual member.
-Product rules correctly refused that configuration. SDK business calls, the
-current native-browser journey and the unaided human trial remain open. The
-sections below retain earlier observations rather than superseding their failures.
+The independent SDK run at `7f113a1` now passes all 64 assertions and 41
+actual API calls, with unchanged inputs and clean shutdown of all children and
+the outer guard. Its [selected evidence](evidence/2026-09-29/sdk-native-7f113a1/index.json)
+keeps nonces, handles and raw native diagnostics private.
 
-The reviewed SDK correction at `6e5d194` passed configuration and bootstrap,
-then failed while encoding its first public request. A subsequent
-closure audit added bounded projection-replay assertions to the existing history
-test; [run 36524215404](https://github.com/ScottTpirate/stead-urbit/actions/runs/36524215404)
-failed while running or validating the fifth native suite on controller/candidate
-`8077dff`. The public diagnostic does not identify the exact native or output-validation failure. Local
-reproduction found a syntax error and a helper-name collision in the added
-test. Corrected inputs passed the local native check at `4452750`, including
-all 71 arms, and its guard closed cleanly. The earlier failed results remain
-failed; new hosted and SDK qualification are pending.
+The latest hosted [run 36529027820](https://github.com/ScottTpirate/stead-urbit/actions/runs/36529027820)
+failed after all six native suites and 776 passing observations, with one failed
+team assertion. Its public report does not name that assertion. Input identity,
+collector completion and clean owned shutdown were verified. The
+[failed evidence](evidence/2026-09-29/ci-36529027820/index.json) remains separate
+from earlier passing CI. Local configured-team reproduction is running at
+`4ddb822`; native browser, natural expiry, human onboarding and final integration
+remain open.
+
+Local native compilation at `4452750` already passed all 71 positive arms,
+including the added bounded projection replay, and its complete guard lifetime
+closed cleanly. The final host suite at `cf63289` passed 660 tests with one
+optional artifact skip. The sections below retain the earlier observations and
+failures, including the SDK fixture and case-encoding corrections.
 
 ## Ready for the next qualification window
 
