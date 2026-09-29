@@ -87,7 +87,6 @@
         "test-updates-delayed-old-watch-after-resume",
         "test-updates-same-rank-access-churn",
         "test-updates-sixteen-rows-seventeen-overflow",
-        "test-updates-retained-history-sixty-four-then-trim",
         "test-updates-closed-watches-still-bounded",
         "test-updates-private-projection-isolation",
         "test-updates-shared-pagination-cap",
@@ -100,7 +99,8 @@
     {
       "path": "/tests/stead-update-capacity",
       "arms": [
-        "test-updates-global-watch-cursor-stream-caps"
+        "test-updates-global-watch-cursor-stream-caps",
+        "test-updates-retained-history-sixty-four-then-trim"
       ],
       "timeout_seconds": 180
     }

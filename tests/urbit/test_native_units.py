@@ -141,6 +141,13 @@ class NativeUnitVerifierTests(unittest.TestCase):
             with self.assertRaises(ValueError):
                 UNITS.validate_inventory(value)
 
+    def test_capacity_inventory_keeps_history_boundary_with_valid_arm_prefix(self):
+        value = copy.deepcopy(self.inventory)
+        capacity = next(suite for suite in value['suites'] if suite['path'] == '/tests/stead-update-capacity')
+        capacity['arms'][1] = 'test-updates-other-boundary'
+        with self.assertRaises(ValueError):
+            UNITS.validate_inventory(value)
+
     def test_inventory_count_mismatch(self):
         value = copy.deepcopy(self.inventory)
         value['expected_arm_count'] = 27
