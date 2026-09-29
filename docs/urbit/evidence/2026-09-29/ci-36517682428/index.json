@@ -1,0 +1,173 @@
+{
+  "additional_negative_controls": "pass",
+  "admission_and_lifetime_controls": [
+    {
+      "case": "changed-limits",
+      "cleanup_empty": true,
+      "status": "pass"
+    },
+    {
+      "case": "guardian-death",
+      "cleanup_empty": true,
+      "status": "pass"
+    },
+    {
+      "case": "missing-profile",
+      "cleanup_empty": true,
+      "status": "pass"
+    },
+    {
+      "case": "parent-death",
+      "cleanup_empty": true,
+      "status": "pass"
+    },
+    {
+      "case": "stale-lease",
+      "cleanup_empty": true,
+      "status": "pass"
+    },
+    {
+      "case": "wrong-profile",
+      "cleanup_empty": true,
+      "status": "pass"
+    }
+  ],
+  "attempt": 1,
+  "candidate_commit": "cd75365364d8cb9a25d36d175c2c2b3840fb6806",
+  "classification": "actual-hosted-native-ci-retained-public-evidence",
+  "cleanup": {
+    "all_seven_owned_cgroups_empty": true,
+    "collector_complete_eof": true
+  },
+  "controller_commit": "cd75365364d8cb9a25d36d175c2c2b3840fb6806",
+  "counts_overlap": true,
+  "distinct_check_names": 776,
+  "evidence_boundary": "The pinned controller verified private worker output; this public report records its digest. Those private bytes are not included. CI executed cd75365; it does not execute the later SDK runner correction.",
+  "files": {
+    "control-changed-limits-inputs.json": {
+      "bytes": 54043,
+      "file": "control-changed-limits-inputs.json.gz",
+      "gzip_sha256": "a02e439592f7c810f97d81a74e04e11efd536e2fb1673403c7d303301fc744b2",
+      "sha256": "2e8e6c42d2290c24ffa5aae8d240ace4695db7a650e0a46b354191686ed49554"
+    },
+    "control-changed-limits-report.json": {
+      "bytes": 9385,
+      "file": "control-changed-limits-report.json.gz",
+      "gzip_sha256": "2c50942d0c4e321d46a5220cf1ddbc625b93251a0f1bf29d223896ea07e2852c",
+      "sha256": "3754cf0ff2d0fbd03ea5c8fc675ca2addd8b3e12a38a62e1641773e9cee691a1"
+    },
+    "control-guardian-death-inputs.json": {
+      "bytes": 54043,
+      "file": "control-guardian-death-inputs.json.gz",
+      "gzip_sha256": "a02e439592f7c810f97d81a74e04e11efd536e2fb1673403c7d303301fc744b2",
+      "sha256": "2e8e6c42d2290c24ffa5aae8d240ace4695db7a650e0a46b354191686ed49554"
+    },
+    "control-guardian-death-report.json": {
+      "bytes": 8192,
+      "file": "control-guardian-death-report.json.gz",
+      "gzip_sha256": "436da915deb16b7709979fb320fc88f974f97023717e7da9647a7817d2e8e764",
+      "sha256": "5d5937343ec7e1c0d03c2529f2211a439c3dafd58b46e2a6b4d986c28896beae"
+    },
+    "control-missing-profile-inputs.json": {
+      "bytes": 54043,
+      "file": "control-missing-profile-inputs.json.gz",
+      "gzip_sha256": "a02e439592f7c810f97d81a74e04e11efd536e2fb1673403c7d303301fc744b2",
+      "sha256": "2e8e6c42d2290c24ffa5aae8d240ace4695db7a650e0a46b354191686ed49554"
+    },
+    "control-missing-profile-report.json": {
+      "bytes": 7154,
+      "file": "control-missing-profile-report.json.gz",
+      "gzip_sha256": "694dc4f7b0c7e0ef405ced8c5f97335d48fdf9e8acf7f4691ba8d611c75903bd",
+      "sha256": "0740614462c31f936ca06b4af15f3a6c84e9deadb5cb7dec7044b2e4b932452f"
+    },
+    "control-parent-death-inputs.json": {
+      "bytes": 54043,
+      "file": "control-parent-death-inputs.json.gz",
+      "gzip_sha256": "a02e439592f7c810f97d81a74e04e11efd536e2fb1673403c7d303301fc744b2",
+      "sha256": "2e8e6c42d2290c24ffa5aae8d240ace4695db7a650e0a46b354191686ed49554"
+    },
+    "control-parent-death-report.json": {
+      "bytes": 9314,
+      "file": "control-parent-death-report.json.gz",
+      "gzip_sha256": "ef18a7b4b1b4a5cff9d8e7f4101935ded2860f333ffe0907f254c7660e1a073b",
+      "sha256": "8b7d147e397a20291573777949e1a1f6103c72e4f384d26a65e9a437fbb71451"
+    },
+    "control-stale-lease-inputs.json": {
+      "bytes": 54043,
+      "file": "control-stale-lease-inputs.json.gz",
+      "gzip_sha256": "a02e439592f7c810f97d81a74e04e11efd536e2fb1673403c7d303301fc744b2",
+      "sha256": "2e8e6c42d2290c24ffa5aae8d240ace4695db7a650e0a46b354191686ed49554"
+    },
+    "control-stale-lease-report.json": {
+      "bytes": 9559,
+      "file": "control-stale-lease-report.json.gz",
+      "gzip_sha256": "e1d466946327063354812e2d001bb9d80a60a30c2b7c70011e9402b3b719056d",
+      "sha256": "5557e8f96ff453eb0074a3455ffb2519a3027d391644947f0ab67083e081fad7"
+    },
+    "control-wrong-profile-inputs.json": {
+      "bytes": 54043,
+      "file": "control-wrong-profile-inputs.json.gz",
+      "gzip_sha256": "a02e439592f7c810f97d81a74e04e11efd536e2fb1673403c7d303301fc744b2",
+      "sha256": "2e8e6c42d2290c24ffa5aae8d240ace4695db7a650e0a46b354191686ed49554"
+    },
+    "control-wrong-profile-report.json": {
+      "bytes": 7932,
+      "file": "control-wrong-profile-report.json.gz",
+      "gzip_sha256": "bb43233fedb744ad2786288b87cfba8d3ca73230e1e5a5ee9c7776ce7987e066",
+      "sha256": "e41d2938437fb513bc76fc13e193bd4bad485b2deaf5bb292fd43686a1773221"
+    },
+    "inputs.json": {
+      "bytes": 54043,
+      "file": "inputs.json.gz",
+      "gzip_sha256": "a02e439592f7c810f97d81a74e04e11efd536e2fb1673403c7d303301fc744b2",
+      "sha256": "2e8e6c42d2290c24ffa5aae8d240ace4695db7a650e0a46b354191686ed49554"
+    },
+    "report.json": {
+      "bytes": 159849,
+      "file": "report.json.gz",
+      "gzip_sha256": "cf3ff757c6e9641bacddaeb26b5c5b579593b98019d33c145ca4c70b99404588",
+      "sha256": "ba60c1f916e16e7e06b7ef7578dd3979fd7fd3d547b05c9c655990f0fac97e52"
+    }
+  },
+  "guard": {
+    "child_terminated": true,
+    "cleanup_errors": [],
+    "elapsed_seconds": 1858.213,
+    "exit_code": 0,
+    "status": "pass"
+  },
+  "independent_review": "Read-only reconciliation of all 217 controller and 49 product blobs, composed inputs, six native transcripts, 71 positive arms and expected failure, new deletion/history checks, six admission/lifetime controls and seven empty cgroups; no blockers found.",
+  "input_digest_semantics": {
+    "canonical_encoding": "sort_keys=True,separators=(comma,colon),ensure_ascii=False",
+    "canonical_json_sha256": "016bb2bbd71b2144169e36e1cbed4d9565999a0355697e5de261099a8f7ed74f",
+    "raw_file_sha256": "2e8e6c42d2290c24ffa5aae8d240ace4695db7a650e0a46b354191686ed49554"
+  },
+  "later_sdk_revision_comparison": {
+    "boundary": "The SDK correction is outside the hosted execution graph. CI remains execution at cd75365, not the later revision.",
+    "captured_differences": [
+      "specs/urbit/hosted-ci-controller.json"
+    ],
+    "controller_map_without_pin_sha256": "2703e6b23fa2a9790c09fc91ac85a165b57d1e059c44154bd9bd969c3b820821",
+    "encoding": "Compact sorted UTF-8 JSON path-to-bytes-and-sha256 maps, ensure_ascii=False",
+    "product_map_sha256": "c68276b3f36979e02e65b1d1e122dfad9eaa675df188dab5871626b7ad7f41c2",
+    "source_commit": "8a2702a577b355acbbc621a38be51348b59e02a5",
+    "unchanged_controller_files_excluding_pin": 216,
+    "unchanged_product_files": 49
+  },
+  "native_check_observations": 789,
+  "native_expected_failing_arms": 1,
+  "native_positive_arms": 71,
+  "qualifies_phase": false,
+  "remaining": [
+    "Native independent SDK consumer business calls and complete cleanup",
+    "Current local four-ship and native-browser journey including Git readback, measured performance/accessibility and natural expiry",
+    "Unaided human Work/Docs trial",
+    "Final reviewed integration and milestone reconciliation"
+  ],
+  "run_id": 36517682428,
+  "run_url": "https://github.com/ScottTpirate/stead-urbit/actions/runs/36517682428",
+  "runtime_binary_sha256": "f7f0d3b3c0480fc10f887dfbc09bde56a81d723a803541c7886c538a0675d833",
+  "status": "pass",
+  "supported_migration": "pass",
+  "workflow_commit": "20e0a4b3efc65b5aa441bd28141ad3434ac0bd66"
+}

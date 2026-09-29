@@ -4,6 +4,14 @@ Recorded 2026-09-28 UTC; updated 2026-09-29 UTC. Phase 2 is incomplete. Its six 
 (#9, #10, #14, #21, #22 and #29) remain open. The Phase 0/1 acceptance record
 remains tied to its recorded source; it does not qualify the newer candidate.
 
+The latest hosted run, [36517682428](https://github.com/ScottTpirate/stead-urbit/actions/runs/36517682428),
+passed the expanded native inventory and independent evidence review on `cd75365`.
+The local SDK run at `8a2702a` compiled its public sample and four marks, then
+failed because its trusted fixture registered Home as an individual member.
+Product rules correctly refused that configuration. SDK business calls, the
+current native-browser journey and the unaided human trial remain open. The
+sections below retain earlier observations rather than superseding their failures.
+
 ## Ready for the next qualification window
 
 The candidate contains configured individual sessions, Work/Docs, private
@@ -519,3 +527,43 @@ Four host replay/regression tests passed; generic failure, timeout, the wrong
 generator/dependency, an incidental mention and oversized output are rejected.
 The complete 85-test SDK host suite then passed in 13.118 seconds, including
 the existing Linux namespace/process controls. A new native run is still required.
+
+## Expanded hosted inventory passed
+
+[Run 36517682428](https://github.com/ScottTpirate/stead-urbit/actions/runs/36517682428)
+passed on workflow `20e0a4b3efc65b5aa441bd28141ad3434ac0bd66`, controller and candidate
+`cd75365364d8cb9a25d36d175c2c2b3840fb6806`. Independent review reconciled all 217
+controller inputs and 49 product inputs with Git, the composed desk and six
+native transcripts. There are 789 passing check observations (776 distinct names),
+including all 71 expected positive native arms and the deliberate failure control.
+These counts overlap. Work/document/relation deletion, survivor and dangling-link
+readback, and private-deletion invisibility checks passed. The history-boundary
+arm completed in 12.911842 seconds within the unchanged 180-second capacity limit;
+this is a native test duration, not an application latency claim.
+
+Supported migration and additional negative controls passed the pinned controller's
+verification. All six admission/lifetime controls passed. The guard completed in
+1,858.213 seconds with exit zero, complete collector EOF, no cleanup errors and
+all seven owned cgroups empty. Fourteen exact compressed public artifacts and
+their hashes are retained in the [evidence index](evidence/2026-09-29/ci-36517682428/index.json).
+
+Against SDK-only correction `8a2702a577b355acbbc621a38be51348b59e02a5`, all 49 product
+files and 216 controller files remain identical; only the captured controller-pin
+manifest differs. The SDK runner/test correction is outside CI's execution graph.
+The index records those comparisons. Hosted execution remains tied to `cd75365`;
+the later SDK lane needs its own native evidence.
+
+## SDK public compilation and rejected member fixture
+
+The next SDK run at `8a2702a` completed its fresh public consumer boot in 648.003
+seconds. The subsequent public sample/four-mark compilation step took 1.771 seconds.
+The private-import negative control passed. A separate fresh Home booted, but
+configuration failed at the predicate that forbids Home from being a member
+identity. The SDK controller had supplied its Home as the control member.
+
+The [failed observation](evidence/2026-09-29/phase2-preparation/sdk-member-fixture.json)
+records ten checks (nine passed, one failed), zero SDK business calls and unchanged
+inputs. Both native children exited cleanly and were reaped, and the consumer
+controller exited zero. The overall run remains failed. Correct the test fixture
+to use a distinct individual control member; do not relax the product's separation
+between the organization Home and individual principals.
