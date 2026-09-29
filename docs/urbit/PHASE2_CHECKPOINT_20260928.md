@@ -19,8 +19,9 @@ test; [run 36524215404](https://github.com/ScottTpirate/stead-urbit/actions/runs
 failed while running or validating the fifth native suite on controller/candidate
 `8077dff`. The public diagnostic does not identify the exact native or output-validation failure. Local
 reproduction found a syntax error and a helper-name collision in the added
-test. Corrected inputs are undergoing native recompilation. Neither failed
-result is qualified.
+test. Corrected inputs passed the local native check at `4452750`, including
+all 71 arms, and its guard closed cleanly. The earlier failed results remain
+failed; new hosted and SDK qualification are pending.
 
 ## Ready for the next qualification window
 
@@ -733,3 +734,30 @@ focused host regressions passed, and the overlapping full SDK host suite passed
 all 102 tests in 13.222 seconds under 25% of one pinned CPU. The
 [host evidence](evidence/2026-09-29/sdk-case-atom-host/index.json) records exact
 source and logs. Native recompilation and a fresh full SDK run remain required.
+
+## Corrected replay passed local native execution
+
+`make dev` at `445275019a7f84e1e586520a90729295f3e0171d` passed 175
+observations in 401.954 seconds, including all 71 positive native test arms,
+the deliberately failing control and actual Home authority probes. Counts
+overlap. The expanded replay assertion passed actual save/load and all five
+bounded projection batches, stale-job rejection, incomplete-view refusal and
+authorized page equality. The history/capacity suite remained inside its
+existing 180-second deadline.
+
+Inputs were unchanged. `make stop` completed successfully; the whole guard
+lifetime closed after 439.916 seconds with exit zero and no cleanup errors.
+Its owned cgroup was absent afterward. Three exact artifacts are retained in
+the [local evidence index](evidence/2026-09-29/local-core-4452750/index.json).
+This remains local compile/probe evidence, separate from the upcoming hosted
+run, configured fixture, independent SDK and browser/human acceptance.
+
+The corrected SDK fixture is now running fresh at `7f113a1`. Its public package
+bytes remain unchanged; the source change encodes the same captured Clay case
+without depending on display-date spelling. [PR #77](https://github.com/ScottTpirate/stead-urbit/pull/77)
+merged the reviewed hosted-controller pin into main at
+`bbcaa3ed64c59c30b08fe45e31130436878b88fd`.
+[Run 36529027820](https://github.com/ScottTpirate/stead-urbit/actions/runs/36529027820)
+is executing controller/candidate `7f113a1573e78de3d6c839508cfd8abd286be17b`.
+Independent evidence review cleared the local pass and closed guard; actual
+hosted and SDK outcomes remain pending.
