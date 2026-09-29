@@ -145,8 +145,7 @@
   ?>  =(db db.completed)
   ?>  =(expected projection.completed)
   ?>  =(~ finished-cards)
-  ?>  (levy `(list @t)`~['work' 'search' 'activity' 'inbox']
-        |=(kind=@t &((same-pages db expected projection.completed actor kind) (same-pages db expected projection.completed member kind))))
+  ?>  (levy `(list @t)`~['work' 'search' 'activity' 'inbox'] |=(kind=@t &((same-pages db expected projection.completed actor kind) (same-pages db expected projection.completed member kind))))
   ::  Valid duplicates remain idempotent; gaps and corrupt data never promote.
   ?>  =(expected (append:stead-projection expected i.journal.data.db))
   =/  chronological  (flop journal.data.db)
