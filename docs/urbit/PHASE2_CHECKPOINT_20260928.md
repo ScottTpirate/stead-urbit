@@ -594,3 +594,24 @@ source review cleared the corrected fixture for a fresh guarded native attempt.
 The [host evidence](evidence/2026-09-29/sdk-fixture-host/index.json) records exact
 reviewed source hashes and logs. Native conformance remains unexecuted; previous
 failed runs remain failed, and Phase 2 remains open.
+
+## Bounded accepted-journal replay prepared
+
+The issue-closure audit found that URB-190's bounded-work criterion needed more
+than the existing whole-projection comparison. The retained-history test now
+also uses its 68 real accepted events to check actual Home reconstruction. Each
+projection wake must consume exactly the smaller of 16 and the remaining count;
+the transition from authoritative restoration must expose all 68 pending events
+before projection work starts. Intermediate views remain closed.
+
+The test saves the actual Home after two full batches, reloads it with a new job
+identity, rejects an old wake and checks the restarted reconstruction through
+completion. Final state and all Work/search/activity/inbox pages for both granted
+members must equal the incremental reference. Duplicated accepted events remain
+idempotent; gapped or corrupt events cannot promote a visible index. The prior
+64/65 history assertions, 71-arm inventory and 180-second capacity deadline remain.
+
+Eighteen host inventory tests passed in 0.078 seconds. The new Hoon assertions are
+not yet compiled or executed. They test bounded replay across five batches; they
+do not establish the 6,144-event maximum, large Git import latency or percentile
+performance. A new reviewed controller and actual native execution are required.
