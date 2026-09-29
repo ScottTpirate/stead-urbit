@@ -909,7 +909,25 @@
       }
     },
     "elapsed_seconds": 1002.739,
-    "final_guard_lifetime": "pending",
+    "final_guard_lifetime": {
+      "cleanup": [],
+      "elapsed_seconds": 4133.055,
+      "exit_code": 0,
+      "file": ".runtime/execution-runs/four-fakes-bl246_hk/report.json",
+      "owned_cgroup_absent": true,
+      "reason": null,
+      "scope_proof": {
+        "cgroup": "/user.slice/user-1000.slice/user@1000.service/app.slice/stead-native-b673d9d0a3bdf8c8746d461706b6e186.scope",
+        "cpu_affinity": [
+          19
+        ],
+        "cpu_max": "5000 10000",
+        "unit": "stead-native-b673d9d0a3bdf8c8746d461706b6e186.scope"
+      },
+      "sha256": "42ea7838f5ce7050817b0fdd608f57eb7debdb10782e1ea864166a2d7f75f9c4",
+      "status": "completed",
+      "stopped_fixture_preserved_under_lifecycle_lock": true
+    },
     "git_export_probes": [
       {
         "commit_bytes": 285,
@@ -1179,6 +1197,7 @@
     "stage": "completed",
     "status": "pass"
   },
+  "natural_expiry": "../natural-expiry-d911505/index.json",
   "private_files": {
     ".piers/fakes/logs/team-check-20260929T101805Z.json": {
       "bytes": 1172006,
@@ -1203,16 +1222,22 @@
     ".runtime/browser-native-20260929T103521Z/transport-report.json": {
       "bytes": 4918,
       "sha256": "80f78b7741121cdb02c87ec09fb2212173738ab93b0443acb00d20f284909d72"
+    },
+    ".runtime/execution-runs/four-fakes-bl246_hk/report.json": {
+      "bytes": 1793814,
+      "sha256": "42ea7838f5ce7050817b0fdd608f57eb7debdb10782e1ea864166a2d7f75f9c4"
+    },
+    ".runtime/phase02-complete-20260927/team-d911505-760-browser34-git43-expiry3-20260929/closeout.json": {
+      "bytes": 1208,
+      "sha256": "1581fe9d478661649dc212b6216568ace8ac0ca2534ffff528dd23d944e666e1"
     }
   },
   "qualifies_phase": false,
   "remaining": [
-    "natural session expiry",
-    "independent human trial review",
-    "whole native guard closure",
+    "completed independent human trial and review",
     "final integration and issue reconciliation"
   ],
-  "scope": "Actual pinned four-fake-ship native execution, real Firefox with native TLS and stock Git. Whole guarded lifetime, natural expiry, human trial and final Phase 2 reconciliation remain pending. No production, live-network, maximum-capacity or production-latency claim.",
+  "scope": "Actual pinned four-fake-ship native execution, real Firefox with native TLS and stock Git. The whole guarded lifetime closed cleanly; separately recorded natural expiry passed. Human trial and final Phase 2 reconciliation remain pending. No production, live-network, maximum-capacity or production-latency claim.",
   "source_commit": "d9115056a04fd86cf55a07fd0d8a0bf0be84caaf",
   "status": "component-passes-with-final-gates-pending"
 }

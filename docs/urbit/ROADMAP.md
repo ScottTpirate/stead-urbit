@@ -4,12 +4,14 @@ No dates or effort estimates here are promises. Each phase exits on evidence, no
 
 September 26: Phases 0 and 1 are complete. The [Phase 1 native gate](PHASE1_ACCEPTANCE_20260926.md)
 passes all 73 requirements with independent semantic acceptance.
-The Phase 2 candidate now includes individual sessions, Work/Docs UI, the
-[configured-team SDK v3](../../sdk/v3/README.md), and disposable native CI.
-Full native/browser qualification, independent SDK consumer execution and human
-onboarding remain open. The [preparation checkpoint](PHASE2_CHECKPOINT_20260928.md)
-separates implemented preparation from actual acceptance; none of the six M2
-issues is closed by package verification or host tests.
+September 29: The Phase 2 candidate has passing configured native, real
+browser/stock-Git, independent SDK, hosted native CI and natural session-expiry
+evidence. Its local native lifetime is closed and the stopped fixture preserved.
+The [current qualification record](PHASE2_QUALIFICATION_20260929.md) binds each
+result to its source and scope. The uncoached human Work/Docs trial and reviewed
+integration remain open; Phase 2 is not complete. The
+[preparation checkpoint](PHASE2_CHECKPOINT_20260928.md) retains earlier failed
+attempts and their historical limits.
 
 | Phase | Deliverable | Gate |
 |---|---|---|

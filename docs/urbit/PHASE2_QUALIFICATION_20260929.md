@@ -1,9 +1,9 @@
 # Phase 2 team alpha qualification
 
 Status on September 29, 2026: **incomplete**. The configured native, browser,
-stock-Git, SDK and current hosted CI components have passing evidence. Natural
-session expiry, a completed independent human trial, final local guard cleanup
-and integration remain required. The six M2 issues remain open.
+stock-Git, SDK, current hosted CI and natural session-expiry components have
+passing evidence. A completed independent human trial and reviewed integration
+remain required. The six M2 issues remain open.
 
 The current local and hosted application candidate is
 `d9115056a04fd86cf55a07fd0d8a0bf0be84caaf`. It uses the pinned Vere 4.6 development
@@ -16,12 +16,12 @@ controller pin; executable native/browser/SDK inputs and packaged assets match.
 
 | Component | Observed result | Evidence and boundary |
 | --- | --- | --- |
-| Configured native | 760/760 checks; 71 positive unit arms plus deliberate failure; four cold restarts; 1,002.739 seconds | [Local record](evidence/2026-09-29/local-native-browser-d911505/index.json); all 77 installed files on four ships match. The whole guard is still live. |
+| Configured native | 760/760 checks; 71 positive unit arms plus deliberate failure; four cold restarts; 1,002.739 seconds | [Local record](evidence/2026-09-29/local-native-browser-d911505/index.json); all 77 installed files on four ships match. The whole guard closed in 4,133.055 seconds with exit zero, no cleanup errors and no remaining owned cgroup. |
 | Real Firefox and native TLS | All 34 expected journey observations passed; complete response capture and empty browser cgroup | Same local record; two principals, Work/Docs, publication/privacy, conflicts/recovery, layouts, account change and logout. Five request failures remain scoped below. |
 | Stock Git | Three native document histories; 43 successful commands | Exact receipt OIDs, Markdown/trees, destination-only ancestry and private-history exclusion; stock `fsck --full --strict` on each retained repository. |
 | Independent SDK | 64 assertions and 41 public calls at `7f113a1`; clean shutdown | [SDK qualification](SDK_CONSUMER_QUALIFICATION.md) explains the reviewed `874a773` shared-guard composition and unaffected d911 invoked paths. This is not a new SDK execution. |
 | Hosted CI | 792 passing observations, 779 distinct names; 71 positive arms plus deliberate failure; six resource controls and seven empty cgroups | [Run 36555130587](https://github.com/ScottTpirate/stead-urbit/actions/runs/36555130587), [exact artifact evidence](evidence/2026-09-29/ci-36555130587/index.json). Guardian completed in 1,889.794 seconds with complete EOF and exit zero. |
-| Natural expiry | Pending | The unchanged session has a 30-minute native lifetime. An actual timed follow-up remains required. |
+| Natural expiry | All three expected cases passed | [Timed follow-up](evidence/2026-09-29/natural-expiry-d911505/index.json): unchanged 30-minute native lifetime and bearer; native authorization rejected expiry, protected content and the unsaved draft cleared, full capture and clean browser shutdown. |
 | Independent human trial | Incomplete | [First attempt](evidence/2026-09-29/onboarding-incomplete-20260929T104307Z/index.json): nine-minute deadline, zero captured qualifying operations/readbacks, no feedback or coaching attestation. Cause is unknown; launch/capture success is not task completion. |
 
 The native and browser inventories overlap with individual assertions; do not add
@@ -73,14 +73,16 @@ later canary work.
 
 | Issue | Remaining acceptance work |
 | --- | --- |
-| [URB-060 / #9](https://github.com/ScottTpirate/stead-urbit/issues/9) | Natural expiry and final local lifetime closure. |
-| [URB-070 / #10](https://github.com/ScottTpirate/stead-urbit/issues/10) | Final local lifetime closure and reviewed integration. |
-| [URB-110 / #14](https://github.com/ScottTpirate/stead-urbit/issues/14) | Publication and reviewed integration of the current passing CI record. |
+| [URB-060 / #9](https://github.com/ScottTpirate/stead-urbit/issues/9) | Reviewed integration of the bounded local team-alpha sessions and expiry evidence. |
+| [URB-070 / #10](https://github.com/ScottTpirate/stead-urbit/issues/10) | Reviewed integration of the qualified browser journey. |
+| [URB-110 / #14](https://github.com/ScottTpirate/stead-urbit/issues/14) | Reviewed integration of the published current passing CI record. |
 | [URB-180 / #21](https://github.com/ScottTpirate/stead-urbit/issues/21) | Integrate the qualified SDK composition and browser adapter. |
 | [URB-190 / #22](https://github.com/ScottTpirate/stead-urbit/issues/22) | Integrate the executed replay/privacy/update and browser cases. |
 | [URB-260 / #29](https://github.com/ScottTpirate/stead-urbit/issues/29) | Completed uncoached human Work/Docs trial with accepted saves, readbacks and participant feedback. |
 
-Final acceptance must also close the owned native lifetime, retain failed attempts,
+The owned native lifetime is closed, and its stopped fixture and evidence are
+preserved. Temporary fan settings and the paused widget configuration were
+restored to their recorded originals. Final acceptance must retain failed attempts,
 merge the reviewed integration and reconcile the constituent PRs without deleting
 unintegrated work. [Earlier checkpoints](PHASE2_CHECKPOINT_20260928.md) preserve
 the failed compiler, Git-helper, thermal and CI attempts as failures. Local team
