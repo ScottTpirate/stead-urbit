@@ -68,6 +68,14 @@ after Hoon edits. After changing any Python harness/runner module, use
 `make stop` followed by `make dev`: the supervisor pins its loaded code and
 rejects changed files. Do not run a test against a stale supervisor.
 
+The first cold initialization boots four identities sequentially, creates clean
+stopped seeds and restarts them. `make dev` waits within the existing two-hour
+guarded lifetime for that complete initialization; the former 20-minute caller
+wait could expire before four individually bounded boots finished. Each ship
+still has its 20-minute readiness deadline, and the outer execution deadline,
+thermal limits, CPU limit and native test deadlines are unchanged. Later runs
+reuse only the verified clean seeds for the same toolchain.
+
 The native checks restore only marked, stopped, hash-verified fake seeds. Test
 data is disposable and is replaced by the next check. They never reset Git or
 replace working source. A future interactive team-development fixture will need

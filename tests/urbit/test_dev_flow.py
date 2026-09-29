@@ -154,6 +154,30 @@ class LifecycleTests(unittest.TestCase):
                         harness.dev()
                     stop.assert_called_once()
 
+    def test_dev_waits_for_four_cold_boots_within_guard_lifetime(self):
+        harness.guard(create=True)
+        stages = [{'stage': 'booting ' + ship, 'ready': False} for ship in ('zod', 'bus', 'nec', 'bud')]
+        stages.append({'stage': 'ready', 'ready': True, 'execution_guard': {'state': 'running'}})
+        with patch.object(harness, 'start'), patch.object(harness, 'rpc', side_effect=stages), \
+                patch.object(harness.time, 'monotonic', side_effect=[0, 0, 650, 1300, 1950, 2600]), \
+                patch.object(harness.time, 'sleep'), patch.object(harness, 'core_check') as check, \
+                patch.object(harness, 'stop') as stop:
+            harness.dev()
+            check.assert_called_once()
+            stop.assert_not_called()
+
+    def test_dev_stops_waiting_at_existing_guard_lifetime(self):
+        harness.guard(create=True)
+        with patch.object(harness, 'start'), \
+                patch.object(harness, 'rpc', return_value={'stage': 'booting zod', 'ready': False}), \
+                patch.object(harness.time, 'monotonic', side_effect=[0, 0, 7201]), \
+                patch.object(harness.time, 'sleep'), patch.object(harness, 'core_check') as check, \
+                patch.object(harness, 'stop') as stop:
+            with self.assertRaisesRegex(RuntimeError, 'Readiness timed out'):
+                harness.dev()
+            check.assert_not_called()
+            stop.assert_called_once()
+
     def test_migration_diagnostic_refuses_existing_fixture_without_stopping_it(self):
         harness.guard(create=True)
         with patch.object(harness, 'running', return_value={'ready': True}), \

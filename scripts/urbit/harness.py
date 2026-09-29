@@ -463,7 +463,7 @@ def dev(*, configured=False):
     previous = signal.signal(signal.SIGTERM, interrupted)
     try:
         start(configured=True) if configured else start()
-        wait_ready()
+        wait_ready(timeout=7200)
         (team_check if configured else core_check)()
     except BaseException:
         # An interrupted developer operation must not leave a heavy run behind.
