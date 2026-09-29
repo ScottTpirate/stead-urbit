@@ -421,8 +421,8 @@ all seven owned cgroups were empty with no cleanup errors. The
 [retained public artifacts and bounded index](evidence/2026-09-29/ci-36512081282/index.json)
 bind the exact source and inputs. Private worker bytes are represented by a
 digest; they are not included in these public artifacts. This run does not cover
-the later 71st arm or deletion checks. The expanded run `36513481746` is still
-in progress at this checkpoint. Phase 2 remains open.
+the later 71st arm or deletion checks. The expanded run `36513481746` then failed;
+its retained outcome is described below. Phase 2 remains open.
 
 The next local SDK attempt at `d89330e` stopped at the unchanged 90°C limit after
 281.056 seconds during fresh consumer boot. Four initial admission checks passed;
@@ -440,3 +440,26 @@ Per-ship 1,200-second readiness limits, native-suite deadlines and resource and
 thermal limits remain unchanged. Forty focused host development-flow tests passed.
 Hosted CI does not invoke this CLI caller; the change still alters the captured
 controller inventory, so earlier CI is not execution at this newer commit.
+
+## Expanded inventory timeout and bounded correction
+
+[Run 36513481746](https://github.com/ScottTpirate/stead-urbit/actions/runs/36513481746)
+failed on controller/candidate `d89330ec0da287eae5b1c86e7e2389d33152f9ac` after
+1,179.878 seconds. All six resource controls passed. The native diagnostic
+retained 172 passed checks, zero recorded failed checks, three completed unit suites
+and four captured transcripts, with a response-header timeout during team-check.
+The counters place it in the ordinary updates suite; the public projection cannot
+identify a particular arm or distinguish compilation from execution. Worker
+cleanup failed; the collector reached EOF and final host cleanup verified an
+empty cgroup. The [public artifacts](evidence/2026-09-29/ci-36513481746/index.json)
+remain failed evidence. Later configured deletion and migration did not qualify.
+
+Independent source review found avoidable test work: the new history arm rebuilt
+the entire growing projection on every one of 65 updates. The prepared correction
+carries the projection through the actual append path, asserts readiness after
+every accepted update, and compares the final result with one complete rebuild.
+All update/poll and exact 64/65-history assertions remain. The arm moves to the
+existing capacity suite: 25 ordinary update arms and two capacity arms preserve
+71 positive arms overall. Ordinary 60-second and capacity 180-second deadlines
+remain unchanged. Eighteen host inventory controls passed; actual native
+execution of this correction is still required.
