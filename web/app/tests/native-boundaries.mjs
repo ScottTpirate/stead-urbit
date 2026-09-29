@@ -55,7 +55,7 @@ async function channel(page, path) {
   return {bytes:result.bytes, public_watch:true, public_poke:true, protected_watch_denied:true, channel_deleted:true};
 }
 
-export async function endpointBoundaries({browser, alice, material, pageIn, restrict, passed}) {
+export async function endpointBoundaries({browser, alice, material, pageIn, restrict, passed, recordBoundary}) {
   const origin = material.origin;
   const path = '/v3/result/~bus/019939ba-4000-7000-8000-0000000000ca/1/019939ba-4000-7000-8000-00000000a001/' + 'a'.repeat(64);
   const member = await channel(alice.home, path);
@@ -90,18 +90,66 @@ export async function endpointBoundaries({browser, alice, material, pageIn, rest
     const probe = await page.evaluate(async () => (await fetch('/stead-boundary-probe/',{credentials:'same-origin'})).json());
     assert.equal(probe.owner_authenticated,'yes');
     const observed = await page.evaluate(async () => {
+      async function capture(operation, url, options = {}) {
+        const row = {operation, status: null, content_type: 'absent', body_bytes: 0,
+          body_sha256: null, capture: 'failed', parse: 'not-json'};
+        let reader;
+        try {
+          const response = await fetch(url, {...options, credentials: 'same-origin', signal: AbortSignal.timeout(5000)});
+          row.status = response.status;
+          const type = response.headers.get('content-type')?.split(';')[0].trim().toLowerCase();
+          row.content_type = type && /^[a-z0-9.+/-]{1,80}$/u.test(type) ? type : 'other';
+          reader = response.body?.getReader();
+          if (!reader) return row;
+          const chunks = [];
+          for (;;) {
+            const part = await reader.read();
+            if (part.done) break;
+            row.body_bytes += part.value.byteLength;
+            if (row.body_bytes > 65536) { row.capture = 'oversized'; return row; }
+            chunks.push(part.value);
+          }
+          const bytes = new Uint8Array(row.body_bytes);
+          let offset = 0;
+          for (const chunk of chunks) { bytes.set(chunk, offset); offset += chunk.byteLength; }
+          row.body_sha256 = Array.from(new Uint8Array(await crypto.subtle.digest('SHA-256', bytes)),
+            value => value.toString(16).padStart(2, '0')).join('');
+          row.capture = 'complete';
+          if (row.content_type === 'application/json') {
+            try {
+              row.value = JSON.parse(new TextDecoder('utf-8', {fatal:true}).decode(bytes));
+              row.parse = 'json';
+            } catch { row.parse = 'invalid-json'; }
+          }
+          return row;
+        } catch { return row; }
+        finally { if (reader) await reader.cancel().catch(() => {}); }
+      }
       const query = {protocol:'stead.query/3',request_id:'019939ba-4000-7000-8000-00000000a002',kind:'identity',
         project_id:'',container_id:'',resource_id:'',search:'',cursor:''};
-      const member = await fetch('/stead/api/query',{method:'POST',credentials:'same-origin',
-        headers:{'Content-Type':'application/json'},body:JSON.stringify(query)});
-      const control = await fetch('/~/scry/stead-http-boundary-probe/public-control.json',{credentials:'same-origin'});
-      const protectedScry = await fetch('/~/scry/stead-home/state.json',{credentials:'same-origin'});
-      return {member_status:member.status, member_body:await member.json(), public_status:control.status,
-        public_body:await control.json(), protected_status:protectedScry.status};
+      return [
+        await capture('owner-member-query', '/stead/api/query', {method:'POST',
+          headers:{'Content-Type':'application/json'},body:JSON.stringify(query)}),
+        await capture('owner-public-scry', '/~/scry/stead-http-boundary-probe/public-control.json'),
+        await capture('owner-protected-scry', '/~/scry/stead-home/state.json'),
+      ];
     });
-    assert.equal(observed.member_status,401); assert.equal(observed.member_body.error,'session_required');
-    assert.equal(observed.public_status,200); assert.deepEqual(observed.public_body,{public_control:'yes'});
-    assert.equal(observed.protected_status,500); // Pinned default-agent explicitly bails on every home peek.
+    for (const row of observed) {
+      const {value, ...metadata} = row;
+      recordBoundary(metadata);
+    }
+    for (const row of observed) assert.equal(row.capture, 'complete', row.operation + ' complete response');
+    const [memberQuery, publicScry, protectedScry] = observed;
+    assert.equal(memberQuery.status,401); assert.equal(memberQuery.parse,'json');
+    assert.ok(memberQuery.value !== null && typeof memberQuery.value === 'object'
+      && !Array.isArray(memberQuery.value) && memberQuery.value.error === 'session_required',
+      'Owner-only query must return the exact session-required denial');
+    assert.equal(publicScry.status,200); assert.equal(publicScry.parse,'json');
+    assert.ok(publicScry.value !== null && typeof publicScry.value === 'object'
+      && !Array.isArray(publicScry.value) && Object.keys(publicScry.value).length === 1
+      && publicScry.value.public_control === 'yes', 'Public scry control payload differs');
+    // Pinned Gall converts the default-agent peek bail to [~ ~]; Eyre returns 404.
+    assert.equal(protectedScry.status,404);
     const raw = await channel(page,path);
     assert.equal((await owner.cookies(origin)).some(row => row.name === '__Host-stead-session'),false);
     passed('organization-owner-cookie-does-not-create-member-session-or-raw-home-read',raw);

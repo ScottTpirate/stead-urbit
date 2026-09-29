@@ -742,7 +742,8 @@ try {
   assert.equal(homeProvenance.secure, 'yes');
   assert.equal((await root.cookies('https://bus.localhost:8444')).some(cookie => cookie.name === '__Host-stead-session'), false);
   passed('member-cookie-is-secure-httponly-host-only-and-not-owner-auth');
-  await endpointBoundaries({browser, alice, material, pageIn, restrict, passed});
+  await endpointBoundaries({browser, alice, material, pageIn, restrict, passed,
+    recordBoundary: row => { (report.boundary_responses ??= []).push(row); }});
   report.asset_timing = {before_docs: await assetTiming(alice.home)};
   await docsJourney(alice, bob);
   await conflictsAndRecovery(alice, bob);

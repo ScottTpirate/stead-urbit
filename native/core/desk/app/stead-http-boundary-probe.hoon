@@ -43,7 +43,7 @@
 ++  on-peek
   |=  route=path
   ^-  (unit (unit cage))
-  ?:  =(/x/public-control/json route)
+  ?:  =(/x/public-control route)
     ``json+!>((object:stead-codec ~[['public_control' 'yes']]))
   (on-peek:def route)
 ++  on-agent  on-agent:def
