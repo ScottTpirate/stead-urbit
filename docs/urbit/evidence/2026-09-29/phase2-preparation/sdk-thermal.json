@@ -1,0 +1,28 @@
+{
+  "classification": "retained-failed-local-native-sdk-attempt",
+  "cleanup": {
+    "consumer_error": "Consumer failed before clean stop",
+    "controller_reaped": true,
+    "datagrams": {
+      "dropped": 0,
+      "received": 0,
+      "sent": 0
+    }
+  },
+  "committed_bytes_verified": true,
+  "guard_elapsed_seconds": 281.056,
+  "guard_report": ".runtime/execution-runs/sdk-consumer-3pu69xgf/report.json",
+  "guard_report_sha256": "f11a0fe1aff28f7974a2f4e4d50689723802bf8f7c48181c97809b4a36ec772d",
+  "initial_checks_passed": 4,
+  "native_public_compilation_qualified": false,
+  "qualifies_phase": false,
+  "reason": "GuardError: Thermal ceiling reached",
+  "report": ".runtime/sdk-consumer-20260929-023709/report.json",
+  "report_sha256": "bab7fbd7ce00d0820ce70f0e118c789192f758a1331e0eb3e2f96cd4983b5d80",
+  "retained_failure": "Consumer failed during fresh boot before public compilation; thermal stop is not qualification.",
+  "sdk_report_elapsed_seconds": 279.937,
+  "source_commit": "d89330ec0da287eae5b1c86e7e2389d33152f9ac",
+  "sources_unchanged": true,
+  "status": "fail",
+  "toolchain_sha256": "ae185adaec12b5aa0b2d48e2198ae65583902512ffd9d148706810c4819c650c"
+}

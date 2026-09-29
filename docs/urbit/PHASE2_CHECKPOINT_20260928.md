@@ -231,8 +231,8 @@ The user has paused K4 and requested completion of Stead. Guarded local work has
 resumed. No K4, fan or desktop settings were changed by this continuation.
 Local admission still requires 75°C or lower and stops at 90°C.
 
-The remaining gates are a complete hosted native compile/unit/multi-ship/migration
-run, the independent SDK consumer, fresh local native/browser journeys including
+The remaining gates are the expanded hosted native inventory, the independent
+SDK consumer, fresh local native/browser journeys including
 natural session expiry, and the uncoached human trial. Review their exact-source
 results against [PHASE2_ACCEPTANCE](PHASE2_ACCEPTANCE.md), then integrate the
 reviewed PRs and reconcile the six issues. Linux fake ships suffice for this
@@ -405,3 +405,38 @@ and failure evidence were preserved without modifying their contents. See the
 This remains failed execution evidence; successful dependency setup does not
 qualify it. The next independent SDK attempt and hosted runs must retain their
 actual results before any milestone closure.
+
+## First complete hosted native run and local startup correction
+
+[Run 36512081282](https://github.com/ScottTpirate/stead-urbit/actions/runs/36512081282)
+passed on workflow `8a1df2fd2273aad397082259100234b2e32713ef`, controller
+`d3b2b97ee7a4c343f3e4472dc05c479e2de11cfb` and candidate
+`4be1ebf5940cbe0fb18554c40aebdf28baec0bd8`, using the repaired development runtime.
+Independent review reconciled 763 passing check observations, including 70
+positive native arms and the expected failing control, plus six admission/lifetime
+controls. These counts overlap and must not be added. The supported migration
+and additional negative controls passed the pinned controller's verification.
+The 1,819.103-second guard exited zero, the collector reached complete EOF, and
+all seven owned cgroups were empty with no cleanup errors. The
+[retained public artifacts and bounded index](evidence/2026-09-29/ci-36512081282/index.json)
+bind the exact source and inputs. Private worker bytes are represented by a
+digest; they are not included in these public artifacts. This run does not cover
+the later 71st arm or deletion checks. The expanded run `36513481746` is still
+in progress at this checkpoint. Phase 2 remains open.
+
+The next local SDK attempt at `d89330e` stopped at the unchanged 90°C limit after
+281.056 seconds during fresh consumer boot. Four initial admission checks passed;
+public compilation did not qualify. Sources stayed unchanged, the controller was
+reaped, and the failed consumer startup and reports remain retained. See the
+[bounded failure record](evidence/2026-09-29/phase2-preparation/sdk-thermal.json).
+
+The combined host suite at `220b96a` ran 637 tests in 174.448 seconds: 636 passed
+and one optional retained-artifact check was explicitly skipped. There were no
+failures. Planning and frozen-contract validators also passed. These are host,
+static and mocked checks, including actual Linux host controls, not Hoon evidence.
+Reviewed commit `347ee04` then corrects only `make dev`'s caller wait: it may await
+four sequential cold boots within the existing 7,200-second guard lifetime.
+Per-ship 1,200-second readiness limits, native-suite deadlines and resource and
+thermal limits remain unchanged. Forty focused host development-flow tests passed.
+Hosted CI does not invoke this CLI caller; the change still alters the captured
+controller inventory, so earlier CI is not execution at this newer commit.

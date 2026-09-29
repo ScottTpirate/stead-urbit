@@ -1,0 +1,188 @@
+{
+  "additional_negative_controls": "pass",
+  "admission_and_lifetime_controls": {
+    "changed-limits": {
+      "cleanup": {
+        "active_state": "failed",
+        "empty": true,
+        "unit": "stead-hosted-7d3457fe20ed06c79550091373a29829.service",
+        "verified": true
+      },
+      "status": "pass"
+    },
+    "guardian-death": {
+      "cleanup": {
+        "active_state": "failed",
+        "empty": true,
+        "unit": "stead-hosted-1b2946ad0d0b6b192c8a0f7aa3726df3.service",
+        "verified": true
+      },
+      "status": "pass"
+    },
+    "missing-profile": {
+      "cleanup": {
+        "active_state": "failed",
+        "empty": true,
+        "unit": "stead-hosted-253c007a71b51084a44136e4f64ebf86.service",
+        "verified": true
+      },
+      "status": "pass"
+    },
+    "parent-death": {
+      "cleanup": {
+        "active_state": "failed",
+        "empty": true,
+        "unit": "stead-hosted-a0fec01fdc42a9e6fc8995ff5bfbf567.service",
+        "verified": true
+      },
+      "status": "pass"
+    },
+    "stale-lease": {
+      "cleanup": {
+        "active_state": "failed",
+        "empty": true,
+        "unit": "stead-hosted-f27728ed7003d58ec68d0d33be13e66c.service",
+        "verified": true
+      },
+      "status": "pass"
+    },
+    "wrong-profile": {
+      "cleanup": {
+        "active_state": "failed",
+        "empty": true,
+        "unit": "stead-hosted-0d704c129d8333518d85a0ff50b2d48a.service",
+        "verified": true
+      },
+      "status": "pass"
+    }
+  },
+  "attempt": 1,
+  "candidate_commit": "4be1ebf5940cbe0fb18554c40aebdf28baec0bd8",
+  "classification": "independently-reviewed-actual-github-hosted-native-ci",
+  "cleanup": {
+    "active_state": "inactive",
+    "empty": true,
+    "unit": "stead-hosted-46188f0c6e35de3c053b28cf4e8f2e94.service",
+    "verified": true
+  },
+  "controller_commit": "d3b2b97ee7a4c343f3e4472dc05c479e2de11cfb",
+  "counts_overlap": "Native unit observations are included in the 763 check observations; counts must not be added.",
+  "distinct_check_names": 759,
+  "evidence_boundary": "Migration and additional negative controls are verified by the pinned controller; the private worker bytes are represented by their digest, not retained in these public artifacts.",
+  "files": {
+    "control-changed-limits-inputs.json": {
+      "bytes": 54040,
+      "file": "control-changed-limits-inputs.json.gz",
+      "gzip_sha256": "dc8198a3488201ed388e6e5f3602df7e6209fc269b1d1a96e03c1e35517218d4",
+      "sha256": "81c0c0ee18df7e51e1b89981b04694e7871a6353902392b072f6e9fd33ae5954"
+    },
+    "control-changed-limits-report.json": {
+      "bytes": 9384,
+      "file": "control-changed-limits-report.json.gz",
+      "gzip_sha256": "c3f47e8f2752313a0df7efeb7b951078660f9b64c382a7be4389906d2942eadc",
+      "sha256": "6ddf778b5a89ab5ab60a841318c2ff1e7cd78f1fbfb53cdb805d32b9bb910f1d"
+    },
+    "control-guardian-death-inputs.json": {
+      "bytes": 54040,
+      "file": "control-guardian-death-inputs.json.gz",
+      "gzip_sha256": "dc8198a3488201ed388e6e5f3602df7e6209fc269b1d1a96e03c1e35517218d4",
+      "sha256": "81c0c0ee18df7e51e1b89981b04694e7871a6353902392b072f6e9fd33ae5954"
+    },
+    "control-guardian-death-report.json": {
+      "bytes": 8192,
+      "file": "control-guardian-death-report.json.gz",
+      "gzip_sha256": "26c93153bb8b0055dd1c5c0b584c84175ad18ed557046516339acc4180c9e1a8",
+      "sha256": "e11bce1a8352abebde29ef89385822b6424f0ebff63bdff2af610d04e4ea5d8c"
+    },
+    "control-missing-profile-inputs.json": {
+      "bytes": 54040,
+      "file": "control-missing-profile-inputs.json.gz",
+      "gzip_sha256": "dc8198a3488201ed388e6e5f3602df7e6209fc269b1d1a96e03c1e35517218d4",
+      "sha256": "81c0c0ee18df7e51e1b89981b04694e7871a6353902392b072f6e9fd33ae5954"
+    },
+    "control-missing-profile-report.json": {
+      "bytes": 7154,
+      "file": "control-missing-profile-report.json.gz",
+      "gzip_sha256": "33f273fff0d77c3c6f0bb3d91517c8fe6d5ce378688a568d909dbd64246673fa",
+      "sha256": "ef9bb65ddad06524918474401dfcf10b97d1cec4e86d3a5bce080405ae16811e"
+    },
+    "control-parent-death-inputs.json": {
+      "bytes": 54040,
+      "file": "control-parent-death-inputs.json.gz",
+      "gzip_sha256": "dc8198a3488201ed388e6e5f3602df7e6209fc269b1d1a96e03c1e35517218d4",
+      "sha256": "81c0c0ee18df7e51e1b89981b04694e7871a6353902392b072f6e9fd33ae5954"
+    },
+    "control-parent-death-report.json": {
+      "bytes": 9314,
+      "file": "control-parent-death-report.json.gz",
+      "gzip_sha256": "a74ba8d8bd99657eca1b90b3e0665635cdef2b5decc2bd9ea2ab50f761f4df1c",
+      "sha256": "d177fd9d49c18e84806d8374d6fc8667825a51d3cf33908d7121dc81fc407547"
+    },
+    "control-stale-lease-inputs.json": {
+      "bytes": 54040,
+      "file": "control-stale-lease-inputs.json.gz",
+      "gzip_sha256": "dc8198a3488201ed388e6e5f3602df7e6209fc269b1d1a96e03c1e35517218d4",
+      "sha256": "81c0c0ee18df7e51e1b89981b04694e7871a6353902392b072f6e9fd33ae5954"
+    },
+    "control-stale-lease-report.json": {
+      "bytes": 9559,
+      "file": "control-stale-lease-report.json.gz",
+      "gzip_sha256": "3a77e3d0d5c69fc3e26f14501df446bdcb74c4c135bc0e305de1702d8fcd898b",
+      "sha256": "364d726b977fcba044265ac16ad3c65524d429494fde6208c4ca7e95cff99034"
+    },
+    "control-wrong-profile-inputs.json": {
+      "bytes": 54040,
+      "file": "control-wrong-profile-inputs.json.gz",
+      "gzip_sha256": "dc8198a3488201ed388e6e5f3602df7e6209fc269b1d1a96e03c1e35517218d4",
+      "sha256": "81c0c0ee18df7e51e1b89981b04694e7871a6353902392b072f6e9fd33ae5954"
+    },
+    "control-wrong-profile-report.json": {
+      "bytes": 7932,
+      "file": "control-wrong-profile-report.json.gz",
+      "gzip_sha256": "774fcf21644f4435f664a0e49fdaab012ba3c896818a340dbff5e999b9e4bd92",
+      "sha256": "506387f9148400d50d3182902bcaed4df0ed149edfed321cdea0a1b02440b11e"
+    },
+    "inputs.json": {
+      "bytes": 54040,
+      "file": "inputs.json.gz",
+      "gzip_sha256": "dc8198a3488201ed388e6e5f3602df7e6209fc269b1d1a96e03c1e35517218d4",
+      "sha256": "81c0c0ee18df7e51e1b89981b04694e7871a6353902392b072f6e9fd33ae5954"
+    },
+    "report.json": {
+      "bytes": 157469,
+      "file": "report.json.gz",
+      "gzip_sha256": "03c9e2ca31957c83b9e5a8b212240a72c9e75ad9009f23761063d0afec24709d",
+      "sha256": "0d0a7ad7a7216b3db1c1cdd9fd53d9d6c5d2d1813968ae4313feef00a03f75b2"
+    }
+  },
+  "guard": {
+    "child_terminated": true,
+    "cleanup_errors": [],
+    "elapsed_seconds": 1819.103,
+    "exit_code": 0,
+    "status": "pass"
+  },
+  "independent_review": "Read-only reconciliation of 217 controller blobs, 49 candidate product blobs, composed inventory and six retained native unit transcripts; no evidence inconsistency found.",
+  "input_digest_semantics": {
+    "canonical_form": "json.dumps(value, sort_keys=True, separators=(comma, colon), ensure_ascii=False), UTF-8",
+    "canonical_json_sha256": "f13a6dfbd8b4e0f532c7deb88608997f4f086dbaf6d45a3decd4e6345510c566",
+    "raw_json_sha256": "81c0c0ee18df7e51e1b89981b04694e7871a6353902392b072f6e9fd33ae5954"
+  },
+  "native_check_observations": 763,
+  "native_expected_failing_arms": 1,
+  "native_positive_arms": 70,
+  "qualifies_phase": false,
+  "remaining": [
+    "Expanded 71-arm and configured deletion checks at d89330e",
+    "Independent SDK consumer",
+    "Current local native/browser, expiry, performance, accessibility and v3 stock-Git readback",
+    "Unaided human onboarding",
+    "Final exact-source integration and issue reconciliation"
+  ],
+  "run_id": "36512081282",
+  "run_url": "https://github.com/ScottTpirate/stead-urbit/actions/runs/36512081282",
+  "runtime_binary_sha256": "f7f0d3b3c0480fc10f887dfbc09bde56a81d723a803541c7886c538a0675d833",
+  "status": "pass",
+  "supported_migration": "pass",
+  "workflow_commit": "8a1df2fd2273aad397082259100234b2e32713ef"
+}
