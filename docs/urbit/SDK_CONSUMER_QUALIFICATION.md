@@ -25,12 +25,17 @@ synthetic browser probe. The reader's five real atomic-replacement host controls
 are retained in the [host evidence](evidence/2026-09-29/atomic-reader-host/index.json).
 
 Independent review permits composing the retained SDK result with qualification
-of this shared guard only after the current native guarded lifetime passes and
-closes cleanly. Both lanes use the same read-only execution directory, lease
-reader, writer, policy checks and owned guardian. That current lifetime is still
-pending. The new retry branch has not executed inside an SDK run. This is not a
-new SDK pass, and it is not unchanged-input equivalence. Changes to the SDK
-consumer, mounts, watchdog or execution path require affected-lane execution.
+of this shared guard. The configured native run at `874a773` passed all 757
+checks; its whole guarded lifetime then closed after 1,679.486 seconds with exit
+zero, no cleanup errors and no remaining owned cgroup. The
+[native lifetime evidence](evidence/2026-09-29/team-native-874a773/index.json)
+satisfies that composition's previously pending condition. Both lanes use the
+same read-only execution directory, lease reader, writer, policy checks and
+owned guardian. The new retry branch has not executed inside an SDK run. This
+is not a new SDK pass, and it is not unchanged-input equivalence. The subsequent
+`04262a2` correction changes only the browser's ordinary-Git observation driver,
+which the SDK lane does not execute. Changes to the SDK consumer, mounts,
+watchdog or execution path require affected-lane execution.
 
 The September 29 run at `cd75365` booted its fresh consumer and compiled the
 public-import control. Clay then refused the unavailable private dependency,

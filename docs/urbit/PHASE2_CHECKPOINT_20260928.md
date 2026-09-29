@@ -1,41 +1,54 @@
 # Phase 2 preparation checkpoint
 
-Recorded 2026-09-28 UTC; updated 2026-09-29 UTC. Phase 2 is incomplete. Its six milestone issues
-(#9, #10, #14, #21, #22 and #29) remain open. The Phase 0/1 acceptance record
-remains tied to its recorded source; it does not qualify the newer candidate.
+Recorded 2026-09-28 UTC; updated 2026-09-29 UTC. Phase 2 is incomplete. Its six
+milestone issues (#9, #10, #14, #21, #22 and #29) remain open. The reviewed Git
+observation correction is pushed at `04262a2f511e26b75e08812068174f345deb2fee`.
+The earlier Phase 0/1 record remains tied to its own source.
 
-The independent SDK run at `7f113a1` now passes all 64 assertions and 41
-actual API calls, with unchanged inputs and clean shutdown of all children and
-the outer guard. Its [selected evidence](evidence/2026-09-29/sdk-native-7f113a1/index.json)
-keeps nonces, handles and raw native diagnostics private.
+The configured team at `874a773` passed all 757 native checks in 1,011.104
+seconds, including 71 positive unit arms, the deliberately failing control and
+all four cold restarts. Independent review verified its installed source and
+native transcripts. The whole guard then closed after 1,679.486 seconds with
+exit zero, no cleanup errors and no remaining owned cgroup.
+[Native evidence](evidence/2026-09-29/team-native-874a773/index.json) records that
+pass separately from the subsequent failed browser closeout.
 
-The configured team at `f5e79f4` passed all 757 checks in 1014.291 seconds,
-including all four cold restarts and one observed Home readiness refusal followed
-by a valid acknowledgment. Its whole lifetime closed cleanly after 1765.663
-seconds, with exit zero, no cleanup errors and no remaining owned cgroup.
-[Native evidence](evidence/2026-09-29/team-native-f5e79f4/index.json) is separate
-from the two failed browser attempts: the first stopped before login navigation
-completed; the corrected runner passed 12 cases before a synthetic public-scry
-probe mismatch stopped the journey. Both browser cgroups were reaped.
-[Browser failure records](evidence/2026-09-29/browser-failures-f5e79f4/index.json)
-retain the exact original hashes and independently bound runner inputs.
+The real Firefox journey at the same source passed all 34 recorded observations,
+including Work/Docs, private publication, conflicts, offline saves and the
+corrected probe. Its browser process was reaped cleanly. The subsequent ordinary
+Git verification failed: its first generated command contained an ungrouped Hoon
+hexadecimal atom, which produced a recorded syntax error and then timed out.
+[The failed closeout](evidence/2026-09-29/browser-git-failure-874a773/index.json)
+remains failed. The small formatter correction preserves exact Git OIDs and
+object bytes; nine focused host tests and independent source review passed.
+Fresh configured/native browser and Git execution are still required.
 
-The latest hosted [run 36535031127](https://github.com/ScottTpirate/stead-urbit/actions/runs/36535031127)
-failed after 677 passing checks at initial Home ingress admission. Its native
-bootstrap acknowledgment succeeded, but ingress no longer held the corresponding
-binding. The first retirement cause was not retained. All six resource controls,
-input identity, collector completion and owned cleanup were verified.
-[Failed CI evidence](evidence/2026-09-29/ci-36535031127/index.json) remains failed.
-A host test separately reproduced an atomic-file reader race; its responsibility
-for this particular CI failure is unproven. The bounded reader correction and
-first-retirement diagnostics require renewed native qualification. Browser,
-natural expiry, human onboarding and final integration remain open.
+The independent SDK at `7f113a1` passed 64 assertions and 41 public API calls,
+with exact package/source binding and clean shutdown. The shared reader change
+at `874a773` is qualified by its real atomic-replacement host controls and the
+closed native lifetime above. This is explicitly composed evidence, not another
+SDK execution or unchanged-input equivalence. See
+[SDK qualification](SDK_CONSUMER_QUALIFICATION.md).
 
-Local native compilation at `4452750` already passed all 71 positive arms,
-including the added bounded projection replay, and its complete guard lifetime
-closed cleanly. The final host suite at `cf63289` passed 660 tests with one
-optional artifact skip. The sections below retain the earlier observations and
-failures, including the SDK fixture and case-encoding corrections.
+Hosted run [36540906136](https://github.com/ScottTpirate/stead-urbit/actions/runs/36540906136)
+passed at controller/candidate `874a773`: 789 observations, 71 positive native
+arms, the deliberately failing control, migration and negative controls. The
+1,901.526-second guard exited zero with complete collector EOF and clean owned
+cleanup. Independent review reconciled the exact inputs and all six resource
+controls. [Hosted evidence](evidence/2026-09-29/ci-36540906136/index.json) remains
+bound to that source; the subsequent browser Git formatter is outside its
+executed path. Its predecessor
+[36535031127](https://github.com/ScottTpirate/stead-urbit/actions/runs/36535031127)
+failed after 677 passing checks at ingress admission; the initiating retirement
+cause was not recorded. Its [failed evidence](evidence/2026-09-29/ci-36535031127/index.json)
+remains retained. The reproduced atomic-reader race is a possible cause, not
+an established diagnosis of that failure.
+
+Current host regression passed 679 tests with one optional artifact skip and
+54 CI host controls. Browser/Git closeout, natural session expiry, the uncoached
+human Work/Docs trial and final integration still remain. The sections below
+retain earlier checkpoints and failures; their then-pending statements are
+historical rather than current acceptance claims.
 
 ## Ready for the next qualification window
 
@@ -893,3 +906,60 @@ uses controller/candidate `874a773` and is also pending. Repository visibility
 was rechecked as public before dispatch. The unchanged workflow and all 217
 controller, 49 product and 85 composed inputs were independently reconciled;
 the selected product files are byte-identical to the prior controller.
+
+## Native browser passed; ordinary Git fixture command corrected
+
+The `874a773` Firefox journey completed all 34 required observations with exact
+input/case binding and drained response capture. It remains an incomplete
+browser gate because the separate Git check failed before materializing any
+objects. The first manifest command's 40-digit `@ux` head began at column 113;
+Lens recorded a syntax error at column 119, its fifth hexadecimal digit. The
+pinned parser requires dotted groups. The existing 120-second observation wait
+then expired; this was not evidence of a slow Git import.
+
+The correction at `04262a2` uses the existing canonical atom encoder only at
+the Hoon call boundary. Leading/trailing-zero regression vectors preserve the
+numeric OIDs; stored object bytes and exact 40-digit Git identities remain
+unchanged. All nine focused host tests passed, including real stock-Git object
+checks and separately mocked native/supervisor controls. Independent source
+review cleared both the correction and its unchanged export generator for a
+fresh native run. No timeout or thermal limit changed.
+
+The failed fixture's four children exited zero without forced termination.
+After the outer guard closed and its owned cgroup disappeared, the stopped
+state was preserved before restoring hash-verified clean synthetic seeds.
+The prepared expiry cookie belongs to this failed, stopped fixture and will
+not be used to claim natural-expiry acceptance. Human onboarding remains
+unexecuted.
+
+## Current hosted native CI passed independent review
+
+Run `36540906136/1` passed at workflow
+`ee137f1fcb10117e8b08652104eb4923d1fdc6d3` and controller/candidate
+`874a77334533c36d7f7cb4974eb601e76cb77751`. It recorded 789 passing observations
+with 776 distinct names, including all 71 positive native arms, the deliberately
+failing control, configured four-ship behavior, migration and negative controls.
+Counts overlap. The guard closed after 1,901.526 seconds with exit zero,
+complete collector EOF, no overflow or cleanup errors, and verified empty
+owned process groups.
+
+Independent review checked all 217 controller, 49 product and 85 composed input
+files; all 81 installed files per ship; six native log/terminal transcripts;
+the six admission/lifetime controls and all seven final empty cgroups. The
+114,610-byte GitHub artifact matches its recorded digest and all 14 retained
+members. The public report binds the trusted verifier's private worker-output
+digest; the private migration/control transcripts are not reconstructed or
+claimed to be published. The [exact public evidence](evidence/2026-09-29/ci-36540906136/index.json)
+records this boundary.
+
+The later `04262a2` formatter changes an imported, captured but uncalled browser
+Git observation helper. The hosted worker invokes team, migration and negative
+checks, not `team-git-check`. Its executed paths and product files are unchanged;
+independent review found no need for another CI run solely for this helper edit.
+The complete captured inventory is not unchanged, and this remains CI execution
+at `874a773`. Actual local browser/Git execution qualifies the helper separately.
+
+URB-110's hosted CI criteria are evidenced by this publication. Whole Phase 2
+still requires a fully passing browser/Git closeout, natural expiry, the unaided
+human trial and reviewed integration. The earlier CI and browser failures remain
+failed evidence.

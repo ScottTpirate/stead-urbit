@@ -1,0 +1,191 @@
+{
+  "format": 1,
+  "classification": "failed-real-browser-native-git-closeout",
+  "qualifies_phase": false,
+  "source_commit": "874a77334533c36d7f7cb4974eb601e76cb77751",
+  "run": "browser-native-20260929T082339Z",
+  "status": "fail",
+  "browser_journey_status": "pass",
+  "browser_observations": 34,
+  "checks": [
+    {
+      "name": "bus-individual-native-owner-approved-session",
+      "passed": true
+    },
+    {
+      "name": "keyboard-principal-signin-approval-error-recovery-and-live-status",
+      "passed": true
+    },
+    {
+      "name": "nec-individual-native-owner-approved-session",
+      "passed": true
+    },
+    {
+      "name": "unsent-project-visible-original-request-retry-with-no-selected-project",
+      "passed": true
+    },
+    {
+      "name": "unsent-collection-receipt-remains-unconfirmed-after-current-parent-authorization",
+      "passed": true
+    },
+    {
+      "name": "native-reader-work-view-without-write-control",
+      "passed": true
+    },
+    {
+      "name": "browser-command-committed-with-native-approved-attribution",
+      "passed": true
+    },
+    {
+      "name": "second-individual-receives-live-committed-browser-work",
+      "passed": true
+    },
+    {
+      "name": "native-accepted-event-renders-same-instant-in-two-local-timezones",
+      "passed": true
+    },
+    {
+      "name": "member-cookie-is-secure-httponly-host-only-and-not-owner-auth",
+      "passed": true
+    },
+    {
+      "name": "member-session-cannot-promote-raw-eyre-channel-or-scry-to-home-authority",
+      "passed": true
+    },
+    {
+      "name": "unbound-individual-browser-cannot-start-a-member-session",
+      "passed": true
+    },
+    {
+      "name": "organization-owner-cookie-does-not-create-member-session-or-raw-home-read",
+      "passed": true
+    },
+    {
+      "name": "native-private-markdown-saves-have-git-oids-and-inert-preview",
+      "passed": true
+    },
+    {
+      "name": "private-doc-edits-preserve-reader-projections-and-only-publication-invalidates",
+      "passed": true
+    },
+    {
+      "name": "selected-page-published-without-private-collection-or-unselected-page",
+      "passed": true
+    },
+    {
+      "name": "shared-doc-edit-reloads-exact-markdown-revision-and-new-git-receipt",
+      "passed": true
+    },
+    {
+      "name": "private-canary-search-owner-positive-reader-negative",
+      "passed": true
+    },
+    {
+      "name": "reader-projections-exclude-private-page-canary",
+      "passed": true
+    },
+    {
+      "name": "browser-links-published-page-to-authorized-work",
+      "passed": true
+    },
+    {
+      "name": "two-native-principals-conflict-compare-explicit-rebase-and-live-refresh",
+      "passed": true
+    },
+    {
+      "name": "native-commit-with-injected-response-loss-recovers-original-receipt",
+      "passed": true
+    },
+    {
+      "name": "two-tab-csrf-rotation-and-unconfirmed-resume-retain-original-pending-receipt",
+      "passed": true
+    },
+    {
+      "name": "explicit-support-download-matches-reviewed-content-free-preview",
+      "passed": true
+    },
+    {
+      "name": "actual-browser-offline-preserves-draft-and-requires-explicit-original-request-retry",
+      "passed": true
+    },
+    {
+      "name": "keyboard-project-and-work-creation-general-profile-unicode-long-title",
+      "passed": true
+    },
+    {
+      "name": "native-long-content-at-small-large-layouts-and-distinct-timezones",
+      "passed": true
+    },
+    {
+      "name": "new-general-project-does-not-implicitly-grant-another-member",
+      "passed": true
+    },
+    {
+      "name": "native-grant-revocation-clears-rendered-project-and-local-draft",
+      "passed": true
+    },
+    {
+      "name": "native-browser-assets-measured-and-no-business-data-in-url-or-storage",
+      "passed": true
+    },
+    {
+      "name": "logout-clears-rendered-business-state",
+      "passed": true
+    },
+    {
+      "name": "nec-individual-native-owner-approved-session",
+      "passed": true
+    },
+    {
+      "name": "explicit-account-change-does-not-restore-former-private-state",
+      "passed": true
+    },
+    {
+      "name": "bus-individual-native-owner-approved-session",
+      "passed": true
+    }
+  ],
+  "browser": "155.0",
+  "node": "v24.21.0",
+  "response_capture_complete": true,
+  "response_capture_error": false,
+  "browser_cleanup": {
+    "process_reaped": true,
+    "cgroup": "/user.slice/user-1000.slice/user@1000.service/app.slice/stead-browser-0cb828a5a80fddb5ab111c71b4368971.service",
+    "empty": true,
+    "state": "inactive"
+  },
+  "error": "RuntimeError: timed out",
+  "native_prerequisite": {
+    "file": "team-check-20260929T080604Z.json",
+    "sha256": "fb1ea422786ccdff036d3f6b0e2cc138b706602aa41a9cbc410b0a57156b9f71"
+  },
+  "private_files": {
+    "browser-report.json": {
+      "path": ".runtime/browser-native-20260929T082339Z/browser-report.json",
+      "bytes": 288729,
+      "sha256": "3773b46063c18657d5888827e54b93c1832159fa9db4a9920be0b6551d31a7ce"
+    },
+    "transport-report.json": {
+      "path": ".runtime/browser-native-20260929T082339Z/transport-report.json",
+      "bytes": 3200,
+      "sha256": "50b980f42520f1ec761ea5e298d2e2a04495e059fa380abc5b10ac410e3cf6f6"
+    },
+    "browser-process.json": {
+      "path": ".runtime/browser-native-20260929T082339Z/browser-process.json",
+      "bytes": 579,
+      "sha256": "598207fe11985f17e8fb9a92ee6bd678e3e7b2a9fb05f48b7962f6c5548645cf"
+    },
+    "git-fixture.json": {
+      "path": ".runtime/browser-native-20260929T082339Z/git-fixture.json",
+      "bytes": 1820,
+      "sha256": "2553363b3b598f31c886060362d0306d57b006b33c2811d46466a1f8b826e5d4"
+    },
+    "team-git-20260929T082339Z.json": {
+      "path": ".piers/fakes/logs/team-git-20260929T082339Z.json",
+      "bytes": 701,
+      "sha256": "bc644f0b1e25ff5b52c635c2a77ae91663ad180a090e84d0851e87bef307cd27"
+    }
+  },
+  "diagnosis": "The first manifest command emitted an ungrouped 40-digit @ux Git head beginning at column113. The retained native log records Lens syntax error at column119, the fifth hexadecimal digit. Lens did not return a successful result and the existing120second observation deadline expired. The failed fixture was stopped and preserved; no Git acceptance, natural expiry or human trial is claimed."
+}
