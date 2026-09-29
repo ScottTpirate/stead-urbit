@@ -17,6 +17,21 @@ lane. `team_check.py` was present in the broad captured/mounted inventory but
 unused; that inventory is therefore not wholly unchanged. This cross-reference
 records execution-input equivalence, not a new SDK run.
 
+At `874a773`, the shared `execution_policy.py` reader is an actually used SDK
+dependency and has changed. The equivalence statement above does not extend to
+this revision. The SDK runner, consumer, public package, business authority
+Hoon and runtime are unchanged; the only later native desk edit is the unused
+synthetic browser probe. The reader's five real atomic-replacement host controls
+are retained in the [host evidence](evidence/2026-09-29/atomic-reader-host/index.json).
+
+Independent review permits composing the retained SDK result with qualification
+of this shared guard only after the current native guarded lifetime passes and
+closes cleanly. Both lanes use the same read-only execution directory, lease
+reader, writer, policy checks and owned guardian. That current lifetime is still
+pending. The new retry branch has not executed inside an SDK run. This is not a
+new SDK pass, and it is not unchanged-input equivalence. Changes to the SDK
+consumer, mounts, watchdog or execution path require affected-lane execution.
+
 The September 29 run at `cd75365` booted its fresh consumer and compiled the
 public-import control. Clay then refused the unavailable private dependency,
 but the runner expected a different diagnostic string and failed before compiling

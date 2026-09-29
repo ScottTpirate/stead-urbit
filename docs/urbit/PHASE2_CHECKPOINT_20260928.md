@@ -881,3 +881,15 @@ status, bounded content type, byte count and complete-body hashes before asserti
 The partial fake-ship state was preserved after clean shutdown. Fresh installed
 source and a new browser journey are required; these edits are not passing
 native/browser evidence.
+
+The reviewed changes are pushed as `a07911c` (reader/diagnostics) and
+`874a77334533c36d7f7cb4974eb601e76cb77751` (synthetic probe/browser controls).
+After preserved-state reset, a 70C preflight admitted a fresh local configured
+run on `874a773`; it is in progress. [PR #79](https://github.com/ScottTpirate/stead-urbit/pull/79)
+merged only the reviewed controller pin into workflow main
+`ee137f1fcb10117e8b08652104eb4923d1fdc6d3`.
+[Hosted run 36540906136](https://github.com/ScottTpirate/stead-urbit/actions/runs/36540906136)
+uses controller/candidate `874a773` and is also pending. Repository visibility
+was rechecked as public before dispatch. The unchanged workflow and all 217
+controller, 49 product and 85 composed inputs were independently reconciled;
+the selected product files are byte-identical to the prior controller.
