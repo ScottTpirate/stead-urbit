@@ -42,8 +42,10 @@ is different; this is an explicit scope assessment, not unchanged-inventory
 equivalence or a new SDK run. The affected helper compiled through the early
 probe in the 757-check configured run at `e7c81fd`; its
 [closed native lifetime](evidence/2026-09-29/browser-thermal-e7c81fd/index.json)
-is separate from the subsequent thermal-stopped browser attempt. Fresh CI and
-ordinary-Git runtime qualification remain pending. Changes to the SDK consumer, mounts,
+is separate from the subsequent thermal-stopped browser attempt. Fresh
+[CI at the same source](evidence/2026-09-29/ci-36548243535/index.json) also passed,
+including the changed build probe. Ordinary-Git runtime qualification remains
+pending. Changes to the SDK consumer, mounts,
 watchdog or execution path require affected-lane execution.
 
 The September 29 run at `cd75365` booted its fresh consumer and compiled the

@@ -61,9 +61,14 @@ controls. [Hosted evidence](evidence/2026-09-29/ci-36540906136/index.json) remai
 bound to that source; the subsequent browser Git formatter is outside its
 executed path. The later `e7c81fd` build-probe change does execute in CI, so a
 fresh [run 36548243535](https://github.com/ScottTpirate/stead-urbit/actions/runs/36548243535)
-is qualifying controller/candidate `e7c81fd` under workflow
-`96102116a7b5b42db53999618e70479e08ef5a79`. Reviewed pin-only PR #80 is merged;
-the new run is not yet a pass. The earlier run's predecessor
+passed at controller/candidate `e7c81fd` under workflow
+`96102116a7b5b42db53999618e70479e08ef5a79`. Reviewed pin-only PR #80 is merged.
+Independent review verified 789 passing observations, the exact native unit
+inventory, migration/negative-control attestation, all six resource controls
+and seven empty final cgroups. The guard completed after 1,687.212 seconds with
+exit zero and complete output collection. The
+[new exact hosted evidence](evidence/2026-09-29/ci-36548243535/index.json)
+retains all 14 public artifact members and their bindings. The earlier run's predecessor
 [36535031127](https://github.com/ScottTpirate/stead-urbit/actions/runs/36535031127)
 failed after 677 passing checks at ingress admission; the initiating retirement
 cause was not recorded. Its [failed evidence](evidence/2026-09-29/ci-36535031127/index.json)
