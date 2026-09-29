@@ -1,0 +1,117 @@
+{
+  "authority_inputs_unchanged": true,
+  "classification": "actual-native-sdk-failed-request-encoding",
+  "consumer_compile": {
+    "boot_seconds": 650.549,
+    "clay_case": "~2026.09.29..05.15.04..cbe0",
+    "compile_seconds": 1.903,
+    "consumer": "~bus",
+    "desk": "base",
+    "marks": "stead-command-3,stead-query-3,stead-result-3,stead-updates-3",
+    "protocol": "stead.sdk-compile/1",
+    "status": "compiled"
+  },
+  "control_member_boot_seconds": 655.792,
+  "elapsed_seconds": 2013.21,
+  "encoding_failure": {
+    "received_bytes": 0,
+    "request_sha256": "e79df2f05b121a77d39c345009bf2abf4ce1f36444c024a5f8deeb43587b8543",
+    "stage": "encode",
+    "stderr": "loom: mapped 512MB\r\nlite: arvo formula 4ce68411\r\nlite: core 641296f\r\nlite: final state 641296f\r\neval (jam, newt):\n\r\neval: bail: %exit\r\n",
+    "stdout_bytes": 52,
+    "stdout_sha256": "a005b935afe6bd18973db9d9c8159b16d541676776c7b26c31da30070e79fe21"
+  },
+  "error": "ValueError: SDK controller result: {'error': 'ValueError: Invalid Newt header'}",
+  "guard": {
+    "cleanup": [],
+    "elapsed_seconds": 2014.075,
+    "exit_code": 1,
+    "policy": {
+      "cooperative_seconds": 10,
+      "cpu_period_us": 10000,
+      "cpu_quota_us": 5000,
+      "kill_seconds": 5,
+      "sample_seconds": 1,
+      "stale_seconds": 3,
+      "start_c": 75,
+      "stop_c": 90,
+      "terminate_seconds": 10
+    },
+    "reason": "Owned sandbox exited unsuccessfully",
+    "run_id": "4c188cee55dcd319d473dfaa51e699d8",
+    "status": "failed"
+  },
+  "home_boot_seconds": 652.399,
+  "local_run": ".runtime/sdk-consumer-20260929-050406",
+  "observed_bootstrap": [
+    {
+      "kind": null,
+      "protocol": "stead.bootstrap/1",
+      "status": "ready"
+    }
+  ],
+  "owned_cgroup_absent_at_readback": true,
+  "package_sha256": "de41150e113c1df26804ffa7466f6018f2bfbf3b509715f2d971f6001f6ef6ac",
+  "passed_checks": 14,
+  "private_evidence": {
+    "consumer-controller.log": {
+      "bytes": 730,
+      "sha256": "76bf6e182436a7439191f8b0172401e48e4329da94c96e5b971205780428a7ee"
+    },
+    "consumer/failure.json": {
+      "bytes": 8441,
+      "sha256": "038b93e6adb651142460a54ea276360a6b56c5d648cc16aad2dcca2ea3dcddeb"
+    },
+    "control_member-transcript.json": {
+      "bytes": 2547,
+      "sha256": "7e097ec3d394b355139697b87f841489cf7c078e9fcd25993727adf40a25b0f9"
+    },
+    "home-transcript.json": {
+      "bytes": 35888,
+      "sha256": "e315bbdd9683e523e2dfc97e830278b4603b42be6b7e998819915379a5e7cf64"
+    },
+    "host-report.json": {
+      "bytes": 875270,
+      "sha256": "bf35ffd01f07274ddcfec1fa1db5a7595654760d4258cdc086e57d5383ee5851"
+    },
+    "report.json": {
+      "bytes": 41048,
+      "sha256": "3f0825b693cfad7a8f7d077d6bab23d9c105eecb58f78ff21c68fc8fb2f0a6f6"
+    }
+  },
+  "qualifies_phase": false,
+  "recorded_checks": 14,
+  "remaining": "Diagnose and correct the request encoding fixture, then execute all public business-call cases and clean completion in a fresh run. Successful configuration and compilation alone do not qualify SDK conformance.",
+  "sdk_calls": 0,
+  "source_commit": "6e5d1948319467a0f93adbf5e40c55393a3cefc6",
+  "sources_unchanged": true,
+  "status": "fail",
+  "toolchain_sha256": "ae185adaec12b5aa0b2d48e2198ae65583902512ffd9d148706810c4819c650c",
+  "watchdog_errors": [
+    "RuntimeError: SDK consumer namespace exited unexpectedly"
+  ],
+  "worker_cleanup": {
+    "consumer_error": "SDK bridge failed",
+    "control_member": {
+      "clean": true,
+      "exit_code": 0,
+      "forced": false,
+      "premature": false,
+      "reaped": true
+    },
+    "controller_reaped": true,
+    "datagrams": {
+      "dropped": 0,
+      "received": 0,
+      "sent": 0
+    },
+    "home": {
+      "clean": false,
+      "exit_code": 0,
+      "forced": false,
+      "premature": true,
+      "reaped": true
+    },
+    "home_error": "home native cleanup was not clean"
+  }
+}

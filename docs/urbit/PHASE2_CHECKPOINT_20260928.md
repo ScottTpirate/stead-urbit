@@ -4,7 +4,7 @@ Recorded 2026-09-28 UTC; updated 2026-09-29 UTC. Phase 2 is incomplete. Its six 
 (#9, #10, #14, #21, #22 and #29) remain open. The Phase 0/1 acceptance record
 remains tied to its recorded source; it does not qualify the newer candidate.
 
-The latest completed hosted run, [36517682428](https://github.com/ScottTpirate/stead-urbit/actions/runs/36517682428),
+The most recent passing hosted run, [36517682428](https://github.com/ScottTpirate/stead-urbit/actions/runs/36517682428),
 passed the expanded native inventory and independent evidence review on `cd75365`.
 The local SDK run at `8a2702a` compiled its public sample and four marks, then
 failed because its trusted fixture registered Home as an individual member.
@@ -12,10 +12,15 @@ Product rules correctly refused that configuration. SDK business calls, the
 current native-browser journey and the unaided human trial remain open. The
 sections below retain earlier observations rather than superseding their failures.
 
-The reviewed SDK correction is now running natively at `6e5d194`. A subsequent
+The reviewed SDK correction at `6e5d194` passed configuration and bootstrap,
+then failed while encoding its first public request. A subsequent
 closure audit added bounded projection-replay assertions to the existing history
 test; [run 36524215404](https://github.com/ScottTpirate/stead-urbit/actions/runs/36524215404)
-is executing them on controller/candidate `8077dff`. Both results are pending.
+failed while running or validating the fifth native suite on controller/candidate
+`8077dff`. The public diagnostic does not identify the exact native or output-validation failure. Local
+reproduction found a syntax error and a helper-name collision in the added
+test. Corrected inputs are undergoing native recompilation. Neither failed
+result is qualified.
 
 ## Ready for the next qualification window
 
@@ -642,3 +647,89 @@ the controller-pin update into main at `0ecdbec`. Its new hosted run is bound to
 controller/candidate `8077dff20c2aa7c784810ce861171068e89ba7fc`. The native inventory
 remains 71 arms. Its actual result is required before the added assertions
 qualify; the previous hosted pass remains bound to its earlier recorded inputs.
+
+## Expanded replay CI failed; local reproduction pending
+
+[Run 36524215404](https://github.com/ScottTpirate/stead-urbit/actions/runs/36524215404)
+failed on workflow `0ecdbec7995e9d69564ecbe48f59011cebf7173f` and
+controller/candidate `8077dff20c2aa7c784810ce861171068e89ba7fc`. It recorded
+173 passing observations, four completed suites and five native transcripts
+while running or validating `/tests/stead-update-capacity`, which contains the added
+replay assertions. Zero named failed checks were recorded; the run still failed
+and those partial counts do not qualify it.
+
+The public native diagnostic reports `ValueError` with an unrecognized reason;
+it does not retain the precise native or output-validation failure. The bound inputs
+were unchanged, the guard ended after 1,341.414 seconds with exit one, the
+collector completed through EOF without overflow, and worker and host cleanup
+were verified. Fourteen exact public artifacts and hashes are retained in the
+[failed-run index](evidence/2026-09-29/ci-36524215404/index.json).
+
+Finish the independent SDK run, then reproduce this native suite locally using
+the verified stopped seeds and inspect its private transcript. Preserve the
+failed attempt and obtain an observed diagnosis before changing the test or
+dispatching another hosted run. The earlier hosted pass remains valid only for
+its earlier recorded inputs.
+
+## Three-identity SDK configuration passed; first call encoding failed
+
+The fresh SDK attempt at `6e5d194` booted all three disposable identities and
+passed fourteen checks, including public sample/four-mark compilation, private
+import refusal, namespace separation, exact control-member installation, Home
+configuration and correlated bootstrap readiness. It then failed at the first
+public capabilities request, before sending its encoded request to the native
+socket. No SDK business call completed.
+
+The private encoder trace records `eval: bail: %exit` and 52 stdout bytes that
+do not form the required Newt frame. It retains the exact request and Clay
+case for diagnosis; this observation alone does not establish the cause. The
+[failed observation](evidence/2026-09-29/phase2-preparation/sdk-request-encoding.json)
+records exact input/evidence hashes and unchanged source.
+
+The worker ended after 2,013.210 seconds. Consumer failure triggered its lifetime
+watchdog; Home was stopped prematurely, so worker cleanup was not clean. The
+control member exited cleanly. The outer guard ended after 2,014.075 seconds with
+exit one and no guard cleanup errors; its owned cgroup was absent afterward.
+This remains a failed run. Correct the observed request construction issue and
+execute the full public conformance cases in a fresh guarded attempt.
+
+## Local replay failure reproduced with warm seeds
+
+`make dev` at unchanged `6e5d194` reproduced the fifth-suite failure in 92.353
+seconds. The private native transcript identifies a syntax error at line 148,
+column 61 of `stead-update-capacity.hoon`: the newly added wide `levy` expression
+was split across lines. The source bytes match the failed hosted candidate.
+The corrected expression stays on one line and preserves every assertion.
+
+The local run recorded 164 passing observations and four completed suites before
+the compiler failure. Bound inputs were unchanged; the guarded fixture shut
+down cleanly after 105.648 seconds, exited zero and left no owned cgroup. The
+compile result remains failed. Exact reports are retained in the
+[local reproduction index](evidence/2026-09-29/local-replay-6e5d194/index.json).
+The correction still needs actual native execution and a new hosted run.
+
+## Replay helper naming and SDK case representation corrected
+
+The next local replay compile at `2d4b68a` got past the syntax error and reported
+`nest-fail` at line 56: an existing serializer named `wire` shadowed the global
+wire mold used by the new recovery helper. Renaming that serializer and its sole
+call to `update-wire` leaves its payload and all assertions unchanged. The
+failed run took 94.068 seconds, with 164 passing observations and four completed
+suites. Its guard closed cleanly after 104.586 seconds with exit zero and no
+cleanup errors. [Exact reports](evidence/2026-09-29/local-replay-2d4b68a/index.json)
+retain the compiler failure separately from clean shutdown.
+
+Independent source review also diagnosed the SDK encoder's column 56 syntax
+error at the padded month `09`. The kernel's display date and the
+[pinned ivory parser](https://github.com/urbit/urbit/blob/ac87d8bbb3915d5e7c880b97c102ffe22112335f/pkg/arvo/sys/hoon.hoon#L5426)
+use different date spelling rules. The qualifier now emits `clay_case_atom`
+using `%ux` from the same captured `p.case` as the existing display field. The
+invocation uses that exact atom after canonical positive hex validation bounded
+to 128 bits. Display-based Clay readback, the Khan unit wrapper, framing checks
+and all execution limits remain unchanged.
+
+Both corrections were independently reviewed and pushed at `4452750`. Eight
+focused host regressions passed, and the overlapping full SDK host suite passed
+all 102 tests in 13.222 seconds under 25% of one pinned CPU. The
+[host evidence](evidence/2026-09-29/sdk-case-atom-host/index.json) records exact
+source and logs. Native recompilation and a fresh full SDK run remain required.

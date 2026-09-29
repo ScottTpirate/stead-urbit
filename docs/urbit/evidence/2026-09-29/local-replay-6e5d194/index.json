@@ -1,0 +1,39 @@
+{
+  "format": 1,
+  "classification": "failed-local-native-replay-reproduction",
+  "qualifies_phase": false,
+  "source_commit": "6e5d1948319467a0f93adbf5e40c55393a3cefc6",
+  "status": "fail",
+  "native_error": "ValueError: Unexpected native output record: clay: read-at-tako fail [desk=%base care=%a case=[%da p=~2026.09.29..05.42.07..9436] path=/tests/stead-update-capacity/hoon]",
+  "compiler_observation": "syntax error at [148 61] in /tests/stead-update-capacity/hoon",
+  "failed_suite": "/tests/stead-update-capacity",
+  "elapsed_seconds": 92.353,
+  "recorded_checks": 164,
+  "passed_checks": 164,
+  "suites_completed": 4,
+  "inputs_match": true,
+  "guard": {
+    "status": "completed",
+    "run_id": "d053f62d43a45ebd578f68af82a47ff5",
+    "exit_code": 0,
+    "reason": null,
+    "elapsed_seconds": 105.648,
+    "cleanup": []
+  },
+  "owned_cgroup_absent_at_readback": true,
+  "files": {
+    "core-report.json": {
+      "path": "core-report.json.gz",
+      "raw_bytes": 848105,
+      "raw_sha256": "775f8e1f9e5020a6a6edbe2238bbc7d493b26c944ddce30c0212e0f7cb845f2c",
+      "gzip_sha256": "db0b8e6f57ff1df71b4238bab071bafac182867ad24618869e655008068dc668"
+    },
+    "guard-report.json": {
+      "path": "guard-report.json.gz",
+      "raw_bytes": 50138,
+      "raw_sha256": "e1d0e26ef8bde3fd533b868de3208723d32ab472ace413fea1375d699fa8e0e7",
+      "gzip_sha256": "78edec7859e39ec727ec0e4763c88d76c05e3f140e5af128d195edd6a7941990"
+    }
+  },
+  "limitation": "Local native failure at the same capacity-test bytes as hosted candidate8077dff. A clean guard shutdown does not turn the failed compiler run into a pass. The hosted public report does not expose its exact native failure."
+}
