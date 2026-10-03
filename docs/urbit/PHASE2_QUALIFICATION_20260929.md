@@ -1,5 +1,12 @@
 # Phase 2 team alpha qualification
 
+October 2 follow-up: fresh native (760 observations), Firefox (34 cases) and
+stock-Git checks passed at integrated source `66f051e3`; their whole native
+lifetime closed cleanly. The [onboarding follow-up](PHASE2_ONBOARDING_20261002.md)
+retains an earlier guard failure and a second human window with no qualifying
+task observations or feedback. Phase 2 and #29 remain incomplete. The dated
+September 29 results below keep their original execution scope.
+
 Status on September 29, 2026: **incomplete**. The configured native, browser,
 stock-Git, SDK, current hosted CI and natural session-expiry components have
 passing evidence. [PR #67](https://github.com/ScottTpirate/stead-urbit/pull/67)

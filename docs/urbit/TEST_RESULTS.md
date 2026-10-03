@@ -6,6 +6,11 @@ session-expiry components from the remaining human trial gate. The reviewed
 implementation is integrated through [PR #67](https://github.com/ScottTpirate/stead-urbit/pull/67).
 The dated records below retain their original execution scope.
 
+The [October 2 follow-up](PHASE2_ONBOARDING_20261002.md) adds fresh native,
+Firefox and stock-Git passes at `66f051e3`, a preserved earlier guard failure,
+and an incomplete human trial. The entire native lifetime closed cleanly;
+independent human acceptance remains unfulfilled.
+
 The [independently reviewed Phase 1 acceptance](PHASE1_ACCEPTANCE_20260926.md) now has a
 passing **73-requirement gate** at native source
 `dd0e8c0ce8d1d00f15de6b07e2e26d368c5c3774`. Independent review accepts this bounded phase with no blockers. Phases 0 and 1

@@ -48,7 +48,10 @@ Replace the example name with the actual passed run. Admission checks the live
 supervisor's native-report digest, exact installed source, packaged frontend,
 and the automated browser evidence and cleanup. A stale or failed prerequisite
 is refused. Do not edit or repackage between those checks and the trial.
-Provide only the [task](onboarding-task.md) and [member quickstart](member.md),
+Confirm the participant is present at the Linux desktop immediately before
+launching; availability stated earlier in preparation does not establish current
+readiness. Notify them when the trial page is ready and its nine-minute window
+begins. Provide only the [task](onboarding-task.md) and [member quickstart](member.md),
 then let the participant work without coaching. The launcher opens a disposable
 personal Firefox profile; its report awaits independent review and does not
 automatically close the milestone. Local thermal admission remains required.

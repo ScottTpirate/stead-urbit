@@ -1,0 +1,240 @@
+{
+  "browser": {
+    "checks": 34,
+    "failure_scope": "Two boundary-channel cancellations and one deliberate offline command have test context; query and updates aborts lack firm initiating-stage attribution.",
+    "owned_cgroup_absent": true,
+    "process_cleanup": {
+      "cgroup": "/user.slice/user-1000.slice/user@1000.service/app.slice/stead-browser-bf41ace10d31b7cd6e8169c4c96c77b9.service",
+      "empty": true,
+      "process_reaped": true,
+      "state": "inactive"
+    },
+    "request_failures": 5,
+    "response_capture_complete": true,
+    "response_capture_error": false,
+    "response_count": 492,
+    "source_before_after_current_equal": true,
+    "status": "pass"
+  },
+  "classification": "local-native-browser-git-qualification-and-incomplete-human-trial",
+  "closed_guard": {
+    "cleanup": [],
+    "elapsed_seconds": 2372.963,
+    "exit_code": 0,
+    "owned_cgroup_absent": true,
+    "policy": {
+      "cooperative_seconds": 10,
+      "cpu_period_us": 10000,
+      "cpu_quota_us": 5000,
+      "kill_seconds": 5,
+      "sample_seconds": 1,
+      "stale_seconds": 3,
+      "start_c": 75,
+      "stop_c": 90,
+      "terminate_seconds": 10
+    },
+    "scope_proof": {
+      "cgroup": "/user.slice/user-1000.slice/user@1000.service/app.slice/stead-native-ea066b8bd0bb47540a5a349f2572aff7.scope",
+      "cpu_affinity": [
+        19
+      ],
+      "cpu_max": "5000 10000",
+      "unit": "stead-native-ea066b8bd0bb47540a5a349f2572aff7.scope"
+    },
+    "status": "completed"
+  },
+  "commands": {
+    "browser": "python3 -B web/app/browser-check.py",
+    "human": "python3 -B web/app/onboarding.py --launch --browser-run browser-native-20261002T234430Z",
+    "native": "make team-dev",
+    "shutdown": "make stop"
+  },
+  "earlier_failed_attempt": {
+    "cause_boundary": "Retained evidence cannot distinguish scheduling, sleep or publication/file-I/O delay. No rejected-generation/check-time record.",
+    "cleanup": [],
+    "guard_elapsed_seconds": 474.585,
+    "guard_exit_code": 1,
+    "guard_report_sha256": "4494850d51eb39372987e4d6b52fb792a260441de6e9b5a895be949cee45f75a",
+    "guard_status": "failed",
+    "maximum_recorded_temperature_c": 79,
+    "native_report": "team-check-20261002T230910Z.json",
+    "observed_longest_sample_completion_interval_seconds": 3.133866,
+    "original_stop_reason": "Stale, future or reversed thermal sample",
+    "owned_cgroup_absent": true,
+    "partial_checks": 169,
+    "partial_checks_true": 169,
+    "preserved_at": "2026-10-02T23:23:36.757605+00:00",
+    "qualifies_phase": false,
+    "run_id": "8f3f618c4d2c749d2d32364d53ac64d4",
+    "shutdown_boundary": "Eventual owned cleanup observed; do not infer a 25-second stop-bound pass.",
+    "source_commit": "66f051e3600ac6685d0017cb524fdd0becb7a8bf",
+    "status": "failed-attempt-preserved"
+  },
+  "format": 1,
+  "human_trial": {
+    "accepted_operations": 0,
+    "captured_failures": 0,
+    "cause": "not-established; absence of qualifying observations does not establish why they were absent",
+    "coaching_attestation": "not-submitted",
+    "collection_readbacks": 0,
+    "duration_seconds": 540,
+    "elapsed_ms": 540044,
+    "inputs_after_equal_before": true,
+    "inputs_before": {
+      "files": {
+        "docs/urbit/quickstarts/member.md": "36aac736f7a4d422d9f7f6cf340583e3a4484670b99f6598f61d4fc63aafa6d6",
+        "docs/urbit/quickstarts/onboarding-task.md": "9814a361235c5f1ad2b6c30400aaa404aa1eb6203fdfb3f0e612279dc5c555fa",
+        "specs/urbit/toolchain.lock.json": "ae185adaec12b5aa0b2d48e2198ae65583902512ffd9d148706810c4819c650c",
+        "web/app/browser_admission.py": "2c0b01ba03cd9d70ee2b42c05ff0841668832511a0ed5c4d3fc3052586d878fb",
+        "web/app/browser_process.py": "cd8c4d151d1d20ce68d96cac2e3a4d33af9440d58815fc193793cc248ccd0ae4",
+        "web/app/dist/manifest.json": "cf46ab5c9fc334b8642c90b1b10c38e659847cbd1eb754865692be3f6e15ccd0",
+        "web/app/onboarding.py": "9c43c0f110ab78c815b5948460797042b14e91f4f071a316d2d34dc4b2fe8f2b",
+        "web/app/tests/onboarding-evidence.mjs": "00b3a7e587df4a5b70c8f9bdd1f23556e67f596c7eeb1ab9adade8fbe5a3b019",
+        "web/app/tests/onboarding.mjs": "7d7f1a25cb9fbe6538ca14c35d95822c75bf6703d7222ae637bbd12c455d73c1",
+        "web/dev/loopback_bridge.py": "a724bcfc4197adc796f580b43a751198cba8fbf4c1eeaba0221ffab01395fae2"
+      },
+      "native_tree": "557976ac8f2f941946c15b9f687fcbef51b0f265b5e1c945cb9e924ba547be02"
+    },
+    "launcher_status": "captured-for-review",
+    "owned_cgroup_absent": true,
+    "participant_feedback": "not-submitted",
+    "prerequisites": {
+      "browser_run": "browser-native-20261002T234430Z",
+      "execution_id": "ea066b8bd0bb47540a5a349f2572aff7",
+      "journey_sha256": "adefccab4361946fbb71a5db55107633c1f7c2b8c75f6e6ae6d389b65ba66b31",
+      "native": {
+        "file": "team-check-20261002T232543Z.json",
+        "sha256": "5b2c6294c7f3b08e99ddf0d5133bdb659a1039f8bb4065bf22b24c1d837e8312"
+      },
+      "transport_sha256": "7f833d48d32e7d0714b8c541d9761fa8502a636dad526b347ce753521db22c1c"
+    },
+    "private_profile_and_personal_fixture_removed": true,
+    "process_cleanup": {
+      "cgroup": "/user.slice/user-1000.slice/user@1000.service/app.slice/stead-browser-d1950b9d84b258860ed95fcd1f468d58.service",
+      "empty": true,
+      "process_reaped": true,
+      "state": "inactive"
+    },
+    "readbacks": 0,
+    "reads": 0,
+    "signed_out": false,
+    "started_at": "2026-10-02T23:53:27.422Z",
+    "status": "deadline-incomplete"
+  },
+  "independent_review": {
+    "browser_and_git": "pass within finite automated component scope; retained request-failure attribution limits",
+    "human": "incomplete; zero qualifying observations and no participant feedback",
+    "native": "pass within configured local component scope",
+    "reviewer": "phase2_trial_review",
+    "whole_lifetime": "pass; final guard bytes and unchanged policy verified, native and both browser cgroups absent, selected preserved copies byte-identical, and current widget bytes equal original snapshot"
+  },
+  "native": {
+    "accepted_receipts_reviewed": 25,
+    "cold_restarts_reviewed": 4,
+    "decoded_native_exchanges_reviewed": 110,
+    "deliberate_failure_controls": 1,
+    "distinct_names": 747,
+    "elapsed_seconds": 1095.685,
+    "execution_id": "ea066b8bd0bb47540a5a349f2572aff7",
+    "input_inventories_before_after_current_equal": true,
+    "installed_files_per_ship": 77,
+    "observations": 760,
+    "positive_unit_arms": 71,
+    "ships": 4,
+    "status": "pass",
+    "unit_transcripts": 6
+  },
+  "phase2_status": "incomplete-human-trial-required",
+  "private_files": {
+    ".piers/fakes/logs/team-check-20261002T232543Z.json": {
+      "bytes": 1172006,
+      "sha256": "5b2c6294c7f3b08e99ddf0d5133bdb659a1039f8bb4065bf22b24c1d837e8312"
+    },
+    ".piers/fakes/logs/team-git-20261002T234430Z.json": {
+      "bytes": 12893,
+      "sha256": "4d4517a474f79da468de9424162a77ff90090238b3dd41909a84054ce3aab6c6"
+    },
+    ".runtime/browser-native-20261002T234430Z/browser-process.json": {
+      "bytes": 579,
+      "sha256": "4320f4793833c3e536d2f17fac72e968e06e77ad7909c38076f9a4a8c600e270"
+    },
+    ".runtime/browser-native-20261002T234430Z/browser-report.json": {
+      "bytes": 286497,
+      "sha256": "adefccab4361946fbb71a5db55107633c1f7c2b8c75f6e6ae6d389b65ba66b31"
+    },
+    ".runtime/browser-native-20261002T234430Z/transport-report.json": {
+      "bytes": 4918,
+      "sha256": "7f833d48d32e7d0714b8c541d9761fa8502a636dad526b347ce753521db22c1c"
+    },
+    ".runtime/execution-runs/four-fakes-3r_2dzom/report.json": {
+      "bytes": 208377,
+      "sha256": "4494850d51eb39372987e4d6b52fb792a260441de6e9b5a895be949cee45f75a"
+    },
+    ".runtime/execution-runs/four-fakes-v07njwcu/control/source-context.json": {
+      "bytes": 30173,
+      "sha256": "3542452178aa8514e28a9f5619eeadbf057c8dcd44ab7ff12548fb6cfc393e48"
+    },
+    ".runtime/execution-runs/four-fakes-v07njwcu/report.json": {
+      "bytes": 1030837,
+      "sha256": "19ec51677a7523f87e6c588a559593b2a34bc829baafcada1a4509195b6d9bee"
+    },
+    ".runtime/onboarding-20261002T235259Z-3u887pgu/browser-process.json": {
+      "bytes": 578,
+      "sha256": "162675b129ef1b9d232085836371c8f3a76b0db18b231b3fafd3ed54dbd884aa"
+    },
+    ".runtime/onboarding-20261002T235259Z-3u887pgu/onboarding-report.json": {
+      "bytes": 666,
+      "sha256": "327ba7f471b12fda5bbb516aa99b7077baaf98b0eb1b9fe7ace4b1633f7a2037"
+    },
+    ".runtime/onboarding-20261002T235259Z-3u887pgu/ready.json": {
+      "bytes": 132,
+      "sha256": "f3a4b573b8c4158f7d054eec04b60e86a8eead9c709c408d927a760bd462a90d"
+    },
+    ".runtime/onboarding-20261002T235259Z-3u887pgu/transport-report.json": {
+      "bytes": 4193,
+      "sha256": "d3fdc43b3e6282725576f95e10dced3f1544172887d7be7cc12ded8bee5426a5"
+    },
+    ".runtime/phase02-onboarding-20261002/attempt1-stale-sample/preservation.json": {
+      "bytes": 1004,
+      "sha256": "3e93c53e77e9fb045e15adaaab9dac153f0018d448d3834a66d4ef66ee9f0e86"
+    },
+    ".runtime/phase02-onboarding-20261002/retry1-preserved/preservation.json": {
+      "bytes": 761,
+      "sha256": "8bdc9d83c1f2a0b69e57dc8219796bb063de298e62c9b209fe6407608c9604ae"
+    },
+    ".runtime/phase02-onboarding-20261002/widget-pause/restore.json": {
+      "bytes": 423,
+      "sha256": "466a019e8ee261c6f38044ecedaec5024eace84e50f2ab645ac90d62a805b6d5"
+    }
+  },
+  "qualifies_phase": false,
+  "remaining": "A completed uncoached Work/Docs trial with correlated accepted saves, readbacks, signout and participant feedback; issue #29 and M2 remain open.",
+  "restoration": {
+    "exclusive_lifecycle_lock_held_during_preservation": true,
+    "fan_settings_changed": false,
+    "stopped_fixture_preserved": true,
+    "widget_original_bytes_restored": true,
+    "widget_original_sha256": "c08515d119a67bf70c9672c52f5b2a90ef28c369bb3f4a3c957f770dea9d965f",
+    "widget_restored_sha256": "c08515d119a67bf70c9672c52f5b2a90ef28c369bb3f4a3c957f770dea9d965f"
+  },
+  "retained_not_reexecuted": [
+    "SDK consumer qualification",
+    "hosted CI run 36555130587/1",
+    "natural session expiry"
+  ],
+  "reviewed_product_equivalent_to": "d9115056a04fd86cf55a07fd0d8a0bf0be84caaf",
+  "source_commit": "66f051e3600ac6685d0017cb524fdd0becb7a8bf",
+  "stock_git": {
+    "command_exits": 0,
+    "commands_reviewed": 43,
+    "history_commit_counts": [
+      3,
+      1,
+      2
+    ],
+    "loose_object_copies_rehashed": 18,
+    "repositories": 3,
+    "review": "Exact receipt OIDs, Markdown and destination-only publication ancestry match; private history and canary are excluded; strict fsck succeeds for all three repositories.",
+    "status": "pass"
+  }
+}

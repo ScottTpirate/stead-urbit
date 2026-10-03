@@ -14,6 +14,10 @@ uncoached human Work/Docs trial remains open in #29; Phase 2 is not complete. Th
 [preparation checkpoint](PHASE2_CHECKPOINT_20260928.md) retains earlier failed
 attempts and their historical limits.
 
+October 2: [fresh native, browser and Git checks passed](PHASE2_ONBOARDING_20261002.md)
+at the integrated source, with clean shutdown and restoration. The human trial
+expired without qualifying activity or feedback; #29 and Phase 2 remain open.
+
 | Phase | Deliverable | Gate |
 |---|---|---|
 | 0 | Independent repo, pinned dependencies, four-fake-ship harness, Git feasibility audit, contributor workflow | Actual native smoke tests, recorded reuse decisions and executed baseline/assisted workflow evaluation |

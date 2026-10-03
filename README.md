@@ -4,6 +4,8 @@ Status: **Phases 0 and 1 are complete. Phase 2 has passing configured native,
 browser/stock-Git, SDK, hosted CI and natural session-expiry components. The
 implementation is integrated; the independent human trial remains open.** See the
 [current qualification record](docs/urbit/PHASE2_QUALIFICATION_20260929.md).
+The [October 2 follow-up](docs/urbit/PHASE2_ONBOARDING_20261002.md) records fresh
+automated passes and a human trial that expired without task evidence or feedback.
 
 The [Phase 1 acceptance record](docs/urbit/PHASE1_ACCEPTANCE_20260926.md) binds
 496 passing native core checks, all eight capacity/predecessor recipes, 58
