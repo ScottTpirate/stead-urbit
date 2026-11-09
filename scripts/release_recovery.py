@@ -222,7 +222,30 @@ def asset_upgrade_plan(source, target, source_sha, target_sha, saved_sha):
             'source_desk': previous, 'saved_home_sha256': saved_sha}
 
 
-def boot_recovery(prior, archive, archive_sha, target, report_sha, guard_sha, copies, receipt_sha, *, upgrade=None):
+def home_upgrade_plan(source, target, source_sha, target_sha, saved_sha):
+    pinned = ('agents', 'role', 'compatibility', 'toolchain_sha256')
+    if (any(source[key] != target[key] for key in pinned) or source['role'] != 'home'
+            or source['saved_state_version'] != 3 or target['saved_state_version'] not in (4, 5)
+            or source_sha == target_sha or source['source_commit'] == target['source_commit']
+            or not re.fullmatch(r'[0-9a-f]{64}', saved_sha)):
+        raise ValueError('Native Home upgrade requires verified v3 and v4/v5-capable packages with matching runtime and API')
+    previous = desk_inventory(source)
+    desired = desk_inventory(target)
+    if previous.get('app/stead-home.hoon') == desired.get('app/stead-home.hoon'):
+        raise ValueError('Native Home upgrade must replace the native agent')
+    for name in ('desk.bill', 'sys.kelvin'):
+        if previous.get(name) != desired.get(name):
+            raise ValueError('Native Home upgrade cannot change desk role or Kelvin')
+    return {'source_artifact_sha256': source_sha, 'source_commit': source['source_commit'],
+            'source_desk': previous, 'saved_home_sha256': saved_sha,
+            'source_saved_state_version': 3, 'target_max_saved_state_version': target['saved_state_version']}
+
+
+def boot_recovery(prior, archive, archive_sha, target, report_sha, guard_sha, copies, receipt_sha, *,
+                  upgrade=None, upgrade_mode=None):
+    plans = {'asset_upgrade': asset_upgrade_plan, 'home_upgrade': home_upgrade_plan}
+    if (upgrade is None) != (upgrade_mode is None) or (upgrade_mode is not None and upgrade_mode not in plans):
+        raise ValueError('Choose a supported upgrade mode with all upgrade inputs')
     retained = None
     next_archive, next_sha, next_target = (archive, archive_sha, target) if upgrade is None else upgrade[:3]
 
@@ -233,14 +256,14 @@ def boot_recovery(prior, archive, archive_sha, target, report_sha, guard_sha, co
             raw = release.read_bounded(ROOT, archive, release.MAX_ARCHIVE)
             old_target = json.loads(release.read_bounded(ROOT, target, 8192), object_pairs_hook=release.unique)
             previous = release.verify_bytes(raw, expected_sha256=archive_sha, target=old_target)
-            plan = asset_upgrade_plan(previous, manifest, archive_sha, next_sha, upgrade[3])
+            plan = plans[upgrade_mode](previous, manifest, archive_sha, next_sha, upgrade[3])
         evidence, retained = restore_checkpoint(state, previous, prior, copies, receipt_sha,
                                                 archive_sha, report_sha, guard_sha)
         if upgrade is not None:
-            evidence.update(artifact_sha256=next_sha, asset_upgrade=plan)
+            evidence.update({'artifact_sha256': next_sha, upgrade_mode: plan})
         return evidence
 
-    report = install.run(next_archive, next_sha, next_target, prepare_restore=prepare, asset_upgrade=upgrade is not None)
+    report = install.run(next_archive, next_sha, next_target, prepare_restore=prepare, upgrade=upgrade_mode)
     retained_trees(*retained)
     report.update(status='pass', retained_trees_unchanged=True)
     name = 'recovery-report.json' if upgrade is None else 'upgrade-report.json'
@@ -259,7 +282,9 @@ if __name__ == '__main__':
     parser.add_argument('--guard-report-sha256', required=True)
     parser.add_argument('--boot-copy', help='Exact .runtime/release-recovery-* run to clone and boot under the guard')
     parser.add_argument('--copy-report-sha256', help='Trusted report digest for --boot-copy')
-    parser.add_argument('--upgrade-archive', help='Distinct verified target Home archive for an asset-only upgrade')
+    parser.add_argument('--upgrade-mode', choices=('assets', 'home-v3'),
+                        help='Use home-v3 for a controlled restart before activation of a new native Home desk')
+    parser.add_argument('--upgrade-archive', help='Distinct verified target Home archive')
     parser.add_argument('--upgrade-sha256', help='Trusted target archive digest')
     parser.add_argument('--upgrade-target', help='Exact target archive compatibility record')
     parser.add_argument('--saved-home-sha256', help='Reviewed v3 Gall saved-vase fingerprint')
@@ -267,8 +292,11 @@ if __name__ == '__main__':
     if (args.boot_copy is None) != (args.copy_report_sha256 is None):
         parser.error('--boot-copy and --copy-report-sha256 must be supplied together')
     upgrade = (args.upgrade_archive, args.upgrade_sha256, args.upgrade_target, args.saved_home_sha256)
-    if any(value is not None for value in upgrade) and (args.boot_copy is None or not all(upgrade)):
-        parser.error('Asset upgrade needs --boot-copy and all four upgrade inputs')
+    if (args.upgrade_mode is not None or any(value is not None for value in upgrade)) and (args.boot_copy is None or not all(upgrade)):
+        parser.error('Upgrade needs --boot-copy and all four upgrade inputs')
+    mode = None
+    if args.upgrade_archive is not None:
+        mode = 'home_upgrade' if args.upgrade_mode == 'home-v3' else 'asset_upgrade'
     try:
         common = (args.prior, args.archive, args.sha256, args.target,
                   args.install_report_sha256, args.guard_report_sha256)
@@ -276,7 +304,7 @@ if __name__ == '__main__':
             path, report = rehearse(*common)
         else:
             path, report = boot_recovery(*common, args.boot_copy, args.copy_report_sha256,
-                                         upgrade=upgrade if args.upgrade_archive is not None else None)
+                                         upgrade=upgrade if mode is not None else None, upgrade_mode=mode)
         print(json.dumps({'report': str(path), **report}, sort_keys=True))
     except (OSError, ValueError, RuntimeError, subprocess.SubprocessError) as error:
         parser.exit(1, 'Recovery rehearsal failed: ' + str(error) + '\n')

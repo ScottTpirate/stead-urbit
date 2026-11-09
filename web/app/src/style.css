@@ -133,6 +133,8 @@ h3 { font-size: 14px; font-weight: 620; }
 .stead-button--quiet:hover:enabled { background: var(--rail); }
 .button-plus { margin-right: 4px; }
 .stead-surface { min-width: 0; padding: 20px; border: 1px solid var(--line); border-radius: 9px; background: var(--paper); }
+.code-review-panel { margin-top: 14px; overflow-wrap: anywhere; }
+.code-review-panel select { max-width: 100%; }
 
 .rows, .work-groups { display: grid; gap: 10px; min-width: 0; }
 .resource-row { display: flex; align-items: center; justify-content: space-between; gap: 14px; padding: 14px 16px; }

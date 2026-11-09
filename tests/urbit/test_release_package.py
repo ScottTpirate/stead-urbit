@@ -90,7 +90,7 @@ class ReleasePackageTests(unittest.TestCase):
                 self.assertIn('desk/mar/kelvin.hoon', files)
                 self.assertIn('desk/mar/bill.hoon', files)
                 self.assertIn('notices/urbit-kernel-LICENSE.txt', files)
-                self.assertEqual(manifest['saved_state_version'], 4 if role == 'home' else 1)
+                self.assertEqual(manifest['saved_state_version'], 5 if role == 'home' else 1)
                 self.assertEqual('desk/lib/stead-code-home.hoon' in files, role == 'home')
                 self.assertFalse(any('/gen/' in name or '/ted/' in name or '/tests/' in name for name in files))
                 self.assertEqual(manifest['qualification']['native_install'], False)

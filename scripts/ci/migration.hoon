@@ -59,7 +59,7 @@
 =/  reloaded=vase  on-save:again
 ?>  &(=(~ again-cards) =(q.saved q.reloaded))
 ~|  %stead-ci-migration-rejections
-=/  future  (mule |.((on-load:initial !>([%stead-home %5 current]))))
+=/  future  (mule |.((on-load:initial !>([%stead-home %6 current]))))
 ?>  ?=(%| -.future)
 =/  corrupt  (mule |.((on-load:initial !>([%stead-home %1 old(journal ~)]))))
 ?>  ?=(%| -.corrupt)

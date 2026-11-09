@@ -28,7 +28,7 @@ def durable_fingerprint(ship, dojo):
 
     Clay can revive an idle app while importing changed asset dependencies.
     Home on-load rebuilds its projection, but on-save retains the original
-    target db throughout restoration. A v4 Home also retains its Code repos.
+    target db throughout restoration. V4 and v5 retain Code state.
     Identity persists only config/counter.
     Typed extraction still rejects a foreign/future saved-state envelope.
     """
@@ -43,8 +43,11 @@ def durable_fingerprint(ship, dojo):
             '?:  ?=([%stead-home %3 *] q.saved)  '
             '=/  stored  !<([%stead-home %3 db=* projection=*] saved)  '
             '(shax (jam db.stored))  '
-            '?>  ?=([%stead-home %4 *] q.saved)  '
+            '?:  ?=([%stead-home %4 *] q.saved)  '
             '=/  stored  !<([%stead-home %4 team=[db=* projection=*] code=*] saved)  '
+            '(shax (jam [db.team.stored code.stored]))  '
+            '?>  ?=([%stead-home %5 *] q.saved)  '
+            '=/  stored  !<([%stead-home %5 team=[db=* projection=*] code=*] saved)  '
             '(shax (jam [db.team.stored code.stored]))')
     else:
         source += ('=/  stored  !<([%stead-identity %1 config=* counter=@ud] saved)  '

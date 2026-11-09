@@ -12,6 +12,8 @@ import ssl
 import subprocess
 import sys
 import tempfile
+import time
+import uuid
 
 ROOT = Path(__file__).resolve().parents[3]
 sys.path.insert(0, str(ROOT / 'scripts/urbit'))
@@ -22,7 +24,7 @@ def pkt(body):
     return f'{len(body) + 4:04x}'.encode() + body
 
 
-def exercise(session, ca, project, output, checks, *, reuse_empty=False):
+def exercise(session, ca, project, output, checks, *, reuse_empty=False, reviewer=None, work=None):
     credentials = session_file(session)
     assert credentials['origin'] == 'https://home.localhost:8443'
     assert re.fullmatch(r'[0-9a-f-]{36}', project)
@@ -160,17 +162,151 @@ def exercise(session, ca, project, output, checks, *, reuse_empty=False):
         command('push', origin + remote, 'main:refs/heads/denied', cwd=source, ok=False)
         assert manage('revoke', handle=read['handle'])['status'] == 'revoked'
         checks.append('read-only credential can fetch but cannot push')
-        return {'first_oid': first.decode(), 'head_oid': second.decode(), 'tag_oid': tag.decode()}
+        result = {'first_oid': first.decode(), 'head_oid': second.decode(), 'tag_oid': tag.decode()}
+        if reviewer:
+            result['review'] = review_proof(
+                credentials, session_file(reviewer), ca, project, work, origin + remote,
+                source, clone, second, manage, command, password, checks)
+        return result
     finally:
         password.unlink(missing_ok=True)
 
 
+def review_proof(owner, reviewer, ca, project, work, remote, source, clone, base, manage,
+                 command, password, checks):
+    """Real second principal and protected branch on the same native Home."""
+    assert owner['origin'] == reviewer['origin'] and owner['principal_id'] != reviewer['principal_id']
+    assert re.fullmatch(r'[0-9a-f-]{36}', work)
+    source_transport = HTTPSQueries(owner, ca_file=ca)
+    reviewer_transport = HTTPSQueries(reviewer, ca_file=ca)
+    make_id = lambda: str(uuid.uuid7())
+    proposal = make_id()
+    grant = make_id()
+    receipt_id = make_id()
+
+    def code(transport, action, expected=200, **fields):
+        with closing(transport._connection(15)) as connection:
+            body = {'protocol': 'stead.code/1', 'project_id': project, 'action': action, **fields}
+            current = transport.credentials
+            connection.request('POST', '/stead/api/code', json.dumps(body).encode(), {
+                'Origin': current['origin'], 'Content-Type': 'application/json',
+                'Cookie': '__Host-stead-session=' + current['session'], 'X-Stead-CSRF': current['csrf'],
+                'Accept-Encoding': 'identity', 'Cache-Control': 'no-store'})
+            response = connection.getresponse()
+            value = json.loads(response.read(16385))
+            if response.status != expected:
+                error = value.get('error', 'unexpected')
+                if not isinstance(error, str) or not re.fullmatch(r'[a-z0-9_-]{1,80}', error):
+                    error = 'unexpected'
+                raise RuntimeError(f'review {action} returned {response.status}: {error}')
+            return value
+
+    def policy(action, payload):
+        value = json.loads(source_transport({'protocol': 'stead.query/3', 'request_id': make_id(),
+            'kind': 'project', 'project_id': project, 'resource_id': '', 'container_id': '', 'cursor': '', 'search': ''}))
+        assert value['status'] == 'read' and len(value['rows']) == 1
+        row = next(iter(value['rows'].values()))
+        outcome = json.loads(source_transport._post('/stead/api/command', {
+            'protocol': 'stead.command/3', 'request_id': make_id(), 'project_id': project,
+            'resource_id': project, 'expected_revision': row['policy_revision'],
+            'authority_epoch': row['authority_epoch'], 'operation': action, 'payload': payload}))
+        if outcome['status'] != 'accepted':
+            raise RuntimeError(f'{action} fixture grant change was rejected')
+
+    write = manage('issue', access='write')
+    granted = False
+    try:
+        password.write_text(write['bearer'] + '\n')
+        head = command('rev-parse', 'HEAD', cwd=source).strip().decode()
+        command('push', remote, 'HEAD:refs/heads/review-proof', cwd=source)
+        selection = {'proposal_id': proposal, 'revision': '1'}
+        submitted = code(source_transport, 'submit', **selection, work_id=work, ref='refs/heads/main',
+                         base_oid=base.decode(), head_oid=head, delegation_id='')
+        assert submitted['status'] == 'accepted'
+        code(source_transport, 'approve', expected=409, **selection)
+        code(reviewer_transport, 'approve', expected=409, **selection)
+        code(reviewer_transport, 'merge', expected=409, request_id=receipt_id, **selection)
+        checks.append('self and reader cannot approve or merge the proposal')
+        policy('policy.grant', {'grant_id': grant, 'principal_id': reviewer['principal_id'],
+                                'role': 'maintainer', 'expires_at_ms': str(int(time.time() * 1000) + 1800000)})
+        granted = True
+        assert code(reviewer_transport, 'approve', **selection)['status'] == 'accepted'
+        view = code(reviewer_transport, 'proposal', **selection)
+        assert view['head_oid'] == head and view['base_oid'] == base.decode()
+        assert view['reviewer'] == reviewer['principal_id']
+        accepted = code(reviewer_transport, 'merge', request_id=receipt_id, **selection)
+        assert accepted['status'] == 'accepted'
+        replayed = code(reviewer_transport, 'merge', request_id=receipt_id, **selection)
+        assert replayed['status'] == 'replayed'
+        assert replayed['repository_revision'] == accepted['repository_revision']
+        command('fetch', 'origin', cwd=clone)
+        assert command('rev-parse', 'refs/remotes/origin/main', cwd=clone).strip().decode() == head
+        command('fsck', '--full', '--strict', cwd=clone)
+        checks.append('exact approved protected ref commits once and stock fetch observes the original OID')
+        build = build_proof(code, source_transport, reviewer_transport, project, selection, head, source, command)
+        checks.append('assigned worker lease and verified offline artifact finish exactly once')
+        policy('policy.revoke', {'grant_id': grant})
+        granted = False
+        code(reviewer_transport, 'merge', expected=409, request_id=receipt_id, **selection)
+        checks.append('revoked reviewer cannot replay a protected merge receipt')
+        return {'proposal': proposal, 'head_oid': head, 'repository_revision': accepted['repository_revision'],
+                'build': build}
+    finally:
+        if granted:
+            policy('policy.revoke', {'grant_id': grant})
+        manage('revoke', handle=write['handle'])
+
+
+def build_proof(code, requester, runner, project, selection, head, source, command):
+    recipe = '9dfe50f0b7df0c270bff4c06a67251eac3e94476c034e4e3d0209fa8aa96fc6e'
+    job_id = str(uuid.uuid7())
+    job = code(requester, 'build-queue', job_id=job_id, recipe=recipe, worker_ship='~nec', **selection)
+    assert job['transition'] == 'accepted' and job['status'] == 'queued'
+    code(requester, 'build-claim', expected=409, job_id=job_id, expected_attempt='0')
+    claim = code(runner, 'build-claim', job_id=job_id, expected_attempt='0')
+    assert claim['status'] == 'leased' and claim['attempt'] == '1' and claim['commit'] == head
+    bundle = source.parent / 'build-input.bundle'
+    command('bundle', 'create', str(bundle), 'refs/heads/main', cwd=source)
+    bundle.chmod(0o600)
+    job_path = source.parent / 'build-job.json'
+    job_raw = json.dumps({'protocol': 'stead.build-job/1', 'project_id': project, 'job_id': job_id,
+        'proposal_id': selection['proposal_id'], 'proposal_revision': 1, 'attempt': 1,
+        'commit': head, 'source': claim['source'], 'recipe': recipe,
+        'bundle_sha256': hashlib.sha256(bundle.read_bytes()).hexdigest()}, sort_keys=True).encode()
+    job_path.write_bytes(job_raw)
+    git = ROOT / '.runtime/tooling/git-2.55.0/bin/git'
+    output = source.parent / 'build-output'
+    result = subprocess.run(['/usr/bin/python3', '-B', str(ROOT / 'scripts/urbit/code_build_worker.py'), 'run',
+        '--job', str(job_path), '--job-sha256', hashlib.sha256(job_raw).hexdigest(),
+        '--bundle', str(bundle), '--git-binary', str(git),
+        '--git-sha256', '93473c28694fd72bd889364107cd2770514de59780885a6a4aafca4d602e30ad',
+        '--output', str(output)], capture_output=True, timeout=40)
+    if result.returncode:
+        raise RuntimeError('isolated build worker failed')
+    receipt = json.loads((output / 'result.json').read_bytes())
+    proof = receipt['attestation']
+    artifact = (output / 'tree-manifest.json').read_bytes()
+    assert proof['source'] == claim['source'] and proof['recipe'] == recipe and proof['outcome'] == 'passed'
+    assert hashlib.sha256(artifact).hexdigest() == proof['output']
+    fields = {'job_id': job_id, 'attempt': '1', **proof, 'artifact_base64': base64.b64encode(artifact).decode()}
+    code(runner, 'build-finish', expected=409, **(fields | {'output': 'a' * 64}))
+    accepted = code(runner, 'build-finish', **fields)
+    assert accepted['transition'] == 'accepted' and accepted['status'] == 'finished'
+    assert code(runner, 'build-finish', **fields)['transition'] == 'replayed'
+    code(requester, 'build-release', expected=409, job_id=job_id, request_id=str(uuid.uuid7()))
+    return {'job_id': job_id, 'attempt': 1, 'commit': head, 'artifact_sha256': proof['output']}
+
+
 if __name__ == '__main__':
-    assert len(sys.argv) == 5 or sys.argv[5:] == ['--reuse-empty']
+    args = sys.argv[5:]
+    assert args in ([], ['--reuse-empty']) or (len(args) == 4 and args[:2] == ['--reuse-empty', '--review'])
     os.umask(0o077)
     checks = []
     try:
-        oids = exercise(Path(sys.argv[1]), Path(sys.argv[2]), sys.argv[3], Path(sys.argv[4]), checks, reuse_empty=len(sys.argv) == 6)
+        reviewer = Path(args[2]) if len(args) == 4 else None
+        work = args[3] if reviewer else None
+        oids = exercise(Path(sys.argv[1]), Path(sys.argv[2]), sys.argv[3], Path(sys.argv[4]), checks,
+                        reuse_empty=bool(args), reviewer=reviewer, work=work)
     except Exception as error:
         detail = str(error) if type(error) is RuntimeError else type(error).__name__
         print(json.dumps({'status': 'fail', 'checks': checks, 'error': detail}))

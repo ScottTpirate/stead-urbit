@@ -46,6 +46,12 @@ globalThis.fetch = async (url, init) => {
     if (mode === 'network') throw new TypeError('lost response');
     return json({status: 'logged_out'});
   }
+  if (String(url).endsWith('/code') && raw.action === 'merge') {
+    if (mode === 'code-merge-lost') throw new TypeError('lost merge response');
+    if (mode === 'code-merge-rejected') return json({protocol: 'stead.result/3', status: 'rejected', error: 'stale-target'}, 409);
+    return json({protocol: 'stead.code/1', status: 'replayed', request_id: raw.request_id,
+      proposal_id: raw.proposal_id, revision: mode === 'code-merge-wrong' ? '99' : raw.revision, repository_revision: '3'});
+  }
   if (String(url).endsWith('/updates')) {
     if (mode === 'updates-network') throw new TypeError('lost update response');
     const terminal = raw.action === 'cancel' || mode === 'updates-refresh';
@@ -351,4 +357,36 @@ test('late React cleanup from the prior partition cannot suppress a resumed watc
   await cleanup;
   assert.ok(current); assert.equal(bodies.length, before + 1);
   assert.equal(bodies.at(-1).action, 'open');
+});
+
+
+test('Code merge retries preserve the exact uncertain request through resume and clear on identity change', async () => {
+  person = 1; mode = ''; const client = new HomeClient(); await client.resume();
+  const project = id('301');
+  const key = {proposal_id: id('302'), revision: '1'};
+  mode = 'code-merge-rejected';
+  await rejects(client.mergeCode(project, key), 'stale-target');
+  assert.equal(client.pendingCodeMerge(project), undefined);
+  mode = 'code-merge-lost';
+  await rejects(client.mergeCode(project, key), 'outcome_unknown');
+  const saved = client.pendingCodeMerge(project)!;
+  assert.equal(saved.proposal_id, key.proposal_id);
+  assert.equal(saved.revision, key.revision);
+  const sent = {...savedBody};
+  await rejects(client.mergeCode(project, {...key, revision: '2'}), 'code_merge_pending');
+  await client.resume();
+  mode = 'code-merge-wrong';
+  await rejects(client.mergeCode(project), 'invalid_response');
+  assert.deepEqual(savedBody, sent);
+  assert.equal(client.pendingCodeMerge(project), saved);
+  mode = '';
+  assert.equal((await client.mergeCode(project)).repository_revision, '3');
+  assert.deepEqual(savedBody, sent);
+  assert.equal(client.pendingCodeMerge(project), undefined);
+  mode = 'code-merge-lost';
+  await rejects(client.mergeCode(project, key), 'outcome_unknown');
+  person = 2; mode = ''; await client.resume();
+  assert.equal(client.pendingCodeMerge(project), undefined);
+  await rejects(client.mergeCode(project), 'no_pending_merge');
+  person = 1;
 });

@@ -125,6 +125,100 @@ class ReleaseRecoveryTests(unittest.TestCase):
         with self.assertRaisesRegex(ValueError, 'only generated inventory'):
             recovery.asset_upgrade_plan(before, after, 'a' * 64, 'b' * 64, 'c' * 64)
 
+    def test_home_upgrade_admits_only_matching_v3_to_code_capable_native_desk(self):
+        common = {'agents': ['stead-home'], 'role': 'home', 'toolchain_sha256': '1' * 64,
+                  'compatibility': {'kernel_kelvin': 408, 'api_version': 3}}
+        app = 'desk/app/stead-home.hoon'
+        old = dict(common, source_commit='a' * 40, saved_state_version=3,
+                   files={app: {'sha256': '2' * 64}, 'desk/sys.kelvin': {'sha256': '3' * 64}})
+        new = dict(common, source_commit='b' * 40, saved_state_version=4,
+                   files={app: {'sha256': '4' * 64}, 'desk/sys.kelvin': {'sha256': '3' * 64}})
+        for version in (4, 5):
+            plan = recovery.home_upgrade_plan(old, dict(new, saved_state_version=version), 'a' * 64, 'b' * 64, 'c' * 64)
+            self.assertEqual(plan['source_desk'], recovery.desk_inventory(old))
+            self.assertEqual(plan['source_saved_state_version'], 3)
+            self.assertEqual(plan['target_max_saved_state_version'], version)
+        for unsupported in (
+            dict(new, saved_state_version=3),
+            dict(new, source_commit=old['source_commit']),
+            dict(new, compatibility={'kernel_kelvin': 408, 'api_version': 4}),
+            dict(new, toolchain_sha256='5' * 64),
+            dict(new, role='identity'),
+        ):
+            with self.assertRaisesRegex(ValueError, 'matching runtime and API'):
+                recovery.home_upgrade_plan(old, unsupported, 'a' * 64, 'b' * 64, 'c' * 64)
+        with self.assertRaisesRegex(ValueError, 'replace the native agent'):
+            recovery.home_upgrade_plan(old, dict(new, files=old['files']), 'a' * 64, 'b' * 64, 'c' * 64)
+
+    def test_full_desk_replacement_stages_new_native_dependencies_and_removes_obsolete_mark(self):
+        install = recovery.install
+        mount = self.source / install.DESK
+        package = self.directory / 'package'
+        (mount / 'lib').mkdir()
+        (mount / 'lib/retired.hoon').write_text('old')
+        (package / 'lib').mkdir(parents=True)
+        (package / 'lib/current.hoon').write_text('new')
+        previous, target = install.inventory(mount), install.inventory(package)
+        native = SimpleNamespace(pier=self.source, check=Mock(),
+                                 dojo=Mock(side_effect=['%.y', '>=', '%.n', '>=', '%.y', '%.y', '%.n']))
+        self.assertEqual(install.replace_clay_files(native, previous, target, package=package),
+                         {'removed': ['lib/retired.hoon'], 'updated': ['lib/current.hoon']})
+        self.assertEqual(install.inventory(mount), target)
+        self.assertEqual(install.inventory(package), target)
+        commands = [call.args[0] for call in native.dojo.call_args_list]
+        self.assertIn('|rm /=release-test=/lib/retired/hoon', commands)
+        self.assertIn('|commit %release-test', commands)
+        self.assertEqual(commands[-1], '.^(? %cu /=release-test=/lib/retired/hoon)')
+
+    def test_home_upgrade_does_not_activate_when_restart_fails(self):
+        install = recovery.install
+        saved = 'a' * 64
+        native = SimpleNamespace(binary='vere', pier=self.source, process=object(), check=Mock(),
+                                 readback=Mock(return_value=True),
+                                 start=Mock(return_value={'proof': {'namespaces': {'net': 'fixture'}}}),
+                                 dojo=Mock(side_effect=['%release-test', '>=', '%.n']))
+        context = {'restore_checkpoint': {'test_drivers': {'driver': 'a'},
+                                         'home_upgrade': {'saved_home_sha256': saved, 'source_desk': {'old': 'a'}}},
+                   'host_namespaces': {'net': 'host'}}
+        checkpoint = Mock()
+        restart = Mock(side_effect=RuntimeError('interruption recovery failed'))
+        tls = SimpleNamespace(create=Mock(return_value=self.directory), install=Mock(), verify=Mock())
+        with patch.dict(sys.modules, {'native_tls': tls}), patch.object(
+                install, 'inventory', return_value={'driver': 'a'}), patch.object(
+                install, 'wait_agent'), patch.object(
+                install, 'saved_home_fingerprint', return_value=saved), patch.object(
+                install, 'clay_readback'), patch.object(
+                install, 'replace_clay_files', return_value={'removed': [], 'updated': []}), patch.object(
+                install, 'bootstrap_role') as bootstrap, patch.object(
+                install.os, 'readlink', return_value='fixture'), patch.object(
+                install.socket, 'if_nameindex', return_value=[(1, 'lo')]):
+            with self.assertRaisesRegex(RuntimeError, 'interruption recovery failed'):
+                install.verify_restored_home(native, context, {}, checkpoint, restart)
+        restart.assert_called_once_with({'driver': 'a'})
+        bootstrap.assert_not_called()
+        self.assertEqual([call.args[0] for call in native.dojo.call_args_list if call.args[0].startswith('|rein')],
+                         ['|rein %release-test [%.n %stead-home]'])
+
+    def test_restarted_home_requires_exact_stopped_pier_from_upgrade_mode(self):
+        install = recovery.install
+        interrupted = {'sha256': 'a' * 64, 'bytes': 7, 'files': 2}
+        context = {'artifact_sha256': 'b' * 64, 'restore_checkpoint':
+                   {'artifact_sha256': 'b' * 64, 'pier': {'sha256': 'c' * 64}, 'home_upgrade': {}}}
+        native = object.__new__(install.RestoredHomeNative)
+        native.ship = 'zod'
+        native.pier = self.source
+        native.interrupted_checkpoint = interrupted
+        with patch.object(install.execution_policy, 'read_json', return_value=context), patch.object(
+                install, 'checkpoint_tree', return_value=interrupted) as tree:
+            native._check_pier()
+            tree.assert_called_once_with(self.source, installed=True)
+            tree.return_value = {'sha256': 'd' * 64}
+            with self.assertRaisesRegex(ValueError, 'binding differs'):
+                native._check_pier()
+            del context['restore_checkpoint']['home_upgrade']
+            with self.assertRaisesRegex(ValueError, 'Only the controlled Home upgrade'):
+                native._check_pier()
+
     def test_replace_verified_asset_delta_rejects_dirty_desk_before_commit(self):
         mount = self.source / recovery.install.DESK
         package = self.directory / 'package'

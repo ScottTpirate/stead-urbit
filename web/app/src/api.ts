@@ -2,6 +2,17 @@ import { newId, commandDigest } from './protocol';
 // Public HTTPS client. No owner cookies, channels, scries or administrative APIs.
 export type Fields = Record<string, string>;
 export type Row = Fields;
+export type CodeReviewKey = { proposal_id: string; revision: string };
+export type CodeMerge = CodeReviewKey & { action: 'merge'; request_id: string };
+export type CodeInput = { action: 'status' | 'create' }
+  | { action: 'issue'; access: 'read' | 'write' }
+  | { action: 'revoke'; handle: string }
+  | { action: 'protect'; ref: string }
+  | ({ action: 'proposal' | 'approve' } & CodeReviewKey)
+  | ({ action: 'submit'; work_id: string; ref: string; base_oid: string; head_oid: string; delegation_id: string } & CodeReviewKey)
+  | { action: 'delegate'; delegation_id: string; worker_ship: string; work_id: string; ref: string; expires_at_ms: string }
+  | { action: 'revoke-delegation'; delegation_id: string }
+  | CodeMerge;
 export type ViewKind = 'identity' | 'projects' | 'project' | 'work' | 'documents' | 'containers' | 'document' | 'relations' | 'search' | 'activity' | 'inbox' | 'receipt';
 export interface Query {
   kind: ViewKind;
@@ -63,6 +74,7 @@ export class HomeError extends Error {
   constructor(readonly code: string) { super(code); }
 }
 const TOKEN = /^[0-9a-f]{64}$/u;
+const GIT_OID = /^[0-9a-f]{40}$/u;
 const DECIMAL = /^(0|[1-9][0-9]{0,19})$/u;
 const MAX_RESPONSE = 262144;
 function object(value: unknown): Record<string, unknown> {
@@ -105,6 +117,7 @@ export class HomeClient {
   private suspended = false;
   private inflight = new Set<AbortController>();
   private retired = new Set<HomeWatch>();
+  private pendingMerges = new Map<string, CodeMerge>();
   onInvalidated: () => void = () => {};
   private fence() {
     this.generation++;
@@ -112,7 +125,7 @@ export class HomeClient {
     this.inflight.clear();
   }
   clear() {
-    this.fence(); this.csrf = ''; this.identity = null; this.adopting = 0; this.suspended = false; this.retired.clear(); this.onInvalidated();
+    this.fence(); this.csrf = ''; this.identity = null; this.adopting = 0; this.suspended = false; this.retired.clear(); this.pendingMerges.clear(); this.onInvalidated();
   }
   private async post(path: string, body: unknown, authenticated: boolean, mutation = false, adoption = false): Promise<Record<string, unknown>> {
     if (authenticated && this.adopting && !adoption) throw new HomeError('session_changed');
@@ -138,7 +151,8 @@ export class HomeClient {
         && ((response.status === 403 && value.error === 'invalid_csrf') || path === '/stead/api/code'))) throw new HomeError('outcome_unknown');
       if (mutation) return value;
       if (value.status === 'rejected') {
-        if (typeof value.error !== 'string' || !/^[a-z_]{1,64}$/u.test(value.error)) throw new HomeError('invalid_response');
+        const errorCode = path === '/stead/api/code' ? /^[a-z_-]{1,64}$/u : /^[a-z_]{1,64}$/u;
+        if (typeof value.error !== 'string' || !errorCode.test(value.error)) throw new HomeError('invalid_response');
         throw new HomeError(value.error);
       }
       if (!response.ok) throw new HomeError('outcome_unknown');
@@ -182,7 +196,7 @@ export class HomeClient {
       throw new HomeError('invalid_response');
     }
     const changed = !this.identity || ['principal_id', 'binding_id', 'binding_revision', 'identity_ship', 'session_audit_id'].some(key => this.identity![key] !== person[key]);
-    if (changed) this.onInvalidated();
+    if (changed) { this.pendingMerges.clear(); this.onInvalidated(); }
     this.identity = person;
     this.retired.clear(); // Confirmed resume/consumption retires prior server read handles.
     this.suspended = false;
@@ -216,13 +230,49 @@ export class HomeClient {
     } catch (error) { if (error instanceof HomeError && error.code === 'session_required') return; throw new HomeError('logout_unconfirmed'); }
   }
   async query(query: Query): Promise<View> { return this.readQuery(query); }
-  async code(project_id: string, input: { action: 'status' | 'create' }
-    | { action: 'issue'; access: 'read' | 'write' } | { action: 'revoke'; handle: string }): Promise<Fields> {
+  async code(project_id: string, input: CodeInput): Promise<Fields> {
     const value = fields(await this.post('/stead/api/code', { protocol: 'stead.code/1', project_id, ...input }, true));
     if (value.protocol !== 'stead.code/1') throw new HomeError('invalid_response');
     if (input.action === 'issue' && (value.status !== 'issued' || !TOKEN.test(value.handle ?? '')
       || !TOKEN.test(value.bearer ?? '') || !DECIMAL.test(value.expires_at_ms ?? ''))) throw new HomeError('invalid_response');
+    if (input.action === 'proposal' && (value.status !== 'proposal' || value.proposal_id !== input.proposal_id
+      || value.revision !== input.revision || !GIT_OID.test(value.base_oid ?? '') || !GIT_OID.test(value.head_oid ?? '')
+      || !value.ref?.startsWith('refs/heads/') || !value.work_id || !value.author || value.reviewer === undefined
+      || value.merged_revision === undefined || (value.merged_revision !== '' && !DECIMAL.test(value.merged_revision)))) {
+      throw new HomeError('invalid_response');
+    }
+    if (['approve', 'submit', 'merge', 'delegate', 'revoke-delegation'].includes(input.action)
+      && value.status !== 'accepted' && value.status !== 'replayed') throw new HomeError('invalid_response');
+    if (input.action === 'merge' && (value.request_id !== input.request_id || value.proposal_id !== input.proposal_id
+      || value.revision !== input.revision || !DECIMAL.test(value.repository_revision ?? '') || value.repository_revision === '0')) {
+      throw new HomeError('invalid_response');
+    }
     return value;
+  }
+  clearCodeMerges() { this.pendingMerges.clear(); }
+  pendingCodeMerge(project: string): Readonly<CodeMerge> | undefined {
+    return this.pendingMerges.get(project);
+  }
+  async mergeCode(project: string, key?: CodeReviewKey): Promise<Fields> {
+    const prior = this.pendingMerges.get(project);
+    if (prior && key && (key.proposal_id !== prior.proposal_id || key.revision !== prior.revision)) {
+      throw new HomeError('code_merge_pending');
+    }
+    const request: CodeMerge | undefined = prior ?? (key && { ...key, action: 'merge', request_id: newId() });
+    if (!request) throw new HomeError('no_pending_merge');
+    this.pendingMerges.set(project, request);
+    try {
+      const receipt = await this.code(project, request);
+      if (this.pendingMerges.get(project) === request) this.pendingMerges.delete(project);
+      return receipt;
+    } catch (error) {
+      // A first confirmed rejection needs no retry. Once an outcome is
+      // uncertain, a later denial cannot tell us whether the first applied.
+      const uncertain = !(error instanceof HomeError)
+        || ['outcome_unknown', 'invalid_response', 'session_changed'].includes(error.code);
+      if (!prior && !uncertain && this.pendingMerges.get(project) === request) this.pendingMerges.delete(project);
+      throw error;
+    }
   }
   private async readQuery(query: Query, adoption = false): Promise<View> {
     const request_id = newId();

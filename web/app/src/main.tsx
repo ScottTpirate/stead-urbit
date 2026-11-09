@@ -102,6 +102,7 @@ function App() {
   const discardTrigger = useRef<HTMLElement | null>(null);
   const [online, setOnline] = useState(navigator.onLine);
   const clearViews = () => {
+    client.clearCodeMerges();
     activeQuery.current++;
     displayedSnapshot.current = null;
     setLoading(false);
@@ -550,7 +551,8 @@ function App() {
             variant={showRepository ? 'primary' : 'quiet'} aria-current={showRepository ? 'page' : undefined}
             onClick={() => setShowRepository(true)}>Code</Button>}</nav>
           {showRepository && repository?.status === 'ready' ? <CodeRepository key={project.project_id}
-            client={client} project={project.project_id!} writable={repository.write === 'yes'} /> : <>
+            client={client} project={project.project_id!} writable={repository.write === 'yes'}
+            manage={repository.manage === 'yes'} principal={identity.principal_id ?? ''} /> : <>
           {tab === 'project' && repository?.status === 'disabled' && repository.manage === 'yes'
             && <Button disabled={busy || !!pending || !!form} onClick={() => void action(async () => {
               await client.code(project.project_id!, { action: 'create' });

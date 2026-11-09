@@ -3,19 +3,20 @@
 =,  stead-codec
 |%
 +$  pending-entry  [actor=authentication:stead-team expires=@ud]
++$  git-reply  [id=@ta sender=@p bearer=@t nonce=@t]
 +$  state
   $:  db=state:stead-team  view=state:stead-projection
       transient=ephemeral:stead-browser  restoring=(unit job:stead-restore)
       job=@t  incarnation=@t  pending=(map path pending-entry)
       files=(map @t [mime=@t bytes=@t])
-      code=state:stead-code-home
+      code=state:stead-code-home  git-waiting=(map @t git-reply)
   ==
 +$  saved  [db=state:stead-team projection=state:stead-projection]
 ++  empty
   ^-  state
   =/  view=state:stead-projection
     [*index:stead-projection *index:stead-projection ~ | |]
-  [empty:stead-team view *ephemeral:stead-browser ~ '' '' ~ ~ *state:stead-code-home]
+  [empty:stead-team view *ephemeral:stead-browser ~ '' '' ~ ~ *state:stead-code-home ~]
 ++  now-ms
   |=  now=@da
   (div (mul 1.000 (sub now ~1970.1.1)) ~s1)
@@ -36,14 +37,14 @@
     ^-  saved
     [?~(restoring.owner db.owner target.u.restoring.owner) view.owner]
   ++  load
-    |=  [old=saved repos=saved:stead-code-home]
+    |=  [old=saved code=persisted:stead-code-home]
     ^-  (quip card:agent:gall state)
     ?>  ?=(^ current.registry.db.old)
-    ?>  (validate-saved:stead-code-home db.old repos)
+    ?>  (validate-persisted:stead-code-home db.old code)
     =/  staged  (begin:stead-restore db.old our.bowl)
     =/  job  (token:stead-session eny.bowl act.bowl 'stead.restore-job/1')
     =/  fresh=state
-      [empty:stead-team *state:stead-projection *ephemeral:stead-browser [~ staged] job '' ~ ~ [repos *ledger:stead-code-credentials]]
+      [empty:stead-team *state:stead-projection *ephemeral:stead-browser [~ staged] job '' ~ ~ [repos.code *ledger:stead-code-credentials uploads.code reviews.code builds.code] ~]
     =.  owner  fresh
     [(weld kicks ~[bind wait]) owner]
   ++  configured
@@ -56,7 +57,7 @@
     =/  next  (configure:stead-team db.owner raw our.bowl (now-ms now.bowl))
     =/  view  (begin:stead-projection next view.owner)
     =/  job  (token:stead-session eny.bowl act.bowl 'stead.projection-job/1')
-    =.  owner  owner(db next, view view, transient *ephemeral:stead-browser, pending ~, incarnation '', job job, files ~, code code.owner(book *ledger:stead-code-credentials))
+    =.  owner  owner(db next, view view, transient *ephemeral:stead-browser, pending ~, incarnation '', job job, files ~, code code.owner(book *ledger:stead-code-credentials), git-waiting ~)
     [(weld kicks ~[bind wait]) owner]
   ++  load-assets
     ^-  (map @t [mime=@t bytes=@t])
@@ -80,7 +81,7 @@
       (turn (skip ~(tap in old-paths) |=(old=path =(old route))) |=(old=path [%give %kick [old ~] ~]))
     =/  replies=(list card:agent:gall)
       ~[[%give %fact [route ~] %stead-result-3 !>(response)] [%give %kick [route ~] ~]]
-    :_  owner(transient *ephemeral:stead-browser, pending ~, incarnation incarnation, files files, code code.owner(book *ledger:stead-code-credentials))
+    :_  owner(transient *ephemeral:stead-browser, pending ~, incarnation incarnation, files files, code code.owner(book *ledger:stead-code-credentials), git-waiting ~)
     (weld retired replies)
   ++  available
     ^-  ?
@@ -114,7 +115,8 @@
     ?:  (git-path:stead-code-http url.request.request)
       =/  input  (validate:stead-code-http request origin.config)
       ?~  input  [(response id 403 'application/json' (error:stead-team 'invalid_http_request') ~) owner]
-      (code-response id (serve:stead-code-home db.owner code.owner u.input (now-ms now.bowl) eny.bowl))
+      ?:  ?=(%receive -.operation.u.input)  (queue-git id u.input)
+      (code-response id (serve:stead-code-home db.owner code.owner u.input (now-ms now.bowl) ''))
     =/  parsed  (validate:stead-http request origin.config (paths:stead-assets '/stead/'))
     ?~  parsed  [(response id 403 'application/json' (error:stead-team 'invalid_http_request') ~) owner]
     ?:  =('/stead/api/code' route.u.parsed)
@@ -132,6 +134,34 @@
         [%pass [%stead-approval (decimal act.bowl) ~] %agent [ship.u.outgoing.out %stead-identity] %poke %stead-auth-challenge-1 !>(bytes.u.outgoing.out)]
       (weld cards [challenge ~])
     [cards owner(db db.out, view view.out, transient transient.out)]
+  ++  queue-git
+    |=  [id=@ta input=incoming:stead-code-http]
+    ^-  (quip card:agent:gall state)
+    =/  request  (request-id:stead-code-home eny.bowl act.bowl)
+    =/  queued  (quarantine:stead-code-home db.owner code.owner input (now-ms now.bowl) request)
+    ?:  ?=(%refused -.queued)  (code-response id out.queued)
+    ?:  |((~(has by git-waiting.owner) key.queued) (gte ~(wyt by git-waiting.owner) 4))
+      (code-response id (error:stead-code-home code.owner 409 'upload_in_progress'))
+    =/  nonce  (token:stead-session eny.bowl act.bowl 'stead.git-lease/1')
+    =/  route=wire  [%stead-git key.queued nonce ~]
+    =/  wake=card:agent:gall  [%pass route %arvo %b %wait (add now.bowl (div ~s1 10))]
+    [[wake ~] owner(code next.queued, git-waiting (~(put by git-waiting.owner) key.queued [id src.bowl bearer.input nonce]))]
+  ++  finish-git
+    |=  [key=@t nonce=@t]
+    ^-  (quip card:agent:gall state)
+    =/  found  (~(get by git-waiting.owner) key)
+    ?~  found  [~ owner]
+    ?.  =(nonce nonce.u.found)  [~ owner]
+    =/  next  owner(git-waiting (~(del by git-waiting.owner) key))
+    ?.  (response-source:stead-eyre sup.bowl sender.u.found id.u.found)  [~ next]
+    =/  out
+      ?.  available  (error:stead-code-home code.owner 503 'projection_unavailable')
+      =/  attempted
+        (mule |.((finish-upload:stead-code-home db.owner code.owner key bearer.u.found (now-ms now.bowl))))
+      ?:  ?=(%| -.attempted)  (error:stead-code-home code.owner 400 'invalid_request')
+      p.attempted
+    =/  [cards=(list card:agent:gall) changed=state]  (code-response id.u.found out)
+    [cards changed(git-waiting git-waiting.next)]
   ++  poke
     |=  [mark=mark vase=vase]
     ^-  (quip card:agent:gall state)
@@ -215,6 +245,12 @@
   ++  leave
     |=  route=path
     ^-  (quip card:agent:gall state)
+    ?:  ?=([%http-response @ ~] route)
+      =/  active
+        %+  skip  ~(tap by git-waiting.owner)
+        |=  [key=@t row=git-reply]
+        &(=(id.row i.t.route) =(sender.row src.bowl))
+      [~ owner(git-waiting (malt active))]
     =/  found  (~(get by pending.owner) route)
     ?~  found  [~ owner]
     ?.  =(src.bowl ship.identity.actor.u.found)  [~ owner]
@@ -225,6 +261,8 @@
     ?:  ?=([%eyre %bound *] sign)
       ?>  accepted.sign
       [~ owner]
+    ?:  &(?=([%stead-git @ @ ~] wire) ?=([%behn %wake ~] sign))
+      (finish-git i.t.wire i.t.t.wire)
     ?.  &(?=([%stead-rebuild @ ~] wire) =(i.t.wire job.owner) ?=([%behn %wake ~] sign))
       [~ owner]
     ?^  restoring.owner

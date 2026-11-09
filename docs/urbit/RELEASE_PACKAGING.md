@@ -32,12 +32,12 @@ reads committed source; uncommitted edits and unrelated files are excluded.
 It refuses a packager that differs from the selected committed version.
 
 The saved-state field names the maximum format emitted by the packaged role.
-The current Home desk declares v4 for Code-enabled state. A Home without Code
-repositories can still emit v3. Identity remains v1. Historical v3 Home archives
-verify against their own pinned target and archive digest. The verifier binds
-the Code import closure to v4, so editing the version label cannot substitute a
-Code desk for a reviewed historical v3 artifact. Native upgrade and recovery
-claims still require the corresponding saved-state tests.
+The current Home declares v5 for queued uploads, reviews and build evidence.
+A Home with Code repositories and no delivery or queued state emits v4. A
+Work/Docs-only Home can still emit v3. Identity remains v1. Historical v3 and
+v4 archives verify against their own pinned targets and digests. The verifier
+checks the Code and upload import closure against the maximum state version.
+Native upgrade and recovery claims require the corresponding saved-state tests.
 
 The candidate includes no pier, key, cookie, account binding, project export,
 test fixture, operator credential or host-specific path. It does not include a

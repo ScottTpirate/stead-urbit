@@ -3,7 +3,7 @@
 =>
 |%
 +$  saved
-  [%stead-home $%([%1 db=state:stead-core-v1] [%2 db=state:stead-core] [%3 team=saved:stead-team-owner] [%4 team=saved:stead-team-owner code=saved:stead-code-home])]
+  [%stead-home $%([%1 db=state:stead-core-v1] [%2 db=state:stead-core] [%3 team=saved:stead-team-owner] [%4 team=saved:stead-team-owner code=saved:stead-code-home] [%5 team=saved:stead-team-owner code=persisted:stead-code-home])]
 +$  pending-entry  [sender=@p expires=@da]
 ++  now-ms
   |=  now=@da
@@ -121,6 +121,8 @@
   `this
 ++  on-save
   ?:  configured
+    ?:  |(?=(^ uploads.code.owner) ?=(^ reviews.code.owner))
+      !>([%stead-home %5 save:team [repos.code.owner uploads.code.owner reviews.code.owner builds.code.owner]])
     ?:  ?=(~ repos.code.owner)  !>([%stead-home %3 save:team])
     !>([%stead-home %4 save:team repos.code.owner])
   !>([%stead-home %2 db])
@@ -128,11 +130,14 @@
   |=  old=vase
   ~|  %stead-unsupported-state
   =/  restored  !<(saved old)
-  ?:  ?=([%stead-home %4 *] restored)
+  ?:  ?=([%stead-home %5 *] restored)
     =/  [cards=(list card:agent:gall) next=state:stead-team-owner]  (load:team team.restored code.restored)
     [cards this(owner next, pending ~)]
+  ?:  ?=([%stead-home %4 *] restored)
+    =/  [cards=(list card:agent:gall) next=state:stead-team-owner]  (load:team team.restored [code.restored ~ ~ ~])
+    [cards this(owner next, pending ~)]
   ?:  ?=([%stead-home %3 *] restored)
-    =/  [cards=(list card:agent:gall) next=state:stead-team-owner]  (load:team team.restored ~)
+    =/  [cards=(list card:agent:gall) next=state:stead-team-owner]  (load:team team.restored [~ ~ ~ ~])
     [cards this(owner next, pending ~)]
   =/  next=state:stead-core
     ?:  ?=([%stead-home %1 *] restored)  (migrate-v1:stead-core db.restored)
@@ -159,7 +164,7 @@
     ?>  &(=(our.bowl ~zod) =(src.bowl our.bowl) initialized.db)
     =/  [op=@tas ship=@p key=@t value=@t]  !<([@tas @p @t @t] vase)
     ?:  =(%roundtrip op)  (on-load on-save)
-    ?:  =(%load-future op)  (on-load !>([%stead-home %5 db]))
+    ?:  =(%load-future op)  (on-load !>([%stead-home %6 db]))
     ?:  =(%load-counter op)  (on-load !>([%0 0]))
     ?:  =(%hold-outsider-read op)
       ?>  &(=(ship ~bud) (lte (met 3 key) 1.024))

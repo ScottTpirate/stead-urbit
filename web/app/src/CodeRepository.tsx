@@ -1,8 +1,11 @@
 import { useState } from 'react';
 import type { Fields, HomeClient } from './api';
 import { Button, Surface, TextField } from './primitives';
+import { CodeReview } from './CodeReview';
 
-export function CodeRepository({ client, project, writable }: { client: HomeClient; project: string; writable: boolean }) {
+export function CodeRepository({ client, project, writable, manage, principal }: {
+  client: HomeClient; project: string; writable: boolean; manage: boolean; principal: string;
+}) {
   const [credential, setCredential] = useState<Fields | null>(null);
   const [handle, setHandle] = useState('');
   const [busy, setBusy] = useState(false);
@@ -22,7 +25,7 @@ export function CodeRepository({ client, project, writable }: { client: HomeClie
       setHandle(''); setCredential(null); setNotice('Git credential revoked.');
     } catch { setFailure(true); } finally { setBusy(false); }
   }
-  return <Surface className="repository-panel">
+  return <><Surface className="repository-panel">
     <h2>Git repository</h2>
     <TextField label="Clone URL" value={new URL(`/stead/git/${project}.git`, location.origin).href} readOnly />
     <p>Use <code>stead</code> as the username and enter an individual credential when Git prompts for a password.</p>
@@ -39,5 +42,7 @@ export function CodeRepository({ client, project, writable }: { client: HomeClie
     <Button disabled={busy || !/^[a-f0-9]{64}$/u.test(handle)} onClick={() => void revoke()}>Revoke credential</Button>
     {failure && <p role="alert">The Home could not confirm this credential request.</p>}
     {notice && <p role="status">{notice}</p>}
-  </Surface>;
+  </Surface>
+    <CodeReview client={client} project={project} writable={writable} manage={manage} principal={principal} />
+  </>;
 }

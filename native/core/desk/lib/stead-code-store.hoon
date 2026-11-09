@@ -1,6 +1,5 @@
-::  PRIVATE PROTOTYPE: pure repository acceptance, no Gall persistence/routes.
-::  Home owns this versioned state and pending jobs. No raw pack input exists.
-::  Small synchronous proof quotas; production requires durable staged work.
+::  Pure repository acceptance owned by the configured Home.
+::  Raw upload quarantine is separate from the authorized object transaction.
 /+  stead-git, stead-codec, stead-session, stead-code-credentials, stead-code-git-objects, stead-code-git-graph, stead-code-receive, stead-code-ancestry
 |%
 +$  scope  scope:stead-code-credentials
@@ -147,7 +146,36 @@
   ?.  &((same-actor:stead-session owner.body.job u.identity) =(current destination.body.job) =(id id.body.job))  (reject db %stage-scope)
   ?.  (payload-bounds body.job)  (reject db %stage-bound)
   ?.  &(=(digest digest.job) =(digest (fingerprint body.job)))  (reject db %stage-digest)
-  =/  joined  (combine objects.db items.body.job)
+  (apply-payload db body.job u.identity digest protected authorize)
+::  Internal only. The Home review reducer binds the authorized exact update,
+::  reviewer, current policy and expected ref. Ordinary Git never calls this.
+++  commit-reviewed
+  |=  [db=state owner=actor id=@t digest=@t change=update]
+  ^-  result
+  =/  body=payload  [destination.db id owner ~[change] ~]
+  ?.  &((payload-bounds body) (token-valid:stead-session digest) !=(0 target.change))
+    (reject db %invalid-request)
+  ?:  (~(has by receipts.db) id)  (reject db %request-id-reused)
+  =/  load=reader:stead-code-git-graph
+    |=  oid=@ux
+    (~(get by objects.db) oid)
+  =/  visible  (closure refs.db load)
+  ?.  ?=(%& -.visible)  (reject db %unavailable)
+  ?.  =([~ %commit] (~(get by p.visible) target.change))
+    (reject db %unavailable)
+  (apply-payload db body owner digest ~ |=([intent=action candidate=update] =(candidate change)))
+++  apply-payload
+  |=  $:  db=state  body=payload  who=actor  digest=@t
+          protected=(set @t)  authorize=$-([action update] ?)
+      ==
+  ^-  result
+  ?.  &(=(1 version.db) =(destination.db destination.body) !(~(has by receipts.db) id.body))
+    (reject db %store-scope)
+  ?:  |((gte ~(wyt by receipts.db) 32) (gte revision.db 18.446.744.073.709.551.615) (gth ~(wyt by refs.db) 16))
+    (reject db %capacity)
+  ?.  &(=(revision.db ~(wyt by receipts.db)) =(revision.db (lent (scag 33 journal.db))))
+    (reject db %journal-state)
+  =/  joined  (combine objects.db items.body)
   ?:  ?=(%| -.joined)  (reject db p.joined)
   =/  load=reader:stead-code-git-graph
     |=  oid=@ux
@@ -160,16 +188,16 @@
   =/  lineage=$-([@ux @ux] ?)
     |=  [base=@ux tip=@ux]
     (descends base tip load)
-  =/  next  (decide:stead-code-receive refs.db epoch.current epoch.destination.body.job changes.body.job protected authorize kind lineage)
+  =/  next  (decide:stead-code-receive refs.db epoch.destination.db epoch.destination.body changes.body protected authorize kind lineage)
   ?:  ?=(%| -.next)  (reject db p.next)
   ?:  (gth ~(wyt by p.next) 16)  (reject db %ref-capacity)
   =/  graph  (closure p.next load)
   ?:  ?=(%| -.graph)  (reject db p.graph)
-  ?.  (levy items.body.job |=([item=object] (~(has by p.graph) oid.item)))  (reject db %unreachable-object)
+  ?.  (levy items.body |=([item=object] (~(has by p.graph) oid.item)))  (reject db %unreachable-object)
   ::  Previously accepted objects may outlive refs. Future reads must still
   ::  enforce current scoped reachability, never expose the whole object map.
-  =/  accepted=receipt  [1 current id digest u.identity +(revision.db) changes.body.job]
+  =/  accepted=receipt  [1 destination.db id.body digest who +(revision.db) changes.body]
   =/  after=state
-    db(revision +(revision.db), objects p.joined, refs p.next, pending (~(del by pending.db) id), receipts (~(put by receipts.db) id accepted), journal [id journal.db])
+    db(revision +(revision.db), objects p.joined, refs p.next, pending (~(del by pending.db) id.body), receipts (~(put by receipts.db) id.body accepted), journal [id.body journal.db])
   [%applied after accepted]
 --

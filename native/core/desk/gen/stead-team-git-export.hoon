@@ -16,6 +16,9 @@
 ?>  ?=([%20 %live *] egg)
 =/  saved=vase  +.old-state.egg
 =/  team=saved:stead-team-owner
+  ?:  ?=([%stead-home %5 *] q.saved)
+    =/  loaded  !<([%stead-home %5 team=saved:stead-team-owner code=persisted:stead-code-home] saved)
+    team.loaded
   ?:  ?=([%stead-home %4 *] q.saved)
     =/  loaded  !<([%stead-home %4 team=saved:stead-team-owner code=saved:stead-code-home] saved)
     team.loaded

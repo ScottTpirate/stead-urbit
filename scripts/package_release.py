@@ -102,7 +102,7 @@ def validate_contract(value):
     require(value['agents'] == {'home': 'stead-home', 'identity': 'stead-identity'}
             and isinstance(states, dict) and set(states) == {'home', 'identity'}
             and all(type(version) is int for version in states.values())
-            and states['home'] in (3, 4) and states['identity'] == 1, 'Unsupported app/state profile')
+            and states['home'] in (3, 4, 5) and states['identity'] == 1, 'Unsupported app/state profile')
     for name in ('runtime_binary_sha256', 'toolchain_sha256'):
         require(isinstance(value[name], str) and re.fullmatch(r'[0-9a-f]{64}', value[name]), 'Invalid release hash')
     require(re.fullmatch(r'[0-9a-f]{40}', value['kernel_commit']), 'Invalid kernel commit')
@@ -181,10 +181,11 @@ def canonical_archive(members):
 
 
 def validate_home_format(role, version, desk):
-    # Code-enabled Home can save v4. Older pinned archives remain verifiable
-    # with their own v3 profile and cannot stand in for a v4 candidate.
+    # Historical archives keep their own maximum saved-state profile.
     if role == 'home':
-        require(('lib/stead-code-home.hoon' in desk) == (version == 4), 'Home saved-state profile differs from desk closure')
+        require(('lib/stead-code-home.hoon' in desk) == (version >= 4)
+                and ('lib/stead-code-upload.hoon' in desk) == (version == 5),
+                'Home saved-state profile differs from desk closure')
 
 
 def archive_bytes(root=ROOT, *, role, reference='HEAD'):

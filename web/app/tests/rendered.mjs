@@ -55,7 +55,7 @@ async function fixture(run, mockRepository = false) {
     watches: new Map(), pages: new Map(), requests: [], sequence: 0, token: 0, polls: 0, opens: 0, denied: false,
     holdOpen: false, releaseOpen: null, holdWork: false, releaseWork: null, invalidateCommands: false,
     project: {kind: 'project', resource_id: id(1), project_id: id(1), title: 'Garden', project_key: 'GARDEN', preset: 'general', authority_epoch: '1', resource_revision: '1', policy_revision: '1', role: 'maintainer'},
-    work: [], activity: [], containers: [], documents: []};
+    work: [], activity: [], containers: [], documents: [], proposals: new Map(), mergeRequests: [], dropMergeResponse: false};
   await page.route(origin + '/stead/**', async route => {
     const request = route.request();
     if (request.method() !== 'POST') return route.continue();
@@ -83,8 +83,23 @@ async function fixture(run, mockRepository = false) {
         state.repositoryReady = true;
         return respond({status: 'ready'});
       }
-      assert.equal(value.action, 'status');
-      return respond({status: state.repositoryReady ? 'ready' : 'disabled', write: 'yes', manage: 'yes'});
+      if (value.action === 'status') return respond({status: state.repositoryReady ? 'ready' : 'disabled', write: 'yes', manage: 'yes'});
+      const key = value.proposal_id + '/' + value.revision;
+      if (value.action === 'submit') {
+        const {proposal_id, revision, work_id, ref, base_oid, head_oid} = value;
+        state.proposals.set(key, {proposal_id, revision, work_id, ref, base_oid, head_oid, author: person.principal_id, reviewer: '', merged_revision: ''});
+        return respond({status: 'accepted'});
+      }
+      const row = state.proposals.get(key);
+      assert.ok(row);
+      if (value.action === 'proposal') return respond({status: 'proposal', ...row});
+      assert.equal(value.action, 'merge');
+      const previous = state.mergeRequests.at(-1);
+      state.mergeRequests.push(value);
+      if (previous) assert.deepEqual(value, previous);
+      row.merged_revision = '3';
+      if (state.dropMergeResponse) { state.dropMergeResponse = false; return route.abort('failed'); }
+      return respond({status: 'replayed', request_id: value.request_id, proposal_id: value.proposal_id, revision: value.revision, repository_revision: '3'});
     }
     const generation = () => state.sequence.toString(16).padStart(64, '0');
     const denied = () => send({protocol: 'stead.result/3', status: 'rejected', error: 'denied_or_not_found'});
@@ -187,7 +202,7 @@ async function fixture(run, mockRepository = false) {
 }
 async function check(name, run) {
   if (requestedCase && name !== requestedCase) return;
-  await fixture(run, name === 'code-survives-reopening-project'); report.checks.push({name, passed: true});
+  await fixture(run, name.startsWith('code-')); report.checks.push({name, passed: true});
   console.log('PASS ' + name);
 }
 async function workForm(page) {
@@ -257,6 +272,35 @@ try {
     assert.equal(await clone.count(), 0);
     await code.click();
     await clone.waitFor();
+  });
+  await check('code-proposal-form-and-merge-retry-survive-view-change', async (page, state) => {
+    state.work = [{kind: 'work', resource_id: id(50), title: 'Review the source', resource_revision: '1'}];
+    await page.getByRole('button', {name: 'Enable Git repository', exact: true}).click();
+    await page.getByRole('button', {name: 'New proposal', exact: true}).click();
+    await page.getByLabel('Work item', {exact: true}).selectOption({label: state.work[0].title});
+    await page.getByLabel('Current target commit', {exact: true}).fill('a'.repeat(40));
+    await page.getByLabel('Proposed commit', {exact: true}).fill('b'.repeat(40));
+    await page.getByRole('button', {name: 'Submit proposal', exact: true}).click();
+    await page.getByText('Awaiting review.', {exact: true}).waitFor();
+    assert.equal(await page.getByRole('button', {name: 'Approve this revision', exact: true}).count(), 0);
+
+    const proposal = id(901);
+    state.proposals.set(proposal + '/1', {proposal_id: proposal, revision: '1', work_id: id(50), ref: 'refs/heads/main',
+      base_oid: 'a'.repeat(40), head_oid: 'b'.repeat(40), author: id(902), reviewer: id(903), merged_revision: ''});
+    await page.getByLabel('Proposal ID', {exact: true}).fill(proposal);
+    await page.getByRole('button', {name: 'Open proposal', exact: true}).click();
+    await page.getByText('Approved for this exact revision.', {exact: true}).waitFor();
+    state.dropMergeResponse = true;
+    await page.getByRole('button', {name: 'Merge this revision', exact: true}).click();
+    await page.getByRole('alert').getByText(/The merge is awaiting confirmation/u).waitFor();
+    await page.getByRole('button', {name: 'Overview', exact: true}).click();
+    await page.getByRole('button', {name: 'Code', exact: true}).click();
+    await page.getByRole('button', {name: 'Retry this merge', exact: true}).click();
+    await page.getByRole('status').filter({hasText: 'Merged at repository revision 3.'}).waitFor();
+    assert.equal(state.mergeRequests.length, 2);
+    assert.deepEqual(state.mergeRequests[0], state.mergeRequests[1]);
+    await page.setViewportSize({width: 320, height: 900});
+    assert.ok(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth));
   });
   await check('authentication-reuses-validated-identity-and-opens-before-one-snapshot', async (page, state) => {
     assert.equal(state.requests.filter(row => row.kind === 'identity').length, 1);
