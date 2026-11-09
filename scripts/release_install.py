@@ -9,13 +9,17 @@ owns every native process. No archive is unpacked before offline verification.
 from __future__ import annotations
 import argparse
 import hashlib
+import http.client
 import io
 import json
 import os
 from pathlib import Path
 import re
+import secrets
 import shutil
 import signal
+import socket
+import ssl
 import stat
 import subprocess
 import sys
@@ -34,6 +38,18 @@ import core_conn
 
 DESK = 'release-test'
 HELPERS = ('execution_policy.py', 'core_conn.py', 'conn.py', 'owned_child.py')
+HTTP_HELPERS = ('native_tls.py', 'team_conn.py')
+HTTP_DRIVERS = ('ted/stead-team-client.hoon', 'ted/stead-local-tls.hoon',
+                'lib/stead-codec.hoon', 'lib/stead-delivery.hoon')
+TLS_HOST = 'home.localhost'
+TLS_PORT = 18443
+HTTP_ORIGIN = f'https://{TLS_HOST}:{TLS_PORT}'
+SECURITY_HEADERS = {
+    'cache-control': 'no-store',
+    'content-security-policy': "default-src 'none'; script-src 'self'; style-src 'self'; connect-src 'self'; img-src 'self'; base-uri 'none'; form-action 'none'; frame-ancestors 'none'",
+    'x-content-type-options': 'nosniff', 'x-frame-options': 'DENY',
+    'referrer-policy': 'no-referrer', 'cross-origin-resource-policy': 'same-origin',
+}
 # This precise audited controller can fail in proof() only after a fresh fake
 # boot and before any desk mutation. Other failures need a fresh run or review.
 CLEAN_RETRY_CONTROLLER = '744861aef3516ddd0e9fbaae87594c0b21a0a2b5f240e10e3220313188f7664d'
@@ -212,7 +228,13 @@ def checked_clean_copy(prior_name, destination, artifact, lock, toolchain_path, 
             'fresh_boot_acceptance': False}
 
 
-class CleanCheckpointNative(Native):
+class ReleaseNative(Native):
+    def _arguments(self):
+        arguments = super()._arguments()
+        return arguments[:-1] + ['--https-port', str(TLS_PORT), arguments[-1]]
+
+
+class CleanCheckpointNative(ReleaseNative):
     """Release-only extension; SDK qualification still requires a new pier."""
     def _check_pier(self):
         context = execution_policy.read_json('/execution/release-context.json', 1024 * 1024)
@@ -224,7 +246,7 @@ class CleanCheckpointNative(Native):
 
     def _arguments(self):
         return [self.binary, '-t', '-L', '--no-dock', '--loom', '31', '-b', '127.0.0.1',
-                '-p', str(self.port), '--http-port', str(self.http_port), str(self.pier)]
+                '-p', str(self.port), '--http-port', str(self.http_port), '--https-port', str(TLS_PORT), str(self.pier)]
 
 
 def system_mounts():
@@ -306,6 +328,156 @@ def wait_agent(native, agent, expected, timeout=300):
     raise TimeoutError('Packaged role did not reach its requested lifecycle state')
 
 
+def role_configuration(role, now_ms):
+    if role == 'identity':
+        return {'protocol': 'stead.identity-config/1', 'expected_revision': '0',
+                'home': '~bus', 'home_origin': 'https://bus.localhost:18444', 'origin': HTTP_ORIGIN}
+    if role != 'home':
+        raise ValueError('Unsupported configured release role')
+    principal = '019939ba-4000-7000-8000-000000000102'
+    return {'protocol': 'stead.team-config/1', 'expected_revision': '0', 'home': '~zod',
+            'origin': HTTP_ORIGIN, 'organization_id': '019939ba-4000-7000-8000-000000000005',
+            'team_id': '019939ba-4000-7000-8000-000000000006', 'custody': 'local-disposable',
+            'runtime': 'isolated-fake', 'bindings': {'~bus': {'principal_id': principal,
+            'binding_id': '019939ba-4000-7000-8000-000000000202', 'binding_revision': '1',
+            'active': 'yes', 'expires_at_ms': str(now_ms + 7200000), 'display_name': 'Synthetic release member'}},
+            'project_creators': {principal: 'yes'}}
+
+
+def owner_call(native, role, mode, value, route='/'):
+    import team_conn
+    native.check()
+    raw = json.dumps(value, sort_keys=True, separators=(',', ':')).encode()
+    result = team_conn.run(native.binary, native.pier / '.urb/conn.sock', mode, route, raw,
+                           target='zod', app='stead-' + role, timeout=75)
+    native.check()
+    outcome = (result.get('outcome') or {}).get('json')
+    if not isinstance(outcome, dict):
+        raise ValueError('Owner-local release operation has no native terminal response')
+    return outcome
+
+
+def bootstrap_role(native, role):
+    nonce = secrets.token_hex(32)
+    for _ in range(3):
+        value = owner_call(native, role, 'bootstrap', {'protocol': 'stead.bootstrap/1', 'nonce': nonce}, '/bootstrap/' + nonce)
+        if (set(value) == {'protocol', 'status', 'home', 'nonce', 'incarnation'}
+                and value['protocol'] == 'stead.bootstrap/1' and value['status'] == 'ready'
+                and value['home'] == '~zod' and value['nonce'] == nonce
+                and isinstance(value['incarnation'], str) and re.fullmatch(r'[0-9a-f]{64}', value['incarnation'])):
+            return value
+        if not (value.get('protocol') == 'stead.test-terminal/1' and value.get('status') == 'failed'
+                and value.get('kind') == 'poke-fail'):
+            raise ValueError('Owner-local release bootstrap acknowledgement differs')
+        native.check()
+        time.sleep(.1)
+    raise ValueError('Owner-local release bootstrap did not become ready')
+
+
+def request_role(native, ca_file, method, route, *, body=None, headers=None, secure=True):
+    """Direct private loopback only: native TLS, CA+hostname checked, no redirects."""
+    if method not in ('GET', 'POST', 'PUT') or not route.startswith(('/stead/', '/stead-identity/')) or len(route) > 512:
+        raise ValueError('Release HTTP request bound')
+    if body is not None and (not isinstance(body, bytes) or len(body) > 65537):
+        raise ValueError('Release HTTP request body bound')
+    native.check()
+    connection = http.client.HTTPConnection('127.0.0.1', TLS_PORT if secure else native.http_port, timeout=5)
+    try:
+        connection.connect()
+        if secure:
+            context = ssl.create_default_context(cafile=str(ca_file))
+            connection.sock = context.wrap_socket(connection.sock, server_hostname=TLS_HOST)
+        fields = {'Host': f'{TLS_HOST}:{TLS_PORT}', 'Accept-Encoding': 'identity'}
+        fields.update(headers or {})
+        connection.request(method, route, body=body, headers=fields)
+        response = connection.getresponse()
+        pairs = response.getheaders()
+        if len(pairs) > 64 or sum(len(k) + len(v) for k, v in pairs) > 16384:
+            raise ValueError('Release HTTP response header bound')
+        response_headers = {}
+        for key, value in pairs:
+            key = key.lower()
+            if key in response_headers:
+                raise ValueError('Duplicate release HTTP response header')
+            response_headers[key] = value
+        content = response.read(524289)
+        if len(content) > 524288:
+            raise ValueError('Release HTTP response byte bound')
+        native.check()
+        return {'status': response.status, 'headers': response_headers, 'body': content}
+    finally:
+        connection.close()
+
+
+def assert_http(response, status, *, mime, digest=None, size=None, error=None):
+    headers, body = response['headers'], response['body']
+    if (response['status'] != status or headers.get('content-type') != mime
+            or any(headers.get(key) != value for key, value in SECURITY_HEADERS.items())
+            or any(key in headers for key in ('set-cookie', 'location', 'access-control-allow-origin'))):
+        raise ValueError('Packaged HTTP status/MIME/security headers differ')
+    if digest is not None and (len(body) != size or hashlib.sha256(body).hexdigest() != digest):
+        raise ValueError('Packaged HTTP asset bytes differ')
+    if error is not None:
+        value = json.loads(body)
+        if value != {'protocol': 'stead.result/3', 'status': 'rejected', 'error': error}:
+            raise ValueError('Packaged HTTP denial payload differs')
+
+
+def route_checks(native, role, ca_file, package=Path('/package'), *, evidence=None):
+    frontend = execution_policy.read_json(package / 'source/frontend.json')
+    prefix = '/stead/' if role == 'home' else '/stead-identity/'
+    routes = [row for row in frontend['routes'] if row['route'].startswith(prefix)]
+    if not 0 < len(routes) <= 32 or not any(row['route'] == prefix for row in routes):
+        raise ValueError('Packaged role frontend inventory is incomplete')
+    evidence = {} if evidence is None else evidence
+    evidence.update(assets=[], denials=[], native_tls=True, browser_authentication=False)
+    def observe(method, route, **kwargs):
+        evidence['last_request'] = {'method': method, 'route': route, 'secure': kwargs.get('secure', True)}
+        response = request_role(native, ca_file, method, route, **kwargs)
+        evidence['last_response'] = {'status': response['status'], 'bytes': len(response['body']),
+            'sha256': hashlib.sha256(response['body']).hexdigest(), 'headers': response['headers']}
+        return response
+    for row in routes:
+        response = observe('GET', row['route'])
+        assert_http(response, 200, mime=row['mime'], digest=row['sha256'], size=row['bytes'])
+        evidence['assets'].append({'route': row['route'], 'sha256': row['sha256'], 'bytes': row['bytes'], 'status': 200})
+    common = {'Origin': HTTP_ORIGIN, 'Content-Type': 'application/json'}
+    denied = [('wrong-host', 'GET', prefix, None, {'Host': 'foreign.invalid:18443'}, True),
+              ('wrong-origin', 'GET', prefix, None, {'Origin': 'https://foreign.invalid'}, True),
+              ('unknown-path', 'GET', prefix + 'not-in-package', None, {}, True),
+              ('query-string', 'GET', prefix + '?test=1', None, {}, True),
+              ('unsupported-method', 'PUT', prefix, b'{}', common, True),
+              ('post-to-asset', 'POST', prefix, b'{}', common, True),
+              ('get-body', 'GET', prefix, b'{}', {}, True),
+              ('forwarded-header', 'GET', prefix, None, {'Forwarded': 'proto=https'}, True),
+              ('spoofed-plain-tls', 'GET', prefix, None, {'Forwarded': 'proto=https'}, False)]
+    for name, method, route, body, headers, secure in denied:
+        response = observe(method, route, body=body, headers=headers, secure=secure)
+        assert_http(response, 403, mime='application/json', error='invalid_http_request')
+        evidence['denials'].append({'name': name, 'status': 403, 'code': 'invalid_http_request'})
+    # Pinned Eyre redirects ordinary cleartext requests once its TLS port is
+    # live. Observe that transport barrier without following the redirect.
+    plain = observe('GET', prefix, secure=False)
+    if plain['status'] != 301 or plain['headers'].get('location') != HTTP_ORIGIN + prefix or plain['body']:
+        raise ValueError('Native Eyre cleartext redirect differs')
+    evidence['denials'].append({'name': 'plain-http', 'status': 301, 'location': HTTP_ORIGIN + prefix})
+    protected = prefix + ('api/query' if role == 'home' else 'api/list')
+    response = observe('POST', protected, body=b'{"protocol":"stead.identity/1"}' if role == 'identity' else b'{}', headers=common)
+    error = 'session_required' if role == 'home' else 'owner_required'
+    assert_http(response, 401, mime='application/json', error=error)
+    evidence['denials'].append({'name': 'anonymous-protected-api', 'status': 401, 'code': error})
+    if role == 'home':
+        response = observe('POST', prefix + 'api/capabilities', body=b'{"protocol":"stead.capabilities/3"}', headers=common)
+        assert_http(response, 200, mime='application/json')
+        value = json.loads(response['body'])
+        if value != {'protocol': 'stead.capabilities/3', 'profile': 'configured-team', 'commands': 'stead.command/3',
+                     'queries': 'stead.query/3', 'updates': 'stead.updates/3', 'authentication': 'native-approved-browser/1',
+                     'max_request_bytes': '65536', 'max_response_bytes': '262144', 'page_size': '20', 'runtime': 'isolated-fake'}:
+            raise ValueError('Packaged public capabilities differ')
+        evidence['public_capabilities'] = value
+    return evidence
+
+
 def inside():
     os.umask(0o077)
     stopped, cleaning, finished = threading.Event(), threading.Event(), threading.Event()
@@ -313,7 +485,7 @@ def inside():
         signal.signal(sig, lambda *_: stopped.set())
     report = {'status': 'fail', 'classification': 'local-native-clean-fake-desk-install',
               'qualifies_phase': False, 'checks': [], 'configured_home': False,
-              'upgrade_recovery': False, 'canary': False}
+              'upgrade_recovery': False, 'canary': False, 'paired_home_identity': False, 'browser_authentication': False}
     native = None
     failures = []
     context = execution_policy.read_json('/execution/release-context.json', 1024 * 1024)
@@ -364,7 +536,7 @@ def inside():
             native = CleanCheckpointNative('zod', 31337, guard)
         else:
             report['boot_mode'] = 'fresh-fake'
-            native = Native('zod', 31337, guard)
+            native = ReleaseNative('zod', 31337, guard)
         report['boot'] = native.start()
         # No Stead code is installed on base or exposed via a private source mount.
         checkpoint('base-has-no-stead-source', native.dojo('=/  arc=arch  .^(arch %cy /=base=/lib/stead-team/hoon)  ?=(~ -.arc)').strip() == '%.y')
@@ -375,12 +547,37 @@ def inside():
         report['installed_files'] = expected
         wait_agent(native, agent, True)
         checkpoint('selected-role-live-on-release-desk', native.dojo(f'.^(desk %gd /={agent}=/$)').strip() == '%' + DESK)
+        # Test-only owner adapters are separate from the verified release desk.
+        report['test_driver_files'] = native.install(Path('/controller/drivers'))
+        import native_tls
+        certificates = native_tls.create('/state/certificates')
+        native_tls.install(native.binary, native.pier / '.urb/conn.sock', certificates, 'zod')
+        report['tls'] = native_tls.verify(native.process, certificates, 'zod', native.check)
+        configuration = role_configuration(manifest['role'], int(time.time() * 1000))
+        mode = 'configure' if manifest['role'] == 'home' else 'identity-config'
+        checkpoint('owner-local-role-configuration', owner_call(native, manifest['role'], mode, configuration) == {})
+        report['configured_role'] = manifest['role']
+        report['configured_home'] = manifest['role'] == 'home'
+        report['bootstrap_before_reload'] = bootstrap_role(native, manifest['role'])
+        report['http_before_reload'] = {}
+        route_checks(native, manifest['role'], certificates / 'ca.pem', evidence=report['http_before_reload'])
+        checkpoint('packaged-native-https-routes-and-assets', True)
         native.dojo(f'|rein %{DESK} [%.n %{agent}]')
         wait_agent(native, agent, False, timeout=60)
         checkpoint('explicit-stop-observed', native.dojo(f'.^(? %gu /={agent}=/$)').strip() == '%.n')
         native.dojo(f'|rein %{DESK} [%.y %{agent}]')
         wait_agent(native, agent, True)
         checkpoint('supported-reload-observed', native.dojo(f'.^(? %gu /={agent}=/$)').strip() == '%.y')
+        prefix = '/stead/' if manifest['role'] == 'home' else '/stead-identity/'
+        unavailable = request_role(native, certificates / 'ca.pem', 'GET', prefix)
+        assert_http(unavailable, 503, mime='application/json',
+                    error='projection_unavailable' if manifest['role'] == 'home' else 'unavailable')
+        checkpoint('reload-blocks-http-until-owner-bootstrap', True)
+        report['bootstrap_after_reload'] = bootstrap_role(native, manifest['role'])
+        checkpoint('reload-changes-owner-incarnation', report['bootstrap_after_reload']['incarnation'] != report['bootstrap_before_reload']['incarnation'])
+        report['http_after_reload'] = {}
+        route_checks(native, manifest['role'], certificates / 'ca.pem', evidence=report['http_after_reload'])
+        checkpoint('packaged-native-https-restored-after-bootstrap', True)
         clay_readback(native, expected, agent)
         checkpoint('package-unchanged-after-load', inventory('/package') == context['package'])
         guard()
@@ -438,7 +635,8 @@ def run(archive, expected_sha256, target_path, retry_clean=None, retry_clean_sha
         raise ValueError('Current verified runtime differs from release target')
     verifier_commit = package_release.source_identity(ROOT, 'HEAD')
     sources = ['scripts/release_install.py', 'scripts/sdk_native/native.py', 'scripts/package_release.py', 'scripts/package_sdk.py']
-    sources += ['scripts/urbit/' + name for name in HELPERS]
+    sources += ['scripts/urbit/' + name for name in HELPERS + HTTP_HELPERS]
+    sources += ['native/core/desk/' + name for name in HTTP_DRIVERS]
     before = {name: package_release.digest(package_release.committed(ROOT, verifier_commit, name)) for name in sources}
     if any(package_release.digest((ROOT / name).read_bytes()) != pin for name, pin in before.items()):
         raise ValueError('Commit the exact release verifier and helper inputs first')
@@ -456,8 +654,12 @@ def run(archive, expected_sha256, target_path, retry_clean=None, retry_clean_sha
             destination.write_bytes(bundle.extractfile(item).read(item.size))
     shutil.copyfile(__file__, state / 'controller/release_install.py')
     shutil.copyfile(ROOT / 'scripts/sdk_native/native.py', state / 'support/native.py')
-    for name in HELPERS:
+    for name in HELPERS + HTTP_HELPERS:
         shutil.copyfile(ROOT / 'scripts/urbit' / name, state / 'helpers' / name)
+    for name in HTTP_DRIVERS:
+        destination = state / 'controller/drivers' / name
+        destination.parent.mkdir(parents=True, exist_ok=True)
+        destination.write_bytes(package_release.committed(ROOT, verifier_commit, 'native/core/desk/' + name))
     context = {'artifact_sha256': expected_sha256, 'verifier_source_commit': verifier_commit,
                'sources': before, 'host_namespaces': {name: os.readlink('/proc/self/ns/' + name) for name in ('net', 'pid', 'mnt', 'user')}}
     context.update({name: inventory(state / name) for name in ('package', 'controller', 'support', 'helpers')})

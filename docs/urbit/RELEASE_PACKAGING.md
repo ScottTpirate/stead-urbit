@@ -86,8 +86,9 @@ with no preserved pier, current native source tree or credentials mounted. It
 creates `%release-test`, imports only the candidate, checks raw Hoon/asset bytes
 and typed Kelvin/bill values through Clay, locally installs the desk, checks the
 selected agent's desk/liveness, and observes explicit stop/reload. It reaps the
-fake and records actual checks and cleanup. It does not configure a company or
-validate configured Home state, migrations, authentication or user workflows.
+fake and records actual checks and cleanup. The configured single-role HTTPS
+extension below adds synthetic owner setup; paired authentication, business
+workflows and migrations remain separate acceptance gates.
 
 The commands follow the [official distribution guide](https://docs.urbit.org/build-on-urbit/userspace/dist/software-distribution)
 and the exact pinned `new-desk`, `install` and `rein` generator sources. The
@@ -114,6 +115,43 @@ Run each role separately and retain its exact artifact, verifier commit, native
 check report and guard report. A host unit-test pass does not mean this native
 command has run. Even a successful native report has `qualifies_phase: false`:
 the remaining M4 install/upgrade/recovery/canary gates below are broader.
+
+## Configured single-role HTTPS checks
+
+The verifier now also stages four committed test-driver files separately from
+the release package: the existing owner-local configuration/bootstrap and TLS
+threads, plus their codec and delivery libraries. After verifying the candidate
+installed on `%release-test`, it installs those test-only adapters on `%base`.
+Their bytes and the Python TLS/transport helpers are bound to the verifier commit;
+the application desk remains exactly the artifact. No current source-tree mount,
+old certificate, credential history, application change or public network is used.
+
+One synthetic role is owner-configured through the existing versioned marks.
+Bootstrap must complete its existing watch/poke/fact/kick exchange with the exact
+nonce and current incarnation. A fresh private CA and certificate are installed
+in native Eyre. The verifier checks the owned TLS listener, CA and hostname, then
+fetches every role asset over private loopback HTTPS and checks its exact length,
+digest, MIME type and security headers. It never follows redirects or disables
+certificate verification.
+
+Independent denials cover wrong Host/Origin, unknown paths, query strings, wrong
+methods, POST-to-asset, GET-with-body, Forwarded overrides and anonymous protected
+API calls. Ordinary cleartext HTTP must redirect to the exact native HTTPS origin;
+a spoofed cleartext Forwarded header must still be rejected. Home also returns its
+public capabilities through the installed route. On app reload, requests must
+remain unavailable until a new owner bootstrap; the incarnation must change and
+all asset/boundary checks repeat. Partial HTTP failure evidence retains only the
+bounded response metadata/digest, not response bodies or any certificate key.
+
+This is a configured **single-role fixture**. Its report keeps
+`paired_home_identity: false`, `browser_authentication: false` and
+`qualifies_phase: false`. The extension needs its own native execution receipt;
+the older eight-check install reports below do not prove these additional checks.
+The next paired slice would run two distinct fresh fakes, install each verified
+role, configure matching Home/member bindings and separate TLS hostnames, then
+exercise real member approval, session/CSRF enforcement and revocation. It must
+retain the native peer/startup fencing and cannot substitute an owner cookie or
+synthetic authenticated HTTP request for that exchange.
 
 ## Narrow retry after a clean pre-install failure
 
