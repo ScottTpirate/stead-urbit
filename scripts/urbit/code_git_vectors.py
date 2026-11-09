@@ -43,6 +43,10 @@ GRAPH_LIBRARY = 'native/core/desk/lib/stead-code-git-graph.hoon'
 GRAPH_TESTS = 'native/core/desk/tests/stead-code-git-graph.hoon'
 FETCH_LIBRARY = 'native/core/desk/lib/stead-code-fetch-wire.hoon'
 FETCH_TESTS = 'native/core/desk/tests/stead-code-fetch-wire.hoon'
+CREDENTIAL_LIBRARY = 'native/core/desk/lib/stead-code-credentials.hoon'
+CREDENTIAL_TESTS = 'native/core/desk/tests/stead-code-credentials.hoon'
+SESSION_LIBRARY = 'native/core/desk/lib/stead-session.hoon'
+CODEC_LIBRARY = 'native/core/desk/lib/stead-codec.hoon'
 PACK_ORACLE = 'scripts/urbit/git_pack_oracle.py'
 INFLATE_LIBRARY = 'native/core/desk/lib/stead-code-git-inflate.hoon'
 INFLATE_TESTS = 'native/core/desk/tests/stead-code-git-inflate.hoon'
@@ -268,6 +272,28 @@ FETCH_ARMS = (
     'test-fetch-wire-buffer-bound',
     'test-fetch-wire-stock-clone',
 )
+CREDENTIAL_ARMS = (
+    'test-credential-issue-bounds-expiry',
+    'test-credential-digest-storage',
+    'test-credential-active-write',
+    'test-credential-active-read',
+    'test-credential-read-cannot-write',
+    'test-credential-read-only-role-cannot-issue-write',
+    'test-credential-unauthorized-issue',
+    'test-credential-current-policy-denial',
+    'test-credential-other-repository',
+    'test-credential-other-home',
+    'test-credential-stale-epoch',
+    'test-credential-binding-revision',
+    'test-credential-unbound-member',
+    'test-credential-expiry',
+    'test-credential-invalid-token',
+    'test-credential-handle-is-not-bearer',
+    'test-credential-revoke-wrong-member',
+    'test-credential-revoke-wrong-home',
+    'test-credential-revoke',
+    'test-credential-counter-limit',
+)
 CODE_CHECKS = (
     'native-blob-roundtrip', 'native-tree-roundtrip', 'native-commit-roundtrip', 'native-tag-roundtrip',
     'native-object-graph-stock-fsck', 'native-ref-syntax-matches-stock-git',
@@ -334,7 +360,7 @@ RESOLVE_CONTROLS = (
     'native-resolve-offset-not-entry-boundary', 'native-resolve-thin-without-visible-base',
     'native-resolve-thin-with-wrong-base-bytes', 'native-resolve-thin-with-verified-base',
 )
-EXPECTED_CHECKS = ARMS + EXTRA_CHECKS + OBJECT_ARMS + PACK_ARMS + RECEIVE_ARMS + WIRE_ARMS + ('receive-wire-failing-tang-control-detected',) + ENTRY_ARMS + DELTA_ARMS + REVIEW_ARMS + GRAPH_ARMS + FETCH_ARMS + CODE_CHECKS + PACK_INTEROP_CHECKS + RESOLVE_CONTROLS
+EXPECTED_CHECKS = ARMS + EXTRA_CHECKS + OBJECT_ARMS + PACK_ARMS + RECEIVE_ARMS + WIRE_ARMS + ('receive-wire-failing-tang-control-detected',) + ENTRY_ARMS + DELTA_ARMS + REVIEW_ARMS + GRAPH_ARMS + FETCH_ARMS + CREDENTIAL_ARMS + ('credentials-failing-tang-control-detected',) + CODE_CHECKS + PACK_INTEROP_CHECKS + RESOLVE_CONTROLS
 ANSI = re.compile(r'\x1b\[[0-9;]*m')
 MAX_OUTPUT = 1_048_576
 
@@ -564,6 +590,16 @@ def inside():
             raise ValueError('Unexpected fetch-wire imports')
         fetch_body = fetch_library.replace(fetch_import, '')
         fetch_dependency = receive_dependency + '=/  stead-code-git-pkt\n' + library + '\n'
+        codec = Path('/input/codec.hoon').read_text()
+        session = Path('/input/session.hoon').read_text()
+        credential = Path('/input/credential-library.hoon').read_text()
+        session_import = '/+  stead-codec\n'
+        credential_import = '/+  stead-codec, stead-session\n'
+        if session.count(session_import) != 1 or credential.count(credential_import) != 1:
+            raise ValueError('Unexpected credential library imports')
+        credential_dependency = ('=/  stead-codec\n' + codec + '\n=/  stead-session\n'
+                                 + session.replace(session_import, '') + '\n')
+        failing_modules = {'stead-code-receive-wire': 'receive-wire', 'stead-code-credentials': 'credentials'}
         for module, source, tests_source, names, dependency in (
                 ('stead-code-git-objects', object_body, object_tests, OBJECT_ARMS, '=/  stead-git\n' + base_git + '\n'),
                 ('stead-code-git-pack', pack_library, pack_tests, PACK_ARMS, ''),
@@ -573,28 +609,33 @@ def inside():
                 ('stead-code-git-delta', delta_library, Path('/input/delta-tests.hoon').read_text(), DELTA_ARMS, ''),
                 ('stead-code-review', review_body, Path('/input/review-tests.hoon').read_text(), REVIEW_ARMS, review_dependency),
                 ('stead-code-git-graph', graph_body, Path('/input/graph-tests.hoon').read_text(), GRAPH_ARMS, receive_dependency),
-                ('stead-code-fetch-wire', fetch_body, Path('/input/fetch-tests.hoon').read_text(), FETCH_ARMS, fetch_dependency)):
+                ('stead-code-fetch-wire', fetch_body, Path('/input/fetch-tests.hoon').read_text(), FETCH_ARMS, fetch_dependency),
+                ('stead-code-credentials', credential.replace(credential_import, ''),
+                 Path('/input/credential-tests.hoon').read_text(), CREDENTIAL_ARMS, credential_dependency)):
 
             test_header, test_body = tests_source.split('\n', 1)
             expected_header = '/+  *test, ' + ('stead-code-git-pkt, ' if module == 'stead-code-receive-wire' else '') + module
             if module == 'stead-code-git-graph':
                 expected_header += ', stead-code-git-objects, stead-git'
+            if module == 'stead-code-credentials':
+                expected_header += ', stead-session'
             if test_header != expected_header or tuple(re.findall(r'^\+\+  (test-[a-z0-9-]+)$', tests_source, re.M)) != names:
                 raise ValueError('Unexpected native module test inventory')
             test_source = '=/  test\n' + helper + '\n' + dependency + '=/  ' + module + '\n' + source + '\n=,  test\n=>\n' + test_body + '\n'
-            evaluated_names = names + (('failure-control',) if module == 'stead-code-receive-wire' else ())
+            evaluated_names = names + (('failure-control',) if module in failing_modules else ())
             expression = '^-  (list [@ta @ta])\n:~  ' + '\n    '.join(f'[(scot %tas %{name}) (scot %ud (lent {name}))]' for name in evaluated_names) + '\n==\n'
             output, valid = native(test_source + expression, module + '-unit-inventory')
             results = parse_rows(output, 2) if valid else []
             if tuple(row[0] for row in results) != evaluated_names:
                 raise ValueError('Native module result names or compiler result differ')
-            failure = results.pop() if module == 'stead-code-receive-wire' else None
+            failure = results.pop() if module in failing_modules else None
             module_report = {'module': module, 'scope': 'pure native unit arms only; no installed service or accepted write', 'checks': [{'name': name, 'tang_lines': tang_lines, 'passed': tang_lines == '0'} for name, tang_lines in results]}
             Path('/output/' + module + '.json').write_text(json.dumps(module_report, indent=2) + '\n')
             for name, tang_lines in results:
                 record(name, tang_lines == '0')
             if failure is not None:
-                record('receive-wire-failing-tang-control-detected', bool(re.fullmatch(r'[1-9][0-9]*', failure[1])), tang_lines=failure[1])
+                record(failing_modules[module] + '-failing-tang-control-detected',
+                       bool(re.fullmatch(r'[1-9][0-9]*', failure[1])), tang_lines=failure[1])
         def object_case(kind, body):
             expression = f'=/  value  (hash-object %{kind} {octets(body)})\n?>  ?=(^ value)\n^-  (list [@ta @ta @ta @ta])\n~[[(scot %tas kind.u.value) (scot %ud length.body.u.value) (scot %ux data.body.u.value) (scot %ux oid.u.value)]]\n'
             output, valid = native(object_prefix + expression, 'native-' + kind + '-object')
@@ -857,7 +898,7 @@ def main(mode="full"):
     run = Path(tempfile.mkdtemp(prefix=datetime.now(timezone.utc).strftime('%Y%m%dT%H%M%SZ-'), dir=base))
     for name in ('input', 'output', 'work', 'code'):
         (run / name).mkdir(mode=0o700)
-    foundation_names = (LIBRARY, TESTS, OBJECT_LIBRARY, OBJECT_TESTS, PACK_LIBRARY, PACK_TESTS, BASE_GIT, RECEIVE_LIBRARY, RECEIVE_TESTS, WIRE_LIBRARY, WIRE_TESTS, ENTRY_LIBRARY, ENTRY_TESTS, DELTA_LIBRARY, DELTA_TESTS, REVIEW_LIBRARY, REVIEW_TESTS, RESOLVE_LIBRARY, GRAPH_LIBRARY, GRAPH_TESTS, FETCH_LIBRARY, FETCH_TESTS, INFLATE_LIBRARY, PACK_ORACLE)
+    foundation_names = (LIBRARY, TESTS, OBJECT_LIBRARY, OBJECT_TESTS, PACK_LIBRARY, PACK_TESTS, BASE_GIT, RECEIVE_LIBRARY, RECEIVE_TESTS, WIRE_LIBRARY, WIRE_TESTS, ENTRY_LIBRARY, ENTRY_TESTS, DELTA_LIBRARY, DELTA_TESTS, REVIEW_LIBRARY, REVIEW_TESTS, RESOLVE_LIBRARY, GRAPH_LIBRARY, GRAPH_TESTS, FETCH_LIBRARY, FETCH_TESTS, INFLATE_LIBRARY, PACK_ORACLE, CREDENTIAL_LIBRARY, CREDENTIAL_TESTS, SESSION_LIBRARY, CODEC_LIBRARY)
     names = (INFLATE_LIBRARY, INFLATE_TESTS) if mode == "inflate" else foundation_names
     sources = {name: ROOT / name for name in names}
     sources.update({ 'scripts/urbit/code_git_vectors.py': Path(__file__),
@@ -877,6 +918,10 @@ def main(mode="full"):
               (ROOT / GRAPH_LIBRARY, 'input/graph-library.hoon'), (ROOT / GRAPH_TESTS, 'input/graph-tests.hoon'),
               (ROOT / FETCH_LIBRARY, 'input/fetch-library.hoon'), (ROOT / FETCH_TESTS, 'input/fetch-tests.hoon'),
               (ROOT / INFLATE_LIBRARY, 'input/inflate-library.hoon'),
+              (ROOT / CREDENTIAL_LIBRARY, 'input/credential-library.hoon'),
+              (ROOT / CREDENTIAL_TESTS, 'input/credential-tests.hoon'),
+              (ROOT / SESSION_LIBRARY, 'input/session.hoon'),
+              (ROOT / CODEC_LIBRARY, 'input/codec.hoon'),
               (ROOT / PACK_ORACLE, 'code/git_pack_oracle.py'),
               (helper, 'input/test-helper.hoon'), (Path(__file__), 'code/code_git_vectors.py'),
               (Path(execution_policy.__file__), 'code/execution_policy.py')]

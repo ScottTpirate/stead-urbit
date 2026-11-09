@@ -36,7 +36,22 @@ indexing, including malformed entries with valid trailers. The oracle does not
 serve requests, verify a project graph, or replace a native quarantine
 implementation. [Git pack format](https://git-scm.com/docs/gitformat-pack)
 
-Still required before a usable Git endpoint: native bounded pack expansion
-and graph validation, scoped per-device credentials, Smart HTTP discovery and
-responses, one state-owning transaction, and real stock clone/fetch/push with
-mid-upload revocation and conflict cases.
+The pure repository credential ledger in `stead-code-credentials` binds a
+bearer to one Home, project, repository, authority epoch, member binding and
+read or write scope. The issuing operation requires a current individual
+session and final policy. Store one ledger per Home. Issue returns the bearer
+once and saves only its domain-separated hash and a separate revocation
+handle. Expiry is capped at 15 minutes, the issuing session's expiry, and the
+member binding's expiry. Each check re-resolves the active member and current
+repository policy. The Home must repeat that check at final acceptance.
+
+The pinned vector runner checks the credential transitions alongside pack and
+ref behavior. It covers current policy denial, changed binding and epoch,
+wrong repository and Home, expiry, cross-member revocation denial, and explicit
+revocation. A future transport must keep bearers out of URLs, logs and command
+receipts and define when Home lifecycle changes retire outstanding credentials.
+
+The remaining service work connects these helpers to authenticated Smart HTTP
+and a state-owning repository transaction. Qualify real stock clone, fetch,
+push and tags with mid-upload revocation, interrupted acceptance and competing
+ref updates against that same native endpoint.
