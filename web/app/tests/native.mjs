@@ -563,7 +563,9 @@ async function conflictsAndRecovery(alice, bob) {
     const resumedResponse = await resume;
     assert.equal(resumedResponse.status(),200);
     assert.equal((await resumedResponse.json()).status,'authenticated');
-    await a.getByText('The home did not confirm the outcome. Check the receipt or retry the same request before making another change.',{exact:true}).waitFor();
+    await a.getByRole('alert').getByRole('button', {name:'Resume this tab', exact:true}).waitFor();
+    await a.getByRole('heading', {name:'Save awaiting confirmation', exact:true}).waitFor();
+    assert.equal(await a.getByRole('textbox', {name:'Title', exact:true}).inputValue(), 'Committed response deliberately lost');
     const attempts = [];
     const capture = request => { if (request.url() === origin + '/stead/api/command') attempts.push(request.postData()); };
     a.on('request',capture);
@@ -891,5 +893,5 @@ try {
   if (report.response_capture_error || report.responses_truncated) report.status = 'fail';
   await writeFile(path.join(output, 'browser-report.json'), JSON.stringify(report, null, 2) + '\n');
   await root.close();
-  assert.equal(report.status, 'pass');
 }
+assert.equal(report.status, 'pass');
