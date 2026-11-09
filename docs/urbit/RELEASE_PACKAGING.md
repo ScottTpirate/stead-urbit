@@ -325,3 +325,19 @@ The fixture contains Home configuration and a member binding. Member sign-in,
 accepted business record readback, supported upgrades and live continuity
 require separate evidence. A saved-vase fingerprint captured inside the clone
 does not substitute for a reviewed pre-stop application fingerprint.
+
+On November 9, 2026, the command passed all 12 native checks for the historical
+`1ac28f7e5d1ef1cecd1b5699dc7dd47a2200e25a` Home payload. The verifier ran from
+`c6e10865ac1d7c5c016cb44c63b3ccf41dbee0aa`. The guard completed in 25.784 seconds
+and peaked at 46°C. The new incarnation preserved the v3 saved-vase digest
+`e69fcb11ddc4cb0df4023a1747413bdf9df7390adfdfb33f2af8c662c64949c7`.
+Nine native TLS assets matched and 11 HTTP boundary checks passed. The clone
+stopped and was reaped, and host and sandbox agreed on its stopped fingerprint
+`ac59a7623a8857de83c5fce3f4671826751758c407b50c9fc74e8b2e56892bac`.
+All three retained trees still matched the original reviewed fingerprint.
+
+| Local evidence | SHA-256 |
+| --- | --- |
+| `.runtime/release-restore-boot-1nq6z31n/recovery-report.json` | `3c8726018f3ded725a8f9b1bdd08b1e92a948c94c47a79a792eceaf7cd2d6307` |
+| `.runtime/release-restore-boot-1nq6z31n/work/report.json` | `46b75b74248d6659da0d2f92a89ab7513b6984a614a95ab158a8a53fd5ae9cb2` |
+| `.runtime/execution-runs/release-restore-boot-9kjjs8hx/report.json` | `886e519159acab8dce87e074429f89776f3477e052fba796b4fc97e63ee3d396` |
