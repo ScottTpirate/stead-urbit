@@ -52,6 +52,14 @@ protected review/build integration. Both exact role archives passed separate
 native installs. Phase 4 still requires supported upgrades and interrupted
 recovery, complete export, and a measured canary.
 
+The next [local Phase 3/4 workflow](PHASE34_LOCAL_WORKFLOW_20261109.md) adds
+durable Git admission, exact protected review and merge, an assigned build
+lease, independent release intent, portable Code and delivery records,
+controlled upgrade recovery and a measured canary. The local qualification
+uses a bounded SHA-1 profile and a fixed verified worker recipe. Larger
+repositories, live worker operation and multi-host rollout have separate
+gates.
+
 The standalone Phase 3/4 development checks use synthetic local ships.
 A real House is outside their acceptance scope. A future House adapter still
 needs a supported installation and launch path, verified individual identity,

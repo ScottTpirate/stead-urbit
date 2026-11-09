@@ -91,10 +91,12 @@ export is qualified. Home restart invalidates in-flight bearer admissions and
 requires fresh authorization for any staged job; a completed receipt remains
 durable. Report ref success to Git only after the authoritative transition.
 
-The [native Home profile](CODE_HOME_PROFILE.md) integrates the repository
-reducer into the Home with bounded synchronous Smart HTTP. The current
-prototype holds decoded objects only during the accepting event. The durable
-job and replay contracts above apply to a later staged receive path.
-The [delivery reducer](CODE_DELIVERY_PROFILE.md) implements explicit proposal,
-review, build and release transitions. Home persistence and protected-ref
-application must bind those transitions to a single authoritative commit.
+The [native Home profile](CODE_HOME_PROFILE.md) saves the complete bounded
+Smart HTTP upload before a separate event decodes and accepts it. It binds a
+pending upload to its exact wire bytes and the current actor. A fresh
+authorized retry can reattach to that pending job. The final ref transition
+remains atomic and does bounded validation within one event.
+The [delivery reducer](CODE_DELIVERY_PROFILE.md) supplies explicit transitions
+for the Home-owned review and build board. The protected ref and exact merge
+receipt commit together. Release intent requires separate authority and
+verified artifact bytes. [Local workflow verification](PHASE34_LOCAL_WORKFLOW_20261109.md)
