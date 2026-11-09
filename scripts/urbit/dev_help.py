@@ -35,7 +35,7 @@ Native checks replace disposable fake data, never Git/source. Build is not phase
 acceptance. The guard requires at most 75 C to start and stops at 90 C.
 The browser alpha uses a disposable local Firefox profile and native TLS.
 Run python3 web/app/browser-check.py after team-dev for automated browser checks.
-The human trial and Phase 2 qualification remain separate acceptance gates.
+Phase 2 acceptance includes independent Astra review of the native journey.
 Manual review uses .piers/review; its browser stays open after tests or native
 shutdown. Native thermal limits and the two-hour runtime bound still apply.
 Use make review-resume after cooling; saved state is retained. Network loss may
