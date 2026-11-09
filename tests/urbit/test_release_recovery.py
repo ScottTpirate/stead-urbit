@@ -100,6 +100,9 @@ class ReleaseRecoveryTests(unittest.TestCase):
         native = SimpleNamespace(dojo=Mock(return_value='0x1.0000\n'))
         self.assertEqual(recovery.install.saved_home_fingerprint(native), f'{65536:064x}')
         self.assertIn('[%stead-home %3 *]', native.dojo.call_args.args[0])
+        self.assertEqual(recovery.install.saved_home_fingerprint(native, authoritative=True), f'{65536:064x}')
+        self.assertIn('[%stead-home %3 [* *]]', native.dojo.call_args.args[0])
+        self.assertIn('(jam -.+>.q.saved)', native.dojo.call_args.args[0])
         native.dojo.return_value = 'dojo: evaluation failed'
         with self.assertRaisesRegex(ValueError, 'configured schema 3'):
             recovery.install.saved_home_fingerprint(native)

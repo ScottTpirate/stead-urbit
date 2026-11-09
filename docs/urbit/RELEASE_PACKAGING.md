@@ -353,10 +353,12 @@ and compares the full mounted and Clay target contents. It removes exact
 obsolete paths with `|rm` and checks their absence at the current Clay
 revision. [Urbit filesystem](https://docs.urbit.org/user-manual/os/filesystem)
 
-After reload it requires a 503
-before fresh bootstrap, the same v3 saved-state digest, and the exact target
-assets and HTTP boundaries. It checks the stopped clone and retained copies
-again before writing `upgrade-report.json`.
+After reload it requires a 503 before fresh bootstrap and then verifies the
+exact target assets and HTTP boundaries. It records the full v3 saved-vase
+digests and compares the authoritative database noun before suspension, after
+reload and after bootstrap. The versioned save envelope also contains a
+projection that Home rebuilds on load. The stopped clone and retained copies
+must match their verified checkpoints before `upgrade-report.json` is written.
 
 ```sh
 PATH="$PWD/.runtime/tooling/git-2.55.0/bin:$PATH" \
@@ -381,3 +383,19 @@ failed attempt retains its disposable workspace and reports. Start a new
 clone after reviewing the failure. Cross-schema migration, interrupted upgrade
 recovery, installed Identity, accepted business record readback and live
 continuity each require separate evidence.
+
+The first attempt on November 9 reached exact target Clay bytes but left an
+obsolete asset in Clay after a Unix-only removal. The explicit Clay removal
+retry verified both obsolete paths were gone and observed the expected 503
+after reload. It stopped when the full saved-vase digest changed from the
+reviewed `e69fcb11ddc4cb0df4023a1747413bdf9df7390adfdfb33f2af8c662c64949c7`
+to `7bc5d9ab0d0c504064eb1645d61925a851078a8940de8ab62972cb8e1d1fe0bd`.
+Both clones stopped cleanly. The retained trees still matched the file-copy
+receipt. The full-vase difference did not identify which saved component changed.
+
+| Local failure evidence | SHA-256 |
+| --- | --- |
+| `.runtime/release-asset-upgrade-e4cghu9_/work/report.json` | `0ca22c2c92800a0e87cb9f0af918fb9f15152a354a3f9ebae0ee9420988444c3` |
+| `.runtime/execution-runs/release-asset-upgrade-jyqvsezo/report.json` | `8e7bd13a59c17057a063ef024f64d3661d808bc7bfa4e15d503d016e0c9905dd` |
+| `.runtime/release-asset-upgrade-w9fbrb7o/work/report.json` | `b9449782a7abb40d0c015a1256a08fa854ad271fcc2c8228ffe0c1af5139256d` |
+| `.runtime/execution-runs/release-asset-upgrade-t130bm0_/report.json` | `02fba8bd19c710214e0a6ad4771c7297f6c57a8ab093e386fcc3918a3b59ece5` |

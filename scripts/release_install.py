@@ -62,13 +62,13 @@ UPGRADE_CLASS = 'local-native-copied-home-same-schema-asset-upgrade'
 RESTORE_BEFORE_BOOTSTRAP = [*PREINSTALL_CHECKS, 'restored-home-live-on-release-desk',
                             'restored-test-drivers-unchanged', 'pre-bootstrap-network-fenced',
                             'restored-home-saved-schema-v3']
-RESTORE_AFTER_BOOTSTRAP = ['restore-changes-owner-incarnation', 'bootstrap-preserves-saved-vase',
-                           'packaged-native-https-restored-after-bootstrap',
-                           'package-unchanged-after-restore', 'restored-clone-stopped-and-reaped']
-RESTORE_CHECKS = [*RESTORE_BEFORE_BOOTSTRAP, *RESTORE_AFTER_BOOTSTRAP]
+RESTORE_END = ['packaged-native-https-restored-after-bootstrap',
+               'package-unchanged-after-restore', 'restored-clone-stopped-and-reaped']
+RESTORE_CHECKS = [*RESTORE_BEFORE_BOOTSTRAP, 'restore-changes-owner-incarnation',
+                  'bootstrap-preserves-saved-vase', *RESTORE_END]
 UPGRADE_CHECKS = [*RESTORE_BEFORE_BOOTSTRAP, 'upgraded-home-suspended-at-reviewed-state',
                   'asset-replacement-matches-clay', 'upgraded-home-fenced-after-reload',
-                  *RESTORE_AFTER_BOOTSTRAP]
+                  'restore-changes-owner-incarnation', 'bootstrap-preserves-authoritative-db', *RESTORE_END]
 CLEAN_STOP = {'clean': True, 'exit_code': 0, 'forced': False, 'premature': False, 'reaped': True}
 
 
@@ -543,10 +543,14 @@ def route_checks(native, role, ca_file, package=Path('/package'), *, evidence=No
     return evidence
 
 
-def saved_home_fingerprint(native):
+def saved_home_fingerprint(native, *, authoritative=False):
     source = ('=/  egg=egg-any:gall  .^(egg-any:gall %gv /=stead-home=/$)  '
-              '?>  ?=([%20 %live *] egg)  =/  saved=vase  +.old-state.egg  '
-              '?>  ?=([%stead-home %3 *] q.saved)  ^-  @ux  (shax (jam saved))')
+              '?>  ?=([%20 %live *] egg)  =/  saved=vase  +.old-state.egg  ')
+    if authoritative:
+        # The v3 payload is [authoritative-db derived-projection].
+        source += '?>  ?=([%stead-home %3 [* *]] q.saved)  ^-  @ux  (shax (jam -.+>.q.saved))'
+    else:
+        source += '?>  ?=([%stead-home %3 *] q.saved)  ^-  @ux  (shax (jam saved))'
     result = native.dojo(source).strip()
     if not re.fullmatch(r'0x[0-9a-f]+(?:\.[0-9a-f]+)*', result):
         raise ValueError('Restored Home saved vase is not configured schema 3')
@@ -621,13 +625,14 @@ def verify_restored_home(native, context, report, checkpoint):
     checkpoint('pre-bootstrap-network-fenced', interfaces == ['lo']
                and net != context['host_namespaces']['net']
                and net == report['boot']['proof']['namespaces']['net'])
-    report['saved_home'] = {'schema': 3, 'sha256_before_bootstrap': saved_home_fingerprint(native)}
+    saved = report['saved_home'] = {'schema': 3, 'sha256_before_bootstrap': saved_home_fingerprint(native)}
     checkpoint('restored-home-saved-schema-v3', True)
     upgrade = restored.get('asset_upgrade')
     if upgrade is not None:
         before = upgrade['saved_home_sha256']
-        if report['saved_home']['sha256_before_bootstrap'] != before:
+        if saved['sha256_before_bootstrap'] != before:
             raise ValueError('Restored Home differs from the reviewed saved-state fingerprint')
+        saved['authoritative_sha256_before_suspend'] = saved_home_fingerprint(native, authoritative=True)
         native.dojo(f'|rein %{DESK} [%.n %stead-home]')
         wait_agent(native, 'stead-home', False, timeout=60)
         checkpoint('upgraded-home-suspended-at-reviewed-state', saved_home_fingerprint(native) == before)
@@ -637,13 +642,20 @@ def verify_restored_home(native, context, report, checkpoint):
         wait_agent(native, 'stead-home', True, timeout=60)
         unavailable = request_role(native, certificates / 'ca.pem', 'GET', '/stead/')
         assert_http(unavailable, 503, mime='application/json', error='projection_unavailable')
-        checkpoint('upgraded-home-fenced-after-reload', saved_home_fingerprint(native) == before)
+        saved['sha256_after_reload'] = saved_home_fingerprint(native)
+        saved['authoritative_sha256_after_reload'] = saved_home_fingerprint(native, authoritative=True)
+        checkpoint('upgraded-home-fenced-after-reload', saved['authoritative_sha256_after_reload']
+                   == saved['authoritative_sha256_before_suspend'])
     report['bootstrap_after_restore'] = bootstrap_role(native, 'home')
     checkpoint('restore-changes-owner-incarnation',
                report['bootstrap_after_restore']['incarnation'] not in restored['prior_incarnations'])
-    report['saved_home']['sha256_after_bootstrap'] = saved_home_fingerprint(native)
-    checkpoint('bootstrap-preserves-saved-vase', report['saved_home']['sha256_after_bootstrap']
-               == report['saved_home']['sha256_before_bootstrap'])
+    saved['sha256_after_bootstrap'] = saved_home_fingerprint(native)
+    if upgrade is None:
+        checkpoint('bootstrap-preserves-saved-vase', saved['sha256_after_bootstrap'] == saved['sha256_before_bootstrap'])
+    else:
+        saved['authoritative_sha256_after_bootstrap'] = saved_home_fingerprint(native, authoritative=True)
+        checkpoint('bootstrap-preserves-authoritative-db', saved['authoritative_sha256_after_bootstrap']
+                   == saved['authoritative_sha256_before_suspend'])
     report['http_after_restore'] = {}
     route_checks(native, 'home', certificates / 'ca.pem', evidence=report['http_after_restore'])
     report['configured_home'] = True
