@@ -11,8 +11,9 @@ from pathlib import Path
 import shutil
 import sys
 import tempfile
+from types import SimpleNamespace
 import unittest
-from unittest.mock import patch
+from unittest.mock import Mock, patch
 
 ROOT = Path(__file__).resolve().parents[2]
 sys.path.insert(0, str(ROOT / 'scripts/urbit'))
@@ -219,6 +220,76 @@ class ReviewLifecycleTests(unittest.TestCase):
         self.assertNotIn('--pipe', arguments)
         self.assertNotIn('--wait', arguments)
         self.assertIn('-i', arguments)
+
+    def resume_host(self):
+        self.own_review()
+        directory = self.state / 'ingress' / ('c' * 32)
+        directory.mkdir(parents=True)
+        events = []
+        team = SimpleNamespace(directory=directory, certificates=directory / 'certificates',
+                               reinstall=lambda ship, dojo: events.append(('reload', ship)),
+                               admit=lambda ship, ack, dojo: events.append(('admit', ship)))
+        host = {'STATE': self.state, 'LIVE': self.state / 'live', 'SHIPS': harness.SHIPS,
+                'TEAM': team, 'PROGRESS': {}, 'LOCK': {'runtime': {'binary': 'bin/synthetic'}},
+                'execution_check': lambda **kwargs: {'run_id': 'c' * 32},
+                'launch': lambda ship, **kwargs: events.append(('launch', ship)),
+                'wait_ready': lambda ship: events.append(('suspended', ship)),
+                'dojo': lambda ship, source: 'synthetic-private-code',
+                'record': lambda name, evidence: events.append(('record', name)),
+                'copy_seed_to_live': Mock(side_effect=AssertionError('Resume must never reseed'))}
+        return host, events
+
+    def test_resume_rebuilds_projection_but_checks_all_durable_state_before_release(self):
+        host, events = self.resume_host()
+        expected = {ship: str(index) * 64 for index, ship in enumerate(harness.SHIPS, 1)}
+        calls = []
+        def fingerprint(ship, dojo):
+            calls.append(ship)
+            events.append(('durable', ship))
+            return expected[ship]
+        def imported(host, ship, command, require):
+            # Mock Clay's real observed behavior: the idle app revives and its
+            # derived projection differs. Durable business state is unchanged.
+            events.append(('clay-revived-with-new-projection', ship))
+        with patch.object(review_prepare, 'hoon_inventory', return_value=review.hoon_inventory(self.native)), \
+             patch.object(review_prepare, 'sha', return_value=sha(self.lock)), \
+             patch.object(review_prepare, 'durable_fingerprint', side_effect=fingerprint), \
+             patch.object(review_prepare.native_install, 'install', side_effect=imported), \
+             patch.object(review_prepare.team_check, 'bootstrap_ready', side_effect=lambda team, ship, call, guard: events.append(('restored', ship)) or {'ready': ship}), \
+             patch.object(review_prepare.native_tls, 'install', side_effect=lambda binary, channel, directory, ship: events.append(('tls', ship))):
+            review_prepare.run(host)
+        self.assertEqual(calls, list(harness.SHIPS) * 2)
+        self.assertGreater(next(i for i, event in enumerate(events) if event[0] == 'tls'),
+                           max(i for i, event in enumerate(events) if event[0] == 'durable'))
+        self.assertGreater(next(i for i, event in enumerate(events) if event[0] == 'admit'),
+                           max(i for i, event in enumerate(events) if event[0] == 'tls'))
+        self.assertEqual([ship for name, ship in events if name == 'admit'], list(harness.SHIPS))
+        host['copy_seed_to_live'].assert_not_called()
+
+    def test_changed_durable_state_fails_before_any_tls_or_peer_release(self):
+        host, events = self.resume_host()
+        count = {}
+        def fingerprint(ship, dojo):
+            count[ship] = count.get(ship, 0) + 1
+            return ('b' if ship == 'bus' and count[ship] > 1 else 'a') * 64
+        with patch.object(review_prepare, 'hoon_inventory', return_value=review.hoon_inventory(self.native)), \
+             patch.object(review_prepare, 'sha', return_value=sha(self.lock)), \
+             patch.object(review_prepare, 'durable_fingerprint', side_effect=fingerprint), \
+             patch.object(review_prepare.native_install, 'install'), \
+             patch.object(review_prepare.team_check, 'bootstrap_ready', return_value={'ready': True}), \
+             patch.object(review_prepare.native_tls, 'install') as tls:
+            with self.assertRaisesRegex(ValueError, 'bus durable state unchanged'):
+                review_prepare.run(host)
+        tls.assert_not_called()
+        self.assertFalse(any(name == 'admit' for name, _ in events))
+        host['copy_seed_to_live'].assert_not_called()
+
+    def test_durable_fingerprint_rejects_invalid_native_output(self):
+        for value in ('not-a-hash', '0x' + 'f' * 65):
+            with self.subTest(value=value), self.assertRaises(ValueError):
+                review_prepare.durable_fingerprint('zod', Mock(side_effect=['%base', value]))
+        with self.assertRaisesRegex(ValueError, 'verified desk'):
+            review_prepare.durable_fingerprint('bus', Mock(return_value='%other'))
 
 
 if __name__ == '__main__':

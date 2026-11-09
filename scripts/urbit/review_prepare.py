@@ -6,6 +6,7 @@ No browser session, draft, grant or accepted command is replayed here.
 """
 from pathlib import Path
 import json
+import re
 import shutil
 
 import execution_policy
@@ -20,6 +21,46 @@ from digests import sha, tree_sha
 def hoon_inventory(native):
     return {str(p.relative_to(native)): sha(p) for p in sorted(Path(native).rglob('*.hoon'))
             if p.relative_to(native).as_posix() != 'web/stead/inventory.hoon'}
+
+
+def durable_fingerprint(ship, dojo):
+    """Hash retained authority/content, excluding the home's derived index.
+
+    Clay can revive an idle app while importing changed asset dependencies.
+    Home on-load rebuilds its projection, but on-save retains the original
+    target db throughout restoration. Identity persists only config/counter.
+    Typed extraction still rejects a foreign/future saved-state envelope.
+    """
+    app = team_lifecycle.APPS[ship]
+    if dojo(ship, f'.^(desk %gd /={app}=/$)').strip() != '%base':
+        raise ValueError('Review durable state is not on the verified desk')
+    saved_type = '[%stead-home %3 db=* projection=*]' if ship == 'zod' else '[%stead-identity %1 config=* counter=@ud]'
+    retained = 'db.stored' if ship == 'zod' else 'stored'
+    source = (f'=/  egg=egg-any:gall  .^(egg-any:gall %gv /={app}=/$)  '
+              f'?>  ?=([%20 %live *] egg)  =/  saved=vase  +.old-state.egg  '
+              f'=/  stored  !<({saved_type} saved)  ^-  @ux  (shax (jam {retained}))')
+    result = dojo(ship, source).strip()
+    if not re.fullmatch(r'0x[0-9a-f]+(?:\.[0-9a-f]+)*', result):
+        raise ValueError('Native durable-state fingerprint is not a hash')
+    value = int(result.replace('.', ''), 16)
+    if value >= 2 ** 256:
+        raise ValueError('Native durable-state fingerprint exceeds SHA-256')
+    return f'{value:064x}'
+
+
+def verify_durable_before_admission(host, expected, call, require):
+    """Finish every restore and compare all retained state before any release."""
+    team = host['TEAM']
+    acknowledgements = {}
+    for ship in host['SHIPS']:
+        acknowledgements[ship] = team_check.bootstrap_ready(team, ship, call, host['execution_check'])
+        if ship in expected:
+            observed = durable_fingerprint(ship, host['dojo'])
+            require(ship + ' durable state unchanged after asset reload and restore', observed == expected[ship])
+            host['record']('review durable state preserved ' + ship,
+                           {'before_sha256': expected[ship], 'after_sha256': observed,
+                            'home_projection_rebuilt': ship == 'zod'})
+    return acknowledgements
 
 
 class ReviewLifecycle(team_lifecycle.TeamLifecycle):
@@ -86,6 +127,7 @@ def run(host):
     fresh = metadata['mode'] == 'new'
     before = host['execution_check'](preflight=True)
     binary = '/runtime/' + host['LOCK']['runtime']['binary']
+    retained = {}
 
     def require(name, condition):
         if not condition:
@@ -113,15 +155,18 @@ def run(host):
         host['PROGRESS']['stage'] = 'preparing review ~' + ship
         host['launch'](ship, fresh=fresh)
         host['wait_ready'](ship)
-        saved = None if fresh else team.saved_fingerprint(ship, host['dojo'])
+        if not fresh:
+            retained[ship] = durable_fingerprint(ship, host['dojo'])
+            host['record']('review retained state before asset import ' + ship,
+                           {'durable_sha256': retained[ship]})
         native_install.install(host, ship, command, require)
         if not fresh:
-            require(ship + ' saved state unchanged by asset import',
-                    team.saved_fingerprint(ship, host['dojo']) == saved)
+            # A Clay dependency update may already have revived this agent.
+            # The supported rein sequence suspends and reloads it again while
+            # ingress/peers remain blocked. Derived projection bytes may change.
             team.reinstall(ship, host['dojo'])
         else:
             command(ship, '|start %' + team_lifecycle.APPS[ship])
-        native_tls.install(binary, host['LIVE'] / ship / '.urb/conn.sock', team.certificates, ship)
 
     if fresh:
         now = int(command('zod', '(div (mul 1.000 (sub now ~1970.1.1)) ~s1)').strip().replace('.', ''))
@@ -138,9 +183,11 @@ def run(host):
             require(ship + ' identity configuration', call(ship, 'identity-config', personal,
                     target=ship, app='stead-identity') == {})
         metadata['binding_expires_at_ms'] = now + 7 * 86400000
+    acknowledgements = verify_durable_before_admission(host, retained, call, require)
     for ship in host['SHIPS']:
-        acknowledgement = team_check.bootstrap_ready(team, ship, call, host['execution_check'])
-        team.admit(ship, acknowledgement, host['dojo'])
+        native_tls.install(binary, host['LIVE'] / ship / '.urb/conn.sock', team.certificates, ship)
+    for ship in host['SHIPS']:
+        team.admit(ship, acknowledgements[ship], host['dojo'])
     execution_policy.write_json(team.directory / 'browser-fixture.json', {
         'format': 1, 'classification': 'private-disposable-browser-fixture',
         'execution_id': before['run_id'], 'origin': 'https://home.localhost:8443',
