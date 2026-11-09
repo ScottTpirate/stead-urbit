@@ -1,0 +1,784 @@
+{
+  "status": "passed",
+  "scope": "pure bounded authorized-input fetch selection and stock Git readback; no listener or policy integration",
+  "qualifies_phase": false,
+  "checks": [
+    {
+      "name": "test-fetch-round-nak",
+      "passed": true,
+      "tang_lines": "0"
+    },
+    {
+      "name": "test-fetch-round-ack",
+      "passed": true,
+      "tang_lines": "0"
+    },
+    {
+      "name": "test-fetch-round-first-common",
+      "passed": true,
+      "tang_lines": "0"
+    },
+    {
+      "name": "test-fetch-round-unknown-have",
+      "passed": true,
+      "tang_lines": "0"
+    },
+    {
+      "name": "test-fetch-round-private-have",
+      "passed": true,
+      "tang_lines": "0"
+    },
+    {
+      "name": "test-fetch-round-unwanted-advertised-have",
+      "passed": true,
+      "tang_lines": "0"
+    },
+    {
+      "name": "test-fetch-done-closure",
+      "passed": true,
+      "tang_lines": "0"
+    },
+    {
+      "name": "test-fetch-done-tag-closure",
+      "passed": true,
+      "tang_lines": "0"
+    },
+    {
+      "name": "test-fetch-done-ack",
+      "passed": true,
+      "tang_lines": "0"
+    },
+    {
+      "name": "test-fetch-duplicate-wants",
+      "passed": true,
+      "tang_lines": "0"
+    },
+    {
+      "name": "test-fetch-offset-flag-preserves-pack",
+      "passed": true,
+      "tang_lines": "0"
+    },
+    {
+      "name": "test-fetch-private-have-preserves-pack",
+      "passed": true,
+      "tang_lines": "0"
+    },
+    {
+      "name": "test-fetch-unwanted-advertised-object-omitted",
+      "passed": true,
+      "tang_lines": "0"
+    },
+    {
+      "name": "test-fetch-have-current-tip-full-pack",
+      "passed": true,
+      "tang_lines": "0"
+    },
+    {
+      "name": "test-fetch-unadvertised-ancestor",
+      "passed": true,
+      "tang_lines": "0"
+    },
+    {
+      "name": "test-fetch-unadvertised-reachable-blob",
+      "passed": true,
+      "tang_lines": "0"
+    },
+    {
+      "name": "test-fetch-unadvertised-private",
+      "passed": true,
+      "tang_lines": "0"
+    },
+    {
+      "name": "test-fetch-revoked-current-advertisement",
+      "passed": true,
+      "tang_lines": "0"
+    },
+    {
+      "name": "test-fetch-mixed-wants-denied",
+      "passed": true,
+      "tang_lines": "0"
+    },
+    {
+      "name": "test-fetch-missing-want",
+      "passed": true,
+      "tang_lines": "0"
+    },
+    {
+      "name": "test-fetch-zero-want",
+      "passed": true,
+      "tang_lines": "0"
+    },
+    {
+      "name": "test-fetch-wide-want",
+      "passed": true,
+      "tang_lines": "0"
+    },
+    {
+      "name": "test-fetch-zero-have",
+      "passed": true,
+      "tang_lines": "0"
+    },
+    {
+      "name": "test-fetch-wide-have",
+      "passed": true,
+      "tang_lines": "0"
+    },
+    {
+      "name": "test-fetch-want-count-over",
+      "passed": true,
+      "tang_lines": "0"
+    },
+    {
+      "name": "test-fetch-have-count-over",
+      "passed": true,
+      "tang_lines": "0"
+    },
+    {
+      "name": "test-fetch-advertisement-count-over",
+      "passed": true,
+      "tang_lines": "0"
+    },
+    {
+      "name": "test-fetch-advertisement-zero",
+      "passed": true,
+      "tang_lines": "0"
+    },
+    {
+      "name": "test-fetch-advertisement-wide",
+      "passed": true,
+      "tang_lines": "0"
+    },
+    {
+      "name": "test-fetch-advertisement-conflicting-kind",
+      "passed": true,
+      "tang_lines": "0"
+    },
+    {
+      "name": "test-fetch-advertisement-wrong-kind",
+      "passed": true,
+      "tang_lines": "0"
+    },
+    {
+      "name": "test-fetch-missing-object",
+      "passed": true,
+      "tang_lines": "0"
+    },
+    {
+      "name": "test-fetch-corrupt-object",
+      "passed": true,
+      "tang_lines": "0"
+    },
+    {
+      "name": "test-fetch-mismatched-loader",
+      "passed": true,
+      "tang_lines": "0"
+    },
+    {
+      "name": "test-fetch-want-count-at",
+      "passed": true,
+      "tang_lines": "0"
+    },
+    {
+      "name": "test-fetch-have-count-at",
+      "passed": true,
+      "tang_lines": "0"
+    },
+    {
+      "name": "test-fetch-advertisement-count-at",
+      "passed": true,
+      "tang_lines": "0"
+    },
+    {
+      "name": "test-fetch-inventory-object-bound",
+      "passed": true,
+      "tang_lines": "0"
+    },
+    {
+      "name": "test-fetch-wire-round",
+      "passed": true,
+      "tang_lines": "0"
+    },
+    {
+      "name": "test-fetch-wire-done",
+      "passed": true,
+      "tang_lines": "0"
+    },
+    {
+      "name": "test-fetch-wire-malformed",
+      "passed": true,
+      "tang_lines": "0"
+    },
+    {
+      "name": "test-fetch-wire-unadvertised-capability",
+      "passed": true,
+      "tang_lines": "0"
+    },
+    {
+      "name": "test-fetch-done-blob-golden",
+      "passed": true,
+      "tang_lines": "0"
+    },
+    {
+      "name": "failing-tang-control-detected",
+      "passed": true
+    },
+    {
+      "name": "compiler-failure-control-detected",
+      "passed": true
+    },
+    {
+      "name": "nak-native-prefix-and-pack-envelope",
+      "passed": true
+    },
+    {
+      "name": "nak-stock-negotiation-prefix",
+      "passed": true
+    },
+    {
+      "name": "nak-stock-index-pack",
+      "passed": true
+    },
+    {
+      "name": "nak-stock-fsck",
+      "passed": true
+    },
+    {
+      "name": "nak-stock-exact-inventory",
+      "passed": true
+    },
+    {
+      "name": "nak-stock-exact-bodies",
+      "passed": true,
+      "objects": 5
+    },
+    {
+      "name": "nak-stock-corrupt-rejected",
+      "passed": true
+    },
+    {
+      "name": "ack-native-prefix-and-pack-envelope",
+      "passed": true
+    },
+    {
+      "name": "ack-stock-negotiation-prefix",
+      "passed": true
+    },
+    {
+      "name": "ack-stock-index-pack",
+      "passed": true
+    },
+    {
+      "name": "ack-stock-fsck",
+      "passed": true
+    },
+    {
+      "name": "ack-stock-exact-inventory",
+      "passed": true
+    },
+    {
+      "name": "ack-stock-exact-bodies",
+      "passed": true,
+      "objects": 5
+    },
+    {
+      "name": "ack-stock-corrupt-rejected",
+      "passed": true
+    }
+  ],
+  "records": [
+    {
+      "kind": "native",
+      "label": "unit-inventory",
+      "source_sha256": "b4d09f30a84ff84d45a445677dec1fffd458f3493ef4c411a5a5f21cd8eba6c6",
+      "exit_code": 0,
+      "stdout": "~[\r\n  [~.test-fetch-round-nak ~.0]\r\n  [~.test-fetch-round-ack ~.0]\r\n  [~.test-fetch-round-first-common ~.0]\r\n  [~.test-fetch-round-unknown-have ~.0]\r\n  [~.test-fetch-round-private-have ~.0]\r\n  [~.test-fetch-round-unwanted-advertised-have ~.0]\r\n  [~.test-fetch-done-closure ~.0]\r\n  [~.test-fetch-done-tag-closure ~.0]\r\n  [~.test-fetch-done-ack ~.0]\r\n  [~.test-fetch-duplicate-wants ~.0]\r\n  [~.test-fetch-offset-flag-preserves-pack ~.0]\r\n  [~.test-fetch-private-have-preserves-pack ~.0]\r\n  [~.test-fetch-unwanted-advertised-object-omitted ~.0]\r\n  [~.test-fetch-have-current-tip-full-pack ~.0]\r\n  [~.test-fetch-unadvertised-ancestor ~.0]\r\n  [~.test-fetch-unadvertised-reachable-blob ~.0]\r\n  [~.test-fetch-unadvertised-private ~.0]\r\n  [~.test-fetch-revoked-current-advertisement ~.0]\r\n  [~.test-fetch-mixed-wants-denied ~.0]\r\n  [~.test-fetch-missing-want ~.0]\r\n  [~.test-fetch-zero-want ~.0]\r\n  [~.test-fetch-wide-want ~.0]\r\n  [~.test-fetch-zero-have ~.0]\r\n  [~.test-fetch-wide-have ~.0]\r\n  [~.test-fetch-want-count-over ~.0]\r\n  [~.test-fetch-have-count-over ~.0]\r\n  [~.test-fetch-advertisement-count-over ~.0]\r\n  [~.test-fetch-advertisement-zero ~.0]\r\n  [~.test-fetch-advertisement-wide ~.0]\r\n  [~.test-fetch-advertisement-conflicting-kind ~.0]\r\n  [~.test-fetch-advertisement-wrong-kind ~.0]\r\n  [~.test-fetch-missing-object ~.0]\r\n  [~.test-fetch-corrupt-object ~.0]\r\n  [~.test-fetch-mismatched-loader ~.0]\r\n  [~.test-fetch-want-count-at ~.0]\r\n  [~.test-fetch-have-count-at ~.0]\r\n  [~.test-fetch-advertisement-count-at ~.0]\r\n  [~.test-fetch-inventory-object-bound ~.0]\r\n  [~.test-fetch-wire-round ~.0]\r\n  [~.test-fetch-wire-done ~.0]\r\n  [~.test-fetch-wire-malformed ~.0]\r\n  [~.test-fetch-wire-unadvertised-capability ~.0]\r\n  [~.test-fetch-done-blob-golden ~.0]\r\n  [~.failure-control ~.3]\r\n]",
+      "stderr": "loom: mapped 512MB\r\nlite: arvo formula 4ce68411\r\nlite: core 641296f\r\nlite: final state 641296f\r\neval (run):"
+    },
+    {
+      "kind": "native",
+      "label": "invalid-compiler-control",
+      "source_sha256": "93861a0912003ecc017e98791b691937344580ec86980b12c1259e489f3ea89b",
+      "exit_code": 0,
+      "stdout": "/eval\r\n{1 22}\r\nsyntax error",
+      "stderr": "loom: mapped 512MB\r\nlite: arvo formula 4ce68411\r\nlite: core 641296f\r\nlite: final state 641296f\r\neval (run):\n\r\neval: bail: %exit"
+    },
+    {
+      "kind": "native",
+      "label": "fetch-bodies",
+      "source_sha256": "ed45801695c22454b2e1db90cda40895eb9780ec3531df182bc4b306e128d88e",
+      "exit_code": 0,
+      "stdout": "~[\r\n  [ ~.nak\r\n    ~.599\r\n    ~.0x2d.613c.a8e4.6434.e0e8.ffc7.4873.6edb.bbb0.407d.9c27.014d.0263.6261.fffc.0003.0101.7833.e30e.d6f3.7f3b.09c7.cf59.19cb.41b4.a784.ce1b.5cab.848f.baf2.0074.7874.2e65.6c69.6620.3434.3630.3031.ffdb.0024.0101.7802.a47e.39db.b90a.646e.6f63.6573.0a0a.3030.3030.2b20.3220.3e64.696c.6176.6e69.2e65.6c70.6d61.7865.4074.7365.743c.2074.7365.5420.7265.7474.696d.6d6f.630a.3030.3030.2b20.3220.3e64.696c.6176.6e69.2e65.6c70.6d61.7865.4074.7365.743c.2074.7365.5420.726f.6874.7561.0a65.3661.6631.3134.3065.3636.6639.3263.3934.6562.3032.3037.3138.6435.3334.3936.3635.6130.3264.3062.3720.746e.6572.6170.0a33.3963.3630.3364.6631.3239.3238.6532.3439.3334.3737.3839.3561.3666.6161.3230.3239.3237.3338.6166.3920.6565.7274.ff40.00bf.0101.780b.9f17.2cc7.090a.7473.7269.660a.0a30.3030.302b.2031.203e.6469.6c61.766e.692e.656c.706d.6178.6540.7473.6574.3c20.7473.6554.2072.6574.7469.6d6d.6f63.0a30.3030.302b.2031.203e.6469.6c61.766e.692e.656c.706d.6178.6540.7473.6574.3c20.7473.6554.2072.6f68.7475.610a.3339.6336.3033.6466.3132.3932.3865.3234.3933.3437.3738.3935.6136.6661.6132.3032.3932.3733.3861.6639.2065.6572.74ff.7100.8e01.0178.089e.fe26.1f5d.0a65.6761.7373.656d.2067.6174.0a0a.3030.3030.2b20.3220.3e64.696c.6176.6e69.2e65.6c70.6d61.7865.4074.7365.743c.2074.7365.5420.7265.6767.6174.0a31.7620.6761.740a.7469.6d6d.6f63.2065.7079.740a.6630.6334.3939.6563.6362.3065.3361.6531.3735.6334.3462.3238.3231.6161.3839.6535.3339.3335.3062.6461.2074.6365.6a62.6fff.8400.7b01.0178.07cb.0500.0000.0200.0000.4b43.4150.0a4b.414e.3830.3030\r\n    ~.body\r\n  ]\r\n  [ ~.ack\r\n    ~.640\r\n    ~.0x2d61.3ca8.e464.34e0.e8ff.c748.736e.dbbb.b040.7d9c.2701.4d02.6362.61ff.fc00.0301.0178.33e3.0ed6.f37f.3b09.c7cf.5919.cb41.b4a7.84ce.1b5c.ab84.8fba.f200.7478.742e.656c.6966.2034.3436.3030.31ff.db00.2401.0178.02a4.7e39.dbb9.0a64.6e6f.6365.730a.0a30.3030.302b.2032.203e.6469.6c61.766e.692e.656c.706d.6178.6540.7473.6574.3c20.7473.6554.2072.6574.7469.6d6d.6f63.0a30.3030.302b.2032.203e.6469.6c61.766e.692e.656c.706d.6178.6540.7473.6574.3c20.7473.6554.2072.6f68.7475.610a.6536.6166.3131.3430.6536.3666.3932.6339.3465.6230.3230.3731.3864.3533.3439.3636.3561.3032.6430.6237.2074.6e65.7261.700a.3339.6336.3033.6466.3132.3932.3865.3234.3933.3437.3738.3935.6136.6661.6132.3032.3932.3733.3861.6639.2065.6572.74ff.4000.bf01.0178.0b9f.172c.c709.0a74.7372.6966.0a0a.3030.3030.2b20.3120.3e64.696c.6176.6e69.2e65.6c70.6d61.7865.4074.7365.743c.2074.7365.5420.7265.7474.696d.6d6f.630a.3030.3030.2b20.3120.3e64.696c.6176.6e69.2e65.6c70.6d61.7865.4074.7365.743c.2074.7365.5420.726f.6874.7561.0a33.3963.3630.3364.6631.3239.3238.6532.3439.3334.3737.3839.3561.3666.6161.3230.3239.3237.3338.6166.3920.6565.7274.ff71.008e.0101.7808.9efe.261f.5d0a.6567.6173.7365.6d20.6761.740a.0a30.3030.302b.2032.203e.6469.6c61.766e.692e.656c.706d.6178.6540.7473.6574.3c20.7473.6554.2072.6567.6761.740a.3176.2067.6174.0a74.696d.6d6f.6320.6570.7974.0a66.3063.3439.3965.6363.6230.6533.6165.3137.3563.3434.6232.3832.3161.6138.3965.3533.3933.3530.6264.6120.7463.656a.626f.ff84.007b.0101.7807.cb05.0000.0002.0000.004b.4341.500a.6536.6166.3131.3430.6536.3666.3932.6339.3465.6230.3230.3731.3864.3533.3439.3636.3561.3032.6430.6237.204b.4341.3133.3030\r\n    ~.body\r\n  ]\r\n]",
+      "stderr": "loom: mapped 512MB\r\nlite: arvo formula 4ce68411\r\nlite: core 641296f\r\nlite: final state 641296f\r\neval (run):"
+    },
+    {
+      "kind": "stock-git",
+      "argv": [
+        "/runtime/git",
+        "-c",
+        "credential.helper=",
+        "-c",
+        "core.hooksPath=/dev/null",
+        "init",
+        "--bare",
+        "--template=",
+        "--object-format=sha1",
+        "--initial-branch=main",
+        "/work/nak.git"
+      ],
+      "input_sha256": null,
+      "exit_code": 0,
+      "stdout_hex": "496e697469616c697a656420656d70747920476974207265706f7369746f727920696e202f776f726b2f6e616b2e6769742f0a",
+      "stderr": ""
+    },
+    {
+      "kind": "stock-git",
+      "argv": [
+        "/runtime/git",
+        "-c",
+        "credential.helper=",
+        "-c",
+        "core.hooksPath=/dev/null",
+        "--git-dir=/work/nak.git",
+        "index-pack",
+        "--stdin",
+        "--strict"
+      ],
+      "input_sha256": "5614fe6d0f9f8cd506fe1de0ee5d07a34c2cd5c6dbb699bd96c8ef5e074076f4",
+      "exit_code": 0,
+      "stdout_hex": "7061636b09396337643430623062626462366537333438633766666538653033343634653461383363363132640a",
+      "stderr": ""
+    },
+    {
+      "kind": "stock-git",
+      "argv": [
+        "/runtime/git",
+        "-c",
+        "credential.helper=",
+        "-c",
+        "core.hooksPath=/dev/null",
+        "--git-dir=/work/nak.git",
+        "update-ref",
+        "refs/heads/main",
+        "adb053935e98aa1282b44c571ea3e0bcce994c0f"
+      ],
+      "input_sha256": null,
+      "exit_code": 0,
+      "stdout_hex": "",
+      "stderr": ""
+    },
+    {
+      "kind": "stock-git",
+      "argv": [
+        "/runtime/git",
+        "-c",
+        "credential.helper=",
+        "-c",
+        "core.hooksPath=/dev/null",
+        "--git-dir=/work/nak.git",
+        "update-ref",
+        "refs/tags/v1",
+        "59e233a53674ca00efbea1103db3cbdc08c3f00e"
+      ],
+      "input_sha256": null,
+      "exit_code": 0,
+      "stdout_hex": "",
+      "stderr": ""
+    },
+    {
+      "kind": "stock-git",
+      "argv": [
+        "/runtime/git",
+        "-c",
+        "credential.helper=",
+        "-c",
+        "core.hooksPath=/dev/null",
+        "upload-pack",
+        "--stateless-rpc",
+        "/work/nak.git"
+      ],
+      "input_sha256": "bd8b2f22c91738506685d330a050f376f0070de0304aab0f2dcae9acd733a0ea",
+      "exit_code": 0,
+      "stdout_hex": "303030384e414b0a5041434b00000002000000059f0b780101bf0040ff7472656520396661383337323932303261616636613539383737343339343265383239323166643330366339330a706172656e7420376230643230613536363934333564383137303230626534396332396636366530343131666136650a617574686f722054657374203c74657374406578616d706c652e696e76616c69643e2032202b303030300a636f6d6d69747465722054657374203c74657374406578616d706c652e696e76616c69643e2032202b303030300a0a7365636f6e640ab9db397ecb077801017b0084ff6f626a65637420616462303533393335653938616131323832623434633537316561336530626363653939346330660a7479706520636f6d6d69740a7461672076310a7461676765722054657374203c74657374406578616d706c652e696e76616c69643e2032202b303030300a0a746167206d6573736167650a5d1f26fe9e087801018e0071ff7472656520396661383337323932303261616636613539383737343339343265383239323166643330366339330a617574686f722054657374203c74657374406578616d706c652e696e76616c69643e2031202b303030300a636f6d6d69747465722054657374203c74657374406578616d706c652e696e76616c69643e2031202b303030300a0a66697273740a09c72c17a4027801012400dbff3130303634342066696c652e74787400f2ba8f84ab5c1bce84a7b441cb1959cfc7093b7ff3d60ee3337801010300fcff616263024d012713651a8cc944ffcb0c9be04b951c29302210747d",
+      "stderr": "Enumerating objects: 5, done.\nCounting objects:  20% (1/5)\rCounting objects:  40% (2/5)\rCounting objects:  60% (3/5)\rCounting objects:  80% (4/5)\rCounting objects: 100% (5/5)\rCounting objects: 100% (5/5), done.\nCompressing objects:  33% (1/3)\rCompressing objects:  66% (2/3)\rCompressing objects: 100% (3/3)\rCompressing objects: 100% (3/3), done.\nTotal 5 (delta 0), reused 5 (delta 0), pack-reused 0 (from 0)\n"
+    },
+    {
+      "kind": "stock-git",
+      "argv": [
+        "/runtime/git",
+        "-c",
+        "credential.helper=",
+        "-c",
+        "core.hooksPath=/dev/null",
+        "--git-dir=/work/nak.git",
+        "fsck",
+        "--full",
+        "--strict"
+      ],
+      "input_sha256": null,
+      "exit_code": 0,
+      "stdout_hex": "",
+      "stderr": ""
+    },
+    {
+      "kind": "stock-git",
+      "argv": [
+        "/runtime/git",
+        "-c",
+        "credential.helper=",
+        "-c",
+        "core.hooksPath=/dev/null",
+        "--git-dir=/work/nak.git",
+        "cat-file",
+        "--batch-all-objects",
+        "--batch-check=%(objectname) %(objecttype) %(objectsize)"
+      ],
+      "input_sha256": null,
+      "exit_code": 0,
+      "stdout_hex": "3539653233336135333637346361303065666265613131303364623363626463303863336630306520746167203132330a3762306432306135363639343335643831373032306265343963323966363665303431316661366520636f6d6d6974203134320a3966613833373239323032616166366135393837373433393432653832393231666433303663393320747265652033360a6164623035333933356539386161313238326234346335373165613365306263636539393463306620636f6d6d6974203139310a6632626138663834616235633162636538346137623434316362313935396366633730393362376620626c6f6220330a",
+      "stderr": ""
+    },
+    {
+      "kind": "stock-git",
+      "argv": [
+        "/runtime/git",
+        "-c",
+        "credential.helper=",
+        "-c",
+        "core.hooksPath=/dev/null",
+        "--git-dir=/work/nak.git",
+        "cat-file",
+        "blob",
+        "f2ba8f84ab5c1bce84a7b441cb1959cfc7093b7f"
+      ],
+      "input_sha256": null,
+      "exit_code": 0,
+      "stdout_hex": "616263",
+      "stderr": ""
+    },
+    {
+      "kind": "stock-git",
+      "argv": [
+        "/runtime/git",
+        "-c",
+        "credential.helper=",
+        "-c",
+        "core.hooksPath=/dev/null",
+        "--git-dir=/work/nak.git",
+        "cat-file",
+        "tree",
+        "9fa83729202aaf6a5987743942e82921fd306c93"
+      ],
+      "input_sha256": null,
+      "exit_code": 0,
+      "stdout_hex": "3130303634342066696c652e74787400f2ba8f84ab5c1bce84a7b441cb1959cfc7093b7f",
+      "stderr": ""
+    },
+    {
+      "kind": "stock-git",
+      "argv": [
+        "/runtime/git",
+        "-c",
+        "credential.helper=",
+        "-c",
+        "core.hooksPath=/dev/null",
+        "--git-dir=/work/nak.git",
+        "cat-file",
+        "commit",
+        "7b0d20a5669435d817020be49c29f66e0411fa6e"
+      ],
+      "input_sha256": null,
+      "exit_code": 0,
+      "stdout_hex": "7472656520396661383337323932303261616636613539383737343339343265383239323166643330366339330a617574686f722054657374203c74657374406578616d706c652e696e76616c69643e2031202b303030300a636f6d6d69747465722054657374203c74657374406578616d706c652e696e76616c69643e2031202b303030300a0a66697273740a",
+      "stderr": ""
+    },
+    {
+      "kind": "stock-git",
+      "argv": [
+        "/runtime/git",
+        "-c",
+        "credential.helper=",
+        "-c",
+        "core.hooksPath=/dev/null",
+        "--git-dir=/work/nak.git",
+        "cat-file",
+        "commit",
+        "adb053935e98aa1282b44c571ea3e0bcce994c0f"
+      ],
+      "input_sha256": null,
+      "exit_code": 0,
+      "stdout_hex": "7472656520396661383337323932303261616636613539383737343339343265383239323166643330366339330a706172656e7420376230643230613536363934333564383137303230626534396332396636366530343131666136650a617574686f722054657374203c74657374406578616d706c652e696e76616c69643e2032202b303030300a636f6d6d69747465722054657374203c74657374406578616d706c652e696e76616c69643e2032202b303030300a0a7365636f6e640a",
+      "stderr": ""
+    },
+    {
+      "kind": "stock-git",
+      "argv": [
+        "/runtime/git",
+        "-c",
+        "credential.helper=",
+        "-c",
+        "core.hooksPath=/dev/null",
+        "--git-dir=/work/nak.git",
+        "cat-file",
+        "tag",
+        "59e233a53674ca00efbea1103db3cbdc08c3f00e"
+      ],
+      "input_sha256": null,
+      "exit_code": 0,
+      "stdout_hex": "6f626a65637420616462303533393335653938616131323832623434633537316561336530626363653939346330660a7479706520636f6d6d69740a7461672076310a7461676765722054657374203c74657374406578616d706c652e696e76616c69643e2032202b303030300a0a746167206d6573736167650a",
+      "stderr": ""
+    },
+    {
+      "kind": "stock-git",
+      "argv": [
+        "/runtime/git",
+        "-c",
+        "credential.helper=",
+        "-c",
+        "core.hooksPath=/dev/null",
+        "--git-dir=/work/nak.git",
+        "index-pack",
+        "--stdin",
+        "--strict"
+      ],
+      "input_sha256": "59b4a43205360cdb3703c82a99ad11bd3e2e539711b2f626bbf8a4766c048441",
+      "exit_code": 128,
+      "stdout_hex": "",
+      "stderr": "fatal: pack is corrupted (SHA1 mismatch)\n"
+    },
+    {
+      "kind": "stock-git",
+      "argv": [
+        "/runtime/git",
+        "-c",
+        "credential.helper=",
+        "-c",
+        "core.hooksPath=/dev/null",
+        "init",
+        "--bare",
+        "--template=",
+        "--object-format=sha1",
+        "--initial-branch=main",
+        "/work/ack.git"
+      ],
+      "input_sha256": null,
+      "exit_code": 0,
+      "stdout_hex": "496e697469616c697a656420656d70747920476974207265706f7369746f727920696e202f776f726b2f61636b2e6769742f0a",
+      "stderr": ""
+    },
+    {
+      "kind": "stock-git",
+      "argv": [
+        "/runtime/git",
+        "-c",
+        "credential.helper=",
+        "-c",
+        "core.hooksPath=/dev/null",
+        "--git-dir=/work/ack.git",
+        "index-pack",
+        "--stdin",
+        "--strict"
+      ],
+      "input_sha256": "5614fe6d0f9f8cd506fe1de0ee5d07a34c2cd5c6dbb699bd96c8ef5e074076f4",
+      "exit_code": 0,
+      "stdout_hex": "7061636b09396337643430623062626462366537333438633766666538653033343634653461383363363132640a",
+      "stderr": ""
+    },
+    {
+      "kind": "stock-git",
+      "argv": [
+        "/runtime/git",
+        "-c",
+        "credential.helper=",
+        "-c",
+        "core.hooksPath=/dev/null",
+        "--git-dir=/work/ack.git",
+        "update-ref",
+        "refs/heads/main",
+        "adb053935e98aa1282b44c571ea3e0bcce994c0f"
+      ],
+      "input_sha256": null,
+      "exit_code": 0,
+      "stdout_hex": "",
+      "stderr": ""
+    },
+    {
+      "kind": "stock-git",
+      "argv": [
+        "/runtime/git",
+        "-c",
+        "credential.helper=",
+        "-c",
+        "core.hooksPath=/dev/null",
+        "--git-dir=/work/ack.git",
+        "update-ref",
+        "refs/tags/v1",
+        "59e233a53674ca00efbea1103db3cbdc08c3f00e"
+      ],
+      "input_sha256": null,
+      "exit_code": 0,
+      "stdout_hex": "",
+      "stderr": ""
+    },
+    {
+      "kind": "stock-git",
+      "argv": [
+        "/runtime/git",
+        "-c",
+        "credential.helper=",
+        "-c",
+        "core.hooksPath=/dev/null",
+        "upload-pack",
+        "--stateless-rpc",
+        "/work/ack.git"
+      ],
+      "input_sha256": "e2bfd6a32183dce14e131294628590f6f590351016d15bd351531f73c278cdb3",
+      "exit_code": 0,
+      "stdout_hex": "3030333141434b20376230643230613536363934333564383137303230626534396332396636366530343131666136650a5041434b00000002000000029f0b780101bf0040ff7472656520396661383337323932303261616636613539383737343339343265383239323166643330366339330a706172656e7420376230643230613536363934333564383137303230626534396332396636366530343131666136650a617574686f722054657374203c74657374406578616d706c652e696e76616c69643e2032202b303030300a636f6d6d69747465722054657374203c74657374406578616d706c652e696e76616c69643e2032202b303030300a0a7365636f6e640ab9db397ecb077801017b0084ff6f626a65637420616462303533393335653938616131323832623434633537316561336530626363653939346330660a7479706520636f6d6d69740a7461672076310a7461676765722054657374203c74657374406578616d706c652e696e76616c69643e2032202b303030300a0a746167206d6573736167650a5d1f26fedd3f12174edfc02e9d4b934091e29ebbbaa0c3b3",
+      "stderr": "Enumerating objects: 2, done.\nCounting objects:  50% (1/2)\rCounting objects: 100% (2/2)\rCounting objects: 100% (2/2), done.\nCompressing objects:  50% (1/2)\rCompressing objects: 100% (2/2)\rCompressing objects: 100% (2/2), done.\nTotal 2 (delta 0), reused 2 (delta 0), pack-reused 0 (from 0)\n"
+    },
+    {
+      "kind": "stock-git",
+      "argv": [
+        "/runtime/git",
+        "-c",
+        "credential.helper=",
+        "-c",
+        "core.hooksPath=/dev/null",
+        "--git-dir=/work/ack.git",
+        "fsck",
+        "--full",
+        "--strict"
+      ],
+      "input_sha256": null,
+      "exit_code": 0,
+      "stdout_hex": "",
+      "stderr": ""
+    },
+    {
+      "kind": "stock-git",
+      "argv": [
+        "/runtime/git",
+        "-c",
+        "credential.helper=",
+        "-c",
+        "core.hooksPath=/dev/null",
+        "--git-dir=/work/ack.git",
+        "cat-file",
+        "--batch-all-objects",
+        "--batch-check=%(objectname) %(objecttype) %(objectsize)"
+      ],
+      "input_sha256": null,
+      "exit_code": 0,
+      "stdout_hex": "3539653233336135333637346361303065666265613131303364623363626463303863336630306520746167203132330a3762306432306135363639343335643831373032306265343963323966363665303431316661366520636f6d6d6974203134320a3966613833373239323032616166366135393837373433393432653832393231666433303663393320747265652033360a6164623035333933356539386161313238326234346335373165613365306263636539393463306620636f6d6d6974203139310a6632626138663834616235633162636538346137623434316362313935396366633730393362376620626c6f6220330a",
+      "stderr": ""
+    },
+    {
+      "kind": "stock-git",
+      "argv": [
+        "/runtime/git",
+        "-c",
+        "credential.helper=",
+        "-c",
+        "core.hooksPath=/dev/null",
+        "--git-dir=/work/ack.git",
+        "cat-file",
+        "blob",
+        "f2ba8f84ab5c1bce84a7b441cb1959cfc7093b7f"
+      ],
+      "input_sha256": null,
+      "exit_code": 0,
+      "stdout_hex": "616263",
+      "stderr": ""
+    },
+    {
+      "kind": "stock-git",
+      "argv": [
+        "/runtime/git",
+        "-c",
+        "credential.helper=",
+        "-c",
+        "core.hooksPath=/dev/null",
+        "--git-dir=/work/ack.git",
+        "cat-file",
+        "tree",
+        "9fa83729202aaf6a5987743942e82921fd306c93"
+      ],
+      "input_sha256": null,
+      "exit_code": 0,
+      "stdout_hex": "3130303634342066696c652e74787400f2ba8f84ab5c1bce84a7b441cb1959cfc7093b7f",
+      "stderr": ""
+    },
+    {
+      "kind": "stock-git",
+      "argv": [
+        "/runtime/git",
+        "-c",
+        "credential.helper=",
+        "-c",
+        "core.hooksPath=/dev/null",
+        "--git-dir=/work/ack.git",
+        "cat-file",
+        "commit",
+        "7b0d20a5669435d817020be49c29f66e0411fa6e"
+      ],
+      "input_sha256": null,
+      "exit_code": 0,
+      "stdout_hex": "7472656520396661383337323932303261616636613539383737343339343265383239323166643330366339330a617574686f722054657374203c74657374406578616d706c652e696e76616c69643e2031202b303030300a636f6d6d69747465722054657374203c74657374406578616d706c652e696e76616c69643e2031202b303030300a0a66697273740a",
+      "stderr": ""
+    },
+    {
+      "kind": "stock-git",
+      "argv": [
+        "/runtime/git",
+        "-c",
+        "credential.helper=",
+        "-c",
+        "core.hooksPath=/dev/null",
+        "--git-dir=/work/ack.git",
+        "cat-file",
+        "commit",
+        "adb053935e98aa1282b44c571ea3e0bcce994c0f"
+      ],
+      "input_sha256": null,
+      "exit_code": 0,
+      "stdout_hex": "7472656520396661383337323932303261616636613539383737343339343265383239323166643330366339330a706172656e7420376230643230613536363934333564383137303230626534396332396636366530343131666136650a617574686f722054657374203c74657374406578616d706c652e696e76616c69643e2032202b303030300a636f6d6d69747465722054657374203c74657374406578616d706c652e696e76616c69643e2032202b303030300a0a7365636f6e640a",
+      "stderr": ""
+    },
+    {
+      "kind": "stock-git",
+      "argv": [
+        "/runtime/git",
+        "-c",
+        "credential.helper=",
+        "-c",
+        "core.hooksPath=/dev/null",
+        "--git-dir=/work/ack.git",
+        "cat-file",
+        "tag",
+        "59e233a53674ca00efbea1103db3cbdc08c3f00e"
+      ],
+      "input_sha256": null,
+      "exit_code": 0,
+      "stdout_hex": "6f626a65637420616462303533393335653938616131323832623434633537316561336530626363653939346330660a7479706520636f6d6d69740a7461672076310a7461676765722054657374203c74657374406578616d706c652e696e76616c69643e2032202b303030300a0a746167206d6573736167650a",
+      "stderr": ""
+    },
+    {
+      "kind": "stock-git",
+      "argv": [
+        "/runtime/git",
+        "-c",
+        "credential.helper=",
+        "-c",
+        "core.hooksPath=/dev/null",
+        "--git-dir=/work/ack.git",
+        "index-pack",
+        "--stdin",
+        "--strict"
+      ],
+      "input_sha256": "59b4a43205360cdb3703c82a99ad11bd3e2e539711b2f626bbf8a4766c048441",
+      "exit_code": 128,
+      "stdout_hex": "",
+      "stderr": "fatal: pack is corrupted (SHA1 mismatch)\n"
+    }
+  ]
+}

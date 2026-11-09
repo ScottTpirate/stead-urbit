@@ -1,0 +1,471 @@
+{
+  "format": 1,
+  "status": "passed",
+  "qualifies_phase": false,
+  "scope": "pure bounded authorized-input fetch selection and stock Git readback; no listener or policy integration",
+  "executed_private_driver": ".runtime/fetch-core-7zeslohn/fetch_check.py",
+  "executed_command": "PATH=/tmp/stead-local-preview.umQhNO/tools/usr/bin:/usr/bin:/bin python3 .runtime/fetch-core-7zeslohn/fetch_check.py",
+  "source_commit_at_execution": "15b74a3e639fcb9ff8b8cf5452b4d645507fdee6",
+  "canonical_promotion_note": "New library/tests ran from private staging during an independent exact-source run. Promoted Hoon is byte-identical to the tested source. New source was uncommitted; execution commit is context, not inclusion proof.",
+  "canonical_native_sources_sha256": {
+    "native/core/desk/lib/stead-code-fetch.hoon": "62c2470b0901606302edd67b7593e9096f01cba5e3b65259c8cd87923c3ca943",
+    "native/core/desk/tests/stead-code-fetch.hoon": "3fe95517cdfc0a29fbed39545478f3e067c52ef9026ee1ce74b68d28877d8dbf",
+    "native/core/desk/lib/stead-code-fetch-wire.hoon": "2218ebca65c69adc1568dc7a3bc622c5b809cc2fcdf068a99dcb6651e5256270",
+    "native/core/desk/lib/stead-code-git-emit.hoon": "1f737cb3a10eb5c1153ef00fb86e3bf30100ecb1fd0e0f2375328876b70f380e",
+    "native/core/desk/lib/stead-code-git-graph.hoon": "501593e3f564fc07f7675f31f857e8adf5fee378366ab79f0742ea7ca3d7965c",
+    "native/core/desk/lib/stead-code-git-objects.hoon": "d82bfa622dd796835ad472bf2624f80b2d44460427b0746aca8ac46452f78440",
+    "native/core/desk/lib/stead-code-git-pkt.hoon": "c0a4c87fb8a1d1d4521c640efad1f60a0d2c064b686468774c17d280442dc24e",
+    "native/core/desk/lib/stead-code-git-response.hoon": "2ab7218660731f140c575e41b02410074f13580c865246d1f299a90ffa334f3d",
+    "native/core/desk/lib/stead-git.hoon": "826b83485429c02f577c9b462ee6cddd3ab8ea1a099d33b66893f863d54c54d7"
+  },
+  "execution_inputs_before_sha256": {
+    "/home/skilgore/stead-urbit/.runtime/fetch-core-7zeslohn/fetch_check.py": "e59d67693ca3ae81bdb2a364ba3163cdc68bd8d69e4ef5354656ffa357532344",
+    "/home/skilgore/stead-urbit/.runtime/fetch-core-7zeslohn/lib/stead-code-fetch.hoon": "62c2470b0901606302edd67b7593e9096f01cba5e3b65259c8cd87923c3ca943",
+    "/home/skilgore/stead-urbit/.runtime/fetch-core-7zeslohn/tests/stead-code-fetch.hoon": "3fe95517cdfc0a29fbed39545478f3e067c52ef9026ee1ce74b68d28877d8dbf",
+    "/home/skilgore/stead-urbit/.runtime/urbit-5a187fededc4582a34fcd6055c67bb63e0917b94/pkg/base-dev/lib/test.hoon": "55d5196a3a8dbd5323943c06f138c9b9aa8fd955506c4f4b14e5d56ff05abcc6",
+    "/home/skilgore/stead-urbit/native/core/desk/lib/stead-code-fetch-wire.hoon": "2218ebca65c69adc1568dc7a3bc622c5b809cc2fcdf068a99dcb6651e5256270",
+    "/home/skilgore/stead-urbit/native/core/desk/lib/stead-code-git-emit.hoon": "1f737cb3a10eb5c1153ef00fb86e3bf30100ecb1fd0e0f2375328876b70f380e",
+    "/home/skilgore/stead-urbit/native/core/desk/lib/stead-code-git-graph.hoon": "501593e3f564fc07f7675f31f857e8adf5fee378366ab79f0742ea7ca3d7965c",
+    "/home/skilgore/stead-urbit/native/core/desk/lib/stead-code-git-objects.hoon": "d82bfa622dd796835ad472bf2624f80b2d44460427b0746aca8ac46452f78440",
+    "/home/skilgore/stead-urbit/native/core/desk/lib/stead-code-git-pkt.hoon": "c0a4c87fb8a1d1d4521c640efad1f60a0d2c064b686468774c17d280442dc24e",
+    "/home/skilgore/stead-urbit/native/core/desk/lib/stead-code-git-response.hoon": "2ab7218660731f140c575e41b02410074f13580c865246d1f299a90ffa334f3d",
+    "/home/skilgore/stead-urbit/native/core/desk/lib/stead-git.hoon": "826b83485429c02f577c9b462ee6cddd3ab8ea1a099d33b66893f863d54c54d7",
+    "/home/skilgore/stead-urbit/scripts/urbit/code_git_vectors.py": "54fa7385d64d5a5c3989c4b1b5d5e9082f1d44784fd5bfa85e07863c40a19e92",
+    "/home/skilgore/stead-urbit/scripts/urbit/execution_policy.py": "8d52b799a3a7bff73f38e029b57fe0cfafd156b7c61184173860c21600ce41c0"
+  },
+  "execution_inputs_after_sha256": {
+    "/home/skilgore/stead-urbit/.runtime/fetch-core-7zeslohn/fetch_check.py": "e59d67693ca3ae81bdb2a364ba3163cdc68bd8d69e4ef5354656ffa357532344",
+    "/home/skilgore/stead-urbit/.runtime/fetch-core-7zeslohn/lib/stead-code-fetch.hoon": "62c2470b0901606302edd67b7593e9096f01cba5e3b65259c8cd87923c3ca943",
+    "/home/skilgore/stead-urbit/.runtime/fetch-core-7zeslohn/tests/stead-code-fetch.hoon": "3fe95517cdfc0a29fbed39545478f3e067c52ef9026ee1ce74b68d28877d8dbf",
+    "/home/skilgore/stead-urbit/.runtime/urbit-5a187fededc4582a34fcd6055c67bb63e0917b94/pkg/base-dev/lib/test.hoon": "55d5196a3a8dbd5323943c06f138c9b9aa8fd955506c4f4b14e5d56ff05abcc6",
+    "/home/skilgore/stead-urbit/native/core/desk/lib/stead-code-fetch-wire.hoon": "2218ebca65c69adc1568dc7a3bc622c5b809cc2fcdf068a99dcb6651e5256270",
+    "/home/skilgore/stead-urbit/native/core/desk/lib/stead-code-git-emit.hoon": "1f737cb3a10eb5c1153ef00fb86e3bf30100ecb1fd0e0f2375328876b70f380e",
+    "/home/skilgore/stead-urbit/native/core/desk/lib/stead-code-git-graph.hoon": "501593e3f564fc07f7675f31f857e8adf5fee378366ab79f0742ea7ca3d7965c",
+    "/home/skilgore/stead-urbit/native/core/desk/lib/stead-code-git-objects.hoon": "d82bfa622dd796835ad472bf2624f80b2d44460427b0746aca8ac46452f78440",
+    "/home/skilgore/stead-urbit/native/core/desk/lib/stead-code-git-pkt.hoon": "c0a4c87fb8a1d1d4521c640efad1f60a0d2c064b686468774c17d280442dc24e",
+    "/home/skilgore/stead-urbit/native/core/desk/lib/stead-code-git-response.hoon": "2ab7218660731f140c575e41b02410074f13580c865246d1f299a90ffa334f3d",
+    "/home/skilgore/stead-urbit/native/core/desk/lib/stead-git.hoon": "826b83485429c02f577c9b462ee6cddd3ab8ea1a099d33b66893f863d54c54d7",
+    "/home/skilgore/stead-urbit/scripts/urbit/code_git_vectors.py": "54fa7385d64d5a5c3989c4b1b5d5e9082f1d44784fd5bfa85e07863c40a19e92",
+    "/home/skilgore/stead-urbit/scripts/urbit/execution_policy.py": "8d52b799a3a7bff73f38e029b57fe0cfafd156b7c61184173860c21600ce41c0"
+  },
+  "current_native_sources_verified_equal": true,
+  "post_execution_non_native_changes": {
+    "/home/skilgore/stead-urbit/scripts/urbit/code_git_vectors.py": {
+      "executed_sha256": "54fa7385d64d5a5c3989c4b1b5d5e9082f1d44784fd5bfa85e07863c40a19e92",
+      "current_sha256": "ebdc813133e9007e09912c7a1f7de4b994a6c2a85a2d8302ff70c8630c08bc7f"
+    }
+  },
+  "toolchain_sha256": "ae185adaec12b5aa0b2d48e2198ae65583902512ffd9d148706810c4819c650c",
+  "git_sha256": "93473c28694fd72bd889364107cd2770514de59780885a6a4aafca4d602e30ad",
+  "git_version": "2.55.0",
+  "expected_checks": [
+    "test-fetch-round-nak",
+    "test-fetch-round-ack",
+    "test-fetch-round-first-common",
+    "test-fetch-round-unknown-have",
+    "test-fetch-round-private-have",
+    "test-fetch-round-unwanted-advertised-have",
+    "test-fetch-done-closure",
+    "test-fetch-done-tag-closure",
+    "test-fetch-done-ack",
+    "test-fetch-duplicate-wants",
+    "test-fetch-offset-flag-preserves-pack",
+    "test-fetch-private-have-preserves-pack",
+    "test-fetch-unwanted-advertised-object-omitted",
+    "test-fetch-have-current-tip-full-pack",
+    "test-fetch-unadvertised-ancestor",
+    "test-fetch-unadvertised-reachable-blob",
+    "test-fetch-unadvertised-private",
+    "test-fetch-revoked-current-advertisement",
+    "test-fetch-mixed-wants-denied",
+    "test-fetch-missing-want",
+    "test-fetch-zero-want",
+    "test-fetch-wide-want",
+    "test-fetch-zero-have",
+    "test-fetch-wide-have",
+    "test-fetch-want-count-over",
+    "test-fetch-have-count-over",
+    "test-fetch-advertisement-count-over",
+    "test-fetch-advertisement-zero",
+    "test-fetch-advertisement-wide",
+    "test-fetch-advertisement-conflicting-kind",
+    "test-fetch-advertisement-wrong-kind",
+    "test-fetch-missing-object",
+    "test-fetch-corrupt-object",
+    "test-fetch-mismatched-loader",
+    "test-fetch-want-count-at",
+    "test-fetch-have-count-at",
+    "test-fetch-advertisement-count-at",
+    "test-fetch-inventory-object-bound",
+    "test-fetch-wire-round",
+    "test-fetch-wire-done",
+    "test-fetch-wire-malformed",
+    "test-fetch-wire-unadvertised-capability",
+    "test-fetch-done-blob-golden",
+    "failing-tang-control-detected",
+    "compiler-failure-control-detected",
+    "nak-native-prefix-and-pack-envelope",
+    "nak-stock-negotiation-prefix",
+    "nak-stock-index-pack",
+    "nak-stock-fsck",
+    "nak-stock-exact-inventory",
+    "nak-stock-exact-bodies",
+    "nak-stock-corrupt-rejected",
+    "ack-native-prefix-and-pack-envelope",
+    "ack-stock-negotiation-prefix",
+    "ack-stock-index-pack",
+    "ack-stock-fsck",
+    "ack-stock-exact-inventory",
+    "ack-stock-exact-bodies",
+    "ack-stock-corrupt-rejected"
+  ],
+  "observed_checks": [
+    {
+      "name": "test-fetch-round-nak",
+      "passed": true,
+      "tang_lines": "0"
+    },
+    {
+      "name": "test-fetch-round-ack",
+      "passed": true,
+      "tang_lines": "0"
+    },
+    {
+      "name": "test-fetch-round-first-common",
+      "passed": true,
+      "tang_lines": "0"
+    },
+    {
+      "name": "test-fetch-round-unknown-have",
+      "passed": true,
+      "tang_lines": "0"
+    },
+    {
+      "name": "test-fetch-round-private-have",
+      "passed": true,
+      "tang_lines": "0"
+    },
+    {
+      "name": "test-fetch-round-unwanted-advertised-have",
+      "passed": true,
+      "tang_lines": "0"
+    },
+    {
+      "name": "test-fetch-done-closure",
+      "passed": true,
+      "tang_lines": "0"
+    },
+    {
+      "name": "test-fetch-done-tag-closure",
+      "passed": true,
+      "tang_lines": "0"
+    },
+    {
+      "name": "test-fetch-done-ack",
+      "passed": true,
+      "tang_lines": "0"
+    },
+    {
+      "name": "test-fetch-duplicate-wants",
+      "passed": true,
+      "tang_lines": "0"
+    },
+    {
+      "name": "test-fetch-offset-flag-preserves-pack",
+      "passed": true,
+      "tang_lines": "0"
+    },
+    {
+      "name": "test-fetch-private-have-preserves-pack",
+      "passed": true,
+      "tang_lines": "0"
+    },
+    {
+      "name": "test-fetch-unwanted-advertised-object-omitted",
+      "passed": true,
+      "tang_lines": "0"
+    },
+    {
+      "name": "test-fetch-have-current-tip-full-pack",
+      "passed": true,
+      "tang_lines": "0"
+    },
+    {
+      "name": "test-fetch-unadvertised-ancestor",
+      "passed": true,
+      "tang_lines": "0"
+    },
+    {
+      "name": "test-fetch-unadvertised-reachable-blob",
+      "passed": true,
+      "tang_lines": "0"
+    },
+    {
+      "name": "test-fetch-unadvertised-private",
+      "passed": true,
+      "tang_lines": "0"
+    },
+    {
+      "name": "test-fetch-revoked-current-advertisement",
+      "passed": true,
+      "tang_lines": "0"
+    },
+    {
+      "name": "test-fetch-mixed-wants-denied",
+      "passed": true,
+      "tang_lines": "0"
+    },
+    {
+      "name": "test-fetch-missing-want",
+      "passed": true,
+      "tang_lines": "0"
+    },
+    {
+      "name": "test-fetch-zero-want",
+      "passed": true,
+      "tang_lines": "0"
+    },
+    {
+      "name": "test-fetch-wide-want",
+      "passed": true,
+      "tang_lines": "0"
+    },
+    {
+      "name": "test-fetch-zero-have",
+      "passed": true,
+      "tang_lines": "0"
+    },
+    {
+      "name": "test-fetch-wide-have",
+      "passed": true,
+      "tang_lines": "0"
+    },
+    {
+      "name": "test-fetch-want-count-over",
+      "passed": true,
+      "tang_lines": "0"
+    },
+    {
+      "name": "test-fetch-have-count-over",
+      "passed": true,
+      "tang_lines": "0"
+    },
+    {
+      "name": "test-fetch-advertisement-count-over",
+      "passed": true,
+      "tang_lines": "0"
+    },
+    {
+      "name": "test-fetch-advertisement-zero",
+      "passed": true,
+      "tang_lines": "0"
+    },
+    {
+      "name": "test-fetch-advertisement-wide",
+      "passed": true,
+      "tang_lines": "0"
+    },
+    {
+      "name": "test-fetch-advertisement-conflicting-kind",
+      "passed": true,
+      "tang_lines": "0"
+    },
+    {
+      "name": "test-fetch-advertisement-wrong-kind",
+      "passed": true,
+      "tang_lines": "0"
+    },
+    {
+      "name": "test-fetch-missing-object",
+      "passed": true,
+      "tang_lines": "0"
+    },
+    {
+      "name": "test-fetch-corrupt-object",
+      "passed": true,
+      "tang_lines": "0"
+    },
+    {
+      "name": "test-fetch-mismatched-loader",
+      "passed": true,
+      "tang_lines": "0"
+    },
+    {
+      "name": "test-fetch-want-count-at",
+      "passed": true,
+      "tang_lines": "0"
+    },
+    {
+      "name": "test-fetch-have-count-at",
+      "passed": true,
+      "tang_lines": "0"
+    },
+    {
+      "name": "test-fetch-advertisement-count-at",
+      "passed": true,
+      "tang_lines": "0"
+    },
+    {
+      "name": "test-fetch-inventory-object-bound",
+      "passed": true,
+      "tang_lines": "0"
+    },
+    {
+      "name": "test-fetch-wire-round",
+      "passed": true,
+      "tang_lines": "0"
+    },
+    {
+      "name": "test-fetch-wire-done",
+      "passed": true,
+      "tang_lines": "0"
+    },
+    {
+      "name": "test-fetch-wire-malformed",
+      "passed": true,
+      "tang_lines": "0"
+    },
+    {
+      "name": "test-fetch-wire-unadvertised-capability",
+      "passed": true,
+      "tang_lines": "0"
+    },
+    {
+      "name": "test-fetch-done-blob-golden",
+      "passed": true,
+      "tang_lines": "0"
+    },
+    {
+      "name": "failing-tang-control-detected",
+      "passed": true
+    },
+    {
+      "name": "compiler-failure-control-detected",
+      "passed": true
+    },
+    {
+      "name": "nak-native-prefix-and-pack-envelope",
+      "passed": true
+    },
+    {
+      "name": "nak-stock-negotiation-prefix",
+      "passed": true
+    },
+    {
+      "name": "nak-stock-index-pack",
+      "passed": true
+    },
+    {
+      "name": "nak-stock-fsck",
+      "passed": true
+    },
+    {
+      "name": "nak-stock-exact-inventory",
+      "passed": true
+    },
+    {
+      "name": "nak-stock-exact-bodies",
+      "passed": true,
+      "objects": 5
+    },
+    {
+      "name": "nak-stock-corrupt-rejected",
+      "passed": true
+    },
+    {
+      "name": "ack-native-prefix-and-pack-envelope",
+      "passed": true
+    },
+    {
+      "name": "ack-stock-negotiation-prefix",
+      "passed": true
+    },
+    {
+      "name": "ack-stock-index-pack",
+      "passed": true
+    },
+    {
+      "name": "ack-stock-fsck",
+      "passed": true
+    },
+    {
+      "name": "ack-stock-exact-inventory",
+      "passed": true
+    },
+    {
+      "name": "ack-stock-exact-bodies",
+      "passed": true,
+      "objects": 5
+    },
+    {
+      "name": "ack-stock-corrupt-rejected",
+      "passed": true
+    }
+  ],
+  "retained_report_sha256": "c684aea8c6823c1e413f64e1e54fdab559d3b69c1280fe5c8dbbed399d4422fd",
+  "raw_sha256": {
+    ".runtime/fetch-core-7zeslohn/runs/20261109T113029Z-swyf6dp6/.stead-disposable.json": "78aa2123ac53d818c464fedf7fb4738463274ff9da7c53d4aefa9f3c320fe0c0",
+    ".runtime/fetch-core-7zeslohn/runs/20261109T113029Z-swyf6dp6/code/code_git_vectors.py": "54fa7385d64d5a5c3989c4b1b5d5e9082f1d44784fd5bfa85e07863c40a19e92",
+    ".runtime/fetch-core-7zeslohn/runs/20261109T113029Z-swyf6dp6/code/execution_policy.py": "8d52b799a3a7bff73f38e029b57fe0cfafd156b7c61184173860c21600ce41c0",
+    ".runtime/fetch-core-7zeslohn/runs/20261109T113029Z-swyf6dp6/code/fetch_check.py": "e59d67693ca3ae81bdb2a364ba3163cdc68bd8d69e4ef5354656ffa357532344",
+    ".runtime/fetch-core-7zeslohn/runs/20261109T113029Z-swyf6dp6/console.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    ".runtime/fetch-core-7zeslohn/runs/20261109T113029Z-swyf6dp6/input/stead-code-fetch-wire.hoon": "2218ebca65c69adc1568dc7a3bc622c5b809cc2fcdf068a99dcb6651e5256270",
+    ".runtime/fetch-core-7zeslohn/runs/20261109T113029Z-swyf6dp6/input/stead-code-fetch.hoon": "62c2470b0901606302edd67b7593e9096f01cba5e3b65259c8cd87923c3ca943",
+    ".runtime/fetch-core-7zeslohn/runs/20261109T113029Z-swyf6dp6/input/stead-code-git-emit.hoon": "1f737cb3a10eb5c1153ef00fb86e3bf30100ecb1fd0e0f2375328876b70f380e",
+    ".runtime/fetch-core-7zeslohn/runs/20261109T113029Z-swyf6dp6/input/stead-code-git-graph.hoon": "501593e3f564fc07f7675f31f857e8adf5fee378366ab79f0742ea7ca3d7965c",
+    ".runtime/fetch-core-7zeslohn/runs/20261109T113029Z-swyf6dp6/input/stead-code-git-objects.hoon": "d82bfa622dd796835ad472bf2624f80b2d44460427b0746aca8ac46452f78440",
+    ".runtime/fetch-core-7zeslohn/runs/20261109T113029Z-swyf6dp6/input/stead-code-git-pkt.hoon": "c0a4c87fb8a1d1d4521c640efad1f60a0d2c064b686468774c17d280442dc24e",
+    ".runtime/fetch-core-7zeslohn/runs/20261109T113029Z-swyf6dp6/input/stead-code-git-response.hoon": "2ab7218660731f140c575e41b02410074f13580c865246d1f299a90ffa334f3d",
+    ".runtime/fetch-core-7zeslohn/runs/20261109T113029Z-swyf6dp6/input/stead-git.hoon": "826b83485429c02f577c9b462ee6cddd3ab8ea1a099d33b66893f863d54c54d7",
+    ".runtime/fetch-core-7zeslohn/runs/20261109T113029Z-swyf6dp6/input/test-helper.hoon": "55d5196a3a8dbd5323943c06f138c9b9aa8fd955506c4f4b14e5d56ff05abcc6",
+    ".runtime/fetch-core-7zeslohn/runs/20261109T113029Z-swyf6dp6/input/tests.hoon": "3fe95517cdfc0a29fbed39545478f3e067c52ef9026ee1ce74b68d28877d8dbf",
+    ".runtime/fetch-core-7zeslohn/runs/20261109T113029Z-swyf6dp6/inputs.json": "fc98af5c6ed99a94a0e56e7280d7533e859564afdaf34b6310e91bf235dc07bb",
+    ".runtime/fetch-core-7zeslohn/runs/20261109T113029Z-swyf6dp6/output/ack.pack": "5614fe6d0f9f8cd506fe1de0ee5d07a34c2cd5c6dbb699bd96c8ef5e074076f4",
+    ".runtime/fetch-core-7zeslohn/runs/20261109T113029Z-swyf6dp6/output/ack.response": "2cbf5717b9b82eef975af03a83f270eb8a165594891f513c1d252c544b44f864",
+    ".runtime/fetch-core-7zeslohn/runs/20261109T113029Z-swyf6dp6/output/fetch-bodies.hoon": "ed45801695c22454b2e1db90cda40895eb9780ec3531df182bc4b306e128d88e",
+    ".runtime/fetch-core-7zeslohn/runs/20261109T113029Z-swyf6dp6/output/invalid-compiler-control.hoon": "93861a0912003ecc017e98791b691937344580ec86980b12c1259e489f3ea89b",
+    ".runtime/fetch-core-7zeslohn/runs/20261109T113029Z-swyf6dp6/output/nak.pack": "5614fe6d0f9f8cd506fe1de0ee5d07a34c2cd5c6dbb699bd96c8ef5e074076f4",
+    ".runtime/fetch-core-7zeslohn/runs/20261109T113029Z-swyf6dp6/output/nak.response": "0a4a91156c73f5d49c1e80782f477ca097f6a167686384f41f064ec1ff81d97a",
+    ".runtime/fetch-core-7zeslohn/runs/20261109T113029Z-swyf6dp6/output/report.json": "c684aea8c6823c1e413f64e1e54fdab559d3b69c1280fe5c8dbbed399d4422fd",
+    ".runtime/fetch-core-7zeslohn/runs/20261109T113029Z-swyf6dp6/output/unit-inventory.hoon": "b4d09f30a84ff84d45a445677dec1fffd458f3493ef4c411a5a5f21cd8eba6c6",
+    ".runtime/execution-runs/code-fetch-fapbg_05/report.json": "b0a764cc0174fd9b6a43b804299b2c1e3a5b13b5072c015ba30c53f3e56aa039",
+    ".runtime/execution-runs/code-fetch-fapbg_05/control/scope.json": "c512d6f0a23e71fe26843ac11cae7a99c6f6cba82d66c19072fbe409699f3791"
+  },
+  "prior_failed_native_attempts": [],
+  "resources": {
+    "guard_status": "completed",
+    "elapsed_seconds": 10.031,
+    "max_sampled_temperature_c": 31.0,
+    "scope_proof": {
+      "cgroup": "/user.slice/user-1000.slice/user@1000.service/app.slice/stead-native-5309b706258283667cf9880247e55c19.scope",
+      "cpu_affinity": [
+        19
+      ],
+      "cpu_max": "5000 10000",
+      "unit": "stead-native-5309b706258283667cf9880247e55c19.scope"
+    },
+    "scope_after": "inactive/dead",
+    "policy": {
+      "cooperative_seconds": 10,
+      "cpu_period_us": 10000,
+      "cpu_quota_us": 5000,
+      "kill_seconds": 5,
+      "sample_seconds": 1,
+      "stale_seconds": 3,
+      "start_c": 75,
+      "stop_c": 90,
+      "terminate_seconds": 10
+    },
+    "guard_deadline_seconds": 120,
+    "native_call_deadline_seconds": 40
+  },
+  "durable_driver": {
+    "path": "scripts/urbit/code_fetch_check.py",
+    "sha256": "e5971d5d0480f7de8b18e62333593c4f3ac9f9ad286e871874b9a58d69c53940",
+    "note": "Canonical-path version promoted after staged execution. No second native launch. Three new host corpus-integrity checks and twelve existing host vector/parser checks passed. The native result binds the recorded private driver and byte-identical promoted Hoon."
+  },
+  "protocol_sources": [
+    "https://git-scm.com/docs/pack-protocol",
+    "https://raw.githubusercontent.com/git/git/v2.55.0/upload-pack.c"
+  ]
+}
