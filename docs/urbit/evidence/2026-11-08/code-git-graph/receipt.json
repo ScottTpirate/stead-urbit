@@ -1,0 +1,309 @@
+{
+  "format": 1,
+  "status": "passed",
+  "qualifies_phase": false,
+  "scope": "Pure native derived object graph, bounded closure and exact commit/path lookup only; no Git server, fsck-strict equivalence or accepted-write qualification.",
+  "run": ".runtime/graph-dev-b_7a5oe_",
+  "checkout_commit_at_receipt": "716a96b559ba9ed551f67c216be6607b03b0355c",
+  "source_binding_note": "New graph files were uncommitted. Execution did not record a checkout commit; exact before/after source hashes bind the executed content independently of commit membership.",
+  "sources_before_sha256": {
+    "native/core/desk/lib/stead-git.hoon": "826b83485429c02f577c9b462ee6cddd3ab8ea1a099d33b66893f863d54c54d7",
+    "native/core/desk/lib/stead-code-git-objects.hoon": "d82bfa622dd796835ad472bf2624f80b2d44460427b0746aca8ac46452f78440",
+    "native/core/desk/lib/stead-code-git-graph.hoon": "501593e3f564fc07f7675f31f857e8adf5fee378366ab79f0742ea7ca3d7965c",
+    "native/core/desk/tests/stead-code-git-graph.hoon": "ba0834247948d74b91f5f7c607ce7fa4acd18dfc75c66aa00cf1435308dd8f08"
+  },
+  "sources_after_sha256": {
+    "native/core/desk/lib/stead-git.hoon": "826b83485429c02f577c9b462ee6cddd3ab8ea1a099d33b66893f863d54c54d7",
+    "native/core/desk/lib/stead-code-git-objects.hoon": "d82bfa622dd796835ad472bf2624f80b2d44460427b0746aca8ac46452f78440",
+    "native/core/desk/lib/stead-code-git-graph.hoon": "501593e3f564fc07f7675f31f857e8adf5fee378366ab79f0742ea7ca3d7965c",
+    "native/core/desk/tests/stead-code-git-graph.hoon": "ba0834247948d74b91f5f7c607ce7fa4acd18dfc75c66aa00cf1435308dd8f08"
+  },
+  "current_sources_verified_equal": true,
+  "toolchain_sha256": "ae185adaec12b5aa0b2d48e2198ae65583902512ffd9d148706810c4819c650c",
+  "helper_sha256": "55d5196a3a8dbd5323943c06f138c9b9aa8fd955506c4f4b14e5d56ff05abcc6",
+  "runtime_version": "4.6",
+  "runtime_binary_sha256": "f7f0d3b3c0480fc10f887dfbc09bde56a81d723a803541c7886c538a0675d833",
+  "runtime_source_commit": "8ddc4b786979574dbfcb655e3db1b634f658d0de",
+  "runtime_patch_commit": "c0a35c6f6302baf536a13522afd1ac89ea8c7776",
+  "kernel_helper_commit": "5a187fededc4582a34fcd6055c67bb63e0917b94",
+  "expected_checks": 31,
+  "observed_checks": [
+    {
+      "name": "test-graph-tree-exact-name",
+      "passed": true,
+      "tang_lines": 0
+    },
+    {
+      "name": "test-graph-tree-malformed-name",
+      "passed": true,
+      "tang_lines": 0
+    },
+    {
+      "name": "test-graph-tree-unsupported-symlink",
+      "passed": true,
+      "tang_lines": 0
+    },
+    {
+      "name": "test-graph-tree-duplicate",
+      "passed": true,
+      "tang_lines": 0
+    },
+    {
+      "name": "test-graph-tree-order",
+      "passed": true,
+      "tang_lines": 0
+    },
+    {
+      "name": "test-graph-commit-tree",
+      "passed": true,
+      "tang_lines": 0
+    },
+    {
+      "name": "test-graph-tag-target",
+      "passed": true,
+      "tang_lines": 0
+    },
+    {
+      "name": "test-graph-closure",
+      "passed": true,
+      "tang_lines": 0
+    },
+    {
+      "name": "test-graph-closure-missing-object",
+      "passed": true,
+      "tang_lines": 0
+    },
+    {
+      "name": "test-graph-closure-wrong-type",
+      "passed": true,
+      "tang_lines": 0
+    },
+    {
+      "name": "test-graph-read-exact-commit",
+      "passed": true,
+      "tang_lines": 0
+    },
+    {
+      "name": "test-graph-read-unreachable-object",
+      "passed": true,
+      "tang_lines": 0
+    },
+    {
+      "name": "test-graph-read-traversal",
+      "passed": true,
+      "tang_lines": 0
+    },
+    {
+      "name": "test-graph-empty-closure",
+      "passed": true,
+      "tang_lines": 0
+    },
+    {
+      "name": "test-graph-duplicate-roots",
+      "passed": true,
+      "tang_lines": 0
+    },
+    {
+      "name": "test-graph-visit-bound",
+      "passed": true,
+      "tang_lines": 0
+    },
+    {
+      "name": "test-graph-byte-bound",
+      "passed": true,
+      "tang_lines": 0
+    },
+    {
+      "name": "test-graph-queue-state",
+      "passed": true,
+      "tang_lines": 0
+    },
+    {
+      "name": "test-graph-queue-bound",
+      "passed": true,
+      "tang_lines": 0
+    },
+    {
+      "name": "test-graph-queue-at-bound",
+      "passed": true,
+      "tang_lines": 0
+    },
+    {
+      "name": "test-graph-oid-mismatch",
+      "passed": true,
+      "tang_lines": 0
+    },
+    {
+      "name": "test-graph-read-unreachable-revision",
+      "passed": true,
+      "tang_lines": 0
+    },
+    {
+      "name": "test-graph-read-unreachable-tree",
+      "passed": true,
+      "tang_lines": 0
+    },
+    {
+      "name": "test-graph-read-forbidden-loader",
+      "passed": true,
+      "tang_lines": 0
+    },
+    {
+      "name": "test-graph-read-corrupt-loader",
+      "passed": true,
+      "tang_lines": 0
+    },
+    {
+      "name": "test-graph-read-directory",
+      "passed": true,
+      "tang_lines": 0
+    },
+    {
+      "name": "test-graph-path-depth-bound",
+      "passed": true,
+      "tang_lines": 0
+    },
+    {
+      "name": "test-graph-root-bound",
+      "passed": true,
+      "tang_lines": 0
+    },
+    {
+      "name": "test-graph-executable-file",
+      "passed": true,
+      "tang_lines": 0
+    },
+    {
+      "name": "graph-failing-tang-control-detected",
+      "passed": true,
+      "tang_lines": 3
+    },
+    {
+      "name": "graph-compiler-failure-control-detected",
+      "passed": true,
+      "process_exit": 0,
+      "diagnostic": "syntax error; eval: bail: %exit"
+    }
+  ],
+  "raw_native_records": [
+    {
+      "label": "eval",
+      "exit_code": 0,
+      "stdout": "\u001b[38;5;244m~[\r\n  [~.test-graph-tree-exact-name ~.0]\r\n  [~.test-graph-tree-malformed-name ~.0]\r\n  [~.test-graph-tree-unsupported-symlink ~.0]\r\n  [~.test-graph-tree-duplicate ~.0]\r\n  [~.test-graph-tree-order ~.0]\r\n  [~.test-graph-commit-tree ~.0]\r\n  [~.test-graph-tag-target ~.0]\r\n  [~.test-graph-closure ~.0]\r\n  [~.test-graph-closure-missing-object ~.0]\r\n  [~.test-graph-closure-wrong-type ~.0]\r\n  [~.test-graph-read-exact-commit ~.0]\r\n  [~.test-graph-read-unreachable-object ~.0]\r\n  [~.test-graph-read-traversal ~.0]\r\n  [~.test-graph-empty-closure ~.0]\r\n  [~.test-graph-duplicate-roots ~.0]\r\n  [~.test-graph-visit-bound ~.0]\r\n  [~.test-graph-byte-bound ~.0]\r\n  [~.test-graph-queue-state ~.0]\r\n  [~.test-graph-queue-bound ~.0]\r\n  [~.test-graph-queue-at-bound ~.0]\r\n  [~.test-graph-oid-mismatch ~.0]\r\n  [~.test-graph-read-unreachable-revision ~.0]\r\n  [~.test-graph-read-unreachable-tree ~.0]\r\n  [~.test-graph-read-forbidden-loader ~.0]\r\n  [~.test-graph-read-corrupt-loader ~.0]\r\n  [~.test-graph-read-directory ~.0]\r\n  [~.test-graph-path-depth-bound ~.0]\r\n  [~.test-graph-root-bound ~.0]\r\n  [~.test-graph-executable-file ~.0]\r\n  [~.failure-control ~.3]\r\n]\u001b[0m\r\n",
+      "stderr": "loom: mapped 512MB\r\nlite: arvo formula 4ce68411\r\nlite: core 641296f\r\nlite: final state 641296f\r\neval (run):\n"
+    },
+    {
+      "label": "invalid",
+      "exit_code": 0,
+      "stdout": "\u001b[38;5;244m/eval\u001b[0m\r\n\u001b[38;5;244m{1 22}\u001b[0m\r\n\u001b[38;5;244msyntax error\u001b[0m\r\n",
+      "stderr": "loom: mapped 512MB\r\nlite: arvo formula 4ce68411\r\nlite: core 641296f\r\nlite: final state 641296f\r\neval (run):\n\r\neval: bail: %exit\r\n"
+    }
+  ],
+  "raw_sha256": {
+    ".runtime/graph-dev-b_7a5oe_/console.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    ".runtime/graph-dev-b_7a5oe_/eval.hoon": "f22bef597d7a90ea31e679361267672e4a0fc811fd9d2dd3a800e9d2604a29b5",
+    ".runtime/graph-dev-b_7a5oe_/execution_policy.py": "8d52b799a3a7bff73f38e029b57fe0cfafd156b7c61184173860c21600ce41c0",
+    ".runtime/graph-dev-b_7a5oe_/inputs.json": "c6df3872d46c477c4b3d88471fba41fb4fba506f8eebaf779ef8ec3ac5f225f5",
+    ".runtime/graph-dev-b_7a5oe_/inside.py": "572d34e27d393b57a7b73861ba1a23eb8d301e6df2a19305e4531b8d66f400cd",
+    ".runtime/graph-dev-b_7a5oe_/invalid.hoon": "93861a0912003ecc017e98791b691937344580ec86980b12c1259e489f3ea89b",
+    ".runtime/graph-dev-b_7a5oe_/output/report.json": "d567d5ac5d6269e94984dea72795a3498aecc6bc5aea0571da0b0c4180d639e5",
+    ".runtime/graph-dev-b_7a5oe_/run.py": "38eb671c7326795fb5e50eba6f4eec43b4afae21bb0626b3935431f9f0bb6468",
+    ".runtime/execution-runs/graph-dev-n4x7rc_k/report.json": "72ca91158cce0bfdb4b81f1816828b139c5b2b403d4221bc71554aa4a5a9bfda",
+    ".runtime/execution-runs/graph-dev-n4x7rc_k/control/scope.json": "5deeb1fe9d67039773ccc6c8e677950e960b21bd1fa2ad6ea5537c5df1c53d51"
+  },
+  "prior_failed_attempts": [
+    {
+      "run": ".runtime/graph-dev-eb2d7bvx",
+      "status": "native-compile-failed",
+      "diagnostic": "nest-fail: a narrowed nonempty pending queue could not become empty",
+      "observed": {
+        "label": "eval",
+        "exit_code": 0,
+        "stdout": "\u001b[38;5;244m- need\r\n[ i=?([%leave oid=@ux] [%visit oid=@ux type=?(%blob %commit %tag %tree)])\r\n  t=it(?([%leave oid=@ux] [%visit oid=@ux type=?(%blob %commit %tag %tree)]))\r\n]\u001b[0m\r\n\u001b[38;5;244m-have.%~\u001b[0m\r\n\u001b[38;5;244mnest-fail\u001b[0m\r\n",
+        "stderr": "loom: mapped 512MB\r\nlite: arvo formula 4ce68411\r\nlite: core 641296f\r\nlite: final state 641296f\r\neval (run):\n\r\neval: bail: %exit\r\n"
+      },
+      "raw_sha256": {
+        ".runtime/graph-dev-eb2d7bvx/console.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        ".runtime/graph-dev-eb2d7bvx/eval.hoon": "f2e7f68bcbd57252cc27be5a57e35a8e5a8c99937fb850b5561a911141047ffc",
+        ".runtime/graph-dev-eb2d7bvx/execution_policy.py": "8d52b799a3a7bff73f38e029b57fe0cfafd156b7c61184173860c21600ce41c0",
+        ".runtime/graph-dev-eb2d7bvx/inputs.json": "b28b8fa5cfa86c00975132ce7702423e753cfe8c323396c6763e2b2d9285b832",
+        ".runtime/graph-dev-eb2d7bvx/inside.py": "572d34e27d393b57a7b73861ba1a23eb8d301e6df2a19305e4531b8d66f400cd",
+        ".runtime/graph-dev-eb2d7bvx/invalid.hoon": "93861a0912003ecc017e98791b691937344580ec86980b12c1259e489f3ea89b",
+        ".runtime/graph-dev-eb2d7bvx/output/report.json": "9db0240928b4504338f20b343e1457f604a8b2949bdaace2452ec992ddca91e3",
+        ".runtime/graph-dev-eb2d7bvx/run.py": "c9da61190bff84073309b2833bbfbc3bd5cc2b5ae739335a0f35e55c5f6d4a6b"
+      }
+    },
+    {
+      "run": ".runtime/graph-dev-f_76wifl",
+      "status": "native-compile-failed",
+      "diagnostic": "nest-fail: weld inferred a leave-only queue tail",
+      "observed": {
+        "label": "eval",
+        "exit_code": 0,
+        "stdout": "\u001b[38;5;244m-need.?(%~ [i=[%leave @ux] t=it([%leave @ux])])\u001b[0m\r\n\u001b[38;5;244m- have\r\n[ i=[%leave @ux]\r\n  ?(\r\n    t=%~\r\n      t\r\n    [ ?(i=[%leave oid=@ux] i=[%visit oid=@ux type=?(%blob %commit %tag %tree)])\r\n        t\r\n      it(?([%leave oid=@ux] [%visit oid=@ux type=?(%blob %commit %tag %tree)]))\r\n    ]\r\n  )\r\n]\u001b[0m\r\n\u001b[38;5;244mnest-fail\u001b[0m\r\n",
+        "stderr": "loom: mapped 512MB\r\nlite: arvo formula 4ce68411\r\nlite: core 641296f\r\nlite: final state 641296f\r\neval (run):\n\r\neval: bail: %exit\r\n"
+      },
+      "raw_sha256": {
+        ".runtime/graph-dev-f_76wifl/console.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        ".runtime/graph-dev-f_76wifl/eval.hoon": "d98d1684e7bb2582f9c541144614ffccff914cc923362d79a5bb63954ac96ee3",
+        ".runtime/graph-dev-f_76wifl/execution_policy.py": "8d52b799a3a7bff73f38e029b57fe0cfafd156b7c61184173860c21600ce41c0",
+        ".runtime/graph-dev-f_76wifl/inputs.json": "058acaf3624f3d3c3ce4f9302294c974b2ae3ba4f06b560c2d79f1cfaa0c4dfa",
+        ".runtime/graph-dev-f_76wifl/inside.py": "572d34e27d393b57a7b73861ba1a23eb8d301e6df2a19305e4531b8d66f400cd",
+        ".runtime/graph-dev-f_76wifl/invalid.hoon": "93861a0912003ecc017e98791b691937344580ec86980b12c1259e489f3ea89b",
+        ".runtime/graph-dev-f_76wifl/output/report.json": "58a2ebab2c3cb79eb66a4c0cc217e8ce0342cec248166aeef45b98346883e417",
+        ".runtime/graph-dev-f_76wifl/run.py": "38eb671c7326795fb5e50eba6f4eec43b4afae21bb0626b3935431f9f0bb6468"
+      }
+    },
+    {
+      "run": ".runtime/graph-dev-yz_2e38k",
+      "status": "native-compile-failed",
+      "diagnostic": "mull-grow/nest-fail: character aura @tD versus @ud",
+      "observed": {
+        "label": "eval",
+        "exit_code": 0,
+        "stdout": "\u001b[38;5;244mmull-grow\u001b[0m\r\n\u001b[38;5;244m-need.@ud\u001b[0m\r\n\u001b[38;5;244m-have.@tD\u001b[0m\r\n\u001b[38;5;244mnest-fail\u001b[0m\r\n",
+        "stderr": "loom: mapped 512MB\r\nlite: arvo formula 4ce68411\r\nlite: core 641296f\r\nlite: final state 641296f\r\neval (run):\n\r\neval: bail: %exit\r\n"
+      },
+      "raw_sha256": {
+        ".runtime/graph-dev-yz_2e38k/console.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        ".runtime/graph-dev-yz_2e38k/eval.hoon": "269a56f62ab9acbf82872e74ec59d1fd20784a47a5e02c90e0dd36bef183ff8c",
+        ".runtime/graph-dev-yz_2e38k/execution_policy.py": "8d52b799a3a7bff73f38e029b57fe0cfafd156b7c61184173860c21600ce41c0",
+        ".runtime/graph-dev-yz_2e38k/inputs.json": "f5e7c6b23b69bf73c167de8660004fb1fc7e643833cff9979a0df61464539944",
+        ".runtime/graph-dev-yz_2e38k/inside.py": "572d34e27d393b57a7b73861ba1a23eb8d301e6df2a19305e4531b8d66f400cd",
+        ".runtime/graph-dev-yz_2e38k/invalid.hoon": "93861a0912003ecc017e98791b691937344580ec86980b12c1259e489f3ea89b",
+        ".runtime/graph-dev-yz_2e38k/output/report.json": "5a8e37b25ed3054b892ed0762d0db3ec41dd8a3dd6e72d03c84c88341dacaf26",
+        ".runtime/graph-dev-yz_2e38k/run.py": "38eb671c7326795fb5e50eba6f4eec43b4afae21bb0626b3935431f9f0bb6468"
+      }
+    }
+  ],
+  "resources": {
+    "guard_status": "completed",
+    "elapsed_seconds": 5.019,
+    "max_sampled_temperature_c": 50.0,
+    "scope_proof": {
+      "cgroup": "/user.slice/user-1000.slice/user@1000.service/app.slice/stead-native-a362f0477a61e279731057656c90e252.scope",
+      "cpu_affinity": [
+        19
+      ],
+      "cpu_max": "5000 10000",
+      "unit": "stead-native-a362f0477a61e279731057656c90e252.scope"
+    },
+    "scope_after": "inactive/dead",
+    "policy": {
+      "start_c": 75,
+      "stop_c": 90,
+      "sample_seconds": 1,
+      "stale_seconds": 3,
+      "cooperative_seconds": 10,
+      "terminate_seconds": 10,
+      "kill_seconds": 5,
+      "cpu_quota_us": 5000,
+      "cpu_period_us": 10000
+    },
+    "guard_deadline_seconds": 45,
+    "native_per_call_deadline_seconds": 30,
+    "isolation": "bubblewrap --unshare-all, private temporary directory, read-only runtime/source, output-only write bind, shared guard lock; no ship boot"
+  },
+  "command": "PATH=/tmp/stead-local-preview.umQhNO/tools/usr/bin:/usr/bin:/bin python3 .runtime/graph-dev-b_7a5oe_/run.py",
+  "reproduction_note": "Diagnostic stages a fixed composed source and records stdout/stderr. Its one-use output directory must be replaced for a rerun; native runs require coordinated guard admission. The official runner was not edited for this evidence."
+}

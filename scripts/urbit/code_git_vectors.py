@@ -39,6 +39,8 @@ DELTA_TESTS = 'native/core/desk/tests/stead-code-git-delta.hoon'
 REVIEW_LIBRARY = 'native/core/desk/lib/stead-code-review.hoon'
 REVIEW_TESTS = 'native/core/desk/tests/stead-code-review.hoon'
 RESOLVE_LIBRARY = 'native/core/desk/lib/stead-code-git-resolve.hoon'
+GRAPH_LIBRARY = 'native/core/desk/lib/stead-code-git-graph.hoon'
+GRAPH_TESTS = 'native/core/desk/tests/stead-code-git-graph.hoon'
 PACK_ORACLE = 'scripts/urbit/git_pack_oracle.py'
 INFLATE_LIBRARY = 'native/core/desk/lib/stead-code-git-inflate.hoon'
 INFLATE_TESTS = 'native/core/desk/tests/stead-code-git-inflate.hoon'
@@ -212,6 +214,37 @@ REVIEW_ARMS = (
     'test-review-forged-self-review',
     'test-review-requires-work-item',
 )
+GRAPH_ARMS = (
+    'test-graph-tree-exact-name',
+    'test-graph-tree-malformed-name',
+    'test-graph-tree-unsupported-symlink',
+    'test-graph-tree-duplicate',
+    'test-graph-tree-order',
+    'test-graph-commit-tree',
+    'test-graph-tag-target',
+    'test-graph-closure',
+    'test-graph-closure-missing-object',
+    'test-graph-closure-wrong-type',
+    'test-graph-read-exact-commit',
+    'test-graph-read-unreachable-object',
+    'test-graph-read-traversal',
+    'test-graph-empty-closure',
+    'test-graph-duplicate-roots',
+    'test-graph-visit-bound',
+    'test-graph-byte-bound',
+    'test-graph-queue-state',
+    'test-graph-queue-bound',
+    'test-graph-queue-at-bound',
+    'test-graph-oid-mismatch',
+    'test-graph-read-unreachable-revision',
+    'test-graph-read-unreachable-tree',
+    'test-graph-read-forbidden-loader',
+    'test-graph-read-corrupt-loader',
+    'test-graph-read-directory',
+    'test-graph-path-depth-bound',
+    'test-graph-root-bound',
+    'test-graph-executable-file',
+)
 CODE_CHECKS = (
     'native-blob-roundtrip', 'native-tree-roundtrip', 'native-commit-roundtrip', 'native-tag-roundtrip',
     'native-object-graph-stock-fsck', 'native-ref-syntax-matches-stock-git',
@@ -278,7 +311,7 @@ RESOLVE_CONTROLS = (
     'native-resolve-offset-not-entry-boundary', 'native-resolve-thin-without-visible-base',
     'native-resolve-thin-with-wrong-base-bytes', 'native-resolve-thin-with-verified-base',
 )
-EXPECTED_CHECKS = ARMS + EXTRA_CHECKS + OBJECT_ARMS + PACK_ARMS + RECEIVE_ARMS + WIRE_ARMS + ('receive-wire-failing-tang-control-detected',) + ENTRY_ARMS + DELTA_ARMS + REVIEW_ARMS + CODE_CHECKS + PACK_INTEROP_CHECKS + RESOLVE_CONTROLS
+EXPECTED_CHECKS = ARMS + EXTRA_CHECKS + OBJECT_ARMS + PACK_ARMS + RECEIVE_ARMS + WIRE_ARMS + ('receive-wire-failing-tang-control-detected',) + ENTRY_ARMS + DELTA_ARMS + REVIEW_ARMS + GRAPH_ARMS + CODE_CHECKS + PACK_INTEROP_CHECKS + RESOLVE_CONTROLS
 ANSI = re.compile(r'\x1b\[[0-9;]*m')
 MAX_OUTPUT = 1_048_576
 
@@ -497,6 +530,11 @@ def inside():
         resolve_dependency = (receive_dependency + '=/  stead-code-git-pack\n' + pack_library
                               + '\n=/  stead-code-git-entry\n' + entry_library
                               + '\n=/  stead-code-git-delta\n' + delta_library + '\n')
+        graph_library = Path('/input/graph-library.hoon').read_text()
+        graph_import = '/+  stead-code-git-objects\n'
+        if graph_library.count(graph_import) != 1:
+            raise ValueError('Unexpected graph helper imports')
+        graph_body = graph_library.replace(graph_import, '')
         for module, source, tests_source, names, dependency in (
                 ('stead-code-git-objects', object_body, object_tests, OBJECT_ARMS, '=/  stead-git\n' + base_git + '\n'),
                 ('stead-code-git-pack', pack_library, pack_tests, PACK_ARMS, ''),
@@ -504,10 +542,13 @@ def inside():
                 ('stead-code-receive-wire', wire_body, wire_tests, WIRE_ARMS, wire_dependency),
                 ('stead-code-git-entry', entry_library, Path('/input/entry-tests.hoon').read_text(), ENTRY_ARMS, ''),
                 ('stead-code-git-delta', delta_library, Path('/input/delta-tests.hoon').read_text(), DELTA_ARMS, ''),
-                ('stead-code-review', review_body, Path('/input/review-tests.hoon').read_text(), REVIEW_ARMS, review_dependency)):
+                ('stead-code-review', review_body, Path('/input/review-tests.hoon').read_text(), REVIEW_ARMS, review_dependency),
+                ('stead-code-git-graph', graph_body, Path('/input/graph-tests.hoon').read_text(), GRAPH_ARMS, receive_dependency)):
 
             test_header, test_body = tests_source.split('\n', 1)
             expected_header = '/+  *test, ' + ('stead-code-git-pkt, ' if module == 'stead-code-receive-wire' else '') + module
+            if module == 'stead-code-git-graph':
+                expected_header += ', stead-code-git-objects, stead-git'
             if test_header != expected_header or tuple(re.findall(r'^\+\+  (test-[a-z0-9-]+)$', tests_source, re.M)) != names:
                 raise ValueError('Unexpected native module test inventory')
             test_source = '=/  test\n' + helper + '\n' + dependency + '=/  ' + module + '\n' + source + '\n=,  test\n=>\n' + test_body + '\n'
@@ -786,7 +827,7 @@ def main(mode="full"):
     run = Path(tempfile.mkdtemp(prefix=datetime.now(timezone.utc).strftime('%Y%m%dT%H%M%SZ-'), dir=base))
     for name in ('input', 'output', 'work', 'code'):
         (run / name).mkdir(mode=0o700)
-    foundation_names = (LIBRARY, TESTS, OBJECT_LIBRARY, OBJECT_TESTS, PACK_LIBRARY, PACK_TESTS, BASE_GIT, RECEIVE_LIBRARY, RECEIVE_TESTS, WIRE_LIBRARY, WIRE_TESTS, ENTRY_LIBRARY, ENTRY_TESTS, DELTA_LIBRARY, DELTA_TESTS, REVIEW_LIBRARY, REVIEW_TESTS, RESOLVE_LIBRARY, INFLATE_LIBRARY, PACK_ORACLE)
+    foundation_names = (LIBRARY, TESTS, OBJECT_LIBRARY, OBJECT_TESTS, PACK_LIBRARY, PACK_TESTS, BASE_GIT, RECEIVE_LIBRARY, RECEIVE_TESTS, WIRE_LIBRARY, WIRE_TESTS, ENTRY_LIBRARY, ENTRY_TESTS, DELTA_LIBRARY, DELTA_TESTS, REVIEW_LIBRARY, REVIEW_TESTS, RESOLVE_LIBRARY, GRAPH_LIBRARY, GRAPH_TESTS, INFLATE_LIBRARY, PACK_ORACLE)
     names = (INFLATE_LIBRARY, INFLATE_TESTS) if mode == "inflate" else foundation_names
     sources = {name: ROOT / name for name in names}
     sources.update({ 'scripts/urbit/code_git_vectors.py': Path(__file__),
@@ -803,6 +844,7 @@ def main(mode="full"):
               (ROOT / DELTA_LIBRARY, 'input/delta-library.hoon'), (ROOT / DELTA_TESTS, 'input/delta-tests.hoon'),
               (ROOT / REVIEW_LIBRARY, 'input/review-library.hoon'), (ROOT / REVIEW_TESTS, 'input/review-tests.hoon'),
               (ROOT / RESOLVE_LIBRARY, 'input/resolve-library.hoon'),
+              (ROOT / GRAPH_LIBRARY, 'input/graph-library.hoon'), (ROOT / GRAPH_TESTS, 'input/graph-tests.hoon'),
               (ROOT / INFLATE_LIBRARY, 'input/inflate-library.hoon'),
               (ROOT / PACK_ORACLE, 'code/git_pack_oracle.py'),
               (helper, 'input/test-helper.hoon'), (Path(__file__), 'code/code_git_vectors.py'),

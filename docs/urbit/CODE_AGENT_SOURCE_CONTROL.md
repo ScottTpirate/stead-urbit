@@ -58,6 +58,8 @@ External runners reconcile effect intents with results by operation ID after
 interruption. A socket, a worker's memory or a successful HTTP upload alone
 cannot represent a durable outcome.
 
-This profile guides the future revision-addressed API, durable jobs and native
-repository integration. Each interface requires its own policy, persistence,
-retry, boundedness and native conformance tests before exposure.
+The [native graph profile](CODE_GIT_GRAPH_PROFILE.md) implements bounded
+closure traversal and an exact-commit file read from an authorized object
+view. These are building blocks for the revision-addressed API. The home still
+has to select and reauthorize the view for each request, persist transitions,
+and qualify the complete transport before exposing them.

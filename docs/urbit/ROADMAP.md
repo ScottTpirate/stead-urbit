@@ -18,6 +18,14 @@ October 2: [fresh native, browser and Git checks passed](PHASE2_ONBOARDING_20261
 at the integrated source, with clean shutdown and restoration. The human trial
 expired without qualifying activity or feedback; #29 and Phase 2 remain open.
 
+November 8: The native Git pack path now reconstructs stock packs and emits
+exact objects that stock Git can index. The graph helper proves bounded
+reachability and exact-commit file reads over a scoped view. Git still needs
+authenticated Smart HTTP and an authoritative repository transaction. The
+offline desk and recovery work verifies [packaged Home HTTPS](RELEASE_PACKAGING.md#configured-home-https-verification)
+and [current Work and Docs portability](PORTABLE_RECOVERY_PROFILE.md).
+Full authority recovery, upgrades and a reviewed canary remain Phase 4 gates.
+
 | Phase | Deliverable | Gate |
 |---|---|---|
 | 0 | Independent repo, pinned dependencies, four-fake-ship harness, Git feasibility audit, contributor workflow | Actual native smoke tests, recorded reuse decisions and executed baseline/assisted workflow evaluation |
