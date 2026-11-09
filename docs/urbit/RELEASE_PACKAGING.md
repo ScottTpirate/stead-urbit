@@ -399,3 +399,20 @@ receipt. The full-vase difference did not identify which saved component changed
 | `.runtime/execution-runs/release-asset-upgrade-jyqvsezo/report.json` | `8e7bd13a59c17057a063ef024f64d3661d808bc7bfa4e15d503d016e0c9905dd` |
 | `.runtime/release-asset-upgrade-w9fbrb7o/work/report.json` | `b9449782a7abb40d0c015a1256a08fa854ad271fcc2c8228ffe0c1af5139256d` |
 | `.runtime/execution-runs/release-asset-upgrade-t130bm0_/report.json` | `02fba8bd19c710214e0a6ad4771c7297f6c57a8ab093e386fcc3918a3b59ece5` |
+
+The final attempt passed all 15 native checks using verifier
+`1d2f2afac51a73702015416f8833bd1f2d1971f1`. The authoritative v3 database
+fingerprint `294a16cfbb3b18b9fe7b91ed2fd3d4b0c1b0f76560940eea093520ca5fa61413`
+matched before suspension, after fenced reload and after fresh bootstrap.
+The full saved-vase fingerprints reproduced the earlier before and after
+values and the post-reload value remained stable through bootstrap. Clay
+removed two obsolete assets and matched the exact target desk. Nine native
+TLS assets and 11 HTTP boundary checks passed. The guard completed in 38.921
+seconds and peaked at 83°C. The clone stopped and was reaped. The original,
+backup and restored trees still matched the reviewed file-copy fingerprint.
+
+| Local success evidence | SHA-256 |
+| --- | --- |
+| `.runtime/release-asset-upgrade-uad_o5qn/work/report.json` | `510c35426b49ad401d1fd636e9cf23ea4935f669095c13082bfd9ef2f5f7a040` |
+| `.runtime/release-asset-upgrade-uad_o5qn/upgrade-report.json` | `9354203540d636e95147b2cdf34092bab733954becbd25779fd311be00135906` |
+| `.runtime/execution-runs/release-asset-upgrade-1cyjchcp/report.json` | `abf5c1dd84236240b223ab732e8750a03c75428675b9c2368ecc9609579e03a3` |

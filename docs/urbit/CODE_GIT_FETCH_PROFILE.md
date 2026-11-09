@@ -80,3 +80,29 @@ serialized thermal/CPU guard, isolated namespace, pinned runtime and stock Git.
 Run it only when the shared native slot is available; its 120-second deadline
 and 40-second native-call deadlines remain fixed. Host-only corpus-integrity
 checks do not replace native execution.
+
+## Isolated stock-client follow-on
+
+A separate loopback fixture subsequently passed thirteen checks using actual
+stock Git 2.55.0 `clone --no-tags` and `fetch --no-tags`, forced to protocol v0.
+The fixture served native discovery and evaluated each captured POST through
+`from-wire`; it did not substitute a stock-generated pack. Clone reached
+`7b0d20a5669435d817020be49c29f66e0411fa6e` with exactly three objects. After the
+synthetic advertised ref advanced, fetch reached
+`adb053935e98aa1282b44c571ea3e0bcce994c0f` with exactly four objects. Both passed
+strict fsck and complete original object-byte/OID readback.
+
+The clone POST was 123 bytes and received a 259-byte body: eight-byte NAK framing
+plus a 251-byte native pack. Fetch's 123-byte POST received a 504-byte body:
+49-byte ACK framing plus a 455-byte native pack. A separate 73-byte POST asking
+for the former tip, now only an unadvertised ancestor, returned the native
+`unadvertised-want` error. The synthetic HTTP wrapper mapped it to status 400
+and exactly `Fetch rejected\n` (15 bytes), without pack data. Successful bodies
+used HTTP 200. These are fixture mappings, not product HTTP status contracts.
+
+The listener existed only in a fresh namespace with loopback up and no external
+route; it was closed and its process scope stopped. The run proves this small
+client exchange, not deployment, credentials, policy enforcement, protocol v2,
+tag fetching or arbitrary repository support. Exact source/report identity,
+negative request and local reproduction are retained in the
+[follow-on evidence](evidence/2026-11-09/code-fetch/README.md#isolated-clone-and-fetch-follow-on).

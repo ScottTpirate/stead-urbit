@@ -36,14 +36,13 @@ Full authority recovery, upgrades and a reviewed canary remain Phase 4 gates.
 | 5 | Explicit replicas, safe home migration, self-hosted dogfooding | One authoritative source of truth, fenced migration and tested exitability |
 | 6 | Supported ecosystem release | Independent adopters, integration, maintainership and qualified security/recovery/distribution process |
 
-November 9: Independent Astra review of the actual local native Work/Docs
-journey replaces the earlier human-trial gate for URB-260. Preserve the earlier
-receipts as historical evidence. Close the gate only when the current journey
-and review meet [Phase 2 acceptance](PHASE2_ACCEPTANCE.md). Freeze Git and
-storage contracts before wiring them into the authority. Build the complete
-work-item-to-build workflow through native Git, exact-revision review and
-isolated runners. Keep Code, Reviews and Build navigation specific to software
-projects.
+November 9: Independent Astra review replaces the earlier human-trial gate for
+URB-260 and accepted the real local Work/Docs journey at `0aa32ae`. The
+[local evidence](LOCAL_ACCEPTANCE_20261109.md) records the scope and remaining
+checks. Freeze Git and storage contracts before wiring them into the authority.
+Build the complete work-item-to-build workflow through native Git,
+exact-revision review and isolated runners. Keep Code, Reviews and Build
+navigation specific to software projects.
 
 Evaluate House alongside Phase 3 through a separate test-space adapter. Require
 a supported installation and launch path, verified individual identity, and

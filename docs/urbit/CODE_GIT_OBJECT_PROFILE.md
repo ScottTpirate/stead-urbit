@@ -84,8 +84,8 @@ It round-trips native blob/tree/commit/tag bytes and OIDs through stock Git,
 runs stock `fsck`, compares a bounded ref corpus with `git check-ref-format`,
 and inspects stock-generated and corrupted packs. Stock `index-pack --strict`
 checks the positive/negative pack fixtures independently. These checks qualify
-only the exercised pure helpers; they do not close URB-080, URB-200, the human
-trial, or any live deployment gate.
+only the exercised pure helpers. URB-080, URB-200, local UI acceptance and live
+deployment each have separate qualification requirements.
 
 The [2026-11-08 retained result](evidence/2026-11-08/code-git-foundation/README.md)
 contains all 128 expected foundation checks passing, including 18 object/ref

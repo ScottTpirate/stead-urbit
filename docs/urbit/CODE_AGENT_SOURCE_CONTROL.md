@@ -90,3 +90,8 @@ digest conflicts. Capacity exhaustion fails closed until bounded retention or
 export is qualified. Home restart invalidates in-flight bearer admissions and
 requires fresh authorization for any staged job; a completed receipt remains
 durable. Report ref success to Git only after the authoritative transition.
+
+The [repository reducer prototype](CODE_REPOSITORY_STORE_PROFILE.md) tests this
+acceptance shape under small synchronous bounds. It leaves the repository
+service, persisted staging jobs, protected review and external builds as
+separate authority integration work.

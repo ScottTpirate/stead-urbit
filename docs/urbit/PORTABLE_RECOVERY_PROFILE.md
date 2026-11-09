@@ -7,8 +7,9 @@ offline verifier and extractor do not start a ship, execute commands from the
 archive, import records, or grant authority.
 
 This is one bounded Phase 4 data-recovery slice. It does not close URB-100,
-URB-230, URB-240 or M4. The new capture path has host tests with synthetic
-responses; no live authenticated home export or native restore was executed.
+URB-230, URB-240 or M4. The current capture path has host tests with synthetic
+responses and a verified local native HTTPS capture with an individual member.
+Restoring accepted records into the authority remains separate.
 
 ## Existing authority boundary
 
@@ -62,8 +63,8 @@ All connections verify the TLS certificate and hostname. `--ca-file` may supply
 an explicitly trusted development CA; there is no insecure mode. Requests go
 directly to the configured origin without environment proxy discovery and
 never follow redirects. Only the specific member cookie is sent. HTTP error
-bodies and transport exceptions are not printed. No network test against a real
-home was performed for this slice.
+bodies and transport exceptions are not printed. The local native test uses a
+disposable Home and its pinned private CA.
 
 Capture reads identity, all visible collections, project metadata, Work lists
 and full records, document lists and full records, and visible relations. It
@@ -179,3 +180,10 @@ output rename/replacement preservation. The initial directory-mode failure and
 independently found pathname-cleanup race were corrected and the suite rerun.
 These checks do not prove a real TLS
 handshake, home authorization, native execution or Phase 4 qualification.
+
+On November 9, the real Firefox/native fixture supplied a current individual
+member session to the CLI. It verified native TLS, captured two Work items and
+three Docs pages, verified the archive digest and extracted the current files.
+The extracted Work record and three Markdown files matched browser-accepted
+content. The temporary export credential was deleted. See the
+[local acceptance record](LOCAL_ACCEPTANCE_20261109.md#corrected-real-browser-journey).

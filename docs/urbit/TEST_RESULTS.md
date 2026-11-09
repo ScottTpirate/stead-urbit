@@ -1,15 +1,16 @@
 # Executed development evidence
 
-The [current Phase 2 qualification record](PHASE2_QUALIFICATION_20260929.md)
-separates the passing configured native, browser/Git, SDK, hosted CI and natural
-session-expiry components from the remaining human trial gate. The reviewed
-implementation is integrated through [PR #67](https://github.com/ScottTpirate/stead-urbit/pull/67).
-The dated records below retain their original execution scope.
+The [November 9 record](LOCAL_ACCEPTANCE_20261109.md) binds the current local
+native and Astra review, Git interoperability, and recovery evidence.
+The [September 29 qualification](PHASE2_QUALIFICATION_20260929.md) preserves the
+earlier configured native, browser/Git, SDK, hosted CI and natural session-expiry
+results. The reviewed implementation at that checkpoint was integrated through
+[PR #67](https://github.com/ScottTpirate/stead-urbit/pull/67).
 
 The [October 2 follow-up](PHASE2_ONBOARDING_20261002.md) adds fresh native,
 Firefox and stock-Git passes at `66f051e3`, a preserved earlier guard failure,
-and an incomplete human trial. The entire native lifetime closed cleanly;
-independent human acceptance remains unfulfilled.
+and an incomplete human trial under the earlier acceptance policy. The entire
+native lifetime closed cleanly. Dated records retain their original scope.
 
 The [independently reviewed Phase 1 acceptance](PHASE1_ACCEPTANCE_20260926.md) now has a
 passing **73-requirement gate** at native source
