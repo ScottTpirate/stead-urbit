@@ -63,3 +63,30 @@ closure traversal and an exact-commit file read from an authorized object
 view. These are building blocks for the revision-addressed API. The home still
 has to select and reauthorize the view for each request, persist transitions,
 and qualify the complete transport before exposing them.
+
+## Repository acceptance contract
+
+Use the existing project Home as the sole authority. A staged upload belongs
+to one Home, repository, principal binding and authority epoch. Its immutable
+input includes the canonical ordered ref updates and SHA-256 of the exact
+uploaded bytes. Native validation produces a sealed candidate containing the
+object inventory, repository view used for graph and ancestry checks, and
+exact target OIDs. Client input never supplies trusted graph facts or review
+results. An unrelated ref or object cannot extend the scoped view.
+
+The final transition rechecks current credentials, binding, grants, authority
+epoch, applicable reviews, protection rules, quotas and expected prior OIDs.
+Fast-forward evidence follows verified commit parents from the proposed tip to
+the prior tip. Incomplete traversal rejects the update. If a change invalidates
+the view used for validation, revalidate under the new view before acceptance.
+Promote validated objects, update every requested ref, append the journal record
+and store the receipt in a single versioned saved-state transition. A failed
+transition retains the previous objects, refs and accepted journal.
+
+The accepted receipt binds the operation ID, authenticated principal,
+repository, epoch, exact input digest and resulting OIDs. A retry with the
+same ID and digest returns that receipt after current authorization. A changed
+digest conflicts. Capacity exhaustion fails closed until bounded retention or
+export is qualified. Home restart invalidates in-flight bearer admissions and
+requires fresh authorization for any staged job; a completed receipt remains
+durable. Report ref success to Git only after the authoritative transition.

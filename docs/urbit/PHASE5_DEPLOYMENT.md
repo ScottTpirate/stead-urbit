@@ -209,3 +209,15 @@ unexpected upstream writes as explicit proposals.
 Admission of real team data requires a separate owner decision following
 independent access, backup and operational review. [Deployment plan](DEPLOYMENT.md)
 · [Master directive](MASTER_BUILD_DIRECTIVE.md)
+
+## House test-space option
+
+The steps above deploy the standalone Stead Home and Identity desks. A House
+space pilot also needs a supported desk installation and app entry contract,
+a verifiable member identity assertion tied to the exact space, and a source of
+membership changes and revocations. Map each verified member to a Stead
+principal and scoped grants. Test two members, denial across spaces, removal
+and a stale membership assertion before granting access to real records. The
+space connection token is insufficient evidence of owner control or member
+authorization. Keep the standalone pilot and House integration evidence
+separate. [Roadmap](ROADMAP.md)
