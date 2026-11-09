@@ -1,10 +1,13 @@
 // Real Firefox -> byte relay -> native Eyre -> configured Gall, synthetic data.
 // No response mocks, ignored certificate failures, sandbox bypass, or live +code.
 import assert from 'node:assert/strict';
-import {readFile, writeFile} from 'node:fs/promises';
+import {execFile} from 'node:child_process';
+import {readFile, unlink, writeFile} from 'node:fs/promises';
 import {createHash, randomBytes} from 'node:crypto';
 import path from 'node:path';
 import os from 'node:os';
+import {fileURLToPath} from 'node:url';
+import {promisify} from 'node:util';
 import {firefox} from 'playwright';
 import {endpointBoundaries} from './native-boundaries.mjs';
 import {ResponseCapture} from './response-capture.mjs';
@@ -30,6 +33,7 @@ const report = {classification: 'real-browser-native-gall', status: 'fail', qual
   node: process.version, browser: browser.version(), execution_id: material.execution_id, checks: [], responses: [], failures: []};
 report.assets = {manifest_sha256: createHash('sha256').update(manifestBytes).digest('hex'), markdown: {path: '/stead/assets/' + lazyAsset, ...manifest.files[lazyAsset]}};
 const responseCapture = new ResponseCapture();
+const runFile = promisify(execFile);
 const pages = [];
 let gitFixture;
 const requestCounts = new WeakMap();
@@ -252,6 +256,52 @@ async function usefulView(page, label, queryKind, visible) {
     query_kind: queryKind, useful_content_ms: Math.round(performance.now() - start),
     returned_rows: Object.keys(view.rows).length, returned_rows_bytes: Buffer.byteLength(JSON.stringify(view.rows)),
     requests: difference(before, counts(page))});
+}
+async function portableRecovery(memberResponse, cookie, work, docs) {
+  const session = path.join(output, 'portable-member-session.json');
+  const archive = path.join(output, 'portable-work-docs.zip');
+  const extracted = path.join(output, 'portable-work-docs');
+  const script = fileURLToPath(new URL('../../../scripts/urbit/portable_recovery.py', import.meta.url));
+  const ca = path.join(path.dirname(fixture), 'certificates', 'ca.pem');
+  const run = async (...args) => JSON.parse((await runFile('/usr/bin/python3', ['-B', script, ...args], {
+    timeout: 60000, maxBuffer: 16384
+  })).stdout);
+  const who = await memberResponse.json();
+  const actor = who.rows?.['0'];
+  const csrf = (await memberResponse.request().allHeaders())['x-stead-csrf'];
+  assert.equal(who.status, 'read');
+  assert.equal(actor?.identity_ship, '~bus');
+  assert.equal(actor?.principal_id, work.principal_id);
+  assert.match(csrf, /^[0-9a-f]{64}$/u);
+  await writeFile(session, JSON.stringify({origin, principal_id: actor.principal_id, session: cookie.value, csrf}),
+    {flag: 'wx', mode: 0o600});
+  try {
+    const saved = await run('capture', '--session-file', session, '--project', work.project_id,
+      '--ca-file', ca, '--output', archive);
+    assert.equal(saved.status, 'captured');
+    assert.equal(saved.source, 'https-member-query');
+    assert.match(saved.sha256, /^[0-9a-f]{64}$/u);
+    const verified = await run('verify', archive, '--sha256', saved.sha256);
+    assert.equal(verified.status, 'integrity-verified');
+    const restored = await run('extract', archive, '--sha256', saved.sha256, '--output', extracted);
+    assert.equal(restored.status, 'files-extracted');
+    assert.equal(restored.sha256, saved.sha256);
+    const rows = JSON.parse(await readFile(path.join(extracted, 'records.json'), 'utf8'));
+    const item = rows.work.find(row => row.resource_id === work.resource_id);
+    assert.equal(item?.title, 'Browser task — 東京');
+    assert.equal(item?.resource_revision, work.resource_revision);
+    assert.equal(item?.description, 'Created through the actual TLS browser boundary.');
+    for (const [name, expected] of Object.entries(docs.source.files)) {
+      assert.match(name, /^[0-9a-f-]{36}\.md$/u);
+      assert.equal(await readFile(path.join(extracted, 'docs', docs.source.container_id, name), 'utf8'), expected);
+    }
+    assert.equal(await readFile(path.join(extracted, 'docs', docs.destination.container_id,
+      docs.destination.document_id + '.md'), 'utf8'), docs.destination.edited_markdown);
+    return {status: 'pass', sha256: saved.sha256, work: restored.work, documents: restored.documents,
+      scope: 'verified native member HTTPS capture and offline file extraction'};
+  } finally {
+    await unlink(session);
+  }
 }
 async function docsJourney(alice, bob) {
   async function showFullMarkdown(page) {
@@ -800,15 +850,26 @@ try {
   const expiryContext = await browser.newContext({ignoreHTTPSErrors:false, serviceWorkers:'block'});
   await restrict(expiryContext);
   const issuedBefore = Date.now();
-  await signIn(expiryContext, 'bus', 8444);
+  const [memberResponse] = await Promise.all([expiryContext.waitForEvent('response', {
+    timeout: 90000, predicate: response => response.url() === origin + '/stead/api/query'
+      && response.request().postDataJSON()?.kind === 'identity'
+  }), signIn(expiryContext, 'bus', 8444)]);
   const expiryCookie = (await expiryContext.cookies(origin)).find(row => row.name === '__Host-stead-session');
   assert.ok(expiryCookie?.secure && expiryCookie.httpOnly && expiryCookie.sameSite === 'Strict');
   await writeFile(path.join(output,'expiry-session.json'), JSON.stringify({format:1, execution_id:material.execution_id,
     origin, issued_before_ms:issuedBefore, captured_at_ms:Date.now(), cookie:expiryCookie}) + '\n', {flag:'wx',mode:0o600});
-  await expiryContext.close();
   report.expiry_followup = {status:'prepared-not-executed', earliest_start_ms:issuedBefore + 28 * 60000,
     latest_start_ms:issuedBefore + 29 * 60000, native_session_lifetime_seconds:1800};
   assert.ok(gitFixture);
+  try {
+    report.portable_recovery = await portableRecovery(memberResponse, expiryCookie, receipt, gitFixture);
+  } catch {
+    // Keep this independent Phase 4 observation separate from the browser
+    // milestone. Do not serialize errors from a process that read a bearer.
+    report.portable_recovery = {status: 'fail', scope: 'native portable capture or offline readback'};
+  } finally {
+    await expiryContext.close();
+  }
   const gitBytes = Buffer.from(JSON.stringify(gitFixture) + '\n');
   assert.ok(gitBytes.length <= 131072);
   await writeFile(path.join(output, 'git-fixture.json'), gitBytes, {flag:'wx', mode:0o600});
