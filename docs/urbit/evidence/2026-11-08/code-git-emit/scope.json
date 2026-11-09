@@ -1,0 +1,8 @@
+{
+  "unit": "stead-native-759f56a8c7a149d7b94b1e8555d3053a.scope",
+  "observed": {
+    "LoadState": "not-found",
+    "ActiveState": "inactive",
+    "SubState": "dead"
+  }
+}

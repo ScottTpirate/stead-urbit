@@ -1,0 +1,425 @@
+{
+  "status": "passed",
+  "scope": "pure native outbound SHA-1 packs and stock Git readback; no service or accepted write",
+  "qualifies_phase": false,
+  "checks": [
+    {
+      "name": "test-emit-empty-pack",
+      "passed": true,
+      "tang_lines": "0"
+    },
+    {
+      "name": "test-emit-blob-golden",
+      "passed": true,
+      "tang_lines": "0"
+    },
+    {
+      "name": "test-emit-ordinary-kinds",
+      "passed": true,
+      "tang_lines": "0"
+    },
+    {
+      "name": "test-emit-deterministic-order",
+      "passed": true,
+      "tang_lines": "0"
+    },
+    {
+      "name": "test-emit-reject-declared-hash",
+      "passed": true,
+      "tang_lines": "0"
+    },
+    {
+      "name": "test-emit-reject-wide-oid",
+      "passed": true,
+      "tang_lines": "0"
+    },
+    {
+      "name": "test-emit-reject-duplicate",
+      "passed": true,
+      "tang_lines": "0"
+    },
+    {
+      "name": "test-emit-reject-kind",
+      "passed": true,
+      "tang_lines": "0"
+    },
+    {
+      "name": "test-emit-reject-body-width",
+      "passed": true,
+      "tang_lines": "0"
+    },
+    {
+      "name": "test-emit-reject-body-bound",
+      "passed": true,
+      "tang_lines": "0"
+    },
+    {
+      "name": "test-emit-count-at-bound",
+      "passed": true,
+      "tang_lines": "0"
+    },
+    {
+      "name": "test-emit-count-over-bound",
+      "passed": true,
+      "tang_lines": "0"
+    },
+    {
+      "name": "test-emit-size-at-bound",
+      "passed": true,
+      "tang_lines": "0"
+    },
+    {
+      "name": "test-emit-size-over-bound",
+      "passed": true,
+      "tang_lines": "0"
+    },
+    {
+      "name": "test-emit-header-empty-kinds",
+      "passed": true,
+      "tang_lines": "0"
+    },
+    {
+      "name": "test-emit-header-first-boundary",
+      "passed": true,
+      "tang_lines": "0"
+    },
+    {
+      "name": "test-emit-header-next-boundary",
+      "passed": true,
+      "tang_lines": "0"
+    },
+    {
+      "name": "test-emit-header-size-bound",
+      "passed": true,
+      "tang_lines": "0"
+    },
+    {
+      "name": "test-emit-adler-empty",
+      "passed": true,
+      "tang_lines": "0"
+    },
+    {
+      "name": "test-emit-adler-known",
+      "passed": true,
+      "tang_lines": "0"
+    },
+    {
+      "name": "test-emit-adler-width",
+      "passed": true,
+      "tang_lines": "0"
+    },
+    {
+      "name": "test-emit-zlib-empty",
+      "passed": true,
+      "tang_lines": "0"
+    },
+    {
+      "name": "test-emit-zlib-literal",
+      "passed": true,
+      "tang_lines": "0"
+    },
+    {
+      "name": "test-emit-zlib-trailing-zero",
+      "passed": true,
+      "tang_lines": "0"
+    },
+    {
+      "name": "test-emit-zlib-all-zero",
+      "passed": true,
+      "tang_lines": "0"
+    },
+    {
+      "name": "test-emit-zlib-last-full-block",
+      "passed": true,
+      "tang_lines": "0"
+    },
+    {
+      "name": "test-emit-zlib-split-block",
+      "passed": true,
+      "tang_lines": "0"
+    },
+    {
+      "name": "test-emit-zlib-over-bound",
+      "passed": true,
+      "tang_lines": "0"
+    },
+    {
+      "name": "failing-tang-control-detected",
+      "passed": true
+    },
+    {
+      "name": "compiler-failure-control-detected",
+      "passed": true
+    },
+    {
+      "name": "native-pack-sha1-envelope",
+      "passed": true
+    },
+    {
+      "name": "stock-index-pack-accepts-native-bytes",
+      "passed": true
+    },
+    {
+      "name": "stock-fsck-native-objects",
+      "passed": true
+    },
+    {
+      "name": "stock-exact-object-inventory",
+      "passed": true
+    },
+    {
+      "name": "stock-exact-blob-bytes-and-oid",
+      "passed": true,
+      "oid": "0ab175842676d1c17f83a775262f57086d5d508b",
+      "bytes": 3
+    },
+    {
+      "name": "stock-exact-tree-bytes-and-oid",
+      "passed": true,
+      "oid": "4b825dc642cb6eb9a060e54bf8d69288fbee4904",
+      "bytes": 0
+    },
+    {
+      "name": "stock-exact-commit-bytes-and-oid",
+      "passed": true,
+      "oid": "00b6c7368b0bad6e5a48035366adf96d15fb0a38",
+      "bytes": 171
+    },
+    {
+      "name": "stock-exact-tag-bytes-and-oid",
+      "passed": true,
+      "oid": "dd6aa3ca05d19fe97e880cb0880df8277d72103c",
+      "bytes": 141
+    },
+    {
+      "name": "stock-rejects-corrupt-native-trailer",
+      "passed": true
+    }
+  ],
+  "records": [
+    {
+      "kind": "native",
+      "label": "unit-inventory",
+      "source_sha256": "0ca459ceed5fa7df736e0cd9fdf873e4a3b58dd7f9dca10722bafc9f296ca8a7",
+      "exit_code": 0,
+      "stdout": "~[\r\n  [~.test-emit-empty-pack ~.0]\r\n  [~.test-emit-blob-golden ~.0]\r\n  [~.test-emit-ordinary-kinds ~.0]\r\n  [~.test-emit-deterministic-order ~.0]\r\n  [~.test-emit-reject-declared-hash ~.0]\r\n  [~.test-emit-reject-wide-oid ~.0]\r\n  [~.test-emit-reject-duplicate ~.0]\r\n  [~.test-emit-reject-kind ~.0]\r\n  [~.test-emit-reject-body-width ~.0]\r\n  [~.test-emit-reject-body-bound ~.0]\r\n  [~.test-emit-count-at-bound ~.0]\r\n  [~.test-emit-count-over-bound ~.0]\r\n  [~.test-emit-size-at-bound ~.0]\r\n  [~.test-emit-size-over-bound ~.0]\r\n  [~.test-emit-header-empty-kinds ~.0]\r\n  [~.test-emit-header-first-boundary ~.0]\r\n  [~.test-emit-header-next-boundary ~.0]\r\n  [~.test-emit-header-size-bound ~.0]\r\n  [~.test-emit-adler-empty ~.0]\r\n  [~.test-emit-adler-known ~.0]\r\n  [~.test-emit-adler-width ~.0]\r\n  [~.test-emit-zlib-empty ~.0]\r\n  [~.test-emit-zlib-literal ~.0]\r\n  [~.test-emit-zlib-trailing-zero ~.0]\r\n  [~.test-emit-zlib-all-zero ~.0]\r\n  [~.test-emit-zlib-last-full-block ~.0]\r\n  [~.test-emit-zlib-split-block ~.0]\r\n  [~.test-emit-zlib-over-bound ~.0]\r\n  [~.failure-control ~.3]\r\n]",
+      "stderr": "loom: mapped 512MB\r\nlite: arvo formula 4ce68411\r\nlite: core 641296f\r\nlite: final state 641296f\r\neval (run):"
+    },
+    {
+      "kind": "native",
+      "label": "invalid-compiler-control",
+      "source_sha256": "93861a0912003ecc017e98791b691937344580ec86980b12c1259e489f3ea89b",
+      "exit_code": 0,
+      "stdout": "/eval\r\n{1 22}\r\nsyntax error",
+      "stderr": "loom: mapped 512MB\r\nlite: arvo formula 4ce68411\r\nlite: core 641296f\r\nlite: final state 641296f\r\neval (run):\n\r\neval: bail: %exit"
+    },
+    {
+      "kind": "native",
+      "label": "emitted-pack",
+      "source_sha256": "8c8817dbc1f817bc1c72669a81f5b9262935ebeabcfd75d3457e8f7808475b6f",
+      "exit_code": 0,
+      "stdout": "~[\r\n  [ ~.397\r\n    ~.0x4c.5cef.1d41.3729.d54e.4562.d33b.79ab.ad56.ad64.b2dd.2dd2.5a0a.6761.7420.6465.7461.746f.6e6e.6120.6369.7465.6874.6e79.530a.0a30.3030.302b.2030.203e.6469.6c61.766e.692e.656c.706d.6178.6540.6572.7574.7869.663c.2065.7275.7478.6946.2072.6567.6761.740a.3176.2067.6174.0a74.696d.6d6f.6320.6570.7974.0a38.3361.3062.6635.3164.3639.6664.6136.3633.3533.3038.3461.3565.3664.6162.3062.3836.3337.6336.6230.3020.7463.656a.626f.ff72.008d.0101.7808.cdc3.3874.a60a.6572.7574.7869.6620.6b63.6170.2063.6974.6568.746e.7953.0a0a.3030.3030.2b20.3020.3e64.696c.6176.6e69.2e65.6c70.6d61.7865.4065.7275.7478.6966.3c20.6572.7574.7869.4620.7265.7474.696d.6d6f.630a.3030.3030.2b20.3020.3e64.696c.6176.6e69.2e65.6c70.6d61.7865.4065.7275.7478.6966.3c20.6572.7574.7869.4620.726f.6874.7561.0a34.3039.3465.6562.6638.3832.3936.6438.6662.3435.6530.3630.6139.6265.3662.6332.3436.6364.3532.3862.3420.6565.7274.ff54.00ab.0101.780a.9b01.0000.00ff.ff00.0001.0178.2062.0026.0100.0061.fffc.0003.0101.7833.0400.0000.0200.0000.4b43.4150\r\n  ]\r\n]",
+      "stderr": "loom: mapped 512MB\r\nlite: arvo formula 4ce68411\r\nlite: core 641296f\r\nlite: final state 641296f\r\neval (run):"
+    },
+    {
+      "kind": "stock-git",
+      "argv": [
+        "/runtime/git",
+        "-c",
+        "credential.helper=",
+        "-c",
+        "core.hooksPath=/dev/null",
+        "init",
+        "--bare",
+        "--template=",
+        "--object-format=sha1",
+        "--initial-branch=main",
+        "/work/export.git"
+      ],
+      "input_sha256": null,
+      "exit_code": 0,
+      "stdout_hex": "496e697469616c697a656420656d70747920476974207265706f7369746f727920696e202f776f726b2f6578706f72742e6769742f0a",
+      "stderr": ""
+    },
+    {
+      "kind": "stock-git",
+      "argv": [
+        "/runtime/git",
+        "-c",
+        "credential.helper=",
+        "-c",
+        "core.hooksPath=/dev/null",
+        "--git-dir=/work/export.git",
+        "index-pack",
+        "--stdin",
+        "--strict"
+      ],
+      "input_sha256": "ca831d3a0b52d4490610e0b27b704b014c5e208782eb655fd6598a46855d078c",
+      "exit_code": 0,
+      "stdout_hex": "7061636b09623236346164353661646162373933626433363234353465643532393337343131646566356334630a",
+      "stderr": ""
+    },
+    {
+      "kind": "stock-git",
+      "argv": [
+        "/runtime/git",
+        "-c",
+        "credential.helper=",
+        "-c",
+        "core.hooksPath=/dev/null",
+        "--git-dir=/work/export.git",
+        "update-ref",
+        "refs/heads/main",
+        "00b6c7368b0bad6e5a48035366adf96d15fb0a38"
+      ],
+      "input_sha256": null,
+      "exit_code": 0,
+      "stdout_hex": "",
+      "stderr": ""
+    },
+    {
+      "kind": "stock-git",
+      "argv": [
+        "/runtime/git",
+        "-c",
+        "credential.helper=",
+        "-c",
+        "core.hooksPath=/dev/null",
+        "--git-dir=/work/export.git",
+        "update-ref",
+        "refs/tags/v1",
+        "dd6aa3ca05d19fe97e880cb0880df8277d72103c"
+      ],
+      "input_sha256": null,
+      "exit_code": 0,
+      "stdout_hex": "",
+      "stderr": ""
+    },
+    {
+      "kind": "stock-git",
+      "argv": [
+        "/runtime/git",
+        "-c",
+        "credential.helper=",
+        "-c",
+        "core.hooksPath=/dev/null",
+        "--git-dir=/work/export.git",
+        "fsck",
+        "--full",
+        "--strict"
+      ],
+      "input_sha256": null,
+      "exit_code": 0,
+      "stdout_hex": "64616e676c696e6720626c6f6220306162313735383432363736643163313766383361373735323632663537303836643564353038620a",
+      "stderr": ""
+    },
+    {
+      "kind": "stock-git",
+      "argv": [
+        "/runtime/git",
+        "-c",
+        "credential.helper=",
+        "-c",
+        "core.hooksPath=/dev/null",
+        "--git-dir=/work/export.git",
+        "cat-file",
+        "--batch-all-objects",
+        "--batch-check=%(objectname) %(objecttype) %(objectsize)"
+      ],
+      "input_sha256": null,
+      "exit_code": 0,
+      "stdout_hex": "3030623663373336386230626164366535613438303335333636616466393664313566623061333820636f6d6d6974203137310a3061623137353834323637366431633137663833613737353236326635373038366435643530386220626c6f6220330a34623832356463363432636236656239613036306535346266386436393238386662656534393034207472656520300a6464366161336361303564313966653937653838306362303838306466383237376437323130336320746167203134310a",
+      "stderr": ""
+    },
+    {
+      "kind": "stock-git",
+      "argv": [
+        "/runtime/git",
+        "-c",
+        "credential.helper=",
+        "-c",
+        "core.hooksPath=/dev/null",
+        "--git-dir=/work/export.git",
+        "cat-file",
+        "blob",
+        "0ab175842676d1c17f83a775262f57086d5d508b"
+      ],
+      "input_sha256": null,
+      "exit_code": 0,
+      "stdout_hex": "610000",
+      "stderr": ""
+    },
+    {
+      "kind": "stock-git",
+      "argv": [
+        "/runtime/git",
+        "-c",
+        "credential.helper=",
+        "-c",
+        "core.hooksPath=/dev/null",
+        "--git-dir=/work/export.git",
+        "cat-file",
+        "tree",
+        "4b825dc642cb6eb9a060e54bf8d69288fbee4904"
+      ],
+      "input_sha256": null,
+      "exit_code": 0,
+      "stdout_hex": "",
+      "stderr": ""
+    },
+    {
+      "kind": "stock-git",
+      "argv": [
+        "/runtime/git",
+        "-c",
+        "credential.helper=",
+        "-c",
+        "core.hooksPath=/dev/null",
+        "--git-dir=/work/export.git",
+        "cat-file",
+        "commit",
+        "00b6c7368b0bad6e5a48035366adf96d15fb0a38"
+      ],
+      "input_sha256": null,
+      "exit_code": 0,
+      "stdout_hex": "7472656520346238323564633634326362366562396130363065353462663864363932383866626565343930340a617574686f722046697874757265203c66697874757265406578616d706c652e696e76616c69643e2030202b303030300a636f6d6d69747465722046697874757265203c66697874757265406578616d706c652e696e76616c69643e2030202b303030300a0a53796e746865746963207061636b20666978747572650a",
+      "stderr": ""
+    },
+    {
+      "kind": "stock-git",
+      "argv": [
+        "/runtime/git",
+        "-c",
+        "credential.helper=",
+        "-c",
+        "core.hooksPath=/dev/null",
+        "--git-dir=/work/export.git",
+        "cat-file",
+        "tag",
+        "dd6aa3ca05d19fe97e880cb0880df8277d72103c"
+      ],
+      "input_sha256": null,
+      "exit_code": 0,
+      "stdout_hex": "6f626a65637420303062366337333638623062616436653561343830333533363661646639366431356662306133380a7479706520636f6d6d69740a7461672076310a7461676765722046697874757265203c66697874757265406578616d706c652e696e76616c69643e2030202b303030300a0a53796e74686574696320616e6e6f7461746564207461670a",
+      "stderr": ""
+    },
+    {
+      "kind": "stock-git",
+      "argv": [
+        "/runtime/git",
+        "-c",
+        "credential.helper=",
+        "-c",
+        "core.hooksPath=/dev/null",
+        "--git-dir=/work/export.git",
+        "index-pack",
+        "--stdin",
+        "--strict"
+      ],
+      "input_sha256": "07a6c53ca57dad0fd4084dcf40e9c7501c5cbb099bba8b9b4e1fb54370c628a9",
+      "exit_code": 128,
+      "stdout_hex": "",
+      "stderr": "fatal: pack is corrupted (SHA1 mismatch)\n"
+    }
+  ]
+}

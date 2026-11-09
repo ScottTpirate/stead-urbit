@@ -113,6 +113,8 @@ Give separate workers project/task-limited authority. Untrusted PR jobs have no 
 
 Design complete, repeatable workflows with visible outcomes and recovery. For a software project, link the work item, documentation, branch, proposed change, exact reviewed revision and accepted build. An agent uses the same authorized operations as a person. Retain its proposed change, base revision, checks and review history as durable project records. Acceptance and release require authority separate from proposal creation. Keep those records and their Work, Docs and Git history portable through supported updates and exports. This applies the workflow ideas from [Toward the self-driving computer](https://graymirror.substack.com/p/toward-the-self-driving-computer). Evaluate %gnat in a separate experiment when its source, license, examples and migrations can be inspected.
 
+Design agent and CI access around exact revisions and bounded object, path and history queries that do not require a full working copy. Keep Git identities and portable clones. Use explicit, versioned transitions for uploads, proposals, reviews, builds and releases, with distinct authorization and recoverable outcomes. The [revision-addressed source control profile](CODE_AGENT_SOURCE_CONTROL.md) records the design and its relationship to Anthropic’s Scion work.
+
 No native-inference or native-every-compiler requirement blocks the work/document/Git milestone. Such research remains a separately budgeted track.
 
 ## 11. Initial acceptance boundaries

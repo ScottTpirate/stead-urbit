@@ -76,6 +76,15 @@ class CodeGitPacketControls(unittest.TestCase):
             with self.assertRaises(ValueError):
                 vectors.validate_report(value)
 
+    def test_focused_inflater_inventory_is_separate(self):
+        report = {'status': 'passed', 'checks': [{'name': name, 'passed': True} for name in vectors.INFLATE_CHECKS]}
+        self.assertIs(vectors.validate_report(report, vectors.INFLATE_CHECKS), report)
+        with self.assertRaises(ValueError):
+            vectors.validate_report(report)
+        report['checks'].pop()
+        with self.assertRaises(ValueError):
+            vectors.validate_report(report, vectors.INFLATE_CHECKS)
+
 
 if __name__ == '__main__':
     unittest.main()

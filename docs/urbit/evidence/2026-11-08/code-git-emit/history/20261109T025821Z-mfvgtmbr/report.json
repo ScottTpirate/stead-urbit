@@ -1,0 +1,16 @@
+{
+  "status": "failed",
+  "scope": "pure native outbound SHA-1 packs and stock Git readback; no service or accepted write",
+  "qualifies_phase": false,
+  "checks": [],
+  "records": [
+    {
+      "kind": "native",
+      "label": "unit-inventory",
+      "source_sha256": "b2372e7e77b4696448784c0112289ec0bf09d0073555e75e48b28ec0b00fe0df",
+      "exit_code": 0,
+      "stdout": "- need\r\n?(\r\n  %~\r\n  [ i=[kind=@tas body=[length=@ud data=@] oid=@ux]\r\n    t=it([kind=@tas body=[length=@ud data=@] oid=@ux])\r\n  ]\r\n)\r\n-have.[[%blob [@ud @ud] @ud] it([kind=@tas body=[length=@ud data=@] oid=@ux])]\r\nnest-fail",
+      "stderr": "loom: mapped 512MB\r\nlite: arvo formula 4ce68411\r\nlite: core 641296f\r\nlite: final state 641296f\r\neval (run):\n\r\neval: bail: %exit"
+    }
+  ]
+}

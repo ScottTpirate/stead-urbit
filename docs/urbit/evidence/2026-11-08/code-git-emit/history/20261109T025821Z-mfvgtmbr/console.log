@@ -1,0 +1,10 @@
+Traceback (most recent call last):
+  File "/code/code_git_emit_check.py", line 214, in <module>
+    inside()
+    ~~~~~~^^
+  File "/code/code_git_emit_check.py", line 124, in inside
+    require(tuple(name for name, _ in rows) == names, 'Native compiler/result inventory differs')
+    ~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/code/code_git_emit_check.py", line 48, in require
+    raise ValueError(message)
+ValueError: Native compiler/result inventory differs

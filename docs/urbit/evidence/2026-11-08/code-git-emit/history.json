@@ -1,0 +1,17 @@
+[
+  {
+    "run": "20261109T025752Z-w5wfddy2",
+    "status": "failed",
+    "reason": "Diagnostic wrapper failed before native evaluation: capsule ROOT parents index."
+  },
+  {
+    "run": "20261109T025821Z-mfvgtmbr",
+    "status": "failed",
+    "reason": "Actual native fixture compiler rejected decimal aura for declared SHA-1 OID."
+  },
+  {
+    "run": "20261109T025922Z-d8tf_cjn",
+    "status": "passed",
+    "checks": 39
+  }
+]

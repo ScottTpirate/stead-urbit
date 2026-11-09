@@ -1,0 +1,7 @@
+Traceback (most recent call last):
+  File "/code/code_git_emit_check.py", line 17, in <module>
+    ROOT = Path(__file__).resolve().parents[2]
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^
+  File "/usr/lib/python3.14/pathlib/__init__.py", line 68, in __getitem__
+    raise IndexError(idx)
+IndexError: 2

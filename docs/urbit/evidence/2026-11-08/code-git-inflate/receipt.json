@@ -1,0 +1,331 @@
+{
+  "format": 1,
+  "status": "passed",
+  "qualifies_phase": false,
+  "scope": "Pure native bounded zlib inflater; no pack resolver, graph, server or accepted-write qualification.",
+  "run": "20261109T024001Z-0ye3oq6a",
+  "mode": "inflate",
+  "checkout_commit": "4716225906ba3374379008816a650d3aa03fee30",
+  "source_binding_note": "The newly implemented files were uncommitted at execution; source hashes bind exact content independently of commit membership.",
+  "sources_before_sha256": {
+    "native/core/desk/lib/stead-code-git-inflate.hoon": "86c0d0eedcb4bdd7be21db7c39e822b059a694ce806aad264bdd0420df8b3194",
+    "native/core/desk/tests/stead-code-git-inflate.hoon": "67e21d9f33fe96ded8c689612313daf65193e31cbd325a0bc04de2fde2e726b2",
+    "scripts/urbit/code_git_vectors.py": "af169d0b5a4edd1e213fc922c5af8818fcf3d8a27250b6f967a6a7d168bd74b6",
+    "scripts/urbit/execution_policy.py": "8d52b799a3a7bff73f38e029b57fe0cfafd156b7c61184173860c21600ce41c0"
+  },
+  "sources_after_sha256": {
+    "native/core/desk/lib/stead-code-git-inflate.hoon": "86c0d0eedcb4bdd7be21db7c39e822b059a694ce806aad264bdd0420df8b3194",
+    "native/core/desk/tests/stead-code-git-inflate.hoon": "67e21d9f33fe96ded8c689612313daf65193e31cbd325a0bc04de2fde2e726b2",
+    "scripts/urbit/code_git_vectors.py": "af169d0b5a4edd1e213fc922c5af8818fcf3d8a27250b6f967a6a7d168bd74b6",
+    "scripts/urbit/execution_policy.py": "8d52b799a3a7bff73f38e029b57fe0cfafd156b7c61184173860c21600ce41c0"
+  },
+  "current_sources_verified_equal": true,
+  "toolchain_sha256": "ae185adaec12b5aa0b2d48e2198ae65583902512ffd9d148706810c4819c650c",
+  "helper_sha256": "55d5196a3a8dbd5323943c06f138c9b9aa8fd955506c4f4b14e5d56ff05abcc6",
+  "git_version": "2.55.0",
+  "expected_checks": 49,
+  "observed_checks": [
+    {
+      "name": "test-inflate-empty",
+      "passed": true,
+      "tang_lines": "0"
+    },
+    {
+      "name": "test-inflate-stored-empty",
+      "passed": true,
+      "tang_lines": "0"
+    },
+    {
+      "name": "test-inflate-stored-binary",
+      "passed": true,
+      "tang_lines": "0"
+    },
+    {
+      "name": "test-inflate-fixed-binary",
+      "passed": true,
+      "tang_lines": "0"
+    },
+    {
+      "name": "test-inflate-dynamic-tree",
+      "passed": true,
+      "tang_lines": "0"
+    },
+    {
+      "name": "test-inflate-offset-and-tail",
+      "passed": true,
+      "tang_lines": "0"
+    },
+    {
+      "name": "test-inflate-concatenated-streams",
+      "passed": true,
+      "tang_lines": "0"
+    },
+    {
+      "name": "test-inflate-stock-multiple-blocks",
+      "passed": true,
+      "tang_lines": "0"
+    },
+    {
+      "name": "test-inflate-overlapping-match",
+      "passed": true,
+      "tang_lines": "0"
+    },
+    {
+      "name": "test-inflate-small-declared-window",
+      "passed": true,
+      "tang_lines": "0"
+    },
+    {
+      "name": "test-inflate-cross-block-distance",
+      "passed": true,
+      "tang_lines": "0"
+    },
+    {
+      "name": "test-inflate-blocks-at-bound",
+      "passed": true,
+      "tang_lines": "0"
+    },
+    {
+      "name": "test-inflate-blocks-over-bound",
+      "passed": true,
+      "tang_lines": "0"
+    },
+    {
+      "name": "test-inflate-truncated-header",
+      "passed": true,
+      "tang_lines": "0"
+    },
+    {
+      "name": "test-inflate-truncated-footer",
+      "passed": true,
+      "tang_lines": "0"
+    },
+    {
+      "name": "test-inflate-truncated-deflate",
+      "passed": true,
+      "tang_lines": "0"
+    },
+    {
+      "name": "test-inflate-invalid-method",
+      "passed": true,
+      "tang_lines": "0"
+    },
+    {
+      "name": "test-inflate-invalid-window",
+      "passed": true,
+      "tang_lines": "0"
+    },
+    {
+      "name": "test-inflate-header-check",
+      "passed": true,
+      "tang_lines": "0"
+    },
+    {
+      "name": "test-inflate-dictionary",
+      "passed": true,
+      "tang_lines": "0"
+    },
+    {
+      "name": "test-inflate-checksum",
+      "passed": true,
+      "tang_lines": "0"
+    },
+    {
+      "name": "test-inflate-reserved-block",
+      "passed": true,
+      "tang_lines": "0"
+    },
+    {
+      "name": "test-inflate-stored-complement",
+      "passed": true,
+      "tang_lines": "0"
+    },
+    {
+      "name": "test-inflate-stored-truncated",
+      "passed": true,
+      "tang_lines": "0"
+    },
+    {
+      "name": "test-inflate-output-bound",
+      "passed": true,
+      "tang_lines": "0"
+    },
+    {
+      "name": "test-inflate-stored-output-bound",
+      "passed": true,
+      "tang_lines": "0"
+    },
+    {
+      "name": "test-inflate-offset-bound",
+      "passed": true,
+      "tang_lines": "0"
+    },
+    {
+      "name": "test-inflate-reserved-length",
+      "passed": true,
+      "tang_lines": "0"
+    },
+    {
+      "name": "test-inflate-reserved-distance",
+      "passed": true,
+      "tang_lines": "0"
+    },
+    {
+      "name": "test-inflate-distance-before-output",
+      "passed": true,
+      "tang_lines": "0"
+    },
+    {
+      "name": "test-inflate-oversubscribed-tree",
+      "passed": true,
+      "tang_lines": "0"
+    },
+    {
+      "name": "test-inflate-incomplete-tree",
+      "passed": true,
+      "tang_lines": "0"
+    },
+    {
+      "name": "test-inflate-empty-code-tree",
+      "passed": true,
+      "tang_lines": "0"
+    },
+    {
+      "name": "test-inflate-repeat-without-previous",
+      "passed": true,
+      "tang_lines": "0"
+    },
+    {
+      "name": "test-inflate-repeat-bound",
+      "passed": true,
+      "tang_lines": "0"
+    },
+    {
+      "name": "test-inflate-missing-end-code",
+      "passed": true,
+      "tang_lines": "0"
+    },
+    {
+      "name": "test-inflate-literal-count",
+      "passed": true,
+      "tang_lines": "0"
+    },
+    {
+      "name": "test-inflate-input-bound",
+      "passed": true,
+      "tang_lines": "0"
+    },
+    {
+      "name": "test-inflate-input-width",
+      "passed": true,
+      "tang_lines": "0"
+    },
+    {
+      "name": "test-inflate-output-limit",
+      "passed": true,
+      "tang_lines": "0"
+    },
+    {
+      "name": "test-inflate-bit-work-bound",
+      "passed": true,
+      "tang_lines": "0"
+    },
+    {
+      "name": "test-inflate-byte-work-bound",
+      "passed": true,
+      "tang_lines": "0"
+    },
+    {
+      "name": "test-inflate-symbol-work-bound",
+      "passed": true,
+      "tang_lines": "0"
+    },
+    {
+      "name": "test-inflate-empty-distance-tree",
+      "passed": true,
+      "tang_lines": "0"
+    },
+    {
+      "name": "test-inflate-single-symbol-tree",
+      "passed": true,
+      "tang_lines": "0"
+    },
+    {
+      "name": "test-inflate-tree-length-bound",
+      "passed": true,
+      "tang_lines": "0"
+    },
+    {
+      "name": "test-inflate-tree-width-bound",
+      "passed": true,
+      "tang_lines": "0"
+    },
+    {
+      "name": "inflater-failing-tang-control-detected",
+      "passed": true,
+      "tang_lines": "3"
+    },
+    {
+      "name": "inflater-compiler-failure-control-detected",
+      "passed": true
+    }
+  ],
+  "unit_arms": 47,
+  "failure_controls": 2,
+  "host_positive_fixture_checks": 12,
+  "host_parser_tests": {
+    "passed": 12,
+    "command": "python3 -m unittest discover -s tests/urbit -p test_code_git_vectors.py -q",
+    "scope": "Host-only parser and focused inventory controls"
+  },
+  "execution": {
+    "status": "completed",
+    "exit_code": 0,
+    "elapsed_seconds": 5.019,
+    "maximum_sampled_c": 35.0,
+    "cpu_affinity": [
+      19
+    ],
+    "cpu_max": "5000 10000",
+    "policy": {
+      "cooperative_seconds": 10,
+      "cpu_period_us": 10000,
+      "cpu_quota_us": 5000,
+      "kill_seconds": 5,
+      "sample_seconds": 1,
+      "stale_seconds": 3,
+      "start_c": 75,
+      "stop_c": 90,
+      "terminate_seconds": 10
+    },
+    "observed_scope_after": "LoadState=not-found\nActiveState=inactive\nSubState=dead\n"
+  },
+  "raw": {
+    "inputs": {
+      "path": "/home/skilgore/stead-urbit/.runtime/code-git-vectors/20261109T024001Z-0ye3oq6a/inputs.json",
+      "sha256": "eb1083a85bea28e9d1aff787dcab2fc093c3528e406d214c8ce12c6fb9536805",
+      "bytes": 1497
+    },
+    "report": {
+      "path": "/home/skilgore/stead-urbit/.runtime/code-git-vectors/20261109T024001Z-0ye3oq6a/output/report.json",
+      "sha256": "025846c4bdf4e3b18a99bd4d0f1052f8d8326ab0511f33b60d61e67e25ff2990",
+      "bytes": 8116
+    },
+    "guard": {
+      "path": "/home/skilgore/stead-urbit/.runtime/execution-runs/code-git-inflate-dnw00f32/report.json",
+      "sha256": "02f150be30c7ccf08850866245bb32221124167579f542359b49257046182aeb",
+      "bytes": 6227
+    },
+    "scope": {
+      "path": "/home/skilgore/stead-urbit/.runtime/execution-runs/code-git-inflate-dnw00f32/control/scope.json",
+      "sha256": "ab31ed9c01c1dd0c527e644ec26b2b8ef3e64cdc82f452d51df0a827ed6403e5",
+      "bytes": 232
+    },
+    "fixture_oracle": {
+      "path": "/home/skilgore/stead-urbit/.runtime/code-git-vectors/20261109T024001Z-0ye3oq6a/fixture-oracle.json",
+      "sha256": "613a2739bb343fbdadce4224c52166ccadeef3c3eebe5e565a659623528631c3",
+      "bytes": 4871
+    }
+  },
+  "unexpected_native_failures": []
+}

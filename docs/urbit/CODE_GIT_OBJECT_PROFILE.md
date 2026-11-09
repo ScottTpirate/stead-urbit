@@ -43,16 +43,37 @@ of internal trailing garbage, establish connectivity or admit objects. A native
 unit explicitly checks that a checksum-valid garbage entry can pass this outer
 layer. No caller may interpret that result as a valid or accepted pack.
 
+## Reconstructing a quarantined pack
+
+`stead-code-git-resolve` starts from the verified outer envelope. Its tagged
+`%scan` stage consumes one complete entry per step. It checks exact declared
+object count and alignment before the SHA-1 trailer. The bounded
+[native inflater](CODE_GIT_INFLATE_PROFILE.md) verifies stream integrity and
+returns the first byte after the Adler-32 trailer. The resolver checks the
+inflated width against the entry header before retaining data.
+
+The `%resolve` stage completes one delta attempt per step. OFS bases must point
+to an earlier entry boundary. REF bases can resolve from objects already built
+in the pack, including on a later pass, or through the home's authorized reader
+for the same repository. An external base is rehashed and stays outside the
+new object inventory. The decoder limits both depth and passes to 32 and charges
+inflated input plus expanded delta results against a 32 MiB budget. A collision
+with different staged bytes rejects the pack.
+
+Only `%complete` returns reconstructed candidate objects. The authority owns
+its saved-state version, quarantine lifetime, cancellation, byte and work
+admission, existing-object collision checks, reachable graph, final policy and
+ref transaction. `%rejected` drops the partial inventory.
+
 ## Integration order and evidence
 
 1. Authenticate the individual request and establish a bounded upload/quarantine
    context without making new objects readable.
 2. Parse framing and receive commands; validate exact refs/OIDs and declared
    limits. Inspect the complete outer pack envelope.
-3. Compose the [entry/delta helpers](CODE_GIT_PACK_ENTRY_PROFILE.md) with bounded
-   native zlib expansion, delta resolution, object validation and
-   graph/reachability checks. Verify declared count and exact
-   end-of-entry offset. Interrupted work must retain durable resumable intent.
+3. Reconstruct candidate objects with the bounded resolver. Validate object
+   structure and graph closure inside the permitted repository. Persist and
+   reconcile durable job intent across interruption.
 4. At final acceptance, re-read current policy, scope, credential expiry,
    authority epoch and refs. The home must atomically accept validated objects,
    compare-and-swap refs and record the result. A candidate map or checksum is

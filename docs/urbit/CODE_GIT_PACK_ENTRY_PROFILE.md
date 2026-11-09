@@ -63,9 +63,8 @@ matched every original body and SHA-1 OID. Exact source bindings and the earlier
 generated-fixture failure are retained. This is pure evaluator evidence, not
 installed pack service or authoritative state evidence.
 
-The next required interface is bounded native inflation that returns exact
-consumed compressed bytes and exact decompressed width. A pack resolver must
-then enumerate exactly the declared entries through the trailer boundary,
-resolve only authorized bases, enforce aggregate expansion and chain-depth
-limits, validate objects/graphs and preserve quarantine. Final current-policy
-authorization, compare-and-swap refs and authoritative receipts remain separate.
+The [native inflater](CODE_GIT_INFLATE_PROFILE.md) and
+[quarantine resolver](CODE_GIT_OBJECT_PROFILE.md#reconstructing-a-quarantined-pack)
+compose these helpers to reconstruct exact bytes from complete packs. Graph and
+custody validation, final current-policy authorization, compare-and-swap refs
+and authoritative receipts remain separate.
