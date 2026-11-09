@@ -42,7 +42,10 @@ current recipe, exact revision, exact claim, and matching source and recipe.
 The authority must verify the output evidence for that exact job, attempt,
 worker and outcome through its trusted artifact readback or authenticated
 attestation policy. It cannot accept a caller-supplied verification boolean.
-A repeated exact completion does not schedule another build.
+An exact completion retry can recover its stored result after a later
+proposal revision or lease expiration. It still requires the original
+worker binding, current historical proposal and build permissions, and
+verified artifact evidence.
 
 A finished build records a passed or failed result. Cancellation ends an
 uncompleted job. A release intent requires a currently allowed release actor
@@ -52,6 +55,13 @@ the accepted ref receipt for that proposal, and the current target head.
 At most one release intent may be recorded per build. A release intent does
 not launch a deployment. External execution needs its own admitted worker
 and idempotent effect reconciliation.
+
+An exact release retry returns its stored result after the target head
+advances or a later proposal revision is submitted. Current permissions for
+the original release, proposal, build and review still apply, including
+delegation and membership checks. The release actor and artifact must still
+match the stored result. Creating a release intent requires fresh source,
+proposal, target-head and acceptance checks.
 
 The proof profile holds at most 32 delegations, builds and releases and 64
 proposal revisions and reviews per board. Capacity fails closed. Production

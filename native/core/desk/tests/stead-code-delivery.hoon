@@ -66,7 +66,7 @@
     |=  [loc=scope id=@t item=proposal attempt=@ud by=actor proof=attestation]
     ?&  =(loc where)
         =(id job-id)
-        =(item change)
+        |(=(item change) =(item delegated))
         |(=(by runner) =(by fallback))
         |(=(attempt 1) =(attempt 2))
         =(source.proof source-pin)
@@ -80,6 +80,13 @@
 ++  released-env
   ^-  authority
   (clock 100 head-pin)
+++  without
+  |=  [context=authority revoked=role]
+  ^-  authority
+  =/  restricted=permit
+    |=  [who=actor loc=scope work=@t target=@t capability=role]
+    &(!=(revoked capability) (policy who loc work target capability))
+  context(allows restricted)
 ++  board
   ^-  state
   (empty where)
@@ -120,6 +127,9 @@
 ++  complete
   ^-  state
   (committed (finish leased env runner job-id 1 verdict))
+++  released
+  ^-  state
+  (committed (release-intent complete released-env custodian release-id job-id))
 ++  granted
   ^-  state
   (committed (delegate board env maker scope-grant))
@@ -203,6 +213,36 @@
   (expect !>(&(?=(%applied -.new-attempt) =([%rejected %stale-lease] old-attempt))))
 ++  test-delivery-build-completion-replay
   (expect !>(=([%replayed complete] (finish complete env runner job-id 1 verdict))))
+++  test-delivery-build-replay-after-edit
+  =/  edited  (committed (submit complete env maker newer ~))
+  =/  advanced=authority  (clock 120.100 0x3)
+  =/  unavailable  advanced(source |=([who=actor item=proposal] `(unit @t)`~))
+  =/  ok=?
+    ?&  =([%replayed edited] (finish edited unavailable runner job-id 1 verdict))
+        =([%rejected %id-conflict] (finish edited unavailable fallback job-id 1 verdict))
+        =([%rejected %id-conflict] (finish edited unavailable runner job-id 2 verdict))
+    ==
+  (expect !>(ok))
+++  test-delivery-build-replay-current-permissions
+  =/  edited  (committed (submit complete env maker newer ~))
+  =/  advanced=authority  (clock 120.100 0x3)
+  =/  current-member=$-(@p (unit actor))
+    |=  ship=@p
+    ?:(=(ship ship.runner) ~ (membership ship))
+  =/  removed  advanced(resolve current-member)
+  =/  ok=?
+    ?&  =([%rejected %denied] (finish edited removed runner job-id 1 verdict))
+        =([%rejected %denied] (finish edited (without advanced %run-build) runner job-id 1 verdict))
+        =([%rejected %denied] (finish edited (without advanced %queue-build) runner job-id 1 verdict))
+        =([%rejected %denied] (finish edited (without advanced %propose) runner job-id 1 verdict))
+    ==
+  (expect !>(ok))
+++  test-delivery-build-replay-revoked-delegation
+  =/  wait  (committed (queue agent-proposed env maker job-id proposal-id 1 recipe-pin))
+  =/  working  (committed (claim wait env runner job-id 0))
+  =/  done  (committed (finish working env runner job-id 1 verdict))
+  =/  revoked  (committed (revoke done env maker grant-id))
+  (expect !>(=([%rejected %denied] (finish revoked env runner job-id 1 verdict))))
 ++  test-delivery-build-completion-conflict
   =/  prior=attestation  verdict
   (expect !>(=([%rejected %id-conflict] (finish complete env runner job-id 1 prior(output source-pin)))))
@@ -225,11 +265,46 @@
   =/  failed  (committed (finish leased env runner job-id 1 prior(outcome %failed)))
   (expect !>(=([%rejected %build-required] (release-intent failed released-env custodian release-id job-id))))
 ++  test-delivery-release-exact-record
-  =/  sealed  (committed (release-intent complete released-env custodian release-id job-id))
+  =/  sealed=state  released
   =/  ok=?
     ?&  ?=(^ (~(get by releases.sealed) release-id))
         =([%replayed sealed] (release-intent sealed released-env custodian release-id job-id))
         =([%rejected %already-released] (release-intent sealed released-env custodian other-id job-id))
+    ==
+  (expect !>(ok))
+++  test-delivery-release-replay-after-tip-moves
+  =/  advanced  (clock 100 0x3)
+  =/  ok=?
+    ?&  =([%replayed released] (release-intent released advanced custodian release-id job-id))
+        =([%rejected %unaccepted-head] (release-intent released advanced custodian other-id job-id))
+    ==
+  (expect !>(ok))
+++  test-delivery-release-replay-after-edit
+  =/  revision=proposal  newer
+  =/  edited  (committed (submit released released-env maker revision(change [1 2 head-pin 0x3]) ~))
+  =/  advanced  (clock 100 0x3)
+  =/  ok=?
+    ?&  =([%replayed edited] (release-intent edited advanced custodian release-id job-id))
+        =([%rejected %denied] (release-intent edited advanced custodian other-id job-id))
+    ==
+  (expect !>(ok))
+++  test-delivery-release-replay-current-permissions
+  =/  advanced  (clock 100 0x3)
+  =/  ok=?
+    ?&  =([%rejected %denied] (release-intent released (without advanced %release) custodian release-id job-id))
+        =([%rejected %denied] (release-intent released (without advanced %run-build) custodian release-id job-id))
+        =([%rejected %review-denied] (release-intent released (without advanced %review) custodian release-id job-id))
+    ==
+  (expect !>(ok))
+++  test-delivery-replay-still-verifies-artifact
+  =/  advanced=authority  (clock 100 0x3)
+  =/  unavailable=verify-output
+    |=  [loc=scope id=@t item=proposal attempt=@ud by=actor proof=attestation]
+    |
+  =/  closed  advanced(verify unavailable)
+  =/  ok=?
+    ?&  =([%rejected %id-conflict] (finish complete closed runner job-id 1 verdict))
+        =([%rejected %artifact-unverified] (release-intent released closed custodian release-id job-id))
     ==
   (expect !>(ok))
 ++  test-delivery-versioned-replay-roundtrip

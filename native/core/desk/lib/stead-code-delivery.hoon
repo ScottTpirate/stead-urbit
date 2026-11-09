@@ -251,15 +251,23 @@
   ?:  (gte ~(wyt by builds.db) 32)  [%rejected %capacity]
   =/  row=build  [id caller item u.pinned recipe %queued ~]
   [%applied db(builds (~(put by builds.db) id row))]
-++  job-current
+++  job-authorized
   |=  [db=state env=authority row=build]
   ^-  ?
   =/  item  item.row
-  =/  prior  (current db env id.item number.change.item)
+  =/  prior  (~(get by revisions.db) [id.item number.change.item])
   ?~  prior  |
-  ?&  (allowed env requester.row work.item target.location.item %queue-build)
+  ?&  (eligible db env u.prior)
       =(item item.u.prior)
+      (allowed env requester.row work.item target.location.item %queue-build)
       (recipe.env destination.env recipe.row)
+  ==
+::  Check these mutable inputs only when advancing a job or creating a release.
+++  job-fresh
+  |=  [db=state env=authority row=build]
+  ^-  ?
+  =/  item  item.row
+  ?&  =((~(get by latest.db) id.item) [~ number.change.item])
       =([~ source.row] (source.env requester.row item))
   ==
 ++  worker-allowed
@@ -276,7 +284,8 @@
   =/  prior  (~(get by builds.db) id)
   ?~  prior  [%rejected %denied]
   =/  row  u.prior
-  ?.  &((worker-allowed env caller row) (job-current db env row))  [%rejected %denied]
+  ?.  &((worker-allowed env caller row) (job-authorized db env row) (job-fresh db env row))
+    [%rejected %denied]
   =/  stage  stage.row
   ?:  ?=(?(%finished %cancelled) -.stage)  [%rejected %terminal]
   =/  count  ?:  ?=(%leased -.stage)  attempt.grant.stage  0
@@ -297,7 +306,7 @@
   =/  prior  (~(get by builds.db) id)
   ?~  prior  [%rejected %denied]
   =/  row  u.prior
-  ?.  &((worker-allowed env caller row) (job-current db env row))  [%rejected %denied]
+  ?.  &((worker-allowed env caller row) (job-authorized db env row))  [%rejected %denied]
   ?.  &(=(source.evidence source.row) =(recipe.evidence recipe.row))  [%rejected %wrong-input]
   =/  stage  stage.row
   ?:  ?=(%finished -.stage)
@@ -308,6 +317,7 @@
         ==
       [%replayed db]
     [%rejected %id-conflict]
+  ?.  (job-fresh db env row)  [%rejected %denied]
   ?.  ?=(%leased -.stage)  [%rejected %not-leased]
   ?.  ?&  (same-actor:stead-session worker.grant.stage caller)
           =(attempt attempt.grant.stage)
@@ -341,7 +351,7 @@
   ?~  found  [%rejected %denied]
   =/  row  u.found
   =/  item  item.row
-  ?.  &((job-current db env row) (allowed env caller work.item target.location.item %release))
+  ?.  &((job-authorized db env row) (allowed env caller work.item target.location.item %release))
     [%rejected %denied]
   ?.  ?=(%finished -.stage.row)  [%rejected %build-required]
   ?.  =(%passed outcome.evidence.stage.row)  [%rejected %build-required]
@@ -352,8 +362,6 @@
           !=(principal.caller principal.requester.row)
       ==
     [%rejected %denied]
-  ?.  =(head.change.item (tip.env target.location.item))  [%rejected %unaccepted-head]
-  ?.  (accepted.env destination.env item)  [%rejected %acceptance-required]
   ?.  (verify.env destination.env job item attempt.grant.stage.row builder evidence.stage.row)
     [%rejected %artifact-unverified]
   =/  prior  (~(get by reviews.db) [id.item number.change.item])
@@ -374,6 +382,9 @@
         ==
       [%replayed db]
     [%rejected %id-conflict]
+  ?.  (job-fresh db env row)  [%rejected %denied]
+  ?.  =(head.change.item (tip.env target.location.item))  [%rejected %unaccepted-head]
+  ?.  (accepted.env destination.env item)  [%rejected %acceptance-required]
   ?:  (gte ~(wyt by releases.db) 32)  [%rejected %capacity]
   ?:  (lien ~(tap by releases.db) |=([key=@t entry=release] =(job.entry job)))
     [%rejected %already-released]
