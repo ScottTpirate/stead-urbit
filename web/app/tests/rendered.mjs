@@ -45,7 +45,7 @@ const person = {principal_id: id(102), binding_id: id(202), binding_revision: '1
 const canonical = value => typeof value === 'string' ? JSON.stringify(value) : '{' + Object.keys(value).sort().map(key => JSON.stringify(key) + ':' + canonical(value[key])).join(',') + '}';
 const digest = command => createHash('sha256').update('stead.command/3\0' + canonical(command)).digest('hex');
 
-async function fixture(run) {
+async function fixture(run, mockRepository = false) {
   const context = await browser.newContext();
   const page = await context.newPage();
   page.setDefaultTimeout(15000);
@@ -76,6 +76,16 @@ async function fixture(run) {
       return send({status: 'authenticated', csrf: 'b'.repeat(64)});
     }
     const token = () => (++state.token).toString(16).padStart(64, '0');
+    if (pathname === '/stead/api/code' && mockRepository) {
+      assert.equal(value.project_id, state.project.project_id);
+      const respond = fields => send({protocol: 'stead.code/1', ...fields});
+      if (value.action === 'create') {
+        state.repositoryReady = true;
+        return respond({status: 'ready'});
+      }
+      assert.equal(value.action, 'status');
+      return respond({status: state.repositoryReady ? 'ready' : 'disabled', write: 'yes', manage: 'yes'});
+    }
     const generation = () => state.sequence.toString(16).padStart(64, '0');
     const denied = () => send({protocol: 'stead.result/3', status: 'rejected', error: 'denied_or_not_found'});
     if (pathname.endsWith('/updates')) {
@@ -177,7 +187,7 @@ async function fixture(run) {
 }
 async function check(name, run) {
   if (requestedCase && name !== requestedCase) return;
-  await fixture(run); report.checks.push({name, passed: true});
+  await fixture(run, name === 'code-survives-reopening-project'); report.checks.push({name, passed: true});
   console.log('PASS ' + name);
 }
 async function workForm(page) {
@@ -234,6 +244,19 @@ try {
     assert.equal(await page.getByRole('heading', {name: 'Garden', exact: true}).count(), 1);
     assert.equal(await page.evaluate(() => window.steadShellMarker), 'retained');
     assert.equal(state.commands.length, 0);
+  });
+  await check('code-survives-reopening-project', async page => {
+    const code = page.getByRole('button', {name: 'Code', exact: true});
+    const project = page.getByRole('button', {name: /GARDEN.*Garden/u});
+    const clone = page.getByRole('textbox', {name: 'Clone URL', exact: true});
+    assert.equal(await code.count(), 0);
+    await page.getByRole('button', {name: 'Enable Git repository', exact: true}).click();
+    await clone.waitFor();
+    assert.equal(await clone.inputValue(), origin + '/stead/git/' + id(1) + '.git');
+    await project.click();
+    assert.equal(await clone.count(), 0);
+    await code.click();
+    await clone.waitFor();
   });
   await check('authentication-reuses-validated-identity-and-opens-before-one-snapshot', async (page, state) => {
     assert.equal(state.requests.filter(row => row.kind === 'identity').length, 1);

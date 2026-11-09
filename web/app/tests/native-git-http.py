@@ -1,5 +1,6 @@
 """Synthetic real Git clients against the owned native Home browser fixture."""
 import base64
+from contextlib import closing
 import hashlib
 import http.client
 import ipaddress
@@ -21,7 +22,7 @@ def pkt(body):
     return f'{len(body) + 4:04x}'.encode() + body
 
 
-def exercise(session, ca, project, output, checks):
+def exercise(session, ca, project, output, checks, *, reuse_empty=False):
     credentials = session_file(session)
     assert credentials['origin'] == 'https://home.localhost:8443'
     assert re.fullmatch(r'[0-9a-f-]{36}', project)
@@ -75,15 +76,16 @@ def exercise(session, ca, project, output, checks):
             headers['Authorization'] = 'Basic ' + base64.b64encode(f'stead:{bearer}'.encode()).decode()
         if data is not None:
             headers['Content-Type'] = 'application/x-git-receive-pack-request'
-        with connected() as conn:
+        with closing(connected()) as conn:
             conn.request(method, remote + path, data, headers)
             response = conn.getresponse()
             raw = response.read(524289)
             assert len(raw) <= 524288
             return response.status, raw
 
-    assert manage('status')['status'] == 'disabled'
-    assert manage('create')['status'] == 'ready'
+    assert manage('status')['status'] == ('ready' if reuse_empty else 'disabled')
+    if not reuse_empty:
+        assert manage('create')['status'] == 'ready'
     assert request('GET', '/info/refs?service=git-upload-pack')[0] == 401
     checks.append('no anonymous discovery')
     write = manage('issue', access='write')
@@ -140,7 +142,7 @@ def exercise(session, ca, project, output, checks):
 
         body = update(second, b'0' * 40)
         auth = 'Basic ' + base64.b64encode(f"stead:{write['bearer']}".encode()).decode()
-        with connected() as conn:
+        with closing(connected()) as conn:
             conn.putrequest('POST', remote + '/git-receive-pack')
             conn.putheader('Authorization', auth)
             conn.putheader('Content-Type', 'application/x-git-receive-pack-request')
@@ -164,11 +166,11 @@ def exercise(session, ca, project, output, checks):
 
 
 if __name__ == '__main__':
-    assert len(sys.argv) == 5
+    assert len(sys.argv) == 5 or sys.argv[5:] == ['--reuse-empty']
     os.umask(0o077)
     checks = []
     try:
-        oids = exercise(Path(sys.argv[1]), Path(sys.argv[2]), sys.argv[3], Path(sys.argv[4]), checks)
+        oids = exercise(Path(sys.argv[1]), Path(sys.argv[2]), sys.argv[3], Path(sys.argv[4]), checks, reuse_empty=len(sys.argv) == 6)
     except Exception as error:
         detail = str(error) if type(error) is RuntimeError else type(error).__name__
         print(json.dumps({'status': 'fail', 'checks': checks, 'error': detail}))

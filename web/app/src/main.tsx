@@ -338,7 +338,8 @@ function App() {
   }
   async function openProject(row: Row) {
     if (busy || editor?.dirty || pending || form) { setError('Finish or discard the current draft before switching projects.'); return; }
-    setRepository(null); setShowRepository(false);
+    if (row.project_id !== project?.project_id) setRepository(null);
+    setShowRepository(false);
     setWork(null); setForm(''); setTargets([]); setConfirmation(null); setCurrentVersion(null); setProject(row); setContainer(null); setEditor(null); setRows([]); setContainers([]); setTab('project'); setCursor('');
     reloadScope();
   }
