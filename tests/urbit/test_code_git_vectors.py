@@ -17,6 +17,11 @@ class CodeGitPacketControls(unittest.TestCase):
         for value in (0, 1, 0xffff, 0x10000, 0x123456789, (1 << 160) - 1):
             self.assertEqual(int(vectors.literal(value)[2:].replace('.', ''), 16), value)
 
+    def test_decimal_uses_hoon_group_separators(self):
+        self.assertEqual(vectors.decimal(2440), '2.440')
+        self.assertEqual(vectors.decimal(8388608), '8.388.608')
+        self.assertEqual(vectors.decimal(0), '0')
+
     def test_explicit_width_preserves_zero_bytes(self):
         self.assertEqual(vectors.native_bytes('0', '0x0'), b'')
         self.assertEqual(vectors.native_bytes('2', '0x0'), b'\0\0')

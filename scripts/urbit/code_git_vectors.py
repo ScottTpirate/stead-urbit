@@ -32,6 +32,13 @@ RECEIVE_LIBRARY = 'native/core/desk/lib/stead-code-receive.hoon'
 RECEIVE_TESTS = 'native/core/desk/tests/stead-code-receive.hoon'
 WIRE_LIBRARY = 'native/core/desk/lib/stead-code-receive-wire.hoon'
 WIRE_TESTS = 'native/core/desk/tests/stead-code-receive-wire.hoon'
+ENTRY_LIBRARY = 'native/core/desk/lib/stead-code-git-entry.hoon'
+ENTRY_TESTS = 'native/core/desk/tests/stead-code-git-entry.hoon'
+DELTA_LIBRARY = 'native/core/desk/lib/stead-code-git-delta.hoon'
+DELTA_TESTS = 'native/core/desk/tests/stead-code-git-delta.hoon'
+REVIEW_LIBRARY = 'native/core/desk/lib/stead-code-review.hoon'
+REVIEW_TESTS = 'native/core/desk/tests/stead-code-review.hoon'
+PACK_ORACLE = 'scripts/urbit/git_pack_oracle.py'
 ARMS = (
     'test-encode-data', 'test-encode-binary', 'test-encode-empty-data',
     'test-encode-controls', 'test-encode-control-payload-rejected',
@@ -117,13 +124,100 @@ WIRE_ARMS = (
     'test-receive-wire-shallow-unsupported',
     'test-receive-wire-signed-push-unsupported',
 )
+ENTRY_ARMS = (
+    'test-entry-ordinary-commit',
+    'test-entry-ordinary-tree',
+    'test-entry-ordinary-blob',
+    'test-entry-ordinary-tag',
+    'test-entry-multi-byte-size',
+    'test-entry-size-at-bound',
+    'test-entry-size-over-bound',
+    'test-entry-size-zero-extension',
+    'test-entry-size-extension-bound',
+    'test-entry-truncated-size',
+    'test-entry-invalid-type',
+    'test-entry-reserved-type',
+    'test-entry-missing-zlib',
+    'test-entry-offset-before-header',
+    'test-entry-offset-at-trailer',
+    'test-entry-offset-beyond-buffer',
+    'test-entry-ofs-base',
+    'test-entry-ofs-multi-byte',
+    'test-entry-ofs-zero',
+    'test-entry-ofs-before-pack',
+    'test-entry-ofs-truncated',
+    'test-entry-ofs-extension-bound',
+    'test-entry-ofs-value-bound',
+    'test-entry-ofs-missing-zlib',
+    'test-entry-ref-big-endian',
+    'test-entry-ref-zero-preserved',
+    'test-entry-ref-truncated',
+    'test-entry-ref-missing-zlib',
+    'test-entry-pack-byte-bound',
+    'test-entry-explicit-width',
+    'test-entry-short-envelope',
+    'test-entry-empty-envelope',
+)
+DELTA_ARMS = (
+    'test-delta-copy-and-literal',
+    'test-delta-literal-zeroes',
+    'test-delta-empty-result',
+    'test-delta-copy-offset',
+    'test-delta-copy-and-binary',
+    'test-delta-base-size',
+    'test-delta-truncated-size',
+    'test-delta-size-encoding',
+    'test-delta-base-size-bound',
+    'test-delta-target-size-bound',
+    'test-delta-truncated-target',
+    'test-delta-missing-result',
+    'test-delta-literal-result-bound',
+    'test-delta-truncated-literal',
+    'test-delta-reserved-instruction',
+    'test-delta-copy-base-bound',
+    'test-delta-copy-result-bound',
+    'test-delta-truncated-copy',
+    'test-delta-missing-copy-field',
+    'test-delta-copy-fourth-offset-byte',
+    'test-delta-copy-default-size',
+    'test-delta-copy-sparse-offset',
+    'test-delta-copy-sparse-size',
+    'test-delta-copy-high-size',
+    'test-delta-instruction-at-bound',
+    'test-delta-instruction-over-bound',
+    'test-delta-remaining-budget',
+    'test-delta-budget-input-bound',
+    'test-delta-base-byte-bound',
+    'test-delta-patch-byte-bound',
+    'test-delta-base-width',
+    'test-delta-patch-width',
+)
+REVIEW_ARMS = (
+    'test-review-records-exact-change',
+    'test-review-self-denied',
+    'test-review-outsider-denied',
+    'test-review-approval-epoch',
+    'test-review-candidate-ref',
+    'test-review-revoked-reviewer',
+    'test-review-merge-permission',
+    'test-review-epoch-changed',
+    'test-review-ref-changed',
+    'test-review-proposal-revised',
+    'test-review-head-changed',
+    'test-review-scope-changed',
+    'test-review-self-merge',
+    'test-review-forged-self-review',
+    'test-review-requires-work-item',
+)
 CODE_CHECKS = (
     'native-blob-roundtrip', 'native-tree-roundtrip', 'native-commit-roundtrip', 'native-tag-roundtrip',
     'native-object-graph-stock-fsck', 'native-ref-syntax-matches-stock-git',
     'stock-pack-envelope-checked-natively', 'corrupt-stock-pack-rejected-natively',
     'stock-pack-independent-index-check',
 )
-EXPECTED_CHECKS = ARMS + EXTRA_CHECKS + OBJECT_ARMS + PACK_ARMS + RECEIVE_ARMS + WIRE_ARMS + ('receive-wire-failing-tang-control-detected',) + CODE_CHECKS
+PACK_INTEROP_CHECKS = ('stock-ref-pack-native-headers', 'stock-ref-pack-native-deltas',
+                       'stock-ofs-pack-native-headers', 'stock-ofs-pack-native-deltas')
+EXPECTED_CHECKS = ARMS + EXTRA_CHECKS + OBJECT_ARMS + PACK_ARMS + RECEIVE_ARMS + WIRE_ARMS + ('receive-wire-failing-tang-control-detected',) + ENTRY_ARMS + DELTA_ARMS + REVIEW_ARMS + CODE_CHECKS + PACK_INTEROP_CHECKS
 ANSI = re.compile(r'\x1b\[[0-9;]*m')
 MAX_OUTPUT = 1_048_576
 
@@ -138,8 +232,12 @@ def literal(value):
     return '0x' + '.'.join([text[:first], *[text[i:i + 4] for i in range(first, len(text), 4)]])
 
 
+def decimal(value):
+    return format(value, ',').replace(',', '.')
+
+
 def octets(data):
-    return f'[{len(data):,} {literal(int.from_bytes(data, "little"))}]'.replace(',', '.')
+    return f'[{decimal(len(data))} {literal(int.from_bytes(data, "little"))}]'
 
 
 def parse_rows(output, width):
@@ -322,11 +420,23 @@ def inside():
             raise ValueError('Unexpected receive-wire imports')
         wire_body = wire_library.replace(wire_import, '')
         wire_dependency = receive_dependency + '=/  stead-code-git-pkt\n' + library + '\n=/  stead-code-receive\n' + receive_body + '\n'
+        entry_library = Path('/input/entry-library.hoon').read_text()
+        delta_library = Path('/input/delta-library.hoon').read_text()
+        review_library = Path('/input/review-library.hoon').read_text()
+        review_import = '/+  stead-code-git-objects, stead-code-receive\n'
+        if review_library.count(review_import) != 1:
+            raise ValueError('Unexpected code-review imports')
+        review_body = review_library.replace(review_import, '')
+        review_dependency = receive_dependency + '=/  stead-code-receive\n' + receive_body + '\n'
         for module, source, tests_source, names, dependency in (
                 ('stead-code-git-objects', object_body, object_tests, OBJECT_ARMS, '=/  stead-git\n' + base_git + '\n'),
                 ('stead-code-git-pack', pack_library, pack_tests, PACK_ARMS, ''),
                 ('stead-code-receive', receive_body, receive_tests, RECEIVE_ARMS, receive_dependency),
-                ('stead-code-receive-wire', wire_body, wire_tests, WIRE_ARMS, wire_dependency)):
+                ('stead-code-receive-wire', wire_body, wire_tests, WIRE_ARMS, wire_dependency),
+                ('stead-code-git-entry', entry_library, Path('/input/entry-tests.hoon').read_text(), ENTRY_ARMS, ''),
+                ('stead-code-git-delta', delta_library, Path('/input/delta-tests.hoon').read_text(), DELTA_ARMS, ''),
+                ('stead-code-review', review_body, Path('/input/review-tests.hoon').read_text(), REVIEW_ARMS, review_dependency)):
+
             test_header, test_body = tests_source.split('\n', 1)
             expected_header = '/+  *test, ' + ('stead-code-git-pkt, ' if module == 'stead-code-receive-wire' else '') + module
             if test_header != expected_header or tuple(re.findall(r'^\+\+  (test-[a-z0-9-]+)$', tests_source, re.M)) != names:
@@ -400,6 +510,76 @@ def inside():
         git('init', '--bare', '--template=', '--initial-branch=main', '/work/pack-check.git')
         git('--git-dir=/work/pack-check.git', 'index-pack', '--strict', '--stdin', data=raw_pack)
         record('stock-pack-independent-index-check', git('--git-dir=/work/pack-check.git', 'index-pack', '--strict', '--stdin', data=corrupt, status=True) != 0)
+        # Real stock-generated REF and OFS deltas, independently expanded by
+        # the host oracle. Native helpers receive the exact entry/delta bytes;
+        # inflation remains host-only and is not claimed as native coverage.
+        import git_pack_oracle as oracle
+        base_body = b''.join(f'An unchanged value for line {n:05d}\n'.encode() for n in range(1024))
+        expected_objects = {}
+        for index in range(6):
+            body = base_body[:18000] + str(index).encode() + base_body[18001:]
+            oid = git('--git-dir=/work/fixture.git', 'hash-object', '-w', '--stdin', data=body).strip().decode()
+            expected_objects[oid] = ('blob', body)
+        object_list = ('\n'.join(expected_objects) + '\n').encode()
+        entry_prefix = '=>\n' + entry_library + '\n'
+        delta_prefix = receive_dependency + '=>\n' + delta_library + '\n'
+        for form, options, delta_kind in [('ref', (), 7), ('ofs', ('--delta-base-offset',), 6)]:
+            packed = git('--git-dir=/work/fixture.git', 'pack-objects', '--stdout', '--threads=1', '--window=10', '--depth=10', *options, data=object_list)
+            if oracle.unpack(packed) != expected_objects:
+                raise ValueError('Independent stock delta pack expansion differs')
+            reader = oracle.Reader(packed[:-20])
+            reader.pos = 12
+            entries = []
+            for _ in range(int.from_bytes(packed[8:12], 'big')):
+                offset = reader.pos
+                first = reader.byte()
+                kind = (first >> 4) & 7
+                length = reader.size(first & 15, 4, first & 128)
+                base = offset - reader.distance() if kind == 6 else bytes(reader.take(20)) if kind == 7 else None
+                zlib_offset = reader.pos
+                expanded = reader.inflate(length)
+                entries.append({'offset': offset, 'kind': kind, 'length': length, 'base': base,
+                                'zlib_offset': zlib_offset, 'data': expanded})
+            if reader.pos != len(packed) - 20 or not any(e['kind'] == delta_kind for e in entries):
+                raise ValueError('Stock fixture lacks complete requested delta entries')
+            expression = f'=/  pack=octets  {octets(packed)}\n^-  (list [@ta @ta @ta @ta])\n:~  ' + '\n    '.join(
+                f'=/  value  (decode pack {decimal(entry["offset"])})\n    ?>  ?=(%& -.value)\n    =/  source  source.p.value\n    =/  base-value=@\n      ?@  source  0\n      ?-  -.source\n        %offset  at.source\n        %oid  value.source\n      ==\n    [(scot %ud kind.p.value) (scot %ud inflated.p.value) (scot %ud zlib-offset.p.value) (scot %ux base-value)]'
+                for entry in entries) + '\n==\n'
+            output, valid = native(entry_prefix + expression, 'stock-' + form + '-pack-entry-headers')
+            rows = parse_rows(output, 4) if valid else []
+            actual_headers = [(int(k.replace('.', '')), int(n.replace('.', '')), int(z.replace('.', '')), int(b[2:].replace('.', ''), 16)) for k, n, z, b in rows]
+            expected_headers = [(e['kind'], e['length'], e['zlib_offset'], int.from_bytes(e['base'], 'big') if isinstance(e['base'], bytes) else e['base'] or 0) for e in entries]
+            record('stock-' + form + '-pack-native-headers', actual_headers == expected_headers,
+                   entries=len(entries), delta_entries=sum(e['kind'] == delta_kind for e in entries), pack_sha256=digest(packed))
+            resolved = {}
+            pending = list(entries)
+            native_deltas = []
+            for _ in range(33):
+                for entry in list(pending):
+                    if entry['kind'] in (1, 2, 3, 4):
+                        body = entry['data']
+                    else:
+                        base = resolved.get(entry['base']) if isinstance(entry['base'], int) else expected_objects.get(entry['base'].hex(), (None, None))[1]
+                        if base is None:
+                            continue
+                        body = oracle.delta(base, entry['data'], oracle.MAX_EXPANDED)
+                        oid = hashlib.sha1(f'blob {len(body)}\0'.encode() + body).hexdigest()
+                        if expected_objects.get(oid) != ('blob', body):
+                            raise ValueError('Delta fixture reconstruction lost original object bytes')
+                        expression = f'=/  value  (apply {octets(base)} {octets(entry["data"])} 33.554.432)\n?>  ?=(%& -.value)\n=/  object  (hash-object:stead-code-git-objects %blob p.value)\n?>  ?=(^ object)\n^-  (list [@ta @ta @ta @ta])\n~[[~.delta (scot %ud length.p.value) (scot %ux oid.u.object) (scot %tas ?:(=({octets(body)} p.value) %yes %no))]]\n'
+                        output, valid = native(delta_prefix + expression, f'stock-{form}-delta-at-{entry["offset"]}')
+                        rows = parse_rows(output, 4) if valid else []
+                        match = len(rows) == 1 and rows[0][0] == 'delta' and int(rows[0][1].replace('.', '')) == len(body) and f'{int(rows[0][2][2:].replace(".", ""), 16):040x}' == oid and rows[0][3] == 'yes'
+                        if not match:
+                            raise ValueError('Native delta differs from exact stock object bytes/OID')
+                        native_deltas.append({'offset': entry['offset'], 'oid': oid, 'bytes': len(body), 'patch_sha256': digest(entry['data'])})
+                    resolved[entry['offset']] = body
+                    pending.remove(entry)
+                if not pending:
+                    break
+            git('--git-dir=/work/pack-check.git', 'index-pack', '--strict', '--stdin', data=packed)
+            record('stock-' + form + '-pack-native-deltas', not pending and len(native_deltas) == sum(e['kind'] in (6, 7) for e in entries) and bool(native_deltas),
+                   cases=native_deltas, pack_sha256=digest(packed))
         report['status'] = 'passed'
     finally:
         Path('/output/report.json').write_text(json.dumps(report, indent=2) + '\n')
@@ -423,7 +603,7 @@ def main():
     run = Path(tempfile.mkdtemp(prefix=datetime.now(timezone.utc).strftime('%Y%m%dT%H%M%SZ-'), dir=base))
     for name in ('input', 'output', 'work', 'code'):
         (run / name).mkdir(mode=0o700)
-    sources = {name: ROOT / name for name in (LIBRARY, TESTS, OBJECT_LIBRARY, OBJECT_TESTS, PACK_LIBRARY, PACK_TESTS, BASE_GIT, RECEIVE_LIBRARY, RECEIVE_TESTS, WIRE_LIBRARY, WIRE_TESTS)}
+    sources = {name: ROOT / name for name in (LIBRARY, TESTS, OBJECT_LIBRARY, OBJECT_TESTS, PACK_LIBRARY, PACK_TESTS, BASE_GIT, RECEIVE_LIBRARY, RECEIVE_TESTS, WIRE_LIBRARY, WIRE_TESTS, ENTRY_LIBRARY, ENTRY_TESTS, DELTA_LIBRARY, DELTA_TESTS, REVIEW_LIBRARY, REVIEW_TESTS, PACK_ORACLE)}
     sources.update({ 'scripts/urbit/code_git_vectors.py': Path(__file__),
                'scripts/urbit/execution_policy.py': Path(execution_policy.__file__)})
     hashes = {name: digest(path.read_bytes()) for name, path in sources.items()}
@@ -434,6 +614,10 @@ def main():
               (ROOT / BASE_GIT, 'input/base-git.hoon'),
               (ROOT / RECEIVE_LIBRARY, 'input/receive-library.hoon'), (ROOT / RECEIVE_TESTS, 'input/receive-tests.hoon'),
               (ROOT / WIRE_LIBRARY, 'input/wire-library.hoon'), (ROOT / WIRE_TESTS, 'input/wire-tests.hoon'),
+              (ROOT / ENTRY_LIBRARY, 'input/entry-library.hoon'), (ROOT / ENTRY_TESTS, 'input/entry-tests.hoon'),
+              (ROOT / DELTA_LIBRARY, 'input/delta-library.hoon'), (ROOT / DELTA_TESTS, 'input/delta-tests.hoon'),
+              (ROOT / REVIEW_LIBRARY, 'input/review-library.hoon'), (ROOT / REVIEW_TESTS, 'input/review-tests.hoon'),
+              (ROOT / PACK_ORACLE, 'code/git_pack_oracle.py'),
               (helper, 'input/test-helper.hoon'), (Path(__file__), 'code/code_git_vectors.py'),
               (Path(execution_policy.__file__), 'code/execution_policy.py')]
     for source, target in copies:

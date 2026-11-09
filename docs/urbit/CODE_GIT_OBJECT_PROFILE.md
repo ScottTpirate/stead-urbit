@@ -49,8 +49,9 @@ layer. No caller may interpret that result as a valid or accepted pack.
    context without making new objects readable.
 2. Parse framing and receive commands; validate exact refs/OIDs and declared
    limits. Inspect the complete outer pack envelope.
-3. Implement bounded entry decoding, zlib expansion, delta resolution, object
-   validation and graph/reachability checks. Verify declared count and exact
+3. Compose the [entry/delta helpers](CODE_GIT_PACK_ENTRY_PROFILE.md) with bounded
+   native zlib expansion, delta resolution, object validation and
+   graph/reachability checks. Verify declared count and exact
    end-of-entry offset. Interrupted work must retain durable resumable intent.
 4. At final acceptance, re-read current policy, scope, credential expiry,
    authority epoch and refs. The home must atomically accept validated objects,

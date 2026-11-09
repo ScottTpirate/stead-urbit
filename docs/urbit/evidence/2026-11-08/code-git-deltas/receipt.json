@@ -1,0 +1,313 @@
+{
+  "format": 1,
+  "status": "passed",
+  "qualifies_phase": false,
+  "scope": "Pure native entry header, delta application and review helper tests plus stock-Git vectors; no native zlib, complete pack resolver, service, accepted repository write or phase qualification.",
+  "run": "20261109T021554Z-s2qto4im",
+  "checkout_commit": "72f412eb5be5950420a815a00f1b279a6f392c0e",
+  "source_binding_note": "New files were uncommitted at execution. Exact source hashes, not checkout commit membership, bind this result.",
+  "sources_before_sha256": {
+    "native/core/desk/lib/stead-code-git-delta.hoon": "117abbdf1d33e0e45f23017bacf1b2c4f983e5a3b2e6d6bc8a2ffa047d6a97de",
+    "native/core/desk/lib/stead-code-git-entry.hoon": "9ebbe76571c965b0cea507cebbd75e866920b7f115117a2384b5737e5257a236",
+    "native/core/desk/lib/stead-code-git-objects.hoon": "d82bfa622dd796835ad472bf2624f80b2d44460427b0746aca8ac46452f78440",
+    "native/core/desk/lib/stead-code-git-pack.hoon": "49a8193642bf0d61a695795a85d045c5a1eed23a0908a350103a0555e93064a9",
+    "native/core/desk/lib/stead-code-git-pkt.hoon": "c0a4c87fb8a1d1d4521c640efad1f60a0d2c064b686468774c17d280442dc24e",
+    "native/core/desk/lib/stead-code-receive-wire.hoon": "27fd2e1e4bb2d5a060065088acc2738077fe6216a3cc74967f451b8ac1bd1fd5",
+    "native/core/desk/lib/stead-code-receive.hoon": "590de8fe7e1e0d06514fee365b8d9decc6f4a9c08c6fe4a6b08a76a90ebcf7d6",
+    "native/core/desk/lib/stead-code-review.hoon": "3a4fa880d60e9913cdb450551733020d354aac6c64a2ae83e0348f9b14e55407",
+    "native/core/desk/lib/stead-git.hoon": "826b83485429c02f577c9b462ee6cddd3ab8ea1a099d33b66893f863d54c54d7",
+    "native/core/desk/tests/stead-code-git-delta.hoon": "85650d3c8445b0ce22444abefa8ec8dad5eb82afa241fd0bbe4ff0c8adb548be",
+    "native/core/desk/tests/stead-code-git-entry.hoon": "bfbc9b39012fb92dd077323a16ea77d0bf466dbdb7dd02cb83c0dd36bb8bc7c2",
+    "native/core/desk/tests/stead-code-git-objects.hoon": "091e09f327c7f6b2b4d01744aa23bad60964d353fa88183823c682ba4d167548",
+    "native/core/desk/tests/stead-code-git-pack.hoon": "eec8ee9054f962e454c4fa9bd646696b6a94513f05adc07817b68a3d51c9ea63",
+    "native/core/desk/tests/stead-code-git-pkt.hoon": "c239f495a35487981f2c309abf18af9d124f35e60f9195f434f1e3c285bb4982",
+    "native/core/desk/tests/stead-code-receive-wire.hoon": "5485d01d4ff668328eee779177772c8607cc1a810f28dd83403d8e4ab99770c8",
+    "native/core/desk/tests/stead-code-receive.hoon": "a0ae20b636747200584d8baca2c75fd455df27647588bc8d9e3cdfee6078bc38",
+    "native/core/desk/tests/stead-code-review.hoon": "c09d9e835caff786e16b9a8b7732c0cdbbde178b0344fb5084cde382dcece906",
+    "scripts/urbit/code_git_vectors.py": "d8b813dd0b63403c106a8b6404e0d2104dcc5b9f2eb27ec6d43110a45bd93a07",
+    "scripts/urbit/execution_policy.py": "8d52b799a3a7bff73f38e029b57fe0cfafd156b7c61184173860c21600ce41c0",
+    "scripts/urbit/git_pack_oracle.py": "d71e84f9cb44b351ae77e4a612c7edf2f178002ddda524c4e83a632298698504"
+  },
+  "sources_after_sha256": {
+    "native/core/desk/lib/stead-code-git-delta.hoon": "117abbdf1d33e0e45f23017bacf1b2c4f983e5a3b2e6d6bc8a2ffa047d6a97de",
+    "native/core/desk/lib/stead-code-git-entry.hoon": "9ebbe76571c965b0cea507cebbd75e866920b7f115117a2384b5737e5257a236",
+    "native/core/desk/lib/stead-code-git-objects.hoon": "d82bfa622dd796835ad472bf2624f80b2d44460427b0746aca8ac46452f78440",
+    "native/core/desk/lib/stead-code-git-pack.hoon": "49a8193642bf0d61a695795a85d045c5a1eed23a0908a350103a0555e93064a9",
+    "native/core/desk/lib/stead-code-git-pkt.hoon": "c0a4c87fb8a1d1d4521c640efad1f60a0d2c064b686468774c17d280442dc24e",
+    "native/core/desk/lib/stead-code-receive-wire.hoon": "27fd2e1e4bb2d5a060065088acc2738077fe6216a3cc74967f451b8ac1bd1fd5",
+    "native/core/desk/lib/stead-code-receive.hoon": "590de8fe7e1e0d06514fee365b8d9decc6f4a9c08c6fe4a6b08a76a90ebcf7d6",
+    "native/core/desk/lib/stead-code-review.hoon": "3a4fa880d60e9913cdb450551733020d354aac6c64a2ae83e0348f9b14e55407",
+    "native/core/desk/lib/stead-git.hoon": "826b83485429c02f577c9b462ee6cddd3ab8ea1a099d33b66893f863d54c54d7",
+    "native/core/desk/tests/stead-code-git-delta.hoon": "85650d3c8445b0ce22444abefa8ec8dad5eb82afa241fd0bbe4ff0c8adb548be",
+    "native/core/desk/tests/stead-code-git-entry.hoon": "bfbc9b39012fb92dd077323a16ea77d0bf466dbdb7dd02cb83c0dd36bb8bc7c2",
+    "native/core/desk/tests/stead-code-git-objects.hoon": "091e09f327c7f6b2b4d01744aa23bad60964d353fa88183823c682ba4d167548",
+    "native/core/desk/tests/stead-code-git-pack.hoon": "eec8ee9054f962e454c4fa9bd646696b6a94513f05adc07817b68a3d51c9ea63",
+    "native/core/desk/tests/stead-code-git-pkt.hoon": "c239f495a35487981f2c309abf18af9d124f35e60f9195f434f1e3c285bb4982",
+    "native/core/desk/tests/stead-code-receive-wire.hoon": "5485d01d4ff668328eee779177772c8607cc1a810f28dd83403d8e4ab99770c8",
+    "native/core/desk/tests/stead-code-receive.hoon": "a0ae20b636747200584d8baca2c75fd455df27647588bc8d9e3cdfee6078bc38",
+    "native/core/desk/tests/stead-code-review.hoon": "c09d9e835caff786e16b9a8b7732c0cdbbde178b0344fb5084cde382dcece906",
+    "scripts/urbit/code_git_vectors.py": "d8b813dd0b63403c106a8b6404e0d2104dcc5b9f2eb27ec6d43110a45bd93a07",
+    "scripts/urbit/execution_policy.py": "8d52b799a3a7bff73f38e029b57fe0cfafd156b7c61184173860c21600ce41c0",
+    "scripts/urbit/git_pack_oracle.py": "d71e84f9cb44b351ae77e4a612c7edf2f178002ddda524c4e83a632298698504"
+  },
+  "current_sources_verified_equal": true,
+  "toolchain_sha256": "ae185adaec12b5aa0b2d48e2198ae65583902512ffd9d148706810c4819c650c",
+  "helper_sha256": "55d5196a3a8dbd5323943c06f138c9b9aa8fd955506c4f4b14e5d56ff05abcc6",
+  "git_sha256": "93473c28694fd72bd889364107cd2770514de59780885a6a4aafca4d602e30ad",
+  "git_version": "2.55.0",
+  "expected_checks": 211,
+  "observed_passed_checks": 211,
+  "positive_native_arms": 192,
+  "negative_controls": 3,
+  "stock_assertions": 16,
+  "module_results": [
+    {
+      "module": "stead-code-git-delta",
+      "positive_arms": 32,
+      "all_empty_tang": true,
+      "raw": {
+        "path": "/home/skilgore/stead-urbit/.runtime/code-git-vectors/20261109T021554Z-s2qto4im/output/stead-code-git-delta.json",
+        "sha256": "85bda7acc15ef0724d18532103175438b721b784f90d0c034c4098bdcaf0b0a6",
+        "bytes": 3457
+      }
+    },
+    {
+      "module": "stead-code-git-entry",
+      "positive_arms": 32,
+      "all_empty_tang": true,
+      "raw": {
+        "path": "/home/skilgore/stead-urbit/.runtime/code-git-vectors/20261109T021554Z-s2qto4im/output/stead-code-git-entry.json",
+        "sha256": "1c24079ff51230911285b5311c1bb515e060bc753a398c0ac13d8b74ca1506f9",
+        "bytes": 3423
+      }
+    },
+    {
+      "module": "stead-code-git-objects",
+      "positive_arms": 18,
+      "all_empty_tang": true,
+      "raw": {
+        "path": "/home/skilgore/stead-urbit/.runtime/code-git-vectors/20261109T021554Z-s2qto4im/output/stead-code-git-objects.json",
+        "sha256": "c45c709d2d3992320f80d7f6462778aa57eef8269d5813de998393cf87a0e1d8",
+        "bytes": 1942
+      }
+    },
+    {
+      "module": "stead-code-git-pack",
+      "positive_arms": 12,
+      "all_empty_tang": true,
+      "raw": {
+        "path": "/home/skilgore/stead-urbit/.runtime/code-git-vectors/20261109T021554Z-s2qto4im/output/stead-code-git-pack.json",
+        "sha256": "9855ae5c67d9dce8385319b0a756df3ea6dd165fe52576c5f1267756eae711d9",
+        "bytes": 1356
+      }
+    },
+    {
+      "module": "stead-code-receive-wire",
+      "positive_arms": 45,
+      "all_empty_tang": true,
+      "raw": {
+        "path": "/home/skilgore/stead-urbit/.runtime/code-git-vectors/20261109T021554Z-s2qto4im/output/stead-code-receive-wire.json",
+        "sha256": "d6629301a3f4839b1b95e885fe2aa4e4123416d6d526383b8c16312ba733f57a",
+        "bytes": 5163
+      }
+    },
+    {
+      "module": "stead-code-receive",
+      "positive_arms": 15,
+      "all_empty_tang": true,
+      "raw": {
+        "path": "/home/skilgore/stead-urbit/.runtime/code-git-vectors/20261109T021554Z-s2qto4im/output/stead-code-receive.json",
+        "sha256": "b10f703d79116192ada7ea8cb2c6b87e43108fa483e31ee57717f80d18847d42",
+        "bytes": 1616
+      }
+    },
+    {
+      "module": "stead-code-review",
+      "positive_arms": 15,
+      "all_empty_tang": true,
+      "raw": {
+        "path": "/home/skilgore/stead-urbit/.runtime/code-git-vectors/20261109T021554Z-s2qto4im/output/stead-code-review.json",
+        "sha256": "27656ad3582dd4f1bed6adb1a5e58a37fe51ac36a7f3e00791e03d3606788dd9",
+        "bytes": 1686
+      }
+    }
+  ],
+  "new_stock_results": [
+    {
+      "name": "stock-ref-pack-native-headers",
+      "passed": true,
+      "entries": 6,
+      "delta_entries": 5,
+      "pack_sha256": "d1e1bef47b492cc27229a2b79737b9e117e1ea93ca3c456949b63b467d923037"
+    },
+    {
+      "name": "stock-ref-pack-native-deltas",
+      "passed": true,
+      "cases": [
+        {
+          "offset": 2440,
+          "oid": "57f6a6cda85093ce19c9adc17916cbc07e455e9a",
+          "bytes": 34816,
+          "patch_sha256": "fe5414d6d4729082dce72eb70f907756b5e7acb76de99cf5bf66c552c61b3405"
+        },
+        {
+          "offset": 2486,
+          "oid": "4257ad1ebc363cb2f50de89db3391c3062cbe284",
+          "bytes": 34816,
+          "patch_sha256": "c03cb945701f2b85c3dc90726268c21b7926a40c4b33766a2337ab1488d8cb43"
+        },
+        {
+          "offset": 2532,
+          "oid": "acb00a6115032045047f5a4157ac6eda53bf5790",
+          "bytes": 34816,
+          "patch_sha256": "833a31a7ea8b25659e570b0e494ffbf184aeaf7b6be7174267bc7936f16ad6f8"
+        },
+        {
+          "offset": 2578,
+          "oid": "43a7d3a37a2003545e3474c252ff560600b98cb3",
+          "bytes": 34816,
+          "patch_sha256": "529509bfaf5cedae847b37b87234193f25ced2d2064d9b93916597acd56d3241"
+        },
+        {
+          "offset": 2624,
+          "oid": "8754809b4bb1d4c3d1af4f1f85ea61e340f874bd",
+          "bytes": 34816,
+          "patch_sha256": "7e4f13693f4cd00abffbb0fb58136981d951f661a59c7b0f2140c36f34175ed6"
+        }
+      ],
+      "pack_sha256": "d1e1bef47b492cc27229a2b79737b9e117e1ea93ca3c456949b63b467d923037"
+    },
+    {
+      "name": "stock-ofs-pack-native-headers",
+      "passed": true,
+      "entries": 6,
+      "delta_entries": 5,
+      "pack_sha256": "19ce039662a55b57d010b9858f71b401342519315bbab85c1775e430a0cf9030"
+    },
+    {
+      "name": "stock-ofs-pack-native-deltas",
+      "passed": true,
+      "cases": [
+        {
+          "offset": 2440,
+          "oid": "57f6a6cda85093ce19c9adc17916cbc07e455e9a",
+          "bytes": 34816,
+          "patch_sha256": "fe5414d6d4729082dce72eb70f907756b5e7acb76de99cf5bf66c552c61b3405"
+        },
+        {
+          "offset": 2468,
+          "oid": "4257ad1ebc363cb2f50de89db3391c3062cbe284",
+          "bytes": 34816,
+          "patch_sha256": "c03cb945701f2b85c3dc90726268c21b7926a40c4b33766a2337ab1488d8cb43"
+        },
+        {
+          "offset": 2496,
+          "oid": "acb00a6115032045047f5a4157ac6eda53bf5790",
+          "bytes": 34816,
+          "patch_sha256": "833a31a7ea8b25659e570b0e494ffbf184aeaf7b6be7174267bc7936f16ad6f8"
+        },
+        {
+          "offset": 2524,
+          "oid": "43a7d3a37a2003545e3474c252ff560600b98cb3",
+          "bytes": 34816,
+          "patch_sha256": "529509bfaf5cedae847b37b87234193f25ced2d2064d9b93916597acd56d3241"
+        },
+        {
+          "offset": 2552,
+          "oid": "8754809b4bb1d4c3d1af4f1f85ea61e340f874bd",
+          "bytes": 34816,
+          "patch_sha256": "7e4f13693f4cd00abffbb0fb58136981d951f661a59c7b0f2140c36f34175ed6"
+        }
+      ],
+      "pack_sha256": "19ce039662a55b57d010b9858f71b401342519315bbab85c1775e430a0cf9030"
+    }
+  ],
+  "execution": {
+    "status": "completed",
+    "exit_code": 0,
+    "elapsed_seconds": 101.267,
+    "maximum_sampled_c": 58.0,
+    "cpu_affinity": [
+      19
+    ],
+    "cpu_max": "5000 10000",
+    "policy": {
+      "cooperative_seconds": 10,
+      "cpu_period_us": 10000,
+      "cpu_quota_us": 5000,
+      "kill_seconds": 5,
+      "sample_seconds": 1,
+      "stale_seconds": 3,
+      "start_c": 75,
+      "stop_c": 90,
+      "terminate_seconds": 10
+    },
+    "observed_scope_after": "LoadState=not-found\nActiveState=inactive\nSubState=dead\n"
+  },
+  "host_tests": {
+    "passed": 11,
+    "scope": "Host parser/oracle controls only",
+    "raw": {
+      "path": "/home/skilgore/stead-urbit/.runtime/code-git-vectors/20261109T021554Z-s2qto4im/host-tests.txt",
+      "sha256": "45acc0d9996eafb08ddde9b31b77931527e5224123dced031d8c350a360144ef",
+      "bytes": 1711
+    }
+  },
+  "raw": {
+    "inputs": {
+      "path": "/home/skilgore/stead-urbit/.runtime/code-git-vectors/20261109T021554Z-s2qto4im/inputs.json",
+      "sha256": "d50b7d6a82a89f2cc78239b86255db7c0aa190b6e5f44f0f5620c4fff1d41ff6",
+      "bytes": 5208
+    },
+    "native_and_stock_report": {
+      "path": "/home/skilgore/stead-urbit/.runtime/code-git-vectors/20261109T021554Z-s2qto4im/output/report.json",
+      "sha256": "6a891dcf86c669ad2167e3fbfc31134b17e46fb4e00308227c59bfa7a2339c92",
+      "bytes": 86046
+    },
+    "guard": {
+      "path": "/home/skilgore/stead-urbit/.runtime/execution-runs/code-git-pkt-ngnhfjv6/report.json",
+      "sha256": "08816ad3e757d64c9f5ce4e49c785cf352755987ded3d0a43ba51ddad005c455",
+      "bytes": 47355
+    },
+    "scope": {
+      "path": "/home/skilgore/stead-urbit/.runtime/execution-runs/code-git-pkt-ngnhfjv6/control/scope.json",
+      "sha256": "74eab74baf4c910b72234edbbb52712e70f94369b2cd69466a20864baa2fff52",
+      "bytes": 232
+    }
+  },
+  "prior_failed_attempts": [
+    {
+      "run": "20261109T021403Z-9kbeqg9g",
+      "status": "failed",
+      "successful_checks": 207,
+      "observed_checks": 208,
+      "failed_check": {
+        "name": "stock-ref-pack-native-headers",
+        "passed": false,
+        "entries": 6,
+        "delta_entries": 5,
+        "pack_sha256": "d1e1bef47b492cc27229a2b79737b9e117e1ea93ca3c456949b63b467d923037"
+      },
+      "diagnostic": {
+        "kind": "pure-native",
+        "label": "stock-ref-pack-entry-headers",
+        "source_sha256": "0f33200df8dca6d2098075dbc02d07c9ea87fe067dce1f3c203262ad26a4541a",
+        "exit_code": 0,
+        "stdout": "/eval\r\n{82 32}\r\nsyntax error",
+        "stderr": "loom: mapped 512MB\r\nlite: arvo formula 4ce68411\r\nlite: core 641296f\r\nlite: final state 641296f\r\neval (run):\n\r\neval: bail: %exit"
+      },
+      "cause": "Generated Hoon decimal entry offset 2440 lacked required grouping 2.440. Native unit suites passed; stock header interop was not yet qualified.",
+      "runner_source_sha256": "dcc8f3d30e5fb86d413bd28dbd5020fa42237c4d4754e4e65527bd7ac00122a1",
+      "raw_report": {
+        "path": "/home/skilgore/stead-urbit/.runtime/code-git-vectors/20261109T021403Z-9kbeqg9g/output/report.json",
+        "sha256": "a5072f6014393cbc8ac1fa8be6584aeb3c03a085bf60d23ed1c30325b56918b2",
+        "bytes": 71053
+      },
+      "raw_inputs": {
+        "path": "/home/skilgore/stead-urbit/.runtime/code-git-vectors/20261109T021403Z-9kbeqg9g/inputs.json",
+        "sha256": "60169e546de9d40a5e0b630db2ff1cf3a87a4be7437e2e680cf9e82be769e659",
+        "bytes": 5208
+      }
+    }
+  ]
+}

@@ -68,6 +68,16 @@ class GitPackTests(unittest.TestCase):
         data = pack(entry(7, patch, bytes.fromhex(oid(base))), entry(3, base))
         self.assertEqual(unpack(data), {oid(base): ('blob', base), oid(target): ('blob', target)})
 
+    def test_overdeep_delta_chain_is_rejected(self):
+        body = b'a'
+        chain = [entry(3, body)]
+        for size in range(1, 34):
+            patch = bytes([size, size + 1, 0x90, size, 1, 97])
+            chain.append(entry(7, patch, bytes.fromhex(oid(body))))
+            body += b'a'
+        with self.assertRaisesRegex(PackError, 'delta chain exceeds'):
+            unpack(pack(*chain))
+
     def test_checksum_valid_malformed_entries_are_rejected(self):
         base = b'abcd'
         reference = bytes.fromhex(oid(base))
