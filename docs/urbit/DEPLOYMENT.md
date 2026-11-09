@@ -2,6 +2,9 @@
 
 September 12, 2026. This is a plan; no cloud resources or Urbit identities have been purchased/provisioned.
 
+Use the [Phase 5 runbook](PHASE5_DEPLOYMENT.md) for the candidate verification,
+install, startup fence, recovery and canary sequence and its current blockers.
+
 ## Local development first
 
 Use a Linux x86-64 development machine or VM. Begin with the existing hardware, not a hosted production node. Target 16 GB available RAM for a four-ship test harness as a planning allowance, not a verified requirement; measure actual RSS/loom and reduce concurrency when needed. No GPU is required for the application.

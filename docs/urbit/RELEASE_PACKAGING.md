@@ -255,3 +255,73 @@ rolling back source with downgrading saved state. Stop, uninstall, data purge an
 project restore remain distinct operations. Hosting, identity provisioning and
 real release/canary promotion retain their existing owner and independent-review
 gates. No such operational action is implemented or authorized by this package.
+
+## Stopped Home file round trip
+
+`scripts/release_recovery.py` rehearses an offline backup and restore from
+the exact verified fresh Home installation above. Supply the archive and its
+trusted digest, the target, the retained native report digest and the retained
+guard report digest. It checks the installed desk inventory against the
+archive, the guard's isolated workspace and stopped lease, retirement of the
+owned scope and absence of a runtime lock. It refuses concurrent guarded
+native execution.
+
+```sh
+python3 -B scripts/release_recovery.py \
+  --prior .runtime/release-install-o8t9xohg \
+  --archive .runtime/releases/alias-verified-1ac28f7e5d1e/home.tar \
+  --sha256 0ed0a28696a8446ab3c767a8023634074959d5b5a522a9e57c168503b6adbec2 \
+  --target .runtime/releases/alias-verified-1ac28f7e5d1e/home-target.json \
+  --install-report-sha256 884ba734df79ea04602a27f0ea3bea83ed0cfc5a3a32b30a8c2813782f2e968c \
+  --guard-report-sha256 e5e14cd8ab0269311180fcd2a9e6e42ba408f67f4546d4f7597f42dc9256ad40
+```
+
+The script creates a new private directory under `.runtime` containing
+`backup`, `restored`, and a receipt. The bounded copier admits only owned
+regular files and directories and verifies all three tree fingerprints.
+The command above passed locally on November 9, 2026. The original, backup
+and restored trees each had 611 files and 253,077,260 bytes, with fingerprint
+`d66931183e5672721cfa8fa1ceeaa579b36bbb11c10860d2c5eb9efec518f5a0`.
+The local receipt is `.runtime/release-recovery-7gvmskob/report.json` with
+SHA-256 `4e73d8e08032ae736beafa984e54ff6b67e5b532703d3cb6fcd4cadf48117d8f`.
+
+Keep both copies offline and private. An interrupted copy retains its failure
+receipt and partial data. These copies prove file transfer only. They do not
+establish native startup, application state recovery, historical pier
+integrity since shutdown, network continuity or production backup encryption.
+The [Phase 5 runbook](PHASE5_DEPLOYMENT.md) keeps those gates separate.
+
+## Isolated boot of a restored Home clone
+
+With the reviewed verifier committed, add the copy receipt inputs to the same
+command and use the pinned Git toolchain. This starts one fake Home under the
+existing runtime guard, with a 15-minute deadline. It copies a new pier under
+`.runtime/release-restore-boot-*`. The original, backup and restored files
+remain stopped and are checked against the reviewed fingerprint before and
+after the native run.
+
+```sh
+PATH="$PWD/.runtime/tooling/git-2.55.0/bin:$PATH" \
+python3 -B scripts/release_recovery.py \
+  --prior .runtime/release-install-o8t9xohg \
+  --archive .runtime/releases/alias-verified-1ac28f7e5d1e/home.tar \
+  --sha256 0ed0a28696a8446ab3c767a8023634074959d5b5a522a9e57c168503b6adbec2 \
+  --target .runtime/releases/alias-verified-1ac28f7e5d1e/home-target.json \
+  --install-report-sha256 884ba734df79ea04602a27f0ea3bea83ed0cfc5a3a32b30a8c2813782f2e968c \
+  --guard-report-sha256 e5e14cd8ab0269311180fcd2a9e6e42ba408f67f4546d4f7597f42dc9256ad40 \
+  --boot-copy .runtime/release-recovery-7gvmskob \
+  --copy-report-sha256 4e73d8e08032ae736beafa984e54ff6b67e5b532703d3cb6fcd4cadf48117d8f
+```
+
+The native controller checks the app and the configured v3 saved vase in the
+loopback-only namespace, obtains a fresh owner acknowledgement and repeats
+the package and native TLS route checks. The packaged assets and capabilities
+must be available, and protected queries must require a session. The verifier
+also checks the saved-vase fingerprint around bootstrap and checks the clone
+again after it is stopped and reaped. `recovery-report.json` is written only
+after the native proof and the retained-tree checks both pass.
+
+The fixture contains Home configuration and a member binding. Member sign-in,
+accepted business record readback, supported upgrades and live continuity
+require separate evidence. A saved-vase fingerprint captured inside the clone
+does not substitute for a reviewed pre-stop application fingerprint.

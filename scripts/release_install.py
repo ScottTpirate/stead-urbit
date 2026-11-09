@@ -57,9 +57,16 @@ CLEAN_RETRY_CONTROLLER = '744861aef3516ddd0e9fbaae87594c0b21a0a2b5f240e10e322031
 CLEAN_RETRY_NATIVE = '44018860a029a79b32866e532241571d8b9483f86d2893a7226d7bd34424f5a1'
 PREINSTALL_CHECKS = ['private-network-and-filesystem', 'exact-public-package-bytes',
                      'exact-controller-and-helper-bytes']
+RESTORE_CLASS = 'local-native-copied-configured-home-recovery'
+RESTORE_CHECKS = [*PREINSTALL_CHECKS, 'restored-home-live-on-release-desk',
+                  'restored-test-drivers-unchanged', 'pre-bootstrap-network-fenced', 'restored-home-saved-schema-v3',
+                  'restore-changes-owner-incarnation', 'bootstrap-preserves-saved-vase',
+                  'packaged-native-https-restored-after-bootstrap',
+                  'package-unchanged-after-restore', 'restored-clone-stopped-and-reaped']
+CLEAN_STOP = {'clean': True, 'exit_code': 0, 'forced': False, 'premature': False, 'reaped': True}
 
 
-def checkpoint_tree(pier, copy_to=None):
+def checkpoint_tree(pier, copy_to=None, *, installed=False):
     """Bounded, owned, no-follow regular tree fingerprint and optional new copy."""
     files, directories, total = {}, [], 0
     def visit(source, target, prefix=''):
@@ -130,8 +137,9 @@ def checkpoint_tree(pier, copy_to=None):
             Path(copy_to).mkdir(mode=0o700)
             with execution_policy.directory_fd(copy_to) as target:
                 visit(source, target)
-    if '.urb' not in directories or not files or any(name == DESK or name.startswith(DESK + '/') for name in directories):
-        raise ValueError('Checkpoint is not an uninstalled synthetic pier')
+    if '.urb' not in directories or not files or ((DESK in directories) != installed):
+        layout = 'installed' if installed else 'uninstalled'
+        raise ValueError('Checkpoint is not an ' + layout + ' synthetic pier')
     body = json.dumps({'files': files, 'directories': directories}, sort_keys=True).encode()
     return {'sha256': hashlib.sha256(body).hexdigest(), 'bytes': total, 'files': len(files)}
 
@@ -248,6 +256,25 @@ class CleanCheckpointNative(ReleaseNative):
     def _arguments(self):
         return [self.binary, '-t', '-L', '--no-dock', '--loom', '31', '-b', '127.0.0.1',
                 '-p', str(self.port), '--http-port', str(self.http_port), '--https-port', str(TLS_PORT), str(self.pier)]
+
+
+class RestoredHomeNative(CleanCheckpointNative):
+    """Resume only the newly staged configured Home clone."""
+    def _check_pier(self):
+        context = execution_policy.read_json('/execution/release-context.json', 1024 * 1024)
+        restored = context['restore_checkpoint']
+        if (self.ship != 'zod' or restored.get('artifact_sha256') != context['artifact_sha256']
+                or checkpoint_tree(self.pier, installed=True) != restored.get('pier')):
+            raise ValueError('Copied configured Home binding differs before boot')
+
+
+def stopped_home_checkpoint(pier, expected):
+    with execution_policy.directory_fd(pier) as descriptor:
+        if '.vere.lock' in os.listdir(descriptor):
+            raise ValueError('Restored Home still has a runtime ownership lock')
+    if inventory(pier / DESK) != expected:
+        raise ValueError('Restored Home desk differs from the verified package')
+    return checkpoint_tree(pier, installed=True)
 
 
 def system_mounts():
@@ -510,6 +537,58 @@ def route_checks(native, role, ca_file, package=Path('/package'), *, evidence=No
     return evidence
 
 
+def saved_home_fingerprint(native):
+    source = ('=/  egg=egg-any:gall  .^(egg-any:gall %gv /=stead-home=/$)  '
+              '?>  ?=([%20 %live *] egg)  =/  saved=vase  +.old-state.egg  '
+              '?>  ?=([%stead-home %3 *] q.saved)  ^-  @ux  (shax (jam saved))')
+    result = native.dojo(source).strip()
+    if not re.fullmatch(r'0x[0-9a-f]+(?:\.[0-9a-f]+)*', result):
+        raise ValueError('Restored Home saved vase is not configured schema 3')
+    value = int(result.replace('.', ''), 16)
+    if value >= 2 ** 256:
+        raise ValueError('Saved Home vase fingerprint exceeds SHA-256')
+    return f'{value:064x}'
+
+
+def verify_restored_home(native, context, report, checkpoint):
+    import native_tls
+
+    restored = context['restore_checkpoint']
+    expected = inventory('/package/desk')
+    report['boot'] = native.start()
+    wait_agent(native, 'stead-home', True, timeout=60)
+    checkpoint('restored-home-live-on-release-desk',
+               native.dojo('.^(desk %gd /=stead-home=/$)').strip() == '%' + DESK)
+    checkpoint('restored-test-drivers-unchanged',
+               inventory('/controller/drivers') == restored['test_drivers']
+               and native.readback(restored['test_drivers']))
+
+    certificates = native_tls.create('/state/certificates')
+    native_tls.install(native.binary, native.pier / '.urb/conn.sock', certificates, 'zod')
+    report['tls'] = native_tls.verify(native.process, certificates, 'zod', native.check)
+    interfaces = [name for _, name in socket.if_nameindex()]
+    net = os.readlink('/proc/self/ns/net')
+    report['pre_bootstrap_fence'] = {'interfaces': interfaces, 'private_namespace': net}
+    checkpoint('pre-bootstrap-network-fenced', interfaces == ['lo']
+               and net != context['host_namespaces']['net']
+               and net == report['boot']['proof']['namespaces']['net'])
+    report['saved_home'] = {'schema': 3, 'sha256_before_bootstrap': saved_home_fingerprint(native)}
+    checkpoint('restored-home-saved-schema-v3', True)
+    report['bootstrap_after_restore'] = bootstrap_role(native, 'home')
+    checkpoint('restore-changes-owner-incarnation',
+               report['bootstrap_after_restore']['incarnation'] not in restored['prior_incarnations'])
+    report['saved_home']['sha256_after_bootstrap'] = saved_home_fingerprint(native)
+    checkpoint('bootstrap-preserves-saved-vase', report['saved_home']['sha256_after_bootstrap']
+               == report['saved_home']['sha256_before_bootstrap'])
+    report['http_after_restore'] = {}
+    route_checks(native, 'home', certificates / 'ca.pem', evidence=report['http_after_restore'])
+    report['configured_home'] = True
+    checkpoint('packaged-native-https-restored-after-bootstrap', True)
+    clay_readback(native, expected, 'stead-home')
+    report['installed_files'] = expected
+    checkpoint('package-unchanged-after-restore', inventory('/package') == context['package'])
+
+
 def inside():
     os.umask(0o077)
     stopped, cleaning, finished = threading.Event(), threading.Event(), threading.Event()
@@ -524,6 +603,9 @@ def inside():
     manifest = execution_policy.read_json('/package/manifest.json')
     report.update(source_commit=manifest['source_commit'], role=manifest['role'],
                   artifact_sha256=context['artifact_sha256'], verifier_source_commit=context['verifier_source_commit'])
+    restore = context.get('restore_checkpoint')
+    if restore:
+        report.update(classification=RESTORE_CLASS, boot_mode='restored-configured-home', restore_checkpoint=restore)
 
     def guard():
         if stopped.is_set() or failures:
@@ -562,56 +644,60 @@ def inside():
         checkpoint('exact-public-package-bytes', inventory('/package') == context['package'])
         checkpoint('exact-controller-and-helper-bytes', inventory('/controller') == context['controller']
                    and inventory('/support') == context['support'] and inventory('/helpers') == context['helpers'])
-        if context.get('clean_checkpoint'):
-            report['clean_checkpoint'] = context['clean_checkpoint']
-            report['boot_mode'] = 'resumed-clean-checkpoint'
-            native = CleanCheckpointNative('zod', 31337, guard)
+        if restore:
+            native = RestoredHomeNative('zod', 31337, guard)
+            verify_restored_home(native, context, report, checkpoint)
         else:
-            report['boot_mode'] = 'fresh-fake'
-            native = ReleaseNative('zod', 31337, guard)
-        report['boot'] = native.start()
-        # No Stead code is installed on base or exposed via a private source mount.
-        checkpoint('base-has-no-stead-source', native.dojo('=/  arc=arch  .^(arch %cy /=base=/lib/stead-team/hoon)  ?=(~ -.arc)').strip() == '%.y')
-        agent = manifest['agents'][0]
-        report['install_attempted'] = True
-        execution_policy.write_json('/state/report.json', report)
-        expected = install_desk(native, agent)
-        report['installed_files'] = expected
-        wait_agent(native, agent, True)
-        checkpoint('selected-role-live-on-release-desk', native.dojo(f'.^(desk %gd /={agent}=/$)').strip() == '%' + DESK)
-        # Test-only owner adapters are separate from the verified release desk.
-        report['test_driver_files'] = native.install(Path('/controller/drivers'))
-        import native_tls
-        certificates = native_tls.create('/state/certificates')
-        native_tls.install(native.binary, native.pier / '.urb/conn.sock', certificates, 'zod')
-        report['tls'] = native_tls.verify(native.process, certificates, 'zod', native.check)
-        configuration = role_configuration(manifest['role'], int(time.time() * 1000))
-        mode = 'configure' if manifest['role'] == 'home' else 'identity-config'
-        checkpoint('owner-local-role-configuration', owner_call(native, manifest['role'], mode, configuration) == {})
-        report['configured_role'] = manifest['role']
-        report['configured_home'] = manifest['role'] == 'home'
-        report['bootstrap_before_reload'] = bootstrap_role(native, manifest['role'])
-        report['http_before_reload'] = {}
-        route_checks(native, manifest['role'], certificates / 'ca.pem', evidence=report['http_before_reload'])
-        checkpoint('packaged-native-https-routes-and-assets', True)
-        native.dojo(f'|rein %{DESK} [%.n %{agent}]')
-        wait_agent(native, agent, False, timeout=60)
-        checkpoint('explicit-stop-observed', native.dojo(f'.^(? %gu /={agent}=/$)').strip() == '%.n')
-        native.dojo(f'|rein %{DESK} [%.y %{agent}]')
-        wait_agent(native, agent, True)
-        checkpoint('supported-reload-observed', native.dojo(f'.^(? %gu /={agent}=/$)').strip() == '%.y')
-        prefix = '/stead/' if manifest['role'] == 'home' else '/stead-identity/'
-        unavailable = request_role(native, certificates / 'ca.pem', 'GET', prefix)
-        assert_http(unavailable, 503, mime='application/json',
-                    error='projection_unavailable' if manifest['role'] == 'home' else 'unavailable')
-        checkpoint('reload-blocks-http-until-owner-bootstrap', True)
-        report['bootstrap_after_reload'] = bootstrap_role(native, manifest['role'])
-        checkpoint('reload-changes-owner-incarnation', report['bootstrap_after_reload']['incarnation'] != report['bootstrap_before_reload']['incarnation'])
-        report['http_after_reload'] = {}
-        route_checks(native, manifest['role'], certificates / 'ca.pem', evidence=report['http_after_reload'])
-        checkpoint('packaged-native-https-restored-after-bootstrap', True)
-        clay_readback(native, expected, agent)
-        checkpoint('package-unchanged-after-load', inventory('/package') == context['package'])
+            if context.get('clean_checkpoint'):
+                report['clean_checkpoint'] = context['clean_checkpoint']
+                report['boot_mode'] = 'resumed-clean-checkpoint'
+                native = CleanCheckpointNative('zod', 31337, guard)
+            else:
+                report['boot_mode'] = 'fresh-fake'
+                native = ReleaseNative('zod', 31337, guard)
+            report['boot'] = native.start()
+            # No Stead code is installed on base or exposed via a private source mount.
+            checkpoint('base-has-no-stead-source', native.dojo('=/  arc=arch  .^(arch %cy /=base=/lib/stead-team/hoon)  ?=(~ -.arc)').strip() == '%.y')
+            agent = manifest['agents'][0]
+            report['install_attempted'] = True
+            execution_policy.write_json('/state/report.json', report)
+            expected = install_desk(native, agent)
+            report['installed_files'] = expected
+            wait_agent(native, agent, True)
+            checkpoint('selected-role-live-on-release-desk', native.dojo(f'.^(desk %gd /={agent}=/$)').strip() == '%' + DESK)
+            # Test-only owner adapters are separate from the verified release desk.
+            report['test_driver_files'] = native.install(Path('/controller/drivers'))
+            import native_tls
+            certificates = native_tls.create('/state/certificates')
+            native_tls.install(native.binary, native.pier / '.urb/conn.sock', certificates, 'zod')
+            report['tls'] = native_tls.verify(native.process, certificates, 'zod', native.check)
+            configuration = role_configuration(manifest['role'], int(time.time() * 1000))
+            mode = 'configure' if manifest['role'] == 'home' else 'identity-config'
+            checkpoint('owner-local-role-configuration', owner_call(native, manifest['role'], mode, configuration) == {})
+            report['configured_role'] = manifest['role']
+            report['configured_home'] = manifest['role'] == 'home'
+            report['bootstrap_before_reload'] = bootstrap_role(native, manifest['role'])
+            report['http_before_reload'] = {}
+            route_checks(native, manifest['role'], certificates / 'ca.pem', evidence=report['http_before_reload'])
+            checkpoint('packaged-native-https-routes-and-assets', True)
+            native.dojo(f'|rein %{DESK} [%.n %{agent}]')
+            wait_agent(native, agent, False, timeout=60)
+            checkpoint('explicit-stop-observed', native.dojo(f'.^(? %gu /={agent}=/$)').strip() == '%.n')
+            native.dojo(f'|rein %{DESK} [%.y %{agent}]')
+            wait_agent(native, agent, True)
+            checkpoint('supported-reload-observed', native.dojo(f'.^(? %gu /={agent}=/$)').strip() == '%.y')
+            prefix = '/stead/' if manifest['role'] == 'home' else '/stead-identity/'
+            unavailable = request_role(native, certificates / 'ca.pem', 'GET', prefix)
+            assert_http(unavailable, 503, mime='application/json',
+                        error='projection_unavailable' if manifest['role'] == 'home' else 'unavailable')
+            checkpoint('reload-blocks-http-until-owner-bootstrap', True)
+            report['bootstrap_after_reload'] = bootstrap_role(native, manifest['role'])
+            checkpoint('reload-changes-owner-incarnation', report['bootstrap_after_reload']['incarnation'] != report['bootstrap_before_reload']['incarnation'])
+            report['http_after_reload'] = {}
+            route_checks(native, manifest['role'], certificates / 'ca.pem', evidence=report['http_after_reload'])
+            checkpoint('packaged-native-https-restored-after-bootstrap', True)
+            clay_readback(native, expected, agent)
+            checkpoint('package-unchanged-after-load', inventory('/package') == context['package'])
         guard()
         report['status'] = 'pass'
     except BaseException as error:
@@ -623,6 +709,9 @@ def inside():
                 report['cleanup'] = native.stop()
                 if not report['cleanup']['clean']:
                     report['status'] = 'fail'
+                if restore and report['status'] == 'pass':
+                    report['stopped_clone'] = stopped_home_checkpoint(native.pier, report['installed_files'])
+                    checkpoint('restored-clone-stopped-and-reaped', report['cleanup'] == CLEAN_STOP)
             except BaseException as error:
                 report.update(status='fail', cleanup_error=type(error).__name__ + ': ' + str(error))
             report['commands'] = native.commands
@@ -649,11 +738,13 @@ def sandbox_command(state, control, run_id, lock, toolchain_path):
     return arguments
 
 
-def run(archive, expected_sha256, target_path, retry_clean=None, retry_clean_sha256=None):
+def run(archive, expected_sha256, target_path, retry_clean=None, retry_clean_sha256=None, *, prepare_restore=None):
     import package_release
     import toolchain
     if (retry_clean is None) != (retry_clean_sha256 is None):
         raise ValueError('Retry requires both the prior run path and its reviewed checkpoint SHA-256')
+    if prepare_restore is not None and retry_clean is not None:
+        raise ValueError('Installed recovery and preinstall retry are separate modes')
     if os.getuid() == 0:
         raise ValueError('Release install requires a nonroot local caller')
     if package_release.git(ROOT, 'remote', 'get-url', '--push', 'origin').decode().strip() != 'https://github.com/ScottTpirate/stead-urbit.git':
@@ -662,6 +753,8 @@ def run(archive, expected_sha256, target_path, retry_clean=None, retry_clean_sha
     raw = package_release.read_bounded(ROOT, archive, package_release.MAX_ARCHIVE)
     target = json.loads(package_release.read_bounded(ROOT, target_path, 8192), object_pairs_hook=package_release.unique)
     manifest = package_release.verify_bytes(raw, expected_sha256=expected_sha256, target=target)
+    if prepare_restore is not None and manifest['role'] != 'home':
+        raise ValueError('Installed recovery requires a verified Home package')
     lock = toolchain.verify()
     if package_release.digest(toolchain.LOCK_PATH.read_bytes()) != manifest['toolchain_sha256']:
         raise ValueError('Current verified runtime differs from release target')
@@ -669,12 +762,16 @@ def run(archive, expected_sha256, target_path, retry_clean=None, retry_clean_sha
     sources = ['scripts/release_install.py', 'scripts/sdk_native/native.py', 'scripts/package_release.py', 'scripts/package_sdk.py']
     sources += ['scripts/urbit/' + name for name in HELPERS + HTTP_HELPERS]
     sources += ['native/core/desk/' + name for name in HTTP_DRIVERS]
+    if prepare_restore is not None:
+        sources += ['scripts/release_recovery.py']
     before = {name: package_release.digest(package_release.committed(ROOT, verifier_commit, name)) for name in sources}
     if any(package_release.digest((ROOT / name).read_bytes()) != pin for name, pin in before.items()):
         raise ValueError('Commit the exact release verifier and helper inputs first')
-    state = Path(tempfile.mkdtemp(prefix='release-install-', dir=ROOT / '.runtime'))
+    label = 'release-install' if prepare_restore is None else 'release-restore-boot'
+    purpose = 'fresh-offline-release-install-only' if prepare_restore is None else 'offline-restored-synthetic-home-only'
+    state = Path(tempfile.mkdtemp(prefix=label + '-', dir=ROOT / '.runtime'))
     state.chmod(0o700)
-    execution_policy.write_json(state / '.stead-disposable.json', {'format': 1, 'purpose': 'fresh-offline-release-install-only'})
+    execution_policy.write_json(state / '.stead-disposable.json', {'format': 1, 'purpose': purpose})
     for name in ('package', 'controller', 'support', 'helpers', 'work'):
         (state / name).mkdir(mode=0o700)
     # Byte strings have already passed canonical-path, type, size and inventory
@@ -700,16 +797,20 @@ def run(archive, expected_sha256, target_path, retry_clean=None, retry_clean_sha
         if retry_clean is not None:
             context['clean_checkpoint'] = checked_clean_copy(retry_clean, state / 'work', expected_sha256, lock, toolchain.LOCK_PATH, retry_clean_sha256)
             execution_policy.write_json(state / 'clean-checkpoint.json', context['clean_checkpoint'])
+        if prepare_restore is not None:
+            context['restore_checkpoint'] = prepare_restore(state, manifest)
         execution_policy.write_json(control / 'release-context.json', context)
         # No writable /state alias reaches candidate, controller or helpers.
         return sandbox_command(state, control, run_id, lock, toolchain.LOCK_PATH)
 
-    guard = execution_policy.run_guarded(command, root=ROOT, label='release-install', timeout=3600)
+    guard = execution_policy.run_guarded(command, root=ROOT, label=label, timeout=3600 if prepare_restore is None else 900)
     unchanged = all(package_release.digest((ROOT / name).read_bytes()) == pin for name, pin in before.items())
     result = {'classification': 'local-native-clean-fake-desk-install', 'qualifies_phase': False,
               'guard_status': guard['status'], 'guard_report': guard['run_directory'] + '/report.json',
               'source_unchanged': unchanged, 'evidence': str(state / 'work/report.json'), 'artifact_sha256': expected_sha256,
               'boot_mode': 'resumed-clean-checkpoint' if retry_clean is not None else 'fresh-fake'}
+    if prepare_restore is not None:
+        result.update(classification=RESTORE_CLASS, boot_mode='restored-configured-home')
     execution_policy.write_json(state / 'host-report.json', result)
     print(json.dumps(result), flush=True)
     if guard['status'] != 'completed' or not unchanged:
@@ -717,6 +818,13 @@ def run(archive, expected_sha256, target_path, retry_clean=None, retry_clean_sha
     report = execution_policy.read_json(state / 'work/report.json', 4 * 1024 * 1024)
     if report.get('status') != 'pass' or not report.get('checks') or not all(row.get('passed') is True for row in report['checks']):
         raise RuntimeError('Native release install did not pass its bounded checks')
+    if prepare_restore is not None:
+        retired_checkpoint_scope(guard['run_id'])
+        restored = stopped_home_checkpoint(state / 'work/zod', inventory(state / 'package/desk'))
+        if (report.get('classification') != RESTORE_CLASS or report.get('restore_checkpoint') != context['restore_checkpoint']
+                or report.get('checks') != [{'name': name, 'passed': True} for name in RESTORE_CHECKS]
+                or report.get('cleanup') != CLEAN_STOP or report.get('stopped_clone') != restored):
+            raise RuntimeError('Stopped restored Home evidence differs from the isolated native result')
     return result
 
 
