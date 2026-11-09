@@ -33,11 +33,15 @@ class ReleasePackageTests(unittest.TestCase):
             target.write_bytes((ROOT / name).read_bytes())
         contract = json.loads((cls.root / release.CONTRACT).read_bytes())
         lock = json.loads((cls.root / 'specs/urbit/toolchain.lock.json').read_bytes())
-        cls.kernel = '.runtime/' + lock['kernel']['directory'] + '/pkg/arvo/'
-        for name in contract['kernel_files']:
-            target = cls.root / cls.kernel / name
+        cls.kernel = '.runtime/' + lock['kernel']['directory'] + '/'
+        for name, pin in contract['kernel_files'].items():
+            target = cls.root / cls.kernel / pin['source']
             target.parent.mkdir(parents=True, exist_ok=True)
-            target.write_bytes((ROOT / cls.kernel / name).read_bytes())
+            target.write_bytes(release.read_bounded(ROOT, cls.kernel + pin['source'], release.MAX_FILE))
+            if name != 'LICENSE.txt':
+                alias = cls.root / cls.kernel / 'pkg/arvo' / name
+                alias.parent.mkdir(parents=True, exist_ok=True)
+                alias.symlink_to('../../base-dev/' + name)
         def git(*args):
             subprocess.run(['git', '-C', str(cls.root), *args], check=True, capture_output=True)
         git('init', '--quiet')
@@ -105,7 +109,7 @@ class ReleasePackageTests(unittest.TestCase):
         with tempfile.TemporaryDirectory(prefix='stead-release-clone-') as temporary:
             clone = Path(temporary) / 'checkout'
             subprocess.run(['git', 'clone', '--quiet', '--no-hardlinks', str(self.root), str(clone)], check=True, capture_output=True)
-            shutil.copytree(self.root / '.runtime', clone / '.runtime')
+            shutil.copytree(self.root / '.runtime', clone / '.runtime', symlinks=True)
             raw, _ = release.archive_bytes(clone, role='home')
             self.assertEqual(raw, self.home)
 
@@ -180,7 +184,7 @@ class ReleasePackageTests(unittest.TestCase):
                     self.verify(output.getvalue())
 
     def test_build_fails_on_cache_tamper_and_never_refreshes_dependencies(self):
-        path = self.root / self.kernel / 'lib/default-agent.hoon'
+        path = self.root / self.kernel / release.KERNEL_SOURCES['lib/default-agent.hoon']
         original = path.read_bytes()
         try:
             path.write_bytes(b'untrusted cache')
@@ -188,6 +192,47 @@ class ReleasePackageTests(unittest.TestCase):
                 release.archive_bytes(self.root, role='home')
         finally:
             path.write_bytes(original)
+
+    def test_arvo_aliases_are_not_build_inputs_and_regular_sources_are_recorded(self):
+        alias = self.root / self.kernel / 'pkg/arvo/lib/default-agent.hoon'
+        self.assertTrue(alias.is_symlink())
+        self.assertEqual(os.readlink(alias), '../../base-dev/lib/default-agent.hoon')
+        alias.unlink()
+        alias.symlink_to('/nonexistent/untrusted-alias')
+        try:
+            raw, manifest = release.archive_bytes(self.root, role='home')
+            self.assertEqual(raw, self.home)
+            self.assertEqual(manifest['desk_sources']['lib/default-agent.hoon'],
+                             'kernel:pkg/base-dev/lib/default-agent.hoon')
+        finally:
+            alias.unlink()
+            alias.symlink_to('../../base-dev/lib/default-agent.hoon')
+
+    def test_selected_regular_source_must_not_be_a_symlink_even_with_matching_bytes(self):
+        path = self.root / self.kernel / release.KERNEL_SOURCES['lib/default-agent.hoon']
+        original = path.read_bytes()
+        target = path.with_name('same-bytes.hoon')
+        target.write_bytes(original)
+        path.unlink()
+        path.symlink_to(target.name)
+        try:
+            with self.assertRaisesRegex(ValueError, 'Symlink input'):
+                release.archive_bytes(self.root, role='home')
+        finally:
+            path.unlink()
+            path.write_bytes(original)
+            target.unlink()
+
+    def test_kernel_contract_cannot_select_alias_or_arbitrary_cache_path(self):
+        for source in ('pkg/arvo/lib/default-agent.hoon',
+                       '../private/default-agent.hoon', 'pkg/base-dev/lib/server.hoon'):
+            def change(members, manifest):
+                contract = json.loads(members['source/release-contract.json'])
+                contract['kernel_files']['lib/default-agent.hoon']['source'] = source
+                members['source/release-contract.json'] = release.encoded(contract)
+                manifest['contract_sha256'] = release.digest(members['source/release-contract.json'])
+            with self.subTest(source=source), self.assertRaisesRegex(ValueError, 'Kernel dependency source path'):
+                self.verify(self.repack(change))
 
     def test_output_does_not_overwrite_or_follow_symlink(self):
         output = self.root / 'output.tar'

@@ -17,9 +17,13 @@ frontend assets and their route inventory, licenses and operator guidance.
 
 `specs/urbit/release-package.json` pins the standard dependency bytes to the
 already pinned Urbit kernel and runtime. The initial dependency pins were checked
-against the SHA-256-verified kernel archive, without extracting it. Build requires
-those files in the existing verified local kernel cache; it never refreshes a
-branch or downloads a missing dependency. Missing, changed or unsupported Ford
+against the SHA-256-verified kernel archive, without extracting it. Each pin also
+names its reviewed regular source path: the standard libraries and marks come
+from `pkg/base-dev/`, and the license comes from `pkg/arvo/LICENSE.txt`. The
+`pkg/arvo/` library/mark aliases are not build inputs. The packager rejects
+symlinks at any component of a selected source path and does not resolve or trust
+cache aliases. Build requires those files in the existing verified local kernel
+cache; it never refreshes a branch or downloads a missing dependency. Missing, changed or unsupported Ford
 imports fail. The original SDK remains a separate stable public developer package.
 
 The manifest records the source commit, packager digests, dependency contract,

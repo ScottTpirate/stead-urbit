@@ -9,47 +9,58 @@
   "kernel_files": {
     "LICENSE.txt": {
       "bytes": 1071,
-      "sha256": "e895931d528be1ab18b353eee7ae5c4f9a8f5b164f747db1e60a59bbe201ffd3"
+      "sha256": "e895931d528be1ab18b353eee7ae5c4f9a8f5b164f747db1e60a59bbe201ffd3",
+      "source": "pkg/arvo/LICENSE.txt"
     },
     "lib/default-agent.hoon": {
       "bytes": 1307,
-      "sha256": "70a8af06601e8d1b75b261b2ac8b2cb06d5622baa1d1b1f8fec9236ce167d113"
+      "sha256": "70a8af06601e8d1b75b261b2ac8b2cb06d5622baa1d1b1f8fec9236ce167d113",
+      "source": "pkg/base-dev/lib/default-agent.hoon"
     },
     "lib/server.hoon": {
       "bytes": 3870,
-      "sha256": "d0a566085300a6deae334b98c4844dc11e90f0315015a91e97c2fbb61db31d68"
+      "sha256": "d0a566085300a6deae334b98c4844dc11e90f0315015a91e97c2fbb61db31d68",
+      "source": "pkg/base-dev/lib/server.hoon"
     },
     "lib/skeleton.hoon": {
       "bytes": 792,
-      "sha256": "c7c654a91c5dc1a535d4a76b019ec175955e52961b1ddff70ad49121208d20f5"
+      "sha256": "c7c654a91c5dc1a535d4a76b019ec175955e52961b1ddff70ad49121208d20f5",
+      "source": "pkg/base-dev/lib/skeleton.hoon"
     },
     "mar/bill.hoon": {
       "bytes": 715,
-      "sha256": "a0196da4970b8dfdee321a638040a564f95e8000f3b49eccc274ee8de2fae0ff"
+      "sha256": "a0196da4970b8dfdee321a638040a564f95e8000f3b49eccc274ee8de2fae0ff",
+      "source": "pkg/base-dev/mar/bill.hoon"
     },
     "mar/hoon.hoon": {
       "bytes": 9154,
-      "sha256": "a77a0a8e0cd772ae9e7aa8c50d17b783d1969c64f031b6dc1d71f9e63a1cd73e"
+      "sha256": "a77a0a8e0cd772ae9e7aa8c50d17b783d1969c64f031b6dc1d71f9e63a1cd73e",
+      "source": "pkg/base-dev/mar/hoon.hoon"
     },
     "mar/json.hoon": {
       "bytes": 588,
-      "sha256": "1a9b61feb7d40dc94e682ba665c9f8d5d37c458868942d3b9e7b87562e538fc6"
+      "sha256": "1a9b61feb7d40dc94e682ba665c9f8d5d37c458868942d3b9e7b87562e538fc6",
+      "source": "pkg/base-dev/mar/json.hoon"
     },
     "mar/kelvin.hoon": {
       "bytes": 566,
-      "sha256": "f23c0150f240d040dd24d99bb54e02c4df736e0f4d2bd5654bbc304082c8125c"
+      "sha256": "f23c0150f240d040dd24d99bb54e02c4df736e0f4d2bd5654bbc304082c8125c",
+      "source": "pkg/base-dev/mar/kelvin.hoon"
     },
     "mar/mime.hoon": {
       "bytes": 565,
-      "sha256": "f1b94f43735fd3a6b86f5cd4619851bc1af9145281f68a07724c4bea870de535"
+      "sha256": "f1b94f43735fd3a6b86f5cd4619851bc1af9145281f68a07724c4bea870de535",
+      "source": "pkg/base-dev/mar/mime.hoon"
     },
     "mar/noun.hoon": {
       "bytes": 409,
-      "sha256": "7581328f74894baa376d3a80e370808dca3ad3af96bc0ef6e4ac299984744b89"
+      "sha256": "7581328f74894baa376d3a80e370808dca3ad3af96bc0ef6e4ac299984744b89",
+      "source": "pkg/base-dev/mar/noun.hoon"
     },
     "mar/txt.hoon": {
       "bytes": 7802,
-      "sha256": "cb76a42e114f3b8f3ac37d09bfe7b1b41bc5c54e6406c0c01fb249af6910bc5d"
+      "sha256": "cb76a42e114f3b8f3ac37d09bfe7b1b41bc5c54e6406c0c01fb249af6910bc5d",
+      "source": "pkg/base-dev/mar/txt.hoon"
     }
   },
   "kernel_kelvin": 408,
