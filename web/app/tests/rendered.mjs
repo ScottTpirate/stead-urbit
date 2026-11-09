@@ -111,7 +111,8 @@ async function fixture(run) {
         authentication: 'native-approved-browser/1', authentication_strength: 'native-approved-browser',
         session_audit_id: person.session_audit_id, runtime: 'isolated-fake', accepted_at_ms: '1790519400000', git_commit_oid: ''};
       state.receipts.set(value.request_id, receipt);
-      state.work = [{...value.payload, kind: 'work', resource_id: value.resource_id, project_id: value.project_id, resource_revision: '1'}];
+      state.work = value.operation === 'work.delete' ? state.work.filter(row => row.resource_id !== value.resource_id)
+        : [{...value.payload, kind: 'work', resource_id: value.resource_id, project_id: value.project_id, resource_revision: '1'}];
       if (state.invalidateCommands) state.sequence++;
       return state.loseCommand ? route.abort('failed') : send(receipt);
     }
@@ -229,7 +230,8 @@ try {
     await page.waitForFunction(() => document.querySelector('article.markdown')?.textContent.endsWith(' edited'));
     assert.equal(await editor.inputValue(), markdown + ' edited');
     assert.equal(state.commands.length, 0, 'rendering does not save or normalize the draft');
-    await page.getByRole('button', {name: 'Discard local changes and close', exact: true}).click();
+    await page.getByRole('button', {name: 'Discard changes…', exact: true}).click();
+    await page.getByRole('button', {name: 'Discard changes', exact: true}).click();
     state.documents = [{...state.documents[0], resource_id: id(302), title: 'Second note', markdown: `---\nid: ${id(302)}\ntype: page\nstate: draft\n---\n# Second body`}];
     await page.getByRole('button', {name: 'Refresh', exact: true}).click();
     await page.getByRole('button', {name: 'Open page', exact: true}).click();
@@ -368,9 +370,10 @@ try {
     }
     await page.getByRole('button', {name: 'Next page', exact: true}).click();
     await page.getByRole('heading', {name: 'Page item 21', exact: true}).waitFor();
-    await page.getByRole('button', {name: 'Edit', exact: true}).first().click();
+    await page.getByRole('button', {name: 'Page item 21', exact: true}).click();
+    await page.getByRole('button', {name: 'Edit work item', exact: true}).click();
     await page.getByRole('heading', {name: 'Edit work item', exact: true}).waitFor();
-    await page.getByRole('button', {name: 'Cancel', exact: true}).click();
+    await page.getByRole('button', {name: 'Close', exact: true}).click();
     await page.waitForTimeout(2500);
     assert.equal(await page.getByRole('heading', {name: 'Page item 1', exact: true}).count(), 0);
     assert.equal(await page.getByRole('heading', {name: 'Page item 21', exact: true}).count(), 1);
@@ -470,7 +473,8 @@ try {
       const text = async (name, value) => { await traversal(page.getByRole('textbox', {name, exact: true})); await page.keyboard.insertText(value); };
       await press(page.getByRole('button', {name: '＋ New project', exact: true}));
       await text('Title', 'Keyboard project'); await text('Project key', 'KEYBOARD');
-      await press(page.getByRole('button', {name: 'Cancel', exact: true}));
+      await press(page.getByRole('button', {name: 'Discard changes…', exact: true}));
+      await press(page.getByRole('button', {name: 'Discard changes', exact: true}));
       await press(page.getByRole('button', {name: 'Work', exact: true}));
       await press(page.getByRole('button', {name: 'New work item', exact: true}));
       await text('Title', 'Keyboard-created work'); await text('Description', 'Tokyo 東京 — Zoë');
@@ -479,6 +483,122 @@ try {
       assert.equal(state.commands.length, 1);
       console.log('Keyboard tab focus before selection: ' + before);
     } finally { await other.close(); }
+  });
+  await check('first-project-draft-can-be-discarded-before-project-selection', async (page, state) => {
+    await page.reload();
+    const newProject = page.getByRole('button', {name: '＋ New project', exact: true});
+    await newProject.click();
+    await page.getByRole('textbox', {name: 'Title', exact: true}).fill('Unsent first project');
+    await page.getByRole('textbox', {name: 'Project key', exact: true}).fill('UNSENT');
+    await page.getByRole('button', {name: 'Discard changes…', exact: true}).click();
+    await page.getByRole('alertdialog', {name: 'Discard unsaved changes?', exact: true}).waitFor();
+    await page.getByRole('button', {name: 'Keep editing', exact: true}).click();
+    assert.equal(await page.getByRole('textbox', {name: 'Title', exact: true}).inputValue(), 'Unsent first project');
+    await page.getByRole('button', {name: 'Discard changes…', exact: true}).click();
+    await page.getByRole('button', {name: 'Discard changes', exact: true}).click();
+    assert.equal(await page.getByRole('textbox', {name: 'Title', exact: true}).count(), 0);
+    assert.equal(state.commands.length, 0);
+    await newProject.click();
+    await page.getByRole('button', {name: 'Close', exact: true}).click();
+    assert.equal(await page.getByRole('alertdialog').count(), 0);
+  });
+  await check('work-title-opens-reader-details-without-write-actions', async (page, state) => {
+    state.project.role = 'reader';
+    state.work = [{kind: 'work', resource_id: id(601), title: 'Read the full context', description: 'A longer explanation available to every project reader.', resource_revision: '3', status: 'in_progress', type: 'task', priority: 'high'}];
+    await page.getByRole('button', {name: 'Work', exact: true}).click();
+    const title = page.getByRole('button', {name: 'Read the full context', exact: true});
+    await title.focus(); await page.keyboard.press('Enter');
+    const panel = page.locator('#work-detail-panel');
+    await panel.getByRole('heading', {name: 'Read the full context', exact: true}).waitFor();
+    await page.waitForFunction(() => document.activeElement?.id === 'work-detail-title');
+    assert.equal(await panel.locator('.work-description').textContent(), state.work[0].description);
+    assert.equal(await panel.getByRole('textbox').count(), 0);
+    assert.equal(await page.getByRole('button', {name: 'Edit work item', exact: true}).count(), 0);
+    assert.equal(await page.getByRole('button', {name: 'Delete', exact: true}).count(), 0);
+    assert.equal(await page.locator('summary[aria-label^="Actions for"]').count(), 0);
+    assert.match(await panel.textContent(), /Revision 3 · Read only/u);
+    await panel.getByRole('button', {name: 'Close', exact: true}).click();
+    await page.waitForFunction(() => document.activeElement?.textContent === 'Read the full context');
+    assert.equal(state.commands.length, 0);
+  });
+  await check('work-details-dirty-close-and-keyboard-secondary-delete', async (page, state) => {
+    const title = 'Make the next step clear';
+    state.work = [{kind: 'work', resource_id: id(602), title, description: 'Keep important actions close to the work.', resource_revision: '1', status: 'todo', type: 'task', priority: 'medium'}];
+    await page.getByRole('button', {name: 'Work', exact: true}).click();
+    await page.getByRole('button', {name: title, exact: true}).click();
+    await page.getByRole('button', {name: 'Edit work item', exact: true}).click();
+    await page.getByRole('textbox', {name: 'Title', exact: true}).fill('My unsaved change');
+    await page.getByRole('button', {name: 'Discard changes…', exact: true}).click();
+    await page.getByRole('button', {name: 'Keep editing', exact: true}).click();
+    assert.equal(await page.getByRole('textbox', {name: 'Title', exact: true}).inputValue(), 'My unsaved change');
+    const more = page.locator('summary[aria-label="More work actions"]');
+    await more.focus(); await page.keyboard.press('Enter');
+    await page.getByRole('button', {name: 'Compare current saved revision', exact: true}).click();
+    await page.getByRole('heading', {name: 'Current saved revision 1', exact: true}).waitFor();
+    await page.getByRole('button', {name: 'Close comparison', exact: true}).click();
+    await page.screenshot({path: path.join(output, 'polish-work-desktop.png'), fullPage: true});
+    await page.getByRole('button', {name: 'Discard changes…', exact: true}).click();
+    await page.getByRole('button', {name: 'Discard changes', exact: true}).click();
+    assert.equal(state.commands.length, 0);
+    await page.getByRole('button', {name: title, exact: true}).click();
+    await page.getByRole('button', {name: 'Edit work item', exact: true}).click();
+    await page.getByRole('button', {name: 'Close', exact: true}).click();
+    await page.waitForFunction(() => document.activeElement?.textContent === 'Make the next step clear');
+    assert.equal(await page.getByRole('alertdialog').count(), 0);
+    const menu = page.locator('summary[aria-label="Actions for Make the next step clear"]');
+    await menu.focus(); await page.keyboard.press('Enter');
+    await page.keyboard.press('Tab');
+    assert.equal(await page.getByRole('button', {name: 'Delete', exact: true}).evaluate(element => element === document.activeElement), true);
+    await page.keyboard.press('Escape');
+    assert.equal(await menu.evaluate(element => element === document.activeElement && !element.parentElement.open), true);
+    await page.keyboard.press('Enter'); await page.keyboard.press('Tab'); await page.keyboard.press('Enter');
+    await page.getByRole('heading', {name: 'Delete this work item?', exact: true}).waitFor();
+    assert.equal(state.commands.length, 0, 'opening confirmation does not delete');
+    await page.getByRole('button', {name: 'Keep it', exact: true}).click();
+    await menu.click(); await page.getByRole('button', {name: 'Delete', exact: true}).click();
+    await page.getByRole('button', {name: 'Confirm deletion', exact: true}).click();
+    await page.getByRole('button', {name: title, exact: true}).waitFor({state: 'detached'});
+    assert.equal(state.commands.length, 1); assert.equal(state.commands[0].operation, 'work.delete');
+  });
+  await check('page-title-visibility-clean-close-and-confirmed-discard-responsive', async (page, state) => {
+    const markdown = `---\nid: ${id(603)}\ntype: page\nstate: draft\n---\n# A useful page — 東京\n\nKeep this exact Markdown.\n`;
+    state.containers = [{kind: 'container', resource_id: id(200), container_id: id(200), title: 'Private notes', visibility: 'private', container_head: ''}];
+    state.documents = [{kind: 'document', resource_id: id(603), container_id: id(200), title: '# A useful page — 東京', resource_revision: '2', markdown}];
+    await page.getByRole('button', {name: 'Docs', exact: true}).click();
+    await page.getByLabel('Collection', {exact: true}).selectOption(id(200));
+    await page.getByRole('button', {name: 'Open page', exact: true}).click();
+    await page.locator('.editor-heading').getByRole('heading', {name: 'A useful page — 東京', exact: true}).waitFor();
+    assert.equal(await page.locator('.page-visibility').textContent(), 'Private draft · only you');
+    assert.equal(await page.getByRole('button', {name: 'Discard changes…', exact: true}).count(), 0);
+    assert.equal(await page.getByRole('textbox', {name: 'Markdown source', exact: true}).inputValue(), markdown);
+    await page.getByRole('button', {name: 'Close', exact: true}).click();
+    assert.equal(await page.getByRole('alertdialog').count(), 0);
+    await page.getByRole('button', {name: 'Open page', exact: true}).click();
+    await page.getByRole('textbox', {name: 'Markdown source', exact: true}).fill(markdown + 'Unsent local edit.');
+    await page.getByRole('button', {name: 'Discard changes…', exact: true}).click();
+    await page.getByRole('button', {name: 'Keep editing', exact: true}).click();
+    assert.equal(await page.getByRole('textbox', {name: 'Markdown source', exact: true}).inputValue(), markdown + 'Unsent local edit.');
+    for (const width of [1440, 390, 320]) {
+      await page.setViewportSize({width, height: 900});
+      assert.equal(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth), true);
+      await page.screenshot({path: path.join(output, `polish-docs-${width}.png`), fullPage: true});
+    }
+    await page.getByRole('button', {name: 'Discard changes…', exact: true}).click();
+    await page.getByRole('button', {name: 'Discard changes', exact: true}).click();
+    await page.getByRole('button', {name: 'Open page', exact: true}).click();
+    assert.equal(await page.getByRole('textbox', {name: 'Markdown source', exact: true}).inputValue(), markdown);
+    assert.equal(state.commands.length, 0);
+  });
+  await check('routine-refresh-announcement-expires-without-clearing-save-evidence', async (page, state) => {
+    await workForm(page);
+    await page.getByRole('button', {name: 'Save at home', exact: true}).click();
+    await page.getByText('Saved at home · revision 1', {exact: true}).waitFor();
+    await page.getByRole('button', {name: 'Refresh', exact: true}).click();
+    const notice = page.locator('.refresh-notice');
+    await notice.getByText('View refreshed from home.', {exact: true}).waitFor();
+    assert.equal(await notice.getAttribute('role'), 'status');
+    await page.waitForFunction(() => document.querySelector('.refresh-notice')?.textContent === '', {timeout: 6000});
+    assert.equal(await page.locator('.live').textContent(), 'Saved at home · revision 1');
   });
   assert.ok(report.checks.length > 0, 'At least one named browser case must execute');
   report.status = 'pass';

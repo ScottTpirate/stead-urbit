@@ -1,0 +1,479 @@
+#!/usr/bin/env python3
+"""Persistent local synthetic review, separate from disposable acceptance tests.
+
+The public app is still native TLS. This host-only command never exposes Dojo,
+starts a production identity, renews grants, or owns the review browser's life.
+"""
+from contextlib import contextmanager
+import argparse
+import fcntl
+import hashlib
+import json
+import os
+from pathlib import Path
+import re
+import secrets
+import shutil
+import ssl
+import socket
+import subprocess
+import sys
+import tempfile
+import time
+
+sys.dont_write_bytecode = True
+import execution_policy
+import harness
+import toolchain
+from digests import sha, tree_sha
+from review_prepare import hoon_inventory
+
+ROOT = harness.ROOT
+STATE = ROOT / '.piers/review'
+BACKUPS = ROOT / '.piers/review-backups'
+ADOPTION = BACKUPS / 'preview-20261108/current'
+ORIGIN = 'https://home.localhost:8443'
+SHIPS = harness.SHIPS
+sys.path[:0] = [str(ROOT / 'web/dev'), str(ROOT / 'web/app')]
+from loopback_bridge import LoopbackBridge, PORTS
+import browser_process
+
+
+def private_directory(path):
+    with execution_policy.directory_fd(path):
+        info = Path(path).stat()
+        if info.st_uid != os.getuid() or info.st_mode & 0o077:
+            raise ValueError('Review directories must belong to this user and be private')
+
+
+def select():
+    harness.select_review()
+    harness.guard()
+    private_directory(STATE)
+
+
+@contextmanager
+def stopped(path=None):
+    path = STATE if path is None else Path(path)
+    private_directory(path)
+    with execution_policy.HeavyRunLock(Path(path) / 'lifecycle.lock'):
+        if (Path(path) / 'control.sock').exists():
+            with socket.socket(socket.AF_UNIX) as probe:
+                probe.settimeout(.2)
+                try:
+                    probe.connect(str(Path(path) / 'control.sock'))
+                except (FileNotFoundError, ConnectionRefusedError):
+                    pass
+                else:
+                    raise ValueError('Review supervisor still answers; stop it first')
+        yield
+
+
+def metadata():
+    select()
+    data = execution_policy.read_json(STATE / 'review.json')
+    if (data.get('format') != 1 or not re.fullmatch(r'[0-9a-f]{32}', data.get('session_id', ''))
+            or data.get('toolchain_sha256') != sha(toolchain.LOCK_PATH)
+            or data.get('native_hoon') != hoon_inventory(ROOT / 'native/core/desk')):
+        raise ValueError('Review metadata/source binding differs; explicit migration is required')
+    return data
+
+
+def pier_hashes(path):
+    result = {}
+    for ship in SHIPS:
+        pier = Path(path) / 'live' / ship
+        if not (pier / '.urb').is_dir() or (pier / '.urb').is_symlink():
+            raise ValueError('Stopped review pier is missing or redirected')
+        result[ship] = tree_sha(pier)
+    return result
+
+
+def validate_seed(path):
+    seed = Path(path) / 'seed'
+    data = execution_policy.read_json(seed / 'manifest.json')
+    if data.get('toolchain_sha256') != sha(toolchain.LOCK_PATH) or set(data.get('ships', {})) != set(SHIPS):
+        raise ValueError('Review seed/toolchain mismatch')
+    for ship in SHIPS:
+        if tree_sha(seed / ship) != data['ships'][ship]:
+            raise ValueError('Review clean seed integrity failure')
+
+
+def base_metadata(mode):
+    return {'format': 1, 'classification': 'manual-synthetic-review-not-qualification',
+            'session_id': secrets.token_hex(16), 'mode': mode, 'initialized': mode == 'resume',
+            'toolchain_sha256': sha(toolchain.LOCK_PATH),
+            'native_hoon': hoon_inventory(ROOT / 'native/core/desk')}
+
+
+@contextmanager
+def preparation():
+    """Failed copies stay in private backups; only complete state is published."""
+    (ROOT / '.piers').mkdir(mode=0o700, exist_ok=True)
+    private_directory(ROOT / '.piers')
+    with execution_policy.HeavyRunLock(ROOT / '.piers/review-preparation.lock'):
+        if STATE.exists() or STATE.is_symlink():
+            raise ValueError('Review already exists; no replacement is permitted')
+        BACKUPS.mkdir(mode=0o700, exist_ok=True)
+        private_directory(BACKUPS)
+        stage = Path(tempfile.mkdtemp(prefix='review-preparing-', dir=BACKUPS))
+        execution_policy.write_json(stage / '.stead-disposable.json',
+            {'format': 1, 'purpose': 'stead-urbit-manual-review', 'ships': list(SHIPS)})
+        (stage / 'logs').mkdir(mode=0o700)
+        yield stage
+        if not (stage / 'review.json').is_file() or STATE.exists() or STATE.is_symlink():
+            raise ValueError('Incomplete or competing review preparation; preserved in backups')
+        stage.rename(STATE)
+
+
+def verify_assets(base):
+    """Verify the generated inventory and all referenced content-addressed bytes."""
+    folder = Path(base) / 'web/stead'
+    inventory = folder / 'inventory.hoon'
+    raw = inventory.read_text()
+    if len(raw) > 65536 or not raw.startswith('::  Generated by web/app/package-desk.mjs from verified manifest bytes.\n'):
+        raise ValueError('Adopted frontend lacks a bounded generated inventory')
+    digests = set(re.findall(r"asset-([0-9a-f]{64})'", raw))
+    if not 0 < len(digests) <= 32:
+        raise ValueError('Adopted frontend inventory bounds differ')
+    for digest in digests:
+        if sha(folder / ('asset-' + digest + '.stead-asset')) != digest:
+            raise ValueError('Adopted frontend asset differs from its inventory')
+    return sha(inventory)
+
+
+def verify_adoption_source(base, source):
+    context = execution_policy.read_json(source / 'source-context.json', maximum=8 * 1024 * 1024)
+    manifest = execution_policy.read_json(source / 'frontend-manifest.json')
+    if manifest.get('classification') != 'frontend-build-only' or not 0 < len(manifest.get('files', {})) <= 32:
+        raise ValueError('Adoption frontend build evidence differs')
+    entries = {}
+    native = ROOT / 'native/core/desk'
+    for path in native.rglob('*'):
+        if path.is_file() and path.relative_to(native).parts[0] != 'web':
+            name = path.relative_to(native).as_posix()
+            entries[name] = sha(Path(base) / name)
+    for pin in manifest['files'].values():
+        digest = pin.get('sha256', '')
+        if not re.fullmatch(r'[0-9a-f]{64}', digest) or type(pin.get('bytes')) is not int:
+            raise ValueError('Adoption frontend asset pin differs')
+        name = 'web/stead/asset-' + digest + '.stead-asset'
+        asset = Path(base) / name
+        if asset.stat().st_size != pin['bytes'] or sha(asset) != digest:
+            raise ValueError('Adoption frontend does not match prior build evidence')
+        entries[name] = digest
+    entries['web/stead/inventory.hoon'] = verify_assets(base)
+    fingerprint = hashlib.sha256(''.join(entries[name] + '  ' + name + '\n' for name in sorted(entries)).encode()).hexdigest()
+    if fingerprint != context.get('native_tree_sha256'):
+        raise ValueError('Adoption native tree differs from its original guarded source')
+    return {'source_commit': context['source_commit'], 'native_tree_sha256': fingerprint,
+            'source_context_sha256': sha(source / 'source-context.json'),
+            'frontend_manifest_sha256': sha(source / 'frontend-manifest.json')}
+
+
+def require_retired_scope(run_id):
+    scope = 'stead-native-' + run_id + '.scope'
+    result = subprocess.run(['/usr/bin/systemctl', '--user', 'show', scope,
+                             '--property=LoadState,ActiveState,ControlGroup'],
+                            capture_output=True, text=True, timeout=3)
+    fields = dict(line.split('=', 1) for line in result.stdout.splitlines() if '=' in line)
+    if (fields.get('LoadState') not in ('not-found', 'loaded')
+            or fields.get('ActiveState') not in ('inactive', 'failed') or fields.get('ControlGroup') != ''):
+        raise ValueError('Original preview scope has not retired; refusing a second live copy')
+
+
+def create():
+    if STATE.exists() or STATE.is_symlink():
+        raise ValueError('Review already exists; use review-resume, never implicit reset')
+    source = ROOT / '.piers/fakes'
+    with stopped(source):
+        validate_seed(source)
+        with preparation() as stage:
+            shutil.copytree(source / 'seed', stage / 'seed')
+            execution_policy.write_json(stage / 'review.json', base_metadata('new'))
+
+
+def adopt():
+    """Only the explicitly preserved November 8 fake snapshot is accepted."""
+    if STATE.exists() or STATE.is_symlink():
+        raise ValueError('Review already exists; adoption cannot replace it')
+    with stopped(ADOPTION):
+        marker = execution_policy.read_json(ADOPTION / harness.MARKER)
+        expected = {'format': 1, 'purpose': 'stead-urbit-four-fakes', 'ships': list(SHIPS)}
+        if marker != expected:
+            raise ValueError('Adoption requires the preserved synthetic fixture marker')
+        validate_seed(ADOPTION)
+        before = pier_hashes(ADOPTION)
+        native = hoon_inventory(ROOT / 'native/core/desk')
+        for ship in SHIPS:
+            for name, digest in native.items():
+                if sha(ADOPTION / 'live' / ship / 'base' / name) != digest:
+                    raise ValueError('Adopted native application differs from this checkout')
+        assets = {ship: verify_assets(ADOPTION / 'live' / ship / 'base') for ship in SHIPS}
+        if len(set(assets.values())) != 1:
+            raise ValueError('Adopted ships contain different frontend inventories')
+        report = execution_policy.read_json(ADOPTION.parent / 'source/guard-report.json', maximum=8 * 1024 * 1024)
+        run_id = report.get('run_id', '')
+        if (not re.fullmatch(r'[0-9a-f]{32}', run_id) or report.get('exit_code') is None
+                or report.get('status') not in ('completed', 'failed')):
+            raise ValueError('Adoption requires a completed guard report')
+        require_retired_scope(run_id)
+        provenance = {ship: verify_adoption_source(ADOPTION / 'live' / ship / 'base', ADOPTION.parent / 'source')
+                      for ship in SHIPS}
+        with preparation() as stage:
+            for name in ('seed', 'live'):
+                shutil.copytree(ADOPTION / name, stage / name)
+            shutil.copytree(ADOPTION / 'ingress' / run_id / 'certificates', stage / 'review-tls')
+            if pier_hashes(ADOPTION) != before or pier_hashes(stage) != before:
+                raise ValueError('Adoption copy changed; preserved source remains untouched')
+            value = base_metadata('resume')
+            value.update(stopped_piers=before, adopted_from=str(ADOPTION.relative_to(ROOT)),
+                         adoption_guard_sha256=sha(ADOPTION.parent / 'source/guard-report.json'),
+                         adopted_assets=assets, provenance=provenance,
+                         interrupted_source=report.get('reason'), authority_renewed=False)
+            execution_policy.write_json(stage / 'review.json', value)
+    print('Adopted the preserved fake workspace. Existing authority expiry is unchanged. Nothing started.')
+
+
+def unit(data, kind):
+    return 'stead-review-' + kind + '-' + data['session_id'] + '.service'
+
+
+def service_active(name):
+    return subprocess.run(['/usr/bin/systemctl', '--user', 'is-active', '--quiet', name],
+                          timeout=3).returncode == 0
+
+
+def service(name, arguments, *, environment=None, cpu='50%'):
+    if service_active(name):
+        return
+    command = ['/usr/bin/systemd-run', '--user', '--quiet', '--collect', '--unit=' + name,
+               '--property=Type=exec', '--property=KillMode=control-group',
+               '--property=CPUQuota=' + cpu, '--property=CPUQuotaPeriodSec=10ms',
+               '--property=CPUAffinity=' + str(max(os.sched_getaffinity(0))),
+               '--working-directory=' + str(ROOT)]
+    if environment is not None:
+        arguments = ['/usr/bin/env', '-i', *[key + '=' + value for key, value in environment.items()], *arguments]
+    subprocess.run([*command, '--', *arguments], check=True, timeout=10)
+
+
+def start(resume=False):
+    if not resume:
+        create()
+    data = metadata()
+    if service_active(unit(data, 'runtime')) or service_active(unit(data, 'relay')) or harness.running():
+        raise ValueError('Review runtime or prior relay is still active; inspect review-status before resuming')
+    with stopped():
+        if resume:
+            if not data.get('initialized'):
+                raise ValueError('Initial review preparation did not finish; preserve it and inspect before reset')
+            for ship in SHIPS:
+                for name, digest in data['native_hoon'].items():
+                    if sha(STATE / 'live' / ship / 'base' / name) != digest:
+                        raise ValueError('Stopped review native code changed; explicit recovery is required')
+            observed = pier_hashes(STATE)
+            history = STATE / 'recovery'
+            history.mkdir(mode=0o700, exist_ok=True)
+            private_directory(history)
+            if len(list(history.iterdir())) >= 1024:
+                raise ValueError('Review recovery history is full; archive this session explicitly')
+            execution_policy.write_json(history / (str(time.time_ns()) + '.json'), {
+                'prior_stopped_piers': data.get('stopped_piers'), 'observed_stopped_piers': observed,
+                'previous_run': execution_policy.read_json(STATE / 'last-run.json') if (STATE / 'last-run.json').exists() else None})
+            data.update(mode='resume', stopped_piers=observed)
+        elif data['mode'] != 'new':
+            raise ValueError('Existing review requires explicit resume')
+        execution_policy.validate_sample(execution_policy.sample_temperatures(), harness.execution_limits(), preflight=True)
+        toolchain.verify()
+        execution_policy.write_json(STATE / 'review.json', data)
+    service(unit(data, 'runtime'), ['/usr/bin/python3', '-B', str(Path(__file__).resolve()), '_run'])
+    service(unit(data, 'relay'), ['/usr/bin/python3', '-B', str(Path(__file__).resolve()), '_serve'])
+    print('Review is preparing. Use make review-status, then make review-open. Native runtime limit: two hours.')
+
+
+def entry():
+    if not STATE.exists() and not STATE.is_symlink():
+        start()
+        return
+    data = metadata()
+    if service_active(unit(data, 'runtime')) or harness.running():
+        status()
+    else:
+        start(resume=True)
+
+
+def notify(message, title='Stead preview paused'):
+    print(message, flush=True)
+    if shutil.which('notify-send'):
+        subprocess.run(['notify-send', '--app-name=Stead review', title, message],
+                       stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL, timeout=3, check=False)
+
+
+def run():
+    metadata()
+    execution_policy.write_json(STATE / 'runtime-start.json', {'started_at_ms': int(time.time() * 1000), 'limit_seconds': 7200})
+    try:
+        harness.guarded_supervisor(configured=True)
+    finally:
+        reason = 'The local runtime stopped. Saved data stays in the review workspace.'
+        if (STATE / 'last-run.json').exists():
+            result = execution_policy.read_json(STATE / 'last-run.json')
+            if 'Thermal' in str(result.get('reason')):
+                reason = 'The temperature limit was reached. The browser stays open. Resume after cooling.'
+            elif 'deadline' in str(result.get('reason', '')).lower():
+                reason = 'The two-hour runtime ended. The browser stays open. Resume explicitly when ready.'
+        notify(reason)
+
+
+def serve():
+    data = metadata()
+    deadline = time.monotonic() + 1200
+    current = None
+    while time.monotonic() < deadline:
+        current = harness.running()
+        if current and current.get('ready') and current.get('manual_review'):
+            break
+        if current and current.get('stage') in ('failed', 'guard-stopped', 'stopped'):
+            raise ValueError('Review preparation failed; inspect local status')
+        if not service_active(unit(data, 'runtime')):
+            raise ValueError('Review runtime ended before relay admission')
+        time.sleep(1)
+    else:
+        raise TimeoutError('Review readiness deadline')
+    run_id = current['execution_guard']['run_id']
+    def healthy():
+        now = harness.running()
+        if (not now or not now.get('ready') or not now.get('manual_review')
+                or now.get('execution_guard', {}).get('run_id') != run_id
+                or now.get('execution_guard', {}).get('state') != 'running'
+                or set(now.get('ships', {})) != set(SHIPS)
+                or any(row['exit'] is not None for row in now['ships'].values())):
+            raise ValueError('Review native generation is no longer admitted')
+    with LoopbackBridge(STATE / 'ingress' / run_id, healthy) as bridge:
+        print('Review ready at ' + ORIGIN + '/stead/', flush=True)
+        timing = execution_policy.read_json(STATE / 'runtime-start.json')
+        warning_at = timing['started_at_ms'] / 1000 + timing['limit_seconds'] - 300
+        warned = False
+        while not bridge.closed.wait(10):
+            if not warned and time.time() >= warning_at:
+                notify('The bounded review runtime ends in about five minutes. Save confirmed changes; the browser will stay open.',
+                       'Stead review runtime ending')
+                warned = True
+
+
+def open_browser(session_root=None, url=ORIGIN + '/stead/'):
+    """Start an independent ordinary Firefox; no test controller or deadline."""
+    if session_root is None:
+        session_root = STATE
+    if Path(session_root) != STATE or url != ORIGIN + '/stead/':
+        raise ValueError('Only this fixed private review session can open')
+    data = metadata()
+    name = unit(data, 'browser')
+    if service_active(name):
+        print('The existing review browser is still open; it was not replaced.')
+        return
+    current = harness.running()
+    if not current or not current.get('ready') or not service_active(unit(data, 'relay')):
+        raise ValueError('Review is not ready; inspect make review-status')
+    certificates = STATE / 'review-tls'
+    context = ssl.create_default_context(cafile=str(certificates / 'ca.pem'))
+    with socket.create_connection(('127.0.0.1', PORTS['zod']), timeout=3) as raw:
+        with context.wrap_socket(raw, server_hostname='home.localhost') as secure:
+            expected = ssl.PEM_cert_to_DER_cert((certificates / 'zod.pem').read_text())
+            if secure.getpeercert(binary_form=True) != expected:
+                raise ValueError('Review TLS identity differs')
+    profile = STATE / 'browser-profile'
+    if not profile.exists():
+        profile.mkdir(mode=0o700)
+        for arguments in (['-N', '--empty-password'], ['-A', '-n', 'Stead private review', '-t', 'C,,', '-i', str(certificates / 'ca.pem')]):
+            subprocess.run(['/usr/bin/certutil', '-d', 'sql:' + str(profile), *arguments], check=True, timeout=10)
+    private_directory(profile)
+    firefox = ROOT / '.runtime/playwright/firefox-1543/firefox/firefox'
+    if not firefox.is_file() or firefox.is_symlink():
+        raise ValueError('The pinned Firefox is unavailable')
+    service(name, [str(firefox), '--no-remote', '--profile', str(profile), url],
+            environment=browser_process.clean_environment(ROOT, headed=True), cpu='25%')
+    print('Opened the manual review window. Only closing that window ends its browser session.')
+
+
+def status():
+    data = metadata()
+    native = harness.status()
+    value = {'classification': data['classification'], 'origin': ORIGIN,
+             'browser_open': service_active(unit(data, 'browser')),
+             'relay_running': service_active(unit(data, 'relay')),
+             'native_ready': native.get('ready', False),
+             'binding_expiry': data.get('binding_expires_at_ms', 'adopted authority unchanged'),
+             'last_run': execution_policy.read_json(STATE / 'last-run.json') if (STATE / 'last-run.json').exists() else None}
+    print(json.dumps(value, indent=2))
+    return value
+
+
+def login():
+    """Private local handoff only. Public status and service logs omit codes."""
+    metadata()
+    current = harness.running()
+    if not current or not current.get('ready') or not current.get('manual_review'):
+        raise ValueError('Review must be ready before creating its private sign-in instructions')
+    run_id = current['execution_guard']['run_id']
+    fixture = execution_policy.read_json(STATE / 'ingress' / run_id / 'browser-fixture.json')
+    if fixture.get('execution_id') != run_id:
+        raise ValueError('Review sign-in fixture is stale')
+    member = fixture['identities']['bus']
+    if member['hostname'] != 'bus.localhost':
+        raise ValueError('Unexpected review member identity')
+    execution_policy.write_json(STATE / 'sign-in.json', {
+        'private_local_fake_identity_only': True,
+        'instructions': ['Open the home in the review browser and enter ~bus.',
+                         'Open the identity URL in a new tab of that same private browser.',
+                         'Log in to the identity ship using the local access key below.',
+                         'Approve the request after matching the home and comparison code.',
+                         'Return to Stead and choose Check approval.'],
+        'home': ORIGIN + '/stead/', 'member': '~bus',
+        'identity': 'https://bus.localhost:8444/stead-identity/', 'local_fake_access_key': member['code']})
+    print('Private sign-in instructions: ' + str(STATE / 'sign-in.json'))
+
+
+def stop():
+    metadata()
+    harness.stop()
+    print('Native review stopped. The manual browser was left open.')
+
+
+def reset(confirm):
+    data = metadata()
+    if confirm != data['session_id']:
+        raise ValueError('Reset requires the exact review session ID from review.json')
+    if service_active(unit(data, 'runtime')) or service_active(unit(data, 'browser')) or service_active(unit(data, 'relay')):
+        raise ValueError('Stop the runtime and close the review browser before archiving this session')
+    with stopped():
+        BACKUPS.mkdir(mode=0o700, exist_ok=True)
+        private_directory(BACKUPS)
+        destination = BACKUPS / ('review-' + data['session_id'])
+        if destination.exists():
+            raise ValueError('Review archive already exists')
+        STATE.rename(destination)
+    print('Archived the review workspace without deleting data. review-start may create a new one.')
+
+
+def main():
+    os.umask(0o077)
+    parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument('command', choices=['entry', 'start', 'resume', 'adopt', 'status', 'open', 'login', 'stop', 'reset', '_run', '_serve'])
+    parser.add_argument('--confirm-session')
+    args = parser.parse_args()
+    if args.command == 'resume':
+        start(resume=True)
+    elif args.command == 'open':
+        open_browser()
+    elif args.command == 'reset':
+        reset(args.confirm_session)
+    else:
+        globals()[args.command.lstrip('_')]()
+
+
+if __name__ == '__main__':
+    try:
+        main()
+    except (OSError, ValueError, RuntimeError, subprocess.SubprocessError) as error:
+        raise SystemExit('REVIEW: ' + str(error))

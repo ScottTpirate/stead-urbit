@@ -53,7 +53,7 @@ useful regression evidence but cannot satisfy this section.
    and never invents an accepted outcome or automatically replays mutations.
 8. Record actual useful-content/save timing and eager/lazy asset transfer bytes
    on a declared machine/runtime/workload. Do not convert a target into a result.
-9. Runner controls: verification remains enabled, clean private trust profile,
+9. Automated runner controls: verification remains enabled, clean private trust profile,
    fixed fixture destinations, no debug/key logging, whole browser cgroup cleanup
    after success, timeout and controller death, and source digests before/after.
 
@@ -88,7 +88,9 @@ useful regression evidence but cannot satisfy this section.
 3. Contributor, member, operator and third-party integrator quickstarts describe
    only supported commands and scopes. A nonauthor receives just the quickstart
    and task; record participant type, errors and completion time. Automated
-   participation is not presented as a human usability study.
+   participation is not presented as a human usability study. Finishing or
+   reaching the deadline seals the human trial evidence. The participant
+   retains the window and closes it when done.
 4. Consent-aware support export contains bounded versions/diagnostic codes and
    correlation IDs, excluding keys, cookies, private messages and document bodies.
 

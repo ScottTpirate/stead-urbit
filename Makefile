@@ -61,6 +61,25 @@ frontend-check:
 	$(PREP) $(NODE) web/app/tests/run.mjs
 frontend-build:
 	$(PREP) $(NODE) web/app/build.mjs
+.PHONY: review review-start review-resume review-adopt review-status review-open review-login review-stop review-reset
+review:
+	$(PREP) python3 scripts/urbit/review.py entry
+review-start:
+	$(PREP) python3 scripts/urbit/review.py start
+review-resume:
+	$(PREP) python3 scripts/urbit/review.py resume
+review-adopt:
+	$(PREP) python3 scripts/urbit/review.py adopt
+review-status:
+	python3 scripts/urbit/review.py status
+review-open:
+	python3 scripts/urbit/review.py open
+review-login:
+	python3 scripts/urbit/review.py login
+review-stop:
+	python3 scripts/urbit/review.py stop
+review-reset:
+	python3 scripts/urbit/review.py reset --confirm-session "$${REVIEW_SESSION:-}"
 plan-check:
 	python3 scripts/urbit/validate_plan.py
 contracts-check:

@@ -36,6 +36,16 @@ failed runs and their evidence before another run; an interrupted state is not
 a clean seed. A cold restart must pass suspension, fresh bootstrap and ingress
 checks before browsers or peer messages are admitted.
 
+For a manual review, run `make review` and check `make review-status`.
+Use `make review-open` when the home and its local connection are ready.
+Use `make review-login` for the private sign-in instructions for the fake member.
+This workspace lives under `.piers/review`, separately from the qualification
+fixture. The review browser stays open when the guarded native runtime stops.
+After cooling, `make review-resume` reopens the saved workspace through the
+same startup checks. `make review-stop` stops the backend. Close the browser
+yourself when you finish. An explicit reset archives the stopped workspace
+and requires the matching review session ID.
+
 For the independent human trial, first complete the current automated browser
 journey on the same running `make team-dev` fixture. Preserve the printed
 `browser-native-YYYYMMDDTHHMMSSZ` directory name. Then launch:
@@ -52,9 +62,13 @@ Confirm the participant is present at the Linux desktop immediately before
 launching; availability stated earlier in preparation does not establish current
 readiness. Notify them when the trial page is ready and its nine-minute window
 begins. Provide only the [task](onboarding-task.md) and [member quickstart](member.md),
-then let the participant work without coaching. The launcher opens a disposable
-personal Firefox profile; its report awaits independent review and does not
-automatically close the milestone. Local thermal admission remains required.
+then let the participant work without coaching. The launcher prints the private
+evidence directory and opens a separate personal Firefox window. Wait for
+`ready.json` in that directory before notifying the participant.
+Finish or the nine-minute deadline ends recording and writes
+`onboarding-report.json` and `transport-report.json`. The window stays open.
+The participant closes it when done. The backend's existing thermal and runtime
+limits still apply. The reports require independent review before milestone closure.
 
 Support reports are opt-in downloads with a visible preview. Ask for that report
 and a description of the action, not cookies, identity codes or private page

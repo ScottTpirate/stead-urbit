@@ -391,6 +391,11 @@ def initialize():
             if TEAM is not None:
                 if not (SEED / 'manifest.json').exists():
                     raise ValueError('Configured lane requires verified clean seeds from make dev')
+                if os.environ.get('STEAD_MANUAL_REVIEW') == '1':
+                    import review_prepare
+                    review_prepare.run(globals())
+                    PROGRESS.update(stage='ready', ready=True, manual_review=True)
+                    return
                 if os.environ.get('STEAD_DIAGNOSTIC') in ('migration', 'controls'):
                     # One foreground-owned diagnostic, not another public RPC.
                     # It always ends this lifetime and never admits a browser.
@@ -526,6 +531,8 @@ def handle(connection):
                     raise ValueError('Invalid control envelope')
                 data += block
             request = json.loads(data)
+            if os.environ.get('STEAD_MANUAL_REVIEW') == '1' and request.get('op') not in ('status', 'stop'):
+                raise ValueError('Manual review cannot execute or reset qualification fixtures')
             if TEAM is not None and request.get('op') not in ('status', 'stop', 'team-check', 'team-git-check'):
                 raise ValueError('This configured fixture only accepts its reviewed team lane')
             if request == {'op': 'status'}:
@@ -704,7 +711,13 @@ if __name__ == '__main__':
         raise ValueError('Configured profile differs from protected source context')
     PROGRESS['profile'] = 'configured-team' if configured else 'legacy-fixture'
     if configured:
-        TEAM = team_lifecycle.TeamLifecycle(STATE / 'ingress' / os.environ['STEAD_EXECUTION_ID'],
+        lifecycle = team_lifecycle.TeamLifecycle
+        if os.environ.get('STEAD_MANUAL_REVIEW') == '1':
+            if context.get('manual_review') is not True:
+                raise ValueError('Manual review differs from protected source context')
+            from review_prepare import ReviewLifecycle
+            lifecycle = ReviewLifecycle
+        TEAM = lifecycle(STATE / 'ingress' / os.environ['STEAD_EXECUTION_ID'],
             context['host_network_namespace'], '/runtime/' + LOCK['runtime']['binary'],
             execution_check, peer_fence_failed, record)
     for name in ('live', 'seed', 'logs', 'control.sock'):

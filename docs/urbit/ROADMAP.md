@@ -28,6 +28,18 @@ expired without qualifying activity or feedback; #29 and Phase 2 remain open.
 | 5 | Explicit replicas, safe home migration, self-hosted dogfooding | One authoritative source of truth, fenced migration and tested exitability |
 | 6 | Supported ecosystem release | Independent adopters, integration, maintainership and qualified security/recovery/distribution process |
 
+Finish the team Work/Docs trial before implementing the Git collaboration lane.
+After that gate, freeze Git and storage contracts first. Build the complete
+work-item-to-build workflow through native Git, exact-revision review and
+isolated runners. Keep Code, Reviews and Build navigation specific to software
+projects.
+
+Evaluate House alongside Phase 3 through a separate test-space adapter. Require
+a supported installation and launch path, verified individual identity, and
+membership expiry and revocation. Verify two members' access, denial across
+spaces, and removal. If those contracts are unavailable, record the missing
+interface and continue standalone delivery.
+
 Workstreams: integration/architecture owns shared contracts; platform owns runtime/harness; native-core owns authoritative transitions; identity/security owns authentication and policy; Git owns protocol/object validation; frontend owns direct-home UX; QA/operations owns independent verification and deployments. One person or agent may fill several roles, but implementation and final approval must remain independent.
 
 Parallelize only after contracts freeze. Do not launch separate agents to invent competing project IDs, schemas, ACLs or storage masters. Platform setup and dependency research may proceed independently. After URB-030, native state and authorization can progress against common tests; frontend and Git follow the relevant gates.

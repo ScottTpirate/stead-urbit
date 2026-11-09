@@ -26,6 +26,15 @@ STATE = BASE / 'fakes'
 SHIPS = ('zod', 'bus', 'nec', 'bud')
 MARKER = '.stead-disposable.json'
 IDENTITY = {'format': 1, 'purpose': 'stead-urbit-four-fakes', 'ships': list(SHIPS)}
+REVIEW = False
+
+
+def select_review():
+    """Select the one fixed manual-review workspace, never a caller path."""
+    global STATE, IDENTITY, REVIEW
+    STATE = BASE / 'review'
+    IDENTITY = {'format': 1, 'purpose': 'stead-urbit-manual-review', 'ships': list(SHIPS)}
+    REVIEW = True
 
 
 def guard(create=False):
@@ -42,7 +51,7 @@ def guard(create=False):
     marker = STATE / MARKER
     if marker.is_symlink() or json.loads(marker.read_text()) != IDENTITY:
         raise ValueError('Missing or invalid disposable fixture marker')
-    if STATE.resolve() != ROOT / '.piers/fakes':
+    if STATE.resolve() != ROOT / ('.piers/review' if REVIEW else '.piers/fakes'):
         raise ValueError('Fixture escaped repository')
     if STATE.stat().st_uid != os.getuid() or STATE.stat().st_mode & 0o077:
         raise ValueError('Fixture must be owned by this user with mode 0700')
@@ -158,6 +167,10 @@ def sandbox(command, *, execution_control=None, execution_id=None, configured=Fa
              '--setenv', 'LANG', 'C.UTF-8']
     if configured:
         args += ['--setenv', 'STEAD_CONFIGURED', '1']
+    if REVIEW:
+        if not configured:
+            raise ValueError('Manual review requires configured identities')
+        args += ['--setenv', 'STEAD_MANUAL_REVIEW', '1']
     if execution_control is not None:
         args += ['--ro-bind', str(execution_control), '/execution',
                  '--setenv', 'STEAD_EXECUTION_ID', execution_id]
@@ -201,6 +214,7 @@ def guarded_supervisor(*, configured=False, migration_only=False, controls_only=
         scripts = source_inventory(ROOT / 'scripts/urbit')
         context = {
             'profile': 'configured-team' if configured else 'legacy-fixture',
+            'manual_review': REVIEW,
             'host_network_namespace': os.readlink('/proc/self/ns/net'),
             'source_commit': subprocess.check_output(['git', 'rev-parse', 'HEAD'], cwd=ROOT, text=True).strip(),
             'dirty_paths': subprocess.check_output(['git', 'status', '--porcelain', '--', *paths], cwd=ROOT, text=True).splitlines(),
@@ -258,6 +272,10 @@ def guarded_supervisor(*, configured=False, migration_only=False, controls_only=
     report = execution_policy.run_guarded(
         command,
         root=ROOT, label='four-fakes', policy=execution_limits())
+    if REVIEW:
+        execution_policy.write_json(STATE / 'last-run.json', {
+            'run_id': report['run_id'], 'status': report['status'],
+            'reason': report['reason'], 'report': report['run_directory'] + '/report.json'})
     if report['status'] != 'completed' and report.get('launched'):
         # A forced/disrupted live fixture is never promoted into a clean seed.
         guard()

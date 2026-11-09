@@ -84,6 +84,7 @@ def source_sha(root):
              'qualification_cases.py', 'qualification_gate.py', 'native_transcript.py',
              'gall_schedule.py', 'gall_schedule_proof.py', 'skill_evaluation_support.py',
              'team_check.py', 'team_git.py', 'team_updates_check.py', 'team_conn.py', 'native_install.py', 'native_units.py',
-             'team_lifecycle.py', 'native_peer_fence.py', 'native_tls.py', 'owned_child.py')
+             'team_lifecycle.py', 'native_peer_fence.py', 'native_tls.py', 'owned_child.py',
+             'review_prepare.py', 'review.py')
     entries = [sha(root / name) + '  ' + name + '\n' for name in names]
     return hashlib.sha256(''.join(entries).encode()).hexdigest()

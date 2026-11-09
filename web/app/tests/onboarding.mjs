@@ -1,12 +1,13 @@
 // Human-operated Firefox against the real native fixture. No app clicks/fills.
 import assert from 'node:assert/strict';
-import {readFile, writeFile, rename} from 'node:fs/promises';
+import {access, readFile, writeFile, rename, unlink} from 'node:fs/promises';
 import {firefox} from 'playwright';
 import {acceptedReceipt, collectionReadback, personalIdentity, sha, scope, workBody} from './onboarding-evidence.mjs';
 const [profile, input, output] = process.argv.slice(2);
 assert.equal(process.version, 'v24.21.0');
 assert.ok(!process.env.SSLKEYLOGFILE);
 const material = JSON.parse(await readFile(input, 'utf8'));
+await unlink(input);
 assert.equal(material.origin, 'https://home.localhost:8443');
 assert.equal(material.identity_origin, 'https://bus.localhost:8444');
 assert.equal(material.identity_ship, '~bus');
@@ -20,6 +21,7 @@ const report = {classification: 'independent-human-local-native-browser', status
   source: {task: sha(task), guide: sha(guide)}};
 const context = await firefox.launchPersistentContext(profile, {headless: false, ignoreHTTPSErrors: false,
   serviceWorkers: 'block', locale: 'en-US', timezoneId: 'America/New_York', viewport: {width: 1180, height: 850}});
+const windowClosed = new Promise(resolve => context.once('close', resolve));
 report.browser = context.browser().version();
 const origins = new Set([material.origin, material.identity_origin]);
 await context.route('**/*', route => origins.has(new URL(route.request().url()).origin) ? route.continue() : route.abort('blockedbyclient'));
@@ -101,6 +103,7 @@ context.on('response', response => {
   pending.add(task); task.finally(() => pending.delete(task));
 });
 function recordFailure(code) {
+  if (!started || finished) return;
   failure(code);
   void checkpoint().catch(() => { finished = true; report.status = 'evidence-incomplete'; resolveFinished(); });
 }
@@ -117,9 +120,16 @@ context.on('requestfailed', request => {
 });
 let resolveFinished;
 const completed = new Promise(resolve => { resolveFinished = resolve; });
-let timer, countdown;
+let timer, countdown, transport, page;
+function endCapture(status) {
+  if (finished) return;
+  finished = true;
+  report.status = status;
+  resolveFinished();
+}
 try {
-  const page = await context.newPage();
+  await writeFile(output + '/window-open.json', '{}\n', {flag:'wx',mode:0o600});
+  page = await context.newPage();
   await page.exposeBinding('finishTrial', async ({frame}, value) => {
     if (frame !== page.mainFrame() || finished || !started || !value || !['yes','no'].includes(value.help)
         || typeof value.notes !== 'string' || value.notes.length > 2000
@@ -133,7 +143,7 @@ try {
   await page.setContent(`<!doctype html><html lang="en"><meta charset="utf-8"><title>Stead local trial</title>
     <style>body{font:18px/1.5 system-ui;max-width:850px;margin:2rem auto;padding:0 1rem;background:#f7f6f2;color:#182a2b}pre{white-space:pre-wrap;font:inherit}code{background:#e3e8e4;padding:.2rem}button,input,textarea,select{font:inherit}button{padding:.6rem 1rem}textarea{width:95%}fieldset{margin:1rem 0}a{color:#15548c}li{margin:.5rem 0}:focus-visible{outline:3px solid #ac4d00;outline-offset:3px}</style>
     <h1>Stead: your local trial</h1><p id="remaining" role="status">Nine minutes are available after the pages open.</p>
-    <p>Your personal identity is <strong>~bus</strong>. Its disposable sign-in code is <code>${escape(material.code)}</code>.</p>
+    <p id="personal">Your personal identity is <strong>~bus</strong>. Its disposable sign-in code is <code>${escape(material.code)}</code>.</p>
     <p><a href="${material.origin}/stead/" target="_blank" rel="noreferrer">Open Stead home</a> ·
     <a href="${material.identity_origin}/stead-identity/" target="_blank" rel="noreferrer">Open personal identity</a></p>
     <pre>${escape(task)}</pre><details><summary>Member quickstart</summary><pre>${escape(guide)}</pre></details>
@@ -154,19 +164,36 @@ try {
   await checkpoint();
   await writeFile(output + '/ready.json', JSON.stringify({status:'ready', execution_id:material.execution_id,
     started_at:report.started_at, duration_seconds:540}) + '\n', {flag:'wx',mode:0o600});
-  timer = setTimeout(() => { finished = true; report.status = 'deadline-incomplete'; resolveFinished(); }, 540000);
+  timer = setTimeout(() => endCapture('deadline-incomplete'), 540000);
+  transport = setInterval(() => {
+    void access(output + '/transport-stopped.json').then(() => endCapture('transport-interrupted'), () => {});
+  }, 500);
   countdown = setInterval(() => { if (!finished) page.locator('#remaining').textContent().then(() => page.evaluate(seconds => {
     document.querySelector('#remaining').textContent = `${Math.ceil(seconds / 60)} minutes remain. Return here to finish.`;
   }, Math.max(0, 540 - (performance.now() - started) / 1000))).catch(() => {}); }, 30000);
-  context.on('close', () => { if (!finished) { finished = true; report.status = 'browser-closed-incomplete'; resolveFinished(); } });
-  await completed; clearInterval(countdown); clearTimeout(timer);
+  void windowClosed.then(() => endCapture('browser-closed-incomplete'));
+  await completed;
   await Promise.allSettled([...pending]);
   report.elapsed_ms = Math.round(performance.now() - started);
+} catch {
+  failure('trial_capture_failed');
+  report.status = 'evidence-incomplete';
 } finally {
-  clearTimeout(timer); clearInterval(countdown);
+  finished = true;
+  clearTimeout(timer); clearInterval(countdown); clearInterval(transport);
   if (started && report.elapsed_ms === null) report.elapsed_ms = Math.round(performance.now() - started);
+  try { await persistence; }
+  catch { report.status = 'evidence-incomplete'; }
   try {
-    await persistence;
-    await writeFile(output + '/onboarding-report.json', JSON.stringify(report, null, 2) + '\n', {flag:'wx',mode:0o600});
-  } finally { await context.close(); }
+    await writeFile(output + '/onboarding-report.tmp', JSON.stringify(report, null, 2) + '\n', {flag:'wx',mode:0o600});
+    await rename(output + '/onboarding-report.tmp', output + '/onboarding-report.json');
+  } catch {
+    console.error('Trial evidence could not be finalized');
+  }
 }
+await page?.evaluate(() => {
+  document.querySelector('#remaining').textContent = 'Trial recording has ended. You can keep this window open.';
+  document.querySelector('#feedback').remove();
+  document.querySelector('#personal').remove();
+}).catch(() => {});
+await windowClosed;

@@ -22,4 +22,5 @@ help beyond the provided quickstart. Do not include credentials in feedback.
 The trial records elapsed time and bounded operation/receipt identifiers,
 without recording keystrokes, screenshots or document contents. Completion is
 reviewed against actual accepted saves and readbacks; checking a box is not a
-passing result. The disposable browser closes at the deadline or when finished.
+passing result. Finishing or reaching the deadline ends recording. You can
+continue using the browser until you close it or the local backend pauses.

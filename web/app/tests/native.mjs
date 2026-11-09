@@ -294,10 +294,10 @@ async function docsJourney(alice, bob) {
       const lazy = report.asset_timing.after_first_preview.filter(row => row.path === report.assets.markdown.path);
       assert.equal(lazy.length, 1); assert.equal(lazy[0].decoded_body_bytes, report.assets.markdown.bytes);
     }
-    await a.getByRole('button', {name: 'Discard local changes and close', exact: true}).click();
+    await a.getByRole('button', {name: 'Close', exact: true}).click();
   }
   passed('native-private-markdown-saves-have-git-oids-and-inert-preview');
-  await a.locator('.resource-row').filter({has: a.getByRole('heading', {name: /# Selected Tokyo 東京/u})}).getByRole('button', {name: 'Open page', exact: true}).click();
+  await a.locator('.resource-row').filter({has: a.getByRole('heading', {name: /^Selected Tokyo 東京/u})}).getByRole('button', {name: 'Open page', exact: true}).click();
   assert.equal(await a.getByRole('textbox', {name: 'Markdown source', exact: true}).inputValue(), selected.markdown);
   selected.markdown += '\nAn edited private explanation — Zoë.\n';
   await a.getByRole('textbox', {name:'Markdown source', exact:true}).fill(selected.markdown);
@@ -306,11 +306,11 @@ async function docsJourney(alice, bob) {
   assert.equal(editedPrivate.resource_revision, String(BigInt(selected.revision) + 1n));
   assert.match(editedPrivate.git_commit_oid, /^[0-9a-f]{40}$/u);
   assert.notEqual(editedPrivate.git_commit_oid, selected.oid);
-  await a.getByRole('button', {name:'Discard local changes and close', exact:true}).click();
+  await a.getByRole('button', {name:'Close', exact:true}).click();
   const privateRead = a.waitForResponse(response => response.url() === origin + '/stead/api/query'
     && response.request().postDataJSON()?.kind === 'document'
     && response.request().postDataJSON()?.resource_id === selected.id);
-  await a.locator('.resource-row').filter({has:a.getByRole('heading', {name:/# Selected Tokyo 東京/u})}).getByRole('button', {name:'Open page', exact:true}).click();
+  await a.locator('.resource-row').filter({has:a.getByRole('heading', {name:/^Selected Tokyo 東京/u})}).getByRole('button', {name:'Open page', exact:true}).click();
   const privateRow = Object.values((await (await privateRead).json()).rows)[0];
   assert.equal(privateRow.markdown, selected.markdown);
   assert.equal(privateRow.resource_revision, editedPrivate.resource_revision);
@@ -327,11 +327,11 @@ async function docsJourney(alice, bob) {
   await privacy.close();
   passed('private-doc-edits-preserve-reader-projections-and-only-publication-invalidates',
     {request_id:editedPrivate.request_id, projections:privateObservations, visible_control:visibleControl});
-  await a.getByRole('button', {name: 'Discard local changes and close', exact: true}).click();
+  await a.getByRole('button', {name: 'Close', exact: true}).click();
   await b.getByRole('button', {name: 'Docs', exact: true}).click();
   assert.equal(await b.getByLabel('Collection', {exact: true}).getByRole('option', {name: /Private notebook/u}).count(), 0);
   await b.getByLabel('Collection', {exact: true}).selectOption({label: 'Shared handbook · Shared'});
-  await b.getByRole('heading', {name: /# Selected Tokyo 東京/u}).waitFor();
+  await b.getByRole('heading', {name: /^Selected Tokyo 東京/u}).waitFor();
   assert.equal(await b.getByRole('heading', {name: /UNSELECTED-PRIVATE-CANARY/u}).count(), 0);
   await b.getByRole('button', {name: 'Open page', exact: true}).click();
   const shared = await b.getByRole('textbox', {name: 'Markdown source', exact: true}).inputValue();
@@ -339,7 +339,7 @@ async function docsJourney(alice, bob) {
   assert.equal(await b.getByRole('button', {name: 'Save page', exact: true}).isDisabled(), true);
   await inertPreview(b);
   await b.screenshot({path: path.join(output, 'native-docs.png'), fullPage: true});
-  await b.getByRole('button', {name: 'Discard local changes and close', exact: true}).click();
+  await b.getByRole('button', {name: 'Close', exact: true}).click();
   passed('selected-page-published-without-private-collection-or-unselected-page', {request_id: published.request_id, git_commit_oid: published.git_commit_oid});
   await a.getByLabel('Collection', {exact:true}).selectOption({label:'Shared handbook · Shared'});
   await a.getByRole('button', {name:'Open page', exact:true}).click();
@@ -351,7 +351,7 @@ async function docsJourney(alice, bob) {
   assert.equal(editedShared.resource_revision, String(BigInt(published.resource_revision) + 1n));
   assert.match(editedShared.git_commit_oid, /^[0-9a-f]{40}$/u);
   assert.notEqual(editedShared.git_commit_oid, published.git_commit_oid);
-  await a.getByRole('button', {name:'Discard local changes and close', exact:true}).click();
+  await a.getByRole('button', {name:'Close', exact:true}).click();
   await b.reload();
   await b.getByRole('button', {name:/GARDEN.*Garden α/u}).click();
   await b.getByRole('button', {name:'Docs', exact:true}).click();
@@ -368,7 +368,7 @@ async function docsJourney(alice, bob) {
   assert.equal(await b.getByRole('button', {name:'Save page', exact:true}).isDisabled(), true);
   await b.getByText('Saved revision ' + editedShared.resource_revision, {exact:true}).waitFor();
   await inertPreview(b);
-  await b.getByRole('button', {name:'Discard local changes and close', exact:true}).click();
+  await b.getByRole('button', {name:'Close', exact:true}).click();
   passed('shared-doc-edit-reloads-exact-markdown-revision-and-new-git-receipt',
     {request_id:editedShared.request_id, git_commit_oid:editedShared.git_commit_oid});
   gitFixture = {format: 'stead.browser-git-fixture/1', execution_id: material.execution_id,
@@ -427,7 +427,8 @@ async function conflictsAndRecovery(alice, bob) {
   for (const page of [a, b]) {
     await page.getByRole('button', {name: /UPDATES.*Update controls/u}).click();
     await page.getByRole('button', {name: 'Work', exact: true}).click();
-    await page.locator('.resource-row').filter({has: page.getByRole('heading', {name: 'Queued before revocation', exact: true})}).getByRole('button', {name: 'Edit', exact: true}).click();
+    await page.getByRole('button', {name: 'Queued before revocation', exact: true}).click();
+    await page.getByRole('button', {name: 'Edit work item', exact: true}).click();
   }
   await a.getByRole('textbox', {name: 'Title', exact: true}).fill('Alice current revision');
   await b.getByRole('textbox', {name: 'Title', exact: true}).fill('Bob local stale draft');
@@ -437,6 +438,7 @@ async function conflictsAndRecovery(alice, bob) {
   const refused = await (await conflict).json();
   assert.equal(refused.status, 'rejected'); assert.equal(refused.error, 'revision_conflict');
   assert.equal(await b.getByRole('textbox', {name: 'Title', exact: true}).inputValue(), 'Bob local stale draft');
+  await b.locator('summary[aria-label="More work actions"]').click();
   await b.getByRole('button', {name: 'Compare current saved revision', exact: true}).click();
   await b.getByRole('button', {name: 'Keep my edits using this revision', exact: true}).click();
   assert.equal(await b.getByRole('textbox', {name: 'Title', exact: true}).inputValue(), 'Bob local stale draft');
@@ -718,7 +720,12 @@ try {
     await usefulView(page, 'Work', 'work', page.getByRole('heading', {name: 'Native task', exact: true}));
   }
   assert.equal(await bob.home.getByRole('button', {name: 'New work item', exact: true}).count(), 0);
-  passed('native-reader-work-view-without-write-control');
+  await bob.home.getByRole('button', {name: 'Native task', exact: true}).click();
+  await bob.home.locator('#work-detail-panel').getByRole('heading', {name: 'Native task', exact: true}).waitFor();
+  assert.equal(await bob.home.getByRole('button', {name: 'Edit work item', exact: true}).count(), 0);
+  assert.equal(await bob.home.locator('#work-detail-panel').getByRole('textbox').count(), 0);
+  await bob.home.locator('#work-detail-panel').getByRole('button', {name: 'Close', exact: true}).click();
+  passed('native-reader-work-details-without-write-control');
   await alice.home.getByRole('button', {name: 'New work item', exact: true}).click();
   await alice.home.getByRole('textbox', {name: 'Title', exact: true}).fill('Browser task — 東京');
   await alice.home.getByRole('textbox', {name: 'Description', exact: true}).fill('Created through the actual TLS browser boundary.');

@@ -31,7 +31,7 @@ function content(text: string) {
       if (line.startsWith('## ')) return <h3 key={index}>{inline(line.slice(3))}</h3>;
       if (line.startsWith('# ')) return <h2 key={index}>{inline(line.slice(2))}</h2>;
       if (line.startsWith('> ')) return <blockquote key={index}>{inline(line.slice(2))}</blockquote>;
-      return line ? <p key={index}>{inline(line)}</p> : <br key={index}/>;
+      return line.trim() ? <p key={index}>{inline(line)}</p> : null;
     })}</>;
 }
 

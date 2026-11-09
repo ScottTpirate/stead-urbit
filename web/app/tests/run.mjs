@@ -10,6 +10,7 @@ await build({absWorkingDir: root, entryPoints: ['tests/client.test.ts'], outfile
   bundle: true, platform: 'node', format: 'esm', target: 'node24'});
 const result = spawnSync(process.execPath, ['--test', '--test-concurrency=1', output,
   path.join(root, 'tests/build.test.mjs'), path.join(root, 'tests/onboarding-evidence.test.mjs'),
+  path.join(root, 'tests/onboarding-lifetime.test.mjs'),
   path.join(root, 'tests/response-capture.test.mjs')], {stdio: 'inherit'});
 if (result.error) throw result.error;
 process.exitCode = result.status ?? 1;
