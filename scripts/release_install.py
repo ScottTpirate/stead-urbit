@@ -8,12 +8,15 @@ owns every native process. No archive is unpacked before offline verification.
 """
 from __future__ import annotations
 import argparse
+import hashlib
 import io
 import json
 import os
 from pathlib import Path
+import re
 import shutil
 import signal
+import stat
 import subprocess
 import sys
 import tarfile
@@ -31,6 +34,197 @@ import core_conn
 
 DESK = 'release-test'
 HELPERS = ('execution_policy.py', 'core_conn.py', 'conn.py', 'owned_child.py')
+# This precise audited controller can fail in proof() only after a fresh fake
+# boot and before any desk mutation. Other failures need a fresh run or review.
+CLEAN_RETRY_CONTROLLER = '744861aef3516ddd0e9fbaae87594c0b21a0a2b5f240e10e3220313188f7664d'
+CLEAN_RETRY_NATIVE = '44018860a029a79b32866e532241571d8b9483f86d2893a7226d7bd34424f5a1'
+PREINSTALL_CHECKS = ['private-network-and-filesystem', 'exact-public-package-bytes',
+                     'exact-controller-and-helper-bytes']
+
+
+def checkpoint_tree(pier, copy_to=None):
+    """Bounded, owned, no-follow regular tree fingerprint and optional new copy."""
+    files, directories, total = {}, [], 0
+    def visit(source, target, prefix=''):
+        nonlocal total
+        info = os.fstat(source)
+        if info.st_uid != os.getuid() or info.st_mode & 0o022:
+            raise ValueError('Checkpoint directory is not owned and protected')
+        for name in sorted(os.listdir(source)):
+            if not re.fullmatch(r'[A-Za-z0-9_.-]+', name) or name in ('.', '..'):
+                raise ValueError('Checkpoint path grammar')
+            relative = prefix + name
+            info = os.stat(name, dir_fd=source, follow_symlinks=False)
+            if not (stat.S_ISDIR(info.st_mode) or stat.S_ISREG(info.st_mode)):
+                raise ValueError('Checkpoint has redirect or special file')
+            if info.st_uid != os.getuid() or info.st_mode & 0o022:
+                raise ValueError('Checkpoint entry is not owned and protected')
+            if stat.S_ISDIR(info.st_mode):
+                directories.append(relative)
+                if len(directories) > 4096:
+                    raise ValueError('Checkpoint directory bound')
+                child = os.open(name, os.O_RDONLY | os.O_DIRECTORY | os.O_NOFOLLOW, dir_fd=source)
+                output = None
+                try:
+                    if target is not None:
+                        os.mkdir(name, 0o700, dir_fd=target)
+                        output = os.open(name, os.O_RDONLY | os.O_DIRECTORY | os.O_NOFOLLOW, dir_fd=target)
+                    visit(child, output, relative + '/')
+                finally:
+                    os.close(child)
+                    if output is not None:
+                        os.close(output)
+            elif stat.S_ISREG(info.st_mode) and info.st_nlink == 1:
+                if len(files) >= 8192 or info.st_size > 512 * 1024 * 1024:
+                    raise ValueError('Checkpoint file bound')
+                descriptor = os.open(name, os.O_RDONLY | os.O_NOFOLLOW | os.O_NONBLOCK, dir_fd=source)
+                output = None
+                try:
+                    before = os.fstat(descriptor)
+                    if (before.st_dev, before.st_ino, before.st_size, before.st_mtime_ns) != (info.st_dev, info.st_ino, info.st_size, info.st_mtime_ns):
+                        raise ValueError('Checkpoint entry changed before read')
+                    if target is not None:
+                        output = os.open(name, os.O_WRONLY | os.O_CREAT | os.O_EXCL | os.O_NOFOLLOW, 0o600, dir_fd=target)
+                    sha, size = hashlib.sha256(), 0
+                    while chunk := os.read(descriptor, 256 * 1024):
+                        size += len(chunk)
+                        total += len(chunk)
+                        if size > info.st_size or total > 1024 * 1024 * 1024:
+                            raise ValueError('Checkpoint total byte bound')
+                        sha.update(chunk)
+                        if output is not None:
+                            remaining = memoryview(chunk)
+                            while remaining:
+                                remaining = remaining[os.write(output, remaining):]
+                    after = os.fstat(descriptor)
+                    if size != info.st_size or (after.st_size, after.st_mtime_ns) != (before.st_size, before.st_mtime_ns):
+                        raise ValueError('Checkpoint entry changed during read')
+                    files[relative] = {'bytes': size, 'sha256': sha.hexdigest()}
+                finally:
+                    os.close(descriptor)
+                    if output is not None:
+                        os.close(output)
+            else:
+                raise ValueError('Checkpoint has redirect, hard link or special file')
+    with execution_policy.directory_fd(pier) as source:
+        if copy_to is None:
+            visit(source, None)
+        else:
+            Path(copy_to).mkdir(mode=0o700)
+            with execution_policy.directory_fd(copy_to) as target:
+                visit(source, target)
+    if '.urb' not in directories or not files or any(name == DESK or name.startswith(DESK + '/') for name in directories):
+        raise ValueError('Checkpoint is not an uninstalled synthetic pier')
+    body = json.dumps({'files': files, 'directories': directories}, sort_keys=True).encode()
+    return {'sha256': hashlib.sha256(body).hexdigest(), 'bytes': total, 'files': len(files)}
+
+
+def retired_checkpoint_scope(run_id):
+    if not re.fullmatch(r'[0-9a-f]{32}', run_id):
+        raise ValueError('Checkpoint guard identity')
+    result = subprocess.run(['/usr/bin/systemctl', '--user', 'show', 'stead-native-' + run_id + '.scope',
+                             '--property=LoadState,ActiveState,ControlGroup'], capture_output=True, text=True, timeout=3)
+    fields = dict(line.split('=', 1) for line in result.stdout.splitlines() if '=' in line)
+    if (fields.get('LoadState') not in ('not-found', 'loaded') or fields.get('ActiveState') not in ('inactive', 'failed')
+            or fields.get('ControlGroup') != ''):
+        raise ValueError('Checkpoint guard scope has not retired')
+
+
+def checked_clean_copy(prior_name, destination, artifact, lock, toolchain_path, expected_checkpoint):
+    """Called only by run_guarded's factory while it holds the native lock."""
+    import package_release as release
+    if not isinstance(expected_checkpoint, str) or not re.fullmatch(r'[0-9a-f]{64}', expected_checkpoint):
+        raise ValueError('Explicit reviewed checkpoint digest required')
+    if not re.fullmatch(r'\.runtime/release-install-[a-z0-9_]+', prior_name):
+        raise ValueError('Retry requires an owned disposable release run path')
+    prior = ROOT / prior_name
+    with execution_policy.directory_fd(prior) as descriptor:
+        info = os.fstat(descriptor)
+        if info.st_uid != os.getuid() or info.st_mode & 0o077:
+            raise ValueError('Checkpoint run directory must be private and owned')
+    read = execution_policy.read_json
+    if read(prior / '.stead-disposable.json') != {'format': 1, 'purpose': 'fresh-offline-release-install-only'}:
+        raise ValueError('Checkpoint must originate from a fresh release test')
+    host, report = read(prior / 'host-report.json'), read(prior / 'work/report.json', 4 * 1024 * 1024)
+    guard_path = Path(host.get('guard_report', ''))
+    if guard_path.parent.parent != ROOT / '.runtime/execution-runs' or not re.fullmatch(r'release-install-[a-z0-9_]+', guard_path.parent.name) or guard_path.name != 'report.json':
+        raise ValueError('Checkpoint guard path binding')
+    guard = read(guard_path, 8 * 1024 * 1024)
+    control = guard_path.parent / 'control'
+    context = read(control / 'release-context.json', 1024 * 1024)
+    commit = context.get('verifier_source_commit', '')
+    if (release.source_identity(ROOT, commit) != commit or host.get('source_unchanged') is not True
+            or host.get('evidence') != str(prior / 'work/report.json')
+            or host.get('guard_status') != 'failed' or guard.get('status') != 'failed'
+            or guard.get('exit_code') != 1 or guard.get('launched') is not True
+            or guard.get('label') != 'release-install' or guard.get('run_directory') != str(guard_path.parent)
+            or report.get('status') != 'fail' or report.get('verifier_source_commit') != commit
+            or any(record.get('artifact_sha256') != artifact for record in (host, report, context))):
+        raise ValueError('Checkpoint report/source/artifact binding')
+    pins = context.get('sources', {})
+    names = ['scripts/release_install.py', 'scripts/sdk_native/native.py', 'scripts/package_release.py', 'scripts/package_sdk.py']
+    names += ['scripts/urbit/' + name for name in HELPERS]
+    if (set(pins) != set(names) or pins['scripts/release_install.py'] != CLEAN_RETRY_CONTROLLER
+            or pins['scripts/sdk_native/native.py'] != CLEAN_RETRY_NATIVE
+            or any(release.digest(release.committed(ROOT, commit, name)) != pin for name, pin in pins.items())
+            or guard.get('guard_sha256') != pins['scripts/urbit/execution_policy.py']):
+        raise ValueError('Checkpoint controller was not the reviewed preinstall version')
+    for group in ('package', 'controller', 'support', 'helpers'):
+        if inventory(prior / group) != context.get(group):
+            raise ValueError('Checkpoint public inputs changed')
+    if (context['controller'] != {'release_install.py': CLEAN_RETRY_CONTROLLER}
+            or context['support'] != {'native.py': CLEAN_RETRY_NATIVE}
+            or context['helpers'] != {name: pins['scripts/urbit/' + name] for name in HELPERS}
+            or inventory(prior / 'package') != inventory(destination.parent / 'package')
+            or release.digest(release.committed(ROOT, commit, 'specs/urbit/toolchain.lock.json')) != release.digest(toolchain_path.read_bytes())):
+        raise ValueError('Checkpoint package/helper/toolchain identity differs')
+    if (report.get('checks') != [{'name': name, 'passed': True} for name in PREINSTALL_CHECKS]
+            or report.get('commands') != [{'source': 'zuse', 'output': '%408\n'}, {'source': 'our', 'output': '~zod\n'}, {'source': '|mount %base', 'output': '>='}]
+            or not re.fullmatch(r"FileNotFoundError: \[Errno 2\] No such file or directory: '/proc/[0-9]+/fd/[0-9]+'", report.get('error', ''))
+            or report.get('cleanup') != {'clean': True, 'exit_code': 0, 'forced': False, 'premature': False, 'reaped': True}
+            or any(key in report for key in ('boot', 'installed_files', 'watchdog_errors', 'cleanup_error'))):
+        raise ValueError('Checkpoint did not stop cleanly at the exact preinstall proof failure')
+    run_id = guard.get('run_id', '')
+    lease = read(control / 'lease.json')
+    if (guard.get('scope') != 'stead-native-' + run_id + '.scope'
+            or read(guard_path.parent / '.stead-disposable.json') != {'format': 1, 'purpose': 'host native execution guard', 'run_id': run_id}
+            or lease.get('state') != 'stopped' or lease.get('run_id') != run_id
+            or lease.get('guard_sha256') != guard['guard_sha256']):
+        raise ValueError('Checkpoint guard is not a stopped owned execution')
+    argv = guard.get('argv', [])
+    if 'bwrap' not in argv or argv[argv.index('bwrap'):] != sandbox_command(prior, control, run_id, lock, toolchain_path):
+        raise ValueError('Checkpoint prior namespace/mount binding differs')
+    retired_checkpoint_scope(run_id)
+    pier = prior / 'work/zod'
+    if (pier / '.vere.lock').exists() or (pier / '.vere.lock').is_symlink():
+        raise ValueError('Checkpoint still has a runtime ownership lock')
+    before = checkpoint_tree(pier)
+    if before['sha256'] != expected_checkpoint:
+        raise ValueError('Checkpoint differs from the explicitly reviewed digest')
+    copied = checkpoint_tree(pier, destination / 'zod')
+    if copied != before or checkpoint_tree(pier) != before or checkpoint_tree(destination / 'zod') != before:
+        raise ValueError('Stopped checkpoint changed while copied; original remains preserved')
+    retired_checkpoint_scope(run_id)
+    return {'mode': 'resumed-clean-checkpoint', 'source_run': prior_name, 'prior_guard_run_id': run_id,
+            'prior_guard_report_sha256': release.digest(guard_path.read_bytes()),
+            'prior_report_sha256': release.digest((prior / 'work/report.json').read_bytes()),
+            'prior_verifier_commit': commit, 'artifact_sha256': artifact, 'pier': before,
+            'fresh_boot_acceptance': False}
+
+
+class CleanCheckpointNative(Native):
+    """Release-only extension; SDK qualification still requires a new pier."""
+    def _check_pier(self):
+        context = execution_policy.read_json('/execution/release-context.json', 1024 * 1024)
+        retry = context.get('clean_checkpoint', {})
+        if (self.ship != 'zod' or retry.get('mode') != 'resumed-clean-checkpoint'
+                or retry.get('artifact_sha256') != context['artifact_sha256']
+                or checkpoint_tree(self.pier) != retry.get('pier')):
+            raise ValueError('Copied clean checkpoint binding differs before boot')
+
+    def _arguments(self):
+        return [self.binary, '-t', '-L', '--no-dock', '--loom', '31', '-b', '127.0.0.1',
+                '-p', str(self.port), '--http-port', str(self.http_port), str(self.pier)]
 
 
 def system_mounts():
@@ -164,11 +358,19 @@ def inside():
         checkpoint('exact-public-package-bytes', inventory('/package') == context['package'])
         checkpoint('exact-controller-and-helper-bytes', inventory('/controller') == context['controller']
                    and inventory('/support') == context['support'] and inventory('/helpers') == context['helpers'])
-        native = Native('zod', 31337, guard)
+        if context.get('clean_checkpoint'):
+            report['clean_checkpoint'] = context['clean_checkpoint']
+            report['boot_mode'] = 'resumed-clean-checkpoint'
+            native = CleanCheckpointNative('zod', 31337, guard)
+        else:
+            report['boot_mode'] = 'fresh-fake'
+            native = Native('zod', 31337, guard)
         report['boot'] = native.start()
         # No Stead code is installed on base or exposed via a private source mount.
         checkpoint('base-has-no-stead-source', native.dojo('=/  arc=arch  .^(arch %cy /=base=/lib/stead-team/hoon)  ?=(~ -.arc)').strip() == '%.y')
         agent = manifest['agents'][0]
+        report['install_attempted'] = True
+        execution_policy.write_json('/state/report.json', report)
         expected = install_desk(native, agent)
         report['installed_files'] = expected
         wait_agent(native, agent, True)
@@ -218,9 +420,11 @@ def sandbox_command(state, control, run_id, lock, toolchain_path):
     return arguments
 
 
-def run(archive, expected_sha256, target_path):
+def run(archive, expected_sha256, target_path, retry_clean=None, retry_clean_sha256=None):
     import package_release
     import toolchain
+    if (retry_clean is None) != (retry_clean_sha256 is None):
+        raise ValueError('Retry requires both the prior run path and its reviewed checkpoint SHA-256')
     if os.getuid() == 0:
         raise ValueError('Release install requires a nonroot local caller')
     if package_release.git(ROOT, 'remote', 'get-url', '--push', 'origin').decode().strip() != 'https://github.com/ScottTpirate/stead-urbit.git':
@@ -259,6 +463,9 @@ def run(archive, expected_sha256, target_path):
     context.update({name: inventory(state / name) for name in ('package', 'controller', 'support', 'helpers')})
 
     def command(control, run_id):
+        if retry_clean is not None:
+            context['clean_checkpoint'] = checked_clean_copy(retry_clean, state / 'work', expected_sha256, lock, toolchain.LOCK_PATH, retry_clean_sha256)
+            execution_policy.write_json(state / 'clean-checkpoint.json', context['clean_checkpoint'])
         execution_policy.write_json(control / 'release-context.json', context)
         # No writable /state alias reaches candidate, controller or helpers.
         return sandbox_command(state, control, run_id, lock, toolchain.LOCK_PATH)
@@ -267,7 +474,8 @@ def run(archive, expected_sha256, target_path):
     unchanged = all(package_release.digest((ROOT / name).read_bytes()) == pin for name, pin in before.items())
     result = {'classification': 'local-native-clean-fake-desk-install', 'qualifies_phase': False,
               'guard_status': guard['status'], 'guard_report': guard['run_directory'] + '/report.json',
-              'source_unchanged': unchanged, 'evidence': str(state / 'work/report.json'), 'artifact_sha256': expected_sha256}
+              'source_unchanged': unchanged, 'evidence': str(state / 'work/report.json'), 'artifact_sha256': expected_sha256,
+              'boot_mode': 'resumed-clean-checkpoint' if retry_clean is not None else 'fresh-fake'}
     execution_policy.write_json(state / 'host-report.json', result)
     print(json.dumps(result), flush=True)
     if guard['status'] != 'completed' or not unchanged:
@@ -285,8 +493,10 @@ if __name__ == '__main__':
     parser.add_argument('--archive', required=True)
     parser.add_argument('--sha256', required=True)
     parser.add_argument('--target', required=True)
+    parser.add_argument('--retry-clean', help='Exact prior .runtime/release-install-* run; only reviewed preinstall proof failures qualify')
+    parser.add_argument('--retry-clean-sha256', help='Explicit independently reviewed stopped checkpoint tree digest')
     args = parser.parse_args()
     try:
-        run(args.archive, args.sha256, args.target)
+        run(args.archive, args.sha256, args.target, args.retry_clean, args.retry_clean_sha256)
     except (OSError, ValueError, RuntimeError, subprocess.SubprocessError) as error:
         parser.exit(1, 'Release install failed: ' + str(error) + '\n')

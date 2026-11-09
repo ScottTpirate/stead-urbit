@@ -117,6 +117,31 @@ check report and guard report. A host unit-test pass does not mean this native
 command has run. Even a successful native report has `qualifies_phase: false`:
 the remaining M4 install/upgrade/recovery/canary gates below are broader.
 
+## Narrow retry after a clean pre-install failure
+
+The optional `--retry-clean .runtime/release-install-<prior-run>` argument, with
+`--retry-clean-sha256` naming its explicitly reviewed stopped tree digest, can reuse a stopped fresh fake only for the audited descriptor-enumeration race
+before installation. It requires the exact reviewed controller/helper provenance,
+same package and toolchain, the precise three-command boot transcript, successful
+clean exit/reaping, a stopped lease and a retired empty guard scope. Any desk
+creation/install attempt, different failure, altered input, runtime lock, symlink,
+hard link or special file rejects reuse. Other failures require a fresh run or
+separate review; there is no automatic fallback or reuse of `.piers` state.
+
+While holding the shared native execution lock, the verifier copies the original
+into a newly owned disposable run and compares bounded hashes before/after copy.
+The original stays stopped and unchanged. The child verifies the copied digest
+again before boot and repeats native identity, Kelvin, namespace, capability,
+socket ownership and package checks before any installation. The report records
+`boot_mode: resumed-clean-checkpoint`, its prior evidence and digest, and
+`fresh_boot_acceptance: false`. This can check installation from the resumed clean
+baseline; it does not count as a new cold boot, an upgrade or recovery acceptance.
+
+Use the same artifact, SHA-256 and explicit target as the prior attempt, adding
+`--retry-clean` and `--retry-clean-sha256` to the existing verifier command. The shared lock and normal
+thermal/deadline limits still apply. Partial copy failures remain private evidence
+in their new run directory and never replace the original checkpoint.
+
 ## Remaining installation and recovery gates
 
 Before an installable beta claim, demonstrate clean installation of each role on

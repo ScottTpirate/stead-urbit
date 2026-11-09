@@ -41,8 +41,7 @@ class Native:
         self.ship, self.port, self.guard = ship, port, guard
         self.http_port = ports[ship][1]
         self.pier = Path('/state') / ship
-        if self.pier.exists() or self.pier.is_symlink():
-            raise ValueError('SDK qualification requires a new empty pier')
+        self._check_pier()
         self.lock = json.loads(Path('/toolchain.json').read_text())
         self.binary = '/runtime/' + self.lock['runtime']['binary']
         self.logpath = Path('/state') / (ship + '.log')
@@ -53,13 +52,19 @@ class Native:
         self.started = time.monotonic()
         self.cleanup = None
 
-    def start(self):
-        self.guard()
-        argv = [self.binary, '-t', '-L', '--no-dock', '--loom', '31',
+    def _check_pier(self):
+        if self.pier.exists() or self.pier.is_symlink():
+            raise ValueError('SDK qualification requires a new empty pier')
+
+    def _arguments(self):
+        return [self.binary, '-t', '-L', '--no-dock', '--loom', '31',
                 '-b', '127.0.0.1', '-p', str(self.port), '--http-port', str(self.http_port),
                 '-F', self.ship, '-B', '/runtime/downloads/' + self.lock['boot_artifact']['archive'],
                 '-A', '/kernel/pkg/arvo', '-c', str(self.pier)]
-        self.process = self.launcher.spawn(argv, stdin=subprocess.DEVNULL,
+
+    def start(self):
+        self.guard()
+        self.process = self.launcher.spawn(self._arguments(), stdin=subprocess.DEVNULL,
             stdout=self.log, stderr=self.log, close_fds=True)
         deadline = time.monotonic() + 1200
         while time.monotonic() < deadline:
@@ -167,7 +172,17 @@ class Native:
         caps = {name: status[name].strip() for name in ('CapEff', 'CapPrm', 'CapInh', 'CapAmb', 'CapBnd', 'NoNewPrivs')}
         if caps['NoNewPrivs'] != '1' or any(v != '0000000000000000' for k, v in caps.items() if k != 'NoNewPrivs'):
             raise ValueError('SDK Vere child retains privileges')
-        inodes = {os.readlink(p)[8:-1] for p in Path(f'/proc/{pid}/fd').iterdir() if os.readlink(p).startswith('socket:[')}
+        inodes = set()
+        for path in Path(f'/proc/{pid}/fd').iterdir():
+            try:
+                target = os.readlink(path)
+            except FileNotFoundError:
+                # An unrelated descriptor may close after enumeration. The
+                # required exclusive Ames inode must still be observed below.
+                continue
+            if target.startswith('socket:[') and target.endswith(']'):
+                inodes.add(target[8:-1])
+        self.check()
         endpoint = '0100007F:' + f'{self.port:04X}'
         matches = [line.split() for line in Path('/proc/net/udp').read_text().splitlines()[1:] if line.split()[1] == endpoint]
         if len(matches) != 1 or matches[0][9] not in inodes:
