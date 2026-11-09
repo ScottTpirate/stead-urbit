@@ -137,7 +137,7 @@ async function signIn(context, ship, port, keyboard = false) {
     await home.getByRole('alert').getByText('This resource is unavailable or you do not have access.', {exact:true}).waitFor();
     assert.equal(await home.getByRole('heading', {name:'Approve on your identity ship', exact:true}).count(), 0);
   }
-  await enter(home, home.getByRole('textbox', {name: 'Your identity ship', exact: true}), '~' + ship);
+  await enter(home, home.getByRole('textbox', {name: 'Your identity ship', exact: true}), keyboard ? ship : '~' + ship);
   await activate(home, home.getByRole('button', {name: 'Request sign-in', exact: true}));
   await home.getByRole('heading', {name: 'Approve on your identity ship', exact: true}).waitFor();
   const code = await home.locator('.comparison').innerText();
@@ -738,7 +738,7 @@ try {
   assert.equal(await bob.home.getByRole('button', {name: 'Edit work item', exact: true}).count(), 0);
   assert.equal(await bob.home.locator('#work-detail-panel').getByRole('textbox').count(), 0);
   await bob.home.locator('#work-detail-panel').getByRole('button', {name: 'Close', exact: true}).click();
-  passed('native-reader-work-details-without-write-control');
+  passed('native-reader-work-view-without-write-control');
   await alice.home.getByRole('button', {name: 'New work item', exact: true}).click();
   await alice.home.getByRole('textbox', {name: 'Title', exact: true}).fill('Browser task — 東京');
   await alice.home.getByRole('textbox', {name: 'Description', exact: true}).fill('Created through the actual TLS browser boundary.');
