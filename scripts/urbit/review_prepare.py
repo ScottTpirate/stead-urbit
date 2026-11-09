@@ -28,17 +28,27 @@ def durable_fingerprint(ship, dojo):
 
     Clay can revive an idle app while importing changed asset dependencies.
     Home on-load rebuilds its projection, but on-save retains the original
-    target db throughout restoration. Identity persists only config/counter.
+    target db throughout restoration. A v4 Home also retains its Code repos.
+    Identity persists only config/counter.
     Typed extraction still rejects a foreign/future saved-state envelope.
     """
     app = team_lifecycle.APPS[ship]
     if dojo(ship, f'.^(desk %gd /={app}=/$)').strip() != '%base':
         raise ValueError('Review durable state is not on the verified desk')
-    saved_type = '[%stead-home %3 db=* projection=*]' if ship == 'zod' else '[%stead-identity %1 config=* counter=@ud]'
-    retained = 'db.stored' if ship == 'zod' else 'stored'
     source = (f'=/  egg=egg-any:gall  .^(egg-any:gall %gv /={app}=/$)  '
               f'?>  ?=([%20 %live *] egg)  =/  saved=vase  +.old-state.egg  '
-              f'=/  stored  !<({saved_type} saved)  ^-  @ux  (shax (jam {retained}))')
+              '^-  @ux  ')
+    if ship == 'zod':
+        source += (
+            '?:  ?=([%stead-home %3 *] q.saved)  '
+            '=/  stored  !<([%stead-home %3 db=* projection=*] saved)  '
+            '(shax (jam db.stored))  '
+            '?>  ?=([%stead-home %4 *] q.saved)  '
+            '=/  stored  !<([%stead-home %4 team=[db=* projection=*] code=*] saved)  '
+            '(shax (jam [db.team.stored code.stored]))')
+    else:
+        source += ('=/  stored  !<([%stead-identity %1 config=* counter=@ud] saved)  '
+                   '(shax (jam stored))')
     result = dojo(ship, source).strip()
     if not re.fullmatch(r'0x[0-9a-f]+(?:\.[0-9a-f]+)*', result):
         raise ValueError('Native durable-state fingerprint is not a hash')

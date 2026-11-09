@@ -284,6 +284,21 @@ class ReviewLifecycleTests(unittest.TestCase):
         self.assertFalse(any(name == 'admit' for name, _ in events))
         host['copy_seed_to_live'].assert_not_called()
 
+    def test_durable_fingerprint_retains_code_for_home_v4(self):
+        home = Mock(side_effect=['%base', '0x1'])
+        self.assertEqual(review_prepare.durable_fingerprint('zod', home), f'{1:064x}')
+        source = home.call_args.args[1]
+        self.assertIn('!<([%stead-home %3 db=* projection=*] saved)', source)
+        self.assertIn('(shax (jam db.stored))', source)
+        self.assertIn('!<([%stead-home %4 team=[db=* projection=*] code=*] saved)', source)
+        self.assertIn('(shax (jam [db.team.stored code.stored]))', source)
+
+        identity = Mock(side_effect=['%base', '0x2'])
+        self.assertEqual(review_prepare.durable_fingerprint('bus', identity), f'{2:064x}')
+        source = identity.call_args.args[1]
+        self.assertIn('!<([%stead-identity %1 config=* counter=@ud] saved)', source)
+        self.assertIn('(shax (jam stored))', source)
+
     def test_durable_fingerprint_rejects_invalid_native_output(self):
         for value in ('not-a-hash', '0x' + 'f' * 65):
             with self.subTest(value=value), self.assertRaises(ValueError):
