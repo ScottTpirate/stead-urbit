@@ -52,6 +52,11 @@ def assert_stopped(pier, run_id):
             raise ValueError('Synthetic pier still has a runtime ownership lock')
 
 
+def desk_inventory(manifest):
+    return {name.removeprefix('desk/'): pin['sha256'] for name, pin in manifest['files'].items()
+            if name.startswith('desk/')}
+
+
 def admitted_pier(prior_name, archive_sha, manifest, report_sha, guard_sha):
     if not re.fullmatch(r'\.runtime/release-install-[a-z0-9_]+', prior_name):
         raise ValueError('A fresh owned release-install run is required')
@@ -109,8 +114,7 @@ def admitted_pier(prior_name, archive_sha, manifest, report_sha, guard_sha):
 
     pier = prior / 'work/zod'
     assert_stopped(pier, run_id)
-    expected = {name.removeprefix('desk/'): pin['sha256'] for name, pin in manifest['files'].items()
-                if name.startswith('desk/')}
+    expected = desk_inventory(manifest)
     if report.get('installed_files') != expected or install.inventory(pier / install.DESK) != expected:
         raise ValueError('Stopped Home desk differs from the verified package')
     return pier, run_id, report
@@ -205,19 +209,42 @@ def restore_checkpoint(state, manifest, original, copies, receipt_sha, archive_s
     return evidence, (pier, copies, checkpoint, run_id)
 
 
-def boot_recovery(prior, archive, archive_sha, target, report_sha, guard_sha, copies, receipt_sha):
+def asset_upgrade_plan(source, target, source_sha, target_sha, saved_sha):
+    pinned = ('agents', 'role', 'compatibility', 'saved_state_version', 'toolchain_sha256', 'contract_sha256')
+    if (any(source[key] != target[key] for key in pinned) or source['role'] != 'home'
+            or source['saved_state_version'] != 3 or source_sha == target_sha
+            or source['source_commit'] == target['source_commit'] or source['frontend_sha256'] == target['frontend_sha256']
+            or not re.fullmatch(r'[0-9a-f]{64}', saved_sha)):
+        raise ValueError('Asset upgrade requires distinct compatible Home packages and reviewed v3 state')
+    previous = desk_inventory(source)
+    install.asset_delta(previous, desk_inventory(target))
+    return {'source_artifact_sha256': source_sha, 'source_commit': source['source_commit'],
+            'source_desk': previous, 'saved_home_sha256': saved_sha}
+
+
+def boot_recovery(prior, archive, archive_sha, target, report_sha, guard_sha, copies, receipt_sha, *, upgrade=None):
     retained = None
+    next_archive, next_sha, next_target = (archive, archive_sha, target) if upgrade is None else upgrade[:3]
 
     def prepare(state, manifest):
         nonlocal retained
-        evidence, retained = restore_checkpoint(state, manifest, prior, copies, receipt_sha,
+        previous = manifest
+        if upgrade is not None:
+            raw = release.read_bounded(ROOT, archive, release.MAX_ARCHIVE)
+            old_target = json.loads(release.read_bounded(ROOT, target, 8192), object_pairs_hook=release.unique)
+            previous = release.verify_bytes(raw, expected_sha256=archive_sha, target=old_target)
+            plan = asset_upgrade_plan(previous, manifest, archive_sha, next_sha, upgrade[3])
+        evidence, retained = restore_checkpoint(state, previous, prior, copies, receipt_sha,
                                                 archive_sha, report_sha, guard_sha)
+        if upgrade is not None:
+            evidence.update(artifact_sha256=next_sha, asset_upgrade=plan)
         return evidence
 
-    report = install.run(archive, archive_sha, target, prepare_restore=prepare)
+    report = install.run(next_archive, next_sha, next_target, prepare_restore=prepare, asset_upgrade=upgrade is not None)
     retained_trees(*retained)
     report.update(status='pass', retained_trees_unchanged=True)
-    path = Path(report['evidence']).parents[1] / 'recovery-report.json'
+    name = 'recovery-report.json' if upgrade is None else 'upgrade-report.json'
+    path = Path(report['evidence']).parents[1] / name
     execution_policy.write_json(path, report)
     return path, report
 
@@ -232,16 +259,24 @@ if __name__ == '__main__':
     parser.add_argument('--guard-report-sha256', required=True)
     parser.add_argument('--boot-copy', help='Exact .runtime/release-recovery-* run to clone and boot under the guard')
     parser.add_argument('--copy-report-sha256', help='Trusted report digest for --boot-copy')
+    parser.add_argument('--upgrade-archive', help='Distinct verified target Home archive for an asset-only upgrade')
+    parser.add_argument('--upgrade-sha256', help='Trusted target archive digest')
+    parser.add_argument('--upgrade-target', help='Exact target archive compatibility record')
+    parser.add_argument('--saved-home-sha256', help='Reviewed v3 Gall saved-vase fingerprint')
     args = parser.parse_args()
     if (args.boot_copy is None) != (args.copy_report_sha256 is None):
         parser.error('--boot-copy and --copy-report-sha256 must be supplied together')
+    upgrade = (args.upgrade_archive, args.upgrade_sha256, args.upgrade_target, args.saved_home_sha256)
+    if any(value is not None for value in upgrade) and (args.boot_copy is None or not all(upgrade)):
+        parser.error('Asset upgrade needs --boot-copy and all four upgrade inputs')
     try:
         common = (args.prior, args.archive, args.sha256, args.target,
                   args.install_report_sha256, args.guard_report_sha256)
         if args.boot_copy is None:
             path, report = rehearse(*common)
         else:
-            path, report = boot_recovery(*common, args.boot_copy, args.copy_report_sha256)
+            path, report = boot_recovery(*common, args.boot_copy, args.copy_report_sha256,
+                                         upgrade=upgrade if args.upgrade_archive is not None else None)
         print(json.dumps({'report': str(path), **report}, sort_keys=True))
     except (OSError, ValueError, RuntimeError, subprocess.SubprocessError) as error:
         parser.exit(1, 'Recovery rehearsal failed: ' + str(error) + '\n')

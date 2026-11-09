@@ -58,11 +58,17 @@ CLEAN_RETRY_NATIVE = '44018860a029a79b32866e532241571d8b9483f86d2893a7226d7bd344
 PREINSTALL_CHECKS = ['private-network-and-filesystem', 'exact-public-package-bytes',
                      'exact-controller-and-helper-bytes']
 RESTORE_CLASS = 'local-native-copied-configured-home-recovery'
-RESTORE_CHECKS = [*PREINSTALL_CHECKS, 'restored-home-live-on-release-desk',
-                  'restored-test-drivers-unchanged', 'pre-bootstrap-network-fenced', 'restored-home-saved-schema-v3',
-                  'restore-changes-owner-incarnation', 'bootstrap-preserves-saved-vase',
-                  'packaged-native-https-restored-after-bootstrap',
-                  'package-unchanged-after-restore', 'restored-clone-stopped-and-reaped']
+UPGRADE_CLASS = 'local-native-copied-home-same-schema-asset-upgrade'
+RESTORE_BEFORE_BOOTSTRAP = [*PREINSTALL_CHECKS, 'restored-home-live-on-release-desk',
+                            'restored-test-drivers-unchanged', 'pre-bootstrap-network-fenced',
+                            'restored-home-saved-schema-v3']
+RESTORE_AFTER_BOOTSTRAP = ['restore-changes-owner-incarnation', 'bootstrap-preserves-saved-vase',
+                           'packaged-native-https-restored-after-bootstrap',
+                           'package-unchanged-after-restore', 'restored-clone-stopped-and-reaped']
+RESTORE_CHECKS = [*RESTORE_BEFORE_BOOTSTRAP, *RESTORE_AFTER_BOOTSTRAP]
+UPGRADE_CHECKS = [*RESTORE_BEFORE_BOOTSTRAP, 'upgraded-home-suspended-at-reviewed-state',
+                  'asset-replacement-matches-clay', 'upgraded-home-fenced-after-reload',
+                  *RESTORE_AFTER_BOOTSTRAP]
 CLEAN_STOP = {'clean': True, 'exit_code': 0, 'forced': False, 'premature': False, 'reaped': True}
 
 
@@ -550,6 +556,38 @@ def saved_home_fingerprint(native):
     return f'{value:064x}'
 
 
+def asset_delta(previous, target):
+    changed = {name for name in previous.keys() | target.keys() if previous.get(name) != target.get(name)}
+    inventory_path = 'web/stead/inventory.hoon'
+    assets = changed - {inventory_path}
+    if (inventory_path not in changed or inventory_path not in previous.keys() & target.keys() or not assets
+            or any(not re.fullmatch(r'web/stead/asset-[0-9a-f]{64}\.stead-asset', name) for name in assets)):
+        raise ValueError('Upgrade must change only generated inventory and content-addressed assets')
+    return sorted(changed - target.keys()), sorted(changed & target.keys())
+
+
+def replace_clay_assets(native, previous, target, package=Path('/package/desk')):
+    remove, update = asset_delta(previous, target)
+    mount = native.pier / DESK
+    if inventory(mount) != previous or inventory(package) != target:
+        raise ValueError('Asset upgrade inputs do not match both verified desk inventories')
+    for name in remove:
+        (mount / name).unlink()
+    for name in update:
+        shutil.copyfile(package / name, mount / name)
+    if inventory(mount) != target:
+        raise ValueError('Mounted desk does not match the target package')
+    native.dojo(f'|commit %{DESK}')
+    clay_readback(native, target, 'stead-home')
+    for name in remove:
+        path = Path(name)
+        route = '/' + '/'.join([*path.with_suffix('').parts, path.suffix[1:]])
+        expression = f'=/  arc=arch  .^(arch %cy /={DESK}={route})  ?=(~ -.arc)'
+        if native.dojo(expression).strip() != '%.y':
+            raise ValueError('Superseded asset is still present in Clay: ' + name)
+    return {'removed': remove, 'updated': update}
+
+
 def verify_restored_home(native, context, report, checkpoint):
     import native_tls
 
@@ -574,6 +612,21 @@ def verify_restored_home(native, context, report, checkpoint):
                and net == report['boot']['proof']['namespaces']['net'])
     report['saved_home'] = {'schema': 3, 'sha256_before_bootstrap': saved_home_fingerprint(native)}
     checkpoint('restored-home-saved-schema-v3', True)
+    upgrade = restored.get('asset_upgrade')
+    if upgrade is not None:
+        before = upgrade['saved_home_sha256']
+        if report['saved_home']['sha256_before_bootstrap'] != before:
+            raise ValueError('Restored Home differs from the reviewed saved-state fingerprint')
+        native.dojo(f'|rein %{DESK} [%.n %stead-home]')
+        wait_agent(native, 'stead-home', False, timeout=60)
+        checkpoint('upgraded-home-suspended-at-reviewed-state', saved_home_fingerprint(native) == before)
+        report['asset_replacement'] = replace_clay_assets(native, upgrade['source_desk'], expected)
+        checkpoint('asset-replacement-matches-clay', native.dojo('.^(? %gu /=stead-home=/$)').strip() == '%.n')
+        native.dojo(f'|rein %{DESK} [%.y %stead-home]')
+        wait_agent(native, 'stead-home', True, timeout=60)
+        unavailable = request_role(native, certificates / 'ca.pem', 'GET', '/stead/')
+        assert_http(unavailable, 503, mime='application/json', error='projection_unavailable')
+        checkpoint('upgraded-home-fenced-after-reload', saved_home_fingerprint(native) == before)
     report['bootstrap_after_restore'] = bootstrap_role(native, 'home')
     checkpoint('restore-changes-owner-incarnation',
                report['bootstrap_after_restore']['incarnation'] not in restored['prior_incarnations'])
@@ -605,7 +658,11 @@ def inside():
                   artifact_sha256=context['artifact_sha256'], verifier_source_commit=context['verifier_source_commit'])
     restore = context.get('restore_checkpoint')
     if restore:
-        report.update(classification=RESTORE_CLASS, boot_mode='restored-configured-home', restore_checkpoint=restore)
+        if restore.get('asset_upgrade') is not None:
+            report.update(classification=UPGRADE_CLASS, boot_mode='restored-asset-upgrade')
+        else:
+            report.update(classification=RESTORE_CLASS, boot_mode='restored-configured-home')
+        report['restore_checkpoint'] = restore
 
     def guard():
         if stopped.is_set() or failures:
@@ -738,13 +795,16 @@ def sandbox_command(state, control, run_id, lock, toolchain_path):
     return arguments
 
 
-def run(archive, expected_sha256, target_path, retry_clean=None, retry_clean_sha256=None, *, prepare_restore=None):
+def run(archive, expected_sha256, target_path, retry_clean=None, retry_clean_sha256=None, *,
+        prepare_restore=None, asset_upgrade=False):
     import package_release
     import toolchain
     if (retry_clean is None) != (retry_clean_sha256 is None):
         raise ValueError('Retry requires both the prior run path and its reviewed checkpoint SHA-256')
     if prepare_restore is not None and retry_clean is not None:
         raise ValueError('Installed recovery and preinstall retry are separate modes')
+    if asset_upgrade and prepare_restore is None:
+        raise ValueError('An asset upgrade requires a verified restored Home clone')
     if os.getuid() == 0:
         raise ValueError('Release install requires a nonroot local caller')
     if package_release.git(ROOT, 'remote', 'get-url', '--push', 'origin').decode().strip() != 'https://github.com/ScottTpirate/stead-urbit.git':
@@ -767,8 +827,12 @@ def run(archive, expected_sha256, target_path, retry_clean=None, retry_clean_sha
     before = {name: package_release.digest(package_release.committed(ROOT, verifier_commit, name)) for name in sources}
     if any(package_release.digest((ROOT / name).read_bytes()) != pin for name, pin in before.items()):
         raise ValueError('Commit the exact release verifier and helper inputs first')
-    label = 'release-install' if prepare_restore is None else 'release-restore-boot'
-    purpose = 'fresh-offline-release-install-only' if prepare_restore is None else 'offline-restored-synthetic-home-only'
+    if asset_upgrade:
+        label, purpose = 'release-asset-upgrade', 'offline-synthetic-home-asset-upgrade-only'
+    elif prepare_restore is not None:
+        label, purpose = 'release-restore-boot', 'offline-restored-synthetic-home-only'
+    else:
+        label, purpose = 'release-install', 'fresh-offline-release-install-only'
     state = Path(tempfile.mkdtemp(prefix=label + '-', dir=ROOT / '.runtime'))
     state.chmod(0o700)
     execution_policy.write_json(state / '.stead-disposable.json', {'format': 1, 'purpose': purpose})
@@ -799,6 +863,8 @@ def run(archive, expected_sha256, target_path, retry_clean=None, retry_clean_sha
             execution_policy.write_json(state / 'clean-checkpoint.json', context['clean_checkpoint'])
         if prepare_restore is not None:
             context['restore_checkpoint'] = prepare_restore(state, manifest)
+            if ('asset_upgrade' in context['restore_checkpoint']) != asset_upgrade:
+                raise ValueError('Staged recovery operation differs from the requested mode')
         execution_policy.write_json(control / 'release-context.json', context)
         # No writable /state alias reaches candidate, controller or helpers.
         return sandbox_command(state, control, run_id, lock, toolchain.LOCK_PATH)
@@ -810,7 +876,10 @@ def run(archive, expected_sha256, target_path, retry_clean=None, retry_clean_sha
               'source_unchanged': unchanged, 'evidence': str(state / 'work/report.json'), 'artifact_sha256': expected_sha256,
               'boot_mode': 'resumed-clean-checkpoint' if retry_clean is not None else 'fresh-fake'}
     if prepare_restore is not None:
-        result.update(classification=RESTORE_CLASS, boot_mode='restored-configured-home')
+        if asset_upgrade:
+            result.update(classification=UPGRADE_CLASS, boot_mode='restored-asset-upgrade')
+        else:
+            result.update(classification=RESTORE_CLASS, boot_mode='restored-configured-home')
     execution_policy.write_json(state / 'host-report.json', result)
     print(json.dumps(result), flush=True)
     if guard['status'] != 'completed' or not unchanged:
@@ -821,8 +890,9 @@ def run(archive, expected_sha256, target_path, retry_clean=None, retry_clean_sha
     if prepare_restore is not None:
         retired_checkpoint_scope(guard['run_id'])
         restored = stopped_home_checkpoint(state / 'work/zod', inventory(state / 'package/desk'))
-        if (report.get('classification') != RESTORE_CLASS or report.get('restore_checkpoint') != context['restore_checkpoint']
-                or report.get('checks') != [{'name': name, 'passed': True} for name in RESTORE_CHECKS]
+        expected_checks = UPGRADE_CHECKS if asset_upgrade else RESTORE_CHECKS
+        if (report.get('classification') != result['classification'] or report.get('restore_checkpoint') != context['restore_checkpoint']
+                or report.get('checks') != [{'name': name, 'passed': True} for name in expected_checks]
                 or report.get('cleanup') != CLEAN_STOP or report.get('stopped_clone') != restored):
             raise RuntimeError('Stopped restored Home evidence differs from the isolated native result')
     return result

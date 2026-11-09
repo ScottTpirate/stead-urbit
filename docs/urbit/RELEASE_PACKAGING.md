@@ -341,3 +341,40 @@ All three retained trees still matched the original reviewed fingerprint.
 | `.runtime/release-restore-boot-1nq6z31n/recovery-report.json` | `3c8726018f3ded725a8f9b1bdd08b1e92a948c94c47a79a792eceaf7cd2d6307` |
 | `.runtime/release-restore-boot-1nq6z31n/work/report.json` | `46b75b74248d6659da0d2f92a89ab7513b6984a614a95ab158a8a53fd5ae9cb2` |
 | `.runtime/execution-runs/release-restore-boot-9kjjs8hx/report.json` | `886e519159acab8dce87e074429f89776f3477e052fba796b4fc97e63ee3d396` |
+
+## Same-schema Home asset upgrade rehearsal
+
+The clone command also accepts a distinct target archive for a narrow
+asset-only upgrade. Both Home archives must pass package verification and
+agree on native code, toolchain, release contract, API and saved schema. The
+rehearsal suspends the isolated clone at the independently reviewed v3
+fingerprint, replaces only generated inventory and content-addressed assets,
+and compares the full mounted and Clay target contents. It checks that removed
+assets are absent at the current Clay revision. After reload it requires a 503
+before fresh bootstrap, the same v3 saved-state digest, and the exact target
+assets and HTTP boundaries. It checks the stopped clone and retained copies
+again before writing `upgrade-report.json`.
+
+```sh
+PATH="$PWD/.runtime/tooling/git-2.55.0/bin:$PATH" \
+python3 -B scripts/release_recovery.py \
+  --prior .runtime/release-install-o8t9xohg \
+  --archive .runtime/releases/alias-verified-1ac28f7e5d1e/home.tar \
+  --sha256 0ed0a28696a8446ab3c767a8023634074959d5b5a522a9e57c168503b6adbec2 \
+  --target .runtime/releases/alias-verified-1ac28f7e5d1e/home-target.json \
+  --install-report-sha256 884ba734df79ea04602a27f0ea3bea83ed0cfc5a3a32b30a8c2813782f2e968c \
+  --guard-report-sha256 e5e14cd8ab0269311180fcd2a9e6e42ba408f67f4546d4f7597f42dc9256ad40 \
+  --boot-copy .runtime/release-recovery-7gvmskob \
+  --copy-report-sha256 4e73d8e08032ae736beafa984e54ff6b67e5b532703d3cb6fcd4cadf48117d8f \
+  --upgrade-archive .runtime/releases/astra-candidate-8yCV5UMh/home.tar \
+  --upgrade-sha256 18b73461298eef7f0697dd90ff4a82960e23ac4bd59dd8ab440060d7029ba5ab \
+  --upgrade-target .runtime/releases/astra-candidate-8yCV5UMh/home.target.json \
+  --saved-home-sha256 e69fcb11ddc4cb0df4023a1747413bdf9df7390adfdfb33f2af8c662c64949c7
+```
+
+This pair changes the Home CSS and JS and their generated inventory. The
+reviewed v3 digest comes from the preceding isolated recovery. A stopped or
+failed attempt retains only its disposable clone and reports. Start a new
+clone after reviewing the failure. Cross-schema migration, interrupted upgrade
+recovery, installed Identity, accepted business record readback and live
+continuity each require separate evidence.

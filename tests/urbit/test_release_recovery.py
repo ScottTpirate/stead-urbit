@@ -104,6 +104,48 @@ class ReleaseRecoveryTests(unittest.TestCase):
         with self.assertRaisesRegex(ValueError, 'configured schema 3'):
             recovery.install.saved_home_fingerprint(native)
 
+    def test_same_schema_asset_plan_rejects_native_or_compatibility_changes(self):
+        inventory = 'desk/web/stead/inventory.hoon'
+        asset = 'desk/web/stead/asset-' + 'a' * 64 + '.stead-asset'
+        agent = 'desk/app/stead-home.hoon'
+        pins = {'agents': ['stead-home'], 'role': 'home', 'compatibility': {'kernel_kelvin': 408},
+                'saved_state_version': 3, 'toolchain_sha256': '1' * 64, 'contract_sha256': '2' * 64}
+        before = dict(pins, source_commit='old', frontend_sha256='old', files={inventory: {'sha256': 'old'},
+                      asset: {'sha256': 'old'}, agent: {'sha256': 'same'}})
+        after = dict(pins, source_commit='new', frontend_sha256='new', files={inventory: {'sha256': 'new'},
+                     asset.replace('a' * 64, 'b' * 64): {'sha256': 'new'}, agent: {'sha256': 'same'}})
+        plan = recovery.asset_upgrade_plan(before, after, 'a' * 64, 'b' * 64, 'c' * 64)
+        self.assertEqual(plan['source_desk'], recovery.desk_inventory(before))
+        with self.assertRaisesRegex(ValueError, 'compatible Home packages'):
+            recovery.asset_upgrade_plan(before, dict(after, saved_state_version=4), 'a' * 64, 'b' * 64, 'c' * 64)
+        after['files'][agent] = {'sha256': 'changed'}
+        with self.assertRaisesRegex(ValueError, 'only generated inventory'):
+            recovery.asset_upgrade_plan(before, after, 'a' * 64, 'b' * 64, 'c' * 64)
+
+    def test_replace_verified_asset_delta_rejects_dirty_desk_before_commit(self):
+        mount = self.source / recovery.install.DESK
+        package = self.directory / 'package'
+        asset = 'asset-' + 'a' * 64 + '.stead-asset'
+        replacement = 'asset-' + 'b' * 64 + '.stead-asset'
+        for root, asset_name, contents in ((mount, asset, 'old'), (package, replacement, 'new')):
+            desk = root / 'web/stead'
+            desk.mkdir(parents=True)
+            (desk / asset_name).write_text(contents)
+            (desk / 'inventory.hoon').write_text(contents)
+        previous, target = recovery.install.inventory(mount), recovery.install.inventory(package)
+        native = SimpleNamespace(pier=self.source, dojo=Mock(return_value='%.y'), check=Mock())
+        (mount / 'unexpected.txt').write_text('keep this evidence')
+        with self.assertRaisesRegex(ValueError, 'both verified desk inventories'):
+            recovery.install.replace_clay_assets(native, previous, target, package)
+        native.dojo.assert_not_called()
+        (mount / 'unexpected.txt').unlink()
+        delta = recovery.install.replace_clay_assets(native, previous, target, package)
+        self.assertEqual(delta['removed'], ['web/stead/' + asset])
+        self.assertEqual(recovery.install.inventory(mount), target)
+        self.assertEqual(recovery.install.inventory(package), target)
+        self.assertEqual(native.dojo.call_args_list[0].args[0], '|commit %release-test')
+        self.assertIn('?=(~ -.arc)', native.dojo.call_args.args[0])
+
 
 if __name__ == '__main__':
     unittest.main()
