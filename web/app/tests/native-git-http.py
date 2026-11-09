@@ -132,8 +132,11 @@ def exercise(session, ca, project, output, checks):
         assert status == 200 and b'unpack invalid or oversized pack' in body
         checks.append('malformed pack rejected by Home')
         assert manage('protect', ref='refs/heads/main')['status'] == 'protected'
+        (source / 'hello.txt').write_bytes(b'Protected fast-forward attempt\n')
+        command('commit', '-am', 'Protected fixture attempt', cwd=source)
+        command('push', origin + remote, 'main', cwd=source, ok=False)
         command('push', origin + remote, ':refs/heads/main', cwd=source, ok=False)
-        checks.append('protected deletion rejected by stock transport')
+        checks.append('protected fast-forward and deletion rejected by stock transport')
 
         body = update(second, b'0' * 40)
         auth = 'Basic ' + base64.b64encode(f"stead:{write['bearer']}".encode()).decode()
