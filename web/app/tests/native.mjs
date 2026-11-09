@@ -285,6 +285,22 @@ async function portableRecovery(memberResponse, cookie, work, docs) {
     } catch {
       report.native_code = {status: 'fail', checks: [], error: 'native code probe interrupted'};
     }
+    if (report.native_code.status === 'pass') {
+      try {
+        const home = memberResponse.request().frame().page();
+        await home.getByRole('button', {name: /GARDEN.*Garden α/u}).click();
+        await home.getByRole('button', {name: 'Code', exact: true}).click();
+        const clone = new URL(await home.getByRole('textbox', {name: 'Clone URL', exact: true}).inputValue());
+        assert.equal(clone.href, origin + '/stead/git/' + work.project_id + '.git');
+        assert.equal(clone.username + clone.password, '');
+        await home.getByRole('button', {name: 'Create read credential', exact: true}).waitFor();
+        await home.getByRole('button', {name: 'Create write credential', exact: true}).waitFor();
+        await home.screenshot({path: path.join(output, 'native-code.png'), fullPage: true});
+        report.native_code_ui = {status: 'pass', screenshot: 'native-code.png'};
+      } catch {
+        report.native_code_ui = {status: 'fail', error: 'Code view or credential controls unavailable'};
+      }
+    }
     const saved = await run('capture', '--session-file', session, '--project', work.project_id,
       '--ca-file', ca, '--output', archive);
     assert.equal(saved.status, 'captured');
