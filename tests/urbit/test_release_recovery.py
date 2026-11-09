@@ -139,12 +139,15 @@ class ReleaseRecoveryTests(unittest.TestCase):
             recovery.install.replace_clay_assets(native, previous, target, package)
         native.dojo.assert_not_called()
         (mount / 'unexpected.txt').unlink()
+        native.dojo.side_effect = ['%.y', '>=', '%.n', '>=', '%.y', '%.y', '%.y', '%.y', '%.n']
         delta = recovery.install.replace_clay_assets(native, previous, target, package)
         self.assertEqual(delta['removed'], ['web/stead/' + asset])
         self.assertEqual(recovery.install.inventory(mount), target)
         self.assertEqual(recovery.install.inventory(package), target)
-        self.assertEqual(native.dojo.call_args_list[0].args[0], '|commit %release-test')
-        self.assertIn('?=(~ -.arc)', native.dojo.call_args.args[0])
+        route = f'/=release-test=/web/stead/{asset.removesuffix(".stead-asset")}/stead-asset'
+        self.assertEqual(native.dojo.call_args_list[1].args[0], '|rm ' + route)
+        self.assertEqual(native.dojo.call_args_list[3].args[0], '|commit %release-test')
+        self.assertEqual(native.dojo.call_args.args[0], f'.^(? %cu {route})')
 
 
 if __name__ == '__main__':

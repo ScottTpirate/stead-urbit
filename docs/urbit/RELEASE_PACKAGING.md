@@ -349,8 +349,11 @@ asset-only upgrade. Both Home archives must pass package verification and
 agree on native code, toolchain, release contract, API and saved schema. The
 rehearsal suspends the isolated clone at the independently reviewed v3
 fingerprint, replaces only generated inventory and content-addressed assets,
-and compares the full mounted and Clay target contents. It checks that removed
-assets are absent at the current Clay revision. After reload it requires a 503
+and compares the full mounted and Clay target contents. It removes exact
+obsolete paths with `|rm` and checks their absence at the current Clay
+revision. [Urbit filesystem](https://docs.urbit.org/user-manual/os/filesystem)
+
+After reload it requires a 503
 before fresh bootstrap, the same v3 saved-state digest, and the exact target
 assets and HTTP boundaries. It checks the stopped clone and retained copies
 again before writing `upgrade-report.json`.
@@ -374,7 +377,7 @@ python3 -B scripts/release_recovery.py \
 
 This pair changes the Home CSS and JS and their generated inventory. The
 reviewed v3 digest comes from the preceding isolated recovery. A stopped or
-failed attempt retains only its disposable clone and reports. Start a new
+failed attempt retains its disposable workspace and reports. Start a new
 clone after reviewing the failure. Cross-schema migration, interrupted upgrade
 recovery, installed Identity, accepted business record readback and live
 continuity each require separate evidence.

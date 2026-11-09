@@ -571,19 +571,30 @@ def replace_clay_assets(native, previous, target, package=Path('/package/desk'))
     mount = native.pier / DESK
     if inventory(mount) != previous or inventory(package) != target:
         raise ValueError('Asset upgrade inputs do not match both verified desk inventories')
-    for name in remove:
-        (mount / name).unlink()
+    obsolete = {name: f'/={DESK}=/{name.removesuffix(".stead-asset")}/stead-asset' for name in remove}
+    for name, route in obsolete.items():
+        exists = f'.^(? %cu {route})'
+        if native.dojo(exists).strip() != '%.y':
+            raise ValueError('Expected source asset is missing from Clay: ' + name)
+        native.dojo('|rm ' + route)
+        deadline = time.monotonic() + 15
+        while True:
+            found = native.dojo(exists, timeout=5).strip()
+            if found == '%.n':
+                break
+            if found != '%.y' or time.monotonic() >= deadline:
+                raise ValueError('Native Clay removal did not complete: ' + name)
+            native.check()
+            time.sleep(.1)
+        (mount / name).unlink(missing_ok=True)
     for name in update:
         shutil.copyfile(package / name, mount / name)
     if inventory(mount) != target:
         raise ValueError('Mounted desk does not match the target package')
     native.dojo(f'|commit %{DESK}')
     clay_readback(native, target, 'stead-home')
-    for name in remove:
-        path = Path(name)
-        route = '/' + '/'.join([*path.with_suffix('').parts, path.suffix[1:]])
-        expression = f'=/  arc=arch  .^(arch %cy /={DESK}={route})  ?=(~ -.arc)'
-        if native.dojo(expression).strip() != '%.y':
+    for name, route in obsolete.items():
+        if native.dojo(f'.^(? %cu {route})').strip() != '%.n':
             raise ValueError('Superseded asset is still present in Clay: ' + name)
     return {'removed': remove, 'updated': update}
 
