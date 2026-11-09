@@ -46,6 +46,27 @@ same startup checks. `make review-stop` stops the backend. Close the browser
 yourself when you finish. An explicit reset archives the stopped workspace
 and requires the matching review session ID.
 
+## Verify an offline desk candidate
+
+Use the [release packaging instructions](../RELEASE_PACKAGING.md) to verify
+each role archive against its separately recorded SHA-256 and target profile.
+Run the guarded installer one role at a time on the pinned Linux toolchain.
+It creates a disposable ship in an isolated network and reports the installed
+files, owner bootstrap, HTTPS assets, rejected requests, reload and cleanup.
+Retain the archive, target, exact verifier source and both native and guard
+reports. Stop on a failed check and preserve its evidence before retrying.
+Fresh-boot, checkpoint retry and configured-pair tests have separate results.
+
+Keep both the release artifact and project recovery material. The
+[portable Work and Docs export](../PORTABLE_RECOVERY_PROFILE.md) recovers
+currently readable records into ordinary files. Keep its digest separately
+and retain the loss manifest. A complete service recovery also requires
+authority state, history, access policy and verified continuity. Follow the
+[deployment and cutover gates](../DEPLOYMENT.md) before installing on a
+live ship or using real team data.
+
+## Run the independent team trial
+
 For the independent human trial, first complete the current automated browser
 journey on the same running `make team-dev` fixture. Preserve the printed
 `browser-native-YYYYMMDDTHHMMSSZ` directory name. Then launch:

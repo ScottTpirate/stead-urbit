@@ -153,8 +153,8 @@ application session cookies remain outside this anonymous fixture.
 
 This is a configured **single-role fixture**. Its report keeps
 `paired_home_identity: false`, `browser_authentication: false` and
-`qualifies_phase: false`. The extension needs its own native execution receipt;
-the older eight-check install reports below do not prove these additional checks.
+`qualifies_phase: false`. The configured Home checks have their own receipts
+below, separate from the older eight-check install reports.
 The next paired slice would run two distinct fresh fakes, install each verified
 role, configure matching Home/member bindings and separate TLS hostnames, then
 exercise real member approval, session/CSRF enforcement and revocation. It must
@@ -209,14 +209,41 @@ Home failure remains in `.runtime/release-install-bu8_udck/work/report.json`.
 These runs cover isolated desk installation. A configured Home/Identity pair,
 upgrades, state recovery and a canary remain separate gates.
 
+### Configured Home HTTPS verification
+
+The Home artifact above also passed the extended single-role verifier from the
+reviewed stopped checkpoint. The exact report is
+`.runtime/release-install-2vpttgtk/work/report.json`, SHA-256
+`a61793b7522ed1f5d02ee21b7b48df33810f2e9e9945527d3748b6ff24adf26c`.
+The verifier source was `5651caa0a94babbd318a900d84a56bf84bf52dc4`.
+It passed 13 checkpoints, matched nine HTTPS assets to their packaged bytes,
+and verified 11 HTTP boundary outcomes both before and after reload. Reload
+required a fresh owner bootstrap and changed incarnation before serving.
+The run reaped the fake and reports `qualifies_phase: false`.
+
+An earlier HTTPS probe reached the first correct asset and then rejected Eyre's
+guest cookie. That verifier failure is retained locally under
+`.runtime/release-install-473r_aoe/`. The corrected verifier identifies the
+pinned guest cookie, redacts its value and keeps the test request anonymous.
+
+The same Home archive passed all 13 checks from a fresh fake using verifier
+`716a96b559ba9ed551f67c216be6607b03b0355c`. The native report is
+`.runtime/release-install-o8t9xohg/work/report.json`, SHA-256
+`884ba734df79ea04602a27f0ea3bea83ed0cfc5a3a32b30a8c2813782f2e968c`.
+It matched 56 installed desk files and repeated the nine asset and 11
+boundary checks across reload. It shut down and reaped the fake cleanly.
+The guarded run took 669.720 seconds and peaked at 58°C. A preceding fresh
+attempt stopped before boot because the HTTPS flag split the pier creation
+argument. The corrected launcher preserves the create flag and path together.
+
 ## Remaining installation and recovery gates
 
-Before an installable beta claim, demonstrate fresh-boot Home installation,
-native route/mark behavior, bootstrap and access isolation, and operator-controlled
-update/pin behavior. Test unavailable publishers, wrong Kelvin/frontend/API
-versions, interrupted updates, every supported predecessor and a nonauthor
-following the runbook. Define and verify canary/stable promotion and any Grid
-launch metadata before advertising those paths.
+Before an installable beta claim, qualify configured Identity and paired
+Home/Identity authentication, access isolation and revocation. Verify
+operator-controlled update/pin behavior, unavailable publishers, wrong
+Kelvin/frontend/API versions, interrupted updates, every supported predecessor
+and a nonauthor following the runbook. Define and verify canary/stable promotion
+and any Grid launch metadata before advertising those paths.
 
 This code artifact cannot restore project data. URB-100 must provide consistent
 Git/Markdown/JSON exports plus authority evidence and reconstructed derived
