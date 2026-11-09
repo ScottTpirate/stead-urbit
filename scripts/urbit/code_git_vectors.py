@@ -41,6 +41,8 @@ REVIEW_TESTS = 'native/core/desk/tests/stead-code-review.hoon'
 RESOLVE_LIBRARY = 'native/core/desk/lib/stead-code-git-resolve.hoon'
 GRAPH_LIBRARY = 'native/core/desk/lib/stead-code-git-graph.hoon'
 GRAPH_TESTS = 'native/core/desk/tests/stead-code-git-graph.hoon'
+FETCH_LIBRARY = 'native/core/desk/lib/stead-code-fetch-wire.hoon'
+FETCH_TESTS = 'native/core/desk/tests/stead-code-fetch-wire.hoon'
 PACK_ORACLE = 'scripts/urbit/git_pack_oracle.py'
 INFLATE_LIBRARY = 'native/core/desk/lib/stead-code-git-inflate.hoon'
 INFLATE_TESTS = 'native/core/desk/tests/stead-code-git-inflate.hoon'
@@ -245,6 +247,27 @@ GRAPH_ARMS = (
     'test-graph-root-bound',
     'test-graph-executable-file',
 )
+FETCH_ARMS = (
+    'test-fetch-wire-clone',
+    'test-fetch-wire-fetch',
+    'test-fetch-wire-round',
+    'test-fetch-wire-multiple-wants',
+    'test-fetch-wire-empty-wants',
+    'test-fetch-wire-missing-want-flush',
+    'test-fetch-wire-no-terminator',
+    'test-fetch-wire-unexpected-want',
+    'test-fetch-wire-unexpected-have',
+    'test-fetch-wire-trailing',
+    'test-fetch-wire-early-v2-delimiter',
+    'test-fetch-wire-hidden-capability',
+    'test-fetch-wire-late-capability',
+    'test-fetch-wire-partial-clone',
+    'test-fetch-wire-shallow-clone',
+    'test-fetch-wire-zero-oid',
+    'test-fetch-wire-malformed-oid',
+    'test-fetch-wire-buffer-bound',
+    'test-fetch-wire-stock-clone',
+)
 CODE_CHECKS = (
     'native-blob-roundtrip', 'native-tree-roundtrip', 'native-commit-roundtrip', 'native-tag-roundtrip',
     'native-object-graph-stock-fsck', 'native-ref-syntax-matches-stock-git',
@@ -311,7 +334,7 @@ RESOLVE_CONTROLS = (
     'native-resolve-offset-not-entry-boundary', 'native-resolve-thin-without-visible-base',
     'native-resolve-thin-with-wrong-base-bytes', 'native-resolve-thin-with-verified-base',
 )
-EXPECTED_CHECKS = ARMS + EXTRA_CHECKS + OBJECT_ARMS + PACK_ARMS + RECEIVE_ARMS + WIRE_ARMS + ('receive-wire-failing-tang-control-detected',) + ENTRY_ARMS + DELTA_ARMS + REVIEW_ARMS + GRAPH_ARMS + CODE_CHECKS + PACK_INTEROP_CHECKS + RESOLVE_CONTROLS
+EXPECTED_CHECKS = ARMS + EXTRA_CHECKS + OBJECT_ARMS + PACK_ARMS + RECEIVE_ARMS + WIRE_ARMS + ('receive-wire-failing-tang-control-detected',) + ENTRY_ARMS + DELTA_ARMS + REVIEW_ARMS + GRAPH_ARMS + FETCH_ARMS + CODE_CHECKS + PACK_INTEROP_CHECKS + RESOLVE_CONTROLS
 ANSI = re.compile(r'\x1b\[[0-9;]*m')
 MAX_OUTPUT = 1_048_576
 
@@ -535,6 +558,12 @@ def inside():
         if graph_library.count(graph_import) != 1:
             raise ValueError('Unexpected graph helper imports')
         graph_body = graph_library.replace(graph_import, '')
+        fetch_library = Path('/input/fetch-library.hoon').read_text()
+        fetch_import = '/+  stead-code-git-pkt, stead-code-git-objects\n'
+        if fetch_library.count(fetch_import) != 1:
+            raise ValueError('Unexpected fetch-wire imports')
+        fetch_body = fetch_library.replace(fetch_import, '')
+        fetch_dependency = receive_dependency + '=/  stead-code-git-pkt\n' + library + '\n'
         for module, source, tests_source, names, dependency in (
                 ('stead-code-git-objects', object_body, object_tests, OBJECT_ARMS, '=/  stead-git\n' + base_git + '\n'),
                 ('stead-code-git-pack', pack_library, pack_tests, PACK_ARMS, ''),
@@ -543,7 +572,8 @@ def inside():
                 ('stead-code-git-entry', entry_library, Path('/input/entry-tests.hoon').read_text(), ENTRY_ARMS, ''),
                 ('stead-code-git-delta', delta_library, Path('/input/delta-tests.hoon').read_text(), DELTA_ARMS, ''),
                 ('stead-code-review', review_body, Path('/input/review-tests.hoon').read_text(), REVIEW_ARMS, review_dependency),
-                ('stead-code-git-graph', graph_body, Path('/input/graph-tests.hoon').read_text(), GRAPH_ARMS, receive_dependency)):
+                ('stead-code-git-graph', graph_body, Path('/input/graph-tests.hoon').read_text(), GRAPH_ARMS, receive_dependency),
+                ('stead-code-fetch-wire', fetch_body, Path('/input/fetch-tests.hoon').read_text(), FETCH_ARMS, fetch_dependency)):
 
             test_header, test_body = tests_source.split('\n', 1)
             expected_header = '/+  *test, ' + ('stead-code-git-pkt, ' if module == 'stead-code-receive-wire' else '') + module
@@ -827,7 +857,7 @@ def main(mode="full"):
     run = Path(tempfile.mkdtemp(prefix=datetime.now(timezone.utc).strftime('%Y%m%dT%H%M%SZ-'), dir=base))
     for name in ('input', 'output', 'work', 'code'):
         (run / name).mkdir(mode=0o700)
-    foundation_names = (LIBRARY, TESTS, OBJECT_LIBRARY, OBJECT_TESTS, PACK_LIBRARY, PACK_TESTS, BASE_GIT, RECEIVE_LIBRARY, RECEIVE_TESTS, WIRE_LIBRARY, WIRE_TESTS, ENTRY_LIBRARY, ENTRY_TESTS, DELTA_LIBRARY, DELTA_TESTS, REVIEW_LIBRARY, REVIEW_TESTS, RESOLVE_LIBRARY, GRAPH_LIBRARY, GRAPH_TESTS, INFLATE_LIBRARY, PACK_ORACLE)
+    foundation_names = (LIBRARY, TESTS, OBJECT_LIBRARY, OBJECT_TESTS, PACK_LIBRARY, PACK_TESTS, BASE_GIT, RECEIVE_LIBRARY, RECEIVE_TESTS, WIRE_LIBRARY, WIRE_TESTS, ENTRY_LIBRARY, ENTRY_TESTS, DELTA_LIBRARY, DELTA_TESTS, REVIEW_LIBRARY, REVIEW_TESTS, RESOLVE_LIBRARY, GRAPH_LIBRARY, GRAPH_TESTS, FETCH_LIBRARY, FETCH_TESTS, INFLATE_LIBRARY, PACK_ORACLE)
     names = (INFLATE_LIBRARY, INFLATE_TESTS) if mode == "inflate" else foundation_names
     sources = {name: ROOT / name for name in names}
     sources.update({ 'scripts/urbit/code_git_vectors.py': Path(__file__),
@@ -845,6 +875,7 @@ def main(mode="full"):
               (ROOT / REVIEW_LIBRARY, 'input/review-library.hoon'), (ROOT / REVIEW_TESTS, 'input/review-tests.hoon'),
               (ROOT / RESOLVE_LIBRARY, 'input/resolve-library.hoon'),
               (ROOT / GRAPH_LIBRARY, 'input/graph-library.hoon'), (ROOT / GRAPH_TESTS, 'input/graph-tests.hoon'),
+              (ROOT / FETCH_LIBRARY, 'input/fetch-library.hoon'), (ROOT / FETCH_TESTS, 'input/fetch-tests.hoon'),
               (ROOT / INFLATE_LIBRARY, 'input/inflate-library.hoon'),
               (ROOT / PACK_ORACLE, 'code/git_pack_oracle.py'),
               (helper, 'input/test-helper.hoon'), (Path(__file__), 'code/code_git_vectors.py'),
