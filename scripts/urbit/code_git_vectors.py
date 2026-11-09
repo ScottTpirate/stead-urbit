@@ -90,6 +90,8 @@ RECEIVE_ARMS = (
 )
 WIRE_ARMS = (
     'test-receive-wire-create',
+    'test-receive-wire-stock-leading-space',
+    'test-receive-wire-double-leading-space',
     'test-receive-wire-empty-capabilities',
     'test-receive-wire-command-order',
     'test-receive-wire-final-lf',

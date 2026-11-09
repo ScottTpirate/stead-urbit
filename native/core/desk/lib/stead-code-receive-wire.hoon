@@ -92,6 +92,9 @@
     =/  requested=(each (set @t) @tas)
       ?:  !first  [%& ~]
       =/  begin=@ud  +(index)
+      ::  Stock send-pack prefixes the capability list with a single SP.
+      =?  begin  &((lth +(begin) width) =(32 (cut 3 [begin 1] data.body)))
+        +(begin)
       (parse-capabilities [(sub width begin) (cut 3 [begin (sub width begin)] data.body)] offered)
     ?-  -.requested
       %|  [%| p.requested]

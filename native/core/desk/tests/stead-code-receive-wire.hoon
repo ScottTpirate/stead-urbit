@@ -63,6 +63,13 @@
         =((silt ~['report-status' 'atomic' 'object-format=sha1' 'agent=git/2.55.0']) capabilities.p.parsed)
     ==
   (expect !>(correct))
+++  test-receive-wire-stock-leading-space
+  =/  wire  (finish (first 'refs/heads/main' ' report-status atomic'))
+  =/  parsed  (decode:stead-code-receive-wire wire offered)
+  ?>  ?=([%& *] parsed)
+  (expect !>(&((=(length.wire pack-offset.p.parsed)) =((silt ~['report-status' 'atomic']) capabilities.p.parsed))))
+++  test-receive-wire-double-leading-space
+  (denied (finish (first 'refs/heads/main' '  report-status atomic')) %capability-bound)
 ++  test-receive-wire-empty-capabilities
   =/  parsed  (decode:stead-code-receive-wire (finish (first 'refs/heads/main' '')) ~)
   (expect !>(?=([%& *] parsed)))
