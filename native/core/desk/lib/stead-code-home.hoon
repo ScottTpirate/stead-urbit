@@ -1,6 +1,6 @@
 ::  Repository authority called only by the configured Home. Repositories
 ::  persist with the Home; device credentials are never in the saved envelope.
-/+  stead-codec, stead-core, stead-team, stead-team-config, stead-session, stead-http, stead-git, stead-code-credentials, stead-code-store, stead-code-service, stead-code-http, stead-code-git-graph, stead-code-git-objects, stead-code-receive, stead-code-upload, stead-code-review-home, stead-code-review-api, stead-code-build-home
+/+  stead-codec, stead-core, stead-team, stead-team-config, stead-session, stead-http, stead-git, stead-code-credentials, stead-code-store, stead-code-service, stead-code-http, stead-code-git-graph, stead-code-git-objects, stead-code-receive, stead-code-upload, stead-code-review-home, stead-code-review-api, stead-code-build-home, stead-code-delivery-export
 =,  stead-codec
 |%
 +$  repository  [data=repository:stead-code-service protected=(set @t)]
@@ -124,10 +124,26 @@
     ?:  (gth ~(wyt in protected) 16)  (error code 409 'capacity_exceeded')
     (respond code(repos (~(put by repos.code) project u.found(protected protected))) ~[['status' 'protected']])
   =/  board  (fall (~(get by reviews.code) project) (empty:stead-code-review-home u.destination))
+  =/  extras  (fall (~(get by builds.code) project) *state:stead-code-build-home)
+  ?:  =('delivery-export' operation)
+    ?.  =(3 role)  (error code 404 'denied_or_not_found')
+    ?.  (keys values ['offset' 'snapshot' base])  (error code 400 'invalid_request')
+    =/  offset  (uint (field values 'offset'))
+    =/  page
+      (page:stead-code-delivery-export data.u.found board extras protected.u.found offset (field values 'snapshot'))
+    ?:  ?=(%| -.page)  (error code 409 p.page)
+    %-  respond
+    :-  code
+    :~  ['status' 'delivery-export']
+        ['snapshot' snapshot.p.page]
+        ['total' (decimal total.p.page)]
+        ['next_offset' ?~(next.p.page '' (decimal u.next.p.page))]
+        ['header' header.p.page]
+        ['records' records.p.page]
+    ==
   ?:  is-build
     ?:  &(|(=('build-queue' operation) =('build-release' operation)) !=(3 role))
       (error code 404 'denied_or_not_found')
-    =/  extras  (fall (~(get by builds.code) project) *state:stead-code-build-home)
     =/  out
       (run:stead-code-build-home db board extras data.u.found identity.u.actor now (member db now) values base operation)
     ?-  -.out
