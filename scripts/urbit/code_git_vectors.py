@@ -1,0 +1,478 @@
+#!/usr/bin/env python3
+"""Bounded pure Hoon Git foundation tests and stock-Git vectors; no ship boot.
+
+The existing host execution guardian owns thermal admission, one CPU, 50% CPU,
+the shared native lock, timeout and cleanup. Native input is read-only and has
+no network, home, live pier, authority socket, or writable source mount.
+"""
+from __future__ import annotations
+
+from datetime import datetime, timezone
+import hashlib
+import json
+import os
+from pathlib import Path
+import re
+import shutil
+import subprocess
+import sys
+import tempfile
+
+import execution_policy
+
+ROOT = Path(__file__).resolve().parent.parent.parent
+LIBRARY = 'native/core/desk/lib/stead-code-git-pkt.hoon'
+TESTS = 'native/core/desk/tests/stead-code-git-pkt.hoon'
+OBJECT_LIBRARY = 'native/core/desk/lib/stead-code-git-objects.hoon'
+OBJECT_TESTS = 'native/core/desk/tests/stead-code-git-objects.hoon'
+PACK_LIBRARY = 'native/core/desk/lib/stead-code-git-pack.hoon'
+PACK_TESTS = 'native/core/desk/tests/stead-code-git-pack.hoon'
+BASE_GIT = 'native/core/desk/lib/stead-git.hoon'
+RECEIVE_LIBRARY = 'native/core/desk/lib/stead-code-receive.hoon'
+RECEIVE_TESTS = 'native/core/desk/tests/stead-code-receive.hoon'
+WIRE_LIBRARY = 'native/core/desk/lib/stead-code-receive-wire.hoon'
+WIRE_TESTS = 'native/core/desk/tests/stead-code-receive-wire.hoon'
+ARMS = (
+    'test-encode-data', 'test-encode-binary', 'test-encode-empty-data',
+    'test-encode-controls', 'test-encode-control-payload-rejected',
+    'test-encode-at-bound', 'test-encode-over-bound-rejected',
+    'test-encode-width-rejected', 'test-decode-controls-and-empty',
+    'test-decode-binary-zero', 'test-decode-all-zero-payload',
+    'test-decode-offset-and-tail', 'test-decode-truncated-header',
+    'test-decode-truncated-payload', 'test-decode-required-relative-to-offset',
+    'test-decode-nonhex-rejected', 'test-decode-reserved-rejected',
+    'test-decode-over-bound-rejected', 'test-decode-at-bound',
+    'test-decode-upper-hex', 'test-decode-offset-rejected',
+    'test-decode-buffer-bound-rejected', 'test-decode-buffer-width-rejected',
+)
+EXTRA_CHECKS = (
+    'failing-tang-control-detected', 'compiler-failure-control-detected',
+    'native-encoded-ls-refs-accepted-by-stock-git',
+    'stock-advertisement-decoded-natively', 'stock-refs-decoded-natively',
+)
+OBJECT_ARMS = (
+    'test-object-empty-blob', 'test-object-trailing-zero', 'test-object-tag-exact-bytes',
+    'test-object-kind-rejected', 'test-object-width-rejected', 'test-object-bound-rejected',
+    'test-oid-zero', 'test-oid-leading-zero', 'test-oid-full-width', 'test-oid-uppercase-rejected',
+    'test-oid-short-rejected', 'test-oid-nul-rejected', 'test-ref-valid', 'test-ref-head-rejected',
+    'test-ref-leading-dot-rejected', 'test-ref-lock-component-rejected', 'test-ref-nul-rejected',
+    'test-ref-bound-rejected',
+)
+PACK_ARMS = (
+    'test-pack-empty-sha-one', 'test-pack-version-three', 'test-pack-unsupported-version',
+    'test-pack-declared-count-bound', 'test-pack-signature', 'test-pack-checksum',
+    'test-pack-empty-payload', 'test-pack-missing-entries', 'test-pack-truncated',
+    'test-pack-envelope-does-not-validate-entry', 'test-pack-byte-bound', 'test-pack-explicit-width',
+)
+RECEIVE_ARMS = (
+    'test-ref-advance', 'test-ref-competing-writes', 'test-ref-revoked', 'test-ref-epoch',
+    'test-ref-protected-delete', 'test-ref-batch-rejects-stale-member', 'test-ref-non-fast-forward',
+    'test-ref-namespace', 'test-ref-duplicate', 'test-ref-bad-name', 'test-ref-unsupported',
+    'test-ref-tag-replacement', 'test-ref-bad-target', 'test-ref-missing-target', 'test-ref-tag-and-branch-create',
+)
+WIRE_ARMS = (
+    'test-receive-wire-create',
+    'test-receive-wire-empty-capabilities',
+    'test-receive-wire-command-order',
+    'test-receive-wire-final-lf',
+    'test-receive-wire-pack-is-opaque',
+    'test-receive-wire-large-tail-bypasses-pkt-buffer-limit',
+    'test-receive-wire-pack-bound',
+    'test-receive-wire-buffer-bound',
+    'test-receive-wire-buffer-width',
+    'test-receive-wire-empty',
+    'test-receive-wire-truncated-header',
+    'test-receive-wire-truncated-payload',
+    'test-receive-wire-missing-flush',
+    'test-receive-wire-invalid-header',
+    'test-receive-wire-delimiter',
+    'test-receive-wire-response-end',
+    'test-receive-wire-first-nul-required',
+    'test-receive-wire-later-nul-forbidden',
+    'test-receive-wire-duplicate-ref',
+    'test-receive-wire-invalid-ref',
+    'test-receive-wire-unsupported-ref',
+    'test-receive-wire-uppercase-oid',
+    'test-receive-wire-command-spacing',
+    'test-receive-wire-unknown-capability',
+    'test-receive-wire-unsupported-sha256',
+    'test-receive-wire-push-options-unsupported',
+    'test-receive-wire-unadvertised-capability',
+    'test-receive-wire-duplicate-capability',
+    'test-receive-wire-duplicate-agent-key',
+    'test-receive-wire-capability-whitespace',
+    'test-receive-wire-capability-nul',
+    'test-receive-wire-command-count-at-bound',
+    'test-receive-wire-command-count-over-bound',
+    'test-receive-wire-delete-advertisement',
+    'test-receive-wire-advertisement-profile',
+    'test-receive-wire-advertisement-bound',
+    'test-receive-wire-header-bound',
+    'test-receive-wire-capability-block-bound',
+    'test-receive-wire-agent-at-token-bound',
+    'test-receive-wire-agent-over-token-bound',
+    'test-receive-wire-ref-at-bound',
+    'test-receive-wire-ref-over-bound',
+    'test-receive-wire-command-payload-bound',
+    'test-receive-wire-shallow-unsupported',
+    'test-receive-wire-signed-push-unsupported',
+)
+CODE_CHECKS = (
+    'native-blob-roundtrip', 'native-tree-roundtrip', 'native-commit-roundtrip', 'native-tag-roundtrip',
+    'native-object-graph-stock-fsck', 'native-ref-syntax-matches-stock-git',
+    'stock-pack-envelope-checked-natively', 'corrupt-stock-pack-rejected-natively',
+    'stock-pack-independent-index-check',
+)
+EXPECTED_CHECKS = ARMS + EXTRA_CHECKS + OBJECT_ARMS + PACK_ARMS + RECEIVE_ARMS + WIRE_ARMS + ('receive-wire-failing-tang-control-detected',) + CODE_CHECKS
+ANSI = re.compile(r'\x1b\[[0-9;]*m')
+MAX_OUTPUT = 1_048_576
+
+
+def digest(data):
+    return hashlib.sha256(data).hexdigest()
+
+
+def literal(value):
+    text = format(value, 'x')
+    first = len(text) % 4 or 4
+    return '0x' + '.'.join([text[:first], *[text[i:i + 4] for i in range(first, len(text), 4)]])
+
+
+def octets(data):
+    return f'[{len(data):,} {literal(int.from_bytes(data, "little"))}]'.replace(',', '.')
+
+
+def parse_rows(output, width):
+    """Accept a complete printed list of fixed-width @ta cells, no diagnostics."""
+    if not isinstance(output, str) or len(output) > MAX_OUTPUT or width not in (2, 4):
+        raise ValueError('Native row output outside bounds')
+    cell = r'~\.([a-z0-9.-]+)'
+    pattern = re.compile(r'\[\s*' + r'\s+'.join([cell] * width) + r'\s*\]')
+    # Vere prints a list either as ~[rows] or [rows ~]. Require that exact
+    # outer structure; stray brackets or a second noun cannot count as tests.
+    outer = output.strip()
+    if outer.startswith('~[') and outer.endswith(']'):
+        inner = outer[2:-1]
+    elif outer.startswith('[') and outer.endswith(']') and outer[1:-1].rstrip().endswith('~'):
+        inner = outer[1:-1].rstrip()[:-1]
+    else:
+        raise ValueError('Native output is not a complete bounded row list')
+    rows = pattern.findall(inner)
+    if not rows or len(rows) > 128 or pattern.sub('', inner).strip():
+        raise ValueError('Native output is not a complete bounded row list')
+    return rows
+
+
+def native_bytes(width, value):
+    if not re.fullmatch(r'[0-9]+(?:\.[0-9]{3})*', width) or not re.fullmatch(r'0x[0-9a-f]+(?:\.[0-9a-f]{4})*', value):
+        raise ValueError('Native byte row is not a canonical bounded number')
+    length, atom = int(width.replace('.', '')), int(value[2:].replace('.', ''), 16)
+    if length > 65_520 or atom.bit_length() > 8 * length:
+        raise ValueError('Native bytes exceed explicit width')
+    return atom.to_bytes(length, 'little')
+
+
+def reference_packets(data):
+    """Independent host oracle for complete stock-produced pkt-line buffers."""
+    if len(data) > 1_048_576:
+        raise ValueError('Fixture buffer exceeds bound')
+    result, offset = [], 0
+    while offset < len(data):
+        if len(result) >= 128 or len(data) - offset < 4:
+            raise ValueError('Truncated or excessive fixture packets')
+        header = data[offset:offset + 4]
+        if not re.fullmatch(rb'[0-9a-fA-F]{4}', header):
+            raise ValueError('Nonhex fixture header')
+        size = int(header, 16)
+        if size in (0, 1, 2):
+            kind, body, end = ('flush', 'delim', 'response-end')[size], b'', offset + 4
+        elif 4 <= size <= 65_520 and offset + size <= len(data):
+            kind, body, end = 'data', data[offset + 4:offset + size], offset + size
+        else:
+            raise ValueError('Invalid or incomplete fixture length')
+        result.append((kind, body, end))
+        offset = end
+    return result
+
+
+def validate_report(report):
+    if not isinstance(report, dict) or report.get('status') != 'passed' or not isinstance(report.get('checks'), list):
+        raise ValueError('Native report has no passing result')
+    rows = report['checks']
+    if (len(rows) != len(EXPECTED_CHECKS)
+            or tuple(row.get('name') for row in rows) != EXPECTED_CHECKS
+            or any(row.get('passed') is not True for row in rows)):
+        raise ValueError('Native expected-check inventory is incomplete')
+    return report
+
+
+def inside():
+    execution_policy.require_lease(Path('/execution'), read_only=True)
+    library = Path('/input/library.hoon').read_text()
+    tests = Path('/input/tests.hoon').read_text()
+    helper = Path('/input/test-helper.hoon').read_text()
+    header, body = tests.split('\n', 1)
+    if header != '/+  *test, stead-code-git-pkt' or tuple(re.findall(r'^\+\+  (test-[a-z0-9-]+)$', tests, re.M)) != ARMS:
+        raise ValueError('Missing or unexpected native test arm/header')
+    prefix = '=>\n' + library + '\n'
+    test_prefix = '=/  test\n' + helper + '\n=/  stead-code-git-pkt\n' + library + '\n=,  test\n=>\n' + body + '\n'
+    report = {'status': 'failed', 'scope': 'pure Hoon Git framing, SHA-1 objects, ref syntax and pack-envelope checks; no acceptance service',
+              'qualifies_phase': False, 'checks': [], 'records': []}
+    def record(name, passed, **values):
+        report['checks'].append({'name': name, 'passed': bool(passed), **values})
+        if not passed:
+            raise AssertionError(name)
+    def native(source, label):
+        execution_policy.require_lease(Path('/execution'), read_only=True)
+        if len(source.encode()) > MAX_OUTPUT:
+            raise ValueError('Evaluator source exceeds bound')
+        result = subprocess.run(['/runtime/vere', 'eval', '--loom', '29'], input=source.encode(), capture_output=True, timeout=45)
+        if len(result.stdout) + len(result.stderr) > MAX_OUTPUT:
+            raise ValueError('Evaluator output exceeds bound')
+        stdout, stderr = (ANSI.sub('', value.decode()).strip() for value in (result.stdout, result.stderr))
+        report['records'].append({'kind': 'pure-native', 'label': label, 'source_sha256': digest(source.encode()),
+                                  'exit_code': result.returncode, 'stdout': stdout, 'stderr': stderr})
+        execution_policy.require_lease(Path('/execution'), read_only=True)
+        return stdout, result.returncode == 0 and 'eval: bail:' not in stderr
+    def git(*args, data=None, protocol=False, status=False):
+        env = {'HOME': '/tmp/empty-home', 'PATH': '/usr/bin', 'LANG': 'C.UTF-8', 'GIT_CONFIG_NOSYSTEM': '1',
+               'GIT_CONFIG_GLOBAL': '/dev/null', 'GIT_TERMINAL_PROMPT': '0'}
+        if protocol:
+            env['GIT_PROTOCOL'] = 'version=2'
+        argv = ['/runtime/git', '-c', 'credential.helper=', '-c', 'core.hooksPath=/dev/null', *args]
+        result = subprocess.run(argv, input=data, capture_output=True, timeout=15, env=env)
+        if len(result.stdout) + len(result.stderr) > MAX_OUTPUT:
+            raise ValueError('Stock Git output exceeds bound')
+        report['records'].append({'kind': 'stock-git', 'argv': argv, 'input_sha256': digest(data) if data is not None else None,
+                                  'stdout_hex': result.stdout.hex(), 'stderr': result.stderr.decode(), 'exit_code': result.returncode})
+        if result.returncode and not status:
+            raise ValueError('Stock Git fixture failed')
+        return result.returncode if status else result.stdout
+    try:
+        # One compilation runs every explicit test arm and a deliberate failing
+        # tang. Exact names/counts are checked independently on both sides.
+        arms = ARMS + ('failure-control',)
+        expression = '^-  (list [@ta @ta])\n:~  ' + '\n    '.join(
+            f'[(scot %tas %{name}) (scot %ud (lent {name}))]' for name in arms) + '\n==\n'
+        output, valid = native(test_prefix + expression, 'native-unit-inventory-and-failing-control')
+        rows = parse_rows(output, 2) if valid else []
+        if tuple(row[0] for row in rows) != arms:
+            raise ValueError('Native test result names or compiler result differ')
+        for name, tang_lines in rows[:-1]:
+            record(name, tang_lines == '0')
+        record('failing-tang-control-detected', bool(re.fullmatch(r'[1-9][0-9]*', rows[-1][1])), tang_lines=rows[-1][1])
+        output, valid = native('(invalid-unterminated\n', 'deliberately-invalid-compiler-control')
+        record('compiler-failure-control-detected', not valid and 'syntax error' in output)
+        git('init', '--bare', '--template=', '--initial-branch=main', '/work/fixture.git')
+        tree = git('--git-dir=/work/fixture.git', 'hash-object', '-w', '-t', 'tree', '--stdin', data=b'').strip()
+        commit_body = (b'tree ' + tree + b'\nauthor Fixture <fixture@stead.invalid> 0 +0000\n'
+                       b'committer Fixture <fixture@stead.invalid> 0 +0000\n\nPacket fixture\n')
+        commit = git('--git-dir=/work/fixture.git', 'hash-object', '-w', '-t', 'commit', '--stdin', data=commit_body).strip()
+        git('--git-dir=/work/fixture.git', 'update-ref', 'refs/heads/main', commit.decode())
+        # Native output is supplied directly as the protocol-v2 ls-refs request.
+        frames = [('data', b'command=ls-refs\n'), ('delim', b''), ('data', b'symrefs\n'), ('flush', b'')]
+        expression = '^-  (list [@ta @ta])\n:~  ' + '\n    '.join(
+            f'=/  frame  (encode %{kind} {octets(data)})\n    ?>  ?=(^ frame)\n    [(scot %ud length.u.frame) (scot %ux data.u.frame)]'
+            for kind, data in frames) + '\n==\n'
+        output, valid = native(prefix + expression, 'native-ls-refs-request')
+        if not valid:
+            raise ValueError('Native encoder failed')
+        encoded = parse_rows(output, 2)
+        if len(encoded) != len(frames):
+            raise ValueError('Native encoder omitted a frame')
+        request = b''.join(native_bytes(width, value) for width, value in encoded)
+        if [(kind, body) for kind, body, _ in reference_packets(request)] != frames:
+            raise ValueError('Native request differs from intended exact bytes')
+        advertisement = git('upload-pack', '--stateless-rpc', '--advertise-refs', '/work/fixture.git', protocol=True)
+        response = git('upload-pack', '--stateless-rpc', '/work/fixture.git', data=request, protocol=True)
+        expected_ref = commit + b' refs/heads/main\n'
+        record('native-encoded-ls-refs-accepted-by-stock-git', expected_ref in [row[1] for row in reference_packets(response)],
+               request_sha256=digest(request), commit_oid=commit.decode())
+        for name, raw in [('stock-advertisement-decoded-natively', advertisement), ('stock-refs-decoded-natively', response)]:
+            expression = f'=/  buffer=octets  {octets(raw)}\n=/  offset=@ud  0\n=/  rows=(list [@ta @ta @ta @ta])  ~\n|-\n^-  (list [@ta @ta @ta @ta])\n?:  =(offset length.buffer)  (flop rows)\n?>  (lth (lent rows) 128)\n=/  value  (decode buffer offset)\n?>  ?=(%ready -.value)\n$(offset next.value, rows [[(scot %tas kind.value) (scot %ud length.body.value) (scot %ux data.body.value) (scot %ud next.value)] rows])\n'
+            output, valid = native(prefix + expression, name)
+            decoded = [(kind, native_bytes(width, value), int(next_offset.replace('.', ''))) for kind, width, value, next_offset in parse_rows(output, 4)] if valid else []
+            record(name, decoded == reference_packets(raw), packet_count=len(decoded), input_sha256=digest(raw))
+        base_git = Path('/input/base-git.hoon').read_text()
+        object_library = Path('/input/object-library.hoon').read_text()
+        object_tests = Path('/input/object-tests.hoon').read_text()
+        pack_library = Path('/input/pack-library.hoon').read_text()
+        pack_tests = Path('/input/pack-tests.hoon').read_text()
+        # Comments may precede the import; remove exactly that one known import.
+        if object_library.count('/+  stead-git\n') != 1:
+            raise ValueError('Unexpected object-library imports')
+        object_body = object_library.replace('/+  stead-git\n', '')
+        object_prefix = '=/  stead-git\n' + base_git + '\n=>\n' + object_body + '\n'
+        compiled, valid = native(object_prefix + '42\n', 'object-helper-compilation-control')
+        if not valid or compiled != '42':
+            raise ValueError('Object helper did not compile independently')
+        receive_library = Path('/input/receive-library.hoon').read_text()
+        receive_tests = Path('/input/receive-tests.hoon').read_text()
+        if receive_library.count('/+  stead-code-git-objects\n') != 1:
+            raise ValueError('Unexpected receive-library imports')
+        receive_body = receive_library.replace('/+  stead-code-git-objects\n', '')
+        receive_dependency = '=/  stead-git\n' + base_git + '\n=/  stead-code-git-objects\n' + object_body + '\n'
+        compiled, valid = native(receive_dependency + '=>\n' + receive_body + '\n42\n', 'receive-helper-compilation-control')
+        if not valid or compiled != '42':
+            raise ValueError('Receive helper did not compile independently')
+        wire_library = Path('/input/wire-library.hoon').read_text()
+        wire_tests = Path('/input/wire-tests.hoon').read_text()
+        wire_import = '/+  stead-code-git-pkt, stead-code-git-objects, stead-code-receive\n'
+        if wire_library.count(wire_import) != 1:
+            raise ValueError('Unexpected receive-wire imports')
+        wire_body = wire_library.replace(wire_import, '')
+        wire_dependency = receive_dependency + '=/  stead-code-git-pkt\n' + library + '\n=/  stead-code-receive\n' + receive_body + '\n'
+        for module, source, tests_source, names, dependency in (
+                ('stead-code-git-objects', object_body, object_tests, OBJECT_ARMS, '=/  stead-git\n' + base_git + '\n'),
+                ('stead-code-git-pack', pack_library, pack_tests, PACK_ARMS, ''),
+                ('stead-code-receive', receive_body, receive_tests, RECEIVE_ARMS, receive_dependency),
+                ('stead-code-receive-wire', wire_body, wire_tests, WIRE_ARMS, wire_dependency)):
+            test_header, test_body = tests_source.split('\n', 1)
+            expected_header = '/+  *test, ' + ('stead-code-git-pkt, ' if module == 'stead-code-receive-wire' else '') + module
+            if test_header != expected_header or tuple(re.findall(r'^\+\+  (test-[a-z0-9-]+)$', tests_source, re.M)) != names:
+                raise ValueError('Unexpected native module test inventory')
+            test_source = '=/  test\n' + helper + '\n' + dependency + '=/  ' + module + '\n' + source + '\n=,  test\n=>\n' + test_body + '\n'
+            evaluated_names = names + (('failure-control',) if module == 'stead-code-receive-wire' else ())
+            expression = '^-  (list [@ta @ta])\n:~  ' + '\n    '.join(f'[(scot %tas %{name}) (scot %ud (lent {name}))]' for name in evaluated_names) + '\n==\n'
+            output, valid = native(test_source + expression, module + '-unit-inventory')
+            results = parse_rows(output, 2) if valid else []
+            if tuple(row[0] for row in results) != evaluated_names:
+                raise ValueError('Native module result names or compiler result differ')
+            failure = results.pop() if module == 'stead-code-receive-wire' else None
+            module_report = {'module': module, 'scope': 'pure native unit arms only; no installed service or accepted write', 'checks': [{'name': name, 'tang_lines': tang_lines, 'passed': tang_lines == '0'} for name, tang_lines in results]}
+            Path('/output/' + module + '.json').write_text(json.dumps(module_report, indent=2) + '\n')
+            for name, tang_lines in results:
+                record(name, tang_lines == '0')
+            if failure is not None:
+                record('receive-wire-failing-tang-control-detected', bool(re.fullmatch(r'[1-9][0-9]*', failure[1])), tang_lines=failure[1])
+        def object_case(kind, body):
+            expression = f'=/  value  (hash-object %{kind} {octets(body)})\n?>  ?=(^ value)\n^-  (list [@ta @ta @ta @ta])\n~[[(scot %tas kind.u.value) (scot %ud length.body.u.value) (scot %ux data.body.u.value) (scot %ux oid.u.value)]]\n'
+            output, valid = native(object_prefix + expression, 'native-' + kind + '-object')
+            rows = parse_rows(output, 4) if valid else []
+            if len(rows) != 1:
+                raise ValueError('Native object result is missing')
+            actual_kind, width, data, oid = rows[0]
+            actual_body = native_bytes(width, data)
+            actual_oid = f'{int(oid[2:].replace(".", ""), 16):040x}'
+            stock_oid = git('--git-dir=/work/fixture.git', 'hash-object', '-t', kind, '--stdin', data=body).strip().decode()
+            if actual_kind != kind or actual_body != body or actual_oid != stock_oid:
+                raise ValueError('Native object bytes/OID differ from stock Git')
+            written = git('--git-dir=/work/fixture.git', 'hash-object', '-w', '-t', kind, '--stdin', data=actual_body).strip().decode()
+            recovered = git('--git-dir=/work/fixture.git', 'cat-file', kind, written)
+            record('native-' + kind + '-roundtrip', written == actual_oid and recovered == body,
+                   oid=actual_oid, body_sha256=digest(body), bytes=len(body))
+            return actual_oid
+        blob_oid = object_case('blob', b'Exact binary bytes: \xff\x00\n')
+        tree_oid = object_case('tree', b'100644 example.txt\0' + bytes.fromhex(blob_oid))
+        code_commit = object_case('commit', (f'tree {tree_oid}\nauthor Jo\u00eb Example <jo@example.invalid> 1700000000 -0500\n'
+                                  'committer Fixture <fixture@stead.invalid> 1700000010 +0000\n\nPreserve authors and original bytes.\n').encode())
+        tag_oid = object_case('tag', (f'object {code_commit}\ntype commit\ntag v1\ntagger Fixture <fixture@stead.invalid> 1700000020 +0000\n\nExact annotated tag.\n').encode())
+        git('--git-dir=/work/fixture.git', 'update-ref', 'refs/heads/code', code_commit)
+        git('--git-dir=/work/fixture.git', 'update-ref', 'refs/tags/v1', tag_oid)
+        git('--git-dir=/work/fixture.git', 'fsck', '--full', '--strict')
+        record('native-object-graph-stock-fsck', True, commit_oid=code_commit, tag_oid=tag_oid)
+        refs = ['refs/heads/main', 'refs/tags/v1', 'refs/notes/topic', 'refs/heads/feature/\u6771\u4eac',
+                'refs/heads/@', 'refs/heads/a.LOCK', 'refs/heads/a./b', 'refs/heads/-leading',
+                'refs/heads/.local', 'refs/a.lock/child', 'refs/a.lock', 'refs/heads/a..b',
+                'refs/heads/a@{b', 'refs//heads', 'refs/heads/a\\b', 'refs/heads/a b',
+                'refs/heads/a~b', 'refs/heads/a^b', 'refs/heads/a:b', 'refs/heads/a?b',
+                'refs/heads/a*b', 'refs/heads/a[b', 'refs/heads/main/', 'refs/heads/main.',
+                'refs/', 'refs/a\x7fb', 'refs/a\x01b', 'refs/heads/' + 'x' * 1013]
+        expression = '^-  (list [@ta @ta])\n:~  ' + '\n    '.join(f'[~.r{index} (scot %tas ?:((valid-ref {octets(ref.encode())}) %yes %no))]' for index, ref in enumerate(refs)) + '\n==\n'
+        output, valid = native(object_prefix + expression, 'native-full-ref-validation')
+        rows = parse_rows(output, 2) if valid else []
+        if [row[0] for row in rows] != [f'r{index}' for index in range(len(refs))] or any(row[1] not in ('yes', 'no') for row in rows):
+            raise ValueError('Native ref result inventory differs')
+        comparisons = [(row[1] == 'yes') == (git('check-ref-format', ref, status=True) == 0) for row, ref in zip(rows, refs)]
+        record('native-ref-syntax-matches-stock-git', all(comparisons), cases=len(refs))
+        raw_pack = git('--git-dir=/work/fixture.git', 'pack-objects', '--stdout', '--all')
+        pack_prefix = '=>\n' + pack_library + '\n'
+        expression = f'=/  value  (inspect {octets(raw_pack)})\n?>  ?=(%envelope -.value)\n^-  (list [@ta @ta @ta @ta])\n~[[(scot %ud version.value) (scot %ud declared.value) (scot %ud entries-length.value) (scot %ux checksum.value)]]\n'
+        output, valid = native(pack_prefix + expression, 'native-stock-pack-envelope')
+        rows = parse_rows(output, 4) if valid else []
+        expected = (int.from_bytes(raw_pack[4:8], 'big'), int.from_bytes(raw_pack[8:12], 'big'), len(raw_pack) - 32, int.from_bytes(raw_pack[-20:], 'big'))
+        actual = tuple(int(value.replace('.', ''), 16 if index == 3 else 10) for index, value in enumerate(rows[0])) if len(rows) == 1 else None
+        record('stock-pack-envelope-checked-natively', actual == expected and hashlib.sha1(raw_pack[:-20]).digest() == raw_pack[-20:],
+               bytes=len(raw_pack), declared_objects=expected[1], sha256=digest(raw_pack))
+        corrupt = raw_pack[:-1] + bytes([raw_pack[-1] ^ 1])
+        output, valid = native(pack_prefix + f'=([%invalid %checksum] (inspect {octets(corrupt)}))\n', 'native-corrupt-pack-trailer')
+        record('corrupt-stock-pack-rejected-natively', valid and output == '%.y')
+        git('init', '--bare', '--template=', '--initial-branch=main', '/work/pack-check.git')
+        git('--git-dir=/work/pack-check.git', 'index-pack', '--strict', '--stdin', data=raw_pack)
+        record('stock-pack-independent-index-check', git('--git-dir=/work/pack-check.git', 'index-pack', '--strict', '--stdin', data=corrupt, status=True) != 0)
+        report['status'] = 'passed'
+    finally:
+        Path('/output/report.json').write_text(json.dumps(report, indent=2) + '\n')
+    validate_report(report)
+
+
+def main():
+    import toolchain
+    allowed = {'https://github.com/ScottTpirate/stead-urbit.git', 'git@github.com:ScottTpirate/stead-urbit.git'}
+    for flags in ([], ['--push']):
+        if subprocess.check_output(['git', 'remote', 'get-url', *flags, 'origin'], cwd=ROOT, text=True).strip() not in allowed:
+            raise ValueError('Origin is not the authorized derivative')
+    lock = toolchain.verify()
+    git_binary = Path(shutil.which('git')).resolve(strict=True)
+    base = ROOT / '.runtime/code-git-vectors'
+    if any(path.is_symlink() for path in (base, *base.parents)):
+        raise ValueError('Redirected fixture path')
+    if subprocess.run(['git', 'check-ignore', '-q', str(base / 'probe')], cwd=ROOT).returncode:
+        raise ValueError('Fixture path must be ignored')
+    base.mkdir(mode=0o700, exist_ok=True)
+    run = Path(tempfile.mkdtemp(prefix=datetime.now(timezone.utc).strftime('%Y%m%dT%H%M%SZ-'), dir=base))
+    for name in ('input', 'output', 'work', 'code'):
+        (run / name).mkdir(mode=0o700)
+    sources = {name: ROOT / name for name in (LIBRARY, TESTS, OBJECT_LIBRARY, OBJECT_TESTS, PACK_LIBRARY, PACK_TESTS, BASE_GIT, RECEIVE_LIBRARY, RECEIVE_TESTS, WIRE_LIBRARY, WIRE_TESTS)}
+    sources.update({ 'scripts/urbit/code_git_vectors.py': Path(__file__),
+               'scripts/urbit/execution_policy.py': Path(execution_policy.__file__)})
+    hashes = {name: digest(path.read_bytes()) for name, path in sources.items()}
+    helper = toolchain.CACHE / lock['kernel']['directory'] / 'pkg/base-dev/lib/test.hoon'
+    copies = [(ROOT / LIBRARY, 'input/library.hoon'), (ROOT / TESTS, 'input/tests.hoon'),
+              (ROOT / OBJECT_LIBRARY, 'input/object-library.hoon'), (ROOT / OBJECT_TESTS, 'input/object-tests.hoon'),
+              (ROOT / PACK_LIBRARY, 'input/pack-library.hoon'), (ROOT / PACK_TESTS, 'input/pack-tests.hoon'),
+              (ROOT / BASE_GIT, 'input/base-git.hoon'),
+              (ROOT / RECEIVE_LIBRARY, 'input/receive-library.hoon'), (ROOT / RECEIVE_TESTS, 'input/receive-tests.hoon'),
+              (ROOT / WIRE_LIBRARY, 'input/wire-library.hoon'), (ROOT / WIRE_TESTS, 'input/wire-tests.hoon'),
+              (helper, 'input/test-helper.hoon'), (Path(__file__), 'code/code_git_vectors.py'),
+              (Path(execution_policy.__file__), 'code/execution_policy.py')]
+    for source, target in copies:
+        with (run / target).open('xb') as output:
+            output.write(source.read_bytes())
+    evidence = {'scope': 'pure Git protocol helpers only; no ship boot or Stead Git service', 'sources_sha256': hashes,
+                'toolchain_sha256': digest(toolchain.LOCK_PATH.read_bytes()), 'helper_sha256': digest(helper.read_bytes()),
+                'git_sha256': digest(git_binary.read_bytes()), 'git_version': lock['host_tools']['git'],
+                'source_commit': subprocess.check_output(['git', 'rev-parse', 'HEAD'], cwd=ROOT, text=True).strip()}
+    execution_policy.write_json(run / '.stead-disposable.json', {'format': 1, 'purpose': 'bounded pure native Git packet vectors'})
+    execution_policy.write_json(run / 'inputs.json', evidence)
+    print('Evidence: ' + str(run), flush=True)
+    def command(control, run_id):
+        return ['/usr/bin/bwrap', '--unshare-all', '--new-session', '--clearenv',
+                '--ro-bind', '/usr', '/usr', '--symlink', 'usr/lib', '/lib', '--symlink', 'usr/lib64', '/lib64',
+                '--symlink', 'usr/bin', '/bin', '--proc', '/proc', '--dev', '/dev', '--tmpfs', '/tmp',
+                '--dir', '/tmp/empty-home', '--setenv', 'HOME', '/tmp/empty-home', '--setenv', 'LANG', 'C.UTF-8',
+                '--setenv', 'PATH', '/usr/bin', '--setenv', 'STEAD_EXECUTION_ID', run_id,
+                '--ro-bind', str(run / 'code'), '/code', '--ro-bind', str(run / 'input'), '/input',
+                '--ro-bind', str(control), '/execution', '--bind', str(run / 'output'), '/output',
+                '--bind', str(run / 'work'), '/work', '--ro-bind', str(git_binary), '/runtime/git',
+                '--ro-bind', str(toolchain.CACHE / lock['runtime']['binary']), '/runtime/vere',
+                '--chdir', '/work', '/usr/bin/python3', '/code/code_git_vectors.py', '_inside']
+    with (run / 'console.log').open('xb') as console:
+        guarded = execution_policy.run_guarded(command, root=ROOT, label='code-git-pkt', timeout=180, console=console)
+    evidence['guard_report'] = guarded['run_directory'] + '/report.json'
+    evidence['sources_after_sha256'] = {name: digest(path.read_bytes()) for name, path in sources.items()}
+    execution_policy.write_json(run / 'inputs.json', evidence)
+    if guarded['status'] != 'completed' or hashes != evidence['sources_after_sha256']:
+        raise ValueError('Native guard/source check failed: ' + str(guarded.get('reason')))
+    report = execution_policy.read_json(run / 'output/report.json', maximum=MAX_OUTPUT)
+    validate_report(report)
+    print(f'PASS {len(report["checks"])} checks; pure native Git helpers only; no ship boot', flush=True)
+
+
+if __name__ == '__main__':
+    if sys.argv[1:] == ['_inside']:
+        inside()
+    elif sys.argv[1:]:
+        raise SystemExit('No caller-selected input paths or commands are accepted')
+    else:
+        main()

@@ -1,0 +1,96 @@
+{
+  "module": "stead-code-git-objects",
+  "scope": "pure native unit arms only; no installed service or accepted write",
+  "checks": [
+    {
+      "name": "test-object-empty-blob",
+      "tang_lines": "0",
+      "passed": true
+    },
+    {
+      "name": "test-object-trailing-zero",
+      "tang_lines": "0",
+      "passed": true
+    },
+    {
+      "name": "test-object-tag-exact-bytes",
+      "tang_lines": "0",
+      "passed": true
+    },
+    {
+      "name": "test-object-kind-rejected",
+      "tang_lines": "0",
+      "passed": true
+    },
+    {
+      "name": "test-object-width-rejected",
+      "tang_lines": "0",
+      "passed": true
+    },
+    {
+      "name": "test-object-bound-rejected",
+      "tang_lines": "0",
+      "passed": true
+    },
+    {
+      "name": "test-oid-zero",
+      "tang_lines": "0",
+      "passed": true
+    },
+    {
+      "name": "test-oid-leading-zero",
+      "tang_lines": "0",
+      "passed": true
+    },
+    {
+      "name": "test-oid-full-width",
+      "tang_lines": "0",
+      "passed": true
+    },
+    {
+      "name": "test-oid-uppercase-rejected",
+      "tang_lines": "0",
+      "passed": true
+    },
+    {
+      "name": "test-oid-short-rejected",
+      "tang_lines": "0",
+      "passed": true
+    },
+    {
+      "name": "test-oid-nul-rejected",
+      "tang_lines": "0",
+      "passed": true
+    },
+    {
+      "name": "test-ref-valid",
+      "tang_lines": "0",
+      "passed": true
+    },
+    {
+      "name": "test-ref-head-rejected",
+      "tang_lines": "0",
+      "passed": true
+    },
+    {
+      "name": "test-ref-leading-dot-rejected",
+      "tang_lines": "0",
+      "passed": true
+    },
+    {
+      "name": "test-ref-lock-component-rejected",
+      "tang_lines": "0",
+      "passed": true
+    },
+    {
+      "name": "test-ref-nul-rejected",
+      "tang_lines": "0",
+      "passed": true
+    },
+    {
+      "name": "test-ref-bound-rejected",
+      "tang_lines": "0",
+      "passed": true
+    }
+  ]
+}

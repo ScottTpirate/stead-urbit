@@ -1,0 +1,230 @@
+{
+  "scope": "Earlier wrapper, syntax and fixture failures retained separately from the final passing source; the earlier 28-check pass qualifies framing only.",
+  "runs": [
+    {
+      "run": "20261109T012206Z-iy4ebsv6",
+      "status": "wrapper-failed-before-evaluator",
+      "qualifies_phase": false,
+      "observed_checks": 0,
+      "last_native_record": null,
+      "console": "Traceback (most recent call last):\n  File \"/code/code_git_vectors.py\", line 23, in <module>\n    ROOT = Path(__file__).resolve().parents[2]\n           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^\n  File \"/usr/lib/python3.14/pathlib/__init__.py\", line 68, in __getitem__\n    raise IndexError(idx)\nIndexError: 2\n",
+      "sources_sha256": {
+        "native/core/desk/lib/stead-code-git-pkt.hoon": "c0a4c87fb8a1d1d4521c640efad1f60a0d2c064b686468774c17d280442dc24e",
+        "native/core/desk/tests/stead-code-git-pkt.hoon": "6966b8d4f8433ef12f73260ce929ab131943230db0ca4090230aee9db03c53a8",
+        "scripts/urbit/code_git_vectors.py": "f287405937bdb5ffa60c364ff88a10c2e6e4713428ea0c38a6d6e7dd9eae1fa4",
+        "scripts/urbit/execution_policy.py": "8d52b799a3a7bff73f38e029b57fe0cfafd156b7c61184173860c21600ce41c0"
+      },
+      "report_sha256": null,
+      "guard_status": "failed",
+      "guard_reason": "Owned sandbox exited unsuccessfully",
+      "guard_elapsed_seconds": 1.007
+    },
+    {
+      "run": "20261109T012222Z-7y1kusim",
+      "status": "failed",
+      "qualifies_phase": false,
+      "observed_checks": 0,
+      "last_native_record": {
+        "kind": "pure-native",
+        "label": "native-unit-inventory-and-failing-control",
+        "source_sha256": "cd7057a410ce6a11c27e54a12398dca44daff913b724cddca64b941c5a1a4bb4",
+        "exit_code": 0,
+        "stdout": "/eval\r\n{182 24}\r\nsyntax error",
+        "stderr": "loom: mapped 512MB\r\nlite: arvo formula 4ce68411\r\nlite: core 641296f\r\nlite: final state 641296f\r\neval (run):\n\r\neval: bail: %exit"
+      },
+      "console": "Traceback (most recent call last):\n  File \"/code/code_git_vectors.py\", line 269, in <module>\n    inside()\n    ~~~~~~^^\n  File \"/code/code_git_vectors.py\", line 168, in inside\n    raise ValueError('Native test result names or compiler result differ')\nValueError: Native test result names or compiler result differ\n",
+      "sources_sha256": {
+        "native/core/desk/lib/stead-code-git-pkt.hoon": "c0a4c87fb8a1d1d4521c640efad1f60a0d2c064b686468774c17d280442dc24e",
+        "native/core/desk/tests/stead-code-git-pkt.hoon": "6966b8d4f8433ef12f73260ce929ab131943230db0ca4090230aee9db03c53a8",
+        "scripts/urbit/code_git_vectors.py": "7318cd51838d368d986f354356d5fba4db2c3ced8436283fda3a286357173132",
+        "scripts/urbit/execution_policy.py": "8d52b799a3a7bff73f38e029b57fe0cfafd156b7c61184173860c21600ce41c0"
+      },
+      "report_sha256": "fa8cead854450822343f8b19a4ca6cb07ad43659555ffe722950a5f554aae63d",
+      "guard_status": "failed",
+      "guard_reason": "Owned sandbox exited unsuccessfully",
+      "guard_elapsed_seconds": 3.01
+    },
+    {
+      "run": "20261109T012253Z-a24euafj",
+      "status": "failed",
+      "qualifies_phase": false,
+      "observed_checks": 0,
+      "last_native_record": {
+        "kind": "pure-native",
+        "label": "native-unit-inventory-and-failing-control",
+        "source_sha256": "3fed21118da727041a680fff34fe72c6c9ac722e34b7c9389ae398871902bad3",
+        "exit_code": 0,
+        "stdout": "/eval\r\n{186 16}\r\nsyntax error",
+        "stderr": "loom: mapped 512MB\r\nlite: arvo formula 4ce68411\r\nlite: core 641296f\r\nlite: final state 641296f\r\neval (run):\n\r\neval: bail: %exit"
+      },
+      "console": "Traceback (most recent call last):\n  File \"/code/code_git_vectors.py\", line 269, in <module>\n    inside()\n    ~~~~~~^^\n  File \"/code/code_git_vectors.py\", line 168, in inside\n    raise ValueError('Native test result names or compiler result differ')\nValueError: Native test result names or compiler result differ\n",
+      "sources_sha256": {
+        "native/core/desk/lib/stead-code-git-pkt.hoon": "c0a4c87fb8a1d1d4521c640efad1f60a0d2c064b686468774c17d280442dc24e",
+        "native/core/desk/tests/stead-code-git-pkt.hoon": "433604f7838093808d7c94b806d8892422718a85ab50870a2d91eacbfaed726d",
+        "scripts/urbit/code_git_vectors.py": "7318cd51838d368d986f354356d5fba4db2c3ced8436283fda3a286357173132",
+        "scripts/urbit/execution_policy.py": "8d52b799a3a7bff73f38e029b57fe0cfafd156b7c61184173860c21600ce41c0"
+      },
+      "report_sha256": "5d5112d09b69993b70adba9cc15c56250300b0e64a45d6c65827a74483909285",
+      "guard_status": "failed",
+      "guard_reason": "Owned sandbox exited unsuccessfully",
+      "guard_elapsed_seconds": 3.013
+    },
+    {
+      "run": "20261109T012315Z-x3b9fvnm",
+      "status": "passed",
+      "qualifies_phase": false,
+      "observed_checks": 28,
+      "last_native_record": {
+        "kind": "pure-native",
+        "label": "stock-refs-decoded-natively",
+        "source_sha256": "8f1ff689eb8f711d2798a16309b98d2a616bcaa25fe17a1d9366a86049dcba4b",
+        "exit_code": 0,
+        "stdout": "~[\r\n  [ ~.data\r\n    ~.76\r\n    ~.0xa6e.6961.6d2f.7364.6165.682f.7366.6572.3a74.6567.7261.742d.6665.726d.7973.2044.4145.4820.3065.6634.6666.3130.3830.3666.3661.3536.6661.6161.6134.6333.3334.6532.3061.3337.6331.6335.3138.3234\r\n    ~.80\r\n  ]\r\n  [ ~.data\r\n    ~.57\r\n    ~.0xa.6e69.616d.2f73.6461.6568.2f73.6665.7220.3065.6634.6666.3130.3830.3666.3661.3536.6661.6161.6134.6333.3334.6532.3061.3337.6331.6335.3138.3234\r\n    ~.141\r\n  ]\r\n  [~.flush ~.0 ~.0x0 ~.145]\r\n]",
+        "stderr": "loom: mapped 512MB\r\nlite: arvo formula 4ce68411\r\nlite: core 641296f\r\nlite: final state 641296f\r\neval (run):"
+      },
+      "console": "",
+      "sources_sha256": {
+        "native/core/desk/lib/stead-code-git-pkt.hoon": "c0a4c87fb8a1d1d4521c640efad1f60a0d2c064b686468774c17d280442dc24e",
+        "native/core/desk/tests/stead-code-git-pkt.hoon": "c239f495a35487981f2c309abf18af9d124f35e60f9195f434f1e3c285bb4982",
+        "scripts/urbit/code_git_vectors.py": "7318cd51838d368d986f354356d5fba4db2c3ced8436283fda3a286357173132",
+        "scripts/urbit/execution_policy.py": "8d52b799a3a7bff73f38e029b57fe0cfafd156b7c61184173860c21600ce41c0"
+      },
+      "report_sha256": "785f5fc93ab1182538f627b5052bf6e3320a2827907ebe03f505c420ca6b346b",
+      "guard_status": "completed",
+      "guard_reason": null,
+      "guard_elapsed_seconds": 8.023
+    },
+    {
+      "run": "20261109T013007Z-fw2a04ix",
+      "status": "failed",
+      "qualifies_phase": false,
+      "observed_checks": 28,
+      "last_native_record": {
+        "kind": "pure-native",
+        "label": "stead-code-git-objects-unit-inventory",
+        "source_sha256": "e530c63d0321cbd68fd53d899a2fc2e005eefea500ba6c34caf2ef2a197996af",
+        "exit_code": 0,
+        "stdout": "-find.$",
+        "stderr": "loom: mapped 512MB\r\nlite: arvo formula 4ce68411\r\nlite: core 641296f\r\nlite: final state 641296f\r\neval (run):\n\r\neval: bail: %exit"
+      },
+      "console": "Traceback (most recent call last):\n  File \"/code/code_git_vectors.py\", line 395, in <module>\n    inside()\n    ~~~~~~^^\n  File \"/code/code_git_vectors.py\", line 265, in inside\n    raise ValueError('Native module result names or compiler result differ')\nValueError: Native module result names or compiler result differ\n",
+      "sources_sha256": {
+        "native/core/desk/lib/stead-code-git-objects.hoon": "d82bfa622dd796835ad472bf2624f80b2d44460427b0746aca8ac46452f78440",
+        "native/core/desk/lib/stead-code-git-pack.hoon": "49a8193642bf0d61a695795a85d045c5a1eed23a0908a350103a0555e93064a9",
+        "native/core/desk/lib/stead-code-git-pkt.hoon": "c0a4c87fb8a1d1d4521c640efad1f60a0d2c064b686468774c17d280442dc24e",
+        "native/core/desk/lib/stead-code-receive.hoon": "06141fff4f964ae2471a7454445885b6481eabd4632bb46c42769faeb72394a2",
+        "native/core/desk/lib/stead-git.hoon": "826b83485429c02f577c9b462ee6cddd3ab8ea1a099d33b66893f863d54c54d7",
+        "native/core/desk/tests/stead-code-git-objects.hoon": "8cb5d8e1df6444709fd7eca1ed4110087b813121b08d496979669e10012f33a5",
+        "native/core/desk/tests/stead-code-git-pack.hoon": "eec8ee9054f962e454c4fa9bd646696b6a94513f05adc07817b68a3d51c9ea63",
+        "native/core/desk/tests/stead-code-git-pkt.hoon": "c239f495a35487981f2c309abf18af9d124f35e60f9195f434f1e3c285bb4982",
+        "native/core/desk/tests/stead-code-receive.hoon": "a0ae20b636747200584d8baca2c75fd455df27647588bc8d9e3cdfee6078bc38",
+        "scripts/urbit/code_git_vectors.py": "d44b836989d43a22ae0283e39cbc546d02675a830961e1fa22856164ad969f55",
+        "scripts/urbit/execution_policy.py": "8d52b799a3a7bff73f38e029b57fe0cfafd156b7c61184173860c21600ce41c0"
+      },
+      "report_sha256": "a04c2226280ed714d48b2f061b1a25eb5a7810130f5c64d1274b0651004948d4",
+      "guard_status": "failed",
+      "guard_reason": "Owned sandbox exited unsuccessfully",
+      "guard_elapsed_seconds": 9.023
+    },
+    {
+      "run": "20261109T013827Z-2xtwk0ci",
+      "status": "failed",
+      "qualifies_phase": false,
+      "observed_checks": 58,
+      "last_native_record": {
+        "kind": "pure-native",
+        "label": "stead-code-receive-unit-inventory",
+        "source_sha256": "8af3247d945ea1d5b687681ae245bffde58f4c74ecdaaf83ce23218fc371e9fc",
+        "exit_code": 0,
+        "stdout": "mint-vain",
+        "stderr": "loom: mapped 512MB\r\nlite: arvo formula 4ce68411\r\nlite: core 641296f\r\nlite: final state 641296f\r\neval (run):\n\r\neval: bail: %exit"
+      },
+      "console": "Traceback (most recent call last):\n  File \"/code/code_git_vectors.py\", line 398, in <module>\n    inside()\n    ~~~~~~^^\n  File \"/code/code_git_vectors.py\", line 268, in inside\n    raise ValueError('Native module result names or compiler result differ')\nValueError: Native module result names or compiler result differ\n",
+      "sources_sha256": {
+        "native/core/desk/lib/stead-code-git-objects.hoon": "d82bfa622dd796835ad472bf2624f80b2d44460427b0746aca8ac46452f78440",
+        "native/core/desk/lib/stead-code-git-pack.hoon": "49a8193642bf0d61a695795a85d045c5a1eed23a0908a350103a0555e93064a9",
+        "native/core/desk/lib/stead-code-git-pkt.hoon": "c0a4c87fb8a1d1d4521c640efad1f60a0d2c064b686468774c17d280442dc24e",
+        "native/core/desk/lib/stead-code-receive.hoon": "06141fff4f964ae2471a7454445885b6481eabd4632bb46c42769faeb72394a2",
+        "native/core/desk/lib/stead-git.hoon": "826b83485429c02f577c9b462ee6cddd3ab8ea1a099d33b66893f863d54c54d7",
+        "native/core/desk/tests/stead-code-git-objects.hoon": "091e09f327c7f6b2b4d01744aa23bad60964d353fa88183823c682ba4d167548",
+        "native/core/desk/tests/stead-code-git-pack.hoon": "eec8ee9054f962e454c4fa9bd646696b6a94513f05adc07817b68a3d51c9ea63",
+        "native/core/desk/tests/stead-code-git-pkt.hoon": "c239f495a35487981f2c309abf18af9d124f35e60f9195f434f1e3c285bb4982",
+        "native/core/desk/tests/stead-code-receive.hoon": "a0ae20b636747200584d8baca2c75fd455df27647588bc8d9e3cdfee6078bc38",
+        "scripts/urbit/code_git_vectors.py": "b4e188239462cfdc9ba574a33480166bebe3ef1e8f8cb02ab06c94a198550a1f",
+        "scripts/urbit/execution_policy.py": "8d52b799a3a7bff73f38e029b57fe0cfafd156b7c61184173860c21600ce41c0"
+      },
+      "report_sha256": "798f8ac7b1acc7dc76e48cd0a92a51c9f65f84504180a42df9ee965b39c393fc",
+      "guard_status": "failed",
+      "guard_reason": "Owned sandbox exited unsuccessfully",
+      "guard_elapsed_seconds": 14.047
+    },
+    {
+      "run": "20261109T015123Z-zf8cqe88",
+      "status": "failed",
+      "qualifies_phase": false,
+      "observed_checks": 73,
+      "last_native_record": {
+        "kind": "pure-native",
+        "label": "stead-code-receive-wire-unit-inventory",
+        "source_sha256": "251d002b02e8b2409442bfd7a91078bd82c7830fe5db8d8c54bd9e47b9152e03",
+        "exit_code": 0,
+        "stdout": "/eval\r\n{508 54}\r\nsyntax error",
+        "stderr": "loom: mapped 512MB\r\nlite: arvo formula 4ce68411\r\nlite: core 641296f\r\nlite: final state 641296f\r\neval (run):\n\r\neval: bail: %exit"
+      },
+      "console": "Traceback (most recent call last):\n  File \"/code/code_git_vectors.py\", line 474, in <module>\n    inside()\n    ~~~~~~^^\n  File \"/code/code_git_vectors.py\", line 340, in inside\n    raise ValueError('Native module result names or compiler result differ')\nValueError: Native module result names or compiler result differ\n",
+      "sources_sha256": {
+        "native/core/desk/lib/stead-code-git-objects.hoon": "d82bfa622dd796835ad472bf2624f80b2d44460427b0746aca8ac46452f78440",
+        "native/core/desk/lib/stead-code-git-pack.hoon": "49a8193642bf0d61a695795a85d045c5a1eed23a0908a350103a0555e93064a9",
+        "native/core/desk/lib/stead-code-git-pkt.hoon": "c0a4c87fb8a1d1d4521c640efad1f60a0d2c064b686468774c17d280442dc24e",
+        "native/core/desk/lib/stead-code-receive-wire.hoon": "cfc6a3e09ad182f405d79d00e5a6d0c1602de8b04beb3a501b1a286b3feaa15c",
+        "native/core/desk/lib/stead-code-receive.hoon": "590de8fe7e1e0d06514fee365b8d9decc6f4a9c08c6fe4a6b08a76a90ebcf7d6",
+        "native/core/desk/lib/stead-git.hoon": "826b83485429c02f577c9b462ee6cddd3ab8ea1a099d33b66893f863d54c54d7",
+        "native/core/desk/tests/stead-code-git-objects.hoon": "091e09f327c7f6b2b4d01744aa23bad60964d353fa88183823c682ba4d167548",
+        "native/core/desk/tests/stead-code-git-pack.hoon": "eec8ee9054f962e454c4fa9bd646696b6a94513f05adc07817b68a3d51c9ea63",
+        "native/core/desk/tests/stead-code-git-pkt.hoon": "c239f495a35487981f2c309abf18af9d124f35e60f9195f434f1e3c285bb4982",
+        "native/core/desk/tests/stead-code-receive-wire.hoon": "c720cc3391ee44efefb9e144b3f8217eff3076e9a7f8e6427c53efcc035fd36d",
+        "native/core/desk/tests/stead-code-receive.hoon": "a0ae20b636747200584d8baca2c75fd455df27647588bc8d9e3cdfee6078bc38",
+        "scripts/urbit/code_git_vectors.py": "bbcb71352f7a3191a7b3107caeaf865fcf153a4af18cadebe792f8d5a707e3bc",
+        "scripts/urbit/execution_policy.py": "8d52b799a3a7bff73f38e029b57fe0cfafd156b7c61184173860c21600ce41c0"
+      },
+      "report_sha256": "41b3848b510eb5870e695ab455ac62df86c17b375f1cd8c5fe1e8a824b261b7c",
+      "guard_status": "failed",
+      "guard_reason": "Owned sandbox exited unsuccessfully",
+      "guard_elapsed_seconds": 31.086
+    },
+    {
+      "run": "20261109T015457Z-gkdx7f90",
+      "status": "failed",
+      "qualifies_phase": false,
+      "observed_checks": 73,
+      "last_native_record": {
+        "kind": "pure-native",
+        "label": "stead-code-receive-wire-unit-inventory",
+        "source_sha256": "5244acf16b3db158c4332e119ea1564437f1c65ddf034e0503f3f91ae9f04415",
+        "exit_code": 0,
+        "stdout": "-find.length.valid",
+        "stderr": "loom: mapped 512MB\r\nlite: arvo formula 4ce68411\r\nlite: core 641296f\r\nlite: final state 641296f\r\neval (run):\n\r\neval: bail: %exit"
+      },
+      "console": "Traceback (most recent call last):\n  File \"/code/code_git_vectors.py\", line 474, in <module>\n    inside()\n    ~~~~~~^^\n  File \"/code/code_git_vectors.py\", line 340, in inside\n    raise ValueError('Native module result names or compiler result differ')\nValueError: Native module result names or compiler result differ\n",
+      "sources_sha256": {
+        "native/core/desk/lib/stead-code-git-objects.hoon": "d82bfa622dd796835ad472bf2624f80b2d44460427b0746aca8ac46452f78440",
+        "native/core/desk/lib/stead-code-git-pack.hoon": "49a8193642bf0d61a695795a85d045c5a1eed23a0908a350103a0555e93064a9",
+        "native/core/desk/lib/stead-code-git-pkt.hoon": "c0a4c87fb8a1d1d4521c640efad1f60a0d2c064b686468774c17d280442dc24e",
+        "native/core/desk/lib/stead-code-receive-wire.hoon": "27fd2e1e4bb2d5a060065088acc2738077fe6216a3cc74967f451b8ac1bd1fd5",
+        "native/core/desk/lib/stead-code-receive.hoon": "590de8fe7e1e0d06514fee365b8d9decc6f4a9c08c6fe4a6b08a76a90ebcf7d6",
+        "native/core/desk/lib/stead-git.hoon": "826b83485429c02f577c9b462ee6cddd3ab8ea1a099d33b66893f863d54c54d7",
+        "native/core/desk/tests/stead-code-git-objects.hoon": "091e09f327c7f6b2b4d01744aa23bad60964d353fa88183823c682ba4d167548",
+        "native/core/desk/tests/stead-code-git-pack.hoon": "eec8ee9054f962e454c4fa9bd646696b6a94513f05adc07817b68a3d51c9ea63",
+        "native/core/desk/tests/stead-code-git-pkt.hoon": "c239f495a35487981f2c309abf18af9d124f35e60f9195f434f1e3c285bb4982",
+        "native/core/desk/tests/stead-code-receive-wire.hoon": "c720cc3391ee44efefb9e144b3f8217eff3076e9a7f8e6427c53efcc035fd36d",
+        "native/core/desk/tests/stead-code-receive.hoon": "a0ae20b636747200584d8baca2c75fd455df27647588bc8d9e3cdfee6078bc38",
+        "scripts/urbit/code_git_vectors.py": "bbcb71352f7a3191a7b3107caeaf865fcf153a4af18cadebe792f8d5a707e3bc",
+        "scripts/urbit/execution_policy.py": "8d52b799a3a7bff73f38e029b57fe0cfafd156b7c61184173860c21600ce41c0"
+      },
+      "report_sha256": "89c7b5b1ad450de4ec740320cd4387aa1a843ef219d6af851a0a4a2359d6b607",
+      "guard_status": "failed",
+      "guard_reason": "Owned sandbox exited unsuccessfully",
+      "guard_elapsed_seconds": 19.051
+    }
+  ]
+}

@@ -1,0 +1,231 @@
+{
+  "module": "stead-code-receive-wire",
+  "scope": "pure native unit arms only; no installed service or accepted write",
+  "checks": [
+    {
+      "name": "test-receive-wire-create",
+      "tang_lines": "0",
+      "passed": true
+    },
+    {
+      "name": "test-receive-wire-empty-capabilities",
+      "tang_lines": "0",
+      "passed": true
+    },
+    {
+      "name": "test-receive-wire-command-order",
+      "tang_lines": "0",
+      "passed": true
+    },
+    {
+      "name": "test-receive-wire-final-lf",
+      "tang_lines": "0",
+      "passed": true
+    },
+    {
+      "name": "test-receive-wire-pack-is-opaque",
+      "tang_lines": "0",
+      "passed": true
+    },
+    {
+      "name": "test-receive-wire-large-tail-bypasses-pkt-buffer-limit",
+      "tang_lines": "0",
+      "passed": true
+    },
+    {
+      "name": "test-receive-wire-pack-bound",
+      "tang_lines": "0",
+      "passed": true
+    },
+    {
+      "name": "test-receive-wire-buffer-bound",
+      "tang_lines": "0",
+      "passed": true
+    },
+    {
+      "name": "test-receive-wire-buffer-width",
+      "tang_lines": "0",
+      "passed": true
+    },
+    {
+      "name": "test-receive-wire-empty",
+      "tang_lines": "0",
+      "passed": true
+    },
+    {
+      "name": "test-receive-wire-truncated-header",
+      "tang_lines": "0",
+      "passed": true
+    },
+    {
+      "name": "test-receive-wire-truncated-payload",
+      "tang_lines": "0",
+      "passed": true
+    },
+    {
+      "name": "test-receive-wire-missing-flush",
+      "tang_lines": "0",
+      "passed": true
+    },
+    {
+      "name": "test-receive-wire-invalid-header",
+      "tang_lines": "0",
+      "passed": true
+    },
+    {
+      "name": "test-receive-wire-delimiter",
+      "tang_lines": "0",
+      "passed": true
+    },
+    {
+      "name": "test-receive-wire-response-end",
+      "tang_lines": "0",
+      "passed": true
+    },
+    {
+      "name": "test-receive-wire-first-nul-required",
+      "tang_lines": "0",
+      "passed": true
+    },
+    {
+      "name": "test-receive-wire-later-nul-forbidden",
+      "tang_lines": "0",
+      "passed": true
+    },
+    {
+      "name": "test-receive-wire-duplicate-ref",
+      "tang_lines": "0",
+      "passed": true
+    },
+    {
+      "name": "test-receive-wire-invalid-ref",
+      "tang_lines": "0",
+      "passed": true
+    },
+    {
+      "name": "test-receive-wire-unsupported-ref",
+      "tang_lines": "0",
+      "passed": true
+    },
+    {
+      "name": "test-receive-wire-uppercase-oid",
+      "tang_lines": "0",
+      "passed": true
+    },
+    {
+      "name": "test-receive-wire-command-spacing",
+      "tang_lines": "0",
+      "passed": true
+    },
+    {
+      "name": "test-receive-wire-unknown-capability",
+      "tang_lines": "0",
+      "passed": true
+    },
+    {
+      "name": "test-receive-wire-unsupported-sha256",
+      "tang_lines": "0",
+      "passed": true
+    },
+    {
+      "name": "test-receive-wire-push-options-unsupported",
+      "tang_lines": "0",
+      "passed": true
+    },
+    {
+      "name": "test-receive-wire-unadvertised-capability",
+      "tang_lines": "0",
+      "passed": true
+    },
+    {
+      "name": "test-receive-wire-duplicate-capability",
+      "tang_lines": "0",
+      "passed": true
+    },
+    {
+      "name": "test-receive-wire-duplicate-agent-key",
+      "tang_lines": "0",
+      "passed": true
+    },
+    {
+      "name": "test-receive-wire-capability-whitespace",
+      "tang_lines": "0",
+      "passed": true
+    },
+    {
+      "name": "test-receive-wire-capability-nul",
+      "tang_lines": "0",
+      "passed": true
+    },
+    {
+      "name": "test-receive-wire-command-count-at-bound",
+      "tang_lines": "0",
+      "passed": true
+    },
+    {
+      "name": "test-receive-wire-command-count-over-bound",
+      "tang_lines": "0",
+      "passed": true
+    },
+    {
+      "name": "test-receive-wire-delete-advertisement",
+      "tang_lines": "0",
+      "passed": true
+    },
+    {
+      "name": "test-receive-wire-advertisement-profile",
+      "tang_lines": "0",
+      "passed": true
+    },
+    {
+      "name": "test-receive-wire-advertisement-bound",
+      "tang_lines": "0",
+      "passed": true
+    },
+    {
+      "name": "test-receive-wire-header-bound",
+      "tang_lines": "0",
+      "passed": true
+    },
+    {
+      "name": "test-receive-wire-capability-block-bound",
+      "tang_lines": "0",
+      "passed": true
+    },
+    {
+      "name": "test-receive-wire-agent-at-token-bound",
+      "tang_lines": "0",
+      "passed": true
+    },
+    {
+      "name": "test-receive-wire-agent-over-token-bound",
+      "tang_lines": "0",
+      "passed": true
+    },
+    {
+      "name": "test-receive-wire-ref-at-bound",
+      "tang_lines": "0",
+      "passed": true
+    },
+    {
+      "name": "test-receive-wire-ref-over-bound",
+      "tang_lines": "0",
+      "passed": true
+    },
+    {
+      "name": "test-receive-wire-command-payload-bound",
+      "tang_lines": "0",
+      "passed": true
+    },
+    {
+      "name": "test-receive-wire-shallow-unsupported",
+      "tang_lines": "0",
+      "passed": true
+    },
+    {
+      "name": "test-receive-wire-signed-push-unsupported",
+      "tang_lines": "0",
+      "passed": true
+    }
+  ]
+}

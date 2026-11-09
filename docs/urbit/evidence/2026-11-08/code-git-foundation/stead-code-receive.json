@@ -1,0 +1,81 @@
+{
+  "module": "stead-code-receive",
+  "scope": "pure native unit arms only; no installed service or accepted write",
+  "checks": [
+    {
+      "name": "test-ref-advance",
+      "tang_lines": "0",
+      "passed": true
+    },
+    {
+      "name": "test-ref-competing-writes",
+      "tang_lines": "0",
+      "passed": true
+    },
+    {
+      "name": "test-ref-revoked",
+      "tang_lines": "0",
+      "passed": true
+    },
+    {
+      "name": "test-ref-epoch",
+      "tang_lines": "0",
+      "passed": true
+    },
+    {
+      "name": "test-ref-protected-delete",
+      "tang_lines": "0",
+      "passed": true
+    },
+    {
+      "name": "test-ref-batch-rejects-stale-member",
+      "tang_lines": "0",
+      "passed": true
+    },
+    {
+      "name": "test-ref-non-fast-forward",
+      "tang_lines": "0",
+      "passed": true
+    },
+    {
+      "name": "test-ref-namespace",
+      "tang_lines": "0",
+      "passed": true
+    },
+    {
+      "name": "test-ref-duplicate",
+      "tang_lines": "0",
+      "passed": true
+    },
+    {
+      "name": "test-ref-bad-name",
+      "tang_lines": "0",
+      "passed": true
+    },
+    {
+      "name": "test-ref-unsupported",
+      "tang_lines": "0",
+      "passed": true
+    },
+    {
+      "name": "test-ref-tag-replacement",
+      "tang_lines": "0",
+      "passed": true
+    },
+    {
+      "name": "test-ref-bad-target",
+      "tang_lines": "0",
+      "passed": true
+    },
+    {
+      "name": "test-ref-missing-target",
+      "tang_lines": "0",
+      "passed": true
+    },
+    {
+      "name": "test-ref-tag-and-branch-create",
+      "tang_lines": "0",
+      "passed": true
+    }
+  ]
+}

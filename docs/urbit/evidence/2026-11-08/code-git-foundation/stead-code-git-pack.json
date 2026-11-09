@@ -1,0 +1,66 @@
+{
+  "module": "stead-code-git-pack",
+  "scope": "pure native unit arms only; no installed service or accepted write",
+  "checks": [
+    {
+      "name": "test-pack-empty-sha-one",
+      "tang_lines": "0",
+      "passed": true
+    },
+    {
+      "name": "test-pack-version-three",
+      "tang_lines": "0",
+      "passed": true
+    },
+    {
+      "name": "test-pack-unsupported-version",
+      "tang_lines": "0",
+      "passed": true
+    },
+    {
+      "name": "test-pack-declared-count-bound",
+      "tang_lines": "0",
+      "passed": true
+    },
+    {
+      "name": "test-pack-signature",
+      "tang_lines": "0",
+      "passed": true
+    },
+    {
+      "name": "test-pack-checksum",
+      "tang_lines": "0",
+      "passed": true
+    },
+    {
+      "name": "test-pack-empty-payload",
+      "tang_lines": "0",
+      "passed": true
+    },
+    {
+      "name": "test-pack-missing-entries",
+      "tang_lines": "0",
+      "passed": true
+    },
+    {
+      "name": "test-pack-truncated",
+      "tang_lines": "0",
+      "passed": true
+    },
+    {
+      "name": "test-pack-envelope-does-not-validate-entry",
+      "tang_lines": "0",
+      "passed": true
+    },
+    {
+      "name": "test-pack-byte-bound",
+      "tang_lines": "0",
+      "passed": true
+    },
+    {
+      "name": "test-pack-explicit-width",
+      "tang_lines": "0",
+      "passed": true
+    }
+  ]
+}

@@ -1,0 +1,17 @@
+Command: python3 -m unittest discover -s tests/urbit -p test_code_git_vectors.py -v
+Scope: host oracle/report parser only; no native qualification.
+test_binary_and_line_endings_unchanged (test_code_git_vectors.CodeGitPacketControls.test_binary_and_line_endings_unchanged) ... ok
+test_complete_native_rows (test_code_git_vectors.CodeGitPacketControls.test_complete_native_rows) ... ok
+test_controls_distinct_from_empty_data (test_code_git_vectors.CodeGitPacketControls.test_controls_distinct_from_empty_data) ... ok
+test_explicit_width_preserves_zero_bytes (test_code_git_vectors.CodeGitPacketControls.test_explicit_width_preserves_zero_bytes) ... ok
+test_literal_preserves_atom_value (test_code_git_vectors.CodeGitPacketControls.test_literal_preserves_atom_value) ... ok
+test_native_bytes_rejects_overflow_and_non_numbers (test_code_git_vectors.CodeGitPacketControls.test_native_bytes_rejects_overflow_and_non_numbers) ... ok
+test_native_output_cannot_hide_errors_or_missing_cases (test_code_git_vectors.CodeGitPacketControls.test_native_output_cannot_hide_errors_or_missing_cases) ... ok
+test_oracle_bounds_and_uppercase (test_code_git_vectors.CodeGitPacketControls.test_oracle_bounds_and_uppercase) ... ok
+test_oracle_rejects_truncated_and_reserved_packets (test_code_git_vectors.CodeGitPacketControls.test_oracle_rejects_truncated_and_reserved_packets) ... ok
+test_report_requires_exact_named_successes (test_code_git_vectors.CodeGitPacketControls.test_report_requires_exact_named_successes) ... ok
+
+----------------------------------------------------------------------
+Ran 10 tests in 0.003s
+
+OK

@@ -1,0 +1,1606 @@
+{
+  "status": "passed",
+  "scope": "pure Hoon Git framing, SHA-1 objects, ref syntax and pack-envelope checks; no acceptance service",
+  "qualifies_phase": false,
+  "checks": [
+    {
+      "name": "test-encode-data",
+      "passed": true
+    },
+    {
+      "name": "test-encode-binary",
+      "passed": true
+    },
+    {
+      "name": "test-encode-empty-data",
+      "passed": true
+    },
+    {
+      "name": "test-encode-controls",
+      "passed": true
+    },
+    {
+      "name": "test-encode-control-payload-rejected",
+      "passed": true
+    },
+    {
+      "name": "test-encode-at-bound",
+      "passed": true
+    },
+    {
+      "name": "test-encode-over-bound-rejected",
+      "passed": true
+    },
+    {
+      "name": "test-encode-width-rejected",
+      "passed": true
+    },
+    {
+      "name": "test-decode-controls-and-empty",
+      "passed": true
+    },
+    {
+      "name": "test-decode-binary-zero",
+      "passed": true
+    },
+    {
+      "name": "test-decode-all-zero-payload",
+      "passed": true
+    },
+    {
+      "name": "test-decode-offset-and-tail",
+      "passed": true
+    },
+    {
+      "name": "test-decode-truncated-header",
+      "passed": true
+    },
+    {
+      "name": "test-decode-truncated-payload",
+      "passed": true
+    },
+    {
+      "name": "test-decode-required-relative-to-offset",
+      "passed": true
+    },
+    {
+      "name": "test-decode-nonhex-rejected",
+      "passed": true
+    },
+    {
+      "name": "test-decode-reserved-rejected",
+      "passed": true
+    },
+    {
+      "name": "test-decode-over-bound-rejected",
+      "passed": true
+    },
+    {
+      "name": "test-decode-at-bound",
+      "passed": true
+    },
+    {
+      "name": "test-decode-upper-hex",
+      "passed": true
+    },
+    {
+      "name": "test-decode-offset-rejected",
+      "passed": true
+    },
+    {
+      "name": "test-decode-buffer-bound-rejected",
+      "passed": true
+    },
+    {
+      "name": "test-decode-buffer-width-rejected",
+      "passed": true
+    },
+    {
+      "name": "failing-tang-control-detected",
+      "passed": true,
+      "tang_lines": "3"
+    },
+    {
+      "name": "compiler-failure-control-detected",
+      "passed": true
+    },
+    {
+      "name": "native-encoded-ls-refs-accepted-by-stock-git",
+      "passed": true,
+      "request_sha256": "2c0cdac8d072e9facc7195d874801cd60d762a6df82bbf46f648d19334fda6f3",
+      "commit_oid": "42815c1c73a02e433c4aaaaf65a6f60801ff4fe0"
+    },
+    {
+      "name": "stock-advertisement-decoded-natively",
+      "passed": true,
+      "packet_count": 7,
+      "input_sha256": "3fca95b8bc9314a89a33dbeb8af10b2e241964e0c2fb50d8dffbfffff38b76c6"
+    },
+    {
+      "name": "stock-refs-decoded-natively",
+      "passed": true,
+      "packet_count": 3,
+      "input_sha256": "ad3dc000d24868d0ff8d267863e33af34f6f5720b3a205784744c84fff8df34c"
+    },
+    {
+      "name": "test-object-empty-blob",
+      "passed": true
+    },
+    {
+      "name": "test-object-trailing-zero",
+      "passed": true
+    },
+    {
+      "name": "test-object-tag-exact-bytes",
+      "passed": true
+    },
+    {
+      "name": "test-object-kind-rejected",
+      "passed": true
+    },
+    {
+      "name": "test-object-width-rejected",
+      "passed": true
+    },
+    {
+      "name": "test-object-bound-rejected",
+      "passed": true
+    },
+    {
+      "name": "test-oid-zero",
+      "passed": true
+    },
+    {
+      "name": "test-oid-leading-zero",
+      "passed": true
+    },
+    {
+      "name": "test-oid-full-width",
+      "passed": true
+    },
+    {
+      "name": "test-oid-uppercase-rejected",
+      "passed": true
+    },
+    {
+      "name": "test-oid-short-rejected",
+      "passed": true
+    },
+    {
+      "name": "test-oid-nul-rejected",
+      "passed": true
+    },
+    {
+      "name": "test-ref-valid",
+      "passed": true
+    },
+    {
+      "name": "test-ref-head-rejected",
+      "passed": true
+    },
+    {
+      "name": "test-ref-leading-dot-rejected",
+      "passed": true
+    },
+    {
+      "name": "test-ref-lock-component-rejected",
+      "passed": true
+    },
+    {
+      "name": "test-ref-nul-rejected",
+      "passed": true
+    },
+    {
+      "name": "test-ref-bound-rejected",
+      "passed": true
+    },
+    {
+      "name": "test-pack-empty-sha-one",
+      "passed": true
+    },
+    {
+      "name": "test-pack-version-three",
+      "passed": true
+    },
+    {
+      "name": "test-pack-unsupported-version",
+      "passed": true
+    },
+    {
+      "name": "test-pack-declared-count-bound",
+      "passed": true
+    },
+    {
+      "name": "test-pack-signature",
+      "passed": true
+    },
+    {
+      "name": "test-pack-checksum",
+      "passed": true
+    },
+    {
+      "name": "test-pack-empty-payload",
+      "passed": true
+    },
+    {
+      "name": "test-pack-missing-entries",
+      "passed": true
+    },
+    {
+      "name": "test-pack-truncated",
+      "passed": true
+    },
+    {
+      "name": "test-pack-envelope-does-not-validate-entry",
+      "passed": true
+    },
+    {
+      "name": "test-pack-byte-bound",
+      "passed": true
+    },
+    {
+      "name": "test-pack-explicit-width",
+      "passed": true
+    },
+    {
+      "name": "test-ref-advance",
+      "passed": true
+    },
+    {
+      "name": "test-ref-competing-writes",
+      "passed": true
+    },
+    {
+      "name": "test-ref-revoked",
+      "passed": true
+    },
+    {
+      "name": "test-ref-epoch",
+      "passed": true
+    },
+    {
+      "name": "test-ref-protected-delete",
+      "passed": true
+    },
+    {
+      "name": "test-ref-batch-rejects-stale-member",
+      "passed": true
+    },
+    {
+      "name": "test-ref-non-fast-forward",
+      "passed": true
+    },
+    {
+      "name": "test-ref-namespace",
+      "passed": true
+    },
+    {
+      "name": "test-ref-duplicate",
+      "passed": true
+    },
+    {
+      "name": "test-ref-bad-name",
+      "passed": true
+    },
+    {
+      "name": "test-ref-unsupported",
+      "passed": true
+    },
+    {
+      "name": "test-ref-tag-replacement",
+      "passed": true
+    },
+    {
+      "name": "test-ref-bad-target",
+      "passed": true
+    },
+    {
+      "name": "test-ref-missing-target",
+      "passed": true
+    },
+    {
+      "name": "test-ref-tag-and-branch-create",
+      "passed": true
+    },
+    {
+      "name": "test-receive-wire-create",
+      "passed": true
+    },
+    {
+      "name": "test-receive-wire-empty-capabilities",
+      "passed": true
+    },
+    {
+      "name": "test-receive-wire-command-order",
+      "passed": true
+    },
+    {
+      "name": "test-receive-wire-final-lf",
+      "passed": true
+    },
+    {
+      "name": "test-receive-wire-pack-is-opaque",
+      "passed": true
+    },
+    {
+      "name": "test-receive-wire-large-tail-bypasses-pkt-buffer-limit",
+      "passed": true
+    },
+    {
+      "name": "test-receive-wire-pack-bound",
+      "passed": true
+    },
+    {
+      "name": "test-receive-wire-buffer-bound",
+      "passed": true
+    },
+    {
+      "name": "test-receive-wire-buffer-width",
+      "passed": true
+    },
+    {
+      "name": "test-receive-wire-empty",
+      "passed": true
+    },
+    {
+      "name": "test-receive-wire-truncated-header",
+      "passed": true
+    },
+    {
+      "name": "test-receive-wire-truncated-payload",
+      "passed": true
+    },
+    {
+      "name": "test-receive-wire-missing-flush",
+      "passed": true
+    },
+    {
+      "name": "test-receive-wire-invalid-header",
+      "passed": true
+    },
+    {
+      "name": "test-receive-wire-delimiter",
+      "passed": true
+    },
+    {
+      "name": "test-receive-wire-response-end",
+      "passed": true
+    },
+    {
+      "name": "test-receive-wire-first-nul-required",
+      "passed": true
+    },
+    {
+      "name": "test-receive-wire-later-nul-forbidden",
+      "passed": true
+    },
+    {
+      "name": "test-receive-wire-duplicate-ref",
+      "passed": true
+    },
+    {
+      "name": "test-receive-wire-invalid-ref",
+      "passed": true
+    },
+    {
+      "name": "test-receive-wire-unsupported-ref",
+      "passed": true
+    },
+    {
+      "name": "test-receive-wire-uppercase-oid",
+      "passed": true
+    },
+    {
+      "name": "test-receive-wire-command-spacing",
+      "passed": true
+    },
+    {
+      "name": "test-receive-wire-unknown-capability",
+      "passed": true
+    },
+    {
+      "name": "test-receive-wire-unsupported-sha256",
+      "passed": true
+    },
+    {
+      "name": "test-receive-wire-push-options-unsupported",
+      "passed": true
+    },
+    {
+      "name": "test-receive-wire-unadvertised-capability",
+      "passed": true
+    },
+    {
+      "name": "test-receive-wire-duplicate-capability",
+      "passed": true
+    },
+    {
+      "name": "test-receive-wire-duplicate-agent-key",
+      "passed": true
+    },
+    {
+      "name": "test-receive-wire-capability-whitespace",
+      "passed": true
+    },
+    {
+      "name": "test-receive-wire-capability-nul",
+      "passed": true
+    },
+    {
+      "name": "test-receive-wire-command-count-at-bound",
+      "passed": true
+    },
+    {
+      "name": "test-receive-wire-command-count-over-bound",
+      "passed": true
+    },
+    {
+      "name": "test-receive-wire-delete-advertisement",
+      "passed": true
+    },
+    {
+      "name": "test-receive-wire-advertisement-profile",
+      "passed": true
+    },
+    {
+      "name": "test-receive-wire-advertisement-bound",
+      "passed": true
+    },
+    {
+      "name": "test-receive-wire-header-bound",
+      "passed": true
+    },
+    {
+      "name": "test-receive-wire-capability-block-bound",
+      "passed": true
+    },
+    {
+      "name": "test-receive-wire-agent-at-token-bound",
+      "passed": true
+    },
+    {
+      "name": "test-receive-wire-agent-over-token-bound",
+      "passed": true
+    },
+    {
+      "name": "test-receive-wire-ref-at-bound",
+      "passed": true
+    },
+    {
+      "name": "test-receive-wire-ref-over-bound",
+      "passed": true
+    },
+    {
+      "name": "test-receive-wire-command-payload-bound",
+      "passed": true
+    },
+    {
+      "name": "test-receive-wire-shallow-unsupported",
+      "passed": true
+    },
+    {
+      "name": "test-receive-wire-signed-push-unsupported",
+      "passed": true
+    },
+    {
+      "name": "receive-wire-failing-tang-control-detected",
+      "passed": true,
+      "tang_lines": "3"
+    },
+    {
+      "name": "native-blob-roundtrip",
+      "passed": true,
+      "oid": "1b0c65d9c8cf386d80c9b4aaa084bac450ae7438",
+      "body_sha256": "d97f1f6e523dbefc03c6deb8d3e3039c50885d9b933a8df828e9bd0f3e95973c",
+      "bytes": 23
+    },
+    {
+      "name": "native-tree-roundtrip",
+      "passed": true,
+      "oid": "095b8bbaca9c1e3f8f02435f05365b244991cb4b",
+      "body_sha256": "23b326ad5f7966e73400567d0e1cf4baf8dabb5eff72fab319ddb34c735b47ac",
+      "bytes": 39
+    },
+    {
+      "name": "native-commit-roundtrip",
+      "passed": true,
+      "oid": "cca861c3bfccfb8693c86297f3fc3fef707f3cab",
+      "body_sha256": "acbcb38d89c2de8a76d578af3704bdf0a5bd26326097a8f1a027d70413e49a2f",
+      "bytes": 201
+    },
+    {
+      "name": "native-tag-roundtrip",
+      "passed": true,
+      "oid": "445eb907c8db801269799a046f5fc09272932e89",
+      "body_sha256": "c7f7a4c199cb21dd5dd047dda169e31ab80f8969e3651586bb31065e26980ec4",
+      "bytes": 145
+    },
+    {
+      "name": "native-object-graph-stock-fsck",
+      "passed": true,
+      "commit_oid": "cca861c3bfccfb8693c86297f3fc3fef707f3cab",
+      "tag_oid": "445eb907c8db801269799a046f5fc09272932e89"
+    },
+    {
+      "name": "native-ref-syntax-matches-stock-git",
+      "passed": true,
+      "cases": 28
+    },
+    {
+      "name": "stock-pack-envelope-checked-natively",
+      "passed": true,
+      "bytes": 532,
+      "declared_objects": 6,
+      "sha256": "5a5a090367d953128fcf3a65c44365aa2b26d8c5de685a9afd21950287ceb387"
+    },
+    {
+      "name": "corrupt-stock-pack-rejected-natively",
+      "passed": true
+    },
+    {
+      "name": "stock-pack-independent-index-check",
+      "passed": true
+    }
+  ],
+  "records": [
+    {
+      "kind": "pure-native",
+      "label": "native-unit-inventory-and-failing-control",
+      "source_sha256": "2ef46f9e329e0c07b0fe0a714f8e590dd1d493f0dcee4208f2d1691ba33ac050",
+      "exit_code": 0,
+      "stdout": "~[\r\n  [~.test-encode-data ~.0]\r\n  [~.test-encode-binary ~.0]\r\n  [~.test-encode-empty-data ~.0]\r\n  [~.test-encode-controls ~.0]\r\n  [~.test-encode-control-payload-rejected ~.0]\r\n  [~.test-encode-at-bound ~.0]\r\n  [~.test-encode-over-bound-rejected ~.0]\r\n  [~.test-encode-width-rejected ~.0]\r\n  [~.test-decode-controls-and-empty ~.0]\r\n  [~.test-decode-binary-zero ~.0]\r\n  [~.test-decode-all-zero-payload ~.0]\r\n  [~.test-decode-offset-and-tail ~.0]\r\n  [~.test-decode-truncated-header ~.0]\r\n  [~.test-decode-truncated-payload ~.0]\r\n  [~.test-decode-required-relative-to-offset ~.0]\r\n  [~.test-decode-nonhex-rejected ~.0]\r\n  [~.test-decode-reserved-rejected ~.0]\r\n  [~.test-decode-over-bound-rejected ~.0]\r\n  [~.test-decode-at-bound ~.0]\r\n  [~.test-decode-upper-hex ~.0]\r\n  [~.test-decode-offset-rejected ~.0]\r\n  [~.test-decode-buffer-bound-rejected ~.0]\r\n  [~.test-decode-buffer-width-rejected ~.0]\r\n  [~.failure-control ~.3]\r\n]",
+      "stderr": "loom: mapped 512MB\r\nlite: arvo formula 4ce68411\r\nlite: core 641296f\r\nlite: final state 641296f\r\neval (run):"
+    },
+    {
+      "kind": "pure-native",
+      "label": "deliberately-invalid-compiler-control",
+      "source_sha256": "93861a0912003ecc017e98791b691937344580ec86980b12c1259e489f3ea89b",
+      "exit_code": 0,
+      "stdout": "/eval\r\n{1 22}\r\nsyntax error",
+      "stderr": "loom: mapped 512MB\r\nlite: arvo formula 4ce68411\r\nlite: core 641296f\r\nlite: final state 641296f\r\neval (run):\n\r\neval: bail: %exit"
+    },
+    {
+      "kind": "stock-git",
+      "argv": [
+        "/runtime/git",
+        "-c",
+        "credential.helper=",
+        "-c",
+        "core.hooksPath=/dev/null",
+        "init",
+        "--bare",
+        "--template=",
+        "--initial-branch=main",
+        "/work/fixture.git"
+      ],
+      "input_sha256": null,
+      "stdout_hex": "496e697469616c697a656420656d70747920476974207265706f7369746f727920696e202f776f726b2f666978747572652e6769742f0a",
+      "stderr": "",
+      "exit_code": 0
+    },
+    {
+      "kind": "stock-git",
+      "argv": [
+        "/runtime/git",
+        "-c",
+        "credential.helper=",
+        "-c",
+        "core.hooksPath=/dev/null",
+        "--git-dir=/work/fixture.git",
+        "hash-object",
+        "-w",
+        "-t",
+        "tree",
+        "--stdin"
+      ],
+      "input_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stdout_hex": "346238323564633634326362366562396130363065353462663864363932383866626565343930340a",
+      "stderr": "",
+      "exit_code": 0
+    },
+    {
+      "kind": "stock-git",
+      "argv": [
+        "/runtime/git",
+        "-c",
+        "credential.helper=",
+        "-c",
+        "core.hooksPath=/dev/null",
+        "--git-dir=/work/fixture.git",
+        "hash-object",
+        "-w",
+        "-t",
+        "commit",
+        "--stdin"
+      ],
+      "input_sha256": "59ecfb5182fad0757bcecea7785876ecaf08a28c941fce5c5b21451246095d14",
+      "stdout_hex": "343238313563316337336130326534333363346161616166363561366636303830316666346665300a",
+      "stderr": "",
+      "exit_code": 0
+    },
+    {
+      "kind": "stock-git",
+      "argv": [
+        "/runtime/git",
+        "-c",
+        "credential.helper=",
+        "-c",
+        "core.hooksPath=/dev/null",
+        "--git-dir=/work/fixture.git",
+        "update-ref",
+        "refs/heads/main",
+        "42815c1c73a02e433c4aaaaf65a6f60801ff4fe0"
+      ],
+      "input_sha256": null,
+      "stdout_hex": "",
+      "stderr": "",
+      "exit_code": 0
+    },
+    {
+      "kind": "pure-native",
+      "label": "native-ls-refs-request",
+      "source_sha256": "c6fa56104c272c443e586a84f01154e0d8eb5156135c80c4a685e396baff148e",
+      "exit_code": 0,
+      "stdout": "~[\r\n  [~.20 ~.0xa73.6665.722d.736c.3d64.6e61.6d6d.6f63.3431.3030]\r\n  [~.4 ~.0x3130.3030]\r\n  [~.12 ~.0xa73.6665.726d.7973.6330.3030]\r\n  [~.4 ~.0x3030.3030]\r\n]",
+      "stderr": "loom: mapped 512MB\r\nlite: arvo formula 4ce68411\r\nlite: core 641296f\r\nlite: final state 641296f\r\neval (run):"
+    },
+    {
+      "kind": "stock-git",
+      "argv": [
+        "/runtime/git",
+        "-c",
+        "credential.helper=",
+        "-c",
+        "core.hooksPath=/dev/null",
+        "upload-pack",
+        "--stateless-rpc",
+        "--advertise-refs",
+        "/work/fixture.git"
+      ],
+      "input_sha256": null,
+      "stdout_hex": "3030306576657273696f6e20320a303031626167656e743d6769742f322e35352e302d4c696e75780a303031336c732d726566733d756e626f726e0a3030323066657463683d7368616c6c6f7720776169742d666f722d646f6e650a303031327365727665722d6f7074696f6e0a303031376f626a6563742d666f726d61743d736861310a30303030",
+      "stderr": "",
+      "exit_code": 0
+    },
+    {
+      "kind": "stock-git",
+      "argv": [
+        "/runtime/git",
+        "-c",
+        "credential.helper=",
+        "-c",
+        "core.hooksPath=/dev/null",
+        "upload-pack",
+        "--stateless-rpc",
+        "/work/fixture.git"
+      ],
+      "input_sha256": "2c0cdac8d072e9facc7195d874801cd60d762a6df82bbf46f648d19334fda6f3",
+      "stdout_hex": "303035303432383135633163373361303265343333633461616161663635613666363038303166663466653020484541442073796d7265662d7461726765743a726566732f68656164732f6d61696e0a303033643432383135633163373361303265343333633461616161663635613666363038303166663466653020726566732f68656164732f6d61696e0a30303030",
+      "stderr": "",
+      "exit_code": 0
+    },
+    {
+      "kind": "pure-native",
+      "label": "stock-advertisement-decoded-natively",
+      "source_sha256": "9b21c0c34abfb08e9f7737ebd90b13347e9194032822d86a0fd281961f32d38d",
+      "exit_code": 0,
+      "stdout": "~[\r\n  [~.data ~.10 ~.0xa32.206e.6f69.7372.6576 ~.14]\r\n  [ ~.data\r\n    ~.23\r\n    ~.0xa.7875.6e69.4c2d.302e.3535.2e32.2f74.6967.3d74.6e65.6761\r\n    ~.41\r\n  ]\r\n  [~.data ~.15 ~.0xa.6e72.6f62.6e75.3d73.6665.722d.736c ~.60]\r\n  [ ~.data\r\n    ~.28\r\n    ~.0xa65.6e6f.642d.726f.662d.7469.6177.2077.6f6c.6c61.6873.3d68.6374.6566\r\n    ~.92\r\n  ]\r\n  [~.data ~.14 ~.0xa6e.6f69.7470.6f2d.7265.7672.6573 ~.110]\r\n  [~.data ~.19 ~.0xa.3161.6873.3d74.616d.726f.662d.7463.656a.626f ~.133]\r\n  [~.flush ~.0 ~.0x0 ~.137]\r\n]",
+      "stderr": "loom: mapped 512MB\r\nlite: arvo formula 4ce68411\r\nlite: core 641296f\r\nlite: final state 641296f\r\neval (run):"
+    },
+    {
+      "kind": "pure-native",
+      "label": "stock-refs-decoded-natively",
+      "source_sha256": "8f1ff689eb8f711d2798a16309b98d2a616bcaa25fe17a1d9366a86049dcba4b",
+      "exit_code": 0,
+      "stdout": "~[\r\n  [ ~.data\r\n    ~.76\r\n    ~.0xa6e.6961.6d2f.7364.6165.682f.7366.6572.3a74.6567.7261.742d.6665.726d.7973.2044.4145.4820.3065.6634.6666.3130.3830.3666.3661.3536.6661.6161.6134.6333.3334.6532.3061.3337.6331.6335.3138.3234\r\n    ~.80\r\n  ]\r\n  [ ~.data\r\n    ~.57\r\n    ~.0xa.6e69.616d.2f73.6461.6568.2f73.6665.7220.3065.6634.6666.3130.3830.3666.3661.3536.6661.6161.6134.6333.3334.6532.3061.3337.6331.6335.3138.3234\r\n    ~.141\r\n  ]\r\n  [~.flush ~.0 ~.0x0 ~.145]\r\n]",
+      "stderr": "loom: mapped 512MB\r\nlite: arvo formula 4ce68411\r\nlite: core 641296f\r\nlite: final state 641296f\r\neval (run):"
+    },
+    {
+      "kind": "pure-native",
+      "label": "object-helper-compilation-control",
+      "source_sha256": "eda625fd00c5dd6c39ee7406cd58b293d844c9272c4af85ff15284f370c18480",
+      "exit_code": 0,
+      "stdout": "42",
+      "stderr": "loom: mapped 512MB\r\nlite: arvo formula 4ce68411\r\nlite: core 641296f\r\nlite: final state 641296f\r\neval (run):"
+    },
+    {
+      "kind": "pure-native",
+      "label": "receive-helper-compilation-control",
+      "source_sha256": "ffd6d8dba38d0ede61b903d472ff37713e3a5232ff9d06a6a2abfd4b010a040b",
+      "exit_code": 0,
+      "stdout": "42",
+      "stderr": "loom: mapped 512MB\r\nlite: arvo formula 4ce68411\r\nlite: core 641296f\r\nlite: final state 641296f\r\neval (run):"
+    },
+    {
+      "kind": "pure-native",
+      "label": "stead-code-git-objects-unit-inventory",
+      "source_sha256": "67051595f9ce1ba0f0ebbb5731014153a44a2dff7d261fed532eec7266edc4a6",
+      "exit_code": 0,
+      "stdout": "~[\r\n  [~.test-object-empty-blob ~.0]\r\n  [~.test-object-trailing-zero ~.0]\r\n  [~.test-object-tag-exact-bytes ~.0]\r\n  [~.test-object-kind-rejected ~.0]\r\n  [~.test-object-width-rejected ~.0]\r\n  [~.test-object-bound-rejected ~.0]\r\n  [~.test-oid-zero ~.0]\r\n  [~.test-oid-leading-zero ~.0]\r\n  [~.test-oid-full-width ~.0]\r\n  [~.test-oid-uppercase-rejected ~.0]\r\n  [~.test-oid-short-rejected ~.0]\r\n  [~.test-oid-nul-rejected ~.0]\r\n  [~.test-ref-valid ~.0]\r\n  [~.test-ref-head-rejected ~.0]\r\n  [~.test-ref-leading-dot-rejected ~.0]\r\n  [~.test-ref-lock-component-rejected ~.0]\r\n  [~.test-ref-nul-rejected ~.0]\r\n  [~.test-ref-bound-rejected ~.0]\r\n]",
+      "stderr": "loom: mapped 512MB\r\nlite: arvo formula 4ce68411\r\nlite: core 641296f\r\nlite: final state 641296f\r\neval (run):"
+    },
+    {
+      "kind": "pure-native",
+      "label": "stead-code-git-pack-unit-inventory",
+      "source_sha256": "2e95ccc1520ab7f01351953648ce2a143f47d84932fa318cd699611440a9096d",
+      "exit_code": 0,
+      "stdout": "~[\r\n  [~.test-pack-empty-sha-one ~.0]\r\n  [~.test-pack-version-three ~.0]\r\n  [~.test-pack-unsupported-version ~.0]\r\n  [~.test-pack-declared-count-bound ~.0]\r\n  [~.test-pack-signature ~.0]\r\n  [~.test-pack-checksum ~.0]\r\n  [~.test-pack-empty-payload ~.0]\r\n  [~.test-pack-missing-entries ~.0]\r\n  [~.test-pack-truncated ~.0]\r\n  [~.test-pack-envelope-does-not-validate-entry ~.0]\r\n  [~.test-pack-byte-bound ~.0]\r\n  [~.test-pack-explicit-width ~.0]\r\n]",
+      "stderr": "loom: mapped 512MB\r\nlite: arvo formula 4ce68411\r\nlite: core 641296f\r\nlite: final state 641296f\r\neval (run):"
+    },
+    {
+      "kind": "pure-native",
+      "label": "stead-code-receive-unit-inventory",
+      "source_sha256": "fb6e188dbd8ab488374cbf35a1f69480de783431de640ac57c8b3b62da0362b0",
+      "exit_code": 0,
+      "stdout": "~[\r\n  [~.test-ref-advance ~.0]\r\n  [~.test-ref-competing-writes ~.0]\r\n  [~.test-ref-revoked ~.0]\r\n  [~.test-ref-epoch ~.0]\r\n  [~.test-ref-protected-delete ~.0]\r\n  [~.test-ref-batch-rejects-stale-member ~.0]\r\n  [~.test-ref-non-fast-forward ~.0]\r\n  [~.test-ref-namespace ~.0]\r\n  [~.test-ref-duplicate ~.0]\r\n  [~.test-ref-bad-name ~.0]\r\n  [~.test-ref-unsupported ~.0]\r\n  [~.test-ref-tag-replacement ~.0]\r\n  [~.test-ref-bad-target ~.0]\r\n  [~.test-ref-missing-target ~.0]\r\n  [~.test-ref-tag-and-branch-create ~.0]\r\n]",
+      "stderr": "loom: mapped 512MB\r\nlite: arvo formula 4ce68411\r\nlite: core 641296f\r\nlite: final state 641296f\r\neval (run):"
+    },
+    {
+      "kind": "pure-native",
+      "label": "stead-code-receive-wire-unit-inventory",
+      "source_sha256": "5f97834dc1b707701c5b10bde45fb7a2cdaa4c69bc8c028cf12d98855e68aa4e",
+      "exit_code": 0,
+      "stdout": "~[\r\n  [~.test-receive-wire-create ~.0]\r\n  [~.test-receive-wire-empty-capabilities ~.0]\r\n  [~.test-receive-wire-command-order ~.0]\r\n  [~.test-receive-wire-final-lf ~.0]\r\n  [~.test-receive-wire-pack-is-opaque ~.0]\r\n  [~.test-receive-wire-large-tail-bypasses-pkt-buffer-limit ~.0]\r\n  [~.test-receive-wire-pack-bound ~.0]\r\n  [~.test-receive-wire-buffer-bound ~.0]\r\n  [~.test-receive-wire-buffer-width ~.0]\r\n  [~.test-receive-wire-empty ~.0]\r\n  [~.test-receive-wire-truncated-header ~.0]\r\n  [~.test-receive-wire-truncated-payload ~.0]\r\n  [~.test-receive-wire-missing-flush ~.0]\r\n  [~.test-receive-wire-invalid-header ~.0]\r\n  [~.test-receive-wire-delimiter ~.0]\r\n  [~.test-receive-wire-response-end ~.0]\r\n  [~.test-receive-wire-first-nul-required ~.0]\r\n  [~.test-receive-wire-later-nul-forbidden ~.0]\r\n  [~.test-receive-wire-duplicate-ref ~.0]\r\n  [~.test-receive-wire-invalid-ref ~.0]\r\n  [~.test-receive-wire-unsupported-ref ~.0]\r\n  [~.test-receive-wire-uppercase-oid ~.0]\r\n  [~.test-receive-wire-command-spacing ~.0]\r\n  [~.test-receive-wire-unknown-capability ~.0]\r\n  [~.test-receive-wire-unsupported-sha256 ~.0]\r\n  [~.test-receive-wire-push-options-unsupported ~.0]\r\n  [~.test-receive-wire-unadvertised-capability ~.0]\r\n  [~.test-receive-wire-duplicate-capability ~.0]\r\n  [~.test-receive-wire-duplicate-agent-key ~.0]\r\n  [~.test-receive-wire-capability-whitespace ~.0]\r\n  [~.test-receive-wire-capability-nul ~.0]\r\n  [~.test-receive-wire-command-count-at-bound ~.0]\r\n  [~.test-receive-wire-command-count-over-bound ~.0]\r\n  [~.test-receive-wire-delete-advertisement ~.0]\r\n  [~.test-receive-wire-advertisement-profile ~.0]\r\n  [~.test-receive-wire-advertisement-bound ~.0]\r\n  [~.test-receive-wire-header-bound ~.0]\r\n  [~.test-receive-wire-capability-block-bound ~.0]\r\n  [~.test-receive-wire-agent-at-token-bound ~.0]\r\n  [~.test-receive-wire-agent-over-token-bound ~.0]\r\n  [~.test-receive-wire-ref-at-bound ~.0]\r\n  [~.test-receive-wire-ref-over-bound ~.0]\r\n  [~.test-receive-wire-command-payload-bound ~.0]\r\n  [~.test-receive-wire-shallow-unsupported ~.0]\r\n  [~.test-receive-wire-signed-push-unsupported ~.0]\r\n  [~.failure-control ~.3]\r\n]",
+      "stderr": "loom: mapped 512MB\r\nlite: arvo formula 4ce68411\r\nlite: core 641296f\r\nlite: final state 641296f\r\neval (run):"
+    },
+    {
+      "kind": "pure-native",
+      "label": "native-blob-object",
+      "source_sha256": "dba95ba130b0c72a732f3f208ce732012dde038ead9301f7b4c4c605099eef90",
+      "exit_code": 0,
+      "stdout": "~[\r\n  [ ~.blob\r\n    ~.23\r\n    ~.0xa.00ff.203a.7365.7479.6220.7972.616e.6962.2074.6361.7845\r\n    ~.0x1b0c.65d9.c8cf.386d.80c9.b4aa.a084.bac4.50ae.7438\r\n  ]\r\n]",
+      "stderr": "loom: mapped 512MB\r\nlite: arvo formula 4ce68411\r\nlite: core 641296f\r\nlite: final state 641296f\r\neval (run):"
+    },
+    {
+      "kind": "stock-git",
+      "argv": [
+        "/runtime/git",
+        "-c",
+        "credential.helper=",
+        "-c",
+        "core.hooksPath=/dev/null",
+        "--git-dir=/work/fixture.git",
+        "hash-object",
+        "-t",
+        "blob",
+        "--stdin"
+      ],
+      "input_sha256": "d97f1f6e523dbefc03c6deb8d3e3039c50885d9b933a8df828e9bd0f3e95973c",
+      "stdout_hex": "316230633635643963386366333836643830633962346161613038346261633435306165373433380a",
+      "stderr": "",
+      "exit_code": 0
+    },
+    {
+      "kind": "stock-git",
+      "argv": [
+        "/runtime/git",
+        "-c",
+        "credential.helper=",
+        "-c",
+        "core.hooksPath=/dev/null",
+        "--git-dir=/work/fixture.git",
+        "hash-object",
+        "-w",
+        "-t",
+        "blob",
+        "--stdin"
+      ],
+      "input_sha256": "d97f1f6e523dbefc03c6deb8d3e3039c50885d9b933a8df828e9bd0f3e95973c",
+      "stdout_hex": "316230633635643963386366333836643830633962346161613038346261633435306165373433380a",
+      "stderr": "",
+      "exit_code": 0
+    },
+    {
+      "kind": "stock-git",
+      "argv": [
+        "/runtime/git",
+        "-c",
+        "credential.helper=",
+        "-c",
+        "core.hooksPath=/dev/null",
+        "--git-dir=/work/fixture.git",
+        "cat-file",
+        "blob",
+        "1b0c65d9c8cf386d80c9b4aaa084bac450ae7438"
+      ],
+      "input_sha256": null,
+      "stdout_hex": "45786163742062696e6172792062797465733a20ff000a",
+      "stderr": "",
+      "exit_code": 0
+    },
+    {
+      "kind": "pure-native",
+      "label": "native-tree-object",
+      "source_sha256": "fa565555d58325ceba79003c65891c3a63fac46c893b56bee5216385f7ce742b",
+      "exit_code": 0,
+      "stdout": "~[\r\n  [ ~.tree\r\n    ~.39\r\n    ~.0x38.74ae.50c4.ba84.a0aa.b4c9.806d.38cf.c8d9.650c.1b00.7478.742e.656c.706d.6178.6520.3434.3630.3031\r\n    ~.0x95b.8bba.ca9c.1e3f.8f02.435f.0536.5b24.4991.cb4b\r\n  ]\r\n]",
+      "stderr": "loom: mapped 512MB\r\nlite: arvo formula 4ce68411\r\nlite: core 641296f\r\nlite: final state 641296f\r\neval (run):"
+    },
+    {
+      "kind": "stock-git",
+      "argv": [
+        "/runtime/git",
+        "-c",
+        "credential.helper=",
+        "-c",
+        "core.hooksPath=/dev/null",
+        "--git-dir=/work/fixture.git",
+        "hash-object",
+        "-t",
+        "tree",
+        "--stdin"
+      ],
+      "input_sha256": "23b326ad5f7966e73400567d0e1cf4baf8dabb5eff72fab319ddb34c735b47ac",
+      "stdout_hex": "303935623862626163613963316533663866303234333566303533363562323434393931636234620a",
+      "stderr": "",
+      "exit_code": 0
+    },
+    {
+      "kind": "stock-git",
+      "argv": [
+        "/runtime/git",
+        "-c",
+        "credential.helper=",
+        "-c",
+        "core.hooksPath=/dev/null",
+        "--git-dir=/work/fixture.git",
+        "hash-object",
+        "-w",
+        "-t",
+        "tree",
+        "--stdin"
+      ],
+      "input_sha256": "23b326ad5f7966e73400567d0e1cf4baf8dabb5eff72fab319ddb34c735b47ac",
+      "stdout_hex": "303935623862626163613963316533663866303234333566303533363562323434393931636234620a",
+      "stderr": "",
+      "exit_code": 0
+    },
+    {
+      "kind": "stock-git",
+      "argv": [
+        "/runtime/git",
+        "-c",
+        "credential.helper=",
+        "-c",
+        "core.hooksPath=/dev/null",
+        "--git-dir=/work/fixture.git",
+        "cat-file",
+        "tree",
+        "095b8bbaca9c1e3f8f02435f05365b244991cb4b"
+      ],
+      "input_sha256": null,
+      "stdout_hex": "313030363434206578616d706c652e747874001b0c65d9c8cf386d80c9b4aaa084bac450ae7438",
+      "stderr": "",
+      "exit_code": 0
+    },
+    {
+      "kind": "pure-native",
+      "label": "native-commit-object",
+      "source_sha256": "473f4b527071ea7f00ce7329eeaf6bd60c897f4dafc53d2327001b87d172801d",
+      "exit_code": 0,
+      "stdout": "~[\r\n  [ ~.commit\r\n    ~.201\r\n    ~.0xa.2e73.6574.7962.206c.616e.6967.6972.6f20.646e.6120.7372.6f68.7475.6120.6576.7265.7365.7250.0a0a.3030.3030.2b20.3031.3030.3030.3030.3731.203e.6469.6c61.766e.692e.6461.6574.7340.6572.7574.7869.663c.2065.7275.7478.6946.2072.6574.7469.6d6d.6f63.0a30.3035.302d.2030.3030.3030.3030.3037.3120.3e64.696c.6176.6e69.2e65.6c70.6d61.7865.406f.6a3c.2065.6c70.6d61.7845.20ab.c36f.4a20.726f.6874.7561.0a62.3462.6331.3939.3434.3262.3536.3335.3066.3533.3432.3066.3866.3365.3163.3961.6361.6262.3862.3539.3020.6565.7274\r\n    ~.0xcca8.61c3.bfcc.fb86.93c8.6297.f3fc.3fef.707f.3cab\r\n  ]\r\n]",
+      "stderr": "loom: mapped 512MB\r\nlite: arvo formula 4ce68411\r\nlite: core 641296f\r\nlite: final state 641296f\r\neval (run):"
+    },
+    {
+      "kind": "stock-git",
+      "argv": [
+        "/runtime/git",
+        "-c",
+        "credential.helper=",
+        "-c",
+        "core.hooksPath=/dev/null",
+        "--git-dir=/work/fixture.git",
+        "hash-object",
+        "-t",
+        "commit",
+        "--stdin"
+      ],
+      "input_sha256": "acbcb38d89c2de8a76d578af3704bdf0a5bd26326097a8f1a027d70413e49a2f",
+      "stdout_hex": "636361383631633362666363666238363933633836323937663366633366656637303766336361620a",
+      "stderr": "",
+      "exit_code": 0
+    },
+    {
+      "kind": "stock-git",
+      "argv": [
+        "/runtime/git",
+        "-c",
+        "credential.helper=",
+        "-c",
+        "core.hooksPath=/dev/null",
+        "--git-dir=/work/fixture.git",
+        "hash-object",
+        "-w",
+        "-t",
+        "commit",
+        "--stdin"
+      ],
+      "input_sha256": "acbcb38d89c2de8a76d578af3704bdf0a5bd26326097a8f1a027d70413e49a2f",
+      "stdout_hex": "636361383631633362666363666238363933633836323937663366633366656637303766336361620a",
+      "stderr": "",
+      "exit_code": 0
+    },
+    {
+      "kind": "stock-git",
+      "argv": [
+        "/runtime/git",
+        "-c",
+        "credential.helper=",
+        "-c",
+        "core.hooksPath=/dev/null",
+        "--git-dir=/work/fixture.git",
+        "cat-file",
+        "commit",
+        "cca861c3bfccfb8693c86297f3fc3fef707f3cab"
+      ],
+      "input_sha256": null,
+      "stdout_hex": "7472656520303935623862626163613963316533663866303234333566303533363562323434393931636234620a617574686f72204a6fc3ab204578616d706c65203c6a6f406578616d706c652e696e76616c69643e2031373030303030303030202d303530300a636f6d6d69747465722046697874757265203c666978747572654073746561642e696e76616c69643e2031373030303030303130202b303030300a0a507265736572766520617574686f727320616e64206f726967696e616c2062797465732e0a",
+      "stderr": "",
+      "exit_code": 0
+    },
+    {
+      "kind": "pure-native",
+      "label": "native-tag-object",
+      "source_sha256": "9edfef0c074c9224a3e80d7b88f3f121f69b1bfa74b75c51d8a934e28b67a1c5",
+      "exit_code": 0,
+      "stdout": "~[\r\n  [ ~.tag\r\n    ~.145\r\n    ~.0xa.2e67.6174.2064.6574.6174.6f6e.6e61.2074.6361.7845.0a0a.3030.3030.2b20.3032.3030.3030.3030.3731.203e.6469.6c61.766e.692e.6461.6574.7340.6572.7574.7869.663c.2065.7275.7478.6946.2072.6567.6761.740a.3176.2067.6174.0a74.696d.6d6f.6320.6570.7974.0a62.6163.3366.3730.3766.6566.3363.6633.6637.3932.3638.6333.3936.3862.6663.6366.6233.6331.3638.6163.6320.7463.656a.626f\r\n    ~.0x445e.b907.c8db.8012.6979.9a04.6f5f.c092.7293.2e89\r\n  ]\r\n]",
+      "stderr": "loom: mapped 512MB\r\nlite: arvo formula 4ce68411\r\nlite: core 641296f\r\nlite: final state 641296f\r\neval (run):"
+    },
+    {
+      "kind": "stock-git",
+      "argv": [
+        "/runtime/git",
+        "-c",
+        "credential.helper=",
+        "-c",
+        "core.hooksPath=/dev/null",
+        "--git-dir=/work/fixture.git",
+        "hash-object",
+        "-t",
+        "tag",
+        "--stdin"
+      ],
+      "input_sha256": "c7f7a4c199cb21dd5dd047dda169e31ab80f8969e3651586bb31065e26980ec4",
+      "stdout_hex": "343435656239303763386462383031323639373939613034366635666330393237323933326538390a",
+      "stderr": "",
+      "exit_code": 0
+    },
+    {
+      "kind": "stock-git",
+      "argv": [
+        "/runtime/git",
+        "-c",
+        "credential.helper=",
+        "-c",
+        "core.hooksPath=/dev/null",
+        "--git-dir=/work/fixture.git",
+        "hash-object",
+        "-w",
+        "-t",
+        "tag",
+        "--stdin"
+      ],
+      "input_sha256": "c7f7a4c199cb21dd5dd047dda169e31ab80f8969e3651586bb31065e26980ec4",
+      "stdout_hex": "343435656239303763386462383031323639373939613034366635666330393237323933326538390a",
+      "stderr": "",
+      "exit_code": 0
+    },
+    {
+      "kind": "stock-git",
+      "argv": [
+        "/runtime/git",
+        "-c",
+        "credential.helper=",
+        "-c",
+        "core.hooksPath=/dev/null",
+        "--git-dir=/work/fixture.git",
+        "cat-file",
+        "tag",
+        "445eb907c8db801269799a046f5fc09272932e89"
+      ],
+      "input_sha256": null,
+      "stdout_hex": "6f626a65637420636361383631633362666363666238363933633836323937663366633366656637303766336361620a7479706520636f6d6d69740a7461672076310a7461676765722046697874757265203c666978747572654073746561642e696e76616c69643e2031373030303030303230202b303030300a0a457861637420616e6e6f7461746564207461672e0a",
+      "stderr": "",
+      "exit_code": 0
+    },
+    {
+      "kind": "stock-git",
+      "argv": [
+        "/runtime/git",
+        "-c",
+        "credential.helper=",
+        "-c",
+        "core.hooksPath=/dev/null",
+        "--git-dir=/work/fixture.git",
+        "update-ref",
+        "refs/heads/code",
+        "cca861c3bfccfb8693c86297f3fc3fef707f3cab"
+      ],
+      "input_sha256": null,
+      "stdout_hex": "",
+      "stderr": "",
+      "exit_code": 0
+    },
+    {
+      "kind": "stock-git",
+      "argv": [
+        "/runtime/git",
+        "-c",
+        "credential.helper=",
+        "-c",
+        "core.hooksPath=/dev/null",
+        "--git-dir=/work/fixture.git",
+        "update-ref",
+        "refs/tags/v1",
+        "445eb907c8db801269799a046f5fc09272932e89"
+      ],
+      "input_sha256": null,
+      "stdout_hex": "",
+      "stderr": "",
+      "exit_code": 0
+    },
+    {
+      "kind": "stock-git",
+      "argv": [
+        "/runtime/git",
+        "-c",
+        "credential.helper=",
+        "-c",
+        "core.hooksPath=/dev/null",
+        "--git-dir=/work/fixture.git",
+        "fsck",
+        "--full",
+        "--strict"
+      ],
+      "input_sha256": null,
+      "stdout_hex": "",
+      "stderr": "",
+      "exit_code": 0
+    },
+    {
+      "kind": "pure-native",
+      "label": "native-full-ref-validation",
+      "source_sha256": "6e362411378f6985899365e51229d0bc5f067de3c7a94995a34e86bf666d5023",
+      "exit_code": 0,
+      "stdout": "~[\r\n  [~.r0 ~.yes]\r\n  [~.r1 ~.yes]\r\n  [~.r2 ~.yes]\r\n  [~.r3 ~.yes]\r\n  [~.r4 ~.yes]\r\n  [~.r5 ~.yes]\r\n  [~.r6 ~.yes]\r\n  [~.r7 ~.yes]\r\n  [~.r8 ~.no]\r\n  [~.r9 ~.no]\r\n  [~.r10 ~.no]\r\n  [~.r11 ~.no]\r\n  [~.r12 ~.no]\r\n  [~.r13 ~.no]\r\n  [~.r14 ~.no]\r\n  [~.r15 ~.no]\r\n  [~.r16 ~.no]\r\n  [~.r17 ~.no]\r\n  [~.r18 ~.no]\r\n  [~.r19 ~.no]\r\n  [~.r20 ~.no]\r\n  [~.r21 ~.no]\r\n  [~.r22 ~.no]\r\n  [~.r23 ~.no]\r\n  [~.r24 ~.no]\r\n  [~.r25 ~.no]\r\n  [~.r26 ~.no]\r\n  [~.r27 ~.yes]\r\n]",
+      "stderr": "loom: mapped 512MB\r\nlite: arvo formula 4ce68411\r\nlite: core 641296f\r\nlite: final state 641296f\r\neval (run):"
+    },
+    {
+      "kind": "stock-git",
+      "argv": [
+        "/runtime/git",
+        "-c",
+        "credential.helper=",
+        "-c",
+        "core.hooksPath=/dev/null",
+        "check-ref-format",
+        "refs/heads/main"
+      ],
+      "input_sha256": null,
+      "stdout_hex": "",
+      "stderr": "",
+      "exit_code": 0
+    },
+    {
+      "kind": "stock-git",
+      "argv": [
+        "/runtime/git",
+        "-c",
+        "credential.helper=",
+        "-c",
+        "core.hooksPath=/dev/null",
+        "check-ref-format",
+        "refs/tags/v1"
+      ],
+      "input_sha256": null,
+      "stdout_hex": "",
+      "stderr": "",
+      "exit_code": 0
+    },
+    {
+      "kind": "stock-git",
+      "argv": [
+        "/runtime/git",
+        "-c",
+        "credential.helper=",
+        "-c",
+        "core.hooksPath=/dev/null",
+        "check-ref-format",
+        "refs/notes/topic"
+      ],
+      "input_sha256": null,
+      "stdout_hex": "",
+      "stderr": "",
+      "exit_code": 0
+    },
+    {
+      "kind": "stock-git",
+      "argv": [
+        "/runtime/git",
+        "-c",
+        "credential.helper=",
+        "-c",
+        "core.hooksPath=/dev/null",
+        "check-ref-format",
+        "refs/heads/feature/\u6771\u4eac"
+      ],
+      "input_sha256": null,
+      "stdout_hex": "",
+      "stderr": "",
+      "exit_code": 0
+    },
+    {
+      "kind": "stock-git",
+      "argv": [
+        "/runtime/git",
+        "-c",
+        "credential.helper=",
+        "-c",
+        "core.hooksPath=/dev/null",
+        "check-ref-format",
+        "refs/heads/@"
+      ],
+      "input_sha256": null,
+      "stdout_hex": "",
+      "stderr": "",
+      "exit_code": 0
+    },
+    {
+      "kind": "stock-git",
+      "argv": [
+        "/runtime/git",
+        "-c",
+        "credential.helper=",
+        "-c",
+        "core.hooksPath=/dev/null",
+        "check-ref-format",
+        "refs/heads/a.LOCK"
+      ],
+      "input_sha256": null,
+      "stdout_hex": "",
+      "stderr": "",
+      "exit_code": 0
+    },
+    {
+      "kind": "stock-git",
+      "argv": [
+        "/runtime/git",
+        "-c",
+        "credential.helper=",
+        "-c",
+        "core.hooksPath=/dev/null",
+        "check-ref-format",
+        "refs/heads/a./b"
+      ],
+      "input_sha256": null,
+      "stdout_hex": "",
+      "stderr": "",
+      "exit_code": 0
+    },
+    {
+      "kind": "stock-git",
+      "argv": [
+        "/runtime/git",
+        "-c",
+        "credential.helper=",
+        "-c",
+        "core.hooksPath=/dev/null",
+        "check-ref-format",
+        "refs/heads/-leading"
+      ],
+      "input_sha256": null,
+      "stdout_hex": "",
+      "stderr": "",
+      "exit_code": 0
+    },
+    {
+      "kind": "stock-git",
+      "argv": [
+        "/runtime/git",
+        "-c",
+        "credential.helper=",
+        "-c",
+        "core.hooksPath=/dev/null",
+        "check-ref-format",
+        "refs/heads/.local"
+      ],
+      "input_sha256": null,
+      "stdout_hex": "",
+      "stderr": "",
+      "exit_code": 1
+    },
+    {
+      "kind": "stock-git",
+      "argv": [
+        "/runtime/git",
+        "-c",
+        "credential.helper=",
+        "-c",
+        "core.hooksPath=/dev/null",
+        "check-ref-format",
+        "refs/a.lock/child"
+      ],
+      "input_sha256": null,
+      "stdout_hex": "",
+      "stderr": "",
+      "exit_code": 1
+    },
+    {
+      "kind": "stock-git",
+      "argv": [
+        "/runtime/git",
+        "-c",
+        "credential.helper=",
+        "-c",
+        "core.hooksPath=/dev/null",
+        "check-ref-format",
+        "refs/a.lock"
+      ],
+      "input_sha256": null,
+      "stdout_hex": "",
+      "stderr": "",
+      "exit_code": 1
+    },
+    {
+      "kind": "stock-git",
+      "argv": [
+        "/runtime/git",
+        "-c",
+        "credential.helper=",
+        "-c",
+        "core.hooksPath=/dev/null",
+        "check-ref-format",
+        "refs/heads/a..b"
+      ],
+      "input_sha256": null,
+      "stdout_hex": "",
+      "stderr": "",
+      "exit_code": 1
+    },
+    {
+      "kind": "stock-git",
+      "argv": [
+        "/runtime/git",
+        "-c",
+        "credential.helper=",
+        "-c",
+        "core.hooksPath=/dev/null",
+        "check-ref-format",
+        "refs/heads/a@{b"
+      ],
+      "input_sha256": null,
+      "stdout_hex": "",
+      "stderr": "",
+      "exit_code": 1
+    },
+    {
+      "kind": "stock-git",
+      "argv": [
+        "/runtime/git",
+        "-c",
+        "credential.helper=",
+        "-c",
+        "core.hooksPath=/dev/null",
+        "check-ref-format",
+        "refs//heads"
+      ],
+      "input_sha256": null,
+      "stdout_hex": "",
+      "stderr": "",
+      "exit_code": 1
+    },
+    {
+      "kind": "stock-git",
+      "argv": [
+        "/runtime/git",
+        "-c",
+        "credential.helper=",
+        "-c",
+        "core.hooksPath=/dev/null",
+        "check-ref-format",
+        "refs/heads/a\\b"
+      ],
+      "input_sha256": null,
+      "stdout_hex": "",
+      "stderr": "",
+      "exit_code": 1
+    },
+    {
+      "kind": "stock-git",
+      "argv": [
+        "/runtime/git",
+        "-c",
+        "credential.helper=",
+        "-c",
+        "core.hooksPath=/dev/null",
+        "check-ref-format",
+        "refs/heads/a b"
+      ],
+      "input_sha256": null,
+      "stdout_hex": "",
+      "stderr": "",
+      "exit_code": 1
+    },
+    {
+      "kind": "stock-git",
+      "argv": [
+        "/runtime/git",
+        "-c",
+        "credential.helper=",
+        "-c",
+        "core.hooksPath=/dev/null",
+        "check-ref-format",
+        "refs/heads/a~b"
+      ],
+      "input_sha256": null,
+      "stdout_hex": "",
+      "stderr": "",
+      "exit_code": 1
+    },
+    {
+      "kind": "stock-git",
+      "argv": [
+        "/runtime/git",
+        "-c",
+        "credential.helper=",
+        "-c",
+        "core.hooksPath=/dev/null",
+        "check-ref-format",
+        "refs/heads/a^b"
+      ],
+      "input_sha256": null,
+      "stdout_hex": "",
+      "stderr": "",
+      "exit_code": 1
+    },
+    {
+      "kind": "stock-git",
+      "argv": [
+        "/runtime/git",
+        "-c",
+        "credential.helper=",
+        "-c",
+        "core.hooksPath=/dev/null",
+        "check-ref-format",
+        "refs/heads/a:b"
+      ],
+      "input_sha256": null,
+      "stdout_hex": "",
+      "stderr": "",
+      "exit_code": 1
+    },
+    {
+      "kind": "stock-git",
+      "argv": [
+        "/runtime/git",
+        "-c",
+        "credential.helper=",
+        "-c",
+        "core.hooksPath=/dev/null",
+        "check-ref-format",
+        "refs/heads/a?b"
+      ],
+      "input_sha256": null,
+      "stdout_hex": "",
+      "stderr": "",
+      "exit_code": 1
+    },
+    {
+      "kind": "stock-git",
+      "argv": [
+        "/runtime/git",
+        "-c",
+        "credential.helper=",
+        "-c",
+        "core.hooksPath=/dev/null",
+        "check-ref-format",
+        "refs/heads/a*b"
+      ],
+      "input_sha256": null,
+      "stdout_hex": "",
+      "stderr": "",
+      "exit_code": 1
+    },
+    {
+      "kind": "stock-git",
+      "argv": [
+        "/runtime/git",
+        "-c",
+        "credential.helper=",
+        "-c",
+        "core.hooksPath=/dev/null",
+        "check-ref-format",
+        "refs/heads/a[b"
+      ],
+      "input_sha256": null,
+      "stdout_hex": "",
+      "stderr": "",
+      "exit_code": 1
+    },
+    {
+      "kind": "stock-git",
+      "argv": [
+        "/runtime/git",
+        "-c",
+        "credential.helper=",
+        "-c",
+        "core.hooksPath=/dev/null",
+        "check-ref-format",
+        "refs/heads/main/"
+      ],
+      "input_sha256": null,
+      "stdout_hex": "",
+      "stderr": "",
+      "exit_code": 1
+    },
+    {
+      "kind": "stock-git",
+      "argv": [
+        "/runtime/git",
+        "-c",
+        "credential.helper=",
+        "-c",
+        "core.hooksPath=/dev/null",
+        "check-ref-format",
+        "refs/heads/main."
+      ],
+      "input_sha256": null,
+      "stdout_hex": "",
+      "stderr": "",
+      "exit_code": 1
+    },
+    {
+      "kind": "stock-git",
+      "argv": [
+        "/runtime/git",
+        "-c",
+        "credential.helper=",
+        "-c",
+        "core.hooksPath=/dev/null",
+        "check-ref-format",
+        "refs/"
+      ],
+      "input_sha256": null,
+      "stdout_hex": "",
+      "stderr": "",
+      "exit_code": 1
+    },
+    {
+      "kind": "stock-git",
+      "argv": [
+        "/runtime/git",
+        "-c",
+        "credential.helper=",
+        "-c",
+        "core.hooksPath=/dev/null",
+        "check-ref-format",
+        "refs/a\u007fb"
+      ],
+      "input_sha256": null,
+      "stdout_hex": "",
+      "stderr": "",
+      "exit_code": 1
+    },
+    {
+      "kind": "stock-git",
+      "argv": [
+        "/runtime/git",
+        "-c",
+        "credential.helper=",
+        "-c",
+        "core.hooksPath=/dev/null",
+        "check-ref-format",
+        "refs/a\u0001b"
+      ],
+      "input_sha256": null,
+      "stdout_hex": "",
+      "stderr": "",
+      "exit_code": 1
+    },
+    {
+      "kind": "stock-git",
+      "argv": [
+        "/runtime/git",
+        "-c",
+        "credential.helper=",
+        "-c",
+        "core.hooksPath=/dev/null",
+        "check-ref-format",
+        "refs/heads/xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"
+      ],
+      "input_sha256": null,
+      "stdout_hex": "",
+      "stderr": "",
+      "exit_code": 0
+    },
+    {
+      "kind": "stock-git",
+      "argv": [
+        "/runtime/git",
+        "-c",
+        "credential.helper=",
+        "-c",
+        "core.hooksPath=/dev/null",
+        "--git-dir=/work/fixture.git",
+        "pack-objects",
+        "--stdout",
+        "--all"
+      ],
+      "input_sha256": null,
+      "stdout_hex": "5041434b0000000200000006990c789c658d410ec2201045f79c62f6c6065ad09234a61b5db8f20a031d14d31603b4a967f2185ecc98baf36dfedbfcbc1c89806b656a63d0a2b6822a573b5eca4a39aeaa9d32a5945a0b6ba46138e55b88700eef171c171c1e3d41730f2dad5ef871c6de7707107bfe03b65c71ce6c18069f334538f9254f91a071abb4291376ff57c161f35dc62e9112c59960cd27c0b18310fdd58fd88379664a05fb00f5404027c109789c25c6410ac2301040d17d4e317ba1340d342988b8d17b4c263321621369c7526f2fd5bf79bfc50793021186d1928b4224318c93a3300e931727e484c5f75e1c6134fa7931509be7a24631c3660f322f702fbbbe1786b3fce7ba2a63ea4addf059d205acef7f0d3d9c0e8db9ed480a586b53544ea0983bf30573232e5e9f09789c8dcb310a02311046e13ea7985e9021cc860444acacbd4226f98341d785382b1edfc23dc076aff89e0d8044a39f6a09e28b0668ca1c1893688b35241f635340128bcbabdd9741d7feb575804eed1f97b721d7637f7df2b3d733311d98995d59e6b99b61ffe16eb93c60b431f703fa3033eba702789c3334303033315148ad48cc2dc849d52ba9286190e649bd79e2bc456ec3c92dab16b4ec3a12b0aec4020012f4105e20789c030000000001b701789c73ad484c2e5148cacc4b2caa5448aa2c492db652f8cfc0050066a208450d9b5536aa6bc55ef8edec7e764cb257a00fa4d2",
+      "stderr": "",
+      "exit_code": 0
+    },
+    {
+      "kind": "pure-native",
+      "label": "native-stock-pack-envelope",
+      "source_sha256": "ceedd313cea00494493e582b3f2f9bafe7b99545c90d381a1ba20e802f82e4c6",
+      "exit_code": 0,
+      "stdout": "~[[~.2 ~.6 ~.500 ~.0xd9b.5536.aa6b.c55e.f8ed.ec7e.764c.b257.a00f.a4d2]]",
+      "stderr": "loom: mapped 512MB\r\nlite: arvo formula 4ce68411\r\nlite: core 641296f\r\nlite: final state 641296f\r\neval (run):"
+    },
+    {
+      "kind": "pure-native",
+      "label": "native-corrupt-pack-trailer",
+      "source_sha256": "133c935d9a025c756de4865c2d4d8ac73f8001d54b8bec43ff9455fa844faa88",
+      "exit_code": 0,
+      "stdout": "%.y",
+      "stderr": "loom: mapped 512MB\r\nlite: arvo formula 4ce68411\r\nlite: core 641296f\r\nlite: final state 641296f\r\neval (run):"
+    },
+    {
+      "kind": "stock-git",
+      "argv": [
+        "/runtime/git",
+        "-c",
+        "credential.helper=",
+        "-c",
+        "core.hooksPath=/dev/null",
+        "init",
+        "--bare",
+        "--template=",
+        "--initial-branch=main",
+        "/work/pack-check.git"
+      ],
+      "input_sha256": null,
+      "stdout_hex": "496e697469616c697a656420656d70747920476974207265706f7369746f727920696e202f776f726b2f7061636b2d636865636b2e6769742f0a",
+      "stderr": "",
+      "exit_code": 0
+    },
+    {
+      "kind": "stock-git",
+      "argv": [
+        "/runtime/git",
+        "-c",
+        "credential.helper=",
+        "-c",
+        "core.hooksPath=/dev/null",
+        "--git-dir=/work/pack-check.git",
+        "index-pack",
+        "--strict",
+        "--stdin"
+      ],
+      "input_sha256": "5a5a090367d953128fcf3a65c44365aa2b26d8c5de685a9afd21950287ceb387",
+      "stdout_hex": "7061636b09306439623535333661613662633535656638656465633765373634636232353761303066613464320a",
+      "stderr": "",
+      "exit_code": 0
+    },
+    {
+      "kind": "stock-git",
+      "argv": [
+        "/runtime/git",
+        "-c",
+        "credential.helper=",
+        "-c",
+        "core.hooksPath=/dev/null",
+        "--git-dir=/work/pack-check.git",
+        "index-pack",
+        "--strict",
+        "--stdin"
+      ],
+      "input_sha256": "14f2da5befc341fedd4c0f53ecb5a72cbef90cb67e5d16a578b747b11982f654",
+      "stdout_hex": "",
+      "stderr": "fatal: pack is corrupted (SHA1 mismatch)\n",
+      "exit_code": 128
+    }
+  ]
+}
