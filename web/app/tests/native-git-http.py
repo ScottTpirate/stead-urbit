@@ -34,6 +34,7 @@ def exercise(session, ca, project, output, checks):
     helper = git_root / 'lib/git-core/git-remote-http'
     assert hashlib.sha256(helper.read_bytes()).hexdigest() == '23f747f69b5293b9f531cc17205eab792eb92075e92f99a8d6bc2b51cf007230'
     assert (helper.parent / 'git-remote-https').resolve(strict=True) == helper
+    assert hashlib.sha256(git.read_bytes()).hexdigest() == '93473c28694fd72bd889364107cd2770514de59780885a6a4aafca4d602e30ad'
     assert subprocess.check_output([git, '--version']).strip() == b'git version 2.55.0'
     remote = f'/stead/git/{project}.git'
     ask = root / 'ask'
@@ -90,6 +91,9 @@ def exercise(session, ca, project, output, checks):
         with password.open('x') as stream:
             stream.write(write['bearer'] + '\n')
         password.chmod(0o600)
+        command('clone', origin + remote, 'empty')
+        assert command('show-ref', cwd=root / 'empty', ok=False) == b''
+        checks.append('stock clone of empty native repository')
         source = root / 'source'
         source.mkdir()
         command('init', '--initial-branch=main', '--object-format=sha1', cwd=source)
@@ -150,7 +154,7 @@ def exercise(session, ca, project, output, checks):
         assert command('rev-parse', 'refs/remotes/origin/main', cwd=clone).strip() == second
         command('push', origin + remote, 'main:refs/heads/denied', cwd=source, ok=False)
         assert manage('revoke', handle=read['handle'])['status'] == 'revoked'
-        checks.append('reader can fetch but cannot push')
+        checks.append('read-only credential can fetch but cannot push')
         return {'first_oid': first.decode(), 'head_oid': second.decode(), 'tag_oid': tag.decode()}
     finally:
         password.unlink(missing_ok=True)
