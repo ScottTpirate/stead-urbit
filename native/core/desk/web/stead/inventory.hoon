@@ -7,8 +7,8 @@
   :~
       ['/stead/assets/NOTICE.txt' [[%web %stead 'asset-1f7ace5da42d050917f462ec832cca5f88550cafed6f4bbfe680886a033efdab' %stead-asset ~] 'text/plain; charset=utf-8' '1f7ace5da42d050917f462ec832cca5f88550cafed6f4bbfe680886a033efdab']]
       ['/stead-identity/assets/NOTICE.txt' [[%web %stead 'asset-1f7ace5da42d050917f462ec832cca5f88550cafed6f4bbfe680886a033efdab' %stead-asset ~] 'text/plain; charset=utf-8' '1f7ace5da42d050917f462ec832cca5f88550cafed6f4bbfe680886a033efdab']]
-      ['/stead/assets/app.css' [[%web %stead 'asset-90858333a5cb5a3741fee45174ab19ef58649f74aac0692ae75552dc88114756' %stead-asset ~] 'text/css; charset=utf-8' '90858333a5cb5a3741fee45174ab19ef58649f74aac0692ae75552dc88114756']]
-      ['/stead/assets/app.js' [[%web %stead 'asset-3cc1ac66b95c439c1c52328c7bc73e5292a0a88b67aee00e192303e65a554706' %stead-asset ~] 'text/javascript; charset=utf-8' '3cc1ac66b95c439c1c52328c7bc73e5292a0a88b67aee00e192303e65a554706']]
+      ['/stead/assets/app.css' [[%web %stead 'asset-c9483fdbc394ba7cd626082389296563b4f3c135a15cace17fde0eb52e66c717' %stead-asset ~] 'text/css; charset=utf-8' 'c9483fdbc394ba7cd626082389296563b4f3c135a15cace17fde0eb52e66c717']]
+      ['/stead/assets/app.js' [[%web %stead 'asset-ef7c19706312ab855b8874def21e3e7e431991d427293381d3d73ad5d65eaa3d' %stead-asset ~] 'text/javascript; charset=utf-8' 'ef7c19706312ab855b8874def21e3e7e431991d427293381d3d73ad5d65eaa3d']]
       ['/stead/assets/app.js.LEGAL.txt' [[%web %stead 'asset-b0f578720c3cda257868108d7295bb78a4535609648dccc4116da960f61520a8' %stead-asset ~] 'text/plain; charset=utf-8' 'b0f578720c3cda257868108d7295bb78a4535609648dccc4116da960f61520a8']]
       ['/stead/assets/chunk-7MPU57UJ.js' [[%web %stead 'asset-feec508be261cc759148b2297b6a276dbdc51cc6d173a5bd9c93852048a9da6d' %stead-asset ~] 'text/javascript; charset=utf-8' 'feec508be261cc759148b2297b6a276dbdc51cc6d173a5bd9c93852048a9da6d']]
       ['/stead-identity/assets/chunk-7MPU57UJ.js' [[%web %stead 'asset-feec508be261cc759148b2297b6a276dbdc51cc6d173a5bd9c93852048a9da6d' %stead-asset ~] 'text/javascript; charset=utf-8' 'feec508be261cc759148b2297b6a276dbdc51cc6d173a5bd9c93852048a9da6d']]

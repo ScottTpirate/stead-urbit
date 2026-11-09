@@ -152,9 +152,14 @@ export class HomeClient {
     if (value.protocol !== 'stead.capabilities/3' || value.profile !== 'configured-team') throw new HomeError('unsupported_version');
     return value;
   }
-  async start(identity_ship: string): Promise<Fields> {
+  async start(input: string): Promise<Fields> {
     // Explicit logout is required before switching identities. The browser does
     // not silently cancel an existing member session using an actor name.
+    const ship = input.trim();
+    if (!/^~?[A-Za-z]+(?:-{1,2}[A-Za-z]+)*$/u.test(ship) || ship.length > (ship.startsWith('~') ? 64 : 63)) {
+      throw new HomeError('invalid_ship_name');
+    }
+    const identity_ship = (ship.startsWith('~') ? ship : '~' + ship).toLowerCase();
     const value = fields(await this.post('/stead/auth/start', { protocol: 'stead.auth/1', identity_ship }, false));
     if (value.status !== 'pending' || !TOKEN.test(value.challenge_id ?? '')) throw new HomeError('invalid_response');
     return value;

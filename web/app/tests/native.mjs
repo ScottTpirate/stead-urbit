@@ -254,6 +254,10 @@ async function usefulView(page, label, queryKind, visible) {
     requests: difference(before, counts(page))});
 }
 async function docsJourney(alice, bob) {
+  async function showFullMarkdown(page) {
+    await page.locator('summary[aria-label="More page actions"]').click();
+    await page.getByRole('button', {name: 'Show full Markdown', exact: true}).click();
+  }
   const a = alice.home, b = bob.home;
   await usefulView(a, 'Docs', 'containers', a.getByRole('heading', {name: 'Choose a collection', exact: true}));
   async function collection(title, visibility) {
@@ -278,6 +282,7 @@ async function docsJourney(alice, bob) {
     report.preview_timings ??= [];
     report.preview_timings.push({content: 'new Untitled draft', first_preview: report.preview_timings.length === 0,
       useful_content_ms: Math.round(performance.now() - previewStart), requests: difference(previewRequests, counts(a))});
+    await showFullMarkdown(a);
     const editor = a.getByRole('textbox', {name: 'Markdown source', exact: true});
     const draft = (await editor.inputValue()).replace('# Untitled\n', body);
     await editor.fill(draft);
@@ -298,6 +303,7 @@ async function docsJourney(alice, bob) {
   }
   passed('native-private-markdown-saves-have-git-oids-and-inert-preview');
   await a.locator('.resource-row').filter({has: a.getByRole('heading', {name: /^Selected Tokyo 東京/u})}).getByRole('button', {name: 'Open page', exact: true}).click();
+  await showFullMarkdown(a);
   assert.equal(await a.getByRole('textbox', {name: 'Markdown source', exact: true}).inputValue(), selected.markdown);
   selected.markdown += '\nAn edited private explanation — Zoë.\n';
   await a.getByRole('textbox', {name:'Markdown source', exact:true}).fill(selected.markdown);
@@ -315,6 +321,7 @@ async function docsJourney(alice, bob) {
   assert.equal(privateRow.markdown, selected.markdown);
   assert.equal(privateRow.resource_revision, editedPrivate.resource_revision);
   assert.equal(privateRow.container_head, editedPrivate.git_commit_oid);
+  await showFullMarkdown(a);
   assert.equal(await a.getByRole('textbox', {name:'Markdown source', exact:true}).inputValue(), selected.markdown);
   const privateObservations = await privacy.unchanged();
   await a.getByRole('button', {name: 'Publish selected page', exact: true}).click();
@@ -334,6 +341,7 @@ async function docsJourney(alice, bob) {
   await b.getByRole('heading', {name: /^Selected Tokyo 東京/u}).waitFor();
   assert.equal(await b.getByRole('heading', {name: /UNSELECTED-PRIVATE-CANARY/u}).count(), 0);
   await b.getByRole('button', {name: 'Open page', exact: true}).click();
+  await showFullMarkdown(b);
   const shared = await b.getByRole('textbox', {name: 'Markdown source', exact: true}).inputValue();
   assert.equal(shared, selected.markdown.replace(selected.id, published.resource_id).replace('state: draft', 'state: published'));
   assert.equal(await b.getByRole('button', {name: 'Save page', exact: true}).isDisabled(), true);
@@ -343,6 +351,7 @@ async function docsJourney(alice, bob) {
   passed('selected-page-published-without-private-collection-or-unselected-page', {request_id: published.request_id, git_commit_oid: published.git_commit_oid});
   await a.getByLabel('Collection', {exact:true}).selectOption({label:'Shared handbook · Shared'});
   await a.getByRole('button', {name:'Open page', exact:true}).click();
+  await showFullMarkdown(a);
   assert.equal(await a.getByRole('textbox', {name:'Markdown source', exact:true}).inputValue(), shared);
   const sharedEdit = shared + '\nShared revision two — confirmed after reload.\n';
   await a.getByRole('textbox', {name:'Markdown source', exact:true}).fill(sharedEdit);
@@ -364,6 +373,7 @@ async function docsJourney(alice, bob) {
   assert.equal(sharedRow.markdown, sharedEdit);
   assert.equal(sharedRow.resource_revision, editedShared.resource_revision);
   assert.equal(sharedRow.container_head, editedShared.git_commit_oid);
+  await showFullMarkdown(b);
   assert.equal(await b.getByRole('textbox', {name:'Markdown source', exact:true}).inputValue(), sharedEdit);
   assert.equal(await b.getByRole('button', {name:'Save page', exact:true}).isDisabled(), true);
   await b.getByText('Saved revision ' + editedShared.resource_revision, {exact:true}).waitFor();

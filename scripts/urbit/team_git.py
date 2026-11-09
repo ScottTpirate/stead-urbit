@@ -81,7 +81,32 @@ def probe(dojo, project, container, head):
             'declared_objects': len(objects), 'commit_bytes': len(body), 'commit_sha1': head}
 
 
-def materialize(read, directory, project, container, head):
+def document_edges(kind, body):
+    """Return typed edges for the bounded, flat Docs history profile."""
+    if kind == 'commit':
+        header, separator, _ = body.partition(b'\n\n')
+        require(separator, 'Missing commit header separator')
+        lines = header.decode('ascii').splitlines()
+        trees = [line[5:] for line in lines if line.startswith('tree ')]
+        parents = [line[7:] for line in lines if line.startswith('parent ')]
+        require(len(trees) == 1 and len(parents) <= 1, 'Unsupported Git commit graph')
+        return [(oid, 'commit') for oid in parents] + [(trees[0], 'tree')]
+    if kind != 'tree':
+        return []
+    rest, names, edges = body, set(), []
+    while rest:
+        header, rest = rest.split(b'\0', 1)
+        mode, name = header.split(b' ', 1)
+        require(mode == b'100644' and name.endswith(b'.md')
+                and UUID.fullmatch(name[:-3].decode('ascii')) and len(rest) >= 20
+                and name not in names and len(names) < 32, 'Unsupported Git tree entry')
+        names.add(name)
+        edges.append((rest[:20].hex(), 'blob'))
+        rest = rest[20:]
+    return edges
+
+
+def materialize(read, directory, project, container, head, *, git_binary='/usr/bin/git'):
     """Traverse independently; bytes come only from the native observation hook."""
     require(UUID.fullmatch(project) and UUID.fullmatch(container) and OID.fullmatch(head), 'Git scope grammar')
     manifest = read(None)
@@ -99,7 +124,7 @@ def materialize(read, directory, project, container, head):
                    'GIT_CONFIG_GLOBAL': '/dev/null', 'GIT_NO_REPLACE_OBJECTS': '1', 'GIT_TERMINAL_PROMPT': '0'}
 
     def git(*args, data=None):
-        result = subprocess.run(owned_child.fixture_command(['/usr/bin/git', '-C', str(directory), *args]),
+        result = subprocess.run(owned_child.fixture_command([git_binary, '-C', str(directory), *args]),
             input=data, capture_output=True, env=environment, timeout=30)
         require(len(result.stdout) <= 1048576 and len(result.stderr) <= 65536, 'Stock Git output bound')
         records.append({'arguments': list(args), 'returncode': result.returncode,
@@ -134,24 +159,7 @@ def materialize(read, directory, project, container, head):
         require(git('hash-object', '-w', '-t', kind, '--stdin', data=body).decode().strip() == oid,
                 'Stock Git object identity differs')
         objects[oid] = {'kind': kind, 'body': body}
-        if kind == 'commit':
-            headers = body.split(b'\n\n', 1)[0].decode('ascii').splitlines()
-            trees = [line[5:] for line in headers if line.startswith('tree ')]
-            parents = [line[7:] for line in headers if line.startswith('parent ')]
-            require(len(trees) == 1 and len(parents) <= 1, 'Unsupported Git commit graph')
-            pending.extend((parent, 'commit') for parent in parents)
-            pending.append((trees[0], 'tree'))
-        elif kind == 'tree':
-            rest, names = body, set()
-            while rest:
-                header, rest = rest.split(b'\0', 1)
-                mode, name = header.split(b' ', 1)
-                require(mode == b'100644' and name.endswith(b'.md')
-                        and UUID.fullmatch(name[:-3].decode('ascii')) and len(rest) >= 20
-                        and name not in names and len(names) < 32, 'Unsupported Git tree entry')
-                names.add(name)
-                pending.append((rest[:20].hex(), 'blob'))
-                rest = rest[20:]
+        pending.extend(document_edges(kind, body))
     require({oid: row['kind'] for oid, row in objects.items()} == declared, 'Manifest contains unreachable objects')
     git('symbolic-ref', 'HEAD', 'refs/heads/main')
     git('update-ref', 'refs/heads/main', head)

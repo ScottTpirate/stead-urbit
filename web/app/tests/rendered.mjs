@@ -48,9 +48,10 @@ const digest = command => createHash('sha256').update('stead.command/3\0' + cano
 async function fixture(run) {
   const context = await browser.newContext();
   const page = await context.newPage();
+  page.setDefaultTimeout(15000);
   const consoleErrors = [];
   page.on('console', message => { if (message.type() === 'error') consoleErrors.push(message.text()); });
-  const state = {failure: '', resumeFailure: false, loseCommand: false, commands: [], recoveryIds: [], receipts: new Map(),
+  const state = {failure: '', resumeFailure: false, signedOut: false, unreachable: false, authStarts: [], loseCommand: false, commands: [], recoveryIds: [], receipts: new Map(),
     watches: new Map(), pages: new Map(), requests: [], sequence: 0, token: 0, polls: 0, opens: 0, denied: false,
     holdOpen: false, releaseOpen: null, holdWork: false, releaseWork: null, invalidateCommands: false,
     project: {kind: 'project', resource_id: id(1), project_id: id(1), title: 'Garden', project_key: 'GARDEN', preset: 'general', authority_epoch: '1', resource_revision: '1', policy_revision: '1', role: 'maintainer'},
@@ -62,8 +63,14 @@ async function fixture(run) {
     const pathname = new URL(request.url()).pathname;
     state.requests.push({path: pathname, kind: value.kind, action: value.action, search: value.search});
     const send = (body, status = 200) => route.fulfill({status, contentType: 'application/json', body: JSON.stringify(body)});
+    if (state.unreachable) return route.abort('failed');
     if (pathname.endsWith('/capabilities')) return send({protocol: 'stead.capabilities/3', profile: 'configured-team'});
+    if (pathname.endsWith('/start')) {
+      state.authStarts.push(value.identity_ship);
+      return send({status: 'pending', challenge_id: 'c'.repeat(64), comparison_code: 'sample-comparison'});
+    }
     if (pathname.endsWith('/resume')) {
+      if (state.signedOut) return send({}, 401);
       if (state.resumeFailure) return send({}, 503);
       state.watches.clear(); state.pages.clear();
       return send({status: 'authenticated', csrf: 'b'.repeat(64)});
@@ -105,11 +112,11 @@ async function fixture(run) {
       state.commands.push(value);
       const receipt = {protocol: 'stead.receipt/3', status: 'accepted', request_id: value.request_id,
         canonical_sha256: digest(value), project_id: value.project_id, resource_id: value.resource_id,
-        resource_kind: value.operation.split('.')[0], container_id: '', resource_revision: String(BigInt(value.expected_revision) + 1n),
+        resource_kind: value.operation.split('.')[0], container_id: value.payload.container_id ?? '', resource_revision: String(BigInt(value.expected_revision) + 1n),
         authority_epoch: value.authority_epoch, operation: value.operation, principal_id: person.principal_id,
         binding_id: person.binding_id, binding_revision: person.binding_revision, identity_ship: person.identity_ship,
         authentication: 'native-approved-browser/1', authentication_strength: 'native-approved-browser',
-        session_audit_id: person.session_audit_id, runtime: 'isolated-fake', accepted_at_ms: '1790519400000', git_commit_oid: ''};
+        session_audit_id: person.session_audit_id, runtime: 'isolated-fake', accepted_at_ms: '1790519400000', git_commit_oid: value.operation.startsWith('document.') ? 'd'.repeat(40) : ''};
       state.receipts.set(value.request_id, receipt);
       state.work = value.operation === 'work.delete' ? state.work.filter(row => row.resource_id !== value.resource_id)
         : [{...value.payload, kind: 'work', resource_id: value.resource_id, project_id: value.project_id, resource_revision: '1'}];
@@ -180,6 +187,54 @@ async function workForm(page) {
   await page.getByRole('textbox', {name: 'Description', exact: true}).fill('Unsaved synthetic text');
 }
 try {
+  await check('identity-entry-accepts-optional-tilde-and-rejects-malformed-input', async (page, state) => {
+    state.failure = 'expired';
+    await page.getByRole('button', {name: 'Refresh', exact: true}).click();
+    const input = page.getByRole('textbox', {name: 'Your identity ship', exact: true});
+    for (const value of ['bus', '~bus', '  BUS  ', ' ~bus ']) {
+      await input.fill(value);
+      const response = page.waitForResponse(response => response.url().endsWith('/auth/start'));
+      await page.getByRole('button', {name: 'Request sign-in', exact: true}).click();
+      await (await response).finished();
+      await page.getByRole('heading', {name: 'Approve on your identity ship', exact: true}).waitFor();
+    }
+    assert.deepEqual(state.authStarts, ['~bus', '~bus', '~bus', '~bus']);
+    for (const value of ['~~bus', 'bus/palnet', 'bus palnet']) {
+      await input.fill(value);
+      await page.getByRole('button', {name: 'Request sign-in', exact: true}).click();
+      await page.getByRole('alert').waitFor();
+      assert.equal(state.authStarts.length, 4, 'malformed input is rejected before an auth request');
+    }
+  });
+  await check('unreachable-boot-retries-in-place-without-reloading-the-shell', async (page, state) => {
+    state.unreachable = true;
+    await page.reload();
+    const retry = page.getByRole('button', {name: 'Retry connection', exact: true});
+    await retry.waitFor();
+    assert.doesNotMatch(await page.getByRole('alert').textContent(), /Check the receipt/u);
+    await page.evaluate(() => { window.steadShellMarker = 'retained'; });
+    state.unreachable = false;
+    await retry.click();
+    await page.getByRole('button', {name: /GARDEN.*Garden/u}).waitFor();
+    assert.equal(await page.evaluate(() => window.steadShellMarker), 'retained');
+    assert.equal(state.commands.length, 0);
+  });
+  await check('home-navigation-keeps-shell-and-guards-unsaved-work-while-disconnected', async (page, state) => {
+    await workForm(page);
+    await page.evaluate(() => { window.steadShellMarker = 'retained'; });
+    state.unreachable = true;
+    await page.getByRole('button', {name: 'Stead home', exact: true}).click();
+    assert.equal(await page.getByRole('textbox', {name: 'Title', exact: true}).inputValue(), 'Keep this local title');
+    assert.equal(await page.evaluate(() => window.steadShellMarker), 'retained');
+    await page.getByRole('button', {name: 'Discard changes…', exact: true}).click();
+    await page.getByRole('button', {name: 'Discard changes', exact: true}).click();
+    await page.getByRole('button', {name: 'Stead home', exact: true}).click();
+    await page.getByRole('button', {name: 'Overview', exact: true}).filter({has: page.locator('span')}).waitFor();
+    assert.equal(await page.getByRole('button', {name: 'Overview', exact: true}).getAttribute('aria-current'), 'page');
+    assert.equal(await page.getByRole('heading', {name: 'Garden', exact: true}).count(), 1);
+    assert.equal(await page.evaluate(() => window.steadShellMarker), 'retained');
+    assert.equal(state.commands.length, 0);
+  });
   await check('authentication-reuses-validated-identity-and-opens-before-one-snapshot', async (page, state) => {
     assert.equal(state.requests.filter(row => row.kind === 'identity').length, 1);
     assert.deepEqual(state.requests.filter(row => row.path === '/stead/api/query' && row.kind === 'project').map(row => row.path), ['/stead/api/query']);
@@ -221,14 +276,14 @@ try {
     const editor = page.getByRole('textbox', {name: 'Markdown source', exact: true});
     const preview = page.getByRole('article', {name: 'Document content', exact: true});
     await preview.locator('pre').waitFor();
-    assert.equal(await editor.inputValue(), markdown);
+    assert.equal(await editor.inputValue(), body);
     assert.equal(await preview.textContent(), body);
     assert.ok(await preview.locator('*').count() < 1024);
     assert.equal(await preview.locator('script,img,iframe,object,embed').count(), 0);
     assert.equal(await page.evaluate(() => window.steadPreviewExecuted), undefined);
-    await editor.fill(markdown + ' edited');
+    await editor.fill(body + ' edited');
     await page.waitForFunction(() => document.querySelector('article.markdown')?.textContent.endsWith(' edited'));
-    assert.equal(await editor.inputValue(), markdown + ' edited');
+    assert.equal(await editor.inputValue(), body + ' edited');
     assert.equal(state.commands.length, 0, 'rendering does not save or normalize the draft');
     await page.getByRole('button', {name: 'Discard changes…', exact: true}).click();
     await page.getByRole('button', {name: 'Discard changes', exact: true}).click();
@@ -314,7 +369,7 @@ try {
     assert.equal(await page.getByRole('textbox', {name: 'Description', exact: true}).inputValue(), 'Unsaved synthetic text');
     state.resumeFailure = false;
     await page.getByRole('button', {name: 'Resume this tab', exact: true}).click();
-    await page.getByText('Session resumed. Choose whether to retry your pending request.', {exact: true}).waitFor();
+    await page.getByText('Session resumed.', {exact: true}).waitFor();
     assert.equal(await page.getByRole('textbox', {name: 'Title', exact: true}).inputValue(), 'Keep this local title');
   });
   await check('uncertain-resume-preserves-original-pending-receipt', async (page, state) => {
@@ -561,7 +616,8 @@ try {
     assert.equal(state.commands.length, 1); assert.equal(state.commands[0].operation, 'work.delete');
   });
   await check('page-title-visibility-clean-close-and-confirmed-discard-responsive', async (page, state) => {
-    const markdown = `---\nid: ${id(603)}\ntype: page\nstate: draft\n---\n# A useful page — 東京\n\nKeep this exact Markdown.\n`;
+    const body = '# A useful page — 東京\n\nKeep this exact Markdown.\n';
+    const markdown = `---\nid: ${id(603)}\ntype: page\nstate: draft\n---\n` + body;
     state.containers = [{kind: 'container', resource_id: id(200), container_id: id(200), title: 'Private notes', visibility: 'private', container_head: ''}];
     state.documents = [{kind: 'document', resource_id: id(603), container_id: id(200), title: '# A useful page — 東京', resource_revision: '2', markdown}];
     await page.getByRole('button', {name: 'Docs', exact: true}).click();
@@ -570,14 +626,14 @@ try {
     await page.locator('.editor-heading').getByRole('heading', {name: 'A useful page — 東京', exact: true}).waitFor();
     assert.equal(await page.locator('.page-visibility').textContent(), 'Private draft · only you');
     assert.equal(await page.getByRole('button', {name: 'Discard changes…', exact: true}).count(), 0);
-    assert.equal(await page.getByRole('textbox', {name: 'Markdown source', exact: true}).inputValue(), markdown);
+    assert.equal(await page.getByRole('textbox', {name: 'Markdown source', exact: true}).inputValue(), body);
     await page.getByRole('button', {name: 'Close', exact: true}).click();
     assert.equal(await page.getByRole('alertdialog').count(), 0);
     await page.getByRole('button', {name: 'Open page', exact: true}).click();
-    await page.getByRole('textbox', {name: 'Markdown source', exact: true}).fill(markdown + 'Unsent local edit.');
+    await page.getByRole('textbox', {name: 'Markdown source', exact: true}).fill(body + 'Unsent local edit.');
     await page.getByRole('button', {name: 'Discard changes…', exact: true}).click();
     await page.getByRole('button', {name: 'Keep editing', exact: true}).click();
-    assert.equal(await page.getByRole('textbox', {name: 'Markdown source', exact: true}).inputValue(), markdown + 'Unsent local edit.');
+    assert.equal(await page.getByRole('textbox', {name: 'Markdown source', exact: true}).inputValue(), body + 'Unsent local edit.');
     for (const width of [1440, 390, 320]) {
       await page.setViewportSize({width, height: 900});
       assert.equal(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth), true);
@@ -586,8 +642,35 @@ try {
     await page.getByRole('button', {name: 'Discard changes…', exact: true}).click();
     await page.getByRole('button', {name: 'Discard changes', exact: true}).click();
     await page.getByRole('button', {name: 'Open page', exact: true}).click();
-    assert.equal(await page.getByRole('textbox', {name: 'Markdown source', exact: true}).inputValue(), markdown);
+    assert.equal(await page.getByRole('textbox', {name: 'Markdown source', exact: true}).inputValue(), body);
     assert.equal(state.commands.length, 0);
+  });
+  await check('page-body-and-full-source-roundtrip-preserves-metadata-and-explicit-save', async (page, state) => {
+    const prefix = `---\nid: ${id(604)}\ntype: page\nstate: draft\n---\n`;
+    const body = '# Notes — 東京\n\nKeep spacing.  \n';
+    state.containers = [{kind: 'container', resource_id: id(200), container_id: id(200), title: 'Private notes', visibility: 'private', container_head: ''}];
+    state.documents = [{kind: 'document', resource_id: id(604), container_id: id(200), title: 'Notes — 東京', resource_revision: '2', markdown: prefix + body}];
+    await page.getByRole('button', {name: 'Docs', exact: true}).click();
+    await page.getByLabel('Collection', {exact: true}).selectOption(id(200));
+    await page.getByRole('button', {name: 'Open page', exact: true}).click();
+    const editor = page.getByRole('textbox', {name: 'Markdown source', exact: true});
+    assert.equal(await editor.inputValue(), body);
+    await editor.fill(body + '\nEdited body.\n');
+    const show = page.getByRole('button', {name: 'Show full Markdown', exact: true});
+    if (!(await show.isVisible())) await page.locator('summary[aria-label="More page actions"]').click();
+    await show.click();
+    assert.equal(await editor.inputValue(), prefix + body + '\nEdited body.\n');
+    assert.equal(state.commands.length, 0, 'changing editor mode never saves');
+    await editor.fill(prefix + body + '\nEdited in full source.\n');
+    await page.locator('summary[aria-label="More page actions"]').click();
+    await page.getByRole('button', {name: 'Hide metadata', exact: true}).click();
+    assert.equal(await editor.inputValue(), body + '\nEdited in full source.\n');
+    await page.getByRole('button', {name: 'Save page', exact: true}).click();
+    await page.getByText('Saved at home · revision 3', {exact: true}).waitFor();
+    assert.equal(state.commands.length, 1);
+    assert.equal(state.commands[0].operation, 'document.save');
+    assert.equal(state.commands[0].payload.markdown, prefix + body + '\nEdited in full source.\n');
+    assert.equal(state.commands[0].expected_revision, '2');
   });
   await check('routine-refresh-announcement-expires-without-clearing-save-evidence', async (page, state) => {
     await workForm(page);

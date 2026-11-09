@@ -28,8 +28,9 @@ expired without qualifying activity or feedback; #29 and Phase 2 remain open.
 | 5 | Explicit replicas, safe home migration, self-hosted dogfooding | One authoritative source of truth, fenced migration and tested exitability |
 | 6 | Supported ecosystem release | Independent adopters, integration, maintainership and qualified security/recovery/distribution process |
 
-Finish the team Work/Docs trial before implementing the Git collaboration lane.
-After that gate, freeze Git and storage contracts first. Build the complete
+The Work/Docs human trial remains an acceptance requirement. Local engineering
+for Git collaboration and recovery can proceed while it is open. Freeze Git
+and storage contracts before wiring them into the authority. Build the complete
 work-item-to-build workflow through native Git, exact-revision review and
 isolated runners. Keep Code, Reviews and Build navigation specific to software
 projects.

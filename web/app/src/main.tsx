@@ -20,6 +20,7 @@ const workStatuses = new Map([
   ['canceled', 'Canceled'],
 ]);
 const messages: Record<string, string> = {
+  invalid_ship_name: 'Enter an Urbit ID such as sampel-palnet. The tilde is optional.',
   search_too_long: 'Search is limited to 128 UTF-8 bytes. Shorten the phrase.',
   logout_unconfirmed: 'Sign-out was not confirmed. Keep this tab open and retry Sign out; your server session may still be active.',
   session_required: 'Your session has ended. Sign in again.',
@@ -36,6 +37,9 @@ const messages: Record<string, string> = {
   resume_required: 'Session resumption was not confirmed. Your local changes are still here. Resume this tab before choosing what to retry.',
 };
 const explain = (error: unknown) => error instanceof HomeError ? messages[error.code] ?? `The home rejected this request (${error.code}).` : 'The request could not be completed.';
+const explainConnection = (error: unknown) => error instanceof HomeError && error.code === 'outcome_unknown'
+  ? 'Stead cannot reach this home right now. Try again once it is back online.'
+  : explain(error);
 function ActionMenu({ label, disabled, children }: { label: string; disabled: boolean; children: ReactNode }) {
   const disclosure = useRef<HTMLDetailsElement>(null);
   return <details className="action-menu" ref={disclosure} onKeyDown={event => {
@@ -46,8 +50,9 @@ function ActionMenu({ label, disabled, children }: { label: string; disabled: bo
     <div className="menu-actions" onClick={event => { if ((event.target as HTMLElement).closest('button') && disclosure.current) disclosure.current.open = false; }}>{children}</div>
   </details>;
 }
+const PAGE_HEADER = /^---\nid: [0-9a-f-]{36}\ntype: page\nstate: (draft|published)\n---\n/u;
 function pageTitle(text: string) {
-  const body = text.replace(/^---\nid: [0-9a-f-]{36}\ntype: page\nstate: (draft|published)\n---\n/u, '');
+  const body = text.replace(PAGE_HEADER, '');
   return body.match(/^#{1,6} +(.+)$/mu)?.[1]?.trim() || 'Untitled page';
 }
 function App() {
@@ -71,7 +76,9 @@ function App() {
   const [diagnostic, setDiagnostic] = useState('none');
   const [notice, setNotice] = useState('');
   const [refreshNotice, setRefreshNotice] = useState<{text: string; sequence: number} | null>(null);
-  const [editor, setEditor] = useState<{ id: string; revision: string; head: string; text: string; dirty: boolean } | null>(null);
+  const [editor, setEditor] = useState<{ id: string; revision: string; head: string; text: string; dirty: boolean; fullSource?: boolean } | null>(null);
+  const pageHeader = editor?.text.match(PAGE_HEADER)?.[0] ?? '';
+  const hiddenHeader = editor?.fullSource ? '' : pageHeader;
   const [currentVersion, setCurrentVersion] = useState<{scope: string; row: Row} | null>(null);
   const [work, setWork] = useState<Row | null>(null);
   const [form, setForm] = useState<'' | 'project' | 'work' | 'container' | 'relation' | 'publish'>('');
@@ -116,7 +123,7 @@ function App() {
         const person = await client.resume();
         if (active) await identify(person);
       }
-      catch (failure) { if (active && (!(failure instanceof HomeError) || failure.code !== 'session_required')) { setError(explain(failure)); setDiagnostic(failure instanceof HomeError ? failure.code : 'unexpected_error'); } }
+      catch (failure) { if (active && (!(failure instanceof HomeError) || failure.code !== 'session_required')) { setError(explainConnection(failure)); setDiagnostic(failure instanceof HomeError ? failure.code : 'unexpected_error'); } }
       finally { if (active) setLoading(false); }
     })();
     const connection = () => setOnline(navigator.onLine);
@@ -136,16 +143,23 @@ function App() {
   }, [editor?.dirty, pending, formDirty, busy]);
   useEffect(() => { setFormDirty(false); setDiscard(null); }, [form, work?.resource_id]);
   const actionBusy = useRef(false);
-  async function action(callback: () => Promise<unknown>) {
+  async function action(callback: () => Promise<unknown>, describeFailure = explain) {
     if (actionBusy.current) return;
     actionBusy.current = true;
-    setBusy(true); setError('');
+    setBusy(true); setError(''); setDiagnostic('none');
     try { await callback(); }
     catch (failure) {
       if (failure instanceof HomeError && failure.code === 'denied_or_not_found') clearViews();
       setDiagnostic(failure instanceof HomeError ? failure.code : 'unexpected_error');
-      setError(explain(failure));
+      setError(describeFailure(failure));
     } finally { actionBusy.current = false; setBusy(false); }
+  }
+  async function retryConnection() {
+    await client.capabilities();
+    try { await identify(await client.resume()); }
+    catch (failure) {
+      if (!(failure instanceof HomeError) || failure.code !== 'session_required') throw failure;
+    }
   }
   async function collections(projectId: string): Promise<Row[]> {
     const found: Row[] = [];
@@ -419,7 +433,7 @@ function App() {
     return <Surface key={key} className={inWork ? 'resource-row work-row' : 'resource-row'} data-selected={inWork && !!work && row.resource_id === work.resource_id}>
       <div className="resource-summary">
         {!inWork && <span className="row-kind">{row.kind === 'document' ? 'Page' : row.kind ?? row.type ?? tab}</span>}
-        <h2>{inWork ? <button className="work-title" disabled={locked} aria-expanded={work?.resource_id === row.resource_id} aria-controls="work-detail-panel" onClick={event => { const trigger = event.currentTarget; void action(() => openWork(row, trigger)); }}>{title}</button> : title}</h2>
+        <h2>{inWork ? <button className="work-title" disabled={locked} aria-expanded={work?.resource_id === row.resource_id} aria-controls="work-detail-panel" onClick={event => { const trigger = event.currentTarget; void action(() => openWork(row, trigger), explainConnection); }}>{title}</button> : title}</h2>
         {row.description && <p>{row.description}</p>}
         {snippet && snippet !== row.description && <p>{snippet}</p>}
         {!inWork && row.status && <span className="muted">{row.status}</span>}
@@ -430,7 +444,7 @@ function App() {
         {row.priority && row.priority !== 'none' && <span className="priority" data-priority={row.priority}>{row.priority}</span>}
       </div>}
       <div className="actions row-actions">
-        {tab === 'documents' && <Button disabled={locked} onClick={() => void action(() => openDocument(row))}>Open page</Button>}
+        {tab === 'documents' && <Button disabled={locked} onClick={() => void action(() => openDocument(row), explainConnection)}>Open page</Button>}
         {canEdit && project && (inWork || tab === 'relations') && <ActionMenu label={`Actions for ${title}`} disabled={locked}><Button variant="quiet" disabled={locked} onClick={() => setConfirmation({
           label: inWork ? 'this work item' : 'this link',
           command: command(project.project_id!, row.resource_id!, row.resource_revision!, project.authority_epoch!, inWork ? 'work.delete' : 'relation.delete', {}),
@@ -477,20 +491,38 @@ function App() {
             <div className="actions"><Button type="submit" variant="primary" pending={busy} disabled={!!pending || (form === 'work' && !canEdit)}>Save at home</Button><Button disabled={busy || !!pending} onClick={() => requestClose('form')}>{formDirty ? 'Discard changes…' : 'Close'}</Button>{workPanelOpen && work && <ActionMenu label="More work actions" disabled={busy || !!pending}><Button variant="quiet" disabled={busy || !!pending} onClick={() => void action(loadCurrentVersion)}>Compare current saved revision</Button></ActionMenu>}</div>
           </fieldset></form></Surface>;
 
+  const brand = <><span className="brand-mark" aria-hidden="true">s</span><span>stead</span></>;
+  const canReconnect = ['outcome_unknown', 'invalid_csrf', 'resume_required', 'refresh_required', 'updates_unavailable'].includes(diagnostic);
   return <div className={identity ? 'app-shell signed-in' : 'app-shell entry-shell'}>
-    <header className="topbar"><a className="brand" href="/stead/" aria-label="Stead home"><span className="brand-mark" aria-hidden="true">s</span><span>stead</span></a><span className="alpha">Team alpha</span><div className="account">{identity ? <><span className="member-label">{identity.display_name}<small>{identity.identity_ship}</small></span><Button variant="quiet" disabled={busy} onClick={() => void action(() => client.logout())}>Sign out</Button></> : <span>Work, with context.</span>}</div></header>
+    <header className="topbar">{project ? <button className="brand" aria-label="Stead home" type="button" disabled={busy}
+      onClick={() => void action(() => openProject(project), explainConnection)}>{brand}</button> : <span className="brand">{brand}</span>}
+      <span className="alpha">Team alpha</span><div className="account">{identity ? <><span className="member-label">{identity.display_name}<small>{identity.identity_ship}</small></span><Button variant="quiet" disabled={busy} onClick={() => void action(() => client.logout())}>Sign out</Button></> : <span>Work, with context.</span>}</div></header>
     {!online && <div className="banner" role="status">You’re offline. Drafts stay in this tab; nothing is saved until the home confirms it.</div>}
     <main id="main"><a className="skip-link" href="#project-content">Skip to project content</a>
-      {error && <div className="error" role="alert"><p>{error}</p>{identity && <Button onClick={() => void action(async () => { const person = await client.resume(); await identify(person); if (project && person.session_audit_id === identity?.session_audit_id) reloadScope(); setNotice('Session resumed. Choose whether to retry your pending request.'); })}>Resume this tab</Button>}</div>}
+      {error && <div className="error" role="alert"><p>{error}</p>
+        {canReconnect && (identity
+          ? <Button disabled={busy} onClick={() => void action(async () => {
+            const person = await client.resume();
+            await identify(person);
+            if (project && person.session_audit_id === identity.session_audit_id) reloadScope();
+            setNotice(pending ? 'Session resumed. Choose whether to retry your pending request.' : 'Session resumed.');
+          }, explainConnection)}>Resume this tab</Button>
+          : <Button disabled={busy} onClick={() => void action(retryConnection, explainConnection)}>Retry connection</Button>)}
+      </div>}
       <div className="live" role="status" aria-live="polite">{notice}</div>
-      <div className="refresh-notice" role="status" aria-live="polite" aria-atomic="true">{refreshNotice && <span key={refreshNotice.sequence}>{refreshNotice.text}</span>}</div>
+      <div className="refresh-notice stead-visually-hidden" role="status" aria-live="polite" aria-atomic="true">{refreshNotice && <span key={refreshNotice.sequence}>{refreshNotice.text}</span>}</div>
       {loading && !identity && <LoadingState label="Connecting to your home"/>}
       {!identity && !loading && <Surface className="login"><p className="eyebrow">YOUR TEAM’S HOME</p><h1>Make room for good work.</h1><p>Sign in with your individual identity. Work and documents stay at this home.</p>
-        <form onSubmit={event => { event.preventDefault(); void action(async () => { const value = await client.start(ship); setChallenge(value); }); }}>
-          <TextField label="Your identity ship" placeholder="~sampel-palnet" value={ship} onChange={event => setShip(event.target.value)} autoComplete="off" required maxLength={64}/>
+        <form onSubmit={event => { event.preventDefault(); void action(async () => {
+          const value = await client.start(ship);
+          setChallenge(value);
+        }, explainConnection); }}>
+          <TextField label="Your identity ship" description="Enter your Urbit ID with or without the tilde (~)." placeholder="sampel-palnet" value={ship}
+            onChange={event => { setShip(event.target.value); setChallenge(null); }} disabled={busy}
+            autoComplete="off" autoCapitalize="none" spellCheck={false} required maxLength={64}/>
           <Button type="submit" variant="primary" pending={busy} pendingLabel="Requesting approval">Request sign-in</Button>
         </form>
-        {challenge && <div className="approval"><h2>Approve on your identity ship</h2><p>Open its Stead identity page. Check this home and the comparison code before approving.</p><p><strong>Home</strong> {location.origin}</p><p className="comparison">{challenge.comparison_code}</p><Button disabled={busy} onClick={() => void action(async () => { const status = await client.status(challenge.challenge_id!); if (status.status === 'approved') { const person = await client.consume(challenge.challenge_id!); setChallenge(null); await identify(person); } else setNotice('Approval is still pending on your identity ship.'); })}>Check approval</Button></div>}
+        {challenge && <div className="approval"><h2>Approve on your identity ship</h2><p>Open its Stead identity page. Check this home and the comparison code before approving.</p><p><strong>Home</strong> {location.origin}</p><p className="comparison">{challenge.comparison_code}</p><Button disabled={busy} onClick={() => void action(async () => { const status = await client.status(challenge.challenge_id!); if (status.status === 'approved') { const person = await client.consume(challenge.challenge_id!); setChallenge(null); await identify(person); } else setNotice('Approval is still pending on your identity ship.'); }, explainConnection)}>Check approval</Button></div>}
       </Surface>}
       {identity && <div className="workspace">
         <aside className="sidebar"><div className="space-label"><span className="space-mark" aria-hidden="true">~</span><div>Workspace{identity.home && <small>{identity.home}</small>}</div></div><h2 className="rail-label">Projects</h2>{projects.length === 0 && <p className="muted">No projects are shared with you yet.</p>}<nav aria-label="Projects">{projects.map(row => <button disabled={busy} key={row.project_id} aria-current={project?.project_id === row.project_id ? 'page' : undefined} onClick={() => void action(() => openProject(row))}><span className="project-glyph" aria-hidden="true">◇</span><span className="project-name"><span className="project-key">{row.project_key}</span>{row.title}</span></button>)}</nav>{identity.can_create === 'yes' && <Button variant="quiet" disabled={busy || !!pending || !!form || !!editor?.dirty} onClick={() => { setEditor(null); setWork(null); setCurrentVersion(null); setForm('project'); }}>＋ New project</Button>}<p className="sidebar-note">Only projects explicitly shared with you appear here.</p></aside>
@@ -508,8 +540,13 @@ function App() {
           </div></div>
           {currentVersion && currentVersion.scope === comparisonScope && <Surface className="comparison"><h2 ref={feedbackHeading} tabIndex={-1}>Current saved revision {currentVersion.row.resource_revision}</h2><pre>{currentVersion.row.markdown ?? `${currentVersion.row.title}\n${currentVersion.row.description}`}</pre><p>{canEdit ? 'Your local text has not changed. Choose its base revision before saving again.' : 'This is the current revision saved at home.'}</p>{canEdit && <Button disabled={busy || !!pending} onClick={() => { if (currentVersion.scope !== comparisonScope) { setCurrentVersion(null); return; } if (editor) setEditor({...editor, revision: currentVersion.row.resource_revision!, head: currentVersion.row.container_head ?? '', dirty: true}); else if (work) setWork(currentVersion.row); setCurrentVersion(null); setNotice('Local edits kept. Review them, then explicitly save against the current revision.'); }}>Keep my edits using this revision</Button>}<Button onClick={() => setCurrentVersion(null)}>Close comparison</Button></Surface>}
           {confirmation && <Surface className="confirmation"><h2 ref={feedbackHeading} tabIndex={-1}>Delete {confirmation.label}?</h2><p>This removes it from current views. Authorized historical Git exports retain earlier page versions; this does not erase copies others already hold.</p><div className="actions"><Button disabled={busy || !!pending || !!form || !!editor?.dirty} onClick={() => void action(() => save(confirmation.command))}>Confirm deletion</Button><Button disabled={busy} onClick={() => setConfirmation(null)}>Keep it</Button></div></Surface>}
-          {editor && container ? <Surface className="document-editor"><div className="editor-heading"><div><h2>{pageTitle(editor.text)}</h2><span className="page-visibility">{draftMode ? 'Private draft · only you' : 'Shared with project members'}</span></div><span>{editor.dirty ? 'Local changes · not saved' : `Saved revision ${editor.revision}`}</span></div><div className="editor-layout"><div className="editor-source"><label className="editor-label" htmlFor="markdown">Markdown source</label><textarea id="markdown" value={editor.text} readOnly={!canEdit || busy || !!pending || !!form} onChange={event => setEditor({ ...editor, text: event.target.value, dirty: true })} spellCheck/>
-          <div className="actions editor-actions"><Button variant="primary" disabled={!canEdit || !editor.dirty || busy || !!pending || !!form} onClick={() => void action(() => save(command(project.project_id!, editor.id, editor.revision, project.authority_epoch!, 'document.save', { container_id: container.container_id!, markdown: editor.text })))}>Save page</Button>{canEdit && !editor.dirty && editor.revision !== '0' && draftMode && <Button disabled={busy || !!pending || !!form} onClick={() => void action(async () => { setContainers(await collections(project.project_id!)); setForm('publish'); })}>Publish selected page</Button>}<Button disabled={busy || !!pending || !!form} onClick={() => requestClose('document')}>{editor.dirty ? 'Discard changes…' : 'Close'}</Button>{editor.revision !== '0' && <ActionMenu label="More page actions" disabled={busy || !!pending || !!form}><Button variant="quiet" disabled={busy || !!pending || !!form} onClick={() => void action(loadCurrentVersion)}>Compare current saved revision</Button>{canEdit && <Button variant="quiet" disabled={busy || !!pending || !!form || editor.dirty} onClick={() => setConfirmation({label: 'this page', command: command(project.project_id!, editor.id, editor.revision, project.authority_epoch!, 'document.delete', {container_id: container.container_id!, expected_head: editor.head})})}>Delete page</Button>}</ActionMenu>}</div></div><div className="editor-preview"><h3>Preview</h3><Suspense fallback={<p>Loading preview…</p>}><Markdown key={comparisonScope} text={editor.text}/></Suspense></div></div></Surface> : <>
+          {editor && container ? <Surface className="document-editor"><div className="editor-heading"><div><h2>{pageTitle(editor.text)}</h2><span className="page-visibility">{draftMode ? 'Private draft · only you' : 'Shared with project members'}</span></div><span>{editor.dirty ? 'Local changes · not saved' : `Saved revision ${editor.revision}`}</span></div><div className="editor-layout"><div className="editor-source"><label className="editor-label" htmlFor="markdown">Markdown source</label><textarea id="markdown" value={editor.text.slice(hiddenHeader.length)} readOnly={!canEdit || busy || !!pending || !!form}
+            onChange={event => setEditor({ ...editor, text: hiddenHeader + event.target.value, dirty: true })} spellCheck/>
+          <div className="actions editor-actions"><Button variant="primary" disabled={!canEdit || !editor.dirty || busy || !!pending || !!form} onClick={() => void action(() => save(command(project.project_id!, editor.id, editor.revision, project.authority_epoch!, 'document.save', { container_id: container.container_id!, markdown: editor.text })))}>Save page</Button>{canEdit && !editor.dirty && editor.revision !== '0' && draftMode && <Button disabled={busy || !!pending || !!form} onClick={() => void action(async () => { setContainers(await collections(project.project_id!)); setForm('publish'); })}>Publish selected page</Button>}<Button disabled={busy || !!pending || !!form} onClick={() => requestClose('document')}>{editor.dirty ? 'Discard changes…' : 'Close'}</Button>{(editor.revision !== '0' || pageHeader || editor.fullSource) && <ActionMenu label="More page actions" disabled={busy || !!pending || !!form}>
+            {(pageHeader || editor.fullSource) && <Button variant="quiet" disabled={busy || !!pending || !!form}
+              onClick={() => setEditor({ ...editor, fullSource: !editor.fullSource })}>{editor.fullSource ? 'Hide metadata' : 'Show full Markdown'}</Button>}
+            {editor.revision !== '0' && <Button variant="quiet" disabled={busy || !!pending || !!form} onClick={() => void action(loadCurrentVersion)}>Compare current saved revision</Button>}
+            {editor.revision !== '0' && canEdit && <Button variant="quiet" disabled={busy || !!pending || !!form || editor.dirty} onClick={() => setConfirmation({label: 'this page', command: command(project.project_id!, editor.id, editor.revision, project.authority_epoch!, 'document.delete', {container_id: container.container_id!, expected_head: editor.head})})}>Delete page</Button>}</ActionMenu>}</div></div><div className="editor-preview"><h3>Preview</h3><Suspense fallback={<p>Loading preview…</p>}><Markdown key={comparisonScope} text={editor.text}/></Suspense></div></div></Surface> : <>
           <div className={workPanelOpen ? 'work-view with-detail' : 'work-view'}>
             <div className="view-list">{visibleRows}</div>
             {workPanelOpen && (form === 'work' ? formPanel : work && <Surface id="work-detail-panel" className="work-detail" aria-labelledby="work-detail-title">
