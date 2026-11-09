@@ -15,8 +15,8 @@ Deletion-only pack-presence rules also belong to that next boundary.
 The grammar follows the official [Git pack protocol](https://git-scm.com/docs/pack-protocol):
 two lowercase 40-digit OIDs, one space between fields, and an exact ref name.
 The first command requires a NUL followed by its capability list, which may be
-empty. Later commands cannot contain NUL. One terminal LF is accepted on each
-command. The list ends at flush; other control markers, shallow declarations,
+empty. The list may start with the single space emitted by stock send-pack.
+Later commands cannot contain NUL. One terminal LF is accepted on each command. The list ends at flush; other control markers, shallow declarations,
 signed-push commands and invalid/truncated frames are rejected.
 
 | Bound | Limit |

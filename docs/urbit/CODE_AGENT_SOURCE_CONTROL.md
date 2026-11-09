@@ -91,7 +91,10 @@ export is qualified. Home restart invalidates in-flight bearer admissions and
 requires fresh authorization for any staged job; a completed receipt remains
 durable. Report ref success to Git only after the authoritative transition.
 
-The [repository reducer prototype](CODE_REPOSITORY_STORE_PROFILE.md) tests this
-acceptance shape under small synchronous bounds. It leaves the repository
-service, persisted staging jobs, protected review and external builds as
-separate authority integration work.
+The [native Home profile](CODE_HOME_PROFILE.md) integrates the repository
+reducer into the Home with bounded synchronous Smart HTTP. The current
+prototype holds decoded objects only during the accepting event. The durable
+job and replay contracts above apply to a later staged receive path.
+The [delivery reducer](CODE_DELIVERY_PROFILE.md) implements explicit proposal,
+review, build and release transitions. Home persistence and protected-ref
+application must bind those transitions to a single authoritative commit.

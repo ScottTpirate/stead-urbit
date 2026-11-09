@@ -44,11 +44,19 @@ Build the complete work-item-to-build workflow through native Git,
 exact-revision review and isolated runners. Keep Code, Reviews and Build
 navigation specific to software projects.
 
-Evaluate House alongside Phase 3 through a separate test-space adapter. Require
-a supported installation and launch path, verified individual identity, and
-membership expiry and revocation. Verify two members' access, denial across
-spaces, and removal. If those contracts are unavailable, record the missing
-interface and continue standalone delivery.
+The November 9 [local verification](LOCAL_CODE_IMPORT_20261109.md)
+covers bounded native stock Git, protected-ref denial, restart of populated
+Code state, and loss-aware Work/Docs import. The local proof profile is
+intentionally small. Phase 3 still requires durable staged receive and
+protected review/build integration. Phase 4 still requires exact role
+installation, supported upgrades and interrupted recovery, complete export
+and a measured canary.
+
+The standalone Phase 3/4 development checks use synthetic local ships.
+A real House is outside their acceptance scope. A future House adapter still
+needs a supported installation and launch path, verified individual identity,
+and membership expiry and revocation. The adapter gate covers two members,
+denial across spaces, and removal.
 
 Workstreams: integration/architecture owns shared contracts; platform owns runtime/harness; native-core owns authoritative transitions; identity/security owns authentication and policy; Git owns protocol/object validation; frontend owns direct-home UX; QA/operations owns independent verification and deployments. One person or agent may fill several roles, but implementation and final approval must remain independent.
 
