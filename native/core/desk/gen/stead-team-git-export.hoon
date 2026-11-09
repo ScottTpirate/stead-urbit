@@ -1,5 +1,5 @@
 :: Owned synthetic qualification only: inspect stored bytes, never author Git.
-/+  stead-codec, stead-git, stead-team-owner
+/+  stead-codec, stead-git, stead-team-owner, stead-code-home
 :-  %say
 |=  [[now=@da eny=@uvJ bec=beak] [[mode=@tas project=@t container=@t head=@ux oid=@ux] ~] ~]
 :-  %noun
@@ -15,8 +15,13 @@
   ==
 ?>  ?=([%20 %live *] egg)
 =/  saved=vase  +.old-state.egg
-=/  loaded  !<([%stead-home %3 team=saved:stead-team-owner] saved)
-=/  db  db.team.loaded
+=/  team=saved:stead-team-owner
+  ?:  ?=([%stead-home %4 *] q.saved)
+    =/  loaded  !<([%stead-home %4 team=saved:stead-team-owner code=saved:stead-code-home] saved)
+    team.loaded
+  =/  loaded  !<([%stead-home %3 team=saved:stead-team-owner] saved)
+  team.loaded
+=/  db  db.team
 =/  config  (need current.registry.db)
 ?>  &(=(~zod home.config) =('isolated-fake' runtime.config) =('local-disposable' custody.config))
 =/  box  (~(got by containers.data.db) container)

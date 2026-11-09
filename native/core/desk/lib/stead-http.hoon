@@ -103,7 +103,7 @@
 ++  validate
   |=  [request=inbound-request:eyre origin=@t assets=(set @t)]
   ^-  (unit incoming)
-  (validate-routes request origin (~(put in assets) '/stead/') (silt ~['/stead/auth/start' '/stead/auth/status' '/stead/auth/consume' '/stead/auth/logout' '/stead/auth/resume' '/stead/api/capabilities' '/stead/api/command' '/stead/api/query' '/stead/api/updates']))
+  (validate-routes request origin (~(put in assets) '/stead/') (silt ~['/stead/auth/start' '/stead/auth/status' '/stead/auth/consume' '/stead/auth/logout' '/stead/auth/resume' '/stead/api/capabilities' '/stead/api/command' '/stead/api/query' '/stead/api/updates' '/stead/api/code']))
 ++  validate-routes
   |=  [request=inbound-request:eyre origin=@t assets=(set @t) posts=(set @t)]
   ^-  (unit incoming)

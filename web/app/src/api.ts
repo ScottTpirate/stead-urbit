@@ -134,7 +134,8 @@ export class HomeClient {
       if (response.status === 401) { this.clear(); throw new HomeError('session_required'); }
       const value = object(await boundedJSON(response));
       if (generation !== this.generation) throw new HomeError('session_changed');
-      if (!response.ok && !(response.status === 403 && value.protocol === 'stead.result/3' && value.error === 'invalid_csrf')) throw new HomeError('outcome_unknown');
+      if (!response.ok && !(value.protocol === 'stead.result/3'
+        && ((response.status === 403 && value.error === 'invalid_csrf') || path === '/stead/api/code'))) throw new HomeError('outcome_unknown');
       if (mutation) return value;
       if (value.status === 'rejected') {
         if (typeof value.error !== 'string' || !/^[a-z_]{1,64}$/u.test(value.error)) throw new HomeError('invalid_response');
@@ -215,6 +216,14 @@ export class HomeClient {
     } catch (error) { if (error instanceof HomeError && error.code === 'session_required') return; throw new HomeError('logout_unconfirmed'); }
   }
   async query(query: Query): Promise<View> { return this.readQuery(query); }
+  async code(project_id: string, input: { action: 'status' | 'create' }
+    | { action: 'issue'; access: 'read' | 'write' } | { action: 'revoke'; handle: string }): Promise<Fields> {
+    const value = fields(await this.post('/stead/api/code', { protocol: 'stead.code/1', project_id, ...input }, true));
+    if (value.protocol !== 'stead.code/1') throw new HomeError('invalid_response');
+    if (input.action === 'issue' && (value.status !== 'issued' || !TOKEN.test(value.handle ?? '')
+      || !TOKEN.test(value.bearer ?? '') || !DECIMAL.test(value.expires_at_ms ?? ''))) throw new HomeError('invalid_response');
+    return value;
+  }
   private async readQuery(query: Query, adoption = false): Promise<View> {
     const request_id = newId();
     const value = await this.post('/stead/api/query', { protocol: 'stead.query/3', request_id, ...query }, true, false, adoption);

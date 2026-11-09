@@ -31,6 +31,14 @@ state version. Timestamps, ownership, modes and archive order are fixed. Build
 reads committed source; uncommitted edits and unrelated files are excluded.
 It refuses a packager that differs from the selected committed version.
 
+The saved-state field names the maximum format emitted by the packaged role.
+The current Home desk declares v4 for Code-enabled state. A Home without Code
+repositories can still emit v3. Identity remains v1. Historical v3 Home archives
+verify against their own pinned target and archive digest. The verifier binds
+the Code import closure to v4, so editing the version label cannot substitute a
+Code desk for a reviewed historical v3 artifact. Native upgrade and recovery
+claims still require the corresponding saved-state tests.
+
 The candidate includes no pier, key, cookie, account binding, project export,
 test fixture, operator credential or host-specific path. It does not include a
 Grid docket or external glob. The current frontend is served through native

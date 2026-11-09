@@ -1,5 +1,5 @@
 ::  Configured-team Gall driver. Only stead-home owns and calls this state.
-/+  stead-codec, stead-core, stead-team, stead-team-config, stead-team-codec, stead-session, stead-http, stead-browser, stead-projection, stead-views, stead-restore, stead-eyre, stead-assets, server, stead-updates, stead-update-codec
+/+  stead-codec, stead-core, stead-team, stead-team-config, stead-team-codec, stead-session, stead-http, stead-browser, stead-projection, stead-views, stead-restore, stead-eyre, stead-assets, server, stead-updates, stead-update-codec, stead-code-home, stead-code-http, stead-code-credentials
 =,  stead-codec
 |%
 +$  pending-entry  [actor=authentication:stead-team expires=@ud]
@@ -8,13 +8,14 @@
       transient=ephemeral:stead-browser  restoring=(unit job:stead-restore)
       job=@t  incarnation=@t  pending=(map path pending-entry)
       files=(map @t [mime=@t bytes=@t])
+      code=state:stead-code-home
   ==
 +$  saved  [db=state:stead-team projection=state:stead-projection]
 ++  empty
   ^-  state
   =/  view=state:stead-projection
     [*index:stead-projection *index:stead-projection ~ | |]
-  [empty:stead-team view *ephemeral:stead-browser ~ '' '' ~ ~]
+  [empty:stead-team view *ephemeral:stead-browser ~ '' '' ~ ~ *state:stead-code-home]
 ++  now-ms
   |=  now=@da
   (div (mul 1.000 (sub now ~1970.1.1)) ~s1)
@@ -35,13 +36,14 @@
     ^-  saved
     [?~(restoring.owner db.owner target.u.restoring.owner) view.owner]
   ++  load
-    |=  old=saved
+    |=  [old=saved repos=saved:stead-code-home]
     ^-  (quip card:agent:gall state)
     ?>  ?=(^ current.registry.db.old)
+    ?>  (validate-saved:stead-code-home db.old repos)
     =/  staged  (begin:stead-restore db.old our.bowl)
     =/  job  (token:stead-session eny.bowl act.bowl 'stead.restore-job/1')
     =/  fresh=state
-      [empty:stead-team *state:stead-projection *ephemeral:stead-browser [~ staged] job '' ~ ~]
+      [empty:stead-team *state:stead-projection *ephemeral:stead-browser [~ staged] job '' ~ ~ [repos *ledger:stead-code-credentials]]
     =.  owner  fresh
     [(weld kicks ~[bind wait]) owner]
   ++  configured
@@ -54,7 +56,7 @@
     =/  next  (configure:stead-team db.owner raw our.bowl (now-ms now.bowl))
     =/  view  (begin:stead-projection next view.owner)
     =/  job  (token:stead-session eny.bowl act.bowl 'stead.projection-job/1')
-    =.  owner  owner(db next, view view, transient *ephemeral:stead-browser, pending ~, incarnation '', job job, files ~)
+    =.  owner  owner(db next, view view, transient *ephemeral:stead-browser, pending ~, incarnation '', job job, files ~, code code.owner(book *ledger:stead-code-credentials))
     [(weld kicks ~[bind wait]) owner]
   ++  load-assets
     ^-  (map @t [mime=@t bytes=@t])
@@ -78,7 +80,7 @@
       (turn (skip ~(tap in old-paths) |=(old=path =(old route))) |=(old=path [%give %kick [old ~] ~]))
     =/  replies=(list card:agent:gall)
       ~[[%give %fact [route ~] %stead-result-3 !>(response)] [%give %kick [route ~] ~]]
-    :_  owner(transient *ephemeral:stead-browser, pending ~, incarnation incarnation, files files)
+    :_  owner(transient *ephemeral:stead-browser, pending ~, incarnation incarnation, files files, code code.owner(book *ledger:stead-code-credentials))
     (weld retired replies)
   ++  available
     ^-  ?
@@ -88,6 +90,14 @@
     ^-  (list card:agent:gall)
     =/  headers  (weld security-headers:stead-http [['content-type' mime] (turn cookies |=(text=@t ['set-cookie' text]))])
     (give-simple-payload:app:server id [[status headers] [~ [(met 3 bytes) bytes]]])
+  ++  code-response
+    |=  [id=@ta out=result:stead-code-home]
+    ^-  (quip card:agent:gall state)
+    =/  headers  (weld security-headers:stead-http ~[['content-type' mime.out]])
+    =?  headers  =(401 status.out)
+      [['www-authenticate' 'Basic realm="Stead Git"'] headers]
+    :_  owner(code next.out)
+    (give-simple-payload:app:server id [[status.out headers] [~ body.out]])
   ++  http
     |=  [id=@ta request=inbound-request:eyre]
     ^-  (quip card:agent:gall state)
@@ -101,8 +111,14 @@
     ^-  (quip card:agent:gall state)
     ?.  available  [(response id 503 'application/json' (error:stead-team 'projection_unavailable') ~) owner]
     =/  config  (need current.registry.db.owner)
+    ?:  (git-path:stead-code-http url.request.request)
+      =/  input  (validate:stead-code-http request origin.config)
+      ?~  input  [(response id 403 'application/json' (error:stead-team 'invalid_http_request') ~) owner]
+      (code-response id (serve:stead-code-home db.owner code.owner u.input (now-ms now.bowl) eny.bowl))
     =/  parsed  (validate:stead-http request origin.config (paths:stead-assets '/stead/'))
     ?~  parsed  [(response id 403 'application/json' (error:stead-team 'invalid_http_request') ~) owner]
+    ?:  =('/stead/api/code' route.u.parsed)
+      (code-response id (manage:stead-code-home db.owner code.owner auth.transient.owner u.parsed (now-ms now.bowl) eny.bowl))
     ?:  =(%'GET' method.request.request)
       =/  entry  (~(get by files.owner) route.u.parsed)
       ?~  entry  [(response id 404 'text/plain' 'Not found' ~) owner]

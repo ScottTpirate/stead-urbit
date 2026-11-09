@@ -2,7 +2,7 @@
 // No response mocks, ignored certificate failures, sandbox bypass, or live +code.
 import assert from 'node:assert/strict';
 import {execFile} from 'node:child_process';
-import {readFile, unlink, writeFile} from 'node:fs/promises';
+import {mkdir, readFile, unlink, writeFile} from 'node:fs/promises';
 import {createHash, randomBytes} from 'node:crypto';
 import path from 'node:path';
 import os from 'node:os';
@@ -276,6 +276,15 @@ async function portableRecovery(memberResponse, cookie, work, docs) {
   await writeFile(session, JSON.stringify({origin, principal_id: actor.principal_id, session: cookie.value, csrf}),
     {flag: 'wx', mode: 0o600});
   try {
+    const codeScript = fileURLToPath(new URL('./native-git-http.py', import.meta.url));
+    try {
+      const result = await runFile('/usr/bin/python3', ['-B', codeScript, session, ca, work.project_id, output], {
+        timeout: 90000, maxBuffer: 16384
+      });
+      report.native_code = JSON.parse(result.stdout);
+    } catch {
+      report.native_code = {status: 'fail', checks: [], error: 'native code probe interrupted'};
+    }
     const saved = await run('capture', '--session-file', session, '--project', work.project_id,
       '--ca-file', ca, '--output', archive);
     assert.equal(saved.status, 'captured');
@@ -297,10 +306,50 @@ async function portableRecovery(memberResponse, cookie, work, docs) {
     }
     assert.equal(await readFile(path.join(extracted, 'docs', docs.destination.container_id,
       docs.destination.document_id + '.md'), 'utf8'), docs.destination.edited_markdown);
+    report.portable_import = await portableImport(archive, saved.sha256, session, ca, actor.home, restored, rows);
     return {status: 'pass', sha256: saved.sha256, work: restored.work, documents: restored.documents,
       scope: 'verified native member HTTPS capture and offline file extraction'};
   } finally {
     await unlink(session);
+  }
+}
+async function portableImport(archive, artifactSha256, session, ca, home, restored, rows) {
+  const scope = 'local member HTTPS create-only import, bounded process restart and authorized readback';
+  const directory = path.join(output, 'portable-import');
+  const planPath = path.join(directory, 'plan.json');
+  const script = fileURLToPath(new URL('../../../scripts/urbit/portable_import.py', import.meta.url));
+  const run = async (operation, ...args) => JSON.parse((await runFile('/usr/bin/python3', [
+    '-B', script, operation, '--archive', archive, '--session-file', session, '--ca-file', ca, ...args
+  ], {timeout: 60000, maxBuffer: 16384})).stdout);
+  let stage = 'plan';
+  try {
+    await mkdir(directory, {mode: 0o700});
+    const plan = await run('plan', '--archive-sha256', artifactSha256, '--target-home', home,
+      '--project-key', 'IMPORT', '--title', 'Synthetic portable import', '--output', planPath);
+    assert.equal(plan.phase, 'planned');
+    assert.equal(plan.commands, 1 + rows.work.length + rows.containers.length + rows.documents.length + rows.relations.length);
+    const inputs = ['--plan', planPath, '--plan-sha256', plan.plan_sha256,
+      '--confirm-project', plan.project_id, '--progress', directory];
+    stage = 'first-batch';
+    const first = await run('apply', ...inputs, '--limit', '2');
+    assert.equal(first.phase, 'ready');
+    assert.equal(first.accepted, 2);
+    stage = 'resumed-batch';
+    const complete = await run('apply', ...inputs);
+    assert.equal(complete.phase, 'complete');
+    assert.equal(complete.accepted, plan.commands);
+    stage = 'readback';
+    const verified = await run('verify', ...inputs);
+    assert.equal(verified.phase, 'verified');
+    assert.equal(verified.project_id, plan.project_id);
+    assert.equal(verified.work, restored.work);
+    assert.equal(verified.documents, restored.documents);
+    assert.equal(verified.collections, rows.containers.length);
+    assert.equal(verified.relations, rows.relations.length);
+    return {status: 'pass', scope, archive_sha256: artifactSha256, plan_sha256: plan.plan_sha256,
+      first_batch: first.accepted, readback: verified};
+  } catch {
+    return {status: 'fail', scope, stage};
   }
 }
 async function docsJourney(alice, bob) {
@@ -863,6 +912,7 @@ try {
   report.expiry_followup = {status:'prepared-not-executed', earliest_start_ms:issuedBefore + 28 * 60000,
     latest_start_ms:issuedBefore + 29 * 60000, native_session_lifetime_seconds:1800};
   assert.ok(gitFixture);
+  report.portable_import = {status: 'not-executed', scope: 'requires successful native portable capture'};
   try {
     report.portable_recovery = await portableRecovery(memberResponse, expiryCookie, receipt, gitFixture);
   } catch {

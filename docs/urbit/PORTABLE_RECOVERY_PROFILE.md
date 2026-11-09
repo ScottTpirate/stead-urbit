@@ -154,10 +154,10 @@ from its exact bytes; without the commit/tree graph, the observed collection
 head does not independently prove those bytes belong to that commit.
 
 The copied project role, binding IDs and head OIDs are observations only. They
-must never become permissions or trusted history during an import. This is not
-a pier backup, cross-home migration, duplicate ship or live authority restore.
-Restoration needs a separately reviewed authorized import contract, fresh
-identity/policy decisions, explicit loss handling and accepted new receipts.
+must never become permissions or trusted history during an import. The archive
+recovers readable records. A pier backup or authority restore has a different
+scope. The local [create-only import](#local-create-only-import) below uses
+the target member's current authority and creates fresh receipts.
 Complete history export needs a bounded currently authorized Git object API.
 Restoring an authority additionally needs single-writer fencing, current epoch
 handling, session invalidation, interrupted-recovery tests and independent
@@ -187,3 +187,76 @@ three Docs pages, verified the archive digest and extracted the current files.
 The extracted Work record and three Markdown files matched browser-accepted
 content. The temporary export credential was deleted. See the
 [local acceptance record](LOCAL_ACCEPTANCE_20261109.md#corrected-real-browser-journey).
+
+## Local create-only import
+
+`scripts/urbit/portable_import.py` imports one verified current-record ZIP into
+a **new** general project on a disposable `home.localhost` Home. The client
+opens TCP on numeric loopback, verifies the TLS certificate for `home.localhost`
+and checks the Home's configured fake runtime capability. Use a synthetic
+archive and the importing member's own private session file. The target member
+needs project-creation permission. Keep the test project under that member's
+sole control throughout the import. The client checks its authority epoch and
+initial policy revision before further writes. This is an observation before
+each command, while the Home enforces current authorization at acceptance.
+
+1. Prepare a private operator directory with mode 0700. Retain the separately
+   trusted source archive SHA-256. Plan checks the target member without writing
+   to the Home. Review the target Home and project, remapped IDs, exact command
+   digests and loss report in the plan before proceeding.
+
+   ```sh
+   python3 scripts/urbit/portable_import.py plan \
+     --archive "$archive" --archive-sha256 "$archive_sha" \
+     --session-file "$member_session" --ca-file "$local_ca" \
+     --target-home '~zod' --project-key IMPORT --title 'Imported project' \
+     --output "$private_dir/plan.json"
+   ```
+
+2. Use the printed plan SHA-256 and confirm the new project ID explicitly.
+   The progress directory must already exist with mode 0700. Apply reconstructs
+   every command from the verified ZIP and plan. It submits up to 16 commands
+   per invocation, starting with project creation. Reuse the original plan,
+   archive and progress directory on every invocation.
+
+   ```sh
+   python3 scripts/urbit/portable_import.py apply \
+     --archive "$archive" --session-file "$member_session" --ca-file "$local_ca" \
+     --plan "$private_dir/plan.json" --plan-sha256 "$plan_sha" \
+     --confirm-project "$new_project" --progress "$private_dir"
+   ```
+
+3. When the phase is `complete`, run the same arguments with `verify` in place
+   of `apply`. Verification reads the current authorized target records and
+   compares every Work field, collection, page body, relation and scope to the
+   import plan. Verify before sharing the project or editing its contents.
+
+Progress is explicitly `ready`, `awaiting-receipt`, or `complete`. A private
+directory lock serializes the operator process. Before sending a command it
+persists the request ID and a hash of the session audit ID. A correlated native
+receipt is required to advance. A lost or rejected response leaves the same
+request awaiting receipt and stops the batch with exit 2. Explicitly rerun the
+same command to reconcile it. A fresh session for the same member binding can
+recover a prior receipt because the original attempt's audit hash is retained.
+Changing origin, Home, principal or binding stops the import. The progress file
+is trusted local operator state and contains no session cookie or CSRF token.
+
+The import preserves Work content and statuses, collection visibility, page
+body bytes and typed relations. It rewrites the canonical page header ID and
+relation endpoints. Embedded Markdown links remain byte-exact and can refer to
+old IDs. The target Home creates fresh resource IDs, owner grants, revisions,
+receipts and document Git commits. Private collections remain private to the
+importing member. The original grant list, owner history, revisions and Git
+ancestry remain outside the import. Planning and verification are read-only.
+Each applied command commits individually, so a stopped import can leave a
+partial project. Keep the plan and progress to resume it. Whole-project
+rollback and import into an existing project remain separate work.
+
+The host regression suite exercises exact remapping, loss after acceptance,
+resume with an unchanged request across sessions, grant/binding changes,
+receipt mismatch, locking, and content readback against a simulated authority.
+The native Firefox fixture can run a separately reported import probe after
+real member export, including a two-command batch, a fresh client process and
+authorized readback. An optional probe failure leaves the independent Work and
+Docs browser result intact. Check `portable_import` in the browser report for
+the actual outcome. This local profile covers portable Work/Docs ZIP input.

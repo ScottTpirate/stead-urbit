@@ -123,7 +123,7 @@ class TeamLifecycle:
     def saved_fingerprint(self, ship, dojo):
         if dojo(ship, f'.^(desk %gd /={APPS[ship]}=/$)').strip() != '%base':
             raise ValueError('Configured application is not on the verified desk')
-        pattern = '[%stead-home %3 *]' if ship == 'zod' else '[%stead-identity %1 *]'
+        pattern = '[%stead-home ?(%3 %4) *]' if ship == 'zod' else '[%stead-identity %1 *]'
         source = (f'=/  egg=egg-any:gall  .^(egg-any:gall %gv /={APPS[ship]}=/$)  '
                   f'?>  ?=([%20 %live *] egg)  =/  saved=vase  +.old-state.egg  '
                   f'?>  ?=({pattern} q.saved)  ^-  @ux  (shax (jam saved))')

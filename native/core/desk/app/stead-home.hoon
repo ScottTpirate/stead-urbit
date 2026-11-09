@@ -1,8 +1,9 @@
-::  One authoritative owner. Configured v3 and isolated legacy fixture v2.
-/+  default-agent, stead-core, stead-codec, stead-core-v1, stead-codec-v1, stead-team-owner
+::  One authoritative owner. Configured v4 with Code, v3 without Code.
+/+  default-agent, stead-core, stead-codec, stead-core-v1, stead-codec-v1, stead-team-owner, stead-code-home
 =>
 |%
-+$  saved  [%stead-home $%([%1 db=state:stead-core-v1] [%2 db=state:stead-core] [%3 team=saved:stead-team-owner])]
++$  saved
+  [%stead-home $%([%1 db=state:stead-core-v1] [%2 db=state:stead-core] [%3 team=saved:stead-team-owner] [%4 team=saved:stead-team-owner code=saved:stead-code-home])]
 +$  pending-entry  [sender=@p expires=@da]
 ++  now-ms
   |=  now=@da
@@ -119,14 +120,19 @@
 ++  on-init
   `this
 ++  on-save
-  ?:  configured  !>([%stead-home %3 save:team])
+  ?:  configured
+    ?:  ?=(~ repos.code.owner)  !>([%stead-home %3 save:team])
+    !>([%stead-home %4 save:team repos.code.owner])
   !>([%stead-home %2 db])
 ++  on-load
   |=  old=vase
   ~|  %stead-unsupported-state
   =/  restored  !<(saved old)
+  ?:  ?=([%stead-home %4 *] restored)
+    =/  [cards=(list card:agent:gall) next=state:stead-team-owner]  (load:team team.restored code.restored)
+    [cards this(owner next, pending ~)]
   ?:  ?=([%stead-home %3 *] restored)
-    =/  [cards=(list card:agent:gall) next=state:stead-team-owner]  (load:team team.restored)
+    =/  [cards=(list card:agent:gall) next=state:stead-team-owner]  (load:team team.restored ~)
     [cards this(owner next, pending ~)]
   =/  next=state:stead-core
     ?:  ?=([%stead-home %1 *] restored)  (migrate-v1:stead-core db.restored)
@@ -153,7 +159,7 @@
     ?>  &(=(our.bowl ~zod) =(src.bowl our.bowl) initialized.db)
     =/  [op=@tas ship=@p key=@t value=@t]  !<([@tas @p @t @t] vase)
     ?:  =(%roundtrip op)  (on-load on-save)
-    ?:  =(%load-future op)  (on-load !>([%stead-home %4 db]))
+    ?:  =(%load-future op)  (on-load !>([%stead-home %5 db]))
     ?:  =(%load-counter op)  (on-load !>([%0 0]))
     ?:  =(%hold-outsider-read op)
       ?>  &(=(ship ~bud) (lte (met 3 key) 1.024))

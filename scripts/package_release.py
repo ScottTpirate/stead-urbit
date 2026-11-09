@@ -98,9 +98,11 @@ def validate_contract(value):
     require(type(value['kernel_kelvin']) is int and value['kernel_kelvin'] == 408
             and type(value['api_version']) is int and value['api_version'] == 3
             and value['runtime_version'] == '4.6', 'Unsupported release compatibility')
+    states = value['saved_state_versions']
     require(value['agents'] == {'home': 'stead-home', 'identity': 'stead-identity'}
-            and value['saved_state_versions'] == {'home': 3, 'identity': 1}
-            and all(type(x) is int for x in value['saved_state_versions'].values()), 'Unsupported app/state profile')
+            and isinstance(states, dict) and set(states) == {'home', 'identity'}
+            and all(type(version) is int for version in states.values())
+            and states['home'] in (3, 4) and states['identity'] == 1, 'Unsupported app/state profile')
     for name in ('runtime_binary_sha256', 'toolchain_sha256'):
         require(isinstance(value[name], str) and re.fullmatch(r'[0-9a-f]{64}', value[name]), 'Invalid release hash')
     require(re.fullmatch(r'[0-9a-f]{40}', value['kernel_commit']), 'Invalid kernel commit')
@@ -178,6 +180,13 @@ def canonical_archive(members):
     return raw
 
 
+def validate_home_format(role, version, desk):
+    # Code-enabled Home can save v4. Older pinned archives remain verifiable
+    # with their own v3 profile and cannot stand in for a v4 candidate.
+    if role == 'home':
+        require(('lib/stead-code-home.hoon' in desk) == (version == 4), 'Home saved-state profile differs from desk closure')
+
+
 def archive_bytes(root=ROOT, *, role, reference='HEAD'):
     require(role in ('home', 'identity'), 'Choose one release role')
     commit = source_identity(root, reference)
@@ -214,6 +223,7 @@ def archive_bytes(root=ROOT, *, role, reference='HEAD'):
         desk[name], origins[name] = body, origin
         pending.extend(imports(body))
         require(len(desk) <= 100, 'Desk dependency closure bound')
+    validate_home_format(role, contract['saved_state_versions'][role], desk)
     desk['sys.kelvin'] = f"[%zuse {contract['kernel_kelvin']}]\n".encode()
     desk['desk.bill'] = f":~  %{contract['agents'][role]}\n==\n".encode()
     origins.update({'sys.kelvin': 'generated:kernel-compatibility', 'desk.bill': 'generated:role-agents'})
@@ -266,6 +276,7 @@ def verify_closure(members, manifest, contract):
         expected.add(name)
         pending.extend(imports(body))
         require(len(expected) <= 100, 'Packaged dependency closure bound')
+    validate_home_format(manifest['role'], manifest['saved_state_version'], expected)
     expected.update(('sys.kelvin', 'desk.bill'))
     origins.update({'sys.kelvin': 'generated:kernel-compatibility', 'desk.bill': 'generated:role-agents'})
     fixed = {'manifest.json', 'LICENSE', 'THIRD_PARTY_NOTICES.md', 'notices/urbit-kernel-LICENSE.txt',

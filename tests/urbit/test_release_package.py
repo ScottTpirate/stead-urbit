@@ -90,6 +90,8 @@ class ReleasePackageTests(unittest.TestCase):
                 self.assertIn('desk/mar/kelvin.hoon', files)
                 self.assertIn('desk/mar/bill.hoon', files)
                 self.assertIn('notices/urbit-kernel-LICENSE.txt', files)
+                self.assertEqual(manifest['saved_state_version'], 4 if role == 'home' else 1)
+                self.assertEqual('desk/lib/stead-code-home.hoon' in files, role == 'home')
                 self.assertFalse(any('/gen/' in name or '/ted/' in name or '/tests/' in name for name in files))
                 self.assertEqual(manifest['qualification']['native_install'], False)
 
@@ -123,11 +125,21 @@ class ReleasePackageTests(unittest.TestCase):
         for key, value in [('role', 'identity'), ('kernel_kelvin', 409), ('kernel_kelvin', True),
                            ('kernel_commit', 'a' * 40), ('runtime_version', '4.7'),
                            ('runtime_binary_sha256', 'b' * 64), ('api_version', 4),
-                           ('saved_state_version', 2), ('frontend_sha256', 'c' * 64)]:
+                           ('saved_state_version', 2), ('saved_state_version', 3), ('frontend_sha256', 'c' * 64)]:
             with self.subTest(key=key):
                 target = release.target_profile(self.home_manifest) | {key: value}
                 with self.assertRaisesRegex(ValueError, 'Target compatibility'):
                     self.verify(target=target)
+
+    def test_code_home_cannot_be_relabelled_as_historical_v3(self):
+        def relabel(members, manifest):
+            contract = json.loads(members['source/release-contract.json'])
+            contract['saved_state_versions']['home'] = 3
+            members['source/release-contract.json'] = release.encoded(contract)
+            manifest['contract_sha256'] = release.digest(members['source/release-contract.json'])
+            manifest['saved_state_version'] = 3
+        with self.assertRaisesRegex(ValueError, 'Home saved-state profile differs'):
+            self.verify(self.repack(relabel), target=release.target_profile(self.home_manifest) | {'saved_state_version': 3})
 
     def test_rejects_missing_pinned_dependency(self):
         raw = self.repack(lambda members, manifest: members.pop('desk/lib/skeleton.hoon'))

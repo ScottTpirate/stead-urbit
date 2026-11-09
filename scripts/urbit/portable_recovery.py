@@ -159,12 +159,18 @@ class HTTPSQueries:
         self.deadline = time.monotonic() + DEADLINE
 
     def __call__(self, query):
+        return self._post('/stead/api/query', query)
+
+    def _connection(self, timeout):
+        return http.client.HTTPSConnection(self.parts.hostname, self.parts.port,
+            context=self.context, timeout=timeout)
+
+    def _post(self, route, body):
         remaining = self.deadline - time.monotonic()
         require(remaining > 0, 'capture-deadline')
-        connection = http.client.HTTPSConnection(self.parts.hostname, self.parts.port,
-            context=self.context, timeout=min(15, remaining))
+        connection = self._connection(min(15, remaining))
         try:
-            connection.request('POST', '/stead/api/query', body=encoded(query), headers={
+            connection.request('POST', route, body=encoded(body), headers={
                 'Origin': self.credentials['origin'], 'Content-Type': 'application/json',
                 'Cookie': '__Host-stead-session=' + self.credentials['session'],
                 'X-Stead-CSRF': self.credentials['csrf'], 'Accept': 'application/json',

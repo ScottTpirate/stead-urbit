@@ -5,6 +5,7 @@ import { HomeClient, HomeError, command, type Command, type Fields, type HomeWat
 import { Button, EmptyState, LoadingState, Surface, TextField } from './primitives';
 import { SupportDetails } from './SupportDetails';
 import { AcceptedTime } from './AcceptedTime';
+import { CodeRepository } from './CodeRepository';
 import './style.css';
 const Markdown = lazy(() => import('./Markdown').then(module => ({ default: module.Markdown })));
 const client = new HomeClient();
@@ -64,6 +65,8 @@ function App() {
   const [containers, setContainers] = useState<Row[]>([]);
   const [container, setContainer] = useState<Row | null>(null);
   const [tab, setTab] = useState<ViewKind>('project');
+  const [repository, setRepository] = useState<Fields | null>(null);
+  const [showRepository, setShowRepository] = useState(false);
   const [rows, setRows] = useState<Row[]>([]);
   const [cursor, setCursor] = useState('');
   const [search, setSearch] = useState('');
@@ -103,9 +106,18 @@ function App() {
     displayedSnapshot.current = null;
     setLoading(false);
     setProjects([]); setProject(null); setContainers([]); setContainer(null); setRows([]);
+    setRepository(null); setShowRepository(false);
     setSearch(''); setSearchDraft(''); setCursor(''); setEditor(null); setWork(null); setForm(''); setFormDirty(false); setDiscard(null); setPending(null); setTargets([]); setTargetFilter(''); setConfirmation(null); setCurrentVersion(null); setNotice(''); setRefreshNotice(null);
   };
   client.onInvalidated = () => { clearViews(); setIdentity(null); setChallenge(null); };
+  useEffect(() => {
+    const id = project?.project_id;
+    if (!id || !identity?.session_audit_id) return;
+    let active = true;
+    void client.code(id, { action: 'status' }).then(value => { if (active) setRepository(value); })
+      .catch(() => { if (active) setRepository(null); });
+    return () => { active = false; };
+  }, [project?.project_id, identity?.session_audit_id]);
   async function identify(admitted?: Fields) {
     // consume/resume already validate identity in HomeClient.adopt().
     const person = admitted ?? Object.values((await client.query(blankQuery('identity'))).rows)[0];
@@ -326,6 +338,7 @@ function App() {
   }
   async function openProject(row: Row) {
     if (busy || editor?.dirty || pending || form) { setError('Finish or discard the current draft before switching projects.'); return; }
+    setRepository(null); setShowRepository(false);
     setWork(null); setForm(''); setTargets([]); setConfirmation(null); setCurrentVersion(null); setProject(row); setContainer(null); setEditor(null); setRows([]); setContainers([]); setTab('project'); setCursor('');
     reloadScope();
   }
@@ -531,7 +544,18 @@ function App() {
           {discard && <Surface className="confirmation" role="alertdialog" aria-labelledby="discard-title" aria-describedby="discard-description"><h2 id="discard-title" ref={feedbackHeading} tabIndex={-1}>Discard unsaved changes?</h2><p id="discard-description">Your local edits will be removed. Your last saved version stays at home.</p><div className="actions"><Button variant="danger" disabled={busy || !!pending} onClick={() => closeDraft(discard)}>Discard changes</Button><Button disabled={busy} onClick={() => { setDiscard(null); discardTrigger.current?.focus(); }}>Keep editing</Button></div></Surface>}
           {!project && <div className="welcome"><p className="eyebrow">START WITH WHAT MATTERS</p><h1 ref={heading} tabIndex={-1}>A clear place for your work.</h1><p>Choose a project to see its work and knowledge.</p></div>}
           {project && <><div className="project-heading"><div><p className="eyebrow">Projects <span aria-hidden="true">/</span> {project.project_key}</p><h1 ref={heading} tabIndex={-1}>{project.title}</h1></div><span className="role-badge">{project.role}</span></div>
-          <nav className="tabs" aria-label="Project views">{([['project','Overview'],['work','Work'],['documents','Docs'],['relations','Links'],['activity','Activity'],['inbox','Inbox'],['search','Search']] as const).map(([kind,label]) => <Button disabled={busy} key={kind} variant={tab === kind ? 'primary' : 'quiet'} aria-current={tab === kind ? 'page' : undefined} onClick={() => { if (busy || editor?.dirty || pending || form) { setError('Finish or discard the current draft first.'); return; } activeQuery.current++; setEditor(null); setWork(null); setCurrentVersion(null); setConfirmation(null); setForm(''); setTab(kind); setRows([]); setCursor(''); reloadScope(); }}>{label}</Button>)}</nav>
+          <nav className="tabs" aria-label="Project views">{([['project','Overview'],['work','Work'],['documents','Docs'],['relations','Links'],['activity','Activity'],['inbox','Inbox'],['search','Search']] as const).map(([kind,label]) => <Button disabled={busy} key={kind} variant={!showRepository && tab === kind ? 'primary' : 'quiet'} aria-current={!showRepository && tab === kind ? 'page' : undefined} onClick={() => { if (busy || editor?.dirty || pending || form) { setError('Finish or discard the current draft first.'); return; } activeQuery.current++; setShowRepository(false); setEditor(null); setWork(null); setCurrentVersion(null); setConfirmation(null); setForm(''); setTab(kind); setRows([]); setCursor(''); reloadScope(); }}>{label}</Button>)}
+          {repository?.status === 'ready' && <Button disabled={busy || !!editor?.dirty || !!pending || !!form}
+            variant={showRepository ? 'primary' : 'quiet'} aria-current={showRepository ? 'page' : undefined}
+            onClick={() => setShowRepository(true)}>Code</Button>}</nav>
+          {showRepository && repository?.status === 'ready' ? <CodeRepository key={project.project_id}
+            client={client} project={project.project_id!} writable={repository.write === 'yes'} /> : <>
+          {tab === 'project' && repository?.status === 'disabled' && repository.manage === 'yes'
+            && <Button disabled={busy || !!pending || !!form} onClick={() => void action(async () => {
+              await client.code(project.project_id!, { action: 'create' });
+              setRepository(await client.code(project.project_id!, { action: 'status' }));
+              setShowRepository(true);
+            })}>Enable Git repository</Button>}
           <div className="toolbar"><div className="view-heading">{tab === 'work' && <h2>Work items</h2>}{tab === 'documents' && <label>Collection <select aria-label="Collection" disabled={busy} value={container?.container_id ?? ''} onChange={event => { const selected = containers.find(row => row.container_id === event.target.value) ?? null; if (busy || editor?.dirty || pending || form) { setError('Finish or discard the current draft first.'); return; } activeQuery.current++; setContainer(selected); setEditor(null); setWork(null); setCurrentVersion(null); setConfirmation(null); setForm(''); setRows([]); setCursor(''); reloadScope(); }}><option value="">Choose a collection</option>{containers.map(row => <option key={row.container_id} value={row.container_id}>{row.title} · {row.visibility === 'private' ? 'Private drafts' : 'Shared'}</option>)}</select></label>}{tab === 'search' && <form className="search" onSubmit={submitSearch}><TextField label="Search this project" value={searchDraft} onChange={event => setSearchDraft(event.target.value)} maxLength={128}/><Button type="submit" disabled={busy}>Search</Button></form>}</div><div className="actions">
           <Button variant="quiet" disabled={busy || loading} onClick={reloadScope}>Refresh</Button>
           {canEdit && tab === 'work' && <Button variant="primary" disabled={busy || !!pending || !!form} onClick={() => { setWork(null); setCurrentVersion(null); setForm('work'); }}><span aria-hidden="true" className="button-plus">＋</span>New work item</Button>}
@@ -558,6 +582,7 @@ function App() {
             </Surface>)}
           </div>
           {cursor && <Button disabled={busy || loading || !updatesConnected} onClick={() => void action(() => refresh(tab, container, cursor))}>Next page</Button>}</>}
+          </>}
           </>}
           {!workPanelOpen && formPanel}
         </section>
