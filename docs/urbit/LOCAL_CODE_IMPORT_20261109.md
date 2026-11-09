@@ -43,10 +43,12 @@ fresh individually approved browser sessions. The first retry passed empty
 clone and Code layout checks, then stock Git's first push returned HTTP 400.
 The pinned send-pack emits a single space before the capabilities following
 the command NUL. The decoder now accepts that delimiter and still rejects
-duplicate and malformed tokens. [Pinned send-pack source](https://raw.githubusercontent.com/git/git/v2.55.0/send-pack.c)
+duplicate and malformed tokens. The focused native parser run passed 47
+cases and four controls, including the single-space and double-space cases.
+[Pinned send-pack source](https://raw.githubusercontent.com/git/git/v2.55.0/send-pack.c)
 
-The corrected run at `242ee45d12f43dbbefe9227b000bf3d1531b2059` passed ten stock
-Git observations and four browser checks. It verified an empty clone, atomic
+The corrected run at `242ee45d12f43dbbefe9227b000bf3d1531b2059` passed ten Git and
+HTTP checks and four browser checks. It verified an empty clone, atomic
 branch and annotated tag creation, exact commit and binary blob readback,
 strict Git fsck, fast-forward and fetch, stale compare-and-swap, malformed
 pack denial, protection, and revocation before an upload finished. A
@@ -115,16 +117,31 @@ Worker report
 `.runtime/code-delivery-BHfYWMKu/build-proof-99roqz6f/output/report.json`
 SHA-256 `cf3fc89453a14a35d40df7567c9b8563f702878d9e5a6ca3217ee99015622c5b`.
 
-## Offline desk packages
+## Exact desk package installs
 
-Both role archives from `011fef82717dca9a1e6a7506e247106a6b09ce8e` rebuilt
-byte for byte and passed exact offline verification against their reviewed
-target JSON. The Home declares maximum saved state v4 and Identity declares v1.
+Both role archives from `3a3647600e8f236ff64e288f345643e0d0545083` rebuilt
+byte for byte and passed offline verification against their reviewed target
+JSON. Home declares maximum saved state v4 and Identity declares v1.
 Historical Home v3 archives remain verifiable against their own pinned targets.
-These packages were verified offline. Clean installs of these exact role
-archives and a supported cross-schema upgrade have separate evidence requirements.
 
-| Archive under `.runtime/releases/code-review-aAmAlM7B` | SHA-256 |
-| --- | --- |
-| Home | `e4bcc7e777b2567ee9fad667537cb500558bde6ecb88d1eb6392df7e384a5ae0` |
-| Identity | `c11730f68976c2f049aac32c5ad519e995cc834f9cd30f7635c73ee0d49354f4` |
+Each exact archive also passed 13 native checks from a fresh isolated fake.
+The verifier checked desk file bytes, owner configuration, packaged HTTPS
+routes and assets, explicit suspension, and reload. Fresh bootstrap restored
+serving with a different incarnation. Both runs reaped the native process
+without a forced stop. These are single-role installs. Paired browser
+authentication has its own development-desk evidence above.
+
+| Role | Archive SHA-256 | Native report SHA-256 |
+| --- | --- | --- |
+| Home | `6e7c8e45fa795be96f927361f05d19951251847543d3f858641b1d2745348216` | `62e6025a1ec7c5f89202fcbede6a95e48eac7ba5ff8ff5716e32f4ef45129bc3` |
+| Identity | `9e1d045a044f2bc527e5e468a624f55adf5aac996f5cc9a545f03ca47df8b13f` | `e2ff53d0e207879d2b63b91a61a26c46b6cf5174b9d8d42fc68a26551a497622` |
+
+Archives and target JSON are in `.runtime/code-phase4-closeout-e8nwGx2U`.
+The Home report is `.runtime/release-install-0uph51v7/work/report.json`.
+The Identity report is `.runtime/release-install-ethicena/work/report.json`.
+The guarded runtimes were 680.790 seconds and 664.748 seconds, respectively.
+
+Host verification ran 822 Python tests with one skip, 38 frontend tests, and
+19 browser-runner Python tests. The release and recovery runs do not qualify
+cross-schema upgrades, live canary, complete Git-history export, or M3/M4
+completion. [Phase 5 deployment runbook](PHASE5_DEPLOYMENT.md)

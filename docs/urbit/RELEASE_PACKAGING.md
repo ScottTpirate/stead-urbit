@@ -244,6 +244,15 @@ The guarded run took 669.720 seconds and peaked at 58°C. A preceding fresh
 attempt stopped before boot because the HTTPS flag split the pier creation
 argument. The corrected launcher preserves the create flag and path together.
 
+### November 9 Home v4 and Identity v1 packages
+
+Both exact role archives from `3a3647600e8f236ff64e288f345643e0d0545083`
+passed 13 checks each, including a fresh isolated boot, exact desk install,
+configured HTTPS, suspension and reload with a fresh owner bootstrap. Both
+guards completed and reaped their ships. See the [exact archive and report
+digests](LOCAL_CODE_IMPORT_20261109.md#exact-desk-package-installs) and the
+separate populated v4 recovery proof.
+
 ## Remaining installation and recovery gates
 
 Before an installable beta claim, qualify configured Identity and paired

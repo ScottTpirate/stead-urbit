@@ -48,9 +48,9 @@ The November 9 [local verification](LOCAL_CODE_IMPORT_20261109.md)
 covers bounded native stock Git, protected-ref denial, restart of populated
 Code state, and loss-aware Work/Docs import. The local proof profile is
 intentionally small. Phase 3 still requires durable staged receive and
-protected review/build integration. Phase 4 still requires exact role
-installation, supported upgrades and interrupted recovery, complete export
-and a measured canary.
+protected review/build integration. Both exact role archives passed separate
+native installs. Phase 4 still requires supported upgrades and interrupted
+recovery, complete export, and a measured canary.
 
 The standalone Phase 3/4 development checks use synthetic local ships.
 A real House is outside their acceptance scope. A future House adapter still

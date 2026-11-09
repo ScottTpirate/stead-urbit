@@ -42,7 +42,9 @@ with the existing team state plus its repository map. Load checks scope,
 capacity, object hashes and graph closure, then reconstructs current refs from
 the ordered accepted receipt history before serving a new incarnation.
 The Work/Docs journal and views keep their existing independent restore
-checks. Exact Code cold-restart qualification requires a v4 fixture.
+checks. The [local populated recovery](LOCAL_CODE_IMPORT_20261109.md#saved-home-state)
+checked both state fingerprints and original Git objects, refs, and protection
+after reload and bootstrap of a stopped v4 copy.
 
 The native browser lane invokes a separate stock-client diagnostic after
 the team workflow. It uses the same disposable member, verified native TLS
