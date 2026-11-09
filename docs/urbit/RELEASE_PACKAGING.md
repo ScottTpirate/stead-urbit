@@ -142,6 +142,14 @@ public capabilities through the installed route. On app reload, requests must
 remain unavailable until a new owner bootstrap; the incarnation must change and
 all asset/boundary checks repeat. Partial HTTP failure evidence retains only the
 bounded response metadata/digest, not response bodies or any certificate key.
+Pinned Eyre adds an anonymous guest cookie to application responses. The verifier
+recognizes only `urbauth-~zod` with a canonical, at-most-128-bit `@uv` value and
+exact `Path=/; Max-Age=604800` attributes, as defined by that pinned kernel's
+`+session-cookie-string`. Cookie values are redacted before recording headers;
+other cookie shapes or attributes fail the check. The observed guest-cookie flag
+is never authentication evidence. No cookie is stored or replayed, and outgoing
+Cookie or Authorization headers are prohibited. Authenticated kernel cookies and
+application session cookies remain outside this anonymous fixture.
 
 This is a configured **single-role fixture**. Its report keeps
 `paired_home_identity: false`, `browser_authentication: false` and

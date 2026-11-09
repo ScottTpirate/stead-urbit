@@ -44,6 +44,7 @@ HTTP_DRIVERS = ('ted/stead-team-client.hoon', 'ted/stead-local-tls.hoon',
 TLS_HOST = 'home.localhost'
 TLS_PORT = 18443
 HTTP_ORIGIN = f'https://{TLS_HOST}:{TLS_PORT}'
+REDACTED_COOKIE = '[redacted]'
 SECURITY_HEADERS = {
     'cache-control': 'no-store',
     'content-security-policy': "default-src 'none'; script-src 'self'; style-src 'self'; connect-src 'self'; img-src 'self'; base-uri 'none'; form-action 'none'; frame-ancestors 'none'",
@@ -374,12 +375,30 @@ def bootstrap_role(native, role):
     raise ValueError('Owner-local release bootstrap did not become ready')
 
 
+def kernel_guest_cookie(value):
+    """Recognize only pinned Eyre's anonymous zod cookie, never authentication.
+
+    +session-cookie-string in the pinned kernel uses a canonical 128-bit @uv
+    session key and the seven-day guest timeout. The authenticated timeout,
+    other ship names and any extra attributes are deliberately not accepted.
+    """
+    match = re.fullmatch(r'urbauth-~zod=0v(0|[1-9a-v][0-9a-v]{0,4}(?:\.[0-9a-v]{5}){0,5}); Path=/; Max-Age=604800', value)
+    return match is not None and int(match[1].replace('.', ''), 32).bit_length() <= 128
+
+
+def report_headers(headers):
+    # Redact even an unexpected or mocked cookie before recording a failure.
+    return {key: REDACTED_COOKIE if 'cookie' in key.lower() else value for key, value in headers.items()}
+
+
 def request_role(native, ca_file, method, route, *, body=None, headers=None, secure=True):
     """Direct private loopback only: native TLS, CA+hostname checked, no redirects."""
     if method not in ('GET', 'POST', 'PUT') or not route.startswith(('/stead/', '/stead-identity/')) or len(route) > 512:
         raise ValueError('Release HTTP request bound')
     if body is not None and (not isinstance(body, bytes) or len(body) > 65537):
         raise ValueError('Release HTTP request body bound')
+    if any('cookie' in key.lower() or key.lower() in ('authorization', 'proxy-authorization') for key in (headers or {})):
+        raise ValueError('Release HTTP probes must remain anonymous')
     native.check()
     connection = http.client.HTTPConnection('127.0.0.1', TLS_PORT if secure else native.http_port, timeout=5)
     try:
@@ -394,26 +413,37 @@ def request_role(native, ca_file, method, route, *, body=None, headers=None, sec
         pairs = response.getheaders()
         if len(pairs) > 64 or sum(len(k) + len(v) for k, v in pairs) > 16384:
             raise ValueError('Release HTTP response header bound')
-        response_headers = {}
+        response_headers, guest_cookie = {}, False
         for key, value in pairs:
             key = key.lower()
             if key in response_headers:
                 raise ValueError('Duplicate release HTTP response header')
+            if 'cookie' in key:
+                if key != 'set-cookie' or not kernel_guest_cookie(value):
+                    raise ValueError('Unexpected release HTTP cookie header')
+                guest_cookie, value = True, REDACTED_COOKIE
             response_headers[key] = value
         content = response.read(524289)
         if len(content) > 524288:
             raise ValueError('Release HTTP response byte bound')
         native.check()
-        return {'status': response.status, 'headers': response_headers, 'body': content}
+        return {'status': response.status, 'headers': response_headers, 'body': content,
+                'kernel_guest_cookie_observed': guest_cookie}
+    except http.client.HTTPException as error:
+        # BadStatusLine and similar parser errors may contain raw wire text.
+        raise ValueError('Release HTTP transport failed (' + type(error).__name__ + ')') from None
     finally:
         connection.close()
 
 
 def assert_http(response, status, *, mime, digest=None, size=None, error=None):
     headers, body = response['headers'], response['body']
+    guest_cookie = response.get('kernel_guest_cookie_observed') is True
+    cookie_headers = {key: value for key, value in headers.items() if 'cookie' in key.lower()}
     if (response['status'] != status or headers.get('content-type') != mime
             or any(headers.get(key) != value for key, value in SECURITY_HEADERS.items())
-            or any(key in headers for key in ('set-cookie', 'location', 'access-control-allow-origin'))):
+            or cookie_headers != ({'set-cookie': REDACTED_COOKIE} if guest_cookie else {})
+            or any(key in headers for key in ('location', 'access-control-allow-origin'))):
         raise ValueError('Packaged HTTP status/MIME/security headers differ')
     if digest is not None and (len(body) != size or hashlib.sha256(body).hexdigest() != digest):
         raise ValueError('Packaged HTTP asset bytes differ')
@@ -433,9 +463,11 @@ def route_checks(native, role, ca_file, package=Path('/package'), *, evidence=No
     evidence.update(assets=[], denials=[], native_tls=True, browser_authentication=False)
     def observe(method, route, **kwargs):
         evidence['last_request'] = {'method': method, 'route': route, 'secure': kwargs.get('secure', True)}
+        evidence.pop('last_response', None)
         response = request_role(native, ca_file, method, route, **kwargs)
         evidence['last_response'] = {'status': response['status'], 'bytes': len(response['body']),
-            'sha256': hashlib.sha256(response['body']).hexdigest(), 'headers': response['headers']}
+            'sha256': hashlib.sha256(response['body']).hexdigest(), 'headers': report_headers(response['headers']),
+            'kernel_guest_cookie_observed': response.get('kernel_guest_cookie_observed') is True}
         return response
     for row in routes:
         response = observe('GET', row['route'])
