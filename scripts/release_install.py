@@ -232,7 +232,7 @@ def checked_clean_copy(prior_name, destination, artifact, lock, toolchain_path, 
 class ReleaseNative(Native):
     def _arguments(self):
         arguments = super()._arguments()
-        return arguments[:-1] + ['--https-port', str(TLS_PORT), arguments[-1]]
+        return arguments[:1] + ['--https-port', str(TLS_PORT)] + arguments[1:]
 
 
 class CleanCheckpointNative(ReleaseNative):

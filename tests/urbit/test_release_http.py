@@ -24,6 +24,16 @@ class ReleaseHTTPTests(unittest.TestCase):
     def response(self, body=b'public asset', status=200, mime='text/html; charset=utf-8'):
         return {'status': status, 'headers': {**install.SECURITY_HEADERS, 'content-type': mime}, 'body': body}
 
+    def test_https_option_preserves_fresh_create_flag_and_value(self):
+        native = object.__new__(install.ReleaseNative)
+        native.binary, native.pier, native.ship = '/runtime/vere', Path('/state/zod'), 'zod'
+        native.port, native.http_port = 31337, 18080
+        native.lock = {'boot_artifact': {'archive': 'brass.pill'}}
+        args = native._arguments()
+        self.assertEqual(args[:3], ['/runtime/vere', '--https-port', str(install.TLS_PORT)])
+        self.assertEqual(args[3:], install.Native._arguments(native)[1:])
+        self.assertEqual(args[-2:], ['-c', '/state/zod'])
+
     def test_synthetic_role_configuration_preserves_separate_home_member_identity(self):
         home = install.role_configuration('home', 10000)
         identity = install.role_configuration('identity', 10000)
