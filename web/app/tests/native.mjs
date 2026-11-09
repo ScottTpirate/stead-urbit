@@ -619,8 +619,11 @@ async function keyboardAndLayout(alice, bob) {
   await page.getByRole('heading', {name: title, exact: true}).waitFor();
   assert.equal(await page.getByRole('button', {name: /^(Code|PRs|Builds)$/u}).count(), 0);
   passed('keyboard-project-and-work-creation-general-profile-unicode-long-title', {request_id: work.request_id});
-  for (const width of [390, 1440]) {
+  for (const width of [320, 390, 1440]) {
     await page.setViewportSize({width, height: 900});
+    const signedInShip = page.locator('.member-label small');
+    assert.ok(await signedInShip.isVisible(), 'Signed-in ship remains visible at ' + width);
+    assert.equal(await signedInShip.textContent(), '~bus');
     const dimensions = await page.evaluate(() => ({viewport: innerWidth, body: document.body.scrollWidth, root: document.documentElement.scrollWidth}));
     assert.ok(dimensions.body <= dimensions.viewport && dimensions.root <= dimensions.viewport, 'No page-wide overflow at ' + width);
     await page.screenshot({path: path.join(output, `native-layout-${width}.png`), fullPage: true});

@@ -496,7 +496,7 @@ function App() {
   return <div className={identity ? 'app-shell signed-in' : 'app-shell entry-shell'}>
     <header className="topbar">{project ? <button className="brand" aria-label="Stead home" type="button" disabled={busy}
       onClick={() => void action(() => openProject(project), explainConnection)}>{brand}</button> : <span className="brand">{brand}</span>}
-      <span className="alpha">Team alpha</span><div className="account">{identity ? <><span className="member-label">{identity.display_name}<small>{identity.identity_ship}</small></span><Button variant="quiet" disabled={busy} onClick={() => void action(() => client.logout())}>Sign out</Button></> : <span>Work, with context.</span>}</div></header>
+      <span className="alpha">Team alpha</span><div className="account">{identity ? <><span className="member-label"><span className="member-name">{identity.display_name}</span><small title={identity.identity_ship}>{identity.identity_ship}</small></span><Button variant="quiet" disabled={busy} onClick={() => void action(() => client.logout())}>Sign out</Button></> : <span>Work, with context.</span>}</div></header>
     {!online && <div className="banner" role="status">You’re offline. Drafts stay in this tab; nothing is saved until the home confirms it.</div>}
     <main id="main"><a className="skip-link" href="#project-content">Skip to project content</a>
       {error && <div className="error" role="alert"><p>{error}</p>

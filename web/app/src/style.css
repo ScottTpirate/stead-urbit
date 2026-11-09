@@ -304,7 +304,11 @@ footer { display: flex; justify-content: space-between; gap: 12px; padding: 12px
 @media (max-width: 620px) {
   .editor-heading { flex-direction: column; align-items: start; gap: 8px; }
   .topbar { min-height: 52px; padding-inline: 14px; }
-  .alpha, .member-label, .space-label, .rail-label, .sidebar-note { display: none; }
+  .alpha, .member-name, .space-label, .rail-label, .sidebar-note { display: none; }
+  .account, .member-label { min-width: 0; }
+  .account { gap: 8px; }
+  .account button { flex: none; }
+  .member-label small { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
   .workspace { display: block; }
   .sidebar { display: flex; align-items: center; gap: 6px; padding: 7px 12px; border-right: 0; border-bottom: 1px solid var(--line); }
   .sidebar nav { display: flex; min-width: 0; overflow-x: auto; margin: 0; padding: 3px; }
