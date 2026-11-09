@@ -29,3 +29,8 @@ Reproduce with the pinned Git executable first on PATH and
 code and synthetic stock Git processes. Its `qualifies_phase` field remains
 false. Git transport, final authorization, persistence and application-level
 ref transactions still require native service evidence.
+
+The later combined run `20261109T031726Z-yhixl37u` passed all 250 checks,
+including the 29 graph checks. Its source hashes again matched before and after.
+Local inputs SHA-256 `ee1636b38026e628b2f665ee603ce22ccb33cb8a4788449b786d44094be3b051` and
+native report SHA-256 `e734fcc45ad348f0dd58ee98c74b21efb5bfc217fb0f95654bed59a59104e0be`.
