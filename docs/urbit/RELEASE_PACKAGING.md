@@ -1,10 +1,9 @@
 # Offline desk packaging foundation
 
 This implements a bounded **URB-220 packaging candidate**, alongside the M4
-requirements in `ECOSYSTEM_PLAN.md`. It does not close URB-220 or qualify an
-install, upgrade, backup restore, canary, distribution channel or production use.
-No command here starts a ship, imports private state, changes an installed desk,
-publishes a release or contacts a service.
+requirements in `ECOSYSTEM_PLAN.md`. Package build and verification are offline.
+The optional native verifier starts a disposable test ship in an isolated
+environment. See [local install evidence](#local-install-evidence) for its scope.
 
 ## What the artifact contains
 
@@ -34,9 +33,8 @@ It refuses a packager that differs from the selected committed version.
 
 The candidate includes no pier, key, cookie, account binding, project export,
 test fixture, operator credential or host-specific path. It does not include a
-Grid docket or external glob: the current frontend is served through native
-Eyre routes. The package has a statically resolved import closure, but compilation
-and actual installation on a separate desk remain unexecuted release gates.
+Grid docket or external glob. The current frontend is served through native
+Eyre routes. The package has a statically resolved import closure.
 
 ## Build and inspect
 
@@ -142,14 +140,37 @@ Use the same artifact, SHA-256 and explicit target as the prior attempt, adding
 thermal/deadline limits still apply. Partial copy failures remain private evidence
 in their new run directory and never replace the original checkpoint.
 
+## Local install evidence
+
+On November 8, 2026, both role archives were built twice with identical bytes
+from source `1ac28f7e5d1ef1cecd1b5699dc7dd47a2200e25a`. The native verifier
+was `a293368ea0dd7e307194be98272b4e0f5ed5eebc`. It matched 56 installed desk
+files per role, passed all eight native checks per role, observed explicit
+stop and reload, and reaped both fakes cleanly. Home used a verified stopped
+checkpoint after a descriptor-enumeration race on the first cold boot, before
+desk creation. Identity started fresh. Both runs report `qualifies_phase: false`.
+
+| Role | Archive SHA-256 | Native report SHA-256 | Boot |
+| --- | --- | --- | --- |
+| Home | `0ed0a28696a8446ab3c767a8023634074959d5b5a522a9e57c168503b6adbec2` | `36fdbce0bcd56224ef3d9dfe3324d4ae1974fc0562430d1c35d9db8bf4bb516c` | Stopped checkpoint |
+| Identity | `7acfe6daf51db6c0f87b0fa8c90b19b261ae994e77ad222a50e6836c0bc39ce4` | `70a8fac555b4180e3e1176d4d68a0ba457dd60a7d18bda16f37ba9f9a8ce0a6f` | Fresh fake |
+
+The archives and build checks are in local directory
+`.runtime/releases/alias-verified-1ac28f7e5d1e/`. The exact native reports are
+`.runtime/release-install-onuyfkoj/work/report.json` for Home and
+`.runtime/release-install-pwffjn_5/work/report.json` for Identity. The initial
+Home failure remains in `.runtime/release-install-bu8_udck/work/report.json`.
+These runs cover isolated desk installation. A configured Home/Identity pair,
+upgrades, state recovery and a canary remain separate gates.
+
 ## Remaining installation and recovery gates
 
-Before an installable beta claim, demonstrate clean installation of each role on
-the pinned runtime, native route/mark behavior, bootstrap and access isolation,
-and operator-controlled update/pin behavior. Test unavailable publishers, wrong
-Kelvin/frontend/API versions, interrupted updates, every supported predecessor
-and a nonauthor following the runbook. Define and verify canary/stable promotion
-and any Grid launch metadata before advertising those paths.
+Before an installable beta claim, demonstrate fresh-boot Home installation,
+native route/mark behavior, bootstrap and access isolation, and operator-controlled
+update/pin behavior. Test unavailable publishers, wrong Kelvin/frontend/API
+versions, interrupted updates, every supported predecessor and a nonauthor
+following the runbook. Define and verify canary/stable promotion and any Grid
+launch metadata before advertising those paths.
 
 This code artifact cannot restore project data. URB-100 must provide consistent
 Git/Markdown/JSON exports plus authority evidence and reconstructed derived
