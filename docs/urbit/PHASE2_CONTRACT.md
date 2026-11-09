@@ -311,9 +311,10 @@ Freeze the detailed native/browser expected-case inventory before qualification.
 Run the actual two-user/outsider browser journey, keyboard/focus/accessibility,
 Unicode/time-zone, responsive/empty/error/offline, XSS and cache-separation cases.
 Measure useful-content timing and eager/lazy bytes on the real native path.
-An independent nonauthor participant receives only the quickstart/task, without
-maintainer coaching; record participant type, failures and time. An automated
-participant is not described as a human usability study.
+An independent Astra reviewer uses the quickstart/task and exact-source local
+browser evidence to evaluate the workflow, accessibility and usability.
+Record the reviewer model, evidence, observed failures and disposition.
+This is an agent review. Participation by a human tester is optional.
 
 Native CI runs on disposable isolated workers with synthetic fixtures, explicit
 resource admission, pinned actions/tools and no production secrets or persistent

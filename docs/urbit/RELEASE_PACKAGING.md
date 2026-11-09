@@ -242,7 +242,7 @@ Before an installable beta claim, qualify configured Identity and paired
 Home/Identity authentication, access isolation and revocation. Verify
 operator-controlled update/pin behavior, unavailable publishers, wrong
 Kelvin/frontend/API versions, interrupted updates, every supported predecessor
-and a nonauthor following the runbook. Define and verify canary/stable promotion
+and an independent agent or operator following the runbook. Define and verify canary/stable promotion
 and any Grid launch metadata before advertising those paths.
 
 This code artifact cannot restore project data. URB-100 must provide consistent

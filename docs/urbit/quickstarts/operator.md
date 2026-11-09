@@ -65,31 +65,20 @@ authority state, history, access policy and verified continuity. Follow the
 [deployment and cutover gates](../DEPLOYMENT.md) before installing on a
 live ship or using real team data.
 
-## Run the independent team trial
+## Review the local team journey
 
-For the independent human trial, first complete the current automated browser
-journey on the same running `make team-dev` fixture. Preserve the printed
-`browser-native-YYYYMMDDTHHMMSSZ` directory name. Then launch:
+Start the configured synthetic fixture with `make team-dev` and run
+`python3 -B web/app/browser-check.py`. Preserve the emitted
+`browser-native-YYYYMMDDTHHMMSSZ` directory and the native prerequisite.
+Keep source, packaged assets and the live fixture consistent throughout.
+Finish with `make stop` and confirm guard and browser cleanup.
 
-```sh
-python3 web/app/onboarding.py --launch --browser-run browser-native-YYYYMMDDTHHMMSSZ
-```
-
-Replace the example name with the actual passed run. Admission checks the live
-supervisor's native-report digest, exact installed source, packaged frontend,
-and the automated browser evidence and cleanup. A stale or failed prerequisite
-is refused. Do not edit or repackage between those checks and the trial.
-Confirm the participant is present at the Linux desktop immediately before
-launching; availability stated earlier in preparation does not establish current
-readiness. Notify them when the trial page is ready and its nine-minute window
-begins. Provide only the [task](onboarding-task.md) and [member quickstart](member.md),
-then let the participant work without coaching. The launcher prints the private
-evidence directory and opens a separate personal Firefox window. Wait for
-`ready.json` in that directory before notifying the participant.
-Finish or the nine-minute deadline ends recording and writes
-`onboarding-report.json` and `transport-report.json`. The window stays open.
-The participant closes it when done. The backend's existing thermal and runtime
-limits still apply. The reports require independent review before milestone closure.
+Give the independent Astra reviewer the [task](onboarding-task.md),
+[member quickstart](member.md), exact native journey report and desktop and
+narrow screenshots. Record the reviewed source, reviewer model, scope of
+evidence, workflow and accessibility findings, and disposition. Recheck
+affected cases after any blocking fix. See [Phase 2 acceptance](../PHASE2_ACCEPTANCE.md).
+The historical human trial launcher is available for optional research.
 
 Support reports are opt-in downloads with a visible preview. Ask for that report
 and a description of the action, not cookies, identity codes or private page

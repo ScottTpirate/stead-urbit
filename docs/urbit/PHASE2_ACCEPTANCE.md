@@ -86,11 +86,14 @@ useful regression evidence but cannot satisfy this section.
    privileged host sockets or shared writable caches. Hosted resource admission
    is reviewed independently; workstation thermal limits remain unchanged.
 3. Contributor, member, operator and third-party integrator quickstarts describe
-   only supported commands and scopes. A nonauthor receives just the quickstart
-   and task; record participant type, errors and completion time. Automated
-   participation is not presented as a human usability study. Finishing or
-   reaching the deadline seals the human trial evidence. The participant
-   retains the window and closes it when done.
+   only supported commands and scopes. An independent Astra reviewer evaluates
+   the Work/Docs task from the member quickstart and the actual local native
+   browser journey. Bind the review to exact browser and source evidence.
+   Review desktop and narrow screenshots, keyboard/focus, sign-in, accepted
+   saves and readback, Search/Activity, access denials, conflict/recovery and
+   signout. Record agent participation, task completion, concrete UX findings
+   and disposition. Resolve blocking findings and repeat affected checks.
+   A human trial is optional. Preserve historical trial receipts as recorded.
 4. Consent-aware support export contains bounded versions/diagnostic codes and
    correlation IDs, excluding keys, cookies, private messages and document bodies.
 

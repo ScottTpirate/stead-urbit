@@ -54,7 +54,7 @@ Keep arbitrary build/model execution off the authority host. Bind job and artifa
 
 ## Independent readiness and community
 
-Before a stable claim, two independent teams must operate the candidate and at least one separate Urbit app must integrate through the published SDK. A nonauthor must install, upgrade, recover and export using the docs. A backup accountable maintainer must reproduce/verify a release and exercise a recovery/security drill. No maintainers, adopters, SLAs or security contacts are invented by this plan.
+Before a stable claim, two independent teams must operate the candidate and at least one separate Urbit app must integrate through the published SDK. Independent local verification may use an agent to execute install, upgrade, recovery and export from the docs. A backup accountable maintainer must reproduce/verify a release and exercise a recovery/security drill. No maintainers, adopters, SLAs or security contacts are invented by this plan.
 
 The owner made the repository public during Phase 2 CI preparation (visibility
 verified 2026-09-28 UTC). That visibility change does not complete URB-270:

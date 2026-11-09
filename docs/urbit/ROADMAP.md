@@ -9,14 +9,14 @@ browser/stock-Git, independent SDK, hosted native CI and natural session-expiry
 evidence. Its local native lifetime is closed and the stopped fixture preserved.
 The [current qualification record](PHASE2_QUALIFICATION_20260929.md) binds each
 result to its source and scope. [PR #67](https://github.com/ScottTpirate/stead-urbit/pull/67)
-integrated the reviewed implementation; five of six M2 issues are closed. The
-uncoached human Work/Docs trial remains open in #29; Phase 2 is not complete. The
+integrated the reviewed implementation; five of six M2 issues are closed. At that checkpoint,
+the uncoached human Work/Docs trial in #29 was still open. The
 [preparation checkpoint](PHASE2_CHECKPOINT_20260928.md) retains earlier failed
 attempts and their historical limits.
 
 October 2: [fresh native, browser and Git checks passed](PHASE2_ONBOARDING_20261002.md)
 at the integrated source, with clean shutdown and restoration. The human trial
-expired without qualifying activity or feedback; #29 and Phase 2 remain open.
+expired without qualifying activity or feedback.
 
 November 8: The native Git pack path now reconstructs stock packs and emits
 exact objects that stock Git can index. The graph helper proves bounded
@@ -36,9 +36,11 @@ Full authority recovery, upgrades and a reviewed canary remain Phase 4 gates.
 | 5 | Explicit replicas, safe home migration, self-hosted dogfooding | One authoritative source of truth, fenced migration and tested exitability |
 | 6 | Supported ecosystem release | Independent adopters, integration, maintainership and qualified security/recovery/distribution process |
 
-The Work/Docs human trial remains an acceptance requirement. Local engineering
-for Git collaboration and recovery can proceed while it is open. Freeze Git
-and storage contracts before wiring them into the authority. Build the complete
+November 9: Independent Astra review of the actual local native Work/Docs
+journey replaces the earlier human-trial gate for URB-260. Preserve the earlier
+receipts as historical evidence. Close the gate only when the current journey
+and review meet [Phase 2 acceptance](PHASE2_ACCEPTANCE.md). Freeze Git and
+storage contracts before wiring them into the authority. Build the complete
 work-item-to-build workflow through native Git, exact-revision review and
 isolated runners. Keep Code, Reviews and Build navigation specific to software
 projects.

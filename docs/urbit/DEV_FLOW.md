@@ -233,8 +233,7 @@ dependencies, user namespaces, and usable user systemd/cgroups. On Arch,
 `certutil` is supplied by `nss`; other distributions use different packages.
 Do not use Playwright's `install-deps` as a portable Linux setup command: it
 invokes distribution package management. Resolve missing host prerequisites
-before starting a native fixture. A headed human trial also needs the current
-user's local display socket.
+before starting a native fixture. The automated browser runs headless.
 
 After dependency installation:
 
@@ -284,10 +283,10 @@ python3 -B web/app/browser-check.py --expiry-from browser-native-YYYYMMDDTHHMMSS
 Replace the example directory name with the actual passing run. The follow-up
 observes the unchanged 30-minute session lifetime, including rejection of the
 original expired credential. It cannot reuse a failed or stopped fixture.
-Run the [human trial](quickstarts/operator.md) only when the participant is
-ready; its disposable window lasts nine minutes. Serialize the browser runners
-because they use the same local relay ports. Preserve the reports and finish
-with `make stop`, checking the closed native guard as well as browser cleanup.
+Use the [independent review procedure](quickstarts/operator.md#review-the-local-team-journey)
+to evaluate the native journey. Serialize the browser runners because they use
+the same local relay ports. Preserve the reports and finish with `make stop`,
+checking the closed native guard as well as browser cleanup.
 
 ## Hosted native CI while the workstation is busy
 
