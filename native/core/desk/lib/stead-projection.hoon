@@ -41,7 +41,7 @@
   ?>  ?|  &(=('native-sender/1' (field receipt 'authentication')) =('native-sender' (field receipt 'authentication_strength')) =('' (field receipt 'session_audit_id')))
           &(=('native-approved-browser/1' (field receipt 'authentication')) =('native-approved-browser' (field receipt 'authentication_strength')) (opaque:stead-team-codec (field receipt 'session_audit_id')))
       ==
-  ?>  &(=('isolated-fake' (field receipt 'runtime')) (gth (uint (field receipt 'accepted_at_ms')) 0))
+  ?>  (gth (uint (field receipt 'accepted_at_ms')) 0)
   =/  actor  (decode-authentication:stead-team (field record 'authentication_context'))
   ?>  &((gth expires.actor (uint (field receipt 'accepted_at_ms'))) =(principal.identity.actor (field receipt 'principal_id')) =(binding.identity.actor (field receipt 'binding_id')))
   ?>  &(=((decimal revision.identity.actor) (field receipt 'binding_revision')) =((scot %p ship.identity.actor) (field receipt 'identity_ship')))

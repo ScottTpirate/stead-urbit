@@ -1,11 +1,29 @@
 # Phase 5 deployment runbook
 
-Use this sequence when the candidate passes local qualification and the owner
-approves a synthetic live pilot. The present configured Home accepts only the
-`local-disposable` custody and `isolated-fake` runtime profile. Live setup must
-wait for a reviewed live profile and startup fence. A real ship must never
-be labeled as a disposable fake to get through admission. [Home configuration
-decoder](../../native/core/desk/lib/stead-team-config.hoon)
+Use this sequence for a reviewed synthetic pilot. Home recognizes the
+`operator-pilot` custody and `live-synthetic` runtime profile only when Jael
+reports a real ship. The repository's current Vere pin has fake-ship qualification.
+Review that exact runtime for live operation and qualify the actual host's
+closed startup fence before enabling pilot traffic. [Home startup checks](../../native/core/desk/lib/stead-team-owner.hoon)
+
+## Pilot checklist
+
+1. Choose a pilot Linux host, a dedicated Home ship and two separately controlled
+   member ships. Choose an HTTPS hostname for each ship and keep ship and
+   certificate keys on the corresponding host.
+2. Verify the approved Home and Identity archives and stage their desks with
+   pilot traffic blocked. Install and configure them over private operator access.
+3. Bootstrap each ship using the owner command below. Open traffic only for pilot
+   participants after the app, process, certificate and restart checks pass.
+4. Try separate logins, Work and Docs writes, a small stock Git round trip,
+   revocation and backup recovery using synthetic data. Record the results before
+   considering the repository cutover.
+
+The [custody and handoff guide](PHASE5_CUSTODY.md) covers scoped replicas and
+planned same-ship moves. The [Git rehearsal](PHASE5_DOGFOOD_REHEARSAL.md) covers
+the full-history offline proof and the native storage gate for cutover. The
+[browser identity profile](BROWSER_IDENTITY_PROFILE.md) is a separate design
+track. Use individual native member ships for this pilot.
 
 ## Candidate admission
 
@@ -120,12 +138,31 @@ software-distribution guide and the pinned verifier document the Clay sequence.
 [Urbit distribution](https://docs.urbit.org/build-on-urbit/userspace/dist/software-distribution)
 · [Verifier](../../scripts/release_install.py)
 
-Once the live profile is qualified, configure the empty Home via the reviewed
-owner-local operation with the approved HTTPS origin, organization and team
-IDs, explicit individual ship/principal/binding IDs and revisions, expirations
-and project-creator grants. Configure each member's Identity role with the
-matching Home and exact HTTPS origins. The existing fixture driver and its fake
-configuration are local test inputs.
+Configure the empty Home with the approved HTTPS origin, organization and team
+UUIDv7s, and explicit ship/principal/binding mappings. In the initial Home JSON
+use `protocol` = `stead.team-config/1`, `expected_revision` = `0`, `custody` =
+`operator-pilot`, and `runtime` = `live-synthetic`. Set `home`, `origin`,
+`organization_id`, and `team_id`. Key `bindings` by canonical member ship name.
+For each member supply `principal_id`, `binding_id`, `binding_revision` = `1`,
+`active` = `yes`, future `expires_at_ms`, and `display_name`. Key
+`project_creators` by the explicitly authorized principal IDs with value `yes`.
+Use JSON strings for these values. Identity JSON has `protocol` =
+`stead.identity-config/1`, `expected_revision` = `0`, `home`, `home_origin`, and
+the member's distinct `origin`. [Configuration decoder](../../native/core/desk/lib/stead-team-config.hoon)
+
+The candidate includes an owner-local Khan thread on each installed desk. Run
+the helper from the reviewed checkout as the dedicated Vere account, with the
+Vere PID and the actual absolute pier path used at launch. Repeat for each
+member with the Identity desk, role, ship and configuration. Keep the pier and
+`.urb` directories private and the Khan socket unexposed.
+
+```sh
+owner=(python3 -B scripts/urbit/pilot_owner.py --pid "$vere_pid" \
+  --binary "$vere_binary" --pier "$pier" --ship "$ship" \
+  --desk "$desk" --role "$role" --approved-runtime-sha256 "$approved_runtime_sha256")
+"${owner[@]}" configure "$config_json"
+"${owner[@]}" cert --key "$private_key_pem" --chain "$full_chain_pem"
+```
 
 For each start or restart, keep ingress and external peer writes fenced. The
 operator's controller must prove the new process owns the expected pier,
@@ -140,24 +177,31 @@ expected target schema and application readback before release. Stop on any
 mismatch. The synthetic team's controller demonstrates the saved-state check.
 [Local startup proof](../../scripts/urbit/team_lifecycle.py)
 
-After those checks, use that process's owner-local connection. Generate a
-fresh 32-byte nonce encoded as lowercase hex, open the Gall watch
-`/bootstrap/<nonce>` and send `%stead-bootstrap-1` to the corresponding role
-with this JSON payload.
+After those checks and the native Eyre certificate request, run the following for
+Home. A first configuration has revision `1`. Use the exact approved HTTPS
+origin, native TLS listener port, and SHA-256 of the leaf certificate in DER
+form. The installed certificate chain must validate with the host trust store.
+The private key file must be mode `0600` and owned by the service account.
 
-```json
-{"protocol":"stead.bootstrap/1","nonce":"<nonce>"}
+```sh
+"${owner[@]}" status --revision "$config_revision"
+"${owner[@]}" bootstrap --revision "$config_revision" --origin "$origin" \
+  --listener-port "$native_https_port" --certificate-sha256 "$certificate_sha256"
 ```
 
-Require an acknowledgement on that watch with protocol `stead.bootstrap/1`,
-status `ready`, the expected ship in `home`, the exact nonce and a fresh
-64-character hexadecimal `incarnation`. Successful bootstrap retires prior
-sessions, approvals, cursors and watches. The acknowledgement proves the new
-incarnation. While the fence is closed, verify the recovered acceptance
-receipts and application readback against the reviewed checkpoint. Open traffic
-only after this readback and the acknowledgement and listener checks pass for
-the same process. Close ingress and existing streams when that process exits
-or loses ownership.
+For Identity run `bootstrap` with its own origin, port and certificate digest,
+omitting `--revision`. On restart include `--previous-incarnation` using the
+retained value. The helper binds the private Khan connection and TLS listener to
+the reviewed process. Home bootstrap requires a closed app with a ready
+projection, correlates a fresh native acknowledgement to the exact config
+revision and checks availability again. Bootstrap invalidates prior sessions,
+approvals, cursors and watches.
+
+While the host fence is closed, verify the recovered acceptance receipts and
+readback against the reviewed checkpoint. The host's fence must close ingress,
+existing streams and peer writes when the admitted process exits or loses
+ownership, including across supervisor restart. Open traffic only after the
+readback, bootstrap and listener checks all pass for that same process.
 [Configured-team contract](PHASE2_CONTRACT.md)
 
 ## Back up, restore and fence

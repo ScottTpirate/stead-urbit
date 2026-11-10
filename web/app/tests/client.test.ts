@@ -78,7 +78,9 @@ globalThis.fetch = async (url, init) => {
       operation: raw.operation, authority_epoch: raw.authority_epoch,
       resource_revision: String(BigInt(String(raw.expected_revision)) + 1n),
       canonical_sha256: await commandDigest(raw), container_id: raw.operation === 'container.create' ? raw.resource_id : payload.container_id ?? '',
-      resource_kind: String(raw.operation).split('.')[0], runtime: 'isolated-fake', accepted_at_ms: '1790519400000', git_commit_oid: String(raw.operation).startsWith('document.') ? 'a'.repeat(40) : '',
+      resource_kind: String(raw.operation).split('.')[0],
+      runtime: mode === 'live-receipt' ? 'live-synthetic' : mode === 'unknown-runtime' ? 'unknown' : 'isolated-fake',
+      accepted_at_ms: '1790519400000', git_commit_oid: String(raw.operation).startsWith('document.') ? 'a'.repeat(40) : '',
       authentication: 'native-approved-browser/1', authentication_strength: 'native-approved-browser'};
     const {display_name, organization_id, team_id, ...receipt} = accepted;
     if (mode === 'missing-oid') delete (receipt as Partial<typeof receipt>).git_commit_oid;
@@ -138,6 +140,8 @@ test('mutation confirmation requires full receipt and correlated rejection', asy
   const client = new HomeClient(); person = 1; mode = ''; await client.resume();
   const value = command(id('1'), id('2'), '0', '1', 'work.create', {title: 'Synthetic', description: '', type: 'task', status: 'todo', priority: 'none'});
   await client.command(value);
+  mode = 'live-receipt'; assert.equal((await client.command(value)).runtime, 'live-synthetic');
+  mode = 'unknown-runtime'; await rejects(client.command(value), 'invalid_response');
   mode = 'missing-oid'; await rejects(client.command(value), 'invalid_response');
   mode = 'wrong-digest'; await rejects(client.command(value), 'invalid_response');
   mode = 'wrong-actor'; await rejects(client.command(value), 'invalid_response');

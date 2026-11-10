@@ -139,7 +139,7 @@ def run(binary, socket_path, mode, route='/', raw=b'', *, control=None, timeout=
     return exchange(binary, socket_path, noun, timeout=timeout)
 
 
-def exchange(binary, socket_path, noun, *, timeout=75):
+def exchange(binary, socket_path, noun, *, timeout=75, check_peer=None):
     """Internal framed Khan exchange; callers own their finite input grammar."""
     trace = {'stage': 'encode', 'request': noun}
     received = bytearray()
@@ -164,6 +164,8 @@ def exchange(binary, socket_path, noun, *, timeout=75):
             channel.settimeout(timeout)
             trace['stage'] = 'connect'
             channel.connect(str(socket_path))
+            if check_peer is not None:
+                check_peer(channel)
             trace['stage'] = 'send'
             channel.sendall(frame)
             trace['stage'] = 'response-header'

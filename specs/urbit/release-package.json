@@ -7,6 +7,21 @@
   "classification": "candidate-packaging-only",
   "kernel_commit": "5a187fededc4582a34fcd6055c67bb63e0917b94",
   "kernel_files": {
+    "lib/strand.hoon": {
+      "bytes": 5,
+      "sha256": "97b2c326494239ed326156ed8eebe2e366addacc1d352ebd7cc41e8510ac2e95",
+      "source": "pkg/base-dev/lib/strand.hoon"
+    },
+    "lib/strandio.hoon": {
+      "bytes": 21439,
+      "sha256": "3408c7d279bea54f3aee9c2db61f6353522da1e37d31a5cd58aca43fd79d2ef7",
+      "source": "pkg/base-dev/lib/strandio.hoon"
+    },
+    "sur/spider.hoon": {
+      "bytes": 490,
+      "sha256": "39746f99a2d740e499d0ca3937ccae6e029901fcb6abc80ad64e40760110eda8",
+      "source": "pkg/base-dev/sur/spider.hoon"
+    },
     "LICENSE.txt": {
       "bytes": 1071,
       "sha256": "e895931d528be1ab18b353eee7ae5c4f9a8f5b164f747db1e60a59bbe201ffd3",
@@ -70,6 +85,7 @@
     "stead-auth-challenge-1",
     "stead-bootstrap-1",
     "stead-command-3",
+    "stead-home-handoff-1",
     "stead-identity-config-1",
     "stead-query-3",
     "stead-result-3",
@@ -80,7 +96,7 @@
   "runtime_binary_sha256": "f7f0d3b3c0480fc10f887dfbc09bde56a81d723a803541c7886c538a0675d833",
   "runtime_version": "4.6",
   "saved_state_versions": {
-    "home": 5,
+    "home": 6,
     "identity": 1
   },
   "toolchain_sha256": "ae185adaec12b5aa0b2d48e2198ae65583902512ffd9d148706810c4819c650c"

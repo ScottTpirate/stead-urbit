@@ -225,7 +225,7 @@ def asset_upgrade_plan(source, target, source_sha, target_sha, saved_sha):
 def home_upgrade_plan(source, target, source_sha, target_sha, saved_sha):
     pinned = ('agents', 'role', 'compatibility', 'toolchain_sha256')
     if (any(source[key] != target[key] for key in pinned) or source['role'] != 'home'
-            or source['saved_state_version'] != 3 or target['saved_state_version'] not in (4, 5)
+            or source['saved_state_version'] != 3 or target['saved_state_version'] not in (4, 5, 6)
             or source_sha == target_sha or source['source_commit'] == target['source_commit']
             or not re.fullmatch(r'[0-9a-f]{64}', saved_sha)):
         raise ValueError('Native Home upgrade requires verified v3 and v4/v5-capable packages with matching runtime and API')

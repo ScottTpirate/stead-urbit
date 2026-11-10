@@ -341,7 +341,7 @@ export class HomeClient {
     const expectedFields = ['protocol','status','request_id','canonical_sha256','project_id','resource_id','resource_kind','container_id','resource_revision','authority_epoch','operation','principal_id','binding_id','binding_revision','identity_ship','authentication','authentication_strength','session_audit_id','runtime','accepted_at_ms','git_commit_oid'];
     const resourceKind = command.operation.split('.')[0] === 'container' ? 'container' : command.operation.split('.')[0];
     if (Object.keys(row).length !== expectedFields.length || expectedFields.some(key => !Object.hasOwn(row, key))) throw new HomeError('invalid_response');
-    if (row.resource_kind !== resourceKind || row.runtime !== 'isolated-fake'
+    if (row.resource_kind !== resourceKind || !['isolated-fake', 'live-synthetic'].includes(row.runtime!)
       || !DECIMAL.test(row.accepted_at_ms!) || BigInt(row.accepted_at_ms!) === 0n || BigInt(row.accepted_at_ms!) > (2n ** 64n - 1n)
       || (resourceKind === 'document' ? !/^[0-9a-f]{40}$/u.test(row.git_commit_oid!) : row.git_commit_oid !== '')) throw new HomeError('invalid_response');
     if (!person || row.protocol !== 'stead.receipt/3' || row.status !== 'accepted'

@@ -270,7 +270,14 @@ def run(host):
             check(ship + '-certificate-task-requested', True)
         now = int(command('zod', '(div (mul 1.000 (sub now ~1970.1.1)) ~s1)').strip().replace('.', ''))
         config = configuration(now)
+        check('fake-ship-cannot-configure-live-pilot', denied(call('zod', 'configure', config | {
+            'custody': 'operator-pilot', 'runtime': 'live-synthetic'}), 'poke-fail', 'stead-runtime-profile-mismatch'))
         check('owner-configuration-accepted', call('zod', 'configure', config) == {})
+        nonce = secrets.token_hex(32)
+        status = call('zod', 'operator-status', route='/operator/' + nonce)
+        check('startup-operator-status-owner-read', status['protocol'] == 'stead.operator-status/1'
+              and status['nonce'] == nonce and status['runtime'] == 'isolated-fake'
+              and status['runtime_matches'] == 'yes' and status['available'] == 'no')
         for offset, ship in enumerate(('bus', 'nec', 'bud'), start=8444):
             personal = {'protocol': 'stead.identity-config/1', 'expected_revision': '0',
                         'home': '~zod', 'home_origin': config['origin'],
@@ -286,6 +293,8 @@ def run(host):
             check(ship + '-owned-peer-admission', team.boots[ship]['acknowledged'])
         check('remote-configuration-denied', denied(call('bus', 'configure', config | {'expected_revision': '1'}),
               'poke-fail', 'stead-owner-required'))
+        check('remote-operator-status-denied', denied(call('bus', 'operator-status', route='/operator/' + secrets.token_hex(32)),
+              'watch-ack-fail', 'stead-owner-required'))
         identity = call('bus', 'query', query('identity'))
         check('current-native-member-read', identity is not None and identity.get('status') == 'read')
         check('native-outsider-denied', denied(call('bud', 'query', query('identity')),

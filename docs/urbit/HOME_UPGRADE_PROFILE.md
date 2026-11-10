@@ -2,7 +2,7 @@
 
 The offline verifier upgrades a fresh copy of a configured synthetic Home
 from a reviewed v3 desk to a Code-capable Home archive declaring a maximum
-saved-state version of v4 or v5. The selected archives must share the exact
+saved-state version of v4, v5, or v6. The selected archives must share the exact
 kernel, Vere and API profile. The verifier checks the target's native agent,
 its dependency closure and its frontend bytes. In this transition, a Home
 with existing v3 state and no Code repositories continues to save v3. The

@@ -1,9 +1,9 @@
 ::  One authoritative owner. Configured v4 with Code, v3 without Code.
-/+  default-agent, stead-core, stead-codec, stead-core-v1, stead-codec-v1, stead-team-owner, stead-code-home
+/+  default-agent, stead-core, stead-codec, stead-core-v1, stead-codec-v1, stead-team-owner, stead-code-home, stead-home-handoff, stead-browser, stead-code-credentials
 =>
 |%
 +$  saved
-  [%stead-home $%([%1 db=state:stead-core-v1] [%2 db=state:stead-core] [%3 team=saved:stead-team-owner] [%4 team=saved:stead-team-owner code=saved:stead-code-home] [%5 team=saved:stead-team-owner code=persisted:stead-code-home])]
+  [%stead-home $%([%1 db=state:stead-core-v1] [%2 db=state:stead-core] [%3 team=saved:stead-team-owner] [%4 team=saved:stead-team-owner code=saved:stead-code-home] [%5 team=saved:stead-team-owner code=persisted:stead-code-home] [%6 team=saved:stead-team-owner code=persisted:stead-code-home mode=phase:stead-home-handoff])]
 +$  pending-entry  [sender=@p expires=@da]
 ++  now-ms
   |=  now=@da
@@ -104,6 +104,7 @@
 =|  db=state:stead-core
 =.  initialized.db  |
 =/  owner  empty:stead-team-owner
+=/  handoff=phase:stead-home-handoff  [%open 1]
 =|  pending=(map path pending-entry)
 ::  Disposable predecessor builder; never an employee interface or accepted home.
 =|  predecessor=state:stead-core-v1
@@ -117,10 +118,13 @@
     def  ~(. (default-agent this %|) bowl)
     team  ~(. (driver:stead-team-owner owner) bowl)
     configured  ?|(?=(^ current.registry.db.owner) ?=(^ restoring.owner))
+    sealed  ?=(%sealed -.handoff)
 ++  on-init
   `this
 ++  on-save
   ?:  configured
+    ?:  !=(handoff [%open 1])
+      !>([%stead-home %6 save:team [repos.code.owner uploads.code.owner reviews.code.owner builds.code.owner] handoff])
     ?:  |(?=(^ uploads.code.owner) ?=(^ reviews.code.owner))
       !>([%stead-home %5 save:team [repos.code.owner uploads.code.owner reviews.code.owner builds.code.owner]])
     ?:  ?=(~ repos.code.owner)  !>([%stead-home %3 save:team])
@@ -130,15 +134,20 @@
   |=  old=vase
   ~|  %stead-unsupported-state
   =/  restored  !<(saved old)
+  ?:  ?=([%stead-home %6 *] restored)
+    ?>  (valid:stead-home-handoff mode.restored)
+    ?>  (gth generation.mode.restored 1)
+    =/  [cards=(list card:agent:gall) next=state:stead-team-owner]  (load:team team.restored code.restored)
+    [cards this(owner next, pending ~, handoff mode.restored)]
   ?:  ?=([%stead-home %5 *] restored)
     =/  [cards=(list card:agent:gall) next=state:stead-team-owner]  (load:team team.restored code.restored)
-    [cards this(owner next, pending ~)]
+    [cards this(owner next, pending ~, handoff [%open 1])]
   ?:  ?=([%stead-home %4 *] restored)
     =/  [cards=(list card:agent:gall) next=state:stead-team-owner]  (load:team team.restored [code.restored ~ ~ ~])
-    [cards this(owner next, pending ~)]
+    [cards this(owner next, pending ~, handoff [%open 1])]
   ?:  ?=([%stead-home %3 *] restored)
     =/  [cards=(list card:agent:gall) next=state:stead-team-owner]  (load:team team.restored [~ ~ ~ ~])
-    [cards this(owner next, pending ~)]
+    [cards this(owner next, pending ~, handoff [%open 1])]
   =/  next=state:stead-core
     ?:  ?=([%stead-home %1 *] restored)  (migrate-v1:stead-core db.restored)
     db.restored
@@ -146,11 +155,17 @@
   =/  paths  (silt (turn ~(tap by sup.bowl) |=([duct [ship=@p route=path]] route)))
   =/  cards=(list card:agent:gall)
     (turn ~(tap in paths) |=(route=path [%give %kick [route ~] ~]))
-  [cards this(db next, pending ~, owner empty:stead-team-owner)]
+  [cards this(db next, pending ~, owner empty:stead-team-owner, handoff [%open 1])]
 ++  on-poke
   |=  [=mark =vase]
   ^-  (quip card:agent:gall _this)
+  ?:  =(%stead-home-handoff-1 mark)
+    ?>  &(configured =(src.bowl our.bowl) ?=(~ restoring.owner))
+    =/  next  (transition:stead-home-handoff our.bowl handoff !<(command:stead-home-handoff vase))
+    ?>  ?=(^ next)
+    [kicks:team this(handoff u.next, owner owner(transient *ephemeral:stead-browser, pending ~, incarnation '', files ~, code code.owner(book *ledger:stead-code-credentials), git-waiting ~))]
   ?:  ?|(configured =(%stead-team-config-1 mark))
+    ?>  |(!sealed =(%handle-http-request mark))
     ?>  ?|(configured !initialized.db)
     =/  [cards=(list card:agent:gall) next=state:stead-team-owner]  (poke:team mark vase)
     [cards this(owner next, pending ~)]
@@ -164,7 +179,7 @@
     ?>  &(=(our.bowl ~zod) =(src.bowl our.bowl) initialized.db)
     =/  [op=@tas ship=@p key=@t value=@t]  !<([@tas @p @t @t] vase)
     ?:  =(%roundtrip op)  (on-load on-save)
-    ?:  =(%load-future op)  (on-load !>([%stead-home %6 db]))
+    ?:  =(%load-future op)  (on-load !>([%stead-home %7 db]))
     ?:  =(%load-counter op)  (on-load !>([%0 0]))
     ?:  =(%hold-outsider-read op)
       ?>  &(=(ship ~bud) (lte (met 3 key) 1.024))
@@ -288,7 +303,15 @@
 ++  on-watch
   |=  route=path
   ^-  (quip card:agent:gall _this)
+  ?:  =(route /home-handoff/status)
+    ?>  &(configured =(src.bowl our.bowl))
+    =/  body  (canonical:stead-codec (object:stead-codec ~[['protocol' 'stead.home-handoff/1'] ['home' (scot %p our.bowl)] ['phase' ?:(sealed 'sealed' 'open')] ['generation' (decimal:stead-codec generation.handoff)]]))
+    :_  this
+    :~  [%give %fact ~ %stead-result-3 !>(body)]
+        [%give %kick ~ ~]
+    ==
   ?:  configured
+    ?>  |(!sealed ?=([%http-response @ ~] route))
     =/  [cards=(list card:agent:gall) next=state:stead-team-owner]  (watch:team route)
     [cards this(owner next)]
   ~|  %stead-watch-denied

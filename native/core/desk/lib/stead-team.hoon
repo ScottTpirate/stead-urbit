@@ -226,7 +226,7 @@
   ?>  &((lte (met 0 home) 128) !=(home ship.identity) =((scot %p home) (field obj 'home')))
   =/  actor=authentication
     [identity (field obj 'authentication') (field obj 'authentication_strength') (field obj 'session_audit_id') (uint (field obj 'credential_expires_at_ms')) home (field obj 'organization_id') (field obj 'team_id') (field obj 'runtime')]
-  ?>  &((uuid organization.actor) (uuid team.actor) =('isolated-fake' runtime.actor))
+  ?>  &((uuid organization.actor) (uuid team.actor) (valid-runtime:stead-team-config runtime.actor))
   ?>  &((gth expires.actor 0) (lte expires.actor expires.identity))
   ?>  ?|  &(=('native-sender/1' method.actor) =('native-sender' strength.actor) =('' audit.actor) =(expires.actor expires.identity))
           &(=('native-approved-browser/1' method.actor) =('native-approved-browser' strength.actor) (token-valid:stead-session audit.actor))

@@ -8,6 +8,16 @@
       custody=@t  runtime=@t  members=(map @p member)  creators=(set @t)
   ==
 +$  registry  [current=(unit config) revisions=(map @t @ud) owners=(map @t @t)]
+++  valid-runtime
+  |=  runtime=@t
+  ^-  ?
+  ?|(=('isolated-fake' runtime) =('live-synthetic' runtime))
+++  valid-profile
+  |=  [custody=@t runtime=@t]
+  ^-  ?
+  ?|  &(=('local-disposable' custody) =('isolated-fake' runtime))
+      &(=('operator-pilot' custody) =('live-synthetic' runtime))
+  ==
 ++  decode
   |=  [raw=@t prior=registry home=@p now=@ud]
   ^-  registry
@@ -30,14 +40,13 @@
   =/  custody  (field obj 'custody')
   =/  runtime  (field obj 'runtime')
   ?>  &((origin-valid:stead-session origin) (uuid organization) (uuid team))
-  ::  The first qualified profile is disposable fake networking. Live custody
-  ::  and provisioning need their own reviewed admission before a new profile.
-  ?>  &(=('local-disposable' custody) =('isolated-fake' runtime))
+  ?>  (valid-profile custody runtime)
   ?>  ?~  current.prior  &
       ?&  =(home home.u.current.prior)
           =(organization organization.u.current.prior)
           =(team team.u.current.prior)
           =(custody custody.u.current.prior)
+          =(runtime runtime.u.current.prior)
       ==
   =/  people  (~(got by obj) 'bindings')
   =/  creators  (~(got by obj) 'project_creators')
@@ -101,7 +110,7 @@
   =/  config  u.current.registry
   ?>  &((gth revision.config 0) (lte revision.config 18.446.744.073.709.551.615) =(home home.config))
   ?>  &((origin-valid:stead-session origin.config) (uuid organization.config) (uuid team.config))
-  ?>  &(=('local-disposable' custody.config) =('isolated-fake' runtime.config))
+  ?>  (valid-profile custody.config runtime.config)
   ?>  &((lte (lent ~(tap by revisions.registry)) 128) (lte (lent ~(tap by owners.registry)) 256))
   ?>  (levy ~(tap by revisions.registry) |=([id=@t rev=@ud] &((uuid id) (gth rev 0) (lte rev 18.446.744.073.709.551.615))))
   ?>  (levy ~(tap by owners.registry) |=([id=@t principal=@t] &((uuid id) (~(has by revisions.registry) principal))))

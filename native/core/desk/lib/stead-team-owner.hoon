@@ -36,6 +36,13 @@
   ++  save
     ^-  saved
     [?~(restoring.owner db.owner target.u.restoring.owner) view.owner]
+  ++  fake-ship
+    ^-  ?
+    .^(? %j /(scot %p our.bowl)/fake/(scot %da now.bowl))
+  ++  runtime-matches
+    |=  config=config:stead-team-config
+    ^-  ?
+    =(fake-ship =('isolated-fake' runtime.config))
   ++  load
     |=  [old=saved code=persisted:stead-code-home]
     ^-  (quip card:agent:gall state)
@@ -55,6 +62,11 @@
       !!
     ?>  &(?=(~ restoring.owner) !rebuilding.view.owner)
     =/  next  (configure:stead-team db.owner raw our.bowl (now-ms now.bowl))
+    =/  config  (need current.registry.next)
+    ::  A live label requires Jael's current ship state even before bootstrap.
+    ::  Historical fixture configuration is also exercised as a pure transition.
+    ~|  %stead-runtime-profile-mismatch
+    ?>  ?|(=('isolated-fake' runtime.config) (runtime-matches config))
     =/  view  (begin:stead-projection next view.owner)
     =/  job  (token:stead-session eny.bowl act.bowl 'stead.projection-job/1')
     =.  owner  owner(db next, view view, transient *ephemeral:stead-browser, pending ~, incarnation '', job job, files ~, code code.owner(book *ledger:stead-code-credentials), git-waiting ~)
@@ -66,15 +78,26 @@
     |=  raw=@t
     ^-  (quip card:agent:gall state)
     ?>  =(src.bowl our.bowl)
-    =/  value  (small:stead-browser raw ~['protocol' 'nonce'] 'stead.bootstrap/1')
+    ?>  &(?=(~ restoring.owner) (ready:stead-projection db.owner view.owner))
+    =/  config  (need current.registry.db.owner)
+    ~|  %stead-runtime-profile-mismatch
+    ?>  (runtime-matches config)
+    =/  live-pilot  =('live-synthetic' runtime.config)
+    =/  protocol  ?:(live-pilot 'stead.bootstrap/2' 'stead.bootstrap/1')
+    =/  keys=(list @t)  ?:(live-pilot ~['protocol' 'nonce' 'expected_revision'] ~['protocol' 'nonce'])
+    =/  value  (small:stead-browser raw keys protocol)
+    ?>  ?|(!live-pilot =(revision.config (uint (field value 'expected_revision'))))
     =/  nonce  (field value 'nonce')
     ?>  (token-valid:stead-session nonce)
-    ?>  &(?=(~ restoring.owner) (ready:stead-projection db.owner view.owner))
     =/  route=path  [%bootstrap nonce ~]
     ?>  (lien ~(tap by sup.bowl) |=([duct [ship=@p path=path]] &(=(ship our.bowl) =(path route))))
     =/  files  load-assets
     =/  incarnation  (token:stead-session eny.bowl act.bowl 'stead.home-incarnation/1')
-    =/  response  (canonical (object ~[['protocol' 'stead.bootstrap/1'] ['status' 'ready'] ['home' (scot %p our.bowl)] ['nonce' nonce] ['incarnation' incarnation]]))
+    =/  fields=(list [@t @t])
+      ~[['protocol' protocol] ['status' 'ready'] ['home' (scot %p our.bowl)] ['nonce' nonce] ['incarnation' incarnation]]
+    =?  fields  live-pilot
+      [['runtime' runtime.config] ['config_revision' (decimal revision.config)] fields]
+    =/  response  (canonical (object fields))
     ::  Invalidate first, then acknowledge this exact native owner-local exchange.
     =/  old-paths  (silt (turn ~(tap by sup.bowl) |=([duct [ship=@p path=path]] path)))
     =/  retired=(list card:agent:gall)
@@ -86,6 +109,31 @@
   ++  available
     ^-  ?
     &(!=('' incarnation.owner) ?=(~ restoring.owner) (ready:stead-projection db.owner view.owner) !?=(~ files.owner))
+  ++  inspect
+    |=  nonce=@t
+    ^-  (quip card:agent:gall state)
+    ~|  %stead-owner-required
+    ?>  &(=(src.bowl our.bowl) (token-valid:stead-session nonce))
+    =/  config  (need current.registry.db.owner)
+    =/  response
+      %-  canonical
+      %-  object
+      :~  ['protocol' 'stead.operator-status/1']
+          ['home' (scot %p our.bowl)]
+          ['nonce' nonce]
+          ['origin' origin.config]
+          ['custody' custody.config]
+          ['runtime' runtime.config]
+          ['config_revision' (decimal revision.config)]
+          ['runtime_matches' ?:((runtime-matches config) 'yes' 'no')]
+          ['projection_ready' ?:((ready:stead-projection db.owner view.owner) 'yes' 'no')]
+          ['available' ?:(available 'yes' 'no')]
+          ['incarnation' incarnation.owner]
+      ==
+    :_  owner
+    :~  [%give %fact ~ %stead-result-3 !>(response)]
+        [%give %kick ~ ~]
+    ==
   ++  response
     |=  [id=@ta status=@ud mime=@t bytes=@t cookies=(list @t)]
     ^-  (list card:agent:gall)
@@ -225,6 +273,7 @@
       ?>  &(=(src.bowl our.bowl) (token-valid:stead-session i.t.route))
       ?>  (lte (lent ~(tap by sup.bowl)) 128)
       [~ owner]
+    ?:  ?=([%operator @ ~] route)  (inspect i.t.route)
     ?>  &(available ?=([%v3 %result @ @ @ @ @ ~] route))
     =/  actor  native-actor
     ?>  &(=(i.t.t.route (scot %p src.bowl)) =(i.t.t.t.route binding.identity.actor))

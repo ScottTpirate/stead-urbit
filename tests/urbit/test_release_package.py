@@ -90,9 +90,10 @@ class ReleasePackageTests(unittest.TestCase):
                 self.assertIn('desk/mar/kelvin.hoon', files)
                 self.assertIn('desk/mar/bill.hoon', files)
                 self.assertIn('notices/urbit-kernel-LICENSE.txt', files)
-                self.assertEqual(manifest['saved_state_version'], 5 if role == 'home' else 1)
+                self.assertEqual(manifest['saved_state_version'], 6 if role == 'home' else 1)
                 self.assertEqual('desk/lib/stead-code-home.hoon' in files, role == 'home')
-                self.assertFalse(any('/gen/' in name or '/ted/' in name or '/tests/' in name for name in files))
+                self.assertEqual([name for name in files if '/ted/' in name], ['desk/' + name for name in release.OPERATOR_THREADS])
+                self.assertFalse(any('/gen/' in name or '/tests/' in name for name in files))
                 self.assertEqual(manifest['qualification']['native_install'], False)
 
     def test_exact_reproduction_ignores_worktree_mutations(self):
@@ -135,6 +136,8 @@ class ReleasePackageTests(unittest.TestCase):
         def relabel(members, manifest):
             contract = json.loads(members['source/release-contract.json'])
             contract['saved_state_versions']['home'] = 3
+            for name in release.OPERATOR_KERNEL_SOURCES:
+                del contract['kernel_files'][name]
             members['source/release-contract.json'] = release.encoded(contract)
             manifest['contract_sha256'] = release.digest(members['source/release-contract.json'])
             manifest['saved_state_version'] = 3
@@ -143,6 +146,11 @@ class ReleasePackageTests(unittest.TestCase):
 
     def test_rejects_missing_pinned_dependency(self):
         raw = self.repack(lambda members, manifest: members.pop('desk/lib/skeleton.hoon'))
+        with self.assertRaisesRegex(ValueError, 'dependency is missing'):
+            self.verify(raw)
+
+    def test_rejects_missing_packaged_operator_thread(self):
+        raw = self.repack(lambda members, manifest: members.pop('desk/ted/stead-pilot-owner.hoon'))
         with self.assertRaisesRegex(ValueError, 'dependency is missing'):
             self.verify(raw)
 

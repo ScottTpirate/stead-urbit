@@ -474,13 +474,15 @@ def same_path(path, opened):
         return False
 
 
-def verify(path, *, expected_sha256=None):
+def verify(path, *, expected_sha256=None, require_private=False):
     require(expected_sha256 is None or match(TOKEN, expected_sha256), 'invalid-expected-digest')
     try:
         fd = os.open(path, os.O_RDONLY | os.O_NOFOLLOW | os.O_NONBLOCK)
         with os.fdopen(fd, 'rb') as stream:
             info = os.fstat(stream.fileno())
             require(stat.S_ISREG(info.st_mode) and 0 < info.st_size <= MAX_ARTIFACT, 'artifact-bound')
+            if require_private:
+                require(info.st_uid == os.getuid() and info.st_nlink == 1 and info.st_mode & 0o077 == 0, 'private-file-required')
             raw = stream.read(MAX_ARTIFACT + 1)
         require(len(raw) <= MAX_ARTIFACT, 'artifact-bound')
         require(expected_sha256 is None or sha(raw) == expected_sha256, 'artifact-digest')
