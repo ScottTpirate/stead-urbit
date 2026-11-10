@@ -1,5 +1,4 @@
-::  Bounded Khan adapter for the configured Gall interfaces. Production use is
-::  owner-local and must keep the socket private.
+::  Bounded disposable Khan adapter for the actual configured Gall interfaces.
 /-  spider
 /+  strandio, stead-codec, stead-delivery
 =,  strand=strand:spider
@@ -39,9 +38,6 @@
     %configure  %stead-team-config-1
     %identity-config  %stead-identity-config-1
     %bootstrap  %stead-bootstrap-1
-    %operator-status  %stead-bootstrap-1
-    %handoff-status  %stead-bootstrap-1
-    %handoff  %stead-home-handoff-1
     %command  %stead-command-3
     %query  %stead-query-3
     %updates  %stead-updates-3
@@ -49,28 +45,14 @@
     %legacy-watch  %stead-command-2
     %approve  %stead-auth-approval-1
   ==
-?:  =(%handoff mode)
-  ?>  (lte (met 3 raw) 256)
-  =/  value  (need (parse-result:stead-codec raw))
-  ?>  ?=([%o *] value)
-  ?>  (keys:stead-codec p.value ~['operation' 'generation' 'proof'])
-  =/  op  (field:stead-codec p.value 'operation')
-  ?>  |(=('seal' op) =('activate' op))
-  =/  operation  ?:(=('seal' op) %seal %activate)
-  =/  input=[operation=?(%seal %activate) generation=@ud proof=@t]
-    [operation (uint:stead-codec (field:stead-codec p.value 'generation')) (field:stead-codec p.value 'proof')]
-  ;<  ~  bind:m  (poke:strandio [target app] mark !>(input))
-  (pure:m !>([%stead-core-result (bytes-hex:stead-codec '{}')]))
 ?:  ?|(=(%configure mode) =(%identity-config mode) =(%approve mode) =(%legacy-poke mode))
   ;<  ~  bind:m  (poke:strandio [target app] mark !>(raw))
   (pure:m !>([%stead-core-result (bytes-hex:stead-codec '{}')]))
 ;<  ~  bind:m  (watch:strandio /result [target app] route)
 ?:  =(%legacy-watch mode)
   (pure:m !>([%stead-core-result (bytes-hex:stead-codec '{}')]))
-;<  ~  bind:m
-  ?:  ?|(=(%operator-status mode) =(%handoff-status mode))  (pure:n ~)
-  (send-raw-card:strandio [%pass /command %agent [target app] %poke mark !>(raw)])
-=/  state=progress:stead-delivery  [?|(=(%operator-status mode) =(%handoff-status mode)) | ~]
+;<  ~  bind:m  (send-raw-card:strandio [%pass /command %agent [target app] %poke mark !>(raw)])
+=/  state=progress:stead-delivery  [| | ~]
 |=  tin=strand-input:strand
 =*  loop  $
 ?:  (complete:stead-delivery state)
