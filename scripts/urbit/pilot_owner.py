@@ -47,6 +47,25 @@ def token(value):
     return isinstance(value, str) and TOKEN.fullmatch(value) is not None
 
 
+def approved_runtime(digest):
+    lock = json.loads((ROOT / 'specs/urbit/toolchain.lock.json').read_bytes(), object_pairs_hook=unique)
+    require(digest == lock['runtime']['binary_sha256'],
+            'Approved live runtime must also match the exact candidate toolchain pin')
+    return digest
+
+
+def private_pier(pier):
+    pier = pier.absolute()
+    uid = os.geteuid()
+    require(uid > 0, 'Use the dedicated non-root Vere service account')
+    require(pier.resolve(strict=True) == pier, 'Use the actual pier path without aliases')
+    for directory in (pier, pier / '.urb'):
+        info = directory.lstat()
+        require(stat.S_ISDIR(info.st_mode) and info.st_uid == uid and not info.st_mode & 0o077,
+                'Pier and .urb must be owned by the service account and private')
+    return pier
+
+
 def pem(path, *, private):
     with os.fdopen(os.open(path, os.O_RDONLY | os.O_NOFOLLOW | os.O_NONBLOCK), 'rb') as source:
         info = os.fstat(source.fileno())
@@ -56,7 +75,8 @@ def pem(path, *, private):
         raw = source.read(16385)
     lines = raw.splitlines()
     require(len(raw) <= 16384 and 0 < len(lines) <= (64 if private else 128)
-            and all(0 < len(line) <= 256 and line.isascii() for line in lines), 'PEM exceeds native input bounds')
+            and all(0 < len(line) <= 256 and all(32 <= byte <= 126 for byte in line) for line in lines),
+            'PEM exceeds native input bounds')
     return '[' + ' '.join(core_conn.atom(line) for line in lines) + ' ~]'
 
 
@@ -68,15 +88,10 @@ class OwnerProcess:
         self.proc = Path(f'/proc/{pid}')
         self.pid = pid
         self.binary = binary.absolute()
-        self.pier = pier.absolute()
+        self.pier = private_pier(pier)
         self.uid = os.geteuid()
-        require(pid > 1 and self.uid > 0, 'Use the dedicated non-root Vere service account')
-        require(self.pier.resolve(strict=True) == self.pier, 'Use the actual pier path without aliases')
+        require(pid > 1, 'Use the current supervised Vere PID')
         self.socket = self.pier / '.urb' / 'conn.sock'
-        for directory in (self.pier, self.socket.parent):
-            info = directory.lstat()
-            require(stat.S_ISDIR(info.st_mode) and info.st_uid == self.uid and not info.st_mode & 0o077,
-                    'Pier and .urb must be owned by the service account and private')
         require(token(digest) and sha(self.binary) == digest, 'Vere executable differs from the pinned digest')
         with (self.proc / 'exe').open('rb') as source:
             require(hashlib.file_digest(source, 'sha256').hexdigest() == digest,
@@ -237,10 +252,7 @@ def main():
             command.add_argument('--previous-incarnation')
     args = parser.parse_args()
     try:
-        lock = json.loads((ROOT / 'specs/urbit/toolchain.lock.json').read_bytes(), object_pairs_hook=unique)
-        require(args.approved_runtime_sha256 == lock['runtime']['binary_sha256'],
-                'Approved live runtime must also match the exact candidate toolchain pin')
-        owner = OwnerProcess(args.pid, args.binary, args.pier, args.approved_runtime_sha256,
+        owner = OwnerProcess(args.pid, args.binary, args.pier, approved_runtime(args.approved_runtime_sha256),
                              desk=args.desk, role=args.role)
         if args.operation == 'configure':
             config = json.loads(read_source(args.config, 65536), object_pairs_hook=unique)

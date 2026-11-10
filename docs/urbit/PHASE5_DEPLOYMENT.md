@@ -165,8 +165,19 @@ owner=(python3 -B scripts/urbit/pilot_owner.py --pid "$vere_pid" \
 ```
 
 For each start or restart, keep ingress and external peer writes fenced. The
-operator's controller must prove the new process owns the expected pier,
-native identity and private TLS listener. Before stopping an admitted process,
+host supervisor must keep the fence closed across Vere exits and supervisor
+restarts. Use the launcher with an existing dedicated pier and the reviewed
+runtime. It injects a sealed Gall suspension at startup and binds HTTP to
+loopback. Configure the host's HTTPS pass-through and Ames network fence
+separately. Use the launched Vere PID for the owner commands.
+
+```sh
+python3 -B scripts/urbit/pilot_start.py --binary "$vere_binary" --pier "$pier" \
+  --role "$role" --approved-runtime-sha256 "$approved_runtime_sha256" \
+  --ames-port "$ames_port" --http-port "$native_http_port" --https-port "$native_https_port"
+```
+
+Before stopping an admitted process,
 capture its expected saved-state schema and fingerprint with writes fenced and
 drained. Retain a reviewed copy of those values and the last accepted Work,
 Docs and Git receipts. For a recovery use the corresponding backup record.
@@ -176,6 +187,18 @@ check the source schema and fingerprint before conversion, then verify the
 expected target schema and application readback before release. Stop on any
 mismatch. The synthetic team's controller demonstrates the saved-state check.
 [Local startup proof](../../scripts/urbit/team_lifecycle.py)
+
+For a restart, confirm the expected `our`, `zuse`, desk and suspended app
+through private Dojo before using `|rein` on the approved desk. The following
+shows Home; substitute the Identity desk and agent on each member ship.
+
+```text
+our
+zuse
+.^(desk %gd /=stead-home=/$)
+.^(? %gu /=stead-home=/$)
+|rein %stead-home-candidate [%.y %stead-home]
+```
 
 After those checks and the native Eyre certificate request, run the following for
 Home. A first configuration has revision `1`. Use the exact approved HTTPS

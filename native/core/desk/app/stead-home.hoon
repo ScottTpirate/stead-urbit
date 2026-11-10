@@ -104,7 +104,7 @@
 =|  db=state:stead-core
 =.  initialized.db  |
 =/  owner  empty:stead-team-owner
-=/  handoff=phase:stead-home-handoff  [%open 1]
+=/  handoff=phase:stead-home-handoff  [%open 1 ~]
 =|  pending=(map path pending-entry)
 ::  Disposable predecessor builder; never an employee interface or accepted home.
 =|  predecessor=state:stead-core-v1
@@ -123,7 +123,7 @@
   `this
 ++  on-save
   ?:  configured
-    ?:  !=(handoff [%open 1])
+    ?:  !=(handoff [%open 1 ~])
       !>([%stead-home %6 save:team [repos.code.owner uploads.code.owner reviews.code.owner builds.code.owner] handoff])
     ?:  |(?=(^ uploads.code.owner) ?=(^ reviews.code.owner))
       !>([%stead-home %5 save:team [repos.code.owner uploads.code.owner reviews.code.owner builds.code.owner]])
@@ -141,13 +141,13 @@
     [cards this(owner next, pending ~, handoff mode.restored)]
   ?:  ?=([%stead-home %5 *] restored)
     =/  [cards=(list card:agent:gall) next=state:stead-team-owner]  (load:team team.restored code.restored)
-    [cards this(owner next, pending ~, handoff [%open 1])]
+    [cards this(owner next, pending ~, handoff [%open 1 ~])]
   ?:  ?=([%stead-home %4 *] restored)
     =/  [cards=(list card:agent:gall) next=state:stead-team-owner]  (load:team team.restored [code.restored ~ ~ ~])
-    [cards this(owner next, pending ~, handoff [%open 1])]
+    [cards this(owner next, pending ~, handoff [%open 1 ~])]
   ?:  ?=([%stead-home %3 *] restored)
     =/  [cards=(list card:agent:gall) next=state:stead-team-owner]  (load:team team.restored [~ ~ ~ ~])
-    [cards this(owner next, pending ~, handoff [%open 1])]
+    [cards this(owner next, pending ~, handoff [%open 1 ~])]
   =/  next=state:stead-core
     ?:  ?=([%stead-home %1 *] restored)  (migrate-v1:stead-core db.restored)
     db.restored
@@ -155,7 +155,7 @@
   =/  paths  (silt (turn ~(tap by sup.bowl) |=([duct [ship=@p route=path]] route)))
   =/  cards=(list card:agent:gall)
     (turn ~(tap in paths) |=(route=path [%give %kick [route ~] ~]))
-  [cards this(db next, pending ~, owner empty:stead-team-owner, handoff [%open 1])]
+  [cards this(db next, pending ~, owner empty:stead-team-owner, handoff [%open 1 ~])]
 ++  on-poke
   |=  [=mark =vase]
   ^-  (quip card:agent:gall _this)

@@ -1,7 +1,7 @@
 ::  Owner-operated same-ship move. A sealed pier requires the release ticket.
 /+  stead-codec, stead-session
 |%
-+$  phase  $%([%open generation=@ud] [%sealed generation=@ud challenge=@t])
++$  phase  $%([%open generation=@ud ~] [%sealed generation=@ud challenge=@t])
 +$  command  [operation=?(%seal %activate) generation=@ud proof=@t]
 ++  valid
   |=  mode=phase
@@ -14,7 +14,7 @@
 ++  transition
   |=  [home=@p prior=phase input=command]
   ^-  (unit phase)
-  ?.  (token-valid:stead-session proof.input)  ~
+  ?.  &((valid prior) (token-valid:stead-session proof.input))  ~
   ?:  ?=(%open -.prior)
     ?.  &(?=(%seal operation.input) =(generation.input generation.prior))  ~
     =/  next=phase  [%sealed +(generation.prior) proof.input]
@@ -22,5 +22,5 @@
     ~
   ?.  &(?=(%activate operation.input) =(generation.input generation.prior))  ~
   ?.  =(challenge.prior (challenge-for home generation.prior proof.input))  ~
-  [~ %open generation.prior]
+  [~ %open generation.prior ~]
 --
