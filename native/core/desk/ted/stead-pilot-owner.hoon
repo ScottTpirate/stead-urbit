@@ -38,7 +38,8 @@
   ?+  in.tin  ~
     [~ %agent * %poke-ack *]
       ?.  =(/command wire.u.in.tin)  ~
-      `[?^(p.sign.u.in.tin %nack %ack) ~]
+      ?^  p.sign.u.in.tin  [~ %nack ~]
+      [~ %ack ~]
     [~ %agent * %fact *]
       ?.  =(/watch/result wire.u.in.tin)  ~
       ?.  =(%stead-result-3 p.cage.sign.u.in.tin)  `[%nack ~]

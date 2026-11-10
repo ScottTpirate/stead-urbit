@@ -37,8 +37,43 @@ class ReleaseInstallTests(unittest.TestCase):
 
     def test_failed_clay_readback_is_not_reported_as_installed(self):
         native = SimpleNamespace(dojo=Mock(side_effect=['%.y', '%.n']), check=Mock())
-        with self.assertRaisesRegex(ValueError, 'content differs'):
+        with patch.object(install.time, 'monotonic', side_effect=[0, 0, 0, 61]), patch.object(install.time, 'sleep'):
+            with self.assertRaisesRegex(TimeoutError, 'content differs'):
+                install.clay_readback(native, {'app/stead-home.hoon': '0' * 64}, 'stead-home')
+
+    def test_clay_readback_waits_for_exact_bytes_after_old_file_exists(self):
+        native = SimpleNamespace(dojo=Mock(side_effect=['%.y', '%.n', '%.y', '%.y']), check=Mock())
+        with patch.object(install.time, 'sleep'):
             install.clay_readback(native, {'app/stead-home.hoon': '0' * 64}, 'stead-home')
+        self.assertEqual(native.dojo.call_args_list[1].args, native.dojo.call_args_list[3].args)
+        native.check.assert_called_once()
+
+    def test_new_desk_waits_for_hoon_mark_before_staging_typed_asset(self):
+        with tempfile.TemporaryDirectory(prefix='stead-release-controller-') as temporary:
+            root = Path(temporary)
+            package = root / 'package'
+            package.mkdir()
+            (package / 'sys.kelvin').write_text('[%zuse 408]\n')
+            (package / 'mar').mkdir()
+            (package / 'mar/stead-asset.hoon').write_text('mark')
+            (package / 'asset.stead-asset').write_text('content')
+            mount = root / 'pier' / install.DESK
+            mount.mkdir(parents=True)
+            (mount / 'sys.kelvin').write_text('[%zuse 408]\n')
+
+            def readback(_native, files, _agent):
+                if 'mar/stead-asset.hoon' in files:
+                    self.assertEqual(set(files), {'mar/stead-asset.hoon'})
+                    self.assertFalse((mount / 'asset.stead-asset').exists())
+                else:
+                    self.assertTrue((mount / 'asset.stead-asset').is_file())
+
+            native = SimpleNamespace(pier=mount.parent, dojo=Mock(), check=Mock())
+            with patch.object(install, 'clay_readback', side_effect=readback) as read:
+                self.assertEqual(install.install_desk(native, 'stead-home', package), install.inventory(package))
+            self.assertEqual(read.call_count, 2)
+            self.assertEqual([call.args[0] for call in native.dojo.call_args_list if call.args[0].startswith('|commit')],
+                             ['|commit %release-test', '|commit %release-test'])
 
     def test_foreign_files_in_new_desk_are_preserved_and_rejected(self):
         with tempfile.TemporaryDirectory(prefix='stead-release-controller-') as temporary:

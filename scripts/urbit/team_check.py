@@ -4,6 +4,7 @@ import hashlib
 import json
 from pathlib import Path
 import re
+import secrets
 import time
 import traceback
 import urllib.request
@@ -374,6 +375,45 @@ def run(host):
         retired = call('nec', 'updates', restart_watch)
         check('restart-invalidates-native-update-cursor-and-watch', retired.get('status') == 'refresh_required'
               and retired.get('rows') == {} and retired.get('generation') == '' and retired.get('cursor') == '')
+        # Public disposable fixture ticket. Never use a live operator's ticket
+        # in this runner, which retains raw native request frames.
+        checkpoint('sealed-home-restart')
+        ticket = 'a' * 64
+        challenge = hashlib.sha256(b'stead.home-handoff/1\0~zod/2/' + ticket.encode()).hexdigest()
+        handoff_route = '/home-handoff/status'
+        state = {'protocol': 'stead.home-handoff/1', 'home': '~zod', 'phase': 'open', 'generation': '1'}
+        check('handoff-initial-status', call('zod', 'handoff-status', route=handoff_route) == state)
+        check('handoff-owner-only-status', call('bus', 'handoff-status', route=handoff_route).get('kind') == 'watch-ack-fail')
+        seal = {'operation': 'seal', 'generation': '1', 'proof': challenge}
+        check('handoff-remote-seal-denied', call('bus', 'handoff', seal).get('kind') == 'poke-fail')
+        check('handoff-owner-seals', call('zod', 'handoff', seal) == {})
+        sealed = state | {'phase': 'sealed', 'generation': '2'}
+        check('handoff-seal-observed', call('zod', 'handoff-status', route=handoff_route) == sealed)
+        check('handoff-seal-denies-member-write', call('bus', 'command', work).get('kind') == 'watch-ack-fail')
+        old = dict(team.boots['zod'])
+        saved = team.prepare_restart('zod', host['dojo'])
+        host['shutdown']('zod')
+        check('handoff-source-child-reaped', old['process'].poll() == 0)
+        host['launch']('zod')
+        host['wait_ready']('zod')
+        check('handoff-sealed-vase-preserved', team.boots['zod']['suspended']
+              and team.saved_fingerprint('zod', host['dojo']) == saved)
+        team.reinstall('zod', host['dojo'])
+        check('handoff-reload-preserves-seal', call('zod', 'handoff-status', route=handoff_route) == sealed)
+        nonce = team.boots['zod']['nonce']
+        check('handoff-seal-denies-bootstrap', call('zod', 'bootstrap', {'protocol': 'stead.bootstrap/1', 'nonce': nonce},
+              route='/bootstrap/' + nonce).get('kind') == 'watch-ack-fail')
+        activate = {'operation': 'activate', 'generation': '2', 'proof': ticket}
+        check('handoff-wrong-ticket-denied', call('zod', 'handoff', activate | {'proof': 'b' * 64}).get('kind') == 'poke-fail')
+        check('handoff-stale-generation-denied', call('zod', 'handoff', activate | {'generation': '1'}).get('kind') == 'poke-fail')
+        check('handoff-activates-once', call('zod', 'handoff', activate) == {}
+              and call('zod', 'handoff', activate).get('kind') == 'poke-fail')
+        check('handoff-open-next-generation', call('zod', 'handoff-status', route=handoff_route) == (sealed | {'phase': 'open'}))
+        boot = bootstrap_ready(team, 'zod', call, host['execution_check'])
+        check('handoff-fresh-incarnation', boot['incarnation'] != report['restarts']['zod']['new_incarnation'])
+        team.admit('zod', boot, host['dojo'])
+        check('handoff-original-receipt-preserved', call('bus', 'command', create) == receipt)
+        check('handoff-reader-work-preserved', call('nec', 'query', query('work', project=uid(1))).get('rows') == rows)
         # Private operator fixture material. Never put +code/cert keys in the
         # portable report, command transcript, UI bundle or support exports.
         operator = {'format': 1, 'classification': 'private-disposable-browser-fixture',

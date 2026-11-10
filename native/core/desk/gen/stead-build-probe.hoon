@@ -3,6 +3,7 @@
 /=  http-boundary  /app/stead-http-boundary-probe
 /=  client  /ted/stead-client
 /=  team-client  /ted/stead-team-client
+/=  pilot-check  /ted/stead-pilot-check
 /=  team-git-export  /gen/stead-team-git-export
 /=  observer  /app/stead-observer
 /=  observer-mark  /mar/stead-observer-1

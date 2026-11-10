@@ -336,12 +336,7 @@ def clay_readback(native, files, agent):
     """Raw Hoon/asset bytes and typed Kelvin/bill values are checked separately."""
     for name, digest in files.items():
         route = clay_route(name)
-        deadline = time.monotonic() + 60
-        while native.dojo(f'=/  arc=arch  .^(arch %cy {route})  ?=(^ -.arc)').strip() != '%.y':
-            native.check()
-            if time.monotonic() > deadline:
-                raise TimeoutError('Release Clay import absent: ' + name)
-            time.sleep(.1)
+        present = f'=/  arc=arch  .^(arch %cy {route})  ?=(^ -.arc)'
         if name == 'sys.kelvin':
             expression = f'=(.^(* %cx /={DESK}=/sys/kelvin) [%zuse 408])'
         elif name == 'desk.bill':
@@ -350,8 +345,28 @@ def clay_readback(native, files, agent):
             literal = core_conn.atom(bytes.fromhex(digest)[::-1])
             expression = (f'=/  raw=@t  .^(@t %cx {route})  '
                           f'=({literal} (sha-256l:sha [(met 3 raw) (rev 3 (met 3 raw) raw)]))')
-        if native.dojo(expression).strip() != '%.y':
-            raise ValueError('Release Clay content differs: ' + name)
+        # Hood acknowledges the request before Clay publishes the commit.
+        # An existing file can still be the previous revision during an upgrade.
+        deadline = time.monotonic() + 60
+        issue = 'import absent'
+        while (remaining := deadline - time.monotonic()) > 0:
+            exists = native.dojo(present, timeout=remaining).strip()
+            if exists == '%.y':
+                issue = 'content differs'
+                remaining = deadline - time.monotonic()
+                if remaining <= 0:
+                    continue
+                observed = native.dojo(expression, timeout=remaining).strip()
+                if observed == '%.y':
+                    break
+                if observed != '%.n':
+                    raise ValueError('Release Clay digest check did not return a boolean: ' + name)
+            elif exists != '%.n':
+                raise ValueError('Release Clay presence check did not return a boolean: ' + name)
+            native.check()
+            time.sleep(.1)
+        else:
+            raise TimeoutError('Release Clay ' + issue + ': ' + name)
 
 
 def install_desk(native, agent, package=Path('/package/desk')):
@@ -372,16 +387,17 @@ def install_desk(native, agent, package=Path('/package/desk')):
     if not set(inventory(mount)) <= set(expected):
         raise ValueError('Fresh desk contains undeclared files')
     for hoon in (True, False):
-        for name in expected:
-            if name.endswith('.hoon') != hoon:
-                continue
+        group = {name: digest for name, digest in expected.items() if name.endswith('.hoon') == hoon}
+        if not group:
+            continue
+        for name in group:
             target = mount / name
             target.parent.mkdir(parents=True, exist_ok=True)
             shutil.copyfile(package / name, target)
         native.dojo('|commit %' + DESK)
+        clay_readback(native, group, agent)
     if inventory(mount) != expected:
         raise ValueError('Release mount differs from candidate bytes')
-    clay_readback(native, expected, agent)
     native.dojo('|install our %' + DESK)
     return expected
 
