@@ -5,6 +5,8 @@ Use this sequence for a reviewed synthetic pilot. Home recognizes the
 reports a real ship. The repository's current Vere pin has fake-ship qualification.
 Review that exact runtime for live operation and qualify the actual host's
 closed startup fence before enabling pilot traffic. [Home startup checks](../../native/core/desk/lib/stead-team-owner.hoon)
+The [local qualification record](PHASE5_LOCAL_20261110.md#native-follow-up)
+identifies the tested role archives and four-ship results.
 
 ## Pilot checklist
 

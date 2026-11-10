@@ -66,6 +66,21 @@ bootstrap. The exact Home served HTTPS and shut down cleanly.
 | `.runtime/execution-runs/phase5-sealed-native-na8ht5ff/report.json` | `f202b2b6ded8b3c58b18afcf3355f6f529f59aecf00acdaa465c114c01dc3b21` |
 | `.runtime/phase5-fresh-desk-3Cvdmu2Q/state/report.json` | `d370496a9bf01784bbb308b1f9bf123e2006e1a5edc8ba2eea36cfcd449d1cb7` |
 
+The configured four-ship suite then passed all 1,212 checks at commit
+`a40ee91f6e5baff5db8a82c8e25e9ba2fd0744f1`, including 17 handoff checks.
+The Home denied a fresh member write while sealed, reloaded the exact saved
+vase after the old process stopped, and required the correct ticket and
+generation. The original receipt and member Work readback matched after
+fresh bootstrap. The suite also verified independent native member grants,
+private document visibility, and revocation. The run took 1,132.488 seconds.
+The guard stopped all four test ships, and the previous disposable fixture
+was restored to its original path.
+
+| Evidence | SHA-256 |
+| --- | --- |
+| `.piers/fakes/logs/team-check-20261110T223833Z.json` | `b67cfa9990912bc91820c003beba27d68d048684f55843ce13a0fb40b775c247` |
+| `.runtime/execution-runs/four-fakes-1j6zx6gp/report.json` | `541016eeac91e6760134e7a023d73d780a1d253d00ec7937d63f258604cf292a` |
+
 The continued host suite ran 878 tests with one skip. The separate bounded
 pack store recovered 7,803 objects and the exact two refs. Home still needs
 to authorize and commit the immutable pack digest with the accepted refs
