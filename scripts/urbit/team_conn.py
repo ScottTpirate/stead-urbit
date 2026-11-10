@@ -5,11 +5,12 @@ import core_conn
 
 SHIPS = ('zod', 'bus', 'nec', 'bud')
 MODES = ('configure', 'identity-config', 'bootstrap', 'command', 'query', 'updates', 'approve',
-         'legacy-poke', 'legacy-watch', 'handoff', 'handoff-status', 'operator-status')
+         'legacy-poke', 'legacy-watch')
+PILOT_MODES = ('handoff', 'handoff-status', 'operator-status')
 
 
 def run(binary, socket_path, mode, route='/', raw=b'', *, target='zod', app='stead-home', timeout=75):
-    if mode not in MODES or target not in SHIPS or app not in ('stead-home', 'stead-identity'):
+    if mode not in MODES + PILOT_MODES or target not in SHIPS or app not in ('stead-home', 'stead-identity'):
         raise ValueError('Unsupported configured test operation or target')
     if (mode == 'identity-config' and app != 'stead-identity') or (mode not in ('identity-config', 'bootstrap') and app != 'stead-home'):
         raise ValueError('Configured operation/app mismatch')
@@ -19,5 +20,6 @@ def run(binary, socket_path, mode, route='/', raw=b'', *, target='zod', app='ste
         raise ValueError('Configured native path bound')
     parts = [core_conn.atom(part.encode()) for part in route.split('/') if part]
     path = '[' + ' '.join(parts) + ' ~]' if parts else '~'
-    noun = f'[32 %fyrd [%base %stead-team-client %noun [%noun [~{target} %{app} %{mode} {path} {core_conn.atom(raw)}]]]]'
+    thread = 'stead-pilot-check' if mode in PILOT_MODES else 'stead-team-client'
+    noun = f'[32 %fyrd [%base %{thread} %noun [%noun [~{target} %{app} %{mode} {path} {core_conn.atom(raw)}]]]]'
     return core_conn.exchange(binary, socket_path, noun, timeout=timeout)
