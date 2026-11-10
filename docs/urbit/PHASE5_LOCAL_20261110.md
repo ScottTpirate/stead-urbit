@@ -1,7 +1,8 @@
 # Phase 5 local candidate evidence
 
-Candidate `02c1cefe8852bd95227cda9a4864fe4be55dc20a` is a local checkpoint.
-The live synthetic pilot and the native dogfooding cutover are still gated.
+This record starts with candidate `02c1cefe8852bd95227cda9a4864fe4be55dc20a`
+and records the follow-up native checks below. Pilot and cutover status
+appear with the latest evidence.
 
 | Check | Observed result |
 | --- | --- |
@@ -30,11 +31,51 @@ is `.runtime/execution-runs/phase5-warm-install-2de5f3kh/report.json`. No
 Phase 5 native guard scope remained running. This run did not observe a
 successful Gall install, owner bootstrap, or handoff reload.
 
-Before opening a synthetic pilot, finish exact Home and Identity native
-installation, restart, and protected workflow verification. Qualify the
-live runtime and startup fence for the chosen host. Before dogfooding,
-qualify the full repository under a larger native storage profile and complete
-the owner-approved move of write authority. Cross-identity project migration
-with epoch advancement still requires its own transfer and fencing proof.
+## Native follow-up
+
+The saved Home checkpoint pinned the older test adapter. Restoring those
+exact bytes and moving the Phase 5 checks to their own adapter allowed the
+guarded upgrade to run. It also exposed a type error in the packaged operator
+thread when Khan invoked that thread. After the fix, candidate
+`afaefd692121734c41db56ab63bcf979d2b43412` passed the 18-check native Home
+upgrade. The Home preserved its authoritative database, served its packaged
+routes after fresh bootstrap, and stopped cleanly.
+
+The sealed handoff then passed 26 native checks using an isolated checkpoint
+copy. Khan ran both packaged owner and TLS threads. The Home denied HTTPS
+and bootstrap after sealing, saved a v6 vase, and preserved that exact vase
+on a stopped copy. The destination remained sealed after reload, refused
+the wrong ticket and an old generation, accepted activation once, and served
+HTTPS after a fresh bootstrap. The old sealed copy remained unchanged. The
+exact Identity archive installed on a new desk in the isolated fixture and
+served HTTPS after owner configuration and bootstrap. This tested both roles
+on the isolated fake. Member traffic between separate live ships still needs
+verification in the pilot.
+
+A separate new-desk Home install on an isolated fake passed seven checks.
+The fake refused the live Home configuration. The packaged owner command
+then configured the fake profile, observed its startup status, and completed
+bootstrap. The exact Home served HTTPS and shut down cleanly.
+
+| Evidence | SHA-256 |
+| --- | --- |
+| `.runtime/phase5-release-HKtZ3ain/home.tar` | `47c1a7bbf7911382a08f691b158b81d16b16b909a21b07ec2e6c6b4b2df0809c` |
+| `.runtime/phase5-release-HKtZ3ain/identity.tar` | `7a2778a3349d8f427777c683916fc57065e9073052196832a6c4dfb649804b0c` |
+| `.runtime/release-home-upgrade-7kir13b4/upgrade-report.json` | `316cccc466cb2eb922b1073d58d0f3c4b83053020fbfe3150b940d3a1a3f8196` |
+| `.runtime/phase5-sealed-native-4nyh0QoA/state/report.json` | `af85258ce1cf4d11fc6a7035405922fae9b02a2f4022905e3c4d9b7210a2968d` |
+| `.runtime/execution-runs/phase5-sealed-native-na8ht5ff/report.json` | `f202b2b6ded8b3c58b18afcf3355f6f529f59aecf00acdaa465c114c01dc3b21` |
+| `.runtime/phase5-fresh-desk-3Cvdmu2Q/state/report.json` | `d370496a9bf01784bbb308b1f9bf123e2006e1a5edc8ba2eea36cfcd449d1cb7` |
+
+The continued host suite ran 878 tests with one skip. The separate bounded
+pack store recovered 7,803 objects and the exact two refs. Home still needs
+to authorize and commit the immutable pack digest with the accepted refs
+before full-history native Git serving. The signed cross-ship verifier
+checks the transfer and journal evidence and issues a candidate directory
+record. The source retirement and destination activation transitions are
+still needed for a cross-ship authority move.
+
+The synthetic pilot needs a qualified live runtime and startup fence on the
+chosen host. Dogfooding also needs the native full-history Git path and the
+approved change of write authority.
 [Pilot checklist](PHASE5_DEPLOYMENT.md) · [Git rehearsal](PHASE5_DOGFOOD_REHEARSAL.md)
-· [Custody and handoff](PHASE5_CUSTODY.md)
+· [Custody and handoff](PHASE5_CUSTODY.md) · [Cross-ship verification](CROSS_SHIP_PROJECT_MIGRATION.md)

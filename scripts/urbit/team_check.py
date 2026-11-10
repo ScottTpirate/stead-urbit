@@ -389,7 +389,8 @@ def run(host):
         check('handoff-owner-seals', call('zod', 'handoff', seal) == {})
         sealed = state | {'phase': 'sealed', 'generation': '2'}
         check('handoff-seal-observed', call('zod', 'handoff-status', route=handoff_route) == sealed)
-        check('handoff-seal-denies-member-write', call('bus', 'command', work).get('kind') == 'watch-ack-fail')
+        blocked = mutation('work.create', uid(999), 0, work['payload'])
+        check('handoff-seal-denies-member-write', call('bus', 'command', blocked).get('kind') == 'watch-ack-fail')
         old = dict(team.boots['zod'])
         saved = team.prepare_restart('zod', host['dojo'])
         host['shutdown']('zod')

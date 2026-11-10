@@ -61,10 +61,11 @@ def read_file(parent, name, limit, *, private=False):
 
 class Git:
     """Use Git plumbing with bounded output and without inherited config or I/O."""
-    def __init__(self, binary, repository, *, deadline=None):
+    def __init__(self, binary, repository, *, deadline=None, command_prefix=()):
         self.binary = binary
         self.repository = repository
         self.path = f'/proc/self/fd/{repository}'
+        self.command_prefix = command_prefix
         self.deadline = time.monotonic() + MAX_GIT_TIME
         if deadline is not None:
             self.deadline = min(self.deadline, deadline)
@@ -75,7 +76,7 @@ class Git:
                'GIT_NO_REPLACE_OBJECTS': '1', 'GIT_OPTIONAL_LOCKS': '0',
                'GIT_TERMINAL_PROMPT': '0', 'GIT_NO_LAZY_FETCH': '1', 'GIT_ALLOW_PROTOCOL': ''}
         location = [] if read_config else ['--git-dir', self.path]
-        argv = [self.binary, *location, '-c', 'core.hooksPath=/dev/null',
+        argv = [*self.command_prefix, self.binary, *location, '-c', 'core.hooksPath=/dev/null',
                 '-c', 'core.fsmonitor=false', *args]
         with (tempfile.TemporaryFile() if data is not None else nullcontext()) as input_file:
             if data is not None:
@@ -293,13 +294,13 @@ def materialize(value, git):
 
 
 @contextmanager
-def staged_repository(parent, binary, *, deadline=None):
+def staged_repository(parent, binary, *, deadline=None, command_prefix=()):
     name = '.code-restore-' + secrets.token_hex(16)
     os.mkdir(name, mode=0o700, dir_fd=parent)
     fd = os.open(name, os.O_RDONLY | os.O_DIRECTORY | os.O_NOFOLLOW, dir_fd=parent)
     opened = os.fstat(fd)
     try:
-        yield name, opened, Git(binary, fd, deadline=deadline)
+        yield name, opened, Git(binary, fd, deadline=deadline, command_prefix=command_prefix)
     finally:
         os.close(fd)
         if same_entry(parent, name, opened):

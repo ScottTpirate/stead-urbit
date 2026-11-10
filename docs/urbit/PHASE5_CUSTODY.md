@@ -90,4 +90,6 @@ both. Older backups lack the new fence. This is a planned handoff, with no
 automatic failover or election. Moving a single project to a different ship
 requires a separately qualified project snapshot and journal protocol that
 preserves attribution, permanently retires the old authority and advances
-the project epoch. Keep that route disabled until the protocol is verified.
+the project epoch. The [cross-ship evidence verifier](CROSS_SHIP_PROJECT_MIGRATION.md)
+checks the signed candidate for that move. Native transfer and activation
+are separate qualification steps.
