@@ -19,10 +19,17 @@
 =/  wire=@t
   =/  flat
     %-  object:stead-codec
-    :~  ['protocol' 'stead.code-pack-attestation/1'] ['home' '~zod']
-        ['project_id' project] ['repository_id' project] ['authority_epoch' '1']
-        ['snapshot' expected] ['head' head.pack] ['pack_sha256' pack-sha.pack]
-        ['pack_bytes' '400'] ['object_count' '7000'] ['object_bytes' '700000']
+    :~  ['protocol' 'stead.code-pack-attestation/1']
+        ['home' '~zod']
+        ['project_id' project]
+        ['repository_id' project]
+        ['authority_epoch' '1']
+        ['snapshot' expected]
+        ['head' head.pack]
+        ['pack_sha256' pack-sha.pack]
+        ['pack_bytes' '400']
+        ['object_count' '7000']
+        ['object_bytes' '700000']
         ['object_ids_sha256' ids-sha.pack]
     ==
   ?>  ?=([%o *] flat)
