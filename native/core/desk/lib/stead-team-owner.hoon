@@ -21,6 +21,53 @@
 ++  now-ms
   |=  now=@da
   (div (mul 1.000 (sub now ~1970.1.1)) ~s1)
+++  frozen-journal-page
+  |=  [home=@p owner=state raw=@t offset=@t]
+  ^-  @t
+  =/  intent  (decode:stead-project-retirement raw)
+  =/  retired  (~(got by retired.owner) project.intent)
+  ?>  =(request.retired intent)
+  =/  data  data.db.owner
+  ?>  (current:stead-project-retirement data intent)
+  =/  start  (uint offset)
+  ?>  (lth start 67.108.864)
+  =/  rows
+    (flop (skim journal.data |=([project=@t bytes=@t digest=@t] =(project project.intent))))
+  =/  count  (lent rows)
+  ?>  &((gth count 0) (lte count 6.144))
+  =/  [done=? body=@]
+    =/  skip=@ud  start
+    =/  room=@ud  (min 32.768 (sub 67.108.864 start))
+    =/  chunks=(list [@ud @])  ~
+    |-
+    ^-  [done=? body=@]
+    ?~  rows
+      ?>  =(0 skip)
+      [%.y (can 3 (flop chunks))]
+    ?:  =(0 room)  [%.n (can 3 (flop chunks))]
+    =/  width  +((met 3 bytes.i.rows))
+    ?:  (gte skip width)  $(rows t.rows, skip (sub skip width))
+    =/  remaining  (sub width skip)
+    =/  taking  (min room remaining)
+    =/  piece  (cut 3 [skip taking] (cat 3 bytes.i.rows 10))
+    =.  chunks  [[taking piece] chunks]
+    ?:  (lth taking remaining)  [%.n (can 3 (flop chunks))]
+    $(rows t.rows, skip 0, room (sub room taking))
+  ?>  (gth (met 3 body) 0)
+  %-  canonical
+  %-  object
+  :~  ['protocol' 'stead.project-journal-page/1']
+      ['home' (scot %p home)]
+      ['project_id' project.intent]
+      ['migration_id' migration.intent]
+      ['authority_epoch' (decimal epoch.intent)]
+      ['destination_home' (scot %p destination.intent)]
+      ['journal_head' journal-head.intent]
+      ['journal_count' (decimal count)]
+      ['offset' offset]
+      ['done' ?:(done 'yes' 'no')]
+      ['data_base64' (en:base64:mimes:html [(met 3 body) body])]
+  ==
 ++  driver
   |=  owner=state
   |_  bowl=bowl:gall

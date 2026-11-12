@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import argparse
+import base64
 import hashlib
 import json
 import os
@@ -16,8 +17,11 @@ import struct
 from urllib.parse import urlsplit
 
 import core_conn
+import project_migration
 from digests import read_source, sha
-from portable_recovery import UUID, match, private_file
+from execution_policy import GuardError, directory_fd
+from portable_code import private_directory, publish_directory
+from portable_recovery import UUID, match, private_file, same_entry, same_path
 
 
 ROOT = Path(__file__).resolve().parents[2]
@@ -25,6 +29,7 @@ SHIP = re.compile(r'~[a-z]+(?:-{1,2}[a-z]+)*\Z')
 DESK = re.compile(r'[a-z][a-z0-9-]{0,63}\Z')
 TOKEN = re.compile(r'[0-9a-f]{64}\Z')
 MAX_REVISION = 2**64 - 1
+JOURNAL_PAGE_BYTES = 32_768
 
 
 def require(condition, message):
@@ -146,14 +151,20 @@ class OwnerProcess:
 
     def call(self, ship, mode, route, value):
         require(len(ship) <= 64 and SHIP.fullmatch(ship), 'Use the expected canonical ship name')
+        raw = json.dumps(value, sort_keys=True, separators=(',', ':')).encode() if value is not None else b''
         path = '~'
-        if route:
+        if mode == 'project-journal-page':
+            require(self.role == 'home' and re.fullmatch(r'0|[1-9][0-9]{0,7}', route)
+                    and int(route) < project_migration.MAX_JOURNAL and 0 < len(raw) <= 2048,
+                    'Use the exact retired project scope and a bounded byte offset')
+            path = f'[%project-journal {core_conn.atom(raw)} {core_conn.atom(route.encode())} ~]'
+            raw = b''
+        elif route:
             segment = {'bootstrap': 'bootstrap', 'operator-status': 'operator',
                        'project-retirement-status': 'project-retirement'}[mode]
             path = f'[%{segment} {core_conn.atom(route.encode())} ~]'
         if mode == 'handoff-status':
             path = '[%home-handoff %status ~]'
-        raw = json.dumps(value, sort_keys=True, separators=(',', ':')).encode() if value is not None else b''
         require(len(raw) <= 65536, 'Home configuration exceeds the native limit')
         noun = (f'[32 %fyrd [%{self.desk} %stead-pilot-owner %noun '
                 f'[%noun [{ship} %stead-{self.role} %{mode} {path} {core_conn.atom(raw)}]]]]')
@@ -292,19 +303,23 @@ def retirement_status(owner, ship, project):
     return value
 
 
-def retire_project(owner, ship, intent):
+def retired_scope(ship, intent):
     require(intent.keys() == {'protocol', 'project_id', 'migration_id', 'authority_epoch',
                               'destination_home', 'expected_journal_head'}
             and intent['protocol'] == 'stead.project-retire/1' and match(UUID, intent['migration_id'])
             and match(SHIP, intent['destination_home']) and intent['destination_home'] != ship
             and token(intent['expected_journal_head']), 'Use the exact reviewed project retirement intent')
+    return {'writer_state': 'retired', 'authority_epoch': revision(intent['authority_epoch']),
+            'journal_head': intent['expected_journal_head'], 'migration_id': intent['migration_id'],
+            'destination_home': intent['destination_home']}
+
+
+def retire_project(owner, ship, intent):
+    expected = retired_scope(ship, intent)
     project = intent['project_id']
     before = retirement_status(owner, ship, project)
-    require(before['authority_epoch'] == revision(intent['authority_epoch'])
-            and before['journal_head'] == intent['expected_journal_head'], 'Project authority or journal head changed')
-    expected = {'writer_state': 'retired', 'authority_epoch': before['authority_epoch'],
-                'journal_head': before['journal_head'], 'migration_id': intent['migration_id'],
-                'destination_home': intent['destination_home']}
+    require(all(before[key] == expected[key] for key in ('authority_epoch', 'journal_head')),
+            'Project authority or journal head changed')
     if before['writer_state'] == 'retired':
         require(all(before[key] == value for key, value in expected.items()), 'Project already retired to a different intent')
         return before
@@ -315,6 +330,71 @@ def retire_project(owner, ship, intent):
     except (OSError, ValueError):
         raise ValueError('Retirement result unconfirmed. Read project-retirement-status before proceeding.') from None
     return after
+
+
+def capture_journal_pages(owner, ship, intent, before, stream):
+    scope = {key: before[key] for key in ('home', 'project_id', 'migration_id', 'authority_epoch',
+                                          'destination_home', 'journal_head')}
+    fields = scope.keys() | {'protocol', 'journal_count', 'offset', 'done', 'data_base64'}
+    digest = hashlib.sha256()
+    offset = 0
+    count = None
+    while offset < project_migration.MAX_JOURNAL:
+        value = owner.call(ship, 'project-journal-page', str(offset), intent)
+        require(value.keys() == fields and value['protocol'] == 'stead.project-journal-page/1'
+                and all(value[key] == expected for key, expected in scope.items())
+                and value['offset'] == str(offset) and value['done'] in ('yes', 'no'),
+                'Unexpected frozen project journal page')
+        page_count = revision(value['journal_count'])
+        require(int(page_count) <= project_migration.MAX_ROWS and count in (None, page_count),
+                'Unexpected frozen project journal record count')
+        count = page_count
+        encoded = value['data_base64']
+        require(isinstance(encoded, str) and len(encoded) <= ((JOURNAL_PAGE_BYTES + 2) // 3) * 4,
+                'Frozen project journal page exceeds byte bound')
+        chunk = base64.b64decode(encoded, validate=True)
+        require(0 < len(chunk) <= JOURNAL_PAGE_BYTES and offset + len(chunk) <= project_migration.MAX_JOURNAL
+                and base64.b64encode(chunk).decode('ascii') == encoded
+                and (value['done'] == 'yes' or len(chunk) == JOURNAL_PAGE_BYTES),
+                'Invalid frozen project journal page bytes')
+        stream.write(chunk)
+        digest.update(chunk)
+        offset += len(chunk)
+        if value['done'] == 'yes':
+            return {'journal_head': before['journal_head'], 'journal_count': count, 'journal_sha256': digest.hexdigest()}
+    raise ValueError('Frozen project journal exceeds byte bound')
+
+
+def export_project_journal(owner, ship, intent, destination):
+    expected = retired_scope(ship, intent)
+    project = intent['project_id']
+    before = retirement_status(owner, ship, project)
+    require(all(before.get(key) == value for key, value in expected.items()),
+            'Project must be retired under this exact migration intent')
+    with directory_fd(destination.parent) as parent:
+        opened_parent = private_directory(parent)
+        private_parent = Path(f'/proc/self/fd/{parent}')
+        require(not os.path.lexists(private_parent / destination.name), 'Journal output already exists')
+        name = '.stead-project-journal-' + secrets.token_hex(16)
+        fd = os.open(name, os.O_WRONLY | os.O_CREAT | os.O_EXCL | os.O_NOFOLLOW, 0o600, dir_fd=parent)
+        opened = os.fstat(fd)
+        try:
+            with os.fdopen(fd, 'wb') as stream:
+                os.fchmod(stream.fileno(), 0o600)
+                evidence = capture_journal_pages(owner, ship, intent, before, stream)
+                stream.flush()
+                os.fsync(stream.fileno())
+            last_time = project_migration.verify_journal(private_parent / name, before, evidence)
+            require(last_time <= int(before['retired_at_ms']) and retirement_status(owner, ship, project) == before,
+                    'Frozen project retirement observation changed')
+            require(same_entry(parent, name, opened) and same_path(destination.parent, opened_parent),
+                    'Journal output directory or temporary file changed')
+            publish_directory(parent, name, destination.name)
+            os.fsync(parent)
+        finally:
+            if same_entry(parent, name, opened):
+                os.unlink(name, dir_fd=parent)
+    return {'home': ship, 'project_id': project, 'migration_id': before['migration_id'], **evidence}
 
 
 def main():
@@ -343,6 +423,9 @@ def main():
     retirement.add_argument('--project', required=True)
     retire = commands.add_parser('project-retire')
     retire.add_argument('--intent-file', type=Path, required=True)
+    journal = commands.add_parser('project-journal-export')
+    journal.add_argument('--intent-file', type=Path, required=True)
+    journal.add_argument('--output', type=Path, required=True)
     pack = commands.add_parser('pack-stage')
     pack.add_argument('--attestation-file', type=Path, required=True)
     for name in ('status', 'bootstrap'):
@@ -383,14 +466,15 @@ def main():
                 operation = args.operation.removeprefix('handoff-')
                 proof = args.challenge if operation == 'seal' else read_handoff_ticket(args.ticket_file)
                 value = change_handoff(owner, args.ship, operation, args.generation, proof)
-        elif args.operation in ('project-retirement-status', 'project-retire', 'pack-stage'):
+        elif args.operation in ('project-retirement-status', 'project-retire', 'project-journal-export', 'pack-stage'):
             require(args.role == 'home', 'Only the Home role supports this operation')
             if args.operation == 'project-retirement-status':
                 value = retirement_status(owner, args.ship, args.project)
-            elif args.operation == 'project-retire':
+            elif args.operation in ('project-retire', 'project-journal-export'):
                 intent = json.loads(private_file(args.intent_file, 2_048), object_pairs_hook=unique)
                 require(isinstance(intent, dict), 'Use a reviewed retirement intent object')
-                value = retire_project(owner, args.ship, intent)
+                value = (retire_project(owner, args.ship, intent) if args.operation == 'project-retire'
+                         else export_project_journal(owner, args.ship, intent, args.output))
             else:
                 attestation = json.loads(private_file(args.attestation_file, 65_536), object_pairs_hook=unique)
                 require(isinstance(attestation, dict) and attestation.get('protocol') == 'stead.code-pack-attestation/1',
@@ -407,7 +491,7 @@ def main():
                 require(args.revision is None, 'Identity bootstrap does not take a Home revision')
                 value = bootstrap_identity(owner, args.ship, **options)
         print(json.dumps(value, sort_keys=True, separators=(',', ':')))
-    except (OSError, ValueError) as error:
+    except (OSError, ValueError, GuardError) as error:
         parser.exit(1, f'Live pilot owner check failed: {error}\n')
 
 

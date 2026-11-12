@@ -4,7 +4,7 @@ The offline verifier checks the evidence for moving a project from its original
 Home at authority epoch 1 to a different ship and origin at epoch 2 within the
 same custody boundary. It returns a candidate directory entry with a distinct
 protocol, `stead.project-directory-candidate/1`. Home provides the native
-source fence. Project snapshot export, destination replay, and activation still
+source fence and frozen journal export. Project snapshot export, destination replay, and activation still
 need implementation and qualification.
 
 ## Retire the source project
@@ -25,6 +25,14 @@ without its final newline as the source observation. Keep it private. Prepare
 the Work/Docs and Code snapshot after observing retirement so it includes any
 Code commits accepted before the fence. Pending upload jobs confer no write
 authority and their finalization is denied after retirement.
+
+Export the frozen Work/Docs journal through the same owner-local connection
+with `project-journal-export --intent-file INTENT_JSON --output PRIVATE_DIR/journal.ndjson`.
+Use the retirement intent from the preceding step and an owner-only directory.
+The command verifies the full original journal and reads the same retirement
+record again before publishing a new mode-0600 file. Its JSON result supplies
+the exact journal digest, record count and head for the signed transfer. The
+Work/Docs and Code snapshots remain separate inputs.
 
 Current membership and project authorization still govern reads on the source.
 The source can revoke an identity binding, and authorized readers can obtain

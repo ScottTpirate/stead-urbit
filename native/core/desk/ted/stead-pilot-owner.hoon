@@ -34,6 +34,7 @@
       %operator-status  &(?=([%operator @ ~] route) =('' raw))
       %handoff-status  &(=(route /home-handoff/status) =('' raw))
       %project-retirement-status  &(?=([%project-retirement @ ~] route) =('' raw))
+      %project-journal-page  &(?=([%project-journal @ @ ~] route) =('' raw))
       %bootstrap  ?=([%bootstrap @ ~] route)
     ==
 =/  watch-only  !=(%bootstrap mode)
@@ -46,7 +47,14 @@
 =*  loop  $
 ?:  (complete:stead-delivery state)
   =/  text  (need answer.state)
-  `[%done !>([%stead-core-result (bytes-hex:stead-codec text)])]
+  =/  encoded
+    ?.  =(%project-journal-page mode)  (bytes-hex:stead-codec text)
+    %+  rep  [3 2]
+    %+  turn  (rip 3 text)
+    |=  byte=@
+    =/  alphabet  '0123456789abcdef'
+    (cat 3 (cut 3 [(div byte 16) 1] alphabet) (cut 3 [(mod byte 16) 1] alphabet))
+  `[%done !>([%stead-core-result encoded])]
 =/  event=(unit event:stead-delivery)
   ?+  in.tin  ~
     [~ %agent * %poke-ack *]
@@ -57,7 +65,7 @@
       ?.  =(/watch/result wire.u.in.tin)  ~
       ?.  =(%stead-result-3 p.cage.sign.u.in.tin)  `[%nack ~]
       =/  text  !<(@t q.cage.sign.u.in.tin)
-      ?.  (lte (met 3 text) 2.048)  `[%nack ~]
+      ?.  (lte (met 3 text) ?:(=(%project-journal-page mode) 45.056 2.048))  `[%nack ~]
       `[%fact text]
     [~ %agent * %kick *]
       ?.  =(/watch/result wire.u.in.tin)  ~

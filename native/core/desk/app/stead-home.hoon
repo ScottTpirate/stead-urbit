@@ -328,6 +328,14 @@
 ++  on-watch
   |=  route=path
   ^-  (quip card:agent:gall _this)
+  ?:  ?=([%project-journal @ @ ~] route)
+    ~|  %stead-project-journal-denied
+    ?>  &(configured =(src.bowl our.bowl) ?=(~ restoring.owner))
+    =/  body  (frozen-journal-page:stead-team-owner our.bowl owner i.t.route i.t.t.route)
+    :_  this
+    :~  [%give %fact ~ %stead-result-3 !>(body)]
+        [%give %kick ~ ~]
+    ==
   ?:  ?=([%project-retirement @ ~] route)
     ~|  %stead-project-retirement-denied
     ?>  &(configured =(src.bowl our.bowl) ?=(~ restoring.owner))
