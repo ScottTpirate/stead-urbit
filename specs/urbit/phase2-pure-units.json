@@ -1,7 +1,7 @@
 {
   "format": 1,
   "classification": "pure-native-only",
-  "expected_arm_count": 75,
+  "expected_arm_count": 86,
   "suites": [
     {
       "path": "/tests/stead-session",
@@ -103,6 +103,29 @@
         "test-creator-renewal-rejects-stale-requests-and-no-extension",
         "test-creator-renewal-needs-current-original-binding-and-grant",
         "test-creator-renewal-cannot-reopen-retired-closed-or-revoked-project-access"
+      ],
+      "timeout_seconds": 60
+    },
+    {
+      "path": "/tests/stead-project-retirement",
+      "arms": [
+        "test-project-retire-current-source",
+        "test-project-retire-compare-and-set",
+        "test-project-retire-replay-and-conflict",
+        "test-project-retire-freezes-replay-and-keeps-other-project-writable",
+        "test-project-retire-rejects-changed-journal-on-load",
+        "test-project-retire-rejects-unexportable-journal-before-fencing"
+      ],
+      "timeout_seconds": 60
+    },
+    {
+      "path": "/tests/stead-code-pack-anchor",
+      "arms": [
+        "test-pack-anchor-stock-manifest-digest",
+        "test-pack-anchor-stage-owner-and-digest",
+        "test-pack-anchor-accept-and-retry",
+        "test-pack-anchor-accept-fences",
+        "test-pack-anchor-revoked-retry-and-immutable"
       ],
       "timeout_seconds": 60
     },
