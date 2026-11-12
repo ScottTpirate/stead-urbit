@@ -151,7 +151,7 @@ def new_id():
 
 
 class HTTPSQueries:
-    """Exactly one HTTPS origin/route. No redirects, proxies or TLS bypass."""
+    """Fixed Stead read routes on one verified HTTPS origin."""
     def __init__(self, credentials, *, ca_file=None):
         self.credentials = credentials
         self.parts = origin(credentials['origin'])
@@ -160,6 +160,10 @@ class HTTPSQueries:
 
     def __call__(self, query):
         return self._post('/stead/api/query', query)
+
+    def pack_view(self, project):
+        require(match(UUID, project), 'project-scope')
+        return self._post('/stead/api/code', {'protocol': 'stead.code/1', 'action': 'pack-view', 'project_id': project})
 
     def _connection(self, timeout):
         return http.client.HTTPSConnection(self.parts.hostname, self.parts.port,

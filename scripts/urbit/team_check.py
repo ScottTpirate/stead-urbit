@@ -386,6 +386,36 @@ def run(host):
         check('handoff-owner-only-status', call('bus', 'handoff-status', route=handoff_route).get('kind') == 'watch-ack-fail')
         seal = {'operation': 'seal', 'generation': '1', 'proof': challenge}
         check('handoff-remote-seal-denied', call('bus', 'handoff', seal).get('kind') == 'poke-fail')
+        moving = uid(980)
+        moving_create = mutation('project.create', moving, 0,
+                                 create['payload'] | {'title': 'Moving', 'project_key': 'MOVING'}, project=moving)
+        check('project-retirement-source-created', call('bus', 'command', moving_create).get('status') == 'accepted')
+        retirement_route = '/project-retirement/' + moving
+        active = call('zod', 'project-retirement-status', route=retirement_route)
+        check('project-retirement-head-observed', active.get('writer_state') == 'active'
+              and active.get('authority_epoch') == '1' and active.get('project_id') == moving
+              and re.fullmatch(r'[0-9a-f]{64}', active.get('journal_head', '')))
+        check('project-retirement-owner-only-status',
+              call('bus', 'project-retirement-status', route=retirement_route).get('kind') == 'watch-ack-fail')
+        retirement = {'protocol': 'stead.project-retire/1', 'project_id': moving, 'migration_id': uid(981),
+                      'authority_epoch': '1', 'destination_home': '~nec', 'expected_journal_head': active['journal_head']}
+        check('project-retirement-owner-only-write', call('bus', 'project-retire', retirement).get('kind') == 'poke-fail')
+        check('project-retirement-stale-head',
+              call('zod', 'project-retire', retirement | {'expected_journal_head': '0' * 64}).get('kind') == 'poke-fail')
+        check('project-retirement-accepted', call('zod', 'project-retire', retirement) == {})
+        fenced = call('zod', 'project-retirement-status', route=retirement_route)
+        check('project-retirement-observed', fenced.get('writer_state') == 'retired'
+              and fenced.get('journal_head') == retirement['expected_journal_head']
+              and fenced.get('migration_id') == retirement['migration_id'])
+        check('project-retirement-repeat-and-conflict', call('zod', 'project-retire', retirement) == {}
+              and call('zod', 'project-retirement-status', route=retirement_route) == fenced
+              and call('zod', 'project-retire', retirement | {'migration_id': uid(982)}).get('kind') == 'poke-fail')
+        frozen_work = mutation('work.create', uid(983), 0, work['payload'], project=moving)
+        check('project-retirement-fresh-write-denied', call('bus', 'command', frozen_work).get('error') == 'authority_retired')
+        check('project-retirement-replay-write-denied', call('bus', 'command', moving_create).get('error') == 'authority_retired')
+        check('project-retirement-authorized-reads-retained', call('bus', 'query', query('project', project=moving)).get('status') == 'read')
+        check('project-retirement-unrelated-write-accepted', call('bus', 'command', mutation('work.create', uid(984), 0, work['payload'])).get('status') == 'accepted')
+        rows = call('nec', 'query', query('work', project=uid(1))).get('rows')
         check('handoff-owner-seals', call('zod', 'handoff', seal) == {})
         sealed = state | {'phase': 'sealed', 'generation': '2'}
         check('handoff-seal-observed', call('zod', 'handoff-status', route=handoff_route) == sealed)
@@ -413,6 +443,8 @@ def run(host):
         boot = bootstrap_ready(team, 'zod', call, host['execution_check'])
         check('handoff-fresh-incarnation', boot['incarnation'] != report['restarts']['zod']['new_incarnation'])
         team.admit('zod', boot, host['dojo'])
+        check('project-retirement-restart-preserves-record', call('zod', 'project-retirement-status', route=retirement_route) == fenced)
+        check('project-retirement-restart-denies-write', call('bus', 'command', frozen_work).get('error') == 'authority_retired')
         check('handoff-original-receipt-preserved', call('bus', 'command', create) == receipt)
         check('handoff-reader-work-preserved', call('nec', 'query', query('work', project=uid(1))).get('rows') == rows)
         # Private operator fixture material. Never put +code/cert keys in the

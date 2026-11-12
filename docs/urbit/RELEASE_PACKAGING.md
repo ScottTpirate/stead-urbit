@@ -32,12 +32,13 @@ reads committed source; uncommitted edits and unrelated files are excluded.
 It refuses a packager that differs from the selected committed version.
 
 The saved-state field names the maximum format emitted by the packaged role.
-The current Home declares v6 for the same-ship handoff fence and its generation.
-Homes that have never sealed retain the existing v3, v4 and v5 formats for
-Work/Docs, Code repositories, and queued uploads or delivery state. Identity
-remains v1. Historical archives verify against their own pinned targets and
-digests. The verifier checks the Code, upload, and handoff imports against the
-maximum state version.
+The current Home declares v7 for project retirement and external Git pack
+records. V6 holds the same-ship handoff fence and generation. Work and Docs,
+inline Code repositories, and queued uploads or delivery state retain the
+existing v3, v4 and v5 formats where those versions can represent the state.
+Identity remains v1. Historical archives verify against their own pinned
+targets and digests. The verifier checks the imports against the maximum
+state version.
 Native upgrade and recovery claims require the corresponding saved-state tests.
 
 The candidate includes no pier, key, cookie, account binding, project export,

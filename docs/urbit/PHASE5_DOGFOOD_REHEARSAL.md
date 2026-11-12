@@ -114,21 +114,48 @@ The private evidence is in `.runtime/phase5-pack-store-BaJKt7aN`.
 
 ### Home acceptance boundary
 
-The local tool produces a custody candidate. The native integration must bind
-the durable manifest digest to a Home-owned proposal that also records the
-current accepted snapshot, exact old and proposed ref OIDs, actor binding,
-request ID and wire digest. The Home must authenticate validation results and
-check current grants, epoch, old OIDs, branch protection, verified ancestry
-and quota when accepting. It must commit the accepted digest, refs, journal
-and receipt together. An interrupted attempt may leave a candidate for later
-reconciliation. Git success follows the durable Home receipt.
+The Home can anchor the first full-history snapshot of a project that has no
+inline repository. The project and repository IDs are the same in this
+profile. The pack custodian first verifies the exact retained object pack
+and immutable manifest. The Home operator stages the verified attestation
+through the owner-local Khan command from the [pilot runbook](PHASE5_DEPLOYMENT.md).
+Keep the attestation and command output inside the project's private custody.
 
-Reads must resolve an exact accepted digest through current Home authorization
-and expose only the permitted ref closure. Recovery selects the digest from an
-independently trusted accepted checkpoint. Removal of accepted snapshots needs
-Home-owned retention evidence. Native manifest anchoring, authenticated Git
-transport, staged incremental push, and restore of the Home's application state
-remain separate checks. [Source control contract](CODE_AGENT_SOURCE_CONTROL.md)
+```sh
+umask 077
+python3 -B scripts/urbit/git_pack_store.py attest "$run_dir/store" \
+  --git "$git_bin" --snapshot "$REVIEWED_SNAPSHOT_SHA256" "${scope[@]}" \
+  > "$run_dir/attestation.json"
+"${owner[@]}" pack-stage --attestation-file "$run_dir/attestation.json"
+```
+
+The Home recomputes the stock manifest digest from the canonical refs and
+scope and records the candidate for 15 minutes. An authenticated project
+maintainer opens **Code**, reviews the exact snapshot and refs, and selects
+**Accept this snapshot**. The Home checks the current actor binding and grant,
+authority epoch, candidate digest, and absence of an inline or accepted
+repository. It saves the exact refs, manifest and receipt in one transition.
+The same request ID replays the receipt only for the same current authorized
+binding. The current external snapshot is immutable.
+
+An authorized operator can read the accepted snapshot through the Home and
+restore the matching private pack locally. Use the existing private session
+file format from the [portable Code instructions](PORTABLE_CODE.md).
+
+```sh
+python3 -B scripts/urbit/git_pack_readback.py STORE PRIVATE_DEST \
+  --project "$PROJECT_ID" --session-file "$SESSION_FILE" --git "$git_bin"
+```
+
+The helper compares the exact Home refs, default branch and object count with
+the verified store. It rechecks the accepted snapshot and current authorization
+after stock Git verification and before publishing the private clone. Use
+`--ca-file` when the pilot Home uses an explicitly trusted private CA. Retain
+accepted snapshots according to the Home receipt and backup records.
+
+An external snapshot currently has a private restore workflow. Native Smart
+HTTP serving, incremental push with protected-ref and ancestry validation,
+and any live change of authority remain separate work. [Source control contract](CODE_AGENT_SOURCE_CONTROL.md)
 
 ## After the synthetic pilot
 

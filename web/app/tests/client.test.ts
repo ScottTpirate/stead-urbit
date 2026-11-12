@@ -2,7 +2,7 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import { newId, commandDigest, canonical } from '../src/protocol';
-import { HomeClient, HomeError, command, type Fields } from '../src/api';
+import { HomeClient, HomeError, command, packRefs, type Fields } from '../src/api';
 import { supportDetails } from '../src/support';
 const id = (end: string) => `019939ba-4000-7000-8000-${end.padStart(12, '0')}`;
 test('support export excludes untrusted diagnostics and non-request secrets', () => {
@@ -51,6 +51,14 @@ globalThis.fetch = async (url, init) => {
     if (mode === 'code-merge-rejected') return json({protocol: 'stead.result/3', status: 'rejected', error: 'stale-target'}, 409);
     return json({protocol: 'stead.code/1', status: 'replayed', request_id: raw.request_id,
       proposal_id: raw.proposal_id, revision: mode === 'code-merge-wrong' ? '99' : raw.revision, repository_revision: '3'});
+  }
+  if (String(url).endsWith('/code') && (raw.action === 'pack-view' || raw.action === 'pack-accept')) {
+    const entries = Array.from({length: 64}, (_, i) => [Buffer.from(`refs/heads/${i}`).toString('hex'), 'a'.repeat(40)]);
+    const head = mode === 'pack-wrong-head' ? '00' : entries[0]![0];
+    const common = {protocol: 'stead.code/1', snapshot: mode === 'pack-wrong-snapshot' ? 'c'.repeat(64) : 'b'.repeat(64),
+      authority_epoch: '1', object_count: '7803', head, refs: JSON.stringify(Object.fromEntries(entries))};
+    if (raw.action === 'pack-view') return json({...common, status: 'external-staged'});
+    return json({...common, status: 'external', request_id: raw.request_id, accepted_at_ms: '1790519400000'});
   }
   if (String(url).endsWith('/updates')) {
     if (mode === 'updates-network') throw new TypeError('lost update response');
@@ -393,4 +401,21 @@ test('Code merge retries preserve the exact uncertain request through resume and
   assert.equal(client.pendingCodeMerge(project), undefined);
   await rejects(client.mergeCode(project), 'no_pending_merge');
   person = 1;
+});
+
+test('Code pack views preserve all 64 refs and reject uncorrelated acceptance', async () => {
+  person = 1; mode = ''; const client = new HomeClient(); await client.resume();
+  const project = id('301');
+  const staged = await client.code(project, {action: 'pack-view'});
+  assert.equal(staged.status, 'external-staged');
+  assert.equal(Object.keys(packRefs(staged)).length, 64);
+  mode = 'pack-wrong-head';
+  await rejects(client.code(project, {action: 'pack-view'}), 'invalid_response');
+  const accept = {action: 'pack-accept' as const, snapshot: staged.snapshot!, authority_epoch: staged.authority_epoch!, request_id: id('302')};
+  mode = 'pack-wrong-snapshot';
+  await rejects(client.code(project, accept), 'invalid_response');
+  mode = '';
+  const accepted = await client.code(project, accept);
+  assert.equal(accepted.request_id, accept.request_id);
+  assert.equal(accepted.status, 'external');
 });

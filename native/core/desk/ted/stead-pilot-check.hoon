@@ -1,12 +1,12 @@
 ::  Disposable Khan adapter for pilot status and Home handoff controls.
 /-  spider
-/+  strandio, stead-codec, stead-delivery
+/+  strandio, stead-codec, stead-delivery, stead-home-handoff
 =,  strand=strand:spider
 ^-  thread:spider
 |=  arg=vase
 =/  [~ target=@p app=@tas mode=@tas route=path raw=@t]  ;;([~ @p @tas @tas path @t] q.arg)
 ?>  =(app %stead-home)
-?>  (lte (met 3 raw) 256)
+?>  (lte (met 3 raw) 512)
 =/  m  (strand ,vase)
 ^-  form:m
 =;  computation=form:m
@@ -32,18 +32,16 @@
 %+  (set-timeout:strandio ,vase)  ~s55
 ?:  =(%handoff mode)
   ?>  ?=(~ route)
-  =/  value  (need (parse-result:stead-codec raw))
-  ?>  ?=([%o *] value)
-  ?>  (keys:stead-codec p.value ~['operation' 'generation' 'proof'])
-  =/  op  (field:stead-codec p.value 'operation')
-  ?>  |(=('seal' op) =('activate' op))
-  =/  operation  ?:(=('seal' op) %seal %activate)
-  =/  input=[operation=?(%seal %activate) generation=@ud proof=@t]
-    [operation (uint:stead-codec (field:stead-codec p.value 'generation')) (field:stead-codec p.value 'proof')]
+  =/  input  (decode:stead-home-handoff raw)
   ;<  ~  bind:m  (poke:strandio [target app] %stead-home-handoff-1 !>(input))
+  (pure:m !>([%stead-core-result (bytes-hex:stead-codec '{}')]))
+?:  =(%project-retire mode)
+  ?>  ?=(~ route)
+  ;<  ~  bind:m  (poke:strandio [target app] %stead-project-retirement-1 !>(raw))
   (pure:m !>([%stead-core-result (bytes-hex:stead-codec '{}')]))
 ?>  =('' raw)
 ?>  ?:  =(%operator-status mode)  ?=([%operator @ ~] route)
+    ?:  =(%project-retirement-status mode)  ?=([%project-retirement @ ~] route)
     &(=(%handoff-status mode) =(route /home-handoff/status))
 ;<  ~  bind:m  (watch:strandio /result [target app] route)
 =/  state=progress:stead-delivery  [& | ~]

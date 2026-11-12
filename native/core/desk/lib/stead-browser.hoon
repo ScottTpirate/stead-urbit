@@ -1,5 +1,5 @@
 ::  Pure browser API orchestration. The Gall owner enforces the Eyre boundary.
-/+  stead-codec, stead-team, stead-team-codec, stead-team-config, stead-session, stead-http, stead-projection, stead-views, stead-updates, stead-update-codec
+/+  stead-codec, stead-team, stead-team-codec, stead-team-config, stead-session, stead-http, stead-projection, stead-views, stead-updates, stead-update-codec, stead-project-retirement
 =,  stead-codec
 |%
 +$  ephemeral  [auth=state:stead-session pages=state:stead-views updates=state:stead-updates]
@@ -59,6 +59,9 @@
   p.attempted
 ++  call
   |=  [db=state:stead-team view=state:stead-projection transient=ephemeral request=incoming:stead-http now=@ud entropy=@]
+  (call-fenced db view transient request now entropy ~)
+++  call-fenced
+  |=  [db=state:stead-team view=state:stead-projection transient=ephemeral request=incoming:stead-http now=@ud entropy=@ retired=ledger:stead-project-retirement]
   ^-  result
   =/  config  (need current.registry.db)
   =/  route  route.request
@@ -139,7 +142,7 @@
   ?:  =('/stead/api/command' route)
     =/  decoded  (mule |.((decode:stead-team-codec raw)))
     ?:  ?=(%| -.decoded)  (reply db view transient 200 (correlated-error raw 'invalid_command'))
-    =/  result  (apply-command:stead-team db u.actor p.decoded now)
+    =/  result  (apply:stead-project-retirement retired db u.actor p.decoded now)
     =/  projected
       ?:  =(db next.result)  view
       ?>  ?=(^ journal.data.next.result)

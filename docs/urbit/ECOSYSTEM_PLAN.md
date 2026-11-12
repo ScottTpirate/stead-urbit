@@ -63,6 +63,10 @@ maintainer backup and release-key recovery remain separate release gates. Keep
 essential security free and open source; preserve notices and reviewed
 dependency scope.
 
+The offline readiness verifier binds role archives, independent reviews,
+owner approval, and publisher key recovery to exact evidence.
+[Release readiness](RELEASE_READINESS.md)
+
 Defer global consensus, blockchain-per-edit, active-active project authority, arbitrary plugin marketplaces and native arbitrary-language build farms. Do not accumulate optional dependencies just because they exist in Urbit.
 
 ## Evidence and integration discipline

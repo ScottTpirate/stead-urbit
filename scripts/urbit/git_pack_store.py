@@ -15,6 +15,7 @@ import stat
 import struct
 import subprocess
 import sys
+import tempfile
 
 from execution_policy import GuardError, directory_fd
 from portable_code import (MAX_REFS, observed_refs, private_directory, publish_directory,
@@ -35,6 +36,8 @@ INDEX_ROW = re.compile(rb'([0-9a-f]{40}) (blob|commit|tree|tag) ([0-9]{1,9})')
 SHIP = re.compile(r'~[a-z][a-z-]{2,62}')
 PACK_NAME = 'objects.pack'
 MANIFEST_NAME = 'snapshot.json'
+ATTESTATION_FORMAT = 'stead.code-pack-attestation/1'
+MAX_ATTESTATION = 65_536
 
 
 def validate_scope(scope):
@@ -219,7 +222,7 @@ def stage(store, pack, expected, scope, refs, head, binary):
             return snapshot, value
 
 
-def restore(store, snapshot, scope, destination, binary):
+def restore(store, snapshot, scope, destination, binary, *, authorize=None):
     """Restore exact authorized roots selected by the offline operator."""
     require(destination.name not in ('', '.', '..'), 'destination-path')
     with repository_directory(store, scope) as (directory, check_store):
@@ -232,6 +235,8 @@ def restore(store, snapshot, scope, destination, binary):
                 require(all(type(value[key]) is type(actual) and value[key] == actual
                             for key, actual in inventory.items()), 'snapshot-inventory')
                 sync_tree(git)
+                if authorize is not None:
+                    authorize(value)
                 check_store()
                 require(same_entry(directory, snapshot, os.fstat(source))
                         and same_entry(parent, scratch, opened)
@@ -241,10 +246,32 @@ def restore(store, snapshot, scope, destination, binary):
     return value
 
 
+def attest(store, snapshot, scope, binary):
+    """Reverify retained pack bytes before issuing a Home staging input."""
+    with repository_directory(store, scope) as (directory, check_store):
+        require(scope['project_id'] == scope['repository_id'], 'home-repository-scope')
+        with open_snapshot(directory, snapshot) as source:
+            value = read_manifest(source, snapshot, scope)
+            with tempfile.TemporaryDirectory(prefix='stead-pack-attest-') as work:
+                with directory_fd(Path(work)) as parent:
+                    with staged_repository(parent, binary, command_prefix=GIT_LIMITS) as (_, _, git):
+                        _, inventory = verify_pack(git, source, PACK_NAME, value['pack_sha256'], value['refs'], value['head'])
+                        require(all(type(value[key]) is type(actual) and value[key] == actual
+                                    for key, actual in inventory.items()), 'snapshot-inventory')
+            check_store()
+            require(same_entry(directory, snapshot, os.fstat(source)), 'snapshot-binding')
+    wire = {'protocol': ATTESTATION_FORMAT, **scope, 'snapshot': snapshot, 'head': value['head'],
+            'refs': value['refs'], 'pack_sha256': value['pack_sha256'],
+            'pack_bytes': str(value['pack_bytes']), 'object_count': str(value['object_count']),
+            'object_bytes': str(value['object_bytes']), 'object_ids_sha256': value['object_ids_sha256']}
+    require(len(encoded(wire)) <= MAX_ATTESTATION, 'attestation-bound')
+    return wire
+
+
 def main(argv=None):
     parser = argparse.ArgumentParser(description=__doc__)
     actions = parser.add_subparsers(dest='action', required=True)
-    for action in ('stage', 'restore'):
+    for action in ('stage', 'restore', 'attest'):
         command = actions.add_parser(action)
         command.add_argument('store', type=Path, help='Existing private storage directory')
         command.add_argument('--home', required=True)
@@ -260,6 +287,7 @@ def main(argv=None):
     restore_command = actions.choices['restore']
     restore_command.add_argument('destination', type=Path)
     restore_command.add_argument('--snapshot', required=True, help='Independently authorized manifest SHA-256')
+    actions.choices['attest'].add_argument('--snapshot', required=True, help='Reviewed staged manifest SHA-256')
     args = parser.parse_args(argv)
     try:
         binary = shutil.which(args.git)
@@ -276,10 +304,13 @@ def main(argv=None):
                 refs[name] = oid
             snapshot, value = stage(args.store, args.pack, args.sha256, scope, refs, args.head_hex, binary)
             status = 'candidate-staged'
-        else:
+        elif args.action == 'restore':
             snapshot = args.snapshot
             value = restore(args.store, snapshot, scope, args.destination, binary)
             status = 'offline-git-restored'
+        else:
+            sys.stdout.buffer.write(encoded(attest(args.store, args.snapshot, scope, binary)))
+            return 0
         print(json.dumps({'status': status, 'snapshot': snapshot, **value}, sort_keys=True))
         return 0
     except RecoveryError as error:

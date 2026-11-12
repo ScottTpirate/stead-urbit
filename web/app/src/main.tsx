@@ -6,6 +6,7 @@ import { Button, EmptyState, LoadingState, Surface, TextField } from './primitiv
 import { SupportDetails } from './SupportDetails';
 import { AcceptedTime } from './AcceptedTime';
 import { CodeRepository } from './CodeRepository';
+import { CodePack } from './CodePack';
 import './style.css';
 const Markdown = lazy(() => import('./Markdown').then(module => ({ default: module.Markdown })));
 const client = new HomeClient();
@@ -66,6 +67,7 @@ function App() {
   const [container, setContainer] = useState<Row | null>(null);
   const [tab, setTab] = useState<ViewKind>('project');
   const [repository, setRepository] = useState<Fields | null>(null);
+  const externalRepository = repository?.status === 'external' || repository?.status === 'external-staged';
   const [showRepository, setShowRepository] = useState(false);
   const [rows, setRows] = useState<Row[]>([]);
   const [cursor, setCursor] = useState('');
@@ -547,12 +549,14 @@ function App() {
           {!project && <div className="welcome"><p className="eyebrow">START WITH WHAT MATTERS</p><h1 ref={heading} tabIndex={-1}>A clear place for your work.</h1><p>Choose a project to see its work and knowledge.</p></div>}
           {project && <><div className="project-heading"><div><p className="eyebrow">Projects <span aria-hidden="true">/</span> {project.project_key}</p><h1 ref={heading} tabIndex={-1}>{project.title}</h1></div><span className="role-badge">{project.role}</span></div>
           <nav className="tabs" aria-label="Project views">{([['project','Overview'],['work','Work'],['documents','Docs'],['relations','Links'],['activity','Activity'],['inbox','Inbox'],['search','Search']] as const).map(([kind,label]) => <Button disabled={busy} key={kind} variant={!showRepository && tab === kind ? 'primary' : 'quiet'} aria-current={!showRepository && tab === kind ? 'page' : undefined} onClick={() => { if (busy || editor?.dirty || pending || form) { setError('Finish or discard the current draft first.'); return; } activeQuery.current++; setShowRepository(false); setEditor(null); setWork(null); setCurrentVersion(null); setConfirmation(null); setForm(''); setTab(kind); setRows([]); setCursor(''); reloadScope(); }}>{label}</Button>)}
-          {repository?.status === 'ready' && <Button disabled={busy || !!editor?.dirty || !!pending || !!form}
+          {(repository?.status === 'ready' || externalRepository) && <Button disabled={busy || !!editor?.dirty || !!pending || !!form}
             variant={showRepository ? 'primary' : 'quiet'} aria-current={showRepository ? 'page' : undefined}
             onClick={() => setShowRepository(true)}>Code</Button>}</nav>
           {showRepository && repository?.status === 'ready' ? <CodeRepository key={project.project_id}
             client={client} project={project.project_id!} writable={repository.write === 'yes'}
-            manage={repository.manage === 'yes'} principal={identity.principal_id ?? ''} /> : <>
+            manage={repository.manage === 'yes'} principal={identity.principal_id ?? ''} /> :
+          showRepository && externalRepository ? <CodePack key={project.project_id} client={client} project={project.project_id!}
+            manage={repository?.manage === 'yes'} onAccepted={() => setRepository(prior => prior && ({ ...prior, status: 'external', write: 'no' }))} /> : <>
           {tab === 'project' && repository?.status === 'disabled' && repository.manage === 'yes'
             && <Button disabled={busy || !!pending || !!form} onClick={() => void action(async () => {
               await client.code(project.project_id!, { action: 'create' });

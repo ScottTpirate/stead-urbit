@@ -1,6 +1,6 @@
-::  Owner-local Khan adapter for configuration, bootstrap and Home status.
+::  Owner-local Khan adapter for configuration, bootstrap and Home handoff.
 /-  spider
-/+  strandio, stead-codec, stead-delivery
+/+  strandio, stead-codec, stead-delivery, stead-home-handoff
 =,  strand=strand:spider
 ^-  thread:spider
 |=  arg=vase
@@ -8,7 +8,7 @@
   ;;([~ @p @tas @tas path @t] q.arg)
 ?>  (lte (met 3 raw) 65.536)
 ?>  ?|  =(app %stead-home)
-        &(=(app %stead-identity) !=(mode %operator-status))
+        &(=(app %stead-identity) ?|(=(mode %bootstrap) =(mode %configure)))
     ==
 =/  m  (strand ,vase)
 =/  n  (strand ,~)
@@ -16,19 +16,32 @@
 %+  (set-timeout:strandio ,vase)  ~s55
 ;<  =bowl:spider  bind:m  get-bowl:strandio
 ?>  =(expected our.bowl)
-?:  =(%configure mode)
+?:  ?|(=(%configure mode) =(%pack-stage mode) =(%project-retire mode))
   ?>  ?=(~ route)
-  =/  mark  ?:(=(app %stead-home) %stead-team-config-1 %stead-identity-config-1)
+  =/  mark
+    ?+  mode  ?:(=(app %stead-home) %stead-team-config-1 %stead-identity-config-1)
+      %pack-stage  %stead-code-pack-stage-1
+      %project-retire  %stead-project-retirement-1
+    ==
   ;<  ~  bind:m  (poke:strandio [our.bowl app] mark !>(raw))
   (pure:m !>([%stead-core-result (bytes-hex:stead-codec '{}')]))
-?>  ?:  =(%operator-status mode)
-      &(?=([%operator @ ~] route) =('' raw))
-    &(=(%bootstrap mode) ?=([%bootstrap @ ~] route))
+?:  =(%handoff mode)
+  ?>  ?=(~ route)
+  =/  input  (decode:stead-home-handoff raw)
+  ;<  ~  bind:m  (poke:strandio [our.bowl app] %stead-home-handoff-1 !>(input))
+  (pure:m !>([%stead-core-result (bytes-hex:stead-codec '{}')]))
+?>  ?+  mode  |
+      %operator-status  &(?=([%operator @ ~] route) =('' raw))
+      %handoff-status  &(=(route /home-handoff/status) =('' raw))
+      %project-retirement-status  &(?=([%project-retirement @ ~] route) =('' raw))
+      %bootstrap  ?=([%bootstrap @ ~] route)
+    ==
+=/  watch-only  !=(%bootstrap mode)
 ;<  ~  bind:m  (watch:strandio /result [our.bowl app] route)
 ;<  ~  bind:m
-  ?:  =(%operator-status mode)  (pure:n ~)
+  ?:  watch-only  (pure:n ~)
   (send-raw-card:strandio [%pass /command %agent [our.bowl app] %poke %stead-bootstrap-1 !>(raw)])
-=/  state=progress:stead-delivery  [=(%operator-status mode) | ~]
+=/  state=progress:stead-delivery  [watch-only | ~]
 |=  tin=strand-input:strand
 =*  loop  $
 ?:  (complete:stead-delivery state)

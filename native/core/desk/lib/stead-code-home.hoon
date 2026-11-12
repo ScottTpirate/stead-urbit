@@ -1,6 +1,6 @@
 ::  Repository authority called only by the configured Home. Repositories
 ::  persist with the Home; device credentials are never in the saved envelope.
-/+  stead-codec, stead-core, stead-team, stead-team-config, stead-session, stead-http, stead-git, stead-code-credentials, stead-code-store, stead-code-service, stead-code-http, stead-code-git-graph, stead-code-git-objects, stead-code-receive, stead-code-upload, stead-code-review-home, stead-code-review-api, stead-code-build-home, stead-code-delivery-export
+/+  stead-codec, stead-core, stead-team, stead-team-config, stead-session, stead-http, stead-git, stead-code-credentials, stead-code-store, stead-code-service, stead-code-http, stead-code-git-graph, stead-code-git-objects, stead-code-receive, stead-code-upload, stead-code-review-home, stead-code-review-api, stead-code-build-home, stead-code-delivery-export, stead-code-pack-anchor
 =,  stead-codec
 |%
 +$  repository  [data=repository:stead-code-service protected=(set @t)]
@@ -8,7 +8,7 @@
 +$  boards  (map @t state:stead-code-review-home)
 +$  build-data  (map @t state:stead-code-build-home)
 +$  persisted  [repos=saved uploads=jobs:stead-code-upload reviews=boards builds=build-data]
-+$  state  [repos=saved book=ledger:stead-code-credentials uploads=jobs:stead-code-upload reviews=boards builds=build-data]
++$  state  [repos=saved book=ledger:stead-code-credentials uploads=jobs:stead-code-upload reviews=boards builds=build-data packs=state:stead-code-pack-anchor]
 +$  admission  $%([%held next=state key=@t] [%refused out=result])
 +$  result  [status=@ud mime=@t body=octets:stead-git next=state]
 ++  text
@@ -61,9 +61,41 @@
   ?~  who  ~
   =/  config  (need current.registry.db)
   (authorize:stead-session auth session.input csrf.input u.who home.config origin.config now)
+++  stage-pack
+  |=  [db=state:stead-team code=state pack=manifest:stead-code-pack-anchor operator=@p now=@ud]
+  ^-  (unit state)
+  =/  destination  destination.pack
+  =/  project  project.destination
+  ?.  &(!(~(has by repos.code) project) =([~ destination] (target db project)))  ~
+  =/  active  (prune:stead-code-pack-anchor packs.code now)
+  ?:  &(!(~(has by active) project) (gte (add ~(wyt by repos.code) ~(wyt by active)) 4))  ~
+  =/  staged  (stage:stead-code-pack-anchor active pack operator now)
+  ?:  ?=(%| -.staged)  ~
+  [~ code(packs next.p.staged)]
+++  pack-details
+  |=  entry=entry:stead-code-pack-anchor
+  ^-  (list [@t @t])
+  =/  pack  pack.row.entry
+  =/  fields=(list [@t @t])
+    :~  ['status' ?:(?=(%accepted -.entry) 'external' 'external-staged')]
+        ['snapshot' snapshot.pack]
+        ['authority_epoch' (decimal epoch.destination.pack)]
+        ['object_count' (decimal objects.pack)]
+        ['head' head.pack]
+        ['refs' (canonical (object ~(tap by refs.pack)))]
+    ==
+  ?.  ?=(%accepted -.entry)  fields
+  (weld fields ~[['request_id' request.proof.entry] ['accepted_at_ms' (decimal accepted-at.proof.entry)]])
+++  validate-packs
+  |=  [team=state:stead-team inline=saved rows=state:stead-code-pack-anchor]
+  ^-  ?
+  ?.  (lte (add ~(wyt by rows) ~(wyt by inline)) 4)  |
+  %+  levy  ~(tap by rows)
+  |=  [project=@t entry=entry:stead-code-pack-anchor]
+  &(!(~(has by inline) project) =([~ destination.pack.row.entry] (target team project)) (valid:stead-code-pack-anchor entry))
 ++  manage
   |=  $:  db=state:stead-team  code=state  auth=state:stead-session
-          input=incoming:stead-http  now=@ud  entropy=@
+          input=incoming:stead-http  now=@ud  entropy=@  retired=$-(@t ?)
       ==
   ^-  result
   =/  session  (browser-session db auth input now)
@@ -78,40 +110,69 @@
   ?.  |(is-build (lte (met 3 body.input) 2.048))  (error code 400 'invalid_request')
   =/  project  (field values 'project_id')
   ?.  (uuid project)  (error code 400 'invalid_request')
-  =/  destination  (target db project)
-  ?~  destination  (error code 404 'denied_or_not_found')
+  =/  scope  (target db project)
+  ?~  scope  (error code 404 'denied_or_not_found')
+  =/  destination  u.scope
   =/  actor  (browser-context:stead-team db u.session now)
   ?~  actor  (error code 403 'session_or_csrf_required')
   =/  role  (role:stead-team db u.actor project now)
   ?:  =(0 role)  (error code 404 'denied_or_not_found')
+  =/  fenced  (retired project)
+  ?:  ?&  fenced
+          !(~(has in (silt ~['status' 'pack-view' 'proposal' 'delivery-export' 'build-job' 'revoke'])) operation)
+          |(!=('issue' operation) !=('read' (field values 'access')))
+      ==
+    (error code 409 'project_retired')
+  =/  who  identity.u.actor
   =/  found  (~(get by repos.code) project)
-  ?:  &(?=(^ found) !=(destination.data.u.found u.destination))  (error code 409 'authority_epoch_conflict')
+  ?:  &(?=(^ found) !=(destination.data.u.found destination))  (error code 409 'authority_epoch_conflict')
   =/  base=(list @t)  ~['protocol' 'action' 'project_id']
+  =/  packs  (prune:stead-code-pack-anchor packs.code now)
+  =/  pack  (~(get by packs) project)
+  ?:  &(?=(^ pack) !=(destination.pack.row.u.pack destination))  (error code 409 'authority_epoch_conflict')
   ?:  =('status' operation)
     ?.  (keys values base)  (error code 400 'invalid_request')
-    (respond code ~[['status' ?~(found 'disabled' 'ready')] ['write' ?:((gte role 2) 'yes' 'no')] ['manage' ?:(=(3 role) 'yes' 'no')]])
+    =/  status
+      ?:  ?=([~ %accepted *] pack)  'external'
+      ?:  &(?=(^ pack) =(3 role))  'external-staged'
+      ?~(found 'disabled' 'ready')
+    (respond code ~[['status' status] ['write' ?:(&((gte role 2) ?=(~ pack) !fenced) 'yes' 'no')] ['manage' ?:(=(3 role) 'yes' 'no')]])
+  ?:  =('pack-view' operation)
+    ?.  (keys values base)  (error code 400 'invalid_request')
+    ?~  pack  (error code 404 'denied_or_not_found')
+    ?.  |(?=(%accepted -.u.pack) =(3 role))  (error code 404 'denied_or_not_found')
+    (respond code (pack-details u.pack))
+  ?:  =('pack-accept' operation)
+    ?.  (keys values ['snapshot' 'authority_epoch' 'request_id' base])  (error code 400 'invalid_request')
+    ?.  =(3 role)  (error code 404 'denied_or_not_found')
+    ?.  =((decimal epoch.destination) (field values 'authority_epoch'))  (error code 409 'authority_epoch_conflict')
+    =/  out
+      (accept:stead-code-pack-anchor packs destination who role now (field values 'snapshot') (field values 'request_id') ?=(^ found))
+    ?:  ?=(%| -.out)  (error code 409 p.out)
+    (respond code(packs next.p.out) (pack-details row.p.out))
   ?:  =('create' operation)
     ?.  (keys values base)  (error code 400 'invalid_request')
     ?.  =(3 role)  (error code 404 'denied_or_not_found')
+    ?^  pack  (error code 409 'external_repository_exists')
     ?^  found  (respond code ~[['status' 'ready']])
-    ?:  (gte ~(wyt by repos.code) 4)  (error code 409 'capacity_exceeded')
-    =/  next  (~(put by repos.code) project [(empty:stead-code-store u.destination) ~])
-    (respond code(repos next) ~[['status' 'ready']])
+    ?:  (gte (add ~(wyt by repos.code) ~(wyt by packs)) 4)  (error code 409 'capacity_exceeded')
+    =/  next  (~(put by repos.code) project [(empty:stead-code-store destination) ~])
+    (respond code(repos next, packs packs) ~[['status' 'ready']])
   ?~  found  (error code 404 'denied_or_not_found')
   ?:  =('issue' operation)
     ?.  (keys values ['access' base])  (error code 400 'invalid_request')
     =/  access  (field values 'access')
     ?.  |(=('read' access) =('write' access))  (error code 400 'invalid_request')
     =/  issued
-      (issue:stead-code-credentials book.code identity.u.actor u.destination =('write' access) expires.u.session now entropy (allowed db now))
+      (issue:stead-code-credentials book.code who destination =('write' access) expires.u.session now entropy (allowed db now))
     ?:  ?=(%| -.issued)  (error code 403 p.issued)
     (respond code(book next.p.issued) ~[['status' 'issued'] ['handle' handle.p.issued] ['bearer' bearer.p.issued] ['expires_at_ms' (decimal expires.p.issued)]])
   ?:  =('revoke' operation)
     ?.  (keys values ['handle' base])  (error code 400 'invalid_request')
     =/  handle  (field values 'handle')
-    ?.  (lien ~(tap by credentials.book.code) |=([key=@t row=credential:stead-code-credentials] &(=(handle handle.row) =(u.destination destination.row))))
+    ?.  (lien ~(tap by credentials.book.code) |=([key=@t row=credential:stead-code-credentials] &(=(handle handle.row) =(destination destination.row))))
       (error code 403 'denied_or_not_found')
-    =/  revoked  (revoke:stead-code-credentials book.code handle identity.u.actor home.u.destination now)
+    =/  revoked  (revoke:stead-code-credentials book.code handle who home.destination now)
     ?:  ?=(%| -.revoked)  (error code 403 p.revoked)
     (respond code(book p.revoked) ~[['status' 'revoked']])
   ?:  =('protect' operation)
@@ -123,7 +184,7 @@
     =/  protected  (~(put in protected.u.found) ref)
     ?:  (gth ~(wyt in protected) 16)  (error code 409 'capacity_exceeded')
     (respond code(repos (~(put by repos.code) project u.found(protected protected))) ~[['status' 'protected']])
-  =/  board  (fall (~(get by reviews.code) project) (empty:stead-code-review-home u.destination))
+  =/  board  (fall (~(get by reviews.code) project) (empty:stead-code-review-home destination))
   =/  extras  (fall (~(get by builds.code) project) *state:stead-code-build-home)
   ?:  =('delivery-export' operation)
     ?.  =(3 role)  (error code 404 'denied_or_not_found')
@@ -145,7 +206,7 @@
     ?:  &(|(=('build-queue' operation) =('build-release' operation)) !=(3 role))
       (error code 404 'denied_or_not_found')
     =/  out
-      (run:stead-code-build-home db board extras data.u.found identity.u.actor now (member db now) values base operation)
+      (run:stead-code-build-home db board extras data.u.found who now (member db now) values base operation)
     ?-  -.out
       %failed  (error code status.out reason.out)
       %read  (respond code rows.out)
@@ -155,7 +216,7 @@
         (respond code(reviews reviews, builds builds) rows.out)
     ==
   =/  out
-    (run:stead-code-review-api db board data.u.found protected.u.found identity.u.actor now (member db now) values base operation)
+    (run:stead-code-review-api db board data.u.found protected.u.found who now (member db now) values base operation)
   ?-  -.out
     %failed  (error code status.out reason.out)
     %read  (respond code rows.out)

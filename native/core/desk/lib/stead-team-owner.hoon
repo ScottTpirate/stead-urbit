@@ -1,5 +1,5 @@
 ::  Configured-team Gall driver. Only stead-home owns and calls this state.
-/+  stead-codec, stead-core, stead-team, stead-team-config, stead-team-codec, stead-session, stead-http, stead-browser, stead-projection, stead-views, stead-restore, stead-eyre, stead-assets, server, stead-updates, stead-update-codec, stead-code-home, stead-code-http, stead-code-credentials
+/+  stead-codec, stead-core, stead-team, stead-team-config, stead-team-codec, stead-session, stead-http, stead-browser, stead-projection, stead-views, stead-restore, stead-eyre, stead-assets, server, stead-updates, stead-update-codec, stead-code-home, stead-code-http, stead-code-credentials, stead-project-retirement, stead-code-pack-anchor
 =,  stead-codec
 |%
 +$  pending-entry  [actor=authentication:stead-team expires=@ud]
@@ -10,13 +10,14 @@
       job=@t  incarnation=@t  pending=(map path pending-entry)
       files=(map @t [mime=@t bytes=@t])
       code=state:stead-code-home  git-waiting=(map @t git-reply)
+      retired=ledger:stead-project-retirement
   ==
 +$  saved  [db=state:stead-team projection=state:stead-projection]
 ++  empty
   ^-  state
   =/  view=state:stead-projection
     [*index:stead-projection *index:stead-projection ~ | |]
-  [empty:stead-team view *ephemeral:stead-browser ~ '' '' ~ ~ *state:stead-code-home ~]
+  [empty:stead-team view *ephemeral:stead-browser ~ '' '' ~ ~ *state:stead-code-home ~ ~]
 ++  now-ms
   |=  now=@da
   (div (mul 1.000 (sub now ~1970.1.1)) ~s1)
@@ -51,9 +52,15 @@
     =/  staged  (begin:stead-restore db.old our.bowl)
     =/  job  (token:stead-session eny.bowl act.bowl 'stead.restore-job/1')
     =/  fresh=state
-      [empty:stead-team *state:stead-projection *ephemeral:stead-browser [~ staged] job '' ~ ~ [repos.code *ledger:stead-code-credentials uploads.code reviews.code builds.code] ~]
+      [empty:stead-team *state:stead-projection *ephemeral:stead-browser [~ staged] job '' ~ ~ [repos.code *ledger:stead-code-credentials uploads.code reviews.code builds.code ~] ~ ~]
     =.  owner  fresh
     [(weld kicks ~[bind wait]) owner]
+  ++  load-v7
+    |=  [old=saved code=persisted:stead-code-home packs=state:stead-code-pack-anchor]
+    ^-  (quip card:agent:gall state)
+    ?>  (validate-packs:stead-code-home db.old repos.code packs)
+    =/  [cards=(list card:agent:gall) next=state]  (load old code)
+    [cards next(code code.next(packs packs))]
   ++  configured
     |=  raw=@t
     ^-  (quip card:agent:gall state)
@@ -109,6 +116,9 @@
   ++  available
     ^-  ?
     &(!=('' incarnation.owner) ?=(~ restoring.owner) (ready:stead-projection db.owner view.owner) !?=(~ files.owner))
+  ++  retired-project
+    |=  project=@t
+    (~(has by retired.owner) project)
   ++  inspect
     |=  nonce=@t
     ^-  (quip card:agent:gall state)
@@ -163,17 +173,19 @@
     ?:  (git-path:stead-code-http url.request.request)
       =/  input  (validate:stead-code-http request origin.config)
       ?~  input  [(response id 403 'application/json' (error:stead-team 'invalid_http_request') ~) owner]
+      ?:  &((retired-project project.u.input) ?|(?=(%receive -.operation.u.input) ?=([%advertise %git-receive-pack] operation.u.input)))
+        (code-response id (error:stead-code-home code.owner 401 'denied_or_not_found'))
       ?:  ?=(%receive -.operation.u.input)  (queue-git id u.input)
       (code-response id (serve:stead-code-home db.owner code.owner u.input (now-ms now.bowl) ''))
     =/  parsed  (validate:stead-http request origin.config (paths:stead-assets '/stead/'))
     ?~  parsed  [(response id 403 'application/json' (error:stead-team 'invalid_http_request') ~) owner]
     ?:  =('/stead/api/code' route.u.parsed)
-      (code-response id (manage:stead-code-home db.owner code.owner auth.transient.owner u.parsed (now-ms now.bowl) eny.bowl))
+      (code-response id (manage:stead-code-home db.owner code.owner auth.transient.owner u.parsed (now-ms now.bowl) eny.bowl retired-project))
     ?:  =(%'GET' method.request.request)
       =/  entry  (~(get by files.owner) route.u.parsed)
       ?~  entry  [(response id 404 'text/plain' 'Not found' ~) owner]
       [(response id 200 mime.u.entry bytes.u.entry ~) owner]
-    =/  attempted  (mule |.((call:stead-browser db.owner view.owner transient.owner u.parsed (now-ms now.bowl) eny.bowl)))
+    =/  attempted  (mule |.((call-fenced:stead-browser db.owner view.owner transient.owner u.parsed (now-ms now.bowl) eny.bowl retired.owner)))
     ?:  ?=(%| -.attempted)  [(response id 400 'application/json' (error:stead-team 'invalid_request') ~) owner]
     =/  out  p.attempted
     =/  cards  (response id status.out 'application/json' bytes.out cookies.out)
@@ -204,6 +216,9 @@
     ?.  (response-source:stead-eyre sup.bowl sender.u.found id.u.found)  [~ next]
     =/  out
       ?.  available  (error:stead-code-home code.owner 503 'projection_unavailable')
+      =/  job  (~(get by uploads.code.owner) key)
+      ?:  &(?=(^ job) (retired-project project.destination.u.job))
+        (error:stead-code-home code.owner 401 'denied_or_not_found')
       =/  attempted
         (mule |.((finish-upload:stead-code-home db.owner code.owner key bearer.u.found (now-ms now.bowl))))
       ?:  ?=(%| -.attempted)  (error:stead-code-home code.owner 400 'invalid_request')
@@ -217,6 +232,13 @@
     ?:  =(%stead-bootstrap-1 mark)  (bootstrap !<(@t vase))
     ?:  =(%handle-http-request mark)  (http !<([@ta inbound-request:eyre] vase))
     ?>  available
+    ?:  =(%stead-code-pack-stage-1 mark)
+      ?>  =(src.bowl our.bowl)
+      =/  pack  (decode:stead-code-pack-anchor !<(@t vase))
+      ?>  !(retired-project project.destination.pack)
+      =/  next  (stage-pack:stead-code-home db.owner code.owner pack src.bowl (now-ms now.bowl))
+      ?>  ?=(^ next)
+      [~ owner(code u.next)]
     ?:  =(%stead-auth-approval-1 mark)
       [~ owner(transient (approve:stead-browser db.owner transient.owner src.bowl !<(@t vase) (now-ms now.bowl)))]
     ?>  ?|  =(%stead-command-3 mark)  =(%stead-query-3 mark)  =(%stead-updates-3 mark)
@@ -238,7 +260,7 @@
       ?^  unsupported  [u.unsupported owner]
       ?:  =(%stead-command-3 mark)
         =/  cmd  (decode:stead-team-codec raw)
-        =/  out  (apply-command:stead-team db.owner actor cmd (now-ms now.bowl))
+        =/  out  (apply:stead-project-retirement retired.owner db.owner actor cmd (now-ms now.bowl))
         =/  view
           ?:  =(db.owner next.out)  view.owner
           ?>  ?=(^ journal.data.next.out)

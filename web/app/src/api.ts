@@ -4,7 +4,8 @@ export type Fields = Record<string, string>;
 export type Row = Fields;
 export type CodeReviewKey = { proposal_id: string; revision: string };
 export type CodeMerge = CodeReviewKey & { action: 'merge'; request_id: string };
-export type CodeInput = { action: 'status' | 'create' }
+export type CodeInput = { action: 'status' | 'create' | 'pack-view' }
+  | { action: 'pack-accept'; snapshot: string; authority_epoch: string; request_id: string }
   | { action: 'issue'; access: 'read' | 'write' }
   | { action: 'revoke'; handle: string }
   | { action: 'protect'; ref: string }
@@ -76,6 +77,7 @@ export class HomeError extends Error {
 const TOKEN = /^[0-9a-f]{64}$/u;
 const GIT_OID = /^[0-9a-f]{40}$/u;
 const DECIMAL = /^(0|[1-9][0-9]{0,19})$/u;
+const GIT_REF_HEX = /^(?:726566732f68656164732f|726566732f746167732f)(?:[0-9a-f]{2})+$/u;
 const MAX_RESPONSE = 262144;
 function object(value: unknown): Record<string, unknown> {
   if (!value || typeof value !== 'object' || Array.isArray(value)) throw new HomeError('invalid_response');
@@ -85,6 +87,16 @@ function fields(value: unknown): Fields {
   const result = object(value);
   if (Object.keys(result).length > 32 || Object.values(result).some(x => typeof x !== 'string')) throw new HomeError('invalid_response');
   return result as Fields;
+}
+export function packRefs(value: Fields): Fields {
+  try {
+    const refs = object(JSON.parse(value.refs ?? ''));
+    const entries = Object.entries(refs);
+    if (entries.length < 1 || entries.length > 64 || !value.head?.startsWith('726566732f68656164732f')
+      || !Object.hasOwn(refs, value.head) || entries.some(([name, oid]) => name.length > 2048
+        || !GIT_REF_HEX.test(name) || typeof oid !== 'string' || !GIT_OID.test(oid))) throw new HomeError('invalid_response');
+    return refs as Fields;
+  } catch { throw new HomeError('invalid_response'); }
 }
 async function boundedJSON(response: Response): Promise<unknown> {
   if (response.headers.get('content-type')?.split(';')[0] !== 'application/json') throw new HomeError('invalid_response');
@@ -233,6 +245,18 @@ export class HomeClient {
   async code(project_id: string, input: CodeInput): Promise<Fields> {
     const value = fields(await this.post('/stead/api/code', { protocol: 'stead.code/1', project_id, ...input }, true));
     if (value.protocol !== 'stead.code/1') throw new HomeError('invalid_response');
+    if (input.action === 'pack-view' || input.action === 'pack-accept') {
+      if (!['external', 'external-staged'].includes(value.status ?? '') || !TOKEN.test(value.snapshot ?? '')
+        || !DECIMAL.test(value.authority_epoch ?? '') || value.authority_epoch === '0'
+        || !DECIMAL.test(value.object_count ?? '') || Number(value.object_count) < 1
+        || Number(value.object_count) > 16384 || (value.status === 'external'
+          && (!value.request_id || !DECIMAL.test(value.accepted_at_ms ?? '')))) throw new HomeError('invalid_response');
+      packRefs(value);
+      if (input.action === 'pack-accept' && (value.status !== 'external' || value.snapshot !== input.snapshot
+        || value.authority_epoch !== input.authority_epoch || value.request_id !== input.request_id)) {
+        throw new HomeError('invalid_response');
+      }
+    }
     if (input.action === 'issue' && (value.status !== 'issued' || !TOKEN.test(value.handle ?? '')
       || !TOKEN.test(value.bearer ?? '') || !DECIMAL.test(value.expires_at_ms ?? ''))) throw new HomeError('invalid_response');
     if (input.action === 'proposal' && (value.status !== 'proposal' || value.proposal_id !== input.proposal_id

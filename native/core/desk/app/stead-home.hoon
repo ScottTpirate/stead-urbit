@@ -1,9 +1,18 @@
 ::  One authoritative owner. Configured v4 with Code, v3 without Code.
-/+  default-agent, stead-core, stead-codec, stead-core-v1, stead-codec-v1, stead-team-owner, stead-code-home, stead-home-handoff, stead-browser, stead-code-credentials
+/+  default-agent, stead-core, stead-codec, stead-core-v1, stead-codec-v1, stead-team-owner, stead-code-home, stead-home-handoff, stead-browser, stead-code-credentials, stead-project-retirement, stead-code-pack-anchor
 =>
 |%
 +$  saved
-  [%stead-home $%([%1 db=state:stead-core-v1] [%2 db=state:stead-core] [%3 team=saved:stead-team-owner] [%4 team=saved:stead-team-owner code=saved:stead-code-home] [%5 team=saved:stead-team-owner code=persisted:stead-code-home] [%6 team=saved:stead-team-owner code=persisted:stead-code-home mode=phase:stead-home-handoff])]
+  $:  %stead-home
+      $%  [%1 db=state:stead-core-v1]
+          [%2 db=state:stead-core]
+          [%3 team=saved:stead-team-owner]
+          [%4 team=saved:stead-team-owner code=saved:stead-code-home]
+          [%5 team=saved:stead-team-owner code=persisted:stead-code-home]
+          [%6 team=saved:stead-team-owner code=persisted:stead-code-home mode=phase:stead-home-handoff]
+          [%7 team=saved:stead-team-owner code=persisted:stead-code-home mode=phase:stead-home-handoff retired=ledger:stead-project-retirement packs=state:stead-code-pack-anchor]
+      ==
+  ==
 +$  pending-entry  [sender=@p expires=@da]
 ++  now-ms
   |=  now=@da
@@ -123,10 +132,13 @@
   `this
 ++  on-save
   ?:  configured
+    =/  code=persisted:stead-code-home  [repos.code.owner uploads.code.owner reviews.code.owner builds.code.owner]
+    ?:  ?|(?=(^ retired.owner) ?=(^ packs.code.owner))
+      !>([%stead-home %7 save:team code handoff retired.owner packs.code.owner])
     ?:  !=(handoff [%open 1 ~])
-      !>([%stead-home %6 save:team [repos.code.owner uploads.code.owner reviews.code.owner builds.code.owner] handoff])
+      !>([%stead-home %6 save:team code handoff])
     ?:  |(?=(^ uploads.code.owner) ?=(^ reviews.code.owner))
-      !>([%stead-home %5 save:team [repos.code.owner uploads.code.owner reviews.code.owner builds.code.owner]])
+      !>([%stead-home %5 save:team code])
     ?:  ?=(~ repos.code.owner)  !>([%stead-home %3 save:team])
     !>([%stead-home %4 save:team repos.code.owner])
   !>([%stead-home %2 db])
@@ -134,6 +146,12 @@
   |=  old=vase
   ~|  %stead-unsupported-state
   =/  restored  !<(saved old)
+  ?:  ?=([%stead-home %7 *] restored)
+    ?>  (valid:stead-home-handoff mode.restored)
+    ?>  ?|(?=(^ retired.restored) ?=(^ packs.restored))
+    ?>  (validate:stead-project-retirement our.bowl data.db.team.restored retired.restored)
+    =/  [cards=(list card:agent:gall) next=state:stead-team-owner]  (load-v7:team team.restored code.restored packs.restored)
+    [cards this(owner next(retired retired.restored), pending ~, handoff mode.restored)]
   ?:  ?=([%stead-home %6 *] restored)
     ?>  (valid:stead-home-handoff mode.restored)
     ?>  (gth generation.mode.restored 1)
@@ -159,6 +177,13 @@
 ++  on-poke
   |=  [=mark =vase]
   ^-  (quip card:agent:gall _this)
+  ?:  =(%stead-project-retirement-1 mark)
+    ~|  %stead-project-retirement-denied
+    ?>  &(configured =(src.bowl our.bowl) !sealed ?=(~ restoring.owner))
+    =/  request  (decode:stead-project-retirement !<(@t vase))
+    =/  next  (retire:stead-project-retirement our.bowl data.db.owner retired.owner request (now-ms now.bowl))
+    ?>  ?=(^ next)
+    `this(owner owner(retired u.next))
   ?:  =(%stead-home-handoff-1 mark)
     ?>  &(configured =(src.bowl our.bowl) ?=(~ restoring.owner))
     =/  next  (transition:stead-home-handoff our.bowl handoff !<(command:stead-home-handoff vase))
@@ -179,7 +204,7 @@
     ?>  &(=(our.bowl ~zod) =(src.bowl our.bowl) initialized.db)
     =/  [op=@tas ship=@p key=@t value=@t]  !<([@tas @p @t @t] vase)
     ?:  =(%roundtrip op)  (on-load on-save)
-    ?:  =(%load-future op)  (on-load !>([%stead-home %7 db]))
+    ?:  =(%load-future op)  (on-load !>([%stead-home %8 db]))
     ?:  =(%load-counter op)  (on-load !>([%0 0]))
     ?:  =(%hold-outsider-read op)
       ?>  &(=(ship ~bud) (lte (met 3 key) 1.024))
@@ -303,6 +328,15 @@
 ++  on-watch
   |=  route=path
   ^-  (quip card:agent:gall _this)
+  ?:  ?=([%project-retirement @ ~] route)
+    ~|  %stead-project-retirement-denied
+    ?>  &(configured =(src.bowl our.bowl) ?=(~ restoring.owner))
+    ?>  (uuid:stead-codec i.t.route)
+    =/  body  (need (status:stead-project-retirement our.bowl data.db.owner retired.owner i.t.route))
+    :_  this
+    :~  [%give %fact ~ %stead-result-3 !>(body)]
+        [%give %kick ~ ~]
+    ==
   ?:  =(route /home-handoff/status)
     ?>  &(configured =(src.bowl our.bowl))
     =/  body  (canonical:stead-codec (object:stead-codec ~[['protocol' 'stead.home-handoff/1'] ['home' (scot %p our.bowl)] ['phase' ?:(sealed 'sealed' 'open')] ['generation' (decimal:stead-codec generation.handoff)]]))

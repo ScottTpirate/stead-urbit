@@ -104,9 +104,16 @@ class ProjectMigration(unittest.TestCase):
         for role in ('source', 'destination'):
             self.stage_evidence(role)
 
-    def stage_evidence(self, role, **overrides):
+    def stage_evidence(self, role, *, source_status=None, **overrides):
         source = role == 'source'
-        observation_sha = self.write(role + '_observation', ('fixture observation for ' + role).encode())
+        observation = ('fixture observation for ' + role).encode()
+        if source:
+            observation = {'protocol': 'stead.project-retirement-status/1', 'home': '~zod', 'authority_epoch': '1',
+                           'writer_state': 'retired', 'retired_at_ms': '1900000000100'}
+            observation.update({key: self.transfer[key] for key in (
+                'project_id', 'migration_id', 'journal_head', 'destination_home')})
+            observation.update(source_status or {})
+        observation_sha = self.write(role + '_observation', observation)
         proof = {'protocol': 'stead.project-source-fence/1' if source else 'stead.project-destination-readback/1',
                  'home': '~zod' if source else '~bus', 'authority_epoch': '1' if source else '2',
                  'writer_state': 'retired' if source else 'write-disabled', 'observation_sha256': observation_sha}
@@ -169,6 +176,15 @@ class ProjectMigration(unittest.TestCase):
         self.write('destination_observation', b'changed observation')
         with self.assertRaisesRegex(ValueError, 'evidence-digest-mismatch'):
             migration.verify(**self.paths)
+
+    def test_signed_status_must_match_native_source_fence(self):
+        for override in ({'writer_state': 'active'}, {'destination_home': '~bud'},
+                         {'retired_at_ms': '1900000000000'}, {'journal_head': 'f' * 64}):
+            with self.subTest(override=override):
+                self.stage_evidence('source', source_status=override)
+                self.sign()
+                with self.assertRaisesRegex(ValueError, 'native-source-status-mismatch'):
+                    migration.verify(**self.paths)
 
     def test_signed_binding_history_preserves_ownership_and_revisions(self):
         create, work = (migration.decoded(row['canonical_command'].encode()) for row in self.rows)

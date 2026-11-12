@@ -69,6 +69,22 @@ Git access and blocks all product commands, including configuration and
 bootstrap. Existing upload evidence stays on disk, but deferred finalization
 cannot proceed. Observe the sealed status before stopping the source.
 
+Use the `owner` command array from the [deployment runbook](PHASE5_DEPLOYMENT.md)
+with the exact source or destination process and pier. The source receives
+only the challenge. Keep the ticket file private and provide it to the
+destination after verifying source retirement.
+
+```sh
+"${owner[@]}" handoff-status
+"${owner[@]}" handoff-seal --generation "$source_generation" --challenge "$challenge"
+# Run on the destination after verifying the retired source and the copied pier.
+"${owner[@]}" handoff-activate --generation "$sealed_generation" --ticket-file "$private_ticket"
+```
+
+If a command reports an unconfirmed result, read `handoff-status` and
+reconcile the observed phase and generation before attempting any further
+operation.
+
 1. Close the public routes, seal the Home and confirm its next generation.
 2. Stop and disable the source service. Independently verify retirement and
    make an encrypted, digest-verified copy of the sealed stopped pier. Retain

@@ -133,7 +133,7 @@ class ReleaseRecoveryTests(unittest.TestCase):
                    files={app: {'sha256': '2' * 64}, 'desk/sys.kelvin': {'sha256': '3' * 64}})
         new = dict(common, source_commit='b' * 40, saved_state_version=4,
                    files={app: {'sha256': '4' * 64}, 'desk/sys.kelvin': {'sha256': '3' * 64}})
-        for version in (4, 5):
+        for version in (4, 5, 6, 7):
             plan = recovery.home_upgrade_plan(old, dict(new, saved_state_version=version), 'a' * 64, 'b' * 64, 'c' * 64)
             self.assertEqual(plan['source_desk'], recovery.desk_inventory(old))
             self.assertEqual(plan['source_saved_state_version'], 3)

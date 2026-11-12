@@ -3,9 +3,34 @@
 The offline verifier checks the evidence for moving a project from its original
 Home at authority epoch 1 to a different ship and origin at epoch 2 within the
 same custody boundary. It returns a candidate directory entry with a distinct
-protocol, `stead.project-directory-candidate/1`. The native source fence,
-project snapshot export, destination replay, and activation are separate steps
-that still need implementation and qualification.
+protocol, `stead.project-directory-candidate/1`. Home provides the native
+source fence. Project snapshot export, destination replay, and activation still
+need implementation and qualification.
+
+## Retire the source project
+
+Use the existing owner-local Khan connection to read the source project status
+with `project-retirement-status --project PROJECT_ID`. Select the move ID and
+the destination ship after reviewing the current epoch and journal head.
+Submit `project-retire --intent-file INTENT_JSON` with those exact values. The
+Gall event compares the
+epoch and the current Work/Docs journal head before it records the permanent
+project fence. A retry of the same intent preserves the first retirement record.
+A competing move fails.
+
+Read back `writer_state=retired` through the same owner-local connection. The
+native status contains the source, project, migration, destination, epoch,
+journal head and retirement timestamp. Save the compact, sorted CLI JSON
+without its final newline as the source observation. Keep it private. Prepare
+the Work/Docs and Code snapshot after observing retirement so it includes any
+Code commits accepted before the fence. Pending upload jobs confer no write
+authority and their finalization is denied after retirement.
+
+Current membership and project authorization still govern reads on the source.
+The source can revoke an identity binding, and authorized readers can obtain
+read-only Git credentials. Project grants, Work, Docs and accepted Code state are frozen.
+Keep older backups isolated, and stop serving the old Home's project after the
+destination takes over so it cannot become a stale access path.
 
 ## Evidence and signatures
 
@@ -23,7 +48,7 @@ files with mode `0600` to the verifier.
 | Journal | One exact native `stead.journal/3` record per line, ordered from sequence 1 with a trailing LF. Hash each row without the LF for the chain and hash the whole file including the LFs for `journal_sha256`. |
 | Snapshot | Exact opaque bytes of the proposed project snapshot. The verifier checks the byte hash. The native importer must verify its format and contents before any activation. |
 | Source fence and destination readback | Canonical records containing `protocol`, `migration_id`, `project_id`, `home`, `authority_epoch`, `journal_head`, `snapshot_sha256`, `observation_sha256`, and `writer_state`. Use `stead.project-source-fence/1` with state `retired` and `stead.project-destination-readback/1` with state `write-disabled`. |
-| Observations | Exact private reports reviewed by the signing operators. The source report describes how the old authority was fenced. The destination report describes the isolated, write-disabled readback and the matching project evidence. |
+| Observations | The source is the exact native `stead.project-retirement-status/1` response. The destination is the exact private report of isolated, write-disabled readback and matching project evidence. |
 
 The JSON files use [Stead canonical JSON](CONTRACTS.md#limits-and-serialization)
 without a trailing LF. Use lowercase SHA-256 hex and UUIDv7 values for project,
@@ -49,7 +74,8 @@ python3 scripts/urbit/project_migration.py \
 ```
 
 The verifier uses OpenSSL Ed25519 verification and bounds the journal to
-6,144 rows and 64 MiB, the snapshot to 256 MiB, and each observation to 1 MiB.
+6,144 rows and 64 MiB, the snapshot to 256 MiB, the source observation to
+4 KiB and the destination observation to 1 MiB.
 It checks the native journal link, command and acceptance-receipt hashes, stable
 binding ownership, actor revision continuity, attribution, time ordering, and
 duplicate request scope. The journal stays in the original authority epoch and
@@ -59,11 +85,9 @@ business transition, every receipt, and the final application state.
 
 ## Native activation boundary
 
-1. Add a durable source retirement transition for the selected project. The
-   source must close every write route for the project, drain in-flight writes,
-   and retain the final journal tip and state checkpoint. Verify that normal
-   reload and recovery cannot reopen the retired writer. Protect older backups
-   behind an operational startup fence.
+1. Retire the selected project, capture its frozen snapshot and verify the
+   signed evidence. Verify that normal reload preserves the fence and protect
+   older backups behind the operational startup fence.
 2. Rebuild the old project in isolation using its historical Home, policy,
    binding, and epoch context. Verify Work, Docs revisions and Git objects, Code
    refs and accepted receipts, grants, and any state outside the Work/Docs

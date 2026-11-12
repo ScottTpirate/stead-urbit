@@ -41,6 +41,8 @@ RECEIPT_FIELDS = {'protocol', 'status', 'request_id', 'canonical_sha256', 'proje
                   'session_audit_id', 'runtime', 'accepted_at_ms', 'git_commit_oid'}
 EVIDENCE_FIELDS = {'protocol', 'migration_id', 'project_id', 'home', 'authority_epoch', 'journal_head',
                    'snapshot_sha256', 'observation_sha256', 'writer_state'}
+SOURCE_STATUS_FIELDS = {'protocol', 'migration_id', 'project_id', 'home', 'authority_epoch', 'journal_head',
+                        'destination_home', 'retired_at_ms', 'writer_state'}
 OPERATIONS = {
     'project.create': 'project', 'work.create': 'work', 'work.update': 'work', 'work.delete': 'work',
     'container.create': 'container', 'document.save': 'document', 'document.publish': 'document',
@@ -230,9 +232,10 @@ def verify_journal(path, current, transfer):
             digest.update(line)
     require(count > 0 and str(count) == transfer['journal_count'] and previous == transfer['journal_head']
             and digest.hexdigest() == transfer['journal_sha256'], 'journal-tip-mismatch')
+    return last_time
 
 
-def verify_evidence(path, observation, transfer, current, *, source):
+def verify_evidence(path, observation, transfer, current, *, source, last_accepted):
     name = 'source_fence_sha256' if source else 'destination_readback_sha256'
     raw = private_file(path, MAX_EVIDENCE)
     require(sha(raw) == transfer[name], 'evidence-digest-mismatch')
@@ -245,7 +248,19 @@ def verify_evidence(path, observation, transfer, current, *, source):
             and evidence['writer_state'] == writer_state
             and all(evidence[key] == transfer[key] for key in ('migration_id', 'project_id', 'journal_head', 'snapshot_sha256'))
             and match(TOKEN, evidence['observation_sha256']), 'evidence-scope-mismatch')
-    verify_blob(observation, MAX_OBSERVATION, evidence['observation_sha256'])
+    if source:
+        raw_status = private_file(observation, MAX_EVIDENCE)
+        require(sha(raw_status) == evidence['observation_sha256'], 'evidence-digest-mismatch')
+        status = exact_record(raw_status, SOURCE_STATUS_FIELDS, MAX_EVIDENCE)
+        number(status['retired_at_ms'])
+        require(status['protocol'] == 'stead.project-retirement-status/1'
+                and status['destination_home'] == transfer['destination_home']
+                and int(status['retired_at_ms']) >= last_accepted
+                and all(status[key] == evidence[key] for key in (
+                    'home', 'project_id', 'authority_epoch', 'journal_head', 'migration_id', 'writer_state')),
+                'native-source-status-mismatch')
+    else:
+        verify_blob(observation, MAX_OBSERVATION, evidence['observation_sha256'])
 
 
 def verify(directory, trust, signed, journal, snapshot, source_fence, source_observation, destination_readback,
@@ -281,9 +296,9 @@ def verify(directory, trust, signed, journal, snapshot, source_fence, source_obs
     verify_signature(pins['source_ed25519'], envelope['source_signature'], b'source', transfer)
     verify_signature(pins['destination_ed25519'], envelope['destination_signature'], b'destination', transfer)
     verify_blob(snapshot, MAX_SNAPSHOT, transfer['snapshot_sha256'])
-    verify_journal(journal, current, transfer)
-    verify_evidence(source_fence, source_observation, transfer, current, source=True)
-    verify_evidence(destination_readback, destination_observation, transfer, current, source=False)
+    last_accepted = verify_journal(journal, current, transfer)
+    verify_evidence(source_fence, source_observation, transfer, current, source=True, last_accepted=last_accepted)
+    verify_evidence(destination_readback, destination_observation, transfer, current, source=False, last_accepted=last_accepted)
     return {'protocol': 'stead.project-handoff-verification/1', 'status': 'verified-candidate', 'authority_changed': False,
             'migration_id': transfer['migration_id'], 'transfer_sha256': sha(canonical(transfer)),
             'candidate_directory': {'protocol': 'stead.project-directory-candidate/1', 'project_id': current['project_id'],

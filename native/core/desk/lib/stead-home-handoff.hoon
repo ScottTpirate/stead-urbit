@@ -3,6 +3,17 @@
 |%
 +$  phase  $%([%open generation=@ud ~] [%sealed generation=@ud challenge=@t])
 +$  command  [operation=?(%seal %activate) generation=@ud proof=@t]
+++  decode
+  |=  raw=@t
+  ^-  command
+  ?>  (lte (met 3 raw) 256)
+  =/  value  (need (parse-result:stead-codec raw))
+  ?>  ?=([%o *] value)
+  ?>  (keys:stead-codec p.value ~['operation' 'generation' 'proof'])
+  =/  op  (field:stead-codec p.value 'operation')
+  ?>  |(=('seal' op) =('activate' op))
+  =/  operation  ?:(=('seal' op) %seal %activate)
+  [operation (uint:stead-codec (field:stead-codec p.value 'generation')) (field:stead-codec p.value 'proof')]
 ++  valid
   |=  mode=phase
   ^-  ?

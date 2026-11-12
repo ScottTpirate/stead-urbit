@@ -17,6 +17,7 @@ from urllib.parse import urlsplit
 
 import core_conn
 from digests import read_source, sha
+from portable_recovery import UUID, match, private_file
 
 
 ROOT = Path(__file__).resolve().parents[2]
@@ -145,8 +146,13 @@ class OwnerProcess:
 
     def call(self, ship, mode, route, value):
         require(len(ship) <= 64 and SHIP.fullmatch(ship), 'Use the expected canonical ship name')
-        path = '[%bootstrap ' if mode == 'bootstrap' else '[%operator '
-        path = path + core_conn.atom(route.encode()) + ' ~]' if route else '~'
+        path = '~'
+        if route:
+            segment = {'bootstrap': 'bootstrap', 'operator-status': 'operator',
+                       'project-retirement-status': 'project-retirement'}[mode]
+            path = f'[%{segment} {core_conn.atom(route.encode())} ~]'
+        if mode == 'handoff-status':
+            path = '[%home-handoff %status ~]'
         raw = json.dumps(value, sort_keys=True, separators=(',', ':')).encode() if value is not None else b''
         require(len(raw) <= 65536, 'Home configuration exceeds the native limit')
         noun = (f'[32 %fyrd [%{self.desk} %stead-pilot-owner %noun '
@@ -227,6 +233,90 @@ def bootstrap_identity(owner, ship, *, origin, port, certificate, previous=None)
     return {'identity': ship, 'pid': owner.pid, 'incarnation': value['incarnation']}
 
 
+def handoff_status(owner, ship):
+    value = owner.call(ship, 'handoff-status', '', None)
+    require(value.keys() == {'protocol', 'home', 'phase', 'generation'}
+            and value['protocol'] == 'stead.home-handoff/1' and value['home'] == ship
+            and value['phase'] in ('open', 'sealed'), 'Unexpected native handoff status')
+    revision(value['generation'])
+    return value
+
+
+def change_handoff(owner, ship, operation, generation, proof):
+    require(operation in ('seal', 'activate') and token(proof), 'Use the exact handoff challenge or ticket')
+    generation = revision(generation)
+    sealing = operation == 'seal'
+    before = handoff_status(owner, ship)
+    require(before['generation'] == generation and before['phase'] == ('open' if sealing else 'sealed'),
+            'Home handoff phase or generation changed')
+    following = int(generation) + int(sealing)
+    require(following <= MAX_REVISION, 'Home handoff generation exhausted')
+    try:
+        require(owner.call(ship, 'handoff', '', {'operation': operation, 'generation': generation, 'proof': proof}) == {},
+                'Unexpected native handoff acknowledgment')
+        after = handoff_status(owner, ship)
+        require(after['generation'] == str(following) and after['phase'] == ('sealed' if sealing else 'open'),
+                'Unexpected native handoff result')
+    except (OSError, ValueError):
+        raise ValueError('Handoff result unconfirmed. Read handoff-status before proceeding.') from None
+    return after
+
+
+def read_handoff_ticket(path):
+    with os.fdopen(os.open(path, os.O_RDONLY | os.O_NOFOLLOW | os.O_NONBLOCK), 'rb') as source:
+        info = os.fstat(source.fileno())
+        require(stat.S_ISREG(info.st_mode) and info.st_uid == os.geteuid() and info.st_nlink == 1
+                and stat.S_IMODE(info.st_mode) == 0o600 and info.st_size in (64, 65),
+                'Use a private owner-owned ticket file with mode 0600')
+        value = source.read(66).removesuffix(b'\n')
+    require(re.fullmatch(rb'[0-9a-f]{64}', value) is not None, 'Invalid private ticket bytes')
+    return value.decode('ascii')
+
+
+def retirement_status(owner, ship, project):
+    require(match(UUID, project), 'Use a canonical project ID')
+    value = owner.call(ship, 'project-retirement-status', project, None)
+    fields = {'protocol', 'home', 'project_id', 'authority_epoch', 'journal_head', 'writer_state'}
+    require(value.get('protocol') == 'stead.project-retirement-status/1' and value.get('home') == ship
+            and value.get('project_id') == project and token(value.get('journal_head')),
+            'Unexpected native retirement status')
+    revision(value.get('authority_epoch'))
+    if value.get('writer_state') == 'retired':
+        fields |= {'migration_id', 'destination_home', 'retired_at_ms'}
+        require(match(UUID, value.get('migration_id')) and match(SHIP, value.get('destination_home'))
+                and value['destination_home'] != ship, 'Unexpected native retirement destination')
+        revision(value.get('retired_at_ms'))
+    else:
+        require(value.get('writer_state') == 'active', 'Unexpected native writer state')
+    require(value.keys() == fields, 'Unexpected native retirement fields')
+    return value
+
+
+def retire_project(owner, ship, intent):
+    require(intent.keys() == {'protocol', 'project_id', 'migration_id', 'authority_epoch',
+                              'destination_home', 'expected_journal_head'}
+            and intent['protocol'] == 'stead.project-retire/1' and match(UUID, intent['migration_id'])
+            and match(SHIP, intent['destination_home']) and intent['destination_home'] != ship
+            and token(intent['expected_journal_head']), 'Use the exact reviewed project retirement intent')
+    project = intent['project_id']
+    before = retirement_status(owner, ship, project)
+    require(before['authority_epoch'] == revision(intent['authority_epoch'])
+            and before['journal_head'] == intent['expected_journal_head'], 'Project authority or journal head changed')
+    expected = {'writer_state': 'retired', 'authority_epoch': before['authority_epoch'],
+                'journal_head': before['journal_head'], 'migration_id': intent['migration_id'],
+                'destination_home': intent['destination_home']}
+    if before['writer_state'] == 'retired':
+        require(all(before[key] == value for key, value in expected.items()), 'Project already retired to a different intent')
+        return before
+    try:
+        require(owner.call(ship, 'project-retire', '', intent) == {}, 'Unexpected retirement acknowledgment')
+        after = retirement_status(owner, ship, project)
+        require(all(after.get(key) == value for key, value in expected.items()), 'Unexpected native retirement result')
+    except (OSError, ValueError):
+        raise ValueError('Retirement result unconfirmed. Read project-retirement-status before proceeding.') from None
+    return after
+
+
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument('--pid', type=int, required=True)
@@ -242,6 +332,19 @@ def main():
     cert = commands.add_parser('cert')
     cert.add_argument('--key', type=Path, required=True)
     cert.add_argument('--chain', type=Path, required=True)
+    commands.add_parser('handoff-status')
+    seal = commands.add_parser('handoff-seal')
+    seal.add_argument('--generation', required=True)
+    seal.add_argument('--challenge', required=True)
+    activate = commands.add_parser('handoff-activate')
+    activate.add_argument('--generation', required=True)
+    activate.add_argument('--ticket-file', type=Path, required=True)
+    retirement = commands.add_parser('project-retirement-status')
+    retirement.add_argument('--project', required=True)
+    retire = commands.add_parser('project-retire')
+    retire.add_argument('--intent-file', type=Path, required=True)
+    pack = commands.add_parser('pack-stage')
+    pack.add_argument('--attestation-file', type=Path, required=True)
     for name in ('status', 'bootstrap'):
         command = commands.add_parser(name)
         command.add_argument('--revision', help='Reviewed Home configuration revision')
@@ -272,6 +375,28 @@ def main():
         elif args.operation == 'status':
             require(args.role == 'home', 'Only the Home role exposes owner-local status')
             value = status(owner, args.ship, revision(args.revision))
+        elif args.operation.startswith('handoff-'):
+            require(args.role == 'home', 'Only the Home role supports handoff')
+            if args.operation == 'handoff-status':
+                value = handoff_status(owner, args.ship)
+            else:
+                operation = args.operation.removeprefix('handoff-')
+                proof = args.challenge if operation == 'seal' else read_handoff_ticket(args.ticket_file)
+                value = change_handoff(owner, args.ship, operation, args.generation, proof)
+        elif args.operation in ('project-retirement-status', 'project-retire', 'pack-stage'):
+            require(args.role == 'home', 'Only the Home role supports this operation')
+            if args.operation == 'project-retirement-status':
+                value = retirement_status(owner, args.ship, args.project)
+            elif args.operation == 'project-retire':
+                intent = json.loads(private_file(args.intent_file, 2_048), object_pairs_hook=unique)
+                require(isinstance(intent, dict), 'Use a reviewed retirement intent object')
+                value = retire_project(owner, args.ship, intent)
+            else:
+                attestation = json.loads(private_file(args.attestation_file, 65_536), object_pairs_hook=unique)
+                require(isinstance(attestation, dict) and attestation.get('protocol') == 'stead.code-pack-attestation/1',
+                        'Use a verified pack attestation')
+                require(owner.call(args.ship, 'pack-stage', '', attestation) == {}, 'Unexpected pack staging acknowledgment')
+                value = {'home': args.ship, 'status': 'staged'}
         else:
             require(args.previous_incarnation is None or token(args.previous_incarnation), 'Invalid prior incarnation')
             options = {'origin': args.origin, 'port': args.listener_port, 'certificate': args.certificate_sha256,
@@ -281,7 +406,7 @@ def main():
             else:
                 require(args.revision is None, 'Identity bootstrap does not take a Home revision')
                 value = bootstrap_identity(owner, args.ship, **options)
-        print(json.dumps(value, sort_keys=True))
+        print(json.dumps(value, sort_keys=True, separators=(',', ':')))
     except (OSError, ValueError) as error:
         parser.exit(1, f'Live pilot owner check failed: {error}\n')
 

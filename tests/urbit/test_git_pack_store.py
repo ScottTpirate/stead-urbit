@@ -12,6 +12,7 @@ from unittest.mock import patch
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[2] / 'scripts/urbit'))
 import git_pack_store as store
+import git_pack_readback as readback
 from dogfood_rehearsal import Git
 
 
@@ -117,6 +118,23 @@ class PackStoreTests(unittest.TestCase):
         self.assertFalse(target.exists())
         self.assertFalse(list(self.root.glob('.code-restore-*')))
 
+    def test_attestation_reverifies_the_exact_home_snapshot(self):
+        home_scope = SCOPE | {'repository_id': SCOPE['project_id']}
+        snapshot, value = self.stage(scope=home_scope)
+        attestation = store.attest(self.storage, snapshot, home_scope, self.binary)
+        self.assertEqual(attestation, {'protocol': store.ATTESTATION_FORMAT, **home_scope,
+            'snapshot': snapshot, 'head': value['head'], 'refs': self.refs, 'pack_sha256': self.digest,
+            'pack_bytes': str(value['pack_bytes']), 'object_count': str(value['object_count']),
+            'object_bytes': str(value['object_bytes']), 'object_ids_sha256': value['object_ids_sha256']})
+        with self.assertRaisesRegex(ValueError, 'snapshot-scope'):
+            store.attest(self.storage, snapshot, home_scope | {'authority_epoch': '2'}, self.binary)
+        entry = self.storage / '.'.join(home_scope[key] for key in ('home', 'project_id', 'repository_id'))
+        stored = entry / snapshot / store.PACK_NAME
+        raw = stored.read_bytes()
+        stored.write_bytes(raw[:-1] + bytes([raw[-1] ^ 1]))
+        with self.assertRaisesRegex(ValueError, 'pack-digest'):
+            store.attest(self.storage, snapshot, home_scope, self.binary)
+
     def test_atomic_replay_at_capacity_and_concurrent_writer(self):
         snapshot, value = self.stage()
         with patch.object(store, 'MAX_SNAPSHOTS', 1):
@@ -128,3 +146,21 @@ class PackStoreTests(unittest.TestCase):
             with self.assertRaises(BlockingIOError):
                 self.stage()
         self.assertEqual([path.name for path in self.repository().iterdir()], [snapshot])
+
+    def test_home_readback_rechecks_current_acceptance_before_publication(self):
+        scope = SCOPE | {'repository_id': SCOPE['project_id']}
+        snapshot, value = self.stage(scope=scope)
+        report = {'snapshot': snapshot, 'request_id': '019939ba-4000-7000-8000-000000000003',
+                  'object_count': str(value['object_count']), 'head': value['head']}
+        observed = (scope, report, value['refs'])
+        target = self.root / 'authorized.git'
+        with patch.object(readback, 'observe', side_effect=[observed, ValueError('denied')]):
+            with self.assertRaisesRegex(ValueError, 'denied'):
+                readback.restore(None, None, scope['project_id'], self.storage, target, self.binary)
+        self.assertFalse(target.exists())
+        self.assertFalse(list(self.root.glob('.code-restore-*')))
+        with patch.object(readback, 'observe', side_effect=[observed, observed]) as observe:
+            result = readback.restore(None, None, scope['project_id'], self.storage, target, self.binary)
+        self.assertEqual(observe.call_count, 2)
+        self.assertEqual(result['snapshot'], snapshot)
+        self.assertEqual(Git(self.binary, target).refs(), self.git.refs())
