@@ -30,14 +30,15 @@
   =/  data  data.db.owner
   ?>  (current:stead-project-retirement data intent)
   =/  start  (uint offset)
-  ?>  (lth start 67.108.864)
+  =/  stream-limit  journal-max-stream-bytes:stead-project-retirement
+  ?>  (lth start stream-limit)
   =/  rows
     (flop (skim journal.data |=([project=@t bytes=@t digest=@t] =(project project.intent))))
   =/  count  (lent rows)
-  ?>  &((gth count 0) (lte count 6.144))
+  ?>  &((gth count 0) (lte count journal-max-rows:stead-project-retirement))
   =/  [done=? body=@]
     =/  skip=@ud  start
-    =/  room=@ud  (min 32.768 (sub 67.108.864 start))
+    =/  room=@ud  (min 32.768 (sub stream-limit start))
     =/  chunks=(list [@ud @])  ~
     |-
     ^-  [done=? body=@]

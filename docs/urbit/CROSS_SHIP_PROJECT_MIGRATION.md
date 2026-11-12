@@ -9,14 +9,18 @@ need implementation and qualification.
 
 ## Retire the source project
 
+Use a disposable rehearsal project until destination import and activation are qualified. Source retirement is permanent.
+
 Use the existing owner-local Khan connection to read the source project status
 with `project-retirement-status --project PROJECT_ID`. Select the move ID and
 the destination ship after reviewing the current epoch and journal head.
 Submit `project-retire --intent-file INTENT_JSON` with those exact values. The
 Gall event compares the
 epoch and the current Work/Docs journal head before it records the permanent
-project fence. A retry of the same intent preserves the first retirement record.
-A competing move fails.
+project fence. It also checks that the project journal fits the export and
+verifier limits of 6,144 records, 256 KiB per record, and 64 MiB total including
+one LF per record. Exceeding any limit leaves the source writer active. A retry
+of the same intent preserves the first retirement record. A competing move fails.
 
 Read back `writer_state=retired` through the same owner-local connection. The
 native status contains the source, project, migration, destination, epoch,
@@ -82,8 +86,9 @@ python3 scripts/urbit/project_migration.py \
 ```
 
 The verifier uses OpenSSL Ed25519 verification and bounds the journal to
-6,144 rows and 64 MiB, the snapshot to 256 MiB, the source observation to
-4 KiB and the destination observation to 1 MiB.
+6,144 rows, 256 KiB per row, and 64 MiB including line endings. It bounds the
+snapshot to 256 MiB, the source observation to 4 KiB and the destination
+observation to 1 MiB.
 It checks the native journal link, command and acceptance-receipt hashes, stable
 binding ownership, actor revision continuity, attribution, time ordering, and
 duplicate request scope. The journal stays in the original authority epoch and

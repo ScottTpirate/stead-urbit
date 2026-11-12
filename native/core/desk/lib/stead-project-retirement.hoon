@@ -5,6 +5,10 @@
 +$  intent  [project=@t migration=@t epoch=@ud destination=@p journal-head=@t]
 +$  record  [request=intent retired-at=@ud]
 +$  ledger  (map @t record)
+::  Match the portable journal verifier's limits, including the LF per row.
+++  journal-max-rows  6.144
+++  journal-max-row-bytes  262.144
+++  journal-max-stream-bytes  67.108.864
 ++  decode
   |=  raw=@t
   ^-  intent
@@ -49,6 +53,23 @@
       (token-valid:stead-session journal-head.request)
       (current data request)
   ==
+++  journal-admissible
+  |=  [data=state:stead-core project=@t]
+  ^-  ?
+  =/  rows  journal.data
+  =/  count=@ud  0
+  =/  total=@ud  0
+  |-
+  ?~  rows  (gth count 0)
+  ?.  =(project project.i.rows)  $(rows t.rows)
+  =/  size  (met 3 bytes.i.rows)
+  =/  next-total  (add total +(size))
+  ?:  ?|  =(0 size)
+          (gth size journal-max-row-bytes)
+          (gte count journal-max-rows)
+          (gth next-total journal-max-stream-bytes)
+      ==  |
+  $(rows t.rows, count +(count), total next-total)
 ++  retire
   |=  [home=@p data=state:stead-core retired=ledger request=intent now=@ud]
   ^-  (unit ledger)
@@ -59,6 +80,7 @@
   ?:  (gte ~(wyt by retired) 16)  ~
   ?.  (valid-record home data [request now])  ~
   ?:  (lien ~(tap by retired) |=([key=@t row=record] =(migration.request migration.request.row)))  ~
+  ?.  (journal-admissible data project.request)  ~
   [~ (~(put by retired) project.request [request now])]
 ++  validate
   |=  [home=@p data=state:stead-core retired=ledger]

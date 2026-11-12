@@ -48,4 +48,27 @@
 ++  test-project-retire-rejects-changed-journal-on-load
   =/  altered  data.source(journal [[project '' (hex:stead-codec 64 0)] journal.data.source])
   (expect !>(!(validate ~zod altered retired)))
+++  test-project-retire-rejects-unexportable-journal-before-fencing
+  ::  Share one synthetic atom across 256 rows to reach 64 MiB with LFs.
+  =/  entry  [project `@t`(bex 2.097.136) tip]
+  =/  exact  (reap 256 entry)
+  =/  wide  [other `@t`(bex 2.097.152) tip]
+  =/  compact  [project 'a' tip]
+  =/  fitting  data.source(journal [wide exact])
+  =/  overflowing  data.source(journal [compact exact])
+  =/  max-row  data.source(journal ~[[project `@t`(bex 2.097.144) tip]])
+  =/  max-count  (reap journal-max-rows compact)
+  =/  observation  (need (parse-result:stead-codec (need (status ~zod overflowing ~ project))))
+  ?>  ?=([%o *] observation)
+  %-  expect
+  !>  ?&  (journal-admissible fitting project)
+          (journal-admissible max-row project)
+          (journal-admissible data.source(journal max-count) project)
+          !(journal-admissible fitting other)
+          !(journal-admissible data.source(journal [compact max-count]) project)
+          ?=(^ (retire ~zod fitting ~ command 1.002))
+          ?=(~ (retire ~zod overflowing ~ command 1.002))
+          =('active' (field:stead-codec p.observation 'writer_state'))
+          =([~ retired] (retire ~zod overflowing retired command 1.003))
+      ==
 --
