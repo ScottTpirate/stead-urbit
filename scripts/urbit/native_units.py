@@ -105,9 +105,10 @@ def validate_inventory(value: dict) -> dict:
                    '/tests/stead-http': ('test-http-', 14, 60),
                    '/tests/stead-identity': ('test-identity-', 11, 60),
                    '/tests/stead-updates': ('test-updates-', 25, 60),
+                   '/tests/stead-creator-renewal': ('test-creator-renewal-', 4, 60),
                    '/tests/stead-update-capacity': ('test-updates-', 2, 180)}
     if not isinstance(suites, list) or len(suites) != len(definitions):
-        raise ValueError('Exactly five native suites required')
+        raise ValueError('Exactly six native suites required')
     paths = [entry.get('path') for entry in suites if isinstance(entry, dict)]
     if set(paths) != set(definitions) or len(paths) != len(definitions):
         raise ValueError('Native suite paths')
@@ -124,7 +125,7 @@ def validate_inventory(value: dict) -> dict:
     capacity = next(suite for suite in suites if suite['path'] == '/tests/stead-update-capacity')
     if set(capacity['arms']) != {'test-updates-global-watch-cursor-stream-caps', 'test-updates-retained-history-sixty-four-then-trim'}:
         raise ValueError('Capacity inventory must retain both native boundary cases')
-    if len(all_arms) != 71 or len(set(all_arms)) != 71 or type(value.get('expected_arm_count')) is not int or value.get('expected_arm_count') != 71:
+    if len(all_arms) != 75 or len(set(all_arms)) != 75 or type(value.get('expected_arm_count')) is not int or value.get('expected_arm_count') != 75:
         raise ValueError('Native arm count and uniqueness')
     if value.get('negative_control') != {
             'path': '/controls/stead-unit-failure', 'arms': ['test-deliberate-failure'],

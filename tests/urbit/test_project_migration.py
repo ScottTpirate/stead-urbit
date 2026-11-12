@@ -32,15 +32,17 @@ def event(sequence, previous, command_value, **identity_overrides):
             'credential_expires_at_ms': identity['binding_expires_at_ms'],
             'identity': migration.canonical(identity).decode()}
     raw_command = migration.canonical(command_value)
+    revision = command_value['expected_revision']
+    next_revision = str(int(revision) + 1)
     receipt = {'protocol': 'stead.receipt/3', 'status': 'accepted',
                'canonical_sha256': migration.domain_hash(migration.COMMAND, raw_command),
                'resource_kind': command_value['operation'].split('.')[0], 'container_id': '',
-               'resource_revision': '1', 'accepted_at_ms': str(1_900_000_000_000 + sequence), 'git_commit_oid': ''}
+               'resource_revision': next_revision, 'accepted_at_ms': str(1_900_000_000_000 + sequence), 'git_commit_oid': ''}
     receipt.update({key: command_value[key] for key in ('request_id', 'project_id', 'resource_id', 'authority_epoch', 'operation')})
     receipt.update({key: identity[key] for key in ('identity_ship', 'principal_id', 'binding_id', 'binding_revision')})
     receipt.update({key: auth[key] for key in ('authentication', 'authentication_strength', 'session_audit_id', 'runtime')})
     return {'protocol': migration.JOURNAL, 'sequence': str(sequence), 'previous_digest': previous,
-            'canonical_command': raw_command.decode(), 'old_revision': '0', 'new_revision': '1',
+            'canonical_command': raw_command.decode(), 'old_revision': revision, 'new_revision': next_revision,
             'receipt': migration.canonical(receipt).decode(), 'authentication_context': migration.canonical(auth).decode(),
             'grant_target': ''}
 
@@ -214,3 +216,30 @@ class ProjectMigration(unittest.TestCase):
                 self.sign()
                 with self.assertRaisesRegex(ValueError, 'journal-command-shape'):
                     migration.verify(**self.paths)
+
+    def test_signed_creator_renewal_preserves_original_unrevoked_grant(self):
+        original = self.rows[:]
+        renewal = command('policy.renew-creator-grant', 13, 1, {'grant_id': uid(7)}) | {'expected_revision': '1'}
+        binding = {'binding_revision': '2', 'binding_expires_at_ms': '2100000000000'}
+        revoke = command('policy.revoke', 14, 1, {'grant_id': uid(7)}) | {'expected_revision': '1'}
+        for change, actor, revoked, error in (
+                ({}, {}, False, None),
+                ({'payload': {'grant_id': uid(8)}}, {}, False, 'journal-creator-grant-renewal'),
+                ({}, {'binding_id': uid(12)}, False, 'journal-creator-grant-renewal'),
+                ({}, {'binding_expires_at_ms': '2000000000000'}, False, 'journal-creator-grant-renewal'),
+                ({'expected_revision': '2'}, {}, False, 'journal-policy-revision'),
+                ({'expected_revision': '2'}, {}, True, 'journal-creator-grant-renewal')):
+            with self.subTest(change=change, actor=actor, revoked=revoked):
+                self.rows = original[:]
+                if revoked:
+                    previous = migration.domain_hash(migration.JOURNAL, migration.canonical(self.rows[-1]))
+                    self.rows.append(event(3, previous, revoke))
+                previous = migration.domain_hash(migration.JOURNAL, migration.canonical(self.rows[-1]))
+                self.rows.append(event(len(self.rows) + 1, previous, renewal | change, **(binding | actor)))
+                self.stage_journal()
+                self.sign()
+                if error is None:
+                    self.assertEqual(migration.verify(**self.paths)['status'], 'verified-candidate')
+                else:
+                    with self.assertRaisesRegex(ValueError, error):
+                        migration.verify(**self.paths)

@@ -1,7 +1,7 @@
 {
   "format": 1,
   "classification": "pure-native-only",
-  "expected_arm_count": 71,
+  "expected_arm_count": 75,
   "suites": [
     {
       "path": "/tests/stead-session",
@@ -93,6 +93,16 @@
         "test-updates-resume-retires-only-own-handles",
         "test-updates-paginated-refresh-reclaims-only-own-query-walk",
         "test-updates-empty-receipt-is-unconfirmed-only-in-current-scope"
+      ],
+      "timeout_seconds": 60
+    },
+    {
+      "path": "/tests/stead-creator-renewal",
+      "arms": [
+        "test-creator-renewal-requires-explicit-acceptance-and-replays",
+        "test-creator-renewal-rejects-stale-requests-and-no-extension",
+        "test-creator-renewal-needs-current-original-binding-and-grant",
+        "test-creator-renewal-cannot-reopen-retired-closed-or-revoked-project-access"
       ],
       "timeout_seconds": 60
     },

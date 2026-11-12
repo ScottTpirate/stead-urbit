@@ -84,6 +84,17 @@ same request is rejected; retrying an accepted original is idempotent.
 | `relation.delete` | none | Current authority over relation and endpoints; positive revision |
 | `policy.grant` | `grant_id`, `principal_id`, `role`, `expires_at_ms` | Project maintainer; project = resource; current positive policy revision |
 | `policy.revoke` | `grant_id` | Project maintainer; project = resource; current positive policy revision |
+| `policy.renew-creator-grant` | `grant_id` | Original creator’s current binding; project = resource; current positive policy revision |
+
+For creator renewal, `grant_id` is the accepted `project.create` request ID.
+The current authenticated actor must have the original principal and binding
+IDs, a higher binding revision, and a later binding expiration than the
+current grant. An accepted renewal extends that same unrevoked maintainer
+grant, advances policy revision, and records the ordinary command receipt.
+Closed and retired projects remain fenced. A creator whose grant expired may
+submit with the current epoch and policy revision if already known. A project
+query still requires active access. Reestablish the session and issue new Git
+credentials after the binding update.
 
 Titles have 1–200 Unicode code points, at most 800 UTF-8 bytes and no control
 bytes below space. Work description is at most 8,192 bytes; Markdown at most

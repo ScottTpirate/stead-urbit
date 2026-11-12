@@ -213,6 +213,48 @@ relations and bounded queries/updates. Capabilities declare supported versions,
 operations and limits; unknown versions fail explicitly. Request/receipt IDs,
 expected revisions and authority epochs remain mandatory for mutation.
 
+### Renewing a pilot project’s creator grant
+
+Project creation grants maintainer access through the creator’s original identity
+binding expiry. A binding update gives the member a new identity credential.
+The creator must separately renew the project grant.
+
+1. Before expiry, record the project ID, authority epoch, policy revision, and
+   original `project.create` request ID. A maintainer’s `project` query returns
+   `authority_epoch` and `policy_revision`. Each accepted policy receipt reports
+   the new policy revision in `resource_revision`.
+2. Have the home operator extend the same principal and binding ID with a higher
+   binding revision and a later expiration. Establish a fresh session as the
+   creator. The prior session and Git credentials remain invalid.
+3. Submit the following shape as the creator through the authenticated
+   `POST /stead/api/command` with the current session cookie and `X-Stead-CSRF` header,
+   or through the native `%stead-command-3` carrier from the verified member
+   ship. Substitute the project values and generate a fresh request UUID.
+
+   ```json
+   {
+     "protocol": "stead.command/3",
+     "request_id": "<new request UUID>",
+     "project_id": "<project UUID>",
+     "resource_id": "<project UUID>",
+     "authority_epoch": "1",
+     "expected_revision": "1",
+     "operation": "policy.renew-creator-grant",
+     "payload": {"grant_id": "<original project.create request UUID>"}
+   }
+   ```
+
+4. Confirm the accepted policy receipt and retain its `resource_revision` for
+   the next policy change. Issue fresh Git credentials when needed. Renew any
+   delegated grants separately using ordinary project policy commands.
+
+The home extends only the original, unrevoked creator grant through the new
+binding expiration. Renewal advances the project policy revision and records the
+usual journal entry and receipt. The existing request ID rules apply to retries.
+Closed and retired projects remain fenced. After the creator’s grant expires,
+the creator needs the current policy revision from a retained accepted receipt
+or an active maintainer. A project query requires current project access.
+
 A newly created draft container is private to its owner. A maintainer can
 explicitly create a shared project container; current project grants then govern
 that container. Publication names the full source project/container/document,

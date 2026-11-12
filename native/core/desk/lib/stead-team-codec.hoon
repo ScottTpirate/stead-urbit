@@ -111,7 +111,7 @@
           (~(has in (silt ~['reader' 'contributor' 'maintainer'])) (field pay 'role'))
           (gth (uint (field pay 'expires_at_ms')) 0)
       ==
-    ?:  =('policy.revoke' op)
+    ?:  ?|(=('policy.revoke' op) =('policy.renew-creator-grant' op))
       ?&  (gth exp 0)  =(pro res)
           (keys pay ~['grant_id'])  (uuid (field pay 'grant_id'))
       ==

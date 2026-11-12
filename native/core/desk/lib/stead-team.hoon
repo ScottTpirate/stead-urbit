@@ -102,6 +102,28 @@
   ?&  (subject db actor project (field payload 'source_kind') (field payload 'source_container_id') (field payload 'source_id') now)
       (subject db actor project (field payload 'target_kind') (field payload 'target_container_id') (field payload 'target_id') now)
   ==
+++  creator-renewal-allowed
+  |=  [db=state actor=authentication cmd=command]
+  ^-  ?
+  ?.  (~(has by projects.data.db) project.cmd)  |
+  ?:  (closed:stead-core data.db project.cmd)  |
+  =/  id  (field payload.cmd 'grant_id')
+  =/  principal  principal.identity.actor
+  =/  grant  (~(get by grants.data.db) (scope-key:stead-core project.cmd id))
+  ?~  grant  |
+  ?.  ?&  =(project.cmd project.u.grant)  =(principal principal.u.grant)
+          =('maintainer' role.u.grant)  !revoked.u.grant
+      ==  |
+  =/  genesis  (~(get by receipts.data.db) [project.cmd principal id])
+  ?~  genesis  |
+  ?.  &(=('project.create' operation.u.genesis) =(project.cmd resource.u.genesis))  |
+  =/  receipt  (parse-result bytes.u.genesis)
+  ?~  receipt  |
+  ?.  ?=([%o *] u.receipt)  |
+  ?&  =(binding.identity.actor (field p.u.receipt 'binding_id'))
+      =([~ principal] (~(get by owners.registry.db) binding.identity.actor))
+      (gth revision.identity.actor (uint (field p.u.receipt 'binding_revision')))
+  ==
 ++  allowed
   |=  [db=state actor=authentication cmd=command now=@ud]
   ^-  ?
@@ -115,6 +137,8 @@
         =(organization.config (field payload.cmd 'organization_id'))
         =(team.config (field payload.cmd 'owning_team_id'))
     ==
+  ?:  =('policy.renew-creator-grant' operation.cmd)
+    (creator-renewal-allowed db actor cmd)
   =/  rank  (role db actor project.cmd now)
   ?.  (gte rank 2)  |
   ?:  =('policy.grant' operation.cmd)  =(rank 3)
@@ -304,7 +328,7 @@
   ^-  (set @t)
   ?:  =('policy.grant' operation.cmd)
     (silt ~[(cat 3 'access:' (field payload.cmd 'principal_id'))])
-  ?:  =('policy.revoke' operation.cmd)
+  ?:  ?|(=('policy.revoke' operation.cmd) =('policy.renew-creator-grant' operation.cmd))
     =/  grant  (~(got by grants.data.db) (scope-key:stead-core project.cmd (field payload.cmd 'grant_id')))
     (silt ~[(cat 3 'access:' principal.grant)])
   =/  kind  (kind:stead-team-codec operation.cmd)
@@ -386,6 +410,14 @@
     =/  project  (~(got by projects.data) project.cmd)
     =.  projects.data  (~(put by projects.data) project.cmd project(policy new))
     =.  grants.data  (~(put by grants.data) (scope-key:stead-core project.cmd id) [project.cmd principal (field payload.cmd 'role') expiry |])
+    (accept db(data data) actor cmd now old new '')
+  ?:  =('policy.renew-creator-grant' operation.cmd)
+    =/  id  (scope-key:stead-core project.cmd (field payload.cmd 'grant_id'))
+    =/  grant  (~(got by grants.data) id)
+    ?.  (gth expires.identity.actor expires.grant)  [(error 'invalid_command') db]
+    =/  project  (~(got by projects.data) project.cmd)
+    =.  projects.data  (~(put by projects.data) project.cmd project(policy new))
+    =.  grants.data  (~(put by grants.data) id grant(expires expires.identity.actor))
     (accept db(data data) actor cmd now old new '')
   ?:  =('policy.revoke' operation.cmd)
     =/  id  (scope-key:stead-core project.cmd (field payload.cmd 'grant_id'))

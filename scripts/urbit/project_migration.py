@@ -47,7 +47,7 @@ OPERATIONS = {
     'project.create': 'project', 'work.create': 'work', 'work.update': 'work', 'work.delete': 'work',
     'container.create': 'container', 'document.save': 'document', 'document.publish': 'document',
     'document.delete': 'document', 'relation.create': 'relation', 'relation.delete': 'relation',
-    'policy.grant': 'policy', 'policy.revoke': 'policy',
+    'policy.grant': 'policy', 'policy.revoke': 'policy', 'policy.renew-creator-grant': 'policy',
 }
 MAX_ROW = 262_144
 MAX_ROWS = 6_144
@@ -129,7 +129,8 @@ def remember_actor(actor, binding_owners, observed_actors):
     observed_actors[principal] = actor
 
 
-def verify_event(raw, current, sequence, previous, last_time, seen, context, binding_owners, observed_actors):
+def verify_event(raw, current, sequence, previous, last_time, seen, context, binding_owners, observed_actors,
+                 creator_grant):
     record = exact_record(raw, ROW_FIELDS, MAX_ROW)
     require(record['protocol'] == JOURNAL and record['sequence'] == str(sequence)
             and record['previous_digest'] == previous, 'journal-link-mismatch')
@@ -194,6 +195,21 @@ def verify_event(raw, current, sequence, previous, last_time, seen, context, bin
     require((browser or native and auth['credential_expires_at_ms'] == identity['binding_expires_at_ms'])
             and auth['runtime'] in {'isolated-fake', 'live-synthetic'}, 'journal-authentication-profile')
     remember_actor(identity, binding_owners, observed_actors)
+    if operation == 'project.create':
+        creator_grant.update(identity, request_id=command['request_id'], policy_revision='1', revoked=False)
+    if kind == 'policy':
+        require(command['resource_id'] == current['project_id']
+                and command['expected_revision'] == creator_grant['policy_revision'], 'journal-policy-revision')
+        creator_grant['policy_revision'] = record['new_revision']
+    if operation == 'policy.revoke' and payload.get('grant_id') == creator_grant['request_id']:
+        creator_grant['revoked'] = True
+    if operation == 'policy.renew-creator-grant':
+        require(payload == {'grant_id': creator_grant['request_id']} and not creator_grant['revoked']
+                and all(identity[field] == creator_grant[field] for field in ('principal_id', 'binding_id'))
+                and int(identity['binding_revision']) > int(creator_grant['binding_revision'])
+                and int(identity['binding_expires_at_ms']) > int(creator_grant['binding_expires_at_ms']),
+                'journal-creator-grant-renewal')
+        creator_grant.update(identity)
     if operation == 'policy.grant':
         target = embedded(record['grant_target'], ACTOR_FIELDS, 1_024)
         require(target['principal_id'] == payload.get('principal_id') and match(UUID, target['principal_id'])
@@ -220,6 +236,7 @@ def verify_journal(path, current, transfer):
     seen = set()
     binding_owners = {}
     observed_actors = {}
+    creator_grant = {}
     digest = hashlib.sha256()
     with input_stream(path, MAX_JOURNAL) as stream:
         for line in iter(lambda: stream.readline(MAX_ROW + 2), b''):
@@ -228,7 +245,7 @@ def verify_journal(path, current, transfer):
             require(count <= MAX_ROWS and size <= MAX_JOURNAL and len(line) <= MAX_ROW + 1 and line.endswith(b'\n'),
                     'journal-input-bound')
             previous, last_time, context = verify_event(line[:-1], current, count, previous, last_time, seen, context,
-                                                        binding_owners, observed_actors)
+                                                        binding_owners, observed_actors, creator_grant)
             digest.update(line)
     require(count > 0 and str(count) == transfer['journal_count'] and previous == transfer['journal_head']
             and digest.hexdigest() == transfer['journal_sha256'], 'journal-tip-mismatch')
