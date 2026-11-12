@@ -10,8 +10,8 @@ function refLabel(hex: string) {
   catch { return `Raw ref bytes ${hex}`; }
 }
 
-export function CodePack({ client, project, manage, onAccepted }: {
-  client: HomeClient; project: string; manage: boolean; onAccepted: () => void;
+export function CodePack({ client, project, manage }: {
+  client: HomeClient; project: string; manage: boolean;
 }) {
   const [details, setDetails] = useState<Fields | null>(null);
   const [busy, setBusy] = useState(true);
@@ -46,7 +46,6 @@ export function CodePack({ client, project, manage, onAccepted }: {
       const accepted = await client.code(project, { action: 'pack-accept', snapshot, authority_epoch: epoch,
         request_id: request.current.id });
       setDetails(accepted);
-      onAccepted();
     } catch {
       setFailure('The Home did not confirm acceptance. Retry this snapshot or refresh to review the current one.');
     } finally { setBusy(false); }

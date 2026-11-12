@@ -164,7 +164,11 @@ to `1030000`. Use the Ed25519 test 1 key. [RFC 8032 §7.1](https://www.rfc-edito
 
 Python produced the tag and 602-byte signing input. OpenSSL 3.6.5 verified the
 resulting signature and rejected separate changes to the origin, tag and
-challenge. This executed byte-profile proof used the host only.
+challenge. The v7 native follow-up verified the same signed bytes and rejected
+separate changes to the origin and challenge using pinned Vere on an isolated
+Home. The native probe exercised the signature primitive. The browser-only
+sign-in flow and remaining qualification cases below are still open.
+[Native evidence](PHASE5_LOCAL_20261110.md#home-v7-and-full-history-readback)
 
 ```text
 Subject tag   3fd14320b0de7d6bb5f48da4c8d558ab8658c9b24a7d5a41305cdc82b346c4d8

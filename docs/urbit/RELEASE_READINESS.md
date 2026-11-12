@@ -91,6 +91,13 @@ the rotation. The temporary keys were discarded. The local report is
 `.runtime/phase6-readiness-6v37z93o/result.json` with SHA-256
 `3c74b644cf93f02f8cfe577d6bb5a181521d550ba780b7393a77fcfcdea0d19a`.
 
+The same CLI rehearsal passed against the v7 role archives built from
+`7d0d025df091abe0dcaf013c048e9b490f7b763f`. It verified the initial synthetic
+candidate, accepted the replacement publisher after rotation, and refused
+the retired publisher and replayed rotation. The local report is
+`.runtime/current-v7-readiness-1mFi4PaL/report.json` with SHA-256
+`73d3aeb5f3593a1b486d002adcf2de828843099ed243d063f7ea3971766534a2`.
+
 URB-270 still needs a real backup maintainer, verified private reporting,
 actual custody and recovery of release keys, and owner approval after the
 history, license and secret review. URB-280 still needs evidence from two

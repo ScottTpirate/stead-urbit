@@ -95,6 +95,7 @@ function App() {
   const [pending, setPending] = useState<Command | null>(null);
   const comparisonScope = `${identity?.session_audit_id}/${project?.project_id}/${container?.container_id ?? ''}/${editor?.id ?? work?.resource_id ?? ''}`;
   const activeQuery = useRef(0);
+  const repositoryGeneration = useRef(0);
   const displayedSnapshot = useRef<{scope: string; generation: string} | null>(null);
   const openingWatch = useRef<Promise<void> | null>(null);
   const heading = useRef<HTMLHeadingElement>(null);
@@ -106,6 +107,7 @@ function App() {
   const clearViews = () => {
     client.clearCodeMerges();
     activeQuery.current++;
+    repositoryGeneration.current++;
     displayedSnapshot.current = null;
     setLoading(false);
     setProjects([]); setProject(null); setContainers([]); setContainer(null); setRows([]);
@@ -113,13 +115,29 @@ function App() {
     setSearch(''); setSearchDraft(''); setCursor(''); setEditor(null); setWork(null); setForm(''); setFormDirty(false); setDiscard(null); setPending(null); setTargets([]); setTargetFilter(''); setConfirmation(null); setCurrentVersion(null); setNotice(''); setRefreshNotice(null);
   };
   client.onInvalidated = () => { clearViews(); setIdentity(null); setChallenge(null); };
+  async function loadRepository(projectId: string, enable = false) {
+    const generation = ++repositoryGeneration.current;
+    try {
+      if (enable) {
+        await client.code(projectId, { action: 'create' });
+        if (generation !== repositoryGeneration.current) return;
+      }
+      const value = await client.code(projectId, { action: 'status' });
+      if (generation !== repositoryGeneration.current) return;
+      setRepository(value);
+      if (enable) setShowRepository(true);
+    } catch (failure) {
+      if (generation !== repositoryGeneration.current) return;
+      if (enable) throw failure;
+      setRepository(null);
+    }
+  }
   useEffect(() => {
     const id = project?.project_id;
     if (!id || !identity?.session_audit_id) return;
-    let active = true;
-    void client.code(id, { action: 'status' }).then(value => { if (active) setRepository(value); })
-      .catch(() => { if (active) setRepository(null); });
-    return () => { active = false; };
+    void loadRepository(id);
+    const generation = repositoryGeneration.current;
+    return () => { if (generation === repositoryGeneration.current) repositoryGeneration.current++; };
   }, [project?.project_id, identity?.session_audit_id]);
   async function identify(admitted?: Fields) {
     // consume/resume already validate identity in HomeClient.adopt().
@@ -341,7 +359,10 @@ function App() {
   }
   async function openProject(row: Row) {
     if (busy || editor?.dirty || pending || form) { setError('Finish or discard the current draft before switching projects.'); return; }
-    if (row.project_id !== project?.project_id) setRepository(null);
+    if (row.project_id !== project?.project_id) {
+      repositoryGeneration.current++;
+      setRepository(null);
+    } else if (row.project_id) void loadRepository(row.project_id);
     setShowRepository(false);
     setWork(null); setForm(''); setTargets([]); setConfirmation(null); setCurrentVersion(null); setProject(row); setContainer(null); setEditor(null); setRows([]); setContainers([]); setTab('project'); setCursor('');
     reloadScope();
@@ -556,15 +577,14 @@ function App() {
             client={client} project={project.project_id!} writable={repository.write === 'yes'}
             manage={repository.manage === 'yes'} principal={identity.principal_id ?? ''} /> :
           showRepository && externalRepository ? <CodePack key={project.project_id} client={client} project={project.project_id!}
-            manage={repository?.manage === 'yes'} onAccepted={() => setRepository(prior => prior && ({ ...prior, status: 'external', write: 'no' }))} /> : <>
+            manage={repository?.manage === 'yes'} /> : <>
           {tab === 'project' && repository?.status === 'disabled' && repository.manage === 'yes'
-            && <Button disabled={busy || !!pending || !!form} onClick={() => void action(async () => {
-              await client.code(project.project_id!, { action: 'create' });
-              setRepository(await client.code(project.project_id!, { action: 'status' }));
-              setShowRepository(true);
-            })}>Enable Git repository</Button>}
+            && <Button disabled={busy || !!pending || !!form} onClick={() => void action(() => loadRepository(project.project_id!, true))}>Enable Git repository</Button>}
           <div className="toolbar"><div className="view-heading">{tab === 'work' && <h2>Work items</h2>}{tab === 'documents' && <label>Collection <select aria-label="Collection" disabled={busy} value={container?.container_id ?? ''} onChange={event => { const selected = containers.find(row => row.container_id === event.target.value) ?? null; if (busy || editor?.dirty || pending || form) { setError('Finish or discard the current draft first.'); return; } activeQuery.current++; setContainer(selected); setEditor(null); setWork(null); setCurrentVersion(null); setConfirmation(null); setForm(''); setRows([]); setCursor(''); reloadScope(); }}><option value="">Choose a collection</option>{containers.map(row => <option key={row.container_id} value={row.container_id}>{row.title} · {row.visibility === 'private' ? 'Private drafts' : 'Shared'}</option>)}</select></label>}{tab === 'search' && <form className="search" onSubmit={submitSearch}><TextField label="Search this project" value={searchDraft} onChange={event => setSearchDraft(event.target.value)} maxLength={128}/><Button type="submit" disabled={busy}>Search</Button></form>}</div><div className="actions">
-          <Button variant="quiet" disabled={busy || loading} onClick={reloadScope}>Refresh</Button>
+          <Button variant="quiet" disabled={busy || loading} onClick={() => {
+            reloadScope();
+            if (tab === 'project') void loadRepository(project.project_id!);
+          }}>Refresh</Button>
           {canEdit && tab === 'work' && <Button variant="primary" disabled={busy || !!pending || !!form} onClick={() => { setWork(null); setCurrentVersion(null); setForm('work'); }}><span aria-hidden="true" className="button-plus">＋</span>New work item</Button>}
           {canEdit && tab === 'relations' && <Button variant="primary" disabled={busy || !!pending || !!form || !!editor?.dirty} onClick={() => void action(async () => { await findTargets(''); setTargetFilter(''); setForm('relation'); })}>Add link</Button>}
           {canEdit && tab === 'documents' && <><Button disabled={busy || !!pending || !!form || !!editor?.dirty} onClick={() => { setEditor(null); setWork(null); setCurrentVersion(null); setForm('container'); }}>New collection</Button>{container && <Button variant="primary" disabled={busy || loading || !!pending || !!form || !!editor?.dirty} onClick={() => { activeQuery.current++; const id = newId(); setWork(null); setCurrentVersion(null); setEditor({ id, revision: '0', head: container.container_head ?? '', dirty: true, text: `---\nid: ${id}\ntype: page\nstate: ${draftMode ? 'draft' : 'published'}\n---\n# Untitled\n` }); }}>New page</Button>}</>}

@@ -1,11 +1,15 @@
 # Stead Urbit — experimental native implementation
 
-Status: **Phases 0 and 1 are complete. Phase 2 has passing configured native,
-browser/stock-Git, SDK, hosted CI and natural session-expiry components. The
-implementation is integrated; the independent human trial remains open.** See the
-[current qualification record](docs/urbit/PHASE2_QUALIFICATION_20260929.md).
-The [October 2 follow-up](docs/urbit/PHASE2_ONBOARDING_20261002.md) records fresh
-automated passes and a human trial that expired without task evidence or feedback.
+**Phases 0 and 1 are complete. Independent local review accepted the Phase 2
+Work/Docs workflow.** Phases 3 and 4 have verified local workflows for bounded
+native Git, review, builds, packaging and recovery. Phase 5 has local handoff,
+project retirement and full-history Git approval and recovery evidence. Live
+pilot qualification, native full-history Git serving and cross-ship activation
+remain open. Phase 6 has a synthetic release-verification and key-recovery drill.
+[Team workflow](docs/urbit/LOCAL_ACCEPTANCE_20261109.md) ·
+[Git and recovery](docs/urbit/PHASE34_LOCAL_WORKFLOW_20261109.md) ·
+[Phase 5](docs/urbit/PHASE5_LOCAL_20261110.md) ·
+[Phase 6](docs/urbit/RELEASE_READINESS.md)
 
 The [Phase 1 acceptance record](docs/urbit/PHASE1_ACCEPTANCE_20260926.md) binds
 496 passing native core checks, all eight capacity/predecessor recipes, 58
@@ -20,8 +24,7 @@ installations. The v3 public sample and four marks compiled in an independent
 fresh consumer; its 64 checks and 41 public calls passed at `7f113a1`, with exact
 input review and clean shutdown.
 [URB-180 / #21](https://github.com/ScottTpirate/stead-urbit/issues/21) is integrated
-through [PR #67](https://github.com/ScottTpirate/stead-urbit/pull/67); full Phase 2
-acceptance still requires the independent human trial.
+through [PR #67](https://github.com/ScottTpirate/stead-urbit/pull/67).
 The [first package's execution and review](docs/urbit/evidence/2026-09-26/phase02-sdk/README.md)
 remain historical v2 evidence. Current package/source checks do not substitute
 for [independent native consumer qualification](docs/urbit/SDK_CONSUMER_QUALIFICATION.md).

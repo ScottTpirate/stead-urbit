@@ -76,14 +76,19 @@ async function fixture(run, mockRepository = false) {
       return send({status: 'authenticated', csrf: 'b'.repeat(64)});
     }
     const token = () => (++state.token).toString(16).padStart(64, '0');
-    if (pathname === '/stead/api/code' && mockRepository) {
+    if (pathname === '/stead/api/code') {
       assert.equal(value.project_id, state.project.project_id);
       const respond = fields => send({protocol: 'stead.code/1', ...fields});
+      if (!mockRepository) {
+        assert.equal(value.action, 'status');
+        return respond({status: 'disabled', write: 'no', manage: 'no'});
+      }
       if (value.action === 'create') {
         state.repositoryReady = true;
         return respond({status: 'ready'});
       }
-      if (value.action === 'status') return respond({status: state.repositoryReady ? 'ready' : 'disabled', write: 'yes', manage: 'yes'});
+      if (value.action === 'status') return respond({status: state.pack?.status ?? (state.repositoryReady ? 'ready' : 'disabled'), write: state.pack ? 'no' : 'yes', manage: 'yes'});
+      if (value.action === 'pack-view') { assert.ok(state.pack); return respond(state.pack); }
       const key = value.proposal_id + '/' + value.revision;
       if (value.action === 'submit') {
         const {proposal_id, revision, work_id, ref, base_oid, head_oid} = value;
@@ -272,6 +277,26 @@ try {
     assert.equal(await clone.count(), 0);
     await code.click();
     await clone.waitFor();
+  });
+  await check('code-discovers-staged-snapshot-without-reloading', async (page, state) => {
+    const code = page.getByRole('button', {name: 'Code', exact: true});
+    const refresh = page.getByRole('button', {name: 'Refresh', exact: true});
+    await page.getByRole('button', {name: 'Enable Git repository', exact: true}).waitFor();
+    const head = Buffer.from('refs/heads/main').toString('hex');
+    const pack = {status: 'external-staged', snapshot: 'a'.repeat(64), authority_epoch: '1',
+      object_count: '3', head, refs: JSON.stringify({[head]: 'b'.repeat(40)})};
+    state.pack = pack;
+    await refresh.click();
+    await code.click();
+    await page.getByRole('heading', {name: 'Git snapshot', exact: true}).waitFor();
+    await page.getByRole('button', {name: 'Accept this snapshot', exact: true}).waitFor();
+    await page.getByRole('button', {name: 'Overview', exact: true}).click();
+    state.pack = null;
+    await refresh.click();
+    await code.waitFor({state: 'hidden'});
+    state.pack = pack;
+    await page.getByRole('button', {name: /GARDEN.*Garden/u}).click();
+    await code.waitFor();
   });
   await check('code-proposal-form-and-merge-retry-survive-view-change', async (page, state) => {
     state.work = [{kind: 'work', resource_id: id(50), title: 'Review the source', resource_revision: '1'}];

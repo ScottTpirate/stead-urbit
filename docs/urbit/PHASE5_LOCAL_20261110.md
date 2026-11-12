@@ -81,16 +81,53 @@ was restored to its original path.
 | `.piers/fakes/logs/team-check-20261110T223833Z.json` | `b67cfa9990912bc91820c003beba27d68d048684f55843ce13a0fb40b775c247` |
 | `.runtime/execution-runs/four-fakes-1j6zx6gp/report.json` | `541016eeac91e6760134e7a023d73d780a1d253d00ec7937d63f258604cf292a` |
 
-The continued host suite ran 878 tests with one skip. The separate bounded
-pack store recovered 7,803 objects and the exact two refs. Home still needs
-to authorize and commit the immutable pack digest with the accepted refs
-before full-history native Git serving. The signed cross-ship verifier
-checks the transfer and journal evidence and issues a candidate directory
-record. The source retirement and destination activation transitions are
-still needed for a cross-ship authority move.
+## Home v7 and full-history readback
 
-The synthetic pilot needs a qualified live runtime and startup fence on the
-chosen host. Dogfooding also needs the native full-history Git path and the
-approved change of write authority.
+The Home and Identity archives built from
+`7d0d025df091abe0dcaf013c048e9b490f7b763f` passed offline verification.
+The packaged v3-to-v7 Home upgrade passed all 18 native checks. A separate
+21-check native run exercised the packaged owner handoff commands and the
+project retirement fence. Home refused pack staging on the retired project
+and preserved the exact retirement record after a cold restart.
+
+A two-ship HTTPS run passed 24 checks. A member logged in through the
+separate Identity ship, created a project, reviewed and accepted the
+owner-staged pack, and received the same receipt on a repeated request.
+Home denied anonymous review, the wrong snapshot and epoch, and inline
+repository creation after acceptance. Stock Git 2.55.0 restored all 7,803
+objects and both refs through the authorized private readback helper. Home
+returned the same receipt after a cold restart and a fresh member login.
+The five native pack tests ran in the same test with the fixture correction
+from `ac40202`. The test applied the changed Hoon to a stopped synthetic
+checkpoint. The separate upgrade run installed the exact archive.
+
+The independent UI review found a late repository response could update the
+wrong project and that Overview Refresh missed an operator-staged snapshot.
+The browser changes fence those responses to the current project and session
+and refresh repository status on request. Type checking and 40 host browser
+client tests passed. Headless Firefox passed 30 rendered cases with synthetic
+Home responses, including discovery of a staged snapshot without a reload.
+
+| Evidence | SHA-256 |
+| --- | --- |
+| `.runtime/current-v7-release-sHVJU892/home.tar` | `c75b5ab16844211b22c2f85b33b67a8bd2c5ae48389ba533053d332d74327a66` |
+| `.runtime/current-v7-release-sHVJU892/identity.tar` | `5d5712b0c85430b9e997b6384bc5247c35956a502b5f7ec6ac8f4acacb0bdd59` |
+| `.runtime/release-home-upgrade-xasp5rf2/upgrade-report.json` | `728667558d2a36646908c6b577b5036f9f423615ecdadd7363374729794b6a63` |
+| `.runtime/current-v7-native-oSGcvOt0/state/report.json` | `fe6f846cf53a8004db6bb017b05486992a7ec0c931eb75e8a53d52d1256bf74d` |
+| `.runtime/current-pack-team-GBZGf4jN/state/report.json` | `4fab3337054ba2edd1fd84a8975adc46e7d60ef30d9202257b003cebe4b52492` |
+| `.runtime/execution-runs/current-pack-team-ci37jerg/report.json` | `fdc7d517c1ffbd29ea74df8f008f9183ae76be9e7db7cea497a539f02f4ded7b` |
+| `.runtime/web-render-tests/report.json` | `dc0cace06f2e089713d513dcbc670aff5381e75f2f3a764ddadea0de487e2c96` |
+
+The initial run confirmed an expired project grant still denies access
+after renewing the member's binding. Create the pilot project with a binding
+that covers the entire trial. The operator still needs a supported process
+for renewing expired project-maintainer grants for long-lived deployments.
+
+The live pilot needs a qualified runtime and startup fence on the chosen
+host. Dogfooding needs stock-client access and pushes for the full-history
+profile and an approved change of write authority. The cross-ship migration
+still needs complete project snapshot export and native destination replay
+and activation. The separate same-ship handoff passed the earlier native
+qualification above.
 [Pilot checklist](PHASE5_DEPLOYMENT.md) · [Git rehearsal](PHASE5_DOGFOOD_REHEARSAL.md)
 · [Custody and handoff](PHASE5_CUSTODY.md) · [Cross-ship verification](CROSS_SHIP_PROJECT_MIGRATION.md)

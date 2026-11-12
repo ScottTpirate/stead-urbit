@@ -60,6 +60,13 @@ uses a bounded SHA-1 profile and a fixed verified worker recipe. Larger
 repositories, live worker operation and multi-host rollout have separate
 gates.
 
+The [Phase 5 local evidence](PHASE5_LOCAL_20261110.md) records the fenced
+same-ship move, source-project retirement and exact full-history Git approval
+and readback. Cross-ship activation, full-history stock Git serving and the
+live pilot and cutover remain open. The [Phase 6 release verifier](RELEASE_READINESS.md)
+passed a synthetic key-recovery drill. Independent adoption, support and
+release operations still need evidence from the actual participants.
+
 The standalone Phase 3/4 development checks use synthetic local ships.
 A real House is outside their acceptance scope. A future House adapter still
 needs a supported installation and launch path, verified individual identity,

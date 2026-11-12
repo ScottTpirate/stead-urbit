@@ -1,6 +1,8 @@
 """Stock Git tests for immutable private pack snapshots and offline restore."""
+from contextlib import redirect_stdout
 import fcntl
 import hashlib
+import io
 import os
 from pathlib import Path
 import shutil
@@ -164,3 +166,18 @@ class PackStoreTests(unittest.TestCase):
         self.assertEqual(observe.call_count, 2)
         self.assertEqual(result['snapshot'], snapshot)
         self.assertEqual(Git(self.binary, target).refs(), self.git.refs())
+
+    def test_readback_cli_resolves_relative_git_before_private_restore(self):
+        executable = self.root / 'stock-git'
+        executable.symlink_to(self.binary)
+        relative = os.path.relpath(executable)
+        target = self.root / 'authorized.git'
+        credentials = {'principal_id': SCOPE['project_id']}
+        with patch.object(readback, 'session_file', return_value=credentials), \
+                patch.object(readback, 'HTTPSQueries') as https, \
+                patch.object(readback, 'restore', return_value={'status': 'restored'}) as restore, \
+                redirect_stdout(io.StringIO()):
+            self.assertEqual(readback.main([str(self.storage), str(target), '--project', SCOPE['project_id'],
+                                           '--session-file', 'session.json', '--git', relative]), 0)
+        restore.assert_called_once_with(https.return_value, credentials['principal_id'], SCOPE['project_id'],
+                                        self.storage, target, str(Path(self.binary).resolve()))

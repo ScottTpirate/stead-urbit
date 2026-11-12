@@ -3,6 +3,7 @@
 import argparse
 import json
 from pathlib import Path
+import shutil
 import subprocess
 import sys
 
@@ -57,9 +58,12 @@ def main(argv=None):
     parser.add_argument('--git', default='git')
     args = parser.parse_args(argv)
     try:
+        git = shutil.which(args.git)
+        require(git, 'stock-git-required')
+        git = str(Path(git).resolve(strict=True))
         credentials = session_file(args.session_file)
         connection = HTTPSQueries(credentials, ca_file=args.ca_file)
-        result = restore(connection, credentials['principal_id'], args.project, args.store, args.destination, args.git)
+        result = restore(connection, credentials['principal_id'], args.project, args.store, args.destination, git)
     except (OSError, ValueError, TypeError, KeyError, subprocess.SubprocessError):
         print('Accepted pack restoration failed.', file=sys.stderr)
         return 1
