@@ -118,10 +118,67 @@ Home responses, including discovery of a staged snapshot without a reload.
 | `.runtime/execution-runs/current-pack-team-ci37jerg/report.json` | `fdc7d517c1ffbd29ea74df8f008f9183ae76be9e7db7cea497a539f02f4ded7b` |
 | `.runtime/web-render-tests/report.json` | `dc0cace06f2e089713d513dcbc670aff5381e75f2f3a764ddadea0de487e2c96` |
 
-The initial run confirmed an expired project grant still denies access
-after renewing the member's binding. Create the pilot project with a binding
-that covers the entire trial. The operator still needs a supported process
-for renewing expired project-maintainer grants for long-lived deployments.
+## Candidate follow-up
+
+The initial run confirmed that renewing the identity binding alone leaves
+an expired project grant in place. Candidate
+`8055b62a86f5b10378ce14b97a5b6bce7b5f7eaf` passed a 47-check paired native run.
+The original creator explicitly renewed the grant with a fresh binding.
+Home rejected a stale policy revision and preserved the exact renewal receipt
+and restored write access across a cold restart. Four focused native cases
+also covered grant ownership, replay, revocation and project retirement.
+The SDK v3 export lock binds the updated command contract to its source.
+[Grant renewal](PHASE2_CONTRACT.md)
+
+After five more accepted writes, the owner retired the project at its exact
+journal head. The private owner command retrieved nine original records
+across two pages, verified the complete 59,069-byte journal and published it
+atomically. Home refused active-project export, mismatched migration intent,
+and a later write to the retired project. The separate full-history approval
+and stock Git restore passed again in the same run. Both disposable ships
+stopped cleanly, and the original checkpoints were unchanged.
+[Frozen journal export](CROSS_SHIP_PROJECT_MIGRATION.md)
+
+The exact Home archive passed all 18 v3-to-v7 upgrade checks. The exact
+Identity archive passed 13 clean-install checks, including native HTTPS
+after fresh bootstrap and after restart. Both native processes stopped and
+the recovery sources stayed unchanged.
+
+| Evidence | SHA-256 |
+| --- | --- |
+| `.runtime/current-v7-candidate-U1tmyUht/home.tar` | `27513dbbcbea68de7bfca0c8ebdac92e941173a33ebd03833df714a3effce198` |
+| `.runtime/current-v7-candidate-U1tmyUht/identity.tar` | `64203e9ea21615a372c9b545a7f83c1190bdd95c72e9d281e556bdc582a80cff` |
+| `.runtime/current-phase5-native-ciw0ifv4/state/report.json` | `6a12abf1a569d96c45f3ef2060884af0f529aee387f4f64116bb0a3a005a9b95` |
+| `.runtime/execution-runs/current-phase5-native-_n71uk30/report.json` | `292d54c97d292e050acb6e226627a7be8ab4fe68c3b62be78531b94bbac3a1b2` |
+| `.runtime/phase5-creator-renewal-native-InTMDQYE/state/report.json` | `efb9e4fad1ae56bdea3b622a25a77309d6a2494cbe2729293bf50f960905d14b` |
+| `.runtime/release-home-upgrade-qxixy45b/upgrade-report.json` | `af62d65fccd89b9175b80001ba153517d5954f4e3dc970d5a5cc6062864ab979` |
+| `.runtime/release-install-mm640nyn/work/report.json` | `6b5d7cca15bc058b17e184cc88e0ecdf98aef807e43299ae186242e039ae39c9` |
+
+## Retirement limits and latest archives
+
+The final native change checks the project journal's record count, record
+size and total export size before the first retirement. Six native tests
+passed, including the exact 64 MiB boundary, an oversized journal that leaves
+the writer active, and a retry that preserves the original retirement record.
+Both the retirement and pack-approval tests are now in the normal guarded
+team test inventory.
+
+Both role archives from `f18f6417f5170fb0c8c15747f9488792fc614d13` passed
+offline verification. Its exact Home archive passed all 18 v3-to-v7 upgrade
+checks. A new desk on a copied disposable pier installed the exact Identity
+archive and passed eight checks, including packaged owner bootstrap, HTTPS
+routes, fail-closed reload and exact Clay readback. The source pier stayed
+unchanged. The host suite ran 898 tests with one skip, and the follow-up
+inventory verification passed all 18 cases after registering the additional
+native arms.
+
+| Evidence | SHA-256 |
+| --- | --- |
+| `.runtime/phase5-final-candidate-M29muuSS/home.tar` | `524d958b010053814cbc2046e1f6fe621782aaf7de67e73584cbae30a2c64815` |
+| `.runtime/phase5-final-candidate-M29muuSS/identity.tar` | `c9392345ebc4ccec3e526642bb5d853cffcf26ef7da259455273cb2a7a04751a` |
+| `.runtime/phase5-retirement-export-admission-native-2nh3r1uy/state/report.json` | `1a188d0c6668deac17b2e1dfe4d2f7275cadd9a83440de9e897376dd4d6c4edd` |
+| `.runtime/release-home-upgrade-6sw5b4ld/upgrade-report.json` | `b85eff8003ee08bede6a0e72a33c7515598d442b41020346fa375def78685282` |
+| `.runtime/phase5-final-identity-fCweWGv6/state/report.json` | `bc91808a9b5a483985d60f845477118af807d435e3627dc9610fac9c29f0e7e8` |
 
 The live pilot needs a qualified runtime and startup fence on the chosen
 host. Dogfooding needs stock-client access and pushes for the full-history

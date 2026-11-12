@@ -1,4 +1,5 @@
 """Real host sockets/child lifetimes; dummy byte backend, not TLS/Eyre evidence."""
+from contextlib import suppress
 from pathlib import Path
 import importlib.util
 import os
@@ -104,7 +105,11 @@ class IngressTests(unittest.TestCase):
 
     def test_no_backend_bytes_before_bootstrap_then_exact_raw_relay(self):
         self.assertGreater(len(os.fsencode(self.fence.path)), 107)
-        peer = self.peer(); peer.sendall(b'pre-bootstrap'); self.closed(peer)
+        peer = self.peer()
+        # A closed ingress may reject the stream before the client's first write.
+        with suppress(BrokenPipeError, ConnectionResetError):
+            peer.sendall(b'pre-bootstrap')
+        self.closed(peer)
         self.assertEqual(self.calls, [])
         self.fence.arm(self.first, self.nonce, self.ack())
         peer = self.peer(); data = b'\x16\x03\x01synthetic-opaque-bytes'; peer.sendall(data)
