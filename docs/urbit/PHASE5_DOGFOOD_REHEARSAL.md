@@ -221,6 +221,18 @@ types. The reducer is not connected to a saved Home ledger or external push
 route. Report `.runtime/pack-push-native-ELIcQOlt/state/report.json`, SHA-256
 `cb6b464064f490d9061f78b49bfc284d2efeb2dbd363fe29fe77621a9a67b65b`.
 
+### Private push adapter
+
+The host adapter prepares a candidate with its private pack worker and gives
+the Home the individual write credential for each transition. A positive Git
+report requires a canonical Home receipt matching the admission, actor, exact
+ordered ref changes and accepted snapshot. If the commit response is lost, the
+adapter performs one read-only lookup with the original admission and proof.
+The stock Git transport test uses a simulated Home. The native admission
+builder separately passed three pinned Vere tests, including a byte-for-byte
+comparison with the worker's canonical format. A live worker deployment and
+protected-branch advancement require their own qualification.
+
 ## Prepare GitHub issues for Work
 
 Use `scripts/urbit/github_work_plan.py` to preview moving issues from
