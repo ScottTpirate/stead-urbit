@@ -38,6 +38,16 @@ to choose the issue records for the cutover. The current import writes only to
 a disposable Home; no live issue migration or authority transfer is implied
 by the preview.
 
+Keep private Git uploads fenced during candidate qualification. The worker
+runs under its own account and exchanges only bounded upload and signature
+frames with the relay over a Unix socket. The relay uses a pinned TLS
+connection to Home and forwards an individual Git credential on each
+decision. Give the service accounts access only to their designated private
+paths. The ingress must dispatch Git and browser routes explicitly, strip
+the relay capability header from participant requests, and reject the private
+Home carrier path. The HTTPS pass-through used by the earlier pilot needs a
+route-aware ingress for this profile. [Git rehearsal](PHASE5_DOGFOOD_REHEARSAL.md#worker-result-authentication)
+
 Before proposing the switch, demonstrate all of the following with one pinned
 candidate:
 

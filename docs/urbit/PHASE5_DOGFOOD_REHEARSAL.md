@@ -282,12 +282,20 @@ including project, repository, authority epoch, Home incarnation and upload.
 The native tests verified the cross-language signature and rejected key
 generation drift, changed proof bytes, a weak public key and a noncanonical
 scalar. The host tests exercised an independently verified OpenSSL signature.
-These primitives are ready for a private transport that isolates the worker
-from the Home's owner control and gives the Home a scoped current key.
+The relay uses a scoped current key and a separate per-incarnation capability.
+A guarded loopback test passed 31 checks using the real Home TLS carrier.
+It covered default-closed startup, owner installation of a current relay pin,
+read-only and wrong-capability denials, a signed stock-client push, exact
+receipt recovery and revocation. Both ships stopped cleanly. A fresh clone
+after restart matched all 7,805 reachable objects. The test invokes the real
+signer in the relay process. The separate Unix worker service still needs
+qualification under distinct service accounts and the pilot ingress.
 [Ed25519 specification](https://www.rfc-editor.org/rfc/rfc8032.html)
 
 The private report `.runtime/pack-worker-signature-native-8fux4jc2/state/report.json`
 has SHA-256 `c8c3adb7ac6eab9c5fdff21b9b6bf5449caeaf34a8cce03c508444906384661c`.
+The relay report `.runtime/pack-relay-stock-xpy8xhqp/state/report.json` has
+SHA-256 `84ef3c10bb54aead82d0ea950e530a3a61b9c8956bb1073910b19b765650c6c1`.
 
 ## Prepare GitHub issues for Work
 
