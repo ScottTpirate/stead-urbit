@@ -55,6 +55,14 @@ The November 14 local rehearsal at `f82358e` preserved all 8,186 reachable
 objects and both pinned refs through bundle restore, passed strict `fsck`, and
 refused to overwrite a divergent mirror. Neither test switched GitHub authority.
 
+The latest external pack rehearsal pinned `8c05529ad619f0f845111dcf3047374b0c650e8e`
+and the same runtime tag. It staged a 25,142,488-byte pack with 8,931 reachable
+objects, validated a stock-client update in a private candidate, and retained
+all original objects through strict `fsck`. The source refs remained unchanged.
+The five-check result is `.runtime/latest-native-pack-RmgHjU6b/pack/report.json`,
+SHA-256 `bcb82067538e7b7865dba955702b8d5a9ff58aba84c9eece9a43dbee8b63d7ce`.
+This host-side test ran separately from native Home acceptance.
+
 ## External pack storage
 
 The private pack store stages a complete SHA-1 pack for the exact pinned branch
