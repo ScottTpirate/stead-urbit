@@ -81,11 +81,14 @@ class NginxEdgeTests(unittest.TestCase):
         native.set_servername_callback(lambda _, name, __: self.sni.append(name))
         self.home.socket = native.wrap_socket(self.home.socket, server_side=True)
         socket_path = self.root / 'edge.sock'
-        self.git = UnixStreamServer(str(socket_path), Backend)
         self.serve(self.home, b'browser home')
-        self.serve(self.git, b'git relay')
         self.profile = Profile(HOST, free_port(), '127.0.0.1', self.home.server_port, socket_path, PROJECT,
                                self.edge_certificate, edge_key, self.home_certificate)
+        self.configure_git(socket_path)
+
+    def configure_git(self, socket_path):
+        self.git = UnixStreamServer(str(socket_path), Backend)
+        self.serve(self.git, b'git relay')
 
     def cert(self, role):
         crt, key = self.root / (role + '.crt'), self.root / (role + '.key')
