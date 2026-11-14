@@ -262,6 +262,22 @@ together before a member can merge from the browser.
 The private report `.runtime/pack-review-native-3l9marb8/state/report.json`
 has SHA-256 `0d53445edac8022fa44b92f28d709df5e4bebda1e4715aa19ab7a146faf3b164`.
 
+### Worker result authentication
+
+The worker signer and native verifier use Ed25519 for a fixed message that
+names `stead.git-pack-worker-attestation/1`, the active key generation and
+SHA-256 of the exact proof bytes. The proof also binds the Home admission,
+including project, repository, authority epoch, Home incarnation and upload.
+The native tests verified the cross-language signature and rejected key
+generation drift, changed proof bytes, a weak public key and a noncanonical
+scalar. The host tests exercised an independently verified OpenSSL signature.
+These primitives are ready for a private transport that isolates the worker
+from the Home's owner control and gives the Home a scoped current key.
+[Ed25519 specification](https://www.rfc-editor.org/rfc/rfc8032.html)
+
+The private report `.runtime/pack-worker-signature-native-8fux4jc2/state/report.json`
+has SHA-256 `c8c3adb7ac6eab9c5fdff21b9b6bf5449caeaf34a8cce03c508444906384661c`.
+
 ## Prepare GitHub issues for Work
 
 Use `scripts/urbit/github_work_plan.py` to preview moving issues from
