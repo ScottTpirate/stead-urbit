@@ -1,7 +1,7 @@
 {
   "format": 1,
   "classification": "pure-native-only",
-  "expected_arm_count": 112,
+  "expected_arm_count": 115,
   "suites": [
     {
       "path": "/tests/stead-session",
@@ -188,6 +188,15 @@
         "test-pack-control-write-and-operational-fences",
         "test-pack-control-checks-exact-worker-and-current-uploader",
         "test-pack-control-receipt-only-retries-with-new-credential"
+      ],
+      "timeout_seconds": 60
+    },
+    {
+      "path": "/tests/stead-code-pack-carrier",
+      "arms": [
+        "test-pack-carrier-opens-current-anchor-and-applies-verified-proof",
+        "test-pack-carrier-receipt-selects-exact-historical-base",
+        "test-pack-carrier-refuses-missing-credential-inexact-time-and-worker"
       ],
       "timeout_seconds": 60
     },

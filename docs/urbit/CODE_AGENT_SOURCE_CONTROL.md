@@ -174,6 +174,13 @@ that path cannot make a new acceptance. Three native tests passed. The
 transport still needs to establish the worker's identity and invoke this gate
 from the authoritative Gall event.
 
+The private message wrapper now binds the canonically encoded admission to
+the same writer and event clock, then decodes and checks the worker proof
+against the Home-selected base. Three native tests exercised two successive
+changes and retrieval of exact earlier receipts from their original bases.
+The wrapper has no effect on persistent Home state by itself; no Gall event
+or Smart HTTP write route invokes it yet.
+
 Default and otherwise protected branches stay closed to direct external
 updates until the exact review commit is implemented. For an ambiguous stock
 client response, reconcile the exact digest and ordered commands under the
