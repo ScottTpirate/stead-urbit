@@ -2,10 +2,12 @@
 
 **Phases 0 and 1 are complete. Independent local review accepted the Phase 2
 Work/Docs workflow.** Phases 3 and 4 have verified local workflows for bounded
-native Git, review, builds, packaging and recovery. Phase 5 has local handoff,
-project retirement and full-history Git approval and recovery evidence. Live
-pilot qualification, native full-history Git serving and cross-ship activation
-remain open. Phase 6 has a synthetic release-verification and key-recovery drill.
+native Git, review, builds, packaging and recovery. The private standalone
+Phase 5 pilot has verified sign-in, Work/Docs, restart, revocation and an
+encrypted Git restore. Stock Git has cloned and fetched full-history snapshots
+in a guarded native rehearsal. Full-history push acceptance, cross-ship
+activation and GitHub cutover remain open. Phase 6 has a synthetic release
+verification and key recovery drill.
 [Team workflow](docs/urbit/LOCAL_ACCEPTANCE_20261109.md) ·
 [Git and recovery](docs/urbit/PHASE34_LOCAL_WORKFLOW_20261109.md) ·
 [Phase 5](docs/urbit/PHASE5_LOCAL_20261110.md) ·
