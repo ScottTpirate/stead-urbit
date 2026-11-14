@@ -48,7 +48,11 @@ class Git:
         command = [self.binary, '-C', self.path, '-c', 'core.hooksPath=/dev/null',
                    '-c', 'core.fsmonitor=false', '-c', 'maintenance.auto=false',
                    '-c', 'gc.auto=0', *args]
-        result = subprocess.run(command, input=data, capture_output=True, env=ENV,
+        executable = Path(self.binary)
+        env = ENV.copy()
+        if executable.is_absolute() and executable.name == 'git':
+            env['GIT_EXEC_PATH'] = str(executable.parent)
+        result = subprocess.run(command, input=data, capture_output=True, env=env,
                                 timeout=120, umask=0o077, check=False)
         if check and result.returncode:
             reason = result.stderr.decode(errors='replace').strip()

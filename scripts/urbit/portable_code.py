@@ -85,6 +85,11 @@ class Git:
                'GIT_CONFIG_NOSYSTEM': '1', 'GIT_CONFIG_GLOBAL': '/dev/null',
                'GIT_NO_REPLACE_OBJECTS': '1', 'GIT_OPTIONAL_LOCKS': '0',
                'GIT_TERMINAL_PROMPT': '0', 'GIT_NO_LAZY_FETCH': '1', 'GIT_ALLOW_PROTOCOL': ''}
+        executable = Path(self.binary)
+        if executable.is_absolute() and executable.name == 'git':
+            # fsck can start git refs verify. Keep that child on the selected
+            # engine when the host also ships a different Git version.
+            env['GIT_EXEC_PATH'] = str(executable.parent)
         location = [] if read_config else ['--git-dir', self.path]
         argv = [*self.command_prefix, self.binary, *location, '-c', 'core.hooksPath=/dev/null',
                 '-c', 'core.fsmonitor=false', *args]
