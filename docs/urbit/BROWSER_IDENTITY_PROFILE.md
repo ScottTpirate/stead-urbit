@@ -170,13 +170,21 @@ Home. The native probe exercised the signature primitive. The browser-only
 sign-in flow and remaining qualification cases below are still open.
 [Native evidence](PHASE5_LOCAL_20261110.md#home-v7-and-full-history-readback)
 
-The host library implements the exact issuer/subject tag, canonical Ed25519
-proof, pinned key and bounded claim fields. It accepts the typed result of a
-trusted, maintained provider verifier. Six host tests exercise the published
-vector, issuer/audience and nonce binding, key custody and malformed or
-expired proof. Provider exchange, the Home challenge/session lifecycle and
-browser sign-in remain implementation work.
-[Host proof library](../../scripts/urbit/browser_oidc_proof.py)
+The host implements the exact issuer/subject tag, canonical Ed25519 proof,
+pinned key and bounded claim fields. The host transaction ledger keeps the
+PKCE verifier server-side and gives one callback the right to consume a
+matching login transaction. Twelve host tests exercise the published vector,
+claim binding, key custody, expiration, concurrent callback and replay.
+[Host proof](../../scripts/urbit/browser_oidc_proof.py) ·
+[Host transactions](../../scripts/urbit/browser_oidc_transactions.py)
+
+Vere passed all five native proof tests, including the published vector,
+exact pin and challenge scope, times, canonical wire, and invalid points and
+scalars. The separate intentional failure was observed and the fake reaped
+cleanly. The report `.runtime/oidc-native-65w23io4/state/report.json` has SHA-256
+`0e56035f3d73eda2b457ce7f2a4c60ce5e454c5de3463adb35058970f770f8cc`.
+Provider exchange, the Home challenge/session lifecycle and browser sign-in
+remain implementation work. [Native proof](../../native/core/desk/lib/stead-browser-oidc-proof.hoon)
 
 ```text
 Subject tag   3fd14320b0de7d6bb5f48da4c8d558ab8658c9b24a7d5a41305cdc82b346c4d8

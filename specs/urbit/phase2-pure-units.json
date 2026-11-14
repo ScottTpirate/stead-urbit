@@ -1,7 +1,7 @@
 {
   "format": 1,
   "classification": "pure-native-only",
-  "expected_arm_count": 142,
+  "expected_arm_count": 147,
   "suites": [
     {
       "path": "/tests/stead-session",
@@ -260,6 +260,17 @@
         "test-home-v9-load-save-retains-exact-promotion-and-history",
         "test-home-v9-rejects-missing-mismatched-and-empty-review-history",
         "test-home-v9-interleaved-raw-promotion-raw-history-roundtrips"
+      ],
+      "timeout_seconds": 60
+    },
+    {
+      "path": "/tests/stead-browser-oidc-proof",
+      "arms": [
+        "test-oidc-proof-published-vector",
+        "test-oidc-proof-exact-pin-and-challenge",
+        "test-oidc-proof-time-and-assurance",
+        "test-oidc-proof-canonical-wire-and-tamper",
+        "test-oidc-proof-canonical-key-r-and-scalar"
       ],
       "timeout_seconds": 60
     },
