@@ -130,7 +130,7 @@ def _export(claim, claim_digest, candidate, *, head, refs):
     return _body(claim, claim_digest, snapshot, manifest, updates)
 
 
-def prepare(admission_bytes, expected_admission_sha256, storage, wire_path, git, *, now_ms):
+def prepare(admission_bytes, expected_admission_sha256, storage, wire_path, git, *, now_ms, deadline=None):
     """Run the stock verifier and emit canonical bytes for an authenticated carrier.
 
     The caller pins the Home's original bytes and supplies its trusted clock
@@ -161,7 +161,7 @@ def prepare(admission_bytes, expected_admission_sha256, storage, wire_path, git,
     _body(claim, expected_admission_sha256, '0' * 64, maxima, updates)
     _live_lease(claim, now_ms())
     candidate = receive.prepare(Path(storage), claim['scope'], claim['base_snapshot'],
-                                Path(wire_path), claim['wire_sha256'], git)
+                                Path(wire_path), claim['wire_sha256'], git, deadline=deadline)
     # A valid proof that misses its lease remains only a staged snapshot.
     proof = _export(claim, expected_admission_sha256, candidate, head=base['head'], refs=expected_refs)
     _live_lease(claim, now_ms())

@@ -113,11 +113,13 @@ def captured_wire(path, expected):
             yield wire, check_binding
 
 
-def prepare(storage, scope, base_snapshot, wire_path, expected_wire_sha256, git):
+def prepare(storage, scope, base_snapshot, wire_path, expected_wire_sha256, git, *, deadline=None):
     """Use an admitted wire digest and exact base. Return staging evidence only."""
     store.validate_scope(scope)
     require(scope['project_id'] == scope['repository_id'] and match(TOKEN, base_snapshot), 'receive-base-scope')
-    deadline = time.monotonic() + MAX_GIT_TIME
+    own_deadline = time.monotonic() + MAX_GIT_TIME
+    deadline = own_deadline if deadline is None else min(own_deadline, deadline)
+    require(time.monotonic() < deadline, 'git-timeout')
     with captured_wire(Path(wire_path), expected_wire_sha256) as capture, \
             tempfile.TemporaryDirectory(prefix='stead-git-receive-') as work:
         wire, check_wire = capture
