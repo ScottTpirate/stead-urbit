@@ -16,6 +16,7 @@ import struct
 import subprocess
 import sys
 import tempfile
+import time
 
 from execution_policy import GuardError, directory_fd
 from portable_code import (MAX_REFS, observed_refs, private_directory, publish_directory,
@@ -183,15 +184,16 @@ def open_snapshot(directory, snapshot):
         os.close(fd)
 
 
-def stage(store, pack, expected, scope, refs, head, binary):
+def stage(store, pack, expected, scope, refs, head, binary, *, deadline=None):
     validate_refs(refs, head)
+    require(deadline is None or time.monotonic() < deadline, 'git-timeout')
     with repository_directory(store, scope, staging=True) as (directory, check_binding):
         with os.scandir(directory) as entries:
             existing = set()
             for entry in entries:
                 require(len(existing) < MAX_SNAPSHOTS, 'snapshot-capacity')
                 existing.add(entry.name)
-        with staged_repository(directory, binary, command_prefix=GIT_LIMITS) as (scratch, opened, git):
+        with staged_repository(directory, binary, deadline=deadline, command_prefix=GIT_LIMITS) as (scratch, opened, git):
             with directory_fd(pack.parent) as source:
                 verified, inventory = verify_pack(git, source, pack.name, expected, refs, head)
             value = {'format': FORMAT, 'object_format': 'sha1', 'scope': scope,
@@ -204,6 +206,7 @@ def stage(store, pack, expected, scope, refs, head, binary):
                     require(copy_pack(old, PACK_NAME, expected) == (value['pack_bytes'], value['object_count']),
                             'snapshot-conflict')
                 check_binding()
+                require(deadline is None or time.monotonic() < deadline, 'git-timeout')
                 return snapshot, value
             require(len(existing) < MAX_SNAPSHOTS, 'snapshot-capacity')
             check_binding()
@@ -216,6 +219,7 @@ def stage(store, pack, expected, scope, refs, head, binary):
             sync_tree(git)
             check_binding()
             require(same_entry(directory, scratch, opened), 'staging-binding')
+            require(deadline is None or time.monotonic() < deadline, 'git-timeout')
             publish_directory(directory, scratch + '/payload', snapshot)
             os.fsync(directory)
             check_binding()
