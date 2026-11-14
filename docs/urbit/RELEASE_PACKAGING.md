@@ -100,6 +100,21 @@ Archive SHA-256 `6d6cb9d1d7a63d68eff40e8a2e973696079f83cac1b13861689cb5678494585
 The local result `.runtime/release-install-5fwxz2i6/work/report.json`
 has SHA-256 `acb7fde58986be408718a4bcef6c71b1bb438de0fec8ececbc967b665c2f0817`.
 
+The matching Identity archive has SHA-256
+`3d8186f92e5220f3002a5879671a789152c87abad6ab035f6db71c01edfb7df4`.
+Its cold run reached the laptop temperature limit before installation. A
+second run from a previously stopped, clean synthetic base installed the
+exact Identity desk and stopped cleanly at the temperature limit. A short
+guarded run on a verified copy of that installation then passed ten checks.
+Clay returned the exact candidate files, the Identity app served HTTPS,
+reload required fresh bootstrap, the incarnation rotated and the app served
+the same assets again. The guard and native test both completed with a clean
+ship stop. The final report `.runtime/identity-load-PYCYrJ5W/work/report.json`
+has SHA-256 `5770bdd24e2c7d15c4efb18a0f4e5d7c11cd73a9fb4653e80156c0b47afacab6`.
+This establishes the exact Identity desk load, HTTPS, and lifecycle from a
+stopped synthetic installation. Cold installation and member authentication
+for this exact archive still need their own complete run.
+
 ### Populated v7 state with the v9 application
 
 A separate guarded test applied the exact v9 Home application files to a
