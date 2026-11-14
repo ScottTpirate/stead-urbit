@@ -48,6 +48,36 @@ the relay capability header from participant requests, and reject the private
 Home carrier path. The HTTPS pass-through used by the earlier pilot needs a
 route-aware ingress for this profile. [Git rehearsal](PHASE5_DOGFOOD_REHEARSAL.md#worker-result-authentication)
 
+Render the proposed Home edge configuration into a private review file. The
+inputs are the approved Home HTTPS hostname, its pinned desk and native TLS
+trust, and the relay's private Git socket. Use a dedicated nginx listener in
+its `http` context and check the complete configuration with `nginx -t`.
+
+```sh
+umask 077
+python3 -B scripts/urbit/git_pack_edge.py --hostname "$HOME_HOSTNAME" \
+  --listen-ipv4 "$APPROVED_ADDRESS" --public-port 443 --home-port "$NATIVE_TLS_PORT" \
+  --git-socket "$GIT_EDGE_SOCKET" --project "$PROJECT_ID" --desk "$VERIFIED_DESK" \
+  --certificate "$PUBLIC_CERT_CHAIN" --key "$PUBLIC_CERT_KEY" --home-ca "$NATIVE_TLS_CA" \
+  > "$PRIVATE_REVIEW_DIR/stead-home-nginx.conf"
+```
+
+Keep the native TLS listener on `127.0.0.1` with no separate public
+pass-through. The Git relay listens only on its Unix socket, with group
+write access for the dedicated nginx worker account and no other client
+accounts. Reconnect the ingress fence to the admitted Vere process before
+opening traffic. The generated include serves only the Home hostname, its
+exact browser routes, and the selected project's Git Smart HTTP routes.
+Use the separate, approved Identity HTTPS route for member ship sign-in.
+Local nginx tests exercise the Home/Git dispatch and certificate validation
+with synthetic backends. Validate the actual host's fence, upstream ownership,
+client interoperability and service deadlines before pilot activation.
+The edge accepts Git uploads with an explicit content length. For a push
+whose request exceeds Git's default 1 MiB buffer, use
+`git -c http.postBuffer=8454144 push stead YOUR_BRANCH` for that invocation.
+The receive request limit is 8,454,144 bytes, including protocol framing.
+[Git HTTP buffer configuration](https://git-scm.com/docs/git-config#Documentation/git-config.txt-httppostBuffer)
+
 The Vere account is the sole writer for the projection mailbox. Provision
 its directory mode 0750 with the mailbox group shared by the worker and read
 relay. Give each service a separate mode-0700 store and provision a second
