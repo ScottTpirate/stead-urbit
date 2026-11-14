@@ -12,6 +12,8 @@ import unittest
 import test_git_pack_proof as fixtures
 from git_pack_http import decision
 import git_pack_projection as projection
+from git_pack_projection_lease import Mailbox, SELECTION
+from git_pack_projection_reconcile import reconcile
 import git_pack_projection_socket as transport
 import git_pack_store as store
 from git_pack_upload import authorized_response
@@ -20,6 +22,7 @@ from test_git_pack_push_http import selection
 
 
 RELAY_UID, WORKER_UID, OUTSIDER_UID = 1, 2, 3
+CONTROLLER_UID = 4
 GROUP_GID = 1
 
 
@@ -39,6 +42,7 @@ def exercise(root, mode):
     source = worker_store / '.'.join(scope[key] for key in ('home', 'project_id', 'repository_id')) / snapshot
     target = read_store / source.parent.name / snapshot
     deadline = time.monotonic() + 15
+    mailbox = Mailbox(root / 'mailbox' / 'current', scope, CONTROLLER_UID, GROUP_GID)
 
     readable, writable = os.pipe()
     child = os.fork()
@@ -47,20 +51,24 @@ def exercise(root, mode):
         as_user(WORKER_UID)
         try:
             assert not os.access(read_store, os.R_OK | os.W_OK | os.X_OK)
+            if mode == 'mailbox':
+                assert not os.access(mailbox.path, os.W_OK)
             calls = []
 
             def is_selected(digest, until):
                 assert time.monotonic() < until <= deadline
                 calls.append(digest)
+                if mode == 'mailbox':
+                    return mailbox.is_selected(digest, until)
                 return digest == snapshot and (mode != 'revoke' or len(calls) == 1)
 
             expected_peer = RELAY_UID if mode != 'wrong-server-peer' else OUTSIDER_UID
             with transport.ArtifactSocket(endpoint, worker_store, scope, is_selected, expected_peer, WORKER_UID,
                                           group_gid=GROUP_GID) as server:
                 os.write(writable, b'1')
-                assert server.serve_one(deadline) is (mode == 'ok')
+                assert server.serve_one(deadline) is (mode in ('ok', 'mailbox'))
             assert not endpoint.exists()
-            expected_checks = 2 if mode in ('ok', 'revoke') else int(mode == 'unselected')
+            expected_checks = 2 if mode in ('ok', 'mailbox', 'revoke') else int(mode == 'unselected')
             assert len(calls) == expected_checks
             os._exit(0)
         except BaseException:
@@ -77,9 +85,13 @@ def exercise(root, mode):
         assert not os.access(worker_store, os.R_OK | os.W_OK | os.X_OK)
         worker_uid = WORKER_UID if mode != 'wrong-client-peer' else OUTSIDER_UID
         open_pack = partial(transport.open_artifact, endpoint, worker_uid, RELAY_UID)
-        if mode == 'ok':
-            result = projection.project(lambda until: raw, fixtures.PROJECT, scope['home'], read_store,
-                                        open_pack, Path('/usr/bin/git'), deadline=deadline)
+        if mode in ('ok', 'mailbox'):
+            if mode == 'mailbox':
+                assert not os.access(mailbox.path, os.W_OK)
+                result = reconcile(mailbox, read_store, open_pack, Path('/usr/bin/git'), deadline=deadline)
+            else:
+                result = projection.project(lambda until: raw, fixtures.PROJECT, scope['home'], read_store,
+                                            open_pack, Path('/usr/bin/git'), deadline=deadline)
             assert result == snapshot and target.stat().st_uid == RELAY_UID
             assert sha((target / store.PACK_NAME).read_bytes()) == row['pack_sha256']
             with authorized_response(lambda: (scope, row, refs), fixtures.PROJECT, read_store, '/usr/bin/git',
@@ -105,12 +117,26 @@ def exercise(root, mode):
         assert os.waitstatus_to_exitcode(status) == 0
 
 
+def publish_mailbox(root):
+    scope, row, refs = decision((root / 'decision').read_bytes(), fixtures.PROJECT)
+    manifest = {'format': store.FORMAT, 'object_format': 'sha1', 'scope': scope, 'head': row['head'], 'refs': refs,
+                **{key: int(row[key]) for key in projection.SIZES}, **{key: row[key] for key in projection.DIGESTS}}
+    mailbox = Mailbox(root / 'mailbox' / 'current', scope, CONTROLLER_UID, GROUP_GID)
+    as_user(CONTROLLER_UID)
+    assert not os.access(root / 'worker', os.R_OK | os.W_OK | os.X_OK)
+    assert not os.access(root / 'relay', os.R_OK | os.W_OK | os.X_OK)
+    result = mailbox.publish(lambda _: {'protocol': SELECTION, 'status': 'open', 'incarnation': 'a' * 64,
+                                        'relay_generation': '2', 'manifest': encoded(manifest).decode(),
+                                        'snapshot': row['snapshot']}, time.monotonic() + 5)
+    assert result.snapshot == row['snapshot']
+
+
 @unittest.skipUnless(shutil.which('unshare'), 'Linux subordinate user namespaces are required')
 class ArtifactSocketTests(unittest.TestCase):
     def setUp(self):
         self.namespace = ['unshare', '--map-root-user', '--map-auto']
         capability = subprocess.run((*self.namespace, sys.executable, '-B', '-c',
-                                     'import os; os.setgroups([]); os.setgid(1); os.setuid(3)'),
+                                     'import os; os.setgroups([]); os.setgid(1); os.setuid(4)'),
                                     capture_output=True, timeout=2)
         if capability.returncode:
             self.skipTest('Kernel or host subordinate UID/GID mapping is unavailable')
@@ -120,7 +146,7 @@ class ArtifactSocketTests(unittest.TestCase):
         self.root = fixture.root
         self.root.chmod(0o755)
         fixture.storage.rename(self.root / 'worker')
-        for name, mode in (('relay', 0o700), ('run', 0o710)):
+        for name, mode in (('relay', 0o700), ('run', 0o710), ('mailbox', 0o750)):
             path = self.root / name
             path.mkdir(mode=mode)
             path.chmod(mode)
@@ -141,6 +167,9 @@ class ArtifactSocketTests(unittest.TestCase):
     def test_distinct_unprivileged_users_pass_exact_snapshot_to_stock_git(self):
         self.run_mode('ok')
 
+    def test_three_distinct_users_publish_export_and_reconcile(self):
+        self.run_mode('mailbox')
+
     def test_peer_checks_scope_selection_and_revocation_fail_closed(self):
         for mode in ('wrong-client-peer', 'wrong-server-peer', 'wrong-scope', 'unselected', 'revoke'):
             with self.subTest(mode=mode):
@@ -151,16 +180,29 @@ if __name__ == '__main__':
     # Namespace root only prepares disposable ownership, then both children
     # irrevocably drop to different mapped UIDs. Restore ownership on cleanup.
     root, mode = Path(sys.argv[1]), sys.argv[2]
-    for path, uid in ((root / 'worker', WORKER_UID), (root / 'relay', RELAY_UID), (root / 'run', WORKER_UID)):
+    for path, uid in ((root / 'worker', WORKER_UID), (root / 'relay', RELAY_UID), (root / 'run', WORKER_UID),
+                      (root / 'mailbox', CONTROLLER_UID)):
         for entry in path.rglob('*'):
             os.chown(entry, uid, GROUP_GID)
         os.chown(path, uid, GROUP_GID)
+    if mode == 'mailbox':
+        publisher = os.fork()
+        if publisher == 0:
+            try:
+                publish_mailbox(root)
+            except BaseException:
+                import traceback
+                traceback.print_exc()
+                os._exit(1)
+            os._exit(0)
+        _, published = os.waitpid(publisher, 0)
+        assert os.waitstatus_to_exitcode(published) == 0
     runner = os.fork()
     if runner == 0:
         exercise(root, mode)
         os._exit(0)
     _, outcome = os.waitpid(runner, 0)
-    for name in ('worker', 'relay', 'run'):
+    for name in ('worker', 'relay', 'run', 'mailbox'):
         path = root / name
         for entry in path.rglob('*'):
             os.chown(entry, 0, 0)

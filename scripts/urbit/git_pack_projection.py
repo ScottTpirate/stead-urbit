@@ -21,7 +21,7 @@ from execution_policy import directory_fd
 from git_pack_http import decision
 import git_pack_store as store
 from portable_code import private_directory, publish_directory, staged_repository, sync_tree
-from portable_recovery import UUID, encoded, match, require, same_entry, same_path, sha
+from portable_recovery import TOKEN, UUID, encoded, match, require, same_entry, same_path, sha, shape
 
 
 MAX_SECONDS = 120
@@ -92,26 +92,51 @@ def project(decide, project_id, home_ship, read_store, open_artifact, git, *, de
     verify a still-selected local copy without reusing the transport.
     """
     require(match(UUID, project_id) and match(store.SHIP, home_ship), 'pack-projection-scope')
-    read_store, git = Path(read_store), Path(git)
-    require(read_store.is_absolute() and git.is_absolute(), 'pack-projection-path')
-    require(type(deadline) in (int, float) and math.isfinite(deadline), 'pack-projection-deadline')
-    deadline = min(deadline, time.monotonic() + MAX_SECONDS)
+    deadline = _deadline(deadline)
     _remaining(deadline)
     observed = decide(deadline)
     snapshot, expected = _manifest(observed, project_id, home_ship)
-    scope = expected['scope']
 
     def check_current():
-        _remaining(deadline)
         require(decide(deadline) == observed, 'pack-projection-home-changed')
-        _remaining(deadline)
 
+    return project_manifest(snapshot, expected, check_current, read_store, open_artifact, git, deadline=deadline)
+
+
+def _deadline(deadline):
+    require(type(deadline) is int or type(deadline) is float and math.isfinite(deadline), 'pack-projection-deadline')
+    return min(deadline, time.monotonic() + MAX_SECONDS)
+
+
+def validate_manifest(snapshot, expected, scope):
+    store.validate_scope(scope)
+    shape(expected, {'format', 'object_format', 'scope', 'head', 'refs', *SIZES, *DIGESTS})
+    require(expected['format'] == store.FORMAT and expected['object_format'] == 'sha1'
+            and expected['scope'] == scope and scope['project_id'] == scope['repository_id'], 'pack-projection-manifest')
+    store.validate_refs(expected['refs'], expected['head'])
+    require(all(match(TOKEN, expected[key]) for key in DIGESTS), 'pack-projection-manifest')
+    for key, minimum, maximum in zip(SIZES, (32, 1, 1), (store.MAX_PACK, store.MAX_OBJECTS, store.MAX_OBJECT_BYTES)):
+        require(type(expected[key]) is int and minimum <= expected[key] <= maximum, 'pack-projection-manifest')
+    raw = encoded(expected)
+    require(len(raw) <= store.MAX_MANIFEST and match(TOKEN, snapshot) and sha(raw) == snapshot, 'pack-projection-manifest')
+    return raw
+
+
+def project_manifest(snapshot, expected, check_current, read_store, open_artifact, git, *, deadline):
+    """Project an exact accepted manifest under a trusted reauthorization gate."""
+    read_store, git = Path(read_store), Path(git)
+    require(read_store.is_absolute() and git.is_absolute(), 'pack-projection-path')
+    deadline = _deadline(deadline)
+    _remaining(deadline)
+    scope = expected['scope']
+    manifest = validate_manifest(snapshot, expected, scope)
     with store.repository_directory(read_store, scope, staging=True) as (directory, check_store):
         if os.path.lexists(f'/proc/self/fd/{directory}/{snapshot}'):
             with store.open_snapshot(directory, snapshot) as held:
                 require(store.read_manifest(held, snapshot, scope) == expected, 'pack-projection-conflict')
                 require(store.copy_pack(held, store.PACK_NAME, expected['pack_sha256'])
                         == (expected['pack_bytes'], expected['object_count']), 'pack-projection-conflict')
+                _remaining(deadline)
                 check_current()
                 check_store()
                 os.fsync(directory)
@@ -137,12 +162,11 @@ def project(decide, project_id, home_ship, read_store, open_artifact, git, *, de
                     payload = Path(repo.path) / 'payload'
                     payload.mkdir(mode=0o700)
                     verified.rename(payload / store.PACK_NAME)
-                    manifest = encoded(expected)
-                    require(sha(manifest) == snapshot, 'pack-projection-manifest')
                     with (payload / store.MANIFEST_NAME).open('xb') as file:
                         os.fchmod(file.fileno(), 0o600)
                         file.write(manifest)
                     sync_tree(repo)
+                    _remaining(deadline)
                     check_current()
                     check_store()
                     require(same_entry(directory, name, binding), 'pack-projection-store-changed')
