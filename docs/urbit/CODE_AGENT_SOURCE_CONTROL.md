@@ -103,11 +103,10 @@ verified artifact bytes. [Local workflow verification](PHASE34_LOCAL_WORKFLOW_20
 
 ## External write integration boundary
 
-The first external profile stores one immutable accepted manifest. Keep the
-v7 saved representation readable. A future writable profile needs its own
-version, with a current manifest and generation, bounded pending intents, and
-receipts indexed by operation ID. Preserve the original snapshot approval
-when initializing the first generation.
+The v7 external profile stores one immutable accepted manifest. The writable
+v8 profile retains that anchor, current manifest and generation, pending
+intent and exact push receipts. The v9 profile adds proposal, approval and
+promotion history. The initial approval remains the anchor for those ledgers.
 
 For each upload, record the project, epoch, actor binding, base snapshot and
 generation, ordered expected ref updates, original wire digest, and a narrow
@@ -135,12 +134,11 @@ before reclaiming other packs. Missing retained bytes suspend recovery and
 publication until the exact digest is recovered.
 
 The pure `stead-code-pack-ledger` module implements admission, verification,
-commit and exact receipt replay over one project. It caps accepted advances at
-seven beyond genesis, rejects a previous Home incarnation for pending work,
-and validates saved lineage against the original accepted anchor. Four pinned
-native arms and the deliberate failure control ran successfully. This module
-has no credential or worker protocol of its own; the authenticated adapter,
-selected manifest reads, and actual `receive-pack` transition are separate.
+commit and exact receipt replay over one project. It caps total accepted
+advances at 64 beyond genesis, rejects a previous Home incarnation for pending
+work and validates saved lineage against the original anchor. Pinned Vere
+reconstructed all 64 changes, replayed the first exact receipt under current
+authority and refused the 65th admission.
 
 Keep the large upload in the adapter's bounded private spool. The worker
 gets only the admitted digest, selected pack, exact ref commands and a narrow
@@ -170,20 +168,26 @@ the wrong epoch, nonwriters, expired credentials, and direct changes to the
 default or protected branches. It checks a worker's exact admission and proof
 before verifying or committing a new attempt. Receipt lookup is separate:
 the same binding may read the exact result with a fresh write credential;
-that path cannot make a new acceptance. Three native tests passed. The
-transport still needs to establish the worker's identity and invoke this gate
-from the authoritative Gall event.
+that path reads an existing acceptance. The private carrier pins the current
+worker's Ed25519 key, Home incarnation and project scope. It invokes the
+authority from the Home's Gall event.
 
 The private message wrapper now binds the canonically encoded admission to
 the same writer and event clock, then decodes and checks the worker proof
 against the Home-selected base. Three native tests exercised two successive
 changes and retrieval of exact earlier receipts from their original bases.
-The wrapper has no effect on persistent Home state by itself; no Gall event
-or Smart HTTP write route invokes it yet.
+The [signed stock Git rehearsal](PHASE5_DOGFOOD_REHEARSAL.md#worker-result-authentication)
+exercised the private carrier against native TLS and an actual Home.
 
-Default and otherwise protected branches stay closed to direct external
-updates until the exact review commit is implemented. For an ambiguous stock
-client response, reconcile the exact digest and ordered commands under the
-same current binding and scope. Reconfirm the expected result before reporting
-a historical receipt. Restart closes outstanding worker admissions; sealed or
-retired homes and missing policy deny new work.
+The external default branch advances through exact Work-linked review.
+Proposal, approval and the accepted Git snapshot survive restart together.
+For an ambiguous stock client response, reconcile the exact digest and ordered
+commands under the same current binding and scope. Reconfirm the expected
+result before reporting a historical receipt. Restart closes outstanding
+worker admissions. Sealed or retired homes and missing policy deny new work.
+
+Scoped agent delegation and durable build acceptance currently use the
+inline Code profile. External Git can export and independently verify exact
+accepted source for a worker. The native external board still needs an
+explicit scoped delegation, build attempt and final release authorization.
+[External build source](CODE_EXTERNAL_BUILD_SOURCE.md)
