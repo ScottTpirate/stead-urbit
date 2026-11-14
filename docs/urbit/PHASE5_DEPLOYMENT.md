@@ -10,9 +10,12 @@ identifies the tested v7 role archives and links the earlier four-ship results.
 
 ## Pilot checklist
 
-1. Choose a pilot Linux host, a dedicated Home ship and two separately controlled
-   member ships. Choose an HTTPS hostname for each ship and keep ship and
-   certificate keys on the corresponding host.
+1. Choose a pilot Linux host, a dedicated Home ship and a separate member ship.
+   This is enough to test live sign-in and member work. Use multiple disposable
+   member ships for local isolation and revocation checks. A testing moon can
+   supply another distinct live identity under the same operator for a synthetic
+   check. Choose an HTTPS hostname for each serving ship and keep its keys on
+   the corresponding host.
 2. Verify the approved Home and Identity archives and stage their desks with
    pilot traffic blocked. Install and configure them over private operator access.
 3. Bootstrap each ship using the owner command below. Open traffic only for pilot
@@ -39,8 +42,9 @@ Before proposing the switch, demonstrate all of the following with one pinned
 candidate:
 
 1. A member can sign in, reopen Work and Docs, and revoke one credential
-   without losing another member's access. Read back a second independently
-   controlled member's grant and its removal.
+   without losing another member's access. Use distinct authenticated member
+   identities on the same Home to check the second member's grant and removal.
+   Operator control of both synthetic identities is sufficient for this test.
 2. Stock Git pushes a change against the full pinned repository. A second
    push from the same prior ref loses the comparison, protected refs advance
    only through exact review, and a lost reply reconciles to the durable
