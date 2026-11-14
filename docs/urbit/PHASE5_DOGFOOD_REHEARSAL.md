@@ -171,10 +171,11 @@ The read adapter accepts only the exact Smart HTTP discovery and fetch routes.
 Its control call delegates authentication to the Home's Git credential check
 on `/stead/git/<project>.git/stead-snapshot`. A separate ingress must enforce
 TLS, request framing, timeouts and canonical routing before this adapter is
-deployed. Each request currently verifies
-the full pack; multi-client workload and fresh-host recovery require
-qualification. Incremental push, protected refs, and live authority transfer
-remain separate work. [Source control contract](CODE_AGENT_SOURCE_CONTROL.md)
+deployed. Each request currently
+verifies the full pack. Multi-client workload, the combined live service
+path and separate-host recovery still need qualification. The local signed
+push and protected-review rehearsals below cover native acceptance.
+[Source control contract](CODE_AGENT_SOURCE_CONTROL.md)
 
 ### External push preparation
 
