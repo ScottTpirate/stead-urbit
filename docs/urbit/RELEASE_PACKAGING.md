@@ -100,6 +100,28 @@ Archive SHA-256 `6d6cb9d1d7a63d68eff40e8a2e973696079f83cac1b13861689cb5678494585
 The local result `.runtime/release-install-5fwxz2i6/work/report.json`
 has SHA-256 `acb7fde58986be408718a4bcef6c71b1bb438de0fec8ececbc967b665c2f0817`.
 
+### Populated v7 state with the v9 application
+
+A separate guarded test applied the exact v9 Home application files to a
+stopped copy of an existing synthetic Home with accepted v7 state. Its base
+desk retained the fixture's system-agent bill. All 112 candidate application
+files matched Clay. The 15 checks included a clean stop between staging and
+activation, preserved suspension at restart, HTTP 503 before bootstrap, a new
+incarnation, exact candidate HTTPS shell bytes and denial of an unrecognized
+session. The digest of the actual v7 database, Code, handoff, retirement and pack
+pins matched across suspension, restart, reload and bootstrap. The original
+checkpoint remained unchanged, and the copied Home was reaped cleanly.
+
+Native result `.runtime/v7-v9-upgrade-KFBw8XA6/state/report.json` has SHA-256
+`8e5a5c0fee80ba1b86500b9132de8028ad7c8c6e0234e4a8c7996ccb65ef99f8`.
+The guard recorded 53.47 seconds and a 74°C peak. Its report SHA-256 was
+`9db6bddab04dda5d9013c6841eec145f01c90d98145c8e884fc3f0194910dc0b`.
+The saved state stayed v7 because the fixture created no new ledger history.
+A separate case with a previously valid member session stopped at the thermal
+limit before staging. That two-ship upgrade case remains open.
+
+### Run the verifier
+
 `scripts/release_install.py` is a separate native verifier. It first performs
 the same archive/target verification, then stages regular candidate files in a
 new private directory. It starts one fresh fake in a private network/filesystem,
