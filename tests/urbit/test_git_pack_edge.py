@@ -226,6 +226,18 @@ class NginxEdgeTests(unittest.TestCase):
         self.assertTrue(self.home.observed.empty())
         self.assertEqual(self.exchange('GET', READ)[0], 200)
 
+    def test_private_tunnel_preserves_the_canonical_browser_and_git_authority(self):
+        origin_port = self.home.server_port
+        profile = replace(self.profile, origin_port=origin_port)
+        self.start(profile)
+        authority = f'{HOST}:{origin_port}'
+        for path, backend in (('/stead/', self.home), (READ, self.git)):
+            self.assertEqual(self.exchange('GET', path)[0], 404)
+            self.assertEqual(self.exchange('GET', path, [('Host', authority)], host=False), (200, backend.label))
+            self.assertEqual(backend.observed.get(timeout=2)['headers']['Host'], authority)
+        with self.assertRaisesRegex(ValueError, 'edge-private-origin-port'):
+            render(replace(profile, listen_ipv4='192.0.2.3'), ROOT / 'native/core/desk')
+
     def test_real_edge_preserves_exact_maximum_body(self):
         self.start()
         for path, kind, count, backend in ((POST, 'application/json', 65_536, self.home),

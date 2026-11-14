@@ -39,6 +39,7 @@ class Profile:
     certificate: Path
     key: Path
     home_ca: Path
+    origin_port: int | None = None
 
 
 def exact_profile(profile):
@@ -51,6 +52,9 @@ def exact_profile(profile):
     ports = (profile.public_port, profile.home_port)
     require(len(set(ports)) == 2 and type(ports[0]) is int and (ports[0] == 443 or 1024 <= ports[0] <= 65_535)
             and type(ports[1]) is int and 1024 <= ports[1] <= 65_535, 'edge-port')
+    if profile.origin_port is not None:
+        require(address.is_loopback and type(profile.origin_port) is int
+                and (profile.origin_port == 443 or 1024 <= profile.origin_port <= 65_535), 'edge-private-origin-port')
     require(match(UUID, profile.project), 'edge-project')
     for item in (profile.certificate, profile.key, profile.home_ca, profile.git_socket):
         require(match(FILE, str(item)) and all(part not in ('.', '..') for part in item.parts[1:]), 'edge-file-path')
@@ -116,7 +120,8 @@ def render(profile: Profile, desk: Path) -> str:
     """Render an http-context include. It performs no setup or listener changes."""
     exact_profile(profile)
     host = profile.hostname
-    host_header = f'{host}:{profile.public_port}' if profile.public_port != 443 else host
+    origin_port = profile.public_port if profile.origin_port is None else profile.origin_port
+    host_header = f'{host}:{origin_port}' if origin_port != 443 else host
     authority = host_header + '|' + host
     base = f'/stead/git/{profile.project}.git'
     get = '(?:0)?'
@@ -199,6 +204,7 @@ def main(argv=None):
         parser.add_argument('--' + name, required=True)
     for name in ('public-port', 'home-port'):
         parser.add_argument('--' + name, required=True, type=int)
+    parser.add_argument('--origin-port', type=int, help='Retain the canonical HTTPS port behind a private tunnel')
     for name in ('certificate', 'key', 'home-ca', 'git-socket', 'desk'):
         parser.add_argument('--' + name, required=True, type=Path)
     args = vars(parser.parse_args(argv))
