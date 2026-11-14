@@ -1,7 +1,7 @@
 {
   "format": 1,
   "classification": "pure-native-only",
-  "expected_arm_count": 95,
+  "expected_arm_count": 99,
   "suites": [
     {
       "path": "/tests/stead-session",
@@ -147,6 +147,16 @@
         "test-pack-push-denies-protected-delete-duplicate-and-unverified",
         "test-pack-push-denies-hidden-ref-change-and-tag-replacement",
         "test-pack-push-receipt-is-a-separate-versioned-record"
+      ],
+      "timeout_seconds": 60
+    },
+    {
+      "path": "/tests/stead-code-pack-ledger",
+      "arms": [
+        "test-pack-ledger-stages-verifies-and-commits-atomically",
+        "test-pack-ledger-replays-exact-attempt-with-current-authority",
+        "test-pack-ledger-checks-expiry-incarnation-and-final-policy",
+        "test-pack-ledger-rebuilds-lineage-and-refuses-corrupt-receipts"
       ],
       "timeout_seconds": 60
     },

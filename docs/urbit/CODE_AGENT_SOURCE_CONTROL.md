@@ -133,3 +133,11 @@ record in the same event. A build needs independently verified tree bytes for
 its pinned Git OID. Retain the accepted, proposal, build and recovery snapshots
 before reclaiming other packs. Missing retained bytes suspend recovery and
 publication until the exact digest is recovered.
+
+The pure `stead-code-pack-ledger` module implements admission, verification,
+commit and exact receipt replay over one project. It caps accepted advances at
+seven beyond genesis, rejects a previous Home incarnation for pending work,
+and validates saved lineage against the original accepted anchor. Four pinned
+native arms and the deliberate failure control ran successfully. This module
+has no credential or worker protocol of its own; the authenticated adapter,
+selected manifest reads, and actual `receive-pack` transition are separate.
