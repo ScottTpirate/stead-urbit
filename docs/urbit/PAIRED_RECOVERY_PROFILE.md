@@ -199,4 +199,35 @@ roundtrip and exact restore, corrupt ciphertext, wrong key, wrong executable
 pin, legacy-profile rejection, archive attacks and create-only publication.
 Five additional checkpoint-profile tests cover explicit bounds, exact alias
 copies and hostile filesystem entries; the ten existing checkpoint tests still
-pass. These are host tests, not evidence of an executed paired native restore.
+pass.
+
+## Executed local paired restore
+
+The guarded rehearsal copied the stopped synthetic Home and Identity from a
+qualified two-member Git run. A fresh member session observed the final
+accepted snapshot. An owner-local read of the native v9 state matched that
+selection and rejected a substituted receipt ID. The source sealed at the
+next handoff generation, denied the old session and shut down cleanly.
+
+A fresh isolated process received the encrypted Home, Identity and Git pack
+copies and their pinned metadata. The original piers and store were absent
+from its filesystem. After authenticated decryption, both trees matched the
+stopped originals. The destination booted sealed with the exact saved Git
+selection and durable business fingerprint. Stock Git restored the complete
+pack and a new clone verified the exact refs, default branch and all 7,805
+objects with strict `fsck`.
+
+Activation preserved the handoff generation. The old session remained
+denied. Fresh member approval recovered the same Work and Docs records and
+the accepted Git selection. The source and destination processes were
+reaped cleanly, and the fixture removed its synthetic keys and activation
+ticket. The guarded run completed in 186.878 seconds, with 16 source and
+30 destination checks passing. This used separate filesystems and processes
+on the same physical machine. Recovery on a separate physical host remains
+open.
+
+| Private result | SHA-256 |
+| --- | --- |
+| `.runtime/paired-home-pack-gpg-c1jpaot_/run-state/report.json` | `ed7d313fc40fd4ec9e3ca646d86d6a4b716c729d6676e20d682af8791dd8f276` |
+| `.runtime/paired-home-pack-gpg-c1jpaot_/run-state/destination/report.json` | `98885956fe22465b7621a702179b3f4794cc31fe228d69d87455416a92be6354` |
+| `.runtime/paired-home-pack-gpg-c1jpaot_/run-guard.json` | `f00929a726057a12f29ace09ea3e2943d572fafd70c6cbc93e6ba71998d300b2` |

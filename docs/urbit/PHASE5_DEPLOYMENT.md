@@ -149,6 +149,9 @@ candidate:
 3. Restore the matching Home checkpoint and accepted Git data on a fresh
    isolated host, verify the exact refs and protected records, and prove
    that only one writer can be admitted. Record restore duration and data loss.
+   The local rehearsal already exercises sealed replay, decrypted recovery,
+   strict clone verification and fresh session admission.
+   [Paired recovery evidence](PAIRED_RECOVERY_PROFILE.md#executed-local-paired-restore)
 4. Rehearse mirror divergence and backout. Only then ask the owner to approve
    freezing GitHub writes and transferring authority to the verified Home.
 
