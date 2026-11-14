@@ -200,6 +200,8 @@ cases as open.
 
 ## Prepare the pilot
 
+### Candidate and host admission
+
 1. Obtain the owner's approval for the exact candidate, host, budget, domain,
    dedicated Home ship and separate member identities. Use only synthetic data.
    Keep live ship keys and certificate credentials in the operator's custody.
