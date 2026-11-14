@@ -170,6 +170,14 @@ Home. The native probe exercised the signature primitive. The browser-only
 sign-in flow and remaining qualification cases below are still open.
 [Native evidence](PHASE5_LOCAL_20261110.md#home-v7-and-full-history-readback)
 
+The host library implements the exact issuer/subject tag, canonical Ed25519
+proof, pinned key and bounded claim fields. It accepts the typed result of a
+trusted, maintained provider verifier. Six host tests exercise the published
+vector, issuer/audience and nonce binding, key custody and malformed or
+expired proof. Provider exchange, the Home challenge/session lifecycle and
+browser sign-in remain implementation work.
+[Host proof library](../../scripts/urbit/browser_oidc_proof.py)
+
 ```text
 Subject tag   3fd14320b0de7d6bb5f48da4c8d558ab8658c9b24a7d5a41305cdc82b346c4d8
 Input SHA-256 5a8117dfc33b6fddfae133ef811116e9fec5d6f517e481440a8d767f7c57a3f9
