@@ -13,6 +13,7 @@ import re
 import secrets
 from selectors import DefaultSelector, EVENT_READ
 import shutil
+import signal
 import stat
 import subprocess
 import sys
@@ -71,6 +72,15 @@ class Git:
             self.deadline = min(self.deadline, deadline)
 
     def run(self, *args, data=None, limit=8192, read_config=False):
+        output = bytearray()
+        self._run(args, output.extend, data, limit, read_config)
+        return bytes(output)
+
+    def run_to(self, output, *args, data=None, limit):
+        """Write bounded output into a private spool; the caller publishes it."""
+        self._run(args, output.write, data, limit, False)
+
+    def _run(self, args, write, data, limit, read_config):
         env = {'PATH': '/usr/bin:/bin', 'HOME': '/', 'LANG': 'C.UTF-8',
                'GIT_CONFIG_NOSYSTEM': '1', 'GIT_CONFIG_GLOBAL': '/dev/null',
                'GIT_NO_REPLACE_OBJECTS': '1', 'GIT_OPTIONAL_LOCKS': '0',
@@ -85,25 +95,33 @@ class Git:
             require(time.monotonic() < self.deadline, 'git-timeout')
             with subprocess.Popen(argv, stdin=input_file if data is not None else subprocess.DEVNULL,
                                   stdout=subprocess.PIPE, stderr=subprocess.DEVNULL,
-                                  env=env, cwd='/', pass_fds=(self.repository,)) as child:
-                output = bytearray()
+                                  env=env, cwd='/', pass_fds=(self.repository,), start_new_session=True) as child:
+                count = 0
                 try:
                     with DefaultSelector() as ready:
                         ready.register(child.stdout, EVENT_READ)
                         while True:
-                            require(ready.select(max(0, self.deadline - time.monotonic())), 'git-timeout')
-                            chunk = os.read(child.stdout.fileno(), min(65536, limit + 1 - len(output)))
+                            remaining = self.deadline - time.monotonic()
+                            require(remaining > 0 and ready.select(remaining), 'git-timeout')
+                            require(time.monotonic() < self.deadline, 'git-timeout')
+                            chunk = os.read(child.stdout.fileno(), min(65536, limit + 1 - count))
                             if not chunk:
                                 break
-                            output.extend(chunk)
-                            require(len(output) <= limit, 'git-output-bound')
-                    require(child.wait(timeout=max(0, self.deadline - time.monotonic())) == 0,
-                            'git-verification-failed')
-                finally:
-                    if child.poll() is None:
-                        child.kill()
-                        child.wait()
-        return bytes(output)
+                            count += len(chunk)
+                            require(count <= limit, 'git-output-bound')
+                            write(chunk)
+                    remaining = self.deadline - time.monotonic()
+                    require(remaining > 0, 'git-timeout')
+                    status = child.wait(timeout=remaining)
+                    require(time.monotonic() < self.deadline, 'git-timeout')
+                    require(status == 0, 'git-verification-failed')
+                except BaseException:
+                    try:
+                        os.killpg(child.pid, signal.SIGKILL)
+                    except ProcessLookupError:
+                        pass
+                    child.wait()
+                    raise
 
 
 def ref_name(value, *, branch=False):

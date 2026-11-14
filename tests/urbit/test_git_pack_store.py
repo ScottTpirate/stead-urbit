@@ -2,6 +2,7 @@
 from contextlib import redirect_stdout
 import fcntl
 import hashlib
+from http.server import BaseHTTPRequestHandler, HTTPServer
 import io
 import os
 from pathlib import Path
@@ -9,13 +10,15 @@ import shutil
 import struct
 import sys
 import tempfile
+from threading import Thread
 import unittest
 from unittest.mock import patch
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[2] / 'scripts/urbit'))
 import git_pack_store as store
 import git_pack_readback as readback
-from dogfood_rehearsal import Git
+import git_pack_upload as upload
+from dogfood_rehearsal import ENV, Git
 
 
 BRANCH = 'refs/heads/main'
@@ -166,6 +169,92 @@ class PackStoreTests(unittest.TestCase):
         self.assertEqual(observe.call_count, 2)
         self.assertEqual(result['snapshot'], snapshot)
         self.assertEqual(Git(self.binary, target).refs(), self.git.refs())
+
+    def upload_home_view(self):
+        project = SCOPE['project_id']
+        scope = SCOPE | {'repository_id': project}
+        snapshot, value = self.stage(scope=scope)
+        return scope, {'snapshot': snapshot, 'object_count': str(value['object_count']),
+                       'head': value['head']}, value['refs']
+
+    def test_stock_smart_http_client_reads_exact_accepted_pack(self):
+        observed = self.upload_home_view()
+        project = SCOPE['project_id']
+        operations = []
+        errors = []
+
+        class Fixture(BaseHTTPRequestHandler):
+            def log_message(self, *_):
+                pass
+
+            def respond(self, operation, request=b''):
+                operations.append(operation)
+                try:
+                    with upload.response(None, None, project, self.server.storage,
+                                         self.server.binary, operation, request) as (mime, length, spool):
+                        self.send_response(200)
+                        self.send_header('Content-Type', mime)
+                        self.send_header('Content-Length', str(length))
+                        self.end_headers()
+                        shutil.copyfileobj(spool, self.wfile)
+                except Exception as error:
+                    errors.append(error)
+                    self.send_error(500)
+
+            def do_GET(self):
+                if self.path != '/fixture.git/info/refs?service=git-upload-pack':
+                    return self.send_error(404)
+                self.respond('advertise')
+
+            def do_POST(self):
+                if self.path != '/fixture.git/git-upload-pack':
+                    return self.send_error(404)
+                self.respond('fetch', self.rfile.read(int(self.headers['Content-Length'])))
+
+        clone = self.root / 'wire.git'
+        with HTTPServer(('127.0.0.1', 0), Fixture) as server, \
+                patch.object(upload, 'observe', return_value=observed) as home:
+            server.storage, server.binary = self.storage, self.binary
+            thread = Thread(target=server.serve_forever)
+            thread.start()
+            try:
+                url = f'http://127.0.0.1:{server.server_port}/fixture.git'
+                with patch.dict(ENV, {'GIT_ALLOW_PROTOCOL': 'http'}):
+                    self.git.run('clone', '--bare', url, clone)
+                    client = Git(self.binary, clone)
+                    # Drop the local tip and its objects so this fetch must ask
+                    # the wire peer for the previously accepted commit again.
+                    client.run('update-ref', BRANCH, self.first)
+                    client.run('repack', '-Ad')
+                    client.run('prune', '--expire=now')
+                    self.assertNotEqual(client.run('cat-file', '-e', self.tip, check=False).returncode, 0)
+                    client.run('fetch', url, f'{BRANCH}:{BRANCH}')
+            finally:
+                server.shutdown()
+                thread.join()
+        self.assertFalse(errors)
+        self.assertEqual(operations, ['advertise', 'fetch', 'advertise', 'fetch'])
+        self.assertEqual(home.call_count, 2 * len(operations))
+        self.assertEqual(client.refs(), self.git.refs())
+        self.assertEqual(client.run('cat-file', 'tag', TAG).stdout, self.git.run('cat-file', 'tag', TAG).stdout)
+        client.run('fsck', '--full', '--strict')
+
+    def test_stock_upload_never_discloses_on_revocation_or_bound_failure(self):
+        observed = self.upload_home_view()
+        project = SCOPE['project_id']
+        with patch.object(upload, 'observe', side_effect=[observed, ValueError('denied')]):
+            with self.assertRaisesRegex(ValueError, 'denied'), \
+                    upload.response(None, None, project, self.storage, self.binary, 'advertise'):
+                self.fail('revoked client received a spool')
+        with patch.object(upload, 'observe', return_value=observed) as home:
+            with self.assertRaisesRegex(ValueError, 'upload-pack-request'), \
+                    upload.response(None, None, project, self.storage, self.binary, 'fetch', b'x' * 65537):
+                self.fail('oversized request accepted')
+            home.assert_not_called()
+            with patch.object(upload, 'MAX_ADVERTISEMENT', 1):
+                with self.assertRaisesRegex(ValueError, 'git-output-bound'), \
+                        upload.response(None, None, project, self.storage, self.binary, 'advertise'):
+                    self.fail('partial response disclosed')
 
     def test_readback_cli_resolves_relative_git_before_private_restore(self):
         executable = self.root / 'stock-git'

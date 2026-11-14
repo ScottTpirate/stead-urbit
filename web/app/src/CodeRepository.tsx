@@ -3,8 +3,8 @@ import type { Fields, HomeClient } from './api';
 import { Button, Surface, TextField } from './primitives';
 import { CodeReview } from './CodeReview';
 
-export function CodeRepository({ client, project, writable, manage, principal }: {
-  client: HomeClient; project: string; writable: boolean; manage: boolean; principal: string;
+export function GitCredentials({ client, project, writable, cloneUrl }: {
+  client: HomeClient; project: string; writable: boolean; cloneUrl?: string;
 }) {
   const [credential, setCredential] = useState<Fields | null>(null);
   const [handle, setHandle] = useState('');
@@ -25,9 +25,10 @@ export function CodeRepository({ client, project, writable, manage, principal }:
       setHandle(''); setCredential(null); setNotice('Git credential revoked.');
     } catch { setFailure(true); } finally { setBusy(false); }
   }
-  return <><Surface className="repository-panel">
-    <h2>Git repository</h2>
-    <TextField label="Clone URL" value={new URL(`/stead/git/${project}.git`, location.origin).href} readOnly />
+  return <Surface className="repository-panel">
+    <h2>{cloneUrl ? 'Git repository' : 'Git read access'}</h2>
+    {cloneUrl ? <TextField label="Clone URL" value={cloneUrl} readOnly />
+      : <p>Use the clone URL provided by your workspace operator. This snapshot supports clone and fetch.</p>}
     <p>Use <code>stead</code> as the username and enter an individual credential when Git prompts for a password.</p>
     <div className="actions">
       <Button disabled={busy} onClick={() => void issue('read')}>Create read credential</Button>
@@ -42,7 +43,15 @@ export function CodeRepository({ client, project, writable, manage, principal }:
     <Button disabled={busy || !/^[a-f0-9]{64}$/u.test(handle)} onClick={() => void revoke()}>Revoke credential</Button>
     {failure && <p role="alert">The Home could not confirm this credential request.</p>}
     {notice && <p role="status">{notice}</p>}
-  </Surface>
+  </Surface>;
+}
+
+export function CodeRepository({ client, project, writable, manage, principal }: {
+  client: HomeClient; project: string; writable: boolean; manage: boolean; principal: string;
+}) {
+  return <>
+    <GitCredentials client={client} project={project} writable={writable}
+      cloneUrl={new URL(`/stead/git/${project}.git`, location.origin).href} />
     <CodeReview client={client} project={project} writable={writable} manage={manage} principal={principal} />
   </>;
 }

@@ -2,6 +2,7 @@ import { useEffect, useRef, useState } from 'react';
 import { packRefs, type Fields, type HomeClient } from './api';
 import { newId } from './protocol';
 import { AcceptedTime } from './AcceptedTime';
+import { GitCredentials } from './CodeRepository';
 import { Button, Surface, TextField } from './primitives';
 
 function refLabel(hex: string) {
@@ -53,7 +54,7 @@ export function CodePack({ client, project, manage }: {
 
   const staged = details?.status === 'external-staged';
   const refs = details ? Object.entries(packRefs(details)) : [];
-  return <Surface className="repository-panel">
+  return <><Surface className="repository-panel">
     <h2>Git snapshot</h2>
     {details && <>
       <p>{staged ? 'Ready for maintainer review' : 'Accepted by the project Home'}</p>
@@ -67,5 +68,7 @@ export function CodePack({ client, project, manage }: {
     </>}
     <Button variant="quiet" disabled={busy} onClick={() => void refresh()}>Refresh snapshot</Button>
     {failure && <p role="alert">{failure}</p>}
-  </Surface>;
+  </Surface>
+    {!busy && details?.status === 'external' && <GitCredentials client={client} project={project} writable={false} />}
+  </>;
 }

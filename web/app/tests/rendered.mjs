@@ -89,6 +89,21 @@ async function fixture(run, mockRepository = false) {
       }
       if (value.action === 'status') return respond({status: state.pack?.status ?? (state.repositoryReady ? 'ready' : 'disabled'), write: state.pack ? 'no' : 'yes', manage: 'yes'});
       if (value.action === 'pack-view') { assert.ok(state.pack); return respond(state.pack); }
+      if (value.action === 'pack-accept') {
+        assert.equal(state.pack?.status, 'external-staged');
+        assert.equal(value.snapshot, state.pack.snapshot);
+        state.pack = {...state.pack, status: 'external', request_id: value.request_id, accepted_at_ms: '1800000000000'};
+        return respond(state.pack);
+      }
+      if (value.action === 'issue') {
+        assert.equal(state.pack?.status, 'external');
+        assert.equal(value.access, 'read');
+        return respond({status: 'issued', bearer: 'c'.repeat(64), handle: 'd'.repeat(64), expires_at_ms: '1800000900000'});
+      }
+      if (value.action === 'revoke') {
+        assert.equal(value.handle, 'd'.repeat(64));
+        return respond({status: 'revoked'});
+      }
       const key = value.proposal_id + '/' + value.revision;
       if (value.action === 'submit') {
         const {proposal_id, revision, work_id, ref, base_oid, head_oid} = value;
@@ -297,6 +312,15 @@ try {
     state.pack = pack;
     await page.getByRole('button', {name: /GARDEN.*Garden/u}).click();
     await code.waitFor();
+    await code.click();
+    await page.getByRole('button', {name: 'Accept this snapshot', exact: true}).click();
+    await page.getByRole('button', {name: 'Create read credential', exact: true}).click();
+    const credential = page.getByRole('textbox', {name: 'Git credential', exact: true});
+    await credential.waitFor();
+    assert.equal(await credential.inputValue(), 'c'.repeat(64));
+    assert.equal(await page.getByRole('button', {name: 'Create write credential', exact: true}).count(), 0);
+    await page.getByRole('button', {name: 'Revoke credential', exact: true}).click();
+    await credential.waitFor({state: 'hidden'});
   });
   await check('code-proposal-form-and-merge-retry-survive-view-change', async (page, state) => {
     state.work = [{kind: 'work', resource_id: id(50), title: 'Review the source', resource_revision: '1'}];

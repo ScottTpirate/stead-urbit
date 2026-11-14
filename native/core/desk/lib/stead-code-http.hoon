@@ -3,6 +3,7 @@
 |%
 +$  operation
   $%  [%advertise kind=service:stead-code-service]
+      [%pack-read ~]
       [%fetch ~]
       [%receive ~]
   ==
@@ -14,6 +15,7 @@
   |=  [suffix=@t method=@tas mime=@t]
   ^-  (unit operation)
   ?:  =(%'GET' method)
+    ?:  &(=('/stead-snapshot' suffix) =('' mime))  [~ %pack-read ~]
     ?:  =('/info/refs?service=git-upload-pack' suffix)  [~ %advertise %git-upload-pack]
     ?:  =('/info/refs?service=git-receive-pack' suffix)  [~ %advertise %git-receive-pack]
     ~
@@ -53,6 +55,15 @@
   =/  op  (endpoint suffix method.req (field 'content-type'))
   ?~  op  ~
   =/  bearer  (basic (field 'authorization'))
+  ?:  ?=(%pack-read -.u.op)
+    ?.  ?&  ?=(~ body.req)
+            !(~(has by u.headers) 'cookie')
+            !(~(has by u.headers) 'x-stead-csrf')
+            !(~(has by u.headers) 'origin')
+            !(~(has by u.headers) 'content-type')
+        ==
+      ~
+    [~ project u.op bearer [0 0]]
   ?:  ?=(%advertise -.u.op)
     ?.  ?~(body.req & =([0 0] u.body.req))  ~
     [~ project u.op bearer [0 0]]

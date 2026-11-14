@@ -1,7 +1,7 @@
 {
   "format": 1,
   "classification": "pure-native-only",
-  "expected_arm_count": 86,
+  "expected_arm_count": 90,
   "suites": [
     {
       "path": "/tests/stead-session",
@@ -126,6 +126,16 @@
         "test-pack-anchor-accept-and-retry",
         "test-pack-anchor-accept-fences",
         "test-pack-anchor-revoked-retry-and-immutable"
+      ],
+      "timeout_seconds": 60
+    },
+    {
+      "path": "/tests/stead-code-pack-read",
+      "arms": [
+        "test-pack-read-authenticated-exact-metadata",
+        "test-pack-read-https-get-without-browser-headers-or-body",
+        "test-pack-read-refuses-staged-cross-scope-expired-and-write",
+        "test-pack-read-current-grants-bindings-and-revocation"
       ],
       "timeout_seconds": 60
     },

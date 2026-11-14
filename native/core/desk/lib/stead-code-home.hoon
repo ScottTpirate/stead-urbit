@@ -158,11 +158,14 @@
     ?:  (gte (add ~(wyt by repos.code) ~(wyt by packs)) 4)  (error code 409 'capacity_exceeded')
     =/  next  (~(put by repos.code) project [(empty:stead-code-store destination) ~])
     (respond code(repos next, packs packs) ~[['status' 'ready']])
-  ?~  found  (error code 404 'denied_or_not_found')
+  ?.  |(?=(^ found) &(?=([~ %accepted *] pack) |(=('issue' operation) =('revoke' operation))))
+    (error code 404 'denied_or_not_found')
   ?:  =('issue' operation)
     ?.  (keys values ['access' base])  (error code 400 'invalid_request')
     =/  access  (field values 'access')
     ?.  |(=('read' access) =('write' access))  (error code 400 'invalid_request')
+    ?.  |(?=(^ found) =('read' access))
+      (error code 404 'denied_or_not_found')
     =/  issued
       (issue:stead-code-credentials book.code who destination =('write' access) expires.u.session now entropy (allowed db now))
     ?:  ?=(%| -.issued)  (error code 403 p.issued)
@@ -175,6 +178,7 @@
     =/  revoked  (revoke:stead-code-credentials book.code handle who home.destination now)
     ?:  ?=(%| -.revoked)  (error code 403 p.revoked)
     (respond code(book p.revoked) ~[['status' 'revoked']])
+  ?~  found  (error code 404 'denied_or_not_found')
   ?:  =('protect' operation)
     ?.  (keys values ['ref' base])  (error code 400 'invalid_request')
     ?.  =(3 role)  (error code 404 'denied_or_not_found')
@@ -275,9 +279,43 @@
   =/  repo  (~(get by repos.rows) project.scope)
   ?~  repo  |
   =(scope destination.data.u.repo)
+++  read-pack
+  |=  [db=state:stead-team code=state id=@t bearer=@t now=@ud]
+  ^-  result
+  =/  denied  (error code 401 'denied_or_not_found')
+  ?:  (~(has by repos.code) id)  denied
+  =/  selected  (~(get by packs.code) id)
+  ?.  ?=([~ %accepted *] selected)  denied
+  =/  pack  pack.row.u.selected
+  =/  scope  destination.pack
+  ?.  =([~ scope] (target db id))  denied
+  =/  who  (check:stead-code-credentials book.code bearer scope %read now (member db now) (allowed db now))
+  ?~  who  denied
+  =/  fields=(list [@t @t])
+    :~  ['protocol' 'stead.code-pack-read/1']
+      ['home' (scot %p home.scope)]
+      ['project_id' project.scope]
+      ['repository_id' repository.scope]
+      ['authority_epoch' (decimal epoch.scope)]
+      ['snapshot' snapshot.pack]
+      ['head' head.pack]
+      ['refs' (canonical (object ~(tap by refs.pack)))]
+      ['pack_sha256' pack-sha.pack]
+      ['pack_bytes' (decimal pack-bytes.pack)]
+      ['object_count' (decimal objects.pack)]
+      ['object_bytes' (decimal object-bytes.pack)]
+      ['object_ids_sha256' ids-sha.pack]
+      ['principal_id' principal.u.who]
+      ['binding_id' binding.u.who]
+      ['binding_revision' (decimal revision.u.who)]
+      ['identity_ship' (scot %p ship.u.who)]
+    ==
+  (text code 200 'application/json' (canonical (object fields)))
 ++  serve
   |=  [db=state:stead-team code=state input=incoming:stead-code-http now=@ud request=@t]
   ^-  result
+  ?:  ?=(%pack-read -.operation.input)
+    (read-pack db code project.input bearer.input now)
   =/  found  (~(get by repos.code) project.input)
   ?~  found  (error code 401 'denied_or_not_found')
   =/  repo  u.found
