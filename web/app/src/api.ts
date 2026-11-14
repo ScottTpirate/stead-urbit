@@ -14,6 +14,7 @@ export type CodeInput = { action: 'status' | 'create' | 'pack-view' }
   | ({ action: 'proposal' | 'approve' } & CodeReviewKey)
   | ({ action: 'submit'; work_id: string; ref: string; base_oid: string; head_oid: string; delegation_id: string } & CodeReviewKey)
   | { action: 'external-proposal'; proposal_id: string }
+  | { action: 'external-list'; work_id?: string }
   | ({ action: 'external-submit'; work_id: string; source_ref: string; ref: string; base_oid: string; head_oid: string;
     base_snapshot: string; generation: string; request_id: string } & CodeReviewKey)
   | ({ action: 'external-approve'; base_snapshot: string; base_oid: string; head_oid: string; request_id: string } & CodeReviewKey)
@@ -88,7 +89,7 @@ const GIT_REF_HEX = /^(?:726566732f68656164732f|726566732f746167732f)(?:[0-9a-f]
 export const UUID = /^[a-f0-9]{8}-[a-f0-9]{4}-7[a-f0-9]{3}-[89ab][a-f0-9]{3}-[a-f0-9]{12}$/u;
 const REVIEW_REVISION = /^(?:[1-9]|[1-5][0-9]|6[0-4])$/u;
 export const MAX_EXTERNAL_CODE = 8192;
-const EXTERNAL_ACTIONS = new Set(['external-proposal', 'external-submit', 'external-approve', 'external-merge']);
+const EXTERNAL_ACTIONS = new Set(['external-list', 'external-proposal', 'external-submit', 'external-approve', 'external-merge']);
 const EXTERNAL_MERGE_DENIALS = new Set(['invalid_request', 'proposal_unavailable', 'stale_review', 'worker_proof_denied',
   'approval-required', 'clock-conflict', 'denied', 'generation-conflict', 'history-capacity', 'history-conflict',
   'invalid-approval', 'invalid-board-context', 'invalid-candidate', 'invalid-intent', 'invalid-principal',
@@ -105,6 +106,17 @@ function fields(value: unknown): Fields {
   const result = object(value);
   if (Object.keys(result).length > 32 || Object.values(result).some(x => typeof x !== 'string')) throw new HomeError('invalid_response');
   return result as Fields;
+}
+function externalProposal(value: Fields, id = value.proposal_id): Fields {
+  if (value.status !== 'proposal' || value.proposal_id !== id || !UUID.test(value.proposal_id ?? '')
+    || !REVIEW_REVISION.test(value.revision ?? '') || !UUID.test(value.work_id ?? '') || !UUID.test(value.author ?? '')
+    || value.reviewer === undefined || (value.reviewer !== '' && !UUID.test(value.reviewer))
+    || !GIT_OID.test(value.base_oid ?? '') || !GIT_OID.test(value.head_oid ?? '') || !TOKEN.test(value.base_snapshot ?? '')
+    || !CODE_GENERATION.test(value.generation ?? '') || !value.source_ref?.startsWith('refs/heads/') || !value.ref?.startsWith('refs/heads/')
+    || (value.work_title !== undefined && value.work_title.length > 512)
+    || !((value.merged_revision === '' && value.merged_snapshot === '')
+      || (value.merged_revision === value.revision && TOKEN.test(value.merged_snapshot ?? '')))) throw new HomeError('invalid_response');
+  return value;
 }
 export function packRefs(value: Fields): Fields {
   try {
@@ -283,6 +295,9 @@ export class HomeClient {
         || !DECIMAL.test(value.object_count ?? '') || Number(value.object_count) < 1
         || Number(value.object_count) > 16384 || (value.generation !== undefined && !CODE_GENERATION.test(value.generation)) || (value.status === 'external'
           && (!value.request_id || !DECIMAL.test(value.accepted_at_ms ?? '')))) throw new HomeError('invalid_response');
+      if (value.generation_limit !== undefined && (!/^[1-9][0-9]{0,19}$/u.test(value.generation_limit)
+        || BigInt(value.generation_limit) > 2n ** 64n - 1n || value.generation === undefined
+        || BigInt(value.generation) > BigInt(value.generation_limit))) throw new HomeError('invalid_response');
       packRefs(value);
       if (input.action === 'pack-accept' && (value.status !== 'external' || value.snapshot !== input.snapshot
         || value.authority_epoch !== input.authority_epoch || value.request_id !== input.request_id)) {
@@ -303,15 +318,7 @@ export class HomeClient {
       || value.revision !== input.revision || !DECIMAL.test(value.repository_revision ?? '') || value.repository_revision === '0')) {
       throw new HomeError('invalid_response');
     }
-    if (input.action === 'external-proposal' && (value.status !== 'proposal' || value.proposal_id !== input.proposal_id
-      || !REVIEW_REVISION.test(value.revision ?? '') || !UUID.test(value.work_id ?? '') || !UUID.test(value.author ?? '')
-      || value.reviewer === undefined || (value.reviewer !== '' && !UUID.test(value.reviewer))
-      || !GIT_OID.test(value.base_oid ?? '') || !GIT_OID.test(value.head_oid ?? '') || !TOKEN.test(value.base_snapshot ?? '')
-      || !CODE_GENERATION.test(value.generation ?? '') || !value.source_ref?.startsWith('refs/heads/') || !value.ref?.startsWith('refs/heads/')
-      || !((value.merged_revision === '' && value.merged_snapshot === '')
-        || (value.merged_revision === value.revision && TOKEN.test(value.merged_snapshot ?? ''))))) {
-      throw new HomeError('invalid_response');
-    }
+    if (input.action === 'external-proposal') externalProposal(value, input.proposal_id);
     if ((input.action === 'external-submit' || input.action === 'external-approve')
       && (value.status !== 'accepted' || value.request_id !== input.request_id || value.proposal_id !== input.proposal_id
         || value.revision !== input.revision)) throw new HomeError('invalid_response');
@@ -327,6 +334,18 @@ export class HomeClient {
         || BigInt(value.generation!) !== BigInt(proof.generation) + 1n) throw new HomeError('invalid_response');
     }
     return value;
+  }
+  async externalReviews(project: string, workId?: string): Promise<Fields[]> {
+    const value = await this.code(project, { action: 'external-list', ...(workId ? { work_id: workId } : {}) });
+    try {
+      if (value.status !== 'proposals' || Object.keys(value).length !== 3) throw new HomeError('invalid_response');
+      const rows: unknown = JSON.parse(value.rows!);
+      if (!Array.isArray(rows) || rows.length > 64) throw new HomeError('invalid_response');
+      const proposals = rows.map(row => externalProposal(fields(row)));
+      if (new Set(proposals.map(row => row.proposal_id)).size !== proposals.length
+        || (workId && proposals.some(row => row.work_id !== workId))) throw new HomeError('invalid_response');
+      return proposals;
+    } catch { throw new HomeError('invalid_response'); }
   }
   clearCodeMerges() { this.pendingMerges.clear(); this.pendingExternalMerges.clear(); }
   pendingCodeMerge(project: string): Readonly<CodeMerge> | undefined {

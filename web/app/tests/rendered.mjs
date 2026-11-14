@@ -108,6 +108,12 @@ async function fixture(run, mockRepository = false) {
       }
       if (value.action.startsWith('external-')) {
         state.externalRequests.push(value);
+        if (value.action === 'external-list') {
+          assert.deepEqual(Object.keys(value).sort(), ['action', 'project_id', 'protocol']);
+          const proposals = [...state.externalReviews.values()].map(row => ({protocol: 'stead.code/1', status: 'proposal', ...row,
+            work_title: state.work.find(work => work.resource_id === row.work_id)?.title ?? ''}));
+          return respond({status: 'proposals', rows: JSON.stringify(proposals)});
+        }
         const saved = state.externalReviews.get(value.proposal_id);
         if (value.action === 'external-proposal') {
           assert.deepEqual(Object.keys(value).sort(), ['action', 'project_id', 'proposal_id', 'protocol']);
@@ -398,12 +404,13 @@ try {
     const targetRef = 'refs/heads/main'; const sourceRef = 'refs/heads/feature';
     const work = {kind: 'work', resource_id: id(50), title: 'Review the change', resource_revision: '1'};
     state.work = [work]; state.externalWritable = true;
-    state.pack = {status: 'external', snapshot: initial, generation: '0', authority_epoch: '1', request_id: id(450), accepted_at_ms: '1800000000000',
+    state.pack = {status: 'external', snapshot: initial, generation: '0', generation_limit: '64', authority_epoch: '1', request_id: id(450), accepted_at_ms: '1800000000000',
       object_count: '6', head: hex(targetRef), refs: JSON.stringify({[hex(targetRef)]: base, [hex(sourceRef)]: head})};
     await page.getByRole('button', {name: 'Refresh', exact: true}).click();
     await code.click();
     const panel = page.getByRole('heading', {name: 'Change review', exact: true});
     await panel.waitFor();
+    await page.getByText('No proposals to review yet.', {exact: true}).waitFor();
     await page.getByRole('button', {name: 'Create write credential', exact: true}).waitFor();
     const prepareDraft = async () => {
       await page.getByRole('button', {name: 'New proposal', exact: true}).click();
@@ -435,10 +442,13 @@ try {
     const reviewed = {...state.externalReviews.get(submitted.proposal_id), proposal_id: id(542), author: id(777)};
     state.externalReviews.set(reviewed.proposal_id, reviewed);
     const open = async () => {
+      await page.getByText('Open by proposal ID', {exact: true}).click();
       await page.getByLabel('Proposal ID', {exact: true}).fill(reviewed.proposal_id);
       await page.getByRole('button', {name: 'Open proposal', exact: true}).click();
     };
-    await open();
+    await page.getByRole('button', {name: 'Refresh snapshot', exact: true}).click();
+    const list = page.getByRole('list', {name: 'Change proposals'});
+    await list.getByRole('button').nth(1).click();
     await page.getByRole('button', {name: 'Approve this revision', exact: true}).click();
     await page.getByText('Approved.', {exact: true}).waitFor();
     await page.getByText('Merge with signed proof', {exact: true}).click();
@@ -467,6 +477,14 @@ try {
     await upload(evidence); await merge.waitFor();
     assert.equal(state.externalRequests.filter(row => row.action === 'external-merge').length, 0);
 
+    state.externalWritable = false;
+    await page.getByRole('button', {name: 'Refresh snapshot', exact: true}).click();
+    await merge.waitFor({state: 'hidden'});
+    assert.equal(await page.getByRole('button', {name: 'Create write credential', exact: true}).count(), 0);
+    state.externalWritable = true;
+    await page.getByRole('button', {name: 'Refresh snapshot', exact: true}).click();
+    await merge.waitFor();
+
     for (const [width, height] of [[1440, 1000], [390, 900], [320, 900]]) {
       await page.setViewportSize({width, height});
       await panel.scrollIntoViewIfNeeded();
@@ -476,8 +494,14 @@ try {
     state.dropMergeResponse = true;
     await merge.click();
     await page.getByRole('alert').getByText(/did not confirm the merge/u).waitFor();
+    state.pack = {...state.pack, generation: '64'};
+    state.externalWritable = false;
     await page.getByRole('button', {name: 'Overview', exact: true}).click();
     await code.click();
+    await page.getByText(/reached its 64 update limit/u).waitFor();
+    await page.getByRole('button', {name: 'Create read credential', exact: true}).waitFor();
+    assert.equal(await page.getByRole('button', {name: 'Create write credential', exact: true}).count(), 0);
+    assert.equal(await page.getByRole('button', {name: 'New proposal', exact: true}).count(), 0);
     assert.equal(state.externalRequests.filter(row => row.action === 'external-merge').length, 1);
     await page.getByRole('button', {name: 'Retry this merge', exact: true}).click();
     await page.getByRole('status').filter({hasText: 'The Home confirmed the merge.'}).waitFor();

@@ -74,6 +74,12 @@ globalThis.fetch = async (url, init) => {
       merged_revision: mode === 'external-review-merged' ? externalReview.revision : '',
       merged_snapshot: mode === 'external-review-merged' ? 'b'.repeat(64) : ''});
   }
+  if (String(url).endsWith('/code') && raw.action === 'external-list') {
+    const row = {status: 'proposal', ...externalReview, merged_revision: '', merged_snapshot: '', work_title: 'Linked work'};
+    const rows = mode === 'external-list-excess' ? Array.from({length: 65}, () => row)
+      : mode === 'external-list-duplicate' ? [row, row] : [row];
+    return json({protocol: 'stead.code/1', status: 'proposals', rows: JSON.stringify(rows)});
+  }
   if (String(url).endsWith('/code') && (raw.action === 'pack-view' || raw.action === 'pack-accept')) {
     const entries = Array.from({length: 64}, (_, i) => [Buffer.from(`refs/heads/${i}`).toString('hex'), 'a'.repeat(40)]);
     const head = mode === 'pack-wrong-head' ? '00' : entries[0]![0];
@@ -82,7 +88,8 @@ globalThis.fetch = async (url, init) => {
     if (raw.action === 'pack-view' && !mode.startsWith('pack-external-')) return json({...common, status: 'external-staged'});
     const accepted = {...common, status: 'external', request_id: raw.request_id ?? id('302'), accepted_at_ms: '1790519400000'};
     if (mode === 'pack-external-missing') return json(accepted);
-    return json({...accepted, generation: mode === 'pack-external-invalid' ? '65' : '0'});
+    return json({...accepted, generation: mode === 'pack-external-invalid' ? '65' : mode === 'pack-external-limit' ? '64' : '0',
+      generation_limit: mode === 'pack-external-invalid-limit' ? '064' : '64'});
   }
   if (String(url).endsWith('/updates')) {
     if (mode === 'updates-network') throw new TypeError('lost update response');
@@ -448,6 +455,10 @@ test('Code pack views preserve all 64 refs and reject uncorrelated acceptance', 
   assert.equal((await client.code(project, {action: 'pack-view'})).generation, undefined);
   mode = 'pack-external-invalid';
   await rejects(client.code(project, {action: 'pack-view'}), 'invalid_response');
+  mode = 'pack-external-invalid-limit';
+  await rejects(client.code(project, {action: 'pack-view'}), 'invalid_response');
+  mode = 'pack-external-limit';
+  assert.equal((await client.code(project, {action: 'pack-view'})).generation_limit, '64');
   mode = '';
 });
 
@@ -505,6 +516,21 @@ test('external review has exact accepted requests and durable merge readback', a
   const merged = await client.code(externalProject, {action: 'external-proposal', proposal_id: externalReview.proposal_id});
   assert.equal(merged.merged_revision, externalReview.revision);
   assert.equal(merged.merged_snapshot, requestedProof.candidate_snapshot);
+  mode = '';
+});
+
+test('external review list bounds and correlates rows to optional Work filter', async () => {
+  person = 1; mode = ''; const client = new HomeClient(); await client.resume();
+  const [first] = await client.externalReviews(externalProject);
+  assert.equal(first?.work_title, 'Linked work');
+  assert.deepEqual(savedBody, {protocol: 'stead.code/1', project_id: externalProject, action: 'external-list'});
+  assert.equal((await client.externalReviews(externalProject, externalReview.work_id)).length, 1);
+  assert.equal(savedBody.work_id, externalReview.work_id);
+  await rejects(client.externalReviews(externalProject, id('999')), 'invalid_response');
+  for (const problem of ['external-list-duplicate', 'external-list-excess']) {
+    mode = problem;
+    await rejects(client.externalReviews(externalProject), 'invalid_response');
+  }
   mode = '';
 });
 

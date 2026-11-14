@@ -141,6 +141,11 @@ h3 { font-size: 14px; font-weight: 620; }
 .code-review-facts dt { color: var(--muted); font-size: 12px; }
 .code-review-facts dd { margin: 3px 0 0; overflow-wrap: anywhere; }
 .code-proof .stead-field { margin-top: 12px; }
+.external-review-list { display: grid; gap: 2px; margin: 8px 0 14px; padding: 0; list-style: none; }
+.external-review-list .stead-button { width: 100%; text-align: left; }
+.external-review-list .stead-button > span { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 2px 12px; width: 100%; }
+.external-review-list .stead-button > span > span { color: var(--muted); }
+.external-review-list [aria-pressed="true"] { background: var(--rail); }
 
 .rows, .work-groups { display: grid; gap: 10px; min-width: 0; }
 .resource-row { display: flex; align-items: center; justify-content: space-between; gap: 14px; padding: 14px 16px; }
