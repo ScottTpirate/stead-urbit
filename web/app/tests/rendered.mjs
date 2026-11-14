@@ -55,7 +55,8 @@ async function fixture(run, mockRepository = false) {
     watches: new Map(), pages: new Map(), requests: [], sequence: 0, token: 0, polls: 0, opens: 0, denied: false,
     holdOpen: false, releaseOpen: null, holdWork: false, releaseWork: null, invalidateCommands: false,
     project: {kind: 'project', resource_id: id(1), project_id: id(1), title: 'Garden', project_key: 'GARDEN', preset: 'general', authority_epoch: '1', resource_revision: '1', policy_revision: '1', role: 'maintainer'},
-    work: [], activity: [], containers: [], documents: [], proposals: new Map(), mergeRequests: [], dropMergeResponse: false};
+    work: [], activity: [], containers: [], documents: [], proposals: new Map(), mergeRequests: [], dropMergeResponse: false,
+    externalWritable: false, externalReviews: new Map(), externalRequests: []};
   await page.route(origin + '/stead/**', async route => {
     const request = route.request();
     if (request.method() !== 'POST') return route.continue();
@@ -87,7 +88,8 @@ async function fixture(run, mockRepository = false) {
         state.repositoryReady = true;
         return respond({status: 'ready'});
       }
-      if (value.action === 'status') return respond({status: state.pack?.status ?? (state.repositoryReady ? 'ready' : 'disabled'), write: state.pack ? 'no' : 'yes', manage: 'yes'});
+      if (value.action === 'status') return respond({status: state.pack?.status ?? (state.repositoryReady ? 'ready' : 'disabled'),
+        write: state.pack && !state.externalWritable ? 'no' : 'yes', manage: 'yes'});
       if (value.action === 'pack-view') { assert.ok(state.pack); return respond(state.pack); }
       if (value.action === 'pack-accept') {
         assert.equal(state.pack?.status, 'external-staged');
@@ -97,12 +99,46 @@ async function fixture(run, mockRepository = false) {
       }
       if (value.action === 'issue') {
         assert.equal(state.pack?.status, 'external');
-        assert.equal(value.access, 'read');
+        assert.ok(value.access === 'read' || (state.externalWritable && value.access === 'write'));
         return respond({status: 'issued', bearer: 'c'.repeat(64), handle: 'd'.repeat(64), expires_at_ms: '1800000900000'});
       }
       if (value.action === 'revoke') {
         assert.equal(value.handle, 'd'.repeat(64));
         return respond({status: 'revoked'});
+      }
+      if (value.action.startsWith('external-')) {
+        state.externalRequests.push(value);
+        const saved = state.externalReviews.get(value.proposal_id);
+        if (value.action === 'external-proposal') {
+          assert.deepEqual(Object.keys(value).sort(), ['action', 'project_id', 'proposal_id', 'protocol']);
+          return saved ? respond({status: 'proposal', ...saved}) : send({error: 'denied_or_not_found'}, 404);
+        }
+        const {proposal_id, revision, work_id, source_ref, ref, base_oid, head_oid, request_id} = value;
+        if (value.action === 'external-submit') {
+          state.externalReviews.set(proposal_id, {proposal_id, revision, work_id, source_ref, ref, base_oid, head_oid,
+            author: person.principal_id, reviewer: '', base_snapshot: state.pack.snapshot, generation: '1', merged_revision: '', merged_snapshot: ''});
+          return respond({status: 'accepted', proposal_id, revision, request_id});
+        }
+        assert.ok(saved);
+        if (value.action === 'external-approve') {
+          for (const key of ['revision', 'base_snapshot', 'base_oid', 'head_oid']) assert.equal(saved[key], value[key]);
+          saved.reviewer = person.principal_id;
+          return respond({status: 'accepted', proposal_id, revision, request_id});
+        }
+        assert.equal(value.action, 'external-merge');
+        const proof = JSON.parse(value.proof);
+        assert.equal(value.proof, canonical(proof) + '\n');
+        if (state.dropMergeResponse) state.dropMergeResponse = false;
+        else {
+          if (state.mergeRequests.length > 0) assert.deepEqual(value, state.mergeRequests[0]);
+          return respond({status: 'merged', request_id, proposal_id, snapshot: proof.candidate_snapshot, generation: '2'});
+        }
+        state.mergeRequests.push(value);
+        saved.merged_revision = revision;
+        saved.merged_snapshot = proof.candidate_snapshot;
+        state.pack = {...state.pack, snapshot: proof.candidate_snapshot, request_id,
+          refs: JSON.stringify({...JSON.parse(state.pack.refs), [state.pack.head]: proof.head_oid})};
+        return route.abort('failed');
       }
       const key = value.proposal_id + '/' + value.revision;
       if (value.action === 'submit') {
@@ -350,6 +386,85 @@ try {
     assert.deepEqual(state.mergeRequests[0], state.mergeRequests[1]);
     await page.setViewportSize({width: 320, height: 900});
     assert.ok(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth));
+  });
+  await check('code-external-review-and-signed-merge', async (page, state, consoleErrors) => {
+    const code = page.getByRole('button', {name: 'Code', exact: true});
+    const hex = text => Buffer.from(text).toString('hex');
+    const base = 'b'.repeat(40); const head = 'c'.repeat(40); const initial = 'a'.repeat(64);
+    const targetRef = 'refs/heads/main'; const sourceRef = 'refs/heads/feature';
+    const work = {kind: 'work', resource_id: id(50), title: 'Review the change', resource_revision: '1'};
+    state.work = [work]; state.externalWritable = true;
+    state.pack = {status: 'external', snapshot: initial, authority_epoch: '1', request_id: id(450), accepted_at_ms: '1800000000000',
+      object_count: '6', head: hex(targetRef), refs: JSON.stringify({[hex(targetRef)]: base, [hex(sourceRef)]: head})};
+    await page.getByRole('button', {name: 'Refresh', exact: true}).click();
+    await code.click();
+    const panel = page.getByRole('heading', {name: 'Change review', exact: true});
+    await panel.waitFor();
+    await page.getByRole('button', {name: 'Create write credential', exact: true}).waitFor();
+    await page.getByRole('button', {name: 'New proposal', exact: true}).click();
+    await page.getByLabel('Work item', {exact: true}).selectOption({label: work.title});
+    await page.getByLabel('Source branch', {exact: true}).selectOption({label: 'feature'});
+    await page.getByRole('button', {name: 'Submit proposal', exact: true}).click();
+    await page.getByText('Awaiting review.', {exact: true}).waitFor();
+    assert.equal(await page.getByRole('button', {name: 'Approve this revision', exact: true}).count(), 0);
+    const submitted = state.externalRequests.find(row => row.action === 'external-submit');
+    assert.equal(submitted.base_oid, base); assert.equal(submitted.head_oid, head);
+    assert.equal(submitted.ref, targetRef); assert.equal(submitted.source_ref, sourceRef);
+
+    const reviewed = {...state.externalReviews.get(submitted.proposal_id), proposal_id: id(542), author: id(777)};
+    state.externalReviews.set(reviewed.proposal_id, reviewed);
+    const open = async () => {
+      await page.getByLabel('Proposal ID', {exact: true}).fill(reviewed.proposal_id);
+      await page.getByRole('button', {name: 'Open proposal', exact: true}).click();
+    };
+    await open();
+    await page.getByRole('button', {name: 'Approve this revision', exact: true}).click();
+    await page.getByText('Approved.', {exact: true}).waitFor();
+    await page.getByText('Merge with signed proof', {exact: true}).click();
+    const merge = page.getByRole('button', {name: 'Merge this revision', exact: true});
+    assert.equal(await merge.count(), 0);
+    const download = async () => {
+      const result = page.waitForEvent('download');
+      await page.getByRole('button', {name: 'Download proof request', exact: true}).click();
+      return JSON.parse(await readFile(await (await result).path(), 'utf8'));
+    };
+    const downloaded = await download();
+    assert.deepEqual(await download(), downloaded);
+    assert.equal(downloaded.protocol, 'stead.git-pack-review-request/1');
+    assert.equal(downloaded.proposal_id, reviewed.proposal_id);
+    assert.equal(downloaded.base_oid, base); assert.equal(downloaded.head_oid, head);
+    const evidence = {protocol: 'stead.git-pack-reviewed-proof/1', base_snapshot: initial, request_id: downloaded.request_id,
+      scope: {home: '~zod', authority_epoch: '1', project_id: id(1), repository_id: id(1)},
+      proposal_id: reviewed.proposal_id, revision: reviewed.revision, work_id: work.resource_id,
+      source: hex(sourceRef), target: hex(targetRef), base_oid: base, head_oid: head, generation: reviewed.generation,
+      candidate_snapshot: 'd'.repeat(64)};
+    const upload = candidate => page.getByLabel('Signed proof file', {exact: true}).setInputFiles({name: 'proof.json',
+      mimeType: 'application/json', buffer: Buffer.from(JSON.stringify({proof: canonical(candidate) + '\n',
+        worker_generation: '1', worker_signature: 'a'.repeat(128)}))});
+    await upload({...evidence, head_oid: base});
+    await page.getByRole('alert').getByText(/does not match/u).waitFor();
+    await upload(evidence); await merge.waitFor();
+    assert.equal(state.externalRequests.filter(row => row.action === 'external-merge').length, 0);
+
+    for (const [width, height] of [[1440, 1000], [390, 900], [320, 900]]) {
+      await page.setViewportSize({width, height});
+      await panel.scrollIntoViewIfNeeded();
+      assert.ok(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth), 'review has no horizontal overflow');
+      await page.screenshot({path: path.join(output, `external-review-${width}.png`), fullPage: true});
+    }
+    state.dropMergeResponse = true;
+    await merge.click();
+    await page.getByRole('alert').getByText(/did not confirm the merge/u).waitFor();
+    await page.getByRole('button', {name: 'Overview', exact: true}).click();
+    await code.click();
+    assert.equal(state.externalRequests.filter(row => row.action === 'external-merge').length, 1);
+    await page.getByRole('button', {name: 'Retry this merge', exact: true}).click();
+    await page.getByRole('status').filter({hasText: 'The Home confirmed the merge.'}).waitFor();
+    await open();
+    await page.getByText('Merged.', {exact: true}).waitFor();
+    assert.equal(await page.getByLabel('Snapshot SHA-256', {exact: true}).inputValue(), evidence.candidate_snapshot);
+    assert.equal(state.externalRequests.filter(row => row.action === 'external-merge').length, 2);
+    assert.deepEqual(consoleErrors, []);
   });
   await check('authentication-reuses-validated-identity-and-opens-before-one-snapshot', async (page, state) => {
     assert.equal(state.requests.filter(row => row.kind === 'identity').length, 1);

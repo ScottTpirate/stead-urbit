@@ -4,6 +4,8 @@ export type Fields = Record<string, string>;
 export type Row = Fields;
 export type CodeReviewKey = { proposal_id: string; revision: string };
 export type CodeMerge = CodeReviewKey & { action: 'merge'; request_id: string };
+export type ExternalMerge = CodeReviewKey & { action: 'external-merge'; request_id: string;
+  worker_generation: string; worker_signature: string; proof: string };
 export type CodeInput = { action: 'status' | 'create' | 'pack-view' }
   | { action: 'pack-accept'; snapshot: string; authority_epoch: string; request_id: string }
   | { action: 'issue'; access: 'read' | 'write' }
@@ -11,9 +13,12 @@ export type CodeInput = { action: 'status' | 'create' | 'pack-view' }
   | { action: 'protect'; ref: string }
   | ({ action: 'proposal' | 'approve' } & CodeReviewKey)
   | ({ action: 'submit'; work_id: string; ref: string; base_oid: string; head_oid: string; delegation_id: string } & CodeReviewKey)
+  | { action: 'external-proposal'; proposal_id: string }
+  | ({ action: 'external-submit'; work_id: string; source_ref: string; ref: string; base_oid: string; head_oid: string; request_id: string } & CodeReviewKey)
+  | ({ action: 'external-approve'; base_snapshot: string; base_oid: string; head_oid: string; request_id: string } & CodeReviewKey)
   | { action: 'delegate'; delegation_id: string; worker_ship: string; work_id: string; ref: string; expires_at_ms: string }
   | { action: 'revoke-delegation'; delegation_id: string }
-  | CodeMerge;
+  | CodeMerge | ExternalMerge;
 export type ViewKind = 'identity' | 'projects' | 'project' | 'work' | 'documents' | 'containers' | 'document' | 'relations' | 'search' | 'activity' | 'inbox' | 'receipt';
 export interface Query {
   kind: ViewKind;
@@ -78,6 +83,17 @@ const TOKEN = /^[0-9a-f]{64}$/u;
 const GIT_OID = /^[0-9a-f]{40}$/u;
 const DECIMAL = /^(0|[1-9][0-9]{0,19})$/u;
 const GIT_REF_HEX = /^(?:726566732f68656164732f|726566732f746167732f)(?:[0-9a-f]{2})+$/u;
+export const UUID = /^[a-f0-9]{8}-[a-f0-9]{4}-7[a-f0-9]{3}-[89ab][a-f0-9]{3}-[a-f0-9]{12}$/u;
+const REVIEW_REVISION = /^(?:[1-9]|[1-5][0-9]|6[0-4])$/u;
+export const MAX_EXTERNAL_CODE = 8192;
+const EXTERNAL_ACTIONS = new Set(['external-proposal', 'external-submit', 'external-approve', 'external-merge']);
+const EXTERNAL_MERGE_DENIALS = new Set(['invalid_request', 'proposal_unavailable', 'stale_review', 'worker_proof_denied',
+  'approval-required', 'clock-conflict', 'denied', 'generation-conflict', 'history-capacity', 'history-conflict',
+  'invalid-approval', 'invalid-board-context', 'invalid-candidate', 'invalid-intent', 'invalid-principal',
+  'invalid-promotion', 'invalid-proposal', 'invalid-selection', 'manifest-conflict', 'merge-denied', 'pack-conflict',
+  'pending-conflict', 'promotion-capacity', 'proof-conflict', 'request-capacity', 'request-reused', 'review-change-conflict',
+  'review-denied', 'scope-conflict', 'self-merge', 'self-review', 'snapshot-conflict', 'source-conflict', 'stale-base',
+  'stale-epoch', 'stale-proposal', 'stale-review', 'stale-revision', 'stale-selection', 'stale-target']);
 const MAX_RESPONSE = 262144;
 function object(value: unknown): Record<string, unknown> {
   if (!value || typeof value !== 'object' || Array.isArray(value)) throw new HomeError('invalid_response');
@@ -130,6 +146,7 @@ export class HomeClient {
   private inflight = new Set<AbortController>();
   private retired = new Set<HomeWatch>();
   private pendingMerges = new Map<string, CodeMerge>();
+  private pendingExternalMerges = new Map<string, ExternalMerge>();
   onInvalidated: () => void = () => {};
   private fence() {
     this.generation++;
@@ -137,14 +154,15 @@ export class HomeClient {
     this.inflight.clear();
   }
   clear() {
-    this.fence(); this.csrf = ''; this.identity = null; this.adopting = 0; this.suspended = false; this.retired.clear(); this.pendingMerges.clear(); this.onInvalidated();
+    this.fence(); this.csrf = ''; this.identity = null; this.adopting = 0; this.suspended = false; this.retired.clear(); this.clearCodeMerges(); this.onInvalidated();
   }
-  private async post(path: string, body: unknown, authenticated: boolean, mutation = false, adoption = false): Promise<Record<string, unknown>> {
+  private async post(path: string, body: unknown, authenticated: boolean, mutation = false, adoption = false,
+    externalCode = ''): Promise<Record<string, unknown>> {
     if (authenticated && this.adopting && !adoption) throw new HomeError('session_changed');
     if (authenticated && this.suspended && !adoption) throw new HomeError('resume_required');
     if (authenticated && !TOKEN.test(this.csrf)) throw new HomeError('session_required');
     const raw = JSON.stringify(body);
-    if (new TextEncoder().encode(raw).byteLength > 65536) throw new HomeError('request_too_large');
+    if (new TextEncoder().encode(raw).byteLength > (externalCode ? MAX_EXTERNAL_CODE : 65536)) throw new HomeError('request_too_large');
     const generation = this.generation;
     const controller = new AbortController();
     this.inflight.add(controller);
@@ -159,6 +177,17 @@ export class HomeClient {
       if (response.status === 401) { this.clear(); throw new HomeError('session_required'); }
       const value = object(await boundedJSON(response));
       if (generation !== this.generation) throw new HomeError('session_changed');
+      if (externalCode) {
+        const names = Object.keys(value);
+        const bare = names.length === 1 && Object.hasOwn(value, 'error');
+        const rejected = names.length === 3 && value.protocol === 'stead.result/3' && value.status === 'rejected';
+        if (externalCode === 'external-merge') {
+          if (response.status === 409 && (bare || rejected) && typeof value.error === 'string'
+            && EXTERNAL_MERGE_DENIALS.has(value.error)) throw new HomeError(value.error);
+          if (!response.ok || value.status === 'rejected') throw new HomeError('outcome_unknown');
+        } else if ([400, 403, 404, 409].includes(response.status) && (bare || rejected)
+          && typeof value.error === 'string' && /^[a-z_-]{1,64}$/u.test(value.error)) throw new HomeError(value.error);
+      }
       if (!response.ok && !(value.protocol === 'stead.result/3'
         && ((response.status === 403 && value.error === 'invalid_csrf') || path === '/stead/api/code'))) throw new HomeError('outcome_unknown');
       if (mutation) return value;
@@ -208,7 +237,7 @@ export class HomeClient {
       throw new HomeError('invalid_response');
     }
     const changed = !this.identity || ['principal_id', 'binding_id', 'binding_revision', 'identity_ship', 'session_audit_id'].some(key => this.identity![key] !== person[key]);
-    if (changed) { this.pendingMerges.clear(); this.onInvalidated(); }
+    if (changed) { this.clearCodeMerges(); this.onInvalidated(); }
     this.identity = person;
     this.retired.clear(); // Confirmed resume/consumption retires prior server read handles.
     this.suspended = false;
@@ -243,7 +272,8 @@ export class HomeClient {
   }
   async query(query: Query): Promise<View> { return this.readQuery(query); }
   async code(project_id: string, input: CodeInput): Promise<Fields> {
-    const value = fields(await this.post('/stead/api/code', { protocol: 'stead.code/1', project_id, ...input }, true));
+    const value = fields(await this.post('/stead/api/code', { protocol: 'stead.code/1', project_id, ...input }, true,
+      false, false, EXTERNAL_ACTIONS.has(input.action) ? input.action : ''));
     if (value.protocol !== 'stead.code/1') throw new HomeError('invalid_response');
     if (input.action === 'pack-view' || input.action === 'pack-accept') {
       if (!['external', 'external-staged'].includes(value.status ?? '') || !TOKEN.test(value.snapshot ?? '')
@@ -271,9 +301,32 @@ export class HomeClient {
       || value.revision !== input.revision || !DECIMAL.test(value.repository_revision ?? '') || value.repository_revision === '0')) {
       throw new HomeError('invalid_response');
     }
+    if (input.action === 'external-proposal' && (value.status !== 'proposal' || value.proposal_id !== input.proposal_id
+      || !REVIEW_REVISION.test(value.revision ?? '') || !UUID.test(value.work_id ?? '') || !UUID.test(value.author ?? '')
+      || value.reviewer === undefined || (value.reviewer !== '' && !UUID.test(value.reviewer))
+      || !GIT_OID.test(value.base_oid ?? '') || !GIT_OID.test(value.head_oid ?? '') || !TOKEN.test(value.base_snapshot ?? '')
+      || !DECIMAL.test(value.generation ?? '') || !value.source_ref?.startsWith('refs/heads/') || !value.ref?.startsWith('refs/heads/')
+      || !((value.merged_revision === '' && value.merged_snapshot === '')
+        || (value.merged_revision === value.revision && TOKEN.test(value.merged_snapshot ?? ''))))) {
+      throw new HomeError('invalid_response');
+    }
+    if ((input.action === 'external-submit' || input.action === 'external-approve')
+      && (value.status !== 'accepted' || value.request_id !== input.request_id || value.proposal_id !== input.proposal_id
+        || value.revision !== input.revision)) throw new HomeError('invalid_response');
+    if (input.action === 'external-merge') {
+      let proof: Record<string, unknown>;
+      try { proof = object(JSON.parse(input.proof)); }
+      catch { throw new HomeError('invalid_response'); }
+      if (Object.keys(value).length !== 6 || value.status !== 'merged'
+        || value.request_id !== input.request_id || value.proposal_id !== input.proposal_id
+        || proof.request_id !== input.request_id || proof.proposal_id !== input.proposal_id || proof.revision !== input.revision
+        || !TOKEN.test(value.snapshot ?? '') || value.snapshot !== proof.candidate_snapshot || !DECIMAL.test(value.generation ?? '')
+        || typeof proof.generation !== 'string' || !DECIMAL.test(proof.generation)
+        || BigInt(value.generation!) !== BigInt(proof.generation) + 1n) throw new HomeError('invalid_response');
+    }
     return value;
   }
-  clearCodeMerges() { this.pendingMerges.clear(); }
+  clearCodeMerges() { this.pendingMerges.clear(); this.pendingExternalMerges.clear(); }
   pendingCodeMerge(project: string): Readonly<CodeMerge> | undefined {
     return this.pendingMerges.get(project);
   }
@@ -295,6 +348,27 @@ export class HomeClient {
       const uncertain = !(error instanceof HomeError)
         || ['outcome_unknown', 'invalid_response', 'session_changed'].includes(error.code);
       if (!prior && !uncertain && this.pendingMerges.get(project) === request) this.pendingMerges.delete(project);
+      throw error;
+    }
+  }
+  pendingExternalMerge(project: string): Readonly<CodeReviewKey> | undefined {
+    const row = this.pendingExternalMerges.get(project);
+    return row && { proposal_id: row.proposal_id, revision: row.revision };
+  }
+  async mergeExternalCode(project: string, input?: ExternalMerge): Promise<Fields> {
+    const prior = this.pendingExternalMerges.get(project);
+    if (prior && input) throw new HomeError('code_merge_pending');
+    const request = prior ?? (input && { ...input });
+    if (!request) throw new HomeError('no_pending_merge');
+    this.pendingExternalMerges.set(project, request);
+    try {
+      const receipt = await this.code(project, request);
+      if (this.pendingExternalMerges.get(project) === request) this.pendingExternalMerges.delete(project);
+      return { ...receipt, revision: request.revision };
+    } catch (error) {
+      const uncertain = !(error instanceof HomeError)
+        || ['outcome_unknown', 'invalid_response', 'session_changed'].includes(error.code);
+      if (!prior && !uncertain && this.pendingExternalMerges.get(project) === request) this.pendingExternalMerges.delete(project);
       throw error;
     }
   }

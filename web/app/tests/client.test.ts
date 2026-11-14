@@ -4,6 +4,7 @@ import assert from 'node:assert/strict';
 import { newId, commandDigest, canonical } from '../src/protocol';
 import { HomeClient, HomeError, command, packRefs, type Fields } from '../src/api';
 import { supportDetails } from '../src/support';
+import { parseReviewArtifact, reviewBranches, reviewRequest } from '../src/externalReview';
 const id = (end: string) => `019939ba-4000-7000-8000-${end.padStart(12, '0')}`;
 test('support export excludes untrusted diagnostics and non-request secrets', () => {
   const secret = 'private document body and cookie ' + 'a'.repeat(64);
@@ -51,6 +52,23 @@ globalThis.fetch = async (url, init) => {
     if (mode === 'code-merge-rejected') return json({protocol: 'stead.result/3', status: 'rejected', error: 'stale-target'}, 409);
     return json({protocol: 'stead.code/1', status: 'replayed', request_id: raw.request_id,
       proposal_id: raw.proposal_id, revision: mode === 'code-merge-wrong' ? '99' : raw.revision, repository_revision: '3'});
+  }
+  if (String(url).endsWith('/code') && raw.action === 'external-merge') {
+    if (mode === 'external-merge-lost') throw new TypeError('lost merge response');
+    if (mode === 'external-merge-503') return json({error: 'stale_review'}, 503);
+    if (mode === 'external-merge-unknown') return json({protocol: 'stead.result/3', status: 'rejected', error: 'future-error'}, 409);
+    if (mode === 'external-merge-denied') return json({protocol: 'stead.result/3', status: 'rejected', error: 'worker_proof_denied'}, 409);
+    return json({protocol: 'stead.code/1', status: 'merged', request_id: raw.request_id, proposal_id: raw.proposal_id,
+      snapshot: (mode === 'external-merge-wrong' ? 'a' : 'b').repeat(64), generation: '5'});
+  }
+  if (String(url).endsWith('/code') && (raw.action === 'external-submit' || raw.action === 'external-approve')) {
+    return json({protocol: 'stead.code/1', status: 'accepted', proposal_id: raw.proposal_id,
+      revision: raw.revision, request_id: mode === 'external-review-uncorrelated' ? id('999') : raw.request_id});
+  }
+  if (String(url).endsWith('/code') && raw.action === 'external-proposal') {
+    return json({protocol: 'stead.code/1', status: 'proposal', ...externalReview,
+      merged_revision: mode === 'external-review-merged' ? externalReview.revision : '',
+      merged_snapshot: mode === 'external-review-merged' ? 'b'.repeat(64) : ''});
   }
   if (String(url).endsWith('/code') && (raw.action === 'pack-view' || raw.action === 'pack-accept')) {
     const entries = Array.from({length: 64}, (_, i) => [Buffer.from(`refs/heads/${i}`).toString('hex'), 'a'.repeat(40)]);
@@ -418,4 +436,91 @@ test('Code pack views preserve all 64 refs and reject uncorrelated acceptance', 
   const accepted = await client.code(project, accept);
   assert.equal(accepted.request_id, accept.request_id);
   assert.equal(accepted.status, 'external');
+});
+
+const externalProject = id('510');
+const externalReview = {proposal_id: id('511'), work_id: id('512'), author: id('513'), reviewer: id('514'),
+  revision: '2', source_ref: 'refs/heads/é', ref: 'refs/heads/main', generation: '4', base_snapshot: 'd'.repeat(64),
+  base_oid: 'a'.repeat(40), head_oid: 'e'.repeat(40)};
+const hex = (name: string) => Buffer.from(name).toString('hex');
+const externalSnapshot = {snapshot: externalReview.base_snapshot, authority_epoch: '1', head: hex(externalReview.ref)};
+const requestedProof = {protocol: 'stead.git-pack-reviewed-proof/1', scope: {home: '~zod', authority_epoch: '1',
+  project_id: externalProject, repository_id: externalProject}, base_snapshot: externalReview.base_snapshot,
+  proposal_id: externalReview.proposal_id, revision: externalReview.revision, work_id: externalReview.work_id,
+  source: hex(externalReview.source_ref), target: hex(externalReview.ref), generation: externalReview.generation,
+  base_oid: externalReview.base_oid, head_oid: externalReview.head_oid, candidate_snapshot: 'b'.repeat(64), request_id: id('515')};
+const externalArtifact = {proof: canonical(requestedProof) + '\n', worker_generation: '7', worker_signature: 'c'.repeat(128)};
+
+test('external review proof request binds full revisions and displays only eligible branch names', () => {
+  const target = externalSnapshot.head;
+  assert.deepEqual(reviewBranches({[target]: externalReview.base_oid, [requestedProof.source]: externalReview.head_oid,
+    [hex('refs/heads/same')]: externalReview.base_oid, [hex('refs/tags/test')]: externalReview.head_oid,
+    [hex('refs/heads/') + 'ff']: externalReview.head_oid}, target),
+  [{key: requestedProof.source, name: externalReview.source_ref, oid: externalReview.head_oid}]);
+  assert.deepEqual(reviewRequest(externalReview, requestedProof.request_id), {
+    protocol: 'stead.git-pack-review-request/1', request_id: requestedProof.request_id,
+    proposal_id: externalReview.proposal_id, revision: externalReview.revision, work_id: externalReview.work_id,
+    source_ref: externalReview.source_ref, ref: externalReview.ref, base_oid: externalReview.base_oid,
+    head_oid: externalReview.head_oid, base_snapshot: externalReview.base_snapshot, generation: externalReview.generation,
+  });
+  const parsed = parseReviewArtifact(JSON.stringify(externalArtifact), externalProject, externalSnapshot, externalReview);
+  assert.equal(parsed.proof, externalArtifact.proof);
+  assert.equal(parsed.request_id, requestedProof.request_id);
+  for (const altered of [{...externalArtifact, proof: externalArtifact.proof.trimEnd()},
+    {...externalArtifact, proof: JSON.stringify(requestedProof) + '\n'},
+    {...externalArtifact, proof: canonical({...requestedProof, head_oid: 'f'.repeat(40)}) + '\n'},
+    {...externalArtifact, proof: canonical({...requestedProof, scope: {...requestedProof.scope, repository_id: id('777')}}) + '\n'},
+    {...externalArtifact, worker_generation: '0'}, {...externalArtifact, worker_signature: 'a'.repeat(8192)}]) {
+    assert.throws(() => parseReviewArtifact(JSON.stringify(altered), externalProject, externalSnapshot, externalReview), /invalid_review_artifact/u);
+  }
+});
+
+test('external review has exact accepted requests and durable merge readback', async () => {
+  person = 1; mode = ''; const client = new HomeClient(); await client.resume();
+  await client.code(externalProject, {action: 'external-proposal', proposal_id: externalReview.proposal_id});
+  assert.deepEqual(savedBody, {protocol: 'stead.code/1', project_id: externalProject, action: 'external-proposal', proposal_id: externalReview.proposal_id});
+  const payload = {proposal_id: externalReview.proposal_id, revision: externalReview.revision, request_id: id('516'),
+    base_oid: externalReview.base_oid, head_oid: externalReview.head_oid};
+  const submitted = await client.code(externalProject, {...payload, action: 'external-submit',
+    work_id: externalReview.work_id, ref: externalReview.ref, source_ref: externalReview.source_ref});
+  assert.equal(submitted.request_id, payload.request_id);
+  mode = 'external-review-uncorrelated';
+  await rejects(client.code(externalProject, {...payload, action: 'external-approve', base_snapshot: externalReview.base_snapshot}), 'invalid_response');
+  mode = 'external-review-merged';
+  const merged = await client.code(externalProject, {action: 'external-proposal', proposal_id: externalReview.proposal_id});
+  assert.equal(merged.merged_revision, externalReview.revision);
+  assert.equal(merged.merged_snapshot, requestedProof.candidate_snapshot);
+  mode = '';
+});
+
+test('external merge requires correlated confirmation and retries exact proof only explicitly', async () => {
+  person = 1; mode = ''; const client = new HomeClient(); await client.resume();
+  const request = parseReviewArtifact(JSON.stringify(externalArtifact), externalProject, externalSnapshot, externalReview);
+  mode = 'external-merge-denied';
+  await rejects(client.mergeExternalCode(externalProject, request), 'worker_proof_denied');
+  assert.equal(client.pendingExternalMerge(externalProject), undefined);
+  mode = 'external-merge-unknown';
+  await rejects(client.mergeExternalCode(externalProject, request), 'outcome_unknown');
+  assert.deepEqual(client.pendingExternalMerge(externalProject), {proposal_id: request.proposal_id, revision: request.revision});
+  const sent = {...savedBody};
+  assert.equal(sent.proof, externalArtifact.proof);
+  await rejects(client.mergeExternalCode(externalProject, request), 'code_merge_pending');
+  await client.resume();
+  assert.notDeepEqual(savedBody, sent);
+  mode = 'external-merge-503';
+  await rejects(client.mergeExternalCode(externalProject), 'outcome_unknown');
+  assert.deepEqual(savedBody, sent);
+  mode = 'external-merge-wrong';
+  await rejects(client.mergeExternalCode(externalProject), 'invalid_response');
+  assert.deepEqual(savedBody, sent);
+  mode = '';
+  assert.equal((await client.mergeExternalCode(externalProject)).snapshot, requestedProof.candidate_snapshot);
+  assert.deepEqual(savedBody, sent);
+  assert.equal(client.pendingExternalMerge(externalProject), undefined);
+  mode = 'external-merge-lost';
+  await rejects(client.mergeExternalCode(externalProject, request), 'outcome_unknown');
+  person = 2; mode = ''; await client.resume();
+  assert.equal(client.pendingExternalMerge(externalProject), undefined);
+  await rejects(client.mergeExternalCode(externalProject), 'no_pending_merge');
+  person = 1;
 });

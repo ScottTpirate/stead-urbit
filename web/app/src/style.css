@@ -135,6 +135,12 @@ h3 { font-size: 14px; font-weight: 620; }
 .stead-surface { min-width: 0; padding: 20px; border: 1px solid var(--line); border-radius: 9px; background: var(--paper); }
 .code-review-panel { margin-top: 14px; overflow-wrap: anywhere; }
 .code-review-panel select { max-width: 100%; }
+.external-code { display: grid; gap: 14px; }
+.external-code .code-review-panel { margin-top: 0; }
+.code-review-facts { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 260px), 1fr)); gap: 10px 16px; }
+.code-review-facts dt { color: var(--muted); font-size: 12px; }
+.code-review-facts dd { margin: 3px 0 0; overflow-wrap: anywhere; }
+.code-proof .stead-field { margin-top: 12px; }
 
 .rows, .work-groups { display: grid; gap: 10px; min-width: 0; }
 .resource-row { display: flex; align-items: center; justify-content: space-between; gap: 14px; padding: 14px 16px; }

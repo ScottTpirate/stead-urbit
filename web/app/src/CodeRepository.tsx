@@ -26,9 +26,9 @@ export function GitCredentials({ client, project, writable, cloneUrl }: {
     } catch { setFailure(true); } finally { setBusy(false); }
   }
   return <Surface className="repository-panel">
-    <h2>{cloneUrl ? 'Git repository' : 'Git read access'}</h2>
+    <h2>{cloneUrl ? 'Git repository' : 'Git access'}</h2>
     {cloneUrl ? <TextField label="Clone URL" value={cloneUrl} readOnly />
-      : <p>Use the clone URL provided by your workspace operator. This snapshot supports clone and fetch.</p>}
+      : <p>Use the Git URL provided by your workspace operator. {writable ? 'Push changes to a feature branch.' : 'This snapshot supports clone and fetch.'}</p>}
     <p>Use <code>stead</code> as the username and enter an individual credential when Git prompts for a password.</p>
     <div className="actions">
       <Button disabled={busy} onClick={() => void issue('read')}>Create read credential</Button>

@@ -3,16 +3,12 @@ import { packRefs, type Fields, type HomeClient } from './api';
 import { newId } from './protocol';
 import { AcceptedTime } from './AcceptedTime';
 import { GitCredentials } from './CodeRepository';
+import { CodeExternalReview } from './CodeExternalReview';
+import { refLabel } from './externalReview';
 import { Button, Surface, TextField } from './primitives';
 
-function refLabel(hex: string) {
-  const bytes = Uint8Array.from(hex.match(/../gu) ?? [], pair => Number.parseInt(pair, 16));
-  try { return new TextDecoder('utf-8', { fatal: true, ignoreBOM: true }).decode(bytes); }
-  catch { return `Raw ref bytes ${hex}`; }
-}
-
-export function CodePack({ client, project, manage }: {
-  client: HomeClient; project: string; manage: boolean;
+export function CodePack({ client, project, manage, writable, principal }: {
+  client: HomeClient; project: string; manage: boolean; writable: boolean; principal: string;
 }) {
   const [details, setDetails] = useState<Fields | null>(null);
   const [busy, setBusy] = useState(true);
@@ -29,7 +25,7 @@ export function CodePack({ client, project, manage }: {
   }, [client, project]);
 
   async function refresh() {
-    setBusy(true); setFailure(''); setDetails(null);
+    setBusy(true); setFailure('');
     try { setDetails(await client.code(project, { action: 'pack-view' })); }
     catch { setFailure('This Git snapshot is unavailable.'); }
     finally { setBusy(false); }
@@ -54,7 +50,7 @@ export function CodePack({ client, project, manage }: {
 
   const staged = details?.status === 'external-staged';
   const refs = details ? Object.entries(packRefs(details)) : [];
-  return <><Surface className="repository-panel">
+  return <div className="external-code"><Surface className="repository-panel">
     <h2>Git snapshot</h2>
     {details && <>
       <p>{staged ? 'Ready for maintainer review' : 'Accepted by the project Home'}</p>
@@ -69,6 +65,10 @@ export function CodePack({ client, project, manage }: {
     <Button variant="quiet" disabled={busy} onClick={() => void refresh()}>Refresh snapshot</Button>
     {failure && <p role="alert">{failure}</p>}
   </Surface>
-    {!busy && details?.status === 'external' && <GitCredentials client={client} project={project} writable={false} />}
-  </>;
+    {details?.status === 'external' && <>
+      <CodeExternalReview client={client} project={project} writable={writable && !busy && !failure} manage={manage}
+        principal={principal} snapshot={details} refreshSnapshot={refresh} />
+      <GitCredentials client={client} project={project} writable={writable} />
+    </>}
+  </div>;
 }
