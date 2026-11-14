@@ -241,12 +241,23 @@ After restarting Home, a fresh member approval and mirror clone reproduced
 the exact refs and 7,805 reachable IDs and passed strict `fsck`. Both ships
 stopped cleanly. The Home enables this transport only on the isolated fake
 profile. The live pilot still needs an authenticated worker deployment,
-protected-branch review and a fresh restore rehearsal for accepted writes.
+protected-branch review and a paired Home and pack restore on a fresh host.
 
 | Evidence | SHA-256 |
 |---|---|
 | `.runtime/pack-push-stock-4x_848lf/state/report.json` | `f21e1b2f967ecf6c31e7c0b0fb94d9f2be524f8b41815a073b615d830d56bbd6` |
 | `.runtime/execution-runs/pack-push-stock-po2qs3z8/report.json` | `234c21ed59d7b441d55d57f9643ef9bfd215e4d444691114f1429e7ed7d7fc3d` |
+
+A fresh network-isolated process on the same machine restored a copied,
+AES-256-GCM-encrypted backup of that accepted pack with the original store
+unavailable. It rejected a modified ciphertext. The restore took 5.055
+seconds and the independent bare clone took 1.628 seconds. Both matched all
+four refs and 7,805 reachable IDs. Across the 13 checks, the workload took
+8.953 seconds. The test covers Git pack recovery. Paired Home data, service
+authority and second-host recovery have separate gates.
+
+The private report `.runtime/accepted-pack-offline-4bd2ndop/state/report.json`
+has SHA-256 `5fe563abbc6f6878b55abfa3cca17a6d113e85e3acd5b4598427ac8546466a16`.
 
 ### Protected default branch review
 
