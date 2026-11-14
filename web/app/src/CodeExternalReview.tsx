@@ -5,7 +5,7 @@ import { Button, Surface, TextField } from './primitives';
 import { newId } from './protocol';
 
 type WorkItem = { id: string; title: string };
-type Draft = { proposal_id: string; revision: string; work_id: string; source: string };
+type Draft = { proposal_id: string; revision: string; work_id: string; source: string; base_snapshot: string; generation: string };
 
 function ReviewFact({ label, value }: { label: string; value: string }) {
   return <div><dt>{label}</dt><dd><code>{value}</code></dd></div>;
@@ -20,7 +20,6 @@ export function CodeExternalReview({ client, project, writable, manage, principa
   const [lookup, setLookup] = useState('');
   const [proposal, setProposal] = useState<Fields | null>(null);
   const [draft, setDraft] = useState<Draft | null>(null);
-  const [draftSnapshot, setDraftSnapshot] = useState('');
   const [work, setWork] = useState<WorkItem[]>([]);
   const [cursor, setCursor] = useState('');
   const [artifact, setArtifact] = useState<ExternalMerge | null>(null);
@@ -36,10 +35,12 @@ export function CodeExternalReview({ client, project, writable, manage, principa
   const sourceChoices = reviewBranches(refs, target);
   const targetName = refLabel(target);
   const source = sourceChoices.find(row => row.key === draft?.source);
-  const current = proposal?.base_snapshot === snapshot.snapshot;
+  const snapshotAvailable = snapshot.generation !== undefined;
+  const current = snapshotAvailable && proposal?.base_snapshot === snapshot.snapshot && proposal?.generation === snapshot.generation;
+  const draftCurrent = snapshotAvailable && draft?.base_snapshot === snapshot.snapshot && draft?.generation === snapshot.generation;
   const accepted = !!proposal && (merged === `${proposal.proposal_id}/${proposal.revision}` || !!proposal.merged_revision);
   const canReview = manage && writable && !!proposal && current && proposal.author !== principal && !accepted;
-  const canSubmit = writable && !pending && draftSnapshot === snapshot.snapshot && !!draft && UUID.test(draft.work_id) && !!source
+  const canSubmit = writable && !pending && draftCurrent && !!draft && UUID.test(draft.work_id) && !!source
     && targetName.startsWith('refs/heads/');
 
   async function perform(operation: () => Promise<void>, failure: string) {
@@ -48,7 +49,7 @@ export function CodeExternalReview({ client, project, writable, manage, principa
     catch (reason) {
       setError(client.pendingExternalMerge(project)
         ? 'The Home did not confirm the merge. You can retry the same request after reconnecting.'
-        : reason instanceof HomeError && ['stale-selection', 'stale-target', 'source-conflict', 'stale-review', 'stale_review'].includes(reason.code)
+        : reason instanceof HomeError && ['stale-selection', 'stale_selection', 'stale-target', 'source-conflict', 'stale-review', 'stale_review'].includes(reason.code)
           ? 'The proposal or Git snapshot changed. Refresh the snapshot and open the latest revision.' : failure);
     } finally { setBusy(false); }
   }
@@ -72,18 +73,20 @@ export function CodeExternalReview({ client, project, writable, manage, principa
   }
 
   function propose(prior?: Fields) {
+    if (snapshot.generation === undefined) return;
     request.current = null;
     setArtifact(null);
-    setDraftSnapshot(snapshot.snapshot!);
     setDraft({ proposal_id: prior?.proposal_id ?? newId(), revision: prior ? String(Number(prior.revision) + 1) : '1',
-      work_id: prior?.work_id ?? '', source: sourceChoices.find(row => row.name === prior?.source_ref)?.key ?? '' });
+      work_id: prior?.work_id ?? '', source: sourceChoices.find(row => row.name === prior?.source_ref)?.key ?? '',
+      base_snapshot: snapshot.snapshot!, generation: snapshot.generation });
     void perform(() => listWork(), 'The Home could not load this project’s Work items.');
   }
 
   async function submit() {
     if (!canSubmit || !draft || !source) return;
     const payload = { action: 'external-submit' as const, proposal_id: draft.proposal_id, revision: draft.revision,
-      work_id: draft.work_id, source_ref: source.name, ref: targetName, base_oid: refs[target]!, head_oid: source.oid };
+      work_id: draft.work_id, source_ref: source.name, ref: targetName, base_oid: refs[target]!, head_oid: source.oid,
+      base_snapshot: draft.base_snapshot, generation: draft.generation };
     await client.code(project, { ...payload, request_id: requestId(payload) });
     request.current = null;
     setLookup(payload.proposal_id); setDraft(null); setProposal(null);
@@ -155,7 +158,7 @@ export function CodeExternalReview({ client, project, writable, manage, principa
         </select>
       </div>
       <p>Target <code>{targetName}</code></p>
-      {draftSnapshot !== snapshot.snapshot && <p role="alert">The repository snapshot changed. Cancel this draft and start again from the current one.</p>}
+      {!draftCurrent && <p role="alert">The repository snapshot changed. Cancel this draft and start again from the current one.</p>}
       <div className="actions">
         <Button type="submit" variant="primary" disabled={!canSubmit} pending={busy} pendingLabel="Submitting proposal">Submit proposal</Button>
         <Button disabled={busy} onClick={() => { setDraft(null); setError(''); }}>Cancel</Button>
@@ -169,10 +172,11 @@ export function CodeExternalReview({ client, project, writable, manage, principa
           onChange={event => { setLookup(event.target.value); setProposal(null); setArtifact(null); }} />
         <div className="actions">
           <Button type="submit" disabled={busy || !UUID.test(lookup.trim())}>Open proposal</Button>
-          {writable && !pending && <Button disabled={busy || !sourceChoices.length} onClick={() => propose()}>New proposal</Button>}
+          {writable && !pending && <Button disabled={busy || !snapshotAvailable || !sourceChoices.length} onClick={() => propose()}>New proposal</Button>}
         </div>
       </form>
-      {writable && !sourceChoices.length && <p>Push a feature branch with changes to start a proposal.</p>}
+      {writable && !snapshotAvailable && <p>Refresh the snapshot to start a proposal or review.</p>}
+      {writable && snapshotAvailable && !sourceChoices.length && <p>Push a feature branch with changes to start a proposal.</p>}
       {proposal && <section aria-label="Exact proposal">
         <h3>Revision {proposal.revision}</h3>
         <p>{accepted ? 'Merged.' : !current ? 'The repository snapshot changed.' : proposal.reviewer ? 'Approved.' : 'Awaiting review.'}</p>
@@ -188,7 +192,7 @@ export function CodeExternalReview({ client, project, writable, manage, principa
           </dl>
         </details>
         <div className="actions">
-          {writable && !pending && !accepted && proposal.author === principal && Number(proposal.revision) < 64
+          {writable && snapshotAvailable && !pending && !accepted && proposal.author === principal && Number(proposal.revision) < 64
             && <Button disabled={busy || !sourceChoices.length} onClick={() => propose(proposal)}>Propose a new revision</Button>}
           {canReview && !proposal.reviewer && !pending && <Button disabled={busy}
             onClick={() => void perform(approve, 'The Home could not confirm approval.')}>Approve this revision</Button>}

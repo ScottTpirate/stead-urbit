@@ -94,7 +94,7 @@ async function fixture(run, mockRepository = false) {
       if (value.action === 'pack-accept') {
         assert.equal(state.pack?.status, 'external-staged');
         assert.equal(value.snapshot, state.pack.snapshot);
-        state.pack = {...state.pack, status: 'external', request_id: value.request_id, accepted_at_ms: '1800000000000'};
+        state.pack = {...state.pack, status: 'external', generation: '0', request_id: value.request_id, accepted_at_ms: '1800000000000'};
         return respond(state.pack);
       }
       if (value.action === 'issue') {
@@ -115,8 +115,12 @@ async function fixture(run, mockRepository = false) {
         }
         const {proposal_id, revision, work_id, source_ref, ref, base_oid, head_oid, request_id} = value;
         if (value.action === 'external-submit') {
+          if (value.base_snapshot !== state.pack.snapshot || value.generation !== state.pack.generation) {
+            return send({error: 'stale-selection'}, 409);
+          }
           state.externalReviews.set(proposal_id, {proposal_id, revision, work_id, source_ref, ref, base_oid, head_oid,
-            author: person.principal_id, reviewer: '', base_snapshot: state.pack.snapshot, generation: '1', merged_revision: '', merged_snapshot: ''});
+            author: person.principal_id, reviewer: '', base_snapshot: value.base_snapshot, generation: value.generation,
+            merged_revision: '', merged_snapshot: ''});
           return respond({status: 'accepted', proposal_id, revision, request_id});
         }
         assert.ok(saved);
@@ -131,12 +135,12 @@ async function fixture(run, mockRepository = false) {
         if (state.dropMergeResponse) state.dropMergeResponse = false;
         else {
           if (state.mergeRequests.length > 0) assert.deepEqual(value, state.mergeRequests[0]);
-          return respond({status: 'merged', request_id, proposal_id, snapshot: proof.candidate_snapshot, generation: '2'});
+          return respond({status: 'merged', request_id, proposal_id, snapshot: proof.candidate_snapshot, generation: String(Number(proof.generation) + 1)});
         }
         state.mergeRequests.push(value);
         saved.merged_revision = revision;
         saved.merged_snapshot = proof.candidate_snapshot;
-        state.pack = {...state.pack, snapshot: proof.candidate_snapshot, request_id,
+        state.pack = {...state.pack, snapshot: proof.candidate_snapshot, generation: String(Number(proof.generation) + 1), request_id,
           refs: JSON.stringify({...JSON.parse(state.pack.refs), [state.pack.head]: proof.head_oid})};
         return route.abort('failed');
       }
@@ -394,20 +398,37 @@ try {
     const targetRef = 'refs/heads/main'; const sourceRef = 'refs/heads/feature';
     const work = {kind: 'work', resource_id: id(50), title: 'Review the change', resource_revision: '1'};
     state.work = [work]; state.externalWritable = true;
-    state.pack = {status: 'external', snapshot: initial, authority_epoch: '1', request_id: id(450), accepted_at_ms: '1800000000000',
+    state.pack = {status: 'external', snapshot: initial, generation: '0', authority_epoch: '1', request_id: id(450), accepted_at_ms: '1800000000000',
       object_count: '6', head: hex(targetRef), refs: JSON.stringify({[hex(targetRef)]: base, [hex(sourceRef)]: head})};
     await page.getByRole('button', {name: 'Refresh', exact: true}).click();
     await code.click();
     const panel = page.getByRole('heading', {name: 'Change review', exact: true});
     await panel.waitFor();
     await page.getByRole('button', {name: 'Create write credential', exact: true}).waitFor();
-    await page.getByRole('button', {name: 'New proposal', exact: true}).click();
-    await page.getByLabel('Work item', {exact: true}).selectOption({label: work.title});
-    await page.getByLabel('Source branch', {exact: true}).selectOption({label: 'feature'});
+    const prepareDraft = async () => {
+      await page.getByRole('button', {name: 'New proposal', exact: true}).click();
+      await page.getByLabel('Work item', {exact: true}).selectOption({label: work.title});
+      await page.getByLabel('Source branch', {exact: true}).selectOption({label: 'feature'});
+    };
+    await prepareDraft();
+    const unrelated = {...state.pack, generation: '1', snapshot: 'e'.repeat(64),
+      refs: JSON.stringify({...JSON.parse(state.pack.refs), [hex('refs/heads/another')]: 'f'.repeat(40)})};
+    state.pack = unrelated;
+    await page.getByRole('button', {name: 'Submit proposal', exact: true}).click();
+    await page.getByRole('alert').getByText(/Git snapshot changed/u).waitFor();
+    assert.equal(state.externalReviews.size, 0);
+    const attempted = state.externalRequests.find(row => row.action === 'external-submit');
+    assert.equal(attempted.base_snapshot, initial); assert.equal(attempted.generation, '0');
+    await page.getByRole('button', {name: 'Refresh snapshot', exact: true}).click();
+    await page.getByRole('alert').getByText(/Cancel this draft/u).waitFor();
+    assert.equal(await page.getByRole('button', {name: 'Submit proposal', exact: true}).isEnabled(), false);
+    await page.getByRole('button', {name: 'Cancel', exact: true}).click();
+    await prepareDraft();
     await page.getByRole('button', {name: 'Submit proposal', exact: true}).click();
     await page.getByText('Awaiting review.', {exact: true}).waitFor();
     assert.equal(await page.getByRole('button', {name: 'Approve this revision', exact: true}).count(), 0);
-    const submitted = state.externalRequests.find(row => row.action === 'external-submit');
+    const submitted = state.externalRequests.findLast(row => row.action === 'external-submit');
+    assert.equal(submitted.base_snapshot, unrelated.snapshot); assert.equal(submitted.generation, unrelated.generation);
     assert.equal(submitted.base_oid, base); assert.equal(submitted.head_oid, head);
     assert.equal(submitted.ref, targetRef); assert.equal(submitted.source_ref, sourceRef);
 
@@ -433,7 +454,7 @@ try {
     assert.equal(downloaded.protocol, 'stead.git-pack-review-request/1');
     assert.equal(downloaded.proposal_id, reviewed.proposal_id);
     assert.equal(downloaded.base_oid, base); assert.equal(downloaded.head_oid, head);
-    const evidence = {protocol: 'stead.git-pack-reviewed-proof/1', base_snapshot: initial, request_id: downloaded.request_id,
+    const evidence = {protocol: 'stead.git-pack-reviewed-proof/1', base_snapshot: unrelated.snapshot, request_id: downloaded.request_id,
       scope: {home: '~zod', authority_epoch: '1', project_id: id(1), repository_id: id(1)},
       proposal_id: reviewed.proposal_id, revision: reviewed.revision, work_id: work.resource_id,
       source: hex(sourceRef), target: hex(targetRef), base_oid: base, head_oid: head, generation: reviewed.generation,

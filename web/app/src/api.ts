@@ -14,7 +14,8 @@ export type CodeInput = { action: 'status' | 'create' | 'pack-view' }
   | ({ action: 'proposal' | 'approve' } & CodeReviewKey)
   | ({ action: 'submit'; work_id: string; ref: string; base_oid: string; head_oid: string; delegation_id: string } & CodeReviewKey)
   | { action: 'external-proposal'; proposal_id: string }
-  | ({ action: 'external-submit'; work_id: string; source_ref: string; ref: string; base_oid: string; head_oid: string; request_id: string } & CodeReviewKey)
+  | ({ action: 'external-submit'; work_id: string; source_ref: string; ref: string; base_oid: string; head_oid: string;
+    base_snapshot: string; generation: string; request_id: string } & CodeReviewKey)
   | ({ action: 'external-approve'; base_snapshot: string; base_oid: string; head_oid: string; request_id: string } & CodeReviewKey)
   | { action: 'delegate'; delegation_id: string; worker_ship: string; work_id: string; ref: string; expires_at_ms: string }
   | { action: 'revoke-delegation'; delegation_id: string }
@@ -82,6 +83,7 @@ export class HomeError extends Error {
 const TOKEN = /^[0-9a-f]{64}$/u;
 const GIT_OID = /^[0-9a-f]{40}$/u;
 const DECIMAL = /^(0|[1-9][0-9]{0,19})$/u;
+const CODE_GENERATION = /^(?:[0-9]|[1-5][0-9]|6[0-4])$/u;
 const GIT_REF_HEX = /^(?:726566732f68656164732f|726566732f746167732f)(?:[0-9a-f]{2})+$/u;
 export const UUID = /^[a-f0-9]{8}-[a-f0-9]{4}-7[a-f0-9]{3}-[89ab][a-f0-9]{3}-[a-f0-9]{12}$/u;
 const REVIEW_REVISION = /^(?:[1-9]|[1-5][0-9]|6[0-4])$/u;
@@ -279,7 +281,7 @@ export class HomeClient {
       if (!['external', 'external-staged'].includes(value.status ?? '') || !TOKEN.test(value.snapshot ?? '')
         || !DECIMAL.test(value.authority_epoch ?? '') || value.authority_epoch === '0'
         || !DECIMAL.test(value.object_count ?? '') || Number(value.object_count) < 1
-        || Number(value.object_count) > 16384 || (value.status === 'external'
+        || Number(value.object_count) > 16384 || (value.generation !== undefined && !CODE_GENERATION.test(value.generation)) || (value.status === 'external'
           && (!value.request_id || !DECIMAL.test(value.accepted_at_ms ?? '')))) throw new HomeError('invalid_response');
       packRefs(value);
       if (input.action === 'pack-accept' && (value.status !== 'external' || value.snapshot !== input.snapshot
@@ -305,7 +307,7 @@ export class HomeClient {
       || !REVIEW_REVISION.test(value.revision ?? '') || !UUID.test(value.work_id ?? '') || !UUID.test(value.author ?? '')
       || value.reviewer === undefined || (value.reviewer !== '' && !UUID.test(value.reviewer))
       || !GIT_OID.test(value.base_oid ?? '') || !GIT_OID.test(value.head_oid ?? '') || !TOKEN.test(value.base_snapshot ?? '')
-      || !DECIMAL.test(value.generation ?? '') || !value.source_ref?.startsWith('refs/heads/') || !value.ref?.startsWith('refs/heads/')
+      || !CODE_GENERATION.test(value.generation ?? '') || !value.source_ref?.startsWith('refs/heads/') || !value.ref?.startsWith('refs/heads/')
       || !((value.merged_revision === '' && value.merged_snapshot === '')
         || (value.merged_revision === value.revision && TOKEN.test(value.merged_snapshot ?? ''))))) {
       throw new HomeError('invalid_response');

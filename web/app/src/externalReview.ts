@@ -61,7 +61,8 @@ export function parseReviewArtifact(raw: string, project: string, snapshot: Fiel
     const value = typeof scope.home === 'string' && /^~[a-z][a-z-]{2,62}$/u.test(scope.home)
       && scope.authority_epoch === snapshot.authority_epoch && scope.project_id === project && scope.repository_id === project
       && row.protocol === PROOF && row.base_snapshot === review.base_snapshot && row.base_snapshot === snapshot.snapshot
-      && row.generation === review.generation && row.proposal_id === review.proposal_id && row.revision === review.revision
+      && row.generation === review.generation && row.generation === snapshot.generation
+      && row.proposal_id === review.proposal_id && row.revision === review.revision
       && row.work_id === review.work_id && row.source === refHex(review.source_ref ?? '') && row.target === snapshot.head
       && row.target === refHex(review.ref ?? '') && row.base_oid === review.base_oid && row.head_oid === review.head_oid
       && typeof row.request_id === 'string' && UUID.test(row.request_id) && typeof row.candidate_snapshot === 'string'

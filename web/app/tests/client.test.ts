@@ -62,6 +62,10 @@ globalThis.fetch = async (url, init) => {
       snapshot: (mode === 'external-merge-wrong' ? 'a' : 'b').repeat(64), generation: '5'});
   }
   if (String(url).endsWith('/code') && (raw.action === 'external-submit' || raw.action === 'external-approve')) {
+    if (raw.action === 'external-submit') {
+      assert.equal(raw.base_snapshot, externalReview.base_snapshot);
+      assert.equal(raw.generation, externalReview.generation);
+    }
     return json({protocol: 'stead.code/1', status: 'accepted', proposal_id: raw.proposal_id,
       revision: raw.revision, request_id: mode === 'external-review-uncorrelated' ? id('999') : raw.request_id});
   }
@@ -75,8 +79,10 @@ globalThis.fetch = async (url, init) => {
     const head = mode === 'pack-wrong-head' ? '00' : entries[0]![0];
     const common = {protocol: 'stead.code/1', snapshot: mode === 'pack-wrong-snapshot' ? 'c'.repeat(64) : 'b'.repeat(64),
       authority_epoch: '1', object_count: '7803', head, refs: JSON.stringify(Object.fromEntries(entries))};
-    if (raw.action === 'pack-view') return json({...common, status: 'external-staged'});
-    return json({...common, status: 'external', request_id: raw.request_id, accepted_at_ms: '1790519400000'});
+    if (raw.action === 'pack-view' && !mode.startsWith('pack-external-')) return json({...common, status: 'external-staged'});
+    const accepted = {...common, status: 'external', request_id: raw.request_id ?? id('302'), accepted_at_ms: '1790519400000'};
+    if (mode === 'pack-external-missing') return json(accepted);
+    return json({...accepted, generation: mode === 'pack-external-invalid' ? '65' : '0'});
   }
   if (String(url).endsWith('/updates')) {
     if (mode === 'updates-network') throw new TypeError('lost update response');
@@ -426,6 +432,7 @@ test('Code pack views preserve all 64 refs and reject uncorrelated acceptance', 
   const project = id('301');
   const staged = await client.code(project, {action: 'pack-view'});
   assert.equal(staged.status, 'external-staged');
+  assert.equal(staged.generation, undefined);
   assert.equal(Object.keys(packRefs(staged)).length, 64);
   mode = 'pack-wrong-head';
   await rejects(client.code(project, {action: 'pack-view'}), 'invalid_response');
@@ -436,6 +443,12 @@ test('Code pack views preserve all 64 refs and reject uncorrelated acceptance', 
   const accepted = await client.code(project, accept);
   assert.equal(accepted.request_id, accept.request_id);
   assert.equal(accepted.status, 'external');
+  assert.equal(accepted.generation, '0');
+  mode = 'pack-external-missing';
+  assert.equal((await client.code(project, {action: 'pack-view'})).generation, undefined);
+  mode = 'pack-external-invalid';
+  await rejects(client.code(project, {action: 'pack-view'}), 'invalid_response');
+  mode = '';
 });
 
 const externalProject = id('510');
@@ -443,7 +456,8 @@ const externalReview = {proposal_id: id('511'), work_id: id('512'), author: id('
   revision: '2', source_ref: 'refs/heads/é', ref: 'refs/heads/main', generation: '4', base_snapshot: 'd'.repeat(64),
   base_oid: 'a'.repeat(40), head_oid: 'e'.repeat(40)};
 const hex = (name: string) => Buffer.from(name).toString('hex');
-const externalSnapshot = {snapshot: externalReview.base_snapshot, authority_epoch: '1', head: hex(externalReview.ref)};
+const externalSnapshot = {snapshot: externalReview.base_snapshot, generation: externalReview.generation,
+  authority_epoch: '1', head: hex(externalReview.ref)};
 const requestedProof = {protocol: 'stead.git-pack-reviewed-proof/1', scope: {home: '~zod', authority_epoch: '1',
   project_id: externalProject, repository_id: externalProject}, base_snapshot: externalReview.base_snapshot,
   proposal_id: externalReview.proposal_id, revision: externalReview.revision, work_id: externalReview.work_id,
@@ -482,7 +496,8 @@ test('external review has exact accepted requests and durable merge readback', a
   const payload = {proposal_id: externalReview.proposal_id, revision: externalReview.revision, request_id: id('516'),
     base_oid: externalReview.base_oid, head_oid: externalReview.head_oid};
   const submitted = await client.code(externalProject, {...payload, action: 'external-submit',
-    work_id: externalReview.work_id, ref: externalReview.ref, source_ref: externalReview.source_ref});
+    work_id: externalReview.work_id, ref: externalReview.ref, source_ref: externalReview.source_ref,
+    base_snapshot: externalReview.base_snapshot, generation: externalReview.generation});
   assert.equal(submitted.request_id, payload.request_id);
   mode = 'external-review-uncorrelated';
   await rejects(client.code(externalProject, {...payload, action: 'external-approve', base_snapshot: externalReview.base_snapshot}), 'invalid_response');
