@@ -220,3 +220,16 @@ Identity `091777f92f1f76bb3dc142bdd9a5c7d486650aeff890873f842e0a45e5bbf7a7`).
 The focused Firefox journey approved the snapshot, issued a read credential,
 showed no write action and removed the credential after revoke using synthetic
 HTTP responses. Offline package verification does not replace native upgrade admission.
+
+### External write ledger persistence
+
+Five route-free native tests called the actual Home's load and save arms on the
+pinned runtime. A valid v7 state stayed v7. An accepted v8 ledger survived two
+load/save calls with its exact manifest and receipt. A pending v8 job stayed
+pending; its old incarnation could not commit. Home rejected empty, corrupt,
+wrong-scope and unsupported future envelopes. The review fingerprint included
+the authoritative ledger and excluded the rebuildable projection. The
+disposable test ship stopped cleanly. This qualifies the saved-state handling;
+no external push route, production upgrade, or full-history ref write is open.
+The private report `.runtime/home-v8-load-ur37o42e/state/report.json` has
+SHA-256 `dc34966cbb7234306f40b7b096eb78ceedf3795593fafcd429f4fd03e87db1c4`.

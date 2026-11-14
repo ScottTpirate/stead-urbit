@@ -28,7 +28,7 @@ def durable_fingerprint(ship, dojo):
 
     Clay can revive an idle app while importing changed asset dependencies.
     Home on-load rebuilds its projection, but on-save retains the original
-    target db throughout restoration. V4 and v5 retain Code state.
+    target db and applicable Code, handoff and migration records throughout restoration.
     Identity persists only config/counter.
     Typed extraction still rejects a foreign/future saved-state envelope.
     """
@@ -46,9 +46,18 @@ def durable_fingerprint(ship, dojo):
             '?:  ?=([%stead-home %4 *] q.saved)  '
             '=/  stored  !<([%stead-home %4 team=[db=* projection=*] code=*] saved)  '
             '(shax (jam [db.team.stored code.stored]))  '
-            '?>  ?=([%stead-home %5 *] q.saved)  '
+            '?:  ?=([%stead-home %5 *] q.saved)  '
             '=/  stored  !<([%stead-home %5 team=[db=* projection=*] code=*] saved)  '
-            '(shax (jam [db.team.stored code.stored]))')
+            '(shax (jam [db.team.stored code.stored]))  '
+            '?:  ?=([%stead-home %6 *] q.saved)  '
+            '=/  stored  !<([%stead-home %6 team=[db=* projection=*] code=* handoff=*] saved)  '
+            '(shax (jam [db.team.stored code.stored handoff.stored]))  '
+            '?:  ?=([%stead-home %7 *] q.saved)  '
+            '=/  stored  !<([%stead-home %7 team=[db=* projection=*] code=* handoff=* retired=* packs=*] saved)  '
+            '(shax (jam [db.team.stored code.stored handoff.stored retired.stored packs.stored]))  '
+            '?>  ?=([%stead-home %8 *] q.saved)  '
+            '=/  stored  !<([%stead-home %8 team=[db=* projection=*] code=* handoff=* retired=* packs=* external=*] saved)  '
+            '(shax (jam [db.team.stored code.stored handoff.stored retired.stored packs.stored external.stored]))')
     else:
         source += ('=/  stored  !<([%stead-identity %1 config=* counter=@ud] saved)  '
                    '(shax (jam stored))')

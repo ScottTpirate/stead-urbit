@@ -1,7 +1,7 @@
 {
   "format": 1,
   "classification": "pure-native-only",
-  "expected_arm_count": 99,
+  "expected_arm_count": 104,
   "suites": [
     {
       "path": "/tests/stead-session",
@@ -157,6 +157,17 @@
         "test-pack-ledger-replays-exact-attempt-with-current-authority",
         "test-pack-ledger-checks-expiry-incarnation-and-final-policy",
         "test-pack-ledger-rebuilds-lineage-and-refuses-corrupt-receipts"
+      ],
+      "timeout_seconds": 60
+    },
+    {
+      "path": "/tests/stead-home-v8-rehearsal",
+      "arms": [
+        "test-home-v8-v7-envelope-remains-v7",
+        "test-home-v8-load-save-retains-exact-accepted-ledger",
+        "test-home-v8-pending-intent-survives-without-auto-commit",
+        "test-home-v8-rejects-empty-or-invalid-ledger-and-future-state",
+        "test-home-v8-custody-omits-projection-but-binds-external-ledger"
       ],
       "timeout_seconds": 60
     },

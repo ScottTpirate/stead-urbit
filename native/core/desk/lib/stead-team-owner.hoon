@@ -1,9 +1,10 @@
 ::  Configured-team Gall driver. Only stead-home owns and calls this state.
-/+  stead-codec, stead-core, stead-team, stead-team-config, stead-team-codec, stead-session, stead-http, stead-browser, stead-projection, stead-views, stead-restore, stead-eyre, stead-assets, server, stead-updates, stead-update-codec, stead-code-home, stead-code-http, stead-code-credentials, stead-project-retirement, stead-code-pack-anchor
+/+  stead-codec, stead-core, stead-team, stead-team-config, stead-team-codec, stead-session, stead-http, stead-browser, stead-projection, stead-views, stead-restore, stead-eyre, stead-assets, server, stead-updates, stead-update-codec, stead-code-home, stead-code-http, stead-code-credentials, stead-project-retirement, stead-code-pack-anchor, stead-code-pack-ledger
 =,  stead-codec
 |%
 +$  pending-entry  [actor=authentication:stead-team expires=@ud]
 +$  git-reply  [id=@ta sender=@p bearer=@t nonce=@t]
++$  external-writes  (map @t ledger:stead-code-pack-ledger)
 +$  state
   $:  db=state:stead-team  view=state:stead-projection
       transient=ephemeral:stead-browser  restoring=(unit job:stead-restore)
@@ -11,13 +12,14 @@
       files=(map @t [mime=@t bytes=@t])
       code=state:stead-code-home  git-waiting=(map @t git-reply)
       retired=ledger:stead-project-retirement
+      external=external-writes
   ==
 +$  saved  [db=state:stead-team projection=state:stead-projection]
 ++  empty
   ^-  state
   =/  view=state:stead-projection
     [*index:stead-projection *index:stead-projection ~ | |]
-  [empty:stead-team view *ephemeral:stead-browser ~ '' '' ~ ~ *state:stead-code-home ~ ~]
+  [empty:stead-team view *ephemeral:stead-browser ~ '' '' ~ ~ *state:stead-code-home ~ ~ ~]
 ++  now-ms
   |=  now=@da
   (div (mul 1.000 (sub now ~1970.1.1)) ~s1)
@@ -100,7 +102,7 @@
     =/  staged  (begin:stead-restore db.old our.bowl)
     =/  job  (token:stead-session eny.bowl act.bowl 'stead.restore-job/1')
     =/  fresh=state
-      [empty:stead-team *state:stead-projection *ephemeral:stead-browser [~ staged] job '' ~ ~ [repos.code *ledger:stead-code-credentials uploads.code reviews.code builds.code ~] ~ ~]
+      [empty:stead-team *state:stead-projection *ephemeral:stead-browser [~ staged] job '' ~ ~ [repos.code *ledger:stead-code-credentials uploads.code reviews.code builds.code ~] ~ ~ ~]
     =.  owner  fresh
     [(weld kicks ~[bind wait]) owner]
   ++  load-v7
@@ -109,6 +111,18 @@
     ?>  (validate-packs:stead-code-home db.old repos.code packs)
     =/  [cards=(list card:agent:gall) next=state]  (load old code)
     [cards next(code code.next(packs packs))]
+  ++  load-v8
+    |=  [old=saved code=persisted:stead-code-home packs=state:stead-code-pack-anchor external=external-writes]
+    ^-  (quip card:agent:gall state)
+    =/  count  ~(wyt by external)
+    ?>  &((gth count 0) (lte count 4))
+    ?>  %+  levy  ~(tap by external)
+        |=  [id=@t row=ledger:stead-code-pack-ledger]
+        =/  genesis  (~(get by packs) id)
+        ?~  genesis  |
+        (valid:stead-code-pack-ledger row u.genesis)
+    =/  [cards=(list card:agent:gall) next=state]  (load-v7 old code packs)
+    [cards next(external external)]
   ++  configured
     |=  raw=@t
     ^-  (quip card:agent:gall state)

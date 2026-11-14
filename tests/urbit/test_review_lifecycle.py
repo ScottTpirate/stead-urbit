@@ -284,7 +284,7 @@ class ReviewLifecycleTests(unittest.TestCase):
         self.assertFalse(any(name == 'admit' for name, _ in events))
         host['copy_seed_to_live'].assert_not_called()
 
-    def test_durable_fingerprint_retains_code_for_home_v4(self):
+    def test_durable_fingerprint_retains_home_code_and_external_ledger(self):
         home = Mock(side_effect=['%base', '0x1'])
         self.assertEqual(review_prepare.durable_fingerprint('zod', home), f'{1:064x}')
         source = home.call_args.args[1]
@@ -292,6 +292,8 @@ class ReviewLifecycleTests(unittest.TestCase):
         self.assertIn('(shax (jam db.stored))', source)
         self.assertIn('!<([%stead-home %4 team=[db=* projection=*] code=*] saved)', source)
         self.assertIn('(shax (jam [db.team.stored code.stored]))', source)
+        self.assertIn('!<([%stead-home %8 team=[db=* projection=*] code=* handoff=* retired=* packs=* external=*] saved)', source)
+        self.assertIn('(shax (jam [db.team.stored code.stored handoff.stored retired.stored packs.stored external.stored]))', source)
 
         identity = Mock(side_effect=['%base', '0x2'])
         self.assertEqual(review_prepare.durable_fingerprint('bus', identity), f'{2:064x}')

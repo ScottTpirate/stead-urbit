@@ -11,6 +11,7 @@
           [%5 team=saved:stead-team-owner code=persisted:stead-code-home]
           [%6 team=saved:stead-team-owner code=persisted:stead-code-home mode=phase:stead-home-handoff]
           [%7 team=saved:stead-team-owner code=persisted:stead-code-home mode=phase:stead-home-handoff retired=ledger:stead-project-retirement packs=state:stead-code-pack-anchor]
+          [%8 team=saved:stead-team-owner code=persisted:stead-code-home mode=phase:stead-home-handoff retired=ledger:stead-project-retirement packs=state:stead-code-pack-anchor external=external-writes:stead-team-owner]
       ==
   ==
 +$  pending-entry  [sender=@p expires=@da]
@@ -133,6 +134,8 @@
 ++  on-save
   ?:  configured
     =/  code=persisted:stead-code-home  [repos.code.owner uploads.code.owner reviews.code.owner builds.code.owner]
+    ?:  (gth ~(wyt by external.owner) 0)
+      !>([%stead-home %8 save:team code handoff retired.owner packs.code.owner external.owner])
     ?:  ?|(?=(^ retired.owner) ?=(^ packs.code.owner))
       !>([%stead-home %7 save:team code handoff retired.owner packs.code.owner])
     ?:  !=(handoff [%open 1 ~])
@@ -146,6 +149,11 @@
   |=  old=vase
   ~|  %stead-unsupported-state
   =/  restored  !<(saved old)
+  ?:  ?=([%stead-home %8 *] restored)
+    ?>  (valid:stead-home-handoff mode.restored)
+    ?>  (validate:stead-project-retirement our.bowl data.db.team.restored retired.restored)
+    =/  [cards=(list card:agent:gall) next=state:stead-team-owner]  (load-v8:team team.restored code.restored packs.restored external.restored)
+    [cards this(owner next(retired retired.restored), pending ~, handoff mode.restored)]
   ?:  ?=([%stead-home %7 *] restored)
     ?>  (valid:stead-home-handoff mode.restored)
     ?>  ?|(?=(^ retired.restored) ?=(^ packs.restored))
@@ -204,7 +212,7 @@
     ?>  &(=(our.bowl ~zod) =(src.bowl our.bowl) initialized.db)
     =/  [op=@tas ship=@p key=@t value=@t]  !<([@tas @p @t @t] vase)
     ?:  =(%roundtrip op)  (on-load on-save)
-    ?:  =(%load-future op)  (on-load !>([%stead-home %8 db]))
+    ?:  =(%load-future op)  (on-load !>([%stead-home %9 db]))
     ?:  =(%load-counter op)  (on-load !>([%0 0]))
     ?:  =(%hold-outsider-read op)
       ?>  &(=(ship ~bud) (lte (met 3 key) 1.024))

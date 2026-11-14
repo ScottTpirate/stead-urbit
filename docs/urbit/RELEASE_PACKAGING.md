@@ -31,9 +31,10 @@ state version. Timestamps, ownership, modes and archive order are fixed. Build
 reads committed source; uncommitted edits and unrelated files are excluded.
 It refuses a packager that differs from the selected committed version.
 
-The saved-state field names the maximum format emitted by the packaged role.
-The current Home declares v7 for project retirement and external Git pack
-records. V6 holds the same-ship handoff fence and generation. Work and Docs,
+The saved-state field names the maximum format supported by the packaged role.
+Home v8 adds the external Git write ledger format. Without a ledger, it saves
+the same older formats as before, including v7 for project retirement and
+external pack anchors. V6 holds the same-ship handoff fence and generation. Work and Docs,
 inline Code repositories, and queued uploads or delivery state retain the
 existing v3, v4 and v5 formats where those versions can represent the state.
 Identity remains v1. Historical archives verify against their own pinned
