@@ -1,7 +1,7 @@
 {
   "format": 1,
   "classification": "pure-native-only",
-  "expected_arm_count": 109,
+  "expected_arm_count": 112,
   "suites": [
     {
       "path": "/tests/stead-session",
@@ -179,6 +179,15 @@
         "test-pack-proof-refuses-noncanonical-sha-and-length",
         "test-pack-proof-refuses-substituted-head-scope-or-update-order",
         "test-pack-proof-refuses-unknown-key-inventory-and-stale-digest"
+      ],
+      "timeout_seconds": 60
+    },
+    {
+      "path": "/tests/stead-code-pack-control",
+      "arms": [
+        "test-pack-control-write-and-operational-fences",
+        "test-pack-control-checks-exact-worker-and-current-uploader",
+        "test-pack-control-receipt-only-retries-with-new-credential"
       ],
       "timeout_seconds": 60
     },

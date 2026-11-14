@@ -165,6 +165,15 @@ raw ref bytes, and refusals for changed scope, command order, HEAD, inventory
 and framing. This verifies parsing and reconstruction; the caller must still
 authenticate both the worker and the Git principal before using the proof.
 
+The typed control gate rejects sealed, retired and unavailable Home contexts,
+the wrong epoch, nonwriters, expired credentials, and direct changes to the
+default or protected branches. It checks a worker's exact admission and proof
+before verifying or committing a new attempt. Receipt lookup is separate:
+the same binding may read the exact result with a fresh write credential;
+that path cannot make a new acceptance. Three native tests passed. The
+transport still needs to establish the worker's identity and invoke this gate
+from the authoritative Gall event.
+
 Default and otherwise protected branches stay closed to direct external
 updates until the exact review commit is implemented. For an ambiguous stock
 client response, reconcile the exact digest and ordered commands under the
