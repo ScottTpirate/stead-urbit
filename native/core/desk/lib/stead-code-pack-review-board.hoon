@@ -176,6 +176,15 @@
   ^-  result
   ?.  &((scoped db env generation current) (uuid:stead-codec request))
     [%rejected %invalid-board-context]
+  =/  prior  (~(get by proposals.db) id.item)
+  ?:  ?&  ?=(^ prior)
+          (allowed:stead-code-pack-review env caller item %propose)
+          (same-actor:stead-session caller owner.u.prior)
+          %+  lien  ~(tap by promotions.db)
+          |=  [key=@t accepted=record]
+          =(id.item id.item.reviewed.review.candidate.accepted)
+      ==
+    [%rejected %proposal-merged]
   =/  checked  (propose:stead-code-pack-review env generation current caller source item)
   ?:  ?=(%| -.checked)  [%rejected p.checked]
   =/  row  p.checked
@@ -188,7 +197,6 @@
     ?.  (same-proposal row u.latest)  [%rejected %stale-revision]
     [%replayed db]
   ?:  (gte ~(wyt by requests.db) 192)  [%rejected %request-capacity]
-  =/  prior  (~(get by proposals.db) id.item)
   ?^  prior
     ?.  (same-actor:stead-session owner.u.prior owner.row)  [%rejected %id-owner-conflict]
     ?.  &(=(work.item work.item.u.prior) =(location.item location.item.u.prior))

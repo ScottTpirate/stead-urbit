@@ -39,12 +39,12 @@
   ?.  (subject:stead-team team auth project 'work' '' work now)  ~
   =/  linked  (~(got by works.data.team) [project work])
   =/  review  (~(get by approvals.book) id.item.row)
-  =/  committed=(unit @t)
+  =/  committed=(unit [request=@t snapshot=@t])
     =/  records  ~(tap by promotions.book)
     |-
     ?~  records  ~
     =/  candidate  candidate.q.i.records
-    ?:  =(row reviewed.review.candidate)  [~ snapshot.pack.decision.candidate]
+    ?:  =(row reviewed.review.candidate)  [~ p.i.records snapshot.pack.decision.candidate]
     $(records t.records)
   =/  response
     %-  canonical  %-  object
@@ -52,7 +52,8 @@
         ['work_title' (field data.linked 'title')]
         ['reviewer' ?~(review '' principal.reviewer.u.review)]
         ['merged_revision' ?~(committed '' (decimal number.change.item.row))]
-        ['merged_snapshot' (fall committed '')]  (view-fields row)
+        ['merged_snapshot' ?~(committed '' snapshot.u.committed)]
+        ['merged_request_id' ?~(committed '' request.u.committed)]  (view-fields row)
     ==
   [~ response]
 ++  list-visible

@@ -143,6 +143,8 @@
         =(pack.decision.candidate.saved promoted)
         =(generation.decision.candidate.saved 1)
         =(db (state (cue (jam db))))
+        ?=  [%rejected %proposal-merged]
+          (submit db env 1 promoted maker replace-id source item(change change.item(number 2)))
     ==
   (expect !>(ok))
 ++  test-pack-board-owner-revision-and-approval-replacement
