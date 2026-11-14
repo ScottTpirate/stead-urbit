@@ -1,6 +1,6 @@
 ::  Durable, single-project transitions for immutable external Git snapshots.
 ::  The caller supplies authenticated member, worker evidence, and current policy.
-/+  stead-codec, stead-code-pack-push, stead-code-pack-anchor, stead-code-receive, stead-session
+/+  stead-codec, stead-code-pack-push, stead-code-pack-anchor, stead-code-receive, stead-session, stead-code-pack-promotion
 |%
 +$  scope  scope:stead-code-pack-push
 +$  actor  actor:stead-session
@@ -14,10 +14,17 @@
 +$  admission  [claim=intent owner=actor since=@ud until=@ud]
 +$  job  $%([%admitted row=admission ~] [%verified row=admission proof=checked])
 +$  record  [row=admission proof=checked result=receipt]
++$  promotion  record:stead-code-pack-promotion
++$  ledger-v1
+  $:  version=@ud  seed=@t  seed-request=@t  birth=@ud  last=@ud
+      current=manifest  generation=@ud  serial=@ud
+      pending=(unit job)  receipts=(map @t record)  journal=(list @t)
+  ==
 +$  ledger
   $:  version=@ud  seed=@t  seed-request=@t  birth=@ud  last=@ud
       current=manifest  generation=@ud  serial=@ud
       pending=(unit job)  receipts=(map @t record)  journal=(list @t)
+      promotions=(map @t promotion)
   ==
 +$  pending-result  $%([%applied next=ledger] [%replayed next=ledger] [%rejected reason=@tas])
 +$  commit-result
@@ -32,7 +39,29 @@
   ^-  (unit ledger)
   ?.  &(?=(%accepted -.anchor) (valid:stead-code-pack-anchor anchor))  ~
   =/  born  accepted-at.proof.anchor
-  [~ 1 (seed-id anchor) request.proof.anchor born born pack.row.anchor 0 0 ~ ~ ~]
+  [~ 2 (seed-id anchor) request.proof.anchor born born pack.row.anchor 0 0 ~ ~ ~ ~]
+++  from-v1
+  |=  old=ledger-v1
+  ^-  ledger
+  ?>  =(version.old 1)
+  [2 seed.old seed-request.old birth.old last.old current.old generation.old serial.old pending.old receipts.old journal.old ~]
+++  as-v1
+  |=  db=ledger
+  ^-  ledger-v1
+  ?>  &(=(version.db 2) ?=(~ promotions.db))
+  [1 seed.db seed-request.db birth.db last.db current.db generation.db serial.db pending.db receipts.db journal.db]
+++  used
+  |=  [db=ledger request=@t]
+  |(=(seed-request.db request) (~(has by receipts.db) request) (~(has by promotions.db) request))
+++  history
+  |=  [db=ledger request=@t]
+  ^-  (unit [pack=manifest generation=@ud accepted=@ud])
+  =/  pushed  (~(get by receipts.db) request)
+  ?^  pushed
+    [~ pack.decision.result.u.pushed generation.decision.result.u.pushed accepted-at.result.u.pushed]
+  =/  promoted  (~(get by promotions.db) request)
+  ?~  promoted  ~
+  [~ pack.decision.candidate.u.promoted generation.decision.candidate.u.promoted accepted-at.u.promoted]
 ++  action-of
   |=  change=update
   ^-  action:stead-code-receive
@@ -106,7 +135,7 @@
   ?.  =(incarnation incarnation.claim)  [%rejected %incarnation-conflict]
   ?.  (scope-matches db claim)  [%rejected %stale-base]
   ?.  (gte now last.db)  [%rejected %clock-conflict]
-  ?:  |(=(seed-request.db request.claim) (~(has by receipts.db) request.claim))
+  ?:  (used db request.claim)
     [%rejected %request-reused]
   ?:  (gte generation.db max-advances)  [%rejected %history-capacity]
   =?  db  ?~(pending.db | (gte now until.row.u.pending.db))
@@ -155,6 +184,7 @@
         ==
       [%replayed db result.u.prior]
     [%rejected %request-reused]
+  ?:  (used db request.claim)  [%rejected %request-reused]
   ?.  =(incarnation incarnation.claim)  [%rejected %incarnation-conflict]
   ?.  (scope-matches db claim)  [%rejected %stale-base]
   ?:  (gte generation.db max-advances)  [%rejected %history-capacity]
@@ -179,6 +209,27 @@
       journal  next-journal
     ==
   [%applied next accepted]
+++  promote
+  |=  [db=ledger row=promotion now=@ud]
+  ^-  (each ledger @tas)
+  ?.  (valid:stead-code-pack-promotion row)  [%| %invalid-promotion]
+  ?.  =(now accepted-at.row)  [%| %clock-conflict]
+  ?:  (used db request.row)  [%| %request-reused]
+  ?.  &((gte now last.db) =(base.row current.db))  [%| %stale-base]
+  ?.  (lth generation.db max-advances)  [%| %history-capacity]
+  ?.  =(generation.decision.candidate.row +(generation.db))  [%| %generation-conflict]
+  ?:  &(?=(^ pending.db) (lth now until.row.u.pending.db))
+    [%| %pending-conflict]
+  =/  next
+    %=  db
+      current     pack.decision.candidate.row
+      generation  +(generation.db)
+      last        now
+      pending     ~
+      promotions  (~(put by promotions.db) request.row row)
+      journal     [request.row journal.db]
+    ==
+  [%& next]
 ++  still
   |=  [current=manifest generation=@ud row=admission proof=checked]
   ^-  outcome:stead-code-pack-push
@@ -192,13 +243,13 @@
   ^-  ?
   =/  seed  (open anchor)
   ?~  seed  |
-  ?.  ?&  =(1 version.db)
+  ?.  ?&  =(2 version.db)
           =(seed.db seed.u.seed)
           =(seed-request.db seed-request.u.seed)
           =(birth.db birth.u.seed)
           (lte generation.db max-advances)
           (lte serial.db max-number)
-          =(generation.db ~(wyt by receipts.db))
+          =(generation.db (add ~(wyt by receipts.db) ~(wyt by promotions.db)))
           =(generation.db (lent (scag +(max-advances) journal.db)))
       ==
     |
@@ -218,14 +269,27 @@
             (gth serial.db attempt)
             =(serial.db attempt.claim.row)
             (gte since.row accepted-at)
-            !=(seed-request.db request.claim.row)
-            !(~(has by receipts.db) request.claim.row)
+            !(used db request.claim.row)
         ==
       |
     ?:  ?=(%admitted -.u.pending.db)  &
     =/  expected  (still current generation row proof.u.pending.db)
     ?=(%candidate -.expected)
   =/  found  (~(get by receipts.db) i.sequence)
+  =/  promoted  (~(get by promotions.db) i.sequence)
+  ?^  promoted
+    ?.  ?&  ?=(~ found)  (valid:stead-code-pack-promotion u.promoted)
+            =(request.u.promoted i.sequence)  !=(seed-request.db i.sequence)
+            =(base.u.promoted current)  (gte accepted-at.u.promoted accepted-at)
+            =(generation.decision.candidate.u.promoted +(generation))
+        ==
+      |
+    %=  $
+      sequence     t.sequence
+      current      pack.decision.candidate.u.promoted
+      generation   +(generation)
+      accepted-at  accepted-at.u.promoted
+    ==
   ?~  found  |
   =/  row  row.u.found
   =/  out  result.u.found

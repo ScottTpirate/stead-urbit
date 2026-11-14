@@ -1,5 +1,5 @@
 ::  One authoritative owner. Configured v4 with Code, v3 without Code.
-/+  default-agent, stead-core, stead-codec, stead-core-v1, stead-codec-v1, stead-team-owner, stead-code-home, stead-home-handoff, stead-browser, stead-code-credentials, stead-project-retirement, stead-code-pack-anchor
+/+  default-agent, stead-core, stead-codec, stead-core-v1, stead-codec-v1, stead-team-owner, stead-code-home, stead-home-handoff, stead-browser, stead-code-credentials, stead-project-retirement, stead-code-pack-anchor, stead-code-pack-ledger
 =>
 |%
 +$  saved
@@ -11,7 +11,8 @@
           [%5 team=saved:stead-team-owner code=persisted:stead-code-home]
           [%6 team=saved:stead-team-owner code=persisted:stead-code-home mode=phase:stead-home-handoff]
           [%7 team=saved:stead-team-owner code=persisted:stead-code-home mode=phase:stead-home-handoff retired=ledger:stead-project-retirement packs=state:stead-code-pack-anchor]
-          [%8 team=saved:stead-team-owner code=persisted:stead-code-home mode=phase:stead-home-handoff retired=ledger:stead-project-retirement packs=state:stead-code-pack-anchor external=external-writes:stead-team-owner]
+          [%8 team=saved:stead-team-owner code=persisted:stead-code-home mode=phase:stead-home-handoff retired=ledger:stead-project-retirement packs=state:stead-code-pack-anchor external=external-writes-v1:stead-team-owner]
+          [%9 team=saved:stead-team-owner code=persisted:stead-code-home mode=phase:stead-home-handoff retired=ledger:stead-project-retirement packs=state:stead-code-pack-anchor external=external-writes:stead-team-owner reviews=pack-boards:stead-team-owner]
       ==
   ==
 +$  pending-entry  [sender=@p expires=@da]
@@ -134,8 +135,12 @@
 ++  on-save
   ?:  configured
     =/  code=persisted:stead-code-home  [repos.code.owner uploads.code.owner reviews.code.owner builds.code.owner]
-    ?:  (gth ~(wyt by external.owner) 0)
-      !>([%stead-home %8 save:team code handoff retired.owner packs.code.owner external.owner])
+    ?:  (gth ~(wyt by pack-reviews.owner) 0)
+      !>([%stead-home %9 save:team code handoff retired.owner packs.code.owner external.owner pack-reviews.owner])
+    =/  external  external.owner
+    ?:  (gth ~(wyt by external) 0)
+      =/  previous  (~(run by external) as-v1:stead-code-pack-ledger)
+      !>([%stead-home %8 save:team code handoff retired.owner packs.code.owner previous])
     ?:  ?|(?=(^ retired.owner) ?=(^ packs.code.owner))
       !>([%stead-home %7 save:team code handoff retired.owner packs.code.owner])
     ?:  !=(handoff [%open 1 ~])
@@ -149,6 +154,12 @@
   |=  old=vase
   ~|  %stead-unsupported-state
   =/  restored  !<(saved old)
+  ?:  ?=([%stead-home %9 *] restored)
+    ?>  (valid:stead-home-handoff mode.restored)
+    ?>  (validate:stead-project-retirement our.bowl data.db.team.restored retired.restored)
+    ?>  ?=(^ reviews.restored)
+    =/  [cards=(list card:agent:gall) next=state:stead-team-owner]  (load-v9:team team.restored code.restored packs.restored external.restored reviews.restored)
+    [cards this(owner next(retired retired.restored), pending ~, handoff mode.restored)]
   ?:  ?=([%stead-home %8 *] restored)
     ?>  (valid:stead-home-handoff mode.restored)
     ?>  (validate:stead-project-retirement our.bowl data.db.team.restored retired.restored)
@@ -212,7 +223,7 @@
     ?>  &(=(our.bowl ~zod) =(src.bowl our.bowl) initialized.db)
     =/  [op=@tas ship=@p key=@t value=@t]  !<([@tas @p @t @t] vase)
     ?:  =(%roundtrip op)  (on-load on-save)
-    ?:  =(%load-future op)  (on-load !>([%stead-home %9 db]))
+    ?:  =(%load-future op)  (on-load !>([%stead-home %10 db]))
     ?:  =(%load-counter op)  (on-load !>([%0 0]))
     ?:  =(%hold-outsider-read op)
       ?>  &(=(ship ~bud) (lte (met 3 key) 1.024))

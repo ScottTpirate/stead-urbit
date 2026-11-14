@@ -63,8 +63,8 @@
 ?>  ?=(%applied -.checked)
 =/  accepted  (commit next.checked claim proof who 5 incarnation.claim allow-all ~)
 ?>  ?=(%applied -.accepted)
-=/  external=external-writes:stead-team-owner  (malt ~[[project next.accepted]])
-=/  pending-external=external-writes:stead-team-owner  (malt ~[[project next.checked]])
+=/  external=external-writes-v1:stead-team-owner  (malt ~[[project (as-v1 next.accepted)]])
+=/  pending-external=external-writes-v1:stead-team-owner  (malt ~[[project (as-v1 next.checked)]])
 =/  baseline=vase  !>([%stead-home %7 team code [%open 1 ~] ~ anchors])
 =/  v8=vase  !>([%stead-home %8 team code [%open 1 ~] ~ anchors external])
 =/  custody
@@ -88,7 +88,7 @@
 ++  test-home-v8-load-save-retains-exact-accepted-ledger
   =/  [cards=(list card:agent:gall) loaded=agent:gall]  (on-load:initial v8)
   =/  saved=vase  on-save:loaded
-  =/  restored  !<([%stead-home %8 team=saved:stead-team-owner code=persisted:stead-code-home mode=phase:stead-home-handoff retired=ledger:stead-project-retirement packs=state:stead-code-pack-anchor external=external-writes:stead-team-owner] saved)
+  =/  restored  !<([%stead-home %8 team=saved:stead-team-owner code=persisted:stead-code-home mode=phase:stead-home-handoff retired=ledger:stead-project-retirement packs=state:stead-code-pack-anchor external=external-writes-v1:stead-team-owner] saved)
   =/  row  (~(got by external.restored) project)
   =/  [again-cards=(list card:agent:gall) again=agent:gall]  (on-load:initial saved)
   =/  second=vase  on-save:again
@@ -109,23 +109,23 @@
   =/  pending-vase=vase  !>([%stead-home %8 team code [%open 1 ~] ~ anchors pending-external])
   =/  [cards=(list card:agent:gall) loaded=agent:gall]  (on-load:initial pending-vase)
   =/  saved=vase  on-save:loaded
-  =/  restored  !<([%stead-home %8 team=saved:stead-team-owner code=persisted:stead-code-home mode=phase:stead-home-handoff retired=ledger:stead-project-retirement packs=state:stead-code-pack-anchor external=external-writes:stead-team-owner] saved)
+  =/  restored  !<([%stead-home %8 team=saved:stead-team-owner code=persisted:stead-code-home mode=phase:stead-home-handoff retired=ledger:stead-project-retirement packs=state:stead-code-pack-anchor external=external-writes-v1:stead-team-owner] saved)
   =/  row  (~(got by external.restored) project)
   =/  ok=?
     ?&  =(pending-external external.restored)
         =(current.row current)
         =(generation.row 0)
         ?=([~ %verified *] pending.row)
-        ?=([%rejected %incarnation-conflict] (commit row claim proof who 6 digest allow-all ~))
+        ?=([%rejected %incarnation-conflict] (commit (from-v1 row) claim proof who 6 digest allow-all ~))
     ==
   (expect !>(ok))
 ++  test-home-v8-rejects-empty-or-invalid-ledger-and-future-state
-  =/  empty-result  (mule |.((on-load:initial !>([%stead-home %8 team code [%open 1 ~] ~ anchors *(map @t ledger)]))))
-  =/  invalid=external-writes:stead-team-owner  (malt ~[[project db(seed digest)]])
+  =/  empty-result  (mule |.((on-load:initial !>([%stead-home %8 team code [%open 1 ~] ~ anchors *external-writes-v1:stead-team-owner]))))
+  =/  invalid=external-writes-v1:stead-team-owner  (malt ~[[project (as-v1 db(seed digest))]])
   =/  bad-result  (mule |.((on-load:initial !>([%stead-home %8 team code [%open 1 ~] ~ anchors invalid]))))
-  =/  other=external-writes:stead-team-owner  (malt ~[[request next.accepted]])
+  =/  other=external-writes-v1:stead-team-owner  (malt ~[[request (as-v1 next.accepted)]])
   =/  scope-result  (mule |.((on-load:initial !>([%stead-home %8 team code [%open 1 ~] ~ anchors other]))))
-  =/  future-result  (mule |.((on-load:initial !>([%stead-home %9 team code [%open 1 ~] ~ anchors external]))))
+  =/  future-result  (mule |.((on-load:initial !>([%stead-home %10 team code [%open 1 ~] ~ anchors external]))))
   (expect !>(?&(?=(%| -.empty-result) ?=(%| -.bad-result) ?=(%| -.scope-result) ?=(%| -.future-result))))
 ++  test-home-v8-custody-omits-projection-but-binds-external-ledger
   =/  changed-view=state:stead-projection  *state:stead-projection

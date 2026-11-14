@@ -28,6 +28,11 @@
       =(selected destination.installed.gate)
       =(incarnation incarnation.installed.gate)
   ==
+++  current-key
+  |=  [gate=state selected=scope incarnation=@t]
+  ^-  (unit worker)
+  ?.  &(?=(%open -.gate) (matches gate selected incarnation))  ~
+  [~ key.installed.gate]
 ++  allowed
   |=  [gate=state selected=scope incarnation=@t supplied=@t]
   ^-  (unit worker)

@@ -16,6 +16,7 @@ from portable_recovery import OID, TOKEN, UUID, encoded, match, require, same_en
 
 PROTOCOL = 'stead.git-pack-reviewed-candidate/1'
 INTENT = 'stead.git-pack-reviewed-intent/1'
+PROOF = 'stead.git-pack-reviewed-proof/1'
 PACK_IDENTITY = ('pack_sha256', 'pack_bytes', 'object_count', 'object_bytes', 'object_ids_sha256')
 
 
@@ -86,3 +87,15 @@ def prepare(storage, scope, base_snapshot, source_ref, target_ref, base_oid, hea
             'review-candidate-evidence')
     return {'protocol': PROTOCOL, 'status': 'candidate-staged', 'intent': intent, 'intent_sha256': digest,
             'candidate_snapshot': candidate['candidate_snapshot'], 'manifest': result, 'changes': candidate['changes']}
+
+
+def proof(result, request_id):
+    """Encode the signed promotion evidence only after successful preparation."""
+    require(match(UUID, request_id) and result['protocol'] == PROTOCOL
+            and result['status'] == 'candidate-staged', 'review-proof')
+    intent = result['intent']
+    require(intent['protocol'] == INTENT and sha(encoded(intent)) == result['intent_sha256']
+            and sha(encoded(result['manifest'])) == result['candidate_snapshot'], 'review-proof-digest')
+    row = {name: value for name, value in intent.items() if name not in ('protocol', 'proposal_revision')}
+    return encoded(row | {'protocol': PROOF, 'revision': intent['proposal_revision'],
+                          'request_id': request_id, 'candidate_snapshot': result['candidate_snapshot']})

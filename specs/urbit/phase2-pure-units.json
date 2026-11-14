@@ -1,7 +1,7 @@
 {
   "format": 1,
   "classification": "pure-native-only",
-  "expected_arm_count": 129,
+  "expected_arm_count": 141,
   "suites": [
     {
       "path": "/tests/stead-session",
@@ -235,6 +235,30 @@
         "test-pack-admit-exact-python-roundtrip",
         "test-pack-admit-refuses-wrong-scope-and-invalid-actor",
         "test-pack-admit-refuses-duplicate-or-oversized-changes"
+      ],
+      "timeout_seconds": 60
+    },
+    {
+      "path": "/tests/stead-code-pack-review-board",
+      "arms": [
+        "test-pack-board-records-exact-promotion-and-replays-history",
+        "test-pack-board-owner-revision-and-approval-replacement",
+        "test-pack-board-request-ids-and-current-exact-approval",
+        "test-pack-board-preflight-rejects-unreviewed-stale-and-unproved",
+        "test-pack-board-replay-needs-authoritative-record-and-current-policy",
+        "test-pack-board-history-validation-refuses-corrupted-bindings",
+        "test-pack-board-read-policy-and-fixed-request-capacity",
+        "test-pack-board-revision-history-is-dense-and-unambiguous"
+      ],
+      "timeout_seconds": 60
+    },
+    {
+      "path": "/tests/stead-home-v9-rehearsal",
+      "arms": [
+        "test-home-v9-board-only-load-save-retains-proposal-and-approval",
+        "test-home-v9-load-save-retains-exact-promotion-and-history",
+        "test-home-v9-rejects-missing-mismatched-and-empty-review-history",
+        "test-home-v9-interleaved-raw-promotion-raw-history-roundtrips"
       ],
       "timeout_seconds": 60
     },

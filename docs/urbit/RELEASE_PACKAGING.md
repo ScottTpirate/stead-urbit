@@ -32,7 +32,9 @@ reads committed source; uncommitted edits and unrelated files are excluded.
 It refuses a packager that differs from the selected committed version.
 
 The saved-state field names the maximum format supported by the packaged role.
-Home v8 adds the external Git write ledger format. Without a ledger, it saves
+Home v9 can retain reviewed external Git promotions in the same history as
+ordinary pushes. With push-only history it keeps the v8 ledger encoding.
+Without a ledger, it saves
 the same older formats as before, including v7 for project retirement and
 external pack anchors. V6 holds the same-ship handoff fence and generation. Work and Docs,
 inline Code repositories, and queued uploads or delivery state retain the

@@ -23,10 +23,10 @@
   =/  index  (sub generation.db generation)
   =/  entries  (slag index journal.db)
   ?~  entries  ~
-  =/  found  (~(get by receipts.db) i.entries)
+  =/  found  (history:stead-code-pack-ledger db i.entries)
   ?~  found  ~
-  ?.  =(generation generation.decision.result.u.found)  ~
-  [~ pack.decision.result.u.found]
+  ?.  =(generation generation.u.found)  ~
+  [~ pack.u.found]
 ++  same-admission
   |=  [view=admission-view:stead-code-pack-proof row=admission:stead-code-pack-ledger]
   ^-  ?

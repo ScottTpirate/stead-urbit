@@ -48,6 +48,37 @@ the relay capability header from participant requests, and reject the private
 Home carrier path. The HTTPS pass-through used by the earlier pilot needs a
 route-aware ingress for this profile. [Git rehearsal](PHASE5_DOGFOOD_REHEARSAL.md#worker-result-authentication)
 
+The Vere account is the sole writer for the projection mailbox. Provision
+its directory mode 0750 with the mailbox group shared by the worker and read
+relay. Give each service a separate mode-0700 store and provision a second
+socket directory for pack projection. Run the projection socket command as
+the worker and the reconciliation command as the read relay.
+
+```sh
+common=(--home "$HOME_SHIP" --project "$PROJECT_ID" --authority-epoch "$AUTHORITY_EPOCH"
+        --mailbox "$MAILBOX" --controller-uid "$VERE_UID" --mailbox-gid "$MAILBOX_GID"
+        --artifact-socket "$PROJECTION_SOCKET" --worker-uid "$WORKER_UID" --relay-uid "$RELAY_UID")
+
+# Worker account
+python3 -B scripts/urbit/git_pack_projection_reconcile.py "${common[@]}" \
+  serve --worker-store "$WORKER_STORE" --socket-gid "$SOCKET_GID"
+
+# Vere account, repeat before the 15-second lease expires
+"${owner[@]}" pack-projection-refresh --project "$PROJECT_ID" --authority-epoch "$AUTHORITY_EPOCH" \
+  --mailbox "$MAILBOX" --mailbox-gid "$MAILBOX_GID"
+
+# Read relay account
+python3 -B scripts/urbit/git_pack_projection_reconcile.py "${common[@]}" \
+  once --read-store "$RELAY_STORE" --git "$PINNED_GIT"
+```
+
+Keep ingress closed until the retained worker data and read relay agree with
+the current Home snapshot. A missing, expired or changed lease prevents
+publication. Each Git read still requires a current individual credential
+and the exact Home decision. Before a writer change, fence ingress and
+in-flight requests, close the native relay policy, and refresh the closed
+mailbox while Home is reachable.
+
 Before proposing the switch, demonstrate all of the following with one pinned
 candidate:
 

@@ -38,6 +38,7 @@
 ?>  ?+  mode  |
       %operator-status  &(?=([%operator @ ~] route) =('' raw))
       %pack-relay-status  &(=(route /pack-relay/status) =('' raw))
+      %pack-selection  &(?=([%pack-selection @ ~] route) =('' raw))
       %handoff-status  &(=(route /home-handoff/status) =('' raw))
       %project-retirement-status  &(?=([%project-retirement @ ~] route) =('' raw))
       %project-journal-page  &(?=([%project-journal @ @ ~] route) =('' raw))
@@ -71,7 +72,12 @@
       ?.  =(/watch/result wire.u.in.tin)  ~
       ?.  =(%stead-result-3 p.cage.sign.u.in.tin)  `[%nack ~]
       =/  text  !<(@t q.cage.sign.u.in.tin)
-      ?.  (lte (met 3 text) ?:(=(%project-journal-page mode) 45.056 2.048))  `[%nack ~]
+      =/  bound
+        ?+  mode  2.048
+          %project-journal-page  45.056
+          %pack-selection  196.608
+        ==
+      ?.  (lte (met 3 text) bound)  `[%nack ~]
       `[%fact text]
     [~ %agent * %kick *]
       ?.  =(/watch/result wire.u.in.tin)  ~

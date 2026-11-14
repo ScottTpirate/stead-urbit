@@ -14,6 +14,7 @@ import socket
 import ssl
 import stat
 import struct
+import time
 from urllib.parse import urlsplit
 
 import core_conn
@@ -161,7 +162,10 @@ class OwnerProcess:
             raw = b''
         elif route:
             segment = {'bootstrap': 'bootstrap', 'operator-status': 'operator',
-                       'project-retirement-status': 'project-retirement'}[mode]
+                       'project-retirement-status': 'project-retirement',
+                       'pack-selection': 'pack-selection'}[mode]
+            if mode == 'pack-selection':
+                require(self.role == 'home' and match(UUID, route) and value is None, 'Use one exact Home project')
             path = f'[%{segment} {core_conn.atom(route.encode())} ~]'
         if mode == 'handoff-status':
             path = '[%home-handoff %status ~]'
@@ -468,6 +472,13 @@ def main():
     pack = commands.add_parser('pack-stage')
     pack.add_argument('--attestation-file', type=Path, required=True)
     commands.add_parser('pack-relay-status')
+    selection = commands.add_parser('pack-selection')
+    selection.add_argument('--project', required=True)
+    projection = commands.add_parser('pack-projection-refresh')
+    projection.add_argument('--project', required=True)
+    projection.add_argument('--authority-epoch', required=True)
+    projection.add_argument('--mailbox', type=Path, required=True)
+    projection.add_argument('--mailbox-gid', type=int, required=True)
     relay = commands.add_parser('pack-relay-policy')
     relay.add_argument('--policy-file', type=Path, required=True)
     for name in ('status', 'bootstrap'):
@@ -500,6 +511,18 @@ def main():
         elif args.operation == 'status':
             require(args.role == 'home', 'Only the Home role exposes owner-local status')
             value = status(owner, args.ship, revision(args.revision))
+        elif args.operation == 'pack-projection-refresh':
+            from git_pack_projection_lease import Mailbox
+
+            scope = {'home': args.ship, 'project_id': args.project, 'repository_id': args.project,
+                     'authority_epoch': args.authority_epoch}
+            mailbox = Mailbox(args.mailbox, scope, os.geteuid(), args.mailbox_gid)
+            selection = mailbox.publish(lambda _: owner.call(args.ship, 'pack-selection', args.project, None),
+                                        time.monotonic() + 10)
+            value = {'status': 'closed' if selection is None else 'open',
+                     'snapshot': '' if selection is None else selection.snapshot}
+        elif args.operation == 'pack-selection':
+            value = owner.call(args.ship, 'pack-selection', args.project, None)
         elif args.operation in ('pack-relay-status', 'pack-relay-policy'):
             require(args.role == 'home', 'Only the Home role supports pack relay control')
             value = (relay_status(owner, args.ship) if args.operation == 'pack-relay-status' else

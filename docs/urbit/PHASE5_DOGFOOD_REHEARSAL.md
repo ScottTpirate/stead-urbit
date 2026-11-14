@@ -266,9 +266,29 @@ revision, source branch tip, target OID and selected snapshot. It checks the
 current author, reviewer and merger grants, requires the worker's exact
 fast-forward evidence, and permits one ref change with the existing object
 inventory. The seven pinned Vere tests cover exact selection, stale review,
-changed grants and worker evidence. This preflight produces a candidate.
-The Home still needs to persist the proposal, approval and accepted promotion
-together before a member can merge from the browser.
+changed grants and worker evidence.
+
+In **Code**, a contributor links a Work item and proposes a source branch
+already pushed to the repository. A different maintainer approves that exact
+revision. The merge advances the default branch to the proposed commit, with
+the same pack and other refs. Each role must still have access to the Work item
+at merge time. A stale snapshot, a changed ref or a removed grant requires a
+fresh review. Home saves the accepted proposal and Git snapshot in one
+transition and returns the same receipt for an exact authorized retry.
+
+Download the reviewed request from **Code**. Run the following on the Git
+worker account, using its approved profile and owner-only directories. Copy
+the request as a mode-0600 file. Import the resulting proof in **Code** and
+select **Merge reviewed change**. Keep the worker key with the worker.
+
+```sh
+python3 -B scripts/urbit/git_pack_worker_service.py --profile "$WORKER_PROFILE" \
+  --review-request "$PRIVATE_REQUEST" --review-output "$PRIVATE_PROOF" \
+  --home "$HOME_SHIP" --project "$PROJECT_ID" --authority-epoch "$AUTHORITY_EPOCH"
+```
+
+The browser review picker supports UTF-8 branch names. Git storage also
+preserves ref names with arbitrary valid Git bytes.
 
 The private report `.runtime/pack-review-native-3l9marb8/state/report.json`
 has SHA-256 `0d53445edac8022fa44b92f28d709df5e4bebda1e4715aa19ab7a146faf3b164`.

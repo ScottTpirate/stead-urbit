@@ -1,10 +1,12 @@
 ::  Configured-team Gall driver. Only stead-home owns and calls this state.
-/+  stead-codec, stead-core, stead-team, stead-team-config, stead-team-codec, stead-session, stead-http, stead-browser, stead-projection, stead-views, stead-restore, stead-eyre, stead-assets, server, stead-updates, stead-update-codec, stead-code-home, stead-code-http, stead-code-credentials, stead-project-retirement, stead-code-pack-anchor, stead-code-pack-ledger, stead-code-pack-owner, stead-code-pack-control, stead-code-receive, stead-code-pack-relay, stead-code-pack-relay-pin, stead-code-pack-relay-http, stead-code-pack-relay-wire
+/+  stead-codec, stead-core, stead-team, stead-team-config, stead-team-codec, stead-session, stead-http, stead-browser, stead-projection, stead-views, stead-restore, stead-eyre, stead-assets, server, stead-updates, stead-update-codec, stead-code-home, stead-code-http, stead-code-credentials, stead-project-retirement, stead-code-pack-anchor, stead-code-pack-ledger, stead-code-pack-owner, stead-code-pack-control, stead-code-receive, stead-code-pack-relay, stead-code-pack-relay-pin, stead-code-pack-relay-http, stead-code-pack-relay-wire, stead-code-pack-review, stead-code-pack-review-board, stead-code-pack-review-api, stead-code-pack-review-proof, stead-code-pack-promotion, stead-code-pack-proof
 =,  stead-codec
 |%
 +$  pending-entry  [actor=authentication:stead-team expires=@ud]
 +$  git-reply  [id=@ta sender=@p bearer=@t nonce=@t]
 +$  external-writes  (map @t ledger:stead-code-pack-ledger)
++$  external-writes-v1  (map @t ledger-v1:stead-code-pack-ledger)
++$  pack-boards  (map @t state:stead-code-pack-review-board)
 +$  state
   $:  db=state:stead-team  view=state:stead-projection
       transient=ephemeral:stead-browser  restoring=(unit job:stead-restore)
@@ -12,14 +14,14 @@
       files=(map @t [mime=@t bytes=@t])
       code=state:stead-code-home  git-waiting=(map @t git-reply)
       retired=ledger:stead-project-retirement
-      external=external-writes  relay=state:stead-code-pack-relay-pin
+      external=external-writes  relay=state:stead-code-pack-relay-pin  pack-reviews=pack-boards
   ==
 +$  saved  [db=state:stead-team projection=state:stead-projection]
 ++  empty
   ^-  state
   =/  view=state:stead-projection
     [*index:stead-projection *index:stead-projection ~ | |]
-  [empty:stead-team view *ephemeral:stead-browser ~ '' '' ~ ~ *state:stead-code-home ~ ~ ~ [%closed 0 ~]]
+  [empty:stead-team view *ephemeral:stead-browser ~ '' '' ~ ~ *state:stead-code-home ~ ~ ~ [%closed 0 ~] ~]
 ++  now-ms
   |=  now=@da
   (div (mul 1.000 (sub now ~1970.1.1)) ~s1)
@@ -102,7 +104,7 @@
     =/  staged  (begin:stead-restore db.old our.bowl)
     =/  job  (token:stead-session eny.bowl act.bowl 'stead.restore-job/1')
     =/  fresh=state
-      [empty:stead-team *state:stead-projection *ephemeral:stead-browser [~ staged] job '' ~ ~ [repos.code *ledger:stead-code-credentials uploads.code reviews.code builds.code ~] ~ ~ ~ [%closed 0 ~]]
+      [empty:stead-team *state:stead-projection *ephemeral:stead-browser [~ staged] job '' ~ ~ [repos.code *ledger:stead-code-credentials uploads.code reviews.code builds.code ~] ~ ~ ~ [%closed 0 ~] ~]
     =.  owner  fresh
     [(weld kicks ~[bind wait]) owner]
   ++  load-v7
@@ -112,17 +114,34 @@
     =/  [cards=(list card:agent:gall) next=state]  (load old code)
     [cards next(code code.next(packs packs))]
   ++  load-v8
-    |=  [old=saved code=persisted:stead-code-home packs=state:stead-code-pack-anchor external=external-writes]
+    |=  [old=saved code=persisted:stead-code-home packs=state:stead-code-pack-anchor external=external-writes-v1]
+    ^-  (quip card:agent:gall state)
+    (load-v9 old code packs (~(run by external) from-v1:stead-code-pack-ledger) ~)
+  ++  load-v9
+    |=  [old=saved code=persisted:stead-code-home packs=state:stead-code-pack-anchor external=external-writes boards=pack-boards]
     ^-  (quip card:agent:gall state)
     =/  count  ~(wyt by external)
-    ?>  &((gth count 0) (lte count 4))
+    ?>  &(|((gth count 0) ?=(^ boards)) (lte count 4) (lte ~(wyt by boards) 4))
     ?>  %+  levy  ~(tap by external)
         |=  [id=@t row=ledger:stead-code-pack-ledger]
         =/  genesis  (~(get by packs) id)
         ?~  genesis  |
-        (valid:stead-code-pack-ledger row u.genesis)
+        ?.  (valid:stead-code-pack-ledger row u.genesis)  |
+        ?~  promotions.row  &
+        =/  board  (~(get by boards) id)
+        ?~  board  |
+        =(promotions.row promotions.u.board)
+    ?>  %+  levy  ~(tap by boards)
+        |=  [id=@t row=state:stead-code-pack-review-board]
+        =/  genesis  (~(get by packs) id)
+        ?.  ?=([~ %accepted *] genesis)  |
+        ?.  =(destination.row destination.pack.row.u.genesis)  |
+        ?.  (valid:stead-code-pack-review-board row)  |
+        ?.  (gth ~(wyt by requests.row) 0)  |
+        =/  ledger  (~(get by external) id)
+        =(promotions.row ?~(ledger ~ promotions.u.ledger))
     =/  [cards=(list card:agent:gall) next=state]  (load-v7 old code packs)
-    [cards next(external external)]
+    [cards next(external external, pack-reviews boards)]
   ++  configured
     |=  raw=@t
     ^-  (quip card:agent:gall state)
@@ -267,6 +286,35 @@
     :~  [%give %fact ~ %stead-result-3 !>(raw)]
         [%give %kick ~ ~]
     ==
+  ++  inspect-pack-selection
+    |=  project=@t
+    ^-  (quip card:agent:gall state)
+    ?>  &((uuid project) =(src.bowl our.bowl))
+    =/  selected=(unit manifest:stead-code-pack-anchor)
+      ?.  &(available !(retired-project project))  ~
+      =/  destination  (target:stead-code-home db.owner project)
+      ?~  destination  ~
+      ?.  (matches:stead-code-pack-relay-pin relay.owner u.destination incarnation.owner)  ~
+      =/  entry  (~(get by packs.code.owner) project)
+      ?.  ?=([~ %accepted *] entry)  ~
+      =/  pack
+        =/  current  (~(get by external.owner) project)
+        ?~  current  pack.row.u.entry
+        current.u.current
+      ?.(=(destination.pack u.destination) ~ [~ pack])
+    =/  raw
+      %-  canonical  %-  object
+      :~  ['protocol' 'stead.git-pack-projection-selection/1']
+          ['status' ?~(selected 'closed' 'open')]
+          ['incarnation' incarnation.owner]
+          ['relay_generation' (decimal generation.relay.owner)]
+          ['snapshot' ?~(selected '' snapshot.u.selected)]
+          ['manifest' ?~(selected '' (snapshot-bytes:stead-code-pack-anchor u.selected))]
+      ==
+    :_  owner
+    :~  [%give %fact ~ %stead-result-3 !>(raw)]
+        [%give %kick ~ ~]
+    ==
   ++  response
     |=  [id=@ta status=@ud mime=@t bytes=@t cookies=(list @t)]
     ^-  (list card:agent:gall)
@@ -280,14 +328,92 @@
       [['www-authenticate' 'Basic realm="Stead Git"'] headers]
     :_  owner(code next.out)
     (give-simple-payload:app:server id [[status.out headers] [~ body.out]])
+  ++  review-http
+    |=  [id=@ta incoming=incoming:stead-http values=object-map]
+    ^-  (quip card:agent:gall state)
+    =/  denied  [(response id 404 'application/json' (error:stead-team 'denied_or_not_found') ~) owner]
+    =/  project  (field values 'project_id')
+    ?.  &((uuid project) !(retired-project project))  denied
+    =/  now  (now-ms now.bowl)
+    =/  session  (browser-session:stead-code-home db.owner auth.transient.owner incoming now)
+    ?~  session  denied
+    =/  auth  (browser-context:stead-team db.owner u.session now)
+    ?~  auth  denied
+    =/  action  (field values 'action')
+    =/  minimum  ?:(=('external-proposal' action) 1 ?:(=('external-submit' action) 2 3))
+    ?.  (gte (role:stead-team db.owner u.auth project now) minimum)  denied
+    =/  target  (target:stead-code-home db.owner project)
+    ?~  target  denied
+    =/  seed  (~(get by packs.code.owner) project)
+    ?~  seed  denied
+    =/  fresh  (open:stead-code-pack-ledger u.seed)
+    ?~  fresh  denied
+    =/  current  (fall (~(get by external.owner) project) u.fresh)
+    ?.  =(u.target destination.current.current)  denied
+    =/  book  (fall (~(get by pack-reviews.owner) project) (empty:stead-code-pack-review-board u.target))
+    ?:  =('external-merge' action)
+      (review-merge id u.auth u.target current book now values)
+    =/  out  (run:stead-code-pack-review-api db.owner book u.auth u.target current.current generation.current now values (member:stead-code-home db.owner now))
+    =?  owner  ?=(^ next.out)
+      owner(pack-reviews (~(put by pack-reviews.owner) project u.next.out))
+    [(response id status.out 'application/json' body.out ~) owner]
+  ++  review-merge
+    |=  $:  id=@ta  auth=authentication:stead-team  destination=scope:stead-code-credentials
+            current=ledger:stead-code-pack-ledger  book=state:stead-code-pack-review-board
+            now=@ud  values=object-map
+        ==
+    ^-  (quip card:agent:gall state)
+    =/  failure
+      |=  reason=@t
+      ^-  (quip card:agent:gall state)
+      [(response id 409 'application/json' (error:stead-team reason) ~) owner]
+    ?.  (keys values ~['protocol' 'action' 'project_id' 'proposal_id' 'revision' 'request_id' 'worker_generation' 'worker_signature' 'proof'])
+      (failure 'invalid_request')
+    =/  proposal  (field values 'proposal_id')
+    =/  request  (field values 'request_id')
+    ?.  &((uuid proposal) (uuid request))  (failure 'invalid_request')
+    =/  prior  (~(get by promotions.current) request)
+    =/  row=(unit proposal:stead-code-pack-review)
+      ?~  prior  (~(get by proposals.book) proposal)
+      [~ reviewed.review.candidate.u.prior]
+    ?~  row  (failure 'proposal_unavailable')
+    ?.  &(=(proposal id.item.u.row) =((uint (field values 'revision')) number.change.item.u.row))
+      (failure 'stale_review')
+    =/  raw  (field values 'proof')
+    =/  checked=(unit checked:stead-code-pack-ledger)
+      ?^  prior
+        ?.  =((hash-wire:stead-code-pack-proof raw) wire.decision.candidate.u.prior)  ~
+        [~ (evidence:stead-code-pack-promotion u.prior)]
+      =/  worker  (current-key:stead-code-pack-relay-pin relay.owner destination incarnation.owner)
+      ?~  worker  ~
+      (decode:stead-code-pack-review-proof raw u.row current.current request u.worker (uint (field values 'worker_generation')) (field values 'worker_signature'))
+    ?~  checked  (failure 'worker_proof_denied')
+    =/  environment  (env:stead-code-pack-review-api db.owner destination now (member:stead-code-home db.owner now))
+    =/  out
+      (accept:stead-code-pack-review-board book environment generation.current current.current identity.auth request u.row u.checked prior)
+    ?:  ?=(%rejected -.out)  (failure reason.out)
+    =/  promoted=(each ledger:stead-code-pack-ledger @tas)
+      ?:  ?=(%replayed -.out)  [%& current]
+      (promote:stead-code-pack-ledger current saved.out now)
+    ?:  ?=(%| -.promoted)  (failure p.promoted)
+    =/  project  project.destination
+    =?  owner  ?=(%applied -.out)
+      owner(pack-reviews (~(put by pack-reviews.owner) project next.out), external (~(put by external.owner) project p.promoted))
+    =/  body
+      %-  canonical  %-  object
+      :~  ['protocol' 'stead.code/1']  ['status' 'merged']  ['request_id' request]
+          ['proposal_id' proposal]  ['snapshot' snapshot.pack.decision.candidate.saved.out]
+          ['generation' (decimal generation.decision.candidate.saved.out)]
+      ==
+    [(response id 200 'application/json' body ~) owner]
   ++  external-selection
     |=  project=@t
     ^-  (unit pack-selection:stead-code-home)
     =/  row  (~(get by external.owner) project)
     ?~  row  ~
     ?~  journal.u.row  ~
-    =/  recent  (~(got by receipts.u.row) i.journal.u.row)
-    [~ current.u.row i.journal.u.row accepted-at.result.recent]
+    =/  recent  (need (history:stead-code-pack-ledger u.row i.journal.u.row))
+    [~ current.u.row i.journal.u.row accepted.recent]
   ++  relay-http
     |=  [id=@ta incoming=inbound-request:eyre]
     ^-  (quip card:agent:gall state)
@@ -351,6 +477,21 @@
     =/  parsed  (validate:stead-http request origin.config (paths:stead-assets '/stead/'))
     ?~  parsed  [(response id 403 'application/json' (error:stead-team 'invalid_http_request') ~) owner]
     ?:  =('/stead/api/code' route.u.parsed)
+      =/  review=(unit object-map)
+        ?.  (lte (met 3 body.u.parsed) 8.192)  ~
+        =/  json  (parse body.u.parsed)
+        ?.  ?=([~ %o *] json)  ~
+        =/  obj  p.u.json
+        =/  action  (~(get by obj) 'action')
+        ?.  ?=([~ %s *] action)  ~
+        ?.  ?&  =([~ %s 'stead.code/1'] (~(get by obj) 'protocol'))
+                ?|  =('external-proposal' p.u.action)  =('external-submit' p.u.action)
+                    =('external-approve' p.u.action)  =('external-merge' p.u.action)
+                ==
+            ==
+          ~
+        [~ obj]
+      ?^  review  (review-http id u.parsed u.review)
       (code-response id (manage-with-worker:stead-code-home db.owner code.owner auth.transient.owner u.parsed (now-ms now.bowl) eny.bowl retired-project external-selection pack-write-ready))
     ?:  =(%'GET' method.request.request)
       =/  entry  (~(get by files.owner) route.u.parsed)
@@ -488,6 +629,7 @@
       [~ owner]
     ?:  ?=([%operator @ ~] route)  (inspect i.t.route)
     ?:  =(route /pack-relay/status)  inspect-relay
+    ?:  ?=([%pack-selection @ ~] route)  (inspect-pack-selection i.t.route)
     ?:  ?=([%pack-local @ ~] route)
       ?>  &(pack-local-ready =(src.bowl our.bowl) (token-valid:stead-session i.t.route))
       ?>  (lte (lent (skim ~(tap by sup.bowl) |=([duct [ship=@p prior=path]] =(prior route)))) 1)

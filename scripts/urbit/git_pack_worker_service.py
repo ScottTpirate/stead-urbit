@@ -8,6 +8,7 @@ from dataclasses import dataclass
 import hashlib
 import os
 from pathlib import Path
+import secrets
 import signal
 import stat
 import subprocess
@@ -17,10 +18,11 @@ import time
 
 from execution_policy import GuardError, directory_fd
 from git_pack_private_worker import PrivatePackWorker
+import git_pack_review
 from git_pack_worker_signature import MAX_GENERATION, sign
 from git_pack_worker_socket import MAX_SECONDS, WorkerSocket, identities
 from portable_code import private_directory
-from portable_recovery import TOKEN, RecoveryError, decoded, match, require, same_entry, same_path, shape, text
+from portable_recovery import TOKEN, UUID, RecoveryError, decoded, encoded, match, number, require, same_entry, same_path, shape, text
 
 
 PROFILE = 'stead.git-pack-worker-service/1'
@@ -234,12 +236,65 @@ def serve(profile):
                 endpoint.serve_one(time.monotonic() + MAX_SECONDS, accept_seconds=ACCEPT_SECONDS, stopping=stopped)
 
 
+def review_request(value, scope, verify, profile):
+    shape(value, {'protocol', 'request_id', 'proposal_id', 'revision', 'work_id', 'source_ref', 'ref',
+                  'base_oid', 'head_oid', 'base_snapshot', 'generation'})
+    require(value['protocol'] == 'stead.git-pack-review-request/1' and match(UUID, value['request_id']),
+            'worker-review-request')
+    source = text(value['source_ref'], 1024).encode('utf-8')
+    target = text(value['ref'], 1024).encode('utf-8')
+    number(value['revision'])
+    number(value['generation'], positive=False)
+    result = git_pack_review.prepare(verify.storage, scope, value['base_snapshot'], source, target,
+                                     value['base_oid'], value['head_oid'], verify.git,
+                                     proposal_id=value['proposal_id'], proposal_revision=int(value['revision']),
+                                     work_id=value['work_id'], generation=int(value['generation']))
+    proof = git_pack_review.proof(result, value['request_id'])
+    signature = sign(proof, profile.key_generation, profile.key)
+    return {'worker_generation': str(profile.key_generation), 'worker_signature': signature,
+            'proof': proof.decode('ascii')}
+
+
+def write_review(path, artifact):
+    with directory_fd(path.parent) as parent:
+        private_directory(parent)
+        temporary = '.stead-review-' + secrets.token_hex(12)
+        fd = os.open(temporary, os.O_WRONLY | os.O_CREAT | os.O_EXCL | os.O_NOFOLLOW, 0o600, dir_fd=parent)
+        try:
+            with os.fdopen(fd, 'wb') as output:
+                output.write(encoded(artifact))
+                output.flush()
+                os.fsync(output.fileno())
+            os.link(temporary, path.name, src_dir_fd=parent, dst_dir_fd=parent, follow_symlinks=False)
+        finally:
+            os.unlink(temporary, dir_fd=parent)
+            os.fsync(parent)
+
+
 def main(argv=None):
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument('--profile', required=True, type=Path)
+    parser.add_argument('--review-request', type=Path)
+    parser.add_argument('--review-output', type=Path)
+    parser.add_argument('--home')
+    parser.add_argument('--project')
+    parser.add_argument('--authority-epoch')
     args = parser.parse_args(argv)
+    review_args = (args.review_request, args.review_output, args.home, args.project, args.authority_epoch)
+    if any(review_args) and not all(review_args):
+        parser.error('A reviewed promotion needs the request, output, Home, project and authority epoch.')
     try:
-        serve(load(args.profile))
+        profile = load(args.profile)
+        if args.review_request:
+            scope = {'home': args.home, 'project_id': args.project, 'repository_id': args.project,
+                     'authority_epoch': args.authority_epoch}
+            with held_file(exact_path(str(args.review_request)), MAX_PROFILE, secret=True) as source:
+                value = decoded(source.read(MAX_PROFILE + 1), MAX_PROFILE)
+            with worker(profile) as verify:
+                artifact = review_request(value, scope, verify, profile)
+            write_review(exact_path(str(args.review_output)), artifact)
+        else:
+            serve(profile)
     except (OSError, RecoveryError, GuardError, subprocess.SubprocessError):
         print('Stead Git worker could not start or continue with the selected private profile.', file=sys.stderr)
         return 1

@@ -1,6 +1,7 @@
 """Exercise the reviewed worker profile and real isolated stock Git path."""
 import os
 from contextlib import nullcontext
+from dataclasses import replace
 from pathlib import Path
 from queue import Queue
 import shutil
@@ -14,6 +15,7 @@ import unittest
 from unittest.mock import Mock, patch
 
 import test_git_pack_proof as fixtures
+import test_git_pack_review as review_fixtures
 from git_pack_receive_adapter import Admission
 import git_pack_worker_service as service
 from portable_recovery import RecoveryError, decoded, encoded, sha
@@ -111,6 +113,37 @@ class WorkerServiceTests(unittest.TestCase):
             self.assertEqual(proof, expected)
             self.assertEqual(decoded(proof)['wire_sha256'], claim['wire_sha256'])
         self.assertEqual(list(profile.spool.iterdir()), [])
+
+    def test_review_request_runs_isolated_git_and_publishes_exact_new_artifact(self):
+        self.real_sandbox()
+        fixture = review_fixtures.PackReviewTests()
+        fixture.setUp()
+        self.addCleanup(fixture.doCleanups)
+        profile = replace(service.load(self.profile), store=fixture.storage)
+        branch = b'refs/heads/topic'
+        refs = fixture.base_refs | {branch.hex(): fixture.second}
+        pack, digest = fixture.pack('browser-review', refs.values())
+        snapshot, _ = review_fixtures.store.stage(fixture.storage, pack, digest, review_fixtures.SCOPE, refs,
+                                                 review_fixtures.MAIN, fixture.binary)
+        request = {'protocol': 'stead.git-pack-review-request/1', 'request_id': review_fixtures.PROPOSAL,
+                   'proposal_id': review_fixtures.PROPOSAL, 'work_id': review_fixtures.WORK,
+                   'revision': '5', 'generation': '2', 'base_snapshot': snapshot, 'base_oid': fixture.first,
+                   'head_oid': fixture.second, 'source_ref': branch.decode(),
+                   'ref': bytes.fromhex(review_fixtures.MAIN).decode()}
+        expected = fixture.reviewed(base_snapshot=snapshot, source_ref=branch)
+        with service.worker(profile) as git:
+            with self.assertRaisesRegex(RecoveryError, 'worker-review-request'):
+                service.review_request(request | {'request_id': ''}, review_fixtures.SCOPE, git, profile)
+            artifact = service.review_request(request, review_fixtures.SCOPE, git, profile)
+        self.assertEqual(artifact['worker_generation'], '5')
+        self.assertEqual(len(artifact['worker_signature']), 128)
+        self.assertEqual(artifact['proof'].encode(), service.git_pack_review.proof(expected, request['request_id']))
+        output = self.root / 'review.json'
+        service.write_review(output, artifact)
+        self.assertEqual(output.stat().st_mode & 0o777, 0o600)
+        with self.assertRaises(FileExistsError):
+            service.write_review(output, {})
+        self.assertEqual(decoded(output.read_bytes()), artifact)
 
     def test_engine_receives_only_bare_repo_and_cannot_see_key_store_or_network(self):
         self.real_sandbox()
