@@ -1,6 +1,6 @@
 ::  A worker attests its exact canonical proof. The Home selects the active
 ::  key generation and public key from its own policy, never from the proof.
-/+  stead-codec, stead-code-pack-proof, stead-code-pack-anchor, stead-code-pack-push
+/+  stead-codec, stead-code-pack-anchor, stead-code-pack-push
 |%
 +$  pin  [generation=@ud public=@t]
 ++  generation-valid
@@ -11,10 +11,12 @@
   ^-  @t
   =/  domain=@t  'stead.git-pack-worker-attestation/1'
   =/  epoch  (decimal:stead-codec generation)
+  =/  size  (met 3 proof)
+  =/  digest  (hex:stead-codec 64 (sha-256l:sha [size (rev 3 size proof)]))
   %-  can  :-  3
   :~  [(met 3 domain) domain]  [1 0]
       [(met 3 epoch) epoch]    [1 0]
-      [64 (hash-wire:stead-code-pack-proof proof)]
+      [64 digest]
   ==
 ++  wire-atom
   |=  [raw=@t width=@ud]
