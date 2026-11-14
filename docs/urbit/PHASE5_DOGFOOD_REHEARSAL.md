@@ -248,6 +248,20 @@ protected-branch review and a fresh restore rehearsal for accepted writes.
 | `.runtime/pack-push-stock-4x_848lf/state/report.json` | `f21e1b2f967ecf6c31e7c0b0fb94d9f2be524f8b41815a073b615d830d56bbd6` |
 | `.runtime/execution-runs/pack-push-stock-po2qs3z8/report.json` | `234c21ed59d7b441d55d57f9643ef9bfd215e4d444691114f1429e7ed7d7fc3d` |
 
+### Protected default branch review
+
+The native review preflight binds the Work item, author, exact proposal
+revision, source branch tip, target OID and selected snapshot. It checks the
+current author, reviewer and merger grants, requires the worker's exact
+fast-forward evidence, and permits one ref change with the existing object
+inventory. The seven pinned Vere tests cover exact selection, stale review,
+changed grants and worker evidence. This preflight produces a candidate.
+The Home still needs to persist the proposal, approval and accepted promotion
+together before a member can merge from the browser.
+
+The private report `.runtime/pack-review-native-3l9marb8/state/report.json`
+has SHA-256 `0d53445edac8022fa44b92f28d709df5e4bebda1e4715aa19ab7a146faf3b164`.
+
 ## Prepare GitHub issues for Work
 
 Use `scripts/urbit/github_work_plan.py` to preview moving issues from

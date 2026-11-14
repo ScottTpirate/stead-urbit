@@ -1,7 +1,7 @@
 {
   "format": 1,
   "classification": "pure-native-only",
-  "expected_arm_count": 118,
+  "expected_arm_count": 125,
   "suites": [
     {
       "path": "/tests/stead-session",
@@ -148,6 +148,19 @@
         "test-pack-push-denies-protected-delete-duplicate-and-unverified",
         "test-pack-push-denies-hidden-ref-change-and-tag-replacement",
         "test-pack-push-receipt-is-a-separate-versioned-record"
+      ],
+      "timeout_seconds": 60
+    },
+    {
+      "path": "/tests/stead-code-pack-review",
+      "arms": [
+        "test-pack-review-exact-selected-candidate",
+        "test-pack-review-pins-proposal-source-and-target",
+        "test-pack-review-approval-binds-whole-proposal",
+        "test-pack-review-rechecks-members-policy-and-owner-separation",
+        "test-pack-review-rejects-stale-selection-and-worker-scope",
+        "test-pack-review-requires-commit-ancestry-and-exact-pack",
+        "test-pack-review-bounds-time-revision-and-generation"
       ],
       "timeout_seconds": 60
     },
