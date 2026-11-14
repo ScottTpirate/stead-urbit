@@ -131,7 +131,8 @@ def project_manifest(snapshot, expected, check_current, read_store, open_artifac
     scope = expected['scope']
     manifest = validate_manifest(snapshot, expected, scope)
     with store.repository_directory(read_store, scope, staging=True) as (directory, check_store):
-        if os.path.lexists(f'/proc/self/fd/{directory}/{snapshot}'):
+        existing = store.snapshot_inventory(directory, scope, deadline=deadline)
+        if snapshot in existing:
             with store.open_snapshot(directory, snapshot) as held:
                 require(store.read_manifest(held, snapshot, scope) == expected, 'pack-projection-conflict')
                 require(store.copy_pack(held, store.PACK_NAME, expected['pack_sha256'])
@@ -143,9 +144,7 @@ def project_manifest(snapshot, expected, check_current, read_store, open_artifac
                 _remaining(deadline)
                 return snapshot
 
-        with os.scandir(directory) as entries:
-            for count, _ in enumerate(entries, 1):
-                require(count < store.MAX_SNAPSHOTS, 'snapshot-capacity')
+        require(len(existing) < store.MAX_SNAPSHOTS, 'snapshot-capacity')
         with tempfile.TemporaryDirectory(prefix='stead-pack-projection-') as temporary:
             scratch = Path(temporary)
             incoming = scratch / store.PACK_NAME

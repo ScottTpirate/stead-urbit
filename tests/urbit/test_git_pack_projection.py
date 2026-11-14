@@ -122,7 +122,8 @@ class PackProjectionTests(unittest.TestCase):
             self.project()
         self.assertTrue(self.target.exists())
         self.fetch.reset_mock()
-        self.assertEqual(self.project(), self.snapshot)
+        with patch.object(store, 'MAX_SNAPSHOTS', 1):
+            self.assertEqual(self.project(), self.snapshot)
         self.fetch.assert_not_called()
         pack = self.target / store.PACK_NAME
         pack.write_bytes(self.pack[:-1] + bytes([self.pack[-1] ^ 1]))
@@ -130,3 +131,18 @@ class PackProjectionTests(unittest.TestCase):
             self.project()
         self.fetch.assert_not_called()
         self.assertNotEqual(pack.read_bytes(), self.pack)
+
+    def test_scratch_uses_independent_capacity_and_new_snapshot_refuses_when_full(self):
+        self.target.parent.mkdir(mode=0o700)
+        scratch = self.target.parent / ('.code-restore-' + 'a' * 32)
+        scratch.mkdir(mode=0o700)
+        with patch.object(store, 'MAX_SNAPSHOTS', 1), patch.object(store, 'MAX_ABANDONED_SCRATCH', 1):
+            self.assertEqual(self.project(), self.snapshot)
+            self.assertEqual(self.project(), self.snapshot)
+            changed = self.manifest | {'refs': self.manifest['refs'] | {b'refs/heads/copy'.hex(): self.fixture.base.decode()}}
+            self.decide.return_value = self.home_decision(changed, sha(encoded(changed)))
+            self.fetch.reset_mock()
+            with self.assertRaisesRegex(RecoveryError, 'snapshot-capacity'):
+                self.project()
+            self.fetch.assert_not_called()
+        self.assertEqual({path.name for path in self.target.parent.iterdir()}, {self.snapshot, scratch.name})

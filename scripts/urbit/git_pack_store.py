@@ -30,10 +30,12 @@ MAX_PACK = 64 * 1024 * 1024
 MAX_OBJECTS = 16_384
 MAX_OBJECT = 16 * 1024 * 1024
 MAX_OBJECT_BYTES = 256 * 1024 * 1024
-MAX_SNAPSHOTS = 8
+MAX_SNAPSHOTS = 80
+MAX_ABANDONED_SCRATCH = 4
 MAX_MANIFEST = 192 * 1024
 GIT_LIMITS = ('/usr/bin/prlimit', '--as=805306368', '--cpu=30', f'--fsize={MAX_PACK}', '--')
 INDEX_ROW = re.compile(rb'([0-9a-f]{40}) (blob|commit|tree|tag) ([0-9]{1,9})')
+SCRATCH_NAME = re.compile(r'\.code-restore-[0-9a-f]{32}')
 SHIP = re.compile(r'~[a-z][a-z-]{2,62}')
 PACK_NAME = 'objects.pack'
 MANIFEST_NAME = 'snapshot.json'
@@ -160,15 +162,25 @@ def verify_pack(git, source, name, expected, refs, head):
     return base.with_suffix('.pack'), {'pack_sha256': expected, 'pack_bytes': pack_bytes, **inventory}
 
 
-def read_manifest(directory, snapshot, scope):
+def snapshot_manifest(directory, snapshot):
     raw = read_file(directory, MANIFEST_NAME, MAX_MANIFEST, private=True)
     require(sha(raw) == snapshot, 'snapshot-digest')
     value = decoded(raw, MAX_MANIFEST)
     shape(value, {'format', 'object_format', 'scope', 'head', 'refs', 'pack_sha256', 'pack_bytes',
                   'object_count', 'object_bytes', 'object_ids_sha256'})
-    require(encoded(value) == raw and value['format'] == FORMAT and value['object_format'] == 'sha1'
-            and value['scope'] == scope, 'snapshot-scope')
+    require(encoded(value) == raw and value['format'] == FORMAT and value['object_format'] == 'sha1', 'snapshot-scope')
+    validate_scope(value['scope'])
     validate_refs(value['refs'], value['head'])
+    require(all(match(TOKEN, value[key]) for key in ('pack_sha256', 'object_ids_sha256')), 'snapshot-inventory')
+    for key, minimum, maximum in (('pack_bytes', 32, MAX_PACK), ('object_count', 1, MAX_OBJECTS),
+                                  ('object_bytes', 1, MAX_OBJECT_BYTES)):
+        require(type(value[key]) is int and minimum <= value[key] <= maximum, 'snapshot-inventory')
+    return value
+
+
+def read_manifest(directory, snapshot, scope):
+    value = snapshot_manifest(directory, snapshot)
+    require(value['scope'] == scope, 'snapshot-scope')
     return value
 
 
@@ -184,15 +196,46 @@ def open_snapshot(directory, snapshot):
         os.close(fd)
 
 
+def snapshot_inventory(directory, scope, *, deadline=None):
+    """Bound persistent snapshots and abandoned scratch while the lock is held.
+
+    Recheck each retained directory's identity and manifest without rereading
+    all pack data. The selected pack still receives the usual full checks.
+    Older authority epochs share repository slots with the current epoch.
+    """
+    snapshots = set()
+    scratch = 0
+    identity = ('home', 'project_id', 'repository_id')
+    with os.scandir(directory) as entries:
+        for entry in entries:
+            require(deadline is None or time.monotonic() < deadline, 'git-timeout')
+            info = entry.stat(follow_symlinks=False)
+            require(stat.S_ISDIR(info.st_mode) and info.st_uid == os.getuid() and not info.st_mode & 0o077,
+                    'snapshot-store-entry')
+            if match(SCRATCH_NAME, entry.name):
+                scratch += 1
+                require(scratch <= MAX_ABANDONED_SCRATCH, 'snapshot-scratch-capacity')
+                continue
+            require(match(TOKEN, entry.name), 'snapshot-store-entry')
+            require(len(snapshots) < MAX_SNAPSHOTS, 'snapshot-capacity')
+            with open_snapshot(directory, entry.name) as held:
+                require(same_entry(directory, entry.name, info), 'snapshot-binding')
+                value = snapshot_manifest(held, entry.name)
+                require(all(value['scope'][key] == scope[key] for key in identity), 'snapshot-scope')
+                pack = os.stat(PACK_NAME, dir_fd=held, follow_symlinks=False)
+                require(stat.S_ISREG(pack.st_mode) and pack.st_uid == os.getuid() and pack.st_nlink == 1
+                        and not pack.st_mode & 0o077 and pack.st_size == value['pack_bytes'], 'snapshot-store-pack')
+                with os.scandir(held) as contents:
+                    require(all(child.name in (PACK_NAME, MANIFEST_NAME) for child in contents), 'snapshot-store-entry')
+            snapshots.add(entry.name)
+    return snapshots
+
+
 def stage(store, pack, expected, scope, refs, head, binary, *, deadline=None):
     validate_refs(refs, head)
     require(deadline is None or time.monotonic() < deadline, 'git-timeout')
     with repository_directory(store, scope, staging=True) as (directory, check_binding):
-        with os.scandir(directory) as entries:
-            existing = set()
-            for entry in entries:
-                require(len(existing) < MAX_SNAPSHOTS, 'snapshot-capacity')
-                existing.add(entry.name)
+        existing = snapshot_inventory(directory, scope, deadline=deadline)
         with staged_repository(directory, binary, deadline=deadline, command_prefix=GIT_LIMITS) as (scratch, opened, git):
             with directory_fd(pack.parent) as source:
                 verified, inventory = verify_pack(git, source, pack.name, expected, refs, head)
@@ -206,6 +249,7 @@ def stage(store, pack, expected, scope, refs, head, binary, *, deadline=None):
                     require(copy_pack(old, PACK_NAME, expected) == (value['pack_bytes'], value['object_count']),
                             'snapshot-conflict')
                 check_binding()
+                os.fsync(directory)
                 require(deadline is None or time.monotonic() < deadline, 'git-timeout')
                 return snapshot, value
             require(len(existing) < MAX_SNAPSHOTS, 'snapshot-capacity')

@@ -142,14 +142,74 @@ class PackStoreTests(unittest.TestCase):
 
     def test_atomic_replay_at_capacity_and_concurrent_writer(self):
         snapshot, value = self.stage()
-        with patch.object(store, 'MAX_SNAPSHOTS', 1):
+        entry = self.repository() / snapshot
+        original = entry.stat().st_ino
+        with patch.object(store, 'MAX_SNAPSHOTS', 2):
+            staged, other = self.stage(scope=SCOPE | {'authority_epoch': '2'})
             self.assertEqual(self.stage(), (snapshot, value))
+            self.assertEqual(self.stage(scope=SCOPE | {'authority_epoch': '2'}), (staged, other))
+            self.assertEqual(entry.stat().st_ino, original)
             with self.assertRaisesRegex(ValueError, 'snapshot-capacity'):
-                self.stage(scope=SCOPE | {'authority_epoch': '2'})
+                self.stage(scope=SCOPE | {'authority_epoch': '3'})
         with store.directory_fd(self.repository()) as directory:
             fcntl.flock(directory, fcntl.LOCK_EX)
             with self.assertRaises(BlockingIOError):
                 self.stage()
+        self.assertEqual({path.name for path in self.repository().iterdir()}, {snapshot, staged})
+
+    def test_inventory_separates_abandoned_scratch_and_blocks_unexpected_entries(self):
+        snapshot, value = self.stage()
+        scratch = self.repository() / ('.code-restore-' + 'a' * 32)
+        scratch.mkdir(mode=0o700)
+        with patch.object(store, 'MAX_ABANDONED_SCRATCH', 1), patch.object(store, 'MAX_SNAPSHOTS', 2):
+            extra, _ = self.stage(scope=SCOPE | {'authority_epoch': '2'})
+            self.assertEqual(self.stage(), (snapshot, value))
+            another = self.repository() / ('.code-restore-' + 'b' * 32)
+            another.mkdir(mode=0o700)
+            with self.assertRaisesRegex(ValueError, 'snapshot-scratch-capacity'):
+                self.stage()
+            another.rmdir()
+        alias = self.repository() / ('f' * 64)
+        alias.symlink_to(scratch, target_is_directory=True)
+        with patch.object(store, 'verify_pack', side_effect=AssertionError('unexpected entry reached Git')):
+            with self.assertRaisesRegex(ValueError, 'snapshot-store-entry'):
+                self.stage()
+        self.assertEqual({path.name for path in self.repository().iterdir()}, {snapshot, extra, scratch.name, alias.name})
+
+    def test_full_eighty_slot_profile_replays_and_refuses_new_content(self):
+        snapshot, value = self.stage()
+        pack = self.pack.read_bytes()
+        self.assertEqual(store.MAX_SNAPSHOTS, 80)
+        for epoch in range(2, 81):
+            raw = store.encoded(value | {'scope': SCOPE | {'authority_epoch': str(epoch)}})
+            entry = self.repository() / store.sha(raw)
+            entry.mkdir(mode=0o700)
+            for name, content in ((store.MANIFEST_NAME, raw), (store.PACK_NAME, pack)):
+                path = entry / name
+                path.write_bytes(content)
+                path.chmod(0o600)
+        self.assertEqual(self.stage(), (snapshot, value))
+        with self.assertRaisesRegex(ValueError, 'snapshot-capacity'):
+            self.stage(scope=SCOPE | {'authority_epoch': '81'})
+        self.assertEqual(len(list(self.repository().iterdir())), 80)
+
+    def test_retry_after_aborted_directory_fsync_at_full_capacity(self):
+        real_sync = os.fsync
+
+        def interrupt(fd):
+            with os.scandir(self.repository()) as entries:
+                published = any(store.TOKEN.fullmatch(entry.name) for entry in entries)
+            if published:
+                raise OSError('published rename not yet durable')
+            real_sync(fd)
+
+        self.repository().mkdir(mode=0o700)
+        with patch.object(store, 'MAX_SNAPSHOTS', 1):
+            with patch.object(store.os, 'fsync', side_effect=interrupt), self.assertRaises(OSError):
+                self.stage()
+            with patch.object(store.os, 'fsync', wraps=real_sync) as sync:
+                snapshot, _ = self.stage()
+            sync.assert_called_once()
         self.assertEqual([path.name for path in self.repository().iterdir()], [snapshot])
 
     def test_home_readback_rechecks_current_acceptance_before_publication(self):
