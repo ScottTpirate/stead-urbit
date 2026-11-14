@@ -155,16 +155,24 @@ class WorkerSocket:
         finally:
             self.listener = None
 
-    def serve_one(self, deadline: float) -> bool:
+    def serve_one(self, deadline: float, *, accept_seconds: float | None = None, stopping=None) -> bool:
+        if accept_seconds is not None:
+            require(type(accept_seconds) in (int, float) and 0 < accept_seconds <= MAX_SECONDS,
+                    'worker-socket-accept-deadline')
         require(self.listener is not None and self.serving.acquire(blocking=False), 'worker-socket-busy')
         try:
+            if stopping is not None and stopping():
+                return False
             until = deadline_for(deadline)
-            self.listener.settimeout(remaining(until))
+            wait = remaining(until)
+            self.listener.settimeout(wait if accept_seconds is None else min(wait, accept_seconds))
             try:
                 channel, _ = self.listener.accept()
             except TimeoutError:
                 return False
             with channel:
+                if stopping is not None and stopping():
+                    return False
                 try:
                     peer_is(channel, self.relay_uid)
                 except (OSError, RecoveryError):
