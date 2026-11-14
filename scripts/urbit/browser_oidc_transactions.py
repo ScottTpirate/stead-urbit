@@ -77,8 +77,8 @@ def redirect(value):
     except ValueError:
         raise RecoveryError('oidc-transaction-config') from None
     authority = 'https://' + parts.netloc
-    origin(authority)
-    require(value == authority + parts.path and match(PATH, parts.path) and '//' not in parts.path,
+    require(origin(authority).port != 443 and value == authority + parts.path
+            and match(PATH, parts.path) and '//' not in parts.path,
             'oidc-transaction-config')
     return authority
 

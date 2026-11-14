@@ -91,7 +91,7 @@ def point(raw):
 def profile_fields(pin, challenge):
     require(type(pin) is VerifierPin and type(challenge) is Challenge, 'oidc-profile')
     require(match(SHIP, pin.home) and len(pin.home) <= 64, 'oidc-home')
-    origin(pin.origin)
+    require(origin(pin.origin).port != 443, 'oidc-home-origin')
     for value in (pin.organization_id, pin.verifier_id, pin.issuer_id):
         require(match(UUID, value), 'oidc-profile')
     number(pin.verifier_revision)

@@ -109,6 +109,7 @@ class OidcTransactionTests(unittest.TestCase):
         for callback, target in ((CALLBACK + '?return=https://other.example', RETURN),
                                  (CALLBACK, 'https://other.example/stead/oidc/complete'),
                                  (PIN.origin + '/oidc/callback', RETURN),
+                                 (PIN.origin + ':443/oidc/callback', RETURN),
                                  (CALLBACK.replace('https://', 'http://'), RETURN),
                                  (CALLBACK, PIN.origin + '/stead/oidc/../complete')):
             with self.assertRaises(RecoveryError):

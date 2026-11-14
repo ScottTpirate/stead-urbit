@@ -59,6 +59,12 @@ class OidcProofTests(unittest.TestCase):
             with self.subTest(issuer=issuer, subject=subject), self.assertRaises(RecoveryError):
                 proof.subject_tag(KEY, issuer, subject)
 
+    def test_home_origin_uses_the_native_default_port_spelling(self):
+        with self.assertRaisesRegex(RecoveryError, 'oidc-home-origin'):
+            proof.profile_fields(replace(PIN, origin=PIN.origin + ':443'), CHALLENGE)
+        pin = replace(PIN, origin=PIN.origin + ':8443')
+        self.assertEqual(proof.profile_fields(pin, CHALLENGE)['origin'], pin.origin)
+
     def test_denies_raw_claims_and_mismatched_projection_before_signing(self):
         cases = [{}, replace(IDENTITY, issuer=PIN.issuer + '/'), replace(IDENTITY, nonce='a' * 64),
                  replace(IDENTITY, audiences=('other',)), replace(IDENTITY, audiences=(PIN.client_id, 'other')),
