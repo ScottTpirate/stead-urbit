@@ -136,6 +136,11 @@ its private partial files for inspection; it never recursively deletes a
 pathname that another process might have replaced. Ordinary ZIP tools can also read the archive, but do not perform
 these application checks.
 
+Capture and extraction report success only after the files and their directory
+entries have been synchronized to storage. A synchronization failure returns an
+error and preserves any private output for inspection; its presence alone is
+not a successful completion. A retry must use a new output path.
+
 An intact archive proves **internal integrity**, not that the data came from a
 particular home. Read hashes are client observations, not independently signed
 accepted receipts. A person who changes the contents and recalculates every hash
@@ -170,13 +175,14 @@ copies already captured.
 ## Verification performed
 
 `python3 -m unittest discover -s tests/urbit -p 'test_portable_recovery.py'`
-passes 20 host tests. These use independent synthetic v3 responses and a mocked
+passes 22 host tests. These use independent synthetic v3 responses and a mocked
 HTTP transport, with real ZIP/filesystem operations. They cover pagination,
 complete text/byte recovery, scope and identity correlation, changing revisions,
 epochs/generations/heads, denial, bounds, private session files, verified-TLS
 context configuration, redirect rejection, tampering, unsafe archive entries,
 derived-index reconstruction, CLI verify/extract, no overwrite, and concurrent
-output rename/replacement preservation. The initial directory-mode failure and
+output rename/replacement preservation, and failed file/directory synchronization
+without a success report or deletion of unrelated data. The initial directory-mode failure and
 independently found pathname-cleanup race were corrected and the suite rerun.
 These checks do not prove a real TLS
 handshake, home authorization, native execution or Phase 4 qualification.

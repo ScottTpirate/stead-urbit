@@ -452,6 +452,13 @@ def write_bundle(data, receipt, destination):
             os.link(temporary, destination.name, src_dir_fd=parent, dst_dir_fd=parent, follow_symlinks=False)
             require(same_entry(parent, destination.name, opened), 'output-binding-changed')
             require(same_path(destination.parent, os.fstat(parent)), 'parent-binding-changed')
+            if same_entry(parent, temporary, opened):
+                os.unlink(temporary, dir_fd=parent)
+            # The file sync alone does not persist its published directory
+            # entry. Report completion only after that metadata is durable.
+            os.fsync(parent)
+            require(same_entry(parent, destination.name, opened)
+                    and same_path(destination.parent, os.fstat(parent)), 'output-binding-changed')
     finally:
         if fd is not None:
             os.close(fd)
@@ -553,6 +560,14 @@ def extract(path, destination, *, expected_sha256=None):
                 key = child
             with os.fdopen(os.open(parts[-1], os.O_WRONLY | os.O_CREAT | os.O_EXCL | os.O_NOFOLLOW, 0o600, dir_fd=directories[key]), 'wb') as stream:
                 stream.write(raw)
+                stream.flush()
+                os.fsync(stream.fileno())
+        # Persist children before their containing entries and the final
+        # destination name. A failed sync retains private files but is not a
+        # successful extraction.
+        for key in sorted(directories, key=len, reverse=True):
+            os.fsync(directories[key])
+        os.fsync(parent)
         for key, directory in directories.items():
             if key:
                 require(same_entry(directories[key[:-1]], key[-1], os.fstat(directory)), 'output-binding-changed')

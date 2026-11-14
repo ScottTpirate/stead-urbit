@@ -277,6 +277,51 @@ class PortableRecovery(unittest.TestCase):
             P.extract(self.bundle, out)
         self.assertEqual((out / 'keep').read_text(), 'retained')
 
+    def test_capture_directory_sync_failure_cannot_report_success(self):
+        data, receipt = self.capture()
+        real_fsync = os.fsync
+
+        def fail_directory_sync(descriptor):
+            if stat.S_ISDIR(os.fstat(descriptor).st_mode):
+                raise OSError('synthetic directory sync failure')
+            return real_fsync(descriptor)
+
+        with patch.object(P.os, 'fsync', fail_directory_sync):
+            with self.assertRaisesRegex(OSError, 'directory sync failure'):
+                P.write_bundle(data, receipt, self.bundle)
+        # A failed durability check does not authorize replacing or deleting
+        # the completed private archive. It remains available for inspection.
+        self.assertEqual(P.verify(self.bundle)[1]['status'], 'integrity-verified')
+        self.assertFalse(list(self.base.glob('.stead-portable-*')))
+
+    def test_extract_sync_failures_return_no_success_and_preserve_partial_files(self):
+        self.publish()
+        real_fsync = os.fsync
+        sentinel = self.base / 'unrelated'
+        sentinel.write_bytes(b'retain unrelated data')
+        for kind in ('file', 'directory', 'parent'):
+            output = self.base / ('sync-failure-' + kind)
+            parent_stat = self.base.stat()
+
+            def fail_selected_sync(descriptor):
+                info = os.fstat(descriptor)
+                is_parent = (info.st_dev, info.st_ino) == (parent_stat.st_dev, parent_stat.st_ino)
+                if ((kind == 'file' and stat.S_ISREG(info.st_mode))
+                        or (kind == 'directory' and stat.S_ISDIR(info.st_mode) and not is_parent)
+                        or (kind == 'parent' and is_parent)):
+                    raise OSError('synthetic storage sync failure')
+                return real_fsync(descriptor)
+
+            with self.subTest(kind=kind), patch.object(P.os, 'fsync', fail_selected_sync), \
+                    patch('sys.stdout', new_callable=io.StringIO) as out, \
+                    patch('sys.stderr', new_callable=io.StringIO) as err:
+                self.assertEqual(P.main(['extract', str(self.bundle), '--output', str(output)]), 1)
+            self.assertEqual(out.getvalue(), '')
+            self.assertIn('no successful capture or restore is claimed', err.getvalue())
+            self.assertTrue((output / 'README.txt').is_file())
+            self.assertTrue(all(path.stat().st_mode & 0o077 == 0 for path in output.rglob('*')))
+            self.assertEqual(sentinel.read_bytes(), b'retain unrelated data')
+
     def test_tampered_body_and_forged_derived_index_rejected(self):
         self.publish()
         self.rewrite(lambda files: files.__setitem__(f'docs/{BOX}/{DOC}.md', b'changed'))
