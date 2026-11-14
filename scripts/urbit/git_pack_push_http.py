@@ -50,7 +50,7 @@ class WriteApplication:
     Content-Length framed body. This module opens no listener.
     """
 
-    def __init__(self, git_origin, advertise, home, worker, spool_root, *, jobs=1, clock=None):
+    def __init__(self, git_origin, advertise, home, worker, spool_root, *, jobs=1, clock=None, push_context=None):
         configured = origin(git_origin)
         self.authorities = {configured.netloc}
         if configured.port in (None, 443):
@@ -62,6 +62,16 @@ class WriteApplication:
         self.worker = worker
         self.spool_root = spool_root
         self.clock = clock
+        self.push_context = push_context
+
+    @classmethod
+    def private_relay(cls, git_origin, relay, signed_worker, spool_root, *, jobs=1):
+        def context():
+            push = relay.push(signed_worker)
+            return push, push
+
+        return cls(git_origin, relay.advertise, None, None, spool_root, jobs=jobs,
+                   clock=relay.clock, push_context=context)
 
     def __call__(self, environ, start_response):
         def refused(status):
@@ -103,7 +113,8 @@ class WriteApplication:
                 response = advertisement(raw, path[1])
             else:
                 bearer = base64.b64decode(authorization[6:])[6:].decode('ascii')
-                response = receive_push(self.home, self.worker, self.spool_root, path[1], bearer,
+                home, worker = (self.home, self.worker) if self.push_context is None else self.push_context()
+                response = receive_push(home, worker, self.spool_root, path[1], bearer,
                                         environ['wsgi.input'], int(length), deadline=deadline, clock=self.clock)
             within(deadline)
         except Denied:
