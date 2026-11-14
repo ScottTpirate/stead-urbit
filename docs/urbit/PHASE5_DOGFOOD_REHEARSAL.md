@@ -51,6 +51,10 @@ atomic leased mirror push. Full history hosted by the native Home, GitHub
 rules, and live mirroring require separate qualification. [Native store](../../native/core/desk/lib/stead-code-store.hoon)
 · [Portable Code](PORTABLE_CODE.md)
 
+The November 14 local rehearsal at `f82358e` preserved all 8,186 reachable
+objects and both pinned refs through bundle restore, passed strict `fsck`, and
+refused to overwrite a divergent mirror. Neither test switched GitHub authority.
+
 ## External pack storage
 
 The private pack store stages a complete SHA-1 pack for the exact pinned branch
