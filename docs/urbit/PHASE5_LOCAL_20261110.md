@@ -233,3 +233,8 @@ disposable test ship stopped cleanly. This qualifies the saved-state handling;
 no external push route, production upgrade, or full-history ref write is open.
 The private report `.runtime/home-v8-load-ur37o42e/state/report.json` has
 SHA-256 `dc34966cbb7234306f40b7b096eb78ceedf3795593fafcd429f4fd03e87db1c4`.
+The Home v8 and Identity v1 packages built from `4d91be1` passed offline
+verification. Archive SHA-256 values are
+`e6493f1bb0d277002cf533fc7472260f6ccf28d1adda6ccf28a389ebedd258a4` (Home)
+and `05c9271630d9fcf8360fac208108486000c3ad6320ef1efbcea068456c52c082`
+(Identity).

@@ -150,6 +150,15 @@ Use an independently authenticated local control or dedicated off-host worker
 identity for evidence, not a general Git credential or browser cookie.
 Record worker evidence only after the exact pack and manifest are durable.
 
+The worker serializer binds the independently pinned `stead.git-pack-admission/1`
+bytes, including the actor binding, incarnation, attempt, admitted upload hash
+and ordered commands. It emits `stead.git-pack-worker-proof/1` with indexed
+commands and verified ancestry facts, the candidate manifest digest, and the
+pack and object inventory hashes. Both documents are bounded canonical JSON.
+The Home must reconstruct the candidate refs and recompute the manifest digest.
+An expired worker returns no proof. Its previously staged immutable bytes may
+remain for retention to reconcile. The proof format itself gives no authority.
+
 Default and otherwise protected branches stay closed to direct external
 updates until the exact review commit is implemented. For an ambiguous stock
 client response, reconcile the exact digest and ordered commands under the
