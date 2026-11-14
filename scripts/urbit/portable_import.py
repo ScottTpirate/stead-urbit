@@ -100,34 +100,57 @@ def import_title(value):
     portable.require(1 <= len(value) <= 200 and all(ord(char) >= 32 for char in value), 'import-title')
 
 
-def plan_commands(files, artifact_digest, origin, target, seed, title, key):
+def import_target(origin, target, seed, title, key):
     portable.require(portable.origin(origin).hostname == 'home.localhost', 'disposable-home-required')
-    portable.require(portable.match(portable.TOKEN, artifact_digest), 'import-archive-digest')
     portable.require(portable.match(portable.UUID, seed), 'import-seed')
     portable.shape(target, set(TARGET_FIELDS))
     portable.identity(target | {'display_name': '', 'can_create': 'yes',
                                 'session_audit_id': '0' * 64}, target['principal_id'])
     import_title(title)
     portable.require(isinstance(key, str) and re.fullmatch(r'[A-Z][A-Z0-9]{1,9}', key), 'import-project-key')
+    return {'origin': origin, 'target': target, 'seed': seed, 'title': title,
+            'project_key': key, 'project_id': child_id(seed, 'project')}
+
+
+def import_step(destination, operation, original, resource_id, payload):
+    command = {'protocol': 'stead.command/3',
+               'request_id': child_id(destination['seed'], 'request', operation, *original),
+               'project_id': destination['project_id'], 'resource_id': resource_id, 'expected_revision': '0',
+               'authority_epoch': '1', 'operation': operation, 'payload': payload}
+    portable.require(len(portable.encoded(command)) <= 65536, 'import-command-size')
+    step = {'operation': operation, 'source_scope': list(original), 'resource_id': resource_id,
+            'request_id': command['request_id'], 'canonical_sha256': command_digest(command)}
+    return step, command
+
+
+def project_payload(destination):
+    return {'organization_id': destination['target']['organization_id'],
+            'owning_team_id': destination['target']['team_id'], 'title': destination['title'],
+            'project_key': destination['project_key'], 'preset': 'general'}
+
+
+def check_command_ids(commands):
+    all_ids = [command[name] for command in commands for name in ('request_id', 'resource_id')]
+    portable.require(len(set(all_ids)) == len(all_ids), 'import-id-collision')
+
+
+def plan_commands(files, artifact_digest, origin, target, seed, title, key):
+    portable.require(portable.match(portable.TOKEN, artifact_digest), 'import-archive-digest')
+    destination = import_target(origin, target, seed, title, key)
     data = portable.decoded(files['records.json'], portable.MAX_CAPTURE)
     source = data['project']['project_id']
-    project = child_id(seed, 'project')
+    project = destination['project_id']
     commands = []
     steps = []
 
     def add(operation, original, target_id, payload):
-        command = {'protocol': 'stead.command/3', 'request_id': child_id(seed, 'request', operation, *original),
-                   'project_id': project, 'resource_id': target_id, 'expected_revision': '0',
-                   'authority_epoch': '1', 'operation': operation, 'payload': payload}
-        portable.require(len(portable.encoded(command)) <= 65536, 'import-command-size')
+        step, command = import_step(destination, operation, original, target_id, payload)
         commands.append(command)
-        steps.append({'operation': operation, 'source_scope': list(original), 'resource_id': target_id,
-                      'request_id': command['request_id'], 'canonical_sha256': command_digest(command)})
+        steps.append(step)
 
     portable.require(1 + sum(len(data[name]) for name in ('work', 'containers', 'documents', 'relations'))
                      <= MAX_STEPS, 'import-step-limit')
-    add('project.create', (source,), project, {'organization_id': target['organization_id'],
-        'owning_team_id': target['team_id'], 'title': title, 'project_key': key, 'preset': 'general'})
+    add('project.create', (source,), project, project_payload(destination))
     for row in sorted(data['work'], key=lambda item: item['resource_id']):
         original = row['resource_id']
         import_title(row['title'])
@@ -154,11 +177,9 @@ def plan_commands(files, artifact_digest, origin, target, seed, title, key):
                 f'{side}_id': child_id(seed, kind, container, resource) if container else child_id(seed, kind, resource)})
         original = row['resource_id']
         add('relation.create', (original,), child_id(seed, 'relation', original), payload)
-    all_ids = [command[name] for command in commands for name in ('request_id', 'resource_id')]
-    portable.require(len(set(all_ids)) == len(all_ids), 'import-id-collision')
+    check_command_ids(commands)
     plan = {'protocol': 'stead.portable-import-plan/1', 'artifact_sha256': artifact_digest,
-            'origin': origin, 'target': target, 'seed': seed, 'title': title, 'project_key': key,
-            'project_id': project, 'steps': steps,
+            **destination, 'steps': steps,
             'losses': {'source_omissions': portable.LOSSES['omitted'], 'import_changes': IMPORT_LOSSES}}
     return plan, commands
 
