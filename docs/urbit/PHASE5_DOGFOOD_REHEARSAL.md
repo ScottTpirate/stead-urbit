@@ -192,6 +192,19 @@ the proposed ref closure, then prepares the complete immutable candidate.
 The test peer captures ordinary stock push bytes and never reports acceptance.
 No external HTTPS write route calls this worker yet.
 
+Run `git_pack_rehearsal.py` with the same exact branch and tag pins as the
+bundle rehearsal to capture a stock push and test the complete preparation
+on a real-sized repository. It uses a new private directory under `.runtime`.
+The test makes one synthetic commit and tag, verifies the worker proof,
+restores the proposed pack and checks every original OID. Its loopback peer
+explicitly refuses the push and leaves the source checkout unchanged.
+
+At `c274604`, this rehearsal preserved all 8,233 original Git objects and
+added only the intended commit and annotated tag. The stock client sent a
+635-byte request for this small change. The pack restored with strict `fsck`.
+The report `.runtime/full-wire-history-pxqxtegS/rehearsal/report.json` has
+SHA-256 `d8838ce468fb32e573889e581bf9b28a45b9b9fe2daedbf278dbb494f15aaa6d`.
+
 A synthetic fast-forward against the 8,049-object `3ba8e43` history and the
 unchanged runtime tag produced an 8,050-object staged candidate in 2.911
 seconds on the test machine. An independent restore passed strict `fsck`.
