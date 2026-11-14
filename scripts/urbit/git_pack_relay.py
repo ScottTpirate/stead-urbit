@@ -2,6 +2,7 @@
 from __future__ import annotations
 
 import base64
+from contextlib import contextmanager
 import http.client
 import io
 import math
@@ -91,7 +92,7 @@ class Relay:
     """One reviewed Home origin reachable only over a fixed loopback TLS target."""
 
     def __init__(self, home_origin, home_ship, capability, *, certificate_sha256, ca_file=None,
-                 connect_ip='127.0.0.1', connect_port=None, clock=None):
+                 ca_data=None, connect_ip='127.0.0.1', connect_port=None, clock=None):
         self.origin = origin(home_origin)
         require(match(SHIP, home_ship) and match(TOKEN, capability) and match(TOKEN, certificate_sha256)
                 and connect_ip in ('127.0.0.1', '::1')
@@ -104,7 +105,7 @@ class Relay:
         self.connect_port = connect_port if connect_port is not None else self.origin.port or 443
         self.clock = clock if clock is not None else lambda: time.time_ns() // 1_000_000
         try:
-            self.context = ssl.create_default_context(cafile=ca_file)
+            self.context = ssl.create_default_context(cafile=ca_file, cadata=ca_data)
         except (OSError, ValueError):
             raise RecoveryError('pack-relay-ca-unavailable') from None
 
@@ -117,28 +118,17 @@ class Relay:
         if deadline is not None:
             until = min(until, deadline)
         limit = git_http.MAX_DECISION if discovery else proof.MAX_MESSAGE
-        try:
-            with socket.create_connection((self.connect_ip, self.connect_port), timeout=remaining(until)) as connection:
-                connection.settimeout(remaining(until))
-                with self.context.wrap_socket(connection, server_hostname=self.origin.hostname) as tls:
-                    require(sha(tls.getpeercert(binary_form=True)) == self.certificate_sha256, 'pack-relay-certificate')
-                    client = http.client.HTTPConnection(self.origin.hostname, self.connect_port)
-                    client.sock = tls
-                    tls.settimeout(remaining(until))
-                    client.request('POST', f'/stead/_pack-relay/{project}', body=body, headers={
-                        'Authorization': authorization, 'X-Stead-Relay': self._capability,
-                        'Host': self.origin.netloc, 'Content-Type': MIME, 'Content-Length': str(len(body)),
-                        'Accept': 'application/json', 'Accept-Encoding': 'identity', 'Connection': 'close',
-                    })
-                    with http.client.HTTPResponse(_ResponseSocket(tls, until, limit), method='POST') as response:
-                        response.begin()
-                        if response.status == 403 or (response.status == 401 and discovery):
-                            remaining(until)
-                            raise receive.Rejected('pack-relay-denied')
-                        require(response.status == 200, 'pack-relay-response-unavailable')
-                        raw = _response_body(response, limit, self.home_ship)
-        except (OSError, http.client.HTTPException):
-            raise RecoveryError('pack-relay-unavailable') from None
+        headers = {
+            'Authorization': authorization, 'X-Stead-Relay': self._capability,
+            'Host': self.origin.netloc, 'Content-Type': MIME, 'Content-Length': str(len(body)),
+            'Accept': 'application/json', 'Accept-Encoding': 'identity', 'Connection': 'close',
+        }
+        with self._response('POST', f'/stead/_pack-relay/{project}', headers, body, until, limit) as response:
+            if response.status == 403 or (response.status == 401 and discovery):
+                remaining(until)
+                raise receive.Rejected('pack-relay-denied')
+            require(response.status == 200, 'pack-relay-response-unavailable')
+            raw = _response_body(response, limit, self.home_ship)
         remaining(until)
         result = decoded(raw, limit)
         if isinstance(result, dict) and result.get('status') == 'refused':
@@ -146,6 +136,40 @@ class Relay:
                     and encoded(result)[:-1] == raw, 'pack-relay-refusal-shape')
             raise receive.Rejected('pack-relay-refused')
         return raw
+
+    @contextmanager
+    def _response(self, method, path, headers, body, deadline, limit):
+        try:
+            with socket.create_connection((self.connect_ip, self.connect_port), timeout=remaining(deadline)) as connection:
+                connection.settimeout(remaining(deadline))
+                with self.context.wrap_socket(connection, server_hostname=self.origin.hostname) as tls:
+                    require(sha(tls.getpeercert(binary_form=True)) == self.certificate_sha256, 'pack-relay-certificate')
+                    client = http.client.HTTPConnection(self.origin.hostname, self.connect_port)
+                    client.sock = tls
+                    tls.settimeout(remaining(deadline))
+                    client.request(method, path, body=body, headers=headers)
+                    with http.client.HTTPResponse(_ResponseSocket(tls, deadline, limit), method=method) as response:
+                        response.begin()
+                        yield response
+        except (OSError, http.client.HTTPException):
+            raise RecoveryError('pack-relay-unavailable') from None
+
+    def read_decision(self, authorization, project):
+        authorization = git_http.basic(authorization)
+        require(match(UUID, project), 'project-scope')
+        until = time.monotonic() + CALL_SECONDS
+        headers = {'Authorization': authorization, 'Host': self.origin.netloc, 'Accept': 'application/json',
+                   'Accept-Encoding': 'identity', 'Cache-Control': 'no-store', 'Connection': 'close'}
+        with self._response('GET', f'/stead/git/{project}.git/stead-snapshot', headers, None, until,
+                            git_http.MAX_DECISION) as response:
+            if response.status == 401:
+                raise git_http.Denied('git-credential-denied')
+            require(response.status == 200, 'home-decision-unavailable')
+            raw = _response_body(response, git_http.MAX_DECISION, self.home_ship)
+        remaining(until)
+        scope, value, refs = git_http.decision(raw, project)
+        require(scope['home'] == self.home_ship and encoded(value)[:-1] == raw, 'home-decision-response')
+        return scope, value, refs
 
     def advertise(self, authorization, project, *, deadline=None):
         try:

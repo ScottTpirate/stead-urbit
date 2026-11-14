@@ -9,7 +9,7 @@ from portable_recovery import OID, TOKEN, UUID, decoded, encoded, match, number,
 
 
 MAX_MESSAGE = 65_536
-MAX_GENERATION = 6
+MAX_GENERATION = 63
 ADMISSION = 'stead.git-pack-admission/1'
 PROTOCOL = 'stead.git-pack-worker-proof/1'
 CLAIM = {'scope', 'base_snapshot', 'generation', 'attempt', 'incarnation', 'request_id',

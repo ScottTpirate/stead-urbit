@@ -115,7 +115,7 @@
   =/  raw  (snapshot-bytes:stead-code-pack-anchor advanced)
   =/  size  (met 3 raw)
   =.  advanced  advanced(snapshot (hex:stead-codec 64 (sha-256l:sha [size (rev 3 size raw)])))
-  =/  changed=pack-selection:stead-code-home  [advanced other 5]
+  =/  changed=pack-selection:stead-code-home  [advanced other 5 1]
   =/  select=$-(@t (unit pack-selection:stead-code-home))
     |=(id=@t ?:(=(id project) [~ changed] ~))
   =/  app  next.issued
@@ -126,8 +126,9 @@
   ?>  =(snapshot.advanced (field:stead-codec (payload browser) 'snapshot'))
   ?>  =(snapshot.advanced (field:stead-codec (payload wire) 'snapshot'))
   ?>  =(other (field:stead-codec (payload browser) 'request_id'))
+  ?>  =('1' (field:stead-codec (payload browser) 'generation'))
   ?>  =(epoch.destination (uint:stead-codec (field:stead-codec (payload wire) 'authority_epoch')))
   =/  mismatched  advanced(destination destination(epoch 2))
-  ?>  =(401 status:(read-selected:stead-code-home team app project secret 11 [~ mismatched other 5]))
+  ?>  =(401 status:(read-selected:stead-code-home team app project secret 11 [~ mismatched other 5 1]))
   ~
 --

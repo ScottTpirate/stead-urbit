@@ -34,7 +34,7 @@
           (scope-valid:stead-code-credentials selected)
           =(project.selected repository.selected)
           (valid-intent:stead-code-pack-ledger claim)
-          (lth generation.claim 7)
+          (lth generation.claim max-advances:stead-code-pack-ledger)
           (gth now 0)
           (live:stead-session who now)
           !=(ship.who home.selected)

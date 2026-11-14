@@ -127,4 +127,66 @@
         !(valid saved other-anchor)
     ==
   (expect !>(ok))
+::  Synthetic worker facts make each exact topic tip a child of its prior tip.
+::  The default branch is protected throughout the bounded ledger run.
+++  capacity-step
+  |=  held=ledger
+  ^-  [input=intent evidence=checked]
+  =/  previous=@ux  (add 0x11 generation.held)
+  =/  tip=@ux  +(previous)
+  =/  serial=@ud  +(serial.held)
+  =/  id=@t  (cat 3 '019939ba-4000-7000-8000-' (hex:stead-codec 12 (add 256 serial)))
+  =/  before=manifest  current.held
+  =/  changes=(list update)  ~[[exact-ref previous tip]]
+  =/  refs  (~(put by refs.before) exact-key (oid-text:stead-git tip))
+  =/  after=manifest  (seal before(refs refs, objects +(objects.before)))
+  =/  input=intent  [destination snapshot.before generation.held digest id serial digest changes]
+  =/  evidence=checked
+    [destination snapshot.before generation.held digest id changes after (malt ~[[tip %commit]]) (silt ~[[previous tip]])]
+  [input evidence]
+++  fill-capacity
+  |=  held=ledger
+  ^-  ledger
+  =/  protected=(set @t)  (silt ~[main])
+  |-
+  ?:  =(64 generation.held)  held
+  =/  step  (capacity-step held)
+  =/  now  +(last.held)
+  =/  staged  (admit held input.step who now digest allow-all protected)
+  ?>  ?=(%applied -.staged)
+  =/  verified  (verify next.staged input.step evidence.step who +(now) digest allow-all protected)
+  ?>  ?=(%applied -.verified)
+  =/  accepted  (commit next.verified input.step evidence.step who (add now 2) digest allow-all protected)
+  ?>  ?=(%applied -.accepted)
+  $(held next.accepted)
+++  test-pack-ledger-retains-sixty-four-advances-and-replays-first
+  =/  full=ledger  (fill-capacity db)
+  =/  loaded=ledger  (ledger (cue (jam full)))
+  =/  first  (capacity-step db)
+  =/  extra  (capacity-step loaded)
+  =/  oldest  (~(got by receipts.loaded) request.input.first)
+  =/  journal  journal.loaded
+  ?>  ?=(^ journal)
+  =/  latest  (need (history loaded i.journal))
+  =/  protected=(set @t)  (silt ~[main])
+  ::  The first admission expired, while the same principal remains active.
+  =/  now=@ud  400.000
+  =/  ok=?
+    ?&  =(loaded full)
+        =(generation.loaded 64)  =(serial.loaded 64)
+        =(~(wyt by receipts.loaded) 64)  =((lent journal.loaded) 64)
+        ?=(~ pending.loaded)  ?=(~ promotions.loaded)
+        (valid loaded anchor)
+        =(generation.latest 64)
+        =(pack.latest current.loaded)
+        =(accepted.latest last.loaded)
+        =((~(get by refs.current.loaded) exact-key) [~ (oid-text:stead-git 0x51)])
+        =((~(get by refs.current.loaded) main-key) [~ (oid-text:stead-git 0x11)])
+        =(1 generation.decision.result.oldest)
+        (gte now until.row.oldest)
+        =([%replayed loaded result.oldest] (commit loaded input.first evidence.first who now digest allow-all protected))
+        ?=([%rejected %denied] (commit loaded input.first evidence.first who now digest deny-all protected))
+        ?=([%rejected %history-capacity] (admit loaded input.extra who now digest allow-all protected))
+    ==
+  (expect !>(ok))
 --

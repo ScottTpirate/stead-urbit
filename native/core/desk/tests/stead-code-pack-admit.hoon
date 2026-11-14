@@ -34,7 +34,10 @@
   ?>  =(~ (build destination claim owner(active |) 1.000 current))
   ?>  =(~ (build destination claim owner(ship ~zod) 1.000 current))
   ?>  =(~ (build destination claim owner 2.000.000 current))
-  ?>  =(~ (build destination claim(generation 7) owner 1.000 current))
+  =/  last  (need (build destination claim(generation 63) owner 1.000 current))
+  =/  parsed  (need (decode-admission:stead-code-pack-proof wire.last digest.last current))
+  ?>  =(63 generation.claim.parsed)
+  ?>  =(~ (build destination claim(generation 64) owner 1.000 current))
   ~
 ++  test-pack-admit-refuses-duplicate-or-oversized-changes
   ^-  tang

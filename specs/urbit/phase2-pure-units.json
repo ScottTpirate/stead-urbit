@@ -1,7 +1,7 @@
 {
   "format": 1,
   "classification": "pure-native-only",
-  "expected_arm_count": 141,
+  "expected_arm_count": 142,
   "suites": [
     {
       "path": "/tests/stead-session",
@@ -170,7 +170,8 @@
         "test-pack-ledger-stages-verifies-and-commits-atomically",
         "test-pack-ledger-replays-exact-attempt-with-current-authority",
         "test-pack-ledger-checks-expiry-incarnation-and-final-policy",
-        "test-pack-ledger-rebuilds-lineage-and-refuses-corrupt-receipts"
+        "test-pack-ledger-rebuilds-lineage-and-refuses-corrupt-receipts",
+        "test-pack-ledger-retains-sixty-four-advances-and-replays-first"
       ],
       "timeout_seconds": 60
     },

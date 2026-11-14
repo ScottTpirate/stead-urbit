@@ -96,8 +96,12 @@ python3 -B scripts/urbit/git_pack_store.py restore "$run_dir/store" "$run_dir/re
 The profile bounds each pack to 64 MiB, 16,384 objects, 16 MiB per object,
 256 MiB of object bodies, and 64 branch or tag refs. Git subprocesses use
 address space, file size, CPU time and wall-clock limits. Each Home and
-repository scope holds up to eight snapshots. Custodians also need a filesystem
-quota for the storage root and an approved retention policy.
+repository scope holds up to 80 immutable snapshots. The Home allows up to
+64 accepted pushes and protected-branch promotions together. Exact snapshot
+retry still works at storage capacity. The extra storage slots allow staged
+candidates. Custodians also need a filesystem quota for the storage root
+and a retention policy. At the per-pack maximum, 80 copies can use 5 GiB
+in each store before scratch or backup.
 
 An interrupted command can leave a `.code-restore-*` directory under the
 repository store or restore destination's parent. Before clearing it, stop pack
@@ -292,6 +296,22 @@ preserves ref names with arbitrary valid Git bytes.
 
 The private report `.runtime/pack-review-native-3l9marb8/state/report.json`
 has SHA-256 `0d53445edac8022fa44b92f28d709df5e4bebda1e4715aa19ab7a146faf3b164`.
+
+A separate 53-check journey used pinned Vere, stock Git, one disposable
+Home and two distinct member ships. It exercised native browser-session
+approval on both members, ordinary branch and annotated tag push with
+recovered receipt, exact Work-linked proposal and approval, protected
+default-branch promotion using real signed evidence, and exact review
+receipt replay. The Home refused direct default-branch push, contributor
+approval and modified proof bytes. After restart, the accepted Code view
+and review receipt were present, and a fresh stock mirror clone matched all
+7,805 reachable IDs and passed strict `fsck`. All three ships stopped
+cleanly. This journey used a loopback fixture with the relay and worker in
+one process. Distinct service accounts are qualified separately by the
+projection tests.
+
+The private report `.runtime/pack-reviewed-stock-woha7b4f/state/report.json`
+has SHA-256 `2776f55b5d9e1d62400bbe77b0627b3b0cc4de61011a4463a9a0638f628bf5e1`.
 
 ### Worker result authentication
 

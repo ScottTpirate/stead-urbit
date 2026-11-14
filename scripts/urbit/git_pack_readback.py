@@ -16,8 +16,14 @@ def observe(connection, principal, project):
     _, who = Reads(connection).one('identity')
     identity(who, principal)
     report = decoded(connection.pack_view(project))
-    shape(report, {'protocol', 'status', 'snapshot', 'authority_epoch', 'object_count',
-                   'head', 'refs', 'request_id', 'accepted_at_ms'})
+    fields = {'protocol', 'status', 'snapshot', 'authority_epoch', 'object_count',
+              'head', 'refs', 'request_id', 'accepted_at_ms'}
+    if isinstance(report, dict):
+        for field in ('generation', 'generation_limit'):
+            if field in report:
+                fields.add(field)
+                number(report[field], positive=field == 'generation_limit')
+    shape(report, fields)
     require(report['protocol'] == 'stead.code/1' and report['status'] == 'external'
             and match(TOKEN, report['snapshot']) and match(UUID, report['request_id']), 'accepted-pack-required')
     number(report['authority_epoch'])

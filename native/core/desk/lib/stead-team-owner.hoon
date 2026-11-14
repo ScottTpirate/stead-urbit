@@ -209,6 +209,8 @@
   ++  pack-write-ready
     |=  project=@t
     ^-  ?
+    =/  newest  (~(get by external.owner) project)
+    ?:  &(?=(^ newest) (gte generation.u.newest max-advances:stead-code-pack-ledger))  |
     ?:  pack-local-ready  &
     =/  selected  (target:stead-code-home db.owner project)
     ?~  selected  |
@@ -340,7 +342,7 @@
     =/  auth  (browser-context:stead-team db.owner u.session now)
     ?~  auth  denied
     =/  action  (field values 'action')
-    =/  minimum  ?:(=('external-proposal' action) 1 ?:(=('external-submit' action) 2 3))
+    =/  minimum  ?:(|(=('external-proposal' action) =('external-list' action)) 1 ?:(=('external-submit' action) 2 3))
     ?.  (gte (role:stead-team db.owner u.auth project now) minimum)  denied
     =/  target  (target:stead-code-home db.owner project)
     ?~  target  denied
@@ -413,7 +415,7 @@
     ?~  row  ~
     ?~  journal.u.row  ~
     =/  recent  (need (history:stead-code-pack-ledger u.row i.journal.u.row))
-    [~ current.u.row i.journal.u.row accepted.recent]
+    [~ current.u.row i.journal.u.row accepted.recent generation.u.row]
   ++  relay-http
     |=  [id=@ta incoming=inbound-request:eyre]
     ^-  (quip card:agent:gall state)
@@ -487,6 +489,7 @@
         ?.  ?&  =([~ %s 'stead.code/1'] (~(get by obj) 'protocol'))
                 ?|  =('external-proposal' p.u.action)  =('external-submit' p.u.action)
                     =('external-approve' p.u.action)  =('external-merge' p.u.action)
+                    =('external-list' p.u.action)
                 ==
             ==
           ~

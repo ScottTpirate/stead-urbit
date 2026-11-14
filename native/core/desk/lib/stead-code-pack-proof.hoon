@@ -109,7 +109,7 @@
   ?>  =(destination destination.base)
   =/  who  (read-actor (nested obj 'actor') home.destination)
   =/  generation  (number-text (field obj 'generation') |)
-  ?>  (lth generation 7)
+  ?>  (lth generation max-advances:stead-code-pack-ledger)
   =/  changes  (turn rows |=(item=row change.item))
   =/  since  (number-text (field obj 'admitted_at_ms') &)
   =/  until  (number-text (field obj 'expires_at_ms') &)

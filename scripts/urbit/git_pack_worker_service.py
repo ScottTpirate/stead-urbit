@@ -182,7 +182,7 @@ if fd < 3 or not stat.S_ISDIR(os.fstat(fd).st_mode):
 options = [value for key in variables for value in ('--setenv', key, os.environ[key])]
 args = []
 for value in map(os.fsencode, argv[2:]):
-    if value.startswith(inside + b'/'):
+    if value == inside or value.startswith(inside + b'/'):
         value = b'/repo' + value[len(inside):]
     args.append(value)
 os.execve(flags[0], flags + options + ['--bind-fd', tail, '/repo', '--remount-ro', '/',

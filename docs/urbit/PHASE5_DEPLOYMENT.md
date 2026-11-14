@@ -78,6 +78,32 @@ whose request exceeds Git's default 1 MiB buffer, use
 The receive request limit is 8,454,144 bytes, including protocol framing.
 [Git HTTP buffer configuration](https://git-scm.com/docs/git-config#Documentation/git-config.txt-httppostBuffer)
 
+Load the relay using a private mode-0600 JSON profile owned by its
+unprivileged service account. Use the existing private Home origin, with
+its native listener port and exact certificate SHA-256. The capability
+belongs only to this process. Install the reviewed Git executable under
+root-owned, non-writable-by-service directories and supply its digest.
+
+The profile protocol is `stead.git-pack-relay-service/1`. Its exact fields
+are `protocol`, `project`, `home`, `origin`, `home_port`,
+`certificate_sha256`, `ca`, `capability`, `relay_uid`, `worker_uid`,
+`worker_socket`, `spool`, `read_store`, `git`, and `git_sha256`.
+Use separate private spool and read-store directories. With the relay
+account and its dedicated edge group, an example foreground service is
+
+```sh
+gunicorn --chdir "$STEAD_CHECKOUT/scripts/urbit" \
+  --bind "unix:$GIT_EDGE_SOCKET" --umask 0007 --workers 1 --timeout 90 \
+  "git_pack_relay_service:create_application('$RELAY_PROFILE')"
+```
+
+The native socket and reviewed Git digest are checked during use. Git runs
+in an isolated namespace that can read only the selected temporary bare
+repository and its executable and runtime libraries. The relay account's
+socket directory admits the nginx worker group only. Configure a service
+supervisor so nginx stops forwarding when either upstream loses its fence.
+[Gunicorn Unix sockets](https://gunicorn.org/deploy/)
+
 The Vere account is the sole writer for the projection mailbox. Provision
 its directory mode 0750 with the mailbox group shared by the worker and read
 relay. Give each service a separate mode-0700 store and provision a second

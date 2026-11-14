@@ -29,7 +29,7 @@
 +$  pending-result  $%([%applied next=ledger] [%replayed next=ledger] [%rejected reason=@tas])
 +$  commit-result
   $%([%applied next=ledger result=receipt] [%replayed next=ledger result=receipt] [%rejected reason=@tas])
-++  max-advances  7
+++  max-advances  64
 ++  max-number  18.446.744.073.709.551.615
 ++  seed-id
   |=  anchor=entry:stead-code-pack-anchor

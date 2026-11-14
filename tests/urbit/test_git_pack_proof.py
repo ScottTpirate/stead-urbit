@@ -105,6 +105,14 @@ class GitPackProofTests(unittest.TestCase):
             with self.assertRaisesRegex(ValueError, 'proof-lease'):
                 self.export(self.claim, now_ms=lambda: 6000)
 
+    def test_private_admission_accepts_last_base_generation_and_refuses_limit(self):
+        valid = self.claim | {'generation': '63'}
+        raw = encoded(valid)
+        self.assertEqual(proof.admission(raw, sha(raw), 2000), valid)
+        raw = encoded(valid | {'generation': '64'})
+        with self.assertRaisesRegex(ValueError, 'proof-generation-bound'):
+            proof.admission(raw, sha(raw), 2000)
+
     def test_worker_result_cannot_substitute_identity_of_snapshot_or_input(self):
         result = receive.prepare(self.storage, SCOPE, self.claim['base_snapshot'], self.wire,
                                  self.claim['wire_sha256'], self.git)

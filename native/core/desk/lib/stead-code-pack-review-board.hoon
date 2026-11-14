@@ -105,7 +105,7 @@
           (lte ~(wyt by proposals.db) 64)
           (lte ~(wyt by approvals.db) 64)
           (lte ~(wyt by requests.db) 192)
-          (lte ~(wyt by promotions.db) 7)
+          (lte ~(wyt by promotions.db) 64)
           |(=(0 ~(wyt by requests.db)) (gth last.db 0))
       ==
     |
@@ -269,7 +269,7 @@
   =/  ready  (preflight:stead-code-pack-review env generation current caller u.row u.review checked)
   ?:  ?=(%| -.ready)  [%rejected p.ready]
   ?:  (gte ~(wyt by requests.db) 192)  [%rejected %request-capacity]
-  ?:  (gte ~(wyt by promotions.db) 7)  [%rejected %promotion-capacity]
+  ?:  (gte ~(wyt by promotions.db) 64)  [%rejected %promotion-capacity]
   =/  saved=record
     [1 request merger.p.ready now.env current p.ready kinds.checked lineage.checked]
   ?.  (valid:stead-code-pack-promotion saved)  [%rejected %invalid-promotion]

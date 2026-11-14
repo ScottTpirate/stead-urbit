@@ -133,6 +133,12 @@ class ActualRelayTLSTests(unittest.TestCase):
 
             def do_POST(self):
                 request = self.rfile.read(int(self.headers['Content-Length']))
+                self.reply(request)
+
+            def do_GET(self):
+                self.reply(b'')
+
+            def reply(self, request):
                 cls.requests.append((self.path, dict(self.headers), request))
                 status, headers, body = cls.reply
                 self.send_response(status)
@@ -201,6 +207,25 @@ class ActualRelayTLSTests(unittest.TestCase):
         with self.assertRaisesRegex(RecoveryError, 'pack-relay-deadline'):
             self.make_relay().advertise(AUTH, PROJECT, deadline=time.monotonic() - 1)
         self.assertFalse(self.requests)
+
+    def test_read_uses_pinned_home_and_individual_credential_without_relay_capability(self):
+        signed = self.make_relay()
+        self.assertEqual(signed.read_decision(AUTH, PROJECT), git_http.decision(selection(), PROJECT))
+        path, headers, body = self.requests[0]
+        self.assertEqual(path, f'/stead/git/{PROJECT}.git/stead-snapshot')
+        self.assertEqual(headers['Authorization'], AUTH)
+        self.assertNotIn('X-Stead-Relay', headers)
+        self.assertNotIn('Cookie', headers)
+        self.assertFalse(body)
+        self.respond(b'ignored', status=401)
+        with self.assertRaises(git_http.Denied):
+            signed.read_decision(AUTH, PROJECT)
+        self.respond(selection(), headers=(('Location', 'https://outside.invalid/'),))
+        with self.assertRaises(RecoveryError):
+            signed.read_decision(AUTH, PROJECT)
+        with self.assertRaises(RecoveryError):
+            self.make_relay(certificate_sha256='0' * 64).read_decision(AUTH, PROJECT)
+        self.assertEqual(len(self.requests), 3)
 
     def test_definite_refusal_is_distinct_from_unconfirmed_response(self):
         home = self.make_relay()

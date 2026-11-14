@@ -1,6 +1,6 @@
 ::  Repository authority called only by the configured Home. Repositories
 ::  persist with the Home; device credentials are never in the saved envelope.
-/+  stead-codec, stead-core, stead-team, stead-team-config, stead-session, stead-http, stead-git, stead-code-credentials, stead-code-store, stead-code-service, stead-code-http, stead-code-git-graph, stead-code-git-objects, stead-code-receive, stead-code-upload, stead-code-review-home, stead-code-review-api, stead-code-build-home, stead-code-delivery-export, stead-code-pack-anchor
+/+  stead-codec, stead-core, stead-team, stead-team-config, stead-session, stead-http, stead-git, stead-code-credentials, stead-code-store, stead-code-service, stead-code-http, stead-code-git-graph, stead-code-git-objects, stead-code-receive, stead-code-upload, stead-code-review-home, stead-code-review-api, stead-code-build-home, stead-code-delivery-export, stead-code-pack-anchor, stead-code-pack-ledger
 =,  stead-codec
 |%
 +$  repository  [data=repository:stead-code-service protected=(set @t)]
@@ -11,7 +11,7 @@
 +$  state  [repos=saved book=ledger:stead-code-credentials uploads=jobs:stead-code-upload reviews=boards builds=build-data packs=state:stead-code-pack-anchor]
 +$  admission  $%([%held next=state key=@t] [%refused out=result])
 +$  result  [status=@ud mime=@t body=octets:stead-git next=state]
-+$  pack-selection  [manifest=manifest:stead-code-pack-anchor request=@t accepted=@ud]
++$  pack-selection  [manifest=manifest:stead-code-pack-anchor request=@t accepted=@ud generation=@ud]
 ++  text
   |=  [code=state status=@ud mime=@t body=@t]
   ^-  result
@@ -86,12 +86,12 @@
 ++  selected-details
   |=  view=pack-selection
   ^-  (list [@t @t])
-  (weld (pack-fields manifest.view 'external') ~[['request_id' request.view] ['accepted_at_ms' (decimal accepted.view)]])
+  (weld (pack-fields manifest.view 'external') ~[['request_id' request.view] ['accepted_at_ms' (decimal accepted.view)] ['generation' (decimal generation.view)] ['generation_limit' (decimal max-advances:stead-code-pack-ledger)]])
 ++  selected-pack
   |=  [entry=entry:stead-code-pack-anchor current=(unit pack-selection)]
   ^-  (unit pack-selection)
   ?.  ?=(%accepted -.entry)  ~
-  ?~  current  [~ pack.row.entry request.proof.entry accepted-at.proof.entry]
+  ?~  current  [~ pack.row.entry request.proof.entry accepted-at.proof.entry 0]
   ?.  =(destination.manifest.u.current destination.pack.row.entry)  ~
   current
 ++  pack-details
