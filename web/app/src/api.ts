@@ -114,6 +114,7 @@ function externalProposal(value: Fields, id = value.proposal_id): Fields {
     || !GIT_OID.test(value.base_oid ?? '') || !GIT_OID.test(value.head_oid ?? '') || !TOKEN.test(value.base_snapshot ?? '')
     || !CODE_GENERATION.test(value.generation ?? '') || !value.source_ref?.startsWith('refs/heads/') || !value.ref?.startsWith('refs/heads/')
     || (value.work_title !== undefined && value.work_title.length > 512)
+    || (value.merged_request_id !== undefined && (value.merged_revision ? !UUID.test(value.merged_request_id) : value.merged_request_id !== ''))
     || !((value.merged_revision === '' && value.merged_snapshot === '')
       || (value.merged_revision === value.revision && TOKEN.test(value.merged_snapshot ?? '')))) throw new HomeError('invalid_response');
   return value;
@@ -375,6 +376,21 @@ export class HomeClient {
   pendingExternalMerge(project: string): Readonly<CodeReviewKey> | undefined {
     const row = this.pendingExternalMerges.get(project);
     return row && { proposal_id: row.proposal_id, revision: row.revision };
+  }
+  stopExternalMergeRetry(project: string, key: CodeReviewKey): boolean {
+    const row = this.pendingExternalMerges.get(project);
+    if (!row || row.proposal_id !== key.proposal_id || row.revision !== key.revision) return false;
+    return this.pendingExternalMerges.delete(project);
+  }
+  async recoverExternalMerge(project: string): Promise<Fields | null> {
+    const pending = this.pendingExternalMerges.get(project);
+    if (!pending) return null;
+    const row = await this.code(project, { action: 'external-proposal', proposal_id: pending.proposal_id });
+    const expected = object(JSON.parse(pending.proof)).candidate_snapshot;
+    if (this.pendingExternalMerges.get(project) !== pending || row.merged_request_id !== pending.request_id
+      || row.merged_revision !== pending.revision || row.merged_snapshot !== expected) return null;
+    this.pendingExternalMerges.delete(project);
+    return row;
   }
   async mergeExternalCode(project: string, input?: ExternalMerge): Promise<Fields> {
     const prior = this.pendingExternalMerges.get(project);

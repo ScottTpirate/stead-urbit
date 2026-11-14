@@ -70,9 +70,11 @@ globalThis.fetch = async (url, init) => {
       revision: raw.revision, request_id: mode === 'external-review-uncorrelated' ? id('999') : raw.request_id});
   }
   if (String(url).endsWith('/code') && raw.action === 'external-proposal') {
+    const merged = mode.startsWith('external-review-merged');
     return json({protocol: 'stead.code/1', status: 'proposal', ...externalReview,
-      merged_revision: mode === 'external-review-merged' ? externalReview.revision : '',
-      merged_snapshot: mode === 'external-review-merged' ? 'b'.repeat(64) : ''});
+      merged_revision: merged ? externalReview.revision : '',
+      merged_request_id: !merged ? '' : mode === 'external-review-merged-wrong-request' ? id('999') : requestedProof.request_id,
+      merged_snapshot: !merged ? '' : (mode === 'external-review-merged-wrong-snapshot' ? 'a' : 'b').repeat(64)});
   }
   if (String(url).endsWith('/code') && raw.action === 'external-list') {
     const row = {status: 'proposal', ...externalReview, merged_revision: '', merged_snapshot: '', work_title: 'Linked work'};
@@ -564,4 +566,29 @@ test('external merge requires correlated confirmation and retries exact proof on
   assert.equal(client.pendingExternalMerge(externalProject), undefined);
   await rejects(client.mergeExternalCode(externalProject), 'no_pending_merge');
   person = 1;
+});
+
+test('external merge recovers only from exact saved proposal receipt and allows explicit stop', async () => {
+  person = 1; mode = ''; const client = new HomeClient(); await client.resume();
+  const input = parseReviewArtifact(JSON.stringify(externalArtifact), externalProject, externalSnapshot, externalReview);
+  mode = 'external-merge-lost';
+  await rejects(client.mergeExternalCode(externalProject, input), 'outcome_unknown');
+  assert.equal(await client.recoverExternalMerge(id('999')), null);
+  for (const sample of ['', 'external-review-merged-wrong-request', 'external-review-merged-wrong-snapshot']) {
+    mode = sample;
+    assert.equal(await client.recoverExternalMerge(externalProject), null);
+    assert.equal(savedBody.action, 'external-proposal');
+    assert.ok(client.pendingExternalMerge(externalProject));
+  }
+  mode = 'external-review-merged';
+  assert.equal((await client.recoverExternalMerge(externalProject))?.merged_request_id, input.request_id);
+  assert.equal(client.pendingExternalMerge(externalProject), undefined);
+  mode = 'external-merge-lost';
+  await rejects(client.mergeExternalCode(externalProject, input), 'outcome_unknown');
+  const sent = bodies.length;
+  assert.equal(client.stopExternalMergeRetry(externalProject, {...input, revision: '3'}), false);
+  assert.equal(client.stopExternalMergeRetry(externalProject, input), true);
+  assert.equal(bodies.length, sent);
+  await rejects(client.mergeExternalCode(externalProject), 'no_pending_merge');
+  mode = '';
 });

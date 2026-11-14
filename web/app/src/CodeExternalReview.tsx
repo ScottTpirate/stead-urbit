@@ -33,6 +33,7 @@ export function CodeExternalReview({ client, project, writable, manage, atCapaci
   const [cursor, setCursor] = useState('');
   const [artifact, setArtifact] = useState<ExternalMerge | null>(null);
   const [merged, setMerged] = useState('');
+  const [stopRetry, setStopRetry] = useState(false);
   const [busy, setBusy] = useState(false);
   const [notice, setNotice] = useState('');
   const [error, setError] = useState('');
@@ -74,7 +75,7 @@ export function CodeExternalReview({ client, project, writable, manage, atCapaci
     try { await operation(); }
     catch (reason) {
       setError(client.pendingExternalMerge(project)
-        ? 'The Home did not confirm the merge. You can retry the same request after reconnecting.'
+        ? 'The Home did not confirm the merge. Check its saved status or retry the same request.'
         : reason instanceof HomeError && ['stale-selection', 'stale_selection', 'stale-target', 'source-conflict', 'stale-review', 'stale_review'].includes(reason.code)
           ? 'The proposal or Git snapshot changed. Refresh the snapshot and open the latest revision.' : failure);
     } finally { setBusy(false); }
@@ -156,8 +157,17 @@ export function CodeExternalReview({ client, project, writable, manage, atCapaci
     const receipt = await client.mergeExternalCode(project, input);
     setMerged(`${receipt.proposal_id}/${receipt.revision}`);
     setArtifact(null);
+    setStopRetry(false);
     setNotice('The Home confirmed the merge.');
     setReviewListVersion(version => version + 1);
+    await refreshSnapshot();
+  }
+
+  async function checkMerge() {
+    const row = await client.recoverExternalMerge(project);
+    if (!row) { setNotice('The Home did not confirm this exact merge.'); return; }
+    setLookup(row.proposal_id!); setProposal(row); setDraft(null); setArtifact(null); setStopRetry(false);
+    setNotice('The Home confirmed the merge.');
     await refreshSnapshot();
   }
 
@@ -165,7 +175,23 @@ export function CodeExternalReview({ client, project, writable, manage, atCapaci
     <h2>Change review</h2>
     {pending && <div role="status">
       <p>Merge awaiting confirmation for proposal {pending.proposal_id}, revision {pending.revision}.</p>
-      <Button disabled={busy || !manage} onClick={() => void perform(() => merge(), 'The Home could not confirm this merge.')}>Retry this merge</Button>
+      <div className="actions">
+        <Button disabled={busy} onClick={() => void perform(checkMerge, 'The Home could not check this merge.')}>Check saved status</Button>
+        <Button disabled={busy || !manage} onClick={() => void perform(() => merge(), 'The Home could not confirm this merge.')}>Retry this merge</Button>
+        <Button disabled={busy} onClick={() => setStopRetry(true)}>Stop retrying</Button>
+      </div>
+      {stopRetry && <div>
+        <p>The merge may already have completed. Stopping retry leaves its saved status available through the proposal.</p>
+        <div className="actions">
+          <Button disabled={busy} onClick={() => {
+            if (client.stopExternalMergeRetry(project, pending)) {
+              setNotice('Stopped retrying. The merge outcome is still unconfirmed.'); setError(''); setArtifact(null);
+            }
+            setStopRetry(false);
+          }}>Stop retrying this merge</Button>
+          <Button disabled={busy} onClick={() => setStopRetry(false)}>Keep checking</Button>
+        </div>
+      </div>}
     </div>}
     {draft ? <form onSubmit={event => { event.preventDefault(); void perform(submit, 'The Home could not confirm this proposal.'); }}>
       <h3>{Number(draft.revision) > 1 ? `New revision ${draft.revision}` : 'New proposal'}</h3>

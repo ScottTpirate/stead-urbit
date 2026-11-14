@@ -126,7 +126,7 @@ async function fixture(run, mockRepository = false) {
           }
           state.externalReviews.set(proposal_id, {proposal_id, revision, work_id, source_ref, ref, base_oid, head_oid,
             author: person.principal_id, reviewer: '', base_snapshot: value.base_snapshot, generation: value.generation,
-            merged_revision: '', merged_snapshot: ''});
+            merged_revision: '', merged_snapshot: '', merged_request_id: ''});
           return respond({status: 'accepted', proposal_id, revision, request_id});
         }
         assert.ok(saved);
@@ -146,6 +146,7 @@ async function fixture(run, mockRepository = false) {
         state.mergeRequests.push(value);
         saved.merged_revision = revision;
         saved.merged_snapshot = proof.candidate_snapshot;
+        saved.merged_request_id = request_id;
         state.pack = {...state.pack, snapshot: proof.candidate_snapshot, generation: String(Number(proof.generation) + 1), request_id,
           refs: JSON.stringify({...JSON.parse(state.pack.refs), [state.pack.head]: proof.head_oid})};
         return route.abort('failed');
@@ -503,12 +504,22 @@ try {
     assert.equal(await page.getByRole('button', {name: 'Create write credential', exact: true}).count(), 0);
     assert.equal(await page.getByRole('button', {name: 'New proposal', exact: true}).count(), 0);
     assert.equal(state.externalRequests.filter(row => row.action === 'external-merge').length, 1);
-    await page.getByRole('button', {name: 'Retry this merge', exact: true}).click();
+    await page.getByRole('button', {name: 'Retry this merge', exact: true}).waitFor();
+    await page.getByRole('button', {name: 'Stop retrying', exact: true}).click();
+    await page.getByRole('button', {name: 'Keep checking', exact: true}).click();
+    const read = state.externalReviews.get(reviewed.proposal_id);
+    const initialRequest = read.merged_request_id;
+    read.merged_request_id = id(999);
+    await page.getByRole('button', {name: 'Check saved status', exact: true}).click();
+    await page.getByRole('status').filter({hasText: 'The Home did not confirm this exact merge.'}).waitFor();
+    assert.equal(await page.getByRole('button', {name: 'Retry this merge', exact: true}).isEnabled(), true);
+    read.merged_request_id = initialRequest;
+    await page.getByRole('button', {name: 'Check saved status', exact: true}).click();
     await page.getByRole('status').filter({hasText: 'The Home confirmed the merge.'}).waitFor();
     await open();
     await page.getByText('Merged.', {exact: true}).waitFor();
     assert.equal(await page.getByLabel('Snapshot SHA-256', {exact: true}).inputValue(), evidence.candidate_snapshot);
-    assert.equal(state.externalRequests.filter(row => row.action === 'external-merge').length, 2);
+    assert.equal(state.externalRequests.filter(row => row.action === 'external-merge').length, 1);
     assert.deepEqual(consoleErrors, []);
   });
   await check('authentication-reuses-validated-identity-and-opens-before-one-snapshot', async (page, state) => {
