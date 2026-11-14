@@ -159,6 +159,12 @@ The Home must reconstruct the candidate refs and recompute the manifest digest.
 An expired worker returns no proof. Its previously staged immutable bytes may
 remain for retention to reconcile. The proof format itself gives no authority.
 
+The native decoder runs against the exact Python canonical bytes and the
+Home-selected base. Four pinned native tests verified the resulting manifest,
+raw ref bytes, and refusals for changed scope, command order, HEAD, inventory
+and framing. This verifies parsing and reconstruction; the caller must still
+authenticate both the worker and the Git principal before using the proof.
+
 Default and otherwise protected branches stay closed to direct external
 updates until the exact review commit is implemented. For an ambiguous stock
 client response, reconcile the exact digest and ordered commands under the

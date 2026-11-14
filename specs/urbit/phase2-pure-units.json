@@ -1,7 +1,7 @@
 {
   "format": 1,
   "classification": "pure-native-only",
-  "expected_arm_count": 104,
+  "expected_arm_count": 108,
   "suites": [
     {
       "path": "/tests/stead-session",
@@ -168,6 +168,16 @@
         "test-home-v8-pending-intent-survives-without-auto-commit",
         "test-home-v8-rejects-empty-or-invalid-ledger-and-future-state",
         "test-home-v8-custody-omits-projection-but-binds-external-ledger"
+      ],
+      "timeout_seconds": 60
+    },
+    {
+      "path": "/tests/stead-code-pack-proof",
+      "arms": [
+        "test-pack-proof-exact-python-canonical-admission-and-proof",
+        "test-pack-proof-refuses-noncanonical-sha-and-length",
+        "test-pack-proof-refuses-substituted-head-scope-or-update-order",
+        "test-pack-proof-refuses-unknown-key-inventory-and-stale-digest"
       ],
       "timeout_seconds": 60
     },
