@@ -186,6 +186,15 @@ This measurement covers preparation on one local host. Wire admission,
 protected-branch review, concurrent Home acceptance, durable receipt and
 full-history push recovery still require separate proof.
 
+The pure native ref reducer passed five tests under pinned Vere. It recomputes
+the candidate ref map from the current accepted manifest, compares the scope,
+generation and prior OIDs, and consults verified object facts and project
+policy. The tests include a byte-exact non-UTF-8 ref, hidden ref changes and
+direct protected updates. A candidate and an accepted receipt have separate
+types. The reducer is not connected to a saved Home ledger or external push
+route. Report `.runtime/pack-push-native-ELIcQOlt/state/report.json`, SHA-256
+`cb6b464064f490d9061f78b49bfc284d2efeb2dbd363fe29fe77621a9a67b65b`.
+
 ## Prepare GitHub issues for Work
 
 Use `scripts/urbit/github_work_plan.py` to preview moving issues from

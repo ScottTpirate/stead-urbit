@@ -1,7 +1,7 @@
 {
   "format": 1,
   "classification": "pure-native-only",
-  "expected_arm_count": 90,
+  "expected_arm_count": 95,
   "suites": [
     {
       "path": "/tests/stead-session",
@@ -136,6 +136,17 @@
         "test-pack-read-https-get-without-browser-headers-or-body",
         "test-pack-read-refuses-staged-cross-scope-expired-and-write",
         "test-pack-read-current-grants-bindings-and-revocation"
+      ],
+      "timeout_seconds": 60
+    },
+    {
+      "path": "/tests/stead-code-pack-push",
+      "arms": [
+        "test-pack-push-keeps-order-and-advances-once",
+        "test-pack-push-compares-scope-snapshot-and-prior-oids",
+        "test-pack-push-denies-protected-delete-duplicate-and-unverified",
+        "test-pack-push-denies-hidden-ref-change-and-tag-replacement",
+        "test-pack-push-receipt-is-a-separate-versioned-record"
       ],
       "timeout_seconds": 60
     },
