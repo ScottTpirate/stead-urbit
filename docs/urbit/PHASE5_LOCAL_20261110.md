@@ -191,3 +191,32 @@ qualification above.
 
 ## External pack qualification
 
+On a guarded pair of disposable ships, the new native decision endpoint
+passed anonymous, wrong-project, and revoked Git credential denials. The
+native Home issued the member an individual read credential, refused write
+credentials for the external snapshot, and returned the exact manifest over
+Eyre before revocation. All four newly inventoried native arms passed; the
+deliberate failure control also reported its expected failure.
+
+The subsequent 29-check guarded run combined native Home authentication,
+private HTTPS Git serving, and stock Git. The mirror clone and fetch returned
+the exact refs and all 7,803 reachable objects of the pinned rehearsal pack;
+strict `fsck` passed. After native revocation, the Git HTTPS adapter returned
+401 with no body and stock `ls-remote` returned no refs. The adapter used a
+loopback transport shim for the older fixture’s native port. It and both fake
+ships stopped at the end of the run. Private evidence:
+
+| Artifact | SHA-256 |
+| --- | --- |
+| `.runtime/pack-read-compile-IaOPe9vz/state/report.json` | `06f359570a6e8b0283176c8efb8b9be92fe7ff0ce05256073426b5e1c681e207` |
+| `.runtime/pack-read-smart-http-x5csBSmY/probe.py` | `607de7e37c8c8df5e51f5bb7687e55b8c9b077019e6d856864db926fb5850ed3` |
+| `.runtime/pack-read-smart-http-x5csBSmY/state/report.json` | `d112b3c5094fbd98c2e2f827b3e993de27eee8e69b3e80635d10bb6fc1432551` |
+| `.runtime/execution-runs/pack-read-stock-mxga75vl/report.json` | `28fa5740ed9870f5c621b3cc234ffa99164268b84143fd91a65614f943a25fc3` |
+
+The packaged candidate at `e2f9a2ec1a1ac7367f35c336506e6704b6529f98` includes
+the new read-credential controls. Both desk archives passed offline verification
+against their exact declared targets (Home `727ea58b8c61602812fc998d1b0c9e0b1e88ab6842196cb03fe22560ddaa6e19`,
+Identity `091777f92f1f76bb3dc142bdd9a5c7d486650aeff890873f842e0a45e5bbf7a7`).
+The focused Firefox journey approved the snapshot, issued a read credential,
+showed no write action and removed the credential after revoke using synthetic
+HTTP responses. Offline package verification does not replace native upgrade admission.

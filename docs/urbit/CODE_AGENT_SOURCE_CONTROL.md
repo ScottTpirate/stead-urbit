@@ -100,3 +100,36 @@ The [delivery reducer](CODE_DELIVERY_PROFILE.md) supplies explicit transitions
 for the Home-owned review and build board. The protected ref and exact merge
 receipt commit together. Release intent requires separate authority and
 verified artifact bytes. [Local workflow verification](PHASE34_LOCAL_WORKFLOW_20261109.md)
+
+## External write integration boundary
+
+The first external profile stores one immutable accepted manifest. Keep the
+v7 saved representation readable. A future writable profile needs its own
+version, with a current manifest and generation, bounded pending intents, and
+receipts indexed by operation ID. Preserve the original snapshot approval
+when initializing the first generation.
+
+For each upload, record the project, epoch, actor binding, base snapshot and
+generation, ordered expected ref updates, original wire digest, and a narrow
+worker lease. A verified worker can stage a complete immutable candidate in the
+pack store and report object kind and ancestry facts for that exact candidate.
+Authenticate the worker and bind its evidence to the admitted job, attempt,
+upload digest, base, and candidate. Wire clients cannot submit trusted facts.
+
+The Home computes the resulting refs from the current ones, compares the
+candidate’s complete ref map, and rechecks current uploader permissions. It
+must atomically advance the manifest/generation, resolve the pending intent,
+and save the receipt. Exact same-actor retries can return that receipt even
+after the ref advances again, subject to current authorization. A successful
+worker response or staged manifest cannot cause `receive-pack` to report
+success. Restart requires fresh worker and uploader admission for an unfinished
+job and must preserve an already accepted receipt.
+
+Use one review and build board with storage-specific lookups for committed
+refs, exact source, and accepted receipts. Pin proposal revisions and builds to
+an exact source manifest. A protected merge needs the current board’s exact
+independent approval and must bind the accepted pointer, receipt and merge
+record in the same event. A build needs independently verified tree bytes for
+its pinned Git OID. Retain the accepted, proposal, build and recovery snapshots
+before reclaiming other packs. Missing retained bytes suspend recovery and
+publication until the exact digest is recovered.

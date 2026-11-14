@@ -153,9 +153,131 @@ after stock Git verification and before publishing the private clone. Use
 `--ca-file` when the pilot Home uses an explicitly trusted private CA. Retain
 accepted snapshots according to the Home receipt and backup records.
 
-An external snapshot currently has a private restore workflow. Native Smart
-HTTP serving, incremental push with protected-ref and ancestry validation,
-and any live change of authority remain separate work. [Source control contract](CODE_AGENT_SOURCE_CONTROL.md)
+An external snapshot has a private restore workflow and a Git read worker.
+The worker verifies the exact accepted object closure in a fresh private
+repository, prepares a bounded stock `upload-pack` reply, and checks the same
+Home decision again before disclosing any bytes. It never sends a receive-pack
+result or edits accepted refs.
+
+The read adapter accepts only the exact Smart HTTP discovery and fetch routes.
+Its control call delegates authentication to the Home's Git credential check
+on `/stead/git/<project>.git/stead-snapshot`. A separate ingress must enforce
+TLS, request framing, timeouts and canonical routing before this adapter is
+deployed. Each request currently verifies
+the full pack; multi-client workload and fresh-host recovery require
+qualification. Incremental push, protected refs, and live authority transfer
+remain separate work. [Source control contract](CODE_AGENT_SOURCE_CONTROL.md)
+
+### External push preparation
+
+The offline preparation worker in `git_pack_push.py` takes an independently
+selected Home snapshot, the SHA-256 of the original upload, and the client’s
+ordered expected and proposed OIDs. It derives the entire proposed ref map,
+then checks it against a verified complete pack. Stock Git confirms the
+branch updates are fast-forwards. The worker refuses stale or repeated refs,
+branch rewrites, tag replacement, deletion, and objects outside the proposed
+ref closure. It stages a separate immutable candidate and never edits the
+base. The result is not a push receipt or permission to publish.
+
+A synthetic fast-forward against the 8,049-object `3ba8e43` history and the
+unchanged runtime tag produced an 8,050-object staged candidate in 2.911
+seconds on the test machine. An independent restore passed strict `fsck`.
+This measurement covers preparation on one local host. Wire admission,
+protected-branch review, concurrent Home acceptance, durable receipt and
+full-history push recovery still require separate proof.
+
+## Prepare GitHub issues for Work
+
+Use `scripts/urbit/github_work_plan.py` to preview moving issues from
+`ScottTpirate/stead-urbit` into Work. It reads a private local file and writes
+one new private plan. Point it at a JSON array from GitHub's repository Issues
+API or the array of paginated arrays emitted by `gh api --paginate --slurp`.
+[GitHub Issues API](https://docs.github.com/en/rest/issues/issues#list-repository-issues)
+· [GitHub CLI](https://cli.github.com/manual/gh_api)
+
+If you need to make the export, run the first command with the appropriate
+GitHub read access. The Python script runs entirely offline.
+
+```sh
+umask 077
+run_dir=$(mktemp -d .runtime/github-work-XXXXXXXX)
+gh api --hostname github.com --paginate --slurp \
+  'repos/ScottTpirate/stead-urbit/issues?state=all&per_page=100' > "$run_dir/issues.json" &&
+python3 -B scripts/urbit/github_work_plan.py "$run_dir/issues.json" \
+  --output "$run_dir/work-plan.json"
+```
+
+The output reports the SHA-256 of the exact source and plan. It gives each
+draft a source issue number and permalink and uses the existing `work.create`
+payload fields. Open issues map to **To do**. Completed issues map to **Done**.
+Issues closed as duplicates or not planned map to **Canceled**. Review the
+suggested **Done** status for issues closed without a reason. Drafts default to
+**Task** and no priority. Pull request numbers are listed separately. Original
+issue descriptions keep their text and links, with carriage returns normalized
+to line feeds. Issues beyond the Work title or description limits need manual
+review using the source file. The plan lists the omitted metadata and history.
+
+The tool checks the pinned repository and exact GitHub issue URLs and fails on
+malformed rows or repeated issue numbers. The input is limited to 2,048 rows
+and 16 MiB of JSON. A native project currently has room for 128 Work items total.
+Review the intended destination and its remaining capacity before copying any
+drafts into Work. This is a preview of the supplied GitHub rows. It creates no
+Stead records and makes no changes to GitHub. Keep both files within the same
+private custody as the issues.
+
+The November 14 preview of the pinned GitHub repository produced 35 Work
+drafts (20 To do), excluded 48 pull requests and reported no title or body
+size exceptions. The data stayed in a private local rehearsal directory.
+
+### Rehearse selected drafts on a disposable Home
+
+Use a synthetic issue export and the existing [disposable Home session
+format](PORTABLE_RECOVERY_PROFILE.md#local-create-only-import). The importer
+connects only to numeric loopback and requires verified TLS for
+`home.localhost`, the native `isolated-fake` runtime, and a current individual
+project creator session. The session file and CA path below are for the
+disposable Home.
+
+```sh
+common=(--source "$run_dir/issues.json" --preview "$run_dir/work-plan.json"
+  --preview-sha256 "$REVIEWED_PREVIEW_SHA256" --target-home '~zod'
+  --session-file "$LOCAL_SESSION_FILE" --ca-file "$LOCAL_CA_FILE")
+python3 -B scripts/urbit/github_work_import.py plan "${common[@]}" \
+  --project-key GHIMPORT --title 'GitHub import rehearsal' \
+  --issue 2 --issue 9 --output "$run_dir/import-plan.json"
+```
+
+Replace the example issue numbers with the complete drafts you reviewed. The
+new plan binds your selection and target to the exact preview and source
+bytes. Review the project and selection in that plan, then use the project ID
+and plan SHA-256 from the planning receipt. Create the progress directory once.
+
+```sh
+mkdir -m 700 "$run_dir/progress"
+bound=(--plan "$run_dir/import-plan.json" --plan-sha256 "$REVIEWED_IMPORT_SHA256"
+  --confirm-project "$REVIEWED_PROJECT_ID" --progress "$run_dir/progress")
+python3 -B scripts/urbit/github_work_import.py apply "${common[@]}" "${bound[@]}"
+python3 -B scripts/urbit/github_work_import.py verify "${common[@]}" "${bound[@]}"
+```
+
+Apply creates a new project and its selected Work items in batches of at most
+16 commands. A `ready` result needs another batch. If a response is uncertain,
+keep the same plan and progress, investigate and rerun `apply` explicitly to
+retry the exact pending command. The importer matches native receipts to the
+project, actor and inputs before proceeding. After `complete`, `verify` reads
+back every Work item and refuses missing, changed or unexpected records. Fresh
+sessions for the same binding can resume a plan. A changed binding or Home
+requires a new rehearsal. Keep the disposable project under sole control until
+verification completes.
+
+A guarded run on two disposable fake ships passed 19 checks with actual native
+member approval and HTTPS. It applied two invented issues in separate CLI
+processes, verified exact Work readback, and replayed the completed plan without
+creating a duplicate. The fixture also rejected the wrong target confirmation,
+changed source bytes and overwrite of the prior preview. It removed the member
+session and reaped both fakes. No GitHub issue was written to the pilot.
+The private report `.runtime/github-import-native-hwhq451u/state/report.json`
+has SHA-256 `5031fc201ea79eb46ec35ad092a9d110c20560faab0e9bcb3dc97e468a7eb571`.
 
 ## After the synthetic pilot
 
