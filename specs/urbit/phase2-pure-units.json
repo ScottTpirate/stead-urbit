@@ -1,7 +1,7 @@
 {
   "format": 1,
   "classification": "pure-native-only",
-  "expected_arm_count": 115,
+  "expected_arm_count": 118,
   "suites": [
     {
       "path": "/tests/stead-session",
@@ -197,6 +197,15 @@
         "test-pack-carrier-opens-current-anchor-and-applies-verified-proof",
         "test-pack-carrier-receipt-selects-exact-historical-base",
         "test-pack-carrier-refuses-missing-credential-inexact-time-and-worker"
+      ],
+      "timeout_seconds": 60
+    },
+    {
+      "path": "/tests/stead-code-pack-admit",
+      "arms": [
+        "test-pack-admit-exact-python-roundtrip",
+        "test-pack-admit-refuses-wrong-scope-and-invalid-actor",
+        "test-pack-admit-refuses-duplicate-or-oversized-changes"
       ],
       "timeout_seconds": 60
     },
