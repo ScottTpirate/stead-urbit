@@ -140,7 +140,7 @@ maintainer opens **Code**, reviews the exact snapshot and refs, and selects
 authority epoch, candidate digest, and absence of an inline or accepted
 repository. It saves the exact refs, manifest and receipt in one transition.
 The same request ID replays the receipt only for the same current authorized
-binding. The current external snapshot is immutable.
+binding. Each pack snapshot is immutable.
 
 An authorized operator can read the accepted snapshot through the Home and
 restore the matching private pack locally. Use the existing private session
@@ -189,8 +189,8 @@ command block, and reconstructs the candidate with the selected immutable
 base in a temporary Git repository. It supports bounded SHA-1 thin packs
 whose missing bases belong to that snapshot. It rejects added objects outside
 the proposed ref closure, then prepares the complete immutable candidate.
-The test peer captures ordinary stock push bytes and never reports acceptance.
-No external HTTPS write route calls this worker yet.
+The preparation rehearsal captures ordinary stock push bytes and reports a
+refusal. The private fake-ship push test below exercises Home acceptance.
 
 Run `git_pack_rehearsal.py` with the same exact branch and tag pins as the
 bundle rehearsal to capture a stock push and test the complete preparation
@@ -218,7 +218,7 @@ generation and prior OIDs, and consults verified object facts and project
 policy. The tests include a byte-exact non-UTF-8 ref, hidden ref changes and
 direct protected updates. A candidate and an accepted receipt have separate
 types. The reducer is not connected to a saved Home ledger or external push
-route. Report `.runtime/pack-push-native-ELIcQOlt/state/report.json`, SHA-256
+route in that reducer-only run. Report `.runtime/pack-push-native-ELIcQOlt/state/report.json`, SHA-256
 `cb6b464064f490d9061f78b49bfc284d2efeb2dbd363fe29fe77621a9a67b65b`.
 
 ### Private push adapter
@@ -228,10 +228,25 @@ the Home the individual write credential for each transition. A positive Git
 report requires a canonical Home receipt matching the admission, actor, exact
 ordered ref changes and accepted snapshot. If the commit response is lost, the
 adapter performs one read-only lookup with the original admission and proof.
-The stock Git transport test uses a simulated Home. The native admission
-builder separately passed three pinned Vere tests, including a byte-for-byte
-comparison with the worker's canonical format. A live worker deployment and
-protected-branch advancement require their own qualification.
+The host transport test uses a simulated Home. The native admission builder
+separately passed three pinned Vere tests, including a byte-for-byte
+comparison with the worker's canonical format.
+
+The guarded two-ship test connected stock Git over private loopback HTTPS to
+a disposable Urbit Home. It passed 24 checks. A member pushed a branch and
+annotated tag, and Git received a success report after recovering the exact
+receipt from a deliberately lost commit reply. The Home refused a direct
+default-branch push and then refused the revoked uploader's credential.
+After restarting Home, a fresh member approval and mirror clone reproduced
+the exact refs and 7,805 reachable IDs and passed strict `fsck`. Both ships
+stopped cleanly. The Home enables this transport only on the isolated fake
+profile. The live pilot still needs an authenticated worker deployment,
+protected-branch review and a fresh restore rehearsal for accepted writes.
+
+| Evidence | SHA-256 |
+|---|---|
+| `.runtime/pack-push-stock-4x_848lf/state/report.json` | `f21e1b2f967ecf6c31e7c0b0fb94d9f2be524f8b41815a073b615d830d56bbd6` |
+| `.runtime/execution-runs/pack-push-stock-po2qs3z8/report.json` | `234c21ed59d7b441d55d57f9643ef9bfd215e4d444691114f1429e7ed7d7fc3d` |
 
 ## Prepare GitHub issues for Work
 
