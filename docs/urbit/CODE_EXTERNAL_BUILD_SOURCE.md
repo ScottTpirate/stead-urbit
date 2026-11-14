@@ -37,6 +37,34 @@ extracting files or executing project code. The Home still needs an assigned
 build job, an independently authorized attempt and explicit acceptance of its
 result before it can record a build outcome.
 
+## Isolated automation command
+
+Use [`git_pack_build_integrity.py`](../../scripts/urbit/git_pack_build_integrity.py)
+on an unprivileged Linux worker with Bubblewrap. Give it a private canonical
+JSON job, its independently trusted SHA-256, and the source directory. The
+job has these four fields, with a final LF after canonical JSON serialization.
+
+| Field | Required value |
+| --- | --- |
+| `protocol` | `stead.build.source-integrity-job/1` |
+| `job_id` | A valid UUIDv7 |
+| `recipe` | `stead.build.verify-source-archive/1` |
+| `source_manifest_sha256` | The trusted digest of `source.json` |
+
+```sh
+python3 -B scripts/urbit/git_pack_build_integrity.py \
+  --job "$PRIVATE_JOB" --job-sha256 "$TRUSTED_JOB_SHA256" \
+  --source "$PRIVATE_SOURCE_DIR"
+```
+
+The launcher binds the open job, source files, and reviewed verifier modules
+read-only by descriptor. The worker checks distinct namespaces, read-only
+mounts, loopback-only networking, and the absence of capabilities. The launcher
+rechecks the original paths and inodes before emitting bounded canonical
+`stead.build.source-integrity-result/1` evidence. The result includes the exact
+job digest and the digest of the verifier result. It contains no credentials
+and performs no job admission, repository changes, or release actions.
+
 ## Local evidence
 
 The retained synthetic reviewed snapshot `2652605332d2fb5b32f67b40c855518e41d1289a5a9b4f17438aecbeba74e6c1`
