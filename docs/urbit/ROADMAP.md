@@ -62,8 +62,14 @@ gates.
 
 The [Phase 5 local evidence](PHASE5_LOCAL_20261110.md) records the fenced
 same-ship move, source-project retirement and exact full-history Git approval
-and readback. Cross-ship activation, full-history stock Git serving and the
-live pilot and cutover remain open. The [Phase 6 release verifier](RELEASE_READINESS.md)
+and readback. The November 14 private standalone pilot verified member
+sign-in, Work/Docs, binding revocation, clean restarts and full-history Git
+restore. Separate guarded fixtures verified stock clone/fetch with native
+authorization and rehearsed GitHub issues as Stead Work. The native external
+push ledger, worker proof, and Home v8 persistence have scoped passing tests.
+Full-history push acceptance, protected review integration, cross-ship
+activation, fresh-host admission and GitHub cutover remain open. The
+[Phase 6 release verifier](RELEASE_READINESS.md)
 passed a synthetic key-recovery drill. Independent adoption, support and
 release operations still need evidence from the actual participants.
 
