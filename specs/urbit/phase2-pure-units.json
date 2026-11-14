@@ -1,7 +1,7 @@
 {
   "format": 1,
   "classification": "pure-native-only",
-  "expected_arm_count": 127,
+  "expected_arm_count": 129,
   "suites": [
     {
       "path": "/tests/stead-session",
@@ -210,6 +210,14 @@
         "test-pack-carrier-opens-current-anchor-and-applies-verified-proof",
         "test-pack-carrier-receipt-selects-exact-historical-base",
         "test-pack-carrier-refuses-missing-credential-inexact-time-and-worker"
+      ],
+      "timeout_seconds": 60
+    },
+    {
+      "path": "/tests/stead-code-pack-relay-wire",
+      "arms": [
+        "test-pack-relay-wire-advertise-closed-frame",
+        "test-pack-relay-wire-receipt-preserves-cords"
       ],
       "timeout_seconds": 60
     },

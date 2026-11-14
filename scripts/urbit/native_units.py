@@ -116,6 +116,7 @@ def validate_inventory(value: dict) -> dict:
                    '/tests/stead-code-pack-carrier': ('test-pack-carrier-', 3, 60),
                    '/tests/stead-code-pack-admit': ('test-pack-admit-', 3, 60),
                    '/tests/stead-code-pack-worker-signature': ('test-pack-worker-signature-', 2, 60),
+                   '/tests/stead-code-pack-relay-wire': ('test-pack-relay-wire-', 2, 60),
                    '/tests/stead-code-pack-control': ('test-pack-control-', 3, 60),
                    '/tests/stead-home-v8-rehearsal': ('test-home-v8-', 5, 60),
                    '/tests/stead-update-capacity': ('test-updates-', 2, 180)}
