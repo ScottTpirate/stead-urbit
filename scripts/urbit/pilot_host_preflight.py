@@ -16,7 +16,7 @@ from portable_recovery import encoded
 
 
 MIB = 1024 * 1024
-QUALIFIED_GIT = '2.55.0'
+QUALIFIED_GIT = '2.55.1'
 CONTROLS = {'cpu': 'cpu.max', 'memory': 'memory.max', 'pids': 'pids.max', 'io': 'io.max'}
 BWRAP_FLAGS = ('--bind-fd', '--ro-bind-fd', '--disable-userns')
 TOOLS = {'git': ('--version',), 'bubblewrap': ('--version',), 'nginx': ('-v',),

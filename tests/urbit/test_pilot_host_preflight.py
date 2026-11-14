@@ -94,5 +94,5 @@ class PilotHostPreflightTests(unittest.TestCase):
         with patch.object(host, '_trusted', return_value=binary):
             with patch.object(host, '_command', return_value='git version 2.43.0'):
                 self.assertEqual(host._tool('git', binary), {'status': 'version-unqualified', 'version': '2.43.0'})
-            with patch.object(host, '_command', return_value='git version 2.55.0'):
-                self.assertEqual(host._tool('git', binary), {'status': 'qualified-version', 'version': '2.55.0'})
+            with patch.object(host, '_command', return_value='git version 2.55.1'):
+                self.assertEqual(host._tool('git', binary), {'status': 'qualified-version', 'version': '2.55.1'})
