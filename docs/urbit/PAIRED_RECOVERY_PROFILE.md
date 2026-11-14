@@ -92,8 +92,11 @@ The values below are placeholders, not evidence.
 
 Versions 7, 8 and 9 are accepted: they retain accepted pack state. The Home
 handoff generation is distinct from the project authority epoch and Git
-ledger generation. A capture preserves the actual readback fields and does
-not invent a Git generation absent from that response.
+ledger generation. Updated native responses may also include `generation` in
+`selection`; preserve it as the original unsigned decimal string. The optional
+`generation_limit` requires that generation and must be positive and at least
+as large. Both are validated and bound when present. A capture does not invent them for
+older responses, including the qualified `caaa85e` fixture.
 
 ## Build and verify
 
@@ -136,7 +139,7 @@ retirement, Git object verification and fresh-host qualification false.
 
 ## Remaining fresh-host qualification
 
-The 15 focused host tests use tiny synthetic files and mock no native restore.
+The 16 focused host tests use tiny synthetic files and mock no native restore.
 They do not establish that a retained real checkpoint is sealed or bootable.
 To qualify a paired restore on an independently prepared fresh host:
 
@@ -160,3 +163,38 @@ To qualify a paired restore on an independently prepared fresh host:
 
 No such fresh-host qualification is implied by a binding or by the separate
 accepted-pack encrypted restore rehearsal.
+
+## Bounded local checkpoint helpers
+
+`scripts/urbit/checkpoint_archive.py` supplies the local rehearsal's exact-tree
+archive and encryption operations. `archive_tree` includes every regular file
+and retained Clay mount; `extract_tree` rejects traversal, duplicate names,
+links, devices, sparse/PAX entries and nonzero trailing payloads. The destination
+tree must match the independently retained checkpoint fingerprint before its
+new name is published. Existing destinations are never replaced. Failed
+extraction leaves an unpublished private scratch tree for inspection.
+
+The checkpoint helper now accepts an explicit `maximum_files` profile up to
+32,768. Its default remains 8,192. The larger profile keeps the existing 4,096
+directory, 512-MiB individual-file and 1-GiB tree-byte limits; no mount or alias
+is silently omitted. The archive profile reserves header space and limits tar
+bytes to 960 MiB and ciphertext to 1 GiB.
+
+`crypt_file` streams through a separately pinned installed GnuPG executable,
+with AES256-OCB selected explicitly. Its caller supplies a fresh random 32-byte
+synthetic key encoded as 64 lowercase hex digits plus newline in a private file.
+The passphrase is passed only on an inherited descriptor. GnuPG uses a temporary
+private home, no agent autostart, no external key lookup and no compression.
+The wrapper accepts decrypt output only after GnuPG reports the exact AEAD
+profile and successful authentication; legacy MDC ciphertext is refused.
+Plaintext remains private and unpublished until that check finishes. No Python
+cryptographic primitive is implemented. The wrapper caps process address space
+at 512 MiB, CPU at 90 seconds, output size at 1 GiB, status output at 64 KiB and
+wall time at 120 seconds. Large runs still require the ordinary execution guard.
+
+Seven focused tests executed against installed GnuPG 2.4.9 cover a tiny AEAD
+roundtrip and exact restore, corrupt ciphertext, wrong key, wrong executable
+pin, legacy-profile rejection, archive attacks and create-only publication.
+Five additional checkpoint-profile tests cover explicit bounds, exact alias
+copies and hostile filesystem entries; the ten existing checkpoint tests still
+pass. These are host tests, not evidence of an executed paired native restore.

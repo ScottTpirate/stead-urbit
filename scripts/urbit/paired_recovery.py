@@ -125,12 +125,19 @@ def capture(raw):
     store.validate_scope(scope)
     require(scope['home'] == status['home'] and scope['project_id'] == scope['repository_id'],
             'paired-recovery-home-scope')
-    shape(selected, SELECTION_FIELDS)
+    optional = {'generation', 'generation_limit'} & selected.keys() if isinstance(selected, dict) else set()
+    shape(selected, SELECTION_FIELDS | optional)
     require(selected['protocol'] == 'stead.code/1' and selected['status'] == 'external'
             and match(TOKEN, selected['snapshot']) and match(UUID, selected['request_id'])
             and selected['authority_epoch'] == scope['authority_epoch'], 'paired-recovery-selection')
     number(selected['object_count'])
     number(selected['accepted_at_ms'])
+    if 'generation' in selected:
+        number(selected['generation'], positive=False)
+    if 'generation_limit' in selected:
+        number(selected['generation_limit'])
+        require('generation' in selected and int(selected['generation']) <= int(selected['generation_limit']),
+                'paired-recovery-generation-limit')
     require(int(selected['object_count']) <= store.MAX_OBJECTS
             and isinstance(selected['refs'], str) and selected['refs'].isascii()
             and len(selected['refs']) <= store.MAX_MANIFEST, 'paired-recovery-selection-bound')
@@ -176,6 +183,10 @@ def report(value, observed, digest):
             'handoff_generation': observed['handoff']['generation'], 'scope': observed['scope'],
             'checkpoint': observed['checkpoint'], 'snapshot': observed['selection']['snapshot'],
             'request_id': observed['selection']['request_id'],
+            **({'selected_generation': observed['selection']['generation']}
+               if 'generation' in observed['selection'] else {}),
+            **({'selected_generation_limit': observed['selection']['generation_limit']}
+               if 'generation_limit' in observed['selection'] else {}),
             'authority_basis': 'externally-pinned-operator-evidence',
             'native_execution': False, 'home_replayed': False, 'git_objects_verified': False,
             'source_retirement_verified': False, 'decryption_verified': False,

@@ -109,6 +109,26 @@ class PairedRecoveryTests(unittest.TestCase):
         with self.assertRaisesRegex(ValueError, 'binding-digest'):
             self.verify(report['binding_sha256'])
 
+    def test_optional_native_generation_is_bound_and_strictly_validated(self):
+        changed = copy.deepcopy(self.observed)
+        changed['selection']['generation'] = '2'
+        self.capture_bytes(changed)
+        self.assertEqual(self.build()[1]['selected_generation'], '2')
+        changed['selection']['generation_limit'] = '63'
+        self.capture_bytes(changed)
+        self.assertEqual(self.build()[1]['selected_generation_limit'], '63')
+        changed['selection']['generation_limit'] = '1'
+        self.capture_bytes(changed)
+        with self.assertRaisesRegex(ValueError, 'generation-limit'):
+            self.build()
+        changed['selection']['generation_limit'] = '63'
+        for value in ('-1', '01', '', '18446744073709551616', 2, True):
+            with self.subTest(value=value):
+                changed['selection']['generation'] = value
+                self.capture_bytes(changed)
+                with self.assertRaisesRegex(ValueError, 'invalid-number'):
+                    self.build()
+
     def test_open_wrong_home_epoch_and_invalid_receipts_are_rejected(self):
         changes = [('handoff', 'phase', 'open'), ('handoff', 'home', '~bus'),
                    ('handoff', 'generation', '1'), ('selection', 'authority_epoch', '8'),

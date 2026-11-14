@@ -94,8 +94,13 @@ def restore_profile(checkpoint):
     return next(iter(modes), None)
 
 
-def checkpoint_tree(pier, copy_to=None, *, installed=False):
+def checkpoint_tree(pier, copy_to=None, *, installed=False, maximum_files=8192):
     """Bounded, owned, no-follow regular tree fingerprint and optional new copy."""
+    # A populated disposable Home can retain multiple complete Clay mounts.
+    # Callers must explicitly select the reviewed larger profile; the release
+    # default and all directory, individual-file and total-byte caps stay fixed.
+    if type(maximum_files) is not int or not 1 <= maximum_files <= 32768:
+        raise ValueError('Checkpoint file-count profile is outside the supported bound')
     files, directories, total = {}, [], 0
     def visit(source, target, prefix=''):
         nonlocal total
@@ -127,7 +132,7 @@ def checkpoint_tree(pier, copy_to=None, *, installed=False):
                     if output is not None:
                         os.close(output)
             elif stat.S_ISREG(info.st_mode) and info.st_nlink == 1:
-                if len(files) >= 8192 or info.st_size > 512 * 1024 * 1024:
+                if len(files) >= maximum_files or info.st_size > 512 * 1024 * 1024:
                     raise ValueError('Checkpoint file bound')
                 descriptor = os.open(name, os.O_RDONLY | os.O_NOFOLLOW | os.O_NONBLOCK, dir_fd=source)
                 output = None
