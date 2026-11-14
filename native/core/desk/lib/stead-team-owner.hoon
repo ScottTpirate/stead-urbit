@@ -1,5 +1,5 @@
 ::  Configured-team Gall driver. Only stead-home owns and calls this state.
-/+  stead-codec, stead-core, stead-team, stead-team-config, stead-team-codec, stead-session, stead-http, stead-browser, stead-projection, stead-views, stead-restore, stead-eyre, stead-assets, server, stead-updates, stead-update-codec, stead-code-home, stead-code-http, stead-code-credentials, stead-project-retirement, stead-code-pack-anchor, stead-code-pack-ledger
+/+  stead-codec, stead-core, stead-team, stead-team-config, stead-team-codec, stead-session, stead-http, stead-browser, stead-projection, stead-views, stead-restore, stead-eyre, stead-assets, server, stead-updates, stead-update-codec, stead-code-home, stead-code-http, stead-code-credentials, stead-project-retirement, stead-code-pack-anchor, stead-code-pack-ledger, stead-code-pack-owner, stead-code-pack-control, stead-code-receive
 =,  stead-codec
 |%
 +$  pending-entry  [actor=authentication:stead-team expires=@ud]
@@ -181,6 +181,49 @@
   ++  retired-project
     |=  project=@t
     (~(has by retired.owner) project)
+  ++  pack-local-ready
+    ^-  ?
+    ?&  available
+        =('isolated-fake' runtime:(need current.registry.db.owner))
+        fake-ship
+    ==
+  ++  pack-local
+    |=  cmd=command:stead-code-pack-owner
+    ^-  (quip card:agent:gall state)
+    ?>  &(pack-local-ready =(src.bowl our.bowl))
+    ?>  &((token-valid:stead-session nonce.cmd) (uuid project.cmd))
+    =/  route=path  [%pack-local nonce.cmd ~]
+    ?>  (lien ~(tap by sup.bowl) |=([duct [ship=@p path=path]] &(=(ship our.bowl) =(path route))))
+    =/  scope  (target:stead-code-home db.owner project.cmd)
+    =/  seed  (~(get by packs.code.owner) project.cmd)
+    =/  now  (now-ms now.bowl)
+    =/  answer
+      ^-  response:stead-code-pack-owner
+      ?:  (retired-project project.cmd)  (refused:stead-code-pack-owner %denied)
+      ?:  ?=(%advertise -.task.cmd)
+        =/  out  (pack-for:stead-code-home db.owner code.owner project.cmd bearer.cmd now (external-selection project.cmd) %write)
+        ?:  !=(200 status.out)  (refused:stead-code-pack-owner %denied)
+        [data.body.out ~]
+      ?.  &(?=(^ scope) ?=(^ seed))  (refused:stead-code-pack-owner %denied)
+      =/  gates=context:stead-code-pack-control
+        :*  u.scope  now  incarnation.owner  available  |  (retired-project project.cmd)
+            book.code.owner  (member:stead-code-home db.owner now)  (allowed:stead-code-home db.owner now)
+            |=([action:stead-code-receive update:stead-code-pack-ledger] &)
+            ~
+            ::  Proof comes from the authenticated local fixture owner. Bind it
+            ::  to the checked upload and candidate in addition to carrier checks.
+            |=  [row=admission:stead-code-pack-ledger evidence=checked:stead-code-pack-ledger]
+            ?&  (proof-matches:stead-code-pack-ledger claim.row evidence)
+                (valid-manifest:stead-code-pack-anchor pack.evidence)
+            ==
+        ==
+      (apply:stead-code-pack-owner (~(get by external.owner) project.cmd) u.seed gates cmd)
+    =?  owner  ?=(^ changed.answer)
+      owner(external (~(put by external.owner) project.cmd u.changed.answer))
+    :_  owner
+    :~  [%give %fact [route ~] %stead-result-3 !>(body.answer)]
+        [%give %kick [route ~] ~]
+    ==
   ++  inspect
     |=  nonce=@t
     ^-  (quip card:agent:gall state)
@@ -253,7 +296,7 @@
     =/  parsed  (validate:stead-http request origin.config (paths:stead-assets '/stead/'))
     ?~  parsed  [(response id 403 'application/json' (error:stead-team 'invalid_http_request') ~) owner]
     ?:  =('/stead/api/code' route.u.parsed)
-      (code-response id (manage-selected:stead-code-home db.owner code.owner auth.transient.owner u.parsed (now-ms now.bowl) eny.bowl retired-project external-selection))
+      (code-response id (manage-with-worker:stead-code-home db.owner code.owner auth.transient.owner u.parsed (now-ms now.bowl) eny.bowl retired-project external-selection pack-local-ready))
     ?:  =(%'GET' method.request.request)
       =/  entry  (~(get by files.owner) route.u.parsed)
       ?~  entry  [(response id 404 'text/plain' 'Not found' ~) owner]
@@ -305,6 +348,11 @@
     ?:  =(%stead-bootstrap-1 mark)  (bootstrap !<(@t vase))
     ?:  =(%handle-http-request mark)  (http !<([@ta inbound-request:eyre] vase))
     ?>  available
+    ?:  =(%noun mark)
+      ?>  &(pack-local-ready =(src.bowl our.bowl))
+      =/  [~ %stead-pack-local cmd=command:stead-code-pack-owner]
+        ;;([~ %stead-pack-local command:stead-code-pack-owner] q.vase)
+      (pack-local cmd)
     ?:  =(%stead-code-pack-stage-1 mark)
       ?>  =(src.bowl our.bowl)
       =/  pack  (decode:stead-code-pack-anchor !<(@t vase))
@@ -369,6 +417,10 @@
       ?>  (lte (lent ~(tap by sup.bowl)) 128)
       [~ owner]
     ?:  ?=([%operator @ ~] route)  (inspect i.t.route)
+    ?:  ?=([%pack-local @ ~] route)
+      ?>  &(pack-local-ready =(src.bowl our.bowl) (token-valid:stead-session i.t.route))
+      ?>  (lte (lent (skim ~(tap by sup.bowl) |=([duct [ship=@p prior=path]] =(prior route)))) 1)
+      [~ owner]
     ?>  &(available ?=([%v3 %result @ @ @ @ @ ~] route))
     =/  actor  native-actor
     ?>  &(=(i.t.t.route (scot %p src.bowl)) =(i.t.t.t.route binding.identity.actor))
