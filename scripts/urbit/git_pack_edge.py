@@ -157,6 +157,9 @@ map "$request_method|$request_uri|$http_host|$ssl_server_name|$http_content_type
 map $http_authorization $stead_git_authorization {{
     default 0;
     "" 1;
+    # A username in the URL can make stock Git probe with an empty password.
+    # Pass just that shape through to the relay's ordinary 401 challenge.
+    "~^Basic c3RlYWQ6$" 1;
     "~^Basic [A-Za-z0-9+/]{{94}}==$" 1;
 }}
 map "$http_cookie|$http_cookie2|$http_x_stead_csrf|$http_origin" $stead_git_foreign {{

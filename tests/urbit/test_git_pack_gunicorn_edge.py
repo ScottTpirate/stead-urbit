@@ -137,11 +137,16 @@ class GunicornEdgeTests(unittest.TestCase):
         destination = edge.root / 'stock-clone'
         git = [str(cached.git), '-c', f'http.curloptResolve={fixtures.HOST}:{edge.profile.public_port}:127.0.0.1',
                '-c', f'http.sslCAInfo={edge.edge_certificate}', '-c', 'http.version=HTTP/1.1', '-c', 'protocol.version=0',
-               '-c', 'http.extraHeader=Authorization: ' + fixtures.GIT_AUTH]
-        url = origin + fixtures.BASE
+               '-c', 'credential.helper=']
+        askpass = edge.root / 'askpass'
+        askpass.write_text('#!/bin/sh\ncase "$1" in *Username*) printf "stead\\n" ;;\n'
+                           '*Password*) printf "%s\\n" ' + ('a' * 64) + ' ;;\n*) exit 1 ;;\nesac\n', encoding='ascii')
+        askpass.chmod(0o700)
+        url = origin.replace('https://', 'https://stead@', 1) + fixtures.BASE
         result = subprocess.run(git + ['clone', url, str(destination)], cwd=edge.root, env={
             'PATH': '/usr/bin:/bin', 'LANG': 'C.UTF-8', 'GIT_CONFIG_NOSYSTEM': '1',
-            'GIT_CONFIG_GLOBAL': '/dev/null', 'GIT_TERMINAL_PROMPT': '0'}, capture_output=True, timeout=18)
+            'GIT_CONFIG_GLOBAL': '/dev/null', 'GIT_TERMINAL_PROMPT': '0', 'GIT_ASKPASS': str(askpass)},
+            capture_output=True, timeout=18)
         self.assertEqual(result.returncode, 0, result.stderr.decode() + log.read_text())
         self.assertEqual(subprocess.check_output([str(cached.git), '-C', destination, 'rev-parse', 'HEAD']).strip(),
                          cached.fixture.base)
