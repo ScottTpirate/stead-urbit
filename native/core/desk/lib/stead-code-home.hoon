@@ -118,11 +118,11 @@
           selection=$-(@t (unit pack-selection))
       ==
   ^-  result
-  (manage-with-worker db code auth input now entropy retired selection |)
+  (manage-with-worker db code auth input now entropy retired selection |=(@t |))
 ++  manage-with-worker
   |=  $:  db=state:stead-team  code=state  auth=state:stead-session
           input=incoming:stead-http  now=@ud  entropy=@  retired=$-(@t ?)
-          selection=$-(@t (unit pack-selection))  worker-ready=?
+          selection=$-(@t (unit pack-selection))  worker-ready=$-(@t ?)
       ==
   ^-  result
   =/  session  (browser-session db auth input now)
@@ -163,7 +163,7 @@
       ?:  ?=([~ %accepted *] pack)  'external'
       ?:  &(?=(^ pack) =(3 role))  'external-staged'
       ?~(found 'disabled' 'ready')
-    =/  writable  &((gte role 2) !fenced |(?=(~ pack) &(worker-ready ?=([~ %accepted *] pack))))
+    =/  writable  &((gte role 2) !fenced |(?=(~ pack) &((worker-ready project) ?=([~ %accepted *] pack))))
     (respond code ~[['status' status] ['write' ?:(writable 'yes' 'no')] ['manage' ?:(=(3 role) 'yes' 'no')]])
   ?:  =('pack-view' operation)
     ?.  (keys values base)  (error code 400 'invalid_request')
@@ -195,7 +195,7 @@
     ?.  (keys values ['access' base])  (error code 400 'invalid_request')
     =/  access  (field values 'access')
     ?.  |(=('read' access) =('write' access))  (error code 400 'invalid_request')
-    ?.  |(?=(^ found) =('read' access) worker-ready)
+    ?.  |(?=(^ found) =('read' access) (worker-ready project))
       (error code 404 'denied_or_not_found')
     =/  issued
       (issue:stead-code-credentials book.code who destination =('write' access) expires.u.session now entropy (allowed db now))

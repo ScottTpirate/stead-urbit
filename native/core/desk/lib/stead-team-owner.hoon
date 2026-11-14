@@ -1,5 +1,5 @@
 ::  Configured-team Gall driver. Only stead-home owns and calls this state.
-/+  stead-codec, stead-core, stead-team, stead-team-config, stead-team-codec, stead-session, stead-http, stead-browser, stead-projection, stead-views, stead-restore, stead-eyre, stead-assets, server, stead-updates, stead-update-codec, stead-code-home, stead-code-http, stead-code-credentials, stead-project-retirement, stead-code-pack-anchor, stead-code-pack-ledger, stead-code-pack-owner, stead-code-pack-control, stead-code-receive
+/+  stead-codec, stead-core, stead-team, stead-team-config, stead-team-codec, stead-session, stead-http, stead-browser, stead-projection, stead-views, stead-restore, stead-eyre, stead-assets, server, stead-updates, stead-update-codec, stead-code-home, stead-code-http, stead-code-credentials, stead-project-retirement, stead-code-pack-anchor, stead-code-pack-ledger, stead-code-pack-owner, stead-code-pack-control, stead-code-receive, stead-code-pack-relay, stead-code-pack-relay-pin, stead-code-pack-relay-http, stead-code-pack-relay-wire
 =,  stead-codec
 |%
 +$  pending-entry  [actor=authentication:stead-team expires=@ud]
@@ -12,14 +12,14 @@
       files=(map @t [mime=@t bytes=@t])
       code=state:stead-code-home  git-waiting=(map @t git-reply)
       retired=ledger:stead-project-retirement
-      external=external-writes
+      external=external-writes  relay=state:stead-code-pack-relay-pin
   ==
 +$  saved  [db=state:stead-team projection=state:stead-projection]
 ++  empty
   ^-  state
   =/  view=state:stead-projection
     [*index:stead-projection *index:stead-projection ~ | |]
-  [empty:stead-team view *ephemeral:stead-browser ~ '' '' ~ ~ *state:stead-code-home ~ ~ ~]
+  [empty:stead-team view *ephemeral:stead-browser ~ '' '' ~ ~ *state:stead-code-home ~ ~ ~ [%closed 0 ~]]
 ++  now-ms
   |=  now=@da
   (div (mul 1.000 (sub now ~1970.1.1)) ~s1)
@@ -102,7 +102,7 @@
     =/  staged  (begin:stead-restore db.old our.bowl)
     =/  job  (token:stead-session eny.bowl act.bowl 'stead.restore-job/1')
     =/  fresh=state
-      [empty:stead-team *state:stead-projection *ephemeral:stead-browser [~ staged] job '' ~ ~ [repos.code *ledger:stead-code-credentials uploads.code reviews.code builds.code ~] ~ ~ ~]
+      [empty:stead-team *state:stead-projection *ephemeral:stead-browser [~ staged] job '' ~ ~ [repos.code *ledger:stead-code-credentials uploads.code reviews.code builds.code ~] ~ ~ ~ [%closed 0 ~]]
     =.  owner  fresh
     [(weld kicks ~[bind wait]) owner]
   ++  load-v7
@@ -138,7 +138,7 @@
     ?>  ?|(=('isolated-fake' runtime.config) (runtime-matches config))
     =/  view  (begin:stead-projection next view.owner)
     =/  job  (token:stead-session eny.bowl act.bowl 'stead.projection-job/1')
-    =.  owner  owner(db next, view view, transient *ephemeral:stead-browser, pending ~, incarnation '', job job, files ~, code code.owner(book *ledger:stead-code-credentials), git-waiting ~)
+    =.  owner  owner(db next, view view, transient *ephemeral:stead-browser, pending ~, incarnation '', job job, files ~, code code.owner(book *ledger:stead-code-credentials), git-waiting ~, relay (reset:stead-code-pack-relay-pin relay.owner))
     [(weld kicks ~[bind wait]) owner]
   ++  load-assets
     ^-  (map @t [mime=@t bytes=@t])
@@ -173,7 +173,7 @@
       (turn (skip ~(tap in old-paths) |=(old=path =(old route))) |=(old=path [%give %kick [old ~] ~]))
     =/  replies=(list card:agent:gall)
       ~[[%give %fact [route ~] %stead-result-3 !>(response)] [%give %kick [route ~] ~]]
-    :_  owner(transient *ephemeral:stead-browser, pending ~, incarnation incarnation, files files, code code.owner(book *ledger:stead-code-credentials), git-waiting ~)
+    :_  owner(transient *ephemeral:stead-browser, pending ~, incarnation incarnation, files files, code code.owner(book *ledger:stead-code-credentials), git-waiting ~, relay (reset:stead-code-pack-relay-pin relay.owner))
     (weld retired replies)
   ++  available
     ^-  ?
@@ -187,6 +187,13 @@
         =('isolated-fake' runtime:(need current.registry.db.owner))
         fake-ship
     ==
+  ++  pack-write-ready
+    |=  project=@t
+    ^-  ?
+    ?:  pack-local-ready  &
+    =/  selected  (target:stead-code-home db.owner project)
+    ?~  selected  |
+    (matches:stead-code-pack-relay-pin relay.owner u.selected incarnation.owner)
   ++  pack-local
     |=  cmd=command:stead-code-pack-owner
     ^-  (quip card:agent:gall state)
@@ -249,6 +256,17 @@
     :~  [%give %fact ~ %stead-result-3 !>(response)]
         [%give %kick ~ ~]
     ==
+  ++  inspect-relay
+    ^-  (quip card:agent:gall state)
+    ?>  =(src.bowl our.bowl)
+    =/  status  ?:(?=(%open -.relay.owner) 'open' 'closed')
+    =/  raw
+      %-  canonical  %-  object
+      ~[['protocol' 'stead.git-pack-relay-status/1'] ['status' status] ['generation' (decimal generation.relay.owner)] ['incarnation' incarnation.owner]]
+    :_  owner
+    :~  [%give %fact ~ %stead-result-3 !>(raw)]
+        [%give %kick ~ ~]
+    ==
   ++  response
     |=  [id=@ta status=@ud mime=@t bytes=@t cookies=(list @t)]
     ^-  (list card:agent:gall)
@@ -270,6 +288,41 @@
     ?~  journal.u.row  ~
     =/  recent  (~(got by receipts.u.row) i.journal.u.row)
     [~ current.u.row i.journal.u.row accepted-at.result.recent]
+  ++  relay-http
+    |=  [id=@ta incoming=inbound-request:eyre]
+    ^-  (quip card:agent:gall state)
+    =/  denied  [(response id 403 'application/json' (error:stead-team 'denied_or_not_found') ~) owner]
+    ?.  ?=(%open -.relay.owner)  denied
+    =/  config  (need current.registry.db.owner)
+    =/  input  (validate:stead-code-pack-relay-http incoming origin.config)
+    ?~  input  denied
+    =/  project  project.u.input
+    =/  scope  (target:stead-code-home db.owner project)
+    =/  seed  (~(get by packs.code.owner) project)
+    ?.  &(?=(^ scope) ?=(^ seed) !(retired-project project))  denied
+    =/  worker  (allowed:stead-code-pack-relay-pin relay.owner u.scope incarnation.owner capability.u.input)
+    ?~  worker  denied
+    =/  now  (now-ms now.bowl)
+    =/  resolve  (member:stead-code-home db.owner now)
+    =/  allows  (allowed:stead-code-home db.owner now)
+    ?.  ?=(^ (check:stead-code-credentials book.code.owner bearer.u.input u.scope %write now resolve allows))
+      denied
+    =/  frame  (decode:stead-code-pack-relay-wire raw.u.input)
+    ?~  frame  denied
+    ?:  ?=(%advertise -.task.u.frame)
+      (code-response id (pack-for:stead-code-home db.owner code.owner project bearer.u.input now (external-selection project) %write))
+    =/  gates=context:stead-code-pack-control
+      :*  u.scope  now  incarnation.owner  available  |  |
+          book.code.owner  resolve  allows
+          |=([action:stead-code-receive update:stead-code-pack-ledger] &)
+          ~
+          |=([admission:stead-code-pack-ledger checked:stead-code-pack-ledger] |)
+      ==
+    =/  out
+      (write:stead-code-pack-relay gates (~(get by external.owner) project) u.seed project bearer.u.input u.worker u.frame)
+    =?  owner  ?=(^ changed.out)
+      owner(external (~(put by external.owner) project u.changed.out))
+    [(response id 200 'application/json' body.out ~) owner]
   ++  http
     |=  [id=@ta request=inbound-request:eyre]
     ^-  (quip card:agent:gall state)
@@ -283,6 +336,8 @@
     ^-  (quip card:agent:gall state)
     ?.  available  [(response id 503 'application/json' (error:stead-team 'projection_unavailable') ~) owner]
     =/  config  (need current.registry.db.owner)
+    ?:  (route:stead-code-pack-relay-http url.request.request)
+      (relay-http id request)
     ?:  (git-path:stead-code-http url.request.request)
       =/  input  (validate:stead-code-http request origin.config)
       ?~  input  [(response id 403 'application/json' (error:stead-team 'invalid_http_request') ~) owner]
@@ -296,7 +351,7 @@
     =/  parsed  (validate:stead-http request origin.config (paths:stead-assets '/stead/'))
     ?~  parsed  [(response id 403 'application/json' (error:stead-team 'invalid_http_request') ~) owner]
     ?:  =('/stead/api/code' route.u.parsed)
-      (code-response id (manage-with-worker:stead-code-home db.owner code.owner auth.transient.owner u.parsed (now-ms now.bowl) eny.bowl retired-project external-selection pack-local-ready))
+      (code-response id (manage-with-worker:stead-code-home db.owner code.owner auth.transient.owner u.parsed (now-ms now.bowl) eny.bowl retired-project external-selection pack-write-ready))
     ?:  =(%'GET' method.request.request)
       =/  entry  (~(get by files.owner) route.u.parsed)
       ?~  entry  [(response id 404 'text/plain' 'Not found' ~) owner]
@@ -349,7 +404,22 @@
     ?:  =(%handle-http-request mark)  (http !<([@ta inbound-request:eyre] vase))
     ?>  available
     ?:  =(%noun mark)
-      ?>  &(pack-local-ready =(src.bowl our.bowl))
+      ?>  =(src.bowl our.bowl)
+      ?:  ?=([~ %stead-pack-relay-policy *] q.vase)
+        =/  [~ %stead-pack-relay-policy cmd=command:stead-code-pack-relay-pin]
+          ;;([~ %stead-pack-relay-policy command:stead-code-pack-relay-pin] q.vase)
+        =/  selected
+          ^-  (unit scope:stead-code-credentials)
+          ?:  ?=(%close -.cmd)  [~ *scope:stead-code-credentials]
+          =/  project  project.destination.desired.cmd
+          ?>  !(retired-project project)
+          ?>  ?=([~ %accepted *] (~(get by packs.code.owner) project))
+          (target:stead-code-home db.owner project)
+        ?>  ?=(^ selected)
+        =/  next  (transition:stead-code-pack-relay-pin relay.owner u.selected incarnation.owner cmd)
+        ?>  ?=(^ next)
+        [~ owner(relay u.next)]
+      ?>  pack-local-ready
       =/  [~ %stead-pack-local cmd=command:stead-code-pack-owner]
         ;;([~ %stead-pack-local command:stead-code-pack-owner] q.vase)
       (pack-local cmd)
@@ -417,6 +487,7 @@
       ?>  (lte (lent ~(tap by sup.bowl)) 128)
       [~ owner]
     ?:  ?=([%operator @ ~] route)  (inspect i.t.route)
+    ?:  =(route /pack-relay/status)  inspect-relay
     ?:  ?=([%pack-local @ ~] route)
       ?>  &(pack-local-ready =(src.bowl our.bowl) (token-valid:stead-session i.t.route))
       ?>  (lte (lent (skim ~(tap by sup.bowl) |=([duct [ship=@p prior=path]] =(prior route)))) 1)

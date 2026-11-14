@@ -1,6 +1,6 @@
 ::  Owner-local Khan adapter for configuration, bootstrap and Home handoff.
 /-  spider
-/+  strandio, stead-codec, stead-delivery, stead-home-handoff
+/+  strandio, stead-codec, stead-delivery, stead-home-handoff, stead-code-pack-relay-policy
 =,  strand=strand:spider
 ^-  thread:spider
 |=  arg=vase
@@ -30,8 +30,14 @@
   =/  input  (decode:stead-home-handoff raw)
   ;<  ~  bind:m  (poke:strandio [our.bowl app] %stead-home-handoff-1 !>(input))
   (pure:m !>([%stead-core-result (bytes-hex:stead-codec '{}')]))
+?:  =(%pack-relay-policy mode)
+  ?>  ?=(~ route)
+  =/  input  (decode:stead-code-pack-relay-policy raw our.bowl)
+  ;<  ~  bind:m  (poke:strandio [our.bowl app] %noun !>([~ %stead-pack-relay-policy input]))
+  (pure:m !>([%stead-core-result (bytes-hex:stead-codec '{}')]))
 ?>  ?+  mode  |
       %operator-status  &(?=([%operator @ ~] route) =('' raw))
+      %pack-relay-status  &(=(route /pack-relay/status) =('' raw))
       %handoff-status  &(=(route /home-handoff/status) =('' raw))
       %project-retirement-status  &(?=([%project-retirement @ ~] route) =('' raw))
       %project-journal-page  &(?=([%project-journal @ @ ~] route) =('' raw))

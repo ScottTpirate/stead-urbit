@@ -165,6 +165,11 @@ class OwnerProcess:
             path = f'[%{segment} {core_conn.atom(route.encode())} ~]'
         if mode == 'handoff-status':
             path = '[%home-handoff %status ~]'
+        if mode == 'pack-relay-status':
+            require(self.role == 'home' and not route and value is None, 'Pack relay status belongs to Home')
+            path = '[%pack-relay %status ~]'
+        if mode == 'pack-relay-policy':
+            require(self.role == 'home' and not route and 0 < len(raw) <= 2048, 'Use a bounded Home pack relay policy')
         require(len(raw) <= 65536, 'Home configuration exceeds the native limit')
         noun = (f'[32 %fyrd [%{self.desk} %stead-pilot-owner %noun '
                 f'[%noun [{ship} %stead-{self.role} %{mode} {path} {core_conn.atom(raw)}]]]]')
@@ -251,6 +256,40 @@ def handoff_status(owner, ship):
             and value['phase'] in ('open', 'sealed'), 'Unexpected native handoff status')
     revision(value['generation'])
     return value
+
+
+def relay_status(owner, ship):
+    value = owner.call(ship, 'pack-relay-status', '', None)
+    require(set(value) == {'protocol', 'status', 'generation', 'incarnation'}
+            and value['protocol'] == 'stead.git-pack-relay-status/1'
+            and value['status'] in ('open', 'closed')
+            and re.fullmatch(r'0|[1-9][0-9]{0,19}', value['generation'])
+            and int(value['generation']) <= MAX_REVISION
+            and (token(value['incarnation']) or value['incarnation'] == '' and value['status'] == 'closed'),
+            'Native pack relay status differs from the expected profile')
+    return value
+
+
+def relay_policy(owner, ship, policy):
+    require(isinstance(policy, dict) and policy.get('protocol') == 'stead.git-pack-relay-policy/1',
+            'Use a reviewed pack relay policy')
+    operation = policy.get('operation')
+    require(operation in ('open', 'close'), 'Use an explicit pack relay operation')
+    before = relay_status(owner, ship)
+    require(policy.get('expected_generation') == before['generation'] and token(before['incarnation']),
+            'Pack relay generation or Home incarnation changed')
+    if operation == 'open':
+        require(before['status'] == 'closed' and policy.get('incarnation') == before['incarnation'],
+                'Pack relay open requires the current closed Home incarnation')
+        expected = revision(policy.get('worker_generation'))
+    else:
+        expected = revision(str(int(before['generation']) + 1))
+    require(owner.call(ship, 'pack-relay-policy', '', policy) == {}, 'Pack relay policy acknowledgement differs')
+    after = relay_status(owner, ship)
+    require(after['generation'] == expected and after['incarnation'] == before['incarnation']
+            and after['status'] == ('open' if operation == 'open' else 'closed'),
+            'Pack relay policy readback differs')
+    return after
 
 
 def change_handoff(owner, ship, operation, generation, proof):
@@ -428,6 +467,9 @@ def main():
     journal.add_argument('--output', type=Path, required=True)
     pack = commands.add_parser('pack-stage')
     pack.add_argument('--attestation-file', type=Path, required=True)
+    commands.add_parser('pack-relay-status')
+    relay = commands.add_parser('pack-relay-policy')
+    relay.add_argument('--policy-file', type=Path, required=True)
     for name in ('status', 'bootstrap'):
         command = commands.add_parser(name)
         command.add_argument('--revision', help='Reviewed Home configuration revision')
@@ -458,6 +500,10 @@ def main():
         elif args.operation == 'status':
             require(args.role == 'home', 'Only the Home role exposes owner-local status')
             value = status(owner, args.ship, revision(args.revision))
+        elif args.operation in ('pack-relay-status', 'pack-relay-policy'):
+            require(args.role == 'home', 'Only the Home role supports pack relay control')
+            value = (relay_status(owner, args.ship) if args.operation == 'pack-relay-status' else
+                     relay_policy(owner, args.ship, json.loads(private_file(args.policy_file, 2_048), object_pairs_hook=unique)))
         elif args.operation.startswith('handoff-'):
             require(args.role == 'home', 'Only the Home role supports handoff')
             if args.operation == 'handoff-status':

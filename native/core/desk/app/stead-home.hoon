@@ -196,7 +196,7 @@
     ?>  &(configured =(src.bowl our.bowl) ?=(~ restoring.owner))
     =/  next  (transition:stead-home-handoff our.bowl handoff !<(command:stead-home-handoff vase))
     ?>  ?=(^ next)
-    [kicks:team this(handoff u.next, owner owner(transient *ephemeral:stead-browser, pending ~, incarnation '', files ~, code code.owner(book *ledger:stead-code-credentials), git-waiting ~))]
+    [kicks:team this(handoff u.next, owner owner(transient *ephemeral:stead-browser, pending ~, incarnation '', files ~, code code.owner(book *ledger:stead-code-credentials), git-waiting ~, relay [%closed 0 ~]))]
   ?:  ?|(configured =(%stead-team-config-1 mark))
     ?>  |(!sealed =(%handle-http-request mark))
     ?>  ?|(configured !initialized.db)
