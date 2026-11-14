@@ -245,7 +245,8 @@ After restarting Home, a fresh member approval and mirror clone reproduced
 the exact refs and 7,805 reachable IDs and passed strict `fsck`. Both ships
 stopped cleanly. The Home enables this transport only on the isolated fake
 profile. The live pilot still needs an authenticated worker deployment,
-protected-branch review and a paired Home and pack restore on a fresh host.
+the protected-branch workflow exercised through its live ingress, and a
+paired Home and pack restore on a fresh host.
 
 | Evidence | SHA-256 |
 |---|---|
@@ -329,7 +330,10 @@ read-only and wrong-capability denials, a signed stock-client push, exact
 receipt recovery and revocation. Both ships stopped cleanly. A fresh clone
 after restart matched all 7,805 reachable objects. The test invokes the real
 signer in the relay process. The separate Unix worker service still needs
-qualification under distinct service accounts and the pilot ingress.
+combined qualification with the native Home and the pilot ingress. The
+three-account projection fixture independently exercised worker and relay
+store isolation. Stock Git also cloned through nginx and the actual Gunicorn
+relay against a synthetic TLS Home.
 [Ed25519 specification](https://www.rfc-editor.org/rfc/rfc8032.html)
 
 The private report `.runtime/pack-worker-signature-native-8fux4jc2/state/report.json`
