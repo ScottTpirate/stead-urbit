@@ -188,3 +188,6 @@ and activation. The separate same-ship handoff passed the earlier native
 qualification above.
 [Pilot checklist](PHASE5_DEPLOYMENT.md) · [Git rehearsal](PHASE5_DOGFOOD_REHEARSAL.md)
 · [Custody and handoff](PHASE5_CUSTODY.md) · [Cross-ship verification](CROSS_SHIP_PROJECT_MIGRATION.md)
+
+## External pack qualification
+

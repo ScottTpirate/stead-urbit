@@ -173,6 +173,11 @@ runtime. It injects a sealed Gall suspension at startup and binds HTTP to
 loopback. Configure the host's HTTPS pass-through and Ames network fence
 separately. Use the launched Vere PID for the owner commands.
 
+For a systemd service, set `KillMode=mixed` so SIGTERM goes to the Vere
+parent first and it can shut down its worker. Verify successful service exit,
+removed pier lock and control socket, and closed listeners before taking a
+stopped-pier backup or starting another process against that pier.
+
 ```sh
 python3 -B scripts/urbit/pilot_start.py --binary "$vere_binary" --pier "$pier" \
   --role "$role" --approved-runtime-sha256 "$approved_runtime_sha256" \

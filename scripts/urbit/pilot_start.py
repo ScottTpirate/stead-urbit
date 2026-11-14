@@ -38,7 +38,7 @@ def arguments(binary, pier, descriptor, ames_port, http_port, https_port):
     ports = (ames_port, http_port, https_port)
     require(len(set(ports)) == len(ports) and all(1024 <= port <= 65535 for port in ports),
             'Use three distinct unprivileged listener ports')
-    return [str(binary), '--no-dock', '--http-ip', '127.0.0.1', '--ames-port', str(ames_port),
+    return [str(binary), '--no-dock', '--no-tty', '--http-ip', '127.0.0.1', '--ames-port', str(ames_port),
             '--http-port', str(http_port), '--https-port', str(https_port),
             '-I', f'/proc/self/fd/{descriptor}', str(pier)]
 

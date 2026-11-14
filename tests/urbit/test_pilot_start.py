@@ -35,7 +35,7 @@ class PilotStart(unittest.TestCase):
 
     def test_launch_only_resumes_the_existing_pier_with_loopback_http(self):
         self.assertEqual(pilot_start.arguments('/opt/vere', '/var/lib/ship', 3, 31337, 8080, 8443),
-                         ['/opt/vere', '--no-dock', '--http-ip', '127.0.0.1', '--ames-port', '31337',
+                         ['/opt/vere', '--no-dock', '--no-tty', '--http-ip', '127.0.0.1', '--ames-port', '31337',
                           '--http-port', '8080', '--https-port', '8443', '-I', '/proc/self/fd/3', '/var/lib/ship'])
 
 
