@@ -9,6 +9,7 @@ import sys
 import tarfile
 import tempfile
 import unittest
+from unittest.mock import patch
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[2] / 'scripts/urbit'))
 import checkpoint_archive as checkpoint
@@ -48,7 +49,7 @@ class CheckpointArchiveTests(unittest.TestCase):
         self.assertFalse(output.exists())
         with self.archive.open('ab') as file:
             file.write(b'hidden second payload')
-        with self.assertRaisesRegex(ValueError, 'trailing-data'):
+        with self.assertRaisesRegex(ValueError, 'trailing-data|framing'):
             checkpoint.extract_tree(self.archive, output, self.expected)
         self.assertFalse(output.exists())
 
@@ -79,6 +80,21 @@ class CheckpointArchiveTests(unittest.TestCase):
                     checkpoint.extract_tree(source, target, self.expected)
                 self.assertFalse(target.exists())
         self.assertFalse((self.root / 'escaped').exists())
+
+    def test_extended_header_is_rejected_before_extension_sized_read_or_library_parser(self):
+        for kind in (tarfile.XHDTYPE, tarfile.XGLTYPE, tarfile.GNUTYPE_LONGNAME,
+                     tarfile.GNUTYPE_LONGLINK, tarfile.GNUTYPE_SPARSE):
+            with self.subTest(kind=kind):
+                member = tarfile.TarInfo('extension')
+                member.type, member.size = kind, 1024 * 1024 * 1024
+                source = self.root / 'extension.tar'
+                source.write_bytes(member.tobuf(format=tarfile.USTAR_FORMAT) + bytes(1024))
+                source.chmod(0o600)
+                output = self.root / 'extension-restored'
+                with patch.object(checkpoint.tarfile, 'open', side_effect=AssertionError('unbounded parser reached')):
+                    with self.assertRaisesRegex(ValueError, 'archive-special'):
+                        checkpoint.extract_tree(source, output, self.expected)
+                self.assertFalse(output.exists())
 
     def test_checkpoint_source_links_or_runtime_lock_are_rejected(self):
         (self.pier / '.vere.lock').write_bytes(b'owned')

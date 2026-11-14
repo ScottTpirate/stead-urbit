@@ -119,6 +119,63 @@ def archive_tree(source, destination, *, installed=False):
     return expected
 
 
+def ustar_members(source, length, deadline):
+    """Read only fixed USTAR regular/directory headers, never extension payloads.
+
+    The consumer must read exactly each yielded file's declared bytes before
+    requesting the next entry. GNU/PAX/sparse headers are rejected before any
+    extension-sized read or allocation can occur.
+    """
+    require(length % 512 == 0, 'checkpoint-archive-framing')
+    def octal(raw):
+        value = raw.strip(b'\0 ')
+        require(value and all(48 <= byte <= 55 for byte in value), 'checkpoint-archive-number')
+        return int(value, 8)
+    def text(raw):
+        value, _, padding = raw.partition(b'\0')
+        require(not padding.strip(b'\0'), 'checkpoint-archive-header')
+        try:
+            return value.decode('ascii')
+        except UnicodeError:
+            require(False, 'checkpoint-archive-path')
+    offset = 0
+    while offset < length:
+        pair.remaining(deadline)
+        header = source.read(512)
+        require(len(header) == 512, 'checkpoint-truncated-archive')
+        offset += 512
+        if header == bytes(512):
+            require(source.read(512) == bytes(512), 'checkpoint-archive-framing')
+            offset += 512
+            while offset < length:
+                pair.remaining(deadline)
+                block = source.read(min(pair.CHUNK, length - offset))
+                require(block and not block.strip(b'\0'), 'checkpoint-archive-trailing-data')
+                offset += len(block)
+            return
+        require(header[257:265] == b'ustar\x0000' and header[156:157] in (tarfile.REGTYPE, tarfile.DIRTYPE)
+                and not header[157:257].strip(b'\0'), 'checkpoint-archive-special')
+        require(octal(header[148:156]) == sum(header[:148]) + 256 + sum(header[156:]),
+                'checkpoint-archive-checksum')
+        name, prefix = text(header[:100]), text(header[345:500])
+        path = (prefix + '/' if prefix else '') + name
+        directory = header[156:157] == tarfile.DIRTYPE
+        if directory:
+            path = path.removesuffix('/')
+        require(NAME.fullmatch(path) and all(x not in ('.', '..') for x in path.split('/')), 'checkpoint-archive-path')
+        size = octal(header[124:136])
+        require(0 <= size <= MAX_FILE and (not directory or size == 0)
+                and offset + ((size + 511) // 512) * 512 <= length, 'checkpoint-file-bound')
+        member = tarfile.TarInfo(path)
+        member.type, member.size = header[156:157], size
+        yield member
+        require(source.tell() == offset + size, 'checkpoint-archive-framing')
+        padding = (-size) % 512
+        require(source.read(padding) == bytes(padding), 'checkpoint-archive-padding')
+        offset += size + padding
+    require(False, 'checkpoint-archive-framing')
+
+
 def extract_tree(archive_path, destination, expected, *, installed=False):
     require(isinstance(expected, dict) and set(expected) == {'sha256', 'bytes', 'files'}
             and match(TOKEN, expected['sha256']) and type(expected['bytes']) is int
@@ -134,48 +191,44 @@ def extract_tree(archive_path, destination, expected, *, installed=False):
         opened = os.fstat(root)
         seen, directories, total, files = set(), 0, 0, 0
         try:
-            with pair.retained(archive_path, MAX_ARCHIVE, deadline) as (source, _):
-                with tarfile.open(fileobj=source, mode='r|') as archive:
-                    for member in archive:
-                        pair.remaining(deadline)
-                        path = member.name
-                        require(NAME.fullmatch(path) and all(x not in ('.', '..') for x in path.split('/'))
-                                and path not in seen and not member.pax_headers and member.sparse is None,
-                                'checkpoint-archive-path')
-                        require(member.type in (tarfile.REGTYPE, tarfile.DIRTYPE), 'checkpoint-archive-special')
-                        seen.add(path)
-                        parts = path.split('/')
-                        current = os.dup(root)
-                        try:
-                            for part in parts[:-1]:
-                                child = os.open(part, os.O_RDONLY | os.O_DIRECTORY | os.O_NOFOLLOW, dir_fd=current)
-                                os.close(current)
-                                current = child
-                            if member.isdir():
-                                directories += 1
-                                require(directories <= MAX_DIRECTORIES and member.size == 0, 'checkpoint-directory-bound')
-                                os.mkdir(parts[-1], 0o700, dir_fd=current)
-                            else:
-                                files += 1
-                                total += member.size
-                                require(files <= MAX_FILES and 0 <= member.size <= MAX_FILE and total <= MAX_BYTES,
-                                        'checkpoint-file-bound')
-                                fd = os.open(parts[-1], os.O_WRONLY | os.O_CREAT | os.O_EXCL | os.O_NOFOLLOW, 0o600, dir_fd=current)
-                                with os.fdopen(fd, 'wb') as output, archive.extractfile(member) as input_file:
-                                    remaining = member.size
-                                    while remaining:
-                                        pair.remaining(deadline)
-                                        block = input_file.read(min(pair.CHUNK, remaining))
-                                        require(block, 'checkpoint-truncated-archive')
-                                        output.write(block)
-                                        remaining -= len(block)
-                                    output.flush()
-                                    os.fsync(output.fileno())
-                        finally:
+            with pair.retained(archive_path, MAX_ARCHIVE, deadline) as (source, length):
+                for member in ustar_members(source, length, deadline):
+                    pair.remaining(deadline)
+                    path = member.name
+                    require(NAME.fullmatch(path) and all(x not in ('.', '..') for x in path.split('/'))
+                            and path not in seen and not member.pax_headers and member.sparse is None,
+                            'checkpoint-archive-path')
+                    require(member.type in (tarfile.REGTYPE, tarfile.DIRTYPE), 'checkpoint-archive-special')
+                    seen.add(path)
+                    parts = path.split('/')
+                    current = os.dup(root)
+                    try:
+                        for part in parts[:-1]:
+                            child = os.open(part, os.O_RDONLY | os.O_DIRECTORY | os.O_NOFOLLOW, dir_fd=current)
                             os.close(current)
-                    while block := archive.fileobj.read(pair.CHUNK):
-                        pair.remaining(deadline)
-                        require(not block.strip(b'\0'), 'checkpoint-archive-trailing-data')
+                            current = child
+                        if member.isdir():
+                            directories += 1
+                            require(directories <= MAX_DIRECTORIES and member.size == 0, 'checkpoint-directory-bound')
+                            os.mkdir(parts[-1], 0o700, dir_fd=current)
+                        else:
+                            files += 1
+                            total += member.size
+                            require(files <= MAX_FILES and 0 <= member.size <= MAX_FILE and total <= MAX_BYTES,
+                                    'checkpoint-file-bound')
+                            fd = os.open(parts[-1], os.O_WRONLY | os.O_CREAT | os.O_EXCL | os.O_NOFOLLOW, 0o600, dir_fd=current)
+                            with os.fdopen(fd, 'wb') as output:
+                                remaining = member.size
+                                while remaining:
+                                    pair.remaining(deadline)
+                                    block = source.read(min(pair.CHUNK, remaining))
+                                    require(block, 'checkpoint-truncated-archive')
+                                    output.write(block)
+                                    remaining -= len(block)
+                                output.flush()
+                                os.fsync(output.fileno())
+                    finally:
+                        os.close(current)
                 # Ignore only tar's conventional zero padding after EOF.
                 while block := source.read(pair.CHUNK):
                     pair.remaining(deadline)

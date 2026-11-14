@@ -169,7 +169,9 @@ accepted-pack encrypted restore rehearsal.
 `scripts/urbit/checkpoint_archive.py` supplies the local rehearsal's exact-tree
 archive and encryption operations. `archive_tree` includes every regular file
 and retained Clay mount; `extract_tree` rejects traversal, duplicate names,
-links, devices, sparse/PAX entries and nonzero trailing payloads. The destination
+links, devices, sparse/PAX entries and nonzero trailing payloads. Extraction
+uses fixed 512-byte USTAR headers and rejects extensions before any
+extension-sized read or library-parser allocation. The destination
 tree must match the independently retained checkpoint fingerprint before its
 new name is published. Existing destinations are never replaced. Failed
 extraction leaves an unpublished private scratch tree for inspection.
@@ -192,7 +194,7 @@ cryptographic primitive is implemented. The wrapper caps process address space
 at 512 MiB, CPU at 90 seconds, output size at 1 GiB, status output at 64 KiB and
 wall time at 120 seconds. Large runs still require the ordinary execution guard.
 
-Seven focused tests executed against installed GnuPG 2.4.9 cover a tiny AEAD
+Eight focused tests executed against installed GnuPG 2.4.9 cover a tiny AEAD
 roundtrip and exact restore, corrupt ciphertext, wrong key, wrong executable
 pin, legacy-profile rejection, archive attacks and create-only publication.
 Five additional checkpoint-profile tests cover explicit bounds, exact alias
