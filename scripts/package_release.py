@@ -22,6 +22,8 @@ from package_sdk import ROOT, encoded, held_parent, read_bounded, require, uniqu
 MAX_FILE = 1024 * 1024
 MAX_ARCHIVE = 8 * 1024 * 1024
 MAX_MEMBERS = 128
+# Leaves room for the manifest, source pins, licenses and generated desk files.
+MAX_DESK_SOURCES = MAX_MEMBERS - 12
 PREFIX = 'stead-release/'
 CONTRACT = 'specs/urbit/release-package.json'
 NATIVE = 'native/core/desk/'
@@ -240,7 +242,7 @@ def archive_bytes(root=ROOT, *, role, reference='HEAD'):
             body, origin = read(NATIVE + name), 'repository:' + NATIVE + name
         desk[name], origins[name] = body, origin
         pending.extend(imports(body))
-        require(len(desk) <= 100, 'Desk dependency closure bound')
+        require(len(desk) <= MAX_DESK_SOURCES, 'Desk dependency closure bound')
     validate_home_format(role, contract['saved_state_versions'][role], desk)
     desk['sys.kelvin'] = f"[%zuse {contract['kernel_kelvin']}]\n".encode()
     desk['desk.bill'] = f":~  %{contract['agents'][role]}\n==\n".encode()
@@ -291,7 +293,7 @@ def verify_closure(members, manifest, contract):
             origins[name] = 'repository:' + NATIVE + name
         expected.add(name)
         pending.extend(imports(body))
-        require(len(expected) <= 100, 'Packaged dependency closure bound')
+        require(len(expected) <= MAX_DESK_SOURCES + 2, 'Packaged dependency closure bound')
     validate_home_format(manifest['role'], manifest['saved_state_version'], expected)
     expected.update(('sys.kelvin', 'desk.bill'))
     origins.update({'sys.kelvin': 'generated:kernel-compatibility', 'desk.bill': 'generated:role-agents'})
