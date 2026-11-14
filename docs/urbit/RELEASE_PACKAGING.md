@@ -92,6 +92,14 @@ to install on a ship with existing state.
 
 ## Optional guarded clean-fake check
 
+The v9 Home archive from source `2be5286a839a7c367ecc21467936e8317b16ba73`
+passed 13 exact-package checks on a newly booted fake ship, including
+owner bootstrap, native HTTPS assets, stop, reload with no old access,
+and fresh bootstrap. The guarded run reaped the ship cleanly.
+Archive SHA-256 `6d6cb9d1d7a63d68eff40e8a2e973696079f83cac1b13861689cb56784945851`.
+The local result `.runtime/release-install-5fwxz2i6/work/report.json`
+has SHA-256 `acb7fde58986be408718a4bcef6c71b1bb438de0fec8ececbc967b665c2f0817`.
+
 `scripts/release_install.py` is a separate native verifier. It first performs
 the same archive/target verification, then stages regular candidate files in a
 new private directory. It starts one fresh fake in a private network/filesystem,
