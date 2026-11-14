@@ -238,3 +238,10 @@ verification. Archive SHA-256 values are
 `e6493f1bb0d277002cf533fc7472260f6ccf28d1adda6ccf28a389ebedd258a4` (Home)
 and `05c9271630d9fcf8360fac208108486000c3ad6320ef1efbcea068456c52c082`
 (Identity).
+
+The native read selectors passed five checks with the same accepted v8
+snapshot selected for the browser and the Git worker. A separate native
+selector check confirmed that an accepted ledger uses the latest exact
+receipt and that genesis and pending-only ledgers retain the initial anchor.
+The focused report `.runtime/selected-read-retry-83tziogd/state/report.json`
+has SHA-256 `27266137cc2d835c5e3c385a99d38f87d84e3cecde948c668defaee3473ef0b4`.

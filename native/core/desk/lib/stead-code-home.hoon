@@ -11,6 +11,7 @@
 +$  state  [repos=saved book=ledger:stead-code-credentials uploads=jobs:stead-code-upload reviews=boards builds=build-data packs=state:stead-code-pack-anchor]
 +$  admission  $%([%held next=state key=@t] [%refused out=result])
 +$  result  [status=@ud mime=@t body=octets:stead-git next=state]
++$  pack-selection  [manifest=manifest:stead-code-pack-anchor request=@t accepted=@ud]
 ++  text
   |=  [code=state status=@ud mime=@t body=@t]
   ^-  result
@@ -72,20 +73,33 @@
   =/  staged  (stage:stead-code-pack-anchor active pack operator now)
   ?:  ?=(%| -.staged)  ~
   [~ code(packs next.p.staged)]
+++  pack-fields
+  |=  [pack=manifest:stead-code-pack-anchor status=@t]
+  ^-  (list [@t @t])
+  :~  ['status' status]
+      ['snapshot' snapshot.pack]
+      ['authority_epoch' (decimal epoch.destination.pack)]
+      ['object_count' (decimal objects.pack)]
+      ['head' head.pack]
+      ['refs' (canonical (object ~(tap by refs.pack)))]
+  ==
+++  selected-details
+  |=  view=pack-selection
+  ^-  (list [@t @t])
+  (weld (pack-fields manifest.view 'external') ~[['request_id' request.view] ['accepted_at_ms' (decimal accepted.view)]])
+++  selected-pack
+  |=  [entry=entry:stead-code-pack-anchor current=(unit pack-selection)]
+  ^-  (unit pack-selection)
+  ?.  ?=(%accepted -.entry)  ~
+  ?~  current  [~ pack.row.entry request.proof.entry accepted-at.proof.entry]
+  ?.  =(destination.manifest.u.current destination.pack.row.entry)  ~
+  current
 ++  pack-details
   |=  entry=entry:stead-code-pack-anchor
   ^-  (list [@t @t])
-  =/  pack  pack.row.entry
-  =/  fields=(list [@t @t])
-    :~  ['status' ?:(?=(%accepted -.entry) 'external' 'external-staged')]
-        ['snapshot' snapshot.pack]
-        ['authority_epoch' (decimal epoch.destination.pack)]
-        ['object_count' (decimal objects.pack)]
-        ['head' head.pack]
-        ['refs' (canonical (object ~(tap by refs.pack)))]
-    ==
-  ?.  ?=(%accepted -.entry)  fields
-  (weld fields ~[['request_id' request.proof.entry] ['accepted_at_ms' (decimal accepted-at.proof.entry)]])
+  =/  view  (selected-pack entry ~)
+  ?~  view  (pack-fields pack.row.entry 'external-staged')
+  (selected-details u.view)
 ++  validate-packs
   |=  [team=state:stead-team inline=saved rows=state:stead-code-pack-anchor]
   ^-  ?
@@ -96,6 +110,12 @@
 ++  manage
   |=  $:  db=state:stead-team  code=state  auth=state:stead-session
           input=incoming:stead-http  now=@ud  entropy=@  retired=$-(@t ?)
+      ==
+  (manage-selected db code auth input now entropy retired |=(id=@t *(unit pack-selection)))
+++  manage-selected
+  |=  $:  db=state:stead-team  code=state  auth=state:stead-session
+          input=incoming:stead-http  now=@ud  entropy=@  retired=$-(@t ?)
+          selection=$-(@t (unit pack-selection))
       ==
   ^-  result
   =/  session  (browser-session db auth input now)
@@ -141,7 +161,10 @@
     ?.  (keys values base)  (error code 400 'invalid_request')
     ?~  pack  (error code 404 'denied_or_not_found')
     ?.  |(?=(%accepted -.u.pack) =(3 role))  (error code 404 'denied_or_not_found')
-    (respond code (pack-details u.pack))
+    ?:  ?=(%staged -.u.pack)  (respond code (pack-details u.pack))
+    =/  view  (selected-pack u.pack (selection project))
+    ?~  view  (error code 404 'denied_or_not_found')
+    (respond code (selected-details u.view))
   ?:  =('pack-accept' operation)
     ?.  (keys values ['snapshot' 'authority_epoch' 'request_id' base])  (error code 400 'invalid_request')
     ?.  =(3 role)  (error code 404 'denied_or_not_found')
@@ -281,12 +304,17 @@
   =(scope destination.data.u.repo)
 ++  read-pack
   |=  [db=state:stead-team code=state id=@t bearer=@t now=@ud]
+  (read-selected db code id bearer now ~)
+++  read-selected
+  |=  [db=state:stead-team code=state id=@t bearer=@t now=@ud current=(unit pack-selection)]
   ^-  result
   =/  denied  (error code 401 'denied_or_not_found')
   ?:  (~(has by repos.code) id)  denied
   =/  selected  (~(get by packs.code) id)
-  ?.  ?=([~ %accepted *] selected)  denied
-  =/  pack  pack.row.u.selected
+  ?~  selected  denied
+  =/  view  (selected-pack u.selected current)
+  ?~  view  denied
+  =/  pack  manifest.u.view
   =/  scope  destination.pack
   ?.  =([~ scope] (target db id))  denied
   =/  who  (check:stead-code-credentials book.code bearer scope %read now (member db now) (allowed db now))

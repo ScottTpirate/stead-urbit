@@ -109,4 +109,25 @@
   =/  stale  core(projects (malt ~[[project project-row(epoch 2)]]))
   ?>  =(401 status:(read-pack:stead-code-home team(data stale) app project secret 11))
   ~
+++  test-pack-read-selected-pointer-matches-browser-and-git
+  ^-  tang
+  =/  advanced  pack(refs (~(put by refs.pack) head.pack 'eeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee'))
+  =/  raw  (snapshot-bytes:stead-code-pack-anchor advanced)
+  =/  size  (met 3 raw)
+  =.  advanced  advanced(snapshot (hex:stead-codec 64 (sha-256l:sha [size (rev 3 size raw)])))
+  =/  changed=pack-selection:stead-code-home  [advanced other 5]
+  =/  select=$-(@t (unit pack-selection:stead-code-home))
+    |=(id=@t ?:(=(id project) [~ changed] ~))
+  =/  app  next.issued
+  =/  body  (canonical:stead-codec (object:stead-codec ~[['protocol' 'stead.code/1'] ['action' 'pack-view'] ['project_id' project]]))
+  =/  browser  (manage-selected:stead-code-home team app auth ['/stead/api/code' body cookie '' csrf] 11 12 unfenced select)
+  =/  wire  (read-selected:stead-code-home team app project secret 11 [~ changed])
+  ?>  &(=(200 status.browser) =(200 status.wire))
+  ?>  =(snapshot.advanced (field:stead-codec (payload browser) 'snapshot'))
+  ?>  =(snapshot.advanced (field:stead-codec (payload wire) 'snapshot'))
+  ?>  =(other (field:stead-codec (payload browser) 'request_id'))
+  ?>  =(epoch.destination (uint:stead-codec (field:stead-codec (payload wire) 'authority_epoch')))
+  =/  mismatched  advanced(destination destination(epoch 2))
+  ?>  =(401 status:(read-selected:stead-code-home team app project secret 11 [~ mismatched other 5]))
+  ~
 --

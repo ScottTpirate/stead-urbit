@@ -219,6 +219,14 @@
       [['www-authenticate' 'Basic realm="Stead Git"'] headers]
     :_  owner(code next.out)
     (give-simple-payload:app:server id [[status.out headers] [~ body.out]])
+  ++  external-selection
+    |=  project=@t
+    ^-  (unit pack-selection:stead-code-home)
+    =/  row  (~(get by external.owner) project)
+    ?~  row  ~
+    ?~  journal.u.row  ~
+    =/  recent  (~(got by receipts.u.row) i.journal.u.row)
+    [~ current.u.row i.journal.u.row accepted-at.result.recent]
   ++  http
     |=  [id=@ta request=inbound-request:eyre]
     ^-  (quip card:agent:gall state)
@@ -235,6 +243,9 @@
     ?:  (git-path:stead-code-http url.request.request)
       =/  input  (validate:stead-code-http request origin.config)
       ?~  input  [(response id 403 'application/json' (error:stead-team 'invalid_http_request') ~) owner]
+      ?:  ?=(%pack-read -.operation.u.input)
+        =/  project  project.u.input
+        (code-response id (read-selected:stead-code-home db.owner code.owner project bearer.u.input (now-ms now.bowl) (external-selection project)))
       ?:  &((retired-project project.u.input) ?|(?=(%receive -.operation.u.input) ?=([%advertise %git-receive-pack] operation.u.input)))
         (code-response id (error:stead-code-home code.owner 401 'denied_or_not_found'))
       ?:  ?=(%receive -.operation.u.input)  (queue-git id u.input)
@@ -242,7 +253,7 @@
     =/  parsed  (validate:stead-http request origin.config (paths:stead-assets '/stead/'))
     ?~  parsed  [(response id 403 'application/json' (error:stead-team 'invalid_http_request') ~) owner]
     ?:  =('/stead/api/code' route.u.parsed)
-      (code-response id (manage:stead-code-home db.owner code.owner auth.transient.owner u.parsed (now-ms now.bowl) eny.bowl retired-project))
+      (code-response id (manage-selected:stead-code-home db.owner code.owner auth.transient.owner u.parsed (now-ms now.bowl) eny.bowl retired-project external-selection))
     ?:  =(%'GET' method.request.request)
       =/  entry  (~(get by files.owner) route.u.parsed)
       ?~  entry  [(response id 404 'text/plain' 'Not found' ~) owner]

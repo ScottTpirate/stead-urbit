@@ -1,7 +1,7 @@
 {
   "format": 1,
   "classification": "pure-native-only",
-  "expected_arm_count": 108,
+  "expected_arm_count": 109,
   "suites": [
     {
       "path": "/tests/stead-session",
@@ -135,7 +135,8 @@
         "test-pack-read-authenticated-exact-metadata",
         "test-pack-read-https-get-without-browser-headers-or-body",
         "test-pack-read-refuses-staged-cross-scope-expired-and-write",
-        "test-pack-read-current-grants-bindings-and-revocation"
+        "test-pack-read-current-grants-bindings-and-revocation",
+        "test-pack-read-selected-pointer-matches-browser-and-git"
       ],
       "timeout_seconds": 60
     },

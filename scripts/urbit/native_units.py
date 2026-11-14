@@ -108,7 +108,7 @@ def validate_inventory(value: dict) -> dict:
                    '/tests/stead-creator-renewal': ('test-creator-renewal-', 4, 60),
                    '/tests/stead-project-retirement': ('test-project-retire-', 6, 60),
                    '/tests/stead-code-pack-anchor': ('test-pack-anchor-', 5, 60),
-                   '/tests/stead-code-pack-read': ('test-pack-read-', 4, 60),
+                   '/tests/stead-code-pack-read': ('test-pack-read-', 5, 60),
                    '/tests/stead-code-pack-push': ('test-pack-push-', 5, 60),
                    '/tests/stead-code-pack-ledger': ('test-pack-ledger-', 4, 60),
                    '/tests/stead-code-pack-proof': ('test-pack-proof-', 4, 60),
