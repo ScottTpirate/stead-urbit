@@ -141,3 +141,18 @@ and validates saved lineage against the original accepted anchor. Four pinned
 native arms and the deliberate failure control ran successfully. This module
 has no credential or worker protocol of its own; the authenticated adapter,
 selected manifest reads, and actual `receive-pack` transition are separate.
+
+Keep the large upload in the adapter's bounded private spool. The worker
+gets only the admitted digest, selected pack, exact ref commands and a narrow
+attempt identifier. It never receives the individual's Git secret. The adapter
+forwards the client's Basic credential only to the configured Home TLS origin.
+Use an independently authenticated local control or dedicated off-host worker
+identity for evidence, not a general Git credential or browser cookie.
+Record worker evidence only after the exact pack and manifest are durable.
+
+Default and otherwise protected branches stay closed to direct external
+updates until the exact review commit is implemented. For an ambiguous stock
+client response, reconcile the exact digest and ordered commands under the
+same current binding and scope. Reconfirm the expected result before reporting
+a historical receipt. Restart closes outstanding worker admissions; sealed or
+retired homes and missing policy deny new work.

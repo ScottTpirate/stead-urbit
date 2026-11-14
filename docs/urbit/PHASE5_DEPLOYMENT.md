@@ -27,6 +27,37 @@ the full-history offline proof and the native storage gate for cutover. The
 [browser identity profile](BROWSER_IDENTITY_PROFILE.md) is a separate design
 track. Use individual native member ships for this pilot.
 
+## Before switching Stead's own project
+
+Keep GitHub authoritative while the private pilot takes synthetic changes.
+Use the [issue preview and import rehearsal](PHASE5_DOGFOOD_REHEARSAL.md#prepare-github-issues-for-work)
+to choose the issue records for the cutover. The current import writes only to
+a disposable Home; no live issue migration or authority transfer is implied
+by the preview.
+
+Before proposing the switch, demonstrate all of the following with one pinned
+candidate:
+
+1. A member can sign in, reopen Work and Docs, and revoke one credential
+   without losing another member's access. Read back a second independently
+   controlled member's grant and its removal.
+2. Stock Git pushes a change against the full pinned repository. A second
+   push from the same prior ref loses the comparison, protected refs advance
+   only through exact review, and a lost reply reconciles to the durable
+   receipt. Reopen the accepted refs, Work item and review after restart.
+3. Restore the matching Home checkpoint and accepted Git data on a fresh
+   isolated host, verify the exact refs and protected records, and prove
+   that only one writer can be admitted. Record restore duration and data loss.
+4. Rehearse mirror divergence and backout. Only then ask the owner to approve
+   freezing GitHub writes and transferring authority to the verified Home.
+
+After the transfer, the first dogfood task should take one real issue through
+Work, an individual collaborator or agent proposal, review, accepted source,
+and the isolated build. Keep the branch, work item, review and build receipts
+connected so failures can be fixed inside Stead. A supported release also
+needs the independent teams, integration and maintainer checks in the
+[ecosystem plan](ECOSYSTEM_PLAN.md).
+
 ## Candidate admission
 
 Keep a reviewed record of the exact Git commit and both role archives. For each
