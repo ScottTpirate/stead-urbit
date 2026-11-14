@@ -179,6 +179,15 @@ branch rewrites, tag replacement, deletion, and objects outside the proposed
 ref closure. It stages a separate immutable candidate and never edits the
 base. The result is not a push receipt or permission to publish.
 
+`git_pack_receive.py` rehearses the preceding wire step. It takes the admitted
+SHA-256 of an exact private stock `receive-pack` request, verifies the ordered
+command block, and reconstructs the candidate with the selected immutable
+base in a temporary Git repository. It supports bounded SHA-1 thin packs
+whose missing bases belong to that snapshot. It rejects added objects outside
+the proposed ref closure, then prepares the complete immutable candidate.
+The test peer captures ordinary stock push bytes and never reports acceptance.
+No external HTTPS write route calls this worker yet.
+
 A synthetic fast-forward against the 8,049-object `3ba8e43` history and the
 unchanged runtime tag produced an 8,050-object staged candidate in 2.911
 seconds on the test machine. An independent restore passed strict `fsck`.

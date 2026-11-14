@@ -56,7 +56,7 @@ def check_ancestry(git, ordered):
 
 
 def prepare(storage, scope, base_snapshot, candidate_pack, candidate_pack_sha256, changes, git,
-            *, upload_sha256):
+            *, upload_sha256, deadline=None, recheck=None):
     """Validate and stage a candidate, leaving accepted refs under Home control.
 
     A trusted caller obtains the base digest and scope from the Home and binds
@@ -68,7 +68,8 @@ def prepare(storage, scope, base_snapshot, candidate_pack, candidate_pack_sha256
     require(scope['project_id'] == scope['repository_id'], 'home-repository-scope')
     require(all(match(TOKEN, digest) for digest in (base_snapshot, candidate_pack_sha256, upload_sha256)),
             'push-digest-required')
-    deadline = time.monotonic() + MAX_GIT_TIME
+    own_deadline = time.monotonic() + MAX_GIT_TIME
+    deadline = own_deadline if deadline is None else min(own_deadline, deadline)
     with store.repository_directory(storage, scope) as (directory, check_store):
         with store.open_snapshot(directory, base_snapshot) as source:
             base = store.read_manifest(source, base_snapshot, scope)
@@ -85,6 +86,8 @@ def prepare(storage, scope, base_snapshot, candidate_pack, candidate_pack_sha256
                 facts = check_ancestry(repo, ordered)
 
     require(time.monotonic() < deadline, 'git-timeout')
+    if recheck is not None:
+        recheck()
     candidate, manifest = store.stage(storage, pack, candidate_pack_sha256, scope, refs, base['head'], git,
                                       deadline=deadline)
     require(all(manifest[key] == value for key, value in inventory.items()), 'snapshot-inventory')
