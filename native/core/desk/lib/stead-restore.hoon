@@ -142,4 +142,32 @@
   |=  job=validation
   ^-  (unit state:stead-team)
   ?:(=(%valid status.job) (some target.job) ~)
++$  history-job
+  $:  mode=%history  cursor=validation
+  ==
+++  begin-history
+  ::  Historical reconstruction only, never fresh authentication or a serving
+  ::  registry. The ordinary begin/step/result contract above is unchanged.
+  |=  [registry=registry:stead-team-config journal=(list event:stead-projection) home=@p]
+  ^-  history-job
+  =/  target  empty:stead-team
+  =.  target  target(registry registry, data data.target(initialized &, journal journal))
+  [%history (begin target home)]
+++  step-history
+  |=  history=history-job
+  ^-  history-job
+  =/  job  cursor.history
+  ?.  =(%pending status.job)  history
+  =/  left=@ud  16
+  |-
+  ?~  remaining.job
+    history(cursor job(status ?:((current-consistent job) %valid %invalid)))
+  ?:  =(left 0)  history(cursor job)
+  =/  attempted  (mule |.((one job)))
+  ?:  ?=(%| -.attempted)  history(cursor job(status %invalid))
+  $(job p.attempted, left (dec left))
+++  result-history
+  |=  history=history-job
+  ^-  (unit state:stead-team)
+  ?:(=(%valid status.cursor.history) (some rebuilt.cursor.history) ~)
 --

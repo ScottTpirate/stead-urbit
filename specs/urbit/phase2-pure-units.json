@@ -1,7 +1,7 @@
 {
   "format": 1,
   "classification": "pure-native-only",
-  "expected_arm_count": 173,
+  "expected_arm_count": 220,
   "suites": [
     {
       "path": "/tests/stead-session",
@@ -140,6 +140,89 @@
         "test-workspace-private-writes-do-not-signal-other-members",
         "test-workspace-pagination-binds-search-principal-and-visible-generation",
         "test-workspace-queued-updates-private-isolation-and-revocation"
+      ],
+      "timeout_seconds": 60
+    },
+    {
+      "path": "/tests/stead-product-codec",
+      "arms": [
+        "test-product-codec-split-operations-and-preconditions",
+        "test-product-codec-rejects-legacy-and-mixed-revision-envelopes",
+        "test-product-codec-status-blocking-and-legacy-disposition",
+        "test-product-codec-targets-pin-scope-and-base",
+        "test-product-codec-closed-fields-never-trust-client-authority",
+        "test-product-codec-completion-is-explicit-and-bounded",
+        "test-product-codec-canonical-exact-bytes-and-domain",
+        "test-product-codec-legacy-resolutions-are-explicit",
+        "test-product-codec-parser-size-depth-and-duplicate-bounds"
+      ],
+      "timeout_seconds": 60
+    },
+    {
+      "path": "/tests/stead-product-migrate",
+      "arms": [
+        "test-product-migrate-deterministic-after-real-predecessor-replay",
+        "test-product-migrate-independent-counters-and-original-comment-provenance",
+        "test-product-migrate-prefix-bytes-and-nonwork-state-remain-exact",
+        "test-product-migrate-legacy-blocked-done-and-assignee-stay-explicit",
+        "test-product-migrate-rejects-unmatched-comments-and-damaged-prefix",
+        "test-product-migrate-batches-before-exposing-converted-work"
+      ],
+      "timeout_seconds": 60
+    },
+    {
+      "path": "/tests/stead-product-work",
+      "arms": [
+        "test-product-work-comment-and-properties-commute-with-stable-contract",
+        "test-product-work-comment-race-retains-rejection-and-requires-new-id",
+        "test-product-work-goal-cas-and-revert-never-revive-old-pin",
+        "test-product-work-current-authority-kinds-and-targets-fail-closed",
+        "test-product-work-human-completion-retention-and-explicit-reopen",
+        "test-product-work-required-outcomes-need-exact-accepted-proof",
+        "test-product-work-explicit-legacy-assignee-clear-preserves-provenance",
+        "test-product-work-explicit-legacy-resolution-and-immutable-deletion",
+        "test-product-work-one-mixed-timeline-and-cross-protocol-idempotency",
+        "test-product-work-atomic-rollback-on-generation-exhaustion"
+      ],
+      "timeout_seconds": 60
+    },
+    {
+      "path": "/tests/stead-principals",
+      "arms": [
+        "test-principals-import-preserves-identity-with-unresolved-kind",
+        "test-principals-declarations-require-owner-current-cas-and-fixed-kind",
+        "test-principals-native-kind-follows-current-binding-and-expiry",
+        "test-principals-runtime-and-definition-versions-preserve-exact-history",
+        "test-principals-workers-cannot-update-runtime-or-transfer-definition-owner",
+        "test-principals-definition-rejects-missing-version-and-disabled-agent"
+      ],
+      "timeout_seconds": 60
+    },
+    {
+      "path": "/tests/stead-product-views",
+      "arms": [
+        "test-product-views-query-four-closed-grammar-and-version",
+        "test-product-views-migrated-exact-and-preview-flat-contract",
+        "test-product-views-v4-work-does-not-require-legacy-journal-index",
+        "test-product-views-separate-comments-ordered-pages-and-no-raw-provenance",
+        "test-product-views-cursor-binds-actor-scope-epoch-generation-and-purpose",
+        "test-product-views-private-document-change-does-not-signal-work",
+        "test-product-views-current-access-revocation-expiry-and-deletion",
+        "test-product-views-required-outcomes-exact-string-or-whole-detail-rejection"
+      ],
+      "timeout_seconds": 60
+    },
+    {
+      "path": "/tests/stead-product-restore",
+      "arms": [
+        "test-product-restore-old-history-path-retains-predecessor-semantics",
+        "test-product-restore-mixed-replay-is-exact-and-retains-rejected-attempts",
+        "test-product-restore-rejects-rehashed-command-receipt-and-completion-changes",
+        "test-product-restore-rejects-reordered-dropped-and-noncanonical-events",
+        "test-product-restore-missing-history-and-unrecorded-configuration-fail-closed",
+        "test-product-restore-boundary-and-current-state-must-match-reconstruction",
+        "test-product-restore-incremental-checkpoint-exposes-no-partial-state",
+        "test-product-restore-admission-retains-core-and-sidecar-record-bounds"
       ],
       "timeout_seconds": 60
     },

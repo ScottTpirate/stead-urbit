@@ -311,7 +311,7 @@
   ::  that actor's old query walks, but metadata reads and update cursors do not.
   ::  Keep this staged until the full bounded response has encoded successfully.
   =?  cursors.next  &(more =('' cursor.query))
-    (malt (skip ~(tap by cursors.next) |=([key=@t val=cursor-record] &(=('query' purpose.val) =(actor actor.val)))))
+    (malt (skip ~(tap by cursors.next) |=([key=@t val=cursor-record] &(?|(=('query' purpose.val) =('product-query' purpose.val)) =(actor actor.val)))))
   ?:  &(more ?|((gte counter.next 18.446.744.073.709.551.615) (gte (lent ~(tap by cursors.next)) 64) (gte (lent (skim ~(tap by cursors.next) |=([key=@t val=cursor-record] =(principal.identity.actor principal.identity.actor.val)))) 4)))
     [(error:stead-team 'capacity_exceeded') prior]
   =?  next  more  next(counter +(counter.next))
