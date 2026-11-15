@@ -1,0 +1,26 @@
+{
+  "changes": {
+    "migrate": "Nonempty predecessor journal before digest.i.journal access",
+    "work": "Nonempty current legacy journal before tail comparison",
+    "workspace": "Nonempty result guard before two fields.i.found accesses"
+  },
+  "files": {
+    "native/core/desk/tests/stead-product-migrate.hoon": "88028f06015a9521fd25d098b587940094e34eb8551ccc3c9193b3d8cfe434b8",
+    "native/core/desk/tests/stead-product-work.hoon": "53fd463c45d32c90f0ca2c7c8a6b232307fa7a4934e294a5d15055044fa733c1",
+    "native/core/desk/tests/stead-workspace-views.hoon": "e4fa2c817a15c3d375bc6508f1d18f86bec3a77897c9b8860bd7c305d3258abf"
+  },
+  "inference": "List length equality does not structurally narrow a Hoon list before named head-field access. Add explicit nonempty-list assertions while preserving the original semantic checks. The fresh native run must confirm the diagnosis.",
+  "native_executed": false,
+  "observed_failure": {
+    "candidate": "c27268f9afccdcdc1e19c64b2a33ac0cb80b09ae",
+    "marker": "find-fork",
+    "registered_verdicts": 0,
+    "run_id": 43743146147,
+    "suite": "/tests/stead-workspace-views"
+  },
+  "protocol": "stead.independent-source-review/1",
+  "release_candidate_scope": "Only workspace guard; the other two belong to the unactivated successor packet",
+  "reviewed_at": "2026-11-15T18:11:36.610237+00:00",
+  "scope": "native-test-structural-guards",
+  "status": "approved-for-isolated-qualification"
+}

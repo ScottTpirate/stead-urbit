@@ -117,6 +117,7 @@
           =(execution-digest.work (contract-digest:stead-product-state [(id 100) (id 101)] 2 data.current))
       ==
 ++  test-product-migrate-prefix-bytes-and-nonwork-state-remain-exact
+  ?>  ?=(^ journal.data.legacy)
   =/  converted  (migrate legacy)
   =/  db  db.converted
   =/  original-work  db(data data.db(works works.data.legacy))

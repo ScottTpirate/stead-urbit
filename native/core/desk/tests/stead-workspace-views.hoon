@@ -134,6 +134,7 @@
   ^-  tang
   =/  found  (rows:stead-views db visible.view bob mine 3.000)
   ?>  =(1 (lent found))
+  ?>  ?=(^ found)
   ?>  =((id 100) (field fields.i.found 'project_id'))
   ?>  =((id 101) (field fields.i.found 'resource_id'))
   =/  done  (apply db alice (command 315 100 101 1 'work.update' ~[['title' 'Visible work'] ['description' 'Shared context'] ['type' 'task'] ['status' 'done'] ['priority' 'none']]) 3.001)
