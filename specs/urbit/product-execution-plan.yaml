@@ -281,7 +281,7 @@ packages:
   - 12
   - 22
   - 26
-  current_progress: T05a f254244 passed hosted native run 43736509249 with 167 arms and 1647 checks; exact source and cleanup are retained in controller-refresh/receipt.json. The successor command/4 reducer, separate discussion, bounded predecessor migration, query/4, concrete adapters and mixed-history restore have independent source review. The 57-arm successor packet is in hosted run 43748907122 at f93a42a; no result is claimed. Later owner/Doc compound history remains a separate source-only packet. Home activation, service adaptation and release readback remain open.
+  current_progress: T05a f254244 passed hosted native run 43736509249 with 167 arms and 1647 checks; exact source and cleanup are retained in controller-refresh/receipt.json. The successor command/4 reducer, separate discussion, bounded predecessor migration, query/4, concrete adapters and mixed-history restore have independent source review. The 57-arm successor packet failed hosted run 43748907122 at f93a42a in the migration suite before registered arm observations there; 420 earlier checks and all containment/cleanup controls passed. Exact failure is retained; source diagnosis and a corrected isolated run are required. Later owner/Doc compound history remains a separate source-only packet. Home activation, service adaptation and release readback remain open.
 - id: T06
   title: Define bounded storage and supported workload strategy
   phase: A
@@ -400,7 +400,7 @@ packages:
   - 10
   - 29
   current_progress: Layout, title-only defaults and priority wording implemented in working branch. Native split
-    properties, owner/worker, readable keys, server filters and board still pending.
+    properties, owner/worker and separate purpose/discussion editor now have an independently reviewed reserved component packet with ten state tests and fifteen protocol tests. It is unwired and its eight rendered cases remain unexecuted. Native carrier integration, readable keys, server filters and board remain pending.
 - id: T09
   title: Make Docs a proper Markdown knowledge experience
   phase: B

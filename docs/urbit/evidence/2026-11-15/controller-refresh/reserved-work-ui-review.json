@@ -1,0 +1,124 @@
+{
+  "protocol": "stead.product-work-ui-preparation/1",
+  "created_at": "2026-11-15T19:19:16.840376+00:00",
+  "classification": "reserved-unwired-source-reviewed-host-tested",
+  "runtime_capability_activated": false,
+  "qualifies_phase": false,
+  "browser_cases_executed": 0,
+  "source_inputs": {
+    "web/app/src/productWork.css": "2decb0a9862d6d1b660679916756415a4bfe82f002ae55155e0aae441b9d447d",
+    "web/app/src/productWorkComposer.tsx": "e97844493f34adb981633c284d9a089d6f5712d16131a540a3eebf40398f64d5",
+    "web/app/src/productWorkDetail.tsx": "960e2a60765926cd3143eac7cad84316bff95e5db7cbd99d387a455867449fbb",
+    "web/app/src/productWorkFields.tsx": "95912d3545cdc44b6875706fe8e4333d4331725e4043686ea4c7a2f18a85ea24",
+    "web/app/src/productWorkState.tsx": "94f839489d67f1101270cb4a99e26c0ba74956b6bdd75e802719a166a99199d8",
+    "web/app/tests/product-work-reference.css": "c6c71c4ededb99eb3f894d8a484e5262cf5fdfcc2efea4488518c99a560b7d6d",
+    "web/app/tests/product-work-reference.mjs": "ca357c14381937b19d0c3bfc77c727d553432e66a645bb54273ca643d5530cb0",
+    "web/app/tests/product-work-reference.tsx": "5f3db1d223e7f43f2b4cc108cc88fea0401d3ea8573a63389e0c9f44ff40ef66",
+    "web/app/tests/product-work.mjs": "6d0a60324c8c139f42f5d6f7c9ec6836dec2b8cfc10daf7b2f942db15dfe0fd1",
+    "web/app/tests/product-work.test.ts": "45feb9e7a2d2880605d536c309928f4a0366baba061c0f0655f943b8c7b5d520"
+  },
+  "review": {
+    "reviewer": "root independent source review",
+    "result": "No additional blocker after requested corrections",
+    "covered": [
+      "Monotonic scope/client/authority generation fences late callbacks and finalization",
+      "Per-section Work/contract/discussion bases and authority conflicts require explicit adoption",
+      "Unknown outcomes preserve exact prepared object and bytes; no automatic retry",
+      "Required draft persistence callback across same-session temporary unmounts; cross-session restore rejected",
+      "Owner human versus Working-on-it human-or-agent",
+      "Distinct required shared-Doc target identity, exact saved pin selection",
+      "Done purpose editing requires reopening; completion note vs accepted-output readiness remains explicit"
+    ]
+  },
+  "host_evidence": {
+    "draft_tests": {
+      "report": ".runtime/product-work-XB0n8W/report.json",
+      "report_sha256": "6cd76d83ba88d0f8ebc824db6f83fe56899621ed6d06d5825f6413b5ac374819",
+      "passed": 10,
+      "input_hashes": {
+        "src/productWorkState.tsx": "94f839489d67f1101270cb4a99e26c0ba74956b6bdd75e802719a166a99199d8",
+        "src/productClient.ts": "359dfb2790072499ae6e4c045c65fc22a7259612b53cd53729a4c4940feb2b69",
+        "src/productProtocol.ts": "53032173a4df1a394ffbab1fea2950ce5e4579279116dcf9d470f1e91f5a2400",
+        "src/productWire.ts": "35b033b3437f07b2e0690e3192091b43ba4bec2c9bee2768ca9b43abb70fa6c1",
+        "src/protocol.ts": "a8dee5b65f79ffe052869f19e9b508f7abcb30149ac82eaa31a47223796003c7",
+        "tests/product-work.test.ts": "45feb9e7a2d2880605d536c309928f4a0366baba061c0f0655f943b8c7b5d520",
+        "tests/product-work.mjs": "6d0a60324c8c139f42f5d6f7c9ec6836dec2b8cfc10daf7b2f942db15dfe0fd1",
+        "package-lock.json": "b4d2ced8e19aa8b7cf9eaab75b906e867132321b97937b534e5810c152dbec98"
+      }
+    },
+    "protocol_tests": {
+      "report": ".runtime/product-protocol-RaOPeQ/report.json",
+      "report_sha256": "7d978b465c38a51eba4cd02f04193d1fc36cde95f58fe292819895c74383055b",
+      "passed": 15,
+      "input_hashes": {
+        "src/productWire.ts": "35b033b3437f07b2e0690e3192091b43ba4bec2c9bee2768ca9b43abb70fa6c1",
+        "src/productProtocol.ts": "53032173a4df1a394ffbab1fea2950ce5e4579279116dcf9d470f1e91f5a2400",
+        "src/productClient.ts": "359dfb2790072499ae6e4c045c65fc22a7259612b53cd53729a4c4940feb2b69",
+        "src/protocol.ts": "a8dee5b65f79ffe052869f19e9b508f7abcb30149ac82eaa31a47223796003c7",
+        "tests/product-protocol.test.ts": "5c77240ef0d9bdc974f53269f4f517cef4b79c9a23d70ec132afefab4f2e8772",
+        "tests/product-protocol.mjs": "7a36d2f05ebe51f5b86c9b07b658b917b9cbe3928d20d08e5b249918ad86d91d",
+        "package-lock.json": "b4d2ced8e19aa8b7cf9eaab75b906e867132321b97937b534e5810c152dbec98",
+        "../../native/core/desk/lib/stead-product-codec.hoon": "f5b16dd0ae46aa1f079a7a35c21d1ed46ff30893dc1096ee16297819863e11d0",
+        "../../native/core/desk/lib/stead-product-query.hoon": "0d6c7a73b803d3c015c6a85b3a7a23d06f82c796de1fb9b18cd4442067e89350",
+        "../../native/core/desk/lib/stead-product-views.hoon": "ea5806bd403937aa2efc782d00eaa1ff58fe064a4baf4102f9097d4ce8fb95f0",
+        "../../native/core/desk/lib/stead-product-work.hoon": "624d1878397c4552bd4e2d7ed0c02af874b95c3c20321f89dcec61cf47ab53e4",
+        "../../native/core/desk/tests/stead-product-codec.hoon": "5e4e1f327c357ccbe137c86ec6d4603c8b9644a1559d5aca5348ad31311092a9"
+      }
+    },
+    "typescript": "passed with no emit",
+    "owned_processes": [
+      {
+        "directory": ".runtime/product-work-typecheck-owner-1794769975768722852",
+        "process_sha256": "061eccc91706d23386432ecbb89ccf49d31588606332199ccf97e24373f2baa7",
+        "monitor_sha256": "87390402c4855c515aaa16ea5c7238935bdd9fff49cd2ec361789b3cf42771d8",
+        "cpu_max": "2500 10000",
+        "cpu_affinity": [
+          19
+        ],
+        "peak_c": 49.0,
+        "duration_seconds": 6.6,
+        "cleanup": "reaped-empty-inactive"
+      },
+      {
+        "directory": ".runtime/product-work-owner-1794769988083653391",
+        "process_sha256": "a0eab3ac53ec2242ff6560312cba99df86d78ec8307f614a2233b1472e0bdda4",
+        "monitor_sha256": "77947d4ee55dad2c17a243503a982265f2168847803e102d927aabd530db768e",
+        "cpu_max": "2500 10000",
+        "cpu_affinity": [
+          19
+        ],
+        "peak_c": 52.0,
+        "duration_seconds": 1.2,
+        "cleanup": "reaped-empty-inactive"
+      },
+      {
+        "directory": ".runtime/product-protocol-owner-1794769871864601264",
+        "process_sha256": "b662329da8a373a434afb45e59ac52abab3e80bdf0ca894c9528537124a4302a",
+        "monitor_sha256": "a52b221caf211262f10363841de6130c2d5140ebf22b8d5a7a6c756ec087b31a",
+        "cpu_max": "2500 10000",
+        "cpu_affinity": [
+          19
+        ],
+        "peak_c": 54.0,
+        "duration_seconds": 1.4,
+        "cleanup": "reaped-empty-inactive"
+      }
+    ]
+  },
+  "prepared_browser_cases": [
+    "composer-keeps-title-defaults-and-owner-worker-eligibility-at-narrow-width",
+    "independent-comment-property-and-purpose-saves-retain-other-section-drafts",
+    "unknown-save-retries-identical-bytes-and-keeps-draft-until-readback",
+    "authority-conflict-needs-refreshed-explicit-adoption-with-unchanged-work-revision",
+    "late-a-to-b-to-a-response-cannot-publish-or-reconcile-a-new-view",
+    "required-doc-pins-advance-explicitly-and-duplicate-targets-are-not-offered",
+    "legacy-blocked-and-assignment-need-separate-explicit-resolution",
+    "human-note-completion-and-revoked-remount-preserve-only-current-session"
+  ],
+  "limitations": [
+    "Eight synthetic real-browser cases are prepared but have not run.",
+    "No production screen imports these components; no capability or authority is inferred from an injected transport.",
+    "Native authorization, runtime activation, and live product acceptance remain separate required gates.",
+    "Automated evidence does not complete the independent human usability trial."
+  ]
+}

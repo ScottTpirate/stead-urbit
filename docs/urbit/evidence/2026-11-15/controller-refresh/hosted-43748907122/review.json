@@ -1,0 +1,40 @@
+{
+  "candidate_commit": "f93a42a06c49fef597f6611e18b2f56eaa73d568",
+  "checks_passed": 420,
+  "cleanup_verified": true,
+  "containment_controls_passed": 6,
+  "controller_commit": "85b77abbe5667d04819695df5fc221c614a5def8",
+  "diagnosis": "pending; no registered arm observations or closed compiler markers/source locations",
+  "inputs_canonical_sha256": "2ce42b42f0e662701e5a2b17f81bee79c21b99616774d43a8d38273a06070101",
+  "last_unit": {
+    "log_bytes": 729,
+    "log_sha256": "fdaa4b53f6a7b45ab489a8ffe7d1385edede7ddadd121c3ad1d2c4904a46149e",
+    "markers": {
+      "build-fail": false,
+      "dojo-lame": false,
+      "exit": false,
+      "find-fork": false,
+      "generator-build-fail": false,
+      "mint-vain": false,
+      "nest-fail": false,
+      "syntax error": false
+    },
+    "path": "/tests/stead-product-migrate",
+    "registered_arm_observations": [],
+    "source_spans": {
+      "locations": [],
+      "truncated": false
+    },
+    "terminal": "[32 %avow 0 %noun 1]"
+  },
+  "live_pilot_affected": false,
+  "protocol": "stead.independent-hosted-review/1",
+  "registered_suites_completed": 9,
+  "report_sha256": "d30f42738334ec4a73978da1cf462c5a30de5f1a7b113de0e44335d7ccfd8e34",
+  "run_id": 43748907122,
+  "source_files_verified": {
+    "candidate_product_files": 114,
+    "controller_files": 394
+  },
+  "status": "failed-not-qualified"
+}

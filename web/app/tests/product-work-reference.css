@@ -1,0 +1,4 @@
+.product-reference { display: block; max-width: 1100px; margin: 0 auto; padding: 24px; }
+.product-reference > h1 { font-size: 22px; }
+.product-reference-controls { display: flex; flex-wrap: wrap; gap: 8px; padding: 12px; margin-bottom: 20px; border: 1px dashed var(--line-strong); }
+@media (max-width: 620px) { .product-reference { padding: 8px; } }

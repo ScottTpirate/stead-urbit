@@ -1,0 +1,38 @@
+{
+  "classification": "host-product-work-draft-state-tests-with-injected-transport",
+  "qualifies_phase": false,
+  "node": "v24.21.0",
+  "expected_tests": [
+    "new drafts have title-only defaults and never restore another session or resource",
+    "remount preserves an unresolved prepared request as unknown with the same object and bytes",
+    "comment and property refreshes retain an independently edited purpose and its original contract pin",
+    "accepted property readback clears only that section and keeps purpose and comment drafts intact",
+    "explicit conflict adoption retains text and rejected attempt while changing only the chosen base",
+    "owner worker and shared Doc choices keep eligibility and project session scope distinct",
+    "accepted-output readiness is advisory only for the exact current session and execution pin",
+    "refresh and base adoption cannot publish a different resource into a retained draft",
+    "a returning view cannot reuse an earlier request generation or clear its newer in-flight owner",
+    "authority conflict needs explicit section adoption even when all Work revisions are unchanged"
+  ],
+  "status": "pass",
+  "inputs_before": {
+    "src/productWorkState.tsx": "94f839489d67f1101270cb4a99e26c0ba74956b6bdd75e802719a166a99199d8",
+    "src/productClient.ts": "359dfb2790072499ae6e4c045c65fc22a7259612b53cd53729a4c4940feb2b69",
+    "src/productProtocol.ts": "53032173a4df1a394ffbab1fea2950ce5e4579279116dcf9d470f1e91f5a2400",
+    "src/productWire.ts": "35b033b3437f07b2e0690e3192091b43ba4bec2c9bee2768ca9b43abb70fa6c1",
+    "src/protocol.ts": "a8dee5b65f79ffe052869f19e9b508f7abcb30149ac82eaa31a47223796003c7",
+    "tests/product-work.test.ts": "45feb9e7a2d2880605d536c309928f4a0366baba061c0f0655f943b8c7b5d520",
+    "tests/product-work.mjs": "6d0a60324c8c139f42f5d6f7c9ec6836dec2b8cfc10daf7b2f942db15dfe0fd1",
+    "package-lock.json": "b4d2ced8e19aa8b7cf9eaab75b906e867132321b97937b534e5810c152dbec98"
+  },
+  "inputs_after": {
+    "src/productWorkState.tsx": "94f839489d67f1101270cb4a99e26c0ba74956b6bdd75e802719a166a99199d8",
+    "src/productClient.ts": "359dfb2790072499ae6e4c045c65fc22a7259612b53cd53729a4c4940feb2b69",
+    "src/productProtocol.ts": "53032173a4df1a394ffbab1fea2950ce5e4579279116dcf9d470f1e91f5a2400",
+    "src/productWire.ts": "35b033b3437f07b2e0690e3192091b43ba4bec2c9bee2768ca9b43abb70fa6c1",
+    "src/protocol.ts": "a8dee5b65f79ffe052869f19e9b508f7abcb30149ac82eaa31a47223796003c7",
+    "tests/product-work.test.ts": "45feb9e7a2d2880605d536c309928f4a0366baba061c0f0655f943b8c7b5d520",
+    "tests/product-work.mjs": "6d0a60324c8c139f42f5d6f7c9ec6836dec2b8cfc10daf7b2f942db15dfe0fd1",
+    "package-lock.json": "b4d2ced8e19aa8b7cf9eaab75b906e867132321b97937b534e5810c152dbec98"
+  }
+}
