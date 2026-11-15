@@ -17,7 +17,7 @@ import git_pack_receive_adapter as receive
 import git_pack_relay_wire as wire
 from git_pack_store import SHIP
 from git_pack_worker_socket import SignedProof
-from portable_recovery import TOKEN, UUID, RecoveryError, decoded, encoded, match, new_id, origin, require, sha
+from portable_recovery import MAX_RESPONSE, TOKEN, UUID, RecoveryError, decoded, encoded, match, new_id, origin, require, sha
 
 
 MIME = 'application/x-stead-git-relay'
@@ -170,6 +170,32 @@ class Relay:
         scope, value, refs = git_http.decision(raw, project)
         require(scope['home'] == self.home_ship and encoded(value)[:-1] == raw, 'home-decision-response')
         return scope, value, refs
+
+    def browser_pack_view(self, project, session, csrf, deadline):
+        require(match(UUID, project) and match(TOKEN, session) and match(TOKEN, csrf), 'browse-credentials')
+        until = min(deadline, time.monotonic() + CALL_SECONDS)
+        body = encoded({'protocol': 'stead.code/1', 'action': 'pack-view', 'project_id': project})
+        headers = {
+            'Host': self.origin.netloc, 'Origin': self.origin.geturl(),
+            'Cookie': f'__Host-stead-session={session}', 'X-Stead-CSRF': csrf,
+            'Content-Type': 'application/json', 'Content-Length': str(len(body)),
+            'Accept': 'application/json', 'Accept-Encoding': 'identity', 'Connection': 'close',
+        }
+        with self._response('POST', '/stead/api/code', headers, body, until, MAX_RESPONSE) as response:
+            if response.status == 401:
+                raise git_http.Denied('session_required')
+            if response.status == 404:
+                raise git_http.Denied('denied_or_not_found')
+            require(response.status in (200, 403, 409), 'browse-home-unavailable')
+            value = decoded(_response_body(response, MAX_RESPONSE, self.home_ship))
+            status = response.status
+        if status == 403:
+            reason = 'invalid_csrf' if isinstance(value, dict) and value.get('error') == 'invalid_csrf' else 'denied_or_not_found'
+            raise git_http.Denied(reason)
+        if status == 409:
+            raise git_http.Denied('stale_selection')
+        remaining(until)
+        return value
 
     def advertise(self, authorization, project, *, deadline=None):
         try:

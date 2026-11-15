@@ -44,7 +44,7 @@ EVIDENCE_FIELDS = {'protocol', 'migration_id', 'project_id', 'home', 'authority_
 SOURCE_STATUS_FIELDS = {'protocol', 'migration_id', 'project_id', 'home', 'authority_epoch', 'journal_head',
                         'destination_home', 'retired_at_ms', 'writer_state'}
 OPERATIONS = {
-    'project.create': 'project', 'work.create': 'work', 'work.update': 'work', 'work.delete': 'work',
+    'project.create': 'project', 'work.create': 'work', 'work.update': 'work', 'work.delete': 'work', 'work.assign': 'work',
     'container.create': 'container', 'document.save': 'document', 'document.publish': 'document',
     'document.delete': 'document', 'relation.create': 'relation', 'relation.delete': 'relation',
     'policy.grant': 'policy', 'policy.revoke': 'policy', 'policy.renew-creator-grant': 'policy',
@@ -210,9 +210,17 @@ def verify_event(raw, current, sequence, previous, last_time, seen, context, bin
                 and int(identity['binding_expires_at_ms']) > int(creator_grant['binding_expires_at_ms']),
                 'journal-creator-grant-renewal')
         creator_grant.update(identity)
+    target_principal = ''
+    if operation == 'work.assign':
+        shape(payload, {'assignee_principal_id'})
+        target_principal = payload['assignee_principal_id']
+        require(command['expected_revision'] != '0' and (target_principal == '' or match(UUID, target_principal)),
+                'journal-assignment-target-shape')
     if operation == 'policy.grant':
+        target_principal = payload.get('principal_id')
+    if operation == 'policy.grant' or target_principal:
         target = embedded(record['grant_target'], ACTOR_FIELDS, 1_024)
-        require(target['principal_id'] == payload.get('principal_id') and match(UUID, target['principal_id'])
+        require(target['principal_id'] == target_principal and match(UUID, target['principal_id'])
                 and match(UUID, target['binding_id']) and match(SHIP, target['identity_ship'])
                 and target['identity_ship'] != current['home'], 'journal-grant-target-mismatch')
         number(target['binding_revision'])

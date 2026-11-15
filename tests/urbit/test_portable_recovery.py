@@ -152,6 +152,20 @@ class PortableRecovery(unittest.TestCase):
         with self.assertRaises(P.RecoveryError):
             P.verify(self.bundle, expected_sha256='0' * 64)
 
+    def test_work_assignments_survive_portable_roundtrip_after_revocation(self):
+        source = Source(2)
+        source.work[0].update(assignee_principal_id=uid(40), assignee_display_name='Current member')
+        source.work[1].update(assignee_principal_id=uid(41))
+        data, _, _ = self.publish(source)
+        files, _ = P.verify(self.bundle)
+        rows = json.loads(files['records.json'])['work']
+        self.assertEqual(rows[0]['assignee_display_name'], data['work'][0]['assignee_display_name'])
+        self.assertEqual(rows[1]['assignee_principal_id'], uid(41))
+        self.assertNotIn('assignee_display_name', rows[1])
+        data['work'][0].pop('assignee_principal_id')
+        with self.assertRaisesRegex(P.RecoveryError, 'record-shape'):
+            P.validate_data(data)
+
     def test_queries_never_leave_requested_project_or_call_mutations(self):
         source = Source()
         self.capture(source)

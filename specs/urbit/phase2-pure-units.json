@@ -1,7 +1,7 @@
 {
   "format": 1,
   "classification": "pure-native-only",
-  "expected_arm_count": 147,
+  "expected_arm_count": 151,
   "suites": [
     {
       "path": "/tests/stead-session",
@@ -93,6 +93,16 @@
         "test-updates-resume-retires-only-own-handles",
         "test-updates-paginated-refresh-reclaims-only-own-query-walk",
         "test-updates-empty-receipt-is-unconfirmed-only-in-current-scope"
+      ],
+      "timeout_seconds": 60
+    },
+    {
+      "path": "/tests/stead-work-assignment",
+      "arms": [
+        "test-work-assignment-persists-through-edits-and-replay",
+        "test-work-assignment-roster-and-search-are-project-scoped",
+        "test-work-assignment-revocation-hides-name-and-allows-clearing",
+        "test-work-assignment-rejects-stale-and-ineligible-actors"
       ],
       "timeout_seconds": 60
     },

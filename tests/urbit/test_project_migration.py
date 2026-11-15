@@ -207,6 +207,28 @@ class ProjectMigration(unittest.TestCase):
                     with self.assertRaisesRegex(ValueError, error):
                         migration.verify(**self.paths)
 
+    def test_work_assignment_requires_exact_historical_target(self):
+        assign = command('work.assign', 22, 9, {'assignee_principal_id': uid(20)}) | {'expected_revision': '1'}
+        previous = migration.domain_hash(migration.JOURNAL, migration.canonical(self.rows[-1]))
+        target = {'identity_ship': '~bud', 'principal_id': uid(20), 'binding_id': uid(21),
+                  'binding_revision': '1', 'binding_expires_at_ms': '2000000000000'}
+        assignment = event(3, previous, assign)
+        assignment['grant_target'] = migration.canonical(target).decode()
+        self.rows.append(assignment)
+        self.stage_journal()
+        self.sign()
+        self.assertEqual(migration.verify(**self.paths)['status'], 'verified-candidate')
+        assignment['grant_target'] = migration.canonical(dict(target, principal_id=uid(23))).decode()
+        self.stage_journal()
+        self.sign()
+        with self.assertRaisesRegex(ValueError, 'journal-grant-target-mismatch'):
+            migration.verify(**self.paths)
+        unassign = command('work.assign', 22, 9, {'assignee_principal_id': ''}) | {'expected_revision': '1'}
+        self.rows[-1] = event(3, previous, unassign)
+        self.stage_journal()
+        self.sign()
+        self.assertEqual(migration.verify(**self.paths)['status'], 'verified-candidate')
+
     def test_signed_payload_respects_native_parser_bounds(self):
         work = migration.decoded(self.rows[1]['canonical_command'].encode())
         for payload in ({f'key-{index}': 'value' for index in range(17)}, {'description': 'bad\0value'}):

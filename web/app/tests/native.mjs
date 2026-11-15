@@ -132,17 +132,17 @@ async function signIn(context, ship, port, keyboard = false) {
   const enter = (page, target, value) => keyboard ? keyboardText(page, target, value) : target.fill(value);
   const activate = (page, target) => keyboard ? keyboardPress(page, target) : target.click();
   if (keyboard) {
-    await enter(home, home.getByRole('textbox', {name:'Your identity ship', exact:true}), '~bud');
+    await enter(home, home.getByRole('textbox', {name:'Urbit ID', exact:true}), '~bud');
     const attempt = home.waitForResponse(response => response.url() === origin + '/stead/auth/start');
-    await activate(home, home.getByRole('button', {name:'Request sign-in', exact:true}));
+    await activate(home, home.getByRole('button', {name:'Continue', exact:true}));
     const denied = await attempt;
     assert.equal(denied.status(), 200); // The pinned auth protocol reports this denial in its body.
     assert.equal((await denied.json()).error, 'denied_or_not_found');
     await home.getByRole('alert').getByText('This resource is unavailable or you do not have access.', {exact:true}).waitFor();
     assert.equal(await home.getByRole('heading', {name:'Approve on your identity ship', exact:true}).count(), 0);
   }
-  await enter(home, home.getByRole('textbox', {name: 'Your identity ship', exact: true}), keyboard ? ship : '~' + ship);
-  await activate(home, home.getByRole('button', {name: 'Request sign-in', exact: true}));
+  await enter(home, home.getByRole('textbox', {name: 'Urbit ID', exact: true}), keyboard ? ship : '~' + ship);
+  await activate(home, home.getByRole('button', {name: 'Continue', exact: true}));
   await home.getByRole('heading', {name: 'Approve on your identity ship', exact: true}).waitFor();
   const code = await home.locator('.comparison').innerText();
   assert.match(code, /^[0-9a-f]{12}$/u);
@@ -180,8 +180,8 @@ async function signIn(context, ship, port, keyboard = false) {
   await personal.getByRole('heading', {name: code, exact: true}).waitFor();
   const requestCard = personal.locator('article').filter({has:personal.getByRole('heading', {name:code, exact:true})});
   await requestCard.getByText('Stead home: ~zod at ' + origin, {exact:true}).waitFor();
-  await activate(personal, requestCard.getByRole('button', {name: 'The code and home match — approve', exact: true}));
-  await personal.getByText('Approval sent. Refresh to check acknowledgement, or return to Stead to finish signing in.', {exact: true}).waitFor();
+  await activate(personal, requestCard.getByRole('button', {name: 'Approve sign-in', exact: true}));
+  await personal.getByText('Approval sent. Return to your Stead tab and check approval.', {exact: true}).waitFor();
   for (let count = 0; count < 20; count++) {
     const observed = home.waitForResponse(response => response.url() === origin + '/stead/auth/status');
     await activate(home, home.getByRole('button', {name: 'Check approval', exact: true}));
@@ -290,6 +290,7 @@ async function portableRecovery(memberResponse, cookie, work, docs) {
         const home = memberResponse.request().frame().page();
         await home.getByRole('button', {name: /GARDEN.*Garden α/u}).click();
         await home.getByRole('button', {name: 'Code', exact: true}).click();
+        await home.getByText('Clone', {exact: true}).click();
         const clone = new URL(await home.getByRole('textbox', {name: 'Clone URL', exact: true}).inputValue());
         assert.equal(clone.href, origin + '/stead/git/' + work.project_id + '.git');
         assert.equal(clone.username + clone.password, '');
@@ -900,7 +901,7 @@ try {
   assert.ok((await privateText.inputValue()).includes('UNSELECTED-PRIVATE-CANARY'));
   await privateText.fill((await privateText.inputValue()) + '\nUnsaved logout canary.');
   await alice.home.getByRole('button', {name: 'Sign out', exact: true}).click();
-  await alice.home.getByRole('button', {name: 'Request sign-in', exact: true}).waitFor();
+  await alice.home.getByRole('button', {name: 'Continue', exact: true}).waitFor();
   assert.equal(await alice.home.getByRole('button', {name: /GARDEN/u}).count(), 0);
   assert.equal(await privateText.count(), 0);
   assert.ok(!(await alice.home.locator('main').innerText()).includes('UNSELECTED-PRIVATE-CANARY'));

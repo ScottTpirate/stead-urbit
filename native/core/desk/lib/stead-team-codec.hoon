@@ -66,6 +66,11 @@
       ==
     ?:  =('work.create' op)  &(=(exp 0) (work-payload pay))
     ?:  =('work.update' op)  &((gth exp 0) (work-payload pay))
+    ?:  =('work.assign' op)
+      ?&  (gth exp 0)  (keys pay ~['assignee_principal_id'])
+          =/  assignee  (field pay 'assignee_principal_id')
+          ?|(=('' assignee) (uuid assignee))
+      ==
     ?:  =('work.delete' op)  &((gth exp 0) (keys pay ~))
     ?:  =('container.create' op)
       ?&  =(exp 0)  (keys pay ~['title' 'visibility'])
@@ -140,7 +145,7 @@
               =('' project)  =('' container)  =('' resource)  =('' search)
           ==
           ?&  (uuid project)
-              (~(has in (silt ~['project' 'work' 'containers' 'documents' 'document' 'relations' 'search' 'activity' 'inbox' 'receipt'])) kind)
+              (~(has in (silt ~['project' 'work' 'assignees' 'containers' 'documents' 'document' 'relations' 'search' 'activity' 'inbox' 'receipt'])) kind)
               ?:  ?|  =('documents' kind)  =('document' kind)
                   ==
                 ?&  (uuid container)  =('' search)
@@ -156,6 +161,12 @@
           ==
       ==
   [req kind project container resource search cursor]
+++  target-principal
+  |=  cmd=command
+  ^-  @t
+  ?:  =('policy.grant' operation.cmd)  (field payload.cmd 'principal_id')
+  ?:  =('work.assign' operation.cmd)  (field payload.cmd 'assignee_principal_id')
+  ''
 ++  kind
   |=  operation=@t
   ^-  @t

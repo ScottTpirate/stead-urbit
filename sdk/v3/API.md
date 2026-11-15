@@ -75,6 +75,7 @@ same request is rejected; retrying an accepted original is idempotent.
 | --- | --- | --- |
 | `project.create` | `organization_id`, `owning_team_id`, `title`, `project_key`, `preset` | Explicit project creator; project = resource; revision 0; preset `general` |
 | `work.create`, `work.update` | `title`, `description`, `type`, `status`, `priority` | Contributor or maintainer; 0 for create, positive for update |
+| `work.assign` | `assignee_principal_id` (eligible member ID or empty to unassign) | Contributor or maintainer; current Work revision |
 | `work.delete` | none | Contributor or maintainer; positive revision |
 | `container.create` | `title`, `visibility` | Contributor or maintainer for private; maintainer for shared; revision 0 |
 | `document.save` | `container_id`, `markdown` | Current container write scope; 0 for new, current revision for edit |
@@ -133,10 +134,12 @@ lowercase SHA-1 Git OIDs.
 ```
 
 All eight fields are required. `identity`, `capabilities` and `projects` use empty scope fields.
-Project kinds are `project`, `work`, `containers`, `documents`, `document`,
+Project kinds are `project`, `work`, `assignees`, `containers`, `documents`, `document`,
 `relations`, `search`, `activity`, `inbox`, `receipt`. `work` optionally selects
 one resource. `documents` requires a collection; `document` also requires a
 resource. `search` accepts at most 128 bytes. Other unused fields remain empty.
+`assignees` is available to contributors and maintainers and lists eligible
+project members with current identity bindings and write grants.
 For `receipt`, `resource_id` is your original request ID and `container_id` is
 the original command's container, when applicable. Recovery requires current
 authorized scope and the original principal; an empty result is unconfirmed.
@@ -170,7 +173,8 @@ come from the row, never from parsing the opaque row key.
 | Identity | `principal_id`, `identity_ship`, `binding_id`, `binding_revision`, `session_audit_id`, `display_name`, `organization_id`, `team_id`, `home`, `can_create` (`yes` or `no`); no resource fields |
 | Capabilities | `protocol`, `profile`, `commands`, `queries`, `updates`, `authentication`, `max_request_bytes`, `max_response_bytes`, `page_size`, `runtime`; no resource fields |
 | Project | `project_id`, `title`, `project_key`, `preset`, `authority_epoch`, `role`; maintainer only: `policy_revision`; no `container_id` |
-| Work | `title`, `description`, `type`, `status`, `priority`, `snippet`; empty `container_id`; full description only on single-resource read |
+| Work | `title`, `description`, `type`, `status`, `priority`, `snippet`; empty `container_id`; full description only on single-resource read; optional `assignee_principal_id` and `assignee_display_name` |
+| Assignee | `principal_id`, `display_name`, `identity_ship`; no resource fields |
 | Collection | `title`, `visibility`, `container_head`; `kind=container`, collection ID in both ID fields |
 | Document | `container_head`, `title`, `snippet`, `visibility`; exact `markdown` only on `document` read |
 | Relation | `title` plus every `relation.create` payload field; empty `container_id` |

@@ -1,26 +1,20 @@
 import { newId } from './protocol';
 import { StrictMode, Suspense, lazy, useEffect, useRef, useState, type FormEvent, type ReactNode } from 'react';
 import { createRoot } from 'react-dom/client';
-import { HomeClient, HomeError, command, type Command, type Fields, type HomeWatch, type Query, type Row, type UpdateScope, type ViewKind } from './api';
+import { HomeClient, HomeError, UUID, command, type Command, type Fields, type HomeWatch, type Query, type Row, type UpdateScope, type ViewKind } from './api';
 import { Button, EmptyState, LoadingState, Surface, TextField } from './primitives';
 import { SupportDetails } from './SupportDetails';
 import { AcceptedTime } from './AcceptedTime';
+import { WorkQuickActions, assigneeName, workStatuses, type WorkMenu, type WorkProperty } from './WorkQuickActions';
 import { CodeRepository } from './CodeRepository';
 import { CodePack } from './CodePack';
+import { UrbitSignIn } from './UrbitSignIn';
 import './style.css';
 const Markdown = lazy(() => import('./Markdown').then(module => ({ default: module.Markdown })));
 const client = new HomeClient();
 const blankQuery = (kind: ViewKind, project_id = '', container_id = '', resource_id = '', search = '', cursor = ''): Query =>
   ({ kind, project_id, container_id, resource_id, search, cursor });
 const scopeKey = (session: string | undefined, scope: UpdateScope) => JSON.stringify([session, scope.kind, scope.project_id, scope.container_id, scope.resource_id, scope.search]);
-const workStatuses = new Map([
-  ['backlog', 'Backlog'],
-  ['todo', 'To do'],
-  ['in_progress', 'In progress'],
-  ['blocked', 'Blocked'],
-  ['done', 'Done'],
-  ['canceled', 'Canceled'],
-]);
 const messages: Record<string, string> = {
   invalid_ship_name: 'Enter an Urbit ID such as sampel-palnet. The tilde is optional.',
   search_too_long: 'Search is limited to 128 UTF-8 bytes. Shorten the phrase.',
@@ -86,6 +80,7 @@ function App() {
   const hiddenHeader = editor?.fullSource ? '' : pageHeader;
   const [currentVersion, setCurrentVersion] = useState<{scope: string; row: Row} | null>(null);
   const [work, setWork] = useState<Row | null>(null);
+  const [workMenu, setWorkMenu] = useState<WorkMenu | null>(null);
   const [form, setForm] = useState<'' | 'project' | 'work' | 'container' | 'relation' | 'publish'>('');
   const [formDirty, setFormDirty] = useState(false);
   const [discard, setDiscard] = useState<'document' | 'form' | null>(null);
@@ -101,6 +96,7 @@ function App() {
   const heading = useRef<HTMLHeadingElement>(null);
   const workEditorHeading = useRef<HTMLHeadingElement>(null);
   const workTrigger = useRef<HTMLElement | null>(null);
+  const quickActionFocus = useRef<{trigger: HTMLElement; row: string; control: string} | null>(null);
   const feedbackHeading = useRef<HTMLHeadingElement>(null);
   const discardTrigger = useRef<HTMLElement | null>(null);
   const [online, setOnline] = useState(navigator.onLine);
@@ -109,10 +105,11 @@ function App() {
     activeQuery.current++;
     repositoryGeneration.current++;
     displayedSnapshot.current = null;
+    quickActionFocus.current = null;
     setLoading(false);
     setProjects([]); setProject(null); setContainers([]); setContainer(null); setRows([]);
     setRepository(null); setShowRepository(false);
-    setSearch(''); setSearchDraft(''); setCursor(''); setEditor(null); setWork(null); setForm(''); setFormDirty(false); setDiscard(null); setPending(null); setTargets([]); setTargetFilter(''); setConfirmation(null); setCurrentVersion(null); setNotice(''); setRefreshNotice(null);
+    setSearch(''); setSearchDraft(''); setCursor(''); setEditor(null); setWork(null); setWorkMenu(null); setForm(''); setFormDirty(false); setDiscard(null); setPending(null); setTargets([]); setTargetFilter(''); setConfirmation(null); setCurrentVersion(null); setNotice(''); setRefreshNotice(null);
   };
   client.onInvalidated = () => { clearViews(); setIdentity(null); setChallenge(null); };
   async function loadRepository(projectId: string, enable = false) {
@@ -175,6 +172,18 @@ function App() {
     return () => window.removeEventListener('beforeunload', warn);
   }, [editor?.dirty, pending, formDirty, busy]);
   useEffect(() => { setFormDirty(false); setDiscard(null); }, [form, work?.resource_id]);
+  useEffect(() => { setWorkMenu(null); quickActionFocus.current = null; }, [tab, project?.project_id, project?.role, project?.authority_epoch, identity?.session_audit_id]);
+  useEffect(() => {
+    const restore = quickActionFocus.current;
+    if (busy || loading || !restore) return;
+    quickActionFocus.current = null;
+    if (document.activeElement !== document.body) return;
+    if (restore.trigger.isConnected) restore.trigger.focus();
+    else {
+      const row = document.querySelector(`[data-work-row="${CSS.escape(restore.row)}"]`);
+      row?.querySelector<HTMLButtonElement>(`[data-work-control="${CSS.escape(restore.control)}"]`)?.focus();
+    }
+  }, [busy, loading, rows]);
   const actionBusy = useRef(false);
   async function action(callback: () => Promise<unknown>, describeFailure = explain) {
     if (actionBusy.current) return;
@@ -368,13 +377,19 @@ function App() {
     reloadScope();
   }
   async function completed(value: Command, receipt: Fields) {
+    const refreshDetail = !form && work?.resource_id === value.resource_id && ['work.update', 'work.assign'].includes(value.operation);
     setPending(null);
     if (value.operation === 'document.save' && editor?.id === value.resource_id) setEditor({ ...editor, revision: receipt.resource_revision!, head: receipt.git_commit_oid ?? '', dirty: false });
-    setForm(''); setFormDirty(false); setDiscard(null); setWork(null); setConfirmation(null); setCurrentVersion(null);
+    setForm(''); setFormDirty(false); setDiscard(null); if (!refreshDetail) setWork(null); setConfirmation(null); setCurrentVersion(null);
     if (value.operation === 'document.delete') setEditor(null);
     if (value.operation === 'project.create') await identify();
     else if (value.operation === 'container.create' && project) setContainers(await collections(project.project_id!));
     else if (project) await refresh();
+    if (refreshDetail) {
+      const generation = activeQuery.current;
+      const view = await client.query(blankQuery('work', value.project_id, '', value.resource_id));
+      if (generation === activeQuery.current) setWork(Object.values(view.rows)[0] ?? null);
+    }
     setNotice(`Saved at home · revision ${receipt.resource_revision}`);
   }
   async function save(value: Command) {
@@ -424,6 +439,69 @@ function App() {
   }
   const canEdit = project && ['contributor', 'maintainer'].includes(project.role ?? '');
   const draftMode = container?.visibility === 'private';
+  const workActionsLocked = busy || !!pending || !!form || !!editor?.dirty;
+  function showWorkMenu(row: Row, view: WorkMenu['view'], trigger: HTMLElement, point?: {x: number; y: number}) {
+    if (workActionsLocked || !project || (view !== 'actions' && !canEdit)) return;
+    const rect = trigger.getBoundingClientRect();
+    setWorkMenu(previous => !point && previous?.trigger === trigger && previous.view === view ? null :
+      {row, view, trigger, x: Math.max(8, point?.x ?? rect.left), y: Math.max(8, point?.y ?? rect.bottom + 4)});
+  }
+  function closeWorkMenu(restoreFocus = true) {
+    if (restoreFocus) workMenu?.trigger.focus();
+    setWorkMenu(null);
+  }
+  async function loadAssignees(projectId: string) {
+    const found: Row[] = [];
+    const cursors = new Set<string>();
+    let next = '';
+    do {
+      if (cursors.has(next) || cursors.size >= 8) throw new HomeError('invalid_response');
+      cursors.add(next);
+      const view = await client.query(blankQuery('assignees', projectId, '', '', '', next));
+      for (const row of Object.values(view.rows)) {
+        if (!UUID.test(row.principal_id ?? '') || !row.display_name || found.some(person => person.principal_id === row.principal_id)) throw new HomeError('invalid_response');
+        found.push(row);
+      }
+      next = view.cursor;
+    } while (next);
+    return found;
+  }
+  async function updateWorkProperty(row: Row, property: WorkProperty, value: string) {
+    if (!project || !canEdit || !row.resource_id || !row.resource_revision) return;
+    const { resource_id: id, resource_revision: revision } = row;
+    const projectId = project.project_id!;
+    const epoch = project.authority_epoch!;
+    if (property === 'assignee') {
+      if ((row.assignee_principal_id ?? '') !== value) await save(command(projectId, id, revision, epoch, 'work.assign', {assignee_principal_id: value}));
+      return;
+    }
+    if ((row[property] ?? 'none') === value) return;
+    const view = await client.query(blankQuery('work', projectId, '', id));
+    const current = Object.values(view.rows)[0];
+    if (!current || current.resource_id !== id) throw new HomeError('denied_or_not_found');
+    if (current.resource_revision !== revision) throw new HomeError('revision_conflict');
+    await save(command(projectId, id, revision, epoch, 'work.update', {
+      title: current.title!, description: current.description ?? '', type: current.type!, status: current.status!, priority: current.priority!, [property]: value,
+    }));
+  }
+  function workProperty(row: Row, property: WorkProperty, title: string, surface = 'list') {
+    const value = row[property] ?? '';
+    const label = property === 'assignee' ? assigneeName(row) : property === 'status' ? workStatuses.get(value) ?? (value || 'No status') : value === 'none' || !value ? 'No priority' : value;
+    const marker = property === 'status' ? <span className="status-marker" data-status={value} aria-hidden="true"/>
+      : property === 'assignee' ? <span className="work-person-mark" aria-hidden="true">{row.assignee_display_name?.trim().charAt(0).toUpperCase() || '–'}</span> : null;
+    const text = <span className="work-property-label">{label}</span>;
+    const className = `work-property work-${property}`;
+    if (!canEdit) return <span className={className} title={label}>{marker}{text}</span>;
+    return <button type="button" className={className} disabled={workActionsLocked} title={label} data-work-control={property} data-work-surface={surface}
+      aria-haspopup="dialog" aria-expanded={workMenu?.trigger.dataset.workSurface === surface
+        && workMenu.row.resource_id === row.resource_id && workMenu.view === property}
+      aria-label={`${property === 'assignee' ? 'Change assignee' : `Set ${property}`} for ${title}: ${label}`}
+      onClick={event => showWorkMenu(row, property, event.currentTarget)}>{marker}{text}</button>;
+  }
+  function confirmWorkRemoval(row: Row) {
+    if (!project || !canEdit) return;
+    setConfirmation({label: 'this work item', command: command(project.project_id!, row.resource_id!, row.resource_revision!, project.authority_epoch!, 'work.delete', {})});
+  }
   function submitForm(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
     if (form === 'publish' && (!editor || editor.dirty)) { setError('Save the page before choosing its publication destination.'); return; }
@@ -468,24 +546,40 @@ function App() {
     const locked = busy || !!pending || !!form || !!editor?.dirty;
     const key = row.request_id ? `event/${row.request_id}`
       : `${row.kind ?? tab}/${row.project_id ?? project?.project_id}/${row.container_id ?? ''}/${row.resource_id ?? index}`;
-    return <Surface key={key} className={inWork ? 'resource-row work-row' : 'resource-row'} data-selected={inWork && !!work && row.resource_id === work.resource_id}>
+    return <Surface key={key} className={inWork ? 'resource-row work-row' : 'resource-row'} data-work-row={inWork ? row.resource_id : undefined}
+      data-selected={inWork && !!work && row.resource_id === work.resource_id}
+      onContextMenu={inWork ? event => {
+        if (locked) return;
+        event.preventDefault();
+        const trigger = event.currentTarget.querySelector<HTMLElement>('.work-title');
+        if (trigger) showWorkMenu(row, 'actions', trigger, {x: event.clientX, y: event.clientY});
+      } : undefined}
+      onKeyDown={inWork ? event => {
+        if (locked || !(event.key === 'ContextMenu' || (event.shiftKey && event.key === 'F10'))) return;
+        event.preventDefault();
+        const trigger = event.target instanceof HTMLElement ? event.target : event.currentTarget;
+        showWorkMenu(row, 'actions', trigger);
+      } : undefined}>
       <div className="resource-summary">
         {!inWork && <span className="row-kind">{row.kind === 'document' ? 'Page' : row.kind ?? row.type ?? tab}</span>}
-        <h2>{inWork ? <button className="work-title" disabled={locked} aria-expanded={work?.resource_id === row.resource_id} aria-controls="work-detail-panel" onClick={event => { const trigger = event.currentTarget; void action(() => openWork(row, trigger), explainConnection); }}>{title}</button> : title}</h2>
+        <h2>{inWork ? <button className="work-title" data-work-control="title" disabled={locked} aria-expanded={work?.resource_id === row.resource_id} aria-controls="work-detail-panel" onClick={event => { const trigger = event.currentTarget; void action(() => openWork(row, trigger), explainConnection); }}>{title}</button> : title}</h2>
         {row.description && <p>{row.description}</p>}
         {snippet && snippet !== row.description && <p>{snippet}</p>}
         {!inWork && row.status && <span className="muted">{row.status}</span>}
         {row.kind === 'activity' && <p className="muted" data-event-request={row.request_id}>{row.principal_id === identity?.principal_id ? 'You' : `Member ${row.principal_id}`} · <AcceptedTime milliseconds={row.accepted_at_ms ?? ''}/></p>}
       </div>
       {inWork && <div className="work-properties">
-        <span className="work-type">{row.type}</span>
-        {row.priority && row.priority !== 'none' && <span className="priority" data-priority={row.priority}>{row.priority}</span>}
+        {workProperty(row, 'status', title ?? 'work item')}
+        {workProperty(row, 'priority', title ?? 'work item')}
+        {workProperty(row, 'assignee', title ?? 'work item')}
       </div>}
       <div className="actions row-actions">
         {tab === 'documents' && <Button disabled={locked} onClick={() => void action(() => openDocument(row), explainConnection)}>Open page</Button>}
-        {canEdit && project && (inWork || tab === 'relations') && <ActionMenu label={`Actions for ${title}`} disabled={locked}><Button variant="quiet" disabled={locked} onClick={() => setConfirmation({
-          label: inWork ? 'this work item' : 'this link',
-          command: command(project.project_id!, row.resource_id!, row.resource_revision!, project.authority_epoch!, inWork ? 'work.delete' : 'relation.delete', {}),
+        {inWork && <button type="button" className="work-property work-overflow" data-work-control="actions" aria-label={`Actions for ${title}`} aria-haspopup="dialog" disabled={locked}
+          onClick={event => showWorkMenu(row, 'actions', event.currentTarget)}><span aria-hidden="true">•••</span></button>}
+        {canEdit && project && tab === 'relations' && <ActionMenu label={`Actions for ${title}`} disabled={locked}><Button variant="quiet" disabled={locked} onClick={() => setConfirmation({
+          label: 'this link',
+          command: command(project.project_id!, row.resource_id!, row.resource_revision!, project.authority_epoch!, 'relation.delete', {}),
         })}>Delete</Button></ActionMenu>}
       </div>
     </Surface>;
@@ -534,9 +628,9 @@ function App() {
   return <div className={identity ? 'app-shell signed-in' : 'app-shell entry-shell'}>
     <header className="topbar">{project ? <button className="brand" aria-label="Stead home" type="button" disabled={busy}
       onClick={() => void action(() => openProject(project), explainConnection)}>{brand}</button> : <span className="brand">{brand}</span>}
-      <span className="alpha">Team alpha</span><div className="account">{identity ? <><span className="member-label"><span className="member-name">{identity.display_name}</span><small title={identity.identity_ship}>{identity.identity_ship}</small></span><Button variant="quiet" disabled={busy} onClick={() => void action(() => client.logout())}>Sign out</Button></> : <span>Work, with context.</span>}</div></header>
+      {identity && <><span className="alpha">Team alpha</span><div className="account"><span className="member-label"><span className="member-name">{identity.display_name}</span><small title={identity.identity_ship}>{identity.identity_ship}</small></span><Button variant="quiet" disabled={busy} onClick={() => void action(() => client.logout())}>Sign out</Button></div></>}</header>
     {!online && <div className="banner" role="status">You’re offline. Drafts stay in this tab; nothing is saved until the home confirms it.</div>}
-    <main id="main"><a className="skip-link" href="#project-content">Skip to project content</a>
+    <main id="main">{identity ? <a className="skip-link" href="#project-content">Skip to project content</a> : !loading && <a className="skip-link" href="#urbit-sign-in-title">Skip to sign-in</a>}
       {error && <div className="error" role="alert"><p>{error}</p>
         {canReconnect && (identity
           ? <Button disabled={busy} onClick={() => void action(async () => {
@@ -547,21 +641,23 @@ function App() {
           }, explainConnection)}>Resume this tab</Button>
           : <Button disabled={busy} onClick={() => void action(retryConnection, explainConnection)}>Retry connection</Button>)}
       </div>}
-      <div className="live" role="status" aria-live="polite">{notice}</div>
+      {identity && <div className="live" role="status" aria-live="polite">{notice}</div>}
       <div className="refresh-notice stead-visually-hidden" role="status" aria-live="polite" aria-atomic="true">{refreshNotice && <span key={refreshNotice.sequence}>{refreshNotice.text}</span>}</div>
       {loading && !identity && <LoadingState label="Connecting to your home"/>}
-      {!identity && !loading && <Surface className="login"><p className="eyebrow">YOUR TEAM’S HOME</p><h1>Make room for good work.</h1><p>Sign in with your individual identity. Work and documents stay at this home.</p>
-        <form onSubmit={event => { event.preventDefault(); void action(async () => {
-          const value = await client.start(ship);
-          setChallenge(value);
-        }, explainConnection); }}>
-          <TextField label="Your identity ship" description="Enter your Urbit ID with or without the tilde (~)." placeholder="sampel-palnet" value={ship}
-            onChange={event => { setShip(event.target.value); setChallenge(null); }} disabled={busy}
-            autoComplete="off" autoCapitalize="none" spellCheck={false} required maxLength={64}/>
-          <Button type="submit" variant="primary" pending={busy} pendingLabel="Requesting approval">Request sign-in</Button>
-        </form>
-        {challenge && <div className="approval"><h2>Approve on your identity ship</h2><p>Open its Stead identity page. Check this home and the comparison code before approving.</p><p><strong>Home</strong> {location.origin}</p><p className="comparison">{challenge.comparison_code}</p><Button disabled={busy} onClick={() => void action(async () => { const status = await client.status(challenge.challenge_id!); if (status.status === 'approved') { const person = await client.consume(challenge.challenge_id!); setChallenge(null); await identify(person); } else setNotice('Approval is still pending on your identity ship.'); }, explainConnection)}>Check approval</Button></div>}
-      </Surface>}
+      {!identity && !loading && <UrbitSignIn ship={ship} challenge={challenge} busy={busy} origin={location.origin} notice={notice}
+        onShipChange={setShip} onBack={() => { setChallenge(null); setNotice(''); setError(''); }}
+        onRequest={() => void action(async () => { setChallenge(await client.start(ship)); }, explainConnection)}
+        onCheck={() => {
+          if (!challenge) return;
+          void action(async () => {
+            const status = await client.status(challenge.challenge_id!);
+            if (status.status === 'approved') {
+              const person = await client.consume(challenge.challenge_id!);
+              setChallenge(null);
+              await identify(person);
+            } else setNotice('Approval is still pending on your identity ship.');
+          }, explainConnection);
+        }}/>}
       {identity && <div className="workspace">
         <aside className="sidebar"><div className="space-label"><span className="space-mark" aria-hidden="true">~</span><div>Workspace{identity.home && <small>{identity.home}</small>}</div></div><h2 className="rail-label">Projects</h2>{projects.length === 0 && <p className="muted">No projects are shared with you yet.</p>}<nav aria-label="Projects">{projects.map(row => <button disabled={busy} key={row.project_id} aria-current={project?.project_id === row.project_id ? 'page' : undefined} onClick={() => void action(() => openProject(row))}><span className="project-glyph" aria-hidden="true">◇</span><span className="project-name"><span className="project-key">{row.project_key}</span>{row.title}</span></button>)}</nav>{identity.can_create === 'yes' && <Button variant="quiet" disabled={busy || !!pending || !!form || !!editor?.dirty} onClick={() => { setEditor(null); setWork(null); setCurrentVersion(null); setForm('project'); }}>＋ New project</Button>}<p className="sidebar-note">Only projects explicitly shared with you appear here.</p></aside>
         <section className="content" id="project-content" data-live-updates={updatesConnected ? 'connected' : 'unavailable'}>
@@ -576,7 +672,7 @@ function App() {
           {showRepository && repository?.status === 'ready' ? <CodeRepository key={project.project_id}
             client={client} project={project.project_id!} writable={repository.write === 'yes'}
             manage={repository.manage === 'yes'} principal={identity.principal_id ?? ''} /> :
-          showRepository && externalRepository ? <CodePack key={project.project_id} client={client} project={project.project_id!}
+          showRepository && externalRepository ? <CodePack key={`${project.project_id}/${project.authority_epoch}`} client={client} project={project.project_id!}
             manage={repository?.manage === 'yes'} writable={repository?.write === 'yes'} principal={identity.principal_id ?? ''} /> : <>
           {tab === 'project' && repository?.status === 'disabled' && repository.manage === 'yes'
             && <Button disabled={busy || !!pending || !!form} onClick={() => void action(() => loadRepository(project.project_id!, true))}>Enable Git repository</Button>}
@@ -603,7 +699,12 @@ function App() {
             {workPanelOpen && (form === 'work' ? formPanel : work && <Surface id="work-detail-panel" className="work-detail" aria-labelledby="work-detail-title">
               <div className="detail-heading"><span className="row-kind">Work item</span><Button variant="quiet" disabled={busy} onClick={() => closeDraft('form')}>Close</Button></div>
               <h2 id="work-detail-title" ref={workEditorHeading} tabIndex={-1}>{work.title}</h2>
-              <dl className="work-metadata"><div><dt>Status</dt><dd>{workStatuses.get(work.status ?? '') ?? work.status}</dd></div><div><dt>Type</dt><dd>{work.type}</dd></div><div><dt>Priority</dt><dd>{work.priority ?? 'none'}</dd></div></dl>
+              <dl className="work-metadata">
+                <div><dt>Status</dt><dd>{workProperty(work, 'status', work.title ?? 'work item', 'detail')}</dd></div>
+                <div><dt>Assignee</dt><dd>{workProperty(work, 'assignee', work.title ?? 'work item', 'detail')}</dd></div>
+                <div><dt>Priority</dt><dd>{workProperty(work, 'priority', work.title ?? 'work item', 'detail')}</dd></div>
+                <div><dt>Type</dt><dd>{work.type}</dd></div>
+              </dl>
               <p className="work-description">{work.description || 'No description yet.'}</p>
               <div className="actions">{canEdit && <Button disabled={busy || !!pending} onClick={() => setForm('work')}>Edit work item</Button>}<span className="muted">Revision {work.resource_revision}{!canEdit && ' · Read only'}</span></div>
             </Surface>)}
@@ -614,7 +715,18 @@ function App() {
           {!workPanelOpen && formPanel}
         </section>
       </div>}
-    </main><footer><div>One home for work and knowledge.<SupportDetails code={diagnostic} requestId={pending?.request_id}/></div><span>Local changes become shared only after the home accepts them.</span></footer>
+    </main>
+    {workMenu && project && <WorkQuickActions key={`${workMenu.row.resource_id}/${workMenu.view}/${workMenu.x}/${workMenu.y}`}
+      menu={workMenu} canEdit={!!canEdit} who={identity?.principal_id} loadAssignees={() => loadAssignees(project.project_id!)}
+      close={closeWorkMenu} open={() => { closeWorkMenu(false); void action(() => openWork(workMenu.row, workMenu.trigger), explainConnection); }}
+      remove={() => { closeWorkMenu(false); confirmWorkRemoval(workMenu.row); }}
+      change={(property, value) => {
+        quickActionFocus.current = {trigger: workMenu.trigger, row: workMenu.row.resource_id!, control: workMenu.trigger.dataset.workControl ?? 'title'};
+        closeWorkMenu();
+        void action(() => updateWorkProperty(workMenu.row, property, value), failure =>
+        failure instanceof HomeError && failure.code === 'revision_conflict'
+          ? 'This item changed. Refresh it and choose the new value again.' : explain(failure)); }}/>}
+    <footer><div>{identity && 'One home for work and knowledge.'}<SupportDetails code={diagnostic} requestId={pending?.request_id}/></div>{identity && <span>Local changes become shared only after the home accepts them.</span>}</footer>
   </div>;
 }
 const root = document.getElementById('root');

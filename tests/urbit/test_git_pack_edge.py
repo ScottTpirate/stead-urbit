@@ -20,6 +20,8 @@ import unittest
 ROOT = Path(__file__).resolve().parents[2]
 sys.path.insert(0, str(ROOT / 'scripts/urbit'))
 from git_pack_edge import MAX_REQUEST, MAX_WIRE, Profile, render
+from git_pack_browse import MAX_REQUEST as MAX_BROWSE
+from git_pack_browse_http import PATH as BROWSE
 
 
 PROJECT = '019939ba-4000-7000-8000-000000000001'
@@ -225,6 +227,35 @@ class NginxEdgeTests(unittest.TestCase):
         self.assertEqual(self.exchange('GET', '/stead/')[0], 502)
         self.assertTrue(self.home.observed.empty())
         self.assertEqual(self.exchange('GET', READ)[0], 200)
+
+    def test_browser_browse_is_exact_and_only_forwards_required_headers_to_relay(self):
+        self.start()
+        authority = f'{HOST}:{self.profile.public_port}'
+        browser = [('Origin', 'https://' + authority), ('Cookie', '__Host-stead-session=' + 'd' * 64),
+                   ('X-Stead-CSRF', 'e' * 64)]
+        inject = [('Authorization', GIT_AUTH), ('X-Stead-Relay', 'discard'),
+                  ('X-Forwarded-Proto', 'http'), ('X-Stead-Edge-Target', '/untrusted'), ('Forwarded', 'for=synthetic')]
+        framing = [('Content-Type', 'application/json'), ('Content-Length', str(MAX_BROWSE))]
+        data = b' ' * MAX_BROWSE
+        self.assertEqual(self.exchange('POST', BROWSE, browser + inject + framing, data), (200, self.git.label))
+        observed = self.git.observed.get(timeout=2)
+        self.assertEqual((observed['method'], observed['path'], observed['body']), ('POST', BROWSE, data))
+        forwarded = dict(browser) | {'Host': authority, 'X-Forwarded-Proto': 'https', 'X-Stead-Edge-Target': BROWSE}
+        for name, expected in forwarded.items():
+            self.assertEqual(observed['headers'][name], expected)
+        for name in ('Authorization', 'X-Stead-Relay', 'Forwarded'):
+            self.assertNotIn(name, observed['headers'])
+        for method, target, headers, body in (
+            ('GET', BROWSE, [], b''),
+            ('POST', BROWSE + '?query=1', [('Content-Type', 'application/json'), ('Content-Length', '2')], b'{}'),
+            ('POST', BROWSE.replace('/browse', '/%62rowse'), framing, data),
+            ('POST', BROWSE, [('Content-Type', 'application/json'), ('Content-Length', str(MAX_BROWSE + 1))], b''),
+            ('POST', BROWSE, [('Content-Type', 'text/plain'), ('Content-Length', '2')], b'{}'),
+        ):
+            with self.subTest(method=method, target=target, headers=headers):
+                self.assertIn(self.exchange(method, target, browser + headers, body)[0], (400, 404, 413))
+        self.assertTrue(self.git.observed.empty())
+        self.assertTrue(self.home.observed.empty())
 
     def test_private_tunnel_preserves_the_canonical_browser_and_git_authority(self):
         origin_port = self.home.server_port

@@ -3,6 +3,11 @@ import { newId, commandDigest } from './protocol';
 export type Fields = Record<string, string>;
 export type Row = Fields;
 export type CodeReviewKey = { proposal_id: string; revision: string };
+export type GitBrowseView = 'tree' | 'file';
+export type GitBrowseResult = { commit: string } & (
+  { status: 'tree'; entries: { name: string; kind: 'tree' | 'file' | 'symlink' | 'submodule'; oid: string }[]; truncated: boolean }
+  | { status: 'file'; preview: 'text' | 'binary' | 'too-large'; bytes: number; text?: string }
+);
 export type CodeMerge = CodeReviewKey & { action: 'merge'; request_id: string };
 export type ExternalMerge = CodeReviewKey & { action: 'external-merge'; request_id: string;
   worker_generation: string; worker_signature: string; proof: string };
@@ -21,7 +26,7 @@ export type CodeInput = { action: 'status' | 'create' | 'pack-view' }
   | { action: 'delegate'; delegation_id: string; worker_ship: string; work_id: string; ref: string; expires_at_ms: string }
   | { action: 'revoke-delegation'; delegation_id: string }
   | CodeMerge | ExternalMerge;
-export type ViewKind = 'identity' | 'projects' | 'project' | 'work' | 'documents' | 'containers' | 'document' | 'relations' | 'search' | 'activity' | 'inbox' | 'receipt';
+export type ViewKind = 'identity' | 'projects' | 'project' | 'work' | 'assignees' | 'documents' | 'containers' | 'document' | 'relations' | 'search' | 'activity' | 'inbox' | 'receipt';
 export interface Query {
   kind: ViewKind;
   project_id: string;
@@ -98,6 +103,8 @@ const EXTERNAL_MERGE_DENIALS = new Set(['invalid_request', 'proposal_unavailable
   'review-denied', 'scope-conflict', 'self-merge', 'self-review', 'snapshot-conflict', 'source-conflict', 'stale-base',
   'stale-epoch', 'stale-proposal', 'stale-review', 'stale-revision', 'stale-selection', 'stale-target']);
 const MAX_RESPONSE = 262144;
+const BROWSE_PATH = '/stead/api/code/browse';
+const GIT_NAME = /^(?:[0-9a-f]{2}){1,255}$/u;
 function object(value: unknown): Record<string, unknown> {
   if (!value || typeof value !== 'object' || Array.isArray(value)) throw new HomeError('invalid_response');
   return value as Record<string, unknown>;
@@ -172,14 +179,18 @@ export class HomeClient {
     this.fence(); this.csrf = ''; this.identity = null; this.adopting = 0; this.suspended = false; this.retired.clear(); this.clearCodeMerges(); this.onInvalidated();
   }
   private async post(path: string, body: unknown, authenticated: boolean, mutation = false, adoption = false,
-    externalCode = ''): Promise<Record<string, unknown>> {
+    externalCode = '', signal?: AbortSignal): Promise<Record<string, unknown>> {
     if (authenticated && this.adopting && !adoption) throw new HomeError('session_changed');
     if (authenticated && this.suspended && !adoption) throw new HomeError('resume_required');
     if (authenticated && !TOKEN.test(this.csrf)) throw new HomeError('session_required');
     const raw = JSON.stringify(body);
-    if (new TextEncoder().encode(raw).byteLength > (externalCode ? MAX_EXTERNAL_CODE : 65536)) throw new HomeError('request_too_large');
+    const browse = path === BROWSE_PATH;
+    if (new TextEncoder().encode(raw).byteLength > (externalCode || browse ? MAX_EXTERNAL_CODE : 65536)) throw new HomeError('request_too_large');
     const generation = this.generation;
     const controller = new AbortController();
+    const cancel = () => controller.abort();
+    signal?.addEventListener('abort', cancel, { once: true });
+    if (signal?.aborted) cancel();
     this.inflight.add(controller);
     const timer = setTimeout(() => controller.abort(), 15000);
     try {
@@ -190,8 +201,14 @@ export class HomeClient {
         referrerPolicy: 'no-referrer', signal: controller.signal });
       if (generation !== this.generation) throw new HomeError('session_changed');
       if (response.status === 401) { this.clear(); throw new HomeError('session_required'); }
+      if (browse && response.headers.get('content-type')?.split(';')[0] !== 'application/json') {
+        if ([404, 405].includes(response.status)) throw new HomeError('browse_unsupported');
+        if ([502, 503, 504].includes(response.status)) throw new HomeError('browse_unavailable');
+      }
       const value = object(await boundedJSON(response));
       if (generation !== this.generation) throw new HomeError('session_changed');
+      if (browse && !response.ok && Object.keys(value).length === 1
+        && typeof value.error === 'string' && /^[a-z_]{1,64}$/u.test(value.error)) throw new HomeError(value.error);
       if (externalCode) {
         const names = Object.keys(value);
         const bare = names.length === 1 && Object.hasOwn(value, 'error');
@@ -216,7 +233,7 @@ export class HomeClient {
     } catch (error) {
       if (error instanceof HomeError) throw error;
       throw new HomeError('outcome_unknown');
-    } finally { clearTimeout(timer); this.inflight.delete(controller); }
+    } finally { clearTimeout(timer); this.inflight.delete(controller); signal?.removeEventListener('abort', cancel); }
   }
   async capabilities(): Promise<Fields> {
     const value = fields(await this.post('/stead/api/capabilities', { protocol: 'stead.capabilities/3' }, false));
@@ -286,6 +303,41 @@ export class HomeClient {
     } catch (error) { if (error instanceof HomeError && error.code === 'session_required') return; throw new HomeError('logout_unconfirmed'); }
   }
   async query(query: Query): Promise<View> { return this.readQuery(query); }
+  async browseCode(project_id: string, snapshot: string, ref: string, path: string[],
+    view: GitBrowseView, signal?: AbortSignal): Promise<GitBrowseResult> {
+    const protocol = 'stead.git-browse/1';
+    if (!UUID.test(project_id) || !TOKEN.test(snapshot) || ref.length > 2048 || !GIT_REF_HEX.test(ref)
+      || path.length > 12 || path.some(name => !GIT_NAME.test(name))
+      || path.reduce((size, name) => size + name.length, 0) > 2048 || (view === 'file' && !path.length)) {
+      throw new HomeError('invalid_request');
+    }
+    const value = await this.post(BROWSE_PATH, { protocol, project_id, snapshot, ref, path, view }, true, false, false, '', signal);
+    if (value.protocol !== protocol || value.project_id !== project_id || value.snapshot !== snapshot || value.ref !== ref
+      || !Array.isArray(value.path) || value.path.length !== path.length || value.path.some((name, index) => name !== path[index])
+      || value.status !== view || typeof value.commit !== 'string' || !GIT_OID.test(value.commit)) throw new HomeError('invalid_response');
+    const commit = value.commit;
+    if (view === 'tree') {
+      if (!Array.isArray(value.entries) || value.entries.length > 128 || typeof value.truncated !== 'boolean') {
+        throw new HomeError('invalid_response');
+      }
+      const seen = new Set<string>();
+      const entries: Extract<GitBrowseResult, { status: 'tree' }>['entries'] = value.entries.map(item => {
+        const { name, kind, oid } = object(item);
+        if (typeof name !== 'string' || !GIT_NAME.test(name) || seen.has(name)
+          || (kind !== 'tree' && kind !== 'file' && kind !== 'symlink' && kind !== 'submodule')
+          || typeof oid !== 'string' || !GIT_OID.test(oid)) throw new HomeError('invalid_response');
+        seen.add(name);
+        return { name, kind, oid };
+      });
+      return { status: 'tree', commit, entries, truncated: value.truncated };
+    }
+    const { preview, bytes, text } = value;
+    if ((preview !== 'text' && preview !== 'binary' && preview !== 'too-large')
+      || typeof bytes !== 'number' || !Number.isSafeInteger(bytes) || bytes < 0 || bytes > 99_999_999
+      || (preview === 'text' ? typeof text !== 'string' || bytes > 32768 || new TextEncoder().encode(text).byteLength !== bytes
+        : text !== undefined)) throw new HomeError('invalid_response');
+    return { status: 'file', commit, preview, bytes, ...(typeof text === 'string' ? {text} : {}) };
+  }
   async code(project_id: string, input: CodeInput): Promise<Fields> {
     const value = fields(await this.post('/stead/api/code', { protocol: 'stead.code/1', project_id, ...input }, true,
       false, false, EXTERNAL_ACTIONS.has(input.action) ? input.action : ''));

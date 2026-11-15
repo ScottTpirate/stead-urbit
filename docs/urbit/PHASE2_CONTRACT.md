@@ -54,10 +54,11 @@ Unknown or malformed state fails closed. Old fixture execution continues to save
 Configured-state validation is consistency reconstruction, not independent proof
 of historical identity approval. Each internal journal entry retains the exact
 nonsecret authentication context, binding and credential expirations, and the
-live target binding for a grant. These details never appear in employee activity
-or public receipts. A private validator checks retained binding ownership and
-revision history, reconstructs each unique accepted command with the unchanged
-business authorization/revision/object checks, and compares the complete state.
+live target binding for a grant or assignment. These details never appear in
+employee activity or public receipts. A private validator checks retained
+binding ownership and revision history, replays each accepted command through
+the existing authorization, revision and object checks, and compares the complete
+state.
 Historical membership, project-creation admission and browser approval remain
 assertions of that retained journal. Current membership may legitimately differ;
 equal binding revisions must still describe identical identities. Validation
@@ -212,6 +213,22 @@ adds configured project/container creation, document publication/deletion, typed
 relations and bounded queries/updates. Capabilities declare supported versions,
 operations and limits; unknown versions fail explicitly. Request/receipt IDs,
 expected revisions and authority epochs remain mandatory for mutation.
+
+### Assigning Work
+
+The project-scoped `assignees` query lists active contributors and maintainers
+with `principal_id`, `display_name`, and `identity_ship`. Contributors and
+maintainers can query candidates and send `work.assign` against the current
+Work revision and authority epoch. Its sole payload field,
+`assignee_principal_id`, accepts a candidate principal ID or an empty string to
+unassign. A regular Work edit preserves its assignment.
+
+Assigned Work rows expose `assignee_principal_id` and include
+`assignee_display_name` while the assignee remains eligible. Existing assignments
+remain visible by principal ID if a binding or grant expires or is revoked, and
+editors can clear or replace them. Search matches currently visible assignee
+names. Portable archives keep the assignment metadata. Importing as a new
+project requires reassignment under the destination’s grants.
 
 ### Renewing a pilot project’s creator grant
 

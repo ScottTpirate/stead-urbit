@@ -73,12 +73,13 @@
   =/  people=(map @p member:stead-team-config)
     (~(put by *(map @p member:stead-team-config)) ship.identity.actor [identity.actor 'Recorded binding'])
   =/  target  (field record 'grant_target')
+  =/  target-principal  (target-principal:stead-team-codec cmd)
   =/  prepared
-    ?.  =('policy.grant' operation.cmd)
+    ?:  =('' target-principal)
       ?>  =('' target)
       [people observed]
     =/  who  (decode-actor:stead-team target)
-    ?>  =(principal.who (field payload.cmd 'principal_id'))
+    ?>  =(principal.who target-principal)
     =/  next  (remember registry.target.job observed who home.config now)
     ?:  ?|(=(ship.who ship.identity.actor) =(principal.who principal.identity.actor) =(binding.who binding.identity.actor))
       ?>  =(who identity.actor)

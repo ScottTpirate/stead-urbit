@@ -68,9 +68,9 @@ export async function endpointBoundaries({browser, alice, material, pageIn, rest
   try {
     const home = await pageIn(outsider);
     await home.goto(origin + '/stead/');
-    await home.getByRole('textbox',{name:'Your identity ship',exact:true}).fill('~bud');
+    await home.getByRole('textbox',{name:'Urbit ID',exact:true}).fill('~bud');
     const response = home.waitForResponse(row => row.url() === origin + '/stead/auth/start');
-    await home.getByRole('button',{name:'Request sign-in',exact:true}).click();
+    await home.getByRole('button',{name:'Continue',exact:true}).click();
     const denied = await (await response).json();
     assert.equal(denied.error,'denied_or_not_found');
     assert.equal(await home.getByRole('heading',{name:'Approve on your identity ship',exact:true}).count(),0);

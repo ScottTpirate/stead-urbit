@@ -293,7 +293,14 @@ def validate_data(data):
     containers = rows_by_id(data['containers'], 32)
     relations = rows_by_id(data['relations'], 256)
     for row in works.values():
-        shape(row, {'kind', 'resource_id', 'container_id', 'resource_revision', 'title', 'description', 'type', 'status', 'priority', 'snippet'})
+        fields = {'kind', 'resource_id', 'container_id', 'resource_revision', 'title', 'description', 'type', 'status', 'priority', 'snippet'}
+        if 'assignee_principal_id' in row:
+            fields.add('assignee_principal_id')
+            require(match(UUID, row['assignee_principal_id']), 'work-assignee')
+            if 'assignee_display_name' in row:
+                fields.add('assignee_display_name')
+                require(text(row['assignee_display_name'], 800) != '', 'work-assignee')
+        shape(row, fields)
         require(row['kind'] == 'work' and row['container_id'] == '', 'work-scope')
         number(row['resource_revision']); text(row['title'], 800); text(row['description'], 8192); text(row['snippet'], 640)
         require(row['type'] in {'deliverable', 'task', 'problem'} and row['status'] in {'backlog', 'todo', 'in_progress', 'blocked', 'done', 'canceled'}

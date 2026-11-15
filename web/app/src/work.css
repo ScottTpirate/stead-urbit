@@ -1,0 +1,45 @@
+.work-property {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  max-width: 100%;
+  min-height: 28px;
+  padding: 2px 5px;
+  border: 1px solid transparent;
+  border-radius: 5px;
+  background: transparent;
+  color: var(--muted);
+  font: inherit;
+  font-size: 11px;
+  white-space: nowrap;
+}
+.work-property:enabled:hover { background: #edeae1; color: var(--ink); }
+.work-property-label { overflow: hidden; text-overflow: ellipsis; }
+.work-assignee { max-width: 115px; text-transform: none; }
+.work-person-mark { display: grid; flex: none; width: 16px; height: 16px; place-content: center; border-radius: 50%; background: #e9e5dc; color: #514c45; font-size: 10px; }
+.work-overflow { min-width: 28px; justify-content: center; }
+.work-metadata .work-property { margin-inline-start: -5px; }
+.work-menu {
+  position: fixed;
+  z-index: 30;
+  width: min(244px, calc(100vw - 16px));
+  max-height: min(310px, calc(100vh - 16px));
+  overflow-y: auto;
+  padding: 4px;
+  border: 1px solid var(--line);
+  border-radius: 9px;
+  background: #fffefa;
+  box-shadow: 0 8px 28px #24201924;
+  color: var(--ink);
+  font-size: 13px;
+}
+.work-menu header { display: flex; align-items: center; gap: 7px; padding: 5px 8px; color: var(--muted); }
+.work-menu button { display: flex; align-items: center; gap: 7px; width: 100%; padding: 7px 8px; text-align: left; background: transparent; border: 0; border-radius: 5px; color: inherit; font: inherit; }
+.work-menu button:focus-visible, .work-menu button:hover { background: #eeebe2; }
+.work-menu-check, .work-menu-chevron { margin-inline-start: auto; }
+.work-menu button small { display: block; color: var(--muted); font-size: 11px; }
+.work-menu button.work-menu-back { width: auto; padding: 2px 6px; }
+.work-menu button.work-menu-delete { color: #8e3b2d; }
+.work-menu input { width: 100%; padding: 7px 8px; border: 0; border-bottom: 1px solid var(--line); background: transparent; font: inherit; }
+.work-menu p { padding: 7px 8px; color: var(--muted); }
+@media (pointer: coarse) { .work-menu button, .work-property { min-height: 36px; } }

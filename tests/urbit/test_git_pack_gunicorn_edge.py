@@ -13,7 +13,8 @@ import unittest
 
 import test_git_pack_edge as fixtures
 import test_git_pack_projection as projection
-from portable_recovery import RecoveryError, encoded
+from git_pack_browse import PROTOCOL as BROWSE_PROTOCOL
+from portable_recovery import RecoveryError, decoded, encoded
 import git_pack_relay_service as service
 
 
@@ -36,6 +37,17 @@ class HomeDecision(BaseHTTPRequestHandler):
         pass
 
     def do_POST(self):
+        if self.path == fixtures.POST:
+            data = self.rfile.read(int(self.headers['Content-Length']))
+            self.server.browser_reads.append((dict(self.headers), decoded(data)))
+            status = self.server.browser_statuses.pop(0)
+            raw = self.server.browser_view if status == 200 else encoded({'error': 'denied_or_not_found'})
+            self.send_response(status)
+            self.send_header('Content-Type', 'application/json')
+            self.send_header('Content-Length', str(len(raw)))
+            self.end_headers()
+            self.wfile.write(raw)
+            return
         self.server.decisions.append((self.path, self.headers.get('Host'), self.headers.get('Authorization')))
         self.send_response(403)
         self.send_header('Content-Length', '0')
@@ -63,6 +75,12 @@ class GunicornEdgeTests(unittest.TestCase):
 
         home = HTTPServer(('127.0.0.1', 0), HomeDecision)
         home.decision, home.decisions = cached.observed, []
+        home.browser_reads, home.browser_statuses = [], []
+        home.browser_view = encoded({'protocol': 'stead.code/1', 'status': 'external', 'snapshot': cached.snapshot,
+                                     'authority_epoch': cached.scope['authority_epoch'], 'head': cached.manifest['head'],
+                                     'refs': encoded(cached.manifest['refs']).decode().strip(), 'request_id': fixtures.PROJECT,
+                                     'object_count': str(cached.manifest['object_count']), 'accepted_at_ms': '1000',
+                                     'generation': '0', 'generation_limit': '80'})
         native = ssl.SSLContext(ssl.PROTOCOL_TLS_SERVER)
         native.load_cert_chain(edge.home_certificate, edge.root / 'home.key')
         home.socket = native.wrap_socket(home.socket, server_side=True)
@@ -154,6 +172,39 @@ class GunicornEdgeTests(unittest.TestCase):
                        stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL, timeout=5)
         expected = (fixtures.BASE + '/stead-snapshot', f'{fixtures.HOST}:{edge.profile.public_port}', fixtures.GIT_AUTH)
         self.assertEqual(home.decisions, [expected] * 4)
+        self.assertEqual(edge.home.observed.qsize(), 0)
+
+        session, csrf = 'd' * 64, 'e' * 64
+        browse = {'protocol': BROWSE_PROTOCOL, 'project_id': fixtures.PROJECT, 'snapshot': cached.snapshot,
+                  'ref': cached.manifest['head'], 'path': [], 'view': 'tree'}
+
+        def query(value=browse, **options):
+            raw = encoded(value)
+            headers = {'Origin': origin, 'Cookie': '__Host-stead-session=' + session, 'X-Stead-CSRF': csrf,
+                       'Content-Length': str(len(raw)), 'Content-Type': 'application/json'} | options
+            return edge.exchange('POST', fixtures.BROWSE, list(headers.items()), raw)
+
+        self.assertEqual(query(Origin='https://other.invalid')[0], 403)
+        self.assertEqual(query(Cookie='irrelevant=sample')[0], 401)
+        self.assertEqual(query(browse | {'project_id': '019939ba-4000-7000-8000-000000000009'})[0], 404)
+        self.assertEqual(home.browser_reads, [])
+        home.browser_statuses[:] = [200, 200]
+        status, raw = query()
+        self.assertEqual(status, 200, log.read_text())
+        fields = {key: value for key, value in browse.items() if key != 'view'}
+        self.assertEqual(decoded(raw), fields | {'status': 'tree', 'commit': cached.fixture.base.decode(),
+                                                 'entries': [], 'truncated': False})
+        home.browser_statuses[:] = [200, 404]
+        self.assertEqual(query()[0], 404, 'permission revoked at final Home read')
+        self.assertEqual(len(home.browser_reads), 4)
+        for headers, body in home.browser_reads:
+            self.assertEqual(body, {'protocol': 'stead.code/1', 'action': 'pack-view', 'project_id': fixtures.PROJECT})
+            self.assertEqual(headers['Origin'], origin)
+            self.assertEqual(headers['Cookie'], '__Host-stead-session=' + session)
+            self.assertEqual(headers['X-Stead-CSRF'], csrf)
+            self.assertNotIn('Authorization', headers)
+            self.assertNotIn('X-Stead-Relay', headers)
+        self.assertEqual(home.browser_statuses, [])
         self.assertEqual(edge.home.observed.qsize(), 0)
         home.decisions.clear()
         cached.target.rename(cached.target.with_name('fixture-unavailable'))

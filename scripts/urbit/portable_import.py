@@ -178,9 +178,12 @@ def plan_commands(files, artifact_digest, origin, target, seed, title, key):
         original = row['resource_id']
         add('relation.create', (original,), child_id(seed, 'relation', original), payload)
     check_command_ids(commands)
+    import_changes = IMPORT_LOSSES
+    if any('assignee_principal_id' in row for row in data['work']):
+        import_changes = [*import_changes, 'Work assignments stay in the archive. Review project access and reassign Work in the destination.']
     plan = {'protocol': 'stead.portable-import-plan/1', 'artifact_sha256': artifact_digest,
             **destination, 'steps': steps,
-            'losses': {'source_omissions': portable.LOSSES['omitted'], 'import_changes': IMPORT_LOSSES}}
+            'losses': {'source_omissions': portable.LOSSES['omitted'], 'import_changes': import_changes}}
     return plan, commands
 
 

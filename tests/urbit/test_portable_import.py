@@ -140,6 +140,15 @@ class PortableImport(unittest.TestCase):
         with self.assertRaises(portable.RecoveryError):
             importer.load_plan(self.archive, self.plan_file, '0' * 64)
 
+    def test_source_assignment_is_reported_as_a_destination_import_loss(self):
+        data = portable.decoded(self.files['records.json'], portable.MAX_CAPTURE)
+        data['work'][0]['assignee_principal_id'] = uid(801)
+        files = dict(self.files, **{'records.json': portable.encoded(data)})
+        plan, commands = importer.plan_commands(files, self.plan['artifact_sha256'], HOME,
+            importer.target_member(MEMBER), uid(800), 'Imported λ', 'IMPORTED')
+        self.assertEqual(commands, self.commands)
+        self.assertTrue(any('Work assignments' in change for change in plan['losses']['import_changes']))
+
     def test_exact_digest_alone_does_not_authorize_an_altered_plan(self):
         edited = copy.deepcopy(self.plan)
         edited['steps'][1]['resource_id'] = uid(801)

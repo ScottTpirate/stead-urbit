@@ -55,8 +55,8 @@ async function fixture(run, mockRepository = false) {
     watches: new Map(), pages: new Map(), requests: [], sequence: 0, token: 0, polls: 0, opens: 0, denied: false,
     holdOpen: false, releaseOpen: null, holdWork: false, releaseWork: null, invalidateCommands: false,
     project: {kind: 'project', resource_id: id(1), project_id: id(1), title: 'Garden', project_key: 'GARDEN', preset: 'general', authority_epoch: '1', resource_revision: '1', policy_revision: '1', role: 'maintainer'},
-    work: [], activity: [], containers: [], documents: [], proposals: new Map(), mergeRequests: [], dropMergeResponse: false,
-    externalWritable: false, externalReviews: new Map(), externalRequests: []};
+    work: [], assignees: [], activity: [], containers: [], documents: [], proposals: new Map(), mergeRequests: [], dropMergeResponse: false,
+    externalWritable: false, externalReviews: new Map(), externalRequests: [], browseRequests: [], browseFixture: null};
   await page.route(origin + '/stead/**', async route => {
     const request = route.request();
     if (request.method() !== 'POST') return route.continue();
@@ -77,6 +77,19 @@ async function fixture(run, mockRepository = false) {
       return send({status: 'authenticated', csrf: 'b'.repeat(64)});
     }
     const token = () => (++state.token).toString(16).padStart(64, '0');
+    if (pathname === '/stead/api/code/browse') {
+      state.browseRequests.push(value);
+      if (!state.browseFixture) return route.fulfill({status: 404, contentType: 'text/html', body: 'Not found'});
+      assert.deepEqual(Object.keys(value).sort(), ['path', 'project_id', 'protocol', 'ref', 'snapshot', 'view']);
+      assert.equal(value.protocol, 'stead.git-browse/1');
+      assert.equal(value.project_id, state.project.project_id);
+      assert.equal(value.snapshot, state.pack.snapshot);
+      assert.ok(Object.hasOwn(JSON.parse(state.pack.refs), value.ref));
+      const {status, fields} = await state.browseFixture(value);
+      if (status !== 200) return send(fields, status);
+      const {view, ...scope} = value;
+      return send({...scope, status: view, ...fields});
+    }
     if (pathname === '/stead/api/code') {
       assert.equal(value.project_id, state.project.project_id);
       const respond = fields => send({protocol: 'stead.code/1', ...fields});
@@ -210,8 +223,16 @@ async function fixture(run, mockRepository = false) {
         authentication: 'native-approved-browser/1', authentication_strength: 'native-approved-browser',
         session_audit_id: person.session_audit_id, runtime: 'isolated-fake', accepted_at_ms: '1790519400000', git_commit_oid: value.operation.startsWith('document.') ? 'd'.repeat(40) : ''};
       state.receipts.set(value.request_id, receipt);
-      state.work = value.operation === 'work.delete' ? state.work.filter(row => row.resource_id !== value.resource_id)
-        : [{...value.payload, kind: 'work', resource_id: value.resource_id, project_id: value.project_id, resource_revision: '1'}];
+      if (value.operation === 'work.delete') state.work = state.work.filter(row => row.resource_id !== value.resource_id);
+      else if (value.operation.startsWith('work.')) {
+        const prior = state.work.find(row => row.resource_id === value.resource_id);
+        const row = {...prior, ...value.payload, kind: 'work', resource_id: value.resource_id, project_id: value.project_id,
+          resource_revision: receipt.resource_revision};
+        if (value.operation === 'work.assign') {
+          row.assignee_display_name = state.assignees.find(person => person.principal_id === row.assignee_principal_id)?.display_name ?? '';
+        }
+        state.work = prior ? state.work.map(item => item.resource_id === row.resource_id ? row : item) : [...state.work, row];
+      }
       if (state.invalidateCommands) state.sequence++;
       return state.loseCommand ? route.abort('failed') : send(receipt);
     }
@@ -231,6 +252,7 @@ async function fixture(run, mockRepository = false) {
         await new Promise(resolve => { state.releaseWork = resolve; });
       }
     }
+    if (value.kind === 'assignees') rows = state.assignees;
     if (value.kind === 'activity') rows = state.activity;
     if (value.kind === 'containers') rows = state.containers;
     if (value.kind === 'documents') rows = state.documents;
@@ -282,18 +304,22 @@ try {
   await check('identity-entry-accepts-optional-tilde-and-rejects-malformed-input', async (page, state) => {
     state.failure = 'expired';
     await page.getByRole('button', {name: 'Refresh', exact: true}).click();
-    const input = page.getByRole('textbox', {name: 'Your identity ship', exact: true});
+    const input = page.getByRole('textbox', {name: 'Urbit ID', exact: true});
     for (const value of ['bus', '~bus', '  BUS  ', ' ~bus ']) {
       await input.fill(value);
       const response = page.waitForResponse(response => response.url().endsWith('/auth/start'));
-      await page.getByRole('button', {name: 'Request sign-in', exact: true}).click();
+      await page.getByRole('button', {name: 'Continue', exact: true}).click();
       await (await response).finished();
-      await page.getByRole('heading', {name: 'Approve on your identity ship', exact: true}).waitFor();
+      const approval = page.getByRole('heading', {name: 'Approve on your identity ship', exact: true});
+      await approval.waitFor();
+      assert.equal(await approval.evaluate(node => node === document.activeElement), true);
+      await page.getByRole('button', {name: 'Use a different ID', exact: true}).click();
+      assert.equal(await input.evaluate(node => node === document.activeElement), true);
     }
     assert.deepEqual(state.authStarts, ['~bus', '~bus', '~bus', '~bus']);
     for (const value of ['~~bus', 'bus/palnet', 'bus palnet']) {
       await input.fill(value);
-      await page.getByRole('button', {name: 'Request sign-in', exact: true}).click();
+      await page.getByRole('button', {name: 'Continue', exact: true}).click();
       await page.getByRole('alert').waitFor();
       assert.equal(state.authStarts.length, 4, 'malformed input is rejected before an auth request');
     }
@@ -333,11 +359,13 @@ try {
     const clone = page.getByRole('textbox', {name: 'Clone URL', exact: true});
     assert.equal(await code.count(), 0);
     await page.getByRole('button', {name: 'Enable Git repository', exact: true}).click();
+    await page.getByText('Clone', {exact: true}).click();
     await clone.waitFor();
     assert.equal(await clone.inputValue(), origin + '/stead/git/' + id(1) + '.git');
     await project.click();
     assert.equal(await clone.count(), 0);
     await code.click();
+    await page.getByText('Clone', {exact: true}).click();
     await clone.waitFor();
   });
   await check('code-discovers-staged-snapshot-without-reloading', async (page, state) => {
@@ -350,7 +378,7 @@ try {
     state.pack = pack;
     await refresh.click();
     await code.click();
-    await page.getByRole('heading', {name: 'Git snapshot', exact: true}).waitFor();
+    await page.getByRole('heading', {name: 'Review Git snapshot', exact: true}).waitFor();
     await page.getByRole('button', {name: 'Accept this snapshot', exact: true}).waitFor();
     await page.getByRole('button', {name: 'Overview', exact: true}).click();
     state.pack = null;
@@ -361,13 +389,149 @@ try {
     await code.waitFor();
     await code.click();
     await page.getByRole('button', {name: 'Accept this snapshot', exact: true}).click();
+    await page.getByText('Clone', {exact: true}).click();
     await page.getByRole('button', {name: 'Create read credential', exact: true}).click();
     const credential = page.getByRole('textbox', {name: 'Git credential', exact: true});
     await credential.waitFor();
     assert.equal(await credential.inputValue(), 'c'.repeat(64));
     assert.equal(await page.getByRole('button', {name: 'Create write credential', exact: true}).count(), 0);
+    await page.getByText('Manage credentials', {exact: true}).click();
     await page.getByRole('button', {name: 'Revoke credential', exact: true}).click();
     await credential.waitFor({state: 'hidden'});
+  });
+  await check('code-browses-accepted-branches-and-tags', async (page, state) => {
+    const hex = text => Buffer.from(text).toString('hex');
+    const main = hex('refs/heads/main');
+    const topic = 'topic/' + 'long-branch-name-'.repeat(5) + 'preview';
+    state.pack = {status: 'external', snapshot: 'a'.repeat(64), generation: '0', authority_epoch: '1', request_id: id(450),
+      accepted_at_ms: '1800000000000', object_count: '8', head: main,
+      refs: JSON.stringify({[main]: 'b'.repeat(40), [hex(`refs/heads/${topic}`)]: 'c'.repeat(40), [hex('refs/tags/v1.0')]: 'd'.repeat(40)})};
+    await page.getByRole('button', {name: 'Refresh', exact: true}).click();
+    await page.getByRole('button', {name: 'Code', exact: true}).click();
+    await page.getByRole('list', {name: 'Branches', exact: true}).getByRole('button', {name: /main.*Default/u}).waitFor();
+    assert.equal(await page.locator('.repo-ref-tip code').getAttribute('title'), 'b'.repeat(40));
+    await page.getByRole('list', {name: 'Branches', exact: true}).getByRole('button', {name: new RegExp(topic, 'u')}).click();
+    assert.equal(await page.locator('.repo-ref-tip code').getAttribute('title'), 'c'.repeat(40));
+    await page.getByRole('button', {name: 'Tags 1', exact: true}).click();
+    await page.getByRole('list', {name: 'Tags', exact: true}).getByRole('button', {name: /v1\.0/u}).waitFor();
+    assert.equal(await page.locator('.repo-ref-tip code').getAttribute('title'), 'd'.repeat(40));
+    await page.getByRole('button', {name: 'Branches 2', exact: true}).click();
+    assert.equal(await page.locator('.repo-ref-tip code').getAttribute('title'), 'c'.repeat(40));
+    await page.getByText('Clone the repository to browse files and commit history.', {exact: true}).waitFor();
+    const clone = page.getByRole('textbox', {name: 'Clone URL', exact: true});
+    assert.ok(!(await clone.isVisible()));
+    for (const width of [1240, 390, 320]) {
+      await page.setViewportSize({width, height: 900});
+      await page.getByText('Clone', {exact: true}).click();
+      assert.equal(await clone.inputValue(), origin + '/stead/git/' + id(1) + '.git');
+      assert.ok(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth), 'clone panel stays inside the viewport');
+      const panel = await page.locator('.repo-clone-panel').boundingBox();
+      assert.ok(panel && panel.x >= 0 && panel.x + panel.width <= width, 'clone panel fully visible');
+      await page.screenshot({path: path.join(output, `repository-${width}.png`), fullPage: true});
+      await clone.focus();
+      await page.keyboard.press('Escape');
+      assert.ok(!(await clone.isVisible()));
+      assert.ok(await page.getByText('Clone', {exact: true}).evaluate(node => node === document.activeElement));
+    }
+  });
+  await check('code-browses-snapshot-files-and-fences-ref-switches', async (page, state) => {
+    const hex = value => Buffer.from(value).toString('hex');
+    const main = hex('refs/heads/main');
+    const topic = hex('refs/heads/topic');
+    const src = hex('src');
+    const readme = hex('README.md');
+    const script = hex('index.js');
+    const binary = hex('sample.png');
+    const link = hex('external');
+    const longName = 'settings-' + 'abcdef'.repeat(25) + '.json';
+    const raw = '<img src="/must-not-load" onerror="alert(1)">\n' + 'x'.repeat(650);
+    const entry = (name, kind) => ({name, kind, oid: 'e'.repeat(40)});
+    const oldSnapshot = 'a'.repeat(64);
+    state.pack = {status: 'external', snapshot: oldSnapshot, generation: '0', authority_epoch: '1', request_id: id(451),
+      accepted_at_ms: '1800000000000', object_count: '12', head: main, refs: JSON.stringify({[main]: 'b'.repeat(40), [topic]: 'c'.repeat(40)})};
+    let deny = false;
+    let stale = false;
+    let delayedRead;
+    let delayedReply;
+    const waitForDelayedRead = new Promise(resolve => { delayedRead = resolve; });
+    const releaseDelayedReply = new Promise(resolve => { delayedReply = resolve; });
+    let transient = true;
+    state.browseFixture = async ({ref, path, view}) => {
+      if (deny) return {status: 404, fields: {error: 'denied_or_not_found'}};
+      if (stale) return {status: 409, fields: {error: 'stale_selection'}};
+      if (transient) return {status: 503, fields: {error: 'browse_unavailable'}};
+      const commit = (ref === main ? 'b' : 'c').repeat(40);
+      if (view === 'tree') {
+        const entries = ref === topic ? [entry(hex('topic.md'), 'file')] : path.length > 0
+          ? [entry(script, 'file')] : [entry(src, 'tree'), entry(readme, 'file'), entry(binary, 'file'),
+            entry(link, 'symlink'), entry(hex(longName), 'file')];
+        return {status: 200, fields: {commit, entries, truncated: false}};
+      }
+      if (path.at(-1) === binary) return {status: 200, fields: {commit, bytes: 32, preview: 'binary'}};
+      if (path.at(-1) === readme) { delayedRead(); await releaseDelayedReply; }
+      const text = path.at(-1) === readme ? 'Obsolete branch text' : raw;
+      return {status: 200, fields: {commit, bytes: Buffer.byteLength(text), preview: 'text', text}};
+    };
+    try {
+      await page.getByRole('button', {name: 'Refresh', exact: true}).click();
+      await page.getByRole('button', {name: 'Code', exact: true}).click();
+      const folder = page.getByRole('list', {name: 'Folder contents', exact: true});
+      const files = page.getByRole('region', {name: 'Files', exact: true});
+      await page.setViewportSize({width: 1240, height: 900});
+      await files.getByRole('alert').getByText('Couldn’t load this folder.').waitFor();
+      transient = false;
+      await files.getByRole('button', {name: 'Retry', exact: true}).click();
+      await folder.waitFor();
+      await page.screenshot({path: path.join(output, 'repo-folder-1240.png'), fullPage: true});
+      await folder.getByRole('button', {name: 'src Folder', exact: true}).focus();
+      await page.keyboard.press('Enter');
+      await folder.getByRole('button', {name: 'index.js', exact: true}).click();
+      const preview = files.locator('pre');
+      await preview.waitFor();
+      assert.equal(await preview.textContent(), raw);
+      assert.equal(await preview.locator('img').count(), 0);
+      assert.deepEqual(state.browseRequests.at(-1).path, [src, script]);
+      assert.equal(state.browseRequests.at(-1).snapshot, oldSnapshot);
+      assert.ok(await page.getByRole('heading', {name: 'Files', exact: true}).evaluate(node => node === document.activeElement));
+      for (const width of [1240, 390, 320]) {
+        await page.setViewportSize({width, height: 900});
+        assert.ok(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth), `file preview fits at ${width}px`);
+        await page.screenshot({path: path.join(output, `repo-file-preview-${width}.png`), fullPage: true});
+      }
+      await page.getByRole('button', {name: 'Back to folder', exact: true}).click();
+      await folder.getByRole('button', {name: 'index.js', exact: true}).waitFor();
+      await page.getByRole('navigation', {name: 'Repository path'}).getByRole('button', {name: 'Root', exact: true}).click();
+      await folder.getByRole('button', {name: 'sample.png', exact: true}).click();
+      await files.getByText('Binary file. Clone to open it.', {exact: true}).waitFor();
+      await page.getByRole('button', {name: 'Back to folder', exact: true}).click();
+      assert.equal(await folder.getByRole('button', {name: /external/u}).count(), 0);
+      await folder.getByText(longName, {exact: true}).waitFor();
+      assert.ok(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth), 'long filename fits at 320px');
+      await page.screenshot({path: path.join(output, 'repo-folder-320.png'), fullPage: true});
+      const canceledPreview = page.waitForEvent('requestfailed', {predicate: request =>
+        new URL(request.url()).pathname === '/stead/api/code/browse' && request.postDataJSON().path.at(-1) === readme});
+      await folder.getByRole('button', {name: 'README.md', exact: true}).click();
+      await waitForDelayedRead;
+      await page.getByRole('list', {name: 'Branches', exact: true}).getByRole('button', {name: /topic/u}).click();
+      await canceledPreview;
+      await folder.getByRole('button', {name: 'topic.md', exact: true}).waitFor();
+      delayedReply();
+      assert.equal(await files.getByText('Obsolete branch text', {exact: true}).count(), 0);
+      assert.equal(await preview.count(), 0);
+      stale = true;
+      await folder.getByRole('button', {name: 'topic.md', exact: true}).click();
+      await files.getByRole('alert').getByText('The accepted snapshot changed.').waitFor();
+      assert.equal(await files.getByRole('navigation', {name: 'Repository path'}).count(), 0);
+      stale = false;
+      deny = true;
+      state.pack = {...state.pack, snapshot: 'd'.repeat(64), generation: '1'};
+      await files.getByRole('button', {name: 'Refresh files', exact: true}).click();
+      await files.getByRole('alert').getByText('These repository files are unavailable.').waitFor();
+      assert.ok(await page.getByRole('heading', {name: 'Repository', exact: true}).evaluate(node => node === document.activeElement));
+      assert.notEqual(state.browseRequests.at(-1).snapshot, oldSnapshot);
+      assert.equal(await folder.count(), 0);
+      assert.equal(await preview.count(), 0);
+    } finally { delayedReply(); }
   });
   await check('code-proposal-form-and-merge-retry-survive-view-change', async (page, state) => {
     state.work = [{kind: 'work', resource_id: id(50), title: 'Review the source', resource_revision: '1'}];
@@ -412,7 +576,10 @@ try {
     const panel = page.getByRole('heading', {name: 'Change review', exact: true});
     await panel.waitFor();
     await page.getByText('No proposals to review yet.', {exact: true}).waitFor();
+    const cloneMenu = page.getByText('Clone', {exact: true});
+    await cloneMenu.click();
     await page.getByRole('button', {name: 'Create write credential', exact: true}).waitFor();
+    await cloneMenu.click();
     const prepareDraft = async () => {
       await page.getByRole('button', {name: 'New proposal', exact: true}).click();
       await page.getByLabel('Work item', {exact: true}).selectOption({label: work.title});
@@ -481,7 +648,9 @@ try {
     state.externalWritable = false;
     await page.getByRole('button', {name: 'Refresh snapshot', exact: true}).click();
     await merge.waitFor({state: 'hidden'});
+    await cloneMenu.click();
     assert.equal(await page.getByRole('button', {name: 'Create write credential', exact: true}).count(), 0);
+    await cloneMenu.click();
     state.externalWritable = true;
     await page.getByRole('button', {name: 'Refresh snapshot', exact: true}).click();
     await merge.waitFor();
@@ -500,6 +669,7 @@ try {
     await page.getByRole('button', {name: 'Overview', exact: true}).click();
     await code.click();
     await page.getByText(/reached its 64 update limit/u).waitFor();
+    await page.getByText('Clone', {exact: true}).click();
     await page.getByRole('button', {name: 'Create read credential', exact: true}).waitFor();
     assert.equal(await page.getByRole('button', {name: 'Create write credential', exact: true}).count(), 0);
     assert.equal(await page.getByRole('button', {name: 'New proposal', exact: true}).count(), 0);
@@ -642,7 +812,7 @@ try {
   await check('401-during-query-restores-usable-sign-in', async (page, state) => {
     state.failure = 'expired';
     await page.getByRole('button', {name: 'Refresh', exact: true}).click();
-    await page.getByRole('button', {name: 'Request sign-in', exact: true}).waitFor();
+    await page.getByRole('button', {name: 'Continue', exact: true}).waitFor();
     assert.equal(await page.getByRole('heading', {name: 'Garden', exact: true}).count(), 0);
   });
   await check('uncertain-resume-preserves-dirty-work-form', async (page, state) => {
@@ -857,7 +1027,11 @@ try {
     assert.equal(await panel.getByRole('textbox').count(), 0);
     assert.equal(await page.getByRole('button', {name: 'Edit work item', exact: true}).count(), 0);
     assert.equal(await page.getByRole('button', {name: 'Delete', exact: true}).count(), 0);
-    assert.equal(await page.locator('summary[aria-label^="Actions for"]').count(), 0);
+    await title.click({button: 'right'});
+    const menu = page.getByRole('menu', {name: 'Work item actions'});
+    assert.equal(await menu.getByRole('menuitem').count(), 1);
+    assert.equal(await menu.getByRole('menuitem', {name: 'Open details'}).count(), 1);
+    await page.keyboard.press('Escape');
     assert.match(await panel.textContent(), /Revision 3 · Read only/u);
     await panel.getByRole('button', {name: 'Close', exact: true}).click();
     await page.waitForFunction(() => document.activeElement?.textContent === 'Read the full context');
@@ -887,20 +1061,66 @@ try {
     await page.getByRole('button', {name: 'Close', exact: true}).click();
     await page.waitForFunction(() => document.activeElement?.textContent === 'Make the next step clear');
     assert.equal(await page.getByRole('alertdialog').count(), 0);
-    const menu = page.locator('summary[aria-label="Actions for Make the next step clear"]');
+    const menu = page.getByRole('button', {name: 'Actions for Make the next step clear'});
     await menu.focus(); await page.keyboard.press('Enter');
-    await page.keyboard.press('Tab');
-    assert.equal(await page.getByRole('button', {name: 'Delete', exact: true}).evaluate(element => element === document.activeElement), true);
+    await page.keyboard.press('End');
+    assert.equal(await page.getByRole('menuitem', {name: 'Delete…', exact: true}).evaluate(element => element === document.activeElement), true);
     await page.keyboard.press('Escape');
-    assert.equal(await menu.evaluate(element => element === document.activeElement && !element.parentElement.open), true);
-    await page.keyboard.press('Enter'); await page.keyboard.press('Tab'); await page.keyboard.press('Enter');
+    assert.equal(await menu.evaluate(element => element === document.activeElement), true);
+    await page.keyboard.press('Enter'); await page.keyboard.press('End'); await page.keyboard.press('Enter');
     await page.getByRole('heading', {name: 'Delete this work item?', exact: true}).waitFor();
     assert.equal(state.commands.length, 0, 'opening confirmation does not delete');
     await page.getByRole('button', {name: 'Keep it', exact: true}).click();
-    await menu.click(); await page.getByRole('button', {name: 'Delete', exact: true}).click();
+    await menu.click(); await page.getByRole('menuitem', {name: 'Delete…', exact: true}).click();
     await page.getByRole('button', {name: 'Confirm deletion', exact: true}).click();
     await page.getByRole('button', {name: title, exact: true}).waitFor({state: 'detached'});
     assert.equal(state.commands.length, 1); assert.equal(state.commands[0].operation, 'work.delete');
+  });
+  await check('work-inline-properties-and-project-assignment', async (page, state) => {
+    const title = 'Prepare the garden';
+    const description = 'Preserve this full description when changing one property.';
+    const item = id(607);
+    const taylor = {principal_id: id(109), display_name: 'Taylor', identity_ship: '~nec'};
+    state.work = [{kind: 'work', resource_id: item, title, description, resource_revision: '1', status: 'todo', type: 'task', priority: 'medium'}];
+    state.assignees = [person, taylor];
+    await page.getByRole('button', {name: 'Work', exact: true}).click();
+    const row = page.locator('.work-row').filter({hasText: title});
+    await row.getByRole('button', {name: /Set status/}).click();
+    const statusMenu = page.getByRole('menu', {name: 'Set status'});
+    const positions = await statusMenu.locator('button > span:nth-child(2)').evaluateAll(labels =>
+      labels.map(label => label.getBoundingClientRect().left));
+    assert.equal(new Set(positions).size, 1, 'status labels use one left edge');
+    await page.keyboard.press('ArrowDown'); await page.keyboard.press('ArrowDown'); await page.keyboard.press('Enter');
+    await row.getByRole('button', {name: /Set status.*In progress/}).waitFor();
+    await page.waitForFunction(() => document.activeElement?.getAttribute('data-work-control') === 'status');
+    assert.equal(state.commands[0].operation, 'work.update');
+    assert.equal(state.commands[0].expected_revision, '1');
+    assert.equal(state.commands[0].payload.description, description);
+    await row.click({button: 'right'});
+    await page.getByRole('menuitem', {name: 'Assign to'}).click();
+    const filter = page.getByRole('textbox', {name: 'Find a project member'});
+    await filter.fill('~nec');
+    await page.getByRole('menuitemradio', {name: /Taylor/}).waitFor();
+    assert.equal(await page.getByRole('menuitemradio').count(), 1);
+    await page.keyboard.press('ArrowDown'); await page.keyboard.press('Enter');
+    await row.getByRole('button', {name: /Change assignee.*Taylor/}).waitFor();
+    await page.waitForFunction(() => document.activeElement?.getAttribute('data-work-control') === 'title');
+    assert.equal(state.commands[1].operation, 'work.assign');
+    assert.equal(state.commands[1].expected_revision, '2');
+    assert.deepEqual(state.commands[1].payload, {assignee_principal_id: taylor.principal_id});
+    await row.getByRole('button', {name: title, exact: true}).click();
+    const panel = page.locator('#work-detail-panel');
+    await panel.getByRole('button', {name: /Change assignee.*Taylor/}).click();
+    await page.getByRole('menuitemradio', {name: 'Unassigned', exact: true}).click();
+    await panel.getByRole('button', {name: /Change assignee.*Unassigned/}).waitFor();
+    assert.equal(state.commands[2].payload.assignee_principal_id, '');
+    await panel.getByRole('button', {name: 'Close', exact: true}).click();
+    await page.setViewportSize({width:320,height:780});
+    await row.getByRole('button', {name: title, exact: true}).focus();
+    await page.keyboard.press('Shift+F10');
+    await page.getByRole('menu', {name: 'Work item actions'}).waitFor();
+    assert.ok(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth));
+    await page.screenshot({path:path.join(output, 'work-quick-actions-mobile.png')});
   });
   await check('page-title-visibility-clean-close-and-confirmed-discard-responsive', async (page, state) => {
     const body = '# A useful page — 東京\n\nKeep this exact Markdown.\n';

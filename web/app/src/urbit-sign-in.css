@@ -1,0 +1,39 @@
+.urbit-sign-in {
+  width: min(428px, calc(100% - 32px));
+  margin: clamp(24px, 8vh, 84px) auto;
+  padding: clamp(20px, 5vw, 32px);
+  border-radius: 14px;
+  box-shadow: 0 10px 36px #30291a10;
+}
+.urbit-sign-in-mark {
+  display: grid;
+  place-items: center;
+  width: 34px;
+  height: 34px;
+  margin-bottom: 18px;
+  border: 1px solid var(--ink);
+  border-radius: 50%;
+  font: 21px var(--mono);
+}
+.urbit-sign-in h1 { font-size: clamp(27px, 5vw, 34px); }
+.urbit-sign-in p { margin: 9px 0 0; color: var(--muted); font-size: 14px; line-height: 1.55; }
+.urbit-sign-in form { display: grid; gap: 14px; margin-top: 22px; }
+.urbit-sign-in .stead-field { margin-bottom: 0; }
+.urbit-sign-in .stead-field__control { min-height: 44px; font: 15px var(--mono); }
+.urbit-sign-in .stead-button { min-height: 44px; }
+.urbit-approval { margin-top: 20px; padding-top: 16px; }
+.urbit-approval h2 { margin: 0; font-size: 18px; }
+.urbit-approval-summary {
+  display: grid;
+  gap: 12px;
+  margin: 16px 0 0;
+  padding: 14px;
+  background: var(--canvas);
+  border: 1px solid var(--line);
+  border-radius: 9px;
+}
+.urbit-approval-summary dt { color: var(--muted); font-size: 11px; }
+.urbit-approval-summary dd { margin: 3px 0 0; font: 13px var(--mono); overflow-wrap: anywhere; }
+.urbit-approval-summary .comparison { margin-bottom: 0; line-height: 1.4; word-break: normal; }
+.urbit-sign-in-actions { display: grid; gap: 4px; margin-top: 14px; }
+.urbit-sign-in-notice:not(:empty) { margin-top: 12px; color: var(--muted); font-size: 13px; }

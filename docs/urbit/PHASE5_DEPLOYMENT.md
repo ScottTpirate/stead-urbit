@@ -68,6 +68,11 @@ write access for the dedicated nginx worker account and no other client
 accounts. Reconnect the ingress fence to the admitted Vere process before
 opening traffic. The generated include serves only the Home hostname, its
 exact browser routes, and the selected project's Git Smart HTTP routes.
+The Code file browser uses `POST /stead/api/code/browse` on the same origin.
+The relay checks the member's session, project access, and accepted snapshot
+with Home before reading the pack and again before returning names or plain
+text. Refresh the nginx include and restart the relay when installing support
+for this route. Existing edges continue to offer branches, tags, and Git clone.
 Use the separate, approved Identity HTTPS route for member ship sign-in.
 Local nginx tests exercise the Home/Git dispatch and certificate validation
 with synthetic backends. Validate the actual host's fence, upstream ownership,

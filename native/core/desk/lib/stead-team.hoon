@@ -70,6 +70,37 @@
   ?.  (~(has by projects.data.db) project)  0
   ?:  (closed:stead-core data.db project)  0
   (role:stead-core data.db principal.identity.actor project now)
+++  active-member
+  |=  [db=state principal=@t now=@ud]
+  ^-  (unit member:stead-team-config)
+  ?~  current.registry.db  ~
+  =/  matches
+    %+  skim  ~(tap by members.u.current.registry.db)
+    |=  [ship=@p person=member:stead-team-config]
+    &(=(principal principal.identity.person) (live:stead-session identity.person now))
+  ?~  matches  ~
+  ?>  ?=(~ t.matches)
+  [~ q.i.matches]
+++  assignees
+  |=  [db=state project=@t now=@ud]
+  ^-  (map @t member:stead-team-config)
+  ?~  current.registry.db  ~
+  =/  editors=(set @t)
+    %-  silt
+    %+  turn
+      %+  skim  ~(tap by grants.data.db)
+      |=  [key=@t grant=grant-state:stead-core]
+      ?&  =(project project.grant)  !revoked.grant  (gth expires.grant now)
+          ?|(=('contributor' role.grant) =('maintainer' role.grant))
+      ==
+    |=([key=@t grant=grant-state:stead-core] principal.grant)
+  %-  malt
+  %+  turn
+    %+  skim  ~(tap by members.u.current.registry.db)
+    |=  [ship=@p person=member:stead-team-config]
+    &((~(has in editors) principal.identity.person) (live:stead-session identity.person now))
+  |=  [ship=@p person=member:stead-team-config]
+  [principal.identity.person person]
 ++  box-access
   |=  [db=state actor=authentication project=@t container=@t now=@ud]
   ^-  ?
@@ -149,6 +180,10 @@
   ?:  =('work.create' operation.cmd)  &
   ?:  =('work.update' operation.cmd)
     (subject db actor project.cmd 'work' '' resource.cmd now)
+  ?:  =('work.assign' operation.cmd)
+    ?.  (subject db actor project.cmd 'work' '' resource.cmd now)  |
+    =/  id  (target-principal:stead-team-codec cmd)
+    ?|(=('' id) (~(has by (assignees db project.cmd now)) id))
   ?:  =('work.delete' operation.cmd)
     (~(has by works.data.db) [project.cmd resource.cmd])
   ?:  =('relation.create' operation.cmd)
@@ -256,18 +291,13 @@
           &(=('native-approved-browser/1' method.actor) =('native-approved-browser' strength.actor) (token-valid:stead-session audit.actor))
       ==
   actor
-++  grant-target
+++  command-target
   |=  [db=state cmd=command now=@ud]
   ^-  @t
-  ?.  =('policy.grant' operation.cmd)  ''
-  =/  config  (need current.registry.db)
-  =/  targets
-    %+  skim  ~(tap by members.config)
-    |=  [ship=@p val=member:stead-team-config]
-    &(=((field payload.cmd 'principal_id') principal.identity.val) (live:stead-session identity.val now))
-  ?>  ?=(^ targets)
-  ?>  ?=(~ t.targets)
-  (actor-json identity.q.i.targets)
+  =/  principal  (target-principal:stead-team-codec cmd)
+  ?:  =('' principal)  ''
+  =/  person  (need (active-member db principal now))
+  (actor-json identity.person)
 ++  accept
   |=  [db=state actor=authentication cmd=command now=@ud old=@ud new=@ud git=@t]
   ^-  transition
@@ -297,7 +327,9 @@
         ['previous_digest' previous]  ['canonical_command' canonical-bytes.cmd]
         ['receipt' receipt]  ['old_revision' (decimal old)]  ['new_revision' (decimal new)]
         ['authentication_context' (authentication-json actor)]
-        ['grant_target' (grant-target db cmd now)]
+        ::  The existing journal slot binds other members whose live
+        ::  identity was checked at acceptance, including assignees.
+        ['grant_target' (command-target db cmd now)]
     ==
   ?>  (lte (met 3 record) 262.144)
   =/  digest  (hash 'stead.journal/3' record)
@@ -394,8 +426,7 @@
   ?:  =('policy.grant' operation.cmd)
     =/  id  (field payload.cmd 'grant_id')
     =/  principal  (field payload.cmd 'principal_id')
-    =/  config  (need current.registry.db)
-    ?.  (lien ~(tap by members.config) |=([ship=@p val=member:stead-team-config] &(=(principal principal.identity.val) (live:stead-session identity.val now))))
+    ?:  ?=(~ (active-member db principal now))
       [(error 'invalid_command') db]
     ?:  (~(has by grants.data) (scope-key:stead-core project.cmd id))  [(error 'invalid_command') db]
     =/  own
@@ -442,7 +473,18 @@
       =.  works.data  (~(put by works.data) [project.cmd resource.cmd] [new payload.cmd])
       (accept db(data data) actor cmd now old new '')
     ?:  =('work.update' operation.cmd)
-      =.  works.data  (~(put by works.data) [project.cmd resource.cmd] [new payload.cmd])
+      =/  prior  (~(got by works.data) [project.cmd resource.cmd])
+      =/  assignee  (~(get by data.prior) 'assignee_principal_id')
+      =/  fields  ?~(assignee payload.cmd (~(put by payload.cmd) 'assignee_principal_id' u.assignee))
+      =.  works.data  (~(put by works.data) [project.cmd resource.cmd] [new fields])
+      (accept db(data data) actor cmd now old new '')
+    ?:  =('work.assign' operation.cmd)
+      =/  prior  (~(got by works.data) [project.cmd resource.cmd])
+      =/  id  (target-principal:stead-team-codec cmd)
+      =/  fields
+        ?:  =('' id)  (~(del by data.prior) 'assignee_principal_id')
+        (~(put by data.prior) 'assignee_principal_id' [%s id])
+      =.  works.data  (~(put by works.data) [project.cmd resource.cmd] [new fields])
       (accept db(data data) actor cmd now old new '')
     ?:  (~(has in tombs.db) [project.cmd 'work' '' resource.cmd])  [(error 'invalid_command') db]
     =/  row  (~(got by works.data) [project.cmd resource.cmd])

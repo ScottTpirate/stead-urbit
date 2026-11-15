@@ -26,7 +26,9 @@
   ^-  ?
   ?.  (current:stead-team db actor now)  |
   ?:  ?|(=('identity' kind.query) =('capabilities' kind.query) =('projects' kind.query))  &
-  ?.  (gth (role:stead-team db actor project.query now) 0)  |
+  =/  rank  (role:stead-team db actor project.query now)
+  ?.  (gth rank 0)  |
+  ?:  =('assignees' kind.query)  (gte rank 2)
   ?:  ?|(=('documents' kind.query) =('document' kind.query))
     ?&  (box-access:stead-team db actor project.query container.query now)
         ?|  =('documents' kind.query)
@@ -44,6 +46,32 @@
     =/  cmd  (decode:stead-team-codec command.u.receipt)
     &((allowed:stead-team db actor cmd now) =(container.query (container:stead-team-codec cmd)))
   &
+++  assignment-name
+  |=  [data=object-map people=(map @t member:stead-team-config)]
+  ^-  @t
+  =/  id  (~(get by data) 'assignee_principal_id')
+  ?~  id  ''
+  ?>  ?=([%s *] u.id)
+  =/  person  (~(get by people) p.u.id)
+  ?~(person '' display.u.person)
+++  assignment-generation
+  |=  [db=state:stead-team query=query:stead-team-codec now=@ud]
+  ^-  (list [@t @t @t])
+  ?.  ?|(=('assignees' kind.query) =('work' kind.query) =('search' kind.query))  ~
+  =/  people  (assignees:stead-team db project.query now)
+  ?:  =('assignees' kind.query)
+    %+  turn  ~(tap by people)
+    |=  [id=@t val=member:stead-team-config]
+    [id display.val (scot %p ship.identity.val)]
+  =/  items  ~(tap by works.data.db)
+  =/  out=(list [@t @t @t])  ~
+  |-
+  ?~  items  out
+  =/  project  -.p.i.items
+  =/  id  +.p.i.items
+  ?.  &(=(project.query project) !(~(has in tombs.db) [project 'work' '' id]))  $(items t.items)
+  =/  name  (assignment-name data.q.i.items people)
+  $(items t.items, out ?:(=('' name) out [[id name ''] out]))
 ++  generation
   |=  [db=state:stead-team actor=authentication:stead-team query=query:stead-team-codec now=@ud]
   ^-  @t
@@ -65,7 +93,9 @@
       ?:  =('identity' kind.query)
         [(~(got by members.config) ship.identity.actor) (~(has in creators.config) principal.identity.actor)]
       ~
-    (hash 'stead.view-generation/3' (bytes-hex (jam [identity.actor identity-view roles selected])))
+    =/  fingerprint  [identity.actor identity-view roles selected]
+    =/  assignments  (assignment-generation db query now)
+    (hash 'stead.view-generation/3' (bytes-hex (jam ?~(assignments fingerprint [fingerprint assignments]))))
   =/  project  -.p.i.rows
   =/  scope  +.p.i.rows
   =/  value  q.i.rows
@@ -90,7 +120,7 @@
   =/  out  (fields ~[['kind' 'project'] ['resource_id' project] ['project_id' project] ['title' (field data.item 'title')] ['project_key' (field data.item 'project_key')] ['preset' 'general'] ['authority_epoch' (decimal epoch.item)] ['resource_revision' (decimal revision.item)] ['role' ?:(=(role 3) 'maintainer' ?:(=(role 2) 'contributor' 'reader'))]])
   ?:(=(role 3) (~(put by out) 'policy_revision' [%s (decimal policy.item)]) out)
 ++  resource-row
-  |=  [db=state:stead-team actor=authentication:stead-team key=[project=@t kind=@t container=@t id=@t] now=@ud body=?]
+  |=  [db=state:stead-team actor=authentication:stead-team key=[project=@t kind=@t container=@t id=@t] now=@ud body=? people=(map @t member:stead-team-config)]
   ^-  object-map
   =/  id  id.key
   =/  project  project.key
@@ -104,6 +134,8 @@
   ?:  =('work' kind)
     =/  item  (~(got by works.data.db) [project id])
     =/  displayed  ?:(body data.item (~(put by data.item) 'description' [%s (prefix (field data.item 'description') 160)]))
+    =/  name  (assignment-name data.item people)
+    =?  displayed  !=('' name)  (~(put by displayed) 'assignee_display_name' [%s name])
     %-  ~(uni by displayed)
     (fields ~[['kind' kind] ['resource_id' id] ['container_id' ''] ['resource_revision' (decimal revision.item)] ['snippet' (prefix (field data.item 'description') 160)]])
   ?:  =('document' kind)
@@ -119,18 +151,19 @@
     ?:  body  (~(put by out) 'markdown' [%s markdown])
     out
   =/  item  (~(got by links.db) [project id])
-  =/  source  (resource-row db actor [project (field data.item 'source_kind') (field data.item 'source_container_id') (field data.item 'source_id')] now |)
-  =/  target  (resource-row db actor [project (field data.item 'target_kind') (field data.item 'target_container_id') (field data.item 'target_id')] now |)
+  =/  source  (resource-row db actor [project (field data.item 'source_kind') (field data.item 'source_container_id') (field data.item 'source_id')] now | people)
+  =/  target  (resource-row db actor [project (field data.item 'target_kind') (field data.item 'target_container_id') (field data.item 'target_id')] now | people)
   %-  ~(uni by data.item)
   (fields ~[['kind' kind] ['resource_id' id] ['container_id' ''] ['resource_revision' (decimal revision.item)] ['title' (rap 3 ~[(field source 'title') ' — ' (field data.item 'type') ' — ' (field target 'title')])]])
 ++  searchable
-  |=  [db=state:stead-team key=[project=@t kind=@t container=@t id=@t] needle=@t]
+  |=  [db=state:stead-team key=[project=@t kind=@t container=@t id=@t] needle=@t people=(map @t member:stead-team-config)]
   ^-  ?
   ?:  =('' needle)  &
   ?:  =('work' kind.key)
     =/  item  (~(got by works.data.db) [project.key id.key])
     ?|  (contains needle (field data.item 'title'))
         (contains needle (field data.item 'description'))
+        (contains needle (assignment-name data.item people))
     ==
   =/  item  (~(got by documents.data.db) [project.key (scope-key:stead-core container.key id.key)])
   =/  blob  (~(got by objects.data.db) blob.item)
@@ -153,6 +186,12 @@
     ~[[resource.query p.value]]
   ?:  ?|(=('activity' kind.query) =('inbox' kind.query))
     (activity db index actor query now)
+  =/  people=(map @t member:stead-team-config)
+    ?:(?|(=('assignees' kind.query) =('work' kind.query) =('search' kind.query)) (assignees:stead-team db project.query now) ~)
+  ?:  =('assignees' kind.query)
+    %+  turn  ~(tap by people)
+    |=  [id=@t val=member:stead-team-config]
+    [id (fields ~[['principal_id' id] ['display_name' display.val] ['identity_ship' (scot %p ship.identity.val)]])]
   =/  keys  ~(tap in resources.index)
   =/  out=(list row)  ~
   |-
@@ -172,8 +211,8 @@
     ==
   ?.  &(matches (subject:stead-team db actor project.key kind.key container.key id.key now))
     $(keys t.keys)
-  ?:  &(=('search' kind.query) !(searchable db key search.query))  $(keys t.keys)
-  =/  item  (resource-row db actor key now ?|(=('document' kind.query) &(=('work' kind.query) !=('' resource.query))))
+  ?:  &(=('search' kind.query) !(searchable db key search.query people))  $(keys t.keys)
+  =/  item  (resource-row db actor key now ?|(=('document' kind.query) &(=('work' kind.query) !=('' resource.query))) people)
   $(keys t.keys, out [[(rap 3 ~[kind.key '/' container.key '/' id.key]) item] out])
 ++  activity
   |=  [db=state:stead-team index=index:stead-projection actor=authentication:stead-team query=query:stead-team-codec now=@ud]

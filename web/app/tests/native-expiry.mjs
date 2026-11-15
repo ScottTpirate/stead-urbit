@@ -88,7 +88,7 @@ try {
   await editor.fill((await editor.inputValue()) + '\nUnsaved natural expiry canary.');
   await page.locator('#project-content[data-live-updates="connected"]').waitFor();
   report.checks.push({name:'real-session-still-authorized-before-expiry-with-private-draft',passed:true,at_ms:Date.now()});
-  await page.getByRole('button',{name:'Request sign-in',exact:true}).waitFor({timeout:240000});
+  await page.getByRole('button',{name:'Continue',exact:true}).waitFor({timeout:240000});
   await capture.drain();
   if (capture.failures) report.capture_errors = ['response_capture_failed'];
   assert.deepEqual(report.capture_errors,[]); assert.equal(report.capture_truncated,false);
