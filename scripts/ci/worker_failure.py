@@ -128,8 +128,9 @@ def capture_snapshot(host):
         return {}
 
 
-def source_spans(raw, sources):
-    """Closed locations against controller-composed bytes, never trace text."""
+def source_trace(raw, sources):
+    """Closed locations and counters against composed bytes; never trace text."""
+    require(isinstance(raw, bytes) and len(raw) <= 262144, 'Failure source trace bound')
     require(sources is None or isinstance(sources, dict) and len(sources) <= 512,
             'Failure source inventory bound')
     admitted = {}
@@ -140,28 +141,55 @@ def source_spans(raw, sources):
         require(isinstance(body, bytes) and len(body) <= 4 * 1024**2,
                 'Failure source file bound')
         admitted['/' + match[1] + '/' + match[2] + '/hoon'] = (path, body.split(b'\n'))
-    pattern = rb'(?<![a-zA-Z0-9_./-])(/(?:lib|tests|app)/[a-z][a-z0-9-]{0,95}/hoon):<\[([0-9]{1,7}) ([0-9]{1,7})\]\.\[([0-9]{1,7}) ([0-9]{1,7})\]>'
-    observed, truncated = {}, False
-    for match in re.finditer(pattern, raw):
+    module = rb'(?<![a-zA-Z0-9_./-])(/(?:lib|tests|app)/[a-z][a-z0-9-]{0,95}/hoon)(?![a-zA-Z0-9_./-])'
+    # %spot uses a rose ':' separator and a leaf with %ud coordinates.
+    # rose/wash may wrap at the separator; %ud groups thousands with dots.
+    # Only bounded ASCII whitespace and numeric punctuation are accepted.
+    ws = rb'[ \t\r\n]{0,256}'
+    space = rb'[ \t\r\n]{1,256}'
+    number = rb'([0-9]{1,7}|[1-9][0-9]{0,2}(?:\.[0-9]{3}){1,2})'
+    pattern = module + ws + rb':' + ws + rb'<\[' + number + space + number + rb'\]\.\[' + number + space + number + rb'\]>'
+    counts = dict.fromkeys(('module_mentions', 'admitted_module_mentions', 'span_patterns', 'admitted_span_patterns', 'bounds_rejected'), 0)
+    mentions, mentions_truncated = {}, False
+    for match in re.finditer(module, raw):
+        counts['module_mentions'] += 1
         source = admitted.get(match[1].decode('ascii'))
         if source is None:
             continue
+        counts['admitted_module_mentions'] += 1
+        path = source[0]; mentions.pop(path, None); mentions[path] = None
+        if len(mentions) > 16:
+            del mentions[next(iter(mentions))]; mentions_truncated = True
+    observed, truncated = {}, False
+    for match in re.finditer(pattern, raw):
+        counts['span_patterns'] += 1
+        source = admitted.get(match[1].decode('ascii'))
+        if source is None:
+            continue
+        counts['admitted_span_patterns'] += 1
         path, lines = source
-        start_line, start_column, end_line, end_column = map(int, match.groups()[1:])
+        start_line, start_column, end_line, end_column = [int(value.replace(b'.', b'')) for value in match.groups()[1:]]
         if not (1 <= start_line <= end_line <= len(lines)
                 and 1 <= start_column <= len(lines[start_line - 1]) + 1
                 and 1 <= end_column <= len(lines[end_line - 1]) + 1
                 and (start_line, start_column) <= (end_line, end_column)):
+            counts['bounds_rejected'] += 1
             continue
         key = (path, start_line, start_column, end_line, end_column)
-        # Keep the most recent distinct frames: compiler failure sites follow
-        # the long outer build chain. Repeated frames move to the tail.
         observed.pop(key, None)
         observed[key] = dict(zip(('path', 'start_line', 'start_column', 'end_line', 'end_column'), key))
         if len(observed) > 16:
             del observed[next(iter(observed))]
             truncated = True
-    return {'locations': list(observed.values()), 'truncated': truncated}
+    return {'locations': list(observed.values()), 'truncated': truncated,
+            'referenced_admitted_modules': list(mentions), 'modules_truncated': mentions_truncated,
+            'counts': {name: min(value, 4096) for name, value in counts.items()},
+            'counts_truncated': any(value > 4096 for value in counts.values())}
+
+
+def source_spans(raw, sources):
+    value = source_trace(raw, sources)
+    return {name: value[name] for name in ('locations', 'truncated')}
 
 
 def unit_structure(raw, path, names):
@@ -235,6 +263,7 @@ def unit_observation(native, inventory, sources=None):
             'registered_arm_observations': outcomes,
             'structure': unit_structure(raw, path, registered.get(path, ())),
             'source_spans': source_spans(raw, sources),
+            'source_trace': {key: value for key, value in source_trace(raw, sources).items() if key not in ('locations', 'truncated')},
             'markers': {name: bool(re.search(rb'(?<![a-z0-9-])' + re.escape(name.encode('ascii'))
                                             + rb'(?![a-z0-9-])', raw)) for name in markers}}
 

@@ -144,6 +144,15 @@ def validate_inventory(value: dict) -> dict:
                    '/tests/stead-home-v9-rehearsal': ('test-home-v9-', 4, 60),
                    '/tests/stead-browser-oidc-proof': ('test-oidc-proof-', 5, 60),
                    '/tests/stead-update-capacity': ('test-updates-', 2, 180)}
+    definitions.update({
+        '/tests/stead-import-probe-product-codec': ('test-import-', 1, 60),
+        '/tests/stead-import-probe-product-state': ('test-import-', 1, 60),
+        '/tests/stead-import-probe-product-migrate': ('test-import-', 1, 60),
+        '/tests/stead-import-probe-actor': ('test-import-', 1, 60),
+        '/tests/stead-import-probe-run-state': ('test-import-', 1, 60),
+        '/tests/stead-import-probe-run': ('test-import-', 1, 60),
+        '/tests/stead-import-probe-doc-change-codec': ('test-import-', 1, 60),
+    })
     if not isinstance(suites, list) or len(suites) != len(definitions):
         raise ValueError('Native suite count')
     paths = [entry.get('path') for entry in suites if isinstance(entry, dict)]

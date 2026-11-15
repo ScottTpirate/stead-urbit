@@ -1,7 +1,7 @@
 {
   "format": 1,
   "classification": "pure-native-only",
-  "expected_arm_count": 293,
+  "expected_arm_count": 300,
   "suites": [
     {
       "path": "/tests/stead-session",
@@ -551,6 +551,55 @@
         "test-run-finite-budgets-and-project-run-cap-are-enforced",
         "test-run-current-access-precedes-cache-and-shared-request-scope",
         "test-run-capacity-rolls-back-candidate-lease-and-effects"
+      ],
+      "timeout_seconds": 60
+    },
+    {
+      "path": "/tests/stead-import-probe-product-codec",
+      "arms": [
+        "test-import-product-codec"
+      ],
+      "timeout_seconds": 60
+    },
+    {
+      "path": "/tests/stead-import-probe-product-state",
+      "arms": [
+        "test-import-product-state"
+      ],
+      "timeout_seconds": 60
+    },
+    {
+      "path": "/tests/stead-import-probe-product-migrate",
+      "arms": [
+        "test-import-product-migrate"
+      ],
+      "timeout_seconds": 60
+    },
+    {
+      "path": "/tests/stead-import-probe-actor",
+      "arms": [
+        "test-import-actor"
+      ],
+      "timeout_seconds": 60
+    },
+    {
+      "path": "/tests/stead-import-probe-run-state",
+      "arms": [
+        "test-import-run-state"
+      ],
+      "timeout_seconds": 60
+    },
+    {
+      "path": "/tests/stead-import-probe-run",
+      "arms": [
+        "test-import-run"
+      ],
+      "timeout_seconds": 60
+    },
+    {
+      "path": "/tests/stead-import-probe-doc-change-codec",
+      "arms": [
+        "test-import-doc-change-codec"
       ],
       "timeout_seconds": 60
     }

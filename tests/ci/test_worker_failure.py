@@ -89,6 +89,39 @@ class FailureProjectionTests(unittest.TestCase):
         self.assertTrue(observed['prefix_counts_truncated'])
         self.assertNotIn(self.secret, json.dumps(observed))
 
+    def test_wrapped_dotted_spans_and_admitted_module_counters(self):
+        source = 'native/core/desk/lib/stead-fixture.hoon'
+        raw = b'/lib/stead-fixture/hoon:\n  <[1.000 1].[1.001 2]>\n/lib/unknown/hoon:<[1 1].[2 2]>\n/lib/stead-fixture/hoon:<[0 1].[1 1]>'
+        value = failure.source_trace(raw, {source: b'xx\n' * 1001})
+        self.assertEqual(value['locations'], [{'path': source, 'start_line': 1000, 'start_column': 1, 'end_line': 1001, 'end_column': 2}])
+        self.assertEqual(value['referenced_admitted_modules'], [source])
+        self.assertEqual(value['counts'], {'module_mentions': 3, 'admitted_module_mentions': 2, 'span_patterns': 3, 'admitted_span_patterns': 2, 'bounds_rejected': 1})
+        self.assertFalse(value['counts_truncated'])
+
+    def test_wrapped_span_cannot_carry_extra_text_or_malformed_numbers(self):
+        source = 'native/core/desk/lib/stead-fixture.hoon'
+        frames = [b'/lib/stead-fixture/hoon:' + self.secret.encode() + b'<[1 1].[2 1]>',
+                  b'/lib/stead-fixture/hoon:' + b' ' * 257 + b'<[1 1].[2 1]>',
+                  b'/lib/stead-fixture/hoon:<[1.00 1].[2 1]>',
+                  b'/lib/stead-fixture/hoon:<[01.000 1].[2 1]>',
+                  b'/lib/stead-fixture/hoon-lookalike:<[1 1].[2 1]>']
+        for raw in frames:
+            value = failure.source_trace(raw, {source: b'xx\n' * 1001})
+            self.assertEqual(value['locations'], [])
+            self.assertNotIn(self.secret, json.dumps(value))
+        with self.assertRaises(ValueError):
+            failure.source_trace(b'x' * 262145, {source: b'x'})
+
+    def test_source_trace_caps_module_names_and_counts(self):
+        sources = {'native/core/desk/lib/fixture-' + str(i) + '.hoon': b'x' for i in range(18)}
+        raw = b''.join(('/lib/fixture-' + str(i) + '/hoon\n').encode() for i in range(18))
+        result = failure.source_trace(raw, sources)
+        self.assertEqual(result['referenced_admitted_modules'], list(sources)[2:])
+        self.assertTrue(result['modules_truncated'])
+        many = failure.source_trace(b'/lib/unknown/hoon\n' * 5000, sources)
+        self.assertEqual(many['counts']['module_mentions'], 4096)
+        self.assertTrue(many['counts_truncated'])
+
     def test_source_spans_require_admitted_source_and_exact_byte_bounds(self):
         source = 'native/core/desk/lib/stead-fixture.hoon'
         sources = {source: b'first\nsecond\n'}
