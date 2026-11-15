@@ -566,12 +566,13 @@ packages:
   - Changed document/base invalidates stale acceptance; repeated request returns one receipt.
   - Private source or deleted target cannot leak; restored proposal history remains attributable.
   evidence: Native proposal/acceptance/migration cases and human Doc review workflow.
-  implementation_status: planned
+  implementation_status: in_progress
   parent_issue_numbers:
   - 7
   - 12
   - 21
   - 26
+  current_progress: A closed source-only Doc Change decoder and six boundary arms reserve exact result/target/Work pins and explicit review/adoption actions. The documented reducer, atomic Doc acceptance, historical replay and UI remain pending; no native qualification or route is active.
 - id: T13
   title: Separate execution expiry from durable proposal review
   phase: C

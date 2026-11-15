@@ -1,0 +1,26 @@
+{
+  "activation_obligations": [
+    "Home must supply independently verified current actor, catalog and state",
+    "Native service-principal authentication and independent historical evidence remain separate",
+    "Real accepted Change and check proof authority must replace deny-proof before accepted-output completion is possible"
+  ],
+  "checks": [
+    "Exact stored Markdown byte length and SHA256, independently reproduced shared-document fixture",
+    "Current declared catalog kind requires current native binding, active membership and project contributor authority",
+    "Verified actor and same principal checked before shared-collection target access",
+    "Exact current document revision and stored Markdown digest; creation requires nonexistence; private, stale, tombstoned and malformed targets fail closed",
+    "Real catalog, native document save and Work reducer fixtures; no permissive kind or target adapter in positive flows",
+    "Accepted-output proof remains absent, so required outcomes cannot be bypassed by a human note"
+  ],
+  "files": {
+    "native/core/desk/lib/stead-product-adapters.hoon": "b4bde08d547ec707262d3827b6791123bc047288d5bb50f6e4e9e0525f963bed",
+    "native/core/desk/tests/stead-product-adapters.hoon": "8a9e00b1c8bb8cddbcb296dfdab6bff0e9bd1b634d1cce2d1c8eb3d5d6821604"
+  },
+  "home_activation": false,
+  "native_executed": false,
+  "native_suite_arms": 4,
+  "protocol": "stead.independent-source-review/1",
+  "reviewed_at": "2026-11-15T18:02:13.283157+00:00",
+  "scope": "reserved-current-product-adapters",
+  "status": "approved-for-isolated-qualification"
+}

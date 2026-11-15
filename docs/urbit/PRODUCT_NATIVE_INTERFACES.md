@@ -377,6 +377,59 @@ satisfied merely by the pure reducer source.
 
 ## T04/T12/T13/T14 incremental integration
 
+### First exact Doc Change interface
+
+The source-only `stead-doc-change-codec` reserves `stead.doc-change/1` with the
+closed fields `protocol`, `request_id`, `project_id`, `work_id`, `change_id`,
+`authority_epoch`, `expected_revision`, `operation`, and `payload`. The expected
+revision is the Change's lifecycle revision. It is distinct from the immutable
+result revision, Work execution revision and target Doc revision. No route or
+mark exposes it yet. Six syntax/boundary arms remain uncompiled.
+
+`change.submit` carries an outcome ID, the exact document target already declared
+by that Work, canonical Markdown bytes, a summary, execution-contract revision
+and digest, and a run/attempt pair. Empty run plus attempt zero denotes a human
+submission; the reducer must verify a current person. A nonempty run requires a
+positive attempt and final native run/lease/contract authorization. Parsing the
+pair grants no execution permission. First-profile submissions target shared
+project Docs only; private publication remains a separate explicit operation.
+
+`change.request-changes`, `change.approve`, `change.adopt`, `change.accept`,
+`change.reject`, and `change.quarantine` all carry exact `result_revision`,
+`result_digest`, and `note`. Requesting changes, adoption, rejection and quarantine
+require a nonblank explanation. Approval and acceptance may omit the note. The
+producer identity, original authentication, timestamp, checks, approval and lease
+are derived by Home, never accepted as authored fields. Approval must be by a
+currently authorized person other than the producer. Acceptance must recheck the
+current reviewer, current accepting human, Work contract, target scope, exact
+base revision/hash and required checks. An adoption records a new authorized
+adopter while preserving the original producer, run and output bytes; it does
+not issue a credential or allow another worker publication.
+
+The proposed retained state keeps lifecycle and immutable output history
+separate. A new result supersedes prior review/adoption eligibility without
+deleting their provenance. Exact Markdown bodies use a bounded content-addressed
+proposal store; they are not extra mutable copies of the accepted Doc. A result
+digest binds project/Work/Change/result, outcome and exact target, Work contract,
+producer/run/attempt, and output digest. Read access is checked against current
+Work and shared target visibility before exposing either body, metadata or counts.
+
+Doc acceptance must call `apply-legacy:stead-product-work`, returning the actual
+canonical Doc write and accepted Change state in one pure transition. Its v3
+Doc event and typed Change-accept event are a fixed adjacent pair committed
+atomically. The latter binds the exact preceding write digest and receipt.
+Recovery recognizes that pair before stepping, reruns acceptance once against
+the preceding state and compares both generated records. Orphaned or forged
+acceptance records fail closed. Ordinary historical direct saves remain direct
+and do not gain fabricated Change provenance. No general transaction dispatcher
+or Code board replacement is introduced.
+
+This paragraph specifies reducer and recovery obligations; the current new code
+is only the closed decoder. It does not implement proposal persistence, review,
+adoption, accepted outcomes, run admission or UI activation yet.
+
+### Remaining integrations
+
 - **T04:** import each legacy repository under its existing ID equal to project
   ID and add an explicit association. New repositories use independent IDs.
   Update map keys/resolvers, Git URL/credentials, pack manifests, delivery

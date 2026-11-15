@@ -1,0 +1,26 @@
+{
+  "activation_obligations": [
+    "Reducer must enforce current identity, custody, lease, audience and CAS semantics",
+    "Exact shared-document base and Markdown storage validity require authoritative validation",
+    "Approval and acceptance require independently derived producer and reviewer authority; decoder is not authorization"
+  ],
+  "checks": [
+    "Closed bounded nine-field envelope and per-operation payloads; no authored identity, approval or worker lease fields",
+    "Explicit Work, Change, outcome and same-project document target; exact base revision/digest syntax",
+    "Execution-contract pin and paired run/attempt syntax retained",
+    "All six decisions pin immutable result revision and digest; adoption, request-changes, rejection and quarantine require nonblank explanation",
+    "Canonical domain-separated hash independently reproduced, preserving Unicode and Markdown whitespace",
+    "Duplicate keys, oversized input, unknown operations, nested scalar replacements and alternate targets rejected"
+  ],
+  "files": {
+    "native/core/desk/lib/stead-doc-change-codec.hoon": "94f295998b847adbeab69a5595f7360513fdc18358baf88f54a99db8c156282c",
+    "native/core/desk/tests/stead-doc-change-codec.hoon": "2d0fa07f7ea475475253fdd51244d88c0947b6247b7e926d71e9c9126cbce5dc"
+  },
+  "home_activation": false,
+  "native_executed": false,
+  "native_suite_arms": 6,
+  "protocol": "stead.independent-source-review/1",
+  "reviewed_at": "2026-11-15T18:05:12.686514+00:00",
+  "scope": "reserved-doc-change-command-decoder",
+  "status": "approved-for-isolated-qualification"
+}
