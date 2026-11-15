@@ -68,7 +68,7 @@
   =/  raw  body.request
   ?:  =('/stead/api/capabilities' route)
     =/  input  (small raw ~['protocol'] 'stead.capabilities/3')
-    (reply db view transient 200 (canonical (object ~[['protocol' 'stead.capabilities/3'] ['profile' 'configured-team'] ['commands' 'stead.command/3'] ['queries' 'stead.query/3'] ['updates' 'stead.updates/3'] ['authentication' 'native-approved-browser/1'] ['max_request_bytes' '65536'] ['max_response_bytes' '262144'] ['page_size' '20'] ['runtime' runtime.config]])))
+    (reply db view transient 200 (canonical (object ~[['protocol' 'stead.capabilities/3'] ['profile' 'configured-team'] ['commands' 'stead.command/3'] ['queries' 'stead.query/3'] ['updates' 'stead.updates/3'] ['work_contract' 'stead.work-contract/1'] ['workspace_queries' 'stead.workspace-queries/1'] ['authentication' 'native-approved-browser/1'] ['max_request_bytes' '65536'] ['max_response_bytes' '262144'] ['page_size' '20'] ['runtime' runtime.config]])))
   ?:  =('/stead/auth/start' route)
     =/  input  (small raw ~['protocol' 'identity_ship'] 'stead.auth/1')
     =/  ship  (need (slaw %p (field input 'identity_ship')))
