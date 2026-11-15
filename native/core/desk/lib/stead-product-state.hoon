@@ -37,9 +37,19 @@
   ==
 +$  attempt
   [digest=@t resource=@t operation=@t command=@t receipt=@t]
-+$  event  [family=?(%v3 %v4) bytes=@t digest=@t]
++$  family  ?(%v3 %v4 %owner %doc-change)
++$  event  [family=family bytes=@t digest=@t]
+++  event-protocol
+  |=  family=family
+  ^-  @t
+  ?-  family
+    %v3  'stead.command/3'
+    %v4  'stead.command/4'
+    %owner  'stead.owner-command/1'
+    %doc-change  'stead.doc-change/1'
+  ==
 ++  append-event
-  |=  [state=state family=?(%v3 %v4) body=@t]
+  |=  [state=state family=family body=@t]
   ^-  state
   =/  boundary  (need migration.state)
   ?>  (lth (lent events.state) 6.144)
@@ -49,7 +59,7 @@
     %-  object
     :~  ['protocol' 'stead.product-event/1']
         ['sequence' (decimal +((lent events.state)))]
-        ['previous_digest' previous]  ['family' ?:(=(family %v3) 'stead.command/3' 'stead.command/4')]
+        ['previous_digest' previous]  ['family' (event-protocol family)]
         ['body' body]
     ==
   ?>  (lte (met 3 record) 262.144)

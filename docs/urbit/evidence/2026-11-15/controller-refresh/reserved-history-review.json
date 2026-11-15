@@ -1,0 +1,30 @@
+{
+  "activation_obligations": [
+    "Home saved envelope and carriers remain inactive pending native qualification and supervised migration",
+    "Caller must preserve the single-writer accepted-history storage boundary; semantic replay is not new cryptographic custody attestation",
+    "Doc Change events remain rejected by this owner/Work validator until separately reviewed full-family replay is integrated"
+  ],
+  "checks": [
+    "Exactly one chronological product timeline; closed owner and reserved doc-change families preserve existing v3/v4 envelope bytes",
+    "Old compatibility validator explicitly rejects owner and doc-change history rather than silently dropping it",
+    "Owner next state and ledger roll back if adjacent timeline append fails; Work and legacy writes roll back shared ordinary/security overflow",
+    "Current native authentication and active catalog principal checked before all Work/legacy writes and retries",
+    "Replay rebuilds original prefix and catalog, applies real current adapters at each historical state, regenerates exact event bytes, and requires whole state equality",
+    "Rehashed owner command/receipt/sender/digest tampering, dropped/reordered events, current-catalog substitution and missing ledger rejected",
+    "Eight arms cover exact mixed replay, actual owner configuration revocation, disabled accepted-receipt retry denial, incremental typed-vase checkpoint, separate global 2048 security and owner128 limits, and timeline overflow rollback",
+    "Source admission retains core/sidecar noun and record caps plus bounded catalog/owner ledger; results withheld until complete validation"
+  ],
+  "files": {
+    "native/core/desk/lib/stead-product-history.hoon": "d841d721e470ff64ad5daed5a71979a4df7a981c4a6a276098552a782336ea45",
+    "native/core/desk/lib/stead-product-restore.hoon": "189791ca8eb9963d53c57aeec4536621948c85e8bf73510dfed3c0e595418f88",
+    "native/core/desk/lib/stead-product-state.hoon": "da502d44f354f0a6096acb23dfe41813120a20def76e377f41ccc49e40a01470",
+    "native/core/desk/tests/stead-product-history.hoon": "9e0c47231b2b08746da66401c4067f28e13c4525af58367664e5947e63d41663"
+  },
+  "home_activation": false,
+  "native_executed": false,
+  "native_suite_arms": 8,
+  "protocol": "stead.independent-source-review/1",
+  "reviewed_at": "2026-11-15T18:33:45.895026+00:00",
+  "scope": "reserved-owner-and-work-single-history",
+  "status": "approved-for-isolated-qualification"
+}

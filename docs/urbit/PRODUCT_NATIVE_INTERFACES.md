@@ -375,6 +375,41 @@ existing projection reads only the legacy journal and cannot discover newly
 created v4 Work by itself. None of these serving or restore obligations is
 satisfied merely by the pure reducer source.
 
+### Ordered owner and principal administration
+
+The reserved `stead.owner-command/1` envelope contains exactly `protocol`,
+`request_id`, `operation`, `expected_revision`, and `payload`. Its four operations
+are `home.configure`, `principal.declare`, `runtime.put`, and `definition.put`.
+The actual Home sender must match the configured Home before even an exact retry
+can recover a receipt. Commands use explicit revisions and immutable request
+identity. Configuration reconciliation preserves original binding ownership,
+revision high-water marks and previously declared principal kinds; new imported
+identities remain unresolved until an explicit declaration.
+
+Owner changes return a proposed core/catalog/ledger state and a typed record.
+The new, unactivated `stead-product-history` wrapper appends that record to the
+same product timeline as ordinary Work and legacy operations, or discards the
+entire transition. There is no separate administrative journal. Rebuilding
+starts from the frozen predecessor registry, reruns the actual migration, then
+replays configuration and principal changes in their original order. It
+regenerates receipts and exact event bytes before comparing the entire final
+state; a recorded kind or today's catalog cannot authorize an earlier event.
+Bounded reconstruction exposes no partial serving state. This is semantic
+reconstruction of retained history, not a new cryptographic custody attestation.
+
+Ordinary owner attempts share the Home's existing 4,096-event capacity. Once
+that pool is full, only a successful strict authority reduction may use the
+remaining security reserve: removing authority, shortening expiry or disabling
+a known principal, without adding bindings, creator rights or new authority.
+Owner security attempts are capped at 128 and also share the existing combined
+2,048 maximum with project revocations. No extra guaranteed reserve is added.
+Catalog deactivation must fence every active carrier, including Code, before
+activation; fencing only the new Work reducer is insufficient.
+
+The owner reducer's six arms and the integrated history cases are source-only.
+They are outside the immutable 230-arm qualification candidate `d965b52` and
+must pass their own registered native run before Home integration can qualify.
+
 ## T04/T12/T13/T14 incremental integration
 
 ### First exact Doc Change interface
@@ -424,9 +459,27 @@ acceptance records fail closed. Ordinary historical direct saves remain direct
 and do not gain fabricated Change provenance. No general transaction dispatcher
 or Code board replacement is introduced.
 
-This paragraph specifies reducer and recovery obligations; the current new code
-is only the closed decoder. It does not implement proposal persistence, review,
-adoption, accepted outcomes, run admission or UI activation yet.
+The new `stead-doc-change` and `stead-doc-change-state` pure source implements
+proposal bodies, immutable outputs, current review/adoption eligibility and the
+paired acceptance preparation described above. Its tests and independent review
+are still in progress; it is not registered, compiled or activated. Previous
+review/adoption provenance remains in the single timeline when a newer output
+clears current eligibility. Accepted Changes are immutable; quarantine fences
+unaccepted output and does not retroactively undo a committed Doc.
+
+Original producer authority retains the exact native binding/session and one
+deterministically selected contributor or maintainer grant. Expiry of that
+unchanged authority requires explicit adoption; revoked, replaced, disabled or
+unknown authority quarantines unaccepted output. A later session or grant does
+not silently extend an old result. A nonempty run requires a Home-internal
+verified run/attempt resolver, which currently denies all such submissions.
+
+The companion `stead-doc-change-proof` is being prepared to resolve Work
+completion from exact accepted outputs, current Doc revision/Markdown digest,
+the actual native receipt and the retained save event. Authored proof strings
+and an accepted status flag alone cannot complete Work. This resolver and the
+compound-pair replay integration remain unqualified. No live Doc Change, run,
+service credential, new saved envelope or UI capability is advertised yet.
 
 ### Remaining integrations
 
