@@ -588,8 +588,20 @@ now admits eight closed command fields and thirteen typed operations, with
 canonical nested contract/target/grant/budget/effect strings and six prepared,
 uncompiled native arms. Its local 23-field contract parser keeps the 64 KiB
 request bound without widening the shared parser. Decoding proves no authority.
-Shared history, saved-state migration, Home routes, run reads, real executor
-and G3 remain required.
+The [native run adapter](evidence/2026-11-15/controller-refresh/reserved-run-adapters-review.json)
+now derives authorization from current actual registry/catalog/Work/Doc state.
+It requires an explicit current human Owner and the exact assigned native agent;
+it does not infer a project steward. Context contains only the exact one to four
+shared Doc target bases, Work purpose/criteria and immutable instructions/policy
+pins, within 64 KiB and the issued input budget. Changed purpose, assignment or
+Doc base blocks execution while current authorized history remains readable.
+Finish requires the actual matching Doc submit command, closed accepted receipt,
+Markdown hash and run attempt audit. Submitted results remain reviewable after
+finish clears their lease; original expiry still needs explicit adoption.
+Eight prepared native arms use the real pure reducers and remain uncompiled.
+Service actors, provider effects, settlement and replacement reconciliation are
+explicitly denied by this initial adapter. Shared history, saved-state migration,
+Home routes, run reads, real executor and G3 remain required.
 
 ### Remaining integrations
 

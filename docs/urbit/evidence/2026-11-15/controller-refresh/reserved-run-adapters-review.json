@@ -1,0 +1,56 @@
+{
+  "activation": "No shared mold, history, Home route, decoder, service authorization, dispatch or saved state activation; no inventory registration. Current state must be bounded and authenticated by eventual Home/history wrapper; returned Doc and Run candidates require atomic single-timeline commit.",
+  "api": [
+    "snapshot [db product catalog ledger changes]",
+    "context(snapshot,contract,now)->unit [bytes,digest]",
+    "current(snapshot,runs,live,run-key)->gates",
+    "doc-runs(snapshot,runs,live)->Doc run authority resolver"
+  ],
+  "arm_count": 8,
+  "arms": [
+    "test-run-adapters-real-owner-issue-and-named-agent-claim",
+    "test-run-adapters-comment-stable-but-changed-goal-not-executable",
+    "test-run-adapters-assignment-and-base-changes-retain-visible-history",
+    "test-run-adapters-current-catalog-grant-and-original-expiry",
+    "test-run-adapters-versioned-runtime-pins-and-default-deny-effects",
+    "test-run-adapters-actual-doc-receipt-required-before-finish",
+    "test-run-adapters-context-is-shared-scoped-and-byte-bounded",
+    "test-run-adapters-current-authority-before-retries-and-clarification"
+  ],
+  "base_commit": "d2e13711082ca554abddb22de96955628f1bd964",
+  "checks": {
+    "delimiter_audit": "pass-static-only",
+    "diff_check": "pass",
+    "native_execution": "not-run",
+    "return_mold_shadow_audit": "pass-static-only",
+    "test_label_suffix_max": 63
+  },
+  "classification": "native-run-adapter-source-only",
+  "files": {
+    "native/core/desk/lib/stead-run-adapters.hoon": {
+      "bytes": 18482,
+      "sha256": "f4ff80e3cf6650b586b05a8508ab9285387123cd024dbd36e8009d06673ae9b1"
+    },
+    "native/core/desk/tests/stead-run-adapters.hoon": {
+      "bytes": 20702,
+      "sha256": "b6ec029ad6a7d6227aaf30a2b35adef90dd84cb7562df5796d1702b961fa627b"
+    }
+  },
+  "profile": [
+    "Verified native person or agent only; service denied",
+    "Explicit current human Work owner; no inferred steward",
+    "Exact assigned agent, binding, immutable definition/runtime, original core grant and Work execution pins",
+    "Read access survives changed execution/assignment/Doc head while current visibility and membership are rechecked",
+    "Shared Doc target context only, <=4 targets and <=64KiB plus immutable input cap",
+    "Exact actual Doc submit command, full accepted receipt, body and attempt audit required before finish",
+    "Submitted result review does not need the lease cleared by finish; original authority/deadline expiry remains distinct from revocation",
+    "Provider/effect/settlement/replacement reconciliation gates deny"
+  ],
+  "protocol": "stead.reserved-source-packet/1",
+  "review": {
+    "release": "independent review requested",
+    "root": "Final full source and receipt-tightening review approved at exact recorded hashes",
+    "resolved_finding": "Require the full closed native submit receipt with empty error, submitted state and exact expected/resulting lifecycle revisions; negative cases cover extra authority, wrong successor and nonempty error."
+  },
+  "suite": "/tests/stead-run-adapters"
+}

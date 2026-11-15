@@ -24,8 +24,12 @@ intent. Canonical contracts preserve original grant, exact Doc targets and
 normalized target order; result references match the Doc Change vocabulary.
 The reserved closed command decoder has six additional independently reviewed,
 uncompiled native arms; it validates intent shape and never substitutes for
-current Home authority. Versioned history/carrier integration, actual execution
-and G3 remain open.
+current Home authority. The [native adapter](evidence/2026-11-15/controller-refresh/reserved-run-adapters-review.json)
+adds current human-owner/assigned-agent checks, exact shared Doc context and real
+Doc submit receipt verification, with eight further uncompiled native arms.
+This first profile requires an explicit Owner; service actors, provider effects,
+settlement and replacement reconciliation stay denied. Versioned history/carrier
+integration, actual execution and G3 remain open.
 
 ## Reuse and separation
 
