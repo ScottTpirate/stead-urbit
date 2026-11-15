@@ -37,14 +37,15 @@
 ++  one-event
   |=  job=conversion
   ^-  conversion
-  ?>  &(=(phase.job %events) ?=(^ events.job))
-  =/  event  i.events.job
+  =/  remaining=(list event)  events.job
+  ?>  &(=(phase.job %events) ?=(^ remaining))
+  =/  event  i.remaining
   ::  Per-project heads alone do not bind interleaving across projects.
   =/  timeline
     %-  hash
     :-  'stead.work-migration-timeline/1'
     (canonical (object ~[['previous' timeline.job] ['project_id' project.event] ['journal_digest' digest.event]]))
-  =.  job  job(events t.events.job, heads (~(put by heads.job) project.event digest.event), timeline timeline)
+  =.  job  job(events t.remaining, heads (~(put by heads.job) project.event digest.event), timeline timeline)
   =/  value  (need (parse-result bytes.event))
   ?>  ?=([%o *] value)
   =/  record  p.value

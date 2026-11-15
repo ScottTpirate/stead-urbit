@@ -1,0 +1,84 @@
+{
+  "checks": {
+    "git_diff_check": "pass",
+    "hosted_successor_qualification": "pending",
+    "native_execution": "not run"
+  },
+  "files": {
+    "native/core/desk/lib/stead-product-migrate.hoon": {
+      "corrected_sha256": "5b0bc0975b96f6528487a0c93c5e94b5c81d36d10bbc9ff8f949a15bd6407260",
+      "observed_sha256": "8094ec4abfe8ee1056212d66dccaa2f13d9ad6e72f3d771eff6297536c7891af"
+    },
+    "native/core/desk/tests/stead-product-codec.hoon": {
+      "corrected_sha256": "e6e0b5ae5374bf2e6959a37a8388c9a099c4f450eab093c4e1ad7812ffa7cc0d",
+      "observed_sha256": "5e4e1f327c357ccbe137c86ec6d4603c8b9644a1559d5aca5348ad31311092a9"
+    }
+  },
+  "limits": [
+    "Source corrections target observed ranges; a successful hosted successor is required to confirm the failures are resolved.",
+    "No native runtime, local child, deployment, controller or inventory change performed by this review.",
+    "This receipt does not qualify the later version10 Home integration."
+  ],
+  "macro_source": {
+    "anchors": [
+      {
+        "fact": "%tsdt uses %cncb to update the whole subject.",
+        "lines": [
+          8657,
+          8658
+        ]
+      },
+      {
+        "fact": "%cncb casts the updated expression to the original wing type.",
+        "lines": [
+          8498,
+          8498
+        ]
+      }
+    ],
+    "path": ".runtime/release-install-473r_aoe/work/zod/base/sys/hoon.hoon",
+    "sha256": "6d9e2e85aac5c01374d51fe93ac25d8c2aaf387b0401159384637f7cc7fa94a8"
+  },
+  "observation": {
+    "migration": {
+      "last_admitted_span": [
+        47,
+        3,
+        106,
+        212
+      ],
+      "marker": "nest-fail",
+      "module_build_failed": true
+    },
+    "product_codec_test": {
+      "known_marker": null,
+      "last_admitted_span": [
+        201,
+        3,
+        213,
+        9
+      ],
+      "library_import_passed": true,
+      "module_build_failed": true
+    }
+  },
+  "observed_candidate": "125e4a6df24a32257dc0592e1c3afd186230ffe7",
+  "observed_run": "43768504940",
+  "protocol": "stead.source-review/1",
+  "reviewer": "native",
+  "scope": "Focused hosted compiler-site corrections",
+  "source_findings": [
+    {
+      "correction": "Copy events.job to a local explicitly typed event list; refine/read/advance that local, leaving job.events a full list union during the subject update.",
+      "finding": "The assertion narrows job.events to a nonempty cell. Updating the entire subject through =. casts the possibly-empty replacement tail against that narrowed subject type. The observed final span starts at that subject update.",
+      "path": "native/core/desk/lib/stead-product-migrate.hoon",
+      "review": "Root approved before edit. Algorithm, nonempty assertion, event order and digest bytes are unchanged."
+    },
+    {
+      "correction": "Annotate seventeen=json.",
+      "finding": "The inferred local object pair has no explicit json mold carrying its p face, subsequently selected as p.seventeen in the observed span.",
+      "path": "native/core/desk/tests/stead-product-codec.hoon",
+      "review": "Root authored; native independently source-reviewed. All nine arms, assertions and bounds unchanged."
+    }
+  ]
+}

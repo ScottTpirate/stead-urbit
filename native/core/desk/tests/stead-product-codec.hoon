@@ -194,7 +194,7 @@
   =/  too-long  (rap 3 (reap 65.537 ' '))
   =/  entries=(map @t json)  ~
   =/  counter=@ud  0
-  =/  seventeen
+  =/  seventeen=json
     |-
     ?:  =(17 counter)  [%o entries]
     $(counter +(counter), entries (~(put by entries) (id (add 400 counter)) (put doc-target 'document_id' [%s (id (add 600 counter))])))

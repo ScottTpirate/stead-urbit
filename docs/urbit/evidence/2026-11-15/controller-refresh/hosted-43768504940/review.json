@@ -1,0 +1,31 @@
+{
+  "candidate_commit": "125e4a6df24a32257dc0592e1c3afd186230ffe7",
+  "cleanup_verified": true,
+  "containment_controls_passed": 6,
+  "controller_commit": "3f0033217039e1b6997d5393518d878cada19b1b",
+  "diagnostic_only": true,
+  "failed_selected_suites": 4,
+  "format": "stead.independent-hosted-diagnostic-review/1",
+  "inputs_canonical_sha256": "1d6589eec9292de6b966134d62e2ae625acac041c85d12880eed7b39271bdd0f",
+  "limitations": [
+    "Raw failing transcripts are intentionally not retained; this report uses only admitted module names and bounded validated numeric coordinates.",
+    "The collector always fails qualification. Normal full qualification remains required after fixes."
+  ],
+  "native_qualification": false,
+  "qualifies_phase": false,
+  "registered_positive_arms": 300,
+  "registered_positive_suites": 50,
+  "report_sha256": "6deb1adfa14a4cdf98f372195058652b9a88519d0c49654d2e48f52d87d90be1",
+  "reviewed_at": "2026-11-15T22:41:17.173810+00:00",
+  "run_id": 43768504940,
+  "selected_positive_arms": 22,
+  "selected_positive_suites": 9,
+  "source_files_verified": {
+    "candidate_product_files": 127,
+    "composed_files": 234,
+    "controller_files": 422
+  },
+  "status": "import-diagnostic-complete",
+  "transcripts_recorded": 10,
+  "workflow_commit": "8601c92bb99a2fce47486168360cb55820326f5b"
+}
