@@ -1,4 +1,8 @@
 import { newId, commandDigest } from './protocol';
+import {ProductWorkClient} from './productClient';
+import {DocChangeClient} from './docChangeClient';
+import {productCarrierMode, type ProductCarrierMode} from './productCarrier';
+import {parseProductJSON} from './productWire';
 // Public HTTPS client. No owner cookies, channels, scries or administrative APIs.
 export type Fields = Record<string, string>;
 export type Row = Fields;
@@ -151,7 +155,7 @@ export function packRefs(value: Fields): Fields {
     return refs as Fields;
   } catch { throw new HomeError('invalid_response'); }
 }
-async function boundedJSON(response: Response): Promise<unknown> {
+async function boundedText(response: Response): Promise<string> {
   if (response.headers.get('content-type')?.split(';')[0] !== 'application/json') throw new HomeError('invalid_response');
   if (!response.body) throw new HomeError('invalid_response');
   const reader = response.body.getReader();
@@ -170,7 +174,14 @@ async function boundedJSON(response: Response): Promise<unknown> {
   const data = new Uint8Array(bytes);
   let offset = 0;
   for (const chunk of chunks) { data.set(chunk, offset); offset += chunk.length; }
-  try { return JSON.parse(new TextDecoder('utf-8', { fatal: true }).decode(data)); }
+  try { return new TextDecoder('utf-8', { fatal: true }).decode(data); }
+  catch { throw new HomeError('invalid_response'); }
+}
+async function boundedJSON(response: Response, closedCapabilities = false): Promise<unknown> {
+  const raw = await boundedText(response);
+  try {
+    return closedCapabilities ? parseProductJSON(raw, {bytes: MAX_RESPONSE, depth: 2, keys: 32}) : JSON.parse(raw);
+  }
   catch { throw new HomeError('invalid_response'); }
 }
 export class HomeClient {
@@ -178,12 +189,30 @@ export class HomeClient {
   private csrf = '';
   private generation = 0;
   private identity: Fields | null = null;
+  private partition: object | null = null;
+  private productCarrier: ProductCarrierMode = Object.freeze({kind: 'unsupported'});
   private adopting = 0;
   private suspended = false;
   private inflight = new Set<AbortController>();
   private retired = new Set<HomeWatch>();
   private pendingMerges = new Map<string, CodeMerge>();
   private pendingExternalMerges = new Map<string, ExternalMerge>();
+  readonly productWork = new ProductWorkClient({
+    currentSession: () => this.currentSessionToken(),
+    command: raw => this.postProduct('/stead/api/command', raw),
+    query: raw => this.postProduct('/stead/api/query', raw),
+  });
+  readonly docChanges = new DocChangeClient({
+    currentSession: () => this.currentSessionToken(),
+    capabilities: () => this.productCarrier.kind === 'native-human-doc'
+      ? {commands: 'stead.doc-change/1', queries: 'stead.doc-change-query/1'} : {commands: null, queries: null},
+    command: raw => this.postProduct('/stead/api/command', raw),
+    query: raw => this.postProduct('/stead/api/query', raw),
+  });
+  productMode(): ProductCarrierMode { return this.productCarrier; }
+  currentSessionToken(): object | null {
+    return this.adopting || this.suspended || !TOKEN.test(this.csrf) || !this.identity ? null : this.partition;
+  }
   onInvalidated: () => void = () => {};
   private fence() {
     this.generation++;
@@ -191,7 +220,32 @@ export class HomeClient {
     this.inflight.clear();
   }
   clear() {
-    this.fence(); this.csrf = ''; this.identity = null; this.adopting = 0; this.suspended = false; this.retired.clear(); this.clearCodeMerges(); this.onInvalidated();
+    this.fence(); this.csrf = ''; this.identity = null; this.partition = null; this.adopting = 0; this.suspended = false; this.retired.clear(); this.clearCodeMerges(); this.onInvalidated();
+  }
+  private async postProduct(path: '/stead/api/command' | '/stead/api/query', raw: string): Promise<string> {
+    if (this.productCarrier.kind !== 'native-human-doc') throw new HomeError('unsupported_operation');
+    if (!this.currentSessionToken()) throw new HomeError(this.suspended ? 'resume_required' : 'session_required');
+    if (new TextEncoder().encode(raw).byteLength > 65536) throw new HomeError('request_too_large');
+    const generation = this.generation, carrier = this.productCarrier;
+    const controller = new AbortController(); this.inflight.add(controller);
+    const timer = setTimeout(() => controller.abort(), 15000);
+    try {
+      const response = await fetch(path, {method: 'POST', body: raw,
+        headers: {'Content-Type': 'application/json', 'X-Stead-CSRF': this.csrf}, credentials: 'same-origin',
+        cache: 'no-store', redirect: 'error', referrerPolicy: 'no-referrer', signal: controller.signal});
+      if (generation !== this.generation) throw new HomeError('session_changed');
+      if (response.status === 401) { this.clear(); throw new HomeError('session_required'); }
+      // Correlated product receipts and query refusals are returned with 200.
+      // An HTTP/transport failure does not establish a business command outcome.
+      if (response.status !== 200) throw new HomeError('outcome_unknown');
+      const result = await boundedText(response);
+      if (generation !== this.generation) throw new HomeError('session_changed');
+      if (path === '/stead/api/query' && carrier !== this.productCarrier && this.productCarrier.kind !== 'native-human-doc') throw new HomeError('unsupported_operation');
+      return result; // Exact bytes go straight to the closed protocol parsers.
+    } catch (error) {
+      if (error instanceof HomeError) throw error;
+      throw new HomeError('outcome_unknown');
+    } finally { clearTimeout(timer); this.inflight.delete(controller); }
   }
   private async post(path: string, body: unknown, authenticated: boolean, mutation = false, adoption = false,
     externalCode = '', signal?: AbortSignal): Promise<Record<string, unknown>> {
@@ -221,7 +275,7 @@ export class HomeClient {
         if ([404, 405].includes(response.status)) throw new HomeError(feature + '_unsupported');
         if ([502, 503, 504].includes(response.status)) throw new HomeError(feature + '_unavailable');
       }
-      const value = object(await boundedJSON(response));
+      const value = object(await boundedJSON(response, path === '/stead/api/capabilities'));
       if (generation !== this.generation) throw new HomeError('session_changed');
       if (browse && !response.ok && Object.keys(value).length === 1
         && typeof value.error === 'string' && /^[a-z_]{1,64}$/u.test(value.error)) throw new HomeError(value.error);
@@ -252,9 +306,15 @@ export class HomeClient {
     } finally { clearTimeout(timer); this.inflight.delete(controller); signal?.removeEventListener('abort', cancel); }
   }
   async capabilities(): Promise<Fields> {
-    const value = fields(await this.post('/stead/api/capabilities', { protocol: 'stead.capabilities/3' }, false));
-    if (value.protocol !== 'stead.capabilities/3' || value.profile !== 'configured-team') throw new HomeError('unsupported_version');
-    return value;
+    try {
+      const value = fields(await this.post('/stead/api/capabilities', { protocol: 'stead.capabilities/3' }, false));
+      this.productCarrier = productCarrierMode(value);
+      if (value.protocol !== 'stead.capabilities/3' || value.profile !== 'configured-team') throw new HomeError('unsupported_version');
+      return value;
+    } catch (error) {
+      this.productCarrier = Object.freeze({kind: 'unsupported'});
+      throw error;
+    }
   }
   async start(input: string): Promise<Fields> {
     // Explicit logout is required before switching identities. The browser does
@@ -285,7 +345,7 @@ export class HomeClient {
       throw new HomeError('invalid_response');
     }
     const changed = !this.identity || ['principal_id', 'binding_id', 'binding_revision', 'identity_ship', 'session_audit_id'].some(key => this.identity![key] !== person[key]);
-    if (changed) { this.clearCodeMerges(); this.onInvalidated(); }
+    if (changed) { this.partition = Object.freeze({}); this.clearCodeMerges(); this.onInvalidated(); }
     this.identity = person;
     this.retired.clear(); // Confirmed resume/consumption retires prior server read handles.
     this.suspended = false;

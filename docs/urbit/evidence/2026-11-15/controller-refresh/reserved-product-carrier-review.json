@@ -1,0 +1,131 @@
+{
+  "amendment": "Moved boundedText await outside JSON-only parse try: preserves original stream/transport outcome_unknown instead of invalid_response. Other three reviewed file hashes unchanged. Parent reported46existing+8carrier host passes; no new reviewer execution.",
+  "classification": "independent-browser-carrier-source-review",
+  "evidence_scope": "Source review and existing eight fake-HTTP host cases inspected. No new test run performed by reviewer; no native or live activation claim.",
+  "files": {
+    "web/app/src/api.ts": "4246566bd5de15ca5aeb6f3f46ac2a5e804c29f8a3ff9c7307d0ad0596c23b74",
+    "web/app/src/productCarrier.ts": "8e3e752ec7104bdf1facbfcb3d199d0f7661088701ba8399b5d454d26c497214",
+    "web/app/tests/product-carrier.mjs": "8ba4b49b674291636df64d15210d504f5ba6f5f94246ab0e1e901175bb44bdf2",
+    "web/app/tests/product-carrier.test.ts": "17baf7b920b5c5062c08cb71a5be15ae69efe52bf64f8e2fc122e8cf834b6732"
+  },
+  "reviewed_invariants": [
+    "Exact15field native-human-doc isolated-fake capability profile; partial successor declarations fail closed.",
+    "Product requests use same-origin authenticated existing endpoints, exact canonical bytes, bounded UTF8 JSON, no redirect/cache/referrer, and current CSRF.",
+    "Stable confirmed session partition preserves prepared retries; suspension, replacement,401 and stale generations fence effects and responses.",
+    "Withdrawn capability blocks new sends and reads while correlated prior command receipts may still resolve uncertainty.",
+    "Duplicate capability/receipt keys and malformed/oversized responses cannot become acceptance."
+  ],
+  "status": "approved-source-only",
+  "qualifies_phase": false,
+  "host_tests": [
+    {
+      "name": "product carrier",
+      "classification": "host-product-http-boundary-with-fake-fetch",
+      "tests_passed": 8,
+      "report_sha256": "d8ac5633eddee11655d2e23d3c5c1f9421c8bb30d8267b5663c889c3fdd98ca7",
+      "inputs": {
+        "src/api.ts": "4246566bd5de15ca5aeb6f3f46ac2a5e804c29f8a3ff9c7307d0ad0596c23b74",
+        "src/productCarrier.ts": "8e3e752ec7104bdf1facbfcb3d199d0f7661088701ba8399b5d454d26c497214",
+        "src/productClient.ts": "d193a18f6c3d98d8198db265ae39b122aca6c6c85c2bb2acf39ee59b4511c0ae",
+        "src/productProtocol.ts": "dd67a172d462e0d8c03e5d074c46e05b77821632ff399849c8b4053ad3e9866c",
+        "src/productWire.ts": "35b033b3437f07b2e0690e3192091b43ba4bec2c9bee2768ca9b43abb70fa6c1",
+        "src/protocol.ts": "a8dee5b65f79ffe052869f19e9b508f7abcb30149ac82eaa31a47223796003c7",
+        "src/docChangeClient.ts": "089be0658e652b531a66994f00f133bfa392d67bab4b3a20007a16892bd9f295",
+        "src/docChangeReadProtocol.ts": "7e312905c12e630345eefb9e16e57cb435ba164e77f8d1d29f0d57b6cb8b95b8",
+        "src/docChangeProtocol.ts": "f41042a8a14ba759e3238ccda54532d0fd49d48b174ada4281d06cb7c6f5f893",
+        "tests/product-carrier.test.ts": "17baf7b920b5c5062c08cb71a5be15ae69efe52bf64f8e2fc122e8cf834b6732",
+        "tests/product-carrier.mjs": "8ba4b49b674291636df64d15210d504f5ba6f5f94246ab0e1e901175bb44bdf2",
+        "package-lock.json": "b4d2ced8e19aa8b7cf9eaab75b906e867132321b97937b534e5810c152dbec98"
+      },
+      "resource_observation": {
+        "output": "/home/skilgore/stead-urbit/.runtime/product-carrier-owner-1794776885349425294",
+        "peak_c": 58.0,
+        "duration_seconds": 1.4
+      }
+    },
+    {
+      "name": "existing client",
+      "classification": "host-existing-client-regression-with-fake-fetch",
+      "tests_passed": 46,
+      "report_sha256": "676f5c668938764ea6acee8818d61c66c4b0beadfdcea4f2344dad187273fd97",
+      "inputs": {
+        "src/productRoutes.ts": "48afa5946212b05d3288c9f01ceb823b906768fb7f1119c82e7670226a709c10",
+        "src/productModel.ts": "be328c2430720be84e260decde60ea807ff61236c2f82baf6216b999b54be723",
+        "tests/product-contract.test.ts": "193143e402e31452b3786dd4abcde9b0ed930d933ad5579bdcefccf05736f8e8",
+        "node_modules/react/cjs/react.production.js": "6b28feb9dbe9781ab1e1b64dea7b29a7c70f03d2dc10eaa966363053d8a9b4e5",
+        "node_modules/react/cjs/react.development.js": "97bef56f30daa05320514ea220d7d03eb765635519ff2d5650c4887772aa5767",
+        "node_modules/react/index.js": "60caffdecbdc5db3bc4ec4e83df9488345ccb271d07533b9210bf5750918d97e",
+        "node_modules/react-dom/cjs/react-dom.production.js": "fd016e2c887f97b82f466ca435ae259d08cf7d4e7fef37e087963336d4770c01",
+        "node_modules/react-dom/cjs/react-dom.development.js": "e4ca31557a0d93a3750438e2f78905d0ce39eff1391a6ff6df12de3a2c332f11",
+        "node_modules/react-dom/index.js": "ba1a3e33489f868371561777607e3ee5091df0f7ea3f1a10f789d6b86e4c1505",
+        "node_modules/react-dom/cjs/react-dom-server-legacy.node.production.js": "bb015a96ed358f4054869f91ba8741b00e28b720cda5a40ec8d4a8bbc36ab50c",
+        "node_modules/react-dom/cjs/react-dom-server.node.production.js": "26b08a8d2fea78cec643ec611b55eaa5d32bfb73e82b8a4d4a9888fc51ace46d",
+        "node_modules/react-dom/cjs/react-dom-server-legacy.node.development.js": "14b43d302d520ad3ee2c8199a285e3858e7b7f34be9020beb315e7d8030bcb84",
+        "node_modules/react-dom/cjs/react-dom-server.node.development.js": "d680cbb2844e9cf2465f108dcfdad717ce370be57d37a8039db6181431f13697",
+        "node_modules/react-dom/server.node.js": "f2dd93f6f91f983cd91232098d4ac55578596d33d680d7cb9438ea3b0a611b4b",
+        "node_modules/mdurl/lib/decode.mjs": "d91544cfb42b9639073f5fa0f576bf72ef6697e848005357c433cad036c2ef20",
+        "node_modules/mdurl/lib/encode.mjs": "0ae621933b548f880404841b251b0f4fc2c8446ded699e6812def217250ac15d",
+        "node_modules/mdurl/lib/format.mjs": "2410ec324b913a42c572e01ae49436e5fa4e2e5fbea15c08c92a6dea8bc5887d",
+        "node_modules/mdurl/lib/parse.mjs": "2a417b42e9ea8ee94fc77c596a34eb206d6c69823484e89d80bf1e7583d8f91d",
+        "node_modules/mdurl/index.mjs": "8ea430f1f8a107f529e2dac519d2f18e71ec9befe6f23f78bf6510cf86d3f9a0",
+        "node_modules/uc.micro/build/index.mjs": "3fdef99558860189fb25d930401847dccc1aafe3d10d4c4aec25fb02df0d0726",
+        "node_modules/entities/dist/decode-codepoint.js": "dddf76e72987697316e647f046b2755dafe16308fe83159969b3155e0ebf3beb",
+        "node_modules/entities/dist/internal/decode-shared.js": "cd26388e8ec3fdc2c4b212883e9ae460a4fe6dd37d80d0dacffd6b0087171b6b",
+        "node_modules/entities/dist/generated/decode-data-html.js": "1ff1226550125bb8976dd032b2dcfc37ba311863dbf9ae69b4b16922f5a38ead",
+        "node_modules/entities/dist/generated/decode-data-xml.js": "e549a5fd573d540a4652c81fab6655f3418c34c1613a30ed245ca017d9a5b730",
+        "node_modules/entities/dist/internal/bin-trie-flags.js": "8bb285f9ab41b9fd2525c83902c99b36e7c36da7cb7fa3be574d68f328183de5",
+        "node_modules/entities/dist/decode.js": "6ce0048039ae0f9dab6e21dd1309661bcfe7e3beabfab1f15cdd61adb91e20b7",
+        "node_modules/entities/dist/escape.js": "880426162e6e6a1c65cb67cca4824c529c37192b51b0571927a81d33074f7302",
+        "node_modules/entities/dist/generated/encode-html.js": "b5fcf3d4d73f5bd5f6a49c9c9da3cc6b824b2e2e5068f74c108649b1185d0a1c",
+        "node_modules/entities/dist/encode.js": "af4b217937b364425a6303b2febfda0a2d1282b73e1d7a3e6381ac2072b7d0ea",
+        "node_modules/entities/dist/index.js": "4ce5bc47aa7a5f3958bc4d42e450d62156efdd043cbad6b7edbdf9604d85dc4f",
+        "node_modules/linkify-it/build/index.mjs": "8b8112c2d772da15ebfff2506ac7a281bfa061f695ac7743c083ac54815385ac",
+        "node_modules/punycode.js/punycode.js": "6052a80eac47e46bd4de17ae0095e0192c336d3d7c387d292ad2176ebfc53d04",
+        "node_modules/markdown-it/dist/markdown-it.mjs": "60dff81404169420bc0dae52e221c933ef48bd38a66eb9ca657c582621782047",
+        "node_modules/react/cjs/react-jsx-runtime.production.js": "1e46f15002696985e80c61d47aaa30dabb03c954270a690f5f7dfbbacfa9002b",
+        "node_modules/react/cjs/react-jsx-runtime.development.js": "706e324b21fcd94fb728da71b374694d0727d0baee4126011cea583f54e09106",
+        "node_modules/react/jsx-runtime.js": "b392951a77d0a2e6a6bd017e49d768481ae5b63c4109c6c31f622cf7b2433edc",
+        "src/ResourceLink.tsx": "ca8efee035f001157bd23a85e6ec391301e985bd0dc5a8dba496e8ee0edecb4d",
+        "src/markdown.css": "0fdf1bbf42bf38abc270e184530aeec36917856d4a5d1329b7b989cd4e81e217",
+        "src/Markdown.tsx": "9829f171225d31bbd59f2c7c11c1ba56a01ebdedc4893e4454c1ae06cc242565",
+        "tests/markdown.test.tsx": "7edceac622079ef3c982433a686f129da5b0738ab5beb2d79331530264b551c4",
+        "src/protocol.ts": "a8dee5b65f79ffe052869f19e9b508f7abcb30149ac82eaa31a47223796003c7",
+        "src/productWire.ts": "35b033b3437f07b2e0690e3192091b43ba4bec2c9bee2768ca9b43abb70fa6c1",
+        "src/productProtocol.ts": "dd67a172d462e0d8c03e5d074c46e05b77821632ff399849c8b4053ad3e9866c",
+        "src/productClient.ts": "d193a18f6c3d98d8198db265ae39b122aca6c6c85c2bb2acf39ee59b4511c0ae",
+        "src/docChangeProtocol.ts": "f41042a8a14ba759e3238ccda54532d0fd49d48b174ada4281d06cb7c6f5f893",
+        "src/docChangeReadProtocol.ts": "7e312905c12e630345eefb9e16e57cb435ba164e77f8d1d29f0d57b6cb8b95b8",
+        "src/docChangeClient.ts": "089be0658e652b531a66994f00f133bfa392d67bab4b3a20007a16892bd9f295",
+        "src/productCarrier.ts": "8e3e752ec7104bdf1facbfcb3d199d0f7661088701ba8399b5d454d26c497214",
+        "src/api.ts": "4246566bd5de15ca5aeb6f3f46ac2a5e804c29f8a3ff9c7307d0ad0596c23b74",
+        "src/agentBrief.ts": "510556d42b3fa8abfc4b6c48cbf1648481ff24ccc2505388e8d3cd7105a8b2f6",
+        "tests/agent-brief.test.ts": "46b1609cac15dfff5a277c1f14d73579f2a0d2aaf4f66ccf316725a8543a6eef",
+        "src/eventPresentation.ts": "ff25a2cf8f9ae6669e2b3f17385d92e023ae71860b1fd6cfcfa6c870ed0b44c5",
+        "tests/event-presentation.test.ts": "1025baebc98c1098bd9d7830f62e271f09c4aea25898c5a41c53a52dedc9f63c",
+        "src/documentFormatting.ts": "b7a7f013ed0051fde4d9cb59a7f4d8e4858863c7fdaabb359f794243fa69e3be",
+        "tests/document-formatting.test.ts": "295cd89d5949a05a2de5d5e9938a7c8246217b3b08484764371bef95f7afe188",
+        "src/support.ts": "811b4d5aa9dcb02e529fb7d7a386a585ab9269a9c3867ed573751b3b76f2b26c",
+        "src/externalReview.ts": "db39a383ad6348ca442d13ec38def1fe115e903696ccb77b00d0705412ced382",
+        "tests/client.test.ts": "39a42cef7e475f9cade5c621001d86e60a8204d4717e57c699b84843c9bdd121",
+        "package-lock.json": "b4d2ced8e19aa8b7cf9eaab75b906e867132321b97937b534e5810c152dbec98"
+      },
+      "resource_observation": {
+        "output": "/home/skilgore/stead-urbit/.runtime/client-regression-owner-1794776872358911678",
+        "peak_c": 52.0,
+        "duration_seconds": 2.6
+      }
+    }
+  ],
+  "remaining": [
+    "Native v10 activation and carrier authorization tests",
+    "Real no-Code Work and Doc acceptance journey",
+    "App routing and draft-state integration"
+  ],
+  "retained_regression": {
+    "classification": "host-existing-client-regression-with-fake-fetch",
+    "passed": 45,
+    "failed": 1,
+    "report_sha256": "b2a2e74d4b7ae897d189118d2de0cc1b77e99c7d7214eee2edbc3af0d03078a6",
+    "correction": "Stream-read failure must remain outcome_unknown; only completed JSON parse failures become invalid_response."
+  }
+}
