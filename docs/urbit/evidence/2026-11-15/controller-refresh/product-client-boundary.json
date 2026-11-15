@@ -1,0 +1,130 @@
+{
+  "classification": "host-protocol-boundary-tests-with-injected-transport",
+  "expected_tests": [
+    "source-derived command4 canonical hash preserves exact bytes and domain",
+    "independent expected fields and all eight operations stay closed",
+    "decimal revisions retain uint64 precision and distinguish zero from positive",
+    "owner worker blocked and completion syntax never invents authority or completion",
+    "parser rejects duplicate keys arrays scalars excessive nesting and byte limits",
+    "required outcomes preserve typed exact targets and reject partial malformed contracts",
+    "query4 scope is exact and never silently accepts query3 or extra filters",
+    "exact Work decoding preserves legacy assignment without converting it to owner or worker",
+    "query results reject cross-scope rows duplicate resources and partial detail pages",
+    "comments retain ordered twenty-row pages exact bodies and original accepted identity",
+    "receipts correlate exact request digest scope operation and independent expected revisions",
+    "prepared retries retain immutable exact bytes without automatic resubmission",
+    "late query and command replies are fenced by the opaque current-session token",
+    "malformed or cross-request receipts remain unknown and preserve the exact retry",
+    "read scope is snapshotted before transport and typed helpers preserve separate revisions"
+  ],
+  "inputs_after": {
+    "../../native/core/desk/lib/stead-product-codec.hoon": "2926129bea22a4f915c85265eb04af0a482ec6970d99bf37c844fd8818455d75",
+    "../../native/core/desk/lib/stead-product-query.hoon": "0d6c7a73b803d3c015c6a85b3a7a23d06f82c796de1fb9b18cd4442067e89350",
+    "../../native/core/desk/lib/stead-product-views.hoon": "ea5806bd403937aa2efc782d00eaa1ff58fe064a4baf4102f9097d4ce8fb95f0",
+    "../../native/core/desk/lib/stead-product-work.hoon": "624d1878397c4552bd4e2d7ed0c02af874b95c3c20321f89dcec61cf47ab53e4",
+    "../../native/core/desk/tests/stead-product-codec.hoon": "59738cb14dd443ff43ca776f1b051501318029dcc26cb402db7e731fa7c35836",
+    "package-lock.json": "b4d2ced8e19aa8b7cf9eaab75b906e867132321b97937b534e5810c152dbec98",
+    "src/productClient.ts": "359dfb2790072499ae6e4c045c65fc22a7259612b53cd53729a4c4940feb2b69",
+    "src/productProtocol.ts": "f755a0a16093e3ed63ba9824f458d1637333b0342396b2fed96938096ddf6c68",
+    "src/productWire.ts": "35b033b3437f07b2e0690e3192091b43ba4bec2c9bee2768ca9b43abb70fa6c1",
+    "src/protocol.ts": "a8dee5b65f79ffe052869f19e9b508f7abcb30149ac82eaa31a47223796003c7",
+    "tests/product-protocol.mjs": "7a36d2f05ebe51f5b86c9b07b658b917b9cbe3928d20d08e5b249918ad86d91d",
+    "tests/product-protocol.test.ts": "2c79de07d604cadb431f3e99d539c807892daee66b914939804f1809cfb8976e"
+  },
+  "inputs_before": {
+    "../../native/core/desk/lib/stead-product-codec.hoon": "2926129bea22a4f915c85265eb04af0a482ec6970d99bf37c844fd8818455d75",
+    "../../native/core/desk/lib/stead-product-query.hoon": "0d6c7a73b803d3c015c6a85b3a7a23d06f82c796de1fb9b18cd4442067e89350",
+    "../../native/core/desk/lib/stead-product-views.hoon": "ea5806bd403937aa2efc782d00eaa1ff58fe064a4baf4102f9097d4ce8fb95f0",
+    "../../native/core/desk/lib/stead-product-work.hoon": "624d1878397c4552bd4e2d7ed0c02af874b95c3c20321f89dcec61cf47ab53e4",
+    "../../native/core/desk/tests/stead-product-codec.hoon": "59738cb14dd443ff43ca776f1b051501318029dcc26cb402db7e731fa7c35836",
+    "package-lock.json": "b4d2ced8e19aa8b7cf9eaab75b906e867132321b97937b534e5810c152dbec98",
+    "src/productClient.ts": "359dfb2790072499ae6e4c045c65fc22a7259612b53cd53729a4c4940feb2b69",
+    "src/productProtocol.ts": "f755a0a16093e3ed63ba9824f458d1637333b0342396b2fed96938096ddf6c68",
+    "src/productWire.ts": "35b033b3437f07b2e0690e3192091b43ba4bec2c9bee2768ca9b43abb70fa6c1",
+    "src/protocol.ts": "a8dee5b65f79ffe052869f19e9b508f7abcb30149ac82eaa31a47223796003c7",
+    "tests/product-protocol.mjs": "7a36d2f05ebe51f5b86c9b07b658b917b9cbe3928d20d08e5b249918ad86d91d",
+    "tests/product-protocol.test.ts": "2c79de07d604cadb431f3e99d539c807892daee66b914939804f1809cfb8976e"
+  },
+  "node": "v24.21.0",
+  "observed_at": "2026-11-15T18:17:37.027963+00:00",
+  "ownership": {
+    "tests": [
+      {
+        "cgroup": "/user.slice/user-1000.slice/user@1000.service/app.slice/stead-browser-6ea663498650813c79f37dc5af33a0d7.service",
+        "cpu_affinity": [
+          19
+        ],
+        "cpu_max": "2500 10000",
+        "pid": 209379
+      },
+      {
+        "cleanup": {
+          "cgroup": "/user.slice/user-1000.slice/user@1000.service/app.slice/stead-browser-6ea663498650813c79f37dc5af33a0d7.service",
+          "empty": true,
+          "process_reaped": true,
+          "state": "inactive"
+        },
+        "exit_code": 0,
+        "headed": false,
+        "proof": {
+          "cgroup": "/user.slice/user-1000.slice/user@1000.service/app.slice/stead-browser-6ea663498650813c79f37dc5af33a0d7.service",
+          "cpu_affinity": [
+            19
+          ],
+          "cpu_max": "2500 10000",
+          "pid": 209379
+        },
+        "status": "pass",
+        "unit": "stead-browser-6ea663498650813c79f37dc5af33a0d7.service"
+      },
+      {
+        "duration_seconds": 1.4,
+        "output": "/home/skilgore/stead-urbit/.runtime/product-protocol-owner-1794766330275562986",
+        "peak_c": 50.0
+      }
+    ],
+    "typecheck": [
+      {
+        "cgroup": "/user.slice/user-1000.slice/user@1000.service/app.slice/stead-browser-6d05ab9a55945624db267a5c5a083123.service",
+        "cpu_affinity": [
+          19
+        ],
+        "cpu_max": "2500 10000",
+        "pid": 208541
+      },
+      {
+        "cleanup": {
+          "cgroup": "/user.slice/user-1000.slice/user@1000.service/app.slice/stead-browser-6d05ab9a55945624db267a5c5a083123.service",
+          "empty": true,
+          "process_reaped": true,
+          "state": "inactive"
+        },
+        "exit_code": 0,
+        "headed": false,
+        "proof": {
+          "cgroup": "/user.slice/user-1000.slice/user@1000.service/app.slice/stead-browser-6d05ab9a55945624db267a5c5a083123.service",
+          "cpu_affinity": [
+            19
+          ],
+          "cpu_max": "2500 10000",
+          "pid": 208541
+        },
+        "status": "pass",
+        "unit": "stead-browser-6d05ab9a55945624db267a5c5a083123.service"
+      },
+      {
+        "duration_seconds": 6.4,
+        "output": "/home/skilgore/stead-urbit/.runtime/product-protocol-typecheck-owner-1794766299715606696",
+        "peak_c": 50.0
+      }
+    ]
+  },
+  "qualifies_phase": false,
+  "review": {
+    "native": "Independent source cross-check found no blocking protocol mismatch.",
+    "native_executed": false,
+    "root": "Closed scopes, exact revisions, immutable retries, session changes and uncertain command receipts reviewed; requested malformed-receipt correction passed.",
+    "ui_or_carrier_active": false
+  },
+  "status": "pass"
+}
