@@ -137,6 +137,10 @@
     |
   =/  canon  (canonical value)
   ['stead.command/3' req pro res exp epo op pay canon (hash 'stead.command/3' canon)]
+++  workspace-query
+  |=  kind=@t
+  ^-  ?
+  ?|(=('workspace-search' kind) =('my-work' kind))
 ++  decode-query
   |=  raw=@t
   ^-  query
@@ -157,6 +161,10 @@
       ==
   ?>  ?|  ?&  (~(has in (silt ~['identity' 'capabilities' 'projects'])) kind)
               =('' project)  =('' container)  =('' resource)  =('' search)
+          ==
+          ?&  (workspace-query kind)
+              =('' project)  =('' container)  =('' resource)
+              ?:(=('workspace-search' kind) (prose search 128) =('' search))
           ==
           ?&  (uuid project)
               (~(has in (silt ~['project' 'work' 'assignees' 'comments' 'containers' 'documents' 'document' 'relations' 'search' 'activity' 'inbox' 'receipt'])) kind)

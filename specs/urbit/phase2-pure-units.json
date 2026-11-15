@@ -1,7 +1,7 @@
 {
   "format": 1,
   "classification": "pure-native-only",
-  "expected_arm_count": 167,
+  "expected_arm_count": 173,
   "suites": [
     {
       "path": "/tests/stead-session",
@@ -128,6 +128,18 @@
         "test-work-contract-scope-and-deletion",
         "test-work-contract-authorized-detail-and-capability",
         "test-work-contract-replay-preserves-authoritative-snapshot"
+      ],
+      "timeout_seconds": 60
+    },
+    {
+      "path": "/tests/stead-workspace-views",
+      "arms": [
+        "test-workspace-closed-empty-scope-grammar",
+        "test-workspace-per-resource-access-and-independent-project-identity",
+        "test-workspace-assigned-to-me-and-current-completion-filter",
+        "test-workspace-private-writes-do-not-signal-other-members",
+        "test-workspace-pagination-binds-search-principal-and-visible-generation",
+        "test-workspace-queued-updates-private-isolation-and-revocation"
       ],
       "timeout_seconds": 60
     },
