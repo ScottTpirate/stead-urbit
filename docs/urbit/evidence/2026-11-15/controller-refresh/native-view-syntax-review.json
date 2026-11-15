@@ -1,0 +1,12 @@
+{
+  "classification": "independent-native-source-review-only",
+  "qualifies_phase": false,
+  "status": "approved-source-only",
+  "path": "native/core/desk/tests/stead-product-views.hoon",
+  "before_sha256": "78b793dfaa21f3385fd0e987a932b3916ef1184eb4beec66d5d820efbacfd997",
+  "after_sha256": "a042298d1100561c7e84894f80cd563e6333f34a1cd9b960a382c8ab3545043b",
+  "change": "Two multiline wide levy calls become equivalent tall %+ calls. The seven stale-cursor predicates and six access-denial predicates are unchanged.",
+  "basis": "Pinned Hoon parser muck uses ace in wide mode; tall mode uses gap.",
+  "observed_failure": "The exact125 candidate product-view suite reported nest-fail; these downstream syntax hazards are not established as that failure cause.",
+  "native_executed": false
+}
