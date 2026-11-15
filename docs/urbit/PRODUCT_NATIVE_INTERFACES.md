@@ -1,7 +1,7 @@
 # Product native interfaces and migration proposal
 
 Prepared November 15, 2026 from source `539825650c60e606634bf4ab5967b698a6daa6e3`.
-Status: **successor pure interfaces independently source-reviewed; native qualification and Home activation pending**. This is the
+Status: **successor interfaces, disposable Home carrier and app integration independently source-reviewed; native qualification and activation pending**. This is the
 concrete T01/T03/T05/T06 design supporting the [experience contract](PRODUCT_EXPERIENCE_CONTRACT.md),
 not a new active wire or saved-state version. T05a's existing-state execution
 pin extension passed hosted native qualification at commit `f254244` (167 arms,
@@ -12,7 +12,7 @@ thermal admission and cleanup guards remain unchanged.
 
 ## Current seams and immediate implementation slice
 
-- `stead-home.hoon` accepts saved envelopes 1–9; configured Work/Docs uses 3,
+- The deployed predecessor accepts saved envelopes 1–9; configured Work/Docs uses 3,
   inline Code uses 4/5, handoff uses 6, retirement/external packs use 7,
   external write ledger uses 8, and external reviews use 9.
 - `stead-team-owner.saved` contains team state plus rebuildable projections.
@@ -64,6 +64,46 @@ check alone has a read/submit race and cannot prove atomic stale-contract
 publication rejection. T14 typed admission must compare the contract inside
 Home's final transaction. T05a acceptance must retain that limitation.
 
+## Prepared disposable human Work/Docs carrier
+
+Commit `34c62a4` adds the explicit `native-human-doc/1` carrier. It is
+[source-reviewed](evidence/2026-11-15/product-home-source/integrator-review.json),
+with fourteen new native test arms and ten passing host adapter tests; the Hoon
+carrier and new arms have not compiled or run. This is not an eligible upgrade
+for the current real Code pilot. Actual owner transport, Jael fake status,
+`isolated-fake` runtime, `local-disposable` custody, empty Code state and the exact
+configuration/predecessor fingerprint are required before activation.
+
+The full version-10 envelope retains profile, pristine predecessor or product
+restore target, Code, handoff, retirement, packs, external writes and reviews.
+Migration and validation keep the original target until publication. All old and
+new accepted Work/Doc/owner operations enter one ordered product history.
+Existing versions 1–9 retain their old routes and saved shapes. Version-10 host
+[fingerprint helpers](evidence/2026-11-15/controller-refresh/reserved-v10-fingerprint-review.json)
+passed 38 host checks; generated Dojo expressions and interrupted restore still
+need actual native execution.
+
+The prepared profile advertises exact command/4, query/4 and Doc Change
+capabilities with explicit refresh. Typed `principals` and `completion` reads
+remain scoped and advisory; final acceptance rechecks current authority and
+exact outcomes. Unsupported old Work, aggregate search/activity, watches, Code,
+legacy export, service and run routes stay unavailable in this first profile.
+The app integration at `0f9aba9` selects this capability explicitly, retains
+original requests in the actual current-session draft partition and hides
+revoked content without dropping unrelated drafts. It adds exact Doc Change
+addresses and a human proposal/review/acceptance journey. TypeScript, 46 client
+regressions, 19 typed-read checks and 10 journey boundary checks passed; these
+[host checks](evidence/2026-11-15/controller-refresh/reserved-app-integration-review.json)
+do not prove the connected browser or native journey.
+
+The exact-`125e4a6` [import diagnostic](evidence/2026-11-15/controller-refresh/hosted-43762343777/review.json)
+passed Product codec/state and Actor/Run-state imports, but failed the migration
+library and the old Run/Doc decoder syntax. The original Product codec test
+fixture is a separate failure. Reviewed syntax corrections and a bounded
+compiler-location diagnostic are successors, not passing qualification. Actual
+multi-person native/HTTP, migration, cold restart and browser evidence remain
+required before activating this profile.
+
 ## Shared shapes reserved for the reviewed successor
 
 The reserved public successor is `stead.command/4`, `stead.query/4`,
@@ -113,8 +153,9 @@ owner path can append these records; an agent cannot alter its own policy. These
 records contain no credential and do not authorize execution. The runner must
 resolve the named profile and digests against its reviewed allowlist.
 
-This catalog is not yet in a saved envelope or public route. Its six native
-cases are source-only until registered and executed. Activation still requires
+This catalog is included in the prepared disposable version-10 carrier above,
+but no deployed route or native qualification covers it. Its six original native
+cases remain source-only. Broader activation still requires
 recorded configuration/custody changes, saved-state validation and replay,
 individually scoped service credentials, verified non-ship actor resolution and
 the corresponding current-membership adapters. Catalog declarations alone do

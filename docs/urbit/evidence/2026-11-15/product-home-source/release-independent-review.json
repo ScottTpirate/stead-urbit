@@ -1,0 +1,56 @@
+{
+  "format": "stead.independent-source-review/1",
+  "classification": "v10-native-human-doc-disposable-integration-source-only",
+  "status": "approved-source-native-qualification-blocked",
+  "reviewer": "release-peer",
+  "reviewed_at": "2026-11-15T21:45:58.764046+00:00",
+  "source_freeze_sha256": "7f5c333cc33a301bb301953176d68f5a80e89c83d53b8b996ce49cc840111a71",
+  "packet_files": {
+    "native/core/desk/app/stead-home.hoon": "86c96535fb391d1c822852d5fe18fb1a7284a583add9a74a1e29343f88fd56a7",
+    "native/core/desk/gen/stead-product-predecessor.hoon": "286e54cd04ecb96354a1fe203abb5e4a61758cca6d2ba774e817d14c44eebe21",
+    "native/core/desk/lib/stead-product-browser.hoon": "5354b2f607f75d853fb56ab2a38d23fdd1d3df4a556943e26d6b82620a27276e",
+    "native/core/desk/lib/stead-product-home-views.hoon": "edbb3ba210ad1ce55e24fef41103511220f91b7dc89864ace49081afee355805",
+    "native/core/desk/lib/stead-product-home.hoon": "0d9c717d718c319a9405937fd4a980428ca807673506ecfe1f15088c68eefa12",
+    "native/core/desk/lib/stead-product-query.hoon": "3ef578972487d5362b779ba3b207c4d9e73c74a81d79f21901bfd50879757318",
+    "native/core/desk/lib/stead-team-owner.hoon": "d047b698f993c76bdbac3b63e5690507dd3cb48520bda42c7c03f3bb0a5c5856",
+    "native/core/desk/mar/stead-command-4.hoon": "1d88f8d91168a47de40b261d5622c740349e2a964a9ef6dd745d685dec047a1d",
+    "native/core/desk/mar/stead-doc-change-1.hoon": "e0efcfe30a7ae1db81c630b1a26b5947a29273636a8ea4faeecbd2207258a2ae",
+    "native/core/desk/mar/stead-doc-change-query-1.hoon": "aa8a45126e316f67c6a4ea7639a946bb4353cb17447b05c5ba8228d6dee44918",
+    "native/core/desk/mar/stead-owner-command-1.hoon": "4a000bca5c402959caa11704b070b635a1e4c8905d5b5f6f1823ca598c016dcc",
+    "native/core/desk/mar/stead-product-activate-1.hoon": "32be122ae379c66c967634e1185503f69c60f97d52f405ac7311d121779f3660",
+    "native/core/desk/mar/stead-query-4.hoon": "b9c5121540723f936f125eb9f9818f02d0e5e7d5d9cee37b2d20a3e12b99ec9a",
+    "native/core/desk/ted/stead-product-check.hoon": "21c4f7600aed8841f0bf2e8afeed8d651b9bb245825900357ca22c1f384a7256",
+    "native/core/desk/tests/stead-home-v10-rehearsal.hoon": "563ff4c04db753cb05af3d3a74ab098aaca58e19843729dc2ea04640266b598b",
+    "native/core/desk/tests/stead-home-v8-rehearsal.hoon": "79491d00977ec4ef89122093e15347a28c0b525ca167eb6c6440aabd2cc47828",
+    "native/core/desk/tests/stead-product-home.hoon": "65740f4e6509b656552684d26a02168a91b9532afebbf9c8f05603b5314033df",
+    "scripts/ci/migration.hoon": "bccd667ea24e43ca85a66777486e4f7428073dfe19554155f0e30f100f7c9f20",
+    "scripts/urbit/product_conn.py": "3a73ac3ab29f130f7f0d70256be48c01c4063c09029956cae6b7f100b147b9bb",
+    "scripts/urbit/product_home_check.py": "7672926e310823e63c12bef8195e36b7fcf40302f5a75a94f7714139f300cfc6",
+    "tests/urbit/test_product_conn.py": "7f4a53f6063d73dbbcc73f70c0670453f0dd6668eef568b5802a2104c1bae0b5"
+  },
+  "hash_verified_counts": {
+    "packet_files": 21,
+    "host_dependencies": 9,
+    "native_desk_snapshot": 239
+  },
+  "reviewed_behavior": [
+    "Version10 saves exact profile, staged predecessor/product target and all retained side fields; unsupported future tests consistently move to11.",
+    "Activation requires owner-local Gall sender, actual Jael fake, isolated-fake/local-disposable configuration, pristine open handoff, exact config revision and predecessor hash, and empty Code-related state.",
+    "Restore publishes no authority until staged validator and projection finish; interrupted saves preserve original target.",
+    "New mark/request routing uses current native binding and exact request/body digest watches; owner commands enter the same history and configuration changes clear transient sessions/capabilities.",
+    "Browser reuses origin/session/CSRF checks and current catalog authorization; outer HTTP catch fails closed; no legacy mutation fallback exists.",
+    "Code, retirement and legacy journal paths are unavailable in the new profile; sealed handoff removes availability and prevents rebootstrap.",
+    "Typed roster and completion advice are permission-scoped and bounded; exact outcome proofs remain enforced again at commit.",
+    "Eight lifecycle/dispatcher pure arms and six real-app/synthetic-bowl arms are source-reviewed; separate transport/cold-restart callback adapter source is reviewed."
+  ],
+  "findings": [],
+  "native_compiled": false,
+  "native_executed": false,
+  "live_activation_approved": false,
+  "limitations": [
+    "Known exact125 import failures and original pure fixture failures remain unresolved; this approval is source-only.",
+    "No actual v10 Gall journey, HTTP/browser authority write, cold restart or live pilot upgrade has run.",
+    "Full239 desk hash verification is a binding check, not a claim that every historical file was newly rereviewed.",
+    "Existing live Code pilot is explicitly ineligible for this no-Code disposable profile."
+  ]
+}
