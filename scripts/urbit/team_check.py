@@ -59,7 +59,8 @@ def capabilities_match(value, request_id):
         and isinstance(value.get('generation'), str) and bool(value['generation'])
         and list(value['rows'].values()) == [{
             'protocol': 'stead.capabilities/3', 'profile': 'configured-team', 'commands': 'stead.command/3',
-            'queries': 'stead.query/3', 'updates': 'stead.updates/3', 'authentication': 'native-sender/1',
+            'queries': 'stead.query/3', 'updates': 'stead.updates/3', 'work_contract': 'stead.work-contract/1',
+            'authentication': 'native-sender/1',
             'max_request_bytes': '65536', 'max_response_bytes': '262144', 'page_size': '20',
             'runtime': 'isolated-fake'}])
 

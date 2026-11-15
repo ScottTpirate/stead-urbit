@@ -1,5 +1,5 @@
 ::  Authorized read projections and opaque, bounded pagination.
-/+  stead-codec, stead-team-codec, stead-team, stead-team-config, stead-core, stead-git, stead-projection, stead-session
+/+  stead-codec, stead-team-codec, stead-team, stead-team-config, stead-core, stead-git, stead-projection, stead-session, stead-work-contract
 =,  stead-codec
 |%
 +$  row  [id=@t fields=object-map]
@@ -139,6 +139,8 @@
     =?  displayed  &(body ?=(^ comments))  (~(put by displayed) 'comment_count' [%s (decimal (lent comments))])
     =/  name  (assignment-name data.item people)
     =?  displayed  !=('' name)  (~(put by displayed) 'assignee_display_name' [%s name])
+    =?  displayed  body
+      (~(uni by displayed) (fields:stead-work-contract journal.data.db project id data.item))
     %-  ~(uni by displayed)
     (fields ~[['kind' kind] ['resource_id' id] ['container_id' ''] ['resource_revision' (decimal revision.item)] ['snippet' (prefix (field data.item 'description') 160)]])
   ?:  =('document' kind)
@@ -176,7 +178,7 @@
   ^-  (list row)
   ?:  =('capabilities' kind.query)
     =/  config  (need current.registry.db)
-    ~[['capabilities' (fields ~[['protocol' 'stead.capabilities/3'] ['profile' 'configured-team'] ['commands' 'stead.command/3'] ['queries' 'stead.query/3'] ['updates' 'stead.updates/3'] ['authentication' method.actor] ['max_request_bytes' '65536'] ['max_response_bytes' '262144'] ['page_size' '20'] ['runtime' runtime.config]])]]
+    ~[['capabilities' (fields ~[['protocol' 'stead.capabilities/3'] ['profile' 'configured-team'] ['commands' 'stead.command/3'] ['queries' 'stead.query/3'] ['updates' 'stead.updates/3'] ['work_contract' 'stead.work-contract/1'] ['authentication' method.actor] ['max_request_bytes' '65536'] ['max_response_bytes' '262144'] ['page_size' '20'] ['runtime' runtime.config]])]]
   ?:  =('identity' kind.query)
     =/  config  (need current.registry.db)
     =/  person  (~(got by members.config) ship.identity.actor)
