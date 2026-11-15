@@ -18,8 +18,8 @@
       "sha256": "178cac634471554dae9928f8c38248751329314391061976a436a22a7075548d"
     },
     "native/core/desk/lib/stead-team-codec.hoon": {
-      "bytes": 7632,
-      "sha256": "142bc0277735b341c9d91c0739194bd687bceaac11eca857b1a043acf8acafcd"
+      "bytes": 7921,
+      "sha256": "c643c4d9ea4b3560c137784c07726e418b295b3dea089623a121c16a7d0a0fd2"
     },
     "native/core/desk/lib/stead-update-codec.hoon": {
       "bytes": 1753,
@@ -42,8 +42,8 @@
       "sha256": "fcd87c92acc16c2883b1dd4900af5064d1da910af317e93c327455cd56d9553b"
     },
     "sdk/v3/API.md": {
-      "bytes": 15031,
-      "sha256": "b5b49e14cf9cdefa27e6e72c27e75d1d59543320767908b384852f6f05694bc3"
+      "bytes": 15172,
+      "sha256": "8fe4afc8910e591ca6cf5cc03ffb073f4a76aea30b9d8315c22386e1c1cff608"
     },
     "sdk/v3/README.md": {
       "bytes": 3319,
@@ -55,7 +55,7 @@
     }
   },
   "kernel_kelvin": 408,
-  "native_source_commit": "0fcb6c350638e22489063f37dd7d80b3b23f31ed",
+  "native_source_commit": "2f154595e1b8a67d1f104ca5a0df88cd9a7225d3",
   "protocol": "stead.sdk-exports/1",
   "runtime_lock_sha256": "ae185adaec12b5aa0b2d48e2198ae65583902512ffd9d148706810c4819c650c",
   "sdk_version": "0.2.0-alpha"
