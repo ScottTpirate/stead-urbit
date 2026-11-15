@@ -281,7 +281,7 @@ packages:
   - 12
   - 22
   - 26
-  current_progress: T05a f254244 passed hosted native run 43736509249 with 167 arms and 1647 checks; exact source and cleanup are retained in controller-refresh/receipt.json. The successor command/4 reducer, separate discussion, bounded predecessor migration, query/4, concrete adapters and mixed-history restore have independent source review. The 57-arm successor packet failed hosted run 43748907122 at f93a42a in the migration suite before registered arm observations there; 420 earlier checks and all containment/cleanup controls passed. Exact failure is retained; source diagnosis and a corrected isolated run are required. Later owner/Doc compound history remains a separate source-only packet. Home activation, service adaptation and release readback remain open.
+  current_progress: T05a f254244 passed hosted native run 43736509249 with 167 arms and 1647 checks; exact source and cleanup are retained in controller-refresh/receipt.json. The successor command/4 reducer, separate discussion, bounded predecessor migration, query/4, concrete adapters and mixed-history restore have independent source review. The 57-arm successor packet failed hosted run 43748907122 at f93a42a in the migration suite before registered arm observations there; 420 earlier checks and all containment/cleanup controls passed. Same-source diagnostic run 43753293747 isolated module build/load failure before registered arms, with unchanged passing earlier suites and containment/cleanup. Source diagnosis and a corrected isolated run are required. Later owner/Doc compound history remains a separate source-only packet. Home activation, service adaptation and release readback remain open.
 - id: T06
   title: Define bounded storage and supported workload strategy
   phase: A
@@ -572,7 +572,7 @@ packages:
   - 12
   - 21
   - 26
-  current_progress: Closed Doc Change decoder, pure proposal/review/adoption reducer, atomic Doc acceptance preparation and concrete accepted-outcome proof are independently source-reviewed. Fourteen reducer/proof arms and six compound-history arms are prepared, with exact pair replay and checkpoint boundaries. Native compilation, serving routes, actual UI and Home activation remain pending.
+  current_progress: Closed Doc Change decoder, pure proposal/review/adoption reducer, atomic Doc acceptance preparation and concrete accepted-outcome proof are independently source-reviewed. Fourteen reducer/proof arms and six compound-history arms are prepared, with exact pair replay and checkpoint boundaries. Seven additional source-reviewed native read arms cover bounded metadata, exact historical before/after bodies, access, result-specific feedback and pagination. The browser command codec passed ten host tests. Native compilation, serving routes, actual UI and Home activation remain pending.
 - id: T13
   title: Separate execution expiry from durable proposal review
   phase: C
@@ -651,13 +651,14 @@ packages:
   - Comment/status changes preserve contract; changed requirements, canceled job or stale epoch block admission.
   - Authored fields cannot spoof actor; scoped context fetch denies unauthorized linked Docs.
   evidence: Native reducer/Gall integration, predecessor migration, export and failure/recovery evidence.
-  implementation_status: planned
+  implementation_status: in_progress
   parent_issue_numbers:
   - 12
   - 21
   - 23
   - 26
   - 28
+  current_progress: Pure typed no-Code run lifecycle and immutable contract, three-attempt fencing, bounded leases/budgets, pre-effect authorization and explicit unknown-effect reconciliation are independently source-reviewed. Ten native arms and a portable expected digest are prepared but uncompiled. Concrete Home adapters, wire/read/history/migration/export, real executor and G3 remain open; no live dispatch is enabled.
 - id: T15
   title: Build supervisor and deterministic executor proofs
   phase: C

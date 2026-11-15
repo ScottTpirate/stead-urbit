@@ -504,8 +504,8 @@ or Code board replacement is introduced.
 
 The new `stead-doc-change` and `stead-doc-change-state` pure source implements
 proposal bodies, immutable outputs, current review/adoption eligibility and the
-paired acceptance preparation described above. Its tests and independent review
-are still in progress; it is not registered, compiled or activated. Previous
+paired acceptance preparation described above. Fourteen reducer/proof test arms and independent source review
+are prepared; it is not registered, compiled or activated. Previous
 review/adoption provenance remains in the single timeline when a newer output
 clears current eligibility. Accepted Changes are immutable; quarantine fences
 unaccepted output and does not retroactively undo a committed Doc.
@@ -517,12 +517,69 @@ unknown authority quarantines unaccepted output. A later session or grant does
 not silently extend an old result. A nonempty run requires a Home-internal
 verified run/attempt resolver, which currently denies all such submissions.
 
-The companion `stead-doc-change-proof` is being prepared to resolve Work
+The companion `stead-doc-change-proof` implements pure resolution of Work
 completion from exact accepted outputs, current Doc revision/Markdown digest,
 the actual native receipt and the retained save event. Authored proof strings
 and an accepted status flag alone cannot complete Work. This resolver and the
 compound-pair replay integration remain unqualified. No live Doc Change, run,
 service credential, new saved envelope or UI capability is advertised yet.
+
+### Reserved Doc Change reads
+
+`stead-doc-change-query` and `stead-doc-change-views` implement source-only
+`stead.doc-change-query/1` and `stead.doc-change-query-result/1`. The closed
+request has ten fields: protocol, request_id, kind, project_id, work_id,
+change_id, result_revision, result_digest, side and cursor. Kinds are `changes`
+(per-Work metadata), `change` (current or exact result detail), `results`
+(immutable result metadata), and `body` (one exact result's `before` or `after`).
+An explicit result requires both its positive revision and exact digest.
+
+Current native identity, active principal catalog, project/Work access and both
+current and selected shared target visibility precede metadata, body and cursor
+access. Metadata excludes Markdown, credentials and raw receipts. Detail exposes
+current eligibility and the actual latest decision/feedback for the selected
+result; historical results never inherit a newer result's approval or adoption.
+Action advice is explanatory only: the reducer performs final authorization.
+
+After-body bytes must match the immutable result's Markdown hash. Before-body
+bytes come only from the exact scoped Doc save revision and hash in accepted
+history. Revision zero is explicitly a new document; missing retained history
+is explicitly unavailable. Neither current Doc text nor an unrelated blob can
+substitute for that base. Pages contain at most twenty metadata rows or one
+32 KiB body, within the existing 256 KiB response bound. Cursors share the
+existing global/principal budget and bind actor, exact filter, epoch, generation
+and expiry. The historical lookup is bounded by the existing 6,144-event limit.
+
+[Independent source review](evidence/2026-11-15/controller-refresh/reserved-doc-change-views-review.json)
+binds seven prepared arms covering scope, exact bodies, revoked access,
+feedback attribution, review authority and pagination. They have not been
+compiled or executed; no route or capability advertises these reads yet.
+
+### Reserved native run transitions
+
+The source-only `stead-run-state` and `stead-run` packet implements typed,
+bounded no-Code run transitions with immutable Work/context/Doc target pins,
+current verified actors, finite budgets and at most three attempts. Claim and
+clarification continuation return distinct candidate execution intents; durable
+replay and restart return none. Unknown effects fence replacement until explicit
+trusted reconciliation. Every proposed effect passes a payload-aware Home gate
+before budget reservation; an eventual carrier must commit the actual ordinary
+Work/Inbox/Doc effect and run transition together or discard both.
+
+The contract hashes portable canonical grant and keyed Doc-target JSON; internal
+target ordering is normalized for future decoding. Result references use
+`result_revision` and `result_digest`, matching Doc Changes. Leases live in a
+separate incarnation book, never exceed current actor/member/original-grant/run
+expiry, and cannot survive restart or credential replacement silently. Strict
+cancellation shares the existing security reserve rather than allocating a new
+capacity pool. Finish verifies a declared outcome and trusted exact result; it
+marks the run Submitted, never the Work Done.
+
+[Independent source review](evidence/2026-11-15/controller-refresh/reserved-run-review.json)
+binds ten prepared native arms. The expected portable digest was calculated on
+the host; the Hoon assertion remains unexecuted. Trusted fixture callbacks are
+not production adapters. Decoder, shared history, saved-state migration,
+Home routes, run reads, real executor and G3 remain required.
 
 ### Remaining integrations
 

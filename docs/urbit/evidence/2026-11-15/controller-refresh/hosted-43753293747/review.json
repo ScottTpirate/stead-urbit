@@ -1,0 +1,66 @@
+{
+  "candidate_commit": "f93a42a06c49fef597f6611e18b2f56eaa73d568",
+  "checks_passed": 420,
+  "cleanup_verified": true,
+  "containment_controls_passed": 6,
+  "controller_commit": "f2a96b57138ad8c0be09dbf2a959f41ae4ee5235",
+  "diagnosis": "Confirmed module build failure; no arm was observed. Exact source cause remains unresolved.",
+  "diagnostic_intent": true,
+  "inputs_canonical_sha256": "55ace145dd606e67b5a0dcd6bf6aaa9fcff604013d9518a517743613ac2d1446",
+  "last_unit": {
+    "log_bytes": 729,
+    "log_sha256": "df473afbb26a7820ecc9de2f1817552574016f5e50078b465aa09681989b3f98",
+    "markers": {
+      "build-fail": false,
+      "dojo-lame": false,
+      "exit": false,
+      "failed-to-compile-test-arm": false,
+      "find-fork": false,
+      "generator-build-fail": false,
+      "mint-lost": false,
+      "mint-nice": false,
+      "mint-vain": false,
+      "mull-bonk": false,
+      "nest-fail": false,
+      "nest-need": false,
+      "syntax error": false
+    },
+    "path": "/tests/stead-product-migrate",
+    "registered_arm_observations": [],
+    "source_spans": {
+      "locations": [],
+      "truncated": false
+    },
+    "structure": {
+      "compile_failed_registered_arms": [],
+      "line_count": 13,
+      "module_build_failed": true,
+      "module_built": false,
+      "prefix_counts": {
+        "CRASHED": 0,
+        "FAILED": 1,
+        "OK": 0,
+        "bang": 0,
+        "built": 0,
+        "empty": 0,
+        "other": 7,
+        "prompt": 0,
+        "source_path": 5
+      },
+      "prefix_counts_truncated": false
+    },
+    "terminal": "[32 %avow 0 %noun 1]"
+  },
+  "live_pilot_affected": false,
+  "protocol": "stead.independent-hosted-review/1",
+  "raw_transcript_retained": false,
+  "registered_suites_completed": 9,
+  "report_sha256": "90872e37f06e44286cac0877d7a445cf2c2dba022073c62c60de872dd5819409",
+  "run_id": 43753293747,
+  "source_files_verified": {
+    "candidate_product_files": 114,
+    "controller_files": 394
+  },
+  "status": "failed-not-qualified",
+  "workflow_commit": "36ca0e8a366b0acb2f20701f50a340c018b46038"
+}

@@ -13,6 +13,17 @@ user-facing acceptance is G3/T18: a document update in a project with no Code.
 A deterministic inline-Code recipe remains a separate parallel proof of
 execution and isolation. It neither substitutes for nor blocks Docs delivery.
 
+The reserved pure `stead-run-state` and `stead-run` source now implements
+bounded no-Code lifecycle transitions, leases, effect reservation and explicit
+reconciliation. [Independent review](evidence/2026-11-15/controller-refresh/reserved-run-review.json)
+binds ten prepared native arms; none has run. Current authorization and
+payload-aware effect gates are mandatory trusted Home adapters, still absent
+from live routes. A transition returns candidate ordinary Work/Inbox/Doc intents;
+it does not dispatch a process. Restart clears live leases and emits no external
+intent. Canonical contracts preserve original grant, exact Doc targets and
+normalized target order; result references match the Doc Change vocabulary.
+Versioned history/carrier integration, actual execution and G3 remain open.
+
 ## Reuse and separation
 
 - `stead-code-delivery.hoon` checks current delegation, membership, proposal and

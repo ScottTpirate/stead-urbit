@@ -1,0 +1,32 @@
+{
+  "protocol": "stead.independent-source-review/1",
+  "status": "source_reviewed_native_unexecuted",
+  "scope": "scoped-doc-change-metadata-exact-bodies-and-review-advice",
+  "files": {
+    "native/core/desk/lib/stead-doc-change-query.hoon": "2a8d6441a46790e9b5d6e348336cebe631a82ae4f65710da7dca6204127dc0c1",
+    "native/core/desk/lib/stead-doc-change-views.hoon": "4eba5952ff605f46ed037d3dd817fbc0b40ef6a14ca34dac1b9cddc76e14fe3f",
+    "native/core/desk/tests/stead-doc-change-views.hoon": "83877421341a12b25ef480688931be63d37665e98eee59f3c48acf5ff0ac5e4d"
+  },
+  "test_arms": 7,
+  "native_executed": false,
+  "home_activation": false,
+  "reviewers": [
+    "native lane independent source review of integrator packet",
+    "integrator final review and exact31-field assertion"
+  ],
+  "checks": [
+    "Closed ten-field query admits bounded per-Work Change list/detail/result-list and one explicit immutable result before/after body.",
+    "Current native registry, active catalog, project/Work access and both current/selected shared target visibility precede result or cursor access.",
+    "Before body comes only from this exact scoped Doc accepted save revision and Markdown hash; absent history is explicit unavailable, revision zero explicit new-document.",
+    "Current detail derives latest accepted or producer-quarantine decision note from bounded retained attempts, with matching receipt/decoded command/result pins; old head reviews never masquerade as prior-output reviews.",
+    "Native action advice matches existing reducer authority distinctions; it is advisory and grants no mutation permission.",
+    "Twenty metadata previews or one <=32768-byte body, <=262144-byte response; opaque cursors share existing64/global4/principal budget and bind exact actor/filter/epoch/generation.",
+    "Seven prepared arms cover closed syntax, reader body, catalog/expiry/target denial, exact revision feedback, review independence, historical base identity and bounded stale/cross-actor pagination."
+  ],
+  "limitations": [
+    "No native compilation, registration, Home carrier or live query capability yet.",
+    "Synthetic pagination map is a cursor-bound fixture, not authentic restored history.",
+    "History validation remains mandatory; shape bounds and displayed advisory eligibility do not prove authorization or historical custody.",
+    "Historical before-body scan is bounded by existing6144events; no large-workload latency qualification is claimed."
+  ]
+}

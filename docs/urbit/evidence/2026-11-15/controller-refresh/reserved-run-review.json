@@ -1,0 +1,33 @@
+{
+  "files_sha256": {
+    "native/core/desk/lib/stead-run-state.hoon": "4c96eb466add4ae26f6c6fbfd390b338d26a14e20a8c3f70214f9e1445602c1d",
+    "native/core/desk/lib/stead-run.hoon": "f512468d8b90a447f8652cef307d015e818954b347f2b07dc6b49172c7d76686",
+    "native/core/desk/tests/stead-run.hoon": "d71a0e1ad5feb96ffa725de2a24f40d3a3bb552cce576f63c984cd48cddf5122"
+  },
+  "home_activated": false,
+  "limitations": [
+    "No native compiler or runtime result for these ten arms yet.",
+    "Trusted positive fixture callbacks are not concrete production adapters.",
+    "No Home route, provider call, Inbox mutation or no-Code agent execution is enabled or qualified."
+  ],
+  "native_executed": false,
+  "portable_contract_vector": {
+    "algorithm": "SHA-256(domain UTF-8 + NUL + canonical JSON UTF-8)",
+    "bytes": 1569,
+    "domain": "stead.run-contract/1",
+    "executed": "independent Python expected-vector calculation only; Hoon assertion unexecuted",
+    "sha256": "8363546216f67077fb15b3c42123d55c95cfbb06692ddfa1f432b593385ec1af"
+  },
+  "resolved_finding": "Added pre-effect provider/request/charge authorization after independent review found that settlement-only validation was too late.",
+  "reviewed": [
+    "Current membership/read authority precede retained receipt lookup; exact run revision and attempt CAS precede new effects.",
+    "Attempt binds full actor audit and clips lease to actor, membership, original grant and deadline; restart clears leases and emits no intents.",
+    "Unknown effects prevent replacement until explicit trusted reconciliation; continuation IDs distinguish answered questions from initial execution.",
+    "Mandatory payload-aware effect gate defaults deny and authorizes exact provider/request/charge or Doc target before budget/effect reservation.",
+    "Malformed shared totals reject; strictly reducing cancellation shares existing ordinary/security/project limits; capacity failure restores original state, live leases and empty intents.",
+    "Bounded retained usage cannot exceed issued budget and finish locally requires declared outcome plus exact trusted result evidence.",
+    "Contract serialization uses portable canonical grant and keyed target JSON, normalized target ordering retained in state, and Doc result_revision/result_digest vocabulary; native vector remains unexecuted."
+  ],
+  "status": "independent-source-review-approved",
+  "test_arms": 10
+}
