@@ -145,6 +145,10 @@
 .repo-full-id { display: block; overflow-wrap: anywhere; user-select: all; }
 .repo-revoke { border-top: 1px solid var(--line); padding-top: 9px; }
 .repo-revoke .stead-field { margin: 9px 0; }
+.repo-review-trail { display: flex; flex-wrap: wrap; align-items: baseline; gap: 3px 8px; margin-block: 4px; min-width: 0; color: var(--muted); font-size: 12px; }
+.external-review-list .stead-button > span > .repo-review-trail { flex-basis: 100%; }
+.repo-review-trail bdi { min-width: 0; overflow-wrap: anywhere; }
+.repo-review-trail code { color: var(--ink); font: 11px var(--mono); white-space: nowrap; }
 .repo-work-context { display: flex; flex-wrap: wrap; align-items: center; gap: 5px 14px; padding: 0 16px 12px; }
 .repo-work-context p { margin: 0; min-width: 0; overflow-wrap: anywhere; color: var(--muted); font-size: 13px; }
 .repo-work-context strong { color: var(--ink); }

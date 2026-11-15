@@ -2,10 +2,21 @@ import { useRef, useState } from 'react';
 import type { CodeReviewKey, Fields, HomeClient } from './api';
 import { Button, Surface, TextField } from './primitives';
 import { CodeReview } from './CodeReview';
+import { branchLabel } from './externalReview';
 import './repository.css';
 
 export function repositoryUrl(project: string) {
   return new URL(`/stead/git/${project}.git`, location.origin).href;
+}
+
+export function ReviewTrail({ review, includeSource = true }: { review: Fields; includeSource?: boolean }) {
+  return <span className="repo-review-trail">
+    {includeSource && <bdi>{branchLabel(review.source_ref!)}</bdi>}
+    <span aria-hidden="true">→</span>
+    <span className="stead-visually-hidden">Target branch </span><bdi>{branchLabel(review.ref!)}</bdi>
+    <span className="stead-visually-hidden">Proposed commit </span>
+    <code title={review.head_oid}>{review.head_oid!.slice(0, 12)}</code>
+  </span>;
 }
 
 export function CopyValue({ value, label, onUnavailable, fallbackLabel = 'Select the full ID to copy it.' }: {

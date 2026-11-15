@@ -13,6 +13,11 @@ export function refLabel(hex: string) {
   return refText(hex) ?? `Raw ref bytes ${hex}`;
 }
 
+export function branchLabel(ref: string) {
+  return ref.replace(/^refs\/heads\//u, '')
+    .replace(/[\p{Cc}\p{Cf}]/gu, character => `\\u{${character.codePointAt(0)?.toString(16)}}`);
+}
+
 function refText(hex: string): string | null {
   const bytes = Uint8Array.from(hex.match(/../gu) ?? [], pair => Number.parseInt(pair, 16));
   try { return new TextDecoder('utf-8', { fatal: true, ignoreBOM: true }).decode(bytes); }

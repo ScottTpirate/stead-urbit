@@ -1,5 +1,7 @@
 import { useEffect, useState } from 'react';
 import { type Fields, type HomeClient } from './api';
+import { ReviewTrail } from './CodeRepository';
+import { branchLabel } from './externalReview';
 import { Button } from './primitives';
 
 type ReviewResult = { client: HomeClient; project: string; work: string; reviews: Fields[] | null };
@@ -28,8 +30,9 @@ export function WorkCodeLinks({ client, project, work, onOpenReview }: {
       : <ul className="external-review-list" aria-label="Linked change reviews">
         {visible.reviews.map(review => <li key={review.proposal_id}>
           <Button variant="quiet" onClick={() => onOpenReview(review.proposal_id!)}>
-            <strong><bdi>{(review.source_ref ?? '').replace(/^refs\/heads\//u, '').replace(/[\p{Cc}\p{Cf}]/gu, '�')}</bdi></strong>
+            <strong><bdi>{branchLabel(review.source_ref!)}</bdi></strong>
             <span>{review.merged_revision ? 'Merged' : review.reviewer ? 'Approved revision' : 'Awaiting review'} · Revision {review.revision}</span>
+            <ReviewTrail review={review} includeSource={false} />
           </Button>
         </li>)}
       </ul>}

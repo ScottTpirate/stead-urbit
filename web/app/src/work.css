@@ -83,4 +83,11 @@
 .work-discussion-list time { color: var(--muted); font-size: 12px; }
 .work-discussion-list li p { white-space: pre-wrap; }
 .work-agent-list li { display: grid; gap: 4px; }
+.work-context-heading { display: flex; align-items: center; justify-content: space-between; gap: 7px; }
+.work-context h4 { margin: 7px 0 3px; color: var(--muted); font-size: 12px; }
+.work-context ul { list-style: none; padding: 0; margin: 0; }
+.work-context li { display: flex; flex-wrap: wrap; align-items: baseline; gap: 4px 8px; border-bottom: 1px solid var(--line); overflow-wrap: anywhere; }
+.work-context li > button:first-child { flex: 1 1 130px; min-width: 0; text-align: left; overflow-wrap: anywhere; }
+.work-context input, .work-context select { min-width: 0; width: 100%; }
+.work-context-form, .work-context-groups { margin-bottom: 9px; }
 @media (pointer: coarse) { .work-menu button, .work-property { min-height: 36px; } }

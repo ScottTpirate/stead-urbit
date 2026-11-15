@@ -1,6 +1,7 @@
 import { useEffect, useId, useRef, useState } from 'react';
 import { HomeError, UUID, packRefs, type ExternalMerge, type Fields, type HomeClient } from './api';
-import { MAX_ARTIFACT_BYTES, parseReviewArtifact, refLabel, reviewBranches, reviewRequest } from './externalReview';
+import { MAX_ARTIFACT_BYTES, branchLabel, parseReviewArtifact, refLabel, reviewBranches, reviewRequest } from './externalReview';
+import { ReviewTrail } from './CodeRepository';
 import { Button, Surface, TextField } from './primitives';
 import { newId } from './protocol';
 import { ReviewChanges } from './ReviewChanges';
@@ -303,8 +304,9 @@ export function CodeExternalReview({ client, project, writable, manage, atCapaci
       {!!reviews?.length && <ul className="external-review-list" aria-label="Change proposals">{reviews.map(row => <li key={row.proposal_id}>
         <Button variant="quiet" disabled={busy} aria-pressed={proposal?.proposal_id === row.proposal_id}
           onClick={() => void perform(() => open(row.proposal_id!), 'The Home could not open that proposal.')}>
-          <strong>{row.work_title || row.source_ref!.slice(11)}</strong>
+          <strong>{row.work_title || branchLabel(row.source_ref!)}</strong>
           <span>{reviewStatus(row, snapshot)} · Revision {row.revision}</span>
+          <ReviewTrail review={row} includeSource={!!row.work_title} />
         </Button>
       </li>)}</ul>}
       <details ref={lookupDisclosure}><summary>Open by proposal ID</summary>
@@ -326,6 +328,7 @@ export function CodeExternalReview({ client, project, writable, manage, atCapaci
       {proposal && <section aria-label="Exact proposal">
         <h3 ref={detailHeading} tabIndex={-1}>{selectedTitle ? `${selectedTitle} · ` : ''}Revision {proposal.revision}</h3>
         <p>{accepted ? 'Merged.' : !current ? 'The repository snapshot changed.' : proposal.reviewer ? 'Approved.' : 'Awaiting review.'}</p>
+        <ReviewTrail review={proposal} />
         {onOpenWork && UUID.test(proposal.work_id ?? '') && <Button variant="quiet" disabled={busy}
           onClick={() => onOpenWork(proposal.work_id!)}>View work item</Button>}
         {snapshot.snapshot && <ReviewChanges

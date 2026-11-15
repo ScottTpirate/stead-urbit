@@ -12,6 +12,7 @@ import { WorkCodeLinks } from './WorkCodeLinks';
 import { WorkDevelopment, type CodeDevelopmentTarget } from './WorkDevelopment';
 import { WorkDiscussion } from './WorkDiscussion';
 import { WorkDelegations } from './WorkDelegations';
+import { WorkContext } from './WorkContext';
 import { UrbitSignIn } from './UrbitSignIn';
 import './style.css';
 const Markdown = lazy(() => import('./Markdown').then(module => ({ default: module.Markdown })));
@@ -102,6 +103,9 @@ function App() {
   const hiddenHeader = editor?.fullSource ? '' : pageHeader;
   const [currentVersion, setCurrentVersion] = useState<{scope: string; row: Row} | null>(null);
   const [work, setWork] = useState<Row | null>(null);
+  const [workContextRevision, setWorkContextRevision] = useState(0);
+  const [linkedPage, setLinkedPage] = useState<{origin: WorkAddress; collection: string; document: string} | null>(null);
+  const linkedPageOrigin = linkedPage?.collection === container?.container_id && linkedPage?.document === editor?.id ? linkedPage?.origin : undefined;
   const [commentDrafts, setCommentDrafts] = useState<Record<string, string>>({});
   const [workMenu, setWorkMenu] = useState<WorkMenu | null>(null);
   const [workFiltersOpen, setWorkFiltersOpen] = useState(false);
@@ -125,6 +129,7 @@ function App() {
   const openingWatch = useRef<Promise<void> | null>(null);
   const heading = useRef<HTMLHeadingElement>(null);
   const workEditorHeading = useRef<HTMLHeadingElement>(null);
+  const documentEditorHeading = useRef<HTMLHeadingElement>(null);
   const workTitle = useRef<HTMLInputElement>(null);
   const workDescription = useRef<HTMLTextAreaElement>(null);
   const newWorkButton = useRef<HTMLButtonElement>(null);
@@ -147,6 +152,7 @@ function App() {
     setRepository(null); setShowRepository(false); clearCodeSelection();
     setWorkFiltersOpen(false); setWorkFilters(initialWorkFilters); setWorkRoster({status: 'loading'});
     setCommentDrafts({});
+    setLinkedPage(null);
     setSearch(''); setSearchDraft(''); setCursor(''); setEditor(null); setWork(null); setWorkMenu(null); setForm(''); setFormDirty(false); setDiscard(null); setPending(null); setTargets([]); setTargetFilter(''); setConfirmation(null); setCurrentVersion(null); setNotice(''); setRefreshNotice(null);
   };
   client.onInvalidated = () => { clearViews(); setIdentity(null); setChallenge(null); };
@@ -409,7 +415,7 @@ function App() {
   }, [form, work?.resource_id, editWorkField, showRepository]);
   useEffect(() => { if (discard || confirmation || currentVersion) feedbackHeading.current?.focus(); }, [discard, confirmation, currentVersion]);
   function closeDraft(target: 'document' | 'form') {
-    if (target === 'document') setEditor(null);
+    if (target === 'document') { setEditor(null); setLinkedPage(null); }
     else {
       const keepDetail = form === 'work' && !!work;
       setForm(''); setEditWorkField(null); setFormDirty(false);
@@ -440,6 +446,7 @@ function App() {
     reloadScope();
   }
   function enterProject(row: Row, nextTab: ViewKind) {
+    setLinkedPage(null);
     if (row.project_id !== project?.project_id) {
       repositoryGeneration.current++;
       setRepository(null);
@@ -520,6 +527,7 @@ function App() {
   function selectProjectTab(kind: ViewKind) {
     if (busy || editor?.dirty || pending || form) { setError('Finish or discard the current draft first.'); return; }
     syncWorkAddress(kind === 'work' ? project?.project_id : undefined);
+    setLinkedPage(null);
     activeQuery.current++; setShowRepository(false); clearCodeSelection(); setEditor(null); setWork(null); setCurrentVersion(null);
     setConfirmation(null); setForm(''); setTab(kind); setRows([]); setCursor(''); reloadScope();
   }
@@ -559,8 +567,48 @@ function App() {
     syncWorkAddress(projectId, item);
     void action(() => restoreWorkAddress({project: projectId, item}), explainConnection);
   }
+  function openWorkDocument(collection: string, document: string) {
+    if (!project?.project_id || !work?.resource_id || workActionsLocked || !UUID.test(collection) || !UUID.test(document)) return;
+    const workOrigin = {project: project.project_id, item: work.resource_id};
+    void action(async () => {
+      const generation = ++activeQuery.current;
+      const boxes = await collections(workOrigin.project);
+      const selected = boxes.find(box => box.container_id === collection);
+      if (!selected) { setError('This linked page is no longer available.'); return; }
+      let view;
+      try { view = await client.query(blankQuery('document', workOrigin.project, collection, document)); }
+      catch (failure) {
+        if (failure instanceof HomeError && failure.code === 'denied_or_not_found') { setError('This linked page is no longer available.'); return; }
+        throw failure;
+      }
+      if (generation !== activeQuery.current) return;
+      const page = Object.values(view.rows).find(row => row.resource_id === document && row.container_id === collection);
+      if (!page?.markdown || !page.resource_revision) { setError('This linked page is no longer available.'); return; }
+      syncWorkAddress(); setWork(null); setCurrentVersion(null); setConfirmation(null);
+      setTab('documents'); setContainers(boxes); setContainer(selected); setRows([]); setCursor('');
+      setLinkedPage({origin: workOrigin, collection, document});
+      setEditor({id: document, revision: page.resource_revision, head: page.container_head ?? '', text: page.markdown, dirty: false});
+      reloadScope();
+      requestAnimationFrame(() => documentEditorHeading.current?.focus());
+    }, explainConnection);
+  }
+  function backToWorkFromDocument() {
+    if (!linkedPageOrigin || linkedPageOrigin.project !== project?.project_id || workActionsLocked) return;
+    const origin = linkedPageOrigin;
+    syncWorkAddress(origin.project, origin.item);
+    void action(() => restoreWorkAddress(origin), explainConnection);
+  }
+  function createWorkContext(payload: Fields) {
+    if (!project?.project_id || !project.authority_epoch || !work || !canEdit || workActionsLocked) return;
+    void action(() => save(command(project.project_id!, newId(), '0', project.authority_epoch!, 'relation.create', payload)));
+  }
+  function removeWorkContext(row: Row) {
+    if (!project?.project_id || !project.authority_epoch || !work || !canEdit || workActionsLocked || !row.resource_id || !row.resource_revision) return;
+    setConfirmation({label: 'this link', command: command(project.project_id, row.resource_id, row.resource_revision, project.authority_epoch, 'relation.delete', {})});
+  }
   async function completed(value: Command, receipt: Fields) {
     const refreshDetail = work?.resource_id === value.resource_id && ['work.update', 'work.assign', 'work.comment'].includes(value.operation);
+    const refreshContext = !!work && ['relation.create', 'relation.delete'].includes(value.operation);
     setPending(null);
     if (value.operation === 'work.comment') {
       if (commentDraft === value.payload.body) updateCommentDraft('');
@@ -568,18 +616,21 @@ function App() {
       if (refreshDetail && work) setWork({...work, resource_revision: receipt.resource_revision!});
     }
     if (value.operation === 'document.save' && editor?.id === value.resource_id) setEditor({ ...editor, revision: receipt.resource_revision!, head: receipt.git_commit_oid ?? '', dirty: false });
-    setForm(''); setEditWorkField(null); setFormDirty(false); setDiscard(null); if (!refreshDetail) setWork(null); setConfirmation(null); setCurrentVersion(null);
-    if (value.operation === 'document.delete') setEditor(null);
+    setForm(''); setEditWorkField(null); setFormDirty(false); setDiscard(null); if (!refreshDetail && !refreshContext) setWork(null); setConfirmation(null); setCurrentVersion(null);
+    if (value.operation === 'document.delete') { setEditor(null); setLinkedPage(null); }
     if (value.operation === 'work.delete' && work?.resource_id === value.resource_id) syncWorkAddress(value.project_id, undefined, true);
     if (value.operation === 'project.create') await identify();
     else if (value.operation === 'container.create' && project) setContainers(await collections(project.project_id!));
     else if (project) await refresh();
+    if (refreshContext) setWorkContextRevision(value => value + 1);
     if (refreshDetail) {
       const generation = activeQuery.current;
       const view = await client.query(blankQuery('work', value.project_id, '', value.resource_id));
       if (generation === activeQuery.current) setWork(Object.values(view.rows)[0] ?? null);
     }
-    if (value.operation !== 'work.comment') setNotice(`Saved at home · revision ${receipt.resource_revision}`);
+    if (value.operation === 'relation.create') setNotice('Link added.');
+    else if (value.operation === 'relation.delete') setNotice('Link removed.');
+    else if (value.operation !== 'work.comment') setNotice(`Saved at home · revision ${receipt.resource_revision}`);
   }
   async function save(value: Command) {
     setPending(value); setNotice('Pending confirmation from home…');
@@ -603,6 +654,7 @@ function App() {
     const page = Object.values(view.rows)[0];
     if (!page?.markdown || !page.resource_revision) throw new HomeError('invalid_response');
     setCurrentVersion(null);
+    setLinkedPage(null);
     setEditor({ id: row.resource_id!, revision: page.resource_revision, head: page.container_head ?? '', text: page.markdown, dirty: false });
   }
   async function openWork(row: Row, trigger: HTMLElement) {
@@ -976,8 +1028,8 @@ function App() {
             {!loading && <p role="status">{activeRows.length} of {rows.length} work items</p>}
           </section>}
           {currentVersion && currentVersion.scope === comparisonScope && <Surface className="comparison"><h2 ref={feedbackHeading} tabIndex={-1}>Current saved revision {currentVersion.row.resource_revision}</h2><pre>{currentVersion.row.markdown ?? `${currentVersion.row.title}\n${currentVersion.row.description}`}</pre><p>{canEdit ? 'Your local text has not changed. Choose its base revision before saving again.' : 'This is the current revision saved at home.'}</p>{canEdit && <Button disabled={busy || !!pending} onClick={() => { if (currentVersion.scope !== comparisonScope) { setCurrentVersion(null); return; } if (editor) setEditor({...editor, revision: currentVersion.row.resource_revision!, head: currentVersion.row.container_head ?? '', dirty: true}); else if (work) setWork(currentVersion.row); setCurrentVersion(null); setNotice('Local edits kept. Review them, then explicitly save against the current revision.'); }}>Keep my edits using this revision</Button>}<Button onClick={() => setCurrentVersion(null)}>Close comparison</Button></Surface>}
-          {confirmation && <Surface className="confirmation"><h2 ref={feedbackHeading} tabIndex={-1}>Delete {confirmation.label}?</h2><p>This removes it from current views. Authorized historical Git exports retain earlier page versions; this does not erase copies others already hold.</p><div className="actions"><Button disabled={busy || !!pending || !!form || !!editor?.dirty} onClick={() => void action(() => save(confirmation.command))}>Confirm deletion</Button><Button disabled={busy} onClick={() => setConfirmation(null)}>Keep it</Button></div></Surface>}
-          {editor && container ? <Surface className="document-editor"><div className="editor-heading"><div><h2>{pageTitle(editor.text)}</h2><span className="page-visibility">{draftMode ? 'Private draft · only you' : 'Shared with project members'}</span></div><span>{editor.dirty ? 'Local changes · not saved' : `Saved revision ${editor.revision}`}</span></div><div className="editor-layout"><div className="editor-source"><label className="editor-label" htmlFor="markdown">Markdown source</label><textarea id="markdown" value={editor.text.slice(hiddenHeader.length)} readOnly={!canEdit || busy || !!pending || !!form}
+          {confirmation && <Surface className="confirmation"><h2 ref={feedbackHeading} tabIndex={-1}>Delete {confirmation.label}?</h2><p>{confirmation.command.operation === 'relation.delete' ? 'This removes only the relationship. Both linked resources stay where they are.' : 'This removes it from current views. Authorized historical Git exports retain earlier page versions; this does not erase copies others already hold.'}</p><div className="actions"><Button disabled={busy || !!pending || !!form || !!editor?.dirty} onClick={() => void action(() => save(confirmation.command))}>Confirm deletion</Button><Button disabled={busy} onClick={() => setConfirmation(null)}>Keep it</Button></div></Surface>}
+          {editor && container ? <Surface className="document-editor">{linkedPageOrigin?.project === project.project_id && !editor.dirty && <Button variant="quiet" disabled={workActionsLocked} onClick={backToWorkFromDocument}>← Back to work item</Button>}<div className="editor-heading"><div><h2 ref={documentEditorHeading} tabIndex={-1}>{pageTitle(editor.text)}</h2><span className="page-visibility">{draftMode ? 'Private draft · only you' : 'Shared with project members'}</span></div><span>{editor.dirty ? 'Local changes · not saved' : `Saved revision ${editor.revision}`}</span></div><div className="editor-layout"><div className="editor-source"><label className="editor-label" htmlFor="markdown">Markdown source</label><textarea id="markdown" value={editor.text.slice(hiddenHeader.length)} readOnly={!canEdit || busy || !!pending || !!form}
             onChange={event => setEditor({ ...editor, text: hiddenHeader + event.target.value, dirty: true })} spellCheck/>
           <div className="actions editor-actions"><Button variant="primary" disabled={!canEdit || !editor.dirty || busy || !!pending || !!form} onClick={() => void action(() => save(command(project.project_id!, editor.id, editor.revision, project.authority_epoch!, 'document.save', { container_id: container.container_id!, markdown: editor.text })))}>Save page</Button>{canEdit && !editor.dirty && editor.revision !== '0' && draftMode && <Button disabled={busy || !!pending || !!form} onClick={() => void action(async () => { setContainers(await collections(project.project_id!)); setForm('publish'); })}>Publish selected page</Button>}<Button disabled={busy || !!pending || !!form} onClick={() => requestClose('document')}>{editor.dirty ? 'Discard changes…' : 'Close'}</Button>{(editor.revision !== '0' || pageHeader || editor.fullSource) && <ActionMenu label="More page actions" disabled={busy || !!pending || !!form}>
             {(pageHeader || editor.fullSource) && <Button variant="quiet" disabled={busy || !!pending || !!form}
@@ -1008,6 +1060,9 @@ function App() {
               {repository?.status === 'ready' && work.resource_id && <WorkDelegations key={`delegations/${workScope}`}
                 client={client} project={project.project_id!} work={work} manage={repository.manage === 'yes'}
                 locked={workActionsLocked} onReview={openInlineReview}/>}
+              {work.resource_id && <WorkContext key={`context/${workScope}`} client={client} project={project.project_id!} work={work.resource_id}
+                writable={!!canEdit} locked={workActionsLocked} viewRevision={workContextRevision}
+                onCreate={createWorkContext} onRemove={removeWorkContext} onOpenWork={openLinkedWork} onOpenDoc={openWorkDocument}/>}
               {work.resource_id && <WorkDiscussion key={`discussion/${workScope}`} client={client} project={project.project_id!} work={work.resource_id}
                 revision={rows.find(row => row.resource_id === work.resource_id)?.resource_revision ?? work.resource_revision!}
                 principal={identity.principal_id!} name={identity.display_name} writable={!!canEdit} locked={workActionsLocked}

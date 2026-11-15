@@ -57,7 +57,7 @@ async function fixture(run, mockRepository = false) {
     project: {kind: 'project', resource_id: id(1), project_id: id(1), title: 'Garden', project_key: 'GARDEN', preset: 'general', authority_epoch: '1', resource_revision: '1', policy_revision: '1', role: 'maintainer'},
     work: [], assignees: [], activity: [], containers: [], documents: [], proposals: new Map(), mergeRequests: [], dropMergeResponse: false,
     externalWritable: false, externalReviews: new Map(), externalRequests: [], browseRequests: [], browseFixture: null,
-    changesRequests: [], changesFixture: null, comments: new Map(), delegations: new Map()};
+    changesRequests: [], changesFixture: null, comments: new Map(), delegations: new Map(), relations: []};
   await page.route(origin + '/stead/**', async route => {
     const request = route.request();
     if (request.method() !== 'POST') return route.continue();
@@ -268,6 +268,11 @@ async function fixture(run, mockRepository = false) {
           principal_id: person.principal_id, identity_ship: person.identity_ship, accepted_at_ms: receipt.accepted_at_ms});
         state.comments.set(value.resource_id, thread);
         row.comment_count = String(thread.length);
+      } else if (value.operation === 'relation.create') {
+        state.relations.push({kind: 'relation', resource_id: value.resource_id, project_id: value.project_id, container_id: '',
+          resource_revision: receipt.resource_revision, title: 'Synthetic relation', ...value.payload});
+      } else if (value.operation === 'relation.delete') {
+        state.relations = state.relations.filter(link => link.resource_id !== value.resource_id);
       } else if (value.operation.startsWith('work.')) {
         const prior = state.work.find(row => row.resource_id === value.resource_id);
         const row = {...prior, ...value.payload, kind: 'work', resource_id: value.resource_id, project_id: value.project_id,
@@ -297,6 +302,8 @@ async function fixture(run, mockRepository = false) {
       }
     }
     if (value.kind === 'assignees') rows = state.assignees;
+    if (value.kind === 'relations') rows = state.relations;
+    if (value.kind === 'search') rows = [...state.work, ...state.documents].filter(row => (row.title ?? '').toLowerCase().includes(value.search.toLowerCase()));
     if (value.kind === 'comments') rows = state.comments.get(value.resource_id) ?? [];
     if (value.kind === 'activity') rows = state.activity;
     if (value.kind === 'containers') rows = state.containers;
@@ -711,8 +718,13 @@ try {
     assert.equal(await source.inputValue(), reference);
     assert.equal(await page.getByLabel('Work item', {exact: true}).inputValue(), work.resource_id);
     assert.equal(await exact.count(), 0);
-    await page.getByRole('button', {name: 'Cancel', exact: true}).click();
-    await page.getByRole('button', {name: 'Return to work item', exact: true}).click();
+    await page.getByRole('button', {name: 'Submit proposal', exact: true}).click();
+    const proposals = page.getByRole('list', {name: 'Change proposals', exact: true});
+    await proposals.getByRole('button', {name: /Snapshot changed · Revision 1.*Target branch main.*Proposed commit c{12}/u}).waitFor();
+    await proposals.getByRole('button', {name: /Awaiting review · Revision 1.*Target branch main.*Proposed commit f{12}/u}).waitFor();
+    assert.equal(await proposals.getByRole('button').count(), 2, 'both revisions retain their own commit trail');
+    assert.equal(state.externalRequests.filter(row => row.action === 'external-submit').length, 2);
+    await exact.getByRole('button', {name: 'View work item', exact: true}).click();
     await development.getByRole('button', {name: 'View branch', exact: true}).waitFor();
     state.externalWritable = false;
     await development.getByRole('button', {name: 'Check for branch', exact: true}).click();
@@ -1381,6 +1393,67 @@ try {
     assert.equal(state.commands[0].operation, 'work.create');
     assert.equal(state.commands[0].payload.assignee_principal_id, taylor.principal_id);
     assert.equal(state.work.at(-1).assignee_display_name, 'Taylor');
+  });
+  await check('work-context-links-docs-and-blockers-with-confirmed-removal', async (page, state) => {
+    const project = state.project.project_id;
+    const work = (num, title) => ({kind: 'work', project_id: project, container_id: '', resource_id: id(num), title,
+      description: '', resource_revision: '1', status: 'todo', type: 'task', priority: 'none'});
+    const ticket = work(651, 'Prepare the launch');
+    const blocker = work(652, 'Review handoff');
+    const later = work(653, 'Publish the release');
+    state.work = [ticket, blocker, later];
+    const box = id(200);
+    const doc = id(654);
+    state.containers = [{kind: 'container', project_id: project, container_id: box, resource_id: box,
+      title: 'Shared pages', resource_revision: '1', visibility: 'shared'}];
+    state.documents = [{kind: 'document', project_id: project, resource_id: doc, container_id: box, title: 'Release guide', resource_revision: '1',
+      markdown: `---\nid: ${doc}\ntype: page\nstate: published\n---\n# Release guide\nAcceptance steps here.`}];
+    const relation = (num, source, target, type = 'blocks') => ({kind: 'relation', title: 'Synthetic relation',
+      project_id: project, container_id: '', resource_id: id(num), resource_revision: '1', type,
+      source_project_id: project, source_kind: 'work', source_container_id: '', source_id: source.resource_id,
+      target_project_id: project, target_kind: 'work', target_container_id: '', target_id: target.resource_id});
+    state.relations = [...Array.from({length: 20}, (_, n) => relation(680 + n, later, blocker)), relation(655, blocker, ticket)];
+    await page.getByRole('button', {name: 'Work', exact: true}).click();
+    await page.locator('.work-row').getByRole('button', {name: ticket.title, exact: true}).click();
+    const context = page.getByRole('region', {name: 'Relationships', exact: true});
+    await context.getByRole('button', {name: 'Show links', exact: true}).waitFor();
+    assert.equal(state.requests.filter(row => row.kind === 'relations').length, 0);
+    await context.getByRole('button', {name: 'Show links', exact: true}).click();
+    await context.getByRole('heading', {name: 'Blocked by', exact: true}).waitFor();
+    await context.getByRole('button', {name: blocker.title, exact: true}).waitFor();
+    assert.equal(state.requests.filter(row => row.kind === 'relations').length, 2);
+    assert.equal(await context.getByRole('button', {name: later.title, exact: true}).count(), 0);
+    await context.getByRole('button', {name: 'Add link', exact: true}).click();
+    await context.getByRole('combobox', {name: 'Relationship type', exact: true}).selectOption({label: 'Supporting doc'});
+    await context.getByRole('textbox', {name: 'Find a resource', exact: true}).fill('release guide');
+    await context.getByRole('button', {name: 'Find matches', exact: true}).click();
+    await context.getByRole('combobox', {name: 'Choose a resource', exact: true}).selectOption({label: 'Release guide'});
+    await context.getByRole('button', {name: 'Save link', exact: true}).click();
+    await page.getByText('Link added.', {exact: true}).waitFor();
+    assert.deepEqual(state.commands.at(-1).payload, {type: 'documents', source_project_id: project, source_kind: 'document',
+      source_container_id: box, source_id: doc, target_project_id: project, target_kind: 'work', target_container_id: '', target_id: ticket.resource_id});
+    await context.getByRole('button', {name: 'Release guide', exact: true}).click();
+    await page.locator('.document-editor').getByRole('heading', {name: 'Release guide', exact: true, level: 2}).waitFor();
+    assert.match(await page.getByRole('textbox', {name: 'Markdown source'}).inputValue(), /Acceptance steps here\./u);
+    await page.getByRole('button', {name: /Back to work item/u}).click();
+    await page.locator('#work-detail-panel').getByRole('heading', {name: ticket.title, exact: true}).waitFor();
+    await context.getByRole('button', {name: 'Show links', exact: true}).click();
+    await context.getByRole('button', {name: 'Remove link to Release guide', exact: true}).click();
+    await page.getByText('This removes only the relationship. Both linked resources stay where they are.', {exact: true}).waitFor();
+    await page.getByRole('button', {name: 'Confirm deletion', exact: true}).click();
+    await page.getByText('Link removed.', {exact: true}).waitFor();
+    await context.getByRole('button', {name: 'Release guide', exact: true}).waitFor({state: 'detached'});
+    assert.equal(state.commands.at(-1).operation, 'relation.delete');
+    assert.equal(state.documents.length, 1);
+    await context.getByRole('button', {name: blocker.title, exact: true}).click();
+    await page.locator('#work-detail-panel').getByRole('heading', {name: blocker.title, exact: true}).waitFor();
+    state.project.role = 'reader';
+    await page.getByRole('button', {name: 'Refresh', exact: true}).click();
+    await context.getByRole('button', {name: 'Show links', exact: true}).click();
+    await context.getByRole('heading', {name: 'Blocks', exact: true}).waitFor();
+    assert.equal(await context.getByRole('button', {name: 'Add link', exact: true}).count(), 0);
+    await page.setViewportSize({width: 320, height: 790});
+    assert.equal(await page.evaluate(() => document.documentElement.scrollWidth <= 320), true);
   });
   await check('code-linked-review-roundtrip-and-missing-work-without-signout', async (page, state) => {
     const item = id(665);
