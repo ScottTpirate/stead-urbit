@@ -163,6 +163,40 @@ def source_spans(raw, sources):
     return {'locations': list(observed.values()), 'truncated': truncated}
 
 
+def unit_structure(raw, path, names):
+    """Counts and trusted module/arm labels only, never a line or free text."""
+    lines = raw.splitlines()
+    counts = dict.fromkeys(('built', 'prompt', 'OK', 'FAILED', 'CRASHED', 'bang', 'source_path', 'other', 'empty'), 0)
+    for line in lines[:4096]:
+        line = line.lstrip(b' \t')
+        category = 'other'
+        if not line:
+            category = 'empty'
+        elif line.startswith(b'>'):
+            category = 'prompt'
+        elif line.startswith(b'!'):
+            category = 'bang'
+        elif re.match(rb'/(?:lib|tests|app)/[a-z][a-z0-9-]{0,95}/hoon(?:[: \t]|$)', line):
+            category = 'source_path'
+        else:
+            for label in ('built', 'OK', 'FAILED', 'CRASHED'):
+                if re.match(label.encode() + rb'(?:[ \t]|$)', line):
+                    category = label
+                    break
+        counts[category] += 1
+    built = failed = False
+    compile_arms = []
+    if path != 'unrecognized':
+        module = re.escape((path + '/hoon').encode())
+        built = any(re.fullmatch(rb'[ \t]*built[ \t]+' + module + rb'[ \t]*', line) for line in lines)
+        failed = any(re.fullmatch(rb'[ \t]*FAILED[ \t]+' + module + rb'[ \t]+\(build\)[ \t]*', line) for line in lines)
+        for name in sorted(names):
+            if re.search(rb'\[%?failed-to-compile-test-arm[ \t\r\n]{1,256}%?' + re.escape(name.encode()) + rb'[ \t\r\n]{0,256}\]', raw):
+                compile_arms.append(name)
+    return {'line_count': len(lines), 'prefix_counts': counts, 'prefix_counts_truncated': len(lines) > 4096,
+            'module_built': built, 'module_build_failed': failed, 'compile_failed_registered_arms': compile_arms}
+
+
 def unit_observation(native, inventory, sources=None):
     """Expose only a registered suite, arm verdicts and fixed compiler markers."""
     import native_units
@@ -192,11 +226,13 @@ def unit_observation(native, inventory, sources=None):
     require(len(names) <= len(registered.get(path, ())) and len(names) == len(set(names)),
             'Failure transcript duplicate verdict or suite bound')
     markers = ('find-fork', 'nest-fail', 'build-fail', 'generator-build-fail',
-               'mint-vain', 'dojo-lame', 'syntax error', 'exit')
+               'mint-vain', 'mint-lost', 'mint-nice', 'nest-need', 'mull-bonk',
+               'failed-to-compile-test-arm', 'dojo-lame', 'syntax error', 'exit')
     return {'path': path, 'log_bytes': len(raw),
             'log_sha256': hashlib.sha256(raw).hexdigest() if raw else None,
             'terminal': choice(row.get('terminal'), ('[32 %avow 0 %noun 0]', '[32 %avow 0 %noun 1]')),
             'registered_arm_observations': outcomes,
+            'structure': unit_structure(raw, path, registered.get(path, ())),
             'source_spans': source_spans(raw, sources),
             'markers': {name: bool(re.search(rb'(?<![a-z0-9-])' + name.encode('ascii')
                                             + rb'(?![a-z0-9-])', raw)) for name in markers}}

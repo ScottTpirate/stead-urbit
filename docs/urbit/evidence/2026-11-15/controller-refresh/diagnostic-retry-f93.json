@@ -1,0 +1,19 @@
+{
+  "candidate": "f93a42a06c49fef597f6611e18b2f56eaa73d568",
+  "controller": "f2a96b57138ad8c0be09dbf2a959f41ae4ee5235",
+  "controller_base": "85b77abbe5667d04819695df5fc221c614a5def8",
+  "files_sha256": {
+    "test_worker_failure.py": "d407bb4e71dceb3b355257cfcd1428c3aae1a609c9bc94f5f80b504e879cf27e",
+    "worker_failure.py": "a651a9ad6f2621834e7db8a0fc1c3cf0e70f9c7628205cfc13293aac45c33945"
+  },
+  "github_run": 43753293747,
+  "host_test_log_sha256": "fd46b21f419f62b27d4b813c3cc43759c78368a7c494f44f9fa7af1d78dffca2",
+  "host_tests_passed": 70,
+  "independent_review": "root and native source review; unchanged full qualification gate",
+  "intent": "diagnostic retry; unchanged native qualification requirements",
+  "native_executed": false,
+  "pin_head": "f145f120cb2ac1432e796077b35ebc113ec182a0",
+  "pr": 91,
+  "status": "diagnostic-run-started",
+  "workflow_commit": "36ca0e8a366b0acb2f20701f50a340c018b46038"
+}
