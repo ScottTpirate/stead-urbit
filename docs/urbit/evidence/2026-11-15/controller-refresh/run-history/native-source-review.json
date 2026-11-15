@@ -1,0 +1,32 @@
+{
+  "format": "stead.run-history-native-semantics-review/1",
+  "status": "source-reviewed-no-blocker",
+  "files": {
+    "web/app/src/RunHistory.tsx": "769dd399e629285a54d21394f26c326c340066b2df695ff6f4970d2721556868",
+    "web/app/src/runReadProtocol.ts": "d53b598c46835335f7874d51cd00b2d10c4d787736f383164fe6ed8fd288afe5",
+    "native/core/desk/lib/stead-run-query.hoon": "0b05231e205cead66a4b9fe05b6ec52777500196cbb2717804399af73b6ea5aa",
+    "native/core/desk/lib/stead-run-views.hoon": "b6a177fa5652fefaefacb5365f2e0cb6e946d54de09e9324cc6c381482acf8ca",
+    "native/core/desk/lib/stead-run-adapters.hoon": "f4ff80e3cf6650b586b05a8508ab9285387123cd024dbd36e8009d06673ae9b1"
+  },
+  "findings_resolved": [
+    "Issued time now says Run requested, so queued/current_attempt0 does not imply worker execution.",
+    "Terminal lease says No active execution lease, not a process-exit claim.",
+    "Same-client capability withdrawal participates in synchronous view identity and action/response admission."
+  ],
+  "reviewed": [
+    "Current client/session token plus explicit session key and Work/scope version fence late responses, route A/B/A and callbacks.",
+    "Current denial clears rows before the scoped parent callback; old callback completion cannot publish or notify after scope change.",
+    "Read continuation is one-use, at most20/page and32 retained, bound generation/epoch/filter/session; stale cursor clears pages.",
+    "Durable phase, ephemeral lease observation and current Work execution pins remain separate display fields and do not enable execution.",
+    "Submitted result route preserves exact Change result revision/digest; UI explicitly distinguishes submission from acceptance and Work Done.",
+    "Empty retained names have explicit fallback. Offline same-token history is visibly stale and cannot navigate; reconnect requires refresh."
+  ],
+  "limitations": [
+    "Read-only source review, no source edits.",
+    "Frontend owns TypeScript/host/browser evidence; no tests or browser/native runtime were run in this review.",
+    "Current native Run query library is reserved; this review does not activate any carrier or establish native qualification."
+  ],
+  "native_executed": false,
+  "browser_executed": false,
+  "host_tests_rerun": false
+}

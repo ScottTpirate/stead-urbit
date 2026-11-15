@@ -674,8 +674,10 @@ offline retention is explicitly stale, navigation is disabled, and Back focus
 is scoped to the same Work. Issued time is Run requested; a terminal lease
 does not assert process exit. [Independent source review, scoped TypeScript and
 twelve host checks](evidence/2026-11-15/controller-refresh/run-history/source-review.json)
-passed; the synthetic browser fixture is prepared but unrun. The component
-is not connected to Home or enabled in the app.
+passed. [Eight isolated real-browser synthetic cases](evidence/2026-11-15/controller-refresh/run-history/review.json)
+also passed, with desktop/320px visual inspection, keyboard and access-state
+checks and complete cleanup. The component is not connected to Home or enabled
+in the app.
 
 The reserved human `RunControlClient` admits only `answer` and `cancel` from
 `stead.run-command/1`. It checks canonical nested question/text, exact request

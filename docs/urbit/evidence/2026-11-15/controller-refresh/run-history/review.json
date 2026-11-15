@@ -1,0 +1,83 @@
+{
+  "authority_network_used": false,
+  "cases_passed": 8,
+  "classification": "actual-isolated-browser-synthetic-component-evidence",
+  "cleanup": {
+    "all_eight_authority_services_healthy": true,
+    "browser_closed": true,
+    "contexts_closed": true,
+    "owned_cgroup_empty": true,
+    "temporary_profile_removed": true
+  },
+  "credentials_used": false,
+  "duration_seconds": 53.6,
+  "guard": {
+    "cpu_max": "2500 10000",
+    "memory_max": "1572864000",
+    "pids_max": "128",
+    "private_network": true,
+    "renderer_verified": true
+  },
+  "independent_source_review_sha256": "68370c7358b66ab3daab8443d738aa8e618ef9d87b3f2dd12bc61d4fe0dce853",
+  "integrator_review_sha256": "b3cad682a27dca138ad33cc2e69bafcd135bca2f73f92df970f78ba95e128551",
+  "limitations": [
+    "Static synthetic data only; not native Run execution, connected v10 browser, or human trial.",
+    "Screenshots retained privately in .runtime/run-history-remote-prepared/run-pass."
+  ],
+  "listener_created": false,
+  "live_product_changed": false,
+  "live_release_unchanged": "a0e90ef29389077d453ec2a775cd8fd69f711727",
+  "native_executed": false,
+  "owner_report_sha256": "0353f45698d4e7c3f549985f56340374fd7a3050df06110cc591c071a5a8f97a",
+  "pins": {
+    "assets/run/index.html": "6f150da2694c1bda2b335f2d3eb787ef0f28e4f33a75400dc5fc3d8b108be1b5",
+    "assets/run/manifest.json": "cb3f0e7ff1d64afb8ccddc1afbcdf506978389b94957b6bb7e16bff9974c49cd",
+    "assets/run/reference.css": "b774178e8c6574ad164273a2502a5b5eb91d512e6c1caefa7720ff6214e9d829",
+    "assets/run/reference.js": "2132b1950f3e10f5e5c0c5262f82f4b27d47915546297d9c671875c844a1b1bf",
+    "check-run.mjs": "608e9df1acc1c13840af6ac25f3f193cf49bfc37b8d747394f89e8afe4a27f36",
+    "run-reference.py": "4ace0a4c4b73ec9ec0c9a1520ec92c0bf8b1da47502b61f9e93ca3e1b3a4661f",
+    "worker.py": "6a4dc2538d9bab0f68568b1d084ece147a54c3b07296875c7c7ae89ea48619f8"
+  },
+  "qualifies_phase": false,
+  "report_sha256": "536f3c2ca3ffee752e28cd8c4286b254259d555298f7ed1221d9a76d7331b62b",
+  "screenshots_verified": [
+    {
+      "name": "run-01.png",
+      "sha256": "df2e14b15ecd3c9601acde12b8128b63a056a36fe86c06d82de76104c1df9840"
+    },
+    {
+      "name": "run-02.png",
+      "sha256": "740e49582a9c679cf4056417bca064b3c26a10a38bacae6379296e472c6c7dce"
+    },
+    {
+      "name": "run-03.png",
+      "sha256": "0234c4cd858da5bc629b47394f78b3efa268f682d066e613f859a5cdc266da7c"
+    },
+    {
+      "name": "run-04.png",
+      "sha256": "5c4b66cfb70f4ad11cef7188a218f1dd884c2b16511674a7d8d37806173982c5"
+    },
+    {
+      "name": "run-05.png",
+      "sha256": "ad2e2541ca8389eb248debe748c7900e464d6ac4f49049939feb60e106a00143"
+    },
+    {
+      "name": "run-06.png",
+      "sha256": "3b9117f9d5282dbb6fcf372d020148b47b6337a760a396ac0ed7e498a55649e7"
+    },
+    {
+      "name": "run-07.png",
+      "sha256": "9107f19fc6c55e1c8ec36aa0bc7f5733c76245985f18c3d480ba6e570ead94fb"
+    },
+    {
+      "name": "run-08.png",
+      "sha256": "c328da3d79bb03de19ff54475dcb7a6b7d9df1d95c05e04c461b6c311357e78e"
+    }
+  ],
+  "source_commit": "76329d95437fa1281317e5159c2f09f42d5b1c1c",
+  "status": "pass",
+  "visual_review": [
+    "Desktop Run list and submitted detail readable with clear state labels.",
+    "320px long text and enlarged text wrap inside viewport; keyboard focus/draft assertions passed."
+  ]
+}

@@ -1,0 +1,117 @@
+{
+  "classification": "real-browser-synthetic-run-history-reference",
+  "qualifies_phase": false,
+  "credentials_used": false,
+  "authority_network_used": false,
+  "node": "v24.21.0",
+  "status": "pass",
+  "checks": [
+    {
+      "name": "list-details-keyboard-focus",
+      "status": "pass",
+      "screenshot": {
+        "name": "run-01.png",
+        "sha256": "df2e14b15ecd3c9601acde12b8128b63a056a36fe86c06d82de76104c1df9840"
+      }
+    },
+    {
+      "name": "submitted-exact-output-callback",
+      "status": "pass",
+      "screenshot": {
+        "name": "run-02.png",
+        "sha256": "740e49582a9c679cf4056417bca064b3c26a10a38bacae6379296e472c6c7dce"
+      }
+    },
+    {
+      "name": "offline-reconnect-refresh",
+      "status": "pass",
+      "screenshot": {
+        "name": "run-03.png",
+        "sha256": "0234c4cd858da5bc629b47394f78b3efa268f682d066e613f859a5cdc266da7c"
+      }
+    },
+    {
+      "name": "revoked-and-unsupported-hide-details",
+      "status": "pass",
+      "screenshot": {
+        "name": "run-04.png",
+        "sha256": "5c4b66cfb70f4ad11cef7188a218f1dd884c2b16511674a7d8d37806173982c5"
+      }
+    },
+    {
+      "name": "delayed-scope-a-b-a",
+      "status": "pass",
+      "screenshot": {
+        "name": "run-05.png",
+        "sha256": "ad2e2541ca8389eb248debe748c7900e464d6ac4f49049939feb60e106a00143"
+      }
+    },
+    {
+      "name": "one-use-page-refresh-recovery",
+      "status": "pass",
+      "screenshot": {
+        "name": "run-06.png",
+        "sha256": "3b9117f9d5282dbb6fcf372d020148b47b6337a760a396ac0ed7e498a55649e7"
+      }
+    },
+    {
+      "name": "long-text-320-and-zoom",
+      "status": "pass",
+      "screenshot": {
+        "name": "run-07.png",
+        "sha256": "9107f19fc6c55e1c8ec36aa0bc7f5733c76245985f18c3d480ba6e570ead94fb"
+      }
+    },
+    {
+      "name": "refresh-keeps-toolbar-focus-and-draft",
+      "status": "pass",
+      "screenshot": {
+        "name": "run-08.png",
+        "sha256": "c328da3d79bb03de19ff54475dcb7a6b7d9df1d95c05e04c461b6c311357e78e"
+      }
+    }
+  ],
+  "requested_cases": [],
+  "execution_scope": "all-declared-cases",
+  "source_baseline": "05f1888329dcf67f3fad579d4f0d7972679cc4bc",
+  "source_inputs": {
+    ".runtime/run-history-reference-prepared/README.md": "252739132f426c4dce3287acd288c91bb78844849db536ab219e747bf059fea5",
+    ".runtime/run-history-reference-prepared/checks.mjs": "465e80767067a1c5c7431119cba83fbd9c1218a2c0995be0263f77ddf7a3c308",
+    ".runtime/run-history-reference-prepared/prepare.mjs": "8946ba229f175227fdb28357e574862e65b0a783334e0243006a8ba02ab2d1de",
+    "web/app/package-lock.json": "b4d2ced8e19aa8b7cf9eaab75b906e867132321b97937b534e5810c152dbec98",
+    ".runtime/run-history-reference-prepared/reference.tsx": "1b71e2658360de68eec2f71fd4afe0aad1e3c2ebe9510f2116cb211547d822cd",
+    "web/app/src/RunHistory.tsx": "769dd399e629285a54d21394f26c326c340066b2df695ff6f4970d2721556868",
+    "web/app/src/run-history.css": "99932e635238507c674accf33c5d54505d09829392ce7533fe86bbfc448af44d",
+    "web/app/src/runReadProtocol.ts": "d53b598c46835335f7874d51cd00b2d10c4d787736f383164fe6ed8fd288afe5",
+    "web/app/src/protocol.ts": "a8dee5b65f79ffe052869f19e9b508f7abcb30149ac82eaa31a47223796003c7",
+    "web/app/tests/run-history-fixture.ts": "d844ea450e71173908359713b91051c37aeb8bd2dd5fa35869464031299b2b10",
+    "web/app/src/style.css": "9e1e9133ff4e97d62f9b4f95770add61b82ac781585cc06a5f440625a38a4d44",
+    ".runtime/run-history-reference-prepared/reference.css": "58e1a1afa1c2b5777622b31e6a2303e7f659a2a0c4016cbe618c426ea723a8f2",
+    "web/app/src/productRoutes.ts": "2a9f60e4627a07604f6114acb1b5496250fb4aa4b268f45ebfe3d0defa062215",
+    "web/app/src/primitives.tsx": "2f75ffd1ec0a16dc041b9eb74bb7fe37c8ee4cf6ccbb4f180332cbc3dc80a7ce",
+    "web/app/src/productWire.ts": "35b033b3437f07b2e0690e3192091b43ba4bec2c9bee2768ca9b43abb70fa6c1",
+    "web/app/src/controls.css": "a56ddea5a06513bc3d05bd9ca6a668c235c6a604bb8a2271552218fea3e3935d",
+    "web/app/src/Icon.tsx": "dd32e23e59619ddbd0c9f2c111f84f273b9040fc16eb4e49ba8161a228ef5ab7"
+  },
+  "assertion_block_sha256": "b1d7df627e0f083422198e517020bc7c65a430d61f195a4d4423fa72dd6e2913",
+  "inputs_before": {
+    "reference.js": "2132b1950f3e10f5e5c0c5262f82f4b27d47915546297d9c671875c844a1b1bf",
+    "reference.css": "b774178e8c6574ad164273a2502a5b5eb91d512e6c1caefa7720ff6214e9d829",
+    "index.html": "6f150da2694c1bda2b335f2d3eb787ef0f28e4f33a75400dc5fc3d8b108be1b5",
+    "driver": "608e9df1acc1c13840af6ac25f3f193cf49bfc37b8d747394f89e8afe4a27f36",
+    "manifest": "cb3f0e7ff1d64afb8ccddc1afbcdf506978389b94957b6bb7e16bff9974c49cd"
+  },
+  "listener_started": false,
+  "browser": "157.0.8103.78",
+  "parent_admitted": true,
+  "inputs_after": {
+    "reference.js": "2132b1950f3e10f5e5c0c5262f82f4b27d47915546297d9c671875c844a1b1bf",
+    "reference.css": "b774178e8c6574ad164273a2502a5b5eb91d512e6c1caefa7720ff6214e9d829",
+    "index.html": "6f150da2694c1bda2b335f2d3eb787ef0f28e4f33a75400dc5fc3d8b108be1b5",
+    "driver": "608e9df1acc1c13840af6ac25f3f193cf49bfc37b8d747394f89e8afe4a27f36",
+    "manifest": "cb3f0e7ff1d64afb8ccddc1afbcdf506978389b94957b6bb7e16bff9974c49cd"
+  },
+  "contextsClosed": true,
+  "browserClosed": true,
+  "noListenerCreated": true
+}

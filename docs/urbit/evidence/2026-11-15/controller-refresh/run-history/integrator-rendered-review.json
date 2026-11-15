@@ -1,0 +1,24 @@
+{
+  "classification": "independent-integrator-rendered-review",
+  "classification_limits": [
+    "Synthetic component inputs only",
+    "No connected native reader, Run command, model dispatch or G3 acceptance"
+  ],
+  "observed": [
+    "Desktop requested-Run list and submitted detail remain readable; submission is explicitly distinct from acceptance.",
+    "320px enlarged-text detail wraps long names, clarification and open diagnostic pins inside the viewport.",
+    "All eight exact keyboard, denial, same-client capability, A-B-A, cursor, offline and draft cases passed.",
+    "Contexts/browser/cgroup/profile cleaned and eight live services remain healthy."
+  ],
+  "qualifies_phase": false,
+  "report_sha256": "536f3c2ca3ffee752e28cd8c4286b254259d555298f7ed1221d9a76d7331b62b",
+  "review_sha256": "1ffa1bbb3602df02deb0eb3857db1fec7642e0aea0099c53b7ce40ee06302e93",
+  "screenshot_hashes_verified": 8,
+  "screenshots_visually_inspected": [
+    "run-01.png",
+    "run-02.png",
+    "run-07.png"
+  ],
+  "source_commit": "76329d95437fa1281317e5159c2f09f42d5b1c1c",
+  "status": "pass"
+}
