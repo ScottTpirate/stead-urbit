@@ -155,8 +155,8 @@
   =/  validation  (begin:stead-restore old home)
   [old old validation *state:stead-product-state ~ ~ ~ ~ (hex 64 0) %validate]
 ++  step
-  |=  job=job
-  ^-  job
+  |=  job=conversion
+  ^-  conversion
   ?:  ?|(=(phase.job %valid) =(phase.job %invalid))  job
   ?:  =(phase.job %validate)
     =/  validation  (step:stead-restore validation.job)

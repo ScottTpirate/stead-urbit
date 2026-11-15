@@ -79,7 +79,7 @@
       (lte (lent ~(tap by comments.product)) 4.096)
       (lte (lent ~(tap by attempts.product)) 4.096)
       %+  levy  events.product
-      |=  [family=?(%v3 %v4) bytes=@t digest=@t]
+      |=  [family=family:stead-product-state bytes=@t digest=@t]
       &((lte (met 3 bytes) 262.144) (opaque:stead-team-codec digest))
       %+  levy  ~(tap by works.product)
       |=  [key=work-key:stead-product-state meta=metadata:stead-product-state]
@@ -161,6 +161,14 @@
 +$  job  validation
 +$  adapter  historical-adapter
 +$  evidence-request  adapter-input
+++  record-bounds
+  |=  product=state:stead-product-state
+  ^-  ?
+  (sidecar-bounded product)
+++  noun-bounds
+  |=  value=*
+  ^-  ?
+  (bounded value)
 ++  begin
   |=  [target=migrated:stead-product-migrate home=@p]
   ^-  job
@@ -174,13 +182,15 @@
   ::  mixed timeline. This first profile deliberately fences configuration.
   ?>  =(registry.target.checked predecessor-registry.boundary)
   ?>  (sidecar-bounded product)
+  ::  This compatibility validator has no owner-history authority adapter.
+  ?>  (levy events.product |=(event=event:stead-product-state ?|(=(%v3 family.event) =(%v4 family.event))))
   ?>  (lte journal-count.boundary (lent journal.data.db.target))
   =/  prefix  (flop (scag journal-count.boundary (flop journal.data.db.target)))
   =/  history  (begin-history:stead-restore predecessor-registry.boundary prefix home)
   [target [empty:stead-team *state:stead-product-state] home history ~ (flop events.product) 0 %history]
 ++  step
   |=  [job=validation adapter=historical-adapter]
-  ^-  job
+  ^-  validation
   ?:  ?|(=(phase.job %valid) =(phase.job %invalid))  job
   ?:  =(phase.job %history)
     =/  history  (step-history:stead-restore history.job)

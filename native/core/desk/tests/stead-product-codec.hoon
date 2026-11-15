@@ -126,6 +126,10 @@
           (refused (contract-wire (put outcomes (id 402) (put code-target 'head_oid' [%s 'cccccccccccccccccccccccccccccccccccccccc']))))
           (refused (contract-wire (put outcomes (id 403) (put note-target 'work_id' [%s (id 999)]))))
           (refused (contract-wire (put outcomes 'unscoped-name' doc-target)))
+          (refused (contract-wire (put outcomes (id 404) doc-target)))
+          (refused (contract-wire (put outcomes (id 404) saved-doc)))
+          (refused (contract-wire (put outcomes (id 404) code-target)))
+          (refused (contract-wire (put outcomes (id 404) note-target)))
       ==
 ++  test-product-codec-closed-fields-never-trust-client-authority
   =/  base  (wire 'work.comment' (object ~[['discussion_sequence' '0']]) (object ~[['body' 'Question']]))
@@ -193,12 +197,16 @@
   =/  seventeen
     |-
     ?:  =(17 counter)  [%o entries]
-    $(counter +(counter), entries (~(put by entries) (id (add 400 counter)) doc-target))
+    $(counter +(counter), entries (~(put by entries) (id (add 400 counter)) (put doc-target 'document_id' [%s (id (add 600 counter))])))
+  ?>  ?=([%o *] seventeen)
+  =/  sixteen  [%o (malt (scag 16 ~(tap by p.seventeen)))]
+  =/  accepted  (decode:stead-product-codec (canonical (contract-wire sixteen)))
   %-  expect
   !>  ?&  ?=(~ (parse-product:stead-product-codec duplicate))
           ?=(~ (parse-product:stead-product-codec nested))
           ?=(~ (parse-product:stead-product-codec array))
           ?=(~ (parse-product:stead-product-codec too-long))
+          =('work.update-contract' operation.accepted)
           (refused (contract-wire seventeen))
           (refused (put (contract-wire outcomes) 'payload' (put (contract outcomes) 'description' [%s (rap 3 (reap 8.193 'a'))])))
           (refused (put (contract-wire outcomes) 'payload' (put (contract outcomes) 'acceptance_criteria' [%s (rap 3 (reap 8.193 'a'))])))

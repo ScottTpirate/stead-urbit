@@ -88,6 +88,7 @@ def error_kind(value):
         'Injected malformed native frame accepted':'control-injected-frame',
         'Native discovered/executed arm mismatch':'control-arm-inventory',
         'Native test build failed':'control-build',
+        'Pure-unit diagnostic complete; qualification disabled':'pure-diagnostic-complete',
     })
     for ship in SHIPS:
         exact[ship + '-owner-bootstrap-acknowledged'] = ship + '-initial-bootstrap'
@@ -227,15 +228,42 @@ def unit_observation(native, inventory, sources=None):
             'Failure transcript duplicate verdict or suite bound')
     markers = ('find-fork', 'nest-fail', 'build-fail', 'generator-build-fail',
                'mint-vain', 'mint-lost', 'mint-nice', 'nest-need', 'mull-bonk',
-               'failed-to-compile-test-arm', 'dojo-lame', 'syntax error', 'exit')
+               'failed-to-compile-test-arm', 'find-limb', 'find.$', 'dojo-lame', 'syntax error', 'exit')
     return {'path': path, 'log_bytes': len(raw),
             'log_sha256': hashlib.sha256(raw).hexdigest() if raw else None,
             'terminal': choice(row.get('terminal'), ('[32 %avow 0 %noun 0]', '[32 %avow 0 %noun 1]')),
             'registered_arm_observations': outcomes,
             'structure': unit_structure(raw, path, registered.get(path, ())),
             'source_spans': source_spans(raw, sources),
-            'markers': {name: bool(re.search(rb'(?<![a-z0-9-])' + name.encode('ascii')
+            'markers': {name: bool(re.search(rb'(?<![a-z0-9-])' + re.escape(name.encode('ascii'))
                                             + rb'(?![a-z0-9-])', raw)) for name in markers}}
+
+
+
+def failed_unit_observations(native, inventory, sources=None):
+    """Each failed registered suite, with the same closed per-unit schema."""
+    diagnostic = native.get('diagnostic_only', False)
+    require(type(diagnostic) is bool, 'Failure diagnostic flag')
+    failures = native.get('native_unit_failures', [])
+    require(isinstance(failures, list), 'Failure diagnostic suite list')
+    if not diagnostic:
+        require(not failures, 'Normal run cannot claim diagnostic failures')
+        return []
+    import native_units
+    checked = native_units.validate_inventory(inventory)
+    entries = [*checked['suites'], checked['negative_control']]
+    allowed = {entry['path'] for entry in entries}
+    require(len(failures) <= len(entries) and all(isinstance(path, str) and path in allowed for path in failures)
+            and len(failures) == len(set(failures)), 'Failure diagnostic suite names')
+    transcripts = native.get('native_unit_transcripts', [])
+    require(isinstance(transcripts, list) and len(transcripts) <= len(entries), 'Failure diagnostic transcript bound')
+    observed = {}
+    for row in transcripts:
+        require(isinstance(row, dict) and isinstance(row.get('path'), str) and row['path'] in allowed
+                and row['path'] not in observed, 'Failure diagnostic transcript identity')
+        observed[row['path']] = row
+    require(set(failures) <= set(observed), 'Failure diagnostic transcript absent')
+    return [unit_observation({'native_unit_transcripts': [observed[path]]}, inventory, sources) for path in failures]
 
 
 def project(raw, inputs, *, run_id, inventory=None, sources=None):
@@ -289,6 +317,8 @@ def project(raw, inputs, *, run_id, inventory=None, sources=None):
     require(isinstance(trace, dict), 'Failure native trace shape')
     result['native']['frame_stage'] = choice(trace.get('stage'), FRAME_STAGES)
     result['native']['last_unit'] = unit_observation(native, inventory, sources)
+    result['native']['diagnostic_only'] = native.get('diagnostic_only') is True
+    result['native']['failed_units'] = failed_unit_observations(native, inventory, sources)
     admission = native.get('admission_failure', {})
     require(isinstance(admission, dict), 'Failure admission shape')
     rollbacks = admission.get('rollback_errors', [])
@@ -327,7 +357,7 @@ def project(raw, inputs, *, run_id, inventory=None, sources=None):
         'present': output is not None,
         'output_bytes': len(encoded),
         'output_sha256': hashlib.sha256(encoded).hexdigest() if output is not None else None,
-        'markers': {name: bool(re.search(rb'(?<![a-z0-9-])' + name.encode('ascii')
+        'markers': {name: bool(re.search(rb'(?<![a-z0-9-])' + re.escape(name.encode('ascii'))
                                          + rb'(?![a-z0-9-])', encoded))
                     for name in MIGRATION_MARKERS}}
     logs = value.get('failure_logs', {})

@@ -117,6 +117,14 @@ def validate_inventory(value: dict) -> dict:
                    '/tests/stead-product-restore': ('test-product-restore-', 8, 60),
                    '/tests/stead-product-adapters': ('test-product-adapters-', 4, 60),
                    '/tests/stead-doc-change-codec': ('test-doc-change-codec-', 6, 60),
+                   '/tests/stead-product-owner': ('test-product-owner-', 6, 60),
+                   '/tests/stead-product-history': ('test-product-history-', 8, 60),
+                   '/tests/stead-doc-change': ('test-doc-change-', 14, 60),
+                   '/tests/stead-product-doc-history': ('test-product-doc-history-', 6, 60),
+                   '/tests/stead-actor': ('test-actor-', 4, 60),
+                   '/tests/stead-service-bindings': ('test-service-bindings-', 8, 60),
+                   '/tests/stead-doc-change-views': ('test-doc-change-', 7, 60),
+                   '/tests/stead-run': ('test-run-', 10, 60),
                    '/tests/stead-work-delegations': ('test-work-delegations-', 3, 60),
                    '/tests/stead-creator-renewal': ('test-creator-renewal-', 4, 60),
                    '/tests/stead-project-retirement': ('test-project-retire-', 6, 60),
@@ -240,3 +248,22 @@ def verify_output(raw: str, *, path: str, expected: list[str], succeeds: bool,
     return {'path': path, 'expected': expected, 'observed': observed,
             'outcome': 'passed' if succeeds else 'expected-failure', 'raw_output': raw,
             'driver_diagnostics': driver_diagnostics}
+
+
+def collect_pure_diagnostics(entries, execute, verify, passed, failed):
+    """Trusted diagnostic controller only. Completion never qualifies a run.
+
+    Only verifier rejection after a completed bounded execution is collected.
+    Transport, decoding, timeouts, callbacks and resource guards propagate.
+    """
+    if not isinstance(entries, list) or not 1 <= len(entries) <= 64:
+        raise ValueError('Diagnostic suite count')
+    for entry in entries:
+        completed = execute(entry)
+        try:
+            verified = verify(entry, completed)
+        except ValueError:
+            failed(entry)
+        else:
+            passed(entry, verified)
+    raise ValueError('Pure-unit diagnostic complete; qualification disabled')

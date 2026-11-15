@@ -183,7 +183,9 @@ def run(host):
             route = '/' + dependency.replace('.hoon', '/hoon')
             command('zod', f'=/  raw=@t  .^(@t %cx /=base={route})  =({literal} (sha-256l:sha [(met 3 raw) (rev 3 (met 3 raw) raw)]))', '%.y')
         report['native_units'] = []
-        for entry in [*inventory['suites'], inventory['negative_control']]:
+        report['diagnostic_only'] = True
+        report['native_unit_failures'] = []
+        def execute(entry):
             host['execution_check']()
             resolved = command('zod', '`path`%' + entry['path']).strip()
             log = Path('/state/logs/zod.log')
@@ -210,12 +212,21 @@ def run(host):
                     'elapsed_seconds': round(time.monotonic() - unit_started, 3), 'terminal_present': bool(terminal)})
             if len(captured) > 262144:
                 raise ValueError('Native unit log byte bound')
-            negative = entry == inventory['negative_control']
-            verified = native_units.verify_output(captured.decode('utf-8', errors='strict') + '\n' + terminal,
-                path=entry['path'], expected=entry['arms'], succeeds=not negative,
-                failure_marker=entry.get('marker'))
+            return captured.decode('utf-8', errors='strict') + '\n' + terminal
+        def verify(entry, completed):
+            return native_units.verify_output(completed, path=entry['path'], expected=entry['arms'],
+                succeeds=entry != inventory['negative_control'], failure_marker=entry.get('marker'))
+        def passed(entry, verified):
             report['native_units'].append(verified)
+            negative = entry == inventory['negative_control']
             check('native-unit-' + ('expected-failure:' if negative else 'arms:') + entry['path'], True)
+        def failed(entry):
+            report['native_unit_failures'].append(entry['path'])
+            checkpoint('native-unit-diagnostic-failure')
+        # This reviewed controller always stops after diagnostics. It cannot
+        # qualify a release even when every registered pure suite passes.
+        native_units.collect_pure_diagnostics([*inventory['suites'], inventory['negative_control']],
+            execute, verify, passed, failed)
 
     sequence = 1000
 

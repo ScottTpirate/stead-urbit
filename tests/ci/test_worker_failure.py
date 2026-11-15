@@ -18,6 +18,35 @@ import owned_child
 
 
 class FailureProjectionTests(unittest.TestCase):
+    def test_diagnostic_failed_suites_retain_each_closed_observation(self):
+        inventory = json.loads((ROOT / 'specs/urbit/phase2-pure-units.json').read_bytes())
+        paths = [entry['path'] for entry in inventory['suites'][:2]]
+        transcripts = [{'path': path, 'terminal': '[32 %avow 0 %noun 1]',
+            'log_hex': ('FAILED  ' + path + '/hoon (build)\nfind.$\n' + self.secret).encode().hex()} for path in paths]
+        self.value['native'].update(diagnostic_only=True, native_unit_failures=paths, native_unit_transcripts=transcripts)
+        observed = failure.project(self.frame(), self.inputs, run_id=self.run, inventory=inventory)
+        rows = observed['native']['failed_units']
+        self.assertTrue(observed['native']['diagnostic_only']); self.assertFalse(observed['qualifies_phase'])
+        self.assertEqual([row['path'] for row in rows], paths)
+        self.assertTrue(all(row['structure']['module_build_failed'] and row['markers']['find.$'] for row in rows))
+        self.assertNotIn(self.secret, json.dumps(observed))
+        self.assertNotIn(self.secret.encode().hex(), json.dumps(observed))
+
+    def test_diagnostic_suite_names_duplicates_missing_and_bounds_fail_closed(self):
+        inventory = json.loads((ROOT / 'specs/urbit/phase2-pure-units.json').read_bytes())
+        path = inventory['suites'][0]['path']; row = {'path': path, 'log_hex': ''}
+        valid = {'diagnostic_only': True, 'native_unit_failures': [path], 'native_unit_transcripts': [row]}
+        variants = [valid | {'diagnostic_only': 1}, valid | {'diagnostic_only': False},
+            valid | {'native_unit_failures': [self.secret]}, valid | {'native_unit_failures': [path, path]},
+            valid | {'native_unit_transcripts': []}, valid | {'native_unit_transcripts': [row, row]},
+            valid | {'native_unit_transcripts': [{'path': self.secret}]},
+            valid | {'native_unit_transcripts': [row] * 101}]
+        for value in variants:
+            with self.subTest(value=value), self.assertRaises(ValueError):
+                failure.failed_unit_observations(value, inventory)
+        self.assertEqual(failure.failed_unit_observations({}, None), [])
+        self.assertEqual(failure.failed_unit_observations({'diagnostic_only': True}, inventory), [])
+
     def test_unit_structure_is_closed_and_registered_only(self):
         inventory = json.loads((ROOT / 'specs/urbit/phase2-pure-units.json').read_bytes())
         suite = next(row for row in inventory['suites'] if row['path'] == '/tests/stead-product-migrate')

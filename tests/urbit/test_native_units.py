@@ -107,7 +107,7 @@ class NativeUnitVerifierTests(unittest.TestCase):
             self.positive_check(self.positive + 'x' * 262144)
 
     def test_valid_inventory(self):
-        self.assertEqual(UNITS.validate_inventory(self.inventory)['expected_arm_count'], 230)
+        self.assertEqual(UNITS.validate_inventory(self.inventory)['expected_arm_count'], 293)
 
     def test_suite_deadlines_cannot_be_raised_or_omitted(self):
         for index in range(len(self.inventory['suites'])):
@@ -159,6 +159,55 @@ class NativeUnitVerifierTests(unittest.TestCase):
         del value['negative_control']['marker']
         with self.assertRaises(ValueError):
             UNITS.validate_inventory(value)
+
+
+
+class PureDiagnosticCollectorTests(unittest.TestCase):
+    def test_completed_verifier_failure_continues_and_never_qualifies(self):
+        seen, passed, failed = [], [], []
+        entries = [{'path': '/tests/a'}, {'path': '/tests/b'}]
+        def execute(entry):
+            seen.append(entry['path']); return entry['path']
+        def verify(entry, completed):
+            if completed.endswith('/a'): raise ValueError('controlled verifier rejection')
+            return {'outcome': 'passed'}
+        with self.assertRaisesRegex(ValueError, 'qualification disabled'):
+            UNITS.collect_pure_diagnostics(entries, execute, verify,
+                lambda entry, result: passed.append(entry['path']), lambda entry: failed.append(entry['path']))
+        self.assertEqual(seen, ['/tests/a', '/tests/b'])
+        self.assertEqual(failed, ['/tests/a']); self.assertEqual(passed, ['/tests/b'])
+
+    def test_all_pass_still_ends_diagnostic_only(self):
+        with self.assertRaisesRegex(ValueError, 'qualification disabled'):
+            UNITS.collect_pure_diagnostics([{}], lambda entry: 'completed', lambda entry, raw: 'passed',
+                lambda entry, result: None, lambda entry: self.fail('Unexpected failure'))
+
+    def test_execution_transport_timeout_and_decode_errors_stop_before_next_suite(self):
+        for error in (TimeoutError('timeout'), ValueError('terminal'), UnicodeDecodeError('utf8', b'x', 0, 1, 'decode'), RuntimeError('guard')):
+            seen = []
+            def execute(entry):
+                seen.append(entry); raise error
+            with self.subTest(kind=type(error).__name__), self.assertRaises(type(error)) as caught:
+                UNITS.collect_pure_diagnostics([1, 2], execute, lambda entry, raw: None,
+                    lambda entry, result: self.fail('Not completed'), lambda entry: self.fail('Not verifier failure'))
+            self.assertIs(caught.exception, error); self.assertEqual(seen, [1])
+
+    def test_checkpoint_guard_callbacks_are_never_swallowed(self):
+        for rejects in (True, False):
+            seen = []
+            def execute(entry): seen.append(entry); return 'completed'
+            def verify(entry, raw):
+                if rejects: raise ValueError('verifier')
+                return 'passed'
+            def checkpoint(*args): raise ValueError('checkpoint guard')
+            with self.subTest(rejects=rejects), self.assertRaisesRegex(ValueError, 'checkpoint guard'):
+                UNITS.collect_pure_diagnostics([1, 2], execute, verify, checkpoint, checkpoint)
+            self.assertEqual(seen, [1])
+
+    def test_diagnostic_suite_bound_precedes_execution(self):
+        for entries in ([], [{}] * 65, None):
+            with self.subTest(entries_type=type(entries).__name__), self.assertRaisesRegex(ValueError, 'suite count'):
+                UNITS.collect_pure_diagnostics(entries, lambda entry: self.fail('Must not execute'), None, None, None)
 
 
 if __name__ == '__main__':
