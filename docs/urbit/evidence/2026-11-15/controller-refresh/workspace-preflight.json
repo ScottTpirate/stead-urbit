@@ -61,5 +61,17 @@
   "merged_commit": "cbabf4c2042a809966f5bdac6e07dd8c4fdbe6f2",
   "merge": "normal-merge-api-exact-head",
   "observed_at": "2026-11-15T17:14:04.497700+00:00",
-  "native_dispatch": "waiting-for-immutable-product-candidate"
+  "native_dispatch": {
+    "run_id": 43740557154,
+    "url": "https://github.com/ScottTpirate/stead-urbit/actions/runs/43740557154",
+    "workflow_commit": "cbabf4c2042a809966f5bdac6e07dd8c4fdbe6f2",
+    "controller_commit": "18673da1282d0b5c0060038d1215b684857d0cbd",
+    "candidate_commit": "01aa9e9d9bbd93857d5addc8c26b2dea1259e7ad",
+    "candidate_product_files": 104,
+    "candidate_product_bytes": 1114859,
+    "composed_files": 188,
+    "observed_status": "queued",
+    "native_result": "pending",
+    "qualifies_phase": false
+  }
 }

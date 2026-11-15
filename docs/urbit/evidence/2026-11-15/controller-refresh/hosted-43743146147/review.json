@@ -1,0 +1,44 @@
+{
+  "candidate_blobs_verified": 104,
+  "captured_suite_transcripts": 8,
+  "cleanup_verified": true,
+  "closed_last_unit": {
+    "log_bytes": 2297,
+    "log_sha256": "d2d3b05f520381f8eb9a7357c360f34d3b5f97bf6c6b044bb99efad58ede4bbc",
+    "markers": {
+      "build-fail": false,
+      "dojo-lame": false,
+      "exit": false,
+      "find-fork": true,
+      "generator-build-fail": false,
+      "mint-vain": false,
+      "nest-fail": false,
+      "syntax error": false
+    },
+    "path": "/tests/stead-workspace-views",
+    "registered_arm_observations": [],
+    "terminal": "[32 %avow 0 %noun 1]"
+  },
+  "completed_suites": 7,
+  "controller_blobs_verified": 376,
+  "controller_commit": "d5b7ea8ba3dc25c01becbdb6477769181421c350",
+  "controls": {
+    "control-changed-limits-report.json": "pass",
+    "control-guardian-death-report.json": "pass",
+    "control-missing-profile-report.json": "pass",
+    "control-parent-death-report.json": "pass",
+    "control-stale-lease-report.json": "pass",
+    "control-wrong-profile-report.json": "pass"
+  },
+  "diagnostic_limit": "No registered arm verdict was emitted. find-fork identifies compiler failure, but free-form native diagnostics remain private.",
+  "inputs_canonical_sha256": "3d3ca0c73619949964cdb98bec081e4180744d50de3b00c7b14330c1de19bcbf",
+  "protocol": "stead.hosted-qualification-review/1",
+  "qualifies_phase": false,
+  "report_sha256": "ab989c73873e78ca6320644fff3b8985107ef879774b49605853559b9c712b0b",
+  "reported_checks_passed": 382,
+  "run_id": 43743146147,
+  "run_url": "https://github.com/ScottTpirate/stead-urbit/actions/runs/43743146147",
+  "source_commit": "c27268f9afccdcdc1e19c64b2a33ac0cb80b09ae",
+  "status": "failed-not-deployable",
+  "workflow_commit": "37a2e0e3e0937c0bf7b2f00b79bf621cbe222648"
+}

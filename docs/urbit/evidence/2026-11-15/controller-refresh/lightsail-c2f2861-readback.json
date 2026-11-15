@@ -1,0 +1,127 @@
+{
+  "active": {
+    "deployed_archives_sha256": {
+      "home": "727917f352af986de69bd7289b0772953c388bca51765008e5fd72744cd03497",
+      "identity": "a7e4e0d651cf9b331ca0065975105782155dbd574054a0db3a534a77759a0285"
+    },
+    "home_edge_port": 19443,
+    "ingress": "ssh-loopback-only",
+    "native_qualification_run": 43745730053,
+    "native_tls_port": {
+      "home": 18443,
+      "identity": 18444
+    },
+    "origin": {
+      "home": "https://stead.kilgore.science",
+      "identity": "https://stead-id.kilgore.science"
+    },
+    "pre_named_checkpoint": "/var/backups/stead-pilot-origins.Fd3NaTB2",
+    "pre_release_checkpoint": "/var/backups/stead-pilot-product-c2f2861.orKUJW4h",
+    "private_tls_directory": "/var/lib/stead-private-domains",
+    "protocol": "stead.private-pilot-active/1",
+    "released_at": "2026-11-15T18:56:54.057587+00:00",
+    "released_candidate": "/var/lib/stead-pilot/candidate-product-c2f2861",
+    "source_commit": "c2f286154ada3f27dd53a7dda78741a75788b522"
+  },
+  "browser_acceptance": "pending-after-local-thermal-stop",
+  "candidate_checks": {
+    "my_work_rows": 0,
+    "permission_filtered_union": "pass",
+    "work_contracts": 2,
+    "workspace_rows": 5
+  },
+  "checkpoint": "/var/backups/stead-pilot-product-c2f2861.orKUJW4h",
+  "checkpoint_manifest_sha256": "de8835d6f1de79eb9340ce258f90a2be2eef142dfbd384b2434a0c4b204daf14",
+  "content": {
+    "git": {
+      "commit": "3ba8e4304e8d73d948905acdb2f1e1cfb1dff5af",
+      "count": 22,
+      "snapshot": "2d0565c884124cdbf5eacccc3626cf3cc72d5c0fda1fb295e70a6ce90fe782ca"
+    },
+    "projects": {
+      "01a1da8f-f2fc-7a73-b4a7-007b6646265b": {
+        "digest": "a82498e1ea37608ac38ac4df8a961397c82d97841219be46e1eabbea321c7688",
+        "pages": 2,
+        "relationships": 0,
+        "role": "maintainer",
+        "work": 1
+      },
+      "01a1da91-db75-7250-8286-2241ff268e59": {
+        "digest": "0cfd06b1b4a7d1eafa003eecff169b12754967a9b4b4c64d33e488986470e04d",
+        "pages": 1,
+        "relationships": 0,
+        "role": "maintainer",
+        "work": 1
+      },
+      "01a1dab7-a64f-7f40-944f-28f95c3c447d": {
+        "digest": "210e130878aabaf46f1fe72749a263f9eb71c6a262b80f13882ed08d472c0ecd",
+        "pages": 0,
+        "relationships": 0,
+        "role": "maintainer",
+        "work": 0
+      }
+    }
+  },
+  "excluded_tools_unchanged": true,
+  "human_trial": "not_claimed",
+  "locks_released": true,
+  "maintenance_absent": true,
+  "native_qualification_run": 43745730053,
+  "operator_amendment": {
+    "hashes": {
+      "prepare.py": "a8c8230533c0ae73a1cba9fb87a957933d734e4f6098421e4fe3cbe711ddec13",
+      "reviewed-tools-delta.json": "0f7dbb554ee0b23484ddbebb4113a0578eecb25bdd34fc9b33e6174cabfd1c03",
+      "rollout.sh": "8773b871c1bb6a641154eecb72e0dd02c50974e015e7c7fdb7b18667b840d04b"
+    },
+    "status": "operator-amendment-verified"
+  },
+  "phase": "private-ingress-reopened",
+  "protocol": "stead.private-rollout-readback/1",
+  "release_manifest_sha256": "869470d380aacb21fa243312b2e1221b3883bb4051aaaf72ee5c90b7626b40e5",
+  "rollout_output_sha256": "8da4f81f03e0fff1d0a66f48e1a4a238949412ab0185bc2b0150a335635d76c3",
+  "routes_sha256": "f77d88124567402bdc5cc94a745c7c023f716f505ce78b784d0dfc915b6ede12",
+  "services": {
+    "stead-pilot-hapnev-sabweb.service": {
+      "ActiveState": "active",
+      "MainPID": "72359"
+    },
+    "stead-pilot-tagdep-salled.service": {
+      "ActiveState": "active",
+      "MainPID": "72389"
+    },
+    "stead-pilot-v9-git-edge.service": {
+      "ActiveState": "active",
+      "MainPID": "72543"
+    },
+    "stead-pilot-v9-git-lease.service": {
+      "ActiveState": "active",
+      "MainPID": "72541"
+    },
+    "stead-pilot-v9-git-projection.service": {
+      "ActiveState": "active",
+      "MainPID": "72470"
+    },
+    "stead-pilot-v9-git-reconcile.service": {
+      "ActiveState": "active",
+      "MainPID": "72542"
+    },
+    "stead-pilot-v9-git-relay.service": {
+      "ActiveState": "active",
+      "MainPID": "72471"
+    },
+    "stead-pilot-v9-git-worker.service": {
+      "ActiveState": "active",
+      "MainPID": "72472"
+    }
+  },
+  "status": "pass",
+  "transfer": {
+    "archive_sha256": "45927550e97579d0185ee7ca13b41252f2c2e240b7a5b36586e68745541be26c",
+    "bytes": 6768640,
+    "files": 192,
+    "inventory_sha256": "3e7ffa9176d45eed4f9469d929b1c027417decc2f28f6e8f9acdf8eee76bf0b4",
+    "protocol": "stead.private-transfer-ready/1",
+    "run_id": 43745730053,
+    "source_commit": "c2f286154ada3f27dd53a7dda78741a75788b522"
+  }
+}

@@ -1,0 +1,33 @@
+{
+  "checks": [
+    "Scoped original grant key is project/UUID and immutable provenance is retained; current authentication precedes retries.",
+    "Only exact shared Doc target/base revision and raw Markdown digest pass; run resolver defaults to denial.",
+    "Approval is independent human evidence, accept/adopt require current accountable person, expiry adoption does not renew revoked producer grants.",
+    "Required Work outcome proof binds the current Doc and exact adjacent native save plus typed acceptance, including actual receipts and immutable result; direct-save forged-head negative is present.",
+    "Whole state and combined ordinary/security/object budgets roll back on capacity failure; accepted state cannot be quarantined into a retroactive Doc rollback.",
+    "Single product timeline includes Doc records; replay starts before native-save/typed-accept pair and compares both regenerated full events.",
+    "16-event replay batches reserve pair capacity before reduction; checkpoint test pins save16/accept17 and first checkpoint15, never a half commit.",
+    "Tests include authentic mixed replay, source/auth/receipt/output tampering, private targets, current revocation, scoped/global request collisions, body limits and typed-vase checkpoints."
+  ],
+  "files": {
+    "native/core/desk/lib/stead-doc-change-proof.hoon": "4e7e94f3df6e89e4c7381d45343f7700c6961fcfb25a3c594c036e50c10d15be",
+    "native/core/desk/lib/stead-doc-change-state.hoon": "13b85959a076570d9c088ec72c682e4168fe14910de2c80170ee534062ff0d53",
+    "native/core/desk/lib/stead-doc-change.hoon": "1d734bdf2b3ad443a0779972235bb99d9abcca3b46363ef114369556e4cd2d80",
+    "native/core/desk/lib/stead-product-history.hoon": "dbf5d79d0a8ac35b644ce4d34779a52e9ffc95f3a7e7a3a14964b8b80327288c",
+    "native/core/desk/tests/stead-doc-change.hoon": "937f791a1e7eff08241b41ab1c2ca6cf1678344cf12d7bcb1c016946178d33ae",
+    "native/core/desk/tests/stead-product-doc-history.hoon": "cfb16931dabd8b8fb9593220fd8a4b082d5107acf27c1f12715dab5c658202dc",
+    "native/core/desk/tests/stead-product-history.hoon": "8cbf18475cdcec25d8f5efbfec45c73aa9578767329607183b0c5301dc736c72"
+  },
+  "home_activation": false,
+  "limitations": [
+    "Source review is not native compile/runtime success.",
+    "No Home carrier or saved envelope activates these new molds.",
+    "Future service/run authority remains absent; semantic history does not add cryptographic custody attestation.",
+    "Capacity counter fixtures are deliberately synthetic, not replay-valid histories."
+  ],
+  "native_executed": false,
+  "protocol": "stead.independent-source-review/1",
+  "reviewed_commit": "931ca5dcbc209812a6f20c08ce584776c4b20dde",
+  "reviewer": "release lane independent source review",
+  "status": "source-reviewed-native-unexecuted"
+}

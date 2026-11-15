@@ -1,0 +1,8 @@
+{
+  "peak_c": 80.0,
+  "duration_seconds": 95.4,
+  "configuration_sha256": "bb8e6804d89cd4aedf9d0d946ac2328246b4bec5936e4f75a54203afc86cd8a7",
+  "script_sha256": "4c4a1a76ac0af690a69af42f853b54589d7a8b0b40ca2a66b16aa84c20c779b0",
+  "wrapper_sha256": "3081668d150b318c6f720b5a6317691f03751007cb8e00d83f5f9e230b74a0ea",
+  "output": "/home/skilgore/stead-urbit/.runtime/pilot-browser-prepared/runs/1794769172278880095"
+}

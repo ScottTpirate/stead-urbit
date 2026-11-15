@@ -1,0 +1,24 @@
+{
+  "candidate_commit": "c2f286154ada3f27dd53a7dda78741a75788b522",
+  "cleanup_verified": true,
+  "containment_controls_passed": 6,
+  "controller_commit": "8c7fbe1550542d187508f6b4fbd6a62448d02925",
+  "format": "stead.independent-hosted-review/1",
+  "human_acceptance": false,
+  "inputs_canonical_sha256": "2ab91a47f7c4bbc8573b1eea253747ea8d6298779f67883661138ef5f726db30",
+  "mounts_unchanged": true,
+  "native_checks": 1672,
+  "native_qualification_only": true,
+  "positive_arms": 173,
+  "positive_suites": 27,
+  "report_sha256": "6356115e2a3ef888bcd091f717842b87c4c10e3d36821d9ee82009da4edfbd2a",
+  "reviewed_at": "2026-11-15T18:48:10.500684+00:00",
+  "run_id": 43745730053,
+  "source_files_verified": {
+    "candidate_product_files": 104,
+    "controller_files": 376
+  },
+  "status": "pass",
+  "supported_migration": "pass",
+  "workflow_commit": "bb47003ccbaa8013faa8e38b44edc23c91a56aa4"
+}

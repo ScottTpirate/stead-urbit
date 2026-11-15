@@ -1,0 +1,21 @@
+{
+  "unit": "stead-browser-dd5bde8863484b817ea8706302df1ab5.service",
+  "status": "fail",
+  "cleanup": {
+    "process_reaped": true,
+    "cgroup": "/user.slice/user-1000.slice/user@1000.service/app.slice/stead-browser-dd5bde8863484b817ea8706302df1ab5.service",
+    "empty": true,
+    "state": "inactive"
+  },
+  "headed": false,
+  "proof": {
+    "pid": 286688,
+    "cgroup": "/user.slice/user-1000.slice/user@1000.service/app.slice/stead-browser-dd5bde8863484b817ea8706302df1ab5.service",
+    "cpu_max": "2500 10000",
+    "cpu_affinity": [
+      19
+    ],
+    "memory_max": "1572864000",
+    "pids_max": "128"
+  }
+}

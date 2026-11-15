@@ -1,0 +1,39 @@
+{
+  "artifacts": {
+    "home": {
+      "archive": "home.tar",
+      "bytes": 1382400,
+      "sha256": "004f6c40e00c61834ee51af5bdb79570cd0b2efcd89a8867dec78fa4e8b728e9",
+      "target": "home-target.json",
+      "verification": "home-verify.json",
+      "saved_state_max": 9,
+      "frontend_sha256": "16b8e49e18ac1d8017fc21ecb08c77680a6e43ed2071de207f9e86757b0b8a4c",
+      "desk_files": 116
+    },
+    "identity": {
+      "archive": "identity.tar",
+      "bytes": 1064960,
+      "sha256": "c683d53aab15f46f65b1eb409e14b804ba99eedf0be9d04099852f661d1d5859",
+      "target": "identity-target.json",
+      "verification": "identity-verify.json",
+      "saved_state_max": 1,
+      "frontend_sha256": "16b8e49e18ac1d8017fc21ecb08c77680a6e43ed2071de207f9e86757b0b8a4c",
+      "desk_files": 79
+    },
+    "relay_tools": {
+      "archive": "tools.tar",
+      "bytes": 1576960,
+      "committed_files": 104,
+      "sha256": "8d766f8649cdeac8e090038269f717f98547ad45d11cfdc86cde386c001b3d1f"
+    }
+  },
+  "classification": "offline-package-integrity-only",
+  "native_execution": false,
+  "protocol": "stead.pilot-preparation/1",
+  "qualification": false,
+  "source_commit": "01aa9e9d9bbd93857d5addc8c26b2dea1259e7ad",
+  "observed_at": "2026-11-15T17:20:52.690276+00:00",
+  "reserved_product_files_absent": true,
+  "candidate_native_assets_built_from": "a30fe4bf4d96aa44c6e263698ba7fb042ab4eb50",
+  "live_host_changed": false
+}

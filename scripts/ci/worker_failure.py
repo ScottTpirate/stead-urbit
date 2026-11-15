@@ -127,7 +127,43 @@ def capture_snapshot(host):
         return {}
 
 
-def unit_observation(native, inventory):
+def source_spans(raw, sources):
+    """Closed locations against controller-composed bytes, never trace text."""
+    require(sources is None or isinstance(sources, dict) and len(sources) <= 512,
+            'Failure source inventory bound')
+    admitted = {}
+    for path, body in (sources or {}).items():
+        match = re.fullmatch(r'native/core/desk/(lib|tests|app)/([a-z][a-z0-9-]{0,95})\.hoon', path)
+        if not match:
+            continue
+        require(isinstance(body, bytes) and len(body) <= 4 * 1024**2,
+                'Failure source file bound')
+        admitted['/' + match[1] + '/' + match[2] + '/hoon'] = (path, body.split(b'\n'))
+    pattern = rb'(?<![a-zA-Z0-9_./-])(/(?:lib|tests|app)/[a-z][a-z0-9-]{0,95}/hoon):<\[([0-9]{1,7}) ([0-9]{1,7})\]\.\[([0-9]{1,7}) ([0-9]{1,7})\]>'
+    observed, truncated = {}, False
+    for match in re.finditer(pattern, raw):
+        source = admitted.get(match[1].decode('ascii'))
+        if source is None:
+            continue
+        path, lines = source
+        start_line, start_column, end_line, end_column = map(int, match.groups()[1:])
+        if not (1 <= start_line <= end_line <= len(lines)
+                and 1 <= start_column <= len(lines[start_line - 1]) + 1
+                and 1 <= end_column <= len(lines[end_line - 1]) + 1
+                and (start_line, start_column) <= (end_line, end_column)):
+            continue
+        key = (path, start_line, start_column, end_line, end_column)
+        # Keep the most recent distinct frames: compiler failure sites follow
+        # the long outer build chain. Repeated frames move to the tail.
+        observed.pop(key, None)
+        observed[key] = dict(zip(('path', 'start_line', 'start_column', 'end_line', 'end_column'), key))
+        if len(observed) > 16:
+            del observed[next(iter(observed))]
+            truncated = True
+    return {'locations': list(observed.values()), 'truncated': truncated}
+
+
+def unit_observation(native, inventory, sources=None):
     """Expose only a registered suite, arm verdicts and fixed compiler markers."""
     import native_units
     entries = []
@@ -161,11 +197,12 @@ def unit_observation(native, inventory):
             'log_sha256': hashlib.sha256(raw).hexdigest() if raw else None,
             'terminal': choice(row.get('terminal'), ('[32 %avow 0 %noun 0]', '[32 %avow 0 %noun 1]')),
             'registered_arm_observations': outcomes,
+            'source_spans': source_spans(raw, sources),
             'markers': {name: bool(re.search(rb'(?<![a-z0-9-])' + name.encode('ascii')
                                             + rb'(?![a-z0-9-])', raw)) for name in markers}}
 
 
-def project(raw, inputs, *, run_id, inventory=None):
+def project(raw, inputs, *, run_id, inventory=None, sources=None):
     """Read the one complete bound failed frame, then discard all free text."""
     require(isinstance(raw, bytes) and 0 < len(raw) <= 32 * 1024**2, 'Failure output byte bound')
     lines = raw.decode('utf-8', errors='strict').splitlines()
@@ -215,7 +252,7 @@ def project(raw, inputs, *, run_id, inventory=None):
     trace = native.get('native_failure', {})
     require(isinstance(trace, dict), 'Failure native trace shape')
     result['native']['frame_stage'] = choice(trace.get('stage'), FRAME_STAGES)
-    result['native']['last_unit'] = unit_observation(native, inventory)
+    result['native']['last_unit'] = unit_observation(native, inventory, sources)
     admission = native.get('admission_failure', {})
     require(isinstance(admission, dict), 'Failure admission shape')
     rollbacks = admission.get('rollback_errors', [])

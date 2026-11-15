@@ -1,0 +1,17 @@
+{
+  "candidate": "f93a42a06c49fef597f6611e18b2f56eaa73d568",
+  "composed_files": 206,
+  "controller": "85b77abbe5667d04819695df5fc221c614a5def8",
+  "controller_bytes": 4009365,
+  "controller_files": 394,
+  "future_owner_history_and_doc_reducer_excluded": true,
+  "host_sources_unchanged": true,
+  "host_test_controller": "646aa5da7fbbc4d22af288c90094867d2b0e8364",
+  "host_tests": 52,
+  "native_executed": false,
+  "native_fixture_change": "One checkpoint serializes a typed vase before cue/cast, preserving arm inventory and timeouts",
+  "positive_suites": 35,
+  "product_files": 114,
+  "protocol": "stead.controller-source-preflight/1",
+  "pure_arms": 230
+}

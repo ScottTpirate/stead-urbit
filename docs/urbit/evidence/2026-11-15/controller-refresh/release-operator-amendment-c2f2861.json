@@ -1,0 +1,58 @@
+{
+  "new": {
+    "prepare.py": "a8c8230533c0ae73a1cba9fb87a957933d734e4f6098421e4fe3cbe711ddec13",
+    "reviewed-tools-delta.json": "0f7dbb554ee0b23484ddbebb4113a0578eecb25bdd34fc9b33e6174cabfd1c03",
+    "rollout.sh": "8773b871c1bb6a641154eecb72e0dd02c50974e015e7c7fdb7b18667b840d04b"
+  },
+  "new_installed_modules": [],
+  "old": {
+    "prepare.py": "4f3b4ac3cf08ba63a956a2509f3240de30cfbaf0eb050ec818923f23e0ef1a99",
+    "rollout.sh": "2a9c7914be7bda898e8ef1183a87f260f38ffcabd443784c3fb0ab02d2d72241"
+  },
+  "parent_review": "approved exact hashes after source diff and CAS review",
+  "post_stop_verification": {
+    "locks_released": true,
+    "maintenance_absent": true,
+    "services_active": 8,
+    "source_unchanged": true
+  },
+  "prior_attempt": "stopped during prepare before fence/checkpoint/service changes",
+  "protocol": "stead.reviewed-operator-amendment/1",
+  "reason": "Exact installed predecessor tools include older modules retained unchanged by this rollout",
+  "source_commit": "c2f286154ada3f27dd53a7dda78741a75788b522",
+  "status": "independently-reviewed-applied",
+  "tool_delta": {
+    "scripts/urbit/agent_proposal.py": {
+      "candidate": "23b334510c06dd5e5db87554ad265e518faae8908878c0419469a8dc6051b956",
+      "previous": null
+    },
+    "scripts/urbit/dogfood_rehearsal.py": {
+      "candidate": "8e31287f3106a03d14fda68a004e49b1213a389626df7042bb7c74694f3e214e",
+      "previous": "c119dadafd1ef711f62a44e8665e34fa44b1bac991d972b3e67e8b0137d3cb2c"
+    },
+    "scripts/urbit/native_units.py": {
+      "candidate": "cd79578b2bc025fb3e2a988a8fd5886d1657afa44cb14684536e2e57a444f00c",
+      "previous": "ee14b6a7e58a8a89a3761e23694ff23b84d3ecfc6f453f1081a761aa642a9af4"
+    },
+    "scripts/urbit/pilot_host_preflight.py": {
+      "candidate": "8f2f728e078a932343638017e6770a334e68e46dc21e32f9cf63587a86e9317e",
+      "previous": "e0205e7258247b97ff23557d7362c7366ac68b1187678978af02065d7fdd00e4"
+    },
+    "scripts/urbit/portable_import.py": {
+      "candidate": "c8aad2ef5419e9ffcbd2b3d52e7f156410ad524238f1d26d6ba076d582949a20",
+      "previous": "30ba7b648bfdfcaf9aee8e165c0a31cd9141a9a8618d031dd70a229d2aa1d241"
+    },
+    "scripts/urbit/portable_recovery.py": {
+      "candidate": "c6e45f457e334d1b18562509f592bd50533ea04ca53062c6a7745f10d83e9605",
+      "previous": "7926e2245ac3bda6d9e6e0b62d77109a7b6bb2f9b5d7c13f65059d29f47224ff"
+    },
+    "scripts/urbit/project_migration.py": {
+      "candidate": "bab254be1aeee15a3a2d8cd9659b464dd13e3f68d43deb2be40b55a73d21b33e",
+      "previous": "cd55eaf44095e654a83db313e8a466d538ba279033a29221401fe6ed406b5782"
+    },
+    "scripts/urbit/team_check.py": {
+      "candidate": "34e50d8ee277ae107b741db8323760c487d8f7dc354e1a3bb6fde18783136008",
+      "previous": "b319983f13aad3eeb45bb774a41aedaf765cb1b8c227eda5819883cd8745a2b6"
+    }
+  }
+}

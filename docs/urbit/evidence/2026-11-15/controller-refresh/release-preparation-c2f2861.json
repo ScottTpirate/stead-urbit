@@ -1,0 +1,29 @@
+{
+  "artifacts": {
+    "home": {
+      "archive": "home.tar",
+      "bytes": 1392640,
+      "sha256": "727917f352af986de69bd7289b0772953c388bca51765008e5fd72744cd03497",
+      "target": "home-target.json",
+      "verification": "home-verify.json"
+    },
+    "identity": {
+      "archive": "identity.tar",
+      "bytes": 1064960,
+      "sha256": "a7e4e0d651cf9b331ca0065975105782155dbd574054a0db3a534a77759a0285",
+      "target": "identity-target.json",
+      "verification": "identity-verify.json"
+    },
+    "relay_tools": {
+      "archive": "tools.tar",
+      "bytes": 1576960,
+      "committed_files": 104,
+      "sha256": "d64a9ab6e8735dbca3f560e568cbea584137cba021dab6c8aeb661037bdf3b71"
+    }
+  },
+  "classification": "offline-package-integrity-only",
+  "native_execution": false,
+  "protocol": "stead.pilot-preparation/1",
+  "qualification": false,
+  "source_commit": "c2f286154ada3f27dd53a7dda78741a75788b522"
+}

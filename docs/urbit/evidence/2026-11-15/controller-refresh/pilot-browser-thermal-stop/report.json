@@ -1,0 +1,24 @@
+{
+  "protocol": "stead.pilot-rendered-review/1",
+  "source": "c2f286154ada3f27dd53a7dda78741a75788b522",
+  "release_manifest_sha256": "869470d380aacb21fa243312b2e1221b3883bb4051aaaf72ee5c90b7626b40e5",
+  "classification": "authenticated-live-read-only",
+  "qualifies_human_trial": false,
+  "freshProfile": true,
+  "globalTrustChanged": false,
+  "sharedProfileUsed": false,
+  "checks": [],
+  "screenshots": {},
+  "content": [],
+  "errors": [
+    {
+      "stage": "identity-approval",
+      "type": "Error"
+    }
+  ],
+  "browser": "155.0.8059.84",
+  "status": "failed",
+  "browserClosed": true,
+  "homeSessionLoggedOut": true,
+  "identitySessionLoggedOut": false
+}

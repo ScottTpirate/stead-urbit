@@ -1,8 +1,35 @@
 # Reviewed procedure for the next existing-pilot update
 
-Status: preparation only. No host mutation or deployment has occurred. The user
-authorized the existing Lightsail rollout; the integrator will select the exact
-qualified commit before execution. This procedure does not activate command/4,
+Status: the supervised rollout completed successfully on 2026-11-15. The
+active pilot source is `c2f286154ada3f27dd53a7dda78741a75788b522`; hosted run
+`43745730053` passed all 173 positive arms, 1,672 checks and six containment
+controls with reviewed controller `8c7fbe1550542d187508f6b4fbd6a62448d02925`.
+The stopped paired checkpoint is
+`/var/backups/stead-pilot-product-c2f2861.orKUJW4h`. All eight services are active,
+maintenance is removed, and exact Work/Docs/relations across three projects plus
+the accepted Git snapshot match the baseline. Home's 11 and Identity's 10
+packaged HTTPS asset routes matched their exact bytes and hashes. See
+`lightsail-c2f2861-readback.json` and `hosted-43745730053/review.json`.
+The first isolated local browser check stopped at the reviewed 80°C limit
+after 95.4 seconds during Identity approval, before any content checks. Its
+process group is empty; Home was not authenticated, and Identity logout could
+not be confirmed after the ephemeral context closed. No unrelated owner
+session was revoked. `pilot-browser-thermal-stop/` retains that incomplete
+result. Rendered acceptance remains pending and will move to an isolated
+remote browser if its separate runtime review succeeds. No human trial is claimed.
+
+The first operator attempt stopped before any fence or service change because
+installed support tools were older than their active source metadata implied.
+The independently reviewed correction pins the exact eight-path before/after
+tool hash map; four unrelated modules remain untouched. The successful retry
+used that correction, retained in `release-operator-amendment-c2f2861.json`.
+
+The earlier `01aa9e9` and `c27268f` candidates failed in the workspace test
+fixture and are not deployable; both failure records are retained separately.
+The current candidate adds only an explicit list-cell guard to that fixture;
+its native applications, libraries and generated assets match `c27268f`.
+The current operator packet is `.runtime/pilot-release-product-c2f2861/operator`; it requires the
+matching successful native receipt before execution. This procedure does not activate command/4,
 new Work saved-state molds, or autonomous agent execution.
 
 ## Observed predecessor
@@ -31,10 +58,10 @@ current candidate's Home and Identity app files match the deployed predecessor,
 so this slice requires no saved-state migration. Recheck that equality at the
 final candidate. Do not infer actual saved schema from the release maximum.
 
-Existing verified stopped checkpoints are retained at
+Earlier verified stopped checkpoints are retained at
 `/var/backups/stead-pilot-release-dbc8cc0.u8RU9Cs2` and
-`/var/backups/stead-pilot-origins.Fd3NaTB2`. Take a new checkpoint for this update;
-neither old checkpoint is the current rollback boundary.
+`/var/backups/stead-pilot-origins.Fd3NaTB2`. The successful rollout added the new `stead-pilot-product-c2f2861.orKUJW4h`
+checkpoint listed above; neither older checkpoint is this rollout boundary.
 
 ## Candidate and preparation gates
 
@@ -65,6 +92,13 @@ neither old checkpoint is the current rollback boundary.
    unchanged. Its exact Clay inventory, process binding and save checks remain
    required. Bootstrap the existing configuration revision and certificate;
    never call the historical origin-changing `domain-roles.py install` action.
+7. Regenerate the Home edge's exact asset-route allowlist from the candidate
+   desk. New shared chunk names require a new include even when relay code is
+   unchanged. Stage it with the reviewed `edge-update.py` checks: bind the
+   predecessor include hash, candidate tools archive hash and nginx binary hash;
+   verify identical hostname, TLS, upstream, socket and project bindings;
+   validate the shadow complete configuration with `nginx -t`; verify that
+   active files remained unchanged during staging. Keep its exact staged receipt.
 
 ## Fence and checkpoint
 
@@ -76,8 +110,10 @@ neither old checkpoint is the current rollback boundary.
    routes, active predecessor metadata and absence of another maintenance fence.
 2. Create a fresh root-private checkpoint directory and durable phase marker.
    Add the existing maintenance output fence for loopback ports
-   18080, 18081, 18443, 18444 and 19443, initially permitting only root and the
-   dedicated Vere account. Verify the rule. Keep the external Ames fence.
+   18080, 18081, 18443, 18444 and 19443, permitting root and the dedicated Vere
+   account. Permit the existing ingress and relay accounts only to native Home
+   port 18443 so the supervised baseline can traverse the unchanged edge while
+   member ingress remains fenced. Verify the rules. Keep the external Ames fence.
 3. Capture a fresh authenticated read-only baseline through the named origins:
    all accessible projects, Work, collections, full Docs, relations and the
    accepted Code snapshot/ref/tree. Log out the probe session. Use bounded
@@ -119,7 +155,8 @@ neither old checkpoint is the current rollback boundary.
    rotation and relay admission path; require the published mailbox selection
    to equal the checkpoint's accepted snapshot and fresh Home incarnation.
    Update only reviewed relay tools if their exact candidate diff requires it.
-   Keep current named routing and certificates; validate the complete nginx
+   Install the staged asset-route include with predecessor-hash compare-and-set.
+   Keep current named origins and certificates; validate the complete nginx
    configuration before starting the edge.
 6. Permit only the existing ingress/relay service accounts through maintenance
    to Home's native TLS port. Start projection, worker and relay; verify sockets
@@ -129,8 +166,10 @@ neither old checkpoint is the current rollback boundary.
    compare byte length and SHA-256 to the archive. Confirm anonymous query/Git
    denial and private-carrier rejection. Perform a new approval/sign-in and
    compare the full Work/Docs/relations/Code baseline. Exercise the new Work
-   contract and workspace capability/read surfaces with that member. Confirm
-   no cross-project/private canary disclosure, then log out and prove denial.
+   contract and workspace capability/read surfaces with that member. Require
+   workspace results to equal the independently read authorized project union;
+   retain the hosted cross-project/private-canary denial proofs separately.
+   Log out both probe sessions and prove Home denial after signout.
 
 ## Reopen and hand back
 
@@ -138,11 +177,15 @@ Only after all preceding checks pass, atomically write the new active release
 metadata with source/archive hashes and the new checkpoint path. Remove the
 maintenance table, leaving the established external Ames fence and private
 tunnel policy unchanged. Recheck served assets and live service ownership after
-reopening. Perform the actual rendered browser path through `stead-pilot`:
+reopening. Perform the actual rendered browser path through a verified private
+SSH tunnel and isolated Chromium profile with the existing exact certificate pins:
 fresh sign-in and approval, My work/Search, Work detail, Docs preview/source,
 Code tree/file and back navigation. Record failures honestly; an API readback
 does not establish rendered product acceptance. Retain the previous artifacts
-and stopped checkpoint after handoff.
+and stopped checkpoint after handoff. Repair the existing `stead-pilot` helper's
+stale socket only after verifying it has no live owner or listening ports; use
+the helper's normal checked tunnel startup without changing global trust or the
+user's browser profile.
 
 On any mismatch, keep maintenance closed and preserve the phase marker and
 evidence. Do not automatically open traffic or restore an old pier. A failure

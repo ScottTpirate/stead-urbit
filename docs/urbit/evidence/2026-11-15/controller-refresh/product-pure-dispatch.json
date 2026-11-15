@@ -1,0 +1,17 @@
+{
+  "base": "bb47003ccbaa8013faa8e38b44edc23c91a56aa4",
+  "branch": "codex/ci-product-pure-vase-pin-20261115",
+  "candidate": "f93a42a06c49fef597f6611e18b2f56eaa73d568",
+  "controller": "85b77abbe5667d04819695df5fc221c614a5def8",
+  "head": "26c5c8b8629f9d2cca1bee2791aade32d2be1a3c",
+  "live_release_candidate": "c2f286154ada3f27dd53a7dda78741a75788b522",
+  "native_result": "pending",
+  "positive_arms": 230,
+  "positive_suites": 35,
+  "protocol": "stead.hosted-dispatch/1",
+  "pull_request": 90,
+  "run_id": 43748907122,
+  "run_url": "https://github.com/ScottTpirate/stead-urbit/actions/runs/43748907122",
+  "status": "dispatched",
+  "workflow_commit": "b4e6dc0803136f30dac1a8082a54ec9d3261ed8f"
+}

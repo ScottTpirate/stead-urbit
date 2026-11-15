@@ -1,0 +1,19 @@
+{
+  "candidate": "c2f286154ada3f27dd53a7dda78741a75788b522",
+  "composed_files": 188,
+  "controller": "8c7fbe1550542d187508f6b4fbd6a62448d02925",
+  "controller_bytes": 3796200,
+  "controller_files": 376,
+  "host_test_modules": [
+    "tests.ci.test_controller",
+    "tests.ci.test_worker_failure",
+    "tests.urbit.test_native_units"
+  ],
+  "host_tests": 52,
+  "native_executed": false,
+  "positive_suites": 27,
+  "product_files": 104,
+  "protocol": "stead.controller-source-preflight/1",
+  "pure_arms": 173,
+  "successor_packet_excluded": true
+}
