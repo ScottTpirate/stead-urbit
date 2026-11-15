@@ -30,6 +30,24 @@ the full-history offline proof and the native storage gate for cutover. The
 [browser identity profile](BROWSER_IDENTITY_PROFILE.md) is a separate design
 track. Use individual native member ships for this pilot.
 
+## Prepare a pilot update
+
+Prepare both role archives and the Git relay tools from a single reviewed
+commit. Use a fresh private output directory for each attempt.
+
+```sh
+python3 -B scripts/prepare_pilot_release.py \
+  --source "$REVIEWED_COMMIT" --output .runtime/pilot-release-candidate
+```
+
+The receipt pins the archives to that commit. Check it before transfer and
+again on the host before staging. Record the running predecessor, fence
+ingress, and verify a stopped checkpoint before installing the candidate.
+Reopen the existing origins after matching saved state, the accepted Git
+snapshot, and the served assets. Check a fresh member sign-in and the project
+readback through the same routes pilot members use. Keep certificate and
+origin changes out of routine product updates.
+
 ## Before switching Stead's own project
 
 Keep GitHub authoritative while the private pilot takes synthetic changes.
