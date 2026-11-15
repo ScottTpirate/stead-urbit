@@ -51,7 +51,14 @@ class Git:
         executable = Path(self.binary)
         env = ENV.copy()
         if executable.is_absolute() and executable.name == 'git':
-            env['GIT_EXEC_PATH'] = str(executable.parent)
+            helpers = executable.parent
+            if helpers.name == 'bin' and not (helpers / 'git-remote-http').is_file():
+                # Installed clients may keep helpers under the same prefix.
+                # Never use a different installation's compiled-in path.
+                prefix = helpers.parent
+                installed = (prefix / 'libexec/git-core', prefix / 'lib/git-core')
+                helpers = next((path for path in installed if (path / 'git-remote-http').is_file()), helpers)
+            env['GIT_EXEC_PATH'] = str(helpers)
         result = subprocess.run(command, input=data, capture_output=True, env=env,
                                 timeout=120, umask=0o077, check=False)
         if check and result.returncode:
