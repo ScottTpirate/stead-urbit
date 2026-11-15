@@ -18,6 +18,48 @@ import owned_child
 
 
 class FailureProjectionTests(unittest.TestCase):
+    def test_unit_structure_is_closed_and_registered_only(self):
+        inventory = json.loads((ROOT / 'specs/urbit/phase2-pure-units.json').read_bytes())
+        suite = next(row for row in inventory['suites'] if row['path'] == '/tests/stead-product-migrate')
+        arm = suite['arms'][0]
+        raw = ('built   ' + suite['path'] + '/hoon\nFAILED  ' + suite['path'] + '/hoon (build)\n'
+               + '[%failed-to-compile-test-arm %' + arm + ']\n'
+               + '[%failed-to-compile-test-arm %' + self.secret + ']\n'
+               + '> ' + self.secret + '\nCRASHED ' + self.secret + '\n! ' + self.secret
+               + '\n/lib/' + self.secret + '/hoon:<[1 1].[2 2]>\n').encode()
+        self.value['native']['native_unit_transcripts'] = [{'path': suite['path'], 'log_hex': raw.hex()}]
+        observed = failure.project(self.frame(), self.inputs, run_id=self.run, inventory=inventory)
+        shape = observed['native']['last_unit']['structure']
+        self.assertTrue(shape['module_built']); self.assertTrue(shape['module_build_failed'])
+        self.assertEqual(shape['compile_failed_registered_arms'], [arm])
+        self.assertEqual(shape['line_count'], 8)
+        self.assertEqual(sum(shape['prefix_counts'].values()), 8)
+        self.assertEqual(shape['prefix_counts']['CRASHED'], 1)
+        self.assertNotIn(self.secret, json.dumps(observed))
+        self.assertNotIn(raw.hex(), json.dumps(observed))
+        unknown = failure.unit_structure(raw, 'unrecognized', ())
+        self.assertFalse(unknown['module_built']); self.assertFalse(unknown['module_build_failed'])
+        self.assertEqual(unknown['compile_failed_registered_arms'], [])
+
+    def test_wrapped_compile_marker_retains_only_exact_registered_names(self):
+        arm = 'test-product-migrate-preserves-an-exact-registered-arm'
+        raw = ('[%failed-to-compile-test-arm\n  %' + arm + '\r\n]\n'
+               + '[%failed-to-compile-test-arm %' + self.secret + ']\n'
+               + '[%failed-to-compile-test-arm %' + arm + '-lookalike]\n'
+               + '[%failed-to-compile-test-arm %' + arm + ' ' + self.secret + ']\n'
+               + '[%failed-to-compile-test-armX %' + arm + ']').encode()
+        observed = failure.unit_structure(raw, '/tests/stead-product-migrate', {arm})
+        self.assertEqual(observed['compile_failed_registered_arms'], [arm])
+        self.assertNotIn(self.secret, json.dumps(observed))
+        self.assertEqual(failure.unit_structure(raw, '/tests/stead-product-migrate', {arm + '-other'})['compile_failed_registered_arms'], [])
+
+    def test_unit_structure_counts_are_bounded_without_free_text(self):
+        observed = failure.unit_structure((self.secret + '\n').encode() * 5000, 'unrecognized', ())
+        self.assertEqual(observed['line_count'], 5000)
+        self.assertEqual(observed['prefix_counts']['other'], 4096)
+        self.assertTrue(observed['prefix_counts_truncated'])
+        self.assertNotIn(self.secret, json.dumps(observed))
+
     def test_source_spans_require_admitted_source_and_exact_byte_bounds(self):
         source = 'native/core/desk/lib/stead-fixture.hoon'
         sources = {source: b'first\nsecond\n'}
