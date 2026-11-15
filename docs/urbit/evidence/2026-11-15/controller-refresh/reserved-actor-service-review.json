@@ -1,0 +1,27 @@
+{
+  "files_sha256": {
+    "native/core/desk/lib/stead-actor.hoon": "4739b3b7e65ff95a14e2410c5c0635833b13e5fc7ff197c9b004b27a92e9c7b8",
+    "native/core/desk/lib/stead-service-bindings.hoon": "fbad713a0aa7f49738fa8e7d0741290981ae34ec039dab57a346326027168b91",
+    "native/core/desk/tests/stead-actor.hoon": "772412409d849e19e3093eb32666e24e36ad4bb8de7733d9ad92722d7b7ed24d",
+    "native/core/desk/tests/stead-service-bindings.hoon": "482e8ae4fbe15d02305026e047dd58bf870986bb8c363b486ea6758103e17c27"
+  },
+  "findings_resolved": [
+    "Strictly reducing revocations use supplied shared ordinary 4096, global security 2048 and owner security 128 totals. Existing capability and live incarnation evidence are required at ordinary exhaustion; expired or absent-book credentials cannot spend reserve.",
+    "Repeated inactive or revoked operations do not spend capacity. Temporary target disablement cannot prevent permanent compromise revocation.",
+    "Early bounded admission retains ownership/highwater, canonical credential and original grant constraints; restored descriptors do not recreate ephemeral bearer authority."
+  ],
+  "home_activated": false,
+  "integrator_review": [
+    "Native authentication bytes remain exact; verified service actors have no fabricated ship.",
+    "Credential issuance returns raw bearer only once; persistent records retain hashes and original scoped shared grants. The outer Home carrier must enforce request idempotency before issuance.",
+    "Each effect rechecks current binding, catalog, issuer, exact original grants, scope, epoch, lease and current ephemeral incarnation. Restored descriptors alone cannot authorize.",
+    "Service grants and roster membership still need a real shared-core adapter; fixture grant rows are trusted test setup, not a live policy route."
+  ],
+  "limitations": [
+    "Pure source and fixtures only; no hosted native execution of these 12 arms yet.",
+    "No new Home route, saved-state activation, service grant adapter or live agent execution is qualified."
+  ],
+  "native_executed": false,
+  "status": "independent-source-review-approved",
+  "test_arms": 12
+}

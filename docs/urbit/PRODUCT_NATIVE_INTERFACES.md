@@ -414,6 +414,39 @@ The owner reducer's six arms and the integrated history cases are source-only.
 They are outside the immutable 230-arm qualification candidate `f93a42a` and
 must pass their own registered native run before Home integration can qualify.
 
+### Reserved service actors and credential bindings
+
+`stead-actor` separates exact existing native authentication from a verified
+service context. A service has a stable principal and no invented ship. Its
+scope pins Home, project, epoch, Work, optional shared Doc and a closed set of
+Work read/comment and Doc read/propose operations. No wire field constructs a
+verified actor.
+
+`stead-service-bindings` preserves binding ownership, custody and revision
+high-water marks, rejects parallel native/service mechanisms, and pins exact
+runtime versions. A current authorized human may issue a credential only within
+existing shared core grants. The raw bearer is returned once; persistent
+records contain its hash, immutable scope, original issuer and grant evidence.
+The carrier must enforce request identity before issuance. Lost issuance replies
+require explicit rotation; replay cannot remint or reveal a saved secret.
+
+Every effect rechecks current catalog, binding, native issuer, original grants,
+resource scope and epoch. A replacement grant cannot revive old authority.
+Credentials last at most fifteen minutes, clipped to all original authority
+expiries. They also require the current ephemeral incarnation/book. Loading
+retained descriptors never rebuilds a usable old bearer.
+
+At ordinary capacity, strict revocation shares the existing global and owner
+security remainder. Already revoked/inactive operations are unchanged and use
+no reserve. Temporary catalog disablement does not prevent permanent revocation
+of retained capability; expired or absent-incarnation credentials cannot spend
+that reserve. Shape bounds do not replace ordered historical validation.
+
+The four actor and eight binding arms are source-only and unexecuted. Their
+[hash-bound independent review](evidence/2026-11-15/controller-refresh/reserved-actor-service-review.json)
+does not activate a carrier, service grant route, principal-aware roster,
+ordered issuance history or saved state. Those integration steps remain required.
+
 ## T04/T12/T13/T14 incremental integration
 
 ### First exact Doc Change interface
