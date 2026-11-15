@@ -1,7 +1,7 @@
 import { newId } from './protocol';
 import { StrictMode, Suspense, lazy, useEffect, useRef, useState, type FormEvent, type ReactNode } from 'react';
 import { createRoot } from 'react-dom/client';
-import { HomeClient, HomeError, UUID, command, type Command, type Fields, type HomeWatch, type Query, type Row, type UpdateScope, type ViewKind } from './api';
+import { HomeClient, HomeError, UUID, command, type CodeReviewKey, type Command, type Fields, type HomeWatch, type Query, type Row, type UpdateScope, type ViewKind } from './api';
 import { Button, EmptyState, LoadingState, Surface, TextField } from './primitives';
 import { SupportDetails } from './SupportDetails';
 import { AcceptedTime } from './AcceptedTime';
@@ -9,6 +9,9 @@ import { WorkQuickActions, assigneeName, workStatuses, type WorkMenu, type WorkP
 import { CodeRepository } from './CodeRepository';
 import { CodePack } from './CodePack';
 import { WorkCodeLinks } from './WorkCodeLinks';
+import { WorkDevelopment, type CodeDevelopmentTarget } from './WorkDevelopment';
+import { WorkDiscussion } from './WorkDiscussion';
+import { WorkDelegations } from './WorkDelegations';
 import { UrbitSignIn } from './UrbitSignIn';
 import './style.css';
 const Markdown = lazy(() => import('./Markdown').then(module => ({ default: module.Markdown })));
@@ -80,6 +83,8 @@ function App() {
   const externalRepository = repository?.status === 'external' || repository?.status === 'external-staged';
   const [showRepository, setShowRepository] = useState(false);
   const [selectedReview, setSelectedReview] = useState<string>();
+  const [inlineReview, setInlineReview] = useState<CodeReviewKey>();
+  const [development, setDevelopment] = useState<CodeDevelopmentTarget>();
   const [rows, setRows] = useState<Row[]>([]);
   const [cursor, setCursor] = useState('');
   const [search, setSearch] = useState('');
@@ -97,6 +102,7 @@ function App() {
   const hiddenHeader = editor?.fullSource ? '' : pageHeader;
   const [currentVersion, setCurrentVersion] = useState<{scope: string; row: Row} | null>(null);
   const [work, setWork] = useState<Row | null>(null);
+  const [commentDrafts, setCommentDrafts] = useState<Record<string, string>>({});
   const [workMenu, setWorkMenu] = useState<WorkMenu | null>(null);
   const [workFiltersOpen, setWorkFiltersOpen] = useState(false);
   const [workFilters, setWorkFilters] = useState(initialWorkFilters);
@@ -111,6 +117,8 @@ function App() {
   const [confirmation, setConfirmation] = useState<{command: Command; label: string} | null>(null);
   const [pending, setPending] = useState<Command | null>(null);
   const comparisonScope = `${identity?.session_audit_id}/${project?.project_id}/${container?.container_id ?? ''}/${editor?.id ?? work?.resource_id ?? ''}`;
+  const workScope = `${identity?.session_audit_id}/${project?.project_id}/${project?.authority_epoch}/${work?.resource_id}`;
+  const commentDraft = commentDrafts[workScope] ?? '';
   const activeQuery = useRef(0);
   const repositoryGeneration = useRef(0);
   const displayedSnapshot = useRef<{scope: string; generation: string} | null>(null);
@@ -136,8 +144,9 @@ function App() {
     routedIdentity.current = undefined;
     setLoading(false);
     setProjects([]); setProject(null); setContainers([]); setContainer(null); setRows([]);
-    setRepository(null); setShowRepository(false); setSelectedReview(undefined);
+    setRepository(null); setShowRepository(false); clearCodeSelection();
     setWorkFiltersOpen(false); setWorkFilters(initialWorkFilters); setWorkRoster({status: 'loading'});
+    setCommentDrafts({});
     setSearch(''); setSearchDraft(''); setCursor(''); setEditor(null); setWork(null); setWorkMenu(null); setForm(''); setFormDirty(false); setDiscard(null); setPending(null); setTargets([]); setTargetFilter(''); setConfirmation(null); setCurrentVersion(null); setNotice(''); setRefreshNotice(null);
   };
   client.onInvalidated = () => { clearViews(); setIdentity(null); setChallenge(null); };
@@ -202,10 +211,10 @@ function App() {
   }, [refreshNotice]);
   const announceRefresh = (text: string) => setRefreshNotice(previous => ({text, sequence: (previous?.sequence ?? 0) + 1}));
   useEffect(() => {
-    const warn = (event: BeforeUnloadEvent) => { if (busy || editor?.dirty || pending || formDirty) { event.preventDefault(); event.returnValue = ''; } };
+    const warn = (event: BeforeUnloadEvent) => { if (busy || editor?.dirty || pending || formDirty || Object.keys(commentDrafts).length) { event.preventDefault(); event.returnValue = ''; } };
     window.addEventListener('beforeunload', warn);
     return () => window.removeEventListener('beforeunload', warn);
-  }, [editor?.dirty, pending, formDirty, busy]);
+  }, [editor?.dirty, pending, formDirty, busy, commentDrafts]);
   useEffect(() => { setFormDirty(false); setDiscard(null); }, [form, work?.resource_id]);
   useEffect(() => { setWorkMenu(null); quickActionFocus.current = null; }, [tab, project?.project_id, project?.role, project?.authority_epoch, identity?.session_audit_id]);
   useEffect(() => {
@@ -437,7 +446,7 @@ function App() {
       setWorkFiltersOpen(false); setWorkFilters(initialWorkFilters);
     } else if (row.project_id) void loadRepository(row.project_id);
     setShowRepository(false);
-    setSelectedReview(undefined);
+    clearCodeSelection();
     setWork(null); setForm(''); setTargets([]); setConfirmation(null); setCurrentVersion(null); setProject(row); setContainer(null); setEditor(null); setRows([]); setContainers([]); setTab(nextTab); setCursor('');
     reloadScope();
   }
@@ -474,7 +483,7 @@ function App() {
     }
     if (location.hash !== requestedHash) return;
     if (project?.project_id !== row.project_id || tab !== 'work') enterProject(row, 'work');
-    else { setShowRepository(false); setSelectedReview(undefined); }
+    else { setShowRepository(false); clearCodeSelection(); }
     const previousItem = work?.resource_id;
     if (!item && previousItem && UUID.test(previousItem)) requestAnimationFrame(() =>
       document.querySelector<HTMLElement>(`[data-work-row="${previousItem}"] .work-title`)?.focus());
@@ -511,12 +520,38 @@ function App() {
   function selectProjectTab(kind: ViewKind) {
     if (busy || editor?.dirty || pending || form) { setError('Finish or discard the current draft first.'); return; }
     syncWorkAddress(kind === 'work' ? project?.project_id : undefined);
-    activeQuery.current++; setShowRepository(false); setSelectedReview(undefined); setEditor(null); setWork(null); setCurrentVersion(null);
+    activeQuery.current++; setShowRepository(false); clearCodeSelection(); setEditor(null); setWork(null); setCurrentVersion(null);
     setConfirmation(null); setForm(''); setTab(kind); setRows([]); setCursor(''); reloadScope();
   }
+  function clearCodeSelection() { setSelectedReview(undefined); setInlineReview(undefined); setDevelopment(undefined); }
   function openLinkedReview(proposalId: string) {
     if (!UUID.test(proposalId) || workActionsLocked) return;
-    syncWorkAddress(); setSelectedReview(proposalId); setShowRepository(true);
+    syncWorkAddress(); clearCodeSelection(); setSelectedReview(proposalId); setShowRepository(true);
+  }
+  function openDevelopment(target: CodeDevelopmentTarget) {
+    if (workActionsLocked || target.workId !== work?.resource_id) return;
+    syncWorkAddress(); clearCodeSelection(); setDevelopment(target); setShowRepository(true);
+  }
+  function openInlineReview(key: CodeReviewKey) {
+    if (workActionsLocked) return;
+    syncWorkAddress(); clearCodeSelection(); setInlineReview(key); setShowRepository(true);
+  }
+  function updateCommentDraft(body: string) {
+    setCommentDrafts(drafts => {
+      const next = {...drafts};
+      if (body) next[workScope] = body;
+      else delete next[workScope];
+      return next;
+    });
+  }
+  function submitComment(body: string) {
+    if (!project?.project_id || !project.authority_epoch || !work?.resource_id || !canEdit || workActionsLocked) return;
+    const {project_id, authority_epoch} = project;
+    const item = work.resource_id;
+    void action(async () => {
+      const latest = await readWorkItem(project_id, item);
+      await save(command(project_id, item, latest.resource_revision!, authority_epoch, 'work.comment', {body}));
+    });
   }
   function openLinkedWork(item: string) {
     const projectId = project?.project_id;
@@ -525,8 +560,13 @@ function App() {
     void action(() => restoreWorkAddress({project: projectId, item}), explainConnection);
   }
   async function completed(value: Command, receipt: Fields) {
-    const refreshDetail = work?.resource_id === value.resource_id && ['work.update', 'work.assign'].includes(value.operation);
+    const refreshDetail = work?.resource_id === value.resource_id && ['work.update', 'work.assign', 'work.comment'].includes(value.operation);
     setPending(null);
+    if (value.operation === 'work.comment') {
+      if (commentDraft === value.payload.body) updateCommentDraft('');
+      setNotice('Comment posted.');
+      if (refreshDetail && work) setWork({...work, resource_revision: receipt.resource_revision!});
+    }
     if (value.operation === 'document.save' && editor?.id === value.resource_id) setEditor({ ...editor, revision: receipt.resource_revision!, head: receipt.git_commit_oid ?? '', dirty: false });
     setForm(''); setEditWorkField(null); setFormDirty(false); setDiscard(null); if (!refreshDetail) setWork(null); setConfirmation(null); setCurrentVersion(null);
     if (value.operation === 'document.delete') setEditor(null);
@@ -539,7 +579,7 @@ function App() {
       const view = await client.query(blankQuery('work', value.project_id, '', value.resource_id));
       if (generation === activeQuery.current) setWork(Object.values(view.rows)[0] ?? null);
     }
-    setNotice(`Saved at home · revision ${receipt.resource_revision}`);
+    if (value.operation !== 'work.comment') setNotice(`Saved at home · revision ${receipt.resource_revision}`);
   }
   async function save(value: Command) {
     setPending(value); setNotice('Pending confirmation from home…');
@@ -900,13 +940,14 @@ function App() {
           <nav className="tabs" aria-label="Project views">{([['project','Overview'],['work','Work'],['documents','Docs'],['relations','Links'],['activity','Activity'],['inbox','Inbox'],['search','Search']] as const).map(([kind,label]) => <Button disabled={busy} key={kind} variant={!showRepository && tab === kind ? 'primary' : 'quiet'} aria-current={!showRepository && tab === kind ? 'page' : undefined} onClick={() => selectProjectTab(kind)}>{label}</Button>)}
           {(repository?.status === 'ready' || externalRepository) && <Button disabled={busy || !!editor?.dirty || !!pending || !!form}
             variant={showRepository ? 'primary' : 'quiet'} aria-current={showRepository ? 'page' : undefined}
-            onClick={() => { syncWorkAddress(); setSelectedReview(undefined); setShowRepository(true); }}>Code</Button>}</nav>
-          {showRepository && repository?.status === 'ready' ? <CodeRepository key={project.project_id}
+            onClick={() => { syncWorkAddress(); clearCodeSelection(); setShowRepository(true); }}>Code</Button>}</nav>
+          {showRepository && repository?.status === 'ready' ? <CodeRepository key={`${identity.session_audit_id}/${project.project_id}/${project.authority_epoch}`}
             client={client} project={project.project_id!} writable={repository.write === 'yes'}
-            manage={repository.manage === 'yes'} principal={identity.principal_id ?? ''} /> :
-          showRepository && externalRepository ? <CodePack key={`${project.project_id}/${project.authority_epoch}`} client={client} project={project.project_id!}
+            manage={repository.manage === 'yes'} principal={identity.principal_id ?? ''}
+            initialProposal={inlineReview} onOpenWork={openLinkedWork}/> :
+          showRepository && externalRepository ? <CodePack key={`${identity.session_audit_id}/${project.project_id}/${project.authority_epoch}`} client={client} project={project.project_id!}
             manage={repository?.manage === 'yes'} writable={repository?.write === 'yes'} principal={identity.principal_id ?? ''}
-            initialProposal={selectedReview} onOpenWork={openLinkedWork}/> : <>
+            initialProposal={selectedReview} onOpenWork={openLinkedWork} development={development}/> : <>
           {tab === 'project' && repository?.status === 'disabled' && repository.manage === 'yes'
             && <Button disabled={busy || !!pending || !!form} onClick={() => void action(() => loadRepository(project.project_id!, true))}>Enable Git repository</Button>}
           <div className="toolbar"><div className="view-heading">{tab === 'work' && <h2>Work items</h2>}{tab === 'documents' && <label>Collection <select aria-label="Collection" disabled={busy} value={container?.container_id ?? ''} onChange={event => { const selected = containers.find(row => row.container_id === event.target.value) ?? null; if (busy || editor?.dirty || pending || form) { setError('Finish or discard the current draft first.'); return; } activeQuery.current++; setContainer(selected); setEditor(null); setWork(null); setCurrentVersion(null); setConfirmation(null); setForm(''); setRows([]); setCursor(''); reloadScope(); }}><option value="">Choose a collection</option>{containers.map(row => <option key={row.container_id} value={row.container_id}>{row.title} · {row.visibility === 'private' ? 'Private drafts' : 'Shared'}</option>)}</select></label>}{tab === 'search' && <form className="search" onSubmit={submitSearch}><TextField label="Search this project" value={searchDraft} onChange={event => setSearchDraft(event.target.value)} maxLength={128}/><Button type="submit" disabled={busy}>Search</Button></form>}</div><div className="actions">
@@ -959,8 +1000,18 @@ function App() {
               {canEdit ? <button type="button" className="work-description work-inline-description" title="Edit description" disabled={workActionsLocked}
                 onClick={() => startEditingWork('description')}>{work.description || 'Add a description'}</button>
                 : <p className="work-description">{work.description || 'No description yet.'}</p>}
-              {repository?.status === 'external' && work.resource_id && <WorkCodeLinks key={`${identity.session_audit_id}/${project.project_id}/${project.authority_epoch}/${work.resource_id}`}
+              {repository?.status === 'external' && work.resource_id && <WorkDevelopment key={workScope}
+                client={client} project={project.project_id!} work={{id: work.resource_id, title: work.title ?? ''}}
+                writable={repository.write === 'yes'} onOpenCode={openDevelopment}/>}
+              {repository?.status === 'external' && work.resource_id && <WorkCodeLinks key={workScope}
                 client={client} project={project.project_id!} work={work.resource_id} onOpenReview={openLinkedReview}/>}
+              {repository?.status === 'ready' && work.resource_id && <WorkDelegations key={workScope}
+                client={client} project={project.project_id!} work={work} manage={repository.manage === 'yes'}
+                locked={workActionsLocked} onReview={openInlineReview}/>}
+              {work.resource_id && <WorkDiscussion key={workScope} client={client} project={project.project_id!} work={work.resource_id}
+                revision={rows.find(row => row.resource_id === work.resource_id)?.resource_revision ?? work.resource_revision!}
+                principal={identity.principal_id!} name={identity.display_name} writable={!!canEdit} locked={workActionsLocked}
+                draft={commentDraft} onChange={updateCommentDraft} onSubmit={submitComment}/>}
               <div className="actions">
                 {canEdit && <Button disabled={busy || !!pending} onClick={() => startEditingWork(null)}>Edit work item</Button>}
                 <Button variant="quiet" disabled={busy} onClick={() => void copyWorkLink(work)}>Copy link</Button>

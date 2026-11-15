@@ -67,3 +67,32 @@ The proof profile holds at most 32 delegations, builds and releases and 64
 proposal revisions and reviews per board. Capacity fails closed. Production
 service wiring, bounded durable artifact transport, a v1 saved-state
 predecessor matrix, and external worker operation require their own evidence.
+
+## Try a Work delegation
+
+In a project with inline Code, open a Work item as a maintainer. Choose
+**Delegate to an agent**, enter the agent's own Urbit ID, choose the target
+branch, and set an expiration. The member must already have project access.
+The human assignee stays responsible for the ticket. Home shows proposal access
+and the proposals submitted using it.
+
+Use **Copy agent brief** to pass the current task to the worker. A worker with
+its own approved session can verify a private copy of the brief with
+`python3 scripts/urbit/agent_proposal.py --brief BRIEF --session-file SESSION`.
+Both files must be owned by the worker and have mode 0600. The session uses the
+same format as the member export tool and stays with the worker's Home client.
+Keep it out of the model prompt, repository, and logs. The brief contains
+project content.
+
+Give the worker a disposable checkout of the authorized repository. For a
+first task, ask it to add a README example and run the project's checks. Have
+an authorized Git writer stage the resulting commit on a feature branch, then
+give the agent the exact original target and staged commit IDs. Run the same
+command with `--base BASE --head HEAD`. It rechecks the assignment and Work
+revision, submits under the worker's identity, and confirms the exact proposal
+through Home. A retry with the same inputs can recover the proposal. The ticket
+links the submitted revision for independent review.
+
+This workflow hands off one task at a time to an external worker. Automatic
+worker dispatch, execution progress, and the external Git profile's delegation,
+build and release steps are separate unfinished paths.

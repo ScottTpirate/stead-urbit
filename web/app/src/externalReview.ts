@@ -19,7 +19,7 @@ function refText(hex: string): string | null {
   catch { return null; }
 }
 
-function refHex(ref: string): string {
+export function refHex(ref: string): string {
   return Array.from(new TextEncoder().encode(ref), byte => byte.toString(16).padStart(2, '0')).join('');
 }
 

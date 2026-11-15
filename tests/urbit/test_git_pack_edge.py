@@ -22,6 +22,7 @@ sys.path.insert(0, str(ROOT / 'scripts/urbit'))
 from git_pack_edge import MAX_REQUEST, MAX_WIRE, Profile, render
 from git_pack_browse import MAX_REQUEST as MAX_BROWSE
 from git_pack_browse_http import PATH as BROWSE
+from git_pack_changes import PATH as CHANGES
 
 
 PROJECT = '019939ba-4000-7000-8000-000000000001'
@@ -256,6 +257,24 @@ class NginxEdgeTests(unittest.TestCase):
                 self.assertIn(self.exchange(method, target, browser + headers, body)[0], (400, 404, 413))
         self.assertTrue(self.git.observed.empty())
         self.assertTrue(self.home.observed.empty())
+
+    def test_exact_proposal_changes_reach_only_the_browser_read_relay(self):
+        self.start()
+        authority = f'{HOST}:{self.profile.public_port}'
+        headers = [('Origin', 'https://' + authority), ('Cookie', '__Host-stead-session=' + 'd' * 64),
+                   ('X-Stead-CSRF', 'e' * 64), ('Content-Type', 'application/json'), ('Content-Length', '2'),
+                   ('Authorization', GIT_AUTH), ('X-Stead-Relay', 'discard')]
+        self.assertEqual(self.exchange('POST', CHANGES, headers, b'{}'), (200, self.git.label))
+        observed = self.git.observed.get(timeout=2)
+        self.assertEqual((observed['path'], observed['body']), (CHANGES, b'{}'))
+        self.assertEqual(observed['headers']['X-Stead-Edge-Target'], CHANGES)
+        self.assertEqual(observed['headers']['Cookie'], '__Host-stead-session=' + 'd' * 64)
+        self.assertNotIn('Authorization', observed['headers'])
+        self.assertNotIn('X-Stead-Relay', observed['headers'])
+        for target in (CHANGES + '?revision=2', CHANGES.replace('/changes', '/%63hanges'), CHANGES.upper()):
+            self.assertIn(self.exchange('POST', target, headers, b'{}')[0], (400, 404))
+        self.assertTrue(self.home.observed.empty())
+        self.assertTrue(self.git.observed.empty())
 
     def test_private_tunnel_preserves_the_canonical_browser_and_git_authority(self):
         origin_port = self.home.server_port

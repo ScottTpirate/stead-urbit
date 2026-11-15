@@ -70,4 +70,17 @@
 .work-detail .work-inline-title:hover, .work-detail .work-inline-description:hover { text-decoration: underline dotted; text-underline-offset: 4px; }
 .work-detail .work-metadata .work-property { max-width: 100%; }
 .work-detail .work-metadata .work-property-label { white-space: normal; overflow-wrap: anywhere; }
+.work-section { display: grid; gap: 9px; padding-block: 13px; margin-top: 10px; border-top: 1px solid var(--line); min-width: 0; }
+.work-section h3 { font-size: 14px; margin: 0; }
+.work-section p { margin: 0; }
+.work-section form { display: grid; gap: 9px; min-width: 0; }
+.work-section textarea, .work-section select { width: 100%; min-width: 0; }
+.work-section textarea { min-height: 78px; max-height: 300px; }
+.work-section form > .stead-button { justify-self: start; }
+.work-discussion-list, .work-agent-list { list-style: none; padding: 0; margin: 0; display: grid; gap: 8px; }
+.work-discussion-list li, .work-agent-list li { background: #f5f3ed; padding: 9px 10px; border-radius: 6px; min-width: 0; overflow-wrap: anywhere; }
+.work-discussion-list li > div { display: flex; gap: 5px 12px; flex-wrap: wrap; align-items: baseline; margin-bottom: 6px; }
+.work-discussion-list time { color: var(--muted); font-size: 12px; }
+.work-discussion-list li p { white-space: pre-wrap; }
+.work-agent-list li { display: grid; gap: 4px; }
 @media (pointer: coarse) { .work-menu button, .work-property { min-height: 36px; } }

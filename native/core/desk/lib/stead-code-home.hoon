@@ -146,7 +146,7 @@
   ?:  =(0 role)  (error code 404 'denied_or_not_found')
   =/  fenced  (retired project)
   ?:  ?&  fenced
-          !(~(has in (silt ~['status' 'pack-view' 'proposal' 'delivery-export' 'build-job' 'revoke'])) operation)
+          !(~(has in (silt ~['status' 'pack-view' 'proposal' 'delivery-export' 'build-job' 'revoke' 'work-delegations'])) operation)
           |(!=('issue' operation) !=('read' (field values 'access')))
       ==
     (error code 409 'project_retired')

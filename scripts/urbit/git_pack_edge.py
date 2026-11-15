@@ -12,6 +12,7 @@ import sys
 
 from git_pack_browse import MAX_REQUEST as MAX_BROWSE
 from git_pack_browse_http import PATH as BROWSE_PATH
+from git_pack_changes import PATH as CHANGES_PATH
 from git_pack_http import FETCH_TYPE
 from git_pack_push_http import MIME
 from git_pack_receive import MAX_WIRE
@@ -133,7 +134,8 @@ def render(profile: Profile, desk: Path) -> str:
                 for name in ('upload', 'receive')]
     entries += [(route('POST', base + '/git-upload-pack', authority, FETCH_TYPE, positive_length(MAX_REQUEST)), '423'),
                 (route('POST', base + '/git-receive-pack', authority, MIME + 'request', positive_length(MAX_WIRE)), '424'),
-                (route('POST', BROWSE_PATH, authority, 'application/json', positive_length(MAX_BROWSE)), '425')]
+                (route('POST', BROWSE_PATH, authority, 'application/json', positive_length(MAX_BROWSE)), '425'),
+                (route('POST', CHANGES_PATH, authority, 'application/json', positive_length(MAX_BROWSE)), '425')]
     rows = '\n'.join(f'    {test} {value};' for test, value in entries)
     common = [('Authorization', '$http_authorization'), ('Git-Protocol', '$http_git_protocol'),
               ('X-Forwarded-Proto', 'https'), ('X-Stead-Edge-Target', '$request_uri')]

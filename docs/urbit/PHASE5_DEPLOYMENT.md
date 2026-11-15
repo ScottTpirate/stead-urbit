@@ -69,6 +69,11 @@ accounts. Reconnect the ingress fence to the admitted Vere process before
 opening traffic. The generated include serves only the Home hostname, its
 exact browser routes, and the selected project's Git Smart HTTP routes.
 The Code file browser uses `POST /stead/api/code/browse` on the same origin.
+Exact proposal comparisons use `POST /stead/api/code/changes`. The relay
+obtains the base and head from Home's authorized proposal revision, verifies
+that both commits remain in the accepted pack, and rechecks the proposal and
+snapshot before returning changed files or a bounded patch. Historical
+comparisons depend on the retention of both exact commits.
 The relay checks the member's session, project access, and accepted snapshot
 with Home before reading the pack and again before returning names or plain
 text. Refresh the nginx include and restart the relay when installing support

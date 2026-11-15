@@ -10,6 +10,7 @@ import weakref
 
 from execution_policy import directory_fd
 import git_pack_browse_http as browser
+import git_pack_changes
 from git_pack_relay import Relay
 from git_pack_service import private_mount
 from git_pack_store import SHIP
@@ -95,7 +96,7 @@ def create_application(profile):
                 or forwarded != {'HTTP_X_FORWARDED_PROTO'} or environ['HTTP_X_FORWARDED_PROTO'] != 'https'):
             start_response('400 Bad Request', [('Cache-Control', 'no-store'), ('Content-Length', '0')])
             return ()
-        if path == browser.PATH:
+        if path in (browser.PATH, git_pack_changes.PATH):
             return browse(environ, start_response)
         return mounted(environ, start_response)
 

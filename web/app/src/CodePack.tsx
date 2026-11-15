@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState, type KeyboardEvent } from 'react';
-import { packRefs, type Fields, type HomeClient } from './api';
+import { UUID, packRefs, type Fields, type HomeClient } from './api';
 import { newId } from './protocol';
 import { AcceptedTime } from './AcceptedTime';
 import { CopyValue, GitCredentials, repositoryUrl } from './CodeRepository';
@@ -7,16 +7,18 @@ import { CodeExternalReview } from './CodeExternalReview';
 import { RepoBrowser } from './RepoBrowser';
 import { refLabel } from './externalReview';
 import { Button, Surface, TextField } from './primitives';
+import { workBranchRef, type CodeDevelopmentTarget } from './WorkDevelopment';
 
 const TAG_PREFIX = '726566732f746167732f';
 const shortRef = (key: string) => refLabel(key).replace(/^refs\/(?:heads|tags)\//u, '')
   .replace(/[\p{Cc}\p{Cf}]/gu, character => `\\u{${character.codePointAt(0)?.toString(16)}}`);
 
-function RepositoryRefs({ snapshot, client, project, browse, refresh }: {
+function RepositoryRefs({ snapshot, client, project, browse, refresh, initialReference }: {
   snapshot: Fields; client: HomeClient; project: string; browse: boolean; refresh: () => void;
+  initialReference?: string;
 }) {
   const [section, setSection] = useState<'branch' | 'tag'>('branch');
-  const [selection, setSelection] = useState('');
+  const [selection, setSelection] = useState(initialReference ?? '');
   const [open, setOpen] = useState(false);
   const [filter, setFilter] = useState('');
   const picker = useRef<HTMLDivElement>(null);
@@ -129,25 +131,31 @@ function RepositoryRefs({ snapshot, client, project, browse, refresh }: {
   </>;
 }
 
-export function CodePack({ client, project, manage, writable, principal, initialProposal, onOpenWork }: {
+export function CodePack({ client, project, manage, writable, principal, initialProposal, onOpenWork, development }: {
   client: HomeClient; project: string; manage: boolean; writable: boolean; principal: string;
   initialProposal?: string; onOpenWork?: (workId: string) => void;
+  development?: CodeDevelopmentTarget;
 }) {
   const [details, setDetails] = useState<Fields | null>(null);
   const [access, setAccess] = useState<{ writable: boolean; manage: boolean } | null>(null);
   const [busy, setBusy] = useState(true);
   const [failure, setFailure] = useState('');
   const heading = useRef<HTMLHeadingElement>(null);
+  const focusedDevelopment = useRef<CodeDevelopmentTarget | null>(null);
   const request = useRef<{ snapshot: string; epoch: string; id: string } | null>(null);
   useEffect(() => {
     let current = true;
-    void client.code(project, { action: 'pack-view' }).then(value => {
-      if (current) setDetails(value);
+    void Promise.all([client.code(project, { action: 'pack-view' }),
+      development ? client.code(project, { action: 'status' }) : null]).then(([value, status]) => {
+      if (current) {
+        setDetails(value);
+        if (status) setAccess({ writable: status.status === 'external' && status.write === 'yes', manage: status.manage === 'yes' });
+      }
     }).catch(() => {
       if (current) setFailure('This Git snapshot is unavailable.');
     }).finally(() => { if (current) setBusy(false); });
     return () => { current = false; };
-  }, [client, project]);
+  }, [client, project, development]);
 
   async function refresh() {
     setBusy(true); setFailure('');
@@ -186,6 +194,14 @@ export function CodePack({ client, project, manage, writable, principal, initial
   const atCapacity = !!details?.generation_limit && details.generation === details.generation_limit;
   const canWrite = (access?.writable ?? writable) && !busy && !failure;
   const canManage = access?.manage ?? manage;
+  const workBranch = development && UUID.test(development.workId) && workBranchRef(development.workId) === development.ref
+    ? development : undefined;
+  const hasWorkBranch = !!workBranch && details?.status === 'external' && Object.hasOwn(packRefs(details), workBranch.ref);
+  useEffect(() => {
+    if (workBranch?.mode !== 'browse' || !details || busy || focusedDevelopment.current === workBranch) return;
+    focusedDevelopment.current = workBranch;
+    heading.current?.focus();
+  }, [workBranch, details, busy]);
   return <div className="external-code repo-page"><Surface className="repo-overview" aria-labelledby="repo-heading">
     <div className="repo-toolbar">
       <h2 id="repo-heading" ref={heading} tabIndex={-1}>{staged ? 'Review Git snapshot' : 'Repository'}</h2>
@@ -197,7 +213,13 @@ export function CodePack({ client, project, manage, writable, principal, initial
     </div>
     {busy && !details && <p className="repo-help" role="status">Loading repository…</p>}
     {details && <>
+      {workBranch && <div className="repo-work-context">
+        {hasWorkBranch ? <p>Work item <strong><bdi>{workBranch.title}</bdi></strong></p>
+          : <p role="status">The Work branch is absent from the accepted Git snapshot.</p>}
+        {onOpenWork && <Button variant="quiet" onClick={() => onOpenWork(workBranch.workId)}>Return to work item</Button>}
+      </div>}
       <RepositoryRefs snapshot={details} client={client} project={project}
+        initialReference={hasWorkBranch ? workBranch.ref : undefined}
         browse={details.status === 'external' && !busy && !failure} refresh={() => {
           heading.current?.focus();
           void refresh();
@@ -212,6 +234,6 @@ export function CodePack({ client, project, manage, writable, principal, initial
     {failure && <p role="alert">{failure}</p>}
   </Surface>{details?.status === 'external' && <CodeExternalReview client={client} project={project} writable={canWrite}
       manage={canManage} atCapacity={atCapacity} principal={principal} snapshot={details} refreshSnapshot={refresh}
-      initialProposal={initialProposal} onOpenWork={onOpenWork} />}
+      initialProposal={initialProposal} onOpenWork={onOpenWork} development={workBranch} />}
   </div>;
 }

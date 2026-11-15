@@ -8,6 +8,16 @@ export type GitBrowseResult = { commit: string } & (
   { status: 'tree'; entries: { name: string; kind: 'tree' | 'file' | 'symlink' | 'submodule'; oid: string }[]; truncated: boolean }
   | { status: 'file'; preview: 'text' | 'binary' | 'too-large'; bytes: number; text?: string }
 );
+export type GitChangesView = 'files' | 'patch';
+export type GitChangesResult = { base: string; head: string } & (
+  { status: 'files'; entries: { path: string; status: 'A' | 'M' | 'D' | 'T'; old_mode: string; new_mode: string }[]; truncated: boolean }
+  | { status: 'patch'; path: string; preview: 'text' | 'binary' | 'too-large' | 'unsupported-type'; text?: string; sanitized?: boolean }
+);
+export type WorkDelegation = {
+  id: string; worker: string; ref: string; expires: string;
+  status: 'active' | 'expired' | 'revoked' | 'unavailable'; revocable: boolean;
+  proposals: CodeReviewKey[];
+};
 export type CodeMerge = CodeReviewKey & { action: 'merge'; request_id: string };
 export type ExternalMerge = CodeReviewKey & { action: 'external-merge'; request_id: string;
   worker_generation: string; worker_signature: string; proof: string };
@@ -25,8 +35,9 @@ export type CodeInput = { action: 'status' | 'create' | 'pack-view' }
   | ({ action: 'external-approve'; base_snapshot: string; base_oid: string; head_oid: string; request_id: string } & CodeReviewKey)
   | { action: 'delegate'; delegation_id: string; worker_ship: string; work_id: string; ref: string; expires_at_ms: string }
   | { action: 'revoke-delegation'; delegation_id: string }
+  | { action: 'work-delegations'; work_id: string }
   | CodeMerge | ExternalMerge;
-export type ViewKind = 'identity' | 'projects' | 'project' | 'work' | 'assignees' | 'documents' | 'containers' | 'document' | 'relations' | 'search' | 'activity' | 'inbox' | 'receipt';
+export type ViewKind = 'identity' | 'projects' | 'project' | 'work' | 'comments' | 'assignees' | 'documents' | 'containers' | 'document' | 'relations' | 'search' | 'activity' | 'inbox' | 'receipt';
 export interface Query {
   kind: ViewKind;
   project_id: string;
@@ -104,7 +115,11 @@ const EXTERNAL_MERGE_DENIALS = new Set(['invalid_request', 'proposal_unavailable
   'stale-epoch', 'stale-proposal', 'stale-review', 'stale-revision', 'stale-selection', 'stale-target']);
 const MAX_RESPONSE = 262144;
 const BROWSE_PATH = '/stead/api/code/browse';
+const CHANGES_PATH = '/stead/api/code/changes';
 const GIT_NAME = /^(?:[0-9a-f]{2}){1,255}$/u;
+const GIT_CHANGE_PATH = /^(?:[0-9a-f]{2}){1,1024}$/u;
+const GIT_MODE = /^[0-7]{6}$/u;
+export const SHIP = /^~[a-z]+(?:-{1,2}[a-z]+)*$/u;
 function object(value: unknown): Record<string, unknown> {
   if (!value || typeof value !== 'object' || Array.isArray(value)) throw new HomeError('invalid_response');
   return value as Record<string, unknown>;
@@ -184,7 +199,7 @@ export class HomeClient {
     if (authenticated && this.suspended && !adoption) throw new HomeError('resume_required');
     if (authenticated && !TOKEN.test(this.csrf)) throw new HomeError('session_required');
     const raw = JSON.stringify(body);
-    const browse = path === BROWSE_PATH;
+    const browse = path === BROWSE_PATH || path === CHANGES_PATH;
     if (new TextEncoder().encode(raw).byteLength > (externalCode || browse ? MAX_EXTERNAL_CODE : 65536)) throw new HomeError('request_too_large');
     const generation = this.generation;
     const controller = new AbortController();
@@ -202,8 +217,9 @@ export class HomeClient {
       if (generation !== this.generation) throw new HomeError('session_changed');
       if (response.status === 401) { this.clear(); throw new HomeError('session_required'); }
       if (browse && response.headers.get('content-type')?.split(';')[0] !== 'application/json') {
-        if ([404, 405].includes(response.status)) throw new HomeError('browse_unsupported');
-        if ([502, 503, 504].includes(response.status)) throw new HomeError('browse_unavailable');
+        const feature = path === CHANGES_PATH ? 'changes' : 'browse';
+        if ([404, 405].includes(response.status)) throw new HomeError(feature + '_unsupported');
+        if ([502, 503, 504].includes(response.status)) throw new HomeError(feature + '_unavailable');
       }
       const value = object(await boundedJSON(response));
       if (generation !== this.generation) throw new HomeError('session_changed');
@@ -367,6 +383,9 @@ export class HomeClient {
     }
     if (['approve', 'submit', 'merge', 'delegate', 'revoke-delegation'].includes(input.action)
       && value.status !== 'accepted' && value.status !== 'replayed') throw new HomeError('invalid_response');
+    if ((input.action === 'delegate' || input.action === 'revoke-delegation') && value.delegation_id !== input.delegation_id) {
+      throw new HomeError('invalid_response');
+    }
     if (input.action === 'merge' && (value.request_id !== input.request_id || value.proposal_id !== input.proposal_id
       || value.revision !== input.revision || !DECIMAL.test(value.repository_revision ?? '') || value.repository_revision === '0')) {
       throw new HomeError('invalid_response');
@@ -399,6 +418,62 @@ export class HomeClient {
         || (workId && proposals.some(row => row.work_id !== workId))) throw new HomeError('invalid_response');
       return proposals;
     } catch { throw new HomeError('invalid_response'); }
+  }
+  async workDelegations(project: string, work: string): Promise<WorkDelegation[]> {
+    const value = await this.code(project, {action: 'work-delegations', work_id: work});
+    try {
+      if (value.status !== 'work-delegations' || value.work_id !== work) throw new HomeError('invalid_response');
+      const rows = Object.entries(object(JSON.parse(value.rows!)));
+      if (rows.length > 32) throw new HomeError('invalid_response');
+      return rows.map(([id, record]) => {
+        const row = fields(record);
+        const {worker_ship: worker, ref, expires_at_ms: expires, status, can_revoke} = row;
+        if (row.delegation_id !== id || !UUID.test(id) || !worker || worker.length > 64 || !SHIP.test(worker)
+          || !ref?.startsWith('refs/heads/') || new TextEncoder().encode(ref).length > 128
+          || !expires || !DECIMAL.test(expires) || !Number.isSafeInteger(Number(expires))
+          || (status !== 'active' && status !== 'expired' && status !== 'revoked' && status !== 'unavailable')
+          || (can_revoke !== 'yes' && can_revoke !== 'no')) throw new HomeError('invalid_response');
+        const links = Object.entries(object(JSON.parse(row.proposals!)));
+        if (links.length > 64) throw new HomeError('invalid_response');
+        const proposals = links.map(([proposal_id, revision]) => {
+          if (!UUID.test(proposal_id) || typeof revision !== 'string' || !REVIEW_REVISION.test(revision)) throw new HomeError('invalid_response');
+          return {proposal_id, revision};
+        });
+        return {id, worker, ref, expires, status, proposals, revocable: can_revoke === 'yes'};
+      });
+    } catch { throw new HomeError('invalid_response'); }
+  }
+  async reviewChanges(project_id: string, snapshot: string, proposal_id: string, revision: string,
+    view: GitChangesView, path: string, signal?: AbortSignal): Promise<GitChangesResult> {
+    const protocol = 'stead.git-changes/1';
+    if (!UUID.test(project_id) || !TOKEN.test(snapshot) || !UUID.test(proposal_id)
+      || !REVIEW_REVISION.test(revision) || (view === 'files' ? path !== '' : !GIT_CHANGE_PATH.test(path))) {
+      throw new HomeError('invalid_request');
+    }
+    const value = await this.post(CHANGES_PATH, {protocol, project_id, snapshot, proposal_id, revision, view, path}, true,
+      false, false, '', signal);
+    const {base, head} = value;
+    if (value.protocol !== protocol || value.project_id !== project_id || value.snapshot !== snapshot
+      || value.proposal_id !== proposal_id || value.revision !== revision || value.status !== view
+      || typeof base !== 'string' || !GIT_OID.test(base) || typeof head !== 'string' || !GIT_OID.test(head)) throw new HomeError('invalid_response');
+    if (view === 'files') {
+      if (!Array.isArray(value.entries) || value.entries.length > 256 || typeof value.truncated !== 'boolean') throw new HomeError('invalid_response');
+      const seen = new Set<string>();
+      const entries: Extract<GitChangesResult, {status: 'files'}>['entries'] = value.entries.map(record => {
+        const {path, status, old_mode, new_mode} = fields(record);
+        if (!path || !GIT_CHANGE_PATH.test(path) || seen.has(path)
+          || (status !== 'A' && status !== 'M' && status !== 'D' && status !== 'T')
+          || !old_mode || !GIT_MODE.test(old_mode) || !new_mode || !GIT_MODE.test(new_mode)) throw new HomeError('invalid_response');
+        seen.add(path);
+        return {path, status, old_mode, new_mode};
+      });
+      return {status: 'files', base, head, entries, truncated: value.truncated};
+    }
+    const {preview, text, sanitized} = value;
+    if (value.path !== path || (preview !== 'text' && preview !== 'binary' && preview !== 'too-large' && preview !== 'unsupported-type')
+      || (preview === 'text' ? typeof text !== 'string' || new TextEncoder().encode(text).byteLength > 196608 || typeof sanitized !== 'boolean'
+        : text !== undefined || sanitized !== undefined)) throw new HomeError('invalid_response');
+    return {status: 'patch', base, head, path, preview, ...(typeof text === 'string' && typeof sanitized === 'boolean' ? {text, sanitized} : {})};
   }
   clearCodeMerges() { this.pendingMerges.clear(); this.pendingExternalMerges.clear(); }
   pendingCodeMerge(project: string): Readonly<CodeMerge> | undefined {

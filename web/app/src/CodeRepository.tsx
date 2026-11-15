@@ -1,5 +1,5 @@
 import { useRef, useState } from 'react';
-import type { Fields, HomeClient } from './api';
+import type { CodeReviewKey, Fields, HomeClient } from './api';
 import { Button, Surface, TextField } from './primitives';
 import { CodeReview } from './CodeReview';
 import './repository.css';
@@ -96,8 +96,9 @@ export function GitCredentials({ client, project, writable, cloneUrl }: {
   </details>;
 }
 
-export function CodeRepository({ client, project, writable, manage, principal }: {
+export function CodeRepository({ client, project, writable, manage, principal, initialProposal, onOpenWork }: {
   client: HomeClient; project: string; writable: boolean; manage: boolean; principal: string;
+  initialProposal?: CodeReviewKey; onOpenWork?: (workId: string) => void;
 }) {
   return <div className="repo-page">
     <Surface className="repo-overview" aria-labelledby="repo-heading">
@@ -107,6 +108,7 @@ export function CodeRepository({ client, project, writable, manage, principal }:
       </div>
       <p className="repo-help">Clone the repository to browse files and commit history.</p>
     </Surface>
-    <CodeReview client={client} project={project} writable={writable} manage={manage} principal={principal} />
+    <CodeReview client={client} project={project} writable={writable} manage={manage} principal={principal}
+      initialProposal={initialProposal} onOpenWork={onOpenWork}/>
   </div>;
 }

@@ -7,15 +7,13 @@
 ++  current-work
   |=  [team=state:stead-team who=actor:stead-session scope=scope:stead-code-credentials work=@t now=@ud]
   ^-  @ud
-  ?.  (~(has by works.data.team) [project.scope work])  0
   =/  actor  (native-context:stead-team team ship.who now)
   ?~  actor  0
-  ?.  (same-actor:stead-session who identity.u.actor)  0
+  ?.  &((same-actor:stead-session who identity.u.actor) (subject:stead-team team u.actor project.scope 'work' '' work now))  0
   (role:stead-team team u.actor project.scope now)
 ++  decode
   |=  [fields=object-map base=(list @t) op=@t who=actor:stead-session scope=scope:stead-code-credentials]
   ^-  (unit command:stead-code-review-home)
-  =/  id  (field fields 'proposal_id')
   ?:  =('delegate' op)
     ?.  (keys fields ['delegation_id' 'worker_ship' 'work_id' 'ref' 'expires_at_ms' base])  ~
     =/  value  (field fields 'worker_ship')
@@ -26,15 +24,16 @@
   ?:  =('revoke-delegation' op)
     ?.  (keys fields ['delegation_id' base])  ~
     [~ %revoke (field fields 'delegation_id')]
+  =/  required
+    ?:  =('approve' op)  ['proposal_id' 'revision' base]
+    ?:  =('merge' op)  ['proposal_id' 'revision' 'request_id' base]
+    ?:  =('submit' op)  ['proposal_id' 'revision' 'work_id' 'ref' 'base_oid' 'head_oid' 'delegation_id' base]
+    ~
+  ?.  &(?=(^ required) (keys fields required))  ~
+  =/  id  (field fields 'proposal_id')
   =/  number  (uint (field fields 'revision'))
-  ?:  =('approve' op)
-    ?.  (keys fields ['proposal_id' 'revision' base])  ~
-    [~ %approve id number]
-  ?:  =('merge' op)
-    ?.  (keys fields ['proposal_id' 'revision' 'request_id' base])  ~
-    [~ %merge id number (field fields 'request_id')]
-  ?.  =('submit' op)  ~
-  ?.  (keys fields ['proposal_id' 'revision' 'work_id' 'ref' 'base_oid' 'head_oid' 'delegation_id' base])  ~
+  ?:  =('approve' op)  [~ %approve id number]
+  ?:  =('merge' op)  [~ %merge id number (field fields 'request_id')]
   =/  old  (parse-oid:stead-code-git-objects [40 (field fields 'base_oid')])
   =/  new  (parse-oid:stead-code-git-objects [40 (field fields 'head_oid')])
   ?~  old  ~
@@ -51,6 +50,7 @@
       ==
   ^-  answer
   =/  scope  destination.repo
+  ?.  =(scope destination.board.board)  [%failed 404 'denied_or_not_found']
   =/  rank
     |=  [actor=actor:stead-session target=scope:stead-code-credentials work=@t]
     ^-  @ud
@@ -74,6 +74,45 @@
         |=([target=scope:stead-code-credentials proposal=proposal:stead-code-review] |)
         |=([target=scope:stead-code-credentials job=@t proposal=proposal:stead-code-review attempt=@ud worker=actor:stead-session proof=attestation:stead-code-delivery] |)
     ==
+  ?:  =('work-delegations' op)
+    ?.  (keys fields ['work_id' base])  [%failed 400 'invalid_request']
+    =/  work  (field fields 'work_id')
+    ?.  (uuid work)  [%failed 400 'invalid_request']
+    =/  level  (rank who scope work)
+    ?:  =(0 level)  [%failed 404 'denied_or_not_found']
+    =/  visible
+      %+  skim  ~(tap by delegates.board.board)
+      |=  [id=@t row=grant:stead-code-delivery]
+      ?&  =(work work.entry.row)
+          |(=(3 level) (same-actor:stead-session who worker.entry.row))
+      ==
+    =/  listed=(list [@t json])
+      %+  turn  visible
+      |=  [id=@t row=grant:stead-code-delivery]
+      =/  entry  entry.row
+      =/  status
+        ?:  ?=(%revoked -.row)  'revoked'
+        ?:  (lte expires.entry now)  'expired'
+        ?:  (grant-valid:stead-code-delivery env entry)  'active'
+        'unavailable'
+      =/  links
+        %+  skim  ~(tap by latest.board.board)
+        |=  [proposal=@t revision=@ud]
+        =/  stored  (~(get by revisions.board.board) [proposal revision])
+        ?~  stored  |
+        =([~ id] via.u.stored)
+      =/  proposals=(list [@t json])
+        %+  turn  links
+        |=  [proposal=@t revision=@ud]
+        [proposal [%s (decimal revision)]]
+      :-  id
+      %-  object
+      :~  ['delegation_id' id]  ['worker_ship' (scot %p ship.worker.entry)]
+          ['ref' target.entry]  ['expires_at_ms' (decimal expires.entry)]
+          ['status' status]  ['proposals' (canonical [%o (malt proposals)])]
+          ['can_revoke' ?:(&(?=(%granted -.row) (same-actor:stead-session who sponsor.entry)) 'yes' 'no')]
+      ==
+    [%read ~[['status' 'work-delegations'] ['work_id' work] ['rows' (canonical [%o (malt listed)])]]]
   ?:  =('proposal' op)
     ?.  (keys fields ['proposal_id' 'revision' base])  [%failed 400 'invalid_request']
     =/  viewer=view-policy:stead-code-review-home
@@ -95,6 +134,12 @@
   =/  result  (perform:stead-code-review-home board repo protected env who u.cmd)
   ?:  ?=(%rejected -.result)  [%failed 409 reason.result]
   =/  rows=(list [@t @t])  ~[['status' ?:(?=(%replayed -.result) 'replayed' 'accepted')]]
+  =/  delegation
+    ?+  -.u.cmd  ''
+      %delegate  id.u.cmd
+      %revoke    id.u.cmd
+    ==
+  =?  rows  !=('' delegation)  [['delegation_id' delegation] rows]
   =?  rows  &(?=(^ receipt.result) ?=(%merge -.u.cmd))
     :*  ['request_id' request.u.cmd]
         ['proposal_id' id.u.cmd]

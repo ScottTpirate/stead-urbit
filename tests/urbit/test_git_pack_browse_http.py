@@ -8,6 +8,7 @@ from urllib.parse import urlsplit
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[2] / 'scripts/urbit'))
 import git_pack_browse as browse
+import git_pack_changes as changes
 import git_pack_browse_http as http
 from portable_recovery import decoded, encoded
 
@@ -75,6 +76,51 @@ class BrowseHTTPTests(unittest.TestCase):
         self.assertEqual(headers['Cross-Origin-Resource-Policy'], 'same-origin')
         self.assertEqual(headers['X-Content-Type-Options'], 'nosniff')
         self.assertNotIn('Set-Cookie', headers)
+
+    def test_exact_changes_reauthorize_same_session_and_share_read_capacity(self):
+        selection = {'protocol': changes.PROTOCOL, 'project_id': PROJECT, 'snapshot': 'a' * 64,
+                     'proposal_id': PROJECT, 'revision': '1', 'view': 'files', 'path': ''}
+        result = {'status': 'files', 'entries': [], 'truncated': False}
+
+        def compare(authorize, home, request, directory, reader, *, deadline):
+            self.assertEqual(request, selection)
+            for _ in range(2):
+                self.assertEqual(authorize(), (self.relay.browser_pack_view.return_value,
+                                              self.relay.browser_external_proposal.return_value))
+            self.assertEqual(self.request()[0], 503)  # File browsing uses this same slot.
+            return result
+
+        with patch.object(changes, 'changes', side_effect=compare):
+            status, headers, body = self.request(encoded(selection), PATH_INFO=changes.PATH)
+        self.assertEqual((status, body), (200, result))
+        self.assertEqual(headers['Cache-Control'], 'no-store')
+        self.assertEqual(self.relay.browser_pack_view.call_count, 2)
+        self.assertEqual(self.relay.browser_external_proposal.call_count, 2)
+        first, second = self.relay.browser_external_proposal.call_args_list
+        self.assertEqual(first.args[:4], (PROJECT, PROJECT, 'd' * 64, CSRF))
+        self.assertEqual(first, second)
+
+    def test_changes_unavailable_and_stale_have_no_contents(self):
+        from git_pack_http import Denied
+        from portable_recovery import RecoveryError
+        selection = {'protocol': changes.PROTOCOL, 'project_id': PROJECT, 'snapshot': 'a' * 64,
+                     'proposal_id': PROJECT, 'revision': '1', 'view': 'files', 'path': ''}
+        for error, status, reason in (
+            (Denied('session_required'), 401, 'session_required'),
+            (Denied('denied_or_not_found'), 404, 'denied_or_not_found'),
+            (RecoveryError('changes-revision-changed'), 409, 'stale_selection'),
+            (RecoveryError('home-acceptance-changed'), 409, 'stale_selection'),
+            (RecoveryError('changes-path-unavailable'), 404, 'denied_or_not_found'),
+            (RecoveryError('changes-metadata-bound'), 422, 'changes_too_large'),
+            (RecoveryError('git-verification-failed'), 503, 'changes_unavailable'),
+        ):
+            with self.subTest(reason=reason), patch.object(changes, 'changes', side_effect=error):
+                observed, _, body = self.request(encoded(selection), PATH_INFO=changes.PATH)
+                self.assertEqual((observed, body), (status, {'error': reason}))
+        with patch.object(changes, 'changes') as compare:
+            self.assertEqual(self.request(encoded(selection | {'head_oid': 'b' * 40}), PATH_INFO=changes.PATH)[0], 400)
+            self.assertEqual(self.request(encoded(selection), PATH_INFO=changes.PATH, HTTP_ORIGIN='null')[0], 403)
+            compare.assert_not_called()
 
 
 if __name__ == '__main__':

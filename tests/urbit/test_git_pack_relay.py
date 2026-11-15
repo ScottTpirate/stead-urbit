@@ -227,6 +227,29 @@ class ActualRelayTLSTests(unittest.TestCase):
             self.make_relay(certificate_sha256='0' * 64).read_decision(AUTH, PROJECT)
         self.assertEqual(len(self.requests), 3)
 
+    def test_browser_proposal_and_pack_reads_keep_only_the_same_member_credentials(self):
+        home = self.make_relay()
+        result = {'protocol': 'stead.code/1', 'status': 'proposal', 'proposal_id': PROJECT}
+        self.respond(encoded(result))
+        deadline = time.monotonic() + 10
+        self.assertEqual(home.browser_external_proposal(PROJECT, PROJECT, 'd' * 64, 'e' * 64, deadline), result)
+        self.assertEqual(home.browser_pack_view(PROJECT, 'd' * 64, 'e' * 64, deadline), result)
+        for index, (path, headers, body) in enumerate(self.requests):
+            self.assertEqual(path, '/stead/api/code')
+            self.assertEqual(headers['Cookie'], '__Host-stead-session=' + 'd' * 64)
+            self.assertEqual(headers['X-Stead-CSRF'], 'e' * 64)
+            self.assertEqual(headers['Origin'], home.origin.geturl())
+            self.assertNotIn('Authorization', headers)
+            self.assertNotIn('X-Stead-Relay', headers)
+            value = {'protocol': 'stead.code/1', 'project_id': PROJECT,
+                     'action': 'external-proposal' if index == 0 else 'pack-view'}
+            if index == 0:
+                value['proposal_id'] = PROJECT
+            self.assertEqual(decoded(body), value)
+        self.respond(encoded({'error': 'invalid_csrf'}), status=403)
+        with self.assertRaisesRegex(git_http.Denied, 'invalid_csrf'):
+            home.browser_external_proposal(PROJECT, PROJECT, 'd' * 64, 'e' * 64, deadline)
+
     def test_definite_refusal_is_distinct_from_unconfirmed_response(self):
         home = self.make_relay()
         self.respond(b'{"reason":"denied","status":"refused"}')

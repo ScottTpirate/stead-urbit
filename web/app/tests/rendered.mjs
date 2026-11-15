@@ -56,7 +56,8 @@ async function fixture(run, mockRepository = false) {
     holdOpen: false, releaseOpen: null, holdWork: false, releaseWork: null, invalidateCommands: false,
     project: {kind: 'project', resource_id: id(1), project_id: id(1), title: 'Garden', project_key: 'GARDEN', preset: 'general', authority_epoch: '1', resource_revision: '1', policy_revision: '1', role: 'maintainer'},
     work: [], assignees: [], activity: [], containers: [], documents: [], proposals: new Map(), mergeRequests: [], dropMergeResponse: false,
-    externalWritable: false, externalReviews: new Map(), externalRequests: [], browseRequests: [], browseFixture: null};
+    externalWritable: false, externalReviews: new Map(), externalRequests: [], browseRequests: [], browseFixture: null,
+    changesRequests: [], changesFixture: null, comments: new Map(), delegations: new Map()};
   await page.route(origin + '/stead/**', async route => {
     const request = route.request();
     if (request.method() !== 'POST') return route.continue();
@@ -77,6 +78,20 @@ async function fixture(run, mockRepository = false) {
       return send({status: 'authenticated', csrf: 'b'.repeat(64)});
     }
     const token = () => (++state.token).toString(16).padStart(64, '0');
+    if (pathname === '/stead/api/code/changes') {
+      state.changesRequests.push(value);
+      if (!state.changesFixture) return route.fulfill({status: 404, contentType: 'text/html', body: 'Not found'});
+      assert.deepEqual(Object.keys(value).sort(), ['path', 'project_id', 'proposal_id', 'protocol', 'revision', 'snapshot', 'view']);
+      assert.equal(value.protocol, 'stead.git-changes/1');
+      assert.equal(value.project_id, state.project.project_id);
+      const proposal = state.externalReviews.get(value.proposal_id);
+      if (!proposal) return send({error: 'denied_or_not_found'}, 404);
+      if (value.snapshot !== state.pack?.snapshot || value.revision !== proposal.revision) return send({error: 'stale_selection'}, 409);
+      const {status, fields} = await state.changesFixture(value, proposal);
+      if (status !== 200) return send(fields, status);
+      const {view, path, ...scope} = value;
+      return send({...scope, ...(view === 'patch' ? {path} : {}), status: view, base: proposal.base_oid, head: proposal.head_oid, ...fields});
+    }
     if (pathname === '/stead/api/code/browse') {
       state.browseRequests.push(value);
       if (!state.browseFixture) return route.fulfill({status: 404, contentType: 'text/html', body: 'Not found'});
@@ -103,6 +118,24 @@ async function fixture(run, mockRepository = false) {
       }
       if (value.action === 'status') return respond({status: state.pack?.status ?? (state.repositoryReady ? 'ready' : 'disabled'),
         write: state.pack && !state.externalWritable ? 'no' : 'yes', manage: 'yes'});
+      if (value.action === 'work-delegations') {
+        const rows = Object.fromEntries([...state.delegations].filter(([, entry]) => entry.work_id === value.work_id)
+          .map(([id, {work_id, ...entry}]) => [id, entry]));
+        return respond({status: 'work-delegations', work_id: value.work_id, rows: JSON.stringify(rows)});
+      }
+      if (value.action === 'delegate') {
+        const {delegation_id, worker_ship, work_id, ref, expires_at_ms} = value;
+        assert.ok(state.work.some(row => row.resource_id === work_id));
+        state.delegations.set(delegation_id, {delegation_id, worker_ship, work_id, ref, expires_at_ms,
+          status: 'active', can_revoke: 'yes', proposals: '{}'});
+        return respond({status: 'accepted', delegation_id});
+      }
+      if (value.action === 'revoke-delegation') {
+        const row = state.delegations.get(value.delegation_id);
+        assert.ok(row);
+        row.status = 'revoked'; row.can_revoke = 'no';
+        return respond({status: 'accepted', delegation_id: value.delegation_id});
+      }
       if (value.action === 'pack-view') { assert.ok(state.pack); return respond(state.pack); }
       if (value.action === 'pack-accept') {
         assert.equal(state.pack?.status, 'external-staged');
@@ -225,7 +258,17 @@ async function fixture(run, mockRepository = false) {
         session_audit_id: person.session_audit_id, runtime: 'isolated-fake', accepted_at_ms: '1790519400000', git_commit_oid: value.operation.startsWith('document.') ? 'd'.repeat(40) : ''};
       state.receipts.set(value.request_id, receipt);
       if (value.operation === 'work.delete') state.work = state.work.filter(row => row.resource_id !== value.resource_id);
-      else if (value.operation.startsWith('work.')) {
+      else if (value.operation === 'work.comment') {
+        const row = state.work.find(item => item.resource_id === value.resource_id);
+        assert.ok(row);
+        assert.equal(value.expected_revision, row.resource_revision);
+        row.resource_revision = receipt.resource_revision;
+        const thread = state.comments.get(value.resource_id) ?? [];
+        thread.push({body: value.payload.body, comment_revision: row.resource_revision,
+          principal_id: person.principal_id, identity_ship: person.identity_ship, accepted_at_ms: receipt.accepted_at_ms});
+        state.comments.set(value.resource_id, thread);
+        row.comment_count = String(thread.length);
+      } else if (value.operation.startsWith('work.')) {
         const prior = state.work.find(row => row.resource_id === value.resource_id);
         const row = {...prior, ...value.payload, kind: 'work', resource_id: value.resource_id, project_id: value.project_id,
           resource_revision: receipt.resource_revision};
@@ -254,6 +297,7 @@ async function fixture(run, mockRepository = false) {
       }
     }
     if (value.kind === 'assignees') rows = state.assignees;
+    if (value.kind === 'comments') rows = state.comments.get(value.resource_id) ?? [];
     if (value.kind === 'activity') rows = state.activity;
     if (value.kind === 'containers') rows = state.containers;
     if (value.kind === 'documents') rows = state.documents;
@@ -575,6 +619,90 @@ try {
       assert.equal(await folder.count(), 0);
       assert.equal(await preview.count(), 0);
     } finally { delayedReply(); }
+  });
+  await check('code-development-work-branch-and-review', async (page, state) => {
+    const hex = text => Buffer.from(text).toString('hex');
+    const work = {kind: 'work', resource_id: id(57), title: 'Ship the welcome page', resource_revision: '1',
+      status: 'todo', priority: 'medium', type: 'task'};
+    const branch = `work/${work.resource_id}`;
+    const targetRef = 'refs/heads/main';
+    const sourceRef = `refs/heads/${branch}`;
+    const main = hex(targetRef);
+    const reference = hex(sourceRef);
+    const base = 'b'.repeat(40);
+    const head = 'c'.repeat(40);
+    state.work = [work]; state.externalWritable = true;
+    state.pack = {status: 'external', snapshot: 'a'.repeat(64), generation: '0', authority_epoch: '1', request_id: id(452),
+      accepted_at_ms: '1800000000000', object_count: '7', head: main, refs: JSON.stringify({[main]: base})};
+    const modifiedPath = hex('welcome.md');
+    state.changesFixture = async ({view, path}) => view === 'files'
+      ? {status: 200, fields: {entries: [{path: modifiedPath, status: 'M', old_mode: '100644', new_mode: '100644'}], truncated: false}}
+      : path === modifiedPath ? {status: 200, fields: {preview: 'text', text: '-Welcome\n+Welcome aboard\n', sanitized: false}}
+        : {status: 404, fields: {error: 'denied_or_not_found'}};
+    await page.evaluate(() => Object.defineProperty(navigator, 'clipboard', {
+      configurable: true, value: {writeText(value) { window.copiedValue = value; return Promise.resolve(); }},
+    }));
+    await page.getByRole('button', {name: 'Refresh', exact: true}).click();
+    await page.getByRole('button', {name: 'Work', exact: true}).click();
+    await page.getByRole('button', {name: work.title, exact: true}).click();
+    const development = page.getByRole('region', {name: 'Development', exact: true});
+    await development.getByText('No matching branch in the accepted Git snapshot.', {exact: true}).waitFor();
+    await development.getByRole('button', {name: 'Copy branch name', exact: true}).click();
+    assert.equal(await page.evaluate(() => window.copiedValue), branch);
+    await development.getByText('Branch commands', {exact: true}).click();
+    await development.getByRole('button', {name: 'Copy create command', exact: true}).click();
+    assert.equal(await page.evaluate(() => window.copiedValue), `git switch -c ${branch} ${base}`);
+    await development.getByRole('button', {name: 'Copy push command', exact: true}).click();
+    assert.equal(await page.evaluate(() => window.copiedValue), `git push -u origin ${branch}`);
+    assert.equal(await development.getByRole('button', {name: 'View branch', exact: true}).count(), 0);
+    assert.equal(state.commands.length, 0);
+    assert.equal(state.externalRequests.some(row => row.action === 'external-submit'), false);
+    state.pack = {...state.pack, snapshot: 'd'.repeat(64), generation: '1', refs: JSON.stringify({[main]: base, [reference]: base})};
+    await development.getByRole('button', {name: 'Check for branch', exact: true}).click();
+    await development.getByText('Branch is in the accepted Git snapshot.', {exact: true}).waitFor();
+    await development.getByText('Push a change to this branch to start a review.', {exact: true}).waitFor();
+    assert.equal(await development.getByRole('button', {name: 'Start change review', exact: true}).count(), 0);
+    state.pack = {...state.pack, snapshot: 'e'.repeat(64), generation: '2', refs: JSON.stringify({[main]: base, [reference]: head})};
+    await development.getByRole('button', {name: 'Check for branch', exact: true}).click();
+    await development.getByRole('button', {name: 'Start change review', exact: true}).waitFor();
+    await development.getByRole('button', {name: 'View branch', exact: true}).click();
+    await page.getByRole('button', {name: `Switch branch or tag. Current branch: ${branch}`, exact: true}).waitFor();
+    assert.equal(page.url().includes(branch), false);
+    await page.getByRole('button', {name: 'Return to work item', exact: true}).click();
+    await development.getByRole('button', {name: 'Start change review', exact: true}).click();
+    const source = page.getByLabel('Source branch', {exact: true});
+    await source.waitFor();
+    assert.equal(await source.inputValue(), reference);
+    assert.equal(await page.getByLabel('Work item', {exact: true}).inputValue(), work.resource_id);
+    assert.equal(await page.getByLabel('Work item', {exact: true}).locator('option:checked').textContent(), work.title);
+    await page.setViewportSize({width: 320, height: 900});
+    assert.equal(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth), true);
+    await page.screenshot({path: path.join(output, 'repo-work-development-320.png'), fullPage: true});
+    await page.getByRole('button', {name: 'Submit proposal', exact: true}).click();
+    const exact = page.getByRole('region', {name: 'Exact proposal', exact: true});
+    await exact.getByRole('button', {name: 'View work item', exact: true}).waitFor();
+    const submitted = state.externalRequests.findLast(row => row.action === 'external-submit');
+    assert.deepEqual({work: submitted.work_id, source: submitted.source_ref, target: submitted.ref,
+      head: submitted.head_oid, base: submitted.base_oid, snapshot: submitted.base_snapshot, generation: submitted.generation},
+      {work: work.resource_id, source: sourceRef, target: targetRef, head, base, snapshot: 'e'.repeat(64), generation: '2'});
+    assert.equal(state.commands.length, 0);
+    const changes = exact.getByRole('region', {name: 'Exact revision changes', exact: true});
+    await changes.getByRole('button', {name: 'welcome.md Modified', exact: true}).click();
+    assert.equal(await changes.getByLabel('Exact file patch').textContent(), '-Welcome\n+Welcome aboard\n');
+    assert.equal(state.changesRequests.at(-1).proposal_id, submitted.proposal_id);
+    assert.equal(state.changesRequests.at(-1).revision, submitted.revision);
+    await exact.getByRole('button', {name: 'View work item', exact: true}).click();
+    await page.getByRole('region', {name: 'Linked code changes', exact: true}).getByRole('button', {
+      name: new RegExp(`work/${work.resource_id}.*Awaiting review`, 'u'),
+    }).waitFor();
+    state.externalWritable = false;
+    await development.getByRole('button', {name: 'Check for branch', exact: true}).click();
+    await development.getByRole('button', {name: 'View branch', exact: true}).waitFor();
+    assert.equal(await development.getByRole('button', {name: 'Start change review', exact: true}).count(), 0);
+    state.pack = {...state.pack, status: 'external-staged'};
+    await development.getByRole('button', {name: 'Check for branch', exact: true}).click();
+    await development.getByText('The accepted Git snapshot is unavailable.', {exact: true}).waitFor();
+    assert.equal(await development.getByRole('button', {name: 'View branch', exact: true}).count(), 0);
   });
   await check('code-proposal-form-and-merge-retry-survive-view-change', async (page, state) => {
     state.work = [{kind: 'work', resource_id: id(50), title: 'Review the source', resource_revision: '1'}];
@@ -1268,6 +1396,69 @@ try {
     await page.getByRole('alert').getByText('This work link is unavailable or you do not have access.').waitFor();
     assert.equal(await page.locator('#work-detail-panel').count(), 0);
     await page.getByRole('button', {name: 'Sign out', exact: true}).waitFor();
+  });
+  await check('work-discussion-retains-draft-and-posts-once', async (page, state) => {
+    const item = id(713);
+    state.work = [{kind: 'work', resource_id: item, title: 'Review ticket context', description: 'Source details.',
+      resource_revision: '2', status: 'todo', type: 'task', priority: 'none', comment_count: '1'}];
+    state.comments.set(item, [{body: 'Use the sample entry points.', comment_revision: '2',
+      principal_id: id(714), identity_ship: '~nec', accepted_at_ms: '1790519400000'}]);
+    await page.getByRole('button', {name: 'Work', exact: true}).click();
+    const row = page.locator('.work-row').getByRole('button', {name: 'Review ticket context', exact: true});
+    await row.click();
+    const discussion = page.getByRole('region', {name: 'Discussion'});
+    await discussion.getByText('Use the sample entry points.').waitFor();
+    await discussion.getByText('~nec', {exact: true}).waitFor();
+    const draft = discussion.getByRole('textbox', {name: 'Comment'});
+    await draft.fill('I verified the entry points. 東京');
+    await page.locator('#work-detail-panel').getByRole('button', {name: 'Close', exact: true}).click();
+    await row.click();
+    assert.equal(await draft.inputValue(), 'I verified the entry points. 東京');
+    state.loseCommand = true;
+    await discussion.getByRole('button', {name: 'Post comment'}).click();
+    await page.getByRole('heading', {name: 'Save awaiting confirmation'}).waitFor();
+    assert.equal(await draft.inputValue(), 'I verified the entry points. 東京');
+    await page.getByRole('button', {name: 'Check receipt'}).click();
+    await discussion.getByText('I verified the entry points. 東京', {exact: true}).waitFor();
+    assert.equal(await draft.inputValue(), '');
+    assert.equal(state.commands.length, 1);
+    assert.equal(state.commands[0].operation, 'work.comment');
+    assert.equal(state.comments.get(item).length, 2);
+    await page.reload();
+    await discussion.getByText('I verified the entry points. 東京', {exact: true}).waitFor();
+  });
+  await check('code-work-agent-access-from-ticket-and-review-readback', async (page, state) => {
+    const item = id(718);
+    state.work = [{kind: 'work', resource_id: item, title: 'Update the readme examples', description: 'Add one simple example.',
+      resource_revision: '1', status: 'todo', type: 'task', priority: 'none'}];
+    await page.getByRole('button', {name: 'Enable Git repository', exact: true}).click();
+    await page.getByRole('button', {name: 'Work', exact: true}).click();
+    await page.locator('.work-row').getByRole('button', {name: 'Update the readme examples', exact: true}).click();
+    const agent = page.getByRole('region', {name: 'Agent delegation'});
+    await agent.getByRole('button', {name: 'Delegate to an agent'}).click();
+    await agent.getByRole('textbox', {name: 'Agent Urbit ID'}).fill('nec');
+    await agent.getByRole('button', {name: 'Grant proposal access'}).click();
+    await agent.getByText('Proposal access granted.', {exact: true}).waitFor();
+    const grant = [...state.delegations.values()][0];
+    assert.equal(grant.work_id, item);
+    assert.equal(grant.worker_ship, '~nec');
+    assert.equal(grant.ref, 'refs/heads/main');
+    const proposal = id(719);
+    grant.proposals = JSON.stringify({[proposal]: '1'});
+    state.proposals.set(proposal + '/1', {proposal_id: proposal, revision: '1', work_id: item,
+      ref: grant.ref, base_oid: 'a'.repeat(40), head_oid: 'b'.repeat(40), author: id(109), reviewer: '', merged_revision: ''});
+    await agent.getByRole('button', {name: 'Refresh agent access'}).click();
+    await agent.getByRole('button', {name: 'View proposal · revision 1', exact: true}).waitFor();
+    await page.reload();
+    await agent.getByRole('button', {name: 'View proposal · revision 1', exact: true}).click();
+    await page.getByRole('region', {name: 'Exact proposal'}).getByText('Awaiting review.', {exact: true}).waitFor();
+    await page.getByRole('button', {name: 'View work item', exact: true}).click();
+    await agent.getByRole('button', {name: 'Revoke access…'}).click();
+    await agent.getByRole('button', {name: 'Confirm revoke'}).click();
+    await agent.getByText('Proposal access revoked.', {exact: true}).waitFor();
+    await agent.getByText('Revoked · main', {exact: true}).waitFor();
+    assert.equal(grant.status, 'revoked');
+    assert.equal(await agent.getByRole('button', {name: 'Copy agent brief'}).count(), 0);
   });
   await check('page-title-visibility-clean-close-and-confirmed-discard-responsive', async (page, state) => {
     const body = '# A useful page — 東京\n\nKeep this exact Markdown.\n';

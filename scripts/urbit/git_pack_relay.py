@@ -172,9 +172,17 @@ class Relay:
         return scope, value, refs
 
     def browser_pack_view(self, project, session, csrf, deadline):
+        return self._browser_code(project, session, csrf, deadline, {'action': 'pack-view'})
+
+    def browser_external_proposal(self, project, proposal, session, csrf, deadline):
+        require(match(UUID, proposal), 'changes-proposal')
+        return self._browser_code(project, session, csrf, deadline,
+                                  {'action': 'external-proposal', 'proposal_id': proposal})
+
+    def _browser_code(self, project, session, csrf, deadline, selection):
         require(match(UUID, project) and match(TOKEN, session) and match(TOKEN, csrf), 'browse-credentials')
         until = min(deadline, time.monotonic() + CALL_SECONDS)
-        body = encoded({'protocol': 'stead.code/1', 'action': 'pack-view', 'project_id': project})
+        body = encoded({'protocol': 'stead.code/1', 'project_id': project} | selection)
         headers = {
             'Host': self.origin.netloc, 'Origin': self.origin.geturl(),
             'Cookie': f'__Host-stead-session={session}', 'X-Stead-CSRF': csrf,

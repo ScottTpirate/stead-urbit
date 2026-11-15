@@ -3,6 +3,8 @@ import { HomeError, UUID, packRefs, type ExternalMerge, type Fields, type HomeCl
 import { MAX_ARTIFACT_BYTES, parseReviewArtifact, refLabel, reviewBranches, reviewRequest } from './externalReview';
 import { Button, Surface, TextField } from './primitives';
 import { newId } from './protocol';
+import { ReviewChanges } from './ReviewChanges';
+import type { CodeDevelopmentTarget } from './WorkDevelopment';
 
 type WorkItem = { id: string; title: string };
 type Draft = { proposal_id: string; revision: string; work_id: string; source: string; base_snapshot: string; generation: string };
@@ -18,10 +20,11 @@ function reviewStatus(row: Fields, snapshot: Fields) {
 }
 
 export function CodeExternalReview({ client, project, writable, manage, atCapacity, principal, snapshot, refreshSnapshot,
-  initialProposal, onOpenWork }: {
+  initialProposal, onOpenWork, development }: {
   client: HomeClient; project: string; writable: boolean; manage: boolean; atCapacity: boolean; principal: string;
   snapshot: Fields; refreshSnapshot: () => Promise<void>;
   initialProposal?: string; onOpenWork?: (workId: string) => void;
+  development?: CodeDevelopmentTarget;
 }) {
   const workPicker = useId();
   const branchPicker = useId();
@@ -36,13 +39,17 @@ export function CodeExternalReview({ client, project, writable, manage, atCapaci
   const [artifact, setArtifact] = useState<ExternalMerge | null>(null);
   const [merged, setMerged] = useState('');
   const [stopRetry, setStopRetry] = useState(false);
-  const [busy, setBusy] = useState(false);
+  const [operating, setBusy] = useState(false);
+  const [openingDevelopment, setOpeningDevelopment] = useState(false);
+  const busy = operating || openingDevelopment;
   const [notice, setNotice] = useState('');
   const [error, setError] = useState('');
   const request = useRef<{ key: string; id: string } | null>(null);
   const proofRequest = useRef<{ key: string; id: string } | null>(null);
   const detailHeading = useRef<HTMLHeadingElement>(null);
+  const draftHeading = useRef<HTMLHeadingElement>(null);
   const lookupDisclosure = useRef<HTMLDetailsElement>(null);
+  const startedDevelopment = useRef<CodeDevelopmentTarget | null>(null);
   const pending = client.pendingExternalMerge(project);
   const refs = packRefs(snapshot);
   const target = snapshot.head!;
@@ -58,6 +65,7 @@ export function CodeExternalReview({ client, project, writable, manage, atCapaci
   const canSubmit = editable && !pending && draftCurrent && !!draft && UUID.test(draft.work_id) && !!source
     && targetName.startsWith('refs/heads/');
   const selectedTitle = proposal?.work_title || reviews?.find(row => row.proposal_id === proposal?.proposal_id)?.work_title;
+  const hasDevelopmentSource = sourceChoices.some(row => row.key === development?.ref);
 
   useEffect(() => {
     let active = true;
@@ -83,6 +91,42 @@ export function CodeExternalReview({ client, project, writable, manage, atCapaci
   }, [client, project, initialProposal]);
 
   useEffect(() => { if (proposal && !draft) detailHeading.current?.focus(); }, [proposal?.proposal_id, proposal?.revision, !!draft]);
+  useEffect(() => { if (draft) draftHeading.current?.focus(); }, [draft?.proposal_id]);
+
+  useEffect(() => {
+    if (!development || development.mode !== 'review' || initialProposal || !editable || pending
+      || startedDevelopment.current === development) {
+      setOpeningDevelopment(false);
+      return;
+    }
+    const acceptedSnapshot = snapshot.snapshot;
+    const generation = snapshot.generation;
+    if (!hasDevelopmentSource || !acceptedSnapshot || generation === undefined) {
+      startedDevelopment.current = development;
+      setOpeningDevelopment(false);
+      setError('Push a change to the Work branch and refresh the accepted Git snapshot before starting a review.');
+      return;
+    }
+    let active = true;
+    setOpeningDevelopment(true); setError(''); setNotice('');
+    void client.query({ kind: 'work', project_id: project, container_id: '', resource_id: development.workId, search: '', cursor: '' })
+      .then(view => {
+        if (!active) return;
+        const row = Object.values(view.rows).find(value => value.resource_id === development.workId);
+        if (!row?.title) throw new HomeError('denied_or_not_found');
+        startedDevelopment.current = development;
+        request.current = null; setArtifact(null);
+        setWork([{ id: development.workId, title: row.title }]); setCursor('');
+        setDraft({ proposal_id: newId(), revision: '1', work_id: development.workId, source: development.ref,
+          base_snapshot: acceptedSnapshot, generation });
+      }).catch(() => {
+        if (active) {
+          startedDevelopment.current = development;
+          setError('The Home could not open that Work item for a change review.');
+        }
+      }).finally(() => { if (active) setOpeningDevelopment(false); });
+    return () => { active = false; };
+  }, [client, project, development, initialProposal, editable, pending, hasDevelopmentSource, snapshot.snapshot, snapshot.generation]);
 
   async function perform(operation: () => Promise<void>, failure: string) {
     setBusy(true); setError(''); setNotice('');
@@ -187,6 +231,7 @@ export function CodeExternalReview({ client, project, writable, manage, atCapaci
 
   return <Surface className="code-review-panel">
     <h2>Change review</h2>
+    {openingDevelopment && <p role="status">Opening the Work item for review…</p>}
     {pending && <div role="status">
       <p>Merge awaiting confirmation for proposal {pending.proposal_id}, revision {pending.revision}.</p>
       <div className="actions">
@@ -208,7 +253,7 @@ export function CodeExternalReview({ client, project, writable, manage, atCapaci
       </div>}
     </div>}
     {draft ? <form onSubmit={event => { event.preventDefault(); void perform(submit, 'The Home could not confirm this proposal.'); }}>
-      <h3>{Number(draft.revision) > 1 ? `New revision ${draft.revision}` : 'New proposal'}</h3>
+      <h3 ref={draftHeading} tabIndex={-1}>{Number(draft.revision) > 1 ? `New revision ${draft.revision}` : 'New proposal'}</h3>
       <div className="stead-field">
         <label htmlFor={workPicker}>Work item</label>
         <select id={workPicker} value={draft.work_id} disabled={busy} required
@@ -263,11 +308,16 @@ export function CodeExternalReview({ client, project, writable, manage, atCapaci
       </details>
       {editable && !snapshotAvailable && <p>Refresh the snapshot to start a proposal or review.</p>}
       {editable && snapshotAvailable && !sourceChoices.length && <p>Push a feature branch with changes to start a proposal.</p>}
+      {development?.mode === 'review' && !editable && <p>Starting a change review requires current Git write access.</p>}
       {proposal && <section aria-label="Exact proposal">
         <h3 ref={detailHeading} tabIndex={-1}>{selectedTitle ? `${selectedTitle} · ` : ''}Revision {proposal.revision}</h3>
         <p>{accepted ? 'Merged.' : !current ? 'The repository snapshot changed.' : proposal.reviewer ? 'Approved.' : 'Awaiting review.'}</p>
         {onOpenWork && UUID.test(proposal.work_id ?? '') && <Button variant="quiet" disabled={busy}
           onClick={() => onOpenWork(proposal.work_id!)}>View work item</Button>}
+        {snapshot.snapshot && <ReviewChanges
+          key={JSON.stringify([principal, project, snapshot.snapshot, proposal.proposal_id, proposal.revision])}
+          client={client} project={project} snapshot={snapshot.snapshot} proposal={proposal.proposal_id!}
+          revision={proposal.revision!} base={proposal.base_oid!} head={proposal.head_oid!} />}
         <details open={canReview}><summary>Reviewed branches and commits</summary>
           <dl className="code-review-facts">
             <ReviewFact label="Source branch" value={proposal.source_ref!} />

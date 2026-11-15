@@ -1,4 +1,4 @@
-import { useId, useState } from 'react';
+import { useEffect, useId, useState } from 'react';
 import { HomeError, type CodeReviewKey, type Fields, type HomeClient } from './api';
 import { Button, Surface, TextField } from './primitives';
 import { newId } from './protocol';
@@ -9,8 +9,9 @@ const validKey = (key: CodeReviewKey) => UUID.test(key.proposal_id) && /^(?:[1-9
 const initialDraft = { work_id: '', ref: 'refs/heads/main', base_oid: '', head_oid: '', delegation_id: '' };
 type WorkChoice = { id: string; title: string };
 
-export function CodeReview({ client, project, writable, manage, principal }: {
+export function CodeReview({ client, project, writable, manage, principal, initialProposal, onOpenWork }: {
   client: HomeClient; project: string; writable: boolean; manage: boolean; principal: string;
+  initialProposal?: CodeReviewKey; onOpenWork?: (workId: string) => void;
 }) {
   const workPicker = useId();
   const [mode, setMode] = useState<'find' | 'propose'>('find');
@@ -23,6 +24,18 @@ export function CodeReview({ client, project, writable, manage, principal }: {
   const [notice, setNotice] = useState('');
   const [error, setError] = useState('');
   const pending = client.pendingCodeMerge(project);
+  useEffect(() => {
+    if (!initialProposal || !validKey(initialProposal)) return;
+    let current = true;
+    setSelection(initialProposal);
+    setBusy(true);
+    void client.code(project, {action: 'proposal', ...initialProposal}).then(row => {
+      if (current) { setProposal(row); setMode('find'); }
+    }, () => {
+      if (current) setError('The Home could not open that proposal revision.');
+    }).finally(() => { if (current) setBusy(false); });
+    return () => { current = false; };
+  }, [client, project, initialProposal]);
 
   async function perform(operation: () => Promise<void>, failure: string) {
     setBusy(true); setNotice(''); setError('');
@@ -125,6 +138,8 @@ export function CodeReview({ client, project, writable, manage, principal }: {
       <p>{proposal.merged_revision ? 'Merged at repository revision ' + proposal.merged_revision + '.'
         : proposal.reviewer ? 'Approved for this exact revision.' : 'Awaiting review.'}</p>
       <TextField label="Linked Work item ID" value={proposal.work_id ?? ''} readOnly />
+      {onOpenWork && UUID.test(proposal.work_id ?? '') && <Button variant="quiet" disabled={busy}
+        onClick={() => onOpenWork(proposal.work_id!)}>View work item</Button>}
       <TextField label="Reviewed target branch" value={proposal.ref ?? ''} readOnly />
       <TextField label="Reviewed base commit" value={proposal.base_oid ?? ''} readOnly />
       <TextField label="Reviewed head commit" value={proposal.head_oid ?? ''} readOnly />
