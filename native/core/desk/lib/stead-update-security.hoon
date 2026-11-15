@@ -32,7 +32,7 @@
     (hash 'stead.update-access/3' (bytes-hex (jam [actor query(request '', cursor '') selected])))
   =/  id  p.i.rows
   =/  rank  (role:stead-team db actor id now)
-  ?.  &(?|(=('projects' kind.query) =(project.query id)) (gth rank 0))
+  ?.  &(?|(=('projects' kind.query) (workspace-query:stead-team-codec kind.query) =(project.query id)) (gth rank 0))
     $(rows t.rows)
   =/  counter  (~(get by generations.db) [id (cat 3 'access:' principal.identity.actor)])
   $(rows t.rows, selected (~(put by selected) id [epoch.q.i.rows rank ?~(counter 0 u.counter)]))

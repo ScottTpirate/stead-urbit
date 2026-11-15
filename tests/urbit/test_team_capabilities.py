@@ -13,7 +13,7 @@ class CapabilitiesTests(unittest.TestCase):
         self.request = '019939ba-4000-7000-8000-000000000001'
         self.row = {'protocol': 'stead.capabilities/3', 'profile': 'configured-team',
                     'commands': 'stead.command/3', 'queries': 'stead.query/3',
-                    'updates': 'stead.updates/3', 'work_contract': 'stead.work-contract/1',
+                    'updates': 'stead.updates/3', 'work_contract': 'stead.work-contract/1', 'workspace_queries': 'stead.workspace-queries/1',
                     'authentication': 'native-sender/1',
                     'max_request_bytes': '65536', 'max_response_bytes': '262144',
                     'page_size': '20', 'runtime': 'isolated-fake'}

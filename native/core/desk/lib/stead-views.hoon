@@ -25,7 +25,7 @@
   |=  [db=state:stead-team actor=authentication:stead-team query=query:stead-team-codec now=@ud]
   ^-  ?
   ?.  (current:stead-team db actor now)  |
-  ?:  ?|(=('identity' kind.query) =('capabilities' kind.query) =('projects' kind.query))  &
+  ?:  ?|(=('identity' kind.query) =('capabilities' kind.query) =('projects' kind.query) (workspace-query:stead-team-codec kind.query))  &
   =/  rank  (role:stead-team db actor project.query now)
   ?.  (gth rank 0)  |
   ?:  =('assignees' kind.query)  (gte rank 2)
@@ -55,10 +55,12 @@
   =/  person  (~(get by people) p.u.id)
   ?~(person '' display.u.person)
 ++  assignment-generation
-  |=  [db=state:stead-team query=query:stead-team-codec now=@ud]
+  |=  [db=state:stead-team actor=authentication:stead-team query=query:stead-team-codec now=@ud]
   ^-  (list [@t @t @t])
-  ?.  ?|(=('assignees' kind.query) =('work' kind.query) =('search' kind.query))  ~
-  =/  people  (assignees:stead-team db project.query now)
+  =/  workspace  (workspace-query:stead-team-codec kind.query)
+  ?.  ?|(workspace =('assignees' kind.query) =('work' kind.query) =('search' kind.query))  ~
+  =/  people=(map @t member:stead-team-config)  ?:(workspace ~ (assignees:stead-team db project.query now))
+  =/  rosters  (workspace-rosters db actor query now)
   ?:  =('assignees' kind.query)
     %+  turn  ~(tap by people)
     |=  [id=@t val=member:stead-team-config]
@@ -69,9 +71,23 @@
   ?~  items  out
   =/  project  -.p.i.items
   =/  id  +.p.i.items
-  ?.  &(=(project.query project) !(~(has in tombs.db) [project 'work' '' id]))  $(items t.items)
-  =/  name  (assignment-name data.q.i.items people)
-  $(items t.items, out ?:(=('' name) out [[id name ''] out]))
+  ?.  &(?:(workspace (gth (role:stead-team db actor project now) 0) =(project.query project)) !(~(has in tombs.db) [project 'work' '' id]))  $(items t.items)
+  =/  eligible  ?:(workspace (~(got by rosters) project) people)
+  =/  name  (assignment-name data.q.i.items eligible)
+  =/  scoped  ?:(workspace (rap 3 ~[project '/' id]) id)
+  $(items t.items, out ?:(=('' name) out [[scoped name ''] out]))
+++  workspace-rosters
+  ::  At most the existing 16 projects; never rescan a roster per result row.
+  |=  [db=state:stead-team actor=authentication:stead-team query=query:stead-team-codec now=@ud]
+  ^-  (map @t (map @t member:stead-team-config))
+  ?.  (workspace-query:stead-team-codec kind.query)  ~
+  =/  projects  ~(tap by projects.data.db)
+  =/  out=(map @t (map @t member:stead-team-config))  ~
+  |-
+  ?~  projects  out
+  =/  id  p.i.projects
+  ?.  (gth (role:stead-team db actor id now) 0)  $(projects t.projects)
+  $(projects t.projects, out (~(put by out) id (assignees:stead-team db id now)))
 ++  generation
   |=  [db=state:stead-team actor=authentication:stead-team query=query:stead-team-codec now=@ud]
   ^-  @t
@@ -82,10 +98,10 @@
     %+  turn
       %+  skim  ~(tap by projects.data.db)
       |=  [id=@t val=project-state:stead-core]
-      &((gth (role:stead-team db actor id now) 0) ?|(=('projects' kind.query) =(id project.query)))
+      &((gth (role:stead-team db actor id now) 0) ?|(=('projects' kind.query) (workspace-query:stead-team-codec kind.query) =(id project.query)))
     |=  [id=@t val=project-state:stead-core]
     =/  rank  (role:stead-team db actor id now)
-    [id rank ?:(&(=(rank 3) ?|(=('project' kind.query) =('projects' kind.query))) policy.val 0)]
+    [id rank ?:((workspace-query:stead-team-codec kind.query) epoch.val ?:(&(=(rank 3) ?|(=('project' kind.query) =('projects' kind.query))) policy.val 0))]
   =/  rows  ~(tap by generations.db)
   |-
   ?~  rows
@@ -94,12 +110,12 @@
         [(~(got by members.config) ship.identity.actor) (~(has in creators.config) principal.identity.actor)]
       ~
     =/  fingerprint  [identity.actor identity-view roles selected]
-    =/  assignments  (assignment-generation db query now)
+    =/  assignments  (assignment-generation db actor query now)
     (hash 'stead.view-generation/3' (bytes-hex (jam ?~(assignments fingerprint [fingerprint assignments]))))
   =/  project  -.p.i.rows
   =/  scope  +.p.i.rows
   =/  value  q.i.rows
-  ?.  ?:(=('projects' kind.query) (gth (role:stead-team db actor project now) 0) =(project project.query))
+  ?.  ?:(?|(=('projects' kind.query) (workspace-query:stead-team-codec kind.query)) (gth (role:stead-team db actor project now) 0) =(project project.query))
     $(rows t.rows)
   =/  access  =(scope (cat 3 'access:' principal.identity.actor))
   =/  included
@@ -108,7 +124,7 @@
       ?:  =('' container.query)  &
       =/  box  (~(got by boxes.db) container.query)
       =('shared' visibility.box)
-    ?:  (~(has in (silt ~['identity' 'projects' 'project' 'work'])) kind.query)  |
+    ?:  (~(has in (silt ~['identity' 'projects' 'project' 'work' 'my-work'])) kind.query)  |
     ?:  !=('' container.query)  =(scope container.query)
     (box-access:stead-team db actor project scope now)
   $(rows t.rows, selected ?:(included (~(put by selected) p.i.rows value) selected))
@@ -178,7 +194,7 @@
   ^-  (list row)
   ?:  =('capabilities' kind.query)
     =/  config  (need current.registry.db)
-    ~[['capabilities' (fields ~[['protocol' 'stead.capabilities/3'] ['profile' 'configured-team'] ['commands' 'stead.command/3'] ['queries' 'stead.query/3'] ['updates' 'stead.updates/3'] ['work_contract' 'stead.work-contract/1'] ['authentication' method.actor] ['max_request_bytes' '65536'] ['max_response_bytes' '262144'] ['page_size' '20'] ['runtime' runtime.config]])]]
+    ~[['capabilities' (fields ~[['protocol' 'stead.capabilities/3'] ['profile' 'configured-team'] ['commands' 'stead.command/3'] ['queries' 'stead.query/3'] ['updates' 'stead.updates/3'] ['work_contract' 'stead.work-contract/1'] ['workspace_queries' 'stead.workspace-queries/1'] ['authentication' method.actor] ['max_request_bytes' '65536'] ['max_response_bytes' '262144'] ['page_size' '20'] ['runtime' runtime.config]])]]
   ?:  =('identity' kind.query)
     =/  config  (need current.registry.db)
     =/  person  (~(got by members.config) ship.identity.actor)
@@ -205,12 +221,15 @@
     |=  [id=@t val=member:stead-team-config]
     [id (fields ~[['principal_id' id] ['display_name' display.val] ['identity_ship' (scot %p ship.identity.val)]])]
   =/  keys  ~(tap in resources.index)
+  =/  rosters  (workspace-rosters db actor query now)
   =/  out=(list row)  ~
   |-
   ?~  keys  (sort out |=([a=row b=row] (aor id.a id.b)))
   =/  key=[project=@t kind=@t container=@t id=@t]  i.keys
   =/  matches
     ?:  =('projects' kind.query)  =('project' kind.key)
+    ?:  =('my-work' kind.query)  =('work' kind.key)
+    ?:  =('workspace-search' kind.query)  ?|(=('work' kind.key) =('document' kind.key))
     ?&  =(project.query project.key)
         ?:  =('search' kind.query)  ?|(=('work' kind.key) =('document' kind.key))
         ?:  =('project' kind.query)  =('project' kind.key)
@@ -223,9 +242,23 @@
     ==
   ?.  &(matches (subject:stead-team db actor project.key kind.key container.key id.key now))
     $(keys t.keys)
-  ?:  &(=('search' kind.query) !(searchable db key search.query people))  $(keys t.keys)
-  =/  item  (resource-row db actor key now ?|(=('document' kind.query) &(=('work' kind.query) !=('' resource.query))) people)
-  $(keys t.keys, out [[(rap 3 ~[kind.key '/' container.key '/' id.key]) item] out])
+  =/  eligible  ?:((workspace-query:stead-team-codec kind.query) (~(got by rosters) project.key) people)
+  ?:  &(?|(=('search' kind.query) =('workspace-search' kind.query)) !(searchable db key search.query eligible))  $(keys t.keys)
+  =/  item  (resource-row db actor key now ?|(=('document' kind.query) &(=('work' kind.query) !=('' resource.query))) eligible)
+  =/  assigned  (~(get by item) 'assignee_principal_id')
+  =/  mine
+    ?~  assigned  |
+    ?>  ?=([%s *] u.assigned)
+    =(principal.identity.actor p.u.assigned)
+  ?:  &(=('my-work' kind.query) ?|(!mine (~(has in (silt ~['done' 'canceled'])) (field item 'status'))))
+    $(keys t.keys)
+  =/  row-id  (rap 3 ~[kind.key '/' container.key '/' id.key])
+  ?.  (workspace-query:stead-team-codec kind.query)  $(keys t.keys, out [[row-id item] out])
+  ::  Add project metadata only after the final per-resource authorization.
+  =/  project-data  data:(~(got by projects.data.db) project.key)
+  =.  item
+    (~(uni by item) (fields ~[['project_id' project.key] ['project_title' (field project-data 'title')] ['project_key' (field project-data 'project_key')]]))
+  $(keys t.keys, out [[(rap 3 ~[project.key '/' row-id]) item] out])
 ++  activity
   |=  [db=state:stead-team index=index:stead-projection actor=authentication:stead-team query=query:stead-team-codec now=@ud]
   ^-  (list row)
