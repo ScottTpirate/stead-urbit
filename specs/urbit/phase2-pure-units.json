@@ -1,7 +1,7 @@
 {
   "format": 1,
   "classification": "pure-native-only",
-  "expected_arm_count": 161,
+  "expected_arm_count": 167,
   "suites": [
     {
       "path": "/tests/stead-session",
@@ -116,6 +116,18 @@
         "test-work-comments-authorize-current-ticket-access",
         "test-work-comments-paginate-and-reject-stale-cursors",
         "test-work-comments-require-exact-bounded-body"
+      ],
+      "timeout_seconds": 60
+    },
+    {
+      "path": "/tests/stead-work-contract",
+      "arms": [
+        "test-work-contract-creation-domain-vector",
+        "test-work-contract-comments-and-metadata-preserve-pin",
+        "test-work-contract-exact-goal-edits-and-revert-advance",
+        "test-work-contract-scope-and-deletion",
+        "test-work-contract-authorized-detail-and-capability",
+        "test-work-contract-replay-preserves-authoritative-snapshot"
       ],
       "timeout_seconds": 60
     },
