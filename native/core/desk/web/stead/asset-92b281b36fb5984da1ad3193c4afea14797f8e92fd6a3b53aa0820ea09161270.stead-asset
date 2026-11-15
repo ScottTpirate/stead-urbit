@@ -21,3 +21,6 @@ react/cjs/react-jsx-runtime.production.js:
    * This source code is licensed under the MIT license found in the
    * LICENSE file in the root directory of this source tree.
    */
+
+markdown-it/dist/markdown-it.mjs:
+  /*! markdown-it 15.0.3 https://github.com/markdown-it/markdown-it @license MIT */
