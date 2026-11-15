@@ -1,0 +1,87 @@
+{
+  "classification": "reserved-doc-review-ui-source-and-host-evidence",
+  "qualifies_phase": false,
+  "live_or_native_acceptance": false,
+  "files": {
+    "web/app/src/docChangeReviewState.tsx": "55f5c9a406157fd81c4ab78537de7c66202587ddc4a3bd5aa33c956f0e2a8ef8",
+    "web/app/src/docChangeReview.tsx": "a632ae8f8736bdf5a4fcf751185891e5b00869bdcdbc9e0bb35d8dbf0f83a2aa",
+    "web/app/src/docChangeReview.css": "6a4b3fe0d075d87bf315bcaf46fbaf94790edb907ec121542ed64580994aa227",
+    "web/app/tests/doc-change-review-fixture.ts": "d3a4bbb11b5b1ad35b42239ccdd6c91f44c7cd52ad747be5251b2c801ded5f03",
+    "web/app/tests/doc-change-review.test.ts": "d4bb5ae34461ea4aeb162c92fdfeea410f83e57c7acd8a705c33f9decbba8bb1",
+    "web/app/tests/doc-change-review.mjs": "5793c35a547f354e89d851cc2a6a7abb7b78bb554170f327636cb59a91a7a191",
+    "web/app/tests/doc-change-review-reference.tsx": "1036489a9e0e35e77c3beaec61be39aaba867c4520ca6cd34b5010837546da45",
+    "web/app/tests/doc-change-review-reference.css": "b2d31885abd3cd10d694dd1b51121ab164f445ba5700d10580711070036d3981",
+    "web/app/tests/doc-change-review-reference.mjs": "1e23d148a83457ba55bf42ad31fa18c8a7bc6eb2b671ae83692469e810cc87a7"
+  },
+  "source_review": {
+    "status": "independent-root-source-review-approved",
+    "scope": "UI-only adapters; no native read/write carrier or App integration",
+    "command_codec": "web/app/src/docChangeProtocol.ts",
+    "native_authority_inference": false,
+    "adapter_requirements": [
+      "Caller supplies current authorized scoped metadata and bodies and immediately clears revoked scope.",
+      "Caller replaces authorizedReadToken only after a fresh successful authorized read; required onAccessChanged must invalidate parent context.",
+      "Caller owns actual transport/session checks, frozen prepared request creation and receipt correlation; throws or uncorrelated outcomes remain unknown.",
+      "Eligibility is an explicit closed native decision bound to current scope/session/head/result/epoch/generation; current unavailable Before adds no client authority restriction.",
+      "onDraftState is required, scoped and same-session only; exact unknown prepared request must survive temporary loading/access transitions."
+    ],
+    "source_map": {
+      "body_integrity": "verifyDocReviewBody: exact target base/selected output hashes, scope/session/result pins, UTF8 <=32768, no CR/NUL/lone surrogates",
+      "comparison": "boundedDocDiff: <=400 lines each, <=40000 matrix cells, exact source reconstruction and final-newline indicators; explicit unavailable fallback",
+      "state": "per-action retained pins and notes; explicit adoption; monotonic view/client/session/authorized-read generation; exact prepared retry; denied fence retained across remount",
+      "presentation": "After default, Changes/Before/After/Source, independent review vs accountable acceptance copy, prior output read-only, scoped20rowlist, pending/conflict/unknown/unsupported/offline/revoked states"
+    },
+    "reviewer": "integrator reviewed body integrity, bounded diff, exact prepared retry, monotonic scope/session fences and access-denial persistence"
+  },
+  "executed": {
+    "typescript": {
+      "command": "tsc --noEmit",
+      "status": "pass",
+      "owner": ".runtime/doc-review-typecheck-owner-1794772454270761056",
+      "resource_monitor": {
+        "output": "/home/skilgore/stead-urbit/.runtime/doc-review-typecheck-owner-1794772454270761056",
+        "peak_c": 47.0,
+        "duration_seconds": 6.6
+      }
+    },
+    "host_tests": {
+      "passed": 10,
+      "report": ".runtime/doc-change-review-7p7VWR/report.json",
+      "report_sha256": "7ad3856ea364d98aed18dced8c8c99ad40dbeff4b81683ea70dfe9f797d8a59d",
+      "owner": ".runtime/doc-review-owner-1794772703314741905",
+      "resource_monitor": {
+        "output": "/home/skilgore/stead-urbit/.runtime/doc-review-owner-1794772703314741905",
+        "peak_c": 52.0,
+        "duration_seconds": 1.8
+      }
+    },
+    "fixture_preparation": {
+      "bundled": true,
+      "runner_syntax_checked": true,
+      "executed_cases": 0
+    }
+  },
+  "not_executed": {
+    "browser_cases": [
+      "after-is-default-exact-source-diff-and-toolbar-focus-survive-narrow-layout",
+      "unavailable-original-never-becomes-empty-diff-or-invented-decision-restriction",
+      "eligibility-and-exact-body-are-required-and-prior-output-stays-read-only",
+      "unknown-decision-retries-original-bytes-and-keeps-independent-notes",
+      "epoch-conflict-requires-fresh-comparison-and-explicit-note-adoption",
+      "late-a-to-b-to-a-decision-cannot-publish-into-returned-view",
+      "denied-decision-clears-content-through-remount-until-fresh-authorized-read",
+      "quarantine-rejection-keeps-note-and-offline-and-list-keyboard-states-remain-explicit"
+    ],
+    "native_tests": true,
+    "live_doc_review": true
+  },
+  "resource_guard": {
+    "cpu_quota_percent": 25,
+    "cpu": [
+      19
+    ],
+    "admission_below_c": 75,
+    "stop_c": 80,
+    "all_owned_processes_cleaned": true
+  }
+}
