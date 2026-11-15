@@ -1,6 +1,12 @@
 # Development and deployment plan
 
-September 12, 2026. This is a plan; no cloud resources or Urbit identities have been purchased/provisioned.
+Initial planning baseline: September 12, 2026. The sizing/pricing discussion below
+is historical planning material, not current purchasing guidance or a live
+infrastructure inventory. Existing private-pilot operation is recorded in
+[Phase 5 deployment](PHASE5_DEPLOYMENT.md). The November 15
+[capability matrix](CAPABILITY_MATRIX.md) and [experience contract](PRODUCT_EXPERIENCE_CONTRACT.md)
+define current limits and the T27/T28/T30 onboarding, recovery and release work.
+No procurement, deployment or source cutover is authorized by this document.
 
 Use the [Phase 5 runbook](PHASE5_DEPLOYMENT.md) for the candidate verification,
 install, startup fence, recovery and canary sequence and its current blockers.
@@ -13,7 +19,7 @@ Pin the Vere release/commit and checksum, boot pill/kernel compatibility, desk d
 
 Use four fake identities: `~zod` home, `~bus` contributor, `~nec` reader, `~bud` outsider. The initial owner is the home harness administration context. These are synthetic roles, not rank privileges. Fake ships on the same machine can communicate but cannot join the live network. Run them in one private development VM/container network namespace with separate processes and pier directories; do not assume separate Docker loopbacks support the documented same-machine fake networking automatically.
 
-Create a clean seeded fake fixture, stop it before copying, and reset only explicitly marked disposable paths. Keep piers, credentials and logs with private input out of Git. Start/stop/reset/doctor targets must be implemented and tested before advertised. The currently supplied validator validates only planning metadata.
+Create a clean seeded fake fixture, stop it before copying, and reset only explicitly marked disposable paths. Keep piers, credentials and logs with private input out of Git. The guarded start/stop/reset/doctor targets now exist; use RUNBOOK.md and DEV_FLOW.md for their exact profile. The planning validator still validates metadata only, never native operation.
 
 Daily loop: small branch -> edit native libraries/agent or UI -> copy/sync into mounted development desk -> compile/test on pinned fake ship -> multi-ship and browser tests -> export round trip -> PR -> independent review. Keep a real failing test for every bug.
 
@@ -23,11 +29,11 @@ Keep GitHub as the source of truth initially. Each PR runs static checks, native
 
 Run untrusted work on disposable hosted or tightly isolated runners. Never attach an unattended public-PR runner to the authority VPS, a production pier, the developer's unrestricted home machine, or a Docker socket controlling live services. Live deployments use a separate protected environment with explicit human approval. Pin action dependencies and keep tokens read-only unless a narrowly reviewed job requires otherwise.
 
-Inherited Stead workflows are archived by bootstrap, not enabled. Implement the new CI only after native commands exist. Do not copy existing repository secrets or activate upstream webhooks.
+Inherited Stead workflows remain archived. Current native CI evidence is linked from the capability matrix; preserve its exact-source boundaries. Do not copy existing repository secrets or activate upstream webhooks.
 
 ## Shared test host
 
-After the first local acceptance slice passes, rent one ordinary VPS. Initial target: x86-64 Linux, 2-4 vCPUs, 8 GB RAM, at least 80 GB SSD, public IPv4 and permitted UDP. Prefer 16 GB if several live ships or build imports share the box. These are experiment-sizing hypotheses; this is not an enterprise performance promise.
+If a separately authorized staging deployment needs hosting, size and review one ordinary VPS against current measurements and prices before procurement. Initial target: x86-64 Linux, 2-4 vCPUs, 8 GB RAM, at least 80 GB SSD, public IPv4 and permitted UDP. Prefer 16 GB if several live ships or build imports share the box. These are experiment-sizing hypotheses; this is not an enterprise performance promise.
 
 The main authority ship gets its own Linux service/user and private pier. A small identity/test ship may share the machine for a synthetic pilot, with separate services, state and ports. For meaningful cross-host tests run the other peer on local equipment or a second disposable VM. Do not host all participants on one VM and call that evidence of network resilience or independent custody.
 
@@ -75,7 +81,7 @@ Never power two live copies of one ship. For an old snapshot, use the supported 
 
 1. GitHub remains canonical while Stead canary imports read-only copies.
 2. Controlled test repositories accept native pushes; compare IDs, permissions and exports with stock Git.
-3. Stead Urbit becomes authoritative for its own repository only after backup/recovery, normal Git compatibility and access tests pass.
+3. Stead Urbit becomes authoritative for its own repository only after the chosen full-history write/concurrent-update/review/check/build/restore profile passes and the owner explicitly authorizes source cutover.
 4. GitHub remains a one-way outward mirror and fallback distribution/read channel. Disable competing upstream writes or accept them only as explicit imported proposals.
 
 Do not create bidirectional synchronization with two independently writable main branches. Do not treat a replica as a backup without deletion/retention protection.

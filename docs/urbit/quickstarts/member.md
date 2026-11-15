@@ -1,5 +1,11 @@
 # Work and Docs: member quickstart
 
+This guide describes existing configured-team controls, not the November 15
+redesign. See the [capability matrix](../CAPABILITY_MATRIX.md) for evidence and
+limits. The [target experience](../PRODUCT_EXPERIENCE_CONTRACT.md) moves Links
+and Activity into context and adds workspace attention queues and real workers;
+those controls must not be advertised as available before implementation.
+
 Your operator supplies two addresses: your team's Stead home and the Stead
 identity page on your individual ship. Use your own identity. Ask the operator
 to grant access to a project if none appears after sign-in.

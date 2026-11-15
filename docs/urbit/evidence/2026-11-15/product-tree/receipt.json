@@ -1,0 +1,48 @@
+{
+  "protocol": "stead.product-tree-investigation/1",
+  "observed_on": "2026-11-15",
+  "package": "T19",
+  "status": "reported_failure_not_reproduced_in_authenticated_http_reads",
+  "classification": "live-private-pilot-read-only-api-observation-not-browser-or-release-qualification",
+  "checkout": "539825650c60e606634bf4ab5967b698a6daa6e3",
+  "pilot_release_label": "candidate-v9-dbc8cc0",
+  "profile": "named HTTPS origin through existing private SSH tunnel and verified private CA; existing native member authentication transport",
+  "transport_source": {
+    "path": "candidate-v9-dbc8cc0/member-read.py",
+    "sha256": "02a5702f1492a7486b8c1e846751720d5a415abc3024bff45f9e882a6db54409",
+    "adaptation": "In-memory AST retained existing login and finally-logout routines; replaced the business-read body with pack/tree/file reads and denial observations. No installed script was changed."
+  },
+  "deployed_files_match_checkout": {
+    "scripts/urbit/git_pack_browse.py": "ad705c70ffc505d2225e37c3b75cdfa14e275004588505f43a458a1817e9eb59",
+    "scripts/urbit/git_pack_browse_http.py": "5ec035c80396b6e3fb0b18bc4c06195508e8268997030ffdef8b2141b81e5267",
+    "scripts/urbit/git_pack_relay.py": "e7f4ac00858f586f87d8a96606bb05544739244b2a27da3bb0870e99814cde44",
+    "scripts/urbit/git_pack_relay_service.py": "e35109e42b5aafc934798f841a14c55b692eacb1be16cd4603eeb4636b1159de",
+    "scripts/urbit/git_pack_store.py": "c704e8745a54a70740aab18daa4c08f702f4ef29806bd5ae449557de4e97a7fb",
+    "scripts/urbit/portable_code.py": "8a68e1be61345c8e33219e5963b63910077ea5d7b30c0b6138432f1a1ee57f06"
+  },
+  "observations": [
+    {"operation": "shell", "http": 200, "tls_validation": "private CA verified"},
+    {"operation": "pack-view", "http": 200, "status": "external", "generation": "1", "objects": 8050, "snapshot": "2d0565c884124cdbf5eacccc3626cf3cc72d5c0fda1fb295e70a6ce90fe782ca"},
+    {"operation": "root-tree", "http": 200, "status": "tree", "entries": 22, "commit": "3ba8e4304e8d73d948905acdb2f1e1cfb1dff5af", "elapsed_seconds": 4.419},
+    {"operation": "file", "path": "README.md", "http": 200, "status": "file", "preview": "text", "commit": "3ba8e4304e8d73d948905acdb2f1e1cfb1dff5af", "bytes": 4963, "text_sha256": "67946a5d1b7705ee38c9935cdbf998360d682f1209b1a4b60bb4e91d0624a675"},
+    {"operation": "wrong-snapshot", "http": 409, "error": "stale_selection", "content_absent": true},
+    {"operation": "post-logout-query", "http": 401, "error": "session_required"},
+    {"operation": "post-logout-browse", "http": 401, "error": "session_required", "content_absent": true}
+  ],
+  "cleanup": {
+    "diagnostics": 2,
+    "own_home_sessions_logged_out": 2,
+    "unrelated_sessions_modified": false,
+    "business_writes": false,
+    "service_changes_or_deployment": false,
+    "credentials_recorded": false,
+    "remote_script_changes": false
+  },
+  "limitations": [
+    "The existing isolated pilot browser was not available through the computer-use surface; no authenticated browser-rendered tree was observed.",
+    "The reported screenshot failure was not reproduced and its cause is unknown; no repair is claimed.",
+    "One timing observation is not a latency or capacity qualification.",
+    "Empty repository, large/binary file, partial response and revocation-during-read cases remain outside this live observation.",
+    "This receipt does not close T19, qualify the redesigned frontend, or change release gates."
+  ]
+}

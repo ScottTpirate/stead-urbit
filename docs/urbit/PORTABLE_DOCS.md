@@ -1,5 +1,24 @@
 # Recover an exported Docs history
 
+## Canonical document and migration contract
+
+The [product experience contract](PRODUCT_EXPERIENCE_CONTRACT.md) requires one
+canonical source per document. A collection Doc remains canonical Markdown in
+its own authorized collection. If a repository README appears in Docs, it is a
+view of that exact repository path/revision and edits through that origin; never
+create a second independently writable copy. Collection confidentiality must
+match clone/export access. Showing one page cannot publish a private collection.
+
+T09/T26 in the [execution plan](../../specs/urbit/product-execution-plan.yaml)
+add safe Markdown read/edit fidelity, stable title/metadata handling and
+loss-aware import/export. Preserve original IDs/OIDs/authorship; new revisions
+use truthful attribution. Dry runs report unsupported fields, ambiguous users,
+attachments and unresolved links; repeated/interrupted imports are idempotent
+and staged content needs explicit activation. The utility below only recovers
+an exported collection history and does not implement that full migration flow.
+
+## Existing recovery utility
+
 `scripts/urbit/portable_docs.py` packages an already exported bare SHA-1
 Docs repository. It follows the chosen head through its commit, tree and
 Markdown objects and verifies every Git object ID. The archive includes

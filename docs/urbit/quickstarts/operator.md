@@ -1,5 +1,10 @@
 # Operator quickstart: local team alpha
 
+This is the synthetic local profile. Existing private-pilot procedures are in
+[Phase 5 deployment](../PHASE5_DEPLOYMENT.md); support boundaries are in the
+[capability matrix](../CAPABILITY_MATRIX.md). T28's one supported install/update/
+recovery journey and T27's browser-only onboarding remain future qualification.
+
 The qualified target for this phase is a disposable Linux fixture. No rented
 server, purchased Urbit identity, production ship copy or public DNS is needed
 for that target. Production desk distribution and recovery belong to later

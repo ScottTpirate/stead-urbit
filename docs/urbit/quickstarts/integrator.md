@@ -1,5 +1,11 @@
 # Native app integrator quickstart
 
+Before adding product interfaces, read the
+[experience contract](../PRODUCT_EXPERIENCE_CONTRACT.md) and
+[current handoff](../AGENT_HANDOFF.md). Existing SDK exports below retain their
+versioned meaning; owner/worker/run, independent repositories and separate Work
+contract revisions require reviewed successors rather than silent API changes.
+
 Use the separately versioned [SDK v3](../../../sdk/v3/README.md) for configured
 team homes. SDK v2 remains the legacy fixture interface. The package is a
 developer fragment, not an application installation or deployment credential.

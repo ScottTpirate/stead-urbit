@@ -1,115 +1,194 @@
-# Proposed Work agent jobs
+# Work agent jobs and durable runs
 
-**Status: unimplemented proposal.** This document specifies the next bounded
-increment; it is not a supported API, executed test report, or claim of agent
-autonomy. Start with synthetic data and inline Code. External Git, model-driven
-execution and batch control require their own acceptance below.
+**Status: adopted target contract, not an implemented job API.** The November
+15, 2026 alignment replaces the former Code-first job proposal. At baseline
+`539825650c60e606634bf4ab5967b698a6daa6e3`, delegation grants proposal access
+and copies a brief; it does not dispatch a worker. No run, model adapter or
+autonomous product gate is closed by this document.
 
-The [master directive](MASTER_BUILD_DIRECTIVE.md#10-agent-and-ci-boundaries)
-requires durable Work, source, proposal, checks and review links, recoverable
-effects, and separate acceptance/release authority. A proposal grant alone
-does not dispatch or execute a task.
+Follow the [product experience contract](PRODUCT_EXPERIENCE_CONTRACT.md),
+[capability matrix](CAPABILITY_MATRIX.md), and T03/T05/T12–T18 in the
+[execution plan](../../specs/urbit/product-execution-plan.yaml). The first
+user-facing acceptance is G3/T18: a document update in a project with no Code.
+A deterministic inline-Code recipe remains a separate parallel proof of
+execution and isolation. It neither substitutes for nor blocks Docs delivery.
 
 ## Reuse and separation
 
-- `stead-code-delivery.hoon` already checks current delegation, membership,
-  proposal and review authority. Its build transitions provide lease,
-  expected-attempt, cancellation and exact-replay patterns.
-- `stead-code-build-home.hoon` already exposes authenticated build
-  queue/read/claim/finish/cancel/release operations and verifies artifact
-  bytes. These follow an existing proposal and require an independent
-  builder. Do not repurpose them as pre-proposal agent jobs.
-- `code_build_worker.py` provides pinned inputs/Git, isolated namespaces,
-  bounded resources/output and receipt-last publication. Its only current
-  recipe inventories an existing commit; it does not edit source or call a
-  model. Reuse the isolation design with a separate job/result protocol.
+- `stead-code-delivery.hoon` checks current delegation, membership, proposal and
+  review authority. Its build transitions supply lease, expected-attempt,
+  cancellation and exact-replay patterns. The expiry/adoption contract below
+  needs explicit migration and negative tests; retain existing eligibility
+  checks until that replacement is implemented and qualified.
+- `stead-code-build-home.hoon` exposes authenticated build operations and
+  verifies artifact bytes. Those post-proposal jobs remain distinct from
+  pre-proposal runs; do not repurpose them as generic task jobs.
+- `code_build_worker.py` supplies pinned inputs, isolation, bounded resources
+  and receipt-last publication. Its existing recipe inventories a commit;
+  it neither edits source nor calls a model. Reuse the isolation boundary
+  with a separate typed job/result protocol.
 - `agent_proposal.py` verifies a private worker session, current Work and
-  delegation, then submits already-staged OIDs. Reuse those checks and exact
-  proposal readback; replace the manual staging handoff with job admission.
-- `stead-code-store.hoon` supplies bounded object/graph validation, ref policy,
-  comparison before update and original Git identities. Existing Git
-  credentials are repository read/write, not job/ref scoped. A proposal-only
-  worker must not receive a general write credential.
+  delegation, then submits already-staged OIDs. Preserve exact readback while
+  replacing manual staging in the normal product interaction.
+- `stead-code-store.hoon` supplies bounded graph/object validation, ref policy,
+  comparison before update and original Git identities. Proposal-only runs
+  must not receive general repository write credentials.
 
-## Proposed single-job contract
+## Owner, worker and run
 
-Home owns a new versioned job map. Preserve predecessor saved-state shapes;
-add migration, validation and portable export instead of silently extending
-an existing saved mold. Initial limits: 32 jobs per project, three retained
-attempts per job, one live lease per job. Capacity fails explicitly.
+**Owner** is the accountable human, explicitly assigned or visibly inherited
+from the project's human steward. **Working on it** identifies the current
+human or agent worker. A **run** is one execution of a task contract with
+separate attempts. Submission is reviewable output, not Work completion.
 
-An immutable issued job binds `job_id`, Home/project/repository/authority epoch,
-requester and worker principal bindings, `delegation_id`, Work ID and revision,
-context digest, target ref and exact base OID, source digest, recipe digest,
-expiry, and staging ref `refs/heads/agent/<job_id>`. Home resolves source and
-context through current authorization. Linked Docs are pinned to exact
-revisions and included only when the worker can read them. Input context and
-results have explicit byte/object limits; caller-provided paths or commands
-cannot widen the recipe.
+Separate the stable agent principal from its versioned instructions, model/tool
+profile and runtime connection. Runtime replacement preserves historical
+attribution; a new run does not require another ship. Service credentials are
+individually scoped, versioned and revocable. Authentication and final
+authorization use the same principal resolver as ordinary members. Display
+names and user-supplied actor fields confer no power.
 
-Proposed authenticated operations are `agent-job-issue`, `agent-job-get`,
-`agent-job-claim`, `agent-job-cancel`, and `agent-job-finish`. These names are
-not implemented routes. Listing is bounded and reveals only authorized jobs.
+Work, Docs, comments, questions, relationships and Changes are shared business
+objects for people and agents. Do not add a parallel AI-task database.
+Ordinary permitted comments/progress remain direct actions; default
+**Review required** applies to deliverables and protected targets.
+
+## Immutable run contract
+
+Home owns a new versioned job map. Preserve predecessor saved-state shapes
+through explicit migration, validation and portable export. The initial
+bounded proof profile retains at most 32 jobs per project, three attempts per
+job and one live lease per job; these are proposed test limits, not measured
+capacity. Initial deterministic leases are at most two minutes and never exceed
+membership, grant or job expiry. Model execution needs separately qualified
+renewal and a finite maximum duration. T06/T31 must specify retention and
+qualify supported limits.
+
+An issued run binds:
+
+- Run/request ID, Home, project, authority epoch and source Work identity.
+- Work `execution_contract_revision` and digest of goal, acceptance criteria
+  and required outcomes; ordinary `work_revision` is not the execution pin.
+- Requester, accountable owner, worker principal/binding, agent-definition
+  version, runtime profile, scoped grant and policy version.
+- Exact authorized context manifest and digest, output kind and targets.
+- Deadline, finite time/cost/tool/network budgets, attempts, fencing token,
+  lease, heartbeat and immutable result references.
+
+Targets are typed. Docs bind complete project/collection/document identity,
+exact prior revision and expected Markdown outcome. Code additionally binds
+an independent repository identity, target ref, exact base OID, source/recipe
+digests and fixed staging ref `refs/heads/agent/<run_id>`. Completion evidence
+binds an authorized Doc or explicit completion note. Generic runs require no
+repository, branch or commit; never invent a Git repo for non-code Work.
+
+Home resolves every context item under current worker access. Linked Docs are
+not implicitly readable. Pin exact revisions; show newer context without
+silently substituting it. Material required-input changes need explicit
+re-planning or a new run. Input/output byte and object bounds cannot be widened
+by caller-supplied paths or commands.
+
+T05 separates execution-contract revisions from mutable Work properties and
+discussion/activity sequences. Comments, progress and unrelated notifications
+must not invalidate an unchanged contract. Changed acceptance criteria do.
+Until that migration exists, the baseline combined Work revision remains the
+implemented behavior; do not claim the revision trap has been fixed.
+
+## Lifecycle and effects
+
+The proposed authenticated protocol covers issue/read/list/claim/heartbeat,
+wait/answer/resume, cancel and finish. Final route/mark names need a versioned
+wire freeze; these are not existing endpoints. Listings and telemetry are
+bounded, paginated and permission filtered.
 
 | Transition | Required behavior |
 | --- | --- |
-| Issue → `queued` | Maintainer authorizes the exact task under a live delegation; identical job ID and inputs replay, differing inputs conflict. Human assignment stays unchanged. |
-| Claim → `running` | Only the assigned worker may claim with `expected_attempt`; compare at Home, increment once and persist before execution. Initial synthetic lease is at most two minutes and never exceeds membership/delegation/job expiry. |
-| Expired claim → new attempt | Current authority and pinned inputs must still hold; only the expected expired attempt can be replaced, up to three attempts. Preserve prior attempts. |
-| Finish → `submitted` | Verify exact attempt, result, live authority and source/context preconditions; admit the staging branch and exact proposal, then retain their IDs, OIDs, checks and receipt. |
-| Finish → `failed` | Store bounded failure evidence without a proposal or target-ref change. Failure is terminal; a new authorized job is required to try different inputs. |
-| Cancel → `cancelled` | Authorized requester cancels an unfinished job; repeated cancellation replays. A completed proposal remains historical and does not become merged or released. |
+| Issue → Queued | Current requester authorizes the exact task under policy/grant/budget. Identical ID and inputs replay; differing inputs conflict. Preserve accountable owner. |
+| Claim → Running | Assigned worker compares expected attempt and gets a fencing token. Home commits before execution. Competing claims yield one live attempt. |
+| Heartbeat / renewal | Compare exact attempt/token; recheck current authority, contract, grant, budget and maximum deadline. Never revive revoked or expired authority. |
+| Running → Waiting for input | Persist a bounded attributable question on Work and an actionable Inbox item. Retain context and attempted effects. |
+| Answer → continuation | Continue a clarification wait only while contract, scope and current authority hold. An answer cannot broaden tools or rewrite the issued contract. |
+| Expired attempt → replacement | Reconcile receipts/effects first; require current authority and expected expired attempt. Fence old attempts and retain history. Never blindly repeat an external call. |
+| Finish → Submitted | Verify exact attempt/token, immutable result, live publication authority, contract/context and target preconditions. Commit result reference, Change and submitted state coherently. |
+| Finish → Failed | Retain bounded failure evidence without target acceptance. Different inputs require a new authorized run. |
+| Cancel → Canceled | Persist cancellation, stop new claims/effects and fence late publication. Exact retries replay. Previously accepted outcomes remain historical. |
 
-Expired/revoked authority or changed Work/context/base prevents publication.
-Readback must explain the blocked condition without presenting a live run as
-accepted. A fresh scope needs a new job, not an in-place rewrite. An exact
-completion retry reads the stored outcome under current access without
-reapplying effects. A different result for the same terminal attempt conflicts.
+Stop work/Cancel is per run. **Pause new work** stops new project claims;
+running work continues unless separately canceled. Clarification continuation
+does not promise arbitrary process checkpoint/resume. The supervisor attempts
+child termination; the UI distinguishes accepted cancellation from observed
+process stop.
 
-## Execution and result admission
+An external unprivileged supervisor holds scoped private credentials. The
+isolated child receives sealed context/source and bounded tools, not Home
+sessions, provider keys, deployment credentials or inherited network access.
+Model/provider egress is explicit: a Doc read does not authorize sending it to
+an arbitrary service. Retrieved content cannot change policy. Task assignment
+alone never authorizes messages, purchases or deployment; these need explicit
+effect authority and reconciliation. Deterministic recipes are allowlisted and
+do not execute arbitrary repository hooks or commands. Keep the executor
+contract provider-neutral and compatible with local models; an external model
+provider is optional and never a dependency of ordinary Work/Docs/Code.
 
-An external unprivileged supervisor polls Home and holds the worker's own
-private session. The isolated child receives only sealed job/context/source;
-no Home session, general Git write credential, authority files, deployment
-keys or inherited network access. The initial allowlisted recipe makes a
-deterministic README edit in a synthetic repository and records bounded
-checks. It never executes arbitrary repository hooks or commands.
+Journal run, attempt and input digests before effects; publish output and a
+receipt last. On restart reconcile Home and durable local/provider evidence
+before another claim or call. Home replay never dispatches a worker. Lost
+finish replies retry the same immutable result. Uncertain model/effect outcomes
+remain explicit rather than silently repeated. Exact completion retries read
+the stored result under current access without reapplying effects; a different
+result for the same terminal attempt conflicts. Promise deduplicated accepted
+outcomes, not universal exactly-once external computation.
 
-The supervisor journals job, attempt and input digests before execution and
-publishes output plus a receipt last. On restart it reconciles Home and any
-complete local result before considering another claim. Home replay never
-starts a worker. A lost reply retries the same immutable result; it does not
-automatically repeat a model call or other external effect.
+## Change admission, review and durable proposals
 
-Add job-scoped result admission, not a broad write token. At final admission
-Home rechecks worker binding, current delegation, lease/attempt, epoch, Work
-context and target base. Reuse bounded Git quarantine/graph checks; require
-the generated commit to descend from the pinned base and allow only the
-job's fixed staging ref with its exact expected prior value. Preserve original
-Git OIDs. The protected target cannot advance through this operation.
+A narrow common **Change** envelope retains source Work, original author/worker,
+run/attempt, summary, exact before/after references, output digest, checks and
+reviews. Keep typed Doc/code targets and existing Git proposal reducers; do not
+introduce a universal workflow or transaction engine. Exact Markdown diffs
+serve Docs; original OIDs and exact branch comparisons serve Code.
 
-The staging-ref receipt, exact proposal under the worker's identity, and
-`submitted` job outcome must commit together. If transport requires staging,
-retain a durable intermediate record and reconcile it; never expose a partial
-result as completed. Revocation/cancellation prevents final publication.
-Supervisor polling should stop local work, but does not promise instantaneous
-remote process termination. Recipe checks remain worker evidence, not an
-independent accepted build.
+At admission Home rechecks worker binding, grant, lease/token, epoch, contract,
+required context and target base. Code uses bounded quarantine/graph checks,
+descends from the pinned base and stages only the assigned ref with its exact
+expected prior value. It cannot advance a protected target. Docs admission
+submits an exact reviewable revision without publishing private collection
+contents. Retain staged/uncertain intermediate states durably; partial staging
+is neither Submitted nor Accepted.
 
-Existing exact review and separately authorized build/release transitions
-follow the proposal. Show queued/running/blocked/failed/cancelled/submitted
-outcomes, attempt history, exact proposal and checks on Work. Only Home
-readback may establish a shared outcome.
+Execution lease and delegating grant are distinct from durable review. Expiry
+stops further worker effects/publication but does not erase an earlier proposal
+or require a live worker grant merely to inspect it. Current reader/reviewer
+access still applies. Revocation or compromise may quarantine pending output.
+
+T13 implements explicit adoption of an exact expired or quarantined proposal.
+Preserve original author/run provenance and digest; require the adopter's
+current acceptance authority, current scope/target/base, required checks and
+fresh review where required. Adoption never renews credentials, authorizes a
+new worker effect or silently accepts compromised output. Baseline delivery
+eligibility remains enforced until migration, time-shift and revocation tests
+qualify this intentional contract change.
+
+Acceptance is separate from submission and build/release authority. Work is
+Done only when declared required outcomes are accepted and required checks
+pass; optional links do not block it. An authorized human may explicitly
+complete a non-artifact task with a short note. Later T25 low-risk automatic
+acceptance requires separate reviewer/acceptance authority and steward-owned
+policy. Producers cannot approve themselves or raise budgets, tools, data
+access or acceptance scope.
 
 ## Incremental acceptance
 
 | Gate | Required executed evidence | Does not establish |
 | --- | --- | --- |
-| Deterministic synthetic task | One Work job produces a real isolated edit and original Git commit, staged through job-scoped admission, then an exact reviewable proposal. Verify separate builder admission; competing claims; stale Work/base; cancellation/revocation; attempt expiry; lost completion reply; restart before/after publication; export/readback; and absence of credentials in the child. Include native authorization and real browser-to-Home execution, not only mocked browser responses. | Model reasoning, arbitrary repository execution, external Git readiness or batch scheduling. |
-| Model-driven task | A separately reviewed, pinned executor adapter performs an actual model-driven task on synthetic source. Record model/configuration, authorized context, input/output and checks; bound cost, duration, retries and tool/network effects. Keep provider credentials outside repository execution. Prove cancellation, restart and ambiguous external-effect recovery without silently repeating calls. Use separately specified finite lease renewal/maximum duration; the two-minute synthetic profile is not sufficient evidence. | General task success, safe execution of arbitrary code, external Git or batch operation. |
-| Bounded batch control | Explicit batch membership, per-job scope and finite concurrency/cost/time budgets; durable enqueue and pause/cancel controls; per-job outcomes; predictable partial failure. Prove restart without duplicate dispatch, starvation bounds and cancellation while jobs are queued/running. Every child still passes single-job authorization and exact proposal admission. | Unbounded autonomous scheduling, production capacity or deployment authorization. |
+| T14 native runs | Competing claims, stale contract/epoch, comment during run, denied context, cancellation, late attempt, migration, export, exact replay and restart. | External execution or model success. |
+| T15 deterministic Docs | Real isolated Doc edit submitted through Home; kill before/after output/publication reply; one accepted result, no child credentials, honest cancellation/readback. | Model reasoning, Code readiness or autonomy. |
+| T15 parallel Code proof | Original Git commit, scoped staging and exact proposal in a synthetic inline repo; base conflict, denied broad write, separate builder and recovery. | A prerequisite for Docs, full-history Git or arbitrary repository execution. |
+| T17 model adapter | Actual synthetic Doc edit with pinned configuration/context, explicit egress, finite tools/cost/time; lease renewal, cancellation and ambiguous-call reconciliation. | General task success or a required cloud dependency. |
+| G3/T18 no-Code journey | Create Work, delegate to a named agent, answer a question, request revision, accept exact Markdown and complete Work without a repository. Include comments during execution, changed criteria, next-day review, revoked attempts and restart. | Completion from mocked APIs, copied briefs or operator staging. |
+| T24/T25 bounded autonomy | Ordinary child Work, acyclic dependencies, finite concurrency/budget, Pause new work, partial failure/reassignment and separate low-risk review/acceptance authority. | Unbounded scheduling, self-approval or deployment permission. |
 
-External Git additionally needs this job authority connected to accepted
-snapshots, scoped result ingestion, build acceptance and release authority.
-Any retained local passing evidence must name exact source/payload hashes,
-executed scope and exclusions. No gate closes merely because its UI exists.
+Record exact source, profile, actors, inputs, observed outcomes, failures and
+unexecuted cases. Independent real-browser/native/model evidence closes the
+product journey; a process exit, grant receipt or run card does not. External
+Git jobs, full-history Code acceptance, sustained capacity and supported release
+retain their separate gates.

@@ -1,5 +1,43 @@
 # Native review and build transitions
 
+## Product target and baseline boundary
+
+The [product experience contract](PRODUCT_EXPERIENCE_CONTRACT.md) and
+[execution plan](../../specs/urbit/product-execution-plan.yaml) govern new
+work. The reducer and manual workflow below describe the implemented baseline
+at `539825650c60e606634bf4ab5967b698a6daa6e3`; they are not the target Delegate
+experience. A proposal grant/copyable brief does not start a worker.
+
+T12 adds a narrow shared Change envelope with typed Doc/code targets, exact
+before/after references, source Work, original author/run, checks and reviews.
+Reuse these Git reducers. Generic Work runs and document review require no
+Code repository; G3/T18 no-Code Docs acceptance precedes the complete forge
+journey. [Run contract](AGENT_JOB_PROFILE.md)
+
+T13 intentionally changes the baseline coupling between delegation eligibility
+and durable review. An execution lease/grant expiry stops new worker effects
+and publication, but preserves output already submitted and its provenance.
+Current authorized readers/reviewers may inspect that exact proposal without
+reviving the worker grant. Revocation/compromise can quarantine output. An
+explicit adoption decision requires current adopter acceptance authority,
+current scope and target/base, exact output digest, required checks and fresh
+review where required. Adoption preserves the original author/run and never
+renews old credentials or silently accepts compromised output. Keep existing
+eligibility checks until versioned migration and time-shift, revocation, replay
+and changed-target tests qualify the replacement; documentation alone does
+not enable adoption.
+
+Review required remains the default for deliverables and protected targets.
+Ordinary permitted comments and progress are direct operations. A producer
+cannot approve its own output. T25 may add steward-authorized narrow low-risk
+automatic acceptance using separate reviewer/acceptance authority, after its
+dependencies pass. Submission, acceptance, Work completion, build and deployment
+remain distinct. All declared required outcomes and checks must pass before
+Work becomes Done; a single merged branch cannot complete unrelated required
+outputs.
+
+## Baseline reducer behavior
+
 The delivery reducer owns one bounded version-1 board for one exact Home,
 project, repository and authority epoch. It takes already authenticated
 actors, re-resolves their current binding and checks the Work, branch and
@@ -69,6 +107,9 @@ service wiring, bounded durable artifact transport, a v1 saved-state
 predecessor matrix, and external worker operation require their own evidence.
 
 ## Try a Work delegation
+
+This is the baseline manual proposal workflow, not automatic delegation or
+the planned no-Code run experience.
 
 In a project with inline Code, open a Work item as a maintainer. Choose
 **Delegate to an agent**, enter the agent's own Urbit ID, choose the target

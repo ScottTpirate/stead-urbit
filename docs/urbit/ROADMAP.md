@@ -1,5 +1,39 @@
 # Phased implementation roadmap
 
+## Current next increment — November 15, 2026
+
+Adopt the [product experience contract](PRODUCT_EXPERIENCE_CONTRACT.md) on the
+existing native foundation. The [32-package plan](../../specs/urbit/product-execution-plan.yaml)
+adds follow-up scope to existing URB parents; A–F are work groups, not new M0–M6
+milestones. The [capability matrix](CAPABILITY_MATRIX.md) is the concise current
+status and evidence map. Historical entries below retain their dated scope.
+
+| Work group | Outcome | Packages / acceptance |
+| --- | --- | --- |
+| A | Shared product, identity, repository, revision and storage contracts | T01–T06; concrete versioned interfaces and migration decisions reviewed before shared mutations. |
+| B | Daily human Work/Docs and bounded live-tree repair | T07–T11, T19; G1 with truthful navigation, permissions, conflict and recovery. |
+| C | Complete agent Docs outcome | T12–T18; G3 in a no-Code project, including clarification/revision/acceptance. |
+| D | Credible software forge | T20–T23; G2/G4 on the declared Git profile with exact review, checks and restore. |
+| E | Bounded project automation and sustained capacity | T24/T25/T31; finite queue/budgets, exception handling and measured limits. |
+| F | Installable supported beta | T26–T30/T32; independent installation/use/upgrade/recovery and capability-bound release decision. |
+
+T01 product decisions are documented; interface/migration acceptance remains
+pending. T02 reference preparation, T06 capacity inventory and T19 live-tree
+investigation may proceed independently; shared-contract mutations wait for T01.
+T07 consumes T01/T02; T08 additionally needs T05 and T09 needs T06. Follow the YAML
+DAG rather than treating every group as a sequential barrier. Docs linking and
+Docs autonomy do not wait for complete forge delivery. Code automatic acceptance
+stays disabled until T22/T23 pass. T32 remains open for consolidation after shipped
+T18/T23/T28, despite this initial documentation alignment.
+
+The live tracker still has 16 open canonical tasks, including #29/URB-260, as
+observed November 15. Its state is separate from November 9's bounded local
+acceptance and the new independent first-time-user gates. No gate is closed by
+writing this roadmap. GitHub source cutover, deployment and release remain
+separate decisions tied to exact-profile evidence.
+
+## Historical implementation and qualification timeline
+
 No dates or effort estimates here are promises. Each phase exits on evidence, not elapsed time.
 
 September 26: Phases 0 and 1 are complete. The [Phase 1 native gate](PHASE1_ACCEPTANCE_20260926.md)
@@ -83,7 +117,7 @@ Workstreams: integration/architecture owns shared contracts; platform owns runti
 
 Parallelize only after contracts freeze. Do not launch separate agents to invent competing project IDs, schemas, ACLs or storage masters. Platform setup and dependency research may proceed independently. After URB-030, native state and authorization can progress against common tests; frontend and Git follow the relevant gates.
 
-Start: URB-000, then URB-010, URB-020 and URB-025, then URB-030. The first product milestone is one page/work item saved on the home and correctly visible or denied to different principals after a restart. Do not start by translating all upstream engine source.
+Historical bootstrap order was URB-000, URB-010/020/025, then URB-030. That first-slice work established the native foundation; it is not the current assignment. Use the current next increment above and preserve its acceptance evidence.
 
 The original task definitions remain in `specs/urbit/backlog.json`;
 `specs/urbit/ecosystem.json` adds ecosystem tasks, milestones and live issue

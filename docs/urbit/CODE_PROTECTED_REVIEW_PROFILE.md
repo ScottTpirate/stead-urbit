@@ -1,5 +1,14 @@
 # Protected branch review
 
+This documents the implemented Code profile at the November 15, 2026 review
+baseline. T12/T13 add the typed Change envelope and explicit durable-proposal
+adoption contract described in [delivery](CODE_DELIVERY_PROFILE.md#product-target-and-baseline-boundary)
+and [agent jobs](AGENT_JOB_PROFILE.md). These are required target changes,
+not existing operations. Preserve current checks until the versioned change
+passes native migration/revocation/replay tests. The baseline worker-delegation
+expiry rules below must not be copied as a requirement that prevents next-day
+inspection or explicitly authorized adoption of exact retained output.
+
 The Home owns proposal revisions, approvals, delegations, and the relation
 between a merged proposal and its exact repository receipt. The saved review
 board is scoped to one repository and authority epoch. A review command uses

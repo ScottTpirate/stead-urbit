@@ -6,6 +6,24 @@ profile below requires new verifier, Home and browser code before operators
 can enable it. A browser-only employee will need an organization IdP account
 and a browser. The organization still operates its Urbit Home.
 
+## Product alignment
+
+T03 and T27 in the [execution plan](../../specs/urbit/product-execution-plan.yaml)
+share one versioned principal registry and current-binding resolver. A durable
+principal is a person, agent or service, not a ship/model/runtime name. Preserve
+existing native login and attribution; service worker credentials are scoped
+separately from this human browser sign-in flow. Several logical agents may use
+one worker service without a planet per run. Changing an agent definition or
+runtime never rewrites authorship or silently expands authority.
+
+Use the [experience contract](PRODUCT_EXPERIENCE_CONTRACT.md) for Members &
+agents and guided invitation/sign-in. The target browser-only member path must
+qualify real provider exchange, Home lifecycle and first-time member behavior;
+the primitive proofs below do not establish a working sign-in flow. One shared
+migration owner coordinates tagged bindings with Git credentials, delegations,
+runs, review and recovery. The profile's one-active-binding limit remains an
+explicit initial constraint, not permission to share an identity or credential.
+
 ## Feasibility decision
 
 Use OpenID Connect Authorization Code with PKCE S256 through a dedicated
