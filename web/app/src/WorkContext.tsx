@@ -1,6 +1,7 @@
 import { useEffect, useId, useRef, useState, type FormEvent } from 'react';
 import { HomeError, UUID, type Fields, type HomeClient, type Query, type Row } from './api';
 import { Button, TextField } from './primitives';
+import { workStatuses } from './WorkQuickActions';
 
 type Endpoint = {kind: 'work' | 'document'; id: string; container: string};
 type Choice = Endpoint & {title: string};
@@ -8,7 +9,8 @@ type Direction = 'support' | 'blocks' | 'blockedBy' | 'related';
 type Group = Direction | 'relatedDocs';
 type Relation = {row: Row; source: Endpoint; target: Endpoint};
 type WorkLink = Relation & {group: Group; other: Endpoint};
-type TitledLink = WorkLink & {title: string};
+type EndpointDetails = {title: string; status?: string};
+type TitledLink = WorkLink & EndpointDetails;
 type LinkView = {revision: number} & ({status: 'ready'; links: TitledLink[]} | {status: 'failed'});
 type MatchSearch = {status: 'none' | 'loading' | 'failed'}
   | {status: 'ready'; choices: Choice[]; limited: boolean};
@@ -54,13 +56,13 @@ function titleOf(row: Row, kind: Endpoint['kind']) {
     : (title.split('\n', 1)[0]?.replace(/^#{1,6} +/u, '').trim() || 'Untitled page');
 }
 
-async function endpointTitle(client: HomeClient, project: string, value: Endpoint) {
+async function endpointDetails(client: HomeClient, project: string, value: Endpoint): Promise<EndpointDetails | null> {
   try {
     const view = await client.query(readScope(value.kind, project, value.id, value.container));
     const [row, extra] = Object.values(view.rows);
     if (!row || extra || view.cursor || row.kind !== value.kind || row.resource_id !== value.id
       || row.container_id !== value.container) throw new HomeError('invalid_response');
-    return titleOf(row, value.kind);
+    return {title: titleOf(row, value.kind), status: value.kind === 'work' ? workStatuses.get(row.status ?? '') : undefined};
   } catch (failure) {
     if (failure instanceof HomeError && failure.code === 'denied_or_not_found') return null;
     throw failure;
@@ -98,16 +100,16 @@ async function linksFor(client: HomeClient, project: string, work: Endpoint, act
   if (!active()) return [];
   if (cursor) throw new HomeError('invalid_response');
 
-  const titles = new Map<string, string | null>();
+  const details = new Map<string, EndpointDetails | null>();
   const endpoints = [...new Map(matching.map(link => [endpointKey(link.other), link.other])).values()];
   for (let offset = 0; offset < endpoints.length && active(); offset += 6) {
     await Promise.all(endpoints.slice(offset, offset + 6).map(async value => {
-      titles.set(endpointKey(value), await endpointTitle(client, project, value));
+      details.set(endpointKey(value), await endpointDetails(client, project, value));
     }));
   }
   return matching.flatMap(link => {
-    const title = titles.get(endpointKey(link.other));
-    return title ? [{...link, title}] : [];
+    const found = details.get(endpointKey(link.other));
+    return found ? [{...link, ...found}] : [];
   });
 }
 
@@ -234,6 +236,7 @@ function WorkContextPanel({client, project, work, writable, locked, viewRevision
                   if (link.other.kind === 'work') onOpenWork(link.other.id);
                   else onOpenDoc(link.other.container, link.other.id);
                 }}>{link.title}</Button>
+                {link.status && <span className="work-context-status">{link.status}</span>}
                 {writable && <Button variant="quiet" aria-label={`Remove link to ${link.title}`} disabled={locked || !!direction}
                   onClick={() => onRemove(link.row)}>Remove</Button>}
               </li>)}</ul>

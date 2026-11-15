@@ -1399,7 +1399,7 @@ try {
     const work = (num, title) => ({kind: 'work', project_id: project, container_id: '', resource_id: id(num), title,
       description: '', resource_revision: '1', status: 'todo', type: 'task', priority: 'none'});
     const ticket = work(651, 'Prepare the launch');
-    const blocker = work(652, 'Review handoff');
+    const blocker = {...work(652, 'Review handoff'), status: 'done'};
     const later = work(653, 'Publish the release');
     state.work = [ticket, blocker, later];
     const box = id(200);
@@ -1421,6 +1421,7 @@ try {
     await context.getByRole('button', {name: 'Show links', exact: true}).click();
     await context.getByRole('heading', {name: 'Blocked by', exact: true}).waitFor();
     await context.getByRole('button', {name: blocker.title, exact: true}).waitFor();
+    await context.getByText('Done', {exact: true}).waitFor();
     assert.equal(state.requests.filter(row => row.kind === 'relations').length, 2);
     assert.equal(await context.getByRole('button', {name: later.title, exact: true}).count(), 0);
     await context.getByRole('button', {name: 'Add link', exact: true}).click();
@@ -1428,8 +1429,14 @@ try {
     await context.getByRole('textbox', {name: 'Find a resource', exact: true}).fill('release guide');
     await context.getByRole('button', {name: 'Find matches', exact: true}).click();
     await context.getByRole('combobox', {name: 'Choose a resource', exact: true}).selectOption({label: 'Release guide'});
+    state.loseCommand = true;
     await context.getByRole('button', {name: 'Save link', exact: true}).click();
+    await page.getByRole('heading', {name: 'Save awaiting confirmation', exact: true}).waitFor();
+    await page.getByRole('alert').waitFor();
+    state.loseCommand = false;
+    await page.getByRole('button', {name: 'Check receipt', exact: true}).click();
     await page.getByText('Link added.', {exact: true}).waitFor();
+    assert.equal(state.commands.length, 1);
     assert.deepEqual(state.commands.at(-1).payload, {type: 'documents', source_project_id: project, source_kind: 'document',
       source_container_id: box, source_id: doc, target_project_id: project, target_kind: 'work', target_container_id: '', target_id: ticket.resource_id});
     await context.getByRole('button', {name: 'Release guide', exact: true}).click();

@@ -619,10 +619,14 @@ function App() {
     setForm(''); setEditWorkField(null); setFormDirty(false); setDiscard(null); if (!refreshDetail && !refreshContext) setWork(null); setConfirmation(null); setCurrentVersion(null);
     if (value.operation === 'document.delete') { setEditor(null); setLinkedPage(null); }
     if (value.operation === 'work.delete' && work?.resource_id === value.resource_id) syncWorkAddress(value.project_id, undefined, true);
+    if (refreshContext) {
+      setWorkContextRevision(value => value + 1);
+      setNotice(value.operation === 'relation.create' ? 'Link added.' : 'Link removed.');
+      return;
+    }
     if (value.operation === 'project.create') await identify();
     else if (value.operation === 'container.create' && project) setContainers(await collections(project.project_id!));
     else if (project) await refresh();
-    if (refreshContext) setWorkContextRevision(value => value + 1);
     if (refreshDetail) {
       const generation = activeQuery.current;
       const view = await client.query(blankQuery('work', value.project_id, '', value.resource_id));
