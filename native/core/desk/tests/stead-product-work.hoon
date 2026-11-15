@@ -427,6 +427,7 @@
   =/  old-retry  (apply-legacy:stead-product-work db.legacy product.legacy alice (command 304 101 0 'work.create' work-fields) 2.005)
   =/  events  events.product.legacy
   ?>  &(?=(^ events) ?=(^ t.events))
+  ?>  ?=(^ journal.data.db.legacy)
   %-  expect
   !>  ?&  =('accepted' (result-field response.legacy 'status'))
           =(%v3 family.i.events)  =(%v4 family.i.t.events)

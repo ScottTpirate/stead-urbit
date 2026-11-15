@@ -767,7 +767,8 @@ def main():
                         with (job / 'console.private.log').open('rb') as source:
                             raw = source.read(32 * 1024**2 + 1)
                         result['worker_diagnostic'] = project(raw, inputs, run_id=run_id,
-                            inventory=json.loads(controller['specs/urbit/phase2-pure-units.json']))
+                            inventory=json.loads(controller['specs/urbit/phase2-pure-units.json']),
+                            sources=combined)
                     except Exception:
                         result['worker_diagnostic'] = {'classification': 'failed-worker-diagnostic-unavailable',
                                                        'qualifies_phase': False}
