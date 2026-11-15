@@ -1,0 +1,25 @@
+{
+  "activation_obligations": [
+    "Only validated current registry and actual owner sender may call gates",
+    "Catalog custody synchronization and project/delegation/transport authority remain separate",
+    "Runtime labels and digests do not independently authorize execution"
+  ],
+  "checks": [
+    "Legacy IDs, original binding custody and revision highwaters imported without inferred principal kind",
+    "Owner local sender and CAS; declared kind immutable even after deactivation",
+    "Native kind requires current live member and current binding owner plus original imported custody and highwater",
+    "Older registry rejected against newer imported catalog",
+    "Runtime and definition versions bounded and immutable, fixed producer ownership"
+  ],
+  "files": {
+    "native/core/desk/lib/stead-principals.hoon": "59674e536e182c62902046a267aa644f05f7c97282e3eb737ab74f3ca6446d7f",
+    "native/core/desk/tests/stead-principals.hoon": "72ff843b387459cfb32fd1e7cbdcfac255f91e4d6223352bb266b0669a612a89"
+  },
+  "home_activation": false,
+  "native_executed": false,
+  "native_suite_arms": 6,
+  "protocol": "stead.independent-source-review/1",
+  "reviewed_at": "2026-11-15T17:52:50.585035+00:00",
+  "scope": "reserved-principal-catalog",
+  "status": "approved-for-isolated-qualification"
+}

@@ -1,12 +1,14 @@
 # Product native interfaces and migration proposal
 
 Prepared November 15, 2026 from source `539825650c60e606634bf4ab5967b698a6daa6e3`.
-Status: **proposed for integrator and independent native review**. This is the
-concrete T01/T06 design supporting the [experience contract](PRODUCT_EXPERIENCE_CONTRACT.md),
-not a new active wire or saved-state version. Native compilation and migration
-qualification have not run for this change. The root agent's current preflight
-reported 96°C and refused startup above the existing 75°C admission limit;
-continue source work without changing thermal guards.
+Status: **successor pure interfaces independently source-reviewed; native qualification and Home activation pending**. This is the
+concrete T01/T03/T05/T06 design supporting the [experience contract](PRODUCT_EXPERIENCE_CONTRACT.md),
+not a new active wire or saved-state version. T05a's existing-state execution
+pin extension passed hosted native qualification at commit `f254244` (167 arms,
+1,647 checks); the successor command/4 decoder, migration and reducer below
+remain a separate unactivated increment. See the [qualification receipt](evidence/2026-11-15/controller-refresh/receipt.json)
+for exact source and limits. Heavy native work uses the hosted runner; local
+thermal admission and cleanup guards remain unchanged.
 
 ## Current seams and immediate implementation slice
 
@@ -33,7 +35,8 @@ T05: independent comment CAS, paged storage, new statuses and required-outcome
 acceptance require the later v4/v10 migration.
 
 T05a contract projection processes accepted Work creation/update events in
-accepted order, bounded by the Home's existing 4,096 ordinary-event limit.
+accepted order, bounded by 6,144 retained journal entries: the existing 4,096
+ordinary events plus the configured per-project security reserves.
 Start execution revision at 1 on creation; increment only when exact title or
 description bytes change. Status, priority, type, assignment and comments do
 not change it. Deletion makes the Work unavailable. Do not derive a contract
@@ -90,6 +93,33 @@ IDs, actor records or grants, then adds individually authenticated service
 bindings. Resolver callbacks for Git/review/run code accept verified principal
 references rather than `@p` alone. Native sender lookup remains explicit.
 
+The source-only `stead-principals` catalog preserves every predecessor principal
+ID, binding ownership tombstone and principal revision high-water mark. Imported
+kinds are **unresolved**: a native login alone does not prove a person, and past
+worker ships must not become accountable human Owners by inference. A declaration
+from the actual Home owner, with current catalog revision, selects an immutable
+person/agent/service kind. Display and active state have their own catalog CAS;
+deactivation cannot permit a later kind transfer. Removed predecessor members
+retain IDs without an invented current display name. The native-kind adapter
+requires both an active declared catalog entry and a live current native binding;
+it does not replace current project grants or Work assignment eligibility.
+
+Agent runtime bindings and definitions have separate stable IDs and immutable
+versions. A definition pins an exact runtime version and instructions digest;
+a runtime version pins an explicit profile and policy digest. New versions do
+not change existing definitions, earlier authorship or run pins. Runtime and
+definition ownership cannot transfer to another agent. Only the trusted Home
+owner path can append these records; an agent cannot alter its own policy. These
+records contain no credential and do not authorize execution. The runner must
+resolve the named profile and digests against its reviewed allowlist.
+
+This catalog is not yet in a saved envelope or public route. Its six native
+cases are source-only until registered and executed. Activation still requires
+recorded configuration/custody changes, saved-state validation and replay,
+individually scoped service credentials, verified non-ship actor resolution and
+the corresponding current-membership adapters. Catalog declarations alone do
+not satisfy T03's live service-agent acceptance.
+
 ## T05 command, concurrency and migration contract
 
 Retain a legacy aggregate revision for old receipt correlation; do not call it
@@ -104,9 +134,101 @@ operation and payload; a typed `expected` object replaces the ambiguous single
 | `work.create` | `work_revision=0`, `execution_contract_revision=0` | Creates properties and contract at 1, discussion sequence 0; no implicit worker/run. |
 | `work.update-properties` | `work_revision` | Status, priority, type, owner, worker and blocking condition; never silently changes goal. |
 | `work.update-contract` | `execution_contract_revision` | Title, description, acceptance criteria and typed required outcomes; increments contract only when canonical content changes. |
+| `work.resolve-legacy-blocked` | `work_revision` | Explicitly chooses the unfinished state and optional blocking reason while retaining legacy provenance. Ordinary property edits cannot clear this disposition. |
+| `work.resolve-legacy-assignee` | `work_revision` | Explicitly chooses owner/worker or leaves both unassigned, retaining the legacy assignment and marking it resolved. |
 | `work.comment` | `discussion_sequence` | Appends one immutable comment and increments sequence; does not alter property/contract revision. |
 | `work.complete` | `work_revision`, `execution_contract_revision` | Requires accepted required outputs/checks or an explicit authorized human non-artifact note. |
 | `work.delete` | `work_revision`, `execution_contract_revision`, `discussion_sequence` | Tombstones the Work and fences active runs without deleting historical comments. |
+
+### Reserved T05b decoder shape
+
+The source-only `stead-product-codec` decoder and its native tests implement the
+following closed shape for review. They are not yet a registered native test
+suite, activated route, supported saved format or qualified release capability.
+No command/3 shape changes. The envelope has exactly `protocol`, `request_id`,
+`project_id`, `resource_id`, `authority_epoch`, `operation`, `expected`, `payload`.
+The protocol is `stead.command/4`; all IDs are canonical UUIDs and all numeric
+fields are canonical unsigned 64-bit decimal strings. Epoch and existing Work/
+contract revisions must be positive; creation revisions and a first discussion
+sequence are zero. Unknown operations, fields and combinations fail closed.
+
+Payloads are full replacements of their named section, not partial patches:
+
+| Operation | Exact payload fields |
+| --- | --- |
+| `work.create` | All property and contract fields below. |
+| `work.update-properties` | `type`, `status`, `priority`, `owner_principal_id`, `worker_principal_id`, `blocked_reason` |
+| `work.update-contract` | `title`, `description`, `acceptance_criteria`, `required_outcomes` |
+| `work.resolve-legacy-blocked` | `status`, `blocked_reason` (unfinished status only) |
+| `work.resolve-legacy-assignee` | `owner_principal_id`, `worker_principal_id` (both may be empty) |
+| `work.comment` | `body` |
+| `work.complete` | `basis`, `note` |
+| `work.delete` | Empty object. |
+
+Type and priority retain their existing enumerations. Authored states are
+`backlog`, `todo`, `in_progress`, `in_review`, `done`, `canceled`. Creation cannot
+start Done. Property updates may carry Done so an already complete Work item
+can change priority or owner without reopening. The final reducer must reject
+any transition **into** Done except through `work.complete`, and preserve the
+valid completion basis when Done is retained with an unchanged contract.
+Blocked is a nonblank reason on unfinished Work, never a status; Done and
+Canceled cannot carry a blocking reason. Legacy blocked disposition and legacy
+completion basis are migration-owned and cannot be authored through this codec.
+Resolution uses `work.resolve-legacy-blocked`; it does not erase the legacy
+record, and an unrelated property edit cannot silently resolve it.
+Owner/worker are UUIDs or empty; owner kind, current eligibility and any explicit
+steward inheritance are final authorization checks, not assertions from a client.
+Legacy assignee IDs and available display/provenance stay explicitly identified
+as legacy assignments. Migration does not silently make them a new accountable
+human owner or worker. Autonomous dispatch requires resolved human accountability
+or explicit, visible steward inheritance. A contract edit on Done is rejected
+unless it is an exact no-op; changing that goal requires an explicit reopen.
+Legacy assignment resolution uses its dedicated operation and the property CAS.
+Ordinary property edits do not resolve a blank-to-blank assignment and cannot
+change owner/worker while that legacy assignment remains unresolved. Explicit
+clearing to unassigned preserves original assignment provenance and changes only
+the property revision. New resolution requests after resolution are rejected;
+an exact retry of the accepted request remains idempotent under current access.
+
+`required_outcomes` is an object of at most 16 stable outcome UUIDs, each mapping
+to one closed desired target. It does not claim that an output already exists:
+
+| Kind | Exact target fields in addition to `kind` |
+| --- | --- |
+| `document` | `project_id`, `collection_id`, `document_id`, `expected_revision`, `base_markdown_sha256` |
+| `code` | `project_id`, `repository_id`, `target_ref`, `base_oid` |
+| `completion-note` | `project_id`, `work_id`, `expected_revision` |
+
+Every target project matches the command project; a completion note names the
+source Work. Doc revision zero requires an empty prior digest; a positive
+revision requires a 64-character lowercase SHA-256. Code targets use a bounded
+valid branch ref and exact 40-character base OID. The produced Doc revision/
+digest or Code head belongs to the later Change; it is not guessed in the Work
+requirement. Existence, collection/repository association and access remain
+authoritative reducer checks.
+The initial reserved reducer profile admits required output targets only in
+shared Doc collections belonging to the Work's project. It checks current
+collection write access, nonexistence for revision zero, or the exact existing
+revision before invoking the trusted Markdown digest resolver. A private
+collection is refused even when the Work author owns it; exact contracts can
+then be read by project members without exposing private target references or
+counts. Private context and drafts remain separately scoped, with existing
+explicit publication unchanged. Code and completion-note targets are reserved
+decoder shapes and fail closed in this reducer until their adapters qualify.
+
+Completion basis is `accepted-outcomes` with an empty note, or `human-note` with
+a nonblank bounded note. The latter must be rejected by the final reducer when
+any required outcomes exist; it neither proves a human actor nor bypasses
+required acceptance/checks. An empty required-outcome set needs the explicit
+authorized human non-artifact completion path.
+
+The decoder permits at most four object levels, 16 keys per object and 65,536
+request bytes; duplicate keys, arrays and non-string scalars are rejected.
+Title retains the existing 800-byte/200-character bound; description and
+acceptance criteria allow 8,192 bytes each. Comment, completion note and blocking
+reason use the existing nonblank 2,048-byte discussion-body rules. Canonical
+bytes preserve string content and hash under `stead.command/4`. These are
+decoding limits, not measured storage or concurrency support.
 
 A concurrent comment and property edit can each accept using their independent
 preconditions. Concurrent comments use stream CAS: one wins; two comments cannot
@@ -152,6 +274,106 @@ unfinished state only if history supports it, otherwise expose an explicit
 legacy-blocked disposition requiring resolution. Legacy Done preserves a
 `legacy` completion basis without invented acceptance. New/reopened Work uses
 required-outcome acceptance. Migration never creates fictitious user events.
+
+The source-only T05c `stead-product-migrate` prototype first completes the
+existing `stead-restore` validation, then processes 16 accepted events or 16
+Work rows per step. It exposes a result only after the full conversion. Its
+unregistered native tests are not execution evidence, and no Home save/load,
+export or serving path uses these molds yet. Qualification of outer versions
+3–9 and the eventual v10 restore remains required.
+
+Conversion starts property/contract revisions at one. Exact changes to type,
+status, priority or legacy assignment advance the imported property revision;
+exact title/description changes advance the imported contract revision. Accepted
+comments independently advance discussion sequence and retain the request,
+legacy aggregate revision, actor, time, exact body and original receipt. The
+derived comment list must match the embedded predecessor list exactly before
+the live embedded copy is removed. Deleted Work and its comments remain tied to
+the retained tombstone. Legacy command/3 never allowed reuse of an existing
+Work UUID, including one retained after deletion.
+
+The core Work map remains the single current source of authored content;
+sidecar metadata holds counters, the `/2` contract digest, migration provenance
+and completion basis. `/2` includes acceptance criteria and required outcomes;
+`/1` and old agent-brief pin semantics remain frozen. Activation must advertise
+the new capability explicitly and reject incompatible writes/briefs. This
+prototype does not make old query/3 consumers understand the new Work fields.
+
+The conversion retains the exact original journal, receipts and non-Work state.
+A domain-separated migration fingerprint binds the journal count, per-project
+heads, current registry digest and a chronological digest chain over every
+accepted journal record. That chain also binds cross-project interleaving.
+This is a fingerprint of the validated predecessor history; it is not a claim
+that the converted current-state hash equals the predecessor hash. Current
+registry display labels are marked as such; unavailable historical display
+names are not invented. No existing event, Work or comment limit is increased.
+The bounded predecessor registry is retained as immutable, hash-bound replay
+input, never live authority. Later registry changes must join the same ordered
+post-migration timeline as v3/v4 operations or be rejected during activation;
+restoration cannot substitute today's registry for that historical boundary.
+
+The separate source-only `stead-product-restore` packet reconstructs the legacy
+prefix using the frozen registry and the existing restore's historical actor
+checks, reruns conversion and requires its exact migration boundary. It then
+replays every later v3/v4 event in the single recorded order, including retained
+v4 rejections, and compares the complete core/sidecar pair. Sequence, preceding
+digest, canonical event/body bytes, generated receipts and completion evidence
+must agree. Its bounded steps expose no partial result. The original
+`stead-restore` begin/step/result behavior remains unchanged; a separately tagged
+history API exposes reconstructed predecessor state only after historical
+validation finishes.
+
+V4 replay requires a Home-internal historical evidence adapter. Missing evidence
+rejects reconstruction. A recorded principal-kind string or today's principal
+catalog cannot independently authorize a past operation; historical kinds,
+target eligibility and accepted output proof must be established from retained
+authority evidence. Native test adapters model a fixed synthetic declaration
+interval and are not a real catalog/Change chronology. The initial replay
+profile rejects any post-migration registry change until configuration events
+have a qualified ordered representation. Sessions and cursors are not rebuilt.
+These source tests remain unregistered and unexecuted; there is no v10 Home
+activation or claim of recovery qualification from this packet alone.
+
+### Reserved paired Work reducer
+
+The source-only `stead-product-work` reducer returns core and sidecar state in
+one pure transition. Its native tests remain unregistered/unexecuted until the
+next hosted qualification packet. Current identity, project access, epoch and
+the operation's independent CAS are checked before mutations; replay visibility
+also requires current identity and access. Admitted v4 attempts retain their
+command digest and original accepted/rejected receipt, so a confirmed conflict
+cannot be retried under changed bytes and the same request ID. Admission denied
+for missing current authority or exhausted capacity is not a retained attempt.
+
+Ordinary capacity counts legacy accepted ordinary events plus retained v4
+attempts against the existing 4,096 limit. Existing revocation reserves remain
+available. Failure while constructing a bounded receipt/event or advancing a
+generation rolls back both core and sidecar. Every accepted v3 operation after
+migration must pass `apply-legacy`, which fences new legacy Work writes and
+records other accepted operations in the same ordered timeline as v4 attempts.
+Request identity is checked across both legacy and new receipt maps.
+
+Completion records retain the actual completing principal, request, contract pin
+and note or exact accepted-outcome evidence in both current metadata and the
+immutable event. A current human owner or maintainer may use the non-artifact
+note path; unassigned ordinary Work also allows a current human contributor.
+Declared outcomes cannot be bypassed by a note. Unresolved legacy blocking or a
+current blocking reason prevents completion. Completing already-Done Work under
+a new request is rejected; priority/owner edits may retain valid Done evidence.
+
+The kind, target and accepted-proof resolver gates are trusted Home internals,
+never command fields. Unknown kinds/targets/proofs fail closed. The initial
+assignment eligibility adapter still requires the current native member roster;
+a catalog-only or service principal needs a reviewed current-membership adapter.
+Pure native tests supply explicit trusted fixture gates; those gates do not
+qualify real Doc/Code access, accepted checks or a live agent workflow.
+
+Activation still requires product-aware reads/projections, mixed timeline replay
+and v10 save/load/export/fingerprint validation, owner-configuration timeline
+handling, current principal/target/proof adapters and actual Home routing. The
+existing projection reads only the legacy journal and cannot discover newly
+created v4 Work by itself. None of these serving or restore obligations is
+satisfied merely by the pure reducer source.
 
 ## T04/T12/T13/T14 incremental integration
 

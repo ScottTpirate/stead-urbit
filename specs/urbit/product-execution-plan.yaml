@@ -127,7 +127,7 @@ packages:
   - 21
   - 29
   current_progress: Experience contract and migration design recorded; T05a read interface reviewed and committed.
-    Successor Work codec is under native review; broader identity/repository/run interfaces remain open.
+    Successor principal and Work codec, reducer, migration, query and mixed-replay source are independently reviewed for isolated qualification; repository and run interfaces remain open.
 - id: T02
   title: Build the reusable interaction reference
   phase: A
@@ -193,13 +193,14 @@ packages:
   - Credential rotation/revocation cannot transfer authority to another principal or preserve revoked access.
   - New runtime version does not rewrite historical authorship or grant itself broader tools.
   evidence: Native migration/authorization negatives and roster/API readback with two distinct agents.
-  implementation_status: planned
+  implementation_status: in_progress
   parent_issue_numbers:
   - 9
   - 19
   - 21
   - 24
   - 26
+  current_progress: Source-only catalog preserves legacy principal IDs, binding custody and revision highwaters; owner declarations resolve kind explicitly and immutable runtime/definition versions stay separate. Six native test arms are independently reviewed but uncompiled. Service authentication, catalog history and Home activation remain open.
 - id: T04
   title: Introduce independent repository identity
   phase: A
@@ -280,10 +281,7 @@ packages:
   - 12
   - 22
   - 26
-  current_progress: T05a f254244 passed hosted native run43736509249:167arms/1647checks, six execution-pin arms,
-    exact controller/workflow and empty cleanup retained in controller-refresh/receipt.json. Browser release readback,
-    v4Work reducer, mixed-timeline replay and v10activation remain open; new codec/migration source is unregistered
-    and unqualified.
+  current_progress: T05a f254244 passed hosted native run 43736509249 with 167 arms and 1647 checks; exact source and cleanup are retained in controller-refresh/receipt.json. The successor command/4 reducer, separate discussion, bounded predecessor migration, query/4 and mixed-history restore have independent source review. The combined principal/Work packet has 47 uncompiled test arms; current adapters, historical authority recording, Home activation and release readback remain open.
 - id: T06
   title: Define bounded storage and supported workload strategy
   phase: A

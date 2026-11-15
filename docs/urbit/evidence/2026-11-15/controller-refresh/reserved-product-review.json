@@ -1,0 +1,35 @@
+{
+  "activation_obligations": [
+    "New saved-state validator must bind legacy prefix, converted Work state, sidecar and mixed chronological timeline",
+    "Trusted current catalog kind and exact document digest/outcome adapters required; no decoded callbacks",
+    "Every old write must traverse mixed journal wrapper and owner configuration must be fenced until recorded",
+    "Home retirement, handoff and existing authority fences must wrap the new reducer",
+    "No Code or note targets activated until their real adapters exist"
+  ],
+  "files": {
+    "native/core/desk/lib/stead-product-codec.hoon": "2926129bea22a4f915c85265eb04af0a482ec6970d99bf37c844fd8818455d75",
+    "native/core/desk/lib/stead-product-migrate.hoon": "62d87351737613a56ddb3be8e6afae22df874da646f510150f042f07a0ad15ff",
+    "native/core/desk/lib/stead-product-state.hoon": "e2849b2d91d1f31560f072602b997d881d1778943704cb2308ea9e1c81eefc73",
+    "native/core/desk/lib/stead-product-work.hoon": "624d1878397c4552bd4e2d7ed0c02af874b95c3c20321f89dcec61cf47ab53e4",
+    "native/core/desk/tests/stead-product-codec.hoon": "59738cb14dd443ff43ca776f1b051501318029dcc26cb402db7e731fa7c35836",
+    "native/core/desk/tests/stead-product-migrate.hoon": "3ae3f38f9e1472ebf96b1ced77621d3fe118af61cde687d1e5313cbf9b90f345",
+    "native/core/desk/tests/stead-product-work.hoon": "58b25a4c89fee671eedb5baf9438ca3333ed690060884dc067b862144ab12fd9"
+  },
+  "findings_resolved": [
+    "Explicit legacy assignment clearing preserves immutable target and authentication provenance with work CAS",
+    "Wrong same-Work execution and required-outcome proofs fail closed",
+    "Completion evidence is retained in immutable event bytes",
+    "Shared-Doc current membership, visibility, existence and revision are checked before trusted digest adapter"
+  ],
+  "home_activation": false,
+  "native_executed": false,
+  "native_suite_arms": {
+    "codec": 9,
+    "migrate": 6,
+    "work": 10
+  },
+  "protocol": "stead.independent-source-review/1",
+  "reviewed_at": "2026-11-15T17:37:16.947569+00:00",
+  "scope": "reserved-product-native-source-only",
+  "status": "approved-for-isolated-qualification"
+}

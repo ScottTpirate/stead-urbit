@@ -1,0 +1,28 @@
+{
+  "activation_obligations": [
+    "Mixed saved-state replay validation before reads",
+    "Home carrier, retirement and handoff fences",
+    "Query4 browser parser with no query3 protocol aliasing"
+  ],
+  "checks": [
+    "closed query4 grammar",
+    "current identity/project and final resource authorization",
+    "bounded flat rows with exact contracts and separate ordered comments",
+    "no raw authentication or outcome receipt disclosure",
+    "private or malformed outcomes reject whole detail",
+    "cursor purpose/actor/filter/epoch/visible generation binding and shared query-walk budget"
+  ],
+  "files": {
+    "native/core/desk/lib/stead-product-query.hoon": "0d6c7a73b803d3c015c6a85b3a7a23d06f82c796de1fb9b18cd4442067e89350",
+    "native/core/desk/lib/stead-product-views.hoon": "ea5806bd403937aa2efc782d00eaa1ff58fe064a4baf4102f9097d4ce8fb95f0",
+    "native/core/desk/lib/stead-views.hoon": "52f08a7878631299024d7ea4892014ee773c8bf462bbe7de71078fbe0791a07b",
+    "native/core/desk/tests/stead-product-views.hoon": "78b793dfaa21f3385fd0e987a932b3916ef1184eb4beec66d5d820efbacfd997"
+  },
+  "home_activation": false,
+  "native_executed": false,
+  "native_suite_arms": 8,
+  "protocol": "stead.independent-source-review/1",
+  "reviewed_at": "2026-11-15T17:50:25.999155+00:00",
+  "scope": "reserved-product-queries",
+  "status": "approved-for-isolated-qualification"
+}

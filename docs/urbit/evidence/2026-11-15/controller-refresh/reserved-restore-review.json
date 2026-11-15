@@ -1,0 +1,31 @@
+{
+  "activation_obligations": [
+    "Concrete independent retained historical kind/target/proof adapter",
+    "Owner configuration/catalog mutation recording or explicit fence",
+    "Versioned Home on-load with mule failure handling and all existing authority/lifecycle fences",
+    "Native execution still required"
+  ],
+  "checks": [
+    "Original restore begin/step/result bytes unchanged; appended tagged history reconstruction returns rebuilt state only",
+    "Combined original noun cap plus all existing core map/object bounds and new per-record sidecar bounds",
+    "Frozen original registry and chronological prefix reconstructed before conversion",
+    "Exact migration boundary then ordered command3/command4 accepted and rejected replay",
+    "Independent historical adapter required; recorded kind is not historical authority",
+    "Exact regenerated receipts/events and final full paired-state equality",
+    "Rehashed command/receipt/completion tamper, drop/order, noncanonical, missing evidence and configuration mismatch negatives",
+    "Incremental result withheld until validation complete"
+  ],
+  "files": {
+    "native/core/desk/lib/stead-product-restore.hoon": "63c413bbe7cffabcfe168aebb450870696f3f9d4abc780cf07945aca0a00fc20",
+    "native/core/desk/lib/stead-restore.hoon": "de5043dff5e395e9e1529386968e0bb30a27dc4844be6801a108c1ec59b7a8ee",
+    "native/core/desk/tests/stead-product-restore.hoon": "9237edc8a5d4cb47c75233c1520710ecea16fe7d11e50c91e512609ca31d17c7"
+  },
+  "home_activation": false,
+  "native_executed": false,
+  "native_suite_arms": 8,
+  "original_restore_arms_unchanged": true,
+  "protocol": "stead.independent-source-review/1",
+  "reviewed_at": "2026-11-15T17:51:41.850671+00:00",
+  "scope": "reserved-mixed-restore",
+  "status": "approved-for-isolated-qualification"
+}
