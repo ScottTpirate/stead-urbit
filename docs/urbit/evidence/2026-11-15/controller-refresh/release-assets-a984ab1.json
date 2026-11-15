@@ -1,0 +1,92 @@
+{
+  "source_commit": "a984ab16636efadbc232197b1125d2f451c39458",
+  "node_sha256": "7fde7b8afa198da66257f42ee2001d874c7355631e6d1579a5fb5ef1f246df4c",
+  "thermal_start_c": 26.0,
+  "thermal_peak_c": 27.0,
+  "cpu_quota": "25%",
+  "cpu_affinity": [
+    19
+  ],
+  "protocol": "stead.frontend-release-assets/1",
+  "classification": "immutable-source-browser-build-and-native-asset-packaging",
+  "observed_at": "2026-11-15T17:46:53.939911+00:00",
+  "manifest_sha256": "34fb90abbc92ca84adde2cc52d73ca980c4d1b41f3a62a2625d11da591fe5e6a",
+  "files": {
+    "asset-08a1794a61e7ed673d2e66de355cda8680a87a9dff4de7245ac987909ce7b1ed.stead-asset": {
+      "bytes": 355,
+      "sha256": "08a1794a61e7ed673d2e66de355cda8680a87a9dff4de7245ac987909ce7b1ed"
+    },
+    "asset-2767d5c1361e4cb50bf77e696544d667b30a8eb674e88d1b8c39cf3fe32ed165.stead-asset": {
+      "bytes": 42524,
+      "sha256": "2767d5c1361e4cb50bf77e696544d667b30a8eb674e88d1b8c39cf3fe32ed165"
+    },
+    "asset-345d75fab6638bf01adfdbd0727f03bce3eecac79f9b376028e0e871beb4e10e.stead-asset": {
+      "bytes": 404832,
+      "sha256": "345d75fab6638bf01adfdbd0727f03bce3eecac79f9b376028e0e871beb4e10e"
+    },
+    "asset-3e9102608b1a1d3dced1bd3f42068196621e3be103c017e5eb0ed70d4521b58e.stead-asset": {
+      "bytes": 27174,
+      "sha256": "3e9102608b1a1d3dced1bd3f42068196621e3be103c017e5eb0ed70d4521b58e"
+    },
+    "asset-4ad0a8c304f247405c5314f49b27fac259aa8f52458868bfe6e5f79760ad7a95.stead-asset": {
+      "bytes": 307,
+      "sha256": "4ad0a8c304f247405c5314f49b27fac259aa8f52458868bfe6e5f79760ad7a95"
+    },
+    "asset-56957f10208bf202c69f67c8de1b90ea606f0058c643a142f26f9761b7e53fef.stead-asset": {
+      "bytes": 148,
+      "sha256": "56957f10208bf202c69f67c8de1b90ea606f0058c643a142f26f9761b7e53fef"
+    },
+    "asset-9dbaaa1b267ebd74b96fc498735a78d76804f1e96e532871291c937cf83694e7.stead-asset": {
+      "bytes": 638,
+      "sha256": "9dbaaa1b267ebd74b96fc498735a78d76804f1e96e532871291c937cf83694e7"
+    },
+    "asset-ac8b6ec4ffeb76127413d28a0b4c627ea82ffa71faaef380d8a3feae127e285c.stead-asset": {
+      "bytes": 8345,
+      "sha256": "ac8b6ec4ffeb76127413d28a0b4c627ea82ffa71faaef380d8a3feae127e285c"
+    },
+    "asset-b0f578720c3cda257868108d7295bb78a4535609648dccc4116da960f61520a8.stead-asset": {
+      "bytes": 934,
+      "sha256": "b0f578720c3cda257868108d7295bb78a4535609648dccc4116da960f61520a8"
+    },
+    "asset-bc5112824c7d9bce98cf1667c0d7e5db217c1ccce14a21ef3b9c0a06f2bc40d5.stead-asset": {
+      "bytes": 623,
+      "sha256": "bc5112824c7d9bce98cf1667c0d7e5db217c1ccce14a21ef3b9c0a06f2bc40d5"
+    },
+    "asset-c61ac0a1b47dc08bf3883c77c56da538e81e376ac93f0e1d613fd7f14e6d7f75.stead-asset": {
+      "bytes": 1524,
+      "sha256": "c61ac0a1b47dc08bf3883c77c56da538e81e376ac93f0e1d613fd7f14e6d7f75"
+    },
+    "asset-d305be95ff04e53c6e4e46cebb6ff0268fa1750eb3c13408f1f91d3dc89c9aac.stead-asset": {
+      "bytes": 102839,
+      "sha256": "d305be95ff04e53c6e4e46cebb6ff0268fa1750eb3c13408f1f91d3dc89c9aac"
+    },
+    "asset-d6594069b32b673ae27191f80d4bf5937d72c6d23767e8b0a5ff984ec906f54c.stead-asset": {
+      "bytes": 5667,
+      "sha256": "d6594069b32b673ae27191f80d4bf5937d72c6d23767e8b0a5ff984ec906f54c"
+    },
+    "asset-eda3aa3ae9037026abda1a3f8567d6d597d1db501d6ecb27571ec2443379c0ca.stead-asset": {
+      "bytes": 2203,
+      "sha256": "eda3aa3ae9037026abda1a3f8567d6d597d1db501d6ecb27571ec2443379c0ca"
+    },
+    "inventory.hoon": {
+      "bytes": 5397,
+      "sha256": "e7f30c8bd6b52d872e682689623ec7c9d2af8c30b2630f0774bff42874bf8b6b"
+    }
+  },
+  "changes": {
+    "added": [
+      "asset-2767d5c1361e4cb50bf77e696544d667b30a8eb674e88d1b8c39cf3fe32ed165.stead-asset",
+      "asset-345d75fab6638bf01adfdbd0727f03bce3eecac79f9b376028e0e871beb4e10e.stead-asset"
+    ],
+    "removed": [
+      "asset-37a599e6d8cfc02fa6582a329a24a3ae0d4c60a189ceecd31815ad344850c247.stead-asset",
+      "asset-e5656f92cad78461112e9b6e8abdfb02bab1f5cfd8098afa1a0baf12cd1c4df4.stead-asset"
+    ],
+    "changed": [
+      "inventory.hoon"
+    ]
+  },
+  "shared_predecessor_matches_source": true,
+  "native_execution": false,
+  "live_host_changed": false
+}
