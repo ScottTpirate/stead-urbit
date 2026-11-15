@@ -1,7 +1,7 @@
 {
   "format": 1,
   "classification": "pure-native-only",
-  "expected_arm_count": 154,
+  "expected_arm_count": 161,
   "suites": [
     {
       "path": "/tests/stead-session",
@@ -106,6 +106,25 @@
         "test-work-assignment-at-creation-is-one-accepted-edit",
         "test-work-assignment-at-creation-denies-ineligible-targets-and-readers",
         "test-work-assignment-at-creation-wire-shape"
+      ],
+      "timeout_seconds": 60
+    },
+    {
+      "path": "/tests/stead-work-comments",
+      "arms": [
+        "test-work-comments-attributed-ordered-and-preserved",
+        "test-work-comments-authorize-current-ticket-access",
+        "test-work-comments-paginate-and-reject-stale-cursors",
+        "test-work-comments-require-exact-bounded-body"
+      ],
+      "timeout_seconds": 60
+    },
+    {
+      "path": "/tests/stead-work-delegations",
+      "arms": [
+        "test-work-delegations-native-http-scopes-and-reader-isolation",
+        "test-work-delegations-native-http-worker-proposes-staged-commit",
+        "test-work-delegations-native-http-correlates-replay-and-expiry"
       ],
       "timeout_seconds": 60
     },

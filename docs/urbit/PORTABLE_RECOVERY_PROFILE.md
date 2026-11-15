@@ -92,8 +92,9 @@ another tab may invalidate this actor's ongoing walk; retry after it finishes.
 | Relations | 256 |
 | Query response | 262,144 bytes |
 | Aggregate query responses | 32 MiB |
-| Requests / elapsed capture deadline | 1,400 / 300 seconds |
+| Requests / elapsed capture deadline | 1,664 / 300 seconds |
 | Work description / page Markdown | 8,192 / 32,768 UTF-8 bytes |
+| Comments per Work item / comment body | 32 / 2,048 UTF-8 bytes |
 | Portable archive | 64 MiB; stored entries only |
 
 The deadline is checked between reads and response chunks, with bounded socket
@@ -103,8 +104,9 @@ timeouts. It is an application I/O limit, not an external hard process deadline.
 
 The artifact contains:
 
-- `records.json`: complete current Work fields, collection metadata, relations,
-  project metadata, and page metadata with exact file/hash references.
+- `records.json`: complete current Work fields, visible discussions and their
+  recorded authors, collection metadata, relations, project metadata, and page
+  metadata with exact file/hash references.
 - `docs/<collection>/<page>.md`: canonical Markdown bytes, unchanged.
 - `work/<item>.md` and `index.json`: deterministic readable views rebuilt from
   the captured records. They are not independent writable masters.
@@ -162,7 +164,8 @@ The copied project role, binding IDs and head OIDs are observations only. They
 must never become permissions or trusted history during an import. The archive
 recovers readable records. A pier backup or authority restore has a different
 scope. The local [create-only import](#local-create-only-import) below uses
-the target member's current authority and creates fresh receipts.
+the target member's current authority and creates fresh receipts. Work
+discussions remain in the archive with their recorded authors.
 Complete history export needs a bounded currently authorized Git object API.
 Restoring an authority additionally needs single-writer fencing, current epoch
 handling, session invalidation, interrupted-recovery tests and independent

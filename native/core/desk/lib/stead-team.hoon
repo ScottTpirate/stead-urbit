@@ -177,7 +177,7 @@
     &(=(rank 3) (~(has by grants.data.db) (scope-key:stead-core project.cmd (field payload.cmd 'grant_id'))))
   ?:  =('container.create' operation.cmd)
     ?|(=('private' (field payload.cmd 'visibility')) =(rank 3))
-  ?:  =('work.update' operation.cmd)
+  ?:  ?|(=('work.update' operation.cmd) =('work.comment' operation.cmd))
     (subject db actor project.cmd 'work' '' resource.cmd now)
   ?:  ?|(=('work.create' operation.cmd) =('work.assign' operation.cmd))
     ?.  ?|(=('work.create' operation.cmd) (subject db actor project.cmd 'work' '' resource.cmd now))  |
@@ -297,6 +297,15 @@
   ?:  =('' principal)  ''
   =/  person  (need (active-member db principal now))
   (actor-json identity.person)
+++  discussion
+  ::  Internal Work member. Keep the outer saved-state mold and legacy
+  ::  records intact; journal replay reconstructs authoritative comments.
+  |=  work=object-map
+  ^-  (list json)
+  =/  saved  (~(get by work) 'discussion')
+  ?~  saved  ~
+  ?>  ?=([%a *] u.saved)
+  p.u.saved
 ++  accept
   |=  [db=state actor=authentication cmd=command now=@ud old=@ud new=@ud git=@t]
   ^-  transition
@@ -475,6 +484,8 @@
       =/  prior  (~(got by works.data) [project.cmd resource.cmd])
       =/  assignee  (~(get by data.prior) 'assignee_principal_id')
       =/  fields  ?~(assignee payload.cmd (~(put by payload.cmd) 'assignee_principal_id' u.assignee))
+      =/  comments  (~(get by data.prior) 'discussion')
+      =?  fields  ?=(^ comments)  (~(put by fields) 'discussion' u.comments)
       =.  works.data  (~(put by works.data) [project.cmd resource.cmd] [new fields])
       (accept db(data data) actor cmd now old new '')
     ?:  =('work.assign' operation.cmd)
@@ -484,6 +495,19 @@
         ?:  =('' id)  (~(del by data.prior) 'assignee_principal_id')
         (~(put by data.prior) 'assignee_principal_id' [%s id])
       =.  works.data  (~(put by works.data) [project.cmd resource.cmd] [new fields])
+      (accept db(data data) actor cmd now old new '')
+    ?:  =('work.comment' operation.cmd)
+      =/  prior  (~(got by works.data) [project.cmd resource.cmd])
+      =/  comments  (discussion data.prior)
+      ?:  (gte (lent comments) 32)  [(error 'capacity_exceeded') db]
+      =/  posted
+        %-  object
+        :~  ['comment_revision' (decimal new)]  ['body' (field payload.cmd 'body')]
+            ['principal_id' principal.identity.actor]  ['identity_ship' (scot %p ship.identity.actor)]
+            ['accepted_at_ms' (decimal now)]
+        ==
+      =.  works.data
+        (~(put by works.data) [project.cmd resource.cmd] [new (~(put by data.prior) 'discussion' [%a [posted comments]])])
       (accept db(data data) actor cmd now old new '')
     ?:  (~(has in tombs.db) [project.cmd 'work' '' resource.cmd])  [(error 'invalid_command') db]
     =/  row  (~(got by works.data) [project.cmd resource.cmd])

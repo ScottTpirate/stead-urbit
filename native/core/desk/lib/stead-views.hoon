@@ -35,7 +35,7 @@
             (subject:stead-team db actor project.query 'document' container.query resource.query now)
         ==
     ==
-  ?:  &(=('work' kind.query) !=('' resource.query))
+  ?:  ?|(=('comments' kind.query) &(=('work' kind.query) !=('' resource.query)))
     (subject:stead-team db actor project.query 'work' '' resource.query now)
   ?:  =('receipt' kind.query)
     =/  receipt  (~(get by receipts.data.db) [project.query principal.identity.actor resource.query])
@@ -133,7 +133,10 @@
     (fields ~[['kind' 'container'] ['resource_id' id] ['container_id' id] ['title' title.item] ['visibility' visibility.item] ['resource_revision' '1'] ['container_head' ?~(head.git '' (oid-text:stead-git u.head.git))]])
   ?:  =('work' kind)
     =/  item  (~(got by works.data.db) [project id])
-    =/  displayed  ?:(body data.item (~(put by data.item) 'description' [%s (prefix (field data.item 'description') 160)]))
+    =/  public  (~(del by data.item) 'discussion')
+    =/  displayed  ?:(body public (~(put by public) 'description' [%s (prefix (field public 'description') 160)]))
+    =/  comments  (discussion:stead-team data.item)
+    =?  displayed  &(body ?=(^ comments))  (~(put by displayed) 'comment_count' [%s (decimal (lent comments))])
     =/  name  (assignment-name data.item people)
     =?  displayed  !=('' name)  (~(put by displayed) 'assignee_display_name' [%s name])
     %-  ~(uni by displayed)
@@ -186,6 +189,13 @@
     ~[[resource.query p.value]]
   ?:  ?|(=('activity' kind.query) =('inbox' kind.query))
     (activity db index actor query now)
+  ?:  =('comments' kind.query)
+    =/  work  (~(got by works.data.db) [project.query resource.query])
+    %+  turn  (flop (discussion:stead-team data.work))
+    |=  comment=json
+    ^-  row
+    ?>  ?=([%o *] comment)
+    [(field p.comment 'comment_revision') p.comment]
   =/  people=(map @t member:stead-team-config)
     ?:(?|(=('assignees' kind.query) =('work' kind.query) =('search' kind.query)) (assignees:stead-team db project.query now) ~)
   ?:  =('assignees' kind.query)

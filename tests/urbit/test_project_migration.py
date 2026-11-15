@@ -253,6 +253,24 @@ class ProjectMigration(unittest.TestCase):
                     with self.assertRaisesRegex(ValueError, error):
                         migration.verify(**self.paths)
 
+    def test_signed_work_discussion_retains_body_and_rejects_forged_shape(self):
+        previous = migration.domain_hash(migration.JOURNAL, migration.canonical(self.rows[-1]))
+        comment = command('work.comment', 30, 9, {'body': 'Exact λ <text>\n'}) | {'expected_revision': '1'}
+        self.rows.append(event(3, previous, comment))
+        self.stage_journal()
+        self.sign()
+        self.assertEqual(migration.verify(**self.paths)['status'], 'verified-candidate')
+        for payload, error in (
+                ({'body': ' \t\n'}, 'work-comment-body'),
+                ({'body': 'λ' * 1025}, 'text-bound'),
+                ({'body': 'Wrong', 'principal_id': uid(10)}, 'record-shape')):
+            with self.subTest(error=error):
+                self.rows[-1] = event(3, previous, comment | {'payload': payload})
+                self.stage_journal()
+                self.sign()
+                with self.assertRaisesRegex(ValueError, error):
+                    migration.verify(**self.paths)
+
     def test_signed_payload_respects_native_parser_bounds(self):
         work = migration.decoded(self.rows[1]['canonical_command'].encode())
         for payload in ({f'key-{index}': 'value' for index in range(17)}, {'description': 'bad\0value'}):

@@ -50,6 +50,7 @@ class Source:
         self.work = [{'kind': 'work', 'resource_id': uid(100 + i), 'container_id': '', 'resource_revision': '3',
             'title': f'Item {i}', 'description': 'λ' * 250 + f'\nComplete description {i}\n',
             'type': 'task', 'status': 'in_progress', 'priority': 'medium', 'snippet': 'λ' * 160} for i in range(count)]
+        self.comments = {}
         self.relation = {'kind': 'relation', 'resource_id': uid(2000), 'container_id': '', 'resource_revision': '1',
             'title': 'Page documents item', 'type': 'documents', 'source_project_id': PROJECT,
             'source_kind': 'document', 'source_container_id': BOX, 'source_id': DOC,
@@ -71,11 +72,19 @@ class Source:
         elif kind == 'project':
             rows = [self.project]
         elif kind == 'work' and query['resource_id']:
-            rows = [next(row for row in self.work if row['resource_id'] == query['resource_id'])]
+            item = next(row for row in self.work if row['resource_id'] == query['resource_id'])
+            notes = self.comments.get(query['resource_id'], [])
+            rows = [dict(item, comment_count=str(len(notes))) if notes else item]
         elif kind == 'work':
             offset = 20 if query['cursor'] else 0
             rows = [{**row, 'description': row['snippet']} for row in self.work[offset:offset + 20]]
             next_cursor = 'f' * 64 if offset + 20 < len(self.work) else ''
+        elif kind == 'comments':
+            assert query['container_id'] == ''
+            notes = self.comments[query['resource_id']]
+            offset = 20 if query['cursor'] else 0
+            rows = notes[offset:offset + 20]
+            next_cursor = 'c' * 64 if offset + 20 < len(notes) else ''
         elif kind == 'documents':
             assert query['container_id'] == BOX
             rows = [{k: v for k, v in self.document.items() if k != 'markdown'}]
@@ -164,6 +173,27 @@ class PortableRecovery(unittest.TestCase):
         self.assertNotIn('assignee_display_name', rows[1])
         data['work'][0].pop('assignee_principal_id')
         with self.assertRaisesRegex(P.RecoveryError, 'record-shape'):
+            P.validate_data(data)
+
+    def test_work_discussion_roundtrips_order_attribution_and_body(self):
+        source = Source()
+        item = source.work[0]
+        item['resource_revision'] = '23'
+        notes = [{
+            'comment_revision': str(i + 2),
+            'body': f'Exact λ <text> {i}  \n',
+            'principal_id': uid(80),
+            'identity_ship': '~nec',
+            'accepted_at_ms': str(1000 + i),
+        } for i in range(21)]
+        source.comments[item['resource_id']] = notes
+        data, receipt, _ = self.publish(source)
+        self.assertEqual(data['work'][0]['comments'], notes)
+        self.assertEqual([read['row_count'] for read in receipt['reads'] if read['kind'] == 'comments'], [20, 1])
+        files, _ = P.verify(self.bundle)
+        self.assertEqual(json.loads(files['records.json'])['work'][0]['comments'], notes)
+        data['work'][0]['comments'].reverse()
+        with self.assertRaisesRegex(P.RecoveryError, 'work-comment-order'):
             P.validate_data(data)
 
     def test_queries_never_leave_requested_project_or_call_mutations(self):

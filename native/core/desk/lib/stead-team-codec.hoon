@@ -37,6 +37,14 @@
       ?:  =('document' kind)  (uuid container)
       &(=('work' kind) =('' container))
   ==
+++  comment-body
+  |=  body=@t
+  ^-  ?
+  =/  bytes  (rip 3 body)
+  ?&  (lte (met 3 body) 2.048)
+      (levy bytes |=(byte=@ ?|(=(byte 9) =(byte 10) (gte byte 32))))
+      (lien bytes |=(byte=@ (gth byte 32)))
+  ==
 ++  decode
   |=  raw=@t
   ^-  command
@@ -75,6 +83,8 @@
           =/  assignee  (field pay 'assignee_principal_id')
           ?|(=('' assignee) (uuid assignee))
       ==
+    ?:  =('work.comment' op)
+      &((gth exp 0) (keys pay ~['body']) (comment-body (field pay 'body')))
     ?:  =('work.delete' op)  &((gth exp 0) (keys pay ~))
     ?:  =('container.create' op)
       ?&  =(exp 0)  (keys pay ~['title' 'visibility'])
@@ -149,7 +159,7 @@
               =('' project)  =('' container)  =('' resource)  =('' search)
           ==
           ?&  (uuid project)
-              (~(has in (silt ~['project' 'work' 'assignees' 'containers' 'documents' 'document' 'relations' 'search' 'activity' 'inbox' 'receipt'])) kind)
+              (~(has in (silt ~['project' 'work' 'assignees' 'comments' 'containers' 'documents' 'document' 'relations' 'search' 'activity' 'inbox' 'receipt'])) kind)
               ?:  ?|  =('documents' kind)  =('document' kind)
                   ==
                 ?&  (uuid container)  =('' search)
@@ -157,6 +167,8 @@
                 ==
               ?:  =('work' kind)
                 &(=('' container) =('' search) ?|(=('' resource) (uuid resource)))
+              ?:  =('comments' kind)
+                &(=('' container) =('' search) (uuid resource))
               ?:  =('receipt' kind)
                 &((uuid resource) ?|(=('' container) (uuid container)) =('' search))
               ?&  =('' resource)  =('' container)

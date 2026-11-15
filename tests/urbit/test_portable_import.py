@@ -149,6 +149,18 @@ class PortableImport(unittest.TestCase):
         self.assertEqual(commands, self.commands)
         self.assertTrue(any('Work assignments' in change for change in plan['losses']['import_changes']))
 
+    def test_discussion_authorship_stays_in_source_archive(self):
+        data = portable.decoded(self.files['records.json'], portable.MAX_CAPTURE)
+        data['work'][0].update(comment_count='1', comments=[{
+            'comment_revision': '2', 'body': 'Keep the exact source author.',
+            'principal_id': uid(801), 'identity_ship': '~nec', 'accepted_at_ms': '1000',
+        }])
+        files = dict(self.files, **{'records.json': portable.encoded(data)})
+        plan, commands = importer.plan_commands(files, self.plan['artifact_sha256'], HOME,
+            importer.target_member(MEMBER), uid(800), 'Imported λ', 'IMPORTED')
+        self.assertEqual(commands, self.commands)
+        self.assertTrue(any('Work discussions' in change for change in plan['losses']['import_changes']))
+
     def test_exact_digest_alone_does_not_authorize_an_altered_plan(self):
         edited = copy.deepcopy(self.plan)
         edited['steps'][1]['resource_id'] = uid(801)

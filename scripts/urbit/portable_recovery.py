@@ -29,7 +29,7 @@ NUMBER = re.compile(r'0|[1-9][0-9]{0,19}')
 MAX_RESPONSE = 262144
 MAX_CAPTURE = 32 * 1024 * 1024
 MAX_ARTIFACT = 64 * 1024 * 1024
-MAX_READS = 1400
+MAX_READS = 1664
 DEADLINE = 300
 SOURCES = {'https-member-query', 'synthetic-test-only'}
 LOSSES = {
@@ -95,6 +95,13 @@ def text(value, maximum=32768):
     except UnicodeError:
         raise RecoveryError('invalid-text') from None
     return value
+
+
+def comment_body(value):
+    body = text(value, 2048)
+    require(all(char in '\t\n' or ord(char) >= 32 for char in body)
+            and any(ord(char) > 32 for char in body), 'work-comment-body')
+    return body
 
 
 def match(pattern, value):
@@ -237,10 +244,10 @@ class Reads:
         })
         return value, [rows[str(i)] for i in range(len(rows))]
 
-    def walk(self, kind, project, container='', bound=128):
+    def walk(self, kind, project, container='', bound=128, *, resource=''):
         rows, seen, cursor, baseline = [], set(), '', None
         while True:
-            value, page = self.read(kind, project, container, cursor=cursor)
+            value, page = self.read(kind, project, container, resource, cursor)
             stamp = (value['authority_epoch'], value['generation'])
             require(baseline is None or stamp == baseline, 'changed-query-generation')
             baseline = stamp
@@ -300,6 +307,24 @@ def validate_data(data):
             if 'assignee_display_name' in row:
                 fields.add('assignee_display_name')
                 require(text(row['assignee_display_name'], 800) != '', 'work-assignee')
+        if 'comment_count' in row:
+            fields.update(('comment_count', 'comments'))
+            number(row['comment_count'])
+            comments = row.get('comments')
+            require(isinstance(comments, list) and 0 < len(comments) <= 32
+                    and len(comments) == int(row['comment_count']), 'work-comment-count')
+            number(row['resource_revision'])
+            last_revision, last_time = 1, 0
+            for comment in comments:
+                shape(comment, {'comment_revision', 'body', 'principal_id', 'identity_ship', 'accepted_at_ms'})
+                number(comment['comment_revision']); number(comment['accepted_at_ms'])
+                revision, stamp = int(comment['comment_revision']), int(comment['accepted_at_ms'])
+                require(last_revision < revision <= int(row['resource_revision']) and last_time <= stamp,
+                        'work-comment-order')
+                require(match(UUID, comment['principal_id'])
+                        and match(re.compile(r'~[a-z-]{3,63}'), comment['identity_ship']), 'work-comment-author')
+                comment_body(comment['body'])
+                last_revision, last_time = revision, stamp
         shape(row, fields)
         require(row['kind'] == 'work' and row['container_id'] == '', 'work-scope')
         number(row['resource_revision']); text(row['title'], 800); text(row['description'], 8192); text(row['snippet'], 640)
@@ -355,6 +380,12 @@ def capture(query, project, principal, home_origin, *, source='synthetic-test-on
     for key, listing in sorted(work_map.items()):
         stamp, row = reads.one('work', project, resource=key)
         require(stamp == work_stamp and stamp[0] == baseline[0] and all(row.get(k) == v for k, v in listing.items() if k != 'description'), 'changed-work')
+        if 'comment_count' in row:
+            number(row['comment_count'])
+            require(int(row['comment_count']) <= 32, 'work-comment-count')
+            comment_stamp, comments = reads.walk('comments', project, bound=32, resource=key)
+            require(comment_stamp[0] == baseline[0] and len(comments) == int(row['comment_count']), 'changed-work-comments')
+            row['comments'] = comments
         work.append(row)
     for box in sorted(box_map):
         stamp, listed = reads.walk('documents', project, box, bound=32)
@@ -396,11 +427,13 @@ def validate_receipt(receipt, project):
     seen = set()
     for read in receipt['reads']:
         shape(read, {'request_id', 'kind', 'project_id', 'container_id', 'resource_id', 'authority_epoch', 'generation', 'response_sha256', 'rows_sha256', 'row_count', 'continued'})
-        require(match(UUID, read['request_id']) and read['request_id'] not in seen and read['kind'] in {'identity', 'project', 'work', 'containers', 'documents', 'document', 'relations'}, 'capture-read')
+        require(match(UUID, read['request_id']) and read['request_id'] not in seen and read['kind'] in {'identity', 'project', 'work', 'comments', 'containers', 'documents', 'document', 'relations'}, 'capture-read')
         seen.add(read['request_id'])
         require(read['project_id'] == ('' if read['kind'] == 'identity' else project['project_id'])
                 and all(read[k] == '' or match(UUID, read[k]) for k in ('container_id', 'resource_id'))
                 and read['authority_epoch'] == ('0' if read['kind'] == 'identity' else project['authority_epoch']), 'capture-read-scope')
+        if read['kind'] == 'comments':
+            require(read['container_id'] == '' and match(UUID, read['resource_id']), 'capture-read-scope')
         require(all(match(TOKEN, read[k]) for k in ('generation', 'response_sha256', 'rows_sha256'))
                 and type(read['row_count']) is int and 0 <= read['row_count'] <= 20 and type(read['continued']) is bool, 'capture-read-fields')
 

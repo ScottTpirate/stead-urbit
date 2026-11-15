@@ -13,7 +13,7 @@ import subprocess
 import sys
 import tempfile
 
-from portable_recovery import OID, TOKEN, UUID, decoded, encoded, match, number, origin, private_file, require, sha, shape
+from portable_recovery import OID, TOKEN, UUID, comment_body, decoded, encoded, match, number, origin, private_file, require, sha, shape
 
 
 DIRECTORY = 'stead.project-directory/1'
@@ -45,6 +45,7 @@ SOURCE_STATUS_FIELDS = {'protocol', 'migration_id', 'project_id', 'home', 'autho
                         'destination_home', 'retired_at_ms', 'writer_state'}
 OPERATIONS = {
     'project.create': 'project', 'work.create': 'work', 'work.update': 'work', 'work.delete': 'work', 'work.assign': 'work',
+    'work.comment': 'work',
     'container.create': 'container', 'document.save': 'document', 'document.publish': 'document',
     'document.delete': 'document', 'relation.create': 'relation', 'relation.delete': 'relation',
     'policy.grant': 'policy', 'policy.revoke': 'policy', 'policy.renew-creator-grant': 'policy',
@@ -160,6 +161,10 @@ def verify_event(raw, current, sequence, previous, last_time, seen, context, bin
     require(all(receipt[field] == command[field] for field in ('request_id', 'project_id', 'resource_id',
                                                                'authority_epoch', 'operation')), 'journal-receipt-scope')
     kind = OPERATIONS[operation]
+    if operation == 'work.comment':
+        shape(payload, {'body'})
+        require(command['expected_revision'] != '0', 'journal-comment-revision')
+        comment_body(payload['body'])
     container = command['resource_id'] if kind == 'container' else payload.get('container_id') if kind == 'document' else ''
     require(receipt['resource_kind'] == kind and receipt['container_id'] == container, 'journal-receipt-target')
     require(match(OID, receipt['git_commit_oid']) if kind == 'document' else receipt['git_commit_oid'] == '',

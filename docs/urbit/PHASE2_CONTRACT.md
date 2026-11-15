@@ -233,6 +233,31 @@ editors can clear or replace them. Search matches currently visible assignee
 names. Portable archives keep the assignment metadata. Importing as a new
 project requires reassignment under the destination’s grants.
 
+### Work discussion
+
+Contributors and maintainers can append a comment with `work.comment`. The
+command names the Work item, its expected revision, the current authority epoch,
+and a new request ID. The only payload field is `body`. It accepts at most
+2,048 UTF-8 bytes, permits tab and line feed, and requires content beyond ASCII
+spaces. Home records the body, accepted time, and authenticated author, advances
+the Work revision, and returns the usual accepted Work receipt. The exact
+request can be retried without appending the comment twice.
+
+Readers with current access to the Work item can query `comments` using the
+project and Work resource IDs with empty container and search fields. The query
+uses ordinary bound cursors and returns at most 20 rows per page in posting order.
+Each Work item holds up to 32 comments. Rows carry `comment_revision`, `body`,
+`principal_id`, `identity_ship`, and `accepted_at_ms`. The accepted Work revision
+identifies a comment within that Work item's history. Single-item Work reads
+include `comment_count` when the discussion has comments. Work list, Search and
+Activity omit the discussion body. Deleting or losing access to a Work item also
+closes discussion access. Comments are append-only in this profile.
+
+Discussion survives restart through journal reconstruction of the current
+Work record. Older Work records have an empty discussion. Current-record
+exports preserve authorized comments in `records.json`; create-only imports
+leave the original attribution in that archive.
+
 ### Renewing a pilot project’s creator grant
 
 Project creation grants maintainer access through the creator’s original identity
