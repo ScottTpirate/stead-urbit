@@ -24,3 +24,24 @@ Implement URB-040 and URB-050: home-owned project/work/document transitions and 
 ## Reporting contract
 
 Report source commit, toolchain pins, exact checks executed, failures, expected failures, benchmark environment, and unresolved gates. Label local/mocked/real-GitHub/live-Urbit tests separately. Never turn a green planning validator into evidence of runtime correctness. Spending, live keys, confidential datasets, merging an implementation PR and deployment all need the relevant owner approval.
+
+## Review the product workflow
+
+Read the [master directive](MASTER_BUILD_DIRECTIVE.md), ecosystem milestones,
+and current acceptance evidence before reviewing the UI. Start with an existing
+Work item and follow the user's entire job. Check whether the ticket makes the
+requirements, discussion, supporting Docs, and blockers understandable. Include
+a Work item with no repository and a software Work item with an accepted branch.
+
+For the software item, follow the human owner, individual agent assignment,
+bounded run, branch, proposal, exact changed files, independent review, accepted
+source, isolated build, and retained result. Exercise revocation, a revision
+change after review, an interrupted worker, and restart or restore. Check that
+the person following this trail can tell what happened and what requires action.
+Use Linear, Jira, and GitHub as references for common interactions and name
+missing capabilities as well as interaction defects.
+
+Give a verdict for the exercised workflow and a separate verdict for the full
+product. Name any missing step, its effect on the user, and the evidence that
+would close it. Browser fixtures, compiled native tests, a connected worker run,
+and independent release reviews each support their own claims.
