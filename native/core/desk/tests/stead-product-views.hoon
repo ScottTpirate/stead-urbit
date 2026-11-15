@@ -290,8 +290,8 @@
   ::  matches, so a legacy cursor cannot be rejected merely by a side effect.
   =/  old-purpose  next.first(cursors (~(put by cursors.next.first) cursor record(purpose 'query')))
   =/  purpose  (read many-comments old-purpose bob follow 2.102 17)
-  ?>  (levy ~[response.reused response.actor response.scope response.expired response.epoch response.generation response.purpose]
-        |=(raw=@t =('stale_cursor' (result-field raw 'error'))))
+  ?>  %+  levy  ~[response.reused response.actor response.scope response.expired response.epoch response.generation response.purpose]
+      |=(raw=@t =('stale_cursor' (result-field raw 'error')))
   ?>  =(next.second next.reused)
   ?>  =(next.first next.actor)
   ?>  =(next.first next.generation)
@@ -334,8 +334,8 @@
   =/  deleted  (run initial-product alice remove 2.001)
   ?>  =('accepted' (result-field response.deleted 'status'))
   =/  tomb  (read [db.deleted product.deleted] *state:stead-views alice exact-query 2.002 29)
-  ?>  (levy ~[response.missing response.stale-identity response.expired-grant response.expired-identity response.outsider response.tomb]
-        |=(raw=@t =('denied_or_not_found' (result-field raw 'error'))))
+  ?>  %+  levy  ~[response.missing response.stale-identity response.expired-grant response.expired-identity response.outsider response.tomb]
+      |=(raw=@t =('denied_or_not_found' (result-field raw 'error')))
   =/  absent  (execute:stead-product-views db.initial-product *state:stead-product-state *state:stead-views bob exact-query 2.000 30)
   ?>  =('migration_required' (result-field response.absent 'error'))
   ?>  =(*state:stead-views next.absent)
