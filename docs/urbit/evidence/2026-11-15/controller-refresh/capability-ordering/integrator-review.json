@@ -1,0 +1,34 @@
+{
+  "boundaries": [
+    "Browser successor evidence is recorded separately. Host checks use fake transport and establish no native qualification.",
+    "Collection titles still use current native preview metadata; canonical native title/authorship work remains open.",
+    "The real pilot remains source a0e90ef; these changes have not been deployed."
+  ],
+  "classification": "integrator-source-and-host-review",
+  "evidence": {
+    "host-after.json": "e4f6282542cea41da7e7b05c46a32fcdaa1d897747d3cba7ca6de48a43444e8f",
+    "host-before.json": "223d1551c0c77fb125f959beb9ad1214c5340839d1c22dfe8eeb83e4df2a3eee",
+    "independent-review.json": "09a4269c63fd6b201a64e90c70f6ad6704beb594865d51ff52a580372aebf4b2",
+    "regression-before.log": "b4ead284d54c24ffcb2ffb77cbfcabc99e3152ebadebb4359253a0e29f90194e",
+    "typescript-and-host.json": "5656acf1753b53115256027ae26377c3144fc0da8589df42a63e6dd43bf877f6"
+  },
+  "observations": [
+    "The initial Docs browser run passed direct-title reading but a later startup displayed unsupported Home before the saved-body case could begin.",
+    "Three host regressions reproduced late abort, success and failure overwriting newer capability state; original eight carrier tests passed and the three added cases failed.",
+    "Each capability call now owns publication by object identity and session generation; the App also checks request ownership and active effect before publishing.",
+    "Final full production TypeScript and all eleven host cases passed. New tests also assert normalized session_changed errors for obsolete calls; the before and after test hashes are retained separately.",
+    "Direct Doc title buttons retain the existing open action and access/lock rules, with wrapping and a 44px minimum target. Native/browser selectors follow the visible title control."
+  ],
+  "source_baseline": "b195f5267953c70a48637fb835683fac87b77474",
+  "source_files": {
+    "web/app/src/api.ts": "1353180c7730b66c713444946f58f614480715ab1295b1d587a10fb6af4c36e4",
+    "web/app/src/main.tsx": "01f87cfd2924b59fb103d22390a638bd00beffa09d2f1d0d4b87e086ff0155f1",
+    "web/app/src/style.css": "dc85b4d7f21877ccb0f36c268e44f45a55859c867cf84944af39240a1419d067",
+    "web/app/tests/native-expiry.mjs": "8e5b3c213ef6e9a8f5083bc27035fad2492da63b1f7e6c635f7e27580007db4e",
+    "web/app/tests/native.mjs": "a769bfeb835de7266b42f39d97654300c070200f2ebc10a82cbc50d6294c706b",
+    "web/app/tests/product-carrier.mjs": "f2f0b2d3f16bb11aa08e956ec35a40c68150f0ea1fcb7cc20e95c6cb65674799",
+    "web/app/tests/product-carrier.test.ts": "ac3c52c7d48c9cf9f4768eb035122aac323a8c13f10f890f427c3124e8aea00a",
+    "web/app/tests/rendered.mjs": "92819fcc2e3d4278bfe7727705f9b71bf678f97e79b010f500d9a1a1f2f5b9ce"
+  },
+  "status": "reviewed"
+}

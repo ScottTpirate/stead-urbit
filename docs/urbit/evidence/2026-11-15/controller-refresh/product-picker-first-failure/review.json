@@ -1,0 +1,25 @@
+{
+  "all_eight_authority_services_healthy": true,
+  "authority_network_used": false,
+  "classification": "actual-isolated-connected-picker-synthetic-failure",
+  "cleanup_verified": true,
+  "credentials_used": false,
+  "declared_cases": 8,
+  "duration_seconds": 15.4,
+  "failed_cases": 1,
+  "failure_cause": "unresolved; strict synthetic response diagnosis assigned to fixture owner",
+  "limitation": "Synthetic transport only; no native acceptance or live mutation.",
+  "live_release_unchanged": "a0e90ef29389077d453ec2a775cd8fd69f711727",
+  "native_executed": false,
+  "observed_failure": "Initial core Work list entered failed state before optional-read assertions; first row readiness timed out.",
+  "owner_report_sha256": "bc3884c6c264245c6df8efd5f64e5bbe93e9b8039b332029658803543a2a63c7",
+  "passed_cases": 0,
+  "qualifies_phase": false,
+  "report_sha256": "6f4afdec927ec0c4ec0f37e34f44e67cac603a9f18f3d91c27e00388d9110e97",
+  "screenshot": {
+    "name": "failure-1.png",
+    "sha256": "220507264774f22545cc75bb0cc243313a4355f7eefe2dbaabc052d41308bbb1"
+  },
+  "source_manifest_sha256": "7600d2f12600cbbaf3b2539f6fe5b39e70b31067444a312c52080aae047d84e8",
+  "status": "fail"
+}

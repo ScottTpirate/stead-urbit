@@ -399,7 +399,7 @@ packages:
   - 6
   - 10
   - 29
-  current_progress: Layout, title-only defaults and priority wording are implemented. Reserved owner/worker and separate purpose/discussion components passed source review, ten state tests, fifteen protocol tests and eight isolated real-browser synthetic cases. The human app journey is wired in reserved source; optional roster and Doc choices now load independently, with full TypeScript and seventeen journey host checks passing. Browser proof of the optional-loader change is pending. Native carrier qualification, connected acceptance, live activation, readable keys, server filters and board remain pending.
+  current_progress: Layout, title-only defaults and priority wording are implemented. Reserved owner/worker and separate purpose/discussion components passed source review, ten state tests, fifteen protocol tests and eight isolated real-browser synthetic cases. The human app journey is wired in reserved source; optional roster and Doc choices now load independently, with full TypeScript, seventeen journey host checks and eight isolated browser cases passing. The first invalid response fixture is retained; production parsing stayed strict. A partially clipped composer footer remains a visual follow-up. Native carrier qualification, connected acceptance, live activation, readable keys, server filters and board remain pending.
 - id: T09
   title: Make Docs a proper Markdown knowledge experience
   phase: B
@@ -444,7 +444,10 @@ packages:
   - 27
   - 29
   current_progress: Maintained safe Markdown parser and explicit Read/Edit/Preview/Source implemented in working
-    branch; reference browser pass. Full native roundtrip, authorship and mounted-document integration remain pending.
+    branch. Direct title opening, keyboard/read-only/draft states, exact body/source save and corrected startup
+    capability ordering passed three isolated main-app browser cases; eleven carrier host checks and full TypeScript
+    passed. These use synthetic transport. Canonical native title metadata, full native roundtrip, authorship and
+    mounted-document integration remain pending.
 - id: T10
   title: Make relationships contextual and revision aware
   phase: B

@@ -1,0 +1,49 @@
+{
+  "admission": {
+    "affinity": [
+      1
+    ],
+    "authority_network_denied": true,
+    "cpu_max": "2500 10000",
+    "group": "/system.slice/stead-pilot-browser-reference-bootant_.service",
+    "memory_max": "1572864000",
+    "network_namespace": "net:[4026532229]",
+    "pid": 95511,
+    "pids_max": "128",
+    "private_paths_denied": true
+  },
+  "authority_healthy_after": true,
+  "authority_services": 8,
+  "browser_cleanup": true,
+  "browser_exit": 1,
+  "credentials_used": false,
+  "duration_seconds": 15.4,
+  "fixture_execution_admitted": true,
+  "output": "/var/lib/stead-pilot-browser/reference-bootant_/output",
+  "packet_sha256": {
+    "assets/picker/index.html": "d5fad4a4aa12901fce52bf57fdbe0125861b4e57ba390e82ec38f084b11e4e33",
+    "assets/picker/manifest.json": "7600d2f12600cbbaf3b2539f6fe5b39e70b31067444a312c52080aae047d84e8",
+    "assets/picker/reference.css": "af55702acba328ec156363e3c7144eaafc18ab6207bcd6db30c436a6bb51dc73",
+    "assets/picker/reference.js": "1e73dc4ebea6c302312b1c2867a13aeb77fad3a997e88eb648e8cd342f5e435d",
+    "check-picker.mjs": "9b84ebeba2565d5cfaeeafb72a6e1bc883fb4d69c98681e8cb84217a47e756fb",
+    "worker.py": "6a4dc2538d9bab0f68568b1d084ece147a54c3b07296875c7c7ae89ea48619f8"
+  },
+  "profile": "picker",
+  "profile_removed": true,
+  "protocol": "stead.remote-synthetic-ui-owner/1",
+  "qualifies_phase": false,
+  "rendered_status": "fail",
+  "renderer_observation": {
+    "all_status_uids_match": true,
+    "exact_executable": true,
+    "exact_owned_cgroup": true,
+    "no_new_privileges": "1",
+    "no_sandbox_flag": false,
+    "pid_namespace_depth": 3,
+    "seccomp": "2"
+  },
+  "sandbox_renderer_verified": true,
+  "source": "a0e90ef29389077d453ec2a775cd8fd69f711727",
+  "status": "fail",
+  "unit": "stead-pilot-browser-reference-bootant_.service"
+}

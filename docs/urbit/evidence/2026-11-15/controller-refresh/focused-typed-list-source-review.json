@@ -1,0 +1,41 @@
+{
+  "candidate": "383495ebe6dd273af4e6cb2b344543c633be1536",
+  "candidate_base": "59e41f985da954e12194f25f602961967b38dc2d",
+  "candidate_branch": "codex/candidate-focused-typed-lists-20261115",
+  "candidate_files": {
+    "native/core/desk/lib/stead-product-migrate.hoon": "e55ae99c270acaa252c54573d927d75f4b207b10bc02d8d85f682ee6c082aaf9",
+    "native/core/desk/lib/stead-run.hoon": "b54027c2b442c33b4051d92e34dbd069bf5e3c0d4b66f38e00cb9ecc671cf58e"
+  },
+  "checks": {
+    "app_tree_unchanged": true,
+    "exact_candidate_two_library_diff": true,
+    "exact_composed_two_library_diff": true,
+    "selector_parser_inventory_deadlines_unchanged": true,
+    "trusted_fixture_overrides_rejected": 2
+  },
+  "classification": "immutable-focused-typed-list-source-preparation",
+  "controller": "bd218860b2ee9160e3c1d27ef325cb42cb7aca86",
+  "controller_unchanged": true,
+  "dispatch": false,
+  "integrator_review": {
+    "scope": "Exact two libraries on59e41; unchanged already main-pinned controller and22selected diagnostic arms; source approval only.",
+    "status": "approved"
+  },
+  "inventories": {
+    "candidate_files": 219,
+    "candidate_product_files": 127,
+    "composed_files": 234,
+    "controller_files": 422
+  },
+  "native_executed": false,
+  "observed_predecessor_run": 43771933646,
+  "published": true,
+  "qualification_disabled": true,
+  "registered_arms": 300,
+  "registered_suites": 50,
+  "reviewed_at": "2026-11-15T23:27:52.722607+00:00",
+  "scope": "Homogeneous typed locals for observed recursive wet lien/levy compiler locations; predicate values/order unchanged. Separate inferred fixture corrections excluded.",
+  "selected_positive_arms": 22,
+  "selected_positive_suites": 9,
+  "workflow_commit": "ac109dfcebf168c2ce62a943253fcc0756b324ee"
+}

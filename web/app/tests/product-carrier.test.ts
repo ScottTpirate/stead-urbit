@@ -106,3 +106,30 @@ test('withdrawn capabilities block new effects and stale reads but retain a corr
   f.caps({...capabilities,refresh:'unsupported'});await f.home.capabilities();readFinish(json({protocol:'stead.query-result/4',status:'rejected',request_id:id(400),error:'denied_or_not_found'}));
   await assert.rejects(reading,{code:'outcome_unknown'});
 });
+test('an older capability abort during resume cannot withdraw the newer admitted profile',async()=>{
+  const f=fixture(),fetch=globalThis.fetch;let reads=0;
+  globalThis.fetch=async(url,init)=>{
+    if(String(url).endsWith('/capabilities')&&++reads===1)return new Promise((_resolve,reject)=>{
+      init!.signal!.addEventListener('abort',()=>reject(new DOMException('Aborted','AbortError')),{once:true});
+    });
+    return fetch(url,init);
+  };
+  const earlier=f.home.capabilities(),rejected=assert.rejects(earlier,{code:'session_changed'});
+  await f.home.capabilities();assert.equal(f.home.productMode().kind,'native-human-doc');
+  await f.home.resume();await rejected;
+  assert.ok(f.home.currentSessionToken());assert.equal(f.home.productMode().kind,'native-human-doc');
+});
+test('superseded capability success cannot restore a withdrawn profile in the same session',async()=>{
+  const f=await ready(),fetch=globalThis.fetch;let finish!:(value:Response)=>void,reads=0;
+  globalThis.fetch=async(url,init)=>String(url).endsWith('/capabilities')&&++reads===1?new Promise(resolve=>{finish=resolve;}):fetch(url,init);
+  const earlier=f.home.capabilities();earlier.catch(()=>{});
+  f.caps({...capabilities,refresh:'unsupported'});await f.home.capabilities();assert.equal(f.home.productMode().kind,'unsupported');
+  finish(json(capabilities));await assert.rejects(earlier,{code:'session_changed'});assert.equal(f.home.productMode().kind,'unsupported');
+});
+test('superseded capability failure cannot clear a newer profile but a current failure still fences it',async()=>{
+  const f=await ready(),fetch=globalThis.fetch;let fail!:(value:Error)=>void,reads=0;
+  globalThis.fetch=async(url,init)=>String(url).endsWith('/capabilities')&&++reads===1?new Promise((_resolve,reject)=>{fail=reject;}):fetch(url,init);
+  const earlier=f.home.capabilities(),rejected=assert.rejects(earlier,{code:'session_changed'});
+  await f.home.capabilities();fail(new Error('Lost older response'));await rejected;assert.equal(f.home.productMode().kind,'native-human-doc');
+  globalThis.fetch=async()=>{throw new Error('Current response unavailable');};await assert.rejects(f.home.capabilities(),{code:'outcome_unknown'});assert.equal(f.home.productMode().kind,'unsupported');
+});

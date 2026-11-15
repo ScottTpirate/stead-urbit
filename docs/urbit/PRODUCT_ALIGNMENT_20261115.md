@@ -1,5 +1,13 @@
 # Product alignment record — November 15, 2026
 
+This is the historical record of the initial documentation-only alignment.
+The user subsequently authorized all T01–T32 implementation and supervised updates
+on the existing Lightsail pilot. Follow the [current handoff](AGENT_HANDOFF.md),
+[capability matrix](CAPABILITY_MATRIX.md) and
+[execution plan](../../specs/urbit/product-execution-plan.yaml) for that ongoing
+work. Statements below about no implementation, commits or deployment apply to
+the initial alignment only.
+
 ## Scope and baseline
 
 The user requested review of the supplied assessment/instructions and alignment

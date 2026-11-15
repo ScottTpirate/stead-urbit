@@ -15,7 +15,7 @@ async function inputs() { return Object.fromEntries(await Promise.all(files.map(
 await mkdir(path.resolve(root, '../../.runtime'), {recursive: true});
 const output = await mkdtemp(path.resolve(root, '../../.runtime/product-carrier-'));
 const names = [...(await readFile(path.join(root, 'tests/product-carrier.test.ts'), 'utf8')).matchAll(/^test\('([^']+)'/gmu)].map(match => match[1]);
-assert.equal(names.length, 8); assert.equal(new Set(names).size, 8);
+assert.equal(names.length, 11); assert.equal(new Set(names).size, 11);
 const report = {classification: 'host-product-http-boundary-with-fake-fetch', qualifies_phase: false, node: process.version,
   expected_tests: names, status: 'running', inputs_before: await inputs()};
 try {
@@ -24,7 +24,7 @@ try {
   const run = spawnSync(process.execPath, ['--test', '--test-reporter=tap', '--test-concurrency=1', bundle], {encoding: 'utf8', timeout: 60000, maxBuffer: 1024 * 1024});
   const log = (run.stdout ?? '') + (run.stderr ?? ''); await writeFile(path.join(output, 'tests.log'), log);
   assert.equal(run.error, undefined); assert.equal(run.status, 0, log);
-  assert.match(log, /# tests 8\n/u); assert.match(log, /# pass 8\n/u); assert.match(log, /# fail 0\n/u);
+  assert.match(log, /# tests 11\n/u); assert.match(log, /# pass 11\n/u); assert.match(log, /# fail 0\n/u);
   const executed = [...log.matchAll(/^ok [0-9]+ - (.+)$/gmu)].map(match => match[1]);
   assert.deepEqual(executed, names);
   report.status = 'pass';

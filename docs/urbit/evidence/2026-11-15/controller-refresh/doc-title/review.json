@@ -1,0 +1,72 @@
+{
+  "authority_network_used": false,
+  "authority_services_healthy": 8,
+  "classification": "independent-real-browser-synthetic-app-review",
+  "cleanup_verified": true,
+  "credentials_used": false,
+  "elapsed_seconds": 50.8,
+  "executed_cases": 3,
+  "limitations": [
+    "Remote runtime lacks Japanese glyph coverage; exact Unicode title bytes and layout assertions passed, but Japanese characters display missing-glyph boxes.",
+    "Component/app browser evidence does not qualify native Home changes or complete agent journey."
+  ],
+  "listener_started": false,
+  "native_qualification": false,
+  "owner_report_sha256": "c4d84e240ba219efcccdc146e571f7724c91c4e58b23c57c1d4e155dbd9d08f6",
+  "packet_files": {
+    "assets/docs/index.html": "2186b83fcf4955655506a16897316c0dddf8b256c6d5ac413fdacae44f0658d5",
+    "assets/docs/manifest.json": "a3564d7eb818574ed657a03499f18d752b357a22381d7751ce4899e782cdb252",
+    "assets/docs/reference.css": "2ed5df4f2793a18f3efca5249b7c15e72dc83bfe90f06c8fd438cfd3f989a6bd",
+    "assets/docs/reference.js": "7e297403054269bae278b1a4e64001e96b9f9885b2d8db4d4c430769a5976718",
+    "check-docs.mjs": "3abe22c4afc1a43a5a10f729e06c3ef86f2e612695ad9ba4a91048f0064fa34e",
+    "run-reference.py": "ea9c5f5c2e6280d5d2a7940fe1eaca3d514408e742948edea9a54869c2f32def",
+    "worker.py": "6a4dc2538d9bab0f68568b1d084ece147a54c3b07296875c7c7ae89ea48619f8"
+  },
+  "previous_failure_retained": "../doc-title-first-failure",
+  "qualifies_phase": false,
+  "report_sha256": "4b9bd322c687d8fa27d5ff26e3e3a5a358842e9260fc69a48befc5c920306165",
+  "reviewed_at": "2026-11-15T23:27:26.956301+00:00",
+  "scope": "Actual app with synthetic Home transport: direct title open, keyboard/20 long-title responsive layout, clean close/discard, exact Markdown and metadata roundtrip, and deterministic overlapping startup capability regression. No live authorization or business write.",
+  "screenshot_directory": "/home/skilgore/stead-urbit/.runtime/doc-title-remote-prepared/run-pass",
+  "screenshots": {
+    "doc-title-collection-1440.png": {
+      "bytes": 198889,
+      "sha256": "7763aa44828c2c7a84494fd18568a28f6bf6a2df8b4f16883e854e8369cdb53e"
+    },
+    "doc-title-collection-320.png": {
+      "bytes": 227470,
+      "sha256": "864c4097c34a88a3e746f9dc92dc579eaed12a681519dcdd74128eb6a37dcc2f"
+    },
+    "docs-01.png": {
+      "bytes": 39886,
+      "sha256": "348b09b4e1bc9c5025d032492fd65b2e64ae1bc3ce11aa64ee1e3124c12cd691"
+    },
+    "docs-02.png": {
+      "bytes": 65036,
+      "sha256": "29e03bf8e8721c31d7bf56c296f7c970c54d77c951d02f43a46e9dc8ed33c931"
+    },
+    "docs-03.png": {
+      "bytes": 45924,
+      "sha256": "bfb3c7ea06245ecfcca9324b52957ba29b1d8fabe68e4bdfb3c2cda4b623d43b"
+    },
+    "polish-docs-1440.png": {
+      "bytes": 67397,
+      "sha256": "117c546cbf1ecedd083c3bed35580c9a7f63a6286abf82f7d2ba3ec6c2ea12a6"
+    },
+    "polish-docs-320.png": {
+      "bytes": 52499,
+      "sha256": "41a62c955ff850d17cb65ed4af5302ea946ac945f635b012bb9762ec6015da1a"
+    },
+    "polish-docs-390.png": {
+      "bytes": 51849,
+      "sha256": "0208a372e26cfc8ad791fac587b167bb28d6acf1c48e97b1d5a6d30a939e4df5"
+    }
+  },
+  "screenshots_inspected": [
+    "doc-title-collection-1440.png",
+    "polish-docs-320.png",
+    "docs-03.png"
+  ],
+  "source_inputs_verified": 74,
+  "status": "pass"
+}

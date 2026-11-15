@@ -1,0 +1,47 @@
+{
+  "classification": "host-product-http-boundary-with-fake-fetch",
+  "qualifies_phase": false,
+  "node": "v24.21.0",
+  "expected_tests": [
+    "successor capabilities are all-or-nothing and restricted to the qualified rehearsal profile",
+    "canonical commands and lost-response retries preserve exact bytes and authenticated transport settings",
+    "duplicate capability or receipt keys are rejected before they can alter meaning",
+    "same confirmed session retains prepared requests while suspension and replacement fence them",
+    "late results from a cleared session cannot reach a fresh session partition",
+    "invalid UTF8 oversized bodies and HTTP failures cannot become accepted receipts",
+    "authoritative non-JSON401 clears the partition before receipt parsing",
+    "withdrawn capabilities block new effects and stale reads but retain a correlated past receipt",
+    "an older capability abort during resume cannot withdraw the newer admitted profile",
+    "superseded capability success cannot restore a withdrawn profile in the same session",
+    "superseded capability failure cannot clear a newer profile but a current failure still fences it"
+  ],
+  "status": "pass",
+  "inputs_before": {
+    "src/api.ts": "1353180c7730b66c713444946f58f614480715ab1295b1d587a10fb6af4c36e4",
+    "src/productCarrier.ts": "8e3e752ec7104bdf1facbfcb3d199d0f7661088701ba8399b5d454d26c497214",
+    "src/productClient.ts": "d193a18f6c3d98d8198db265ae39b122aca6c6c85c2bb2acf39ee59b4511c0ae",
+    "src/productProtocol.ts": "dd67a172d462e0d8c03e5d074c46e05b77821632ff399849c8b4053ad3e9866c",
+    "src/productWire.ts": "35b033b3437f07b2e0690e3192091b43ba4bec2c9bee2768ca9b43abb70fa6c1",
+    "src/protocol.ts": "a8dee5b65f79ffe052869f19e9b508f7abcb30149ac82eaa31a47223796003c7",
+    "src/docChangeClient.ts": "089be0658e652b531a66994f00f133bfa392d67bab4b3a20007a16892bd9f295",
+    "src/docChangeReadProtocol.ts": "7e312905c12e630345eefb9e16e57cb435ba164e77f8d1d29f0d57b6cb8b95b8",
+    "src/docChangeProtocol.ts": "f41042a8a14ba759e3238ccda54532d0fd49d48b174ada4281d06cb7c6f5f893",
+    "tests/product-carrier.test.ts": "ac3c52c7d48c9cf9f4768eb035122aac323a8c13f10f890f427c3124e8aea00a",
+    "tests/product-carrier.mjs": "f2f0b2d3f16bb11aa08e956ec35a40c68150f0ea1fcb7cc20e95c6cb65674799",
+    "package-lock.json": "b4d2ced8e19aa8b7cf9eaab75b906e867132321b97937b534e5810c152dbec98"
+  },
+  "inputs_after": {
+    "src/api.ts": "1353180c7730b66c713444946f58f614480715ab1295b1d587a10fb6af4c36e4",
+    "src/productCarrier.ts": "8e3e752ec7104bdf1facbfcb3d199d0f7661088701ba8399b5d454d26c497214",
+    "src/productClient.ts": "d193a18f6c3d98d8198db265ae39b122aca6c6c85c2bb2acf39ee59b4511c0ae",
+    "src/productProtocol.ts": "dd67a172d462e0d8c03e5d074c46e05b77821632ff399849c8b4053ad3e9866c",
+    "src/productWire.ts": "35b033b3437f07b2e0690e3192091b43ba4bec2c9bee2768ca9b43abb70fa6c1",
+    "src/protocol.ts": "a8dee5b65f79ffe052869f19e9b508f7abcb30149ac82eaa31a47223796003c7",
+    "src/docChangeClient.ts": "089be0658e652b531a66994f00f133bfa392d67bab4b3a20007a16892bd9f295",
+    "src/docChangeReadProtocol.ts": "7e312905c12e630345eefb9e16e57cb435ba164e77f8d1d29f0d57b6cb8b95b8",
+    "src/docChangeProtocol.ts": "f41042a8a14ba759e3238ccda54532d0fd49d48b174ada4281d06cb7c6f5f893",
+    "tests/product-carrier.test.ts": "ac3c52c7d48c9cf9f4768eb035122aac323a8c13f10f890f427c3124e8aea00a",
+    "tests/product-carrier.mjs": "f2f0b2d3f16bb11aa08e956ec35a40c68150f0ea1fcb7cc20e95c6cb65674799",
+    "package-lock.json": "b4d2ced8e19aa8b7cf9eaab75b906e867132321b97937b534e5810c152dbec98"
+  }
+}

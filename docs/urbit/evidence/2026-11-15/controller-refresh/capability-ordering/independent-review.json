@@ -1,0 +1,23 @@
+{
+  "browser_proof": "Corrected three-case Docs packet pending; failed predecessor remains retained.",
+  "classification": "independent-source-and-retained-host-evidence-review",
+  "files": {
+    "src/api.ts": "1353180c7730b66c713444946f58f614480715ab1295b1d587a10fb6af4c36e4",
+    "src/main.tsx": "01f87cfd2924b59fb103d22390a638bd00beffa09d2f1d0d4b87e086ff0155f1",
+    "tests/product-carrier.mjs": "f2f0b2d3f16bb11aa08e956ec35a40c68150f0ea1fcb7cc20e95c6cb65674799",
+    "tests/product-carrier.test.ts": "ac3c52c7d48c9cf9f4768eb035122aac323a8c13f10f890f427c3124e8aea00a"
+  },
+  "host_report_sha256": "e4f6282542cea41da7e7b05c46a32fcdaa1d897747d3cba7ca6de48a43444e8f",
+  "native_qualification": false,
+  "observed_host_cases": 11,
+  "review": [
+    "Every capability request has an object owner and captured generation; only current requests publish success or fail-closed state.",
+    "Superseded abort, success and failure all return session_changed without altering a newer mode. Current failure still withdraws the profile.",
+    "App publication has a separate owner and active-effect predicate, preventing cleanup of an earlier StrictMode effect from replacing current UI state.",
+    "Three new tests preserve original eight carrier checks and explicitly reproduce late abort, late success and late failure.",
+    "Existing direct Doc title button change is independently reviewed and unchanged by the capability correction."
+  ],
+  "reviewed_at": "2026-11-15T23:24:06.744849+00:00",
+  "status": "approved-source",
+  "typescript_report_sha256": "5656acf1753b53115256027ae26377c3144fc0da8589df42a63e6dd43bf877f6"
+}

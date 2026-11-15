@@ -1,0 +1,21 @@
+{
+  "classification": "integrator-browser-evidence-and-visual-review",
+  "independent_review_sha256": "a4f4a65667b4cf1c4297028fe410d56ae662b48b44559e8b47e1e80bddca8f2d",
+  "limitations": [
+    "No native save or live-pilot rollout is implied.",
+    "The private browser lacks Japanese glyph coverage; exact Unicode bytes and layout passed.",
+    "Canonical native title metadata and truthful new commit authorship remain open."
+  ],
+  "native_qualification": false,
+  "observed": "Three actual-browser synthetic main-app cases passed: title activation and draft/read-only states; exact body/full-source explicit save; deterministic superseded startup response.",
+  "owner_report_sha256": "c4d84e240ba219efcccdc146e571f7724c91c4e58b23c57c1d4e155dbd9d08f6",
+  "qualifies_phase": false,
+  "report_sha256": "4b9bd322c687d8fa27d5ff26e3e3a5a358842e9260fc69a48befc5c920306165",
+  "screenshots_inspected": {
+    ".runtime/doc-title-remote-prepared/run-pass/docs-02.png": "29e03bf8e8721c31d7bf56c296f7c970c54d77c951d02f43a46e9dc8ed33c931",
+    ".runtime/doc-title-remote-prepared/run-pass/docs-03.png": "bfb3c7ea06245ecfcca9324b52957ba29b1d8fabe68e4bdfb3c2cda4b623d43b",
+    ".runtime/doc-title-remote-prepared/run-pass/polish-docs-320.png": "41a62c955ff850d17cb65ed4af5302ea946ac945f635b012bb9762ec6015da1a"
+  },
+  "source_baseline": "b195f5267953c70a48637fb835683fac87b77474",
+  "status": "scoped-checks-pass-with-listed-limits"
+}

@@ -1,0 +1,124 @@
+TAP version 13
+# Subtest: successor capabilities are all-or-nothing and restricted to the qualified rehearsal profile
+ok 1 - successor capabilities are all-or-nothing and restricted to the qualified rehearsal profile
+  ---
+  duration_ms: 8.718711
+  type: 'test'
+  ...
+# Subtest: canonical commands and lost-response retries preserve exact bytes and authenticated transport settings
+ok 2 - canonical commands and lost-response retries preserve exact bytes and authenticated transport settings
+  ---
+  duration_ms: 208.889021
+  type: 'test'
+  ...
+# Subtest: duplicate capability or receipt keys are rejected before they can alter meaning
+ok 3 - duplicate capability or receipt keys are rejected before they can alter meaning
+  ---
+  duration_ms: 30.856424
+  type: 'test'
+  ...
+# Subtest: same confirmed session retains prepared requests while suspension and replacement fence them
+ok 4 - same confirmed session retains prepared requests while suspension and replacement fence them
+  ---
+  duration_ms: 38.860735
+  type: 'test'
+  ...
+# Subtest: late results from a cleared session cannot reach a fresh session partition
+ok 5 - late results from a cleared session cannot reach a fresh session partition
+  ---
+  duration_ms: 20.481441
+  type: 'test'
+  ...
+# Subtest: invalid UTF8 oversized bodies and HTTP failures cannot become accepted receipts
+ok 6 - invalid UTF8 oversized bodies and HTTP failures cannot become accepted receipts
+  ---
+  duration_ms: 19.504761
+  type: 'test'
+  ...
+# Subtest: authoritative non-JSON401 clears the partition before receipt parsing
+ok 7 - authoritative non-JSON401 clears the partition before receipt parsing
+  ---
+  duration_ms: 11.27568
+  type: 'test'
+  ...
+# Subtest: withdrawn capabilities block new effects and stale reads but retain a correlated past receipt
+ok 8 - withdrawn capabilities block new effects and stale reads but retain a correlated past receipt
+  ---
+  duration_ms: 29.140014
+  type: 'test'
+  ...
+# Subtest: an older capability abort during resume cannot withdraw the newer admitted profile
+not ok 9 - an older capability abort during resume cannot withdraw the newer admitted profile
+  ---
+  duration_ms: 12.106445
+  type: 'test'
+  location: '/home/skilgore/stead-urbit/.runtime/product-carrier-ciRZaZ/product-carrier.test.mjs:2114:1'
+  failureType: 'testCodeFailure'
+  error: |-
+    Expected values to be strictly equal:
+    + actual - expected
+    
+    + 'unsupported'
+    - 'native-human-doc'
+    
+  code: 'ERR_ASSERTION'
+  name: 'AssertionError'
+  expected: 'native-human-doc'
+  actual: 'unsupported'
+  operator: 'strictEqual'
+  stack: |-
+    TestContext.<anonymous> (file:///home/skilgore/stead-urbit/.runtime/product-carrier-ciRZaZ/product-carrier.test.mjs:2129:10)
+    async Test.run (node:internal/test_runner/test:1409:7)
+    async Test.processPendingSubtests (node:internal/test_runner/test:974:7)
+  ...
+# Subtest: superseded capability success cannot restore a withdrawn profile in the same session
+not ok 10 - superseded capability success cannot restore a withdrawn profile in the same session
+  ---
+  duration_ms: 1.11275
+  type: 'test'
+  location: '/home/skilgore/stead-urbit/.runtime/product-carrier-ciRZaZ/product-carrier.test.mjs:2131:1'
+  failureType: 'testCodeFailure'
+  error: 'Missing expected rejection.'
+  code: 'ERR_ASSERTION'
+  name: 'AssertionError'
+  expected:
+    code: 'session_changed'
+  operator: 'rejects'
+  stack: |-
+    async TestContext.<anonymous> (file:///home/skilgore/stead-urbit/.runtime/product-carrier-ciRZaZ/product-carrier.test.mjs:2144:3)
+    async Test.run (node:internal/test_runner/test:1409:7)
+    async Test.processPendingSubtests (node:internal/test_runner/test:974:7)
+  ...
+# Subtest: superseded capability failure cannot clear a newer profile but a current failure still fences it
+not ok 11 - superseded capability failure cannot clear a newer profile but a current failure still fences it
+  ---
+  duration_ms: 9.121596
+  type: 'test'
+  location: '/home/skilgore/stead-urbit/.runtime/product-carrier-ciRZaZ/product-carrier.test.mjs:2147:1'
+  failureType: 'testCodeFailure'
+  error: |-
+    Expected values to be strictly equal:
+    + actual - expected
+    
+    + 'unsupported'
+    - 'native-human-doc'
+    
+  code: 'ERR_ASSERTION'
+  name: 'AssertionError'
+  expected: 'native-human-doc'
+  actual: 'unsupported'
+  operator: 'strictEqual'
+  stack: |-
+    TestContext.<anonymous> (file:///home/skilgore/stead-urbit/.runtime/product-carrier-ciRZaZ/product-carrier.test.mjs:2157:10)
+    async Test.run (node:internal/test_runner/test:1409:7)
+    async Test.processPendingSubtests (node:internal/test_runner/test:974:7)
+  ...
+1..11
+# tests 11
+# suites 0
+# pass 8
+# fail 3
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 687.645514

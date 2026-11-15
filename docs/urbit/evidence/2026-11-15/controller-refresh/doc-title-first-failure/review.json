@@ -1,0 +1,54 @@
+{
+  "all_eight_authority_services_healthy": true,
+  "authority_network_used": false,
+  "classification": "actual-isolated-synthetic-app-browser-failure",
+  "cleanup_verified": true,
+  "credentials_used": false,
+  "duration_seconds": 48.2,
+  "failed_cases": 1,
+  "limitations": [
+    "First direct-title/keyboard/20-row/narrow/read-only case passed; second explicit-save case did not start.",
+    "Private browser font set shows missing CJK glyphs in the Tokyo fixture; string and overflow assertions still passed.",
+    "Failure HTML and screenshots retained privately."
+  ],
+  "live_release_unchanged": "a0e90ef29389077d453ec2a775cd8fd69f711727",
+  "native_executed": false,
+  "observed_failure": "Second fresh fixture startup timed out waiting for project; actual screen showed unsupported_version before its Doc-edit assertion body.",
+  "owner_report_sha256": "589a5edfb6978734cae39f1676161549faa905eac285df58da4ed742f88c8695",
+  "passed_cases": 1,
+  "qualifies_phase": false,
+  "report_sha256": "6fb397f509f6bbbd7608cbb42d28c6d83910171dc9057c1238182cb5a3610a09",
+  "screenshots": [
+    {
+      "name": "doc-title-collection-1440.png",
+      "sha256": "7763aa44828c2c7a84494fd18568a28f6bf6a2df8b4f16883e854e8369cdb53e"
+    },
+    {
+      "name": "doc-title-collection-320.png",
+      "sha256": "864c4097c34a88a3e746f9dc92dc579eaed12a681519dcdd74128eb6a37dcc2f"
+    },
+    {
+      "name": "docs-01.png",
+      "sha256": "348b09b4e1bc9c5025d032492fd65b2e64ae1bc3ce11aa64ee1e3124c12cd691"
+    },
+    {
+      "name": "failure.png",
+      "sha256": "bf74606496e9a85e924a1fd0dda69a863dc9cf7c2bb277793f1be277090b897c"
+    },
+    {
+      "name": "polish-docs-1440.png",
+      "sha256": "117c546cbf1ecedd083c3bed35580c9a7f63a6286abf82f7d2ba3ec6c2ea12a6"
+    },
+    {
+      "name": "polish-docs-320.png",
+      "sha256": "41a62c955ff850d17cb65ed4af5302ea946ac945f635b012bb9762ec6015da1a"
+    },
+    {
+      "name": "polish-docs-390.png",
+      "sha256": "0208a372e26cfc8ad791fac587b167bb28d6acf1c48e97b1d5a6d30a939e4df5"
+    }
+  ],
+  "source_hypothesis_unconfirmed": "Concurrent StrictMode capabilities requests may allow an earlier aborted request to overwrite current carrier state; needs deterministic reproduction.",
+  "source_manifest_sha256": "4363320d2853ddf7523bd962991ab65dab12ec04b35f75bb66c75f830d359cf2",
+  "status": "fail"
+}

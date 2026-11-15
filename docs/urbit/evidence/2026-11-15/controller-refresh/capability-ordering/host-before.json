@@ -1,0 +1,48 @@
+{
+  "classification": "host-product-http-boundary-with-fake-fetch",
+  "qualifies_phase": false,
+  "node": "v24.21.0",
+  "expected_tests": [
+    "successor capabilities are all-or-nothing and restricted to the qualified rehearsal profile",
+    "canonical commands and lost-response retries preserve exact bytes and authenticated transport settings",
+    "duplicate capability or receipt keys are rejected before they can alter meaning",
+    "same confirmed session retains prepared requests while suspension and replacement fence them",
+    "late results from a cleared session cannot reach a fresh session partition",
+    "invalid UTF8 oversized bodies and HTTP failures cannot become accepted receipts",
+    "authoritative non-JSON401 clears the partition before receipt parsing",
+    "withdrawn capabilities block new effects and stale reads but retain a correlated past receipt",
+    "an older capability abort during resume cannot withdraw the newer admitted profile",
+    "superseded capability success cannot restore a withdrawn profile in the same session",
+    "superseded capability failure cannot clear a newer profile but a current failure still fences it"
+  ],
+  "status": "fail",
+  "inputs_before": {
+    "src/api.ts": "4246566bd5de15ca5aeb6f3f46ac2a5e804c29f8a3ff9c7307d0ad0596c23b74",
+    "src/productCarrier.ts": "8e3e752ec7104bdf1facbfcb3d199d0f7661088701ba8399b5d454d26c497214",
+    "src/productClient.ts": "d193a18f6c3d98d8198db265ae39b122aca6c6c85c2bb2acf39ee59b4511c0ae",
+    "src/productProtocol.ts": "dd67a172d462e0d8c03e5d074c46e05b77821632ff399849c8b4053ad3e9866c",
+    "src/productWire.ts": "35b033b3437f07b2e0690e3192091b43ba4bec2c9bee2768ca9b43abb70fa6c1",
+    "src/protocol.ts": "a8dee5b65f79ffe052869f19e9b508f7abcb30149ac82eaa31a47223796003c7",
+    "src/docChangeClient.ts": "089be0658e652b531a66994f00f133bfa392d67bab4b3a20007a16892bd9f295",
+    "src/docChangeReadProtocol.ts": "7e312905c12e630345eefb9e16e57cb435ba164e77f8d1d29f0d57b6cb8b95b8",
+    "src/docChangeProtocol.ts": "f41042a8a14ba759e3238ccda54532d0fd49d48b174ada4281d06cb7c6f5f893",
+    "tests/product-carrier.test.ts": "0260cdf30d1ef557a83452fc3bb28ca467c6bd3a8f746106b03e5550c7af21f7",
+    "tests/product-carrier.mjs": "f2f0b2d3f16bb11aa08e956ec35a40c68150f0ea1fcb7cc20e95c6cb65674799",
+    "package-lock.json": "b4d2ced8e19aa8b7cf9eaab75b906e867132321b97937b534e5810c152dbec98"
+  },
+  "error": "AssertionError [ERR_ASSERTION]: TAP version 13\n# Subtest: successor capabilities are all-or-nothing and restricted to the qualified rehearsal profile\nok 1 - successor capabilities are all-or-nothing and restricted to the qualified rehearsal profile\n  ---\n  duration_ms: 8.718711\n  type: 'test'\n  ...\n# Subtest: canonical commands and lost-response retries preserve exact bytes and authenticated transport settings\nok 2 - canonical commands and lost-response retries preserve exact bytes and authenticated transport settings\n  ---\n  duration_ms: 208.889021\n  type: 'test'\n  ...\n# Subtest: duplicate capability or receipt keys are rejected before they can alter meaning\nok 3 - duplicate capability or receipt keys are rejected before they can alter meaning\n  ---\n  duration_ms: 30.856424\n  type: 'test'\n  ...\n# Subtest: same confirmed session retains prepared requests while suspension and replacement fence them\nok 4 - same confirmed session retains prepared requests while suspension and replacement fence them\n  ---\n  duration_ms: 38.860735\n  type: 'test'\n  ...\n# Subtest: late results from a cleared session cannot reach a fresh session partition\nok 5 - late results from a cleared session cannot reach a fresh session partition\n  ---\n  duration_ms: 20.481441\n  type: 'test'\n  ...\n# Subtest: invalid UTF8 oversized bodies and HTTP failures cannot become accepted receipts\nok 6 - invalid UTF8 oversized bodies and HTTP failures cannot become accepted receipts\n  ---\n  duration_ms: 19.504761\n  type: 'test'\n  ...\n# Subtest: authoritative non-JSON401 clears the partition before receipt parsing\nok 7 - authoritative non-JSON401 clears the partition before receipt parsing\n  ---\n  duration_ms: 11.27568\n  type: 'test'\n  ...\n# Subtest: withdrawn capabilities block new effects and stale reads but retain a correlated past receipt\nok 8 - withdrawn capabilities block new effects and stale reads but retain a correlated past receipt\n  ---\n  duration_ms: 29.140014\n  type: 'test'\n  ...\n# Subtest: an older capability abort during resume cannot withdraw the newer admitted profile\nnot ok 9 - an older capability abort during resume cannot withdraw the newer admitted profile\n  ---\n  duration_ms: 12.106445\n  type: 'test'\n  location: '/home/skilgore/stead-urbit/.runtime/product-carrier-ciRZaZ/product-carrier.test.mjs:2114:1'\n  failureType: 'testCodeFailure'\n  error: |-\n    Expected values to be strictly equal:\n    + actual - expected\n    \n    + 'unsupported'\n    - 'native-human-doc'\n    \n  code: 'ERR_ASSERTION'\n  name: 'AssertionError'\n  expected: 'native-human-doc'\n  actual: 'unsupported'\n  operator: 'strictEqual'\n  stack: |-\n    TestContext.<anonymous> (file:///home/skilgore/stead-urbit/.runtime/product-carrier-ciRZaZ/product-carrier.test.mjs:2129:10)\n    async Test.run (node:internal/test_runner/test:1409:7)\n    async Test.processPendingSubtests (node:internal/test_runner/test:974:7)\n  ...\n# Subtest: superseded capability success cannot restore a withdrawn profile in the same session\nnot ok 10 - superseded capability success cannot restore a withdrawn profile in the same session\n  ---\n  duration_ms: 1.11275\n  type: 'test'\n  location: '/home/skilgore/stead-urbit/.runtime/product-carrier-ciRZaZ/product-carrier.test.mjs:2131:1'\n  failureType: 'testCodeFailure'\n  error: 'Missing expected rejection.'\n  code: 'ERR_ASSERTION'\n  name: 'AssertionError'\n  expected:\n    code: 'session_changed'\n  operator: 'rejects'\n  stack: |-\n    async TestContext.<anonymous> (file:///home/skilgore/stead-urbit/.runtime/product-carrier-ciRZaZ/product-carrier.test.mjs:2144:3)\n    async Test.run (node:internal/test_runner/test:1409:7)\n    async Test.processPendingSubtests (node:internal/test_runner/test:974:7)\n  ...\n# Subtest: superseded capability failure cannot clear a newer profile but a current failure still fences it\nnot ok 11 - superseded capability failure cannot clear a newer profile but a current failure still fences it\n  ---\n  duration_ms: 9.121596\n  type: 'test'\n  location: '/home/skilgore/stead-urbit/.runtime/product-carrier-ciRZaZ/product-carrier.test.mjs:2147:1'\n  failureType: 'testCodeFailure'\n  error: |-\n    Expected values to be strictly equal:\n    + actual - expected\n    \n    + 'unsupported'\n    - 'native-human-doc'\n    \n  code: 'ERR_ASSERTION'\n  name: 'AssertionError'\n  expected: 'native-human-doc'\n  actual: 'unsupported'\n  operator: 'strictEqual'\n  stack: |-\n    TestContext.<anonymous> (file:///home/skilgore/stead-urbit/.runtime/product-carrier-ciRZaZ/product-carrier.test.mjs:2157:10)\n    async Test.run (node:internal/test_runner/test:1409:7)\n    async Test.processPendingSubtests (node:internal/test_runner/test:974:7)\n  ...\n1..11\n# tests 11\n# suites 0\n# pass 8\n# fail 3\n# cancelled 0\n# skipped 0\n# todo 0\n# duration_ms 687.645514\n\n\n1 !== 0\n\n    at file:///home/skilgore/stead-urbit/web/app/tests/product-carrier.mjs:26:46",
+  "inputs_after": {
+    "src/api.ts": "4246566bd5de15ca5aeb6f3f46ac2a5e804c29f8a3ff9c7307d0ad0596c23b74",
+    "src/productCarrier.ts": "8e3e752ec7104bdf1facbfcb3d199d0f7661088701ba8399b5d454d26c497214",
+    "src/productClient.ts": "d193a18f6c3d98d8198db265ae39b122aca6c6c85c2bb2acf39ee59b4511c0ae",
+    "src/productProtocol.ts": "dd67a172d462e0d8c03e5d074c46e05b77821632ff399849c8b4053ad3e9866c",
+    "src/productWire.ts": "35b033b3437f07b2e0690e3192091b43ba4bec2c9bee2768ca9b43abb70fa6c1",
+    "src/protocol.ts": "a8dee5b65f79ffe052869f19e9b508f7abcb30149ac82eaa31a47223796003c7",
+    "src/docChangeClient.ts": "089be0658e652b531a66994f00f133bfa392d67bab4b3a20007a16892bd9f295",
+    "src/docChangeReadProtocol.ts": "7e312905c12e630345eefb9e16e57cb435ba164e77f8d1d29f0d57b6cb8b95b8",
+    "src/docChangeProtocol.ts": "f41042a8a14ba759e3238ccda54532d0fd49d48b174ada4281d06cb7c6f5f893",
+    "tests/product-carrier.test.ts": "0260cdf30d1ef557a83452fc3bb28ca467c6bd3a8f746106b03e5550c7af21f7",
+    "tests/product-carrier.mjs": "f2f0b2d3f16bb11aa08e956ec35a40c68150f0ea1fcb7cc20e95c6cb65674799",
+    "package-lock.json": "b4d2ced8e19aa8b7cf9eaab75b906e867132321b97937b534e5810c152dbec98"
+  }
+}

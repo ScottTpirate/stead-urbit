@@ -1,0 +1,119 @@
+{
+  "adjacent_library_site": {
+    "line": 32,
+    "path": "native/core/desk/lib/stead-run.hoon",
+    "reason": "The immediately following revision predicate uses the identical literal-list wet levy pattern."
+  },
+  "changes": {
+    "contract-ids": "(list @t)",
+    "contract-revisions": "(list @ud)",
+    "denied-responses": "(list @t)",
+    "malformed-receipts": "(list @t)",
+    "property-names": "(list @t)",
+    "stale-responses": "(list @t)"
+  },
+  "classification": "source correction at two observed compiler sites plus three matching fixture sites; hosted successor pending",
+  "diagnosis": "Pinned levy/lien are recursive wet gates without a homogenizing step. Fixed literal-list specialization is a plausible source of the nesting errors; explicitly typed list locals remove that specialization. This receipt does not claim the successor has compiled.",
+  "diff": {
+    "path": ".runtime/focused-list-type-correction.diff",
+    "sha256": "9b90a4e499474ffd78774f42db5a7e0b4f62a2461bf4d140d0dd1e4cb2d178a5"
+  },
+  "files": {
+    "native/core/desk/lib/stead-product-migrate.hoon": {
+      "after_sha256": "e55ae99c270acaa252c54573d927d75f4b207b10bc02d8d85f682ee6c082aaf9",
+      "base_commit": "b195f5267953c70a48637fb835683fac87b77474",
+      "before_sha256": "5b0bc0975b96f6528487a0c93c5e94b5c81d36d10bbc9ff8f949a15bd6407260"
+    },
+    "native/core/desk/lib/stead-run.hoon": {
+      "after_sha256": "b54027c2b442c33b4051d92e34dbd069bf5e3c0d4b66f38e00cb9ecc671cf58e",
+      "base_commit": "b195f5267953c70a48637fb835683fac87b77474",
+      "before_sha256": "8ceedb6fd1ce56af30d53c027a1d250f30ac1faaa069e085445d9f6b49cf2432"
+    },
+    "native/core/desk/tests/stead-product-views.hoon": {
+      "after_sha256": "874fb01935dd10aa37daa5636fc95a1ec4e1e8eac73bef3e749827a2977c2967",
+      "base_commit": "b195f5267953c70a48637fb835683fac87b77474",
+      "before_sha256": "a042298d1100561c7e84894f80cd563e6333f34a1cd9b960a382c8ab3545043b"
+    },
+    "native/core/desk/tests/stead-run-adapters.hoon": {
+      "after_sha256": "5cf1e10060e246b5c773fe2638f4255d6a2b2e527599305a8aab721dc3658c8b",
+      "base_commit": "b195f5267953c70a48637fb835683fac87b77474",
+      "before_sha256": "b6ec029ad6a7d6227aaf30a2b35adef90dd84cb7562df5796d1702b961fa627b"
+    }
+  },
+  "focused_successor_paths": [
+    "native/core/desk/lib/stead-product-migrate.hoon",
+    "native/core/desk/lib/stead-run.hoon"
+  ],
+  "limits": [
+    "No native or local runtime execution performed.",
+    "No test predicate, field order, record domain or public wire change.",
+    "Same-pattern fixture corrections are separate from the observed two-library focused successor.",
+    "Private reset packet and its original dependency manifest remain unchanged historical pins."
+  ],
+  "observed_candidate": "59e41f985da954e12194f25f602961967b38dc2d",
+  "observed_run": "43771933646",
+  "observed_sites": [
+    {
+      "expression": "lien on literal property-name list",
+      "marker": "nest-fail",
+      "path": "native/core/desk/lib/stead-product-migrate.hoon",
+      "span": [
+        98,
+        5,
+        100,
+        49
+      ]
+    },
+    {
+      "expression": "levy on literal contract-identifier list",
+      "marker": "nest-fail",
+      "path": "native/core/desk/lib/stead-run.hoon",
+      "span": [
+        30,
+        7,
+        30,
+        124
+      ]
+    }
+  ],
+  "pinned_primary_source": {
+    "contrast_turn_lines": [
+      725,
+      732
+    ],
+    "levy_lines": [
+      557,
+      563
+    ],
+    "lien_lines": [
+      565,
+      572
+    ],
+    "path": ".runtime/release-install-473r_aoe/work/zod/base/sys/hoon.hoon",
+    "sha256": "6d9e2e85aac5c01374d51fe93ac25d8c2aaf387b0401159384637f7cc7fa94a8"
+  },
+  "protocol": "stead.source-review/1",
+  "review": {
+    "git_diff_check": "pass",
+    "integrator": "Root approved exact final four-file diff, local names/types and unchanged list/predicate/ordering/wire semantics.",
+    "name_audit": "Each new name was absent from its file before editing and now has exactly one definition and one use. No test labels changed.",
+    "release": "Independently read observed sites and pinned gate definitions; judged typed local lists a minimal plausible correction. Focused successor limited to two observed libraries."
+  },
+  "same_pattern_fixture_sites": [
+    {
+      "lines": [
+        293,
+        337
+      ],
+      "path": "native/core/desk/tests/stead-product-views.hoon",
+      "reason": "Two literal response lists passed to levy; original assertions unchanged. No observed compiler coordinate for these fixture expressions in this focused run."
+    },
+    {
+      "lines": [
+        242
+      ],
+      "path": "native/core/desk/tests/stead-run-adapters.hoon",
+      "reason": "Literal malformed-receipt list passed to levy; all negative predicates unchanged. This suite is absent from125/59e41 and remains outside the focused successor."
+    }
+  ]
+}

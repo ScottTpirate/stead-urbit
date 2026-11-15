@@ -238,8 +238,9 @@
   =/  extra  (canonical (put receipt 'claimed_authority' [%s 'yes']))
   =/  wrong-revision  (canonical (put receipt 'resulting_revision' [%s '0']))
   =/  wrong-error  (canonical (put receipt 'error' [%s 'producer_unavailable']))
+  =/  malformed-receipts=(list @t)  ~[extra wrong-revision wrong-error]
   =/  rejects
-    %+  levy  ~[extra wrong-revision wrong-error]
+    %+  levy  malformed-receipts
     |=  raw=@t
     =/  altered  candidate(changes changes.candidate(attempts (~(put by attempts.changes.candidate) [(id 100) (id 103) (id 750)] entry(receipt raw))))
     =/  check  (gates altered next.claimed live.claimed)

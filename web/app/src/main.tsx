@@ -88,6 +88,7 @@ function App() {
   const [workspaceView,setWorkspaceView]=useState<'my-work'|'search'|null>(null);
   const [workspaceSupported,setWorkspaceSupported]=useState(false);
   const [carrierMode, setCarrierMode] = useState<ProductCarrierMode>({kind: 'unsupported'});
+  const capabilityRead = useRef<object | undefined>(undefined);
   const productActive = carrierMode.kind === 'native-human-doc';
   const productDrafts = useRef(new ProductJourneyDraftStore());
   const productPartition = useRef<object | null>(null);
@@ -224,9 +225,19 @@ function App() {
     setWorkspaceSupported(workspaceAvailable.current);
     if (mode.kind === 'unsupported') throw new HomeError('unsupported_version');
   }
-  async function refreshCapabilities() {
-    try { adoptCapabilities(await client.capabilities()); }
-    catch (failure) { setCarrierMode({kind: 'unsupported'}); setWorkspaceSupported(false); throw failure; }
+  async function refreshCapabilities(active: () => boolean = () => true) {
+    const owner = {}; capabilityRead.current = owner;
+    const current = () => active() && capabilityRead.current === owner;
+    try {
+      const capabilities = await client.capabilities();
+      if (!current()) throw new HomeError('session_changed');
+      adoptCapabilities(capabilities);
+    } catch (failure) {
+      if (current() && !(failure instanceof HomeError && failure.code === 'session_changed')) {
+        setCarrierMode({kind: 'unsupported'}); workspaceAvailable.current = false; setWorkspaceSupported(false);
+      }
+      throw failure;
+    }
   }
   async function identify(admitted?: Fields) {
     if (client.productMode().kind === 'unsupported') throw new HomeError('unsupported_version');
@@ -253,7 +264,7 @@ function App() {
     let active = true;
     void (async () => {
       try {
-        await refreshCapabilities();
+        await refreshCapabilities(() => active);
         if (!active) return;
         const person = await client.resume();
         if (active) await identify(person);
@@ -1139,7 +1150,9 @@ function App() {
       } : undefined}>
       <div className="resource-summary">
         {!inWork && <span className="row-kind">{row.kind === 'document' ? 'Page' : row.kind ?? row.type ?? tab}</span>}
-        <h2>{inWork ? <button className="work-title" data-work-control="title" disabled={locked} aria-expanded={work?.resource_id === row.resource_id} aria-controls="work-detail-panel" aria-keyshortcuts={canEdit ? 'S A P Shift+F10' : 'Shift+F10'} onClick={event => { const trigger = event.currentTarget; void action(() => openWork(row, trigger), explainConnection); }}>{title}</button> : title}</h2>
+        <h2>{inWork ? <button className="work-title" data-work-control="title" disabled={locked} aria-expanded={work?.resource_id === row.resource_id} aria-controls="work-detail-panel" aria-keyshortcuts={canEdit ? 'S A P Shift+F10' : 'Shift+F10'} onClick={event => { const trigger = event.currentTarget; void action(() => openWork(row, trigger), explainConnection); }}>{title}</button>
+          : tab === 'documents' && row.kind === 'document' ? <button type="button" className="document-title" disabled={locked}
+              onClick={() => void action(() => openDocument(row), explainConnection)}>{title}</button> : title}</h2>
         {!inWork && row.description && <p>{row.description}</p>}
         {!inWork && snippet && snippet !== row.description && <p>{snippet}</p>}
         {!inWork && row.status && <span className="muted">{row.status}</span>}
@@ -1152,7 +1165,6 @@ function App() {
         {workProperty(row, 'assignee', title ?? 'work item')}
       </div>}
       <div className="actions row-actions">
-        {tab === 'documents' && <Button disabled={locked} onClick={() => void action(() => openDocument(row), explainConnection)}>Open page</Button>}
         {inWork && <button type="button" className="work-property work-overflow" data-work-control="actions" aria-label={`Actions for ${title}`} aria-haspopup="dialog" disabled={locked}
           onClick={event => showWorkMenu(row, 'actions', event.currentTarget)}><span aria-hidden="true">•••</span></button>}
         {canEdit && project && tab === 'relations' && <ActionMenu label={`Actions for ${title}`} disabled={locked}><Button variant="quiet" disabled={locked} onClick={() => setConfirmation({

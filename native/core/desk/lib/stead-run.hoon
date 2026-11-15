@@ -26,10 +26,14 @@
 ++  contract-valid
   |=  [item=contract now=@ud]
   ^-  ?
+  =/  contract-ids=(list @t)
+    ~[project.item work.item requester.item owner.item worker.item binding.item definition.item runtime.item]
+  =/  contract-revisions=(list @ud)
+    ~[epoch.item execution-revision.item binding-revision.item definition-revision.item runtime-revision.item]
   ?&  (lte (met 0 home.item) 128)
-      (levy ~[project.item work.item requester.item owner.item worker.item binding.item definition.item runtime.item] uuid)
+      (levy contract-ids uuid)
       !=(owner.item worker.item)
-      (levy ~[epoch.item execution-revision.item binding-revision.item definition-revision.item runtime-revision.item] |=(n=@ud &((gth n 0) (uint64 n))))
+      (levy contract-revisions |=(n=@ud &((gth n 0) (uint64 n))))
       (digest-valid execution-digest.item)  (digest-valid context.item)
       (gth duration.budget.item 0)  (lte duration.budget.item 3.600.000)
       (usage-valid limits.budget.item)

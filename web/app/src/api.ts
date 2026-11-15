@@ -191,6 +191,7 @@ export class HomeClient {
   private identity: Fields | null = null;
   private partition: object | null = null;
   private productCarrier: ProductCarrierMode = Object.freeze({kind: 'unsupported'});
+  private capabilityRead?: object;
   private adopting = 0;
   private suspended = false;
   private inflight = new Set<AbortController>();
@@ -306,12 +307,19 @@ export class HomeClient {
     } finally { clearTimeout(timer); this.inflight.delete(controller); signal?.removeEventListener('abort', cancel); }
   }
   async capabilities(): Promise<Fields> {
+    const owner = Object.freeze({}), generation = this.generation;
+    this.capabilityRead = owner;
+    const current = () => this.capabilityRead === owner && this.generation === generation;
     try {
       const value = fields(await this.post('/stead/api/capabilities', { protocol: 'stead.capabilities/3' }, false));
-      this.productCarrier = productCarrierMode(value);
+      if (!current()) throw new HomeError('session_changed');
       if (value.protocol !== 'stead.capabilities/3' || value.profile !== 'configured-team') throw new HomeError('unsupported_version');
+      this.productCarrier = productCarrierMode(value);
       return value;
     } catch (error) {
+      // Resume may abort an older check after a newer check has been admitted.
+      // Neither a late failure nor a late success can change that newer profile.
+      if (!current()) throw new HomeError('session_changed');
       this.productCarrier = Object.freeze({kind: 'unsupported'});
       throw error;
     }

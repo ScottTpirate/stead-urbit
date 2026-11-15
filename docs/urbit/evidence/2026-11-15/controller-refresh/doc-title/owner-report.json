@@ -1,0 +1,49 @@
+{
+  "admission": {
+    "affinity": [
+      1
+    ],
+    "authority_network_denied": true,
+    "cpu_max": "2500 10000",
+    "group": "/system.slice/stead-pilot-browser-reference-gkp9y4sv.service",
+    "memory_max": "1572864000",
+    "network_namespace": "net:[4026532229]",
+    "pid": 96950,
+    "pids_max": "128",
+    "private_paths_denied": true
+  },
+  "authority_healthy_after": true,
+  "authority_services": 8,
+  "browser_cleanup": true,
+  "browser_exit": 0,
+  "credentials_used": false,
+  "duration_seconds": 50.8,
+  "fixture_execution_admitted": true,
+  "output": "/var/lib/stead-pilot-browser/reference-gkp9y4sv/output",
+  "packet_sha256": {
+    "assets/docs/index.html": "2186b83fcf4955655506a16897316c0dddf8b256c6d5ac413fdacae44f0658d5",
+    "assets/docs/manifest.json": "a3564d7eb818574ed657a03499f18d752b357a22381d7751ce4899e782cdb252",
+    "assets/docs/reference.css": "2ed5df4f2793a18f3efca5249b7c15e72dc83bfe90f06c8fd438cfd3f989a6bd",
+    "assets/docs/reference.js": "7e297403054269bae278b1a4e64001e96b9f9885b2d8db4d4c430769a5976718",
+    "check-docs.mjs": "3abe22c4afc1a43a5a10f729e06c3ef86f2e612695ad9ba4a91048f0064fa34e",
+    "worker.py": "6a4dc2538d9bab0f68568b1d084ece147a54c3b07296875c7c7ae89ea48619f8"
+  },
+  "profile": "docs",
+  "profile_removed": true,
+  "protocol": "stead.remote-synthetic-ui-owner/1",
+  "qualifies_phase": false,
+  "rendered_status": "pass",
+  "renderer_observation": {
+    "all_status_uids_match": true,
+    "exact_executable": true,
+    "exact_owned_cgroup": true,
+    "no_new_privileges": "1",
+    "no_sandbox_flag": false,
+    "pid_namespace_depth": 3,
+    "seccomp": "2"
+  },
+  "sandbox_renderer_verified": true,
+  "source": "a0e90ef29389077d453ec2a775cd8fd69f711727",
+  "status": "pass",
+  "unit": "stead-pilot-browser-reference-gkp9y4sv.service"
+}

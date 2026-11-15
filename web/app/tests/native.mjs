@@ -418,7 +418,7 @@ async function docsJourney(alice, bob) {
     await a.getByRole('button', {name: 'Close', exact: true}).click();
   }
   passed('native-private-markdown-saves-have-git-oids-and-inert-preview');
-  await a.locator('.resource-row').filter({has: a.getByRole('heading', {name: /^Selected Tokyo 東京/u})}).getByRole('button', {name: 'Open page', exact: true}).click();
+  await a.locator('.resource-row').filter({has: a.getByRole('heading', {name: /^Selected Tokyo 東京/u})}).locator('button.document-title').click();
   await showFullMarkdown(a);
   assert.equal(await a.getByRole('textbox', {name: 'Markdown source', exact: true}).inputValue(), selected.markdown);
   selected.markdown += '\nAn edited private explanation — Zoë.\n';
@@ -432,7 +432,7 @@ async function docsJourney(alice, bob) {
   const privateRead = a.waitForResponse(response => response.url() === origin + '/stead/api/query'
     && response.request().postDataJSON()?.kind === 'document'
     && response.request().postDataJSON()?.resource_id === selected.id);
-  await a.locator('.resource-row').filter({has:a.getByRole('heading', {name:/^Selected Tokyo 東京/u})}).getByRole('button', {name:'Open page', exact:true}).click();
+  await a.locator('.resource-row').filter({has:a.getByRole('heading', {name:/^Selected Tokyo 東京/u})}).locator('button.document-title').click();
   const privateRow = Object.values((await (await privateRead).json()).rows)[0];
   assert.equal(privateRow.markdown, selected.markdown);
   assert.equal(privateRow.resource_revision, editedPrivate.resource_revision);
@@ -457,7 +457,7 @@ async function docsJourney(alice, bob) {
   await b.getByLabel('Collection', {exact: true}).selectOption({label: 'Shared handbook · Shared'});
   await b.getByRole('heading', {name: /^Selected Tokyo 東京/u}).waitFor();
   assert.equal(await b.getByRole('heading', {name: /UNSELECTED-PRIVATE-CANARY/u}).count(), 0);
-  await b.getByRole('button', {name: 'Open page', exact: true}).click();
+  await b.locator('button.document-title').click();
   await showFullMarkdown(b);
   const shared = await b.getByRole('textbox', {name: 'Markdown source', exact: true}).inputValue();
   assert.equal(shared, selected.markdown.replace(selected.id, published.resource_id).replace('state: draft', 'state: published'));
@@ -467,7 +467,7 @@ async function docsJourney(alice, bob) {
   await b.getByRole('button', {name: 'Close', exact: true}).click();
   passed('selected-page-published-without-private-collection-or-unselected-page', {request_id: published.request_id, git_commit_oid: published.git_commit_oid});
   await a.getByLabel('Collection', {exact:true}).selectOption({label:'Shared handbook · Shared'});
-  await a.getByRole('button', {name:'Open page', exact:true}).click();
+  await a.locator('button.document-title').click();
   await showFullMarkdown(a);
   assert.equal(await a.getByRole('textbox', {name:'Markdown source', exact:true}).inputValue(), shared);
   const sharedEdit = shared + '\nShared revision two — confirmed after reload.\n';
@@ -485,7 +485,7 @@ async function docsJourney(alice, bob) {
   const sharedRead = b.waitForResponse(response => response.url() === origin + '/stead/api/query'
     && response.request().postDataJSON()?.kind === 'document'
     && response.request().postDataJSON()?.resource_id === published.resource_id);
-  await b.getByRole('button', {name:'Open page', exact:true}).click();
+  await b.locator('button.document-title').click();
   const sharedRow = Object.values((await (await sharedRead).json()).rows)[0];
   assert.equal(sharedRow.markdown, sharedEdit);
   assert.equal(sharedRow.resource_revision, editedShared.resource_revision);
@@ -897,7 +897,7 @@ try {
   await alice.home.getByRole('button', {name: /GARDEN.*Garden α/u}).click();
   await alice.home.getByRole('button', {name: 'Docs', exact: true}).click();
   await alice.home.getByLabel('Collection', {exact: true}).selectOption({label: 'Private notebook α · Private drafts'});
-  await alice.home.locator('.resource-row').filter({has: alice.home.getByRole('heading', {name: /UNSELECTED-PRIVATE-CANARY/u})}).getByRole('button', {name: 'Open page', exact: true}).click();
+  await alice.home.locator('.resource-row').filter({has: alice.home.getByRole('heading', {name: /UNSELECTED-PRIVATE-CANARY/u})}).locator('button.document-title').click();
   const privateText = alice.home.getByRole('textbox', {name: 'Markdown source', exact: true});
   assert.ok((await privateText.inputValue()).includes('UNSELECTED-PRIVATE-CANARY'));
   await privateText.fill((await privateText.inputValue()) + '\nUnsaved logout canary.');

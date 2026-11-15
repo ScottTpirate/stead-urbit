@@ -1,0 +1,22 @@
+{
+  "classification": "integrator-browser-evidence-and-visual-review",
+  "independent_review_sha256": "722489e809f6b511dd9b8b8e899513f84219e3bd60301dd9596cb50124a13278",
+  "limitations": [
+    "No native authority or live carrier is exercised.",
+    "Visual inspection found the Create Work footer partially below the dialog viewport at1440x1000; scroll/body/footer followup remains open.",
+    "The eight assertions pass but do not close the complete Work UX package."
+  ],
+  "native_qualification": false,
+  "observed": "Eight actual-browser synthetic connected Work-component cases passed; strict parser, optional failure/retry, session/response fencing, exact proposal-base checks and narrow keyboard/read-only states observed.",
+  "owner_report_sha256": "8d8bcf35d404ece3abc5161b65520d09d234539e9b0075c655aa3b22ac76797f",
+  "qualifies_phase": false,
+  "report_sha256": "d67373667eedfcc3c6515ecea3cbdb0f13c6a963428bc6361ea75442e03a7bad",
+  "screenshots_inspected": {
+    ".runtime/product-picker-envelope-remote-prepared/run-pass/picker-01.png": "467d427ae6938175a58f521b15bbb7a0f9f4b0a1f2e8dbf9d50d56633ebe77c4",
+    ".runtime/product-picker-envelope-remote-prepared/run-pass/picker-03.png": "4023345cdebf50f9312662881a97bb5b613568ba6aed9f0924bd6543daba80e9",
+    ".runtime/product-picker-envelope-remote-prepared/run-pass/picker-04.png": "f3755fbaf2a35f106eb7a58ca8136a3bea1bab00e30a1482a8a33376402473d2",
+    ".runtime/product-picker-envelope-remote-prepared/run-pass/picker-08.png": "85cde38dcdb8c08ab3caadb8b58e25ad0a0dbd985149f0e34dd257560c447d11"
+  },
+  "source_baseline": "b195f5267953c70a48637fb835683fac87b77474",
+  "status": "scoped-checks-pass-with-listed-limits"
+}
