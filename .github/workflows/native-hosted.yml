@@ -68,12 +68,52 @@ jobs:
           (root / '.runtime/candidate').write_text(candidate + '\n')
           (root / '.runtime/controller').write_text(controller + '\n')
           PY
+      - name: Provision the exact Git corpus version on the disposable VM
+        timeout-minutes: 15
+        run: |
+          sudo apt-get update -qq
+          sudo apt-get install --no-install-recommends -y build-essential libcurl4-openssl-dev libexpat1-dev libssl-dev zlib1g-dev
+          python3 -I -B - <<'PY'
+          import hashlib, json, pathlib, subprocess, tarfile, tempfile, urllib.request
+          # Official archive checksum: https://www.kernel.org/pub/software/scm/git/sha256sums.asc
+          version = '2.55.0'
+          expected = '457fdb04dc8728e007d4688695e6912e6f680727920f2a40bf11eacc17505357'
+          url = 'https://www.kernel.org/pub/software/scm/git/git-' + version + '.tar.xz'
+          with tempfile.TemporaryDirectory(prefix='stead-git-build-') as directory:
+              root = pathlib.Path(directory)
+              archive = root / 'git.tar.xz'
+              with urllib.request.urlopen(url, timeout=60) as response:
+                  raw = response.read(16 * 1024 * 1024 + 1)
+              if len(raw) > 16 * 1024 * 1024 or hashlib.sha256(raw).hexdigest() != expected:
+                  raise SystemExit('Pinned Git source archive differs')
+              archive.write_bytes(raw)
+              with tarfile.open(archive) as source:
+                  members = source.getmembers()
+                  if len(members) > 16000 or sum(member.size for member in members) > 160 * 1024 * 1024:
+                      raise SystemExit('Git source extraction bound')
+                  if any(not (member.name.startswith('git-' + version + '/')
+                              or (member.name == 'git-' + version and member.isdir())) for member in members):
+                      raise SystemExit('Git source root differs')
+                  source.extractall(root, filter='data')
+              source = root / ('git-' + version)
+              options = ['prefix=/usr', 'gitexecdir=/usr/lib/git-core', 'NO_RUST=1', 'NO_TCLTK=1', 'NO_GETTEXT=1']
+              subprocess.run(['make', '-j2', *options, 'all'], cwd=source, check=True, timeout=600)
+              subprocess.run(['sudo', 'make', '-j2', *options, 'install'], cwd=source, check=True, timeout=120)
+          observed = subprocess.check_output(['/usr/bin/git', '--version'], text=True).strip()
+          if observed != 'git version ' + version:
+              raise SystemExit('Installed Git version differs')
+          helpers = subprocess.check_output(['/usr/bin/git', '--exec-path'], text=True).strip()
+          if helpers != '/usr/lib/git-core' or not pathlib.Path(helpers, 'git-remote-https').is_file():
+              raise SystemExit('Installed Git helper path differs')
+          print(json.dumps({'source_url': url, 'source_sha256': expected, 'git': observed,
+              'git_exec_path': helpers, 'build_options': options}))
+          PY
       - name: Install the disposable VM dependency and verify pinned downloads
         run: |
           sudo apt-get update -qq
           sudo apt-get install --no-install-recommends -y bubblewrap
           dpkg-query --show --showformat='${Package} ${Version}\n' bubblewrap
-          sudo python3 -I -B - <<'PY'
+          sudo env PATH=/usr/bin:/bin python3 -I -B - <<'PY'
           import runpy, sys
           sys.path.insert(0, '/var/lib/stead-ci-controller/scripts/urbit')
           sys.argv = ['toolchain.py', 'fetch']
