@@ -136,6 +136,23 @@ lowercase SHA-1 Git OIDs.
 ```
 
 All eight fields are required. `identity`, `capabilities` and `projects` use empty scope fields.
+The implementation-branch extension `stead.workspace-queries/1`, advertised as
+the `workspace_queries` capability, adds `workspace-search` and `my-work` with
+empty project/container/resource fields. Clients must check that exact capability
+before offering these views; older deployed Homes do not support them.
+`workspace-search` accepts up to 128 UTF-8 bytes in `search`; `my-work` requires
+an empty search. Both use the same bounded 20-row pagination and update watches.
+Each result includes `project_id`, `project_title` and `project_key` alongside
+its ordinary resource preview. Row keys are opaque and distinguish identical
+resource UUIDs in different projects. Opening a result still requires a fresh
+authorized resource read. Only currently readable projects and resources
+contribute rows or visible generations; private content does not contribute
+another person's results, counts or watch notifications. Access expiry or
+revocation invalidates prior cursors and clears queued protected updates.
+`my-work` currently means unfinished Work whose **legacy assignee** is the
+current principal, excluding Done and Canceled. It does not implement the new
+Owner/worker split, autonomous-run ownership, or an actionable Inbox.
+
 Project kinds are `project`, `work`, `assignees`, `comments`, `containers`, `documents`, `document`,
 `relations`, `search`, `activity`, `inbox`, `receipt`. `work` optionally selects
 one resource. `documents` requires a collection; `document` also requires a
@@ -175,7 +192,7 @@ come from the row, never from parsing the opaque row key.
 | Row | Additional fields or exact metadata shape |
 | --- | --- |
 | Identity | `principal_id`, `identity_ship`, `binding_id`, `binding_revision`, `session_audit_id`, `display_name`, `organization_id`, `team_id`, `home`, `can_create` (`yes` or `no`); no resource fields |
-| Capabilities | `protocol`, `profile`, `commands`, `queries`, `updates`, `authentication`, `max_request_bytes`, `max_response_bytes`, `page_size`, `runtime`; no resource fields |
+| Capabilities | `protocol`, `profile`, `commands`, `queries`, `updates`, optional `work_contract` capability, `authentication`, `max_request_bytes`, `max_response_bytes`, `page_size`, `runtime`; no resource fields |
 | Project | `project_id`, `title`, `project_key`, `preset`, `authority_epoch`, `role`; maintainer only: `policy_revision`; no `container_id` |
 | Work | `title`, `description`, `type`, `status`, `priority`, `snippet`; empty `container_id`; full description and optional `comment_count` only on single-resource read; optional `assignee_principal_id` and `assignee_display_name` |
 | Comment | `comment_revision` (accepted Work revision), `body`, `principal_id`, `identity_ship`, `accepted_at_ms`; author and time assigned by Home; no resource fields |
@@ -185,6 +202,23 @@ come from the row, never from parsing the opaque row key.
 | Relation | `title` plus every `relation.create` payload field; empty `container_id` |
 | Activity / Inbox | Exactly `kind` (`activity`), `resource_id`, `container_id`, `operation`, `title` (the operation), `request_id`, `principal_id`, `accepted_at_ms`; authorized projections, not command receipts; no resource revision |
 | Receipt | Exact `stead.receipt/3` fields listed under Validate outcomes; validate against the original command |
+
+### Additive Work execution pins
+
+The T05a implementation candidate advertises `work_contract=stead.work-contract/1`
+in capabilities. Authorized single-Work reads then include all three strings:
+`execution_contract_protocol=stead.work-contract/1`,
+`execution_contract_revision` (positive canonical uint64) and
+`execution_contract_digest` (64 lowercase hex). List and search previews omit
+these pins. Do not construct a pin from preview content or `resource_revision`.
+
+The digest uses the existing canonical JSON/domain-separated `hash:stead-codec`
+with domain `stead.work-contract/1` and exactly `project_id`, `work_id`,
+`execution_contract_revision`, `title`, `description`. Accepted exact title or
+description changes advance the revision from its creation value of 1; comments
+and operational property edits do not. Editing and reverting a goal still
+advances its execution revision. Old command/3 write preconditions and receipts
+remain unchanged. This read extension does not provide atomic run admission.
 
 ## Updates
 

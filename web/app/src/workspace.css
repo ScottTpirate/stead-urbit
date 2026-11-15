@@ -1,0 +1,23 @@
+.workspace-view { width: 100%; max-width: 1000px; min-width: 0; margin-inline: auto; }
+.workspace-breadcrumb { display: flex; gap: 8px; color: var(--muted); font-size: 13px; margin: 0 0 16px; }
+.workspace-heading { display: flex; align-items: start; justify-content: space-between; gap: 16px; margin-bottom: 24px; }
+.workspace-heading > div { min-width: 0; }
+.workspace-heading p { color: var(--muted); line-height: 1.5; margin: 8px 0 0; }
+.workspace-search { display: flex; align-items: start; gap: 8px; margin-bottom: 24px; }
+.workspace-search .stead-field { flex: 1; min-width: 0; margin: 0; }
+.workspace-search > .stead-button { margin-top: 23px; flex: none; }
+.workspace-results { min-width: 0; }
+.workspace-result { min-width: 0; padding: 16px 0; border-bottom: 1px solid var(--line); }
+.workspace-result-project { display: flex; flex-wrap: wrap; gap: 8px; color: var(--muted); font-size: 12px; overflow-wrap: anywhere; }
+.workspace-result-project > span { font-family: var(--mono); }
+.workspace-result > .stead-button { display: block; max-width: 100%; margin: 4px 0; padding: 4px 0; text-align: start; font-size: 16px; overflow-wrap: anywhere; }
+.workspace-result-properties { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; color: var(--muted); font-size: 13px; overflow-wrap: anywhere; }
+.workspace-result > p { max-width: 800px; margin: 8px 0 0; color: var(--muted); line-height: 1.55; overflow-wrap: anywhere; white-space: pre-wrap; }
+.workspace-pagination { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 12px; margin-top: 16px; }
+.workspace-pagination p { color: var(--muted); font-size: 13px; }
+.workspace-view > .stead-outcome, .workspace-view > .stead-state { margin-bottom: 16px; }
+@media (max-width: 600px) {
+  .workspace-heading { flex-direction: column; gap: 12px; }
+  .workspace-search { flex-wrap: wrap; }
+  .workspace-search > .stead-button { margin-top: 23px; }
+}

@@ -48,3 +48,28 @@ membership, policy, event history, and the live authority still require the
 project restore workflow. The command never boots an Urbit ship. SHA-256
 verification checks integrity against a trusted digest. The digest itself
 does not attest who authorized the original export.
+
+## Reader and editor profile in the implementation candidate
+
+The November 15 candidate keeps complete Markdown as the canonical stored
+source. Saved pages open in **Read**; **Edit** changes the body, **Source** shows
+the complete bytes including the recognized Stead header, and **Preview** reads
+the current unsaved text. Mode changes do not save. **Save page** still requires
+the Home's correlated accepted receipt. A stale revision preserves the local
+draft and requires an explicit choice of base before another save.
+
+The pinned `markdown-it` 15.0.3 parser renders headings, paragraphs, emphasis,
+ordered/unordered lists, block quotes, fenced/inline code, links, tables,
+strikethrough and task markers through a closed React element vocabulary. Raw
+HTML stays text; image syntax becomes a deliberate link and never loads an
+external image automatically. Unsafe URL schemes and credential-bearing links
+are inert. Syntax outside the supported profile remains unchanged in Source
+and export. There is no rich-text conversion or keystroke commit.
+
+Display accepts the existing 32,768-byte complete-document bound. More than
+512 newline/backtick separators or 2,048 parsed tokens falls back to the complete
+inert body, without silently truncating accepted source. Parser nesting is
+bounded at 20. These are rendering safeguards, not a new native storage limit.
+Reference browser and host corpus checks cover this renderer; native
+save/export/reimport and full release qualification remain separately recorded
+in the [capability matrix](CAPABILITY_MATRIX.md).

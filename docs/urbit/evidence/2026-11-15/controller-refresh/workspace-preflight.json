@@ -1,0 +1,65 @@
+{
+  "controller_source_commit": "18673da1282d0b5c0060038d1215b684857d0cbd",
+  "parent": "0699d255ff39b3a639a6c324ba869e7d779198ca",
+  "paths": {
+    "native/core/desk/lib/stead-team-codec.hoon": {
+      "blob": "c9a7294ab9c4173bf7e80669bee62190aac46d6c",
+      "sha256": "0a7e54ad7cd6fc66dcbfabd90425d55a234d9239140dec97309474fb3b90ba76"
+    },
+    "native/core/desk/lib/stead-views.hoon": {
+      "blob": "b341c062909a9dec52d5b1e1359893cd63a8b61b",
+      "sha256": "f3eea9a132aa4593b5a65612521ab1700d818751e93bb0b9ef2158a0f9ccd26b"
+    },
+    "native/core/desk/lib/stead-update-security.hoon": {
+      "blob": "ccfe9568480c02be35e7c30e8665d165124ee953",
+      "sha256": "4ef803d5671641bdffdff95965e85f6fdb73c91b2c3a40c818dca79c5727c4fd"
+    },
+    "native/core/desk/tests/stead-workspace-views.hoon": {
+      "blob": "79c0d5973120b95b3ff3547f2909220580e9b468",
+      "sha256": "0ea32c67b5aff91161b57e1bf9308c1f1aa6fa8afab24965486339d5b12045e2"
+    },
+    "scripts/urbit/native_units.py": {
+      "blob": "0c4b936a854ef440d5caae46e574f2d804c0ae1b",
+      "sha256": "cd79578b2bc025fb3e2a988a8fd5886d1657afa44cb14684536e2e57a444f00c"
+    },
+    "specs/urbit/phase2-pure-units.json": {
+      "blob": "b2a2234bbdc8d62cf8e64e7c0ea289bc116b114d",
+      "sha256": "aa09efff3cd979dd815bad9e2df743d60d7350521ffa519633cea6091764ea67"
+    },
+    "tests/urbit/test_native_units.py": {
+      "blob": "110c592cec41697fed60dfef385f3c54b06dc404",
+      "sha256": "480f7911732c65eda1915ed397fa3a56e008ac5d47f88d857b4de141ae0da645"
+    },
+    "scripts/urbit/team_check.py": {
+      "blob": "27e66b763697f9804cf3d2c42a69729117801495",
+      "sha256": "34e50d8ee277ae107b741db8323760c487d8f7dc354e1a3bb6fde18783136008"
+    },
+    "tests/urbit/test_team_capabilities.py": {
+      "blob": "9578429aa044234d616103bba63262542fe7ede0",
+      "sha256": "550320f413185d66d1d020e8b7fb0ccaa6ba26287566500fadd5a0a799f9405e"
+    }
+  },
+  "shared_index_unchanged": true,
+  "positive_suites": 27,
+  "positive_arms": 173,
+  "native_execution": false,
+  "immutable_preflight": {
+    "host_tests": 28,
+    "test_result": "pass",
+    "native_suite_source_names_match": true,
+    "controller_files": 376,
+    "controller_bytes": 3791637,
+    "self_composition_files": 186,
+    "product_files": 102,
+    "reserved_product_files_absent": true,
+    "workflow_and_isolation_unchanged": true,
+    "native_execution": false
+  },
+  "controller_pin_commit": "a841cd241cdfc15218f0d0bbbd4b15dba7c0547c",
+  "source_review": "independent-integrator-approved",
+  "pull_request": "https://github.com/ScottTpirate/stead-urbit/pull/86",
+  "merged_commit": "cbabf4c2042a809966f5bdac6e07dd8c4fdbe6f2",
+  "merge": "normal-merge-api-exact-head",
+  "observed_at": "2026-11-15T17:14:04.497700+00:00",
+  "native_dispatch": "waiting-for-immutable-product-candidate"
+}

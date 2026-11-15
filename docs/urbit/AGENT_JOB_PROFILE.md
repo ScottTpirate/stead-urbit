@@ -91,8 +91,14 @@ by caller-supplied paths or commands.
 T05 separates execution-contract revisions from mutable Work properties and
 discussion/activity sequences. Comments, progress and unrelated notifications
 must not invalidate an unchanged contract. Changed acceptance criteria do.
-Until that migration exists, the baseline combined Work revision remains the
-implemented behavior; do not claim the revision trap has been fixed.
+T05a now implements an additive read-only execution pin derived from accepted
+legacy title/description edits, plus strict agent brief/2 consumption. This is
+committed source awaiting native qualification, not a durable-run API. Commands
+and comments still use the legacy aggregate revision. The helper checks the pin
+before Code submission, leaving a read/submit race; atomic contract fencing,
+acceptance criteria, output requirements and independent discussion CAS still
+require the versioned migration and T14 final native admission. See
+[the exact interface boundary](PRODUCT_NATIVE_INTERFACES.md).
 
 ## Lifecycle and effects
 

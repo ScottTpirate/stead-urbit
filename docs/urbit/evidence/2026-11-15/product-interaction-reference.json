@@ -1,0 +1,262 @@
+{
+  "recorded_at": "2026-11-15T16:33:20.708508+00:00",
+  "classification": "real-browser-synthetic-interaction-reference",
+  "qualifies_phase": false,
+  "scope": [
+    "T02 shared controls and synthetic interaction reference",
+    "T07 shell layout tokens",
+    "T08 Work layout geometry only",
+    "T09 DocumentBody read/edit/preview interaction only"
+  ],
+  "exclusions": [
+    "No native ships, authority tests or mutations",
+    "No attended uncoached usability acceptance",
+    "No deployed pilot verification",
+    "CSS zoom is tested at two times; this is not a claim of browser-chrome zoom testing",
+    "Dark contrast measurements cover shared reference tokens, not every legacy feature surface"
+  ],
+  "typescript": "Pinned Node24.21.0 TypeScript noEmit passed under25percent oneCPU after icon/control/layout changes",
+  "visual_inspection": [
+    "normal-1440.png inspected",
+    "crowded-320.png inspected; no clipping or horizontal page overflow"
+  ],
+  "reference": {
+    "classification": "real-browser-synthetic-interaction-reference",
+    "qualifies_phase": false,
+    "node": "v24.21.0",
+    "status": "pass",
+    "checks": [
+      {
+        "name": "menu-navigation-skips-disabled-items-and-restores-focus",
+        "status": "pass"
+      },
+      {
+        "name": "searchable-people-picker-selects-on-enter-and-keeps-eligibility-distinct",
+        "status": "pass"
+      },
+      {
+        "name": "dialog-traps-focus-preserves-draft-and-supports-nested-picker",
+        "status": "pass"
+      },
+      {
+        "name": "loading-empty-error-and-read-only-states-remain-explicit",
+        "status": "pass"
+      },
+      {
+        "name": "desktop-narrow-crowded-and-empty-reference-layouts",
+        "status": "pass"
+      },
+      {
+        "name": "production-work-widths-dense-rows-and-two-times-zoom-reflow",
+        "status": "pass"
+      },
+      {
+        "name": "document-read-edit-preview-preserves-local-draft",
+        "status": "pass"
+      },
+      {
+        "name": "light-dark-system-theme-text-and-focus-contrast",
+        "status": "pass"
+      }
+    ],
+    "inputs_before": {
+      "src/primitives.tsx": "2f75ffd1ec0a16dc041b9eb74bb7fe37c8ee4cf6ccbb4f180332cbc3dc80a7ce",
+      "src/Icon.tsx": "dd32e23e59619ddbd0c9f2c111f84f273b9040fc16eb4e49ba8161a228ef5ab7",
+      "src/controls.css": "a56ddea5a06513bc3d05bd9ca6a668c235c6a604bb8a2271552218fea3e3935d",
+      "src/style.css": "51894bc3bda7fc5c70517944a35f40d629ccc9540c3ff08c1555b457ecc28e34",
+      "src/work.css": "92cc3442d5dfdffce320e721feb0018a45c1078bac4510b1e9627123c3a1ac41",
+      "src/DocumentBody.tsx": "1d918f1c059b36140e2fff84903a33c098408695a6c1a3623576b383cece5484",
+      "src/Markdown.tsx": "9829f171225d31bbd59f2c7c11c1ba56a01ebdedc4893e4454c1ae06cc242565",
+      "src/markdown.css": "a03ad8dbcadf396d64301166d7cda0bd249876d7ba7f17fa8aa5523cbdc870ce",
+      "src/ResourceLink.tsx": "ca8efee035f001157bd23a85e6ec391301e985bd0dc5a8dba496e8ee0edecb4d",
+      "tests/interaction-reference.tsx": "795089f84c4b99a2af5d076d9a002721a1217631d424d625f06eeaf3087a846c",
+      "tests/interaction-reference.css": "daee1c79e59cb8b471232d861ec23e1fb8472d9de59b61e30c7b533eedbe522f",
+      "tests/interaction-reference.mjs": "3d0f070c4dd70d86e07ef1e026fa5ba255eee714472253378136147cfdb98dd3",
+      "package-lock.json": "b4d2ced8e19aa8b7cf9eaab75b906e867132321b97937b534e5810c152dbec98"
+    },
+    "browser": "155.0",
+    "theme_contrast": {
+      "light": {
+        "--ink": 16.169473064020004,
+        "--muted": 5.8392976575212385,
+        "--focus": 6.311768492851934,
+        "--danger": 8.996447091573005,
+        "--success": 7.779368305383217
+      },
+      "dark": {
+        "--ink": 13.176933625170934,
+        "--muted": 7.930508647949976,
+        "--focus": 6.810124228420795,
+        "--danger": 9.17036605962667,
+        "--success": 9.125853007782032
+      },
+      "system": {
+        "--ink": 13.176933625170934,
+        "--muted": 7.930508647949976,
+        "--focus": 6.810124228420795,
+        "--danger": 9.17036605962667,
+        "--success": 9.125853007782032
+      }
+    },
+    "inputs_after": {
+      "src/primitives.tsx": "2f75ffd1ec0a16dc041b9eb74bb7fe37c8ee4cf6ccbb4f180332cbc3dc80a7ce",
+      "src/Icon.tsx": "dd32e23e59619ddbd0c9f2c111f84f273b9040fc16eb4e49ba8161a228ef5ab7",
+      "src/controls.css": "a56ddea5a06513bc3d05bd9ca6a668c235c6a604bb8a2271552218fea3e3935d",
+      "src/style.css": "51894bc3bda7fc5c70517944a35f40d629ccc9540c3ff08c1555b457ecc28e34",
+      "src/work.css": "92cc3442d5dfdffce320e721feb0018a45c1078bac4510b1e9627123c3a1ac41",
+      "src/DocumentBody.tsx": "1d918f1c059b36140e2fff84903a33c098408695a6c1a3623576b383cece5484",
+      "src/Markdown.tsx": "9829f171225d31bbd59f2c7c11c1ba56a01ebdedc4893e4454c1ae06cc242565",
+      "src/markdown.css": "a03ad8dbcadf396d64301166d7cda0bd249876d7ba7f17fa8aa5523cbdc870ce",
+      "src/ResourceLink.tsx": "ca8efee035f001157bd23a85e6ec391301e985bd0dc5a8dba496e8ee0edecb4d",
+      "tests/interaction-reference.tsx": "795089f84c4b99a2af5d076d9a002721a1217631d424d625f06eeaf3087a846c",
+      "tests/interaction-reference.css": "daee1c79e59cb8b471232d861ec23e1fb8472d9de59b61e30c7b533eedbe522f",
+      "tests/interaction-reference.mjs": "3d0f070c4dd70d86e07ef1e026fa5ba255eee714472253378136147cfdb98dd3",
+      "package-lock.json": "b4d2ced8e19aa8b7cf9eaab75b906e867132321b97937b534e5810c152dbec98"
+    }
+  },
+  "process": {
+    "unit": "stead-browser-f4ab43d68962a0c78d8bf28402855555.service",
+    "status": "pass",
+    "cleanup": {
+      "process_reaped": true,
+      "cgroup": "/user.slice/user-1000.slice/user@1000.service/app.slice/stead-browser-f4ab43d68962a0c78d8bf28402855555.service",
+      "empty": true,
+      "state": "inactive"
+    },
+    "headed": false,
+    "proof": {
+      "pid": 38997,
+      "cgroup": "/user.slice/user-1000.slice/user@1000.service/app.slice/stead-browser-f4ab43d68962a0c78d8bf28402855555.service",
+      "cpu_max": "2500 10000",
+      "cpu_affinity": [
+        19
+      ]
+    },
+    "exit_code": 0
+  },
+  "resources": {
+    "output": "/home/skilgore/stead-urbit/.runtime/frontend-reference-owner-1794760280563671567",
+    "peak_c": 61.0,
+    "duration_seconds": 56.7
+  },
+  "retained_screenshots": {
+    ".runtime/interaction-reference-Lpp2eP/crowded-1440.png": {
+      "sha256": "b31cea14537af9949df5da843dfe5b9ada4e5f87a92df907ea0846ca686eb651",
+      "bytes": 361125
+    },
+    ".runtime/interaction-reference-Lpp2eP/crowded-320.png": {
+      "sha256": "2c3c7b7798b824124b37c42bb1b1ee6d259dedda48d8858238242a260120167f",
+      "bytes": 258354
+    },
+    ".runtime/interaction-reference-Lpp2eP/crowded-390.png": {
+      "sha256": "49ec0c628305d94f7e6788c5a580f69e9d80f7ee5479843c3894967596deeea0",
+      "bytes": 257298
+    },
+    ".runtime/interaction-reference-Lpp2eP/dialog-320.png": {
+      "sha256": "60b970fa472f958fd6f659821b7337e775d17e91585a8d80844a160bed5969eb",
+      "bytes": 187321
+    },
+    ".runtime/interaction-reference-Lpp2eP/empty-1440.png": {
+      "sha256": "631b5e78d15f325aa0dabcf259fe1b68d17777fb319aa140f6391c8a01bc4046",
+      "bytes": 212320
+    },
+    ".runtime/interaction-reference-Lpp2eP/empty-320.png": {
+      "sha256": "00006afce6af9e83f115af7c2eee0586ecd9dc806def7540afe02851a1d8470d",
+      "bytes": 216868
+    },
+    ".runtime/interaction-reference-Lpp2eP/empty-390.png": {
+      "sha256": "8ce18fda1dda07815b7ca6273f66acb22a001cd256d8649c952eef41ccd4f179",
+      "bytes": 215137
+    },
+    ".runtime/interaction-reference-Lpp2eP/normal-1440.png": {
+      "sha256": "174e211eddd117d0e97bf35f424d43b9edaacb6e78777b304358524b16e2eecd",
+      "bytes": 266687
+    },
+    ".runtime/interaction-reference-Lpp2eP/normal-320.png": {
+      "sha256": "ff9b15fdbcbdf89059598cbd250a827c1c25d29d33bb2c046bc38213d479037b",
+      "bytes": 253244
+    },
+    ".runtime/interaction-reference-Lpp2eP/normal-390.png": {
+      "sha256": "138b420f9ecdd8f1a5c550b2edbcbec66fb98d85548e44bf97467dcc7ea2fa41",
+      "bytes": 252156
+    },
+    ".runtime/interaction-reference-Lpp2eP/theme-dark.png": {
+      "sha256": "7d4a71db02c26fd23715f85ac0cd0ec5eda75a7acd8540ecb94ba8f3ef45f24f",
+      "bytes": 268471
+    },
+    ".runtime/interaction-reference-Lpp2eP/theme-light.png": {
+      "sha256": "174e211eddd117d0e97bf35f424d43b9edaacb6e78777b304358524b16e2eecd",
+      "bytes": 266687
+    },
+    ".runtime/interaction-reference-Lpp2eP/theme-system.png": {
+      "sha256": "7d4a71db02c26fd23715f85ac0cd0ec5eda75a7acd8540ecb94ba8f3ef45f24f",
+      "bytes": 268471
+    },
+    ".runtime/interaction-reference-Lpp2eP/zoom-200-percent.png": {
+      "sha256": "94ca3a07ede6fb3be2a2bfeccc7be96169338c1254fb0bfded02ccf232be3afd",
+      "bytes": 572156
+    }
+  },
+  "icon_source": {
+    "repository": "https://github.com/lucide-icons/lucide",
+    "commit": "55782beff3a0133df79c417eb68f96e8f19e2404",
+    "license": "ISC with MIT Feather notices",
+    "files": {
+      "LICENSE": {
+        "sha256": "b495047bd93a9b06913511076f504daba17d5bbeb3e0650f3bb53a4220329c57",
+        "git_blob": "718bb3f0e44153809972abed31839375804bf652",
+        "bytes": 3208,
+        "url": "https://github.com/lucide-icons/lucide/blob/55782beff3a0133df79c417eb68f96e8f19e2404/LICENSE"
+      },
+      "icons/chevron-down.svg": {
+        "sha256": "66ea878e72ed3488bb3b464c39dfdccee8d1f78e560dccea40e5e12da0e87e87",
+        "git_blob": "e70d30b88399a721cd5d20d0d26756608cf8c42b",
+        "bytes": 236,
+        "url": "https://github.com/lucide-icons/lucide/blob/55782beff3a0133df79c417eb68f96e8f19e2404/icons/chevron-down.svg"
+      },
+      "icons/check.svg": {
+        "sha256": "7f33acc9a77a61659531044525fc008edebe215bf4dcf1c789c8674ad3277db0",
+        "git_blob": "5abe1527434e7b251bde0661f99af96178976d8c",
+        "bytes": 239,
+        "url": "https://github.com/lucide-icons/lucide/blob/55782beff3a0133df79c417eb68f96e8f19e2404/icons/check.svg"
+      },
+      "icons/circle.svg": {
+        "sha256": "3a991bd47beaf9874fba6fdf87bbba442970a89b5e6aa391558bc8b0a00a0513",
+        "git_blob": "1717bb4ba7381455f5c85e69ac75c182c34ba1c9",
+        "bytes": 244,
+        "url": "https://github.com/lucide-icons/lucide/blob/55782beff3a0133df79c417eb68f96e8f19e2404/icons/circle.svg"
+      },
+      "icons/circle-exclamation-point.svg": {
+        "sha256": "ce3e98b7a03b78c0071131df42466e4e1ff5187fccad30e739ec9ce951cf685a",
+        "git_blob": "578d25c022d9dd30b851d4ad72d9ec7640408a21",
+        "bytes": 332,
+        "url": "https://github.com/lucide-icons/lucide/blob/55782beff3a0133df79c417eb68f96e8f19e2404/icons/circle-exclamation-point.svg"
+      },
+      "icons/ellipsis.svg": {
+        "sha256": "4f495cc72013ffdfec677f03b33a150f7b4dd741979283fd6853a09024bca112",
+        "git_blob": "68456c39be516d1d14aee329ca3b0056ba84d3c5",
+        "bytes": 312,
+        "url": "https://github.com/lucide-icons/lucide/blob/55782beff3a0133df79c417eb68f96e8f19e2404/icons/ellipsis.svg"
+      },
+      "icons/plus.svg": {
+        "sha256": "7f6af73bf1ff6c4bca3f18351c8d1bdec6749c0c2530c4de5da85d520c21df17",
+        "git_blob": "41f92bb93eb6626368d71c9884127bbcf7d3ccdf",
+        "bytes": 256,
+        "url": "https://github.com/lucide-icons/lucide/blob/55782beff3a0133df79c417eb68f96e8f19e2404/icons/plus.svg"
+      },
+      "icons/x.svg": {
+        "sha256": "4a9cdab38fbb96162e7dace28e33f4ca0e49d8963a6162abc3d4691b7d675117",
+        "git_blob": "e31794349d3eecea1b3ae8e974b68bb8f4becda7",
+        "bytes": 260,
+        "url": "https://github.com/lucide-icons/lucide/blob/55782beff3a0133df79c417eb68f96e8f19e2404/icons/x.svg"
+      },
+      "icons/search.svg": {
+        "sha256": "283d371c2e433817bb9c0c8310caa6c77fa4177c0f4f1168d9c83b97af7389dc",
+        "git_blob": "03e442a5440cff92c219fe3a3c1f2b0788d30701",
+        "bytes": 275,
+        "url": "https://github.com/lucide-icons/lucide/blob/55782beff3a0133df79c417eb68f96e8f19e2404/icons/search.svg"
+      }
+    }
+  },
+  "rerun": "Use web/app/browser_process.py owned runner with pinnedNode and PLAYWRIGHT_BROWSERS_PATH=.runtime/playwright to run web/app/tests/interaction-reference.mjs; max25percent oneCPU,240second deadline,75C admission/90C stop."
+}

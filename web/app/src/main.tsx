@@ -19,6 +19,7 @@ import { UrbitSignIn } from './UrbitSignIn';
 import './style.css';
 import { DocumentBody } from './DocumentBody';
 import {eventPresentation} from './eventPresentation';
+import {WorkspaceView} from './WorkspaceView';
 const client = new HomeClient();
 const blankQuery = (kind: ViewKind, project_id = '', container_id = '', resource_id = '', search = '', cursor = ''): Query =>
   ({ kind, project_id, container_id, resource_id, search, cursor });
@@ -78,6 +79,10 @@ function App() {
   const [challenge, setChallenge] = useState<Fields | null>(null);
   const [projects, setProjects] = useState<Row[]>([]);
   const [project, setProject] = useState<Row | null>(null);
+  const [workspaceView,setWorkspaceView]=useState<'my-work'|'search'|null>(null);
+  const [workspaceSupported,setWorkspaceSupported]=useState(false);
+  const workspaceAvailable=useRef(false);
+  const [workspaceSearch,setWorkspaceSearch]=useState({draft:'',term:''});
   const [containers, setContainers] = useState<Row[]>([]);
   const [container, setContainer] = useState<Row | null>(null);
   const [tab, setTab] = useState<ViewKind>('project');
@@ -150,7 +155,7 @@ function App() {
     quickActionFocus.current = null;
     routedIdentity.current = undefined;
     setLoading(false);
-    setProjects([]); setProject(null); setContainers([]); setContainer(null); setRows([]);
+    setProjects([]); setProject(null); setWorkspaceView(null); setWorkspaceSearch({draft:'',term:''}); setContainers([]); setContainer(null); setRows([]);
     setRepository(null); setShowRepository(false); clearCodeSelection();
     setWorkFiltersOpen(false); setWorkFilters(initialWorkFilters); setWorkRoster({status: 'loading'});
     setCommentDrafts({}); navigationMemory.current.clear(); pendingNavigation.current=null;
@@ -200,8 +205,10 @@ function App() {
     let active = true;
     void (async () => {
       try {
-        await client.capabilities();
+        const capabilities=await client.capabilities();
         if (!active) return;
+        workspaceAvailable.current=capabilities.workspace_queries==='stead.workspace-queries/1';
+        setWorkspaceSupported(workspaceAvailable.current);
         const person = await client.resume();
         if (active) await identify(person);
       }
@@ -249,7 +256,8 @@ function App() {
     } finally { actionBusy.current = false; setBusy(false); }
   }
   async function retryConnection() {
-    await client.capabilities();
+    const capabilities=await client.capabilities();
+    workspaceAvailable.current=capabilities.workspace_queries==='stead.workspace-queries/1';setWorkspaceSupported(workspaceAvailable.current);
     try { await identify(await client.resume()); }
     catch (failure) {
       if (!(failure instanceof HomeError) || failure.code !== 'session_required') throw failure;
@@ -466,7 +474,7 @@ function App() {
       setRepository(null);
       setWorkFiltersOpen(false); setWorkFilters(initialWorkFilters);
     } else if (row.project_id) void loadRepository(row.project_id);
-    setShowRepository(false);
+    setShowRepository(false);setWorkspaceView(null);
     clearCodeSelection();
     setWork(null); setForm(''); setTargets([]); setConfirmation(null); setCurrentVersion(null); setProject(row); setContainer(null); setEditor(null); setRows([]); setContainers([]); setTab(nextTab); setCursor('');
     reloadScope();
@@ -478,7 +486,9 @@ function App() {
   }
   function rememberNavigation() {
     if (project?.project_id && tab === 'work') navigationMemory.current.set({kind:'work',project:project.project_id},
-      {filters:workFilters,scroll:window.scrollY,selection:work?.resource_id});
+      {filters:workFilters,scroll:window.scrollY,selection:work?.resource_id??navigationMemory.current.get({kind:'work',project:project.project_id})?.selection});
+    if(workspaceView)navigationMemory.current.set({kind:'workspace',view:workspaceView},
+      {filters:{title:workspaceSearch.term,status:'',assignee:''},scroll:window.scrollY,selection:navigationMemory.current.get({kind:'workspace',view:workspaceView})?.selection});
   }
   function syncResourceAddress(route?: ProductRoute, replace = false) {
     rememberNavigation();
@@ -491,10 +501,39 @@ function App() {
   function syncWorkAddress(projectId?: string, item?: string, replace = false) {
     syncResourceAddress(projectId ? {kind:'work',project:projectId,item} : undefined,replace);
   }
+  function enterWorkspace(view:'my-work'|'search'|null) {
+    activeQuery.current++;repositoryGeneration.current++;pendingNavigation.current=null;displayedSnapshot.current=null;
+    setProject(null);setWorkspaceView(view);setRepository(null);setShowRepository(false);clearCodeSelection();setLoading(false);
+    setRows([]);setContainers([]);setContainer(null);setWork(null);setEditor(null);setLinkedPage(null);
+    setCurrentVersion(null);setConfirmation(null);setCursor('');setTab('project');
+  }
+  function openWorkspace(view:'my-work'|'search') {
+    if(busy||editor?.dirty||pending||form){setError('Finish or discard the current draft before navigating.');return;}
+    syncResourceAddress({kind:'workspace',view});enterWorkspace(view);
+  }
+  async function openWorkspaceResource(row:Row) {
+    if(busy||pending||form||editor?.dirty)return;
+    const route:ProductRoute=row.kind==='work'?{kind:'work',project:row.project_id!,item:row.resource_id!}
+      :{kind:'doc',project:row.project_id!,collection:row.container_id!,document:row.resource_id!};
+    const available=await client.query(blankQuery('projects'));
+    if(available.cursor)throw new HomeError('unsupported_version');
+    const allowed=Object.values(available.rows);
+    if(!allowed.some(project=>project.project_id===row.project_id))throw new HomeError('denied_or_not_found');
+    setProjects(allowed);
+    syncResourceAddress(route);
+    if(workspaceView){
+      const previous=navigationMemory.current.get({kind:'workspace',view:workspaceView});
+      if(previous)navigationMemory.current.set({kind:'workspace',view:workspaceView},{...previous,selection:encodeProductRoute(route)});
+    }
+    await restoreProductAddress(route,allowed);
+  }
   async function restoreProductAddress(address: ProductRoute, allowed=projects) {
     pendingNavigation.current=null;
     if(address.kind==='work')return restoreWorkAddress({project:address.project,item:address.item},allowed);
-    if(address.kind==='workspace') { setError('This workspace view is not available on the current Home yet.');return; }
+    if(address.kind==='workspace') {
+      if(address.view==='inbox'){setError('This Home does not yet support an actionable Inbox.');return;}
+      enterWorkspace(address.view);return;
+    }
     const requestedHash=location.hash;
     const row=allowed.find(item=>item.project_id===address.project);
     if(!row){setError('This link is unavailable or you do not have access.');return;}
@@ -569,10 +608,7 @@ function App() {
       lastAddress.current = address ? location.hash : '';
       if (address) void action(() => restoreProductAddress(address), explainConnection);
       else {
-        activeQuery.current++;repositoryGeneration.current++;pendingNavigation.current=null;displayedSnapshot.current=null;
-        setProject(null);setRepository(null);setShowRepository(false);clearCodeSelection();setLoading(false);
-        setRows([]);setContainers([]);setContainer(null);setWork(null);setEditor(null);setLinkedPage(null);
-        setCurrentVersion(null);setConfirmation(null);setCursor('');setTab('project');
+        enterWorkspace(null);
         if(location.hash)setError('This link is unavailable. Choose a project to continue.');
       }
     }
@@ -1063,11 +1099,18 @@ function App() {
           }, explainConnection);
         }}/>}
       {identity && <div className="workspace">
-        <aside className="sidebar"><div className="space-label"><span className="space-mark" aria-hidden="true">~</span><div>Workspace{identity.home && <small>{identity.home}</small>}</div></div><h2 className="rail-label">Projects</h2>{projects.length === 0 && <p className="muted">No projects are shared with you yet.</p>}<nav aria-label="Projects">{projects.map(row => <button disabled={busy} key={row.project_id} aria-current={project?.project_id === row.project_id ? 'page' : undefined} onClick={() => void action(() => openProject(row))}><span className="project-glyph" aria-hidden="true">◇</span><span className="project-name"><span className="project-key">{row.project_key}</span>{row.title}</span></button>)}</nav>{identity.can_create === 'yes' && <Button variant="quiet" disabled={busy || !!pending || !!form || !!editor?.dirty} onClick={() => { setEditor(null); setWork(null); setCurrentVersion(null); setForm('project'); }}>＋ New project</Button>}<p className="sidebar-note">Only projects explicitly shared with you appear here.</p></aside>
+        <aside className="sidebar"><div className="space-label"><span className="space-mark" aria-hidden="true">~</span><div>Workspace{identity.home && <small>{identity.home}</small>}</div></div>{workspaceSupported&&<nav aria-label="Workspace"><button type="button" disabled={workActionsLocked} aria-current={workspaceView==='my-work'?'page':undefined} onClick={()=>openWorkspace('my-work')}>My work</button><button type="button" disabled={workActionsLocked} aria-current={workspaceView==='search'?'page':undefined} onClick={()=>openWorkspace('search')}>Search</button></nav>}<h2 className="rail-label">Projects</h2>{projects.length === 0 && <p className="muted">No projects are shared with you yet.</p>}<nav aria-label="Projects">{projects.map(row => <button disabled={busy} key={row.project_id} aria-current={project?.project_id === row.project_id ? 'page' : undefined} onClick={() => void action(() => openProject(row))}><span className="project-glyph" aria-hidden="true">◇</span><span className="project-name"><span className="project-key">{row.project_key}</span>{row.title}</span></button>)}</nav>{identity.can_create === 'yes' && <Button variant="quiet" disabled={busy || !!pending || !!form || !!editor?.dirty} onClick={() => { setEditor(null); setWork(null); setCurrentVersion(null); setForm('project'); }}>＋ New project</Button>}<p className="sidebar-note">Only projects explicitly shared with you appear here.</p></aside>
         <section className="content" id="project-content" data-live-updates={updatesConnected ? 'connected' : 'unavailable'}>
           {pending && <Surface className="pending"><h2>Save awaiting confirmation</h2><p>Keep this tab open. Retrying uses the same request ID and cannot create a second accepted change.</p>{pending.operation === 'project.create' && <p>Use Retry this request to confirm a new project. Receipt lookup needs access to an existing project.</p>}<div className="actions">{pending.operation !== 'project.create' && <Button disabled={busy} onClick={() => void action(checkReceipt)}>Check receipt</Button>}<Button disabled={busy} onClick={() => void action(() => save(pending))}>Retry this request</Button></div></Surface>}
           {discard && <Surface className="confirmation" role="alertdialog" aria-labelledby="discard-title" aria-describedby="discard-description"><h2 id="discard-title" ref={feedbackHeading} tabIndex={-1}>Discard unsaved changes?</h2><p id="discard-description">Your local edits will be removed. Your last saved version stays at home.</p><div className="actions"><Button variant="danger" disabled={busy || !!pending} onClick={() => closeDraft(discard)}>Discard changes</Button><Button disabled={busy} onClick={() => { setDiscard(null); discardTrigger.current?.focus(); }}>Keep editing</Button></div></Surface>}
-          {!project && <div className="welcome"><p className="eyebrow">START WITH WHAT MATTERS</p><h1 ref={heading} tabIndex={-1}>A clear place for your work.</h1><p>Choose a project to see its work and knowledge.</p></div>}
+          {workspaceView && (workspaceSupported ? <WorkspaceView key={identity.session_audit_id}
+            client={client} view={workspaceView==='search'?'workspace-search':'my-work'} search={workspaceSearch}
+            onSearchChange={setWorkspaceSearch} sessionKey={identity.session_audit_id!} locked={workActionsLocked}
+            openingWatchRef={openingWatch} restoreNavigation={navigationMemory.current.get({kind:'workspace',view:workspaceView})}
+            onOpen={row=>void action(()=>openWorkspaceResource(row),explainConnection)}
+            onError={failure=>{if(failure instanceof HomeError&&failure.code==='denied_or_not_found')clearViews();setError(explainConnection(failure));}}/>
+            : <EmptyState title="Workspace views need a newer Home" description="Choose a project to keep working. This Home does not advertise workspace queries."/>)}
+          {!project && !workspaceView && <div className="welcome"><p className="eyebrow">START WITH WHAT MATTERS</p><h1 ref={heading} tabIndex={-1}>A clear place for your work.</h1><p>Choose a project to see its work and knowledge.</p></div>}
           {project && <><div className="project-heading"><div><p className="eyebrow">Projects <span aria-hidden="true">/</span> {project.project_key}</p><h1 ref={heading} tabIndex={-1}>{project.title}</h1></div><span className="role-badge">{project.role}</span></div>
           <nav className="tabs" aria-label="Project views">{([['project','Overview'],['work','Work'],['documents','Docs']] as const).map(([kind,label]) => <Button disabled={busy} key={kind} variant={!showRepository && tab === kind ? 'primary' : 'quiet'} aria-current={!showRepository && tab === kind ? 'page' : undefined} onClick={() => selectProjectTab(kind)}>{label}</Button>)}
           {(repository?.status === 'ready' || externalRepository) && <Button disabled={busy || !!editor?.dirty || !!pending || !!form}

@@ -112,7 +112,8 @@ This is the baseline manual proposal workflow, not automatic delegation or
 the planned no-Code run experience.
 
 In a project with inline Code, open a Work item as a maintainer. Choose
-**Delegate to an agent**, enter the agent's own Urbit ID, choose the target
+**Delegate to an agent** (renamed **Grant agent proposal access** in the
+implementation candidate), enter the agent's own Urbit ID, choose the target
 branch, and set an expiration. The member must already have project access.
 The human assignee stays responsible for the ticket. Home shows proposal access
 and the proposals submitted using it.
@@ -129,11 +130,29 @@ Give the worker a disposable checkout of the authorized repository. For a
 first task, ask it to add a README example and run the project's checks. Have
 an authorized Git writer stage the resulting commit on a feature branch, then
 give the agent the exact original target and staged commit IDs. Run the same
-command with `--base BASE --head HEAD`. It rechecks the assignment and Work
-revision, submits under the worker's identity, and confirms the exact proposal
+command with `--base BASE --head HEAD`. It rechecks current delegation and the exact Work pin, submits under the worker's identity, and confirms the exact proposal
 through Home. A retry with the same inputs can recover the proposal. The ticket
 links the submitted revision for independent review.
 
 This workflow hands off one task at a time to an external worker. Automatic
 worker dispatch, execution progress, and the external Git profile's delegation,
 build and release steps are separate unfinished paths.
+
+### Versioned brief compatibility in the implementation candidate
+
+The single-Work read can advertise `execution_contract_protocol` equal to
+`stead.work-contract/1` with a complete execution revision/digest pair. The
+candidate browser then emits `stead.agent-brief/2`; a partial, malformed or
+unknown pin is rejected rather than silently downgraded. An older Home without
+these fields continues to produce brief/1, retaining its strict aggregate
+`work_revision` comparison. The brief link always names the canonical scoped
+Work resource, independent of the current browser view. Copying it does not
+start a worker.
+
+The helper accepts both exact shapes. A brief/2 goal is unchanged by ordinary
+comments, status, priority, type or assignment edits, while exact title or
+description edits (including editing and reverting) advance the pin. Current
+membership/delegation/target checks still apply. This preflight comparison is
+not atomic with native Code submission; T14 must close that race before claiming
+stale-contract publication is fenced at final authority. Qualification status
+is recorded in the [capability matrix](CAPABILITY_MATRIX.md).

@@ -1,0 +1,554 @@
+{
+  "recorded_at": "2026-11-15T16:53:05.358987+00:00",
+  "classification": "source-and-real-browser-synthetic-followup",
+  "qualifies_phase": false,
+  "claim": "Selected current-source cases passed. Earlier source passed21cases before an outdated visible-list expectation stopped its full run. This record is not a full-current-source browser pass or native qualification.",
+  "typescript": {
+    "status": "pass",
+    "runtime": "Node24.21.0",
+    "command": "tsc --noEmit --project web/app",
+    "resource_limit": "25percent oneCPU"
+  },
+  "unit_tests": {
+    "status": "pass",
+    "passed": 61,
+    "failed": 0,
+    "runtime": "Node24.21.0",
+    "log": ".runtime/product-unit-20261115.log",
+    "sha256": "127b585731134bead629ad8bb3ab5229fc6f32e8f1f6cc3ed3413bdabf3ebc64",
+    "resource_limit": "25percent oneCPU"
+  },
+  "older_partial_rendered": {
+    "report": {
+      "classification": "real-browser-with-mocked-home",
+      "node": "v24.21.0",
+      "browser": "155.0",
+      "checks": [
+        {
+          "name": "identity-entry-accepts-optional-tilde-and-rejects-malformed-input",
+          "passed": true
+        },
+        {
+          "name": "unreachable-boot-retries-in-place-without-reloading-the-shell",
+          "passed": true
+        },
+        {
+          "name": "home-navigation-keeps-shell-and-guards-unsaved-work-while-disconnected",
+          "passed": true
+        },
+        {
+          "name": "code-survives-reopening-project",
+          "passed": true
+        },
+        {
+          "name": "code-discovers-staged-snapshot-without-reloading",
+          "passed": true
+        },
+        {
+          "name": "code-browses-accepted-branches-and-tags",
+          "passed": true
+        },
+        {
+          "name": "code-browses-snapshot-files-and-fences-ref-switches",
+          "passed": true
+        },
+        {
+          "name": "code-development-work-branch-and-review",
+          "passed": true
+        },
+        {
+          "name": "code-proposal-form-and-merge-retry-survive-view-change",
+          "passed": true
+        },
+        {
+          "name": "code-external-review-and-signed-merge",
+          "passed": true
+        },
+        {
+          "name": "authentication-reuses-validated-identity-and-opens-before-one-snapshot",
+          "passed": true
+        },
+        {
+          "name": "saved-snapshot-coalesces-own-invalidation-but-keeps-remote-refresh-and-revocation",
+          "passed": true
+        },
+        {
+          "name": "dense-markdown-preview-keeps-full-inert-text-and-bounded-dom",
+          "passed": true
+        },
+        {
+          "name": "typing-search-keeps-current-watch-until-explicit-submit",
+          "passed": true
+        },
+        {
+          "name": "selected-tab-and-refresh-each-open-before-one-snapshot",
+          "passed": true
+        },
+        {
+          "name": "rapid-scope-changes-retire-one-delayed-open-before-latest-snapshot",
+          "passed": true
+        },
+        {
+          "name": "401-during-query-restores-usable-sign-in",
+          "passed": true
+        },
+        {
+          "name": "uncertain-resume-preserves-dirty-work-form",
+          "passed": true
+        },
+        {
+          "name": "uncertain-resume-preserves-original-pending-receipt",
+          "passed": true
+        },
+        {
+          "name": "refresh-adopts-current-project-role-and-authority",
+          "passed": true
+        },
+        {
+          "name": "activity-keeps-distinct-events-for-one-resource",
+          "passed": true
+        }
+      ],
+      "qualifies_phase": false,
+      "requested_case": "",
+      "inputs_before": {
+        "package-lock.json": "b4d2ced8e19aa8b7cf9eaab75b906e867132321b97937b534e5810c152dbec98",
+        "src/AcceptedTime.tsx": "83d8df590acb5108514495fc9e8e4249f479e6e2db9781af2d6d2a4bc221df71",
+        "src/CodeExternalReview.tsx": "a512db325a20764cac5050753988c0041d1386bcb9791d872502cb5607841d2b",
+        "src/CodePack.tsx": "d901e0e935f375f996859494e588f1b06603f2c6019bd744512562240dfc673e",
+        "src/CodeRepository.tsx": "3d056d626c503dfc0b5fcb074b437c4e4d8eb62838b7c4bb21261239e316e202",
+        "src/CodeReview.tsx": "d760007e241251dc794db407aafe6dc08a117af503fe1ae1f12d04f55bac8c67",
+        "src/DocumentBody.tsx": "1d918f1c059b36140e2fff84903a33c098408695a6c1a3623576b383cece5484",
+        "src/Icon.tsx": "dd32e23e59619ddbd0c9f2c111f84f273b9040fc16eb4e49ba8161a228ef5ab7",
+        "src/Markdown.tsx": "9829f171225d31bbd59f2c7c11c1ba56a01ebdedc4893e4454c1ae06cc242565",
+        "src/RepoBrowser.tsx": "51ce653df5419306c5b6d0e6a3a328e95fd07369e394c8f57a99b6d60f37ecfa",
+        "src/ResourceLink.tsx": "ca8efee035f001157bd23a85e6ec391301e985bd0dc5a8dba496e8ee0edecb4d",
+        "src/ReviewChanges.tsx": "269f811a888d1be0332a90df90a53e2a03303ef0d47bf9794cd3541ccab8c14c",
+        "src/SupportDetails.tsx": "4a55384f0ad0d31670a847e9737cbfdf86c15ba312c81851f855b577e9c6b07c",
+        "src/UrbitSignIn.tsx": "72a10d25c64f9b483c31e3762f78174f8db384bb00b4c2525f5f00b799e7d13f",
+        "src/WorkCodeLinks.tsx": "bbb9deb32d18d1fa8728bda7706616342d4d7faa9d50e078c1c9dee7e679277a",
+        "src/WorkContext.tsx": "07de60cf4059ff74bbd93acf6d54a6747f3dd9636fdbc721f184252f877766f4",
+        "src/WorkDelegations.tsx": "41dc91abf3a54dd8a18bc4cbcc0da2f3d4ab868335c5705723304e9fd756419b",
+        "src/WorkDevelopment.tsx": "f40f9d2377df19c2691a8df2522f9036cdd49e8a4ec038d1bbc72abe5495f5db",
+        "src/WorkDiscussion.tsx": "2877d381247d5f3a6023b3e923a398b371a74057c7bfc265d52b78c32d5a929f",
+        "src/WorkQuickActions.tsx": "2e1e2f756c04ab6238bb6b6927052d7a1db48be79af83da87bca5640d84ec67f",
+        "src/agentBrief.ts": "510556d42b3fa8abfc4b6c48cbf1648481ff24ccc2505388e8d3cd7105a8b2f6",
+        "src/api.ts": "9bb3291830bf7044702d6a2f9810c26272ca04dcc65b5de8e4fee9fd337f934c",
+        "src/assets.d.ts": "da5bf71d48cf909584a01c80b445f730507068f5b34c920f352e2bfcf0315e4c",
+        "src/controls.css": "a56ddea5a06513bc3d05bd9ca6a668c235c6a604bb8a2271552218fea3e3935d",
+        "src/eventPresentation.ts": "ff25a2cf8f9ae6669e2b3f17385d92e023ae71860b1fd6cfcfa6c870ed0b44c5",
+        "src/externalReview.ts": "db39a383ad6348ca442d13ec38def1fe115e903696ccb77b00d0705412ced382",
+        "src/identity.css": "c57c64f8602c21442586e8d02b74b740ee96d8ebf655595306149fc774cf9c96",
+        "src/identity.ts": "03ae5c121b8ecc3fd12f3dd4cf0d7756e8d58f81acb7c9ea34e7b04740402103",
+        "src/main.tsx": "cfa0a7e0533b1c3b67893daf223c86d2e5635270a57c5b9f73b049d3420f0917",
+        "src/markdown.css": "a03ad8dbcadf396d64301166d7cda0bd249876d7ba7f17fa8aa5523cbdc870ce",
+        "src/primitives.tsx": "2f75ffd1ec0a16dc041b9eb74bb7fe37c8ee4cf6ccbb4f180332cbc3dc80a7ce",
+        "src/productModel.ts": "be328c2430720be84e260decde60ea807ff61236c2f82baf6216b999b54be723",
+        "src/productRoutes.ts": "48afa5946212b05d3288c9f01ceb823b906768fb7f1119c82e7670226a709c10",
+        "src/protocol.ts": "a8dee5b65f79ffe052869f19e9b508f7abcb30149ac82eaa31a47223796003c7",
+        "src/repo-browser.css": "f4a5a7985e09ef0a5d379e178a0b71ca3823760d973186aaa2cd37dac553d594",
+        "src/repository.css": "dc25ca5b16e615712e6afb6640c5a0f67b2cb863f526436deefe304c9448efef",
+        "src/style.css": "c5821136e70b992864a5715a86385636be5c81f8f14ac50da1b0ad0bbeb6a554",
+        "src/support.ts": "811b4d5aa9dcb02e529fb7d7a386a585ab9269a9c3867ed573751b3b76f2b26c",
+        "src/urbit-sign-in.css": "3e88931a4f000927bfc49a43afa0138bebd3409b970a811902a3444d3f6b4330",
+        "src/work.css": "92cc3442d5dfdffce320e721feb0018a45c1078bac4510b1e9627123c3a1ac41",
+        "tests/rendered.mjs": "dd6b79e2cd00eb532d40673b80c7ec75a03285e681c520232e9a93f6796d704d"
+      },
+      "status": "fail",
+      "error": "AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:\n\n0 !== 1\n",
+      "inputs_after": {
+        "package-lock.json": "b4d2ced8e19aa8b7cf9eaab75b906e867132321b97937b534e5810c152dbec98",
+        "src/AcceptedTime.tsx": "83d8df590acb5108514495fc9e8e4249f479e6e2db9781af2d6d2a4bc221df71",
+        "src/CodeExternalReview.tsx": "a512db325a20764cac5050753988c0041d1386bcb9791d872502cb5607841d2b",
+        "src/CodePack.tsx": "d901e0e935f375f996859494e588f1b06603f2c6019bd744512562240dfc673e",
+        "src/CodeRepository.tsx": "3d056d626c503dfc0b5fcb074b437c4e4d8eb62838b7c4bb21261239e316e202",
+        "src/CodeReview.tsx": "d760007e241251dc794db407aafe6dc08a117af503fe1ae1f12d04f55bac8c67",
+        "src/DocumentBody.tsx": "1d918f1c059b36140e2fff84903a33c098408695a6c1a3623576b383cece5484",
+        "src/Icon.tsx": "dd32e23e59619ddbd0c9f2c111f84f273b9040fc16eb4e49ba8161a228ef5ab7",
+        "src/Markdown.tsx": "9829f171225d31bbd59f2c7c11c1ba56a01ebdedc4893e4454c1ae06cc242565",
+        "src/RepoBrowser.tsx": "51ce653df5419306c5b6d0e6a3a328e95fd07369e394c8f57a99b6d60f37ecfa",
+        "src/ResourceLink.tsx": "ca8efee035f001157bd23a85e6ec391301e985bd0dc5a8dba496e8ee0edecb4d",
+        "src/ReviewChanges.tsx": "269f811a888d1be0332a90df90a53e2a03303ef0d47bf9794cd3541ccab8c14c",
+        "src/SupportDetails.tsx": "4a55384f0ad0d31670a847e9737cbfdf86c15ba312c81851f855b577e9c6b07c",
+        "src/UrbitSignIn.tsx": "72a10d25c64f9b483c31e3762f78174f8db384bb00b4c2525f5f00b799e7d13f",
+        "src/WorkCodeLinks.tsx": "bbb9deb32d18d1fa8728bda7706616342d4d7faa9d50e078c1c9dee7e679277a",
+        "src/WorkContext.tsx": "07de60cf4059ff74bbd93acf6d54a6747f3dd9636fdbc721f184252f877766f4",
+        "src/WorkDelegations.tsx": "41dc91abf3a54dd8a18bc4cbcc0da2f3d4ab868335c5705723304e9fd756419b",
+        "src/WorkDevelopment.tsx": "f40f9d2377df19c2691a8df2522f9036cdd49e8a4ec038d1bbc72abe5495f5db",
+        "src/WorkDiscussion.tsx": "2877d381247d5f3a6023b3e923a398b371a74057c7bfc265d52b78c32d5a929f",
+        "src/WorkQuickActions.tsx": "2e1e2f756c04ab6238bb6b6927052d7a1db48be79af83da87bca5640d84ec67f",
+        "src/agentBrief.ts": "510556d42b3fa8abfc4b6c48cbf1648481ff24ccc2505388e8d3cd7105a8b2f6",
+        "src/api.ts": "9bb3291830bf7044702d6a2f9810c26272ca04dcc65b5de8e4fee9fd337f934c",
+        "src/assets.d.ts": "da5bf71d48cf909584a01c80b445f730507068f5b34c920f352e2bfcf0315e4c",
+        "src/controls.css": "a56ddea5a06513bc3d05bd9ca6a668c235c6a604bb8a2271552218fea3e3935d",
+        "src/eventPresentation.ts": "ff25a2cf8f9ae6669e2b3f17385d92e023ae71860b1fd6cfcfa6c870ed0b44c5",
+        "src/externalReview.ts": "db39a383ad6348ca442d13ec38def1fe115e903696ccb77b00d0705412ced382",
+        "src/identity.css": "c57c64f8602c21442586e8d02b74b740ee96d8ebf655595306149fc774cf9c96",
+        "src/identity.ts": "03ae5c121b8ecc3fd12f3dd4cf0d7756e8d58f81acb7c9ea34e7b04740402103",
+        "src/main.tsx": "cfa0a7e0533b1c3b67893daf223c86d2e5635270a57c5b9f73b049d3420f0917",
+        "src/markdown.css": "a03ad8dbcadf396d64301166d7cda0bd249876d7ba7f17fa8aa5523cbdc870ce",
+        "src/primitives.tsx": "2f75ffd1ec0a16dc041b9eb74bb7fe37c8ee4cf6ccbb4f180332cbc3dc80a7ce",
+        "src/productModel.ts": "be328c2430720be84e260decde60ea807ff61236c2f82baf6216b999b54be723",
+        "src/productRoutes.ts": "48afa5946212b05d3288c9f01ceb823b906768fb7f1119c82e7670226a709c10",
+        "src/protocol.ts": "a8dee5b65f79ffe052869f19e9b508f7abcb30149ac82eaa31a47223796003c7",
+        "src/repo-browser.css": "f4a5a7985e09ef0a5d379e178a0b71ca3823760d973186aaa2cd37dac553d594",
+        "src/repository.css": "dc25ca5b16e615712e6afb6640c5a0f67b2cb863f526436deefe304c9448efef",
+        "src/style.css": "c5821136e70b992864a5715a86385636be5c81f8f14ac50da1b0ad0bbeb6a554",
+        "src/support.ts": "811b4d5aa9dcb02e529fb7d7a386a585ab9269a9c3867ed573751b3b76f2b26c",
+        "src/urbit-sign-in.css": "3e88931a4f000927bfc49a43afa0138bebd3409b970a811902a3444d3f6b4330",
+        "src/work.css": "92cc3442d5dfdffce320e721feb0018a45c1078bac4510b1e9627123c3a1ac41",
+        "tests/rendered.mjs": "dd6b79e2cd00eb532d40673b80c7ec75a03285e681c520232e9a93f6796d704d"
+      }
+    },
+    "resources": {
+      "output": "/home/skilgore/stead-urbit/.runtime/product-render-full-owner-1794760764214560498",
+      "peak_c": 56.0,
+      "duration_seconds": 192.4
+    },
+    "process": {
+      "unit": "stead-browser-2b11cbf3fe2871d2ddb4ba82c6841441.service",
+      "status": "fail",
+      "cleanup": {
+        "process_reaped": true,
+        "cgroup": "/user.slice/user-1000.slice/user@1000.service/app.slice/stead-browser-2b11cbf3fe2871d2ddb4ba82c6841441.service",
+        "empty": true,
+        "state": "failed"
+      },
+      "headed": false,
+      "proof": {
+        "pid": 52875,
+        "cgroup": "/user.slice/user-1000.slice/user@1000.service/app.slice/stead-browser-2b11cbf3fe2871d2ddb4ba82c6841441.service",
+        "cpu_max": "2500 10000",
+        "cpu_affinity": [
+          19
+        ]
+      },
+      "exit_code": 1
+    }
+  },
+  "current_selected_rendered": {
+    "report": {
+      "classification": "real-browser-with-mocked-home",
+      "node": "v24.21.0",
+      "browser": "155.0",
+      "checks": [
+        {
+          "name": "activity-keeps-distinct-events-for-one-resource",
+          "passed": true
+        },
+        {
+          "name": "page-two-survives-foreground-actions-and-repeated-paginated-refresh",
+          "passed": true
+        },
+        {
+          "name": "updates-preserve-local-form-and-original-uncertain-save",
+          "passed": true
+        },
+        {
+          "name": "cancelled-quiet-refresh-does-not-leave-docs-loading",
+          "passed": true
+        },
+        {
+          "name": "revoked-update-scope-clears-protected-rendered-state",
+          "passed": true
+        },
+        {
+          "name": "document-page-two-survives-a-paginated-collection-selector",
+          "passed": true
+        },
+        {
+          "name": "repeated-confirmed-resume-retires-the-old-read-handles",
+          "passed": true
+        },
+        {
+          "name": "keyboard-controls-after-switching-between-two-user-pages",
+          "passed": true
+        },
+        {
+          "name": "first-project-draft-can-be-discarded-before-project-selection",
+          "passed": true
+        },
+        {
+          "name": "work-title-opens-reader-details-without-write-actions",
+          "passed": true
+        },
+        {
+          "name": "work-details-dirty-close-and-keyboard-secondary-delete",
+          "passed": true
+        },
+        {
+          "name": "work-inline-properties-and-project-assignment",
+          "passed": true
+        },
+        {
+          "name": "work-filter-keyboard-create-and-authorized-links",
+          "passed": true
+        },
+        {
+          "name": "work-context-links-docs-and-blockers-with-confirmed-removal",
+          "passed": true
+        },
+        {
+          "name": "code-linked-review-roundtrip-and-missing-work-without-signout",
+          "passed": true
+        },
+        {
+          "name": "work-discussion-retains-draft-and-posts-once",
+          "passed": true
+        },
+        {
+          "name": "code-work-agent-access-from-ticket-and-review-readback",
+          "passed": true
+        },
+        {
+          "name": "page-title-visibility-clean-close-and-confirmed-discard-responsive",
+          "passed": true
+        },
+        {
+          "name": "page-body-and-full-source-roundtrip-preserves-metadata-and-explicit-save",
+          "passed": true
+        },
+        {
+          "name": "routine-refresh-announcement-expires-without-clearing-save-evidence",
+          "passed": true
+        }
+      ],
+      "qualifies_phase": false,
+      "requested_case": "",
+      "requested_cases": [
+        "activity-keeps-distinct-events-for-one-resource",
+        "page-two-survives-foreground-actions-and-repeated-paginated-refresh",
+        "updates-preserve-local-form-and-original-uncertain-save",
+        "cancelled-quiet-refresh-does-not-leave-docs-loading",
+        "revoked-update-scope-clears-protected-rendered-state",
+        "document-page-two-survives-a-paginated-collection-selector",
+        "repeated-confirmed-resume-retires-the-old-read-handles",
+        "keyboard-controls-after-switching-between-two-user-pages",
+        "first-project-draft-can-be-discarded-before-project-selection",
+        "work-title-opens-reader-details-without-write-actions",
+        "work-details-dirty-close-and-keyboard-secondary-delete",
+        "work-inline-properties-and-project-assignment",
+        "work-filter-keyboard-create-and-authorized-links",
+        "work-context-links-docs-and-blockers-with-confirmed-removal",
+        "code-linked-review-roundtrip-and-missing-work-without-signout",
+        "work-discussion-retains-draft-and-posts-once",
+        "code-work-agent-access-from-ticket-and-review-readback",
+        "page-title-visibility-clean-close-and-confirmed-discard-responsive",
+        "page-body-and-full-source-roundtrip-preserves-metadata-and-explicit-save",
+        "routine-refresh-announcement-expires-without-clearing-save-evidence"
+      ],
+      "execution_scope": "selected-cases",
+      "inputs_before": {
+        "package-lock.json": "b4d2ced8e19aa8b7cf9eaab75b906e867132321b97937b534e5810c152dbec98",
+        "src/AcceptedTime.tsx": "83d8df590acb5108514495fc9e8e4249f479e6e2db9781af2d6d2a4bc221df71",
+        "src/CodeExternalReview.tsx": "a512db325a20764cac5050753988c0041d1386bcb9791d872502cb5607841d2b",
+        "src/CodePack.tsx": "d901e0e935f375f996859494e588f1b06603f2c6019bd744512562240dfc673e",
+        "src/CodeRepository.tsx": "3d056d626c503dfc0b5fcb074b437c4e4d8eb62838b7c4bb21261239e316e202",
+        "src/CodeReview.tsx": "d760007e241251dc794db407aafe6dc08a117af503fe1ae1f12d04f55bac8c67",
+        "src/DocumentBody.tsx": "d5155eb95c1d1597b067cb9f53fa14c50197adc4666472b376052a774ced8857",
+        "src/Icon.tsx": "dd32e23e59619ddbd0c9f2c111f84f273b9040fc16eb4e49ba8161a228ef5ab7",
+        "src/Markdown.tsx": "9829f171225d31bbd59f2c7c11c1ba56a01ebdedc4893e4454c1ae06cc242565",
+        "src/RepoBrowser.tsx": "51ce653df5419306c5b6d0e6a3a328e95fd07369e394c8f57a99b6d60f37ecfa",
+        "src/ResourceLink.tsx": "ca8efee035f001157bd23a85e6ec391301e985bd0dc5a8dba496e8ee0edecb4d",
+        "src/ReviewChanges.tsx": "269f811a888d1be0332a90df90a53e2a03303ef0d47bf9794cd3541ccab8c14c",
+        "src/SupportDetails.tsx": "4a55384f0ad0d31670a847e9737cbfdf86c15ba312c81851f855b577e9c6b07c",
+        "src/UrbitSignIn.tsx": "72a10d25c64f9b483c31e3762f78174f8db384bb00b4c2525f5f00b799e7d13f",
+        "src/WorkCodeLinks.tsx": "bbb9deb32d18d1fa8728bda7706616342d4d7faa9d50e078c1c9dee7e679277a",
+        "src/WorkContext.tsx": "07de60cf4059ff74bbd93acf6d54a6747f3dd9636fdbc721f184252f877766f4",
+        "src/WorkDelegations.tsx": "41dc91abf3a54dd8a18bc4cbcc0da2f3d4ab868335c5705723304e9fd756419b",
+        "src/WorkDevelopment.tsx": "f40f9d2377df19c2691a8df2522f9036cdd49e8a4ec038d1bbc72abe5495f5db",
+        "src/WorkDiscussion.tsx": "2877d381247d5f3a6023b3e923a398b371a74057c7bfc265d52b78c32d5a929f",
+        "src/WorkQuickActions.tsx": "2e1e2f756c04ab6238bb6b6927052d7a1db48be79af83da87bca5640d84ec67f",
+        "src/agentBrief.ts": "510556d42b3fa8abfc4b6c48cbf1648481ff24ccc2505388e8d3cd7105a8b2f6",
+        "src/api.ts": "9bb3291830bf7044702d6a2f9810c26272ca04dcc65b5de8e4fee9fd337f934c",
+        "src/assets.d.ts": "da5bf71d48cf909584a01c80b445f730507068f5b34c920f352e2bfcf0315e4c",
+        "src/controls.css": "a56ddea5a06513bc3d05bd9ca6a668c235c6a604bb8a2271552218fea3e3935d",
+        "src/documentFormatting.ts": "b7a7f013ed0051fde4d9cb59a7f4d8e4858863c7fdaabb359f794243fa69e3be",
+        "src/eventPresentation.ts": "ff25a2cf8f9ae6669e2b3f17385d92e023ae71860b1fd6cfcfa6c870ed0b44c5",
+        "src/externalReview.ts": "db39a383ad6348ca442d13ec38def1fe115e903696ccb77b00d0705412ced382",
+        "src/identity.css": "c57c64f8602c21442586e8d02b74b740ee96d8ebf655595306149fc774cf9c96",
+        "src/identity.ts": "03ae5c121b8ecc3fd12f3dd4cf0d7756e8d58f81acb7c9ea34e7b04740402103",
+        "src/main.tsx": "cfa0a7e0533b1c3b67893daf223c86d2e5635270a57c5b9f73b049d3420f0917",
+        "src/markdown.css": "0fdf1bbf42bf38abc270e184530aeec36917856d4a5d1329b7b989cd4e81e217",
+        "src/primitives.tsx": "2f75ffd1ec0a16dc041b9eb74bb7fe37c8ee4cf6ccbb4f180332cbc3dc80a7ce",
+        "src/productModel.ts": "be328c2430720be84e260decde60ea807ff61236c2f82baf6216b999b54be723",
+        "src/productRoutes.ts": "48afa5946212b05d3288c9f01ceb823b906768fb7f1119c82e7670226a709c10",
+        "src/protocol.ts": "a8dee5b65f79ffe052869f19e9b508f7abcb30149ac82eaa31a47223796003c7",
+        "src/repo-browser.css": "f4a5a7985e09ef0a5d379e178a0b71ca3823760d973186aaa2cd37dac553d594",
+        "src/repository.css": "dc25ca5b16e615712e6afb6640c5a0f67b2cb863f526436deefe304c9448efef",
+        "src/style.css": "8ef3db44d059dbb3adb462166b5f4b14af8cbe2ae3481af5e0b7ac2c10a5275c",
+        "src/support.ts": "811b4d5aa9dcb02e529fb7d7a386a585ab9269a9c3867ed573751b3b76f2b26c",
+        "src/urbit-sign-in.css": "3e88931a4f000927bfc49a43afa0138bebd3409b970a811902a3444d3f6b4330",
+        "src/work.css": "92cc3442d5dfdffce320e721feb0018a45c1078bac4510b1e9627123c3a1ac41",
+        "tests/rendered.mjs": "3756d6f7fec9070f8c84409cee5104c78fc1021bdb3be6d69116f5f13e84ce62"
+      },
+      "status": "pass",
+      "inputs_after": {
+        "package-lock.json": "b4d2ced8e19aa8b7cf9eaab75b906e867132321b97937b534e5810c152dbec98",
+        "src/AcceptedTime.tsx": "83d8df590acb5108514495fc9e8e4249f479e6e2db9781af2d6d2a4bc221df71",
+        "src/CodeExternalReview.tsx": "a512db325a20764cac5050753988c0041d1386bcb9791d872502cb5607841d2b",
+        "src/CodePack.tsx": "d901e0e935f375f996859494e588f1b06603f2c6019bd744512562240dfc673e",
+        "src/CodeRepository.tsx": "3d056d626c503dfc0b5fcb074b437c4e4d8eb62838b7c4bb21261239e316e202",
+        "src/CodeReview.tsx": "d760007e241251dc794db407aafe6dc08a117af503fe1ae1f12d04f55bac8c67",
+        "src/DocumentBody.tsx": "d5155eb95c1d1597b067cb9f53fa14c50197adc4666472b376052a774ced8857",
+        "src/Icon.tsx": "dd32e23e59619ddbd0c9f2c111f84f273b9040fc16eb4e49ba8161a228ef5ab7",
+        "src/Markdown.tsx": "9829f171225d31bbd59f2c7c11c1ba56a01ebdedc4893e4454c1ae06cc242565",
+        "src/RepoBrowser.tsx": "51ce653df5419306c5b6d0e6a3a328e95fd07369e394c8f57a99b6d60f37ecfa",
+        "src/ResourceLink.tsx": "ca8efee035f001157bd23a85e6ec391301e985bd0dc5a8dba496e8ee0edecb4d",
+        "src/ReviewChanges.tsx": "269f811a888d1be0332a90df90a53e2a03303ef0d47bf9794cd3541ccab8c14c",
+        "src/SupportDetails.tsx": "4a55384f0ad0d31670a847e9737cbfdf86c15ba312c81851f855b577e9c6b07c",
+        "src/UrbitSignIn.tsx": "72a10d25c64f9b483c31e3762f78174f8db384bb00b4c2525f5f00b799e7d13f",
+        "src/WorkCodeLinks.tsx": "bbb9deb32d18d1fa8728bda7706616342d4d7faa9d50e078c1c9dee7e679277a",
+        "src/WorkContext.tsx": "07de60cf4059ff74bbd93acf6d54a6747f3dd9636fdbc721f184252f877766f4",
+        "src/WorkDelegations.tsx": "41dc91abf3a54dd8a18bc4cbcc0da2f3d4ab868335c5705723304e9fd756419b",
+        "src/WorkDevelopment.tsx": "f40f9d2377df19c2691a8df2522f9036cdd49e8a4ec038d1bbc72abe5495f5db",
+        "src/WorkDiscussion.tsx": "2877d381247d5f3a6023b3e923a398b371a74057c7bfc265d52b78c32d5a929f",
+        "src/WorkQuickActions.tsx": "2e1e2f756c04ab6238bb6b6927052d7a1db48be79af83da87bca5640d84ec67f",
+        "src/agentBrief.ts": "510556d42b3fa8abfc4b6c48cbf1648481ff24ccc2505388e8d3cd7105a8b2f6",
+        "src/api.ts": "9bb3291830bf7044702d6a2f9810c26272ca04dcc65b5de8e4fee9fd337f934c",
+        "src/assets.d.ts": "da5bf71d48cf909584a01c80b445f730507068f5b34c920f352e2bfcf0315e4c",
+        "src/controls.css": "a56ddea5a06513bc3d05bd9ca6a668c235c6a604bb8a2271552218fea3e3935d",
+        "src/documentFormatting.ts": "b7a7f013ed0051fde4d9cb59a7f4d8e4858863c7fdaabb359f794243fa69e3be",
+        "src/eventPresentation.ts": "ff25a2cf8f9ae6669e2b3f17385d92e023ae71860b1fd6cfcfa6c870ed0b44c5",
+        "src/externalReview.ts": "db39a383ad6348ca442d13ec38def1fe115e903696ccb77b00d0705412ced382",
+        "src/identity.css": "c57c64f8602c21442586e8d02b74b740ee96d8ebf655595306149fc774cf9c96",
+        "src/identity.ts": "03ae5c121b8ecc3fd12f3dd4cf0d7756e8d58f81acb7c9ea34e7b04740402103",
+        "src/main.tsx": "cfa0a7e0533b1c3b67893daf223c86d2e5635270a57c5b9f73b049d3420f0917",
+        "src/markdown.css": "0fdf1bbf42bf38abc270e184530aeec36917856d4a5d1329b7b989cd4e81e217",
+        "src/primitives.tsx": "2f75ffd1ec0a16dc041b9eb74bb7fe37c8ee4cf6ccbb4f180332cbc3dc80a7ce",
+        "src/productModel.ts": "be328c2430720be84e260decde60ea807ff61236c2f82baf6216b999b54be723",
+        "src/productRoutes.ts": "48afa5946212b05d3288c9f01ceb823b906768fb7f1119c82e7670226a709c10",
+        "src/protocol.ts": "a8dee5b65f79ffe052869f19e9b508f7abcb30149ac82eaa31a47223796003c7",
+        "src/repo-browser.css": "f4a5a7985e09ef0a5d379e178a0b71ca3823760d973186aaa2cd37dac553d594",
+        "src/repository.css": "dc25ca5b16e615712e6afb6640c5a0f67b2cb863f526436deefe304c9448efef",
+        "src/style.css": "8ef3db44d059dbb3adb462166b5f4b14af8cbe2ae3481af5e0b7ac2c10a5275c",
+        "src/support.ts": "811b4d5aa9dcb02e529fb7d7a386a585ab9269a9c3867ed573751b3b76f2b26c",
+        "src/urbit-sign-in.css": "3e88931a4f000927bfc49a43afa0138bebd3409b970a811902a3444d3f6b4330",
+        "src/work.css": "92cc3442d5dfdffce320e721feb0018a45c1078bac4510b1e9627123c3a1ac41",
+        "tests/rendered.mjs": "3756d6f7fec9070f8c84409cee5104c78fc1021bdb3be6d69116f5f13e84ce62"
+      }
+    },
+    "resources": {
+      "output": "/home/skilgore/stead-urbit/.runtime/product-render-batch-owner-1794761286598364779",
+      "peak_c": 64.0,
+      "duration_seconds": 187.0
+    },
+    "process": {
+      "unit": "stead-browser-81c6a8b9a7df33ba031b011e3d2b510e.service",
+      "status": "pass",
+      "cleanup": {
+        "process_reaped": true,
+        "cgroup": "/user.slice/user-1000.slice/user@1000.service/app.slice/stead-browser-81c6a8b9a7df33ba031b011e3d2b510e.service",
+        "empty": true,
+        "state": "inactive"
+      },
+      "headed": false,
+      "proof": {
+        "pid": 67011,
+        "cgroup": "/user.slice/user-1000.slice/user@1000.service/app.slice/stead-browser-81c6a8b9a7df33ba031b011e3d2b510e.service",
+        "cpu_max": "2500 10000",
+        "cpu_affinity": [
+          19
+        ]
+      },
+      "exit_code": 0
+    }
+  },
+  "current_selected_reference": {
+    "report": {
+      "classification": "real-browser-synthetic-interaction-reference",
+      "qualifies_phase": false,
+      "node": "v24.21.0",
+      "status": "pass",
+      "checks": [
+        {
+          "name": "document-read-edit-preview-preserves-local-draft",
+          "status": "pass"
+        }
+      ],
+      "requested_cases": [
+        "document-read-edit-preview-preserves-local-draft"
+      ],
+      "execution_scope": "selected-cases",
+      "inputs_before": {
+        "src/primitives.tsx": "2f75ffd1ec0a16dc041b9eb74bb7fe37c8ee4cf6ccbb4f180332cbc3dc80a7ce",
+        "src/Icon.tsx": "dd32e23e59619ddbd0c9f2c111f84f273b9040fc16eb4e49ba8161a228ef5ab7",
+        "src/controls.css": "a56ddea5a06513bc3d05bd9ca6a668c235c6a604bb8a2271552218fea3e3935d",
+        "src/style.css": "8ef3db44d059dbb3adb462166b5f4b14af8cbe2ae3481af5e0b7ac2c10a5275c",
+        "src/work.css": "92cc3442d5dfdffce320e721feb0018a45c1078bac4510b1e9627123c3a1ac41",
+        "src/DocumentBody.tsx": "d5155eb95c1d1597b067cb9f53fa14c50197adc4666472b376052a774ced8857",
+        "src/Markdown.tsx": "9829f171225d31bbd59f2c7c11c1ba56a01ebdedc4893e4454c1ae06cc242565",
+        "src/markdown.css": "0fdf1bbf42bf38abc270e184530aeec36917856d4a5d1329b7b989cd4e81e217",
+        "src/ResourceLink.tsx": "ca8efee035f001157bd23a85e6ec391301e985bd0dc5a8dba496e8ee0edecb4d",
+        "src/documentFormatting.ts": "b7a7f013ed0051fde4d9cb59a7f4d8e4858863c7fdaabb359f794243fa69e3be",
+        "tests/interaction-reference.tsx": "b1f43803fd202f4a2def20b52189ff318f6553959fc86f03f8e971676c81e624",
+        "tests/interaction-reference.css": "daee1c79e59cb8b471232d861ec23e1fb8472d9de59b61e30c7b533eedbe522f",
+        "tests/interaction-reference.mjs": "3e770487a6440686595a8dc3181d67eeef9e048fdb59cd7d46d26eb206a15c29",
+        "package-lock.json": "b4d2ced8e19aa8b7cf9eaab75b906e867132321b97937b534e5810c152dbec98"
+      },
+      "browser": "155.0",
+      "inputs_after": {
+        "src/primitives.tsx": "2f75ffd1ec0a16dc041b9eb74bb7fe37c8ee4cf6ccbb4f180332cbc3dc80a7ce",
+        "src/Icon.tsx": "dd32e23e59619ddbd0c9f2c111f84f273b9040fc16eb4e49ba8161a228ef5ab7",
+        "src/controls.css": "a56ddea5a06513bc3d05bd9ca6a668c235c6a604bb8a2271552218fea3e3935d",
+        "src/style.css": "8ef3db44d059dbb3adb462166b5f4b14af8cbe2ae3481af5e0b7ac2c10a5275c",
+        "src/work.css": "92cc3442d5dfdffce320e721feb0018a45c1078bac4510b1e9627123c3a1ac41",
+        "src/DocumentBody.tsx": "d5155eb95c1d1597b067cb9f53fa14c50197adc4666472b376052a774ced8857",
+        "src/Markdown.tsx": "9829f171225d31bbd59f2c7c11c1ba56a01ebdedc4893e4454c1ae06cc242565",
+        "src/markdown.css": "0fdf1bbf42bf38abc270e184530aeec36917856d4a5d1329b7b989cd4e81e217",
+        "src/ResourceLink.tsx": "ca8efee035f001157bd23a85e6ec391301e985bd0dc5a8dba496e8ee0edecb4d",
+        "src/documentFormatting.ts": "b7a7f013ed0051fde4d9cb59a7f4d8e4858863c7fdaabb359f794243fa69e3be",
+        "tests/interaction-reference.tsx": "b1f43803fd202f4a2def20b52189ff318f6553959fc86f03f8e971676c81e624",
+        "tests/interaction-reference.css": "daee1c79e59cb8b471232d861ec23e1fb8472d9de59b61e30c7b533eedbe522f",
+        "tests/interaction-reference.mjs": "3e770487a6440686595a8dc3181d67eeef9e048fdb59cd7d46d26eb206a15c29",
+        "package-lock.json": "b4d2ced8e19aa8b7cf9eaab75b906e867132321b97937b534e5810c152dbec98"
+      }
+    },
+    "resources": {
+      "output": "/home/skilgore/stead-urbit/.runtime/frontend-reference-docs-owner-1794761489765605747",
+      "peak_c": 49.0,
+      "duration_seconds": 19.8
+    },
+    "process": {
+      "unit": "stead-browser-37e243ec126d95c3dc42bf1d6f64e3b3.service",
+      "status": "pass",
+      "cleanup": {
+        "process_reaped": true,
+        "cgroup": "/user.slice/user-1000.slice/user@1000.service/app.slice/stead-browser-37e243ec126d95c3dc42bf1d6f64e3b3.service",
+        "empty": true,
+        "state": "inactive"
+      },
+      "headed": false,
+      "proof": {
+        "pid": 72830,
+        "cgroup": "/user.slice/user-1000.slice/user@1000.service/app.slice/stead-browser-37e243ec126d95c3dc42bf1d6f64e3b3.service",
+        "cpu_max": "2500 10000",
+        "cpu_affinity": [
+          19
+        ]
+      },
+      "exit_code": 0
+    }
+  },
+  "fixed_review_findings": [
+    "Collection and accepted-document URLs reflect displayed context",
+    "Back-to-blank clears project display",
+    "Deferred Work scroll restoration waits for loaded matching view",
+    "Heading and List formatting operate on selected lines",
+    "Markdown task checkboxes remain inline and read only",
+    "Expanded accepted-event IDs wrap at320px",
+    "Work preview tests use the explicit desktop and single-surface narrow flows"
+  ],
+  "test_expectation_changes": [
+    "Page-two test closes edit then detail before checking the visible list",
+    "Reader context-menu case uses1440px desktop preview where both list and detail are visible",
+    "Dirty-edit keyboard deletion returns from detail to list before overflow menu",
+    "Work properties use one readable column at320px"
+  ],
+  "limits": [
+    "MockedHome browser scenarios do not prove native authority, accepted durability or deployed behavior",
+    "Synthetic reference makes no Home calls",
+    "First20renderedcases were not rerun after focused formatter/CSS changes; their earlier evidence retains its source hashes",
+    "No native processes or local previews started; owned browser descendants verified empty after each run"
+  ]
+}

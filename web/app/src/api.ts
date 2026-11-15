@@ -37,7 +37,7 @@ export type CodeInput = { action: 'status' | 'create' | 'pack-view' }
   | { action: 'revoke-delegation'; delegation_id: string }
   | { action: 'work-delegations'; work_id: string }
   | CodeMerge | ExternalMerge;
-export type ViewKind = 'identity' | 'projects' | 'project' | 'work' | 'comments' | 'assignees' | 'documents' | 'containers' | 'document' | 'relations' | 'search' | 'activity' | 'inbox' | 'receipt';
+export type ViewKind = 'identity' | 'projects' | 'project' | 'work' | 'comments' | 'assignees' | 'documents' | 'containers' | 'document' | 'relations' | 'search' | 'workspace-search' | 'my-work' | 'activity' | 'inbox' | 'receipt';
 export interface Query {
   kind: ViewKind;
   project_id: string;

@@ -1,0 +1,143 @@
+{
+  "protocol": "stead.controller-refresh-review/1",
+  "observed_at": "2026-11-15T17:02:40.572192+00:00",
+  "classification": "source-review-host-preflight-and-actual-hosted-native-regression",
+  "native_pass_claimed": true,
+  "controller_commit": "3e1cabd2f814f51f7d53f0b58097442b36a38dc3",
+  "controller_pin_commit": "c3b5cafb48ca019bc768c0353f16c12edafa4d4c",
+  "workflow_commit": "055ef9e63c3e5a8b4640551228bab1b02b704e2d",
+  "candidate_commit": "f25424464623c8fad7557227444907578933fa0e",
+  "pull_request": "https://github.com/ScottTpirate/stead-urbit/pull/84",
+  "merge": "normal-merge-api-exact-head",
+  "preflight": {
+    "host_only_tests": 28,
+    "result": "passed",
+    "test_files": [
+      "tests/urbit/test_ci_composition.py",
+      "tests/urbit/test_native_units.py",
+      "tests/urbit/test_team_capabilities.py"
+    ],
+    "executed_from": "materialized-immutable-controller-commit",
+    "controller_files": 375,
+    "controller_bytes": 3775269,
+    "candidate_product_files": 102,
+    "composed_files": 185,
+    "native_suites": 26,
+    "expected_native_arms": 167,
+    "arm_names_match_trusted_test_source": true,
+    "shared_index_unchanged": true
+  },
+  "review": {
+    "native_contract": "independent-integrator-source-review",
+    "future_state_fixture": "independent-native-lane-source-review",
+    "controller_paths_and_capabilities": "independent-integrator-source-review",
+    "isolation_limits_workflow_and_hash_rules": "unchanged"
+  },
+  "dispatch": {
+    "run_id": 43736015074,
+    "url": "https://github.com/ScottTpirate/stead-urbit/actions/runs/43736015074",
+    "observed_status": "completed",
+    "native_result": "not-executed",
+    "conclusion": "failure",
+    "failure_step": "Install the disposable VM dependency and verify pinned downloads",
+    "failure": "Git version differs from tested corpus: git version 2.56.1",
+    "expected_git": "2.55.0",
+    "admission_and_native_steps": "skipped",
+    "bounded_native_artifacts": "not-created-before-failure"
+  },
+  "pilot": {
+    "source_commit": "dbc8cc01adb32b14912e3e74c8efa324ba0eb5c9",
+    "changed": false
+  },
+  "limits": [
+    "Native regression applies only to candidate f254244 with controller 3e1cabd and workflow 0699d25.",
+    "Reserved product codec, migration and workspace query changes are not in this qualified candidate.",
+    "The run does not qualify a broader phase or human product review.",
+    "No live pilot change or deployment occurred during this controller refresh."
+  ],
+  "retry_preparation": {
+    "status": "reviewed-and-merged",
+    "pinned_git_source": "https://www.kernel.org/pub/software/scm/git/git-2.55.0.tar.xz",
+    "source_checksum_reference": "https://www.kernel.org/pub/software/scm/git/sha256sums.asc",
+    "archive_sha256": "457fdb04dc8728e007d4688695e6912e6f680727920f2a40bf11eacc17505357",
+    "locally_verified_archive_bytes": 8177180,
+    "local_compile": false,
+    "authority_host_compile": false,
+    "pull_request": "https://github.com/ScottTpirate/stead-urbit/pull/85",
+    "workflow_commit": "0699d255ff39b3a639a6c324ba869e7d779198ca"
+  },
+  "retry_dispatch": {
+    "run_id": 43736509249,
+    "url": "https://github.com/ScottTpirate/stead-urbit/actions/runs/43736509249",
+    "workflow_commit": "0699d255ff39b3a639a6c324ba869e7d779198ca",
+    "controller_commit": "3e1cabd2f814f51f7d53f0b58097442b36a38dc3",
+    "candidate_commit": "f25424464623c8fad7557227444907578933fa0e",
+    "observed_at": "2026-11-15T17:02:40.572192+00:00",
+    "observed_status": "completed",
+    "git_provisioning": "passed",
+    "pinned_downloads": "passed",
+    "namespace_prerequisites": "passed",
+    "admission_and_failure_cleanup_controls": "passed",
+    "native_step": "completed",
+    "native_result": "pass",
+    "conclusion": "success",
+    "positive_suites": 26,
+    "positive_arms": 167,
+    "native_checks": 1647,
+    "deliberate_failure_control": "expected-failure",
+    "supported_migration": "pass",
+    "negative_controls": "pass",
+    "mounts_unchanged": true,
+    "guard_elapsed_seconds": 1151.103,
+    "cleanup": {
+      "active_state": "inactive",
+      "empty": true,
+      "unit": "stead-hosted-b810bbc2a8a987e8749c90da56139c92.service",
+      "verified": true
+    },
+    "qualifies_phase": false
+  },
+  "retained_evidence": {
+    "directory": "hosted-43736509249",
+    "files": {
+      "report.json": {
+        "bytes": 369651,
+        "sha256": "de019b02e06f60c2748cd12e1211063d91f9610f501d6f0f20c628c78c80ff12"
+      },
+      "inputs.json": {
+        "bytes": 99133,
+        "sha256": "682890514fa509a0e064fc90a884c4cb29eea655ef8f62da14b4bb3d5486316e"
+      },
+      "control-changed-limits-report.json": {
+        "bytes": 9388,
+        "sha256": "eef072074b05a24b15211985a7dfa649f5204d8a18013875874a74e491cc2a56"
+      },
+      "control-guardian-death-report.json": {
+        "bytes": 8196,
+        "sha256": "507458061f34c3b138c2dcbc2a41a23c4eea08f4ada1666d08fcbca3ed1dd01e"
+      },
+      "control-missing-profile-report.json": {
+        "bytes": 7154,
+        "sha256": "64414a88c2be0f1ce0eca198a1bea8bdaaaac592a2ddba4d82713c07de596cc4"
+      },
+      "control-parent-death-report.json": {
+        "bytes": 9318,
+        "sha256": "f337a573bd1da38a1cd0210d2710b50bf4588dad3569e6e4812e358589b3e886"
+      },
+      "control-stale-lease-report.json": {
+        "bytes": 9563,
+        "sha256": "3dd8d96c91dfe9e81dec2695297b4f169ceafd316a983551b4a17fe283271acb"
+      },
+      "control-wrong-profile-report.json": {
+        "bytes": 7931,
+        "sha256": "f3bab99d1a956f48b0ac35914d5e1d509ff4fc3f6574a1ab1c84b4eeaf4017aa"
+      }
+    },
+    "canonical_inputs_sha256": "dc6e36c95173d9eebe5d35aaa679df4e523ede485803d58f37e39d1cb92c7489",
+    "exact_commit_source_hashes_verified": {
+      "controller_files": 375,
+      "candidate_product_files": 102
+    },
+    "control_inputs_identical_to_main_inputs": true
+  }
+}

@@ -1,0 +1,242 @@
+{
+  "recorded_at": "2026-11-15T17:14:50.345774+00:00",
+  "classification": "real-browser-workspace-with-mocked-home",
+  "qualifies_phase": false,
+  "claim": "All ten dedicated workspace browser cases passed on the recorded source inputs, including the production App Search to Docs and browser Back path. This is synthetic HTTP evidence, not native authorization, native search/assignment filtering, deployment, or human usability acceptance.",
+  "browser": {
+    "report": {
+      "classification": "real-browser-workspace-with-mocked-home",
+      "qualifies_phase": false,
+      "node": "v24.21.0",
+      "requested_cases": [],
+      "status": "pass",
+      "checks": [
+        {
+          "name": "authorized-pages-keyboard-routes-and-narrow-results",
+          "status": "pass"
+        },
+        {
+          "name": "search-typing-is-local-and-submit-has-one-native-scope",
+          "status": "pass"
+        },
+        {
+          "name": "late-watch-open-is-retired-before-the-next-scope",
+          "status": "pass"
+        },
+        {
+          "name": "terminal-access-refresh-clears-previews-before-requery",
+          "status": "pass"
+        },
+        {
+          "name": "pending-navigation-keeps-consumed-cursor-and-offline-needs-refresh",
+          "status": "pass"
+        },
+        {
+          "name": "malformed-scope-and-duplicate-resources-reject-the-whole-page",
+          "status": "pass"
+        },
+        {
+          "name": "changed-session-hides-old-rows-and-return-focus-waits-for-snapshot",
+          "status": "pass"
+        },
+        {
+          "name": "empty-results-and-unsupported-home-stay-explicit",
+          "status": "pass"
+        },
+        {
+          "name": "expired-pagination-clears-page-and-refresh-starts-with-empty-cursor",
+          "status": "pass"
+        },
+        {
+          "name": "production-search-opens-canonical-doc-and-back-restores-term-focus",
+          "status": "pass"
+        }
+      ],
+      "inputs_before": {
+        "package-lock.json": "b4d2ced8e19aa8b7cf9eaab75b906e867132321b97937b534e5810c152dbec98",
+        "src/AcceptedTime.tsx": "83d8df590acb5108514495fc9e8e4249f479e6e2db9781af2d6d2a4bc221df71",
+        "src/CodeExternalReview.tsx": "a512db325a20764cac5050753988c0041d1386bcb9791d872502cb5607841d2b",
+        "src/CodePack.tsx": "d901e0e935f375f996859494e588f1b06603f2c6019bd744512562240dfc673e",
+        "src/CodeRepository.tsx": "3d056d626c503dfc0b5fcb074b437c4e4d8eb62838b7c4bb21261239e316e202",
+        "src/CodeReview.tsx": "d760007e241251dc794db407aafe6dc08a117af503fe1ae1f12d04f55bac8c67",
+        "src/DocumentBody.tsx": "d5155eb95c1d1597b067cb9f53fa14c50197adc4666472b376052a774ced8857",
+        "src/Icon.tsx": "dd32e23e59619ddbd0c9f2c111f84f273b9040fc16eb4e49ba8161a228ef5ab7",
+        "src/Markdown.tsx": "9829f171225d31bbd59f2c7c11c1ba56a01ebdedc4893e4454c1ae06cc242565",
+        "src/RepoBrowser.tsx": "51ce653df5419306c5b6d0e6a3a328e95fd07369e394c8f57a99b6d60f37ecfa",
+        "src/ResourceLink.tsx": "ca8efee035f001157bd23a85e6ec391301e985bd0dc5a8dba496e8ee0edecb4d",
+        "src/ReviewChanges.tsx": "269f811a888d1be0332a90df90a53e2a03303ef0d47bf9794cd3541ccab8c14c",
+        "src/SupportDetails.tsx": "4a55384f0ad0d31670a847e9737cbfdf86c15ba312c81851f855b577e9c6b07c",
+        "src/UrbitSignIn.tsx": "72a10d25c64f9b483c31e3762f78174f8db384bb00b4c2525f5f00b799e7d13f",
+        "src/WorkCodeLinks.tsx": "bbb9deb32d18d1fa8728bda7706616342d4d7faa9d50e078c1c9dee7e679277a",
+        "src/WorkContext.tsx": "07de60cf4059ff74bbd93acf6d54a6747f3dd9636fdbc721f184252f877766f4",
+        "src/WorkDelegations.tsx": "41dc91abf3a54dd8a18bc4cbcc0da2f3d4ab868335c5705723304e9fd756419b",
+        "src/WorkDevelopment.tsx": "f40f9d2377df19c2691a8df2522f9036cdd49e8a4ec038d1bbc72abe5495f5db",
+        "src/WorkDiscussion.tsx": "2877d381247d5f3a6023b3e923a398b371a74057c7bfc265d52b78c32d5a929f",
+        "src/WorkQuickActions.tsx": "2e1e2f756c04ab6238bb6b6927052d7a1db48be79af83da87bca5640d84ec67f",
+        "src/WorkspaceView.tsx": "0f301554b0c90ea3db093586b475472f6abee79a8dfe7eb6701524e0d7314e41",
+        "src/agentBrief.ts": "510556d42b3fa8abfc4b6c48cbf1648481ff24ccc2505388e8d3cd7105a8b2f6",
+        "src/api.ts": "4095b5fb417d4b3d6e2fcef8d400df273622b44429f1661d49f84543a4082187",
+        "src/assets.d.ts": "da5bf71d48cf909584a01c80b445f730507068f5b34c920f352e2bfcf0315e4c",
+        "src/controls.css": "a56ddea5a06513bc3d05bd9ca6a668c235c6a604bb8a2271552218fea3e3935d",
+        "src/documentFormatting.ts": "b7a7f013ed0051fde4d9cb59a7f4d8e4858863c7fdaabb359f794243fa69e3be",
+        "src/eventPresentation.ts": "ff25a2cf8f9ae6669e2b3f17385d92e023ae71860b1fd6cfcfa6c870ed0b44c5",
+        "src/externalReview.ts": "db39a383ad6348ca442d13ec38def1fe115e903696ccb77b00d0705412ced382",
+        "src/identity.css": "c57c64f8602c21442586e8d02b74b740ee96d8ebf655595306149fc774cf9c96",
+        "src/identity.ts": "03ae5c121b8ecc3fd12f3dd4cf0d7756e8d58f81acb7c9ea34e7b04740402103",
+        "src/main.tsx": "1a72be4bf63c1faafcc5e388ae7dad021e9ce4c698a93389182e7e4bf3fecfb7",
+        "src/markdown.css": "0fdf1bbf42bf38abc270e184530aeec36917856d4a5d1329b7b989cd4e81e217",
+        "src/primitives.tsx": "2f75ffd1ec0a16dc041b9eb74bb7fe37c8ee4cf6ccbb4f180332cbc3dc80a7ce",
+        "src/productModel.ts": "be328c2430720be84e260decde60ea807ff61236c2f82baf6216b999b54be723",
+        "src/productRoutes.ts": "48afa5946212b05d3288c9f01ceb823b906768fb7f1119c82e7670226a709c10",
+        "src/protocol.ts": "a8dee5b65f79ffe052869f19e9b508f7abcb30149ac82eaa31a47223796003c7",
+        "src/repo-browser.css": "f4a5a7985e09ef0a5d379e178a0b71ca3823760d973186aaa2cd37dac553d594",
+        "src/repository.css": "dc25ca5b16e615712e6afb6640c5a0f67b2cb863f526436deefe304c9448efef",
+        "src/style.css": "8ef3db44d059dbb3adb462166b5f4b14af8cbe2ae3481af5e0b7ac2c10a5275c",
+        "src/support.ts": "811b4d5aa9dcb02e529fb7d7a386a585ab9269a9c3867ed573751b3b76f2b26c",
+        "src/urbit-sign-in.css": "3e88931a4f000927bfc49a43afa0138bebd3409b970a811902a3444d3f6b4330",
+        "src/work.css": "92cc3442d5dfdffce320e721feb0018a45c1078bac4510b1e9627123c3a1ac41",
+        "src/workspace.css": "13e3772c9eb89b7242c63383ed60403684fd671237708e39aecfd0eda092e1f7",
+        "tests/workspace-reference.css": "072786e54e4526d053ad10570f5d448b065290946b02fb912b22324785e1ee72",
+        "tests/workspace-reference.mjs": "17db6c4eb65c6037b1d684e98c024e2bdf70c97584303de3b45a2f541fd26c3a",
+        "tests/workspace-reference.tsx": "ae1f7a0086806c422fa2597edd21c5c2797afc72cc7f785f8a1c851c5c9ed668"
+      },
+      "browser": "155.0",
+      "inputs_after": {
+        "package-lock.json": "b4d2ced8e19aa8b7cf9eaab75b906e867132321b97937b534e5810c152dbec98",
+        "src/AcceptedTime.tsx": "83d8df590acb5108514495fc9e8e4249f479e6e2db9781af2d6d2a4bc221df71",
+        "src/CodeExternalReview.tsx": "a512db325a20764cac5050753988c0041d1386bcb9791d872502cb5607841d2b",
+        "src/CodePack.tsx": "d901e0e935f375f996859494e588f1b06603f2c6019bd744512562240dfc673e",
+        "src/CodeRepository.tsx": "3d056d626c503dfc0b5fcb074b437c4e4d8eb62838b7c4bb21261239e316e202",
+        "src/CodeReview.tsx": "d760007e241251dc794db407aafe6dc08a117af503fe1ae1f12d04f55bac8c67",
+        "src/DocumentBody.tsx": "d5155eb95c1d1597b067cb9f53fa14c50197adc4666472b376052a774ced8857",
+        "src/Icon.tsx": "dd32e23e59619ddbd0c9f2c111f84f273b9040fc16eb4e49ba8161a228ef5ab7",
+        "src/Markdown.tsx": "9829f171225d31bbd59f2c7c11c1ba56a01ebdedc4893e4454c1ae06cc242565",
+        "src/RepoBrowser.tsx": "51ce653df5419306c5b6d0e6a3a328e95fd07369e394c8f57a99b6d60f37ecfa",
+        "src/ResourceLink.tsx": "ca8efee035f001157bd23a85e6ec391301e985bd0dc5a8dba496e8ee0edecb4d",
+        "src/ReviewChanges.tsx": "269f811a888d1be0332a90df90a53e2a03303ef0d47bf9794cd3541ccab8c14c",
+        "src/SupportDetails.tsx": "4a55384f0ad0d31670a847e9737cbfdf86c15ba312c81851f855b577e9c6b07c",
+        "src/UrbitSignIn.tsx": "72a10d25c64f9b483c31e3762f78174f8db384bb00b4c2525f5f00b799e7d13f",
+        "src/WorkCodeLinks.tsx": "bbb9deb32d18d1fa8728bda7706616342d4d7faa9d50e078c1c9dee7e679277a",
+        "src/WorkContext.tsx": "07de60cf4059ff74bbd93acf6d54a6747f3dd9636fdbc721f184252f877766f4",
+        "src/WorkDelegations.tsx": "41dc91abf3a54dd8a18bc4cbcc0da2f3d4ab868335c5705723304e9fd756419b",
+        "src/WorkDevelopment.tsx": "f40f9d2377df19c2691a8df2522f9036cdd49e8a4ec038d1bbc72abe5495f5db",
+        "src/WorkDiscussion.tsx": "2877d381247d5f3a6023b3e923a398b371a74057c7bfc265d52b78c32d5a929f",
+        "src/WorkQuickActions.tsx": "2e1e2f756c04ab6238bb6b6927052d7a1db48be79af83da87bca5640d84ec67f",
+        "src/WorkspaceView.tsx": "0f301554b0c90ea3db093586b475472f6abee79a8dfe7eb6701524e0d7314e41",
+        "src/agentBrief.ts": "510556d42b3fa8abfc4b6c48cbf1648481ff24ccc2505388e8d3cd7105a8b2f6",
+        "src/api.ts": "4095b5fb417d4b3d6e2fcef8d400df273622b44429f1661d49f84543a4082187",
+        "src/assets.d.ts": "da5bf71d48cf909584a01c80b445f730507068f5b34c920f352e2bfcf0315e4c",
+        "src/controls.css": "a56ddea5a06513bc3d05bd9ca6a668c235c6a604bb8a2271552218fea3e3935d",
+        "src/documentFormatting.ts": "b7a7f013ed0051fde4d9cb59a7f4d8e4858863c7fdaabb359f794243fa69e3be",
+        "src/eventPresentation.ts": "ff25a2cf8f9ae6669e2b3f17385d92e023ae71860b1fd6cfcfa6c870ed0b44c5",
+        "src/externalReview.ts": "db39a383ad6348ca442d13ec38def1fe115e903696ccb77b00d0705412ced382",
+        "src/identity.css": "c57c64f8602c21442586e8d02b74b740ee96d8ebf655595306149fc774cf9c96",
+        "src/identity.ts": "03ae5c121b8ecc3fd12f3dd4cf0d7756e8d58f81acb7c9ea34e7b04740402103",
+        "src/main.tsx": "1a72be4bf63c1faafcc5e388ae7dad021e9ce4c698a93389182e7e4bf3fecfb7",
+        "src/markdown.css": "0fdf1bbf42bf38abc270e184530aeec36917856d4a5d1329b7b989cd4e81e217",
+        "src/primitives.tsx": "2f75ffd1ec0a16dc041b9eb74bb7fe37c8ee4cf6ccbb4f180332cbc3dc80a7ce",
+        "src/productModel.ts": "be328c2430720be84e260decde60ea807ff61236c2f82baf6216b999b54be723",
+        "src/productRoutes.ts": "48afa5946212b05d3288c9f01ceb823b906768fb7f1119c82e7670226a709c10",
+        "src/protocol.ts": "a8dee5b65f79ffe052869f19e9b508f7abcb30149ac82eaa31a47223796003c7",
+        "src/repo-browser.css": "f4a5a7985e09ef0a5d379e178a0b71ca3823760d973186aaa2cd37dac553d594",
+        "src/repository.css": "dc25ca5b16e615712e6afb6640c5a0f67b2cb863f526436deefe304c9448efef",
+        "src/style.css": "8ef3db44d059dbb3adb462166b5f4b14af8cbe2ae3481af5e0b7ac2c10a5275c",
+        "src/support.ts": "811b4d5aa9dcb02e529fb7d7a386a585ab9269a9c3867ed573751b3b76f2b26c",
+        "src/urbit-sign-in.css": "3e88931a4f000927bfc49a43afa0138bebd3409b970a811902a3444d3f6b4330",
+        "src/work.css": "92cc3442d5dfdffce320e721feb0018a45c1078bac4510b1e9627123c3a1ac41",
+        "src/workspace.css": "13e3772c9eb89b7242c63383ed60403684fd671237708e39aecfd0eda092e1f7",
+        "tests/workspace-reference.css": "072786e54e4526d053ad10570f5d448b065290946b02fb912b22324785e1ee72",
+        "tests/workspace-reference.mjs": "17db6c4eb65c6037b1d684e98c024e2bdf70c97584303de3b45a2f541fd26c3a",
+        "tests/workspace-reference.tsx": "ae1f7a0086806c422fa2597edd21c5c2797afc72cc7f785f8a1c851c5c9ed668"
+      }
+    },
+    "report_path": ".runtime/workspace-reference-XaFujk/report.json",
+    "report_sha256": "394cb84c84ffb71ada63d948580aa1de4ff801ab200dd25ad2da921a2d247ede",
+    "process": {
+      "unit": "stead-browser-ca19988d8f3950612c300742ea192f73.service",
+      "status": "pass",
+      "cleanup": {
+        "process_reaped": true,
+        "cgroup": "/user.slice/user-1000.slice/user@1000.service/app.slice/stead-browser-ca19988d8f3950612c300742ea192f73.service",
+        "empty": true,
+        "state": "inactive"
+      },
+      "headed": false,
+      "proof": {
+        "pid": 107052,
+        "cgroup": "/user.slice/user-1000.slice/user@1000.service/app.slice/stead-browser-ca19988d8f3950612c300742ea192f73.service",
+        "cpu_max": "2500 10000",
+        "cpu_affinity": [
+          19
+        ]
+      },
+      "exit_code": 0
+    },
+    "resources": {
+      "output": "/home/skilgore/stead-urbit/.runtime/workspace-reference-owner-1794762784611685351",
+      "peak_c": 69.0,
+      "duration_seconds": 63.6
+    }
+  },
+  "prior_fixture_failure": {
+    "report_path": ".runtime/workspace-reference-6e1VjD/report.json",
+    "report_sha256": "6584d5b9cfa5bedbcb9e003d1542c7539a0f08ef821a8d7565005690973abb7e",
+    "finding": "The first test expected one total watch open. React StrictMode correctly opened, retired and reopened the mount. The test now verifies that retirement sequence, one live/in-flight open, and unchanged watch during pagination. No product change was required for this failure."
+  },
+  "typescript": {
+    "status": "pass",
+    "command": "node node_modules/typescript/bin/tsc --noEmit",
+    "working_directory": "web/app",
+    "process": {
+      "unit": "stead-browser-0a482406d843dd9f983baed04f7f2994.service",
+      "status": "pass",
+      "cleanup": {
+        "process_reaped": true,
+        "cgroup": "/user.slice/user-1000.slice/user@1000.service/app.slice/stead-browser-0a482406d843dd9f983baed04f7f2994.service",
+        "empty": true,
+        "state": "inactive"
+      },
+      "headed": false,
+      "proof": {
+        "pid": 104316,
+        "cgroup": "/user.slice/user-1000.slice/user@1000.service/app.slice/stead-browser-0a482406d843dd9f983baed04f7f2994.service",
+        "cpu_max": "2500 10000",
+        "cpu_affinity": [
+          19
+        ]
+      },
+      "exit_code": 0
+    },
+    "resources": {
+      "output": "/home/skilgore/stead-urbit/.runtime/workspace-typecheck-owner-1794762731694352971",
+      "peak_c": 49.0,
+      "duration_seconds": 6.0
+    }
+  },
+  "visual_review": {
+    "reviewed_widths": [
+      1440,
+      320
+    ],
+    "result": "Readable project labels, result titles, properties and pagination; no horizontal overflow. Screenshots include explicit synthetic fixture controls outside the product component.",
+    "screenshots": [
+      {
+        "path": ".runtime/workspace-reference-XaFujk/workspace-1440.png",
+        "sha256": "094ab766137746e0096e28aae38e3121ad35b48adab6fc758bffb25156d88e37"
+      },
+      {
+        "path": ".runtime/workspace-reference-XaFujk/workspace-390.png",
+        "sha256": "a705aecde9d83da1763a0bef7bb1ba50345ad102d46d0f38b2c25b862f65425e"
+      },
+      {
+        "path": ".runtime/workspace-reference-XaFujk/workspace-320.png",
+        "sha256": "24e6cf69f1d6e050266bc4b1833d8dfcb4e592fb9f4f3761641b4b347a7f5479"
+      }
+    ]
+  },
+  "limits": [
+    "Local execution was limited to25percent of oneCPU; no local native ship was launched.",
+    "These cases do not qualify native authorization, query filtering, Hoon compilation, migration, deployment, or human acceptance.",
+    "Navigation restoration revalidates a fresh first page. A selected result on a later page cannot be restored from only scroll/selection memory and a consumed opaque cursor; no client fan-out or cursor replay is performed."
+  ]
+}

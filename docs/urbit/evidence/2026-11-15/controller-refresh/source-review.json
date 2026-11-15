@@ -1,0 +1,143 @@
+{
+  "protocol": "stead.independent-source-review/1",
+  "observed_at": "2026-11-15T16:47:30.479331+00:00",
+  "classification": "source-review-only",
+  "native_execution": false,
+  "browser_execution": false,
+  "source_commit_base": "be2e78c7a7985601a8a9b2bcb6c512f859078d1c",
+  "reviewed_working_files": {
+    "native/core/desk/lib/stead-product-codec.hoon": "3172a52cd4275681d1da85ab106569883b0f6094d205df135fcbbc8da5e75f0b",
+    "native/core/desk/tests/stead-product-codec.hoon": "e7623d6ab5807804e461ad71c1ade707d653109cff99f0e19224088a96e712e4",
+    "web/app/src/DocumentBody.tsx": "d5155eb95c1d1597b067cb9f53fa14c50197adc4666472b376052a774ced8857",
+    "web/app/src/Markdown.tsx": "9829f171225d31bbd59f2c7c11c1ba56a01ebdedc4893e4454c1ae06cc242565",
+    "web/app/src/ResourceLink.tsx": "ca8efee035f001157bd23a85e6ec391301e985bd0dc5a8dba496e8ee0edecb4d",
+    "web/app/src/agentBrief.ts": "510556d42b3fa8abfc4b6c48cbf1648481ff24ccc2505388e8d3cd7105a8b2f6",
+    "web/app/src/productRoutes.ts": "48afa5946212b05d3288c9f01ceb823b906768fb7f1119c82e7670226a709c10",
+    "web/app/src/main.tsx": "cfa0a7e0533b1c3b67893daf223c86d2e5635270a57c5b9f73b049d3420f0917",
+    "web/app/src/style.css": "8ef3db44d059dbb3adb462166b5f4b14af8cbe2ae3481af5e0b7ac2c10a5275c",
+    "web/app/src/work.css": "92cc3442d5dfdffce320e721feb0018a45c1078bac4510b1e9627123c3a1ac41"
+  },
+  "findings": [
+    {
+      "file": "web/app/src/style.css",
+      "finding": "Mobile navigation retained seven explicit tracks after reducing project tabs to three or four.",
+      "resolution": "Source now uses automatic equal-width columns; rendered verification remains separate."
+    }
+  ],
+  "native_codec": {
+    "status": "no-blocking-source-finding",
+    "test_arms": 9,
+    "registered_in_frozen_native_candidate": false,
+    "scope": [
+      "Closed command/4 envelope, exact operation-specific revision maps and uint64 bounds.",
+      "Four object levels, sixteen keys per object, request byte bound and duplicate rejection.",
+      "Same-project typed targets and exact Doc base revision/digest pairing.",
+      "Done retention is syntactic only; final reducer must enforce transitions, outcome acceptance and current authorization.",
+      "Explicit legacy-blocked resolution preserves distinction from ordinary property edits."
+    ],
+    "independent_unicode_digest_vector": "b4e24f08d8bea370485f53b606afc9b04ac919aba93dcd675f45fa41cd532fdb",
+    "activation": "not-activated"
+  },
+  "frontend": {
+    "status": "no-other-actionable-source-finding",
+    "scope": [
+      "Resource route parsing, bounded revision/path identity and session-scoped navigation memory.",
+      "Authorized document restore and HomeClient session generation fences.",
+      "Canonical Markdown source, editor modes, read-only locks and explicit resource navigation.",
+      "Closed React renderer, suppressed automatic image loads and bounded parser output.",
+      "Brief/2 complete-pin checks with explicit legacy fallback."
+    ],
+    "limitation": "Rendered browser and exact release verification remain separate."
+  },
+  "agent_submit_limitation": "Brief/2 preflight is not an atomic native contract publication fence; final typed admission remains required.",
+  "native_migration": {
+    "observed_at": "2026-11-15T16:52:59.681721+00:00",
+    "status": "no-blocking-source-finding",
+    "native_execution": false,
+    "test_arms": 6,
+    "registered_in_frozen_native_candidate": false,
+    "files": {
+      "native/core/desk/lib/stead-product-state.hoon": "482dd3f5316d88535006bed055e6ad1e7633a968cf5b8fb4a3091eb13bf23457",
+      "native/core/desk/lib/stead-product-migrate.hoon": "e463981716189d9a4cd730a4cde7f686899f39a294c60e55228034b42d1dcd5c",
+      "native/core/desk/tests/stead-product-migrate.hoon": "39ed9db3332855e212135ab9ad04f873fe83e903a47d43601182a12dee0f9488"
+    },
+    "review": [
+      "Validate predecessor before private conversion and expose only the valid result.",
+      "Correlate accepted Work history, exact comments, revision and tombstone state.",
+      "Preserve original journal/receipts/non-Work state, assignment authentication/target and explicit legacy completion basis.",
+      "Fingerprint global chronological interleaving as well as per-project heads and registry."
+    ],
+    "strengthened_cases": [
+      "Actual valid A-then-B versus B-then-A project creation with same timestamps, per-project heads and event count yields different timeline fingerprints.",
+      "Actual member removal preserves legacy assignee identity/provenance with explicitly unavailable display name."
+    ],
+    "activation_requirements": [
+      "New saved-state validator must bind the unchanged legacy prefix, converted Work and sidecar; the old whole-state restore does not validate the intentionally converted Work shape.",
+      "Legacy Work mutation paths cannot bypass independent counters.",
+      "Unresolved legacy blocking must stay visible and fence autonomous dispatch even when a known prior unfinished status is restored."
+    ],
+    "registry_snapshot_followup": {
+      "observed_at": "2026-11-15T17:04:07.945572+00:00",
+      "status": "source-approved",
+      "scope": "boundary predecessor-registry field and boundary-of internal digest plus migration call and exact registry assertion",
+      "note": "Frozen validated predecessor registry is immutable replay input, never live authority. New completion/attempt/event additions are outside this scoped review."
+    }
+  },
+  "workspace_queries": {
+    "observed_at": "2026-11-15T17:14:18.435142+00:00",
+    "status": "no-blocking-source-finding",
+    "native_execution": false,
+    "browser_execution": false,
+    "test_arms": 6,
+    "files": {
+      "native/core/desk/lib/stead-team-codec.hoon": "0a7e54ad7cd6fc66dcbfabd90425d55a234d9239140dec97309474fb3b90ba76",
+      "native/core/desk/lib/stead-views.hoon": "f3eea9a132aa4593b5a65612521ab1700d818751e93bb0b9ef2158a0f9ccd26b",
+      "native/core/desk/lib/stead-update-security.hoon": "4ef803d5671641bdffdff95965e85f6fdb73c91b2c3a40c818dca79c5727c4fd",
+      "native/core/desk/tests/stead-workspace-views.hoon": "0ea32c67b5aff91161b57e1bf9308c1f1aa6fa8afab24965486339d5b12045e2",
+      "web/app/src/WorkspaceView.tsx": "0f301554b0c90ea3db093586b475472f6abee79a8dfe7eb6701524e0d7314e41",
+      "web/app/src/workspace.css": "13e3772c9eb89b7242c63383ed60403684fd671237708e39aecfd0eda092e1f7",
+      "web/app/src/main.tsx": "1a72be4bf63c1faafcc5e388ae7dad021e9ce4c698a93389182e7e4bf3fecfb7",
+      "web/app/src/api.ts": "4095b5fb417d4b3d6e2fcef8d400df273622b44429f1661d49f84543a4082187"
+    },
+    "review": [
+      "Empty global query scope and bounded search; strict new capability.",
+      "Current actor admission and final resource authorization precede project metadata and search matching.",
+      "Per-authorized-project bounded roster cache and project-scoped row identity.",
+      "Cursor actor/filter/current visible generation binding; inaccessible private and project writes excluded.",
+      "Workspace watch fingerprint binds current access to each accessible project.",
+      "Client page shape checking, scope identity render fence, deferred cursor result, serialized watch opening and stale/offline opening lock."
+    ],
+    "pending_cases": [
+      "Rendered UI switching, revocation, stale cursor recovery and back navigation.",
+      "Actual hosted native execution of the immutable workspace candidate."
+    ],
+    "qualifies_candidate": false,
+    "source_controller_commit": "18673da1282d0b5c0060038d1215b684857d0cbd",
+    "strengthened_cases": [
+      "Canceled My work excluded alongside Done.",
+      "Queued watch at grant expiry returns refresh_required, purges handles and withholds queued payload."
+    ]
+  },
+  "principal_catalog": {
+    "observed_at": "2026-11-15T17:15:57.422117+00:00",
+    "status": "no-blocking-source-finding",
+    "native_execution": false,
+    "registered_in_workspace_candidate": false,
+    "test_arms": 6,
+    "files": {
+      "native/core/desk/lib/stead-principals.hoon": "42bd333f56a2dd13b8f5d931e30c221cc25721f9bf08bacd79136abe1080e527",
+      "native/core/desk/tests/stead-principals.hoon": "e23c0b2b845b13d7e6dd3b5892ac37f600d9a680d3481668d499118bb2af3794"
+    },
+    "scope": [
+      "Preserved legacy identity ownership/highwaters and unresolved imported kind.",
+      "Owner-only CAS declaration, immutable kind and current native binding/expiry checks.",
+      "Bounded immutable runtime/definition versions with fixed producer and exact referenced version."
+    ],
+    "activation_requirements": [
+      "Actual owner sender and current validated registry are trusted Home inputs, not command fields.",
+      "Registry updates must preserve and synchronize catalog custody.",
+      "Project grants, delegations, service/agent transport and final current authorization remain separate.",
+      "Runtime profile labels and policy digests do not authorize arbitrary execution; trusted runner admission remains required."
+    ]
+  }
+}
