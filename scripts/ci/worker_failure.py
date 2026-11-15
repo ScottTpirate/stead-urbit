@@ -140,7 +140,7 @@ def source_spans(raw, sources):
                 'Failure source file bound')
         admitted['/' + match[1] + '/' + match[2] + '/hoon'] = (path, body.split(b'\n'))
     pattern = rb'(?<![a-zA-Z0-9_./-])(/(?:lib|tests|app)/[a-z][a-z0-9-]{0,95}/hoon):<\[([0-9]{1,7}) ([0-9]{1,7})\]\.\[([0-9]{1,7}) ([0-9]{1,7})\]>'
-    observed, seen, truncated = [], set(), False
+    observed, truncated = {}, False
     for match in re.finditer(pattern, raw):
         source = admitted.get(match[1].decode('ascii'))
         if source is None:
@@ -153,14 +153,14 @@ def source_spans(raw, sources):
                 and (start_line, start_column) <= (end_line, end_column)):
             continue
         key = (path, start_line, start_column, end_line, end_column)
-        if key in seen:
-            continue
-        seen.add(key)
-        if len(observed) == 16:
+        # Keep the most recent distinct frames: compiler failure sites follow
+        # the long outer build chain. Repeated frames move to the tail.
+        observed.pop(key, None)
+        observed[key] = dict(zip(('path', 'start_line', 'start_column', 'end_line', 'end_column'), key))
+        if len(observed) > 16:
+            del observed[next(iter(observed))]
             truncated = True
-            continue
-        observed.append(dict(zip(('path', 'start_line', 'start_column', 'end_line', 'end_column'), key)))
-    return {'locations': observed, 'truncated': truncated}
+    return {'locations': list(observed.values()), 'truncated': truncated}
 
 
 def unit_observation(native, inventory, sources=None):
