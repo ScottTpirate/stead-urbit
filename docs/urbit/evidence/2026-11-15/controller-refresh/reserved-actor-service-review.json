@@ -2,7 +2,7 @@
   "files_sha256": {
     "native/core/desk/lib/stead-actor.hoon": "4739b3b7e65ff95a14e2410c5c0635833b13e5fc7ff197c9b004b27a92e9c7b8",
     "native/core/desk/lib/stead-service-bindings.hoon": "fbad713a0aa7f49738fa8e7d0741290981ae34ec039dab57a346326027168b91",
-    "native/core/desk/tests/stead-actor.hoon": "772412409d849e19e3093eb32666e24e36ad4bb8de7733d9ad92722d7b7ed24d",
+    "native/core/desk/tests/stead-actor.hoon": "8b80768566c48d57f282e22803475a973ea92828fb3ef3bce39cd56a061a65f7",
     "native/core/desk/tests/stead-service-bindings.hoon": "482e8ae4fbe15d02305026e047dd58bf870986bb8c363b486ea6758103e17c27"
   },
   "findings_resolved": [
@@ -17,6 +17,16 @@
     "Each effect rechecks current binding, catalog, issuer, exact original grants, scope, epoch, lease and current ephemeral incarnation. Restored descriptors alone cannot authorize.",
     "Service grants and roster membership still need a real shared-core adapter; fixture grant rows are trusted test setup, not a live policy route."
   ],
+  "label_only_amendment": {
+    "assertions_changed": false,
+    "current_test_file_sha256": "8b80768566c48d57f282e22803475a973ea92828fb3ef3bce39cd56a061a65f7",
+    "new_test_label": "test-actor-unresolved-kind-is-not-human-and-inactive-or-forged-denied",
+    "old_test_label": "test-actor-unresolved-kind-is-not-human-and-inactive-or-forged-native-denied",
+    "prior_test_file_sha256": "772412409d849e19e3093eb32666e24e36ad4bb8de7733d9ad92722d7b7ed24d",
+    "reason": "Retain existing 64-character suite-prefix suffix bound",
+    "root_approved": true,
+    "test_arm_count_changed": false
+  },
   "limitations": [
     "Pure source and fixtures only; no hosted native execution of these 12 arms yet.",
     "No new Home route, saved-state activation, service grant adapter or live agent execution is qualified."

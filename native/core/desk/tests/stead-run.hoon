@@ -234,7 +234,7 @@
           (rejected changed 'request_id_reuse')  (rejected fresh 'terminal_run')
           (bounded:stead-run next.submitted)
       ==
-++  test-run-restart-clears-lease-without-dispatch-and-never-adds-fourth-attempt
+++  test-run-restart-clears-lease-without-dispatch-or-fourth-attempt
   =/  restart  (restart:stead-run next.claimed (hex 64 9))
   =/  before=transition  [response.claimed db.restart book.restart ~ ~]
   =/  heartbeat  (run before worker (command 303 2 1 [%heartbeat ~]) 3.000)

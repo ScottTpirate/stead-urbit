@@ -55,7 +55,7 @@
           =((id 102) (principal:stead-actor actor))
           (native-human:stead-actor db catalog actor 2.000)
       ==
-++  test-actor-unresolved-kind-is-not-human-and-inactive-or-forged-native-denied
+++  test-actor-unresolved-kind-is-not-human-and-inactive-or-forged-denied
   =/  unresolved  (need (verify-native:stead-actor db imported alice 2.000))
   =/  disabled  (declare:stead-principals catalog ~zod ~zod (id 102) 2 %person 'Alice' | 2.000)
   =/  forged  alice(identity identity.alice(revision 999))

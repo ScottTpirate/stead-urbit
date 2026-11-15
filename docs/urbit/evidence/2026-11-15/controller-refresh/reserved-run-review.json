@@ -2,9 +2,19 @@
   "files_sha256": {
     "native/core/desk/lib/stead-run-state.hoon": "4c96eb466add4ae26f6c6fbfd390b338d26a14e20a8c3f70214f9e1445602c1d",
     "native/core/desk/lib/stead-run.hoon": "f512468d8b90a447f8652cef307d015e818954b347f2b07dc6b49172c7d76686",
-    "native/core/desk/tests/stead-run.hoon": "d71a0e1ad5feb96ffa725de2a24f40d3a3bb552cce576f63c984cd48cddf5122"
+    "native/core/desk/tests/stead-run.hoon": "d58777ed4742b485c8ee206e9eb1943136b1e0b4f10740a3e413ac8d1bdd2b79"
   },
   "home_activated": false,
+  "label_only_amendment": {
+    "assertions_changed": false,
+    "current_test_file_sha256": "d58777ed4742b485c8ee206e9eb1943136b1e0b4f10740a3e413ac8d1bdd2b79",
+    "new_test_label": "test-run-restart-clears-lease-without-dispatch-or-fourth-attempt",
+    "old_test_label": "test-run-restart-clears-lease-without-dispatch-and-never-adds-fourth-attempt",
+    "prior_test_file_sha256": "d71a0e1ad5feb96ffa725de2a24f40d3a3bb552cce576f63c984cd48cddf5122",
+    "reason": "Retain existing 64-character suite-prefix suffix bound",
+    "root_approved": true,
+    "test_arm_count_changed": false
+  },
   "limitations": [
     "No native compiler or runtime result for these ten arms yet.",
     "Trusted positive fixture callbacks are not concrete production adapters.",
