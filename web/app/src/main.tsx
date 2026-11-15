@@ -8,6 +8,7 @@ import { AcceptedTime } from './AcceptedTime';
 import { WorkQuickActions, assigneeName, workStatuses, type WorkMenu, type WorkProperty } from './WorkQuickActions';
 import { CodeRepository } from './CodeRepository';
 import { CodePack } from './CodePack';
+import { WorkCodeLinks } from './WorkCodeLinks';
 import { UrbitSignIn } from './UrbitSignIn';
 import './style.css';
 const Markdown = lazy(() => import('./Markdown').then(module => ({ default: module.Markdown })));
@@ -47,6 +48,21 @@ function ActionMenu({ label, disabled, children }: { label: string; disabled: bo
   </details>;
 }
 const PAGE_HEADER = /^---\nid: [0-9a-f-]{36}\ntype: page\nstate: (draft|published)\n---\n/u;
+const initialWorkFilters = { title: '', status: '', assignee: '' };
+const workShortcuts = new Map<string, WorkProperty>([['s', 'status'], ['a', 'assignee'], ['p', 'priority']]);
+type WorkRoster = { status: 'loading' | 'unavailable' } | { status: 'ready'; rows: Row[] };
+type WorkAddress = { project: string; item?: string };
+function decodeWorkAddress(hash: string): WorkAddress | null {
+  const parts = hash.split('/');
+  if (parts[0] !== '#work' || ![2, 3].includes(parts.length) || !UUID.test(parts[1] ?? '')
+    || (parts.length === 3 && !UUID.test(parts[2] ?? ''))) return null;
+  return {project: parts[1]!, item: parts[2]};
+}
+function workAddress(project: string, item?: string) {
+  const url = new URL(location.pathname, location.origin);
+  url.hash = `work/${project}${item ? '/' + item : ''}`;
+  return url;
+}
 function pageTitle(text: string) {
   const body = text.replace(PAGE_HEADER, '');
   return body.match(/^#{1,6} +(.+)$/mu)?.[1]?.trim() || 'Untitled page';
@@ -63,6 +79,7 @@ function App() {
   const [repository, setRepository] = useState<Fields | null>(null);
   const externalRepository = repository?.status === 'external' || repository?.status === 'external-staged';
   const [showRepository, setShowRepository] = useState(false);
+  const [selectedReview, setSelectedReview] = useState<string>();
   const [rows, setRows] = useState<Row[]>([]);
   const [cursor, setCursor] = useState('');
   const [search, setSearch] = useState('');
@@ -81,6 +98,11 @@ function App() {
   const [currentVersion, setCurrentVersion] = useState<{scope: string; row: Row} | null>(null);
   const [work, setWork] = useState<Row | null>(null);
   const [workMenu, setWorkMenu] = useState<WorkMenu | null>(null);
+  const [workFiltersOpen, setWorkFiltersOpen] = useState(false);
+  const [workFilters, setWorkFilters] = useState(initialWorkFilters);
+  const [workRoster, setWorkRoster] = useState<WorkRoster>({status: 'loading'});
+  const [workRosterRetry, setWorkRosterRetry] = useState(0);
+  const [editWorkField, setEditWorkField] = useState<'title' | 'description' | null>(null);
   const [form, setForm] = useState<'' | 'project' | 'work' | 'container' | 'relation' | 'publish'>('');
   const [formDirty, setFormDirty] = useState(false);
   const [discard, setDiscard] = useState<'document' | 'form' | null>(null);
@@ -95,6 +117,11 @@ function App() {
   const openingWatch = useRef<Promise<void> | null>(null);
   const heading = useRef<HTMLHeadingElement>(null);
   const workEditorHeading = useRef<HTMLHeadingElement>(null);
+  const workTitle = useRef<HTMLInputElement>(null);
+  const workDescription = useRef<HTMLTextAreaElement>(null);
+  const newWorkButton = useRef<HTMLButtonElement>(null);
+  const routedIdentity = useRef<string | undefined>(undefined);
+  const lastWorkAddress = useRef(decodeWorkAddress(location.hash) ? location.hash : '');
   const workTrigger = useRef<HTMLElement | null>(null);
   const quickActionFocus = useRef<{trigger: HTMLElement; row: string; control: string} | null>(null);
   const feedbackHeading = useRef<HTMLHeadingElement>(null);
@@ -106,9 +133,11 @@ function App() {
     repositoryGeneration.current++;
     displayedSnapshot.current = null;
     quickActionFocus.current = null;
+    routedIdentity.current = undefined;
     setLoading(false);
     setProjects([]); setProject(null); setContainers([]); setContainer(null); setRows([]);
-    setRepository(null); setShowRepository(false);
+    setRepository(null); setShowRepository(false); setSelectedReview(undefined);
+    setWorkFiltersOpen(false); setWorkFilters(initialWorkFilters); setWorkRoster({status: 'loading'});
     setSearch(''); setSearchDraft(''); setCursor(''); setEditor(null); setWork(null); setWorkMenu(null); setForm(''); setFormDirty(false); setDiscard(null); setPending(null); setTargets([]); setTargetFilter(''); setConfirmation(null); setCurrentVersion(null); setNotice(''); setRefreshNotice(null);
   };
   client.onInvalidated = () => { clearViews(); setIdentity(null); setChallenge(null); };
@@ -142,7 +171,13 @@ function App() {
     if (!person) throw new HomeError('invalid_response');
     setIdentity(person);
     const list = await client.query(blankQuery('projects'));
-    setProjects(Object.values(list.rows));
+    const allowed = Object.values(list.rows);
+    setProjects(allowed);
+    if (routedIdentity.current !== person.session_audit_id) {
+      routedIdentity.current = person.session_audit_id;
+      const address = decodeWorkAddress(location.hash);
+      if (address) await restoreWorkAddress(address, allowed);
+    }
   }
   useEffect(() => {
     let active = true;
@@ -246,8 +281,25 @@ function App() {
       const query = blankQuery(nextTab, project.project_id, nextTab === 'documents' ? nextContainer?.container_id ?? '' : '', '', nextTab === 'search' ? term : '', nextCursor);
       const view = nextTab === 'project' ? metadata : await client.query(query);
       if (generation !== activeQuery.current || !applies()) return false;
+      let nextRows = Object.values(view.rows);
+      let cursor = view.cursor;
+      if (nextTab === 'work' && workFiltersOpen && !nextCursor) {
+        const seen = new Set<string>();
+        while (cursor) {
+          if (seen.has(cursor) || seen.size >= 6) throw new HomeError('invalid_response');
+          seen.add(cursor);
+          const page = await client.query({...query, cursor});
+          if (generation !== activeQuery.current || !applies()) return false;
+          if (page.generation !== view.generation) throw new HomeError('stale_cursor');
+          nextRows = [...nextRows, ...Object.values(page.rows)];
+          cursor = page.cursor;
+        }
+        if (nextRows.length > 128 || new Set(nextRows.map(row => row.resource_id)).size !== nextRows.length) {
+          throw new HomeError('invalid_response');
+        }
+      }
       displayedSnapshot.current = {scope: scopeKey(identity?.session_audit_id, query), generation: view.generation};
-      setRows(Object.values(view.rows)); setCursor(view.cursor); if (announce) announceRefresh('View refreshed from home.');
+      setRows(nextRows); setCursor(cursor); if (announce) announceRefresh('View refreshed from home.');
       return true;
     } finally { if (announce && generation === activeQuery.current) setLoading(false); }
   }
@@ -338,13 +390,25 @@ function App() {
     }
     void connect();
     return () => { active = false; if (timer) clearTimeout(timer); if (watch) void client.retire(watch).catch(() => {}); };
-  }, [identity?.session_audit_id, project?.project_id, tab, container?.container_id, search, updatesRevision]);
+  }, [identity?.session_audit_id, project?.project_id, tab, container?.container_id, search, updatesRevision, workFiltersOpen]);
   useEffect(() => { if (project) heading.current?.focus(); }, [project?.project_id]);
-  useEffect(() => { if (form === 'work' || work) workEditorHeading.current?.focus(); }, [form, work?.resource_id]);
+  useEffect(() => {
+    if (showRepository) return;
+    if (form === 'work' && (!work || editWorkField === 'title')) workTitle.current?.focus();
+    else if (form === 'work' && editWorkField === 'description') workDescription.current?.focus();
+    else if (form === 'work' || work) workEditorHeading.current?.focus();
+  }, [form, work?.resource_id, editWorkField, showRepository]);
   useEffect(() => { if (discard || confirmation || currentVersion) feedbackHeading.current?.focus(); }, [discard, confirmation, currentVersion]);
   function closeDraft(target: 'document' | 'form') {
     if (target === 'document') setEditor(null);
-    else { setForm(''); setWork(null); setFormDirty(false); requestAnimationFrame(() => workTrigger.current?.focus()); }
+    else {
+      const keepDetail = form === 'work' && !!work;
+      setForm(''); setEditWorkField(null); setFormDirty(false);
+      if (!keepDetail) {
+        if (tab === 'work' && project?.project_id && work) syncWorkAddress(project.project_id, undefined, true);
+        setWork(null); requestAnimationFrame(() => workTrigger.current?.focus());
+      }
+    }
     setDiscard(null); setCurrentVersion(null); setConfirmation(null); setError('');
   }
   function requestClose(target: 'document' | 'form') {
@@ -366,22 +430,107 @@ function App() {
     setSearch(searchDraft);
     reloadScope();
   }
-  async function openProject(row: Row) {
-    if (busy || editor?.dirty || pending || form) { setError('Finish or discard the current draft before switching projects.'); return; }
+  function enterProject(row: Row, nextTab: ViewKind) {
     if (row.project_id !== project?.project_id) {
       repositoryGeneration.current++;
       setRepository(null);
+      setWorkFiltersOpen(false); setWorkFilters(initialWorkFilters);
     } else if (row.project_id) void loadRepository(row.project_id);
     setShowRepository(false);
-    setWork(null); setForm(''); setTargets([]); setConfirmation(null); setCurrentVersion(null); setProject(row); setContainer(null); setEditor(null); setRows([]); setContainers([]); setTab('project'); setCursor('');
+    setSelectedReview(undefined);
+    setWork(null); setForm(''); setTargets([]); setConfirmation(null); setCurrentVersion(null); setProject(row); setContainer(null); setEditor(null); setRows([]); setContainers([]); setTab(nextTab); setCursor('');
     reloadScope();
   }
+  async function openProject(row: Row) {
+    if (busy || editor?.dirty || pending || form) { setError('Finish or discard the current draft before switching projects.'); return; }
+    syncWorkAddress();
+    enterProject(row, 'project');
+  }
+  function syncWorkAddress(projectId?: string, item?: string, replace = false) {
+    const hash = projectId ? workAddress(projectId, item).hash : '';
+    if (!hash && !decodeWorkAddress(location.hash)) return;
+    lastWorkAddress.current = hash;
+    if (hash !== location.hash) history[replace ? 'replaceState' : 'pushState'](null, '', location.pathname + hash);
+  }
+  async function readWorkItem(projectId: string, itemId: string) {
+    const view = await client.query(blankQuery('work', projectId, '', itemId));
+    const items = Object.values(view.rows);
+    const item = items[0];
+    if (items.length !== 1 || item?.resource_id !== itemId || item.kind !== 'work') throw new HomeError('denied_or_not_found');
+    return item;
+  }
+  async function restoreWorkAddress(address: WorkAddress, allowed = projects) {
+    const requestedHash = location.hash;
+    const row = allowed.find(item => item.project_id === address.project);
+    if (!row) { setError('This work link is unavailable or you do not have access.'); return; }
+    let item: Row | null = null;
+    let unavailable = false;
+    if (address.item) {
+      try { item = await readWorkItem(address.project, address.item); }
+      catch (failure) {
+        if (!(failure instanceof HomeError) || failure.code !== 'denied_or_not_found') throw failure;
+        unavailable = true;
+      }
+    }
+    if (location.hash !== requestedHash) return;
+    if (project?.project_id !== row.project_id || tab !== 'work') enterProject(row, 'work');
+    else { setShowRepository(false); setSelectedReview(undefined); }
+    const previousItem = work?.resource_id;
+    if (!item && previousItem && UUID.test(previousItem)) requestAnimationFrame(() =>
+      document.querySelector<HTMLElement>(`[data-work-row="${previousItem}"] .work-title`)?.focus());
+    workTrigger.current = null;
+    setWork(item); setForm(''); setWorkMenu(null); setCurrentVersion(null); setConfirmation(null);
+    if (unavailable) setError('This work link is unavailable or you do not have access.');
+  }
+  useEffect(() => {
+    if (!identity) return;
+    function restore() {
+      const address = decodeWorkAddress(location.hash);
+      if (!address && !lastWorkAddress.current) return;
+      if (lastWorkAddress.current === location.hash) return;
+      if (actionBusy.current || editor?.dirty || pending || form) {
+        history.pushState(null, '', location.pathname + lastWorkAddress.current);
+        setError('Finish or discard the current draft before navigating.');
+        return;
+      }
+      lastWorkAddress.current = address ? location.hash : '';
+      if (address) void action(() => restoreWorkAddress(address), explainConnection);
+      else if (project && tab === 'work') enterProject(project, 'project');
+    }
+    window.addEventListener('popstate', restore);
+    window.addEventListener('hashchange', restore);
+    return () => { window.removeEventListener('popstate', restore); window.removeEventListener('hashchange', restore); };
+  });
+  async function copyWorkLink(row: Row) {
+    if (!project?.project_id || !UUID.test(row.resource_id ?? '')) return;
+    try {
+      await navigator.clipboard.writeText(workAddress(project.project_id, row.resource_id).href);
+      setNotice('Work item link copied.');
+    } catch { setError('This browser could not copy the link. Open the item and copy its address.'); }
+  }
+  function selectProjectTab(kind: ViewKind) {
+    if (busy || editor?.dirty || pending || form) { setError('Finish or discard the current draft first.'); return; }
+    syncWorkAddress(kind === 'work' ? project?.project_id : undefined);
+    activeQuery.current++; setShowRepository(false); setSelectedReview(undefined); setEditor(null); setWork(null); setCurrentVersion(null);
+    setConfirmation(null); setForm(''); setTab(kind); setRows([]); setCursor(''); reloadScope();
+  }
+  function openLinkedReview(proposalId: string) {
+    if (!UUID.test(proposalId) || workActionsLocked) return;
+    syncWorkAddress(); setSelectedReview(proposalId); setShowRepository(true);
+  }
+  function openLinkedWork(item: string) {
+    const projectId = project?.project_id;
+    if (!projectId || !UUID.test(item) || workActionsLocked) return;
+    syncWorkAddress(projectId, item);
+    void action(() => restoreWorkAddress({project: projectId, item}), explainConnection);
+  }
   async function completed(value: Command, receipt: Fields) {
-    const refreshDetail = !form && work?.resource_id === value.resource_id && ['work.update', 'work.assign'].includes(value.operation);
+    const refreshDetail = work?.resource_id === value.resource_id && ['work.update', 'work.assign'].includes(value.operation);
     setPending(null);
     if (value.operation === 'document.save' && editor?.id === value.resource_id) setEditor({ ...editor, revision: receipt.resource_revision!, head: receipt.git_commit_oid ?? '', dirty: false });
-    setForm(''); setFormDirty(false); setDiscard(null); if (!refreshDetail) setWork(null); setConfirmation(null); setCurrentVersion(null);
+    setForm(''); setEditWorkField(null); setFormDirty(false); setDiscard(null); if (!refreshDetail) setWork(null); setConfirmation(null); setCurrentVersion(null);
     if (value.operation === 'document.delete') setEditor(null);
+    if (value.operation === 'work.delete' && work?.resource_id === value.resource_id) syncWorkAddress(value.project_id, undefined, true);
     if (value.operation === 'project.create') await identify();
     else if (value.operation === 'container.create' && project) setContainers(await collections(project.project_id!));
     else if (project) await refresh();
@@ -419,9 +568,9 @@ function App() {
   async function openWork(row: Row, trigger: HTMLElement) {
     if (busy || editor?.dirty || pending || form) { setError('Finish or discard the current draft first.'); return; }
     if (!project) return; const generation = ++activeQuery.current;
-    const view = await client.query(blankQuery('work', project.project_id, '', row.resource_id));
+    const item = await readWorkItem(project.project_id!, row.resource_id!);
     if (generation !== activeQuery.current) return;
-    const item = Object.values(view.rows)[0]; if (!item) throw new HomeError('denied_or_not_found');
+    syncWorkAddress(project.project_id!, item.resource_id);
     workTrigger.current = trigger;
     setWork(item); setForm(''); setCurrentVersion(null); setConfirmation(null);
   }
@@ -440,6 +589,34 @@ function App() {
   const canEdit = project && ['contributor', 'maintainer'].includes(project.role ?? '');
   const draftMode = container?.visibility === 'private';
   const workActionsLocked = busy || !!pending || !!form || !!editor?.dirty;
+  function startNewWork() {
+    if (workActionsLocked || !canEdit) return;
+    workTrigger.current = newWorkButton.current;
+    setWork(null); setEditWorkField(null); setWorkRoster({status: 'loading'}); setCurrentVersion(null); setConfirmation(null); setForm('work');
+  }
+  function startEditingWork(field: 'title' | 'description' | null) {
+    if (workActionsLocked || !canEdit || !work) return;
+    setEditWorkField(field); setForm('work');
+  }
+  function toggleWorkFilters() {
+    if (workActionsLocked) return;
+    setWorkFiltersOpen(!workFiltersOpen);
+    if (workFiltersOpen) setWorkFilters(initialWorkFilters);
+    setRows([]); setCursor('');
+    reloadScope();
+  }
+  useEffect(() => {
+    if (tab !== 'work' || showRepository || workActionsLocked || workMenu || !canEdit) return;
+    function shortcut(event: KeyboardEvent) {
+      if (event.defaultPrevented || event.repeat || event.isComposing || event.altKey || event.ctrlKey || event.metaKey || event.shiftKey
+        || event.key.toLowerCase() !== 'c' || !(event.target instanceof HTMLElement)
+        || event.target.closest('input,textarea,select,[contenteditable],summary,[role="dialog"]')) return;
+      event.preventDefault();
+      startNewWork();
+    }
+    document.addEventListener('keydown', shortcut);
+    return () => document.removeEventListener('keydown', shortcut);
+  }, [tab, showRepository, workActionsLocked, workMenu, canEdit]);
   function showWorkMenu(row: Row, view: WorkMenu['view'], trigger: HTMLElement, point?: {x: number; y: number}) {
     if (workActionsLocked || !project || (view !== 'actions' && !canEdit)) return;
     const rect = trigger.getBoundingClientRect();
@@ -466,6 +643,18 @@ function App() {
     } while (next);
     return found;
   }
+  useEffect(() => {
+    const projectId = project?.project_id;
+    if (form !== 'work' || work || !projectId || !canEdit) return;
+    let active = true;
+    setWorkRoster({status: 'loading'});
+    void loadAssignees(projectId).then(rows => {
+      if (active) setWorkRoster({status: 'ready', rows});
+    }, () => {
+      if (active) setWorkRoster({status: 'unavailable'});
+    });
+    return () => { active = false; };
+  }, [form, work?.resource_id, project?.project_id, project?.authority_epoch, identity?.session_audit_id, canEdit, workRosterRetry]);
   async function updateWorkProperty(row: Row, property: WorkProperty, value: string) {
     if (!project || !canEdit || !row.resource_id || !row.resource_revision) return;
     const { resource_id: id, resource_revision: revision } = row;
@@ -516,8 +705,17 @@ function App() {
     } else {
       if (!project) return;
       const id = form === 'work' && work ? work.resource_id! : newId();
-      if (form === 'work') next = command(project.project_id!, id, work?.resource_revision ?? '0', project.authority_epoch!, work ? 'work.update' : 'work.create',
-        { title: text('title'), description: text('description'), type: text('type'), status: text('status'), priority: text('priority') });
+      if (form === 'work') {
+        const payload: Fields = {title: text('title'), description: text('description'), type: text('type'), status: text('status'), priority: text('priority')};
+        const assignee = work ? '' : text('assignee');
+        if (assignee) {
+          if (workRoster.status !== 'ready' || !workRoster.rows.some(row => row.principal_id === assignee)) {
+            setError('Choose a project member again before creating this item.'); return;
+          }
+          payload.assignee_principal_id = assignee;
+        }
+        next = command(project.project_id!, id, work?.resource_revision ?? '0', project.authority_epoch!, work ? 'work.update' : 'work.create', payload);
+      }
       else if (form === 'container') next = command(project.project_id!, id, '0', project.authority_epoch!, 'container.create', { title: text('title'), visibility: text('visibility') });
       else if (form === 'publish') {
         const destination = containers.find(row => row.container_id === text('destination') && row.visibility === 'shared');
@@ -555,14 +753,21 @@ function App() {
         if (trigger) showWorkMenu(row, 'actions', trigger, {x: event.clientX, y: event.clientY});
       } : undefined}
       onKeyDown={inWork ? event => {
-        if (locked || !(event.key === 'ContextMenu' || (event.shiftKey && event.key === 'F10'))) return;
-        event.preventDefault();
+        if (locked || event.defaultPrevented || event.repeat || event.nativeEvent.isComposing || event.altKey || event.ctrlKey || event.metaKey) return;
         const trigger = event.target instanceof HTMLElement ? event.target : event.currentTarget;
-        showWorkMenu(row, 'actions', trigger);
+        if (event.key === 'ContextMenu' || (event.shiftKey && event.key === 'F10')) {
+          event.preventDefault();
+          showWorkMenu(row, 'actions', trigger);
+        } else if (canEdit && !event.shiftKey && trigger.matches('button')) {
+          const property = workShortcuts.get(event.key.toLowerCase());
+          if (!property) return;
+          event.preventDefault();
+          showWorkMenu(row, property, trigger);
+        }
       } : undefined}>
       <div className="resource-summary">
         {!inWork && <span className="row-kind">{row.kind === 'document' ? 'Page' : row.kind ?? row.type ?? tab}</span>}
-        <h2>{inWork ? <button className="work-title" data-work-control="title" disabled={locked} aria-expanded={work?.resource_id === row.resource_id} aria-controls="work-detail-panel" onClick={event => { const trigger = event.currentTarget; void action(() => openWork(row, trigger), explainConnection); }}>{title}</button> : title}</h2>
+        <h2>{inWork ? <button className="work-title" data-work-control="title" disabled={locked} aria-expanded={work?.resource_id === row.resource_id} aria-controls="work-detail-panel" aria-keyshortcuts={canEdit ? 'S A P Shift+F10' : 'Shift+F10'} onClick={event => { const trigger = event.currentTarget; void action(() => openWork(row, trigger), explainConnection); }}>{title}</button> : title}</h2>
         {row.description && <p>{row.description}</p>}
         {snippet && snippet !== row.description && <p>{snippet}</p>}
         {!inWork && row.status && <span className="muted">{row.status}</span>}
@@ -585,9 +790,17 @@ function App() {
     </Surface>;
   }
 
+  const titleTerm = workFilters.title.trim().toLocaleLowerCase();
+  const activeRows = tab !== 'work' || !workFiltersOpen ? rows : rows.filter(row =>
+    (!titleTerm || row.title?.toLocaleLowerCase().includes(titleTerm))
+    && (!workFilters.status || row.status === workFilters.status)
+    && (!workFilters.assignee || (workFilters.assignee === 'unassigned' ? !row.assignee_principal_id
+      : row.assignee_principal_id === (workFilters.assignee === 'mine' ? identity?.principal_id : workFilters.assignee))));
+  const workPeople = new Map(rows.filter(row => row.assignee_principal_id && row.assignee_display_name)
+    .map(row => [row.assignee_principal_id!, row.assignee_display_name!]));
   const workGroups = new Map<string, Row[]>();
   if (tab === 'work') {
-    for (const row of rows) {
+    for (const row of activeRows) {
       const status = row.status || 'No status';
       const group = workGroups.get(status);
       if (group) group.push(row);
@@ -595,7 +808,9 @@ function App() {
     }
   }
   const visibleRows = loading ? <LoadingState label="Loading authorized view"/>
-    : rows.length === 0 ? <EmptyState title={tab === 'documents' && !container ? 'Choose a collection' : 'Nothing here yet'} description={
+    : tab === 'work' && workFiltersOpen && activeRows.length === 0 && rows.length > 0
+      ? <EmptyState title="No work matches these filters" description="Clear one or more filters to see more work."/>
+    : activeRows.length === 0 ? <EmptyState title={tab === 'documents' && !container ? 'Choose a collection' : 'Nothing here yet'} description={
       tab === 'documents' ? 'Private drafts stay private until you explicitly publish a page.' : 'This view contains only resources you are allowed to access.'
     }/>
     : tab === 'work' ? <div className="work-groups">{[...new Set([...workStatuses.keys(), ...workGroups.keys()])].map(status => {
@@ -613,10 +828,25 @@ function App() {
     })}</div> : <div className="rows">{rows.map(resourceRow)}</div>;
   const workPanelOpen = tab === 'work' && (form === 'work' || !!work);
   const formPanel = form && <Surface id={workPanelOpen ? "work-detail-panel" : undefined} className={workPanelOpen ? "creation work-detail" : "creation"} aria-labelledby="form-title"><h2 id="form-title" ref={workPanelOpen ? workEditorHeading : undefined} tabIndex={workPanelOpen ? -1 : undefined}>{form === 'project' ? 'Create a general project' : form === 'container' ? 'Create a collection' : form === 'relation' ? 'Link two resources' : form === 'publish' ? 'Publish a selected page' : work ? 'Edit work item' : 'Create work item'}</h2><form key={form + (work?.resource_id ?? '')} onSubmit={submitForm} onChange={() => setFormDirty(true)}><fieldset disabled={busy || !!pending}>
-            {form !== 'relation' && form !== 'publish' && <TextField label="Title" name="title" readOnly={form === 'work' && !canEdit} defaultValue={form === 'work' ? work?.title ?? '' : ''} maxLength={200} required/>}
+            {form !== 'relation' && form !== 'publish' && <TextField ref={form === 'work' ? workTitle : undefined} label="Title" name="title" readOnly={form === 'work' && !canEdit} defaultValue={form === 'work' ? work?.title ?? '' : ''} maxLength={200} required/>}
             {form === 'project' && <TextField label="Project key" description="A short uppercase key, such as GARDEN." name="project_key" pattern="[A-Z][A-Z0-9]{1,9}" maxLength={10} required/>}
             {form === 'container' && <label>Visibility<select name="visibility" aria-label="Visibility"><option value="private">Private drafts · only you</option>{project?.role === 'maintainer' && <option value="shared">Shared with project members</option>}</select></label>}
-            {form === 'work' && <><label>Description<textarea name="description" readOnly={!canEdit} defaultValue={work?.description ?? ''} maxLength={8192}/></label><div className="form-columns"><label>Type<select aria-label="Type" name="type" disabled={!canEdit} defaultValue={work?.type ?? 'task'}>{['deliverable','task','problem'].map(value => <option key={value}>{value}</option>)}</select></label><label>Status<select aria-label="Status" name="status" disabled={!canEdit} defaultValue={work?.status ?? 'todo'}>{[...workStatuses].map(([value, label]) => <option key={value} value={value}>{label}</option>)}</select></label><label>Priority<select aria-label="Priority" name="priority" disabled={!canEdit} defaultValue={work?.priority ?? 'none'}>{['none','low','medium','high','urgent'].map(value => <option key={value}>{value}</option>)}</select></label></div></>}
+            {form === 'work' && <>
+              <label>Description<textarea ref={workDescription} name="description" readOnly={!canEdit} defaultValue={work?.description ?? ''} maxLength={8192}/></label>
+              <div className="form-columns">
+                <label>Type<select aria-label="Type" name="type" disabled={!canEdit} defaultValue={work?.type ?? 'task'}>{['deliverable','task','problem'].map(value => <option key={value} value={value}>{value[0]?.toUpperCase()}{value.slice(1)}</option>)}</select></label>
+                <label>Status<select aria-label="Status" name="status" disabled={!canEdit} defaultValue={work?.status ?? 'todo'}>{[...workStatuses].map(([value, label]) => <option key={value} value={value}>{label}</option>)}</select></label>
+                <label>Priority<select aria-label="Priority" name="priority" disabled={!canEdit} defaultValue={work?.priority ?? 'none'}>{['none','low','medium','high','urgent'].map(value => <option key={value} value={value}>{value === 'none' ? 'No priority' : value[0]?.toUpperCase() + value.slice(1)}</option>)}</select></label>
+              </div>
+              {!work && <><label>Assignee<select name="assignee" disabled={workRoster.status !== 'ready'}>
+                <option value="">Unassigned</option>{workRoster.status === 'ready' && workRoster.rows.map(row =>
+                  <option key={row.principal_id} value={row.principal_id}>{row.display_name}{row.principal_id === identity?.principal_id ? ' (you)' : ''} · {row.identity_ship}</option>)}
+              </select></label>
+                {workRoster.status === 'loading' && <p className="muted" role="status">Loading project members…</p>}
+                {workRoster.status === 'unavailable' && <div className="work-roster-error"><span role="status">Project members could not be loaded.</span>
+                  <Button variant="quiet" onClick={() => setWorkRosterRetry(value => value + 1)}>Retry members</Button></div>}
+              </>}
+            </>}
             {form === 'publish' && <><p>Publish saved revision {editor?.revision} of page {editor?.id}. Its source is locked while you choose a destination. Copy this saved page into a shared collection. The original and other drafts stay private. Only the selected body is published.</p><label>Destination collection<select name="destination" aria-label="Destination collection" required><option value="">Choose a shared collection</option>{containers.filter(row => row.visibility === 'shared').map(row => <option key={row.container_id} value={row.container_id}>{row.title}</option>)}</select></label></>}
             {form === 'relation' && <><div className="search"><TextField label="Find resources to link" value={targetFilter} onChange={event => setTargetFilter(event.target.value)} maxLength={128}/><Button disabled={busy} onClick={() => void action(() => findTargets())}>Find resources</Button></div><label>Link type<select name="relation_type" aria-label="Link type"><option value="related_to">Related to</option><option value="blocks">Blocks · work to work</option><option value="documents">Documents · page to work</option></select></label>{['source','target'].map(side => <label key={side}>{side === 'source' ? 'From resource' : 'To resource'}<select name={side} aria-label={side === 'source' ? 'From resource' : 'To resource'} required><option value="">Choose an authorized resource</option>{targets.map(row => { const key = `${row.kind}/${row.container_id}/${row.resource_id}`; return <option key={key} value={key}>{row.title} · {row.kind}</option>; })}</select></label>)}</>}
 
@@ -630,7 +860,9 @@ function App() {
       onClick={() => void action(() => openProject(project), explainConnection)}>{brand}</button> : <span className="brand">{brand}</span>}
       {identity && <><span className="alpha">Team alpha</span><div className="account"><span className="member-label"><span className="member-name">{identity.display_name}</span><small title={identity.identity_ship}>{identity.identity_ship}</small></span><Button variant="quiet" disabled={busy} onClick={() => void action(() => client.logout())}>Sign out</Button></div></>}</header>
     {!online && <div className="banner" role="status">You’re offline. Drafts stay in this tab; nothing is saved until the home confirms it.</div>}
-    <main id="main">{identity ? <a className="skip-link" href="#project-content">Skip to project content</a> : !loading && <a className="skip-link" href="#urbit-sign-in-title">Skip to sign-in</a>}
+    <main id="main">{identity ? <a className="skip-link" href="#project-content" onClick={event => {
+      event.preventDefault(); document.getElementById('project-content')?.focus();
+    }}>Skip to project content</a> : !loading && <a className="skip-link" href="#urbit-sign-in-title">Skip to sign-in</a>}
       {error && <div className="error" role="alert"><p>{error}</p>
         {canReconnect && (identity
           ? <Button disabled={busy} onClick={() => void action(async () => {
@@ -665,15 +897,16 @@ function App() {
           {discard && <Surface className="confirmation" role="alertdialog" aria-labelledby="discard-title" aria-describedby="discard-description"><h2 id="discard-title" ref={feedbackHeading} tabIndex={-1}>Discard unsaved changes?</h2><p id="discard-description">Your local edits will be removed. Your last saved version stays at home.</p><div className="actions"><Button variant="danger" disabled={busy || !!pending} onClick={() => closeDraft(discard)}>Discard changes</Button><Button disabled={busy} onClick={() => { setDiscard(null); discardTrigger.current?.focus(); }}>Keep editing</Button></div></Surface>}
           {!project && <div className="welcome"><p className="eyebrow">START WITH WHAT MATTERS</p><h1 ref={heading} tabIndex={-1}>A clear place for your work.</h1><p>Choose a project to see its work and knowledge.</p></div>}
           {project && <><div className="project-heading"><div><p className="eyebrow">Projects <span aria-hidden="true">/</span> {project.project_key}</p><h1 ref={heading} tabIndex={-1}>{project.title}</h1></div><span className="role-badge">{project.role}</span></div>
-          <nav className="tabs" aria-label="Project views">{([['project','Overview'],['work','Work'],['documents','Docs'],['relations','Links'],['activity','Activity'],['inbox','Inbox'],['search','Search']] as const).map(([kind,label]) => <Button disabled={busy} key={kind} variant={!showRepository && tab === kind ? 'primary' : 'quiet'} aria-current={!showRepository && tab === kind ? 'page' : undefined} onClick={() => { if (busy || editor?.dirty || pending || form) { setError('Finish or discard the current draft first.'); return; } activeQuery.current++; setShowRepository(false); setEditor(null); setWork(null); setCurrentVersion(null); setConfirmation(null); setForm(''); setTab(kind); setRows([]); setCursor(''); reloadScope(); }}>{label}</Button>)}
+          <nav className="tabs" aria-label="Project views">{([['project','Overview'],['work','Work'],['documents','Docs'],['relations','Links'],['activity','Activity'],['inbox','Inbox'],['search','Search']] as const).map(([kind,label]) => <Button disabled={busy} key={kind} variant={!showRepository && tab === kind ? 'primary' : 'quiet'} aria-current={!showRepository && tab === kind ? 'page' : undefined} onClick={() => selectProjectTab(kind)}>{label}</Button>)}
           {(repository?.status === 'ready' || externalRepository) && <Button disabled={busy || !!editor?.dirty || !!pending || !!form}
             variant={showRepository ? 'primary' : 'quiet'} aria-current={showRepository ? 'page' : undefined}
-            onClick={() => setShowRepository(true)}>Code</Button>}</nav>
+            onClick={() => { syncWorkAddress(); setSelectedReview(undefined); setShowRepository(true); }}>Code</Button>}</nav>
           {showRepository && repository?.status === 'ready' ? <CodeRepository key={project.project_id}
             client={client} project={project.project_id!} writable={repository.write === 'yes'}
             manage={repository.manage === 'yes'} principal={identity.principal_id ?? ''} /> :
           showRepository && externalRepository ? <CodePack key={`${project.project_id}/${project.authority_epoch}`} client={client} project={project.project_id!}
-            manage={repository?.manage === 'yes'} writable={repository?.write === 'yes'} principal={identity.principal_id ?? ''} /> : <>
+            manage={repository?.manage === 'yes'} writable={repository?.write === 'yes'} principal={identity.principal_id ?? ''}
+            initialProposal={selectedReview} onOpenWork={openLinkedWork}/> : <>
           {tab === 'project' && repository?.status === 'disabled' && repository.manage === 'yes'
             && <Button disabled={busy || !!pending || !!form} onClick={() => void action(() => loadRepository(project.project_id!, true))}>Enable Git repository</Button>}
           <div className="toolbar"><div className="view-heading">{tab === 'work' && <h2>Work items</h2>}{tab === 'documents' && <label>Collection <select aria-label="Collection" disabled={busy} value={container?.container_id ?? ''} onChange={event => { const selected = containers.find(row => row.container_id === event.target.value) ?? null; if (busy || editor?.dirty || pending || form) { setError('Finish or discard the current draft first.'); return; } activeQuery.current++; setContainer(selected); setEditor(null); setWork(null); setCurrentVersion(null); setConfirmation(null); setForm(''); setRows([]); setCursor(''); reloadScope(); }}><option value="">Choose a collection</option>{containers.map(row => <option key={row.container_id} value={row.container_id}>{row.title} · {row.visibility === 'private' ? 'Private drafts' : 'Shared'}</option>)}</select></label>}{tab === 'search' && <form className="search" onSubmit={submitSearch}><TextField label="Search this project" value={searchDraft} onChange={event => setSearchDraft(event.target.value)} maxLength={128}/><Button type="submit" disabled={busy}>Search</Button></form>}</div><div className="actions">
@@ -681,10 +914,26 @@ function App() {
             reloadScope();
             if (tab === 'project') void loadRepository(project.project_id!);
           }}>Refresh</Button>
-          {canEdit && tab === 'work' && <Button variant="primary" disabled={busy || !!pending || !!form} onClick={() => { setWork(null); setCurrentVersion(null); setForm('work'); }}><span aria-hidden="true" className="button-plus">＋</span>New work item</Button>}
+          {tab === 'work' && <Button variant="quiet" disabled={workActionsLocked} aria-expanded={workFiltersOpen}
+            aria-controls="work-filters" onClick={toggleWorkFilters}>Filters{workFiltersOpen && ' ▾'}</Button>}
+          {canEdit && tab === 'work' && <Button ref={newWorkButton} variant="primary" disabled={workActionsLocked} aria-keyshortcuts="C" title="New work item (C)"
+            onClick={startNewWork}><span aria-hidden="true" className="button-plus">＋</span>New work item</Button>}
           {canEdit && tab === 'relations' && <Button variant="primary" disabled={busy || !!pending || !!form || !!editor?.dirty} onClick={() => void action(async () => { await findTargets(''); setTargetFilter(''); setForm('relation'); })}>Add link</Button>}
           {canEdit && tab === 'documents' && <><Button disabled={busy || !!pending || !!form || !!editor?.dirty} onClick={() => { setEditor(null); setWork(null); setCurrentVersion(null); setForm('container'); }}>New collection</Button>{container && <Button variant="primary" disabled={busy || loading || !!pending || !!form || !!editor?.dirty} onClick={() => { activeQuery.current++; const id = newId(); setWork(null); setCurrentVersion(null); setEditor({ id, revision: '0', head: container.container_head ?? '', dirty: true, text: `---\nid: ${id}\ntype: page\nstate: ${draftMode ? 'draft' : 'published'}\n---\n# Untitled\n` }); }}>New page</Button>}</>}
           </div></div>
+          {tab === 'work' && workFiltersOpen && <section className="work-filters" id="work-filters" aria-label="Work filters">
+            <TextField label="Find by title" value={workFilters.title} maxLength={200} onChange={event => setWorkFilters({...workFilters, title: event.target.value})}/>
+            <label>Status<select aria-label="Filter by status" value={workFilters.status} onChange={event => setWorkFilters({...workFilters, status: event.target.value})}>
+              <option value="">Any status</option>{[...workStatuses].map(([value, label]) => <option key={value} value={value}>{label}</option>)}
+            </select></label>
+            <label>Assignee<select aria-label="Filter by assignee" value={workFilters.assignee} onChange={event => setWorkFilters({...workFilters, assignee: event.target.value})}>
+              <option value="">Any assignee</option><option value="mine">Assigned to me</option><option value="unassigned">Unassigned</option>
+              {[...workPeople].filter(([id]) => id !== identity.principal_id).sort((a, b) => a[1].localeCompare(b[1])).map(([id, name]) =>
+                <option key={id} value={id}>{name}</option>)}
+            </select></label>
+            <Button variant="quiet" disabled={!workFilters.title && !workFilters.status && !workFilters.assignee} onClick={() => setWorkFilters(initialWorkFilters)}>Clear filters</Button>
+            {!loading && <p role="status">{activeRows.length} of {rows.length} work items</p>}
+          </section>}
           {currentVersion && currentVersion.scope === comparisonScope && <Surface className="comparison"><h2 ref={feedbackHeading} tabIndex={-1}>Current saved revision {currentVersion.row.resource_revision}</h2><pre>{currentVersion.row.markdown ?? `${currentVersion.row.title}\n${currentVersion.row.description}`}</pre><p>{canEdit ? 'Your local text has not changed. Choose its base revision before saving again.' : 'This is the current revision saved at home.'}</p>{canEdit && <Button disabled={busy || !!pending} onClick={() => { if (currentVersion.scope !== comparisonScope) { setCurrentVersion(null); return; } if (editor) setEditor({...editor, revision: currentVersion.row.resource_revision!, head: currentVersion.row.container_head ?? '', dirty: true}); else if (work) setWork(currentVersion.row); setCurrentVersion(null); setNotice('Local edits kept. Review them, then explicitly save against the current revision.'); }}>Keep my edits using this revision</Button>}<Button onClick={() => setCurrentVersion(null)}>Close comparison</Button></Surface>}
           {confirmation && <Surface className="confirmation"><h2 ref={feedbackHeading} tabIndex={-1}>Delete {confirmation.label}?</h2><p>This removes it from current views. Authorized historical Git exports retain earlier page versions; this does not erase copies others already hold.</p><div className="actions"><Button disabled={busy || !!pending || !!form || !!editor?.dirty} onClick={() => void action(() => save(confirmation.command))}>Confirm deletion</Button><Button disabled={busy} onClick={() => setConfirmation(null)}>Keep it</Button></div></Surface>}
           {editor && container ? <Surface className="document-editor"><div className="editor-heading"><div><h2>{pageTitle(editor.text)}</h2><span className="page-visibility">{draftMode ? 'Private draft · only you' : 'Shared with project members'}</span></div><span>{editor.dirty ? 'Local changes · not saved' : `Saved revision ${editor.revision}`}</span></div><div className="editor-layout"><div className="editor-source"><label className="editor-label" htmlFor="markdown">Markdown source</label><textarea id="markdown" value={editor.text.slice(hiddenHeader.length)} readOnly={!canEdit || busy || !!pending || !!form}
@@ -698,15 +947,25 @@ function App() {
             <div className="view-list">{visibleRows}</div>
             {workPanelOpen && (form === 'work' ? formPanel : work && <Surface id="work-detail-panel" className="work-detail" aria-labelledby="work-detail-title">
               <div className="detail-heading"><span className="row-kind">Work item</span><Button variant="quiet" disabled={busy} onClick={() => closeDraft('form')}>Close</Button></div>
-              <h2 id="work-detail-title" ref={workEditorHeading} tabIndex={-1}>{work.title}</h2>
+              <h2 id="work-detail-title" ref={workEditorHeading} tabIndex={-1}>{canEdit
+                ? <button className="work-inline-title" title="Edit title" disabled={workActionsLocked} onClick={() => startEditingWork('title')}>{work.title}</button>
+                : work.title}</h2>
               <dl className="work-metadata">
                 <div><dt>Status</dt><dd>{workProperty(work, 'status', work.title ?? 'work item', 'detail')}</dd></div>
                 <div><dt>Assignee</dt><dd>{workProperty(work, 'assignee', work.title ?? 'work item', 'detail')}</dd></div>
                 <div><dt>Priority</dt><dd>{workProperty(work, 'priority', work.title ?? 'work item', 'detail')}</dd></div>
                 <div><dt>Type</dt><dd>{work.type}</dd></div>
               </dl>
-              <p className="work-description">{work.description || 'No description yet.'}</p>
-              <div className="actions">{canEdit && <Button disabled={busy || !!pending} onClick={() => setForm('work')}>Edit work item</Button>}<span className="muted">Revision {work.resource_revision}{!canEdit && ' · Read only'}</span></div>
+              {canEdit ? <button type="button" className="work-description work-inline-description" title="Edit description" disabled={workActionsLocked}
+                onClick={() => startEditingWork('description')}>{work.description || 'Add a description'}</button>
+                : <p className="work-description">{work.description || 'No description yet.'}</p>}
+              {repository?.status === 'external' && work.resource_id && <WorkCodeLinks key={`${identity.session_audit_id}/${project.project_id}/${project.authority_epoch}/${work.resource_id}`}
+                client={client} project={project.project_id!} work={work.resource_id} onOpenReview={openLinkedReview}/>}
+              <div className="actions">
+                {canEdit && <Button disabled={busy || !!pending} onClick={() => startEditingWork(null)}>Edit work item</Button>}
+                <Button variant="quiet" disabled={busy} onClick={() => void copyWorkLink(work)}>Copy link</Button>
+                <span className="muted">Revision {work.resource_revision}{!canEdit && ' · Read only'}</span>
+              </div>
             </Surface>)}
           </div>
           {cursor && <Button disabled={busy || loading || !updatesConnected} onClick={() => void action(() => refresh(tab, container, cursor))}>Next page</Button>}</>}
@@ -719,6 +978,7 @@ function App() {
     {workMenu && project && <WorkQuickActions key={`${workMenu.row.resource_id}/${workMenu.view}/${workMenu.x}/${workMenu.y}`}
       menu={workMenu} canEdit={!!canEdit} who={identity?.principal_id} loadAssignees={() => loadAssignees(project.project_id!)}
       close={closeWorkMenu} open={() => { closeWorkMenu(false); void action(() => openWork(workMenu.row, workMenu.trigger), explainConnection); }}
+      copy={() => { closeWorkMenu(); void copyWorkLink(workMenu.row); }}
       remove={() => { closeWorkMenu(false); confirmWorkRemoval(workMenu.row); }}
       change={(property, value) => {
         quickActionFocus.current = {trigger: workMenu.trigger, row: workMenu.row.resource_id!, control: workMenu.trigger.dataset.workControl ?? 'title'};

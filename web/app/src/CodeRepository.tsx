@@ -8,8 +8,8 @@ export function repositoryUrl(project: string) {
   return new URL(`/stead/git/${project}.git`, location.origin).href;
 }
 
-export function CopyValue({ value, label, onUnavailable }: {
-  value: string; label: string; onUnavailable?: () => void;
+export function CopyValue({ value, label, onUnavailable, fallbackLabel = 'Select the full ID to copy it.' }: {
+  value: string; label: string; onUnavailable?: () => void; fallbackLabel?: string;
 }) {
   const [result, setResult] = useState<'copied' | 'fallback' | null>(null);
   async function copy() {
@@ -24,7 +24,7 @@ export function CopyValue({ value, label, onUnavailable }: {
   return <>
     <Button variant="quiet" onClick={() => void copy()}>{label}</Button>
     {result && <span className="repo-copy-notice" role="status">
-      {result === 'copied' ? 'Copied.' : onUnavailable ? 'Copy the selected text.' : 'Select the full ID to copy it.'}
+      {result === 'copied' ? 'Copied.' : onUnavailable ? 'Copy the selected text.' : fallbackLabel}
       {result === 'fallback' && !onUnavailable && <code className="repo-full-id">{value}</code>}
     </span>}
   </>;

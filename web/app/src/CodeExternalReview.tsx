@@ -17,9 +17,11 @@ function reviewStatus(row: Fields, snapshot: Fields) {
   return row.reviewer ? 'Approved' : 'Awaiting review';
 }
 
-export function CodeExternalReview({ client, project, writable, manage, atCapacity, principal, snapshot, refreshSnapshot }: {
+export function CodeExternalReview({ client, project, writable, manage, atCapacity, principal, snapshot, refreshSnapshot,
+  initialProposal, onOpenWork }: {
   client: HomeClient; project: string; writable: boolean; manage: boolean; atCapacity: boolean; principal: string;
   snapshot: Fields; refreshSnapshot: () => Promise<void>;
+  initialProposal?: string; onOpenWork?: (workId: string) => void;
 }) {
   const workPicker = useId();
   const branchPicker = useId();
@@ -67,6 +69,18 @@ export function CodeExternalReview({ client, project, writable, manage, atCapaci
     });
     return () => { active = false; };
   }, [client, project, snapshot, reviewListVersion]);
+
+  useEffect(() => {
+    if (!initialProposal || !UUID.test(initialProposal)) return;
+    let active = true;
+    setBusy(true); setError(''); setNotice(''); setProposal(null); setDraft(null); setArtifact(null);
+    void client.code(project, { action: 'external-proposal', proposal_id: initialProposal }).then(row => {
+      if (active) { setLookup(initialProposal); setProposal(row); }
+    }).catch(() => {
+      if (active) setError('The Home could not open this linked change review.');
+    }).finally(() => { if (active) setBusy(false); });
+    return () => { active = false; };
+  }, [client, project, initialProposal]);
 
   useEffect(() => { if (proposal && !draft) detailHeading.current?.focus(); }, [proposal?.proposal_id, proposal?.revision, !!draft]);
 
@@ -252,6 +266,8 @@ export function CodeExternalReview({ client, project, writable, manage, atCapaci
       {proposal && <section aria-label="Exact proposal">
         <h3 ref={detailHeading} tabIndex={-1}>{selectedTitle ? `${selectedTitle} · ` : ''}Revision {proposal.revision}</h3>
         <p>{accepted ? 'Merged.' : !current ? 'The repository snapshot changed.' : proposal.reviewer ? 'Approved.' : 'Awaiting review.'}</p>
+        {onOpenWork && UUID.test(proposal.work_id ?? '') && <Button variant="quiet" disabled={busy}
+          onClick={() => onOpenWork(proposal.work_id!)}>View work item</Button>}
         <details open={canReview}><summary>Reviewed branches and commits</summary>
           <dl className="code-review-facts">
             <ReviewFact label="Source branch" value={proposal.source_ref!} />

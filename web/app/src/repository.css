@@ -18,9 +18,36 @@
   line-height: 1.45;
 }
 
-.repo-ref-tabs { display: flex; gap: 6px; padding: 0 12px; border-bottom: 1px solid var(--line); }
+.repo-ref-picker { position: relative; min-width: 0; max-width: 100%; }
+.repo-ref-trigger { max-width: 100%; }
+.repo-ref-trigger > span { display: flex; align-items: center; gap: 7px; min-width: 0; }
+.repo-ref-trigger > span::after {
+  content: '';
+  flex: none;
+  width: 5px;
+  height: 5px;
+  margin: -3px 2px 0;
+  border-right: 1px solid currentColor;
+  border-bottom: 1px solid currentColor;
+  transform: rotate(45deg);
+}
+.repo-ref-trigger bdi { min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.repo-ref-kind { color: var(--muted); font-size: 11px; }
+.repo-ref-panel {
+  position: absolute;
+  z-index: 6;
+  inset-block-start: calc(100% + 5px);
+  inset-inline-start: 0;
+  width: min(360px, calc(100vw - 70px));
+  border: 1px solid var(--line-strong);
+  border-radius: 8px;
+  background: var(--paper);
+  box-shadow: 0 10px 30px #201f1d26;
+}
+.repo-ref-search { padding: 8px 12px; border-bottom: 1px solid var(--line); }
+.repo-ref-tabs { display: flex; gap: 6px; padding: 6px 12px 0; border-bottom: 1px solid var(--line); }
 .repo-ref-tabs .stead-button { border-radius: 6px 6px 0 0; }
-.repo-ref-tabs [aria-current="page"] { border-bottom-color: var(--ink); }
+.repo-ref-tabs [aria-pressed="true"] { border-bottom-color: var(--ink); }
 .repo-count { margin-left: 4px; color: var(--muted); font: 11px var(--mono); }
 .repo-ref-tip {
   display: flex;
@@ -30,15 +57,11 @@
   gap: 8px 16px;
   padding: 9px 16px;
   background: var(--canvas);
-  border-bottom: 1px solid var(--line);
 }
-.repo-ref-tip > div:first-child { min-width: 0; }
-.repo-ref-tip > div:first-child > span { display: block; color: var(--muted); font-size: 11px; }
-.repo-ref-tip strong { font-size: 14px; overflow-wrap: anywhere; }
 .repo-tip-actions code, .repo-ref-row code { color: var(--muted); font: 12px var(--mono); }
 .repo-tip-actions .stead-button { min-height: 30px; }
-.repo-ref-list { padding: 0; margin: 0; max-height: 162px; overflow: auto; list-style: none; }
-.repo-ref-list > li { border-bottom: 1px solid var(--line); }
+.repo-ref-list { padding: 0; margin: 0; max-height: min(248px, 38vh); overflow: auto; list-style: none; }
+.repo-ref-list > li + li { border-top: 1px solid var(--line); }
 .repo-ref-row {
   display: flex;
   justify-content: space-between;
@@ -120,3 +143,7 @@
 .repo-full-id { display: block; overflow-wrap: anywhere; user-select: all; }
 .repo-revoke { border-top: 1px solid var(--line); padding-top: 9px; }
 .repo-revoke .stead-field { margin: 9px 0; }
+.work-code-links { min-width: 0; margin-top: 16px; padding-top: 12px; border-top: 1px solid var(--line); }
+.work-code-links h3 { margin: 0; font-size: 14px; }
+.work-code-links p { margin: 6px 0 0; color: var(--muted); font-size: 13px; }
+.work-code-links bdi { overflow-wrap: anywhere; }

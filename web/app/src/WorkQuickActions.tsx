@@ -22,11 +22,12 @@ type Props = {
   loadAssignees: () => Promise<Row[]>;
   close: (restoreFocus?: boolean) => void;
   open: () => void;
+  copy: () => void;
   remove: () => void;
   change: (property: WorkProperty, value: string) => void;
 };
 
-export function WorkQuickActions({ menu, canEdit, who, loadAssignees, close, open, remove, change }: Props) {
+export function WorkQuickActions({ menu, canEdit, who, loadAssignees, close, open, copy, remove, change }: Props) {
   const [view, setView] = useState(menu.view);
   const [filter, setFilter] = useState('');
   const [people, setPeople] = useState<{ status: 'loading' | 'unavailable' } | { status: 'ready'; rows: Row[] }>({ status: 'loading' });
@@ -107,6 +108,7 @@ export function WorkQuickActions({ menu, canEdit, who, loadAssignees, close, ope
     <div role="menu" aria-label={title}>
     {view === 'actions' && <>
       <button type="button" role="menuitem" onClick={open}>Open details</button>
+      <button type="button" role="menuitem" onClick={copy}>Copy work item link</button>
       {canEdit && <><button type="button" role="menuitem" onClick={() => select('status')}>Set status <span className="work-menu-chevron" aria-hidden="true">›</span></button>
         <button type="button" role="menuitem" onClick={() => select('assignee')}>Assign to <span className="work-menu-chevron" aria-hidden="true">›</span></button>
         <button type="button" role="menuitem" onClick={() => select('priority')}>Set priority <span className="work-menu-chevron" aria-hidden="true">›</span></button>

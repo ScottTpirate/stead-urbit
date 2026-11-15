@@ -197,7 +197,7 @@ h3 { font-size: 14px; font-weight: 620; }
 .detail-heading { display: flex; align-items: center; justify-content: space-between; gap: 8px; }
 .work-detail > h2 { overflow-wrap: anywhere; line-height: 1.35; }
 .work-description { white-space: pre-wrap; overflow-wrap: anywhere; font-size: 13px; line-height: 1.6; }
-.work-metadata { display: flex; flex-wrap: wrap; gap: 12px 20px; padding-bottom: 16px; border-bottom: 1px solid var(--line); }
+.work-metadata { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px 20px; padding-bottom: 16px; border-bottom: 1px solid var(--line); }
 .work-metadata dt { margin-bottom: 4px; color: var(--muted); font-size: 11px; }
 .work-metadata dd { margin: 0; font-size: 12px; text-transform: capitalize; }
 .work-view.with-detail { display: grid; grid-template-columns: minmax(0, 1fr) minmax(270px, 350px); gap: 14px; align-items: start; }

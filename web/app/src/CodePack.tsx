@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useRef, useState, type KeyboardEvent } from 'react';
 import { packRefs, type Fields, type HomeClient } from './api';
 import { newId } from './protocol';
 import { AcceptedTime } from './AcceptedTime';
@@ -9,13 +9,20 @@ import { refLabel } from './externalReview';
 import { Button, Surface, TextField } from './primitives';
 
 const TAG_PREFIX = '726566732f746167732f';
-const shortRef = (key: string) => refLabel(key).replace(/^refs\/(?:heads|tags)\//u, '');
+const shortRef = (key: string) => refLabel(key).replace(/^refs\/(?:heads|tags)\//u, '')
+  .replace(/[\p{Cc}\p{Cf}]/gu, character => `\\u{${character.codePointAt(0)?.toString(16)}}`);
 
 function RepositoryRefs({ snapshot, client, project, browse, refresh }: {
   snapshot: Fields; client: HomeClient; project: string; browse: boolean; refresh: () => void;
 }) {
-  const [section, setSection] = useState<'branches' | 'tags'>('branches');
-  const [selection, setSelection] = useState<{ branches?: string; tags?: string }>({});
+  const [section, setSection] = useState<'branch' | 'tag'>('branch');
+  const [selection, setSelection] = useState('');
+  const [open, setOpen] = useState(false);
+  const [filter, setFilter] = useState('');
+  const picker = useRef<HTMLDivElement>(null);
+  const trigger = useRef<HTMLButtonElement>(null);
+  const search = useRef<HTMLInputElement>(null);
+  const choices = useRef<HTMLUListElement>(null);
   const refs = Object.entries(packRefs(snapshot)).sort(([left], [right]) => {
     if (left === snapshot.head) return -1;
     if (right === snapshot.head) return 1;
@@ -23,43 +30,108 @@ function RepositoryRefs({ snapshot, client, project, browse, refresh }: {
   });
   const branches = refs.filter(([key]) => !key.startsWith(TAG_PREFIX));
   const tags = refs.filter(([key]) => key.startsWith(TAG_PREFIX));
-  const active = section === 'branches' ? branches : tags;
-  const selected = active.find(([key]) => key === selection[section]) ?? active[0];
+  const selected = refs.find(([key]) => key === selection) ?? branches[0]!;
+  const selectedKind = selected[0].startsWith(TAG_PREFIX) ? 'tag' : 'branch';
+  const available = (section === 'branch' ? branches : tags).filter(([key]) =>
+    shortRef(key).toLowerCase().includes(filter.trim().toLowerCase()));
+
+  useEffect(() => {
+    if (!open) return;
+    search.current?.focus();
+    function dismiss(event: PointerEvent) {
+      if (event.target instanceof Node && !picker.current?.contains(event.target)) setOpen(false);
+    }
+    document.addEventListener('pointerdown', dismiss);
+    return () => document.removeEventListener('pointerdown', dismiss);
+  }, [open]);
+
+  function select(key: string) {
+    setSelection(key);
+    trigger.current?.focus();
+    setOpen(false);
+  }
+  function pickerKeys(event: KeyboardEvent<HTMLDivElement>) {
+    if (event.key === 'Escape' && open) {
+      event.preventDefault();
+      trigger.current?.focus();
+      setOpen(false);
+      return;
+    }
+    if (event.currentTarget === event.target || !open || !['ArrowDown', 'ArrowUp', 'Home', 'End', 'Enter'].includes(event.key)) return;
+    const buttons = Array.from(choices.current?.querySelectorAll('button') ?? []);
+    const active = buttons.findIndex(button => button === event.target);
+    if (event.target === search.current) {
+      if (event.key === 'Enter' && available.length === 1) {
+        event.preventDefault();
+        select(available[0]![0]);
+      }
+      if (event.key === 'ArrowDown' && buttons[0]) {
+        event.preventDefault();
+        buttons[0].focus();
+      }
+      return;
+    }
+    if (active < 0 || event.key === 'Enter') return;
+    event.preventDefault();
+    if (event.key === 'ArrowUp' && active === 0) search.current?.focus();
+    else {
+      const index = event.key === 'Home' ? 0 : event.key === 'End' ? buttons.length - 1
+        : active + (event.key === 'ArrowDown' ? 1 : -1);
+      buttons[index]?.focus();
+    }
+  }
+
   return <>
-    <nav className="repo-ref-tabs" aria-label="Git references">
-      <Button variant="quiet" aria-current={section === 'branches' ? 'page' : undefined}
-        onClick={() => setSection('branches')}>Branches <span className="repo-count">{branches.length}</span></Button>
-      <Button variant="quiet" aria-current={section === 'tags' ? 'page' : undefined}
-        onClick={() => setSection('tags')}>Tags <span className="repo-count">{tags.length}</span></Button>
-    </nav>
-    {selected ? <>
-      <div className="repo-ref-tip">
-        <div>
-          <span>{section === 'branches' ? 'Branch tip' : 'Tag target'}</span>
-          <strong><bdi>{shortRef(selected[0])}</bdi></strong>
-        </div>
-        <div className="repo-tip-actions">
-          <code title={selected[1]}>{selected[1].slice(0, 12)}</code>
-          <CopyValue key={selected[1]} value={selected[1]} label={section === 'branches' ? 'Copy commit ID' : 'Copy object ID'} />
-        </div>
+    <div className="repo-ref-tip">
+      <div className="repo-ref-picker" ref={picker} onKeyDown={pickerKeys} onBlur={event => {
+        if (event.relatedTarget instanceof Node && !event.currentTarget.contains(event.relatedTarget)) setOpen(false);
+      }}>
+        <Button ref={trigger} className="repo-ref-trigger" aria-haspopup="dialog" aria-expanded={open}
+          aria-label={`Switch branch or tag. Current ${selectedKind}: ${shortRef(selected[0])}`}
+          onClick={() => {
+            if (!open) { setSection(selectedKind); setFilter(''); }
+            setOpen(!open);
+          }}>
+          <span aria-hidden="true" className="repo-ref-kind">{selectedKind === 'branch' ? 'Branch' : 'Tag'}</span>
+          <bdi>{shortRef(selected[0])}</bdi>
+        </Button>
+        {open && <div className="repo-ref-panel" role="dialog" aria-label="Switch branch or tag">
+          <nav className="repo-ref-tabs" aria-label="Reference type">
+            <Button variant="quiet" aria-pressed={section === 'branch'} onClick={() => setSection('branch')}>
+              Branches <span className="repo-count">{branches.length}</span>
+            </Button>
+            <Button variant="quiet" aria-pressed={section === 'tag'} onClick={() => setSection('tag')}>
+              Tags <span className="repo-count">{tags.length}</span>
+            </Button>
+          </nav>
+          <div className="repo-ref-search">
+            <TextField ref={search} label={section === 'branch' ? 'Find a branch' : 'Find a tag'}
+              type="search" value={filter} maxLength={256} onChange={event => setFilter(event.target.value)}
+              spellCheck={false} autoComplete="off" />
+          </div>
+          {available.length > 0 ? <ul ref={choices} className="repo-ref-list" aria-label={section === 'branch' ? 'Branches' : 'Tags'}>
+            {available.map(([key, oid]) => <li key={key}>
+              <button type="button" className="repo-ref-row" aria-pressed={key === selected[0]} onClick={() => select(key)}>
+                <span className="repo-ref-name"><bdi>{shortRef(key)}</bdi>{key === snapshot.head && <small>Default</small>}</span>
+                <code title={oid}>{oid.slice(0, 7)}</code>
+              </button>
+            </li>)}
+          </ul> : <p role="status" className="repo-ref-empty">{filter.trim() ? 'No matching references.' : 'No tags yet.'}</p>}
+        </div>}
       </div>
-      <ul className="repo-ref-list" aria-label={section === 'branches' ? 'Branches' : 'Tags'}>
-        {active.map(([key, oid]) => <li key={key}>
-          <button type="button" className="repo-ref-row" aria-pressed={key === selected[0]}
-            onClick={() => setSelection(current => ({ ...current, [section]: key }))}>
-            <span className="repo-ref-name"><bdi>{shortRef(key)}</bdi>{key === snapshot.head && <small>Default</small>}</span>
-            <code title={oid}>{oid.slice(0, 12)}</code>
-          </button>
-        </li>)}
-      </ul>
-      {browse && snapshot.snapshot && <RepoBrowser key={`${project}/${snapshot.snapshot}/${selected[0]}`} client={client} project={project}
-        snapshot={snapshot.snapshot} reference={selected[0]} refresh={refresh} />}
-    </> : <p className="repo-ref-empty">No tags yet.</p>}
+      <div className="repo-tip-actions">
+        <code title={selected[1]}>{selected[1].slice(0, 12)}</code>
+        <CopyValue key={selected[1]} value={selected[1]} label={selectedKind === 'branch' ? 'Copy commit ID' : 'Copy object ID'} />
+      </div>
+    </div>
+    {browse && snapshot.snapshot && <RepoBrowser key={`${project}/${snapshot.snapshot}/${selected[0]}`} client={client} project={project}
+      snapshot={snapshot.snapshot} reference={selected[0]} refresh={refresh} />}
   </>;
 }
 
-export function CodePack({ client, project, manage, writable, principal }: {
+export function CodePack({ client, project, manage, writable, principal, initialProposal, onOpenWork }: {
   client: HomeClient; project: string; manage: boolean; writable: boolean; principal: string;
+  initialProposal?: string; onOpenWork?: (workId: string) => void;
 }) {
   const [details, setDetails] = useState<Fields | null>(null);
   const [access, setAccess] = useState<{ writable: boolean; manage: boolean } | null>(null);
@@ -139,6 +211,7 @@ export function CodePack({ client, project, manage, writable, principal }: {
     </>}
     {failure && <p role="alert">{failure}</p>}
   </Surface>{details?.status === 'external' && <CodeExternalReview client={client} project={project} writable={canWrite}
-      manage={canManage} atCapacity={atCapacity} principal={principal} snapshot={details} refreshSnapshot={refresh} />}
+      manage={canManage} atCapacity={atCapacity} principal={principal} snapshot={details} refreshSnapshot={refresh}
+      initialProposal={initialProposal} onOpenWork={onOpenWork} />}
   </div>;
 }

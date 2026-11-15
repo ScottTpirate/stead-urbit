@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState } from 'react';
 import { HomeError, type GitBrowseResult, type GitBrowseView, type HomeClient } from './api';
+import { CopyValue } from './CodeRepository';
 import { Button } from './primitives';
 import './repo-browser.css';
 
@@ -10,12 +11,16 @@ type BrowseState = { location: Location } & (
   | { status: 'ready'; data: GitBrowseResult }
 );
 
-function displayName(hex: string) {
-  let name: string;
+function decodeName(hex: string) {
   try {
     const decoder = new TextDecoder('utf-8', { fatal: true, ignoreBOM: true });
-    name = decoder.decode(Uint8Array.from(hex.match(/../gu) ?? [], byte => Number.parseInt(byte, 16)));
-  } catch { return `0x${hex}`; }
+    return decoder.decode(Uint8Array.from(hex.match(/../gu) ?? [], byte => Number.parseInt(byte, 16)));
+  } catch { return null; }
+}
+
+const CONTROL = /[\p{Cc}\p{Cf}]/u;
+function displayName(hex: string) {
+  const name = decodeName(hex) ?? `0x${hex}`;
   return name.replace(/[\p{Cc}\p{Cf}]/gu, character => `\\u{${character.codePointAt(0)?.toString(16)}}`);
 }
 
@@ -25,6 +30,9 @@ export function RepoBrowser({ client, project, snapshot, reference, refresh }: {
   client: HomeClient; project: string; snapshot: string; reference: string; refresh: () => void;
 }) {
   const heading = useRef<HTMLHeadingElement>(null);
+  const listing = useRef<HTMLUListElement>(null);
+  const preview = useRef<HTMLPreElement>(null);
+  const returnTo = useRef('');
   const [current, setCurrent] = useState<BrowseState>({ location: { path: [], view: 'tree' }, status: 'loading' });
   const { location } = current;
 
@@ -47,27 +55,54 @@ export function RepoBrowser({ client, project, snapshot, reference, refresh }: {
     return () => controller.abort();
   }, [client, project, snapshot, reference, location]);
 
-  function go(path: string[], view: GitBrowseView) {
+  useEffect(() => {
+    if (current.status !== 'ready' || current.data.status !== 'tree' || !returnTo.current) return;
+    const key = returnTo.current;
+    returnTo.current = '';
+    if (document.activeElement !== heading.current) return;
+    const rows = Array.from(listing.current?.querySelectorAll('button') ?? []);
+    rows.find(button => button.dataset.repoEntry === key)?.focus();
+  }, [current]);
+
+  function go(path: string[], view: GitBrowseView, child = '') {
+    returnTo.current = child;
     heading.current?.focus();
     setCurrent({ location: { path, view }, status: 'loading' });
+  }
+  function goToAncestor(depth: number) {
+    go(location.path.slice(0, depth), 'tree', location.path[depth]);
+  }
+  function selectContents() {
+    const element = preview.current;
+    if (!element) return;
+    element.focus();
+    window.getSelection()?.selectAllChildren(element);
   }
 
   if (current.status === 'unsupported') return <p className="repo-help">Clone the repository to browse files and commit history.</p>;
   const showPath = current.status !== 'unavailable' && current.status !== 'stale';
   const data = current.status === 'ready' ? current.data : null;
+  const segments = location.path.map(decodeName);
+  const exactPath = segments.every(name => name !== null && !CONTROL.test(name)) ? segments.join('/') : '';
   return <section className="repo-browser" aria-labelledby="repo-browser-heading">
     <div className="repo-browser-bar">
       <h3 id="repo-browser-heading" ref={heading} tabIndex={-1}>Files</h3>
       {showPath && location.path.length > 0 && <nav aria-label="Repository path" className="repo-browser-path">
-        <Button variant="quiet" onClick={() => go([], 'tree')}>Root</Button>
+        <Button variant="quiet" onClick={() => goToAncestor(0)}>Root</Button>
         {location.path.map((part, index) => <span className="repo-path-part" key={index}>
           <span aria-hidden="true" className="repo-path-separator">/</span>
           {index === location.path.length - 1 ? <bdi aria-current="page">{displayName(part)}</bdi>
-            : <Button variant="quiet" onClick={() => go(location.path.slice(0, index + 1), 'tree')}><bdi>{displayName(part)}</bdi></Button>}
+            : <Button variant="quiet" onClick={() => goToAncestor(index + 1)}><bdi>{displayName(part)}</bdi></Button>}
         </span>)}
       </nav>}
-      {data?.status === 'file' && <Button variant="quiet" className="repo-browser-back"
-        onClick={() => go(location.path.slice(0, -1), 'tree')}>Back to folder</Button>}
+      {showPath && location.path.length > 0 && <div className="repo-browser-actions">
+        <Button variant="quiet" onClick={() => goToAncestor(location.path.length - 1)}>
+          {location.view === 'file' ? 'Back to folder' : 'Parent folder'}
+        </Button>
+        {data && exactPath && <CopyValue value={exactPath} label="Copy path" fallbackLabel="Select the path to copy it." />}
+        {data?.status === 'file' && data.preview === 'text' && data.text && <CopyValue
+          value={data.text} label="Copy contents" onUnavailable={selectContents} />}
+      </div>}
     </div>
     {current.status === 'loading' && <p role="status" className="repo-browser-note">Loading {location.view === 'tree' ? 'folder' : 'file'}…</p>}
     {current.status === 'unavailable' && <p role="alert" className="repo-browser-note">These repository files are unavailable.</p>}
@@ -79,7 +114,7 @@ export function RepoBrowser({ client, project, snapshot, reference, refresh }: {
       <Button variant="quiet" onClick={() => go(location.path, location.view)}>Retry</Button>
     </div>}
     {data?.status === 'tree' && <>
-      {data.entries.length > 0 ? <ul className="repo-browser-list" aria-label="Folder contents">
+      {data.entries.length > 0 ? <ul ref={listing} className="repo-browser-list" aria-label="Folder contents">
         {data.entries.map(entry => {
           const name = <><span className={`repo-file-icon repo-file-${glyph[entry.kind]}`} aria-hidden="true" />
             <bdi>{displayName(entry.name)}</bdi></>;
@@ -87,6 +122,7 @@ export function RepoBrowser({ client, project, snapshot, reference, refresh }: {
           const withinBrowseLimit = path.length <= 12 && path.reduce((bytes, part) => bytes + part.length / 2, 0) <= 1024;
           return <li key={entry.name}>{withinBrowseLimit && (entry.kind === 'tree' || entry.kind === 'file')
             ? <button type="button" className="repo-file-row"
+                data-repo-entry={entry.name}
                 onClick={() => go(path, entry.kind === 'tree' ? 'tree' : 'file')}>
                 {name}{entry.kind === 'tree' && <span className="repo-file-kind">Folder</span>}
               </button>
@@ -98,7 +134,7 @@ export function RepoBrowser({ client, project, snapshot, reference, refresh }: {
       {data.truncated && <p className="repo-browser-note">Clone to see the rest of this folder.</p>}
     </>}
     {data?.status === 'file' && <>
-      {data.preview === 'text' ? data.text ? <pre className="repo-file-preview" tabIndex={0} aria-label="File contents">{data.text}</pre>
+      {data.preview === 'text' ? data.text ? <pre ref={preview} className="repo-file-preview" tabIndex={0} aria-label="File contents">{data.text}</pre>
         : <p className="repo-browser-note">This file is empty.</p>
         : <p className="repo-browser-note">{data.preview === 'binary' ? 'Binary file.' : 'This file is too large to preview.'} Clone to open it.</p>}
     </>}

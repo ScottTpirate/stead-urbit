@@ -15,7 +15,8 @@
 .repo-browser-path button { padding-inline: 4px; }
 .repo-path-part > bdi, .repo-path-part button { overflow-wrap: anywhere; max-width: 100%; }
 .repo-path-separator { color: var(--muted); }
-.repo-browser-back { margin-inline-start: auto; }
+.repo-browser-actions { display: flex; flex-wrap: wrap; align-items: center; gap: 3px; margin-inline-start: auto; min-width: 0; }
+.repo-browser-actions .stead-button { min-height: 30px; }
 .repo-browser-list { padding: 0; margin: 0; list-style: none; }
 .repo-browser-list > li + li { border-top: 1px solid var(--line); }
 .repo-file-row {
