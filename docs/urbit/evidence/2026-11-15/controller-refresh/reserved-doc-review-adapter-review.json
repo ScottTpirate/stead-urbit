@@ -1,0 +1,72 @@
+{
+  "classification": "reserved-doc-review-mapping-and-loader-source-and-host-evidence",
+  "qualifies_phase": false,
+  "native_executed": false,
+  "live_or_browser_executed": false,
+  "files": {
+    "web/app/src/docChangeReviewAdapter.ts": "4b2ed935bf1cf61e318b400875963727e6407191907c9f78b9093950e3fb695f",
+    "web/app/src/docChangeReview.tsx": "efe0e7cc0d98ca132864a7abd8cb6abf6b7bbff2a009712c01af76fb322d65ca",
+    "web/app/src/docChangeReviewState.tsx": "6d49760599f0541076618358a96b5d5263d6f339d9151a9d34a02101db8c2d1b",
+    "web/app/tests/doc-change-adapter.test.ts": "faf1decb6ca3d4ec2bf3d54ea3b3ce236bfb2325ba5d075f84615226e675c5f7",
+    "web/app/tests/doc-change-adapter.mjs": "bdacca84055b0a7e81c1cbcd963cdaf7d1ffaed8f80f4dd94d06d73f472c626c"
+  },
+  "review": {
+    "reviewer": "root",
+    "status": "approved-source-only",
+    "finding": "An access invalidation callback can await across a newer scope/session; check current again after callback before rethrowing denied.",
+    "resolution": "Post-callback current check plus delayed callback/new successful load regression in existing8case suite."
+  },
+  "mapping": [
+    "Native eligible empty reason maps to UI none; read_only/superseded_result and every native receipt rejection retain explicit plain language.",
+    "No request IDs exist in sanitized approval/adoption/latest decision/acceptance; optional UI fields remain absent and Request details are hidden.",
+    "Feedback outcome producer_quarantined renders as a rejected requested decision with quarantine, never accepted business action.",
+    "Evidence dedup uses actual available operation/result/actor/time/note/outcome when request IDs are unavailable.",
+    "Current20rowperWork preview maps scoped fields; unknown Doc label stays empty for Shared Doc fallback."
+  ],
+  "loader": [
+    "Injected actual DocChangeClient retains command capability/session checks and exact original frozen prepared request for unknown retries.",
+    "Detail then exact Before then exact After then repeated same-filter detail:4bounded reads.",
+    "Different body query generations are expected; repeated detail must match epoch,generation,andall31fields.",
+    "Before unavailable returned by successful native read is explicit authorized state. A denied body invalidates parent context and publishes no content/token.",
+    "Scope/session generation fences every async path including awaited parent access invalidation; stale errors become view_changed.",
+    "Only successful complete authorized load returns a newly frozen opaque read token and immutable mappeddata."
+  ],
+  "executed": {
+    "typescript": {
+      "status": "pass",
+      "owner": ".runtime/doc-adapter-typecheck-owner-1794774326503654539",
+      "resources": {
+        "output": "/home/skilgore/stead-urbit/.runtime/doc-adapter-typecheck-owner-1794774326503654539",
+        "peak_c": 49.0,
+        "duration_seconds": 6.8
+      }
+    },
+    "adapter_and_static_markup": {
+      "passed": 8,
+      "report": ".runtime/doc-change-adapter-ZWbtrq/report.json",
+      "report_sha256": "2fbcd1ae40f4d4d8a48c0d75bbeb7cbf7ab37d7ed3af380a5daebe79b2d5bf03",
+      "owner": ".runtime/doc-adapter-owner-1794774276251470427",
+      "resources": {
+        "output": "/home/skilgore/stead-urbit/.runtime/doc-adapter-owner-1794774276251470427",
+        "peak_c": 46.0,
+        "duration_seconds": 2.2
+      }
+    },
+    "ui_state": {
+      "passed": 10,
+      "report": ".runtime/doc-change-review-RpfJEe/report.json",
+      "report_sha256": "1d7d9aa879e6b8e2ab56979699176ec0f30860384e3e4661648a72818621435e",
+      "scope": "Current UI component/state hashes match; this runner does not include the later adapter-only callback fix, which is covered by current8adaptertests."
+    },
+    "browser_fixture_preparation": {
+      "bundled": true,
+      "runner_syntax_checked": true,
+      "executed_cases": 0
+    }
+  },
+  "limits": [
+    "No App wiring, public capability, route or live native acceptance.",
+    "Eight Work and eight Doc synthetic browser cases remain prepared and unexecuted at this checkpoint.",
+    "The adapter caller remains responsible for authenticated sessionKey, scoped parent invalidation, persisted drafts and eventual current watch/refresh lifecycle."
+  ]
+}

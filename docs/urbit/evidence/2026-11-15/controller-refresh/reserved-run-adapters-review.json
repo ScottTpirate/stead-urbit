@@ -48,7 +48,7 @@
   ],
   "protocol": "stead.reserved-source-packet/1",
   "review": {
-    "release": "independent review requested",
+    "release": "Independent source review approved at the recorded final hashes; no remaining finding, native execution still pending",
     "root": "Final full source and receipt-tightening review approved at exact recorded hashes",
     "resolved_finding": "Require the full closed native submit receipt with empty error, submitted state and exact expected/resulting lifecycle revisions; negative cases cover extra authority, wrong successor and nonempty error."
   },

@@ -45,10 +45,17 @@ export function DocChangeReview(props: DocChangeReviewProps) {
   return <ActiveReview {...props} snapshot={props.snapshot}/>;
 }
 function Evidence({value, label}: {value: DocDecisionEvidence; label: string}) {
-  return <div className="doc-change-evidence"><strong>{label}</strong><p>{actorLabel(value.actor)} · <AcceptedTime milliseconds={value.recordedAtMs}/></p>
+  return <div className="doc-change-evidence"><strong>{value.outcome === 'producer_quarantined' ? 'Output quarantined' : label}</strong><p>{actorLabel(value.actor)} · <AcceptedTime milliseconds={value.recordedAtMs}/></p>
+    {value.outcome === 'producer_quarantined' && <p>Home quarantined this output while checking the decision. The requested decision was rejected.</p>}
     {value.note && <p className="doc-change-note">{value.note}</p>}
-    <details><summary>Decision details</summary><dl><div><dt>Request</dt><dd>{value.requestId}</dd></div><div><dt>Output digest</dt><dd>{value.resultDigest}</dd></div>
+    <details><summary>Decision details</summary><dl>{value.requestId && <div><dt>Request</dt><dd>{value.requestId}</dd></div>}<div><dt>Output digest</dt><dd>{value.resultDigest}</dd></div>
       <div><dt>Recorded time</dt><dd>{value.recordedAtMs}</dd></div></dl></details></div>;
+}
+function sameEvidence(a: DocDecisionEvidence | undefined, b: DocDecisionEvidence | undefined) {
+  if (!a || !b) return false;
+  if (a.requestId && b.requestId) return a.requestId === b.requestId;
+  return a.operation === b.operation && a.resultRevision === b.resultRevision && a.resultDigest === b.resultDigest && a.recordedAtMs === b.recordedAtMs
+    && a.actor.principalId === b.actor.principalId && a.note === b.note && (a.outcome ?? 'accepted') === (b.outcome ?? 'accepted');
 }
 function Body({body, source = false, side}: {body: VerifiedDocBody; source?: boolean; side: 'before' | 'after'}) {
   if (body.state === 'loading') return <LoadingState label={side === 'after' ? 'Loading exact proposed Doc' : 'Loading exact original Doc'}/>;
@@ -102,8 +109,8 @@ function ActiveReview(props: DocChangeReviewProps & {snapshot: DocReviewSnapshot
       : mode === 'before' ? <Body body={before} side="before"/> : <Body body={after} side="after" source={mode === 'source'}/>}</div>
     <section aria-label="Review decisions" className="doc-change-decisions"><h3>Review this output</h3>
       {relevant(snapshot.feedback) && <Evidence value={snapshot.feedback!} label={actionLabels[snapshot.feedback!.operation]}/>}
-      {relevant(snapshot.approval) && snapshot.approval?.requestId !== snapshot.feedback?.requestId && <Evidence value={snapshot.approval!} label="Recorded approval"/>}
-      {relevant(snapshot.adoption) && snapshot.adoption?.requestId !== snapshot.feedback?.requestId && <Evidence value={snapshot.adoption!} label="Recorded adoption"/>}
+      {relevant(snapshot.approval) && !sameEvidence(snapshot.approval, snapshot.feedback) && <Evidence value={snapshot.approval!} label="Recorded approval"/>}
+      {relevant(snapshot.adoption) && !sameEvidence(snapshot.adoption, snapshot.feedback) && <Evidence value={snapshot.adoption!} label="Recorded adoption"/>}
       {snapshot.acceptance?.resultDigest === snapshot.output.digest && <p>Accepted into Doc revision {snapshot.acceptance.documentRevision} by {actorLabel(snapshot.acceptance.actor)}. Later Doc edits do not change this recorded outcome.</p>}
       {current && <><p>An independent person reviews the output. An accountable Owner or maintainer accepts it after Home checks the current requirements.</p>
         {!eligibilityMatches && <p role="status">Current decision availability has not been loaded. Refresh to check it.</p>}

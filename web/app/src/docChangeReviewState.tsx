@@ -4,13 +4,11 @@ import {docChangeCommandDigest, encodeDocChangeCommand, type DocChangeCommand, t
 import {byteLength, protocolText} from './productWire';
 import {newId} from './protocol';
 import type {DocumentOutcome} from './productProtocol';
+import type {DocActionReason, DocChangeReceiptError} from './docChangeReadProtocol';
 
 export const docDecisionActions = ['change.request-changes', 'change.approve', 'change.adopt', 'change.accept', 'change.reject', 'change.quarantine'] as const;
 export type DocChangeStatus = 'submitted' | 'changes-requested' | 'approved' | 'accepted' | 'rejected' | 'quarantined';
-export type DocDecisionReason = 'none' | 'unsupported' | 'denied_or_not_found' | 'human_review_required' | 'accountable_human_required'
-  | 'self_review_denied' | 'independent_adopter_required' | 'independent_review_required' | 'explicit_adoption_required'
-  | 'adoption_requires_expiry' | 'execution_contract_conflict' | 'target_base_conflict' | 'producer_quarantined'
-  | 'change_closed' | 'result_conflict' | 'revision_conflict' | 'authority_epoch_conflict' | 'capacity_exceeded' | 'migration_required';
+export type DocDecisionReason = 'none' | 'unsupported' | Exclude<DocActionReason, ''> | DocChangeReceiptError;
 export type DocReviewScope = {projectId: string; workId: string; changeId: string};
 export type DocReviewPin = {authorityEpoch: string; generation: string; headRevision: string; resultRevision: string; resultDigest: string};
 export type DocActorLabel = {principalId: string; displayName: string};
@@ -18,11 +16,11 @@ export type DocOutputMetadata = {revision: string; digest: string; outcomeId: st
   executionContractRevision: string; executionContractDigest: string; markdownSha256: string; summary: string;
   producer: DocActorLabel; runId: string; attempt: string; submittedAtMs: string};
 export type DocDecisionEvidence = {operation: DocChangeDecisionOperation; resultRevision: string; resultDigest: string;
-  actor: DocActorLabel; note: string; recordedAtMs: string; requestId: string};
+  actor: DocActorLabel; note: string; recordedAtMs: string; requestId?: string; outcome?: 'accepted' | 'producer_quarantined'};
 export type DocReviewSnapshot = {scope: DocReviewScope; sessionKey: string; authorityEpoch: string; generation: string;
   head: {revision: string; status: DocChangeStatus; resultRevision: string; resultDigest: string}; output: DocOutputMetadata;
   feedback?: DocDecisionEvidence; approval?: DocDecisionEvidence; adoption?: DocDecisionEvidence;
-  acceptance?: {actor: DocActorLabel; recordedAtMs: string; requestId: string; documentRevision: string; resultDigest: string}};
+  acceptance?: {actor: DocActorLabel; recordedAtMs: string; requestId?: string; documentRevision: string; resultDigest: string}};
 export type DocActionEligibility = {scope: DocReviewScope; sessionKey: string; pin: DocReviewPin;
   actions: Readonly<Record<DocChangeDecisionOperation, {state: 'eligible' | 'blocked' | 'unsupported'; reason: DocDecisionReason}>>};
 export type DocReviewBody = {scope: DocReviewScope; sessionKey: string; resultRevision: string; resultDigest: string; side: 'before' | 'after'} & (
@@ -141,7 +139,13 @@ export function boundedDocDiff(before: string, after: string): {state: 'ready'; 
   return {state: 'ready', lines, beforeFinalNewline: before.endsWith('\n'), afterFinalNewline: after.endsWith('\n')};
 }
 export function docDecisionReason(reason: DocDecisionReason) {
-  const messages: Record<DocDecisionReason, string> = {none: '', unsupported: 'This decision is not available here yet.', denied_or_not_found: 'Current access does not permit this decision.',
+  const messages: Record<DocDecisionReason, string> = {
+    read_only: 'Your current access permits reading only.', superseded_result: 'A newer output is current. Open it to make a decision.',
+    invalid_time: 'Home could not record the decision time. Your note is kept.', request_id_reuse: 'Home could not reconcile this request. Your note is kept; refresh before trying again.',
+    producer_mismatch: 'Only the original producer can revise this Change.', producer_unavailable: 'The original producer cannot submit with its current access.',
+    invalid_document: 'Home could not verify the exact proposed Doc.', content_collision: 'Home could not retain the proposed Doc. Your note is kept.',
+    invalid_result: 'Home could not verify this retained output.', invalid_command: 'Home could not recognize this decision.',
+    internal_request_id_collision: 'Home could not reserve the Doc save. Your note is kept.', document_save_rejected: 'The Doc could not be saved. Refresh its current version before deciding.', none: '', unsupported: 'This decision is not available here yet.', denied_or_not_found: 'Current access does not permit this decision.',
     human_review_required: 'An authorized person must review this output.', accountable_human_required: 'The accountable Owner or a project maintainer must make this decision.',
     self_review_denied: 'Another authorized person must review this output.', independent_adopter_required: 'Another accountable person must adopt this output.',
     independent_review_required: 'A current independent approval is needed.', explicit_adoption_required: 'The original authority expired. An authorized person must explicitly adopt this exact output.',
