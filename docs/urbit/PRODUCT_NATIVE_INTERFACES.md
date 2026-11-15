@@ -407,7 +407,7 @@ Catalog deactivation must fence every active carrier, including Code, before
 activation; fencing only the new Work reducer is insufficient.
 
 The owner reducer's six arms and the integrated history cases are source-only.
-They are outside the immutable 230-arm qualification candidate `d965b52` and
+They are outside the immutable 230-arm qualification candidate `f93a42a` and
 must pass their own registered native run before Home integration can qualify.
 
 ## T04/T12/T13/T14 incremental integration

@@ -185,7 +185,7 @@
 =/  shared-box  (apply-command:stead-team next.create alice (command 351 200 0 'container.create' ~[['title' 'Shared'] ['visibility' 'shared']]) 1.006)
 =/  private-box  (apply-command:stead-team next.shared-box alice (command 352 202 0 'container.create' ~[['title' 'Private'] ['visibility' 'private']]) 1.007)
 =/  migrated  (migrate next.private-box)
-=/  baseline  (initialize:stead-product-owner migrated ~zod)
+=/  baseline  (initialize:stead-product-history migrated ~zod)
 =/  human-command  (owner-command 901 'principal.declare' 1 ~[['principal_id' (id 102)] ['kind' 'person'] ['display_name' 'Alice'] ['active' 'yes']])
 =/  agent-command  (owner-command 902 'principal.declare' 1 ~[['principal_id' (id 103)] ['kind' 'agent'] ['display_name' 'Bob worker'] ['active' 'yes']])
 =/  human  (apply-owner:stead-product-history baseline human-command ~zod ~zod 2.000)

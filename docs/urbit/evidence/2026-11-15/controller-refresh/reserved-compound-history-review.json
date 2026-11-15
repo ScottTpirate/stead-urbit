@@ -1,0 +1,36 @@
+{
+  "protocol": "stead.independent-source-review/1",
+  "status": "source_reviewed_native_unexecuted",
+  "scope": "single-owner-work-doc-timeline-and-compound-accept-recovery",
+  "files": {
+    "native/core/desk/lib/stead-product-history.hoon": "dbf5d79d0a8ac35b644ce4d34779a52e9ffc95f3a7e7a3a14964b8b80327288c",
+    "native/core/desk/tests/stead-product-history.hoon": "8cbf18475cdcec25d8f5efbfec45c73aa9578767329607183b0c5301dc736c72",
+    "native/core/desk/tests/stead-product-doc-history.hoon": "cfb16931dabd8b8fb9593220fd8a4b082d5107acf27c1f12715dab5c658202dc"
+  },
+  "test_arms": {
+    "native/core/desk/tests/stead-product-history.hoon": 8,
+    "native/core/desk/tests/stead-product-doc-history.hoon": 6
+  },
+  "native_executed": false,
+  "home_activation": false,
+  "reviewers": [
+    "native implementer independently reviewed integrator history",
+    "integrator independently reviewed native compound fixtures"
+  ],
+  "checks": [
+    "Initialize concrete catalog from validated frozen predecessor, preserve original legacy prefix and every ordered owner/Work/Doc transition.",
+    "Work completion uses concrete accepted Doc proof after current member/catalog checks; no external or supplied proof callback on this profile.",
+    "All four operation families share ordinary capacity, exact request namespaces and owner-global request IDs. Direct Doc saves also enforce combined core/proposal object bounds after staging.",
+    "Doc reducer next core/product/proposals and returned typed record commit together or all roll back.",
+    "Restore recognizes the fixed adjacent native-save and typed-accept pair before applying either; reruns acceptance exactly once from preceding state and compares both complete generated events.",
+    "Batch reserves one or two slots before reduction; cannot split a pair or expose a partial restored result. Explicit fixture places save at event16 and typed accept17, requiring first checkpoint stop at15.",
+    "Whole-state equality plus canonical rehashed tamper/orphan/dropped/reordered record, missing declaration, substituted catalog and malformed body admission negatives.",
+    "Actual typed vase is retained through every jam/cue checkpoint roundtrip."
+  ],
+  "limitations": [
+    "No native compilation or execution yet; exact new suites still need isolated registration/qualification.",
+    "No Home activation, service credentials, run authorization or external effects. Current default run resolver denies.",
+    "Semantic reconstructed history does not add cryptographic custody attestation.",
+    "Synthetic capacity-counter fixtures are not realistic replay or storage qualification evidence."
+  ]
+}
