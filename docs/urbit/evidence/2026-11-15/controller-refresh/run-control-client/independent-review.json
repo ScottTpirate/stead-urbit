@@ -1,0 +1,37 @@
+{
+  "protocol": "stead.independent-source-review/1",
+  "classification": "independent-source-review-not-native-or-browser-evidence",
+  "reviewer": "frontend",
+  "status": "no-source-blocker-found",
+  "source_sha256": {
+    "web/app/src/runControlProtocol.ts": "e2840bd88ba909bd1d69ae70a5239af5fc1f4d16a4c3e126c37f64cc4e1e9ea0",
+    "web/app/src/productWire.ts": "35b033b3437f07b2e0690e3192091b43ba4bec2c9bee2768ca9b43abb70fa6c1",
+    "native/core/desk/lib/stead-run-codec.hoon": "ba0c758e95230b133c5475e592a07e8106c73dfbab8e1c0967b04c8797e62ecb",
+    "native/core/desk/lib/stead-run-state.hoon": "4c96eb466add4ae26f6c6fbfd390b338d26a14e20a8c3f70214f9e1445602c1d",
+    "native/core/desk/lib/stead-run.hoon": "8ceedb6fd1ce56af30d53c027a1d250f30ac1faaa069e085445d9f6b49cf2432",
+    "native/core/desk/lib/stead-codec.hoon": "56e3d574381bbf8cdf29ca192c70eff256009f89d782e3ffe859b19c1321cbd7",
+    "web/app/tests/run-control.test.ts": "2d93a29f464eadd8198df35bc5e6d1647c6fddb076f5e1aa6086eb7dfc7f4692"
+  },
+  "reviewed_boundaries": [
+    "Closed eight-string answer/cancel command subset, positive expected revision, attempt zero through three and canonical nested answer payload match the native decoder.",
+    "UTF-8 prose byte limits and domain-separated SHA-256 match native text/command-bytes/hash sources.",
+    "Five-field early denial and nine-field committed receipt correlate exact request, command hash and Run. Full rejection permits current head conflict while accepted answer retains waiting and accepted cancel records canceled.",
+    "Prepared requests retain original immutable canonical bytes in a client-owned WeakMap; current opaque session and invalidation generation fence prepare, send and completion.",
+    "Malformed or mismatched replies remain outcome_unknown; explicit retry resends the same prepared bytes, concurrent reuse is refused, and no automatic retry occurs.",
+    "A matching in-flight receipt may reconcile after capability withdrawal in the same session; withdrawal prevents subsequent sends.",
+    "Answer records clarification without resuming execution. Canceled receipt records durable transition and stop intent, not process exit, rollback or native effect completion."
+  ],
+  "host_evidence": {
+    "path": "docs/urbit/evidence/2026-11-15/controller-refresh/run-control-client/host-tests.json",
+    "observed_by": "root",
+    "status": "pass",
+    "tests": 14,
+    "independently_rerun": false
+  },
+  "limitations": [
+    "No Hoon compilation or native execution in this review.",
+    "No endpoint, capability advertisement, UI integration, worker launch or browser execution.",
+    "No authority is asserted by the caller; final native gates remain required."
+  ],
+  "qualifies_phase": false
+}

@@ -1,0 +1,55 @@
+{
+  "classification": "reserved-read-only-run-history-source-and-host",
+  "implemented": [
+    "Read-only bounded list/detail, exact submitted-output route and explicit Refresh/Load more",
+    "Current opaque token, Work/scope/view-generation and A-B-A fences; current denial hides data before callback",
+    "Same-scope offline data visibly stale; navigation disabled until fresh authorized read",
+    "Owner and worker names, truthful empty names, clarification/answer and exact output reference",
+    "Durable phase, lease observation and Work input freshness remain separate; details contain IDs/pins",
+    "Scoped Back focus and keyboard controls with locally bounded layout"
+  ],
+  "independent_review": {
+    "resolved": [
+      "Native review: issued time labeled Run requested rather than Run started; actual attempt start remains separate.",
+      "Root review: same-client capability withdrawal now hides cached content immediately and fences in-flight publication through additive supportsReads().",
+      "Root review: terminal lease says No active execution lease; it does not assert observed process exit."
+    ],
+    "reviewers": [
+      "native",
+      "root"
+    ],
+    "status": "source-reviewed-with-findings-corrected"
+  },
+  "observed": {
+    "cleanup_empty": true,
+    "cpu_affinity": [
+      19
+    ],
+    "cpu_quota": "25% of one core",
+    "duration_seconds": 6.8,
+    "fixture_manifest_sha256": "59072235952e63327d6479ecb7e070e23ce2d30e1abf16cc4af46fbb423963df",
+    "guard_receipt_sha256": "1e024ce72efcff9079d70c208567228de22e5aa1371de994253c609fcb225ed6",
+    "host_report_sha256": "b3d5f618211c41b492f357a5ff5378175f31508c661284dae72f4deb060dc1ba",
+    "host_tests": 12,
+    "inputs_unchanged": true,
+    "peak_c": 51.0,
+    "static_fixture": "bundle and syntax pass; zero browser cases executed",
+    "typescript": "pass for RunHistory.tsx and production imports"
+  },
+  "protocol": "stead.source-and-host-review/1",
+  "qualifies_phase": false,
+  "source_files": {
+    "web/app/src/RunHistory.tsx": "769dd399e629285a54d21394f26c326c340066b2df695ff6f4970d2721556868",
+    "web/app/src/run-history.css": "99932e635238507c674accf33c5d54505d09829392ce7533fe86bbfc448af44d",
+    "web/app/src/runReadProtocol.ts": "d53b598c46835335f7874d51cd00b2d10c4d787736f383164fe6ed8fd288afe5",
+    "web/app/tests/run-history-fixture.ts": "d844ea450e71173908359713b91051c37aeb8bd2dd5fa35869464031299b2b10",
+    "web/app/tests/run-history.mjs": "c82d53d2f4239aecd9be4a00a7b29aede2e73a7474ac3ef537f0ed3b56dee52a",
+    "web/app/tests/run-history.test.ts": "a865d51d9499386ec8cc7bc136c466aa9a2553064859b05daa50ea0cf272b75d"
+  },
+  "unexecuted": [
+    "Actual rendered desktop/narrow browser checks",
+    "Connected native Run read carrier and current access/readback",
+    "Answer/cancel or issue UI",
+    "Real dispatch, progress, model, acceptance and G3"
+  ]
+}

@@ -148,7 +148,8 @@ export class RunReadClient {
   private listSequence = 0;
   constructor(private readonly transport: RunReadTransport) {}
   currentSessionToken() { return this.transport.currentSession(); }
-  private capability() { if (this.transport.capability?.() !== 'stead.run-query/1') throw new RunReadClientError('unsupported_operation'); }
+  supportsReads() { return this.transport.capability?.() === 'stead.run-query/1'; }
+  private capability() { if (!this.supportsReads()) throw new RunReadClientError('unsupported_operation'); }
   private check(token: RunSessionToken) { if (this.transport.currentSession() !== token) throw new RunReadClientError('session_changed'); }
   private current(token: RunSessionToken, sequence: number | undefined) {
     this.check(token); this.capability(); if (sequence !== undefined && sequence !== this.listSequence) throw new RunReadClientError('stale_cursor');

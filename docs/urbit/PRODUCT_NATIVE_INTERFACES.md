@@ -666,6 +666,17 @@ TypeScript and fourteen host checks](evidence/2026-11-15/controller-refresh/run-
 passed. The native wire is unchanged; no Home endpoint, Run control, connected
 screen or actual dispatch is activated by this reader.
 
+The reserved `RunHistory` component now uses that reader for a Work-scoped list
+and detail view, clarification history and the exact submitted Change route.
+Its additive `supportsReads()` query lets it hide cached content immediately
+on capability withdrawal. Session/scope/view generations fence late reads;
+offline retention is explicitly stale, navigation is disabled, and Back focus
+is scoped to the same Work. Issued time is Run requested; a terminal lease
+does not assert process exit. [Independent source review, scoped TypeScript and
+twelve host checks](evidence/2026-11-15/controller-refresh/run-history/source-review.json)
+passed; the synthetic browser fixture is prepared but unrun. The component
+is not connected to Home or enabled in the app.
+
 The reserved human `RunControlClient` admits only `answer` and `cancel` from
 `stead.run-command/1`. It checks canonical nested question/text, exact request
 and digest, the short five-field rejection and full nine-field receipt. An
