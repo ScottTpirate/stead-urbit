@@ -217,11 +217,14 @@ expected revisions and authority epochs remain mandatory for mutation.
 ### Assigning Work
 
 The project-scoped `assignees` query lists active contributors and maintainers
-with `principal_id`, `display_name`, and `identity_ship`. Contributors and
-maintainers can query candidates and send `work.assign` against the current
-Work revision and authority epoch. Its sole payload field,
-`assignee_principal_id`, accepts a candidate principal ID or an empty string to
-unassign. A regular Work edit preserves its assignment.
+with `principal_id`, `display_name`, and `identity_ship`. A `work.create` command
+may include an eligible `assignee_principal_id`; Home accepts the item and its
+assignment in one operation. Omit the field to create unassigned Work. Use
+`work.assign` against the current revision and authority epoch to assign or
+unassign existing Work. Its sole field `assignee_principal_id` accepts an
+eligible principal ID or an empty string to unassign. Home checks current
+eligibility at acceptance and retains the accepted binding in its journal.
+A regular Work edit preserves the assignment.
 
 Assigned Work rows expose `assignee_principal_id` and include
 `assignee_display_name` while the assignee remains eligible. Existing assignments

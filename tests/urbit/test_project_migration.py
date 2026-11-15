@@ -229,6 +229,30 @@ class ProjectMigration(unittest.TestCase):
         self.sign()
         self.assertEqual(migration.verify(**self.paths)['status'], 'verified-candidate')
 
+    def test_work_assigned_at_creation_requires_historical_live_target(self):
+        work = migration.decoded(self.rows[1]['canonical_command'].encode())
+        payload = work['payload'] | {'assignee_principal_id': uid(20)}
+        target = {'identity_ship': '~bud', 'principal_id': uid(20), 'binding_id': uid(21),
+                  'binding_revision': '1', 'binding_expires_at_ms': '2000000000000'}
+        previous = self.rows[1]['previous_digest']
+        for changed_payload, evidence, error in (
+                (payload, target, None),
+                (payload, dict(target, principal_id=uid(23)), 'journal-grant-target-mismatch'),
+                (payload, dict(target, binding_expires_at_ms='1900000000002'), 'journal-grant-target-time'),
+                (payload | {'assignee_principal_id': ''}, None, 'journal-assignment-target-shape')):
+            with self.subTest(error=error):
+                created = event(2, previous, work | {'payload': changed_payload})
+                if evidence is not None:
+                    created['grant_target'] = migration.canonical(evidence).decode()
+                self.rows[1] = created
+                self.stage_journal()
+                self.sign()
+                if error is None:
+                    self.assertEqual(migration.verify(**self.paths)['status'], 'verified-candidate')
+                else:
+                    with self.assertRaisesRegex(ValueError, error):
+                        migration.verify(**self.paths)
+
     def test_signed_payload_respects_native_parser_bounds(self):
         work = migration.decoded(self.rows[1]['canonical_command'].encode())
         for payload in ({f'key-{index}': 'value' for index in range(17)}, {'description': 'bad\0value'}):

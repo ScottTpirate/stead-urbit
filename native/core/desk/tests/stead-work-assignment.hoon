@@ -109,4 +109,43 @@
           =('denied_or_not_found' (result-field response.actor-reader 'error'))
           =(db next.stale)  =(db next.target-reader)  =(db next.actor-reader)
       ==
+++  test-work-assignment-at-creation-is-one-accepted-edit
+  =/  payload  (weld work-fields ~[['assignee_principal_id' principal.identity.bob]])
+  =/  create  (command 307 108 0 'work.create' payload)
+  =/  done  (apply-command:stead-team db alice create 1.010)
+  =/  item  (~(got by works.data.next.done) [(id 100) (id 108)])
+  =/  view  (indexed next.done)
+  %-  expect
+  !>  ?&  =('accepted' (result-field response.done 'status'))
+          =('1' (result-field response.done 'resource_revision'))
+          =(done (apply-command:stead-team next.done alice create 1.011))
+          =(principal.identity.bob (field data.item 'assignee_principal_id'))
+          =(revision.item 1)
+          (ready:stead-projection next.done view)
+          =((some next.done) (result:stead-restore (step:stead-restore (begin:stead-restore next.done ~zod))))
+      ==
+++  test-work-assignment-at-creation-denies-ineligible-targets-and-readers
+  =/  to-reader  (command 307 108 0 'work.create' (weld work-fields ~[['assignee_principal_id' principal.identity.carol]]))
+  =/  to-editor  (command 308 108 0 'work.create' (weld work-fields ~[['assignee_principal_id' principal.identity.bob]]))
+  =/  target-reader  (apply-command:stead-team db alice to-reader 1.010)
+  =/  actor-reader  (apply-command:stead-team db carol to-editor 1.010)
+  =/  target-expired  (apply-command:stead-team db alice to-editor 5.000)
+  =/  target-revoked  (apply-command:stead-team next.revoked alice to-editor 1.010)
+  %-  expect
+  !>  ?&  =('denied_or_not_found' (result-field response.target-reader 'error'))
+          =('denied_or_not_found' (result-field response.actor-reader 'error'))
+          =('denied_or_not_found' (result-field response.target-expired 'error'))
+          =('denied_or_not_found' (result-field response.target-revoked 'error'))
+          =(db next.target-reader)  =(db next.actor-reader)  =(db next.target-expired)
+          =(next.revoked next.target-revoked)
+      ==
+++  test-work-assignment-at-creation-wire-shape
+  =/  empty-assignee  (weld work-fields ~[['assignee_principal_id' '']])
+  =/  malformed-assignee  (weld work-fields ~[['assignee_principal_id' '~nec']])
+  =/  update-assignee  (weld work-fields ~[['assignee_principal_id' principal.identity.bob]])
+  =/  empty  (mule |.((command 307 108 0 'work.create' empty-assignee)))
+  =/  malformed  (mule |.((command 307 108 0 'work.create' malformed-assignee)))
+  =/  update  (mule |.((command 307 101 2 'work.update' update-assignee)))
+  %-  expect
+  !>  &(?=([%| *] empty) ?=([%| *] malformed) ?=([%| *] update))
 --

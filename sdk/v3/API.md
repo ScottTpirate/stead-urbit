@@ -74,7 +74,8 @@ same request is rejected; retrying an accepted original is idempotent.
 | Operation | Exact payload fields | Scope and expected revision |
 | --- | --- | --- |
 | `project.create` | `organization_id`, `owning_team_id`, `title`, `project_key`, `preset` | Explicit project creator; project = resource; revision 0; preset `general` |
-| `work.create`, `work.update` | `title`, `description`, `type`, `status`, `priority` | Contributor or maintainer; 0 for create, positive for update |
+| `work.create` | `title`, `description`, `type`, `status`, `priority`, optional `assignee_principal_id` (eligible member ID) | Contributor or maintainer; revision 0 |
+| `work.update` | `title`, `description`, `type`, `status`, `priority` | Contributor or maintainer; current Work revision |
 | `work.assign` | `assignee_principal_id` (eligible member ID or empty to unassign) | Contributor or maintainer; current Work revision |
 | `work.delete` | none | Contributor or maintainer; positive revision |
 | `container.create` | `title`, `visibility` | Contributor or maintainer for private; maintainer for shared; revision 0 |

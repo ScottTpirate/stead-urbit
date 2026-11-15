@@ -216,7 +216,12 @@ def verify_event(raw, current, sequence, previous, last_time, seen, context, bin
         target_principal = payload['assignee_principal_id']
         require(command['expected_revision'] != '0' and (target_principal == '' or match(UUID, target_principal)),
                 'journal-assignment-target-shape')
-    if operation == 'policy.grant':
+    elif operation == 'work.create' and 'assignee_principal_id' in payload:
+        shape(payload, {'title', 'description', 'type', 'status', 'priority', 'assignee_principal_id'})
+        target_principal = payload['assignee_principal_id']
+        require(command['expected_revision'] == '0' and match(UUID, target_principal),
+                'journal-assignment-target-shape')
+    elif operation == 'policy.grant':
         target_principal = payload.get('principal_id')
     if operation == 'policy.grant' or target_principal:
         target = embedded(record['grant_target'], ACTOR_FIELDS, 1_024)

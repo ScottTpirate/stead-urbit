@@ -1,7 +1,7 @@
 {
   "format": 1,
   "classification": "pure-native-only",
-  "expected_arm_count": 151,
+  "expected_arm_count": 154,
   "suites": [
     {
       "path": "/tests/stead-session",
@@ -102,7 +102,10 @@
         "test-work-assignment-persists-through-edits-and-replay",
         "test-work-assignment-roster-and-search-are-project-scoped",
         "test-work-assignment-revocation-hides-name-and-allows-clearing",
-        "test-work-assignment-rejects-stale-and-ineligible-actors"
+        "test-work-assignment-rejects-stale-and-ineligible-actors",
+        "test-work-assignment-at-creation-is-one-accepted-edit",
+        "test-work-assignment-at-creation-denies-ineligible-targets-and-readers",
+        "test-work-assignment-at-creation-wire-shape"
       ],
       "timeout_seconds": 60
     },

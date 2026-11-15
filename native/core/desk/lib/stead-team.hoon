@@ -177,11 +177,10 @@
     &(=(rank 3) (~(has by grants.data.db) (scope-key:stead-core project.cmd (field payload.cmd 'grant_id'))))
   ?:  =('container.create' operation.cmd)
     ?|(=('private' (field payload.cmd 'visibility')) =(rank 3))
-  ?:  =('work.create' operation.cmd)  &
   ?:  =('work.update' operation.cmd)
     (subject db actor project.cmd 'work' '' resource.cmd now)
-  ?:  =('work.assign' operation.cmd)
-    ?.  (subject db actor project.cmd 'work' '' resource.cmd now)  |
+  ?:  ?|(=('work.create' operation.cmd) =('work.assign' operation.cmd))
+    ?.  ?|(=('work.create' operation.cmd) (subject db actor project.cmd 'work' '' resource.cmd now))  |
     =/  id  (target-principal:stead-team-codec cmd)
     ?|(=('' id) (~(has by (assignees db project.cmd now)) id))
   ?:  =('work.delete' operation.cmd)

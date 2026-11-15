@@ -64,7 +64,11 @@
           (title (field pay 'title'))  (project-key (field pay 'project_key'))
           =('general' (field pay 'preset'))
       ==
-    ?:  =('work.create' op)  &(=(exp 0) (work-payload pay))
+    ?:  =('work.create' op)
+      ?&  =(exp 0)
+          ?.  (~(has by pay) 'assignee_principal_id')  (work-payload pay)
+          &((uuid (field pay 'assignee_principal_id')) (work-payload (~(del by pay) 'assignee_principal_id')))
+      ==
     ?:  =('work.update' op)  &((gth exp 0) (work-payload pay))
     ?:  =('work.assign' op)
       ?&  (gth exp 0)  (keys pay ~['assignee_principal_id'])
@@ -165,7 +169,10 @@
   |=  cmd=command
   ^-  @t
   ?:  =('policy.grant' operation.cmd)  (field payload.cmd 'principal_id')
-  ?:  =('work.assign' operation.cmd)  (field payload.cmd 'assignee_principal_id')
+  ?:  ?|  =('work.assign' operation.cmd)
+          &(=('work.create' operation.cmd) (~(has by payload.cmd) 'assignee_principal_id'))
+      ==
+    (field payload.cmd 'assignee_principal_id')
   ''
 ++  kind
   |=  operation=@t
