@@ -94,8 +94,9 @@
   =/  assigned  (optional-field data.work 'assignee_principal_id')
   =?  data  !=('' assigned)  (~(put by data) 'assignee_principal_id' [%s assigned])
   =/  goal-changed  ?|(!=((field data 'title') (field data.work 'title')) !=((field data 'description') (field data.work 'description')))
+  =/  property-names=(list @t)  ~['type' 'status' 'priority']
   =/  properties-changed
-    %+  lien  ~['type' 'status' 'priority']
+    %+  lien  property-names
     |=  name=@t
     !=((field data name) (field data.work name))
   =/  before  (field data.work 'status')
