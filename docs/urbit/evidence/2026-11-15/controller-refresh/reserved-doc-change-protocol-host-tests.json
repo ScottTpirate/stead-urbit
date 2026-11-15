@@ -1,0 +1,48 @@
+{
+  "classification": "host-doc-change-codec-source-derived-vectors",
+  "qualifies_phase": false,
+  "node": "v24.21.0",
+  "expected_tests": [
+    "source-derived submission and adoption vectors preserve exact canonical JSON and native hash domain",
+    "all seven operations retain closed shapes and explicit decision note rules",
+    "lifecycle result execution and target pins are distinct and all remain in exact request bytes",
+    "document targets preserve same-project exact bases and reject alternate kinds or claimed visibility",
+    "run pairs carry provenance intent without admitting caller-supplied authority or acceptance context",
+    "uint64 string pins reject lossy numbers signs leading zeros and overflow at every level",
+    "bounded parser rejects duplicate decoded keys unknown fields arrays scalars and extra nesting",
+    "Markdown explanations and whole wire enforce native UTF-8 byte bounds without text normalization",
+    "Unicode escapes and source bytes remain exact while NUL and lone surrogate decoding fail",
+    "decoded commands are isolated deeply frozen intents and encoding never invokes authored getters"
+  ],
+  "status": "pass",
+  "inputs_before": {
+    "src/docChangeProtocol.ts": "f41042a8a14ba759e3238ccda54532d0fd49d48b174ada4281d06cb7c6f5f893",
+    "src/productWire.ts": "35b033b3437f07b2e0690e3192091b43ba4bec2c9bee2768ca9b43abb70fa6c1",
+    "src/productProtocol.ts": "53032173a4df1a394ffbab1fea2950ce5e4579279116dcf9d470f1e91f5a2400",
+    "src/protocol.ts": "a8dee5b65f79ffe052869f19e9b508f7abcb30149ac82eaa31a47223796003c7",
+    "tests/doc-change-protocol.test.ts": "2a49c92578e29e2bb2c3d53f93e89fc80492d92037e5c6161c06d4cae809fb2d",
+    "tests/doc-change-protocol.mjs": "6aa7d63f4f9a657874c595676bb21dd76b82d0ba5bcf619bc1c3ddb3b38c14ec",
+    "tests/doc-change-vectors.json": "9d3abf65a6ac659c17fdbf6ec59eec30771078dd73c28f0ed2ced0b0ee656897",
+    "package-lock.json": "b4d2ced8e19aa8b7cf9eaab75b906e867132321b97937b534e5810c152dbec98",
+    "../../native/core/desk/lib/stead-doc-change-codec.hoon": "94f295998b847adbeab69a5595f7360513fdc18358baf88f54a99db8c156282c",
+    "../../native/core/desk/lib/stead-codec.hoon": "56e3d574381bbf8cdf29ca192c70eff256009f89d782e3ffe859b19c1321cbd7",
+    "../../native/core/desk/lib/stead-team-codec.hoon": "0a7e54ad7cd6fc66dcbfabd90425d55a234d9239140dec97309474fb3b90ba76",
+    "../../native/core/desk/lib/stead-product-codec.hoon": "f5b16dd0ae46aa1f079a7a35c21d1ed46ff30893dc1096ee16297819863e11d0",
+    "../../native/core/desk/tests/stead-doc-change-codec.hoon": "2d0fa07f7ea475475253fdd51244d88c0947b6247b7e926d71e9c9126cbce5dc"
+  },
+  "inputs_after": {
+    "src/docChangeProtocol.ts": "f41042a8a14ba759e3238ccda54532d0fd49d48b174ada4281d06cb7c6f5f893",
+    "src/productWire.ts": "35b033b3437f07b2e0690e3192091b43ba4bec2c9bee2768ca9b43abb70fa6c1",
+    "src/productProtocol.ts": "53032173a4df1a394ffbab1fea2950ce5e4579279116dcf9d470f1e91f5a2400",
+    "src/protocol.ts": "a8dee5b65f79ffe052869f19e9b508f7abcb30149ac82eaa31a47223796003c7",
+    "tests/doc-change-protocol.test.ts": "2a49c92578e29e2bb2c3d53f93e89fc80492d92037e5c6161c06d4cae809fb2d",
+    "tests/doc-change-protocol.mjs": "6aa7d63f4f9a657874c595676bb21dd76b82d0ba5bcf619bc1c3ddb3b38c14ec",
+    "tests/doc-change-vectors.json": "9d3abf65a6ac659c17fdbf6ec59eec30771078dd73c28f0ed2ced0b0ee656897",
+    "package-lock.json": "b4d2ced8e19aa8b7cf9eaab75b906e867132321b97937b534e5810c152dbec98",
+    "../../native/core/desk/lib/stead-doc-change-codec.hoon": "94f295998b847adbeab69a5595f7360513fdc18358baf88f54a99db8c156282c",
+    "../../native/core/desk/lib/stead-codec.hoon": "56e3d574381bbf8cdf29ca192c70eff256009f89d782e3ffe859b19c1321cbd7",
+    "../../native/core/desk/lib/stead-team-codec.hoon": "0a7e54ad7cd6fc66dcbfabd90425d55a234d9239140dec97309474fb3b90ba76",
+    "../../native/core/desk/lib/stead-product-codec.hoon": "f5b16dd0ae46aa1f079a7a35c21d1ed46ff30893dc1096ee16297819863e11d0",
+    "../../native/core/desk/tests/stead-doc-change-codec.hoon": "2d0fa07f7ea475475253fdd51244d88c0947b6247b7e926d71e9c9126cbce5dc"
+  }
+}

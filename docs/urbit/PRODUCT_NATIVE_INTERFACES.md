@@ -425,6 +425,12 @@ revision is the Change's lifecycle revision. It is distinct from the immutable
 result revision, Work execution revision and target Doc revision. No route or
 mark exposes it yet. Six syntax/boundary arms remain uncompiled.
 
+The reserved browser command codec mirrors these exact nine fields and seven
+operations, preserving uint64 decimal strings, typed target pins and the
+`stead.doc-change/1` command digest. Its ten host tests and source-derived
+canonical vectors pass; they are not native execution. No read interface,
+transport, session authority or live capability is provided by that codec.
+
 `change.submit` carries an outcome ID, the exact document target already declared
 by that Work, canonical Markdown bytes, a summary, execution-contract revision
 and digest, and a run/attempt pair. Empty run plus attempt zero denotes a human

@@ -1,0 +1,110 @@
+{
+  "protocol": "stead.doc-change-protocol-preparation/1",
+  "created_at": "2026-11-15T19:26:20.736702+00:00",
+  "classification": "reserved-command-codec-host-tests",
+  "qualifies_phase": false,
+  "native_executed": false,
+  "live_routes_changed": false,
+  "source_inputs": {
+    "src/docChangeProtocol.ts": "f41042a8a14ba759e3238ccda54532d0fd49d48b174ada4281d06cb7c6f5f893",
+    "src/productWire.ts": "35b033b3437f07b2e0690e3192091b43ba4bec2c9bee2768ca9b43abb70fa6c1",
+    "src/productProtocol.ts": "53032173a4df1a394ffbab1fea2950ce5e4579279116dcf9d470f1e91f5a2400",
+    "src/protocol.ts": "a8dee5b65f79ffe052869f19e9b508f7abcb30149ac82eaa31a47223796003c7",
+    "tests/doc-change-protocol.test.ts": "2a49c92578e29e2bb2c3d53f93e89fc80492d92037e5c6161c06d4cae809fb2d",
+    "tests/doc-change-protocol.mjs": "6aa7d63f4f9a657874c595676bb21dd76b82d0ba5bcf619bc1c3ddb3b38c14ec",
+    "tests/doc-change-vectors.json": "9d3abf65a6ac659c17fdbf6ec59eec30771078dd73c28f0ed2ced0b0ee656897",
+    "package-lock.json": "b4d2ced8e19aa8b7cf9eaab75b906e867132321b97937b534e5810c152dbec98",
+    "../../native/core/desk/lib/stead-doc-change-codec.hoon": "94f295998b847adbeab69a5595f7360513fdc18358baf88f54a99db8c156282c",
+    "../../native/core/desk/lib/stead-codec.hoon": "56e3d574381bbf8cdf29ca192c70eff256009f89d782e3ffe859b19c1321cbd7",
+    "../../native/core/desk/lib/stead-team-codec.hoon": "0a7e54ad7cd6fc66dcbfabd90425d55a234d9239140dec97309474fb3b90ba76",
+    "../../native/core/desk/lib/stead-product-codec.hoon": "f5b16dd0ae46aa1f079a7a35c21d1ed46ff30893dc1096ee16297819863e11d0",
+    "../../native/core/desk/tests/stead-doc-change-codec.hoon": "2d0fa07f7ea475475253fdd51244d88c0947b6247b7e926d71e9c9126cbce5dc"
+  },
+  "source_mapping": [
+    {
+      "native": "stead-doc-change-codec.decode",
+      "typescript": "commandValue/parseDocChangeCommand",
+      "contract": "Nine exact envelope fields, protocol1, UUIDv7 identity, positive authority epoch, uint64 lifecycle revision"
+    },
+    {
+      "native": "stead-doc-change-codec.submission + stead-product-codec.outcome",
+      "typescript": "commandValue change.submit branch",
+      "contract": "Eight exact payload fields, same-project Doc target, zero/new or positive/existing Doc base hash, exact Markdown, execution pin and run/attempt pair"
+    },
+    {
+      "native": "stead-doc-change-codec.action/result-pin",
+      "typescript": "commandValue decision branch",
+      "contract": "Six decisions, positive lifecycle/result revisions, opaque result digest, mandatory note key; only approval/acceptance admit empty note"
+    },
+    {
+      "native": "stead-product-codec.parse-product",
+      "typescript": "productWire.parseProductJSON/productJSON",
+      "contract": "65536 UTF-8 bytes, four object levels,16 keys/object, strings/objects only, duplicate decoded keys fail"
+    },
+    {
+      "native": "stead-codec.canonical/hash",
+      "typescript": "productJSON/docChangeCommandDigest",
+      "contract": "Canonical key order and JSON escaping; SHA256 of UTF-8 domain stead.doc-change/1 followed by NUL and exact canonical bytes"
+    }
+  ],
+  "fixtures": {
+    "file": "web/app/tests/doc-change-vectors.json",
+    "classification": "source-derived-expected-values-not-native-execution",
+    "submission_sha256": "8badc6f6292779c5c6b30d119d45fac8b8163647a6a7a6d08029a8efa1764223",
+    "adoption_sha256": "73d6d921a97ad901f634b9a2a3ea34b9a326cfdfb0328c65a23f4a1f673509aa"
+  },
+  "host_tests": {
+    "passed": 10,
+    "report": ".runtime/doc-change-protocol-4tu9QO/report.json",
+    "report_sha256": "5d18e7c72ee704d6ced88cb0f493d44f54a5c6c96d739bbcbf459a889e04843e",
+    "names": [
+      "source-derived submission and adoption vectors preserve exact canonical JSON and native hash domain",
+      "all seven operations retain closed shapes and explicit decision note rules",
+      "lifecycle result execution and target pins are distinct and all remain in exact request bytes",
+      "document targets preserve same-project exact bases and reject alternate kinds or claimed visibility",
+      "run pairs carry provenance intent without admitting caller-supplied authority or acceptance context",
+      "uint64 string pins reject lossy numbers signs leading zeros and overflow at every level",
+      "bounded parser rejects duplicate decoded keys unknown fields arrays scalars and extra nesting",
+      "Markdown explanations and whole wire enforce native UTF-8 byte bounds without text normalization",
+      "Unicode escapes and source bytes remain exact while NUL and lone surrogate decoding fail",
+      "decoded commands are isolated deeply frozen intents and encoding never invokes authored getters"
+    ]
+  },
+  "typescript": "passed no emit",
+  "owned_processes": [
+    {
+      "directory": ".runtime/doc-change-typecheck-owner-1794770678713670173",
+      "process_sha256": "e82c914ac9fc8f6eb01d9ed23bb5d030e4d07d68f71da076a843757f4b9477c1",
+      "monitor_sha256": "f12ad7477a6006b33bd15bfec63fd2396de5777cefd1ba8f736d129bf168142d",
+      "cpu_max": "2500 10000",
+      "cpu_affinity": [
+        19
+      ],
+      "peak_c": 51.0,
+      "duration_seconds": 7.0,
+      "cleanup": "reaped-empty-inactive"
+    },
+    {
+      "directory": ".runtime/doc-change-owner-1794770704045760765",
+      "process_sha256": "da044a22f0ac0057205317cc56d544531503c29d802c442ba97554afa7ad2c26",
+      "monitor_sha256": "058e684cde1cef8126c4203765e3fae342684b1ec8953ada73bce1c5841a4106",
+      "cpu_max": "2500 10000",
+      "cpu_affinity": [
+        19
+      ],
+      "peak_c": 49.0,
+      "duration_seconds": 1.6,
+      "cleanup": "reaped-empty-inactive"
+    }
+  ],
+  "independent_review": {
+    "reviewer": "root",
+    "result": "No blocker found",
+    "scope": "Native codec, prose/uint/comment-body, nine fields and seven operations, text boundaries, exact target/run pairs, note rules and revisions"
+  },
+  "limits": [
+    "No query/read or receipt contract invented. No transport or API route is bound.",
+    "The codec admits syntax only. Shared visibility, current actor kind/authority, run lease, checks, reviewer separation and acceptance context remain native decisions.",
+    "Prepared hashes mirror source fixtures; this does not report native compilation or cross-language runtime execution."
+  ]
+}
