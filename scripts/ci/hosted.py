@@ -766,7 +766,8 @@ def main():
                         require_collected_child(result.get('guard', {}))
                         with (job / 'console.private.log').open('rb') as source:
                             raw = source.read(32 * 1024**2 + 1)
-                        result['worker_diagnostic'] = project(raw, inputs, run_id=run_id)
+                        result['worker_diagnostic'] = project(raw, inputs, run_id=run_id,
+                            inventory=json.loads(controller['specs/urbit/phase2-pure-units.json']))
                     except Exception:
                         result['worker_diagnostic'] = {'classification': 'failed-worker-diagnostic-unavailable',
                                                        'qualifies_phase': False}
