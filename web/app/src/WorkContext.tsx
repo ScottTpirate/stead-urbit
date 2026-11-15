@@ -2,6 +2,7 @@ import { useEffect, useId, useRef, useState, type FormEvent } from 'react';
 import { HomeError, UUID, type Fields, type HomeClient, type Query, type Row } from './api';
 import { Button, TextField } from './primitives';
 import { workStatuses } from './WorkQuickActions';
+import type {ProductWorkEndpointReader} from './productJourneyState';
 
 type Endpoint = {kind: 'work' | 'document'; id: string; container: string};
 type Choice = Endpoint & {title: string};
@@ -56,8 +57,14 @@ function titleOf(row: Row, kind: Endpoint['kind']) {
     : (title.split('\n', 1)[0]?.replace(/^#{1,6} +/u, '').trim() || 'Untitled page');
 }
 
-async function endpointDetails(client: HomeClient, project: string, value: Endpoint): Promise<EndpointDetails | null> {
+async function endpointDetails(client: HomeClient, project: string, value: Endpoint, readWork?: ProductWorkEndpointReader, epoch?: string): Promise<EndpointDetails | null> {
   try {
+    if (value.kind === 'work' && readWork) {
+      const row = await readWork(project, value.id);
+      if (row.projectId !== project || row.workId !== value.id) throw new HomeError('invalid_response');
+      if (epoch && row.authorityEpoch !== epoch) throw new HomeError('stale_cursor');
+      return {title: row.title.trim() || 'Untitled work item', status: row.statusLabel};
+    }
     const view = await client.query(readScope(value.kind, project, value.id, value.container));
     const [row, extra] = Object.values(view.rows);
     if (!row || extra || view.cursor || row.kind !== value.kind || row.resource_id !== value.id
@@ -69,7 +76,7 @@ async function endpointDetails(client: HomeClient, project: string, value: Endpo
   }
 }
 
-async function linksFor(client: HomeClient, project: string, work: Endpoint, active: () => boolean) {
+async function linksFor(client: HomeClient, project: string, work: Endpoint, active: () => boolean, readWork?: ProductWorkEndpointReader) {
   const matching: WorkLink[] = [];
   const seen = new Set<string>();
   const cursors = new Set<string>();
@@ -104,7 +111,7 @@ async function linksFor(client: HomeClient, project: string, work: Endpoint, act
   const endpoints = [...new Map(matching.map(link => [endpointKey(link.other), link.other])).values()];
   for (let offset = 0; offset < endpoints.length && active(); offset += 6) {
     await Promise.all(endpoints.slice(offset, offset + 6).map(async value => {
-      details.set(endpointKey(value), await endpointDetails(client, project, value));
+      details.set(endpointKey(value), await endpointDetails(client, project, value, readWork, stamp?.split('/')[0]));
     }));
   }
   return matching.flatMap(link => {
@@ -133,13 +140,14 @@ type Props = {
   writable: boolean; locked: boolean; viewRevision: number;
   onCreate: (payload: Fields) => void; onRemove: (row: Row) => void;
   onOpenWork: (id: string) => void; onOpenDoc: (containerId: string, id: string) => void;
+  readWork?: ProductWorkEndpointReader;
 };
 
 export function WorkContext(props: Props) {
-  return <WorkContextPanel key={`${props.project}/${props.work}`} {...props}/>;
+  return <WorkContextPanel key={`${props.project}/${props.work}/${props.readWork ? 'product' : 'legacy'}`} {...props}/>;
 }
 
-function WorkContextPanel({client, project, work, writable, locked, viewRevision, onCreate, onRemove, onOpenWork, onOpenDoc}: Props) {
+function WorkContextPanel({client, project, work, writable, locked, viewRevision, onCreate, onRemove, onOpenWork, onOpenDoc, readWork}: Props) {
   const id = useId();
   const [expanded, setExpanded] = useState(false);
   const [result, setResult] = useState<LinkView | null>(null);
@@ -157,12 +165,12 @@ function WorkContextPanel({client, project, work, writable, locked, viewRevision
   useEffect(() => {
     if (!expanded) return;
     let running = true;
-    void linksFor(client, project, {kind: 'work', id: work, container: ''}, () => running).then(
+    void linksFor(client, project, {kind: 'work', id: work, container: ''}, () => running, readWork).then(
       value => { if (running) setResult({revision: viewRevision, status: 'ready', links: value}); },
       () => { if (running) setResult({revision: viewRevision, status: 'failed'}); },
     );
     return () => { running = false; };
-  }, [client, project, work, expanded, attempt, viewRevision]);
+  }, [client, project, work, expanded, attempt, viewRevision, readWork]);
 
   useEffect(() => () => { searchRevision.current++; }, []);
 

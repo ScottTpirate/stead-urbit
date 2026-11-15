@@ -1,4 +1,4 @@
-import {useEffect, useRef, useState, type ReactNode} from 'react';
+import {useEffect, useId, useRef, useState, type ReactNode} from 'react';
 import {Button, LoadingState, OutcomeState, PropertyPicker, Surface, TextField} from './primitives';
 import {Markdown} from './Markdown';
 import {newId} from './protocol';
@@ -23,6 +23,7 @@ export function ProductWorkDetail(props: ProductWorkDetailProps) {
   return <ActiveDetail {...props} work={snapshot.work}/>;
 }
 function ActiveDetail(props: ProductWorkDetailProps & {work: Work}) {
+  const labels = useId();
   const {work} = props, state = useProductWorkDraft(props, work), {draft, change, locked} = state;
   const [editingContract, setEditingContract] = useState(!!props.restoredDraft?.contract.dirty);
   const heading = useRef<HTMLHeadingElement>(null), title = useRef<HTMLInputElement>(null);
@@ -115,7 +116,7 @@ function ActiveDetail(props: ProductWorkDetailProps & {work: Work}) {
         {!props.completionReadiness || props.completionReadiness.state === 'unsupported' ? <OutcomeState state="unsupported_operation" description="Completion from accepted outputs is not available here yet."/>
           : <Button disabled={locked || unfinishedPurpose || !completionReady || (baseChanged('completion') || draft.conflicts['completion'])} onClick={() => void state.send('completion', () => props.client.prepareCompletion(scope(),
             {work_revision: draft.completion.workBase, execution_contract_revision: draft.completion.contractBase}, {basis: 'accepted-outcomes', note: ''}))}>Complete with accepted outputs</Button>}</>
-        : props.actor.kind === 'person' ? <><label>Completion note<textarea value={draft.completion.note} disabled={locked} onChange={event => change(current => ({...current,
+        : props.actor.kind === 'person' ? <><label><span id={`${labels}-completion`}>Completion note</span><textarea aria-labelledby={`${labels}-completion`} value={draft.completion.note} disabled={locked} onChange={event => change(current => ({...current,
           completion: {...current.completion, note: event.target.value, dirty: true}}))}/></label>
           <p className="muted">Explain the outcome. Home will confirm your current authority before completing this work.</p>
           <Button disabled={locked || unfinishedPurpose || !draft.completion.note || (baseChanged('completion') || draft.conflicts['completion'])} onClick={() => void state.send('completion', () => props.client.prepareCompletion(scope(),
@@ -129,7 +130,7 @@ function ActiveDetail(props: ProductWorkDetailProps & {work: Work}) {
           : <>{!props.comments.rows.length && <p className="muted">No comments yet.</p>}{props.comments.rows.map(comment => <article key={comment.sequence}><header><strong>{comment.display_name || 'Project member'}</strong></header>
             <p>{comment.body}</p><details><summary>Details</summary><dl><div><dt>Accepted time</dt><dd>{comment.accepted_at_ms}</dd></div><div><dt>Request ID</dt><dd>{comment.request_id}</dd></div></dl></details></article>)}
             {props.comments.cursor && <Button disabled={state.pending || !props.online} onClick={props.comments.onNext}>More comments</Button>}</>}
-      <label>Comment<textarea value={draft.discussion.value} disabled={locked} onChange={event => change(current => ({...current,
+      <label><span id={`${labels}-comment`}>Comment</span><textarea aria-labelledby={`${labels}-comment`} value={draft.discussion.value} disabled={locked} onChange={event => change(current => ({...current,
         discussion: {...current.discussion, value: event.target.value, dirty: !!event.target.value}}))}/></label>
       {conflict('discussion')}<Button disabled={locked || !draft.discussion.value || (baseChanged('discussion') || draft.conflicts['discussion'])} onClick={() => void state.send('discussion', () => props.client.prepareComment(scope(), draft.discussion.base, draft.discussion.value))}>Post comment</Button>
     </section>

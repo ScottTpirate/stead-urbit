@@ -1,0 +1,10 @@
+.product-work-journey { min-width: 0; }
+.product-journey-toolbar { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 12px; margin-block: 16px; }
+.product-journey-toolbar > div { display: flex; flex-wrap: wrap; gap: 8px; }
+.product-journey-list { list-style: none; padding: 0; margin-block: 16px; }
+.product-journey-list li + li { border-top: 1px solid var(--line); }
+.product-journey-list button { display: grid; width: 100%; grid-template-columns: minmax(0,1fr) auto; text-align: left; gap: 4px 16px; min-height: 48px; padding: 10px; border: 0; background: var(--paper); }
+.product-journey-list small { grid-column: 1 / -1; color: var(--muted); font-weight: 400; }
+.product-journey-output-actions > div { display: flex; flex-wrap: wrap; gap: 8px; margin-block: 12px; }
+.product-journey-output-actions > div > p { flex-basis: 100%; }
+@media (max-width: 620px) { .product-journey-list button { grid-template-columns: minmax(0,1fr); } }

@@ -4,6 +4,7 @@ const ID = /^[a-f0-9]{8}-[a-f0-9]{4}-7[a-f0-9]{3}-[89ab][a-f0-9]{3}-[a-f0-9]{12}
 const REVISION = /^[1-9][0-9]{0,19}$/u;
 const validRevision = (value: string) => REVISION.test(value) && BigInt(value) <= 18446744073709551615n;
 const OID = /^(?:[0-9a-f]{40}|[0-9a-f]{64})$/u;
+const DIGEST = /^[0-9a-f]{64}$/u;
 function validPath(path: string): boolean {
   return path.length > 0 && new TextEncoder().encode(path).length <= 1024
     && !/[\u0000-\u001f\u007f\\]/u.test(path) && path.split('/').every(part => part !== '' && part !== '.' && part !== '..');
@@ -19,6 +20,7 @@ export type ProductRoute =
   | { kind: 'repository'; project: string; repository: string; view: 'files' | 'changes' | 'history' }
   | { kind: 'change'; project: string; change: string; revision?: string }
   | { kind: 'review'; project: string; change: string; revision: string }
+  | { kind: 'doc-change'; project: string; work: string; change: string; result?: {revision: string; digest: string} }
   | { kind: 'file'; project: string; repository: string; commit: string; path: string }
   | { kind: 'run'; project: string; run: string };
 
@@ -38,6 +40,11 @@ export function decodeProductRoute(hash: string): ProductRoute | null {
     } catch { return null; }
   }
   if (hash.includes('%')) return null;
+  if (kind === 'doc-change' && [4, 6].includes(p.length) && ID.test(a ?? '') && ID.test(b ?? '')
+    && (p.length === 4 || (validRevision(revision ?? '') && DIGEST.test(p[5] ?? '')))) {
+    return {kind: 'doc-change', project: project!, work: a!, change: b!,
+      ...(p.length === 6 ? {result: {revision: revision!, digest: p[5]!}} : {})};
+  }
   if (kind === 'collection' && p.length === 3 && ID.test(a ?? '')) return {kind:'collection',project:project!,collection:a!};
   if (kind === 'project' && p.length === 3 && ['overview', 'work', 'docs', 'code'].includes(a ?? '')) {
     return {kind: 'project', project: project!, view: a as ProjectView};
@@ -72,6 +79,8 @@ export function encodeProductRoute(route: ProductRoute): string {
     : route.kind === 'repository' ? ['repository', route.project, route.repository, route.view]
     : route.kind === 'change' ? ['change', route.project, route.change, ...(route.revision ? [route.revision] : [])]
     : route.kind === 'review' ? ['review', route.project, route.change, route.revision]
+    : route.kind === 'doc-change' ? ['doc-change', route.project, route.work, route.change,
+      ...(route.result ? [route.result.revision, route.result.digest] : [])]
     : route.kind === 'file' ? ['file', route.project, route.repository, route.commit, encodeURIComponent(route.path)]
     : ['run', route.project, route.run];
   const hash = '#' + parts.join('/');

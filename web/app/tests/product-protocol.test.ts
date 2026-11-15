@@ -124,6 +124,55 @@ test('query4 scope is exact and never silently accepts query3 or extra filters',
     {...query, container_id: id(200)}, {...query, search: 'text'}, {...query, cursor: 'main'}, {...query, owner: id(102)},
     {...query, kind: 'comments', resource_id: ''}]) assert.throws(() => encodeProductQuery(changed), ProductProtocolError);
 });
+test('principal and completion reads retain their exact resource and cursor grammar', () => {
+  const roster = {...query, kind: 'principals', resource_id: '', cursor: 'c'.repeat(64)};
+  const completion = {...query, kind: 'completion'};
+  assert.equal(parseProductQuery(encodeProductQuery(roster)).kind, 'principals');
+  assert.equal(parseProductQuery(encodeProductQuery(completion)).kind, 'completion');
+  for (const value of [{...roster, resource_id: id(101)}, {...roster, search: 'person'}, {...completion, resource_id: ''},
+    {...completion, cursor: 'c'.repeat(64)}, {...completion, actor_kind: 'person'}]) {
+    assert.throws(() => encodeProductQuery(value), ProductProtocolError);
+  }
+});
+test('principal rows retain native kinds and roles without converting service or unresolved identities', () => {
+  const request: ProductQuery = {...query, kind: 'principals', resource_id: ''};
+  const principal = {kind: 'principal', principal_id: id(102), display_name: '', principal_kind: 'unresolved', active: 'no', project_role: 'reader'};
+  const rows = ['person', 'agent', 'service', 'unresolved'].map((principal_kind, index) => ({...principal, principal_id: id(102 + index), principal_kind}));
+  const parsed = parseProductView(JSON.stringify(result(request, rows)), request);
+  assert.ok(parsed.status === 'read' && parsed.kind === 'principals'); assert.deepEqual(parsed.rows.map(row => ({...row})), rows);
+  for (const row of [{...principal, principal_kind: 'human'}, {...principal, project_role: 'owner'}, {...principal, active: true},
+    {...principal, binding_id: id(501)}, {...principal, principal_id: '~bus'}, {...principal, display_name: 'x'.repeat(201)},
+    {...principal, display_name: 'Hidden\nname'}, {...principal, display_name: '😀'.repeat(201)}]) badView(result(request, [row]), request);
+  badView(result(request, [principal, principal]), request);
+  badView(result(request, rows, 'c'.repeat(64)), request);
+  const page = Array.from({length: 20}, (_, index) => ({...principal, principal_id: id(102 + index)}));
+  assert.equal(parseProductView(JSON.stringify(result(request, page, 'c'.repeat(64))), request).status, 'read');
+  badView({...result(request, rows), project_id: id(999)}, request);
+});
+test('completion advice is exact scoped pinned and never accepts invented authority or contradictory readiness', () => {
+  const request: ProductQuery = {...query, kind: 'completion'};
+  const row = {kind: 'completion', project_id: id(100), work_id: id(101), execution_contract_revision: '9007199254740993',
+    execution_contract_digest: 'b'.repeat(64), ready: 'yes', reason: ''};
+  for (const advice of [row, {...row, ready: 'no', reason: 'human-note-required'}, {...row, ready: 'no', reason: 'required-outcomes-unconfirmed'}]) {
+    const parsed = parseProductView(JSON.stringify(result(request, [advice])), request);
+    assert.ok(parsed.status === 'read' && parsed.kind === 'completion'); assert.deepEqual(parsed.rows.map(row => ({...row})), [advice]);
+  }
+  for (const changed of [{...row, project_id: id(999)}, {...row, work_id: id(999)}, {...row, execution_contract_revision: '0'},
+    {...row, execution_contract_revision: 1}, {...row, execution_contract_digest: ''}, {...row, ready: 'yes', reason: 'human-note-required'},
+    {...row, ready: 'no'}, {...row, reason: 'private-doc-missing'}, {...row, principal_kind: 'person'}]) badView(result(request, [changed]), request);
+  badView(result(request, []), request); badView(result(request, [row, row]), request); badView(result(request, [row], 'c'.repeat(64)), request);
+});
+test('principal and completion client helpers send frozen exact queries and fence late authority reads', async () => {
+  let token = {}, resolve!: (raw: string) => void; const sent: ProductQuery[] = [];
+  const client = new ProductWorkClient({currentSession: () => token, command: async () => { throw new Error('Unexpected command'); },
+    query: raw => { sent.push(parseProductQuery(raw)); return new Promise(done => { resolve = done; }); }});
+  const roster = client.readPrincipals({request_id: id(601), project_id: id(100)});
+  const rosterRequest = sent[0]!; assert.deepEqual({...rosterRequest}, {...query, request_id: id(601), kind: 'principals', resource_id: ''});
+  resolve(JSON.stringify(result(rosterRequest, []))); assert.equal((await roster).status, 'read');
+  const completion = client.readCompletion({request_id: id(602), project_id: id(100), resource_id: id(101)});
+  assert.deepEqual({...sent[1]}, {...query, request_id: id(602), kind: 'completion'});
+  token = {}; resolve('{}'); await assert.rejects(completion, {code: 'session_changed'});
+});
 test('exact Work decoding preserves legacy assignment without converting it to owner or worker', () => {
   const parsed = parseProductView(JSON.stringify(result(query, [detail])), query);
   assert.equal(parsed.status, 'read'); if (parsed.status !== 'read' || parsed.kind !== 'work') return;

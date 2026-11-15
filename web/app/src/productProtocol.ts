@@ -27,7 +27,7 @@ export type ProductCommand = ProductScope & {protocol: 'stead.command/4'} & (
   | {operation: 'work.complete'; expected: WorkContractRevisions; payload: Completion}
   | {operation: 'work.delete'; expected: WorkContractRevisions & {discussion_sequence: string}; payload: Record<string, never>}
 );
-export type ProductQuery = {protocol: 'stead.query/4'; request_id: string; kind: 'work' | 'comments'; project_id: string;
+export type ProductQuery = {protocol: 'stead.query/4'; request_id: string; kind: 'work' | 'comments' | 'principals' | 'completion'; project_id: string;
   container_id: ''; resource_id: string; search: ''; cursor: string};
 export type ProductWorkBase = {kind: 'work'; project_id: string; resource_id: string; container_id: ''; resource_revision: string;
   work_revision: string; execution_contract_protocol: 'stead.work-contract/2'; execution_contract_revision: string;
@@ -41,10 +41,15 @@ export type ProductWorkDetail = ProductWorkBase & {description: string; acceptan
   legacy_assignee_display_name: string; legacy_blocked_pending: 'yes' | 'no'; legacy_blocked_status: '' | 'blocked'; legacy_prior_status: string};
 export type ProductComment = {kind: 'comment'; project_id: string; work_id: string; sequence: string; body: string;
   principal_id: string; display_name: string; identity_ship: string; request_id: string; accepted_at_ms: string; legacy_comment_revision: string};
+export type ProductPrincipal = {kind: 'principal'; principal_id: string; display_name: string;
+  principal_kind: 'person' | 'agent' | 'service' | 'unresolved'; active: 'yes' | 'no'; project_role: 'reader' | 'contributor' | 'maintainer'};
+export type ProductCompletion = {kind: 'completion'; project_id: string; work_id: string; execution_contract_revision: string;
+  execution_contract_digest: string; ready: 'yes' | 'no'; reason: '' | 'human-note-required' | 'required-outcomes-unconfirmed'};
 type QueryResult = {protocol: 'stead.query-result/4'; status: 'read'; request_id: string; project_id: string; container_id: '';
   resource_id: string; authority_epoch: string; generation: string; cursor: string};
 export type ProductView = QueryResult & ({kind: 'work'; rows: readonly (ProductWorkPreview | ProductWorkDetail)[]}
-  | {kind: 'comments'; rows: readonly ProductComment[]});
+  | {kind: 'comments'; rows: readonly ProductComment[]}
+  | {kind: 'principals'; rows: readonly ProductPrincipal[]} | {kind: 'completion'; rows: readonly ProductCompletion[]});
 export type ProductQueryRejection = {protocol: 'stead.query-result/4'; status: 'rejected'; request_id: string; error: string};
 export type ProductResulting = WorkContractRevisions & {discussion_sequence: string; execution_contract_digest: string};
 type ReceiptBase = {protocol: 'stead.receipt/4'; request_id: string; canonical_sha256: string; error: string};
@@ -150,7 +155,10 @@ export function parseProductQuery(raw: string): ProductQuery {
   const row = parseProductJSON(raw, {bytes: 65536, depth: 2, keys: 16}); keys(row, queryKeys);
   requireValue(row.protocol === 'stead.query/4' && row.container_id === '' && row.search === '');
   uuid(row.request_id); uuid(row.project_id); hash(row.cursor, true);
-  requireValue(row.kind === 'work' || row.kind === 'comments'); uuid(row.resource_id, row.kind === 'work');
+  requireValue(['work', 'comments', 'principals', 'completion'].includes(text(row, 'kind')));
+  if (row.kind === 'principals') requireValue(row.resource_id === '');
+  else uuid(row.resource_id, row.kind === 'work');
+  if (row.kind === 'completion') requireValue(row.cursor === '');
   return freeze(row as unknown as ProductQuery);
 }
 export function encodeProductQuery(value: unknown): string { return productJSON(parseProductQuery(productJSON(value))); }
@@ -203,6 +211,24 @@ function commentRow(value: unknown, query: ProductQuery): ProductComment {
   requireValue(/^~[a-z]+(?:-{1,2}[a-z]+)*$/u.test(text(row, 'identity_ship')) && byteLength(row.identity_ship as string) <= 65);
   return row as unknown as ProductComment;
 }
+function principalRow(value: unknown): ProductPrincipal {
+  const row = object(value); keys(row, ['kind', 'principal_id', 'display_name', 'principal_kind', 'active', 'project_role']);
+  for (const value of Object.values(row)) protocolText(value);
+  requireValue(row.kind === 'principal'); uuid(row.principal_id);
+  if (row.display_name !== '') title(row.display_name);
+  requireValue(['person', 'agent', 'service', 'unresolved'].includes(text(row, 'principal_kind'))
+    && ['yes', 'no'].includes(text(row, 'active')) && ['reader', 'contributor', 'maintainer'].includes(text(row, 'project_role')));
+  return row as unknown as ProductPrincipal;
+}
+function completionRow(value: unknown, query: ProductQuery): ProductCompletion {
+  const row = object(value); keys(row, ['kind', 'project_id', 'work_id', 'execution_contract_revision', 'execution_contract_digest', 'ready', 'reason']);
+  for (const value of Object.values(row)) protocolText(value);
+  requireValue(row.kind === 'completion' && row.project_id === query.project_id && row.work_id === query.resource_id);
+  decimal(row.execution_contract_revision, true); hash(row.execution_contract_digest);
+  requireValue(row.ready === 'yes' ? row.reason === '' : row.ready === 'no'
+    && ['human-note-required', 'required-outcomes-unconfirmed'].includes(text(row, 'reason')));
+  return row as unknown as ProductCompletion;
+}
 function response<T>(operation: () => T): T {
   try { return operation(); }
   catch (failure) { if (failure instanceof ProductProtocolError && failure.code === 'unsupported_profile') throw failure; throw new ProductProtocolError('invalid_response'); }
@@ -218,14 +244,20 @@ export function parseProductView(raw: string, request: ProductQuery): ProductVie
     decimal(row.authority_epoch, true); hash(row.generation); hash(row.cursor, true);
     const indexed = object(row.rows), count = Object.keys(indexed).length; requireValue(count <= 20);
     requireValue(Object.keys(indexed).every(key => /^(?:0|[1-9][0-9]?)$/u.test(key) && Number(key) < count));
-    const rows = Array.from({length: count}, (_, index) => query.kind === 'work' ? workRow(indexed[String(index)], query) : commentRow(indexed[String(index)], query));
+    const rows = Array.from({length: count}, (_, index) => query.kind === 'work' ? workRow(indexed[String(index)], query)
+      : query.kind === 'comments' ? commentRow(indexed[String(index)], query)
+      : query.kind === 'principals' ? principalRow(indexed[String(index)]) : completionRow(indexed[String(index)], query));
     if (query.kind === 'work') {
       const ids = rows.map(value => (value as ProductWorkBase).resource_id); requireValue(new Set(ids).size === ids.length);
       if (query.resource_id) requireValue(count === 1 && row.cursor === '');
-    } else {
+    } else if (query.kind === 'comments') {
       const comments = rows as ProductComment[];
       for (let index = 1; index < comments.length; index++) requireValue(BigInt(comments[index]!.sequence) === BigInt(comments[index - 1]!.sequence) + 1n);
       if (!query.cursor && comments.length) requireValue(comments[0]!.sequence === '1');
+    } else if (query.kind === 'principals') {
+      const ids = rows.map(value => (value as ProductPrincipal).principal_id); requireValue(new Set(ids).size === ids.length);
+    } else {
+      requireValue(count === 1 && row.cursor === '');
     }
     if (row.cursor !== '') requireValue(count === 20);
     return freeze({...row, rows} as unknown as ProductView);

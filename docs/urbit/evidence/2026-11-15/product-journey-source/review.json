@@ -1,0 +1,110 @@
+{
+  "classification": "connected-product-journey-source-and-host-boundary-review",
+  "qualifies_phase": false,
+  "base_commit": "3546929fdcc5306d279e42281da148c6fbaa59da",
+  "source_sha256": {
+    "web/app/src/productJourneyState.ts": "3fc2f7a6deb90ba35a650b8bf031b54206abadde679d3371236988e99d34bf3d",
+    "web/app/src/productWorkJourney.tsx": "ed7c86891b456f42488d2814119dbcdd9e1038e281b88ba16061916d7fe670c0",
+    "web/app/src/productWorkJourney.css": "03c11e1df9081c0a4ff80414fbb4c2c1026795bc610aa1b5d45e45988aa3fd91",
+    "web/app/src/docChangeProposal.tsx": "833838981a7f7a1938898bbcb2aba6d81c3722699c98a4b97eb6bb7e79e2857e",
+    "web/app/src/docChangeProposal.css": "f3a9401d425981bc13bda846e8d24d3236cc9fee551d4a9ebe49049b6ca567b4",
+    "web/app/src/WorkContext.tsx": "126d0638cfff450cc73e9e71576fbf62048ab03707b87e06e26f731098435554",
+    "web/app/src/DocumentContext.tsx": "467f304a8d7b41052203b63a2242961ee6670112626996dcf3eff263e4e4955b",
+    "web/app/tests/product-journey.test.ts": "976c586a432444b435476835f95b1c44c4ce56d1cb82d26aea433cb0909220b8",
+    "web/app/tests/product-journey.mjs": "9a3adf8ff45991eaca726a61b19a0372b2cea9469e57e7978d8b7cce65c9ac04"
+  },
+  "behavior": [
+    "Capability-selected native-human-doc journey with exact query4 Work/typed principals/completion and existing current project/shared Doc reads.",
+    "Original prepared requests retained by opaque current-session draft partition; denied object content hidden without inventing authority.",
+    "Work properties, purpose and discussion stay independently pinned; proposal changes preserve original exact target/base, human provenance and immutable prior-output routes.",
+    "All Doc enumeration is bounded at32 collections and128 scanned documents, including unsupported bodies; incomplete pickers are never published.",
+    "Review eligibility comes only from native read decisions; proposal acceptance readback loads exact result before clearing pending state.",
+    "Legacy WorkContext and DocumentContext behavior remains default; explicit injected Work endpoint reader enables current product Work backlinks."
+  ],
+  "host_tests": {
+    "report": ".runtime/product-journey-OMQo7s/report.json",
+    "sha256": "b1ee0aee8f998858a090857377d023f0ecbed7393692fcd4169350f4d56c474e",
+    "test_names": [
+      "draft partitions reject late writes after session change and preserve resource separation",
+      "proposal remount and store retain the original unknown request without allowing discard",
+      "accepted readback and full draft capacity cannot silently evict unresolved Work",
+      "proposal restoration never crosses session or scope and never turns an unprepared draft into a retry",
+      "proposal comparison exposes changed target pins while original submit bytes keep exact provenance",
+      "typed roster choices never infer a human or agent from a name or legacy role",
+      "completion readiness binds exact authority and contract while ordinary discussion remains independent",
+      "shared Doc choices use exact authorized body bytes and never enumerate a private collection",
+      "roster scan rejects repeated cursors, changed epochs and late replies before publishing a partial roster",
+      "Doc scan budget counts unsupported bodies and rejects the entire over-budget picker"
+    ],
+    "tests": 10,
+    "passed": 10,
+    "input_sha256": {
+      "package-lock.json": "b4d2ced8e19aa8b7cf9eaab75b906e867132321b97937b534e5810c152dbec98",
+      "tests/product-journey.mjs": "9a3adf8ff45991eaca726a61b19a0372b2cea9469e57e7978d8b7cce65c9ac04",
+      "tests/product-journey.test.ts": "976c586a432444b435476835f95b1c44c4ce56d1cb82d26aea433cb0909220b8",
+      "src/productWire.ts": "35b033b3437f07b2e0690e3192091b43ba4bec2c9bee2768ca9b43abb70fa6c1",
+      "src/docChangeClient.ts": "089be0658e652b531a66994f00f133bfa392d67bab4b3a20007a16892bd9f295",
+      "src/docChangeProtocol.ts": "f41042a8a14ba759e3238ccda54532d0fd49d48b174ada4281d06cb7c6f5f893",
+      "src/productJourneyState.ts": "3fc2f7a6deb90ba35a650b8bf031b54206abadde679d3371236988e99d34bf3d",
+      "src/productWorkState.tsx": "94f839489d67f1101270cb4a99e26c0ba74956b6bdd75e802719a166a99199d8",
+      "src/productProtocol.ts": "dd67a172d462e0d8c03e5d074c46e05b77821632ff399849c8b4053ad3e9866c",
+      "src/protocol.ts": "a8dee5b65f79ffe052869f19e9b508f7abcb30149ac82eaa31a47223796003c7",
+      "src/docChangeReadProtocol.ts": "7e312905c12e630345eefb9e16e57cb435ba164e77f8d1d29f0d57b6cb8b95b8",
+      "src/productWorkFields.tsx": "6ed5e74e4edb23198b1c649e4e946d2cd49351521440575dbc7059651393669b",
+      "src/productClient.ts": "d193a18f6c3d98d8198db265ae39b122aca6c6c85c2bb2acf39ee59b4511c0ae",
+      "src/docChangeReviewState.tsx": "6d49760599f0541076618358a96b5d5263d6f339d9151a9d34a02101db8c2d1b",
+      "src/api.ts": "4246566bd5de15ca5aeb6f3f46ac2a5e804c29f8a3ff9c7307d0ad0596c23b74",
+      "src/productCarrier.ts": "8e3e752ec7104bdf1facbfcb3d199d0f7661088701ba8399b5d454d26c497214",
+      "src/primitives.tsx": "2f75ffd1ec0a16dc041b9eb74bb7fe37c8ee4cf6ccbb4f180332cbc3dc80a7ce",
+      "src/controls.css": "a56ddea5a06513bc3d05bd9ca6a668c235c6a604bb8a2271552218fea3e3935d",
+      "src/Icon.tsx": "dd32e23e59619ddbd0c9f2c111f84f273b9040fc16eb4e49ba8161a228ef5ab7"
+    },
+    "resource_monitor": {
+      "output": "/home/skilgore/stead-urbit/.runtime/product-journey-owner-1794778036527669078",
+      "peak_c": 51.0,
+      "duration_seconds": 1.4
+    },
+    "process": {
+      "unit": "stead-browser-91de76dcf01aaa58762c5311664891ab.service",
+      "status": "pass",
+      "cleanup": {
+        "process_reaped": true,
+        "cgroup": "/user.slice/user-1000.slice/user@1000.service/app.slice/stead-browser-91de76dcf01aaa58762c5311664891ab.service",
+        "empty": true,
+        "state": "inactive"
+      },
+      "headed": false,
+      "proof": {
+        "pid": 526191,
+        "cgroup": "/user.slice/user-1000.slice/user@1000.service/app.slice/stead-browser-91de76dcf01aaa58762c5311664891ab.service",
+        "cpu_max": "2500 10000",
+        "cpu_affinity": [
+          19
+        ]
+      },
+      "exit_code": 0
+    }
+  },
+  "typecheck": {
+    "owner": ".runtime/product-app-typecheck-owner-1794777958825159757",
+    "result": "pass",
+    "limitation": "All source TypeScript passed before three product-copy-only edits in productWorkJourney.tsx and docChangeProposal.tsx. Shell integration remains integrator-owned and under review."
+  },
+  "retained_failed_attempts": [
+    {
+      "report": ".runtime/product-journey-CE4wmR/report.json",
+      "classification": "runner-configuration-failure-before-any-test",
+      "cause": "esbuild onLoad Go regular expression rejects Unicode flag; only that runner flag was removed."
+    }
+  ],
+  "not_proven": [
+    "No browser execution of these new connected journey/proposal components.",
+    "No native v10 carrier compilation, activation, real multi-person proposal/review/adoption/acceptance or Work completion is proved by these injected host tests.",
+    "No current real pilot change or deployed capability advertisement is made by this packet."
+  ],
+  "integration_review_findings_sent_to_root": [
+    "Block dirty Work Close/list navigation or provide scoped explicit draft discard.",
+    "Do not clear all prepared drafts on a scoped Doc/object denial in product mode.",
+    "Clear or gate previously mounted Code content when capability mode ceases to be legacy."
+  ]
+}

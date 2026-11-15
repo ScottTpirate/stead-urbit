@@ -1,4 +1,4 @@
-import {useEffect, useRef, useState} from 'react';
+import {useEffect, useId, useRef, useState} from 'react';
 import {Button, EmptyState, LoadingState, OutcomeState, Surface} from './primitives';
 import {Markdown} from './Markdown';
 import {AcceptedTime} from './AcceptedTime';
@@ -81,6 +81,7 @@ function Diff({before, after}: {before: VerifiedDocBody; after: VerifiedDocBody}
   </div>;
 }
 function ActiveReview(props: DocChangeReviewProps & {snapshot: DocReviewSnapshot}) {
+  const noteLabel = useId();
   const snapshot = props.snapshot, before = useVerifiedDocBody(props.before, snapshot, 'before'), after = useVerifiedDocBody(props.after, snapshot, 'after');
   const state = useDocReviewDraft(props, snapshot, after.state === 'ready'), {draft, change, locked, pending} = state;
   const [mode, setMode] = useState<'changes' | 'before' | 'after' | 'source'>('after'), heading = useRef<HTMLHeadingElement>(null);
@@ -121,7 +122,7 @@ function ActiveReview(props: DocChangeReviewProps & {snapshot: DocReviewSnapshot
             {supplied && supplied.state !== 'eligible' && <small>{docDecisionReason(supplied.reason)}</small>}</div>;
         })}</div>
         {selected && decision && <div className="doc-change-decision-draft"><h4>{actionLabels[selected]}</h4>
-          <label>Decision note<textarea value={decision.note} disabled={locked} onChange={event => change(value => ({...value,
+          <label><span id={noteLabel}>Decision note</span><textarea aria-labelledby={noteLabel} value={decision.note} disabled={locked} onChange={event => change(value => ({...value,
             decisions: {...value.decisions, [selected]: {...value.decisions[selected]!, note: event.target.value}}}))}/></label>
           <p className="muted">{selected === 'change.approve' || selected === 'change.accept' ? 'A note is optional for this decision.' : 'Explain this decision so the next person knows what to do.'}</p>
           {(changed || decision.conflicted) && <div className="doc-change-compare"><p>Your note is kept with its original output. Read the current version above before changing its base.</p>

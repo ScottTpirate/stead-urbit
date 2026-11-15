@@ -81,4 +81,10 @@ export class ProductWorkClient {
   readComments(request: {request_id: string; project_id: string; resource_id: string; cursor?: string}) {
     return this.read({...request, protocol: 'stead.query/4', kind: 'comments', container_id: '', search: '', cursor: request.cursor ?? ''});
   }
+  readPrincipals(request: {request_id: string; project_id: string; cursor?: string}) {
+    return this.read({...request, protocol: 'stead.query/4', kind: 'principals', container_id: '', resource_id: '', search: '', cursor: request.cursor ?? ''});
+  }
+  readCompletion(request: {request_id: string; project_id: string; resource_id: string}) {
+    return this.read({...request, protocol: 'stead.query/4', kind: 'completion', container_id: '', search: '', cursor: ''});
+  }
 }

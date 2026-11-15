@@ -1,11 +1,11 @@
-import {useState} from 'react';
+import {useId, useState} from 'react';
 import {Button, Combobox, OutcomeState, PropertyPicker, TextField, type PickerOption} from './primitives';
 import {newId} from './protocol';
 import type {ProductContract, ProductProperties, ProductWorkDetail} from './productProtocol';
 import {productWorkDocuments, productWorkPeople, type ProductWorkDraft, type ProductWorkEnvironment, type ProductWorkPropertyDraft} from './productWorkState';
 
 export const productStatusLabels = {backlog: 'Backlog', todo: 'To do', in_progress: 'In progress', in_review: 'In review', done: 'Done', canceled: 'Canceled', 'legacy-blocked': 'Blocked (legacy)'};
-export const productPriorityLabels = {none: 'No priority', low: 'Low', medium: 'Medium', high: 'High', urgent: 'Urgent'};
+export const productPriorityLabels = {none: 'No priority', low: 'Low', medium: 'Normal', high: 'High', urgent: 'Urgent'};
 export function ProductWorkPeoplePicker({environment, role, value, onChange, disabled}: {environment: ProductWorkEnvironment; role: 'owner' | 'worker'; value: string; onChange: (value: string) => void; disabled: boolean}) {
   const people = productWorkPeople(environment.people, role, environment.scope.projectId, environment.sessionKey);
   const options: PickerOption[] = [{value: '', label: 'Unassigned'}, ...people.map(person => ({value: person.principalId,
@@ -17,6 +17,7 @@ export function ProductWorkPeoplePicker({environment, role, value, onChange, dis
 }
 export function ProductWorkProperties({environment, value, onChange, disabled, creating = false}: {environment: ProductWorkEnvironment; value: ProductWorkPropertyDraft;
   onChange: (value: ProductWorkPropertyDraft) => void; disabled: boolean; creating?: boolean}) {
+  const blockerLabel = useId();
   const patch = (next: Partial<ProductWorkPropertyDraft>) => onChange({...value, ...next});
   const statuses: PickerOption[] = Object.entries(productStatusLabels).filter(([status]) => status !== 'done' && status !== 'legacy-blocked')
     .map(([value, label]) => ({value, label}));
@@ -32,12 +33,13 @@ export function ProductWorkProperties({environment, value, onChange, disabled, c
     <ProductWorkPeoplePicker environment={environment} role="owner" value={value.owner_principal_id} disabled={disabled} onChange={owner_principal_id => patch({owner_principal_id})}/>
     <ProductWorkPeoplePicker environment={environment} role="worker" value={value.worker_principal_id} disabled={disabled} onChange={worker_principal_id => patch({worker_principal_id})}/>
     {creating && <Button variant="quiet" disabled={disabled || !mayAssignMe} onClick={() => patch({owner_principal_id: environment.actor.principalId})}>Assign to me</Button>}
-    {!['done', 'canceled'].includes(value.status) && <label className="product-work-blocker">Blocked by <textarea value={value.blocked_reason} disabled={disabled}
+    {!['done', 'canceled'].includes(value.status) && <label className="product-work-blocker"><span id={blockerLabel}>Blocked by</span><textarea aria-labelledby={blockerLabel} value={value.blocked_reason} disabled={disabled}
       placeholder="Optional reason this work cannot move forward" onChange={event => patch({blocked_reason: event.target.value})}/></label>}
   </div>;
 }
 export function ProductWorkContractFields({environment, value, onChange, disabled, titleRef}: {environment: ProductWorkEnvironment; value: ProductContract;
   onChange: (value: ProductContract) => void; disabled: boolean; titleRef?: React.RefObject<HTMLInputElement | null>}) {
+  const labels = useId();
   const [selected, setSelected] = useState('');
   const allChoices = productWorkDocuments(environment.documents, environment.scope.projectId, environment.sessionKey);
   const choices = allChoices.filter(choice => !Object.values(value.required_outcomes).some(target => target.kind === 'document'
@@ -48,8 +50,8 @@ export function ProductWorkContractFields({environment, value, onChange, disable
   const selectedChoice = choices.find(choice => choiceKey(choice) === selected);
   return <div className="product-work-contract">
     <TextField ref={titleRef} label="Title" value={value.title} required disabled={disabled} onChange={event => patch({title: event.target.value})}/>
-    <label>Purpose<textarea value={value.description} disabled={disabled} onChange={event => patch({description: event.target.value})}/></label>
-    <label>Acceptance criteria<textarea value={value.acceptance_criteria} disabled={disabled} onChange={event => patch({acceptance_criteria: event.target.value})}/></label>
+    <label><span id={`${labels}-purpose`}>Purpose</span><textarea aria-labelledby={`${labels}-purpose`} value={value.description} disabled={disabled} onChange={event => patch({description: event.target.value})}/></label>
+    <label><span id={`${labels}-criteria`}>Acceptance criteria</span><textarea aria-labelledby={`${labels}-criteria`} value={value.acceptance_criteria} disabled={disabled} onChange={event => patch({acceptance_criteria: event.target.value})}/></label>
     <fieldset className="product-work-outcomes" disabled={disabled}><legend>Required outputs</legend>
       <p>Choose shared Docs this work must produce. Their expected saved revisions are kept with this purpose.</p>
       {Object.entries(value.required_outcomes).map(([id, target]) => {

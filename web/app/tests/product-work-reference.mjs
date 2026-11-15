@@ -169,7 +169,7 @@ try {
     await control(page, 'Load legacy work').click(); const work = panel(page);
     await choose(page, 'Resolved status', 'Choose a status', 'In progress'); await work.getByLabel('Blocking reason', {exact: true}).fill('Waiting for review');
     await work.getByRole('button', {name: 'Resolve blocked status', exact: true}).click(); await accepted(page, 1);
-    const section = work.locator('section').filter({has: work.getByRole('heading', {name: 'Resolve older assignment', exact: true})});
+    const section = work.locator('section').filter({has: page.getByRole('heading', {name: 'Resolve older assignment', exact: true})});
     await section.getByRole('button', {name: 'Owner: Unassigned', exact: true}).click(); await page.getByRole('combobox', {name: 'Search owner', exact: true}).fill('Alice'); await page.keyboard.press('Enter');
     await section.getByRole('button', {name: 'Working on it: Unassigned', exact: true}).click(); await page.getByRole('combobox', {name: 'Search working on it', exact: true}).fill('Writer agent'); await page.keyboard.press('Enter');
     await section.getByRole('button', {name: 'Resolve assignment', exact: true}).click(); await accepted(page, 2);
