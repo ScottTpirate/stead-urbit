@@ -89,6 +89,34 @@ class FailureProjectionTests(unittest.TestCase):
         self.assertTrue(observed['prefix_counts_truncated'])
         self.assertNotIn(self.secret, json.dumps(observed))
 
+    def test_compiler_show_spans_share_exact_admission_and_coordinate_bounds(self):
+        source = 'native/core/desk/lib/stead-product-migrate.hoon'
+        raw = (b'/lib/stead-product-migrate/hoon::[1 1].[2 3]>\n'
+               b'/lib/stead-product-migrate/hoon\n  ::[1.000 2].[1.001 3]>\n'
+               b'/lib/stead-product-migrate/hoon:<[1 1].[2 3]>\n'
+               b'/lib/unadmitted/hoon::[1 1].[2 3]>\n' + self.secret.encode())
+        value = failure.source_trace(raw, {source: b'xx\n' * 1001})
+        self.assertEqual(value['locations'], [
+            {'path': source, 'start_line': 1000, 'start_column': 2, 'end_line': 1001, 'end_column': 3},
+            {'path': source, 'start_line': 1, 'start_column': 1, 'end_line': 2, 'end_column': 3}])
+        self.assertEqual(value['counts']['span_patterns'], 4)
+        self.assertEqual(value['counts']['admitted_span_patterns'], 3)
+        self.assertEqual(value['counts']['bounds_rejected'], 0)
+        self.assertNotIn(self.secret, json.dumps(value))
+        self.assertNotIn('unadmitted', json.dumps(value))
+
+    def test_compiler_show_spans_reject_malformed_and_out_of_source_coordinates(self):
+        source = 'native/core/desk/lib/stead-product-migrate.hoon'
+        prefix = b'/lib/stead-product-migrate/hoon'
+        for suffix in (b'::[0 1].[2 3]>', b'::[1 1].[2 4]>', b'::[2 3].[1 1]>',
+                       b'::[1 1].[3 1]>', b'::[1 private].[2 3]>', b'::[1 1].[2 3 private]>',
+                       b'::[1 1].[2 3]', b':[1 1].[2 3]>', b':::<[1 1].[2 3]>',
+                       b'::[1.00 1].[2 3]>', b'::[1 1]x[2 3]>'):
+            with self.subTest(suffix=suffix):
+                value = failure.source_trace(prefix + suffix, {source: b'xx\nxx'})
+                self.assertEqual(value['locations'], [])
+                self.assertNotIn('private', json.dumps(value))
+
     def test_wrapped_dotted_spans_and_admitted_module_counters(self):
         source = 'native/core/desk/lib/stead-fixture.hoon'
         raw = b'/lib/stead-fixture/hoon:\n  <[1.000 1].[1.001 2]>\n/lib/unknown/hoon:<[1 1].[2 2]>\n/lib/stead-fixture/hoon:<[0 1].[1 1]>'

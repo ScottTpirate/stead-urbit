@@ -148,7 +148,10 @@ def source_trace(raw, sources):
     ws = rb'[ \t\r\n]{0,256}'
     space = rb'[ \t\r\n]{1,256}'
     number = rb'([0-9]{1,7}|[1-9][0-9]{0,2}(?:\.[0-9]{3}){1,2})'
-    pattern = module + ws + rb':' + ws + rb'<\[' + number + space + number + rb'\]\.\[' + number + space + number + rb'\]>'
+    # +mint %dbug uses +show %o: /path::[L C].[L C]>.
+    # Runtime +mook %spot instead uses /path:<[L C].[L C]>.
+    opening = rb'(?::' + ws + rb'<\[|::' + ws + rb'\[)'
+    pattern = module + ws + opening + number + space + number + rb'\]\.\[' + number + space + number + rb'\]>'
     counts = dict.fromkeys(('module_mentions', 'admitted_module_mentions', 'span_patterns', 'admitted_span_patterns', 'bounds_rejected'), 0)
     mentions, mentions_truncated = {}, False
     for match in re.finditer(module, raw):

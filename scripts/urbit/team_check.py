@@ -226,7 +226,7 @@ def run(host):
         # This reviewed controller always stops after diagnostics. It cannot
         # qualify a release even when every registered pure suite passes.
         # Fixed import-only diagnosis of the unchanged candidate. Never qualifies.
-        diagnostic_paths = ('/tests/stead-work-contract', '/tests/stead-import-probe-product-codec', '/tests/stead-import-probe-product-state', '/tests/stead-import-probe-product-migrate', '/tests/stead-import-probe-actor', '/tests/stead-import-probe-run-state', '/tests/stead-import-probe-run', '/tests/stead-import-probe-doc-change-codec')
+        diagnostic_paths = ('/tests/stead-work-contract', '/tests/stead-product-codec', '/tests/stead-import-probe-product-codec', '/tests/stead-import-probe-product-state', '/tests/stead-import-probe-product-migrate', '/tests/stead-import-probe-actor', '/tests/stead-import-probe-run-state', '/tests/stead-import-probe-run', '/tests/stead-import-probe-doc-change-codec')
         diagnostic_entries = [next(row for row in inventory['suites'] if row['path'] == path) for path in diagnostic_paths]
         native_units.collect_pure_diagnostics([*diagnostic_entries, inventory['negative_control']],
             execute, verify, passed, failed)
