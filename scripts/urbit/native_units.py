@@ -115,6 +115,8 @@ def validate_inventory(value: dict) -> dict:
                    '/tests/stead-principals': ('test-principals-', 6, 60),
                    '/tests/stead-product-views': ('test-product-views-', 8, 60),
                    '/tests/stead-product-restore': ('test-product-restore-', 8, 60),
+                   '/tests/stead-product-adapters': ('test-product-adapters-', 4, 60),
+                   '/tests/stead-doc-change-codec': ('test-doc-change-codec-', 6, 60),
                    '/tests/stead-work-delegations': ('test-work-delegations-', 3, 60),
                    '/tests/stead-creator-renewal': ('test-creator-renewal-', 4, 60),
                    '/tests/stead-project-retirement': ('test-project-retire-', 6, 60),

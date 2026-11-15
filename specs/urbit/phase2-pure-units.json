@@ -1,7 +1,7 @@
 {
   "format": 1,
   "classification": "pure-native-only",
-  "expected_arm_count": 220,
+  "expected_arm_count": 230,
   "suites": [
     {
       "path": "/tests/stead-session",
@@ -223,6 +223,28 @@
         "test-product-restore-boundary-and-current-state-must-match-reconstruction",
         "test-product-restore-incremental-checkpoint-exposes-no-partial-state",
         "test-product-restore-admission-retains-core-and-sidecar-record-bounds"
+      ],
+      "timeout_seconds": 60
+    },
+    {
+      "path": "/tests/stead-product-adapters",
+      "arms": [
+        "test-product-adapters-hash-exact-markdown-and-stored-length",
+        "test-product-adapters-kind-requires-declaration-current-binding-and-grant",
+        "test-product-adapters-target-rechecks-exact-base-audience-and-verified-actor",
+        "test-product-adapters-real-work-flow-keeps-accepted-output-proof-required"
+      ],
+      "timeout_seconds": 60
+    },
+    {
+      "path": "/tests/stead-doc-change-codec",
+      "arms": [
+        "test-doc-change-codec-exact-submission-and-result-pins",
+        "test-doc-change-codec-scope-base-and-run-pairs",
+        "test-doc-change-codec-never-decodes-authority-or-alternate-targets",
+        "test-doc-change-codec-decisions-require-exact-output-and-explanation",
+        "test-doc-change-codec-exact-markdown-and-canonical-domain",
+        "test-doc-change-codec-bounds-duplicates-and-closed-depth"
       ],
       "timeout_seconds": 60
     },
