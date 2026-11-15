@@ -1,0 +1,52 @@
+{
+  "classification": "reserved-human-run-controls-source-and-host-tests",
+  "independent_review": {
+    "notes": [
+      "Compared native codec/state/reducer exact command and receipt shapes.",
+      "Verified answer remains waiting and cancel is no process-exit proof.",
+      "Reviewed prepared identity/session fences and unknown reply handling."
+    ],
+    "reviewer": "frontend",
+    "source_sha256": "e2840bd88ba909bd1d69ae70a5239af5fc1f4d16a4c3e126c37f64cc4e1e9ea0",
+    "status": "source-reviewed-no-blocker"
+  },
+  "native_inputs": {
+    "../../native/core/desk/lib/stead-codec.hoon": "56e3d574381bbf8cdf29ca192c70eff256009f89d782e3ffe859b19c1321cbd7",
+    "../../native/core/desk/lib/stead-run-codec.hoon": "ba0c758e95230b133c5475e592a07e8106c73dfbab8e1c0967b04c8797e62ecb",
+    "../../native/core/desk/lib/stead-run-state.hoon": "4c96eb466add4ae26f6c6fbfd390b338d26a14e20a8c3f70214f9e1445602c1d",
+    "../../native/core/desk/lib/stead-run.hoon": "8ceedb6fd1ce56af30d53c027a1d250f30ac1faaa069e085445d9f6b49cf2432"
+  },
+  "observed": {
+    "cleanup_empty": true,
+    "cpu_affinity": [
+      19
+    ],
+    "cpu_quota": "25% of one core",
+    "duration_seconds": 9.1,
+    "guard_receipt_sha256": "831688c381990d88fcf72ffb8b87a00c0d9db78d7d313446981d227d34420f32",
+    "host_report_sha256": "cab201d26d320e5c3d434366d476f0d046fa46366392bccd52e5dc82e25c4295",
+    "host_tests": 14,
+    "inputs_unchanged": true,
+    "peak_c": 54.0,
+    "typescript": "pass"
+  },
+  "protocol": "stead.source-and-host-review/1",
+  "qualifies_phase": false,
+  "source_files": {
+    "web/app/src/runControlProtocol.ts": "e2840bd88ba909bd1d69ae70a5239af5fc1f4d16a4c3e126c37f64cc4e1e9ea0",
+    "web/app/tests/run-control.mjs": "9fd043f44808191099257673ade26de8497eee36da206a84ecefe8fb914e1510",
+    "web/app/tests/run-control.test.ts": "2d93a29f464eadd8198df35bc5e6d1647c6fddb076f5e1aa6086eb7dfc7f4692"
+  },
+  "source_mapping": {
+    "client": "Injected command callable only, explicit nullable capability, actual opaque session and invalidation generation; immutable prepared object identity, single simultaneous send and explicit exact-byte retry. Lost/malformed/mismatched replies remain outcome_unknown; no automatic retry.",
+    "commands": "Eight exact string fields of stead.run-command/1; only answer and cancel; nested answer canonical question/text; domain-separated SHA256",
+    "receipts": "stead.run-result/1: short five-field rejection or full nine-field result. Exact request/hash/run; accepted revision increments once and attempt remains unchanged.",
+    "semantics": "Accepted answer stays waiting; no resume. Accepted cancel records canceled plus native stop intent; it does not prove process exit or undo accepted output."
+  },
+  "unexecuted": [
+    "Native command execution and receipt equality",
+    "Home Run command endpoint and capability advertisement",
+    "Connected answer/cancel UI",
+    "Actual worker dispatch, stop observation, model and G3"
+  ]
+}

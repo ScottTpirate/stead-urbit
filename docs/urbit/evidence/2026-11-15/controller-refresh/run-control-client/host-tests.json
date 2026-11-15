@@ -1,0 +1,48 @@
+{
+  "classification": "host-run-control-protocol-and-injected-client-tests",
+  "qualifies_phase": false,
+  "browser_executed": false,
+  "native_executed": false,
+  "node": "v24.21.0",
+  "expected_tests": [
+    "human command subset preserves exact eight string fields and domain digest",
+    "command decoder rejects workers extra keys numeric scalars and invalid scope counters",
+    "answer payload is canonical bounded UTF8 and preserves native permitted prose",
+    "accepted answer remains waiting and cancellation is only a durable canceled receipt",
+    "full rejected receipts permit changed current revision attempt and phase without accepting",
+    "five-field rejection stays closed and never invents a current head",
+    "receipts require exact request hash run counters status and phase",
+    "preparation snapshots caller data and rejects reconstructed or foreign objects",
+    "answer and cancel helpers only prepare the requested human command",
+    "unknown reply never retries automatically and explicit retry preserves every byte",
+    "malformed and mismatched replies remain unknown while a valid denial is known",
+    "actual token replacement and invalidation fence preparation success and failure",
+    "missing session capability and withdrawn capability prevent sends without losing prepared bytes",
+    "simultaneous submissions of the same prepared command cannot duplicate a send"
+  ],
+  "status": "pass",
+  "inputs_before": {
+    "src/runControlProtocol.ts": "e2840bd88ba909bd1d69ae70a5239af5fc1f4d16a4c3e126c37f64cc4e1e9ea0",
+    "src/productWire.ts": "35b033b3437f07b2e0690e3192091b43ba4bec2c9bee2768ca9b43abb70fa6c1",
+    "src/protocol.ts": "a8dee5b65f79ffe052869f19e9b508f7abcb30149ac82eaa31a47223796003c7",
+    "tests/run-control.test.ts": "2d93a29f464eadd8198df35bc5e6d1647c6fddb076f5e1aa6086eb7dfc7f4692",
+    "tests/run-control.mjs": "9fd043f44808191099257673ade26de8497eee36da206a84ecefe8fb914e1510",
+    "package-lock.json": "b4d2ced8e19aa8b7cf9eaab75b906e867132321b97937b534e5810c152dbec98",
+    "../../native/core/desk/lib/stead-run-codec.hoon": "ba0c758e95230b133c5475e592a07e8106c73dfbab8e1c0967b04c8797e62ecb",
+    "../../native/core/desk/lib/stead-run-state.hoon": "4c96eb466add4ae26f6c6fbfd390b338d26a14e20a8c3f70214f9e1445602c1d",
+    "../../native/core/desk/lib/stead-run.hoon": "8ceedb6fd1ce56af30d53c027a1d250f30ac1faaa069e085445d9f6b49cf2432",
+    "../../native/core/desk/lib/stead-codec.hoon": "56e3d574381bbf8cdf29ca192c70eff256009f89d782e3ffe859b19c1321cbd7"
+  },
+  "inputs_after": {
+    "src/runControlProtocol.ts": "e2840bd88ba909bd1d69ae70a5239af5fc1f4d16a4c3e126c37f64cc4e1e9ea0",
+    "src/productWire.ts": "35b033b3437f07b2e0690e3192091b43ba4bec2c9bee2768ca9b43abb70fa6c1",
+    "src/protocol.ts": "a8dee5b65f79ffe052869f19e9b508f7abcb30149ac82eaa31a47223796003c7",
+    "tests/run-control.test.ts": "2d93a29f464eadd8198df35bc5e6d1647c6fddb076f5e1aa6086eb7dfc7f4692",
+    "tests/run-control.mjs": "9fd043f44808191099257673ade26de8497eee36da206a84ecefe8fb914e1510",
+    "package-lock.json": "b4d2ced8e19aa8b7cf9eaab75b906e867132321b97937b534e5810c152dbec98",
+    "../../native/core/desk/lib/stead-run-codec.hoon": "ba0c758e95230b133c5475e592a07e8106c73dfbab8e1c0967b04c8797e62ecb",
+    "../../native/core/desk/lib/stead-run-state.hoon": "4c96eb466add4ae26f6c6fbfd390b338d26a14e20a8c3f70214f9e1445602c1d",
+    "../../native/core/desk/lib/stead-run.hoon": "8ceedb6fd1ce56af30d53c027a1d250f30ac1faaa069e085445d9f6b49cf2432",
+    "../../native/core/desk/lib/stead-codec.hoon": "56e3d574381bbf8cdf29ca192c70eff256009f89d782e3ffe859b19c1321cbd7"
+  }
+}

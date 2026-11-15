@@ -666,6 +666,16 @@ TypeScript and fourteen host checks](evidence/2026-11-15/controller-refresh/run-
 passed. The native wire is unchanged; no Home endpoint, Run control, connected
 screen or actual dispatch is activated by this reader.
 
+The reserved human `RunControlClient` admits only `answer` and `cancel` from
+`stead.run-command/1`. It checks canonical nested question/text, exact request
+and digest, the short five-field rejection and full nine-field receipt. An
+accepted answer remains Waiting; accepted cancellation records Canceled but
+does not prove process exit or undo output. Prepared objects retain exact bytes
+across an explicit retry, while changed sessions and invalidation fence replies.
+Lost or malformed replies remain outcome unknown; no automatic retry occurs.
+[Independent source review, TypeScript and fourteen host checks](evidence/2026-11-15/controller-refresh/run-control-client/source-review.json)
+passed. No endpoint, capability advertisement, UI action or worker is activated.
+
 ### Remaining integrations
 
 - **T04:** import each legacy repository under its existing ID equal to project

@@ -38,6 +38,12 @@ recorded clarification and exact submitted result without credentials or context
 bodies. Shared bounded pagination rechecks current access; no public carrier or
 supported run API follows from this source alone.
 
+The reserved browser answer/cancel client has [independent source review and
+fourteen passing host checks](evidence/2026-11-15/controller-refresh/run-control-client/source-review.json).
+It preserves exact requests after unknown replies and fences changed sessions.
+An accepted answer does not resume execution; accepted cancellation does not
+prove process exit. The client supplies no endpoint, authority or dispatch.
+
 ## Reuse and separation
 
 - `stead-code-delivery.hoon` checks current delegation, membership, proposal and
