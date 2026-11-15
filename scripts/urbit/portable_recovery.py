@@ -301,6 +301,14 @@ def validate_data(data):
     relations = rows_by_id(data['relations'], 256)
     for row in works.values():
         fields = {'kind', 'resource_id', 'container_id', 'resource_revision', 'title', 'description', 'type', 'status', 'priority', 'snippet'}
+        contract_fields = {'execution_contract_protocol', 'execution_contract_revision', 'execution_contract_digest'}
+        if contract_fields.intersection(row):
+            require(contract_fields.issubset(row)
+                    and row['execution_contract_protocol'] == 'stead.work-contract/1'
+                    and match(TOKEN, row['execution_contract_digest']), 'work-contract')
+            number(row['execution_contract_revision'])
+            fields.update(contract_fields)
+            # Retained read metadata is not a signed authority attestation.
         if 'assignee_principal_id' in row:
             fields.add('assignee_principal_id')
             require(match(UUID, row['assignee_principal_id']), 'work-assignee')

@@ -78,6 +78,79 @@ class AgentProposalTests(unittest.TestCase):
             self.handoff()
         self.assertIsNotNone(self.submitted)
 
+    def contract_brief(self):
+        self.ticket.update(execution_contract_protocol='stead.work-contract/1',
+                           execution_contract_revision='2', execution_contract_digest='a' * 64)
+        self.brief.pop('work_revision')
+        self.brief.update(protocol='stead.agent-brief/2', execution_contract_revision='2',
+                          execution_contract_digest='a' * 64)
+
+    def test_contract_brief_survives_comment_and_metadata_revisions(self):
+        self.contract_brief()
+        self.ticket.update(resource_revision='19', status='done', priority='high',
+                           comment_count='8', assignee_principal_id=uid(90))
+        checked = agent.context(self.brief, self.credentials, self.read, self.code)
+        self.assertEqual(checked['title'], self.ticket['title'])
+        self.assertEqual(checked['description'], self.ticket['description'])
+        self.assertEqual(self.handoff()['status'], 'submitted-for-review')
+
+    def test_contract_brief_requires_current_exact_pin_and_capability(self):
+        self.contract_brief()
+        for field, changed in (('execution_contract_revision', '3'),
+                               ('execution_contract_digest', 'b' * 64),
+                               ('execution_contract_protocol', 'stead.work-contract/2')):
+            with self.subTest(field=field):
+                original = self.ticket[field]
+                self.ticket[field] = changed
+                with self.assertRaisesRegex(agent.RecoveryError, 'agent-work-contract-changed'):
+                    self.handoff()
+                self.ticket[field] = original
+        self.ticket.pop('execution_contract_revision')
+        with self.assertRaisesRegex(agent.RecoveryError, 'agent-work-contract-changed'):
+            self.handoff()
+        self.assertIsNone(self.submitted)
+
+    def test_contract_brief_remains_scoped_to_work_actor_and_delegation(self):
+        self.contract_brief()
+        for row, field, changed in ((self.ticket, 'resource_id', uid(99)),
+                                    (self.saved, 'status', 'revoked'),
+                                    (self.saved, 'ref', 'refs/heads/other'),
+                                    (self.person, 'identity_ship', '~bus')):
+            with self.subTest(field=field):
+                original = row[field]
+                row[field] = changed
+                with self.assertRaises(agent.RecoveryError):
+                    self.handoff()
+                row[field] = original
+        self.assertIsNone(self.submitted)
+
+    def test_contract_brief_refuses_malformed_pins_and_mixed_versions(self):
+        self.contract_brief()
+        for field, changed in (('execution_contract_revision', '02'),
+                               ('execution_contract_revision', '0'),
+                               ('execution_contract_digest', 'A' * 64),
+                               ('execution_contract_digest', 'a' * 63),
+                               ('protocol', 'stead.agent-brief/3')):
+            with self.subTest(field=field):
+                original = self.brief[field]
+                self.brief[field] = changed
+                with self.assertRaises(agent.RecoveryError):
+                    self.handoff()
+                self.brief[field] = original
+        self.brief['work_revision'] = '4'
+        with self.assertRaisesRegex(agent.RecoveryError, 'record-shape'):
+            self.handoff()
+        self.assertEqual(self.read.one.call_count, 0)
+        self.assertEqual(self.code.call_count, 0)
+
+    def test_legacy_brief_keeps_aggregate_revision_even_with_contract_fields(self):
+        self.ticket.update(execution_contract_protocol='stead.work-contract/1',
+                           execution_contract_revision='2', execution_contract_digest='a' * 64,
+                           resource_revision='5')
+        with self.assertRaisesRegex(agent.RecoveryError, 'agent-work-revision-changed'):
+            self.handoff()
+        self.assertIsNone(self.submitted)
+
 
 if __name__ == '__main__':
     unittest.main()
