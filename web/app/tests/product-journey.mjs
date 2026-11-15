@@ -11,7 +11,7 @@ assert.equal(process.version, 'v24.21.0');
 await mkdir(path.resolve(root, '../../.runtime'), {recursive: true});
 const output = await mkdtemp(path.resolve(root, '../../.runtime/product-journey-'));
 const names = [...(await readFile(path.join(root, 'tests/product-journey.test.ts'), 'utf8')).matchAll(/^test\('([^']+)'/gmu)].map(match => match[1]);
-assert.equal(names.length, 10); assert.equal(new Set(names).size, 10);
+assert.equal(names.length, 17); assert.equal(new Set(names).size, 17);
 const sha = raw => createHash('sha256').update(raw).digest('hex');
 const inputs = Object.create(null);
 for (const file of ['package-lock.json', 'tests/product-journey.mjs']) inputs[file] = sha(await readFile(path.join(root, file)));
@@ -31,7 +31,7 @@ try {
   const run = spawnSync(process.execPath, ['--test', '--test-reporter=tap', '--test-concurrency=1', bundle], {encoding: 'utf8', timeout: 60000, maxBuffer: 1024 * 1024});
   const log = (run.stdout ?? '') + (run.stderr ?? ''); await writeFile(path.join(output, 'tests.log'), log);
   assert.equal(run.error, undefined); assert.equal(run.status, 0, log);
-  assert.match(log, /# tests 10\n/u); assert.match(log, /# pass 10\n/u); assert.match(log, /# fail 0\n/u);
+  assert.match(log, /# tests 17\n/u); assert.match(log, /# pass 17\n/u); assert.match(log, /# fail 0\n/u);
   assert.deepEqual([...log.matchAll(/^ok [0-9]+ - (.+)$/gmu)].map(match => match[1]), names);
   report.status = 'pass';
 } catch (error) { report.status = 'fail'; report.error = error.stack ?? String(error); process.exitCode = 1; }

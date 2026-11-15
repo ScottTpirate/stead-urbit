@@ -100,6 +100,51 @@ export class ProductJourneyDraftStore {
   getProposal(scope: DocReviewScope) { const entry = this.entries.get(this.key('proposal', scope.projectId, scope.workId, scope.changeId)); return entry?.kind === 'proposal' ? entry.value : undefined; }
   putProposal(value: DocProposalDraft) { return this.put(this.key('proposal', value.scope.projectId, value.scope.workId, value.scope.changeId), {kind: 'proposal', value}); }
 }
+
+export type JourneyPickerState<T> = {state: 'idle' | 'loading' | 'unavailable' | 'revoked'} | {state: 'ready'; value: T};
+type JourneyPickerBinding<T> = {view: object; projectId: string; sessionKey: string; authorityEpoch: string; token: object | string;
+  current: () => boolean; read: (current: () => void) => Promise<T>; onDenied: () => void | Promise<void>};
+// Optional data has its own request owner. It cannot delay a core Work read or
+// turn an incomplete/failed roster into an authoritative empty list.
+export class JourneyPicker<T> {
+  private binding?: JourneyPickerBinding<T>;
+  private serial = 0;
+  private state: JourneyPickerState<T> = {state: 'idle'};
+  private listener?: () => void;
+  configure(binding?: JourneyPickerBinding<T>) {
+    const previous = this.binding;
+    if (previous?.view !== binding?.view || previous?.projectId !== binding?.projectId || previous?.sessionKey !== binding?.sessionKey
+      || previous?.authorityEpoch !== binding?.authorityEpoch || previous?.token !== binding?.token) {
+      this.serial++; this.state = {state: 'idle'};
+    }
+    this.binding = binding;
+  }
+  subscribe(listener: () => void) { this.listener = listener; return () => { this.listener = undefined; this.serial++; this.state = {state: 'idle'}; }; }
+  snapshot() { return this.state; }
+  private publish(value: JourneyPickerState<T>) { this.state = value; this.listener?.(); }
+  async request() {
+    const binding = this.binding;
+    if (!binding || !binding.current() || ['loading', 'ready', 'revoked'].includes(this.state.state)) return;
+    const serial = ++this.serial, active = () => serial === this.serial && this.binding?.view === binding.view && binding.current();
+    const current = () => { if (!active()) throw new HomeError('session_changed'); };
+    this.publish({state: 'loading'});
+    try {
+      const value = await binding.read(current);
+      if (active()) this.publish({state: 'ready', value});
+    } catch (error) {
+      if (!active()) return;
+      const code = error && typeof error === 'object' && 'code' in error ? String(error.code) : '';
+      if (['denied_or_not_found', 'session_required', 'session_changed'].includes(code)) {
+        this.publish({state: 'revoked'});
+        try { await binding.onDenied(); } catch { /* The parent owns access recovery. */ }
+      } else this.publish({state: 'unavailable'});
+    }
+  }
+}
+
+export function journeyPickerDemand(selection: ProductJourneySelection, composerOpen: boolean, purposeRequested: boolean, proposalOpen: boolean) {
+  return {people: composerOpen || selection.kind !== 'list', documents: composerOpen || purposeRequested || proposalOpen};
+}
 export function journeyPeople(rows: readonly ProductPrincipal[]): ProductWorkPerson[] {
   return rows.filter(row => row.active === 'yes' && ['contributor', 'maintainer'].includes(row.project_role)
     && (row.principal_kind === 'person' || row.principal_kind === 'agent')).map(row => ({principalId: row.principal_id,

@@ -1,4 +1,4 @@
-import {useEffect, useRef, useState} from 'react';
+import {useCallback, useEffect, useRef, useState} from 'react';
 import {HomeError, type Fields, type HomeClient} from './api';
 import {Button, EmptyState, LoadingState, OutcomeState} from './primitives';
 import {newId} from './protocol';
@@ -11,7 +11,7 @@ import {DocChangeList, DocChangeReview} from './docChangeReview';
 import {DocChangeReviewAdapter, docReviewSubmitter, mapDocReviewList, type LoadedDocReview} from './docChangeReviewAdapter';
 import {DocChangeProposal} from './docChangeProposal';
 import {currentProposalPin, journeyActor, journeyCompletion, journeyDocumentKey, journeyDocuments, journeyPeople, journeyProject, journeyRoster,
-  ProductJourneyDraftStore, type DocProposalDraft, type JourneyDocuments, type ProductJourneySelection} from './productJourneyState';
+  JourneyPicker, journeyPickerDemand, ProductJourneyDraftStore, type DocProposalDraft, type JourneyDocuments, type ProductJourneySelection} from './productJourneyState';
 import {readProductWorkEndpoint} from './productJourneyState';
 import {WorkContext} from './WorkContext';
 import type {DocReviewScope} from './docChangeReviewState';
@@ -25,7 +25,7 @@ export type ProductWorkJourneyProps = {client: HomeClient; project: {id: string;
   onProjectRefresh: (current: Fields) => void; onAccessChanged: () => void; onProjectDenied?: () => void; onRouteDenied?: () => void; refreshRevision?: number};
 type ChangeList = ReturnType<typeof mapDocReviewList>;
 type Snapshot = {key: string; owner?: object; phase: 'loading' | 'ready' | 'failed' | 'revoked'; project?: Fields; rows?: readonly ProductWorkPreview[]; cursor?: string;
-  work?: Work; comments?: readonly ProductComment[]; commentCursor?: string; commentGeneration?: string; changesGeneration?: string; people?: readonly ProductPrincipal[]; documents?: JourneyDocuments;
+  work?: Work; comments?: readonly ProductComment[]; commentCursor?: string; commentGeneration?: string; changesGeneration?: string;
   readiness?: ProductWorkReadiness; changes?: ChangeList; review?: LoadedDocReview; results?: readonly DocChangePreview[]; resultCursor?: string; resultGeneration?: string; readToken?: object; message?: string};
 const failureCode = (error: unknown) => error && typeof error === 'object' && 'code' in error ? String(error.code) : '';
 const identityKey = (props: ProductWorkJourneyProps) => JSON.stringify([props.project.id, props.sessionKey]);
@@ -40,9 +40,14 @@ function Journey(props: ProductWorkJourneyProps) {
   const [creating, setCreating] = useState<string | undefined>(() => props.drafts.newWork(props.project.id)?.resourceId), [composerOpen, setComposerOpen] = useState(false),
     [proposal, setProposal] = useState<DocProposalDraft | undefined>(() => props.selection.kind === 'list' ? undefined : props.drafts.workProposal(props.project.id, props.selection.workId)), [proposalOpen, setProposalOpen] = useState(false);
   const generation = useRef(0), latest = useRef(props), mounted = useRef(true), nextWorkCursor = useRef(''); latest.current = props;
+  const [documentsRequested, setDocumentsRequested] = useState<object | undefined>(), [, redrawPickers] = useState(0);
+  const pickers = useRef<{people: JourneyPicker<ProductPrincipal[]>; documents: JourneyPicker<JourneyDocuments>} | undefined>(undefined);
+  if (!pickers.current) pickers.current = {people: new JourneyPicker(), documents: new JourneyPicker()};
+  const peoplePicker = pickers.current.people, documentPicker = pickers.current.documents, currentRead = useRef<object | undefined>(undefined);
   const stamp = JSON.stringify([key, props.online, revision, props.refreshRevision]), fence = useRef({stamp, client: props.client});
   if (fence.current.stamp !== stamp || fence.current.client !== props.client) fence.current = {stamp, client: props.client};
   const owner = fence.current;
+  const requestDocuments = useCallback(() => { setDocumentsRequested(owner); void documentPicker.request(); }, [owner, documentPicker]);
   const adapter = useRef<{client: HomeClient; value: DocChangeReviewAdapter} | undefined>(undefined);
   const endpointReader = useRef({client: props.client, read: (project: string, work: string) => readProductWorkEndpoint(props.client, project, work)});
   if (endpointReader.current.client !== props.client) endpointReader.current = {client: props.client, read: (project, work) => readProductWorkEndpoint(props.client, project, work)};
@@ -77,7 +82,6 @@ function Journey(props: ProductWorkJourneyProps) {
     void (async () => {
       const project = await journeyProject(props.client, props.project.id, current); current(); props.onProjectRefresh(project);
       readingProject = false;
-      const writable = ['contributor', 'maintainer'].includes(project.role!);
       const workId = props.selection.kind === 'list' ? '' : props.selection.workId;
       const cursor = workId ? '' : nextWorkCursor.current; nextWorkCursor.current = '';
       const view = await props.client.productWork.readWork({request_id: newId(), project_id: props.project.id, resource_id: workId, cursor}); current();
@@ -86,7 +90,6 @@ function Journey(props: ProductWorkJourneyProps) {
       const work = workId ? view.rows[0] as Work : undefined;
       if (work && !('description' in work)) throw new HomeError('invalid_response');
       const base: Snapshot = {key, owner, phase: 'ready', project, readToken: Object.freeze({}), ...(work ? {work} : {rows: view.rows as readonly ProductWorkPreview[], cursor: view.cursor})};
-      const people = writable ? await journeyRoster(props.client, props.project.id, project.authority_epoch!, current) : []; current(); base.people = people;
       if (props.selection.kind === 'doc-change') {
         base.review = await adapter.current!.value.load({scope: {projectId: props.project.id, workId: props.selection.workId, changeId: props.selection.changeId},
           sessionKey: props.sessionKey, ...(props.selection.result ? {result: props.selection.result} : {})}); current();
@@ -95,12 +98,6 @@ function Journey(props: ProductWorkJourneyProps) {
         if (versions.kind !== 'results' || versions.authority_epoch !== project.authority_epoch) throw new HomeError('stale_cursor');
         base.results = versions.rows; base.resultCursor = versions.cursor; base.resultGeneration = versions.generation;
       } else {
-        // Choices are optional. A failed picker read never makes a complete list
-        // out of a partial scan and never blocks reading already authorized Work.
-        if (writable) {
-          try { base.documents = await journeyDocuments(props.client, props.project.id, project.authority_epoch!, current); }
-          catch (error) { current(); if (failureCode(error) === 'denied_or_not_found') throw error; }
-        }
         if (work) {
           const comments = await props.client.productWork.readComments({request_id: newId(), project_id: props.project.id, resource_id: work.resource_id}); current();
           if (comments.status === 'rejected') throw new HomeError(comments.error);
@@ -129,13 +126,35 @@ function Journey(props: ProductWorkJourneyProps) {
   const visible = snapshot.key === key && snapshot.owner === owner && snapshot.phase === 'ready' ? snapshot : undefined;
   const project = visible?.project, work = visible?.work, currentAccess = project && ['contributor', 'maintainer'].includes(project.role!) ? 'writable' : 'read-only';
   const unavailable = !!props.locked || !props.online || stale || !visible;
+  currentRead.current = visible?.readToken;
+  const token = props.client.currentSessionToken(), readToken = visible?.readToken;
+  const pickerCurrent = () => mounted.current && fence.current === owner && !!readToken && currentRead.current === readToken
+    && props.client.currentSessionToken() === token && !!token && latest.current.online;
+  const pickerDenied = () => {
+    if (!pickerCurrent()) return;
+    currentRead.current = undefined; setSnapshot({key, owner, phase: 'revoked'}); props.onRouteDenied?.();
+  };
+  const binding = readToken && token && currentAccess === 'writable' ? {view: readToken, token, projectId: props.project.id, sessionKey: props.sessionKey,
+    authorityEpoch: project!.authority_epoch!, current: pickerCurrent, onDenied: pickerDenied} : undefined;
+  peoplePicker.configure(binding ? {...binding, read: current => journeyRoster(props.client, props.project.id, project!.authority_epoch!, current)} : undefined);
+  documentPicker.configure(binding ? {...binding, read: current => journeyDocuments(props.client, props.project.id, project!.authority_epoch!, current)} : undefined);
+  const peopleState = peoplePicker.snapshot(), documentState = documentPicker.snapshot();
+  const people = peopleState.state === 'ready' ? peopleState.value : [], documents = documentState.state === 'ready' ? documentState.value : undefined;
+  const demand = journeyPickerDemand(props.selection, composerOpen, documentsRequested === owner, proposalOpen);
+  useEffect(() => {
+    const people = peoplePicker.subscribe(() => redrawPickers(value => value + 1)), docs = documentPicker.subscribe(() => redrawPickers(value => value + 1));
+    return () => { people(); docs(); };
+  }, [peoplePicker, documentPicker]);
+  useEffect(() => { if (binding && demand.people) void peoplePicker.request(); }, [readToken, token, currentAccess, demand.people, peoplePicker]);
+  useEffect(() => { if (binding && demand.documents) void documentPicker.request(); }, [readToken, token, currentAccess, demand.documents, documentPicker]);
   const workId = composerOpen ? creating ?? '' : work?.resource_id ?? '';
   const environment: ProductWorkEnvironment = {client: props.client.productWork, scope: {projectId: props.project.id, resourceId: workId,
     authorityEpoch: project?.authority_epoch ?? props.project.authorityEpoch}, sessionKey: props.sessionKey, supported: true, access: currentAccess,
-    online: props.online, refreshing: unavailable, actor: journeyActor(visible?.people ?? [], props.principalId),
-    people: {state: visible ? 'ready' : 'loading', projectId: props.project.id, sessionKey: props.sessionKey, values: journeyPeople(visible?.people ?? [])} as ProductWorkEnvironment['people'],
-    documents: visible?.documents ? {state: 'ready', projectId: props.project.id, sessionKey: props.sessionKey, values: visible.documents.choices}
-      : {state: visible ? 'unavailable' : 'loading', projectId: props.project.id, sessionKey: props.sessionKey},
+    online: props.online, refreshing: unavailable, actor: journeyActor(people, props.principalId),
+    people: peopleState.state === 'ready' ? {state: 'ready', projectId: props.project.id, sessionKey: props.sessionKey, values: journeyPeople(people)}
+      : {state: ['unavailable', 'revoked'].includes(peopleState.state) ? 'unavailable' : 'loading', projectId: props.project.id, sessionKey: props.sessionKey},
+    documents: documents ? {state: 'ready', projectId: props.project.id, sessionKey: props.sessionKey, values: documents.choices}
+      : {state: ['unavailable', 'revoked'].includes(documentState.state) ? 'unavailable' : 'loading', projectId: props.project.id, sessionKey: props.sessionKey},
     restoredDraft: props.drafts.getWork(props.project.id, workId), onDraftState: draft => { props.drafts.putWork(draft); notifyDraft(); }, onRefresh: refresh,
     onAccepted: async (prepared, receipt) => {
       if (receipt.status !== 'accepted' || fence.current !== owner || !mounted.current || unavailable || currentAccess !== 'writable') return;
@@ -150,11 +169,11 @@ function Journey(props: ProductWorkJourneyProps) {
     }};
   function startProposal(outcomeId: string, target: DocumentOutcome) {
     if (!work || unavailable || currentAccess !== 'writable' || environment.actor.kind !== 'person' || props.drafts.currentPending(props.project.id)) return;
-    if (!visible?.documents?.markdown.has(journeyDocumentKey(target)) || target.project_id !== props.project.id) return;
+    if (!documents?.markdown.has(journeyDocumentKey(target)) || target.project_id !== props.project.id) return;
     const scope: DocReviewScope = {projectId: props.project.id, workId: work.resource_id, changeId: newId()};
     const draft: DocProposalDraft = {scope, sessionKey: props.sessionKey, base: {authorityEpoch: project!.authority_epoch!, headRevision: '0',
       executionContractRevision: work.execution_contract_revision, executionContractDigest: work.execution_contract_digest, outcomeId, target: {...target}},
-      markdown: visible!.documents!.markdown.get(journeyDocumentKey(target))!, summary: '', dirty: false, conflicted: false};
+      markdown: documents.markdown.get(journeyDocumentKey(target))!, summary: '', dirty: false, conflicted: false};
     props.drafts.putProposal(draft); notifyDraft(); setProposal(draft); setProposalOpen(true);
   }
   async function recordedProposal(prepared: PreparedDocChangeCommand, receipt: Extract<DocChangeReceipt, {status: 'accepted'}>) {
@@ -231,15 +250,21 @@ function Journey(props: ProductWorkJourneyProps) {
     {creating && composerOpen && visible && <ProductWorkComposer {...environment} open onClose={() => setComposerOpen(false)}/>}
     {visible && work && props.selection.kind === 'work' && <>
       {!proposalOpen && <ProductWorkDetail {...environment} snapshot={{work, sessionKey: props.sessionKey, authorityEpoch: project!.authority_epoch!}}
+        onRequestDocuments={requestDocuments}
         comments={{state: 'ready', projectId: props.project.id, resourceId: work.resource_id, sessionKey: props.sessionKey, rows: visible.comments ?? [], cursor: visible.commentCursor ?? '', onNext: () => void more('comments'), onRefresh: refresh}}
         completionReadiness={visible.readiness} mode="page" onClose={() => props.onNavigate({kind: 'list'})}
         context={<><section className="product-journey-output-actions" aria-label="Required Doc actions"><h3>Produce and review Docs</h3>
+          {Object.keys(productDetailOutcomes(work)).length > 0 && currentAccess === 'writable' && !documents && <>
+            {documentState.state === 'loading' ? <p role="status">Loading current shared Docs…</p> : <Button disabled={unavailable} onClick={requestDocuments}>
+              {documentState.state === 'unavailable' ? 'Retry shared Docs' : 'Load shared Docs for a proposal'}</Button>}
+            {documentState.state === 'unavailable' && <p role="status">Current shared Docs are unavailable. Work and its conversation remain available.</p>}
+          </>}
           {proposal?.scope.workId === work.resource_id && <Button disabled={unavailable} onClick={() => setProposalOpen(true)}>Continue proposal draft</Button>}
           {Object.entries(productDetailOutcomes(work)).map(([outcomeId, target]) => target.kind === 'document' && <div key={outcomeId}>
             <Button disabled={unavailable || props.drafts.hasDraft(props.project.id)} onClick={() => { if (target.project_id === props.project.id) props.onOpenDoc({collectionId: target.collection_id, documentId: target.document_id}); }}>Open required Doc</Button>
-            {environment.actor.kind === 'person' && <Button disabled={unavailable || currentAccess !== 'writable' || props.drafts.hasDraft(props.project.id) || !visible.documents?.markdown.has(journeyDocumentKey(target))}
+            {environment.actor.kind === 'person' && <Button disabled={unavailable || currentAccess !== 'writable' || props.drafts.hasDraft(props.project.id) || !documents?.markdown.has(journeyDocumentKey(target))}
               onClick={() => startProposal(outcomeId, target)}>Propose Doc change</Button>}
-            {!visible.documents?.markdown.has(journeyDocumentKey(target)) && <p className="muted">Refresh or update the required output if its saved base changed.</p>}
+            {documents && !documents.markdown.has(journeyDocumentKey(target)) && <p className="muted">Refresh or update the required output if its saved base changed.</p>}
           </div>)}</section>
           {visible.changes && <DocChangeList projectId={props.project.id} workId={work.resource_id} sessionKey={props.sessionKey} data={visible.changes}
             locked={unavailable || props.drafts.hasDraft(props.project.id)} onOpen={changeId => props.onNavigate({kind: 'doc-change', workId: work.resource_id, changeId})}

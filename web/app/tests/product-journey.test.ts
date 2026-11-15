@@ -2,11 +2,12 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import {createHash} from 'node:crypto';
-import type {HomeClient} from '../src/api';
+import {HomeError, type HomeClient} from '../src/api';
+import {ProductWorkClient} from '../src/productClient';
 import {DocChangeClient} from '../src/docChangeClient';
 import {encodeDocChangeCommand} from '../src/docChangeProtocol';
 import {ProductJourneyDraftStore, currentProposalPin, journeyActor, journeyCompletion, journeyDocumentKey, journeyDocuments, journeyPeople,
-  journeyRoster, proposalCommand, proposalMatchesWork, restoreDocProposal, type DocProposalDraft} from '../src/productJourneyState';
+  journeyRoster, JourneyPicker, journeyPickerDemand, proposalCommand, proposalMatchesWork, restoreDocProposal, type DocProposalDraft} from '../src/productJourneyState';
 import {makeProductWorkDraft} from '../src/productWorkState';
 import type {DocumentOutcome, ProductPrincipal, ProductView, ProductWorkDetail} from '../src/productProtocol';
 import {productJSON} from '../src/productWire';
@@ -139,4 +140,72 @@ test('Doc scan budget counts unsupported bodies and rejects the entire over-budg
   }} as unknown as HomeClient;
   await assert.rejects(journeyDocuments(client, project, '1', () => {}), /invalid_response/u);
   assert.equal(exactReads, 128);
+});
+
+const pickerBinding = <T,>(read: (current: () => void) => Promise<T>, overrides = {}) => ({view: {}, projectId: project, sessionKey: session,
+  authorityEpoch: '1', token: session, current: () => true, read, onDenied: () => {}, ...overrides});
+
+test('plain list and ordinary detail request no Doc scan and configuration never performs a read', async () => {
+  assert.deepEqual(journeyPickerDemand({kind:'list'},false,false,false),{people:false,documents:false});
+  assert.deepEqual(journeyPickerDemand({kind:'work',workId},false,false,false),{people:true,documents:false});
+  assert.deepEqual(journeyPickerDemand({kind:'list'},true,false,false),{people:true,documents:true});
+  assert.equal(journeyPickerDemand({kind:'work',workId},false,true,false).documents,true);
+  assert.equal(journeyPickerDemand({kind:'doc-change',workId,changeId:id(400)},false,false,true).documents,true);
+  let calls=0;const picker=new JourneyPicker<string[]>();picker.configure(pickerBinding(async()=>{calls++;return [];}));
+  assert.equal(calls,0);assert.equal(picker.snapshot().state,'idle');
+  picker.configure();await picker.request();assert.equal(calls,0);
+});
+
+test('deferred optional choices leave title-only unassigned command preparation independent', async () => {
+  let finish!:(value:ProductPrincipal[])=>void,calls=0;
+  const picker=new JourneyPicker<ProductPrincipal[]>();picker.configure(pickerBinding(()=>{calls++;return new Promise(resolve=>{finish=resolve;});}));
+  const pending=picker.request();await picker.request();assert.equal(picker.snapshot().state,'loading');assert.equal(calls,1);
+  const draft=makeProductWorkDraft({projectId:project,resourceId:workId,authorityEpoch:'1'},session);draft.contract.value.title='Title only';
+  const client=new ProductWorkClient({currentSession:()=>session,query:async()=>{throw new Error('No picker dependency');},command:async()=>{throw new Error('No send in host proof');}});
+  const prepared=await client.prepareCreate({request_id:id(601),project_id:project,resource_id:workId,authority_epoch:'1'},
+    {...draft.properties.value,status:'todo'},draft.contract.value);
+  assert.equal(prepared.command.operation,'work.create');assert.equal(prepared.command.payload.owner_principal_id,'');assert.equal(prepared.command.payload.worker_principal_id,'');
+  assert.equal(picker.snapshot().state,'loading');assert.equal(journeyActor([],id(700)).kind,'unknown');finish([]);await pending;
+  assert.deepEqual(picker.snapshot(),{state:'ready',value:[]});
+});
+
+test('same-scope picker failure is unavailable until an explicit retry returns complete typed data', async () => {
+  let fail=true,calls=0;const picker=new JourneyPicker<ProductPrincipal[]>(),binding=pickerBinding(async()=>{calls++;if(fail)throw new HomeError('disconnected');return [];});
+  picker.configure(binding);await picker.request();assert.deepEqual(picker.snapshot(),{state:'unavailable'});
+  picker.configure(binding);assert.equal(calls,1);assert.equal(picker.snapshot().state,'unavailable');
+  fail=false;await picker.request();assert.deepEqual(picker.snapshot(),{state:'ready',value:[]});await picker.request();assert.equal(calls,2);
+});
+
+test('current optional denial closes the scoped view and prevents a second deferred picker publication', async () => {
+  let authorized=true,denied=0,finish!:(value:string[])=>void;
+  const documents=new JourneyPicker<string[]>(),people=new JourneyPicker<string[]>();
+  documents.configure(pickerBinding(()=>new Promise(resolve=>{finish=resolve;}),{current:()=>authorized}));const pending=documents.request();
+  people.configure(pickerBinding(async()=>{throw new HomeError('denied_or_not_found');},{current:()=>authorized,onDenied:()=>{denied++;authorized=false;}}));
+  await people.request();assert.equal(people.snapshot().state,'revoked');assert.equal(denied,1);
+  finish(['Protected document']);await pending;assert.notEqual(documents.snapshot().state,'ready');
+  people.configure();documents.configure();assert.equal(people.snapshot().state,'idle');assert.equal(documents.snapshot().state,'idle');
+});
+
+test('optional reads fence A to B to A late successes and denials by view generation', async () => {
+  const picker=new JourneyPicker<string[]>(),waits:Array<{resolve:(value:string[])=>void;reject:(error:Error)=>void}>=[];let denied=0;
+  const read=()=>new Promise<string[]>((resolve,reject)=>waits.push({resolve,reject}));
+  const a=pickerBinding(read,{onDenied:()=>{denied++;}}),b=pickerBinding(read,{projectId:id(999),onDenied:()=>{denied++;}});
+  picker.configure(a);const first=picker.request();picker.configure(b);const second=picker.request();picker.configure({...a,view:{}});const last=picker.request();
+  waits[2]!.resolve(['Current A']);await last;waits[0]!.resolve(['Old A']);await first;waits[1]!.reject(new HomeError('denied_or_not_found'));await second;
+  assert.deepEqual(picker.snapshot(),{state:'ready',value:['Current A']});assert.equal(denied,0);
+});
+
+test('optional reads cannot publish after opaque session or authority identity changes', async () => {
+  let token:object={},finish!:(value:string[])=>void;const initial=token,picker=new JourneyPicker<string[]>();
+  const binding=pickerBinding(()=>new Promise<string[]>(resolve=>{finish=resolve;}),{token,current:()=>token===initial});
+  picker.configure(binding);const first=picker.request();token={};finish(['Old session']);await first;assert.notEqual(picker.snapshot().state,'ready');
+  picker.configure({...binding,token,current:()=>true,read:async()=>['Current session']});await picker.request();assert.equal(picker.snapshot().state,'ready');
+  picker.configure({...binding,token,authorityEpoch:'2',current:()=>true});assert.equal(picker.snapshot().state,'idle');
+});
+
+test('optional read completion after unmount cannot publish or invoke an access callback', async () => {
+  const picker=new JourneyPicker<string[]>();let reject!:(error:Error)=>void,publications=0,denied=0;
+  picker.configure(pickerBinding(()=>new Promise<string[]>((_resolve,fail)=>{reject=fail;}),{onDenied:()=>{denied++;}}));
+  const unsubscribe=picker.subscribe(()=>{publications++;}),pending=picker.request();assert.equal(publications,1);unsubscribe();
+  reject(new HomeError('denied_or_not_found'));await pending;assert.equal(publications,1);assert.equal(denied,0);assert.equal(picker.snapshot().state,'idle');
 });

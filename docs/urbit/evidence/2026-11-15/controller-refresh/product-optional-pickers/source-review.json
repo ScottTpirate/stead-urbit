@@ -1,0 +1,55 @@
+{
+  "classification": "optional-journey-picker-source-and-host-evidence",
+  "status": "source-reviewed-host-pass",
+  "qualifies_phase": false,
+  "sources": {
+    "web/app/src/productWorkJourney.tsx": "82fe30dbf87b1ad157006b913bfac581578da9b1057ab9449aa90dcb0ad2d5ff",
+    "web/app/src/productJourneyState.ts": "40233444fb0d4d43f35ef315ada2164a198ab9b9ba02745bc08a55c922cb30d8",
+    "web/app/src/productWorkDetail.tsx": "549527286f4d831b944398b0bf52339a85ba5c39a428e5bd42de18e4ee9ef259",
+    "web/app/tests/product-journey.test.ts": "14a61088090746787fe1ad018c326d3ba5f60d33562edf88bfc9afea4143fcc1",
+    "web/app/tests/product-journey.mjs": "91db68b4c53398f9dbd650acc31c4b98a47266282d30ea4a366f749fee120a2c"
+  },
+  "changes": [
+    "Core Work list/detail/review no longer waits for optional roster or shared Doc choices.",
+    "Plain Work list starts no roster or Doc scan; composer requests both, detail requests typed people, purpose/proposal requests exact shared Doc choices.",
+    "Picker states distinguish idle/loading/unavailable and complete ready data; actor remains unknown until typed roster succeeds.",
+    "Denied current picker read hides current Work content; stale scope/session/epoch or A-B-A replies cannot publish or invoke current access callbacks.",
+    "Original prepared requests and drafts are untouched; required Doc proposal still requires exact matching target revision/hash."
+  ],
+  "verification": {
+    "guard": ".runtime/product-picker-owner-1794783001739121433",
+    "host_report": ".runtime/product-journey-5BczVR/report.json",
+    "host_report_sha256": "6888cadad6c34fe153ee66e8b0df65ecb86fd9190d53c9a5542b463eec5cb84e",
+    "typescript": "all production sources passed",
+    "tests": 17,
+    "original_tests_preserved": 10,
+    "new_tests": [
+      "plain list and ordinary detail request no Doc scan and configuration never performs a read",
+      "deferred optional choices leave title-only unassigned command preparation independent",
+      "same-scope picker failure is unavailable until an explicit retry returns complete typed data",
+      "current optional denial closes the scoped view and prevents a second deferred picker publication",
+      "optional reads fence A to B to A late successes and denials by view generation",
+      "optional reads cannot publish after opaque session or authority identity changes",
+      "optional read completion after unmount cannot publish or invoke an access callback"
+    ],
+    "duration_seconds": 8.5,
+    "peak_c": 48,
+    "cpu_quota": "25%",
+    "cpu_affinity": [
+      19
+    ],
+    "cleanup": {
+      "process_reaped": true,
+      "empty": true,
+      "state": "inactive"
+    },
+    "source_unchanged": true
+  },
+  "browser_executed": false,
+  "native_executed": false,
+  "limitations": [
+    "No carrier/native qualification or deployment claim.",
+    "The original Work/Doc/actual-v10 browser fixtures remain immutable; this new integration has not been rendered in an actual browser.",
+    "Host tests exercise the optional loader, gating and canonical preparation boundaries; they do not establish native acceptance."
+  ]
+}

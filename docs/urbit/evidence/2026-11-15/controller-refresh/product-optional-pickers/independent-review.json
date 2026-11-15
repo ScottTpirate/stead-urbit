@@ -1,0 +1,28 @@
+{
+  "browser_executed": false,
+  "classification": "independent-optional-picker-source-review",
+  "files": {
+    "web/app/src/productJourneyState.ts": "40233444fb0d4d43f35ef315ada2164a198ab9b9ba02745bc08a55c922cb30d8",
+    "web/app/src/productWorkDetail.tsx": "549527286f4d831b944398b0bf52339a85ba5c39a428e5bd42de18e4ee9ef259",
+    "web/app/src/productWorkJourney.tsx": "82fe30dbf87b1ad157006b913bfac581578da9b1057ab9449aa90dcb0ad2d5ff",
+    "web/app/tests/product-journey.mjs": "91db68b4c53398f9dbd650acc31c4b98a47266282d30ea4a366f749fee120a2c",
+    "web/app/tests/product-journey.test.ts": "14a61088090746787fe1ad018c326d3ba5f60d33562edf88bfc9afea4143fcc1"
+  },
+  "host_evidence_reviewed": {
+    "report_sha256": "6888cadad6c34fe153ee66e8b0df65ecb86fd9190d53c9a5542b463eec5cb84e",
+    "tests": 17
+  },
+  "native_executed": false,
+  "qualifies_phase": false,
+  "remaining": "Actual connected component DOM behavior should be verified by the prepared isolated browser fixture.",
+  "review_receipt_sha256": "dd7b390ac1c71e0bd54cef84c466c8501d1ef6e95a848447dce0e6e376a1ed09",
+  "reviewed": [
+    "Optional requests are absent from core Work reads and title-only creation lock state.",
+    "Current scope/view, exact opaque session token, authority epoch and request serial fence late success and denial; unmount invalidates requests.",
+    "Current denial closes the scoped view before another optional result can publish; missing roster keeps actor unknown rather than implying human authority.",
+    "Complete roster/Doc scans retain existing bounded epoch/generation/duplicate checks and exact Doc base digests; partial lists never become ready.",
+    "Draft/prepared command handling remains unchanged; saved proposals still require exact target revision/hash."
+  ],
+  "status": "approved-for-browser-verification",
+  "tests_rerun_by_release": false
+}

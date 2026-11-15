@@ -399,8 +399,7 @@ packages:
   - 6
   - 10
   - 29
-  current_progress: Layout, title-only defaults and priority wording implemented in working branch. Native split
-    properties, owner/worker and separate purpose/discussion editor now have an independently reviewed reserved component packet with ten state tests and fifteen protocol tests. It is unwired and its eight rendered cases remain unexecuted. Native carrier integration, readable keys, server filters and board remain pending.
+  current_progress: Layout, title-only defaults and priority wording are implemented. Reserved owner/worker and separate purpose/discussion components passed source review, ten state tests, fifteen protocol tests and eight isolated real-browser synthetic cases. The human app journey is wired in reserved source; optional roster and Doc choices now load independently, with full TypeScript and seventeen journey host checks passing. Browser proof of the optional-loader change is pending. Native carrier qualification, connected acceptance, live activation, readable keys, server filters and board remain pending.
 - id: T09
   title: Make Docs a proper Markdown knowledge experience
   phase: B

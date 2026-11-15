@@ -1,0 +1,22 @@
+{
+  "classification": "integrator-source-and-evidence-review",
+  "status": "approved",
+  "qualifies_phase": false,
+  "sources": {
+    "web/app/src/productWorkJourney.tsx": "82fe30dbf87b1ad157006b913bfac581578da9b1057ab9449aa90dcb0ad2d5ff",
+    "web/app/src/productJourneyState.ts": "40233444fb0d4d43f35ef315ada2164a198ab9b9ba02745bc08a55c922cb30d8",
+    "web/app/src/productWorkDetail.tsx": "549527286f4d831b944398b0bf52339a85ba5c39a428e5bd42de18e4ee9ef259",
+    "web/app/tests/product-journey.test.ts": "14a61088090746787fe1ad018c326d3ba5f60d33562edf88bfc9afea4143fcc1",
+    "web/app/tests/product-journey.mjs": "91db68b4c53398f9dbd650acc31c4b98a47266282d30ea4a366f749fee120a2c"
+  },
+  "checks": [
+    "Read full production diff and all seven new tests; original ten retained",
+    "Core read completion independent of optional member and Doc lookups",
+    "Current access denial fences simultaneous picker completion; actual token and view changes suppress late replies",
+    "Title-only unassigned creation remains possible; unknown actor cannot produce a Doc proposal",
+    "Full TS and17 injected host checks verified from source-bound reports; owned process reaped and group empty"
+  ],
+  "browser_executed": false,
+  "native_executed": false,
+  "live_activation": false
+}

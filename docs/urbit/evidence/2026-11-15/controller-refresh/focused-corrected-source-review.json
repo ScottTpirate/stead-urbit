@@ -1,0 +1,66 @@
+{
+  "absent_run_views_not_added": true,
+  "candidate": "59e41f985da954e12194f25f602961967b38dc2d",
+  "candidate_base": "125e4a6df24a32257dc0592e1c3afd186230ffe7",
+  "candidate_files": {
+    "native/core/desk/lib/stead-doc-change-codec.hoon": {
+      "sha256": "152479a5288eb7a46b6cd3abe29f3fd48a3a184f6a5a8e7310c499713ba55f19",
+      "source_commit": "1f06b1b2c246e7a7ec44cf16bb1aab64023c5386"
+    },
+    "native/core/desk/lib/stead-product-migrate.hoon": {
+      "sha256": "5b0bc0975b96f6528487a0c93c5e94b5c81d36d10bbc9ff8f949a15bd6407260",
+      "source_commit": "8fb40c176dcd353087b3738128b6ce7717defb48"
+    },
+    "native/core/desk/lib/stead-run.hoon": {
+      "sha256": "8ceedb6fd1ce56af30d53c027a1d250f30ac1faaa069e085445d9f6b49cf2432",
+      "source_commit": "1f06b1b2c246e7a7ec44cf16bb1aab64023c5386"
+    },
+    "native/core/desk/tests/stead-product-codec.hoon": {
+      "sha256": "e6e0b5ae5374bf2e6959a37a8388c9a099c4f450eab093c4e1ad7812ffa7cc0d",
+      "source_commit": "8fb40c176dcd353087b3738128b6ce7717defb48"
+    },
+    "native/core/desk/tests/stead-product-views.hoon": {
+      "sha256": "a042298d1100561c7e84894f80cd563e6333f34a1cd9b960a382c8ab3545043b",
+      "source_commit": "ea9869188cef55364e03c6ca7c517f1681e51252"
+    }
+  },
+  "checks": {
+    "exact_candidate_five_file_diff": true,
+    "exact_composed_five_file_diff": true,
+    "exact_controller_two_file_diff": true,
+    "selector_parser_inventory_unchanged": true,
+    "trusted_fixture_overrides_rejected": 2
+  },
+  "classification": "immutable-focused-diagnostic-source-preparation",
+  "controller": "bd218860b2ee9160e3c1d27ef325cb42cb7aca86",
+  "controller_base": "3f0033217039e1b6997d5393518d878cada19b1b",
+  "controller_files": [
+    "native/core/desk/tests/stead-product-codec.hoon",
+    "native/core/desk/tests/stead-product-views.hoon"
+  ],
+  "dispatched": false,
+  "inventories": {
+    "candidate_files": 219,
+    "candidate_product_files": 127,
+    "composed_files": 234,
+    "controller_files": 422
+  },
+  "native_executed": false,
+  "native_result": "pending",
+  "pin_commit": "8203844a5db56df7b4caf682052c57ccf5120e72",
+  "pr": 97,
+  "private_review_receipt_sha256": "f57865c577cb699e2b13eaeea6e245aced4c5b6fe3321d6302a10d9a308774bc",
+  "qualification_disabled": true,
+  "registered_arms": 300,
+  "registered_suites": 50,
+  "reviewed_by": [
+    "root",
+    "native",
+    "release"
+  ],
+  "run_id": 43771933646,
+  "selected_positive_arms": 22,
+  "selected_positive_suites": 9,
+  "source_app_unchanged": true,
+  "workflow_commit": "ac109dfcebf168c2ce62a943253fcc0756b324ee"
+}

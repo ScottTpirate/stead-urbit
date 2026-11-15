@@ -12,6 +12,7 @@ export type ProductWorkDetailProps = ProductWorkEnvironment & {
   snapshot?: {work: Work; sessionKey: string; authorityEpoch: string};
   comments: ProductWorkComments; completionReadiness?: ProductWorkReadiness; context?: ReactNode;
   mode?: 'preview' | 'page'; onClose?: (draft: ProductWorkDraft) => void;
+  onRequestDocuments?: () => void;
 };
 export function ProductWorkDetail(props: ProductWorkDetailProps) {
   if (!props.supported) return <OutcomeState state="unsupported_operation" description="This Home does not support this Work view yet."/>;
@@ -30,6 +31,7 @@ function ActiveDetail(props: ProductWorkDetailProps & {work: Work}) {
   const key = productWorkScopeKey(props.scope, props.sessionKey);
   useEffect(() => { const frame = requestAnimationFrame(() => heading.current?.focus()); return () => cancelAnimationFrame(frame); }, [key]);
   useEffect(() => { if (editingContract) title.current?.focus(); }, [editingContract]);
+  useEffect(() => { if (editingContract && work.status !== 'done') props.onRequestDocuments?.(); }, [editingContract, work.status, props.onRequestDocuments]);
   useEffect(() => { if (draft.attempt?.section === 'contract' && draft.attempt.phase === 'accepted' && !draft.attempt.awaitingReadback) setEditingContract(false); }, [draft.attempt]);
   const scope = () => ({request_id: newId(), project_id: props.scope.projectId, resource_id: props.scope.resourceId, authority_epoch: props.scope.authorityEpoch});
   const outcomes = productDetailOutcomes(work);
