@@ -1,0 +1,60 @@
+{
+  "protocol": "stead.pilot-browser-path/1",
+  "classification": "unauthenticated-live-render-only",
+  "pages": [
+    {
+      "role": "home",
+      "url": "https://stead.kilgore.science/stead/",
+      "status": 200,
+      "title": "Stead",
+      "headings": [
+        "Sign in with Urbit"
+      ],
+      "buttonLabels": [
+        "Continue",
+        "Download these details"
+      ],
+      "scriptErrors": []
+    },
+    {
+      "role": "identity",
+      "url": "https://stead-id.kilgore.science/stead-identity/",
+      "status": 200,
+      "title": "Stead identity approval",
+      "headings": [
+        "Approve a Stead sign-in"
+      ],
+      "buttonLabels": [
+        "Refresh requests"
+      ],
+      "scriptErrors": []
+    }
+  ],
+  "errors": [],
+  "freshProfile": true,
+  "globalTrustChanged": false,
+  "sharedProfileUsed": false,
+  "browser": "155.0.8059.84",
+  "status": "pass",
+  "browserClosed": true,
+  "observed_at": "2026-11-15T17:26:21.287875+00:00",
+  "deployed_source": "dbc8cc01adb32b14912e3e74c8efa324ba0eb5c9",
+  "certificate_ca_and_spki_preflight": "pass",
+  "chromium_sandbox": true,
+  "owned_tunnel_closed": true,
+  "browser_scope": "inactive/dead",
+  "authenticated_acceptance": false,
+  "new_candidate_deployed": false,
+  "images": {
+    "home.png": {
+      "bytes": 599182,
+      "sha256": "8b8aed08ef916be92760d99a03407fb01ee777a86b21e0d46c78693c548d32de",
+      "visually_inspected": true
+    },
+    "identity.png": {
+      "bytes": 22605,
+      "sha256": "198fe38df05a6c4bb0299e041089f70c4ca6b9adf9034a7e6c8886477ba5279a",
+      "visually_inspected": true
+    }
+  }
+}

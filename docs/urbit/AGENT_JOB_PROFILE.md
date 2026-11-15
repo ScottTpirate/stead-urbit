@@ -93,7 +93,8 @@ discussion/activity sequences. Comments, progress and unrelated notifications
 must not invalidate an unchanged contract. Changed acceptance criteria do.
 T05a now implements an additive read-only execution pin derived from accepted
 legacy title/description edits, plus strict agent brief/2 consumption. This is
-committed source awaiting native qualification, not a durable-run API. Commands
+qualified on the hosted native profile at commit `f254244` (167 arms and 1,647
+checks), not a durable-run API. Commands
 and comments still use the legacy aggregate revision. The helper checks the pin
 before Code submission, leaving a read/submit race; atomic contract fencing,
 acceptance criteria, output requirements and independent discussion CAS still

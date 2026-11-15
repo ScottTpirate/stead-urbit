@@ -481,12 +481,16 @@ packages:
   - Required multiple outcomes prevent premature completion; informational links do not block it.
   evidence: Native Work/Doc relation/privacy tests and Work→Doc→Back navigation; Code relation proof closes with
     T21.
-  implementation_status: planned
+  implementation_status: in_progress
   parent_issue_numbers:
   - 6
   - 12
   - 21
   - 22
+  current_progress: Saved-Doc contextual backlinks implemented with current endpoint authorization, bounded reads,
+    private/deleted endpoint omission and canonical Work navigation. Eight initial browser cases passed; real Back
+    focus failure corrected and both affected final-source cases passed. Pinned-revision and required-outcome semantics
+    remain pending; these links remain informational and latest-only.
 - id: T11
   title: Build actionable Inbox My work and scoped search
   phase: B

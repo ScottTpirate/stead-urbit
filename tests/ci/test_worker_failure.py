@@ -18,6 +18,54 @@ import owned_child
 
 
 class FailureProjectionTests(unittest.TestCase):
+    def test_last_unit_reports_only_registered_names_and_closed_verdicts(self):
+        inventory = json.loads((ROOT / 'specs/urbit/phase2-pure-units.json').read_bytes())
+        suite = next(row for row in inventory['suites'] if row['path'] == '/tests/stead-workspace-views')
+        arm = suite['arms'][0]
+        raw = ('private ' + self.secret + '\nnest-fail\n'
+               + 'FAILED ' + suite['path'] + '/' + arm + '\n'
+               + 'CRASHED ' + suite['path'] + '/' + self.secret + '\n'
+               + 'OK /tests/stead-unknown/' + arm + '\n').encode()
+        self.value['native']['native_unit_transcripts'] = [{
+            'path': suite['path'], 'log_hex': raw.hex(), 'terminal': '[32 %avow 0 %noun 1]'}]
+        observed = failure.project(self.frame(), self.inputs, run_id=self.run, inventory=inventory)
+        row = observed['native']['last_unit']
+        self.assertEqual(row['path'], suite['path'])
+        self.assertEqual(row['registered_arm_observations'], [{'arm': arm, 'outcome': 'FAILED'}])
+        self.assertTrue(row['markers']['nest-fail'])
+        self.assertEqual(row['log_sha256'], hashlib.sha256(raw).hexdigest())
+        self.assertFalse(observed['qualifies_phase'])
+        self.assertNotIn(self.secret, json.dumps(observed))
+        self.assertNotIn(raw.hex(), json.dumps(observed))
+        self.value['native']['native_unit_transcripts'][0]['path'] = self.secret
+        self.value['native']['native_unit_transcripts'][0]['terminal'] = self.secret
+        unknown = failure.project(self.frame(), self.inputs, run_id=self.run, inventory=inventory)['native']['last_unit']
+        self.assertEqual(unknown['path'], 'unrecognized')
+        self.assertEqual(unknown['terminal'], 'unrecognized')
+        self.assertEqual(unknown['registered_arm_observations'], [])
+
+    def test_last_unit_requires_bounded_hex_and_registered_inventory(self):
+        for value in (None, {}, [{}] * 101, [None], [{'log_hex': 'z0'}], [{'log_hex': '00' * 262145}]):
+            self.value['native']['native_unit_transcripts'] = value
+            with self.subTest(value=str(value)[:60]), self.assertRaises(ValueError):
+                self.project()
+        self.value['native']['native_unit_transcripts'] = [{'path': '/tests/stead-workspace-views',
+            'log_hex': ('exit\nFAILED /tests/stead-workspace-views/' + self.secret).encode().hex()}]
+        observed = self.project()['native']['last_unit']
+        self.assertEqual(observed['path'], 'unrecognized')
+        self.assertEqual(observed['registered_arm_observations'], [])
+        self.assertTrue(observed['markers']['exit'])
+
+    def test_last_unit_rejects_duplicate_and_contradictory_registered_verdicts(self):
+        inventory = json.loads((ROOT / 'specs/urbit/phase2-pure-units.json').read_bytes())
+        suite = inventory['suites'][0]
+        name = suite['path'] + '/' + suite['arms'][0]
+        for outcomes in (('OK', 'OK'), ('OK', 'FAILED')):
+            raw = '\n'.join(outcome + ' ' + name for outcome in outcomes).encode()
+            self.value['native']['native_unit_transcripts'] = [{'path': suite['path'], 'log_hex': raw.hex()}]
+            with self.subTest(outcomes=outcomes), self.assertRaises(ValueError):
+                failure.project(self.frame(), self.inputs, run_id=self.run, inventory=inventory)
+
     def test_first_ingress_retirement_uses_only_closed_codes(self):
         self.value['native']['admission_failure'] = {'ingress_retirement': {
             'cause': 'guard-refusal', 'error': 'control-input', 'extra': self.secret}}

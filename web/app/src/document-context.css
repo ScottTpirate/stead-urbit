@@ -1,0 +1,11 @@
+.document-context { max-width: 800px; margin: 24px auto 0; padding-top: 20px; border-top: 1px solid var(--line); min-width: 0; }
+.document-context-heading { display: flex; align-items: center; justify-content: space-between; gap: 12px; }
+.document-context h3 { margin: 0; font-size: 16px; }
+.document-context-note { color: var(--muted); font-size: 13px; line-height: 1.5; margin: 12px 0 20px; }
+.document-context-group { margin-bottom: 16px; }
+.document-context h4 { color: var(--muted); font-size: 12px; font-weight: 600; margin: 12px 0 4px; }
+.document-context ul { padding: 0; margin: 0; list-style: none; }
+.document-context li { min-height: 44px; display: flex; align-items: center; flex-wrap: wrap; gap: 8px; border-bottom: 1px solid var(--line); padding: 4px 0; }
+.document-context li > .stead-button { flex: 1 1 200px; min-width: 0; justify-content: flex-start; text-align: start; overflow-wrap: anywhere; padding-inline: 0; }
+.document-context > div > .stead-outcome { margin-block: 16px; }
+@media (max-width: 600px) { .document-context { margin-top: 20px; } .document-context li { padding-bottom: 8px; } }

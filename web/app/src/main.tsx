@@ -20,6 +20,7 @@ import './style.css';
 import { DocumentBody } from './DocumentBody';
 import {eventPresentation} from './eventPresentation';
 import {WorkspaceView} from './WorkspaceView';
+import {DocumentContext} from './DocumentContext';
 const client = new HomeClient();
 const blankQuery = (kind: ViewKind, project_id = '', container_id = '', resource_id = '', search = '', cursor = ''): Query =>
   ({ kind, project_id, container_id, resource_id, search, cursor });
@@ -135,6 +136,7 @@ function App() {
   const heading = useRef<HTMLHeadingElement>(null);
   const workEditorHeading = useRef<HTMLHeadingElement>(null);
   const documentEditorHeading = useRef<HTMLHeadingElement>(null);
+  const pendingDocumentFocus = useRef<{project: string; collection: string; document: string; session: string; hash: string} | null>(null);
   const workTitle = useRef<HTMLInputElement>(null);
   const workDescription = useRef<HTMLTextAreaElement>(null);
   const newWorkButton = useRef<HTMLButtonElement>(null);
@@ -153,6 +155,7 @@ function App() {
     repositoryGeneration.current++;
     displayedSnapshot.current = null;
     quickActionFocus.current = null;
+    pendingDocumentFocus.current = null;
     routedIdentity.current = undefined;
     setLoading(false);
     setProjects([]); setProject(null); setWorkspaceView(null); setWorkspaceSearch({draft:'',term:''}); setContainers([]); setContainer(null); setRows([]);
@@ -435,6 +438,23 @@ function App() {
     else if (form === 'work' && editWorkField === 'description') workDescription.current?.focus();
     else if (form === 'work' || work) workEditorHeading.current?.focus();
   }, [form, work?.resource_id, editWorkField, showRepository]);
+  useEffect(() => {
+    const requested = pendingDocumentFocus.current;
+    if (!requested) return;
+    if (requested.hash !== location.hash || requested.session !== identity?.session_audit_id) {
+      pendingDocumentFocus.current = null; return;
+    }
+    if (requested.project !== project?.project_id || requested.collection !== container?.container_id
+        || requested.document !== editor?.id || editor.dirty || !documentEditorHeading.current) return;
+    // Wait for the matching reader to commit. A frame queued by the async
+    // route loader can run before React has mounted its heading.
+    const frame = requestAnimationFrame(() => {
+      if (pendingDocumentFocus.current !== requested || location.hash !== requested.hash) return;
+      const target = documentEditorHeading.current;
+      if (target?.isConnected) { pendingDocumentFocus.current = null; target.focus(); }
+    });
+    return () => cancelAnimationFrame(frame);
+  }, [editor, project?.project_id, container?.container_id, identity?.session_audit_id]);
   useEffect(() => { if (discard || confirmation || currentVersion) feedbackHeading.current?.focus(); }, [discard, confirmation, currentVersion]);
   function closeDraft(target: 'document' | 'form') {
     if (target === 'document') { if(project?.project_id && container?.container_id)syncResourceAddress({kind:'collection',project:project.project_id,collection:container.container_id},true); setEditor(null); setLinkedPage(null); }
@@ -502,6 +522,7 @@ function App() {
     syncResourceAddress(projectId ? {kind:'work',project:projectId,item} : undefined,replace);
   }
   function enterWorkspace(view:'my-work'|'search'|null) {
+    pendingDocumentFocus.current=null;
     activeQuery.current++;repositoryGeneration.current++;pendingNavigation.current=null;displayedSnapshot.current=null;
     setProject(null);setWorkspaceView(view);setRepository(null);setShowRepository(false);clearCodeSelection();setLoading(false);
     setRows([]);setContainers([]);setContainer(null);setWork(null);setEditor(null);setLinkedPage(null);
@@ -556,7 +577,8 @@ function App() {
       if(address.revision&&address.revision!==page.resource_revision){setError('This exact page revision is not available through the current Home interface.');return;}
       enterProject(row,'documents');setContainers(boxes);setContainer(selected);
       setEditor({id:address.document,revision:page.resource_revision,head:page.container_head??'',text:page.markdown,dirty:false});
-      requestAnimationFrame(()=>documentEditorHeading.current?.focus());return;
+      pendingDocumentFocus.current={project:address.project,collection:address.collection,document:address.document,
+        session:routedIdentity.current ?? identity?.session_audit_id ?? '',hash:location.hash};return;
     }
     setError('This resource view is not supported by the current Home interface.');
   }
@@ -692,7 +714,8 @@ function App() {
       setLinkedPage({origin: workOrigin, collection, document});
       setEditor({id: document, revision: page.resource_revision, head: page.container_head ?? '', text: page.markdown, dirty: false});
       reloadScope();
-      requestAnimationFrame(() => documentEditorHeading.current?.focus());
+      pendingDocumentFocus.current={project:workOrigin.project,collection,document,
+        session:routedIdentity.current ?? identity?.session_audit_id ?? '',hash:location.hash};
     }, explainConnection);
   }
   function backToWorkFromDocument() {
@@ -770,6 +793,8 @@ function App() {
     setLinkedPage(null);
     syncResourceAddress({kind:'doc',project:project.project_id!,collection:container.container_id!,document:row.resource_id!});
     setEditor({ id: row.resource_id!, revision: page.resource_revision, head: page.container_head ?? '', text: page.markdown, dirty: false });
+    pendingDocumentFocus.current={project:project.project_id!,collection:container.container_id!,document:row.resource_id!,
+      session:routedIdentity.current ?? identity?.session_audit_id ?? '',hash:location.hash};
   }
   async function openWork(row: Row, trigger: HTMLElement) {
     if (busy || editor?.dirty || pending || form) { setError('Finish or discard the current draft first.'); return; }
@@ -1165,6 +1190,13 @@ function App() {
             editable={!!canEdit} locked={busy || !!pending || !!form} isNew={editor.revision === '0'} fullSource={!!editor.fullSource}
             onFullSource={fullSource => setEditor({...editor,fullSource})}
             onChange={text => setEditor({...editor,text,dirty:true})}/>
+          {editor.revision !== '0' && <DocumentContext
+            key={`${identity.session_audit_id}/${project.project_id}/${container.container_id}/${editor.id}`}
+            client={client} project={project.project_id!} collection={container.container_id!} document={editor.id}
+            sessionKey={identity.session_audit_id!}
+            viewRevision={`${project.authority_epoch}/${displayedSnapshot.current?.generation ?? ''}/${editor.revision}/${workContextRevision}`}
+            locked={workActionsLocked || !online || !updatesConnected} onOpenWork={openLinkedWork}
+            onError={failure => { if (failure instanceof HomeError && failure.code === 'denied_or_not_found') clearViews(); setError(explainConnection(failure)); }}/>}
           <div className="actions editor-actions"><Button variant="primary" disabled={!canEdit || !editor.dirty || busy || !!pending || !!form} onClick={() => void action(() => save(command(project.project_id!, editor.id, editor.revision, project.authority_epoch!, 'document.save', { container_id: container.container_id!, markdown: editor.text })))}>Save page</Button>{canEdit && !editor.dirty && editor.revision !== '0' && draftMode && <Button disabled={busy || !!pending || !!form} onClick={() => void action(async () => { setContainers(await collections(project.project_id!)); setForm('publish'); })}>Publish selected page</Button>}<Button disabled={busy || !!pending || !!form} onClick={() => requestClose('document')}>{editor.dirty ? 'Discard changes…' : 'Close'}</Button>{(editor.revision !== '0' || pageHeader || editor.fullSource) && <ActionMenu label="More page actions" disabled={busy || !!pending || !!form}>
             {(pageHeader || editor.fullSource) && <Button variant="quiet" disabled={busy || !!pending || !!form}
               onClick={() => setEditor({ ...editor, fullSource: !editor.fullSource })}>{editor.fullSource ? 'Hide metadata' : 'Show full Markdown'}</Button>}

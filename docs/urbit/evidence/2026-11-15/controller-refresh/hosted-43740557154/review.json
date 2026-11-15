@@ -1,0 +1,26 @@
+{
+  "candidate_blobs_verified": 104,
+  "captured_suite_transcripts": 8,
+  "cleanup_verified": true,
+  "completed_suites": 7,
+  "controller_blobs_verified": 376,
+  "controller_commit": "18673da1282d0b5c0060038d1215b684857d0cbd",
+  "controls": {
+    "control-changed-limits-report.json": "pass",
+    "control-guardian-death-report.json": "pass",
+    "control-missing-profile-report.json": "pass",
+    "control-parent-death-report.json": "pass",
+    "control-stale-lease-report.json": "pass",
+    "control-wrong-profile-report.json": "pass"
+  },
+  "diagnostic_limit": "Original closed projection does not identify the exact failed arm or compiler marker. Eighth suite is inferred from fixed inventory order.",
+  "protocol": "stead.hosted-qualification-review/1",
+  "qualifies_phase": false,
+  "report_sha256": "20e900b135e9b895b705fcda367e5524214200c125fdb486b5cb0fc55ea3c837",
+  "reported_checks_passed": 382,
+  "run_id": 43740557154,
+  "run_url": "https://github.com/ScottTpirate/stead-urbit/actions/runs/43740557154",
+  "source_commit": "01aa9e9d9bbd93857d5addc8c26b2dea1259e7ad",
+  "source_finding": "Workspace new-project fixture used id5/id6 with a three-digit-only helper, producing invalid UUID suffixes; source corrected separately, requires new qualification.",
+  "status": "failed-not-deployable"
+}
