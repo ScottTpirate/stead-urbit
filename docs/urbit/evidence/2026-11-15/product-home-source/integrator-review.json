@@ -1,0 +1,31 @@
+{
+  "classification": "independent-source-review-not-native-qualification",
+  "source_freeze_sha256": "7f5c333cc33a301bb301953176d68f5a80e89c83d53b8b996ce49cc840111a71",
+  "reviewer": "root integrator",
+  "status": "source-approved-held-for-native-qualification",
+  "packet_file_count": 21,
+  "native_dependency_count": 239,
+  "reviewed_boundaries": [
+    "Saved1-9 remain separate. Full saved10 retains all side fields and pristine migration or restore target until verified publication.",
+    "Activation/load requires actual Jael fake state, disposable runtime/custody, actual Home sender for activation, exact predecessor hash/configuration revision and no Code state.",
+    "Native watch paths bind actual sender/current binding/request/domain digest and bounded pending slots; cached results cannot bypass active-member checks.",
+    "Browser uses existing verified identity, session and CSRF boundaries; malformed call is caught by the existing outer HTTP mule.",
+    "Owner config is ordered through the product history; invalidating current configuration clears transient sessions/readers and cannot change the declared disposable profile.",
+    "Old Work writes and aggregate/search/update projections are withheld after activation; no Code/export/service/run support is inferred.",
+    "Eight new pure and six Gall arms retain failure/unsupported-version cases; two older future-version tests now reject11. Native tests remain unexecuted.",
+    "Real journey adapter requires owned native callbacks and exact source/fingerprint/restart evidence; ten host tests cover adapter shape only."
+  ],
+  "independent_transport_review_sha256": "3a1d066649611e2fa09cee2c1ecfd1cd764aa0a3259871616f7a7dc4e38d792e",
+  "qualification": {
+    "native_compiled": false,
+    "actual_gall_execution": false,
+    "browser_executed": false,
+    "live_pilot_activation": false,
+    "g3": false
+  },
+  "remaining": [
+    "Resolve exact-source product migration/fixture compiler failures with the bounded diagnostic.",
+    "Register and execute all current required arms plus real two-member native/HTTP/restart/partial-restore cases in a reviewed controller.",
+    "Run connected desktop/narrow keyboard browser journey on the disposable no-Code Home."
+  ]
+}

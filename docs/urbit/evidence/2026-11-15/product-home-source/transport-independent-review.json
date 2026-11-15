@@ -1,0 +1,38 @@
+{
+  "format": "stead.independent-source-review/1",
+  "classification": "reserved-native-human-doc-transport-lifecycle-source-only",
+  "status": "approved-source-awaiting-native-execution",
+  "reviewer": "release-peer",
+  "reviewed_at": "2026-11-15T21:40:42.180530+00:00",
+  "files": {
+    "native/core/desk/tests/stead-home-v10-rehearsal.hoon": "563ff4c04db753cb05af3d3a74ab098aaca58e19843729dc2ea04640266b598b",
+    "native/core/desk/ted/stead-product-check.hoon": "21c4f7600aed8841f0bf2e8afeed8d651b9bb245825900357ca22c1f384a7256",
+    "native/core/desk/gen/stead-product-predecessor.hoon": "286e54cd04ecb96354a1fe203abb5e4a61758cca6d2ba774e817d14c44eebe21",
+    "scripts/urbit/product_conn.py": "3a73ac3ab29f130f7f0d70256be48c01c4063c09029956cae6b7f100b147b9bb",
+    "scripts/urbit/product_home_check.py": "7672926e310823e63c12bef8195e36b7fcf40302f5a75a94f7714139f300cfc6",
+    "tests/urbit/test_product_conn.py": "7f4a53f6063d73dbbcc73f70c0670453f0dd6668eef568b5802a2104c1bae0b5"
+  },
+  "native_test_arms": 6,
+  "host_tests": {
+    "passed": 10,
+    "duration_seconds": 0.001,
+    "native_calls_executed": false
+  },
+  "observations": [
+    "Gall fixtures exercise real app arms with synthetic bowls; positive owner receipt watch proves publication beyond wake quiescence.",
+    "Immediate and intermediate saves retain original target; cold reload equality remains a mandatory actual runner callback.",
+    "Disposable native thread has bounded input, timer, result bytes and terminal errors; no wire actor or bootstrap authority is supplied.",
+    "Owner activation generator reads exact saved predecessor and binds configuration revision plus canonical predecessor hash.",
+    "Host adapter admits only closed modes and fake-ship target names; exact protocol, request, binding revision and payload bytes determine result path.",
+    "Successful read evidence now requires exact response protocol, request, resource scope, epoch, generation, cursor and bounded row keys; owner receipt requires exact protocol, operation, CAS and command digest.",
+    "Real scenario includes independent review, stale output and current revocation denials; exact accepted Markdown, Done basis, cached receipts and complete saved fingerprints across owned restart."
+  ],
+  "resolved_findings": [
+    "Strengthened successful read and owner receipt correlation after initial review."
+  ],
+  "limitations": [
+    "No Hoon compilation, real Gall transport or cold restart executed for this packet.",
+    "Mandatory supervised runner callbacks remain separate integration work; fake callbacks cannot qualify.",
+    "Fresh no-Code disposable profile only; existing live pilot and current native controllers unchanged."
+  ]
+}
