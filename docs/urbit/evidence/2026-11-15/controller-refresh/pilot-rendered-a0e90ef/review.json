@@ -1,0 +1,54 @@
+{
+  "agent_g3_qualified": false,
+  "authority_services_healthy": 8,
+  "business_writes": false,
+  "check_script_sha256": "df602b6aa0170ca059d78db81356ef9f1ecc6a1c54d413eb66227a69973bf131",
+  "checks": 14,
+  "classification": "actual-live-visual-release-independent-review",
+  "duration_seconds": 112.7,
+  "human_trial_qualified": false,
+  "native_run": 43764597951,
+  "observations": [
+    "Workspace My work/Search labels fit the 320px screen; New project plus renders as the bundled vector.",
+    "Saved Doc Read has no Save or primary Publish; actual More menu keyboard access passed four times without publishing.",
+    "All three projects, both Work details and all three Docs match actual authorized readbacks; workspace Search and Code retain exact snapshot/README and focus behavior."
+  ],
+  "owned_resources_cleaned": true,
+  "owner_report_sha256": "2f4165be933628d82af23751526926692a84f97c18dc0baa05b6672f3b3334e0",
+  "owner_script_sha256": "8aab860b8b7ec13ff7bdf8da888dc578e97b83b94a46bf88e27ecb4ebd95b9c2",
+  "release_manifest_sha256": "ba50c8a27ae1ac74977948f751f30710c880a555322799da1922f2c20ddcb567",
+  "report_sha256": "35341e85a501343c9525bf2a4438bcfe50d8e0a19591a2bce101437667be85a3",
+  "reviewed_at": "2026-11-15T22:25:36.632115+00:00",
+  "screenshot_hashes": {
+    "code-folder-desktop": "f2647fa16087ebc878406978b85477e56f1cf0813d98b54fe22ab53c3c9f5e11",
+    "code-root-desktop": "923f2840510e34ee0de2c0325ce21974c1bbd78ea8c5dda0a88435745a57cc67",
+    "code-root-narrow": "d5ad8efd4757b625b5f7e765bb7b6675f422eefa5822ad063cd4760ce020c9e5",
+    "code-text-desktop": "d8afbf74cd570c32e4d089fec8b3203a9ee88385ef1f4c9d636fb0ea66b190d1",
+    "code-text-narrow": "cbbbb356f6ab1058b3e6dae9989997fa827671c297e21f263fa83c415642c059",
+    "document-0-0": "483c2dc1db98e798772bdfcc5f609a6ab7efe5ef5a75e503909b4f568a0f11f3",
+    "document-1-0": "0fd72e14b978d4a5f7375e55e9053c48366d7b259e8a6ea161fb66c48bf7d5a3",
+    "document-narrow": "007d44a3c7cad7d3d87931c41c15597f49a0cb653cd4863dc001d69322149fb3",
+    "my-work-desktop": "948eb5f87d56f7ca4cd367e6d44698da9327b298fc23ddadcda1d129d6647b46",
+    "search-narrow": "3bbb70810ef3b86bc878210a2f37b4c90d16bbfc9ac1e29e2d0b87265b9f4b7e",
+    "search-return-narrow": "84d4e4650ead4b31d893062c70f428a3a603ed812400757f4d3b0a9c3d071662",
+    "work-0": "cfd0217fe343df0331a776da1159c502c140f93c98784e614149c67b455b861d",
+    "work-1": "b0e9c87f6a90735d853f850030d0ac1c498408db1c359cd6995ea50216f3bcb3",
+    "work-narrow": "0a938b87f403ffc01ca12193e6089bcf646b8254d5f419cf4a3344539532da0f",
+    "workspace-navigation-narrow": "e5ec1dc8343ffe0e2773dc2f7074f1d6079822d130c94ab137ddf2039f9953c6"
+  },
+  "screenshots_visually_inspected": [
+    "workspace-navigation-narrow",
+    "document-narrow",
+    "document-0-0",
+    "code-text-narrow"
+  ],
+  "session_logout_confirmed": true,
+  "source": "a0e90ef29389077d453ec2a775cd8fd69f711727",
+  "status": "pass",
+  "visual": {
+    "plusSvgChecks": 4,
+    "publishMenuChecks": 4,
+    "savedReadChecks": 4,
+    "workspaceNarrowChecks": 2
+  }
+}

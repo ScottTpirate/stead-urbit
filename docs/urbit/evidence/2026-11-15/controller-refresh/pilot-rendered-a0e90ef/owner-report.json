@@ -1,0 +1,40 @@
+{
+  "admission": {
+    "affinity": [
+      1
+    ],
+    "cpu_max": "2500 10000",
+    "group": "/system.slice/stead-pilot-browser-review-e0sf2n9r.service",
+    "memory_max": "1572864000",
+    "network_allowlist_verified": true,
+    "pid": 91953,
+    "pids_max": "128",
+    "private_paths_denied": true
+  },
+  "authority_healthy_after": true,
+  "authority_services": 8,
+  "browser_cleanup": true,
+  "browser_exit": 0,
+  "credential_sent": true,
+  "duration_seconds": 112.7,
+  "output": "/var/lib/stead-pilot-browser/review-e0sf2n9r/output",
+  "profile_removed": true,
+  "protocol": "stead.remote-browser-owner/1",
+  "rendered_status": "pass",
+  "renderer_observation": {
+    "all_status_uids_match": true,
+    "exact_executable": true,
+    "exact_owned_cgroup": true,
+    "no_new_privileges": "1",
+    "no_sandbox_flag": false,
+    "pid_namespace_depth": 3,
+    "seccomp": "2"
+  },
+  "sandbox_renderer_verified": true,
+  "session_cleanup": true,
+  "session_cleanup_status": "no-retained-session",
+  "source": "a0e90ef29389077d453ec2a775cd8fd69f711727",
+  "status": "pass",
+  "uid_fence_removed": true,
+  "unit": "stead-pilot-browser-review-e0sf2n9r.service"
+}

@@ -1,0 +1,113 @@
+{
+  "active": {
+    "deployed_archives_sha256": {
+      "home": "baa226f22bc1950981628486539fa1f087d2e6544c12a18c1d15e144b082e7da",
+      "identity": "534d9440572d8055d32fa98a7ad608ac933f038308995cf63be5f44b427cb353"
+    },
+    "home_edge_port": 19443,
+    "ingress": "ssh-loopback-only",
+    "native_qualification_run": 43764597951,
+    "native_tls_port": {
+      "home": 18443,
+      "identity": 18444
+    },
+    "origin": {
+      "home": "https://stead.kilgore.science",
+      "identity": "https://stead-id.kilgore.science"
+    },
+    "pre_named_checkpoint": "/var/backups/stead-pilot-origins.Fd3NaTB2",
+    "pre_release_checkpoint": "/var/backups/stead-pilot-product-a0e90ef.pvY8wWZT",
+    "private_tls_directory": "/var/lib/stead-private-domains",
+    "protocol": "stead.private-pilot-active/1",
+    "released_at": "2026-11-15T22:20:42.379118+00:00",
+    "released_candidate": "/var/lib/stead-pilot/candidate-product-a0e90ef",
+    "source_commit": "a0e90ef29389077d453ec2a775cd8fd69f711727"
+  },
+  "candidate_checks": {
+    "my_work_rows": 0,
+    "permission_filtered_union": "pass",
+    "work_contracts": 2,
+    "workspace_rows": 5
+  },
+  "checkpoint": "/var/backups/stead-pilot-product-a0e90ef.pvY8wWZT",
+  "checkpoint_manifest_sha256": "765935d74e3891a8ccb3a439ddd8832bfc8576366d63912cc0b0f472064ef9f2",
+  "content": {
+    "git": {
+      "commit": "3ba8e4304e8d73d948905acdb2f1e1cfb1dff5af",
+      "count": 22,
+      "snapshot": "2d0565c884124cdbf5eacccc3626cf3cc72d5c0fda1fb295e70a6ce90fe782ca"
+    },
+    "projects": {
+      "01a1da8f-f2fc-7a73-b4a7-007b6646265b": {
+        "digest": "a82498e1ea37608ac38ac4df8a961397c82d97841219be46e1eabbea321c7688",
+        "pages": 2,
+        "relationships": 0,
+        "role": "maintainer",
+        "work": 1
+      },
+      "01a1da91-db75-7250-8286-2241ff268e59": {
+        "digest": "0cfd06b1b4a7d1eafa003eecff169b12754967a9b4b4c64d33e488986470e04d",
+        "pages": 1,
+        "relationships": 0,
+        "role": "maintainer",
+        "work": 1
+      },
+      "01a1dab7-a64f-7f40-944f-28f95c3c447d": {
+        "digest": "210e130878aabaf46f1fe72749a263f9eb71c6a262b80f13882ed08d472c0ecd",
+        "pages": 0,
+        "relationships": 0,
+        "role": "maintainer",
+        "work": 0
+      }
+    }
+  },
+  "excluded_tools_unchanged": true,
+  "locks_released": true,
+  "maintenance_absent": true,
+  "phase": "private-ingress-reopened",
+  "protocol": "stead.private-rollout-readback/1",
+  "public_capabilities": {
+    "profile": "configured-team",
+    "protocol": "stead.capabilities/3",
+    "work_contract": "stead.work-contract/1",
+    "workspace_queries": "stead.workspace-queries/1"
+  },
+  "release_manifest_sha256": "ba50c8a27ae1ac74977948f751f30710c880a555322799da1922f2c20ddcb567",
+  "routes_sha256": "f77d88124567402bdc5cc94a745c7c023f716f505ce78b784d0dfc915b6ede12",
+  "services": {
+    "stead-pilot-hapnev-sabweb.service": {
+      "ActiveState": "active",
+      "MainPID": "91481"
+    },
+    "stead-pilot-tagdep-salled.service": {
+      "ActiveState": "active",
+      "MainPID": "91511"
+    },
+    "stead-pilot-v9-git-edge.service": {
+      "ActiveState": "active",
+      "MainPID": "91670"
+    },
+    "stead-pilot-v9-git-lease.service": {
+      "ActiveState": "active",
+      "MainPID": "91668"
+    },
+    "stead-pilot-v9-git-projection.service": {
+      "ActiveState": "active",
+      "MainPID": "91597"
+    },
+    "stead-pilot-v9-git-reconcile.service": {
+      "ActiveState": "active",
+      "MainPID": "91669"
+    },
+    "stead-pilot-v9-git-relay.service": {
+      "ActiveState": "active",
+      "MainPID": "91599"
+    },
+    "stead-pilot-v9-git-worker.service": {
+      "ActiveState": "active",
+      "MainPID": "91598"
+    }
+  },
+  "status": "pass",
+  "transfer_files_verified": 192
+}

@@ -851,9 +851,9 @@ packages:
   current_progress: Authenticated pilot tree and README reads succeeded; stale selection and sign-out denial verified
     in product-tree/receipt.json. Original defect not reproduced. The in-app browser could not resolve the private
     route; a separately owned Chromium browser reached both named pilot sites through the private tunnel. Authenticated
-    read-only browser verification at da42d22 now passes all ten content/navigation cases and both sign-outs, including
-    the 22-entry repository root and exact README at desktop and narrow widths. Three presentation fixes are separate
-    source-only work; no mutation, forge or human acceptance follows from this read-only check.
+    read-only browser verification at a0e90ef now passes all fourteen content/navigation/visual cases and both sign-outs, including
+    the 22-entry repository root and exact README at desktop and narrow widths. The three presentation corrections
+    are deployed and rendered-verified; no mutation, forge or human acceptance follows from this read-only check.
 - id: T20
   title: Unify Code capabilities and qualify standard Git writes
   phase: D

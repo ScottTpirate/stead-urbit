@@ -1,0 +1,29 @@
+{
+  "browser_review_sha256": "c912db750e5b99d1fa30fbb4d80143121c7b496af2ce23b6a89a08354105fead",
+  "native_checks": 1672,
+  "native_frames_independently_verified": true,
+  "native_positive_arms": 173,
+  "native_run": 43764597951,
+  "observations": [
+    "Desktop and 320px navigation and document controls remain readable.",
+    "Workspace labels fit; New project plus renders; clean saved Doc Read has Close and More without Save or primary Publish.",
+    "All fourteen actual browser checks and both sign-outs passed with no business commands; exact content readbacks and eight healthy services are retained."
+  ],
+  "protocol": "stead.pilot-integrator-review/1",
+  "readback_sha256": "636ec1a69f0730517d705e5ab5e6181d0e85304b2ffcd565d7dd1a6a69d01bdb",
+  "report_sha256": "35341e85a501343c9525bf2a4438bcfe50d8e0a19591a2bce101437667be85a3",
+  "screenshot_hashes_verified": 15,
+  "screenshots_visually_inspected": [
+    "workspace-navigation-narrow",
+    "document-narrow",
+    "document-0-0"
+  ],
+  "source": "a0e90ef29389077d453ec2a775cd8fd69f711727",
+  "status": "pass",
+  "unexecuted": [
+    "Human acceptance",
+    "Connected successor native-human-doc journey",
+    "Real worker/model dispatch",
+    "G3 and remaining package gates"
+  ]
+}
