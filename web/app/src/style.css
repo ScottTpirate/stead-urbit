@@ -141,7 +141,6 @@ h3 { font-size: 14px; font-weight: 620; }
 .stead-button--danger { color: var(--danger); background: var(--danger-surface); border-color: var(--line-strong); }
 .stead-button:hover:enabled { filter: brightness(.95); }
 .stead-button--quiet:hover:enabled { background: var(--rail); }
-.button-plus { margin-right: 4px; }
 .stead-surface { min-width: 0; padding: 24px; border: 1px solid var(--line); border-radius: 9px; background: var(--paper); }
 .code-review-panel { margin-top: 14px; overflow-wrap: anywhere; }
 .code-review-panel select { max-width: 100%; }
@@ -358,10 +357,14 @@ footer { display: flex; justify-content: space-between; gap: 12px; padding: 12px
   .account button { flex: none; }
   .member-label small { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
   .workspace { display: block; }
-  .sidebar { display: flex; align-items: center; gap: 6px; padding: 7px 12px; border-right: 0; border-bottom: 1px solid var(--line); }
+  .sidebar { display: grid; grid-template-columns: minmax(0, 1fr) auto; align-items: center; gap: 6px; padding: 7px 12px; border-right: 0; border-bottom: 1px solid var(--line); }
   .sidebar nav { display: flex; min-width: 0; overflow-x: auto; margin: 0; padding: 3px; }
   .sidebar nav button { flex: none; max-width: 100%; }
-  .sidebar > .stead-button { flex: none; }
+  .sidebar nav[aria-label="Workspace"] { grid-column: 1 / -1; }
+  .sidebar nav[aria-label="Workspace"] button { white-space: nowrap; }
+  .sidebar nav[aria-label="Projects"] { grid-column: 1; }
+  .sidebar > .stead-button { grid-column: 2; white-space: nowrap; }
+  .sidebar > .muted { grid-column: 1 / -1; margin: 4px 8px; }
   .content { padding: 16px 16px 24px; }
   .stead-surface { padding: 16px; }
   .work-detail .form-columns { grid-template-columns: minmax(0, 1fr); }
