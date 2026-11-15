@@ -44,8 +44,14 @@ class FailureProjectionTests(unittest.TestCase):
         raw = '\n'.join(f'/tests/stead-fixture/hoon:<[{n} 1].[{n} 2]>' for n in range(1, 19)).encode()
         result = failure.source_spans(raw, {path: b'x\n' * 18})
         self.assertEqual(len(result['locations']), 16)
-        self.assertEqual(result['locations'][-1]['start_line'], 16)
+        self.assertEqual(result['locations'][0]['start_line'], 3)
+        self.assertEqual(result['locations'][-1]['start_line'], 18)
         self.assertTrue(result['truncated'])
+        repeated = raw + b'\n/tests/stead-fixture/hoon:<[3 1].[3 2]>'
+        tail = failure.source_spans(repeated, {path: b'x\n' * 18})
+        self.assertEqual(len(tail['locations']), 16)
+        self.assertEqual(tail['locations'][0]['start_line'], 4)
+        self.assertEqual(tail['locations'][-1]['start_line'], 3)
 
     def test_last_unit_reports_only_registered_names_and_closed_verdicts(self):
         inventory = json.loads((ROOT / 'specs/urbit/phase2-pure-units.json').read_bytes())
