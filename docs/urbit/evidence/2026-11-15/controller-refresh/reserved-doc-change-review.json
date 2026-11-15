@@ -1,0 +1,33 @@
+{
+  "protocol": "stead.independent-source-review/1",
+  "status": "source_reviewed_native_unexecuted",
+  "scope": "reserved-doc-change-preparation-and-concrete-completion-proof",
+  "files": {
+    "native/core/desk/lib/stead-doc-change-state.hoon": "13b85959a076570d9c088ec72c682e4168fe14910de2c80170ee534062ff0d53",
+    "native/core/desk/lib/stead-doc-change.hoon": "1d734bdf2b3ad443a0779972235bb99d9abcca3b46363ef114369556e4cd2d80",
+    "native/core/desk/lib/stead-doc-change-proof.hoon": "4e7e94f3df6e89e4c7381d45343f7700c6961fcfb25a3c594c036e50c10d15be",
+    "native/core/desk/tests/stead-doc-change.hoon": "937f791a1e7eff08241b41ab1c2ca6cf1678344cf12d7bcb1c016946178d33ae"
+  },
+  "native_suite_arms": 14,
+  "native_executed": false,
+  "home_activation": false,
+  "reviewers": [
+    "integrator reviewing native implementation",
+    "native implementer reviewing independently authored proof resolver"
+  ],
+  "checks": [
+    "Closed decoded command and verified current native actor before cached receipt; immutable result output, selected scoped grant and original binding/session provenance.",
+    "Expired unchanged authority requires explicit adoption; revoked, replaced, disabled or unknown producer authority quarantines unaccepted output. Accepted Changes remain immutable.",
+    "Independent current human review and current accountable human acceptance recheck exact Work contract and current shared Doc target/base.",
+    "Acceptance stages one real canonical Doc save plus one typed record; two attempt/event slots and combined core/proposal object bounds are required. Integrator must append typed record atomically or discard whole result.",
+    "Completion requires exact current Doc bytes/revision, actual native receipt and the exact adjacent typed accept/native save pair with matching request/result/actor/time/review/adoption and typed retained attempt. A direct save plus a forged accepted head cannot satisfy proof.",
+    "Bounded admission verifies exact 73-byte project/grant UUID key, actual proposal byte sum and SHA keys, record/count/ID/authentication/uint limits.",
+    "Fourteen source arms exercise review/revision, exact retries, stale/base/private access, comment independence, expiry/adoption/revocation, current reviewer/acceptor, deterministic internal request vector, capacity rollback, missing run resolver, existing Doc update and real completion proof negatives."
+  ],
+  "limitations": [
+    "No native compilation or execution yet; source review and test definitions do not constitute a passing native gate.",
+    "No Home mark, HTTP route, saved-state successor or service principal is activated.",
+    "Compound history integration is a separate packet and must regenerate both acceptance events before exposing restored state.",
+    "Run admission defaults to unknown/denied; trusted positive run fixture is synthetic and does not prove a real agent run."
+  ]
+}
