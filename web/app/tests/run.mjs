@@ -7,7 +7,10 @@ const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 const output = path.resolve(root, '../../.runtime/web-app-tests/client.test.mjs');
 await mkdir(path.dirname(output), { recursive: true });
 await build({absWorkingDir: root, entryPoints: ['tests/client.test.ts'], outfile: output,
-  bundle: true, platform: 'node', format: 'esm', target: 'node24'});
+  bundle: true, platform: 'node', format: 'esm', target: 'node24',
+  // React's server renderer uses Node built-ins through CommonJS. This binding
+  // belongs only to the host test bundle; browser output has no require path.
+  banner: {js: "import { createRequire } from 'node:module'; const require = createRequire(import.meta.url);"}});
 const result = spawnSync(process.execPath, ['--test', '--test-concurrency=1', output,
   path.join(root, 'tests/build.test.mjs'), path.join(root, 'tests/onboarding-evidence.test.mjs'),
   path.join(root, 'tests/onboarding-lifetime.test.mjs'),

@@ -1,13 +1,14 @@
 import { useEffect, useLayoutEffect, useRef, useState, type KeyboardEvent } from 'react';
 import { createPortal } from 'react-dom';
 import type { Row } from './api';
+import { priorityLabel } from './productModel';
 import './work.css';
 
 export const workStatuses = new Map([
   ['backlog', 'Backlog'], ['todo', 'To do'], ['in_progress', 'In progress'],
   ['blocked', 'Blocked'], ['done', 'Done'], ['canceled', 'Canceled'],
 ]);
-const priorities = [['none', 'No priority'], ['low', 'Low'], ['medium', 'Medium'], ['high', 'High'], ['urgent', 'Urgent']];
+const priorities = ['none', 'low', 'medium', 'high', 'urgent'].map(value => [value, priorityLabel(value)]);
 export type WorkProperty = 'status' | 'priority' | 'assignee';
 export type WorkMenu = { row: Row; view: 'actions' | WorkProperty; x: number; y: number; trigger: HTMLElement };
 

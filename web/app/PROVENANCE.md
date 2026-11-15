@@ -36,3 +36,28 @@ The initial registry vulnerability audit reported zero known findings across
 of safety or native/browser test acceptance. Any lockfile update requires a new
 audit, notices and independent review. No browser test has yet been executed for
 this package.
+
+## Product Docs parser, November 15, 2026
+
+The Docs slice adds exact `markdown-it` 15.0.3 from the official npm registry
+(MIT, SHA-512 integrity pinned in package-lock.json). Its token parser supplies
+CommonMark and the documented tables/strikethrough subset. Stead renders only
+explicit React elements, with HTML/linkify/typographer disabled and maximum
+nesting20. Images become deliberate attachment links; rendering never loads
+remote images. ResourceLink rejects executable, credential-bearing and
+protocol-relative URLs and sets no-referrer/noopener/noreferrer.
+
+The locked additions are mdurl2.1.0 (MIT), entities8.1.0 (BSD-2-Clause),
+uc.micro3.0.0 (MIT), linkify-it6.1.0 (MIT), punycode.js2.3.1 (MIT), and
+argparse3.0.4 (PSF-2.0, CLI dependency). Actual installed license texts were
+inspected; all are included by the release notice builder, including the CLI
+license as a conservative package-distribution record. No lifecycle scripts ran.
+The registry audit at installation reported zero known vulnerabilities across
+20 installed packages; this is time-specific metadata, not a security proof.
+Source tests cover structured Markdown, literal hostile HTML, suppressed image
+loads, unsafe URL schemes and bounded dense/oversized content. Runtime/browser
+qualification remains separate and must name the exact candidate.
+
+Upstream references: [parser and license](https://github.com/markdown-it/markdown-it),
+[safety model](https://github.com/markdown-it/markdown-it/blob/master/docs/safety.md),
+[version15 changes](https://github.com/markdown-it/markdown-it/blob/master/CHANGELOG.md).

@@ -1,5 +1,5 @@
 import { newId } from './protocol';
-import { StrictMode, Suspense, lazy, useEffect, useRef, useState, type FormEvent, type ReactNode } from 'react';
+import { StrictMode, useEffect, useRef, useState, type FormEvent, type ReactNode } from 'react';
 import { createRoot } from 'react-dom/client';
 import { HomeClient, HomeError, UUID, command, type CodeReviewKey, type Command, type Fields, type HomeWatch, type Query, type Row, type UpdateScope, type ViewKind } from './api';
 import { Button, EmptyState, LoadingState, Surface, TextField } from './primitives';
@@ -13,9 +13,12 @@ import { WorkDevelopment, type CodeDevelopmentTarget } from './WorkDevelopment';
 import { WorkDiscussion } from './WorkDiscussion';
 import { WorkDelegations } from './WorkDelegations';
 import { WorkContext } from './WorkContext';
+import { decodeProductRoute, encodeProductRoute, NavigationMemory, type ProductRoute } from './productRoutes';
+import { newWorkDefaults, priorityLabel } from './productModel';
 import { UrbitSignIn } from './UrbitSignIn';
 import './style.css';
-const Markdown = lazy(() => import('./Markdown').then(module => ({ default: module.Markdown })));
+import { DocumentBody } from './DocumentBody';
+import {eventPresentation} from './eventPresentation';
 const client = new HomeClient();
 const blankQuery = (kind: ViewKind, project_id = '', container_id = '', resource_id = '', search = '', cursor = ''): Query =>
   ({ kind, project_id, container_id, resource_id, search, cursor });
@@ -57,14 +60,12 @@ const workShortcuts = new Map<string, WorkProperty>([['s', 'status'], ['a', 'ass
 type WorkRoster = { status: 'loading' | 'unavailable' } | { status: 'ready'; rows: Row[] };
 type WorkAddress = { project: string; item?: string };
 function decodeWorkAddress(hash: string): WorkAddress | null {
-  const parts = hash.split('/');
-  if (parts[0] !== '#work' || ![2, 3].includes(parts.length) || !UUID.test(parts[1] ?? '')
-    || (parts.length === 3 && !UUID.test(parts[2] ?? ''))) return null;
-  return {project: parts[1]!, item: parts[2]};
+  const route = decodeProductRoute(hash);
+  return route?.kind === 'work' ? {project: route.project, item: route.item} : null;
 }
 function workAddress(project: string, item?: string) {
   const url = new URL(location.pathname, location.origin);
-  url.hash = `work/${project}${item ? '/' + item : ''}`;
+  url.hash = encodeProductRoute({kind: 'work', project, item});
   return url;
 }
 function pageTitle(text: string) {
@@ -100,7 +101,6 @@ function App() {
   const [refreshNotice, setRefreshNotice] = useState<{text: string; sequence: number} | null>(null);
   const [editor, setEditor] = useState<{ id: string; revision: string; head: string; text: string; dirty: boolean; fullSource?: boolean } | null>(null);
   const pageHeader = editor?.text.match(PAGE_HEADER)?.[0] ?? '';
-  const hiddenHeader = editor?.fullSource ? '' : pageHeader;
   const [currentVersion, setCurrentVersion] = useState<{scope: string; row: Row} | null>(null);
   const [work, setWork] = useState<Row | null>(null);
   const [workContextRevision, setWorkContextRevision] = useState(0);
@@ -134,7 +134,9 @@ function App() {
   const workDescription = useRef<HTMLTextAreaElement>(null);
   const newWorkButton = useRef<HTMLButtonElement>(null);
   const routedIdentity = useRef<string | undefined>(undefined);
-  const lastWorkAddress = useRef(decodeWorkAddress(location.hash) ? location.hash : '');
+  const lastAddress = useRef(decodeProductRoute(location.hash) ? location.hash : '');
+  const navigationMemory = useRef(new NavigationMemory());
+  const pendingNavigation = useRef<{project:string;scroll:number;focus?:string}|null>(null);
   const workTrigger = useRef<HTMLElement | null>(null);
   const quickActionFocus = useRef<{trigger: HTMLElement; row: string; control: string} | null>(null);
   const feedbackHeading = useRef<HTMLHeadingElement>(null);
@@ -151,7 +153,7 @@ function App() {
     setProjects([]); setProject(null); setContainers([]); setContainer(null); setRows([]);
     setRepository(null); setShowRepository(false); clearCodeSelection();
     setWorkFiltersOpen(false); setWorkFilters(initialWorkFilters); setWorkRoster({status: 'loading'});
-    setCommentDrafts({});
+    setCommentDrafts({}); navigationMemory.current.clear(); pendingNavigation.current=null;
     setLinkedPage(null);
     setSearch(''); setSearchDraft(''); setCursor(''); setEditor(null); setWork(null); setWorkMenu(null); setForm(''); setFormDirty(false); setDiscard(null); setPending(null); setTargets([]); setTargetFilter(''); setConfirmation(null); setCurrentVersion(null); setNotice(''); setRefreshNotice(null);
   };
@@ -184,14 +186,14 @@ function App() {
     // consume/resume already validate identity in HomeClient.adopt().
     const person = admitted ?? Object.values((await client.query(blankQuery('identity'))).rows)[0];
     if (!person) throw new HomeError('invalid_response');
-    setIdentity(person);
+    setIdentity(person); navigationMemory.current.bind(person.session_audit_id ?? person.principal_id!);
     const list = await client.query(blankQuery('projects'));
     const allowed = Object.values(list.rows);
     setProjects(allowed);
     if (routedIdentity.current !== person.session_audit_id) {
       routedIdentity.current = person.session_audit_id;
-      const address = decodeWorkAddress(location.hash);
-      if (address) await restoreWorkAddress(address, allowed);
+      const address = decodeProductRoute(location.hash);
+      if (address) await restoreProductAddress(address, allowed);
     }
   }
   useEffect(() => {
@@ -408,6 +410,18 @@ function App() {
   }, [identity?.session_audit_id, project?.project_id, tab, container?.container_id, search, updatesRevision, workFiltersOpen]);
   useEffect(() => { if (project) heading.current?.focus(); }, [project?.project_id]);
   useEffect(() => {
+    const restore=pendingNavigation.current;
+    if(!restore||loading||tab!=='work'||project?.project_id!==restore.project
+      ||displayedSnapshot.current?.scope!==scopeKey(identity?.session_audit_id,blankQuery('work',restore.project)))return;
+    const frame=requestAnimationFrame(()=>{
+      if(pendingNavigation.current!==restore)return;
+      pendingNavigation.current=null;
+      if(restore.focus)document.querySelector<HTMLElement>(`[data-work-row="${CSS.escape(restore.focus)}"] .work-title`)?.focus({preventScroll:true});
+      window.scrollTo({top:restore.scroll});
+    });
+    return ()=>cancelAnimationFrame(frame);
+  },[loading,rows,tab,project?.project_id,identity?.session_audit_id]);
+  useEffect(() => {
     if (showRepository) return;
     if (form === 'work' && (!work || editWorkField === 'title')) workTitle.current?.focus();
     else if (form === 'work' && editWorkField === 'description') workDescription.current?.focus();
@@ -415,7 +429,7 @@ function App() {
   }, [form, work?.resource_id, editWorkField, showRepository]);
   useEffect(() => { if (discard || confirmation || currentVersion) feedbackHeading.current?.focus(); }, [discard, confirmation, currentVersion]);
   function closeDraft(target: 'document' | 'form') {
-    if (target === 'document') { setEditor(null); setLinkedPage(null); }
+    if (target === 'document') { if(project?.project_id && container?.container_id)syncResourceAddress({kind:'collection',project:project.project_id,collection:container.container_id},true); setEditor(null); setLinkedPage(null); }
     else {
       const keepDetail = form === 'work' && !!work;
       setForm(''); setEditWorkField(null); setFormDirty(false);
@@ -459,14 +473,53 @@ function App() {
   }
   async function openProject(row: Row) {
     if (busy || editor?.dirty || pending || form) { setError('Finish or discard the current draft before switching projects.'); return; }
-    syncWorkAddress();
+    syncResourceAddress({kind:'project',project:row.project_id!,view:'overview'});
     enterProject(row, 'project');
   }
+  function rememberNavigation() {
+    if (project?.project_id && tab === 'work') navigationMemory.current.set({kind:'work',project:project.project_id},
+      {filters:workFilters,scroll:window.scrollY,selection:work?.resource_id});
+  }
+  function syncResourceAddress(route?: ProductRoute, replace = false) {
+    rememberNavigation();
+    pendingNavigation.current=null;
+    const hash=route?encodeProductRoute(route):'';
+    if (!hash && !decodeProductRoute(location.hash)) return;
+    lastAddress.current=hash;
+    if(hash!==location.hash)history[replace?'replaceState':'pushState'](null,'',location.pathname+hash);
+  }
   function syncWorkAddress(projectId?: string, item?: string, replace = false) {
-    const hash = projectId ? workAddress(projectId, item).hash : '';
-    if (!hash && !decodeWorkAddress(location.hash)) return;
-    lastWorkAddress.current = hash;
-    if (hash !== location.hash) history[replace ? 'replaceState' : 'pushState'](null, '', location.pathname + hash);
+    syncResourceAddress(projectId ? {kind:'work',project:projectId,item} : undefined,replace);
+  }
+  async function restoreProductAddress(address: ProductRoute, allowed=projects) {
+    pendingNavigation.current=null;
+    if(address.kind==='work')return restoreWorkAddress({project:address.project,item:address.item},allowed);
+    if(address.kind==='workspace') { setError('This workspace view is not available on the current Home yet.');return; }
+    const requestedHash=location.hash;
+    const row=allowed.find(item=>item.project_id===address.project);
+    if(!row){setError('This link is unavailable or you do not have access.');return;}
+    if(address.kind==='project') {
+      const kind=({overview:'project',work:'work',docs:'documents',code:'project'} as const)[address.view];
+      enterProject(row,kind);
+      if(address.view==='code')setShowRepository(true);
+      return;
+    }
+    if(address.kind==='doc'||address.kind==='collection') {
+      const boxes=await collections(address.project);
+      const selected=boxes.find(box=>box.container_id===address.collection);
+      if(!selected){setError('This page is unavailable or you do not have access.');return;}
+      if(location.hash!==requestedHash)return;
+      if(address.kind==='collection'){enterProject(row,'documents');setContainers(boxes);setContainer(selected);return;}
+      const view=await client.query(blankQuery('document',address.project,address.collection,address.document));
+      const page=Object.values(view.rows).find(item=>item.resource_id===address.document && item.container_id===address.collection);
+      if(location.hash!==requestedHash)return;
+      if(typeof page?.markdown!=='string'||!page.resource_revision){setError('This page is unavailable or you do not have access.');return;}
+      if(address.revision&&address.revision!==page.resource_revision){setError('This exact page revision is not available through the current Home interface.');return;}
+      enterProject(row,'documents');setContainers(boxes);setContainer(selected);
+      setEditor({id:address.document,revision:page.resource_revision,head:page.container_head??'',text:page.markdown,dirty:false});
+      requestAnimationFrame(()=>documentEditorHeading.current?.focus());return;
+    }
+    setError('This resource view is not supported by the current Home interface.');
   }
   async function readWorkItem(projectId: string, itemId: string) {
     const view = await client.query(blankQuery('work', projectId, '', itemId));
@@ -491,6 +544,9 @@ function App() {
     if (location.hash !== requestedHash) return;
     if (project?.project_id !== row.project_id || tab !== 'work') enterProject(row, 'work');
     else { setShowRepository(false); clearCodeSelection(); }
+    const remembered=navigationMemory.current.get({kind:'work',project:address.project});
+    if(remembered){setWorkFilters(remembered.filters);setWorkFiltersOpen(!!(remembered.filters.title||remembered.filters.status||remembered.filters.assignee));
+      pendingNavigation.current={project:address.project,scroll:remembered.scroll,...(!address.item&&remembered.selection?{focus:remembered.selection}:{})};}
     const previousItem = work?.resource_id;
     if (!item && previousItem && UUID.test(previousItem)) requestAnimationFrame(() =>
       document.querySelector<HTMLElement>(`[data-work-row="${previousItem}"] .work-title`)?.focus());
@@ -501,17 +557,24 @@ function App() {
   useEffect(() => {
     if (!identity) return;
     function restore() {
-      const address = decodeWorkAddress(location.hash);
-      if (!address && !lastWorkAddress.current) return;
-      if (lastWorkAddress.current === location.hash) return;
+      const address = decodeProductRoute(location.hash);
+      if (!address && !lastAddress.current) return;
+      if (lastAddress.current === location.hash) return;
       if (actionBusy.current || editor?.dirty || pending || form) {
-        history.pushState(null, '', location.pathname + lastWorkAddress.current);
+        history.pushState(null, '', location.pathname + lastAddress.current);
         setError('Finish or discard the current draft before navigating.');
         return;
       }
-      lastWorkAddress.current = address ? location.hash : '';
-      if (address) void action(() => restoreWorkAddress(address), explainConnection);
-      else if (project && tab === 'work') enterProject(project, 'project');
+      rememberNavigation();
+      lastAddress.current = address ? location.hash : '';
+      if (address) void action(() => restoreProductAddress(address), explainConnection);
+      else {
+        activeQuery.current++;repositoryGeneration.current++;pendingNavigation.current=null;displayedSnapshot.current=null;
+        setProject(null);setRepository(null);setShowRepository(false);clearCodeSelection();setLoading(false);
+        setRows([]);setContainers([]);setContainer(null);setWork(null);setEditor(null);setLinkedPage(null);
+        setCurrentVersion(null);setConfirmation(null);setCursor('');setTab('project');
+        if(location.hash)setError('This link is unavailable. Choose a project to continue.');
+      }
     }
     window.addEventListener('popstate', restore);
     window.addEventListener('hashchange', restore);
@@ -526,7 +589,11 @@ function App() {
   }
   function selectProjectTab(kind: ViewKind) {
     if (busy || editor?.dirty || pending || form) { setError('Finish or discard the current draft first.'); return; }
-    syncWorkAddress(kind === 'work' ? project?.project_id : undefined);
+    if(project?.project_id) {
+      if(kind==='work')syncWorkAddress(project.project_id);
+      else if(kind==='project'||kind==='documents')syncResourceAddress({kind:'project',project:project.project_id,view:kind==='project'?'overview':'docs'});
+      else syncResourceAddress();
+    }
     setLinkedPage(null);
     activeQuery.current++; setShowRepository(false); clearCodeSelection(); setEditor(null); setWork(null); setCurrentVersion(null);
     setConfirmation(null); setForm(''); setTab(kind); setRows([]); setCursor(''); reloadScope();
@@ -583,8 +650,8 @@ function App() {
       }
       if (generation !== activeQuery.current) return;
       const page = Object.values(view.rows).find(row => row.resource_id === document && row.container_id === collection);
-      if (!page?.markdown || !page.resource_revision) { setError('This linked page is no longer available.'); return; }
-      syncWorkAddress(); setWork(null); setCurrentVersion(null); setConfirmation(null);
+      if (typeof page?.markdown !== 'string' || !page.resource_revision) { setError('This linked page is no longer available.'); return; }
+      syncResourceAddress({kind:'doc',project:workOrigin.project,collection,document}); setWork(null); setCurrentVersion(null); setConfirmation(null);
       setTab('documents'); setContainers(boxes); setContainer(selected); setRows([]); setCursor('');
       setLinkedPage({origin: workOrigin, collection, document});
       setEditor({id: document, revision: page.resource_revision, head: page.container_head ?? '', text: page.markdown, dirty: false});
@@ -615,9 +682,15 @@ function App() {
       setNotice('Comment posted.');
       if (refreshDetail && work) setWork({...work, resource_revision: receipt.resource_revision!});
     }
-    if (value.operation === 'document.save' && editor?.id === value.resource_id) setEditor({ ...editor, revision: receipt.resource_revision!, head: receipt.git_commit_oid ?? '', dirty: false });
+    if (value.operation === 'document.save' && editor?.id === value.resource_id) {
+      setEditor({ ...editor, revision: receipt.resource_revision!, head: receipt.git_commit_oid ?? '', dirty: false });
+      syncResourceAddress({kind:'doc',project:value.project_id,collection:value.payload.container_id!,document:value.resource_id},true);
+    }
     setForm(''); setEditWorkField(null); setFormDirty(false); setDiscard(null); if (!refreshDetail && !refreshContext) setWork(null); setConfirmation(null); setCurrentVersion(null);
-    if (value.operation === 'document.delete') { setEditor(null); setLinkedPage(null); }
+    if (value.operation === 'document.delete') {
+      syncResourceAddress({kind:'collection',project:value.project_id,collection:value.payload.container_id!},true);
+      setEditor(null); setLinkedPage(null);
+    }
     if (value.operation === 'work.delete' && work?.resource_id === value.resource_id) syncWorkAddress(value.project_id, undefined, true);
     if (refreshContext) {
       setWorkContextRevision(value => value + 1);
@@ -656,9 +729,10 @@ function App() {
     const view = await client.query(blankQuery('document', project.project_id, container.container_id, row.resource_id));
     if (generation !== activeQuery.current) return;
     const page = Object.values(view.rows)[0];
-    if (!page?.markdown || !page.resource_revision) throw new HomeError('invalid_response');
+    if (typeof page?.markdown !== 'string' || !page.resource_revision) throw new HomeError('invalid_response');
     setCurrentVersion(null);
     setLinkedPage(null);
+    syncResourceAddress({kind:'doc',project:project.project_id!,collection:container.container_id!,document:row.resource_id!});
     setEditor({ id: row.resource_id!, revision: page.resource_revision, head: page.container_head ?? '', text: page.markdown, dirty: false });
   }
   async function openWork(row: Row, trigger: HTMLElement) {
@@ -831,9 +905,10 @@ function App() {
     void action(() => save(next));
   }
   function resourceRow(row: Row, index: number) {
+    const event=row.kind==='activity'?eventPresentation(row,identity?.principal_id):null;
     const inWork = tab === 'work';
     const documentTitle = row.kind === 'document' ? row.title?.split('\n', 1)[0] : undefined;
-    const title = documentTitle?.replace(/^#{1,6} +/u, '') || row.title || row.summary || row.operation || row.resource_id;
+    const title = event?.summary || documentTitle?.replace(/^#{1,6} +/u, '') || row.title || row.summary || 'Untitled resource';
     const snippet = documentTitle && row.snippet?.startsWith(documentTitle)
       ? row.snippet.slice(documentTitle.length).trimStart()
       : row.snippet;
@@ -864,10 +939,11 @@ function App() {
       <div className="resource-summary">
         {!inWork && <span className="row-kind">{row.kind === 'document' ? 'Page' : row.kind ?? row.type ?? tab}</span>}
         <h2>{inWork ? <button className="work-title" data-work-control="title" disabled={locked} aria-expanded={work?.resource_id === row.resource_id} aria-controls="work-detail-panel" aria-keyshortcuts={canEdit ? 'S A P Shift+F10' : 'Shift+F10'} onClick={event => { const trigger = event.currentTarget; void action(() => openWork(row, trigger), explainConnection); }}>{title}</button> : title}</h2>
-        {row.description && <p>{row.description}</p>}
-        {snippet && snippet !== row.description && <p>{snippet}</p>}
+        {!inWork && row.description && <p>{row.description}</p>}
+        {!inWork && snippet && snippet !== row.description && <p>{snippet}</p>}
         {!inWork && row.status && <span className="muted">{row.status}</span>}
-        {row.kind === 'activity' && <p className="muted" data-event-request={row.request_id}>{row.principal_id === identity?.principal_id ? 'You' : `Member ${row.principal_id}`} · <AcceptedTime milliseconds={row.accepted_at_ms ?? ''}/></p>}
+        {event && <><p className="muted" data-event-request={row.request_id}><AcceptedTime milliseconds={event.acceptedAt}/></p>
+          <details><summary>Details</summary><dl>{event.details.map(detail=><div key={detail.label}><dt>{detail.label}</dt><dd>{detail.value}</dd></div>)}</dl></details></>}
       </div>
       {inWork && <div className="work-properties">
         {workProperty(row, 'status', title ?? 'work item')}
@@ -930,9 +1006,9 @@ function App() {
             {form === 'work' && <>
               <label>Description<textarea ref={workDescription} name="description" readOnly={!canEdit} defaultValue={work?.description ?? ''} maxLength={8192}/></label>
               <div className="form-columns">
-                <label>Type<select aria-label="Type" name="type" disabled={!canEdit} defaultValue={work?.type ?? 'task'}>{['deliverable','task','problem'].map(value => <option key={value} value={value}>{value[0]?.toUpperCase()}{value.slice(1)}</option>)}</select></label>
-                <label>Status<select aria-label="Status" name="status" disabled={!canEdit} defaultValue={work?.status ?? 'todo'}>{[...workStatuses].map(([value, label]) => <option key={value} value={value}>{label}</option>)}</select></label>
-                <label>Priority<select aria-label="Priority" name="priority" disabled={!canEdit} defaultValue={work?.priority ?? 'none'}>{['none','low','medium','high','urgent'].map(value => <option key={value} value={value}>{value === 'none' ? 'No priority' : value[0]?.toUpperCase() + value.slice(1)}</option>)}</select></label>
+                <label>Type<select aria-label="Type" name="type" disabled={!canEdit} defaultValue={work?.type ?? newWorkDefaults.type}>{['deliverable','task','problem'].map(value => <option key={value} value={value}>{value[0]?.toUpperCase()}{value.slice(1)}</option>)}</select></label>
+                <label>Status<select aria-label="Status" name="status" disabled={!canEdit} defaultValue={work?.status ?? newWorkDefaults.status}>{[...workStatuses].map(([value, label]) => <option key={value} value={value}>{label}</option>)}</select></label>
+                <label>Priority<select aria-label="Priority" name="priority" disabled={!canEdit} defaultValue={work?.priority ?? newWorkDefaults.priority}>{['none','low','medium','high','urgent'].map(value => <option key={value} value={value}>{priorityLabel(value)}</option>)}</select></label>
               </div>
               {!work && <><label>Assignee<select name="assignee" disabled={workRoster.status !== 'ready'}>
                 <option value="">Unassigned</option>{workRoster.status === 'ready' && workRoster.rows.map(row =>
@@ -993,10 +1069,10 @@ function App() {
           {discard && <Surface className="confirmation" role="alertdialog" aria-labelledby="discard-title" aria-describedby="discard-description"><h2 id="discard-title" ref={feedbackHeading} tabIndex={-1}>Discard unsaved changes?</h2><p id="discard-description">Your local edits will be removed. Your last saved version stays at home.</p><div className="actions"><Button variant="danger" disabled={busy || !!pending} onClick={() => closeDraft(discard)}>Discard changes</Button><Button disabled={busy} onClick={() => { setDiscard(null); discardTrigger.current?.focus(); }}>Keep editing</Button></div></Surface>}
           {!project && <div className="welcome"><p className="eyebrow">START WITH WHAT MATTERS</p><h1 ref={heading} tabIndex={-1}>A clear place for your work.</h1><p>Choose a project to see its work and knowledge.</p></div>}
           {project && <><div className="project-heading"><div><p className="eyebrow">Projects <span aria-hidden="true">/</span> {project.project_key}</p><h1 ref={heading} tabIndex={-1}>{project.title}</h1></div><span className="role-badge">{project.role}</span></div>
-          <nav className="tabs" aria-label="Project views">{([['project','Overview'],['work','Work'],['documents','Docs'],['relations','Links'],['activity','Activity'],['inbox','Inbox'],['search','Search']] as const).map(([kind,label]) => <Button disabled={busy} key={kind} variant={!showRepository && tab === kind ? 'primary' : 'quiet'} aria-current={!showRepository && tab === kind ? 'page' : undefined} onClick={() => selectProjectTab(kind)}>{label}</Button>)}
+          <nav className="tabs" aria-label="Project views">{([['project','Overview'],['work','Work'],['documents','Docs']] as const).map(([kind,label]) => <Button disabled={busy} key={kind} variant={!showRepository && tab === kind ? 'primary' : 'quiet'} aria-current={!showRepository && tab === kind ? 'page' : undefined} onClick={() => selectProjectTab(kind)}>{label}</Button>)}
           {(repository?.status === 'ready' || externalRepository) && <Button disabled={busy || !!editor?.dirty || !!pending || !!form}
             variant={showRepository ? 'primary' : 'quiet'} aria-current={showRepository ? 'page' : undefined}
-            onClick={() => { syncWorkAddress(); clearCodeSelection(); setShowRepository(true); }}>Code</Button>}</nav>
+            onClick={() => { syncResourceAddress({kind:'project',project:project.project_id!,view:'code'}); clearCodeSelection(); setShowRepository(true); }}>Code</Button>}</nav>
           {showRepository && repository?.status === 'ready' ? <CodeRepository key={`${identity.session_audit_id}/${project.project_id}/${project.authority_epoch}`}
             client={client} project={project.project_id!} writable={repository.write === 'yes'}
             manage={repository.manage === 'yes'} principal={identity.principal_id ?? ''}
@@ -1004,9 +1080,18 @@ function App() {
           showRepository && externalRepository ? <CodePack key={`${identity.session_audit_id}/${project.project_id}/${project.authority_epoch}`} client={client} project={project.project_id!}
             manage={repository?.manage === 'yes'} writable={repository?.write === 'yes'} principal={identity.principal_id ?? ''}
             initialProposal={selectedReview} onOpenWork={openLinkedWork} development={development}/> : <>
+          {tab === 'project' && <Surface className="project-overview"><h2>Move this project forward</h2>
+            <p>{project.summary || 'Define an outcome in Work, keep its context in Docs, and review the result together.'}</p>
+            <div className="actions"><Button variant="primary" disabled={workActionsLocked} onClick={() => selectProjectTab('work')}>Open work</Button>
+              <Button disabled={workActionsLocked} onClick={() => selectProjectTab('documents')}>Open docs</Button></div>
+            <details><summary>Project activity and relationships</summary><div className="actions">
+              <Button variant="quiet" disabled={workActionsLocked} onClick={() => selectProjectTab('activity')}>Activity</Button>
+              <Button variant="quiet" disabled={workActionsLocked} onClick={() => selectProjectTab('relations')}>Relationships</Button>
+              <Button variant="quiet" disabled={workActionsLocked} onClick={() => selectProjectTab('search')}>Search this project</Button>
+            </div></details></Surface>}
           {tab === 'project' && repository?.status === 'disabled' && repository.manage === 'yes'
             && <Button disabled={busy || !!pending || !!form} onClick={() => void action(() => loadRepository(project.project_id!, true))}>Enable Git repository</Button>}
-          <div className="toolbar"><div className="view-heading">{tab === 'work' && <h2>Work items</h2>}{tab === 'documents' && <label>Collection <select aria-label="Collection" disabled={busy} value={container?.container_id ?? ''} onChange={event => { const selected = containers.find(row => row.container_id === event.target.value) ?? null; if (busy || editor?.dirty || pending || form) { setError('Finish or discard the current draft first.'); return; } activeQuery.current++; setContainer(selected); setEditor(null); setWork(null); setCurrentVersion(null); setConfirmation(null); setForm(''); setRows([]); setCursor(''); reloadScope(); }}><option value="">Choose a collection</option>{containers.map(row => <option key={row.container_id} value={row.container_id}>{row.title} · {row.visibility === 'private' ? 'Private drafts' : 'Shared'}</option>)}</select></label>}{tab === 'search' && <form className="search" onSubmit={submitSearch}><TextField label="Search this project" value={searchDraft} onChange={event => setSearchDraft(event.target.value)} maxLength={128}/><Button type="submit" disabled={busy}>Search</Button></form>}</div><div className="actions">
+          <div className="toolbar"><div className="view-heading">{tab === 'work' && <h2>Work items</h2>}{tab === 'documents' && <label>Collection <select aria-label="Collection" disabled={busy} value={container?.container_id ?? ''} onChange={event => { const selected = containers.find(row => row.container_id === event.target.value) ?? null; if (busy || editor?.dirty || pending || form) { setError('Finish or discard the current draft first.'); return; } activeQuery.current++; syncResourceAddress(selected?.container_id ? {kind:'collection',project:project.project_id!,collection:selected.container_id} : {kind:'project',project:project.project_id!,view:'docs'}); setContainer(selected); setEditor(null); setWork(null); setCurrentVersion(null); setConfirmation(null); setForm(''); setRows([]); setCursor(''); reloadScope(); }}><option value="">Choose a collection</option>{containers.map(row => <option key={row.container_id} value={row.container_id}>{row.title} · {row.visibility === 'private' ? 'Private drafts' : 'Shared'}</option>)}</select></label>}{tab === 'search' && <form className="search" onSubmit={submitSearch}><TextField label="Search this project" value={searchDraft} onChange={event => setSearchDraft(event.target.value)} maxLength={128}/><Button type="submit" disabled={busy}>Search</Button></form>}</div><div className="actions">
           <Button variant="quiet" disabled={busy || loading} onClick={() => {
             reloadScope();
             if (tab === 'project') void loadRepository(project.project_id!);
@@ -1033,15 +1118,17 @@ function App() {
           </section>}
           {currentVersion && currentVersion.scope === comparisonScope && <Surface className="comparison"><h2 ref={feedbackHeading} tabIndex={-1}>Current saved revision {currentVersion.row.resource_revision}</h2><pre>{currentVersion.row.markdown ?? `${currentVersion.row.title}\n${currentVersion.row.description}`}</pre><p>{canEdit ? 'Your local text has not changed. Choose its base revision before saving again.' : 'This is the current revision saved at home.'}</p>{canEdit && <Button disabled={busy || !!pending} onClick={() => { if (currentVersion.scope !== comparisonScope) { setCurrentVersion(null); return; } if (editor) setEditor({...editor, revision: currentVersion.row.resource_revision!, head: currentVersion.row.container_head ?? '', dirty: true}); else if (work) setWork(currentVersion.row); setCurrentVersion(null); setNotice('Local edits kept. Review them, then explicitly save against the current revision.'); }}>Keep my edits using this revision</Button>}<Button onClick={() => setCurrentVersion(null)}>Close comparison</Button></Surface>}
           {confirmation && <Surface className="confirmation"><h2 ref={feedbackHeading} tabIndex={-1}>Delete {confirmation.label}?</h2><p>{confirmation.command.operation === 'relation.delete' ? 'This removes only the relationship. Both linked resources stay where they are.' : 'This removes it from current views. Authorized historical Git exports retain earlier page versions; this does not erase copies others already hold.'}</p><div className="actions"><Button disabled={busy || !!pending || !!form || !!editor?.dirty} onClick={() => void action(() => save(confirmation.command))}>Confirm deletion</Button><Button disabled={busy} onClick={() => setConfirmation(null)}>Keep it</Button></div></Surface>}
-          {editor && container ? <Surface className="document-editor">{linkedPageOrigin?.project === project.project_id && !editor.dirty && <Button variant="quiet" disabled={workActionsLocked} onClick={backToWorkFromDocument}>← Back to work item</Button>}<div className="editor-heading"><div><h2 ref={documentEditorHeading} tabIndex={-1}>{pageTitle(editor.text)}</h2><span className="page-visibility">{draftMode ? 'Private draft · only you' : 'Shared with project members'}</span></div><span>{editor.dirty ? 'Local changes · not saved' : `Saved revision ${editor.revision}`}</span></div><div className="editor-layout"><div className="editor-source"><label className="editor-label" htmlFor="markdown">Markdown source</label><textarea id="markdown" value={editor.text.slice(hiddenHeader.length)} readOnly={!canEdit || busy || !!pending || !!form}
-            onChange={event => setEditor({ ...editor, text: hiddenHeader + event.target.value, dirty: true })} spellCheck/>
+          {editor && container ? <Surface className="document-editor">{linkedPageOrigin?.project === project.project_id && !editor.dirty && <Button variant="quiet" disabled={workActionsLocked} onClick={backToWorkFromDocument}>← Back to work item</Button>}<div className="editor-heading"><div><h2 ref={documentEditorHeading} tabIndex={-1}>{pageTitle(editor.text)}</h2><span className="page-visibility">{draftMode ? 'Private draft · only you' : 'Shared with project members'}</span></div><span>{editor.dirty ? 'Local changes · not saved' : `Saved revision ${editor.revision}`}</span></div><DocumentBody key={`${identity.session_audit_id}/${container.container_id}/${editor.id}`} text={editor.text} header={pageHeader}
+            editable={!!canEdit} locked={busy || !!pending || !!form} isNew={editor.revision === '0'} fullSource={!!editor.fullSource}
+            onFullSource={fullSource => setEditor({...editor,fullSource})}
+            onChange={text => setEditor({...editor,text,dirty:true})}/>
           <div className="actions editor-actions"><Button variant="primary" disabled={!canEdit || !editor.dirty || busy || !!pending || !!form} onClick={() => void action(() => save(command(project.project_id!, editor.id, editor.revision, project.authority_epoch!, 'document.save', { container_id: container.container_id!, markdown: editor.text })))}>Save page</Button>{canEdit && !editor.dirty && editor.revision !== '0' && draftMode && <Button disabled={busy || !!pending || !!form} onClick={() => void action(async () => { setContainers(await collections(project.project_id!)); setForm('publish'); })}>Publish selected page</Button>}<Button disabled={busy || !!pending || !!form} onClick={() => requestClose('document')}>{editor.dirty ? 'Discard changes…' : 'Close'}</Button>{(editor.revision !== '0' || pageHeader || editor.fullSource) && <ActionMenu label="More page actions" disabled={busy || !!pending || !!form}>
             {(pageHeader || editor.fullSource) && <Button variant="quiet" disabled={busy || !!pending || !!form}
               onClick={() => setEditor({ ...editor, fullSource: !editor.fullSource })}>{editor.fullSource ? 'Hide metadata' : 'Show full Markdown'}</Button>}
             {editor.revision !== '0' && <Button variant="quiet" disabled={busy || !!pending || !!form} onClick={() => void action(loadCurrentVersion)}>Compare current saved revision</Button>}
-            {editor.revision !== '0' && canEdit && <Button variant="quiet" disabled={busy || !!pending || !!form || editor.dirty} onClick={() => setConfirmation({label: 'this page', command: command(project.project_id!, editor.id, editor.revision, project.authority_epoch!, 'document.delete', {container_id: container.container_id!, expected_head: editor.head})})}>Delete page</Button>}</ActionMenu>}</div></div><div className="editor-preview"><h3>Preview</h3><Suspense fallback={<p>Loading preview…</p>}><Markdown key={comparisonScope} text={editor.text}/></Suspense></div></div></Surface> : <>
-          <div className={workPanelOpen ? 'work-view with-detail' : 'work-view'}>
-            <div className="view-list">{visibleRows}</div>
+            {editor.revision !== '0' && canEdit && <Button variant="quiet" disabled={busy || !!pending || !!form || editor.dirty} onClick={() => setConfirmation({label: 'this page', command: command(project.project_id!, editor.id, editor.revision, project.authority_epoch!, 'document.delete', {container_id: container.container_id!, expected_head: editor.head})})}>Delete page</Button>}</ActionMenu>}</div></Surface> : <>
+          <div className={workPanelOpen ? `work-view with-detail${form === 'work' ? ' with-composer' : ''}` : 'work-view'}>
+            <div className="view-list">{tab !== 'project' && visibleRows}</div>
             {workPanelOpen && (form === 'work' ? formPanel : work && <Surface id="work-detail-panel" className="work-detail" aria-labelledby="work-detail-title">
               <div className="detail-heading"><span className="row-kind">Work item</span><Button variant="quiet" disabled={busy} onClick={() => closeDraft('form')}>Close</Button></div>
               <h2 id="work-detail-title" ref={workEditorHeading} tabIndex={-1}>{canEdit

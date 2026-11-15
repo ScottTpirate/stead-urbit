@@ -14,7 +14,7 @@ assert.equal(process.version, 'v24.21.0', 'Use the pinned frontend Node runtime'
 const output = path.resolve(root, '../../.runtime/web-render-tests');
 async function inputs() {
   const entries = await readdir(path.join(root, 'src'), {withFileTypes: true});
-  assert.ok(entries.length > 0 && entries.length <= 32 && entries.every(entry => entry.isFile()));
+  assert.ok(entries.length > 0 && entries.length <= 64 && entries.every(entry => entry.isFile()));
   const result = {};
   for (const name of ['tests/rendered.mjs', 'package-lock.json', ...entries.map(entry => 'src/' + entry.name)].sort()) {
     const raw = await readFile(path.join(root, name)); assert.ok(raw.length <= 1024 * 1024);
@@ -22,8 +22,9 @@ async function inputs() {
   }
   return result;
 }
-const requestedCase = process.argv[2] ?? '';
-assert.ok(!requestedCase || /^[a-z0-9-]{1,100}$/u.test(requestedCase), 'Bounded case name');
+const requestedCases = process.argv.slice(2);
+assert.ok(requestedCases.length <= 40 && new Set(requestedCases).size === requestedCases.length
+  && requestedCases.every(name => /^[a-z0-9-]{1,100}$/u.test(name)), 'At most forty unique bounded case names');
 const inputsBefore = await inputs();
 await mkdir(output, {recursive: true});
 await build({absWorkingDir: root, entryPoints: ['src/main.tsx'], outfile: path.join(output, 'app.js'),
@@ -38,7 +39,9 @@ const server = createServer(async (request, response) => {
 await new Promise(resolve => server.listen(0, '127.0.0.1', resolve));
 const origin = `http://127.0.0.1:${server.address().port}`;
 const browser = await firefox.launch({headless: true});
-const report = {classification: 'real-browser-with-mocked-home', node: process.version, browser: browser.version(), checks: [], qualifies_phase: false, requested_case: requestedCase, inputs_before: inputsBefore};
+const report = {classification: 'real-browser-with-mocked-home', node: process.version, browser: browser.version(), checks: [], qualifies_phase: false,
+  requested_case: requestedCases.length === 1 ? requestedCases[0] : '', requested_cases: requestedCases,
+  execution_scope: requestedCases.length ? 'selected-cases' : 'all-declared-cases', inputs_before: inputsBefore};
 const id = number => '019939ba-4000-7000-8000-' + String(number).padStart(12, '0');
 const person = {principal_id: id(102), binding_id: id(202), binding_revision: '1', identity_ship: '~bus',
   session_audit_id: 'a'.repeat(64), organization_id: id(5), team_id: id(6), display_name: 'Synthetic Alice', can_create: 'yes'};
@@ -342,7 +345,7 @@ async function fixture(run, mockRepository = false) {
   } finally { state.releaseWork?.(); state.releaseOpen?.(); await context.close(); }
 }
 async function check(name, run) {
-  if (requestedCase && name !== requestedCase) return;
+  if (requestedCases.length && !requestedCases.includes(name)) return;
   await fixture(run, name.startsWith('code-')); report.checks.push({name, passed: true});
   console.log('PASS ' + name);
 }
@@ -935,13 +938,17 @@ try {
     const editor = page.getByRole('textbox', {name: 'Markdown source', exact: true});
     const preview = page.getByRole('article', {name: 'Document content', exact: true});
     await preview.locator('pre').waitFor();
-    assert.equal(await editor.inputValue(), body);
+    assert.equal(await editor.count(), 0, 'Docs opens in Read mode');
     assert.equal(await preview.textContent(), body);
     assert.ok(await preview.locator('*').count() < 1024);
     assert.equal(await preview.locator('script,img,iframe,object,embed').count(), 0);
     assert.equal(await page.evaluate(() => window.steadPreviewExecuted), undefined);
+    await page.getByRole('button', {name:'Edit',exact:true}).click();
+    assert.equal(await editor.inputValue(),body);
     await editor.fill(body + ' edited');
+    await page.getByRole('button', {name:'Preview',exact:true}).click();
     await page.waitForFunction(() => document.querySelector('article.markdown')?.textContent.endsWith(' edited'));
+    await page.getByRole('button', {name:'Edit',exact:true}).click();
     assert.equal(await editor.inputValue(), body + ' edited');
     assert.equal(state.commands.length, 0, 'rendering does not save or normalize the draft');
     await page.getByRole('button', {name: 'Discard changes…', exact: true}).click();
@@ -953,7 +960,8 @@ try {
     assert.equal((await preview.textContent()).includes('steadPreviewExecuted'), false);
   });
   await check('typing-search-keeps-current-watch-until-explicit-submit', async (page, state) => {
-    await page.getByRole('navigation', {name: 'Project views'}).getByRole('button', {name: 'Search', exact: true}).click();
+    await page.getByText('Project activity and relationships', {exact: true}).click();
+    await page.getByRole('button', {name: 'Search this project', exact: true}).click();
     await page.getByRole('button', {name: 'Refresh', exact: true}).waitFor({state: 'visible'});
     await page.waitForFunction(() => document.querySelector('#project-content')?.dataset.liveUpdates === 'connected'
       && ![...document.querySelectorAll('button')].find(button => button.textContent === 'Refresh')?.disabled);
@@ -998,18 +1006,18 @@ try {
     const deadline = Date.now() + 10000;
     while (!state.releaseOpen && Date.now() < deadline) await page.waitForTimeout(20);
     assert.ok(state.releaseOpen, 'first open reached the controlled response hold');
-    for (const label of ['Docs', 'Activity', 'Inbox', 'Work', 'Search']) {
+    for (const label of ['Docs', 'Overview', 'Work', 'Docs', 'Work']) {
       await page.getByRole('navigation', {name: 'Project views'}).getByRole('button', {name: label, exact: true}).click();
     }
     assert.equal(state.opens, opens + 1, 'new scopes wait for ownership of the outstanding open');
     const snapshot = page.waitForResponse(response => response.url().endsWith('/stead/api/query')
-      && response.request().postDataJSON()?.kind === 'search');
+      && response.request().postDataJSON()?.kind === 'work');
     state.releaseOpen(); state.releaseOpen = null;
     await (await snapshot).finished();
     await page.locator('#project-content[data-live-updates="connected"]').waitFor();
     assert.equal(state.opens, opens + 2);
     assert.equal(state.watches.size, 1);
-    assert.deepEqual(state.requests.slice(start).filter(row => row.path === '/stead/api/query').map(row => row.kind), ['project', 'search']);
+    assert.deepEqual(state.requests.slice(start).filter(row => row.path === '/stead/api/query').map(row => row.kind), ['project', 'work']);
   });
   await check('401-during-query-restores-usable-sign-in', async (page, state) => {
     state.failure = 'expired';
@@ -1064,15 +1072,21 @@ try {
     await page.screenshot({path: path.join(output, 'work.png'), fullPage: true});
   });
   await check('activity-keeps-distinct-events-for-one-resource', async (page, state, errors) => {
-    state.activity = [1, 2, 3].map(n => ({resource_id: id(50), request_id: id(900 + n), title: 'Event ' + n}));
+    state.activity = [1, 2, 3].map(n => ({kind:'activity',resource_id: id(50), request_id: id(900 + n), operation:'work.comment',principal_id:id(102),accepted_at_ms:'1000'}));
+    await page.getByText('Project activity and relationships', {exact: true}).click();
     await page.getByRole('button', {name: 'Activity', exact: true}).click();
-    await page.getByRole('heading', {name: 'Event 3', exact: true}).waitFor();
-    assert.equal(await page.getByRole('heading', {name: /^Event /u}).count(), 3);
-    state.activity = [4, 5].map(n => ({resource_id: id(50), request_id: id(900 + n), title: 'Event ' + n}));
+    await page.locator('[data-event-request="'+id(903)+'"]').waitFor();
+    assert.equal(await page.getByRole('heading', {name: /commented on work$/u}).count(), 3);
+    state.activity = [4, 5].map(n => ({kind:'activity',resource_id: id(50), request_id: id(900 + n), operation:'work.update',principal_id:id(102),accepted_at_ms:'2000'}));
     await page.getByRole('button', {name: 'Refresh', exact: true}).click();
-    await page.getByRole('heading', {name: 'Event 5', exact: true}).waitFor();
-    assert.equal(await page.getByRole('heading', {name: /^Event /u}).count(), 2);
+    await page.locator('[data-event-request="'+id(905)+'"]').waitFor();
+    assert.equal(await page.getByRole('heading', {name: /updated work$/u}).count(), 2);
     assert.equal(errors.filter(error => /same key|unique.*key/iu.test(error)).length, 0);
+    await page.setViewportSize({width: 320, height: 900});
+    const event = page.locator('.resource-row').filter({has: page.locator('[data-event-request="'+id(905)+'"]')});
+    await event.getByText('Details', {exact: true}).click();
+    await event.getByText(id(905), {exact: true}).waitFor();
+    assert.equal(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth), true, 'Expanded accepted-event details fit the narrow viewport');
   });
   await check('page-two-survives-foreground-actions-and-repeated-paginated-refresh', async (page, state) => {
     state.work = Array.from({length: 22}, (_, n) => ({kind: 'work', resource_id: id(100 + n), title: `Page item ${n + 1}`, resource_revision: '1', description: 'Synthetic', type: 'task', status: 'todo', priority: 'none'}));
@@ -1087,6 +1101,8 @@ try {
     await page.getByRole('button', {name: 'Page item 21', exact: true}).click();
     await page.getByRole('button', {name: 'Edit work item', exact: true}).click();
     await page.getByRole('heading', {name: 'Edit work item', exact: true}).waitFor();
+    await page.getByRole('button', {name: 'Close', exact: true}).click();
+    await page.locator('#work-detail-panel').getByRole('heading', {name: 'Page item 21', exact: true}).waitFor();
     await page.getByRole('button', {name: 'Close', exact: true}).click();
     await page.waitForTimeout(2500);
     assert.equal(await page.getByRole('heading', {name: 'Page item 1', exact: true}).count(), 0);
@@ -1217,6 +1233,8 @@ try {
     assert.equal(await page.getByRole('alertdialog').count(), 0);
   });
   await check('work-title-opens-reader-details-without-write-actions', async (page, state) => {
+    // The desktop preview keeps the list available for its visible context menu.
+    await page.setViewportSize({width: 1440, height: 1000});
     state.project.role = 'reader';
     state.work = [{kind: 'work', resource_id: id(601), title: 'Read the full context', description: 'A longer explanation available to every project reader.', resource_revision: '3', status: 'in_progress', type: 'task', priority: 'high'}];
     await page.getByRole('button', {name: 'Work', exact: true}).click();
@@ -1262,6 +1280,7 @@ try {
     await page.locator('#work-detail-panel').getByRole('heading', {name: title, exact: true}).waitFor();
     await page.getByRole('button', {name: 'Edit work item', exact: true}).click();
     await page.getByRole('button', {name: 'Close', exact: true}).click();
+    await page.locator('#work-detail-panel').getByRole('button', {name: 'Close', exact: true}).click();
     await page.waitForFunction(() => document.activeElement?.textContent === 'Make the next step clear');
     assert.equal(await page.getByRole('alertdialog').count(), 0);
     const menu = page.getByRole('button', {name: 'Actions for Make the next step clear'});
@@ -1371,7 +1390,7 @@ try {
     await panel.getByRole('heading', {name: late.title, exact: true}).waitFor();
     await page.setViewportSize({width: 320, height: 780});
     assert.equal(await panel.locator('.work-metadata').evaluate(node => getComputedStyle(node).display), 'grid');
-    assert.equal(await panel.locator('.work-metadata').evaluate(node => getComputedStyle(node).gridTemplateColumns.split(' ').length), 2);
+    assert.equal(await panel.locator('.work-metadata').evaluate(node => getComputedStyle(node).gridTemplateColumns.split(' ').length), 1, 'Small-screen properties use one readable column');
     assert.ok(await panel.locator('.work-property-label').evaluateAll(labels => labels.every(label => label.scrollWidth <= label.clientWidth)));
     await page.screenshot({path:path.join(output, 'work-item-320.png')});
     await panel.getByRole('button', {name: late.title, exact: true}).click();
@@ -1441,6 +1460,7 @@ try {
       source_container_id: box, source_id: doc, target_project_id: project, target_kind: 'work', target_container_id: '', target_id: ticket.resource_id});
     await context.getByRole('button', {name: 'Release guide', exact: true}).click();
     await page.locator('.document-editor').getByRole('heading', {name: 'Release guide', exact: true, level: 2}).waitFor();
+    await page.getByRole('button', {name:'Source',exact:true}).click();
     assert.match(await page.getByRole('textbox', {name: 'Markdown source'}).inputValue(), /Acceptance steps here\./u);
     await page.getByRole('button', {name: /Back to work item/u}).click();
     await page.locator('#work-detail-panel').getByRole('heading', {name: ticket.title, exact: true}).waitFor();
@@ -1534,8 +1554,8 @@ try {
     await page.getByRole('button', {name: 'Enable Git repository', exact: true}).click();
     await page.getByRole('button', {name: 'Work', exact: true}).click();
     await page.locator('.work-row').getByRole('button', {name: 'Update the readme examples', exact: true}).click();
-    const agent = page.getByRole('region', {name: 'Agent delegation'});
-    await agent.getByRole('button', {name: 'Delegate to an agent'}).click();
+    const agent = page.getByRole('region', {name: 'Agent proposal access'});
+    await agent.getByRole('button', {name: 'Grant agent proposal access'}).click();
     await agent.getByRole('textbox', {name: 'Agent Urbit ID'}).fill('nec');
     await agent.getByRole('button', {name: 'Grant proposal access'}).click();
     await agent.getByText('Proposal access granted.', {exact: true}).waitFor();
@@ -1571,10 +1591,14 @@ try {
     await page.locator('.editor-heading').getByRole('heading', {name: 'A useful page — 東京', exact: true}).waitFor();
     assert.equal(await page.locator('.page-visibility').textContent(), 'Private draft · only you');
     assert.equal(await page.getByRole('button', {name: 'Discard changes…', exact: true}).count(), 0);
+    assert.equal(await page.getByRole('textbox', {name: 'Markdown source', exact: true}).count(), 0);
+    assert.equal(await page.getByRole('button', {name:'Read',exact:true}).getAttribute('aria-pressed'),'true');
+    await page.getByRole('button', {name:'Edit',exact:true}).click();
     assert.equal(await page.getByRole('textbox', {name: 'Markdown source', exact: true}).inputValue(), body);
     await page.getByRole('button', {name: 'Close', exact: true}).click();
     assert.equal(await page.getByRole('alertdialog').count(), 0);
     await page.getByRole('button', {name: 'Open page', exact: true}).click();
+    await page.getByRole('button', {name:'Edit',exact:true}).click();
     await page.getByRole('textbox', {name: 'Markdown source', exact: true}).fill(body + 'Unsent local edit.');
     await page.getByRole('button', {name: 'Discard changes…', exact: true}).click();
     await page.getByRole('button', {name: 'Keep editing', exact: true}).click();
@@ -1587,6 +1611,9 @@ try {
     await page.getByRole('button', {name: 'Discard changes…', exact: true}).click();
     await page.getByRole('button', {name: 'Discard changes', exact: true}).click();
     await page.getByRole('button', {name: 'Open page', exact: true}).click();
+    assert.equal(await page.getByRole('textbox', {name: 'Markdown source', exact: true}).count(), 0);
+    assert.equal(await page.getByRole('button', {name:'Read',exact:true}).getAttribute('aria-pressed'),'true');
+    await page.getByRole('button', {name:'Edit',exact:true}).click();
     assert.equal(await page.getByRole('textbox', {name: 'Markdown source', exact: true}).inputValue(), body);
     assert.equal(state.commands.length, 0);
   });
@@ -1598,6 +1625,7 @@ try {
     await page.getByRole('button', {name: 'Docs', exact: true}).click();
     await page.getByLabel('Collection', {exact: true}).selectOption(id(200));
     await page.getByRole('button', {name: 'Open page', exact: true}).click();
+    await page.getByRole('button', {name:'Edit',exact:true}).click();
     const editor = page.getByRole('textbox', {name: 'Markdown source', exact: true});
     assert.equal(await editor.inputValue(), body);
     await editor.fill(body + '\nEdited body.\n');
@@ -1629,6 +1657,8 @@ try {
     assert.equal(await page.locator('.live').textContent(), 'Saved at home · revision 1');
   });
   assert.ok(report.checks.length > 0, 'At least one named browser case must execute');
+  if (requestedCases.length) assert.deepEqual(report.checks.map(check => check.name).sort(), [...requestedCases].sort(),
+    'Every requested case must execute exactly once');
   report.status = 'pass';
 } catch (error) {
   report.status = 'fail'; report.error = String(error); throw error;

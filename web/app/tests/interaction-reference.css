@@ -1,0 +1,34 @@
+.interaction-reference { max-width: 1440px; margin: 0 auto; padding: 24px; }
+.reference-heading { margin-bottom: 24px; }
+.reference-heading h1 { font-size: 28px; }
+.reference-heading > p:not(.reference-notice) { color: var(--muted); }
+.reference-notice { margin: 0 0 20px; padding: 10px 12px; border: 1px solid var(--line-strong); border-radius: 6px; font-size: 13px; background: var(--rail); }
+.reference-controls { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; }
+.reference-checkbox { display: flex; align-items: center; gap: 8px; padding: 8px; }
+.reference-checkbox input { width: auto; }
+.reference-panel { padding: 20px; border: 1px solid var(--line); border-radius: 9px; background: var(--paper); margin-bottom: 20px; min-width: 0; container-type: inline-size; }
+.reference-panel h2 { margin-top: 0; }
+.reference-section-heading { display: flex; justify-content: space-between; align-items: center; gap: 12px; margin-bottom: 12px; }
+.reference-section-heading h2 { margin: 0; }
+.reference-work-key { font: 11px var(--mono); color: var(--muted); }
+.reference-work-detail { min-width: 0; }
+.reference-work-detail h3 { font-size: 22px; margin: 8px 0 14px; overflow-wrap: anywhere; }
+.reference-work-detail > p, .reference-work-detail li { font-size: 14px; line-height: 1.6; }
+.reference-work-detail h4 { margin-bottom: 8px; font-size: 13px; }
+.reference-work-detail ul { padding-left: 22px; margin-top: 8px; }
+.reference-properties { display: flex; flex-wrap: wrap; gap: 5px; margin: 20px 0; }
+.reference-action-result { color: var(--muted); font-size: 12px; margin-bottom: 0; }
+.reference-doc { max-width: 800px; font-size: 16px; line-height: 1.7; }
+.reference-doc h2 { font-size: 26px; }
+.reference-doc h3 { font-size: 18px; }
+.reference-doc blockquote { margin-inline: 0; padding-left: 16px; border-left: 3px solid var(--line-strong); color: var(--muted); }
+.reference-diff { border: 1px solid var(--line); border-radius: 6px; font: 13px var(--mono); overflow-wrap: anywhere; }
+.reference-diff p { display: flex; flex-wrap: wrap; gap: 14px; margin: 0; padding: 12px; }
+.reference-diff p:first-child { background: var(--danger-surface); }
+.reference-diff p:last-child { border-inline-start: 3px solid var(--success); }
+.reference-diff p > span { min-width: 60px; }
+.reference-states { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 270px), 1fr)); gap: 12px; margin-bottom: 16px; }
+@media (max-width: 600px) {
+  .interaction-reference { padding: 16px; }
+  .reference-panel { padding: 16px; }
+}

@@ -1,4 +1,9 @@
 // Host tests with an explicit fake fetch transport. Not browser/native evidence.
+import './product-contract.test';
+import './markdown.test';
+import './agent-brief.test';
+import './event-presentation.test';
+import './document-formatting.test';
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import { newId, commandDigest, canonical } from '../src/protocol';

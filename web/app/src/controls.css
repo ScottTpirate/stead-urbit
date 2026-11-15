@@ -1,0 +1,88 @@
+.stead-icon { display: inline-block; width: 16px; height: 16px; flex: none; vertical-align: middle; }
+.stead-picker-label { color: var(--muted); margin-inline-end: 6px; font-weight: 400; }
+.stead-picker-value { overflow-wrap: anywhere; }
+.stead-picker-chevron { margin-inline-start: 6px; flex: none; }
+.stead-control-popup {
+  position: fixed;
+  z-index: 50;
+  width: min(320px, calc(100vw - 16px));
+  max-height: min(360px, calc(100dvh - 16px));
+  overflow-y: auto;
+  padding: 5px;
+  border: 1px solid var(--line-strong);
+  border-radius: 8px;
+  color: var(--ink);
+  background: var(--paper);
+  box-shadow: 0 8px 28px #24201924;
+  font-size: 14px;
+}
+.stead-control-option {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  width: 100%;
+  min-height: 36px;
+  padding: 8px 10px;
+  border: 0;
+  border-radius: 5px;
+  color: inherit;
+  background: transparent;
+  font: inherit;
+  text-align: start;
+  cursor: pointer;
+}
+.stead-control-option > span:first-child { min-width: 0; overflow-wrap: anywhere; }
+.stead-control-option small { display: block; margin-top: 3px; color: var(--muted); font-size: 12px; }
+.stead-control-option:enabled:hover, .stead-control-option:focus-visible,
+.stead-control-option[data-active="true"] { background: var(--selected); }
+.stead-control-option[aria-disabled="true"] { opacity: .55; cursor: default; }
+.stead-control-option--danger { color: var(--danger); border-top: 1px solid var(--line); border-radius: 0 0 5px 5px; margin-top: 4px; }
+.stead-control-check { margin-inline-start: auto; flex: none; }
+.stead-control-note { padding: 8px 10px; margin: 0; color: var(--muted); font-size: 13px; }
+.stead-control-note p { margin: 0 0 8px; }
+.stead-combobox > input { margin-bottom: 5px; font-size: 14px; }
+.stead-dialog {
+  width: min(680px, calc(100vw - 32px));
+  max-height: calc(100dvh - 32px);
+  padding: 0;
+  overflow: auto;
+  border: 1px solid var(--line-strong);
+  border-radius: 12px;
+  color: var(--ink);
+  background: var(--paper);
+  box-shadow: 0 24px 64px #201f1d40;
+}
+.stead-dialog::backdrop { background: #201f1d60; }
+.stead-dialog-header { display: flex; align-items: center; justify-content: space-between; gap: 16px; padding: 20px 24px 12px; }
+.stead-dialog-header h2 { margin: 0; font-size: 20px; overflow-wrap: anywhere; }
+.stead-dialog-description { margin: 0; padding: 0 24px 16px; color: var(--muted); line-height: 1.5; }
+.stead-dialog-body { padding: 8px 24px 24px; }
+.stead-dialog-footer { display: flex; flex-wrap: wrap; justify-content: end; gap: 8px; padding: 16px 24px; border-top: 1px solid var(--line); }
+.stead-person { display: inline-flex; align-items: center; gap: 6px; min-width: 0; max-width: 100%; font-size: 13px; }
+.stead-person-avatar { display: inline-grid; place-items: center; width: 24px; height: 24px; flex: none; border-radius: 50%; color: var(--ink); background: var(--selected); font-size: 10px; font-weight: 650; }
+.stead-person-name { min-width: 0; overflow-wrap: anywhere; }
+.stead-person-kind, .stead-person-inherited { border: 1px solid var(--line-strong); border-radius: 4px; padding: 2px 4px; font-size: 11px; color: var(--muted); }
+.stead-person-kind { flex: none; }
+.stead-status-badge { display: inline-flex; align-items: center; gap: 5px; max-width: 100%; padding: 3px 7px; border: 1px solid var(--line-strong); border-radius: 5px; font-size: 12px; overflow-wrap: anywhere; }
+.stead-status-badge[data-tone="active"] { color: var(--accent); }
+.stead-status-badge[data-tone="success"] { color: var(--success); }
+.stead-status-badge[data-tone="warning"], .stead-status-badge[data-tone="danger"] { color: var(--danger); }
+.stead-outcome { padding: 12px 14px; border: 1px solid var(--line); border-radius: 7px; background: var(--rail); font-size: 13px; line-height: 1.5; overflow-wrap: anywhere; }
+.stead-outcome p { margin: 3px 0 0; color: var(--muted); }
+.stead-outcome-action { margin-top: 8px; }
+.stead-outcome[data-state="conflict"], .stead-outcome[data-state="permission_revoked"] { border-inline-start: 3px solid var(--danger); }
+@media (pointer: coarse) {
+  .stead-control-option { min-height: 44px; }
+  .stead-dialog .stead-button { min-height: 44px; }
+}
+@media (max-width: 600px) {
+  .stead-dialog { width: 100%; height: 100dvh; max-height: 100dvh; margin: 0; border: 0; border-radius: 0; }
+  .stead-dialog-header { padding: 16px; }
+  .stead-dialog-description { padding: 0 16px 16px; }
+  .stead-dialog-body { padding: 8px 16px 20px; }
+  .stead-dialog-footer { padding: 16px; }
+  .stead-person { flex-wrap: wrap; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .stead-control-popup, .stead-dialog { scroll-behavior: auto; }
+}

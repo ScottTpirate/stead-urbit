@@ -3,6 +3,7 @@ import { AcceptedTime } from './AcceptedTime';
 import { HomeError, SHIP, type CodeInput, type CodeReviewKey, type HomeClient, type Row, type WorkDelegation } from './api';
 import { Button, TextField } from './primitives';
 import { newId } from './protocol';
+import { agentBrief } from './agentBrief';
 
 type Delegate = Extract<CodeInput, {action: 'delegate' | 'revoke-delegation'}>;
 const statusLabel = {active: 'Proposal access granted', expired: 'Expired', revoked: 'Revoked', unavailable: 'Access unavailable'};
@@ -71,17 +72,12 @@ export function WorkDelegations({client, project, work, manage, locked, onReview
     }
   }
   async function copyBrief(row: WorkDelegation) {
-    const brief = JSON.stringify({
-      protocol: 'stead.agent-brief/1', project_id: project, work_id: item,
-      delegation_id: row.id, worker_ship: row.worker, expires_at_ms: row.expires,
-      target_ref: row.ref, title: work.title ?? '', description: work.description ?? '',
-      work_revision: work.resource_revision, work_url: location.origin + location.pathname + location.hash,
-    }, null, 2);
     try {
-      await navigator.clipboard.writeText(brief);
-      setFeedback({text: 'Agent brief copied.'});
-    } catch {
-      setFeedback({text: 'Clipboard access is unavailable in this browser.', error: true});
+      await navigator.clipboard.writeText(agentBrief(project,work,row,location.origin));
+      setFeedback({text: 'Agent brief copied. A worker has not been started.'});
+    } catch (error) {
+      setFeedback({text: error instanceof HomeError ? 'The current task contract could not be verified. Refresh the work item before copying a brief.'
+        : 'Clipboard access is unavailable in this browser.', error: true});
     }
   }
   const worker = ('~' + ship.trim().replace(/^~/u, '')).toLowerCase();
@@ -90,8 +86,8 @@ export function WorkDelegations({client, project, work, manage, locked, onReview
     && /^(?:[A-Za-z0-9][A-Za-z0-9._-]*\/)*[A-Za-z0-9][A-Za-z0-9._-]*$/u.test(branch)
     && branch.length <= 117;
   const disabled = busy || locked || !!pending;
-  return <section className="work-section" aria-label="Agent delegation">
-    <h3>Agent delegation</h3>
+  return <section className="work-section" aria-label="Agent proposal access">
+    <h3>Agent proposal access</h3>
     {rows === undefined ? <p role="status">Loading delegations…</p>
       : rows === null ? <p className="muted">Delegation is unavailable on this Home.</p>
       : rows.length === 0 ? <p className="muted">No agent has proposal access for this item.</p>
@@ -117,7 +113,7 @@ export function WorkDelegations({client, project, work, manage, locked, onReview
       void save({action: 'delegate', delegation_id: newId(), worker_ship: worker, work_id: item,
         ref: 'refs/heads/' + branch, expires_at_ms: String(Date.now() + Number(minutes) * 60000)});
     }}>
-      <p>Give a project member’s agent permission to propose a change for this item. The human assignee keeps ownership.</p>
+      <p>Allow a project member’s agent to propose a change for this item. Granting access does not start a worker.</p>
       <TextField label="Agent Urbit ID" value={ship} onChange={event => setShip(event.target.value)} required maxLength={64}
         disabled={disabled} spellCheck={false}/>
       <TextField label="Target branch" value={target} onChange={event => setTarget(event.target.value)} required maxLength={128}
@@ -129,7 +125,7 @@ export function WorkDelegations({client, project, work, manage, locked, onReview
         <Button type="submit" variant="primary" disabled={!valid || disabled}>Grant proposal access</Button>
         <Button variant="quiet" disabled={disabled} onClick={() => setEditing(false)}>Cancel</Button>
       </div>
-    </form> : <Button variant="quiet" disabled={disabled} onClick={() => setEditing(true)}>Delegate to an agent</Button>)}
+    </form> : <Button variant="quiet" disabled={disabled} onClick={() => setEditing(true)}>Grant agent proposal access</Button>)}
     {feedback && <p role={feedback.error ? 'alert' : 'status'}>{feedback.text}</p>}
     <div className="actions">
       <Button variant="quiet" disabled={busy || locked} onClick={() => setAttempt(value => value + 1)}>Refresh agent access</Button>

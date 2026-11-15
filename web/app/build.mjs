@@ -27,9 +27,14 @@ try {
   await writeFile(path.join(outdir, 'identity.html'), identityHtml);
   let notices = 'Stead Urbit browser alpha\nApache-2.0; see the source repository and PROVENANCE.md for original source attribution.\n\n';
   notices += await readFile(path.join(root, '../../LICENSE'), 'utf8');
-  for (const name of ['react', 'react-dom', 'scheduler']) {
-    notices += `\n\nDependency: ${name}\n` + await readFile(path.join(root, 'node_modules', name, 'LICENSE'), 'utf8');
+  const licenses = {'react':'LICENSE', 'react-dom':'LICENSE', 'scheduler':'LICENSE',
+    'markdown-it':'LICENSE', 'mdurl':'LICENSE', 'entities':'LICENSE', 'uc.micro':'LICENSE.txt',
+    'linkify-it':'LICENSE', 'punycode.js':'LICENSE-MIT.txt', 'argparse':'LICENSE'};
+  for (const [name, license] of Object.entries(licenses)) {
+    notices += `\n\nDependency: ${name}\n` + await readFile(path.join(root, 'node_modules', name, license), 'utf8');
   }
+  notices += '\n\nDependency: audited local Lucide icon subset\n'
+    + await readFile(path.join(root,'vendor/lucide/LICENSE'),'utf8');
   await writeFile(path.join(outdir, 'NOTICE.txt'), notices);
   const manifest = { format: 1, classification: 'frontend-build-only', files: {} };
   for (const name of ['index.html', 'identity.html', 'NOTICE.txt', ...Object.keys(result.metafile.outputs).map(file => path.basename(file))]) {
