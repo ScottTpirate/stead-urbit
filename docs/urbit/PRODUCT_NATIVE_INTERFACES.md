@@ -601,7 +601,20 @@ finish clears their lease; original expiry still needs explicit adoption.
 Eight prepared native arms use the real pure reducers and remain uncompiled.
 Service actors, provider effects, settlement and replacement reconciliation are
 explicitly denied by this initial adapter. Shared history, saved-state migration,
-Home routes, run reads, real executor and G3 remain required.
+Home routes, real executor and G3 remain required.
+
+The [reserved run reader](evidence/2026-11-15/controller-refresh/reserved-run-views-review.json)
+adds closed `stead.run-query/1` queries for a Work's runs or one exact run.
+Current catalog, native membership, Work and shared-target visibility precede
+metadata and cursor use. Nineteen preview fields and twenty-five detail fields
+separate durable phase from observed lease state and advisory execution freshness;
+neither observation authorizes execution. Details include the recorded question,
+answer and exact submitted result, without grants, context bodies, provider data
+or live lease secrets. Blank retained names remain blank rather than inventing
+identity. Pages share the existing twenty-row, four-per-principal and sixty-four
+global cursor limits; tokens bind current actor, scope, epoch and visible generation.
+Eight additional source-reviewed native arms remain uncompiled and unregistered.
+These reads require admitted, reconstructed state and expose no live route yet.
 
 ### Remaining integrations
 

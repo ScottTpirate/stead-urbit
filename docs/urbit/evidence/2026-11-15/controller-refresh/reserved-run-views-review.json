@@ -1,0 +1,32 @@
+{
+  "classification": "source-only-independent-review",
+  "files": {
+    "native/core/desk/lib/stead-run-query.hoon": "0b05231e205cead66a4b9fe05b6ec52777500196cbb2717804399af73b6ea5aa",
+    "native/core/desk/lib/stead-run-views.hoon": "c674bed7c65a6dd917a89f0944c952a59cc8d33ee38baeac30af58afe76c431f",
+    "native/core/desk/tests/stead-run-views.hoon": "653cb68757f7b8a77bf2bb342fec0ad396604fe3e335136d7076b186e6f1a3f2"
+  },
+  "home_activation": false,
+  "integrator_review": {
+    "native_execution": false,
+    "observed": "Closed scope/current access, metadata field counts, submitted/result coherence, shared cursors and blank-name correction reviewed; no Home route or authority from lease observations.",
+    "status": "source-review-pass"
+  },
+  "limits": [
+    "Home must first admit bounded state and reconstruct unified history.",
+    "No native compile, public carrier, restore authority or provider execution claim."
+  ],
+  "native_arms": 8,
+  "native_execution": false,
+  "protocol": "stead.source-review/1",
+  "reviewed": [
+    "Closed seven-field per-Work query; exact current catalog/native membership and Work subject access precede all rows and cursors.",
+    "Each row rechecks current adapter visibility across shared target collections; private writes cannot affect visible generation or body.",
+    "Exactly 19 preview and 25 detail fields expose run/attempt/question/result metadata without auth, grant, context body, lease incarnation or provider details.",
+    "Durable phase remains separate from observational current lease status and advisory execution freshness; neither authorizes effects.",
+    "Shared 20-row paging, four-per-principal and 64-global cursor limits; one-use cursors bind actor, filter, generation, rank and epoch.",
+    "Submitted/result coherence is checked before response construction; damaged submitted-without-result state fails closed.",
+    "Eight arms cover real reducers, revocation/expiry, stale execution versus readable history, private-write noninterference, scope/cursor crossings and capacity rollback.",
+    "Empty historical catalog display names remain explicit blanks; every nonempty name still validates. The negative/blank fixture does not modify authority, kind or activity."
+  ],
+  "scope": "reserved-current-native-run-reads"
+}

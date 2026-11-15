@@ -31,6 +31,13 @@ This first profile requires an explicit Owner; service actors, provider effects,
 settlement and replacement reconciliation stay denied. Versioned history/carrier
 integration, actual execution and G3 remain open.
 
+The [reserved per-Work run reader](evidence/2026-11-15/controller-refresh/reserved-run-views-review.json)
+adds eight source-reviewed, uncompiled native arms. Current authorized metadata
+distinguishes durable phase, observed lease and execution freshness, and exposes
+recorded clarification and exact submitted result without credentials or context
+bodies. Shared bounded pagination rechecks current access; no public carrier or
+supported run API follows from this source alone.
+
 ## Reuse and separation
 
 - `stead-code-delivery.hoon` checks current delegation, membership, proposal and
