@@ -90,7 +90,7 @@
   %-  fields:stead-views
   :~  ['execution_contract_revision' (decimal execution-revision.item)]
       ['execution_contract_digest' execution-digest.item]  ['agent_version' versions]
-      ['execution_current' ?:( (pins.gates item %execute now) 'yes' 'no')]
+      ['execution_current' ?:((pins.gates item %execute now) 'yes' 'no')]
       ['current_attempt_detail' (attempt-view catalog.state runs key attempt.row)]
       ['latest_question' (question-view catalog.state runs key question.row)]
   ==

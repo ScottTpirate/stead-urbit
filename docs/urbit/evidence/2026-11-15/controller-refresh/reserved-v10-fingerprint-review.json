@@ -1,0 +1,54 @@
+{
+  "classification": "independent-host-fingerprint-helper-review",
+  "qualifies_phase": false,
+  "status": "source-reviewed-host-tests-pass-native-expressions-pending",
+  "files": {
+    "scripts/release_install.py": "30b2a651c3e7d124e7e5ef319f5581299d29427322e605f1ffca91e9015f5e80",
+    "scripts/urbit/review_prepare.py": "0f851b1376a5ee526ccadd63f8b0782ded623d85742ee1198d1517025eaf33ea",
+    "scripts/urbit/team_lifecycle.py": "d3a323965597df1dcdc9b44daf7726fc61811b246d3db49ea77fef3de0926ad6",
+    "tests/urbit/test_release_install.py": "4795f0c21811f19a1760cdaa7288e652c0d0459d0f62ff70bbdf34f3584c2894",
+    "tests/urbit/test_review_lifecycle.py": "5eb40f38145926ab7e4affcb85e7618cc6a87a75837cd955e2a4fb2c4e82691c"
+  },
+  "reviewer": "native",
+  "reviewed_behavior": [
+    "Version10 authority fingerprint includes the complete profile/target/code/mode/retired/packs/external/reviews tuple.",
+    "Previous version3 through9 expressions retained; no legacy envelope rewritten.",
+    "Full saved-vase helper admits version10 and rejects future version11.",
+    "Semantic validation of target bodies belongs to the Home; these helpers observe fingerprints only."
+  ],
+  "host_tests": {
+    "passed": 38,
+    "runner": ".runtime/product-fingerprint-host-tests.py",
+    "console_sha256": "92a8e80eb01c0745367bb8f18039cba698c5b83c46b7405f4d2b7ac66ea2b9f4",
+    "process": {
+      "unit": "stead-browser-4e0a44cbc20f5ccdef49bdee07dbd3cc.service",
+      "status": "pass",
+      "cleanup": {
+        "process_reaped": true,
+        "cgroup": "/user.slice/user-1000.slice/user@1000.service/app.slice/stead-browser-4e0a44cbc20f5ccdef49bdee07dbd3cc.service",
+        "empty": true,
+        "state": "inactive"
+      },
+      "headed": false,
+      "proof": {
+        "pid": 470027,
+        "cgroup": "/user.slice/user-1000.slice/user@1000.service/app.slice/stead-browser-4e0a44cbc20f5ccdef49bdee07dbd3cc.service",
+        "cpu_max": "2500 10000",
+        "cpu_affinity": [
+          19
+        ]
+      },
+      "exit_code": 0
+    },
+    "resources": {
+      "output": "/home/skilgore/stead-urbit/.runtime/product-fingerprint-owner-1794776057498283176",
+      "peak_c": 54.0,
+      "duration_seconds": 2.0
+    }
+  },
+  "native_executed": false,
+  "remaining": [
+    "Execute exact generated expressions against actual predecessor/product targets, partial restore and final state.",
+    "Qualify actual Gall upgrade/restart/recovery with the saved-version10 Home."
+  ]
+}

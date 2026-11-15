@@ -294,6 +294,9 @@ class ReviewLifecycleTests(unittest.TestCase):
         self.assertIn('(shax (jam [db.team.stored code.stored]))', source)
         self.assertIn('!<([%stead-home %8 team=[db=* projection=*] code=* handoff=* retired=* packs=* external=*] saved)', source)
         self.assertIn('(shax (jam [db.team.stored code.stored handoff.stored retired.stored packs.stored external.stored]))', source)
+        self.assertIn('!<([%stead-home %10 profile=@t target=* code=* mode=* retired=* packs=* external=* reviews=*] saved)', source)
+        self.assertIn("?>  =('native-human-doc/1' profile.stored)", source)
+        self.assertIn('(shax (jam [profile.stored target.stored code.stored mode.stored retired.stored packs.stored external.stored reviews.stored]))', source)
 
         identity = Mock(side_effect=['%base', '0x2'])
         self.assertEqual(review_prepare.durable_fingerprint('bus', identity), f'{2:064x}')

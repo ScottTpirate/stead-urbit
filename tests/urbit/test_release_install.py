@@ -12,6 +12,20 @@ import release_install as install
 
 
 class ReleaseInstallTests(unittest.TestCase):
+    def test_fingerprint_keeps_whole_product_target_and_rejects_native_failure(self):
+        # Mocked Dojo verifies controller construction/output handling only.
+        # The configured native lane must execute both target variants.
+        native = SimpleNamespace(dojo=Mock(return_value='0x1'))
+        self.assertEqual(install.saved_home_fingerprint(native, authoritative=True), f'{1:064x}')
+        source = native.dojo.call_args.args[0]
+        self.assertIn('(shax (jam -.+>.q.saved))', source)
+        self.assertIn("?>  =('native-human-doc/1' profile.stored)", source)
+        self.assertIn('(shax (jam [profile.stored target.stored code.stored mode.stored retired.stored packs.stored external.stored reviews.stored]))', source)
+        for authoritative in (False, True):
+            for reply in ('native assertion failed', '0x' + 'f' * 65):
+                with self.subTest(authoritative=authoritative, reply=reply), self.assertRaises(ValueError):
+                    install.saved_home_fingerprint(SimpleNamespace(dojo=Mock(return_value=reply)), authoritative=authoritative)
+
     def test_no_preserved_piers_or_writable_input_alias_in_namespace(self):
         state = Path('/tmp/owned-release-proof')
         command = install.sandbox_command(state, Path('/tmp/guard'), 'a' * 32,

@@ -1,0 +1,16 @@
+{
+  "after_sha256": "b6a177fa5652fefaefacb5365f2e0cb6e946d54de09e9324cc6c381482acf8ca",
+  "before_sha256": "c674bed7c65a6dd917a89f0944c952a59cc8d33ee38baeac30af58afe76c431f",
+  "change": "Remove one leading space after wide ?:( before the pins gate; predicates, projection fields and result values remain identical.",
+  "classification": "independent-native-source-syntax-review",
+  "home_activated": false,
+  "in_candidate_125e4a6": false,
+  "independent_reviewer": "root",
+  "native_compiled": false,
+  "native_executed": false,
+  "path": "native/core/desk/lib/stead-run-views.hoon",
+  "prior_checkpoint": "14858ee",
+  "prior_review": "The original Run query/views review remains evidence for its original source bytes only.",
+  "remaining": "Exact successor source must compile and pass the registered native Run read suite before qualification.",
+  "status": "source-approved-native-unexecuted"
+}
