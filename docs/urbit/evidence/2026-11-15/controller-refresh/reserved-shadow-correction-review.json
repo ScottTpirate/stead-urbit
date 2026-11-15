@@ -1,0 +1,45 @@
+{
+  "checks": {
+    "git_diff_check": "pass",
+    "native_execution": "not-run",
+    "new_test_arms": 0
+  },
+  "classification": "source-shadow-correction-only",
+  "correction": "Avoid sample faces shadowing unqualified return mold references. Public molds, wire bytes, transitions and journal bodies remain unchanged.",
+  "files": {
+    "native/core/desk/lib/stead-doc-change.hoon": {
+      "bytes": 27771,
+      "sha256": "6a2cffd06b82f876f4328f0f996834047bdd47080e0c50aadfd53d6dc6edfec6"
+    },
+    "native/core/desk/lib/stead-product-migrate.hoon": {
+      "bytes": 9100,
+      "sha256": "8094ec4abfe8ee1056212d66dccaa2f13d9ad6e72f3d771eff6297536c7891af"
+    },
+    "native/core/desk/lib/stead-product-restore.hoon": {
+      "bytes": 11161,
+      "sha256": "eb4e0d730d09d4fe2e8451040e93e775ea9f73ffbb0222586ee9e9ec0c68beb8"
+    },
+    "native/core/desk/lib/stead-product-state.hoon": {
+      "bytes": 3577,
+      "sha256": "75e29a7a53f9b211bd194a112666b4bae736acddb7c4026aaec99c1c1180cb14"
+    }
+  },
+  "independent_source_review": {
+    "result": "approved-exact-four-library-diff",
+    "reviewer": "/root"
+  },
+  "observed_failure": {
+    "cause_matches_correction": "not-proven",
+    "compiler_vs_initialization": "not-established",
+    "module_build_failed": true,
+    "module_built": false,
+    "registered_arms_observed": 0,
+    "suite": "/tests/stead-product-migrate"
+  },
+  "observed_failure_candidate": "f93a42a06c49fef597f6611e18b2f56eaa73d568",
+  "observed_failure_run": "43753293747",
+  "protocol": "stead.source-correction-review/1",
+  "qualification": "unqualified until exact corrected candidate completes hosted native checks",
+  "scope_boundary": "Current product-state includes successor closed owner/doc-change families; a retry of f93 must apply only the face rename to its original product-state bytes, not substitute the successor file.",
+  "working_base_commit": "59ea813691a38ef583eeb89a99c2ca94aca1c2e7"
+}

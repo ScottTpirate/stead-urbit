@@ -49,21 +49,21 @@
     %doc-change  'stead.doc-change/1'
   ==
 ++  append-event
-  |=  [state=state family=family body=@t]
+  |=  [db=state family=family body=@t]
   ^-  state
-  =/  boundary  (need migration.state)
-  ?>  (lth (lent events.state) 6.144)
-  =/  previous  ?~(events.state fingerprint.boundary digest.i.events.state)
+  =/  boundary  (need migration.db)
+  ?>  (lth (lent events.db) 6.144)
+  =/  previous  ?~(events.db fingerprint.boundary digest.i.events.db)
   =/  record
     %-  canonical
     %-  object
     :~  ['protocol' 'stead.product-event/1']
-        ['sequence' (decimal +((lent events.state)))]
+        ['sequence' (decimal +((lent events.db)))]
         ['previous_digest' previous]  ['family' (event-protocol family)]
         ['body' body]
     ==
   ?>  (lte (met 3 record) 262.144)
-  state(events [[family record (hash 'stead.product-event/1' record)] events.state])
+  db(events [[family record (hash 'stead.product-event/1' record)] events.db])
 ++  boundary-of
   |=  [count=@ud heads=(map @t @t) registry=registry:stead-team-config timeline=@t]
   ^-  boundary

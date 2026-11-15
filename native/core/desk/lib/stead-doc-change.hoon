@@ -249,9 +249,9 @@
       ==
   ==
 ++  put-head
-  |=  [state=state cmd=command:stead-doc-change-codec head=head:stead-doc-change-state]
+  |=  [db=state cmd=command:stead-doc-change-codec head=head:stead-doc-change-state]
   ^-  state
-  state(changes changes.state(heads (~(put by heads.changes.state) [project.cmd change.cmd] head)))
+  db(changes changes.db(heads (~(put by heads.changes.db) [project.cmd change.cmd] head)))
 ++  deny
   |=  [state=state cmd=command:stead-doc-change-codec error=@t]
   ^-  result

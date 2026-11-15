@@ -190,7 +190,7 @@
   [target [empty:stead-team *state:stead-product-state] home history ~ (flop events.product) 0 %history]
 ++  step
   |=  [job=validation adapter=historical-adapter]
-  ^-  job
+  ^-  validation
   ?:  ?|(=(phase.job %valid) =(phase.job %invalid))  job
   ?:  =(phase.job %history)
     =/  history  (step-history:stead-restore history.job)
