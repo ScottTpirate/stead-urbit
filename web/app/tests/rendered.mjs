@@ -695,6 +695,25 @@ try {
     await page.getByRole('region', {name: 'Linked code changes', exact: true}).getByRole('button', {
       name: new RegExp(`work/${work.resource_id}.*Awaiting review`, 'u'),
     }).waitFor();
+    await development.getByRole('button', {name: 'Start change review', exact: true}).click();
+    await exact.getByRole('button', {name: 'View work item', exact: true}).waitFor();
+    await changes.getByRole('button', {name: 'welcome.md Modified', exact: true}).waitFor();
+    assert.equal(state.changesRequests.at(-1).proposal_id, submitted.proposal_id);
+    assert.equal(await page.getByRole('button', {name: 'Submit proposal', exact: true}).count(), 0);
+    assert.equal(state.externalRequests.filter(row => row.action === 'external-submit').length, 1);
+    await exact.getByRole('button', {name: 'View work item', exact: true}).click();
+    await development.getByRole('button', {name: 'View branch', exact: true}).waitFor();
+    const laterHead = 'f'.repeat(40);
+    state.pack = {...state.pack, snapshot: 'f'.repeat(64), generation: '3', refs: JSON.stringify({[main]: base, [reference]: laterHead})};
+    await development.getByRole('button', {name: 'Check for branch', exact: true}).click();
+    await development.getByRole('button', {name: 'Start change review', exact: true}).click();
+    await source.waitFor();
+    assert.equal(await source.inputValue(), reference);
+    assert.equal(await page.getByLabel('Work item', {exact: true}).inputValue(), work.resource_id);
+    assert.equal(await exact.count(), 0);
+    await page.getByRole('button', {name: 'Cancel', exact: true}).click();
+    await page.getByRole('button', {name: 'Return to work item', exact: true}).click();
+    await development.getByRole('button', {name: 'View branch', exact: true}).waitFor();
     state.externalWritable = false;
     await development.getByRole('button', {name: 'Check for branch', exact: true}).click();
     await development.getByRole('button', {name: 'View branch', exact: true}).waitFor();
@@ -1245,7 +1264,8 @@ try {
     await page.getByRole('button', {name: 'Keep it', exact: true}).click();
     await menu.click(); await page.getByRole('menuitem', {name: 'Delete…', exact: true}).click();
     await page.getByRole('button', {name: 'Confirm deletion', exact: true}).click();
-    await page.getByRole('button', {name: title, exact: true}).waitFor({state: 'detached'});
+    await page.locator('.work-row').getByRole('button', {name: title, exact: true}).waitFor({state: 'detached'});
+    await page.locator('#work-detail-panel').waitFor({state: 'detached'});
     assert.equal(state.commands.length, 1); assert.equal(state.commands[0].operation, 'work.delete');
   });
   await check('work-inline-properties-and-project-assignment', async (page, state) => {

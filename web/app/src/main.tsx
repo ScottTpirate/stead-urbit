@@ -1000,15 +1000,15 @@ function App() {
               {canEdit ? <button type="button" className="work-description work-inline-description" title="Edit description" disabled={workActionsLocked}
                 onClick={() => startEditingWork('description')}>{work.description || 'Add a description'}</button>
                 : <p className="work-description">{work.description || 'No description yet.'}</p>}
-              {repository?.status === 'external' && work.resource_id && <WorkDevelopment key={workScope}
+              {repository?.status === 'external' && work.resource_id && <WorkDevelopment key={`development/${workScope}`}
                 client={client} project={project.project_id!} work={{id: work.resource_id, title: work.title ?? ''}}
                 writable={repository.write === 'yes'} onOpenCode={openDevelopment}/>}
-              {repository?.status === 'external' && work.resource_id && <WorkCodeLinks key={workScope}
+              {repository?.status === 'external' && work.resource_id && <WorkCodeLinks key={`reviews/${workScope}`}
                 client={client} project={project.project_id!} work={work.resource_id} onOpenReview={openLinkedReview}/>}
-              {repository?.status === 'ready' && work.resource_id && <WorkDelegations key={workScope}
+              {repository?.status === 'ready' && work.resource_id && <WorkDelegations key={`delegations/${workScope}`}
                 client={client} project={project.project_id!} work={work} manage={repository.manage === 'yes'}
                 locked={workActionsLocked} onReview={openInlineReview}/>}
-              {work.resource_id && <WorkDiscussion key={workScope} client={client} project={project.project_id!} work={work.resource_id}
+              {work.resource_id && <WorkDiscussion key={`discussion/${workScope}`} client={client} project={project.project_id!} work={work.resource_id}
                 revision={rows.find(row => row.resource_id === work.resource_id)?.resource_revision ?? work.resource_revision!}
                 principal={identity.principal_id!} name={identity.display_name} writable={!!canEdit} locked={workActionsLocked}
                 draft={commentDraft} onChange={updateCommentDraft} onSubmit={submitComment}/>}

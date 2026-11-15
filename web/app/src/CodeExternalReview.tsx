@@ -65,7 +65,10 @@ export function CodeExternalReview({ client, project, writable, manage, atCapaci
   const canSubmit = editable && !pending && draftCurrent && !!draft && UUID.test(draft.work_id) && !!source
     && targetName.startsWith('refs/heads/');
   const selectedTitle = proposal?.work_title || reviews?.find(row => row.proposal_id === proposal?.proposal_id)?.work_title;
-  const hasDevelopmentSource = sourceChoices.some(row => row.key === development?.ref);
+  const developmentSource = sourceChoices.find(row => row.key === development?.ref);
+  const developmentRef = developmentSource?.name;
+  const developmentHead = developmentSource?.oid;
+  const targetBase = refs[target];
 
   useEffect(() => {
     let active = true;
@@ -101,7 +104,7 @@ export function CodeExternalReview({ client, project, writable, manage, atCapaci
     }
     const acceptedSnapshot = snapshot.snapshot;
     const generation = snapshot.generation;
-    if (!hasDevelopmentSource || !acceptedSnapshot || generation === undefined) {
+    if (!developmentRef || !developmentHead || !targetBase || !acceptedSnapshot || generation === undefined) {
       startedDevelopment.current = development;
       setOpeningDevelopment(false);
       setError('Push a change to the Work branch and refresh the accepted Git snapshot before starting a review.');
@@ -109,24 +112,35 @@ export function CodeExternalReview({ client, project, writable, manage, atCapaci
     }
     let active = true;
     setOpeningDevelopment(true); setError(''); setNotice('');
-    void client.query({ kind: 'work', project_id: project, container_id: '', resource_id: development.workId, search: '', cursor: '' })
-      .then(view => {
+    void Promise.all([
+      client.query({ kind: 'work', project_id: project, container_id: '', resource_id: development.workId, search: '', cursor: '' }),
+      client.externalReviews(project, development.workId),
+    ]).then(([view, linked]) => {
         if (!active) return;
         const row = Object.values(view.rows).find(value => value.resource_id === development.workId);
         if (!row?.title) throw new HomeError('denied_or_not_found');
+        const existing = linked.find(review => review.work_id === development.workId && review.source_ref === developmentRef
+          && review.ref === targetName && review.base_oid === targetBase && review.head_oid === developmentHead
+          && review.base_snapshot === acceptedSnapshot && review.generation === generation);
         startedDevelopment.current = development;
         request.current = null; setArtifact(null);
+        if (existing) {
+          setLookup(existing.proposal_id!); setProposal(existing); setDraft(null);
+          return;
+        }
+        setProposal(null);
         setWork([{ id: development.workId, title: row.title }]); setCursor('');
         setDraft({ proposal_id: newId(), revision: '1', work_id: development.workId, source: development.ref,
           base_snapshot: acceptedSnapshot, generation });
       }).catch(() => {
         if (active) {
           startedDevelopment.current = development;
-          setError('The Home could not open that Work item for a change review.');
+          setError('The Home could not open that Work item and its linked change reviews.');
         }
       }).finally(() => { if (active) setOpeningDevelopment(false); });
     return () => { active = false; };
-  }, [client, project, development, initialProposal, editable, pending, hasDevelopmentSource, snapshot.snapshot, snapshot.generation]);
+  }, [client, project, development, initialProposal, editable, pending, developmentRef, developmentHead, targetName, targetBase,
+    snapshot.snapshot, snapshot.generation]);
 
   async function perform(operation: () => Promise<void>, failure: string) {
     setBusy(true); setError(''); setNotice('');
