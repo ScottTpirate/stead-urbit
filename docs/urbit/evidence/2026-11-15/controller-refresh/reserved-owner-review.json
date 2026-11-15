@@ -1,0 +1,29 @@
+{
+  "activation_obligations": [
+    "Home must supply real sender and authoritative non-overlapping budget counts",
+    "Caller must append returned typed record to the single product timeline atomically with next state or discard the whole result",
+    "Mixed restoration must replay owner records and all shared attempt/ledger namespaces exactly before Home activation"
+  ],
+  "checks": [
+    "Closed four-operation decoder with canonical inner configuration and no authored owner identity",
+    "Actual Home and native sender checked before retries; exact request digest and per-resource CAS retained",
+    "Configuration reconciles imported custody and monotonic principal highwaters without inferring kinds",
+    "Catalog producer/runtime/definition version invariants delegated to reviewed immutable catalog gates",
+    "Ordinary attempts share 4096 capacity accounting; security fallback limited to successful strict authority reductions, 128 owner records and remaining 2048 global security capacity",
+    "Prepared result returns next state, receipt and typed record atomically; no independent owner journal or live commit path",
+    "Negative tests cover current owner, replay, kind conflict, version pinning, revocation, renewed/expanded authority and reserve limits"
+  ],
+  "files": {
+    "native/core/desk/lib/stead-product-owner-codec.hoon": "04337fc8c29361342c87d42059a4d7b02926920c36ac9d0876c51419acd8f705",
+    "native/core/desk/lib/stead-product-owner-policy.hoon": "ede91205025c803d231a591c6561690731ef0dc8025c6cfb9fc392cca029d69f",
+    "native/core/desk/lib/stead-product-owner.hoon": "75fa44ee3ada2ad2fab25bcf127bcd1a529d1e6fa6617292f2ecaf941cfa1c32",
+    "native/core/desk/tests/stead-product-owner.hoon": "34b6efce69f85b7b4b64627dce8d1ffc95d5467676a208964a7be768c55d36ae"
+  },
+  "home_activation": false,
+  "native_executed": false,
+  "native_suite_arms": 6,
+  "protocol": "stead.independent-source-review/1",
+  "reviewed_at": "2026-11-15T18:14:31.305030+00:00",
+  "scope": "reserved-product-owner-preparation",
+  "status": "approved-for-isolated-qualification"
+}
