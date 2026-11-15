@@ -1,0 +1,418 @@
+{
+  "protocol": "stead.pilot-rendered-review/1",
+  "source": "da42d2220c7f85709996b5a7bfd8fa3f236c8625",
+  "release_manifest_sha256": "3f096af75eb6d1c01756bafb33f5c3697a019cd247a7047319ac078c4790572a",
+  "classification": "authenticated-live-read-only",
+  "qualifies_human_trial": false,
+  "freshProfile": true,
+  "globalTrustChanged": false,
+  "sharedProfileUsed": false,
+  "checks": [
+    "Actual public capabilities advertise the qualified workspace and legacy Work profiles before member sign-in",
+    "Rendered sign-in and exact named-origin approval",
+    "Workspace navigation is visible after sign-in using the actual public capability response",
+    "My work matches a current authorized read; returned work opens canonically and Back restores selection when present",
+    "Three actual projects show their exact counts, including empty Code project; both Work details and all three saved Docs match fresh native readbacks",
+    "All saved Docs expose no authorized backlinks, matching the actual zero-relation baseline; no synthetic linked record was added",
+    "Explicit Search matches authorized results; keyboard Doc open and browser Back preserve submitted text and result focus at 320px",
+    "Code root lists all 22 actual entries at the displayed accepted commit",
+    "Keyboard folder open and Root return preserve accepted revision and restore folder focus",
+    "README exact accepted text renders at 1440px and 320px; Back to folder preserves snapshot and file focus",
+    "Home sign-out confirmed by denied member query",
+    "Identity owner session sign-out confirmed"
+  ],
+  "screenshots": {
+    "my-work-desktop": "52e58603149c13bbbe183ab992679f60a04b6a74612c7b68e684f1d7aae0ab51",
+    "work-0": "fffc0dd9c660e6d5551ccad9098d292fcaea606261aeeab067da103a32227b42",
+    "work-narrow": "82a0af137faef401d7e5613ed25e2724178b9926dfbf2b8f211dfa0a63d2bcec",
+    "document-0-0": "e4fc2b7331fdded5bf56d20483c9dec988e467f62ed1b27e52c2a31eb9fd7802",
+    "work-1": "f19394a725f7cbfd8394be4f22d5a5583ec7e37c559deb49b3f39fcde1743365",
+    "document-1-0": "0ea077c3bbb769fd7b32fc9156870762e87b065e4ee7012a728cc14f122477ac",
+    "search-narrow": "0b00b1cf737e77afe75ad87d41ee05ed81343b0bbac4968516a6568261528142",
+    "document-narrow": "a0541098b88874c0779913b68db5f082e17c21ba18bd51653bcb04b766739d04",
+    "search-return-narrow": "89157fae6ddad3834ce0011729c90e3ab4c705a615ce054c0caa37c5cd5ca571",
+    "code-root-desktop": "37404f60e5546f7623e1d652c5d6ab8e6df860ae8503bb304c6abd9eab197cd2",
+    "code-folder-desktop": "f8bf762e78fda4bd34cc183b9345f55c946365e5f0162624680cb598590f873e",
+    "code-text-desktop": "1ffa6b36493617717475732945ec7fda195a1c8849fd1f301b5851120349b566",
+    "code-text-narrow": "3e8adfbbb489795cf40385180c6a038b50ba7644d0c9a77a1ef5b4848e6fcde9",
+    "code-root-narrow": "56ad655f2c1a3ca54fd8eaf936b863c91c0abf423499c056b94ae1c33ebecd45"
+  },
+  "content": [
+    {
+      "kind": "work",
+      "project_id": "01a1da8f-f2fc-7a73-b4a7-007b6646265b",
+      "resource_id": "01a1da8f-f3a6-7c5b-8dd4-4c3b456cd338",
+      "revision": "1",
+      "title_sha256": "48141f769ba6a1200ca7ffaeb15f4ec44db3abd9969a1dfbc8a5d14dfff455f0",
+      "description_sha256": "a56ee747171ef3dd9893ee07d2513eb030865fc79f9e5a25d3afbb7d46953fba",
+      "view": "project-0"
+    },
+    {
+      "kind": "document",
+      "project_id": "01a1da8f-f2fc-7a73-b4a7-007b6646265b",
+      "collection_id": "01a1da90-8165-7c5d-902a-7cb2c0fdf36b",
+      "resource_id": "01a1da90-823c-7d74-9c16-ddc39325be94",
+      "revision": "1",
+      "markdown_sha256": "d734967f9fdd971982f96798c83a2af1b94d8905be759ce67cbdaeb4402191e2",
+      "view": "project-0-doc-0"
+    },
+    {
+      "kind": "document",
+      "project_id": "01a1da8f-f2fc-7a73-b4a7-007b6646265b",
+      "collection_id": "01a1dc44-3b76-7dfd-8292-836217c62bf0",
+      "resource_id": "01a1dc44-3dc1-7494-b2d1-77ff08297f9f",
+      "revision": "1",
+      "markdown_sha256": "7c0a8833f9bba74314b125575fddcf4dcbc83a1c0a79b088da5c0bea31f5beda",
+      "view": "project-0-doc-0"
+    },
+    {
+      "kind": "work",
+      "project_id": "01a1da91-db75-7250-8286-2241ff268e59",
+      "resource_id": "01a1dc72-8283-7b0e-a72a-bf785c5114b1",
+      "revision": "1",
+      "title_sha256": "2fc290c49c2164d29a341565e55e5e5b61c4ff0db6e6b103afc7be1d99631c9a",
+      "description_sha256": "3f07b3712e9d7be82a28dd5094f6ee9fffc87534458db51f033d49d3a5e4dd6a",
+      "view": "project-1"
+    },
+    {
+      "kind": "document",
+      "project_id": "01a1da91-db75-7250-8286-2241ff268e59",
+      "collection_id": "01a1dc72-be31-7e26-908d-d79b5c06b74a",
+      "resource_id": "01a1dc72-daee-7f27-8d9f-8b03a5bf0401",
+      "revision": "1",
+      "markdown_sha256": "831d868bdd5d7c8bfaa3bb92c4808ec6b9337e47bf598c346fc6d2202aa16473",
+      "view": "project-1-doc-0"
+    },
+    {
+      "kind": "document",
+      "project_id": "01a1da91-db75-7250-8286-2241ff268e59",
+      "collection_id": "01a1dc72-be31-7e26-908d-d79b5c06b74a",
+      "resource_id": "01a1dc72-daee-7f27-8d9f-8b03a5bf0401",
+      "revision": "1",
+      "markdown_sha256": "831d868bdd5d7c8bfaa3bb92c4808ec6b9337e47bf598c346fc6d2202aa16473",
+      "view": "workspace-search-narrow"
+    }
+  ],
+  "errors": [],
+  "browser": "157.0.8103.78",
+  "publicCapabilities": {
+    "protocol": "stead.capabilities/3",
+    "profile": "configured-team",
+    "commands": "stead.command/3",
+    "queries": "stead.query/3",
+    "updates": "stead.updates/3",
+    "work_contract": "stead.work-contract/1",
+    "workspace_queries": "stead.workspace-queries/1",
+    "authentication": "native-approved-browser/1",
+    "max_request_bytes": "65536",
+    "max_response_bytes": "262144",
+    "page_size": "20"
+  },
+  "projectCount": 3,
+  "workDetailCount": 2,
+  "documentCount": 3,
+  "docBacklinkOpenCount": 0,
+  "searchSourceVisibility": "authorized-private",
+  "codeStatus": {
+    "project_id": "01a1dab7-a64f-7f40-944f-28f95c3c447d",
+    "status": "external",
+    "http_status": 200
+  },
+  "code": {
+    "project_id": "01a1dab7-a64f-7f40-944f-28f95c3c447d",
+    "snapshot": "2d0565c884124cdbf5eacccc3626cf3cc72d5c0fda1fb295e70a6ce90fe782ca",
+    "ref": "726566732f68656164732f6d61696e",
+    "commit": "3ba8e4304e8d73d948905acdb2f1e1cfb1dff5af",
+    "root_entries": 22,
+    "readme_sha256": "67946a5d1b7705ee38c9935cdbf998360d682f1209b1a4b60bb4e91d0624a675",
+    "readme_bytes": 4963,
+    "folder_entries": 1
+  },
+  "finalSafety": {
+    "response_error_count": 0,
+    "script_error_count": 0,
+    "blocked_business_count": 0,
+    "blocked_request_kinds": [],
+    "delegation_read_counts": [
+      1,
+      1
+    ],
+    "blocked_delegation_pair_indices": []
+  },
+  "scriptErrors": [],
+  "businessCommandRequests": 0,
+  "status": "pass",
+  "contextClosed": true,
+  "browserClosed": true,
+  "readObservations": [
+    {
+      "kind": "identity",
+      "status": "read",
+      "http_status": 200,
+      "row_count": 1
+    },
+    {
+      "kind": "projects",
+      "status": "read",
+      "http_status": 200,
+      "row_count": 3
+    },
+    {
+      "kind": "my-work",
+      "status": "read",
+      "http_status": 200,
+      "row_count": 0
+    },
+    {
+      "kind": "project",
+      "status": "read",
+      "http_status": 200,
+      "row_count": 1
+    },
+    {
+      "kind": "work",
+      "status": "read",
+      "http_status": 200,
+      "row_count": 1
+    },
+    {
+      "kind": "work",
+      "status": "read",
+      "http_status": 200,
+      "row_count": 1
+    },
+    {
+      "kind": "other",
+      "status": "read",
+      "http_status": 200,
+      "row_count": 0
+    },
+    {
+      "kind": "project",
+      "status": "read",
+      "http_status": 200,
+      "row_count": 1
+    },
+    {
+      "kind": "containers",
+      "status": "read",
+      "http_status": 200,
+      "row_count": 2
+    },
+    {
+      "kind": "project",
+      "status": "read",
+      "http_status": 200,
+      "row_count": 1
+    },
+    {
+      "kind": "containers",
+      "status": "read",
+      "http_status": 200,
+      "row_count": 2
+    },
+    {
+      "kind": "documents",
+      "status": "read",
+      "http_status": 200,
+      "row_count": 1
+    },
+    {
+      "kind": "document",
+      "status": "read",
+      "http_status": 200,
+      "row_count": 1
+    },
+    {
+      "kind": "document",
+      "status": "read",
+      "http_status": 200,
+      "row_count": 1
+    },
+    {
+      "kind": "relations",
+      "status": "read",
+      "http_status": 200,
+      "row_count": 0
+    },
+    {
+      "kind": "project",
+      "status": "read",
+      "http_status": 200,
+      "row_count": 1
+    },
+    {
+      "kind": "containers",
+      "status": "read",
+      "http_status": 200,
+      "row_count": 2
+    },
+    {
+      "kind": "documents",
+      "status": "read",
+      "http_status": 200,
+      "row_count": 1
+    },
+    {
+      "kind": "document",
+      "status": "read",
+      "http_status": 200,
+      "row_count": 1
+    },
+    {
+      "kind": "document",
+      "status": "read",
+      "http_status": 200,
+      "row_count": 1
+    },
+    {
+      "kind": "relations",
+      "status": "read",
+      "http_status": 200,
+      "row_count": 0
+    },
+    {
+      "kind": "project",
+      "status": "read",
+      "http_status": 200,
+      "row_count": 1
+    },
+    {
+      "kind": "work",
+      "status": "read",
+      "http_status": 200,
+      "row_count": 1
+    },
+    {
+      "kind": "work",
+      "status": "read",
+      "http_status": 200,
+      "row_count": 1
+    },
+    {
+      "kind": "other",
+      "status": "read",
+      "http_status": 200,
+      "row_count": 0
+    },
+    {
+      "kind": "project",
+      "status": "read",
+      "http_status": 200,
+      "row_count": 1
+    },
+    {
+      "kind": "containers",
+      "status": "read",
+      "http_status": 200,
+      "row_count": 1
+    },
+    {
+      "kind": "project",
+      "status": "read",
+      "http_status": 200,
+      "row_count": 1
+    },
+    {
+      "kind": "containers",
+      "status": "read",
+      "http_status": 200,
+      "row_count": 1
+    },
+    {
+      "kind": "documents",
+      "status": "read",
+      "http_status": 200,
+      "row_count": 1
+    },
+    {
+      "kind": "document",
+      "status": "read",
+      "http_status": 200,
+      "row_count": 1
+    },
+    {
+      "kind": "document",
+      "status": "read",
+      "http_status": 200,
+      "row_count": 1
+    },
+    {
+      "kind": "relations",
+      "status": "read",
+      "http_status": 200,
+      "row_count": 0
+    },
+    {
+      "kind": "project",
+      "status": "read",
+      "http_status": 200,
+      "row_count": 1
+    },
+    {
+      "kind": "work",
+      "status": "read",
+      "http_status": 200,
+      "row_count": 0
+    },
+    {
+      "kind": "project",
+      "status": "read",
+      "http_status": 200,
+      "row_count": 1
+    },
+    {
+      "kind": "containers",
+      "status": "read",
+      "http_status": 200,
+      "row_count": 0
+    },
+    {
+      "kind": "workspace-search",
+      "status": "read",
+      "http_status": 200,
+      "row_count": 1
+    },
+    {
+      "kind": "projects",
+      "status": "read",
+      "http_status": 200,
+      "row_count": 3
+    },
+    {
+      "kind": "containers",
+      "status": "read",
+      "http_status": 200,
+      "row_count": 1
+    },
+    {
+      "kind": "document",
+      "status": "read",
+      "http_status": 200,
+      "row_count": 1
+    },
+    {
+      "kind": "workspace-search",
+      "status": "read",
+      "http_status": 200,
+      "row_count": 1
+    },
+    {
+      "kind": "project",
+      "status": "read",
+      "http_status": 200,
+      "row_count": 1
+    }
+  ],
+  "responseErrorCount": 0,
+  "authAttempted": {
+    "home": true,
+    "identity": true
+  },
+  "logoutConfirmed": {
+    "home": true,
+    "identity": true
+  },
+  "homeSessionLoggedOut": true,
+  "identitySessionLoggedOut": true
+}

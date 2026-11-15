@@ -1,0 +1,69 @@
+{
+  "protocol": "stead.live-browser-partial-review/1",
+  "source_commit": "da42d2220c7f85709996b5a7bfd8fa3f236c8625",
+  "release_manifest_sha256": "3f096af75eb6d1c01756bafb33f5c3697a019cd247a7047319ac078c4790572a",
+  "script_sha256": "a311198fba231be2c82d4ecc90e7348a905d0442ac4ae8eca53c7115e44e547c",
+  "status": "failed-at-code-root",
+  "classification": "actual-authenticated-read-only-partial-browser-evidence",
+  "human_acceptance": false,
+  "completed_checks": [
+    "Actual public capabilities advertise the qualified workspace and legacy Work profiles before member sign-in",
+    "Rendered sign-in and exact named-origin approval",
+    "Workspace navigation is visible after sign-in using the actual public capability response",
+    "My work matches a current authorized read; returned work opens canonically and Back restores selection when present",
+    "Three actual projects show their exact counts, including empty Code project; both Work details and all three saved Docs match fresh native readbacks",
+    "All saved Docs expose no authorized backlinks, matching the actual zero-relation baseline; no synthetic linked record was added",
+    "Explicit Search matches authorized results; keyboard Doc open and browser Back preserve submitted text and result focus at 320px",
+    "Home sign-out confirmed by denied member query",
+    "Identity owner session sign-out confirmed"
+  ],
+  "project_count": 3,
+  "work_details": 2,
+  "documents": 3,
+  "actual_backlink_count": 0,
+  "public_capabilities": {
+    "protocol": "stead.capabilities/3",
+    "profile": "configured-team",
+    "commands": "stead.command/3",
+    "queries": "stead.query/3",
+    "updates": "stead.updates/3",
+    "work_contract": "stead.work-contract/1",
+    "workspace_queries": "stead.workspace-queries/1",
+    "authentication": "native-approved-browser/1",
+    "max_request_bytes": "65536",
+    "max_response_bytes": "262144",
+    "page_size": "20"
+  },
+  "failure": [
+    {
+      "stage": "code-root",
+      "type": "AssertionError"
+    }
+  ],
+  "diagnosis": "The Code probe tested immediate button count before the independent asynchronous repository status request completed. The exact-project status and DOM wait correction is under separate review; no product change or successful Code check claimed.",
+  "cleanup": {
+    "browser_cleanup": true,
+    "session_cleanup": true,
+    "authority_healthy_after": true,
+    "uid_fence_removed": true,
+    "profile_removed": true
+  },
+  "logout_confirmed": {
+    "home": true,
+    "identity": true
+  },
+  "duration_seconds": 77.6,
+  "private_report_sha256": "be302e5c0783bbb7beb476bb894f95d3b1f3f06a9256c697720df98eb371686b",
+  "screenshot_sha256": {
+    "my-work-desktop": "52e58603149c13bbbe183ab992679f60a04b6a74612c7b68e684f1d7aae0ab51",
+    "work-0": "a8836ea63af1c0c87398e7eb7eb6b42c6f89329320611d6516e3356290d356e9",
+    "work-narrow": "1fa27a82d47a9aefc37b141e7ba280ee008ab623ad2814e402c5bbf56244c7f0",
+    "document-0-0": "e4fc2b7331fdded5bf56d20483c9dec988e467f62ed1b27e52c2a31eb9fd7802",
+    "work-1": "c0e47018baa9fa3af6773a36099912c9c7cf5ac7aa0bfac42e29ade4fe62e4af",
+    "document-1-0": "0ea077c3bbb769fd7b32fc9156870762e87b065e4ee7012a728cc14f122477ac",
+    "search-narrow": "0b00b1cf737e77afe75ad87d41ee05ed81343b0bbac4968516a6568261528142",
+    "document-narrow": "a0541098b88874c0779913b68db5f082e17c21ba18bd51653bcb04b766739d04",
+    "search-return-narrow": "89157fae6ddad3834ce0011729c90e3ab4c705a615ce054c0caa37c5cd5ca571",
+    "failureHome": "809983072068434df79fa710417f9d9a2c483710edd044e5b73ac0214fd9b7ae"
+  }
+}

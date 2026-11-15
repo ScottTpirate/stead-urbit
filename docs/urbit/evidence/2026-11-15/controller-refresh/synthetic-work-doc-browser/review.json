@@ -1,0 +1,59 @@
+{
+  "classification": "actual-browser-synthetic-components",
+  "corrections": "Stable aria-labelledby names for populated textareas; one Work case7 relative locator correction. Earlier failing reports remain retained and do not count as pass.",
+  "limitations": [
+    "Synthetic fixtures do not establish Home authorization, native compilation, saved-state migration, real agent execution or human acceptance.",
+    "Eight Work cases use the selector-only successor; eight Doc cases use unchanged Doc inputs from the label-correction packet."
+  ],
+  "live_product_activation": false,
+  "native_authority_qualified": false,
+  "no_credentials": true,
+  "private_network_verified": true,
+  "profiles": {
+    "doc": {
+      "cleanup_verified": true,
+      "driver_sha256": "f105e1427e7fe8dae66586c35409d0cdde7073f83ed70a706044e806b5fa0b20",
+      "duration_seconds": 50.7,
+      "passed": 8,
+      "report_sha256": "007fd768198b7e0f830e0f9b58478b6e538b3677480a8195a844fee58939c53e",
+      "screenshots": {
+        "review-1440": {
+          "bytes": 77382,
+          "sha256": "9151146e7e6261cbd2278263f4845dd832623dfdab777f688b5b1efeadaf5a3f"
+        },
+        "review-320": {
+          "bytes": 95018,
+          "sha256": "489d34a9b0f05e5e43cbea3c44010fbbc663640a8fb9ad06021924ca5b4bd109"
+        }
+      },
+      "source_manifest_sha256": "96c3e5a0ea29b2d554017574e243d1b94afa1712b4c34cfe6a44f67d616752e3"
+    },
+    "work": {
+      "cleanup_verified": true,
+      "driver_sha256": "c39543236b497ab007831d7cf017250b1ce4c40bbc8ef7100ae86038bfe0d35d",
+      "duration_seconds": 54.2,
+      "passed": 8,
+      "report_sha256": "f109c158e183541a658c571db679de1c3e3f6d5d924e7178f7aecdf1323493b0",
+      "screenshots": {
+        "composer-320": {
+          "bytes": 31208,
+          "sha256": "e2c141a10aafa5bf81b77fcf3bb0e6ea8a66cd1ae6bea63d969ed1967b33479a"
+        },
+        "detail-320": {
+          "bytes": 87521,
+          "sha256": "1a3df2197f953856ba295a14262c4850bd13b79cb8e754835ef1b1bf5bfc5630"
+        }
+      },
+      "source_manifest_sha256": "2a81f6d182efc0ef0e5fde93511d8654a653f426a18a02cf1655596482f4e8d8"
+    }
+  },
+  "qualifies_phase": false,
+  "resource_limits": {
+    "cpu_percent_of_one_core": 25,
+    "memory_bytes": 1572864000,
+    "pids": 128
+  },
+  "runtime": "Chromium157.0.8103.78/Node24.21.0/Playwright1.63.0",
+  "status": "pass",
+  "visual_review": "320px Work detail and Doc comparison inspected: labels, controls, content and action buttons visible without viewport overflow. Fixture harness controls are explicit synthetic-only UI."
+}

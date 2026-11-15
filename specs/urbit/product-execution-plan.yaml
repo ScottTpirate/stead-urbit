@@ -572,7 +572,7 @@ packages:
   - 12
   - 21
   - 26
-  current_progress: Closed Doc Change decoder, pure proposal/review/adoption reducer, atomic Doc acceptance preparation and concrete accepted-outcome proof are independently source-reviewed. Fourteen reducer/proof arms and six compound-history arms are prepared, with exact pair replay and checkpoint boundaries. Seven additional source-reviewed native read arms cover bounded metadata, exact historical before/after bodies, access, result-specific feedback and pagination. The browser command codec passed ten host tests; the closed read/receipt client passed TypeScript and fifteen host tests with exact body/session/cursor checks and no serving route. Reserved Doc review components have independent source review, passing TypeScript and ten host tests; eight rendered cases are prepared but unexecuted. Explicit read-to-UI mapping and stale-load invalidation passed eight additional host/static-markup cases, preserving missing request IDs and rejected quarantine outcomes honestly. Native compilation, serving routes, rendered/UI activation and Home integration remain pending.
+  current_progress: Closed Doc Change decoder, pure proposal/review/adoption reducer, atomic Doc acceptance preparation and concrete accepted-outcome proof are independently source-reviewed. Fourteen reducer/proof arms and six compound-history arms are prepared, with exact pair replay and checkpoint boundaries. Seven additional source-reviewed native read arms cover bounded metadata, exact historical before/after bodies, access, result-specific feedback and pagination. The browser command codec passed ten host tests; the closed read/receipt client passed TypeScript and fifteen host tests with exact body/session/cursor checks and no serving route. Reserved Doc review components have independent source review, passing TypeScript and ten host tests; eight actual-browser synthetic cases passed on the reviewed Lightsail isolated component runtime after stable textarea-label correction. Explicit read-to-UI mapping and stale-load invalidation passed eight additional host/static-markup cases, preserving missing request IDs and rejected quarantine outcomes honestly. Native compilation, serving routes, connected UI activation and Home integration remain pending.
 - id: T13
   title: Separate execution expiry from durable proposal review
   phase: C
@@ -849,7 +849,9 @@ packages:
   current_progress: Authenticated pilot tree and README reads succeeded; stale selection and sign-out denial verified
     in product-tree/receipt.json. Original defect not reproduced. The in-app browser could not resolve the private
     route; a separately owned Chromium browser reached both named pilot sites through the private tunnel. Authenticated
-    visual tree verification remains open until the reviewed rollout and browser regression finish.
+    read-only browser verification at da42d22 now passes all ten content/navigation cases and both sign-outs, including
+    the 22-entry repository root and exact README at desktop and narrow widths. Three presentation fixes are separate
+    source-only work; no mutation, forge or human acceptance follows from this read-only check.
 - id: T20
   title: Unify Code capabilities and qualify standard Git writes
   phase: D

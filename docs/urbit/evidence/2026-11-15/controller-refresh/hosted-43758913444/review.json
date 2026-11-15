@@ -1,0 +1,29 @@
+{
+  "candidate_commit": "125e4a6df24a32257dc0592e1c3afd186230ffe7",
+  "cleanup_verified": true,
+  "containment_controls_passed": 6,
+  "controller_commit": "b5c129da3cc2cf0565084f0726ccb7ce708a6617",
+  "diagnostic_only": true,
+  "format": "stead.independent-hosted-diagnostic-review/1",
+  "inputs_canonical_sha256": "8884f145c9f394d518471575f2da91b9fe69b4bc7ad1ffee9f6e8949328b49f8",
+  "limitations": [
+    "No raw failing transcript retained in published artifact; source-path lines exist but current closed span parser emitted no locations.",
+    "The collector always fails qualification. Normal full qualification remains required after fixes."
+  ],
+  "module_build_failures": 15,
+  "native_qualification": false,
+  "qualifies_phase": false,
+  "registered_positive_arms": 293,
+  "registered_positive_suites": 43,
+  "report_sha256": "d9a01faa674b606ab836d455fdcd65411eace60b5aca4f0435ef1d580d5298f1",
+  "reviewed_at": "2026-11-15T21:01:02.012773+00:00",
+  "run_id": 43758913444,
+  "source_files_verified": {
+    "candidate_product_files": 127,
+    "composed_files": 227,
+    "controller_files": 415
+  },
+  "status": "diagnostic-complete-with-source-failures",
+  "transcripts_recorded": 44,
+  "workflow_commit": "e1db701edeb13bee08f67fbedfc97c7635e1c711"
+}

@@ -1,0 +1,52 @@
+{
+  "protocol": "stead.remote-synthetic-ui-owner/1",
+  "status": "pass",
+  "source": "da42d2220c7f85709996b5a7bfd8fa3f236c8625",
+  "profile": "work",
+  "output": "/var/lib/stead-pilot-browser/reference-byg314cf/output",
+  "unit": "stead-pilot-browser-reference-byg314cf.service",
+  "browser_cleanup": true,
+  "authority_services": 8,
+  "credentials_used": false,
+  "qualifies_phase": false,
+  "packet_sha256": {
+    "assets/doc/manifest.json": "96c3e5a0ea29b2d554017574e243d1b94afa1712b4c34cfe6a44f67d616752e3",
+    "assets/doc/reference.css": "3a3eec267b9f21dc3b6b5b591a2e1fc3475c31528e150b64f5ba521d1f5d110f",
+    "assets/doc/reference.js": "41ade6f51b0bd3d85884131828a22dddfe422a5084744d9bc2e02fad22ad5f71",
+    "assets/work/manifest.json": "2a81f6d182efc0ef0e5fde93511d8654a653f426a18a02cf1655596482f4e8d8",
+    "assets/work/reference.css": "22df297114cb5030e5125e2221fd102fdd6ad716daa43e452d0c09f838e4992f",
+    "assets/work/reference.js": "758e543cfe6ffcad811c9fb5c77d1e561e4b34ebc5d75d3db899c0048606d3a8",
+    "check-doc.mjs": "f105e1427e7fe8dae66586c35409d0cdde7073f83ed70a706044e806b5fa0b20",
+    "check-work.mjs": "c39543236b497ab007831d7cf017250b1ce4c40bbc8ef7100ae86038bfe0d35d",
+    "worker.py": "6a4dc2538d9bab0f68568b1d084ece147a54c3b07296875c7c7ae89ea48619f8"
+  },
+  "renderer_observation": {
+    "seccomp": "2",
+    "no_new_privileges": "1",
+    "pid_namespace_depth": 3,
+    "no_sandbox_flag": false,
+    "exact_owned_cgroup": true,
+    "exact_executable": true,
+    "all_status_uids_match": true
+  },
+  "sandbox_renderer_verified": true,
+  "admission": {
+    "pid": 87016,
+    "group": "/system.slice/stead-pilot-browser-reference-byg314cf.service",
+    "cpu_max": "2500 10000",
+    "memory_max": "1572864000",
+    "pids_max": "128",
+    "affinity": [
+      1
+    ],
+    "network_namespace": "net:[4026532229]",
+    "private_paths_denied": true,
+    "authority_network_denied": true
+  },
+  "fixture_execution_admitted": true,
+  "browser_exit": 0,
+  "duration_seconds": 54.2,
+  "authority_healthy_after": true,
+  "rendered_status": "pass",
+  "profile_removed": true
+}

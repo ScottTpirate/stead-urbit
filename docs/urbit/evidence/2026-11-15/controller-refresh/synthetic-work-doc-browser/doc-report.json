@@ -1,0 +1,115 @@
+{
+  "classification": "real-browser-synthetic-doc-reference",
+  "qualifies_phase": false,
+  "credentials_used": false,
+  "authority_network_used": false,
+  "node": "v24.21.0",
+  "status": "pass",
+  "checks": [
+    {
+      "name": "after-is-default-exact-source-diff-and-toolbar-focus-survive-narrow-layout",
+      "status": "pass"
+    },
+    {
+      "name": "unavailable-original-never-becomes-empty-diff-or-invented-decision-restriction",
+      "status": "pass"
+    },
+    {
+      "name": "eligibility-and-exact-body-are-required-and-prior-output-stays-read-only",
+      "status": "pass"
+    },
+    {
+      "name": "unknown-decision-retries-original-bytes-and-keeps-independent-notes",
+      "status": "pass"
+    },
+    {
+      "name": "epoch-conflict-requires-fresh-comparison-and-explicit-note-adoption",
+      "status": "pass"
+    },
+    {
+      "name": "late-a-to-b-to-a-decision-cannot-publish-into-returned-view",
+      "status": "pass"
+    },
+    {
+      "name": "denied-decision-clears-content-through-remount-until-fresh-authorized-read",
+      "status": "pass"
+    },
+    {
+      "name": "quarantine-rejection-keeps-note-and-offline-and-list-keyboard-states-remain-explicit",
+      "status": "pass"
+    }
+  ],
+  "requested_cases": [],
+  "execution_scope": "all-declared-cases",
+  "source_baseline": "9b921914302a67580c1ef4b91cd4821bbda90c1d",
+  "source_inputs": {
+    "tests/doc-change-review-reference.tsx": "1036489a9e0e35e77c3beaec61be39aaba867c4520ca6cd34b5010837546da45",
+    "node_modules/react/jsx-runtime.js": "b392951a77d0a2e6a6bd017e49d768481ae5b63c4109c6c31f622cf7b2433edc",
+    "node_modules/react/index.js": "60caffdecbdc5db3bc4ec4e83df9488345ccb271d07533b9210bf5750918d97e",
+    "node_modules/react-dom/client.js": "00e348ab3d6bc2eef908345d0bc4e008c95bcfecec060dfda5c4967953761396",
+    "src/docChangeReview.tsx": "797dcc2a7a53caa09ac54a98a94fffb326d73db17890ee96c26ff418d52d764d",
+    "src/primitives.tsx": "2f75ffd1ec0a16dc041b9eb74bb7fe37c8ee4cf6ccbb4f180332cbc3dc80a7ce",
+    "tests/doc-change-review-fixture.ts": "d3a4bbb11b5b1ad35b42239ccdd6c91f44c7cd52ad747be5251b2c801ded5f03",
+    "src/style.css": "8ef3db44d059dbb3adb462166b5f4b14af8cbe2ae3481af5e0b7ac2c10a5275c",
+    "tests/doc-change-review-reference.css": "b2d31885abd3cd10d694dd1b51121ab164f445ba5700d10580711070036d3981",
+    "node_modules/react/cjs/react-jsx-runtime.development.js": "706e324b21fcd94fb728da71b374694d0727d0baee4126011cea583f54e09106",
+    "node_modules/react/cjs/react.development.js": "97bef56f30daa05320514ea220d7d03eb765635519ff2d5650c4887772aa5767",
+    "node_modules/react-dom/cjs/react-dom-client.development.js": "c10b5e5ad37ca22c88b58bf4ada9a3b655ab79934c0b5cc6bad26f42c774584f",
+    "src/docChangeReview.css": "6a4b3fe0d075d87bf315bcaf46fbaf94790edb907ec121542ed64580994aa227",
+    "src/Markdown.tsx": "9829f171225d31bbd59f2c7c11c1ba56a01ebdedc4893e4454c1ae06cc242565",
+    "src/AcceptedTime.tsx": "83d8df590acb5108514495fc9e8e4249f479e6e2db9781af2d6d2a4bc221df71",
+    "src/docChangeProtocol.ts": "f41042a8a14ba759e3238ccda54532d0fd49d48b174ada4281d06cb7c6f5f893",
+    "src/docChangeReviewState.tsx": "6d49760599f0541076618358a96b5d5263d6f339d9151a9d34a02101db8c2d1b",
+    "src/protocol.ts": "a8dee5b65f79ffe052869f19e9b508f7abcb30149ac82eaa31a47223796003c7",
+    "src/controls.css": "a56ddea5a06513bc3d05bd9ca6a668c235c6a604bb8a2271552218fea3e3935d",
+    "src/markdown.css": "0fdf1bbf42bf38abc270e184530aeec36917856d4a5d1329b7b989cd4e81e217",
+    "node_modules/react-dom/index.js": "ba1a3e33489f868371561777607e3ee5091df0f7ea3f1a10f789d6b86e4c1505",
+    "src/productWire.ts": "35b033b3437f07b2e0690e3192091b43ba4bec2c9bee2768ca9b43abb70fa6c1",
+    "src/Icon.tsx": "dd32e23e59619ddbd0c9f2c111f84f273b9040fc16eb4e49ba8161a228ef5ab7",
+    "src/ResourceLink.tsx": "ca8efee035f001157bd23a85e6ec391301e985bd0dc5a8dba496e8ee0edecb4d",
+    "node_modules/markdown-it/dist/markdown-it.mjs": "60dff81404169420bc0dae52e221c933ef48bd38a66eb9ca657c582621782047",
+    "node_modules/react-dom/cjs/react-dom.development.js": "e4ca31557a0d93a3750438e2f78905d0ce39eff1391a6ff6df12de3a2c332f11",
+    "node_modules/punycode.js/punycode.es6.js": "8969ae1b78644a33574be197d1a7a9c85b031092f1c1a657d865b7b3c1edd77e",
+    "node_modules/mdurl/index.mjs": "8ea430f1f8a107f529e2dac519d2f18e71ec9befe6f23f78bf6510cf86d3f9a0",
+    "node_modules/uc.micro/build/index.mjs": "3fdef99558860189fb25d930401847dccc1aafe3d10d4c4aec25fb02df0d0726",
+    "node_modules/entities/dist/index.js": "4ce5bc47aa7a5f3958bc4d42e450d62156efdd043cbad6b7edbdf9604d85dc4f",
+    "node_modules/linkify-it/build/index.mjs": "8b8112c2d772da15ebfff2506ac7a281bfa061f695ac7743c083ac54815385ac",
+    "node_modules/mdurl/lib/parse.mjs": "2a417b42e9ea8ee94fc77c596a34eb206d6c69823484e89d80bf1e7583d8f91d",
+    "node_modules/entities/dist/escape.js": "880426162e6e6a1c65cb67cca4824c529c37192b51b0571927a81d33074f7302",
+    "node_modules/mdurl/lib/decode.mjs": "d91544cfb42b9639073f5fa0f576bf72ef6697e848005357c433cad036c2ef20",
+    "node_modules/mdurl/lib/encode.mjs": "0ae621933b548f880404841b251b0f4fc2c8446ded699e6812def217250ac15d",
+    "node_modules/mdurl/lib/format.mjs": "2410ec324b913a42c572e01ae49436e5fa4e2e5fbea15c08c92a6dea8bc5887d",
+    "node_modules/entities/dist/decode.js": "6ce0048039ae0f9dab6e21dd1309661bcfe7e3beabfab1f15cdd61adb91e20b7",
+    "node_modules/entities/dist/encode.js": "af4b217937b364425a6303b2febfda0a2d1282b73e1d7a3e6381ac2072b7d0ea",
+    "node_modules/scheduler/index.js": "145965504d60007bc25486ab930b0367867dcd5d579ccd343c148d69349a7cfb",
+    "node_modules/entities/dist/internal/bin-trie-flags.js": "8bb285f9ab41b9fd2525c83902c99b36e7c36da7cb7fa3be574d68f328183de5",
+    "node_modules/entities/dist/generated/encode-html.js": "b5fcf3d4d73f5bd5f6a49c9c9da3cc6b824b2e2e5068f74c108649b1185d0a1c",
+    "node_modules/scheduler/cjs/scheduler.development.js": "646eb671c8585382baff16daf92fe16a4cdd10dcf1a363c58b2ae1f6bf3a2b8d",
+    "node_modules/entities/dist/decode-codepoint.js": "dddf76e72987697316e647f046b2755dafe16308fe83159969b3155e0ebf3beb",
+    "node_modules/entities/dist/generated/decode-data-html.js": "1ff1226550125bb8976dd032b2dcfc37ba311863dbf9ae69b4b16922f5a38ead",
+    "node_modules/entities/dist/generated/decode-data-xml.js": "e549a5fd573d540a4652c81fab6655f3418c34c1613a30ed245ca017d9a5b730",
+    "node_modules/entities/dist/internal/decode-shared.js": "cd26388e8ec3fdc2c4b212883e9ae460a4fe6dd37d80d0dacffd6b0087171b6b",
+    "package.json": "114c7bebb586769708d0622cd27662371d1ae08aec4164ee36ab1995bb63776d",
+    "package-lock.json": "b4d2ced8e19aa8b7cf9eaab75b906e867132321b97937b534e5810c152dbec98",
+    "tsconfig.json": "946598487037c2907aeed34b17deb628dc7ead7bb7226be99f41c8652eb44bfb",
+    "tests/doc-change-review-reference.mjs": "1e23d148a83457ba55bf42ad31fa18c8a7bc6eb2b671ae83692469e810cc87a7"
+  },
+  "assertion_block_sha256": "dfa2d6bd83b7da0d9af606d72da8d8d551945e1f6ffeb8f9b9794ac67c09d8a1",
+  "inputs_before": {
+    "reference.js": "41ade6f51b0bd3d85884131828a22dddfe422a5084744d9bc2e02fad22ad5f71",
+    "reference.css": "3a3eec267b9f21dc3b6b5b591a2e1fc3475c31528e150b64f5ba521d1f5d110f",
+    "driver": "f105e1427e7fe8dae66586c35409d0cdde7073f83ed70a706044e806b5fa0b20",
+    "manifest": "96c3e5a0ea29b2d554017574e243d1b94afa1712b4c34cfe6a44f67d616752e3"
+  },
+  "browser": "157.0.8103.78",
+  "parent_admitted": true,
+  "inputs_after": {
+    "reference.js": "41ade6f51b0bd3d85884131828a22dddfe422a5084744d9bc2e02fad22ad5f71",
+    "reference.css": "3a3eec267b9f21dc3b6b5b591a2e1fc3475c31528e150b64f5ba521d1f5d110f",
+    "driver": "f105e1427e7fe8dae66586c35409d0cdde7073f83ed70a706044e806b5fa0b20",
+    "manifest": "96c3e5a0ea29b2d554017574e243d1b94afa1712b4c34cfe6a44f67d616752e3"
+  },
+  "contextsClosed": true,
+  "browserClosed": true,
+  "serverClosed": true
+}

@@ -1,0 +1,44 @@
+{
+  "authority_services_healthy": 8,
+  "classification": "independent-authenticated-live-read-only-browser-review",
+  "content_journeys_passed": 10,
+  "exact_accepted_git_snapshot_unchanged": true,
+  "final_safety": {
+    "blocked_business_count": 0,
+    "blocked_delegation_pair_indices": [],
+    "blocked_request_kinds": [],
+    "delegation_read_counts": [
+      1,
+      1
+    ],
+    "response_error_count": 0,
+    "script_error_count": 0
+  },
+  "home_and_identity_logout_confirmed": {
+    "home": true,
+    "identity": true
+  },
+  "owned_cleanup_verified": true,
+  "owner_report_sha256": "0ebdf5581f490bf62a8889bf6ae1ecd6fd8e9624e2d7e5d6bfc41ea9aa676e2e",
+  "prior_attempts": "Earlier failed attempts remain preserved: public capability defect was fixed and qualified; Code status synchronization and exact Work delegation read allowlist were corrected in the reviewed harness.",
+  "projects": 3,
+  "qualifies_human_trial": false,
+  "readme_bytes": 4963,
+  "release_manifest_sha256": "3f096af75eb6d1c01756bafb33f5c3697a019cd247a7047319ac078c4790572a",
+  "remaining_visual_findings": [
+    "The320px Workspace navigation clips My work.",
+    "Bundled fullwidthplus glyph missing in this private browser font environment.",
+    "Saved Doc Read still shows Save and Publish controls. Root has separately prepared a source-only visual correction; it is not deployed by this receipt."
+  ],
+  "report_sha256": "b3afad45cb2c35a3a504f5e18bc1860d3552c86a08fe22423ebf1e7f4841c1b2",
+  "repository_root_entries": 22,
+  "reviewed_at": "2026-11-15T21:14:02.175868+00:00",
+  "saved_docs": 3,
+  "script_sha256": "07ae1ecece22733eca738531ec2030469d8bdc3dc65918c5a1b9076919fa2037",
+  "signout_checks_passed": 2,
+  "source_commit": "da42d2220c7f85709996b5a7bfd8fa3f236c8625",
+  "status": "pass",
+  "supervisor_sha256": "dd8d20c80721365505ad76281dee9d535698fa1b017264d985d1d6e6bc5cf836",
+  "visual_review": "Actual desktop repository root and narrow repository text, Doc read and Search return inspected. Content and keyboard navigation match exact live responses.",
+  "work_details": 2
+}
