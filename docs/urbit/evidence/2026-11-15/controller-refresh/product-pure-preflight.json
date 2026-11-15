@@ -1,0 +1,14 @@
+{
+  "adapters_excluded": true,
+  "candidate": "40bc68423e0b905b524ed70418cd48e23e56970a",
+  "composed_files": 202,
+  "controller": "1037caaaa31b9e1a68959de43035f278619b21ef",
+  "controller_bytes": 3978582,
+  "controller_files": 390,
+  "host_tests": 53,
+  "native_executed": false,
+  "positive_suites": 33,
+  "product_files": 112,
+  "protocol": "stead.controller-source-preflight/1",
+  "pure_arms": 220
+}
