@@ -18,6 +18,35 @@ import owned_child
 
 
 class FailureProjectionTests(unittest.TestCase):
+    def test_source_spans_require_admitted_source_and_exact_byte_bounds(self):
+        source = 'native/core/desk/lib/stead-fixture.hoon'
+        sources = {source: b'first\nsecond\n'}
+        raw = (self.secret + '\n/lib/stead-fixture/hoon:<[1 2].[2 6]>\n'
+               '/lib/unknown/hoon:<[1 1].[2 1]>\n'
+               '/lib/stead-fixture/hoon:<[0 1].[1 1]>\n'
+               '/lib/stead-fixture/hoon:<[1 1].[9 1]>\n'
+               '/lib/stead-fixture/hoon:<[1 7].[2 1]>\n'
+               '/lib/stead-fixture/hoon:<[2 6].[2 1]>\n'
+               'private/lib/stead-fixture/hoon:<[1 1].[1 2]>\n'
+               '/lib/stead-fixture/hoon:<[1 2].[2 6]>').encode()
+        self.value['native']['native_unit_transcripts'] = [{'log_hex': raw.hex()}]
+        observed = failure.project(self.frame(), self.inputs, run_id=self.run, sources=sources)
+        self.assertEqual(observed['native']['last_unit']['source_spans'], {'locations': [{
+            'path': source, 'start_line': 1, 'start_column': 2, 'end_line': 2, 'end_column': 6}], 'truncated': False})
+        self.assertNotIn(self.secret, json.dumps(observed))
+        self.assertEqual(failure.source_spans(raw, None), {'locations': [], 'truncated': False})
+        for malformed in ([], {'x': b''} | {str(i): b'' for i in range(513)}, {source: 'private'}):
+            with self.subTest(source_type=type(malformed).__name__), self.assertRaises(ValueError):
+                failure.source_spans(raw, malformed)
+
+    def test_source_spans_are_unique_and_capped_at_sixteen(self):
+        path = 'native/core/desk/tests/stead-fixture.hoon'
+        raw = '\n'.join(f'/tests/stead-fixture/hoon:<[{n} 1].[{n} 2]>' for n in range(1, 19)).encode()
+        result = failure.source_spans(raw, {path: b'x\n' * 18})
+        self.assertEqual(len(result['locations']), 16)
+        self.assertEqual(result['locations'][-1]['start_line'], 16)
+        self.assertTrue(result['truncated'])
+
     def test_last_unit_reports_only_registered_names_and_closed_verdicts(self):
         inventory = json.loads((ROOT / 'specs/urbit/phase2-pure-units.json').read_bytes())
         suite = next(row for row in inventory['suites'] if row['path'] == '/tests/stead-workspace-views')
