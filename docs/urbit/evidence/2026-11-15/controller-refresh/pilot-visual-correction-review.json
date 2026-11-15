@@ -1,0 +1,25 @@
+{
+  "classification": "independent-visual-correction-source-review",
+  "qualifies_phase": false,
+  "status": "approved-source-only",
+  "inputs": {
+    "web/app/src/main.tsx": "767cc0aab75231df71457613d2a1f2f550341153a200432cafae42cd20cad858",
+    "web/app/src/style.css": "9e1e9133ff4e97d62f9b4f95770add61b82ac781585cc06a5f440625a38a4d44",
+    "web/app/tests/native.mjs": "ed285a51a29b41f7b3f462aa67a548b63d04face7d95305ed61593bd4f7decef"
+  },
+  "observed_defects": [
+    "Actual320px pilot render clipped Workspace navigation beside projectchips and Newproject.",
+    "Private runtime font did not supply fullwidth plus glyph.",
+    "Clean saved Doc Read showed inactive Save and publication action among primary controls."
+  ],
+  "change": [
+    "Workspace navigation receives a full-width row; project navigation scrolls on its own row.",
+    "Newproject and Newwork use the existing bundled plus icon.",
+    "Save appears for editable dirty Docs; private publication moves into named More page actions."
+  ],
+  "remaining": [
+    "TypeScript/build validation",
+    "Actual desktop and narrow app rendering and keyboard check",
+    "Native publication/read-only journey on the exact source"
+  ]
+}

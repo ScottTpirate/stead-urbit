@@ -440,6 +440,7 @@ async function docsJourney(alice, bob) {
   await showFullMarkdown(a);
   assert.equal(await a.getByRole('textbox', {name:'Markdown source', exact:true}).inputValue(), selected.markdown);
   const privateObservations = await privacy.unchanged();
+  await a.locator('summary[aria-label="More page actions"]').click();
   await a.getByRole('button', {name: 'Publish selected page', exact: true}).click();
   await a.getByLabel('Destination collection', {exact: true}).selectOption({label: 'Shared handbook'});
   const published = await acceptedClick(a, 'Save at home');
@@ -460,7 +461,7 @@ async function docsJourney(alice, bob) {
   await showFullMarkdown(b);
   const shared = await b.getByRole('textbox', {name: 'Markdown source', exact: true}).inputValue();
   assert.equal(shared, selected.markdown.replace(selected.id, published.resource_id).replace('state: draft', 'state: published'));
-  assert.equal(await b.getByRole('button', {name: 'Save page', exact: true}).isDisabled(), true);
+  assert.equal(await b.getByRole('button', {name: 'Save page', exact: true}).count(), 0);
   await inertPreview(b);
   await b.screenshot({path: path.join(output, 'native-docs.png'), fullPage: true});
   await b.getByRole('button', {name: 'Close', exact: true}).click();
@@ -491,7 +492,7 @@ async function docsJourney(alice, bob) {
   assert.equal(sharedRow.container_head, editedShared.git_commit_oid);
   await showFullMarkdown(b);
   assert.equal(await b.getByRole('textbox', {name:'Markdown source', exact:true}).inputValue(), sharedEdit);
-  assert.equal(await b.getByRole('button', {name:'Save page', exact:true}).isDisabled(), true);
+  assert.equal(await b.getByRole('button', {name: 'Save page', exact: true}).count(), 0);
   await b.getByText('Saved revision ' + editedShared.resource_revision, {exact:true}).waitFor();
   await inertPreview(b);
   await b.getByRole('button', {name:'Close', exact:true}).click();
