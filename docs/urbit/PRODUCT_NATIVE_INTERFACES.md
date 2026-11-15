@@ -578,8 +578,13 @@ marks the run Submitted, never the Work Done.
 [Independent source review](evidence/2026-11-15/controller-refresh/reserved-run-review.json)
 binds ten prepared native arms. The expected portable digest was calculated on
 the host; the Hoon assertion remains unexecuted. Trusted fixture callbacks are
-not production adapters. Decoder, shared history, saved-state migration,
-Home routes, run reads, real executor and G3 remain required.
+not production adapters. The [reserved run decoder](evidence/2026-11-15/controller-refresh/reserved-run-codec-review.json)
+now admits eight closed command fields and thirteen typed operations, with
+canonical nested contract/target/grant/budget/effect strings and six prepared,
+uncompiled native arms. Its local 23-field contract parser keeps the 64 KiB
+request bound without widening the shared parser. Decoding proves no authority.
+Shared history, saved-state migration, Home routes, run reads, real executor
+and G3 remain required.
 
 ### Remaining integrations
 

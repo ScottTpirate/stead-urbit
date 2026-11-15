@@ -1,0 +1,25 @@
+{
+  "protocol": "stead.independent-source-review/1",
+  "status": "source_reviewed_native_unexecuted",
+  "scope": "reserved-run-command-decoder",
+  "files": {
+    "native/core/desk/lib/stead-run-codec.hoon": "ba0c758e95230b133c5475e592a07e8106c73dfbab8e1c0967b04c8797e62ecb",
+    "native/core/desk/tests/stead-run-codec.hoon": "8c017c03365d8e4a8a91ce2f393d60eacbc06c7f4126e922c040c92d5dbe9888"
+  },
+  "test_arms": 6,
+  "native_executed": false,
+  "home_activation": false,
+  "reviewer": "native lane independent review of integrator packet",
+  "resolved_finding": "The23field contract exceeded the shared16field request parser. The local flat object helper now uses parse-result with an explicit65536byte bound, exact keys, canonical nested bytes and string-only values; the global parser is unchanged.",
+  "checks": [
+    "Closed8field request and13typed operations; current Home authorization is not inferred from decoded claims.",
+    "Portable canonical grant/budget/target/effect strings roundtrip to existing run command bytes.",
+    "At most4 distinct scoped Doc destinations, exact revision/hash pairs, bounded numeric/text/lease-budget shapes.",
+    "Prepared6arms cover all operations, portable vector, target ordering, key/scope/shape errors, numeric/text limits and forbidden effect/authority fields."
+  ],
+  "limitations": [
+    "No native compilation, test registration, public mark/route, saved-state integration or run API is enabled.",
+    "Decoder validates intent shape only. Actual clock, actor, custody, policy, context, execution pins, original grant and effect authority remain reducer/Home obligations.",
+    "The portable digest assertion remains unexecuted Hoon; its expected value was computed on the host."
+  ]
+}

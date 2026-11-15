@@ -22,7 +22,10 @@ from live routes. A transition returns candidate ordinary Work/Inbox/Doc intents
 it does not dispatch a process. Restart clears live leases and emits no external
 intent. Canonical contracts preserve original grant, exact Doc targets and
 normalized target order; result references match the Doc Change vocabulary.
-Versioned history/carrier integration, actual execution and G3 remain open.
+The reserved closed command decoder has six additional independently reviewed,
+uncompiled native arms; it validates intent shape and never substitutes for
+current Home authority. Versioned history/carrier integration, actual execution
+and G3 remain open.
 
 ## Reuse and separation
 
