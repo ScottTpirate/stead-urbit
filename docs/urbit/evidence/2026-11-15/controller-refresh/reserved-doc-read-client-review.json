@@ -1,0 +1,112 @@
+{
+  "classification": "reserved-doc-change-query-receipt-and-injected-client-source-and-host-evidence",
+  "qualifies_phase": false,
+  "native_executed": false,
+  "live_carrier_executed": false,
+  "source_commit": "c1cbee3",
+  "files": {
+    "web/app/src/docChangeReadProtocol.ts": "7e312905c12e630345eefb9e16e57cb435ba164e77f8d1d29f0d57b6cb8b95b8",
+    "web/app/src/docChangeClient.ts": "089be0658e652b531a66994f00f133bfa392d67bab4b3a20007a16892bd9f295",
+    "web/app/tests/doc-change-read.test.ts": "fd0e9708ead8e95d1e335004c68670fb17429ba9216d26d6d5b70712c188d51c",
+    "web/app/tests/doc-change-read.mjs": "f7c4691438c5b73d76d04721f99590ec517715132e7f3fc74f1b59bfba699623",
+    "web/app/tests/doc-change-read-vectors.json": "468fa00ea9b1013fe08049e0db9154813663cf64dc53345296fb7fcedd9eb68c"
+  },
+  "source_review": {
+    "reviewer": "root",
+    "status": "no-blocking-finding",
+    "scope": "Native source equivalence only; no serving route or capability advertised",
+    "mapping": {
+      "query": "stead-doc-change-query.valid/decode/bytes: closed10fields,4purposes,exactpositive result revision+digest,side onlybody,opaque cursor onlymetadata lists",
+      "read": "stead-doc-change-views.execute:14fieldread/4fieldrejected envelope,scope/requestcorrelation,20rowsor1body,256KiBbound;metadata22preview/31detail/body10scalars",
+      "nested": "Canonical JSON strings remain strings in exactwire rows; sharedDoc target6,evidence5,acceptance5,latestdecision9,actions6x2 decodedclosed; no request IDs invented",
+      "body": "Exactselectedoutput andnativeDoc targetpins copiedbeforeawait;ready bytes verifySHA256 againstmetadata;after includesexactpublished nativeDoc header;before unavailable/newDoc explicit",
+      "receipt": "stead-doc-change.deny/prepare:5fieldshortrejection/16fieldfullreceipt;exactrequest/digest/scope/op/CAS;accepted andproducer_quarantined successorchecks;quarantine remainsrejected",
+      "client": "Injected callable transport only; default absentqueries/commandscapability; opaque sessioncheckedafterawait; query/preparecapabilitycheckedafterawait; a matchingknownacceptedreceipt canremainvalidhistoricaloutcomeaftercommandcapwithdrawal inthesame session",
+      "retry": "Original frozen preparedobject+bytes+requestID retained; malformed/crossrequest commandresponse=>outcome_unknown; noautomaticretry; cursorlocallyoneuse/boundtopurpose,scope,session,epoch,generation"
+    },
+    "limitations": [
+      "No native Hoon compile/execution for these rows/receipts.",
+      "No Home route, capability advertisement, UI integration or live Doc Change acceptance.",
+      "Output digest cannot be recomputed from sanitized metadata alone because original authentication/grant fields are intentionally not exposed.",
+      "Known current reply does not itself authorize a new decision; native reducer checks final authority."
+    ]
+  },
+  "executed": {
+    "typescript": {
+      "status": "pass",
+      "owner": ".runtime/doc-read-typecheck-owner-1794773532684256486",
+      "resources": {
+        "output": "/home/skilgore/stead-urbit/.runtime/doc-read-typecheck-owner-1794773532684256486",
+        "peak_c": 47.0,
+        "duration_seconds": 6.6
+      }
+    },
+    "host_tests": {
+      "passed": 15,
+      "report": ".runtime/doc-change-read-ufWpx3/report.json",
+      "report_sha256": "6d15011ba1dcd4a13709159c34f6089ff2b807252d39a36d1882d65b4ea96bd8",
+      "owner": ".runtime/doc-read-owner-1794773563999508947",
+      "resources": {
+        "output": "/home/skilgore/stead-urbit/.runtime/doc-read-owner-1794773563999508947",
+        "peak_c": 55.0,
+        "duration_seconds": 1.6
+      }
+    }
+  },
+  "source_derived_vectors": {
+    "classification": "source-derived-expected-values-not-native-execution",
+    "native_source_commit": "c1cbee3",
+    "hash_definition": "SHA256 of exact UTF-8 canonical bytes; not a native generation or result digest",
+    "vectors": [
+      {
+        "name": "body-query",
+        "value": {
+          "protocol": "stead.doc-change-query/1",
+          "request_id": "019939ba-4000-7000-8000-000000000700",
+          "kind": "body",
+          "project_id": "019939ba-4000-7000-8000-000000000100",
+          "work_id": "019939ba-4000-7000-8000-000000000101",
+          "change_id": "019939ba-4000-7000-8000-000000000400",
+          "result_revision": "1",
+          "result_digest": "cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc",
+          "side": "before",
+          "cursor": ""
+        },
+        "canonical": "{\"change_id\":\"019939ba-4000-7000-8000-000000000400\",\"cursor\":\"\",\"kind\":\"body\",\"project_id\":\"019939ba-4000-7000-8000-000000000100\",\"protocol\":\"stead.doc-change-query/1\",\"request_id\":\"019939ba-4000-7000-8000-000000000700\",\"result_digest\":\"cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc\",\"result_revision\":\"1\",\"side\":\"before\",\"work_id\":\"019939ba-4000-7000-8000-000000000101\"}",
+        "bytes_sha256": "d49c9ea6b8f631b22f0ff788d9f66e5c4d75c2029a5545c3eb81d2d30caef32d"
+      },
+      {
+        "name": "accepted-adoption-receipt",
+        "value": {
+          "protocol": "stead.doc-change-receipt/1",
+          "status": "accepted",
+          "request_id": "019939ba-4000-7000-8000-000000000300",
+          "canonical_sha256": "73d6d921a97ad901f634b9a2a3ea34b9a326cfdfb0328c65a23f4a1f673509aa",
+          "project_id": "019939ba-4000-7000-8000-000000000100",
+          "work_id": "019939ba-4000-7000-8000-000000000101",
+          "change_id": "019939ba-4000-7000-8000-000000000400",
+          "authority_epoch": "1",
+          "operation": "change.adopt",
+          "expected_revision": "2",
+          "resulting_revision": "3",
+          "result_revision": "1",
+          "result_digest": "cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc",
+          "change_status": "submitted",
+          "recorded_at_ms": "2000",
+          "error": ""
+        },
+        "canonical": "{\"authority_epoch\":\"1\",\"canonical_sha256\":\"73d6d921a97ad901f634b9a2a3ea34b9a326cfdfb0328c65a23f4a1f673509aa\",\"change_id\":\"019939ba-4000-7000-8000-000000000400\",\"change_status\":\"submitted\",\"error\":\"\",\"expected_revision\":\"2\",\"operation\":\"change.adopt\",\"project_id\":\"019939ba-4000-7000-8000-000000000100\",\"protocol\":\"stead.doc-change-receipt/1\",\"recorded_at_ms\":\"2000\",\"request_id\":\"019939ba-4000-7000-8000-000000000300\",\"result_digest\":\"cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc\",\"result_revision\":\"1\",\"resulting_revision\":\"3\",\"status\":\"accepted\",\"work_id\":\"019939ba-4000-7000-8000-000000000101\"}",
+        "bytes_sha256": "860bec428e9cfd29801f323bb8021cdbbd38eaf3e3a78a205e01585800e3b29f"
+      }
+    ]
+  },
+  "resource_guard": {
+    "cpu_quota_percent": 25,
+    "cpu": [
+      19
+    ],
+    "admission_below_c": 75,
+    "stop_c": 80,
+    "cleanup_verified": true
+  }
+}

@@ -553,7 +553,12 @@ and expiry. The historical lookup is bounded by the existing 6,144-event limit.
 [Independent source review](evidence/2026-11-15/controller-refresh/reserved-doc-change-views-review.json)
 binds seven prepared arms covering scope, exact bodies, revoked access,
 feedback attribution, review authority and pagination. They have not been
-compiled or executed; no route or capability advertises these reads yet.
+compiled or executed; no route or capability advertises these reads yet. The
+[prepared browser client](evidence/2026-11-15/controller-refresh/reserved-doc-read-client-review.json)
+checks the exact query/result/receipt shapes, body hashes and current session;
+unknown command outcomes retain the original frozen request. TypeScript and
+fifteen host cases pass, with no native or live-carrier claim. Its callable
+transport defaults to absent capabilities and invents no endpoint.
 
 ### Reserved native run transitions
 

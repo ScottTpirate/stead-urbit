@@ -1,0 +1,47 @@
+{
+  "classification": "source-derived-expected-values-not-native-execution",
+  "native_source_commit": "c1cbee3",
+  "hash_definition": "SHA256 of exact UTF-8 canonical bytes; not a native generation or result digest",
+  "vectors": [
+    {
+      "name": "body-query",
+      "value": {
+        "protocol": "stead.doc-change-query/1",
+        "request_id": "019939ba-4000-7000-8000-000000000700",
+        "kind": "body",
+        "project_id": "019939ba-4000-7000-8000-000000000100",
+        "work_id": "019939ba-4000-7000-8000-000000000101",
+        "change_id": "019939ba-4000-7000-8000-000000000400",
+        "result_revision": "1",
+        "result_digest": "cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc",
+        "side": "before",
+        "cursor": ""
+      },
+      "canonical": "{\"change_id\":\"019939ba-4000-7000-8000-000000000400\",\"cursor\":\"\",\"kind\":\"body\",\"project_id\":\"019939ba-4000-7000-8000-000000000100\",\"protocol\":\"stead.doc-change-query/1\",\"request_id\":\"019939ba-4000-7000-8000-000000000700\",\"result_digest\":\"cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc\",\"result_revision\":\"1\",\"side\":\"before\",\"work_id\":\"019939ba-4000-7000-8000-000000000101\"}",
+      "bytes_sha256": "d49c9ea6b8f631b22f0ff788d9f66e5c4d75c2029a5545c3eb81d2d30caef32d"
+    },
+    {
+      "name": "accepted-adoption-receipt",
+      "value": {
+        "protocol": "stead.doc-change-receipt/1",
+        "status": "accepted",
+        "request_id": "019939ba-4000-7000-8000-000000000300",
+        "canonical_sha256": "73d6d921a97ad901f634b9a2a3ea34b9a326cfdfb0328c65a23f4a1f673509aa",
+        "project_id": "019939ba-4000-7000-8000-000000000100",
+        "work_id": "019939ba-4000-7000-8000-000000000101",
+        "change_id": "019939ba-4000-7000-8000-000000000400",
+        "authority_epoch": "1",
+        "operation": "change.adopt",
+        "expected_revision": "2",
+        "resulting_revision": "3",
+        "result_revision": "1",
+        "result_digest": "cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc",
+        "change_status": "submitted",
+        "recorded_at_ms": "2000",
+        "error": ""
+      },
+      "canonical": "{\"authority_epoch\":\"1\",\"canonical_sha256\":\"73d6d921a97ad901f634b9a2a3ea34b9a326cfdfb0328c65a23f4a1f673509aa\",\"change_id\":\"019939ba-4000-7000-8000-000000000400\",\"change_status\":\"submitted\",\"error\":\"\",\"expected_revision\":\"2\",\"operation\":\"change.adopt\",\"project_id\":\"019939ba-4000-7000-8000-000000000100\",\"protocol\":\"stead.doc-change-receipt/1\",\"recorded_at_ms\":\"2000\",\"request_id\":\"019939ba-4000-7000-8000-000000000300\",\"result_digest\":\"cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc\",\"result_revision\":\"1\",\"resulting_revision\":\"3\",\"status\":\"accepted\",\"work_id\":\"019939ba-4000-7000-8000-000000000101\"}",
+      "bytes_sha256": "860bec428e9cfd29801f323bb8021cdbbd38eaf3e3a78a205e01585800e3b29f"
+    }
+  ]
+}
