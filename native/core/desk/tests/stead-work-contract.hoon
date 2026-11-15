@@ -1,4 +1,4 @@
-/+  *test, stead-codec, stead-core, stead-projection, stead-restore, stead-team, stead-team-codec, stead-views, stead-work-contract
+/+  *test, stead-browser, stead-codec, stead-core, stead-projection, stead-restore, stead-team, stead-team-codec, stead-views, stead-work-contract
 =,  stead-codec
 =>
 |%
@@ -109,6 +109,9 @@
   =/  found  (snag 0 (rows:stead-views db visible.view carol detail 1.010))
   =/  listing  (snag 0 (rows:stead-views db visible.view carol detail(resource '') 1.010))
   =/  capability  (snag 0 (rows:stead-views db visible.view carol detail(kind 'capabilities', project '', resource '') 1.010))
+  =/  browser  (call:stead-browser db view *ephemeral:stead-browser ['/stead/api/capabilities' '{"protocol":"stead.capabilities/3"}' '' '' ''] 1.010 0xabc)
+  =/  advertised  (need (parse-result bytes.browser))
+  ?>  ?=([%o *] advertised)
   =/  denied  (execute:stead-views db view *state:stead-views carol detail 5.000 0xabc)
   =/  inconsistent  (~(put by data:(~(got by works.data.db) [(id 100) (id 101)])) 'title' [%s 'Unrecorded'])
   =/  refused  (mule |.((fields:stead-work-contract journal.data.db (id 100) (id 101) inconsistent)))
@@ -118,6 +121,13 @@
           =('1' (field fields.found 'execution_contract_revision'))
           =('921aaf0599b23bed49a622a56555072751ede18c5998f81546b743ae31450e06' (field fields.found 'execution_contract_digest'))
           =('stead.work-contract/1' (field fields.capability 'work_contract'))
+          =('stead.workspace-queries/1' (field fields.capability 'workspace_queries'))
+          =(200 status.browser)
+          =((field fields.capability 'work_contract') (field p.advertised 'work_contract'))
+          =((field fields.capability 'workspace_queries') (field p.advertised 'workspace_queries'))
+          =(db db.browser)  =(view view.browser)
+          =(*ephemeral:stead-browser transient.browser)
+          ?=(~ cookies.browser)  ?=(~ outgoing.browser)
           !(~(has by fields.listing) 'execution_contract_revision')
           =('denied_or_not_found' (result-field response.denied 'error'))
           ?=([%| *] refused)

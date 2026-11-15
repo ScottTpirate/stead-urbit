@@ -1,0 +1,86 @@
+{
+  "auth_attempted": {
+    "home": true,
+    "identity": true
+  },
+  "authority_services_healthy": 8,
+  "business_content_checks_completed": false,
+  "check_sha256": "31a38204c88a374a6e00185b5d1008ce9ec2f7522f156b9a9c1b031b1d7b4083",
+  "confirmed_finding": "Public browser capability response omits workspace_queries and work_contract. The actual UI therefore hides Workspace navigation although authenticated query capabilities and queries are implemented.",
+  "launcher_sha256": "2eca8abd86b4d4d1d6272b593e3f4872502818d00cfc767ce532c15fa72f40d6",
+  "logout_401_confirmed": {
+    "home": true,
+    "identity": true
+  },
+  "observed_stage": "workspace-navigation",
+  "observed_ui": {
+    "alert": false,
+    "busy": false,
+    "disconnected": false,
+    "loading": false,
+    "myWorkButton": false,
+    "myWorkButtonDisabled": false,
+    "myWorkHeading": false,
+    "noAssignedWork": false,
+    "results": false,
+    "retryable": false,
+    "revoked": false,
+    "unsupported": false,
+    "workspaceNavigation": false
+  },
+  "owned_apparmor_profile_removed": true,
+  "owned_browser_cleanup": true,
+  "owned_network_fence_removed": true,
+  "owned_session_cleanup": true,
+  "protocol": "stead.pilot-rendered-review/1",
+  "public_capabilities": {
+    "profile": "configured-team",
+    "protocol": "stead.capabilities/3",
+    "queries": "stead.query/3",
+    "updates": "stead.updates/3",
+    "work_contract": null,
+    "workspace_queries": null
+  },
+  "public_response_sha256": "6d48cb7051de17c1f428b36889e89c5d7cfe5b478a0a8589401219bf5bba6592",
+  "qualifies_human_trial": false,
+  "read_observations": [
+    {
+      "http_status": 200,
+      "kind": "identity",
+      "row_count": 1,
+      "status": "read"
+    },
+    {
+      "http_status": 200,
+      "kind": "projects",
+      "row_count": 3,
+      "status": "read"
+    }
+  ],
+  "release_manifest_sha256": "869470d380aacb21fa243312b2e1221b3883bb4051aaaf72ee5c90b7626b40e5",
+  "renderer_proof": {
+    "all_status_uids_match": true,
+    "exact_executable": true,
+    "exact_owned_cgroup": true,
+    "no_new_privileges": "1",
+    "no_sandbox_flag": false,
+    "pid_namespace_depth": 3,
+    "seccomp": "2"
+  },
+  "resource_admission": {
+    "affinity": [
+      1
+    ],
+    "cpu_max": "2500 10000",
+    "memory_max": "1572864000",
+    "network_allowlist_verified": true,
+    "pids_max": "128",
+    "private_paths_denied": true
+  },
+  "runtime_inventory_sha256": "0ab637b96dc0085abfeaf205bb67c4dc3e114224ac0800cbc99ca17af4ba226a",
+  "screenshot_retained_privately": true,
+  "screenshot_sha256": "63b83a73556f97ac6672b2607615671931d4cfa086e6986b1d41906124896e7c",
+  "screenshot_visually_inspected": true,
+  "source": "c2f286154ada3f27dd53a7dda78741a75788b522",
+  "status": "failed-capability-mismatch"
+}
