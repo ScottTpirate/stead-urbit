@@ -89,7 +89,19 @@
   =/  original  (saved accepted)
   =/  [cards=(list card:agent:gall) loaded=agent:gall]  (on-load:initial original)
   =/  immediate=vase  on-save:loaded
-  =/  final  (finish cards loaded)
+  =/  pending  (waits cards)
+  ?>  ?=(^ pending)
+  =/  [next-cards=(list card:agent:gall) advanced=agent:gall]
+    (on-arvo:loaded i.pending [%behn %wake ~])
+  ::  An actual intermediate step must still be pending, not merely idle after
+  ::  a failed or already completed restore. Save/reload that original target.
+  ?>  ?=(^ (waits next-cards))
+  =/  partial=vase  on-save:advanced
+  =/  [partial-cards=(list card:agent:gall) partial-loaded=agent:gall]
+    (on-load:initial partial)
+  =/  partial-final  (finish partial-cards partial-loaded)
+  =/  partial-output=vase  on-save:partial-final
+  =/  final  (finish next-cards advanced)
   =/  output=vase  on-save:final
   =/  row  !<(envelope output)
   =/  [again-cards=(list card:agent:gall) again=agent:gall]  (on-load:initial output)
@@ -97,7 +109,9 @@
   =/  replayed-save=vase  on-save:replayed
   %-  expect
   !>  ?&  =(q.original q.immediate)
+          =(q.original q.partial)  !(published advanced)
           =(q.original q.output)
+          =(q.output q.partial-output)  (published partial-final)
           =(q.output q.replayed-save)
           =(accepted target.row)  (published final)  (published replayed)
           =([%open 1 ~] mode.row)

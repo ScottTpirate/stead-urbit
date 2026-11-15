@@ -1,0 +1,20 @@
+{
+  "classification": "synthetic-gall-app-arm-source-review-only",
+  "source": "native/core/desk/tests/stead-home-v10-rehearsal.hoon",
+  "sha256": "905a057fdaad9c7576336f947570c4fc46286e42e445886032822247d1eca5f5",
+  "reviewer": "native",
+  "integrator": "root",
+  "native_arms": 6,
+  "arm_count_changed": false,
+  "changed_arm": "test-home-v10-product-restore-retains-full-target-before-publish",
+  "review": [
+    "Consume one real on-arvo wake from actual on-load cards.",
+    "Require another restore wake and owner receipt watch still unavailable, so failed or complete quiescence cannot impersonate partial restore.",
+    "Save exact original full product target after the intermediate wake.",
+    "Reload that partial save, complete both paths and compare exact final saved vases with positive publication.",
+    "Keep existing final roundtrip and sidecar assertions."
+  ],
+  "native_executed": false,
+  "cold_gall_partial_restore_observed": false,
+  "prior_source_freeze_unchanged": true
+}
