@@ -75,6 +75,18 @@
         (lte revision 18.446.744.073.709.551.615)
     ==
   |
+++  outcome-identity
+  ::  Two outcomes cannot require independent acceptance of the same target
+  ::  base: accepting one would make the other's base permanently stale.
+  |=  value=json
+  ^-  @t
+  ?>  ?=([%o *] value)
+  =/  kind  (field p.value 'kind')
+  =/  names
+    ?:  =('document' kind)  ~['kind' 'project_id' 'collection_id' 'document_id']
+    ?:  =('code' kind)  ~['kind' 'project_id' 'repository_id' 'target_ref']
+    ~['kind' 'project_id' 'work_id']
+  (canonical (object (turn names |=(name=@t [name (field p.value name)]))))
 ++  outcomes
   |=  [project=@t work=@t data=object-map]
   ^-  ?
@@ -82,6 +94,8 @@
       %+  levy  ~(tap by data)
       |=  [id=@t value=json]
       &((uuid id) (outcome project work value))
+      =/  targets  (turn ~(tap by data) |=([id=@t value=json] (outcome-identity value)))
+      =((lent targets) (lent ~(tap in (silt targets))))
   ==
 ++  properties
   |=  [data=object-map allow-done=?]

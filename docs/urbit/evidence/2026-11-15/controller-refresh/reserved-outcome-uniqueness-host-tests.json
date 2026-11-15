@@ -1,0 +1,51 @@
+{
+  "classification": "host-protocol-boundary-tests-with-injected-transport",
+  "qualifies_phase": false,
+  "node": "v24.21.0",
+  "expected_tests": [
+    "source-derived command4 canonical hash preserves exact bytes and domain",
+    "independent expected fields and all eight operations stay closed",
+    "decimal revisions retain uint64 precision and distinguish zero from positive",
+    "owner worker blocked and completion syntax never invents authority or completion",
+    "parser rejects duplicate keys arrays scalars excessive nesting and byte limits",
+    "required outcomes preserve typed exact targets and reject partial malformed contracts",
+    "query4 scope is exact and never silently accepts query3 or extra filters",
+    "exact Work decoding preserves legacy assignment without converting it to owner or worker",
+    "query results reject cross-scope rows duplicate resources and partial detail pages",
+    "comments retain ordered twenty-row pages exact bodies and original accepted identity",
+    "receipts correlate exact request digest scope operation and independent expected revisions",
+    "prepared retries retain immutable exact bytes without automatic resubmission",
+    "late query and command replies are fenced by the opaque current-session token",
+    "malformed or cross-request receipts remain unknown and preserve the exact retry",
+    "read scope is snapshotted before transport and typed helpers preserve separate revisions"
+  ],
+  "status": "pass",
+  "inputs_before": {
+    "src/productWire.ts": "35b033b3437f07b2e0690e3192091b43ba4bec2c9bee2768ca9b43abb70fa6c1",
+    "src/productProtocol.ts": "53032173a4df1a394ffbab1fea2950ce5e4579279116dcf9d470f1e91f5a2400",
+    "src/productClient.ts": "359dfb2790072499ae6e4c045c65fc22a7259612b53cd53729a4c4940feb2b69",
+    "src/protocol.ts": "a8dee5b65f79ffe052869f19e9b508f7abcb30149ac82eaa31a47223796003c7",
+    "tests/product-protocol.test.ts": "5c77240ef0d9bdc974f53269f4f517cef4b79c9a23d70ec132afefab4f2e8772",
+    "tests/product-protocol.mjs": "7a36d2f05ebe51f5b86c9b07b658b917b9cbe3928d20d08e5b249918ad86d91d",
+    "package-lock.json": "b4d2ced8e19aa8b7cf9eaab75b906e867132321b97937b534e5810c152dbec98",
+    "../../native/core/desk/lib/stead-product-codec.hoon": "f5b16dd0ae46aa1f079a7a35c21d1ed46ff30893dc1096ee16297819863e11d0",
+    "../../native/core/desk/lib/stead-product-query.hoon": "0d6c7a73b803d3c015c6a85b3a7a23d06f82c796de1fb9b18cd4442067e89350",
+    "../../native/core/desk/lib/stead-product-views.hoon": "ea5806bd403937aa2efc782d00eaa1ff58fe064a4baf4102f9097d4ce8fb95f0",
+    "../../native/core/desk/lib/stead-product-work.hoon": "624d1878397c4552bd4e2d7ed0c02af874b95c3c20321f89dcec61cf47ab53e4",
+    "../../native/core/desk/tests/stead-product-codec.hoon": "5e4e1f327c357ccbe137c86ec6d4603c8b9644a1559d5aca5348ad31311092a9"
+  },
+  "inputs_after": {
+    "src/productWire.ts": "35b033b3437f07b2e0690e3192091b43ba4bec2c9bee2768ca9b43abb70fa6c1",
+    "src/productProtocol.ts": "53032173a4df1a394ffbab1fea2950ce5e4579279116dcf9d470f1e91f5a2400",
+    "src/productClient.ts": "359dfb2790072499ae6e4c045c65fc22a7259612b53cd53729a4c4940feb2b69",
+    "src/protocol.ts": "a8dee5b65f79ffe052869f19e9b508f7abcb30149ac82eaa31a47223796003c7",
+    "tests/product-protocol.test.ts": "5c77240ef0d9bdc974f53269f4f517cef4b79c9a23d70ec132afefab4f2e8772",
+    "tests/product-protocol.mjs": "7a36d2f05ebe51f5b86c9b07b658b917b9cbe3928d20d08e5b249918ad86d91d",
+    "package-lock.json": "b4d2ced8e19aa8b7cf9eaab75b906e867132321b97937b534e5810c152dbec98",
+    "../../native/core/desk/lib/stead-product-codec.hoon": "f5b16dd0ae46aa1f079a7a35c21d1ed46ff30893dc1096ee16297819863e11d0",
+    "../../native/core/desk/lib/stead-product-query.hoon": "0d6c7a73b803d3c015c6a85b3a7a23d06f82c796de1fb9b18cd4442067e89350",
+    "../../native/core/desk/lib/stead-product-views.hoon": "ea5806bd403937aa2efc782d00eaa1ff58fe064a4baf4102f9097d4ce8fb95f0",
+    "../../native/core/desk/lib/stead-product-work.hoon": "624d1878397c4552bd4e2d7ed0c02af874b95c3c20321f89dcec61cf47ab53e4",
+    "../../native/core/desk/tests/stead-product-codec.hoon": "5e4e1f327c357ccbe137c86ec6d4603c8b9644a1559d5aca5348ad31311092a9"
+  }
+}

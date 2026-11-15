@@ -200,7 +200,11 @@ to one closed desired target. It does not claim that an output already exists:
 | `completion-note` | `project_id`, `work_id`, `expected_revision` |
 
 Every target project matches the command project; a completion note names the
-source Work. Doc revision zero requires an empty prior digest; a positive
+source Work. Target identities must be distinct across outcome IDs: a Doc's
+project/collection/document, a Code branch's project/repository/ref, or the
+completion note's project/Work. Different expected revisions do not create
+different targets. This prevents one acceptance from making a duplicate required
+output permanently stale. Doc revision zero requires an empty prior digest; a positive
 revision requires a 64-character lowercase SHA-256. Code targets use a bounded
 valid branch ref and exact 40-character base OID. The produced Doc revision/
 digest or Code head belongs to the later Change; it is not guessed in the Work

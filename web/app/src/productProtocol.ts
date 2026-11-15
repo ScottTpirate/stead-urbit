@@ -85,6 +85,7 @@ function branch(value: string) {
 }
 function outcomes(value: unknown, project: string, work: string, profile = false): asserts value is ProductOutcomes {
   const entries = object(value); requireValue(Object.keys(entries).length <= 16);
+  const identities = new Set<string>();
   for (const [id, target] of Object.entries(entries)) {
     uuid(id); const row = object(target); const kind = text(row, 'kind'); requireValue(row.project_id === project);
     if (kind === 'document') {
@@ -97,6 +98,9 @@ function outcomes(value: unknown, project: string, work: string, profile = false
     } else if (kind === 'completion-note') {
       keys(row, ['kind', 'project_id', 'work_id', 'expected_revision']); requireValue(row.work_id === work); decimal(row.expected_revision);
     } else throw new ProductProtocolError();
+    const identity = JSON.stringify(kind === 'document' ? [kind, project, row.collection_id, row.document_id]
+      : kind === 'code' ? [kind, project, row.repository_id, row.target_ref] : [kind, project, row.work_id]);
+    requireValue(!identities.has(identity)); identities.add(identity);
     if (profile && kind !== 'document') throw new ProductProtocolError('unsupported_profile');
   }
 }

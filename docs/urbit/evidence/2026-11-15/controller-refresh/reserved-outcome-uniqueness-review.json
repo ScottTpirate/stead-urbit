@@ -1,0 +1,29 @@
+{
+  "protocol": "stead.independent-source-review/1",
+  "status": "source_reviewed_native_unexecuted",
+  "scope": "distinct-required-outcome-targets",
+  "files": {
+    "native/core/desk/lib/stead-product-codec.hoon": "f5b16dd0ae46aa1f079a7a35c21d1ed46ff30893dc1096ee16297819863e11d0",
+    "native/core/desk/tests/stead-product-codec.hoon": "5e4e1f327c357ccbe137c86ec6d4603c8b9644a1559d5aca5348ad31311092a9",
+    "web/app/src/productProtocol.ts": "53032173a4df1a394ffbab1fea2950ce5e4579279116dcf9d470f1e91f5a2400",
+    "web/app/tests/product-protocol.test.ts": "5c77240ef0d9bdc974f53269f4f517cef4b79c9a23d70ec132afefab4f2e8772"
+  },
+  "reviewers": [
+    "integrator implementation and native/TypeScript mirror review",
+    "release lane independent native target-identity review",
+    "frontend lane focused host tests"
+  ],
+  "checks": [
+    "Closed target validation precedes target-identity comparison.",
+    "Identity is kind plus exact project/collection/document, project/repository/ref or project/Work; changed base revisions do not create distinct targets.",
+    "Reject repeated identities under distinct outcome IDs, retaining independent scoped targets.",
+    "Sixteen distinct Doc targets pass and seventeen fail; duplicate rejection cannot mask the separate sixteen-output bound.",
+    "Fifteen protocol/transport host tests pass at exact before/after source hashes."
+  ],
+  "native_executed": false,
+  "home_activation": false,
+  "limitations": [
+    "Native codec assertions still require the next isolated qualification candidate.",
+    "No command4 or query4 routes are activated by this change."
+  ]
+}

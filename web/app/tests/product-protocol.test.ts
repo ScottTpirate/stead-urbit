@@ -107,10 +107,15 @@ test('required outcomes preserve typed exact targets and reject partial malforme
   const note = {kind: 'completion-note', project_id: id(100), work_id: id(101), expected_revision: '0'};
   const make = (required_outcomes: unknown) => command('work.update-contract', {execution_contract_revision: '1'}, {...contract, required_outcomes});
   assert.doesNotThrow(() => encodeProductCommand(make({[id(401)]: target, [id(402)]: code, [id(403)]: note})));
+  for (const original of [target, code, note]) refused(make({[id(401)]: original, [id(402)]: {...original}}));
+  refused(make({[id(401)]: target, [id(402)]: {...target, expected_revision: '2', base_markdown_sha256: 'a'.repeat(64)}}));
+  assert.doesNotThrow(() => encodeProductCommand(make({[id(401)]: target, [id(402)]: {...target, collection_id: id(299)}})));
   for (const changed of [{...target, project_id: id(999)}, {...target, expected_revision: '1'}, {...target, base_markdown_sha256: 'a'.repeat(64)},
     {...target, expected_revision: '1', base_markdown_sha256: 'A'.repeat(64)}, {...target, hidden: 'field'}, {...note, work_id: id(999)}]) refused(make({[id(401)]: changed}));
   for (const ref of ['refs/tags/release', 'refs/heads/a..b', 'refs/heads/.hidden', 'refs/heads/a.lock/b', 'refs/heads/a@{b', 'refs/heads/a\\b', 'refs/heads/a/', 'refs/heads/' + 'é'.repeat(60)]) refused(make({[id(401)]: {...code, target_ref: ref}}));
-  refused(make(Object.fromEntries(Array.from({length: 17}, (_, index) => [id(400 + index), target]))));
+  const distinct = (count: number) => Object.fromEntries(Array.from({length: count}, (_, index) => [id(400 + index), {...target, document_id: id(600 + index)}]));
+  assert.doesNotThrow(() => encodeProductCommand(make(distinct(16))));
+  refused(make(distinct(17)));
   refused(make({name: target}));
 });
 test('query4 scope is exact and never silently accepts query3 or extra filters', () => {
