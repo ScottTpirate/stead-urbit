@@ -5,6 +5,7 @@
 ++  id
   |=  n=@ud
   ^-  @t
+  ?>  &((gte n 100) (lte n 999))
   (fixture-id:stead-core (cat 3 '000000000' (decimal n)))
 ++  command
   |=  [req=@ud project=@ud resource=@ud revision=@ud operation=@t payload=(list [@t @t])]
@@ -44,7 +45,7 @@
 ++  new-project
   |=  [db=state:stead-team actor=authentication:stead-team req=@ud project=@ud title=@t key=@t]
   ^-  state:stead-team
-  (apply db actor (command req project project 0 'project.create' ~[['organization_id' (id 5)] ['owning_team_id' (id 6)] ['title' title] ['project_key' key] ['preset' 'general']]) 1.002)
+  (apply db actor (command req project project 0 'project.create' ~[['organization_id' '019939ba-4000-7000-8000-000000000005'] ['owning_team_id' '019939ba-4000-7000-8000-000000000006'] ['title' title] ['project_key' key] ['preset' 'general']]) 1.002)
 ++  query-wire
   |=  query=query:stead-team-codec
   ^-  @t

@@ -127,7 +127,45 @@ def capture_snapshot(host):
         return {}
 
 
-def project(raw, inputs, *, run_id):
+def unit_observation(native, inventory):
+    """Expose only a registered suite, arm verdicts and fixed compiler markers."""
+    import native_units
+    entries = []
+    if inventory is not None:
+        checked = native_units.validate_inventory(inventory)
+        entries = [*checked['suites'], checked['negative_control']]
+    registered = {entry['path']: set(entry['arms']) for entry in entries}
+    transcripts = native.get('native_unit_transcripts', [])
+    require(isinstance(transcripts, list) and len(transcripts) <= 100, 'Failure transcript count')
+    row = transcripts[-1] if transcripts else {}
+    require(isinstance(row, dict), 'Failure transcript shape')
+    path = choice(row.get('path'), registered)
+    encoded = row.get('log_hex', '')
+    require(isinstance(encoded, str) and len(encoded) <= 524288
+            and re.fullmatch(r'(?:[0-9a-f]{2})*', encoded), 'Failure transcript byte bound')
+    raw = bytes.fromhex(encoded)
+    outcomes = []
+    for line in raw.decode('utf-8', errors='replace').splitlines():
+        matched = re.fullmatch(r'\s*(OK|FAILED|CRASHED)\s+(/[^\s]+)\s*', line)
+        if matched and path in registered:
+            prefix = path + '/'
+            name = matched[2].removeprefix(prefix)
+            if matched[2].startswith(prefix) and name in registered[path]:
+                outcomes.append({'arm': name, 'outcome': matched[1]})
+    names = [row['arm'] for row in outcomes]
+    require(len(names) <= len(registered.get(path, ())) and len(names) == len(set(names)),
+            'Failure transcript duplicate verdict or suite bound')
+    markers = ('find-fork', 'nest-fail', 'build-fail', 'generator-build-fail',
+               'mint-vain', 'dojo-lame', 'syntax error', 'exit')
+    return {'path': path, 'log_bytes': len(raw),
+            'log_sha256': hashlib.sha256(raw).hexdigest() if raw else None,
+            'terminal': choice(row.get('terminal'), ('[32 %avow 0 %noun 0]', '[32 %avow 0 %noun 1]')),
+            'registered_arm_observations': outcomes,
+            'markers': {name: bool(re.search(rb'(?<![a-z0-9-])' + name.encode('ascii')
+                                            + rb'(?![a-z0-9-])', raw)) for name in markers}}
+
+
+def project(raw, inputs, *, run_id, inventory=None):
     """Read the one complete bound failed frame, then discard all free text."""
     require(isinstance(raw, bytes) and 0 < len(raw) <= 32 * 1024**2, 'Failure output byte bound')
     lines = raw.decode('utf-8', errors='strict').splitlines()
@@ -177,6 +215,7 @@ def project(raw, inputs, *, run_id):
     trace = native.get('native_failure', {})
     require(isinstance(trace, dict), 'Failure native trace shape')
     result['native']['frame_stage'] = choice(trace.get('stage'), FRAME_STAGES)
+    result['native']['last_unit'] = unit_observation(native, inventory)
     admission = native.get('admission_failure', {})
     require(isinstance(admission, dict), 'Failure admission shape')
     rollbacks = admission.get('rollback_errors', [])
