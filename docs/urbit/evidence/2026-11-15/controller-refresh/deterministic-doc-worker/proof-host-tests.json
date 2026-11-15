@@ -1,0 +1,19 @@
+{
+  "classification": "host-adversarial-proof-verifier-only",
+  "inputs_before": {
+    "scripts/ci/doc_worker_proof.py": "929fb658b92327481bd20256cdc09c4bf5932081feb63ba19c94751a3a390209",
+    "scripts/urbit/doc_run_worker.py": "8549e8c2f442c5cc011467b8470a608091094601b66c84725360f491cb4b13a6",
+    "tests/urbit/test_doc_worker_proof.py": "5dd2f044d1deb273a34188f4a05336eb200fc2a087cc56b08621f04e0d335b83"
+  },
+  "native_executed": false,
+  "child_executed": false,
+  "status": "pass",
+  "tests": 10,
+  "inputs_after": {
+    "scripts/ci/doc_worker_proof.py": "929fb658b92327481bd20256cdc09c4bf5932081feb63ba19c94751a3a390209",
+    "scripts/urbit/doc_run_worker.py": "8549e8c2f442c5cc011467b8470a608091094601b66c84725360f491cb4b13a6",
+    "tests/urbit/test_doc_worker_proof.py": "5dd2f044d1deb273a34188f4a05336eb200fc2a087cc56b08621f04e0d335b83"
+  },
+  "peak_c": 56.0,
+  "duration_seconds": 0.8
+}

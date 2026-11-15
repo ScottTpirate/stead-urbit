@@ -81,6 +81,14 @@ must atomically bind the exact Doc proposal to the current Run attempt through
 Home. Actual hosted isolation/crash tests, the supervisor, Run carrier and G3
 remain required. Keep execution off the laptop and off the authority host.
 
+The [prepared hosted proof](evidence/2026-11-15/controller-refresh/deterministic-doc-worker/proof-source-review.json)
+uses the existing admitted CI owner and a further unprivileged, sealed namespace.
+Its exact-output and publication-boundary kill cases are source-reviewed; ten
+host adversarial verifier/custody checks passed with process launches prohibited.
+The proof has not executed. It excludes native publication, an active-child kill
+and power-loss durability; any hosted timeout still requires verified owner
+cleanup. The prepared controller changes are not part of the current CI pin.
+
 ## Owner, worker and run
 
 **Owner** is the accountable human, explicitly assigned or visibly inherited

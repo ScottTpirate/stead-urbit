@@ -1,0 +1,68 @@
+{
+  "classification": "prepared-hosted-doc-worker-proof-independent-review",
+  "status": "source-reviewed-hosted-execution-and-later-composition-pending",
+  "manifest_sha256": "bc7b27533fa13d6ce79e1ce6d9c691a0d38504207074763d1b2d32929f962225",
+  "files": {
+    "scripts/ci/worker.py": {
+      "baseline_sha256": "336b427fb0fd398e58446d36277e6c01aa587da2ececca3657885f56b44c0a56",
+      "prepared_sha256": "49460cccef3094a6a026676ddcb216c141138777bd144104697fcc07f2b6d6aa"
+    },
+    "scripts/ci/worker_result.py": {
+      "baseline_sha256": "c8905296dbf4f7dc90d8d830bfcda941e8f617ea6df911b8077ce0e37606751a",
+      "prepared_sha256": "f4dad8f7c83ca80d68df89e20728035d3cb3b605008e61a760ec33096c5402fb"
+    },
+    "scripts/ci/worker_failure.py": {
+      "baseline_sha256": "7bff785bafb6c92e2b248b3b3871cdee662dfa104e1793d6327fb944456ef975",
+      "prepared_sha256": "c75a44e9e276f8873a60a758759425ee90b9773153224d7bc4b7b03d7bdf6c92"
+    },
+    "scripts/ci/doc_worker_proof.py": {
+      "sha256": "929fb658b92327481bd20256cdc09c4bf5932081feb63ba19c94751a3a390209"
+    },
+    "scripts/urbit/doc_run_worker.py": {
+      "sha256": "8549e8c2f442c5cc011467b8470a608091094601b66c84725360f491cb4b13a6"
+    }
+  },
+  "reviewed_at": "2026-11-15T22:13:39.708056+00:00",
+  "review": [
+    "Insertion occurs after admission, empty-state isolation and watcher start, before fresh native boot.",
+    "Nested bwrap maps only the exact worker and trusted proof files read-only, with separate UID 1000, all namespaces, no capabilities and private bounded state.",
+    "The unchanged worker runs its real inner bwrap and verifies distinct namespaces, clear environment, read-only input and exact byte output.",
+    "Wrong source/context/budget and existing output fail closed; four explicitly injected publication cuts kill and reap their parent and inspect only owned result files.",
+    "Normal worker verifier requires exact closed proof; failure projection only retains fully validated proof or unobserved.",
+    "Source pins and outer resource/parent guards are unchanged."
+  ],
+  "integration_requirements": [
+    "Merge additive worker_failure stage/proof projection onto the latest approved compiler-span parser, rather than replacing it with this older baseline.",
+    "Complete independent host adversarial tests, immutable controller/source binding and actual hosted execution before proof claims."
+  ],
+  "limits": [
+    "Publication fault injection does not demonstrate in-flight recipe kill or power-loss durability.",
+    "No native authority publication, provider/model execution or agent G3 completion.",
+    "No current candidate, controller, live host or local runtime changed by this review."
+  ],
+  "executed": false,
+  "dispatch_allowed": false,
+  "diffs_sha256": {
+    "worker.py.diff": "69c5d9d77f540b11ff2a89e7a0cd27039135ffa4395791ef6fa6df39006be83a",
+    "worker_failure.py.diff": "f0f14c5f628bddfda9332e3cd92ab0bc93349de0853dd72b6188120859f759dc",
+    "worker_result.py.diff": "461925f399002bb7de329861d9ff71dc9197fdabc1298d6997ee4719b3147203"
+  },
+  "host_adversarial_tests": {
+    "status": "pass",
+    "count": 10,
+    "receipt": "proof-host-tests.json",
+    "sha256": "88f30b26d0cc175c2642548ed7277ed4bb5e600caa7823dba9d1e238af1c5f5f",
+    "process_calls_prohibited": true
+  },
+  "frontend_review": [
+    "Owned output directory requires exact uid and0700; regular single-link output files require0600.",
+    "Real child would run only in hosted proof; all ten current host tests prohibit body, cutpoint, controller and process entry points.",
+    "No active-child kill proof. Environment canary is actively checked; private pathname absence is by sealed mount construction."
+  ],
+  "integrator_review": {
+    "status": "source-reviewed-unexecuted",
+    "normal_ci_unchanged": true,
+    "hosted_dispatch_authorized": false,
+    "later_composition_requires_latest_compiler_parser": true
+  }
+}
