@@ -279,7 +279,7 @@
 ++  test-product-restore-incremental-checkpoint-exposes-no-partial-state
   =/  first  (begin:stead-product-restore snapshot ~zod)
   =/  next  (step:stead-product-restore first historical)
-  =/  checkpoint  !<(job:stead-product-restore (cue (jam next)))
+  =/  checkpoint  !<(job:stead-product-restore (cue (jam !>(next))))
   =/  resumed
     =/  job  checkpoint
     =/  budget=@ud  1.024
