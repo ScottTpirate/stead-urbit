@@ -1,0 +1,13 @@
+{
+  "status": "source_reviewed_native_unexecuted",
+  "candidate_base": "d965b522a0bb520e0192da35710369d973282ff5",
+  "change": "Preserve the typed vase through jam/cue before !< reconstructs the checkpoint job. The former code jammed the raw job noun.",
+  "path": "native/core/desk/tests/stead-product-restore.hoon",
+  "sha256": "a085a81123492bda50bb3905535161d3283b968d41ff872c287fbfcfce9cd34f",
+  "independent_reviewers": [
+    "frontend",
+    "release"
+  ],
+  "scope": "One test-fixture line only; no production source, arm count, timeout or acceptance gate change.",
+  "native_execution": "Pending exact-source successor qualification; no local native execution."
+}
