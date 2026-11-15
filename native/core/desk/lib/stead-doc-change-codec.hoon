@@ -11,8 +11,9 @@
 ++  result-pin
   |=  payload=object-map
   ^-  ?
-  &((gth (uint (field payload 'result_revision')) 0)
-    (opaque:stead-team-codec (field payload 'result_digest')))
+  ?&  (gth (uint (field payload 'result_revision')) 0)
+      (opaque:stead-team-codec (field payload 'result_digest'))
+  ==
 ++  submission
   |=  [project=@t work=@t payload=object-map]
   ^-  ?

@@ -1,0 +1,51 @@
+{
+  "bounds": {
+    "home_activation": false,
+    "mold_changes": false,
+    "native_compiled": false,
+    "native_executed": false,
+    "observed_failure_cause_proven": false,
+    "semantic_changes_intended": false,
+    "test_assertions_changed": false,
+    "wire_changes": false
+  },
+  "changes": [
+    {
+      "after_sha256": "152479a5288eb7a46b6cd3abe29f3fd48a3a184f6a5a8e7310c499713ba55f19",
+      "before_sha256": "94f295998b847adbeab69a5595f7360513fdc18358baf88f54a99db8c156282c",
+      "description": "Convert result-pin two-predicate boolean from multiline wide form to equivalent tall ?& form; preserve revision-positive and opaque-digest predicates.",
+      "path": "native/core/desk/lib/stead-doc-change-codec.hoon"
+    },
+    {
+      "after_sha256": "8ceedb6fd1ce56af30d53c027a1d250f30ac1faaa069e085445d9f6b49cf2432",
+      "before_sha256": "f512468d8b90a447f8652cef307d015e818954b347f2b07dc6b49172c7d76686",
+      "description": "Remove the leading space after ?:( at two retained effect/reconciliation conditionals; conditions and results unchanged.",
+      "path": "native/core/desk/lib/stead-run.hoon"
+    }
+  ],
+  "classification": "independent-native-source-syntax-review",
+  "grammar_source": {
+    "anchors": [
+      "13405-13410 toad wide rune contents have immediate first child",
+      "13434 wide loaf",
+      "13439 wide muck is ace, tall muck is gap",
+      "13476-13478 expa/expb/expc children"
+    ],
+    "path": ".runtime/release-install-473r_aoe/work/zod/base/sys/hoon.hoon",
+    "sha256": "6d9e2e85aac5c01374d51fe93ac25d8c2aaf387b0401159384637f7cc7fa94a8"
+  },
+  "observed_diagnostic": {
+    "candidate": "125e4a6",
+    "doc_change_codec": "module-build-failure-with-syntax-error-marker",
+    "exact_source_spans_retained": false,
+    "qualification": false,
+    "run": "module-build-failure-with-syntax-error-marker",
+    "run_id": "43758913444"
+  },
+  "remaining": "Hosted exact-source compilation must confirm these syntax fixes and identify all remaining product codec and nest-fail roots. These source hazards match the failure class but are not exact-span proof of the observed failures.",
+  "reviewers": {
+    "doc_change_codec": "native independent review of root edit",
+    "run": "root independent review of native edit"
+  },
+  "status": "source-approved-native-unexecuted"
+}
