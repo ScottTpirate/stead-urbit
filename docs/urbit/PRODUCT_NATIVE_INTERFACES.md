@@ -657,6 +657,15 @@ global cursor limits; tokens bind current actor, scope, epoch and visible genera
 Eight additional source-reviewed native arms remain uncompiled and unregistered.
 These reads require admitted, reconstructed state and expose no live route yet.
 
+The reserved browser `RunReadClient` now checks that exact closed query/result
+grammar, including canonical nested attempt/question/result records. It requires
+an explicit read capability and an opaque current-session identity. A new list
+refresh fences older successful and failed responses before they can replace
+its one-use cursor; exact-detail reads remain independent. [Source review,
+TypeScript and fourteen host checks](evidence/2026-11-15/controller-refresh/run-read-client/source-review.json)
+passed. The native wire is unchanged; no Home endpoint, Run control, connected
+screen or actual dispatch is activated by this reader.
+
 ### Remaining integrations
 
 - **T04:** import each legacy repository under its existing ID equal to project

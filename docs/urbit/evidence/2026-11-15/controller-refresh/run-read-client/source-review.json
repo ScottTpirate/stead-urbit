@@ -1,0 +1,92 @@
+{
+  "protocol": "stead.source-and-host-review/1",
+  "classification": "reserved-run-read-boundary-source-and-host-tests",
+  "source_files": {
+    "web/app/src/runReadProtocol.ts": "39a051c2a2528cc8b9618faf23dc1ad409700f3e2192316eb447b34ec6e4f815",
+    "web/app/tests/run-read.test.ts": "df25e37ef3bb942fa39417a61becf2f07176f7693b5dcc22f0d856b0366f70cc",
+    "web/app/tests/run-read.mjs": "c42050fdfebfabfc00cb32988f0f4645e0af0e9d6fdd44832b65b7a5237004ff",
+    "web/app/tests/run-read-vectors.json": "fa70e031ea54bcda71d3e3325cfffd1954a166dd67d92383673205422d38e758"
+  },
+  "native_inputs": {
+    "../../native/core/desk/lib/stead-run-query.hoon": "0b05231e205cead66a4b9fe05b6ec52777500196cbb2717804399af73b6ea5aa",
+    "../../native/core/desk/lib/stead-run-views.hoon": "b6a177fa5652fefaefacb5365f2e0cb6e946d54de09e9324cc6c381482acf8ca",
+    "../../native/core/desk/lib/stead-run-state.hoon": "4c96eb466add4ae26f6c6fbfd390b338d26a14e20a8c3f70214f9e1445602c1d",
+    "../../native/core/desk/lib/stead-run.hoon": "8ceedb6fd1ce56af30d53c027a1d250f30ac1faaa069e085445d9f6b49cf2432",
+    "../../native/core/desk/lib/stead-codec.hoon": "56e3d574381bbf8cdf29ca192c70eff256009f89d782e3ffe859b19c1321cbd7"
+  },
+  "source_mapping": {
+    "query": "stead-run-query valid/decode/bytes: seven exact strings; per-Work list or exact run, no command grammar",
+    "preview": "stead-run-views metadata: nineteen flat scalars; durable phase distinct from lease observation",
+    "detail": "stead-run-views metadata/attempt-view/question-view: twenty-five scalars; nested canonical version/attempt/question/answer and submitted result reference",
+    "bounds": "stead-run-state result-valid plus admitted stead-run valid-state invariants: uint64 strings, attempt<=3, question<=4096, ordered attempt times, title/prose limits and blank names",
+    "client": "Injected query callable only; explicit nullable query capability, opaque same-session fence, no endpoint/claim/effect/heartbeat transport; one-use scope/epoch/generation/count/order-bound cursors; each new first-page invocation supersedes older list reads, even in one unchanged session; exact detail reads remain independent"
+  },
+  "observed": {
+    "typescript": {
+      "status": "pass",
+      "receipt": "/home/skilgore/stead-urbit/.runtime/run-read-owner-1794780837944173447/verification.json",
+      "same_production_source": true,
+      "tests_outside_tsconfig": true
+    },
+    "host": {
+      "status": "pass",
+      "expected_count": 14,
+      "actual_count": 14,
+      "names": [
+        "seven-field query grammar and source-derived canonical vectors stay exact without commands",
+        "nineteen-field previews are scoped ordered bounded and preserve blank catalog names",
+        "twenty-five-field detail retains exact attempt question answer and immutable agent version",
+        "durable phase lease observation and execution freshness remain independent from business acceptance",
+        "nested records are canonical duplicate-free bounded and cannot disclose grants or lease secrets",
+        "integer limits and exact response envelope reject coercion sparse rows mixed versions and unknown failures",
+        "capability and session are required and late capability withdrawal never publishes rows",
+        "read failure stays separate from rejection and malformed response without an automatic retry",
+        "opaque session changes suppress late success and failure and query bytes snapshot caller data",
+        "one-use cursor binds Work scope and ordered thirty-two-run native bound",
+        "cursor epoch generation consumed unknown and cross-page duplicate failures require fresh first page",
+        "late old-session response cannot erase current-session continuation",
+        "same-session A to B to A list refreshes suppress old success and failure without deleting newest cursor",
+        "refresh fences in-flight continuation while independent exact detail still publishes"
+      ],
+      "receipt": "/home/skilgore/stead-urbit/.runtime/run-read-RDThqS/report.json",
+      "sha256": "4ef4f68c2f05f87203ce6b9477c33ac36e1c518015104b02d6d5ea0b4e69e994",
+      "guard_receipt": "/home/skilgore/stead-urbit/.runtime/run-read-owner-1794780837944173447/browser-process.json",
+      "duration_seconds": 9.1,
+      "peak_c": 59.0,
+      "cpu_quota": "25% of one core",
+      "cpu_affinity": [
+        19
+      ],
+      "cleanup_empty": true
+    }
+  },
+  "retained_failure": {
+    "receipt": "/home/skilgore/stead-urbit/.runtime/run-read-4oT54x/report.json",
+    "passed": 11,
+    "failed": 1,
+    "cause": "Malformed numeric/array fixture was rejected by its canonical encoder before reaching the response parser. Fixture uses raw JSON serialization now; production source unchanged."
+  },
+  "vectors": "source-derived canonical query bytes and independent Python SHA256, checked by Node; native equality unexecuted",
+  "limits": [
+    "No native compiler/runtime execution",
+    "No Home read carrier or capability advertisement",
+    "No UI integration",
+    "No command, claim, lease renewal or effect dispatch",
+    "Submitted result reference does not prove review, acceptance, completion or G3"
+  ],
+  "independent_review": {
+    "reviewer": "root",
+    "status": "source-reviewed-host-evidence-verified",
+    "review": [
+      "Exact7/19/25 fields compared with native query/views/state/invariants.",
+      "Canonical nested output references contain no raw context or grant secrets.",
+      "Blank names and native zero question timestamps preserved.",
+      "Local sequence fences old same-session first pages and continuations; session/capability changes suppress all late reads.",
+      "Native compiler/browser/carrier execution remains unobserved."
+    ]
+  },
+  "integrator_finding": {
+    "resolved": "Same-session stale first-page completion could replace a newer cursor. A local list sequence now fences older successful/failed reads and in-flight continuations; two new adversarial tests cover A-B-A and refresh while a continuation is pending.",
+    "native_wire_changed": false
+  }
+}

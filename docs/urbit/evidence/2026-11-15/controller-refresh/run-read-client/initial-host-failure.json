@@ -1,0 +1,51 @@
+{
+  "classification": "host-run-read-protocol-and-injected-client-tests",
+  "qualifies_phase": false,
+  "browser_executed": false,
+  "native_executed": false,
+  "node": "v24.21.0",
+  "expected_tests": [
+    "seven-field query grammar and source-derived canonical vectors stay exact without commands",
+    "nineteen-field previews are scoped ordered bounded and preserve blank catalog names",
+    "twenty-five-field detail retains exact attempt question answer and immutable agent version",
+    "durable phase lease observation and execution freshness remain independent from business acceptance",
+    "nested records are canonical duplicate-free bounded and cannot disclose grants or lease secrets",
+    "integer limits and exact response envelope reject coercion sparse rows mixed versions and unknown failures",
+    "capability and session are required and late capability withdrawal never publishes rows",
+    "read failure stays separate from rejection and malformed response without an automatic retry",
+    "opaque session changes suppress late success and failure and query bytes snapshot caller data",
+    "one-use cursor binds Work scope and ordered thirty-two-run native bound",
+    "cursor epoch generation consumed unknown and cross-page duplicate failures require fresh first page",
+    "late old-session response cannot erase current-session continuation"
+  ],
+  "status": "fail",
+  "inputs_before": {
+    "src/runReadProtocol.ts": "8cc5954075c27cb3972512ac6cba6763798aad469b2cb863b760819de4076e8d",
+    "src/productWire.ts": "35b033b3437f07b2e0690e3192091b43ba4bec2c9bee2768ca9b43abb70fa6c1",
+    "src/protocol.ts": "a8dee5b65f79ffe052869f19e9b508f7abcb30149ac82eaa31a47223796003c7",
+    "tests/run-read.test.ts": "6fa7df09459f2ae303184d2703d9bca3e7f8a02360747d199dafc8295f25dec1",
+    "tests/run-read.mjs": "d4b8fac14a567b54c236ea55601814b251b654de49eb45085bd832c55fd6b756",
+    "tests/run-read-vectors.json": "fa70e031ea54bcda71d3e3325cfffd1954a166dd67d92383673205422d38e758",
+    "package-lock.json": "b4d2ced8e19aa8b7cf9eaab75b906e867132321b97937b534e5810c152dbec98",
+    "../../native/core/desk/lib/stead-run-query.hoon": "0b05231e205cead66a4b9fe05b6ec52777500196cbb2717804399af73b6ea5aa",
+    "../../native/core/desk/lib/stead-run-views.hoon": "b6a177fa5652fefaefacb5365f2e0cb6e946d54de09e9324cc6c381482acf8ca",
+    "../../native/core/desk/lib/stead-run-state.hoon": "4c96eb466add4ae26f6c6fbfd390b338d26a14e20a8c3f70214f9e1445602c1d",
+    "../../native/core/desk/lib/stead-run.hoon": "8ceedb6fd1ce56af30d53c027a1d250f30ac1faaa069e085445d9f6b49cf2432",
+    "../../native/core/desk/lib/stead-codec.hoon": "56e3d574381bbf8cdf29ca192c70eff256009f89d782e3ffe859b19c1321cbd7"
+  },
+  "error": "AssertionError [ERR_ASSERTION]: TAP version 13\n# Subtest: seven-field query grammar and source-derived canonical vectors stay exact without commands\nok 1 - seven-field query grammar and source-derived canonical vectors stay exact without commands\n  ---\n  duration_ms: 67.982056\n  type: 'test'\n  ...\n# Subtest: nineteen-field previews are scoped ordered bounded and preserve blank catalog names\nok 2 - nineteen-field previews are scoped ordered bounded and preserve blank catalog names\n  ---\n  duration_ms: 70.434272\n  type: 'test'\n  ...\n# Subtest: twenty-five-field detail retains exact attempt question answer and immutable agent version\nok 3 - twenty-five-field detail retains exact attempt question answer and immutable agent version\n  ---\n  duration_ms: 9.92381\n  type: 'test'\n  ...\n# Subtest: durable phase lease observation and execution freshness remain independent from business acceptance\nok 4 - durable phase lease observation and execution freshness remain independent from business acceptance\n  ---\n  duration_ms: 59.221527\n  type: 'test'\n  ...\n# Subtest: nested records are canonical duplicate-free bounded and cannot disclose grants or lease secrets\nok 5 - nested records are canonical duplicate-free bounded and cannot disclose grants or lease secrets\n  ---\n  duration_ms: 29.867606\n  type: 'test'\n  ...\n# Subtest: integer limits and exact response envelope reject coercion sparse rows mixed versions and unknown failures\nnot ok 6 - integer limits and exact response envelope reject coercion sparse rows mixed versions and unknown failures\n  ---\n  duration_ms: 9.059269\n  type: 'test'\n  location: '/home/skilgore/stead-urbit/.runtime/run-read-4oT54x/run-read.test.mjs:579:1'\n  failureType: 'testCodeFailure'\n  error: |-\n    The validation function is expected to return \"true\". Received false\n    \n    Caught error:\n    \n    Error: Invalid protocol value\n  code: 'ERR_ASSERTION'\n  name: 'AssertionError'\n  stack: |-\n    invalid (file:///home/skilgore/stead-urbit/.runtime/run-read-4oT54x/run-read.test.mjs:476:34)\n    TestContext.<anonymous> (file:///home/skilgore/stead-urbit/.runtime/run-read-4oT54x/run-read.test.mjs:589:6)\n    Test.runInAsyncScope (node:async_hooks:227:14)\n    Test.run (node:internal/test_runner/test:1402:25)\n    Test.processPendingSubtests (node:internal/test_runner/test:974:18)\n    Test.postRun (node:internal/test_runner/test:1542:19)\n    Test.run (node:internal/test_runner/test:1467:12)\n    async Test.processPendingSubtests (node:internal/test_runner/test:974:7)\n  ...\n# Subtest: capability and session are required and late capability withdrawal never publishes rows\nok 7 - capability and session are required and late capability withdrawal never publishes rows\n  ---\n  duration_ms: 0.860266\n  type: 'test'\n  ...\n# Subtest: read failure stays separate from rejection and malformed response without an automatic retry\nok 8 - read failure stays separate from rejection and malformed response without an automatic retry\n  ---\n  duration_ms: 9.244937\n  type: 'test'\n  ...\n# Subtest: opaque session changes suppress late success and failure and query bytes snapshot caller data\nok 9 - opaque session changes suppress late success and failure and query bytes snapshot caller data\n  ---\n  duration_ms: 0.975916\n  type: 'test'\n  ...\n# Subtest: one-use cursor binds Work scope and ordered thirty-two-run native bound\nok 10 - one-use cursor binds Work scope and ordered thirty-two-run native bound\n  ---\n  duration_ms: 19.926586\n  type: 'test'\n  ...\n# Subtest: cursor epoch generation consumed unknown and cross-page duplicate failures require fresh first page\nok 11 - cursor epoch generation consumed unknown and cross-page duplicate failures require fresh first page\n  ---\n  duration_ms: 49.855966\n  type: 'test'\n  ...\n# Subtest: late old-session response cannot erase current-session continuation\nok 12 - late old-session response cannot erase current-session continuation\n  ---\n  duration_ms: 9.785318\n  type: 'test'\n  ...\n1..12\n# tests 12\n# suites 0\n# pass 11\n# fail 1\n# cancelled 0\n# skipped 0\n# todo 0\n# duration_ms 680.386015\n\n\n1 !== 0\n\n    at file:///home/skilgore/stead-urbit/web/app/tests/run-read.mjs:20:139",
+  "inputs_after": {
+    "src/runReadProtocol.ts": "8cc5954075c27cb3972512ac6cba6763798aad469b2cb863b760819de4076e8d",
+    "src/productWire.ts": "35b033b3437f07b2e0690e3192091b43ba4bec2c9bee2768ca9b43abb70fa6c1",
+    "src/protocol.ts": "a8dee5b65f79ffe052869f19e9b508f7abcb30149ac82eaa31a47223796003c7",
+    "tests/run-read.test.ts": "6fa7df09459f2ae303184d2703d9bca3e7f8a02360747d199dafc8295f25dec1",
+    "tests/run-read.mjs": "d4b8fac14a567b54c236ea55601814b251b654de49eb45085bd832c55fd6b756",
+    "tests/run-read-vectors.json": "fa70e031ea54bcda71d3e3325cfffd1954a166dd67d92383673205422d38e758",
+    "package-lock.json": "b4d2ced8e19aa8b7cf9eaab75b906e867132321b97937b534e5810c152dbec98",
+    "../../native/core/desk/lib/stead-run-query.hoon": "0b05231e205cead66a4b9fe05b6ec52777500196cbb2717804399af73b6ea5aa",
+    "../../native/core/desk/lib/stead-run-views.hoon": "b6a177fa5652fefaefacb5365f2e0cb6e946d54de09e9324cc6c381482acf8ca",
+    "../../native/core/desk/lib/stead-run-state.hoon": "4c96eb466add4ae26f6c6fbfd390b338d26a14e20a8c3f70214f9e1445602c1d",
+    "../../native/core/desk/lib/stead-run.hoon": "8ceedb6fd1ce56af30d53c027a1d250f30ac1faaa069e085445d9f6b49cf2432",
+    "../../native/core/desk/lib/stead-codec.hoon": "56e3d574381bbf8cdf29ca192c70eff256009f89d782e3ffe859b19c1321cbd7"
+  }
+}

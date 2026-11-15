@@ -734,11 +734,12 @@ packages:
   - No-Code task has no branch/OID fields; normal flow needs no copied JSON brief.
   - Question answer, requested changes, retry/reassign and cancel work with keyboard and honest pending state.
   evidence: Component fixtures plus real dispatch/wait/review flow after T15; no mock-only closure.
-  implementation_status: planned
+  implementation_status: in_progress
   parent_issue_numbers:
   - 10
   - 12
   - 29
+  current_progress: A reserved read-only Run client now checks the exact native query and sanitized preview/detail shapes, separates phase from lease and input freshness, and fences changed sessions, capabilities and superseded same-session pagination. TypeScript and fourteen host boundary checks passed after correcting an observed stale first-page race. It exposes no endpoint or command and has no connected screen, real dispatch or G3 acceptance; those remain required.
 - id: T17
   title: Qualify one real model adapter
   phase: C
