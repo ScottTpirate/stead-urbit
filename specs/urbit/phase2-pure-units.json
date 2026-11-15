@@ -1,7 +1,7 @@
 {
   "format": 1,
   "classification": "pure-native-only",
-  "expected_arm_count": 230,
+  "expected_arm_count": 293,
   "suites": [
     {
       "path": "/tests/stead-session",
@@ -442,6 +442,117 @@
         "test-updates-retained-history-sixty-four-then-trim"
       ],
       "timeout_seconds": 180
+    },
+    {
+      "path": "/tests/stead-product-owner",
+      "arms": [
+        "test-product-owner-codec-is-closed-and-never-accepts-a-wire-actor",
+        "test-product-owner-declaration-retry-and-current-owner-boundary",
+        "test-product-owner-runtime-definitions-retain-pinned-versions",
+        "test-product-owner-configuration-revocation-reconciles-highwaters",
+        "test-product-owner-security-fallback-requires-strict-authority-reduction",
+        "test-product-owner-configuration-expansion-imports-new-unresolved-principal"
+      ],
+      "timeout_seconds": 60
+    },
+    {
+      "path": "/tests/stead-product-history",
+      "arms": [
+        "test-product-history-owner-work-doc-and-policy-replay-is-exact",
+        "test-product-history-rotation-and-disable-fence-all-current-writes",
+        "test-product-history-rejects-rehashed-owner-command-receipt-digest-and-sender",
+        "test-product-history-reordered-and-dropped-owner-events-fail-after-rechaining",
+        "test-product-history-rejects-todays-catalog-false-kind-and-missing-ledger",
+        "test-product-history-incremental-checkpoint-never-publishes-partial-replay",
+        "test-product-history-exhausted-budgets-roll-back-catalog-doc-and-work",
+        "test-product-history-admission-and-compatibility-do-not-erase-owner-obligations"
+      ],
+      "timeout_seconds": 60
+    },
+    {
+      "path": "/tests/stead-doc-change",
+      "arms": [
+        "test-doc-change-human-revision-review-and-atomic-exact-acceptance",
+        "test-doc-change-independent-people-current-access-and-request-identity",
+        "test-doc-change-stale-lifecycle-output-contract-and-late-replies",
+        "test-doc-change-exact-base-private-target-and-comment-noninterference",
+        "test-doc-change-expired-output-explicit-adoption-and-no-late-worker-effects",
+        "test-doc-change-revocation-quarantines-without-renewing-original-grant",
+        "test-doc-change-current-reviewer-and-accountable-acceptor",
+        "test-doc-change-internal-save-request-fixed-vector-and-global-collision",
+        "test-doc-change-paired-budget-and-final-object-limit-rollback",
+        "test-doc-change-run-authority-default-deny-and-immutable-attempt-provenance",
+        "test-doc-change-existing-doc-exact-hash-revision-and-canonical-markdown",
+        "test-doc-change-accepted-proof-completes-real-work-with-required-outcome",
+        "test-doc-change-proof-rejects-uncommitted-forged-or-changed-outcomes",
+        "test-doc-change-accepted-proof-survives-review-expiry-with-current-completer"
+      ],
+      "timeout_seconds": 60
+    },
+    {
+      "path": "/tests/stead-product-doc-history",
+      "arms": [
+        "test-product-doc-history-real-owner-review-accept-complete-replays-exactly",
+        "test-product-doc-history-orphaned-dropped-and-reordered-accept-pairs-rejected",
+        "test-product-doc-history-command-receipt-output-and-admission-tamper-rejected",
+        "test-product-doc-history-historical-declarations-and-later-current-fences",
+        "test-product-doc-history-checkpoints-never-publish-half-an-accept-pair",
+        "test-product-doc-history-shared-budget-request-collisions-and-save-rollback"
+      ],
+      "timeout_seconds": 60
+    },
+    {
+      "path": "/tests/stead-actor",
+      "arms": [
+        "test-actor-native-verification-keeps-exact-historical-authentication",
+        "test-actor-unresolved-kind-is-not-human-and-inactive-or-forged-denied",
+        "test-actor-service-tag-has-no-native-identity-or-human-review-authority",
+        "test-actor-service-scopes-are-exact-bounded-resource-intents"
+      ],
+      "timeout_seconds": 60
+    },
+    {
+      "path": "/tests/stead-service-bindings",
+      "arms": [
+        "test-service-bindings-two-agents-have-distinct-current-scoped-identity",
+        "test-service-bindings-wrong-resource-operation-epoch-and-forged-proof-denied",
+        "test-service-bindings-owner-custody-and-one-active-mechanism",
+        "test-service-bindings-rotation-and-revocation-fence-in-flight-effects",
+        "test-service-bindings-restore-descriptors-never-revive-a-live-bearer",
+        "test-service-bindings-shared-grants-and-issuer-authority-cannot-be-renewed-implicitly",
+        "test-service-bindings-expiry-current-catalog-and-immutable-runtime-versions",
+        "test-service-bindings-global-budget-and-entropy-fail-closed"
+      ],
+      "timeout_seconds": 60
+    },
+    {
+      "path": "/tests/stead-doc-change-views",
+      "arms": [
+        "test-doc-change-query-closed-scope-and-exact-body-pins",
+        "test-doc-change-reader-sees-exact-scoped-metadata-and-one-body",
+        "test-doc-change-current-catalog-access-and-target-visibility-fence-reads",
+        "test-doc-change-requested-revision-feedback-never-moves-to-new-output",
+        "test-doc-change-review-advice-preserves-independent-review-and-accountability",
+        "test-doc-change-before-uses-exact-authorized-doc-history-not-current-text",
+        "test-doc-change-pagination-is-bounded-and-current-actor-bound"
+      ],
+      "timeout_seconds": 60
+    },
+    {
+      "path": "/tests/stead-run",
+      "arms": [
+        "test-run-claim-competes-and-retries-with-one-bounded-lease",
+        "test-run-original-pins-fence-effects-but-comments-do-not",
+        "test-run-clarification-is-attributable-and-only-explicit-continuation",
+        "test-run-unknown-provider-outcome-requires-reconciliation-before-replace",
+        "test-run-cancellation-fences-and-shares-existing-revocation-remainder",
+        "test-run-finish-is-exact-reviewed-result-reference-not-work-completion",
+        "test-run-restart-clears-lease-without-dispatch-or-fourth-attempt",
+        "test-run-finite-budgets-and-project-run-cap-are-enforced",
+        "test-run-current-access-precedes-cache-and-shared-request-scope",
+        "test-run-capacity-rolls-back-candidate-lease-and-effects"
+      ],
+      "timeout_seconds": 60
     }
   ],
   "negative_control": {
