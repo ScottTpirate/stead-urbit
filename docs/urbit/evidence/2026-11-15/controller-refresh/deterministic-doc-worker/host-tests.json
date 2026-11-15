@@ -1,0 +1,16 @@
+{
+  "classification": "host-only-doc-worker-boundary-tests-with-mocked-child",
+  "status": "pass",
+  "tests": 11,
+  "passed": 11,
+  "seconds": 0.008,
+  "source_sha256": {
+    "scripts/urbit/doc_run_worker.py": "8549e8c2f442c5cc011467b8470a608091094601b66c84725360f491cb4b13a6",
+    "tests/urbit/test_doc_run_worker.py": "cae896619383c5e812e856bc9ee3b2fcc0e32b57a9b7f8f91ee184c088652ac4"
+  },
+  "command": "python3 -B -m unittest discover -s tests/urbit -p test_doc_run_worker.py -v",
+  "child_executed": false,
+  "native_executed": false,
+  "qualifies_phase": false,
+  "prior_attempt": ".runtime/doc-run-worker-host/initial-attempt.json"
+}

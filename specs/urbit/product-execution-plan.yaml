@@ -691,12 +691,13 @@ packages:
   - Deterministic Docs edit is a real isolated output, not a mocked success response. Record the separate deterministic
     Code recipe proof when available without claiming it proves larger Code capability.
   evidence: Actual external supervisor/native Home integration and recorded crash points.
-  implementation_status: planned
+  implementation_status: in_progress
   parent_issue_numbers:
   - 12
   - 23
   - 24
   - 28
+  current_progress: The isolated deterministic Doc child source consumes exact native run-context bytes and one declared target, preserves original Markdown, enforces the output budget and publishes a private output-ready receipt last. Independent source review and eleven host boundary tests passed; child calls were mocked. Actual remote isolation/crash proof, current Run claim and lease reconciliation, supervisor transport and atomic Doc-plus-Run publication remain required. No agent or model execution is enabled.
 - id: T16
   title: Integrate the unified worker and run experience
   phase: C

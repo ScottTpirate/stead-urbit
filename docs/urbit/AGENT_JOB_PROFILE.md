@@ -59,6 +59,28 @@ supported run API follows from this source alone.
   comparison before update and original Git identities. Proposal-only runs
   must not receive general repository write credentials.
 
+## Prepared deterministic Doc worker
+
+`scripts/urbit/doc_run_worker.py` consumes exact existing `stead.run-context/1`
+bytes and one declared Doc target under a closed local worker envelope. Its
+allowlisted append-paragraph recipe preserves the original Markdown bytes,
+checks the current input digest and output budget, and produces a private
+`proposal.md` plus an `output-ready` receipt written last. The child receives
+only sealed inputs and private scratch, without Home/provider/deployment
+credentials or inherited networking. An existing output, including a partial
+interrupted output, cannot be overwritten by a retry.
+
+[Independent source review and eleven host tests](evidence/2026-11-15/controller-refresh/deterministic-doc-worker/source-review.json)
+cover input/scope/Unicode bounds, target and byte mismatches, output comparison,
+timeout and partial publication. Child calls in these tests are mocked; no
+actual isolated execution or native dispatch has run. This local envelope does
+not grant authority or constitute a new Home API. Before launch, the admitted
+supervisor must verify the current Run claim, lease, source and context, own the
+bounded remote process and reconcile retained output on restart. Publication
+must atomically bind the exact Doc proposal to the current Run attempt through
+Home. Actual hosted isolation/crash tests, the supervisor, Run carrier and G3
+remain required. Keep execution off the laptop and off the authority host.
+
 ## Owner, worker and run
 
 **Owner** is the accountable human, explicitly assigned or visibly inherited

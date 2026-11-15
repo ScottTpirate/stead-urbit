@@ -1,0 +1,44 @@
+{
+  "classification": "deterministic-doc-child-source-and-host-boundary-only",
+  "files": {
+    "scripts/urbit/doc_run_worker.py": "8549e8c2f442c5cc011467b8470a608091094601b66c84725360f491cb4b13a6",
+    "tests/urbit/test_doc_run_worker.py": "cae896619383c5e812e856bc9ee3b2fcc0e32b57a9b7f8f91ee184c088652ac4"
+  },
+  "format": "stead.independent-source-review/1",
+  "host_tests": {
+    "actual_isolated_child_executed": false,
+    "command": "python3 -B -m unittest discover -s tests/urbit -p test_doc_run_worker.py",
+    "native_calls": false,
+    "passed": 11,
+    "seconds": 0.008,
+    "subprocess_child": "mocked"
+  },
+  "native_contract_sources": {
+    "native/core/desk/lib/stead-codec.hoon": "56e3d574381bbf8cdf29ca192c70eff256009f89d782e3ffe859b19c1321cbd7",
+    "native/core/desk/lib/stead-doc-change-codec.hoon": "152479a5288eb7a46b6cd3abe29f3fd48a3a184f6a5a8e7310c499713ba55f19",
+    "native/core/desk/lib/stead-run-adapters.hoon": "f4ff80e3cf6650b586b05a8508ab9285387123cd024dbd36e8009d06673ae9b1",
+    "native/core/desk/lib/stead-run-state.hoon": "4c96eb466add4ae26f6c6fbfd390b338d26a14e20a8c3f70214f9e1445602c1d"
+  },
+  "observations": [
+    "Closed canonical duplicate-free UTF-8 JSON; numeric JSON inputs rejected and all version/revision/cap fields canonical strings.",
+    "Exact job source/context digests, project/Work scope, one selected declared outcome, distinct Doc targets, exact existing base hash/header and empty-base new Doc rules.",
+    "Only a deterministic append recipe; existing source bytes and trailing whitespace remain an exact prefix. No command interpretation or provider/Home access.",
+    "Child command specifies separate user/pid/mount/network namespaces, read-only inputs, no ambient environment or capabilities; parent checks returned bytes independently against the deterministic recipe.",
+    "Private owned bounded no-follow single-link input admission, exact output-parent path, atomic new directory and exclusive artifact writes; result.json follows fsynced proposal.md and existing/partial output cannot be overwritten.",
+    "Child failure, wrong output, wrong scope, timeout and interruption produce no completed output receipt in host tests."
+  ],
+  "remaining": [
+    "Trusted supervisor must bind job/context/output budget to actual current Run contract, attempt and lease before launch; hashes alone grant no authority.",
+    "Run actual hosted namespace, network/credential absence, timeout/kill, output bounds and crash/reconciliation controls.",
+    "Verify exact input/source pins before and after supervised execution and retain bounded actual process/custody evidence.",
+    "Submitting the candidate must recheck current Home/catalog/grants/target/contract/attempt and use atomic Doc Change+Run transition; a local output-ready receipt is not accepted output or Work completion.",
+    "No local child or native runtime was launched by this review."
+  ],
+  "resolved_findings": [
+    "Match native title limits: at most200 Unicode characters/800 UTF-8 bytes, no codepoint below32. Added valid200-character Unicode cases and invalid201/control cases.",
+    "Preserve native prose CR/NUL exclusion in exact context and Markdown inputs."
+  ],
+  "reviewed_at": "2026-11-15T21:55:40.185824+00:00",
+  "reviewer": "native-peer",
+  "status": "approved-source-awaiting-real-isolation-and-run-integration"
+}

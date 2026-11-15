@@ -1,0 +1,14 @@
+{
+  "classification": "host-tests-with-mocked-child",
+  "tests": 10,
+  "passed": 9,
+  "failed": 1,
+  "seconds": 0.008,
+  "failure": "Generic canonical object decoder admitted a JSON float; focused rejection assertion failed before native or child execution.",
+  "source_sha256": {
+    "scripts/urbit/doc_run_worker.py": "5f92a52960887e38708faace9425e21f67acb484ef02b86ff0cfe42ab3e08111",
+    "tests/urbit/test_doc_run_worker.py": "2082a06dde751d9d11b9a968298c03422b0cb0d251bd9cc6026620a0c7fce715"
+  },
+  "child_executed": false,
+  "native_executed": false
+}
