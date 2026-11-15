@@ -606,12 +606,18 @@ def saved_home_fingerprint(native, *, authoritative=False):
               '?>  ?=([%20 %live *] egg)  =/  saved=vase  +.old-state.egg  ')
     if authoritative:
         # The v3 payload is [authoritative-db derived-projection].
-        source += '?>  ?=([%stead-home %3 [* *]] q.saved)  ^-  @ux  (shax (jam -.+>.q.saved))'
+        source += (
+            '^-  @ux  ?:  ?=([%stead-home %10 *] q.saved)  '
+            '=/  stored  !<([%stead-home %10 profile=@t target=* code=* mode=* retired=* packs=* external=* reviews=*] saved)  '
+            "?>  =('native-human-doc/1' profile.stored)  "
+            '?>  ?=(?(%predecessor %product) -.target.stored)  '
+            '(shax (jam [profile.stored target.stored code.stored mode.stored retired.stored packs.stored external.stored reviews.stored]))  '
+            '?>  ?=([%stead-home %3 [* *]] q.saved)  (shax (jam -.+>.q.saved))')
     else:
-        source += '?>  ?=([%stead-home %3 *] q.saved)  ^-  @ux  (shax (jam saved))'
+        source += '?>  ?=([%stead-home ?(%3 %10) *] q.saved)  ^-  @ux  (shax (jam saved))'
     result = native.dojo(source).strip()
     if not re.fullmatch(r'0x[0-9a-f]+(?:\.[0-9a-f]+)*', result):
-        raise ValueError('Restored Home saved vase is not configured schema 3')
+        raise ValueError('Restored Home saved vase is not a supported configured schema')
     value = int(result.replace('.', ''), 16)
     if value >= 2 ** 256:
         raise ValueError('Saved Home vase fingerprint exceeds SHA-256')

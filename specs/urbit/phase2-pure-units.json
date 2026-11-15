@@ -1,7 +1,7 @@
 {
   "format": 1,
   "classification": "pure-native-only",
-  "expected_arm_count": 300,
+  "expected_arm_count": 329,
   "suites": [
     {
       "path": "/tests/stead-session",
@@ -555,51 +555,68 @@
       "timeout_seconds": 60
     },
     {
-      "path": "/tests/stead-import-probe-product-codec",
+      "path": "/tests/stead-run-codec",
       "arms": [
-        "test-import-product-codec"
+        "test-run-codec-portable-contract-and-normalized-targets",
+        "test-run-codec-all-thirteen-typed-operations-roundtrip",
+        "test-run-codec-closed-envelope-and-canonical-nested-json",
+        "test-run-codec-bounded-distinct-doc-targets-and-exact-grant",
+        "test-run-codec-canonical-numbers-and-finite-text-budgets",
+        "test-run-codec-effects-cannot-widen-kind-or-submit-fake-authority"
       ],
       "timeout_seconds": 60
     },
     {
-      "path": "/tests/stead-import-probe-product-state",
+      "path": "/tests/stead-run-adapters",
       "arms": [
-        "test-import-product-state"
+        "test-run-adapters-real-owner-issue-and-named-agent-claim",
+        "test-run-adapters-comment-stable-but-changed-goal-not-executable",
+        "test-run-adapters-assignment-and-base-changes-retain-visible-history",
+        "test-run-adapters-current-catalog-grant-and-original-expiry",
+        "test-run-adapters-versioned-runtime-pins-and-default-deny-effects",
+        "test-run-adapters-actual-doc-receipt-required-before-finish",
+        "test-run-adapters-context-is-shared-scoped-and-byte-bounded",
+        "test-run-adapters-current-authority-before-retries-and-clarification"
       ],
       "timeout_seconds": 60
     },
     {
-      "path": "/tests/stead-import-probe-product-migrate",
+      "path": "/tests/stead-run-views",
       "arms": [
-        "test-import-product-migrate"
+        "test-run-views-closed-seven-field-query-and-exact-scope",
+        "test-run-views-exact-counts-and-durable-phase-versus-live-lease",
+        "test-run-views-real-clarification-and-recorded-doc-result",
+        "test-run-views-current-revocation-and-stale-contract-are-distinct",
+        "test-run-views-private-writes-and-other-scope-do-not-leak",
+        "test-run-views-twenty-row-pages-and-one-use-cursors",
+        "test-run-views-cursors-bind-current-generation-and-work-filter",
+        "test-run-views-shared-cursor-capacity-and-expiry-cleanup"
       ],
       "timeout_seconds": 60
     },
     {
-      "path": "/tests/stead-import-probe-actor",
+      "path": "/tests/stead-product-home",
       "arms": [
-        "test-import-actor"
+        "test-product-home-migration-keeps-pristine-target-until-publish",
+        "test-product-home-restore-keeps-exact-target-and-completion",
+        "test-product-home-dispatches-exact-doc-review-accept-complete",
+        "test-product-home-legacy-work-and-inactive-cached-retry-denied",
+        "test-product-home-principal-roster-real-kinds-and-reader-fence",
+        "test-product-home-completion-advice-requires-current-exact-proof",
+        "test-product-home-new-query-scopes-and-cursor-shapes-are-closed",
+        "test-product-home-owner-configuration-enters-same-restorable-history"
       ],
       "timeout_seconds": 60
     },
     {
-      "path": "/tests/stead-import-probe-run-state",
+      "path": "/tests/stead-home-v10-rehearsal",
       "arms": [
-        "test-import-run-state"
-      ],
-      "timeout_seconds": 60
-    },
-    {
-      "path": "/tests/stead-import-probe-run",
-      "arms": [
-        "test-import-run"
-      ],
-      "timeout_seconds": 60
-    },
-    {
-      "path": "/tests/stead-import-probe-doc-change-codec",
-      "arms": [
-        "test-import-doc-change-codec"
+        "test-home-v10-predecessor-save-is-pristine-before-migration",
+        "test-home-v10-product-restore-retains-full-target-before-publish",
+        "test-home-v10-wrong-restore-wake-cannot-publish-or-alter-target",
+        "test-home-v10-predecessor-never-activates-without-owner-control",
+        "test-home-v10-activation-requires-actual-owner-and-exact-prefix",
+        "test-home-v10-rejects-wrong-profile-code-and-future-envelope"
       ],
       "timeout_seconds": 60
     }

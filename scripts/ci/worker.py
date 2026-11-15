@@ -49,6 +49,13 @@ def mounted_inputs(inputs):
         require(actual == expected, 'Controller mount differs: ' + prefix)
         require(os.statvfs(mount).f_flag & os.ST_RDONLY, 'Writable controller mount')
         observed[prefix] = actual
+    for name in ('scripts/release_install.py', 'scripts/sdk_native/native.py'):
+        mounted = Path('/fingerprint') / name
+        require(not mounted.is_symlink() and mounted.is_file(), 'Fingerprint helper is not regular')
+        digest = sha(mounted)
+        require(digest == inputs['controller_files'][name]['sha256'], 'Fingerprint helper differs')
+        require(os.statvfs(mounted).f_flag & os.ST_RDONLY, 'Writable fingerprint helper')
+        observed[name] = digest
     actual = source_inventory(Path('/native'), ignore_python_cache=False)
     require(actual == {name.removeprefix('native/'): item['sha256'] for name, item in inputs['composed_files'].items()}, 'Composed native mount differs')
     require(os.statvfs('/native').f_flag & os.ST_RDONLY, 'Writable product mount')
@@ -198,6 +205,10 @@ def main(*, hosted=False):
         fcntl.flock(host.gate, fcntl.LOCK_EX | fcntl.LOCK_NB)
         watcher = threading.Thread(target=host.execution_watch, daemon=True)
         watcher.start()
+        # Actual deterministic child proof under the same admitted owner.
+        progress['stage'] = 'doc-worker'
+        from doc_worker_proof import run_controller
+        result['doc_worker'] = run_controller(host.execution_check)
         # Fresh -F boot for each distinct identity; no host pier or seed enters.
         result['fresh_seeds'] = fresh_seeds(host, progress)
         progress.update(stage='filesystem-controls', ship=None)
@@ -212,6 +223,18 @@ def main(*, hosted=False):
             summary = host.guarded_result(host.team_check.run(vars(host)))
         report_path = Path('/state/logs') / Path(summary['evidence_file']).name
         result['native'] = execution_policy.read_json(report_path, maximum=4 * 1024 * 1024)
+        if 'product_journey' in result['native']:
+            require(hosted, 'Product inspection is hosted-only')
+            # Exact helpers are already admitted read-only by mounted_inputs.
+            sys.path.insert(0, '/fingerprint/scripts')
+            import release_install
+            from product_result import verify_observation
+            host.execution_check()
+            result['mounts_after'] = mounted_inputs(inputs)
+            result['product_observation'] = verify_observation(result['native'], inputs,
+                release_fingerprint=release_install.saved_home_fingerprint)
+            # The following existing summary refusal MUST remain: this is an
+            # observed inspection, never the legacy or product qualification.
         require(summary['status'] == 'pass', 'Native team suite failed')
         progress['stage'] = 'migration'
         observed = host.dojo('zod', '+stead-ci-migration-probe', timeout=180)

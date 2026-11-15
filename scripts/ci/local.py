@@ -24,7 +24,8 @@ import time
 ROOT = Path(__file__).resolve().parents[2]
 MAX_FILES, MAX_FILE, MAX_TREE = 512, 4 * 1024**2, 32 * 1024**2
 MEMORY, TASKS, STATE_BYTES, TEMP_BYTES = 12 * 1024**3, 256, 8 * 1024**3, 512 * 1024**2
-CONTROLLER_PATHS = ('scripts/ci', 'scripts/urbit', 'web/dev', 'specs/urbit',
+CONTROLLER_PATHS = ('scripts/release_install.py', 'scripts/sdk_native/native.py',
+                    'scripts/ci', 'scripts/urbit', 'web/dev', 'specs/urbit',
                     'native', 'tests/urbit/native_gall_schedule', 'tests/urbit/skill_evaluation',
                     'web/toolchain/package-lock.json')
 PRODUCT_APPS = {'app/stead-home.hoon', 'app/stead-identity.hoon'}

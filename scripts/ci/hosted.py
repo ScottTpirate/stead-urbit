@@ -214,6 +214,8 @@ def sandbox_command(job, context):
         '--tmpfs', '/tmp', '--size', str(local.STATE_BYTES), '--tmpfs', '/state']
     for source, target in [
         (base / 'scripts/urbit', '/code'), (base / 'scripts/ci', '/ci'), (base / 'web/dev', '/web-dev'),
+        (base / 'scripts/release_install.py', '/fingerprint/scripts/release_install.py'),
+        (base / 'scripts/sdk_native/native.py', '/fingerprint/scripts/sdk_native/native.py'),
         (base / 'specs/urbit', '/specs'), (job / 'composed/native', '/native'),
         (base / 'specs/urbit/toolchain.lock.json', '/toolchain.json'),
         (ROOT / '.runtime' / pins['runtime']['binary'], '/runtime/' + pins['runtime']['binary']),
@@ -769,6 +771,19 @@ def main():
                         result['worker_diagnostic'] = project(raw, inputs, run_id=run_id,
                             inventory=json.loads(controller['specs/urbit/phase2-pure-units.json']),
                             sources=combined)
+                        if 'scripts/ci/product_failure.py' in controller:
+                            try:
+                                # Captured trusted source only; never import
+                                # helpers from the mutable candidate checkout.
+                                sys.path.insert(0, str(CAPTURED / 'scripts'))
+                                import release_install
+                                from product_failure import project as product_projection
+                                result['product_observation'] = product_projection(raw, inputs,
+                                    run_id=run_id, guard=result['guard'], cleanup=result['cleanup'], policy=POLICY,
+                                    release_fingerprint=release_install.saved_home_fingerprint)
+                            except Exception:
+                                result['product_observation'] = {
+                                    'classification': 'product-inspection-unavailable', 'qualifies_phase': False}
                     except Exception:
                         result['worker_diagnostic'] = {'classification': 'failed-worker-diagnostic-unavailable',
                                                        'qualifies_phase': False}

@@ -125,7 +125,7 @@
   =/  bad-result  (mule |.((on-load:initial !>([%stead-home %8 team code [%open 1 ~] ~ anchors invalid]))))
   =/  other=external-writes-v1:stead-team-owner  (malt ~[[request (as-v1 next.accepted)]])
   =/  scope-result  (mule |.((on-load:initial !>([%stead-home %8 team code [%open 1 ~] ~ anchors other]))))
-  =/  future-result  (mule |.((on-load:initial !>([%stead-home %10 team code [%open 1 ~] ~ anchors external]))))
+  =/  future-result  (mule |.((on-load:initial !>([%stead-home %11 team code [%open 1 ~] ~ anchors external]))))
   (expect !>(?&(?=(%| -.empty-result) ?=(%| -.bad-result) ?=(%| -.scope-result) ?=(%| -.future-result))))
 ++  test-home-v8-custody-omits-projection-but-binds-external-ledger
   =/  changed-view=state:stead-projection  *state:stead-projection

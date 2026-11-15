@@ -58,9 +58,14 @@ def durable_fingerprint(ship, dojo):
             '?:  ?=([%stead-home %8 *] q.saved)  '
             '=/  stored  !<([%stead-home %8 team=[db=* projection=*] code=* handoff=* retired=* packs=* external=*] saved)  '
             '(shax (jam [db.team.stored code.stored handoff.stored retired.stored packs.stored external.stored]))  '
-            '?>  ?=([%stead-home %9 *] q.saved)  '
+            '?:  ?=([%stead-home %9 *] q.saved)  '
             '=/  stored  !<([%stead-home %9 team=[db=* projection=*] code=* handoff=* retired=* packs=* external=* reviews=*] saved)  '
-            '(shax (jam [db.team.stored code.stored handoff.stored retired.stored packs.stored external.stored reviews.stored]))')
+            '(shax (jam [db.team.stored code.stored handoff.stored retired.stored packs.stored external.stored reviews.stored]))  '
+            '?>  ?=([%stead-home %10 *] q.saved)  '
+            '=/  stored  !<([%stead-home %10 profile=@t target=* code=* mode=* retired=* packs=* external=* reviews=*] saved)  '
+            "?>  =('native-human-doc/1' profile.stored)  "
+            '?>  ?=(?(%predecessor %product) -.target.stored)  '
+            '(shax (jam [profile.stored target.stored code.stored mode.stored retired.stored packs.stored external.stored reviews.stored]))')
     else:
         source += ('=/  stored  !<([%stead-identity %1 config=* counter=@ud] saved)  '
                    '(shax (jam stored))')

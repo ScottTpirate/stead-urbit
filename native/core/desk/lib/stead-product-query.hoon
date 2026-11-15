@@ -19,6 +19,8 @@
   ?>  &((uuid request) (uuid project) =('' (field obj 'container_id')) =('' (field obj 'search')))
   ?>  ?|  &(=('work' kind) ?|(=('' resource) (uuid resource)))
           &(=('comments' kind) (uuid resource))
+          &(=('principals' kind) =('' resource))
+          &(=('completion' kind) (uuid resource) =('' cursor))
       ==
   ?>  ?|(=('' cursor) (opaque:stead-team-codec cursor))
   [request kind project '' resource '' cursor]

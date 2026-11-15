@@ -8,7 +8,7 @@ import re
 from worker_result import PREFIX, canonical, require, unique
 
 SHIPS = ('zod', 'bus', 'nec', 'bud')
-STAGES = ('admission', 'mounts', 'isolation', 'pins', 'supervisor', 'fresh-boot',
+STAGES = ('admission', 'mounts', 'isolation', 'pins', 'supervisor', 'doc-worker', 'fresh-boot',
           'fresh-ready', 'fresh-mount', 'fresh-stop', 'fresh-copy', 'filesystem-controls',
           'team-lifecycle', 'team-check', 'migration', 'native-controls', 'final-inputs', 'complete')
 FRAME_STAGES = ('encode', 'connect', 'send', 'response-header', 'response-body', 'decode', 'parse-terminal')
@@ -392,6 +392,13 @@ def project(raw, inputs, *, run_id, inventory=None, sources=None):
         'markers': {name: bool(re.search(rb'(?<![a-z0-9-])' + re.escape(name.encode('ascii'))
                                          + rb'(?![a-z0-9-])', encoded))
                     for name in MIGRATION_MARKERS}}
+    result['doc_worker'] = {'status': 'unobserved'}
+    if 'doc_worker' in value:
+        from doc_worker_proof import verify as verify_doc_worker
+        verify_doc_worker(value['doc_worker'],
+            inputs['controller_files']['scripts/urbit/doc_run_worker.py']['sha256'],
+            inputs['controller_files']['scripts/ci/doc_worker_proof.py']['sha256'])
+        result['doc_worker'] = value['doc_worker']
     logs = value.get('failure_logs', {})
     require(isinstance(logs, dict), 'Failure log shape')
     result['log_observations'] = {}

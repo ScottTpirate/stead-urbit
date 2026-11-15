@@ -125,6 +125,11 @@ def validate_inventory(value: dict) -> dict:
                    '/tests/stead-service-bindings': ('test-service-bindings-', 8, 60),
                    '/tests/stead-doc-change-views': ('test-doc-change-', 7, 60),
                    '/tests/stead-run': ('test-run-', 10, 60),
+                   '/tests/stead-run-codec': ('test-run-codec-', 6, 60),
+                   '/tests/stead-run-adapters': ('test-run-adapters-', 8, 60),
+                   '/tests/stead-run-views': ('test-run-views-', 8, 60),
+                   '/tests/stead-product-home': ('test-product-home-', 8, 60),
+                   '/tests/stead-home-v10-rehearsal': ('test-home-v10-', 6, 60),
                    '/tests/stead-work-delegations': ('test-work-delegations-', 3, 60),
                    '/tests/stead-creator-renewal': ('test-creator-renewal-', 4, 60),
                    '/tests/stead-project-retirement': ('test-project-retire-', 6, 60),
@@ -144,15 +149,6 @@ def validate_inventory(value: dict) -> dict:
                    '/tests/stead-home-v9-rehearsal': ('test-home-v9-', 4, 60),
                    '/tests/stead-browser-oidc-proof': ('test-oidc-proof-', 5, 60),
                    '/tests/stead-update-capacity': ('test-updates-', 2, 180)}
-    definitions.update({
-        '/tests/stead-import-probe-product-codec': ('test-import-', 1, 60),
-        '/tests/stead-import-probe-product-state': ('test-import-', 1, 60),
-        '/tests/stead-import-probe-product-migrate': ('test-import-', 1, 60),
-        '/tests/stead-import-probe-actor': ('test-import-', 1, 60),
-        '/tests/stead-import-probe-run-state': ('test-import-', 1, 60),
-        '/tests/stead-import-probe-run': ('test-import-', 1, 60),
-        '/tests/stead-import-probe-doc-change-codec': ('test-import-', 1, 60),
-    })
     if not isinstance(suites, list) or len(suites) != len(definitions):
         raise ValueError('Native suite count')
     paths = [entry.get('path') for entry in suites if isinstance(entry, dict)]

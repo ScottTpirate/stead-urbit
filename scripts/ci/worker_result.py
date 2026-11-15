@@ -35,13 +35,15 @@ def verify(raw, inputs, *, run_id, inventory):
     value = json.loads(framed[0][len(PREFIX):], object_pairs_hook=unique)
     require(set(value) == {'format', 'status', 'inputs_sha256', 'run_id', 'cleanup', 'admission',
                           'mounts_before', 'mounts_after', 'isolation', 'fresh_seeds', 'native', 'migration',
-                          'filesystem_controls', 'negative_controls'}, 'Worker result schema')
+                          'filesystem_controls', 'negative_controls', 'doc_worker'}, 'Worker result schema')
     require(value['format'] == 'stead.local-ci-worker/1' and value['status'] == 'pass' and value['cleanup'] is True, 'Worker did not finish cleanly')
     require(value['run_id'] == run_id and re.fullmatch(r'[0-9a-f]{32}', run_id), 'Worker belongs to another run')
     require(value['inputs_sha256'] == hashlib.sha256(canonical(inputs)).hexdigest(), 'Worker input identity differs')
     expected_mounts = {prefix: {name[len(prefix) + 1:]: item['sha256']
         for name, item in inputs['controller_files'].items() if name.startswith(prefix + '/')}
         for prefix in ('scripts/urbit', 'scripts/ci', 'specs/urbit', 'web/dev')}
+    for name in ('scripts/release_install.py', 'scripts/sdk_native/native.py'):
+        expected_mounts[name] = inputs['controller_files'][name]['sha256']
     expected_mounts['native'] = {name.removeprefix('native/'): item['sha256'] for name, item in inputs['composed_files'].items()}
     require(value['mounts_before'] == value['mounts_after'] == hashlib.sha256(canonical(expected_mounts)).hexdigest(), 'Worker mount identity differs')
     require(value['isolation'] == {'private_network': True, 'host_credentials_absent': True,
@@ -54,6 +56,10 @@ def verify(raw, inputs, *, run_id, inventory):
     migration = value['migration']
     require(set(migration) == {'source_sha256', 'output'} and migration['source_sha256'] == inputs['controller_files']['scripts/ci/migration.hoon']['sha256']
             and migration['output'].strip() == '%stead-ci-supported-migration-pass', 'Migration proof missing or different')
+    from doc_worker_proof import verify as verify_doc_worker
+    verify_doc_worker(value['doc_worker'],
+        inputs['controller_files']['scripts/urbit/doc_run_worker.py']['sha256'],
+        inputs['controller_files']['scripts/ci/doc_worker_proof.py']['sha256'])
     report = value['native']
     require(report['status'] == 'pass' and report['stage'] == 'completed'
             and report['classification'] == 'local-real-configured-gall-development'

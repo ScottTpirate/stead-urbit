@@ -183,9 +183,7 @@ def run(host):
             route = '/' + dependency.replace('.hoon', '/hoon')
             command('zod', f'=/  raw=@t  .^(@t %cx /=base={route})  =({literal} (sha-256l:sha [(met 3 raw) (rev 3 (met 3 raw) raw)]))', '%.y')
         report['native_units'] = []
-        report['diagnostic_only'] = True
-        report['native_unit_failures'] = []
-        def execute(entry):
+        for entry in [*inventory['suites'], inventory['negative_control']]:
             host['execution_check']()
             resolved = command('zod', '`path`%' + entry['path']).strip()
             log = Path('/state/logs/zod.log')
@@ -212,24 +210,12 @@ def run(host):
                     'elapsed_seconds': round(time.monotonic() - unit_started, 3), 'terminal_present': bool(terminal)})
             if len(captured) > 262144:
                 raise ValueError('Native unit log byte bound')
-            return captured.decode('utf-8', errors='strict') + '\n' + terminal
-        def verify(entry, completed):
-            return native_units.verify_output(completed, path=entry['path'], expected=entry['arms'],
-                succeeds=entry != inventory['negative_control'], failure_marker=entry.get('marker'))
-        def passed(entry, verified):
-            report['native_units'].append(verified)
             negative = entry == inventory['negative_control']
+            verified = native_units.verify_output(captured.decode('utf-8', errors='strict') + '\n' + terminal,
+                path=entry['path'], expected=entry['arms'], succeeds=not negative,
+                failure_marker=entry.get('marker'))
+            report['native_units'].append(verified)
             check('native-unit-' + ('expected-failure:' if negative else 'arms:') + entry['path'], True)
-        def failed(entry):
-            report['native_unit_failures'].append(entry['path'])
-            checkpoint('native-unit-diagnostic-failure')
-        # This reviewed controller always stops after diagnostics. It cannot
-        # qualify a release even when every registered pure suite passes.
-        # Fixed import-only diagnosis of the unchanged candidate. Never qualifies.
-        diagnostic_paths = ('/tests/stead-work-contract', '/tests/stead-product-codec', '/tests/stead-import-probe-product-codec', '/tests/stead-import-probe-product-state', '/tests/stead-import-probe-product-migrate', '/tests/stead-import-probe-actor', '/tests/stead-import-probe-run-state', '/tests/stead-import-probe-run', '/tests/stead-import-probe-doc-change-codec')
-        diagnostic_entries = [next(row for row in inventory['suites'] if row['path'] == path) for path in diagnostic_paths]
-        native_units.collect_pure_diagnostics([*diagnostic_entries, inventory['negative_control']],
-            execute, verify, passed, failed)
 
     sequence = 1000
 
@@ -307,6 +293,16 @@ def run(host):
                   and boot.get('home') == '~' + ship and boot.get('status') == 'ready')
             team.admit(ship, boot, host['dojo'])
             check(ship + '-owned-peer-admission', team.boots[ship]['acknowledged'])
+        # Prepared inspection-only successor. New fresh fixture, before any
+        # Work/Code pilot scenario. This always refuses qualification afterward.
+        import sys
+        sys.path.insert(0, '/fingerprint/scripts')
+        import release_install
+        import product_controller
+        product_controller.run(host, legacy=call, command=command, check=check,
+            checkpoint=checkpoint, report=report, config=config, now=now,
+            release_fingerprint=release_install.saved_home_fingerprint,
+            release_source_sha256=sha('/fingerprint/scripts/release_install.py'))
         check('remote-configuration-denied', denied(call('bus', 'configure', config | {'expected_revision': '1'}),
               'poke-fail', 'stead-owner-required'))
         check('remote-operator-status-denied', denied(call('bus', 'operator-status', route='/operator/' + secrets.token_hex(32)),

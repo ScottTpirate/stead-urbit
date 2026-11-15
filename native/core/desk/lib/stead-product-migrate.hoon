@@ -37,14 +37,15 @@
 ++  one-event
   |=  job=conversion
   ^-  conversion
-  ?>  &(=(phase.job %events) ?=(^ events.job))
-  =/  event  i.events.job
+  =/  remaining=(list event)  events.job
+  ?>  &(=(phase.job %events) ?=(^ remaining))
+  =/  event  i.remaining
   ::  Per-project heads alone do not bind interleaving across projects.
   =/  timeline
     %-  hash
     :-  'stead.work-migration-timeline/1'
     (canonical (object ~[['previous' timeline.job] ['project_id' project.event] ['journal_digest' digest.event]]))
-  =.  job  job(events t.events.job, heads (~(put by heads.job) project.event digest.event), timeline timeline)
+  =.  job  job(events t.remaining, heads (~(put by heads.job) project.event digest.event), timeline timeline)
   =/  value  (need (parse-result bytes.event))
   ?>  ?=([%o *] value)
   =/  record  p.value
@@ -93,8 +94,9 @@
   =/  assigned  (optional-field data.work 'assignee_principal_id')
   =?  data  !=('' assigned)  (~(put by data) 'assignee_principal_id' [%s assigned])
   =/  goal-changed  ?|(!=((field data 'title') (field data.work 'title')) !=((field data 'description') (field data.work 'description')))
+  =/  property-names=(list @t)  ~['type' 'status' 'priority']
   =/  properties-changed
-    %+  lien  ~['type' 'status' 'priority']
+    %+  lien  property-names
     |=  name=@t
     !=((field data name) (field data.work name))
   =/  before  (field data.work 'status')

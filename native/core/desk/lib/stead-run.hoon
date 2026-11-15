@@ -26,10 +26,14 @@
 ++  contract-valid
   |=  [item=contract now=@ud]
   ^-  ?
+  =/  contract-ids=(list @t)
+    ~[project.item work.item requester.item owner.item worker.item binding.item definition.item runtime.item]
+  =/  contract-revisions=(list @ud)
+    ~[epoch.item execution-revision.item binding-revision.item definition-revision.item runtime-revision.item]
   ?&  (lte (met 0 home.item) 128)
-      (levy ~[project.item work.item requester.item owner.item worker.item binding.item definition.item runtime.item] uuid)
+      (levy contract-ids uuid)
       !=(owner.item worker.item)
-      (levy ~[epoch.item execution-revision.item binding-revision.item definition-revision.item runtime-revision.item] |=(n=@ud &((gth n 0) (uint64 n))))
+      (levy contract-revisions |=(n=@ud &((gth n 0) (uint64 n))))
       (digest-valid execution-digest.item)  (digest-valid context.item)
       (gth duration.budget.item 0)  (lte duration.budget.item 3.600.000)
       (usage-valid limits.budget.item)
@@ -159,7 +163,7 @@
     ?.  &(=(%settled status.item.op) (digest-valid evidence.item.op) (digest-valid result-digest.item.op))
       [db book ~ 'invalid_reconciliation']
     ?:  =(%settled status.u.prior)
-      [db book ~ ?:( &(=(evidence.u.prior evidence.item.op) =(result-digest.u.prior result-digest.item.op)) '' 'effect_conflict')]
+      [db book ~ ?:(&(=(evidence.u.prior evidence.item.op) =(result-digest.u.prior result-digest.item.op)) '' 'effect_conflict')]
     ?.  (settled.gates issued attempt.row u.prior item.op now)  [db book ~ 'unverified_reconciliation']
     [db(effects (~(put by effects.db) [key attempt.row id.item.op] u.prior(status %settled, evidence evidence.item.op, result-digest result-digest.item.op))) book ~ '']
   ?:  (terminal phase.row)  [db book ~ 'terminal_run']
@@ -237,7 +241,7 @@
     ?.  &((digest-valid evidence.item.op) ?:(=(%settled status.item.op) (digest-valid result-digest.item.op) =('' result-digest.item.op)))
       [db book ~ 'invalid_settlement']
     ?:  !=(%pending status.u.prior)
-      [db book ~ ?:( &(=(status.u.prior status.item.op) =(evidence.u.prior evidence.item.op) =(result-digest.u.prior result-digest.item.op)) '' 'reconciliation_required')]
+      [db book ~ ?:(&(=(status.u.prior status.item.op) =(evidence.u.prior evidence.item.op) =(result-digest.u.prior result-digest.item.op)) '' 'reconciliation_required')]
     ?.  (settled.gates issued attempt.row u.prior item.op now)  [db book ~ 'unverified_settlement']
     [db(effects (~(put by effects.db) [key attempt.row id.item.op] u.prior(status status.item.op, evidence evidence.item.op, result-digest result-digest.item.op))) book ~ '']
   [db book ~ 'unsupported_operation']
