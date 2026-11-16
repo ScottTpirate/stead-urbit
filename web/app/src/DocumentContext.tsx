@@ -4,6 +4,7 @@ import {Button, EmptyState, LoadingState, OutcomeState, StatusBadge} from './pri
 import {encodeProductRoute} from './productRoutes';
 import {workStatuses} from './WorkQuickActions';
 import './document-context.css';
+import type {ProductWorkEndpointReader} from './productJourneyState';
 
 export interface DocumentContextProps {
   readonly client: HomeClient;
@@ -15,6 +16,7 @@ export interface DocumentContextProps {
   readonly viewRevision: string | number;
   readonly onOpenWork: (id: string) => void;
   readonly onError: (failure: unknown) => void;
+  readonly readWork?: ProductWorkEndpointReader;
 }
 type Endpoint = {kind: 'work' | 'document'; container: string; id: string};
 type Link = {id: string; group: 'support' | 'related'; title: string; status?: string};
@@ -37,7 +39,7 @@ function exactRow(view: View, kind: 'work' | 'document', project: string, contai
   return row;
 }
 
-async function readLinks(client: HomeClient, project: string, collection: string, document: string, active: () => boolean): Promise<Link[]> {
+async function readLinks(client: HomeClient, project: string, collection: string, document: string, active: () => boolean, readWork?: ProductWorkEndpointReader): Promise<Link[]> {
   if (![project, collection, document].every(id => UUID.test(id))) throw new HomeError('invalid_request');
   // A visible relation is not a grant. Recheck the Doc and every Work endpoint;
   // never use the relation's display payload to infer a hidden endpoint's name.
@@ -79,6 +81,13 @@ async function readLinks(client: HomeClient, project: string, collection: string
   for (let start = 0; start < entries.length && active(); start += 6) {
     const batch = await Promise.all(entries.slice(start, start + 6).map(async ([id, group]) => {
       try {
+        if (readWork) {
+          const row = await readWork(project, id);
+          if (!active()) return null;
+          if (row.projectId !== project || row.workId !== id) throw new HomeError('invalid_response');
+          if (row.authorityEpoch !== source.authority_epoch) throw new HomeError('stale_cursor');
+          return {id, group, title: row.title.trim() || 'Untitled work', status: row.statusLabel};
+        }
         const result = await client.query(query('work', project, '', id));
         if (!active()) return null;
         if (result.authority_epoch !== source.authority_epoch) throw new HomeError('stale_cursor');
@@ -95,9 +104,9 @@ async function readLinks(client: HomeClient, project: string, collection: string
   return links;
 }
 
-export function DocumentContext({client, project, collection, document, sessionKey, locked, viewRevision, onOpenWork, onError}: DocumentContextProps) {
+export function DocumentContext({client, project, collection, document, sessionKey, locked, viewRevision, onOpenWork, onError, readWork}: DocumentContextProps) {
   const region = useId();
-  const key = JSON.stringify([project, collection, document, sessionKey, viewRevision]);
+  const key = JSON.stringify([project, collection, document, sessionKey, viewRevision, readWork ? 'product' : 'legacy']);
   const [expanded, setExpanded] = useState(false);
   const [attempt, setAttempt] = useState(0);
   const [online, setOnline] = useState(() => navigator.onLine);
@@ -124,7 +133,7 @@ export function DocumentContext({client, project, collection, document, sessionK
     let running = true;
     const active = () => running && current.current.key === key && !current.current.locked && current.current.online;
     setState({key, phase: 'loading'});
-    void readLinks(client, project, collection, document, active).then(value => {
+    void readLinks(client, project, collection, document, active, readWork).then(value => {
       if (active()) setState({key, phase: 'ready', links: value});
     }, failure => {
       if (!active()) return;
@@ -133,7 +142,7 @@ export function DocumentContext({client, project, collection, document, sessionK
       current.current.onError(failure);
     });
     return () => { running = false; };
-  }, [client, project, collection, document, sessionKey, viewRevision, key, expanded, locked, attempt]);
+  }, [client, project, collection, document, sessionKey, viewRevision, key, expanded, locked, attempt, readWork]);
 
   const retry = <Button variant="quiet" disabled={locked || !online} onClick={() => setAttempt(value => value + 1)}>Refresh links</Button>;
   return <section className="document-context" aria-label="Related work">

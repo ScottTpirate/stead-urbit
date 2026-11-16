@@ -1,0 +1,9 @@
+.doc-change-proposal { max-width: 800px; margin-inline: auto; padding: 24px; }
+.doc-change-proposal > header { display: flex; align-items: start; justify-content: space-between; gap: 16px; }
+.doc-change-proposal .document-body { margin-block: 20px; }
+.doc-change-proposal .editor-source { min-height: 300px; font-weight: 400; }
+.doc-change-proposal > label { display: grid; gap: 8px; margin-block: 20px; }
+.doc-change-proposal > details { margin-top: 24px; overflow-wrap: anywhere; }
+.doc-proposal-comparison { padding-block: 16px; border-block: 1px solid var(--line); }
+.doc-proposal-comparison > button { margin: 8px 8px 0 0; }
+@media (max-width: 620px) { .doc-change-proposal { padding: 16px; } }

@@ -161,6 +161,10 @@ h3 { font-size: 14px; font-weight: 620; }
 .resource-row h2 { margin: 3px 0; overflow-wrap: anywhere; }
 .resource-row p { margin: 5px 0 0; color: var(--muted); font-size: 13px; line-height: 1.45; white-space: pre-wrap; overflow-wrap: anywhere; }
 .resource-row .row-actions { flex: none; }
+.resource-summary { min-width: 0; }
+.document-title { display: block; max-width: 100%; min-height: 44px; padding: 0; border: 0; background: transparent; color: inherit; font: inherit; text-align: left; overflow-wrap: anywhere; }
+.document-title:hover:enabled { text-decoration: underline; text-underline-offset: 3px; }
+.resource-row .row-actions:empty { display: none; }
 .resource-summary details { margin-top: 8px; font-size: 13px; }
 .resource-summary details summary { cursor: pointer; }
 .resource-summary details dl { display: grid; gap: 8px; margin: 12px 0; }

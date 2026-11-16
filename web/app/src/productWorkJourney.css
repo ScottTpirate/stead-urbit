@@ -1,0 +1,5 @@
+.product-work-journey { min-width: 0; }
+.product-journey-toolbar { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 12px; margin-block: 16px; }
+.product-journey-toolbar > div { display: flex; flex-wrap: wrap; gap: 8px; }
+.product-journey-output-actions > div { display: flex; flex-wrap: wrap; gap: 8px; margin-block: 12px; }
+.product-journey-output-actions > div > p { flex-basis: 100%; }

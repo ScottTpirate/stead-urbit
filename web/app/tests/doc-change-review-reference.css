@@ -1,0 +1,5 @@
+.doc-review-reference { display: block; max-width: 1100px; margin: 0 auto; padding: 24px; }
+.doc-review-reference > h1 { font-size: 22px; }
+.doc-review-reference-controls { display: flex; flex-wrap: wrap; gap: 8px; padding: 12px; margin-bottom: 20px; border: 1px dashed var(--line-strong); }
+.doc-review-reference > .doc-change-list { margin-bottom: 24px; }
+@media (max-width: 620px) { .doc-review-reference { padding: 8px; } }

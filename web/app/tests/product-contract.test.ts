@@ -14,6 +14,8 @@ test('resource routes round-trip independent scope and exact revision without ti
     {kind:'repository',project,repository:item,view:'history'},
     {kind:'change',project,change:item,revision:'2'}, {kind:'run',project,run:item},
     {kind:'review',project,change:item,revision:'18446744073709551615'},
+    {kind:'doc-change',project,work:item,change:collection},
+    {kind:'doc-change',project,work:item,change:collection,result:{revision:'18446744073709551615',digest:'f'.repeat(64)}},
     {kind:'file',project,repository:item,commit:'a'.repeat(40),path:'docs/東京 guide.md'},
   ];
   for (const route of routes) assert.deepEqual(decodeProductRoute(encodeProductRoute(route)),route);
@@ -25,6 +27,12 @@ test('addresses reject ambiguous scope, query payloads, encodings and unsupporte
     `#doc/${project}/${collection}/${item}/01`, `#project/${project}/agents`, `#run/${project}/${item}\n`,
     `#doc/${project}/${collection}/${item}/18446744073709551616`,
     `#review/${project}/${item}/18446744073709551616`,
+    `#doc-change/${project}/${item}/${collection}/1`,
+    `#doc-change/${project}/${item}/${collection}/0/${'f'.repeat(64)}`,
+    `#doc-change/${project}/${item}/${collection}/18446744073709551616/${'f'.repeat(64)}`,
+    `#doc-change/${project}/${item}/${collection}/1/${'f'.repeat(40)}`,
+    `#doc-change/${project}/${item}/${collection}/1/${'F'.repeat(64)}`,
+    `#doc-change/${project}/${item}/${collection}/1/${'f'.repeat(64)}/extra`,
     `#file/${project}/${item}/${'a'.repeat(40)}/..%2Fprivate`,
     `#file/${project}/${item}/main/README.md`,
     `#file/${project}/${item}/${'a'.repeat(40)}/docs%2fguide.md`]) {

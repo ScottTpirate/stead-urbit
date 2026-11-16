@@ -82,7 +82,7 @@ try {
   await page.getByRole('button',{name:'Docs',exact:true}).click();
   await page.getByLabel('Collection',{exact:true}).selectOption({label:'Private notebook α · Private drafts'});
   await page.locator('.resource-row').filter({has:page.getByRole('heading',{name:/UNSELECTED-PRIVATE-CANARY/u})})
-    .getByRole('button',{name:'Open page',exact:true}).click();
+    .locator('button.document-title').click();
   const editor = page.getByRole('textbox',{name:'Markdown source',exact:true});
   assert.ok((await editor.inputValue()).includes('UNSELECTED-PRIVATE-CANARY'));
   await editor.fill((await editor.inputValue()) + '\nUnsaved natural expiry canary.');

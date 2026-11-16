@@ -1,0 +1,60 @@
+{
+  "native_source": "native/core/desk/tests/stead-doc-change-codec.hoon",
+  "domain": "stead.doc-change/1\\0",
+  "vectors": [
+    {
+      "name": "native-submission-vector",
+      "classification": "source-derived-expected-value-not-native-execution",
+      "command": {
+        "protocol": "stead.doc-change/1",
+        "request_id": "019939ba-4000-7000-8000-000000000300",
+        "project_id": "019939ba-4000-7000-8000-000000000100",
+        "work_id": "019939ba-4000-7000-8000-000000000101",
+        "change_id": "019939ba-4000-7000-8000-000000000400",
+        "authority_epoch": "1",
+        "expected_revision": "0",
+        "operation": "change.submit",
+        "payload": {
+          "outcome_id": "019939ba-4000-7000-8000-000000000401",
+          "target": {
+            "kind": "document",
+            "project_id": "019939ba-4000-7000-8000-000000000100",
+            "collection_id": "019939ba-4000-7000-8000-000000000200",
+            "document_id": "019939ba-4000-7000-8000-000000000201",
+            "expected_revision": "1",
+            "base_markdown_sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+          },
+          "markdown": "Exact λ <text>  \n",
+          "summary": "Clarify the launch instructions",
+          "execution_contract_revision": "2",
+          "execution_contract_digest": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+          "run_id": "",
+          "attempt": "0"
+        }
+      },
+      "canonical": "{\"authority_epoch\":\"1\",\"change_id\":\"019939ba-4000-7000-8000-000000000400\",\"expected_revision\":\"0\",\"operation\":\"change.submit\",\"payload\":{\"attempt\":\"0\",\"execution_contract_digest\":\"bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb\",\"execution_contract_revision\":\"2\",\"markdown\":\"Exact λ <text>  \\n\",\"outcome_id\":\"019939ba-4000-7000-8000-000000000401\",\"run_id\":\"\",\"summary\":\"Clarify the launch instructions\",\"target\":{\"base_markdown_sha256\":\"aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa\",\"collection_id\":\"019939ba-4000-7000-8000-000000000200\",\"document_id\":\"019939ba-4000-7000-8000-000000000201\",\"expected_revision\":\"1\",\"kind\":\"document\",\"project_id\":\"019939ba-4000-7000-8000-000000000100\"}},\"project_id\":\"019939ba-4000-7000-8000-000000000100\",\"protocol\":\"stead.doc-change/1\",\"request_id\":\"019939ba-4000-7000-8000-000000000300\",\"work_id\":\"019939ba-4000-7000-8000-000000000101\"}",
+      "sha256": "8badc6f6292779c5c6b30d119d45fac8b8163647a6a7a6d08029a8efa1764223"
+    },
+    {
+      "name": "native-adoption-shape",
+      "classification": "source-derived-expected-value-not-native-execution",
+      "command": {
+        "protocol": "stead.doc-change/1",
+        "request_id": "019939ba-4000-7000-8000-000000000300",
+        "project_id": "019939ba-4000-7000-8000-000000000100",
+        "work_id": "019939ba-4000-7000-8000-000000000101",
+        "change_id": "019939ba-4000-7000-8000-000000000400",
+        "authority_epoch": "1",
+        "expected_revision": "2",
+        "operation": "change.adopt",
+        "payload": {
+          "result_revision": "1",
+          "result_digest": "cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc",
+          "note": "Please clarify the final step."
+        }
+      },
+      "canonical": "{\"authority_epoch\":\"1\",\"change_id\":\"019939ba-4000-7000-8000-000000000400\",\"expected_revision\":\"2\",\"operation\":\"change.adopt\",\"payload\":{\"note\":\"Please clarify the final step.\",\"result_digest\":\"cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc\",\"result_revision\":\"1\"},\"project_id\":\"019939ba-4000-7000-8000-000000000100\",\"protocol\":\"stead.doc-change/1\",\"request_id\":\"019939ba-4000-7000-8000-000000000300\",\"work_id\":\"019939ba-4000-7000-8000-000000000101\"}",
+      "sha256": "73d6d921a97ad901f634b9a2a3ea34b9a326cfdfb0328c65a23f4a1f673509aa"
+    }
+  ]
+}

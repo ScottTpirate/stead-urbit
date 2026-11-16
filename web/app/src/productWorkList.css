@@ -1,0 +1,30 @@
+.product-work-page { min-width: 0; container: work-page / inline-size; }
+.product-work-page-note { margin-block: 12px 6px; font-size: .8125rem; }
+.product-work-page-group { margin-block: 16px; min-width: 0; }
+.product-work-page-group h3, .product-work-page-group summary { margin: 0; padding: 8px 10px; color: var(--ink); font-size: .8125rem; font-weight: 600; }
+.product-work-page-group summary { min-height: 44px; box-sizing: border-box; cursor: pointer; overflow-wrap: anywhere; }
+.product-work-page-count { margin-inline-start: 10px; color: var(--muted); font-size: .75rem; font-weight: 400; white-space: nowrap; }
+.product-work-page-rows { list-style: none; padding: 0; margin: 0; }
+.product-work-page-rows li + li { border-top: 1px solid var(--line); }
+.product-work-page-row { display: grid; grid-template-columns: 108px minmax(0, 1fr) minmax(0, .6fr) minmax(0, .65fr) 110px; align-items: center; gap: 8px 12px; width: 100%; min-height: 48px; padding: 8px 10px; border: 0; background: var(--paper); color: var(--ink); text-align: start; font: inherit; font-size: .8125rem; cursor: pointer; }
+.product-work-page-row:hover:not(:disabled) { background: var(--rail); }
+.product-work-page-row:disabled { cursor: default; color: var(--muted); }
+.product-work-page-row > span { min-width: 0; overflow-wrap: anywhere; }
+.product-work-page-title { font-size: .875rem; font-weight: 500; }
+.product-work-page-status { display: flex; align-items: center; gap: 6px; font-size: .75rem; }
+.product-work-page-status svg { flex: 0 0 16px; }
+.product-work-page-label { color: var(--muted); }
+.product-work-page-priority { font-size: .75rem; }
+.product-work-page-row:focus-visible, .product-work-page-group summary:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; position: relative; z-index: 1; }
+@container work-page (max-width: 800px) {
+  .product-work-page-row { grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); }
+  .product-work-page-title { grid-column: 1 / -1; grid-row: 1; }
+  .product-work-page-status { grid-row: 2; }
+  .product-work-page-priority { grid-column: 2; grid-row: 2; }
+}
+@container work-page (max-width: 420px) {
+  .product-work-page-row { grid-template-columns: minmax(0, 1fr); }
+  .product-work-page-title, .product-work-page-status, .product-work-page-priority { grid-column: auto; grid-row: auto; }
+  .product-work-page-title { grid-row: 1; }
+  .product-work-page-count { white-space: normal; }
+}
