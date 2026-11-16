@@ -384,6 +384,7 @@
   =/  links  ~(tap by links.db)
   =/  relevant
     |-
+    ^-  (set @t)
     ?~  links  scopes
     =/  link  q.i.links
     =/  id  +.p.i.links
