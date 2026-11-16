@@ -102,6 +102,44 @@ def source_map(hosted):
     return {path: pin(raw) for path, raw in hosted.CONTROLLER_FILES.items()}
 
 
+def setup_failure_positions(hosted, intake, error, phase):
+    """Closed positions from captured intake code; never exception text or locals."""
+    require(phase in ('admission', 'apparmor', 'bwrap', 'intake', 'input',
+                      'launch', 'execution', 'result'))
+    path = MODULE_PATHS['model_intake']
+    raw = hosted.CONTROLLER_FILES[path]
+    filename = str(hosted.CAPTURED / path)
+    require(type(raw) is bytes and 0 < len(raw) <= 262144
+            and intake.__file__ == filename)
+    root = compile(raw, filename, 'exec')  # Inspect code only; no execution.
+    admitted, pending = [], [root]
+    while pending:
+        code = pending.pop()
+        require(len(admitted) < 256)
+        admitted.append(code)
+        pending.extend(value for value in code.co_consts if type(value) is types.CodeType)
+    line_count = len(raw.splitlines())
+    locations, seen, inspected, truncated = [], set(), 0, False
+    trace = error.__traceback__
+    while trace is not None and inspected < 64:
+        inspected += 1
+        code, line = trace.tb_frame.f_code, trace.tb_lineno
+        if (code.co_filename == filename and code in admitted
+                and type(line) is int and 1 <= line <= line_count
+                and re.fullmatch(r'[A-Za-z_][A-Za-z0-9_]{0,63}', code.co_name)):
+            key = (code.co_name, line)
+            if key not in seen:
+                seen.add(key)
+                if len(locations) < 16:
+                    locations.append({'function': key[0], 'line': key[1]})
+                else:
+                    truncated = True
+        trace = trace.tb_next
+    return {'protocol': 'stead.fixed-model-setup-failure/1', 'phase': phase,
+            'source_sha256': sha(raw), 'locations': locations,
+            'frames_inspected': inspected, 'truncated': truncated or trace is not None}
+
+
 def job_context(hosted, boundary, job):
     require(re.fullmatch('/var/lib/stead-model-proof-[a-z0-9]{8}', str(job)) is not None)
     hosted.regular_root(job)
@@ -406,9 +444,12 @@ def outer(hosted, args, identity, binding):
         'error_class': 'none', 'cleanup_error_class': 'none', 'cleanup': {'verified': False}}
     process = None
     service_started = False
+    setup_phase = 'admission'
     try:
         setup_guard()
+        setup_phase = 'apparmor'
         result['apparmor_setup'] = hosted.hosted_apparmor.prepare(hosted.regular_root)
+        setup_phase = 'bwrap'
         result['bwrap_version'] = subprocess.run(['/usr/bin/bwrap', '--version'], check=True,
             stdout=subprocess.PIPE, stderr=subprocess.DEVNULL, timeout=5,
             env={'PATH': '/usr/bin:/bin', 'LANG': 'C'}).stdout.decode('ascii').strip()
@@ -418,10 +459,12 @@ def outer(hosted, args, identity, binding):
         old_alarm = signal.signal(signal.SIGALRM, setup_timeout)
         signal.setitimer(signal.ITIMER_REAL, max(0.001, SETUP_SECONDS - (time.monotonic() - started)))
         try:
+            setup_phase = 'intake'
             result['intake'] = intake.prepare(job, setup_guard)
         finally:
             signal.setitimer(signal.ITIMER_REAL, 0)
             signal.signal(signal.SIGALRM, old_alarm)
+        setup_phase = 'input'
         (job / 'model').mkdir(mode=0o755)
         os.chmod(job / 'model', 0o755)
         os.rename(job / boundary.MODEL_NAME, job / 'model' / boundary.MODEL_NAME)
@@ -459,10 +502,12 @@ def outer(hosted, args, identity, binding):
         lease_publish(job, 'caller', owner_sha256, caller_generation, account.pw_gid)
         lease_publish(job, 'guardian', owner_sha256, 1, account.pw_gid)
         command = service_command(hosted, collection, job, context)
+        setup_phase = 'launch'
         service_started = True
         # Existing trusted spawn owns PDEATHSIG plus the unique service stdin.
         # No diagnostic thread is created; no raw service log is exported.
         process = hosted.spawn_owned(command)
+        setup_phase = 'execution'
         limit = time.monotonic() + UNIT_WAIT_SECONDS
         while process.poll() is None:
             require(time.monotonic() < limit)
@@ -471,11 +516,16 @@ def outer(hosted, args, identity, binding):
             time.sleep(0.2)
         result['service_exit_code'] = process.returncode
         require(process.returncode == 0)
+        setup_phase = 'result'
         result['guard'] = read_json(boundary, job / 'model-guard.json', 131072)
         complete_guard(result['guard'], collection)
         result['status'] = 'pass'
     except BaseException as error:
         result['error_class'] = closed_error(error)
+        try:
+            result['setup_failure'] = setup_failure_positions(hosted, intake, error, setup_phase)
+        except BaseException:
+            result['setup_failure'] = None
     finally:
         if process is not None:
             try:
