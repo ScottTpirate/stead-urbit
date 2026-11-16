@@ -168,7 +168,8 @@
     ?>  &(=('isolated-fake' runtime.config) =('local-disposable' custody.config))
     =/  started  (begin:stead-product-home source our.bowl)
     =/  token  (token:stead-session eny.bowl act.bowl 'stead.product-restore-job/1')
-    =.  owner  empty(product (some phase.started), job token)
+    =/  fresh=state  empty
+    =.  owner  fresh(product (some phase.started), job token)
     [(weld kicks ~[bind wait]) owner]
   ++  activate-product
     |=  raw=@t
