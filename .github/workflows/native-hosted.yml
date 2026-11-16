@@ -3,6 +3,12 @@ name: Isolated native CI
 on:
   workflow_dispatch:
     inputs:
+      mode:
+        description: Reviewed native inspection or standalone fixed model compatibility proof
+        required: true
+        default: native
+        type: choice
+        options: [native, model]
       candidate:
         description: Full candidate commit from this repository; blank tests the pinned reviewed controller
         required: false
@@ -20,15 +26,16 @@ jobs:
   native:
     if: github.repository_id == '1367847927' && github.ref == 'refs/heads/main'
     runs-on: ubuntu-24.04
-    timeout-minutes: 125
+    timeout-minutes: ${{ inputs.mode == 'model' && 30 || 125 }}
     steps:
       - name: Capture the reviewed controller and candidate data
         env:
           STEAD_WORKFLOW: ${{ github.sha }}
           STEAD_CANDIDATE: ${{ inputs.candidate }}
+          STEAD_MODE: ${{ inputs.mode }}
         shell: bash
         run: |
-          sudo --preserve-env=STEAD_WORKFLOW,STEAD_CANDIDATE python3 -I -B - <<'PY'
+          sudo --preserve-env=STEAD_WORKFLOW,STEAD_CANDIDATE,STEAD_MODE python3 -I -B - <<'PY'
           import json, os, pathlib, re, subprocess
           workflow = os.environ['STEAD_WORKFLOW']
           if not re.fullmatch(r'[0-9a-f]{40}', workflow):
@@ -59,6 +66,9 @@ jobs:
           controller = manifest.get('controller_commit', '')
           if manifest != {'format': 'stead.hosted-controller/1', 'repository': 'ScottTpirate/stead-urbit', 'controller_commit': controller}:
               raise SystemExit('Invalid controller manifest')
+          mode = os.environ.get('STEAD_MODE') or 'native'
+          if mode not in ('native', 'model') or (mode == 'model' and os.environ.get('STEAD_CANDIDATE')):
+              raise SystemExit('Fixed model mode accepts no candidate override')
           candidate = os.environ.get('STEAD_CANDIDATE') or controller
           if not all(re.fullmatch(r'[0-9a-f]{40}', value) for value in (controller, candidate)):
               raise SystemExit('Full immutable commits required')
@@ -69,6 +79,7 @@ jobs:
           (root / '.runtime/controller').write_text(controller + '\n')
           PY
       - name: Provision the exact Git corpus version on the disposable VM
+        if: inputs.mode != 'model'
         timeout-minutes: 15
         run: |
           sudo apt-get update -qq
@@ -109,6 +120,7 @@ jobs:
               'git_exec_path': helpers, 'build_options': options}))
           PY
       - name: Install the disposable VM dependency and verify pinned downloads
+        if: inputs.mode != 'model'
         run: |
           sudo apt-get update -qq
           sudo apt-get install --no-install-recommends -y bubblewrap
@@ -119,6 +131,13 @@ jobs:
           sys.argv = ['toolchain.py', 'fetch']
           runpy.run_path('/var/lib/stead-ci-controller/scripts/urbit/toolchain.py', run_name='__main__')
           PY
+      - name: Install the fixed model namespace dependency
+        if: inputs.mode == 'model'
+        timeout-minutes: 5
+        run: |
+          sudo apt-get update -qq
+          sudo apt-get install --no-install-recommends -y bubblewrap
+          dpkg-query --show --showformat='${Package} ${Version}\n' bubblewrap
       - name: Record namespace prerequisites
         run: |
           sudo python3 -I -B - <<'PY'
@@ -139,6 +158,7 @@ jobs:
           print(json.dumps({'bwrap_profiles': [line for line in profiles.splitlines() if 'bwrap' in line][:16]}))
           PY
       - name: Authenticate admission and prove owned failure cleanup
+        if: inputs.mode != 'model'
         env:
           STEAD_WORKFLOW: ${{ github.sha }}
           STEAD_RUN_ID: ${{ github.run_id }}
@@ -150,6 +170,7 @@ jobs:
             sudo --preserve-env=ACTIONS_ID_TOKEN_REQUEST_URL,ACTIONS_ID_TOKEN_REQUEST_TOKEN python3 -I -B /var/lib/stead-ci-controller/scripts/ci/hosted.py --workflow "$STEAD_WORKFLOW" --controller "$controller" --candidate "$candidate" --run-id "$STEAD_RUN_ID" --attempt "$STEAD_ATTEMPT" --control "$control"
           done
       - name: Execute the isolated native job
+        if: inputs.mode != 'model'
         env:
           STEAD_WORKFLOW: ${{ github.sha }}
           STEAD_RUN_ID: ${{ github.run_id }}
@@ -158,6 +179,16 @@ jobs:
           candidate=$(sudo cat /var/lib/stead-ci-controller/.runtime/candidate)
           controller=$(sudo cat /var/lib/stead-ci-controller/.runtime/controller)
           sudo --preserve-env=ACTIONS_ID_TOKEN_REQUEST_URL,ACTIONS_ID_TOKEN_REQUEST_TOKEN python3 -I -B /var/lib/stead-ci-controller/scripts/ci/hosted.py --workflow "$STEAD_WORKFLOW" --controller "$controller" --candidate "$candidate" --run-id "$STEAD_RUN_ID" --attempt "$STEAD_ATTEMPT"
+      - name: Execute the fixed standalone model proof
+        if: inputs.mode == 'model'
+        timeout-minutes: 24
+        env:
+          STEAD_WORKFLOW: ${{ github.sha }}
+          STEAD_RUN_ID: ${{ github.run_id }}
+          STEAD_ATTEMPT: ${{ github.run_attempt }}
+        run: |
+          controller=$(sudo cat /var/lib/stead-ci-controller/.runtime/controller)
+          sudo --preserve-env=ACTIONS_ID_TOKEN_REQUEST_URL,ACTIONS_ID_TOKEN_REQUEST_TOKEN python3 -I -B /var/lib/stead-ci-controller/scripts/ci/hosted.py --workflow "$STEAD_WORKFLOW" --controller "$controller" --candidate "$controller" --run-id "$STEAD_RUN_ID" --attempt "$STEAD_ATTEMPT" --mode model
       - name: Record namespace kernel denial diagnostics
         if: failure()
         run: |
@@ -173,10 +204,23 @@ jobs:
               raise SystemExit('Kernel diagnostic collection failed')
           PY
       - name: Publish bounded evidence only
-        if: always()
+        if: always() && inputs.mode != 'model'
         uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
         with:
           name: native-ci-evidence-${{ github.run_id }}-${{ github.run_attempt }}
           path: /var/lib/stead-ci-controller/hosted-evidence/*.json
+          if-no-files-found: error
+          retention-days: 7
+      - name: Publish fixed model evidence only
+        if: always() && inputs.mode == 'model'
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
+        with:
+          name: model-proof-evidence-${{ github.run_id }}-${{ github.run_attempt }}
+          path: |
+            /var/lib/stead-ci-controller/model-evidence/owner-report.json
+            /var/lib/stead-ci-controller/model-evidence/request.json
+            /var/lib/stead-ci-controller/model-evidence/response.bin
+            /var/lib/stead-ci-controller/model-evidence/proposal.json
+            /var/lib/stead-ci-controller/model-evidence/report.json
           if-no-files-found: error
           retention-days: 7
