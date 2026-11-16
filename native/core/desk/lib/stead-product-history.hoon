@@ -91,40 +91,40 @@
   |=  [state=current actor=authentication:stead-team cmd=command:stead-product-codec now=@ud]
   ^-  transition
   ?.  (member state actor now)
-    [(response:(unrecorded:stead-product-work db.state product.state cmd 'denied_or_not_found')) state]
+    [response:(unrecorded:stead-product-work db.state product.state cmd 'denied_or_not_found') state]
   ?:  ?|  (~(has by attempts.changes.state) [project.cmd principal.identity.actor request.cmd])
           (~(has by ledger.state) request.cmd)
       ==
-    [(response:(unrecorded:stead-product-work db.state product.state cmd 'request_id_reuse')) state]
+    [response:(unrecorded:stead-product-work db.state product.state cmd 'request_id_reuse') state]
   =/  resolvers  (current:stead-product-adapters db.state catalog.state actor)
   =.  accepted.resolvers  (resolver:stead-doc-change-proof (doc-state state) actor)
   =/  out  (apply-command:stead-product-work db.state product.state actor cmd now resolvers)
   =/  next  state(db db.out, product product.out)
   ?:  (gth (ordinary next) 4.096)
-    [(response:(unrecorded:stead-product-work db.state product.state cmd 'capacity_exceeded')) state]
+    [response:(unrecorded:stead-product-work db.state product.state cmd 'capacity_exceeded') state]
   [response.out next]
 ++  legacy
   |=  [state=current actor=authentication:stead-team cmd=command now=@ud]
   ^-  transition
   ?.  (member state actor now)
-    [(response:(legacy-rejected:stead-product-work db.state product.state cmd 'denied_or_not_found')) state]
+    [response:(legacy-rejected:stead-product-work db.state product.state cmd 'denied_or_not_found') state]
   ?:  ?|  (~(has by attempts.changes.state) [project.cmd principal.identity.actor request.cmd])
           (~(has by ledger.state) request.cmd)
       ==
-    [(response:(legacy-rejected:stead-product-work db.state product.state cmd 'request_id_reuse')) state]
+    [response:(legacy-rejected:stead-product-work db.state product.state cmd 'request_id_reuse') state]
   =/  out  (apply-legacy:stead-product-work db.state product.state actor cmd now)
   =/  next  state(db db.out, product product.out)
   ?:  ?|  (gth (ordinary next) 4.096)  (gth (security next) 2.048)
           !(body-budget:stead-doc-change (doc-state next))
       ==
-    [(response:(legacy-rejected:stead-product-work db.state product.state cmd 'capacity_exceeded')) state]
+    [response:(legacy-rejected:stead-product-work db.state product.state cmd 'capacity_exceeded') state]
   [response.out next]
 ++  owner
   |=  [state=current cmd=command:stead-product-owner-codec home=@p sender=@p now=@ud]
   ^-  transition
   =/  base  (owner-state state)
   ?.  &(=(sender home) ?=(^ current.registry.db.state) =(home home.u.current.registry.db.state))
-    [(response:(deny:stead-product-owner base cmd 'owner_required')) state]
+    [response:(deny:stead-product-owner base cmd 'owner_required') state]
   =/  native-used
     %+  lien  ~(tap by receipts.data.db.state)
     |=  [key=[project=@t principal=@t request=@t] value=receipt-state:stead-core]
@@ -138,7 +138,7 @@
     |=  [key=request-key:stead-doc-change value=attempt:stead-doc-change-state]
     =(request.cmd request.key)
   ?:  ?|(native-used work-used doc-used)
-    [(response:(deny:stead-product-owner base cmd 'request_id_reuse')) state]
+    [response:(deny:stead-product-owner base cmd 'request_id_reuse') state]
   =/  out  (apply:stead-product-owner base cmd home sender now [(lent ~(tap by attempts.changes.state)) 0])
   =/  next  state(db db.next.out, product product.next.out, catalog catalog.next.out, ledger ledger.next.out)
   ?~  record.out  [response.out next]
@@ -147,13 +147,13 @@
     |.
     next(product (append-event:stead-product-state product.next %owner u.record.out))
   ?:  ?=(%| -.attempted)
-    [(response:(deny:stead-product-owner (owner-state state) cmd 'capacity_exceeded')) state]
+    [response:(deny:stead-product-owner (owner-state state) cmd 'capacity_exceeded') state]
   [response.out p.attempted]
 ++  doc
   |=  [state=current actor=authentication:stead-team cmd=command:stead-doc-change-codec now=@ud]
   ^-  transition
   ?.  (member state actor now)
-    [(response:(deny:stead-doc-change (doc-state state) cmd 'denied_or_not_found')) state]
+    [response:(deny:stead-doc-change (doc-state state) cmd 'denied_or_not_found') state]
   =/  used
     |=  key=request-key:stead-doc-change
     ^-  ?
@@ -168,7 +168,7 @@
     ?>  (lte (ordinary next) 4.096)
     next(product (append-event:stead-product-state product.next %doc-change u.record.out))
   ?:  ?=(%| -.attempted)
-    [(response:(deny:stead-doc-change (doc-state state) cmd 'capacity_exceeded')) state]
+    [response:(deny:stead-doc-change (doc-state state) cmd 'capacity_exceeded') state]
   [response.out p.attempted]
 ++  flat
   |=  [raw=@t names=(list @t)]
