@@ -44,7 +44,8 @@
 =/  human  (declare:stead-principals imported ~zod ~zod (id 102) 1 %person 'Alice' & 1.010)
 =/  second-human  (declare:stead-principals next.human ~zod ~zod (id 103) 1 %person 'Bob' & 1.011)
 =/  catalog  next.second-human
-=/  scope=scope:stead-actor  [~zod (id 100) 1 (id 101) '' '' (silt ~[%work-read %work-comment])]
+=/  permitted-actions=(list action:stead-actor)  ~[%work-read %work-comment]
+=/  scope=scope:stead-actor  [~zod (id 100) 1 (id 101) '' '' (silt permitted-actions)]
 =/  first-agent  (declare:stead-principals catalog ~zod ~zod (id 106) 0 %agent 'Documentation agent' & 1.020)
 =/  second-agent  (declare:stead-principals next.first-agent ~zod ~zod (id 107) 0 %agent 'Release agent' & 1.021)
 =/  first-runtime  (runtime-put:stead-principals next.second-agent ~zod ~zod (id 810) 0 (id 106) 'isolated-doc-worker' (hex 64 1) 1.022)
@@ -61,7 +62,8 @@
 =/  first-binding  (owner-bind:stead-service-bindings empty-bindings granted catalog ~zod (id 806) 0 (id 106) 'supervisor-a' (id 810) 1 9.999.999 2.000 0)
 =/  second-binding  (owner-bind:stead-service-bindings next.first-binding granted catalog ~zod (id 807) 0 (id 107) 'supervisor-b' (id 811) 1 9.999.999 2.001 1)
 =/  book  (new-live:stead-service-bindings ~zod 999)
-=/  scope  scope(collection (id 200), document (id 201), actions (silt ~[%work-read %work-comment %doc-propose]))
+=/  proposal-actions=(list action:stead-actor)  ~[%work-read %work-comment %doc-propose]
+=/  scope  scope(collection (id 200), document (id 201), actions (silt proposal-actions))
 =/  issued-a  (issue:stead-service-bindings next.second-binding book granted catalog [%native alice] (id 806) scope 2.002 111 2)
 =/  issued-b  (issue:stead-service-bindings next.issued-a live.issued-a granted catalog [%native alice] (id 807) scope 2.003 222 3)
 =/  state  next.issued-b

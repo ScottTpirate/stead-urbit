@@ -258,6 +258,7 @@
   =/  accepted  (dispatch next.adopted catalog alice (action next.adopted 644 'change.accept') 2.005)
   =/  late  (dispatch next.adopted catalog short (submit-wire next.adopted 645 3 second-markdown doc-target '' 0) 2.005)
   =/  original  (~(got by results.changes.next.proposed) [(id 100) (id 600) 1])
+  =/  accepted-head=head:stead-doc-change-state  (head next.accepted)
   %-  expect
   !>  ?&  =('accepted' (result-field response.proposed 'status'))
           =('explicit_adoption_required' (result-field response.denied 'error'))
@@ -267,7 +268,7 @@
           =(short producer.original)  =(markdown (doc-body next.accepted))
           =('denied_or_not_found' (result-field response.late 'error'))
           =(next.adopted next.late)  ?=(~ record.late)
-          ?=(^ adoption:(head next.accepted))
+          ?=(^ adoption.accepted-head)
       ==
 ++  test-doc-change-revocation-quarantines-without-renewing-original-grant
   =/  proposed  (dispatch initial-change catalog bob (submit-wire initial-change 650 0 markdown doc-target '' 0) 2.000)

@@ -44,7 +44,8 @@
 =/  human  (declare:stead-principals imported ~zod ~zod (id 102) 1 %person 'Alice' & 1.010)
 =/  second-human  (declare:stead-principals next.human ~zod ~zod (id 103) 1 %person 'Bob' & 1.011)
 =/  catalog  next.second-human
-=/  scope=scope:stead-actor  [~zod (id 100) 1 (id 101) '' '' (silt ~[%work-read %work-comment])]
+=/  permitted-actions=(list action:stead-actor)  ~[%work-read %work-comment]
+=/  scope=scope:stead-actor  [~zod (id 100) 1 (id 101) '' '' (silt permitted-actions)]
 |%
 ++  test-actor-native-verification-keeps-exact-historical-authentication
   =/  actor  (need (verify-native:stead-actor db catalog alice 2.000))

@@ -142,7 +142,8 @@
 ++  refused-query
   |=  raw=@t
   ^-  ?
-  ?=(%| -:(mule |.((decode:stead-doc-change-query raw))))
+  =/  attempted  (mule |.((decode:stead-doc-change-query raw)))
+  ?=(%| -.attempted)
 --
 =/  configuration
   %-  rap

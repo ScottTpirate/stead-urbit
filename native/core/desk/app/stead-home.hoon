@@ -17,6 +17,10 @@
       ==
   ==
 +$  pending-entry  [sender=@p expires=@da]
+++  owner-configured
+  |=  owner=state:stead-team-owner
+  ^-  ?
+  ?|(?=(^ current.registry.db.owner) ?=(^ restoring.owner) ?=(^ product.owner))
 ++  now-ms
   |=  now=@da
   (div (mul 1.000 (sub now ~1970.1.1)) ~s1)
@@ -129,7 +133,7 @@
 +*  this  .
     def  ~(. (default-agent this %|) bowl)
     team  ~(. (driver:stead-team-owner owner) bowl)
-    configured  ?|(?=(^ current.registry.db.owner) ?=(^ restoring.owner) ?=(^ product.owner))
+    configured  (owner-configured owner)
     sealed  ?=(%sealed -.handoff)
 ++  on-init
   `this
