@@ -205,10 +205,14 @@ def main(*, hosted=False):
         fcntl.flock(host.gate, fcntl.LOCK_EX | fcntl.LOCK_NB)
         watcher = threading.Thread(target=host.execution_watch, daemon=True)
         watcher.start()
-        # Actual deterministic child proof under the same admitted owner.
+        # The same root owner completed the real proof before native startup.
+        # Read its source/run-bound immutable inode; never forge a proof or
+        # create a second user namespace from this capability-limited UID0.
         progress['stage'] = 'doc-worker'
-        from doc_worker_proof import run_controller
-        result['doc_worker'] = run_controller(host.execution_check)
+        require(hosted and provider is not None, 'Doc proof requires the hosted owner')
+        from doc_worker_proof import read_admission
+        result['doc_worker'] = read_admission(inputs, result['run_id'], provider.require())
+        host.execution_check()
         # Fresh -F boot for each distinct identity; no host pier or seed enters.
         result['fresh_seeds'] = fresh_seeds(host, progress)
         progress.update(stage='filesystem-controls', ship=None)

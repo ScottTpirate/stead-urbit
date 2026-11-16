@@ -223,11 +223,108 @@ def sandbox_command(job, context):
         (ROOT / '.runtime' / pins['kernel']['directory'], '/kernel'),
         (job / 'inputs.json', '/ci-inputs.json'), (job / 'control', '/execution')]:
         command += ['--ro-bind', str(source), target]
+    if not context.get('control_case'):
+        command += ['--ro-bind', str(job / 'doc-proof.json'), '/doc-proof.json']
     entry = ['/ci/hosted_control.py'] if context.get('control_case') else ['/ci/worker.py', '--hosted']
     command += ['--chdir', '/state', '--clearenv', '--setenv', 'PATH', '/usr/bin:/bin',
         '--setenv', 'LANG', 'C.UTF-8', '--setenv', 'TERM', 'dumb',
         '--setenv', 'STEAD_EXECUTION_ID', context['run_id'], '--', '/usr/bin/python3', '-B', *entry]
     return command
+
+
+def proof_child(job, parent):
+    """Owner-created launcher: no native namespaces, credentials or extra caps."""
+    regular_root(job / 'context.json')
+    context = execution_policy.read_json(job / 'context.json', maximum=1024 * 1024)
+    inputs = execution_policy.read_json(job / 'inputs.json', maximum=1024 * 1024)
+    require(os.getuid() == 0 and os.getppid() == parent, 'Proof launcher parent differs')
+    require(type(context['uid']) is int and context['uid'] > 0
+            and type(context['gid']) is int and context['gid'] > 0
+            and not context.get('control_case'), 'Nonzero hosted proof owner required')
+    worker = job / 'controller/scripts/urbit/doc_run_worker.py'
+    proof = job / 'controller/scripts/ci/doc_worker_proof.py'
+    for path in (worker, proof):
+        regular_root(path)
+    worker_sha = inputs['controller_files']['scripts/urbit/doc_run_worker.py']['sha256']
+    proof_sha = inputs['controller_files']['scripts/ci/doc_worker_proof.py']['sha256']
+    from doc_worker_proof import guardian_command
+    os.setgroups([])
+    os.setgid(context['gid'])
+    os.setuid(context['uid'])
+    # UID change clears PDEATHSIG. The unit also owns every descendant if the
+    # root guardian dies during setup, before this immediate re-arm/check.
+    libc = ctypes.CDLL(None, use_errno=True)
+    require(libc.prctl(1, signal.SIGKILL, 0, 0, 0) == 0 and os.getppid() == parent,
+            'Proof parent lifetime unavailable')
+    require(libc.prctl(38, 1, 0, 0, 0) == 0, 'Proof no-new-privileges unavailable')
+    hosted_apparmor.require_label()
+    os.environ.clear()
+    os.environ.update(PATH='/usr/bin:/bin', LANG='C.UTF-8')
+    namespaces = {name: os.readlink('/proc/self/ns/' + name) for name in ('net', 'mnt', 'pid', 'user')}
+    command = guardian_command(worker, proof, worker_sha, proof_sha, namespaces)
+    os.execv(command[0], command)
+
+
+def doc_proof_before_native(job, context, heartbeat, result):
+    """The existing root guardian admits one real proof, before native boot."""
+    from doc_worker_proof import (admission as proof_admission, diagnostic, failure_value, observe_process,
+                                 ProofFailure, verify_admission, verify_diagnostic)
+    inputs = execution_policy.read_json(job / 'inputs.json', maximum=1024 * 1024)
+    worker_sha = inputs['controller_files']['scripts/urbit/doc_run_worker.py']['sha256']
+    proof_sha = inputs['controller_files']['scripts/ci/doc_worker_proof.py']['sha256']
+    require(os.getuid() == 0 and not context.get('control_case'), 'Root proof owner required')
+    require(not os.path.lexists(job / 'doc-proof.json'), 'Doc proof admission already exists')
+    cgroup = Path('/sys/fs/cgroup/system.slice') / context['unit']
+    def owned_pids():
+        return {int(value) for value in (cgroup / 'cgroup.procs').read_text().splitlines()}
+    heartbeat()
+    baseline = owned_pids()
+    require(baseline == {os.getpid()}, 'Fresh guardian proof membership differs')
+    result['doc_worker_diagnostic'] = diagnostic(b'', b'', None,
+        eof={'stdout': False, 'stderr': False}, reason='collector')
+    try:
+        process = subprocess.Popen(['/usr/bin/python3', '-I', '-B', str(Path(__file__)),
+            '_proof_child', str(job), str(os.getpid())], stdin=subprocess.DEVNULL,
+            stdout=subprocess.PIPE, stderr=subprocess.PIPE, start_new_session=True,
+            env={'PATH': '/usr/bin:/bin', 'LANG': 'C.UTF-8'})
+    except BaseException as error:
+        failed = failure_value(error)
+        result['doc_worker_diagnostic'].update({k: failed[k] for k in ('error_class', 'errno')})
+        raise ProofFailure(verify_diagnostic(result['doc_worker_diagnostic'])) from None
+    try:
+        proof, observed = observe_process(process, heartbeat, owned_pids, baseline, worker_sha, proof_sha)
+    except ProofFailure as error:
+        result['doc_worker_diagnostic'] = verify_diagnostic(error.diagnostic)
+        raise
+    result['doc_worker_diagnostic'] = observed
+    lease = heartbeat()
+    value = proof_admission(proof, observed, inputs, context, os.getpid())
+    verify_admission(value, inputs, context['run_id'], lease)
+    # Exclusive publication in a root-owned directory. No worker exists yet;
+    # it only receives the complete read-only inode after source verification.
+    temporary = job / ('.doc-proof-' + secrets.token_hex(12))
+    fd = os.open(temporary, os.O_WRONLY | os.O_CREAT | os.O_EXCL | os.O_NOFOLLOW, 0o600)
+    try:
+        with os.fdopen(fd, 'wb') as stream:
+            stream.write(canonical(value) + b'\n')
+            stream.flush()
+            os.fsync(stream.fileno())
+            os.fchown(stream.fileno(), 0, context['gid'])
+            os.fchmod(stream.fileno(), 0o440)
+        os.link(temporary, job / 'doc-proof.json', follow_symlinks=False)
+    finally:
+        temporary.unlink(missing_ok=True)
+    with execution_policy.directory_fd(job) as directory:
+        os.fsync(directory)
+    stored = job / 'doc-proof.json'
+    info = stored.lstat()
+    require(stat.S_ISREG(info.st_mode) and info.st_uid == 0 and info.st_gid == context['gid']
+            and info.st_nlink == 1 and info.st_mode & 0o777 == 0o440
+            and stored.read_bytes() == canonical(value) + b'\n', 'Root Doc proof publication differs')
+    result['doc_worker_receipt'] = {'sha256': hashlib.sha256(stored.read_bytes()).hexdigest(),
+        'bytes': info.st_size, 'host_uid': 0, 'host_gid': context['gid'],
+        'mode': 0o440, 'device': info.st_dev, 'inode': info.st_ino}
+    result['doc_worker_admission'] = value
 
 
 def child(job, parent):
@@ -287,6 +384,8 @@ def guardian(job):
         admission.update(status='admitted', profile=POLICY['profile'], authenticated_host=True)
         write(control / 'ci-admission.json', admission, shared=True, gid=context['gid'])
         result['admission'] = admission
+        if not context.get('control_case'):
+            doc_proof_before_native(job, context, heartbeat, result)
         process = subprocess.Popen(['/usr/bin/python3', '-I', '-B', str(Path(__file__)), '_child',
             str(job), str(os.getpid())], stdin=subprocess.DEVNULL, stdout=subprocess.PIPE,
             stderr=subprocess.STDOUT, start_new_session=True, env={'PATH': '/usr/bin:/bin', 'LANG': 'C.UTF-8'})
@@ -703,6 +802,10 @@ def main():
             raw = (job / 'console.private.log').read_bytes()
             worker = verify(raw, inputs, run_id=run_id,
                 inventory=json.loads(controller['specs/urbit/phase2-pure-units.json']))
+            from doc_worker_proof import verify_admission
+            proof_admission = verify_admission(result['guard']['doc_worker_admission'], inputs, run_id)
+            require(canonical(worker['doc_worker']) == canonical(proof_admission['proof']),
+                    'Worker Doc proof differs from guardian admission')
             require(worker['admission'] == result['guard']['admission']
                 and worker['native']['execution_guard']['policy'] == POLICY, 'Hosted admission differs')
             result['verification'] = {'native_checks': len(worker['native']['checks']),
@@ -816,6 +919,9 @@ if __name__ == '__main__':
         raise SystemExit(guardian(Path(sys.argv[2])))
     if sys.argv[1:2] == ['_launcher'] and len(sys.argv) == 4:
         raise SystemExit(launcher(Path(sys.argv[2]), int(sys.argv[3])))
+    if sys.argv[1:2] == ['_proof_child'] and len(sys.argv) == 4:
+        proof_child(Path(sys.argv[2]), int(sys.argv[3]))
+        raise AssertionError('Proof exec returned')
     if sys.argv[1:2] == ['_child'] and len(sys.argv) == 4:
         child(Path(sys.argv[2]), int(sys.argv[3]))
         raise AssertionError('Worker exec returned')

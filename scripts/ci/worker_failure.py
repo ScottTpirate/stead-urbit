@@ -43,7 +43,13 @@ def error_kind(value):
         return {'class': 'unrecognized', 'reason': 'unrecognized'}
     kind, _, message = value.partition(': ')
     reason = 'unrecognized'
-    exact = {'Native team suite failed': 'team-suite', 'Fresh base mount absent': 'base-mount',
+    exact = {'Hosted Doc child proof failed': 'doc-worker-proof',
+             'Doc proof requires the hosted owner': 'doc-worker-owner',
+             'Doc proof custody differs': 'doc-worker-custody',
+             'Doc proof admission identity differs': 'doc-worker-identity',
+             'Doc proof belongs to another guardian': 'doc-worker-guardian',
+             'Doc proof mapped owner differs': 'doc-worker-mapped-owner',
+             'Native team suite failed': 'team-suite', 'Fresh base mount absent': 'base-mount',
              'native-public-capabilities-current-member': 'capabilities-member',
              'native-capabilities-unbound-sender-denied': 'capabilities-denial',
              'Supported predecessor migration failed': 'migration',
