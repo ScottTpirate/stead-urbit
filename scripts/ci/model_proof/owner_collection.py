@@ -31,6 +31,48 @@ ARTIFACT_LIMITS = {'request.json': 8192, 'response.bin': 32768,
                    'proposal.json': 65536, 'report.json': 16384}
 
 
+FAILURE_LIMITS = {'request.json': 8192, 'response.bin': 32768, 'report.json': 16384}
+FAILURE_FIELDS = {'protocol', 'status', 'phase', 'error_class', 'cleanup_error_class',
+                  'model_launches', 'client_launches', 'children_reaped',
+                  'namespace_baseline_restored', 'elapsed_ms', 'native_executed', 'qualifies_g3'}
+FAILURE_ERRORS = {'none', 'unrecognized', 'ValueError', 'TypeError', 'TimeoutError', 'OSError',
+    'PermissionError', 'FileNotFoundError', 'FileExistsError', 'ProcessLookupError',
+    'ChildProcessError', 'ConnectionRefusedError', 'ConnectionResetError', 'BrokenPipeError',
+    'RemoteDisconnected', 'IncompleteRead', 'BadStatusLine', 'LineTooLong',
+    'HTTPException', 'JSONDecodeError', 'UnicodeDecodeError'}
+FAILURE_PHASES = {'admission', 'parent-admission', 'server-start', 'server-readiness',
+                  'client', 'client-output', 'cleanup', 'complete'}
+
+
+def checked_failure_observation(value):
+    require(type(value) is dict and set(value) == FAILURE_FIELDS
+            and value['protocol'] == 'stead.fixed-model-failure-observation/1'
+            and value['status'] == 'fail' and value['phase'] in FAILURE_PHASES
+            and value['error_class'] in FAILURE_ERRORS and value['cleanup_error_class'] in FAILURE_ERRORS
+            and value['native_executed'] is False and value['qualifies_g3'] is False
+            and type(value['children_reaped']) is bool
+            and type(value['namespace_baseline_restored']) is bool
+            and type(value['elapsed_ms']) is int and 0 <= value['elapsed_ms'] <= 555000
+            and all(type(value[key]) is int and 0 <= value[key] <= 1
+                    for key in ('model_launches', 'client_launches')))
+    return value
+
+
+def failure_observation(value):
+    """Project bounded worker failure scalars; no raw fields or accepted output."""
+    require(type(value) is dict and set(value) == FINAL_KEYS
+            and value['protocol'] == 'stead.fixed-model-worker-result/1'
+            and value['outer_cleanup_required'] is True
+            and type(value['artifacts']) is dict and type(value['children']) is dict
+            and (value['admission'] is None or type(value['admission']) is dict)
+            and (value['client_report_sha256'] is None or
+                 (type(value['client_report_sha256']) is str and len(value['client_report_sha256']) == 64
+                  and all(c in '0123456789abcdef' for c in value['client_report_sha256']))))
+    projected = {key: value[key] for key in FAILURE_FIELDS}
+    projected['protocol'] = 'stead.fixed-model-failure-observation/1'
+    return checked_failure_observation(projected)
+
+
 def require(ok):
     boundary.require(ok)
 
@@ -169,9 +211,12 @@ def run(process, job, value, owner, heartbeat):
     selector = selectors.DefaultSelector()
     raw, eof = {'stdout': bytearray(), 'stderr': bytearray()}, {'stdout': False, 'stderr': False}
     anchor, final, admitted, cleaned = None, None, False, False
+    failure = None
     result = {'protocol': 'stead.fixed-model-owner-result/1', 'status': 'fail',
               'stage': 'ready', 'error_class': 'none', 'cleanup_error_class': 'none', 'parent_admitted': False,
               'worker_result': None, 'artifact_pins': {}, 'child_streams_eof': False,
+              'worker_failure': None, 'worker_exit_code': None, 'failure_artifacts': None,
+              'failure_evidence_error_class': 'none',
               'owned_children_empty': False, 'native_executed': False, 'qualifies_g3': False}
     artifact_bytes = {}
     pending = bytearray()
@@ -206,8 +251,16 @@ def run(process, job, value, owner, heartbeat):
                     pending = bytearray(rest)
                     frames += 1
                     require(frames <= 2)
-                    message = parse(bytes(line), 4096 if frames == 1 else 32768)
-                    if frames == 1:
+                    message = parse(bytes(line), 32768)
+                    require(failure is None)
+                    if type(message) is dict and message.get('status') == 'fail':
+                        require((frames == 1 and not admitted) or (frames == 2 and admitted))
+                        failure = failure_observation(message)
+                        result['worker_failure'] = failure
+                        if process.stdin is not None and not process.stdin.closed:
+                            process.stdin.close()  # No go for a pre-admission failure.
+                    elif frames == 1:
+                        require(len(line) <= 4096)
                         anchor = boundary.pin_ready(job, value, message,
                             hashlib.sha256(canonical(owner)).hexdigest(), heartbeat)
                         boundary.current(anchor, value, heartbeat)
@@ -224,7 +277,7 @@ def run(process, job, value, owner, heartbeat):
                         require(admitted and final is None)
                         worker_result(message, owner, anchor, value)
                         final = message
-            if anchor is not None and final is None:
+            if anchor is not None and final is None and failure is None:
                 # The worker can exit just before its final pipe bytes arrive.
                 # Once its pidfd signals, allow only a short bounded EOF drain;
                 # no further admission or commands are possible in this state.
@@ -236,7 +289,13 @@ def run(process, job, value, owner, heartbeat):
                     boundary.current(anchor, value, heartbeat)
             if process.poll() is not None and all(eof.values()):
                 break
-        require(admitted and frames == 2 and not pending and final is not None and process.returncode == 0)
+        require(not pending and type(process.returncode) is int)
+        result['worker_exit_code'] = process.returncode
+        if failure is not None:
+            require(frames == (2 if admitted else 1) and final is None and process.returncode == 1)
+            result['error_class'] = 'worker-reported-failure'
+        else:
+            require(admitted and frames == 2 and final is not None and process.returncode == 0)
         result['child_streams_eof'] = True
         result['stage'] = 'cleanup'
     except BaseException as error:
@@ -281,6 +340,19 @@ def run(process, job, value, owner, heartbeat):
             except BaseException:
                 artifact_bytes.clear()
                 cleanup_error('artifact-refusal')
+        if (cleaned and admitted and failure is not None and final is None
+                and result['error_class'] == 'worker-reported-failure'
+                and result['cleanup_error_class'] == 'none'
+                and result['child_streams_eof'] is True and all(eof.values())):
+            try:
+                heartbeat()
+                metadata, artifact_bytes = boundary.read_failed_output(anchor, value)
+                heartbeat()
+                result['failure_artifacts'] = metadata
+            except BaseException:
+                artifact_bytes.clear()
+                result['failure_artifacts'] = None
+                result['failure_evidence_error_class'] = 'diagnostic-read-refusal'
         # Every close is attempted even when a previous close failed. None of
         # these failures can overwrite the original cause or produce a pass.
         for event in list(selector.get_map().values()):
@@ -303,6 +375,10 @@ def run(process, job, value, owner, heartbeat):
                 and set(artifact_bytes) == set(ARTIFACT_LIMITS)):
             result.update(status='pass', stage='complete', worker_result=final,
                           artifact_pins=final['artifacts'])
+        if failure is not None and result['cleanup_error_class'] != 'none':
+            artifact_bytes.clear()
+            result['failure_artifacts'] = None
+            result['failure_evidence_error_class'] = 'cleanup-refusal'
         result['elapsed_ms'] = int((time.monotonic() - started) * 1000)
         result['streams'] = {name: {'bytes': len(data), 'sha256': hashlib.sha256(data).hexdigest(),
                                    'eof': eof[name]} for name, data in raw.items()}

@@ -270,6 +270,16 @@ def guardian(hosted, job):
             os.chmod(export, 0o700)
             for name, raw in artifacts.items():
                 write_new(export / name, raw)
+        if (result['status'] == 'fail' and closed
+                and result.get('failure_artifacts') is not None):
+            expected = failure_pins(result, collection)
+            require(set(artifacts) == set(expected)
+                    and all(pin(raw) == expected[name] for name, raw in artifacts.items()))
+            export = job / 'retained-failure'
+            export.mkdir(mode=0o700)
+            os.chmod(export, 0o700)
+            for name, raw in artifacts.items():
+                write_new(export / name, raw)
         write_new(job / 'model-guard.json', canonical(result))
     return 0 if result['status'] == 'pass' else 1
 
@@ -322,6 +332,47 @@ def checked_artifacts(boundary, collection, job, guard):
     return {name: boundary.read_file(job / 'retained' / name,
                 collection.ARTIFACT_LIMITS[name], expected)
             for name, expected in guard['artifact_pins'].items()}
+
+
+
+def failure_pins(guard, collection):
+    """Strict failed observation; this cannot satisfy the unchanged pass gate."""
+    require(type(guard) is dict and guard.get('protocol') == 'stead.fixed-model-owner-result/1'
+            and guard.get('status') == 'fail' and guard.get('error_class') == 'worker-reported-failure'
+            and guard.get('cleanup_error_class') == 'none'
+            and guard.get('failure_evidence_error_class') == 'none'
+            and guard.get('parent_admitted') is True and guard.get('child_streams_eof') is True
+            and guard.get('owned_children_empty') is True and guard.get('adapter_owned_cleanup') is True
+            and guard.get('native_executed') is False and guard.get('qualifies_g3') is False
+            and guard.get('worker_result') is None and guard.get('artifact_pins') == {}
+            and type(guard.get('worker_exit_code')) is int and guard['worker_exit_code'] == 1)
+    collection.checked_failure_observation(guard.get('worker_failure'))
+    metadata = guard.get('failure_artifacts')
+    require(type(metadata) is dict and set(metadata) == set(collection.FAILURE_LIMITS))
+    pins = {}
+    for name, row in metadata.items():
+        require(type(row) is dict and set(row) == {'present', 'bytes', 'sha256'}
+                and type(row['present']) is bool)
+        if row['present']:
+            require(type(row['bytes']) is int and 0 <= row['bytes'] <= collection.FAILURE_LIMITS[name]
+                    and type(row['sha256']) is str and re.fullmatch('[a-f0-9]{64}', row['sha256']))
+            pins[name] = {key: row[key] for key in ('bytes', 'sha256')}
+        else:
+            require(row['bytes'] is None and row['sha256'] is None)
+    return pins
+
+
+def checked_failure_artifacts(boundary, collection, job, guard):
+    """Called after whole-unit cleanup; retained root bytes, never a proposal."""
+    pins = failure_pins(guard, collection)
+    directory = job / 'retained-failure'
+    before = boundary.directory(directory, 0o700)
+    require(before.st_gid == 0 and set(os.listdir(directory)) == set(pins))
+    result = {name: boundary.read_failed_retained(directory / name,
+                collection.FAILURE_LIMITS[name], expected) for name, expected in pins.items()}
+    require(boundary.identity(directory.lstat()) == boundary.identity(before)
+            and set(os.listdir(directory)) == set(pins))
+    return result
 
 
 def outer(hosted, args, identity, binding):
@@ -418,6 +469,7 @@ def outer(hosted, args, identity, binding):
             caller_generation += 1
             lease_publish(job, 'caller', owner_sha256, caller_generation, account.pw_gid)
             time.sleep(0.2)
+        result['service_exit_code'] = process.returncode
         require(process.returncode == 0)
         result['guard'] = read_json(boundary, job / 'model-guard.json', 131072)
         complete_guard(result['guard'], collection)
@@ -465,6 +517,19 @@ def outer(hosted, args, identity, binding):
             artifacts = checked_artifacts(boundary, collection, job, result['guard'])
             for name, raw in artifacts.items():
                 write_new(public / name, raw, mode=0o644)
+        if (result['status'] == 'fail' and result['cleanup']['verified'] is True
+                and result['cleanup_error_class'] == 'none'
+                and type(result.get('guard')) is dict
+                and result['guard'].get('failure_artifacts') is not None):
+            try:
+                artifacts = checked_failure_artifacts(boundary, collection, job, result['guard'])
+                for name, raw in artifacts.items():
+                    write_new(public / name, raw, mode=0o644)
+                result['failed_output_export'] = 'collected'
+            except BaseException:
+                result['failed_output_export'] = 'refused'
+        else:
+            result['failed_output_export'] = 'not-collected'
         result['elapsed_ms'] = int((time.monotonic() - started) * 1000)
         write_new(public / 'owner-report.json', canonical(result), mode=0o644)
     return 0 if result['status'] == 'pass' else 1

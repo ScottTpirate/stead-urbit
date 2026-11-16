@@ -361,3 +361,81 @@ def read_output(anchor, value, name, expected):
         if fd is not None:
             os.close(fd)
         os.close(directory)
+
+
+FAILURE_LIMITS = {'request.json': 8192, 'response.bin': 32768, 'report.json': 16384}
+
+
+def read_failed_output(anchor, value):
+    """Forensic read after admission, EOF and reaping; never a proposal receipt.
+
+    The retained descriptor is the exact private output mount pinned before go.
+    None denotes absence; a present empty file retains its zero length and hash.
+    """
+    missing = {name: {'present': False, 'bytes': None, 'sha256': None}
+               for name in FAILURE_LIMITS}
+    output = anchor['outputfd']
+    before_output = os.fstat(output)
+    require(stat.S_ISDIR(before_output.st_mode) and before_output.st_uid == value['host_uid']
+            and before_output.st_gid == value['host_gid']
+            and stat.S_IMODE(before_output.st_mode) == 0o700)
+    entries = set(os.listdir(output))
+    require(entries <= {'client'})
+    if not entries:
+        require(identity(os.fstat(output)) == identity(before_output))
+        return missing, {}
+    directory = os.open('client', os.O_RDONLY | os.O_DIRECTORY | os.O_NOFOLLOW
+                        | os.O_CLOEXEC, dir_fd=output)
+    try:
+        before_directory = os.fstat(directory)
+        require(stat.S_ISDIR(before_directory.st_mode)
+                and before_directory.st_uid == value['host_uid']
+                and before_directory.st_gid == value['host_gid']
+                and stat.S_IMODE(before_directory.st_mode) == 0o700)
+        limits = {**FAILURE_LIMITS, 'proposal.json': 65536}
+        names = set(os.listdir(directory))
+        require(names <= set(limits))
+        retained = {}
+        for name in sorted(names):
+            fd = os.open(name, os.O_RDONLY | os.O_NOFOLLOW | os.O_NONBLOCK
+                         | os.O_CLOEXEC, dir_fd=directory)
+            try:
+                before = os.fstat(fd)
+                require(stat.S_ISREG(before.st_mode) and before.st_uid == value['host_uid']
+                        and before.st_gid == value['host_gid'] and before.st_nlink == 1
+                        and stat.S_IMODE(before.st_mode) == 0o600
+                        and 0 <= before.st_size <= limits[name])
+                raw = os.read(fd, limits[name] + 1)
+                require(len(raw) == before.st_size and identity(os.fstat(fd)) == identity(before))
+                if name in FAILURE_LIMITS:
+                    retained[name] = raw
+                    missing[name] = {'present': True, 'bytes': len(raw),
+                                     'sha256': hashlib.sha256(raw).hexdigest()}
+            finally:
+                os.close(fd)
+        require(set(os.listdir(directory)) == names
+                and identity(os.fstat(directory)) == identity(before_directory)
+                and identity(os.fstat(output)) == identity(before_output))
+        return missing, retained
+    finally:
+        os.close(directory)
+
+
+def read_failed_retained(path, maximum, expected):
+    """Root-retained diagnostic bytes; success read_file remains unchanged."""
+    require(type(expected) is dict and set(expected) == {'bytes', 'sha256'}
+            and type(expected['bytes']) is int and 0 <= expected['bytes'] <= maximum
+            and type(expected['sha256']) is str and re.fullmatch('[a-f0-9]{64}', expected['sha256']))
+    before = path.lstat()
+    require(stat.S_ISREG(before.st_mode) and before.st_uid == 0 and before.st_gid == 0
+            and before.st_nlink == 1 and stat.S_IMODE(before.st_mode) == 0o600
+            and before.st_size == expected['bytes'])
+    fd = os.open(path, os.O_RDONLY | os.O_NOFOLLOW | os.O_NONBLOCK | os.O_CLOEXEC)
+    try:
+        require(identity(os.fstat(fd)) == identity(before))
+        raw = os.read(fd, maximum + 1)
+        require(len(raw) == expected['bytes'] and hashlib.sha256(raw).hexdigest() == expected['sha256']
+                and identity(os.fstat(fd)) == identity(before))
+        return raw
+    finally:
+        os.close(fd)
