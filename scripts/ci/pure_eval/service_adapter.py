@@ -320,7 +320,14 @@ def guardian(hosted, job):
         command=['/usr/bin/python3','-I','-B',str(Path(hosted.__file__)),'_pure_child',str(job),str(os.getpid())]
         process=subprocess.Popen(command,stdin=subprocess.PIPE,stdout=subprocess.PIPE,stderr=subprocess.PIPE,
             close_fds=True,env={'PATH':'/usr/bin:/bin','LANG':'C.UTF-8'})
-        result,artifact=collection.run(process,job,context,value['owner'],heartbeat,codec,jobs,hashes)
+        diagnostic_sources = {name: {'raw': hosted.CONTROLLER_FILES[MODULE_PATHS[name]],
+            'filename': str(hosted.CAPTURED / MODULE_PATHS[name])}
+            for name in ('owner_collection','owner_boundary')}
+        diagnostic_sources['service_adapter'] = {
+            'raw': hosted.CONTROLLER_FILES[PREFIX + 'service_adapter.py'],
+            'filename': __file__}
+        result,artifact=collection.run(process,job,context,value['owner'],heartbeat,codec,jobs,hashes,
+                                      diagnostic_sources=diagnostic_sources)
     except BaseException as error:
         result={'protocol':'stead.fixed-pure-eval-adapter-failure/1','status':'fail',
                 'error_class':closed_error(error),'qualifies_phase':False}

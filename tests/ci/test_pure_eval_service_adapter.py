@@ -19,7 +19,7 @@ from unittest.mock import Mock, patch
 
 ROOT = Path(__file__).resolve().parents[2]
 PINS = {
-    'service_adapter.py': '9cf944e4cfa132d1d31dcc973ac64133360e643edf782e9e13240467405d7524',
+    'service_adapter.py': 'a5e43047f005b60bd9b23ad8eaff68f5517d5b426537c28ab722fb3da947a666',
     'owner_boundary.py': '1d28fdb6413a630efca8f4e354d77618cd9d115079cb4fd0a2df50dd89e33866',
     'codec.py': '7fc1584bbab62f0017d6c2bce6245070373c2c144772c73e45aa4dfb87d54b75',
 }
@@ -193,7 +193,7 @@ class PureEvalServiceAdapterTests(unittest.TestCase):
                 guard = guard_for(raw)
                 process = SimpleNamespace(stdin=Stream(events, 'stdin'), stdout=Stream(events, 'stdout'),
                     stderr=Stream(events, 'stderr', fail=mode == 'stderr-close-error'))
-                def collect(*args):
+                def collect(*args, **kwargs):
                     events.append('collect')
                     if mode == 'collector-error':
                         raise ValueError('inert precollector failure')
@@ -216,7 +216,10 @@ class PureEvalServiceAdapterTests(unittest.TestCase):
                     stack.enter_context(patch.object(adapter.subprocess, 'Popen', return_value=process))
                     close = stack.enter_context(patch.object(adapter.os, 'close'))
                     stack.enter_context(patch.object(adapter, 'write_new', side_effect=write))
-                    result = adapter.guardian(SimpleNamespace(__file__='/fixed/hosted.py'), job)
+                    hosted = SimpleNamespace(__file__='/fixed/hosted.py', CAPTURED=ROOT,
+                        CONTROLLER_FILES={adapter.PREFIX + name: (ROOT / adapter.PREFIX / name).read_bytes()
+                            for name in ('owner_collection.py', 'owner_boundary.py', 'service_adapter.py')})
+                    result = adapter.guardian(hosted, job)
                 self.assertEqual(result, 1)
                 self.assertTrue(all(stream.closed for stream in (process.stdin, process.stdout, process.stderr)))
                 close.assert_called_once_with(987)
