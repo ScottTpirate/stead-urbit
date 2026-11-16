@@ -310,7 +310,7 @@
   =/  first  (begin:stead-product-history snapshot ~zod)
   =/  ready  (events-phase snapshot)
   =/  partial  (step:stead-product-history ready)
-  =/  checkpoint  !<(job:stead-product-history (cue (jam !>(partial))))
+  =/  checkpoint  !<(job:stead-product-history ;;(vase (cue (jam !>(partial)))))
   =/  result  (finish checkpoint)
   %-  expect
   !>  ?&  ?=(~ (restored:stead-product-history first))

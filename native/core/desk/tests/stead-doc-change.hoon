@@ -166,6 +166,7 @@
   =/  accepted  (dispatch next.approved catalog alice accept 2.005)
   =/  current  (head next.accepted)
   =/  events  events.product.next.accepted
+  =/  retained-events=(list event:stead-product-state)  events.product.next.accepted
   ?>  ?=(^ events)
   ?>  ?=(^ t.events)
   =/  recorded  (need (parse-result (need record.accepted)))
@@ -177,9 +178,9 @@
           =(1 output-revision.first)  =(2 output-revision.revised-head)
           ?=(~ approval.revised-head)  ?=(~ adoption.revised-head)
           =((~(got by results.changes.next.submitted) [(id 100) (id 600) 1]) (~(got by results.changes.next.accepted) [(id 100) (id 600) 1]))
-          (levy events |=([family=family:stead-product-state bytes=@t digest=@t] =((hash 'stead.product-event/1' bytes) digest)))
+          (levy retained-events |=([family=family:stead-product-state bytes=@t digest=@t] =((hash 'stead.product-event/1' bytes) digest)))
           ::  Prior review remains an exact immutable timeline member.
-          (lien events |=([family=family:stead-product-state bytes=@t digest=@t] =(reviewed-event (result-field bytes 'body'))))
+          (lien retained-events |=([family=family:stead-product-state bytes=@t digest=@t] =(reviewed-event (result-field bytes 'body'))))
           =(%accepted status.current)  =(6 revision.current)
           =(second-markdown (doc-body next.accepted))
           =(2 (lent ~(tap by bodies.changes.next.accepted)))

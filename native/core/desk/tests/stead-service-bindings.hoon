@@ -1,5 +1,5 @@
 ::  Source-only service binding fixtures. No service carrier is active.
-/+  *test, stead-codec, stead-core, stead-team, stead-team-codec, stead-principals, stead-actor, stead-service-bindings
+/+  *test, stead-codec, stead-session, stead-core, stead-team, stead-team-codec, stead-principals, stead-actor, stead-service-bindings
 =,  stead-codec
 =>
 |%
@@ -140,7 +140,7 @@
           =((~(got by descriptors.state) handle.issued-a) (~(got by descriptors.next.next-credential) handle.issued-a))
       ==
 ++  test-service-bindings-restore-descriptors-never-revive-a-live-bearer
-  =/  restored  !<(state:stead-service-bindings (cue (jam !>(state))))
+  =/  restored  !<(state:stead-service-bindings ;;(vase (cue (jam !>(state)))))
   =/  new-book  (new-live:stead-service-bindings ~zod 1.000)
   =/  actor  (need (verify-bearer:stead-service-bindings state book granted catalog bearer.issued-a scope %work-comment 2.004))
   =/  empty-old  book(credentials ~)
