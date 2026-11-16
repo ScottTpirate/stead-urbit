@@ -13,6 +13,7 @@ import re
 from types import SimpleNamespace
 
 import product_conn
+import product_capture
 import product_home_check
 import review_prepare
 import team_check
@@ -58,7 +59,7 @@ def run(host, *, legacy, command, check, checkpoint, report, config, now,
         raise ValueError('Current owned admitted fixture required')
     record = {'profile': 'native-human-doc/1', 'status': 'running',
               'classification': 'prepared-disposable-native-journey',
-              'qualifies_phase': False, 'restarts': [], 'paused_predecessor': None,
+              'qualifies_phase': False, 'restarts': [], 'paused_predecessor': None, 'old_captures': {},
               'full_product_partial_restore': 'not-observed', 'browser': 'separate-fresh-fixture-required',
               'config': config, 'now': now, 'trace': [], 'result': None,
               'initial_owners': {s: {'pid': team.boots[s]['process'].pid, 'nonce': team.boots[s]['nonce']}
@@ -109,6 +110,8 @@ def run(host, *, legacy, command, check, checkpoint, report, config, now,
         after = checkpoint_value(command('zod', '+stead-product-checkpoint'), activate)
         check('product-paused-predecessor-still-exact', before == after)
         record['paused_predecessor'] = {'observation': before, 'first': first, 'second': second}
+        record['old_captures']['predecessor'] = product_capture.collect(command,
+            lambda: team.saved_fingerprint('zod', command), 'predecessor', first['release_vase'])
         checkpoint('product-paused-predecessor-proved')
 
     def restart():
@@ -127,6 +130,11 @@ def run(host, *, legacy, command, check, checkpoint, report, config, now,
             check('product-' + ship + '-suspended-exact-saved-vase',
                   entry['suspended'] and entry['present'] and not entry['acknowledged']
                   and team.saved_fingerprint(ship, command) == saved)
+            # Batch0 resumes the predecessor. Batch1 is the existing first
+            # cold restart after completed Doc/Work, before owner mutations.
+            if ship == 'zod' and len(record['restarts']) == 1:
+                record['old_captures']['product'] = product_capture.collect(command,
+                    lambda: team.saved_fingerprint('zod', command), 'product', saved)
             team.reinstall(ship, command)
             nonce = entry['nonce']
             boot = team_check.bootstrap_ready(team, ship, legacy, host['execution_check'])
@@ -160,7 +168,7 @@ def run(host, *, legacy, command, check, checkpoint, report, config, now,
         fingerprints=traced('fingerprints', fingerprints),
         paused_predecessor=traced('paused-predecessor', paused_predecessor),
         config=config, now=now, uid=team_check.uid)
-    if record['paused_predecessor'] is None:
+    if record['paused_predecessor'] is None or set(record['old_captures']) != {'predecessor', 'product'}:
         raise ValueError('Actual paused predecessor checkpoint is mandatory')
     record['status'] = 'observed'
     record.update(command_end=len(report['commands']), check_end=len(report['checks']))

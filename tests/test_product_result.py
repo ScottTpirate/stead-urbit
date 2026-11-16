@@ -100,6 +100,7 @@ def authored_restart():
 def incomplete_outer():
     """Source-bound authored shell that lacks the actual journey; must fail."""
     modules = {'scripts/ci/product_result.py': verifier,
+        'scripts/urbit/product_capture.py': verifier.product_capture,
         'scripts/urbit/product_controller.py': verifier.product_controller,
         'scripts/urbit/product_conn.py': conn, 'scripts/urbit/product_home_check.py': verifier.product_home_check,
         'scripts/urbit/team_check.py': team_check, 'scripts/urbit/team_lifecycle.py': verifier.team_lifecycle,
@@ -110,7 +111,7 @@ def incomplete_outer():
                for name, module in modules.items()}
     sources['scripts/urbit/supervisor.py'] = {'sha256': verifier.hashlib.sha256((ROOT / 'scripts/urbit/supervisor.py').read_bytes()).hexdigest()}
     composed = {}
-    for name in ('ted/stead-product-checkpoint.hoon', 'gen/stead-product-checkpoint.hoon'):
+    for name in ('ted/stead-product-checkpoint.hoon', 'gen/stead-product-checkpoint.hoon', 'gen/stead-v10-capture.hoon'):
         path = 'native/core/desk/' + name
         sources[path] = {'sha256': verifier.hashlib.sha256((PREPARED / path).read_bytes()).hexdigest()}
         composed[path] = sources[path]
@@ -129,6 +130,7 @@ def incomplete_outer():
     now = 1_700_000_000_000
     record = {'profile': 'native-human-doc/1', 'status': 'observed', 'classification': 'prepared-disposable-native-journey',
         'qualifies_phase': False, 'restarts': [], 'paused_predecessor': None,
+        'old_captures': {'predecessor': {}, 'product': {}},
         'full_product_partial_restore': 'not-observed', 'browser': 'separate-fresh-fixture-required',
         'config': team_check.configuration(now), 'now': now, 'trace': trace, 'result': {},
         'initial_owners': owners, 'command_start': 4, 'command_end': 4, 'check_start': 0, 'check_end': 0}
@@ -252,6 +254,58 @@ class ResultTests(unittest.TestCase):
         cursor.done()
         self.assertEqual(checks, ['product-zod-previous-child-reaped', 'product-zod-suspended-exact-saved-vase',
                                   'product-zod-fresh-native-bootstrap'])
+
+    def test_saved_capture_is_replayed_only_between_suspension_and_reinstall(self):
+        rows, entry = authored_restart()
+        capture = verifier.product_capture
+        raw, fingerprint = b'authored-only', 'a' * 64
+        response = {'protocol': 'stead.v10-capture/1', 'target': 'product',
+            'offset': '0', 'length': str(len(raw)), 'total_bytes': str(len(raw)),
+            'capture_pin': capture.domain('stead.v10-capture/1', raw.hex().encode()),
+            'native_vase_fingerprint': fingerprint, 'type_pin': 'b' * 64,
+            'payload_pin': 'c' * 64, 'data_hex': raw.hex()}
+        idle = {'ship': 'zod', 'dojo': '.^(? %gu /=stead-home=/$)', 'result': '%.n'}
+        observation = {'ship': 'zod', 'dojo': capture.source('product', 0, ''),
+            'result': hex(int.from_bytes(capture.canonical(response), 'little'))}
+        capture_rows = [idle, observation, idle, *rows[:2]]
+        combined = [*rows[:4], *capture_rows, *rows[4:]]
+        entry['command_end'] = len(combined)
+        def observed(cursor, saved):
+            retained = capture.collect(cursor.dojo,
+                lambda: verifier.team_lifecycle.TeamLifecycle.saved_fingerprint(None, 'zod', cursor.dojo),
+                'product', saved)
+            self.assertEqual(capture.validate_record(retained), raw)
+        cursor = verifier.Commands(combined, 0, len(combined))
+        verifier.verify_restart(cursor, entry, 'zod', lambda n, c: self.assertTrue(c), capture=observed)
+        cursor.done()
+        for changed in ([*capture_rows, *rows], [*rows[:4], *capture_rows[1:], *rows[4:]]):
+            with self.subTest(length=len(changed)), self.assertRaises(ValueError):
+                verifier.verify_restart(verifier.Commands(changed, 0, len(changed)),
+                    entry | {'command_end': len(changed)}, 'zod',
+                    lambda n, c: self.assertTrue(c), capture=observed)
+
+    def test_large_capture_response_bound_is_exact_source_only(self):
+        authored = load('authored_capture_source', 'tests/test_product_capture.py')
+        source = authored.AuthoredSource(b'x' * (verifier.product_capture.CHUNK + 1))
+        rows = []
+        def recorded(ship, command):
+            result = source.dojo(ship, command)
+            rows.append({'ship': ship, 'dojo': command, 'result': result})
+            return result
+        expected = verifier.product_capture.collect(recorded, lambda: authored.FP, 'product', authored.FP)
+        self.assertGreater(len(rows[1]['result']), 32768)
+        cursor = verifier.Commands(rows, 0, len(rows))
+        actual = verifier.product_capture.collect(cursor.dojo, lambda: authored.FP, 'product', authored.FP)
+        cursor.done()
+        self.assertEqual(actual, expected)
+        for ship, command, output in (
+                ('zod', rows[1]['dojo'], '0x' + '1' * 100000),
+                ('bus', rows[1]['dojo'], rows[1]['result']),
+                ('zod', '+unrelated', rows[1]['result']),
+                ('zod', rows[1]['dojo'] + ' ', rows[1]['result'])):
+            row = {'ship': ship, 'dojo': command, 'result': output}
+            with self.subTest(ship=ship, command=command), self.assertRaises(ValueError):
+                verifier.Commands([row], 0, 1).dojo(ship, command)
 
     def test_reused_nonce_wrong_incarnation_or_missing_custody_event_fails(self):
         rows, entry = authored_restart()

@@ -724,6 +724,7 @@ def main():
     parser.add_argument('--attempt', required=True)
     parser.add_argument('--control', choices=CONTROL_CASES)
     args = parser.parse_args()
+    capture_artifacts = {}
     require(os.getuid() == 0 and sys.flags.isolated and sys.dont_write_bytecode, 'Root isolated controller required')
     os.umask(0o077)
     regular_root(ROOT)
@@ -880,8 +881,8 @@ def main():
                                 # helpers from the mutable candidate checkout.
                                 sys.path.insert(0, str(CAPTURED / 'scripts'))
                                 import release_install
-                                from product_failure import project as product_projection
-                                result['product_observation'] = product_projection(raw, inputs,
+                                from product_failure import project_with_captures as product_projection
+                                result['product_observation'], capture_artifacts = product_projection(raw, inputs,
                                     run_id=run_id, guard=result['guard'], cleanup=result['cleanup'], policy=POLICY,
                                     release_fingerprint=release_install.saved_home_fingerprint)
                             except Exception:
@@ -903,6 +904,34 @@ def main():
         public.mkdir(mode=0o755, exist_ok=True)
         regular_root(public)
         os.chmod(public, 0o755)
+        if capture_artifacts:
+            require(not args.control and result['cleanup']['verified'], 'Capture export requires completed isolated inspection')
+            expected_capture_files = {'v10-old-predecessor.jam', 'v10-old-predecessor.json',
+                                      'v10-old-product.jam', 'v10-old-product.json'}
+            require(set(capture_artifacts) == expected_capture_files, 'Closed capture artifact paths')
+            # Validate every fixed artifact before the first write. A failed
+            # exclusive export removes only this attempt's newly created files;
+            # the ordinary outer report is still the final publication receipt.
+            require(all(isinstance(data, bytes) and 0 < len(data) <=
+                        (262144 if name.endswith('.jam') else 8192)
+                        for name, data in capture_artifacts.items()), 'Capture artifact bound')
+            require(sum(len(data) for name, data in capture_artifacts.items() if name.endswith('.jam')) <= 524288,
+                    'Combined captured-state artifact bound')
+            created = []
+            metadata = {}
+            try:
+                for name in sorted(capture_artifacts):
+                    data = capture_artifacts[name]
+                    fd = os.open(public / name, os.O_WRONLY | os.O_CREAT | os.O_EXCL | os.O_NOFOLLOW, 0o600)
+                    created.append(public / name)
+                    with os.fdopen(fd, 'wb') as stream:
+                        stream.write(data)
+                    metadata[name] = {'bytes': len(data), 'sha256': hashlib.sha256(data).hexdigest()}
+            except BaseException:
+                for path in created:
+                    path.unlink()
+                raise
+            result['product_capture_files'] = metadata
         prefix = 'control-' + args.control + '-' if args.control else ''
         write(public / (prefix + 'report.json'), result)
         if inputs is not None:

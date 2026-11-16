@@ -17,6 +17,7 @@ import core_conn
 from conn import framed_length
 from gall_schedule_proof import _atom, _cue, _jam
 import product_conn
+import product_capture
 import product_controller
 import product_home_check
 import review_prepare
@@ -132,10 +133,13 @@ class Commands:
         return row
 
     def dojo(self, ship, source, **options):
+        # The trusted fixed capture generator is the sole larger Dojo result.
+        # Ordinary Dojo, Gall frames and aggregate report bounds stay unchanged.
+        maximum = 100000 if ship == 'zod' and product_capture.is_source(source) else 32768
         require(not options, 'Unexpected fingerprint Dojo option')
         row = self.next()
         require(set(row) == {'ship', 'dojo', 'result'} and row['ship'] == ship and row['dojo'] == source
-                and isinstance(row['result'], str) and len(row['result']) <= 32768, 'Exact actual Dojo source/result correlation')
+                and isinstance(row['result'], str) and len(row['result']) <= maximum, 'Exact actual Dojo source/result correlation')
         return row['result']
 
     def done(self):
@@ -176,7 +180,7 @@ def verify_observation(report, inputs, *, release_fingerprint):
             and report.get('qualifies_phase') is False, 'Prepared report must refuse qualification')
     require(same(report['inputs_before'], report['inputs_after'])
             and same(report['inputs_after'], inputs['expected_native_inputs']), 'Native source/input changed')
-    modules = {'scripts/urbit/product_controller.py': product_controller,
+    modules = {'scripts/urbit/product_capture.py': product_capture, 'scripts/urbit/product_controller.py': product_controller,
         'scripts/urbit/product_conn.py': product_conn, 'scripts/urbit/product_home_check.py': product_home_check,
         'scripts/urbit/team_check.py': team_check, 'scripts/urbit/team_lifecycle.py': team_lifecycle,
         'scripts/urbit/review_prepare.py': review_prepare, 'scripts/urbit/core_conn.py': core_conn,
@@ -196,12 +200,12 @@ def verify_observation(report, inputs, *, release_fingerprint):
         for name, item in inputs['composed_files'].items() if name.startswith('native/core/desk/')}
     require(set(report['installed']) == set(SHIPS) and all(same(value, expected_installed)
             for value in report['installed'].values()), 'Exact four-ship composed source required')
-    for name in ('ted/stead-product-checkpoint.hoon', 'gen/stead-product-checkpoint.hoon'):
+    for name in ('ted/stead-product-checkpoint.hoon', 'gen/stead-product-checkpoint.hoon', 'gen/stead-v10-capture.hoon'):
         require(expected_installed[name] == inputs['controller_files']['native/core/desk/' + name]['sha256'],
                 'Checkpoint helper must be trusted controller source')
     record = report['product_journey']
     require(set(record) == {'profile', 'status', 'classification', 'qualifies_phase', 'restarts',
-        'paused_predecessor', 'full_product_partial_restore', 'browser', 'config', 'now', 'trace',
+        'paused_predecessor', 'old_captures', 'full_product_partial_restore', 'browser', 'config', 'now', 'trace',
         'result', 'initial_owners', 'command_start', 'command_end', 'check_start', 'check_end'}, 'Closed journey report')
     require(record['profile'] == 'native-human-doc/1' and record['status'] == 'observed'
         and record['classification'] == 'prepared-disposable-native-journey' and record['qualifies_phase'] is False
@@ -209,6 +213,7 @@ def verify_observation(report, inputs, *, release_fingerprint):
         and record['browser'] == 'separate-fresh-fixture-required', 'Observed scope cannot expand')
     require(type(record['now']) is int and 0 < record['now'] < 2**64
             and same(record['config'], team_check.configuration(record['now'])), 'Exact fresh fixture configuration')
+    require(isinstance(record['old_captures'], dict) and set(record['old_captures']) == {'predecessor', 'product'}, 'Two closed old capture records')
     commands, checks, trace = report['commands'], report['checks'], record['trace']
     require(isinstance(commands, list) and len(commands) <= 4096
             and isinstance(checks, list) and len(checks) <= 2000
@@ -273,6 +278,10 @@ def verify_observation(report, inputs, *, release_fingerprint):
                 after = product_controller.checkpoint_value(cursor.dojo('zod', '+stead-product-checkpoint'), activate)
                 check('product-paused-predecessor-still-exact', before == after)
                 require(same(record['paused_predecessor'], {'observation': before, 'first': first, 'second': second}), 'Paused retained observations differ')
+                captured = product_capture.collect(cursor.dojo,
+                    lambda: team_lifecycle.TeamLifecycle.saved_fingerprint(None, 'zod', cursor.dojo),
+                    'predecessor', first['release_vase'])
+                require(same(captured, record['old_captures']['predecessor']), 'Exact observed predecessor bytes')
                 value = None
             elif kind in ('ready', 'restart'):
                 require(restart_at < len(record['restarts']), 'Missing owned restart batch')
@@ -285,7 +294,14 @@ def verify_observation(report, inputs, *, release_fingerprint):
                     require(entry['new_nonce'] not in seen_nonces
                             and entry['new_pid'] not in {o['pid'] for s, o in owners.items() if s != ship},
                             'New runtime owner cannot alias another admitted incarnation')
-                    verify_restart(cursor, entry, ship, check)
+                    capture = None
+                    if restart_at == 2 and ship == 'zod':
+                        def capture(cursor, saved):
+                            retained = product_capture.collect(cursor.dojo,
+                                lambda: team_lifecycle.TeamLifecycle.saved_fingerprint(None, 'zod', cursor.dojo),
+                                'product', saved)
+                            require(same(retained, record['old_captures']['product']), 'Exact observed product bytes')
+                    verify_restart(cursor, entry, ship, check, capture=capture)
                     owners[ship] = {'pid': entry['new_pid'], 'nonce': entry['new_nonce']}
                     seen_nonces.add(entry['new_nonce'])
                 value = None
@@ -306,10 +322,11 @@ def verify_observation(report, inputs, *, release_fingerprint):
     return {'format': 'stead.product-journey-observation/1', 'status': 'observed', 'qualifies_phase': False,
             'scope': 'native human Work/Doc journey and exact predecessor pause; outer worker execution trust required',
             'full_product_partial_restore': 'not-observed', 'browser': 'not-observed',
-            'result': result, 'assertions': check_at - record['check_start'], 'callbacks': trace_at}
+            'result': result, 'assertions': check_at - record['check_start'], 'callbacks': trace_at,
+            'old_captures': {k: product_capture.metadata(v) for k, v in record['old_captures'].items()}}
 
 
-def verify_restart(commands, entry, ship, check):
+def verify_restart(commands, entry, ship, check, *, capture=None):
     require(set(entry) == {'ship', 'saved_vase_sha256', 'new_incarnation', 'passed', 'old_pid', 'new_pid',
         'old_nonce', 'new_nonce', 'old_exit_code', 'command_start', 'command_end', 'injection', 'lifecycle'}
         and entry['ship'] == ship and entry['passed'] is True
@@ -325,6 +342,8 @@ def verify_restart(commands, entry, ship, check):
     check('product-' + ship + '-previous-child-reaped', entry['old_exit_code'] == 0)
     restored = team_lifecycle.TeamLifecycle.saved_fingerprint(None, ship, commands.dojo)
     check('product-' + ship + '-suspended-exact-saved-vase', saved == restored)
+    if capture is not None:
+        capture(commands, saved)
     app = team_lifecycle.APPS[ship]
     require(commands.dojo(ship, f'.^(desk %gd /={app}=/$)').strip() == '%base', 'Restart verified desk')
     commands.dojo(ship, f'|rein %base [%.n %{app}]')

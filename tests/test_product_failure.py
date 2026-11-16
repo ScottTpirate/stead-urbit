@@ -69,6 +69,10 @@ def authored():
     observed = {'format': 'stead.product-journey-observation/1', 'status': 'observed', 'qualifies_phase': False,
         'scope': 'authored stub; no native execution', 'full_product_partial_restore': 'not-observed', 'browser': 'not-observed',
         'assertions': 80, 'callbacks': 70,
+        'old_captures': {target: {'protocol': 'stead.v10-capture-record/1', 'target': target,
+            'capture_pin': 'a' * 64, 'native_vase_fingerprint': 'b' * 64,
+            'type_pin': 'c' * 64, 'payload_pin': 'd' * 64,
+            'artifact_sha256': 'e' * 64, 'artifact_bytes': 1} for target in ('predecessor', 'product')},
         'result': {'profile': 'native-human-doc/1', 'scope': 'actual native Gall; HTTP/browser/agent-run not included',
             'project_id': 'PRIVATE-PROJECT-MUST-NOT-LEAK', 'work_id': 'PRIVATE-WORK-MUST-NOT-LEAK',
             'change_id': 'PRIVATE-CHANGE-MUST-NOT-LEAK', 'document_id': 'PRIVATE-DOC-MUST-NOT-LEAK',
@@ -183,6 +187,19 @@ class ExportTests(unittest.TestCase):
         for encoded in (raw(value) + raw(value), raw(value)[:-10], raw(value) + b'late output\n'):
             with self.subTest(length=len(encoded)), self.assertRaises((ValueError, projection.json.JSONDecodeError)):
                 projection._worker(encoded, inputs, run_id, guard, cleanup, policy)
+
+    def test_capture_metadata_cannot_export_extra_content_or_change_scope(self):
+        for mutation in ('extra', 'raw', 'target', 'count-float', 'pin', 'missing'):
+            data = list(authored())
+            captures = data[6]['old_captures']
+            if mutation == 'extra': captures['elsewhere'] = captures['product']
+            elif mutation == 'raw': captures['product']['data_hex'] = 'SECRET-MUST-NOT-EXPORT'
+            elif mutation == 'target': captures['product']['target'] = 'predecessor'
+            elif mutation == 'count-float': captures['product']['artifact_bytes'] = 1.0
+            elif mutation == 'pin': captures['product']['payload_pin'] = 'SECRET-MUST-NOT-EXPORT'
+            else: captures.pop('predecessor')
+            with self.subTest(mutation=mutation), self.assertRaises(ValueError):
+                self.run_projection(data)
 
 
 if __name__ == '__main__':

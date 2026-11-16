@@ -18,6 +18,60 @@ import owned_child
 
 
 class FailureProjectionTests(unittest.TestCase):
+    def test_build_probe_projects_exact_interval_locations_without_text(self):
+        source = 'native/core/desk/app/stead-home.hoon'
+        raw = ('nest-fail\n/app/stead-home/hoon::[1 1].[2 2]>\n' + self.secret).encode()
+        self.value['native'].update(error='AssertionError: zod:+stead-build-probe',
+            commands=[{'ship': 'zod', 'dojo': '+stead-build-probe', 'result': self.secret}],
+            build_probe_transcripts=[{'ship': 'zod', 'dojo': '+stead-build-probe',
+                'log_offset': 123, 'log_bytes': len(raw), 'log_hex': raw.hex()}])
+        result = failure.project(self.frame(), self.inputs, run_id=self.run, sources={source: b'xx\nxx'})
+        probe = result['native']['build_probes'][0]
+        self.assertEqual(result['native']['error']['reason'], 'zod-build-probe')
+        self.assertTrue(probe['markers']['nest-fail'])
+        self.assertTrue(probe['result_recorded']); self.assertFalse(probe['expected_result_observed'])
+        self.assertEqual(probe['source_spans']['locations'][0]['path'], source)
+        self.assertNotIn(self.secret, json.dumps(result)); self.assertNotIn(raw.hex(), json.dumps(result))
+        self.assertFalse(result['qualifies_phase'])
+
+    def test_build_probe_rejects_unknown_duplicate_unbounded_and_noninteger_records(self):
+        row = {'ship': 'zod', 'dojo': '+stead-build-probe', 'log_offset': 0, 'log_bytes': 0, 'log_hex': ''}
+        variants = [[row | {'ship': self.secret}], [row | {'dojo': '+code'}], [row, row], [row] * 5,
+                    [row | {'log_offset': False}], [row | {'log_bytes': 0.0}],
+                    [row | {'log_bytes': 262145, 'log_hex': '00' * 262145}],
+                    [row | {'log_hex': 'zz'}], [row | {'private': self.secret}]]
+        for rows in variants:
+            with self.subTest(rows=repr(rows)[:60]), self.assertRaises(ValueError):
+                failure.build_probe_observations({'build_probe_transcripts': rows})
+        command = {'ship': 'zod', 'dojo': '+stead-build-probe', 'result': self.secret}
+        for commands in ([command, command], [command | {'result': 'x' * 32769}],
+                         [command | {'result': False}], [command | {'private': self.secret}]):
+            with self.assertRaises(ValueError):
+                failure.build_probe_observations({'commands': commands, 'build_probe_transcripts': [row]})
+
+    def test_build_probe_transport_failure_and_pass_do_not_create_acceptance(self):
+        row = {'ship': 'zod', 'dojo': '+stead-build-probe', 'log_offset': 0, 'log_bytes': 0, 'log_hex': ''}
+        native = {'build_probe_transcripts': [row]}
+        absent = failure.build_probe_observations(native)[0]
+        self.assertFalse(absent['result_recorded']); self.assertIsNone(absent['result_sha256'])
+        self.assertFalse(absent['expected_result_observed'])
+        native['commands'] = [{'ship': 'zod', 'dojo': '+stead-build-probe', 'result': '%stead-builds-pass\n'}]
+        passed = failure.build_probe_observations(native)[0]
+        self.assertTrue(passed['expected_result_observed']); self.assertNotIn('qualifies_phase', passed)
+        self.assertEqual(failure.build_probe_observations({}), [])
+
+    def test_build_probe_result_only_diagnostic_is_separate_and_closed(self):
+        source = 'native/core/desk/lib/stead-product-home.hoon'
+        terminal = 'find.$\n/lib/stead-product-home/hoon::[1 1].[2 2]>\n' + self.secret
+        row = {'ship': 'zod', 'dojo': '+stead-build-probe', 'log_offset': 0, 'log_bytes': 0, 'log_hex': ''}
+        native = {'commands': [{'ship': 'zod', 'dojo': '+stead-build-probe', 'result': terminal}],
+                  'build_probe_transcripts': [row]}
+        probe = failure.build_probe_observations(native, {source: b'xx\nxx'})[0]
+        self.assertFalse(probe['markers']['find.$']); self.assertEqual(probe['source_spans']['locations'], [])
+        self.assertTrue(probe['result_observation']['markers']['find.$'])
+        self.assertEqual(probe['result_observation']['source_spans']['locations'][0]['path'], source)
+        self.assertNotIn(self.secret, json.dumps(probe)); self.assertNotIn(terminal.encode().hex(), json.dumps(probe))
+
     def test_diagnostic_failed_suites_retain_each_closed_observation(self):
         inventory = json.loads((ROOT / 'specs/urbit/phase2-pure-units.json').read_bytes())
         paths = [entry['path'] for entry in inventory['suites'][:2]]

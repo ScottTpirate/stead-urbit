@@ -1,7 +1,9 @@
 """Closed hosted export of a completed *inspection-only* product journey.
 
-No raw native content, callback trace, process ID, nonce or resource ID is
-returned. Authored host fixtures are not native evidence. The hosted caller
+project() returns metadata only, with no callback trace, process ID, nonce or
+resource ID. project_with_captures() additionally returns only two fixed
+source-bound disposable saved-state artifacts. Authored host fixtures are not
+native evidence. The hosted caller
 must provide its actual collected guardian and actual final cleanup readback.
 This path cannot turn the deliberately failed worker/job into qualification.
 """
@@ -13,6 +15,7 @@ from pathlib import Path
 import re
 
 import product_result
+import product_capture
 from worker_result import PREFIX, canonical, unique
 
 require, same = product_result.require, product_result.same
@@ -90,11 +93,16 @@ def project(raw, inputs, *, run_id, guard, cleanup, policy, release_fingerprint)
     observed = product_result.verify_observation(value['native'], inputs, release_fingerprint=release_fingerprint)
     require(same(value.get('product_observation'), observed), 'Independent host replay differs from worker observation')
     require(set(observed) == {'format', 'status', 'qualifies_phase', 'scope', 'full_product_partial_restore',
-        'browser', 'result', 'assertions', 'callbacks'} and observed['format'] == 'stead.product-journey-observation/1'
+        'browser', 'result', 'assertions', 'callbacks', 'old_captures'} and observed['format'] == 'stead.product-journey-observation/1'
         and observed['status'] == 'observed' and observed['qualifies_phase'] is False
         and observed['full_product_partial_restore'] == 'not-observed' and observed['browser'] == 'not-observed'
         and type(observed['assertions']) is int and 0 < observed['assertions'] <= 2000
         and type(observed['callbacks']) is int and 0 < observed['callbacks'] <= 256, 'Closed product observation scope/counts')
+    captures = observed['old_captures']
+    require(isinstance(captures, dict) and set(captures) == {'predecessor', 'product'}, 'Closed old capture metadata')
+    for target, row in captures.items():
+        product_capture.validate_metadata(row)
+        require(row['target'] == target, 'Capture metadata target correlation')
     result = observed['result']
     require(isinstance(result, dict) and set(result) == {'profile', 'scope', 'project_id', 'work_id', 'change_id',
         'document_id', 'accepted_markdown_sha256', 'final_fingerprints'}
@@ -117,4 +125,15 @@ def project(raw, inputs, *, run_id, guard, cleanup, policy, release_fingerprint)
         'final_authority_sha256': fingerprints['release_authority'], 'final_saved_vase_sha256': fingerprints['release_vase'],
         'assertions': observed['assertions'], 'callbacks': observed['callbacks'],
         'owned_cold_restarts': 16, 'paused_predecessor': True, 'full_product_partial_restore': False,
-        'browser': False, 'agent_run': False, 'outer_cleanup_verified': True}
+        'browser': False, 'agent_run': False, 'outer_cleanup_verified': True,
+        'old_captures': observed['old_captures']}
+
+
+def project_with_captures(raw, inputs, *, run_id, guard, cleanup, policy, release_fingerprint):
+    """Only exact source-bound synthetic bytes, after full outer verification."""
+    projected = project(raw, inputs, run_id=run_id, guard=guard, cleanup=cleanup,
+                        policy=policy, release_fingerprint=release_fingerprint)
+    value = _worker(raw, inputs, run_id, guard, cleanup, policy)
+    artifacts = product_capture.exports(value['native']['product_journey']['old_captures'],
+        inputs, run_id, value['native']['execution_guard']['guard_sha256'])
+    return projected, artifacts

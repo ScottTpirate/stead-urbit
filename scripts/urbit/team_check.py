@@ -110,6 +110,28 @@ def bootstrap_ready(team, ship, call, guard):
     raise TimeoutError('Native bootstrap readiness not acknowledged')
 
 
+def build_probe(ship, command, report, checkpoint, logs=Path('/state/logs')):
+    """Retain only this fixed probe's bounded native interval for diagnosis."""
+    if ship not in ('zod', 'bus', 'nec', 'bud'):
+        raise ValueError('Unknown build probe ship')
+    log = logs / (ship + '.log')
+    offset = log.stat().st_size
+    try:
+        return command(ship, '+stead-build-probe', '%stead-builds-pass')
+    finally:
+        with log.open('rb') as stream:
+            stream.seek(offset)
+            captured = stream.read(262145)
+        if len(captured) > 262144:
+            raise ValueError('Native build probe log byte bound')
+        rows = report.setdefault('build_probe_transcripts', [])
+        if len(rows) >= 4 or any(row['ship'] == ship for row in rows):
+            raise ValueError('Native build probe duplicate or count bound')
+        rows.append({'ship': ship, 'dojo': '+stead-build-probe', 'log_offset': offset,
+                     'log_bytes': len(captured), 'log_hex': captured.hex()})
+        checkpoint('build-probe-output')
+
+
 def run(host):
     started = time.monotonic()
     report = {'status': 'fail', 'classification': 'local-real-configured-gall-development',
@@ -247,7 +269,7 @@ def run(host):
             host['launch'](ship, fresh=True)
             host['wait_ready'](ship)
             report['installed'][ship] = native_install.install(host, ship, command, check)
-            command(ship, '+stead-build-probe', '%stead-builds-pass')
+            build_probe(ship, command, report, checkpoint)
             if ship == 'zod':
                 pure_units()
                 command('zod', '+stead-team-contract-probe', '%stead-team-contract-basic-pass')

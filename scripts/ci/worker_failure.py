@@ -97,6 +97,7 @@ def error_kind(value):
         'Pure-unit diagnostic complete; qualification disabled':'pure-diagnostic-complete',
     })
     for ship in SHIPS:
+        exact[ship + ':+stead-build-probe'] = ship + '-build-probe'
         exact[ship + '-owner-bootstrap-acknowledged'] = ship + '-initial-bootstrap'
         exact[ship + '-restart-fresh-bootstrap'] = ship + '-restart-bootstrap'
     if message in exact:
@@ -278,6 +279,44 @@ def unit_observation(native, inventory, sources=None):
 
 
 
+def build_probe_observations(native, sources=None):
+    """Fixed known Dojo probe only; no result text or unrelated log tail."""
+    rows = native.get('build_probe_transcripts', [])
+    require(isinstance(rows, list) and len(rows) <= 4, 'Build probe count bound')
+    commands = native.get('commands', [])
+    require(isinstance(commands, list) and len(commands) <= 10000, 'Build probe command bound')
+    seen, result = set(), []
+    for row in rows:
+        require(isinstance(row, dict) and set(row) == {'ship', 'dojo', 'log_offset', 'log_bytes', 'log_hex'},
+                'Build probe transcript shape')
+        ship = row['ship']
+        require(isinstance(ship, str) and ship in SHIPS and ship not in seen
+                and row['dojo'] == '+stead-build-probe', 'Build probe identity')
+        seen.add(ship)
+        encoded = row['log_hex']
+        require(type(row['log_offset']) is int and 0 <= row['log_offset'] <= 32 * 1024**2
+                and type(row['log_bytes']) is int and 0 <= row['log_bytes'] <= 262144
+                and isinstance(encoded, str) and len(encoded) == row['log_bytes'] * 2
+                and re.fullmatch(r'(?:[0-9a-f]{2})*', encoded), 'Build probe byte bound')
+        matches = [entry for entry in commands if isinstance(entry, dict)
+                   and entry.get('ship') == ship and entry.get('dojo') == '+stead-build-probe']
+        require(len(matches) <= 1 and (not matches or set(matches[0]) == {'ship', 'dojo', 'result'}),
+                'Build probe exact command correspondence')
+        terminal = matches[0]['result'] if matches else ''
+        require(isinstance(terminal, str), 'Build probe result type')
+        raw_terminal = terminal.encode('utf-8', errors='strict')
+        require(len(raw_terminal) <= 32768, 'Build probe result byte bound')
+        observation = unit_observation({'native_unit_transcripts': [{'log_hex': encoded}]}, None, sources)
+        terminal_observation = unit_observation({'native_unit_transcripts': [{'log_hex': raw_terminal.hex()}]}, None, sources)
+        result.append({'ship': ship, 'probe': 'stead-build-probe',
+            'result_recorded': bool(matches),
+            'result_bytes': len(raw_terminal), 'result_sha256': hashlib.sha256(raw_terminal).hexdigest() if matches else None,
+            'expected_result_observed': bool(matches) and terminal.strip() == '%stead-builds-pass',
+            'result_observation': {key: terminal_observation[key] for key in ('structure', 'source_spans', 'source_trace', 'markers')},
+            **{key: observation[key] for key in ('log_bytes', 'log_sha256', 'structure', 'source_spans', 'source_trace', 'markers')}})
+    return result
+
+
 def failed_unit_observations(native, inventory, sources=None):
     """Each failed registered suite, with the same closed per-unit schema."""
     diagnostic = native.get('diagnostic_only', False)
@@ -355,6 +394,7 @@ def project(raw, inputs, *, run_id, inventory=None, sources=None):
     require(isinstance(trace, dict), 'Failure native trace shape')
     result['native']['frame_stage'] = choice(trace.get('stage'), FRAME_STAGES)
     result['native']['last_unit'] = unit_observation(native, inventory, sources)
+    result['native']['build_probes'] = build_probe_observations(native, sources)
     result['native']['diagnostic_only'] = native.get('diagnostic_only') is True
     result['native']['failed_units'] = failed_unit_observations(native, inventory, sources)
     admission = native.get('admission_failure', {})
