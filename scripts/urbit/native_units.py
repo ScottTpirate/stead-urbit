@@ -148,6 +148,8 @@ def validate_inventory(value: dict) -> dict:
                    '/tests/stead-code-pack-review-board': ('test-pack-board-', 8, 60),
                    '/tests/stead-home-v9-rehearsal': ('test-home-v9-', 4, 60),
                    '/tests/stead-browser-oidc-proof': ('test-oidc-proof-', 5, 60),
+                   '/tests/stead-repository-catalog': ('test-repository-catalog-', 6, 60),
+                   '/tests/stead-repository-import': ('test-repository-import-', 4, 60),
                    '/tests/stead-update-capacity': ('test-updates-', 2, 180)}
     if not isinstance(suites, list) or len(suites) != len(definitions):
         raise ValueError('Native suite count')

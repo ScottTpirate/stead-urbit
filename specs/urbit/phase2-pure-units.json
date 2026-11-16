@@ -1,7 +1,7 @@
 {
   "format": 1,
   "classification": "pure-native-only",
-  "expected_arm_count": 329,
+  "expected_arm_count": 339,
   "suites": [
     {
       "path": "/tests/stead-session",
@@ -617,6 +617,28 @@
         "test-home-v10-predecessor-never-activates-without-owner-control",
         "test-home-v10-activation-requires-actual-owner-and-exact-prefix",
         "test-home-v10-rejects-wrong-profile-code-and-future-envelope"
+      ],
+      "timeout_seconds": 60
+    },
+    {
+      "path": "/tests/stead-repository-catalog",
+      "arms": [
+        "test-repository-catalog-two-repos-exact-inline-profile",
+        "test-repository-catalog-typed-ids-never-infer-alias",
+        "test-repository-catalog-retry-is-original-and-current-authorized",
+        "test-repository-catalog-resolver-authority-cas-retirement",
+        "test-repository-catalog-global-retained-capacity-no-eviction",
+        "test-repository-catalog-closed-codec-and-receipt-closure"
+      ],
+      "timeout_seconds": 60
+    },
+    {
+      "path": "/tests/stead-repository-import",
+      "arms": [
+        "test-repository-import-inline-exact-refs-reviews-uploads-and-alias",
+        "test-repository-import-external-exact-promotion-and-snapshot",
+        "test-repository-import-refuses-orphan-corrupt-and-cross-scope-tails",
+        "test-repository-import-empty-and-full-pure-roundtrip"
       ],
       "timeout_seconds": 60
     }
