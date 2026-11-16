@@ -723,7 +723,7 @@ def main():
     parser.add_argument('--run-id', required=True)
     parser.add_argument('--attempt', required=True)
     parser.add_argument('--control', choices=CONTROL_CASES)
-    parser.add_argument('--mode', choices=('native', 'model'), default='native')
+    parser.add_argument('--mode', choices=('native', 'model', 'pure'), default='native')
     args = parser.parse_args()
     capture_artifacts = {}
     require(os.getuid() == 0 and sys.flags.isolated and sys.dont_write_bytecode, 'Root isolated controller required')
@@ -736,6 +736,9 @@ def main():
     binding = workflow_binding(args.workflow, args.controller)
     if args.mode == 'model':
         from model_proof.service_adapter import outer
+        return outer(sys.modules[__name__], args, identity, binding)
+    if args.mode == 'pure':
+        from pure_eval.service_adapter import outer
         return outer(sys.modules[__name__], args, identity, binding)
     controller = CONTROLLER_FILES
     candidate = local.inventory(args.candidate, ('native/core/desk',))
@@ -948,6 +951,12 @@ def main():
 
 if __name__ == '__main__':
     bootstrap()
+    if sys.argv[1:2] == ['_pure_guardian'] and len(sys.argv) == 3:
+        from pure_eval.service_adapter import guardian as pure_guardian
+        raise SystemExit(pure_guardian(sys.modules[__name__], Path(sys.argv[2])))
+    if sys.argv[1:2] == ['_pure_child'] and len(sys.argv) == 4:
+        from pure_eval.service_adapter import child as pure_child
+        pure_child(sys.modules[__name__], Path(sys.argv[2]), int(sys.argv[3]))
     if sys.argv[1:2] == ['_model_guardian'] and len(sys.argv) == 3:
         from model_proof.service_adapter import guardian as model_guardian
         raise SystemExit(model_guardian(sys.modules[__name__], Path(sys.argv[2])))
