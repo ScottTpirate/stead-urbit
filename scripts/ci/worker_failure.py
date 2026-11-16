@@ -95,6 +95,9 @@ def error_kind(value):
         'Native discovered/executed arm mismatch':'control-arm-inventory',
         'Native test build failed':'control-build',
         'Pure-unit diagnostic complete; qualification disabled':'pure-diagnostic-complete',
+        'Native diagnostic evidence budget reached':'pure-diagnostic-budget',
+        'Native diagnostic build result refused':'pure-diagnostic-build-refusal',
+        'Native diagnostic interrupted':'pure-diagnostic-interrupted',
     })
     for ship in SHIPS:
         exact[ship + ':+stead-build-probe'] = ship + '-build-probe'
@@ -444,6 +447,63 @@ def failed_unit_observations(native, inventory, sources=None):
     return [unit_observation({'native_unit_transcripts': [observed[path]]}, inventory, sources) for path in failures]
 
 
+def diagnostic_limits(native, inventory):
+    """Closed omitted-evidence metadata; never a replacement suite verdict."""
+    import native_units
+    checked = native_units.validate_inventory(inventory)
+    allowed = {row['path'] for row in [*checked['suites'], checked['negative_control']]}
+    phases = ('startup', 'command', 'check', 'checkpoint', 'build', 'suite', 'final')
+    stop = native.get('diagnostic_budget_stop')
+    interruption = native.get('diagnostic_interruption')
+    result = {'budget_stop': None, 'interruption': None}
+    if stop is not None:
+        require(isinstance(stop, dict) and set(stop) == {
+            'phase', 'path', 'staged_bytes', 'staged_sha256', 'retained_bytes', 'limit_bytes', 'omitted'},
+            'Diagnostic budget fields')
+        require(isinstance(stop['phase'], str) and isinstance(stop['path'], str)
+                and stop['phase'] in phases and stop['path'] in allowed | {''}
+                and (stop['phase'] == 'suite') == (stop['path'] in allowed), 'Diagnostic budget identity')
+        require(all(type(stop[key]) is int for key in ('staged_bytes', 'retained_bytes', 'limit_bytes'))
+                and stop['limit_bytes'] == (4 * 1024**2 - 128 * 1024
+                    if stop['phase'] == 'final' else 2 * 1024**2)
+                and 0 < stop['retained_bytes'] <= stop['limit_bytes'] < stop['staged_bytes'] <= 64 * 1024**2
+                and stop['omitted'] is True
+                and isinstance(stop['staged_sha256'], str)
+                and re.fullmatch('[0-9a-f]{64}', stop['staged_sha256']), 'Diagnostic budget bounds')
+        if stop['path']:
+            require(not any(row.get('path') == stop['path'] for row in native.get('native_units', []))
+                    and stop['path'] not in native.get('native_unit_failures', [])
+                    and not any(row.get('path') == stop['path'] for row in native.get('native_unit_transcripts', []))
+                    and not any(isinstance(row, dict) and row.get('passed') is True
+                        and row.get('name') in ('native-unit-arms:' + stop['path'],
+                                               'native-unit-expected-failure:' + stop['path'])
+                        for row in native.get('checks', [])),
+                    'Omitted suite cannot claim retained execution verdict')
+        result['budget_stop'] = dict(stop)
+    if interruption is not None:
+        require(isinstance(interruption, dict) and set(interruption) == {
+            'phase', 'path', 'error_class', 'evidence_bytes', 'evidence_sha256', 'raw_evidence_omitted'},
+            'Diagnostic interruption fields')
+        require(isinstance(interruption['phase'], str) and isinstance(interruption['path'], str)
+                and interruption['phase'] in phases and interruption['path'] in allowed | {''}
+                and (interruption['phase'] == 'suite') == (interruption['path'] in allowed),
+                'Diagnostic interruption identity')
+        require(interruption['error_class'] in {
+            'AssertionError', 'ValueError', 'TypeError', 'RuntimeError', 'TimeoutError', 'OSError',
+            'ConnectionError', 'ConnectionResetError', 'BrokenPipeError', 'PermissionError',
+            'FileNotFoundError', 'InterruptedError', 'GuardError', 'CalledProcessError',
+            'TimeoutExpired', 'JSONDecodeError', 'UnicodeDecodeError', 'unrecognized'}
+            and type(interruption['evidence_bytes']) is int
+            and 0 <= interruption['evidence_bytes'] <= 64 * 1024**2
+            and interruption['raw_evidence_omitted'] is True, 'Diagnostic interruption bounds')
+        digest = interruption['evidence_sha256']
+        require((interruption['evidence_bytes'] == 0 and digest is None)
+                or (interruption['evidence_bytes'] > 0 and isinstance(digest, str)
+                    and re.fullmatch('[0-9a-f]{64}', digest)), 'Diagnostic interruption digest')
+        result['interruption'] = dict(interruption)
+    return result
+
+
 def project(raw, inputs, *, run_id, inventory=None, sources=None):
     """Read the one complete bound failed frame, then discard all free text."""
     require(isinstance(raw, bytes) and 0 < len(raw) <= 32 * 1024**2, 'Failure output byte bound')
@@ -498,6 +558,8 @@ def project(raw, inputs, *, run_id, inventory=None, sources=None):
     result['native']['build_probes'] = build_probe_observations(native, sources)
     result['native']['diagnostic_only'] = native.get('diagnostic_only') is True
     result['native']['failed_units'] = failed_unit_observations(native, inventory, sources)
+    if native.get('diagnostic_only') is True:
+        result['native']['diagnostic_limits'] = diagnostic_limits(native, inventory)
     admission = native.get('admission_failure', {})
     require(isinstance(admission, dict), 'Failure admission shape')
     rollbacks = admission.get('rollback_errors', [])
