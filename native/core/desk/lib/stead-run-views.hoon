@@ -134,8 +134,8 @@
   =/  epoch  epoch:(~(got by projects.data.db.state) project.query)
   =/  filter  (bytes:stead-run-query query(request '', cursor ''))
   =/  generation  (hash 'stead.run-view-generation/1' (bytes-hex (jam [actor filter rank epoch all])))
-  =/  next  prior(cursors (malt (skim ~(tap by cursors.prior) |=([key=@t row=cursor-record:stead-views] (gth expires.row now)))))
-  =/  continuation  (~(get by cursors.next) cursor.query)
+  =/  next=state:stead-views  prior(cursors (malt (skim ~(tap by cursors.prior) |=([key=@t row=cursor-record:stead-views] (gth expires.row now)))))
+  =/  continuation=(unit cursor-record:stead-views)  (~(get by cursors.next) cursor.query)
   ?:  &(!=('' cursor.query) ?=(~ continuation))  [(error query 'stale_cursor') prior]
   ?.  ?~  continuation  &
       ?&  =('run-query' purpose.u.continuation)  =(actor actor.u.continuation)

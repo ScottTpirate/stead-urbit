@@ -83,7 +83,7 @@
   =/  gen  (hash 'stead.product-home-view/1' (bytes-hex (jam [identity.actor filter rank epoch all])))
   =/  next=state:stead-views
     prior(cursors (malt (skim ~(tap by cursors.prior) |=([key=@t val=cursor-record:stead-views] (gth expires.val now)))))
-  =/  continuation  (~(get by cursors.next) cursor.query)
+  =/  continuation=(unit cursor-record:stead-views)  (~(get by cursors.next) cursor.query)
   ?:  &(!=('' cursor.query) ?=(~ continuation))  [(error:stead-product-views query 'stale_cursor') prior]
   ?.  ?~  continuation  &
       ?&  =('product-principals' purpose.u.continuation)  =(actor actor.u.continuation)
