@@ -99,5 +99,72 @@ class ParserPositionTests(unittest.TestCase):
         self.assertNotIn(terminal, encoded)
 
 
+class ClayParserPositionTests(unittest.TestCase):
+    def test_embedded_path_binds_position_without_sole_module_guess(self):
+        raw = b'/app/stead-home/hoon\nsyntax error at [2 4] in ' + REFERENCE
+        value = failure.clay_parser_locations(raw, SOURCES)
+        self.assertEqual(value['locations'], [{'path': PATH, 'line': 2, 'column': 4}])
+        self.assertEqual(value['counts'], {'position_patterns': 1,
+                         'admitted_position_patterns': 1, 'bounds_rejected': 0})
+        self.assertEqual(failure.parser_positions(raw, SOURCES)['association'], 'unresolved')
+        wide = {PATH: b'\n' * 1000 + b'x' * 1001}
+        wrapped = b'syntax error at\n[ 1.001\t1.002 ]\nin\n' + REFERENCE
+        self.assertEqual(failure.clay_parser_locations(wrapped, wide)['locations'],
+                         [{'path': PATH, 'line': 1001, 'column': 1002}])
+
+    def test_bad_coordinates_unknown_paths_and_formatter_lookalikes_are_closed(self):
+        for position in (b'0 1', b'1 0', b'4 1', b'1 4', b'3 2'):
+            with self.subTest(position=position):
+                value = failure.clay_parser_locations(b'syntax error at [' + position + b'] in ' + REFERENCE, SOURCES)
+                self.assertEqual(value['locations'], [])
+                self.assertEqual(value['counts']['bounds_rejected'], 1)
+        for raw in (b'not-syntax error at [1 1] in ' + REFERENCE,
+                    b'syntax error at [1 1] in ' + REFERENCE + b'-suffix',
+                    b'syntax error at {1 1} in ' + REFERENCE,
+                    b'syntax error at [1.01 1] in ' + REFERENCE,
+                    b'syntax error at [1 1] in/lib/stead-product-owner/hoon',
+                    b'syntax error at [1 1] elsewhere ' + REFERENCE):
+            with self.subTest(raw=raw):
+                self.assertEqual(failure.clay_parser_locations(raw, SOURCES)['counts']['position_patterns'], 0)
+        for sources in (None, {}):
+            self.assertEqual(failure.clay_parser_locations(b'syntax error at [1 1] in ' + REFERENCE, sources)['locations'], [])
+        unknown = b'syntax error at [1 1] in /gen/unadmitted/hoon'
+        value = failure.clay_parser_locations(unknown, SOURCES)
+        self.assertEqual(value['counts']['position_patterns'], 1)
+        self.assertEqual(value['counts']['admitted_position_patterns'], 0)
+        self.assertNotIn('unadmitted', json.dumps(value))
+
+    def test_direct_tail_and_count_bounds_never_expand_source_or_output(self):
+        source = {PATH: b'x' * 100}
+        raw = b'\n'.join(b'syntax error at [1 ' + str(n).encode() + b'] in ' + REFERENCE
+                         for n in [*range(1, 21), 20, 1])
+        value = failure.clay_parser_locations(raw, source)
+        self.assertTrue(value['truncated'])
+        self.assertEqual(len(value['locations']), 16)
+        self.assertEqual(value['locations'][-1], {'path': PATH, 'line': 1, 'column': 1})
+        short = {'native/core/desk/lib/a.hoon': b'x'}
+        repeated = b'syntax error at [1 1] in /lib/a/hoon\n' * 4097
+        value = failure.clay_parser_locations(repeated, short)
+        self.assertEqual(value['counts']['position_patterns'], 4096)
+        self.assertTrue(value['counts_truncated'])
+        with self.assertRaises(ValueError): failure.clay_parser_locations(b'x' * 262145, SOURCES)
+        with self.assertRaises(ValueError): failure.clay_parser_locations(raw, {PATH: b'x' * (4 * 1024**2 + 1)})
+
+    def test_direct_log_and_result_discard_source_caret_and_private_text(self):
+        private = b'PRIVATE-SOURCE-LINE-MUST-NOT-LEAVE'
+        log = b'syntax error at [2 3] in ' + REFERENCE + b'\n' + private + b'\n--^\n'
+        terminal = (b'syntax error at [1 2] in ' + REFERENCE + b'\n' + private + b'\n-^').decode()
+        native = {'commands': [{'ship': 'zod', 'dojo': '+stead-build-probe', 'result': terminal}],
+                  'build_probe_transcripts': [{'ship': 'zod', 'dojo': '+stead-build-probe',
+                    'log_offset': 1, 'log_bytes': len(log), 'log_hex': log.hex()}]}
+        value = failure.build_probe_observations(native, SOURCES)[0]
+        self.assertEqual(value['clay_parser_locations']['locations'], [{'path': PATH, 'line': 2, 'column': 3}])
+        self.assertEqual(value['result_observation']['clay_parser_locations']['locations'],
+                         [{'path': PATH, 'line': 1, 'column': 2}])
+        encoded = json.dumps(value)
+        for text in (private.decode(), '--^', log.hex(), terminal):
+            self.assertNotIn(text, encoded)
+
+
 if __name__ == '__main__':
     unittest.main()

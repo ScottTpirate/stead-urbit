@@ -257,6 +257,50 @@ def parser_positions(raw, sources):
     return result
 
 
+def clay_parser_locations(raw, sources):
+    """Pinned Clay +report-error embeds the position and path in one leaf.
+
+    Keep only exact admitted paths and bounded numeric coordinates. The next
+    leaves contain source text and a caret; none of that text is retained.
+    This direct formatter association is separate from +scan's heuristic.
+    """
+    require(isinstance(raw, bytes) and len(raw) <= 262144, 'Failure parser byte bound')
+    require(sources is None or isinstance(sources, dict) and len(sources) <= 512,
+            'Failure parser inventory bound')
+    space = rb'[ \t\r\n]{1,256}'
+    optional = rb'[ \t\r\n]{0,256}'
+    number = rb'([0-9]{1,7}|[1-9][0-9]{0,2}(?:\.[0-9]{3}){1,2})'
+    module = rb'(/[a-z][a-z0-9-]{0,31}/[a-z][a-z0-9-]{0,95}/hoon)'
+    pattern = (rb'(?<![a-zA-Z0-9_.-])syntax error at' + space + rb'\[' + optional
+               + number + space + number + optional + rb'\]' + space + rb'in'
+               + space + module + rb'(?![a-zA-Z0-9_./-])')
+    counts = dict.fromkeys(('position_patterns', 'admitted_position_patterns', 'bounds_rejected'), 0)
+    observed, truncated = {}, False
+    for match in re.finditer(pattern, raw):
+        counts['position_patterns'] += 1
+        path = 'native/core/desk' + match[3].decode('ascii')[:-5] + '.hoon'
+        body = (sources or {}).get(path)
+        if body is None:
+            continue
+        require(isinstance(body, bytes) and len(body) <= 4 * 1024**2,
+                'Failure parser source bound')
+        counts['admitted_position_patterns'] += 1
+        line, column = [int(value.replace(b'.', b'')) for value in match.groups()[:2]]
+        lines = body.split(b'\n')
+        if not (1 <= line <= len(lines) and 1 <= column <= len(lines[line - 1]) + 1):
+            counts['bounds_rejected'] += 1
+            continue
+        key = (path, line, column)
+        observed.pop(key, None)
+        observed[key] = dict(zip(('path', 'line', 'column'), key))
+        if len(observed) > 16:
+            del observed[next(iter(observed))]
+            truncated = True
+    return {'locations': list(observed.values()), 'truncated': truncated,
+            'counts': {name: min(value, 4096) for name, value in counts.items()},
+            'counts_truncated': any(value > 4096 for value in counts.values())}
+
+
 def unit_structure(raw, path, names):
     """Counts and trusted module/arm labels only, never a line or free text."""
     lines = raw.splitlines()
@@ -329,6 +373,7 @@ def unit_observation(native, inventory, sources=None):
             'structure': unit_structure(raw, path, registered.get(path, ())),
             'source_spans': source_spans(raw, sources),
             'parser_positions': parser_positions(raw, sources),
+            'clay_parser_locations': clay_parser_locations(raw, sources),
             'source_trace': {key: value for key, value in source_trace(raw, sources).items() if key not in ('locations', 'truncated')},
             'markers': {name: bool(re.search(rb'(?<![a-z0-9-])' + re.escape(name.encode('ascii'))
                                             + rb'(?![a-z0-9-])', raw)) for name in markers}}
@@ -368,8 +413,8 @@ def build_probe_observations(native, sources=None):
             'result_recorded': bool(matches),
             'result_bytes': len(raw_terminal), 'result_sha256': hashlib.sha256(raw_terminal).hexdigest() if matches else None,
             'expected_result_observed': bool(matches) and terminal.strip() == '%stead-builds-pass',
-            'result_observation': {key: terminal_observation[key] for key in ('structure', 'source_spans', 'parser_positions', 'source_trace', 'markers')},
-            **{key: observation[key] for key in ('log_bytes', 'log_sha256', 'structure', 'source_spans', 'parser_positions', 'source_trace', 'markers')}})
+            'result_observation': {key: terminal_observation[key] for key in ('structure', 'source_spans', 'parser_positions', 'clay_parser_locations', 'source_trace', 'markers')},
+            **{key: observation[key] for key in ('log_bytes', 'log_sha256', 'structure', 'source_spans', 'parser_positions', 'clay_parser_locations', 'source_trace', 'markers')}})
     return result
 
 
