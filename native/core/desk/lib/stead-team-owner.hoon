@@ -1,5 +1,5 @@
 ::  Configured-team Gall driver. Only stead-home owns and calls this state.
-/+  stead-codec, stead-core, stead-team, stead-team-config, stead-team-codec, stead-session, stead-http, stead-browser, stead-projection, stead-views, stead-restore, stead-eyre, stead-assets, server, stead-updates, stead-update-codec, stead-code-home, stead-code-http, stead-code-credentials, stead-project-retirement, stead-code-pack-anchor, stead-code-pack-ledger, stead-code-pack-owner, stead-code-pack-control, stead-code-receive, stead-code-pack-relay, stead-code-pack-relay-pin, stead-code-pack-relay-http, stead-code-pack-relay-wire, stead-code-pack-review, stead-code-pack-review-board, stead-code-pack-review-api, stead-code-pack-review-proof, stead-code-pack-promotion, stead-code-pack-proof, stead-product-home, stead-product-browser, stead-product-history, stead-product-codec, stead-product-owner-codec
+/+  stead-codec, stead-core, stead-team, stead-team-config, stead-team-codec, stead-session, stead-http, stead-browser, stead-projection, stead-views, stead-restore, stead-eyre, stead-assets, server, stead-updates, stead-update-codec, stead-code-home, stead-code-http, stead-code-credentials, stead-project-retirement, stead-code-pack-anchor, stead-code-pack-ledger, stead-code-pack-owner, stead-code-pack-control, stead-code-receive, stead-code-pack-relay, stead-code-pack-relay-pin, stead-code-pack-relay-http, stead-code-pack-relay-wire, stead-code-pack-review, stead-code-pack-review-board, stead-code-pack-review-api, stead-code-pack-review-proof, stead-code-pack-promotion, stead-code-pack-proof
 =,  stead-codec
 |%
 +$  pending-entry  [actor=authentication:stead-team expires=@ud]
@@ -15,14 +15,13 @@
       code=state:stead-code-home  git-waiting=(map @t git-reply)
       retired=ledger:stead-project-retirement
       external=external-writes  relay=state:stead-code-pack-relay-pin  pack-reviews=pack-boards
-      product=(unit stage:stead-product-home)
   ==
 +$  saved  [db=state:stead-team projection=state:stead-projection]
 ++  empty
   ^-  state
   =/  view=state:stead-projection
     [*index:stead-projection *index:stead-projection ~ | |]
-  [empty:stead-team view *ephemeral:stead-browser ~ '' '' ~ ~ *state:stead-code-home ~ ~ ~ [%closed 0 ~] ~ ~]
+  [empty:stead-team view *ephemeral:stead-browser ~ '' '' ~ ~ *state:stead-code-home ~ ~ ~ [%closed 0 ~] ~]
 ++  now-ms
   |=  now=@da
   (div (mul 1.000 (sub now ~1970.1.1)) ~s1)
@@ -90,22 +89,6 @@
   ++  save
     ^-  saved
     [?~(restoring.owner db.owner target.u.restoring.owner) view.owner]
-  ++  product-pair
-    ^-  pair:stead-product-home
-    [db.owner (need product.owner)]
-  ++  save-product
-    ^-  target:stead-product-home
-    (snapshot:stead-product-home product-pair)
-  ++  product-ready
-    ^-  ?
-    ?~(product.owner & (ready:stead-product-home u.product.owner))
-  ++  no-code
-    ^-  ?
-    ?&  ?=(~ repos.code.owner)  ?=(~ uploads.code.owner)
-        ?=(~ reviews.code.owner)  ?=(~ builds.code.owner)
-        ?=(~ packs.code.owner)  ?=(~ retired.owner)
-        ?=(~ external.owner)  ?=(~ pack-reviews.owner)
-    ==
   ++  fake-ship
     ^-  ?
     .^(? %j /(scot %p our.bowl)/fake/(scot %da now.bowl))
@@ -121,7 +104,7 @@
     =/  staged  (begin:stead-restore db.old our.bowl)
     =/  job  (token:stead-session eny.bowl act.bowl 'stead.restore-job/1')
     =/  fresh=state
-      [empty:stead-team *state:stead-projection *ephemeral:stead-browser [~ staged] job '' ~ ~ [repos.code *ledger:stead-code-credentials uploads.code reviews.code builds.code ~] ~ ~ ~ [%closed 0 ~] ~ ~]
+      [empty:stead-team *state:stead-projection *ephemeral:stead-browser [~ staged] job '' ~ ~ [repos.code *ledger:stead-code-credentials uploads.code reviews.code builds.code ~] ~ ~ ~ [%closed 0 ~] ~]
     =.  owner  fresh
     [(weld kicks ~[bind wait]) owner]
   ++  load-v7
@@ -159,34 +142,12 @@
         =(promotions.row ?~(ledger ~ promotions.u.ledger))
     =/  [cards=(list card:agent:gall) next=state]  (load-v7 old code packs)
     [cards next(external external, pack-reviews boards)]
-  ++  load-product
-    |=  source=target:stead-product-home
-    ^-  (quip card:agent:gall state)
-    ?>  fake-ship
-    =/  db  ?:(?=(%predecessor -.source) db.source db.value.source)
-    =/  config  (need current.registry.db)
-    ?>  &(=('isolated-fake' runtime.config) =('local-disposable' custody.config))
-    =/  started  (begin:stead-product-home source our.bowl)
-    =/  token  (token:stead-session eny.bowl act.bowl 'stead.product-restore-job/1')
-    =.  owner  empty(product (some phase.started), job token)
-    [(weld kicks ~[bind wait]) owner]
-  ++  activate-product
-    |=  raw=@t
-    ^-  (quip card:agent:gall state)
-    ?>  &(=(src.bowl our.bowl) ?=(~ product.owner) ?=(~ restoring.owner) (ready:stead-projection db.owner view.owner) no-code fake-ship)
-    =/  config  (need current.registry.db.owner)
-    ?>  &(=('isolated-fake' runtime.config) =('local-disposable' custody.config))
-    =/  input  (small:stead-browser raw ~['protocol' 'profile' 'expected_config_revision' 'predecessor_sha256'] 'stead.product-activate/1')
-    ?>  &(=(profile:stead-product-home (field input 'profile')) =(revision.config (uint (field input 'expected_config_revision'))))
-    ?>  =((hash 'stead.product-predecessor/1' (bytes-hex (jam db.owner))) (field input 'predecessor_sha256'))
-    (load-product [%predecessor db.owner])
   ++  configured
     |=  raw=@t
     ^-  (quip card:agent:gall state)
     ?.  =(src.bowl our.bowl)
       ~|  %stead-owner-required
       !!
-    ?>  ?=(~ product.owner)
     ?>  &(?=(~ restoring.owner) !rebuilding.view.owner)
     =/  next  (configure:stead-team db.owner raw our.bowl (now-ms now.bowl))
     =/  config  (need current.registry.next)
@@ -205,7 +166,7 @@
     |=  raw=@t
     ^-  (quip card:agent:gall state)
     ?>  =(src.bowl our.bowl)
-    ?>  &(?=(~ restoring.owner) product-ready (ready:stead-projection db.owner view.owner))
+    ?>  &(?=(~ restoring.owner) (ready:stead-projection db.owner view.owner))
     =/  config  (need current.registry.db.owner)
     ~|  %stead-runtime-profile-mismatch
     ?>  (runtime-matches config)
@@ -235,14 +196,13 @@
     (weld retired replies)
   ++  available
     ^-  ?
-    &(!=('' incarnation.owner) ?=(~ restoring.owner) product-ready (ready:stead-projection db.owner view.owner) !?=(~ files.owner))
+    &(!=('' incarnation.owner) ?=(~ restoring.owner) (ready:stead-projection db.owner view.owner) !?=(~ files.owner))
   ++  retired-project
     |=  project=@t
     (~(has by retired.owner) project)
   ++  pack-local-ready
     ^-  ?
     ?&  available
-        ?=(~ product.owner)
         =('isolated-fake' runtime:(need current.registry.db.owner))
         fake-ship
     ==
@@ -504,8 +464,6 @@
     ^-  (quip card:agent:gall state)
     ?.  available  [(response id 503 'application/json' (error:stead-team 'projection_unavailable') ~) owner]
     =/  config  (need current.registry.db.owner)
-    ?:  &(?=(^ product.owner) ?|((route:stead-code-pack-relay-http url.request.request) (git-path:stead-code-http url.request.request)))
-      [(response id 403 'application/json' (error:stead-team 'unsupported_profile') ~) owner]
     ?:  (route:stead-code-pack-relay-http url.request.request)
       (relay-http id request)
     ?:  (git-path:stead-code-http url.request.request)
@@ -521,8 +479,6 @@
     =/  parsed  (validate:stead-http request origin.config (paths:stead-assets '/stead/'))
     ?~  parsed  [(response id 403 'application/json' (error:stead-team 'invalid_http_request') ~) owner]
     ?:  =('/stead/api/code' route.u.parsed)
-      ?^  product.owner
-        [(response id 403 'application/json' (error:stead-team 'unsupported_profile') ~) owner]
       =/  review=(unit object-map)
         ?.  (lte (met 3 body.u.parsed) 8.192)  ~
         =/  json  (parse body.u.parsed)
@@ -544,14 +500,6 @@
       =/  entry  (~(get by files.owner) route.u.parsed)
       ?~  entry  [(response id 404 'text/plain' 'Not found' ~) owner]
       [(response id 200 mime.u.entry bytes.u.entry ~) owner]
-    ?^  product.owner
-      =/  out  (call:stead-product-browser product-pair view.owner transient.owner u.parsed (now-ms now.bowl) eny.bowl)
-      =/  cards  (response id status.out 'application/json' bytes.out cookies.out)
-      =?  cards  ?=(^ outgoing.out)
-        =/  challenge=card:agent:gall
-          [%pass [%stead-approval (decimal act.bowl) ~] %agent [ship.u.outgoing.out %stead-identity] %poke %stead-auth-challenge-1 !>(bytes.u.outgoing.out)]
-        (weld cards [challenge ~])
-      [cards owner(db db.next.out, product (some phase.next.out), view view.out, transient transient.out)]
     =/  attempted  (mule |.((call-fenced:stead-browser db.owner view.owner transient.owner u.parsed (now-ms now.bowl) eny.bowl retired.owner)))
     ?:  ?=(%| -.attempted)  [(response id 400 'application/json' (error:stead-team 'invalid_request') ~) owner]
     =/  out  p.attempted
@@ -595,22 +543,11 @@
   ++  poke
     |=  [mark=mark vase=vase]
     ^-  (quip card:agent:gall state)
-    ?:  =(%stead-product-activate-1 mark)  (activate-product !<(@t vase))
-    ?:  =(%stead-owner-command-1 mark)
-      ?>  &(=(src.bowl our.bowl) ?=(^ product.owner) product-ready)
-      =/  before  registry.db.owner
-      =/  out  (owner-command:stead-product-home product-pair !<(@t vase) our.bowl src.bowl (now-ms now.bowl))
-      =/  projected  (projected:stead-product-home db.owner db.next.out view.owner)
-      =/  next  owner(db db.next.out, product (some phase.next.out), view projected)
-      ?:  =(before registry.db.next)  [~ next]
-      ::  Configuration/custody rotation invalidates every transient reader.
-      [kicks next(transient *ephemeral:stead-browser, pending ~, incarnation '', files ~, code code.next(book *ledger:stead-code-credentials), git-waiting ~, relay [%closed 0 ~])]
     ?:  =(%stead-team-config-1 mark)  (configured !<(@t vase))
     ?:  =(%stead-bootstrap-1 mark)  (bootstrap !<(@t vase))
     ?:  =(%handle-http-request mark)  (http !<([@ta inbound-request:eyre] vase))
     ?>  available
     ?:  =(%noun mark)
-      ?>  ?=(~ product.owner)
       ?>  =(src.bowl our.bowl)
       ?:  ?=([~ %stead-pack-relay-policy *] q.vase)
         =/  [~ %stead-pack-relay-policy cmd=command:stead-code-pack-relay-pin]
@@ -631,7 +568,6 @@
         ;;([~ %stead-pack-local command:stead-code-pack-owner] q.vase)
       (pack-local cmd)
     ?:  =(%stead-code-pack-stage-1 mark)
-      ?>  ?=(~ product.owner)
       ?>  =(src.bowl our.bowl)
       =/  pack  (decode:stead-code-pack-anchor !<(@t vase))
       ?>  !(retired-project project.destination.pack)
@@ -639,12 +575,7 @@
       ?>  ?=(^ next)
       [~ owner(code u.next)]
     ?:  =(%stead-auth-approval-1 mark)
-      =/  admitted
-        ?~  product.owner  &
-        (active-member:stead-product-history (current:stead-product-home product-pair) native-actor (now-ms now.bowl))
-      ?>  admitted
       [~ owner(transient (approve:stead-browser db.owner transient.owner src.bowl !<(@t vase) (now-ms now.bowl)))]
-    ?^  product.owner  (product-native mark !<(@t vase))
     ?>  ?|  =(%stead-command-3 mark)  =(%stead-query-3 mark)  =(%stead-updates-3 mark)
         ==
     =/  actor  native-actor
@@ -687,57 +618,11 @@
     :~  [%give %fact [route ~] %stead-result-3 !>(body)]
         [%give %kick [route ~] ~]
     ==
-  ++  product-native
-    |=  [mark=mark raw=@t]
-    ^-  (quip card:agent:gall state)
-    =/  domain
-      ?:  =(%stead-command-3 mark)  'stead.command/3'
-      ?:  =(%stead-query-3 mark)  'stead.query/3'
-      ?:  =(%stead-updates-3 mark)  'stead.updates/3'
-      ?:  =(%stead-command-4 mark)  'stead.command/4'
-      ?:  =(%stead-query-4 mark)  'stead.query/4'
-      ?:  =(%stead-doc-change-1 mark)  'stead.doc-change/1'
-      ?>  =(%stead-doc-change-query-1 mark)
-      'stead.doc-change-query/1'
-    =/  actor  native-actor
-    =/  value  (need (parse-product:stead-product-codec raw))
-    ?>  ?=([%o *] value)
-    ?>  =(domain (field p.value 'protocol'))
-    =/  request  (field p.value 'request_id')
-    ?>  (uuid request)
-    =/  digest  (hash domain (canonical value))
-    =/  family  ?:((~(has in (silt ~['stead.command/3' 'stead.query/3' 'stead.updates/3'])) domain) %v3 %product)
-    =/  route=path  [family %result (scot %p src.bowl) binding.identity.actor (decimal revision.identity.actor) request digest ~]
-    =/  reserved  (need (~(get by pending.owner) route))
-    ?>  &(=(actor actor.reserved) (gth expires.reserved (now-ms now.bowl)))
-    =/  outcome=[body=@t next=state]
-      ?:  (~(has in (silt ~['stead.command/3' 'stead.command/4' 'stead.doc-change/1'])) domain)
-        =/  out  (command:stead-product-home product-pair actor raw (now-ms now.bowl))
-        =/  view  (projected:stead-product-home db.owner db.next.out view.owner)
-        [response.out owner(db db.next.out, product (some phase.next.out), view view, transient transient.owner(updates *state:stead-updates))]
-      ?:  =('stead.updates/3' domain)
-        [(error:stead-team 'unsupported_version') owner]
-      =/  out  (query:stead-product-home product-pair view.owner pages.transient.owner actor raw (now-ms now.bowl) eny.bowl)
-      [response.out owner(transient transient.owner(pages next.out))]
-    ?>  (lte (met 3 body.outcome) 262.144)
-    :_  next.outcome(pending (~(del by pending.next.outcome) route))
-    :~  [%give %fact [route ~] %stead-result-3 !>(body.outcome)]
-        [%give %kick [route ~] ~]
-    ==
   ++  watch
     |=  route=path
     ^-  (quip card:agent:gall state)
     ?>  &((lte (lent route) 8) (levy route |=(part=@t (lte (met 3 part) 128))))
     ?>  (lte (lent ~(tap by sup.bowl)) 128)
-    ?:  ?=([%product-owner-receipt @ @ ~] route)
-      ?>  &(=(src.bowl our.bowl) ?=(^ product.owner) product-ready (uuid i.t.route) (token-valid:stead-session i.t.t.route))
-      =/  current  (current:stead-product-home product-pair)
-      =/  found  (~(get by ledger.current) i.t.route)
-      =/  body
-        ?~  found  (error:stead-team 'denied_or_not_found')
-        ?:  !=(digest.u.found i.t.t.route)  (error:stead-team 'denied_or_not_found')
-        receipt.u.found
-      [~[[%give %fact [route ~] %stead-result-3 !>(body)] [%give %kick [route ~] ~]] owner]
     ?:  ?=([%http-response @ ~] route)
       ?>  (response-source:stead-eyre sup.bowl src.bowl i.t.route)
       [~ owner]
@@ -752,7 +637,7 @@
       ?>  &(pack-local-ready =(src.bowl our.bowl) (token-valid:stead-session i.t.route))
       ?>  (lte (lent (skim ~(tap by sup.bowl) |=([duct [ship=@p prior=path]] =(prior route)))) 1)
       [~ owner]
-    ?>  &(available ?|(?=([%v3 %result @ @ @ @ @ ~] route) &(?=(^ product.owner) ?=([%product %result @ @ @ @ @ ~] route))))
+    ?>  &(available ?=([%v3 %result @ @ @ @ @ ~] route))
     =/  actor  native-actor
     ?>  &(=(i.t.t.route (scot %p src.bowl)) =(i.t.t.t.route binding.identity.actor))
     ?>  &(=(i.t.t.t.t.route (decimal revision.identity.actor)) (uuid i.t.t.t.t.t.route) (token-valid:stead-session i.t.t.t.t.t.t.route))
@@ -768,10 +653,7 @@
     ^-  authentication:stead-team
     =/  who  (native-context:stead-team db.owner src.bowl (now-ms now.bowl))
     ~|  %stead-current-member-required
-    =/  actor  (need who)
-    ?>  ?~  product.owner  &
-        &(product-ready (active-member:stead-product-history (current:stead-product-home product-pair) actor (now-ms now.bowl)))
-    actor
+    (need who)
   ++  leave
     |=  route=path
     ^-  (quip card:agent:gall state)
@@ -792,17 +674,9 @@
       ?>  accepted.sign
       [~ owner]
     ?:  &(?=([%stead-git @ @ ~] wire) ?=([%behn %wake ~] sign))
-      ?^  product.owner  [~ owner]
       (finish-git i.t.wire i.t.t.wire)
     ?.  &(?=([%stead-rebuild @ ~] wire) =(i.t.wire job.owner) ?=([%behn %wake ~] sign))
       [~ owner]
-    ?:  &(?=(^ product.owner) !product-ready)
-      =/  next  (step:stead-product-home product-pair our.bowl)
-      ?:  (invalid:stead-product-home phase.next)
-        [~ owner(product (some phase.next), incarnation '')]
-      ?.  (ready:stead-product-home phase.next)
-        [[wait ~] owner(product (some phase.next))]
-      [[wait ~] owner(db db.next, product (some phase.next), view (begin:stead-projection db.next *state:stead-projection))]
     ?^  restoring.owner
       =/  job  (step:stead-restore u.restoring.owner)
       ?:  =(%invalid status.job)  [~ owner(restoring [~ job], incarnation '')]

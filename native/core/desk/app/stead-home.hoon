@@ -1,5 +1,5 @@
 ::  One authoritative owner. Configured v4 with Code, v3 without Code.
-/+  default-agent, stead-core, stead-codec, stead-core-v1, stead-codec-v1, stead-team-owner, stead-code-home, stead-home-handoff, stead-browser, stead-code-credentials, stead-project-retirement, stead-code-pack-anchor, stead-code-pack-ledger, stead-product-home
+/+  default-agent, stead-core, stead-codec, stead-core-v1, stead-codec-v1, stead-team-owner, stead-code-home, stead-home-handoff, stead-browser, stead-code-credentials, stead-project-retirement, stead-code-pack-anchor, stead-code-pack-ledger
 =>
 |%
 +$  saved
@@ -13,7 +13,6 @@
           [%7 team=saved:stead-team-owner code=persisted:stead-code-home mode=phase:stead-home-handoff retired=ledger:stead-project-retirement packs=state:stead-code-pack-anchor]
           [%8 team=saved:stead-team-owner code=persisted:stead-code-home mode=phase:stead-home-handoff retired=ledger:stead-project-retirement packs=state:stead-code-pack-anchor external=external-writes-v1:stead-team-owner]
           [%9 team=saved:stead-team-owner code=persisted:stead-code-home mode=phase:stead-home-handoff retired=ledger:stead-project-retirement packs=state:stead-code-pack-anchor external=external-writes:stead-team-owner reviews=pack-boards:stead-team-owner]
-          [%10 profile=@t target=target:stead-product-home code=persisted:stead-code-home mode=phase:stead-home-handoff retired=ledger:stead-project-retirement packs=state:stead-code-pack-anchor external=external-writes:stead-team-owner reviews=pack-boards:stead-team-owner]
       ==
   ==
 +$  pending-entry  [sender=@p expires=@da]
@@ -129,14 +128,11 @@
 +*  this  .
     def  ~(. (default-agent this %|) bowl)
     team  ~(. (driver:stead-team-owner owner) bowl)
-    configured  ?|(?=(^ current.registry.db.owner) ?=(^ restoring.owner) ?=(^ product.owner))
+    configured  ?|(?=(^ current.registry.db.owner) ?=(^ restoring.owner))
     sealed  ?=(%sealed -.handoff)
 ++  on-init
   `this
 ++  on-save
-  ?^  product.owner
-    =/  code=persisted:stead-code-home  [repos.code.owner uploads.code.owner reviews.code.owner builds.code.owner]
-    !>([%stead-home %10 profile:stead-product-home save-product:team code handoff retired.owner packs.code.owner external.owner pack-reviews.owner])
   ?:  configured
     =/  code=persisted:stead-code-home  [repos.code.owner uploads.code.owner reviews.code.owner builds.code.owner]
     ?:  (gth ~(wyt by pack-reviews.owner) 0)
@@ -158,17 +154,6 @@
   |=  old=vase
   ~|  %stead-unsupported-state
   =/  restored  !<(saved old)
-  ?:  ?=([%stead-home %10 *] restored)
-    ?>  =(profile:stead-product-home profile.restored)
-    ?>  (valid:stead-home-handoff mode.restored)
-    ::  This first activated profile is intentionally unsuitable for the
-    ::  current real Code pilot. Never silently discard retained side fields.
-    ?>  ?&  =(code.restored *persisted:stead-code-home)
-            ?=(~ retired.restored)  ?=(~ packs.restored)
-            ?=(~ external.restored)  ?=(~ reviews.restored)
-        ==
-    =/  [cards=(list card:agent:gall) next=state:stead-team-owner]  (load-product:team target.restored)
-    [cards this(owner next, pending ~, handoff mode.restored)]
   ?:  ?=([%stead-home %9 *] restored)
     ?>  (valid:stead-home-handoff mode.restored)
     ?>  (validate:stead-project-retirement our.bowl data.db.team.restored retired.restored)
@@ -213,20 +198,16 @@
   ^-  (quip card:agent:gall _this)
   ?:  =(%stead-project-retirement-1 mark)
     ~|  %stead-project-retirement-denied
-    ?>  &(configured =(src.bowl our.bowl) !sealed ?=(~ restoring.owner) ?=(~ product.owner))
+    ?>  &(configured =(src.bowl our.bowl) !sealed ?=(~ restoring.owner))
     =/  request  (decode:stead-project-retirement !<(@t vase))
     =/  next  (retire:stead-project-retirement our.bowl data.db.owner retired.owner request (now-ms now.bowl))
     ?>  ?=(^ next)
     `this(owner owner(retired u.next))
   ?:  =(%stead-home-handoff-1 mark)
-    ?>  &(configured =(src.bowl our.bowl) ?=(~ restoring.owner) product-ready:team)
+    ?>  &(configured =(src.bowl our.bowl) ?=(~ restoring.owner))
     =/  next  (transition:stead-home-handoff our.bowl handoff !<(command:stead-home-handoff vase))
     ?>  ?=(^ next)
     [kicks:team this(handoff u.next, owner owner(transient *ephemeral:stead-browser, pending ~, incarnation '', files ~, code code.owner(book *ledger:stead-code-credentials), git-waiting ~, relay [%closed 0 ~]))]
-  ?:  =(%stead-product-activate-1 mark)
-    ?>  &(configured =(src.bowl our.bowl) =(handoff [%open 1 ~]) ?=(~ product.owner))
-    =/  [cards=(list card:agent:gall) next=state:stead-team-owner]  (poke:team mark vase)
-    [cards this(owner next, pending ~)]
   ?:  ?|(configured =(%stead-team-config-1 mark))
     ?>  |(!sealed =(%handle-http-request mark))
     ?>  ?|(configured !initialized.db)
@@ -242,7 +223,7 @@
     ?>  &(=(our.bowl ~zod) =(src.bowl our.bowl) initialized.db)
     =/  [op=@tas ship=@p key=@t value=@t]  !<([@tas @p @t @t] vase)
     ?:  =(%roundtrip op)  (on-load on-save)
-    ?:  =(%load-future op)  (on-load !>([%stead-home %11 db]))
+    ?:  =(%load-future op)  (on-load !>([%stead-home %10 db]))
     ?:  =(%load-counter op)  (on-load !>([%0 0]))
     ?:  =(%hold-outsider-read op)
       ?>  &(=(ship ~bud) (lte (met 3 key) 1.024))
@@ -368,7 +349,7 @@
   ^-  (quip card:agent:gall _this)
   ?:  ?=([%project-journal @ @ ~] route)
     ~|  %stead-project-journal-denied
-    ?>  &(configured =(src.bowl our.bowl) ?=(~ restoring.owner) ?=(~ product.owner))
+    ?>  &(configured =(src.bowl our.bowl) ?=(~ restoring.owner))
     =/  body  (frozen-journal-page:stead-team-owner our.bowl owner i.t.route i.t.t.route)
     :_  this
     :~  [%give %fact ~ %stead-result-3 !>(body)]
@@ -376,7 +357,7 @@
     ==
   ?:  ?=([%project-retirement @ ~] route)
     ~|  %stead-project-retirement-denied
-    ?>  &(configured =(src.bowl our.bowl) ?=(~ restoring.owner) ?=(~ product.owner))
+    ?>  &(configured =(src.bowl our.bowl) ?=(~ restoring.owner))
     ?>  (uuid:stead-codec i.t.route)
     =/  body  (need (status:stead-project-retirement our.bowl data.db.owner retired.owner i.t.route))
     :_  this
