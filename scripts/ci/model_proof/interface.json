@@ -1,0 +1,136 @@
+{
+  "acceptance": [
+    "Actual one response from exact model alias passes existing strict llama.cpp adapter.",
+    "Exactly one untrusted propose_doc_update proposal contains exact public Markdown; no native write or tool execution.",
+    "Source/artifact hashes, original request/response/proposal bytes, usage and actual runtime/lifecycle controls retained.",
+    "Uncertain/timeout/invalid/incomplete response is failure with no retry; missing/mismatched/partial evidence never becomes pass."
+  ],
+  "boundary": {
+    "billable_provider_micro_usd": 0,
+    "capacity_note": "2GiB is a proposed finite admission cap for this639MB model, not a measured capacity result. Refusal/OOM remains failure; no automatic limit increases.",
+    "client": "No arguments; /input/model_connections.py exact reviewed bytes; /output/client must not already exist; one fixed loopback POST after parent readiness, no redirects/retries;60s whole-request alarm;original bounded response bytes retained.",
+    "environment": "Fixed cleared environment; no inherited LLAMA_*, proxy, API secrets, auth tokens or cloud credentials. No model/server file/MCP tools, URL fetching, model switching or automatic fallback.",
+    "execution_host": "existing disposable GitHub hosted worker only",
+    "guardian_lease": {
+      "channels": "Root outer caller renews a root-only lease; guardian validates it before each current-check-bound renewal of a separate root-owned read-only /lease/guardian.json. Worker validates after go, before each launch, around readiness/client pumps, and before success.",
+      "cleanup_not_skipped_on_expiry": true,
+      "max_detection_seconds": 7,
+      "no_extra_worker_fds": true,
+      "protocol": "stead.fixed-model-lease/1",
+      "source_files_unchanged_by_renewal": true,
+      "ttl_ms": 5000
+    },
+    "limits": {
+      "client_report_bytes": 16384,
+      "client_response_bytes": 32768,
+      "context_tokens": 2048,
+      "cpu_threads": 1,
+      "inference_requests": 1,
+      "memory_mib": 2048,
+      "output_tokens": 256,
+      "request_seconds": 60,
+      "swap_mib": 0,
+      "tasks": 128,
+      "wall_seconds": 600
+    },
+    "namespace": "bwrap --unshare-all with --cap-drop ALL from start; pinned bwrap initializes its private loopback before application execution. Worker and outer owner must observe sole lo UP and zero capabilities before server/client start. No application capability activation helper, host net, authority, credentials, source checkout, home or service paths. Read-only /usr plus only exact runtime/model/client/module; private bounded scratch and output.",
+    "native_budget_claim": "None. This standalone synthetic compatibility call does not manufacture a native effect-start receipt, native permission or cost settlement.",
+    "no_laptop_or_live_authority_host": true,
+    "outer_owner": "Reuse reviewed Doc-proof/owned_child lifetime and collector with a separately admitted fixed model profile; parent death/stale lease/cleanup remain mandatory.",
+    "output": "Only explicit fixed client artifacts and bounded server/runtime observations. Hash inventories and counts, no raw credentials or arbitrary exception output. Server output cannot authorize a native effect.",
+    "parent_owned_lifecycle": "Root verifies immutable intake, current cgroup limits and namespace isolation. Worker owns exact server PID/cgroup, bounded readiness, client and log pipes. Finite cleanup reaps both, verifies empty cgroup and removes mounts before final accepted report.",
+    "readiness": "Bounded GET /health only in private net before client; no inference warmup. Endpoint absence/malformed status does not retry a model call.",
+    "source_ownership": "Outer root verifies root-owned exact immutable intake before read-only bind. One-UID/GID bwrap mapping maps child1000 to existing nonzero host account, leaves outer root unmapped; fixed kernel overflowUID65534 must be observed by owner/worker. Client requires exact UID1000 and source-owner65534 (not arbitrary nonzero ownership). All mapping/mount/root namespace observations must agree before actual execution."
+  },
+  "classification": "private-source-preparation-no-runtime-download-or-execution",
+  "documentation": {
+    "relevant_flags": "Exact pinned README documents explicit non-thinking template flag plus reasoning budget0, offline/no-agent/no-webui/no-MCP, CPU/threads/context/slots/time/token bounds. These options complement actual namespace isolation; they do not prove it.",
+    "sha256": "0d16e91b78b8fe1306e6f0dc69b0bd8571f0fa2dbc1ef10252299a67db9dcdbf",
+    "url": "https://raw.githubusercontent.com/ggml-org/llama.cpp/b1b770d90d94cad9e9ea5b993bdbc383a522fb28/tools/server/README.md"
+  },
+  "execution_admitted": false,
+  "files": {
+    ".runtime/model-inference-proof-prepared/client.py": {
+      "bytes": 9816,
+      "sha256": "2193ecefd55176c101630b3f81f4b055d86c48f346c483494445dd834cddba70"
+    },
+    "scripts/urbit/model_connections.py": {
+      "bytes": 22885,
+      "sha256": "6f65a2d6c0dcb666c6ed621f914dc8392b01637d488f4a1c4d33fb043cdb5400"
+    }
+  },
+  "model": {
+    "bytes": 639446688,
+    "filename": "Qwen3-0.6B-Q8_0.gguf",
+    "license": "apache-2.0",
+    "metadata_sha256": "703439a89168903cc90ee766e2d8a2aa8a404a10824f36bf0ad28b5fcba24a61",
+    "metadata_source": ".runtime/provider-guidance/runtime-pin-research.json",
+    "repository": "Qwen/Qwen3-0.6B-GGUF",
+    "revision": "23749fefcc72300e3a2ad315e1317431b06b590a",
+    "sha256": "9465e63a22add5354d9bb4b99e90117043c7124007664907259bd16d043bb031",
+    "url": "https://huggingface.co/Qwen/Qwen3-0.6B-GGUF/resolve/23749fefcc72300e3a2ad315e1317431b06b590a/Qwen3-0.6B-Q8_0.gguf"
+  },
+  "not_proven": [
+    "G3 human-agent workflow",
+    "native authority, lease renewal, cancel or effect settlement",
+    "service credentials",
+    "generic provider HTTP transport",
+    "MCP tool execution",
+    "model quality for general tasks",
+    "production local-model hosting"
+  ],
+  "protocol": "stead.synthetic-model-compatibility-profile/1",
+  "runtime": {
+    "archive_layout_and_executable_dependencies": "Must inspect bounded exact archive contents and record executable/runtime tree pins on disposable setup before execution; no install scripts or symlinks outside fixed runtime.",
+    "bytes": 23311084,
+    "commit": "b1b770d90d94cad9e9ea5b993bdbc383a522fb28",
+    "metadata_sha256": "03da485415bc6d7a5f137f45198af918b69944252470e76544e558e04ae04e70",
+    "metadata_source": ".runtime/provider-guidance/llamacpp-release-assets.json",
+    "repository": "ggml-org/llama.cpp",
+    "server_argv_after_pinned_executable": [
+      "--model",
+      "/model/Qwen3-0.6B-Q8_0.gguf",
+      "--alias",
+      "qwen3-0.6b-stead-compat1",
+      "--host",
+      "127.0.0.1",
+      "--port",
+      "8088",
+      "--threads",
+      "1",
+      "--threads-batch",
+      "1",
+      "--threads-http",
+      "1",
+      "--ctx-size",
+      "2048",
+      "--parallel",
+      "1",
+      "--n-predict",
+      "256",
+      "--n-gpu-layers",
+      "0",
+      "--offline",
+      "--no-warmup",
+      "--no-webui",
+      "--no-ui-mcp-proxy",
+      "--no-agent",
+      "--no-slots",
+      "--no-context-shift",
+      "--no-cache-prompt",
+      "--jinja",
+      "--chat-template-kwargs",
+      "{\"enable_thinking\":false}",
+      "--reasoning-budget",
+      "0",
+      "--timeout",
+      "60"
+    ],
+    "sha256": "0bc1f091e8916102b6d8f2cf944233a620e90a0f856c72d0ce41150c65c2e72e",
+    "tag": "b12359",
+    "url": "https://github.com/ggml-org/llama.cpp/releases/download/b12359/llama-b12359-bin-ubuntu-x64.tar.gz"
+  },
+  "runtime_downloaded": false,
+  "tests_executed": false,
+  "user_outcome": "Observe a real local model propose one exact public Markdown edit through the provider-neutral adapter; preserve all bytes and distinguish proposal from accepted work."
+}

@@ -723,6 +723,7 @@ def main():
     parser.add_argument('--run-id', required=True)
     parser.add_argument('--attempt', required=True)
     parser.add_argument('--control', choices=CONTROL_CASES)
+    parser.add_argument('--mode', choices=('native', 'model'), default='native')
     args = parser.parse_args()
     capture_artifacts = {}
     require(os.getuid() == 0 and sys.flags.isolated and sys.dont_write_bytecode, 'Root isolated controller required')
@@ -733,6 +734,9 @@ def main():
         run_id=args.run_id, attempt=args.attempt)
     require(local.git('rev-parse', 'HEAD').decode().strip() == args.controller, 'Controller checkout identity differs')
     binding = workflow_binding(args.workflow, args.controller)
+    if args.mode == 'model':
+        from model_proof.service_adapter import outer
+        return outer(sys.modules[__name__], args, identity, binding)
     controller = CONTROLLER_FILES
     candidate = local.inventory(args.candidate, ('native/core/desk',))
     combined, product = local.compose(controller, candidate)
@@ -944,6 +948,13 @@ def main():
 
 if __name__ == '__main__':
     bootstrap()
+    if sys.argv[1:2] == ['_model_guardian'] and len(sys.argv) == 3:
+        from model_proof.service_adapter import guardian as model_guardian
+        raise SystemExit(model_guardian(sys.modules[__name__], Path(sys.argv[2])))
+    if sys.argv[1:2] == ['_model_child'] and len(sys.argv) == 4:
+        from model_proof.service_adapter import child as model_child
+        model_child(sys.modules[__name__], Path(sys.argv[2]), int(sys.argv[3]))
+        raise AssertionError('Model child exec returned')
     if sys.argv[1:2] == ['_guardian'] and len(sys.argv) == 3:
         raise SystemExit(guardian(Path(sys.argv[2])))
     if sys.argv[1:2] == ['_launcher'] and len(sys.argv) == 4:
