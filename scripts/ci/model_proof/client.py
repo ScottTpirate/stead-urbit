@@ -154,7 +154,9 @@ def main():
                         'propose_doc_update function exactly once with the complete Markdown. '
                         'Do not claim that any document was saved or accepted.')
         messages = [{'role': 'user', 'content': 'Update the public test document. Call propose_doc_update '
-                     'with markdown exactly equal to this text:\n' + EXPECTED_MARKDOWN}]
+                     'exactly once. Its markdown argument must equal the decoded JSON string below, '
+                     'including its final newline. Preserve every character; do not trim whitespace. '
+                     'JSON string: ' + json.dumps(EXPECTED_MARKDOWN, ensure_ascii=False)}]
         request = model.prepare_chat(spec, scope, '1', instructions, messages, registry)
         report['connection_digest'] = spec.sha256
         report['request_digest'] = request.request_digest

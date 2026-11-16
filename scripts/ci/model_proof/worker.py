@@ -33,10 +33,10 @@ MODEL_SHA = '9465e63a22add5354d9bb4b99e90117043c7124007664907259bd16d043bb031'
 MODEL_BYTES = 639446688
 ARCHIVE_SHA = '0bc1f091e8916102b6d8f2cf944233a620e90a0f856c72d0ce41150c65c2e72e'
 SOURCE_PINS = {
-    'client.py': '2193ecefd55176c101630b3f81f4b055d86c48f346c483494445dd834cddba70',
+    'client.py': 'c9fb0fa7d7915a941f8a0ba23bcc6750b5bc9b8034192771d9d60cad00fc76d2',
     'model_connections.py': '6f65a2d6c0dcb666c6ed621f914dc8392b01637d488f4a1c4d33fb043cdb5400',
     'owned_child.py': 'a01fc92a0b5f000f5ddee505d475127681ac47ea9a7aa4d8b450594cd50ec229',
-    'interface.json': '07cca01f29bff04d650cc38788cb60b17397097f650e3d783754785d9ca5d068',
+    'interface.json': '5cec94bd9c52423d502b41cec28af4726ad10d65018b7078c25cf0ba58e66a66',
 }
 NAMESPACES = ('user', 'mnt', 'pid', 'net')
 ENV = {'PATH': '/usr/bin', 'HOME': '/tmp', 'TMPDIR': '/tmp', 'LC_ALL': 'C',
