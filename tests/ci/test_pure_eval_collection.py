@@ -173,7 +173,8 @@ class PureEvalCollectionTests(unittest.TestCase):
                        (C.select, 'select', Mock(return_value=([777], [], []))),
                        (B, 'pin_ready', Mock(return_value=anchor)),
                        (B, 'loopback_observation', Mock(return_value={'fixed': True})),
-                       (B, 'current', Mock()), (B, 'read_output', Mock(side_effect=retained)),
+                       (B, 'current', Mock()), (B, 'monitor_current', Mock(return_value=False)),
+                       (B, 'read_output', Mock(side_effect=retained)),
                        (B, 'close_anchor', Mock(side_effect=lambda _: events.append(('anchor-close',))))]
             for module, name, value in patches: stack.enter_context(patch.object(module, name, value))
             result, artifact = C.run(process, Path('/inert'), {}, owner, Mock(), CODEC, selected(), HASHES)

@@ -290,6 +290,55 @@ def current(anchor, value, heartbeat):
                     for name in ('CapInh', 'CapPrm', 'CapEff', 'CapBnd', 'CapAmb')))
 
 
+class _OwnedWorkerExited(Exception):
+    """Monitor-only observation of the original retained pidfd, never authority."""
+
+
+def monitor_current(anchor, value, heartbeat):
+    """Check a running worker, or permit its already-owned terminal drain.
+
+    Admission still uses strict current(). A signaled original pidfd only
+    permits the collector to continue draining; exact final/EOF/reap/report
+    verification remains mandatory. Never convert an obtained mismatch or a
+    lease, group, permission or arbitrary currentness error into an exit.
+    """
+    heartbeat()
+    group(value)
+
+    def read_proc(read):
+        try:
+            return read()
+        except (FileNotFoundError, ProcessLookupError):
+            if select.select([anchor['pidfd']], [], [], 0)[0]:
+                raise _OwnedWorkerExited from None
+            raise
+
+    try:
+        if select.select([anchor['pidfd']], [], [], 0)[0]:
+            raise _OwnedWorkerExited
+        require(read_proc(lambda: proc_identity(anchor['pid'])) == anchor['identity'])
+        root = Path('/proc', str(anchor['pid']))
+        membership = read_proc(lambda: (root / 'cgroup').read_text())
+        require(membership.splitlines() == ['0::/system.slice/' + value['unit']])
+        # Validate each successfully read namespace before another proc read
+        # can disappear; a later exit must not conceal an earlier mismatch.
+        for name in NAMESPACES:
+            observed = read_proc(lambda: os.readlink(root / 'ns' / name))
+            require(observed == anchor['namespaces'][name])
+        observed = read_proc(lambda: (root / 'root').stat())
+        require((observed.st_dev, observed.st_ino) == anchor['root_identity'])
+        raw = read_proc(lambda: (root / 'status').read_text())
+        state = dict(line.split(':', 1) for line in raw.splitlines() if ':' in line)
+        require(state['Uid'].split() == [str(value['host_uid'])] * 4
+                and state['Gid'].split() == [str(value['host_gid'])] * 4
+                and state['NoNewPrivs'].strip() == '1'
+                and all(state[name].strip() == '0000000000000000'
+                        for name in ('CapInh', 'CapPrm', 'CapEff', 'CapBnd', 'CapAmb')))
+    except _OwnedWorkerExited:
+        return False
+    return True
+
+
 def loopback_observation(anchor, value, heartbeat):
     """Observe only links/flags in the pinned network namespace, then restore.
 

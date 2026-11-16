@@ -191,7 +191,8 @@ class PureEvalDiagnosticTests(unittest.TestCase):
                     (C, 'failure_positions', diagnostic),
                     (B, 'pin_ready', Mock(return_value={'pidfd': 1900})),
                     (B, 'loopback_observation', Mock(return_value={'proof_descriptors_closed': True})),
-                    (B, 'current', current), (B, 'read_output', retained),
+                    (B, 'current', current), (B, 'monitor_current', current),
+                    (B, 'read_output', retained),
                     (B, 'close_anchor', lambda *_: events.append(('anchor-close',)))):
                 stack.enter_context(patch.object(target, name, replacement))
             result, artifact = C.run(process, Path('/inert'), {}, owner, Mock(), F.CODEC,

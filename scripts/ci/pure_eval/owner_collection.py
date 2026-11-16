@@ -308,10 +308,9 @@ def run(process, job, value, owner, heartbeat, codec, jobs, source_hashes, diagn
             phase = 'deadline'
             require(time.monotonic()-started < TOTAL_SECONDS)
             if anchor is not None and process.poll() is None:
-                # A worker may finish before its already-written final packet is
-                # drained. Its retained pidfd distinguishes death from replacement.
-                if not select.select([anchor['pidfd']],[],[],0)[0]:
-                    phase = 'current-worker';boundary.current(anchor,value,heartbeat)
+                # The original worker may exit between proc reads. Only its
+                # retained pidfd can permit draining; a live mismatch still fails.
+                phase = 'current-worker';boundary.monitor_current(anchor,value,heartbeat)
             elif ready is None:
                 phase = 'ready-deadline'
                 require(time.monotonic()-started < READY_SECONDS)
