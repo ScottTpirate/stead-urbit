@@ -202,6 +202,61 @@ def source_spans(raw, sources):
     return {name: value[name] for name in ('locations', 'truncated')}
 
 
+def parser_positions(raw, sources):
+    """+scan positions, explicitly associated by a sole module reference.
+
+    Pinned +scan renders {%d %d} and a separate 'syntax error' leaf. This is
+    not a compiler source span. Retain no text, and do not guess among two
+    module references or associate a position with an unadmitted module.
+    """
+    require(isinstance(raw, bytes) and len(raw) <= 262144, 'Failure parser byte bound')
+    require(sources is None or isinstance(sources, dict) and len(sources) <= 512,
+            'Failure parser inventory bound')
+    # Ambiguity detection includes all Hoon namespaces, even those absent
+    # from the candidate allowlist. Only exact admitted bytes can be output.
+    module = rb'(?<![a-zA-Z0-9_./-])(/[a-z][a-z0-9-]{0,31}/[a-z][a-z0-9-]{0,95}/hoon)(?![a-zA-Z0-9_./-])'
+    referenced = {match[1] for match in re.finditer(module, raw)}
+    syntax = bool(re.search(rb'(?<![a-z0-9-])syntax error(?![a-z0-9-])', raw))
+    source = None
+    if syntax and len(referenced) == 1:
+        reference = next(iter(referenced)).decode('ascii')
+        path = 'native/core/desk' + reference[:-5] + '.hoon'
+        body = (sources or {}).get(path)
+        if body is not None:
+            require(isinstance(body, bytes) and len(body) <= 4 * 1024**2,
+                    'Failure parser source bound')
+            source = (path, body.split(b'\n'))
+    result = {'association': 'sole-referenced-admitted-module' if source else 'unresolved',
+              'path': source[0] if source else None, 'syntax_error_observed': syntax,
+              'positions': [], 'truncated': False, 'position_patterns': 0,
+              'bounds_rejected': 0, 'counts_truncated': False}
+    if not syntax:
+        return result
+    number = rb'([0-9]{1,7}|[1-9][0-9]{0,2}(?:\.[0-9]{3}){1,2})'
+    pattern = rb'(?<![a-zA-Z0-9_.{}-])\{' + number + rb'[ \t\r\n]{1,256}' + number + rb'\}(?![a-zA-Z0-9_.{}-])'
+    observed = {}
+    for match in re.finditer(pattern, raw):
+        result['position_patterns'] += 1
+        if source is None:
+            continue
+        line, column = [int(value.replace(b'.', b'')) for value in match.groups()]
+        lines = source[1]
+        if not (1 <= line <= len(lines) and 1 <= column <= len(lines[line - 1]) + 1):
+            result['bounds_rejected'] += 1
+            continue
+        key = (line, column)
+        observed.pop(key, None)
+        observed[key] = {'line': line, 'column': column}
+        if len(observed) > 16:
+            del observed[next(iter(observed))]
+            result['truncated'] = True
+    result['positions'] = list(observed.values())
+    result['counts_truncated'] = any(result[key] > 4096 for key in ('position_patterns', 'bounds_rejected'))
+    for key in ('position_patterns', 'bounds_rejected'):
+        result[key] = min(result[key], 4096)
+    return result
+
+
 def unit_structure(raw, path, names):
     """Counts and trusted module/arm labels only, never a line or free text."""
     lines = raw.splitlines()
@@ -273,6 +328,7 @@ def unit_observation(native, inventory, sources=None):
             'registered_arm_observations': outcomes,
             'structure': unit_structure(raw, path, registered.get(path, ())),
             'source_spans': source_spans(raw, sources),
+            'parser_positions': parser_positions(raw, sources),
             'source_trace': {key: value for key, value in source_trace(raw, sources).items() if key not in ('locations', 'truncated')},
             'markers': {name: bool(re.search(rb'(?<![a-z0-9-])' + re.escape(name.encode('ascii'))
                                             + rb'(?![a-z0-9-])', raw)) for name in markers}}
@@ -312,8 +368,8 @@ def build_probe_observations(native, sources=None):
             'result_recorded': bool(matches),
             'result_bytes': len(raw_terminal), 'result_sha256': hashlib.sha256(raw_terminal).hexdigest() if matches else None,
             'expected_result_observed': bool(matches) and terminal.strip() == '%stead-builds-pass',
-            'result_observation': {key: terminal_observation[key] for key in ('structure', 'source_spans', 'source_trace', 'markers')},
-            **{key: observation[key] for key in ('log_bytes', 'log_sha256', 'structure', 'source_spans', 'source_trace', 'markers')}})
+            'result_observation': {key: terminal_observation[key] for key in ('structure', 'source_spans', 'parser_positions', 'source_trace', 'markers')},
+            **{key: observation[key] for key in ('log_bytes', 'log_sha256', 'structure', 'source_spans', 'parser_positions', 'source_trace', 'markers')}})
     return result
 
 

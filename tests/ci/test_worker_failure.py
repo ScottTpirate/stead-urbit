@@ -483,7 +483,7 @@ class FailureProjectionTests(unittest.TestCase):
         self.assertFalse(result['native']['inputs_match'])
 
     def test_malformed_or_unbounded_private_shapes_refused(self):
-        for change in ({'diagnostic': []}, {'native': []}, {'native': {'checks': [None] * 2001}},
+        for change in ({'diagnostic': []}, {'native': []}, {'native': {'checks': [None] * 4097}},
                        {'failure_logs': {'zod': {'tail_hex': '00' * 262145}}},
                        {'failure_logs': {'zod': {'tail_hex': 'xx'}}}):
             with self.subTest(keys=list(change)), self.assertRaises(ValueError):
