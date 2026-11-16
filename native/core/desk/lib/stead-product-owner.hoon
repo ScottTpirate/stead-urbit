@@ -66,9 +66,9 @@
     ?:  =('principal.declare' operation.cmd)
       =/  kind=kind:stead-principals
         ?+  (field payload.cmd 'kind')  !!
-          'person'  %person
-          'agent'  %agent
-          'service'  %service
+          %'person'  %person
+          %'agent'  %agent
+          %'service'  %service
         ==
       (declare:stead-principals catalog.state home home (field payload.cmd 'principal_id') expected.cmd kind (field payload.cmd 'display_name') =('yes' (field payload.cmd 'active')) now)
     ?:  =('runtime.put' operation.cmd)
