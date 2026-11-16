@@ -24,8 +24,9 @@
 --
 =/  person=verified:stead-actor
   [%native [[~bus (id 102) (id 202) 1 & 9.000.000] 'native' 'ship' (hex 64 1) 9.000.000 ~zod (id 105) (id 106) 'isolated-fake']]
+=/  worker-actions=(list action:stead-actor)  ~[%work-read %work-comment %doc-propose]
 =/  worker=verified:stead-actor
-  [%service [(id 107) (id 807) 1 (hex 64 2) 1 (hex 64 3) (hex 64 4) 160.000 [~zod (id 100) 1 (id 101) (id 200) (id 201) (silt ~[%work-read %work-comment %doc-propose])]]]
+  [%service [(id 107) (id 807) 1 (hex 64 2) 1 (hex 64 3) (hex 64 4) 160.000 [~zod (id 100) 1 (id 101) (id 200) (id 201) (silt worker-actions)]]]
 =/  task=contract
   :*  ~zod  (id 100)  (id 101)  1  2  (hex 64 5)
       (id 102)  (id 102)  %explicit  (id 107)  (id 807)  1

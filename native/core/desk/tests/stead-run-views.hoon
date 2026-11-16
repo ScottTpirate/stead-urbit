@@ -341,7 +341,7 @@
     [(hex 64 n) sample(purpose 'query')]
   =/  per-person=state:stead-views  [0 four]
   =/  refused  (read prepared runs book per-person alice (query 'runs' '' '') 4.101)
-  =/  all
+  =/  all=(map @t cursor-record:stead-views)
     =/  count=@ud  0
     =/  rows=(map @t cursor-record:stead-views)  ~
     |-

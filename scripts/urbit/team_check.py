@@ -1,6 +1,7 @@
 """Actual configured Gall development lane. Browser/TLS acceptance is separate."""
 from __future__ import annotations
 import hashlib
+import copy
 import json
 from pathlib import Path
 import re
@@ -132,11 +133,142 @@ def build_probe(ship, command, report, checkpoint, logs=Path('/state/logs')):
         checkpoint('build-probe-output')
 
 
+DIAGNOSTIC_BUDGET = 2 * 1024 * 1024
+# The unchanged supervisor can subsequently attach a <=64KiB hosted lease
+# summary. Reserve twice that bound below the worker's unchanged 4MiB reader.
+DIAGNOSTIC_FINAL_BUDGET = 4 * 1024 * 1024 - 128 * 1024
+BUILD_FAILURE_SHA = 'cd0bbd5af9e06ee8ec5279531dc9a3b89956535a2af3c33f61d5c14c4559998d'
+DIAGNOSTIC_PHASES = ('startup', 'command', 'check', 'checkpoint', 'build', 'suite', 'final')
+
+
+def diagnostic_bytes(value):
+    """Exactly execution_policy.write_json's encoding, including its newline."""
+    return (json.dumps(value, sort_keys=True) + '\n').encode()
+
+
+def budget_stop(report, staged_raw, phase, path, limit):
+    if phase not in DIAGNOSTIC_PHASES or not isinstance(path, str):
+        raise ValueError('Native diagnostic budget identity')
+    report['diagnostic_budget_stop'] = {
+        'phase': phase, 'path': path, 'staged_bytes': len(staged_raw),
+        'staged_sha256': hashlib.sha256(staged_raw).hexdigest(),
+        'retained_bytes': len(diagnostic_bytes(report)), 'limit_bytes': limit,
+        'omitted': True}
+
+
+def retain_diagnostic(report, staged, phase, path=''):
+    """Commit a complete bounded row transaction; never append then trim."""
+    raw = diagnostic_bytes(staged)
+    if len(raw) > DIAGNOSTIC_BUDGET:
+        budget_stop(report, raw, phase, path, DIAGNOSTIC_BUDGET)
+        raise ValueError('Native diagnostic evidence budget reached')
+    report.clear()
+    report.update(staged)
+
+
+def diagnostic_error(report, error, phase, path='', evidence=None):
+    """Abort evidence is closed metadata, never a large exception/trace payload."""
+    kinds = ('AssertionError', 'ValueError', 'TypeError', 'RuntimeError', 'TimeoutError',
+             'OSError', 'ConnectionError', 'ConnectionResetError', 'BrokenPipeError',
+             'PermissionError', 'FileNotFoundError', 'InterruptedError', 'GuardError',
+             'CalledProcessError', 'TimeoutExpired', 'JSONDecodeError', 'UnicodeDecodeError')
+    kind = type(error).__name__
+    kind = kind if kind in kinds else 'unrecognized'
+    raw = diagnostic_bytes(evidence) if evidence is not None else b''
+    report.setdefault('diagnostic_interruption', {
+        'phase': phase, 'path': path, 'error_class': kind,
+        'evidence_bytes': len(raw), 'evidence_sha256': hashlib.sha256(raw).hexdigest() if raw else None,
+        'raw_evidence_omitted': True})
+    fixed = ('Pure-unit diagnostic complete; qualification disabled',
+             'Native diagnostic evidence budget reached', 'Native diagnostic build result refused')
+    message = str(error) if type(error) is ValueError and error.args in [(v,) for v in fixed] else 'Native diagnostic interrupted'
+    report['error'] = kind + ': ' + message
+
+
+def finalize_diagnostic(report, before, after, elapsed):
+    staged = copy.deepcopy(report)
+    staged.update(status='fail', qualifies_phase=False, inputs_after=after,
+                  elapsed_seconds=elapsed, stage='failed')
+    if before != after:
+        staged['error'] = 'ValueError: Configured source/input changed during execution'
+    raw = diagnostic_bytes(staged)
+    if len(raw) > DIAGNOSTIC_FINAL_BUDGET:
+        budget_stop(report, raw, 'final', '', DIAGNOSTIC_FINAL_BUDGET)
+        report.update(status='fail', qualifies_phase=False, stage='failed',
+                      elapsed_seconds=elapsed,
+                      error='ValueError: Native diagnostic evidence budget reached')
+        # inputs_after was omitted; the existing verifier cannot infer equality.
+        report.pop('inputs_after', None)
+    else:
+        report.clear()
+        report.update(staged)
+    if len(diagnostic_bytes(report)) > DIAGNOSTIC_FINAL_BUDGET:
+        raise ValueError('Native diagnostic final evidence bound')
+
+
+def completed_build_probe(host, report, checkpoint, logs=Path('/state/logs')):
+    """Only exact completed zod success/observed compile refusal can continue."""
+    if not isinstance(report.get('commands'), list) or not isinstance(report.get('checks'), list):
+        raise ValueError('Native diagnostic build result refused')
+    if any(not isinstance(row, dict) or row.get('passed') is not True for row in report['checks']):
+        raise ValueError('Native diagnostic build result refused')
+    if any(row.get('dojo') == '+stead-build-probe' for row in report['commands']):
+        raise ValueError('Native diagnostic build result refused')
+    if report.get('build_probe_transcripts'):
+        raise ValueError('Native diagnostic build result refused')
+    if any(row.get('name') == 'zod:+stead-build-probe' for row in report['checks']):
+        raise ValueError('Native diagnostic build result refused')
+    log = logs / 'zod.log'
+    offset = log.stat().st_size
+    terminal = None
+    captured = b''
+    try:
+        try:
+            terminal = host['dojo']('zod', '+stead-build-probe')
+        finally:
+            with log.open('rb') as stream:
+                stream.seek(offset)
+                captured = stream.read(262145)
+            if len(captured) > 262144:
+                raise ValueError('Native build probe log byte bound')
+        if not isinstance(terminal, str) or len(terminal.encode()) > 32768:
+            raise ValueError('Native diagnostic build result refused')
+        expected = terminal.strip() == '%stead-builds-pass'
+        known_failure = (len(terminal.encode()) == 50
+                         and hashlib.sha256(terminal.encode()).hexdigest() == BUILD_FAILURE_SHA)
+        staged = copy.deepcopy(report)
+        staged['commands'].append({'ship': 'zod', 'dojo': '+stead-build-probe', 'result': terminal})
+        staged['checks'].append({'name': 'zod:+stead-build-probe', 'passed': expected})
+        staged['build_probe_transcripts'] = [{'ship': 'zod', 'dojo': '+stead-build-probe',
+            'log_offset': offset, 'log_bytes': len(captured), 'log_hex': captured.hex()}]
+        retain_diagnostic(report, staged, 'build')
+        checkpoint('build-probe-output')
+        if not (expected or known_failure):
+            raise ValueError('Native diagnostic build result refused')
+        commands = [row for row in report['commands'] if row.get('dojo') == '+stead-build-probe']
+        checks = [row for row in report['checks'] if row.get('name') == 'zod:+stead-build-probe']
+        if (commands != [{'ship': 'zod', 'dojo': '+stead-build-probe', 'result': terminal}]
+                or checks != [{'name': 'zod:+stead-build-probe', 'passed': expected}]
+                or type(checks[0].get('passed')) is not bool
+                or report.get('build_probe_transcripts') != [{'ship': 'zod', 'dojo': '+stead-build-probe',
+                    'log_offset': offset, 'log_bytes': len(captured), 'log_hex': captured.hex()}]
+                or report.get('stage') != 'build-probe-output'):
+            raise ValueError('Native diagnostic build result refused')
+        host['execution_check']()
+        return 'pass' if expected else 'compile-failed'
+    except Exception as error:
+        diagnostic_error(report, error, 'build', evidence={
+            'terminal': terminal, 'log_bytes': len(captured),
+            'log_sha256': hashlib.sha256(captured).hexdigest()})
+        raise
+
+
 def run(host):
     started = time.monotonic()
     report = {'status': 'fail', 'classification': 'local-real-configured-gall-development',
               'qualifies_phase': False, 'checks': [], 'commands': [], 'installed': {},
-              'scope': 'Actual configured Gall, owned native TLS and cold restarts; browser acceptance is separate.'}
+              'scope': 'Dedicated build and pure-suite diagnostics only; no later ship startup, Gall journey, capture or qualification.',
+              'diagnostic_only': True}
     path = Path('/state/logs') / ('team-check-' + time.strftime('%Y%m%dT%H%M%SZ', time.gmtime()) + '.json')
 
     def inputs():
@@ -148,18 +280,23 @@ def run(host):
     report['inputs_before'] = before
 
     def checkpoint(stage):
-        report['stage'] = stage
+        staged = dict(report, stage=stage)
+        retain_diagnostic(report, staged, 'checkpoint')
         execution_policy.write_json(path, report)
 
     def check(name, condition):
-        report['checks'].append({'name': name, 'passed': bool(condition)})
+        staged = copy.deepcopy(report)
+        staged['checks'].append({'name': name, 'passed': bool(condition)})
+        retain_diagnostic(report, staged, 'check')
         checkpoint('running')
         if not condition:
             raise AssertionError(name)
 
     def command(ship, source, expected=None, *, timeout=None):
         result = host['dojo'](ship, source, **({'timeout': timeout} if timeout is not None else {}))
-        report['commands'].append({'ship': ship, 'dojo': source, 'result': result})
+        staged = copy.deepcopy(report)
+        staged['commands'].append({'ship': ship, 'dojo': source, 'result': result})
+        retain_diagnostic(report, staged, 'command')
         checkpoint('native-command')
         if expected is not None:
             check(ship + ':' + source, result.strip() == expected)
@@ -204,40 +341,72 @@ def run(host):
             literal = core_conn.atom(bytes.fromhex(sha(pinned))[::-1])
             route = '/' + dependency.replace('.hoon', '/hoon')
             command('zod', f'=/  raw=@t  .^(@t %cx /=base={route})  =({literal} (sha-256l:sha [(met 3 raw) (rev 3 (met 3 raw) raw)]))', '%.y')
-        report['native_units'] = []
-        for entry in [*inventory['suites'], inventory['negative_control']]:
+        staged = copy.deepcopy(report)
+        staged.update(native_units=[], native_unit_failures=[], native_unit_transcripts=[])
+        retain_diagnostic(report, staged, 'startup')
+        pending = {}
+
+        def execute(entry):
             host['execution_check']()
-            resolved = command('zod', '`path`%' + entry['path']).strip()
+            pending.clear()
+            source = '`path`%' + entry['path']
+            resolved = host['dojo']('zod', source)
+            if not isinstance(resolved, str) or len(resolved.encode()) > 32768:
+                raise ValueError('Native diagnostic beam result bound')
+            resolution = {'ship': 'zod', 'dojo': source, 'result': resolved}
             log = Path('/state/logs/zod.log')
             offset = log.stat().st_size
-            terminal = ''
+            terminal, captured = '', b''
             unit_started = time.monotonic()
             host['record']('native unit start', {'path': entry['path'], 'expected_arms': len(entry['arms'])})
             try:
-                observed = native_units.run(binary, host['LIVE'] / 'zod/.urb/conn.sock', resolved, timeout=entry.get('timeout_seconds', 60))
-                report['commands'].append({'ship': 'zod', 'native_test': observed})
-                terminal = observed['stdout']
+                try:
+                    observed = native_units.run(binary, host['LIVE'] / 'zod/.urb/conn.sock',
+                        resolved.strip(), timeout=entry.get('timeout_seconds', 60))
+                    terminal = observed['stdout']
+                finally:
+                    with log.open('rb') as stream:
+                        stream.seek(offset)
+                        captured = stream.read(262145)
+                    if len(captured) > 262144:
+                        raise ValueError('Native unit log byte bound')
+                pending.update(commands=[resolution, {'ship': 'zod', 'native_test': observed}],
+                    transcript={'path': entry['path'], 'log_offset': offset,
+                        'log_bytes': len(captured), 'log_hex': captured.hex(), 'terminal': terminal})
+                return captured.decode('utf-8', errors='strict') + '\n' + terminal
             except Exception as error:
-                if hasattr(error, 'native_failure'):
-                    report['commands'].append({'ship': 'zod', 'native_test_failure': error.native_failure})
+                diagnostic_error(report, error, 'suite', entry['path'], evidence={
+                    'native_failure': getattr(error, 'native_failure', None),
+                    'log_bytes': len(captured), 'log_sha256': hashlib.sha256(captured).hexdigest()})
                 raise
             finally:
-                with log.open('rb') as stream:
-                    stream.seek(offset)
-                    captured = stream.read(262145)
-                report.setdefault('native_unit_transcripts', []).append({'path': entry['path'],
-                    'log_offset': offset, 'log_bytes': len(captured), 'log_hex': captured.hex(), 'terminal': terminal})
-                checkpoint('native-unit-output')
                 host['record']('native unit captured', {'path': entry['path'], 'log_bytes': len(captured),
                     'elapsed_seconds': round(time.monotonic() - unit_started, 3), 'terminal_present': bool(terminal)})
-            if len(captured) > 262144:
-                raise ValueError('Native unit log byte bound')
-            negative = entry == inventory['negative_control']
-            verified = native_units.verify_output(captured.decode('utf-8', errors='strict') + '\n' + terminal,
-                path=entry['path'], expected=entry['arms'], succeeds=not negative,
-                failure_marker=entry.get('marker'))
-            report['native_units'].append(verified)
-            check('native-unit-' + ('expected-failure:' if negative else 'arms:') + entry['path'], True)
+
+        def verify(entry, completed):
+            return native_units.verify_output(completed, path=entry['path'], expected=entry['arms'],
+                succeeds=entry != inventory['negative_control'], failure_marker=entry.get('marker'))
+
+        def retain(entry, verified):
+            staged = copy.deepcopy(report)
+            staged['commands'].extend(pending['commands'])
+            staged['native_unit_transcripts'].append(pending['transcript'])
+            if verified is None:
+                staged['native_unit_failures'].append(entry['path'])
+            else:
+                staged['native_units'].append(verified)
+                negative = entry == inventory['negative_control']
+                staged['checks'].append({'name': 'native-unit-' +
+                    ('expected-failure:' if negative else 'arms:') + entry['path'], 'passed': True})
+            retain_diagnostic(report, staged, 'suite', entry['path'])
+            checkpoint('native-unit-diagnostic-failure' if verified is None else 'native-unit-output')
+            pending.clear()
+
+        # The dedicated controller always stops here, even when the app and
+        # all49 completed suites pass. No later ship/Gall/journey/capture runs.
+        native_units.collect_pure_diagnostics([*inventory['suites'], inventory['negative_control']],
+            execute, verify, lambda entry, verified: retain(entry, verified),
+            lambda entry: retain(entry, None))
 
     sequence = 1000
 
@@ -266,12 +435,18 @@ def run(host):
         host['all_stop']()
         host['copy_seed_to_live']()
         for ship in host['SHIPS']:
+            if ship != 'zod':
+                raise ValueError('Dedicated diagnostic cannot start a later ship')
             host['launch'](ship, fresh=True)
             host['wait_ready'](ship)
-            report['installed'][ship] = native_install.install(host, ship, command, check)
-            build_probe(ship, command, report, checkpoint)
+            installed = native_install.install(host, ship, command, check)
+            staged = copy.deepcopy(report)
+            staged['installed'][ship] = installed
+            retain_diagnostic(report, staged, 'startup')
+            completed_build_probe(host, report, checkpoint)
             if ship == 'zod':
                 pure_units()
+                raise ValueError('Dedicated diagnostic collector unexpectedly returned')
                 command('zod', '+stead-team-contract-probe', '%stead-team-contract-basic-pass')
                 command('zod', '+stead-team-authority-probe', '%stead-team-authority-basic-pass', timeout=300)
         command('zod', '|start %stead-home')
@@ -491,17 +666,11 @@ def run(host):
         host['execution_check']()
         report['status'] = 'pass'
     except Exception as error:
-        report['error'] = type(error).__name__ + ': ' + str(error)
-        if hasattr(error, 'native_failure'):
-            report['native_failure'] = error.native_failure
-        if hasattr(error, 'admission_failure'):
-            report['admission_failure'] = error.admission_failure
+        diagnostic_error(report, error, 'final', evidence=getattr(error, 'native_failure', None))
         traceback.print_exc()
-    report['inputs_after'] = inputs()
-    if before != report['inputs_after']:
-        report.update(status='fail', error='Configured source/input changed during execution')
-    report['elapsed_seconds'] = round(time.monotonic() - started, 3)
-    checkpoint('completed' if report['status'] == 'pass' else 'failed')
+    after = inputs()
+    finalize_diagnostic(report, before, after, round(time.monotonic() - started, 3))
+    execution_policy.write_json(path, report)
     return {key: report[key] for key in ('status', 'classification', 'qualifies_phase', 'scope', 'elapsed_seconds')} | {
         'error': report.get('error'), 'checks_passed': sum(row['passed'] for row in report['checks']),
         'evidence_file': '.piers/fakes/logs/' + path.name}

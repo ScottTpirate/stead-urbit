@@ -48,6 +48,7 @@
   ^-  ?
   (refused (command-bytes:stead-run-state (command [%issue row])))
 --
+=/  task=contract:stead-run-state  task
 |%
 ++  test-run-codec-portable-contract-and-normalized-targets
   =/  cmd  (command [%issue task])

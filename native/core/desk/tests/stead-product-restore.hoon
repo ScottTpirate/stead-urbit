@@ -149,7 +149,7 @@
 ++  rechain
   |=  [product=state:stead-product-state events=(list event:stead-product-state)]
   ^-  state:stead-product-state
-  =/  next  product(events ~)
+  =/  next=state:stead-product-state  product(events ~)
   =/  remaining  (flop events)
   |-
   ?~  remaining  next
