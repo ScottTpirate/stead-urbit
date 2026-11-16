@@ -402,7 +402,7 @@
   =.  changes
     changes(bodies (~(put by bodies.changes) sha markdown), body-bytes (add body-bytes.changes ?~(body (met 3 markdown) 0)))
   =.  results.changes  (~(put by results.changes) [project.cmd change.cmd revision] output)
-  =/  next=state  state(changes changes)
+  =/  next  state(changes changes)
   =/  new=head:stead-doc-change-state
     [work.cmd principal.identity.actor ?~(head 1 +(revision.u.head)) %submitted revision digest.output ~ ~ ~]
   =.  next  (put-head next cmd new)
