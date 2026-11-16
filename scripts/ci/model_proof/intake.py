@@ -62,7 +62,7 @@ def new_directory(path, mode=0o755):
 
 
 RUNTIME_HOSTS = frozenset(('github.com', 'release-assets.githubusercontent.com'))
-MODEL_HOSTS = frozenset(('huggingface.co', 'cas-bridge.xethub.hf.co'))
+MODEL_HOSTS = frozenset(('huggingface.co', 'cas-bridge.xethub.hf.co', 'us.aws.cdn.hf.co'))
 MAX_REDIRECTS = 5
 
 
