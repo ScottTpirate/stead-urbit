@@ -77,6 +77,12 @@
   |=  prior=transition
   ^-  head
   (~(got by heads.next.prior) [(id 100) (id 401)])
+++  execution-continuation
+  |=  items=(list candidate-intent)
+  ^-  @ud
+  ?>  ?=(^ items)
+  ?>  ?=(%execution -.i.items)
+  continuation.i.items
 ++  accepted
   |=  prior=transition
   ^-  ?
@@ -109,7 +115,7 @@
   =/  first  (~(got by attempts.next.claimed) [[(id 100) (id 401)] 1])
   =/  later  (~(got by attempts.next.renewal) [[(id 100) (id 401)] 1])
   ?>  ?=(^ intents.claimed)
-  ?>  ?=(%execution -.i.intents.claimed)
+  =/  claimed-continuation  (execution-continuation intents.claimed)
   %-  expect
   !>  ?&  (accepted issued)  (accepted claimed)  (accepted renewal)
           =(1.569 (met 3 portable))
@@ -126,7 +132,7 @@
           =(%queued phase:(row issued))  =(%running phase:(row claimed))
           =(1 (lent ~(tap by attempts.next.claimed)))  =(1 (lent intents.claimed))
           ?=(%execution -.i.intents.claimed)
-          =(0 continuation.i.intents.claimed)
+          =(0 claimed-continuation)
           =(122.000 until.first)  =(160.000 until.later)
           (rejected forbidden 'stale_lease')  =(attempts.next.claimed attempts.next.forbidden)
           =(response.claimed response.replay)  =(next.claimed next.replay)
@@ -163,7 +169,7 @@
   ?>  ?=(^ intents.waiting)
   ?>  ?=(^ intents.answered)
   ?>  ?=(^ intents.resumed)
-  ?>  ?=(%execution -.i.intents.resumed)
+  =/  resumed-continuation  (execution-continuation intents.resumed)
   %-  expect
   !>  ?&  (accepted waiting)  (accepted answered)  (accepted resumed)
           (rejected premature 'answer_required')
@@ -173,7 +179,7 @@
           =((id 107) principal.question)  =((id 102) principal.answer)
           ?=(%question -.i.intents.waiting)  ?=(%answer -.i.intents.answered)
           ?=(%execution -.i.intents.resumed)  ?=(~ intents.expired)
-          =(1 continuation.i.intents.resumed)
+          =(1 resumed-continuation)
           =(response.resumed response.retry)  ?=(~ intents.retry)
       ==
 ++  test-run-unknown-provider-outcome-requires-reconciliation-before-replace

@@ -14,7 +14,7 @@
   ?>  &((gth budget 0) !(invalid:stead-product-home phase.input))
   ?>  =(source (snapshot:stead-product-home input))
   =/  saved=vase  !>(source)
-  =/  copied  !<(target:stead-product-home (cue (jam saved)))
+  =/  copied  !<(target:stead-product-home ;;(vase (cue (jam saved))))
   ?>  =(source copied)
   $(input (step:stead-product-home input ~zod), budget (dec budget))
 ++  query

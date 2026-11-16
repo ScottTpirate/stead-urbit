@@ -341,7 +341,7 @@
   ?>  =('17' (field (value bytes.i.t.remaining.first) 'sequence'))
   ?>  =(%approved status:(head rebuilt.first))
   ?>  =(markdown (doc-body rebuilt.first))
-  =/  job  !<(job:stead-product-history (cue (jam !>(first))))
+  =/  job  !<(job:stead-product-history ;;(vase (cue (jam !>(first)))))
   =/  seen=@ud  1
   =/  partial=?  ?=(~ (restored:stead-product-history first))
   =/  safe=?  &
@@ -360,7 +360,7 @@
   =/  change-accepted  ?~(change | =(%accepted status.u.change))
   =/  next-safe  &(safe =(doc-accepted change-accepted))
   =/  next-partial  ?|(partial &(=(%events phase.advanced) ?=(~ (restored:stead-product-history advanced))))
-  $(job !<(job:stead-product-history (cue (jam !>(advanced)))), seen +(seen), partial next-partial, safe next-safe)
+  $(job !<(job:stead-product-history ;;(vase (cue (jam !>(advanced))))), seen +(seen), partial next-partial, safe next-safe)
 ++  test-product-doc-history-shared-budget-request-collisions-and-save-rollback
   =/  work-collision  (apply-work:stead-product-history next.submitted alice (comment-command 750 6) 2.201)
   =/  legacy-collision  (apply-legacy:stead-product-history next.submitted alice (command 750 201 1 'document.save' ~[['container_id' (id 200)] ['markdown' draft]]) 2.201)

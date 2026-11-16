@@ -266,17 +266,17 @@
           =('denied_or_not_found' (result-field response.wrong 'error'))
       ==
 ++  test-doc-change-review-advice-preserves-independent-review-and-accountability
-  =/  head  (head next.submitted)
+  =/  selected-head  (head next.submitted)
   =/  output  (~(got by results.changes.next.submitted) [(id 100) (id 600) 1])
   =/  approved  (dispatch next.submitted catalog bob (action next.submitted 713 'change.approve') 2.001)
   =/  new-head  (head next.approved)
   %-  expect
-  !>  ?&  =('self_review_denied' (action-reason:stead-doc-change-views next.submitted catalog alice head output 'change.approve' 2.002 deny-run:stead-doc-change))
-          =('' (action-reason:stead-doc-change-views next.submitted catalog bob head output 'change.approve' 2.002 deny-run:stead-doc-change))
-          =('independent_review_required' (action-reason:stead-doc-change-views next.submitted catalog alice head output 'change.accept' 2.002 deny-run:stead-doc-change))
+  !>  ?&  =('self_review_denied' (action-reason:stead-doc-change-views next.submitted catalog alice selected-head output 'change.approve' 2.002 deny-run:stead-doc-change))
+          =('' (action-reason:stead-doc-change-views next.submitted catalog bob selected-head output 'change.approve' 2.002 deny-run:stead-doc-change))
+          =('independent_review_required' (action-reason:stead-doc-change-views next.submitted catalog alice selected-head output 'change.accept' 2.002 deny-run:stead-doc-change))
           =('' (action-reason:stead-doc-change-views next.approved catalog alice new-head output 'change.accept' 2.002 deny-run:stead-doc-change))
           =('accountable_human_required' (action-reason:stead-doc-change-views next.approved catalog bob new-head output 'change.accept' 2.002 deny-run:stead-doc-change))
-          =('' (action-reason:stead-doc-change-views next.submitted catalog alice head output 'change.quarantine' 2.002 deny-run:stead-doc-change))
+          =('' (action-reason:stead-doc-change-views next.submitted catalog alice selected-head output 'change.quarantine' 2.002 deny-run:stead-doc-change))
       ==
 ++  test-doc-change-before-uses-exact-authorized-doc-history-not-current-text
   =/  saved  (apply-legacy:stead-product-work db.initial-change product.initial-change alice (command 714 201 0 'document.save' ~[['container_id' (id 200)] ['markdown' markdown]]) 2.001)
