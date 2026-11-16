@@ -13,7 +13,7 @@ import re
 MAX_BYTES = 262144
 CHUNK = 16384
 MAX_CHUNKS = 16
-OLD_CANDIDATE = 'fb0097a667efa3a348b063b6e0736c07aea39b7a'
+OLD_CANDIDATE = 'a27ecc2c50edf9016ef71671f86c5fe6d790f629'
 GENERATOR = 'native/core/desk/gen/stead-v10-capture.hoon'
 HASH = re.compile(r'[0-9a-f]{64}')
 DECIMAL = re.compile(r'0|[1-9][0-9]*')
