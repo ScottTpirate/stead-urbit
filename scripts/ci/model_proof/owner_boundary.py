@@ -23,9 +23,9 @@ import struct
 
 NAMESPACES = ('user', 'mnt', 'pid', 'net')
 SOURCE_NAMES = {'worker.py', 'client.py', 'model_connections.py', 'owned_child.py', 'interface.json'}
-MODEL_NAME = 'Qwen3-0.6B-Q8_0.gguf'
-MODEL_SHA = '9465e63a22add5354d9bb4b99e90117043c7124007664907259bd16d043bb031'
-MODEL_BYTES = 639446688
+MODEL_NAME = 'qwen2.5-1.5b-instruct-q4_k_m.gguf'
+MODEL_SHA = '6a1a2eb6d15622bf3c96857206351ba97e1af16c30d7a74ee38970e434e9407e'
+MODEL_BYTES = 1117320736
 APPARMOR = 'stead-hosted-ci-userns-v1'
 LIMITS = {'cpu.max': '100000 100000', 'memory.max': '2147483648',
           'memory.swap.max': '0', 'pids.max': '128'}

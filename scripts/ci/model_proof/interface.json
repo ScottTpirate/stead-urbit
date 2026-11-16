@@ -7,7 +7,7 @@
   ],
   "boundary": {
     "billable_provider_micro_usd": 0,
-    "capacity_note": "2GiB is a proposed finite admission cap for this639MB model, not a measured capacity result. Refusal/OOM remains failure; no automatic limit increases.",
+    "capacity_note": "The 2GiB cap is unchanged. The 1117320736-byte official GGUF plus 58720256-byte estimated f16 KV cache at 2048 tokens leaves 971442656 bytes before graph/runtime/other allocations. No fit, peak-memory or throughput result is observed; OOM/refusal/timeout stays failure, with no automatic limit increase.",
     "client": "No arguments; /input/model_connections.py exact reviewed bytes; /output/client must not already exist; one fixed loopback POST after parent readiness, no redirects/retries;60s whole-request alarm;original bounded response bytes retained.",
     "environment": "Fixed cleared environment; no inherited LLAMA_*, proxy, API secrets, auth tokens or cloud credentials. No model/server file/MCP tools, URL fetching, model switching or automatic fallback.",
     "execution_host": "existing disposable GitHub hosted worker only",
@@ -44,15 +44,15 @@
   },
   "classification": "private-source-preparation-no-runtime-download-or-execution",
   "documentation": {
-    "relevant_flags": "Exact pinned README documents explicit non-thinking template flag plus reasoning budget0, offline/no-agent/no-webui/no-MCP, CPU/threads/context/slots/time/token bounds. These options complement actual namespace isolation; they do not prove it.",
+    "relevant_flags": "Pinned server CLI supports explicit --temp 0 (greedy) and --seed 42; unchanged --jinja uses the GGUF embedded template, unchanged --reasoning-budget 0 requests immediate end of any reasoning allocation. Only Qwen3-specific enable_thinking template kwargs are removed. Offline/no-agent/no-webui/no-MCP and all CPU/context/slots/time/token bounds remain. Flags complement, but never establish, actual namespace/lifetime isolation.",
     "sha256": "0d16e91b78b8fe1306e6f0dc69b0bd8571f0fa2dbc1ef10252299a67db9dcdbf",
     "url": "https://raw.githubusercontent.com/ggml-org/llama.cpp/b1b770d90d94cad9e9ea5b993bdbc383a522fb28/tools/server/README.md"
   },
   "execution_admitted": false,
   "files": {
     ".runtime/model-inference-proof-prepared/client.py": {
-      "bytes": 10023,
-      "sha256": "c9fb0fa7d7915a941f8a0ba23bcc6750b5bc9b8034192771d9d60cad00fc76d2"
+      "bytes": 10025,
+      "sha256": "576320fadd45f50609a70c315872223b92c029e0096c228d50f03314ea5898aa"
     },
     "scripts/urbit/model_connections.py": {
       "bytes": 22885,
@@ -60,15 +60,15 @@
     }
   },
   "model": {
-    "bytes": 639446688,
-    "filename": "Qwen3-0.6B-Q8_0.gguf",
+    "bytes": 1117320736,
+    "filename": "qwen2.5-1.5b-instruct-q4_k_m.gguf",
     "license": "apache-2.0",
-    "metadata_sha256": "703439a89168903cc90ee766e2d8a2aa8a404a10824f36bf0ad28b5fcba24a61",
-    "metadata_source": ".runtime/provider-guidance/runtime-pin-research.json",
-    "repository": "Qwen/Qwen3-0.6B-GGUF",
-    "revision": "23749fefcc72300e3a2ad315e1317431b06b590a",
-    "sha256": "9465e63a22add5354d9bb4b99e90117043c7124007664907259bd16d043bb031",
-    "url": "https://huggingface.co/Qwen/Qwen3-0.6B-GGUF/resolve/23749fefcc72300e3a2ad315e1317431b06b590a/Qwen3-0.6B-Q8_0.gguf"
+    "metadata_sha256": "75fbddbb5aeb154af272d3e6c7865dd253d4522599648b3a3b5e79ad001577f2",
+    "metadata_source": ".runtime/model-trial-assessment/primary-metadata/qwen2.5-1.5b-model-metadata.json",
+    "repository": "Qwen/Qwen2.5-1.5B-Instruct-GGUF",
+    "revision": "91cad51170dc346986eccefdc2dd33a9da36ead9",
+    "sha256": "6a1a2eb6d15622bf3c96857206351ba97e1af16c30d7a74ee38970e434e9407e",
+    "url": "https://huggingface.co/Qwen/Qwen2.5-1.5B-Instruct-GGUF/resolve/91cad51170dc346986eccefdc2dd33a9da36ead9/qwen2.5-1.5b-instruct-q4_k_m.gguf"
   },
   "not_proven": [
     "G3 human-agent workflow",
@@ -79,7 +79,28 @@
     "model quality for general tasks",
     "production local-model hosting"
   ],
-  "protocol": "stead.synthetic-model-compatibility-profile/1",
+  "profile_transition": {
+    "download_admitted": false,
+    "exact_47_byte_markdown_gate_unchanged": true,
+    "execution_admitted": false,
+    "greedy_temperature": "0",
+    "interpretation": "Changes model plus explicit sampling; any future success concerns this one compatibility profile, not a model-quality comparison or native G3 authority.",
+    "literal_prompt_unchanged": true,
+    "model_alias": "qwen2.5-1.5b-stead-compat2",
+    "predecessor_controller": "a9fe0cac7782122516b72096209cb1191f65eb57",
+    "predecessor_interface_sha256": "5cec94bd9c52423d502b41cec28af4726ad10d65018b7078c25cf0ba58e66a66",
+    "predecessor_protocol": "stead.synthetic-model-compatibility-profile/1",
+    "resources_and_cost_bounds_unchanged": true,
+    "retained_failed_runs": [
+      "43823695825",
+      "43832899126"
+    ],
+    "rng_seed": "42",
+    "runtime_archive_unchanged": true,
+    "synthetic_connection_id": "00000000-0000-7000-8000-000000000001",
+    "synthetic_connection_revision": "2"
+  },
+  "protocol": "stead.synthetic-model-compatibility-profile/2",
   "runtime": {
     "archive_layout_and_executable_dependencies": "Must inspect bounded exact archive contents and record executable/runtime tree pins on disposable setup before execution; no install scripts or symlinks outside fixed runtime.",
     "bytes": 23311084,
@@ -89,9 +110,9 @@
     "repository": "ggml-org/llama.cpp",
     "server_argv_after_pinned_executable": [
       "--model",
-      "/model/Qwen3-0.6B-Q8_0.gguf",
+      "/model/qwen2.5-1.5b-instruct-q4_k_m.gguf",
       "--alias",
-      "qwen3-0.6b-stead-compat1",
+      "qwen2.5-1.5b-stead-compat2",
       "--host",
       "127.0.0.1",
       "--port",
@@ -119,10 +140,12 @@
       "--no-context-shift",
       "--no-cache-prompt",
       "--jinja",
-      "--chat-template-kwargs",
-      "{\"enable_thinking\":false}",
       "--reasoning-budget",
       "0",
+      "--temp",
+      "0",
+      "--seed",
+      "42",
       "--timeout",
       "60"
     ],
@@ -131,6 +154,11 @@
     "url": "https://github.com/ggml-org/llama.cpp/releases/download/b12359/llama-b12359-bin-ubuntu-x64.tar.gz"
   },
   "runtime_downloaded": false,
+  "template": {
+    "claim_limit": "Exact full-file digest binds any embedded template bytes. Existence, selected tool template and actual interoperability have not been observed for this profile.",
+    "source": "GGUF embedded template only; no external template/override download",
+    "transitive_model_sha256": "6a1a2eb6d15622bf3c96857206351ba97e1af16c30d7a74ee38970e434e9407e"
+  },
   "tests_executed": false,
   "user_outcome": "Observe a real local model propose one exact public Markdown edit through the provider-neutral adapter; preserve all bytes and distinguish proposal from accepted work."
 }

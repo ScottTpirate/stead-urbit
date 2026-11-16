@@ -26,11 +26,11 @@ RUNTIME = {
     'sha256': '0bc1f091e8916102b6d8f2cf944233a620e90a0f856c72d0ce41150c65c2e72e',
 }
 MODEL = {
-    'url': 'https://huggingface.co/Qwen/Qwen3-0.6B-GGUF/resolve/23749fefcc72300e3a2ad315e1317431b06b590a/Qwen3-0.6B-Q8_0.gguf',
-    'bytes': 639446688,
-    'sha256': '9465e63a22add5354d9bb4b99e90117043c7124007664907259bd16d043bb031',
+    'url': 'https://huggingface.co/Qwen/Qwen2.5-1.5B-Instruct-GGUF/resolve/91cad51170dc346986eccefdc2dd33a9da36ead9/qwen2.5-1.5b-instruct-q4_k_m.gguf',
+    'bytes': 1117320736,
+    'sha256': '6a1a2eb6d15622bf3c96857206351ba97e1af16c30d7a74ee38970e434e9407e',
 }
-MODEL_NAME = 'Qwen3-0.6B-Q8_0.gguf'
+MODEL_NAME = 'qwen2.5-1.5b-instruct-q4_k_m.gguf'
 MAX_MEMBERS = 512
 MAX_EXPANDED = 512 * 1024**2
 MAX_FILE = 200 * 1024**2

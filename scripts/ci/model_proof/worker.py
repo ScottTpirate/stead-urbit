@@ -28,15 +28,15 @@ import time
 INPUT = Path('/input')
 OUTPUT = Path('/output')
 RUNTIME = Path('/runtime')
-MODEL_NAME = 'Qwen3-0.6B-Q8_0.gguf'
-MODEL_SHA = '9465e63a22add5354d9bb4b99e90117043c7124007664907259bd16d043bb031'
-MODEL_BYTES = 639446688
+MODEL_NAME = 'qwen2.5-1.5b-instruct-q4_k_m.gguf'
+MODEL_SHA = '6a1a2eb6d15622bf3c96857206351ba97e1af16c30d7a74ee38970e434e9407e'
+MODEL_BYTES = 1117320736
 ARCHIVE_SHA = '0bc1f091e8916102b6d8f2cf944233a620e90a0f856c72d0ce41150c65c2e72e'
 SOURCE_PINS = {
-    'client.py': 'c9fb0fa7d7915a941f8a0ba23bcc6750b5bc9b8034192771d9d60cad00fc76d2',
+    'client.py': '576320fadd45f50609a70c315872223b92c029e0096c228d50f03314ea5898aa',
     'model_connections.py': '6f65a2d6c0dcb666c6ed621f914dc8392b01637d488f4a1c4d33fb043cdb5400',
     'owned_child.py': 'a01fc92a0b5f000f5ddee505d475127681ac47ea9a7aa4d8b450594cd50ec229',
-    'interface.json': '5cec94bd9c52423d502b41cec28af4726ad10d65018b7078c25cf0ba58e66a66',
+    'interface.json': '12d3bdbe84c502a77a1edb744490c705c92896ef813d52b48a242057b47fea25',
 }
 NAMESPACES = ('user', 'mnt', 'pid', 'net')
 ENV = {'PATH': '/usr/bin', 'HOME': '/tmp', 'TMPDIR': '/tmp', 'LC_ALL': 'C',
@@ -487,7 +487,7 @@ def result_files():
             and report['status'] == 'pass' and report['error_class'] == 'none'
             and report['classification'] == 'actual-local-inference-with-synthetic-public-document'
             and report['model_adapter_sha256'] == SOURCE_PINS['model_connections.py']
-            and report['model'] == 'qwen3-0.6b-stead-compat1'
+            and report['model'] == 'qwen2.5-1.5b-stead-compat2'
             and type(report['attempted_requests']) is int and report['attempted_requests'] == 1
             and type(report['completed_responses']) is int and report['completed_responses'] == 1
             and all(report[key] is False for key in ('native_authority_supplied', 'tool_executed', 'document_mutated', 'qualifies_g3'))

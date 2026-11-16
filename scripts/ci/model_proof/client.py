@@ -22,7 +22,7 @@ SOURCE = Path('/input/model_connections.py')
 SOURCE_SHA = '6f65a2d6c0dcb666c6ed621f914dc8392b01637d488f4a1c4d33fb043cdb5400'
 OUTPUT = Path('/output/client')
 PORT = 8088
-MODEL = 'qwen3-0.6b-stead-compat1'
+MODEL = 'qwen2.5-1.5b-stead-compat2'
 MAX_RESPONSE = 32768
 SOURCE_UID = 65534  # Root outside the one-UID worker user namespace is unmapped.
 EXPECTED_MARKDOWN = '# Team guide\n\nReview changes before accepting.\n'
@@ -126,7 +126,7 @@ def main():
               'artifacts': {}, 'error_class': 'none'}
     try:
         value = {'protocol': 'stead.model-connection/1', 'connection_id': uid(1),
-                 'revision': '1', 'display_name': 'Isolated Qwen compatibility proof',
+                 'revision': '2', 'display_name': 'Isolated Qwen compatibility proof',
                  'adapter': 'llamacpp.chat-completions/1', 'model': MODEL,
                  'endpoint': {'url': 'http://127.0.0.1:8088/v1/chat/completions',
                      'placement': 'local-isolated',
