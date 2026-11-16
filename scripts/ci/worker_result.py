@@ -72,7 +72,7 @@ def verify(raw, inputs, *, run_id, inventory):
     require(set(report['installed']) == {'zod', 'bus', 'nec', 'bud'}
             and all(files == expected_installed for files in report['installed'].values()), 'Installed source inventory differs')
     checks = report['checks']
-    require(isinstance(checks, list) and 0 < len(checks) <= 2000
+    require(isinstance(checks, list) and 0 < len(checks) <= 4096
             and all(set(row) == {'name', 'passed'} and row['passed'] is True and isinstance(row['name'], str) for row in checks), 'Failed or empty native checks')
     names = [row['name'] for row in checks]
     required = {'configured-startup-controller-present', 'explicit-creator-project-accepted',

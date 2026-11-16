@@ -381,7 +381,7 @@ def project(raw, inputs, *, run_id, inventory=None, sources=None):
     native = value.get('native', {})
     require(isinstance(native, dict), 'Failure native shape')
     checks = native.get('checks', [])
-    require(isinstance(checks, list) and len(checks) <= 2000, 'Failure check bound')
+    require(isinstance(checks, list) and len(checks) <= 4096, 'Failure check bound')
     result['native'] = {'present': bool(native), 'error': error_kind(native.get('error')),
                         'checks_recorded': len(checks),
                         'checks_passed': sum(isinstance(row, dict) and row.get('passed') is True for row in checks),

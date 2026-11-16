@@ -216,7 +216,7 @@ def verify_observation(report, inputs, *, release_fingerprint):
     require(isinstance(record['old_captures'], dict) and set(record['old_captures']) == {'predecessor', 'product'}, 'Two closed old capture records')
     commands, checks, trace = report['commands'], report['checks'], record['trace']
     require(isinstance(commands, list) and len(commands) <= 4096
-            and isinstance(checks, list) and len(checks) <= 2000
+            and isinstance(checks, list) and len(checks) <= 4096
             and isinstance(trace, list) and 0 < len(trace) <= 256, 'Journey traversal bounds')
     command_at, check_at, trace_at, restart_at = record['command_start'], record['check_start'], 0, 0
     require(all(type(record[k]) is int for k in ('command_start', 'command_end', 'check_start', 'check_end'))
