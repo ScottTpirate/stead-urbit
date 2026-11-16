@@ -752,7 +752,8 @@
       ?>  &(pack-local-ready =(src.bowl our.bowl) (token-valid:stead-session i.t.route))
       ?>  (lte (lent (skim ~(tap by sup.bowl) |=([duct [ship=@p prior=path]] =(prior route)))) 1)
       [~ owner]
-    ?>  &(available ?|(?=([%v3 %result @ @ @ @ @ ~] route) &(?=(^ product.owner) ?=([%product %result @ @ @ @ @ ~] route))))
+    ?>  &(available ?=([@ %result @ @ @ @ @ ~] route))
+    ?>  ?|(=(%v3 i.route) &(=(%product i.route) ?=(^ product.owner)))
     =/  actor  native-actor
     ?>  &(=(i.t.t.route (scot %p src.bowl)) =(i.t.t.t.route binding.identity.actor))
     ?>  &(=(i.t.t.t.t.route (decimal revision.identity.actor)) (uuid i.t.t.t.t.t.route) (token-valid:stead-session i.t.t.t.t.t.t.route))
