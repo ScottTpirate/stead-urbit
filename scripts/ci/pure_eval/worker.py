@@ -28,10 +28,12 @@ COMPOSITION_SHA = '3d42cb1788ddbe5bdf6f9643bbbe4d2bfa7245a24431b851ef247c525c9ea
 RUNTIME_SHA = 'f7f0d3b3c0480fc10f887dfbc09bde56a81d723a803541c7886c538a0675d833'
 OWNED_SHA = 'a01fc92a0b5f000f5ddee505d475127681ac47ea9a7aa4d8b450594cd50ec229'
 # Exact fixed codec/interface bytes; the outer profile still requires independent admission.
-CODEC_SHA = '3c2c56d34f612e2d2a1486d7521ffd7896b37746339b7a8f5f8e30d158c9362f'
-INTERFACE_SHA = 'f3607078d253f9fcc552ae9be08e00ea6c92d822a684ce4d9ae3b45334d71b8f'
+CODEC_SHA = 'cb052609cc6daca33e405829eb1d584c34f3892635dc66456bda57d426765744'
+INTERFACE_SHA = 'bede0786605e079ed1efd1fdb2ee7f45e4fe492706ef94527077a3393746cd79'
 MODEL_COMPOSITION_SHA = 'c23002a6a5d1423167a0ef2caa9c35bc86b5ccc64ba3fff640dc73edfd9dfaa6'
-MODEL_INTERFACE_SHA = 'e63165b6ab2a191ace58c7d62fdc2e4425bf2993547089e1a168df931bbb732f'
+MODEL_INTERFACE_SHA = '6a413f766454c660d77b3306b25ce088c557ee53d2c476f823b4a207fd9d6472'
+DEBUG_COMPOSITION_SHA = '1c59ea7469037040723308c1b7bc5c015bc2bc9db954c7003e9fc1b0a2c6e68c'
+DEBUG_INTERFACE_SHA = 'c173bf9298df8e961edfd61f42e3ac7b3fa71647d3fe2276a3f50eabb89716cc'
 ENV = {'PATH':'/usr/bin','HOME':'/tmp','TMPDIR':'/tmp','LC_ALL':'C','PYTHONDONTWRITEBYTECODE':'1','PYTHONNOUSERSITE':'1'}
 LIMIT = 1000000
 TOTAL_SECONDS = 540
@@ -223,8 +225,8 @@ def load(name, raw):
 def source_inventory(composition, composition_sha256=COMPOSITION_SHA):
     # The owner-pinned digest selects the source count; a child supplies no count.
     require(type(composition_sha256) is str and composition_sha256 in
-            (COMPOSITION_SHA, MODEL_COMPOSITION_SHA))
-    expected_count = 55 if composition_sha256 == COMPOSITION_SHA else 21
+            (COMPOSITION_SHA, MODEL_COMPOSITION_SHA, DEBUG_COMPOSITION_SHA))
+    expected_count = 21 if composition_sha256 == MODEL_COMPOSITION_SHA else 55
     expected = {name: {k: row[k] for k in ('bytes', 'sha256')}
                 for name, row in composition['sources'].items()}
     helper = composition['composition']['test_helper']
@@ -248,7 +250,8 @@ def input_profile(code):
             {'worker.py', 'codec.py', 'owned_child.py', 'interface.json', 'composition.json'}
             and all(type(raw) is bytes for raw in code.values()))
     composition_sha = sha(code['composition.json'])
-    interfaces = {COMPOSITION_SHA: INTERFACE_SHA, MODEL_COMPOSITION_SHA: MODEL_INTERFACE_SHA}
+    interfaces = {COMPOSITION_SHA: INTERFACE_SHA, MODEL_COMPOSITION_SHA: MODEL_INTERFACE_SHA,
+                  DEBUG_COMPOSITION_SHA: DEBUG_INTERFACE_SHA}
     require(composition_sha in interfaces and sha(code['codec.py']) == CODEC_SHA
             and sha(code['interface.json']) == interfaces[composition_sha]
             and sha(code['owned_child.py']) == OWNED_SHA)

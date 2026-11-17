@@ -1,0 +1,52 @@
+{
+  "codec": {
+    "bytes": 20030,
+    "sha256": "cb052609cc6daca33e405829eb1d584c34f3892635dc66456bda57d426765744"
+  },
+  "composition_sha256": "1c59ea7469037040723308c1b7bc5c015bc2bc9db954c7003e9fc1b0a2c6e68c",
+  "controls": 2,
+  "input_names": [
+    "worker.py",
+    "codec.py",
+    "owned_child.py",
+    "interface.json",
+    "composition.json",
+    "owner.json"
+  ],
+  "jobs": 3,
+  "no_native_application_or_model": true,
+  "output_files": [
+    "report.json"
+  ],
+  "owned_child_sha256": "a01fc92a0b5f000f5ddee505d475127681ac47ea9a7aa4d8b450594cd50ec229",
+  "positive_arms": 6,
+  "protocol": "stead.fixed-pure-eval-worker-interface/1",
+  "qualifies_phase": false,
+  "readonly_mounts": [
+    "/input",
+    "/sources",
+    "/runtime",
+    "/lease",
+    "/usr"
+  ],
+  "resources": {
+    "collector_seconds": 575,
+    "control_seconds": 15,
+    "cpu_cores": 1,
+    "final_metadata_reserve": 131072,
+    "memory_bytes": 2147483648,
+    "output_bytes_each": 1000000,
+    "report_aggregate_bytes": 4194304,
+    "service_seconds": 600,
+    "setup_seconds": 720,
+    "staging_bytes": 4063232,
+    "suite_seconds": 85,
+    "swap_bytes": 0,
+    "tasks": 128,
+    "worker_report_bytes": 4063232,
+    "worker_seconds": 540
+  },
+  "runtime_sha256": "f7f0d3b3c0480fc10f887dfbc09bde56a81d723a803541c7886c538a0675d833",
+  "source_files": 55,
+  "source_import_semantics": "Exact retained catalog composition with fixed !: prefix for diagnostics. No original library/test bytes changed; diagnostic only."
+}

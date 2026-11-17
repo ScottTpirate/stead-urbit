@@ -19,9 +19,9 @@ from unittest.mock import Mock, patch
 
 ROOT = Path(__file__).resolve().parents[2]
 PINS = {
-    'service_adapter.py': 'a1b564be95e571d98cc673d64e7077016892d85ba45b6753e77f73cf97be4bbc',
+    'service_adapter.py': 'aae749fa109c2c3bd6a4f950bb058f9a1ddc80b5bd6dd2ff96f11da95fdb19bc',
     'owner_boundary.py': '15ae147d736f2967388a9e54e0b342f4e4dface6aee6b98fbcba407e3a286ea4',
-    'codec.py': '3c2c56d34f612e2d2a1486d7521ffd7896b37746339b7a8f5f8e30d158c9362f',
+    'codec.py': 'cb052609cc6daca33e405829eb1d584c34f3892635dc66456bda57d426765744',
 }
 
 

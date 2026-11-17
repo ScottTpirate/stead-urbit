@@ -17,6 +17,8 @@ import types
 PREFIX='scripts/ci/pure_eval/'
 DATA_PREFIX=PREFIX+'data/'
 MODEL_DATA_PREFIX=PREFIX+'model_data/'
+DEBUG_DATA_PREFIX=PREFIX+'debug_data/'
+DEBUG_COMPOSITION='1c59ea7469037040723308c1b7bc5c015bc2bc9db954c7003e9fc1b0a2c6e68c'
 REPOSITORY_COMPOSITION='3d42cb1788ddbe5bdf6f9643bbbe4d2bfa7245a24431b851ef247c525c9ead72'
 MODEL_COMPOSITION='c23002a6a5d1423167a0ef2caa9c35bc86b5ccc64ba3fff640dc73edfd9dfaa6'
 MODEL_SOURCE_PATHS={'native/core/desk/lib/stead-actor.hoon': 'native/core/desk/lib/stead-actor.hoon', 'native/core/desk/lib/stead-codec-v1.hoon': 'native/core/desk/lib/stead-codec-v1.hoon', 'native/core/desk/lib/stead-codec.hoon': 'native/core/desk/lib/stead-codec.hoon', 'native/core/desk/lib/stead-core-v1.hoon': 'native/core/desk/lib/stead-core-v1.hoon', 'native/core/desk/lib/stead-core.hoon': 'native/core/desk/lib/stead-core.hoon', 'native/core/desk/lib/stead-git.hoon': 'native/core/desk/lib/stead-git.hoon', 'native/core/desk/lib/stead-model-codec.hoon': 'scripts/ci/pure_eval/model_data/native/core/desk/lib/stead-model-codec.hoon', 'native/core/desk/lib/stead-model-material.hoon': 'scripts/ci/pure_eval/model_data/native/core/desk/lib/stead-model-material.hoon', 'native/core/desk/lib/stead-model-reply.hoon': 'scripts/ci/pure_eval/model_data/native/core/desk/lib/stead-model-reply.hoon', 'native/core/desk/lib/stead-model-turn-codec.hoon': 'scripts/ci/pure_eval/model_data/native/core/desk/lib/stead-model-turn-codec.hoon', 'native/core/desk/lib/stead-principals.hoon': 'native/core/desk/lib/stead-principals.hoon', 'native/core/desk/lib/stead-run-codec.hoon': 'native/core/desk/lib/stead-run-codec.hoon', 'native/core/desk/lib/stead-run-state.hoon': 'native/core/desk/lib/stead-run-state.hoon', 'native/core/desk/lib/stead-session.hoon': 'native/core/desk/lib/stead-session.hoon', 'native/core/desk/lib/stead-team-codec.hoon': 'native/core/desk/lib/stead-team-codec.hoon', 'native/core/desk/lib/stead-team-config.hoon': 'native/core/desk/lib/stead-team-config.hoon', 'native/core/desk/lib/stead-team.hoon': 'native/core/desk/lib/stead-team.hoon', 'native/core/desk/tests/stead-model-codec.hoon': 'scripts/ci/pure_eval/model_data/native/core/desk/tests/stead-model-codec.hoon', 'native/core/desk/tests/stead-model-reply.hoon': 'scripts/ci/pure_eval/model_data/native/core/desk/tests/stead-model-reply.hoon', 'native/core/desk/tests/stead-model-turn-codec.hoon': 'scripts/ci/pure_eval/model_data/native/core/desk/tests/stead-model-turn-codec.hoon', 'pkg/base-dev/lib/test.hoon': 'scripts/ci/pure_eval/data/pkg/base-dev/lib/test.hoon'}
@@ -300,10 +302,15 @@ def fixed_data(hosted, codec, composition_sha256=REPOSITORY_COMPOSITION):
 
 
 def selected_paths(composition_sha256=REPOSITORY_COMPOSITION):
-    """Only two source-owned maps; no caller path, prefix, source or suite list."""
+    """Only three source-owned maps; no caller path, prefix, source or suite list."""
     require(type(composition_sha256) is str)
     if composition_sha256 == REPOSITORY_COMPOSITION:
         return dict(SOURCE_PATHS), dict(FIXED_SOURCE_PATHS), DATA_PREFIX
+    if composition_sha256 == DEBUG_COMPOSITION:
+        sources = dict(SOURCE_PATHS)
+        sources['interface.json'] = PREFIX + 'debug-interface.json'
+        sources['composition.json'] = DEBUG_DATA_PREFIX + 'composition.json'
+        return sources, dict(FIXED_SOURCE_PATHS), DEBUG_DATA_PREFIX
     require(composition_sha256 == MODEL_COMPOSITION)
     sources = dict(SOURCE_PATHS)
     sources['interface.json'] = PREFIX + 'model-interface.json'
@@ -396,15 +403,20 @@ def outer(hosted,args,identity,binding):
 
 
 def outer_model_simple(hosted,args,identity,binding):
-    """Prospective fixed entry only: no current CLI/workflow registers this wrapper."""
+    """Fixed model-codec entry; no model inference."""
     return _outer(hosted,args,identity,binding,MODEL_COMPOSITION)
 
+
+def outer_repository_debug(hosted,args,identity,binding):
+    """Only the fixed catalog diagnostic with its unchanged original controls."""
+    return _outer(hosted,args,identity,binding,DEBUG_COMPOSITION)
 
 def _outer(hosted,args,identity,binding,composition_sha256):
     modules=load(hosted)
     boundary,collection,intake,codec=(modules[n] for n in ('owner_boundary','owner_collection','pure_intake','codec'))
     selected=codec.profile(composition_sha256)
-    expected_mode='pure' if composition_sha256==REPOSITORY_COMPOSITION else 'pure-model-simple'
+    expected_mode={REPOSITORY_COMPOSITION:'pure', MODEL_COMPOSITION:'pure-model-simple',
+                   DEBUG_COMPOSITION:'pure-repository-debug'}[composition_sha256]
     require(args.mode==expected_mode and args.control is None and args.candidate==args.controller
             and binding['controller_commit']==args.controller and identity['workflow_sha']==args.workflow)
     files,jobs,hashes=fixed_data(hosted,codec,composition_sha256)

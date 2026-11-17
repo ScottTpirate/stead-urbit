@@ -1,0 +1,1335 @@
+{
+  "base_controller": "be60dba02968d94821b4bc9f50d3d3bc38d2d5a2",
+  "composition": {
+    "exact_import_headers": {
+      "native/core/desk/lib/stead-actor.hoon": "/+  stead-codec, stead-team, stead-principals\n",
+      "native/core/desk/lib/stead-code-ancestry.hoon": "/+  stead-code-git-graph\n",
+      "native/core/desk/lib/stead-code-build-home.hoon": "/+  stead-codec, stead-team, stead-session, stead-git, stead-code-credentials, stead-code-review, stead-code-delivery, stead-code-review-home, stead-code-review-api, stead-code-store, stead-code-git-graph\n",
+      "native/core/desk/lib/stead-code-credentials.hoon": "/+  stead-codec, stead-session\n",
+      "native/core/desk/lib/stead-code-delivery-export.hoon": "/+  stead-codec, stead-git, stead-session, stead-code-credentials, stead-code-store, stead-code-review-home, stead-code-delivery, stead-code-review, stead-code-build-home\n",
+      "native/core/desk/lib/stead-code-delivery.hoon": "/+  stead-codec, stead-session, stead-code-credentials, stead-code-review, stead-code-git-objects\n",
+      "native/core/desk/lib/stead-code-fetch-wire.hoon": "/+  stead-code-git-pkt, stead-code-git-objects\n",
+      "native/core/desk/lib/stead-code-fetch.hoon": "/+  stead-git, stead-code-fetch-wire, stead-code-git-response, stead-code-git-graph, stead-code-git-emit\n",
+      "native/core/desk/lib/stead-code-git-delta.hoon": "",
+      "native/core/desk/lib/stead-code-git-emit.hoon": "/+  stead-git, stead-code-git-objects\n",
+      "native/core/desk/lib/stead-code-git-entry.hoon": "",
+      "native/core/desk/lib/stead-code-git-graph.hoon": "/+  stead-code-git-objects\n",
+      "native/core/desk/lib/stead-code-git-inflate.hoon": "",
+      "native/core/desk/lib/stead-code-git-objects.hoon": "/+  stead-git\n",
+      "native/core/desk/lib/stead-code-git-pack.hoon": "",
+      "native/core/desk/lib/stead-code-git-pkt.hoon": "",
+      "native/core/desk/lib/stead-code-git-resolve.hoon": "/+  stead-code-git-pack, stead-code-git-entry, stead-code-git-delta, stead-code-git-objects\n",
+      "native/core/desk/lib/stead-code-git-response.hoon": "/+  stead-git, stead-code-git-objects, stead-code-git-pkt\n",
+      "native/core/desk/lib/stead-code-home.hoon": "/+  stead-codec, stead-core, stead-team, stead-team-config, stead-session, stead-http, stead-git, stead-code-credentials, stead-code-store, stead-code-service, stead-code-http, stead-code-git-graph, stead-code-git-objects, stead-code-receive, stead-code-upload, stead-code-review-home, stead-code-review-api, stead-code-build-home, stead-code-delivery-export, stead-code-pack-anchor, stead-code-pack-ledger\n",
+      "native/core/desk/lib/stead-code-http.hoon": "/+  stead-http, stead-codec, stead-session, stead-code-service, stead-git\n",
+      "native/core/desk/lib/stead-code-pack-anchor.hoon": "/+  stead-codec, stead-code-credentials, stead-session\n",
+      "native/core/desk/lib/stead-code-pack-ledger.hoon": "/+  stead-codec, stead-code-pack-push, stead-code-pack-anchor, stead-code-receive, stead-session, stead-code-pack-promotion\n",
+      "native/core/desk/lib/stead-code-pack-promotion.hoon": "/+  stead-codec, stead-session, stead-code-credentials, stead-code-review, stead-code-pack-review, stead-code-pack-push, stead-code-pack-anchor, stead-code-git-graph, stead-code-receive\n",
+      "native/core/desk/lib/stead-code-pack-push.hoon": "/+  stead-codec, stead-code-credentials, stead-code-pack-anchor, stead-code-receive, stead-session, stead-code-git-graph, stead-code-git-objects, stead-git\n",
+      "native/core/desk/lib/stead-code-pack-review-board.hoon": "/+  stead-codec, stead-session, stead-code-credentials, stead-code-review, stead-code-pack-review, stead-code-pack-promotion, stead-code-pack-push, stead-code-pack-anchor\n",
+      "native/core/desk/lib/stead-code-pack-review.hoon": "/+  stead-codec, stead-session, stead-code-credentials, stead-code-review, stead-code-pack-anchor, stead-code-pack-push, stead-code-receive, stead-code-git-objects, stead-git\n",
+      "native/core/desk/lib/stead-code-receive-wire.hoon": "/+  stead-code-git-pkt, stead-code-git-objects, stead-code-receive\n",
+      "native/core/desk/lib/stead-code-receive.hoon": "/+  stead-code-git-objects\n",
+      "native/core/desk/lib/stead-code-review-api.hoon": "/+  stead-codec, stead-team, stead-session, stead-code-credentials, stead-code-git-objects, stead-git, stead-code-store, stead-code-review-home, stead-code-delivery, stead-code-review\n",
+      "native/core/desk/lib/stead-code-review-home.hoon": "/+  stead-codec, stead-session, stead-code-credentials, stead-code-review, stead-code-delivery, stead-code-store, stead-code-git-graph\n",
+      "native/core/desk/lib/stead-code-review.hoon": "/+  stead-code-git-objects, stead-code-receive\n",
+      "native/core/desk/lib/stead-code-service.hoon": "/+  stead-git, stead-codec, stead-code-credentials, stead-code-store, stead-code-receive-wire, stead-code-git-resolve, stead-code-git-inflate, stead-code-git-response, stead-code-git-graph, stead-code-fetch\n",
+      "native/core/desk/lib/stead-code-store.hoon": "/+  stead-git, stead-codec, stead-session, stead-code-credentials, stead-code-git-objects, stead-code-git-graph, stead-code-receive, stead-code-ancestry\n",
+      "native/core/desk/lib/stead-code-upload.hoon": "/+  stead-codec, stead-git, stead-session, stead-code-credentials\n",
+      "native/core/desk/lib/stead-codec-v1.hoon": "",
+      "native/core/desk/lib/stead-codec.hoon": "",
+      "native/core/desk/lib/stead-core-v1.hoon": "/+  stead-codec-v1, stead-git\n",
+      "native/core/desk/lib/stead-core.hoon": "/+  stead-codec, stead-git, stead-core-v1\n",
+      "native/core/desk/lib/stead-git.hoon": "",
+      "native/core/desk/lib/stead-http.hoon": "/+  stead-session\n",
+      "native/core/desk/lib/stead-principals.hoon": "/+  stead-codec, stead-session, stead-team-config\n",
+      "native/core/desk/lib/stead-project-retirement.hoon": "/+  stead-codec, stead-core, stead-session, stead-team\n",
+      "native/core/desk/lib/stead-repository-authority.hoon": "/+  stead-codec, stead-team, stead-principals, stead-actor, stead-session, stead-project-retirement, stead-repository-catalog, stead-code-credentials\n",
+      "native/core/desk/lib/stead-repository-catalog.hoon": "/+  stead-codec, stead-session, stead-code-credentials, stead-code-store\n",
+      "native/core/desk/lib/stead-repository-import.hoon": "/+  stead-team, stead-code-home, stead-code-pack-anchor, stead-code-pack-ledger, stead-code-pack-review-board, stead-repository-catalog\n",
+      "native/core/desk/lib/stead-repository-store.hoon": "/+  stead-codec, stead-team, stead-code-home, stead-code-store, stead-code-git-objects, stead-code-credentials, stead-code-upload, stead-code-review-home, stead-code-build-home, stead-code-pack-anchor, stead-code-pack-ledger, stead-code-pack-review-board, stead-repository-catalog, stead-repository-import, stead-repository-authority\n",
+      "native/core/desk/lib/stead-session.hoon": "/+  stead-codec\n",
+      "native/core/desk/lib/stead-team-codec.hoon": "/+  stead-codec\n",
+      "native/core/desk/lib/stead-team-config.hoon": "/+  stead-codec, stead-session\n",
+      "native/core/desk/lib/stead-team.hoon": "/+  stead-codec, stead-core, stead-git, stead-session, stead-team-config, stead-team-codec\n"
+    },
+    "imports": {
+      "stead-actor": [
+        "stead-codec",
+        "stead-team",
+        "stead-principals"
+      ],
+      "stead-code-ancestry": [
+        "stead-code-git-graph"
+      ],
+      "stead-code-build-home": [
+        "stead-codec",
+        "stead-team",
+        "stead-session",
+        "stead-git",
+        "stead-code-credentials",
+        "stead-code-review",
+        "stead-code-delivery",
+        "stead-code-review-home",
+        "stead-code-review-api",
+        "stead-code-store",
+        "stead-code-git-graph"
+      ],
+      "stead-code-credentials": [
+        "stead-codec",
+        "stead-session"
+      ],
+      "stead-code-delivery": [
+        "stead-codec",
+        "stead-session",
+        "stead-code-credentials",
+        "stead-code-review",
+        "stead-code-git-objects"
+      ],
+      "stead-code-delivery-export": [
+        "stead-codec",
+        "stead-git",
+        "stead-session",
+        "stead-code-credentials",
+        "stead-code-store",
+        "stead-code-review-home",
+        "stead-code-delivery",
+        "stead-code-review",
+        "stead-code-build-home"
+      ],
+      "stead-code-fetch": [
+        "stead-git",
+        "stead-code-fetch-wire",
+        "stead-code-git-response",
+        "stead-code-git-graph",
+        "stead-code-git-emit"
+      ],
+      "stead-code-fetch-wire": [
+        "stead-code-git-pkt",
+        "stead-code-git-objects"
+      ],
+      "stead-code-git-delta": [],
+      "stead-code-git-emit": [
+        "stead-git",
+        "stead-code-git-objects"
+      ],
+      "stead-code-git-entry": [],
+      "stead-code-git-graph": [
+        "stead-code-git-objects"
+      ],
+      "stead-code-git-inflate": [],
+      "stead-code-git-objects": [
+        "stead-git"
+      ],
+      "stead-code-git-pack": [],
+      "stead-code-git-pkt": [],
+      "stead-code-git-resolve": [
+        "stead-code-git-pack",
+        "stead-code-git-entry",
+        "stead-code-git-delta",
+        "stead-code-git-objects"
+      ],
+      "stead-code-git-response": [
+        "stead-git",
+        "stead-code-git-objects",
+        "stead-code-git-pkt"
+      ],
+      "stead-code-home": [
+        "stead-codec",
+        "stead-core",
+        "stead-team",
+        "stead-team-config",
+        "stead-session",
+        "stead-http",
+        "stead-git",
+        "stead-code-credentials",
+        "stead-code-store",
+        "stead-code-service",
+        "stead-code-http",
+        "stead-code-git-graph",
+        "stead-code-git-objects",
+        "stead-code-receive",
+        "stead-code-upload",
+        "stead-code-review-home",
+        "stead-code-review-api",
+        "stead-code-build-home",
+        "stead-code-delivery-export",
+        "stead-code-pack-anchor",
+        "stead-code-pack-ledger"
+      ],
+      "stead-code-http": [
+        "stead-http",
+        "stead-codec",
+        "stead-session",
+        "stead-code-service",
+        "stead-git"
+      ],
+      "stead-code-pack-anchor": [
+        "stead-codec",
+        "stead-code-credentials",
+        "stead-session"
+      ],
+      "stead-code-pack-ledger": [
+        "stead-codec",
+        "stead-code-pack-push",
+        "stead-code-pack-anchor",
+        "stead-code-receive",
+        "stead-session",
+        "stead-code-pack-promotion"
+      ],
+      "stead-code-pack-promotion": [
+        "stead-codec",
+        "stead-session",
+        "stead-code-credentials",
+        "stead-code-review",
+        "stead-code-pack-review",
+        "stead-code-pack-push",
+        "stead-code-pack-anchor",
+        "stead-code-git-graph",
+        "stead-code-receive"
+      ],
+      "stead-code-pack-push": [
+        "stead-codec",
+        "stead-code-credentials",
+        "stead-code-pack-anchor",
+        "stead-code-receive",
+        "stead-session",
+        "stead-code-git-graph",
+        "stead-code-git-objects",
+        "stead-git"
+      ],
+      "stead-code-pack-review": [
+        "stead-codec",
+        "stead-session",
+        "stead-code-credentials",
+        "stead-code-review",
+        "stead-code-pack-anchor",
+        "stead-code-pack-push",
+        "stead-code-receive",
+        "stead-code-git-objects",
+        "stead-git"
+      ],
+      "stead-code-pack-review-board": [
+        "stead-codec",
+        "stead-session",
+        "stead-code-credentials",
+        "stead-code-review",
+        "stead-code-pack-review",
+        "stead-code-pack-promotion",
+        "stead-code-pack-push",
+        "stead-code-pack-anchor"
+      ],
+      "stead-code-receive": [
+        "stead-code-git-objects"
+      ],
+      "stead-code-receive-wire": [
+        "stead-code-git-pkt",
+        "stead-code-git-objects",
+        "stead-code-receive"
+      ],
+      "stead-code-review": [
+        "stead-code-git-objects",
+        "stead-code-receive"
+      ],
+      "stead-code-review-api": [
+        "stead-codec",
+        "stead-team",
+        "stead-session",
+        "stead-code-credentials",
+        "stead-code-git-objects",
+        "stead-git",
+        "stead-code-store",
+        "stead-code-review-home",
+        "stead-code-delivery",
+        "stead-code-review"
+      ],
+      "stead-code-review-home": [
+        "stead-codec",
+        "stead-session",
+        "stead-code-credentials",
+        "stead-code-review",
+        "stead-code-delivery",
+        "stead-code-store",
+        "stead-code-git-graph"
+      ],
+      "stead-code-service": [
+        "stead-git",
+        "stead-codec",
+        "stead-code-credentials",
+        "stead-code-store",
+        "stead-code-receive-wire",
+        "stead-code-git-resolve",
+        "stead-code-git-inflate",
+        "stead-code-git-response",
+        "stead-code-git-graph",
+        "stead-code-fetch"
+      ],
+      "stead-code-store": [
+        "stead-git",
+        "stead-codec",
+        "stead-session",
+        "stead-code-credentials",
+        "stead-code-git-objects",
+        "stead-code-git-graph",
+        "stead-code-receive",
+        "stead-code-ancestry"
+      ],
+      "stead-code-upload": [
+        "stead-codec",
+        "stead-git",
+        "stead-session",
+        "stead-code-credentials"
+      ],
+      "stead-codec": [],
+      "stead-codec-v1": [],
+      "stead-core": [
+        "stead-codec",
+        "stead-git",
+        "stead-core-v1"
+      ],
+      "stead-core-v1": [
+        "stead-codec-v1",
+        "stead-git"
+      ],
+      "stead-git": [],
+      "stead-http": [
+        "stead-session"
+      ],
+      "stead-principals": [
+        "stead-codec",
+        "stead-session",
+        "stead-team-config"
+      ],
+      "stead-project-retirement": [
+        "stead-codec",
+        "stead-core",
+        "stead-session",
+        "stead-team"
+      ],
+      "stead-repository-authority": [
+        "stead-codec",
+        "stead-team",
+        "stead-principals",
+        "stead-actor",
+        "stead-session",
+        "stead-project-retirement",
+        "stead-repository-catalog",
+        "stead-code-credentials"
+      ],
+      "stead-repository-catalog": [
+        "stead-codec",
+        "stead-session",
+        "stead-code-credentials",
+        "stead-code-store"
+      ],
+      "stead-repository-import": [
+        "stead-team",
+        "stead-code-home",
+        "stead-code-pack-anchor",
+        "stead-code-pack-ledger",
+        "stead-code-pack-review-board",
+        "stead-repository-catalog"
+      ],
+      "stead-repository-store": [
+        "stead-codec",
+        "stead-team",
+        "stead-code-home",
+        "stead-code-store",
+        "stead-code-git-objects",
+        "stead-code-credentials",
+        "stead-code-upload",
+        "stead-code-review-home",
+        "stead-code-build-home",
+        "stead-code-pack-anchor",
+        "stead-code-pack-ledger",
+        "stead-code-pack-review-board",
+        "stead-repository-catalog",
+        "stead-repository-import",
+        "stead-repository-authority"
+      ],
+      "stead-session": [
+        "stead-codec"
+      ],
+      "stead-team": [
+        "stead-codec",
+        "stead-core",
+        "stead-git",
+        "stead-session",
+        "stead-team-config",
+        "stead-team-codec"
+      ],
+      "stead-team-codec": [
+        "stead-codec"
+      ],
+      "stead-team-config": [
+        "stead-codec",
+        "stead-session"
+      ]
+    },
+    "library_order": [
+      "stead-code-git-delta",
+      "stead-code-git-entry",
+      "stead-code-git-inflate",
+      "stead-code-git-pack",
+      "stead-code-git-pkt",
+      "stead-codec",
+      "stead-codec-v1",
+      "stead-git",
+      "stead-code-git-objects",
+      "stead-core-v1",
+      "stead-session",
+      "stead-team-codec",
+      "stead-code-credentials",
+      "stead-code-fetch-wire",
+      "stead-code-git-emit",
+      "stead-code-git-graph",
+      "stead-code-git-resolve",
+      "stead-code-git-response",
+      "stead-code-receive",
+      "stead-core",
+      "stead-http",
+      "stead-team-config",
+      "stead-code-ancestry",
+      "stead-code-fetch",
+      "stead-code-pack-anchor",
+      "stead-code-receive-wire",
+      "stead-code-review",
+      "stead-code-upload",
+      "stead-principals",
+      "stead-team",
+      "stead-actor",
+      "stead-code-delivery",
+      "stead-code-pack-push",
+      "stead-code-store",
+      "stead-project-retirement",
+      "stead-code-pack-review",
+      "stead-code-review-home",
+      "stead-code-service",
+      "stead-repository-catalog",
+      "stead-code-http",
+      "stead-code-pack-promotion",
+      "stead-code-review-api",
+      "stead-repository-authority",
+      "stead-code-build-home",
+      "stead-code-pack-ledger",
+      "stead-code-pack-review-board",
+      "stead-code-delivery-export",
+      "stead-code-home",
+      "stead-repository-import",
+      "stead-repository-store"
+    ],
+    "method": "Fixed catalog source with diagnostic-only zapcol prefix; original source and six arm bodies unchanged.",
+    "semantics_limit": "Compiler location diagnostic only. Debug hints may change tail-call optimization and execution cost. No whole repository, Clay, performance, release or native qualification.",
+    "suites": [
+      {
+        "arms": [
+          "test-repository-catalog-two-repos-exact-inline-profile",
+          "test-repository-catalog-typed-ids-never-infer-alias",
+          "test-repository-catalog-retry-is-original-and-current-authorized",
+          "test-repository-catalog-resolver-authority-cas-retirement",
+          "test-repository-catalog-global-retained-capacity-no-eviction",
+          "test-repository-catalog-closed-codec-and-receipt-closure"
+        ],
+        "composed_source": {
+          "bytes": 131322,
+          "sha256": "f71320f25fc19e9a93ab435fd17fb8e604b86764a464d1d0b28fd5c3182ee4b9"
+        },
+        "import_header": "/+  *test, stead-codec, stead-core, stead-session, stead-code-credentials, stead-code-store, stead-repository-catalog\n",
+        "inventory_expression": {
+          "bytes": 942,
+          "sha256": "22283bebd8d5623899429ae8999638a5e6ea0dd5215124afbec684b27d2117e0"
+        },
+        "path": "native/core/desk/tests/stead-repository-catalog.hoon",
+        "source_files": {
+          "native/core/desk/lib/stead-code-ancestry.hoon": {
+            "bytes": 2026,
+            "origin_commit": "be60dba02968d94821b4bc9f50d3d3bc38d2d5a2",
+            "sha256": "d46a3af25bb6a1ce0cdb36497717a160c96247fd1bcf831cff7035c7e4db91b9"
+          },
+          "native/core/desk/lib/stead-code-credentials.hoon": {
+            "bytes": 3637,
+            "origin_commit": "be60dba02968d94821b4bc9f50d3d3bc38d2d5a2",
+            "sha256": "6e7eb121e5aa7bb36f80170eeb58bd87db52348a40189ef4f7682952647de2d5"
+          },
+          "native/core/desk/lib/stead-code-git-graph.hoon": {
+            "bytes": 9243,
+            "origin_commit": "be60dba02968d94821b4bc9f50d3d3bc38d2d5a2",
+            "sha256": "501593e3f564fc07f7675f31f857e8adf5fee378366ab79f0742ea7ca3d7965c"
+          },
+          "native/core/desk/lib/stead-code-git-objects.hoon": {
+            "bytes": 2633,
+            "origin_commit": "be60dba02968d94821b4bc9f50d3d3bc38d2d5a2",
+            "sha256": "d82bfa622dd796835ad472bf2624f80b2d44460427b0746aca8ac46452f78440"
+          },
+          "native/core/desk/lib/stead-code-receive.hoon": {
+            "bytes": 2956,
+            "origin_commit": "be60dba02968d94821b4bc9f50d3d3bc38d2d5a2",
+            "sha256": "590de8fe7e1e0d06514fee365b8d9decc6f4a9c08c6fe4a6b08a76a90ebcf7d6"
+          },
+          "native/core/desk/lib/stead-code-store.hoon": {
+            "bytes": 10103,
+            "origin_commit": "be60dba02968d94821b4bc9f50d3d3bc38d2d5a2",
+            "sha256": "653148bad82c5853e58998adc36aebfa29536a4b9b6e9d5c31edaccd8b03df4d"
+          },
+          "native/core/desk/lib/stead-codec-v1.hoon": {
+            "bytes": 8571,
+            "origin_commit": "be60dba02968d94821b4bc9f50d3d3bc38d2d5a2",
+            "sha256": "ce4c7a69b03ee1761590c37e71ff49b9f63a1a2edd2aaa6dfbf75bc3c960584a"
+          },
+          "native/core/desk/lib/stead-codec.hoon": {
+            "bytes": 9532,
+            "origin_commit": "be60dba02968d94821b4bc9f50d3d3bc38d2d5a2",
+            "sha256": "56e3d574381bbf8cdf29ca192c70eff256009f89d782e3ffe859b19c1321cbd7"
+          },
+          "native/core/desk/lib/stead-core-v1.hoon": {
+            "bytes": 19390,
+            "origin_commit": "be60dba02968d94821b4bc9f50d3d3bc38d2d5a2",
+            "sha256": "879615a5547d06a09d382c2bac4c5cb20cdf03236ddfdab79c9f1da15bd33cb5"
+          },
+          "native/core/desk/lib/stead-core.hoon": {
+            "bytes": 30949,
+            "origin_commit": "be60dba02968d94821b4bc9f50d3d3bc38d2d5a2",
+            "sha256": "4c183ef6283030437af5e1433e3fbf80f414757bcede4cab1282fc71ff5f34de"
+          },
+          "native/core/desk/lib/stead-git.hoon": {
+            "bytes": 3935,
+            "origin_commit": "be60dba02968d94821b4bc9f50d3d3bc38d2d5a2",
+            "sha256": "826b83485429c02f577c9b462ee6cddd3ab8ea1a099d33b66893f863d54c54d7"
+          },
+          "native/core/desk/lib/stead-repository-catalog.hoon": {
+            "bytes": 8454,
+            "origin_manifest_sha256": "848e7257dbf046c3aa3fdcfbdc70078fa25907a76d9b42138d40433c016ee0af",
+            "origin_packet": ".runtime/repository-tall-spacing-prepared",
+            "sha256": "72e3d3e9eeb1fe47162ffd38f2179357f9620f2771a0114db14cfe9e2973c0e3"
+          },
+          "native/core/desk/lib/stead-session.hoon": {
+            "bytes": 8713,
+            "origin_commit": "be60dba02968d94821b4bc9f50d3d3bc38d2d5a2",
+            "sha256": "ec331d4534cc19fc76f6b9ad590ec326d74e09f0b846b36f866e6351bdcbbb27"
+          },
+          "native/core/desk/tests/stead-repository-catalog.hoon": {
+            "bytes": 7970,
+            "origin_manifest_sha256": "848e7257dbf046c3aa3fdcfbdc70078fa25907a76d9b42138d40433c016ee0af",
+            "origin_packet": ".runtime/repository-tall-spacing-prepared",
+            "sha256": "661f18d836d4ab5c27bf7434104147f0293e70a410bd4f4e9fa1811b49de778d"
+          }
+        },
+        "source_offsets": [
+          {
+            "generated_end_byte": 3,
+            "generated_newlines": 1,
+            "generated_start_byte": 0,
+            "generated_start_line": 1,
+            "kind": "fixed-debug-prefix"
+          },
+          {
+            "generated_end_byte": 12,
+            "generated_newlines": 1,
+            "generated_start_byte": 3,
+            "generated_start_line": 2,
+            "kind": "fixed-binding"
+          },
+          {
+            "generated_end_byte": 2521,
+            "generated_newlines": 103,
+            "generated_start_byte": 12,
+            "generated_start_line": 3,
+            "kind": "original-source",
+            "source": "pkg/base-dev/lib/test.hoon",
+            "source_end_byte": 2509,
+            "source_start_byte": 0,
+            "source_start_line": 1
+          },
+          {
+            "generated_end_byte": 2522,
+            "generated_newlines": 1,
+            "generated_start_byte": 2521,
+            "generated_start_line": 106,
+            "kind": "fixed-separator"
+          },
+          {
+            "generated_end_byte": 2538,
+            "generated_newlines": 1,
+            "generated_start_byte": 2522,
+            "generated_start_line": 107,
+            "kind": "fixed-binding"
+          },
+          {
+            "generated_end_byte": 12070,
+            "generated_newlines": 294,
+            "generated_start_byte": 2538,
+            "generated_start_line": 108,
+            "kind": "original-source",
+            "source": "native/core/desk/lib/stead-codec.hoon",
+            "source_end_byte": 9532,
+            "source_start_byte": 0,
+            "source_start_line": 1
+          },
+          {
+            "generated_end_byte": 12071,
+            "generated_newlines": 1,
+            "generated_start_byte": 12070,
+            "generated_start_line": 402,
+            "kind": "fixed-separator"
+          },
+          {
+            "generated_end_byte": 12090,
+            "generated_newlines": 1,
+            "generated_start_byte": 12071,
+            "generated_start_line": 403,
+            "kind": "fixed-binding"
+          },
+          {
+            "generated_end_byte": 20661,
+            "generated_newlines": 275,
+            "generated_start_byte": 12090,
+            "generated_start_line": 404,
+            "kind": "original-source",
+            "source": "native/core/desk/lib/stead-codec-v1.hoon",
+            "source_end_byte": 8571,
+            "source_start_byte": 0,
+            "source_start_line": 1
+          },
+          {
+            "generated_end_byte": 20662,
+            "generated_newlines": 1,
+            "generated_start_byte": 20661,
+            "generated_start_line": 679,
+            "kind": "fixed-separator"
+          },
+          {
+            "generated_end_byte": 20676,
+            "generated_newlines": 1,
+            "generated_start_byte": 20662,
+            "generated_start_line": 680,
+            "kind": "fixed-binding"
+          },
+          {
+            "generated_end_byte": 24611,
+            "generated_newlines": 132,
+            "generated_start_byte": 20676,
+            "generated_start_line": 681,
+            "kind": "original-source",
+            "source": "native/core/desk/lib/stead-git.hoon",
+            "source_end_byte": 3935,
+            "source_start_byte": 0,
+            "source_start_line": 1
+          },
+          {
+            "generated_end_byte": 24612,
+            "generated_newlines": 1,
+            "generated_start_byte": 24611,
+            "generated_start_line": 813,
+            "kind": "fixed-separator"
+          },
+          {
+            "generated_end_byte": 24639,
+            "generated_newlines": 1,
+            "generated_start_byte": 24612,
+            "generated_start_line": 814,
+            "kind": "fixed-binding"
+          },
+          {
+            "generated_end_byte": 24790,
+            "generated_newlines": 2,
+            "generated_start_byte": 24639,
+            "generated_start_line": 815,
+            "kind": "original-source",
+            "source": "native/core/desk/lib/stead-code-git-objects.hoon",
+            "source_end_byte": 151,
+            "source_start_byte": 0,
+            "source_start_line": 1
+          },
+          {
+            "generated_end_byte": 27258,
+            "generated_newlines": 67,
+            "generated_start_byte": 24790,
+            "generated_start_line": 817,
+            "kind": "original-source",
+            "source": "native/core/desk/lib/stead-code-git-objects.hoon",
+            "source_end_byte": 2633,
+            "source_start_byte": 165,
+            "source_start_line": 4
+          },
+          {
+            "generated_end_byte": 27259,
+            "generated_newlines": 1,
+            "generated_start_byte": 27258,
+            "generated_start_line": 884,
+            "kind": "fixed-separator"
+          },
+          {
+            "generated_end_byte": 27277,
+            "generated_newlines": 1,
+            "generated_start_byte": 27259,
+            "generated_start_line": 885,
+            "kind": "fixed-binding"
+          },
+          {
+            "generated_end_byte": 27362,
+            "generated_newlines": 1,
+            "generated_start_byte": 27277,
+            "generated_start_line": 886,
+            "kind": "original-source",
+            "source": "native/core/desk/lib/stead-core-v1.hoon",
+            "source_end_byte": 85,
+            "source_start_byte": 0,
+            "source_start_line": 1
+          },
+          {
+            "generated_end_byte": 46637,
+            "generated_newlines": 433,
+            "generated_start_byte": 27362,
+            "generated_start_line": 887,
+            "kind": "original-source",
+            "source": "native/core/desk/lib/stead-core-v1.hoon",
+            "source_end_byte": 19390,
+            "source_start_byte": 115,
+            "source_start_line": 3
+          },
+          {
+            "generated_end_byte": 46638,
+            "generated_newlines": 1,
+            "generated_start_byte": 46637,
+            "generated_start_line": 1320,
+            "kind": "fixed-separator"
+          },
+          {
+            "generated_end_byte": 46656,
+            "generated_newlines": 1,
+            "generated_start_byte": 46638,
+            "generated_start_line": 1321,
+            "kind": "fixed-binding"
+          },
+          {
+            "generated_end_byte": 46790,
+            "generated_newlines": 2,
+            "generated_start_byte": 46656,
+            "generated_start_line": 1322,
+            "kind": "original-source",
+            "source": "native/core/desk/lib/stead-session.hoon",
+            "source_end_byte": 134,
+            "source_start_byte": 0,
+            "source_start_line": 1
+          },
+          {
+            "generated_end_byte": 55353,
+            "generated_newlines": 207,
+            "generated_start_byte": 46790,
+            "generated_start_line": 1324,
+            "kind": "original-source",
+            "source": "native/core/desk/lib/stead-session.hoon",
+            "source_end_byte": 8713,
+            "source_start_byte": 150,
+            "source_start_line": 4
+          },
+          {
+            "generated_end_byte": 55354,
+            "generated_newlines": 1,
+            "generated_start_byte": 55353,
+            "generated_start_line": 1531,
+            "kind": "fixed-separator"
+          },
+          {
+            "generated_end_byte": 55381,
+            "generated_newlines": 1,
+            "generated_start_byte": 55354,
+            "generated_start_line": 1532,
+            "kind": "fixed-binding"
+          },
+          {
+            "generated_end_byte": 55601,
+            "generated_newlines": 3,
+            "generated_start_byte": 55381,
+            "generated_start_line": 1533,
+            "kind": "original-source",
+            "source": "native/core/desk/lib/stead-code-credentials.hoon",
+            "source_end_byte": 220,
+            "source_start_byte": 0,
+            "source_start_line": 1
+          },
+          {
+            "generated_end_byte": 58987,
+            "generated_newlines": 80,
+            "generated_start_byte": 55601,
+            "generated_start_line": 1536,
+            "kind": "original-source",
+            "source": "native/core/desk/lib/stead-code-credentials.hoon",
+            "source_end_byte": 3637,
+            "source_start_byte": 251,
+            "source_start_line": 5
+          },
+          {
+            "generated_end_byte": 58988,
+            "generated_newlines": 1,
+            "generated_start_byte": 58987,
+            "generated_start_line": 1616,
+            "kind": "fixed-separator"
+          },
+          {
+            "generated_end_byte": 59013,
+            "generated_newlines": 1,
+            "generated_start_byte": 58988,
+            "generated_start_line": 1617,
+            "kind": "fixed-binding"
+          },
+          {
+            "generated_end_byte": 59091,
+            "generated_newlines": 1,
+            "generated_start_byte": 59013,
+            "generated_start_line": 1618,
+            "kind": "original-source",
+            "source": "native/core/desk/lib/stead-code-git-graph.hoon",
+            "source_end_byte": 78,
+            "source_start_byte": 0,
+            "source_start_line": 1
+          },
+          {
+            "generated_end_byte": 68229,
+            "generated_newlines": 252,
+            "generated_start_byte": 59091,
+            "generated_start_line": 1619,
+            "kind": "original-source",
+            "source": "native/core/desk/lib/stead-code-git-graph.hoon",
+            "source_end_byte": 9243,
+            "source_start_byte": 105,
+            "source_start_line": 3
+          },
+          {
+            "generated_end_byte": 68230,
+            "generated_newlines": 1,
+            "generated_start_byte": 68229,
+            "generated_start_line": 1871,
+            "kind": "fixed-separator"
+          },
+          {
+            "generated_end_byte": 68253,
+            "generated_newlines": 1,
+            "generated_start_byte": 68230,
+            "generated_start_line": 1872,
+            "kind": "fixed-binding"
+          },
+          {
+            "generated_end_byte": 68395,
+            "generated_newlines": 2,
+            "generated_start_byte": 68253,
+            "generated_start_line": 1873,
+            "kind": "original-source",
+            "source": "native/core/desk/lib/stead-code-receive.hoon",
+            "source_end_byte": 142,
+            "source_start_byte": 0,
+            "source_start_line": 1
+          },
+          {
+            "generated_end_byte": 71182,
+            "generated_newlines": 68,
+            "generated_start_byte": 68395,
+            "generated_start_line": 1875,
+            "kind": "original-source",
+            "source": "native/core/desk/lib/stead-code-receive.hoon",
+            "source_end_byte": 2956,
+            "source_start_byte": 169,
+            "source_start_line": 4
+          },
+          {
+            "generated_end_byte": 71183,
+            "generated_newlines": 1,
+            "generated_start_byte": 71182,
+            "generated_start_line": 1943,
+            "kind": "fixed-separator"
+          },
+          {
+            "generated_end_byte": 71198,
+            "generated_newlines": 1,
+            "generated_start_byte": 71183,
+            "generated_start_line": 1944,
+            "kind": "fixed-binding"
+          },
+          {
+            "generated_end_byte": 71283,
+            "generated_newlines": 1,
+            "generated_start_byte": 71198,
+            "generated_start_line": 1945,
+            "kind": "original-source",
+            "source": "native/core/desk/lib/stead-core.hoon",
+            "source_end_byte": 85,
+            "source_start_byte": 0,
+            "source_start_line": 1
+          },
+          {
+            "generated_end_byte": 102105,
+            "generated_newlines": 653,
+            "generated_start_byte": 71283,
+            "generated_start_line": 1946,
+            "kind": "original-source",
+            "source": "native/core/desk/lib/stead-core.hoon",
+            "source_end_byte": 30949,
+            "source_start_byte": 127,
+            "source_start_line": 3
+          },
+          {
+            "generated_end_byte": 102106,
+            "generated_newlines": 1,
+            "generated_start_byte": 102105,
+            "generated_start_line": 2599,
+            "kind": "fixed-separator"
+          },
+          {
+            "generated_end_byte": 102130,
+            "generated_newlines": 1,
+            "generated_start_byte": 102106,
+            "generated_start_line": 2600,
+            "kind": "fixed-binding"
+          },
+          {
+            "generated_end_byte": 102339,
+            "generated_newlines": 3,
+            "generated_start_byte": 102130,
+            "generated_start_line": 2601,
+            "kind": "original-source",
+            "source": "native/core/desk/lib/stead-code-ancestry.hoon",
+            "source_end_byte": 209,
+            "source_start_byte": 0,
+            "source_start_line": 1
+          },
+          {
+            "generated_end_byte": 104131,
+            "generated_newlines": 49,
+            "generated_start_byte": 102339,
+            "generated_start_line": 2604,
+            "kind": "original-source",
+            "source": "native/core/desk/lib/stead-code-ancestry.hoon",
+            "source_end_byte": 2026,
+            "source_start_byte": 234,
+            "source_start_line": 5
+          },
+          {
+            "generated_end_byte": 104132,
+            "generated_newlines": 1,
+            "generated_start_byte": 104131,
+            "generated_start_line": 2653,
+            "kind": "fixed-separator"
+          },
+          {
+            "generated_end_byte": 104153,
+            "generated_newlines": 1,
+            "generated_start_byte": 104132,
+            "generated_start_line": 2654,
+            "kind": "fixed-binding"
+          },
+          {
+            "generated_end_byte": 104292,
+            "generated_newlines": 2,
+            "generated_start_byte": 104153,
+            "generated_start_line": 2655,
+            "kind": "original-source",
+            "source": "native/core/desk/lib/stead-code-store.hoon",
+            "source_end_byte": 139,
+            "source_start_byte": 0,
+            "source_start_line": 1
+          },
+          {
+            "generated_end_byte": 114103,
+            "generated_newlines": 200,
+            "generated_start_byte": 104292,
+            "generated_start_line": 2657,
+            "kind": "original-source",
+            "source": "native/core/desk/lib/stead-code-store.hoon",
+            "source_end_byte": 10103,
+            "source_start_byte": 292,
+            "source_start_line": 4
+          },
+          {
+            "generated_end_byte": 114104,
+            "generated_newlines": 1,
+            "generated_start_byte": 114103,
+            "generated_start_line": 2857,
+            "kind": "fixed-separator"
+          },
+          {
+            "generated_end_byte": 114133,
+            "generated_newlines": 1,
+            "generated_start_byte": 114104,
+            "generated_start_line": 2858,
+            "kind": "fixed-binding"
+          },
+          {
+            "generated_end_byte": 114366,
+            "generated_newlines": 3,
+            "generated_start_byte": 114133,
+            "generated_start_line": 2859,
+            "kind": "original-source",
+            "source": "native/core/desk/lib/stead-repository-catalog.hoon",
+            "source_end_byte": 233,
+            "source_start_byte": 0,
+            "source_start_line": 1
+          },
+          {
+            "generated_end_byte": 122514,
+            "generated_newlines": 190,
+            "generated_start_byte": 114366,
+            "generated_start_line": 2862,
+            "kind": "original-source",
+            "source": "native/core/desk/lib/stead-repository-catalog.hoon",
+            "source_end_byte": 8454,
+            "source_start_byte": 306,
+            "source_start_line": 5
+          },
+          {
+            "generated_end_byte": 122515,
+            "generated_newlines": 1,
+            "generated_start_byte": 122514,
+            "generated_start_line": 3052,
+            "kind": "fixed-separator"
+          },
+          {
+            "generated_end_byte": 122527,
+            "generated_newlines": 2,
+            "generated_start_byte": 122515,
+            "generated_start_line": 3053,
+            "kind": "fixed-test-binding"
+          },
+          {
+            "generated_end_byte": 122588,
+            "generated_newlines": 1,
+            "generated_start_byte": 122527,
+            "generated_start_line": 3055,
+            "kind": "original-source",
+            "source": "native/core/desk/tests/stead-repository-catalog.hoon",
+            "source_end_byte": 61,
+            "source_start_byte": 0,
+            "source_start_line": 1
+          },
+          {
+            "generated_end_byte": 130379,
+            "generated_newlines": 148,
+            "generated_start_byte": 122588,
+            "generated_start_line": 3056,
+            "kind": "original-source",
+            "source": "native/core/desk/tests/stead-repository-catalog.hoon",
+            "source_end_byte": 7970,
+            "source_start_byte": 179,
+            "source_start_line": 3
+          },
+          {
+            "generated_end_byte": 130380,
+            "generated_newlines": 1,
+            "generated_start_byte": 130379,
+            "generated_start_line": 3204,
+            "kind": "fixed-separator"
+          },
+          {
+            "generated_end_byte": 131322,
+            "generated_newlines": 8,
+            "generated_start_byte": 130380,
+            "generated_start_line": 3205,
+            "kind": "fixed-inventory-expression"
+          }
+        ],
+        "transitive_library_count": 13,
+        "transitive_library_order": [
+          "stead-codec",
+          "stead-codec-v1",
+          "stead-git",
+          "stead-code-git-objects",
+          "stead-core-v1",
+          "stead-session",
+          "stead-code-credentials",
+          "stead-code-git-graph",
+          "stead-code-receive",
+          "stead-core",
+          "stead-code-ancestry",
+          "stead-code-store",
+          "stead-repository-catalog"
+        ]
+      }
+    ],
+    "test_helper": {
+      "bytes": 2509,
+      "kernel_commit": "5a187fededc4582a34fcd6055c67bb63e0917b94",
+      "path": "pkg/base-dev/lib/test.hoon",
+      "sha256": "55d5196a3a8dbd5323943c06f138c9b9aa8fd955506c4f4b14e5d56ff05abcc6"
+    }
+  },
+  "protocol": "stead.fixed-pure-evaluator-composition/1",
+  "sources": {
+    "native/core/desk/lib/stead-actor.hoon": {
+      "bytes": 3471,
+      "origin_commit": "be60dba02968d94821b4bc9f50d3d3bc38d2d5a2",
+      "sha256": "4739b3b7e65ff95a14e2410c5c0635833b13e5fc7ff197c9b004b27a92e9c7b8"
+    },
+    "native/core/desk/lib/stead-code-ancestry.hoon": {
+      "bytes": 2026,
+      "origin_commit": "be60dba02968d94821b4bc9f50d3d3bc38d2d5a2",
+      "sha256": "d46a3af25bb6a1ce0cdb36497717a160c96247fd1bcf831cff7035c7e4db91b9"
+    },
+    "native/core/desk/lib/stead-code-build-home.hoon": {
+      "bytes": 12793,
+      "origin_commit": "be60dba02968d94821b4bc9f50d3d3bc38d2d5a2",
+      "sha256": "ae7ea38afaf41fde3f9532935ca2b444a3a40cc11601d21d20f8c9470d7afa91"
+    },
+    "native/core/desk/lib/stead-code-credentials.hoon": {
+      "bytes": 3637,
+      "origin_commit": "be60dba02968d94821b4bc9f50d3d3bc38d2d5a2",
+      "sha256": "6e7eb121e5aa7bb36f80170eeb58bd87db52348a40189ef4f7682952647de2d5"
+    },
+    "native/core/desk/lib/stead-code-delivery-export.hoon": {
+      "bytes": 8254,
+      "origin_commit": "be60dba02968d94821b4bc9f50d3d3bc38d2d5a2",
+      "sha256": "5afc8a4cd112eb4fd863ed9c3caa2875007d92714cfb85e26328f3c852de8810"
+    },
+    "native/core/desk/lib/stead-code-delivery.hoon": {
+      "bytes": 16101,
+      "origin_commit": "be60dba02968d94821b4bc9f50d3d3bc38d2d5a2",
+      "sha256": "80abf877b32660d65bdf7f5f9657fc2990d953681cd50350c7841f5a5eb048f8"
+    },
+    "native/core/desk/lib/stead-code-fetch-wire.hoon": {
+      "bytes": 2663,
+      "origin_commit": "be60dba02968d94821b4bc9f50d3d3bc38d2d5a2",
+      "sha256": "2218ebca65c69adc1568dc7a3bc622c5b809cc2fcdf068a99dcb6651e5256270"
+    },
+    "native/core/desk/lib/stead-code-fetch.hoon": {
+      "bytes": 4862,
+      "origin_commit": "be60dba02968d94821b4bc9f50d3d3bc38d2d5a2",
+      "sha256": "62c2470b0901606302edd67b7593e9096f01cba5e3b65259c8cd87923c3ca943"
+    },
+    "native/core/desk/lib/stead-code-git-delta.hoon": {
+      "bytes": 3312,
+      "origin_commit": "be60dba02968d94821b4bc9f50d3d3bc38d2d5a2",
+      "sha256": "117abbdf1d33e0e45f23017bacf1b2c4f983e5a3b2e6d6bc8a2ffa047d6a97de"
+    },
+    "native/core/desk/lib/stead-code-git-emit.hoon": {
+      "bytes": 4487,
+      "origin_commit": "be60dba02968d94821b4bc9f50d3d3bc38d2d5a2",
+      "sha256": "1f737cb3a10eb5c1153ef00fb86e3bf30100ecb1fd0e0f2375328876b70f380e"
+    },
+    "native/core/desk/lib/stead-code-git-entry.hoon": {
+      "bytes": 2744,
+      "origin_commit": "be60dba02968d94821b4bc9f50d3d3bc38d2d5a2",
+      "sha256": "9ebbe76571c965b0cea507cebbd75e866920b7f115117a2384b5737e5257a236"
+    },
+    "native/core/desk/lib/stead-code-git-graph.hoon": {
+      "bytes": 9243,
+      "origin_commit": "be60dba02968d94821b4bc9f50d3d3bc38d2d5a2",
+      "sha256": "501593e3f564fc07f7675f31f857e8adf5fee378366ab79f0742ea7ca3d7965c"
+    },
+    "native/core/desk/lib/stead-code-git-inflate.hoon": {
+      "bytes": 12799,
+      "origin_commit": "be60dba02968d94821b4bc9f50d3d3bc38d2d5a2",
+      "sha256": "86c0d0eedcb4bdd7be21db7c39e822b059a694ce806aad264bdd0420df8b3194"
+    },
+    "native/core/desk/lib/stead-code-git-objects.hoon": {
+      "bytes": 2633,
+      "origin_commit": "be60dba02968d94821b4bc9f50d3d3bc38d2d5a2",
+      "sha256": "d82bfa622dd796835ad472bf2624f80b2d44460427b0746aca8ac46452f78440"
+    },
+    "native/core/desk/lib/stead-code-git-pack.hoon": {
+      "bytes": 1297,
+      "origin_commit": "be60dba02968d94821b4bc9f50d3d3bc38d2d5a2",
+      "sha256": "49a8193642bf0d61a695795a85d045c5a1eed23a0908a350103a0555e93064a9"
+    },
+    "native/core/desk/lib/stead-code-git-pkt.hoon": {
+      "bytes": 2437,
+      "origin_commit": "be60dba02968d94821b4bc9f50d3d3bc38d2d5a2",
+      "sha256": "c0a4c87fb8a1d1d4521c640efad1f60a0d2c064b686468774c17d280442dc24e"
+    },
+    "native/core/desk/lib/stead-code-git-resolve.hoon": {
+      "bytes": 5609,
+      "origin_commit": "be60dba02968d94821b4bc9f50d3d3bc38d2d5a2",
+      "sha256": "bdd6ac7170e099c876203899eec282c2aa56825e12d26674e32588c822d99472"
+    },
+    "native/core/desk/lib/stead-code-git-response.hoon": {
+      "bytes": 5139,
+      "origin_commit": "be60dba02968d94821b4bc9f50d3d3bc38d2d5a2",
+      "sha256": "2ab7218660731f140c575e41b02410074f13580c865246d1f299a90ffa334f3d"
+    },
+    "native/core/desk/lib/stead-code-home.hoon": {
+      "bytes": 22229,
+      "origin_commit": "be60dba02968d94821b4bc9f50d3d3bc38d2d5a2",
+      "sha256": "e7bb6c222ab2b5dc0e0fd8e4dbadedfbc752125a035b6acf71c23c9db70a5cbd"
+    },
+    "native/core/desk/lib/stead-code-http.hoon": {
+      "bytes": 2877,
+      "origin_commit": "be60dba02968d94821b4bc9f50d3d3bc38d2d5a2",
+      "sha256": "aa110550644610004987796020e8a37f6976ecce9376d8863f7c3fd309c714c9"
+    },
+    "native/core/desk/lib/stead-code-pack-anchor.hoon": {
+      "bytes": 6317,
+      "origin_commit": "be60dba02968d94821b4bc9f50d3d3bc38d2d5a2",
+      "sha256": "e195a49e63492b42e4e1eeff18bd6bf1437ed44285f610e85030acb329d75434"
+    },
+    "native/core/desk/lib/stead-code-pack-ledger.hoon": {
+      "bytes": 12951,
+      "origin_commit": "be60dba02968d94821b4bc9f50d3d3bc38d2d5a2",
+      "sha256": "ff2175608ce15317a640d2a17742b4b0d03c19e92d7a5a9221a578fa6bd44c4d"
+    },
+    "native/core/desk/lib/stead-code-pack-promotion.hoon": {
+      "bytes": 5003,
+      "origin_commit": "be60dba02968d94821b4bc9f50d3d3bc38d2d5a2",
+      "sha256": "10f8caa883d8dae9aaae75de3ca080d2ebd2879e4e370145ab20a9a3f5a9545c"
+    },
+    "native/core/desk/lib/stead-code-pack-push.hoon": {
+      "bytes": 4300,
+      "origin_commit": "be60dba02968d94821b4bc9f50d3d3bc38d2d5a2",
+      "sha256": "bbc4e1383647b5bd6191510fa4c6ff1bf6018f0ab2623cd1023150d0ffa985a8"
+    },
+    "native/core/desk/lib/stead-code-pack-review-board.hoon": {
+      "bytes": 12740,
+      "origin_commit": "be60dba02968d94821b4bc9f50d3d3bc38d2d5a2",
+      "sha256": "d75c9cf6cc36af7d4eb9c0e2456b0ebeef568e062f04abb0639acabd36ba2dbc"
+    },
+    "native/core/desk/lib/stead-code-pack-review.hoon": {
+      "bytes": 7336,
+      "origin_commit": "be60dba02968d94821b4bc9f50d3d3bc38d2d5a2",
+      "sha256": "3c1229baa7f3178a1e7395f73693b0d0f0b7343f15d52db8d64e8d1a927c54a9"
+    },
+    "native/core/desk/lib/stead-code-receive-wire.hoon": {
+      "bytes": 6018,
+      "origin_commit": "be60dba02968d94821b4bc9f50d3d3bc38d2d5a2",
+      "sha256": "e46b051541722bc0cf8cfc5892579a1515e2828eb7843ce79d68ba2b1de83b94"
+    },
+    "native/core/desk/lib/stead-code-receive.hoon": {
+      "bytes": 2956,
+      "origin_commit": "be60dba02968d94821b4bc9f50d3d3bc38d2d5a2",
+      "sha256": "590de8fe7e1e0d06514fee365b8d9decc6f4a9c08c6fe4a6b08a76a90ebcf7d6"
+    },
+    "native/core/desk/lib/stead-code-review-api.hoon": {
+      "bytes": 7404,
+      "origin_commit": "be60dba02968d94821b4bc9f50d3d3bc38d2d5a2",
+      "sha256": "f1ef0209906ef14ccd27ab271b03d5cadbcbdc32b4ba917af9cec23a6c02c3c1"
+    },
+    "native/core/desk/lib/stead-code-review-home.hoon": {
+      "bytes": 10721,
+      "origin_commit": "be60dba02968d94821b4bc9f50d3d3bc38d2d5a2",
+      "sha256": "cb29b0b347bf2251c24fcf6ce4471a89bf2f9214dfe5a3e9d4b7b23283b93433"
+    },
+    "native/core/desk/lib/stead-code-review.hoon": {
+      "bytes": 2526,
+      "origin_commit": "be60dba02968d94821b4bc9f50d3d3bc38d2d5a2",
+      "sha256": "3a4fa880d60e9913cdb450551733020d354aac6c64a2ae83e0348f9b14e55407"
+    },
+    "native/core/desk/lib/stead-code-service.hoon": {
+      "bytes": 7084,
+      "origin_commit": "be60dba02968d94821b4bc9f50d3d3bc38d2d5a2",
+      "sha256": "bb4c1608f2d12e91473cbd6a5491a8f28e06fcfc75480dd67740d867a266caf1"
+    },
+    "native/core/desk/lib/stead-code-store.hoon": {
+      "bytes": 10103,
+      "origin_commit": "be60dba02968d94821b4bc9f50d3d3bc38d2d5a2",
+      "sha256": "653148bad82c5853e58998adc36aebfa29536a4b9b6e9d5c31edaccd8b03df4d"
+    },
+    "native/core/desk/lib/stead-code-upload.hoon": {
+      "bytes": 2441,
+      "origin_commit": "be60dba02968d94821b4bc9f50d3d3bc38d2d5a2",
+      "sha256": "2369722fffe69083fd857a70a562da6a5020fdfaa120e25c68c156cc0a5f0580"
+    },
+    "native/core/desk/lib/stead-codec-v1.hoon": {
+      "bytes": 8571,
+      "origin_commit": "be60dba02968d94821b4bc9f50d3d3bc38d2d5a2",
+      "sha256": "ce4c7a69b03ee1761590c37e71ff49b9f63a1a2edd2aaa6dfbf75bc3c960584a"
+    },
+    "native/core/desk/lib/stead-codec.hoon": {
+      "bytes": 9532,
+      "origin_commit": "be60dba02968d94821b4bc9f50d3d3bc38d2d5a2",
+      "sha256": "56e3d574381bbf8cdf29ca192c70eff256009f89d782e3ffe859b19c1321cbd7"
+    },
+    "native/core/desk/lib/stead-core-v1.hoon": {
+      "bytes": 19390,
+      "origin_commit": "be60dba02968d94821b4bc9f50d3d3bc38d2d5a2",
+      "sha256": "879615a5547d06a09d382c2bac4c5cb20cdf03236ddfdab79c9f1da15bd33cb5"
+    },
+    "native/core/desk/lib/stead-core.hoon": {
+      "bytes": 30949,
+      "origin_commit": "be60dba02968d94821b4bc9f50d3d3bc38d2d5a2",
+      "sha256": "4c183ef6283030437af5e1433e3fbf80f414757bcede4cab1282fc71ff5f34de"
+    },
+    "native/core/desk/lib/stead-git.hoon": {
+      "bytes": 3935,
+      "origin_commit": "be60dba02968d94821b4bc9f50d3d3bc38d2d5a2",
+      "sha256": "826b83485429c02f577c9b462ee6cddd3ab8ea1a099d33b66893f863d54c54d7"
+    },
+    "native/core/desk/lib/stead-http.hoon": {
+      "bytes": 5652,
+      "origin_commit": "be60dba02968d94821b4bc9f50d3d3bc38d2d5a2",
+      "sha256": "8dced7c0ac0af601ca319ab317a705865589bb3aaf223c238d792512406fe05f"
+    },
+    "native/core/desk/lib/stead-principals.hoon": {
+      "bytes": 6666,
+      "origin_commit": "be60dba02968d94821b4bc9f50d3d3bc38d2d5a2",
+      "sha256": "59674e536e182c62902046a267aa644f05f7c97282e3eb737ab74f3ca6446d7f"
+    },
+    "native/core/desk/lib/stead-project-retirement.hoon": {
+      "bytes": 4741,
+      "origin_commit": "be60dba02968d94821b4bc9f50d3d3bc38d2d5a2",
+      "sha256": "25eb485c134a5cb18e758c68ade3bff4d7493ae99128e8f78fc1dd771846aba3"
+    },
+    "native/core/desk/lib/stead-repository-authority.hoon": {
+      "bytes": 6363,
+      "origin_manifest_sha256": "848e7257dbf046c3aa3fdcfbdc70078fa25907a76d9b42138d40433c016ee0af",
+      "origin_packet": ".runtime/repository-tall-spacing-prepared",
+      "sha256": "eeff9440258c6da0592a504baa53296d7f71a732ef4fb89d5d4be9369baf9549"
+    },
+    "native/core/desk/lib/stead-repository-catalog.hoon": {
+      "bytes": 8454,
+      "origin_manifest_sha256": "848e7257dbf046c3aa3fdcfbdc70078fa25907a76d9b42138d40433c016ee0af",
+      "origin_packet": ".runtime/repository-tall-spacing-prepared",
+      "sha256": "72e3d3e9eeb1fe47162ffd38f2179357f9620f2771a0114db14cfe9e2973c0e3"
+    },
+    "native/core/desk/lib/stead-repository-import.hoon": {
+      "bytes": 2982,
+      "origin_manifest_sha256": "848e7257dbf046c3aa3fdcfbdc70078fa25907a76d9b42138d40433c016ee0af",
+      "origin_packet": ".runtime/repository-tall-spacing-prepared",
+      "sha256": "471acbf04f48aa9e3cf226d112adcfb1a839048c9841e97419b79b1165726917"
+    },
+    "native/core/desk/lib/stead-repository-store.hoon": {
+      "bytes": 6568,
+      "origin_manifest_sha256": "848e7257dbf046c3aa3fdcfbdc70078fa25907a76d9b42138d40433c016ee0af",
+      "origin_packet": ".runtime/repository-tall-spacing-prepared",
+      "sha256": "32998f09ae4c83f1b687a35522b12f36e33d5d53e1669d92d77e6e83f0f9e15e"
+    },
+    "native/core/desk/lib/stead-session.hoon": {
+      "bytes": 8713,
+      "origin_commit": "be60dba02968d94821b4bc9f50d3d3bc38d2d5a2",
+      "sha256": "ec331d4534cc19fc76f6b9ad590ec326d74e09f0b846b36f866e6351bdcbbb27"
+    },
+    "native/core/desk/lib/stead-team-codec.hoon": {
+      "bytes": 8633,
+      "origin_commit": "be60dba02968d94821b4bc9f50d3d3bc38d2d5a2",
+      "sha256": "0a7e54ad7cd6fc66dcbfabd90425d55a234d9239140dec97309474fb3b90ba76"
+    },
+    "native/core/desk/lib/stead-team-config.hoon": {
+      "bytes": 6486,
+      "origin_commit": "be60dba02968d94821b4bc9f50d3d3bc38d2d5a2",
+      "sha256": "ca95235550f5ebe34ac43f1f886620e4598fae4e304eef855068022400f5f630"
+    },
+    "native/core/desk/lib/stead-team.hoon": {
+      "bytes": 30909,
+      "origin_commit": "be60dba02968d94821b4bc9f50d3d3bc38d2d5a2",
+      "sha256": "36c5affad6ba239f92b42ff7459b916fbb3223b387fa76149bf8350501872128"
+    },
+    "native/core/desk/tests/stead-repository-authority.hoon": {
+      "bytes": 20855,
+      "origin_manifest_sha256": "848e7257dbf046c3aa3fdcfbdc70078fa25907a76d9b42138d40433c016ee0af",
+      "origin_packet": ".runtime/repository-tall-spacing-prepared",
+      "sha256": "d687ec355d9cfbe50e764fe53e713152b4e042462ea78f858ab01a4426670a5e"
+    },
+    "native/core/desk/tests/stead-repository-catalog.hoon": {
+      "bytes": 7970,
+      "origin_manifest_sha256": "848e7257dbf046c3aa3fdcfbdc70078fa25907a76d9b42138d40433c016ee0af",
+      "origin_packet": ".runtime/repository-tall-spacing-prepared",
+      "sha256": "661f18d836d4ab5c27bf7434104147f0293e70a410bd4f4e9fa1811b49de778d"
+    },
+    "native/core/desk/tests/stead-repository-import.hoon": {
+      "bytes": 20334,
+      "origin_manifest_sha256": "848e7257dbf046c3aa3fdcfbdc70078fa25907a76d9b42138d40433c016ee0af",
+      "origin_packet": ".runtime/repository-tall-spacing-prepared",
+      "sha256": "cd699ed49098d3107db7d04b01f2dbbdfc0c5562385bd61eb1a1f570ef486ba6"
+    },
+    "native/core/desk/tests/stead-repository-store.hoon": {
+      "bytes": 35505,
+      "origin_manifest_sha256": "848e7257dbf046c3aa3fdcfbdc70078fa25907a76d9b42138d40433c016ee0af",
+      "origin_packet": ".runtime/repository-tall-spacing-prepared",
+      "sha256": "edcc806b4ab9226ddd97a8742ca8b9d43d5baf4a2485209d0419d5382dbdc717"
+    }
+  }
+}

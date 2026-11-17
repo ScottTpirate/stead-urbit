@@ -1,4 +1,4 @@
-"""Two fixed ivory source profiles and closed output parsing; no runtime authority.
+"""Three fixed ivory source profiles and closed output parsing; no runtime authority.
 
 This module operates on retained bytes only. The owner proves source custody,
 current lease, process completion, stable bounded output and aggregate admission.
@@ -68,6 +68,10 @@ MODEL_COMPOSITION_BYTES = 110358
 MODEL_SUITES = (('model-codec', '234f119ef4636c2cc4e9fcc3a1f9ba1d3f556c13b2d1d5cffa951f0492ffae03', ('test-model-codec-golden-reserve-and-derived-native-identity', 'test-model-codec-closed-parent-and-canonical-cas', 'test-model-codec-material-pins-and-exact-charge-reject-drift', 'test-model-codec-observation-absence-empty-and-binary-bytes', 'test-model-codec-parser-and-parent-bounds-do-not-expand', 'test-model-codec-real-linefeeds-and-supplementary-unicode')), ('model-reply', 'd9d3fdd036fcc869159a686bd96a35da6aa07c1c1bbf38b4481ed68b8920d8ed', ('test-model-reply-rebuilds-golden-proposal-from-original-bytes', 'test-model-reply-binary-utf8-duplicate-depth-and-size-refusals', 'test-model-reply-timing-exponents-and-reasoning-are-bounded', 'test-model-reply-refusal-incomplete-and-filter-never-propose-doc', 'test-model-reply-tool-model-and-usage-pins-reject-spoofs', 'test-model-reply-actual-linefeeds-and-supplementary-unicode')), ('model-turn-codec', '17bfc6d95c6fa975487ba893b8a873f08ece870c200c75b8249a3426699e6ed2', ('test-model-turn-codec-four-exact-parent-vectors', 'test-model-turn-codec-closed-canonical-claim-boundary', 'test-model-turn-codec-ids-digests-and-finite-uints', 'test-model-turn-codec-exact-answer-utf8-and-comment-bounds', 'test-model-turn-codec-five-child-identities-are-not-authority', 'test-model-turn-codec-escaped-limits-and-nested-shape-denials')))
 
 
+DEBUG_COMPOSITION_SHA256 = "1c59ea7469037040723308c1b7bc5c015bc2bc9db954c7003e9fc1b0a2c6e68c"
+DEBUG_COMPOSITION_BYTES = 54273
+DEBUG_SUITES = (("catalog-debug", "f71320f25fc19e9a93ab435fd17fb8e604b86764a464d1d0b28fd5c3182ee4b9", SUITES[0][2]),)
+
 def profile(composition_sha256):
     """Return only a source-owned closed profile; no caller-selected counts/paths."""
     _require(type(composition_sha256) is str, "Profile digest type")
@@ -77,6 +81,9 @@ def profile(composition_sha256):
     elif composition_sha256 == MODEL_COMPOSITION_SHA256:
         name, size, sources, libraries, arms, suites = ("native-model-simple/1", MODEL_COMPOSITION_BYTES, 21, 17, 18, MODEL_SUITES)
         paths = tuple("native/core/desk/tests/stead-" + s[0] + ".hoon" for s in suites)
+    elif composition_sha256 == DEBUG_COMPOSITION_SHA256:
+        name, size, sources, libraries, arms, suites = ("repository-catalog-debug/1", DEBUG_COMPOSITION_BYTES, 55, 50, 6, DEBUG_SUITES)
+        paths = ("native/core/desk/tests/stead-repository-catalog.hoon",)
     else:
         raise ValueError("Unknown fixed composition")
     return {"name": name, "composition_sha256": composition_sha256, "composition_bytes": size,
@@ -87,7 +94,7 @@ def profile(composition_sha256):
 def job_profile(jobs):
     """Recheck the complete fixed job sequence; child report fields select nothing."""
     _require(type(jobs) is tuple, "Job sequence type")
-    for digest in (COMPOSITION_SHA256, MODEL_COMPOSITION_SHA256):
+    for digest in (COMPOSITION_SHA256, MODEL_COMPOSITION_SHA256, DEBUG_COMPOSITION_SHA256):
         selected = profile(digest)
         labels = ("compiler-control", "failing-tang-control") + tuple(s[0] for s in selected["suites"])
         if len(jobs) == selected["jobs"] and all(type(job) is dict for job in jobs) and tuple(job.get("label") for job in jobs) == labels:
@@ -191,7 +198,7 @@ def _job(label, kind, source, arms):
 
 
 def jobs(files, composition_bytes):
-    """Compose one of two exact retained profiles; original repository bytes select the original six jobs."""
+    """Compose one of three exact retained profiles; original repository bytes select the original six jobs."""
     _require(type(files) is dict and type(composition_bytes) is bytes, "Input types")
     selected_profile = profile(_sha(composition_bytes))
     _require(len(composition_bytes) == selected_profile["composition_bytes"], "Composition pin mismatch")
@@ -262,6 +269,8 @@ def jobs(files, composition_bytes):
         _require(suite["source_files"] == {name: sources[name] for name in sorted(paths)},
                  "Suite source pins")
         built = _Composer(files)
+        if selected_profile["composition_sha256"] == DEBUG_COMPOSITION_SHA256:
+            built.add(b"!:\n", "fixed-debug-prefix")
         built.add(b"=/  test\n", "fixed-binding")
         built.source(HELPER_PATH)
         built.add(b"\n", "fixed-separator")
@@ -291,7 +300,7 @@ def _checked_job(job):
     _require(type(job) is dict and set(job) == JOB_FIELDS, "Closed job shape")
     label = job["label"]
     _require(type(label) is str, "Job label type")
-    specs = {name: ("suite", sha, arms, 85) for name, sha, arms in SUITES + MODEL_SUITES}
+    specs = {name: ("suite", sha, arms, 85) for name, sha, arms in SUITES + MODEL_SUITES + DEBUG_SUITES}
     specs.update({"compiler-control": ("compiler-control", COMPILER_SHA256, (), 15),
                   "failing-tang-control": ("failing-tang-control", TANG_SHA256, (), 15)})
     _require(label in specs, "Unknown job")
