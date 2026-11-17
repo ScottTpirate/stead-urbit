@@ -110,7 +110,7 @@
   ^-  tang
   =/  imported=catalog
     :*  2
-        (malt ~[[(id 200) [(id 200) '' 1 %inline-sha1-v1 %tombstone & [%legacy]]] [(id 201) [(id 201) '' 1 %external-sha1-pack-v1 %active & [%legacy]]]])
+        (malt ^-((list [@t entry]) ~[[(id 200) [(id 200) '' 1 %inline-sha1-v1 %tombstone & [%legacy]]] [(id 201) [(id 201) '' 1 %external-sha1-pack-v1 %active & [%legacy]]]]))
         ~
     ==
   ?>  (valid imported)

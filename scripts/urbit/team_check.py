@@ -280,7 +280,7 @@ def run(host):
     started = time.monotonic()
     report = {'status': 'fail', 'classification': 'local-real-configured-gall-development',
               'qualifies_phase': False, 'checks': [], 'commands': [], 'installed': {},
-              'scope': 'Fixed incremental restore arm and deliberate-negative diagnostics only; no restore8/all329, later ship, journey, capture or qualification.',
+              'scope': 'Fixed hint-only incremental restore copy and deliberate-negative diagnostics only; no restore8/all329, later ship, journey, capture or qualification.',
               'diagnostic_scope': native_units.restore_scope(),
               'diagnostic_only': True}
     path = Path('/state/logs') / ('team-check-' + time.strftime('%Y%m%dT%H%M%SZ', time.gmtime()) + '.json')
@@ -358,6 +358,8 @@ def run(host):
         staged = copy.deepcopy(report)
         staged.update(native_units=[], native_unit_failures=[], native_unit_transcripts=[])
         retain_diagnostic(report, staged, 'startup')
+        native_units.verify_trace_sources({name: (Path('/native') / name.removeprefix('native/')).read_bytes()
+            for name in native_units.TRACE_SOURCES})
         pending = {}
 
         def execute(entry):
@@ -399,6 +401,8 @@ def run(host):
                     'elapsed_seconds': round(time.monotonic() - unit_started, 3), 'terminal_present': bool(terminal)})
 
         def verify(entry, completed):
+            if entry['path'] == native_units.TRACE_PATH:
+                completed = native_units.trace_completed_output(completed)
             return native_units.verify_output(completed, path=entry['path'], expected=entry['arms'],
                 succeeds=entry != inventory['negative_control'], failure_marker=entry.get('marker'))
 

@@ -345,6 +345,9 @@ def unit_observation(native, inventory, sources=None):
     if inventory is not None:
         checked = native_units.validate_inventory(inventory)
         entries = [*checked['suites'], checked['negative_control']]
+        if native.get('diagnostic_scope') is not None:
+            native_units.validate_restore_scope(native['diagnostic_scope'])
+            entries = native_units.restore_entries(inventory)
     registered = {entry['path']: set(entry['arms']) for entry in entries}
     transcripts = native.get('native_unit_transcripts', [])
     require(isinstance(transcripts, list) and len(transcripts) <= 100, 'Failure transcript count')
@@ -369,7 +372,7 @@ def unit_observation(native, inventory, sources=None):
     markers = ('find-fork', 'nest-fail', 'build-fail', 'generator-build-fail',
                'mint-vain', 'mint-lost', 'mint-nice', 'nest-need', 'mull-bonk',
                'failed-to-compile-test-arm', 'find-limb', 'find.$', 'dojo-lame', 'syntax error', 'exit')
-    return {'path': path, 'log_bytes': len(raw),
+    result = {'path': path, 'log_bytes': len(raw),
             'log_sha256': hashlib.sha256(raw).hexdigest() if raw else None,
             'terminal': choice(row.get('terminal'), ('[32 %avow 0 %noun 0]', '[32 %avow 0 %noun 1]')),
             'registered_arm_observations': outcomes,
@@ -380,6 +383,9 @@ def unit_observation(native, inventory, sources=None):
             'source_trace': {key: value for key, value in source_trace(raw, sources).items() if key not in ('locations', 'truncated')},
             'markers': {name: bool(re.search(rb'(?<![a-z0-9-])' + re.escape(name.encode('ascii'))
                                             + rb'(?![a-z0-9-])', raw)) for name in markers}}
+    if path == native_units.TRACE_PATH:
+        result['stages'] = native_units.trace_progress(raw)
+    return result
 
 
 
@@ -433,6 +439,9 @@ def failed_unit_observations(native, inventory, sources=None):
     import native_units
     checked = native_units.validate_inventory(inventory)
     entries = [*checked['suites'], checked['negative_control']]
+    if native.get('diagnostic_scope') is not None:
+        native_units.validate_restore_scope(native['diagnostic_scope'])
+        entries = native_units.restore_entries(inventory)
     allowed = {entry['path'] for entry in entries}
     require(len(failures) <= len(entries) and all(isinstance(path, str) and path in allowed for path in failures)
             and len(failures) == len(set(failures)), 'Failure diagnostic suite names')
@@ -444,7 +453,7 @@ def failed_unit_observations(native, inventory, sources=None):
                 and row['path'] not in observed, 'Failure diagnostic transcript identity')
         observed[row['path']] = row
     require(set(failures) <= set(observed), 'Failure diagnostic transcript absent')
-    return [unit_observation({'native_unit_transcripts': [observed[path]]}, inventory, sources) for path in failures]
+    return [unit_observation({'native_unit_transcripts': [observed[path]], **({'diagnostic_scope': native['diagnostic_scope']} if native.get('diagnostic_scope') is not None else {})}, inventory, sources) for path in failures]
 
 
 def diagnostic_limits(native, inventory):
@@ -595,6 +604,11 @@ def project(raw, inputs, *, run_id, inventory=None, sources=None):
     trace = native.get('native_failure', {})
     require(isinstance(trace, dict), 'Failure native trace shape')
     result['native']['frame_stage'] = choice(trace.get('stage'), FRAME_STAGES)
+    if native.get('diagnostic_scope') is not None:
+        import native_units
+        native_units.validate_restore_scope(native['diagnostic_scope'])
+        require(type(sources) is dict, 'Fixed trace source bytes required')
+        native_units.verify_trace_sources({name: sources.get(name) for name in native_units.TRACE_SOURCES})
     result['native']['last_unit'] = unit_observation(native, inventory, sources)
     result['native']['build_probes'] = build_probe_observations(native, sources)
     result['native']['diagnostic_only'] = native.get('diagnostic_only') is True

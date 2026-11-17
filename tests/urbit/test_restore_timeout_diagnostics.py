@@ -1,4 +1,4 @@
-"""Seven inert boundaries for one original arm; no historical bytes reconstructed.
+"""Seven inert boundaries for one original arm in a hint-only copy; no historical bytes reconstructed.
 
 Socket/process/Dojo operations are doubles. The final case runs the actual
 fixed coordinator with those doubles; it proves orchestration, not Hoon cost.
@@ -129,7 +129,7 @@ class RestoreTimeoutDiagnosticsTests(unittest.TestCase):
     def test_fixed_selection_and_public_projection_refuse_crossed_claims(self):
         inventory = self.inventory()
         entries = units.restore_entries(inventory)
-        self.assertEqual([row['path'] for row in entries], [units.NEGATIVE_PATH, units.RESTORE_PATH])
+        self.assertEqual([row['path'] for row in entries], [units.NEGATIVE_PATH, units.TRACE_PATH])
         self.assertEqual(len(inventory['suites']), 48)
         self.assertEqual(sum(len(row['arms']) for row in inventory['suites']), 329)
         self.assertEqual(entries[1]['arms'], [units.RESTORE_ARM])
@@ -142,13 +142,13 @@ class RestoreTimeoutDiagnosticsTests(unittest.TestCase):
         error.native_interruption = self.progress()['transport']
         report = {'diagnostic_scope': units.restore_scope(), 'native_units': [{'path': units.NEGATIVE_PATH}],
                   'native_unit_transcripts': [{'path': units.NEGATIVE_PATH}], 'checks': []}
-        coordinator.diagnostic_error(report, error, 'suite', units.RESTORE_PATH)
+        coordinator.diagnostic_error(report, error, 'suite', units.TRACE_PATH)
         coordinator.diagnostic_unit_progress(report, entries[1], error, b'', inventory)
         closed = worker_failure.diagnostic_limits(report, inventory)
-        self.assertEqual(closed['unit_progress']['path'], units.RESTORE_PATH)
-        for field, extra in [('native_units', {'path': units.RESTORE_PATH}),
-                             ('native_unit_transcripts', {'path': units.RESTORE_PATH}),
-                             ('checks', {'name': 'native-unit-arms:' + units.RESTORE_PATH, 'passed': True})]:
+        self.assertEqual(closed['unit_progress']['path'], units.TRACE_PATH)
+        for field, extra in [('native_units', {'path': units.TRACE_PATH}),
+                             ('native_unit_transcripts', {'path': units.TRACE_PATH}),
+                             ('checks', {'name': 'native-unit-arms:' + units.TRACE_PATH, 'passed': True})]:
             changed = copy.deepcopy(report)
             changed[field].append(extra)
             with self.assertRaises(ValueError):
@@ -182,7 +182,7 @@ class RestoreTimeoutDiagnosticsTests(unittest.TestCase):
                 def paths(value):
                     return {'/state/logs': folder, '/state/logs/zod.log': folder / 'zod.log',
                         '/specs/phase2-pure-units.json': ROOT / 'specs/urbit/phase2-pure-units.json',
-                        '/kernel/pkg/arvo': KernelPath()}.get(str(value), real_path(value))
+                        '/kernel/pkg/arvo': KernelPath(), '/native': ROOT / 'native'}.get(str(value), real_path(value))
                 def dojo(ship, source, **kwargs):
                     self.assertEqual(ship, 'zod')
                     events.append(('dojo', source))
@@ -217,7 +217,7 @@ class RestoreTimeoutDiagnosticsTests(unittest.TestCase):
                      patch.object(coordinator, 'source_sha', return_value='a' * 64), \
                      patch.object(coordinator, 'closure', return_value={'source': 'a' * 64}), \
                      patch.object(coordinator, 'LOADED_CLOSURE', {'source': 'a' * 64}), \
-                     patch.object(coordinator.native_install, 'install', return_value=249), \
+                     patch.object(coordinator.native_install, 'install', return_value=251), \
                      patch.object(units, 'run', side_effect=native_run), \
                      patch.object(units, 'verify_output', side_effect=verify), \
                      patch.object(coordinator, 'completed_build_probe', side_effect=lambda h, r, c: real_probe(h, r, c, folder)), \
@@ -237,7 +237,7 @@ class RestoreTimeoutDiagnosticsTests(unittest.TestCase):
                 self.assertIs(result['qualifies_phase'], False)
                 self.assertTrue(result['error'].startswith('TimeoutError:'))
                 final = writes[-1]
-                self.assertEqual(final['diagnostic_interruption']['path'], units.RESTORE_PATH)
+                self.assertEqual(final['diagnostic_interruption']['path'], units.TRACE_PATH)
                 self.assertEqual([row['path'] for row in final['native_unit_transcripts']], [units.NEGATIVE_PATH])
                 self.assertEqual([row['path'] for row in final['native_units']], [units.NEGATIVE_PATH])
                 self.assertNotIn('product_observation', final)
@@ -251,7 +251,7 @@ class RestoreTimeoutDiagnosticsTests(unittest.TestCase):
     def test_single_arm_routing_refuses_foreign_prefix_extra_or_changed_deadline(self):
         entries = units.restore_entries(self.inventory())
         self.assertEqual(units.restore_request_path(entries[0]), units.NEGATIVE_PATH)
-        selected = units.RESTORE_PATH + '/' + units.RESTORE_ARM
+        selected = units.TRACE_PATH + '/' + units.RESTORE_ARM
         self.assertEqual(units.restore_request_path(entries[1]), selected)
         for bad in (dict(entries[1], arms=[]), dict(entries[1], arms=[units.RESTORE_ARM, 'test-foreign']),
                     dict(entries[1], timeout_seconds=61), dict(entries[1], path='/tests/other'),

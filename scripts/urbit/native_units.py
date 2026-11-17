@@ -11,12 +11,18 @@ import re
 RESTORE_PATH = '/tests/stead-product-restore'
 NEGATIVE_PATH = '/controls/stead-unit-failure'
 RESTORE_ARM = 'test-product-restore-incremental-checkpoint-exposes-no-partial-state'
+TRACE_PATH = '/tests/stead-product-restore-checkpoint-trace'
+TRACE_THREAD = 'stead-restore-checkpoint-trace'
+TRACE_PREFIX = 'stead.restore-checkpoint-trace/1'
+TRACE_BODY = ('body-enter', 'begin-complete', 'first-step-complete', 'checkpoint-complete', 'replay-complete')
+TRACE_ARMS = ('test-product-restore-old-history-path-retains-predecessor-semantics', 'test-product-restore-mixed-replay-is-exact-and-retains-rejected-attempts', 'test-product-restore-rejects-rehashed-command-receipt-and-completion-changes', 'test-product-restore-rejects-reordered-dropped-and-noncanonical-events', 'test-product-restore-missing-history-and-unrecorded-configuration-fail-closed', 'test-product-restore-boundary-and-current-state-must-match-reconstruction', 'test-product-restore-incremental-checkpoint-exposes-no-partial-state', 'test-product-restore-admission-retains-core-and-sidecar-record-bounds')
+TRACE_SOURCES = {'native/core/desk/tests/stead-product-restore.hoon': 'e8e0a1709e5fce6f51d6216e2781242d30f84428b8e2dcca9bb1eb47e0899469', 'native/core/desk/tests/stead-product-restore-checkpoint-trace.hoon': 'e8ea955abb6f38a8f11c75c7563c25e5266e70a445dd20275515b20871024cae', 'native/core/desk/ted/stead-restore-checkpoint-trace.hoon': '0ddc216f38f76df3c40242c7c83d686121f4bf777cd24415947e0d93e6c8e1f7'}
 INTERRUPTION_STAGES = ('encode', 'connect', 'send', 'response-header',
                        'response-body', 'decode', 'parse-terminal')
 
 
 def restore_scope():
-    return {'profile': 'restore-incremental/1', 'paths': [NEGATIVE_PATH, RESTORE_PATH],
+    return {'profile': 'restore-checkpoint-trace/1', 'paths': [NEGATIVE_PATH, TRACE_PATH],
             'selected_arm': RESTORE_ARM,
             'positive_suites': 1, 'positive_arms': 1, 'negative_controls': 1,
             'timeout_seconds': 60, 'qualification': False}
@@ -39,17 +45,112 @@ def restore_entries(inventory):
     checked = validate_inventory(inventory)
     entry = next(row for row in checked['suites'] if row['path'] == RESTORE_PATH)
     diagnostic_require(RESTORE_ARM in entry['arms'])
-    return [checked['negative_control'], dict(entry, arms=[RESTORE_ARM])]
+    return [checked['negative_control'], dict(entry, path=TRACE_PATH, arms=[RESTORE_ARM])]
 
 
 def restore_request_path(entry):
-    """Pinned Arvo filters this one arm after compiling the unchanged module."""
+    """Fixed private hint-only copy; original eight bodies and assertions retained."""
     if entry == {'path': NEGATIVE_PATH, 'arms': ['test-deliberate-failure'],
                  'marker': 'stead-intentional-native-unit-failure'}:
         return NEGATIVE_PATH
-    diagnostic_require(entry == {'path': RESTORE_PATH, 'arms': [RESTORE_ARM],
+    diagnostic_require(type(entry) is dict and type(entry.get('timeout_seconds')) is int
+                        and entry == {'path': TRACE_PATH, 'arms': [RESTORE_ARM],
                                  'timeout_seconds': 60})
-    return RESTORE_PATH + '/' + RESTORE_ARM
+    return TRACE_PATH + '/' + RESTORE_ARM
+
+
+def verify_trace_sources(files):
+    """Closed source bytes; no caller-selected module, thread or original."""
+    import hashlib
+    diagnostic_require(type(files) is dict and set(files) == set(TRACE_SOURCES))
+    diagnostic_require(all(type(raw) is bytes and len(raw) <= 262144
+        and hashlib.sha256(raw).hexdigest() == TRACE_SOURCES[name] for name, raw in files.items()))
+    original = files['native/core/desk/tests/stead-product-restore.hoon']
+    diagnostic = files['native/core/desk/tests/stead-product-restore-checkpoint-trace.hoon']
+    removed = b''.join(line for line in diagnostic.splitlines(keepends=True) if TRACE_PREFIX.encode() not in line)
+    diagnostic_require(removed == original)
+    return dict(TRACE_SOURCES)
+
+
+def validate_trace_progress(value):
+    """All hints remain source-correlated observations, never arm verdicts."""
+    import json
+    diagnostic_require(type(value) is dict and set(value) == {'protocol', 'sources', 'status', 'markers'}
+        and value['protocol'] == 'stead.restore-checkpoint-stages/1'
+        and type(value['status']) is str and value['status'] in ('observed', 'malformed')
+        and json.dumps(value['sources'], sort_keys=True, allow_nan=False) == json.dumps(TRACE_SOURCES, sort_keys=True)
+        and type(value['markers']) is list and len(value['markers']) <= 23)
+    pending, compiled, running, ended, body = None, set(), False, False, 0
+    for row in value['markers']:
+        diagnostic_require(type(row) is dict and set(row) == {'phase', 'arm'}
+            and type(row['phase']) is str and type(row['arm']) is str)
+        phase, arm = row['phase'], row['arm']
+        if phase == 'compile-start':
+            diagnostic_require(not running and not ended and pending is None and arm in TRACE_ARMS and arm not in compiled)
+            pending = arm
+        elif phase == 'compile-end':
+            diagnostic_require(not running and not ended and arm == pending)
+            compiled.add(arm); pending = None
+        elif phase == 'run-start':
+            diagnostic_require(arm == RESTORE_ARM and pending is None and compiled == set(TRACE_ARMS)
+                and not running and not ended)
+            running = True
+        elif phase == 'run-end':
+            # mule may return CRASHED after any body prefix; return is not pass.
+            diagnostic_require(arm == RESTORE_ARM and running and not ended)
+            running, ended = False, True
+        else:
+            diagnostic_require(arm == RESTORE_ARM and running and not ended and body < len(TRACE_BODY)
+                and phase == TRACE_BODY[body])
+            body += 1
+    diagnostic_require(value['status'] != 'malformed' or value['markers'] == [])
+    return value
+
+
+def trace_progress(raw):
+    diagnostic_require(type(raw) is bytes and len(raw) <= 262144)
+    value = {'protocol': 'stead.restore-checkpoint-stages/1', 'sources': dict(TRACE_SOURCES),
+             'status': 'observed', 'markers': []}
+    try:
+        for encoded in raw.splitlines(keepends=True):
+            line = encoded.decode('utf-8', errors='strict')
+            if not line.endswith(('\n', '\r')):
+                continue
+            text = line.strip(' \t\r\n')
+            if TRACE_PREFIX not in text:
+                continue
+            diagnostic_require(text.isascii() and text.startswith(TRACE_PREFIX + ' '))
+            suffix = text[len(TRACE_PREFIX) + 1:]
+            parts = suffix.split(' ')
+            if len(parts) == 2 and parts[0] in ('compile-start', 'compile-end'):
+                phase, arm = parts
+            else:
+                diagnostic_require(len(parts) == 1 and parts[0] in (*TRACE_BODY, 'run-start', 'run-end'))
+                phase, arm = parts[0], RESTORE_ARM
+            value['markers'].append({'phase': phase, 'arm': arm})
+            diagnostic_require(len(value['markers']) <= 23)
+        validate_trace_progress(value)
+    except (UnicodeError, ValueError):
+        value.update(status='malformed', markers=[])
+    return value
+
+
+def trace_completed_output(completed):
+    """Remove only validated exact diagnostic hints before existing verdict parsing."""
+    diagnostic_require(type(completed) is str and len(completed.encode()) <= 262144 + 32768)
+    # The unit log limit remains 262144; appended terminal has no trace marker.
+    lines = completed.splitlines(keepends=True)
+    diagnostic_require(all(line.endswith(('\n', '\r')) for line in lines if TRACE_PREFIX in line))
+    hints = ''.join(line for line in lines if TRACE_PREFIX in line).encode()
+    observed = trace_progress(hints)
+    diagnostic_require(observed['status'] == 'observed')
+    cleaned = ''.join(line for line in lines if TRACE_PREFIX not in line)
+    successful = re.search(r'(?m)^\s*OK\s+' + re.escape(TRACE_PATH + '/' + RESTORE_ARM) + r'\s*$', cleaned)
+    if successful:
+        rows = observed['markers']
+        diagnostic_require(len(rows) == 23 and rows[-1] == {'phase': 'run-end', 'arm': RESTORE_ARM}
+            and [row['phase'] for row in rows if row['phase'] in TRACE_BODY] == list(TRACE_BODY))
+    return cleaned
 
 
 def interruption_transport(stage, elapsed_ms, received, timeout):
@@ -79,7 +180,7 @@ def partial_log(entry, raw):
     """Only source-registered complete log lines, never a suite verdict."""
     import hashlib
     diagnostic_require(type(raw) is bytes and len(raw) <= 262144
-        and entry['path'] in (RESTORE_PATH, NEGATIVE_PATH))
+        and entry['path'] in (TRACE_PATH, NEGATIVE_PATH))
     result = {'log_bytes': len(raw), 'log_sha256': hashlib.sha256(raw).hexdigest(),
               'build_observed': False, 'registered_arm_observations': [],
               'projection_status': 'observed'}
@@ -105,6 +206,8 @@ def partial_log(entry, raw):
         result['build_observed'] = builds == 1
     except (UnicodeDecodeError, ValueError):
         result.update(build_observed=False, registered_arm_observations=[], projection_status='malformed')
+    if entry['path'] == TRACE_PATH:
+        result['stages'] = trace_progress(raw)
     return result
 
 
@@ -137,13 +240,16 @@ def validate_interrupted_unit(value, inventory):
                 and (5 <= size < declared + 5 if state == 'partial-body' else
                      size == declared + 5 if state == 'complete' else size > declared + 5))
     log = value['log']
+    extra = {'stages'} if value['path'] == TRACE_PATH else set()
     diagnostic_require(type(log) is dict and set(log) == {'log_bytes', 'log_sha256',
-        'build_observed', 'registered_arm_observations', 'projection_status'}
+        'build_observed', 'registered_arm_observations', 'projection_status'} | extra
         and type(log['log_bytes']) is int and 0 <= log['log_bytes'] <= 262144
         and type(log['log_sha256']) is str and re.fullmatch('[a-f0-9]{64}', log['log_sha256'])
         and type(log['build_observed']) is bool
         and type(log['projection_status']) is str and log['projection_status'] in ('observed', 'malformed')
         and type(log['registered_arm_observations']) is list)
+    if extra:
+        validate_trace_progress(log['stages'])
     rows = log['registered_arm_observations']
     diagnostic_require(len(rows) <= len(entries[value['path']]['arms']))
     names = set()
@@ -159,7 +265,7 @@ def validate_interrupted_unit(value, inventory):
 
 
 def run(binary, socket_path, resolved_path: str, timeout: float = 60) -> dict:
-    """Invoke pinned Arvo's unchanged /ted/test through its private Khan API.
+    """Invoke the pinned runner or its sole fixed diagnostic copy via Khan.
 
     Dojo resolves the beam separately. The unit runner itself does not pass
     through Dojo/Lens: that path raises a Dojo %kick error after completion on
@@ -176,13 +282,19 @@ def run(binary, socket_path, resolved_path: str, timeout: float = 60) -> dict:
     started = time.monotonic()
     ordinary = re.fullmatch(r'/~zod/base/~[0-9a-zA-Z.:-]+/(tests|controls)/stead-[a-z0-9-]+', resolved_path)
     incremental = re.fullmatch(r'/~zod/base/~[0-9a-zA-Z.:-]+' + re.escape(RESTORE_PATH + '/' + RESTORE_ARM), resolved_path)
-    if not (ordinary or incremental):
+    traced = re.fullmatch(r'/~zod/base/~[0-9a-zA-Z.:-]+' + re.escape(TRACE_PATH + '/' + RESTORE_ARM), resolved_path)
+    if TRACE_PATH in resolved_path and not traced:
+        raise ValueError('Fixed trace arm required')
+    if traced and (type(timeout) is not int or timeout != 60):
+        raise ValueError('Fixed trace deadline differs')
+    if not (ordinary or incremental or traced):
         raise ValueError('Resolved native unit beam required')
     atoms = ' '.join(core_conn.atom(part.encode()) for part in resolved_path.split('/')[1:])
     # Arvo's %path mark preserves the vase type required by /ted/test's !<.
     # A %noun input has the right value but an intentionally erased type and
     # is rejected by the official runner before executing any tests.
-    request = f'[32 %fyrd [%base %test %noun [%path [{atoms} ~]]]]'
+    thread = TRACE_THREAD if traced else 'test'
+    request = f'[32 %fyrd [%base %{thread} %noun [%path [{atoms} ~]]]]'
     def evaluator_stderr(raw: bytes, mode: str) -> bool:
         # Ordinary startup is exact for the pinned binary/pill.
         return raw.replace(b'\r\n', b'\n') == (

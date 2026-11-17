@@ -34,7 +34,7 @@ def observe(job, code, stdout, stderr):
             'stdout_sha256': hashlib.sha256(stdout).hexdigest(), 'stdout_bytes': len(stdout),
             'stderr_sha256': hashlib.sha256(stderr).hexdigest(), 'stderr_bytes': len(stderr),
             'compiler_failure': False}
-PROFILE = {'composition_sha256': '1c1f04d82fcfc4eac6f5edf5d00b39f29bbbeb541687fb5df5a431726810a280',
+PROFILE = {'composition_sha256': '29f23ddb8849c5b182fca693a993a0634463e12104b47433ba3525adf93dfe31',
            'positive_arms': 26, 'jobs': 6}
 # These lifecycle doubles remain synthetic. test_pure_eval_profiles uses the real
 # codec and both complete source maps to verify cross-profile admission.
@@ -59,7 +59,7 @@ def report(failed=False):
                         'source_bytes': 1, 'exit_code': 0, 'stdout': stream_row(stdout),
                         'stderr': stream_row(b''), 'observation': json.loads(C.canonical(observation))})
     return {'protocol': 'stead.fixed-pure-eval-report/1', 'status': 'fail' if failed else 'pass',
-            'qualifies_phase': False, 'composition_sha256': '1c1f04d82fcfc4eac6f5edf5d00b39f29bbbeb541687fb5df5a431726810a280',
+            'qualifies_phase': False, 'composition_sha256': '29f23ddb8849c5b182fca693a993a0634463e12104b47433ba3525adf93dfe31',
             'runtime_sha256': 'f7f0d3b3c0480fc10f887dfbc09bde56a81d723a803541c7886c538a0675d833',
             'records': records, 'source_hashes_before': HASHES, 'source_hashes_after': HASHES,
             'budget_stop': None, 'error_class': 'ValueError' if failed else 'none',
@@ -69,7 +69,7 @@ def report(failed=False):
 
 def envelope(failed=False):
     owner = {'host_uid': 1001, 'host_gid': 1002, 'sources': {'worker.py': {'bytes': 10, 'sha256': 'a' * 64},
-                 'composition.json': {'bytes': 240147, 'sha256': PROFILE['composition_sha256']}},
+                 'composition.json': {'bytes': 240159, 'sha256': PROFILE['composition_sha256']}},
              'runtime': {'sha256': 'f7f0d3b3c0480fc10f887dfbc09bde56a81d723a803541c7886c538a0675d833'}}
     namespaces = {name: name + ':[2]' for name in ('user', 'mnt', 'pid', 'net')}
     digest = hashlib.sha256(C.canonical(owner)).hexdigest()
