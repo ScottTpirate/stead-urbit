@@ -1,4 +1,4 @@
-"""Six inert groups. No native, namespace, service, socket or model execution.
+"""Seven inert groups. No native, namespace, service, socket or model execution.
 
 Temporary bytes are explicitly host-only vectors, never actual saved nouns.
 Privileged metadata and process boundaries are mocked; archive bytes, hashes,
@@ -398,3 +398,69 @@ class Saved8OuterTests(unittest.TestCase):
             self.assertEqual(A.publish(root, row, inputs, {}), 'fail')
             self.assertEqual(row['errors'][0]['error_class'], 'TimeoutError')
             self.assertFalse(any((root / n).exists() for n in R.NAMES))
+
+    def test_public_evidence_permissions_under_private_umask(self):
+        value, expected, inputs, context = synthetic()
+        _, artifacts = decode(value, expected, inputs, context)
+        source = ast.parse((PACKAGE / 'service_adapter.py').read_bytes())
+        outer = next(n for n in source.body if isinstance(n, ast.FunctionDef) and n.name == 'outer')
+        start = next(i for i, n in enumerate(outer.body) if isinstance(n, ast.Assign)
+                     and any(isinstance(t, ast.Name) and t.id == 'public' for t in n.targets))
+        end = next(i for i in range(start, len(outer.body)) if isinstance(outer.body[i], ast.Expr)
+                   and isinstance(outer.body[i].value, ast.Call)
+                   and isinstance(outer.body[i].value.func, ast.Name)
+                   and outer.body[i].value.func.id == 'publish')
+        # Execute only the actual fixed public-directory preparation statements.
+        # Root ownership is an explicit double; actual temporary modes and bytes
+        # are real, with the same private umask as hosted.main.
+        directory_code = compile(ast.Module(body=outer.body[start:end], type_ignores=[]),
+                                 '<captured-public-directory>', 'exec', dont_inherit=True)
+        previous_umask = os.umask(0o077)
+        try:
+            for outcome in ('pass', 'initial-failure', 'export-failure'):
+                with self.subTest(outcome=outcome), tempfile.TemporaryDirectory() as folder:
+                    base = Path(folder)
+                    private = base / 'private'; private.mkdir(mode=0o700)
+                    secret = private / 'console.private.log'; secret.write_bytes(b'private fixture')
+                    def controlled(path):
+                        self.assertEqual(path, base / 'home-asset-evidence')
+                        self.assertFalse(path.is_symlink())
+                        self.assertEqual(path.stat().st_mode & 0o777, 0o700)
+                    hosted = types.SimpleNamespace(ROOT=base, regular_root=controlled)
+                    namespace = {'hosted': hosted, 'os': os}
+                    exec(directory_code, namespace)
+                    public = namespace['public']
+                    self.assertEqual(public.stat().st_mode & 0o777, 0o755)
+                    row = {'status': 'pass', 'errors': [], 'cleanup': {'verified': True},
+                           'artifacts': {}, 'report': value['report']}
+                    files = artifacts
+                    if outcome == 'initial-failure':
+                        row.update(status='fail', errors=[{'phase': 'intake', 'error_class': 'ValueError'}], report=None)
+                        files = {}
+                    order = []
+                    original = A.exclusive
+                    def checked(path, raw, created):
+                        if outcome == 'export-failure' and path.name == 'report.json':
+                            raise OSError('inert export refusal')
+                        original(path, raw, created)
+                        self.assertEqual(path.stat().st_mode & 0o777, 0o644)
+                        self.assertEqual(path.read_bytes(), raw)
+                        order.append(path.name)
+                    with mock.patch.object(A, 'exclusive', side_effect=checked):
+                        self.assertEqual(A.publish(public, row, inputs, files),
+                                         'pass' if outcome == 'pass' else 'fail')
+                    self.assertEqual(order[-1], 'owner-report.json')
+                    expected_files = ({*R.NAMES, 'inputs.json', 'report.json', 'owner-report.json'}
+                                      if outcome == 'pass' else {'inputs.json', 'owner-report.json'}
+                                      if outcome == 'initial-failure' else {'owner-report.json'})
+                    self.assertEqual({p.name for p in public.iterdir()}, expected_files)
+                    self.assertTrue(all((p.stat().st_mode & 0o777) == 0o644 for p in public.iterdir()))
+                    receipt = json.loads((public / 'owner-report.json').read_bytes())
+                    self.assertEqual(receipt['status'], 'pass' if outcome == 'pass' else 'fail')
+                    if outcome != 'pass':
+                        self.assertEqual(receipt['artifacts'], {})
+                    self.assertEqual(private.stat().st_mode & 0o777, 0o700)
+                    self.assertEqual(secret.stat().st_mode & 0o777, 0o600)
+                    self.assertEqual(secret.read_bytes(), b'private fixture')
+        finally:
+            os.umask(previous_umask)

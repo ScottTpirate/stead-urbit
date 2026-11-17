@@ -199,7 +199,7 @@ def exclusive(path, raw, created):
     fd = os.open(path, os.O_WRONLY | os.O_CREAT | os.O_EXCL | os.O_NOFOLLOW | os.O_CLOEXEC, 0o600)
     created.append(path)
     with os.fdopen(fd, 'wb') as stream:
-        stream.write(raw); stream.flush(); os.fsync(stream.fileno())
+        stream.write(raw); stream.flush(); os.fchmod(stream.fileno(), 0o644); os.fsync(stream.fileno())
 
 
 def sync_directory(root):
@@ -380,6 +380,7 @@ def outer(hosted, args, identity, binding):
         owner['status'] = 'fail'
     public = hosted.ROOT / 'home-asset-evidence'
     public.mkdir(mode=0o700, exist_ok=True); hosted.regular_root(public)
+    os.chmod(public, 0o755)
     publish(public, owner, inputs, artifacts)
     print(json.dumps({'status': owner['status'], 'evidence': 'home-asset-evidence/owner-report.json'}), flush=True)
     return 0 if owner['status'] == 'pass' else 1
