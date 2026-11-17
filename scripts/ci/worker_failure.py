@@ -456,6 +456,30 @@ def diagnostic_limits(native, inventory):
     stop = native.get('diagnostic_budget_stop')
     interruption = native.get('diagnostic_interruption')
     result = {'budget_stop': None, 'interruption': None}
+    scope = native.get('diagnostic_scope')
+    if scope is not None:
+        result['scope'] = native_units.validate_restore_scope(scope)
+        selected_paths = [row['path'] for row in native_units.restore_entries(inventory)]
+        selected = set(selected_paths)
+        for field in ('native_units', 'native_unit_transcripts'):
+            rows = native.get(field, [])
+            require(type(rows) is list and len(rows) <= 2
+                and all(type(row) is dict and type(row.get('path')) is str
+                    and row['path'] in selected for row in rows),
+                'Focused diagnostic row scope')
+            paths = [row['path'] for row in rows]
+            require(len(set(paths)) == len(paths)
+                and paths == [path for path in selected_paths if path in paths]
+                and (field != 'native_unit_transcripts' or paths == selected_paths[:len(paths)]),
+                'Focused diagnostic row order')
+        failures = native.get('native_unit_failures', [])
+        require(type(failures) is list and len(failures) <= 2
+            and all(type(path) is str and path in selected for path in failures),
+            'Focused diagnostic failure scope')
+        require(len(set(failures)) == len(failures)
+            and failures == [path for path in selected_paths if path in failures],
+            'Focused diagnostic failure order')
+        allowed = selected
     if stop is not None:
         require(isinstance(stop, dict) and set(stop) == {
             'phase', 'path', 'staged_bytes', 'staged_sha256', 'retained_bytes', 'limit_bytes', 'omitted'},
@@ -501,6 +525,23 @@ def diagnostic_limits(native, inventory):
                 or (interruption['evidence_bytes'] > 0 and isinstance(digest, str)
                     and re.fullmatch('[0-9a-f]{64}', digest)), 'Diagnostic interruption digest')
         result['interruption'] = dict(interruption)
+    progress = native.get('diagnostic_unit_interruption')
+    if progress is not None:
+        require(scope is not None and interruption is not None
+            and interruption['phase'] == 'suite', 'Interrupted unit scope required')
+        native_units.validate_interrupted_unit(progress, inventory)
+        require(progress['path'] == interruption['path'], 'Interrupted unit path differs')
+        retained = native.get('native_unit_transcripts', [])
+        require(len(retained) < 2 and progress['path'] == selected_paths[len(retained)],
+            'Interrupted unit is not the next fixed entry')
+        require(not any(row.get('path') == progress['path'] for row in native.get('native_units', []))
+            and not any(row.get('path') == progress['path'] for row in native.get('native_unit_transcripts', []))
+            and progress['path'] not in native.get('native_unit_failures', [])
+            and not any(type(row) is dict and row.get('passed') is True
+                and row.get('name') in ('native-unit-arms:' + progress['path'],
+                                       'native-unit-expected-failure:' + progress['path'])
+                for row in native.get('checks', [])), 'Interrupted unit cannot claim completion')
+        result['unit_progress'] = progress
     return result
 
 

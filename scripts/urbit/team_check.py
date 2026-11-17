@@ -185,6 +185,19 @@ def diagnostic_error(report, error, phase, path='', evidence=None):
     report['error'] = kind + ': ' + message
 
 
+def diagnostic_unit_progress(report, entry, error, captured, inventory):
+    """Optional closed progress. Never replace the original error or add a row."""
+    try:
+        value = {'path': entry['path'], 'transport': getattr(error, 'native_interruption', None),
+                 'log': native_units.partial_log(entry, captured)}
+        native_units.validate_interrupted_unit(value, inventory)
+        staged = dict(report, diagnostic_unit_interruption=value)
+        if len(diagnostic_bytes(staged)) <= DIAGNOSTIC_BUDGET:
+            report['diagnostic_unit_interruption'] = value
+    except Exception:
+        pass
+
+
 def finalize_diagnostic(report, before, after, elapsed):
     staged = copy.deepcopy(report)
     staged.update(status='fail', qualifies_phase=False, inputs_after=after,
@@ -267,7 +280,8 @@ def run(host):
     started = time.monotonic()
     report = {'status': 'fail', 'classification': 'local-real-configured-gall-development',
               'qualifies_phase': False, 'checks': [], 'commands': [], 'installed': {},
-              'scope': 'Dedicated build and pure-suite diagnostics only; no later ship startup, Gall journey, capture or qualification.',
+              'scope': 'Fixed restore8 and deliberate-negative diagnostics only; no all329, later ship, journey, capture or qualification.',
+              'diagnostic_scope': native_units.restore_scope(),
               'diagnostic_only': True}
     path = Path('/state/logs') / ('team-check-' + time.strftime('%Y%m%dT%H%M%SZ', time.gmtime()) + '.json')
 
@@ -378,6 +392,7 @@ def run(host):
                 diagnostic_error(report, error, 'suite', entry['path'], evidence={
                     'native_failure': getattr(error, 'native_failure', None),
                     'log_bytes': len(captured), 'log_sha256': hashlib.sha256(captured).hexdigest()})
+                diagnostic_unit_progress(report, entry, error, captured, inventory)
                 raise
             finally:
                 host['record']('native unit captured', {'path': entry['path'], 'log_bytes': len(captured),
@@ -402,9 +417,9 @@ def run(host):
             checkpoint('native-unit-diagnostic-failure' if verified is None else 'native-unit-output')
             pending.clear()
 
-        # The dedicated controller always stops here, even when the app and
-        # all49 completed suites pass. No later ship/Gall/journey/capture runs.
-        native_units.collect_pure_diagnostics([*inventory['suites'], inventory['negative_control']],
+        # Fixed negative first, then the original restore8. This always stops;
+        # no later ship/Gall/journey/capture and no all329 qualification.
+        native_units.collect_pure_diagnostics(native_units.restore_entries(inventory),
             execute, verify, lambda entry, verified: retain(entry, verified),
             lambda entry: retain(entry, None))
 

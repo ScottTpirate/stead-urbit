@@ -8,6 +8,143 @@ from __future__ import annotations
 import re
 
 
+RESTORE_PATH = '/tests/stead-product-restore'
+NEGATIVE_PATH = '/controls/stead-unit-failure'
+INTERRUPTION_STAGES = ('encode', 'connect', 'send', 'response-header',
+                       'response-body', 'decode', 'parse-terminal')
+
+
+def restore_scope():
+    return {'profile': 'restore-timeout/1', 'paths': [NEGATIVE_PATH, RESTORE_PATH],
+            'positive_suites': 1, 'positive_arms': 8, 'negative_controls': 1,
+            'timeout_seconds': 60, 'qualification': False}
+
+
+def diagnostic_require(value):
+    if not value:
+        raise ValueError('Closed restore interruption refused')
+
+
+def validate_restore_scope(value):
+    import json
+    diagnostic_require(type(value) is dict and
+        json.dumps(value, sort_keys=True, allow_nan=False) ==
+        json.dumps(restore_scope(), sort_keys=True, allow_nan=False))
+    return value
+
+
+def restore_entries(inventory):
+    checked = validate_inventory(inventory)
+    return [checked['negative_control'],
+            next(row for row in checked['suites'] if row['path'] == RESTORE_PATH)]
+
+
+def interruption_transport(stage, elapsed_ms, received, timeout):
+    """Structural progress only. Even a complete frame is no terminal verdict."""
+    import hashlib
+    diagnostic_require(type(stage) is str and stage in INTERRUPTION_STAGES
+        and type(elapsed_ms) is int and 0 <= elapsed_ms <= 180000
+        and type(received) is bytes and len(received) <= 1000005
+        and type(timeout) is int and timeout == 60)
+    count, declared = len(received), None
+    if count == 0:
+        state = 'empty'
+    elif count < 5:
+        state = 'partial-header'
+    elif received[0] != 0 or not 1 <= int.from_bytes(received[1:5], 'little') <= 1000000:
+        state = 'invalid-header'
+    else:
+        declared = int.from_bytes(received[1:5], 'little')
+        state = 'partial-body' if count < declared + 5 else 'complete' if count == declared + 5 else 'overlong'
+    return {'protocol': 'stead.native-unit-interruption/1', 'stage': stage,
+            'timeout_seconds': timeout, 'elapsed_ms': elapsed_ms, 'received_bytes': count,
+            'received_sha256': hashlib.sha256(received).hexdigest(), 'frame_state': state,
+            'declared_body_bytes': declared, 'terminal_accepted': False}
+
+
+def partial_log(entry, raw):
+    """Only source-registered complete log lines, never a suite verdict."""
+    import hashlib
+    diagnostic_require(type(raw) is bytes and len(raw) <= 262144
+        and entry['path'] in (RESTORE_PATH, NEGATIVE_PATH))
+    result = {'log_bytes': len(raw), 'log_sha256': hashlib.sha256(raw).hexdigest(),
+              'build_observed': False, 'registered_arm_observations': [],
+              'projection_status': 'observed'}
+    try:
+        # Ignore a trailing incomplete line: it is not a completed observation.
+        lines = raw.decode('utf-8', errors='strict').splitlines(keepends=True)
+        seen, builds = set(), 0
+        for line in lines:
+            if not line.endswith(('\n', '\r')):
+                continue
+            line = line.strip()
+            if line == 'built   ' + entry['path'] + '/hoon':
+                builds += 1
+            match = re.fullmatch(r'(OK|FAILED|CRASHED)\s+(/[^\s]+)', line)
+            if match:
+                prefix = entry['path'] + '/'
+                diagnostic_require(match[2].startswith(prefix))
+                name = match[2][len(prefix):]
+                diagnostic_require(name in entry['arms'] and name not in seen)
+                seen.add(name)
+                result['registered_arm_observations'].append({'arm': name, 'outcome': match[1]})
+        diagnostic_require(builds <= 1)
+        result['build_observed'] = builds == 1
+    except (UnicodeDecodeError, ValueError):
+        result.update(build_observed=False, registered_arm_observations=[], projection_status='malformed')
+    return result
+
+
+def validate_interrupted_unit(value, inventory):
+    """Validate the closed public projection without upgrading partial evidence."""
+    import json
+    entries = {row['path']: row for row in restore_entries(inventory)}
+    diagnostic_require(type(value) is dict and set(value) == {'path', 'transport', 'log'}
+        and type(value['path']) is str and value['path'] in entries)
+    transport = value['transport']
+    if transport is not None:
+        diagnostic_require(type(transport) is dict and set(transport) == {
+            'protocol', 'stage', 'timeout_seconds', 'elapsed_ms', 'received_bytes',
+            'received_sha256', 'frame_state', 'declared_body_bytes', 'terminal_accepted'})
+        diagnostic_require(transport['protocol'] == 'stead.native-unit-interruption/1'
+            and type(transport['stage']) is str and transport['stage'] in INTERRUPTION_STAGES
+            and type(transport['timeout_seconds']) is int and transport['timeout_seconds'] == 60
+            and type(transport['elapsed_ms']) is int and 0 <= transport['elapsed_ms'] <= 180000
+            and type(transport['received_bytes']) is int and 0 <= transport['received_bytes'] <= 1000005
+            and type(transport['received_sha256']) is str and re.fullmatch('[a-f0-9]{64}', transport['received_sha256'])
+            and transport['terminal_accepted'] is False)
+        size, declared, state = transport['received_bytes'], transport['declared_body_bytes'], transport['frame_state']
+        diagnostic_require(type(state) is str)
+        if state in ('empty', 'partial-header', 'invalid-header'):
+            diagnostic_require(declared is None and
+                (size == 0 if state == 'empty' else 1 <= size < 5 if state == 'partial-header' else size >= 5))
+        else:
+            diagnostic_require(type(declared) is int and 1 <= declared <= 1000000
+                and state in ('partial-body', 'complete', 'overlong')
+                and (5 <= size < declared + 5 if state == 'partial-body' else
+                     size == declared + 5 if state == 'complete' else size > declared + 5))
+    log = value['log']
+    diagnostic_require(type(log) is dict and set(log) == {'log_bytes', 'log_sha256',
+        'build_observed', 'registered_arm_observations', 'projection_status'}
+        and type(log['log_bytes']) is int and 0 <= log['log_bytes'] <= 262144
+        and type(log['log_sha256']) is str and re.fullmatch('[a-f0-9]{64}', log['log_sha256'])
+        and type(log['build_observed']) is bool
+        and type(log['projection_status']) is str and log['projection_status'] in ('observed', 'malformed')
+        and type(log['registered_arm_observations']) is list)
+    rows = log['registered_arm_observations']
+    diagnostic_require(len(rows) <= len(entries[value['path']]['arms']))
+    names = set()
+    for row in rows:
+        diagnostic_require(type(row) is dict and set(row) == {'arm', 'outcome'}
+            and type(row['arm']) is str and row['arm'] in entries[value['path']]['arms']
+            and row['arm'] not in names and type(row['outcome']) is str
+            and row['outcome'] in ('OK', 'FAILED', 'CRASHED'))
+        names.add(row['arm'])
+    diagnostic_require(log['projection_status'] != 'malformed' or (not rows and log['build_observed'] is False))
+    diagnostic_require(len(json.dumps(value, sort_keys=True).encode()) <= 8192)
+    return value
+
+
 def run(binary, socket_path, resolved_path: str, timeout: float = 60) -> dict:
     """Invoke pinned Arvo's unchanged /ted/test through its private Khan API.
 
@@ -83,6 +220,12 @@ def run(binary, socket_path, resolved_path: str, timeout: float = 60) -> dict:
         return observation
     except Exception as error:
         import subprocess
+        # Diagnostic-only attachment cannot replace the initiating exception.
+        try:
+            error.native_interruption = interruption_transport(trace['stage'],
+                round((time.monotonic() - started) * 1000), bytes(received), timeout)
+        except Exception:
+            error.native_interruption = None
         trace.update(error=type(error).__name__ + ': ' + str(error), received_frame_hex=received.hex(), elapsed_seconds=round(time.monotonic() - started, 3))
         if isinstance(error, (subprocess.CalledProcessError, subprocess.TimeoutExpired)):
             trace.update(evaluator_output_hex=(error.output or b'').hex(),
