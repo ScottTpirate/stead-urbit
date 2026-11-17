@@ -1,0 +1,919 @@
+ase-dev/mar/hoon.hoon",
+    "mar/json.hoon": "kernel:pkg/base-dev/mar/json.hoon",
+    "mar/kelvin.hoon": "kernel:pkg/base-dev/mar/kelvin.hoon",
+    "mar/mime.hoon": "kernel:pkg/base-dev/mar/mime.hoon",
+    "mar/noun.hoon": "kernel:pkg/base-dev/mar/noun.hoon",
+    "mar/stead-asset.hoon": "repository:native/core/desk/mar/stead-asset.hoon",
+    "mar/stead-auth-approval-1.hoon": "repository:native/core/desk/mar/stead-auth-approval-1.hoon",
+    "mar/stead-auth-challenge-1.hoon": "repository:native/core/desk/mar/stead-auth-challenge-1.hoon",
+    "mar/stead-bootstrap-1.hoon": "repository:native/core/desk/mar/stead-bootstrap-1.hoon",
+    "mar/stead-code-pack-stage-1.hoon": "repository:native/core/desk/mar/stead-code-pack-stage-1.hoon",
+    "mar/stead-command-3.hoon": "repository:native/core/desk/mar/stead-command-3.hoon",
+    "mar/stead-home-handoff-1.hoon": "repository:native/core/desk/mar/stead-home-handoff-1.hoon",
+    "mar/stead-identity-config-1.hoon": "repository:native/core/desk/mar/stead-identity-config-1.hoon",
+    "mar/stead-project-retirement-1.hoon": "repository:native/core/desk/mar/stead-project-retirement-1.hoon",
+    "mar/stead-query-3.hoon": "repository:native/core/desk/mar/stead-query-3.hoon",
+    "mar/stead-result-3.hoon": "repository:native/core/desk/mar/stead-result-3.hoon",
+    "mar/stead-team-config-1.hoon": "repository:native/core/desk/mar/stead-team-config-1.hoon",
+    "mar/stead-updates-3.hoon": "repository:native/core/desk/mar/stead-updates-3.hoon",
+    "mar/txt.hoon": "kernel:pkg/base-dev/mar/txt.hoon",
+    "sur/spider.hoon": "kernel:pkg/base-dev/sur/spider.hoon",
+    "sys.kelvin": "generated:kernel-compatibility",
+    "ted/stead-pilot-cert.hoon": "repository:native/core/desk/ted/stead-pilot-cert.hoon",
+    "ted/stead-pilot-owner.hoon": "repository:native/core/desk/ted/stead-pilot-owner.hoon",
+    "web/stead/asset-08a1794a61e7ed673d2e66de355cda8680a87a9dff4de7245ac987909ce7b1ed.stead-asset": "repository:native/core/desk/web/stead/asset-08a1794a61e7ed673d2e66de355cda8680a87a9dff4de7245ac987909ce7b1ed.stead-asset",
+    "web/stead/asset-3e9102608b1a1d3dced1bd3f42068196621e3be103c017e5eb0ed70d4521b58e.stead-asset": "repository:native/core/desk/web/stead/asset-3e9102608b1a1d3dced1bd3f42068196621e3be103c017e5eb0ed70d4521b58e.stead-asset",
+    "web/stead/asset-3f5adfead9553e9a640639d4c0f2bbad5bef04ed9d6b9e0ab2e06daac0e6e162.stead-asset": "repository:native/core/desk/web/stead/asset-3f5adfead9553e9a640639d4c0f2bbad5bef04ed9d6b9e0ab2e06daac0e6e162.stead-asset",
+    "web/stead/asset-4ad0a8c304f247405c5314f49b27fac259aa8f52458868bfe6e5f79760ad7a95.stead-asset": "repository:native/core/desk/web/stead/asset-4ad0a8c304f247405c5314f49b27fac259aa8f52458868bfe6e5f79760ad7a95.stead-asset",
+    "web/stead/asset-545015593ed73aed1b421833eb462ccc6ba2ae0179ebd64909ec13ea499ed07c.stead-asset": "repository:native/core/desk/web/stead/asset-545015593ed73aed1b421833eb462ccc6ba2ae0179ebd64909ec13ea499ed07c.stead-asset",
+    "web/stead/asset-76d34b4f451dddc7ca0cc468214e6d0134ce919f9e44c6d5900cc163b449c329.stead-asset": "repository:native/core/desk/web/stead/asset-76d34b4f451dddc7ca0cc468214e6d0134ce919f9e44c6d5900cc163b449c329.stead-asset",
+    "web/stead/asset-948622e93fa4482a32d535f33e2fe6999c359e014d769cc4a7ef0b1a5cee58c2.stead-asset": "repository:native/core/desk/web/stead/asset-948622e93fa4482a32d535f33e2fe6999c359e014d769cc4a7ef0b1a5cee58c2.stead-asset",
+    "web/stead/asset-96fdd773b2fdf2913dd981d8a9e55864e64a10328008dd10bcceb6706d21ced5.stead-asset": "repository:native/core/desk/web/stead/asset-96fdd773b2fdf2913dd981d8a9e55864e64a10328008dd10bcceb6706d21ced5.stead-asset",
+    "web/stead/asset-9dbaaa1b267ebd74b96fc498735a78d76804f1e96e532871291c937cf83694e7.stead-asset": "repository:native/core/desk/web/stead/asset-9dbaaa1b267ebd74b96fc498735a78d76804f1e96e532871291c937cf83694e7.stead-asset",
+    "web/stead/asset-b8bde83065c9373b81c1d6ddb13187ad75419e6975b7fefa4deeba90fb67c980.stead-asset": "repository:native/core/desk/web/stead/asset-b8bde83065c9373b81c1d6ddb13187ad75419e6975b7fefa4deeba90fb67c980.stead-asset",
+    "web/stead/asset-b9e5d702e8b41173e270cbb40a3f22f1a33f5d9d49507a15e6d9e836b1f05a98.stead-asset": "repository:native/core/desk/web/stead/asset-b9e5d702e8b41173e270cbb40a3f22f1a33f5d9d49507a15e6d9e836b1f05a98.stead-asset",
+    "web/stead/asset-c5588f1a49419f8eebe2152a9dba4f25a1582e5b2c79dd7fb28dbdd26405e54c.stead-asset": "repository:native/core/desk/web/stead/asset-c5588f1a49419f8eebe2152a9dba4f25a1582e5b2c79dd7fb28dbdd26405e54c.stead-asset",
+    "web/stead/asset-c9235b043c7ea052717cebbc9a705f8c771bafe5cc6ccc92a992d1ff13ec1d25.stead-asset": "repository:native/core/desk/web/stead/asset-c9235b043c7ea052717cebbc9a705f8c771bafe5cc6ccc92a992d1ff13ec1d25.stead-asset",
+    "web/stead/asset-d6594069b32b673ae27191f80d4bf5937d72c6d23767e8b0a5ff984ec906f54c.stead-asset": "repository:native/core/desk/web/stead/asset-d6594069b32b673ae27191f80d4bf5937d72c6d23767e8b0a5ff984ec906f54c.stead-asset",
+    "web/stead/asset-e3c2ed32bd37b50a0f4d81f76b027511e219665af301041e6e2fb1046cccddda.stead-asset": "repository:native/core/desk/web/stead/asset-e3c2ed32bd37b50a0f4d81f76b027511e219665af301041e6e2fb1046cccddda.stead-asset",
+    "web/stead/asset-eda3aa3ae9037026abda1a3f8567d6d597d1db501d6ecb27571ec2443379c0ca.stead-asset": "repository:native/core/desk/web/stead/asset-eda3aa3ae9037026abda1a3f8567d6d597d1db501d6ecb27571ec2443379c0ca.stead-asset",
+    "web/stead/inventory.hoon": "repository:native/core/desk/web/stead/inventory.hoon"
+  },
+  "docket": "not-included-native-route-candidate",
+  "files": {
+    "LICENSE": {
+      "bytes": 10030,
+      "sha256": "a268d7b43f15fc12307b291a01c5761d177a8848521fd3f6f9949e2e89680c05"
+    },
+    "OPERATOR.md": {
+      "bytes": 29872,
+      "sha256": "36a4f5be2469a685da3133c054075dcf6c33d2b0c2c7adfd3c03ad29ade69166"
+    },
+    "THIRD_PARTY_NOTICES.md": {
+      "bytes": 13933,
+      "sha256": "3c02a6d5d517e54c2c69bf9e4d830c97fef68a717248d0cbbf9cdce7686c3197"
+    },
+    "desk/app/stead-home.hoon": {
+      "bytes": 22394,
+      "sha256": "b22de1f66ef4e96146dc0038b9946ce108bf64dd4ecc7dff7091d5ea5ee277d2"
+    },
+    "desk/desk.bill": {
+      "bytes": 19,
+      "sha256": "b18f220bcb92a430725b7f5cf5c39944bf2407f78c1f0c0f58b214d09b17543e"
+    },
+    "desk/lib/default-agent.hoon": {
+      "bytes": 1307,
+      "sha256": "70a8af06601e8d1b75b261b2ac8b2cb06d5622baa1d1b1f8fec9236ce167d113"
+    },
+    "desk/lib/server.hoon": {
+      "bytes": 3870,
+      "sha256": "d0a566085300a6deae334b98c4844dc11e90f0315015a91e97c2fbb61db31d68"
+    },
+    "desk/lib/skeleton.hoon": {
+      "bytes": 792,
+      "sha256": "c7c654a91c5dc1a535d4a76b019ec175955e52961b1ddff70ad49121208d20f5"
+    },
+    "desk/lib/stead-assets.hoon": {
+      "bytes": 992,
+      "sha256": "e5493f5d45e3a588b98520ee9f0772683a9c277eec083d49b238cc8986a789b3"
+    },
+    "desk/lib/stead-browser.hoon": {
+      "bytes": 11193,
+      "sha256": "78a6cf8d314590070230ade522ef0329a81faa446050832567f6b8750c604027"
+    },
+    "desk/lib/stead-code-ancestry.hoon": {
+      "bytes": 2026,
+      "sha256": "d46a3af25bb6a1ce0cdb36497717a160c96247fd1bcf831cff7035c7e4db91b9"
+    },
+    "desk/lib/stead-code-build-home.hoon": {
+      "bytes": 12793,
+      "sha256": "ae7ea38afaf41fde3f9532935ca2b444a3a40cc11601d21d20f8c9470d7afa91"
+    },
+    "desk/lib/stead-code-credentials.hoon": {
+      "bytes": 3637,
+      "sha256": "6e7eb121e5aa7bb36f80170eeb58bd87db52348a40189ef4f7682952647de2d5"
+    },
+    "desk/lib/stead-code-delivery-export.hoon": {
+      "bytes": 8254,
+      "sha256": "5afc8a4cd112eb4fd863ed9c3caa2875007d92714cfb85e26328f3c852de8810"
+    },
+    "desk/lib/stead-code-delivery.hoon": {
+      "bytes": 16101,
+      "sha256": "80abf877b32660d65bdf7f5f9657fc2990d953681cd50350c7841f5a5eb048f8"
+    },
+    "desk/lib/stead-code-fetch-wire.hoon": {
+      "bytes": 2663,
+      "sha256": "2218ebca65c69adc1568dc7a3bc622c5b809cc2fcdf068a99dcb6651e5256270"
+    },
+    "desk/lib/stead-code-fetch.hoon": {
+      "bytes": 4862,
+      "sha256": "62c2470b0901606302edd67b7593e9096f01cba5e3b65259c8cd87923c3ca943"
+    },
+    "desk/lib/stead-code-git-delta.hoon": {
+      "bytes": 3312,
+      "sha256": "117abbdf1d33e0e45f23017bacf1b2c4f983e5a3b2e6d6bc8a2ffa047d6a97de"
+    },
+    "desk/lib/stead-code-git-emit.hoon": {
+      "bytes": 4487,
+      "sha256": "1f737cb3a10eb5c1153ef00fb86e3bf30100ecb1fd0e0f2375328876b70f380e"
+    },
+    "desk/lib/stead-code-git-entry.hoon": {
+      "bytes": 2744,
+      "sha256": "9ebbe76571c965b0cea507cebbd75e866920b7f115117a2384b5737e5257a236"
+    },
+    "desk/lib/stead-code-git-graph.hoon": {
+      "bytes": 9243,
+      "sha256": "501593e3f564fc07f7675f31f857e8adf5fee378366ab79f0742ea7ca3d7965c"
+    },
+    "desk/lib/stead-code-git-inflate.hoon": {
+      "bytes": 12799,
+      "sha256": "86c0d0eedcb4bdd7be21db7c39e822b059a694ce806aad264bdd0420df8b3194"
+    },
+    "desk/lib/stead-code-git-objects.hoon": {
+      "bytes": 2633,
+      "sha256": "d82bfa622dd796835ad472bf2624f80b2d44460427b0746aca8ac46452f78440"
+    },
+    "desk/lib/stead-code-git-pack.hoon": {
+      "bytes": 1297,
+      "sha256": "49a8193642bf0d61a695795a85d045c5a1eed23a0908a350103a0555e93064a9"
+    },
+    "desk/lib/stead-code-git-pkt.hoon": {
+      "bytes": 2437,
+      "sha256": "c0a4c87fb8a1d1d4521c640efad1f60a0d2c064b686468774c17d280442dc24e"
+    },
+    "desk/lib/stead-code-git-resolve.hoon": {
+      "bytes": 5609,
+      "sha256": "bdd6ac7170e099c876203899eec282c2aa56825e12d26674e32588c822d99472"
+    },
+    "desk/lib/stead-code-git-response.hoon": {
+      "bytes": 5139,
+      "sha256": "2ab7218660731f140c575e41b02410074f13580c865246d1f299a90ffa334f3d"
+    },
+    "desk/lib/stead-code-home.hoon": {
+      "bytes": 22229,
+      "sha256": "e7bb6c222ab2b5dc0e0fd8e4dbadedfbc752125a035b6acf71c23c9db70a5cbd"
+    },
+    "desk/lib/stead-code-http.hoon": {
+      "bytes": 2877,
+      "sha256": "aa110550644610004987796020e8a37f6976ecce9376d8863f7c3fd309c714c9"
+    },
+    "desk/lib/stead-code-pack-admit.hoon": {
+      "bytes": 3091,
+      "sha256": "b03ad00f55bf24bd7dcf4be30ef6f58fd7499b8696b22931ab02948540b4bd56"
+    },
+    "desk/lib/stead-code-pack-anchor.hoon": {
+      "bytes": 6317,
+      "sha256": "e195a49e63492b42e4e1eeff18bd6bf1437ed44285f610e85030acb329d75434"
+    },
+    "desk/lib/stead-code-pack-carrier.hoon": {
+      "bytes": 4748,
+      "sha256": "7e94854488b5d42cb0d3d2e3eb9621eeb79264f3598a6c2ca7e48472db46e6f8"
+    },
+    "desk/lib/stead-code-pack-control.hoon": {
+      "bytes": 4022,
+      "sha256": "a11bf163215d81e124fca34742df0bc337b10b8218ec27f82bd56328150586ff"
+    },
+    "desk/lib/stead-code-pack-ledger.hoon": {
+      "bytes": 12951,
+      "sha256": "ff2175608ce15317a640d2a17742b4b0d03c19e92d7a5a9221a578fa6bd44c4d"
+    },
+    "desk/lib/stead-code-pack-owner.hoon": {
+      "bytes": 4261,
+      "sha256": "7c5b743b2db4839b1cb36a4f3476f78c1197362a1037662c95af70bd4e99d5a7"
+    },
+    "desk/lib/stead-code-pack-promotion.hoon": {
+      "bytes": 5003,
+      "sha256": "10f8caa883d8dae9aaae75de3ca080d2ebd2879e4e370145ab20a9a3f5a9545c"
+    },
+    "desk/lib/stead-code-pack-proof.hoon": {
+      "bytes": 7609,
+      "sha256": "253fa94759f17ceb2d1610e399056a35a315a22aa9faf856e6d2e52c24759a18"
+    },
+    "desk/lib/stead-code-pack-push.hoon": {
+      "bytes": 4300,
+      "sha256": "bbc4e1383647b5bd6191510fa4c6ff1bf6018f0ab2623cd1023150d0ffa985a8"
+    },
+    "desk/lib/stead-code-pack-relay-http.hoon": {
+      "bytes": 1528,
+      "sha256": "0de17d9dc252f1c4bad46faed8066684e0399817591de1ae8dbaacc778d813c5"
+    },
+    "desk/lib/stead-code-pack-relay-pin.hoon": {
+      "bytes": 2374,
+      "sha256": "f3dd49fe91b38b0234f21908a7f7c6cb61f766efee21fe953ac14d24bdf7e123"
+    },
+    "desk/lib/stead-code-pack-relay-policy.hoon": {
+      "bytes": 1185,
+      "sha256": "571c02fe99dfb162b4110a9e1f45cecc97f3bd15325101696e574e91cc7993b9"
+    },
+    "desk/lib/stead-code-pack-relay-wire.hoon": {
+      "bytes": 2611,
+      "sha256": "3686d7adff12b1df8fdfd8b7c0ea580304b4b2e4d985547233a50521da14357c"
+    },
+    "desk/lib/stead-code-pack-relay.hoon": {
+      "bytes": 1613,
+      "sha256": "d7ac69f6158d076f12a407e2f3ff8a8f1d9fb4665fcd9cb714f531a97d42ff46"
+    },
+    "desk/lib/stead-code-pack-review-api.hoon": {
+      "bytes": 7000,
+      "sha256": "357916f176418f1e358531591b7d0f2b23df2f7b4bdbc0a1ad377194bdc9329b"
+    },
+    "desk/lib/stead-code-pack-review-board.hoon": {
+      "bytes": 12740,
+      "sha256": "d75c9cf6cc36af7d4eb9c0e2456b0ebeef568e062f04abb0639acabd36ba2dbc"
+    },
+    "desk/lib/stead-code-pack-review-proof.hoon": {
+      "bytes": 2433,
+      "sha256": "61aade9789bacecaea419b4a326aa02c7d476a621186614904f667a18287d7de"
+    },
+    "desk/lib/stead-code-pack-review.hoon": {
+      "bytes": 7336,
+      "sha256": "3c1229baa7f3178a1e7395f73693b0d0f0b7343f15d52db8d64e8d1a927c54a9"
+    },
+    "desk/lib/stead-code-pack-worker-signature.hoon": {
+      "bytes": 1718,
+      "sha256": "ec04acd4244ca18ad5453c8274ae0f803f2055de07f86aca8e7c23fb338881df"
+    },
+    "desk/lib/stead-code-receive-wire.hoon": {
+      "bytes": 6018,
+      "sha256": "e46b051541722bc0cf8cfc5892579a1515e2828eb7843ce79d68ba2b1de83b94"
+    },
+    "desk/lib/stead-code-receive.hoon": {
+      "bytes": 2956,
+      "sha256": "590de8fe7e1e0d06514fee365b8d9decc6f4a9c08c6fe4a6b08a76a90ebcf7d6"
+    },
+    "desk/lib/stead-code-review-api.hoon": {
+      "bytes": 7404,
+      "sha256": "f1ef0209906ef14ccd27ab271b03d5cadbcbdc32b4ba917af9cec23a6c02c3c1"
+    },
+    "desk/lib/stead-code-review-home.hoon": {
+      "bytes": 10721,
+      "sha256": "cb29b0b347bf2251c24fcf6ce4471a89bf2f9214dfe5a3e9d4b7b23283b93433"
+    },
+    "desk/lib/stead-code-review.hoon": {
+      "bytes": 2526,
+      "sha256": "3a4fa880d60e9913cdb450551733020d354aac6c64a2ae83e0348f9b14e55407"
+    },
+    "desk/lib/stead-code-service.hoon": {
+      "bytes": 7084,
+      "sha256": "bb4c1608f2d12e91473cbd6a5491a8f28e06fcfc75480dd67740d867a266caf1"
+    },
+    "desk/lib/stead-code-store.hoon": {
+      "bytes": 10103,
+      "sha256": "653148bad82c5853e58998adc36aebfa29536a4b9b6e9d5c31edaccd8b03df4d"
+    },
+    "desk/lib/stead-code-upload.hoon": {
+      "bytes": 2441,
+      "sha256": "2369722fffe69083fd857a70a562da6a5020fdfaa120e25c68c156cc0a5f0580"
+    },
+    "desk/lib/stead-codec-v1.hoon": {
+      "bytes": 8571,
+      "sha256": "ce4c7a69b03ee1761590c37e71ff49b9f63a1a2edd2aaa6dfbf75bc3c960584a"
+    },
+    "desk/lib/stead-codec.hoon": {
+      "bytes": 9532,
+      "sha256": "56e3d574381bbf8cdf29ca192c70eff256009f89d782e3ffe859b19c1321cbd7"
+    },
+    "desk/lib/stead-core-v1.hoon": {
+      "bytes": 19390,
+      "sha256": "879615a5547d06a09d382c2bac4c5cb20cdf03236ddfdab79c9f1da15bd33cb5"
+    },
+    "desk/lib/stead-core.hoon": {
+      "bytes": 30949,
+      "sha256": "4c183ef6283030437af5e1433e3fbf80f414757bcede4cab1282fc71ff5f34de"
+    },
+    "desk/lib/stead-delivery.hoon": {
+      "bytes": 556,
+      "sha256": "178cac634471554dae9928f8c38248751329314391061976a436a22a7075548d"
+    },
+    "desk/lib/stead-eyre.hoon": {
+      "bytes": 693,
+      "sha256": "33c2f7dcfacf519e047eb35073d58db44c9d39d4aea0eb72b5f7e6964ec451c3"
+    },
+    "desk/lib/stead-git.hoon": {
+      "bytes": 3935,
+      "sha256": "826b83485429c02f577c9b462ee6cddd3ab8ea1a099d33b66893f863d54c54d7"
+    },
+    "desk/lib/stead-home-handoff.hoon": {
+      "bytes": 1637,
+      "sha256": "26c3ad38d27e70770c9399fcab55f66374b55b653e119967e9cdca124f131639"
+    },
+    "desk/lib/stead-http.hoon": {
+      "bytes": 5652,
+      "sha256": "8dced7c0ac0af601ca319ab317a705865589bb3aaf223c238d792512406fe05f"
+    },
+    "desk/lib/stead-project-retirement.hoon": {
+      "bytes": 4741,
+      "sha256": "25eb485c134a5cb18e758c68ade3bff4d7493ae99128e8f78fc1dd771846aba3"
+    },
+    "desk/lib/stead-projection.hoon": {
+      "bytes": 6985,
+      "sha256": "95aa098349f10d15c235abd7ade13c97fba7361bcf78f6d00b38dc443338551c"
+    },
+    "desk/lib/stead-restore.hoon": {
+      "bytes": 6973,
+      "sha256": "978223b175a17e67556b7300cf4b1bdf9f3b668a074c9ed46f265e020d608ea1"
+    },
+    "desk/lib/stead-session.hoon": {
+      "bytes": 8713,
+      "sha256": "ec331d4534cc19fc76f6b9ad590ec326d74e09f0b846b36f866e6351bdcbbb27"
+    },
+    "desk/lib/stead-team-codec.hoon": {
+      "bytes": 8633,
+      "sha256": "0a7e54ad7cd6fc66dcbfabd90425d55a234d9239140dec97309474fb3b90ba76"
+    },
+    "desk/lib/stead-team-config.hoon": {
+      "bytes": 6486,
+      "sha256": "ca95235550f5ebe34ac43f1f886620e4598fae4e304eef855068022400f5f630"
+    },
+    "desk/lib/stead-team-owner.hoon": {
+      "bytes": 35959,
+      "sha256": "a49fef952f933b678d03467d29c1246945250fa6c4dfbcfc58d508d53ad7d1ef"
+    },
+    "desk/lib/stead-team.hoon": {
+      "bytes": 30909,
+      "sha256": "36c5affad6ba239f92b42ff7459b916fbb3223b387fa76149bf8350501872128"
+    },
+    "desk/lib/stead-update-codec.hoon": {
+      "bytes": 1753,
+      "sha256": "632fc4d5a92c6db834454314c3b40bb57e348c6eaaa9a0767e9da126e659c02a"
+    },
+    "desk/lib/stead-update-security.hoon": {
+      "bytes": 1828,
+      "sha256": "4ef803d5671641bdffdff95965e85f6fdb73c91b2c3a40c818dca79c5727c4fd"
+    },
+    "desk/lib/stead-updates.hoon": {
+      "bytes": 13021,
+      "sha256": "205adbd403bfc814636e35062d5720611ef2192b87f18233bb471879ce3a1c56"
+    },
+    "desk/lib/stead-views.hoon": {
+      "bytes": 19529,
+      "sha256": "f3eea9a132aa4593b5a65612521ab1700d818751e93bb0b9ef2158a0f9ccd26b"
+    },
+    "desk/lib/stead-work-contract.hoon": {
+      "bytes": 2556,
+      "sha256": "dbd57a940370371251e838e583f373a1633aef10e164f522824342e416483061"
+    },
+    "desk/lib/strand.hoon": {
+      "bytes": 5,
+      "sha256": "97b2c326494239ed326156ed8eebe2e366addacc1d352ebd7cc41e8510ac2e95"
+    },
+    "desk/lib/strandio.hoon": {
+      "bytes": 21439,
+      "sha256": "3408c7d279bea54f3aee9c2db61f6353522da1e37d31a5cd58aca43fd79d2ef7"
+    },
+    "desk/mar/bill.hoon": {
+      "bytes": 715,
+      "sha256": "a0196da4970b8dfdee321a638040a564f95e8000f3b49eccc274ee8de2fae0ff"
+    },
+    "desk/mar/hoon.hoon": {
+      "bytes": 9154,
+      "sha256": "a77a0a8e0cd772ae9e7aa8c50d17b783d1969c64f031b6dc1d71f9e63a1cd73e"
+    },
+    "desk/mar/json.hoon": {
+      "bytes": 588,
+      "sha256": "1a9b61feb7d40dc94e682ba665c9f8d5d37c458868942d3b9e7b87562e538fc6"
+    },
+    "desk/mar/kelvin.hoon": {
+      "bytes": 566,
+      "sha256": "f23c0150f240d040dd24d99bb54e02c4df736e0f4d2bd5654bbc304082c8125c"
+    },
+    "desk/mar/mime.hoon": {
+      "bytes": 565,
+      "sha256": "f1b94f43735fd3a6b86f5cd4619851bc1af9145281f68a07724c4bea870de535"
+    },
+    "desk/mar/noun.hoon": {
+      "bytes": 409,
+      "sha256": "7581328f74894baa376d3a80e370808dca3ad3af96bc0ef6e4ac299984744b89"
+    },
+    "desk/mar/stead-asset.hoon": {
+      "bytes": 340,
+      "sha256": "82f4e3037c43ad2acb4a5ead30b74e8c2abdc8d0d215d417789029c8d4a419ce"
+    },
+    "desk/mar/stead-auth-approval-1.hoon": {
+      "bytes": 171,
+      "sha256": "fcd87c92acc16c2883b1dd4900af5064d1da910af317e93c327455cd56d9553b"
+    },
+    "desk/mar/stead-auth-challenge-1.hoon": {
+      "bytes": 171,
+      "sha256": "fcd87c92acc16c2883b1dd4900af5064d1da910af317e93c327455cd56d9553b"
+    },
+    "desk/mar/stead-bootstrap-1.hoon": {
+      "bytes": 171,
+      "sha256": "fcd87c92acc16c2883b1dd4900af5064d1da910af317e93c327455cd56d9553b"
+    },
+    "desk/mar/stead-code-pack-stage-1.hoon": {
+      "bytes": 174,
+      "sha256": "d2979598256a159d3fd34adaaac51cf1bbe7c41a2bd0cebd59224c059cc5df43"
+    },
+    "desk/mar/stead-command-3.hoon": {
+      "bytes": 171,
+      "sha256": "fcd87c92acc16c2883b1dd4900af5064d1da910af317e93c327455cd56d9553b"
+    },
+    "desk/mar/stead-home-handoff-1.hoon": {
+      "bytes": 260,
+      "sha256": "a9fee71e88bae9242b506c841b302d8fbc626aaae0c32706f9f00c52aec7b26b"
+    },
+    "desk/mar/stead-identity-config-1.hoon": {
+      "bytes": 171,
+      "sha256": "fcd87c92acc16c2883b1dd4900af5064d1da910af317e93c327455cd56d9553b"
+    },
+    "desk/mar/stead-project-retirement-1.hoon": {
+      "bytes": 176,
+      "sha256": "958de7191c1d6d4a144bcf6848f9d4f4e6d9db0cfb1a997261c413dc37dc7065"
+    },
+    "desk/mar/stead-query-3.hoon": {
+      "bytes": 171,
+      "sha256": "fcd87c92acc16c2883b1dd4900af5064d1da910af317e93c327455cd56d9553b"
+    },
+    "desk/mar/stead-result-3.hoon": {
+      "bytes": 171,
+      "sha256": "fcd87c92acc16c2883b1dd4900af5064d1da910af317e93c327455cd56d9553b"
+    },
+    "desk/mar/stead-team-config-1.hoon": {
+      "bytes": 171,
+      "sha256": "fcd87c92acc16c2883b1dd4900af5064d1da910af317e93c327455cd56d9553b"
+    },
+    "desk/mar/stead-updates-3.hoon": {
+      "bytes": 171,
+      "sha256": "fcd87c92acc16c2883b1dd4900af5064d1da910af317e93c327455cd56d9553b"
+    },
+    "desk/mar/txt.hoon": {
+      "bytes": 7802,
+      "sha256": "cb76a42e114f3b8f3ac37d09bfe7b1b41bc5c54e6406c0c01fb249af6910bc5d"
+    },
+    "desk/sur/spider.hoon": {
+      "bytes": 490,
+      "sha256": "39746f99a2d740e499d0ca3937ccae6e029901fcb6abc80ad64e40760110eda8"
+    },
+    "desk/sys.kelvin": {
+      "bytes": 12,
+      "sha256": "0a66fa5dec5893d2e3a8e854c4d6c81d62882863e4c8574ce18da9daea5a7cc4"
+    },
+    "desk/ted/stead-pilot-cert.hoon": {
+      "bytes": 668,
+      "sha256": "298ca789fafb0aed4d32484c3655b96cab732f01988ed3b3500d52bcb3d1e4d7"
+    },
+    "desk/ted/stead-pilot-owner.hoon": {
+      "bytes": 3539,
+      "sha256": "09ff7b9382444f64a5d82f32d6a56b850963c35af77f0498c8ce723598feb23f"
+    },
+    "desk/web/stead/asset-08a1794a61e7ed673d2e66de355cda8680a87a9dff4de7245ac987909ce7b1ed.stead-asset": {
+      "bytes": 355,
+      "sha256": "08a1794a61e7ed673d2e66de355cda8680a87a9dff4de7245ac987909ce7b1ed"
+    },
+    "desk/web/stead/asset-3e9102608b1a1d3dced1bd3f42068196621e3be103c017e5eb0ed70d4521b58e.stead-asset": {
+      "bytes": 27174,
+      "sha256": "3e9102608b1a1d3dced1bd3f42068196621e3be103c017e5eb0ed70d4521b58e"
+    },
+    "desk/web/stead/asset-3f5adfead9553e9a640639d4c0f2bbad5bef04ed9d6b9e0ab2e06daac0e6e162.stead-asset": {
+      "bytes": 19813,
+      "sha256": "3f5adfead9553e9a640639d4c0f2bbad5bef04ed9d6b9e0ab2e06daac0e6e162"
+    },
+    "desk/web/stead/asset-4ad0a8c304f247405c5314f49b27fac259aa8f52458868bfe6e5f79760ad7a95.stead-asset": {
+      "bytes": 307,
+      "sha256": "4ad0a8c304f247405c5314f49b27fac259aa8f52458868bfe6e5f79760ad7a95"
+    },
+    "desk/web/stead/asset-545015593ed73aed1b421833eb462ccc6ba2ae0179ebd64909ec13ea499ed07c.stead-asset": {
+      "bytes": 637,
+      "sha256": "545015593ed73aed1b421833eb462ccc6ba2ae0179ebd64909ec13ea499ed07c"
+    },
+    "desk/web/stead/asset-76d34b4f451dddc7ca0cc468214e6d0134ce919f9e44c6d5900cc163b449c329.stead-asset": {
+      "bytes": 119,
+      "sha256": "76d34b4f451dddc7ca0cc468214e6d0134ce919f9e44c6d5900cc163b449c329"
+    },
+    "desk/web/stead/asset-948622e93fa4482a32d535f33e2fe6999c359e014d769cc4a7ef0b1a5cee58c2.stead-asset": {
+      "bytes": 132466,
+      "sha256": "948622e93fa4482a32d535f33e2fe6999c359e014d769cc4a7ef0b1a5cee58c2"
+    },
+    "desk/web/stead/asset-96fdd773b2fdf2913dd981d8a9e55864e64a10328008dd10bcceb6706d21ced5.stead-asset": {
+      "bytes": 6784,
+      "sha256": "96fdd773b2fdf2913dd981d8a9e55864e64a10328008dd10bcceb6706d21ced5"
+    },
+    "desk/web/stead/asset-9dbaaa1b267ebd74b96fc498735a78d76804f1e96e532871291c937cf83694e7.stead-asset": {
+      "bytes": 638,
+      "sha256": "9dbaaa1b267ebd74b96fc498735a78d76804f1e96e532871291c937cf83694e7"
+    },
+    "desk/web/stead/asset-b8bde83065c9373b81c1d6ddb13187ad75419e6975b7fefa4deeba90fb67c980.stead-asset": {
+      "bytes": 56831,
+      "sha256": "b8bde83065c9373b81c1d6ddb13187ad75419e6975b7fefa4deeba90fb67c980"
+    },
+    "desk/web/stead/asset-b9e5d702e8b41173e270cbb40a3f22f1a33f5d9d49507a15e6d9e836b1f05a98.stead-asset": {
+      "bytes": 378553,
+      "sha256": "b9e5d702e8b41173e270cbb40a3f22f1a33f5d9d49507a15e6d9e836b1f05a98"
+    },
+    "desk/web/stead/asset-c5588f1a49419f8eebe2152a9dba4f25a1582e5b2c79dd7fb28dbdd26405e54c.stead-asset": {
+      "bytes": 192661,
+      "sha256": "c5588f1a49419f8eebe2152a9dba4f25a1582e5b2c79dd7fb28dbdd26405e54c"
+    },
+    "desk/web/stead/asset-c9235b043c7ea052717cebbc9a705f8c771bafe5cc6ccc92a992d1ff13ec1d25.stead-asset": {
+      "bytes": 1039,
+      "sha256": "c9235b043c7ea052717cebbc9a705f8c771bafe5cc6ccc92a992d1ff13ec1d25"
+    },
+    "desk/web/stead/asset-d6594069b32b673ae27191f80d4bf5937d72c6d23767e8b0a5ff984ec906f54c.stead-asset": {
+      "bytes": 5667,
+      "sha256": "d6594069b32b673ae27191f80d4bf5937d72c6d23767e8b0a5ff984ec906f54c"
+    },
+    "desk/web/stead/asset-e3c2ed32bd37b50a0f4d81f76b027511e219665af301041e6e2fb1046cccddda.stead-asset": {
+      "bytes": 129,
+      "sha256": "e3c2ed32bd37b50a0f4d81f76b027511e219665af301041e6e2fb1046cccddda"
+    },
+    "desk/web/stead/asset-eda3aa3ae9037026abda1a3f8567d6d597d1db501d6ecb27571ec2443379c0ca.stead-asset": {
+      "bytes": 2203,
+      "sha256": "eda3aa3ae9037026abda1a3f8567d6d597d1db501d6ecb27571ec2443379c0ca"
+    },
+    "desk/web/stead/inventory.hoon": {
+      "bytes": 5859,
+      "sha256": "3ab2f5bb6c634967483dac51083821eb66a04007cd0451cf9ece9522b884d62b"
+    },
+    "notices/urbit-kernel-LICENSE.txt": {
+      "bytes": 1071,
+      "sha256": "e895931d528be1ab18b353eee7ae5c4f9a8f5b164f747db1e60a59bbe201ffd3"
+    },
+    "source/frontend.json": {
+      "bytes": 5036,
+      "sha256": "ec1fbfb0d382efab9138687ad28c8f6170cee96ca35281bc5ed7bd60c5c0e121"
+    },
+    "source/release-contract.json": {
+      "bytes": 3492,
+      "sha256": "0f21fc4dd665459e3613bd4f6d35209fb06e64605ab1410598c95f2fa8954a13"
+    },
+    "source/toolchain.lock.json": {
+      "bytes": 4223,
+      "sha256": "ae185adaec12b5aa0b2d48e2198ae65583902512ffd9d148706810c4819c650c"
+    }
+  },
+  "frontend_sha256": "ec1fbfb0d382efab9138687ad28c8f6170cee96ca35281bc5ed7bd60c5c0e121",
+  "kind": "offline-desk-candidate",
+  "packager_sha256": "49172413f8021b4d6011866784d3dbba013e225f434cd79829c0e3865d2148f1",
+  "protocol": "stead.release-package/1",
+  "qualification": {
+    "canary": false,
+    "native_install": false,
+    "package_integrity_only": true,
+    "production": false,
+    "upgrade_recovery": false
+  },
+  "role": "home",
+  "saved_state_version": 9,
+  "shared_packager_sha256": "810709d833cae220883c05722439c00983382930b70fd58806d7c6e92476f927",
+  "source_commit": "a670d58c7801a48a92ab66139839fd192abbc53b",
+  "toolchain_sha256": "ae185adaec12b5aa0b2d48e2198ae65583902512ffd9d148706810c4819c650c"
+}
+                                                                                                                                                                                                                                                                                                                                                                                 stead-release/notices/urbit-kernel-LICENSE.txt                                                      0000644 0000000 0000000 00000002057 00000000000 016357  0                                                                                                    ustar 00                                                                                                                                                                                                                                                       The MIT License (MIT)
+
+Copyright (c) 2017 Urbit
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                 stead-release/source/frontend.json                                                                  0000644 0000000 0000000 00000011654 00000000000 014504  0                                                                                                    ustar 00                                                                                                                                                                                                                                                       {
+  "inventory_sha256": "3ab2f5bb6c634967483dac51083821eb66a04007cd0451cf9ece9522b884d62b",
+  "protocol": "stead.release-frontend/1",
+  "routes": [
+    {
+      "bytes": 27174,
+      "mime": "text/plain; charset=utf-8",
+      "route": "/stead/assets/NOTICE.txt",
+      "sha256": "3e9102608b1a1d3dced1bd3f42068196621e3be103c017e5eb0ed70d4521b58e"
+    },
+    {
+      "bytes": 27174,
+      "mime": "text/plain; charset=utf-8",
+      "route": "/stead-identity/assets/NOTICE.txt",
+      "sha256": "3e9102608b1a1d3dced1bd3f42068196621e3be103c017e5eb0ed70d4521b58e"
+    },
+    {
+      "bytes": 56831,
+      "mime": "text/css; charset=utf-8",
+      "route": "/stead/assets/app.css",
+      "sha256": "b8bde83065c9373b81c1d6ddb13187ad75419e6975b7fefa4deeba90fb67c980"
+    },
+    {
+      "bytes": 378553,
+      "mime": "text/javascript; charset=utf-8",
+      "route": "/stead/assets/app.js",
+      "sha256": "b9e5d702e8b41173e270cbb40a3f22f1a33f5d9d49507a15e6d9e836b1f05a98"
+    },
+    {
+      "bytes": 637,
+      "mime": "text/plain; charset=utf-8",
+      "route": "/stead/assets/app.js.LEGAL.txt",
+      "sha256": "545015593ed73aed1b421833eb462ccc6ba2ae0179ebd64909ec13ea499ed07c"
+    },
+    {
+      "bytes": 132466,
+      "mime": "text/javascript; charset=utf-8",
+      "route": "/stead/assets/chunk-E3N4ZXCD.js",
+      "sha256": "948622e93fa4482a32d535f33e2fe6999c359e014d769cc4a7ef0b1a5cee58c2"
+    },
+    {
+      "bytes": 132466,
+      "mime": "text/javascript; charset=utf-8",
+      "route": "/stead-identity/assets/chunk-E3N4ZXCD.js",
+      "sha256": "948622e93fa4482a32d535f33e2fe6999c359e014d769cc4a7ef0b1a5cee58c2"
+    },
+    {
+      "bytes": 1039,
+      "mime": "text/plain; charset=utf-8",
+      "route": "/stead/assets/chunk-E3N4ZXCD.js.LEGAL.txt",
+      "sha256": "c9235b043c7ea052717cebbc9a705f8c771bafe5cc6ccc92a992d1ff13ec1d25"
+    },
+    {
+      "bytes": 1039,
+      "mime": "text/plain; charset=utf-8",
+      "route": "/stead-identity/assets/chunk-E3N4ZXCD.js.LEGAL.txt",
+      "sha256": "c9235b043c7ea052717cebbc9a705f8c771bafe5cc6ccc92a992d1ff13ec1d25"
+    },
+    {
+      "bytes": 638,
+      "mime": "text/javascript; charset=utf-8",
+      "route": "/stead/assets/chunk-OOJM4CTU.js",
+      "sha256": "9dbaaa1b267ebd74b96fc498735a78d76804f1e96e532871291c937cf83694e7"
+    },
+    {
+      "bytes": 638,
+      "mime": "text/javascript; charset=utf-8",
+      "route": "/stead-identity/assets/chunk-OOJM4CTU.js",
+      "sha256": "9dbaaa1b267ebd74b96fc498735a78d76804f1e96e532871291c937cf83694e7"
+    },
+    {
+      "bytes": 119,
+      "mime": "text/javascript; charset=utf-8",
+      "route": "/stead/assets/chunk-REA6RKUT.js",
+      "sha256": "76d34b4f451dddc7ca0cc468214e6d0134ce919f9e44c6d5900cc163b449c329"
+    },
+    {
+      "bytes": 119,
+      "mime": "text/javascript; charset=utf-8",
+      "route": "/stead-identity/assets/chunk-REA6RKUT.js",
+      "sha256": "76d34b4f451dddc7ca0cc468214e6d0134ce919f9e44c6d5900cc163b449c329"
+    },
+    {
+      "bytes": 6784,
+      "mime": "text/css; charset=utf-8",
+      "route": "/stead/assets/chunk-TFFQTDJT.css",
+      "sha256": "96fdd773b2fdf2913dd981d8a9e55864e64a10328008dd10bcceb6706d21ced5"
+    },
+    {
+      "bytes": 6784,
+      "mime": "text/css; charset=utf-8",
+      "route": "/stead-identity/assets/chunk-TFFQTDJT.css",
+      "sha256": "96fdd773b2fdf2913dd981d8a9e55864e64a10328008dd10bcceb6706d21ced5"
+    },
+    {
+      "bytes": 192661,
+      "mime": "text/javascript; charset=utf-8",
+      "route": "/stead/assets/chunk-YP5XBJ32.js",
+      "sha256": "c5588f1a49419f8eebe2152a9dba4f25a1582e5b2c79dd7fb28dbdd26405e54c"
+    },
+    {
+      "bytes": 192661,
+      "mime": "text/javascript; charset=utf-8",
+      "route": "/stead-identity/assets/chunk-YP5XBJ32.js",
+      "sha256": "c5588f1a49419f8eebe2152a9dba4f25a1582e5b2c79dd7fb28dbdd26405e54c"
+    },
+    {
+      "bytes": 2203,
+      "mime": "text/css; charset=utf-8",
+      "route": "/stead-identity/assets/identity.css",
+      "sha256": "eda3aa3ae9037026abda1a3f8567d6d597d1db501d6ecb27571ec2443379c0ca"
+    },
+    {
+      "bytes": 355,
+      "mime": "text/html; charset=utf-8",
+      "route": "/stead-identity/",
+      "sha256": "08a1794a61e7ed673d2e66de355cda8680a87a9dff4de7245ac987909ce7b1ed"
+    },
+    {
+      "bytes": 5667,
+      "mime": "text/javascript; charset=utf-8",
+      "route": "/stead-identity/assets/identity.js",
+      "sha256": "d6594069b32b673ae27191f80d4bf5937d72c6d23767e8b0a5ff984ec906f54c"
+    },
+    {
+      "bytes": 307,
+      "mime": "text/html; charset=utf-8",
+      "route": "/stead/",
+      "sha256": "4ad0a8c304f247405c5314f49b27fac259aa8f52458868bfe6e5f79760ad7a95"
+    },
+    {
+      "bytes": 19813,
+      "mime": "text/css; charset=utf-8",
+      "route": "/stead/assets/product.css",
+      "sha256": "3f5adfead9553e9a640639d4c0f2bbad5bef04ed9d6b9e0ab2e06daac0e6e162"
+    },
+    {
+      "bytes": 129,
+      "mime": "text/javascript; charset=utf-8",
+      "route": "/stead/assets/product.js",
+      "sha256": "e3c2ed32bd37b50a0f4d81f76b027511e219665af301041e6e2fb1046cccddda"
+    }
+  ]
+}
+                                                                                    stead-release/source/release-contract.json                                                          0000644 0000000 0000000 00000006644 00000000000 016123  0                                                                                                    ustar 00                                                                                                                                                                                                                                                       {
+  "agents": {
+    "home": "stead-home",
+    "identity": "stead-identity"
+  },
+  "api_version": 3,
+  "classification": "candidate-packaging-only",
+  "kernel_commit": "5a187fededc4582a34fcd6055c67bb63e0917b94",
+  "kernel_files": {
+    "lib/strand.hoon": {
+      "bytes": 5,
+      "sha256": "97b2c326494239ed326156ed8eebe2e366addacc1d352ebd7cc41e8510ac2e95",
+      "source": "pkg/base-dev/lib/strand.hoon"
+    },
+    "lib/strandio.hoon": {
+      "bytes": 21439,
+      "sha256": "3408c7d279bea54f3aee9c2db61f6353522da1e37d31a5cd58aca43fd79d2ef7",
+      "source": "pkg/base-dev/lib/strandio.hoon"
+    },
+    "sur/spider.hoon": {
+      "bytes": 490,
+      "sha256": "39746f99a2d740e499d0ca3937ccae6e029901fcb6abc80ad64e40760110eda8",
+      "source": "pkg/base-dev/sur/spider.hoon"
+    },
+    "LICENSE.txt": {
+      "bytes": 1071,
+      "sha256": "e895931d528be1ab18b353eee7ae5c4f9a8f5b164f747db1e60a59bbe201ffd3",
+      "source": "pkg/arvo/LICENSE.txt"
+    },
+    "lib/default-agent.hoon": {
+      "bytes": 1307,
+      "sha256": "70a8af06601e8d1b75b261b2ac8b2cb06d5622baa1d1b1f8fec9236ce167d113",
+      "source": "pkg/base-dev/lib/default-agent.hoon"
+    },
+    "lib/server.hoon": {
+      "bytes": 3870,
+      "sha256": "d0a566085300a6deae334b98c4844dc11e90f0315015a91e97c2fbb61db31d68",
+      "source": "pkg/base-dev/lib/server.hoon"
+    },
+    "lib/skeleton.hoon": {
+      "bytes": 792,
+      "sha256": "c7c654a91c5dc1a535d4a76b019ec175955e52961b1ddff70ad49121208d20f5",
+      "source": "pkg/base-dev/lib/skeleton.hoon"
+    },
+    "mar/bill.hoon": {
+      "bytes": 715,
+      "sha256": "a0196da4970b8dfdee321a638040a564f95e8000f3b49eccc274ee8de2fae0ff",
+      "source": "pkg/base-dev/mar/bill.hoon"
+    },
+    "mar/hoon.hoon": {
+      "bytes": 9154,
+      "sha256": "a77a0a8e0cd772ae9e7aa8c50d17b783d1969c64f031b6dc1d71f9e63a1cd73e",
+      "source": "pkg/base-dev/mar/hoon.hoon"
+    },
+    "mar/json.hoon": {
+      "bytes": 588,
+      "sha256": "1a9b61feb7d40dc94e682ba665c9f8d5d37c458868942d3b9e7b87562e538fc6",
+      "source": "pkg/base-dev/mar/json.hoon"
+    },
+    "mar/kelvin.hoon": {
+      "bytes": 566,
+      "sha256": "f23c0150f240d040dd24d99bb54e02c4df736e0f4d2bd5654bbc304082c8125c",
+      "source": "pkg/base-dev/mar/kelvin.hoon"
+    },
+    "mar/mime.hoon": {
+      "bytes": 565,
+      "sha256": "f1b94f43735fd3a6b86f5cd4619851bc1af9145281f68a07724c4bea870de535",
+      "source": "pkg/base-dev/mar/mime.hoon"
+    },
+    "mar/noun.hoon": {
+      "bytes": 409,
+      "sha256": "7581328f74894baa376d3a80e370808dca3ad3af96bc0ef6e4ac299984744b89",
+      "source": "pkg/base-dev/mar/noun.hoon"
+    },
+    "mar/txt.hoon": {
+      "bytes": 7802,
+      "sha256": "cb76a42e114f3b8f3ac37d09bfe7b1b41bc5c54e6406c0c01fb249af6910bc5d",
+      "source": "pkg/base-dev/mar/txt.hoon"
+    }
+  },
+  "kernel_kelvin": 408,
+  "marks": [
+    "stead-asset",
+    "stead-auth-approval-1",
+    "stead-auth-challenge-1",
+    "stead-bootstrap-1",
+    "stead-code-pack-stage-1",
+    "stead-command-3",
+    "stead-home-handoff-1",
+    "stead-identity-config-1",
+    "stead-project-retirement-1",
+    "stead-query-3",
+    "stead-result-3",
+    "stead-team-config-1",
+    "stead-updates-3"
+  ],
+  "protocol": "stead.release-contract/1",
+  "runtime_binary_sha256": "f7f0d3b3c0480fc10f887dfbc09bde56a81d723a803541c7886c538a0675d833",
+  "runtime_version": "4.6",
+  "saved_state_versions": {
+    "home": 9,
+    "identity": 1
+  },
+  "toolchain_sha256": "ae185adaec12b5aa0b2d48e2198ae65583902512ffd9d148706810c4819c650c"
+}
+                                                                                            stead-release/source/toolchain.lock.json                                                            0000644 0000000 0000000 00000010177 00000000000 015573  0                                                                                                    ustar 00                                                                                                                                                                                                                                                       {
+  "format": 1,
+  "profile": "linux-x86_64-fake-only",
+  "resolved_on": "2026-09-29",
+  "runtime": {
+    "repository": "ScottTpirate/stead-urbit",
+    "release": "runtime-v4.6-newt-c0a35c6",
+    "version": "4.6",
+    "source_repository": "urbit/vere",
+    "commit": "8ddc4b786979574dbfcb655e3db1b634f658d0de",
+    "upstream_patch_commit": "c0a35c6f6302baf536a13522afd1ac89ea8c7776",
+    "url": "https://github.com/ScottTpirate/stead-urbit/releases/download/runtime-v4.6-newt-c0a35c6/vere-v4.6-newt-linux-x86_64.tgz",
+    "archive": "vere-v4.6-newt-linux-x86_64.tgz",
+    "sha256": "d00669a0bdc9fe0be15d519bdf508208b0676f84e1a9f02be12ecc03f4576a01",
+    "binary": "bin/vere-v4.6-newt-linux-x86_64",
+    "binary_sha256": "f7f0d3b3c0480fc10f887dfbc09bde56a81d723a803541c7886c538a0675d833",
+    "checksum_authority": "Locally packaged verified hosted build; exact build and native regression evidence below; not a signed upstream release",
+    "build_workflow_commit": "825aebf719d1fd99bfc51457cc023ce36edda089",
+    "build_run_url": "https://github.com/ScottTpirate/stead-urbit/actions/runs/36485873646",
+    "source_bundle": {
+      "url": "https://github.com/ScottTpirate/stead-urbit/releases/download/runtime-v4.6-newt-c0a35c6/build-inputs.tar",
+      "sha256": "e6f5184a227d632a8d7b81a1b6403fbc2ccf5dcbaab1d37191bb38ccc87167e6"
+    },
+    "source_manifest": "specs/urbit/runtime-source-build.json",
+    "build_evidence": "docs/urbit/evidence/2026-09-28/runtime-disconnect/build.json",
+    "regression_evidence": "docs/urbit/evidence/2026-09-28/runtime-disconnect/native-regression.json",
+    "profile": "development-fake-ships-only"
+  },
+  "kernel": {
+    "repository": "urbit/urbit",
+    "release": "408k-2",
+    "commit": "5a187fededc4582a34fcd6055c67bb63e0917b94",
+    "kelvin": 408,
+    "url": "https://codeload.github.com/urbit/urbit/tar.gz/5a187fededc4582a34fcd6055c67bb63e0917b94",
+    "archive": "urbit-408k-2.tar.gz",
+    "sha256": "7f6f41388f456d1e94850a51b60b15e3148ede103ebb03b8acad470ed27beb31",
+    "directory": "urbit-5a187fededc4582a34fcd6055c67bb63e0917b94",
+    "checksum_authority": "locally measured archive at immutable Git commit; not a signed upstream build attestation",
+    "source_tree_sha256": "33b397d659f7686be86d12f59c968f7613a5dc2851916ca512b6f18aa0ec231b"
+  },
+  "boot_artifact": {
+    "url": "https://media.githubusercontent.com/media/urbit/urbit/5a187fededc4582a34fcd6055c67bb63e0917b94/bin/brass.pill",
+    "archive": "brass-408k-2.pill",
+    "sha256": "b4babd14e9f1acbdb421b3c31c215ee637ad6691b7e382b99c6fd8991e623708",
+    "size": 23389629,
+    "checksum_authority": "Git LFS pointer in pinned kernel commit",
+    "source_overlay": "kernel pkg/arvo supplied with -A; pill alone is not claimed to contain final kernel"
+  },
+  "desk_dependencies": {
+    "source": "kernel pkg/arvo",
+    "profile": "mounted disposable base desk; no distribution desk yet",
+    "imports": [
+      "default-agent",
+      "skeleton",
+      "spider",
+      "strandio"
+    ]
+  },
+  "frontend": {
+    "status": "toolchain_only_no_ui_no_build",
+    "node": "24.21.0",
+    "npm": "11.19.0",
+    "url": "https://nodejs.org/dist/v24.21.0/node-v24.21.0-linux-x64.tar.xz",
+    "archive": "node-v24.21.0-linux-x64.tar.xz",
+    "sha256": "fd8e59d5a511510f6a298afb548f18c7d2b1be404d8b4a27d94fbe49f56cb2d6",
+    "directory": "node-v24.21.0-linux-x64",
+    "lockfile": "web/toolchain/package-lock.json",
+    "lock_sha256": "7db4246a48ff04da8e01bef0ec1cdccf5297867e5e343b06531eebdfa36e511e",
+    "checksum_authority": "official Node SHASUMS256.txt; signature verification not performed",
+    "binary_sha256": "7fde7b8afa198da66257f42ee2001d874c7355631e6d1579a5fb5ef1f246df4c"
+  },
+  "host_tools": {
+    "git": "2.55.0",
+    "python_tested": "3.14.7",
+    "python_minimum": "3.12",
+    "bubblewrap_tested": "0.12.0"
+  },
+  "compatibility_evidence": "docs/urbit/TEST_RESULTS.md",
+  "urgit": {
+    "repository": "yapishu/urgit",
+    "commit": "9cec0371b02269efcdbd8580c42e883e69b82000",
+    "status": "independent_candidate_evaluation_only_not_runtime_dependency"
+  },
+  "protocol_corpus": {
+    "path": "specs/urbit/smoke-corpus.json",
+    "sha256": "3a05090f8ff4aceddcd228145346564ce9ecf28af7016fd256eb911430dbbd9c"
+  }
+}
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                 

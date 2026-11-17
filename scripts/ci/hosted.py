@@ -204,6 +204,9 @@ def observe(job, context):
 
 
 def sandbox_command(job, context):
+    if context.get('fixed_profile') == 'home-assets-saved8/1':
+        from home_asset_rehearsal.service_adapter import command
+        return command(sys.modules[__name__], job, context)
     base, pins = job / 'controller', context['pins']
     command = ['/usr/bin/bwrap', '--unshare-all', '--die-with-parent', '--new-session', '--uid', '0', '--gid', '0',
         '--cap-add', 'CAP_NET_ADMIN', '--cap-add', 'CAP_SETPCAP', '--ro-bind', '/usr', '/usr']
@@ -723,7 +726,7 @@ def main():
     parser.add_argument('--run-id', required=True)
     parser.add_argument('--attempt', required=True)
     parser.add_argument('--control', choices=CONTROL_CASES)
-    parser.add_argument('--mode', choices=('native', 'model', 'pure', 'pure-model-simple', 'pure-repository-debug'), default='native')
+    parser.add_argument('--mode', choices=('native', 'model', 'pure', 'pure-model-simple', 'pure-repository-debug', 'home-assets-saved8'), default='native')
     args = parser.parse_args()
     capture_artifacts = {}
     require(os.getuid() == 0 and sys.flags.isolated and sys.dont_write_bytecode, 'Root isolated controller required')
@@ -746,6 +749,9 @@ def main():
     if args.mode == 'pure-repository-debug':
         from pure_eval.service_adapter import outer_repository_debug
         return outer_repository_debug(sys.modules[__name__], args, identity, binding)
+    if args.mode == 'home-assets-saved8':
+        from home_asset_rehearsal.service_adapter import outer
+        return outer(sys.modules[__name__], args, identity, binding)
     controller = CONTROLLER_FILES
     candidate = local.inventory(args.candidate, ('native/core/desk',))
     combined, product = local.compose(controller, candidate)
