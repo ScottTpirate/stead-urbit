@@ -8,7 +8,7 @@ on:
         required: true
         default: native
         type: choice
-        options: [native, model, pure, pure-model-simple, pure-repository-debug]
+        options: [native, model, pure, pure-model-simple, pure-repository-debug, home-assets-saved8]
       candidate:
         description: Full candidate commit from this repository; blank tests the pinned reviewed controller
         required: false
@@ -67,7 +67,7 @@ jobs:
           if manifest != {'format': 'stead.hosted-controller/1', 'repository': 'ScottTpirate/stead-urbit', 'controller_commit': controller}:
               raise SystemExit('Invalid controller manifest')
           mode = os.environ.get('STEAD_MODE') or 'native'
-          if mode not in ('native', 'model', 'pure', 'pure-model-simple', 'pure-repository-debug') or (mode in ('model', 'pure', 'pure-model-simple', 'pure-repository-debug') and os.environ.get('STEAD_CANDIDATE')):
+          if mode not in ('native', 'model', 'pure', 'pure-model-simple', 'pure-repository-debug', 'home-assets-saved8') or (mode in ('model', 'pure', 'pure-model-simple', 'pure-repository-debug', 'home-assets-saved8') and os.environ.get('STEAD_CANDIDATE')):
               raise SystemExit('Fixed standalone modes accept no candidate override')
           candidate = os.environ.get('STEAD_CANDIDATE') or controller
           if not all(re.fullmatch(r'[0-9a-f]{40}', value) for value in (controller, candidate)):
@@ -170,7 +170,7 @@ jobs:
             sudo --preserve-env=ACTIONS_ID_TOKEN_REQUEST_URL,ACTIONS_ID_TOKEN_REQUEST_TOKEN python3 -I -B /var/lib/stead-ci-controller/scripts/ci/hosted.py --workflow "$STEAD_WORKFLOW" --controller "$controller" --candidate "$candidate" --run-id "$STEAD_RUN_ID" --attempt "$STEAD_ATTEMPT" --control "$control"
           done
       - name: Execute the isolated native job
-        if: inputs.mode != 'model' && inputs.mode != 'pure' && inputs.mode != 'pure-model-simple' && inputs.mode != 'pure-repository-debug'
+        if: inputs.mode != 'model' && inputs.mode != 'pure' && inputs.mode != 'pure-model-simple' && inputs.mode != 'pure-repository-debug' && inputs.mode != 'home-assets-saved8'
         env:
           STEAD_WORKFLOW: ${{ github.sha }}
           STEAD_RUN_ID: ${{ github.run_id }}
@@ -179,6 +179,15 @@ jobs:
           candidate=$(sudo cat /var/lib/stead-ci-controller/.runtime/candidate)
           controller=$(sudo cat /var/lib/stead-ci-controller/.runtime/controller)
           sudo --preserve-env=ACTIONS_ID_TOKEN_REQUEST_URL,ACTIONS_ID_TOKEN_REQUEST_TOKEN python3 -I -B /var/lib/stead-ci-controller/scripts/ci/hosted.py --workflow "$STEAD_WORKFLOW" --controller "$controller" --candidate "$candidate" --run-id "$STEAD_RUN_ID" --attempt "$STEAD_ATTEMPT"
+      - name: Execute the fixed disposable saved8 asset rehearsal
+        if: inputs.mode == 'home-assets-saved8'
+        env:
+          STEAD_WORKFLOW: ${{ github.sha }}
+          STEAD_RUN_ID: ${{ github.run_id }}
+          STEAD_ATTEMPT: ${{ github.run_attempt }}
+        run: |
+          controller=$(sudo cat /var/lib/stead-ci-controller/.runtime/controller)
+          sudo --preserve-env=ACTIONS_ID_TOKEN_REQUEST_URL,ACTIONS_ID_TOKEN_REQUEST_TOKEN python3 -I -B /var/lib/stead-ci-controller/scripts/ci/hosted.py --workflow "$STEAD_WORKFLOW" --controller "$controller" --candidate "$controller" --run-id "$STEAD_RUN_ID" --attempt "$STEAD_ATTEMPT" --mode home-assets-saved8
       - name: Execute the fixed standalone model proof
         if: inputs.mode == 'model'
         timeout-minutes: 24
@@ -234,7 +243,7 @@ jobs:
               raise SystemExit('Kernel diagnostic collection failed')
           PY
       - name: Publish bounded evidence only
-        if: always() && inputs.mode != 'model' && inputs.mode != 'pure' && inputs.mode != 'pure-model-simple' && inputs.mode != 'pure-repository-debug'
+        if: always() && inputs.mode != 'model' && inputs.mode != 'pure' && inputs.mode != 'pure-model-simple' && inputs.mode != 'pure-repository-debug' && inputs.mode != 'home-assets-saved8'
         uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
         with:
           name: native-ci-evidence-${{ github.run_id }}-${{ github.run_attempt }}
@@ -265,5 +274,46 @@ jobs:
           path: |
             /var/lib/stead-ci-controller/pure-evidence/owner-report.json
             /var/lib/stead-ci-controller/pure-evidence/report.json
+          if-no-files-found: error
+          retention-days: 7
+      - name: Publish fixed saved8 rehearsal evidence only
+        if: always() && inputs.mode == 'home-assets-saved8'
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
+        with:
+          name: saved8-rehearsal-evidence-${{ github.run_id }}-${{ github.run_attempt }}
+          path: |
+            /var/lib/stead-ci-controller/home-asset-evidence/owner-report.json
+            /var/lib/stead-ci-controller/home-asset-evidence/report.json
+            /var/lib/stead-ci-controller/home-asset-evidence/inputs.json
+            /var/lib/stead-ci-controller/home-asset-evidence/seed8.jam
+            /var/lib/stead-ci-controller/home-asset-evidence/seed8.json
+            /var/lib/stead-ci-controller/home-asset-evidence/a0-loaded.jam
+            /var/lib/stead-ci-controller/home-asset-evidence/a0-loaded.json
+            /var/lib/stead-ci-controller/home-asset-evidence/a0-cold.jam
+            /var/lib/stead-ci-controller/home-asset-evidence/a0-cold.json
+            /var/lib/stead-ci-controller/home-asset-evidence/assets-loaded.jam
+            /var/lib/stead-ci-controller/home-asset-evidence/assets-loaded.json
+            /var/lib/stead-ci-controller/home-asset-evidence/rollback-loaded.jam
+            /var/lib/stead-ci-controller/home-asset-evidence/rollback-loaded.json
+          if-no-files-found: error
+          retention-days: 7
+      - name: Publish fixed saved8 resource control evidence only
+        if: always() && inputs.mode == 'home-assets-saved8'
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
+        with:
+          name: saved8-control-evidence-${{ github.run_id }}-${{ github.run_attempt }}
+          path: |
+            /var/lib/stead-ci-controller/hosted-evidence/control-missing-profile-report.json
+            /var/lib/stead-ci-controller/hosted-evidence/control-missing-profile-inputs.json
+            /var/lib/stead-ci-controller/hosted-evidence/control-wrong-profile-report.json
+            /var/lib/stead-ci-controller/hosted-evidence/control-wrong-profile-inputs.json
+            /var/lib/stead-ci-controller/hosted-evidence/control-parent-death-report.json
+            /var/lib/stead-ci-controller/hosted-evidence/control-parent-death-inputs.json
+            /var/lib/stead-ci-controller/hosted-evidence/control-guardian-death-report.json
+            /var/lib/stead-ci-controller/hosted-evidence/control-guardian-death-inputs.json
+            /var/lib/stead-ci-controller/hosted-evidence/control-changed-limits-report.json
+            /var/lib/stead-ci-controller/hosted-evidence/control-changed-limits-inputs.json
+            /var/lib/stead-ci-controller/hosted-evidence/control-stale-lease-report.json
+            /var/lib/stead-ci-controller/hosted-evidence/control-stale-lease-inputs.json
           if-no-files-found: error
           retention-days: 7
