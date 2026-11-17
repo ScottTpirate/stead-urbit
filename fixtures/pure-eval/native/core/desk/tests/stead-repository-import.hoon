@@ -367,7 +367,7 @@
   ?>  =((malt ~[[(id 101) ledger]]) external.p.out)
   ?>  =((malt ~[[(id 101) board]]) boards.p.out)
   =/  row  (~(got by entries.catalog.p.out) (id 101))
-  ?>  &(=(%external-sha1-pack-v1 profile.row) legacy-alias.row =(%legacy -.origin.row))
+  ?>  &(=(%external-sha1-pack-v1 profile.row) legacy-alias.row =(%legacy origin.row))
   ?>  =(snapshot.current.ledger snapshot.current:(~(got by external.p.out) (id 101)))
   =/  value  (need (parse added-wire))
   ?>  ?=([%o *] value)

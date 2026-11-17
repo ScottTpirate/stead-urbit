@@ -76,7 +76,7 @@
     =/  id  p.i.rows
     =/  row  q.i.rows
     ?>  &((uuid id) (uuid project.row) =(1 metadata-revision.row))
-    ?:  ?=(%legacy -.origin.row)
+    ?:  ?=(%legacy origin.row)
       ?>  &(legacy-alias.row =(id project.row) =('' name.row))
       $(rows t.rows, imported +(imported))
     ?>  ?&  !legacy-alias.row  =(%inline-sha1-v1 profile.row)
@@ -96,7 +96,7 @@
   =/  receipt  q.i.saved
   =/  cmd  (decode command.receipt)
   =/  row  (~(got by entries.db) repository.receipt)
-  ?>  ?=(%created -.origin.row)
+  ?>  ?=([%created *] origin.row)
   ?>  ?&  =(1 version.receipt)  =(id request.receipt)
           =(request.cmd request.receipt)  =(project.cmd project.receipt)
           =(repository.cmd repository.receipt)  =(name.cmd name.row)

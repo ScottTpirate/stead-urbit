@@ -9,7 +9,7 @@ import hashlib
 import json
 import re
 
-COMPOSITION_SHA256 = "3d42cb1788ddbe5bdf6f9643bbbe4d2bfa7245a24431b851ef247c525c9ead72"
+COMPOSITION_SHA256 = "1c1f04d82fcfc4eac6f5edf5d00b39f29bbbeb541687fb5df5a431726810a280"
 COMPOSITION_BYTES = 240147
 HELPER_PATH = "pkg/base-dev/lib/test.hoon"
 HELPER_SHA256 = "55d5196a3a8dbd5323943c06f138c9b9aa8fd955506c4f4b14e5d56ff05abcc6"
@@ -29,7 +29,7 @@ EXIT_DIAGNOSTICS = (EXIT_STDERR, CORE_LIMIT_WARNING + EXIT_STDERR)
 COMPILER_STDOUT = "/eval\n{1 22}\nsyntax error"
 JOB_FIELDS = {"label", "kind", "source", "source_sha256", "timeout_seconds", "arms"}
 SUITES = (('catalog',
-  '4c970d23b0faace637cfc16f65ea519270942dcb77d37bcdc3950ad1e28b7eca',
+  '8c377fa822ef4d1808e203ff8ae578f309f1ce6157b7d1adba37bb7224283cdb',
   ('test-repository-catalog-two-repos-exact-inline-profile',
    'test-repository-catalog-typed-ids-never-infer-alias',
    'test-repository-catalog-retry-is-original-and-current-authorized',
@@ -37,13 +37,13 @@ SUITES = (('catalog',
    'test-repository-catalog-global-retained-capacity-no-eviction',
    'test-repository-catalog-closed-codec-and-receipt-closure')),
  ('import',
-  '904f373104c1a388105864b8d38ed17001666a9b2fbef40eb6eb30bc033372f8',
+  '83becaaa829e8d77f19e2e3d70f26d51023b9ecd3e820c420625efd84371fb1b',
   ('test-repository-import-inline-exact-refs-reviews-uploads-and-alias',
    'test-repository-import-external-exact-promotion-and-snapshot',
    'test-repository-import-refuses-orphan-corrupt-and-cross-scope-tails',
    'test-repository-import-empty-and-full-pure-roundtrip')),
  ('authority',
-  'c13051201e7ee497c29d845b7a4db97fd6a99a8cb07dd97047eef1e3983ba3bc',
+  '28efeacc16ca0e1cee091726c95817b1b7972fecba97a0a5c1fc5542cafcdb7a',
   ('test-repository-authority-current-human-roles-and-two-repos',
    'test-repository-authority-nonhuman-and-unresolved-denied',
    'test-repository-authority-browser-possession-and-current-session',
@@ -53,7 +53,7 @@ SUITES = (('catalog',
    'test-repository-authority-current-before-original-create-replay',
    'test-repository-authority-missing-and-forged-snapshot-boundaries')),
  ('store',
-  'd281c5ebf92d05f94cab6c0c7acbdc50962710ebcce9c5fb141806b0862ce656',
+  '61c1d4c5bb5d3217735f9a808d7cf170cdb38ae209fa8e56333780ced212ccd4',
   ('test-repository-store-two-inline-current-scope',
    'test-repository-store-import-exact-mixed-four-roots',
    'test-repository-store-catalog-key-profile-and-epoch',
@@ -68,9 +68,9 @@ MODEL_COMPOSITION_BYTES = 110358
 MODEL_SUITES = (('model-codec', '234f119ef4636c2cc4e9fcc3a1f9ba1d3f556c13b2d1d5cffa951f0492ffae03', ('test-model-codec-golden-reserve-and-derived-native-identity', 'test-model-codec-closed-parent-and-canonical-cas', 'test-model-codec-material-pins-and-exact-charge-reject-drift', 'test-model-codec-observation-absence-empty-and-binary-bytes', 'test-model-codec-parser-and-parent-bounds-do-not-expand', 'test-model-codec-real-linefeeds-and-supplementary-unicode')), ('model-reply', 'd9d3fdd036fcc869159a686bd96a35da6aa07c1c1bbf38b4481ed68b8920d8ed', ('test-model-reply-rebuilds-golden-proposal-from-original-bytes', 'test-model-reply-binary-utf8-duplicate-depth-and-size-refusals', 'test-model-reply-timing-exponents-and-reasoning-are-bounded', 'test-model-reply-refusal-incomplete-and-filter-never-propose-doc', 'test-model-reply-tool-model-and-usage-pins-reject-spoofs', 'test-model-reply-actual-linefeeds-and-supplementary-unicode')), ('model-turn-codec', '17bfc6d95c6fa975487ba893b8a873f08ece870c200c75b8249a3426699e6ed2', ('test-model-turn-codec-four-exact-parent-vectors', 'test-model-turn-codec-closed-canonical-claim-boundary', 'test-model-turn-codec-ids-digests-and-finite-uints', 'test-model-turn-codec-exact-answer-utf8-and-comment-bounds', 'test-model-turn-codec-five-child-identities-are-not-authority', 'test-model-turn-codec-escaped-limits-and-nested-shape-denials')))
 
 
-DEBUG_COMPOSITION_SHA256 = "1c59ea7469037040723308c1b7bc5c015bc2bc9db954c7003e9fc1b0a2c6e68c"
+DEBUG_COMPOSITION_SHA256 = "adecaa18bc47cf8dd60bb10198eadba0abd4554f852dc0c30dbb020e6b5082a8"
 DEBUG_COMPOSITION_BYTES = 54273
-DEBUG_SUITES = (("catalog-debug", "f71320f25fc19e9a93ab435fd17fb8e604b86764a464d1d0b28fd5c3182ee4b9", SUITES[0][2]),)
+DEBUG_SUITES = (("catalog-debug", "ba20d4c01d98e83f97ea089e4c8fa2c6bb42eb0c7e02b5ea2471a328beecad06", SUITES[0][2]),)
 
 def profile(composition_sha256):
     """Return only a source-owned closed profile; no caller-selected counts/paths."""

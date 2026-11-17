@@ -22,8 +22,8 @@ def load(name):
 CODEC = load('codec')
 ADAPTER = load('service_adapter')
 WORKER = load('worker')
-DEBUG = '1c59ea7469037040723308c1b7bc5c015bc2bc9db954c7003e9fc1b0a2c6e68c'
-REPO = '3d42cb1788ddbe5bdf6f9643bbbe4d2bfa7245a24431b851ef247c525c9ead72'
+DEBUG = 'adecaa18bc47cf8dd60bb10198eadba0abd4554f852dc0c30dbb020e6b5082a8'
+REPO = '1c1f04d82fcfc4eac6f5edf5d00b39f29bbbeb541687fb5df5a431726810a280'
 MODEL = 'c23002a6a5d1423167a0ef2caa9c35bc86b5ccc64ba3fff640dc73edfd9dfaa6'
 
 
@@ -49,7 +49,7 @@ class CatalogDebugTests(unittest.TestCase):
         diagnostic = self.selected[DEBUG][1][2]
         self.assertEqual(diagnostic['source'], b'!:\n' + original['source'])
         self.assertEqual((len(diagnostic['source']), diagnostic['source_sha256']),
-                         (131322, 'f71320f25fc19e9a93ab435fd17fb8e604b86764a464d1d0b28fd5c3182ee4b9'))
+                         (131322, 'ba20d4c01d98e83f97ea089e4c8fa2c6bb42eb0c7e02b5ea2471a328beecad06'))
         old = json.loads(self.composition(REPO))['composition']['suites'][0]
         new = json.loads(self.composition(DEBUG))['composition']['suites'][0]
         self.assertEqual(new['source_offsets'][0], {'kind': 'fixed-debug-prefix',

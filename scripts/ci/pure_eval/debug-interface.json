@@ -1,9 +1,9 @@
 {
   "codec": {
     "bytes": 20030,
-    "sha256": "cb052609cc6daca33e405829eb1d584c34f3892635dc66456bda57d426765744"
+    "sha256": "f53215d038bacec0786801b4c8c83c57febc47ce3436bda8761e668bb4a208a7"
   },
-  "composition_sha256": "1c59ea7469037040723308c1b7bc5c015bc2bc9db954c7003e9fc1b0a2c6e68c",
+  "composition_sha256": "adecaa18bc47cf8dd60bb10198eadba0abd4554f852dc0c30dbb020e6b5082a8",
   "controls": 2,
   "input_names": [
     "worker.py",

@@ -32,7 +32,7 @@ with patch.dict(sys.modules, {'owner_boundary': BOUNDARY}):
     COLLECTION = load('profile_collection', DIRECTORY / 'owner_collection.py')
 ADAPTER = load('profile_adapter', DIRECTORY / 'service_adapter.py')
 WORKER = load('profile_worker', DIRECTORY / 'worker.py')
-REPOSITORY = '3d42cb1788ddbe5bdf6f9643bbbe4d2bfa7245a24431b851ef247c525c9ead72'
+REPOSITORY = '1c1f04d82fcfc4eac6f5edf5d00b39f29bbbeb541687fb5df5a431726810a280'
 MODEL = 'c23002a6a5d1423167a0ef2caa9c35bc86b5ccc64ba3fff640dc73edfd9dfaa6'
 
 
@@ -117,10 +117,10 @@ class FixedProfileTests(unittest.TestCase):
         self.assertEqual(jobs[1]['source_sha256'],
                          '6ccdf445296a66cac869b95ff3a7d068421309cf7b541e2cf5adbc79589e0639')
         self.assertEqual(tuple(j['source_sha256'] for j in jobs[2:]), (
-            '4c970d23b0faace637cfc16f65ea519270942dcb77d37bcdc3950ad1e28b7eca',
-            '904f373104c1a388105864b8d38ed17001666a9b2fbef40eb6eb30bc033372f8',
-            'c13051201e7ee497c29d845b7a4db97fd6a99a8cb07dd97047eef1e3983ba3bc',
-            'd281c5ebf92d05f94cab6c0c7acbdc50962710ebcce9c5fb141806b0862ce656'))
+            '8c377fa822ef4d1808e203ff8ae578f309f1ce6157b7d1adba37bb7224283cdb',
+            '83becaaa829e8d77f19e2e3d70f26d51023b9ecd3e820c420625efd84371fb1b',
+            '28efeacc16ca0e1cee091726c95817b1b7972fecba97a0a5c1fc5542cafcdb7a',
+            '61c1d4c5bb5d3217735f9a808d7cf170cdb38ae209fa8e56333780ced212ccd4'))
 
     def test_model_five_jobs_eighteen_arms_exact_sources_and_same_controls(self):
         files, jobs, _ = self.selected[MODEL]

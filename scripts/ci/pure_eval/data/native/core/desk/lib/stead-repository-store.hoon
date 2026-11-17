@@ -48,11 +48,11 @@
         =/  repo  (~(get by repos.code) id)
         ?~  repo  |
         ?.  (inline-valid destination u.repo)  |
-        ?:  ?=(%legacy -.origin.row)  &
+        ?:  ?=(%legacy origin.row)  &
         =/  created  (~(get by creates.catalog.value) request.origin.row)
         ?~  created  |
         =(epoch.destination authority-epoch.u.created)
-      ?.  ?&  legacy-alias.row  ?=(%legacy -.origin.row)
+      ?.  ?&  legacy-alias.row  ?=(%legacy origin.row)
               =(id project.row)  !(~(has by repos.code) id)
           ==
         |
