@@ -383,7 +383,8 @@ def evaluate(job, owned, lease, baseline, deadline):
             end = min(deadline, time.monotonic() + job['timeout_seconds'])
             while process.poll() is None:
                 lease.check()
-                require(time.monotonic() < end)
+                if not time.monotonic() < end:
+                    raise TimeoutError('Fixed evaluator job deadline')
                 require(os.fstat(output.fileno()).st_size <= LIMIT and os.fstat(errors.fileno()).st_size <= LIMIT)
                 time.sleep(0.05)
             process.wait(timeout=1)
