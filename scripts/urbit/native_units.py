@@ -10,13 +10,15 @@ import re
 
 RESTORE_PATH = '/tests/stead-product-restore'
 NEGATIVE_PATH = '/controls/stead-unit-failure'
+RESTORE_ARM = 'test-product-restore-incremental-checkpoint-exposes-no-partial-state'
 INTERRUPTION_STAGES = ('encode', 'connect', 'send', 'response-header',
                        'response-body', 'decode', 'parse-terminal')
 
 
 def restore_scope():
-    return {'profile': 'restore-timeout/1', 'paths': [NEGATIVE_PATH, RESTORE_PATH],
-            'positive_suites': 1, 'positive_arms': 8, 'negative_controls': 1,
+    return {'profile': 'restore-incremental/1', 'paths': [NEGATIVE_PATH, RESTORE_PATH],
+            'selected_arm': RESTORE_ARM,
+            'positive_suites': 1, 'positive_arms': 1, 'negative_controls': 1,
             'timeout_seconds': 60, 'qualification': False}
 
 
@@ -35,8 +37,19 @@ def validate_restore_scope(value):
 
 def restore_entries(inventory):
     checked = validate_inventory(inventory)
-    return [checked['negative_control'],
-            next(row for row in checked['suites'] if row['path'] == RESTORE_PATH)]
+    entry = next(row for row in checked['suites'] if row['path'] == RESTORE_PATH)
+    diagnostic_require(RESTORE_ARM in entry['arms'])
+    return [checked['negative_control'], dict(entry, arms=[RESTORE_ARM])]
+
+
+def restore_request_path(entry):
+    """Pinned Arvo filters this one arm after compiling the unchanged module."""
+    if entry == {'path': NEGATIVE_PATH, 'arms': ['test-deliberate-failure'],
+                 'marker': 'stead-intentional-native-unit-failure'}:
+        return NEGATIVE_PATH
+    diagnostic_require(entry == {'path': RESTORE_PATH, 'arms': [RESTORE_ARM],
+                                 'timeout_seconds': 60})
+    return RESTORE_PATH + '/' + RESTORE_ARM
 
 
 def interruption_transport(stage, elapsed_ms, received, timeout):
@@ -161,7 +174,9 @@ def run(binary, socket_path, resolved_path: str, timeout: float = 60) -> dict:
     if isinstance(timeout, bool) or not isinstance(timeout, (int, float)) or not 0 < timeout <= 180:
         raise ValueError('Bounded native unit deadline required')
     started = time.monotonic()
-    if not re.fullmatch(r'/~zod/base/~[0-9a-zA-Z.:-]+/(tests|controls)/stead-[a-z0-9-]+', resolved_path):
+    ordinary = re.fullmatch(r'/~zod/base/~[0-9a-zA-Z.:-]+/(tests|controls)/stead-[a-z0-9-]+', resolved_path)
+    incremental = re.fullmatch(r'/~zod/base/~[0-9a-zA-Z.:-]+' + re.escape(RESTORE_PATH + '/' + RESTORE_ARM), resolved_path)
+    if not (ordinary or incremental):
         raise ValueError('Resolved native unit beam required')
     atoms = ' '.join(core_conn.atom(part.encode()) for part in resolved_path.split('/')[1:])
     # Arvo's %path mark preserves the vase type required by /ted/test's !<.

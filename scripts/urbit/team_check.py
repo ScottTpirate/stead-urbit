@@ -280,7 +280,7 @@ def run(host):
     started = time.monotonic()
     report = {'status': 'fail', 'classification': 'local-real-configured-gall-development',
               'qualifies_phase': False, 'checks': [], 'commands': [], 'installed': {},
-              'scope': 'Fixed restore8 and deliberate-negative diagnostics only; no all329, later ship, journey, capture or qualification.',
+              'scope': 'Fixed incremental restore arm and deliberate-negative diagnostics only; no restore8/all329, later ship, journey, capture or qualification.',
               'diagnostic_scope': native_units.restore_scope(),
               'diagnostic_only': True}
     path = Path('/state/logs') / ('team-check-' + time.strftime('%Y%m%dT%H%M%SZ', time.gmtime()) + '.json')
@@ -363,7 +363,7 @@ def run(host):
         def execute(entry):
             host['execution_check']()
             pending.clear()
-            source = '`path`%' + entry['path']
+            source = '`path`%' + native_units.restore_request_path(entry)
             resolved = host['dojo']('zod', source)
             if not isinstance(resolved, str) or len(resolved.encode()) > 32768:
                 raise ValueError('Native diagnostic beam result bound')
@@ -417,7 +417,7 @@ def run(host):
             checkpoint('native-unit-diagnostic-failure' if verified is None else 'native-unit-output')
             pending.clear()
 
-        # Fixed negative first, then the original restore8. This always stops;
+        # Fixed negative first, then one exact original incremental restore arm. This always stops;
         # no later ship/Gall/journey/capture and no all329 qualification.
         native_units.collect_pure_diagnostics(native_units.restore_entries(inventory),
             execute, verify, lambda entry, verified: retain(entry, verified),

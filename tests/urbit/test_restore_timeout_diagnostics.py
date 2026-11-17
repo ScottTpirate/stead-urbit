@@ -1,4 +1,4 @@
-"""Six authored inert boundaries; no historical timeout bytes are reconstructed.
+"""Seven inert boundaries for one original arm; no historical bytes reconstructed.
 
 Socket/process/Dojo operations are doubles. The final case runs the actual
 fixed coordinator with those doubles; it proves orchestration, not Hoon cost.
@@ -132,7 +132,8 @@ class RestoreTimeoutDiagnosticsTests(unittest.TestCase):
         self.assertEqual([row['path'] for row in entries], [units.NEGATIVE_PATH, units.RESTORE_PATH])
         self.assertEqual(len(inventory['suites']), 48)
         self.assertEqual(sum(len(row['arms']) for row in inventory['suites']), 329)
-        self.assertEqual(len(entries[1]['arms']), 8)
+        self.assertEqual(entries[1]['arms'], [units.RESTORE_ARM])
+        self.assertEqual(len(next(row for row in inventory['suites'] if row['path'] == units.RESTORE_PATH)['arms']), 8)
         self.assertEqual([row.get('timeout_seconds', 60) for row in entries], [60, 60])
         fixture = ROOT / 'native/core/desk/tests/stead-product-restore.hoon'
         self.assertEqual(hashlib.sha256(fixture.read_bytes()).hexdigest(),
@@ -194,7 +195,7 @@ class RestoreTimeoutDiagnosticsTests(unittest.TestCase):
                 error = TimeoutError('synthetic secret original timeout')
                 def native_run(binary, socket_path, path, timeout):
                     events.append(('suite', path, timeout))
-                    if path.endswith(units.RESTORE_PATH):
+                    if path.endswith(units.restore_request_path(entries[1])):
                         error.native_interruption = {'unknown': 'secret'} if malformed_projection else self.progress()['transport']
                         raise error
                     return {'stdout': '[32 %avow 0 %noun 1]'}
@@ -231,7 +232,7 @@ class RestoreTimeoutDiagnosticsTests(unittest.TestCase):
                         host['all_stop']()
                 self.assertEqual([e for e in events if e[0] == 'launch'], [('launch', 'zod')])
                 self.assertEqual([e for e in events if e[0] == 'suite'],
-                    [('suite', '/~zod/base/~2026.1.1' + row['path'], 60) for row in entries])
+                    [('suite', '/~zod/base/~2026.1.1' + units.restore_request_path(row), 60) for row in entries])
                 self.assertEqual(result['status'], 'fail')
                 self.assertIs(result['qualifies_phase'], False)
                 self.assertTrue(result['error'].startswith('TimeoutError:'))
@@ -246,6 +247,32 @@ class RestoreTimeoutDiagnosticsTests(unittest.TestCase):
                 self.assertEqual('diagnostic_unit_interruption' in final, not malformed_projection)
                 self.assertNotIn('synthetic secret', json.dumps(final))
 
+
+    def test_single_arm_routing_refuses_foreign_prefix_extra_or_changed_deadline(self):
+        entries = units.restore_entries(self.inventory())
+        self.assertEqual(units.restore_request_path(entries[0]), units.NEGATIVE_PATH)
+        selected = units.RESTORE_PATH + '/' + units.RESTORE_ARM
+        self.assertEqual(units.restore_request_path(entries[1]), selected)
+        for bad in (dict(entries[1], arms=[]), dict(entries[1], arms=[units.RESTORE_ARM, 'test-foreign']),
+                    dict(entries[1], timeout_seconds=61), dict(entries[1], path='/tests/other'),
+                    dict(entries[1], arms=['test-product-restore-incremental'])):
+            with self.assertRaises(ValueError): units.restore_request_path(bad)
+        # Fixed exact suffix is encoded as a path mark; no native/evaluator call.
+        stopped = RuntimeError('inert before encode')
+        with patch.object(core_conn, 'evaluate', side_effect=stopped) as encode:
+            with self.assertRaises(RuntimeError) as caught:
+                units.run('never-executed', '/inert/socket', '/~zod/base/~2026.1.1' + selected, 60)
+            self.assertIs(caught.exception, stopped)
+            self.assertEqual(encode.call_count, 1)
+            request = encode.call_args.args[2]
+            self.assertIn(b'[%path [', request)
+            self.assertIn(core_conn.atom(units.RESTORE_ARM.encode()).encode(), request)
+            for wrong in (selected + '/extra', units.RESTORE_PATH + '/test-foreign',
+                          units.NEGATIVE_PATH + '/' + units.RESTORE_ARM,
+                          units.RESTORE_PATH + '/test-product-restore-incremental'):
+                with self.assertRaises(ValueError):
+                    units.run('never-executed', '/inert/socket', '/~zod/base/~2026.1.1' + wrong, 60)
+            self.assertEqual(encode.call_count, 1)
 
 if __name__ == '__main__':
     unittest.main()
