@@ -28,8 +28,10 @@ COMPOSITION_SHA = '3d42cb1788ddbe5bdf6f9643bbbe4d2bfa7245a24431b851ef247c525c9ea
 RUNTIME_SHA = 'f7f0d3b3c0480fc10f887dfbc09bde56a81d723a803541c7886c538a0675d833'
 OWNED_SHA = 'a01fc92a0b5f000f5ddee505d475127681ac47ea9a7aa4d8b450594cd50ec229'
 # Exact fixed codec/interface bytes; the outer profile still requires independent admission.
-CODEC_SHA = '7fc1584bbab62f0017d6c2bce6245070373c2c144772c73e45aa4dfb87d54b75'
-INTERFACE_SHA = '13e91f719b5464ca56ec321ef0796f312b08ffac135e56813cb6c8562f73aa0e'
+CODEC_SHA = '3c2c56d34f612e2d2a1486d7521ffd7896b37746339b7a8f5f8e30d158c9362f'
+INTERFACE_SHA = 'f3607078d253f9fcc552ae9be08e00ea6c92d822a684ce4d9ae3b45334d71b8f'
+MODEL_COMPOSITION_SHA = 'c23002a6a5d1423167a0ef2caa9c35bc86b5ccc64ba3fff640dc73edfd9dfaa6'
+MODEL_INTERFACE_SHA = 'e63165b6ab2a191ace58c7d62fdc2e4425bf2993547089e1a168df931bbb732f'
 ENV = {'PATH':'/usr/bin','HOME':'/tmp','TMPDIR':'/tmp','LC_ALL':'C','PYTHONDONTWRITEBYTECODE':'1','PYTHONNOUSERSITE':'1'}
 LIMIT = 1000000
 TOTAL_SECONDS = 540
@@ -218,12 +220,16 @@ def load(name, raw):
     return module
 
 
-def source_inventory(composition):
+def source_inventory(composition, composition_sha256=COMPOSITION_SHA):
+    # The owner-pinned digest selects the source count; a child supplies no count.
+    require(type(composition_sha256) is str and composition_sha256 in
+            (COMPOSITION_SHA, MODEL_COMPOSITION_SHA))
+    expected_count = 55 if composition_sha256 == COMPOSITION_SHA else 21
     expected = {name: {k: row[k] for k in ('bytes', 'sha256')}
                 for name, row in composition['sources'].items()}
     helper = composition['composition']['test_helper']
     expected[helper['path']] = {k: helper[k] for k in ('bytes', 'sha256')}
-    require(len(expected) == 55)
+    require(len(expected) == expected_count)
     actual = set()
     for parent, directories, names in os.walk(SOURCES, followlinks=False):
         for name in directories:
@@ -234,6 +240,19 @@ def source_inventory(composition):
     require(actual == set(expected))
     files = {name: exact_file(SOURCES / name, pin) for name, pin in expected.items()}
     return files, {name: sha(raw) for name, raw in files.items()}
+
+
+def input_profile(code):
+    """Check fixed code/interface/composition pairing after root-pinned file custody."""
+    require(type(code) is dict and set(code) ==
+            {'worker.py', 'codec.py', 'owned_child.py', 'interface.json', 'composition.json'}
+            and all(type(raw) is bytes for raw in code.values()))
+    composition_sha = sha(code['composition.json'])
+    interfaces = {COMPOSITION_SHA: INTERFACE_SHA, MODEL_COMPOSITION_SHA: MODEL_INTERFACE_SHA}
+    require(composition_sha in interfaces and sha(code['codec.py']) == CODEC_SHA
+            and sha(code['interface.json']) == interfaces[composition_sha]
+            and sha(code['owned_child.py']) == OWNED_SHA)
+    return composition_sha
 
 
 def admission():
@@ -272,10 +291,9 @@ def admission():
         require(stat.S_ISDIR(info.st_mode) and info.st_uid == 1000
                 and stat.S_IMODE(info.st_mode) == 0o700 and not list(path.iterdir()))
     code = {name: exact_file(INPUT / name, expected) for name, expected in owner['sources'].items()}
-    require(sha(code['codec.py']) == CODEC_SHA and sha(code['interface.json']) == INTERFACE_SHA
-            and sha(code['owned_child.py']) == OWNED_SHA and sha(code['composition.json']) == COMPOSITION_SHA)
+    composition_sha = input_profile(code)
     composition = json.loads(code['composition.json'], object_pairs_hook=unique)
-    files, before = source_inventory(composition)
+    files, before = source_inventory(composition, composition_sha)
     require(type(owner['runtime']) is dict and set(owner['runtime']) == {'bytes', 'sha256'}
             and owner['runtime']['sha256'] == RUNTIME_SHA
             and type(owner['runtime']['bytes']) is int and 0 < owner['runtime']['bytes'] <= 128 * 1024**2)
@@ -284,7 +302,8 @@ def admission():
     hash_file(RUNTIME, owner['runtime']['bytes'], RUNTIME_SHA)
     codec, owned = load('codec', code['codec.py']), load('owned_child', code['owned_child.py'])
     jobs = codec.jobs(files, code['composition.json'])
-    require(type(jobs) is tuple and len(jobs) == 6)
+    selected = codec.profile(composition_sha)
+    require(codec.job_profile(jobs) == selected)
     proof = {'uid': 1000, 'gid': 1000, 'host_uid': owner['host_uid'], 'host_gid': owner['host_gid'],
              'namespace_maps': {'uid': [1000, 0, 1], 'gid': [1000, 0, 1]},
              'namespaces': observed, 'source_uid': 65534, 'capabilities_empty': True,
@@ -414,6 +433,10 @@ def main():
               'expected_positive_arms': 26, 'expected_controls': 2, 'native_application_executed': False}
     try:
         owner, proof, codec, owned, jobs, composition, before = admission()
+        selected = codec.job_profile(jobs)
+        require(selected['composition_sha256'] == owner['sources']['composition.json']['sha256'])
+        report['composition_sha256'] = selected['composition_sha256']
+        report['expected_positive_arms'] = selected['positive_arms']
         baseline = process_ids(); require(baseline == {1, os.getpid()})
         report['source_hashes_before'] = before
         reserve = dict(report, source_hashes_after=before,
@@ -457,10 +480,10 @@ def main():
                 raise observation_error
             lease.check()
         phase = 'source-after'
-        _, after = source_inventory(composition)
+        _, after = source_inventory(composition, owner['sources']['composition.json']['sha256'])
         require(after == before); report['source_hashes_after'] = after
         lease.check(); require(process_ids() == baseline)
-        require(len(report['records']) == 6 and all(r['observation']['status'] == 'pass' for r in report['records']))
+        require(len(report['records']) == selected['jobs'] and all(r['observation']['status'] == 'pass' for r in report['records']))
         report['status'] = 'pass'
         phase = 'complete'
     except BaseException as error:

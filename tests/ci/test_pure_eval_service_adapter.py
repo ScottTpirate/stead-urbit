@@ -19,9 +19,9 @@ from unittest.mock import Mock, patch
 
 ROOT = Path(__file__).resolve().parents[2]
 PINS = {
-    'service_adapter.py': 'a5e43047f005b60bd9b23ad8eaff68f5517d5b426537c28ab722fb3da947a666',
-    'owner_boundary.py': '1d28fdb6413a630efca8f4e354d77618cd9d115079cb4fd0a2df50dd89e33866',
-    'codec.py': '7fc1584bbab62f0017d6c2bce6245070373c2c144772c73e45aa4dfb87d54b75',
+    'service_adapter.py': 'a1b564be95e571d98cc673d64e7077016892d85ba45b6753e77f73cf97be4bbc',
+    'owner_boundary.py': '15ae147d736f2967388a9e54e0b342f4e4dface6aee6b98fbcba407e3a286ea4',
+    'codec.py': '3c2c56d34f612e2d2a1486d7521ffd7896b37746339b7a8f5f8e30d158c9362f',
 }
 
 
@@ -90,7 +90,7 @@ class PureEvalServiceAdapterTests(unittest.TestCase):
                     changed[path] += b'\n'
                 else:
                     changed[path] = changed[path].decode()
-                sink = SimpleNamespace(jobs=Mock())
+                sink = SimpleNamespace(profile=codec_source.profile, jobs=Mock())
                 with self.subTest(logical=logical, mode=mode), self.assertRaises((ValueError, KeyError)):
                     adapter.fixed_data(SimpleNamespace(CONTROLLER_FILES=changed), sink)
                 sink.jobs.assert_not_called()
@@ -168,7 +168,12 @@ class PureEvalServiceAdapterTests(unittest.TestCase):
                 row['worker_result']['report'] = copy.deepcopy(row['report_pin'])
                 variants.append(row)
             row = copy.deepcopy(guard); del row['parent_admitted']; variants.append(row)
-            with patch.object(adapter, 'fixed_data', return_value=({}, ('fixed-job',), {})):
+            # This path now reads the original admitted profile from guardian input.
+            # The synthetic fixture owns that read; actual root-file custody is separate.
+            context = {'boundary': {'sources': {'composition.json':
+                       {'sha256': adapter.REPOSITORY_COMPOSITION}}}}
+            with patch.object(adapter, 'fixed_data', return_value=({}, ('fixed-job',), {})), \
+                    patch.object(adapter, 'job_context', return_value=context):
                 self.assertEqual(adapter.checked_report(None, boundary, collection, None, job, guard), raw)
                 for row in variants:
                     boundary.directory.reset_mock(); boundary.read_file.reset_mock()
@@ -210,7 +215,10 @@ class PureEvalServiceAdapterTests(unittest.TestCase):
                 with ExitStack() as stack:
                     stack.enter_context(patch.object(adapter, 'load', return_value={
                         'owner_boundary': boundary, 'owner_collection': collection, 'codec': object()}))
-                    stack.enter_context(patch.object(adapter, 'job_context', return_value={'boundary': {}, 'owner': {}}))
+                    # Bind the fixed repository selection required before collector setup.
+                    context = {'boundary': {'sources': {'composition.json':
+                               {'sha256': adapter.REPOSITORY_COMPOSITION}}}, 'owner': {}}
+                    stack.enter_context(patch.object(adapter, 'job_context', return_value=context))
                     stack.enter_context(patch.object(adapter, 'fixed_data', return_value=({}, (), {})))
                     stack.enter_context(patch.object(adapter, 'heartbeat_factory', return_value=(lambda: None, 987)))
                     stack.enter_context(patch.object(adapter.subprocess, 'Popen', return_value=process))
@@ -289,6 +297,7 @@ class PureEvalServiceAdapterTests(unittest.TestCase):
                     events.append('unit-active'); return {'ActiveState': 'active'}
                 events.append('unit-inactive'); return {'ActiveState': 'failed'}
             sources = {path: b'fixed captured source' for path in adapter.SOURCE_PATHS.values()}
+            sources[adapter.SOURCE_PATHS['composition.json']] = (ROOT / 'fixtures/pure-eval/composition.json').read_bytes()
             hosted = SimpleNamespace(ROOT=root, __file__='/fixed/hosted.py', CONTROLLER_FILES=sources,
                 regular_root=Mock(), hosted_apparmor=SimpleNamespace(prepare=Mock(return_value={})),
                 spawn_owned=Mock(side_effect=spawn), readback=Mock(side_effect=readback))
@@ -321,10 +330,14 @@ class PureEvalServiceAdapterTests(unittest.TestCase):
                 self.assertIn('caller-reap', events)
                 return actual_check(*args)
             modules = {'owner_boundary': boundary, 'owner_collection': collection,
-                       'pure_intake': SimpleNamespace(prepare=prepare), 'codec': object()}
+                       'pure_intake': SimpleNamespace(prepare=prepare),
+                       'codec': SimpleNamespace(profile=codec_source.profile)}
             with ExitStack() as stack:
                 stack.enter_context(patch.object(adapter, 'load', return_value=modules))
                 stack.enter_context(patch.object(adapter, 'fixed_data', return_value=({'fixed.hoon': b'0'}, ('job',), {})))
+                # No Git/current-host action: the mocked outer wrote this exact
+                # synthetic root-owned context; real context custody is separate.
+                stack.enter_context(patch.object(adapter, 'job_context', side_effect=lambda _hosted, _boundary, job: json.loads((job / 'guardian.json').read_bytes())))
                 stack.enter_context(patch.object(adapter, 'Path', side_effect=mapped_path))
                 stack.enter_context(patch.object(adapter.os, 'geteuid', return_value=0))
                 stack.enter_context(patch.object(adapter.os, 'sched_getaffinity', return_value={0}))

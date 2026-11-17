@@ -1,4 +1,4 @@
-"""Fixed T04 ivory composition and closed output parsing; no runtime authority.
+"""Two fixed ivory source profiles and closed output parsing; no runtime authority.
 
 This module operates on retained bytes only. The owner proves source custody,
 current lease, process completion, stable bounded output and aggregate admission.
@@ -21,6 +21,11 @@ TANG_SHA256 = "6ccdf445296a66cac869b95ff3a7d068421309cf7b541e2cf5adbc79589e0639"
 BOOT = ("loom: mapped 512MB\nlite: arvo formula 4ce68411\n"
         "lite: core 641296f\nlite: final state 641296f\neval (run):")
 EXIT_STDERR = BOOT + "\n\neval: bail: %exit"
+# Exact nonfatal startup diagnostic from the pinned Vere under RLIMIT_CORE=0.
+# Retain every original byte/hash; admit only these two complete envelopes.
+CORE_LIMIT_WARNING = "boot: core limit: Invalid argument\n"
+BOOT_DIAGNOSTICS = (BOOT, CORE_LIMIT_WARNING + BOOT)
+EXIT_DIAGNOSTICS = (EXIT_STDERR, CORE_LIMIT_WARNING + EXIT_STDERR)
 COMPILER_STDOUT = "/eval\n{1 22}\nsyntax error"
 JOB_FIELDS = {"label", "kind", "source", "source_sha256", "timeout_seconds", "arms"}
 SUITES = (('catalog',
@@ -57,6 +62,39 @@ SUITES = (('catalog',
    'test-repository-store-upload-scope-and-lossless-import',
    'test-repository-store-external-closure-stays-legacy',
    'test-repository-store-current-access-not-old-history')))
+
+MODEL_COMPOSITION_SHA256 = "c23002a6a5d1423167a0ef2caa9c35bc86b5ccc64ba3fff640dc73edfd9dfaa6"
+MODEL_COMPOSITION_BYTES = 110358
+MODEL_SUITES = (('model-codec', '234f119ef4636c2cc4e9fcc3a1f9ba1d3f556c13b2d1d5cffa951f0492ffae03', ('test-model-codec-golden-reserve-and-derived-native-identity', 'test-model-codec-closed-parent-and-canonical-cas', 'test-model-codec-material-pins-and-exact-charge-reject-drift', 'test-model-codec-observation-absence-empty-and-binary-bytes', 'test-model-codec-parser-and-parent-bounds-do-not-expand', 'test-model-codec-real-linefeeds-and-supplementary-unicode')), ('model-reply', 'd9d3fdd036fcc869159a686bd96a35da6aa07c1c1bbf38b4481ed68b8920d8ed', ('test-model-reply-rebuilds-golden-proposal-from-original-bytes', 'test-model-reply-binary-utf8-duplicate-depth-and-size-refusals', 'test-model-reply-timing-exponents-and-reasoning-are-bounded', 'test-model-reply-refusal-incomplete-and-filter-never-propose-doc', 'test-model-reply-tool-model-and-usage-pins-reject-spoofs', 'test-model-reply-actual-linefeeds-and-supplementary-unicode')), ('model-turn-codec', '17bfc6d95c6fa975487ba893b8a873f08ece870c200c75b8249a3426699e6ed2', ('test-model-turn-codec-four-exact-parent-vectors', 'test-model-turn-codec-closed-canonical-claim-boundary', 'test-model-turn-codec-ids-digests-and-finite-uints', 'test-model-turn-codec-exact-answer-utf8-and-comment-bounds', 'test-model-turn-codec-five-child-identities-are-not-authority', 'test-model-turn-codec-escaped-limits-and-nested-shape-denials')))
+
+
+def profile(composition_sha256):
+    """Return only a source-owned closed profile; no caller-selected counts/paths."""
+    _require(type(composition_sha256) is str, "Profile digest type")
+    if composition_sha256 == COMPOSITION_SHA256:
+        name, size, sources, libraries, arms, suites = ("repository/1", COMPOSITION_BYTES, 55, 50, 26, SUITES)
+        paths = tuple("native/core/desk/tests/stead-repository-" + s[0] + ".hoon" for s in suites)
+    elif composition_sha256 == MODEL_COMPOSITION_SHA256:
+        name, size, sources, libraries, arms, suites = ("native-model-simple/1", MODEL_COMPOSITION_BYTES, 21, 17, 18, MODEL_SUITES)
+        paths = tuple("native/core/desk/tests/stead-" + s[0] + ".hoon" for s in suites)
+    else:
+        raise ValueError("Unknown fixed composition")
+    return {"name": name, "composition_sha256": composition_sha256, "composition_bytes": size,
+            "source_files": sources, "libraries": libraries, "positive_arms": arms,
+            "jobs": len(suites) + 2, "suites": suites, "suite_paths": paths}
+
+
+def job_profile(jobs):
+    """Recheck the complete fixed job sequence; child report fields select nothing."""
+    _require(type(jobs) is tuple, "Job sequence type")
+    for digest in (COMPOSITION_SHA256, MODEL_COMPOSITION_SHA256):
+        selected = profile(digest)
+        labels = ("compiler-control", "failing-tang-control") + tuple(s[0] for s in selected["suites"])
+        if len(jobs) == selected["jobs"] and all(type(job) is dict for job in jobs) and tuple(job.get("label") for job in jobs) == labels:
+            for job in jobs:
+                _checked_job(job)
+            return selected
+    raise ValueError("Mixed, partial or unknown fixed job sequence")
 
 
 def _require(ok, reason):
@@ -153,15 +191,15 @@ def _job(label, kind, source, arms):
 
 
 def jobs(files, composition_bytes):
-    """Compose exactly the reviewed six jobs, with no caller-selected expression."""
+    """Compose one of two exact retained profiles; original repository bytes select the original six jobs."""
     _require(type(files) is dict and type(composition_bytes) is bytes, "Input types")
-    _require(len(composition_bytes) == COMPOSITION_BYTES and
-             _sha(composition_bytes) == COMPOSITION_SHA256, "Composition pin mismatch")
+    selected_profile = profile(_sha(composition_bytes))
+    _require(len(composition_bytes) == selected_profile["composition_bytes"], "Composition pin mismatch")
     document = json.loads(composition_bytes, object_pairs_hook=_unique)
     sources = document["sources"]
     composition = document["composition"]
     helper = composition["test_helper"]
-    _require(set(files) == set(sources) | {HELPER_PATH} and len(files) == 55,
+    _require(set(files) == set(sources) | {HELPER_PATH} and len(files) == selected_profile["source_files"],
              "Exact source inventory required")
     for path, pin in sources.items():
         _pin(files[path], pin)
@@ -173,7 +211,21 @@ def jobs(files, composition_bytes):
         data.decode("utf-8", errors="strict")
     order = composition["library_order"]
     imports = composition["imports"]
-    _require(len(order) == 50 and len(set(order)) == 50 and set(order) == set(imports),
+    aliases = None
+    if selected_profile["composition_sha256"] == MODEL_COMPOSITION_SHA256:
+        # The exact reviewed model map uses full paths and retains suite edges.
+        # Build only a lossless local name view; never rewrite its pinned bytes.
+        _require(all(type(path) is str and re.fullmatch(
+            r"native/core/desk/lib/(stead-[a-z0-9-]+)\.hoon", path) for path in order),
+            "Model library path form")
+        aliases = {path: path.rsplit("/", 1)[1][:-5] for path in order}
+        _require(len(aliases) == len(order) and len(set(aliases.values())) == len(order) and
+                 set(imports) == set(order) | set(selected_profile["suite_paths"]) and
+                 all(set(deps) <= set(order) for deps in imports.values()), "Model graph closure")
+        imports = {aliases[path]: [aliases[dep] for dep in composition["imports"][path]]
+                   for path in order}
+        order = [aliases[path] for path in order]
+    _require(len(order) == selected_profile["libraries"] and len(set(order)) == selected_profile["libraries"] and set(order) == set(imports),
              "Exact library order")
     seen = set()
     for name in order:
@@ -185,9 +237,8 @@ def jobs(files, composition_bytes):
     _require(_sha(tang) == TANG_SHA256, "Failing control pin")
     result = [_job("compiler-control", "compiler-control", COMPILER_SOURCE, ()),
               _job("failing-tang-control", "failing-tang-control", tang, ())]
-    _require(len(composition["suites"]) == 4, "Exact suite count")
-    for (label, expected_sha, arms), suite in zip(SUITES, composition["suites"]):
-        path = f"native/core/desk/tests/stead-repository-{label}.hoon"
+    _require(len(composition["suites"]) == len(selected_profile["suites"]), "Exact suite count")
+    for (label, expected_sha, arms), path, suite in zip(selected_profile["suites"], selected_profile["suite_paths"], composition["suites"]):
         _require(suite["path"] == path and tuple(suite["arms"]) == arms,
                  "Fixed suite inventory")
         observed = tuple(name.decode() for name in re.findall(
@@ -197,9 +248,15 @@ def jobs(files, composition_bytes):
         _require(declaration.startswith("/+  *test, ") and declaration.endswith("\n"),
                  "Test import form")
         direct = declaration[len("/+  *test, "):-1].split(", ")
+        declared_order = suite["transitive_library_order"]
+        if aliases is not None:
+            _require(composition["imports"][path] ==
+                     ["native/core/desk/lib/" + name + ".hoon" for name in direct] and
+                     all(name in aliases for name in declared_order), "Model suite import edges")
+            declared_order = [aliases[name] for name in declared_order]
         needed = _closure(direct, imports)
         selected = [name for name in order if name in needed]
-        _require(selected == suite["transitive_library_order"] and
+        _require(selected == declared_order and
                  len(selected) == suite["transitive_library_count"], "Suite import closure")
         paths = {f"native/core/desk/lib/{name}.hoon" for name in selected} | {path}
         _require(suite["source_files"] == {name: sources[name] for name in sorted(paths)},
@@ -234,7 +291,7 @@ def _checked_job(job):
     _require(type(job) is dict and set(job) == JOB_FIELDS, "Closed job shape")
     label = job["label"]
     _require(type(label) is str, "Job label type")
-    specs = {name: ("suite", sha, arms, 85) for name, sha, arms in SUITES}
+    specs = {name: ("suite", sha, arms, 85) for name, sha, arms in SUITES + MODEL_SUITES}
     specs.update({"compiler-control": ("compiler-control", COMPILER_SHA256, (), 15),
                   "failing-tang-control": ("failing-tang-control", TANG_SHA256, (), 15)})
     _require(label in specs, "Unknown job")
@@ -286,21 +343,21 @@ def observe(job, exit_code, stdout, stderr):
     compiler_failure = False
     arms = ()
     if kind == "compiler-control":
-        _require(out == COMPILER_STDOUT and err == EXIT_STDERR, "Compiler control mismatch")
+        _require(out == COMPILER_STDOUT and err in EXIT_DIAGNOSTICS, "Compiler control mismatch")
         status = "pass"
     elif kind == "failing-tang-control":
-        _require(err == BOOT, "Failing-tang evaluator refusal")
+        _require(err in BOOT_DIAGNOSTICS, "Failing-tang evaluator refusal")
         rows = _rows(out, ("failure-control",))
         _require(rows[0]["tang_length"] > 0, "Failing tang did not fail")
         status = "pass"
-    elif err == EXIT_STDERR:
+    elif err in EXIT_DIAGNOSTICS:
         # This proves only a completed evaluator %exit. A runtime assertion may
         # also produce it. No arm verdict or stage-specific claim is invented.
         _require(bool(out), "Missing evaluator failure trace")
         compiler_failure = True
         status = "fail"
     else:
-        _require(err == BOOT, "Unknown evaluator diagnostics")
+        _require(err in BOOT_DIAGNOSTICS, "Unknown evaluator diagnostics")
         arms = _rows(out, job["arms"])
         status = "pass" if all(row["passed"] for row in arms) else "fail"
     return {"label": job["label"], "kind": kind, "status": status, "exit_code": exit_code,

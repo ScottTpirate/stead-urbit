@@ -183,6 +183,7 @@ def cleanup(process, value):
 
 
 def validate_report(raw, codec, jobs, expected_hashes):
+    selected = codec.job_profile(jobs)
     report = parse(raw, WORKER_REPORT_LIMIT)
     require(type(report) is dict and set(report) == {'protocol','status','qualifies_phase',
             'composition_sha256','runtime_sha256','records','source_hashes_before','source_hashes_after',
@@ -191,15 +192,15 @@ def validate_report(raw, codec, jobs, expected_hashes):
     require(report['protocol'] == 'stead.fixed-pure-eval-report/1'
             and report['status'] in ('pass','fail') and report['qualifies_phase'] is False
             and report['native_application_executed'] is False
-            and report['composition_sha256'] == '3d42cb1788ddbe5bdf6f9643bbbe4d2bfa7245a24431b851ef247c525c9ead72'
+            and report['composition_sha256'] == selected['composition_sha256']
             and report['runtime_sha256'] == 'f7f0d3b3c0480fc10f887dfbc09bde56a81d723a803541c7886c538a0675d833'
-            and type(report['expected_positive_arms']) is int and report['expected_positive_arms'] == 26
+            and type(report['expected_positive_arms']) is int and report['expected_positive_arms'] == selected['positive_arms']
             and type(report['expected_controls']) is int and report['expected_controls'] == 2
             and report['error_class'] in ERRORS
             and report['children_reaped'] is True and report['namespace_baseline_restored'] is True
             and report['source_hashes_before'] == expected_hashes
             and report['source_hashes_after'] in ({}, expected_hashes)
-            and type(report['records']) is list and len(report['records']) <= 6)
+            and type(report['records']) is list and len(report['records']) <= selected['jobs'])
     observations = []
     for index, record in enumerate(report['records']):
         job = jobs[index]
@@ -230,18 +231,19 @@ def validate_report(raw, codec, jobs, expected_hashes):
     stop = report['budget_stop']
     if stop is not None:
         require(type(stop) is dict and set(stop) == {'label','bytes','sha256'}
-                and len(report['records']) < 6 and stop['label'] == jobs[len(report['records'])]['label']
+                and len(report['records']) < selected['jobs'] and stop['label'] == jobs[len(report['records'])]['label']
                 and type(stop['bytes']) is int and 4063232 < stop['bytes'] < 8000000
                 and type(stop['sha256']) is str and len(stop['sha256']) == 64
                 and all(c in '0123456789abcdef' for c in stop['sha256']) and report['status'] == 'fail')
     if report['status'] == 'pass':
-        require(len(observations) == 6 and all(o is not None and o['status'] == 'pass' for o in observations)
+        require(len(observations) == selected['jobs'] and all(o is not None and o['status'] == 'pass' for o in observations)
                 and report['error_class'] == 'none' and stop is None
                 and report['source_hashes_after'] == expected_hashes)
     return report
 
 
-def worker_result(value, owner, ready):
+def worker_result(value, owner, ready, codec):
+    selected = codec.profile(owner['sources']['composition.json']['sha256'])
     require(type(value) is dict and set(value) == FINAL_KEYS
             and value['protocol'] == 'stead.fixed-pure-eval-worker-result/1'
             and value['status'] in ('pass','fail') and value['phase'] in PHASES
@@ -249,7 +251,7 @@ def worker_result(value, owner, ready):
             and value['outer_cleanup_required'] is True and value['children_reaped'] is True
             and value['namespace_baseline_restored'] is True
             and value['qualifies_phase'] is False and value['native_application_executed'] is False
-            and type(value['jobs_retained']) is int and 0 <= value['jobs_retained'] <= 6
+            and type(value['jobs_retained']) is int and 0 <= value['jobs_retained'] <= selected['jobs']
             and type(value['elapsed_ms']) is int and 0 <= value['elapsed_ms'] <= 555000)
     proof = value['admission']
     require(type(proof) is dict and set(proof) == {'uid','gid','host_uid','host_gid','namespace_maps',
@@ -269,7 +271,7 @@ def worker_result(value, owner, ready):
     require(type(value['report']) is dict and set(value['report']) == {'bytes','sha256'}
             and type(value['report']['bytes']) is int and 0 < value['report']['bytes'] <= WORKER_REPORT_LIMIT)
     if value['status'] == 'pass':
-        require(value['phase'] == 'complete' and value['error_class'] == 'none' and value['jobs_retained'] == 6)
+        require(value['phase'] == 'complete' and value['error_class'] == 'none' and value['jobs_retained'] == selected['jobs'])
     return value
 
 
@@ -298,6 +300,8 @@ def run(process, job, value, owner, heartbeat, codec, jobs, source_hashes, diagn
     started = time.monotonic()
     try:
         service_current(value); heartbeat()
+        selected = codec.job_profile(jobs)
+        require(selected == codec.profile(owner['sources']['composition.json']['sha256']))
         phase = 'stream-registration'
         for name, stream in (('stdout',process.stdout),('stderr',process.stderr)):
             os.set_blocking(stream.fileno(),False);selector.register(stream,selectors.EVENT_READ,name)
@@ -341,7 +345,7 @@ def run(process, job, value, owner, heartbeat, codec, jobs, source_hashes, diagn
                 else:
                     phase = 'final';attempted_final = row
                     require(final is None)
-                    final=worker_result(row,owner,ready)
+                    final=worker_result(row,owner,ready,codec)
         phase = 'wait';process.wait(timeout=1)
         phase = 'terminal'
         require(ready is not None and final is not None and consumed==len(streams['stdout'])

@@ -64,7 +64,8 @@ class PureEvalWorkerTests(unittest.TestCase):
                 raw = path.read_bytes()
                 self.assertEqual({'bytes': len(raw), 'sha256': W.sha(raw)}, expected)
                 return raw
-            # Only directory ownership metadata is synthetic; all55 file bytes are real.
+            # Directory traversal and privileged metadata checks are mocked;
+            # file bytes and hash checks are real.
             walked = [(str(root), [], names + [helper])]
             with patch.object(W, 'SOURCES', root), patch.object(W.os, 'walk', return_value=walked), patch.object(W, 'exact_file', side_effect=exact):
                 files, hashes = W.source_inventory(composition)
@@ -72,6 +73,69 @@ class PureEvalWorkerTests(unittest.TestCase):
                 for bad in (names, names + [helper, 'ambient.hoon'], names + ['test-helper.hoon']):
                     with patch.object(W.os, 'walk', return_value=[(str(root), [], bad)]):
                         with self.assertRaises(ValueError): W.source_inventory(composition)
+
+                # The repository default remains 55; model selection must reject it.
+                with self.assertRaises(ValueError):
+                    W.source_inventory(composition, W.MODEL_COMPOSITION_SHA)
+
+        # Actual frozen model21 files and their original declared bytes/hashes.
+        # Directory traversal and privileged metadata checks are mocked;
+        # file bytes and hash checks are real.
+        source_root = SOURCE.parents[3]
+        model_root = source_root / 'scripts/ci/pure_eval/model_data'
+        raw = (model_root / 'composition.json').read_bytes()
+        self.assertEqual(W.sha(raw), W.MODEL_COMPOSITION_SHA)
+        model = json.loads(raw)
+        private_sources = {
+            'native/core/desk/lib/stead-model-codec.hoon',
+            'native/core/desk/lib/stead-model-material.hoon',
+            'native/core/desk/lib/stead-model-reply.hoon',
+            'native/core/desk/lib/stead-model-turn-codec.hoon',
+            'native/core/desk/tests/stead-model-codec.hoon',
+            'native/core/desk/tests/stead-model-reply.hoon',
+            'native/core/desk/tests/stead-model-turn-codec.hoon',
+        }
+        originals = {name: ((model_root if name in private_sources else source_root) / name).read_bytes()
+                     for name in model['sources']}
+        helper = model['composition']['test_helper']
+        originals[helper['path']] = (source_root / 'scripts/ci/pure_eval/data' / helper['path']).read_bytes()
+        expected = {**model['sources'], helper['path']: helper}
+        self.assertEqual(len(originals), 21)
+        for name, data in originals.items():
+            self.assertEqual({'bytes': len(data), 'sha256': W.sha(data)},
+                             {key: expected[name][key] for key in ('bytes', 'sha256')})
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            for name, data in originals.items():
+                target = root / name; target.parent.mkdir(parents=True, exist_ok=True); target.write_bytes(data)
+            def pinned_file(path, expected):
+                data = path.read_bytes()
+                W.require({'bytes': len(data), 'sha256': W.sha(data)} == expected)
+                return data
+            walked = [(str(root), [], list(originals))]
+            with patch.object(W, 'SOURCES', root), patch.object(W.os, 'walk', return_value=walked), patch.object(W, 'exact_file', side_effect=pinned_file):
+                files, hashes = W.source_inventory(model, W.MODEL_COMPOSITION_SHA)
+                self.assertEqual(files, originals)
+                self.assertEqual(hashes, {name: W.sha(data) for name, data in originals.items()})
+                for wrong in (W.COMPOSITION_SHA, '0' * 64, W.MODEL_COMPOSITION_SHA.upper(), True, 21, {'source_files': 21}):
+                    with self.subTest(profile=wrong), self.assertRaises(ValueError):
+                        W.source_inventory(model, wrong)
+                for names in (list(originals)[:-1], [*originals, 'ambient.hoon']):
+                    with patch.object(W.os, 'walk', return_value=[(str(root), [], names)]), self.assertRaises(ValueError):
+                        W.source_inventory(model, W.MODEL_COMPOSITION_SHA)
+                mixed = copy.deepcopy(model)
+                mixed['sources']['ambient.hoon'] = {'bytes': 1, 'sha256': W.sha(b'x')}
+                with self.assertRaises(ValueError): W.source_inventory(mixed, W.MODEL_COMPOSITION_SHA)
+                changed = copy.deepcopy(model)
+                changed['sources']['native/core/desk/lib/stead-model-codec.hoon']['sha256'] = 'f' * 64
+                with self.assertRaises(ValueError): W.source_inventory(changed, W.MODEL_COMPOSITION_SHA)
+                target = root / 'native/core/desk/lib/stead-model-codec.hoon'
+                original = target.read_bytes()
+                try:
+                    target.write_bytes(original + b'\n')
+                    with self.assertRaises(ValueError): W.source_inventory(model, W.MODEL_COMPOSITION_SHA)
+                finally:
+                    target.write_bytes(original)
 
     def test_parent_go_requires_exact_bytes_and_eof_with_current_lease(self):
         selector = Mock(); selector.select.return_value = [object()]
@@ -159,14 +223,16 @@ class PureEvalWorkerTests(unittest.TestCase):
         def observe(item, code, stdout, stderr):
             if scenario == 'malformed' and item['label'] == 'catalog': raise ValueError('inert unknown output')
             return {'status': 'fail' if scenario == 'completed-failure' and item['label'] == 'catalog' else 'pass', 'arms': ()}
-        codec = types.SimpleNamespace(observe=observe)
+        profile = {'composition_sha256': W.COMPOSITION_SHA, 'positive_arms': 26, 'jobs': 6}
+        codec = types.SimpleNamespace(observe=observe, job_profile=lambda _: profile)
+        owner = {'sources': {'composition.json': {'sha256': W.COMPOSITION_SHA}}}
         original_path = Path
         class EmptyTemp:
             def iterdir(self): return iter(())
         def fake_path(value): return EmptyTemp() if value == '/tmp' else original_path(value)
         out = io.StringIO()
         with contextlib.ExitStack() as stack:
-            for name, value in {'admission': Mock(return_value=({}, proof, codec, object(), selected, {}, before)), 'process_ids': Mock(return_value={1, os.getpid()}), 'GuardianLease': Mock(return_value=lease), 'namespace_values': Mock(return_value={'pid': 'pid:[1]'}), 'await_go': Mock(), 'evaluate': Mock(side_effect=evaluate), 'source_inventory': Mock(return_value=({}, before)), 'atomic_report': Mock(side_effect=lambda report: captured.append(copy.deepcopy(report)) or {'bytes': len(W.canonical(report)), 'sha256': W.sha(W.canonical(report))}), 'Path': fake_path}.items(): stack.enter_context(patch.object(W, name, value))
+            for name, value in {'admission': Mock(return_value=(owner, proof, codec, object(), selected, {}, before)), 'process_ids': Mock(return_value={1, os.getpid()}), 'GuardianLease': Mock(return_value=lease), 'namespace_values': Mock(return_value={'pid': 'pid:[1]'}), 'await_go': Mock(), 'evaluate': Mock(side_effect=evaluate), 'source_inventory': Mock(return_value=({}, before)), 'atomic_report': Mock(side_effect=lambda report: captured.append(copy.deepcopy(report)) or {'bytes': len(W.canonical(report)), 'sha256': W.sha(W.canonical(report))}), 'Path': fake_path}.items(): stack.enter_context(patch.object(W, name, value))
             stack.enter_context(patch.object(W.signal, 'signal')); stack.enter_context(patch.object(W.signal, 'setitimer'))
             stack.enter_context(contextlib.redirect_stdout(out)); code = W.main()
         rows = [json.loads(row) for row in out.getvalue().splitlines()]

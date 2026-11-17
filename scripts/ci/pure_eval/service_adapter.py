@@ -16,6 +16,10 @@ import time
 import types
 PREFIX='scripts/ci/pure_eval/'
 DATA_PREFIX=PREFIX+'data/'
+MODEL_DATA_PREFIX=PREFIX+'model_data/'
+REPOSITORY_COMPOSITION='3d42cb1788ddbe5bdf6f9643bbbe4d2bfa7245a24431b851ef247c525c9ead72'
+MODEL_COMPOSITION='c23002a6a5d1423167a0ef2caa9c35bc86b5ccc64ba3fff640dc73edfd9dfaa6'
+MODEL_SOURCE_PATHS={'native/core/desk/lib/stead-actor.hoon': 'native/core/desk/lib/stead-actor.hoon', 'native/core/desk/lib/stead-codec-v1.hoon': 'native/core/desk/lib/stead-codec-v1.hoon', 'native/core/desk/lib/stead-codec.hoon': 'native/core/desk/lib/stead-codec.hoon', 'native/core/desk/lib/stead-core-v1.hoon': 'native/core/desk/lib/stead-core-v1.hoon', 'native/core/desk/lib/stead-core.hoon': 'native/core/desk/lib/stead-core.hoon', 'native/core/desk/lib/stead-git.hoon': 'native/core/desk/lib/stead-git.hoon', 'native/core/desk/lib/stead-model-codec.hoon': 'scripts/ci/pure_eval/model_data/native/core/desk/lib/stead-model-codec.hoon', 'native/core/desk/lib/stead-model-material.hoon': 'scripts/ci/pure_eval/model_data/native/core/desk/lib/stead-model-material.hoon', 'native/core/desk/lib/stead-model-reply.hoon': 'scripts/ci/pure_eval/model_data/native/core/desk/lib/stead-model-reply.hoon', 'native/core/desk/lib/stead-model-turn-codec.hoon': 'scripts/ci/pure_eval/model_data/native/core/desk/lib/stead-model-turn-codec.hoon', 'native/core/desk/lib/stead-principals.hoon': 'native/core/desk/lib/stead-principals.hoon', 'native/core/desk/lib/stead-run-codec.hoon': 'native/core/desk/lib/stead-run-codec.hoon', 'native/core/desk/lib/stead-run-state.hoon': 'native/core/desk/lib/stead-run-state.hoon', 'native/core/desk/lib/stead-session.hoon': 'native/core/desk/lib/stead-session.hoon', 'native/core/desk/lib/stead-team-codec.hoon': 'native/core/desk/lib/stead-team-codec.hoon', 'native/core/desk/lib/stead-team-config.hoon': 'native/core/desk/lib/stead-team-config.hoon', 'native/core/desk/lib/stead-team.hoon': 'native/core/desk/lib/stead-team.hoon', 'native/core/desk/tests/stead-model-codec.hoon': 'scripts/ci/pure_eval/model_data/native/core/desk/tests/stead-model-codec.hoon', 'native/core/desk/tests/stead-model-reply.hoon': 'scripts/ci/pure_eval/model_data/native/core/desk/tests/stead-model-reply.hoon', 'native/core/desk/tests/stead-model-turn-codec.hoon': 'scripts/ci/pure_eval/model_data/native/core/desk/tests/stead-model-turn-codec.hoon', 'pkg/base-dev/lib/test.hoon': 'scripts/ci/pure_eval/data/pkg/base-dev/lib/test.hoon'}
 # Exact logical-source to immutable captured-controller path map; no fallback.
 FIXED_SOURCE_PATHS = {'native/core/desk/lib/stead-actor.hoon': 'native/core/desk/lib/stead-actor.hoon', 'native/core/desk/lib/stead-code-ancestry.hoon': 'native/core/desk/lib/stead-code-ancestry.hoon', 'native/core/desk/lib/stead-code-build-home.hoon': 'native/core/desk/lib/stead-code-build-home.hoon', 'native/core/desk/lib/stead-code-credentials.hoon': 'native/core/desk/lib/stead-code-credentials.hoon', 'native/core/desk/lib/stead-code-delivery-export.hoon': 'native/core/desk/lib/stead-code-delivery-export.hoon', 'native/core/desk/lib/stead-code-delivery.hoon': 'native/core/desk/lib/stead-code-delivery.hoon', 'native/core/desk/lib/stead-code-fetch-wire.hoon': 'native/core/desk/lib/stead-code-fetch-wire.hoon', 'native/core/desk/lib/stead-code-fetch.hoon': 'native/core/desk/lib/stead-code-fetch.hoon', 'native/core/desk/lib/stead-code-git-delta.hoon': 'native/core/desk/lib/stead-code-git-delta.hoon', 'native/core/desk/lib/stead-code-git-emit.hoon': 'native/core/desk/lib/stead-code-git-emit.hoon', 'native/core/desk/lib/stead-code-git-entry.hoon': 'native/core/desk/lib/stead-code-git-entry.hoon', 'native/core/desk/lib/stead-code-git-graph.hoon': 'native/core/desk/lib/stead-code-git-graph.hoon', 'native/core/desk/lib/stead-code-git-inflate.hoon': 'native/core/desk/lib/stead-code-git-inflate.hoon', 'native/core/desk/lib/stead-code-git-objects.hoon': 'native/core/desk/lib/stead-code-git-objects.hoon', 'native/core/desk/lib/stead-code-git-pack.hoon': 'native/core/desk/lib/stead-code-git-pack.hoon', 'native/core/desk/lib/stead-code-git-pkt.hoon': 'native/core/desk/lib/stead-code-git-pkt.hoon', 'native/core/desk/lib/stead-code-git-resolve.hoon': 'native/core/desk/lib/stead-code-git-resolve.hoon', 'native/core/desk/lib/stead-code-git-response.hoon': 'native/core/desk/lib/stead-code-git-response.hoon', 'native/core/desk/lib/stead-code-home.hoon': 'native/core/desk/lib/stead-code-home.hoon', 'native/core/desk/lib/stead-code-http.hoon': 'native/core/desk/lib/stead-code-http.hoon', 'native/core/desk/lib/stead-code-pack-anchor.hoon': 'native/core/desk/lib/stead-code-pack-anchor.hoon', 'native/core/desk/lib/stead-code-pack-ledger.hoon': 'native/core/desk/lib/stead-code-pack-ledger.hoon', 'native/core/desk/lib/stead-code-pack-promotion.hoon': 'native/core/desk/lib/stead-code-pack-promotion.hoon', 'native/core/desk/lib/stead-code-pack-push.hoon': 'native/core/desk/lib/stead-code-pack-push.hoon', 'native/core/desk/lib/stead-code-pack-review-board.hoon': 'native/core/desk/lib/stead-code-pack-review-board.hoon', 'native/core/desk/lib/stead-code-pack-review.hoon': 'native/core/desk/lib/stead-code-pack-review.hoon', 'native/core/desk/lib/stead-code-receive-wire.hoon': 'native/core/desk/lib/stead-code-receive-wire.hoon', 'native/core/desk/lib/stead-code-receive.hoon': 'native/core/desk/lib/stead-code-receive.hoon', 'native/core/desk/lib/stead-code-review-api.hoon': 'native/core/desk/lib/stead-code-review-api.hoon', 'native/core/desk/lib/stead-code-review-home.hoon': 'native/core/desk/lib/stead-code-review-home.hoon', 'native/core/desk/lib/stead-code-review.hoon': 'native/core/desk/lib/stead-code-review.hoon', 'native/core/desk/lib/stead-code-service.hoon': 'native/core/desk/lib/stead-code-service.hoon', 'native/core/desk/lib/stead-code-store.hoon': 'native/core/desk/lib/stead-code-store.hoon', 'native/core/desk/lib/stead-code-upload.hoon': 'native/core/desk/lib/stead-code-upload.hoon', 'native/core/desk/lib/stead-codec-v1.hoon': 'native/core/desk/lib/stead-codec-v1.hoon', 'native/core/desk/lib/stead-codec.hoon': 'native/core/desk/lib/stead-codec.hoon', 'native/core/desk/lib/stead-core-v1.hoon': 'native/core/desk/lib/stead-core-v1.hoon', 'native/core/desk/lib/stead-core.hoon': 'native/core/desk/lib/stead-core.hoon', 'native/core/desk/lib/stead-git.hoon': 'native/core/desk/lib/stead-git.hoon', 'native/core/desk/lib/stead-http.hoon': 'native/core/desk/lib/stead-http.hoon', 'native/core/desk/lib/stead-principals.hoon': 'native/core/desk/lib/stead-principals.hoon', 'native/core/desk/lib/stead-project-retirement.hoon': 'native/core/desk/lib/stead-project-retirement.hoon', 'native/core/desk/lib/stead-repository-authority.hoon': 'scripts/ci/pure_eval/data/native/core/desk/lib/stead-repository-authority.hoon', 'native/core/desk/lib/stead-repository-catalog.hoon': 'scripts/ci/pure_eval/data/native/core/desk/lib/stead-repository-catalog.hoon', 'native/core/desk/lib/stead-repository-import.hoon': 'scripts/ci/pure_eval/data/native/core/desk/lib/stead-repository-import.hoon', 'native/core/desk/lib/stead-repository-store.hoon': 'scripts/ci/pure_eval/data/native/core/desk/lib/stead-repository-store.hoon', 'native/core/desk/lib/stead-session.hoon': 'native/core/desk/lib/stead-session.hoon', 'native/core/desk/lib/stead-team-codec.hoon': 'native/core/desk/lib/stead-team-codec.hoon', 'native/core/desk/lib/stead-team-config.hoon': 'native/core/desk/lib/stead-team-config.hoon', 'native/core/desk/lib/stead-team.hoon': 'native/core/desk/lib/stead-team.hoon', 'native/core/desk/tests/stead-repository-authority.hoon': 'scripts/ci/pure_eval/data/native/core/desk/tests/stead-repository-authority.hoon', 'native/core/desk/tests/stead-repository-catalog.hoon': 'scripts/ci/pure_eval/data/native/core/desk/tests/stead-repository-catalog.hoon', 'native/core/desk/tests/stead-repository-import.hoon': 'scripts/ci/pure_eval/data/native/core/desk/tests/stead-repository-import.hoon', 'native/core/desk/tests/stead-repository-store.hoon': 'scripts/ci/pure_eval/data/native/core/desk/tests/stead-repository-store.hoon', 'pkg/base-dev/lib/test.hoon': 'scripts/ci/pure_eval/data/pkg/base-dev/lib/test.hoon'}
 SOURCE_PATHS={'worker.py':PREFIX+'worker.py','codec.py':PREFIX+'codec.py',
@@ -147,8 +151,9 @@ def job_context(hosted, boundary, job):
             and value['identity']['repository'] == hosted.hosted_identity.REPOSITORY
             and value['identity']['runner_environment'] == 'github-hosted')
     boundary.context(value['boundary'])
+    selected_sources, _, _ = selected_paths(value['boundary']['sources']['composition.json']['sha256'])
     require(value['boundary']['sources'] == {name: pin(hosted.CONTROLLER_FILES[path])
-        for name, path in SOURCE_PATHS.items()})
+        for name, path in selected_sources.items()})
     require(canonical(value['owner']) == boundary.read_file(job / 'input/owner.json', 262144))
     require(type(value['outer_pid']) is int and value['outer_pid'] > 1
             and type(value['outer_start']) is int and value['outer_start'] > 0
@@ -272,24 +277,38 @@ def service_command(hosted, collection, job, context):
     return command + ['/usr/bin/python3', '-I', '-B', str(Path(hosted.__file__)), '_pure_guardian', str(job)]
 
 
-def fixed_data(hosted, codec):
-    composition_raw = hosted.CONTROLLER_FILES[DATA_PREFIX + 'composition.json']
-    require(sha(composition_raw) == '3d42cb1788ddbe5bdf6f9643bbbe4d2bfa7245a24431b851ef247c525c9ead72')
+def fixed_data(hosted, codec, composition_sha256=REPOSITORY_COMPOSITION):
+    selected = codec.profile(composition_sha256)
+    source_paths, fixed_paths, data_prefix = selected_paths(composition_sha256)
+    composition_raw = hosted.CONTROLLER_FILES[source_paths['composition.json']]
+    require(sha(composition_raw) == selected['composition_sha256'])
     composition = json.loads(composition_raw)
     paths = set(composition['sources']) | {composition['composition']['test_helper']['path']}
-    require(len(paths) == 55)
-    require(set(FIXED_SOURCE_PATHS) == paths)
-    expected_data = {path for path in FIXED_SOURCE_PATHS.values() if path.startswith(DATA_PREFIX)}
-    expected_data.add(DATA_PREFIX + 'composition.json')
-    require({path for path in hosted.CONTROLLER_FILES if path.startswith(DATA_PREFIX)} == expected_data)
+    require(len(paths) == selected['source_files'] and set(fixed_paths) == paths)
+    expected_data = {path for path in fixed_paths.values() if path.startswith(data_prefix)}
+    expected_data.add(data_prefix + 'composition.json')
+    require({path for path in hosted.CONTROLLER_FILES if path.startswith(data_prefix)} == expected_data)
     files = {}
-    for name, path in FIXED_SOURCE_PATHS.items():
+    for name, path in fixed_paths.items():
         raw = hosted.CONTROLLER_FILES[path]
         expected = composition['sources'][name] if name in composition['sources'] else composition['composition']['test_helper']
         require(type(raw) is bytes and pin(raw) == {'bytes': expected['bytes'], 'sha256': expected['sha256']})
         files[name] = raw
     jobs = codec.jobs(files, composition_raw)
+    require(codec.job_profile(jobs) == selected)
     return files, jobs, {name: sha(raw) for name, raw in files.items()}
+
+
+def selected_paths(composition_sha256=REPOSITORY_COMPOSITION):
+    """Only two source-owned maps; no caller path, prefix, source or suite list."""
+    require(type(composition_sha256) is str)
+    if composition_sha256 == REPOSITORY_COMPOSITION:
+        return dict(SOURCE_PATHS), dict(FIXED_SOURCE_PATHS), DATA_PREFIX
+    require(composition_sha256 == MODEL_COMPOSITION)
+    sources = dict(SOURCE_PATHS)
+    sources['interface.json'] = PREFIX + 'model-interface.json'
+    sources['composition.json'] = MODEL_DATA_PREFIX + 'composition.json'
+    return sources, dict(MODEL_SOURCE_PATHS), MODEL_DATA_PREFIX
 
 
 def complete_guard(guard, allow_failure=False):
@@ -311,7 +330,7 @@ def guardian(hosted, job):
     modules=load(hosted)
     boundary,collection,codec=(modules[n] for n in ('owner_boundary','owner_collection','codec'))
     value=job_context(hosted,boundary,job);context=value['boundary']
-    _,jobs,hashes=fixed_data(hosted,codec)
+    _,jobs,hashes=fixed_data(hosted,codec,context['sources']['composition.json']['sha256'])
     heartbeat,parentfd=heartbeat_factory(hosted,boundary,value,job)
     process=None;result=None;artifact=None;closed=False
     try:
@@ -364,18 +383,32 @@ def checked_report(hosted,boundary,collection,codec,job,guard):
     directory=job/'retained';boundary.directory(directory,0o700)
     require({p.name for p in directory.iterdir()}=={'report.json'})
     raw=boundary.read_file(directory/'report.json',REPORT_LIMIT,guard['report_pin'])
-    _,jobs,hashes=fixed_data(hosted,codec)
+    context=job_context(hosted,boundary,job)
+    _,jobs,hashes=fixed_data(hosted,codec,context['boundary']['sources']['composition.json']['sha256'])
     report=collection.validate_report(raw,codec,jobs,hashes)
     require(report['status']==guard['status'])
     return raw
 
 
 def outer(hosted,args,identity,binding):
+    """Existing repository profile remains the default and existing hosted entry."""
+    return _outer(hosted,args,identity,binding,REPOSITORY_COMPOSITION)
+
+
+def outer_model_simple(hosted,args,identity,binding):
+    """Prospective fixed entry only: no current CLI/workflow registers this wrapper."""
+    return _outer(hosted,args,identity,binding,MODEL_COMPOSITION)
+
+
+def _outer(hosted,args,identity,binding,composition_sha256):
     modules=load(hosted)
     boundary,collection,intake,codec=(modules[n] for n in ('owner_boundary','owner_collection','pure_intake','codec'))
-    require(args.mode=='pure' and args.control is None and args.candidate==args.controller
+    selected=codec.profile(composition_sha256)
+    expected_mode='pure' if composition_sha256==REPOSITORY_COMPOSITION else 'pure-model-simple'
+    require(args.mode==expected_mode and args.control is None and args.candidate==args.controller
             and binding['controller_commit']==args.controller and identity['workflow_sha']==args.workflow)
-    files,jobs,hashes=fixed_data(hosted,codec)
+    files,jobs,hashes=fixed_data(hosted,codec,composition_sha256)
+    selected_sources,_,_=selected_paths(composition_sha256)
     started=time.monotonic();outer_pid=os.getpid();outer_identity=boundary.proc_identity(outer_pid)
     def setup_guard():
         require(os.geteuid()==0 and boundary.proc_identity(outer_pid)==outer_identity
@@ -387,7 +420,7 @@ def outer(hosted,args,identity,binding):
     context={'protocol':'stead.fixed-pure-eval-owner-context/1','run_id':run_id,
              'unit':'stead-pure-eval-'+run_id+'.service','cpu':min(os.sched_getaffinity(0)),
              'host_uid':account.pw_uid,'host_gid':account.pw_gid,
-             'sources':{name:pin(hosted.CONTROLLER_FILES[path]) for name,path in SOURCE_PATHS.items()},
+             'sources':{name:pin(hosted.CONTROLLER_FILES[path]) for name,path in selected_sources.items()},
              'bwrap_sha256':sha(boundary.read_file(Path('/usr/bin/bwrap'),4*1024**2))}
     boundary.context(context)
     result={'protocol':'stead.fixed-pure-eval-hosted-result/1','status':'fail',
@@ -429,7 +462,7 @@ def outer(hosted,args,identity,binding):
         owner={'protocol':'stead.fixed-pure-eval-worker-input/1','host_uid':account.pw_uid,'host_gid':account.pw_gid,
                'outer_namespaces':{n:os.readlink('/proc/self/ns/'+n) for n in boundary.NAMESPACES},
                'sources':context['sources'],'runtime':result['intake']['runtime']}
-        for name,path in SOURCE_PATHS.items():write_new(job/'input'/name,hosted.CONTROLLER_FILES[path],mode=0o440,gid=account.pw_gid)
+        for name,path in selected_sources.items():write_new(job/'input'/name,hosted.CONTROLLER_FILES[path],mode=0o440,gid=account.pw_gid)
         write_new(job/'input/owner.json',canonical(owner),mode=0o440,gid=account.pw_gid)
         os.chown(job,0,account.pw_gid);os.chmod(job,0o750);setup_guard()
         guardian_input={'protocol':'stead.fixed-pure-eval-guardian-input/1','boundary':context,

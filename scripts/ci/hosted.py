@@ -723,7 +723,7 @@ def main():
     parser.add_argument('--run-id', required=True)
     parser.add_argument('--attempt', required=True)
     parser.add_argument('--control', choices=CONTROL_CASES)
-    parser.add_argument('--mode', choices=('native', 'model', 'pure'), default='native')
+    parser.add_argument('--mode', choices=('native', 'model', 'pure', 'pure-model-simple'), default='native')
     args = parser.parse_args()
     capture_artifacts = {}
     require(os.getuid() == 0 and sys.flags.isolated and sys.dont_write_bytecode, 'Root isolated controller required')
@@ -740,6 +740,9 @@ def main():
     if args.mode == 'pure':
         from pure_eval.service_adapter import outer
         return outer(sys.modules[__name__], args, identity, binding)
+    if args.mode == 'pure-model-simple':
+        from pure_eval.service_adapter import outer_model_simple
+        return outer_model_simple(sys.modules[__name__], args, identity, binding)
     controller = CONTROLLER_FILES
     candidate = local.inventory(args.candidate, ('native/core/desk',))
     combined, product = local.compose(controller, candidate)

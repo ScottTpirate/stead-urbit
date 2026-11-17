@@ -34,7 +34,14 @@ def observe(job, code, stdout, stderr):
             'stdout_sha256': hashlib.sha256(stdout).hexdigest(), 'stdout_bytes': len(stdout),
             'stderr_sha256': hashlib.sha256(stderr).hexdigest(), 'stderr_bytes': len(stderr),
             'compiler_failure': False}
-CODEC = types.SimpleNamespace(observe=observe)
+PROFILE = {'composition_sha256': '3d42cb1788ddbe5bdf6f9643bbbe4d2bfa7245a24431b851ef247c525c9ead72',
+           'positive_arms': 26, 'jobs': 6}
+# These lifecycle doubles remain synthetic. test_pure_eval_profiles uses the real
+# codec and both complete source maps to verify cross-profile admission.
+def profile(digest):
+    if digest != PROFILE['composition_sha256']: raise ValueError('inert wrong profile')
+    return dict(PROFILE)
+CODEC = types.SimpleNamespace(observe=observe, profile=profile, job_profile=lambda _: dict(PROFILE))
 HASHES = {'fixed-source': 'a' * 64}
 
 
@@ -61,7 +68,8 @@ def report(failed=False):
 
 
 def envelope(failed=False):
-    owner = {'host_uid': 1001, 'host_gid': 1002, 'sources': {'worker.py': {'bytes': 10, 'sha256': 'a' * 64}},
+    owner = {'host_uid': 1001, 'host_gid': 1002, 'sources': {'worker.py': {'bytes': 10, 'sha256': 'a' * 64},
+                 'composition.json': {'bytes': 240147, 'sha256': PROFILE['composition_sha256']}},
              'runtime': {'sha256': 'f7f0d3b3c0480fc10f887dfbc09bde56a81d723a803541c7886c538a0675d833'}}
     namespaces = {name: name + ':[2]' for name in ('user', 'mnt', 'pid', 'net')}
     digest = hashlib.sha256(C.canonical(owner)).hexdigest()
@@ -136,7 +144,7 @@ class PureEvalCollectionTests(unittest.TestCase):
 
     def test_worker_proof_requires_exact_scalar_and_nested_identity_types(self):
         owner, ready, final, _ = envelope()
-        self.assertEqual(C.worker_result(final, owner, ready), final)
+        self.assertEqual(C.worker_result(final, owner, ready, CODEC), final)
         mutations = [lambda f: f['admission'].update(host_uid=1001.0),
                      lambda f: f['admission'].update(host_gid=1002.0),
                      lambda f: f['admission']['namespace_maps']['uid'].__setitem__(2, True),
@@ -147,7 +155,7 @@ class PureEvalCollectionTests(unittest.TestCase):
                      lambda f: f.update(children_reaped=1)]
         for mutate in mutations:
             value = copy.deepcopy(final); mutate(value)
-            with self.assertRaises(ValueError): C.worker_result(value, owner, ready)
+            with self.assertRaises(ValueError): C.worker_result(value, owner, ready, CODEC)
 
     def collect(self, failed=False, missing_eof=False, duplicate=False, cleanup_ok=True):
         owner, ready, final, raw = envelope(failed); events = []

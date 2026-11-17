@@ -206,3 +206,36 @@ class PureEvalCodecTests(unittest.TestCase):
                 codec.observe(job, 0, valid.replace(b"1.000.000", bad), codec.BOOT.encode())
         with self.assertRaises(ValueError):
             codec.observe(job, 0, valid.replace(b" ~.", "\u00a0~.".encode(), 1), codec.BOOT.encode())
+
+    def test_exact_core_limit_envelopes_preserve_original_control_and_reject_other_diagnostics(self):
+        # Original byte streams retained from isolated run43862574588, record0.
+        # This host parser replay does not execute Vere or qualify its controls.
+        compiler, tang, suite = self.fixed[:3]
+        stdout = b"\x1b[38;5;244m/eval\x1b[0m\r\n\x1b[38;5;244m{1 22}\x1b[0m\r\n\x1b[38;5;244msyntax error\x1b[0m\r\n"
+        stderr = b"boot: core limit: Invalid argument\r\nloom: mapped 512MB\r\nlite: arvo formula 4ce68411\r\nlite: core 641296f\r\nlite: final state 641296f\r\neval (run):\n\r\neval: bail: %exit\r\n"
+        self.assertEqual(hashlib.sha256(stdout).hexdigest(), "c3232b33c9161a6a34ba6ada072165c2cdb8a4744311ac4b794db7168363e974")
+        self.assertEqual(hashlib.sha256(stderr).hexdigest(), "3a2c1c47f0111742a3041b6179d8207a8b24240fed2349f3b7b44a7b3c4ca673")
+        result = codec.observe(compiler, 0, stdout, stderr)
+        self.assertEqual((result["status"], result["arms"], result["compiler_failure"]), ("pass", (), False))
+        self.assertEqual((result["stdout_bytes"], result["stderr_bytes"]), (74, 165))
+        self.assertEqual(result["stderr_sha256"], hashlib.sha256(stderr).hexdigest())
+        cases = ((compiler, codec.COMPILER_STDOUT.encode(), codec.EXIT_STDERR, "pass", False),
+                 (tang, self.rows(tang, (3,)), codec.BOOT, "pass", False),
+                 (suite, self.rows(suite), codec.BOOT, "pass", False),
+                 (suite, b"/eval\n{10 20}\nsynthetic completed trace", codec.EXIT_STDERR, "fail", True))
+        warning = codec.CORE_LIMIT_WARNING
+        for job, out, envelope, status, failed in cases:
+            for prefix in ("", warning):
+                err = (prefix + envelope).encode()
+                with self.subTest(job=job["label"], envelope=envelope, prefix=prefix):
+                    got = codec.observe(job, 0, out, err)
+                    self.assertEqual((got["status"], got["compiler_failure"]), (status, failed))
+                    self.assertEqual((got["stderr_bytes"], got["stderr_sha256"]), (len(err), hashlib.sha256(err).hexdigest()))
+            for err in (warning + warning + envelope, "unknown warning\n" + warning + envelope,
+                        warning.replace("Invalid argument", "Operation not permitted") + envelope,
+                        envelope + "\n" + warning.rstrip("\n"), warning.rstrip("\n") + envelope,
+                        warning, warning + envelope[:-1], warning + envelope + "\nextra"):
+                with self.subTest(job=job["label"], invalid=err), self.assertRaises(ValueError):
+                    codec.observe(job, 0, out, err.encode())
+        with self.assertRaises(ValueError):
+            codec.observe(compiler, 0, (warning + codec.COMPILER_STDOUT).encode(), stderr)
