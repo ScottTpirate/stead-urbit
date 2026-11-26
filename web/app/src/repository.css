@@ -136,7 +136,7 @@
   box-shadow: 0 10px 30px #201f1d26;
 }
 .repo-clone-panel > p { margin: 0; }
-.repo-clone-panel > [role="alert"] { color: #812d24; }
+.repo-clone-panel > [role="alert"] { color: var(--danger); }
 .repo-copy-field { display: flex; gap: 5px; align-items: flex-end; flex-wrap: wrap; }
 .repo-copy-field .stead-field { flex: 1; min-width: 120px; }
 .repo-copy-field input { min-width: 0; }

@@ -12,7 +12,7 @@
   --paper: #ffffff;
   --rail: #efeeea;
   --line: #dedbd4;
-  --line-strong: #a29d93;
+  --line-strong: #918d84;
   --selected: #e9e6df;
   --focus: #5b50bd;
   --accent: var(--focus);
@@ -388,7 +388,7 @@ footer { display: flex; justify-content: space-between; gap: 12px; padding: 12px
 }
 @media (max-width: 620px) {
   .editor-heading { flex-direction: column; align-items: start; gap: 8px; }
-  .topbar { min-height: 48px; padding-inline: 12px; gap: 8px; color: var(--house-ink); background: var(--house-ground); border-color: #343330; }
+  .topbar { --focus: var(--house-focus); min-height: 48px; padding-inline: 12px; gap: 8px; color: var(--house-ink); background: var(--house-ground); border-color: #343330; }
   .topbar .brand { width: auto; padding: 4px 2px; font-size: 21px; background: transparent; }
   .topbar .workspace-label { display: none; }
   .topbar .account .stead-button { color: var(--house-ink); border-color: var(--house-line); }
