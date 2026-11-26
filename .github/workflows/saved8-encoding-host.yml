@@ -1,0 +1,33 @@
+name: Saved8 capture encoding host checks
+on:
+  pull_request:
+    paths:
+      - '.github/workflows/saved8-encoding-host.yml'
+      - 'scripts/ci/saved8_encoding_host.py'
+      - 'scripts/ci/saved8_encoding_fixture_driver.py'
+      - 'specs/urbit/saved8-encoding-host.json'
+permissions:
+  contents: read
+jobs:
+  host:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 3
+    steps:
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
+        with:
+          path: harness
+          persist-credentials: false
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
+        with:
+          ref: c80b1d6305a2c5964139439779af4a5f4ef895df
+          path: candidate
+          persist-credentials: false
+      - name: Run18 fixed inert cases without native or network effects
+        run: timeout --kill-after=5s 90s python3 -IB harness/scripts/ci/saved8_encoding_host.py
+      - name: Retain original host report
+        if: always()
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        with:
+          name: saved8-encoding-host-result
+          path: saved8-host-output/report.json
+          if-no-files-found: error
