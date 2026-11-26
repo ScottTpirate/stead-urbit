@@ -78,6 +78,38 @@ def diagnostic():
 
 
 class Saved8DiagnosticTests(unittest.TestCase):
+    def test_seed_disk_matches_the_exact_installed_predecessor_plus_synthetic_overlay(self):
+        import io
+        import shutil
+        import tarfile
+
+        def inventory(root):
+            return {p.relative_to(root).as_posix(): E.sha(p.read_bytes())
+                    for p in root.rglob('*') if p.is_file()}
+
+        with tempfile.TemporaryDirectory() as folder:
+            root = Path(folder)
+            previous = root / 'previous'
+            seed_inputs = root / 'seed-inputs'
+            with tarfile.open(fileobj=io.BytesIO(F.archive_bytes('previous'))) as tar:
+                for member in tar.getmembers():
+                    if member.name.startswith('stead-release/desk/'):
+                        target = previous / member.name.removeprefix('stead-release/desk/')
+                        target.parent.mkdir(parents=True, exist_ok=True)
+                        target.write_bytes(tar.extractfile(member).read())
+            for name, source in F.A.SEED.items():
+                path = seed_inputs / name
+                path.parent.mkdir(parents=True, exist_ok=True)
+                shutil.copyfile(PACKAGE / 'data' / source, path)
+            old = inventory(previous)
+            expected = old | inventory(seed_inputs)
+            self.assertEqual(len(expected), len(old) + 1)
+            self.assertEqual(U.materialize_seed(previous, seed_inputs, root / 'seed', old, inventory), expected)
+            self.assertEqual(inventory(root / 'seed'), expected)
+            (seed_inputs / 'app/stead-home.hoon').write_bytes(b'wrong overlay')
+            with self.assertRaises(ValueError):
+                U.materialize_seed(previous, seed_inputs, root / 'changed', old, inventory)
+
     def test_exact_code_positions_reject_spoofs_and_bound_trace_without_private_text(self):
         pinned = sources()
         error = caught(lambda: U.command_observation(7))

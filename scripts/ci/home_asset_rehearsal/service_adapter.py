@@ -24,7 +24,7 @@ from . import result as R
 PROFILE = 'home-assets-saved8/1'
 PREFIX = 'scripts/ci/home_asset_rehearsal/'
 DATA = {
-    'previous.tar': (1392640, R.PREVIOUS), 'target.tar': (1648640, R.NEXT),
+    'previous.tar': (1679360, R.PREVIOUS), 'target.tar': (1689600, R.NEXT),
     'seed-home.hoon': (607, 'd6d15bc9514001a2edcdcb67384881826215e7fd40c08465edc74962d8b70fdd'),
     'seed-lib.hoon': (15981, '4021487a4d7878461e02951a8e00ccd28b1b9eb2346ec3a09f596ca93bc131e4'),
     'a0-stead-codec.hoon': (9532, '56e3d574381bbf8cdf29ca192c70eff256009f89d782e3ffe859b19c1321cbd7'),
@@ -37,8 +37,8 @@ DRIVERS = {'lib/stead-codec.hoon': 'a0-stead-codec.hoon', 'lib/stead-delivery.ho
     'ted/stead-team-client.hoon': 'a0-stead-team-client.hoon', 'ted/stead-local-tls.hoon': 'a0-stead-local-tls.hoon'}
 FROZEN = {
     PREFIX + '__init__.py': '012fb68d9afed4520e136077b0cc8124df015eb584ab421cf051d0d7c210bec4',
-    PREFIX + 'worker.py': 'bfe387e7559d63eb84b160df7ce6c060fcbf92caf79d9f25802f74d80afbb4a9',
-    PREFIX + 'runner.py': '43b3c967b692bef27e0ff6ae0d314b94483286587ed4f05f3d0f0173b606613a',
+    PREFIX + 'worker.py': '76973d5fc826a69a7bf7ef88a69fbb19635c762ffc849c92044e00bd5dba8fcd',
+    PREFIX + 'runner.py': '397eede271a2a70cd0c75cc8b0ce6fad3778c37271ce5a4c0bda52b943024b2f',
     PREFIX + 'evidence.py': '7534daf5dd443cc4e4a1be4724797bf5cf2535a81fe8afffb3e9f70349c90946',
     PREFIX + 'capture.hoon': '04296e9706c1a58af9a139aed9fa7a7aba040b912bbb588292207610df84e6e3',
     'scripts/release_install.py': '30b2a651c3e7d124e7e5ef319f5581299d29427322e605f1ffca91e9015f5e80',
@@ -75,7 +75,7 @@ def archive(raw, name):
     result = {}
     with tarfile.open(fileobj=io.BytesIO(raw), mode='r:') as source:
         members = source.getmembers()
-        require(len(members) == (124 if name == 'previous' else 126))
+        require(len(members) == (126 if name == 'previous' else 127))
         for member in members:
             require(member.isfile() and member.name.startswith('stead-release/') and 0 < member.size <= 524288
                     and re.fullmatch(r'[A-Za-z0-9_./-]+', member.name)
@@ -85,7 +85,7 @@ def archive(raw, name):
             result[relative] = source.extractfile(member).read()
             require(len(result[relative]) == member.size)
     manifest = json.loads(result['manifest.json'], object_pairs_hook=E.unique)
-    require(manifest['source_commit'] == (R.BASE if name == 'previous' else R.TARGET)
+    require(manifest['source_commit'] == (R.PREDECESSOR if name == 'previous' else R.TARGET)
             and manifest['role'] == 'home' and manifest['agents'] == ['stead-home']
             and type(manifest['saved_state_version']) is int and manifest['saved_state_version'] == 9)
     require(manifest['compatibility']['kernel_commit'] == R.KERNEL
@@ -93,7 +93,9 @@ def archive(raw, name):
     R.exact(manifest['files'], {path: {'bytes': len(data), 'sha256': E.sha(data)}
         for path, data in result.items() if path != 'manifest.json'})
     desk = {path[5:]: E.sha(data) for path, data in result.items() if path.startswith('desk/')}
-    require(len(desk) == (116 if name == 'previous' else 118))
+    require(len(desk) == (118 if name == 'previous' else 119))
+    native = {p: digest for p, digest in desk.items() if not p.startswith('web/stead/')}
+    require(len(native) == 101 and E.sha(E.canonical(native)) == R.BACKEND_FILES_SHA256)
     frontend = json.loads(result['source/frontend.json'], object_pairs_hook=E.unique)
     routes = [{'route': row['route'], 'sha256': row['sha256'], 'bytes': row['bytes']}
               for row in frontend['routes'] if row['route'].startswith('/stead/')]
@@ -149,7 +151,7 @@ def intake(hosted, job, args, account, binding, run_id, pins):
     hashes = lambda files: {name: E.sha(raw) for name, raw in files.items()}
     seed_desk = old | hashes(seed)
     inputs = {'protocol': 'stead.saved8-hosted-inputs/1', 'profile': PROFILE, 'run_id': run_id,
-        'controller_commit': args.controller, 'candidate_commit': R.BASE, 'backend_commit': R.BASE,
+        'controller_commit': args.controller, 'candidate_commit': R.BASE, 'backend_commit': R.BASE, 'previous_commit': R.PREDECESSOR,
         'target_commit': R.TARGET, 'workflow_binding': binding, 'controller_files': hosted.local.hashes(controller),
         'host_namespaces': {name: os.readlink('/proc/self/ns/' + name) for name in ('net', 'pid', 'mnt', 'user')},
         'owner_uid': account.pw_uid, 'owner_gid': account.pw_gid,
@@ -295,7 +297,7 @@ def outer(hosted, args, identity, binding):
     username, unit = 'steadci-' + run_id[:12], 'stead-hosted-' + run_id + '.service'
     owner = {'protocol': 'stead.saved8-hosted-owner/1', 'status': 'fail', 'profile': PROFILE,
         'classification': 'disposable-synthetic-saved8-only', 'qualifies_phase': False,
-        'controller_commit': args.controller, 'backend_commit': R.BASE, 'target_commit': R.TARGET,
+        'controller_commit': args.controller, 'backend_commit': R.BASE, 'previous_commit': R.PREDECESSOR, 'target_commit': R.TARGET,
         'run_id': run_id, 'identity': identity, 'workflow_binding': binding, 'policy': hosted.POLICY,
         'errors': [], 'cleanup': {'verified': False}, 'worker': None, 'artifacts': {}}
     job = process = account = inputs = rehearsal = None
