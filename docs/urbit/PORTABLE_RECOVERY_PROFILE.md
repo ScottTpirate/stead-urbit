@@ -250,6 +250,14 @@ recover a prior receipt because the original attempt's audit hash is retained.
 Changing origin, Home, principal or binding stops the import. The progress file
 is trusted local operator state and contains no session cookie or CSRF token.
 
+Version 2 import plans include Work discussions. Each destination comment names
+the source ship and UTC time above the original text. Its native receipt belongs
+to the importing member. The plan records the source Work, comment revision,
+principal and time. Comments exceeding the 2,048-byte limit with attribution
+stay in the source archive and appear individually under `archive_only_comments`.
+Verification checks every imported body, revision and destination author in
+order. Reuse an existing version 1 plan to resume its original selection.
+
 The import preserves Work content and statuses, collection visibility, page
 body bytes and typed relations. It rewrites the canonical page header ID and
 relation endpoints. Embedded Markdown links remain byte-exact and can refer to

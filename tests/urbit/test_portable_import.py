@@ -48,7 +48,7 @@ class Target:
             kind = command['operation'].split('.')[0]
             row = {'protocol': 'stead.receipt/3', 'status': 'accepted', 'canonical_sha256': digest,
                    **{name: command[name] for name in ('request_id', 'project_id', 'resource_id', 'operation', 'authority_epoch')},
-                   'resource_revision': '1', 'resource_kind': kind, 'runtime': 'isolated-fake',
+                   'resource_revision': str(int(command['expected_revision']) + 1), 'resource_kind': kind, 'runtime': 'isolated-fake',
                    'container_id': command['resource_id'] if kind == 'container' else command['payload'].get('container_id', ''),
                    'authentication': 'native-approved-browser/1', 'authentication_strength': 'native-approved-browser',
                    'accepted_at_ms': '1800000000000', 'git_commit_oid': 'b' * 40 if kind == 'document' else '',
@@ -69,6 +69,15 @@ class Target:
         if kind == 'identity':
             rows.append(self.member())
         else:
+            comments = {}
+            for event in self.events:
+                if event['operation'] == 'work.comment' and event['project_id'] == project:
+                    receipt = self.artifacts[event['request_id']]
+                    comments.setdefault(event['resource_id'], []).append({
+                        'comment_revision': receipt['resource_revision'], 'body': event['payload']['body'],
+                        **{name: receipt[name] for name in ('identity_ship', 'principal_id', 'accepted_at_ms')}})
+            if kind == 'comments':
+                rows = comments.get(resource, [])
             for command in self.events:
                 if command['project_id'] != project:
                     continue
@@ -82,6 +91,10 @@ class Target:
                     rows.append(row | payload | {'kind': 'project', 'project_id': item, 'role': 'maintainer',
                                                 'policy_revision': self.policy, 'authority_epoch': '1'})
                 if kind == 'work' and operation == 'work.create' and resource in ('', item):
+                    if item in comments:
+                        row['resource_revision'] = comments[item][-1]['comment_revision']
+                        if resource:
+                            row['comment_count'] = str(len(comments[item]))
                     rows.append(row | payload | {'kind': 'work', 'container_id': '', 'snippet': payload['description'][:30]})
                 if kind == 'containers' and operation == 'container.create':
                     rows.append(row | payload | {'kind': 'container', 'container_id': item, 'container_head': 'b' * 40})
@@ -149,17 +162,54 @@ class PortableImport(unittest.TestCase):
         self.assertEqual(commands, self.commands)
         self.assertTrue(any('Work assignments' in change for change in plan['losses']['import_changes']))
 
-    def test_discussion_authorship_stays_in_source_archive(self):
-        data = portable.decoded(self.files['records.json'], portable.MAX_CAPTURE)
-        data['work'][0].update(comment_count='1', comments=[{
-            'comment_revision': '2', 'body': 'Keep the exact source author.',
-            'principal_id': uid(801), 'identity_ship': '~nec', 'accepted_at_ms': '1000',
-        }])
-        files = dict(self.files, **{'records.json': portable.encoded(data)})
-        plan, commands = importer.plan_commands(files, self.plan['artifact_sha256'], HOME,
+    def discussion_archive(self):
+        source = Source()
+        work = source.work[0]
+        work['resource_revision'] = '8'
+        source.comments[work['resource_id']] = [
+            {'comment_revision': revision, 'body': body, 'principal_id': uid(801), 'identity_ship': '~nec',
+             'accepted_at_ms': '1000'}
+            for revision, body in [('3', 'First λ.  \n'), ('5', 'x' * 2048), ('8', 'Second comment')]]
+        data, receipt = portable.capture(source, PROJECT, PRINCIPAL, ORIGIN)
+        self.archive = self.directory / 'discussion.zip'
+        artifact = portable.write_bundle(data, receipt, self.archive)
+        files, _ = portable.verify(self.archive, expected_sha256=artifact['sha256'])
+        return files, artifact['sha256']
+
+    def test_import_discussion_keeps_attribution_and_replays_a_lost_receipt(self):
+        files, archive_digest = self.discussion_archive()
+        self.plan, self.commands = importer.plan_commands(files, archive_digest, HOME,
             importer.target_member(MEMBER), uid(800), 'Imported λ', 'IMPORTED')
+        plan_file = self.directory / 'discussion-plan.json'
+        self.digest = importer.published_plan(self.plan, plan_file)
+        self.assertEqual(importer.load_plan(self.archive, plan_file, self.digest), (self.plan, self.commands))
+        self.assertEqual(self.plan['losses']['archive_only_comments'], [{'work_id': uid(100), 'comment_revision': '5',
+                                                                       'reason': 'attributed_body_exceeds_2048_bytes'}])
+        notes = [step for step in self.plan['steps'] if step['operation'] == 'work.comment']
+        self.assertEqual([note['source_scope'] for note in notes], [[uid(100), '3'], [uid(100), '8']])
+        self.assertEqual(notes[0]['source_author']['principal_id'], uid(801))
+        first, second = self.commands[2:4]
+        self.assertEqual((first['expected_revision'], second['expected_revision']), ('1', '2'))
+        self.assertEqual(first['payload'], {'body': 'Imported comment from ~nec at 1970-01-01T00:00:01.000Z\n\nFirst λ.  \n'})
+        self.assertEqual(self.apply(2)['accepted'], 2)
+        self.target.loss = True
+        self.assertEqual(self.apply()['phase'], 'awaiting-receipt')
+        self.assertEqual(self.apply()['phase'], 'complete')
+        self.assertEqual(self.target.calls[2], self.target.calls[3])
+        self.assertEqual(self.readback()['work'], 1)
+        self.assertEqual(len(self.target.events), len(self.commands))
+        self.target.events[3]['payload']['body'] += ' changed'
+        with self.assertRaisesRegex(portable.RecoveryError, 'discussion-mismatch'):
+            self.readback()
+
+    def test_original_discussion_free_plan_still_resumes_exactly(self):
+        files, digest = self.discussion_archive()
+        plan, commands = importer.plan_commands(files, digest, HOME, importer.target_member(MEMBER),
+                                                uid(800), 'Imported λ', 'IMPORTED', importer.LEGACY_FORMAT)
         self.assertEqual(commands, self.commands)
         self.assertTrue(any('Work discussions' in change for change in plan['losses']['import_changes']))
+        path = self.directory / 'legacy-plan.json'
+        self.assertEqual(importer.load_plan(self.archive, path, importer.published_plan(plan, path)), (plan, commands))
 
     def test_exact_digest_alone_does_not_authorize_an_altered_plan(self):
         edited = copy.deepcopy(self.plan)

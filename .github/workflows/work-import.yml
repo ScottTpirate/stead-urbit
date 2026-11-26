@@ -6,6 +6,8 @@ on:
       - scripts/urbit/portable_import.py
       - scripts/urbit/portable_recovery.py
       - tests/urbit/test_github_work_*.py
+      - tests/urbit/test_portable_import.py
+      - tests/urbit/test_portable_recovery.py
       - .github/workflows/work-import.yml
   workflow_dispatch:
 permissions:
@@ -20,3 +22,7 @@ jobs:
           persist-credentials: false
       - name: Check GitHub preview provenance and resumable imports
         run: python3 -B -m unittest discover -v -s tests/urbit -p 'test_github_work_*.py'
+      - name: Check portable discussion import and archive readback
+        run: |
+          python3 -B -m unittest discover -v -s tests/urbit -p 'test_portable_import.py'
+          python3 -B -m unittest discover -v -s tests/urbit -p 'test_portable_recovery.py'
