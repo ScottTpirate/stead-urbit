@@ -14,6 +14,8 @@ import re
 
 MAX_CAPTURE = 262144
 CHUNK = 16384
+ENCODING_CONTROL = "+home-ui-capture [262.144 'stead.saved8-hex-control/1']"
+ENCODING_MARKER = 0x736176656438686578
 STAGES = ('seed8', 'a0-loaded', 'a0-cold', 'assets-loaded', 'rollback-loaded')
 TAILS = ('db_pin', 'code_pin', 'handoff_pin', 'retired_pin', 'packs_pin', 'external_pin')
 PINS = ('capture_pin', 'vase_fingerprint', 'type_pin', 'payload_pin', 'durable_pin', *TAILS)
@@ -119,6 +121,9 @@ def validate_capture(value):
 def collect(dojo, stage):
     require(type(stage) is str and stage in STAGES)
     require(dojo(SUSPENDED).strip() == '%.n' and dojo(DESK).strip() == '%release-test')
+    # The same fixed generator must compile and pass exact old/new encoding
+    # vectors before any large saved-state formatting request.
+    require(atom(dojo(ENCODING_CONTROL), 64) == ENCODING_MARKER)
     before = fingerprint(dojo)
     offset, previous, first, parts = 0, '', None, []
     for _ in range(16):
