@@ -54,7 +54,11 @@ After applying the configuration, wait for the projection, bootstrap the
 Home with the existing origin and certificate, and verify the Git relay and
 accepted snapshot. Check a fresh sign-in and the intended project grant.
 The Identity configuration can stay in place when the two origins and Home
-ship are unchanged. See the [creator grant renewal procedure](PHASE2_CONTRACT.md#renewing-a-pilot-projects-creator-grant).
+ship are unchanged. After renewal, compare the authenticated Work and Docs
+readbacks and accepted Git snapshot to their pre-maintenance values. The
+November 25 supervised renewal verified all three original projects. [Creator
+grant procedure](PHASE2_CONTRACT.md#renewing-a-pilot-projects-creator-grant) ·
+[Named pilot renewal evidence](evidence/2026-11-25/existing-member-renewal.json)
 
 ## Prepare a pilot update
 
