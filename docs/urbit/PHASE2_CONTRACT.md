@@ -300,8 +300,10 @@ closes discussion access. Comments are append-only in this profile.
 
 Discussion survives restart through journal reconstruction of the current
 Work record. Older Work records have an empty discussion. Current-record
-exports preserve authorized comments in `records.json`; create-only imports
-leave the original attribution in that archive.
+exports preserve authorized comments in `records.json`. Version 2 import plans
+recreate discussions in order and label each imported entry with its source
+ship and time. The plan lists entries whose attributed text exceeds the native
+comment limit. [Portable import](PORTABLE_RECOVERY_PROFILE.md#local-create-only-import)
 
 ### Renewing a pilot project’s creator grant
 

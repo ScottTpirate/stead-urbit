@@ -2,6 +2,7 @@
 from __future__ import annotations
 
 import argparse
+from datetime import datetime, timedelta, timezone
 import fcntl
 import hashlib
 import http.client
@@ -16,6 +17,8 @@ import sys
 import portable_recovery as portable
 
 MAX_STEPS = 256
+LEGACY_FORMAT = 'stead.portable-import-plan/1'
+FORMAT = 'stead.portable-import-plan/2'
 MAX_PLAN = 256 * 1024
 MAX_PROGRESS = 128 * 1024
 MAX_BATCH = 16
@@ -112,10 +115,10 @@ def import_target(origin, target, seed, title, key):
             'project_key': key, 'project_id': child_id(seed, 'project')}
 
 
-def import_step(destination, operation, original, resource_id, payload):
+def import_step(destination, operation, original, resource_id, payload, expected_revision='0'):
     command = {'protocol': 'stead.command/3',
                'request_id': child_id(destination['seed'], 'request', operation, *original),
-               'project_id': destination['project_id'], 'resource_id': resource_id, 'expected_revision': '0',
+               'project_id': destination['project_id'], 'resource_id': resource_id, 'expected_revision': expected_revision,
                'authority_epoch': '1', 'operation': operation, 'payload': payload}
     portable.require(len(portable.encoded(command)) <= 65536, 'import-command-size')
     step = {'operation': operation, 'source_scope': list(original), 'resource_id': resource_id,
@@ -130,11 +133,23 @@ def project_payload(destination):
 
 
 def check_command_ids(commands):
-    all_ids = [command[name] for command in commands for name in ('request_id', 'resource_id')]
+    all_ids = [command['request_id'] for command in commands]
+    all_ids.extend(command['resource_id'] for command in commands if command['operation'] != 'work.comment')
     portable.require(len(set(all_ids)) == len(all_ids), 'import-id-collision')
 
 
-def plan_commands(files, artifact_digest, origin, target, seed, title, key):
+def imported_comment(comment):
+    stamp = comment['accepted_at_ms']
+    try:
+        date = datetime(1970, 1, 1, tzinfo=timezone.utc) + timedelta(milliseconds=int(stamp))
+        when = date.isoformat(timespec='milliseconds').replace('+00:00', 'Z')
+    except OverflowError:
+        when = stamp + ' ms since 1970-01-01 UTC'
+    return f"Imported comment from {comment['identity_ship']} at {when}\n\n{comment['body']}"
+
+
+def plan_commands(files, artifact_digest, origin, target, seed, title, key, version=FORMAT):
+    portable.require(version in (LEGACY_FORMAT, FORMAT), 'import-plan-format')
     portable.require(portable.match(portable.TOKEN, artifact_digest), 'import-archive-digest')
     destination = import_target(origin, target, seed, title, key)
     data = portable.decoded(files['records.json'], portable.MAX_CAPTURE)
@@ -143,8 +158,11 @@ def plan_commands(files, artifact_digest, origin, target, seed, title, key):
     commands = []
     steps = []
 
-    def add(operation, original, target_id, payload):
-        step, command = import_step(destination, operation, original, target_id, payload)
+    archived_comments = []
+
+    def add(operation, original, target_id, payload, expected_revision='0'):
+        portable.require(len(steps) < MAX_STEPS, 'import-step-limit')
+        step, command = import_step(destination, operation, original, target_id, payload, expected_revision)
         commands.append(command)
         steps.append(step)
 
@@ -155,8 +173,23 @@ def plan_commands(files, artifact_digest, origin, target, seed, title, key):
         original = row['resource_id']
         import_title(row['title'])
         portable.require('\r' not in row['description'], 'import-work-description')
-        add('work.create', (original,), child_id(seed, 'work', original),
+        work = child_id(seed, 'work', original)
+        add('work.create', (original,), work,
             {name: row[name] for name in ('title', 'description', 'type', 'status', 'priority')})
+        if version == FORMAT:
+            revision = 1
+            for comment in row.get('comments', []):
+                body = imported_comment(comment)
+                source_scope = (original, comment['comment_revision'])
+                if len(body.encode('utf-8')) > 2048:
+                    archived_comments.append({'work_id': original, 'comment_revision': comment['comment_revision'],
+                                              'reason': 'attributed_body_exceeds_2048_bytes'})
+                    continue
+                add('work.comment', source_scope, work, {'body': body}, str(revision))
+                steps[-1]['source_author'] = {'principal_id': comment['principal_id'],
+                                              'identity_ship': comment['identity_ship'],
+                                              'accepted_at_ms': comment['accepted_at_ms']}
+                revision += 1
     for row in sorted(data['containers'], key=lambda item: item['resource_id']):
         original = row['resource_id']
         import_title(row['title'])
@@ -182,10 +215,16 @@ def plan_commands(files, artifact_digest, origin, target, seed, title, key):
     if any('assignee_principal_id' in row for row in data['work']):
         import_changes.append('Work assignments stay in the archive. Review project access and reassign Work in the destination.')
     if any('comments' in row for row in data['work']):
-        import_changes.append('Work discussions and their original authors stay in the archive.')
-    plan = {'protocol': 'stead.portable-import-plan/1', 'artifact_sha256': artifact_digest,
+        if version == LEGACY_FORMAT:
+            import_changes.append('Work discussions and their original authors stay in the archive.')
+        else:
+            import_changes.append('Imported comments show the source author and time in the text. The target '
+                                  'records the importing member and a new acceptance time.')
+    plan = {'protocol': version, 'artifact_sha256': artifact_digest,
             **destination, 'steps': steps,
             'losses': {'source_omissions': portable.LOSSES['omitted'], 'import_changes': import_changes}}
+    if archived_comments:
+        plan['losses']['archive_only_comments'] = archived_comments
     return plan, commands
 
 
@@ -220,7 +259,7 @@ def load_plan(archive, path, digest):
     portable.require(portable.match(portable.TOKEN, plan['artifact_sha256']), 'import-archive-digest')
     files, _ = portable.verify(archive, expected_sha256=plan['artifact_sha256'])
     expected, commands = plan_commands(files, plan['artifact_sha256'], plan['origin'], plan['target'],
-                                       plan['seed'], plan['title'], plan['project_key'])
+                                       plan['seed'], plan['title'], plan['project_key'], plan['protocol'])
     portable.require(raw == portable.encoded(expected), 'import-plan-reconstruction')
     return plan, commands
 
@@ -233,7 +272,7 @@ def checked_receipt(value, command, target, sessions):
     expected = {'protocol': 'stead.receipt/3', 'status': 'accepted', 'request_id': command['request_id'],
                 'canonical_sha256': command_digest(command), 'project_id': command['project_id'],
                 'resource_id': command['resource_id'], 'operation': operation, 'resource_kind': kind,
-                'container_id': container, 'resource_revision': '1', 'authority_epoch': '1',
+                'container_id': container, 'resource_revision': str(int(command['expected_revision']) + 1), 'authority_epoch': '1',
                 'principal_id': target['principal_id'], 'binding_id': target['binding_id'],
                 'binding_revision': target['binding_revision'], 'identity_ship': target['identity_ship'],
                 'authentication': 'native-approved-browser/1', 'authentication_strength': 'native-approved-browser',
@@ -415,12 +454,28 @@ def verify_import(home, plan, digest, commands, progress):
                             ('document.save', 'documents'), ('relation.create', 'relations')):
         maps[operation] = {row['resource_id']: row for row in data[name]}
         portable.require(len(maps[operation]) == len(data[name]), 'import-unexpected-records')
+    discussions = {}
+    for command in commands:
+        if command['operation'] == 'work.comment':
+            discussions.setdefault(command['resource_id'], []).append(command)
     for command in commands[1:]:
-        rows = maps[command['operation']]
-        row = rows.pop(command['resource_id'], {})
-        portable.require(row.get('resource_revision') == '1'
+        operation = command['operation']
+        if operation == 'work.comment':
+            continue
+        row = maps[operation].pop(command['resource_id'], {})
+        expected_comments = discussions.get(command['resource_id'], [])
+        portable.require(row.get('resource_revision') == str(1 + len(expected_comments))
                          and all(row.get(key) == value for key, value in command['payload'].items()),
                          'import-readback-mismatch')
+        if operation == 'work.create':
+            actual = row.get('comments', [])
+            portable.require(len(actual) == len(expected_comments), 'import-discussion-count')
+            for observed, expected in zip(actual, expected_comments):
+                portable.require(observed['body'] == expected['payload']['body']
+                                 and observed['comment_revision'] == str(int(expected['expected_revision']) + 1)
+                                 and observed['principal_id'] == plan['target']['principal_id']
+                                 and observed['identity_ship'] == plan['target']['identity_ship'],
+                                 'import-discussion-mismatch')
     portable.require(not any(maps.values()), 'import-unexpected-records')
     check_project(home, plan)
     return {'phase': 'verified', 'project_id': plan['project_id'], 'accepted': len(state['accepted']),
