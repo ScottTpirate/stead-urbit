@@ -196,6 +196,41 @@ class PortableRecovery(unittest.TestCase):
         with self.assertRaisesRegex(P.RecoveryError, 'work-comment-order'):
             P.validate_data(data)
 
+    def test_work_contract_metadata_roundtrips_with_legacy_records(self):
+        source = Source(2)
+        contract = {'execution_contract_protocol': 'stead.work-contract/1',
+                    'execution_contract_revision': '2', 'execution_contract_digest': 'a' * 64}
+        source.work[0].update(contract)
+        data, _, _ = self.publish(source)
+        files, checked = P.verify(self.bundle)
+        rows = json.loads(files['records.json'])['work']
+        self.assertEqual({key: rows[0][key] for key in contract}, contract)
+        self.assertFalse(set(contract).intersection(rows[1]))
+        self.assertEqual(checked['authentication'], 'not-independently-verifiable-offline')
+        self.assertEqual(rows, data['work'])
+
+    def test_work_contract_metadata_rejects_partial_or_malformed_pins(self):
+        data, _ = self.capture()
+        row = data['work'][0]
+        contract = {'execution_contract_protocol': 'stead.work-contract/1',
+                    'execution_contract_revision': '2', 'execution_contract_digest': 'a' * 64}
+        for missing in contract:
+            with self.subTest(missing=missing):
+                row.update(contract)
+                row.pop(missing)
+                with self.assertRaisesRegex(P.RecoveryError, 'work-contract'):
+                    P.validate_data(data)
+        row.update(contract)
+        for key, value in (('execution_contract_protocol', 'stead.work-contract/2'),
+                           ('execution_contract_revision', '02'),
+                           ('execution_contract_revision', '0'),
+                           ('execution_contract_digest', 'A' * 64)):
+            with self.subTest(key=key, value=value):
+                row[key] = value
+                with self.assertRaises(P.RecoveryError):
+                    P.validate_data(data)
+                row.update(contract)
+
     def test_queries_never_leave_requested_project_or_call_mutations(self):
         source = Source()
         self.capture(source)
