@@ -4,8 +4,10 @@ import { createRoot } from 'react-dom/client';
 import { HomeClient, HomeError, UUID, command, type CodeReviewKey, type Command, type Fields, type HomeWatch, type RepositoryAccess, type Query, type Row, type UpdateScope, type ViewKind } from './api';
 import { Button, EmptyState, LoadingState, Surface, TextField } from './primitives';
 import { SupportDetails } from './SupportDetails';
+import { AppearanceControl } from './Appearance';
 import { AcceptedTime } from './AcceptedTime';
 import { WorkQuickActions, assigneeName, workStatuses, type WorkMenu, type WorkProperty } from './WorkQuickActions';
+import {PriorityMark} from './WorkMarks';
 import { CodeRepository } from './CodeRepository';
 import { CodePack } from './CodePack';
 import { WorkCodeLinks } from './WorkCodeLinks';
@@ -97,6 +99,9 @@ function App() {
   const [project, setProject] = useState<Row | null>(null);
   const [workspaceView,setWorkspaceView]=useState<'my-work'|'search'|null>(null);
   const [workspaceSupported,setWorkspaceSupported]=useState(false);
+  const [navigationOpen, setNavigationOpen] = useState<boolean | null>(null);
+  const navigationButton = useRef<HTMLButtonElement>(null);
+  const showNavigation = navigationOpen ?? (!project && !workspaceView);
   const [carrierMode, setCarrierMode] = useState<ProductCarrierMode>({kind: 'unsupported'});
   const capabilityRead = useRef<object | undefined>(undefined);
   const productActive = carrierMode.kind === 'native-human-doc';
@@ -310,11 +315,12 @@ function App() {
     if (busy || loading || !restore) return;
     quickActionFocus.current = null;
     if (document.activeElement !== document.body) return;
-    if (restore.trigger.isConnected) restore.trigger.focus();
-    else {
-      const row = document.querySelector(`[data-work-row="${CSS.escape(restore.row)}"]`);
-      row?.querySelector<HTMLButtonElement>(`[data-work-control="${CSS.escape(restore.control)}"]`)?.focus();
-    }
+    const target = restore.trigger.isConnected ? restore.trigger : document
+      .querySelector(`[data-work-row="${CSS.escape(restore.row)}"]`)
+      ?.querySelector<HTMLButtonElement>(`[data-work-control="${CSS.escape(restore.control)}"]`);
+    const group = target?.closest<HTMLDetailsElement>('details.work-group');
+    if (group) group.open = true;
+    target?.focus();
   }, [busy, loading, rows]);
   const actionBusy = useRef(false);
   async function action(callback: () => Promise<unknown>, describeFailure = explain) {
@@ -585,6 +591,7 @@ function App() {
     reloadScope();
   }
   function enterProject(row: Row, nextTab: ViewKind) {
+    setNavigationOpen(null);
     setLinkedPage(null);
     if (row.project_id !== project?.project_id) {
       repositoryGeneration.current++;
@@ -631,6 +638,7 @@ function App() {
     syncResourceAddress(projectId ? {kind:'work',project:projectId,item} : undefined,replace);
   }
   function enterWorkspace(view:'my-work'|'search'|null) {
+    setNavigationOpen(null);
     pendingDocumentFocus.current=null;
     activeQuery.current++;repositoryGeneration.current++;pendingNavigation.current=null;displayedSnapshot.current=null;
     setProject(null);setWorkspaceView(view);setRepository(null);setShowRepository(false);clearCodeSelection();setLoading(false);
@@ -1093,9 +1101,10 @@ function App() {
   }
   function workProperty(row: Row, property: WorkProperty, title: string, surface = 'list') {
     const value = row[property] ?? '';
-    const label = property === 'assignee' ? assigneeName(row) : property === 'status' ? workStatuses.get(value) ?? (value || 'No status') : value === 'none' || !value ? 'No priority' : value;
+    const label = property === 'assignee' ? assigneeName(row) : property === 'status' ? workStatuses.get(value) ?? (value || 'No status') : priorityLabel(value || 'none');
     const marker = property === 'status' ? <span className="status-marker" data-status={value} aria-hidden="true"/>
-      : property === 'assignee' ? <span className="work-person-mark" aria-hidden="true">{row.assignee_display_name?.trim().charAt(0).toUpperCase() || '–'}</span> : null;
+      : property === 'assignee' ? <span className="work-person-mark" data-assigned={!!row.assignee_principal_id} aria-hidden="true">{row.assignee_display_name?.trim().charAt(0).toUpperCase()}</span>
+      : <PriorityMark priority={value}/>;
     const text = <span className="work-property-label">{label}</span>;
     const className = `work-property work-${property}`;
     if (!canEdit) return <span className={className} title={label}>{marker}{text}</span>;
@@ -1186,6 +1195,7 @@ function App() {
         }
       } : undefined}>
       <div className="resource-summary">
+        {inWork && workProperty(row, 'status', title ?? 'work item')}
         {!inWork && !event && <span className="row-kind">{row.kind === 'document' ? 'Page' : row.kind ?? row.type ?? tab}</span>}
         <h2>{inWork ? <button className="work-title" data-work-control="title" disabled={locked} aria-expanded={work?.resource_id === row.resource_id} aria-controls="work-detail-panel" aria-keyshortcuts={canEdit ? 'S A P Shift+F10' : 'Shift+F10'} onClick={event => { const trigger = event.currentTarget; void action(() => openWork(row, trigger), explainConnection); }}>{title}</button>
           : tab === 'documents' && row.kind === 'document' ? <button type="button" className="document-title" disabled={locked}
@@ -1198,13 +1208,12 @@ function App() {
           <details><summary>Details</summary><dl>{event.details.map(detail=><div key={detail.label}><dt>{detail.label}</dt><dd>{detail.value}</dd></div>)}</dl></details></>}
       </div>
       {inWork && <div className="work-properties">
-        {workProperty(row, 'status', title ?? 'work item')}
         {workProperty(row, 'priority', title ?? 'work item')}
         {workProperty(row, 'assignee', title ?? 'work item')}
       </div>}
       <div className="actions row-actions">
         {inWork && <button type="button" className="work-property work-overflow" data-work-control="actions" aria-label={`Actions for ${title}`} aria-haspopup="dialog" disabled={locked}
-          onClick={event => showWorkMenu(row, 'actions', event.currentTarget)}><span aria-hidden="true">•••</span></button>}
+          onClick={event => showWorkMenu(row, 'actions', event.currentTarget)}><Icon name="ellipsis"/></button>}
         {canEdit && project && tab === 'relations' && <ActionMenu label={`Actions for ${title}`} disabled={locked}><Button variant="quiet" disabled={locked} onClick={() => setConfirmation({
           label: 'this link',
           command: command(project.project_id!, row.resource_id!, row.resource_revision!, project.authority_epoch!, 'relation.delete', {}),
@@ -1240,15 +1249,16 @@ function App() {
       const group = workGroups.get(status);
       if (!group) return null;
       const label = workStatuses.get(status) ?? status;
-      return <section className="work-group" key={status} aria-label={label}>
-        <div className="work-group-heading">
-          <span className="status-marker" data-status={status} aria-hidden="true"/>
-          <h3>{label}</h3>
-          <span className="group-count" aria-label={`${group.length} items shown`}>{group.length}</span>
-        </div>
+      const terminal = status === 'done' || status === 'canceled';
+      return <details className="work-group" key={status} open={!terminal || !!titleTerm || !!workFilters.assignee || workFilters.status === status}>
+        <summary className="work-group-heading" aria-label={`${label}, ${group.length} ${group.length === 1 ? 'item' : 'items'} shown`}>
+          <Icon name="chevron-down"/>
+          <span>{label}</span>
+          <span className="group-count" aria-hidden="true">{group.length}</span>
+        </summary>
         {group.map(resourceRow)}
-      </section>;
-    })}</div> : <div className="rows">{rows.map(resourceRow)}</div>;
+      </details>;
+    })}</div> : <div className={tab === 'documents' ? 'rows doc-index' : 'rows'}>{rows.map(resourceRow)}</div>;
   const workPanelOpen = tab === 'work' && (form === 'work' || !!work);
   const formPanel = form && <Surface id={workPanelOpen ? "work-detail-panel" : undefined} className={workPanelOpen ? "creation work-detail" : "creation"} aria-labelledby="form-title"><h2 id="form-title" ref={workPanelOpen ? workEditorHeading : undefined} tabIndex={workPanelOpen ? -1 : undefined}>{form === 'project' ? 'Create a general project' : form === 'container' ? 'Create a collection' : form === 'relation' ? 'Link two resources' : form === 'publish' ? 'Publish a selected page' : work ? 'Edit work item' : 'Create work item'}</h2><form key={form + (work?.resource_id ?? '')} onSubmit={submitForm} onChange={() => setFormDirty(true)}><fieldset disabled={busy || !!pending}>
             {form !== 'relation' && form !== 'publish' && <TextField ref={form === 'work' ? workTitle : undefined} label="Title" name="title" readOnly={form === 'work' && !canEdit} defaultValue={form === 'work' ? work?.title ?? '' : ''} maxLength={200} required/>}
@@ -1281,7 +1291,7 @@ function App() {
   return <div className={identity ? 'app-shell signed-in' : 'app-shell entry-shell'}>
     <header className="topbar">{project ? <button className="brand" aria-label="Stead home" type="button" disabled={busy}
       onClick={() => void action(() => openProject(project), explainConnection)}>{brand}</button> : <span className="brand">{brand}</span>}
-      {identity && <><span className="alpha">Team alpha</span><div className="account"><span className="member-label"><span className="member-name">{identity.display_name}</span><small title={identity.identity_ship}>{identity.identity_ship}</small></span><Button variant="quiet" disabled={busy} onClick={() => void action(() => client.logout())}>Sign out</Button></div></>}</header>
+      {identity && <><span className="workspace-label">Workspace</span><div className="account"><span className="member-label"><span className="member-name">{identity.display_name}</span><small title={identity.identity_ship}>{identity.identity_ship}</small></span><Button variant="quiet" disabled={busy} onClick={() => void action(() => client.logout())}>Sign out</Button></div></>}</header>
     {!online && <div className="banner" role="status">You’re offline. Drafts stay in this tab; nothing is saved until the home confirms it.</div>}
     <main id="main">{identity ? <a className="skip-link" href="#project-content" onClick={event => {
       event.preventDefault(); document.getElementById('project-content')?.focus();
@@ -1321,7 +1331,36 @@ function App() {
       {identity && carrierMode.kind === 'unsupported' && <EmptyState title="This Home needs a supported connection" description="Check this Home’s capabilities again before continuing. Your pending requests have not been retried."
         action={<Button disabled={busy} onClick={() => void action(retryConnection, explainConnection)}>Resume this tab</Button>}/>}
       {identity && carrierMode.kind !== 'unsupported' && <div className="workspace">
-        <aside className="sidebar"><div className="space-label"><span className="space-mark" aria-hidden="true">~</span><div>Workspace{identity.home && <small>{identity.home}</small>}</div></div>{workspaceSupported&&<nav aria-label="Workspace"><button type="button" disabled={workActionsLocked} aria-current={workspaceView==='my-work'?'page':undefined} onClick={()=>openWorkspace('my-work')}>My work</button><button type="button" disabled={workActionsLocked} aria-current={workspaceView==='search'?'page':undefined} onClick={()=>openWorkspace('search')}>Search</button></nav>}<h2 className="rail-label">Projects</h2>{projects.length === 0 && <p className="muted">No projects are shared with you yet.</p>}<nav aria-label="Projects">{projects.map(row => <button disabled={busy} key={row.project_id} aria-current={project?.project_id === row.project_id ? 'page' : undefined} onClick={() => void action(() => openProject(row))}><span className="project-glyph" aria-hidden="true">◇</span><span className="project-name"><span className="project-key">{row.project_key}</span>{row.title}</span></button>)}</nav>{identity.can_create === 'yes' && <Button variant="quiet" disabled={busy || !!pending || !!form || !!editor?.dirty || currentProductDraft()} onClick={() => { setEditor(null); setWork(null); setCurrentVersion(null); setForm('project'); }}><Icon name="plus"/>New project</Button>}<p className="sidebar-note">Only projects explicitly shared with you appear here.</p></aside>
+        <aside className="sidebar" onKeyDown={event => {
+          if (event.key === 'Escape' && showNavigation && navigationButton.current?.getClientRects().length) {
+            event.preventDefault(); setNavigationOpen(false); navigationButton.current.focus();
+          }
+        }}>
+          <button className="workspace-switch" type="button" ref={navigationButton} aria-expanded={showNavigation}
+            aria-controls="workspace-navigation" onClick={() => setNavigationOpen(!showNavigation)}>
+            <span>Browse workspace</span><Icon name="chevron-down"/>
+          </button>
+          <div className="workspace-nav-items" id="workspace-navigation" data-open={showNavigation}>
+          <div className="space-label"><span className="space-mark" aria-hidden="true">~</span>
+            <div>Workspace{identity.home && <small>{identity.home}</small>}</div>
+          </div>
+          {workspaceSupported && <nav aria-label="Workspace">
+            <button type="button" disabled={workActionsLocked} aria-current={workspaceView === 'my-work' ? 'page' : undefined}
+              onClick={() => openWorkspace('my-work')}><Icon name="circle"/>My work</button>
+            <button type="button" disabled={workActionsLocked} aria-current={workspaceView === 'search' ? 'page' : undefined}
+              onClick={() => openWorkspace('search')}><Icon name="search"/>Search</button>
+          </nav>}
+          <h2 className="rail-label">Projects</h2>
+          {projects.length === 0 && <p className="muted">No projects are shared with you yet.</p>}
+          <nav aria-label="Projects">{projects.map(row => <button type="button" disabled={busy} key={row.project_id}
+            aria-current={project?.project_id === row.project_id ? 'page' : undefined} onClick={() => void action(() => openProject(row))}>
+            <span className="project-glyph" aria-hidden="true">{(row.project_key || row.title || '·').slice(0, 1)}</span>
+            <span className="project-name"><span className="project-key">{row.project_key}</span>{row.title}</span>
+          </button>)}</nav>
+          {identity.can_create === 'yes' && <Button variant="quiet" disabled={busy || !!pending || !!form || !!editor?.dirty || currentProductDraft()}
+            onClick={() => { setEditor(null); setWork(null); setCurrentVersion(null); setForm('project'); }}><Icon name="plus"/>New project</Button>}
+          </div>
+        </aside>
         <section className="content" id="project-content" data-live-updates={productActive ? 'unsupported' : updatesConnected ? 'connected' : 'unavailable'} data-refresh={productActive ? 'explicit' : 'watch'}>
           {productActive && !project && editor?.dirty && retainedDocumentScope.current && <Surface>
             <h2>Doc draft kept in this tab</h2><p>Refresh access before continuing this draft. Its text stays hidden while access is unavailable.</p>
@@ -1343,8 +1382,10 @@ function App() {
             onOpen={row=>void action(()=>openWorkspaceResource(row),explainConnection)}
             onError={failure=>{if(failure instanceof HomeError&&failure.code==='denied_or_not_found')clearViews();setError(explainConnection(failure));}}/>
             : <EmptyState title="Workspace views need a newer Home" description="Choose a project to keep working. This Home does not advertise workspace queries."/>)}
-          {!project && !workspaceView && <div className="welcome"><p className="eyebrow">START WITH WHAT MATTERS</p><h1 ref={heading} tabIndex={-1}>A clear place for your work.</h1><p>Choose a project to see its work and knowledge.</p></div>}
-          {project && <><div className="project-heading"><div><p className="eyebrow">Projects <span aria-hidden="true">/</span> {project.project_key}</p><h1 ref={heading} tabIndex={-1}>{project.title}</h1></div><span className="role-badge">{project.role}</span></div>
+          {!project && !workspaceView && <div className="welcome"><h1 ref={heading} tabIndex={-1}>Your workspace</h1><p>{projects.length ? 'Choose a project to open its Work and Docs.' : 'Shared projects will appear here when you have access.'}</p></div>}
+          {project && <><div className={tab === 'project' && !showRepository ? 'project-heading project-cover' : 'project-heading'}><div><p className="eyebrow">Projects <span aria-hidden="true">/</span> {project.project_key}</p><h1 ref={heading} tabIndex={-1}>{project.title}</h1>
+            {tab === 'project' && !showRepository && project.summary && <p className="project-summary">{project.summary}</p>}
+          </div>{project.role && <span className="role-badge"><span>Your access</span> {project.role}</span>}</div>
           <nav className="tabs" aria-label="Project views">{([['project','Overview'],['work','Work'],['documents','Docs']] as const).map(([kind,label]) => <Button disabled={busy} key={kind} variant={!showRepository && tab === kind ? 'primary' : 'quiet'} aria-current={!showRepository && tab === kind ? 'page' : undefined} onClick={() => selectProjectTab(kind)}>{label}</Button>)}
           {carrierMode.kind === 'legacy' && (repository?.status === 'ready' || externalRepository) && <Button disabled={busy || !!editor?.dirty || !!pending || !!form}
             variant={showRepository ? 'primary' : 'quiet'} aria-current={showRepository ? 'page' : undefined}
@@ -1356,15 +1397,20 @@ function App() {
           carrierMode.kind === 'legacy' && showRepository && externalRepository ? <CodePack key={`${identity.session_audit_id}/${project.project_id}/${project.authority_epoch}`} client={client} project={project.project_id!}
             principal={identity.principal_id ?? ''}
             initialProposal={selectedReview} onOpenWork={openLinkedWork} development={development}/> : <>
-          {tab === 'project' && <Surface className="project-overview"><h2>Move this project forward</h2>
-            <p>{project.summary || 'Define an outcome in Work, keep its context in Docs, and review the result together.'}</p>
-            <div className="actions"><Button variant="primary" disabled={workActionsLocked} onClick={() => selectProjectTab('work')}>Open work</Button>
-              <Button disabled={workActionsLocked} onClick={() => selectProjectTab('documents')}>Open docs</Button></div>
+          {tab === 'project' && <section className="project-overview" aria-label="Project shortcuts">
+            <div className="project-destinations">
+              <Button disabled={workActionsLocked} onClick={() => selectProjectTab('work')} aria-label="Open work">
+                <strong>Work</strong><small>Tasks, people and progress</small><span aria-hidden="true">→</span>
+              </Button>
+              <Button disabled={workActionsLocked} onClick={() => selectProjectTab('documents')} aria-label="Open docs">
+                <strong>Docs</strong><small>Collections and pages</small><span aria-hidden="true">→</span>
+              </Button>
+            </div>
             {!productActive && <details><summary>Project activity and relationships</summary><div className="actions">
               <Button variant="quiet" disabled={workActionsLocked} onClick={() => selectProjectTab('activity')}>Activity</Button>
               <Button variant="quiet" disabled={workActionsLocked} onClick={() => selectProjectTab('relations')}>Relationships</Button>
               <Button variant="quiet" disabled={workActionsLocked} onClick={() => selectProjectTab('search')}>Search this project</Button>
-            </div></details>}</Surface>}
+            </div></details>}</section>}
           {carrierMode.kind === 'legacy' && tab === 'project' && repository?.status === 'disabled' && repository.manage
             && <Button disabled={busy || !!pending || !!form} onClick={() => void action(() => loadRepository(project.project_id!, true))}>Enable Git repository</Button>}
           {productActive && tab === 'work' ? <><ProductWorkJourney key={`${productSessionKey}/${project.project_id}/${productDraftReset}`}
@@ -1390,9 +1436,9 @@ function App() {
             if (tab === 'project') void loadRepository(project.project_id!);
           }}>Refresh</Button>
           {tab === 'work' && <Button variant="quiet" disabled={workActionsLocked} aria-expanded={workFiltersOpen}
-            aria-controls="work-filters" onClick={toggleWorkFilters}>Filters{workFiltersOpen && ' ▾'}</Button>}
+            aria-controls="work-filters" onClick={toggleWorkFilters}>Filters<Icon name="chevron-down"/></Button>}
           {canEdit && tab === 'work' && <Button ref={newWorkButton} variant="primary" disabled={workActionsLocked} aria-keyshortcuts="C" title="New work item (C)"
-            onClick={startNewWork}><Icon name="plus"/>New work item</Button>}
+            onClick={startNewWork}><Icon name="plus"/>New work item<kbd className="work-shortcut" aria-hidden="true">C</kbd></Button>}
           {canEdit && tab === 'relations' && <Button variant="primary" disabled={busy || !!pending || !!form || !!editor?.dirty} onClick={() => void action(async () => { await findTargets(''); setTargetFilter(''); setForm('relation'); })}>Add link</Button>}
           {canEdit && tab === 'documents' && <><Button disabled={busy || !!pending || !!form || !!editor?.dirty} onClick={() => { setEditor(null); setWork(null); setCurrentVersion(null); setForm('container'); }}>New collection</Button>{container && <Button variant="primary" disabled={busy || loading || !!pending || !!form || !!editor?.dirty} onClick={() => { activeQuery.current++; const id = newId(); setWork(null); setCurrentVersion(null); setEditor({ id, revision: '0', head: container.container_head ?? '', dirty: true, text: `---\nid: ${id}\ntype: page\nstate: ${draftMode ? 'draft' : 'published'}\n---\n# Untitled\n` }); }}>New page</Button>}</>}
           </div></div>
@@ -1485,7 +1531,7 @@ function App() {
         void action(() => updateWorkProperty(workMenu.row, property, value), failure =>
         failure instanceof HomeError && failure.code === 'revision_conflict'
           ? 'This item changed. Refresh it and choose the new value again.' : explain(failure)); }}/>}
-    <footer><div>{identity && 'One home for work and knowledge.'}<SupportDetails code={diagnostic} requestId={pending?.request_id}/></div>{identity && <span>Local changes become shared only after the home accepts them.</span>}</footer>
+    <footer><SupportDetails code={diagnostic} requestId={pending?.request_id}/>{identity && <AppearanceControl/>}</footer>
   </div>;
 }
 const root = document.getElementById('root');

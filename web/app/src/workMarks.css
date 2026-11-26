@@ -1,0 +1,22 @@
+.work-priority-mark {
+  display: inline-flex;
+  align-items: end;
+  justify-content: center;
+  flex: 0 0 14px;
+  height: 14px;
+  gap: 2px;
+  color: var(--muted);
+}
+.work-priority-mark i {
+  width: 3px;
+  height: 4px;
+  border-radius: 1px;
+  background: currentColor;
+}
+.work-priority-mark i:nth-child(2) { height: 8px; }
+.work-priority-mark i:nth-child(3) { height: 12px; }
+.work-priority-mark[data-priority="urgent"] { color: var(--warning); }
+.work-priority-mark[data-priority="low"] i:nth-child(n + 2),
+.work-priority-mark[data-priority="medium"] i:last-child { opacity: .28; }
+.work-priority-mark:is([data-priority=""], [data-priority="none"]) { align-items: center; }
+.work-priority-mark:is([data-priority=""], [data-priority="none"]) i { width: 2px; height: 2px; }

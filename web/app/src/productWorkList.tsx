@@ -1,6 +1,6 @@
 import {useEffect, useId, useRef} from 'react';
 import {Button, OutcomeState} from './primitives';
-import {Icon} from './Icon';
+import {PriorityMark} from './WorkMarks';
 import {productPriorityLabels, productStatusLabels} from './productWorkFields';
 import type {ProductWorkPreview} from './productProtocol';
 import './productWorkList.css';
@@ -50,12 +50,18 @@ function WorkPage({projectId, rows, locked, onOpen, onRefresh}: ProductWorkListP
   const list = (group: Group) => <ul className="product-journey-list product-work-page-rows" aria-labelledby={`${id}-${group.status}`}>
     {group.rows.map(row => <li key={row.resource_id}><button type="button" className="product-work-page-row" disabled={locked}
       onClick={() => { if (!locked) onOpen(row.resource_id); }}>
-      <span className="product-work-page-status"><Icon name={row.status === 'done' ? 'check' : row.status === 'canceled' ? 'x'
-        : row.status === 'legacy-blocked' ? 'circle-exclamation-point' : 'circle'}/><span>{productStatusLabels[row.status]}</span></span>
-      <span className="product-work-page-title">{row.title}</span>
-      <span className="product-work-page-person"><span className="product-work-page-label">Owner: </span>{row.owner_display_name || (row.owner_principal_id ? 'Project member' : 'Unassigned')}</span>
-      <span className="product-work-page-person"><span className="product-work-page-label">Working on it: </span>{row.worker_display_name || (row.worker_principal_id ? 'Project member' : 'Unassigned')}</span>
-      <span className="product-work-page-priority"><span className="product-work-page-label">Priority: </span>{productPriorityLabels[row.priority]}</span>
+      <span className="product-work-page-subject">
+        <span className="product-work-page-status" title={productStatusLabels[row.status]}>
+          <span className="status-marker" data-status={row.status} aria-hidden="true"/>
+          <span className="stead-visually-hidden">{productStatusLabels[row.status]}</span>
+        </span>
+        <span className="product-work-page-title">{row.title}</span>
+      </span>
+      <span className="product-work-page-properties">
+        <span className="product-work-page-person"><span className="product-work-page-label">Owner: </span>{row.owner_display_name || (row.owner_principal_id ? 'Project member' : 'Unassigned')}</span>
+        <span className="product-work-page-person"><span className="product-work-page-label">Working on it: </span>{row.worker_display_name || (row.worker_principal_id ? 'Project member' : 'Unassigned')}</span>
+        <span className="product-work-page-priority"><PriorityMark priority={row.priority}/><span className="product-work-page-label">Priority: </span>{productPriorityLabels[row.priority]}</span>
+      </span>
     </button></li>)}
   </ul>;
   return <div className="product-work-page">
