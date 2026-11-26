@@ -936,7 +936,13 @@ packages:
   - Unsupported operations fail clearly and are accurately surfaced in UI.
   - Home/store restart and lost response reconcile without duplicate/ref-corrupt acceptance.
   evidence: Actual Git/native profile-specific conformance and restore evidence; exact excluded features listed.
-  implementation_status: planned
+  implementation_status: in_progress
+  current_progress: >-
+    The candidate reads typed Home repository access for Work and Code and correlates it with the external snapshot.
+    On the existing Lightsail release a renewed member completed stock Git ref discovery, a bare clone, full strict
+    fsck and fetch. Credential revocation denied the next request. Concurrent updates, interrupted writes and
+    recovery on the selected write profile remain open.
+  evidence_record: docs/urbit/evidence/2026-11-25/existing-member-git-read.json
   parent_issue_numbers:
   - 11
   - 12

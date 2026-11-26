@@ -2,6 +2,20 @@ import { newId, commandDigest } from './protocol';
 // Public HTTPS client. No owner cookies, channels, scries or administrative APIs.
 export type Fields = Record<string, string>;
 export type Row = Fields;
+export type RepositoryStatus = 'disabled' | 'ready' | 'external-staged' | 'external';
+export type RepositoryAccess = {status: RepositoryStatus; writable: boolean; manage: boolean};
+export type ExternalRepositoryRead = {snapshot: Fields; access: RepositoryAccess; atCapacity: boolean};
+
+export function repositoryAccess(value: Fields): RepositoryAccess {
+  const status = value.status;
+  if (value.protocol !== 'stead.code/1'
+      || (status !== 'disabled' && status !== 'ready' && status !== 'external-staged' && status !== 'external')
+      || (value.write !== 'yes' && value.write !== 'no') || (value.manage !== 'yes' && value.manage !== 'no')) {
+    throw new HomeError('invalid_response');
+  }
+  return {status, writable: (status === 'ready' || status === 'external') && value.write === 'yes',
+    manage: value.manage === 'yes'};
+}
 export type CodeReviewKey = { proposal_id: string; revision: string };
 export type GitBrowseView = 'tree' | 'file';
 export type GitBrowseResult = { commit: string } & (
@@ -354,6 +368,16 @@ export class HomeClient {
         : text !== undefined)) throw new HomeError('invalid_response');
     return { status: 'file', commit, preview, bytes, ...(typeof text === 'string' ? {text} : {}) };
   }
+  async repositoryAccess(project: string): Promise<RepositoryAccess> {
+    return repositoryAccess(await this.code(project, {action: 'status'}));
+  }
+  async externalRepository(project: string): Promise<ExternalRepositoryRead> {
+    const [snapshot, access] = await Promise.all([this.code(project, {action: 'pack-view'}), this.repositoryAccess(project)]);
+    if ((access.status !== 'external' && access.status !== 'external-staged') || snapshot.status !== access.status) {
+      throw new HomeError('repository_changed');
+    }
+    return {snapshot, access, atCapacity: snapshot.generation_limit !== undefined && snapshot.generation === snapshot.generation_limit};
+  }
   async code(project_id: string, input: CodeInput): Promise<Fields> {
     const value = fields(await this.post('/stead/api/code', { protocol: 'stead.code/1', project_id, ...input }, true,
       false, false, EXTERNAL_ACTIONS.has(input.action) ? input.action : ''));
@@ -373,6 +397,7 @@ export class HomeClient {
         throw new HomeError('invalid_response');
       }
     }
+    if (input.action === 'revoke' && value.status !== 'revoked') throw new HomeError('invalid_response');
     if (input.action === 'issue' && (value.status !== 'issued' || !TOKEN.test(value.handle ?? '')
       || !TOKEN.test(value.bearer ?? '') || !DECIMAL.test(value.expires_at_ms ?? ''))) throw new HomeError('invalid_response');
     if (input.action === 'proposal' && (value.status !== 'proposal' || value.proposal_id !== input.proposal_id

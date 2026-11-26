@@ -1,7 +1,7 @@
 import { newId } from './protocol';
 import { StrictMode, Suspense, lazy, useEffect, useRef, useState, type FormEvent, type ReactNode } from 'react';
 import { createRoot } from 'react-dom/client';
-import { HomeClient, HomeError, UUID, command, type CodeReviewKey, type Command, type Fields, type HomeWatch, type Query, type Row, type UpdateScope, type ViewKind } from './api';
+import { HomeClient, HomeError, UUID, command, type CodeReviewKey, type Command, type Fields, type HomeWatch, type RepositoryAccess, type Query, type Row, type UpdateScope, type ViewKind } from './api';
 import { Button, EmptyState, LoadingState, Surface, TextField } from './primitives';
 import { SupportDetails } from './SupportDetails';
 import { AcceptedTime } from './AcceptedTime';
@@ -80,7 +80,7 @@ function App() {
   const [containers, setContainers] = useState<Row[]>([]);
   const [container, setContainer] = useState<Row | null>(null);
   const [tab, setTab] = useState<ViewKind>('project');
-  const [repository, setRepository] = useState<Fields | null>(null);
+  const [repository, setRepository] = useState<RepositoryAccess | null>(null);
   const externalRepository = repository?.status === 'external' || repository?.status === 'external-staged';
   const [showRepository, setShowRepository] = useState(false);
   const [selectedReview, setSelectedReview] = useState<string>();
@@ -163,7 +163,7 @@ function App() {
         await client.code(projectId, { action: 'create' });
         if (generation !== repositoryGeneration.current) return;
       }
-      const value = await client.code(projectId, { action: 'status' });
+      const value = await client.repositoryAccess(projectId);
       if (generation !== repositoryGeneration.current) return;
       setRepository(value);
       if (enable) setShowRepository(true);
@@ -998,13 +998,13 @@ function App() {
             variant={showRepository ? 'primary' : 'quiet'} aria-current={showRepository ? 'page' : undefined}
             onClick={() => { syncWorkAddress(); clearCodeSelection(); setShowRepository(true); }}>Code</Button>}</nav>
           {showRepository && repository?.status === 'ready' ? <CodeRepository key={`${identity.session_audit_id}/${project.project_id}/${project.authority_epoch}`}
-            client={client} project={project.project_id!} writable={repository.write === 'yes'}
-            manage={repository.manage === 'yes'} principal={identity.principal_id ?? ''}
+            client={client} project={project.project_id!} writable={repository.writable}
+            manage={repository.manage} principal={identity.principal_id ?? ''}
             initialProposal={inlineReview} onOpenWork={openLinkedWork}/> :
           showRepository && externalRepository ? <CodePack key={`${identity.session_audit_id}/${project.project_id}/${project.authority_epoch}`} client={client} project={project.project_id!}
-            manage={repository?.manage === 'yes'} writable={repository?.write === 'yes'} principal={identity.principal_id ?? ''}
+            principal={identity.principal_id ?? ''}
             initialProposal={selectedReview} onOpenWork={openLinkedWork} development={development}/> : <>
-          {tab === 'project' && repository?.status === 'disabled' && repository.manage === 'yes'
+          {tab === 'project' && repository?.status === 'disabled' && repository.manage
             && <Button disabled={busy || !!pending || !!form} onClick={() => void action(() => loadRepository(project.project_id!, true))}>Enable Git repository</Button>}
           <div className="toolbar"><div className="view-heading">{tab === 'work' && <h2>Work items</h2>}{tab === 'documents' && <label>Collection <select aria-label="Collection" disabled={busy} value={container?.container_id ?? ''} onChange={event => { const selected = containers.find(row => row.container_id === event.target.value) ?? null; if (busy || editor?.dirty || pending || form) { setError('Finish or discard the current draft first.'); return; } activeQuery.current++; setContainer(selected); setEditor(null); setWork(null); setCurrentVersion(null); setConfirmation(null); setForm(''); setRows([]); setCursor(''); reloadScope(); }}><option value="">Choose a collection</option>{containers.map(row => <option key={row.container_id} value={row.container_id}>{row.title} · {row.visibility === 'private' ? 'Private drafts' : 'Shared'}</option>)}</select></label>}{tab === 'search' && <form className="search" onSubmit={submitSearch}><TextField label="Search this project" value={searchDraft} onChange={event => setSearchDraft(event.target.value)} maxLength={128}/><Button type="submit" disabled={busy}>Search</Button></form>}</div><div className="actions">
           <Button variant="quiet" disabled={busy || loading} onClick={() => {
@@ -1058,11 +1058,11 @@ function App() {
                 : <p className="work-description">{work.description || 'No description yet.'}</p>}
               {repository?.status === 'external' && work.resource_id && <WorkDevelopment key={`development/${workScope}`}
                 client={client} project={project.project_id!} work={{id: work.resource_id, title: work.title ?? ''}}
-                writable={repository.write === 'yes'} onOpenCode={openDevelopment}/>}
+                writable={repository.writable} onOpenCode={openDevelopment}/>}
               {repository?.status === 'external' && work.resource_id && <WorkCodeLinks key={`reviews/${workScope}`}
                 client={client} project={project.project_id!} work={work.resource_id} onOpenReview={openLinkedReview}/>}
               {repository?.status === 'ready' && work.resource_id && <WorkDelegations key={`delegations/${workScope}`}
-                client={client} project={project.project_id!} work={work} manage={repository.manage === 'yes'}
+                client={client} project={project.project_id!} work={work} manage={repository.manage}
                 locked={workActionsLocked} onReview={openInlineReview}/>}
               {work.resource_id && <WorkContext key={`context/${workScope}`} client={client} project={project.project_id!} work={work.resource_id}
                 writable={!!canEdit} locked={workActionsLocked} viewRevision={workContextRevision}

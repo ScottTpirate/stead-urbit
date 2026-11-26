@@ -1,0 +1,35 @@
+{
+  "profile": "Existing private Lightsail pilot, original accepted external Git repository",
+  "release": "a0e90ef29389077d453ec2a775cd8fd69f711727",
+  "tested_at_utc": "2026-11-26",
+  "granted_access": "temporary read-only device credential for the renewed member",
+  "transport": "stock Git via private HTTPS with the pilot CA",
+  "observations": [
+    {
+      "bare_clone": "pass",
+      "head": "3ba8e4304e8d73d948905acdb2f1e1cfb1dff5af",
+      "full_strict_fsck": "pass",
+      "fetch": "pass"
+    },
+    {
+      "temporary_read_credential_revoked": true
+    },
+    {
+      "git": "git version 2.43.0",
+      "refs": [
+        [
+          "3ba8e4304e8d73d948905acdb2f1e1cfb1dff5af",
+          "HEAD"
+        ],
+        [
+          "3ba8e4304e8d73d948905acdb2f1e1cfb1dff5af",
+          "refs/heads/main"
+        ]
+      ],
+      "revoked_access_denied": true
+    }
+  ],
+  "snapshot": "2d0565c884124cdbf5eacccc3626cf3cc72d5c0fda1fb295e70a6ce90fe782ca",
+  "receipt_sha256": "1483d73aad199a6d7e6a5c475c639f8413b166805a1cc37c35450d49d3aafcbf",
+  "writes_exercised": false
+}

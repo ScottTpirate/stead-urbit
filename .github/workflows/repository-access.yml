@@ -1,0 +1,41 @@
+name: Repository access
+on:
+  pull_request:
+    paths:
+      - web/app/src/api.ts
+      - web/app/src/main.tsx
+      - web/app/src/CodePack.tsx
+      - web/app/src/CodeRepository.tsx
+      - web/app/src/WorkDevelopment.tsx
+      - web/app/tests/repository-access.test.ts
+      - web/app/tests/rendered.mjs
+      - web/app/package*.json
+      - .github/workflows/repository-access.yml
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  repository:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 12
+    defaults:
+      run:
+        working-directory: web/app
+    steps:
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020
+        with:
+          node-version: '24.21.0'
+          package-manager-cache: false
+      - run: npm ci --ignore-scripts --no-audit --no-fund
+      - run: npm run check && npm run build
+      - name: Verify authority and credential responses
+        run: |
+          ./node_modules/.bin/esbuild tests/repository-access.test.ts --bundle --platform=node --format=esm --outfile="$RUNNER_TEMP/repository-access.mjs"
+          node --test "$RUNNER_TEMP/repository-access.mjs"
+      - run: ./node_modules/.bin/playwright install firefox --with-deps
+      - name: Exercise inline Code, staged and accepted snapshots, and Work branches
+        run: |
+          node tests/rendered.mjs code-survives-reopening-project code-discovers-staged-snapshot-without-reloading code-browses-accepted-branches-and-tags code-development-work-branch-and-review
