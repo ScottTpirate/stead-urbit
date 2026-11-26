@@ -110,23 +110,33 @@ def bootstrap_ready(team, ship, call, guard):
     raise TimeoutError('Native bootstrap readiness not acknowledged')
 
 
-def run(host):
+def run(host, *, profile=None):
+    if profile not in (None, 'stead.storage-initial/1'):
+        raise ValueError('Unknown fixed configured profile')
     started = time.monotonic()
     report = {'status': 'fail', 'classification': 'local-real-configured-gall-development',
               'qualifies_phase': False, 'checks': [], 'commands': [], 'installed': {},
               'scope': 'Actual configured Gall, owned native TLS and cold restarts; browser acceptance is separate.'}
     path = Path('/state/logs') / ('team-check-' + time.strftime('%Y%m%dT%H%M%SZ', time.gmtime()) + '.json')
+    measuring = False
+    storage_module = None
+    storage_transport_bytes = 0
 
     def inputs():
-        return {'native': tree_sha(Path('/native/core/desk')), 'runner': closure(),
+        captured = {'native': tree_sha(Path('/native/core/desk')), 'runner': closure(),
                 'harness': source_sha(CODE), 'ingress': tree_sha(Path('/web-dev')),
                 'toolchain': sha('/toolchain.json'), 'native_unit_inventory': sha('/specs/phase2-pure-units.json')}
+        if profile is not None:
+            captured['storage_helper'] = sha(CODE / 'storage_workload.py')
+        return captured
 
     before = inputs()
     report['inputs_before'] = before
 
     def checkpoint(stage):
         report['stage'] = stage
+        if profile is not None and len((json.dumps(report, sort_keys=True) + '\n').encode()) > 4 * 1024 * 1024:
+            raise ValueError('Storage report exceeds existing native report bound')
         execution_policy.write_json(path, report)
 
     def check(name, condition):
@@ -146,6 +156,7 @@ def run(host):
     binary = '/runtime/' + host['LOCK']['runtime']['binary']
 
     def call(ship, mode, value=None, *, target='zod', app='stead-home', route=None, timeout=75):
+        nonlocal storage_transport_bytes
         host['execution_check']()
         raw = canonical(value) if value is not None else b''
         if route is None and mode in ('command', 'query', 'updates'):
@@ -155,11 +166,22 @@ def run(host):
             route = '/v3/result/~' + ship + '/' + binding + '/1/' + value['request_id'] + '/' + digest
         result = team_conn.run(binary, host['LIVE'] / ship / '.urb/conn.sock', mode,
                                route or '/', raw, target=target, app=app, timeout=timeout)
-        observed = {key: result[key] for key in ('stdout', 'stderr', 'response_frame_sha256',
-                    'request', 'request_frame_hex', 'response_frame_hex', 'outcome')}
-        report['commands'].append({'ship': ship, 'mode': mode, 'app': app, 'target': target,
-            'input_sha256': hashlib.sha256(raw).hexdigest(), 'input_hex': raw.hex(), 'route': route, **observed})
-        checkpoint('native-call')
+        if measuring:
+            observed = storage_module.transport_record(result, ship, mode, raw, route)
+            size = len(json.dumps(observed, sort_keys=True).encode()) + 2
+            if storage_transport_bytes + size > storage_module.MAX_TRANSPORT_BYTES:
+                report['storage_evidence_stop'] = {'input_sha256': hashlib.sha256(raw).hexdigest(),
+                    'response_frame_sha256': result['response_frame_sha256'], 'record_bytes': size}
+                raise ValueError('Fixed storage transport evidence budget')
+            storage_transport_bytes += size
+            report['commands'].append(observed)
+            # Checkpoint outside measured calls; retain exact originals once.
+        else:
+            observed = {key: result[key] for key in ('stdout', 'stderr', 'response_frame_sha256',
+                        'request', 'request_frame_hex', 'response_frame_hex', 'outcome')}
+            report['commands'].append({'ship': ship, 'mode': mode, 'app': app, 'target': target,
+                'input_sha256': hashlib.sha256(raw).hexdigest(), 'input_hex': raw.hex(), 'route': route, **observed})
+            checkpoint('native-call')
         outcome = (result.get('outcome') or {}).get('json')
         if outcome is None:
             raise RuntimeError('Native thread failed without an explicit observed outcome')
@@ -248,7 +270,7 @@ def run(host):
             host['wait_ready'](ship)
             report['installed'][ship] = native_install.install(host, ship, command, check)
             command(ship, '+stead-build-probe', '%stead-builds-pass')
-            if ship == 'zod':
+            if ship == 'zod' and profile is None:
                 pure_units()
                 command('zod', '+stead-team-contract-probe', '%stead-team-contract-basic-pass')
                 command('zod', '+stead-team-authority-probe', '%stead-team-authority-basic-pass', timeout=300)
@@ -307,6 +329,45 @@ def run(host):
               capabilities_match(capabilities, capabilities_query['request_id']))
         check('native-capabilities-unbound-sender-denied', denied(call('bud', 'query', query('capabilities')),
               'watch-ack-fail', 'stead-current-member-required'))
+        if profile == 'stead.storage-initial/1':
+            # A separate measurement job, never a replacement qualification run.
+            # All owned-fake startup/current-member/ingress admission above is real.
+            import storage_workload
+            storage_module = storage_workload
+            check('storage-loaded-helper-source', Path(storage_workload.__file__).resolve() == CODE / 'storage_workload.py'
+                  and sha(CODE / 'storage_workload.py') == before['storage_helper'])
+            report.update(classification='disposable-configured-native-storage-baseline',
+                scope='Fixed2projects/64Work/16Docs/256comments/64Docedits; command/query3 round trips only')
+            report['storage_source_sha256'] = sha(CODE / 'storage_workload.py')
+            def storage_checkpoint(value):
+                report['storage'] = value
+                checkpoint('storage-workload')
+            measuring = True
+            try:
+                storage_workload.run(call=call, config=config, guard=host['execution_check'],
+                    sample=lambda: storage_workload.host_sample(host), checkpoint=storage_checkpoint)
+            finally:
+                measuring = False
+                report['storage_transport_bytes'] = storage_transport_bytes
+            team.block('zod')
+            command('zod', '|rein %base [%.n %stead-home]')
+            deadline = time.monotonic() + 60
+            while command('zod', '.^(? %gu /=stead-home=/$)').strip() != '%.n':
+                host['execution_check']()
+                if time.monotonic() >= deadline:
+                    raise TimeoutError('Storage snapshot suspension deadline')
+                time.sleep(.1)
+            observed = command('zod', '+stead-storage-observation', timeout=60)
+            report['storage']['native_storage'] = storage_workload.native_observation(observed)
+            report['storage']['generator_sha256'] = sha('/native/core/desk/gen/stead-storage-observation.hoon')
+            report['inputs_after'] = inputs()
+            check('storage-exact-inputs-unchanged', before == report['inputs_after'])
+            host['execution_check']()
+            report.update(status='pass', elapsed_seconds=round(time.monotonic() - started, 3))
+            checkpoint('completed')
+            return {key: report[key] for key in ('status', 'classification', 'qualifies_phase', 'scope', 'elapsed_seconds')} | {
+                'error': None, 'checks_passed': sum(row['passed'] for row in report['checks']),
+                'evidence_file': '.piers/fakes/logs/' + path.name}
         create = mutation('project.create', uid(1), 0, {'organization_id': uid(5), 'owning_team_id': uid(6), 'title': 'Garden α', 'project_key': 'GARDEN', 'preset': 'general'})
         for mode in ('command', 'query', 'updates'):
             domain = {'command': 'stead.command/3', 'query': 'stead.query/3', 'updates': 'stead.updates/3'}[mode]
