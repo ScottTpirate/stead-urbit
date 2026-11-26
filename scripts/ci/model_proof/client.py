@@ -18,12 +18,13 @@ import stat
 import sys
 import time
 
-SOURCE = Path('/input/model_connections.py')
+INPUT = Path('/input')
 SOURCE_SHA = '6f65a2d6c0dcb666c6ed621f914dc8392b01637d488f4a1c4d33fb043cdb5400'
 OUTPUT = Path('/output/client')
 PORT = 8088
 MODEL = 'qwen2.5-1.5b-stead-compat2'
 MAX_RESPONSE = 32768
+SUPPORT = {'model_connections.py': {'bytes': 22885, 'sha256': '6f65a2d6c0dcb666c6ed621f914dc8392b01637d488f4a1c4d33fb043cdb5400'}, 'model_doc_replacement.py': {'bytes': 4202, 'sha256': '4786f6782a7c76ebd11dcfc73259597215dd5dad8318d088fdb7f7263b85f619'}}
 SOURCE_UID = 65534  # Root outside the one-UID worker user namespace is unmapped.
 DOCUMENT_ID = '00000000-0000-7000-8000-000000000008'
 HEADER = '---\nid: ' + DOCUMENT_ID + '\ntype: page\nstate: published\n---\n'
@@ -43,20 +44,40 @@ def revision_context():
             'markdown': SOURCE_MARKDOWN, 'task': TASK, 'repositories': []}
 
 
-def prepare_revision(model, spec, scope):
-    """Use the ordinary provider-neutral request API; no completed edit is supplied."""
+def target():
+    context = revision_context()
+    return {'kind': 'document', **{field: context[field] for field in
+        ('project_id', 'collection_id', 'document_id', 'expected_revision', 'base_markdown_sha256')}}
+
+
+def prepare_revision(model, replacement, spec, scope):
     context = revision_context()
     scope = dict(scope, context_digest=sha(canonical(context)))
-    registry = [{'tool_id': uid(6), 'revision': '1', 'name': 'propose_doc_update',
-                 'description': 'Propose the complete edited Markdown for review. Does not save it.',
-                 'arguments': {'markdown': '1024'}}]
-    instructions = ('You propose document edits for a reviewer. Use the supplied '
-                    'propose_doc_update function exactly once with the complete Markdown. '
-                    'Do not claim that any document was saved or accepted.')
-    messages = [{'role': 'user', 'content': 'Revise this existing document in a no-Code project. '
-                 'The JSON below contains the task and original document, not the completed edit. '
+    tool = replacement.replacement_tool(target(), '1024')
+    instructions = ('Propose one edit for review by calling propose_doc_replacement exactly once. '
+                    'Use old_text for the original weekday and new_text for the new weekday. '
+                    'Only the reviewer can accept the edit.')
+    messages = [{'role': 'user', 'content': 'Read the original document and follow its editing task. '
                  + canonical(context).decode()}]
-    return model.prepare_chat(spec, scope, '1', instructions, messages, registry)
+    return model.prepare_chat(spec, scope, '1', instructions, messages, [tool])
+
+
+def load_support(directory):
+    modules = {}
+    for filename, expected in SUPPORT.items():
+        path = directory / filename
+        info = path.lstat()
+        require(stat.S_ISREG(info.st_mode) and info.st_uid == SOURCE_UID and info.st_nlink == 1
+                and not info.st_mode & 0o022 and info.st_size == expected['bytes'])
+        raw = path.read_bytes()
+        require(len(raw) == expected['bytes'] and sha(raw) == expected['sha256'])
+        name = path.stem
+        module_spec = importlib.util.spec_from_file_location(name, path)
+        module = importlib.util.module_from_spec(module_spec)
+        sys.modules[name] = module
+        exec(compile(raw, str(path), 'exec'), module.__dict__)
+        modules[name] = module
+    return modules['model_connections'], modules['model_doc_replacement']
 
 
 def assess_revision(markdown):
@@ -156,7 +177,7 @@ def uid(number):
 
 def connection_and_scope(model):
     value = {'protocol': 'stead.model-connection/1', 'connection_id': uid(1),
-             'revision': '2', 'display_name': 'Isolated Qwen Doc revision',
+             'revision': '2', 'display_name': 'Isolated Qwen Doc replacement',
              'adapter': 'llamacpp.chat-completions/1', 'model': MODEL,
              'endpoint': {'url': 'http://127.0.0.1:8088/v1/chat/completions',
                  'placement': 'local-isolated',
@@ -182,30 +203,23 @@ def connection_and_scope(model):
 
 def main():
     require(os.getuid() == os.geteuid() == 1000 and len(sys.argv) == 1)
-    info = SOURCE.lstat()
-    require(stat.S_ISREG(info.st_mode) and info.st_uid == SOURCE_UID and info.st_nlink == 1
-            and not info.st_mode & 0o022 and info.st_size == 22885)
-    require(sha(SOURCE.read_bytes()) == SOURCE_SHA)
+    model, replacement = load_support(INPUT)
     # The admitted owner binds an empty private output directory. Never reuse a
     # prior proof, infer native authority or manufacture a native-start receipt.
     OUTPUT.mkdir(mode=0o700)
     info = OUTPUT.lstat()
     require(stat.S_ISDIR(info.st_mode) and info.st_uid == os.geteuid()
             and stat.S_IMODE(info.st_mode) == 0o700)
-    module_spec = importlib.util.spec_from_file_location('model_connections', SOURCE)
-    model = importlib.util.module_from_spec(module_spec)
-    sys.modules[module_spec.name] = model
-    module_spec.loader.exec_module(model)
     started = time.monotonic()
-    report = {'protocol': 'stead.synthetic-model-doc-revision/1', 'status': 'fail',
+    report = {'protocol': 'stead.synthetic-model-doc-replacement/1', 'status': 'fail',
               'classification': 'actual-local-inference-with-synthetic-public-document',
               'model_adapter_sha256': SOURCE_SHA, 'model': MODEL, 'attempted_requests': 0,
               'completed_responses': 0, 'native_authority_supplied': False,
-              'tool_executed': False, 'document_mutated': False, 'qualifies_g3': False,
+              'external_tool_executed': False, 'document_mutated': False, 'qualifies_g3': False,
               'artifacts': {}, 'error_class': 'none'}
     try:
         spec, scope = connection_and_scope(model)
-        request = prepare_revision(model, spec, scope)
+        request = prepare_revision(model, replacement, spec, scope)
         report['connection_digest'] = spec.sha256
         report['request_digest'] = request.request_digest
         report['artifacts']['request.json'] = publish('request.json', request.body, 8192)
@@ -219,11 +233,9 @@ def main():
         report['artifacts']['proposal.json'] = publish('proposal.json', canonical(proposal), 65536)
         report['proposal_state'] = proposal['state']
         report['observed_usage'] = proposal['observed_usage']
-        calls = proposal['tool_proposals']
-        require(proposal['state'] == 'tool-proposals' and len(calls) == 1
-                and calls[0]['name'] == 'propose_doc_update' and calls[0]['tool_id'] == uid(6)
-                and calls[0]['revision'] == '1' and set(calls[0]['arguments']) == {'markdown'})
-        report['revision_checks'] = assess_revision(calls[0]['arguments']['markdown'])
+        proposed = replacement.materialize(spec, request, proposal, target(), SOURCE_MARKDOWN, '1024')
+        report['review_document'] = proposed
+        report['revision_checks'] = assess_revision(proposed['markdown'])
         report['semantic_edit_proposed'] = accepted_revision(report['revision_checks'])
         require(report['semantic_edit_proposed'])
         report['status'] = 'pass'

@@ -23,7 +23,7 @@ ISSUER = 'https://token.actions.githubusercontent.com'
 JWKS = ISSUER + '/.well-known/jwks'
 REPOSITORY = 'ScottTpirate/stead-urbit'
 REPOSITORY_ID, OWNER_ID = '1367847927', '44659733'
-WORKFLOW = REPOSITORY + '/.github/workflows/model-doc-revision.yml@refs/heads/main'
+WORKFLOW = REPOSITORY + '/.github/workflows/model-doc-replacement.yml@refs/heads/main'
 
 
 def require(condition, message):

@@ -1,14 +1,14 @@
 {
   "acceptance": [
-    "Exactly one initial inference through unchanged provider-neutral prepare_chat and normalize_reply.",
-    "Existing canonical Doc header and ID remain byte-exact; review moves Monday to Wednesday while time, room and all other Markdown remain exact.",
-    "The prompt contains only the task and original Markdown, never the completed edit.",
-    "Original request/response/proposal plus semantic assessment retained only after verified owned cleanup. No repair/retry/native effects/G3 claim."
+    "Exactly one original local Qwen response through the provider-neutral prepare_chat and normalize_reply APIs.",
+    "The answer is absent from the prompt. The model must infer the new weekday and propose one unique literal replacement in the pinned Doc.",
+    "Materialize the suggested replacement with the ordinary pinned-target helper. Compare the canonical header, time, room, contact, weekday and final newline independently.",
+    "Preserve original request, response and normalized proposal. No external tool, Home write, retry or G3 claim."
   ],
   "boundary": {
     "billable_provider_micro_usd": 0,
     "capacity_note": "The 2GiB cap is unchanged. The 1117320736-byte official GGUF plus 58720256-byte estimated f16 KV cache at 2048 tokens leaves 971442656 bytes before graph/runtime/other allocations. No fit, peak-memory or throughput result is observed; OOM/refusal/timeout stays failure, with no automatic limit increase.",
-    "client": "No arguments; /input/model_connections.py exact reviewed bytes; /output/client must not already exist; one fixed loopback POST after parent readiness, no redirects/retries;60s whole-request alarm;original bounded response bytes retained.",
+    "client": "Fixed loopback client with the reviewed model adapter and one pure replacement helper. The pinned read-only source is hash-checked before import. One initial request, 60-second whole-request deadline, original bounded response retained.",
     "environment": "Fixed cleared environment; no inherited LLAMA_*, proxy, API secrets, auth tokens or cloud credentials. No model/server file/MCP tools, URL fetching, model switching or automatic fallback.",
     "execution_host": "existing disposable GitHub hosted worker only",
     "guardian_lease": {
@@ -51,12 +51,16 @@
   "execution_admitted": false,
   "files": {
     "scripts/ci/model_proof/client.py": {
-      "bytes": 12485,
-      "sha256": "101b2b21a56d8ff6bf677d6f488656c60d5feed5808538b1748158b146ab304d"
+      "bytes": 12841,
+      "sha256": "c8eb2444153af16355b8ba147189a832a8704a8c9932f9f3c1f0b237e95e1a9b"
     },
     "scripts/urbit/model_connections.py": {
       "bytes": 22885,
       "sha256": "6f65a2d6c0dcb666c6ed621f914dc8392b01637d488f4a1c4d33fb043cdb5400"
+    },
+    "scripts/urbit/model_doc_replacement.py": {
+      "bytes": 4202,
+      "sha256": "4786f6782a7c76ebd11dcfc73259597215dd5dad8318d088fdb7f7263b85f619"
     }
   },
   "model": {
@@ -150,5 +154,5 @@
     "transitive_model_sha256": "6a1a2eb6d15622bf3c96857206351ba97e1af16c30d7a74ee38970e434e9407e"
   },
   "tests_executed": false,
-  "user_outcome": "Observe one genuine local-model semantic revision of an existing canonical synthetic Stead Doc, preserving identity and untouched material; retain exact unmodified tool output."
+  "user_outcome": "Observe a genuine semantic replacement proposal and its complete materialized review Doc in an isolated, synthetic project."
 }

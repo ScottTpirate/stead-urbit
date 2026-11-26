@@ -28,6 +28,7 @@ SOURCE_PATHS = {
     'interface.json': PREFIX + 'interface.json',
     'owned_child.py': 'scripts/urbit/owned_child.py',
     'model_connections.py': 'scripts/urbit/model_connections.py',
+    'model_doc_replacement.py': 'scripts/urbit/model_doc_replacement.py',
 }
 MODULE_PATHS = {'owner_boundary': PREFIX + 'owner_boundary.py',
                 'owner_collection': PREFIX + 'owner_collection.py',

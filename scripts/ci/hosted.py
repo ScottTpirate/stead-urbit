@@ -708,8 +708,8 @@ def execute_control(case, process, job, context):
 
 
 def workflow_binding(workflow_sha, controller_sha):
-    manifest_path = 'specs/urbit/model-doc-revision-controller.json'
-    workflow_path = '.github/workflows/model-doc-revision.yml'
+    manifest_path = 'specs/urbit/model-doc-replacement-controller.json'
+    workflow_path = '.github/workflows/model-doc-replacement.yml'
     files = local.inventory(workflow_sha, (manifest_path, workflow_path))
     require(set(files) == {manifest_path, workflow_path}, 'Incomplete trusted workflow binding')
     raw = files[manifest_path]

@@ -33,10 +33,11 @@ MODEL_SHA = '6a1a2eb6d15622bf3c96857206351ba97e1af16c30d7a74ee38970e434e9407e'
 MODEL_BYTES = 1117320736
 ARCHIVE_SHA = '0bc1f091e8916102b6d8f2cf944233a620e90a0f856c72d0ce41150c65c2e72e'
 SOURCE_PINS = {
-    'client.py': '101b2b21a56d8ff6bf677d6f488656c60d5feed5808538b1748158b146ab304d',
+    'client.py': 'c8eb2444153af16355b8ba147189a832a8704a8c9932f9f3c1f0b237e95e1a9b',
     'model_connections.py': '6f65a2d6c0dcb666c6ed621f914dc8392b01637d488f4a1c4d33fb043cdb5400',
     'owned_child.py': 'a01fc92a0b5f000f5ddee505d475127681ac47ea9a7aa4d8b450594cd50ec229',
-    'interface.json': 'f7649162343289cbc26800fbf8f600f23b43e8cb26ece1f13221b1c8377587cf',
+    'model_doc_replacement.py': '4786f6782a7c76ebd11dcfc73259597215dd5dad8318d088fdb7f7263b85f619',
+    'interface.json': '8233b7ee93a373b5f31ca75223445069741ff7c07550707dd128db8cbe9ab401',
 }
 NAMESPACES = ('user', 'mnt', 'pid', 'net')
 ENV = {'PATH': '/usr/bin', 'HOME': '/tmp', 'TMPDIR': '/tmp', 'LC_ALL': 'C',
@@ -480,27 +481,22 @@ def result_files():
     report = parse(raw['report.json'])
     require(type(report) is dict and set(report) == {'protocol', 'status', 'classification',
             'model_adapter_sha256', 'model', 'attempted_requests', 'completed_responses',
-            'native_authority_supplied', 'tool_executed', 'document_mutated', 'qualifies_g3',
+            'native_authority_supplied', 'external_tool_executed', 'document_mutated', 'qualifies_g3',
             'artifacts', 'error_class', 'connection_digest', 'request_digest', 'proposal_state',
-            'observed_usage', 'semantic_edit_proposed', 'revision_checks', 'elapsed_ms'})
-    require(report['protocol'] == 'stead.synthetic-model-doc-revision/1'
+            'observed_usage', 'semantic_edit_proposed', 'revision_checks', 'review_document', 'elapsed_ms'})
+    require(report['protocol'] == 'stead.synthetic-model-doc-replacement/1'
             and report['status'] == 'pass' and report['error_class'] == 'none'
             and report['classification'] == 'actual-local-inference-with-synthetic-public-document'
             and report['model_adapter_sha256'] == SOURCE_PINS['model_connections.py']
             and report['model'] == 'qwen2.5-1.5b-stead-compat2'
             and type(report['attempted_requests']) is int and report['attempted_requests'] == 1
             and type(report['completed_responses']) is int and report['completed_responses'] == 1
-            and all(report[key] is False for key in ('native_authority_supplied', 'tool_executed', 'document_mutated', 'qualifies_g3'))
+            and all(report[key] is False for key in ('native_authority_supplied', 'external_tool_executed', 'document_mutated', 'qualifies_g3'))
             and report['semantic_edit_proposed'] is True and report['proposal_state'] == 'tool-proposals'
             and type(report['elapsed_ms']) is int and 0 <= report['elapsed_ms'] <= 65000)
     require(report['artifacts'] == {name: pins[name] for name in ('request.json', 'response.bin', 'proposal.json')})
     proposal = parse(raw['proposal.json'])
     require(type(proposal) is dict and proposal['state'] == 'tool-proposals')
-    calls = proposal['tool_proposals']
-    require(type(calls) is list and len(calls) == 1 and calls[0]['name'] == 'propose_doc_update'
-            and calls[0]['tool_id'] == '00000000-0000-7000-8000-000000000006'
-            and calls[0]['revision'] == '1' and type(calls[0]['arguments']) is dict
-            and set(calls[0]['arguments']) == {'markdown'})
     # Recheck the retained argument with the exact admitted verifier. A child
     # report's success flag cannot substitute for the original output bytes.
     client_raw = ordinary(INPUT / 'client.py', owner=65534, maximum=65536)
@@ -508,7 +504,16 @@ def result_files():
     module_spec = importlib.util.spec_from_file_location('stead_doc_revision', INPUT / 'client.py')
     client = importlib.util.module_from_spec(module_spec)
     module_spec.loader.exec_module(client)
-    checks = client.assess_revision(calls[0]['arguments']['markdown'])
+    model, replacement = client.load_support(INPUT)
+    spec, scope = client.connection_and_scope(model)
+    request = client.prepare_revision(model, replacement, spec, scope)
+    require(raw['request.json'] == request.body and report['request_digest'] == request.request_digest
+            and report['connection_digest'] == spec.sha256)
+    normalized = model.normalize_reply(spec, request, raw['response.bin'])
+    require(proposal == normalized and report['observed_usage'] == normalized['observed_usage'])
+    proposed = replacement.materialize(spec, request, normalized, client.target(), client.SOURCE_MARKDOWN, '1024')
+    require(report['review_document'] == proposed)
+    checks = client.assess_revision(proposed['markdown'])
     require(report['revision_checks'] == checks and client.accepted_revision(checks))
     return pins, sha(raw['report.json'])
 

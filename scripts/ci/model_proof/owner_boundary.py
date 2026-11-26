@@ -22,7 +22,7 @@ import struct
 
 
 NAMESPACES = ('user', 'mnt', 'pid', 'net')
-SOURCE_NAMES = {'worker.py', 'client.py', 'model_connections.py', 'owned_child.py', 'interface.json'}
+SOURCE_NAMES = {'worker.py', 'client.py', 'model_connections.py', 'model_doc_replacement.py', 'owned_child.py', 'interface.json'}
 MODEL_NAME = 'qwen2.5-1.5b-instruct-q4_k_m.gguf'
 MODEL_SHA = '6a1a2eb6d15622bf3c96857206351ba97e1af16c30d7a74ee38970e434e9407e'
 MODEL_BYTES = 1117320736
