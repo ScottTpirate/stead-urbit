@@ -128,6 +128,7 @@ def render(profile: Profile, desk: Path) -> str:
     authority = host_header + '|' + host
     base = f'/stead/git/{profile.project}.git'
     get = '(?:0)?'
+    bare_home = re.escape('|' + authority + '||') + get + r'\|0$'
     entries = [(route('GET', path, authority, '', get), '421') for path in asset_routes(desk)]
     entries += [(route('POST', path, authority, 'application/json', positive_length(65_536)), '421') for path in HOME_POSTS]
     entries += [(route('GET', base + '/info/refs?service=git-' + name + '-pack', authority, '', get), '422')
@@ -156,6 +157,10 @@ map $request $stead_exact_request_line {{
 map "$http_transfer_encoding|$http_content_encoding|$http_expect|$http_upgrade|$http_te|$http_trailer" $stead_http_encoding {{
     default 1;
     "|||||" 0;
+}}
+map "$request|$http_host|$ssl_server_name|$http_content_type|$content_length|$stead_http_encoding" $stead_bare_home {{
+    default 0;
+    "~^(?:GET|HEAD) / HTTP/1[.]1{bare_home}" 1;
 }}
 map "$request_method|$request_uri|$http_host|$ssl_server_name|$http_content_type|$content_length|$stead_http_encoding" $stead_edge_route {{
     default 404;
@@ -195,6 +200,8 @@ server {{
     error_page 424 = @stead_push;
     error_page 425 = @stead_browse;
     location / {{
+        absolute_redirect off;
+        if ($stead_bare_home) {{ return 302 /stead/; }}
         if ($stead_exact_request_line = 0) {{ return 400; }}
         if ($stead_http_encoding) {{ return 400; }}
         if ($stead_edge_route = 421) {{ return 421; }}

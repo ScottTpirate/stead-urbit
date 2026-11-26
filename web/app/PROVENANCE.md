@@ -109,4 +109,22 @@ following from the repository root, pointing it at the official revision above.
 
 ```sh
 python3 web/app/tests/ship-sigil-audit.py /path/to/sigil-js
+python3 web/app/tests/ship-sigil-audit.py /path/to/sigil-js --display-sizes
 ```
+
+The second command tests the same 18 generator layouts with the official
+small-size stroke widths. It renders black on white and white on black in
+librsvg. Within each cell it counts only pixels that no other glyph can
+cover. Each number below is a lower bound on pixels that differ by at least
+96 grayscale levels out of 255, across every syllable combination and both
+color arrangements. For example, at 12 px even the compact mark differs in at
+least 10 of the 144 pixels. This describes the tested rasterizer at one device
+pixel per image pixel. Human recognition also depends on the screen and size.
+
+| Size | Original | Compact / Overview | Work | Docs | Code |
+| --- | ---: | ---: | ---: | ---: | ---: |
+| 12 px | 11 | 10 | 11 | 13 | 13 |
+| 14 px | 18 | 18 | 17 | 18 | 22 |
+| 16 px | 29 | 30 | 38 | 31 | 38 |
+| 28 px | 143 | 173 | 179 | 128 | 171 |
+| 34 px | 215 | 261 | 282 | 211 | 276 |

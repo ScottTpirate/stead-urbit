@@ -30,6 +30,14 @@ the full-history offline proof and the native storage gate for cutover. The
 [browser identity profile](BROWSER_IDENTITY_PROFILE.md) is a separate design
 track. Use individual native member ships for this pilot.
 
+## Open Home from its hostname
+
+Browsers connected to the private pilot can open the Home hostname directly.
+The Home edge redirects a bodyless GET or HEAD on the exact root path to
+`/stead/`. The relative redirect preserves the browser’s hostname and port.
+Verify the redirect and its destination after rebuilding the edge. Earlier
+configurations require the full Home application path.
+
 ## Prepare a pilot update
 
 Prepare both role archives and the Git relay tools from a single reviewed
