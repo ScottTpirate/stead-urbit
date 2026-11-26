@@ -1,0 +1,33 @@
+name: Saved8 direct capture host checks
+on:
+  pull_request:
+    paths:
+      - '.github/workflows/saved8-direct-host.yml'
+      - 'scripts/ci/saved8_direct_host.py'
+      - 'scripts/ci/saved8_direct_fixture_driver.py'
+      - 'specs/urbit/saved8-direct-host.json'
+permissions:
+  contents: read
+jobs:
+  host:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 3
+    steps:
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
+        with:
+          path: harness
+          persist-credentials: false
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
+        with:
+          ref: f77bd6b9a5da79f89cd855fcdf91900d79fe873b
+          path: candidate
+          persist-credentials: false
+      - name: Run22 fixed inert cases without native or network effects
+        run: timeout --kill-after=5s 90s python3 -IB harness/scripts/ci/saved8_direct_host.py
+      - name: Retain original host report
+        if: always()
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        with:
+          name: saved8-direct-host-result
+          path: saved8-direct-host-output/report.json
+          if-no-files-found: error
