@@ -25,7 +25,7 @@ class DocReplacementTests(unittest.TestCase):
         self.scope = {**{key: row[key] for key in model_catalog.BINDING_FIELDS},
                       'connection_digest': row['connection_digest'], 'run_id': RUN, 'attempt': '1',
                       'effect_sequence': '1', 'run_contract_sha256': 'e' * 64, 'context_digest': 'f' * 64}
-        self.source = doc.docs.header(DOC) + '# Weekly review\n\nMonday at 10:00.  \n\nContact Zoë.\n\n'
+        self.source = f"---\nid: {DOC}\ntype: page\nstate: published\n---\n" + '# Weekly review\n\nMonday at 10:00.  \n\nContact Zoë.\n\n'
         self.target = {'kind': 'document', 'project_id': row['project_id'], 'collection_id': COLLECTION,
                        'document_id': DOC, 'expected_revision': '7', 'base_markdown_sha256': self.digest(self.source)}
 

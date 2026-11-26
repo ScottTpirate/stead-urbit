@@ -1,23 +1,24 @@
 """Prepare a single Doc replacement for review from an untrusted model proposal."""
 import hashlib
 
-import doc_run_worker as docs
 import model_connections as model
 
 TOOL_ID = '019cb890-1fce-77ba-9120-539758b72f89'
 TOOL_NAME = 'propose_doc_replacement'
 MAX_FRAGMENT = 2048
+MAX_MARKDOWN = 32768
+TARGET_FIELDS = {'kind', 'project_id', 'collection_id', 'document_id', 'expected_revision', 'base_markdown_sha256'}
 
 
 def replacement_tool(target, max_output_bytes):
     """Register only for one currently authorized existing Doc and one output budget."""
-    model.closed(target, docs.TARGET_FIELDS)
+    model.closed(target, TARGET_FIELDS)
     model.require(target['kind'] == 'document', 'existing_doc_required')
     for field in ('project_id', 'collection_id', 'document_id'):
         model.uuid(target[field])
     model.uint(target['expected_revision'], positive=True)
     model.digest(target['base_markdown_sha256'])
-    model.uint(max_output_bytes, docs.MAX_MARKDOWN, positive=True)
+    model.uint(max_output_bytes, MAX_MARKDOWN, positive=True)
     pin = model.domain_hash('stead.doc-replacement-target/1', model.canonical({
         'target': target, 'max_output_bytes': max_output_bytes}))
     return {'name': TOOL_NAME, 'tool_id': TOOL_ID, 'revision': '1',
@@ -46,10 +47,10 @@ def materialize(spec, request, proposal, target, base_markdown, max_output_bytes
     old = model.text(args['old_text'], MAX_FRAGMENT, nonempty=True)
     new = model.text(args['new_text'], MAX_FRAGMENT)
     model.require(old != new and '\r' not in old and '\r' not in new, 'invalid_doc_replacement')
-    model.require(docs.text(base_markdown, docs.MAX_MARKDOWN, nonempty=True)
-                  and hashlib.sha256(base_markdown.encode()).hexdigest() == target['base_markdown_sha256'],
+    model.text(base_markdown, MAX_MARKDOWN, nonempty=True)
+    model.require('\r' not in base_markdown and hashlib.sha256(base_markdown.encode()).hexdigest() == target['base_markdown_sha256'],
                   'doc_base_changed')
-    header = docs.header(target['document_id'])
+    header = f"---\nid: {target['document_id']}\ntype: page\nstate: published\n---\n"
     model.require(base_markdown.startswith(header), 'invalid_doc_header')
     body = base_markdown[len(header):]
     first = body.find(old)
