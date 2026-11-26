@@ -1,0 +1,1051 @@
+ Sn(e){let t=e|32;return t>=97&&t<=122}function wo(e,t){let n=e.src,r,i;if(n.startsWith("<!--",t)){if(n.startsWith(">",t+4))return t+5;if(n.startsWith("->",t+4))return t+6;r=t+4,i="-->"}else if(n.startsWith("<![CDATA[",t))r=t+9,i="]]>";else if(n.charCodeAt(t+1)===63)r=t+2,i="?>";else if(Sn(n.charCodeAt(t+2)))r=t+3,i=">";else return-1;if(e.skipHtmlSpecial)return-1;let o=n.indexOf(i,r);return o<0?(e.skipHtmlSpecial=!0,-1):o+i.length}function yo(e,t){if(!e.md.options.html)return!1;let n=e.posMax,r=e.pos;if(e.src.charCodeAt(r)!==60||r+2>=n)return!1;let i,o=e.src.charCodeAt(r+1);if(o===33||o===63)i=wo(e,r);else if(o===47||Sn(o)){let s=e.src.slice(r).match(An);i=s?r+s[0].length:-1}else return!1;if(i<0)return!1;if(!t){let s=e.push("html_inline","",0);s.content=e.src.slice(r,i),vo(s.content)&&e.linkLevel++,Ro(s.content)&&e.linkLevel--}return e.pos=i,!0}var Co=/^&#((?:x[a-f0-9]{1,6}|[0-9]{1,7}));/i,Ao=/^&([a-z][a-z0-9]{1,31});/i;function Eo(e,t){let n=e.pos,r=e.posMax;if(e.src.charCodeAt(n)!==38||n+1>=r)return!1;if(e.src.charCodeAt(n+1)===35){let i=e.src.slice(n).match(Co);if(i){if(!t){let o=i[1][0].toLowerCase()==="x"?parseInt(i[1].slice(1),16):parseInt(i[1],10),s=e.push("text_special","",0);s.content=ut(o)?me(o):me(65533),s.markup=i[0],s.info="entity"}return e.pos+=i[0].length,!0}}else{let i=e.src.slice(n).match(Ao);if(i){let o=Fe(i[0]);if(o!==i[0]){if(!t){let s=e.push("text_special","",0);s.content=o,s.markup=i[0],s.info="entity"}return e.pos+=i[0].length,!0}}}return!1}function hn(e){let t={},n=e.length;if(!n)return;let r=0,i=-2,o=[];for(let s=0;s<n;s++){let a=e[s];if(o.push(0),(e[r].marker!==a.marker||i!==a.token-1)&&(r=s),i=a.token,a.length=a.length||0,!a.close)continue;t.hasOwnProperty(a.marker)||(t[a.marker]=[-1,-1,-1,-1,-1,-1]);let u=t[a.marker][(a.open?3:0)+a.length%3],c=r-o[r]-1,l=c;for(;c>u;c-=o[c]+1){let h=e[c];if(h.marker===a.marker&&h.open&&h.end<0){let p=!1;if((h.close||a.open)&&(h.length+a.length)%3===0&&(h.length%3!==0||a.length%3!==0)&&(p=!0),!p){let d=c>0&&!e[c-1].open?o[c-1]+1:0;o[s]=s-c+d,o[c]=d,a.open=!1,h.end=s,h.close=!1,l=-1,i=-2;break}}}l!==-1&&(t[a.marker][(a.open?3:0)+(a.length||0)%3]=l)}}function Do(e){let t=e.tokens_meta,n=e.tokens_meta.length;hn(e.delimiters);for(let i=0;i<n;i++){var r;let o=(r=t[i])===null||r===void 0?void 0:r.delimiters;o&&hn(o)}}function Fo(e){let t,n,r=0,i=e.tokens,o=e.tokens.length;for(t=n=0;t<o;t++)i[t].nesting<0&&r--,i[t].level=r,i[t].nesting>0&&r++,i[t].type==="text"&&t+1<o&&i[t+1].type==="text"?i[t+1].content=i[t].content+i[t+1].content:(t!==n&&(i[n]=i[t]),n++);t!==n&&(i.length=n)}var st=[["text",ro],["linkify",so],["newline",ao],["escape",uo],["backticks",lo],["strikethrough",Fn.tokenize],["emphasis",Tn.tokenize],["link",go],["image",ko],["autolink",xo],["html_inline",yo],["entity",Eo]],at=[["balance_pairs",Do],["strikethrough",Fn.postProcess],["emphasis",Tn.postProcess],["fragments_join",Fo]],Bn=class{constructor(){y(this,"ruler",new xe),y(this,"ruler2",new xe),y(this,"State",Dn);for(let e=0;e<st.length;e++)this.ruler.push(st[e][0],st[e][1]);for(let e=0;e<at.length;e++)this.ruler2.push(at[e][0],at[e][1])}skipToken(e){let t=e.pos,n=this.ruler.getRules(""),r=n.length,i=e.md.options.maxNesting,o=e.cache;if(typeof o[t]<"u"){e.pos=o[t];return}let s=!1;if(e.level<i){for(let a=0;a<r;a++)if(e.level++,s=n[a](e,!0),e.level--,s){if(t>=e.pos)throw new Error("inline rule didn't increment state.pos");break}}else e.pos=e.posMax;s||e.pos++,o[t]=e.pos}tokenize(e){let t=this.ruler.getRules(""),n=t.length,r=e.posMax,i=e.md.options.maxNesting;for(;e.pos<r;){let o=e.pos,s=!1;if(e.level<i){for(let a=0;a<n;a++)if(s=t[a](e,!1),s){if(o>=e.pos)throw new Error("inline rule didn't increment state.pos");break}}if(s){if(e.pos>=r)break;continue}e.pending+=e.src[e.pos++]}e.pending&&e.pushPending()}parse(e,t,n,r){let i=new this.State(e,t,n,r);this.tokenize(i);let o=this.ruler2.getRules(""),s=o.length;for(let a=0;a<s;a++)o[a](i)}},To={default:{options:{html:!1,xhtmlOut:!1,breaks:!1,langPrefix:"language-",linkify:!1,typographer:!1,quotes:"\u201C\u201D\u2018\u2019",highlight:null,maxNesting:100},components:{core:{},block:{},inline:{}}},zero:{options:{html:!1,xhtmlOut:!1,breaks:!1,langPrefix:"language-",linkify:!1,typographer:!1,quotes:"\u201C\u201D\u2018\u2019",highlight:null,maxNesting:20},components:{core:{rules:["normalize","block","strip_references","inline","text_join"]},block:{rules:["paragraph"]},inline:{rules:["text"],rules2:["balance_pairs","fragments_join"]}}},commonmark:{options:{html:!0,xhtmlOut:!0,breaks:!1,langPrefix:"language-",linkify:!1,typographer:!1,quotes:"\u201C\u201D\u2018\u2019",highlight:null,maxNesting:20},components:{core:{rules:["normalize","block","strip_references","inline","text_join"]},block:{rules:["blockquote","code","fence","heading","hr","html_block","lheading","list","reference","paragraph"]},inline:{rules:["autolink","backticks","emphasis","entity","escape","html_inline","image","link","newline","text"],rules2:["balance_pairs","emphasis","fragments_join"]}}}},So=/^(vbscript|javascript|file|data):/,Bo=/^data:image\/(gif|png|jpeg|webp);/,pn=["http:","https:","mailto:"],G=class{validateLink(e){let t=e.trim().toLowerCase();return So.test(t)?Bo.test(t):!0}normalizeLink(e){let t=de(e,!0);if(t.hostname&&(!t.protocol||pn.indexOf(t.protocol)>=0))try{t.hostname=nt.toASCII(t.hostname)}catch{}return t.auth&&(t.auth=K(t.auth)),t.hostname&&(t.hostname=K(t.hostname)),t.pathname&&(t.pathname=K(t.pathname)),t.search&&(t.search=K(t.search)),t.hash&&(t.hash=K(t.hash)),ae(t)}normalizeLinkText(e){let t=de(e,!0);if(t.hostname&&(!t.protocol||pn.indexOf(t.protocol)>=0))try{t.hostname=nt.toUnicode(t.hostname)}catch{}return fe(ae(t),fe.defaultChars+"%")}constructor(...e){y(this,"inline",new Bn),y(this,"block",new En),y(this,"core",new Rn),y(this,"renderer",new bn),y(this,"linkify",new Yt),y(this,"utils",Qr),y(this,"helpers",Object.assign({},mi));let[t,n]=e;typeof t=="string"?(this.configure(t),n&&this.set(n)):(this.configure("default"),this.set(t||{}))}set(e){return Object.assign(this.options,e),this}configure(e){let t;if(typeof e=="string"){let i=e;if(t=To[i],!t)throw new Error(`Wrong 'markdown-it' preset "${i}", check name`)}else t=e;if(!t)throw new Error("Wrong `markdown-it` preset, can't be empty");t.options&&(this.options={...t.options});let n=t.components;if(n){var r;["core","block","inline"].forEach(o=>{var s;let a=(s=n[o])===null||s===void 0?void 0:s.rules;a&&this[o].ruler.enableOnly(a)});let i=(r=n.inline)===null||r===void 0?void 0:r.rules2;i&&this.inline.ruler2.enableOnly(i)}return this}enable(e,t=!1){let n=[];Array.isArray(e)||(e=[e]),["core","block","inline"].forEach(i=>{n=n.concat(this[i].ruler.enable(e,!0))}),n=n.concat(this.inline.ruler2.enable(e,!0));let r=e.filter(i=>n.indexOf(i)<0);if(r.length&&!t)throw new Error(`MarkdownIt. Failed to enable unknown rule(s): ${r}`);return this}disable(e,t=!1){let n=[];Array.isArray(e)||(e=[e]),["core","block","inline"].forEach(i=>{n=n.concat(this[i].ruler.disable(e,!0))}),n=n.concat(this.inline.ruler2.disable(e,!0));let r=e.filter(i=>n.indexOf(i)<0);if(r.length&&!t)throw new Error(`MarkdownIt. Failed to disable unknown rule(s): ${r}`);return this}use(e,...t){return e.apply(e,[this,...t]),this}parse(e,t){if(typeof e!="string")throw new Error("Input data should be a String");let n=new this.core.State(e,this,t);return this.core.process(n),n.tokens}render(e,t={}){return this.renderer.render(this.parse(e,t),this.options,t)}parseInline(e,t){let n=new this.core.State(e,this,t);return n.inlineMode=!0,this.core.process(n),n.tokens}renderInline(e,t={}){return this.renderer.render(this.parseInline(e,t),this.options,t)}};y(G,"Token",re);y(G,"Ruler",xe);y(G,"Renderer",bn);y(G,"ParserCore",Rn);y(G,"StateCore",xn);y(G,"ParserBlock",En);y(G,"StateBlock",wn);y(G,"ParserInline",Bn);y(G,"StateInline",Dn);var In=gn(G);var lt=q(Z(),1);function ve(e){if(!e||e.length>2048||/[\u0000-\u0020\u007f\\]/u.test(e))return null;if(e.startsWith("#")&&!e.startsWith("#/")||e.startsWith("/")&&!e.startsWith("//"))return e;try{let t=new URL(e);return!["https:","http:"].includes(t.protocol)||t.username||t.password?null:t.href}catch{return null}}function Le({href:e,children:t,title:n}){let r=ve(e);if(!r)return(0,lt.jsx)("span",{children:t});let i=r.startsWith("http:")||r.startsWith("https:");return(0,lt.jsx)("a",{href:r,title:n,target:i?"_blank":void 0,rel:"noopener noreferrer",referrerPolicy:"no-referrer",children:t})}var F=q(ye(),1),ft=q($n(),1);var S=q(Z(),1);function ce({name:e}){let t;switch(e){case"chevron-down":t=(0,S.jsx)("path",{d:"m6 9 6 6 6-6"});break;case"check":t=(0,S.jsx)("path",{d:"M20 6 9 17l-5-5"});break;case"circle":t=(0,S.jsx)("circle",{cx:"12",cy:"12",r:"10"});break;case"circle-exclamation-point":t=(0,S.jsxs)(S.Fragment,{children:[(0,S.jsx)("circle",{cx:"12",cy:"12",r:"10"}),(0,S.jsx)("line",{x1:"12",x2:"12",y1:"8",y2:"12"}),(0,S.jsx)("line",{x1:"12",x2:"12.01",y1:"16",y2:"16"})]});break;case"ellipsis":t=(0,S.jsxs)(S.Fragment,{children:[(0,S.jsx)("circle",{cx:"12",cy:"12",r:"1"}),(0,S.jsx)("circle",{cx:"19",cy:"12",r:"1"}),(0,S.jsx)("circle",{cx:"5",cy:"12",r:"1"})]});break;case"plus":t=(0,S.jsxs)(S.Fragment,{children:[(0,S.jsx)("path",{d:"M5 12h14"}),(0,S.jsx)("path",{d:"M12 5v14"})]});break;case"x":t=(0,S.jsxs)(S.Fragment,{children:[(0,S.jsx)("path",{d:"M18 6 6 18"}),(0,S.jsx)("path",{d:"m6 6 12 12"})]});break;case"search":t=(0,S.jsxs)(S.Fragment,{children:[(0,S.jsx)("path",{d:"m21 21-4.34-4.34"}),(0,S.jsx)("circle",{cx:"11",cy:"11",r:"8"})]});break;default:return null}return(0,S.jsx)("svg",{className:"stead-icon",xmlns:"http://www.w3.org/2000/svg",width:"16",height:"16",viewBox:"0 0 24 24",fill:"none",stroke:"currentColor",strokeWidth:"2",strokeLinecap:"round",strokeLinejoin:"round","aria-hidden":"true",focusable:"false",children:t})}var _=q(Z(),1);function dt(...e){return e.filter(Boolean).join(" ")}var jo=new Set(["action","background","backgroundimage","codebase","csstext","dangerouslysetinnerhtml","data","formaction","href","innerhtml","outerhtml","ping","poster","src","srcdoc","srcset","style"]);function ht(e){for(let t of Reflect.ownKeys(e))if(typeof t!="string"||jo.has(t.toLowerCase()))throw new Error("resource-loading DOM properties are not supported");return e}var le=(0,F.forwardRef)(function({className:t,variant:n="secondary",pending:r=!1,pendingLabel:i="Working",disabled:o,children:s,type:a="button",...u},c){return(0,_.jsxs)("button",{...ht(u),ref:c,className:dt("stead-button",`stead-button--${n}`,t),type:a,disabled:o||r,"aria-busy":r||void 0,children:[r?(0,_.jsx)("span",{className:"stead-spinner","aria-hidden":"true"}):null,(0,_.jsx)("span",{children:r?i:s})]})}),Ys=(0,F.forwardRef)(function({className:t,id:n,label:r,description:i,error:o,...s},a){let u=(0,F.useId)(),c=n??u,l=i?`${c}-description`:void 0,h=o?`${c}-error`:void 0,p=[l,h].filter(Boolean).join(" ")||void 0;return(0,_.jsxs)("div",{className:"stead-field",children:[(0,_.jsx)("label",{className:"stead-field__label",htmlFor:c,children:r}),i?(0,_.jsx)("span",{className:"stead-field__description",id:l,children:i}):null,(0,_.jsx)("input",{...ht(s),ref:a,id:c,className:dt("stead-field__control",t),"aria-describedby":p,"aria-invalid":o?!0:void 0}),o?(0,_.jsx)("span",{className:"stead-field__error",id:h,role:"alert",children:o}):null]})});function Gs({children:e,className:t,elevated:n=!1,...r}){return(0,_.jsx)("section",{...ht(r),className:dt("stead-surface",n&&"stead-surface--elevated",t),children:e})}function Ks({title:e,description:t,action:n}){return(0,_.jsxs)("div",{className:"stead-state","data-state":"empty",children:[(0,_.jsx)("span",{className:"stead-state__glyph","aria-hidden":"true",children:"\u25CC"}),(0,_.jsx)("h2",{children:e}),(0,_.jsx)("p",{children:t}),n?(0,_.jsx)("div",{className:"stead-state__action",children:n}):null]})}function Vs({label:e="Loading authorized content",lines:t=3}){return(0,_.jsxs)("div",{className:"stead-state stead-state--loading","data-state":"loading","aria-busy":"true",children:[(0,_.jsx)("span",{className:"stead-visually-hidden",role:"status",children:e}),(0,_.jsx)("div",{"aria-hidden":"true",className:"stead-skeleton","data-lines":t,children:Array.from({length:t},(n,r)=>(0,_.jsx)("span",{},r))})]})}function Hn(e,t){let n=(0,F.useRef)(null),r=(0,F.useRef)(null),i=(0,F.useRef)(t);return i.current=t,(0,F.useLayoutEffect)(()=>{if(!e)return;function o(){let a=n.current,u=r.current;if(!a||!u)return;let c=a.getBoundingClientRect(),l=Math.max(8,Math.min(c.left,window.innerWidth-u.offsetWidth-8)),h=c.bottom+6,p=h+u.offsetHeight<=window.innerHeight-8?h:Math.max(8,c.top-u.offsetHeight-6);u.style.left=`${l}px`,u.style.top=`${p}px`}o();let s=new ResizeObserver(o);return r.current&&s.observe(r.current),window.addEventListener("resize",o),window.addEventListener("scroll",o,!0),()=>{s.disconnect(),window.removeEventListener("resize",o),window.removeEventListener("scroll",o,!0)}},[e]),(0,F.useEffect)(()=>{if(!e)return;function o(s){s.target instanceof Node&&!r.current?.contains(s.target)&&!n.current?.contains(s.target)&&i.current(!1)}return document.addEventListener("pointerdown",o),document.addEventListener("focusin",o),()=>{document.removeEventListener("pointerdown",o),document.removeEventListener("focusin",o)}},[e]),{trigger:n,panel:r}}function Oo({label:e,triggerLabel:t,items:n,disabled:r=!1}){let[i,o]=(0,F.useState)(!1),[s,a]=(0,F.useState)("selected"),u=(0,F.useId)(),c=(0,F.useRef)({text:"",time:0}),l=(d=!0)=>{o(!1),d&&h.current?.focus()},{trigger:h,panel:p}=Hn(i,l);return(0,F.useLayoutEffect)(()=>{if(!i)return;let d=[...p.current?.querySelectorAll("button:enabled")??[]];((s==="last"?d.at(-1):s==="selected"?d.find(x=>x.getAttribute("aria-checked")==="true")??d[0]:d[0])??p.current)?.focus()},[i,s]),(0,F.useEffect)(()=>{r&&o(!1)},[r]),(0,_.jsxs)(_.Fragment,{children:[(0,_.jsxs)(le,{ref:h,variant:"quiet",disabled:r,"aria-label":e,"aria-haspopup":"menu","aria-expanded":i,"aria-controls":i?u:void 0,onClick:()=>{a("selected"),o(d=>!d)},onKeyDown:d=>{(d.key==="ArrowDown"||d.key==="ArrowUp")&&(d.preventDefault(),a(d.key==="ArrowUp"?"last":"first"),o(!0))},children:[t??e,(0,_.jsx)("span",{className:"stead-picker-chevron",children:(0,_.jsx)(ce,{name:"chevron-down"})})]}),i&&(0,ft.createPortal)((0,_.jsxs)("div",{ref:p,id:u,className:"stead-control-popup",role:"menu","aria-label":e,tabIndex:-1,onKeyDown:d=>{if(d.key==="Escape"||d.key==="Tab"){d.key==="Escape"&&(d.preventDefault(),d.stopPropagation()),l();return}let f=[...p.current?.querySelectorAll("button:enabled")??[]];if(!f.length)return;let x=f.findIndex(m=>m===document.activeElement);if(["ArrowDown","ArrowUp","Home","End"].includes(d.key)){d.preventDefault();let m=d.key==="Home"?0:d.key==="End"?f.length-1:d.key==="ArrowDown"?(x+1)%f.length:(x-1+f.length)%f.length;f[m]?.focus()}else if(d.key.length===1&&d.key!==" "&&!d.ctrlKey&&!d.metaKey&&!d.altKey){let m=Date.now();c.current={text:(m-c.current.time<600?c.current.text:"")+d.key.toLocaleLowerCase(),time:m};let v=c.current.text,R=[...f.slice(x+1),...f.slice(0,x+1)].find(b=>b.textContent?.trim().toLocaleLowerCase().startsWith(v));R&&(d.preventDefault(),R.focus())}},children:[n.map(d=>(0,_.jsxs)("button",{type:"button",tabIndex:-1,role:d.checked===void 0?"menuitem":"menuitemradio","aria-checked":d.checked,disabled:d.disabled,className:d.danger?"stead-control-option stead-control-option--danger":"stead-control-option",onClick:()=>{l(),d.onSelect()},children:[(0,_.jsx)("span",{children:d.label}),d.checked&&(0,_.jsx)("span",{className:"stead-control-check",children:(0,_.jsx)(ce,{name:"check"})})]},d.value)),!n.length&&(0,_.jsx)("p",{className:"stead-control-note",children:"No actions available"})]}),h.current?.closest("dialog[open]")??document.body)]})}function Jo({label:e,value:t,options:n,onChange:r,placeholder:i="Choose\u2026",disabled:o=!1,loading:s=!1,error:a,onRetry:u}){let[c,l]=(0,F.useState)(!1),[h,p]=(0,F.useState)(""),[d,f]=(0,F.useState)(""),x=(0,F.useRef)(null),m=(0,F.useId)(),v=(g=!0)=>{l(!1),p(""),g&&R.current?.focus()},{trigger:R,panel:b}=Hn(c,v),k=n.find(g=>g.value===t),w=h.trim().toLocaleLowerCase(),C=s||a?[]:n.filter(g=>`${g.label} ${g.description??""}`.toLocaleLowerCase().includes(w)),E=C.filter(g=>!g.disabled),B=E.some(g=>g.value===d)?d:E[0]?.value,D=C.findIndex(g=>g.value===B);(0,F.useLayoutEffect)(()=>{c&&x.current?.focus()},[c]),(0,F.useEffect)(()=>{o&&l(!1)},[o]),(0,F.useEffect)(()=>{c&&D>=0&&document.getElementById(`${m}-option-${D}`)?.scrollIntoView({block:"nearest"})},[c,m,D]);function L(g){g.disabled||s||a||(v(),r(g.value))}return(0,_.jsxs)(_.Fragment,{children:[(0,_.jsxs)(le,{ref:R,variant:"quiet",disabled:o,"aria-label":`${e}: ${k?.label??i}`,"aria-haspopup":"dialog","aria-expanded":c,"aria-controls":c?`${m}-popup`:void 0,onClick:()=>{f(t),l(g=>!g)},onKeyDown:g=>{(g.key==="ArrowDown"||g.key==="ArrowUp")&&(g.preventDefault(),f(t),l(!0))},children:[(0,_.jsx)("span",{className:"stead-picker-label",children:e}),(0,_.jsx)("span",{className:"stead-picker-value",children:k?.label??i}),(0,_.jsx)("span",{className:"stead-picker-chevron",children:(0,_.jsx)(ce,{name:"chevron-down"})})]}),c&&(0,ft.createPortal)((0,_.jsxs)("div",{ref:b,id:`${m}-popup`,className:"stead-control-popup stead-combobox",role:"dialog","aria-label":`Choose ${e.toLocaleLowerCase()}`,onKeyDown:g=>{(g.key==="Escape"||g.key==="Tab")&&(g.key==="Escape"&&(g.preventDefault(),g.stopPropagation()),v())},children:[(0,_.jsxs)("label",{className:"stead-visually-hidden",htmlFor:`${m}-search`,children:["Search ",e.toLocaleLowerCase()]}),(0,_.jsx)("input",{ref:x,id:`${m}-search`,role:"combobox","aria-autocomplete":"list","aria-expanded":"true","aria-controls":`${m}-options`,"aria-activedescendant":D>=0?`${m}-option-${D}`:void 0,placeholder:`Search ${e.toLocaleLowerCase()}\u2026`,value:h,onChange:g=>{p(g.target.value),f("")},onKeyDown:g=>{if(g.key==="ArrowDown"||g.key==="ArrowUp"){g.preventDefault();let M=E.findIndex(O=>O.value===B),z=g.key==="ArrowDown"?(M+1)%E.length:(M-1+E.length)%E.length,H=E[z];H&&f(H.value)}else if(g.key==="Enter"){g.preventDefault();let M=E.find(z=>z.value===B);M&&L(M)}}}),(0,_.jsx)("div",{role:"listbox",id:`${m}-options`,"aria-label":e,"aria-busy":s||void 0,children:C.map((g,M)=>(0,_.jsxs)("div",{id:`${m}-option-${M}`,role:"option","aria-selected":g.value===t,"aria-disabled":g.disabled||void 0,"data-active":g.value===B?"true":void 0,className:"stead-control-option",onPointerMove:()=>{g.disabled||f(g.value)},onPointerDown:z=>z.preventDefault(),onClick:()=>L(g),children:[(0,_.jsxs)("span",{children:[g.label,g.description&&(0,_.jsx)("small",{children:g.description})]}),g.kind==="agent"&&(0,_.jsx)("span",{className:"stead-person-kind",children:"Agent"}),g.value===t&&(0,_.jsx)("span",{className:"stead-control-check",children:(0,_.jsx)(ce,{name:"check"})})]},g.value))}),s?(0,_.jsx)("p",{className:"stead-control-note",role:"status",children:"Loading options\u2026"}):a?(0,_.jsxs)("div",{className:"stead-control-note",role:"alert",children:[(0,_.jsx)("p",{children:a}),u&&(0,_.jsx)(le,{onClick:u,children:"Try again"})]}):C.length?null:(0,_.jsx)("p",{className:"stead-control-note",role:"status",children:w?"No matching options":"No eligible options"})]}),R.current?.closest("dialog[open]")??document.body)]})}function Qs({searchable:e=!1,...t}){if(e)return(0,_.jsx)(Jo,{...t});let r=t.options.find(i=>i.value===t.value)?.label??t.placeholder??"Choose\u2026";return(0,_.jsx)(Oo,{label:`${t.label}: ${r}`,disabled:t.disabled||t.loading||!!t.error,triggerLabel:(0,_.jsxs)(_.Fragment,{children:[(0,_.jsx)("span",{className:"stead-picker-label",children:t.label}),(0,_.jsx)("span",{className:"stead-picker-value",children:r})]}),items:t.options.map(i=>({value:i.value,label:i.label,checked:t.value===i.value,disabled:i.disabled,onSelect:()=>t.onChange(i.value)}))})}function ea({open:e,title:t,description:n,children:r,footer:i,onClose:o,initialFocus:s}){let a=(0,F.useRef)(null),u=(0,F.useRef)(null),c=(0,F.useId)();return(0,F.useLayoutEffect)(()=>{let l=a.current;l&&(e&&!l.open?(u.current=document.activeElement instanceof HTMLElement?document.activeElement:null,l.showModal(),(s?.current??l.querySelector("input:not(:disabled), textarea:not(:disabled), [data-dialog-initial-focus]")??l).focus()):!e&&l.open&&(l.close(),u.current?.isConnected&&u.current.focus()))},[e,s]),(0,F.useEffect)(()=>()=>{u.current?.isConnected&&u.current.focus()},[]),(0,_.jsxs)("dialog",{ref:a,className:"stead-dialog",tabIndex:-1,"aria-labelledby":`${c}-title`,"aria-describedby":n?`${c}-description`:void 0,onKeyDown:l=>{if(l.key!=="Tab"||l.defaultPrevented)return;let h=[...a.current?.querySelectorAll('button, input, textarea, select, a[href], [tabindex], [contenteditable="true"]')??[]].filter(f=>f.tabIndex>=0&&!f.matches(":disabled")&&f.getClientRects().length>0),p=h[0],d=h.at(-1);p?l.shiftKey&&(document.activeElement===p||document.activeElement===a.current)?(l.preventDefault(),d?.focus()):!l.shiftKey&&document.activeElement===d&&(l.preventDefault(),p.focus()):(l.preventDefault(),a.current?.focus())},onCancel:l=>{l.preventDefault(),o()},children:[(0,_.jsxs)("header",{className:"stead-dialog-header",children:[(0,_.jsx)("h2",{id:`${c}-title`,children:t}),(0,_.jsx)(le,{variant:"quiet","aria-label":`Close ${t}`,onClick:o,children:"Close"})]}),n&&(0,_.jsx)("p",{id:`${c}-description`,className:"stead-dialog-description",children:n}),(0,_.jsx)("div",{className:"stead-dialog-body",children:r}),i&&(0,_.jsx)("footer",{className:"stead-dialog-footer",children:i})]})}function ta({label:e,tone:t="neutral"}){return(0,_.jsxs)("span",{className:"stead-status-badge","data-tone":t,children:[(0,_.jsx)(ce,{name:t==="success"?"check":t==="warning"||t==="danger"?"circle-exclamation-point":"circle"}),e]})}var $o={read_only:{title:"Read only",description:"You can read this content, but cannot change it."},dirty_draft:{title:"Unsaved changes",description:"Your changes have not been saved."},saving:{title:"Saving\u2026",description:"Waiting for this Home to confirm your changes."},accepted:{title:"Saved",description:"This Home accepted your changes."},disconnected_or_stale:{title:"Connection interrupted",description:"This view may be out of date. Reconnect before making changes."},outcome_unknown:{title:"Checking whether this saved\u2026",description:"Keep this draft while the original request is reconciled."},conflict:{title:"A newer version is available",description:"Compare it with your draft before choosing what to save."},permission_revoked:{title:"Access has changed",description:"This content is no longer available with your current access."},retryable_error:{title:"This action could not be completed",description:"Try again when the connection is available."},unsupported_operation:{title:"Not available here",description:"This configuration does not support this operation."}};function na({state:e,description:t,action:n}){let r=$o[e];return(0,_.jsxs)("div",{className:"stead-outcome","data-state":e,role:e==="conflict"||e==="permission_revoked"||e==="retryable_error"?"alert":"status","aria-busy":e==="saving"||e==="outcome_unknown"||void 0,children:[(0,_.jsx)("strong",{children:r.title}),(0,_.jsx)("p",{children:t??r.description}),n&&(0,_.jsx)("div",{className:"stead-outcome-action",children:n})]})}function Un(e){let t="";for(let n of e)n.type==="softbreak"||n.type==="hardbreak"?t+=" ":n.children?t+=Un(n.children):n.nesting===0&&(t+=n.content);return t}function qn(e){let t=[];for(let n=0;n<e.length;n++){let r=e[n],i=e[n+1];if(r.type!=="heading_open"||!/^h[1-6]$/u.test(r.tag)||i?.type!=="inline")continue;let o=Un(i.children??[]).replace(/\s+/gu," ").trim();if(!o)continue;if(t.length===64)return{headings:t,limited:!0};let s=Array.from(o),a=s.length>160?s.slice(0,160).join("")+"\u2026":o;t.push({tokenIndex:n,level:Number(r.tag.slice(1)),label:a})}return{headings:t,limited:!1}}var te=q(Z(),1);function Ho(e,t){if(!e||e.length>2048||/[\u0000-\u0020\u007f\\]/u.test(e)||e.startsWith("//")||e.startsWith("#"))return{kind:"unavailable"};let n=ve(e);return n&&(/^https?:/u.test(n)||t==="document"&&n.startsWith("/"))?{kind:"link",href:n}:t==="repository"&&!/^[a-z][a-z0-9+.-]*:/iu.test(e)?{kind:"clone"}:{kind:"unavailable"}}function Wn({target:e,alt:t,origin:n}){let r=Ho(e,n),i=`Image: ${t||"attachment"}`;return(0,te.jsxs)("span",{className:"markdown-attachment","data-attachment-state":r.kind,children:[(0,te.jsx)("span",{className:"markdown-attachment-label",children:i}),r.kind==="link"?(0,te.jsxs)(Le,{href:r.href,children:["Open image",(0,te.jsxs)("span",{className:"stead-visually-hidden",children:[": ",t||"attachment"]}),/^https?:/u.test(r.href)&&(0,te.jsx)("span",{className:"stead-visually-hidden",children:" (opens in a new tab)"})]}):(0,te.jsx)("span",{className:"markdown-attachment-status",children:r.kind==="clone"?"Clone the repository to view this image.":"Image target unavailable."})]})}var T=q(Z(),1),Uo=new In({html:!1,linkify:!1,typographer:!1,maxNesting:20}),qo=new Set(["p","h1","h2","h3","h4","h5","h6","blockquote","ul","ol","li","em","strong","s","table","thead","tbody","tr","th","td"]),Wo=/^---\nid: [0-9a-f-]{36}\ntype: page\nstate: (draft|published)\n---\n/u;function Xn(e){let t=0;for(let n of e)if(t+=1+(n.children?Xn(n.children):0),t>2048)return t;return t}function Zn(e,t,n,r,i){let o=ve(e);return n==="repository"&&(!o||!/^https?:/u.test(o))?(0,T.jsxs)("span",{className:"markdown-unavailable-link",title:"Open repository links in a clone.",children:[t,(0,T.jsx)("span",{className:"stead-visually-hidden",children:" (repository link unavailable)"})]},r):(0,T.jsx)(Le,{href:e,title:i,children:t},r)}function Yn(e,t,n=!1,r){let i=0;function o(s){let a=[];for(;i<e.length;){let u=i,c=e[i++];if(c.nesting===-1)break;if(c.nesting===1){let l=i,h=o(s||c.tag==="li");if(c.type==="link_open"){let p=String(c.attrGet("href")??""),d=String(c.attrGet("title")??"")||void 0;a.push(e.slice(l,i).some(f=>f.type==="image")?(0,T.jsxs)("span",{className:"markdown-linked-attachment",children:[h," ",Zn(p,"Related link",t,void 0,d)]},u):Zn(p,h,t,u,d))}else if(c.hidden||!qo.has(c.tag))a.push((0,T.jsx)($.Fragment,{children:h},u));else{let p={key:u};if(c.tag==="ol"){let x=Number(c.attrGet("start")??1);Number.isSafeInteger(x)&&x>=0&&x<=999999999&&(p.start=x)}c.tag==="th"&&(p.scope="col");let d=c.type==="heading_open"?r?.get(u):void 0;d&&(p.id=d,p.tabIndex=-1,p.className="document-outline-heading");let f=(0,$.createElement)(c.tag,p,h);a.push(c.tag==="table"?(0,T.jsx)("div",{className:"markdown-table",tabIndex:0,role:"region","aria-label":"Document table",children:f},u):f)}}else if(c.type==="inline"){let l=c.children??[],h=l[0],p=s&&h?.type==="text"?/^\[([ xX])\] /u.exec(h.content):null;p&&h&&(l=[{...h,content:h.content.slice(p[0].length)},...l.slice(1)],a.push((0,T.jsx)("input",{type:"checkbox",disabled:!0,checked:p[1]!==" ","aria-label":p[1]===" "?"Incomplete task":"Completed task"},`check-${u}`))),a.push((0,T.jsx)($.Fragment,{children:Yn(l,t)},u))}else c.type==="text"?a.push(c.content):c.type==="softbreak"?a.push(`
+`):c.type==="hardbreak"?a.push((0,T.jsx)("br",{},u)):c.type==="code_inline"?a.push((0,T.jsx)("code",{children:c.content},u)):c.type==="fence"||c.type==="code_block"?a.push((0,T.jsx)("pre",{tabIndex:0,children:(0,T.jsx)("code",{children:c.content})},u)):c.type==="hr"?a.push((0,T.jsx)("hr",{},u)):c.type==="image"?a.push((0,T.jsx)(Wn,{target:String(c.attrGet("src")??""),alt:c.content,origin:t},u)):a.push(c.content)}return a}return o(n)}function Gn(e,t,n){let r=l=>({content:l,headings:[],limited:!1});if(new TextEncoder().encode(e).length>32768)return r((0,T.jsx)("p",{role:"alert",children:"This document exceeds the supported display size."}));let i=t==="repository"?e:e.replace(Wo,""),o=0;for(let l of i)if((l===`
+`||l==="`")&&++o>512)return r((0,T.jsx)("pre",{className:"markdown-plain",tabIndex:0,children:i}));let s=Uo.parse(i,{});if(Xn(s)>2048)return r((0,T.jsx)("pre",{className:"markdown-plain",tabIndex:0,children:i}));let a=n&&t==="document"?qn(s):void 0,u=a&&a.headings.length>=3?a.headings.map((l,h)=>({...l,id:`${n}-${h}`})):[],c=new Map(u.map(l=>[l.tokenIndex,l.id]));return{content:(0,T.jsx)(T.Fragment,{children:Yn(s,t,!1,c)}),headings:u,limited:!!a?.limited}}function _a(e,t="document"){return Gn(e,t).content}var ba=(0,$.memo)(function({text:t,origin:n="document",showOutline:r=!1}){let i=(0,$.useDeferredValue)(t),o=(0,$.useId)().replace(/[^a-zA-Z0-9_-]/gu,""),s=(0,$.useRef)(null),a=(0,$.useRef)({text:t,origin:n,showOutline:r});(a.current.text!==t||a.current.origin!==n||a.current.showOutline!==r)&&(a.current={text:t,origin:n,showOutline:r});let u=a.current,c=(0,$.useMemo)(()=>Gn(i,n,r?`stead-outline-${o}`:void 0),[i,n,r,o]),l=t===i&&r&&c.headings.length>=3;function h(p){if(!l||a.current!==u||!c.headings.some(f=>f.id===p))return;let d=s.current?.querySelector(`[id="${p}"]`);!d||!s.current?.contains(d)||(d.focus({preventScroll:!0}),d.scrollIntoView({block:"start",behavior:"auto"}))}return(0,T.jsxs)(T.Fragment,{children:[l&&(0,T.jsx)("nav",{className:"document-outline","aria-label":"On this page",children:(0,T.jsxs)("details",{children:[(0,T.jsx)("summary",{children:"On this page"}),(0,T.jsx)("ol",{children:c.headings.map(p=>(0,T.jsx)("li",{"data-level":p.level,children:(0,T.jsx)(le,{variant:"quiet",onClick:()=>h(p.id),children:p.label})},p.id))}),c.limited&&(0,T.jsx)("p",{children:"Showing the first 64 headings."})]})}),(0,T.jsx)("article",{ref:s,className:"markdown","aria-label":n==="repository"?"Repository file content":"Document content","aria-busy":t!==i,children:c.content})]})});export{ye as a,$n as b,Z as c,ce as d,le as e,Ys as f,Gs as g,Ks as h,Vs as i,Jo as j,Qs as k,ea as l,ta as m,na as n,_a as o,ba as p};
+                                                                         desk/web/stead/asset-d318c5941423ef97fe6d2be5989720a2ae0cfe6af5a6b0fb8c6d486578c8792b.stead-asset   0000644 0000000 0000000 00000013043 00000000000 027467  0                                                                                                    ustar 00                                                                                stead-release                                                                                                                                                          import"./chunk-OOJM4CTU.js";function n(t,e,r){let o=document.createElement(t);return o.className=e,r!==void 0&&(o.textContent=r),o}var I=document.getElementById("root"),q=n("header","identity-header"),A=n("span","identity-mark","~");A.setAttribute("aria-hidden","true");var R=n("h1","","Approve a Stead sign-in");q.append(A,R);var p=n("p","identity-status");p.setAttribute("role","status");p.setAttribute("aria-live","polite");p.tabIndex=-1;var c=n("button","identity-action identity-action--quiet","Refresh requests");c.type="button";var S=n("div","identity-toolbar");S.append(p,c);var l=n("div","identity-requests");l.setAttribute("aria-label","Sign-in requests");I.append(q,S,l);var g=!1;function C(t){if(!t||typeof t!="object"||Array.isArray(t)||Object.keys(t).length>16||Object.values(t).some(e=>typeof e!="string"))throw new Error("Invalid response");return t}function T(t){let e=C(t),r=["comparison_code","origin","identity_ship","home","principal_id","binding_id","binding_revision","expires_at_ms","status","csrf"],o=/^[0-9a-f]{8}-[0-9a-f]{4}-7[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/u;if(Object.keys(e).length!==r.length||r.some(a=>!(a in e))||!o.test(e.principal_id)||!o.test(e.binding_id)||!/^[1-9][0-9]{0,19}$/u.test(e.binding_revision)||BigInt(e.binding_revision)>18446744073709551615n||!/^[1-9][0-9]{0,15}$/u.test(e.expires_at_ms)||!Number.isSafeInteger(Number(e.expires_at_ms))||!Number.isFinite(new Date(Number(e.expires_at_ms)).getTime())||!/^~[a-z-]{3,80}$/u.test(e.home)||!/^~[a-z-]{3,80}$/u.test(e.identity_ship))throw new Error("Invalid response");let i=new URL(e.origin);if(i.protocol!=="https:"||i.origin!==e.origin||e.origin.length>256)throw new Error("Invalid response");return e}async function _(t,e){let r=await fetch("/stead-identity/api/"+t,{method:"POST",credentials:"same-origin",cache:"no-store",redirect:"error",headers:{"Content-Type":"application/json"},body:JSON.stringify(e),signal:AbortSignal.timeout(15e3)});if(r.status===401)throw new Error("owner_required");if(!r.ok||r.headers.get("content-type")?.split(";")[0]!=="application/json"||!r.body)throw new Error("The request was not confirmed.");let o=r.body.getReader(),i=[],a=0;try{for(;;){let s=await o.read();if(s.done)break;if(a+=s.value.length,a>32768)throw new Error("Response too large");i.push(s.value)}}catch(s){throw await o.cancel().catch(()=>{}),s}finally{o.releaseLock()}let y=new Uint8Array(a),h=0;for(let s of i)y.set(s,h),h+=s.length;let u=JSON.parse(new TextDecoder("utf-8",{fatal:!0}).decode(y));if(!u||typeof u!="object"||Array.isArray(u))throw new Error("Invalid response");return u}function k(t){if(l.replaceChildren(),t instanceof Error&&t.message==="owner_required"){c.hidden=!0,p.textContent="Sign in to your Urbit to review the request.";let e=n("a","identity-action identity-action--primary","Sign in to my ship");e.href="/~/login?redirect=/stead-identity/",l.append(e)}else p.textContent="The request was not confirmed. Refresh requests before trying again."}async function E(){if(!g){g=!0,c.disabled=!0,p.textContent="Checking for sign-in requests\u2026";try{let t=await _("list",{protocol:"stead.identity/1"});if(t.protocol!=="stead.identity/1"||t.status!=="read"||!t.requests||typeof t.requests!="object"||Array.isArray(t.requests))throw new Error("Invalid response");let e=Object.entries(t.requests);if(e.length>4)throw new Error("Invalid response");l.replaceChildren(),p.textContent=e.length?"Match the Home address and code with your Stead tab before approving.":"No pending sign-ins. Start in your Stead tab, then refresh here.";for(let[r,o]of e){let i=T(o);if(!/^[0-9a-f]{64}$/u.test(r)||i.comparison_code!==r.slice(0,12)||!/^(pending|sent|approved|failed)$/u.test(i.status??""))throw new Error("Invalid response");let a=n("article","identity-request"),y=n("p","identity-caption","Comparison code"),h=n("h2","identity-code",i.comparison_code),u=n("p","identity-address","Stead home: "+i.home+" at "+i.origin),s=n("p","identity-caption","Approving as "+i.identity_ship),b=n("p","identity-caption"),x=new Date(Number(i.expires_at_ms)),w=n("time","",x.toLocaleTimeString(void 0,{hour:"numeric",minute:"2-digit"}));w.dateTime=x.toISOString(),b.append("Expires ",w);let f=n("p","identity-result",{pending:"Waiting for your approval.",sent:"Approval sent. Return to your Stead tab and check approval.",approved:"Approval confirmed. Return to your Stead tab to finish signing in.",failed:"Approval was not accepted. Start a new sign-in in Stead."}[i.status]);f.setAttribute("role","status"),f.tabIndex=-1;let v=n("details","identity-details");if(v.append(n("summary","","Request details"),n("p","","Principal "+i.principal_id),n("p","","Binding "+i.binding_id+", revision "+i.binding_revision)),a.append(y,h,u,s,b,f),i.status==="pending"){if(!/^[0-9a-f]{64}$/u.test(i.csrf??""))throw new Error("Invalid response");let m=n("button","identity-action identity-action--primary","Approve sign-in");m.type="button",m.addEventListener("click",async()=>{if(!g){g=!0,c.disabled=!0;for(let d of l.querySelectorAll("button"))d.disabled=!0;try{let d=await _("approve",{protocol:"stead.identity/1",challenge_id:r,csrf:i.csrf,comparison_code:i.comparison_code,origin:i.origin});if(d.protocol!=="stead.identity/1"||d.status!=="sent"||d.challenge_id!==r)throw new Error("Approval was not confirmed. Refresh before trying again.");f.textContent="Approval sent. Return to your Stead tab and check approval.",m.remove(),f.focus()}catch(d){k(d),p.focus()}finally{g=!1,c.disabled=!1;for(let d of l.querySelectorAll("button"))d.disabled=!1}}}),a.append(m)}a.append(v),l.append(a)}}catch(t){k(t)}finally{g=!1,c.disabled=!1}}}c.addEventListener("click",()=>{E()});E();
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                             desk/web/stead/asset-d41d8a1a7171d06405f67f510ff392afca81f17da9233823150692e69da0b4f1.stead-asset   0000644 0000000 0000000 00000005361 00000000000 027115  0                                                                                                    ustar 00                                                                                stead-release                                                                                                                                                          :root{--house-ink: #f6f2eb;--house-muted: #c2bdb4;--house-field: #242422;--house-line: #595650;--house-focus: #c5b8ff;--house-ground: #181817;--house-light: linear-gradient(90deg, rgb(17 17 16 / 86%), transparent 78%), radial-gradient(ellipse 5% 140% at 78% 55%, rgb(227 218 197 / 15%), transparent), radial-gradient(ellipse 7% 110% at 88% 28%, rgb(224 216 199 / 13%), transparent), linear-gradient(101deg, #141413 25%, #2e2d29 68%, #181817 100%)}:root{font:15px/1.55 Inter,ui-sans-serif,system-ui,sans-serif;color:var(--house-ink);min-height:100%;background-color:var(--house-ground);background-image:var(--house-light);color-scheme:dark;--muted: var(--house-muted);--line: var(--house-line);--mono: ui-monospace, SFMono-Regular, Consolas, monospace}*{box-sizing:border-box}body{margin:0}#root{max-width:546px;margin:auto;padding:clamp(28px,8vh,70px) 20px 32px}.identity-header{display:grid;gap:14px}.identity-mark{display:grid;place-items:center;border:1px solid currentColor;border-radius:50%;width:34px;height:34px;font:21px var(--mono)}h1{margin:0;font-size:clamp(27px,5vw,34px);font-weight:650;letter-spacing:-.04em;line-height:1.15}.identity-toolbar{display:flex;flex-wrap:wrap;align-items:center;gap:8px 16px;margin:12px 0 16px}.identity-status{flex:1 1 230px;margin:0;color:var(--muted);font-size:14px}.identity-requests{display:grid;gap:12px}.identity-request{min-width:0;padding:clamp(16px,4vw,22px);border:1px solid var(--line);border-radius:13px;background:var(--house-field);overflow-wrap:anywhere}.identity-caption{margin:0;color:var(--muted);font-size:12px}.identity-code{margin:4px 0 12px;font:650 clamp(24px,5vw,30px)/1.25 var(--mono);letter-spacing:.05em}.identity-address{margin:0 0 5px;font:13px/1.5 var(--mono)}.identity-result{margin:13px 0 0;padding-top:12px;border-top:1px solid var(--line);font-size:13px}.identity-details{margin-top:14px;color:var(--muted);font-size:12px}.identity-details summary{width:fit-content;cursor:pointer}.identity-details p{margin:5px 0 0;font:12px/1.5 var(--mono)}.identity-action{display:inline-flex;align-items:center;justify-content:center;min-height:44px;padding:8px 12px;border:1px solid transparent;border-radius:9px;font:600 14px/1.35 Inter,ui-sans-serif,system-ui,sans-serif;text-align:center;text-decoration:none;cursor:pointer}.identity-action[hidden]{display:none}.identity-action--quiet{border-color:var(--line);color:var(--house-ink);background:transparent}.identity-action--quiet:hover{background:#373633}.identity-action--primary{width:100%;color:var(--house-ground);background:var(--house-ink)}.identity-request .identity-action--primary{margin-top:12px}.identity-action--primary:hover{background:#dedad2}.identity-action:disabled{opacity:.55;cursor:default}:focus-visible{outline:2px solid var(--house-focus);outline-offset:3px}
+                                                                                                                                                                                                                                                                               desk/web/stead/asset-f9f263b207490702f511b63510a46eb5dc81e450fb78f9e6e7f19fc7ec021e4f.stead-asset   0000644 0000000 0000000 00000000167 00000000000 027301  0                                                                                                    ustar 00                                                                                stead-release                                                                                                                                                          import{o as a,p as b}from"./chunk-HRUDAQ2O.js";import"./chunk-OOJM4CTU.js";export{b as Markdown,a as markdownContent};
+                                                                                                                                                                                                                                                                                                                                                                                                         stead-release/desk/web/stead/inventory.hoon                                                         0000644 0000000 0000000 00000013343 00000000000 016214  0                                                                                                    ustar 00                                                                                                                                                                                                                                                       ::  Generated by web/app/package-desk.mjs from verified manifest bytes.
+|%
++$  asset  [file=path mime=@t digest=@t]
+++  inventory
+  ^-  (map @t asset)
+  %-  malt
+  :~
+      ['/stead/assets/NOTICE.txt' [[%web %stead 'asset-3e9102608b1a1d3dced1bd3f42068196621e3be103c017e5eb0ed70d4521b58e' %stead-asset ~] 'text/plain; charset=utf-8' '3e9102608b1a1d3dced1bd3f42068196621e3be103c017e5eb0ed70d4521b58e']]
+      ['/stead-identity/assets/NOTICE.txt' [[%web %stead 'asset-3e9102608b1a1d3dced1bd3f42068196621e3be103c017e5eb0ed70d4521b58e' %stead-asset ~] 'text/plain; charset=utf-8' '3e9102608b1a1d3dced1bd3f42068196621e3be103c017e5eb0ed70d4521b58e']]
+      ['/stead/assets/app.css' [[%web %stead 'asset-78a9908481e8567c1baafb039eebcc6806277052a10dfcfd6807f84716d0650a' %stead-asset ~] 'text/css; charset=utf-8' '78a9908481e8567c1baafb039eebcc6806277052a10dfcfd6807f84716d0650a']]
+      ['/stead/assets/app.js' [[%web %stead 'asset-43104c1b63fdeb00baf9a040db1872996eb498f3fe47a41c55f04fbda6ee746e' %stead-asset ~] 'text/javascript; charset=utf-8' '43104c1b63fdeb00baf9a040db1872996eb498f3fe47a41c55f04fbda6ee746e']]
+      ['/stead/assets/app.js.LEGAL.txt' [[%web %stead 'asset-545015593ed73aed1b421833eb462ccc6ba2ae0179ebd64909ec13ea499ed07c' %stead-asset ~] 'text/plain; charset=utf-8' '545015593ed73aed1b421833eb462ccc6ba2ae0179ebd64909ec13ea499ed07c']]
+      ['/stead/assets/chunk-EUJWMAPN.js' [[%web %stead 'asset-96aa0cdd475339c38a2e767f93f61475e17ff2e6e236147a062902c2f756db5a' %stead-asset ~] 'text/javascript; charset=utf-8' '96aa0cdd475339c38a2e767f93f61475e17ff2e6e236147a062902c2f756db5a']]
+      ['/stead-identity/assets/chunk-EUJWMAPN.js' [[%web %stead 'asset-96aa0cdd475339c38a2e767f93f61475e17ff2e6e236147a062902c2f756db5a' %stead-asset ~] 'text/javascript; charset=utf-8' '96aa0cdd475339c38a2e767f93f61475e17ff2e6e236147a062902c2f756db5a']]
+      ['/stead/assets/chunk-HRUDAQ2O.js' [[%web %stead 'asset-d02c4a767baadf4c7a68b9dd7c0aba0e68a1181a57a9470952ae26dc75f25baa' %stead-asset ~] 'text/javascript; charset=utf-8' 'd02c4a767baadf4c7a68b9dd7c0aba0e68a1181a57a9470952ae26dc75f25baa']]
+      ['/stead-identity/assets/chunk-HRUDAQ2O.js' [[%web %stead 'asset-d02c4a767baadf4c7a68b9dd7c0aba0e68a1181a57a9470952ae26dc75f25baa' %stead-asset ~] 'text/javascript; charset=utf-8' 'd02c4a767baadf4c7a68b9dd7c0aba0e68a1181a57a9470952ae26dc75f25baa']]
+      ['/stead/assets/chunk-HRUDAQ2O.js.LEGAL.txt' [[%web %stead 'asset-c9235b043c7ea052717cebbc9a705f8c771bafe5cc6ccc92a992d1ff13ec1d25' %stead-asset ~] 'text/plain; charset=utf-8' 'c9235b043c7ea052717cebbc9a705f8c771bafe5cc6ccc92a992d1ff13ec1d25']]
+      ['/stead-identity/assets/chunk-HRUDAQ2O.js.LEGAL.txt' [[%web %stead 'asset-c9235b043c7ea052717cebbc9a705f8c771bafe5cc6ccc92a992d1ff13ec1d25' %stead-asset ~] 'text/plain; charset=utf-8' 'c9235b043c7ea052717cebbc9a705f8c771bafe5cc6ccc92a992d1ff13ec1d25']]
+      ['/stead/assets/chunk-NA53SZAR.js' [[%web %stead 'asset-f9f263b207490702f511b63510a46eb5dc81e450fb78f9e6e7f19fc7ec021e4f' %stead-asset ~] 'text/javascript; charset=utf-8' 'f9f263b207490702f511b63510a46eb5dc81e450fb78f9e6e7f19fc7ec021e4f']]
+      ['/stead-identity/assets/chunk-NA53SZAR.js' [[%web %stead 'asset-f9f263b207490702f511b63510a46eb5dc81e450fb78f9e6e7f19fc7ec021e4f' %stead-asset ~] 'text/javascript; charset=utf-8' 'f9f263b207490702f511b63510a46eb5dc81e450fb78f9e6e7f19fc7ec021e4f']]
+      ['/stead/assets/chunk-OOJM4CTU.js' [[%web %stead 'asset-9dbaaa1b267ebd74b96fc498735a78d76804f1e96e532871291c937cf83694e7' %stead-asset ~] 'text/javascript; charset=utf-8' '9dbaaa1b267ebd74b96fc498735a78d76804f1e96e532871291c937cf83694e7']]
+      ['/stead-identity/assets/chunk-OOJM4CTU.js' [[%web %stead 'asset-9dbaaa1b267ebd74b96fc498735a78d76804f1e96e532871291c937cf83694e7' %stead-asset ~] 'text/javascript; charset=utf-8' '9dbaaa1b267ebd74b96fc498735a78d76804f1e96e532871291c937cf83694e7']]
+      ['/stead/assets/chunk-QIJDOJKB.css' [[%web %stead 'asset-3bb7988e10c27e803d3f9ebcdc621be6a4b96e19244819b2841d7ea4287228f7' %stead-asset ~] 'text/css; charset=utf-8' '3bb7988e10c27e803d3f9ebcdc621be6a4b96e19244819b2841d7ea4287228f7']]
+      ['/stead-identity/assets/chunk-QIJDOJKB.css' [[%web %stead 'asset-3bb7988e10c27e803d3f9ebcdc621be6a4b96e19244819b2841d7ea4287228f7' %stead-asset ~] 'text/css; charset=utf-8' '3bb7988e10c27e803d3f9ebcdc621be6a4b96e19244819b2841d7ea4287228f7']]
+      ['/stead-identity/assets/identity.css' [[%web %stead 'asset-d41d8a1a7171d06405f67f510ff392afca81f17da9233823150692e69da0b4f1' %stead-asset ~] 'text/css; charset=utf-8' 'd41d8a1a7171d06405f67f510ff392afca81f17da9233823150692e69da0b4f1']]
+      ['/stead-identity/' [[%web %stead 'asset-08a1794a61e7ed673d2e66de355cda8680a87a9dff4de7245ac987909ce7b1ed' %stead-asset ~] 'text/html; charset=utf-8' '08a1794a61e7ed673d2e66de355cda8680a87a9dff4de7245ac987909ce7b1ed']]
+      ['/stead-identity/assets/identity.js' [[%web %stead 'asset-d318c5941423ef97fe6d2be5989720a2ae0cfe6af5a6b0fb8c6d486578c8792b' %stead-asset ~] 'text/javascript; charset=utf-8' 'd318c5941423ef97fe6d2be5989720a2ae0cfe6af5a6b0fb8c6d486578c8792b']]
+      ['/stead/' [[%web %stead 'asset-4ad0a8c304f247405c5314f49b27fac259aa8f52458868bfe6e5f79760ad7a95' %stead-asset ~] 'text/html; charset=utf-8' '4ad0a8c304f247405c5314f49b27fac259aa8f52458868bfe6e5f79760ad7a95']]
+      ['/stead/assets/product.css' [[%web %stead 'asset-9306dc9fd0db4afe24abd07a37d7d8f1d46b43a66405e441ced117bf4baca644' %stead-asset ~] 'text/css; charset=utf-8' '9306dc9fd0db4afe24abd07a37d7d8f1d46b43a66405e441ced117bf4baca644']]
+      ['/stead/assets/product.js' [[%web %stead 'asset-16a73851036ab3b2c40560b799f848e7bfa54738d2d9f16c461bd9c81ced1b65' %stead-asset ~] 'text/javascript; charset=utf-8' '16a73851036ab3b2c40560b799f848e7bfa54738d2d9f16c461bd9c81ced1b65']]
+  ==
+++  paths
+  ^-  (set @t)
+  (silt (turn ~(tap by inventory) |=([route=@t value=asset] route)))
+--
+                                                                                                                                                                                                                                                                                             stead-release/manifest.json                                                                         0000644 0000000 0000000 00000102217 00000000000 013167  0                                                                                                    ustar 00                                                                                                                                                                                                                                                       {
+  "agents": [
+    "stead-home"
+  ],
+  "compatibility": {
+    "api_version": 3,
+    "kernel_commit": "5a187fededc4582a34fcd6055c67bb63e0917b94",
+    "kernel_kelvin": 408,
+    "runtime_binary_sha256": "f7f0d3b3c0480fc10f887dfbc09bde56a81d723a803541c7886c538a0675d833",
+    "runtime_version": "4.6"
+  },
+  "contract_sha256": "0f21fc4dd665459e3613bd4f6d35209fb06e64605ab1410598c95f2fa8954a13",
+  "desk_sources": {
+    "app/stead-home.hoon": "repository:native/core/desk/app/stead-home.hoon",
+    "desk.bill": "generated:role-agents",
+    "lib/default-agent.hoon": "kernel:pkg/base-dev/lib/default-agent.hoon",
+    "lib/server.hoon": "kernel:pkg/base-dev/lib/server.hoon",
+    "lib/skeleton.hoon": "kernel:pkg/base-dev/lib/skeleton.hoon",
+    "lib/stead-assets.hoon": "repository:native/core/desk/lib/stead-assets.hoon",
+    "lib/stead-browser.hoon": "repository:native/core/desk/lib/stead-browser.hoon",
+    "lib/stead-code-ancestry.hoon": "repository:native/core/desk/lib/stead-code-ancestry.hoon",
+    "lib/stead-code-build-home.hoon": "repository:native/core/desk/lib/stead-code-build-home.hoon",
+    "lib/stead-code-credentials.hoon": "repository:native/core/desk/lib/stead-code-credentials.hoon",
+    "lib/stead-code-delivery-export.hoon": "repository:native/core/desk/lib/stead-code-delivery-export.hoon",
+    "lib/stead-code-delivery.hoon": "repository:native/core/desk/lib/stead-code-delivery.hoon",
+    "lib/stead-code-fetch-wire.hoon": "repository:native/core/desk/lib/stead-code-fetch-wire.hoon",
+    "lib/stead-code-fetch.hoon": "repository:native/core/desk/lib/stead-code-fetch.hoon",
+    "lib/stead-code-git-delta.hoon": "repository:native/core/desk/lib/stead-code-git-delta.hoon",
+    "lib/stead-code-git-emit.hoon": "repository:native/core/desk/lib/stead-code-git-emit.hoon",
+    "lib/stead-code-git-entry.hoon": "repository:native/core/desk/lib/stead-code-git-entry.hoon",
+    "lib/stead-code-git-graph.hoon": "repository:native/core/desk/lib/stead-code-git-graph.hoon",
+    "lib/stead-code-git-inflate.hoon": "repository:native/core/desk/lib/stead-code-git-inflate.hoon",
+    "lib/stead-code-git-objects.hoon": "repository:native/core/desk/lib/stead-code-git-objects.hoon",
+    "lib/stead-code-git-pack.hoon": "repository:native/core/desk/lib/stead-code-git-pack.hoon",
+    "lib/stead-code-git-pkt.hoon": "repository:native/core/desk/lib/stead-code-git-pkt.hoon",
+    "lib/stead-code-git-resolve.hoon": "repository:native/core/desk/lib/stead-code-git-resolve.hoon",
+    "lib/stead-code-git-response.hoon": "repository:native/core/desk/lib/stead-code-git-response.hoon",
+    "lib/stead-code-home.hoon": "repository:native/core/desk/lib/stead-code-home.hoon",
+    "lib/stead-code-http.hoon": "repository:native/core/desk/lib/stead-code-http.hoon",
+    "lib/stead-code-pack-admit.hoon": "repository:native/core/desk/lib/stead-code-pack-admit.hoon",
+    "lib/stead-code-pack-anchor.hoon": "repository:native/core/desk/lib/stead-code-pack-anchor.hoon",
+    "lib/stead-code-pack-carrier.hoon": "repository:native/core/desk/lib/stead-code-pack-carrier.hoon",
+    "lib/stead-code-pack-control.hoon": "repository:native/core/desk/lib/stead-code-pack-control.hoon",
+    "lib/stead-code-pack-ledger.hoon": "repository:native/core/desk/lib/stead-code-pack-ledger.hoon",
+    "lib/stead-code-pack-owner.hoon": "repository:native/core/desk/lib/stead-code-pack-owner.hoon",
+    "lib/stead-code-pack-promotion.hoon": "repository:native/core/desk/lib/stead-code-pack-promotion.hoon",
+    "lib/stead-code-pack-proof.hoon": "repository:native/core/desk/lib/stead-code-pack-proof.hoon",
+    "lib/stead-code-pack-push.hoon": "repository:native/core/desk/lib/stead-code-pack-push.hoon",
+    "lib/stead-code-pack-relay-http.hoon": "repository:native/core/desk/lib/stead-code-pack-relay-http.hoon",
+    "lib/stead-code-pack-relay-pin.hoon": "repository:native/core/desk/lib/stead-code-pack-relay-pin.hoon",
+    "lib/stead-code-pack-relay-policy.hoon": "repository:native/core/desk/lib/stead-code-pack-relay-policy.hoon",
+    "lib/stead-code-pack-relay-wire.hoon": "repository:native/core/desk/lib/stead-code-pack-relay-wire.hoon",
+    "lib/stead-code-pack-relay.hoon": "repository:native/core/desk/lib/stead-code-pack-relay.hoon",
+    "lib/stead-code-pack-review-api.hoon": "repository:native/core/desk/lib/stead-code-pack-review-api.hoon",
+    "lib/stead-code-pack-review-board.hoon": "repository:native/core/desk/lib/stead-code-pack-review-board.hoon",
+    "lib/stead-code-pack-review-proof.hoon": "repository:native/core/desk/lib/stead-code-pack-review-proof.hoon",
+    "lib/stead-code-pack-review.hoon": "repository:native/core/desk/lib/stead-code-pack-review.hoon",
+    "lib/stead-code-pack-worker-signature.hoon": "repository:native/core/desk/lib/stead-code-pack-worker-signature.hoon",
+    "lib/stead-code-receive-wire.hoon": "repository:native/core/desk/lib/stead-code-receive-wire.hoon",
+    "lib/stead-code-receive.hoon": "repository:native/core/desk/lib/stead-code-receive.hoon",
+    "lib/stead-code-review-api.hoon": "repository:native/core/desk/lib/stead-code-review-api.hoon",
+    "lib/stead-code-review-home.hoon": "repository:native/core/desk/lib/stead-code-review-home.hoon",
+    "lib/stead-code-review.hoon": "repository:native/core/desk/lib/stead-code-review.hoon",
+    "lib/stead-code-service.hoon": "repository:native/core/desk/lib/stead-code-service.hoon",
+    "lib/stead-code-store.hoon": "repository:native/core/desk/lib/stead-code-store.hoon",
+    "lib/stead-code-upload.hoon": "repository:native/core/desk/lib/stead-code-upload.hoon",
+    "lib/stead-codec-v1.hoon": "repository:native/core/desk/lib/stead-codec-v1.hoon",
+    "lib/stead-codec.hoon": "repository:native/core/desk/lib/stead-codec.hoon",
+    "lib/stead-core-v1.hoon": "repository:native/core/desk/lib/stead-core-v1.hoon",
+    "lib/stead-core.hoon": "repository:native/core/desk/lib/stead-core.hoon",
+    "lib/stead-delivery.hoon": "repository:native/core/desk/lib/stead-delivery.hoon",
+    "lib/stead-eyre.hoon": "repository:native/core/desk/lib/stead-eyre.hoon",
+    "lib/stead-git.hoon": "repository:native/core/desk/lib/stead-git.hoon",
+    "lib/stead-home-handoff.hoon": "repository:native/core/desk/lib/stead-home-handoff.hoon",
+    "lib/stead-http.hoon": "repository:native/core/desk/lib/stead-http.hoon",
+    "lib/stead-project-retirement.hoon": "repository:native/core/desk/lib/stead-project-retirement.hoon",
+    "lib/stead-projection.hoon": "repository:native/core/desk/lib/stead-projection.hoon",
+    "lib/stead-restore.hoon": "repository:native/core/desk/lib/stead-restore.hoon",
+    "lib/stead-session.hoon": "repository:native/core/desk/lib/stead-session.hoon",
+    "lib/stead-team-codec.hoon": "repository:native/core/desk/lib/stead-team-codec.hoon",
+    "lib/stead-team-config.hoon": "repository:native/core/desk/lib/stead-team-config.hoon",
+    "lib/stead-team-owner.hoon": "repository:native/core/desk/lib/stead-team-owner.hoon",
+    "lib/stead-team.hoon": "repository:native/core/desk/lib/stead-team.hoon",
+    "lib/stead-update-codec.hoon": "repository:native/core/desk/lib/stead-update-codec.hoon",
+    "lib/stead-update-security.hoon": "repository:native/core/desk/lib/stead-update-security.hoon",
+    "lib/stead-updates.hoon": "repository:native/core/desk/lib/stead-updates.hoon",
+    "lib/stead-views.hoon": "repository:native/core/desk/lib/stead-views.hoon",
+    "lib/stead-work-contract.hoon": "repository:native/core/desk/lib/stead-work-contract.hoon",
+    "lib/strand.hoon": "kernel:pkg/base-dev/lib/strand.hoon",
+    "lib/strandio.hoon": "kernel:pkg/base-dev/lib/strandio.hoon",
+    "mar/bill.hoon": "kernel:pkg/base-dev/mar/bill.hoon",
+    "mar/hoon.hoon": "kernel:pkg/base-dev/mar/hoon.hoon",
+    "mar/json.hoon": "kernel:pkg/base-dev/mar/json.hoon",
+    "mar/kelvin.hoon": "kernel:pkg/base-dev/mar/kelvin.hoon",
+    "mar/mime.hoon": "kernel:pkg/base-dev/mar/mime.hoon",
+    "mar/noun.hoon": "kernel:pkg/base-dev/mar/noun.hoon",
+    "mar/stead-asset.hoon": "repository:native/core/desk/mar/stead-asset.hoon",
+    "mar/stead-auth-approval-1.hoon": "repository:native/core/desk/mar/stead-auth-approval-1.hoon",
+    "mar/stead-auth-challenge-1.hoon": "repository:native/core/desk/mar/stead-auth-challenge-1.hoon",
+    "mar/stead-bootstrap-1.hoon": "repository:native/core/desk/mar/stead-bootstrap-1.hoon",
+    "mar/stead-code-pack-stage-1.hoon": "repository:native/core/desk/mar/stead-code-pack-stage-1.hoon",
+    "mar/stead-command-3.hoon": "repository:native/core/desk/mar/stead-command-3.hoon",
+    "mar/stead-home-handoff-1.hoon": "repository:native/core/desk/mar/stead-home-handoff-1.hoon",
+    "mar/stead-identity-config-1.hoon": "repository:native/core/desk/mar/stead-identity-config-1.hoon",
+    "mar/stead-project-retirement-1.hoon": "repository:native/core/desk/mar/stead-project-retirement-1.hoon",
+    "mar/stead-query-3.hoon": "repository:native/core/desk/mar/stead-query-3.hoon",
+    "mar/stead-result-3.hoon": "repository:native/core/desk/mar/stead-result-3.hoon",
+    "mar/stead-team-config-1.hoon": "repository:native/core/desk/mar/stead-team-config-1.hoon",
+    "mar/stead-updates-3.hoon": "repository:native/core/desk/mar/stead-updates-3.hoon",
+    "mar/txt.hoon": "kernel:pkg/base-dev/mar/txt.hoon",
+    "sur/spider.hoon": "kernel:pkg/base-dev/sur/spider.hoon",
+    "sys.kelvin": "generated:kernel-compatibility",
+    "ted/stead-pilot-cert.hoon": "repository:native/core/desk/ted/stead-pilot-cert.hoon",
+    "ted/stead-pilot-owner.hoon": "repository:native/core/desk/ted/stead-pilot-owner.hoon",
+    "web/stead/asset-08a1794a61e7ed673d2e66de355cda8680a87a9dff4de7245ac987909ce7b1ed.stead-asset": "repository:native/core/desk/web/stead/asset-08a1794a61e7ed673d2e66de355cda8680a87a9dff4de7245ac987909ce7b1ed.stead-asset",
+    "web/stead/asset-16a73851036ab3b2c40560b799f848e7bfa54738d2d9f16c461bd9c81ced1b65.stead-asset": "repository:native/core/desk/web/stead/asset-16a73851036ab3b2c40560b799f848e7bfa54738d2d9f16c461bd9c81ced1b65.stead-asset",
+    "web/stead/asset-3bb7988e10c27e803d3f9ebcdc621be6a4b96e19244819b2841d7ea4287228f7.stead-asset": "repository:native/core/desk/web/stead/asset-3bb7988e10c27e803d3f9ebcdc621be6a4b96e19244819b2841d7ea4287228f7.stead-asset",
+    "web/stead/asset-3e9102608b1a1d3dced1bd3f42068196621e3be103c017e5eb0ed70d4521b58e.stead-asset": "repository:native/core/desk/web/stead/asset-3e9102608b1a1d3dced1bd3f42068196621e3be103c017e5eb0ed70d4521b58e.stead-asset",
+    "web/stead/asset-43104c1b63fdeb00baf9a040db1872996eb498f3fe47a41c55f04fbda6ee746e.stead-asset": "repository:native/core/desk/web/stead/asset-43104c1b63fdeb00baf9a040db1872996eb498f3fe47a41c55f04fbda6ee746e.stead-asset",
+    "web/stead/asset-4ad0a8c304f247405c5314f49b27fac259aa8f52458868bfe6e5f79760ad7a95.stead-asset": "repository:native/core/desk/web/stead/asset-4ad0a8c304f247405c5314f49b27fac259aa8f52458868bfe6e5f79760ad7a95.stead-asset",
+    "web/stead/asset-545015593ed73aed1b421833eb462ccc6ba2ae0179ebd64909ec13ea499ed07c.stead-asset": "repository:native/core/desk/web/stead/asset-545015593ed73aed1b421833eb462ccc6ba2ae0179ebd64909ec13ea499ed07c.stead-asset",
+    "web/stead/asset-78a9908481e8567c1baafb039eebcc6806277052a10dfcfd6807f84716d0650a.stead-asset": "repository:native/core/desk/web/stead/asset-78a9908481e8567c1baafb039eebcc6806277052a10dfcfd6807f84716d0650a.stead-asset",
+    "web/stead/asset-9306dc9fd0db4afe24abd07a37d7d8f1d46b43a66405e441ced117bf4baca644.stead-asset": "repository:native/core/desk/web/stead/asset-9306dc9fd0db4afe24abd07a37d7d8f1d46b43a66405e441ced117bf4baca644.stead-asset",
+    "web/stead/asset-96aa0cdd475339c38a2e767f93f61475e17ff2e6e236147a062902c2f756db5a.stead-asset": "repository:native/core/desk/web/stead/asset-96aa0cdd475339c38a2e767f93f61475e17ff2e6e236147a062902c2f756db5a.stead-asset",
+    "web/stead/asset-9dbaaa1b267ebd74b96fc498735a78d76804f1e96e532871291c937cf83694e7.stead-asset": "repository:native/core/desk/web/stead/asset-9dbaaa1b267ebd74b96fc498735a78d76804f1e96e532871291c937cf83694e7.stead-asset",
+    "web/stead/asset-c9235b043c7ea052717cebbc9a705f8c771bafe5cc6ccc92a992d1ff13ec1d25.stead-asset": "repository:native/core/desk/web/stead/asset-c9235b043c7ea052717cebbc9a705f8c771bafe5cc6ccc92a992d1ff13ec1d25.stead-asset",
+    "web/stead/asset-d02c4a767baadf4c7a68b9dd7c0aba0e68a1181a57a9470952ae26dc75f25baa.stead-asset": "repository:native/core/desk/web/stead/asset-d02c4a767baadf4c7a68b9dd7c0aba0e68a1181a57a9470952ae26dc75f25baa.stead-asset",
+    "web/stead/asset-d318c5941423ef97fe6d2be5989720a2ae0cfe6af5a6b0fb8c6d486578c8792b.stead-asset": "repository:native/core/desk/web/stead/asset-d318c5941423ef97fe6d2be5989720a2ae0cfe6af5a6b0fb8c6d486578c8792b.stead-asset",
+    "web/stead/asset-d41d8a1a7171d06405f67f510ff392afca81f17da9233823150692e69da0b4f1.stead-asset": "repository:native/core/desk/web/stead/asset-d41d8a1a7171d06405f67f510ff392afca81f17da9233823150692e69da0b4f1.stead-asset",
+    "web/stead/asset-f9f263b207490702f511b63510a46eb5dc81e450fb78f9e6e7f19fc7ec021e4f.stead-asset": "repository:native/core/desk/web/stead/asset-f9f263b207490702f511b63510a46eb5dc81e450fb78f9e6e7f19fc7ec021e4f.stead-asset",
+    "web/stead/inventory.hoon": "repository:native/core/desk/web/stead/inventory.hoon"
+  },
+  "docket": "not-included-native-route-candidate",
+  "files": {
+    "LICENSE": {
+      "bytes": 10030,
+      "sha256": "a268d7b43f15fc12307b291a01c5761d177a8848521fd3f6f9949e2e89680c05"
+    },
+    "OPERATOR.md": {
+      "bytes": 29872,
+      "sha256": "36a4f5be2469a685da3133c054075dcf6c33d2b0c2c7adfd3c03ad29ade69166"
+    },
+    "THIRD_PARTY_NOTICES.md": {
+      "bytes": 13933,
+      "sha256": "3c02a6d5d517e54c2c69bf9e4d830c97fef68a717248d0cbbf9cdce7686c3197"
+    },
+    "desk/app/stead-home.hoon": {
+      "bytes": 22394,
+      "sha256": "b22de1f66ef4e96146dc0038b9946ce108bf64dd4ecc7dff7091d5ea5ee277d2"
+    },
+    "desk/desk.bill": {
+      "bytes": 19,
+      "sha256": "b18f220bcb92a430725b7f5cf5c39944bf2407f78c1f0c0f58b214d09b17543e"
+    },
+    "desk/lib/default-agent.hoon": {
+      "bytes": 1307,
+      "sha256": "70a8af06601e8d1b75b261b2ac8b2cb06d5622baa1d1b1f8fec9236ce167d113"
+    },
+    "desk/lib/server.hoon": {
+      "bytes": 3870,
+      "sha256": "d0a566085300a6deae334b98c4844dc11e90f0315015a91e97c2fbb61db31d68"
+    },
+    "desk/lib/skeleton.hoon": {
+      "bytes": 792,
+      "sha256": "c7c654a91c5dc1a535d4a76b019ec175955e52961b1ddff70ad49121208d20f5"
+    },
+    "desk/lib/stead-assets.hoon": {
+      "bytes": 992,
+      "sha256": "e5493f5d45e3a588b98520ee9f0772683a9c277eec083d49b238cc8986a789b3"
+    },
+    "desk/lib/stead-browser.hoon": {
+      "bytes": 11193,
+      "sha256": "78a6cf8d314590070230ade522ef0329a81faa446050832567f6b8750c604027"
+    },
+    "desk/lib/stead-code-ancestry.hoon": {
+      "bytes": 2026,
+      "sha256": "d46a3af25bb6a1ce0cdb36497717a160c96247fd1bcf831cff7035c7e4db91b9"
+    },
+    "desk/lib/stead-code-build-home.hoon": {
+      "bytes": 12793,
+      "sha256": "ae7ea38afaf41fde3f9532935ca2b444a3a40cc11601d21d20f8c9470d7afa91"
+    },
+    "desk/lib/stead-code-credentials.hoon": {
+      "bytes": 3637,
+      "sha256": "6e7eb121e5aa7bb36f80170eeb58bd87db52348a40189ef4f7682952647de2d5"
+    },
+    "desk/lib/stead-code-delivery-export.hoon": {
+      "bytes": 8254,
+      "sha256": "5afc8a4cd112eb4fd863ed9c3caa2875007d92714cfb85e26328f3c852de8810"
+    },
+    "desk/lib/stead-code-delivery.hoon": {
+      "bytes": 16101,
+      "sha256": "80abf877b32660d65bdf7f5f9657fc2990d953681cd50350c7841f5a5eb048f8"
+    },
+    "desk/lib/stead-code-fetch-wire.hoon": {
+      "bytes": 2663,
+      "sha256": "2218ebca65c69adc1568dc7a3bc622c5b809cc2fcdf068a99dcb6651e5256270"
+    },
+    "desk/lib/stead-code-fetch.hoon": {
+      "bytes": 4862,
+      "sha256": "62c2470b0901606302edd67b7593e9096f01cba5e3b65259c8cd87923c3ca943"
+    },
+    "desk/lib/stead-code-git-delta.hoon": {
+      "bytes": 3312,
+      "sha256": "117abbdf1d33e0e45f23017bacf1b2c4f983e5a3b2e6d6bc8a2ffa047d6a97de"
+    },
+    "desk/lib/stead-code-git-emit.hoon": {
+      "bytes": 4487,
+      "sha256": "1f737cb3a10eb5c1153ef00fb86e3bf30100ecb1fd0e0f2375328876b70f380e"
+    },
+    "desk/lib/stead-code-git-entry.hoon": {
+      "bytes": 2744,
+      "sha256": "9ebbe76571c965b0cea507cebbd75e866920b7f115117a2384b5737e5257a236"
+    },
+    "desk/lib/stead-code-git-graph.hoon": {
+      "bytes": 9243,
+      "sha256": "501593e3f564fc07f7675f31f857e8adf5fee378366ab79f0742ea7ca3d7965c"
+    },
+    "desk/lib/stead-code-git-inflate.hoon": {
+      "bytes": 12799,
+      "sha256": "86c0d0eedcb4bdd7be21db7c39e822b059a694ce806aad264bdd0420df8b3194"
+    },
+    "desk/lib/stead-code-git-objects.hoon": {
+      "bytes": 2633,
+      "sha256": "d82bfa622dd796835ad472bf2624f80b2d44460427b0746aca8ac46452f78440"
+    },
+    "desk/lib/stead-code-git-pack.hoon": {
+      "bytes": 1297,
+      "sha256": "49a8193642bf0d61a695795a85d045c5a1eed23a0908a350103a0555e93064a9"
+    },
+    "desk/lib/stead-code-git-pkt.hoon": {
+      "bytes": 2437,
+      "sha256": "c0a4c87fb8a1d1d4521c640efad1f60a0d2c064b686468774c17d280442dc24e"
+    },
+    "desk/lib/stead-code-git-resolve.hoon": {
+      "bytes": 5609,
+      "sha256": "bdd6ac7170e099c876203899eec282c2aa56825e12d26674e32588c822d99472"
+    },
+    "desk/lib/stead-code-git-response.hoon": {
+      "bytes": 5139,
+      "sha256": "2ab7218660731f140c575e41b02410074f13580c865246d1f299a90ffa334f3d"
+    },
+    "desk/lib/stead-code-home.hoon": {
+      "bytes": 22229,
+      "sha256": "e7bb6c222ab2b5dc0e0fd8e4dbadedfbc752125a035b6acf71c23c9db70a5cbd"
+    },
+    "desk/lib/stead-code-http.hoon": {
+      "bytes": 2877,
+      "sha256": "aa110550644610004987796020e8a37f6976ecce9376d8863f7c3fd309c714c9"
+    },
+    "desk/lib/stead-code-pack-admit.hoon": {
+      "bytes": 3091,
+      "sha256": "b03ad00f55bf24bd7dcf4be30ef6f58fd7499b8696b22931ab02948540b4bd56"
+    },
+    "desk/lib/stead-code-pack-anchor.hoon": {
+      "bytes": 6317,
+      "sha256": "e195a49e63492b42e4e1eeff18bd6bf1437ed44285f610e85030acb329d75434"
+    },
+    "desk/lib/stead-code-pack-carrier.hoon": {
+      "bytes": 4748,
+      "sha256": "7e94854488b5d42cb0d3d2e3eb9621eeb79264f3598a6c2ca7e48472db46e6f8"
+    },
+    "desk/lib/stead-code-pack-control.hoon": {
+      "bytes": 4022,
+      "sha256": "a11bf163215d81e124fca34742df0bc337b10b8218ec27f82bd56328150586ff"
+    },
+    "desk/lib/stead-code-pack-ledger.hoon": {
+      "bytes": 12951,
+      "sha256": "ff2175608ce15317a640d2a17742b4b0d03c19e92d7a5a9221a578fa6bd44c4d"
+    },
+    "desk/lib/stead-code-pack-owner.hoon": {
+      "bytes": 4261,
+      "sha256": "7c5b743b2db4839b1cb36a4f3476f78c1197362a1037662c95af70bd4e99d5a7"
+    },
+    "desk/lib/stead-code-pack-promotion.hoon": {
+      "bytes": 5003,
+      "sha256": "10f8caa883d8dae9aaae75de3ca080d2ebd2879e4e370145ab20a9a3f5a9545c"
+    },
+    "desk/lib/stead-code-pack-proof.hoon": {
+      "bytes": 7609,
+      "sha256": "253fa94759f17ceb2d1610e399056a35a315a22aa9faf856e6d2e52c24759a18"
+    },
+    "desk/lib/stead-code-pack-push.hoon": {
+      "bytes": 4300,
+      "sha256": "bbc4e1383647b5bd6191510fa4c6ff1bf6018f0ab2623cd1023150d0ffa985a8"
+    },
+    "desk/lib/stead-code-pack-relay-http.hoon": {
+      "bytes": 1528,
+      "sha256": "0de17d9dc252f1c4bad46faed8066684e0399817591de1ae8dbaacc778d813c5"
+    },
+    "desk/lib/stead-code-pack-relay-pin.hoon": {
+      "bytes": 2374,
+      "sha256": "f3dd49fe91b38b0234f21908a7f7c6cb61f766efee21fe953ac14d24bdf7e123"
+    },
+    "desk/lib/stead-code-pack-relay-policy.hoon": {
+      "bytes": 1185,
+      "sha256": "571c02fe99dfb162b4110a9e1f45cecc97f3bd15325101696e574e91cc7993b9"
+    },
+    "desk/lib/stead-code-pack-relay-wire.hoon": {
+      "bytes": 2611,
+      "sha256": "3686d7adff12b1df8fdfd8b7c0ea580304b4b2e4d985547233a50521da14357c"
+    },
+    "desk/lib/stead-code-pack-relay.hoon": {
+      "bytes": 1613,
+      "sha256": "d7ac69f6158d076f12a407e2f3ff8a8f1d9fb4665fcd9cb714f531a97d42ff46"
+    },
+    "desk/lib/stead-code-pack-review-api.hoon": {
+      "bytes": 7000,
+      "sha256": "357916f176418f1e358531591b7d0f2b23df2f7b4bdbc0a1ad377194bdc9329b"
+    },
+    "desk/lib/stead-code-pack-review-board.hoon": {
+      "bytes": 12740,
+      "sha256": "d75c9cf6cc36af7d4eb9c0e2456b0ebeef568e062f04abb0639acabd36ba2dbc"
+    },
+    "desk/lib/stead-code-pack-review-proof.hoon": {
+      "bytes": 2433,
+      "sha256": "61aade9789bacecaea419b4a326aa02c7d476a621186614904f667a18287d7de"
+    },
+    "desk/lib/stead-code-pack-review.hoon": {
+      "bytes": 7336,
+      "sha256": "3c1229baa7f3178a1e7395f73693b0d0f0b7343f15d52db8d64e8d1a927c54a9"
+    },
+    "desk/lib/stead-code-pack-worker-signature.hoon": {
+      "bytes": 1718,
+      "sha256": "ec04acd4244ca18ad5453c8274ae0f803f2055de07f86aca8e7c23fb338881df"
+    },
+    "desk/lib/stead-code-receive-wire.hoon": {
+      "bytes": 6018,
+      "sha256": "e46b051541722bc0cf8cfc5892579a1515e2828eb7843ce79d68ba2b1de83b94"
+    },
+    "desk/lib/stead-code-receive.hoon": {
+      "bytes": 2956,
+      "sha256": "590de8fe7e1e0d06514fee365b8d9decc6f4a9c08c6fe4a6b08a76a90ebcf7d6"
+    },
+    "desk/lib/stead-code-review-api.hoon": {
+      "bytes": 7404,
+      "sha256": "f1ef0209906ef14ccd27ab271b03d5cadbcbdc32b4ba917af9cec23a6c02c3c1"
+    },
+    "desk/lib/stead-code-review-home.hoon": {
+      "bytes": 10721,
+      "sha256": "cb29b0b347bf2251c24fcf6ce4471a89bf2f9214dfe5a3e9d4b7b23283b93433"
+    },
+    "desk/lib/stead-code-review.hoon": {
+      "bytes": 2526,
+      "sha256": "3a4fa880d60e9913cdb450551733020d354aac6c64a2ae83e0348f9b14e55407"
+    },
+    "desk/lib/stead-code-service.hoon": {
+      "bytes": 7084,
+      "sha256": "bb4c1608f2d12e91473cbd6a5491a8f28e06fcfc75480dd67740d867a266caf1"
+    },
+    "desk/lib/stead-code-store.hoon": {
+      "bytes": 10103,
+      "sha256": "653148bad82c5853e58998adc36aebfa29536a4b9b6e9d5c31edaccd8b03df4d"
+    },
+    "desk/lib/stead-code-upload.hoon": {
+      "bytes": 2441,
+      "sha256": "2369722fffe69083fd857a70a562da6a5020fdfaa120e25c68c156cc0a5f0580"
+    },
+    "desk/lib/stead-codec-v1.hoon": {
+      "bytes": 8571,
+      "sha256": "ce4c7a69b03ee1761590c37e71ff49b9f63a1a2edd2aaa6dfbf75bc3c960584a"
+    },
+    "desk/lib/stead-codec.hoon": {
+      "bytes": 9532,
+      "sha256": "56e3d574381bbf8cdf29ca192c70eff256009f89d782e3ffe859b19c1321cbd7"
+    },
+    "desk/lib/stead-core-v1.hoon": {
+      "bytes": 19390,
+      "sha256": "879615a5547d06a09d382c2bac4c5cb20cdf03236ddfdab79c9f1da15bd33cb5"
+    },
+    "desk/lib/stead-core.hoon": {
+      "bytes": 30949,
+      "sha256": "4c183ef6283030437af5e1433e3fbf80f414757bcede4cab1282fc71ff5f34de"
+    },
+    "desk/lib/stead-delivery.hoon": {
+      "bytes": 556,
+      "sha256": "178cac634471554dae9928f8c38248751329314391061976a436a22a7075548d"
+    },
+    "desk/lib/stead-eyre.hoon": {
+      "bytes": 693,
+      "sha256": "33c2f7dcfacf519e047eb35073d58db44c9d39d4aea0eb72b5f7e6964ec451c3"
+    },
+    "desk/lib/stead-git.hoon": {
+      "bytes": 3935,
+      "sha256": "826b83485429c02f577c9b462ee6cddd3ab8ea1a099d33b66893f863d54c54d7"
+    },
+    "desk/lib/stead-home-handoff.hoon": {
+      "bytes": 1637,
+      "sha256": "26c3ad38d27e70770c9399fcab55f66374b55b653e119967e9cdca124f131639"
+    },
+    "desk/lib/stead-http.hoon": {
+      "bytes": 5652,
+      "sha256": "8dced7c0ac0af601ca319ab317a705865589bb3aaf223c238d792512406fe05f"
+    },
+    "desk/lib/stead-project-retirement.hoon": {
+      "bytes": 4741,
+      "sha256": "25eb485c134a5cb18e758c68ade3bff4d7493ae99128e8f78fc1dd771846aba3"
+    },
+    "desk/lib/stead-projection.hoon": {
+      "bytes": 6985,
+      "sha256": "95aa098349f10d15c235abd7ade13c97fba7361bcf78f6d00b38dc443338551c"
+    },
+    "desk/lib/stead-restore.hoon": {
+      "bytes": 6973,
+      "sha256": "978223b175a17e67556b7300cf4b1bdf9f3b668a074c9ed46f265e020d608ea1"
+    },
+    "desk/lib/stead-session.hoon": {
+      "bytes": 8713,
+      "sha256": "ec331d4534cc19fc76f6b9ad590ec326d74e09f0b846b36f866e6351bdcbbb27"
+    },
+    "desk/lib/stead-team-codec.hoon": {
+      "bytes": 8633,
+      "sha256": "0a7e54ad7cd6fc66dcbfabd90425d55a234d9239140dec97309474fb3b90ba76"
+    },
+    "desk/lib/stead-team-config.hoon": {
+      "bytes": 6486,
+      "sha256": "ca95235550f5ebe34ac43f1f886620e4598fae4e304eef855068022400f5f630"
+    },
+    "desk/lib/stead-team-owner.hoon": {
+      "bytes": 35959,
+      "sha256": "a49fef952f933b678d03467d29c1246945250fa6c4dfbcfc58d508d53ad7d1ef"
+    },
+    "desk/lib/stead-team.hoon": {
+      "bytes": 30909,
+      "sha256": "36c5affad6ba239f92b42ff7459b916fbb3223b387fa76149bf8350501872128"
+    },
+    "desk/lib/stead-update-codec.hoon": {
+      "bytes": 1753,
+      "sha256": "632fc4d5a92c6db834454314c3b40bb57e348c6eaaa9a0767e9da126e659c02a"
+    },
+    "desk/lib/stead-update-security.hoon": {
+      "bytes": 1828,
+      "sha256": "4ef803d5671641bdffdff95965e85f6fdb73c91b2c3a40c818dca79c5727c4fd"
+    },
+    "desk/lib/stead-updates.hoon": {
+      "bytes": 13021,
+      "sha256": "205adbd403bfc814636e35062d5720611ef2192b87f18233bb471879ce3a1c56"
+    },
+    "desk/lib/stead-views.hoon": {
+      "bytes": 19529,
+      "sha256": "f3eea9a132aa4593b5a65612521ab1700d818751e93bb0b9ef2158a0f9ccd26b"
+    },
+    "desk/lib/stead-work-contract.hoon": {
+      "bytes": 2556,
+      "sha256": "dbd57a940370371251e838e583f373a1633aef10e164f522824342e416483061"
+    },
+    "desk/lib/strand.hoon": {
+      "bytes": 5,
+      "sha256": "97b2c326494239ed326156ed8eebe2e366addacc1d352ebd7cc41e8510ac2e95"
+    },
+    "desk/lib/strandio.hoon": {
+      "bytes": 21439,
+      "sha256": "3408c7d279bea54f3aee9c2db61f6353522da1e37d31a5cd58aca43fd79d2ef7"
+    },
+    "desk/mar/bill.hoon": {
+      "bytes": 715,
+      "sha256": "a0196da4970b8dfdee321a638040a564f95e8000f3b49eccc274ee8de2fae0ff"
+    },
+    "desk/mar/hoon.hoon": {
+      "bytes": 9154,
+      "sha256": "a77a0a8e0cd772ae9e7aa8c50d17b783d1969c64f031b6dc1d71f9e63a1cd73e"
+    },
+    "desk/mar/json.hoon": {
+      "bytes": 588,
+      "sha256": "1a9b61feb7d40dc94e682ba665c9f8d5d37c458868942d3b9e7b87562e538fc6"
+    },
+    "desk/mar/kelvin.hoon": {
+      "bytes": 566,
+      "sha256": "f23c0150f240d040dd24d99bb54e02c4df736e0f4d2bd5654bbc304082c8125c"
+    },
+    "desk/mar/mime.hoon": {
+      "bytes": 565,
+      "sha256": "f1b94f43735fd3a6b86f5cd4619851bc1af9145281f68a07724c4bea870de535"
+    },
+    "desk/mar/noun.hoon": {
+      "bytes": 409,
+      "sha256": "7581328f74894baa376d3a80e370808dca3ad3af96bc0ef6e4ac299984744b89"
+    },
+    "desk/mar/stead-asset.hoon": {
+      "bytes": 340,
+      "sha256": "82f4e3037c43ad2acb4a5ead30b74e8c2abdc8d0d215d417789029c8d4a419ce"
+    },
+    "desk/mar/stead-auth-approval-1.hoon": {
+      "bytes": 171,
+      "sha256": "fcd87c92acc16c2883b1dd4900af5064d1da910af317e93c327455cd56d9553b"
+    },
+    "desk/mar/stead-auth-challenge-1.hoon": {
+      "bytes": 171,
+      "sha256": "fcd87c92acc16c2883b1dd4900af5064d1da910af317e93c327455cd56d9553b"
+    },
+    "desk/mar/stead-bootstrap-1.hoon": {
+      "bytes": 171,
+      "sha256": "fcd87c92acc16c2883b1dd4900af5064d1da910af317e93c327455cd56d9553b"
+    },
+    "desk/mar/stead-code-pack-stage-1.hoon": {
+      "bytes": 174,
+      "sha256": "d2979598256a159d3fd34adaaac51cf1bbe7c41a2bd0cebd59224c059cc5df43"
+    },
+    "desk/mar/stead-command-3.hoon": {
+      "bytes": 171,
+      "sha256": "fcd87c92acc16c2883b1dd4900af5064d1da910af317e93c327455cd56d9553b"
+    },
+    "desk/mar/stead-home-handoff-1.hoon": {
+      "bytes": 260,
+      "sha256": "a9fee71e88bae9242b506c841b302d8fbc626aaae0c32706f9f00c52aec7b26b"
+    },
+    "desk/mar/stead-identity-config-1.hoon": {
+      "bytes": 171,
+      "sha256": "fcd87c92acc16c2883b1dd4900af5064d1da910af317e93c327455cd56d9553b"
+    },
+    "desk/mar/stead-project-retirement-1.hoon": {
+      "bytes": 176,
+      "sha256": "958de7191c1d6d4a144bcf6848f9d4f4e6d9db0cfb1a997261c413dc37dc7065"
+    },
+    "desk/mar/stead-query-3.hoon": {
+      "bytes": 171,
+      "sha256": "fcd87c92acc16c2883b1dd4900af5064d1da910af317e93c327455cd56d9553b"
+    },
+    "desk/mar/stead-result-3.hoon": {
+      "bytes": 171,
+      "sha256": "fcd87c92acc16c2883b1dd4900af5064d1da910af317e93c327455cd56d9553b"
+    },
+    "desk/mar/stead-team-config-1.hoon": {
+      "bytes": 171,
+      "sha256": "fcd87c92acc16c2883b1dd4900af5064d1da910af317e93c327455cd56d9553b"
+    },
+    "desk/mar/stead-updates-3.hoon": {
+      "bytes": 171,
+      "sha256": "fcd87c92acc16c2883b1dd4900af5064d1da910af317e93c327455cd56d9553b"
+    },
+    "desk/mar/txt.hoon": {
+      "bytes": 7802,
+      "sha256": "cb76a42e114f3b8f3ac37d09bfe7b1b41bc5c54e6406c0c01fb249af6910bc5d"
+    },
+    "desk/sur/spider.hoon": {
+      "bytes": 490,
+      "sha256": "39746f99a2d740e499d0ca3937ccae6e029901fcb6abc80ad64e40760110eda8"
+    },
+    "desk/sys.kelvin": {
+      "bytes": 12,
+      "sha256": "0a66fa5dec5893d2e3a8e854c4d6c81d62882863e4c8574ce18da9daea5a7cc4"
+    },
+    "desk/ted/stead-pilot-cert.hoon": {
+      "bytes": 668,
+      "sha256": "298ca789fafb0aed4d32484c3655b96cab732f01988ed3b3500d52bcb3d1e4d7"
+    },
+    "desk/ted/stead-pilot-owner.hoon": {
+      "bytes": 3539,
+      "sha256": "09ff7b9382444f64a5d82f32d6a56b850963c35af77f0498c8ce723598feb23f"
+    },
+    "desk/web/stead/asset-08a1794a61e7ed673d2e66de355cda8680a87a9dff4de7245ac987909ce7b1ed.stead-asset": {
+      "bytes": 355,
+      "sha256": "08a1794a61e7ed673d2e66de355cda8680a87a9dff4de7245ac987909ce7b1ed"
+    },
+    "desk/web/stead/asset-16a73851036ab3b2c40560b799f848e7bfa54738d2d9f16c461bd9c81ced1b65.stead-asset": {
+      "bytes": 129,
+      "sha256": "16a73851036ab3b2c40560b799f848e7bfa54738d2d9f16c461bd9c81ced1b65"
+    },
+    "desk/web/stead/asset-3bb7988e10c27e803d3f9ebcdc621be6a4b96e19244819b2841d7ea4287228f7.stead-asset": {
+      "bytes": 7058,
+      "sha256": "3bb7988e10c27e803d3f9ebcdc621be6a4b96e19244819b2841d7ea4287228f7"
+    },
+    "desk/web/stead/asset-3e9102608b1a1d3dced1bd3f42068196621e3be103c017e5eb0ed70d4521b58e.stead-asset": {
+      "bytes": 27174,
+      "sha256": "3e9102608b1a1d3dced1bd3f42068196621e3be103c017e5eb0ed70d4521b58e"
+    },
+    "desk/web/stead/asset-43104c1b63fdeb00baf9a040db1872996eb498f3fe47a41c55f04fbda6ee746e.stead-asset": {
+      "bytes": 414107,
+      "sha256": "43104c1b63fdeb00baf9a040db1872996eb498f3fe47a41c55f04fbda6ee746e"
+    },
+    "desk/web/stead/asset-4ad0a8c304f247405c5314f49b27fac259aa8f52458868bfe6e5f79760ad7a95.stead-asset": {
+      "bytes": 307,
+      "sha256": "4ad0a8c304f247405c5314f49b27fac259aa8f52458868bfe6e5f79760ad7a95"
+    },
+    "desk/web/stead/asset-545015593ed73aed1b421833eb462ccc6ba2ae0179ebd64909ec13ea499ed07c.stead-asset": {
+      "bytes": 637,
+      "sha256": "545015593ed73aed1b421833eb462ccc6ba2ae0179ebd64909ec13ea499ed07c"
+    },
+    "desk/web/stead/asset-78a9908481e8567c1baafb039eebcc6806277052a10dfcfd6807f84716d0650a.stead-asset": {
+      "bytes": 69287,
+      "sha256": "78a9908481e8567c1baafb039eebcc6806277052a10dfcfd6807f84716d0650a"
+    },
+    "desk/web/stead/asset-9306dc9fd0db4afe24abd07a37d7d8f1d46b43a66405e441ced117bf4baca644.stead-asset": {
+      "bytes": 24762,
+      "sha256": "9306dc9fd0db4afe24abd07a37d7d8f1d46b43a66405e441ced117bf4baca644"
+    },
+    "desk/web/stead/asset-96aa0cdd475339c38a2e767f93f61475e17ff2e6e236147a062902c2f756db5a.stead-asset": {
+      "bytes": 193998,
+      "sha256": "96aa0cdd475339c38a2e767f93f61475e17ff2e6e236147a062902c2f756db5a"
+    },
+    "desk/web/stead/asset-9dbaaa1b267ebd74b96fc498735a78d76804f1e96e532871291c937cf83694e7.stead-asset": {
+      "bytes": 638,
+      "sha256": "9dbaaa1b267ebd74b96fc498735a78d76804f1e96e532871291c937cf83694e7"
+    },
+    "desk/web/stead/asset-c9235b043c7ea052717cebbc9a705f8c771bafe5cc6ccc92a992d1ff13ec1d25.stead-asset": {
+      "bytes": 1039,
+      "sha256": "c9235b043c7ea052717cebbc9a705f8c771bafe5cc6ccc92a992d1ff13ec1d25"
+    },
+    "desk/web/stead/asset-d02c4a767baadf4c7a68b9dd7c0aba0e68a1181a57a9470952ae26dc75f25baa.stead-asset": {
+      "bytes": 133559,
+      "sha256": "d02c4a767baadf4c7a68b9dd7c0aba0e68a1181a57a9470952ae26dc75f25baa"
+    },
+    "desk/web/stead/asset-d318c5941423ef97fe6d2be5989720a2ae0cfe6af5a6b0fb8c6d486578c8792b.stead-asset": {
+      "bytes": 5667,
+      "sha256": "d318c5941423ef97fe6d2be5989720a2ae0cfe6af5a6b0fb8c6d486578c8792b"
+    },
+    "desk/web/stead/asset-d41d8a1a7171d06405f67f510ff392afca81f17da9233823150692e69da0b4f1.stead-asset": {
+      "bytes": 2801,
+      "sha256": "d41d8a1a7171d06405f67f510ff392afca81f17da9233823150692e69da0b4f1"
+    },
+    "desk/web/stead/asset-f9f263b207490702f511b63510a46eb5dc81e450fb78f9e6e7f19fc7ec021e4f.stead-asset": {
+      "bytes": 119,
+      "sha256": "f9f263b207490702f511b63510a46eb5dc81e450fb78f9e6e7f19fc7ec021e4f"
+    },
+    "desk/web/stead/inventory.hoon": {
+      "bytes": 5859,
+      "sha256": "2ab5586980cd2f55bb24db01d49b4ea7f38d67f7b4f3f7a76552a91d7dbb1834"
+    },
+    "notices/urbit-kernel-LICENSE.txt": {
+      "bytes": 1071,
+      "sha256": "e895931d528be1ab18b353eee7ae5c4f9a8f5b164f747db1e60a59bbe201ffd3"
+    },
+    "source/frontend.json": {
+      "bytes": 5036,
+      "sha256": "907aaf6f6f6aeed54d4a30e7094e20341094f9bd4305236ba25736e261d2d341"
+    },
+    "source/release-contract.json": {
+      "bytes": 3492,
+      "sha256": "0f21fc4dd665459e3613bd4f6d35209fb06e64605ab1410598c95f2fa8954a13"
+    },
+    "source/toolchain.lock.json": {
+      "bytes": 4223,
+      "sha256": "ae185adaec12b5aa0b2d48e2198ae65583902512ffd9d148706810c4819c650c"
+    }
+  },
+  "frontend_sha256": "907aaf6f6f6aeed54d4a30e7094e20341094f9bd4305236ba25736e261d2d341",
+  "kind": "offline-desk-candidate",
+  "packager_sha256": "49172413f8021b4d6011866784d3dbba013e225f434cd79829c0e3865d2148f1",
+  "protocol": "stead.release-package/1",
+  "qualification": {
+    "canary": false,
+    "native_install": false,
+    "package_integrity_only": true,
+    "production": false,
+    "upgrade_recovery": false
+  },
+  "role": "home",
+  "saved_state_version": 9,
+  "shared_packager_sha256": "810709d833cae220883c05722439c00983382930b70fd58806d7c6e92476f927",
+  "source_commit": "65048c772e27153c3421a32efb346ea7f69dc634",
+  "toolchain_sha256": "ae185adaec12b5aa0b2d48e2198ae65583902512ffd9d148706810c4819c650c"
+}
+                                                                                                                                                                                                                                                                                                                                                                                 stead-release/notices/urbit-kernel-LICENSE.txt                                                      0000644 0000000 0000000 00000002057 00000000000 016357  0                                                                                                    ustar 00                                                                                                                                                                                                                                                       The MIT License (MIT)
+
+Copyright (c) 2017 Urbit
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                 stead-release/source/frontend.json                                                                  0000644 0000000 0000000 00000011654 00000000000 014504  0                                                                                                    ustar 00                                                                                                                                                                                                                                                       {
+  "inventory_sha256": "2ab5586980cd2f55bb24db01d49b4ea7f38d67f7b4f3f7a76552a91d7dbb1834",
+  "protocol": "stead.release-frontend/1",
+  "routes": [
+    {
+      "bytes": 27174,
+      "mime": "text/plain; charset=utf-8",
+      "route": "/stead/assets/NOTICE.txt",
+      "sha256": "3e9102608b1a1d3dced1bd3f42068196621e3be103c017e5eb0ed70d4521b58e"
+    },
+    {
+      "bytes": 27174,
+      "mime": "text/plain; charset=utf-8",
+      "route": "/stead-identity/assets/NOTICE.txt",
+      "sha256": "3e9102608b1a1d3dced1bd3f42068196621e3be103c017e5eb0ed70d4521b58e"
+    },
+    {
+      "bytes": 69287,
+      "mime": "text/css; charset=utf-8",
+      "route": "/stead/assets/app.css",
+      "sha256": "78a9908481e8567c1baafb039eebcc6806277052a10dfcfd6807f84716d0650a"
+    },
+    {
+      "bytes": 414107,
+      "mime": "text/javascript; charset=utf-8",
+      "route": "/stead/assets/app.js",
+      "sha256": "43104c1b63fdeb00baf9a040db1872996eb498f3fe47a41c55f04fbda6ee746e"
+    },
+    {
+      "bytes": 637,
+      "mime": "text/plain; charset=utf-8",
+      "route": "/stead/assets/app.js.LEGAL.txt",
+      "sha256": "545015593ed73aed1b421833eb462ccc6ba2ae0179ebd64909ec13ea499ed07c"
+    },
+    {
+      "bytes": 193998,
+      "mime": "text/javascript; charset=utf-8",
+      "route": "/stead/assets/chunk-EUJWMAPN.js",
+      "sha256": "96aa0cdd475339c38a2e767f93f61475e17ff2e6e236147a062902c2f756db5a"
+    },
+    {
+      "bytes": 193998,
+      "mime": "text/javascript; charset=utf-8",
+      "route": "/stead-identity/assets/chunk-EUJWMAPN.js",
+      "sha256": "96aa0cdd475339c38a2e767f93f61475e17ff2e6e236147a062902c2f756db5a"
+    },
+    {
+      "bytes": 133559,
+      "mime": "text/javascript; charset=utf-8",
+      "route": "/stead/assets/chunk-HRUDAQ2O.js",
+      "sha256": "d02c4a767baadf4c7a68b9dd7c0aba0e68a1181a57a9470952ae26dc75f25baa"
+    },
+    {
+      "bytes": 133559,
+      "mime": "text/javascript; charset=utf-8",
+      "route": "/stead-identity/assets/chunk-HRUDAQ2O.js",
+      "sha256": "d02c4a767baadf4c7a68b9dd7c0aba0e68a1181a57a9470952ae26dc75f25baa"
+    },
+    {
+      "bytes": 1039,
+      "mime": "text/plain; charset=utf-8",
+      "route": "/stead/assets/chunk-HRUDAQ2O.js.LEGAL.txt",
+      "sha256": "c9235b043c7ea052717cebbc9a705f8c771bafe5cc6ccc92a992d1ff13ec1d25"
+    },
+    {
+      "bytes": 1039,
+      "mime": "text/plain; charset=utf-8",
+      "route": "/stead-identity/assets/chunk-HRUDAQ2O.js.LEGAL.txt",
+      "sha256": "c9235b043c7ea052717cebbc9a705f8c771bafe5cc6ccc92a992d1ff13ec1d25"
+    },
+    {
+      "bytes": 119,
+      "mime": "text/javascript; charset=utf-8",
+      "route": "/stead/assets/chunk-NA53SZAR.js",
+      "sha256": "f9f263b207490702f511b63510a46eb5dc81e450fb78f9e6e7f19fc7ec021e4f"
+    },
+    {
+      "bytes": 119,
+      "mime": "text/javascript; charset=utf-8",
+      "route": "/stead-identity/assets/chunk-NA53SZAR.js",
+      "sha256": "f9f263b207490702f511b63510a46eb5dc81e450fb78f9e6e7f19fc7ec021e4f"
+    },
+    {
+      "bytes": 638,
+      "mime": "text/javascript; charset=utf-8",
+      "route": "/stead/assets/chunk-OOJM4CTU.js",
+      "sha256": "9dbaaa1b267ebd74b96fc498735a78d76804f1e96e532871291c937cf83694e7"
+    },
+    {
+      "bytes": 638,
+      "mime": "text/javascript; charset=utf-8",
+      "route": "/stead-identity/assets/chunk-OOJM4CTU.js",
+      "sha256": "9dbaaa1b267ebd74b96fc498735a78d76804f1e96e532871291c937cf83694e7"
+    },
+    {
+      "bytes": 7058,
+      "mime": "text/css; charset=utf-8",
+      "route": "/stead/assets/chunk-QIJDOJKB.css",
+      "sha256": "3bb7988e10c27e803d3f9ebcdc621be6a4b96e19244819b2841d7ea4287228f7"
+    },
+    {
+      "bytes": 7058,
+      "mime": "text/css; charset=utf-8",
+      "route": "/stead-identity/assets/chunk-QIJDOJKB.css",
+      "sha256": "3bb7988e10c27e803d3f9ebcdc621be6a4b96e19244819b2841d7ea4287228f7"
+    },
+    {
+      "bytes": 2801,
+      "mime": "text/css; charset=utf-8",
+      "route": "/stead-identity/assets/identity.css",
+      "sha256": "d41d8a1a7171d06405f67f510ff392afca81f17da9233823150692e69da0b4f1"
+    },
+    {
+      "bytes": 355,
+      "mime": "text/html; charset=utf-8",
+      "route": "/stead-identity/",
+      "sha256": "08a1794a61e7ed673d2e66de355cda8680a87a9dff4de7245ac987909ce7b1ed"
+    },
+    {
+      "bytes": 5667,
+      "mime": "text/javascript; charset=utf-8",
+      "route": "/stead-identity/assets/identity.js",
+      "sha256": "d318c5941423ef97fe6d2be5989720a2ae0cfe6af5a6b0fb8c6d486578c8792b"
+    },
+    {
+      "bytes": 307,
+      "mime": "text/html; charset=utf-8",
+      "route": "/stead/",
+      "sha256": "4ad0a8c304f247405c5314f49b27fac259aa8f52458868bfe6e5f79760ad7a95"
+    },
+    {
+      "bytes": 24762,
+      "mime": "text/css; charset=utf-8",
+      "route": "/stead/assets/product.css",
+      "sha256": "9306dc9fd0db4afe24abd07a37d7d8f1d46b43a66405e441ced117bf4baca644"
+    },
+    {
+      "bytes": 129,
+      "mime": "text/javascript; charset=utf-8",
+      "route": "/stead/assets/product.js",
+      "sha256": "16a73851036ab3b2c40560b799f848e7bfa54738d2d9f16c461bd9c81ced1b65"
+    }
+  ]
+}
+                                                                                    stead-release/source/release-contract.json                                                          0000644 0000000 0000000 00000006644 00000000000 016123  0                                                                                                    ustar 00                                                                                                                                                                                                                                                       {
+  "agents": {
+    "home": "stead-home",
+    "identity": "stead-identity"
+  },
+  "api_version": 3,
+  "classification": "candidate-packaging-only",
+  "kernel_commit": "5a187fededc4582a34fcd6055c67bb63e0917b94",
+  "kernel_files": {
+    "lib/strand.hoon": {
+      "bytes": 5,
+      "sha256": "97b2c326494239ed326156ed8eebe2e366addacc1d352ebd7cc41e8510ac2e95",
+      "source": "pkg/base-dev/lib/strand.hoon"
+    },
+    "lib/strandio.hoon": {
+      "bytes": 21439,
+      "sha256": "3408c7d279bea54f3aee9c2db61f6353522da1e37d31a5cd58aca43fd79d2ef7",
+      "source": "pkg/base-dev/lib/strandio.hoon"
+    },
+    "sur/spider.hoon": {
+      "bytes": 490,
+      "sha256": "39746f99a2d740e499d0ca3937ccae6e029901fcb6abc80ad64e40760110eda8",
+      "source": "pkg/base-dev/sur/spider.hoon"
+    },
+    "LICENSE.txt": {
+      "bytes": 1071,
+      "sha256": "e895931d528be1ab18b353eee7ae5c4f9a8f5b164f747db1e60a59bbe201ffd3",
+      "source": "pkg/arvo/LICENSE.txt"
+    },
+    "lib/default-agent.hoon": {
+      "bytes": 1307,
+      "sha256": "70a8af06601e8d1b75b261b2ac8b2cb06d5622baa1d1b1f8fec9236ce167d113",
+      "source": "pkg/base-dev/lib/default-agent.hoon"
+    },
+    "lib/server.hoon": {
+      "bytes": 3870,
+      "sha256": "d0a566085300a6deae334b98c4844dc11e90f0315015a91e97c2fbb61db31d68",
+      "source": "pkg/base-dev/lib/server.hoon"
+    },
+    "lib/skeleton.hoon": {
+      "bytes": 792,
+      "sha256": "c7c654a91c5dc1a535d4a76b019ec175955e52961b1ddff70ad49121208d20f5",
+      "source": "pkg/base-dev/lib/skeleton.hoon"
+    },
+    "mar/bill.hoon": {
+      "bytes": 715,
+      "sha256": "a0196da4970b8dfdee321a638040a564f95e8000f3b49eccc274ee8de2fae0ff",
+      "source": "pkg/base-dev/mar/bill.hoon"
+    },
+    "mar/hoon.hoon": {
+      "bytes": 9154,
+      "sha256": "a77a0a8e0cd772ae9e7aa8c50d17b783d1969c64f031b6dc1d71f9e63a1cd73e",
+      "source": "pkg/base-dev/mar/hoon.hoon"
+    },
+    "mar/json.hoon": {
+      "bytes": 588,
+      "sha256": "1a9b61feb7d40dc94e682ba665c9f8d5d37c458868942d3b9e7b87562e538fc6",
+      "source": "pkg/base-dev/mar/json.hoon"
+    },
+    "mar/kelvin.hoon": {
+      "bytes": 566,
+      "sha256": "f23c0150f240d040dd24d99bb54e02c4df736e0f4d2bd5654bbc304082c8125c",
+      "source": "pkg/base-dev/mar/kelvin.hoon"
+    },
+    "mar/mime.hoon": {
+      "bytes": 565,
+      "sha256": "f1b94f43735fd3a6b86f5cd4619851bc1af9145281f68a07724c4bea870de535",
+      "source": "pkg/base-dev/mar/mime.hoon"
+    },
+    "mar/noun.hoon": {
+      "bytes": 409,
+      "sha256": "7581328f74894baa376d3a80e370808dca3ad3af96bc0ef6e4ac299984744b89",
+      "source": "pkg/base-dev/mar/noun.hoon"
+    },
+    "mar/txt.hoon": {
+      "bytes": 7802,
+      "sha256": "cb76a42e114f3b8f3ac37d09bfe7b1b41bc5c54e6406c0c01fb249af6910bc5d",
+      "source": "pkg/base-dev/mar/txt.hoon"
+    }
+  },
+  "kernel_kelvin": 408,
+  "marks": [
+    "stead-asset",
+    "stead-auth-approval-1",
+    "stead-auth-challenge-1",
+    "stead-bootstrap-1",
+    "stead-code-pack-stage-1",
+    "stead-command-3",
+    "stead-home-handoff-1",
+    "stead-identity-config-1",
+    "stead-project-retirement-1",
+    "stead-query-3",
+    "stead-result-3",
+    "stead-team-config-1",
+    "stead-updates-3"
+  ],
+  "protocol": "stead.release-contract/1",
+  "runtime_binary_sha256": "f7f0d3b3c0480fc10f887dfbc09bde56a81d723a803541c7886c538a0675d833",
+  "runtime_version": "4.6",
+  "saved_state_versions": {
+    "home": 9,
+    "identity": 1
+  },
+  "toolchain_sha256": "ae185adaec12b5aa0b2d48e2198ae65583902512ffd9d148706810c4819c650c"
+}
+                                                                                            stead-release/source/toolchain.lock.json                                                            0000644 0000000 0000000 00000010177 00000000000 015573  0                                                                                                    ustar 00                                                                                                                                                                                                                                                       {
+  "format": 1,
+  "profile": "linux-x86_64-fake-only",
+  "resolved_on": "2026-09-29",
+  "runtime": {
+    "repository": "ScottTpirate/stead-urbit",
+    "release": "runtime-v4.6-newt-c0a35c6",
+    "version": "4.6",
+    "source_repository": "urbit/vere",
+    "commit": "8ddc4b786979574dbfcb655e3db1b634f658d0de",
+    "upstream_patch_commit": "c0a35c6f6302baf536a13522afd1ac89ea8c7776",
+    "url": "https://github.com/ScottTpirate/stead-urbit/releases/download/runtime-v4.6-newt-c0a35c6/vere-v4.6-newt-linux-x86_64.tgz",
+    "archive": "vere-v4.6-newt-linux-x86_64.tgz",
+    "sha256": "d00669a0bdc9fe0be15d519bdf508208b0676f84e1a9f02be12ecc03f4576a01",
+    "binary": "bin/vere-v4.6-newt-linux-x86_64",
+    "binary_sha256": "f7f0d3b3c0480fc10f887dfbc09bde56a81d723a803541c7886c538a0675d833",
+    "checksum_authority": "Locally packaged verified hosted build; exact build and native regression evidence below; not a signed upstream release",
+    "build_workflow_commit": "825aebf719d1fd99bfc51457cc023ce36edda089",
+    "build_run_url": "https://github.com/ScottTpirate/stead-urbit/actions/runs/36485873646",
+    "source_bundle": {
+      "url": "https://github.com/ScottTpirate/stead-urbit/releases/download/runtime-v4.6-newt-c0a35c6/build-inputs.tar",
+      "sha256": "e6f5184a227d632a8d7b81a1b6403fbc2ccf5dcbaab1d37191bb38ccc87167e6"
+    },
+    "source_manifest": "specs/urbit/runtime-source-build.json",
+    "build_evidence": "docs/urbit/evidence/2026-09-28/runtime-disconnect/build.json",
+    "regression_evidence": "docs/urbit/evidence/2026-09-28/runtime-disconnect/native-regression.json",
+    "profile": "development-fake-ships-only"
+  },
+  "kernel": {
+    "repository": "urbit/urbit",
+    "release": "408k-2",
+    "commit": "5a187fededc4582a34fcd6055c67bb63e0917b94",
+    "kelvin": 408,
+    "url": "https://codeload.github.com/urbit/urbit/tar.gz/5a187fededc4582a34fcd6055c67bb63e0917b94",
+    "archive": "urbit-408k-2.tar.gz",
+    "sha256": "7f6f41388f456d1e94850a51b60b15e3148ede103ebb03b8acad470ed27beb31",
+    "directory": "urbit-5a187fededc4582a34fcd6055c67bb63e0917b94",
+    "checksum_authority": "locally measured archive at immutable Git commit; not a signed upstream build attestation",
+    "source_tree_sha256": "33b397d659f7686be86d12f59c968f7613a5dc2851916ca512b6f18aa0ec231b"
+  },
+  "boot_artifact": {
+    "url": "https://media.githubusercontent.com/media/urbit/urbit/5a187fededc4582a34fcd6055c67bb63e0917b94/bin/brass.pill",
+    "archive": "brass-408k-2.pill",
+    "sha256": "b4babd14e9f1acbdb421b3c31c215ee637ad6691b7e382b99c6fd8991e623708",
+    "size": 23389629,
+    "checksum_authority": "Git LFS pointer in pinned kernel commit",
+    "source_overlay": "kernel pkg/arvo supplied with -A; pill alone is not claimed to contain final kernel"
+  },
+  "desk_dependencies": {
+    "source": "kernel pkg/arvo",
+    "profile": "mounted disposable base desk; no distribution desk yet",
+    "imports": [
+      "default-agent",
+      "skeleton",
+      "spider",
+      "strandio"
+    ]
+  },
+  "frontend": {
+    "status": "toolchain_only_no_ui_no_build",
+    "node": "24.21.0",
+    "npm": "11.19.0",
+    "url": "https://nodejs.org/dist/v24.21.0/node-v24.21.0-linux-x64.tar.xz",
+    "archive": "node-v24.21.0-linux-x64.tar.xz",
+    "sha256": "fd8e59d5a511510f6a298afb548f18c7d2b1be404d8b4a27d94fbe49f56cb2d6",
+    "directory": "node-v24.21.0-linux-x64",
+    "lockfile": "web/toolchain/package-lock.json",
+    "lock_sha256": "7db4246a48ff04da8e01bef0ec1cdccf5297867e5e343b06531eebdfa36e511e",
+    "checksum_authority": "official Node SHASUMS256.txt; signature verification not performed",
+    "binary_sha256": "7fde7b8afa198da66257f42ee2001d874c7355631e6d1579a5fb5ef1f246df4c"
+  },
+  "host_tools": {
+    "git": "2.55.0",
+    "python_tested": "3.14.7",
+    "python_minimum": "3.12",
+    "bubblewrap_tested": "0.12.0"
+  },
+  "compatibility_evidence": "docs/urbit/TEST_RESULTS.md",
+  "urgit": {
+    "repository": "yapishu/urgit",
+    "commit": "9cec0371b02269efcdbd8580c42e883e69b82000",
+    "status": "independent_candidate_evaluation_only_not_runtime_dependency"
+  },
+  "protocol_corpus": {
+    "path": "specs/urbit/smoke-corpus.json",
+    "sha256": "3a05090f8ff4aceddcd228145346564ce9ecf28af7016fd256eb911430dbbd9c"
+  }
+}
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                 
