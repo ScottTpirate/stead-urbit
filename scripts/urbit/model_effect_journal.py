@@ -115,10 +115,10 @@ class EffectJournal:
 
     @classmethod
     def for_run(cls, root_fd, catalog, scope, turn, instructions, messages, tools,
-                *, prior_digest=None):
+                *, prior_digest=None, required_tool=None):
         """Prepare or reopen the pinned request in an admitted supervisor's attempt directory."""
         spec, request = catalog.prepare(scope, turn, instructions, messages, tools,
-                                        prior_digest=prior_digest)
+                                        prior_digest=prior_digest, required_tool=required_tool)
         return cls(root_fd, spec, request)
 
     def __init__(self, root_fd, spec, request):

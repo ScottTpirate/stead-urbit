@@ -2,7 +2,6 @@
 from contextlib import contextmanager
 from dataclasses import replace
 import fcntl
-import importlib.util
 import json
 import os
 from pathlib import Path
@@ -15,16 +14,12 @@ from unittest.mock import patch
 HERE = Path(__file__).resolve().parents[2] / 'scripts/urbit'
 
 
-def load(name):
-    spec = importlib.util.spec_from_file_location(name, HERE / (name + '.py'))
-    module = importlib.util.module_from_spec(spec)
-    sys.modules[name] = module
-    spec.loader.exec_module(module)
-    return module
-
-
-M = load('model_connections')
-J = load('model_effect_journal')
+sys.path.insert(0, str(HERE))
+try:
+    import model_connections as M
+    import model_effect_journal as J
+finally:
+    sys.path.pop(0)
 
 
 def uid(n):
