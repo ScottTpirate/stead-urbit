@@ -1,0 +1,41 @@
+{
+  "package": "T19",
+  "profile": "a0e90ef private read-only pilot",
+  "status": "accepted_for_named_profile",
+  "source_commit": "a0e90ef29389077d453ec2a775cd8fd69f711727",
+  "browser": {
+    "sha256": "35341e85a501343c9525bf2a4438bcfe50d8e0a19591a2bce101437667be85a3"
+  },
+  "http": {
+    "sha256": "3d7be4470a9bc4712759809870afd9796534cf78cdaefb948e8a7f412d47c7bf"
+  },
+  "current_release_readback": {
+    "sha256": "bab0ce1863b568e81c9f3add45fe9717dd7bc94c20c1b2248faf08967cdf2aec"
+  },
+  "observed": {
+    "git_commit": "3ba8e4304e8d73d948905acdb2f1e1cfb1dff5af",
+    "repository_root_entries": 22,
+    "folder_entries": 1,
+    "readme_bytes": 4963,
+    "readme_sha256": "67946a5d1b7705ee38c9935cdbf998360d682f1209b1a4b60bb4e91d0624a675",
+    "cases": [
+      "Code root lists all 22 actual entries at the displayed accepted commit",
+      "Keyboard folder open and Root return preserve accepted revision and restore folder focus",
+      "README exact accepted text renders at 1440px and 320px; Back to folder preserves snapshot and file focus",
+      "Home sign-out confirmed by denied member query",
+      "Identity owner session sign-out confirmed"
+    ],
+    "wrong_snapshot": "409 stale_selection, no content",
+    "signed_out_browse": "401 session_required, no content"
+  },
+  "shipped_recovery_and_ordering": [
+    "web/app/src/RepoBrowser.tsx aborts superseded reads, guards the selected location and provides Retry or Refresh files.",
+    "web/app/src/CodePack.tsx keys the reader by project, snapshot and reference."
+  ],
+  "review": "Implementation lead and independent frontend reviewer reconciled the original browser report, HTTP observations and shipped source on November 25.",
+  "limitations": [
+    "The reported screenshot failure did not reproduce. Its cause is unknown.",
+    "No Git write, release promotion or new human trial was exercised."
+  ],
+  "custody": "The operator retains the original authenticated browser and HTTP records privately. Digests identify those records."
+}

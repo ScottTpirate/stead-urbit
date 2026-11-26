@@ -1,4 +1,23 @@
-# Repository acceptance prototype — version 1
+# Repository storage and identity profile
+
+The live Code profile still uses the project ID as its repository ID. T04 now retains a reviewed, uncompiled catalog and importer in the checkout. It permits four retained independently identified repositories per Home, creates an exact empty inline SHA-1 store with its catalog entry, and resolves old URLs only through an explicit imported alias. A repository ID equal to a project ID does not create an alias.
+
+The importer calls the existing store/pack validators and full ledger/review-board checks, returning the original refs, objects, reviews, uploads and promotion history unchanged. Six catalog and four importer test arms are authored. [Actual scoped run43824884727](https://github.com/ScottTpirate/stead-urbit/actions/runs/43824884727) built the app but both selected test modules failed parsing at catalog11:18, before any positive arm verdict. The deliberate failure control and cleanup passed. The Reviewed spacing-only source correction is now retained across the catalog, importer, authority and storage helpers; all 26 authored arms are unchanged, successor compilation is pending and no native acceptance is claimed. The concrete current-human authority adapter is also retained with independent source reviews and eight authored, uncompiled arms. It derives native/browser identity from the current Home snapshot, requires an active declared person and current project role, and resolves exact Home/project/repository/epoch with lifecycle and retirement checks. Device credential issuance and use retain the existing expiry and revocation rules; browser logout does not silently revoke separately issued device credentials. Full Home integration, complete operation-scope propagation, saved-state integration, native migration and two-repository browser/Git qualification remain required. No route, wire capability or release support is enabled.
+
+The repository-keyed storage closure is also retained with two source reviews and eight authored, uncompiled arms. It joins the catalog to exact inline stores and unchanged external legacy stores, reuses existing object/review/build/upload validators, and preserves original import tails. Current human selection remains separate from historical validity; the internal object map is not a public fetch result.
+
+These helpers remain unregistered and inactive. Atomic creation/history, full Home save/replay, Code transport scope propagation and actual Git/browser/recovery acceptance are still required.
+
+The [current diagnostic run 43846986399](https://github.com/ScottTpirate/stead-urbit/actions/runs/43846986399)
+does not change that status: none of the repository catalog, importer,
+authority or store suites was selected in its 48-suite positive registry.
+Its 39 positive suites / 254 arms concern the exact composed legacy and product
+modules, not these unregistered T04 helpers. The historical 41-arm prototype
+record below also remains separate from their pending native checks.
+
+## Historical version-1 acceptance prototype
+
+The following record applies only to its pinned historical source; it does not qualify the new catalog/importer or later store changes.
 
 Status: the pinned native evaluator passed all 41 test arms plus the deliberately failing tang and compiler-error controls (43 checks total). This is pure prototype qualification only.
 

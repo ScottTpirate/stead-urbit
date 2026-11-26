@@ -1,7 +1,7 @@
 {
   "version": "0.1",
   "as_of": "2026-09-12",
-  "status": "proposed_not_created_as_github_issues",
+  "status": "historical_task_definitions_execution_tracked_in_live_issues",
   "issues": [
     {
       "id": "URB-000",
@@ -282,5 +282,12 @@
         "Individual attribution/delegation survives identity binding changes"
       ]
     }
-  ]
+  ],
+  "product_alignment": {
+    "adopted_on": "2026-11-15",
+    "contract": "docs/urbit/PRODUCT_EXPERIENCE_CONTRACT.md",
+    "execution_plan": "specs/urbit/product-execution-plan.yaml",
+    "capabilities": "docs/urbit/CAPABILITY_MATRIX.md",
+    "rule": "T01-T32 supplement existing URB parents and M0-M6; no task or milestone acceptance is changed by documentation alignment."
+  }
 }

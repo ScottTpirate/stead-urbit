@@ -460,3 +460,31 @@ and a stale membership assertion before granting access to real records. The
 space connection token is insufficient evidence of owner control or member
 authorization. Keep the standalone pilot and House integration evidence
 separate. [Roadmap](ROADMAP.md)
+
+### November 15 bounded House investigation
+
+Status: **integration disabled; supported host contract unknown**. This is T29
+research, not an installation or compatibility qualification. A bounded public
+source/document search found no repository matching `gnat` or `house` within
+the connected GitHub `urbit` organization search, nor `urbit.house` in the
+repository-name/description search. This is a search result, not proof that
+source or private SDKs do not exist. The [House public entry](https://urbit.house/)
+returned HTML with no readable documentation through the available web reader.
+The [Urbit homepage](https://urbit.org/) links the existing
+[Urbit documentation](https://docs.urbit.org/); those observations do not establish
+a versioned House app/identity/lifecycle API. No account, invitation, credential
+or membership change was created for this investigation.
+
+| Required fact | Observed disposition | Integration consequence |
+| --- | --- | --- |
+| Supported House version, source revision and applicable license | Not established by the retrieved primary sources. | Do not package or claim a compatible adapter. |
+| App launch/install/upgrade and deep-link contract | No versioned contract retrieved. | Standalone routes stay the active entry points; do not guess an iframe or plugin ABI. |
+| Verified member assertion, audience/space scope and revocation | No contract retrieved. | House membership must not create a Stead principal or project grant. |
+| Permission-filtered notifications | No contract retrieved. | No project events or private titles are sent to House. |
+| Two members, denied outsider, removal and upgrade proof | Not executed; prerequisite interfaces unavailable. | Remains required before enabling any integration. |
+
+The adaptation boundary remains a small host shell plus identity, notification
+and lifecycle adapters. There is no Gnat migration and no dependency from the
+standalone Work/Docs product to this investigation. Resume with an identified
+versioned SDK/source/license and test-space contract, then run the member and
+outsider proof above against actual current Stead grants.

@@ -1,47 +1,39 @@
-# First assignment for the local implementation agent
+# Stead implementation handoff
 
-Work only in `ScottTpirate/stead-urbit`; verify the remote. Bootstrap this independent derivative if it does not exist. The original Stead main-line baseline is `3d47f0172a41beebb31f5c3a7df133cc1d4b1ead`. Preserve its history and notices. Do not push to the original repository or reactivate its archived workflows.
+Updated November 25, 2026. The active repository is `ScottTpirate/stead-urbit`. The product increment covers Work and Docs in projects without a repository, optional Code, and collaboration between people and agents. The owner authorized T01–T32 and supervised updates to the existing private Lightsail pilot. Verify the remote before writing. Preserve the historical upstream and other contributors’ work.
 
-Read the new master directive and deployment plan. The repository is not a working Urbit app yet. Existing copied source is reference material.
+## What to build
 
-## Deliver the first independently runnable development increment
+The UX and native leads accepted the T01 design on November 25. The [native interface decisions](PRODUCT_NATIVE_INTERFACES.md) cover predecessor identities, revisions, saved states and the conditions for activating a successor.
 
-Complete URB-010, URB-020 and URB-025 in dependency order, then URB-030. This means:
+The first agent journey is a document update in a project with no Code. A person assigns Work to a named agent. The agent asks a question, receives an answer and submits exact Markdown. An independent reviewer requests a revision and accepts the resulting Doc change. Work reaches Done when its required outcomes are accepted. A comment, model response or submitted proposal has its own status. [Experience contract](PRODUCT_EXPERIENCE_CONTRACT.md) · [Execution plan](../../specs/urbit/product-execution-plan.yaml)
 
-- Resolve current runtime/kernel/pill dependencies; record exact versions, URLs, hashes and compatibility evidence. Do not fill example pins from guesses.
-- Inspect candidate Urgit source/license and record whether reuse is actually permitted. Run its stock-client vectors separately if legally/technically feasible. A successful install is not approval.
-- Implement a local isolated four-fake-ship harness with doctor/start/stop/reset/test commands. No live network identity or cloud purchase. Keep fixtures disposable and ensure reset cannot delete arbitrary paths.
-- Prove a minimal native Hoon message handler/state transition compiles on the pinned toolchain and survives restart; run an actual negative native test as well as a positive one. Record commands and output.
-- Define stable project/principal IDs, request/revision/epoch semantics, policy decisions and bounded envelopes. Freeze these contracts before parallel feature agents touch them.
-- Establish independent test ownership and a Hoon reviewer. Start with one mutation-owning home agent and pure libraries, not a microservice rewrite.
+Home owns permissions, business state, accepted results and custody. Owner is the accountable human. A worker is a person or a stable agent principal. Each run pins its definition, runtime, context, Work contract and allowed effects. Keep contract revisions independent of comments. Recheck current authority at execution, adoption and acceptance. Keep an expired worker’s original evidence available for authorized review. [Master directive](MASTER_BUILD_DIRECTIVE.md) · [Agent and job profile](AGENT_JOB_PROFILE.md)
 
-Stop this increment at reproducible environment and frozen first-slice contracts. Produce a PR with real evidence and a clear list of unimplemented features. Do not claim a page, Git forge, authentication system or deployment works until separately executed.
+Use the selected Home for workspace Inbox, My work and Search. Project navigation is Overview, Work, Docs and optional Code. Each resource has one scoped identity. A project may contain zero or several repositories. A repository document shown in Docs keeps its Git origin. Render Markdown safely and preserve the original bytes. [Experience contract](PRODUCT_EXPERIENCE_CONTRACT.md) · [Portable Docs](PORTABLE_DOCS.md)
 
-## Subsequent increment
+## Current work
 
-Implement URB-040 and URB-050: home-owned project/work/document transitions and deny-by-default permissions tested across the four identities, including restart, stale revisions, revoked access and duplicate commands. Use public/synthetic content only. Browser/session and native Git integration are later reviewed increments.
+| Area | Verified position | Next action |
+| --- | --- | --- |
+| Private pilot | Release `a0e90ef` serves both named sites. The November 25 check matched all 21 web routes and found eight active services. Read-only repository browsing meets T19 on this profile. | Use `stead-pilot` on the configured machine to open the sites. Preserve the existing member data, Git snapshot and signing key through any update. |
+| Shared interaction reference | Eight Firefox scenarios and five Chromium attachment scenarios exercised desktop and narrow layouts, keyboard focus, target sizes and safe links. T02 is accepted for this reference. | Apply the shared controls to real user journeys and verify each connected flow. |
+| Work and Docs client | Candidate `a670d58c` passed the complete-app check with candidate assets. Its Home package preserves 101 backend desk files from the pilot. | Rehearse the native upgrade against a synthetic saved-version-8 predecessor, including cold restart and rollback. [Candidate comparison](https://github.com/ScottTpirate/stead-urbit/pull/130) |
+| Upgrade rehearsal | The corrected launcher passed 10 host regressions. Run 45734762563 executed 261 native commands and shut down cleanly. The worker reported a failure before recording the first saved-state capture. | Locate the failing operation, fix the observed defect, then exercise the full rehearsal before staging a live update. [Rehearsal](https://github.com/ScottTpirate/stead-urbit/actions/runs/45734762563) |
+| Agent models | Main includes versioned agent/runtime-to-model selection for compatible hosted endpoints and isolated local models. All 39 adapter, catalog and journal checks passed. A separate isolated Qwen2.5 trial returned the exact 47-byte Markdown output. | Wire the current native claim, bounded effects, questions, review and durable acceptance into the no-Code journey. [Model selection](https://github.com/ScottTpirate/stead-urbit/pull/129) · [Actual inference](https://github.com/ScottTpirate/stead-urbit/actions/runs/43843435452) |
+| Native workflow | The successor Home built in diagnostic 43863766357. Thirteen suites returned 131 of 329 positive arm verdicts before restore timed out. The separate model-codec evaluation returned two controls and timed out at 86.55 seconds without a model verdict. | Localize the first missing native result. Capture real predecessor state before promoting a shared migration. [Home diagnostic](https://github.com/ScottTpirate/stead-urbit/actions/runs/43863766357) · [Model evaluation](https://github.com/ScottTpirate/stead-urbit/actions/runs/45731575647) |
+| Independent repositories | The corrected native repository catalog returned all six expected arm verdicts. | Exercise import, authority and storage together, with a project hosting two repositories and an explicit legacy-ID migration. [Native catalog check](https://github.com/ScottTpirate/stead-urbit/actions/runs/45732106760) |
 
-## Reporting contract
+## Operating the pilot
 
-Report source commit, toolchain pins, exact checks executed, failures, expected failures, benchmark environment, and unresolved gates. Label local/mocked/real-GitHub/live-Urbit tests separately. Never turn a green planning validator into evidence of runtime correctness. Spending, live keys, confidential datasets, merging an implementation PR and deployment all need the relevant owner approval.
+Keep this computer on lightweight source, Git, hash and data inspection. Run native builds, models and untrusted work on a disposable worker. Reviewed, bounded browser and host checks may use the existing Lightsail arrangements. The authority and identity processes have their own duties. Keep their resources and private data separate from model and repository execution.
 
-## Review the product workflow
+A live Home update requires a tested predecessor, a stopped checkpoint, a maintenance fence, preservation of the existing signing key and saved state, and a verified rollback path. Keep Identity at its reviewed release. Check both named URLs, a fresh sign-in, the three projects’ Work/Docs content and the accepted Git snapshot after updating. The real pilot already has Code and is ineligible for the reserved no-Code test profile. [Deployment runbook](PHASE5_DEPLOYMENT.md#prepare-a-pilot-update)
 
-Read the [master directive](MASTER_BUILD_DIRECTIVE.md), ecosystem milestones,
-and current acceptance evidence before reviewing the UI. Start with an existing
-Work item and follow the user's entire job. Check whether the ticket makes the
-requirements, discussion, supporting Docs, and blockers understandable. Include
-a Work item with no repository and a software Work item with an accepted branch.
+## Evidence and ownership
 
-For the software item, follow the human owner, individual agent assignment,
-bounded run, branch, proposal, exact changed files, independent review, accepted
-source, isolated build, and retained result. Exercise revocation, a revision
-change after review, an interrupted worker, and restart or restore. Check that
-the person following this trail can tell what happened and what requires action.
-Use Linear, Jira, and GitHub as references for common interactions and name
-missing capabilities as well as interaction defects.
+Preserve M0–M6, URB-000 through URB-280 and their original acceptance records. T01–T32 identify follow-up packages. Record the source, runtime, actors, actual result and remaining gap for each exercised profile. A named pilot acceptance applies to that release and scope. [Capability matrix](CAPABILITY_MATRIX.md) · [Ecosystem issue mapping](../../specs/urbit/ecosystem.json)
 
-Give a verdict for the exercised workflow and a separate verdict for the full
-product. Name any missing step, its effect on the user, and the evidence that
-would close it. Browser fixtures, compiled native tests, a connected worker run,
-and independent release reviews each support their own claims.
+Use one integrator for shared native molds, wire marks and migrations. Assign bounded implementation slices to independent lanes and have an independent reviewer check each result. For UI work, inspect rendered desktop and narrow layouts, keyboard access, stale or revoked reads and draft continuity. For native work, use the actual harness for replay, stale inputs and recovery. For agent work, observe the request, effects, answer, revision, exact output and acceptance, including lost-reply reconciliation.
+
+Independent first-time-user trials and the owner's eventual source-cutover decision remain separate gates. Keep GitHub authoritative until the stock Git write, review, check, build and recovery profile qualifies and the owner authorizes the switch. The current authorization covers the existing pilot. New paid hosting, provider accounts, identities and third-party outreach require their own decisions.

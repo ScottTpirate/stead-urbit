@@ -1,0 +1,66 @@
+{
+  "T09_result": "Governed Markdown attachment rendering implemented and verified; other T09 criteria are not classified here.",
+  "additive_five_chromium": {
+    "covers": [
+      "governed attachments and canonical Markdown in read-only modes",
+      "repository-relative clone and unavailable states",
+      "no image loading or unexpected request",
+      "long text320 and CSSzoom2",
+      "actual shared icon-only overflow desktop/touch geometry contrast accessible name Enter Escape focus return"
+    ],
+    "original_report_bytes": 14915,
+    "original_report_sha256": "738278bd73bfdd8537a49b802a071553105a7f7c08274d4c35019e0ad6a78ffe",
+    "status": "pass"
+  },
+  "historical_eight_firefox": {
+    "bytes": 12100,
+    "cases": 8,
+    "covers": [
+      "empty normal crowded fixtures",
+      "shared menu and combobox keyboard selection/Escape/focus return",
+      "modal focus/draft and nested picker",
+      "explicit loading empty error read-only outcome states",
+      "Work geometry and responsive reflow",
+      "document read/edit/preview draft",
+      "light dark system text and focus contrast"
+    ],
+    "css_zoom": 2,
+    "sha256": "8b71c6d96a4a4741e1d45098a3ee438b5ee7f861febcbfdd250dc75f794fafdf",
+    "status": "pass",
+    "widths": [
+      1440,
+      390,
+      320
+    ]
+  },
+  "overflow_targets": {
+    "desktop1440": {
+      "background": "rgb(255, 255, 255)",
+      "coarse": false,
+      "color": "rgb(32, 33, 31)",
+      "contrast": 16.169473064020004,
+      "height": 34,
+      "name": "More reference actions",
+      "width": 62
+    },
+    "narrow320Touch": {
+      "background": "rgb(255, 255, 255)",
+      "coarse": true,
+      "color": "rgb(32, 33, 31)",
+      "contrast": 16.169473064020004,
+      "height": 49.09375,
+      "name": "More reference actions",
+      "width": 56.796875
+    }
+  },
+  "protocol": "stead.interaction-reference-scoped-acceptance/1",
+  "remaining_specific_T02_acceptance_gap": null,
+  "scope": "T02 reusable synthetic interaction reference only",
+  "scope_limits": [
+    "The8historical Firefox cases and5additive Chromium cases are separate source-bound observations, not a claim of13cases rerun in one current browser session.",
+    "CSSzoom2 is not browser-chrome zoom; private font missing glyphs do not change retained alt text.",
+    "Synthetic data only; no live release, native authority, attended human trial, or broader T07–T09 rollout acceptance is implied."
+  ],
+  "status": "accepted-with-declared-evidence-scope",
+  "custody": "The operator retains the two original browser reports at the identified digests."
+}

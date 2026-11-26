@@ -1,5 +1,20 @@
 # Revision-addressed source control for Stead
 
+This is the Code-specific design and implementation profile. Generic Work,
+Docs and agent runs follow the [experience contract](PRODUCT_EXPERIENCE_CONTRACT.md)
+and [job profile](AGENT_JOB_PROFILE.md); they do not require a repository or
+wait for full-history Code delivery. The deterministic Code task is an internal
+parallel proof, not the first user-facing agent acceptance.
+
+T04 preserves existing repository identities while adding independent IDs and
+explicit project association. T12 reuses the exact proposal/review mechanics
+below as a typed Code target of Change. T13 separates execution expiry from
+durable review via explicit authorized adoption, without reviving credentials.
+T20–T23 qualify the selected Git/forge profile. Report actual supported
+operations and exclusions using the [capability matrix](CAPABILITY_MATRIX.md);
+this design does not itself establish stock full-history write readiness,
+external worker acceptance or permission to cut over from GitHub.
+
 Stead supports portable Git objects, stock clients and offline clones. A home
 owns acceptance, access policy and ref advancement. In this design, source
 objects are immutable and ref changes compare an expected prior OID at the

@@ -1,0 +1,632 @@
+{
+  "profile_version": 1,
+  "prepared_on": "2026-11-15",
+  "reviewed_commit": "539825650c60e606634bf4ab5967b698a6daa6e3",
+  "status": "source_inventory_and_live_point_observation_not_capacity_qualification",
+  "native_interfaces": "docs/urbit/PRODUCT_NATIVE_INTERFACES.md",
+  "measured_capacity": null,
+  "correction": "The 4096 ordinary event cap is Home-wide. The dated supplied review called it per-project; source event-count filters by project only for security records.",
+  "limits": [
+    {
+      "id": "ordinary_accepted_events",
+      "limit": 4096,
+      "unit": "events",
+      "scope": "Home",
+      "source": {
+        "path": "native/core/desk/lib/stead-team.hoon",
+        "line": 422,
+        "sha256": "36c5affad6ba239f92b42ff7459b916fbb3223b387fa76149bf8350501872128"
+      },
+      "note": "event-count filters project only for security=true; ordinary count spans all projects."
+    },
+    {
+      "id": "security_reserve",
+      "limit": 128,
+      "unit": "policy.revoke events",
+      "scope": "project",
+      "source": {
+        "path": "native/core/desk/lib/stead-team.hoon",
+        "line": 238,
+        "sha256": "36c5affad6ba239f92b42ff7459b916fbb3223b387fa76149bf8350501872128"
+      },
+      "note": "Ordinary events cannot consume this reserve; exhaustion fails protected operations closed."
+    },
+    {
+      "id": "projects",
+      "limit": 16,
+      "unit": "projects",
+      "scope": "Home",
+      "source": {
+        "path": "native/core/desk/lib/stead-team.hoon",
+        "line": 429,
+        "sha256": "36c5affad6ba239f92b42ff7459b916fbb3223b387fa76149bf8350501872128"
+      },
+      "note": ""
+    },
+    {
+      "id": "work_items",
+      "limit": 128,
+      "unit": "Work records",
+      "scope": "project",
+      "source": {
+        "path": "native/core/desk/lib/stead-team.hoon",
+        "line": 479,
+        "sha256": "36c5affad6ba239f92b42ff7459b916fbb3223b387fa76149bf8350501872128"
+      },
+      "note": ""
+    },
+    {
+      "id": "comments",
+      "limit": 32,
+      "unit": "embedded comments",
+      "scope": "Work",
+      "source": {
+        "path": "native/core/desk/lib/stead-team.hoon",
+        "line": 502,
+        "sha256": "36c5affad6ba239f92b42ff7459b916fbb3223b387fa76149bf8350501872128"
+      },
+      "note": ""
+    },
+    {
+      "id": "collections",
+      "limit": 32,
+      "unit": "collections",
+      "scope": "project",
+      "source": {
+        "path": "native/core/desk/lib/stead-team.hoon",
+        "line": 471,
+        "sha256": "36c5affad6ba239f92b42ff7459b916fbb3223b387fa76149bf8350501872128"
+      },
+      "note": ""
+    },
+    {
+      "id": "documents",
+      "limit": 32,
+      "unit": "current documents",
+      "scope": "collection",
+      "source": {
+        "path": "native/core/desk/lib/stead-team.hoon",
+        "line": 539,
+        "sha256": "36c5affad6ba239f92b42ff7459b916fbb3223b387fa76149bf8350501872128"
+      },
+      "note": ""
+    },
+    {
+      "id": "document_commits",
+      "limit": 128,
+      "unit": "retained revisions",
+      "scope": "collection",
+      "source": {
+        "path": "native/core/desk/lib/stead-team.hoon",
+        "line": 538,
+        "sha256": "36c5affad6ba239f92b42ff7459b916fbb3223b387fa76149bf8350501872128"
+      },
+      "note": ""
+    },
+    {
+      "id": "doc_markdown",
+      "limit": 32768,
+      "unit": "UTF-8 bytes including metadata",
+      "scope": "document",
+      "source": {
+        "path": "native/core/desk/lib/stead-team.hoon",
+        "line": 577,
+        "sha256": "36c5affad6ba239f92b42ff7459b916fbb3223b387fa76149bf8350501872128"
+      },
+      "note": ""
+    },
+    {
+      "id": "doc_objects",
+      "limit": 8388608,
+      "unit": "object body bytes",
+      "scope": "Home Docs store",
+      "source": {
+        "path": "native/core/desk/lib/stead-team.hoon",
+        "line": 599,
+        "sha256": "36c5affad6ba239f92b42ff7459b916fbb3223b387fa76149bf8350501872128"
+      },
+      "note": ""
+    },
+    {
+      "id": "relationships",
+      "limit": 256,
+      "unit": "relationships",
+      "scope": "project",
+      "source": {
+        "path": "native/core/desk/lib/stead-team.hoon",
+        "line": 519,
+        "sha256": "36c5affad6ba239f92b42ff7459b916fbb3223b387fa76149bf8350501872128"
+      },
+      "note": ""
+    },
+    {
+      "id": "grants",
+      "limit": 128,
+      "unit": "retained grants",
+      "scope": "project",
+      "source": {
+        "path": "native/core/desk/lib/stead-team.hoon",
+        "line": 447,
+        "sha256": "36c5affad6ba239f92b42ff7459b916fbb3223b387fa76149bf8350501872128"
+      },
+      "note": ""
+    },
+    {
+      "id": "comment_body",
+      "limit": 2048,
+      "unit": "UTF-8 bytes",
+      "scope": "comment",
+      "source": {
+        "path": "native/core/desk/lib/stead-team-codec.hoon",
+        "line": 44,
+        "sha256": "32af481763079fdaf26a261746f5ea60622d07d7155c0c20eb82ca8b9df71c13"
+      },
+      "note": ""
+    },
+    {
+      "id": "work_description",
+      "limit": 8192,
+      "unit": "UTF-8 bytes",
+      "scope": "Work",
+      "source": {
+        "path": "native/core/desk/lib/stead-codec.hoon",
+        "line": 271,
+        "sha256": "56e3d574381bbf8cdf29ca192c70eff256009f89d782e3ffe859b19c1321cbd7"
+      },
+      "note": ""
+    },
+    {
+      "id": "page_rows",
+      "limit": 20,
+      "unit": "rows",
+      "scope": "read page",
+      "source": {
+        "path": "native/core/desk/lib/stead-views.hoon",
+        "line": 272,
+        "sha256": "407bada1ca28319a9f4d8a2d4b824f36f6e432d5dbfb3e2b9971e9ccd42bd33b"
+      },
+      "note": ""
+    },
+    {
+      "id": "query_cursors",
+      "limit": 64,
+      "unit": "cursors",
+      "scope": "Home",
+      "source": {
+        "path": "native/core/desk/lib/stead-views.hoon",
+        "line": 280,
+        "sha256": "407bada1ca28319a9f4d8a2d4b824f36f6e432d5dbfb3e2b9971e9ccd42bd33b"
+      },
+      "note": ""
+    },
+    {
+      "id": "cursors_per_principal",
+      "limit": 4,
+      "unit": "cursors",
+      "scope": "principal",
+      "source": {
+        "path": "native/core/desk/lib/stead-views.hoon",
+        "line": 280,
+        "sha256": "407bada1ca28319a9f4d8a2d4b824f36f6e432d5dbfb3e2b9971e9ccd42bd33b"
+      },
+      "note": ""
+    },
+    {
+      "id": "restore_batch",
+      "limit": 16,
+      "unit": "accepted events",
+      "scope": "native event",
+      "source": {
+        "path": "native/core/desk/lib/stead-restore.hoon",
+        "line": 133,
+        "sha256": "978223b175a17e67556b7300cf4b1bdf9f3b668a074c9ed46f265e020d608ea1"
+      },
+      "note": ""
+    },
+    {
+      "id": "repositories",
+      "limit": 4,
+      "unit": "inline plus external repositories",
+      "scope": "Home",
+      "source": {
+        "path": "native/core/desk/lib/stead-code-home.hoon",
+        "line": 106,
+        "sha256": "e7bb6c222ab2b5dc0e0fd8e4dbadedfbc752125a035b6acf71c23c9db70a5cbd"
+      },
+      "note": ""
+    },
+    {
+      "id": "inline_objects",
+      "limit": 64,
+      "unit": "objects",
+      "scope": "repository",
+      "source": {
+        "path": "native/core/desk/lib/stead-code-store.hoon",
+        "line": 58,
+        "sha256": "653148bad82c5853e58998adc36aebfa29536a4b9b6e9d5c31edaccd8b03df4d"
+      },
+      "note": ""
+    },
+    {
+      "id": "inline_object_bytes",
+      "limit": 262144,
+      "unit": "object body bytes",
+      "scope": "repository",
+      "source": {
+        "path": "native/core/desk/lib/stead-code-store.hoon",
+        "line": 62,
+        "sha256": "653148bad82c5853e58998adc36aebfa29536a4b9b6e9d5c31edaccd8b03df4d"
+      },
+      "note": ""
+    },
+    {
+      "id": "inline_refs",
+      "limit": 16,
+      "unit": "refs",
+      "scope": "repository",
+      "source": {
+        "path": "native/core/desk/lib/stead-code-store.hoon",
+        "line": 128,
+        "sha256": "653148bad82c5853e58998adc36aebfa29536a4b9b6e9d5c31edaccd8b03df4d"
+      },
+      "note": ""
+    },
+    {
+      "id": "inline_push_receipts",
+      "limit": 32,
+      "unit": "accepted receipts",
+      "scope": "repository",
+      "source": {
+        "path": "native/core/desk/lib/stead-code-store.hoon",
+        "line": 128,
+        "sha256": "653148bad82c5853e58998adc36aebfa29536a4b9b6e9d5c31edaccd8b03df4d"
+      },
+      "note": ""
+    },
+    {
+      "id": "inline_upload_bytes",
+      "limit": 65536,
+      "unit": "wire bytes",
+      "scope": "upload",
+      "source": {
+        "path": "native/core/desk/lib/stead-code-upload.hoon",
+        "line": 14,
+        "sha256": "2369722fffe69083fd857a70a562da6a5020fdfaa120e25c68c156cc0a5f0580"
+      },
+      "note": ""
+    },
+    {
+      "id": "inline_uploads",
+      "limit": 4,
+      "unit": "uploads",
+      "scope": "Home",
+      "source": {
+        "path": "native/core/desk/lib/stead-code-upload.hoon",
+        "line": 40,
+        "sha256": "2369722fffe69083fd857a70a562da6a5020fdfaa120e25c68c156cc0a5f0580"
+      },
+      "note": ""
+    },
+    {
+      "id": "inline_uploads_per_binding",
+      "limit": 2,
+      "unit": "uploads",
+      "scope": "actor binding",
+      "source": {
+        "path": "native/core/desk/lib/stead-code-upload.hoon",
+        "line": 43,
+        "sha256": "2369722fffe69083fd857a70a562da6a5020fdfaa120e25c68c156cc0a5f0580"
+      },
+      "note": ""
+    },
+    {
+      "id": "delivery_delegations",
+      "limit": 32,
+      "unit": "delegations",
+      "scope": "delivery board",
+      "source": {
+        "path": "native/core/desk/lib/stead-code-delivery.hoon",
+        "line": 112,
+        "sha256": "80abf877b32660d65bdf7f5f9657fc2990d953681cd50350c7841f5a5eb048f8"
+      },
+      "note": ""
+    },
+    {
+      "id": "delivery_proposals",
+      "limit": 64,
+      "unit": "proposal revisions",
+      "scope": "delivery board",
+      "source": {
+        "path": "native/core/desk/lib/stead-code-delivery.hoon",
+        "line": 182,
+        "sha256": "80abf877b32660d65bdf7f5f9657fc2990d953681cd50350c7841f5a5eb048f8"
+      },
+      "note": ""
+    },
+    {
+      "id": "delivery_reviews",
+      "limit": 64,
+      "unit": "reviews",
+      "scope": "delivery board",
+      "source": {
+        "path": "native/core/desk/lib/stead-code-delivery.hoon",
+        "line": 208,
+        "sha256": "80abf877b32660d65bdf7f5f9657fc2990d953681cd50350c7841f5a5eb048f8"
+      },
+      "note": ""
+    },
+    {
+      "id": "delivery_builds",
+      "limit": 32,
+      "unit": "builds",
+      "scope": "delivery board",
+      "source": {
+        "path": "native/core/desk/lib/stead-code-delivery.hoon",
+        "line": 251,
+        "sha256": "80abf877b32660d65bdf7f5f9657fc2990d953681cd50350c7841f5a5eb048f8"
+      },
+      "note": ""
+    },
+    {
+      "id": "build_attempts",
+      "limit": 3,
+      "unit": "attempts",
+      "scope": "build",
+      "source": {
+        "path": "native/core/desk/lib/stead-code-delivery.hoon",
+        "line": 297,
+        "sha256": "80abf877b32660d65bdf7f5f9657fc2990d953681cd50350c7841f5a5eb048f8"
+      },
+      "note": ""
+    },
+    {
+      "id": "external_pack_bytes",
+      "limit": 67108864,
+      "unit": "pack bytes",
+      "scope": "external manifest",
+      "source": {
+        "path": "native/core/desk/lib/stead-code-pack-anchor.hoon",
+        "line": 59,
+        "sha256": "e195a49e63492b42e4e1eeff18bd6bf1437ed44285f610e85030acb329d75434"
+      },
+      "note": ""
+    },
+    {
+      "id": "external_objects",
+      "limit": 16384,
+      "unit": "objects",
+      "scope": "external manifest",
+      "source": {
+        "path": "native/core/desk/lib/stead-code-pack-anchor.hoon",
+        "line": 60,
+        "sha256": "e195a49e63492b42e4e1eeff18bd6bf1437ed44285f610e85030acb329d75434"
+      },
+      "note": ""
+    },
+    {
+      "id": "external_object_bytes",
+      "limit": 268435456,
+      "unit": "object body bytes",
+      "scope": "external manifest",
+      "source": {
+        "path": "native/core/desk/lib/stead-code-pack-anchor.hoon",
+        "line": 61,
+        "sha256": "e195a49e63492b42e4e1eeff18bd6bf1437ed44285f610e85030acb329d75434"
+      },
+      "note": ""
+    },
+    {
+      "id": "external_refs",
+      "limit": 64,
+      "unit": "refs",
+      "scope": "external manifest",
+      "source": {
+        "path": "native/core/desk/lib/stead-code-pack-anchor.hoon",
+        "line": 62,
+        "sha256": "e195a49e63492b42e4e1eeff18bd6bf1437ed44285f610e85030acb329d75434"
+      },
+      "note": ""
+    },
+    {
+      "id": "external_advances",
+      "limit": 64,
+      "unit": "generations",
+      "scope": "external ledger",
+      "source": {
+        "path": "native/core/desk/lib/stead-code-pack-ledger.hoon",
+        "line": 32,
+        "sha256": "ff2175608ce15317a640d2a17742b4b0d03c19e92d7a5a9221a578fa6bd44c4d"
+      },
+      "note": ""
+    },
+    {
+      "id": "active_members",
+      "limit": 32,
+      "unit": "bindings",
+      "scope": "configured Home",
+      "source": {
+        "path": "native/core/desk/lib/stead-team-config.hoon",
+        "line": 55,
+        "sha256": "ca95235550f5ebe34ac43f1f886620e4598fae4e304eef855068022400f5f630"
+      },
+      "note": ""
+    },
+    {
+      "id": "project_creators",
+      "limit": 8,
+      "unit": "principals",
+      "scope": "configured Home",
+      "source": {
+        "path": "native/core/desk/lib/stead-team-config.hoon",
+        "line": 55,
+        "sha256": "ca95235550f5ebe34ac43f1f886620e4598fae4e304eef855068022400f5f630"
+      },
+      "note": ""
+    },
+    {
+      "id": "principal_history",
+      "limit": 128,
+      "unit": "retained principals",
+      "scope": "configured Home",
+      "source": {
+        "path": "native/core/desk/lib/stead-team-config.hoon",
+        "line": 97,
+        "sha256": "ca95235550f5ebe34ac43f1f886620e4598fae4e304eef855068022400f5f630"
+      },
+      "note": ""
+    },
+    {
+      "id": "binding_owners",
+      "limit": 256,
+      "unit": "retained binding IDs",
+      "scope": "configured Home",
+      "source": {
+        "path": "native/core/desk/lib/stead-team-config.hoon",
+        "line": 97,
+        "sha256": "ca95235550f5ebe34ac43f1f886620e4598fae4e304eef855068022400f5f630"
+      },
+      "note": ""
+    },
+    {
+      "id": "request_bytes",
+      "limit": 65536,
+      "unit": "bytes",
+      "scope": "HTTP request",
+      "source": {
+        "path": "native/core/desk/lib/stead-http.hoon",
+        "line": 135,
+        "sha256": "8dced7c0ac0af601ca319ab317a705865589bb3aaf223c238d792512406fe05f"
+      },
+      "note": ""
+    },
+    {
+      "id": "response_bytes",
+      "limit": 262144,
+      "unit": "bytes",
+      "scope": "query response",
+      "source": {
+        "path": "native/core/desk/lib/stead-views.hoon",
+        "line": 294,
+        "sha256": "407bada1ca28319a9f4d8a2d4b824f36f6e432d5dbfb3e2b9971e9ccd42bd33b"
+      },
+      "note": ""
+    },
+    {
+      "id": "delivery_releases",
+      "limit": 32,
+      "unit": "release intents",
+      "scope": "delivery board",
+      "source": {
+        "path": "native/core/desk/lib/stead-code-delivery.hoon",
+        "line": 388,
+        "sha256": "80abf877b32660d65bdf7f5f9657fc2990d953681cd50350c7841f5a5eb048f8"
+      },
+      "note": ""
+    },
+    {
+      "id": "update_retention",
+      "limit": 64,
+      "unit": "minimal invalidations",
+      "scope": "scope",
+      "source": {
+        "path": "native/core/desk/lib/stead-updates.hoon",
+        "line": 95,
+        "sha256": "205adbd403bfc814636e35062d5720611ef2192b87f18233bb471879ce3a1c56"
+      },
+      "note": ""
+    },
+    {
+      "id": "watch_queue",
+      "limit": 16,
+      "unit": "invalidations",
+      "scope": "watch",
+      "source": {
+        "path": "native/core/desk/lib/stead-updates.hoon",
+        "line": 105,
+        "sha256": "205adbd403bfc814636e35062d5720611ef2192b87f18233bb471879ce3a1c56"
+      },
+      "note": ""
+    }
+  ],
+  "cost_observations": [
+    {
+      "source": "native/core/desk/lib/stead-team.hoon",
+      "arm": "event-count",
+      "observation": "Scans retained receipt map on every new accepted command; no per-project ordinary counter."
+    },
+    {
+      "source": "native/core/desk/lib/stead-team.hoon",
+      "arm": "accept",
+      "observation": "Scans project journal for previous digest and sequence; changed-scopes scans relations."
+    },
+    {
+      "source": "native/core/desk/lib/stead-views.hoon",
+      "arm": "rows/query",
+      "observation": "Constructs authorized result collection before scag20 pagination; page size is not an independent work bound."
+    },
+    {
+      "source": "native/core/desk/lib/stead-team.hoon",
+      "arm": "document-command",
+      "observation": "Rebuilds tree/commit and sums object bodies; retained history grows within hard caps."
+    },
+    {
+      "source": "native/core/desk/lib/stead-restore.hoon",
+      "arm": "step",
+      "observation": "Validates/replays at most16 accepted events per step; total replay and memory need measurement."
+    }
+  ],
+  "retention_contract": {
+    "business_records": "Retain accepted receipts, revision history, actor provenance, revocation/binding high-water marks and tombstones through a versioned archive/checkpoint. No deletion merely to admit more work.",
+    "telemetry": "Bound transient run/tool logs separately from accepted business events; durable questions, results and effect receipts remain retained business evidence.",
+    "paging": "Keep authorized20-row pages; implement indexed bounded scan budgets and opaque identity/scope/generation-bound cursors before raising caps.",
+    "bulk_objects": "Canonical content-addressed Markdown/Git/artifact bytes remain in their authorized custody boundary; a hot-state pointer requires verified digest and current access on read.",
+    "quota_behavior": "Reject atomically before effects, show capacity reason and allowed recovery/export action; reserve revoke/recovery control capacity.",
+    "compaction": "Requires format version, immutable checkpoint/history bindings, retry deduplication, exact review/effect evidence and actual restore tests before activation."
+  },
+  "initial_workload": {
+    "status": "not_executed_waiting_safe_native_admission",
+    "synthetic_only": true,
+    "projects": 2,
+    "work_per_project": 32,
+    "docs_per_project": 8,
+    "comments_per_work": 4,
+    "document_edits": 4,
+    "planned_observations": [
+      "exact runtime/source/host",
+      "p50/p95 authorized read and save",
+      "RSS and Home object/journal growth",
+      "bounded page scan costs",
+      "restart and backup/restore duration",
+      "revocation at ordinary quota and unaffected control reserve"
+    ],
+    "no_limit_increases": true
+  },
+  "long_running_target": {
+    "package": "T31",
+    "work": 1000,
+    "docs": 500,
+    "business_events": 100000,
+    "runs": 10,
+    "supported": false
+  },
+  "qualification_remaining": [
+    "native baseline workload measurement",
+    "indexed discussion/storage migration",
+    "retention and deduplication checkpoint prototype",
+    "growth beyond pilot limits",
+    "quota recovery and restore evidence"
+  ],
+  "live_point_observation": {
+    "evidence": "docs/urbit/evidence/2026-11-15/controller-refresh/pilot-resource-observation/custody.json",
+    "observed_at": "2026-11-16T04:51:07.164508+00:00",
+    "source_commit": "a0e90ef29389077d453ec2a775cd8fd69f711727",
+    "service_count": 8,
+    "memory_current_bytes": 197255168,
+    "tasks_current": 27,
+    "native_urb_allocated_bytes": 1233436672,
+    "native_urb_logical_bytes": 1234792460,
+    "measured_read_save_latency": false,
+    "supports_capacity_claim": false,
+    "scope": "All eight pilot services and bounded metadata-only traversal of two native .urb trees; not entire server storage. Existing content, no workload generated."
+  }
+}

@@ -1,4 +1,20 @@
-# Operator quickstart: local team alpha
+# Operator quickstart
+
+## Existing Lightsail pilot
+
+On the configured computer, run `stead-pilot` to open Stead and sign-in approval
+through the private SSH tunnel. Run `stead-pilot --check` to check both sites
+without opening a browser. The [member guide](member.md) follows the sign-in and
+Work/Docs flow. The [capability matrix](../CAPABILITY_MATRIX.md) identifies the
+serving release and the browser and native checks completed for it.
+
+For a supervised update, use the existing [deployment runbook](../PHASE5_DEPLOYMENT.md#prepare-a-pilot-update).
+It covers release preparation, the server checkpoint, recovery and verification.
+For machine and runtime configuration of agent models, see the
+[operator catalog](../AGENT_JOB_PROFILE.md#choose-a-model-for-an-agent-runtime).
+The pilot has no active model-dispatch service.
+
+## Disposable local team fixture
 
 The qualified target for this phase is a disposable Linux fixture. No rented
 server, purchased Urbit identity, production ship copy or public DNS is needed

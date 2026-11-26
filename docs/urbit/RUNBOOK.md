@@ -1,5 +1,12 @@
 # Local fake-ship development
 
+Use the [capability matrix](CAPABILITY_MATRIX.md) to identify the tested profile,
+and the [current handoff](AGENT_HANDOFF.md) for development priorities. The
+[experience contract](PRODUCT_EXPERIENCE_CONTRACT.md) describes target behavior;
+this runbook's commands do not activate that redesign or qualify an agent run.
+For existing private-pilot operation, see [Phase 5 deployment](PHASE5_DEPLOYMENT.md).
+The synthetic harness below is a separate local profile.
+
 See [the edit/build/test flow](DEV_FLOW.md) for the local command reference and
 the distinction between compile checks, acceptance, browser testing and hosting.
 `make` prints help; `make status` and `make preflight` do not start ships.

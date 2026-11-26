@@ -1,5 +1,24 @@
 # Phase 6 release evidence and publisher key recovery
 
+## Product acceptance required for the redesigned candidate
+
+The [experience contract](PRODUCT_EXPERIENCE_CONTRACT.md) and
+[capability matrix](CAPABILITY_MATRIX.md) supplement the existing M0–M6 gates.
+T30 must bind G1–G5 to the exact candidate: real no-Code team work, human and
+agent Code work, a real model-driven Docs outcome, and failure/recovery.
+Independent clean install, upgrade/restore, portable export, measured capacity,
+and the existing independent teams/app/maintainer requirements remain required.
+The initial four-of-five unfamiliar-user completion target is unmeasured; record
+actual results and wrong turns. Lost accepted data, permission disclosure and
+misleading success states block release regardless of that target.
+
+T01 documentation alignment and this verifier's synthetic rehearsal close no
+product or release gate. T32 guidance must describe shipped behavior after its
+dependencies, not merely restate the design. House compatibility and GitHub source
+cutover each need separate exact-profile evidence; source cutover additionally
+requires explicit owner authorization. The existing verifier below checks its
+specified bundle; it does not automatically verify the new product journeys.
+
 Run the verifier after assembling the evidence for an exact candidate.
 It checks both role archives against their signed digests and compatibility
 targets, binds each review to the candidate and its observations, and checks

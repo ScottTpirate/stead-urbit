@@ -8,6 +8,23 @@ its dependency closure and its frontend bytes. In this transition, a Home
 with existing v3 state and no Code repositories continues to save v3. The
 package maximum does not force a state rewrite.
 
+## Current candidate evidence boundary
+
+[Diagnostic run 43846986399](https://github.com/ScottTpirate/stead-urbit/actions/runs/43846986399)
+records source-bound positive results for `stead-product-migrate` (6 registered
+arms), `stead-home-v8-rehearsal` (5) and `stead-home-v9-rehearsal` (4). These
+results follow the exact trusted test sequence and closed observed counts;
+original positive-arm transcripts were not exported. The Product restore,
+history, Doc-history, Home and v10 rehearsal suites failed to compile. The
+overall run failed nine suites containing 75 arms, despite positive results
+for 39 suites containing 254 arms.
+
+This is partial native test evidence for candidate `6e6c21a` with controller
+`e316934`. It did not reach the ordinary journey or capture original saved
+vases, and does not qualify v10 adoption, a new live upgrade or a repeat of the
+historical controlled-interruption rehearsal below. Later fixture corrections
+need their own immutable composition and observed results.
+
 ## Controlled interruption
 
 The runner verifies the previous native install report, its retired guard,
