@@ -4,6 +4,7 @@ import { createRoot } from 'react-dom/client';
 import { HomeClient, HomeError, UUID, command, type CodeReviewKey, type Command, type Fields, type HomeWatch, type RepositoryAccess, type Query, type Row, type UpdateScope, type ViewKind } from './api';
 import { Button, EmptyState, LoadingState, Surface, TextField } from './primitives';
 import { SupportDetails } from './SupportDetails';
+import {Handbook, WorkspaceSettings, useHandbookVisibility} from './Handbook';
 import { AppearanceControl } from './Appearance';
 import { AcceptedTime } from './AcceptedTime';
 import { WorkQuickActions, assigneeName, workStatuses, type WorkMenu, type WorkProperty } from './WorkQuickActions';
@@ -98,10 +99,12 @@ function App() {
   const [projects, setProjects] = useState<Row[]>([]);
   const [project, setProject] = useState<Row | null>(null);
   const [workspaceView,setWorkspaceView]=useState<'my-work'|'search'|null>(null);
+  const [guideRoute, setGuideRoute] = useState<Extract<ProductRoute, {kind:'handbook'|'settings'}> | null>(null);
+  const handbookPreference = useHandbookVisibility(identity?.principal_id ?? '');
   const [workspaceSupported,setWorkspaceSupported]=useState(false);
   const [navigationOpen, setNavigationOpen] = useState<boolean | null>(null);
   const navigationButton = useRef<HTMLButtonElement>(null);
-  const showNavigation = navigationOpen ?? (!project && !workspaceView);
+  const showNavigation = navigationOpen ?? (!project && !workspaceView && !guideRoute);
   const [carrierMode, setCarrierMode] = useState<ProductCarrierMode>({kind: 'unsupported'});
   const capabilityRead = useRef<object | undefined>(undefined);
   const productActive = carrierMode.kind === 'native-human-doc';
@@ -194,7 +197,7 @@ function App() {
     pendingDocumentFocus.current = null;
     routedIdentity.current = undefined;
     setLoading(false);
-    setProjects([]); setProject(null); setWorkspaceView(null); setWorkspaceSearch({draft:'',term:''}); setContainers([]); setContainer(null); setRows([]);
+    setProjects([]); setProject(null); setWorkspaceView(null); setGuideRoute(null); setWorkspaceSearch({draft:'',term:''}); setContainers([]); setContainer(null); setRows([]);
     setRepository(null); setShowRepository(false); clearCodeSelection();
     setWorkFiltersOpen(false); setWorkFilters(initialWorkFilters); setWorkRoster({status: 'loading'});
     setCommentDrafts({}); navigationMemory.current.clear(); pendingNavigation.current=null;
@@ -591,6 +594,7 @@ function App() {
     reloadScope();
   }
   function enterProject(row: Row, nextTab: ViewKind) {
+    setGuideRoute(null);
     setNavigationOpen(null);
     setLinkedPage(null);
     if (row.project_id !== project?.project_id) {
@@ -638,6 +642,7 @@ function App() {
     syncResourceAddress(projectId ? {kind:'work',project:projectId,item} : undefined,replace);
   }
   function enterWorkspace(view:'my-work'|'search'|null) {
+    setGuideRoute(null);
     setNavigationOpen(null);
     pendingDocumentFocus.current=null;
     activeQuery.current++;repositoryGeneration.current++;pendingNavigation.current=null;displayedSnapshot.current=null;
@@ -670,6 +675,9 @@ function App() {
     pendingNavigation.current=null;
     const mode = client.productMode().kind;
     if (mode === 'unsupported') throw new HomeError('unsupported_version');
+    if (address.kind === 'handbook' || address.kind === 'settings') {
+      enterWorkspace(null); setGuideRoute(address); setNavigationOpen(false); return;
+    }
     if(address.kind==='work')return restoreWorkAddress({project:address.project,item:address.item},allowed);
     if(address.kind==='workspace') {
       if(address.view==='inbox'){setError('This Home does not yet support an actionable Inbox.');return;}
@@ -1356,9 +1364,12 @@ function App() {
             aria-current={project?.project_id === row.project_id ? 'page' : undefined} onClick={() => void action(() => openProject(row))}>
             <span className="project-glyph" aria-hidden="true">{(row.project_key || row.title || '·').slice(0, 1)}</span>
             <span className="project-name"><span className="project-key">{row.project_key}</span>{row.title}</span>
-          </button>)}</nav>
+          </button>)}{handbookPreference.visible && <a className="sidebar-link" href="#handbook" aria-current={guideRoute?.kind==='handbook'?'page':undefined}>
+            <span className="project-glyph" aria-hidden="true">H</span><span className="project-name">Stead Handbook</span>
+          </a>}</nav>
           {identity.can_create === 'yes' && <Button variant="quiet" disabled={busy || !!pending || !!form || !!editor?.dirty || currentProductDraft()}
-            onClick={() => { setEditor(null); setWork(null); setCurrentVersion(null); setForm('project'); }}><Icon name="plus"/>New project</Button>}
+            onClick={() => { if (guideRoute) { syncResourceAddress(); enterWorkspace(null); } setEditor(null); setWork(null); setCurrentVersion(null); setForm('project'); }}><Icon name="plus"/>New project</Button>}
+          <nav aria-label="Preferences"><a href="#settings" className="sidebar-link" aria-current={guideRoute?.kind==='settings'?'page':undefined}>Settings</a></nav>
           </div>
         </aside>
         <section className="content" id="project-content" data-live-updates={productActive ? 'unsupported' : updatesConnected ? 'connected' : 'unavailable'} data-refresh={productActive ? 'explicit' : 'watch'}>
@@ -1382,7 +1393,9 @@ function App() {
             onOpen={row=>void action(()=>openWorkspaceResource(row),explainConnection)}
             onError={failure=>{if(failure instanceof HomeError&&failure.code==='denied_or_not_found')clearViews();setError(explainConnection(failure));}}/>
             : <EmptyState title="Workspace views need a newer Home" description="Choose a project to keep working. This Home does not advertise workspace queries."/>)}
-          {!project && !workspaceView && <div className="welcome"><h1 ref={heading} tabIndex={-1}>Your workspace</h1><p>{projects.length ? 'Choose a project to open its Work and Docs.' : 'Shared projects will appear here when you have access.'}</p></div>}
+          {guideRoute?.kind==='handbook' && <Handbook page={guideRoute.page}/>}
+          {guideRoute?.kind==='settings' && <WorkspaceSettings visible={handbookPreference.visible} onVisible={handbookPreference.setVisible}/>}
+          {!project && !workspaceView && !guideRoute && <div className="welcome"><h1 ref={heading} tabIndex={-1}>Your workspace</h1><p>{projects.length ? 'Choose a project to open its Work and Docs.' : 'Shared projects will appear here when you have access.'}</p></div>}
           {project && <><div className={tab === 'project' && !showRepository ? 'project-heading project-cover' : 'project-heading'}><div><p className="eyebrow">Projects <span aria-hidden="true">/</span> {project.project_key}</p><h1 ref={heading} tabIndex={-1}>{project.title}</h1>
             {tab === 'project' && !showRepository && project.summary && <p className="project-summary">{project.summary}</p>}
           </div>{project.role && <span className="role-badge"><span>Your access</span> {project.role}</span>}</div>
@@ -1531,7 +1544,7 @@ function App() {
         void action(() => updateWorkProperty(workMenu.row, property, value), failure =>
         failure instanceof HomeError && failure.code === 'revision_conflict'
           ? 'This item changed. Refresh it and choose the new value again.' : explain(failure)); }}/>}
-    <footer><SupportDetails code={diagnostic} requestId={pending?.request_id}/>{identity && <AppearanceControl/>}</footer>
+    <footer><SupportDetails code={diagnostic} requestId={pending?.request_id}/>{identity && guideRoute?.kind!=='settings' && <AppearanceControl/>}</footer>
   </div>;
 }
 const root = document.getElementById('root');

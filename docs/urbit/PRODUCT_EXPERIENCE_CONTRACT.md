@@ -267,3 +267,9 @@ Detailed replacements and acceptance conditions for all 24 supplied screens are
 retained in [source review §7](reviews/2026-11-15-product-review.md#7-the-experience-contract)
 and apply with these decisions. Its 24-screen review is supplied evidence; this
 alignment did not re-open the screenshot archive or repeat its visual inspection.
+
+## Stead Handbook
+
+Every signed-in member can open the built-in Stead Handbook, including a member with no shared business projects. Show it under Projects by default. Settings lets a person hide or restore that entry for their account in the current browser. Direct article links remain usable. The Handbook uses release content and makes no project membership, Work, document, repository or agent mutations.
+
+Maintain the guides in `web/app/src/handbook/`. The Code reader displays the canonical Markdown README in both Read and Raw. Edit the corresponding guide in the same change as a user-visible feature, command, permission or setting. Check the directions using the role and release the guide describes. Describe experimental agent and Git actions as such until the capability matrix records the completed user journey. The browser check covers navigation, packaged article text, visibility across reloads and account isolation.

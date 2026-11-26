@@ -11,7 +11,11 @@ function validPath(path: string): boolean {
 }
 export type ProjectView = 'overview' | 'work' | 'docs' | 'code' | 'activity';
 export type WorkspaceView = 'inbox' | 'my-work' | 'search';
+export const handbookPages = ['overview', 'work', 'docs', 'code', 'daily-work', 'agents', 'settings', 'questions'] as const;
+export type HandbookPage = typeof handbookPages[number];
 export type ProductRoute =
+  | { kind: 'handbook'; page: HandbookPage }
+  | { kind: 'settings' }
   | { kind: 'workspace'; view: WorkspaceView }
   | { kind: 'project'; project: string; view: ProjectView }
   | { kind: 'work'; project: string; item?: string }
@@ -28,6 +32,12 @@ export function decodeProductRoute(hash: string): ProductRoute | null {
   if (hash.length > 4096 || !hash.startsWith('#') || /[?\s]/u.test(hash)) return null;
   const p = hash.slice(1).split('/');
   const [kind, project, a, b, revision] = p;
+  if (kind === 'settings' && p.length === 1) return {kind:'settings'};
+  if (kind === 'handbook') {
+    if (p.length === 1) return {kind:'handbook',page:'overview'};
+    const page = handbookPages.find(value => value === project);
+    return p.length === 2 && page && page !== 'overview' ? {kind:'handbook',page} : null;
+  }
   if (p.length === 1 && ['inbox', 'my-work', 'search'].includes(kind ?? '')) {
     return { kind: 'workspace', view: kind as WorkspaceView };
   }
@@ -75,7 +85,9 @@ export function decodeProductRoute(hash: string): ProductRoute | null {
 }
 
 export function encodeProductRoute(route: ProductRoute): string {
-  const parts = route.kind === 'workspace' ? [route.view]
+  const parts = route.kind === 'settings' ? ['settings']
+    : route.kind === 'handbook' ? (route.page === 'overview' ? ['handbook'] : ['handbook',route.page])
+    : route.kind === 'workspace' ? [route.view]
     : route.kind === 'project' ? ['project', route.project, route.view]
     : route.kind === 'work' ? ['work', route.project, ...(route.item ? [route.item] : [])]
     : route.kind === 'doc' ? ['doc', route.project, route.collection, route.document, ...(route.revision ? [route.revision] : [])]

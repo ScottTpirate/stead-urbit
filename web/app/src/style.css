@@ -74,12 +74,12 @@ button.brand:focus-visible { outline-offset: -4px; outline-color: var(--house-fo
 .space-mark { width: 29px; height: 29px; border: 1px solid #62605a; border-radius: 8px; font: 18px var(--mono); }
 .rail-label { margin: 20px 8px 7px; color: var(--muted); font-size: 11px; font-weight: 600; letter-spacing: .055em; text-transform: uppercase; }
 .sidebar nav { display: grid; gap: 2px; margin-bottom: 6px; }
-.sidebar nav button {
+.sidebar nav :is(button,.sidebar-link) {
   position: relative; display: flex; align-items: center; gap: 9px; min-width: 0; min-height: 34px;
   padding: 5px 8px; border: 1px solid transparent; border-radius: 5px;
-  background: transparent; color: var(--house-muted); text-align: start; font-size: 13px; font-weight: 520;
+  background: transparent; color: var(--house-muted); text-decoration:none; text-align: start; font-size: 13px; font-weight: 520;
 }
-.sidebar nav button:hover:enabled, .workspace-nav-items > .stead-button:hover:enabled { background: #343330; color: var(--house-ink); }
+.sidebar nav .sidebar-link:hover, .sidebar nav button:hover:enabled, .workspace-nav-items > .stead-button:hover:enabled { background: #343330; color: var(--house-ink); }
 .sidebar nav [aria-current="page"] { border-color: #514e48; background: #373531; color: var(--house-ink); }
 .sidebar nav [aria-current="page"]::before {
   content: ""; position: absolute; inset-inline-start: -1px; inset-block: 9px;
@@ -414,7 +414,7 @@ footer { display: flex; justify-content: space-between; gap: 12px; padding: 12px
   .workspace-nav-items[data-open="false"] { display: none; }
   .sidebar .rail-label { display: block; margin: 12px 8px 6px; }
   .sidebar nav { gap: 3px; margin-bottom: 4px; }
-  .sidebar nav button, .workspace-nav-items > .stead-button { min-height: 44px; }
+  .sidebar nav :is(button,.sidebar-link), .workspace-nav-items > .stead-button { min-height: 44px; }
   .sidebar nav[aria-label="Workspace"] { grid-template-columns: repeat(2, minmax(0, 1fr)); }
   .sidebar nav[aria-label="Projects"] { grid-template-columns: repeat(auto-fit, minmax(min(100%, 140px), 1fr)); }
   .content { padding: 16px 16px 24px; }
