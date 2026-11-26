@@ -199,6 +199,8 @@ async function boundedJSON(response: Response, closedCapabilities = false): Prom
   catch { throw new HomeError('invalid_response'); }
 }
 export class HomeClient {
+  constructor(private readonly request: (path: string, init: RequestInit) => Promise<Response> = (path, init) => fetch(path, init)) {}
+
   // Lives only in memory. A fresh page uses the same-origin resume endpoint.
   private csrf = '';
   private generation = 0;
@@ -245,7 +247,7 @@ export class HomeClient {
     const controller = new AbortController(); this.inflight.add(controller);
     const timer = setTimeout(() => controller.abort(), 15000);
     try {
-      const response = await fetch(path, {method: 'POST', body: raw,
+      const response = await this.request(path, {method: 'POST', body: raw,
         headers: {'Content-Type': 'application/json', 'X-Stead-CSRF': this.csrf}, credentials: 'same-origin',
         cache: 'no-store', redirect: 'error', referrerPolicy: 'no-referrer', signal: controller.signal});
       if (generation !== this.generation) throw new HomeError('session_changed');
@@ -280,7 +282,7 @@ export class HomeClient {
     try {
       const headers: Record<string, string> = { 'Content-Type': 'application/json' };
       if (authenticated) headers['X-Stead-CSRF'] = this.csrf;
-      const response = await fetch(path, { method: 'POST', headers, body: raw,
+      const response = await this.request(path, { method: 'POST', headers, body: raw,
         credentials: 'same-origin', cache: 'no-store', redirect: 'error',
         referrerPolicy: 'no-referrer', signal: controller.signal });
       if (generation !== this.generation) throw new HomeError('session_changed');

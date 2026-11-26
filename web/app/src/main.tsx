@@ -4,7 +4,10 @@ import { createRoot } from 'react-dom/client';
 import { HomeClient, HomeError, UUID, command, type CodeReviewKey, type Command, type Fields, type HomeWatch, type RepositoryAccess, type Query, type Row, type UpdateScope, type ViewKind } from './api';
 import { Button, EmptyState, LoadingState, Surface, TextField } from './primitives';
 import { SupportDetails } from './SupportDetails';
-import {Handbook, WorkspaceSettings, useHandbookVisibility} from './Handbook';
+import {WorkspaceSettings, useHandbookVisibility} from './Handbook';
+import {HandbookTour} from './HandbookTour';
+import {handbookProject, handbookWork, handbookCollection} from './handbookData';
+import {handbookClient, prepareHandbook, handbookTab, handbookDocument, handbookAddress} from './handbookProject';
 import { AppearanceControl } from './Appearance';
 import { AcceptedTime } from './AcceptedTime';
 import { WorkQuickActions, assigneeName, workStatuses, type WorkMenu, type WorkProperty } from './WorkQuickActions';
@@ -29,16 +32,16 @@ import {Icon} from './Icon';
 import {ProductWorkJourney} from './productWorkJourney';
 import {ProductJourneyDraftStore, productJourneyRoute, productReadNavigationAllowed, readProductWorkEndpoint, type ProductJourneySelection} from './productJourneyState';
 import type {ProductCarrierMode} from './productCarrier';
-const client = new HomeClient();
+const home = new HomeClient();
 async function observeApproval(id: string, signal?: AbortSignal) {
-  try { return (await client.status(id, signal)).status!; }
+  try { return (await home.status(id, signal)).status!; }
   catch (failure) {
     if (failure instanceof HomeError && failure.code === 'approval_ended') return 'ended';
     throw failure;
   }
 }
 
-const productWorkEndpoint = (project: string, work: string) => readProductWorkEndpoint(client, project, work);
+const productWorkEndpoint = (project: string, work: string) => readProductWorkEndpoint(home, project, work);
 const blankQuery = (kind: ViewKind, project_id = '', container_id = '', resource_id = '', search = '', cursor = ''): Query =>
   ({ kind, project_id, container_id, resource_id, search, cursor });
 const scopeKey = (session: string | undefined, scope: UpdateScope) => JSON.stringify([session, scope.kind, scope.project_id, scope.container_id, scope.resource_id, scope.search]);
@@ -105,7 +108,10 @@ function App() {
   const [navigationOpen, setNavigationOpen] = useState<boolean | null>(null);
   const navigationButton = useRef<HTMLButtonElement>(null);
   const showNavigation = navigationOpen ?? (!project && !workspaceView && !guideRoute);
-  const [carrierMode, setCarrierMode] = useState<ProductCarrierMode>({kind: 'unsupported'});
+  const inHandbook = guideRoute?.kind === 'handbook';
+  const client = inHandbook ? handbookClient : home;
+  const [homeMode, setCarrierMode] = useState<ProductCarrierMode>({kind: 'unsupported'});
+  const carrierMode = inHandbook ? handbookClient.productMode() : homeMode;
   const capabilityRead = useRef<object | undefined>(undefined);
   const productActive = carrierMode.kind === 'native-human-doc';
   const productDrafts = useRef(new ProductJourneyDraftStore());
@@ -189,7 +195,7 @@ function App() {
       retainedDocumentScope.current = {project: project.project_id, collection: container.container_id, document: editor.id, token: productPartition.current};
     }
     if (!retainProductDrafts) retainedDocumentScope.current = null;
-    client.clearCodeMerges();
+    home.clearCodeMerges();
     activeQuery.current++;
     repositoryGeneration.current++;
     displayedSnapshot.current = null;
@@ -210,7 +216,7 @@ function App() {
     if (!retainProductDrafts) setPending(null);
     setWork(null); setWorkMenu(null); setForm(''); setFormDirty(false); setDiscard(null); setTargets([]); setTargetFilter(''); setConfirmation(null); setCurrentVersion(null); setNotice(''); setRefreshNotice(null);
   };
-  client.onInvalidated = () => { clearViews(); setIdentity(null); setChallenge(null); };
+  home.onInvalidated = () => { clearViews(); setIdentity(null); setChallenge(null); };
   async function loadRepository(projectId: string, enable = false) {
     if (client.productMode().kind !== 'legacy') { setRepository(null); return; }
     const generation = ++repositoryGeneration.current;
@@ -235,9 +241,9 @@ function App() {
     void loadRepository(id);
     const generation = repositoryGeneration.current;
     return () => { if (generation === repositoryGeneration.current) repositoryGeneration.current++; };
-  }, [project?.project_id, identity?.session_audit_id, carrierMode.kind]);
+  }, [project?.project_id, identity?.session_audit_id, carrierMode.kind, inHandbook]);
   function adoptCapabilities(capabilities: Fields) {
-    const mode = client.productMode(); setCarrierMode(mode);
+    const mode = home.productMode(); setCarrierMode(mode);
     if (mode.kind !== 'legacy') { repositoryGeneration.current++; setRepository(null); setShowRepository(false); clearCodeSelection(); }
     workspaceAvailable.current = mode.kind === 'legacy' && capabilities.workspace_queries === 'stead.workspace-queries/1';
     setWorkspaceSupported(workspaceAvailable.current);
@@ -247,7 +253,7 @@ function App() {
     const owner = {}; capabilityRead.current = owner;
     const current = () => active() && capabilityRead.current === owner;
     try {
-      const capabilities = await client.capabilities();
+      const capabilities = await home.capabilities();
       if (!current()) throw new HomeError('session_changed');
       adoptCapabilities(capabilities);
     } catch (failure) {
@@ -258,18 +264,18 @@ function App() {
     }
   }
   async function identify(admitted?: Fields) {
-    if (client.productMode().kind === 'unsupported') throw new HomeError('unsupported_version');
+    if (home.productMode().kind === 'unsupported') throw new HomeError('unsupported_version');
     // consume/resume already validate identity in HomeClient.adopt().
-    const person = admitted ?? Object.values((await client.query(blankQuery('identity'))).rows)[0];
+    const person = admitted ?? Object.values((await home.query(blankQuery('identity'))).rows)[0];
     if (!person) throw new HomeError('invalid_response');
-    const token = client.currentSessionToken();
+    const token = home.currentSessionToken();
     if (!token) throw new HomeError('session_required');
     if (token !== productPartition.current) {
       const key = newId(); productPartition.current = token;
       productDrafts.current.bind(key); setProductSessionKey(key);
     }
     setIdentity(person); navigationMemory.current.bind(person.session_audit_id ?? person.principal_id!);
-    const list = await client.query(blankQuery('projects'));
+    const list = await home.query(blankQuery('projects'));
     const allowed = Object.values(list.rows);
     setProjects(allowed);
     if (routedIdentity.current !== person.session_audit_id) {
@@ -284,7 +290,7 @@ function App() {
       try {
         await refreshCapabilities(() => active);
         if (!active) return;
-        const person = await client.resume();
+        const person = await home.resume();
         if (active) await identify(person);
       }
       catch (failure) { if (active && (!(failure instanceof HomeError) || failure.code !== 'session_required')) { setError(explainConnection(failure)); setDiagnostic(failure instanceof HomeError ? failure.code : 'unexpected_error'); } }
@@ -339,17 +345,17 @@ function App() {
   }
   async function retryConnection() {
     await refreshCapabilities();
-    try { await identify(await client.resume()); }
+    try { await identify(await home.resume()); }
     catch (failure) {
       if (!(failure instanceof HomeError) || failure.code !== 'session_required') throw failure;
     }
   }
-  async function collections(projectId: string): Promise<Row[]> {
+  async function collections(projectId: string, source = client): Promise<Row[]> {
     const found: Row[] = [];
     let next = ''; const seen = new Set<string>();
     do {
       if (seen.has(next) || seen.size >= 2) throw new HomeError('invalid_response');
-      seen.add(next); const result = await client.query(blankQuery('containers', projectId, '', '', '', next));
+      seen.add(next); const result = await source.query(blankQuery('containers', projectId, '', '', '', next));
       found.push(...Object.values(result.rows)); next = result.cursor;
       if (found.length > 32) throw new HomeError('invalid_response');
     } while (next);
@@ -367,7 +373,7 @@ function App() {
     if (values.length !== 1 || !current || current.project_id !== projectId
       || !current.authority_epoch || !['reader', 'contributor', 'maintainer'].includes(current.role ?? '')) throw new HomeError('invalid_response');
     setProject(current);
-    setProjects(previous => previous.map(row => row.project_id === projectId ? current : row));
+    if (!inHandbook) setProjects(previous => previous.map(row => row.project_id === projectId ? current : row));
   }
   async function refresh(nextTab = tab, nextContainer = container, nextCursor = '', term = search, applies = () => true, announce = true) {
     if (!project || !applies()) return false;
@@ -421,10 +427,10 @@ function App() {
     let pendingRefresh = false;
     let pendingGeneration: string | null = null;
     setLoading(true);
-    if (productActive) {
+    if (productActive || inHandbook) {
       // This profile advertises explicit refresh, not the predecessor watch.
       // Its Work journey owns query/4 reads and cannot fall through to query/3.
-      if (tab === 'work') { setLoading(false); setUpdatesConnected(true); return; }
+      if (productActive && tab === 'work') { setLoading(false); setUpdatesConnected(true); return; }
       const load = async () => {
         if (!active) return;
         if (actionBusy.current) { timer = setTimeout(load, 200); return; }
@@ -519,7 +525,7 @@ function App() {
     }
     void connect();
     return () => { active = false; if (timer) clearTimeout(timer); if (watch) void client.retire(watch).catch(() => {}); };
-  }, [identity?.session_audit_id, project?.project_id, tab, container?.container_id, search, updatesRevision, workFiltersOpen, carrierMode.kind]);
+  }, [identity?.session_audit_id, project?.project_id, tab, container?.container_id, search, updatesRevision, workFiltersOpen, carrierMode.kind, inHandbook]);
   useEffect(() => { if (project) heading.current?.focus(); }, [project?.project_id]);
   useEffect(() => {
     const restore=pendingNavigation.current;
@@ -593,11 +599,12 @@ function App() {
     setSearch(searchDraft);
     reloadScope();
   }
-  function enterProject(row: Row, nextTab: ViewKind) {
-    setGuideRoute(null);
+  function enterProject(row: Row, nextTab: ViewKind, guide: Extract<ProductRoute, {kind: 'handbook'}> | null = null) {
+    setGuideRoute(guide);
     setNavigationOpen(null);
     setLinkedPage(null);
-    if (row.project_id !== project?.project_id) {
+    if (inHandbook !== !!guide) { setSearch(''); setSearchDraft(''); }
+    if (row.project_id !== project?.project_id || inHandbook !== !!guide) {
       repositoryGeneration.current++;
       setRepository(null);
       setWorkFiltersOpen(false); setWorkFilters(initialWorkFilters);
@@ -610,10 +617,11 @@ function App() {
   }
   async function openProject(row: Row) {
     if (busy || editor?.dirty || pending || form || currentProductDraft()) { setError('Finish or discard the current draft before switching projects.'); return; }
-    syncResourceAddress({kind:'project',project:row.project_id!,view:'overview'});
+    syncResourceAddress({kind:'project',project:row.project_id!,view:'overview'}, false, false);
     enterProject(row, 'project');
   }
   function rememberNavigation() {
+    if (inHandbook) return;
     if (project?.project_id && tab === 'activity') {
       const route = {kind: 'project', project: project.project_id, view: 'activity'} as const;
       const focused = document.activeElement?.getAttribute('data-activity-target');
@@ -630,9 +638,11 @@ function App() {
           ...(previous?.filters.title === term ? {selection:previous.selection,workspacePage:previous.workspacePage} : {})});
     }
   }
-  function syncResourceAddress(route?: ProductRoute, replace = false) {
+  function syncResourceAddress(route?: ProductRoute, replace = false, guide = inHandbook) {
     rememberNavigation();
     pendingNavigation.current=null;
+    if (route && guide) route = handbookAddress(route);
+    if (route?.kind === 'handbook') setGuideRoute(route);
     const hash=route?encodeProductRoute(route):'';
     if (!hash && !decodeProductRoute(location.hash)) return;
     lastAddress.current=hash;
@@ -643,6 +653,7 @@ function App() {
   }
   function enterWorkspace(view:'my-work'|'search'|null) {
     setGuideRoute(null);
+    if (inHandbook) { setSearch(''); setSearchDraft(''); }
     setNavigationOpen(null);
     pendingDocumentFocus.current=null;
     activeQuery.current++;repositoryGeneration.current++;pendingNavigation.current=null;displayedSnapshot.current=null;
@@ -659,7 +670,7 @@ function App() {
     if(busy||pending||form||editor?.dirty)return;
     const route:ProductRoute=row.kind==='work'?{kind:'work',project:row.project_id!,item:row.resource_id!}
       :{kind:'doc',project:row.project_id!,collection:row.container_id!,document:row.resource_id!};
-    const available=await client.query(blankQuery('projects'));
+    const available=await home.query(blankQuery('projects'));
     if(available.cursor)throw new HomeError('unsupported_version');
     const allowed=Object.values(available.rows);
     if(!allowed.some(project=>project.project_id===row.project_id))throw new HomeError('denied_or_not_found');
@@ -673,9 +684,31 @@ function App() {
   }
   async function restoreProductAddress(address: ProductRoute, allowed=projects) {
     pendingNavigation.current=null;
-    const mode = client.productMode().kind;
+    const mode = home.productMode().kind;
     if (mode === 'unsupported') throw new HomeError('unsupported_version');
-    if (address.kind === 'handbook' || address.kind === 'settings') {
+    if (address.kind === 'handbook') {
+      const hash = location.hash;
+      const session = home.currentSessionToken();
+      await prepareHandbook();
+      if (!session || home.currentSessionToken() !== session || hash !== location.hash) return;
+      const kind = handbookTab(address.page);
+      enterProject(handbookProject, kind, address);
+      setNavigationOpen(false);
+      if (kind === 'documents') {
+        setContainers([handbookCollection]);
+        setContainer(handbookCollection);
+        const page = handbookDocument(address.page);
+        if (page) {
+          setEditor({id: page.resource_id!, revision: page.resource_revision!, head: page.container_head!, text: page.markdown!, dirty: false});
+          pendingDocumentFocus.current = {project: handbookProject.project_id!, collection: handbookCollection.container_id!,
+            document: page.resource_id!, session: routedIdentity.current ?? '', hash};
+        }
+      }
+      if (address.page === 'example') setWork(handbookWork);
+      if (address.page === 'code') setShowRepository(true);
+      return;
+    }
+    if (address.kind === 'settings') {
       enterWorkspace(null); setGuideRoute(address); setNavigationOpen(false); return;
     }
     if(address.kind==='work')return restoreWorkAddress({project:address.project,item:address.item},allowed);
@@ -707,18 +740,18 @@ function App() {
       return;
     }
     if(address.kind==='doc'||address.kind==='collection') {
-      const boxes=await collections(address.project);
+      const boxes=await collections(address.project, home);
       const selected=boxes.find(box=>box.container_id===address.collection);
       if(!selected){setError('This page is unavailable or you do not have access.');return;}
       if(location.hash!==requestedHash)return;
       if(address.kind==='collection'){enterProject(row,'documents');setContainers(boxes);setContainer(selected);return;}
-      const view=await client.query(blankQuery('document',address.project,address.collection,address.document));
+      const view=await home.query(blankQuery('document',address.project,address.collection,address.document));
       const page=Object.values(view.rows).find(item=>item.resource_id===address.document && item.container_id===address.collection);
       if(location.hash!==requestedHash)return;
       if(typeof page?.markdown!=='string'||!page.resource_revision){setError('This page is unavailable or you do not have access.');return;}
       if(address.revision&&address.revision!==page.resource_revision){setError('This exact page revision is not available through the current Home interface.');return;}
       const retained = retainedDocumentScope.current;
-      const local = mode === 'native-human-doc' && editor?.dirty && retained?.token === client.currentSessionToken()
+      const local = mode === 'native-human-doc' && editor?.dirty && retained?.token === home.currentSessionToken()
         && retained.project === address.project && retained.collection === address.collection && retained.document === address.document ? editor : null;
       enterProject(row,'documents');setContainers(boxes);setContainer(selected);
       setEditor(local ?? {id:address.document,revision:page.resource_revision,head:page.container_head??'',text:page.markdown,dirty:false});
@@ -729,8 +762,8 @@ function App() {
     }
     setError('This resource view is not supported by the current Home interface.');
   }
-  async function readWorkItem(projectId: string, itemId: string) {
-    const view = await client.query(blankQuery('work', projectId, '', itemId));
+  async function readWorkItem(projectId: string, itemId: string, source = client) {
+    const view = await source.query(blankQuery('work', projectId, '', itemId));
     const items = Object.values(view.rows);
     const item = items[0];
     if (items.length !== 1 || item?.resource_id !== itemId || item.kind !== 'work') throw new HomeError('denied_or_not_found');
@@ -740,23 +773,23 @@ function App() {
     const requestedHash = location.hash;
     const row = allowed.find(item => item.project_id === address.project);
     if (!row) { setError('This work link is unavailable or you do not have access.'); return; }
-    if (client.productMode().kind === 'native-human-doc') {
+    if (home.productMode().kind === 'native-human-doc') {
       enterProject(row, 'work');
       setProductSelection(address.item ? {kind: 'work', workId: address.item} : {kind: 'list'});
       return;
     }
-    if (client.productMode().kind !== 'legacy') throw new HomeError('unsupported_version');
+    if (home.productMode().kind !== 'legacy') throw new HomeError('unsupported_version');
     let item: Row | null = null;
     let unavailable = false;
     if (address.item) {
-      try { item = await readWorkItem(address.project, address.item); }
+      try { item = await readWorkItem(address.project, address.item, home); }
       catch (failure) {
         if (!(failure instanceof HomeError) || failure.code !== 'denied_or_not_found') throw failure;
         unavailable = true;
       }
     }
     if (location.hash !== requestedHash) return;
-    if (project?.project_id !== row.project_id || tab !== 'work') enterProject(row, 'work');
+    if (inHandbook || project?.project_id !== row.project_id || tab !== 'work') enterProject(row, 'work');
     else { setShowRepository(false); clearCodeSelection(); }
     const remembered=navigationMemory.current.get({kind:'work',project:address.project});
     if(remembered){setWorkFilters(remembered.filters);setWorkFiltersOpen(!!(remembered.filters.title||remembered.filters.status||remembered.filters.assignee));
@@ -781,7 +814,16 @@ function App() {
       }
       rememberNavigation();
       lastAddress.current = address ? location.hash : '';
-      if (address) void action(() => restoreProductAddress(address), explainConnection);
+      if (address?.kind === 'handbook' || address?.kind === 'settings') {
+        // Bundled guide reads can be superseded by a newer address while they load.
+        const hash = location.hash;
+        setError(''); setDiagnostic('none');
+        void restoreProductAddress(address).catch(failure => {
+          if (hash !== location.hash) return;
+          setDiagnostic(failure instanceof HomeError ? failure.code : 'unexpected_error');
+          setError(explainConnection(failure));
+        });
+      } else if (address) void action(() => restoreProductAddress(address), explainConnection);
       else {
         enterWorkspace(null);
         if(location.hash)setError('This link is unavailable. Choose a project to continue.');
@@ -794,17 +836,21 @@ function App() {
   async function copyWorkLink(row: Row) {
     if (!project?.project_id || !UUID.test(row.resource_id ?? '')) return;
     try {
-      await navigator.clipboard.writeText(workAddress(project.project_id, row.resource_id).href);
+      const url = workAddress(project.project_id, row.resource_id);
+      if (inHandbook) url.hash = encodeProductRoute({kind:'handbook',page:'example'});
+      await navigator.clipboard.writeText(url.href);
       setNotice('Work item link copied.');
     } catch { setError('This browser could not copy the link. Open the item and copy its address.'); }
   }
   function selectProjectTab(kind: ViewKind) {
     if (busy || editor?.dirty || pending || form || currentProductDraft()) { setError('Finish or discard the current draft first.'); return; }
     if (productActive && !['project', 'work', 'documents', 'relations'].includes(kind)) return;
+    if (inHandbook && kind === 'documents') setContainer(handbookCollection);
     if(project?.project_id) {
       if(kind==='work')syncWorkAddress(project.project_id);
       else if (kind === 'activity') syncResourceAddress({kind: 'project', project: project.project_id, view: 'activity'});
       else if(kind==='project'||kind==='documents')syncResourceAddress({kind:'project',project:project.project_id,view:kind==='project'?'overview':'docs'});
+      else if (inHandbook && (kind === 'search' || kind === 'relations')) syncResourceAddress({kind:'handbook',page:kind});
       else syncResourceAddress();
     }
     setLinkedPage(null); setProductSelection({kind: 'list'});
@@ -812,7 +858,7 @@ function App() {
     setConfirmation(null); setForm(''); setTab(kind); setRows([]); setCursor(''); reloadScope();
   }
   function clearCodeSelection() { setSelectedReview(undefined); setInlineReview(undefined); setDevelopment(undefined); }
-  function currentProductDraft() { return !!project?.project_id && productDrafts.current.hasDraft(project.project_id); }
+  function currentProductDraft() { return !inHandbook && !!project?.project_id && productDrafts.current.hasDraft(project.project_id); }
   function canReadRelatedProduct(route: ProductRoute | null) {
     return productActive && client.productMode().kind === 'native-human-doc' && productReadNavigationAllowed({projectId: project?.project_id,
       partition: productPartition.current, currentSession: client.currentSessionToken(), pending: productDrafts.current.currentPending(project?.project_id),
@@ -889,6 +935,7 @@ function App() {
     const projectId = project?.project_id;
     if (!projectId || !UUID.test(item) || workActionsLocked) return;
     if (productActive && !canReadRelatedProduct({kind: 'work', project: projectId, item})) return;
+    if (inHandbook) { location.hash = '#handbook/example'; return; }
     syncWorkAddress(projectId, item);
     void action(() => restoreWorkAddress({project: projectId, item}), explainConnection);
   }
@@ -922,6 +969,7 @@ function App() {
     if (!linkedPageOrigin || linkedPageOrigin.project !== project?.project_id || workActionsLocked) return;
     const origin = linkedPageOrigin;
     if (productActive && !canReadRelatedProduct({kind: 'work', project: origin.project, item: origin.item})) return;
+    if (inHandbook) { location.hash = '#handbook/example'; return; }
     syncWorkAddress(origin.project, origin.item);
     void action(() => restoreWorkAddress(origin), explainConnection);
   }
@@ -1299,7 +1347,7 @@ function App() {
   return <div className={identity ? 'app-shell signed-in' : 'app-shell entry-shell'}>
     <header className="topbar">{project ? <button className="brand" aria-label="Stead home" type="button" disabled={busy}
       onClick={() => void action(() => openProject(project), explainConnection)}>{brand}</button> : <span className="brand">{brand}</span>}
-      {identity && <><span className="workspace-label">Workspace</span><div className="account"><span className="member-label"><span className="member-name">{identity.display_name}</span><small title={identity.identity_ship}>{identity.identity_ship}</small></span><Button variant="quiet" disabled={busy} onClick={() => void action(() => client.logout())}>Sign out</Button></div></>}</header>
+      {identity && <><span className="workspace-label">Workspace</span><div className="account"><span className="member-label"><span className="member-name">{identity.display_name}</span><small title={identity.identity_ship}>{identity.identity_ship}</small></span><Button variant="quiet" disabled={busy} onClick={() => void action(() => home.logout())}>Sign out</Button></div></>}</header>
     {!online && <div className="banner" role="status">You’re offline. Drafts stay in this tab; nothing is saved until the home confirms it.</div>}
     <main id="main">{identity ? <a className="skip-link" href="#project-content" onClick={event => {
       event.preventDefault(); document.getElementById('project-content')?.focus();
@@ -1307,7 +1355,7 @@ function App() {
       {error && <div className="error" role="alert"><p>{error}</p>
         {canReconnect && (identity
           ? <Button disabled={busy} onClick={() => void action(async () => {
-            const person = await client.resume();
+            const person = await home.resume();
             await identify(person);
             if (project && person.session_audit_id === identity.session_audit_id) reloadScope();
             setNotice(pending ? 'Session resumed. Choose whether to retry your pending request.' : 'Session resumed.');
@@ -1320,7 +1368,7 @@ function App() {
       {!identity && !loading && <UrbitSignIn ship={ship} challenge={challenge} busy={busy} origin={location.origin} notice={notice}
         onShipChange={setShip} onBack={() => { setChallenge(null); setNotice(''); setError(''); }}
         onObserve={observeApproval}
-        onRequest={() => void action(async () => { setNotice(''); setChallenge(await client.start(ship)); },
+        onRequest={() => void action(async () => { setNotice(''); setChallenge(await home.start(ship)); },
           failure => failure instanceof HomeError && failure.code === 'denied_or_not_found'
             ? 'This Home could not start sign-in for that Urbit ID. Check the ID or ask your operator to check your member access.'
             : explainConnection(failure))}
@@ -1330,7 +1378,7 @@ function App() {
             const status = await observeApproval(challenge.challenge_id!);
             if (status === 'ended') { onEnded(); setNotice(''); return; }
             if (status === 'approved') {
-              const person = await client.consume(challenge.challenge_id!);
+              const person = await home.consume(challenge.challenge_id!);
               setChallenge(null);
               await identify(person);
             } else setNotice('Approval is still pending on your identity ship.');
@@ -1361,7 +1409,7 @@ function App() {
           <h2 className="rail-label">Projects</h2>
           {projects.length === 0 && <p className="muted">No projects are shared with you yet.</p>}
           <nav aria-label="Projects">{projects.map(row => <button type="button" disabled={busy} key={row.project_id}
-            aria-current={project?.project_id === row.project_id ? 'page' : undefined} onClick={() => void action(() => openProject(row))}>
+            aria-current={!inHandbook && project?.project_id === row.project_id ? 'page' : undefined} onClick={() => void action(() => openProject(row))}>
             <span className="project-glyph" aria-hidden="true">{(row.project_key || row.title || '·').slice(0, 1)}</span>
             <span className="project-name"><span className="project-key">{row.project_key}</span>{row.title}</span>
           </button>)}{handbookPreference.visible && <a className="sidebar-link" href="#handbook" aria-current={guideRoute?.kind==='handbook'?'page':undefined}>
@@ -1372,7 +1420,7 @@ function App() {
           <nav aria-label="Preferences"><a href="#settings" className="sidebar-link" aria-current={guideRoute?.kind==='settings'?'page':undefined}>Settings</a></nav>
           </div>
         </aside>
-        <section className="content" id="project-content" data-live-updates={productActive ? 'unsupported' : updatesConnected ? 'connected' : 'unavailable'} data-refresh={productActive ? 'explicit' : 'watch'}>
+        <section className="content" id="project-content" data-live-updates={productActive || inHandbook ? 'unsupported' : updatesConnected ? 'connected' : 'unavailable'} data-refresh={productActive || inHandbook ? 'explicit' : 'watch'}>
           {productActive && !project && editor?.dirty && retainedDocumentScope.current && <Surface>
             <h2>Doc draft kept in this tab</h2><p>Refresh access before continuing this draft. Its text stays hidden while access is unavailable.</p>
             <div className="actions"><Button disabled={busy} onClick={() => void action(retryConnection, explainConnection)}>Refresh access</Button>
@@ -1393,7 +1441,6 @@ function App() {
             onOpen={row=>void action(()=>openWorkspaceResource(row),explainConnection)}
             onError={failure=>{if(failure instanceof HomeError&&failure.code==='denied_or_not_found')clearViews();setError(explainConnection(failure));}}/>
             : <EmptyState title="Workspace views need a newer Home" description="Choose a project to keep working. This Home does not advertise workspace queries."/>)}
-          {guideRoute?.kind==='handbook' && <Handbook page={guideRoute.page}/>}
           {guideRoute?.kind==='settings' && <WorkspaceSettings visible={handbookPreference.visible} onVisible={handbookPreference.setVisible}/>}
           {!project && !workspaceView && !guideRoute && <div className="welcome"><h1 ref={heading} tabIndex={-1}>Your workspace</h1><p>{projects.length ? 'Choose a project to open its Work and Docs.' : 'Shared projects will appear here when you have access.'}</p></div>}
           {project && <><div className={tab === 'project' && !showRepository ? 'project-heading project-cover' : 'project-heading'}><div><p className="eyebrow">Projects <span aria-hidden="true">/</span> {project.project_key}</p><h1 ref={heading} tabIndex={-1}>{project.title}</h1>
@@ -1403,13 +1450,16 @@ function App() {
           {carrierMode.kind === 'legacy' && (repository?.status === 'ready' || externalRepository) && <Button disabled={busy || !!editor?.dirty || !!pending || !!form}
             variant={showRepository ? 'primary' : 'quiet'} aria-current={showRepository ? 'page' : undefined}
             onClick={() => { syncResourceAddress({kind:'project',project:project.project_id!,view:'code'}); clearCodeSelection(); setShowRepository(true); }}>Code</Button>}</nav>
+          {inHandbook && <HandbookTour principal={identity.principal_id!}
+            view={showRepository ? 'code' : tab === 'work' ? 'work' : tab === 'documents' ? 'docs' : 'overview'}
+            onNavigate={page => { if (!actionBusy.current) location.hash = encodeProductRoute({kind:'handbook',page}); }}/>}
           {carrierMode.kind === 'legacy' && showRepository && repository?.status === 'ready' ? <CodeRepository key={`${identity.session_audit_id}/${project.project_id}/${project.authority_epoch}`}
             client={client} project={project.project_id!} writable={repository.writable}
             manage={repository.manage} principal={identity.principal_id ?? ''}
             initialProposal={inlineReview} onOpenWork={openLinkedWork}/> :
           carrierMode.kind === 'legacy' && showRepository && externalRepository ? <CodePack key={`${identity.session_audit_id}/${project.project_id}/${project.authority_epoch}`} client={client} project={project.project_id!}
             principal={identity.principal_id ?? ''}
-            initialProposal={selectedReview} onOpenWork={openLinkedWork} development={development}/> : <>
+            gitAccess={!inHandbook} initialProposal={selectedReview} onOpenWork={openLinkedWork} development={development}/> : <>
           {tab === 'project' && <section className="project-overview" aria-label="Project shortcuts">
             <div className="project-destinations">
               <Button disabled={workActionsLocked} onClick={() => selectProjectTab('work')} aria-label="Open work">

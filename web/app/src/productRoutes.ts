@@ -11,7 +11,7 @@ function validPath(path: string): boolean {
 }
 export type ProjectView = 'overview' | 'work' | 'docs' | 'code' | 'activity';
 export type WorkspaceView = 'inbox' | 'my-work' | 'search';
-export const handbookPages = ['overview', 'work', 'docs', 'code', 'daily-work', 'agents', 'settings', 'questions'] as const;
+export const handbookPages = ['overview', 'work', 'docs', 'code', 'example', 'activity', 'relations', 'search', 'daily-work', 'agents', 'settings', 'questions'] as const;
 export type HandbookPage = typeof handbookPages[number];
 export type ProductRoute =
   | { kind: 'handbook'; page: HandbookPage }

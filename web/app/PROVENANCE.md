@@ -61,3 +61,14 @@ qualification remains separate and must name the exact candidate.
 Upstream references: [parser and license](https://github.com/markdown-it/markdown-it),
 [safety model](https://github.com/markdown-it/markdown-it/blob/master/docs/safety.md),
 [version15 changes](https://github.com/markdown-it/markdown-it/blob/master/CHANGELOG.md).
+
+## Handbook example repository
+
+The Handbook Code tab reads a three-object Git repository built from
+`web/app/src/handbook/README.md`. After changing that file run
+`python3 web/app/handbook-repository.py --update` from the repository root.
+The command rebuilds the Git blob, tree, commit and snapshot in a temporary
+directory and updates the release identifiers in the browser adapter. Run
+`python3 web/app/handbook-repository.py` to check them. The Handbook CI job
+also opens the root tree and file through the same read-only adapter used by
+the project’s Code tab.

@@ -6,7 +6,9 @@ Look beside **Docs** in a project that has a repository you can access. General 
 
 ## Can I try this without changing team work?
 
-Yes. Open the example card in the Handbook's **Work** tab, explore the guides under **Docs**, and switch between **Read** and **Raw** in **Code**. These examples only contain material shipped with Stead.
+Yes. Open **Work** and select **Update the visitor guide**. Read the task and its discussion, then choose **Show links** under **Relationships** to open the related agent guide. In **Docs**, choose **Handbook guides** and open a page. In **Code**, select **README.md** from the file list and switch between **Read** and **Raw**. Everyone can explore this read-only project.
+
+Choose **Show me around** for a short tour of those views. **Skip** dismisses it. **Replay tour** brings it back.
 
 ## Can I hide this project and still read an article?
 

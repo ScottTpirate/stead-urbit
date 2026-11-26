@@ -4,6 +4,8 @@
 
 Open **My work** to see items assigned to you. To see a team's queue, choose its project and open **Work**. Expand a status group and select a title for the description and discussion. Use **Filters** to narrow a long list.
 
+In the Handbook project, open **Update the visitor guide**. The task includes completion criteria, a discussion and a link to the agent guide under **Relationships → Show links**.
+
 ## Try a small handoff
 
 In a project where you can edit, create a Work item such as “Check the visitor guide.” Include what to check, who should do it and how to tell that it is finished. A comment records a conversation. Set the status after the outcome is ready.

@@ -4,7 +4,7 @@ Start with a Work item, a specific deliverable and a person who can judge the re
 
 ## Write a brief someone can review
 
-For example, “Move the opening meeting from Monday to Wednesday in the visitor guide. Keep the time, meeting point and all other wording. Show the proposed change for review.”
+The Handbook’s **Update the visitor guide** task asks, “Move the opening meeting from Monday to Wednesday in the visitor guide. Keep the time, meeting point and all other wording. Show the proposed change for review.”
 
 Link or identify the exact page, describe what the agent may change, and say when it should ask a question. For this example, it should ask if the page contains two different Monday meetings.
 

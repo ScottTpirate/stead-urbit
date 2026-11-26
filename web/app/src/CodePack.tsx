@@ -131,10 +131,10 @@ function RepositoryRefs({ snapshot, client, project, browse, refresh, initialRef
   </>;
 }
 
-export function CodePack({ client, project, principal, initialProposal, onOpenWork, development }: {
+export function CodePack({ client, project, principal, initialProposal, onOpenWork, development, gitAccess = true }: {
   client: HomeClient; project: string; principal: string;
   initialProposal?: string; onOpenWork?: (workId: string) => void;
-  development?: CodeDevelopmentTarget;
+  development?: CodeDevelopmentTarget; gitAccess?: boolean;
 }) {
   const [repository, setRepository] = useState<ExternalRepositoryRead | null>(null);
   const details = repository?.snapshot;
@@ -200,7 +200,7 @@ export function CodePack({ client, project, principal, initialProposal, onOpenWo
       <h2 id="repo-heading" ref={heading} tabIndex={-1}>{staged ? 'Review Git snapshot' : 'Repository'}</h2>
       <div className="repo-actions">
         <Button variant="quiet" disabled={busy} onClick={() => void refresh()}>Refresh snapshot</Button>
-        {details?.status === 'external' && <GitCredentials client={client} project={project}
+        {gitAccess && details?.status === 'external' && <GitCredentials client={client} project={project}
           writable={canWrite && !atCapacity} cloneUrl={repositoryUrl(project)} />}
       </div>
     </div>
