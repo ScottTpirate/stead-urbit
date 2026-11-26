@@ -229,12 +229,18 @@ def capture_files():
 def failure_projection(report):
     if not isinstance(report, dict):
         return None
-    value = {'protocol': 'stead.saved8-failure-observation/1', 'status': 'fail',
+    detail = report.get('diagnostic')
+    try:
+        R.diagnostic(detail)
+    except BaseException:
+        detail = None
+    value = {'protocol': 'stead.saved8-failure-observation/2', 'status': 'fail',
         'error_class': report.get('error_class'), 'cleanup_error_class': report.get('cleanup_error_class'),
         'completed_phases': report.get('phases'),
         'captures_observed': [stage for stage in E.STAGES if stage in report.get('captures', {})],
         'command_count': len(report.get('commands', [])),
-        'native_reaped': report.get('cleanup', {}).get('reaped') is True}
+        'native_reaped': report.get('cleanup', {}).get('reaped') is True,
+        'diagnostic': detail}
     R.failed_report(value)
     return value
 

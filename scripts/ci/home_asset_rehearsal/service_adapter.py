@@ -37,8 +37,8 @@ DRIVERS = {'lib/stead-codec.hoon': 'a0-stead-codec.hoon', 'lib/stead-delivery.ho
     'ted/stead-team-client.hoon': 'a0-stead-team-client.hoon', 'ted/stead-local-tls.hoon': 'a0-stead-local-tls.hoon'}
 FROZEN = {
     PREFIX + '__init__.py': '012fb68d9afed4520e136077b0cc8124df015eb584ab421cf051d0d7c210bec4',
-    PREFIX + 'worker.py': 'c357616483ea6fbbd041e0e2aa3ca0193c15de3b19d7c060068b566dc8321a95',
-    PREFIX + 'runner.py': '49c299e1118a37707e4b509328875279d73d79745c5394b73df87e636d419e2e',
+    PREFIX + 'worker.py': 'bfe387e7559d63eb84b160df7ce6c060fcbf92caf79d9f25802f74d80afbb4a9',
+    PREFIX + 'runner.py': '8d759ca5d650c7ba9815bc1bf1949ca4e0f82bc13f015ca6b0915eebc0cbd037',
     PREFIX + 'evidence.py': '1515c00f1c8b6acde61e5e0f647a83f9e5cd78b11d157f46ec13db545c284175',
     PREFIX + 'capture.hoon': 'e6bad02fbecf2f73a7f3608eda8a0dad938dfe72af8d4909321c824148d277bc',
     'scripts/release_install.py': '30b2a651c3e7d124e7e5ef319f5581299d29427322e605f1ffca91e9015f5e80',

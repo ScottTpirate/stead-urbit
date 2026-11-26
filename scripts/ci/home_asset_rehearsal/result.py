@@ -32,6 +32,9 @@ DENIALS = ['wrong-host', 'wrong-origin', 'unknown-path', 'query-string', 'unsupp
 BINDINGS = {'run_id', 'controller_commit', 'inputs_sha256', 'worker_sha256', 'guardian_sources_sha256'}
 NAMES = tuple(stage + suffix for stage in E.STAGES for suffix in ('.jam', '.json'))
 ERRORS = {'none', 'admission-refusal', 'runner-failed', 'artifact-refusal', 'frame-overflow', 'worker-refusal'}
+DIAGNOSTIC_OPERATIONS = ('admission', 'seed-package', 'fresh-boot', 'driver-install', 'seed-install', 'seed-ready', 'seed-suspend', 'capture-seed8', 'predecessor-replace', 'tls', 'predecessor-resume', 'predecessor-routes', 'predecessor-suspend', 'capture-a0-loaded', 'cold-restart', 'cold-resume', 'cold-suspend', 'capture-a0-cold', 'asset-replace', 'asset-resume', 'asset-routes', 'asset-suspend', 'capture-assets-loaded', 'rollback-replace', 'rollback-resume', 'rollback-routes', 'rollback-suspend', 'capture-rollback-loaded', 'rollback-restart', 'rollback-cold-resume', 'rollback-cold-suspend', 'final-inputs')
+DIAGNOSTIC_TAGS = ('mint-vain', 'mint-nice', 'nest-fail', 'find-fork', 'find-limb', 'seek-loop', 'play-dull', 'syntax error')
+
 RUNNER_ERRORS = {'none', 'ValueError', 'TimeoutError', 'RuntimeError', 'OSError', 'InterruptedError', 'other'}
 
 
@@ -226,18 +229,70 @@ def decode(raw, expected, *, context_sha, desk_hashes, assets):
     return value, artifacts(value['report'], value['artifacts'], expected, context_sha)
 
 
+def diagnostic(row):
+    if row is None:
+        return
+    require(type(row) is dict and set(row) == {'operation', 'last_command', 'positions', 'native_log'}
+        and type(row['operation']) is str and row['operation'] in DIAGNOSTIC_OPERATIONS
+        and len(E.canonical(row)) <= 12288)
+    command = row['last_command']
+    if command is not None:
+        require(type(command) is dict and set(command) == {'source_sha256', 'source_bytes',
+            'completed', 'output_sha256', 'output_bytes', 'output_kind'}
+            and E.digest(command['source_sha256']) and type(command['completed']) is bool)
+        integer(command['source_bytes'], 1, 65536)
+        if command['completed']:
+            require(E.digest(command['output_sha256']) and type(command['output_kind']) is str
+                and command['output_kind'] in ('empty', 'yes', 'no', 'release-desk', 'hex-atom', 'other'))
+            integer(command['output_bytes'], 0, 1000000)
+        else:
+            require(command['output_sha256'] is None and command['output_bytes'] is None
+                and command['output_kind'] == 'unobserved')
+    positions = row['positions']
+    if positions is not None:
+        labels = {'runner', 'evidence', 'release_install', 'native'}
+        require(type(positions) is dict and set(positions) == {'source_sha256', 'locations',
+            'frames_inspected', 'truncated'} and type(positions['source_sha256']) is dict
+            and set(positions['source_sha256']) == labels
+            and all(E.digest(value) for value in positions['source_sha256'].values())
+            and type(positions['truncated']) is bool and type(positions['locations']) is list
+            and len(positions['locations']) <= 16)
+        integer(positions['frames_inspected'], 0, 64)
+        for item in positions['locations']:
+            require(type(item) is dict and set(item) == {'source', 'function', 'line'}
+                and type(item['source']) is str and item['source'] in labels
+                and type(item['function']) is str and re.fullmatch('[A-Za-z_][A-Za-z0-9_]{0,63}', item['function']))
+            integer(item['line'], 1, 262144)
+    log = row['native_log']
+    if log is not None:
+        require(type(log) is dict and set(log) == {'bytes', 'tail_bytes', 'tail_sha256', 'tags', 'locations'}
+            and E.digest(log['tail_sha256']) and type(log['tags']) is list
+            and len(log['tags']) <= len(DIAGNOSTIC_TAGS)
+            and all(type(tag) is str and tag in DIAGNOSTIC_TAGS for tag in log['tags'])
+            and len(set(log['tags'])) == len(log['tags'])
+            and type(log['locations']) is list and len(log['locations']) <= 16)
+        integer(log['bytes'], 0, 16777216); integer(log['tail_bytes'], 0, 65536)
+        require(log['tail_bytes'] == min(log['bytes'], 65536))
+        for item in log['locations']:
+            require(type(item) is dict and set(item) == {'path', 'line', 'column', 'end_line', 'end_column'}
+                and type(item['path']) is str and re.fullmatch('/[a-z0-9~/._-]{1,192}', item['path']))
+            for key in ('line', 'column', 'end_line', 'end_column'):
+                integer(item[key], 1, 1000000)
+
+
 def failed_report(row):
     if row is None:
         return
     require(type(row) is dict and set(row) == {'protocol', 'status', 'error_class', 'cleanup_error_class',
-            'completed_phases', 'captures_observed', 'command_count', 'native_reaped'})
-    require(row['protocol'] == 'stead.saved8-failure-observation/1' and row['status'] == 'fail'
+            'completed_phases', 'captures_observed', 'command_count', 'native_reaped', 'diagnostic'})
+    require(row['protocol'] == 'stead.saved8-failure-observation/2' and row['status'] == 'fail'
             and type(row['error_class']) is str and row['error_class'] in RUNNER_ERRORS
             and row['cleanup_error_class'] in ('none', 'cleanup-refusal', 'artifact-refusal')
             and type(row['completed_phases']) is list and row['completed_phases'] == PHASES[:len(row['completed_phases'])]
             and type(row['captures_observed']) is list and row['captures_observed'] == list(E.STAGES[:len(row['captures_observed'])])
             and type(row['native_reaped']) is bool)
     integer(row['command_count'], 0, 4096)
+    diagnostic(row['diagnostic'])
 
 
 def failure(expected, error_class, report=None, *, cleanup=False):

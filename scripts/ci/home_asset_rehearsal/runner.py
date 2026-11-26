@@ -18,6 +18,7 @@ import socket
 import stat
 import tarfile
 import time
+import types
 
 from . import evidence as E
 
@@ -46,6 +47,115 @@ PILL = 'b4babd14e9f1acbdb421b3c31c215ee637ad6691b7e382b99c6fd8991e623708'
 KERNEL = '5a187fededc4582a34fcd6055c67bb63e0917b94'
 CLEAN_STOP = {'clean': True, 'exit_code': 0, 'forced': False, 'premature': False, 'reaped': True}
 MAX_SECONDS = 3600
+OPERATIONS = ('admission', 'seed-package', 'fresh-boot', 'driver-install', 'seed-install',
+    'seed-ready', 'seed-suspend', 'capture-seed8', 'predecessor-replace', 'tls',
+    'predecessor-resume', 'predecessor-routes', 'predecessor-suspend', 'capture-a0-loaded',
+    'cold-restart', 'cold-resume', 'cold-suspend', 'capture-a0-cold', 'asset-replace',
+    'asset-resume', 'asset-routes', 'asset-suspend', 'capture-assets-loaded',
+    'rollback-replace', 'rollback-resume', 'rollback-routes', 'rollback-suspend',
+    'capture-rollback-loaded', 'rollback-restart', 'rollback-cold-resume',
+    'rollback-cold-suspend', 'final-inputs')
+DIAGNOSTIC_SOURCES = {
+    'runner': ('/ci', 'home_asset_rehearsal/runner.py'),
+    'evidence': ('/ci', 'home_asset_rehearsal/evidence.py'),
+    'release_install': ('/code', 'release_install.py'),
+    'native': ('/support', 'native.py'),
+}
+COMPILER_TAGS = ('mint-vain', 'mint-nice', 'nest-fail', 'find-fork', 'find-limb',
+    'seek-loop', 'play-dull', 'syntax error')
+
+
+def command_observation(source, output=None):
+    """Only digests and finite classifications; never retain a saved noun."""
+    E.require(type(source) is str)
+    raw = source.encode()
+    E.require(0 < len(raw) <= 65536 and (output is None or type(output) is str))
+    result = {'source_sha256': E.sha(raw), 'source_bytes': len(raw),
+        'completed': output is not None, 'output_sha256': None, 'output_bytes': None,
+        'output_kind': 'unobserved'}
+    if output is not None:
+        value = output.encode()
+        E.require(len(value) <= 1000000)
+        text = output.strip()
+        kind = {'': 'empty', '%.y': 'yes', '%.n': 'no', '%release-test': 'release-desk'}.get(text)
+        if kind is None:
+            kind = 'hex-atom' if re.fullmatch(r'0x[0-9a-f]+(?:\.[0-9a-f]+)*', text) else 'other'
+        result.update(output_sha256=E.sha(value), output_bytes=len(value), output_kind=kind)
+    return result
+
+
+def failure_positions(error, sources):
+    """Match exact captured code, excluding messages, locals and arbitrary frames."""
+    E.require(type(sources) is dict and set(sources) == set(DIAGNOSTIC_SOURCES))
+    allowed, hashes = {}, {}
+    for label, item in sources.items():
+        E.require(type(item) is dict and set(item) == {'raw', 'filename', 'sha256'})
+        raw, filename = item['raw'], item['filename']
+        E.require(type(raw) is bytes and 0 < len(raw) <= 262144 and E.sha(raw) == item['sha256']
+            and type(filename) is str and 0 < len(filename) <= 4096)
+        pending, codes = [compile(raw, filename, 'exec', dont_inherit=True)], []
+        while pending:
+            code = pending.pop()
+            E.require(len(codes) < 256)
+            codes.append(code)
+            pending.extend(value for value in code.co_consts if type(value) is types.CodeType)
+        allowed[label] = (filename, codes, len(raw.splitlines()))
+        hashes[label] = item['sha256']
+    trace, inspected, locations, seen, truncated = error.__traceback__, 0, [], set(), False
+    while trace is not None and inspected < 64:
+        inspected += 1
+        code, line = trace.tb_frame.f_code, trace.tb_lineno
+        for label, (filename, codes, count) in allowed.items():
+            key = (label, code.co_name, line)
+            if (code.co_filename == filename and code in codes and 1 <= line <= count
+                    and re.fullmatch('[A-Za-z_][A-Za-z0-9_]{0,63}', code.co_name) and key not in seen):
+                seen.add(key)
+                if len(locations) < 16:
+                    locations.append({'source': label, 'function': code.co_name, 'line': line})
+                else:
+                    truncated = True
+        trace = trace.tb_next
+    return {'source_sha256': hashes, 'locations': locations, 'frames_inspected': inspected,
+        'truncated': truncated or trace is not None}
+
+
+def compiler_projection(raw):
+    """Closed location/tag projection from a bounded native log tail, not raw logs."""
+    E.require(type(raw) is bytes and len(raw) <= 65536)
+    text = re.sub(r'\x1b\[[0-9;]*m', '', raw.decode('utf-8', errors='replace'))
+    tags, positions = [], []
+    # Only native source paths, numbers and known compiler labels are exported.
+    span = re.compile(r'(/[a-z0-9~/._-]{1,192})(?:::|:)<?\[([0-9,]+) ([0-9,]+)\]\.\[([0-9,]+) ([0-9,]+)\]>?')
+    for line in text.splitlines():
+        if len(line) > 1024:
+            continue
+        token = line.strip()
+        if token in COMPILER_TAGS and token not in tags:
+            tags.append(token)
+        match = span.fullmatch(token)
+        if match and len(positions) < 16:
+            path, *values = match.groups()
+            numbers = [int(value.replace(',', '')) for value in values]
+            if all(0 < value <= 1000000 for value in numbers):
+                row = {'path': path, 'line': numbers[0], 'column': numbers[1],
+                    'end_line': numbers[2], 'end_column': numbers[3]}
+                if row not in positions:
+                    positions.append(row)
+    return {'tail_bytes': len(raw), 'tail_sha256': E.sha(raw), 'tags': tags, 'locations': positions}
+
+
+def log_observation(path):
+    fd = os.open(path, os.O_RDONLY | os.O_NOFOLLOW | os.O_NONBLOCK)
+    with os.fdopen(fd, 'rb') as stream:
+        before = os.fstat(stream.fileno())
+        E.require(stat.S_ISREG(before.st_mode) and before.st_nlink == 1 and 0 <= before.st_size <= 16777216)
+        stream.seek(max(0, before.st_size - 65536))
+        raw = stream.read(65537)
+        after = os.fstat(stream.fileno())
+        fields = ('st_dev', 'st_ino', 'st_mode', 'st_nlink', 'st_uid', 'st_gid', 'st_size', 'st_mtime_ns', 'st_ctime_ns')
+        E.require(len(raw) == min(before.st_size, 65536)
+            and all(getattr(before, key) == getattr(after, key) for key in fields))
+    return {'bytes': before.st_size, **compiler_projection(raw)}
 
 
 def read_regular(path, maximum):
@@ -137,6 +247,7 @@ def native_class(release):
     class OwnedNative(release.ReleaseNative):
         def __init__(self, guard, sealed=None, expected=None):
             self.sealed, self.expected = sealed, expected
+            self.last_command = None
             super().__init__('zod', 31337, guard)
 
         def _check_pier(self):
@@ -155,8 +266,17 @@ def native_class(release):
             E.require(type(source) is str and 0 < len(source.encode()) <= 65536
                 and type(timeout) in (int, float) and 0 < timeout <= 180)
             count = len(self.commands)
+            self.last_command = None
+            try:
+                self.last_command = command_observation(source)
+            except BaseException:
+                pass
             try:
                 value = super().dojo(source, timeout=min(timeout, 60))
+                try:
+                    self.last_command = command_observation(source, value)
+                except BaseException:
+                    pass
                 self.check()
                 return value
             finally:
@@ -243,6 +363,7 @@ def run(guard):
 
     start = time.monotonic()
     native, finished, failed = None, False, False
+    operation, context = 'admission', None
     rows, incarnations = {}, set()
     report = {'protocol': 'stead.saved8-asset-rehearsal/1', 'status': 'fail',
         'classification': 'disposable-synthetic-saved8-only', 'saved_version': 8,
@@ -266,6 +387,8 @@ def run(guard):
         return bootstrap(native, team_conn, incarnations)
 
     def retained(stage):
+        nonlocal operation
+        operation = 'capture-' + stage
         E.require(stage not in rows)
         before = native.proof()
         pid = native.process.pid
@@ -306,6 +429,7 @@ def run(guard):
         report.update(run_id=context['run_id'], controller_commit=context['controller_commit'],
             inputs_sha256=context['inputs_sha256'], previous_artifact=ARCHIVES['previous'][1],
             target_artifact=ARCHIVES['target'][1], asset_delta={'removed': removed, 'updated': replaced})
+        operation = 'seed-package'
         seed = Path('/state/seed-package')
         seed.mkdir(mode=0o700)
         for name in old:
@@ -320,52 +444,77 @@ def run(guard):
         native = Native(current)
         E.require(native.lock['runtime']['binary_sha256'] == RUNTIME
             and native.lock['boot_artifact']['sha256'] == PILL and native.lock['kernel']['commit'] == KERNEL)
+        operation = 'fresh-boot'
         report['boot'] = native.start()
+        operation = 'driver-install'
         E.require(native.install(Path('/rehearsal/drivers')) == context['driver_files'])
+        operation = 'seed-install'
         E.require(release.install_desk(native, 'stead-home', seed) == seed_inventory)
+        operation = 'seed-ready'
         release.wait_agent(native, 'stead-home', True, timeout=300)
+        operation = 'seed-suspend'
         suspend()
         first = retained('seed8')
         report['phases'].append('fresh-seed8')
+        operation = 'predecessor-replace'
         release.replace_clay_files(native, seed_inventory, old, package=Path('/rehearsal/previous/desk'))
         E.require(native.dojo(E.SUSPENDED).strip() == '%.n'
             and E.fingerprint(native.dojo) == first['vase_fingerprint']
             and native.dojo('.^(? %cu /=release-test=/lib/stead-home-ui-seed/hoon)').strip() == '%.n')
+        operation = 'tls'
         certificates = native_tls.create('/state/certificates')
         native_tls.install(native.binary, native.pier / '.urb/conn.sock', certificates, 'zod')
         report['tls'] = native_tls.verify(native.process, certificates, 'zod', native.check)
+        operation = 'predecessor-resume'
         report['bootstrap_a0'] = resume()
+        operation = 'predecessor-routes'
         report['routes_a0'] = routes(native, release, certificates / 'ca.pem', Path('/rehearsal/previous'))
+        operation = 'predecessor-suspend'
         suspend()
         loaded = retained('a0-loaded')
         E.preserved(first, loaded, complete=False)
         report['phases'].append('actual-a0-predecessor')
+        operation = 'cold-restart'
         restart(old, 'cold', loaded['vase_fingerprint'])
         native_tls.install(native.binary, native.pier / '.urb/conn.sock', certificates, 'zod')
+        operation = 'cold-resume'
         report['bootstrap_cold'] = resume()
+        operation = 'cold-suspend'
         suspend()
         E.preserved(loaded, retained('a0-cold'), complete=True)
         report['phases'].append('cold-repeat')
+        operation = 'asset-replace'
         release.replace_clay_assets(native, old, new, package=Path('/rehearsal/target/desk'))
         E.require(native.dojo(E.SUSPENDED).strip() == '%.n' and E.fingerprint(native.dojo) == loaded['vase_fingerprint'])
+        operation = 'asset-resume'
         report['bootstrap_assets'] = resume()
+        operation = 'asset-routes'
         report['routes_assets'] = routes(native, release, certificates / 'ca.pem', Path('/rehearsal/target'))
+        operation = 'asset-suspend'
         suspend()
         assets = retained('assets-loaded')
         E.preserved(loaded, assets, complete=False)
+        operation = 'rollback-replace'
         release.replace_clay_assets(native, new, old, package=Path('/rehearsal/previous/desk'))
         E.require(native.dojo(E.SUSPENDED).strip() == '%.n' and E.fingerprint(native.dojo) == assets['vase_fingerprint'])
+        operation = 'rollback-resume'
         report['bootstrap_rollback'] = resume()
+        operation = 'rollback-routes'
         report['routes_rollback'] = routes(native, release, certificates / 'ca.pem', Path('/rehearsal/previous'))
+        operation = 'rollback-suspend'
         suspend()
         rollback = retained('rollback-loaded')
         E.preserved(loaded, rollback, complete=False)
+        operation = 'rollback-restart'
         restart(old, 'rollback-cold', rollback['vase_fingerprint'])
         native_tls.install(native.binary, native.pier / '.urb/conn.sock', certificates, 'zod')
+        operation = 'rollback-cold-resume'
         report['bootstrap_rollback_cold'] = resume()
+        operation = 'rollback-cold-suspend'
         suspend()
         E.require(E.fingerprint(native.dojo) == rollback['vase_fingerprint'])
         report['phases'].append('assets-and-rollback')
+        operation = 'final-inputs'
         E.complete_stages(rows)
         # Recheck all immutable input bytes; the fresh-pier-only admission
         # predicate intentionally cannot be called after boot.
@@ -381,6 +530,21 @@ def run(guard):
         failed = True
         name = type(error).__name__
         report['error_class'] = name if name in ('ValueError', 'TimeoutError', 'RuntimeError', 'OSError', 'InterruptedError') else 'other'
+        # Failure-only observations cannot replace the original failure or
+        # relax cleanup/admission. No exception message, local or raw noun leaves.
+        report['diagnostic'] = {'operation': operation, 'last_command': None,
+            'positions': None, 'native_log': None}
+        try:
+            if native is not None:
+                report['diagnostic']['last_command'] = native.last_command
+            sources = {}
+            for label, (root, path) in DIAGNOSTIC_SOURCES.items():
+                raw = read_regular(Path(root) / path, 262144)
+                sources[label] = {'raw': raw, 'filename': str(Path(root) / path),
+                    'sha256': context['source_files'][root][path]}
+            report['diagnostic']['positions'] = failure_positions(error, sources)
+        except BaseException:
+            pass
     finally:
         if native is not None:
             try:
@@ -391,6 +555,11 @@ def run(guard):
                 report['cleanup_error_class'] = 'cleanup-refusal'
         else:
             report['cleanup'] = {'started': False, 'reaped': True}
+        if failed and native is not None and report.get('cleanup', {}).get('reaped') is True:
+            try:
+                report['diagnostic']['native_log'] = log_observation(native.logpath)
+            except BaseException:
+                pass
         if finished and not failed and report['error_class'] == report['cleanup_error_class'] == 'none':
             try:
                 # Exclusive, fixed artifacts are written only after clean child
