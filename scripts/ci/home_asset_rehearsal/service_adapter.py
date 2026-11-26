@@ -40,7 +40,7 @@ FROZEN = {
     PREFIX + 'worker.py': 'bfe387e7559d63eb84b160df7ce6c060fcbf92caf79d9f25802f74d80afbb4a9',
     PREFIX + 'runner.py': '8d759ca5d650c7ba9815bc1bf1949ca4e0f82bc13f015ca6b0915eebc0cbd037',
     PREFIX + 'evidence.py': 'cfa4e7f2a0e5e8f26158237655cfc4f2f26446ea10b302e2343a424d698005f7',
-    PREFIX + 'capture.hoon': '368684122a6cc36024aedd29d2db2582e4b5ac8d89ed378fb66f050fad06c76c',
+    PREFIX + 'capture.hoon': '04296e9706c1a58af9a139aed9fa7a7aba040b912bbb588292207610df84e6e3',
     'scripts/release_install.py': '30b2a651c3e7d124e7e5ef319f5581299d29427322e605f1ffca91e9015f5e80',
     'scripts/sdk_native/native.py': '3c12a59eafe9b165550d0bf469b359aaf3b3127ecf43f357cf561ce358ccde1c',
     'scripts/urbit/execution_policy.py': '8d52b799a3a7bff73f38e029b57fe0cfafd156b7c61184173860c21600ce41c0',

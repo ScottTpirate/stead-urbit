@@ -35,8 +35,7 @@
   ?>  %+  levy  vectors
       |=  row=[size=@ud data=@ text=@t]
       ?&  =((capture-hex size.row data.row) text.row)
-          =((capture-hex size.row data.row)
-            (hex:stead-codec (mul 2 size.row) (rev 3 size.row data.row)))
+          =((capture-hex size.row data.row) (hex:stead-codec (mul 2 size.row) (rev 3 size.row data.row)))
       ==
   ^-  @ux
   0x73.6176.6564.3868.6578
