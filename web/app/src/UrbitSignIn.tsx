@@ -11,7 +11,7 @@ type SignInProps = {
   notice: string;
   onShipChange: (ship: string) => void;
   onRequest: () => void;
-  onCheck: () => void;
+  onCheck: (onEnded: () => void) => void;
   onObserve: (id: string, signal: AbortSignal) => Promise<string>;
   onBack: () => void;
 };
@@ -24,11 +24,12 @@ export function UrbitSignIn({ ship, challenge, busy, origin, notice, onShipChang
   const challengeId = challenge?.challenge_id;
   const expiresAt = challenge?.expires_at_ms;
   const observed = approval?.id === challengeId ? approval?.notice : undefined;
+  const ended = observed === 'ended';
   useEffect(() => {
-    if (!challengeId) return;
+    if (!challengeId || ended) return;
     return watchApproval(expiresAt, signal => onObserve(challengeId, signal),
       next => setApproval({id: challengeId, notice: next}));
-  }, [challengeId, expiresAt, onObserve]);
+  }, [challengeId, expiresAt, onObserve, ended]);
 
 
   useEffect(() => {
@@ -57,7 +58,9 @@ export function UrbitSignIn({ ship, challenge, busy, origin, notice, onShipChang
       <div className="urbit-sign-in-actions">
         {observed === 'ended'
           ? <Button variant="primary" pending={busy} pendingLabel="Requesting approval" onClick={onRequest}>Request a new code</Button>
-          : <Button variant="primary" pending={busy} pendingLabel="Checking approval" onClick={onCheck}>{observed === 'approved' ? 'Open Stead' : 'Check approval'}</Button>}
+          : <Button variant="primary" pending={busy} pendingLabel="Checking approval" onClick={() => onCheck(() => {
+              if (challengeId) setApproval({id: challengeId, notice: 'ended'});
+            })}>{observed === 'approved' ? 'Open Stead' : 'Check approval'}</Button>}
         <Button variant="quiet" disabled={busy} onClick={() => { focusOnReturn.current = true; onBack(); }}>Use a different ID</Button>
       </div>
     </section> : <>

@@ -72,6 +72,10 @@ try {
       await page.getByRole('button',{name:'Check approval'}).waitFor();
       await page.clock.fastForward(4001);
       await page.getByText(/could not check automatically/).waitFor();
+      status='ended';
+      await page.getByRole('button',{name:'Check approval'}).click();
+      await renew.waitFor();
+      assert.equal(await page.getByRole('button',{name:'Check approval'}).count(),0);
       await page.getByRole('button',{name:'Use a different ID'}).click();
       await page.waitForFunction(()=>document.activeElement?.getAttribute('autocomplete')==='username');
       const last=polls;

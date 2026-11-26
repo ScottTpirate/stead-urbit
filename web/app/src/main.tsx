@@ -27,7 +27,7 @@ import {ProductWorkJourney} from './productWorkJourney';
 import {ProductJourneyDraftStore, productJourneyRoute, productReadNavigationAllowed, readProductWorkEndpoint, type ProductJourneySelection} from './productJourneyState';
 import type {ProductCarrierMode} from './productCarrier';
 const client = new HomeClient();
-async function observeApproval(id: string, signal: AbortSignal) {
+async function observeApproval(id: string, signal?: AbortSignal) {
   try { return (await client.status(id, signal)).status!; }
   catch (failure) {
     if (failure instanceof HomeError && failure.code === 'approval_ended') return 'ended';
@@ -1306,11 +1306,12 @@ function App() {
           failure => failure instanceof HomeError && failure.code === 'denied_or_not_found'
             ? 'This Home could not start sign-in for that Urbit ID. Check the ID or ask your operator to check your member access.'
             : explainConnection(failure))}
-        onCheck={() => {
+        onCheck={onEnded => {
           if (!challenge) return;
           void action(async () => {
-            const status = await client.status(challenge.challenge_id!);
-            if (status.status === 'approved') {
+            const status = await observeApproval(challenge.challenge_id!);
+            if (status === 'ended') { onEnded(); setNotice(''); return; }
+            if (status === 'approved') {
               const person = await client.consume(challenge.challenge_id!);
               setChallenge(null);
               await identify(person);
