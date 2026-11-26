@@ -19,7 +19,7 @@ jobs:
           persist-credentials: false
       - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
         with:
-          ref: c80b1d6305a2c5964139439779af4a5f4ef895df
+          ref: 71be1d75d042f0b1f31c0ccae18299f1f3ac8f72
           path: candidate
           persist-credentials: false
       - name: Run18 fixed inert cases without native or network effects

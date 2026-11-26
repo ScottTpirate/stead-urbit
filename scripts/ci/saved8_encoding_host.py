@@ -16,9 +16,9 @@ import sys
 import tempfile
 import time
 
-MANIFEST_SHA = 'aa30101c6f57882e3f9f65e46c470b728efa90dfd2d532ee4ca818f26d5cd95d'
+MANIFEST_SHA = 'e9d9a5adad17f7b59e3c0e2cc0c6714ff0adefc3219181583b4e994cea636197'
 DRIVER_SHA = '55770e225ed018b1052a526bab497ac36dc23f0f33ee11f54ba4b2f43a6ae27e'
-CONTROLLER = 'c80b1d6305a2c5964139439779af4a5f4ef895df'
+CONTROLLER = '71be1d75d042f0b1f31c0ccae18299f1f3ac8f72'
 ROOT = Path(__file__).resolve().parents[2]
 CANDIDATE = ROOT.parent / 'candidate'
 OUT = ROOT.parent / 'saved8-host-output'
