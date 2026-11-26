@@ -49,13 +49,13 @@ class GitHubWorkPlanTests(unittest.TestCase):
                          ['todo', 'done', 'done', 'canceled', 'canceled'])
         first = report['drafts'][0]
         self.assertEqual(first['payload'], {'title': 'Read and save Café', 'type': 'task', 'status': 'todo',
-            'priority': 'none', 'description': f"GitHub issue #1\n{first['source']['url']}\n\n"
+            'priority': 'none', 'description': f"GitHub issue #1\n{first['source']['url']}\nGitHub author: source-reviewer\n\n"
                                               'Keep the [handoff](./handoff.md).\nDraft.'})
         self.assertIn('normalized to LF', first['notes'][0])
         self.assertEqual(report['drafts'][1]['payload']['description'],
-                         f'GitHub issue #2\nhttps://github.com/{github_work.REPOSITORY}/issues/2')
+                         f'GitHub issue #2\nhttps://github.com/{github_work.REPOSITORY}/issues/2\nGitHub author: source-reviewer')
         self.assertIn('without a reason', report['drafts'][2]['notes'][0])
-        self.assertNotIn('source-reviewer', json.dumps(report))
+        self.assertEqual(first['source']['author'], {'id': None, 'login': 'source-reviewer'})
         self.assertNotIn('Excluded PR body', json.dumps(report))
 
     def test_scopes_input_to_the_pinned_repository_and_exact_issue_number(self):
@@ -71,6 +71,39 @@ class GitHubWorkPlanTests(unittest.TestCase):
         case = issue(1, repository_url=f'https://api.github.com/repos/{github_work.REPOSITORY.lower()}',
                      html_url=f'https://github.com/{github_work.REPOSITORY.lower()}/issues/1')
         self.assertEqual(planned([case])['drafts'][0]['source']['url'], issue()['html_url'])
+
+    def test_named_repository_provenance_and_unmapped_assignments(self):
+        repository = 'example-org/member.docs'
+        row = issue(42, id=183, repository_url=f'https://api.github.com/repos/{repository}',
+                    html_url=f'https://github.com/{repository}/issues/42',
+                    user={'login': 'example-app[bot]', 'id': 51}, assignees=[{'login': 'dev-user', 'id': 60}],
+                    created_at='2026-06-02T00:02:01Z', updated_at='2026-08-15T01:03:05Z', comments=2)
+        report = github_work.plan(json.dumps([row]).encode(), repository)
+        draft, = report['drafts']
+        self.assertEqual(report['repository'], repository)
+        self.assertEqual(draft['source']['id'], 183)
+        self.assertEqual(draft['source']['unmapped_assignees'], [{'id': 60, 'login': 'dev-user'}])
+        self.assertEqual(draft['source']['excluded_comment_count'], 2)
+        self.assertIn('Created on GitHub: 2026-06-02T00:02:01Z', draft['payload']['description'])
+        self.assertEqual(set(draft['payload']), {'title', 'type', 'status', 'priority', 'description'})
+        self.assertNotIn('dev-user', str(draft['payload']))
+        self.assertEqual(draft['source']['author'], {'login': 'example-app[bot]', 'id': 51})
+        with self.assertRaisesRegex(ValueError, 'issue-repository'):
+            github_work.plan(json.dumps([row, issue(1)]).encode(), repository)
+
+    def test_incomplete_attribution_and_invalid_metadata_have_explicit_outcomes(self):
+        draft, = planned([issue(user=None, assignee={'login': 'from-legacy'}, comments=0)])['drafts']
+        self.assertIsNone(draft['source']['author'])
+        self.assertIsNone(draft['source']['created_at'])
+        self.assertEqual(draft['source']['unmapped_assignees'], [{'login': 'from-legacy', 'id': None}])
+        self.assertNotIn('GitHub author:', draft['payload']['description'])
+        for field, value in [('user', {'login': 'name\nManager'}), ('id', True), ('comments', -1),
+                             ('assignees', [None]), ('created_at', '2026-02-31T12:13:14Z')]:
+            with self.subTest(field=field), self.assertRaises(ValueError):
+                planned([issue(**{field: value})])
+        for repo in ['host.example/a/b', 'user/..', 'user/.', 'user/repo?x=1']:
+            with self.subTest(repository=repo), self.assertRaises(ValueError):
+                github_work.plan(b'[]', repo)
 
     def test_rejects_malformed_export_before_planning_any_work(self):
         missing_body = issue()
@@ -89,7 +122,7 @@ class GitHubWorkPlanTests(unittest.TestCase):
             planned([[issue()], [issue()]])
 
     def test_marks_work_field_limits_without_truncation(self):
-        prefix = f'GitHub issue #1\nhttps://github.com/{github_work.REPOSITORY}/issues/1\n\n'
+        prefix = f'GitHub issue #1\nhttps://github.com/{github_work.REPOSITORY}/issues/1\nGitHub author: source-reviewer\n\n'
         width = github_work.MAX_DESCRIPTION - len(prefix)
         under = 'é' * (width // 2) + 'x' * (width % 2)
         report = planned([issue(1, title='🗃' * 200, body=under), issue(2, body='失' * width),

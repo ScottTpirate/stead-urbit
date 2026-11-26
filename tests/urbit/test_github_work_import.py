@@ -52,16 +52,38 @@ class GitHubWorkImportTests(unittest.TestCase):
         self.assertEqual(github_import.reviewed_preview(self.source, self.preview_file, self.preview_sha), self.preview)
         self.assertEqual(self.commands_for([2, 9]), (self.plan, self.commands))
         self.assertEqual(self.plan['protocol'], 'stead.github-work-import-plan/1')
-        self.assertEqual(self.plan['provenance'], {'protocol': 'stead.github-work-plan/1',
+        self.assertEqual(self.plan['provenance'], {'protocol': 'stead.github-work-plan/2',
             'repository': github_work.REPOSITORY, 'source_sha256': portable.sha(self.source.read_bytes()),
             'preview_sha256': self.preview_sha})
         self.assertEqual([row['number'] for row in self.plan['selected_issues']], [2, 9])
         self.assertEqual([row['operation'] for row in self.commands], ['project.create', 'work.create', 'work.create'])
         self.assertTrue(all(command['project_id'] == self.plan['project_id']
                             and command['expected_revision'] == '0' for command in self.commands))
-        self.assertIn('/issues/2\n\nOpen body', self.commands[1]['payload']['description'])
+        self.assertIn('/issues/2\nGitHub author: source-reviewer\n\nOpen body', self.commands[1]['payload']['description'])
         self.assertEqual(github_import.load_import(self.plan_file, self.plan_sha, self.preview, self.preview_sha),
                          (self.plan, self.commands))
+
+    def test_old_review_reconstructs_exact_bytes_and_original_request_ids(self):
+        preview = github_work.plan(self.source.read_bytes(), version=github_work.LEGACY_FORMAT)
+        old = portable.encoded(preview)
+        self.preview_file.write_bytes(old)
+        sha = portable.sha(old)
+        reviewed = github_import.reviewed_preview(self.source, self.preview_file, sha)
+        self.assertEqual(reviewed, preview)
+        self.assertNotIn('author', preview['drafts'][0]['source'])
+        plan, commands = github_import.import_commands(reviewed, sha, [2], HOME, importer.target_member(MEMBER),
+                                                       uid(875), 'Import trial', 'TRIAL')
+        self.assertEqual(commands[1]['payload']['description'],
+                         f'GitHub issue #2\nhttps://github.com/{github_work.REPOSITORY}/issues/2\n\nOpen body')
+        raw = portable.encoded(plan)
+        self.plan_file.write_bytes(raw)
+        self.assertEqual(github_import.load_import(self.plan_file, portable.sha(raw), reviewed, sha), (plan, commands))
+        for changed, reason in [(dict(preview, protocol='unknown'), 'preview-format'),
+                                (dict(preview, repository='other/project'), 'legacy-repository')]:
+            data = portable.encoded(changed)
+            self.preview_file.write_bytes(data)
+            with self.assertRaisesRegex(ValueError, reason):
+                github_import.reviewed_preview(self.source, self.preview_file, portable.sha(data))
 
     def test_missing_incomplete_duplicate_and_excessive_selections_fail(self):
         for selection in ([], [True], [9, 9], list(range(1, 130))):

@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import argparse
+from datetime import datetime
 import os
 from pathlib import Path
 import re
@@ -13,21 +14,69 @@ import portable_recovery as portable
 
 
 REPOSITORY = 'ScottTpirate/stead-urbit'
-REPOSITORY_PATH = f'(?i:{re.escape(REPOSITORY)})'
-SOURCE = re.compile(rf'https://api\.github\.com/repos/{REPOSITORY_PATH}', re.ASCII)
+LEGACY_FORMAT = 'stead.github-work-plan/1'
+FORMAT = 'stead.github-work-plan/2'
+REPOSITORY_NAME = re.compile(r'[A-Za-z0-9][A-Za-z0-9-]{0,38}/[A-Za-z0-9_.-]{1,100}', re.ASCII)
+LOGIN = re.compile(r'[A-Za-z0-9][A-Za-z0-9_-]{0,99}(?:\[bot\])?', re.ASCII)
+UTC_TIMESTAMP = re.compile(r'[0-9]{4}-[0-9]{2}-[0-9]{2}T[0-9]{2}:[0-9]{2}:[0-9]{2}(?:\.[0-9]{1,6})?Z')
 MAX_INPUT = 16 * 1024 * 1024
 MAX_ROWS = 2048
 MAX_TITLE = 800
 MAX_TITLE_CHARACTERS = 200
 MAX_DESCRIPTION = 8192
 PROJECT_WORK_LIMIT = 128
-LOSSES = [
+LEGACY_LOSSES = [
     'Pull requests, comments, attachments and timeline entries are excluded.',
     'Labels, milestones, project board fields, priorities, assignments and relations are not applied.',
     'GitHub identities, permissions, timestamps and authorship are not imported into Stead.',
     'Original body links stay in the text. The tool does not retrieve, rewrite or verify their targets.',
     'These drafts cover the supplied rows. Their digest does not attest to origin or completeness.',
 ]
+
+LOSSES = [
+    'Pull requests, comment bodies, attachments and timeline entries are excluded.',
+    'Original GitHub authors and dates are copied as source attribution. Stead records the importing member as creator.',
+    'Source assignees remain unmapped. Review the destination team before assigning Work.',
+    'Labels, milestones, project fields, priorities and relations are excluded.',
+    'Body links are preserved verbatim and their targets are unverified.',
+    'This preview covers the supplied rows. Its digest establishes the exact input bytes.',
+]
+
+
+def source_account(value):
+    if value is None:
+        return None
+    portable.require(isinstance(value, dict) and portable.match(LOGIN, value.get('login')), 'issue-account')
+    return {'login': value['login'], 'id': source_id(value.get('id'))}
+
+
+def source_id(value):
+    portable.require(value is None or (type(value) is int and 0 < value < 2**63), 'issue-source-id')
+    return value
+
+
+def source_time(value):
+    if value is None:
+        return None
+    portable.require(portable.match(UTC_TIMESTAMP, value), 'issue-source-time')
+    try:
+        datetime.fromisoformat(value[:-1])
+    except ValueError:
+        raise portable.RecoveryError('issue-source-time') from None
+    return value
+
+
+def provenance(row):
+    assigned = row.get('assignees', [])
+    if 'assignees' not in row and row.get('assignee') is not None:
+        assigned = [row['assignee']]
+    portable.require(isinstance(assigned, list) and len(assigned) <= 100 and all(assigned), 'issue-assignees')
+    count = row.get('comments')
+    portable.require(count is None or (type(count) is int and 0 <= count < 2**63), 'issue-comment-count')
+    return {'id': source_id(row.get('id')), 'author': source_account(row.get('user')),
+            'created_at': source_time(row.get('created_at')), 'updated_at': source_time(row.get('updated_at')),
+            'closed_at': source_time(row.get('closed_at')), 'unmapped_assignees': [source_account(a) for a in assigned],
+            'excluded_comment_count': count}
 
 
 def issue_rows(raw):
@@ -43,19 +92,20 @@ def issue_rows(raw):
     return rows
 
 
-def issue_number(row, seen):
-    portable.require(isinstance(row, dict) and portable.match(SOURCE, row.get('repository_url')), 'issue-repository')
+def issue_number(row, seen, repository_path):
+    source = re.compile(rf'https://api\.github\.com/repos/{repository_path}', re.ASCII)
+    portable.require(isinstance(row, dict) and portable.match(source, row.get('repository_url')), 'issue-repository')
     number = row.get('number')
     portable.require(type(number) is int and 0 < number <= 2**53 - 1, 'issue-number')
     portable.require(number not in seen, 'duplicate-issue-number')
     seen.add(number)
     namespace = 'pull' if 'pull_request' in row else 'issues'
-    pattern = re.compile(rf'https://github\.com/{REPOSITORY_PATH}/{namespace}/{number}', re.ASCII)
+    pattern = re.compile(rf'https://github\.com/{repository_path}/{namespace}/{number}', re.ASCII)
     portable.require(portable.match(pattern, row.get('html_url')), 'issue-permalink')
     return number
 
 
-def issue_draft(row, number):
+def issue_draft(row, number, repository, version):
     state = row.get('state')
     reason = row.get('state_reason')
     portable.require((state == 'open' and reason in (None, 'reopened'))
@@ -69,11 +119,18 @@ def issue_draft(row, number):
     portable.require('body' in row, 'issue-body')
     body = '' if row['body'] is None else portable.text(row['body'], MAX_INPUT)
     normalized = body.replace('\r\n', '\n').replace('\r', '\n')
-    url = f'https://github.com/{REPOSITORY}/issues/{number}'
+    url = f'https://github.com/{repository}/issues/{number}'
     description = f'GitHub issue #{number}\n{url}'
+    source = {'number': number, 'url': url, 'state': state, 'state_reason': reason}
+    if version == FORMAT:
+        source.update(provenance(row))
+        if source['author']:
+            description += '\nGitHub author: ' + source['author']['login']
+        for key, label in (('created_at', 'Created'), ('updated_at', 'Updated'), ('closed_at', 'Closed')):
+            if source[key]:
+                description += f'\n{label} on GitHub: {source[key]}'
     if normalized:
         description += '\n\n' + normalized
-    source = {'number': number, 'url': url, 'state': state, 'state_reason': reason}
     review = []
     if len(title) > MAX_TITLE_CHARACTERS or len(title.encode('utf-8')) > MAX_TITLE or any(ord(c) < 32 for c in title):
         review.append('Title exceeds the Work title limits or contains control characters.')
@@ -90,20 +147,25 @@ def issue_draft(row, number):
     return 'drafts', {'source': source, 'notes': notes, 'payload': payload}
 
 
-def plan(raw):
+def plan(raw, repository=REPOSITORY, version=FORMAT):
+    portable.require(version in (FORMAT, LEGACY_FORMAT), 'github-preview-format')
+    portable.require(portable.match(REPOSITORY_NAME, repository) and repository.split('/')[1] not in {'.', '..'},
+                     'issue-repository')
+    portable.require(version != LEGACY_FORMAT or repository == REPOSITORY, 'legacy-repository')
+    repository_path = f'(?i:{re.escape(repository)})'
     rows = issue_rows(raw)
-    result = {'protocol': 'stead.github-work-plan/1', 'repository': REPOSITORY,
+    result = {'protocol': version, 'repository': repository,
               'source_sha256': portable.sha(raw), 'input_rows': len(rows),
               'max_work_per_project': PROJECT_WORK_LIMIT, 'drafts': [], 'needs_review': [],
-              'excluded_pull_requests': [], 'losses': LOSSES}
+              'excluded_pull_requests': [], 'losses': LEGACY_LOSSES if version == LEGACY_FORMAT else LOSSES}
     seen = set()
-    ordered = sorted((issue_number(row, seen), row) for row in rows)
+    ordered = sorted((issue_number(row, seen, repository_path), row) for row in rows)
     for number, row in ordered:
         if 'pull_request' in row:
             portable.require(isinstance(row['pull_request'], dict), 'pull-request-shape')
             result['excluded_pull_requests'].append(number)
             continue
-        bucket, record = issue_draft(row, number)
+        bucket, record = issue_draft(row, number, repository, version)
         result[bucket].append(record)
     return result
 
@@ -139,11 +201,13 @@ def publish(raw, output):
 def main(argv=None):
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument('source', type=Path, help='Private local JSON from the GitHub repository issues API')
+    parser.add_argument('--repository', default=REPOSITORY, help='Expected GitHub owner/repository')
     parser.add_argument('--output', required=True, type=Path, help='New review file in a private directory')
     args = parser.parse_args(argv)
     try:
-        result = plan(portable.private_file(args.source, MAX_INPUT))
+        result = plan(portable.private_file(args.source, MAX_INPUT), args.repository)
         raw = portable.encoded(result)
+        portable.require(len(raw) <= 2 * MAX_INPUT, 'github-preview-size')
         publish(raw, args.output)
     except portable.RecoveryError as error:
         print(f'GitHub Work planning stopped ({error}).', file=sys.stderr)

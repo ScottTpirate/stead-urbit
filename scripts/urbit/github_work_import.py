@@ -19,7 +19,10 @@ def reviewed_preview(source, preview, digest):
     portable.require(portable.match(portable.TOKEN, digest), 'github-preview-sha256')
     raw = portable.private_file(preview, 2 * github.MAX_INPUT)
     portable.require(portable.sha(raw) == digest, 'github-preview-sha256')
-    expected = github.plan(portable.private_file(source, github.MAX_INPUT))
+    preview_data = portable.decoded(raw, 2 * github.MAX_INPUT)
+    portable.require(isinstance(preview_data, dict), 'github-preview-format')
+    expected = github.plan(portable.private_file(source, github.MAX_INPUT),
+                           preview_data.get('repository'), preview_data.get('protocol'))
     portable.require(raw == portable.encoded(expected), 'github-preview-reconstruction')
     return expected
 

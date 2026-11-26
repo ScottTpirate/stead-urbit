@@ -1185,7 +1185,14 @@ packages:
   - Ambiguous identities and unsupported fields are reported rather than silently guessed.
   - Export opens without Stead and restores canonical Markdown/Git identities plus scoped structured history.
   evidence: Representative source fixtures, loss reports and real exported/imported round trip.
-  implementation_status: planned
+  implementation_status: in_progress
+  current_progress: >-
+    The create-only import historically passed 19 checks on two isolated ships with native Work readback
+    and replay. The current GitHub preview accepts an explicitly named repository, carries source
+    author and timestamps into Work, and reports unmapped assignees and excluded comment counts.
+    Original version 1 plans resume with their original request identities. The current path stages
+    Work in a new disposable project. Explicit activation, broader Markdown and attachment import,
+    and supported project migration remain open.
   parent_issue_numbers:
   - 13
   - 18
