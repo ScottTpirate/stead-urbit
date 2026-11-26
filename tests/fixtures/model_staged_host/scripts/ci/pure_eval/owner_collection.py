@@ -1,0 +1,430 @@
+"""Private fixed pure evaluator guardian collector; actual final unit cleanup remains outer-owned."""
+from __future__ import annotations
+import base64
+import hashlib
+import json
+import os
+from pathlib import Path
+import re
+import select
+import selectors
+import signal
+import subprocess
+import time
+import types
+import owner_boundary as boundary
+TOTAL_SECONDS = 575
+READY_SECONDS = 90
+STDOUT_LIMIT = 32768
+STDERR_LIMIT = 16384
+REPORT_LIMIT = 4194304
+WORKER_REPORT_LIMIT = 4063232
+FINAL_KEYS = {'protocol','status','phase','error_class','cleanup_error_class','report','admission','outer_cleanup_required','children_reaped','namespace_baseline_restored','jobs_retained','elapsed_ms','qualifies_phase','native_application_executed'}
+ERRORS = {'none','unrecognized','ValueError','TypeError','TimeoutError','OSError','PermissionError','FileNotFoundError','FileExistsError','ProcessLookupError','ChildProcessError','UnicodeDecodeError','JSONDecodeError'}
+PHASES = {'admission','parent-admission','evaluations','source-after','complete'}
+COLLECTOR_PHASES = {'service-admission','stream-registration','heartbeat','service-current',
+    'deadline','current-worker','ready-deadline','stream-read','stream-bound','row-parse',
+    'ready','pin-ready','loopback','current-ready','go','final','wait','terminal',
+    'exit-code','report-current','report-read','report-validate','report-correlation'}
+DIAGNOSTIC_SOURCES = {'owner_collection','owner_boundary','service_adapter'}
+
+def require(ok):
+    boundary.require(ok)
+
+
+def canonical(value):
+    return json.dumps(value, sort_keys=True, ensure_ascii=False,
+                      separators=(',', ':'), allow_nan=False).encode()
+
+
+def final_summary(row):
+    """Non-admitting scalar observation; never copy a rejected packet or its text."""
+    if row is None:
+        return {'presence': 'absent'}
+    if (type(row) is not dict or set(row) != FINAL_KEYS
+            or row.get('protocol') != 'stead.fixed-pure-eval-worker-result/1'):
+        return {'presence': 'unrecognized'}
+    result = {'presence': 'recognized-envelope'}
+    for key, choices in (('status', {'pass','fail'}), ('phase', PHASES),
+            ('error_class', ERRORS), ('cleanup_error_class',
+             {'none','baseline-or-temporary-files','report-retention'})):
+        value = row[key]
+        result[key] = value if type(value) is str and value in choices else None
+    for key in ('children_reaped','namespace_baseline_restored'):
+        result[key] = row[key] if type(row[key]) is bool else None
+    value = row['jobs_retained']
+    result['jobs_retained'] = value if type(value) is int and 0 <= value <= 6 else None
+    report = row['report']
+    result['report_presence'] = ('absent' if report is None else 'descriptor' if
+        type(report) is dict and set(report) == {'bytes','sha256'}
+        and type(report['bytes']) is int and 0 < report['bytes'] <= WORKER_REPORT_LIMIT
+        and type(report['sha256']) is str and re.fullmatch('[a-f0-9]{64}',report['sha256'])
+        else 'malformed')
+    return result
+
+
+def failure_positions(error, phase, sources):
+    """Match only captured code objects; exclude messages, locals and file contents."""
+    require(type(phase) is str and phase in COLLECTOR_PHASES and type(sources) is dict
+            and set(sources) == DIAGNOSTIC_SOURCES)
+    allowed, hashes = {}, {}
+    for label in sorted(DIAGNOSTIC_SOURCES):
+        item = sources[label]
+        require(type(item) is dict and set(item) == {'raw','filename'})
+        raw, filename = item['raw'], item['filename']
+        require(type(raw) is bytes and 0 < len(raw) <= 262144
+                and type(filename) is str and 0 < len(filename) <= 4096
+                and Path(filename).name == label + '.py')
+        pending, codes = [compile(raw, filename, 'exec', dont_inherit=True)], []
+        while pending:
+            code = pending.pop()
+            require(len(codes) < 256)
+            codes.append(code)
+            pending.extend(x for x in code.co_consts if type(x) is types.CodeType)
+        allowed[label] = (filename, codes, len(raw.splitlines()))
+        hashes[label] = hashlib.sha256(raw).hexdigest()
+    trace, inspected, locations, seen, truncated = error.__traceback__, 0, [], set(), False
+    while trace is not None and inspected < 64:
+        inspected += 1
+        code, line = trace.tb_frame.f_code, trace.tb_lineno
+        for label, (filename, codes, line_count) in allowed.items():
+            if (code.co_filename == filename and code in codes
+                    and type(line) is int and 1 <= line <= line_count
+                    and re.fullmatch('[A-Za-z_][A-Za-z0-9_]{0,63}',code.co_name)):
+                key = (label, code.co_name, line)
+                if key not in seen:
+                    seen.add(key)
+                    if len(locations) < 16:
+                        locations.append({'source':label,'function':code.co_name,'line':line})
+                    else:
+                        truncated = True
+        trace = trace.tb_next
+    return {'protocol':'stead.fixed-pure-eval-collector-failure/1','phase':phase,
+            'source_sha256':hashes,'locations':locations,'frames_inspected':inspected,
+            'truncated':truncated or trace is not None}
+
+
+def unique(pairs):
+    result = {}
+    for key, value in pairs:
+        require(key not in result)
+        result[key] = value
+    return result
+
+
+def parse(raw, maximum):
+    require(type(raw) is bytes and 0 < len(raw) <= maximum)
+    value = json.loads(raw, object_pairs_hook=unique,
+                       parse_constant=lambda _: (_ for _ in ()).throw(ValueError()))
+    require(canonical(value) == raw)
+    return value
+
+
+def service_properties(cpu):
+    require(type(cpu) is int and 0 <= cpu < 1024)
+    return {'CPUQuota': '100%', 'CPUQuotaPeriodSec': '100ms', 'CPUAffinity': str(cpu),
+            'AllowedCPUs': str(cpu), 'MemoryMax': '2147483648', 'MemorySwapMax': '0',
+            'TasksMax': '128', 'RuntimeMaxSec': '600', 'TimeoutStopSec': '15',
+            'KillMode': 'control-group', 'ExitType': 'main', 'RemainAfterExit': 'no',
+            'Restart': 'no', 'OOMPolicy': 'kill', 'AppArmorProfile': boundary.APPARMOR}
+
+
+def service_current(value):
+    boundary.group(value)
+    keys = ('LoadState', 'ActiveState', 'ControlGroup', 'MainPID', 'KillMode', 'ExitType',
+            'RemainAfterExit', 'Restart', 'OOMPolicy', 'RuntimeMaxUSec', 'TimeoutStopUSec',
+            'AppArmorProfile')
+    result = subprocess.run(['/usr/bin/systemctl', 'show', value['unit'],
+        '--property=' + ','.join(keys)], check=True, stdout=subprocess.PIPE,
+        stderr=subprocess.DEVNULL, timeout=5, env={'PATH': '/usr/bin:/bin', 'LANG': 'C'})
+    require(len(result.stdout) <= 4096)
+    rows = result.stdout.decode('ascii').splitlines()
+    observed = dict(row.split('=', 1) for row in rows)
+    expected = {'LoadState': 'loaded', 'ActiveState': 'active',
+                'ControlGroup': '/system.slice/' + value['unit'], 'MainPID': str(os.getpid()),
+                'KillMode': 'control-group', 'ExitType': 'main', 'RemainAfterExit': 'no',
+                'Restart': 'no', 'OOMPolicy': 'kill', 'RuntimeMaxUSec': '10min',
+                'TimeoutStopUSec': '15s', 'AppArmorProfile': boundary.APPARMOR}
+    require(len(rows) == len(keys) and observed == expected)
+
+
+def cleanup(process, value):
+    """Only the exact private unit; the guardian itself is the sole survivor."""
+    path = boundary.group(value)
+    expected = '/system.slice/' + value['unit']
+    for text in (path / 'cgroup.procs').read_text().splitlines():
+        pid = int(text)
+        if pid == os.getpid():
+            continue
+        fd = None
+        try:
+            fd = os.pidfd_open(pid, 0)
+            try:
+                membership = Path('/proc', text, 'cgroup').read_text().splitlines()
+            except FileNotFoundError:
+                # A vanished proc entry is benign only for this already-dead
+                # pinned process; never ignore a live or wrong-cgroup process.
+                require(bool(select.select([fd], [], [], 0)[0]))
+                continue
+            require(membership == ['0::' + expected])
+            signal.pidfd_send_signal(fd, signal.SIGKILL)
+        except ProcessLookupError:
+            pass
+        finally:
+            if fd is not None:
+                os.close(fd)
+    process.wait(timeout=8)
+    end = time.monotonic() + 5
+    while time.monotonic() < end:
+        if set((path / 'cgroup.procs').read_text().splitlines()) == {str(os.getpid())}:
+            return True
+        time.sleep(0.05)
+    return False
+
+
+def retained_streams(record):
+    values = []
+    for name in ('stdout','stderr'):
+        row = record[name]
+        require(type(row) is dict and set(row) == {'present','bytes','sha256','base64'}
+                and row['present'] is True and type(row['bytes']) is int and 0 <= row['bytes'] <= 1000000
+                and type(row['base64']) is str and len(row['base64']) <= 1333336
+                and type(row['sha256']) is str and len(row['sha256']) == 64)
+        data = base64.b64decode(row['base64'], validate=True)
+        require(len(data) == row['bytes'] and hashlib.sha256(data).hexdigest() == row['sha256']
+                and base64.b64encode(data).decode('ascii') == row['base64'])
+        values.append(data)
+    return values
+
+
+def validate_report(raw, codec, jobs, expected_hashes):
+    selected = codec.job_profile(jobs)
+    report = parse(raw, WORKER_REPORT_LIMIT)
+    staged = selected['name'] == 'native-model-codec-staged/1'
+    require(type(report) is dict and set(report) == {'protocol','status','qualifies_phase',
+            'composition_sha256','runtime_sha256','records','source_hashes_before','source_hashes_after',
+            'budget_stop','error_class','children_reaped','namespace_baseline_restored',
+            'expected_positive_arms','expected_controls','native_application_executed'}
+            | ({'interruption'} if staged else set()))
+    require(report['protocol'] == ('stead.fixed-staged-pure-eval-report/1' if staged
+                                 else 'stead.fixed-pure-eval-report/1')
+            and report['status'] in ('pass','fail') and report['qualifies_phase'] is False
+            and report['native_application_executed'] is False
+            and report['composition_sha256'] == selected['composition_sha256']
+            and report['runtime_sha256'] == 'f7f0d3b3c0480fc10f887dfbc09bde56a81d723a803541c7886c538a0675d833'
+            and type(report['expected_positive_arms']) is int and report['expected_positive_arms'] == selected['positive_arms']
+            and type(report['expected_controls']) is int and report['expected_controls'] == 2
+            and report['error_class'] in ERRORS
+            and report['children_reaped'] is True and report['namespace_baseline_restored'] is True
+            and report['source_hashes_before'] == expected_hashes
+            and report['source_hashes_after'] in ({}, expected_hashes)
+            and type(report['records']) is list and len(report['records']) <= selected['jobs'])
+    observations = []
+    for index, record in enumerate(report['records']):
+        job = jobs[index]
+        require(type(record) is dict and set(record) == {'label','source_sha256','source_bytes','exit_code','stdout','stderr','observation'}
+                | ({'elapsed_ms'} if staged else set())
+                and record['label'] == job['label'] and record['source_sha256'] == job['source_sha256']
+                and type(record['source_bytes']) is int and record['source_bytes'] == len(job['source'])
+                and type(record['exit_code']) is int and -128 <= record['exit_code'] <= 255)
+        if staged:
+            require(type(record['elapsed_ms']) is int and 0 <= record['elapsed_ms'] <= 540000)
+        values = retained_streams(record)
+        try:
+            actual = codec.observe(job, record['exit_code'], *values)
+        except ValueError:
+            require(record['observation'] is None and report['status'] == 'fail'
+                    and index == len(report['records']) - 1)
+            actual = None
+        else:
+            require(canonical(record['observation']) == canonical(actual))
+        observations.append(actual)
+    if staged:
+        codec.validate_staged_records(report['records'])
+        interrupted = report['interruption']
+        if interrupted is not None:
+            require(type(interrupted) is dict and set(interrupted) ==
+                    {'label','source_sha256','source_bytes','reason','elapsed_ms','stdout','stderr','exit_code'}
+                    and 2 <= len(report['records']) < len(jobs)
+                    and all(value is not None for value in observations)
+                    and all(value['status'] == 'pass' for value in observations[:2])
+                    and report['status'] == 'fail' and report['error_class'] == 'TimeoutError'
+                    and report['budget_stop'] is None and report['source_hashes_after'] == {})
+            job = jobs[len(report['records'])]
+            require(job['label'] in ('model-codec-stage-core','model-codec-stage-mint','model-codec-stage-run')
+                    and interrupted['label'] == job['label']
+                    and interrupted['source_sha256'] == job['source_sha256']
+                    and type(interrupted['source_bytes']) is int and interrupted['source_bytes'] == len(job['source'])
+                    and interrupted['reason'] == 'evaluator-deadline'
+                    and type(interrupted['elapsed_ms']) is int and 0 <= interrupted['elapsed_ms'] <= 540000
+                    and type(interrupted['exit_code']) is int and -128 <= interrupted['exit_code'] <= 255)
+            retained_streams(interrupted)  # Full raw custody only; never a completed observation.
+        measured_ms = sum(record['elapsed_ms'] for record in report['records'])
+        if interrupted is not None:
+            measured_ms += interrupted['elapsed_ms']
+        require(measured_ms <= 540000)
+    stop = report['budget_stop']
+    if stop is not None:
+        require(type(stop) is dict and set(stop) == {'label','bytes','sha256'}
+                and len(report['records']) < selected['jobs'] and stop['label'] == jobs[len(report['records'])]['label']
+                and type(stop['bytes']) is int and 4063232 < stop['bytes'] < 8000000
+                and type(stop['sha256']) is str and len(stop['sha256']) == 64
+                and all(c in '0123456789abcdef' for c in stop['sha256']) and report['status'] == 'fail')
+    if report['status'] == 'pass':
+        require(not staged or report['interruption'] is None)
+        require(len(observations) == selected['jobs'] and all(o is not None and o['status'] == 'pass' for o in observations)
+                and report['error_class'] == 'none' and stop is None
+                and report['source_hashes_after'] == expected_hashes)
+    return report
+
+
+def worker_result(value, owner, ready, codec):
+    selected = codec.profile(owner['sources']['composition.json']['sha256'])
+    require(type(value) is dict and set(value) == FINAL_KEYS
+            and value['protocol'] == 'stead.fixed-pure-eval-worker-result/1'
+            and value['status'] in ('pass','fail') and value['phase'] in PHASES
+            and value['error_class'] in ERRORS and value['cleanup_error_class'] == 'none'
+            and value['outer_cleanup_required'] is True and value['children_reaped'] is True
+            and value['namespace_baseline_restored'] is True
+            and value['qualifies_phase'] is False and value['native_application_executed'] is False
+            and type(value['jobs_retained']) is int and 0 <= value['jobs_retained'] <= selected['jobs']
+            and type(value['elapsed_ms']) is int and 0 <= value['elapsed_ms'] <= 555000)
+    proof = value['admission']
+    require(type(proof) is dict and set(proof) == {'uid','gid','host_uid','host_gid','namespace_maps',
+            'namespaces','source_uid','capabilities_empty','no_new_privileges','private_loopback_only',
+            'owner_sha256','sources','runtime_sha256','guardian_lease_required'}
+            and type(proof['uid']) is int and proof['uid'] == 1000
+            and type(proof['gid']) is int and proof['gid'] == 1000
+            and type(proof['source_uid']) is int and proof['source_uid'] == 65534
+            and type(proof['host_uid']) is int and proof['host_uid'] == owner['host_uid']
+            and type(proof['host_gid']) is int and proof['host_gid'] == owner['host_gid']
+            and canonical(proof['namespace_maps']) == canonical({'uid':[1000,0,1],'gid':[1000,0,1]})
+            and proof['namespaces'] == ready['namespaces']
+            and proof['owner_sha256'] == hashlib.sha256(canonical(owner)).hexdigest()
+            and canonical(proof['sources']) == canonical(owner['sources'])
+            and proof['runtime_sha256'] == owner['runtime']['sha256']
+            and all(proof[k] is True for k in ('capabilities_empty','no_new_privileges','private_loopback_only','guardian_lease_required')))
+    require(type(value['report']) is dict and set(value['report']) == {'bytes','sha256'}
+            and type(value['report']['bytes']) is int and 0 < value['report']['bytes'] <= WORKER_REPORT_LIMIT)
+    if value['status'] == 'pass':
+        require(value['phase'] == 'complete' and value['error_class'] == 'none' and value['jobs_retained'] == selected['jobs'])
+    return value
+
+
+def run(process, job, value, owner, heartbeat, codec, jobs, source_hashes, diagnostic_sources=None):
+    selector = selectors.DefaultSelector()
+    streams = {'stdout': bytearray(), 'stderr': bytearray()}
+    eof = {'stdout': False, 'stderr': False}
+    ready = anchor = final = None
+    artifact = None
+    phase = 'service-admission'
+    attempted_final = None
+    result = {'protocol':'stead.fixed-pure-eval-guard/1','status':'fail','error_class':'none',
+              'cleanup_error_class':'none','parent_admitted':False,'owned_children_empty':False,
+              'child_streams_eof':False,'worker_exit_code':None,'worker_result':None,
+              'report_pin':None,'root_loopback_observation':None,'qualifies_phase':False,
+              'failure_observation':None}
+    def record_failure(error):
+        try:
+            observation = failure_positions(error, phase, diagnostic_sources)
+            observation['attempted_final'] = final_summary(attempted_final)
+            require(len(canonical(observation)) <= 8192)
+            result['failure_observation'] = observation
+        except BaseException:
+            # Diagnostic refusal cannot replace the initiating error or cleanup.
+            pass
+    started = time.monotonic()
+    try:
+        service_current(value); heartbeat()
+        selected = codec.job_profile(jobs)
+        require(selected == codec.profile(owner['sources']['composition.json']['sha256']))
+        phase = 'stream-registration'
+        for name, stream in (('stdout',process.stdout),('stderr',process.stderr)):
+            os.set_blocking(stream.fileno(),False);selector.register(stream,selectors.EVENT_READ,name)
+        consumed = 0
+        while process.poll() is None or selector.get_map():
+            phase = 'heartbeat';heartbeat()
+            phase = 'service-current';service_current(value)
+            phase = 'deadline'
+            require(time.monotonic()-started < TOTAL_SECONDS)
+            if anchor is not None and process.poll() is None:
+                # The original worker may exit between proc reads. Only its
+                # retained pidfd can permit draining; a live mismatch still fails.
+                phase = 'current-worker';boundary.monitor_current(anchor,value,heartbeat)
+            elif ready is None:
+                phase = 'ready-deadline'
+                require(time.monotonic()-started < READY_SECONDS)
+            for event,_ in selector.select(0.05):
+                phase = 'stream-read'
+                name=event.data;raw=os.read(event.fileobj.fileno(),8192)
+                if not raw:
+                    eof[name]=True;selector.unregister(event.fileobj);event.fileobj.close();continue
+                streams[name].extend(raw)
+                phase = 'stream-bound'
+                require(len(streams[name]) <= (STDOUT_LIMIT if name=='stdout' else STDERR_LIMIT))
+            while b'\n' in streams['stdout'][consumed:]:
+                end=streams['stdout'].index(b'\n',consumed)
+                phase = 'row-parse'
+                row=parse(bytes(streams['stdout'][consumed:end]),16384);consumed=end+1
+                if ready is None:
+                    phase = 'ready'
+                    require(row.get('protocol')=='stead.fixed-pure-eval-ready/1')
+                    ready=row
+                    phase = 'pin-ready'
+                    anchor=boundary.pin_ready(job,value,ready,hashlib.sha256(canonical(owner)).hexdigest(),heartbeat)
+                    phase = 'loopback'
+                    result['root_loopback_observation']=boundary.loopback_observation(anchor,value,heartbeat)
+                    phase = 'current-ready';boundary.current(anchor,value,heartbeat)
+                    phase = 'go'
+                    process.stdin.write(b'go\n');process.stdin.flush();process.stdin.close()
+                    result['parent_admitted']=True
+                else:
+                    phase = 'final';attempted_final = row
+                    require(final is None)
+                    final=worker_result(row,owner,ready,codec)
+        phase = 'wait';process.wait(timeout=1)
+        phase = 'terminal'
+        require(ready is not None and final is not None and consumed==len(streams['stdout'])
+                and streams['stderr']==b'' and all(eof.values()))
+        phase = 'exit-code'
+        require(process.returncode == (0 if final['status']=='pass' else 1))
+        result['worker_result']=final;result['worker_exit_code']=process.returncode
+    except BaseException as error:
+        result['error_class']=type(error).__name__ if type(error).__name__ in ERRORS else 'unrecognized'
+        record_failure(error)
+    finally:
+        try:
+            if process.stdin is not None and not process.stdin.closed:process.stdin.close()
+        except BaseException:
+            result['cleanup_error_class']='stdin-close'
+        try:
+            result['owned_children_empty']=cleanup(process,value)
+        except BaseException:
+            result['cleanup_error_class']='owned-cleanup'
+        result['child_streams_eof']=all(eof.values())
+        for event in list(selector.get_map().values()):
+            try:event.fileobj.close()
+            except BaseException:result['cleanup_error_class']='stream-close'
+        selector.close()
+        try:
+            if (result['error_class']=='none' and result['cleanup_error_class']=='none'
+                    and result['owned_children_empty'] and result['child_streams_eof'] and anchor is not None):
+                phase = 'report-current';heartbeat();service_current(value)
+                phase = 'report-read'
+                artifact=boundary.read_output(anchor,value,'report.json',final['report'])
+                phase = 'report-validate'
+                report=validate_report(artifact,codec,jobs,source_hashes)
+                phase = 'report-correlation'
+                require(report['status']==final['status'] and len(report['records'])==final['jobs_retained'])
+                result['report_pin']=final['report']
+                result['status']=report['status']
+        except BaseException as error:
+            if result['error_class']=='none':result['error_class']=type(error).__name__ if type(error).__name__ in ERRORS else 'unrecognized'
+            result['status']='fail';artifact=None
+            record_failure(error)
+        finally:
+            if anchor is not None:
+                try:boundary.close_anchor(anchor)
+                except BaseException:result['cleanup_error_class']='anchor-close';result['status']='fail';artifact=None
+    return result, artifact
+
