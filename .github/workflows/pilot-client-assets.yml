@@ -45,3 +45,5 @@ jobs:
           path: ${{ runner.temp }}/pilot-client/
           if-no-files-found: error
           retention-days: 7
+      - name: Verify the committed desk reproduces exactly
+        run: test -z "$(git status --porcelain --untracked-files=all -- native/core/desk/web/stead)"
