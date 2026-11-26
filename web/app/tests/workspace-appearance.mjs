@@ -50,12 +50,12 @@ const browser = await chromium.launch();
 const source = (...args) => execFileSync('git', args, {cwd: root, encoding: 'utf8'}).trim();
 const report = {classification: 'Packaged app in Chromium with synthetic project, people and documents',
   commit: source('rev-parse', 'HEAD'), appSourceTree: source('rev-parse', 'HEAD:web/app/src'), browser: browser.version(),
-  screenshots: [], keyboardActivated: [], appearance: [], noWrites: true};
+  screenshots: [], keyboardActivated: [], appearance: [], phoneSwitcher: [], noWrites: true};
 try {
   for (const [width, height] of [[1440, 960], [390, 844], [320, 800]]) {
     const context = await browser.newContext({viewport: {width, height}, colorScheme: 'light',
       hasTouch: width < 600, serviceWorkers: 'block', reducedMotion: 'reduce'});
-    const home = createHome(), errors = [];
+    const home = createHome(), errors = [], otherWatches = new Set();
     let signedOut = false;
     home.state.documents = documents;
     await context.route('**/*', async route => {
@@ -79,6 +79,20 @@ try {
           protocol: 'stead.capabilities/3', profile: 'configured-team', commands: 'stead.command/3',
           queries: 'stead.query/3', updates: 'stead.updates/3', work_contract: 'stead.work-contract/1',
           workspace_queries: 'stead.workspace-queries/1'}});
+        const otherProject = projectRows.slice(1).some(row => row.project_id === q.project_id);
+        if (otherProject && url.pathname === '/stead/api/code' && q.action === 'status') {
+          return route.fulfill({json: {protocol: 'stead.code/1', status: 'disabled', write: 'no', manage: 'no'}});
+        }
+        if (url.pathname === '/stead/api/updates' && (otherProject || otherWatches.has(q.watch_id))) {
+          const token = 'f'.repeat(62) + String(otherWatches.size + 1).padStart(2, '0');
+          const status = {open: 'watching', poll: 'updated', cancel: 'cancelled'}[q.action];
+          assert.ok(status);
+          const watchId = q.action === 'open' ? token : q.watch_id;
+          otherWatches.add(watchId);
+          return route.fulfill({json: {protocol: 'stead.update-result/3', request_id: q.request_id, status,
+            watch_id: watchId, cursor: q.action === 'cancel' ? '' : token,
+            generation: q.action === 'cancel' ? '' : home.state.generation, rows: {}}});
+        }
         if (url.pathname === '/stead/api/query') {
           let rows;
           switch (q.kind) {
@@ -175,6 +189,29 @@ try {
       await activate(button(guideTitle), 'Open guide');
       await page.getByRole('heading', {name: 'Before visitors arrive', exact: true}).waitFor();
       await capture('guide');
+      const switcher = button('Browse workspace');
+      if (width <= 390 && await switcher.count()) {
+        assert.equal(await switcher.getAttribute('aria-expanded'), 'false');
+        await activate(switcher, 'Browse workspace');
+        const projects = page.getByRole('navigation', {name: 'Projects', exact: true});
+        for (const row of projectRows) {
+          const entry = projects.getByRole('button', {name: new RegExp(row.title, 'u')});
+          await entry.waitFor();
+          const bounds = await entry.boundingBox();
+          assert.ok(bounds && bounds.x >= 0 && bounds.x + bounds.width <= width + 1);
+        }
+        await capture('browse-workspace');
+        const next = projects.getByRole('button', {name: /Wayfinding/u});
+        await next.focus();
+        await page.keyboard.press('Escape');
+        assert.equal(await switcher.getAttribute('aria-expanded'), 'false');
+        assert.ok(await switcher.evaluate(el => document.activeElement === el));
+        await activate(switcher, 'Reopen workspace');
+        await next.click();
+        await page.getByRole('heading', {name: 'Wayfinding', exact: true}).first().waitFor();
+        assert.equal(await switcher.getAttribute('aria-expanded'), 'false');
+        report.phoneSwitcher.push({width, projects: projectRows.length, escapeRestoresFocus: true, switchedTo: 'Wayfinding'});
+      }
       signedOut = true;
       await page.goto(base + '/stead/');
       await page.reload();
