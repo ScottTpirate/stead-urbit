@@ -203,6 +203,20 @@ Keep the operator catalog outside worker-writable storage. Save the selected con
 
 This path prepares a request. Before sending it, the supervisor still needs the current native grant, lease, budget and egress decision. A proposed tool call also requires its own authorization. The catalog contains credential references only. Installing an example does not start a model, send data to a provider or enable the pilot's Run controls.
 
+### Recover a model proposal for review
+
+The supervisor retains the terminal `result_sha256` for the exact request. After
+a restart, reopen the same journal with its original Run scope and pinned model
+connection. Call `journal.read_proposal(result_sha256)` to recover the verified
+text or proposed tool arguments. A document tool's `markdown` argument retains
+its exact UTF-8 content, including the final newline. Check the pinned tool ID,
+revision, target document and base revision before submitting it for review.
+
+A refusal, a truncated or filtered reply, a changed receipt, or an interrupted
+publication supplies no actionable proposal. Reading the journal performs no
+provider call, tool execution or Home mutation. Native submission and
+independent acceptance still need current authorization.
+
 ## Immutable run contract
 
 Home owns a new versioned job map. Preserve predecessor saved-state shapes

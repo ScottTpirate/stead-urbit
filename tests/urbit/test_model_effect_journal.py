@@ -54,8 +54,10 @@ def inputs(sequence='1', body='Revise this synthetic guide. λ', run=4):
 
 
 def intent(spec, request):
-    charge = {'tool_calls': '0', 'network_calls': '1', 'token_units': '5120',
-              'cost_units': '1', 'input_bytes': str(len(request.body)), 'output_bytes': '65536'}
+    limits = spec.value()['limits']
+    charge = {'tool_calls': '0', 'network_calls': '1',
+              'token_units': str(int(limits['input_tokens']) + int(limits['output_tokens'])),
+              'cost_units': '1', 'input_bytes': str(len(request.body)), 'output_bytes': limits['output_bytes']}
     return M.canonical({'effect_id': request.effect_id, 'kind': 'provider-call',
         'provider_id': spec.value()['connection_id'], 'request_digest': request.request_digest,
         'result': '', 'charge': M.canonical(charge).decode()})
@@ -139,6 +141,46 @@ class ModelEffectJournalTests(unittest.TestCase):
                 'stead.model-journal-proposal/1', M.canonical(M.normalize_reply(spec, request, raw))))
             with opened(fd, spec, request) as journal: self.assertEqual(journal.observe(), result)
 
+    def test_recorded_qwen_proposal_recovers_exact_markdown_after_reopen(self):
+        fixture = Path(__file__).parent / 'fixtures' / 'model-proposal-43843435452'
+        source = json.loads((fixture / 'input.json').read_bytes())
+        spec = M.connection(M.canonical(source['connection']))
+        first, *messages = source['messages']
+        request = M.prepare_chat(spec, source['scope'], '1', first['content'], messages, source['registry'])
+        self.assertEqual(J.sha(request.body), source['request_body_sha256'])
+        self.assertEqual(request.request_digest, source['request_digest'])
+        raw = (fixture / 'response.json').read_bytes()
+        self.assertEqual(J.sha(raw), '970439573970d893a7169d2decad8e0fe458017ea1495ad2c8f7883e67ab7340')
+        # The recorded provider reply was real. The journal and start receipt here are test inputs.
+        with directory() as (_, fd):
+            with opened(fd, spec, request) as journal:
+                journal.record_started(intent(spec, request), 'e' * 64)
+                result = journal.retain_response(raw)['result_sha256']
+            with opened(fd, spec, request) as journal:
+                replay = journal.read_proposal(result)
+                self.assertEqual(J.sha(M.canonical(replay)), source['normalized_sha256'])
+                call, = replay['tool_proposals']
+                self.assertEqual((call['tool_id'], call['revision']), (source['registry'][0]['tool_id'], '1'))
+                self.assertEqual(call['arguments']['markdown'].encode(),
+                                 b'# Team guide\n\nReview changes before accepting.\n')
+                self.assertEqual(replay['authority'], 'untrusted-proposal')
+                self.assertFalse(journal.observe()['native_settled'])
+
+    def test_text_proposal_requires_the_exact_terminal_receipt_and_response(self):
+        spec, request = inputs()
+        content = '# Guide\n\nTwo spaces here  \r\nλ\n'
+        with directory() as (root, fd), opened(fd, spec, request) as journal:
+            journal.record_started(intent(spec, request), 'e' * 64)
+            with self.assertRaises(ValueError):
+                journal.read_proposal('0' * 64)
+            result = journal.retain_response(response(content))['result_sha256']
+            self.assertEqual(journal.read_proposal(result)['text'], content)
+            with self.assertRaises(ValueError):
+                journal.read_proposal('0' * 64)
+            (root / request.effect_id / 'response.bin').write_bytes(response('Changed'))
+            with self.assertRaises(ValueError):
+                journal.read_proposal(result)
+
     def test_response_only_recovery_never_silently_completes_publication(self):
         spec, request = inputs(); raw = response(); publish = J.publish
         with directory() as (root, fd):
@@ -149,6 +191,8 @@ class ModelEffectJournalTests(unittest.TestCase):
                     return publish(target, name, body, maximum)
                 with patch.object(J, 'publish', interrupted), self.assertRaises(OSError): journal.retain_response(raw)
                 self.assertEqual(journal.observe()['state'], 'response-retained')
+                with self.assertRaises(ValueError):
+                    journal.read_proposal('0' * 64)
             with opened(fd, spec, request) as journal:
                 self.assertEqual(journal.retain_response(raw)['state'], 'response-retained')
                 self.assertFalse((root / request.effect_id / 'result.json').exists())
@@ -157,6 +201,7 @@ class ModelEffectJournalTests(unittest.TestCase):
         spec, request = inputs()
         cases = [(response(refusal='No'), 'refused', 'completed'),
                  (response(finish='length'), 'incomplete', 'completed'),
+                 (response(finish='content_filter'), 'blocked', 'completed'),
                  (b'{"malformed":true}', 'unknown', 'unknown')]
         for raw, observation, state in cases:
             with self.subTest(observation=observation), directory() as (_, fd), opened(fd, spec, request) as journal:
@@ -164,6 +209,8 @@ class ModelEffectJournalTests(unittest.TestCase):
                 observed = journal.retain_response(raw)
                 self.assertEqual((observed['state'], observed['provider_observation']), (state, observation))
                 self.assertFalse(observed['may_dispatch']); self.assertFalse(observed['native_settled'])
+                with self.assertRaises(ValueError):
+                    journal.read_proposal(observed['result_sha256'])
 
     def test_unknown_terminal_preserves_uncertainty_and_cannot_take_late_response(self):
         spec, request = inputs()

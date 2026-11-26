@@ -216,6 +216,7 @@ class EffectJournal:
             'connection_digest': self.spec.sha256, 'response_sha256': None,
             'proposal_digest': None, 'state': 'unknown', 'reason': reason,
             'observed_usage': None, 'authority': 'untrusted-proposal'}
+        proposal = None
         if raw is not None:
             result['response_sha256'] = sha(raw)
             try:
@@ -229,7 +230,19 @@ class EffectJournal:
                     observed_usage=proposal['observed_usage'])
         else:
             require(reason in REASONS - {'invalid-response'})
-        return model.canonical(result)
+        return model.canonical(result), proposal
+
+    def read_proposal(self, expected_result_sha256):
+        """Recover the exact proposal bound to the supervisor's retained terminal receipt."""
+        model.digest(expected_result_sha256)
+        require(self._current() == NAMES)
+        terminal = read(self.fd, 'result.json', RECORD_MAX)
+        require(sha(terminal) == expected_result_sha256)
+        raw = read(self.fd, 'response.bin', int(self.spec.value()['limits']['output_bytes']))
+        expected, proposal = self._result(raw)
+        require(terminal == expected and proposal is not None
+                and proposal['state'] in ('text-proposal', 'tool-proposals'))
+        return proposal
 
     def retain_response(self, raw):
         names = self._current()
@@ -243,14 +256,15 @@ class EffectJournal:
             return self.observe()
         require('result.json' not in names)
         publish(self.fd, 'response.bin', raw, maximum)
-        result = self._result(raw)
+        result, _ = self._result(raw)
         publish(self.fd, 'result.json', result, RECORD_MAX)
         return self.observe()
 
     def record_unknown(self, reason):
         names = self._current()
         require(names == {'request.json', 'started.json'} and reason in REASONS - {'invalid-response'})
-        publish(self.fd, 'result.json', self._result(reason=reason), RECORD_MAX)
+        result, _ = self._result(reason=reason)
+        publish(self.fd, 'result.json', result, RECORD_MAX)
         return self.observe()
 
     def observe(self):
@@ -270,7 +284,7 @@ class EffectJournal:
         if 'result.json' in names:
             terminal = read(self.fd, 'result.json', RECORD_MAX)
             value = model.decode(terminal, RECORD_MAX)
-            expected = self._result(raw, None if raw is not None else value.get('reason'))
+            expected, _ = self._result(raw, None if raw is not None else value.get('reason'))
             require(expected == terminal)
             result.update(state='unknown' if value['state'] == 'unknown' else 'completed',
                           result_sha256=sha(terminal), provider_observation=value['state'])
