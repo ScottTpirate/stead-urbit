@@ -1,0 +1,29 @@
+name: Staged model evaluator host checks
+on:
+  pull_request:
+    paths:
+      - '.github/workflows/model-staged-host.yml'
+      - 'scripts/ci/model_staged_host.py'
+      - 'scripts/ci/model_staged_fixture_driver.py'
+      - 'specs/urbit/model-staged-host.json'
+      - 'tests/fixtures/model_staged_host/**'
+permissions:
+  contents: read
+jobs:
+  host:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 3
+    steps:
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
+        with:
+          path: harness
+          persist-credentials: false
+      - name: Run12 fixed inert cases without native or network effects
+        run: timeout --kill-after=5s 90s python3 -IB harness/scripts/ci/model_staged_host.py
+      - name: Retain original host report
+        if: always()
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        with:
+          name: model-staged-host-result
+          path: model-staged-host-output/report.json
+          if-no-files-found: error
