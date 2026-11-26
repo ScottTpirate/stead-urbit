@@ -1,0 +1,34 @@
+name: Storage workload controller
+on:
+  pull_request:
+    paths:
+      - '.github/workflows/storage-workload-host.yml'
+      - 'scripts/ci/storage_workload_host.py'
+      - 'scripts/urbit/storage_workload.py'
+      - 'scripts/urbit/team_check.py'
+      - 'specs/urbit/storage-workload-initial.json'
+      - 'tests/urbit/test_storage_workload.py'
+      - 'native/core/desk/gen/stead-storage-observation.hoon'
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  host:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 3
+    steps:
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
+        with:
+          persist-credentials: false
+      - name: Verify four inert workload groups
+        shell: bash
+        run: |
+          set -eu
+          timeout --kill-after=3s 30s python3 -IB scripts/ci/storage_workload_host.py
+      - uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
+        if: always()
+        with:
+          name: storage-workload-host
+          path: storage-host-report.json
+          if-no-files-found: error
+          retention-days: 7

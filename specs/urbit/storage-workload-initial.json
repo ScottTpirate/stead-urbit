@@ -1,0 +1,41 @@
+{
+  "actual_native_measurements": null,
+  "bounds": {
+    "calls": 768,
+    "measurement_seconds": 1800,
+    "native_report_bytes": 4194304,
+    "storage_entries": 32768,
+    "transport_evidence_bytes": 2097152
+  },
+  "expected": {
+    "accepted_writes": 404,
+    "authorized_reads": 213,
+    "total_calls": 617,
+    "verified_readbacks": 208
+  },
+  "metrics": {
+    "percentiles": "nearest rank p50 and p95",
+    "resources": "Four non-atomic owned Home RSS/HWM and deduplicated regular .urb file metadata samples; HWM includes boot",
+    "saved_state": "Read-only counters from actual suspended no-Code saved3 Home",
+    "timing": "integer nanoseconds; controller round trip including native encoding/transport/decoding and evidence formatting; per-call checkpoint writes excluded"
+  },
+  "native_profile_routed": false,
+  "profile": "stead.storage-initial/1",
+  "protocol": "stead.storage-workload-profile/1",
+  "public_ci_scope": "Four inert controller tests only, fake clocks and transport; no native performance result",
+  "qualification_remaining": [
+    "fixed disposable native worker routing and complete input binding",
+    "actual native measurement and cleanup review",
+    "restart/restore and quota recovery separate"
+  ],
+  "qualifies_phase": false,
+  "scope": "Fresh owned configured fake Home; real authorized command/query3; no pilot or browser",
+  "synthetic_only": true,
+  "workload": {
+    "comments_per_work": 4,
+    "docs_per_project": 8,
+    "document_edits_after_create": 4,
+    "projects": 2,
+    "work_per_project": 32
+  }
+}
