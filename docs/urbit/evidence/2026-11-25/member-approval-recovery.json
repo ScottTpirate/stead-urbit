@@ -1,0 +1,82 @@
+{
+  "profile": "React client on a synthetic native member Home",
+  "candidate": "dc870a612f1a03db9ef7f2f02a9a9da4425ee499",
+  "run": "https://github.com/ScottTpirate/stead-urbit/actions/runs/45744666435",
+  "regression": "https://github.com/ScottTpirate/stead-urbit/actions/runs/45744666545",
+  "observations": [
+    "Denied member start offers a non-enumerating recovery step",
+    "A pending comparison is read without consuming a session",
+    "Approval requires an explicit Open Stead action",
+    "Expired requests expose a new-code action",
+    "Unavailable automatic check followed by a terminal manual check immediately allows a new code",
+    "Leaving the challenge restores input focus and stops observation"
+  ],
+  "visual_review": {
+    "source": "dc870a612f1a03db9ef7f2f02a9a9da4425ee499",
+    "run": "https://github.com/ScottTpirate/stead-urbit/actions/runs/45744666435",
+    "screens": [
+      {
+        "width": 1440,
+        "height": 900,
+        "bytes": 498397,
+        "sha256": "32e4d881d199384f0fe9156e4e705c515cc1e89abe4fe75ec2f38df01a422f11",
+        "path": "member-approval-recovery/sign-in-1440.png"
+      },
+      {
+        "width": 320,
+        "height": 900,
+        "bytes": 96166,
+        "sha256": "c636f6e50267d2d560d8a758cbb7ec1e9e1caabe65ff0460c52375b439511316",
+        "path": "member-approval-recovery/sign-in-320.png"
+      }
+    ],
+    "observation": "Independently viewed the original latest-run screenshots. At 1440px and 320px the approved state clearly shows comparison, Home, member ID and Open Stead; controls and text remain visible without horizontal page overflow. These are synthetic browser responses and an invented identity, not the private pilot.",
+    "previous_images_byte_identical": true
+  },
+  "remaining": [
+    "independent browser-only member and invitations",
+    "private pilot rollout of this client"
+  ],
+  "previous_visual_review": {
+    "source": "966aa1f88fc0721c8bf3188806f6794ca1ba0adf",
+    "run": "https://github.com/ScottTpirate/stead-urbit/actions/runs/45744332456",
+    "screens": [
+      {
+        "width": 1440,
+        "sha256": "32e4d881d199384f0fe9156e4e705c515cc1e89abe4fe75ec2f38df01a422f11"
+      },
+      {
+        "width": 320,
+        "sha256": "c636f6e50267d2d560d8a758cbb7ec1e9e1caabe65ff0460c52375b439511316"
+      }
+    ],
+    "observation": "The approved state displayed the Home, Urbit ID, comparison code and explicit Open Stead action at both widths."
+  },
+  "artifact_custody": {
+    "artifact_id": 15082816595,
+    "name": "synthetic-approval",
+    "zip_bytes": 591332,
+    "zip_sha256": "6e99fe8bf31cf432969c005d26e28b2a1de97d7fccde98d29b7db1022959ab12",
+    "exact_original_zip_and_two_pngs_verified": true,
+    "public_images_confirmed_synthetic": true
+  },
+  "independent_review": {
+    "scope": "Exact dc870 source, successful hosted job log and original artifact bytes; no new execution",
+    "result": "No remaining source blocker in this bounded recovery change",
+    "prior_finding": "An unavailable automatic check followed by terminal manual status previously left Check approval visible. dc870 passes that result to the same ended state and covers it in both rendered viewport scenarios.",
+    "keyboard_and_races": "Native buttons, return-to-input focus, effect abort/late-response fence and zero automatic consumption reviewed; approved state does not steal focus.",
+    "native_membership_renewal_or_live_deployment_claimed": false
+  },
+  "hosted_result": {
+    "approval_job": 139657699352,
+    "conclusion": "success",
+    "rendered_viewports": [
+      1440,
+      320
+    ],
+    "typescript_and_production_build": "pass",
+    "automatic_session_consumptions": 0,
+    "activity_regression_run": 45744666545,
+    "activity_regression_conclusion": "success"
+  }
+}
