@@ -29,7 +29,7 @@ for (const name of names) {
   const bytes = await readFile(source); const hash = createHash('sha256').update(bytes).digest('hex');
   if (bytes.length !== manifest.files[name].bytes || hash !== manifest.files[name].sha256) throw new Error('Build manifest mismatch');
   const dot = name.lastIndexOf('.'); const stem = name.slice(0, dot); const extension = name.slice(dot + 1);
-  const mime = {js: 'text/javascript; charset=utf-8', css: 'text/css; charset=utf-8', html: 'text/html; charset=utf-8', txt: 'text/plain; charset=utf-8'}[extension];
+  const mime = name === 'favicon.svg' ? 'image/svg+xml' : {js: 'text/javascript; charset=utf-8', css: 'text/css; charset=utf-8', html: 'text/html; charset=utf-8', txt: 'text/plain; charset=utf-8'}[extension];
   if (!mime) throw new Error('Unsupported asset type');
   const route = name === 'index.html' ? '/stead/' : name === 'identity.html' ? '/stead-identity/' : (name.startsWith('identity.') ? '/stead-identity/assets/' : '/stead/assets/') + name;
   // A dedicated raw mark avoids %txt's line-list conversion and preserves

@@ -93,3 +93,7 @@ button.repo-file-row:focus-visible { outline-offset: -3px; }
   .repo-file-details { flex-basis: 100%; margin-inline-start: 0; }
   .repo-browser-actions { margin-inline-start: 0; }
 }
+
+.repo-root-readme { min-width: 0; border-top: 1px solid var(--line); }
+.repo-root-readme > h4 { margin: 0; padding: 10px 16px; border-bottom: 1px solid var(--line);
+  background: var(--canvas); color: var(--muted); font-size: 13px; font-weight: 600; }

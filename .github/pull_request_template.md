@@ -4,6 +4,8 @@ Task IDs and phase; current integration branch; shared contracts touched.
 ## Behavior and compatibility
 What changes for users, permissions, state migrations, API/marks, and installation?
 
+For a change to a user-facing workflow, link the updated Stead Handbook guide in `web/app/src/handbook/` or explain why the existing directions still apply.
+
 ## Evidence
 Exact source/toolchain; actual commands; expected and executed tests; negative controls; outcomes.
 Distinguish static, mocked, native, browser, live-network and independent review evidence.

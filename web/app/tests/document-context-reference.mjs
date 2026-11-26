@@ -1,8 +1,9 @@
 // Actual Firefox and HomeClient with synthetic HTTP. No native privacy claim.
 import assert from 'node:assert/strict';
+import {webSourceFiles} from './web-source-files.mjs';
 import {createHash} from 'node:crypto';
 import {createServer} from 'node:http';
-import {mkdir, mkdtemp, readFile, readdir, writeFile} from 'node:fs/promises';
+import {mkdir, mkdtemp, readFile, writeFile} from 'node:fs/promises';
 import path from 'node:path';
 import {fileURLToPath} from 'node:url';
 import {build} from 'esbuild';
@@ -15,9 +16,8 @@ assert.ok(requested.length <= 9 && new Set(requested).size === requested.length 
 await mkdir(path.resolve(root, '../../.runtime'), {recursive: true});
 const output = await mkdtemp(path.resolve(root, '../../.runtime/document-context-reference-'));
 async function inputs() {
-  const entries = await readdir(path.join(root, 'src'), {withFileTypes: true});
-  assert.ok(entries.length > 0 && entries.length <= 64 && entries.every(entry => entry.isFile()));
-  const files = [...entries.map(entry => 'src/' + entry.name), 'tests/document-context-reference.tsx',
+  const sourceFiles = await webSourceFiles(root);
+  const files = [...sourceFiles, 'tests/web-source-files.mjs', 'tests/document-context-reference.tsx',
     'tests/workspace-reference.css', 'tests/document-context-reference.mjs', 'package-lock.json'].sort();
   return Object.fromEntries(await Promise.all(files.map(async name => {
     const raw = await readFile(path.join(root, name)); assert.ok(raw.length <= 1024 * 1024);

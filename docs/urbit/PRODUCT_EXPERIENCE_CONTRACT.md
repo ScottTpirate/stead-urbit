@@ -32,6 +32,8 @@ initially. Project navigation is Overview, Work, Docs and optional Code. Links
 and Activity become contextual views, with advanced inspection available when
 useful. Cross-home aggregation needs a separately authorized protocol.
 
+Use the four-piece Stead mark for Home. Overview, Work, Docs and Code each pair a fixed section symbol with a visible label. The account header pairs the signed-in member’s display name and ship name with its Urbit sigil for supported ship classes. Keep the ship name readable at narrow widths and when a sigil is unavailable. The drawings and small-size variants live in the [brand guide](../../web/app/BRAND.md).
+
 ## 2. Domain and interface contract
 
 | Concept | Required meaning and boundary |
@@ -267,3 +269,13 @@ Detailed replacements and acceptance conditions for all 24 supplied screens are
 retained in [source review §7](reviews/2026-11-15-product-review.md#7-the-experience-contract)
 and apply with these decisions. Its 24-screen review is supplied evidence; this
 alignment did not re-open the screenshot archive or repeat its visual inspection.
+
+## Stead Handbook
+
+Every signed-in member can open Stead Handbook under Projects, including someone with no shared projects. It opens in the normal project shell with reader access. Use the shared Overview, Work list and detail, Docs collection and reader, and Code repository browser. The bundled project has its own read-only data source. Its example illustrates an actual Work item, discussion and linked guide. Team membership, search and Git credentials stay scoped to team projects.
+
+Offer **Show me around** on the Handbook. Each step opens the corresponding project tab and gives one short hint. Members can browse freely, skip from any step and replay the tour. Save Skip or Done for that account in the current browser. Settings lets each member hide or restore the Handbook in Projects. Bookmarked guides remain accessible.
+
+Open Code at the selected branch or tag’s root file list. When that tree contains a readable README, render it below the list using the same commit and Markdown reader. A member can still open the file to inspect its exact source.
+
+Introduce the product with a short **Why Stead?** and a separate **How Stead works** guide. Explain how portable Git and Markdown content, Urbit identity and Home’s permissions fit together. Maintain the guides and Git README in `web/app/src/handbook/`. Edit the corresponding Markdown in the same change as a user-visible workflow, command, permission or setting. Check the directions using the role and release the guide describes. Describe experimental agent and Git actions accurately until the capability matrix records the completed user journey. The Handbook browser check exercises project navigation, the tour, the canonical Markdown, visibility across reloads and account isolation.

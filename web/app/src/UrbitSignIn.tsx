@@ -1,3 +1,4 @@
+import {SteadMark} from './SteadMark';
 import { useEffect, useRef, useState } from 'react';
 import { watchApproval, type ApprovalNotice } from './approvalWatch';
 import { Button, Surface, TextField } from './primitives';
@@ -41,7 +42,7 @@ export function UrbitSignIn({ ship, challenge, busy, origin, notice, onShipChang
   }, [challenge]);
 
   return <Surface className="urbit-sign-in" aria-labelledby="urbit-sign-in-title">
-    <span className="urbit-sign-in-mark" aria-hidden="true">~</span>
+    <SteadMark/>
     <h1 id="urbit-sign-in-title" tabIndex={-1}>Sign in with Urbit</h1>
     {challenge ? <section className="approval urbit-approval" aria-labelledby="urbit-approval-title">
       <h2 id="urbit-approval-title" ref={approvalHeading} tabIndex={-1}>{observed === 'approved' ? 'Sign-in approved' : observed === 'ended' ? 'Sign-in request ended' : 'Approve on your identity ship'}</h2>

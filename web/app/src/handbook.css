@@ -1,0 +1,6 @@
+.settings-page {max-width:67rem}
+.settings-preferences {max-width:52rem;padding:clamp(1rem,3vw,2rem) 0;line-height:1.55}
+.settings-preferences h2 {margin:0 0 .8rem}
+.settings-page .appearance-control {width:fit-content;color:inherit}
+.handbook-setting {display:flex;align-items:center;gap:.65rem;margin-top:1.4rem;cursor:pointer}
+.handbook-setting input {width:1.1rem;height:1.1rem}

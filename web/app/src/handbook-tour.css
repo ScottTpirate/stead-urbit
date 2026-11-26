@@ -1,0 +1,41 @@
+.handbook-tour {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  gap: .5rem 1.2rem;
+  margin-block: .75rem;
+  padding: .625rem .875rem;
+  color: var(--ink);
+  background: var(--paper);
+  border: 1px solid var(--line);
+  border-radius: 6px;
+}
+
+.handbook-tour p { margin: 0; font-size: .875rem; line-height: 1.45; }
+.handbook-tour-step { display: flex; flex-wrap: wrap; align-items: baseline; gap: .6rem; margin-bottom: .2rem; }
+.handbook-tour-step span { color: var(--muted); font: .75rem var(--mono); }
+.handbook-tour-step strong { color: var(--ink); font-size: .875rem; }
+.handbook-tour-actions { display: flex; flex-wrap: wrap; gap: .25rem; align-items: center; }
+
+.handbook-tour button, .handbook-tour-replay button {
+  min-height: 32px;
+  padding: .25rem .625rem;
+  font: inherit;
+  font-size: .8125rem;
+  color: var(--ink);
+  background: transparent;
+  border: 1px solid transparent;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.handbook-tour button.handbook-tour-primary { border-color: var(--line); font-weight: 600; }
+.handbook-tour button:enabled:hover, .handbook-tour-replay button:hover { color: var(--ink); background: var(--hover); }
+.handbook-tour button:disabled { opacity: .5; cursor: default; }
+.handbook-tour button:focus-visible, .handbook-tour-replay button:focus-visible { outline: 2px solid var(--focus); outline-offset: 2px; }
+.handbook-tour-replay { display: flex; justify-content: flex-end; }
+.handbook-tour-replay button { color: var(--muted); }
+@media (max-width: 640px) {
+  .handbook-tour button, .handbook-tour-replay button { min-height: 44px; }
+}

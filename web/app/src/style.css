@@ -48,14 +48,11 @@ main { flex: 1; min-width: 0; }
   width: 224px; padding: 8px 20px; border: 0; background: var(--house-ground);
   color: var(--house-ink); font-size: 23px; font-weight: 620; letter-spacing: -.065em;
 }
-.brand-mark, .space-mark, .project-glyph { display: inline-grid; flex: none; place-items: center; }
-.brand-mark {
-  width: 28px; height: 28px; border: 1px solid #96918a; border-radius: 50%;
-  font: italic 23px/1 Georgia, serif; padding-bottom: 2px;
-}
+.space-mark, .project-glyph { display: inline-grid; flex: none; place-items: center; }
 button.brand:focus-visible { outline-offset: -4px; outline-color: var(--house-focus); }
 .workspace-label { color: var(--muted); font-size: 13px; }
 .account { display: flex; align-items: center; gap: 16px; margin-left: auto; }
+.member-profile { display: flex; align-items: center; gap: 8px; min-width: 0; }
 .member-label { display: flex; align-items: baseline; gap: 8px; font-size: 13px; font-weight: 570; }
 .member-label small, .space-label small { color: var(--muted); font: 11px var(--mono); }
 .account .stead-button { border-inline-start: 1px solid var(--line); border-radius: 0; }
@@ -74,12 +71,12 @@ button.brand:focus-visible { outline-offset: -4px; outline-color: var(--house-fo
 .space-mark { width: 29px; height: 29px; border: 1px solid #62605a; border-radius: 8px; font: 18px var(--mono); }
 .rail-label { margin: 20px 8px 7px; color: var(--muted); font-size: 11px; font-weight: 600; letter-spacing: .055em; text-transform: uppercase; }
 .sidebar nav { display: grid; gap: 2px; margin-bottom: 6px; }
-.sidebar nav button {
+.sidebar nav :is(button,.sidebar-link) {
   position: relative; display: flex; align-items: center; gap: 9px; min-width: 0; min-height: 34px;
   padding: 5px 8px; border: 1px solid transparent; border-radius: 5px;
-  background: transparent; color: var(--house-muted); text-align: start; font-size: 13px; font-weight: 520;
+  background: transparent; color: var(--house-muted); text-decoration:none; text-align: start; font-size: 13px; font-weight: 520;
 }
-.sidebar nav button:hover:enabled, .workspace-nav-items > .stead-button:hover:enabled { background: #343330; color: var(--house-ink); }
+.sidebar nav .sidebar-link:hover, .sidebar nav button:hover:enabled, .workspace-nav-items > .stead-button:hover:enabled { background: #343330; color: var(--house-ink); }
 .sidebar nav [aria-current="page"] { border-color: #514e48; background: #373531; color: var(--house-ink); }
 .sidebar nav [aria-current="page"]::before {
   content: ""; position: absolute; inset-inline-start: -1px; inset-block: 9px;
@@ -396,11 +393,12 @@ footer { display: flex; justify-content: space-between; gap: 12px; padding: 12px
   .topbar .account .stead-button:hover:enabled { background: var(--house-field); }
   .topbar .member-label small { color: var(--house-muted); }
   .project-cover { min-height: 126px; }
-  .member-name, .space-label, .rail-label { display: none; }
+  .space-label, .rail-label { display: none; }
   .account, .member-label { min-width: 0; }
   .account { gap: 8px; }
   .account button { flex: none; }
-  .member-label small { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .member-label { display: grid; gap: 1px; }
+  .member-name, .member-label small { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
   .workspace { display: block; }
   .sidebar { padding: 0 12px; border-bottom: 1px solid #393834; }
   .workspace-switch {
@@ -414,7 +412,7 @@ footer { display: flex; justify-content: space-between; gap: 12px; padding: 12px
   .workspace-nav-items[data-open="false"] { display: none; }
   .sidebar .rail-label { display: block; margin: 12px 8px 6px; }
   .sidebar nav { gap: 3px; margin-bottom: 4px; }
-  .sidebar nav button, .workspace-nav-items > .stead-button { min-height: 44px; }
+  .sidebar nav :is(button,.sidebar-link), .workspace-nav-items > .stead-button { min-height: 44px; }
   .sidebar nav[aria-label="Workspace"] { grid-template-columns: repeat(2, minmax(0, 1fr)); }
   .sidebar nav[aria-label="Projects"] { grid-template-columns: repeat(auto-fit, minmax(min(100%, 140px), 1fr)); }
   .content { padding: 16px 16px 24px; }

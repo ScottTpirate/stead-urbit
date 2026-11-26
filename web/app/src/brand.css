@@ -1,0 +1,11 @@
+.stead-brand-mark, .stead-section-mark { display: block; flex: none; }
+.stead-brand-mark { width: 28px; height: 28px; }
+.urbit-sign-in .stead-brand-mark { width: 34px; height: 34px; margin-bottom: 18px; }
+.stead-section-mark { width: 14px; height: 14px; }
+.tabs .stead-button > span:has(> .stead-section-mark) {
+  display: inline-flex; align-items: center; justify-content: center; gap: 6px;
+}
+@media (max-width: 420px) {
+  .tabs .stead-button > span:has(> .stead-section-mark) { gap: 4px; }
+  .stead-section-mark { width: 12px; height: 12px; }
+}

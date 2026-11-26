@@ -1,9 +1,10 @@
 // Real Firefox + synthetic HTTP responses. This does not qualify native TLS,
 // authentication, permissions or the business outcomes represented by fixtures.
 import assert from 'node:assert/strict';
+import {webSourceFiles} from './web-source-files.mjs';
 import { createHash } from 'node:crypto';
 import { createServer } from 'node:http';
-import { mkdir, readFile, writeFile, readdir } from 'node:fs/promises';
+import { mkdir, readFile, writeFile } from 'node:fs/promises';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { build } from 'esbuild';
@@ -13,10 +14,9 @@ const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 assert.equal(process.version, 'v24.21.0', 'Use the pinned frontend Node runtime');
 const output = path.resolve(root, '../../.runtime/web-render-tests');
 async function inputs() {
-  const entries = await readdir(path.join(root, 'src'), {withFileTypes: true});
-  assert.ok(entries.length > 0 && entries.length <= 128 && entries.every(entry => entry.isFile()));
+  const sourceFiles = await webSourceFiles(root);
   const result = {};
-  for (const name of ['tests/rendered.mjs', 'package-lock.json', ...entries.map(entry => 'src/' + entry.name)].sort()) {
+  for (const name of ['tests/rendered.mjs', 'package-lock.json', ...sourceFiles, 'tests/web-source-files.mjs'].sort()) {
     const raw = await readFile(path.join(root, name)); assert.ok(raw.length <= 1024 * 1024);
     result[name] = createHash('sha256').update(raw).digest('hex');
   }
@@ -529,6 +529,83 @@ try {
       assert.ok(!(await clone.isVisible()));
       assert.ok(await page.getByText('Clone', {exact: true}).evaluate(node => node === document.activeElement));
     }
+  });
+  await check('code-renders-one-pinned-root-readme', async (page, state) => {
+    const hex = text => Buffer.from(text).toString('hex');
+    const names = ['main', 'pending', 'absent', 'binary', 'oversize', 'mismatch', 'empty'];
+    const refs = Object.fromEntries(names.map((name, i) => [hex('refs/heads/' + name), (i + 1).toString().repeat(40)]));
+    const main = hex('refs/heads/main'), snapshot = '7'.repeat(64);
+    const entry = (name, kind = 'file') => ({name: hex(name), kind, oid: 'f'.repeat(40)});
+    state.pack = {status: 'external', snapshot, generation: '1', authority_epoch: '1', request_id: id(921),
+      accepted_at_ms: '1800000000000', object_count: '20', head: main, refs: JSON.stringify(refs)};
+    const readme = '# Project guide\n\n[Local](relative.md) and ![private](https://example.invalid/tracker)\n';
+    let release, requested;
+    const pending = new Promise(resolve => {release = resolve;});
+    const pendingRead = new Promise(resolve => {requested = resolve;});
+    state.browseFixture = async ({view, ref, path}) => {
+      const branch = Buffer.from(ref, 'hex').toString().split('/').pop();
+      const commit = refs[ref];
+      if (view === 'tree') {
+        const entries = path.length ? [entry('README.md')] : branch === 'absent' ? [entry('README.md', 'symlink'), entry('notes.txt')]
+          : [entry('README.markdown'), entry('ReadMe.md'), entry('README.md'), entry('docs', 'tree')];
+        return {status: 200, fields: {commit, entries, truncated: false}};
+      }
+      assert.deepEqual(path, [hex('README.md')]);
+      if (branch === 'pending') { requested(); await pending; }
+      const preview = branch === 'binary' ? 'binary' : branch === 'oversize' ? 'too-large' : 'text';
+      const text = branch === 'empty' ? '' : readme;
+      return {status: 200, fields: {commit: branch === 'mismatch' ? refs[main] : commit, preview,
+        bytes: preview === 'text' ? Buffer.byteLength(text) : 40000, ...(preview === 'text' ? {text} : {})}};
+    };
+    const folder = page.getByRole('list', {name: 'Folder contents'});
+    const panel = page.getByRole('region', {name: 'Repository README'});
+    async function select(name) {
+      await page.getByRole('button', {name: /^Switch branch or tag\./u}).click();
+      await page.getByRole('list', {name: 'Branches'}).getByRole('button', {name: new RegExp('^' + name + '\\b')}).click();
+    }
+    const reads = ref => state.browseRequests.filter(row => row.view === 'file' && row.ref === ref);
+    try {
+      await page.getByRole('button', {name: 'Refresh', exact: true}).click();
+      await page.getByRole('button', {name: 'Code', exact: true}).click();
+      await panel.getByRole('heading', {name: 'Project guide'}).waitFor();
+      assert.equal(await panel.locator('img').count(), 0);
+      assert.equal(await panel.getByRole('link', {name: 'Local', exact: true}).count(), 0);
+      assert.equal(await folder.getByRole('button').count(), 4);
+      assert.ok(await folder.evaluate(node => node.getBoundingClientRect().bottom <=
+        document.querySelector('.repo-root-readme').getBoundingClientRect().top + 1));
+      await page.setViewportSize({width: 320, height: 700});
+      assert.ok(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth));
+      await page.screenshot({path: path.join(output, 'root-readme-320.png'), fullPage: true});
+      await folder.getByRole('button', {name: 'README.md', exact: true}).click();
+      await page.getByRole('tab', {name: 'Raw', exact: true}).click();
+      assert.equal(await page.getByLabel('File contents').textContent(), readme);
+      assert.equal(reads(main).length, 1);
+      await page.getByRole('button', {name: 'Back to folder', exact: true}).click();
+      await panel.getByRole('heading', {name: 'Project guide'}).waitFor();
+      assert.equal(reads(main).length, 1);
+      await folder.getByRole('button', {name: 'docs Folder'}).click();
+      await page.getByRole('button', {name: 'Parent folder'}).waitFor();
+      assert.equal(await panel.count(), 0);
+      assert.equal(state.browseRequests.filter(row => row.path.length > 1).length, 0);
+      await select('pending');
+      await pendingRead;
+      await folder.getByRole('button', {name: 'README.md', exact: true}).click();
+      await select('absent');
+      await folder.getByRole('button', {name: 'notes.txt'}).waitFor();
+      release();
+      assert.equal(await panel.count(), 0);
+      assert.equal(reads(hex('refs/heads/pending')).length, 1);
+      assert.equal(reads(hex('refs/heads/absent')).length, 0);
+      for (const branch of ['binary', 'oversize', 'mismatch', 'empty']) {
+        const ref = hex('refs/heads/' + branch);
+        const file = page.waitForResponse(response => response.url().endsWith('/stead/api/code/browse')
+          && response.request().postDataJSON().ref === ref && response.request().postDataJSON().view === 'file');
+        await select(branch); await file;
+        if (branch === 'empty') await panel.getByText('This file is empty.').waitFor();
+        else assert.equal(await panel.count(), 0);
+        assert.equal(reads(ref).length, 1);
+      }
+    } finally { release(); }
   });
   await check('code-browses-snapshot-files-and-fences-ref-switches', async (page, state) => {
     const hex = value => Buffer.from(value).toString('hex');

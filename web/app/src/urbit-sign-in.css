@@ -5,16 +5,6 @@
   border-radius: 14px;
   box-shadow: 0 10px 36px #30291a10;
 }
-.urbit-sign-in-mark {
-  display: grid;
-  place-items: center;
-  width: 34px;
-  height: 34px;
-  margin-bottom: 18px;
-  border: 1px solid var(--ink);
-  border-radius: 50%;
-  font: 21px var(--mono);
-}
 .urbit-sign-in h1 { font-size: clamp(27px, 5vw, 34px); }
 .urbit-sign-in p { margin: 9px 0 0; color: var(--muted); font-size: 14px; line-height: 1.55; }
 .urbit-sign-in form { display: grid; gap: 14px; margin-top: 22px; }
