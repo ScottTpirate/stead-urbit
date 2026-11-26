@@ -103,7 +103,7 @@ h3 { font-size: 14px; font-weight: 620; }
 .project-heading { align-items: end; }
 .project-cover {
   min-height: 155px; padding: clamp(18px, 3vw, 34px); border-radius: 9px;
-  color: var(--house-ink); background: var(--house-ground) var(--house-light);
+  color: var(--house-ink); background-color: var(--house-ground); background-image: var(--house-light);
 }
 .project-cover .eyebrow, .project-cover .role-badge, .project-cover .eyebrow span { color: var(--house-muted); }
 .project-cover h1 { font-size: clamp(27px, 3vw, 40px); font-weight: 580; }
@@ -257,7 +257,7 @@ h3 { font-size: 14px; font-weight: 620; }
   color-scheme: dark; --ink: var(--house-ink); --muted: var(--house-muted); --focus: var(--house-focus);
   --paper: var(--house-field); --canvas: var(--house-ground); --line: #494742;
   --line-strong: #817c73; --rail: #353430;
-  color: var(--ink); background: var(--house-ground) var(--house-light);
+  color: var(--ink); background-color: var(--house-ground); background-image: var(--house-light);
 }
 .entry-shell .topbar, .entry-shell .brand, .entry-shell footer { background: transparent; border-color: var(--line); }
 .entry-shell .brand { width: auto; }
