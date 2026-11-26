@@ -9,7 +9,7 @@ function validPath(path: string): boolean {
   return path.length > 0 && new TextEncoder().encode(path).length <= 1024
     && !/[\u0000-\u001f\u007f\\]/u.test(path) && path.split('/').every(part => part !== '' && part !== '.' && part !== '..');
 }
-export type ProjectView = 'overview' | 'work' | 'docs' | 'code';
+export type ProjectView = 'overview' | 'work' | 'docs' | 'code' | 'activity';
 export type WorkspaceView = 'inbox' | 'my-work' | 'search';
 export type ProductRoute =
   | { kind: 'workspace'; view: WorkspaceView }
@@ -46,7 +46,7 @@ export function decodeProductRoute(hash: string): ProductRoute | null {
       ...(p.length === 6 ? {result: {revision: revision!, digest: p[5]!}} : {})};
   }
   if (kind === 'collection' && p.length === 3 && ID.test(a ?? '')) return {kind:'collection',project:project!,collection:a!};
-  if (kind === 'project' && p.length === 3 && ['overview', 'work', 'docs', 'code'].includes(a ?? '')) {
+  if (kind === 'project' && p.length === 3 && ['overview', 'work', 'docs', 'code', 'activity'].includes(a ?? '')) {
     return {kind: 'project', project: project!, view: a as ProjectView};
   }
   // Keep all existing #work/project[/item] links working without rewriting IDs.

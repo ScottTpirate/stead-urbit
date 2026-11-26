@@ -1,0 +1,43 @@
+name: Activity navigation
+on:
+  pull_request:
+    paths:
+      - 'web/app/src/**'
+      - 'web/app/tests/activity-navigation.mjs'
+      - 'web/app/tests/event-presentation.test.ts'
+      - 'web/app/tests/contextual-search-home.mjs'
+      - 'web/app/package*.json'
+      - '.github/workflows/activity-navigation.yml'
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  activity:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    defaults:
+      run:
+        working-directory: web/app
+    steps:
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020
+        with:
+          node-version: '24.21.0'
+          package-manager-cache: false
+      - run: npm ci --ignore-scripts --no-audit --no-fund
+      - run: npm run check && npm run build
+      - name: Verify event scope and labels
+        run: |
+          ./node_modules/.bin/esbuild tests/event-presentation.test.ts --bundle --platform=node --format=esm --outfile="$RUNNER_TEMP/activity.test.mjs"
+          node --test "$RUNNER_TEMP/activity.test.mjs"
+      - run: ./node_modules/.bin/playwright install chromium --with-deps
+      - run: node tests/activity-navigation.mjs "$RUNNER_TEMP/activity-images"
+      - uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
+        if: always()
+        with:
+          name: synthetic-activity
+          path: ${{ runner.temp }}/activity-images/*.png
+          if-no-files-found: ignore
+          retention-days: 7

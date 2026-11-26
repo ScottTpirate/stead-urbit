@@ -1,6 +1,6 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import {eventPresentation} from '../src/eventPresentation';
+import {eventPresentation, eventTarget} from '../src/eventPresentation';
 
 const principal = '019939ba-4000-7000-8000-000000000101';
 const other = '019939ba-4000-7000-8000-000000000102';
@@ -55,4 +55,19 @@ test('missing or unusual accepted timestamps are not replaced or rounded by pres
   assert.equal(presented.acceptedAt, exact);
   assert.equal(presented.details.at(-1)?.value, exact);
   assert.equal(eventPresentation({...row, accepted_at_ms: 'invalid'}).acceptedAt, 'invalid');
+});
+
+test('activity links select the current project and the explicit document collection', () => {
+  for (const operation of ['work.create', 'work.update', 'work.assign', 'work.comment']) {
+    assert.deepEqual(eventTarget({...row, operation}, other), {href: `#work/${other}/${resource}`, label: 'Open work item'});
+  }
+  for (const operation of ['document.save', 'document.publish']) {
+    assert.deepEqual(eventTarget({...row, operation, container_id: principal}, other),
+      {href: `#doc/${other}/${principal}/${resource}`, label: 'Open document'});
+  }
+  for (const change of [{operation: 'work.delete'}, {operation: 'document.delete'}, {operation: 'new.operation'},
+    {operation: 'document.save'}, {container_id: principal}, {project_id: principal}, {kind: 'work'},
+    {resource_id: `${resource}/${other}`}]) {
+    assert.equal(eventTarget({...row, ...change}, other), null);
+  }
 });
