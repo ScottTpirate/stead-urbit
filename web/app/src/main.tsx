@@ -99,6 +99,9 @@ function App() {
   const [project, setProject] = useState<Row | null>(null);
   const [workspaceView,setWorkspaceView]=useState<'my-work'|'search'|null>(null);
   const [workspaceSupported,setWorkspaceSupported]=useState(false);
+  const [navigationOpen, setNavigationOpen] = useState<boolean | null>(null);
+  const navigationButton = useRef<HTMLButtonElement>(null);
+  const showNavigation = navigationOpen ?? (!project && !workspaceView);
   const [carrierMode, setCarrierMode] = useState<ProductCarrierMode>({kind: 'unsupported'});
   const capabilityRead = useRef<object | undefined>(undefined);
   const productActive = carrierMode.kind === 'native-human-doc';
@@ -588,6 +591,7 @@ function App() {
     reloadScope();
   }
   function enterProject(row: Row, nextTab: ViewKind) {
+    setNavigationOpen(null);
     setLinkedPage(null);
     if (row.project_id !== project?.project_id) {
       repositoryGeneration.current++;
@@ -634,6 +638,7 @@ function App() {
     syncResourceAddress(projectId ? {kind:'work',project:projectId,item} : undefined,replace);
   }
   function enterWorkspace(view:'my-work'|'search'|null) {
+    setNavigationOpen(null);
     pendingDocumentFocus.current=null;
     activeQuery.current++;repositoryGeneration.current++;pendingNavigation.current=null;displayedSnapshot.current=null;
     setProject(null);setWorkspaceView(view);setRepository(null);setShowRepository(false);clearCodeSelection();setLoading(false);
@@ -1326,7 +1331,16 @@ function App() {
       {identity && carrierMode.kind === 'unsupported' && <EmptyState title="This Home needs a supported connection" description="Check this Home’s capabilities again before continuing. Your pending requests have not been retried."
         action={<Button disabled={busy} onClick={() => void action(retryConnection, explainConnection)}>Resume this tab</Button>}/>}
       {identity && carrierMode.kind !== 'unsupported' && <div className="workspace">
-        <aside className="sidebar">
+        <aside className="sidebar" onKeyDown={event => {
+          if (event.key === 'Escape' && showNavigation && navigationButton.current?.getClientRects().length) {
+            event.preventDefault(); setNavigationOpen(false); navigationButton.current.focus();
+          }
+        }}>
+          <button className="workspace-switch" type="button" ref={navigationButton} aria-expanded={showNavigation}
+            aria-controls="workspace-navigation" onClick={() => setNavigationOpen(!showNavigation)}>
+            <span>Browse workspace</span><Icon name="chevron-down"/>
+          </button>
+          <div className="workspace-nav-items" id="workspace-navigation" data-open={showNavigation}>
           <div className="space-label"><span className="space-mark" aria-hidden="true">~</span>
             <div>Workspace{identity.home && <small>{identity.home}</small>}</div>
           </div>
@@ -1345,6 +1359,7 @@ function App() {
           </button>)}</nav>
           {identity.can_create === 'yes' && <Button variant="quiet" disabled={busy || !!pending || !!form || !!editor?.dirty || currentProductDraft()}
             onClick={() => { setEditor(null); setWork(null); setCurrentVersion(null); setForm('project'); }}><Icon name="plus"/>New project</Button>}
+          </div>
         </aside>
         <section className="content" id="project-content" data-live-updates={productActive ? 'unsupported' : updatesConnected ? 'connected' : 'unavailable'} data-refresh={productActive ? 'explicit' : 'watch'}>
           {productActive && !project && editor?.dirty && retainedDocumentScope.current && <Surface>

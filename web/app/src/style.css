@@ -67,6 +67,7 @@ button.brand:focus-visible { outline-offset: -4px; outline-color: var(--house-fo
   background-image: linear-gradient(180deg, var(--house-ground) 25%, transparent), var(--house-light);
   --ink: var(--house-ink); --muted: var(--house-muted); --focus: var(--house-focus); --rail: #343330;
 }
+.workspace-switch { display: none; }
 .space-label { display: flex; gap: 10px; align-items: center; margin: 0 4px 12px; padding: 0 4px 18px; border-bottom: 1px solid #383734; font-size: 14px; font-weight: 600; }
 .space-label > div { min-width: 0; overflow-wrap: anywhere; }
 .space-label small { display: block; margin-top: 3px; }
@@ -78,7 +79,7 @@ button.brand:focus-visible { outline-offset: -4px; outline-color: var(--house-fo
   padding: 5px 8px; border: 1px solid transparent; border-radius: 5px;
   background: transparent; color: var(--house-muted); text-align: start; font-size: 13px; font-weight: 520;
 }
-.sidebar nav button:hover:enabled, .sidebar > .stead-button:hover:enabled { background: #343330; color: var(--house-ink); }
+.sidebar nav button:hover:enabled, .workspace-nav-items > .stead-button:hover:enabled { background: #343330; color: var(--house-ink); }
 .sidebar nav [aria-current="page"] { border-color: #514e48; background: #373531; color: var(--house-ink); }
 .sidebar nav [aria-current="page"]::before {
   content: ""; position: absolute; inset-inline-start: -1px; inset-block: 9px;
@@ -87,9 +88,9 @@ button.brand:focus-visible { outline-offset: -4px; outline-color: var(--house-fo
 .project-glyph { width: 23px; height: 23px; color: var(--house-ink); background: #33322f; border: 1px solid #64615a; border-radius: 5px; font: 12px var(--mono); }
 .project-name { min-width: 0; overflow-wrap: anywhere; }
 .project-key { display: block; margin-bottom: 2px; color: var(--house-muted); font: 9px var(--mono); letter-spacing: .05em; }
-.sidebar > .stead-button { color: var(--house-muted); padding-inline: 8px; font-weight: 500; }
-.sidebar > .stead-button > span { display: flex; align-items: center; gap: 7px; }
-.sidebar > .muted { margin: 12px 8px; font-size: 12px; }
+.workspace-nav-items > .stead-button { color: var(--house-muted); padding-inline: 8px; font-weight: 500; }
+.workspace-nav-items > .stead-button > span { display: flex; align-items: center; gap: 7px; }
+.workspace-nav-items > .muted { margin: 12px 8px; font-size: 12px; }
 .content { width: 100%; max-width: 1800px; min-width: 0; margin-inline: auto; padding: 24px 24px 40px; container-type: inline-size; }
 .project-heading { display: flex; align-items: center; justify-content: space-between; gap: 12px; margin-bottom: 16px; }
 .project-heading > div, .resource-summary { min-width: 0; }
@@ -401,14 +402,21 @@ footer { display: flex; justify-content: space-between; gap: 12px; padding: 12px
   .account button { flex: none; }
   .member-label small { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
   .workspace { display: block; }
-  .sidebar { display: grid; grid-template-columns: minmax(0, 1fr) auto; align-items: center; gap: 6px; padding: 7px 12px; border-right: 0; border-bottom: 1px solid var(--line); }
-  .sidebar nav { display: flex; min-width: 0; overflow-x: auto; margin: 0; padding: 3px; }
-  .sidebar nav button { flex: none; max-width: 100%; }
-  .sidebar nav[aria-label="Workspace"] { grid-column: 1 / -1; }
-  .sidebar nav[aria-label="Workspace"] button { white-space: nowrap; }
-  .sidebar nav[aria-label="Projects"] { grid-column: 1; }
-  .sidebar > .stead-button { grid-column: 2; white-space: nowrap; }
-  .sidebar > .muted { grid-column: 1 / -1; margin: 4px 8px; }
+  .sidebar { padding: 0 12px; border-bottom: 1px solid #393834; }
+  .workspace-switch {
+    display: flex; align-items: center; justify-content: space-between; gap: 10px;
+    width: 100%; min-height: 44px; padding: 6px 4px; border: 0;
+    background: transparent; color: var(--house-ink); font-size: 13px; font-weight: 540;
+  }
+  .workspace-switch[aria-expanded="true"] svg { transform: rotate(180deg); }
+  .workspace-switch:focus-visible { outline-offset: -2px; }
+  .workspace-nav-items { padding: 4px 0 12px; }
+  .workspace-nav-items[data-open="false"] { display: none; }
+  .sidebar .rail-label { display: block; margin: 12px 8px 6px; }
+  .sidebar nav { gap: 3px; margin-bottom: 4px; }
+  .sidebar nav button, .workspace-nav-items > .stead-button { min-height: 44px; }
+  .sidebar nav[aria-label="Workspace"] { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .sidebar nav[aria-label="Projects"] { grid-template-columns: repeat(auto-fit, minmax(min(100%, 140px), 1fr)); }
   .content { padding: 16px 16px 24px; }
   .stead-surface { padding: 16px; }
   .work-detail .form-columns { grid-template-columns: minmax(0, 1fr); }
