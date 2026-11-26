@@ -317,13 +317,15 @@ def outer(hosted, args, identity, binding):
         os.chown(job, 0, account.pw_gid); os.chmod(job, 0o750)
         hosted.local.materialize(hosted.CONTROLLER_FILES, job / 'controller')
         inputs, rehearsal = intake(hosted, job, args, account, binding, run_id, pins)
-        hosted.write(job / 'inputs.json', inputs)
+        # Worker admission pins compact canonical bytes, including the final LF.
+        # Reuse the guardian's atomic canonical writer, not write_json's spaced form.
+        hosted.write(job / 'inputs.json', inputs, shared=True, gid=account.pw_gid)
         (job / 'control').mkdir()
         context = {'run_id': run_id, 'unit': unit, 'uid': account.pw_uid, 'gid': account.pw_gid,
             'cpus': cpus, 'pins': pins, 'guard_sha256': E.sha(Path(hosted.__file__).read_bytes()),
             'control_case': None, 'fixed_profile': PROFILE}
         hosted.write(job / 'context.json', context)
-        hosted.write(job / 'control/home-asset-rehearsal.json', rehearsal)
+        hosted.write(job / 'control/home-asset-rehearsal.json', rehearsal, shared=True, gid=account.pw_gid)
         hosted.share_tree(job, account.pw_gid)
         hosted.share_tree(hosted.ROOT / '.runtime', account.pw_gid)
         phase = 'owned-service'

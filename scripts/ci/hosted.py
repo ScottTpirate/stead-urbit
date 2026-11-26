@@ -334,6 +334,10 @@ def child(job, parent):
     regular_root(job / 'context.json')
     context = execution_policy.read_json(job / 'context.json', maximum=1024 * 1024)
     require(os.getuid() == 0 and os.getppid() == parent, 'Worker launcher parent differs')
+    # The saved8 adapter lives in bootstrap's root-only captured tree. Resolve
+    # that exact source and construct its fixed command before dropping UID;
+    # do not make the captured tree readable by the worker account.
+    command = sandbox_command(job, context) if context.get('fixed_profile') == 'home-assets-saved8/1' else None
     os.setgroups([])
     os.setgid(context['gid'])
     os.setuid(context['uid'])
@@ -344,7 +348,8 @@ def child(job, parent):
     hosted_apparmor.require_label()
     os.environ.clear()
     os.environ.update(PATH='/usr/bin:/bin', LANG='C.UTF-8')
-    command = sandbox_command(job, context)
+    if command is None:
+        command = sandbox_command(job, context)
     os.execv(command[0], command)
 
 
