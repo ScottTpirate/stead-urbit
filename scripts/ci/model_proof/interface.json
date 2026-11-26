@@ -1,6 +1,6 @@
 {
   "acceptance": [
-    "Exactly one original local Qwen response through the provider-neutral prepare_chat and normalize_reply APIs.",
+    "Exactly one inference under a new Run and version-two model connection. The required request offers the single pinned replacement tool.",
     "The answer is absent from the prompt. The model must infer the new weekday and propose one unique literal replacement in the pinned Doc.",
     "Materialize the suggested replacement with the ordinary pinned-target helper. Compare the canonical header, time, room, contact, weekday and final newline independently.",
     "Preserve original request, response and normalized proposal. No external tool, Home write, retry or G3 claim."
@@ -51,12 +51,12 @@
   "execution_admitted": false,
   "files": {
     "scripts/ci/model_proof/client.py": {
-      "bytes": 12841,
-      "sha256": "c8eb2444153af16355b8ba147189a832a8704a8c9932f9f3c1f0b237e95e1a9b"
+      "bytes": 12922,
+      "sha256": "501d3e3554fd1b6dc684b276e09af56f024d4feeabf6a98f98e845753e9b8f9f"
     },
     "scripts/urbit/model_connections.py": {
-      "bytes": 22885,
-      "sha256": "6f65a2d6c0dcb666c6ed621f914dc8392b01637d488f4a1c4d33fb043cdb5400"
+      "bytes": 24399,
+      "sha256": "d3a7ffd883559846349a96c165718dc00f263792d17c74430c2168cf5caf6a9b"
     },
     "scripts/urbit/model_doc_replacement.py": {
       "bytes": 4202,
@@ -154,5 +154,5 @@
     "transitive_model_sha256": "6a1a2eb6d15622bf3c96857206351ba97e1af16c30d7a74ee38970e434e9407e"
   },
   "tests_executed": false,
-  "user_outcome": "Observe a genuine semantic replacement proposal and its complete materialized review Doc in an isolated, synthetic project."
+  "user_outcome": "Observe Qwen supply a complete, semantically correct, reviewable Doc change through one required registered function."
 }

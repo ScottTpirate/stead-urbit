@@ -33,11 +33,11 @@ MODEL_SHA = '6a1a2eb6d15622bf3c96857206351ba97e1af16c30d7a74ee38970e434e9407e'
 MODEL_BYTES = 1117320736
 ARCHIVE_SHA = '0bc1f091e8916102b6d8f2cf944233a620e90a0f856c72d0ce41150c65c2e72e'
 SOURCE_PINS = {
-    'client.py': 'c8eb2444153af16355b8ba147189a832a8704a8c9932f9f3c1f0b237e95e1a9b',
-    'model_connections.py': '6f65a2d6c0dcb666c6ed621f914dc8392b01637d488f4a1c4d33fb043cdb5400',
+    'client.py': '501d3e3554fd1b6dc684b276e09af56f024d4feeabf6a98f98e845753e9b8f9f',
+    'model_connections.py': 'd3a7ffd883559846349a96c165718dc00f263792d17c74430c2168cf5caf6a9b',
     'owned_child.py': 'a01fc92a0b5f000f5ddee505d475127681ac47ea9a7aa4d8b450594cd50ec229',
     'model_doc_replacement.py': '4786f6782a7c76ebd11dcfc73259597215dd5dad8318d088fdb7f7263b85f619',
-    'interface.json': '8233b7ee93a373b5f31ca75223445069741ff7c07550707dd128db8cbe9ab401',
+    'interface.json': '6b6904745dd5d17d4907edc363b5024fe1f8ee3a5895964f6939ca6c164c197e',
 }
 NAMESPACES = ('user', 'mnt', 'pid', 'net')
 ENV = {'PATH': '/usr/bin', 'HOME': '/tmp', 'TMPDIR': '/tmp', 'LC_ALL': 'C',
@@ -484,7 +484,7 @@ def result_files():
             'native_authority_supplied', 'external_tool_executed', 'document_mutated', 'qualifies_g3',
             'artifacts', 'error_class', 'connection_digest', 'request_digest', 'proposal_state',
             'observed_usage', 'semantic_edit_proposed', 'revision_checks', 'review_document', 'elapsed_ms'})
-    require(report['protocol'] == 'stead.synthetic-model-doc-replacement/1'
+    require(report['protocol'] == 'stead.synthetic-model-required-doc/1'
             and report['status'] == 'pass' and report['error_class'] == 'none'
             and report['classification'] == 'actual-local-inference-with-synthetic-public-document'
             and report['model_adapter_sha256'] == SOURCE_PINS['model_connections.py']

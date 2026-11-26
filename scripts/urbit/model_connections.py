@@ -159,7 +159,7 @@ class ConnectionSpec:
 
 def connection(raw):
     value = closed(decode(raw, 8192), SPEC_FIELDS)
-    require(value['protocol'] == 'stead.model-connection/1'
+    require(value['protocol'] in ('stead.model-connection/1', 'stead.model-connection/2')
             and value['adapter'] in ('openai.chat-completions/1', 'llamacpp.chat-completions/1'),
             'unsupported_connection')
     uuid(value['connection_id']); uint(value['revision'], positive=True)
@@ -177,8 +177,14 @@ def connection(raw):
         closed(auth, {'kind', 'reference_id', 'revision'})
         require(auth['kind'] == 'bearer-reference', 'unsupported_authentication')
         uuid(auth['reference_id']); uint(auth['revision'], positive=True)
-    caps = closed(value['capabilities'], {'instruction_role', 'function_tools', 'token_limit_field',
-                                        'strict_tools', 'parallel_tool_calls', 'store'})
+    cap_fields = {'instruction_role', 'function_tools', 'token_limit_field', 'strict_tools', 'parallel_tool_calls', 'store'}
+    if value['protocol'] == 'stead.model-connection/2':
+        cap_fields.add('required_tool_choice')
+    caps = closed(value['capabilities'], cap_fields)
+    required_choice = caps.get('required_tool_choice', 'unsupported')
+    require(required_choice in ('unsupported', 'single-function/1')
+            and (required_choice == 'unsupported' or caps['function_tools'] == 'json-schema-strings/1'),
+            'unsupported_required_tool_choice')
     require(caps['instruction_role'] in ('system', 'developer')
             and caps['function_tools'] in ('disabled', 'json-schema-strings/1')
             and caps['token_limit_field'] in ('max_tokens', 'max_completion_tokens')
@@ -192,7 +198,7 @@ def connection(raw):
     require(target['placement'] == 'local-isolated' or parsed['billable_micro_usd'] > 0,
             'remote_spend_ceiling_required')
     normalized = canonical({**value, 'endpoint': target})
-    return ConnectionSpec(normalized, domain_hash('stead.model-connection/1', normalized))
+    return ConnectionSpec(normalized, domain_hash(value['protocol'], normalized))
 
 
 def effect_id(scope):
@@ -254,7 +260,7 @@ class RequestDraft:
     # Not a credential, HTTP operation, native receipt or execution permit.
 
 
-def prepare_chat(spec, scope, turn, instructions, messages, registry, *, prior_digest=None):
+def prepare_chat(spec, scope, turn, instructions, messages, registry, *, prior_digest=None, required_tool=None):
     require(type(spec) is ConnectionSpec and connection(spec.raw) == spec, 'connection_pin_changed')
     value = spec.value(); identifier = effect_id(scope)
     require(scope['connection_digest'] == spec.sha256, 'connection_scope_changed')
@@ -277,13 +283,18 @@ def prepare_chat(spec, scope, turn, instructions, messages, registry, *, prior_d
             caps['token_limit_field']: int(value['limits']['output_tokens'])}
     if caps['store'] == 'supported':
         body['store'] = False
-    if approved:
+    offered = approved
+    if required_tool is not None:
+        require(caps.get('required_tool_choice') == 'single-function/1', 'required_tool_unsupported')
+        offered = [tool for tool in approved if tool['name'] == required_tool]
+        require(len(offered) == 1, 'required_tool_not_in_registry')
+    if offered:
         body['tools'] = [{'type': 'function', 'function': {
             'name': tool['name'], 'description': tool['description'],
             'parameters': {'type': 'object', 'properties': {name: {'type': 'string', 'maxLength': int(bound)}
                 for name, bound in tool['arguments'].items()}, 'required': list(tool['arguments']), 'additionalProperties': False},
-            **({'strict': True} if caps['strict_tools'] == 'supported' else {})}} for tool in approved]
-        body['tool_choice'] = 'auto'
+            **({'strict': True} if caps['strict_tools'] == 'supported' else {})}} for tool in offered]
+        body['tool_choice'] = 'required' if required_tool is not None else 'auto'
         if caps['parallel_tool_calls'] == 'supported':
             body['parallel_tool_calls'] = False
     raw = canonical(body)
@@ -297,6 +308,17 @@ def prepare_chat(spec, scope, turn, instructions, messages, registry, *, prior_d
                         domain_hash('stead.provider-scope/1', canonical(scope)), canonical(scope), canonical(approved), turn)
 
 
+def required_tool_name(body):
+    if body.get('tool_choice') != 'required':
+        return None
+    offered = body.get('tools')
+    require(type(offered) is list and len(offered) == 1 and type(offered[0]) is dict
+            and type(offered[0].get('function')) is dict, 'invalid_required_tool_choice')
+    name = offered[0]['function'].get('name')
+    require(type(name) is str and NAME.fullmatch(name), 'invalid_required_tool_choice')
+    return name
+
+
 def validate_request(spec, request):
     """Check retained bytes, not authority; dispatch still needs native admission."""
     require(type(request) is RequestDraft, 'invalid_request_draft')
@@ -306,7 +328,8 @@ def validate_request(spec, request):
             'invalid_request_draft')
     first = closed(body['messages'][0], {'role', 'content'})
     registry = decode(request.tool_registry, 32768)
-    rebuilt = prepare_chat(spec, scope, request.turn, first['content'], body['messages'][1:], registry)
+    rebuilt = prepare_chat(spec, scope, request.turn, first['content'], body['messages'][1:], registry,
+                           required_tool=required_tool_name(body))
     require(request == rebuilt, 'request_bytes_changed')
     return request
 
@@ -435,6 +458,10 @@ def normalize_reply(spec, request, raw):
                                       'length': 'incomplete', 'content_filter': 'blocked'}[finish]
     if state in ('refused', 'incomplete', 'blocked'):
         proposals = []
+    else:
+        required = required_tool_name(decode(request.body, 65536))
+        if required is not None:
+            require(len(proposals) == 1 and proposals[0]['name'] == required, 'required_tool_reply_mismatch')
     return {'state': state, 'text': content or '', 'tool_proposals': proposals,
             'observed_usage': counts, 'provider_response_id': value['id'],
             'response_sha256': hashlib.sha256(raw).hexdigest(), 'request_digest': request.request_digest,

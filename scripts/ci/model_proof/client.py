@@ -19,12 +19,12 @@ import sys
 import time
 
 INPUT = Path('/input')
-SOURCE_SHA = '6f65a2d6c0dcb666c6ed621f914dc8392b01637d488f4a1c4d33fb043cdb5400'
+SOURCE_SHA = 'd3a7ffd883559846349a96c165718dc00f263792d17c74430c2168cf5caf6a9b'
 OUTPUT = Path('/output/client')
 PORT = 8088
 MODEL = 'qwen2.5-1.5b-stead-compat2'
 MAX_RESPONSE = 32768
-SUPPORT = {'model_connections.py': {'bytes': 22885, 'sha256': '6f65a2d6c0dcb666c6ed621f914dc8392b01637d488f4a1c4d33fb043cdb5400'}, 'model_doc_replacement.py': {'bytes': 4202, 'sha256': '4786f6782a7c76ebd11dcfc73259597215dd5dad8318d088fdb7f7263b85f619'}}
+SUPPORT = {'model_connections.py': {'bytes': 24399, 'sha256': 'd3a7ffd883559846349a96c165718dc00f263792d17c74430c2168cf5caf6a9b'}, 'model_doc_replacement.py': {'bytes': 4202, 'sha256': '4786f6782a7c76ebd11dcfc73259597215dd5dad8318d088fdb7f7263b85f619'}}
 SOURCE_UID = 65534  # Root outside the one-UID worker user namespace is unmapped.
 DOCUMENT_ID = '00000000-0000-7000-8000-000000000008'
 HEADER = '---\nid: ' + DOCUMENT_ID + '\ntype: page\nstate: published\n---\n'
@@ -59,7 +59,7 @@ def prepare_revision(model, replacement, spec, scope):
                     'Only the reviewer can accept the edit.')
     messages = [{'role': 'user', 'content': 'Read the original document and follow its editing task. '
                  + canonical(context).decode()}]
-    return model.prepare_chat(spec, scope, '1', instructions, messages, [tool])
+    return model.prepare_chat(spec, scope, '1', instructions, messages, [tool], required_tool=replacement.TOOL_NAME)
 
 
 def load_support(directory):
@@ -176,8 +176,8 @@ def uid(number):
 
 
 def connection_and_scope(model):
-    value = {'protocol': 'stead.model-connection/1', 'connection_id': uid(1),
-             'revision': '2', 'display_name': 'Isolated Qwen Doc replacement',
+    value = {'protocol': 'stead.model-connection/2', 'connection_id': uid(1),
+             'revision': '3', 'display_name': 'Isolated Qwen required Doc tool',
              'adapter': 'llamacpp.chat-completions/1', 'model': MODEL,
              'endpoint': {'url': 'http://127.0.0.1:8088/v1/chat/completions',
                  'placement': 'local-isolated',
@@ -185,14 +185,14 @@ def connection_and_scope(model):
              'authentication': {'kind': 'none'},
              'capabilities': {'instruction_role': 'system',
                  'function_tools': 'json-schema-strings/1', 'token_limit_field': 'max_tokens',
-                 'strict_tools': 'unsupported', 'parallel_tool_calls': 'supported',
+                 'strict_tools': 'unsupported', 'required_tool_choice': 'single-function/1', 'parallel_tool_calls': 'supported',
                  'store': 'unsupported'},
              'limits': {'input_bytes': '8192', 'output_bytes': str(MAX_RESPONSE),
                  'turns': '1', 'tool_calls': '1', 'request_timeout_ms': '60000',
                  'duration_ms': '180000', 'input_tokens': '1536', 'output_tokens': '256',
                  'total_tokens': '1792', 'cost_units': '1', 'billable_micro_usd': '0'}}
     spec = model.connection(canonical(value))
-    scope = {'home': '~zod', 'project_id': uid(2), 'run_id': uid(3), 'attempt': '1',
+    scope = {'home': '~zod', 'project_id': uid(2), 'run_id': uid(9), 'attempt': '1',
              'effect_sequence': '1', 'definition_id': uid(4), 'definition_revision': '1',
              'runtime_id': uid(5), 'runtime_revision': '1', 'connection_digest': spec.sha256,
              'run_contract_sha256': sha(b'synthetic-contract'),
@@ -211,7 +211,7 @@ def main():
     require(stat.S_ISDIR(info.st_mode) and info.st_uid == os.geteuid()
             and stat.S_IMODE(info.st_mode) == 0o700)
     started = time.monotonic()
-    report = {'protocol': 'stead.synthetic-model-doc-replacement/1', 'status': 'fail',
+    report = {'protocol': 'stead.synthetic-model-required-doc/1', 'status': 'fail',
               'classification': 'actual-local-inference-with-synthetic-public-document',
               'model_adapter_sha256': SOURCE_SHA, 'model': MODEL, 'attempted_requests': 0,
               'completed_responses': 0, 'native_authority_supplied': False,
