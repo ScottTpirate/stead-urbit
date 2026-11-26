@@ -1,0 +1,22 @@
+name: Work import
+on:
+  pull_request:
+    paths:
+      - scripts/urbit/github_work_*.py
+      - scripts/urbit/portable_import.py
+      - scripts/urbit/portable_recovery.py
+      - tests/urbit/test_github_work_*.py
+      - .github/workflows/work-import.yml
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  preview-and-resume:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 3
+    steps:
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
+        with:
+          persist-credentials: false
+      - name: Check GitHub preview provenance and resumable imports
+        run: python3 -B -m unittest discover -v -s tests/urbit -p 'test_github_work_*.py'

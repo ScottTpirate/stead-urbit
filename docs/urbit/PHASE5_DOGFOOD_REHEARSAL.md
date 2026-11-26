@@ -352,8 +352,9 @@ SHA-256 `84ef3c10bb54aead82d0ea950e530a3a61b9c8956bb1073910b19b765650c6c1`.
 
 ## Prepare GitHub issues for Work
 
-Use `scripts/urbit/github_work_plan.py` to preview moving issues from
-`ScottTpirate/stead-urbit` into Work. It reads a private local file and writes
+Use `scripts/urbit/github_work_plan.py` to preview a GitHub repository’s issues as Work.
+Pass `--repository owner/name` to select the source. The default is
+`ScottTpirate/stead-urbit`. It reads a private local file and writes
 one new private plan. Point it at a JSON array from GitHub's repository Issues
 API or the array of paginated arrays emitted by `gh api --paginate --slurp`.
 [GitHub Issues API](https://docs.github.com/en/rest/issues/issues#list-repository-issues)
@@ -381,7 +382,16 @@ issue descriptions keep their text and links, with carriage returns normalized
 to line feeds. Issues beyond the Work title or description limits need manual
 review using the source file. The plan lists the omitted metadata and history.
 
-The tool checks the pinned repository and exact GitHub issue URLs and fails on
+The current preview preserves the source issue ID, number and permalink, reported
+GitHub author, and creation, update and closure times when the export supplies
+them. The Work description carries the source author and dates. Stead records
+the member performing the import as its creator. Each private preview lists
+the source assignees for manual mapping and the count of omitted comments when
+available. A missing author or timestamp appears as `null` in the preview.
+Keep a reviewed version 1 preview with its original source and progress when
+resuming an earlier import. Rebuilding the preview would change its digest.
+
+The tool checks the selected repository and exact GitHub issue URLs and fails on
 malformed rows or repeated issue numbers. The input is limited to 2,048 rows
 and 16 MiB of JSON. A native project currently has room for 128 Work items total.
 Review the intended destination and its remaining capacity before copying any
