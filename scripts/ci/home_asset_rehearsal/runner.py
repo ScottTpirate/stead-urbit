@@ -24,11 +24,11 @@ import urllib.request
 
 from . import evidence as E
 
-BASE = 'a0e90ef29389077d453ec2a775cd8fd69f711727'
-TARGET = '3acf4e193b2f4d95a522bfac829737733d6567e8'
+PREDECESSOR = '3acf4e193b2f4d95a522bfac829737733d6567e8'
+TARGET = '7a7a010d389cb296df85786a94e57b9c36b8eb2d'
 ARCHIVES = {
-    'previous': (1392640, 'baa226f22bc1950981628486539fa1f087d2e6544c12a18c1d15e144b082e7da', BASE),
-    'target': (1648640, '8e4f5d1e27f916efed154394be27974b7aa07c121429afe521d2c1c21e9b7743', TARGET),
+    'previous': (1648640, '8e4f5d1e27f916efed154394be27974b7aa07c121429afe521d2c1c21e9b7743', PREDECESSOR),
+    'target': (1658880, 'ea364f5cd58e6c65f2edc7cb5495cdf267e4b7583654305d4b7d747eaf729363', TARGET),
 }
 SEED = {
     'app/stead-home.hoon': 'd6d15bc9514001a2edcdcb67384881826215e7fd40c08465edc74962d8b70fdd',
@@ -206,7 +206,7 @@ def package(name, inventory):
     E.require(manifest['files'] == {name: {'bytes': len(data), 'sha256': E.sha(data)}
         for name, data in files.items() if name != 'manifest.json'})
     desk = {name[5:]: E.sha(data) for name, data in files.items() if name.startswith('desk/')}
-    E.require(len(desk) == (116 if name == 'previous' else 118))
+    E.require(len(desk) == (118 if name == 'previous' else 118))
     return manifest, desk
 
 
@@ -506,7 +506,7 @@ def run(guard):
         suspend()
         loaded = retained('a0-loaded')
         E.preserved(first, loaded, complete=False)
-        report['phases'].append('actual-a0-predecessor')
+        report['phases'].append('actual-installed-predecessor')
         operation = 'cold-restart'
         restart(old, 'cold', loaded['vase_fingerprint'])
         native_tls.install(native.binary, native.pier / '.urb/conn.sock', certificates, 'zod')

@@ -64,7 +64,7 @@ finally:
 
 # Test-only readonly chunks preserve the host's unchanged 1 MiB file limit.
 # Runtime archives remain exact full tar files; no host fixture is runtime evidence.
-ARCHIVE_CHUNKS = {'previous': [('previous-0.chunk', 524288, 'ff40efb3c3f8351cd7dc6f33e008e22a59ffae8510838032027597f65330fde3'), ('previous-1.chunk', 524288, 'c47dcb795b056405c06fb004c015e4c0d5498d5c78dc49ab20aea414f4233b9a'), ('previous-2.chunk', 344064, 'dee3742b0aeb62d9cfd357b04e1d3f9a5bec1953cfaaaa9aad95515982357e03')], 'target': [('target-0.chunk', 524288, 'ff40efb3c3f8351cd7dc6f33e008e22a59ffae8510838032027597f65330fde3'), ('target-1.chunk', 524288, '9db277dd1c570f46c3605e61ed10d1418cd51f8470fa25543fe0151320230871'), ('target-2.chunk', 524288, '36ece196aaed5c25db52f741975d8539fa0ec1d116aef3cccc2b36b4aaaadf42'), ('target-3.chunk', 75776, '0059daddeb4524e1c4cc04d5827123c1ecd272f1a6b8e612eb713917ccbd486c')]}
+ARCHIVE_CHUNKS = {'previous': [('previous-0.chunk', 524288, 'ff40efb3c3f8351cd7dc6f33e008e22a59ffae8510838032027597f65330fde3'), ('previous-1.chunk', 524288, '9db277dd1c570f46c3605e61ed10d1418cd51f8470fa25543fe0151320230871'), ('previous-2.chunk', 524288, '36ece196aaed5c25db52f741975d8539fa0ec1d116aef3cccc2b36b4aaaadf42'), ('previous-3.chunk', 75776, '0059daddeb4524e1c4cc04d5827123c1ecd272f1a6b8e612eb713917ccbd486c')], 'target': [('target-0.chunk', 524288, 'ff40efb3c3f8351cd7dc6f33e008e22a59ffae8510838032027597f65330fde3'), ('target-1.chunk', 524288, 'dc33d39b89fc70080f96f96d967364afa1b766ba7659e5403973a5067bbfc6eb'), ('target-2.chunk', 524288, 'c8f40c171ee59b207fde2e4f0afb84435fd77bb1d6cfefed82bf25881335ac9b'), ('target-3.chunk', 86016, '1e33bb0849623073aee0511baa859254082fbbb271bed0b5c1a080b8cfa97377')]}
 
 
 def archive_bytes(name):
@@ -216,7 +216,7 @@ class Saved8OuterTests(unittest.TestCase):
         # Real pinned archive bytes and full manifest hashes, not fabricated packages.
         prior, _, old, _ = A.archive(archive_bytes('previous'), 'previous')
         target, _, new, _ = A.archive(archive_bytes('target'), 'target')
-        self.assertEqual((len(old), len(new)), (116, 118))
+        self.assertEqual((len(old), len(new)), (118, 118))
         self.assertEqual({n: v for n, v in prior.items() if n.startswith('desk/') and not n.startswith('desk/web/')},
                          {n: v for n, v in target.items() if n.startswith('desk/') and not n.startswith('desk/web/')})
         for raw, name in ((b'fake supplied vase', 'previous'), (archive_bytes('previous')[:-1] + b'x', 'previous'),
