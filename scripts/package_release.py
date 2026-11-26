@@ -22,8 +22,8 @@ from package_sdk import ROOT, encoded, held_parent, read_bounded, require, uniqu
 MAX_FILE = 1024 * 1024
 MAX_ARCHIVE = 8 * 1024 * 1024
 MAX_MEMBERS = 128
-# Leaves room for the manifest, source pins, licenses and generated desk files.
-MAX_DESK_SOURCES = MAX_MEMBERS - 12
+# Eight archive-level files and the generated sys.kelvin and desk.bill occupy ten slots.
+MAX_DESK_SOURCES = MAX_MEMBERS - 10
 PREFIX = 'stead-release/'
 CONTRACT = 'specs/urbit/release-package.json'
 NATIVE = 'native/core/desk/'
@@ -54,7 +54,7 @@ INVENTORY_TAIL = ('\n  ==\n++  paths\n  ^-  (set @t)\n'
                   '  (silt (turn ~(tap by inventory) |=([route=@t value=asset] route)))\n--\n')
 ROW = re.compile(r"      \['(?P<route>/(?:stead|stead-identity)/(?:assets/[A-Za-z0-9.-]+)?)' "
                  r"\[\[%web %stead 'asset-(?P<digest>[0-9a-f]{64})' %stead-asset ~\] "
-                 r"'(?P<mime>text/(?:plain|html|css|javascript); charset=utf-8)' '(?P=digest)'\]\]")
+                 r"'(?P<mime>text/(?:plain|html|css|javascript); charset=utf-8|image/svg\+xml)' '(?P=digest)'\]\]")
 
 
 def digest(raw):
@@ -142,6 +142,8 @@ def frontend(reader):
         require(found is not None, 'Unsupported frontend inventory row')
         row = found.groupdict()
         require(row['route'] not in seen and '..' not in row['route'], 'Duplicate or unsafe frontend route')
+        require((row['mime'] == 'image/svg+xml') == (row['route'] == '/stead/assets/favicon.svg'),
+                'Unexpected favicon route or media type')
         seen.add(row['route'])
         name = 'web/stead/asset-' + row['digest'] + '.stead-asset'
         body = reader(name)
@@ -294,7 +296,7 @@ def verify_closure(members, manifest, contract):
             origins[name] = 'repository:' + NATIVE + name
         expected.add(name)
         pending.extend(imports(body))
-        require(len(expected) <= MAX_DESK_SOURCES + 2, 'Packaged dependency closure bound')
+        require(len(expected) <= MAX_DESK_SOURCES, 'Packaged dependency closure bound')
     validate_home_format(manifest['role'], manifest['saved_state_version'], expected)
     expected.update(('sys.kelvin', 'desk.bill'))
     origins.update({'sys.kelvin': 'generated:kernel-compatibility', 'desk.bill': 'generated:role-agents'})

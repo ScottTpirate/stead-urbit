@@ -1,3 +1,4 @@
+import { compactSteadPaths } from './src/brandGeometry.ts';
 import { build } from 'esbuild';
 import { mkdtemp, readFile, writeFile, rm, readdir } from 'node:fs/promises';
 import { createHash } from 'node:crypto';
@@ -22,7 +23,12 @@ try {
     bundle: true, minify: true, sourcemap: false, metafile: true, target: ['es2022'],
     format: 'esm', splitting: true, chunkNames: 'chunk-[hash]', outdir, legalComments: 'external',
     define: { 'process.env.NODE_ENV': '"production"' } });
-  const html = '<!doctype html>\n<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>Stead</title><link rel="stylesheet" href="/stead/assets/app.css"></head><body><div id="root"></div><script type="module" src="/stead/assets/app.js"></script></body></html>\n';
+  const favicon = '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16">\n'
+    + '<rect width="16" height="16" rx="2.5" fill="#181817"/>\n'
+    + '<g fill="#f6f2eb" transform="translate(1 1) scale(.875)">\n'
+    + compactSteadPaths.map(path => '<path d="' + path + '"/>').join('\n') + '\n</g></svg>\n';
+  await writeFile(path.join(outdir, 'favicon.svg'), favicon);
+  const html = '<!doctype html>\n<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>Stead</title><link rel="icon" type="image/svg+xml" href="/stead/assets/favicon.svg"><link rel="stylesheet" href="/stead/assets/app.css"></head><body><div id="root"></div><script type="module" src="/stead/assets/app.js"></script></body></html>\n';
   await writeFile(path.join(outdir, 'index.html'), html);
   const identityHtml = '<!doctype html>\n<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>Stead identity approval</title><link rel="stylesheet" href="/stead-identity/assets/identity.css"></head><body><main id="root"></main><script type="module" src="/stead-identity/assets/identity.js"></script></body></html>\n';
   await writeFile(path.join(outdir, 'identity.html'), identityHtml);
@@ -36,9 +42,11 @@ try {
   }
   notices += '\n\nDependency: audited local Lucide icon subset\n'
     + await readFile(path.join(root,'vendor/lucide/LICENSE'),'utf8');
+  notices += '\n\nUrbit ship sigil artwork and phoneme indexing (sigil-js, urbit-ob)\n'
+    + await readFile(path.join(root, 'vendor/urbit-sigil/LICENSE'), 'utf8');
   await writeFile(path.join(outdir, 'NOTICE.txt'), notices);
   const manifest = { format: 1, classification: 'frontend-build-only', files: {} };
-  for (const name of ['index.html', 'identity.html', 'NOTICE.txt', ...Object.keys(result.metafile.outputs).map(file => path.basename(file))]) {
+  for (const name of ['index.html', 'identity.html', 'NOTICE.txt', 'favicon.svg', ...Object.keys(result.metafile.outputs).map(file => path.basename(file))]) {
     if (Object.hasOwn(manifest.files, name)) throw new Error('Duplicate output identity');
     const bytes = await readFile(path.join(outdir, name));
     manifest.files[name] = { bytes: bytes.length, sha256: createHash('sha256').update(bytes).digest('hex') };

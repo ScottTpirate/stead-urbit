@@ -1,3 +1,4 @@
+import {SteadMark} from './SteadMark';
 import { newId } from './protocol';
 import { StrictMode, useEffect, useRef, useState, type FormEvent, type ReactNode } from 'react';
 import { createRoot } from 'react-dom/client';
@@ -9,6 +10,7 @@ import {HandbookTour} from './HandbookTour';
 import {handbookProject, handbookWork, handbookCollection} from './handbookData';
 import {handbookClient, prepareHandbook, handbookTab, handbookDocument, handbookAddress} from './handbookProject';
 import { AppearanceControl } from './Appearance';
+import {ShipSigil} from './ShipSigil';
 import { AcceptedTime } from './AcceptedTime';
 import { WorkQuickActions, assigneeName, workStatuses, type WorkMenu, type WorkProperty } from './WorkQuickActions';
 import {PriorityMark} from './WorkMarks';
@@ -1342,12 +1344,15 @@ function App() {
             <div className="actions"><Button type="submit" variant="primary" pending={busy} disabled={!!pending || (form === 'work' && !canEdit)}>Save at home</Button><Button disabled={busy || !!pending} onClick={() => requestClose('form')}>{formDirty ? 'Discard changes…' : 'Close'}</Button>{workPanelOpen && work && <ActionMenu label="More work actions" disabled={busy || !!pending}><Button variant="quiet" disabled={busy || !!pending} onClick={() => void action(loadCurrentVersion)}>Compare current saved revision</Button></ActionMenu>}</div>
           </fieldset></form></Surface>;
 
-  const brand = <><span className="brand-mark" aria-hidden="true">s</span><span>stead</span></>;
+  const brand = <><SteadMark/><span>stead</span></>;
   const canReconnect = ['outcome_unknown', 'invalid_csrf', 'resume_required', 'refresh_required', 'updates_unavailable', 'denied_or_not_found'].includes(diagnostic);
   return <div className={identity ? 'app-shell signed-in' : 'app-shell entry-shell'}>
     <header className="topbar">{project ? <button className="brand" aria-label="Stead home" type="button" disabled={busy}
       onClick={() => void action(() => openProject(project), explainConnection)}>{brand}</button> : <span className="brand">{brand}</span>}
-      {identity && <><span className="workspace-label">Workspace</span><div className="account"><span className="member-label"><span className="member-name">{identity.display_name}</span><small title={identity.identity_ship}>{identity.identity_ship}</small></span><Button variant="quiet" disabled={busy} onClick={() => void action(() => home.logout())}>Sign out</Button></div></>}</header>
+      {identity && <><span className="workspace-label">Workspace</span><div className="account"><span className="member-profile">
+        <ShipSigil ship={identity.identity_ship ?? ''}/>
+        <span className="member-label"><span className="member-name" title={identity.display_name}>{identity.display_name}</span><small title={identity.identity_ship}>{identity.identity_ship}</small></span>
+      </span><Button variant="quiet" disabled={busy} onClick={() => void action(() => home.logout())}>Sign out</Button></div></>}</header>
     {!online && <div className="banner" role="status">You’re offline. Drafts stay in this tab; nothing is saved until the home confirms it.</div>}
     <main id="main">{identity ? <a className="skip-link" href="#project-content" onClick={event => {
       event.preventDefault(); document.getElementById('project-content')?.focus();
@@ -1446,10 +1451,10 @@ function App() {
           {project && <><div className={tab === 'project' && !showRepository ? 'project-heading project-cover' : 'project-heading'}><div><p className="eyebrow">Projects <span aria-hidden="true">/</span> {project.project_key}</p><h1 ref={heading} tabIndex={-1}>{project.title}</h1>
             {tab === 'project' && !showRepository && project.summary && <p className="project-summary">{project.summary}</p>}
           </div>{project.role && <span className="role-badge"><span>Your access</span> {project.role}</span>}</div>
-          <nav className="tabs" aria-label="Project views">{([['project','Overview'],['work','Work'],['documents','Docs']] as const).map(([kind,label]) => <Button disabled={busy} key={kind} variant={!showRepository && tab === kind ? 'primary' : 'quiet'} aria-current={!showRepository && tab === kind ? 'page' : undefined} onClick={() => selectProjectTab(kind)}>{label}</Button>)}
+          <nav className="tabs" aria-label="Project views">{([['project','Overview'],['work','Work'],['documents','Docs']] as const).map(([kind,label]) => <Button disabled={busy} key={kind} variant={!showRepository && tab === kind ? 'primary' : 'quiet'} aria-current={!showRepository && tab === kind ? 'page' : undefined} onClick={() => selectProjectTab(kind)}><SteadMark section={kind}/>{label}</Button>)}
           {carrierMode.kind === 'legacy' && (repository?.status === 'ready' || externalRepository) && <Button disabled={busy || !!editor?.dirty || !!pending || !!form}
             variant={showRepository ? 'primary' : 'quiet'} aria-current={showRepository ? 'page' : undefined}
-            onClick={() => { syncResourceAddress({kind:'project',project:project.project_id!,view:'code'}); clearCodeSelection(); setShowRepository(true); }}>Code</Button>}</nav>
+            onClick={() => { syncResourceAddress({kind:'project',project:project.project_id!,view:'code'}); clearCodeSelection(); setShowRepository(true); }}><SteadMark section="code"/>Code</Button>}</nav>
           {inHandbook && <HandbookTour principal={identity.principal_id!}
             view={showRepository ? 'code' : tab === 'work' ? 'work' : tab === 'documents' ? 'docs' : 'overview'}
             onNavigate={page => { if (!actionBusy.current) location.hash = encodeProductRoute({kind:'handbook',page}); }}/>}

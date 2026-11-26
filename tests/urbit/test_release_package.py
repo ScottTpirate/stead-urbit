@@ -18,6 +18,42 @@ sys.path.insert(0, str(ROOT / 'scripts'))
 import package_release as release
 
 
+class ReleaseBoundsTests(unittest.TestCase):
+    def test_source_budget_leaves_space_for_generated_files_and_metadata(self):
+        sources = {f'desk/test-{i}.hoon': b'test' for i in range(release.MAX_DESK_SOURCES)}
+        fixed = ('desk/sys.kelvin', 'desk/desk.bill', 'LICENSE', 'THIRD_PARTY_NOTICES.md',
+                 'notices/urbit-kernel-LICENSE.txt', 'OPERATOR.md', 'source/release-contract.json',
+                 'source/toolchain.lock.json', 'source/frontend.json', 'manifest.json')
+        members = {**sources, **dict.fromkeys(fixed, b'test')}
+        self.assertEqual(len(members), 128)
+        self.assertTrue(release.canonical_archive(members))
+        with self.assertRaisesRegex(ValueError, 'member bound'):
+            release.canonical_archive({**members, 'desk/one-extra.hoon': b'test'})
+
+
+class FrontendInventoryTests(unittest.TestCase):
+    def test_svg_is_scoped_to_the_home_favicon(self):
+        body = b'<svg xmlns="http://www.w3.org/2000/svg"/>'
+        digest = release.digest(body)
+
+        def with_icon(route, mime):
+            rows = [('/stead/', 'text/html; charset=utf-8'),
+                    ('/stead-identity/', 'text/html; charset=utf-8'), (route, mime)]
+            lines = [f"      ['{path}' [[%web %stead 'asset-{digest}' %stead-asset ~] '{kind}' '{digest}']]"
+                     for path, kind in rows]
+            source = (release.INVENTORY_HEAD + '\n'.join(lines) + release.INVENTORY_TAIL).encode()
+            files = {'web/stead/inventory.hoon': source, f'web/stead/asset-{digest}.stead-asset': body}
+            _, record = release.frontend(files.__getitem__)
+            return json.loads(record)['routes'][-1]
+
+        icon = '/stead/assets/favicon.svg'
+        self.assertEqual(with_icon(icon, 'image/svg+xml')['route'], icon)
+        for route, mime in [(icon, 'text/html; charset=utf-8'), ('/stead/assets/other.svg', 'image/svg+xml'),
+                            ('/stead-identity/assets/favicon.svg', 'image/svg+xml')]:
+            with self.subTest(route=route, mime=mime), self.assertRaisesRegex(ValueError, 'favicon'):
+                with_icon(route, mime)
+
+
 class ReleasePackageTests(unittest.TestCase):
     @classmethod
     def setUpClass(cls):

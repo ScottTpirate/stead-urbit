@@ -32,6 +32,8 @@ initially. Project navigation is Overview, Work, Docs and optional Code. Links
 and Activity become contextual views, with advanced inspection available when
 useful. Cross-home aggregation needs a separately authorized protocol.
 
+Use the four-piece Stead mark for Home. Overview, Work, Docs and Code each pair a fixed section symbol with a visible label. The account header pairs the signed-in member’s display name and ship name with its Urbit sigil for supported ship classes. Keep the ship name readable at narrow widths and when a sigil is unavailable. The drawings and small-size variants live in the [brand guide](../../web/app/BRAND.md).
+
 ## 2. Domain and interface contract
 
 | Concept | Required meaning and boundary |

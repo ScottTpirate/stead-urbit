@@ -48,14 +48,11 @@ main { flex: 1; min-width: 0; }
   width: 224px; padding: 8px 20px; border: 0; background: var(--house-ground);
   color: var(--house-ink); font-size: 23px; font-weight: 620; letter-spacing: -.065em;
 }
-.brand-mark, .space-mark, .project-glyph { display: inline-grid; flex: none; place-items: center; }
-.brand-mark {
-  width: 28px; height: 28px; border: 1px solid #96918a; border-radius: 50%;
-  font: italic 23px/1 Georgia, serif; padding-bottom: 2px;
-}
+.space-mark, .project-glyph { display: inline-grid; flex: none; place-items: center; }
 button.brand:focus-visible { outline-offset: -4px; outline-color: var(--house-focus); }
 .workspace-label { color: var(--muted); font-size: 13px; }
 .account { display: flex; align-items: center; gap: 16px; margin-left: auto; }
+.member-profile { display: flex; align-items: center; gap: 8px; min-width: 0; }
 .member-label { display: flex; align-items: baseline; gap: 8px; font-size: 13px; font-weight: 570; }
 .member-label small, .space-label small { color: var(--muted); font: 11px var(--mono); }
 .account .stead-button { border-inline-start: 1px solid var(--line); border-radius: 0; }
@@ -396,11 +393,12 @@ footer { display: flex; justify-content: space-between; gap: 12px; padding: 12px
   .topbar .account .stead-button:hover:enabled { background: var(--house-field); }
   .topbar .member-label small { color: var(--house-muted); }
   .project-cover { min-height: 126px; }
-  .member-name, .space-label, .rail-label { display: none; }
+  .space-label, .rail-label { display: none; }
   .account, .member-label { min-width: 0; }
   .account { gap: 8px; }
   .account button { flex: none; }
-  .member-label small { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .member-label { display: grid; gap: 1px; }
+  .member-name, .member-label small { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
   .workspace { display: block; }
   .sidebar { padding: 0 12px; border-bottom: 1px solid #393834; }
   .workspace-switch {

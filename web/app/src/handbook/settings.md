@@ -8,6 +8,8 @@ Open **Settings** in the workspace sidebar. Choose **System**, **Light** or **Da
 
 ## What other people see
 
+The name at the top of Stead belongs to the signed-in account. Beneath it is the Urbit ID that approved the session. For a galaxy, star or planet, Stead draws that ship’s sigil beside the name. Two ships can look alike at this size. Read the Urbit ID when you need to tell them apart.
+
 Appearance applies to everyone using this browser profile. Each signed-in account chooses whether the Handbook appears in its own project list. Other projects show only when your Home has granted you access. If you expected a project, ask its maintainer to check which Urbit identity has membership.
 
 ## Sign in on the private pilot

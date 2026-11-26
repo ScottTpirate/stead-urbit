@@ -72,3 +72,41 @@ directory and updates the release identifiers in the browser adapter. Run
 `python3 web/app/handbook-repository.py` to check them. The Handbook CI job
 also opens the root tree and file through the same read-only adapter used by
 the project’s Code tab.
+
+## Profile ship sigils
+
+A member's galaxy, star or planet uses Urbit's official 28 px icon vocabulary
+(`detail: none`, `space: none`). The account name and ship address remain the
+identity labels. The renderer centers a star's rectangular sigil in its square
+avatar slot. For ship classes outside the official generator, the account
+uses its text label. The browser matches phonemes in memory.
+
+The 512 syllables in the official small-size index resolve to 14 distinct SVG
+element records. The local table deduplicates identical records and retains the
+exact paths, circle/rectangle dimensions, stroke choices and syllable assignments.
+Some different ships therefore share the same small-size silhouette. The profile
+uses ordinary React SVG elements in the active theme. The distribution includes
+Tlon's MIT license for both upstream sources in `NOTICE.txt`.
+
+[Official icon index and revision](https://github.com/urbit/sigil-js/blob/e86b674a4a3539ddc634351f335ac31d63bf64bd/src/symbols/icon.ts) ·
+[Official layout](https://github.com/urbit/sigil-js/blob/e86b674a4a3539ddc634351f335ac31d63bf64bd/src/core.ts) ·
+[Prefix and suffix positions](https://github.com/urbit/urbit-ob/blob/3808c277fba9444a30946fc38c84c4751eae8d5f/src/internal/co.js)
+
+## Stead mark comparison
+
+The [offline comparison](tests/ship-sigil-audit.py) renders the application’s
+five distinct marks and the pinned official generator’s geometry at 256 px.
+It checks the galaxy, star and planet layouts, both detail settings, all three
+spacing settings and both monochrome polarities. For each possible first
+syllable it counts solid pixels that disagree with Stead and that no later
+syllable can cover. The lower bounds were 962 pixels for the original master,
+2,747 for compact/Overview, 4,657 for Work, 2,534 for Docs and 3,407 for Code.
+These bounds establish a difference for those stock renderings. They measure
+neither perceived similarity at avatar size nor third-party marks.
+
+To reproduce, use Node 24 and Python with Cairo and GI/librsvg. Run the
+following from the repository root, pointing it at the official revision above.
+
+```sh
+python3 web/app/tests/ship-sigil-audit.py /path/to/sigil-js
+```

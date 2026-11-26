@@ -19,7 +19,7 @@ try {
       const name = url.pathname === '/stead/' ? 'index.html' : url.pathname.slice('/stead/assets/'.length);
       if (url.pathname === '/favicon.ico') return route.fulfill({status:204});
       if (Object.hasOwn(manifest.files,name)) return route.fulfill({
-        contentType: name.endsWith('.html')?'text/html':name.endsWith('.css')?'text/css':'text/javascript',
+        contentType: name.endsWith('.html')?'text/html':name.endsWith('.css')?'text/css':name==='favicon.svg'?'image/svg+xml':'text/javascript',
         body: await readFile(new URL(name, dist))});
     } else if (req.method() === 'POST') {
       const q = req.postDataJSON();
@@ -32,7 +32,7 @@ try {
         updates:'stead.updates/3',work_contract:'stead.work-contract/1',workspace_queries:'stead.workspace-queries/1'}});
       if (url.pathname === '/stead/auth/resume') return route.fulfill({json:{status:'authenticated',csrf:'c'.repeat(64)}});
       if (url.pathname === '/stead/api/query' && ['projects','identity'].includes(q.kind)) {
-        const rows = q.kind==='projects'?{}:{'0':{principal_id:account(member),identity_ship:'~bus',display_name:'Member '+member,
+        const rows = q.kind==='projects'?{}:{'0':{principal_id:account(member),identity_ship:member===1?'~bus':'~tagdep-salled',display_name:'Member '+member,
           binding_id:account(50+member),binding_revision:'1',session_audit_id:String(member).repeat(64),can_create:'no'}};
         return route.fulfill({json:{protocol:'stead.query-result/3',status:'read',request_id:q.request_id,kind:q.kind,
           project_id:q.project_id,container_id:q.container_id,resource_id:q.resource_id,search:q.search,
@@ -54,9 +54,29 @@ try {
 
   await page.goto(base);await rail.waitFor();
   assert.equal(await button('Show me around').count(),0);
+  const profile=page.locator('.member-profile');
+  const sigil=profile.locator('.ship-sigil');
+  await profile.getByText('~bus',{exact:true}).waitFor();
+  assert.equal(await sigil.getAttribute('aria-hidden'),'true');
+  assert.equal(await sigil.locator('g > g').count(),1);
   const nativeBeforeGuide=nativePosts.length;
   await rail.click();await heading('Stead Handbook').waitFor();
   await page.getByRole('region',{name:'Project shortcuts'}).waitFor();
+  const iconLink=page.locator('head link[rel="icon"]');
+  assert.equal(await iconLink.getAttribute('href'),'/stead/assets/favicon.svg');
+  assert.equal(await iconLink.getAttribute('type'),'image/svg+xml');
+  const brand=page.locator('.brand .stead-brand-mark');
+  assert.equal(await brand.getAttribute('aria-hidden'),'true');
+  assert.equal(await brand.locator('path').count(),4);
+  await tab('Code').waitFor();
+  const marks=[];
+  for (const name of steps) {
+    const mark=tab(name).locator('.stead-section-mark');
+    assert.equal(await mark.getAttribute('aria-hidden'),'true');
+    marks.push(await mark.locator('path').evaluateAll(paths=>paths.map(path=>path.getAttribute('d')).join(' ')));
+  }
+  assert.equal(new Set(marks).size,steps.length);
+
   await button('Show me around').focus();await page.keyboard.press('Enter');
   for (const [index,view] of steps.entries()) {
     const tour=page.getByRole('region',{name:view,exact:true});
@@ -118,6 +138,11 @@ try {
     await page.reload();
     const reader=page.locator('.document-reader');
     await reader.getByRole('heading',{name:title,exact:true}).waitFor();
+    if (slug==='why-stead') {
+      for (const label of ['GitHub or GitLab.', 'Atlassian’s Jira and Confluence.', 'A local folder.']) {
+        await reader.getByText(label,{exact:true}).waitFor();
+      }
+    }
     if (slug==='architecture') {
       await reader.getByRole('heading',{name:'What lives in Git, and what lives in Home',exact:true}).waitFor();
       await reader.getByRole('table').waitFor();
@@ -139,6 +164,8 @@ try {
   await heading('Stead Handbook').waitFor();await button('Replay tour').waitFor();
   await page.goBack();await visibility.waitFor();
   member=2;await page.reload();await visibility.waitFor();assert.equal(await visibility.isChecked(),true);
+  await profile.getByText('~tagdep-salled',{exact:true}).waitFor();
+  assert.equal(await sigil.locator('g > g').count(),4);
   await rail.click();await button('Show me around').click();
   await page.getByText('Step 1 of 4',{exact:true}).waitFor();
   await button('Skip').click();await page.reload();await button('Replay tour').waitFor();
@@ -146,6 +173,8 @@ try {
 
   await preferences.click();member=1;await page.reload();await visibility.waitFor();assert.equal(await visibility.isChecked(),false);
   await visibility.check();await rail.waitFor();await page.setViewportSize({width:320,height:800});
+  assert.equal(await profile.getByText('Member 1',{exact:true}).isVisible(),true);
+  assert.equal(await profile.getByText('~bus',{exact:true}).isVisible(),true);
   await page.goto(base+'#handbook/questions');await heading('Common questions').first().waitFor();
   await page.getByRole('button',{name:'Browse workspace'}).click();await rail.click();
   await heading('Stead Handbook').waitFor();await button('Replay tour').click();
