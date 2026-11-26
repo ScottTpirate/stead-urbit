@@ -1249,6 +1249,54 @@ try {
     await page.getByRole('button', {name: 'Close', exact: true}).click();
     assert.equal(await page.getByRole('alertdialog').count(), 0);
   });
+  await check('work-status-groups-keyboard-and-responsive-rows', async (page, state) => {
+    const tasks = [
+      ['Compare the spring seed lists', 'todo', 'medium', 'Taylor'],
+      ['Confirm the tool library hours', 'todo', 'none', ''],
+      ['Share the planting calendar', 'in_progress', 'high', 'Sam'],
+      ['Check access to the north beds', 'blocked', 'urgent', 'Taylor'],
+      ['Publish the garden map', 'done', 'low', 'Sam'],
+    ];
+    state.work = tasks.map(([title, status, priority, assignee], index) => ({
+      kind: 'work', resource_id: id(670 + index), title, status, priority, type: 'task', resource_revision: '1',
+      description: 'Coordinate with the garden team before the next work day.',
+      assignee_principal_id: assignee ? id(assignee === 'Taylor' ? 109 : 110) : '', assignee_display_name: assignee,
+    }));
+    await page.setViewportSize({width: 1440, height: 960});
+    await page.getByRole('button', {name: 'Work', exact: true}).click();
+    const group = status => page.locator('details.work-group').filter({has: page.locator('summary', {hasText: status})});
+    const todo = group('To do'), done = group('Done');
+    const first = todo.getByRole('button', {name: tasks[0][0], exact: true});
+    await first.waitFor();
+    assert.equal(await done.evaluate(node => node.open), false);
+    assert.ok(await todo.locator('.work-row').evaluateAll(rows => rows.every(row => {
+      const height = row.getBoundingClientRect().height;
+      return height >= 44 && height <= 48;
+    })));
+    await page.screenshot({path: path.join(output, 'work-queue-desktop.png')});
+    await todo.locator('summary').focus(); await page.keyboard.press('Enter');
+    assert.equal(await first.isVisible(), false);
+    await page.keyboard.press('Space'); await first.waitFor();
+    await done.locator('summary').focus(); await page.keyboard.press('Enter');
+    await done.getByRole('button', {name: tasks[4][0], exact: true}).waitFor();
+    await page.keyboard.press('Space');
+    await page.getByRole('button', {name: 'Filters', exact: true}).click();
+    await page.getByRole('combobox', {name: 'Filter by status'}).selectOption('done');
+    await page.getByRole('button', {name: tasks[4][0], exact: true}).waitFor();
+    await page.getByText('1 of 5 work items', {exact: true}).waitFor();
+    await page.screenshot({path: path.join(output, 'work-queue-filtered.png')});
+    await page.getByRole('button', {name: 'Filters', exact: true}).click();
+    await first.waitFor();
+    await page.setViewportSize({width: 390, height: 844});
+    await first.scrollIntoViewIfNeeded();
+    assert.ok(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth + 1));
+    await page.screenshot({path: path.join(output, 'work-queue-phone.png')});
+    await page.setViewportSize({width: 1440, height: 960});
+    await first.click();
+    await page.locator('#work-detail-panel').getByRole('heading', {name: tasks[0][0], exact: true}).waitFor();
+    await page.screenshot({path: path.join(output, 'work-drawer-desktop.png')});
+    assert.equal(state.commands.length, 0);
+  });
   await check('work-title-opens-reader-details-without-write-actions', async (page, state) => {
     // The desktop preview keeps the list available for its visible context menu.
     await page.setViewportSize({width: 1440, height: 1000});

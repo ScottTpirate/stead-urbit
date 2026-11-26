@@ -3,6 +3,7 @@ on:
   pull_request:
     paths:
       - .github/workflows/pilot-client-assets.yml
+      - web/app/src/**
       - web/app/build.mjs
       - web/app/package-desk.mjs
       - native/core/desk/web/stead/**
