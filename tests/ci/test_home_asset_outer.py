@@ -64,7 +64,7 @@ finally:
 
 # Test-only readonly chunks preserve the host's unchanged 1 MiB file limit.
 # Runtime archives remain exact full tar files; no host fixture is runtime evidence.
-ARCHIVE_CHUNKS = {'previous': [('previous-0.chunk', 524288, 'ff40efb3c3f8351cd7dc6f33e008e22a59ffae8510838032027597f65330fde3'), ('previous-1.chunk', 524288, 'c47dcb795b056405c06fb004c015e4c0d5498d5c78dc49ab20aea414f4233b9a'), ('previous-2.chunk', 344064, 'dee3742b0aeb62d9cfd357b04e1d3f9a5bec1953cfaaaa9aad95515982357e03')], 'target': [('target-0.chunk', 524288, 'ff40efb3c3f8351cd7dc6f33e008e22a59ffae8510838032027597f65330fde3'), ('target-1.chunk', 524288, '090926dadcf794695472fea0cfa1304e39ed2784b4c7a44a5b5d626e505e4a7e'), ('target-2.chunk', 524288, '4e1233e6308d8e590961aa443b712c67f25e6f0f098fcb46741df2aacd054f53'), ('target-3.chunk', 45056, 'd42020dc2c03fdd9c704226f6a5298b5c9899296509c5f07aa79ba0fefea95a5')]}
+ARCHIVE_CHUNKS = {'previous': [('previous-0.chunk', 524288, 'ff40efb3c3f8351cd7dc6f33e008e22a59ffae8510838032027597f65330fde3'), ('previous-1.chunk', 524288, 'c47dcb795b056405c06fb004c015e4c0d5498d5c78dc49ab20aea414f4233b9a'), ('previous-2.chunk', 344064, 'dee3742b0aeb62d9cfd357b04e1d3f9a5bec1953cfaaaa9aad95515982357e03')], 'target': [('target-0.chunk', 524288, 'ff40efb3c3f8351cd7dc6f33e008e22a59ffae8510838032027597f65330fde3'), ('target-1.chunk', 524288, 'cabc5735e83d70c7cd4506264d71b7b156b49e9287e771c7c026e7d7a2132053'), ('target-2.chunk', 524288, '06ebf214c2256892bcf6e49f488e02e00b93632d9e10837f500d0035f96e2ba4'), ('target-3.chunk', 75776, '69e84bc851b731a7df6f096bfff4ec89b39db9c387ce42d314b97e0c3752ed12')]}
 
 
 def archive_bytes(name):

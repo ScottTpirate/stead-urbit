@@ -26,6 +26,7 @@ class Replies:
         self.overrides = {}
         self.seen = {}
         self.rows = {
+            **{source: '%.y' for source in E.CONDITIONS.values()},
             E.SUSPENDED: '%.n', E.DESK: '%release-test',
             E.SANITY: '0x73.6176.6564.3868.6578',
             E.ENCODING_CONTROL: '0x73.6176.6564.3868.6578',
@@ -129,9 +130,18 @@ class Saved8DirectTests(unittest.TestCase):
                for name in ('db', 'code', 'handoff', 'retired', 'packs', 'external')},
         })
         # Pins and numeric literals belong to fixed source, not caller Hoon.
-        self.assertIn('=(~zod our)', E.PREFIX)
-        self.assertIn('=(%.n .^(? %gu /=stead-home=/$))', E.PREFIX)
-        self.assertIn('=(%release-test .^(desk %gd /=stead-home=/$))', E.PREFIX)
+        self.assertEqual(E.CONDITIONS['ship'], '=(~zod our)')
+        self.assertEqual(E.SUSPENDED, '.^(? %gu /=stead-home=/$)')
+        self.assertEqual(E.DESK, '.^(desk %gd /=stead-home=/$)')
+        self.assertNotIn('stored', E.FINGERPRINT)
+        replies = Replies(b'x')
+        replies.overrides[E.CONDITIONS['handoff'], 1] = '%.n'
+        replies.overrides[E.CONDITIONS['packs'], 1] = 'syntax error'
+        with self.assertRaises(ValueError) as error:
+            E.collect(replies, 'seed8')
+        self.assertEqual(error.exception.projection_results['handoff'], 'no')
+        self.assertEqual(error.exception.projection_results['packs'], 'native-error')
+        self.assertEqual(error.exception.projection_results['external'], 'yes')
         self.assertNotIn('!<', E.PREFIX)
         self.assertNotIn('/+', E.PREFIX)
         self.assertEqual(E.grouped(262144), '262.144')

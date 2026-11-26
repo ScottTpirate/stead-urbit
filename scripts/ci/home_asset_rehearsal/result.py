@@ -17,9 +17,9 @@ PREFIX = b'STEAD_SAVED8_REHEARSAL_RESULT_V1 '
 MAX_FRAME = 4 * 1024 * 1024
 MAX_DESCRIPTOR = 8192
 BASE = 'a0e90ef29389077d453ec2a775cd8fd69f711727'
-TARGET = 'a670d58c7801a48a92ab66139839fd192abbc53b'
+TARGET = '51d608cb81955c35a021247697bdcc9a0936a4c5'
 PREVIOUS = 'baa226f22bc1950981628486539fa1f087d2e6544c12a18c1d15e144b082e7da'
-NEXT = 'd7aa054ca6110bb1a9d9e5a3bd89e5a662d13edb010e3e77e7a9f0ecef2b7afa'
+NEXT = '17c4932589c75d132416746c748c8acd0aecc5c7394c5766155eaab692839d97'
 RUNTIME = 'f7f0d3b3c0480fc10f887dfbc09bde56a81d723a803541c7886c538a0675d833'
 KERNEL = '5a187fededc4582a34fcd6055c67bb63e0917b94'
 CLEAN = {'clean': True, 'exit_code': 0, 'forced': False, 'premature': False, 'reaped': True}
@@ -229,17 +229,42 @@ def decode(raw, expected, *, context_sha, desk_hashes, assets):
     return value, artifacts(value['report'], value['artifacts'], expected, context_sha)
 
 
+def check_compiler(info):
+    require(type(info) is dict and set(info) == {'terms', 'coordinates'}
+        and type(info['terms']) is list and len(info['terms']) <= 12
+        and all(type(s) is str and s in E.COMPILER_WORDS for s in info['terms'])
+        and type(info['coordinates']) is list and len(info['coordinates']) <= 4
+        and all(type(point) is list and len(point) == 2 and all(type(n) is int
+            and 0 <= n <= 99999 for n in point) for point in info['coordinates']))
+
+
 def diagnostic(row):
     if row is None:
         return
-    require(type(row) is dict and set(row) == {'operation', 'last_command', 'positions', 'native_log'}
+    require(type(row) is dict and set(row) - {'conditions', 'condition_errors'} == {'operation', 'last_command', 'positions', 'native_log'}
         and type(row['operation']) is str and row['operation'] in DIAGNOSTIC_OPERATIONS
         and len(E.canonical(row)) <= 12288)
+    require(('conditions' in row) == ('condition_errors' in row))
+    if 'conditions' in row:
+        require(type(row['conditions']) is dict and set(row['conditions']) == set(E.CONDITIONS)
+            and all(type(v) is str and v in ('yes', 'no', 'empty', 'native-error')
+                    for v in row['conditions'].values())
+            and any(v != 'yes' for v in row['conditions'].values()))
+        errors = row['condition_errors']
+        require(type(errors) is dict and set(errors) == {k for k, v in row['conditions'].items() if v == 'native-error'})
+        for info in errors.values():
+            check_compiler(info)
     command = row['last_command']
     if command is not None:
-        require(type(command) is dict and set(command) == {'source_sha256', 'source_bytes',
+        require(type(command) is dict and set(command) - {'compiler'} == {'source_sha256', 'source_bytes',
             'completed', 'output_sha256', 'output_bytes', 'output_kind'}
             and E.digest(command['source_sha256']) and type(command['completed']) is bool)
+        if 'compiler' in command:
+            info = command['compiler']
+            allowed = (E.FINGERPRINT, E.TOTAL, *E.CONDITIONS.values())
+            require(command['completed'] and command['output_kind'] == 'other'
+                and command['source_sha256'] in {E.sha(s.encode()) for s in allowed})
+            check_compiler(info)
         integer(command['source_bytes'], 1, 65536)
         if command['completed']:
             require(E.digest(command['output_sha256']) and type(command['output_kind']) is str

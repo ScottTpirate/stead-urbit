@@ -24,24 +24,67 @@ DESK = '.^(desk %gd /=stead-home=/$)'
 # Exact source-owned direct projection builders; no native library import.
 SANITY = '0x73.6176.6564.3868.6578'
 
-PREFIX = (
-    '?>  =(~zod our)  '
-    '?>  .^(? %j /(scot %p our)/fake/(scot %da now))  '
-    '?>  =(%.n .^(? %gu /=stead-home=/$))  '
-    '?>  =(%release-test .^(desk %gd /=stead-home=/$))  '
-    '=/  egg=egg-any:gall  .^(egg-any:gall %gv /=stead-home=/$)  '
-    '?>  ?=([%20 %live *] egg)  =/  saved=vase  +.old-state.egg  '
-    '?>  ?=([%stead-home %8 [* *] * * * * *] q.saved)  '
-    '=/  stored=[team=[db=* projection=*] code=* handoff=* retired=* packs=* external=*]  +>.q.saved  '
-    '?>  &(?=(^ code.stored) ?=(^ -.code.stored) =(handoff.stored [%open 2 ~]) '
-    '?=(^ retired.stored) ?=(^ packs.stored) ?=(^ external.stored))  '
-    '=/  packed  (jam saved)  =/  total  (met 3 packed)  '
-    '?>  &((gth total 0) (lte total 262.144))  '
-)
+EGG = '=/  egg=egg-any:gall  .^(egg-any:gall %gv /=stead-home=/$)  '
+SAVED = EGG + '?>  ?=([%20 %live *] egg)  =/  saved=vase  +.old-state.egg  '
+VERSION = '?=([%stead-home %8 *] q.saved)'
+SHAPE = '?=([%stead-home %8 [* *] * * * * *] q.saved)'
+STORED = (SAVED + '?>  ' + SHAPE + '  '
+    '=/  stored=[team=[db=* projection=*] code=* handoff=* retired=* packs=* external=*]  +>.q.saved  ')
+PREFIX = SAVED + '?>  ' + VERSION + '  =/  packed  (jam saved)  '
+FINGERPRINT = SAVED + '?>  ' + VERSION + '  ^-  @ux  (shax (jam saved))'
+TOTAL = PREFIX + '^-  @ud  (met 3 packed)'
 
-FINGERPRINT = PREFIX + '^-  @ux  (shax packed)'
+# Each of these returns a loobean. An individual field or compiler failure
+# must not hide the other observations from the same suspended fake ship.
+CONDITIONS = {
+    'ship': '=(~zod our)',
+    'fake': '.^(? %j /(scot %p our)/fake/(scot %da now))',
+    'egg': EGG + '?=([%20 %live *] egg)',
+    'version': SAVED + VERSION,
+    'shape': SAVED + SHAPE,
+    'code': STORED + '?=(^ code.stored)',
+    'code-head': STORED + '?@  code.stored  %.n  ?=(^ -.code.stored)',
+    'handoff': STORED + '=(handoff.stored [%open 2 ~])',
+    'retired': STORED + '?=(^ retired.stored)',
+    'packs': STORED + '?=(^ packs.stored)',
+    'external': STORED + '?=(^ external.stored)',
+}
 
-TOTAL = PREFIX + '^-  @ud  total'
+
+COMPILER_WORDS = {'mint-vain', 'mint-nice', 'nest-fail', 'find-fork', 'find-limb', 'seek-loop', 'play-dull', 'syntax error'} | {'dojo', 'ford', 'hoon', 'syntax', 'error', 'failed',
+        'trace', 'stack', 'crash', 'expression', 'exit', 'bail', 'fail', 'parse',
+        'unexpected', 'token', 'line', 'column', 'evaluation', 'arvo', 'lens',
+        'term', 'type', 'path', 'meme', 'hoon-expression', 'poke', 'crude',
+        'nest', 'have', 'need', 'reference', 'find', 'limb', 'seed', 'weld'}
+
+
+def fixed_compiler_terms(text):
+    tokens = re.findall(r'[a-z][a-z-]{0,63}', text.lower()[:1024])
+    coords = re.findall(r'\[([0-9]{1,5})[ ,]+([0-9]{1,5})\]', text[:1024])
+    return {'terms': list(dict.fromkeys(word for word in tokens if word in COMPILER_WORDS))[:12],
+        'coordinates': [[int(line), int(column)] for line, column in coords[:4]]}
+
+
+def projection_checks(dojo):
+    observed, diagnostics = {}, {}
+    for name, source in CONDITIONS.items():
+        output = dojo(source)
+        observed[name] = projection_result(output)
+        if observed[name] == 'native-error':
+            diagnostics[name] = fixed_compiler_terms(output)
+    if any(value != 'yes' for value in observed.values()):
+        error = ValueError('Saved8 projection check failed')
+        error.projection_results = observed
+        error.projection_diagnostics = diagnostics
+        raise error
+
+
+def projection_result(output):
+    value = output.strip()
+    if value in ('%.y', '%.n'):
+        return 'yes' if value == '%.y' else 'no'
+    return 'native-error' if value else 'empty'
+
 
 ENCODING_CONTROL = (
     '=/  capture-hex  |=  [size=@ud data=@]  ^-  @t  '
@@ -85,7 +128,8 @@ def digest_command(field, fingerprint):
     domain, noun = NOUNS[field]
     # This is the exact a0 ++hash arithmetic. Return its numeric digest rather
     # than running its64-character output formatter. Python formats064x.
-    return (bound(PREFIX, fingerprint)
+    prefix = PREFIX if field in ('type_pin', 'payload_pin') else STORED + '=/  packed  (jam saved)  '
+    return (bound(prefix, fingerprint)
         + '=/  part  (jam ' + noun + ')  =/  width  (met 3 part)  '
         + '=/  text=@t  (en:base16:mimes:html [width (rev 3 width part)])  '
         + '=/  domain=@t  \'' + domain + '\'  =/  prefix  +((met 3 domain))  '
@@ -98,7 +142,7 @@ def chunk_command(total, offset, fingerprint):
             and type(offset) is int and 0 <= offset < total and offset % CHUNK == 0)
     size = min(CHUNK, total - offset)
     return (bound(PREFIX, fingerprint)
-        + '?>  =(' + grouped(total) + ' total)  ^-  @ux  '
+        + '?>  =(' + grouped(total) + ' (met 3 packed))  ^-  @ux  '
         + '(cut 3 [' + grouped(offset) + ' ' + grouped(size) + '] packed)')
 
 def chunk_bytes(value, total, offset):
@@ -221,6 +265,7 @@ def collect(dojo, stage):
     require(atom(dojo(SANITY), 64) == ENCODING_MARKER)
     require(atom(dojo(ENCODING_CONTROL), 64) == ENCODING_MARKER)
     before = fingerprint(dojo)
+    projection_checks(dojo)
     total = native_decimal(dojo(TOTAL))
     pins = {'vase_fingerprint': before}
     for field in NOUNS:

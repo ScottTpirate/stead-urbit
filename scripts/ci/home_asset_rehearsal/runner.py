@@ -23,10 +23,10 @@ import types
 from . import evidence as E
 
 BASE = 'a0e90ef29389077d453ec2a775cd8fd69f711727'
-TARGET = 'a670d58c7801a48a92ab66139839fd192abbc53b'
+TARGET = '51d608cb81955c35a021247697bdcc9a0936a4c5'
 ARCHIVES = {
     'previous': (1392640, 'baa226f22bc1950981628486539fa1f087d2e6544c12a18c1d15e144b082e7da', BASE),
-    'target': (1617920, 'd7aa054ca6110bb1a9d9e5a3bd89e5a662d13edb010e3e77e7a9f0ecef2b7afa', TARGET),
+    'target': (1648640, '17c4932589c75d132416746c748c8acd0aecc5c7394c5766155eaab692839d97', TARGET),
 }
 SEED = {
     'app/stead-home.hoon': 'd6d15bc9514001a2edcdcb67384881826215e7fd40c08465edc74962d8b70fdd',
@@ -81,7 +81,12 @@ def command_observation(source, output=None):
         if kind is None:
             kind = 'hex-atom' if re.fullmatch(r'0x[0-9a-f]+(?:\.[0-9a-f]+)*', text) else 'other'
         result.update(output_sha256=E.sha(value), output_bytes=len(value), output_kind=kind)
+        if source in (E.FINGERPRINT, E.TOTAL, *E.CONDITIONS.values()) and kind == 'other':
+            # Frozen commands return only a boolean or digest/length. Retain
+            # compiler vocabulary and coordinates; arbitrary text and nouns stay private.
+            result['compiler'] = E.fixed_compiler_terms(text)
     return result
+
 
 
 def failure_positions(error, sources):
@@ -537,6 +542,9 @@ def run(guard):
         try:
             if native is not None:
                 report['diagnostic']['last_command'] = native.last_command
+            if hasattr(error, 'projection_results'):
+                report['diagnostic']['conditions'] = error.projection_results
+                report['diagnostic']['condition_errors'] = error.projection_diagnostics
             sources = {}
             for label, (root, path) in DIAGNOSTIC_SOURCES.items():
                 raw = read_regular(Path(root) / path, 262144)

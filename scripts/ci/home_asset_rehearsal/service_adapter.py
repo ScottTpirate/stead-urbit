@@ -24,7 +24,7 @@ from . import result as R
 PROFILE = 'home-assets-saved8/1'
 PREFIX = 'scripts/ci/home_asset_rehearsal/'
 DATA = {
-    'previous.tar': (1392640, R.PREVIOUS), 'target.tar': (1617920, R.NEXT),
+    'previous.tar': (1392640, R.PREVIOUS), 'target.tar': (1648640, R.NEXT),
     'seed-home.hoon': (607, 'd6d15bc9514001a2edcdcb67384881826215e7fd40c08465edc74962d8b70fdd'),
     'seed-lib.hoon': (15981, '4021487a4d7878461e02951a8e00ccd28b1b9eb2346ec3a09f596ca93bc131e4'),
     'a0-stead-codec.hoon': (9532, '56e3d574381bbf8cdf29ca192c70eff256009f89d782e3ffe859b19c1321cbd7'),
@@ -38,8 +38,8 @@ DRIVERS = {'lib/stead-codec.hoon': 'a0-stead-codec.hoon', 'lib/stead-delivery.ho
 FROZEN = {
     PREFIX + '__init__.py': '012fb68d9afed4520e136077b0cc8124df015eb584ab421cf051d0d7c210bec4',
     PREFIX + 'worker.py': 'bfe387e7559d63eb84b160df7ce6c060fcbf92caf79d9f25802f74d80afbb4a9',
-    PREFIX + 'runner.py': '8d759ca5d650c7ba9815bc1bf1949ca4e0f82bc13f015ca6b0915eebc0cbd037',
-    PREFIX + 'evidence.py': 'd9c23d3dada2da6bd3ee3309761d4f01c1c42880df64d97f16f888fb73122506',
+    PREFIX + 'runner.py': '4738d4d2b22d612c3c1e94d12309166ab5479586af87b124ff4709bde1bf0b8c',
+    PREFIX + 'evidence.py': '98fb6bc0613523dc9383b6c3fe845a21d4d02581904c405d9cf5bc00a2d287a0',
     PREFIX + 'capture.hoon': '04296e9706c1a58af9a139aed9fa7a7aba040b912bbb588292207610df84e6e3',
     'scripts/release_install.py': '30b2a651c3e7d124e7e5ef319f5581299d29427322e605f1ffca91e9015f5e80',
     'scripts/sdk_native/native.py': '3c12a59eafe9b165550d0bf469b359aaf3b3127ecf43f357cf561ce358ccde1c',

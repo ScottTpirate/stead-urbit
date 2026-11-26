@@ -49,6 +49,7 @@ class Saved8EncodingTests(unittest.TestCase):
             if source == E.SUSPENDED: return '%.n'
             if source == E.DESK: return '%release-test'
             if source in (E.SANITY, E.ENCODING_CONTROL): return '0x73.6176.6564.3868.6578'
+            if source in E.CONDITIONS.values(): return '%.y'
             if source == E.FINGERPRINT: return '0x' + fingerprint
             if source == E.TOTAL: return '16.641'
             if source in [E.digest_command(field, fingerprint) for field in E.NOUNS]:
@@ -62,7 +63,7 @@ class Saved8EncodingTests(unittest.TestCase):
         self.assertEqual(value['data'], raw)
         self.assertEqual(value['artifact_sha256'], E.sha(raw))
         self.assertEqual(value['capture_pin'], capture_pin)
-        self.assertEqual(calls, [E.SUSPENDED, E.DESK, E.SANITY, E.ENCODING_CONTROL, E.FINGERPRINT, E.TOTAL,
+        self.assertEqual(calls, [E.SUSPENDED, E.DESK, E.SANITY, E.ENCODING_CONTROL, E.FINGERPRINT, *E.CONDITIONS.values(), E.TOTAL,
             *[E.digest_command(field, fingerprint) for field in E.NOUNS],
             E.chunk_command(len(raw), 0, fingerprint), E.chunk_command(len(raw), E.CHUNK, fingerprint),
             E.SUSPENDED, E.DESK, E.FINGERPRINT])
