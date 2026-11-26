@@ -59,14 +59,14 @@ class ModelCatalog:
                    'display_name': value['display_name'], 'model': value['model'],
                    'placement': value['endpoint']['placement']}
 
-    def prepare(self, scope, turn, instructions, messages, tools, *, prior_digest=None):
+    def prepare(self, scope, turn, instructions, messages, tools, *, prior_digest=None, required_tool=None):
         """Build the existing journal input for an already pinned Run scope."""
         model.closed(scope, model.SCOPE_FIELDS)
         key = binding_key(scope)
         model.require(key in self._bindings, 'runtime_binding_unavailable')
         spec = self._bindings[key]
         request = model.prepare_chat(spec, scope, turn, instructions, messages, tools,
-                                     prior_digest=prior_digest)
+                                     prior_digest=prior_digest, required_tool=required_tool)
         return spec, request
 
 

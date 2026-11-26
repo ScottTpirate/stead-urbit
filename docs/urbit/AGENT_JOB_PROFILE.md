@@ -203,6 +203,19 @@ Keep the operator catalog outside worker-writable storage. Save the selected con
 
 This path prepares a request. Before sending it, the supervisor still needs the current native grant, lease, budget and egress decision. A proposed tool call also requires its own authorization. The catalog contains credential references only. Installing an example does not start a model, send data to a provider or enable the pilot's Run controls.
 
+A connection using `stead.model-connection/2` declares
+`capabilities.required_tool_choice` as `single-function/1` or `unsupported`.
+Give the connection a new revision and select its new digest in the Run scope.
+The supervisor can pass `required_tool="propose_doc_replacement"` to
+`catalog.prepare` or `EffectJournal.for_run`. The provider then receives
+one registered function and `tool_choice: "required"`. This also works with
+servers that support required tool use but lack a named-function wire format.
+
+A completed reply must contain exactly one call to the selected function.
+Refusal, incomplete output and text-only responses supply no Doc change.
+The default remains automatic selection. Existing version-one requests and
+journals retain their exact bytes and continue to replay.
+
 ### Recover a model proposal for review
 
 The supervisor retains the terminal `result_sha256` for the exact request. After
