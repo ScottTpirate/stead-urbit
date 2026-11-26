@@ -7,9 +7,11 @@
   :~
       ['/stead/assets/NOTICE.txt' [[%web %stead 'asset-3e9102608b1a1d3dced1bd3f42068196621e3be103c017e5eb0ed70d4521b58e' %stead-asset ~] 'text/plain; charset=utf-8' '3e9102608b1a1d3dced1bd3f42068196621e3be103c017e5eb0ed70d4521b58e']]
       ['/stead-identity/assets/NOTICE.txt' [[%web %stead 'asset-3e9102608b1a1d3dced1bd3f42068196621e3be103c017e5eb0ed70d4521b58e' %stead-asset ~] 'text/plain; charset=utf-8' '3e9102608b1a1d3dced1bd3f42068196621e3be103c017e5eb0ed70d4521b58e']]
-      ['/stead/assets/app.css' [[%web %stead 'asset-743c554b46965dd33671f44abce1af0bb457f247b5997ea8d7b9c31318a73252' %stead-asset ~] 'text/css; charset=utf-8' '743c554b46965dd33671f44abce1af0bb457f247b5997ea8d7b9c31318a73252']]
-      ['/stead/assets/app.js' [[%web %stead 'asset-76414e39c8dcf3af9f869ca8e2405725b524430c84604e5d78bbc0fb0a1a8f18' %stead-asset ~] 'text/javascript; charset=utf-8' '76414e39c8dcf3af9f869ca8e2405725b524430c84604e5d78bbc0fb0a1a8f18']]
+      ['/stead/assets/app.css' [[%web %stead 'asset-4b20f7954924c0957371b3abb9707854eb21182e452b7d098d196b20062bf25b' %stead-asset ~] 'text/css; charset=utf-8' '4b20f7954924c0957371b3abb9707854eb21182e452b7d098d196b20062bf25b']]
+      ['/stead/assets/app.js' [[%web %stead 'asset-bf759356fbb5727c96e1aee32de6713bba1341333a5158c1a6d6a937edc6c080' %stead-asset ~] 'text/javascript; charset=utf-8' 'bf759356fbb5727c96e1aee32de6713bba1341333a5158c1a6d6a937edc6c080']]
       ['/stead/assets/app.js.LEGAL.txt' [[%web %stead 'asset-545015593ed73aed1b421833eb462ccc6ba2ae0179ebd64909ec13ea499ed07c' %stead-asset ~] 'text/plain; charset=utf-8' '545015593ed73aed1b421833eb462ccc6ba2ae0179ebd64909ec13ea499ed07c']]
+      ['/stead/assets/chunk-EUJWMAPN.js' [[%web %stead 'asset-96aa0cdd475339c38a2e767f93f61475e17ff2e6e236147a062902c2f756db5a' %stead-asset ~] 'text/javascript; charset=utf-8' '96aa0cdd475339c38a2e767f93f61475e17ff2e6e236147a062902c2f756db5a']]
+      ['/stead-identity/assets/chunk-EUJWMAPN.js' [[%web %stead 'asset-96aa0cdd475339c38a2e767f93f61475e17ff2e6e236147a062902c2f756db5a' %stead-asset ~] 'text/javascript; charset=utf-8' '96aa0cdd475339c38a2e767f93f61475e17ff2e6e236147a062902c2f756db5a']]
       ['/stead/assets/chunk-HRUDAQ2O.js' [[%web %stead 'asset-d02c4a767baadf4c7a68b9dd7c0aba0e68a1181a57a9470952ae26dc75f25baa' %stead-asset ~] 'text/javascript; charset=utf-8' 'd02c4a767baadf4c7a68b9dd7c0aba0e68a1181a57a9470952ae26dc75f25baa']]
       ['/stead-identity/assets/chunk-HRUDAQ2O.js' [[%web %stead 'asset-d02c4a767baadf4c7a68b9dd7c0aba0e68a1181a57a9470952ae26dc75f25baa' %stead-asset ~] 'text/javascript; charset=utf-8' 'd02c4a767baadf4c7a68b9dd7c0aba0e68a1181a57a9470952ae26dc75f25baa']]
       ['/stead/assets/chunk-HRUDAQ2O.js.LEGAL.txt' [[%web %stead 'asset-c9235b043c7ea052717cebbc9a705f8c771bafe5cc6ccc92a992d1ff13ec1d25' %stead-asset ~] 'text/plain; charset=utf-8' 'c9235b043c7ea052717cebbc9a705f8c771bafe5cc6ccc92a992d1ff13ec1d25']]
@@ -20,14 +22,12 @@
       ['/stead-identity/assets/chunk-OOJM4CTU.js' [[%web %stead 'asset-9dbaaa1b267ebd74b96fc498735a78d76804f1e96e532871291c937cf83694e7' %stead-asset ~] 'text/javascript; charset=utf-8' '9dbaaa1b267ebd74b96fc498735a78d76804f1e96e532871291c937cf83694e7']]
       ['/stead/assets/chunk-QIJDOJKB.css' [[%web %stead 'asset-3bb7988e10c27e803d3f9ebcdc621be6a4b96e19244819b2841d7ea4287228f7' %stead-asset ~] 'text/css; charset=utf-8' '3bb7988e10c27e803d3f9ebcdc621be6a4b96e19244819b2841d7ea4287228f7']]
       ['/stead-identity/assets/chunk-QIJDOJKB.css' [[%web %stead 'asset-3bb7988e10c27e803d3f9ebcdc621be6a4b96e19244819b2841d7ea4287228f7' %stead-asset ~] 'text/css; charset=utf-8' '3bb7988e10c27e803d3f9ebcdc621be6a4b96e19244819b2841d7ea4287228f7']]
-      ['/stead/assets/chunk-VN4HO2RN.js' [[%web %stead 'asset-5b5220256e88e7218cb61f022d355a5f20a2a0217795b7935102168c7677067a' %stead-asset ~] 'text/javascript; charset=utf-8' '5b5220256e88e7218cb61f022d355a5f20a2a0217795b7935102168c7677067a']]
-      ['/stead-identity/assets/chunk-VN4HO2RN.js' [[%web %stead 'asset-5b5220256e88e7218cb61f022d355a5f20a2a0217795b7935102168c7677067a' %stead-asset ~] 'text/javascript; charset=utf-8' '5b5220256e88e7218cb61f022d355a5f20a2a0217795b7935102168c7677067a']]
       ['/stead-identity/assets/identity.css' [[%web %stead 'asset-d41d8a1a7171d06405f67f510ff392afca81f17da9233823150692e69da0b4f1' %stead-asset ~] 'text/css; charset=utf-8' 'd41d8a1a7171d06405f67f510ff392afca81f17da9233823150692e69da0b4f1']]
       ['/stead-identity/' [[%web %stead 'asset-08a1794a61e7ed673d2e66de355cda8680a87a9dff4de7245ac987909ce7b1ed' %stead-asset ~] 'text/html; charset=utf-8' '08a1794a61e7ed673d2e66de355cda8680a87a9dff4de7245ac987909ce7b1ed']]
       ['/stead-identity/assets/identity.js' [[%web %stead 'asset-d318c5941423ef97fe6d2be5989720a2ae0cfe6af5a6b0fb8c6d486578c8792b' %stead-asset ~] 'text/javascript; charset=utf-8' 'd318c5941423ef97fe6d2be5989720a2ae0cfe6af5a6b0fb8c6d486578c8792b']]
       ['/stead/' [[%web %stead 'asset-4ad0a8c304f247405c5314f49b27fac259aa8f52458868bfe6e5f79760ad7a95' %stead-asset ~] 'text/html; charset=utf-8' '4ad0a8c304f247405c5314f49b27fac259aa8f52458868bfe6e5f79760ad7a95']]
       ['/stead/assets/product.css' [[%web %stead 'asset-9306dc9fd0db4afe24abd07a37d7d8f1d46b43a66405e441ced117bf4baca644' %stead-asset ~] 'text/css; charset=utf-8' '9306dc9fd0db4afe24abd07a37d7d8f1d46b43a66405e441ced117bf4baca644']]
-      ['/stead/assets/product.js' [[%web %stead 'asset-d6bd37fea84f74349fa9e84120f0c1bdd5cd87a2eabb605c7536fe908218e3f5' %stead-asset ~] 'text/javascript; charset=utf-8' 'd6bd37fea84f74349fa9e84120f0c1bdd5cd87a2eabb605c7536fe908218e3f5']]
+      ['/stead/assets/product.js' [[%web %stead 'asset-16a73851036ab3b2c40560b799f848e7bfa54738d2d9f16c461bd9c81ced1b65' %stead-asset ~] 'text/javascript; charset=utf-8' '16a73851036ab3b2c40560b799f848e7bfa54738d2d9f16c461bd9c81ced1b65']]
   ==
 ++  paths
   ^-  (set @t)
