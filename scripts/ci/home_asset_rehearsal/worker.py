@@ -155,12 +155,12 @@ def admission():
     raw = regular('/inputs.json', 1048576)
     value = json.loads(raw, object_pairs_hook=E.unique)
     require(raw == E.canonical(value) + b'\n' and type(value) is dict and set(value) == {
-        'protocol', 'profile', 'run_id', 'controller_commit', 'candidate_commit', 'backend_commit',
+        'protocol', 'profile', 'run_id', 'controller_commit', 'candidate_commit', 'backend_commit', 'previous_commit',
         'target_commit', 'workflow_binding', 'controller_files', 'host_namespaces', 'owner_uid', 'owner_gid',
         'source_files', 'guardian_files', 'driver_files', 'seed_files', 'runtime_sha256', 'pill_sha256',
         'kernel_commit', 'kernel_tree_sha256', 'toolchain_sha256', 'archives', 'assets', 'desk_hashes'})
     require(value['protocol'] == 'stead.saved8-hosted-inputs/1' and value['profile'] == 'home-assets-saved8/1'
-            and value['backend_commit'] == value['candidate_commit'] == R.BASE and value['target_commit'] == R.TARGET
+            and value['previous_commit'] == R.PREDECESSOR and value['backend_commit'] == value['candidate_commit'] == R.BASE and value['target_commit'] == R.TARGET
             and value['runtime_sha256'] == R.RUNTIME and value['kernel_commit'] == R.KERNEL
             and value['run_id'] == os.environ.get('STEAD_EXECUTION_ID'))
     for key in ('owner_uid', 'owner_gid'):

@@ -24,11 +24,11 @@ import urllib.request
 
 from . import evidence as E
 
-BASE = 'a0e90ef29389077d453ec2a775cd8fd69f711727'
-TARGET = '3acf4e193b2f4d95a522bfac829737733d6567e8'
+PREDECESSOR = '3acf4e193b2f4d95a522bfac829737733d6567e8'
+TARGET = '65048c772e27153c3421a32efb346ea7f69dc634'
 ARCHIVES = {
-    'previous': (1392640, 'baa226f22bc1950981628486539fa1f087d2e6544c12a18c1d15e144b082e7da', BASE),
-    'target': (1648640, '8e4f5d1e27f916efed154394be27974b7aa07c121429afe521d2c1c21e9b7743', TARGET),
+    'previous': (1648640, '8e4f5d1e27f916efed154394be27974b7aa07c121429afe521d2c1c21e9b7743', PREDECESSOR),
+    'target': (1679360, '6cd2a17496bb756100fd51850a681e168f13dc0e834087f9b1f548b2a1ae89b1', TARGET),
 }
 SEED = {
     'app/stead-home.hoon': 'd6d15bc9514001a2edcdcb67384881826215e7fd40c08465edc74962d8b70fdd',
@@ -206,8 +206,23 @@ def package(name, inventory):
     E.require(manifest['files'] == {name: {'bytes': len(data), 'sha256': E.sha(data)}
         for name, data in files.items() if name != 'manifest.json'})
     desk = {name[5:]: E.sha(data) for name, data in files.items() if name.startswith('desk/')}
-    E.require(len(desk) == (116 if name == 'previous' else 118))
+    E.require(len(desk) == (118 if name == 'previous' else 118))
     return manifest, desk
+
+
+def materialize_seed(previous, seed_source, destination, old, inventory):
+    """Overlay the pinned synthetic agent on the exact predecessor Home desk."""
+    E.require('app/stead-home.hoon' in old and 'lib/stead-home-ui-seed.hoon' not in old)
+    destination.mkdir(mode=0o700)
+    for name in old:
+        path = destination / name
+        path.parent.mkdir(parents=True, exist_ok=True)
+        shutil.copyfile(previous / name, path)
+    for name in SEED:
+        shutil.copyfile(seed_source / name, destination / name)
+    expected = old | SEED
+    E.require(inventory(destination) == expected)
+    return expected
 
 
 def inputs(context, inventory):
@@ -464,15 +479,8 @@ def run(guard):
             target_artifact=ARCHIVES['target'][1], asset_delta={'removed': removed, 'updated': replaced})
         operation = 'seed-package'
         seed = Path('/state/seed-package')
-        seed.mkdir(mode=0o700)
-        for name in old:
-            path = seed / name
-            path.parent.mkdir(parents=True, exist_ok=True)
-            shutil.copyfile(Path('/rehearsal/previous/desk') / name, path)
-        for name in SEED:
-            shutil.copyfile(Path('/rehearsal/seed') / name, seed / name)
-        seed_inventory = dict(old) | SEED
-        E.require(len(seed_inventory) == 117 and release.inventory(seed) == seed_inventory)
+        seed_inventory = materialize_seed(Path('/rehearsal/previous/desk'), Path('/rehearsal/seed'),
+            seed, old, release.inventory)
         Native = native_class(release)
         native = Native(current)
         E.require(native.lock['runtime']['binary_sha256'] == RUNTIME
@@ -506,7 +514,7 @@ def run(guard):
         suspend()
         loaded = retained('a0-loaded')
         E.preserved(first, loaded, complete=False)
-        report['phases'].append('actual-a0-predecessor')
+        report['phases'].append('actual-installed-predecessor')
         operation = 'cold-restart'
         restart(old, 'cold', loaded['vase_fingerprint'])
         native_tls.install(native.binary, native.pier / '.urb/conn.sock', certificates, 'zod')
