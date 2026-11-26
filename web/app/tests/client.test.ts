@@ -1,3 +1,4 @@
+import './repository-access.test';
 // Host tests with an explicit fake fetch transport. Not browser/native evidence.
 import './product-contract.test';
 import './markdown.test';

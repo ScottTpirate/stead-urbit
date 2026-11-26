@@ -1,5 +1,5 @@
-import { useEffect, useRef, useState, type KeyboardEvent } from 'react';
-import { UUID, packRefs, type Fields, type HomeClient } from './api';
+import { useCallback, useEffect, useRef, useState, type KeyboardEvent } from 'react';
+import { UUID, packRefs, type Fields, type ExternalRepositoryRead, type HomeClient } from './api';
 import { newId } from './protocol';
 import { AcceptedTime } from './AcceptedTime';
 import { CopyValue, GitCredentials, repositoryUrl } from './CodeRepository';
@@ -131,59 +131,52 @@ function RepositoryRefs({ snapshot, client, project, browse, refresh, initialRef
   </>;
 }
 
-export function CodePack({ client, project, manage, writable, principal, initialProposal, onOpenWork, development }: {
-  client: HomeClient; project: string; manage: boolean; writable: boolean; principal: string;
+export function CodePack({ client, project, principal, initialProposal, onOpenWork, development }: {
+  client: HomeClient; project: string; principal: string;
   initialProposal?: string; onOpenWork?: (workId: string) => void;
   development?: CodeDevelopmentTarget;
 }) {
-  const [details, setDetails] = useState<Fields | null>(null);
-  const [access, setAccess] = useState<{ writable: boolean; manage: boolean } | null>(null);
+  const [repository, setRepository] = useState<ExternalRepositoryRead | null>(null);
+  const details = repository?.snapshot;
   const [busy, setBusy] = useState(true);
   const [failure, setFailure] = useState('');
   const heading = useRef<HTMLHeadingElement>(null);
   const focusedDevelopment = useRef<CodeDevelopmentTarget | null>(null);
   const request = useRef<{ snapshot: string; epoch: string; id: string } | null>(null);
-  useEffect(() => {
-    let current = true;
-    void Promise.all([client.code(project, { action: 'pack-view' }),
-      development ? client.code(project, { action: 'status' }) : null]).then(([value, status]) => {
-      if (current) {
-        setDetails(value);
-        if (status) setAccess({ writable: status.status === 'external' && status.write === 'yes', manage: status.manage === 'yes' });
-      }
-    }).catch(() => {
-      if (current) setFailure('This Git snapshot is unavailable.');
-    }).finally(() => { if (current) setBusy(false); });
-    return () => { current = false; };
-  }, [client, project, development]);
-
-  async function refresh() {
-    setBusy(true); setFailure('');
+  const readSequence = useRef(0);
+  const refresh = useCallback(async () => {
+    const sequence = ++readSequence.current;
+    setBusy(true);
+    setFailure('');
     try {
-      const [pack, status] = await Promise.all([client.code(project, { action: 'pack-view' }), client.code(project, { action: 'status' })]);
-      setDetails(pack);
-      setAccess({ writable: status.write === 'yes', manage: status.manage === 'yes' });
+      const value = await client.externalRepository(project);
+      if (sequence === readSequence.current) setRepository(value);
+    } catch {
+      if (sequence === readSequence.current) {
+        setRepository(null);
+        setFailure('This Git snapshot is unavailable.');
+      }
+    } finally {
+      if (sequence === readSequence.current) setBusy(false);
     }
-    catch {
-      setDetails(null);
-      setAccess(null);
-      setFailure('This Git snapshot is unavailable.');
-    }
-    finally { setBusy(false); }
-  }
+  }, [client, project]);
+
+  useEffect(() => {
+    void refresh();
+    return () => { readSequence.current++; };
+  }, [refresh, development]);
 
   async function accept() {
     const snapshot = details?.snapshot;
     const epoch = details?.authority_epoch;
-    if (!(access?.manage ?? manage) || details?.status !== 'external-staged' || !snapshot || !epoch) return;
+    if (!repository?.access.manage || details?.status !== 'external-staged' || !snapshot || !epoch) return;
     if (request.current?.snapshot !== snapshot || request.current.epoch !== epoch) {
       request.current = { snapshot, epoch, id: newId() };
     }
     setBusy(true); setFailure('');
     try {
-      const accepted = await client.code(project, { action: 'pack-accept', snapshot, authority_epoch: epoch,
+      await client.code(project, { action: 'pack-accept', snapshot, authority_epoch: epoch,
         request_id: request.current.id });
-      setDetails(accepted);
       await refresh();
     } catch {
       setFailure('The Home did not confirm acceptance. Retry this snapshot or refresh to review the current one.');
@@ -191,9 +184,9 @@ export function CodePack({ client, project, manage, writable, principal, initial
   }
 
   const staged = details?.status === 'external-staged';
-  const atCapacity = !!details?.generation_limit && details.generation === details.generation_limit;
-  const canWrite = (access?.writable ?? writable) && !busy && !failure;
-  const canManage = access?.manage ?? manage;
+  const atCapacity = repository?.atCapacity === true;
+  const canWrite = repository?.access.writable === true && !busy && !failure;
+  const canManage = repository?.access.manage === true;
   const workBranch = development && UUID.test(development.workId) && workBranchRef(development.workId) === development.ref
     ? development : undefined;
   const hasWorkBranch = !!workBranch && details?.status === 'external' && Object.hasOwn(packRefs(details), workBranch.ref);

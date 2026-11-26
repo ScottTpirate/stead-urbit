@@ -1,7 +1,7 @@
 import { newId } from './protocol';
 import { StrictMode, useEffect, useRef, useState, type FormEvent, type ReactNode } from 'react';
 import { createRoot } from 'react-dom/client';
-import { HomeClient, HomeError, UUID, command, type CodeReviewKey, type Command, type Fields, type HomeWatch, type Query, type Row, type UpdateScope, type ViewKind } from './api';
+import { HomeClient, HomeError, UUID, command, type CodeReviewKey, type Command, type Fields, type HomeWatch, type RepositoryAccess, type Query, type Row, type UpdateScope, type ViewKind } from './api';
 import { Button, EmptyState, LoadingState, Surface, TextField } from './primitives';
 import { SupportDetails } from './SupportDetails';
 import { AcceptedTime } from './AcceptedTime';
@@ -113,7 +113,7 @@ function App() {
   const [containers, setContainers] = useState<Row[]>([]);
   const [container, setContainer] = useState<Row | null>(null);
   const [tab, setTab] = useState<ViewKind>('project');
-  const [repository, setRepository] = useState<Fields | null>(null);
+  const [repository, setRepository] = useState<RepositoryAccess | null>(null);
   const externalRepository = repository?.status === 'external' || repository?.status === 'external-staged';
   const [showRepository, setShowRepository] = useState(false);
   const [selectedReview, setSelectedReview] = useState<string>();
@@ -211,7 +211,7 @@ function App() {
         await client.code(projectId, { action: 'create' });
         if (generation !== repositoryGeneration.current) return;
       }
-      const value = await client.code(projectId, { action: 'status' });
+      const value = await client.repositoryAccess(projectId);
       if (generation !== repositoryGeneration.current) return;
       setRepository(value);
       if (enable) setShowRepository(true);
@@ -1350,11 +1350,11 @@ function App() {
             variant={showRepository ? 'primary' : 'quiet'} aria-current={showRepository ? 'page' : undefined}
             onClick={() => { syncResourceAddress({kind:'project',project:project.project_id!,view:'code'}); clearCodeSelection(); setShowRepository(true); }}>Code</Button>}</nav>
           {carrierMode.kind === 'legacy' && showRepository && repository?.status === 'ready' ? <CodeRepository key={`${identity.session_audit_id}/${project.project_id}/${project.authority_epoch}`}
-            client={client} project={project.project_id!} writable={repository.write === 'yes'}
-            manage={repository.manage === 'yes'} principal={identity.principal_id ?? ''}
+            client={client} project={project.project_id!} writable={repository.writable}
+            manage={repository.manage} principal={identity.principal_id ?? ''}
             initialProposal={inlineReview} onOpenWork={openLinkedWork}/> :
           carrierMode.kind === 'legacy' && showRepository && externalRepository ? <CodePack key={`${identity.session_audit_id}/${project.project_id}/${project.authority_epoch}`} client={client} project={project.project_id!}
-            manage={repository?.manage === 'yes'} writable={repository?.write === 'yes'} principal={identity.principal_id ?? ''}
+            principal={identity.principal_id ?? ''}
             initialProposal={selectedReview} onOpenWork={openLinkedWork} development={development}/> : <>
           {tab === 'project' && <Surface className="project-overview"><h2>Move this project forward</h2>
             <p>{project.summary || 'Define an outcome in Work, keep its context in Docs, and review the result together.'}</p>
@@ -1365,7 +1365,7 @@ function App() {
               <Button variant="quiet" disabled={workActionsLocked} onClick={() => selectProjectTab('relations')}>Relationships</Button>
               <Button variant="quiet" disabled={workActionsLocked} onClick={() => selectProjectTab('search')}>Search this project</Button>
             </div></details>}</Surface>}
-          {carrierMode.kind === 'legacy' && tab === 'project' && repository?.status === 'disabled' && repository.manage === 'yes'
+          {carrierMode.kind === 'legacy' && tab === 'project' && repository?.status === 'disabled' && repository.manage
             && <Button disabled={busy || !!pending || !!form} onClick={() => void action(() => loadRepository(project.project_id!, true))}>Enable Git repository</Button>}
           {productActive && tab === 'work' ? <><ProductWorkJourney key={`${productSessionKey}/${project.project_id}/${productDraftReset}`}
             client={client} project={{id: project.project_id!, title: project.title ?? '', authorityEpoch: project.authority_epoch!, role: project.role!}}
@@ -1446,11 +1446,11 @@ function App() {
                 : <p className="work-description">{work.description || 'No description yet.'}</p>}
               {repository?.status === 'external' && work.resource_id && <WorkDevelopment key={`development/${workScope}`}
                 client={client} project={project.project_id!} work={{id: work.resource_id, title: work.title ?? ''}}
-                writable={repository.write === 'yes'} onOpenCode={openDevelopment}/>}
+                writable={repository.writable} onOpenCode={openDevelopment}/>}
               {repository?.status === 'external' && work.resource_id && <WorkCodeLinks key={`reviews/${workScope}`}
                 client={client} project={project.project_id!} work={work.resource_id} onOpenReview={openLinkedReview}/>}
               {repository?.status === 'ready' && work.resource_id && <WorkDelegations key={`delegations/${workScope}`}
-                client={client} project={project.project_id!} work={work} manage={repository.manage === 'yes'}
+                client={client} project={project.project_id!} work={work} manage={repository.manage}
                 locked={workActionsLocked} onReview={openInlineReview}/>}
               {work.resource_id && <WorkContext key={`context/${workScope}`} client={client} project={project.project_id!} work={work.resource_id}
                 writable={!!canEdit} locked={workActionsLocked} viewRevision={workContextRevision}

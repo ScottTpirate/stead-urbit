@@ -1,0 +1,47 @@
+name: Pilot client package
+on:
+  pull_request:
+    paths:
+      - .github/workflows/pilot-client-assets.yml
+      - web/app/build.mjs
+      - web/app/package-desk.mjs
+      - native/core/desk/web/stead/**
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  package:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 6
+    steps:
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020
+        with:
+          node-version: '24.21.0'
+          package-manager-cache: false
+      - name: Build the release client
+        working-directory: web/app
+        run: |
+          npm ci --ignore-scripts --no-audit --no-fund
+          npm run check
+          npm run build
+      - name: Package and retain the browser assets
+        run: |
+          case "$(git remote get-url origin)" in
+            https://github.com/ScottTpirate/stead-urbit|https://github.com/ScottTpirate/stead-urbit.git) ;;
+            *) exit 1 ;;
+          esac
+          git remote set-url --push origin https://github.com/ScottTpirate/stead-urbit.git
+          node web/app/package-desk.mjs
+          mkdir -p "$RUNNER_TEMP/pilot-client"
+          cp -a native/core/desk/web/stead "$RUNNER_TEMP/pilot-client/desk"
+          cp web/app/dist/manifest.json "$RUNNER_TEMP/pilot-client/browser-manifest.json"
+          git rev-parse HEAD > "$RUNNER_TEMP/pilot-client/source.txt"
+      - uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
+        with:
+          name: pilot-client-assets
+          path: ${{ runner.temp }}/pilot-client/
+          if-no-files-found: error
+          retention-days: 7
