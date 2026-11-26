@@ -184,7 +184,7 @@ async function signIn(context, ship, port, keyboard = false) {
   await personal.getByText('Approval sent. Return to your Stead tab and check approval.', {exact: true}).waitFor();
   for (let count = 0; count < 20; count++) {
     const observed = home.waitForResponse(response => response.url() === origin + '/stead/auth/status');
-    await activate(home, home.getByRole('button', {name: 'Check approval', exact: true}));
+    await activate(home, home.getByRole('button', {name: /^(?:Check approval|Open Stead)$/u}));
     const response = await observed;
     assert.equal(response.status(), 200, 'Native approval-status HTTP response');
     if ((await response.json()).status === 'approved') break;

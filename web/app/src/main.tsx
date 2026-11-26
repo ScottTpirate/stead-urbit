@@ -27,11 +27,20 @@ import {ProductWorkJourney} from './productWorkJourney';
 import {ProductJourneyDraftStore, productJourneyRoute, productReadNavigationAllowed, readProductWorkEndpoint, type ProductJourneySelection} from './productJourneyState';
 import type {ProductCarrierMode} from './productCarrier';
 const client = new HomeClient();
+async function observeApproval(id: string, signal?: AbortSignal) {
+  try { return (await client.status(id, signal)).status!; }
+  catch (failure) {
+    if (failure instanceof HomeError && failure.code === 'approval_ended') return 'ended';
+    throw failure;
+  }
+}
+
 const productWorkEndpoint = (project: string, work: string) => readProductWorkEndpoint(client, project, work);
 const blankQuery = (kind: ViewKind, project_id = '', container_id = '', resource_id = '', search = '', cursor = ''): Query =>
   ({ kind, project_id, container_id, resource_id, search, cursor });
 const scopeKey = (session: string | undefined, scope: UpdateScope) => JSON.stringify([session, scope.kind, scope.project_id, scope.container_id, scope.resource_id, scope.search]);
 const messages: Record<string, string> = {
+  approval_ended: 'This sign-in request has ended. Request a new comparison code.',
   invalid_ship_name: 'Enter an Urbit ID such as sampel-palnet. The tilde is optional.',
   search_too_long: 'Search is limited to 128 UTF-8 bytes. Shorten the phrase.',
   logout_unconfirmed: 'Sign-out was not confirmed. Keep this tab open and retry Sign out; your server session may still be active.',
@@ -1292,12 +1301,17 @@ function App() {
       {loading && !identity && <LoadingState label="Connecting to your home"/>}
       {!identity && !loading && <UrbitSignIn ship={ship} challenge={challenge} busy={busy} origin={location.origin} notice={notice}
         onShipChange={setShip} onBack={() => { setChallenge(null); setNotice(''); setError(''); }}
-        onRequest={() => void action(async () => { setChallenge(await client.start(ship)); }, explainConnection)}
-        onCheck={() => {
+        onObserve={observeApproval}
+        onRequest={() => void action(async () => { setNotice(''); setChallenge(await client.start(ship)); },
+          failure => failure instanceof HomeError && failure.code === 'denied_or_not_found'
+            ? 'This Home could not start sign-in for that Urbit ID. Check the ID or ask your operator to check your member access.'
+            : explainConnection(failure))}
+        onCheck={onEnded => {
           if (!challenge) return;
           void action(async () => {
-            const status = await client.status(challenge.challenge_id!);
-            if (status.status === 'approved') {
+            const status = await observeApproval(challenge.challenge_id!);
+            if (status === 'ended') { onEnded(); setNotice(''); return; }
+            if (status === 'approved') {
               const person = await client.consume(challenge.challenge_id!);
               setChallenge(null);
               await identify(person);
