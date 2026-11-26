@@ -1,0 +1,33 @@
+name: Named observer boundaries
+on:
+  pull_request:
+    paths:
+      - 'web/app/named*'
+      - 'web/app/NAMED_OBSERVER.md'
+      - '.github/workflows/named-observer.yml'
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  boundaries:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020
+        with:
+          node-version: '24.21.0'
+          package-manager-cache: false
+      - name: Check synthetic boundaries and source syntax
+        run: |
+          node --check web/app/named-observer.mjs
+          node --test --test-concurrency=1 web/app/namedObserverBoundary.test.mjs web/app/namedObserverConfig.test.mjs
+          python3 web/app/namedObserverLauncher.test.py
+          python3 - <<'PY'
+          import ast
+          from pathlib import Path
+          for name in ('named_observer.py', 'named_observer_owner.py'):
+              ast.parse((Path('web/app') / name).read_text())
+          PY
