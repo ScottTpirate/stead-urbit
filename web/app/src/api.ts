@@ -270,7 +270,12 @@ export class HomeClient {
         credentials: 'same-origin', cache: 'no-store', redirect: 'error',
         referrerPolicy: 'no-referrer', signal: controller.signal });
       if (generation !== this.generation) throw new HomeError('session_changed');
-      if (response.status === 401) { this.clear(); throw new HomeError('session_required'); }
+      if (response.status === 401) {
+        // A pending approval can expire independently of an authenticated session.
+        if (path === '/stead/auth/status') throw new HomeError('approval_ended');
+        this.clear();
+        throw new HomeError('session_required');
+      }
       if (browse && response.headers.get('content-type')?.split(';')[0] !== 'application/json') {
         const feature = path === CHANGES_PATH ? 'changes' : 'browse';
         if ([404, 405].includes(response.status)) throw new HomeError(feature + '_unsupported');
@@ -336,8 +341,8 @@ export class HomeClient {
     if (value.status !== 'pending' || !TOKEN.test(value.challenge_id ?? '')) throw new HomeError('invalid_response');
     return value;
   }
-  async status(challenge_id: string): Promise<Fields> {
-    const value = fields(await this.post('/stead/auth/status', { protocol: 'stead.auth/1', challenge_id }, false));
+  async status(challenge_id: string, signal?: AbortSignal): Promise<Fields> {
+    const value = fields(await this.post('/stead/auth/status', { protocol: 'stead.auth/1', challenge_id }, false, false, false, '', signal));
     if (!['pending', 'approved'].includes(value.status ?? '') || value.challenge_id !== challenge_id) throw new HomeError('invalid_response');
     return value;
   }
