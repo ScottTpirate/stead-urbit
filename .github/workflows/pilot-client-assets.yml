@@ -16,6 +16,7 @@ jobs:
     steps:
       - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
         with:
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
           persist-credentials: false
       - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020
         with:
@@ -47,3 +48,38 @@ jobs:
           retention-days: 7
       - name: Verify the committed desk reproduces exactly
         run: test -z "$(git status --porcelain --untracked-files=all -- native/core/desk/web/stead)"
+      - name: Read the release kernel pin
+        id: kernel
+        run: |
+          python3 - <<'PYTHON'
+          import json, os, pathlib, re
+          pin = json.loads(pathlib.Path('specs/urbit/toolchain.lock.json').read_bytes())['kernel']
+          assert pin['repository'] == 'urbit/urbit' and re.fullmatch('[0-9a-f]{40}', pin['commit'])
+          assert pin['directory'] == 'urbit-' + pin['commit']
+          pathlib.Path('.runtime').mkdir(mode=0o700, exist_ok=True)
+          with open(os.environ['GITHUB_OUTPUT'], 'a') as lines:
+              print('commit=' + pin['commit'], file=lines)
+              print('path=.runtime/' + pin['directory'], file=lines)
+          PYTHON
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
+        with:
+          repository: urbit/urbit
+          ref: ${{ steps.kernel.outputs.commit }}
+          path: ${{ steps.kernel.outputs.path }}
+          persist-credentials: false
+          sparse-checkout-cone-mode: false
+          sparse-checkout: |
+            /pkg/arvo/LICENSE.txt
+            /pkg/base-dev/lib/
+            /pkg/base-dev/mar/
+            /pkg/base-dev/sur/
+      - name: Verify both pilot packages and the relay tools
+        run: |
+          python3 -B scripts/prepare_pilot_release.py --source "$(git rev-parse HEAD)" --output .runtime/pilot-candidate
+          mv .runtime/pilot-candidate "$RUNNER_TEMP/stead-pilot-release"
+      - uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
+        with:
+          name: stead-pilot-release
+          path: ${{ runner.temp }}/stead-pilot-release/
+          if-no-files-found: error
+          retention-days: 7

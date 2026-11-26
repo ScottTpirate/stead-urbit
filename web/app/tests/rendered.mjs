@@ -714,7 +714,8 @@ try {
     assert.equal(state.commands.length, 0);
     const changes = exact.getByRole('region', {name: 'Exact revision changes', exact: true});
     await changes.getByRole('button', {name: 'welcome.md Modified', exact: true}).click();
-    assert.equal(await changes.getByLabel('Exact file patch').textContent(), '-Welcome\n+Welcome aboard\n');
+    await changes.getByText('This patch cannot be numbered reliably. The full supplied patch is shown below.', {exact: true}).waitFor();
+    assert.equal(await changes.getByLabel('Raw supplied patch', {exact: true}).textContent(), '-Welcome\n+Welcome aboard\n');
     assert.equal(state.changesRequests.at(-1).proposal_id, submitted.proposal_id);
     assert.equal(state.changesRequests.at(-1).revision, submitted.revision);
     await exact.getByRole('button', {name: 'View work item', exact: true}).click();
