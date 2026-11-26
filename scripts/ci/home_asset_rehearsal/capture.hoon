@@ -31,6 +31,7 @@
 =/  chunk  (cut 3 [offset size] packed)
 =/  durable  [db.team.stored code.stored handoff.stored retired.stored packs.stored external.stored]
 ^-  @ux
+^-  @
 %-  canonical:stead-codec
 %-  object:stead-codec
 :~  ['protocol' 'stead.saved8-capture/1']
