@@ -348,7 +348,10 @@ packages:
   - 22
   - 23
   - 26
-  current_progress: Source-bound storage inventory and actual read-only live point observation are retained in product-storage-profile.json. Eight pilot services used197255168bytes of current memory and27tasks; two native engine trees allocated1233436672bytes at the observed instant. No workload, content mutation or capacity claim. Representative read/save latency, sustained measurements, storage changes and recovery qualification remain open.
+  current_progress: Source-bound storage inventory and actual read-only live point observation are retained in product-storage-profile.json. Eight pilot services used197255168bytes of current memory and27tasks; two native engine trees allocated1233436672bytes at the observed instant. No workload, content mutation or capacity claim. The fixed Work, Docs and discussion workload is implemented in candidate e0ebfc47.
+    Four controller test groups passed on hosted Ubuntu in run 45741243229. Six input files matched their Git
+    hashes before and after the test. See docs/urbit/evidence/2026-11-25/storage-workload-controller.json.
+    Native read/save latency, sustained measurements, storage changes and recovery qualification remain open.
 - id: T07
   title: Deliver the compact shell and resource routes
   phase: B
@@ -562,8 +565,10 @@ packages:
   current_progress: Workspace-search and legacy Assigned-to-me read extensions implemented in working tree with
     six native test arms and per-project roster cache; hosted native run 43745730053 passed the exact c2f2861 candidate with 173 arms and 1,672 checks. Release verification remains separate. Capability-gated browser workspace
     passed ten Firefox cases including production Search-to-Doc-to-Back, source stable and owned cleanup verified.
-    The candidate restores later-page selection, scroll and focus through fresh authorized pages, bounded to the remembered page, 205 pages and 20 seconds. Full production TypeScript, ten host cases and eight isolated browser cases passed; deployment remains pending. Durable recipient Inbox/read-handled state still requires successor native state; activity
-    is not substituted for Inbox.
+    The candidate restores later-page selection, scroll and focus through fresh authorized pages, bounded to the remembered page, 205 pages and 20 seconds. Full production TypeScript, ten host cases and eight isolated browser cases passed; deployment remains pending. On candidate 272f4c86, project Activity opens the exact Work item or document from a known
+    event. Keyboard Back restores the source link. A Chromium test at 1440 and 320 pixels verified current read
+    access, an unavailable target, refresh and zero writes against a synthetic Home. See
+    docs/urbit/evidence/2026-11-25/activity-navigation.json. Recipient-specific Inbox and read/handled state remain open.
 - id: T12
   title: Add common Changes and exact Docs review
   phase: C
