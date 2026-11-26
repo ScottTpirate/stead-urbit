@@ -1,0 +1,2734 @@
+{
+  "acyclic": true,
+  "candidate_imported": false,
+  "classification": "private composition data only; not registered, not accepted by current T04 codec",
+  "composition": {
+    "exact_import_headers": {
+      "native/core/desk/lib/stead-actor.hoon": "/+  stead-codec, stead-team, stead-principals\n",
+      "native/core/desk/lib/stead-codec-v1.hoon": "",
+      "native/core/desk/lib/stead-codec.hoon": "",
+      "native/core/desk/lib/stead-core-v1.hoon": "/+  stead-codec-v1, stead-git\n",
+      "native/core/desk/lib/stead-core.hoon": "/+  stead-codec, stead-git, stead-core-v1\n",
+      "native/core/desk/lib/stead-git.hoon": "",
+      "native/core/desk/lib/stead-model-codec.hoon": "/+  stead-codec, stead-run-state, stead-run-codec, stead-model-material\n",
+      "native/core/desk/lib/stead-model-material.hoon": "/+  stead-codec, stead-run-state, stead-run-codec\n",
+      "native/core/desk/lib/stead-model-reply.hoon": "/+  stead-codec, stead-run-state, stead-model-material, stead-model-codec\n",
+      "native/core/desk/lib/stead-model-turn-codec.hoon": "/+  stead-codec, stead-team, stead-team-codec, stead-run-state, stead-run-codec\n",
+      "native/core/desk/lib/stead-principals.hoon": "/+  stead-codec, stead-session, stead-team-config\n",
+      "native/core/desk/lib/stead-run-codec.hoon": "/+  stead-codec, stead-core, stead-run-state\n",
+      "native/core/desk/lib/stead-run-state.hoon": "/+  stead-codec, stead-core, stead-actor\n",
+      "native/core/desk/lib/stead-session.hoon": "/+  stead-codec\n",
+      "native/core/desk/lib/stead-team-codec.hoon": "/+  stead-codec\n",
+      "native/core/desk/lib/stead-team-config.hoon": "/+  stead-codec, stead-session\n",
+      "native/core/desk/lib/stead-team.hoon": "/+  stead-codec, stead-core, stead-git, stead-session, stead-team-config, stead-team-codec\n",
+      "native/core/desk/tests/stead-model-codec.hoon": "/+  *test, stead-codec, stead-run-state, stead-model-material, stead-model-codec\n",
+      "native/core/desk/tests/stead-model-reply.hoon": "/+  *test, stead-codec, stead-model-material, stead-model-codec, stead-model-reply\n",
+      "native/core/desk/tests/stead-model-turn-codec.hoon": "/+  *test, stead-codec, stead-core, stead-team, stead-team-codec, stead-model-turn-codec\n"
+    },
+    "imports": {
+      "native/core/desk/lib/stead-actor.hoon": [
+        "native/core/desk/lib/stead-codec.hoon",
+        "native/core/desk/lib/stead-team.hoon",
+        "native/core/desk/lib/stead-principals.hoon"
+      ],
+      "native/core/desk/lib/stead-codec-v1.hoon": [],
+      "native/core/desk/lib/stead-codec.hoon": [],
+      "native/core/desk/lib/stead-core-v1.hoon": [
+        "native/core/desk/lib/stead-codec-v1.hoon",
+        "native/core/desk/lib/stead-git.hoon"
+      ],
+      "native/core/desk/lib/stead-core.hoon": [
+        "native/core/desk/lib/stead-codec.hoon",
+        "native/core/desk/lib/stead-git.hoon",
+        "native/core/desk/lib/stead-core-v1.hoon"
+      ],
+      "native/core/desk/lib/stead-git.hoon": [],
+      "native/core/desk/lib/stead-model-codec.hoon": [
+        "native/core/desk/lib/stead-codec.hoon",
+        "native/core/desk/lib/stead-run-state.hoon",
+        "native/core/desk/lib/stead-run-codec.hoon",
+        "native/core/desk/lib/stead-model-material.hoon"
+      ],
+      "native/core/desk/lib/stead-model-material.hoon": [
+        "native/core/desk/lib/stead-codec.hoon",
+        "native/core/desk/lib/stead-run-state.hoon",
+        "native/core/desk/lib/stead-run-codec.hoon"
+      ],
+      "native/core/desk/lib/stead-model-reply.hoon": [
+        "native/core/desk/lib/stead-codec.hoon",
+        "native/core/desk/lib/stead-run-state.hoon",
+        "native/core/desk/lib/stead-model-material.hoon",
+        "native/core/desk/lib/stead-model-codec.hoon"
+      ],
+      "native/core/desk/lib/stead-model-turn-codec.hoon": [
+        "native/core/desk/lib/stead-codec.hoon",
+        "native/core/desk/lib/stead-team.hoon",
+        "native/core/desk/lib/stead-team-codec.hoon",
+        "native/core/desk/lib/stead-run-state.hoon",
+        "native/core/desk/lib/stead-run-codec.hoon"
+      ],
+      "native/core/desk/lib/stead-principals.hoon": [
+        "native/core/desk/lib/stead-codec.hoon",
+        "native/core/desk/lib/stead-session.hoon",
+        "native/core/desk/lib/stead-team-config.hoon"
+      ],
+      "native/core/desk/lib/stead-run-codec.hoon": [
+        "native/core/desk/lib/stead-codec.hoon",
+        "native/core/desk/lib/stead-core.hoon",
+        "native/core/desk/lib/stead-run-state.hoon"
+      ],
+      "native/core/desk/lib/stead-run-state.hoon": [
+        "native/core/desk/lib/stead-codec.hoon",
+        "native/core/desk/lib/stead-core.hoon",
+        "native/core/desk/lib/stead-actor.hoon"
+      ],
+      "native/core/desk/lib/stead-session.hoon": [
+        "native/core/desk/lib/stead-codec.hoon"
+      ],
+      "native/core/desk/lib/stead-team-codec.hoon": [
+        "native/core/desk/lib/stead-codec.hoon"
+      ],
+      "native/core/desk/lib/stead-team-config.hoon": [
+        "native/core/desk/lib/stead-codec.hoon",
+        "native/core/desk/lib/stead-session.hoon"
+      ],
+      "native/core/desk/lib/stead-team.hoon": [
+        "native/core/desk/lib/stead-codec.hoon",
+        "native/core/desk/lib/stead-core.hoon",
+        "native/core/desk/lib/stead-git.hoon",
+        "native/core/desk/lib/stead-session.hoon",
+        "native/core/desk/lib/stead-team-config.hoon",
+        "native/core/desk/lib/stead-team-codec.hoon"
+      ],
+      "native/core/desk/tests/stead-model-codec.hoon": [
+        "native/core/desk/lib/stead-codec.hoon",
+        "native/core/desk/lib/stead-run-state.hoon",
+        "native/core/desk/lib/stead-model-material.hoon",
+        "native/core/desk/lib/stead-model-codec.hoon"
+      ],
+      "native/core/desk/tests/stead-model-reply.hoon": [
+        "native/core/desk/lib/stead-codec.hoon",
+        "native/core/desk/lib/stead-model-material.hoon",
+        "native/core/desk/lib/stead-model-codec.hoon",
+        "native/core/desk/lib/stead-model-reply.hoon"
+      ],
+      "native/core/desk/tests/stead-model-turn-codec.hoon": [
+        "native/core/desk/lib/stead-codec.hoon",
+        "native/core/desk/lib/stead-core.hoon",
+        "native/core/desk/lib/stead-team.hoon",
+        "native/core/desk/lib/stead-team-codec.hoon",
+        "native/core/desk/lib/stead-model-turn-codec.hoon"
+      ]
+    },
+    "library_order": [
+      "native/core/desk/lib/stead-codec-v1.hoon",
+      "native/core/desk/lib/stead-codec.hoon",
+      "native/core/desk/lib/stead-git.hoon",
+      "native/core/desk/lib/stead-core-v1.hoon",
+      "native/core/desk/lib/stead-session.hoon",
+      "native/core/desk/lib/stead-team-codec.hoon",
+      "native/core/desk/lib/stead-core.hoon",
+      "native/core/desk/lib/stead-team-config.hoon",
+      "native/core/desk/lib/stead-principals.hoon",
+      "native/core/desk/lib/stead-team.hoon",
+      "native/core/desk/lib/stead-actor.hoon",
+      "native/core/desk/lib/stead-run-state.hoon",
+      "native/core/desk/lib/stead-run-codec.hoon",
+      "native/core/desk/lib/stead-model-material.hoon",
+      "native/core/desk/lib/stead-model-turn-codec.hoon",
+      "native/core/desk/lib/stead-model-codec.hoon",
+      "native/core/desk/lib/stead-model-reply.hoon"
+    ],
+    "method": "Exact per-suite transitive closure with explicit named-core bindings; remove only pinned import declaration, retain every other byte and map its original offsets.",
+    "semantics_limit": "Earlier named cores are ambient within the exact closure. This is not Clay import/missing-import proof; no unrelated libraries or server namespace are supplied.",
+    "suites": [
+      {
+        "arms": [
+          "test-model-codec-golden-reserve-and-derived-native-identity",
+          "test-model-codec-closed-parent-and-canonical-cas",
+          "test-model-codec-material-pins-and-exact-charge-reject-drift",
+          "test-model-codec-observation-absence-empty-and-binary-bytes",
+          "test-model-codec-parser-and-parent-bounds-do-not-expand",
+          "test-model-codec-real-linefeeds-and-supplementary-unicode"
+        ],
+        "composed_source": {
+          "bytes": 232002,
+          "path": ".runtime/native-model-simple-pure-composition-prepared/composed/stead-model-codec.hoon",
+          "sha256": "234f119ef4636c2cc4e9fcc3a1f9ba1d3f556c13b2d1d5cffa951f0492ffae03"
+        },
+        "count": 6,
+        "import_header": "/+  *test, stead-codec, stead-run-state, stead-model-material, stead-model-codec\n",
+        "inventory_expression": {
+          "bytes": 934,
+          "sha256": "d44da1eb81f78dd627c56efda84e1d4cdba6919d509134501c2c0654dd319881"
+        },
+        "label": "stead-model-codec",
+        "path": "native/core/desk/tests/stead-model-codec.hoon",
+        "source_files": {
+          "native/core/desk/lib/stead-actor.hoon": {
+            "bytes": 3471,
+            "origin": {
+              "authority": "240f dependency closure",
+              "bytes": 3471,
+              "sha256": "4739b3b7e65ff95a14e2410c5c0635833b13e5fc7ff197c9b004b27a92e9c7b8",
+              "source_path": ".runtime/native-model-doc-proof-prepared/dependency-source/native/core/desk/lib/stead-actor.hoon"
+            },
+            "sha256": "4739b3b7e65ff95a14e2410c5c0635833b13e5fc7ff197c9b004b27a92e9c7b8"
+          },
+          "native/core/desk/lib/stead-codec-v1.hoon": {
+            "bytes": 8571,
+            "origin": {
+              "authority": "240f dependency closure",
+              "bytes": 8571,
+              "sha256": "ce4c7a69b03ee1761590c37e71ff49b9f63a1a2edd2aaa6dfbf75bc3c960584a",
+              "source_path": ".runtime/native-model-doc-proof-prepared/dependency-source/native/core/desk/lib/stead-codec-v1.hoon"
+            },
+            "sha256": "ce4c7a69b03ee1761590c37e71ff49b9f63a1a2edd2aaa6dfbf75bc3c960584a"
+          },
+          "native/core/desk/lib/stead-codec.hoon": {
+            "bytes": 9532,
+            "origin": {
+              "authority": "240f dependency closure",
+              "bytes": 9532,
+              "sha256": "56e3d574381bbf8cdf29ca192c70eff256009f89d782e3ffe859b19c1321cbd7",
+              "source_path": ".runtime/native-model-doc-proof-prepared/dependency-source/native/core/desk/lib/stead-codec.hoon"
+            },
+            "sha256": "56e3d574381bbf8cdf29ca192c70eff256009f89d782e3ffe859b19c1321cbd7"
+          },
+          "native/core/desk/lib/stead-core-v1.hoon": {
+            "bytes": 19390,
+            "origin": {
+              "authority": "240f dependency closure",
+              "bytes": 19390,
+              "sha256": "879615a5547d06a09d382c2bac4c5cb20cdf03236ddfdab79c9f1da15bd33cb5",
+              "source_path": ".runtime/native-model-doc-proof-prepared/dependency-source/native/core/desk/lib/stead-core-v1.hoon"
+            },
+            "sha256": "879615a5547d06a09d382c2bac4c5cb20cdf03236ddfdab79c9f1da15bd33cb5"
+          },
+          "native/core/desk/lib/stead-core.hoon": {
+            "bytes": 30949,
+            "origin": {
+              "authority": "240f dependency closure",
+              "bytes": 30949,
+              "sha256": "4c183ef6283030437af5e1433e3fbf80f414757bcede4cab1282fc71ff5f34de",
+              "source_path": ".runtime/native-model-doc-proof-prepared/dependency-source/native/core/desk/lib/stead-core.hoon"
+            },
+            "sha256": "4c183ef6283030437af5e1433e3fbf80f414757bcede4cab1282fc71ff5f34de"
+          },
+          "native/core/desk/lib/stead-git.hoon": {
+            "bytes": 3935,
+            "origin": {
+              "authority": "240f dependency closure",
+              "bytes": 3935,
+              "sha256": "826b83485429c02f577c9b462ee6cddd3ab8ea1a099d33b66893f863d54c54d7",
+              "source_path": ".runtime/native-model-doc-proof-prepared/dependency-source/native/core/desk/lib/stead-git.hoon"
+            },
+            "sha256": "826b83485429c02f577c9b462ee6cddd3ab8ea1a099d33b66893f863d54c54d7"
+          },
+          "native/core/desk/lib/stead-model-codec.hoon": {
+            "bytes": 4753,
+            "origin": {
+              "authority": "240f dependency closure",
+              "bytes": 4753,
+              "sha256": "e2a74203d5325e12262179bcab7b05bc0fb1b56dbb814e9adb145e3093c7ccc1",
+              "source_path": ".runtime/native-model-doc-proof-prepared/dependency-source/native/core/desk/lib/stead-model-codec.hoon"
+            },
+            "sha256": "e2a74203d5325e12262179bcab7b05bc0fb1b56dbb814e9adb145e3093c7ccc1"
+          },
+          "native/core/desk/lib/stead-model-material.hoon": {
+            "bytes": 17466,
+            "origin": {
+              "authority": "240f dependency closure",
+              "bytes": 17466,
+              "sha256": "070e26bfbbcaae56d54c9c8045a8312056b21e3b82549d290ea33c696120c7d8",
+              "source_path": ".runtime/native-model-doc-proof-prepared/dependency-source/native/core/desk/lib/stead-model-material.hoon"
+            },
+            "sha256": "070e26bfbbcaae56d54c9c8045a8312056b21e3b82549d290ea33c696120c7d8"
+          },
+          "native/core/desk/lib/stead-principals.hoon": {
+            "bytes": 6666,
+            "origin": {
+              "authority": "240f dependency closure",
+              "bytes": 6666,
+              "sha256": "59674e536e182c62902046a267aa644f05f7c97282e3eb737ab74f3ca6446d7f",
+              "source_path": ".runtime/native-model-doc-proof-prepared/dependency-source/native/core/desk/lib/stead-principals.hoon"
+            },
+            "sha256": "59674e536e182c62902046a267aa644f05f7c97282e3eb737ab74f3ca6446d7f"
+          },
+          "native/core/desk/lib/stead-run-codec.hoon": {
+            "bytes": 9030,
+            "origin": {
+              "authority": "240f dependency closure",
+              "bytes": 9030,
+              "sha256": "ba0c758e95230b133c5475e592a07e8106c73dfbab8e1c0967b04c8797e62ecb",
+              "source_path": ".runtime/native-model-doc-proof-prepared/dependency-source/native/core/desk/lib/stead-run-codec.hoon"
+            },
+            "sha256": "ba0c758e95230b133c5475e592a07e8106c73dfbab8e1c0967b04c8797e62ecb"
+          },
+          "native/core/desk/lib/stead-run-state.hoon": {
+            "bytes": 8894,
+            "origin": {
+              "authority": "240f dependency closure",
+              "bytes": 8894,
+              "sha256": "4c96eb466add4ae26f6c6fbfd390b338d26a14e20a8c3f70214f9e1445602c1d",
+              "source_path": ".runtime/native-model-doc-proof-prepared/dependency-source/native/core/desk/lib/stead-run-state.hoon"
+            },
+            "sha256": "4c96eb466add4ae26f6c6fbfd390b338d26a14e20a8c3f70214f9e1445602c1d"
+          },
+          "native/core/desk/lib/stead-session.hoon": {
+            "bytes": 8713,
+            "origin": {
+              "authority": "240f dependency closure",
+              "bytes": 8713,
+              "sha256": "ec331d4534cc19fc76f6b9ad590ec326d74e09f0b846b36f866e6351bdcbbb27",
+              "source_path": ".runtime/native-model-doc-proof-prepared/dependency-source/native/core/desk/lib/stead-session.hoon"
+            },
+            "sha256": "ec331d4534cc19fc76f6b9ad590ec326d74e09f0b846b36f866e6351bdcbbb27"
+          },
+          "native/core/desk/lib/stead-team-codec.hoon": {
+            "bytes": 8633,
+            "origin": {
+              "authority": "240f dependency closure",
+              "bytes": 8633,
+              "sha256": "0a7e54ad7cd6fc66dcbfabd90425d55a234d9239140dec97309474fb3b90ba76",
+              "source_path": ".runtime/native-model-doc-proof-prepared/dependency-source/native/core/desk/lib/stead-team-codec.hoon"
+            },
+            "sha256": "0a7e54ad7cd6fc66dcbfabd90425d55a234d9239140dec97309474fb3b90ba76"
+          },
+          "native/core/desk/lib/stead-team-config.hoon": {
+            "bytes": 6486,
+            "origin": {
+              "authority": "240f dependency closure",
+              "bytes": 6486,
+              "sha256": "ca95235550f5ebe34ac43f1f886620e4598fae4e304eef855068022400f5f630",
+              "source_path": ".runtime/native-model-doc-proof-prepared/dependency-source/native/core/desk/lib/stead-team-config.hoon"
+            },
+            "sha256": "ca95235550f5ebe34ac43f1f886620e4598fae4e304eef855068022400f5f630"
+          },
+          "native/core/desk/lib/stead-team.hoon": {
+            "bytes": 30909,
+            "origin": {
+              "authority": "240f dependency closure",
+              "bytes": 30909,
+              "sha256": "36c5affad6ba239f92b42ff7459b916fbb3223b387fa76149bf8350501872128",
+              "source_path": ".runtime/native-model-doc-proof-prepared/dependency-source/native/core/desk/lib/stead-team.hoon"
+            },
+            "sha256": "36c5affad6ba239f92b42ff7459b916fbb3223b387fa76149bf8350501872128"
+          },
+          "native/core/desk/tests/stead-model-codec.hoon": {
+            "bytes": 51452,
+            "origin": {
+              "authority": "native-model-codec-prepared frozen test",
+              "bytes": 51452,
+              "sha256": "184e54bff341e7f7177881061626a6c3da68f4cb6a235b354de85eeba56070ee",
+              "source_path": ".runtime/native-model-codec-prepared/native/core/desk/tests/stead-model-codec.hoon"
+            },
+            "sha256": "184e54bff341e7f7177881061626a6c3da68f4cb6a235b354de85eeba56070ee"
+          }
+        },
+        "source_offsets": [
+          {
+            "generated_end_byte": 9,
+            "generated_newlines": 1,
+            "generated_start_byte": 0,
+            "generated_start_line": 1,
+            "kind": "fixed-binding"
+          },
+          {
+            "generated_end_byte": 2518,
+            "generated_newlines": 103,
+            "generated_start_byte": 9,
+            "generated_start_line": 2,
+            "kind": "original-source",
+            "source": "pkg/base-dev/lib/test.hoon",
+            "source_end_byte": 2509,
+            "source_start_byte": 0,
+            "source_start_line": 1
+          },
+          {
+            "generated_end_byte": 2519,
+            "generated_newlines": 1,
+            "generated_start_byte": 2518,
+            "generated_start_line": 105,
+            "kind": "fixed-separator"
+          },
+          {
+            "generated_end_byte": 2538,
+            "generated_newlines": 1,
+            "generated_start_byte": 2519,
+            "generated_start_line": 106,
+            "kind": "fixed-binding"
+          },
+          {
+            "generated_end_byte": 11109,
+            "generated_newlines": 275,
+            "generated_start_byte": 2538,
+            "generated_start_line": 107,
+            "kind": "original-source",
+            "source": "native/core/desk/lib/stead-codec-v1.hoon",
+            "source_end_byte": 8571,
+            "source_start_byte": 0,
+            "source_start_line": 1
+          },
+          {
+            "generated_end_byte": 11110,
+            "generated_newlines": 1,
+            "generated_start_byte": 11109,
+            "generated_start_line": 382,
+            "kind": "fixed-separator"
+          },
+          {
+            "generated_end_byte": 11126,
+            "generated_newlines": 1,
+            "generated_start_byte": 11110,
+            "generated_start_line": 383,
+            "kind": "fixed-binding"
+          },
+          {
+            "generated_end_byte": 20658,
+            "generated_newlines": 294,
+            "generated_start_byte": 11126,
+            "generated_start_line": 384,
+            "kind": "original-source",
+            "source": "native/core/desk/lib/stead-codec.hoon",
+            "source_end_byte": 9532,
+            "source_start_byte": 0,
+            "source_start_line": 1
+          },
+          {
+            "generated_end_byte": 20659,
+            "generated_newlines": 1,
+            "generated_start_byte": 20658,
+            "generated_start_line": 678,
+            "kind": "fixed-separator"
+          },
+          {
+            "generated_end_byte": 20673,
+            "generated_newlines": 1,
+            "generated_start_byte": 20659,
+            "generated_start_line": 679,
+            "kind": "fixed-binding"
+          },
+          {
+            "generated_end_byte": 24608,
+            "generated_newlines": 132,
+            "generated_start_byte": 20673,
+            "generated_start_line": 680,
+            "kind": "original-source",
+            "source": "native/core/desk/lib/stead-git.hoon",
+            "source_end_byte": 3935,
+            "source_start_byte": 0,
+            "source_start_line": 1
+          },
+          {
+            "generated_end_byte": 24609,
+            "generated_newlines": 1,
+            "generated_start_byte": 24608,
+            "generated_start_line": 812,
+            "kind": "fixed-separator"
+          },
+          {
+            "generated_end_byte": 24627,
+            "generated_newlines": 1,
+            "generated_start_byte": 24609,
+            "generated_start_line": 813,
+            "kind": "fixed-binding"
+          },
+          {
+            "generated_end_byte": 24712,
+            "generated_newlines": 1,
+            "generated_start_byte": 24627,
+            "generated_start_line": 814,
+            "kind": "original-source",
+            "source": "native/core/desk/lib/stead-core-v1.hoon",
+            "source_end_byte": 85,
+            "source_start_byte": 0,
+            "source_start_line": 1
+          },
+          {
+            "generated_end_byte": 43987,
+            "generated_newlines": 433,
+            "generated_start_byte": 24712,
+            "generated_start_line": 815,
+            "kind": "original-source",
+            "source": "native/core/desk/lib/stead-core-v1.hoon",
+            "source_end_byte": 19390,
+            "source_start_byte": 115,
+            "source_start_line": 3
+          },
+          {
+            "generated_end_byte": 43988,
+            "generated_newlines": 1,
+            "generated_start_byte": 43987,
+            "generated_start_line": 1248,
+            "kind": "fixed-separator"
+          },
+          {
+            "generated_end_byte": 44006,
+            "generated_newlines": 1,
+            "generated_start_byte": 43988,
+            "generated_start_line": 1249,
+            "kind": "fixed-binding"
+          },
+          {
+            "generated_end_byte": 44140,
+            "generated_newlines": 2,
+            "generated_start_byte": 44006,
+            "generated_start_line": 1250,
+            "kind": "original-source",
+            "source": "native/core/desk/lib/stead-session.hoon",
+            "source_end_byte": 134,
+            "source_start_byte": 0,
+            "source_start_line": 1
+          },
+          {
+            "generated_end_byte": 52703,
+            "generated_newlines": 207,
+            "generated_start_byte": 44140,
+            "generated_start_line": 1252,
+            "kind": "original-source",
+            "source": "native/core/desk/lib/stead-session.hoon",
+            "source_end_byte": 8713,
+            "source_start_byte": 150,
+            "source_start_line": 4
+          },
+          {
+            "generated_end_byte": 52704,
+            "generated_newlines": 1,
+            "generated_start_byte": 52703,
+            "generated_start_line": 1459,
+            "kind": "fixed-separator"
+          },
+          {
+            "generated_end_byte": 52725,
+            "generated_newlines": 1,
+            "generated_start_byte": 52704,
+            "generated_start_line": 1460,
+            "kind": "fixed-binding"
+          },
+          {
+            "generated_end_byte": 52798,
+            "generated_newlines": 1,
+            "generated_start_byte": 52725,
+            "generated_start_line": 1461,
+            "kind": "original-source",
+            "source": "native/core/desk/lib/stead-team-codec.hoon",
+            "source_end_byte": 73,
+            "source_start_byte": 0,
+            "source_start_line": 1
+          },
+          {
+            "generated_end_byte": 61342,
+            "generated_newlines": 210,
+            "generated_start_byte": 52798,
+            "generated_start_line": 1462,
+            "kind": "original-source",
+            "source": "native/core/desk/lib/stead-team-codec.hoon",
+            "source_end_byte": 8633,
+            "source_start_byte": 89,
+            "source_start_line": 3
+          },
+          {
+            "generated_end_byte": 61343,
+            "generated_newlines": 1,
+            "generated_start_byte": 61342,
+            "generated_start_line": 1672,
+            "kind": "fixed-separator"
+          },
+          {
+            "generated_end_byte": 61358,
+            "generated_newlines": 1,
+            "generated_start_byte": 61343,
+            "generated_start_line": 1673,
+            "kind": "fixed-binding"
+          },
+          {
+            "generated_end_byte": 61443,
+            "generated_newlines": 1,
+            "generated_start_byte": 61358,
+            "generated_start_line": 1674,
+            "kind": "original-source",
+            "source": "native/core/desk/lib/stead-core.hoon",
+            "source_end_byte": 85,
+            "source_start_byte": 0,
+            "source_start_line": 1
+          },
+          {
+            "generated_end_byte": 92265,
+            "generated_newlines": 653,
+            "generated_start_byte": 61443,
+            "generated_start_line": 1675,
+            "kind": "original-source",
+            "source": "native/core/desk/lib/stead-core.hoon",
+            "source_end_byte": 30949,
+            "source_start_byte": 127,
+            "source_start_line": 3
+          },
+          {
+            "generated_end_byte": 92266,
+            "generated_newlines": 1,
+            "generated_start_byte": 92265,
+            "generated_start_line": 2328,
+            "kind": "fixed-separator"
+          },
+          {
+            "generated_end_byte": 92288,
+            "generated_newlines": 1,
+            "generated_start_byte": 92266,
+            "generated_start_line": 2329,
+            "kind": "fixed-binding"
+          },
+          {
+            "generated_end_byte": 92359,
+            "generated_newlines": 1,
+            "generated_start_byte": 92288,
+            "generated_start_line": 2330,
+            "kind": "original-source",
+            "source": "native/core/desk/lib/stead-team-config.hoon",
+            "source_end_byte": 71,
+            "source_start_byte": 0,
+            "source_start_line": 1
+          },
+          {
+            "generated_end_byte": 98743,
+            "generated_newlines": 137,
+            "generated_start_byte": 92359,
+            "generated_start_line": 2331,
+            "kind": "original-source",
+            "source": "native/core/desk/lib/stead-team-config.hoon",
+            "source_end_byte": 6486,
+            "source_start_byte": 102,
+            "source_start_line": 3
+          },
+          {
+            "generated_end_byte": 98744,
+            "generated_newlines": 1,
+            "generated_start_byte": 98743,
+            "generated_start_line": 2468,
+            "kind": "fixed-separator"
+          },
+          {
+            "generated_end_byte": 98765,
+            "generated_newlines": 1,
+            "generated_start_byte": 98744,
+            "generated_start_line": 2469,
+            "kind": "fixed-binding"
+          },
+          {
+            "generated_end_byte": 99001,
+            "generated_newlines": 3,
+            "generated_start_byte": 98765,
+            "generated_start_line": 2470,
+            "kind": "original-source",
+            "source": "native/core/desk/lib/stead-principals.hoon",
+            "source_end_byte": 236,
+            "source_start_byte": 0,
+            "source_start_line": 1
+          },
+          {
+            "generated_end_byte": 105381,
+            "generated_newlines": 152,
+            "generated_start_byte": 99001,
+            "generated_start_line": 2473,
+            "kind": "original-source",
+            "source": "native/core/desk/lib/stead-principals.hoon",
+            "source_end_byte": 6666,
+            "source_start_byte": 286,
+            "source_start_line": 5
+          },
+          {
+            "generated_end_byte": 105382,
+            "generated_newlines": 1,
+            "generated_start_byte": 105381,
+            "generated_start_line": 2625,
+            "kind": "fixed-separator"
+          },
+          {
+            "generated_end_byte": 105397,
+            "generated_newlines": 1,
+            "generated_start_byte": 105382,
+            "generated_start_line": 2626,
+            "kind": "fixed-binding"
+          },
+          {
+            "generated_end_byte": 105475,
+            "generated_newlines": 1,
+            "generated_start_byte": 105397,
+            "generated_start_line": 2627,
+            "kind": "original-source",
+            "source": "native/core/desk/lib/stead-team.hoon",
+            "source_end_byte": 78,
+            "source_start_byte": 0,
+            "source_start_line": 1
+          },
+          {
+            "generated_end_byte": 136215,
+            "generated_newlines": 612,
+            "generated_start_byte": 105475,
+            "generated_start_line": 2628,
+            "kind": "original-source",
+            "source": "native/core/desk/lib/stead-team.hoon",
+            "source_end_byte": 30909,
+            "source_start_byte": 169,
+            "source_start_line": 3
+          },
+          {
+            "generated_end_byte": 136216,
+            "generated_newlines": 1,
+            "generated_start_byte": 136215,
+            "generated_start_line": 3240,
+            "kind": "fixed-separator"
+          },
+          {
+            "generated_end_byte": 136232,
+            "generated_newlines": 1,
+            "generated_start_byte": 136216,
+            "generated_start_line": 3241,
+            "kind": "fixed-binding"
+          },
+          {
+            "generated_end_byte": 136701,
+            "generated_newlines": 6,
+            "generated_start_byte": 136232,
+            "generated_start_line": 3242,
+            "kind": "original-source",
+            "source": "native/core/desk/lib/stead-actor.hoon",
+            "source_end_byte": 469,
+            "source_start_byte": 0,
+            "source_start_line": 1
+          },
+          {
+            "generated_end_byte": 139657,
+            "generated_newlines": 79,
+            "generated_start_byte": 136701,
+            "generated_start_line": 3248,
+            "kind": "original-source",
+            "source": "native/core/desk/lib/stead-actor.hoon",
+            "source_end_byte": 3471,
+            "source_start_byte": 515,
+            "source_start_line": 8
+          },
+          {
+            "generated_end_byte": 139658,
+            "generated_newlines": 1,
+            "generated_start_byte": 139657,
+            "generated_start_line": 3327,
+            "kind": "fixed-separator"
+          },
+          {
+            "generated_end_byte": 139678,
+            "generated_newlines": 1,
+            "generated_start_byte": 139658,
+            "generated_start_line": 3328,
+            "kind": "fixed-binding"
+          },
+          {
+            "generated_end_byte": 139905,
+            "generated_newlines": 3,
+            "generated_start_byte": 139678,
+            "generated_start_line": 3329,
+            "kind": "original-source",
+            "source": "native/core/desk/lib/stead-run-state.hoon",
+            "source_end_byte": 227,
+            "source_start_byte": 0,
+            "source_start_line": 1
+          },
+          {
+            "generated_end_byte": 148531,
+            "generated_newlines": 183,
+            "generated_start_byte": 139905,
+            "generated_start_line": 3332,
+            "kind": "original-source",
+            "source": "native/core/desk/lib/stead-run-state.hoon",
+            "source_end_byte": 8894,
+            "source_start_byte": 268,
+            "source_start_line": 5
+          },
+          {
+            "generated_end_byte": 148532,
+            "generated_newlines": 1,
+            "generated_start_byte": 148531,
+            "generated_start_line": 3515,
+            "kind": "fixed-separator"
+          },
+          {
+            "generated_end_byte": 148552,
+            "generated_newlines": 1,
+            "generated_start_byte": 148532,
+            "generated_start_line": 3516,
+            "kind": "fixed-binding"
+          },
+          {
+            "generated_end_byte": 148779,
+            "generated_newlines": 3,
+            "generated_start_byte": 148552,
+            "generated_start_line": 3517,
+            "kind": "original-source",
+            "source": "native/core/desk/lib/stead-run-codec.hoon",
+            "source_end_byte": 227,
+            "source_start_byte": 0,
+            "source_start_line": 1
+          },
+          {
+            "generated_end_byte": 157537,
+            "generated_newlines": 180,
+            "generated_start_byte": 148779,
+            "generated_start_line": 3520,
+            "kind": "original-source",
+            "source": "native/core/desk/lib/stead-run-codec.hoon",
+            "source_end_byte": 9030,
+            "source_start_byte": 272,
+            "source_start_line": 5
+          },
+          {
+            "generated_end_byte": 157538,
+            "generated_newlines": 1,
+            "generated_start_byte": 157537,
+            "generated_start_line": 3700,
+            "kind": "fixed-separator"
+          },
+          {
+            "generated_end_byte": 157563,
+            "generated_newlines": 1,
+            "generated_start_byte": 157538,
+            "generated_start_line": 3701,
+            "kind": "fixed-binding"
+          },
+          {
+            "generated_end_byte": 157869,
+            "generated_newlines": 4,
+            "generated_start_byte": 157563,
+            "generated_start_line": 3702,
+            "kind": "original-source",
+            "source": "native/core/desk/lib/stead-model-material.hoon",
+            "source_end_byte": 306,
+            "source_start_byte": 0,
+            "source_start_line": 1
+          },
+          {
+            "generated_end_byte": 174979,
+            "generated_newlines": 386,
+            "generated_start_byte": 157869,
+            "generated_start_line": 3706,
+            "kind": "original-source",
+            "source": "native/core/desk/lib/stead-model-material.hoon",
+            "source_end_byte": 17466,
+            "source_start_byte": 356,
+            "source_start_line": 6
+          },
+          {
+            "generated_end_byte": 174980,
+            "generated_newlines": 1,
+            "generated_start_byte": 174979,
+            "generated_start_line": 4092,
+            "kind": "fixed-separator"
+          },
+          {
+            "generated_end_byte": 175002,
+            "generated_newlines": 1,
+            "generated_start_byte": 174980,
+            "generated_start_line": 4093,
+            "kind": "fixed-binding"
+          },
+          {
+            "generated_end_byte": 175237,
+            "generated_newlines": 3,
+            "generated_start_byte": 175002,
+            "generated_start_line": 4094,
+            "kind": "original-source",
+            "source": "native/core/desk/lib/stead-model-codec.hoon",
+            "source_end_byte": 235,
+            "source_start_byte": 0,
+            "source_start_line": 1
+          },
+          {
+            "generated_end_byte": 179683,
+            "generated_newlines": 96,
+            "generated_start_byte": 175237,
+            "generated_start_line": 4097,
+            "kind": "original-source",
+            "source": "native/core/desk/lib/stead-model-codec.hoon",
+            "source_end_byte": 4753,
+            "source_start_byte": 307,
+            "source_start_line": 5
+          },
+          {
+            "generated_end_byte": 179684,
+            "generated_newlines": 1,
+            "generated_start_byte": 179683,
+            "generated_start_line": 4193,
+            "kind": "fixed-separator"
+          },
+          {
+            "generated_end_byte": 179696,
+            "generated_newlines": 2,
+            "generated_start_byte": 179684,
+            "generated_start_line": 4194,
+            "kind": "fixed-test-binding"
+          },
+          {
+            "generated_end_byte": 179849,
+            "generated_newlines": 2,
+            "generated_start_byte": 179696,
+            "generated_start_line": 4196,
+            "kind": "original-source",
+            "source": "native/core/desk/tests/stead-model-codec.hoon",
+            "source_end_byte": 153,
+            "source_start_byte": 0,
+            "source_start_line": 1
+          },
+          {
+            "generated_end_byte": 231067,
+            "generated_newlines": 175,
+            "generated_start_byte": 179849,
+            "generated_start_line": 4198,
+            "kind": "original-source",
+            "source": "native/core/desk/tests/stead-model-codec.hoon",
+            "source_end_byte": 51452,
+            "source_start_byte": 234,
+            "source_start_line": 4
+          },
+          {
+            "generated_end_byte": 231068,
+            "generated_newlines": 1,
+            "generated_start_byte": 231067,
+            "generated_start_line": 4373,
+            "kind": "fixed-separator"
+          },
+          {
+            "generated_end_byte": 232002,
+            "generated_newlines": 8,
+            "generated_start_byte": 231068,
+            "generated_start_line": 4374,
+            "kind": "fixed-inventory-expression"
+          }
+        ],
+        "transitive_library_count": 15,
+        "transitive_library_order": [
+          "native/core/desk/lib/stead-codec-v1.hoon",
+          "native/core/desk/lib/stead-codec.hoon",
+          "native/core/desk/lib/stead-git.hoon",
+          "native/core/desk/lib/stead-core-v1.hoon",
+          "native/core/desk/lib/stead-session.hoon",
+          "native/core/desk/lib/stead-team-codec.hoon",
+          "native/core/desk/lib/stead-core.hoon",
+          "native/core/desk/lib/stead-team-config.hoon",
+          "native/core/desk/lib/stead-principals.hoon",
+          "native/core/desk/lib/stead-team.hoon",
+          "native/core/desk/lib/stead-actor.hoon",
+          "native/core/desk/lib/stead-run-state.hoon",
+          "native/core/desk/lib/stead-run-codec.hoon",
+          "native/core/desk/lib/stead-model-material.hoon",
+          "native/core/desk/lib/stead-model-codec.hoon"
+        ]
+      },
+      {
+        "arms": [
+          "test-model-reply-rebuilds-golden-proposal-from-original-bytes",
+          "test-model-reply-binary-utf8-duplicate-depth-and-size-refusals",
+          "test-model-reply-timing-exponents-and-reasoning-are-bounded",
+          "test-model-reply-refusal-incomplete-and-filter-never-propose-doc",
+          "test-model-reply-tool-model-and-usage-pins-reject-spoofs",
+          "test-model-reply-actual-linefeeds-and-supplementary-unicode"
+        ],
+        "composed_source": {
+          "bytes": 219399,
+          "path": ".runtime/native-model-simple-pure-composition-prepared/composed/stead-model-reply.hoon",
+          "sha256": "d9d3fdd036fcc869159a686bd96a35da6aa07c1c1bbf38b4481ed68b8920d8ed"
+        },
+        "count": 6,
+        "import_header": "/+  *test, stead-codec, stead-model-material, stead-model-codec, stead-model-reply\n",
+        "inventory_expression": {
+          "bytes": 980,
+          "sha256": "d2e58c31766669e1a5788a2e6bf90bd5f55439f2c36743647bbea53b01aab618"
+        },
+        "label": "stead-model-reply",
+        "path": "native/core/desk/tests/stead-model-reply.hoon",
+        "source_files": {
+          "native/core/desk/lib/stead-actor.hoon": {
+            "bytes": 3471,
+            "origin": {
+              "authority": "240f dependency closure",
+              "bytes": 3471,
+              "sha256": "4739b3b7e65ff95a14e2410c5c0635833b13e5fc7ff197c9b004b27a92e9c7b8",
+              "source_path": ".runtime/native-model-doc-proof-prepared/dependency-source/native/core/desk/lib/stead-actor.hoon"
+            },
+            "sha256": "4739b3b7e65ff95a14e2410c5c0635833b13e5fc7ff197c9b004b27a92e9c7b8"
+          },
+          "native/core/desk/lib/stead-codec-v1.hoon": {
+            "bytes": 8571,
+            "origin": {
+              "authority": "240f dependency closure",
+              "bytes": 8571,
+              "sha256": "ce4c7a69b03ee1761590c37e71ff49b9f63a1a2edd2aaa6dfbf75bc3c960584a",
+              "source_path": ".runtime/native-model-doc-proof-prepared/dependency-source/native/core/desk/lib/stead-codec-v1.hoon"
+            },
+            "sha256": "ce4c7a69b03ee1761590c37e71ff49b9f63a1a2edd2aaa6dfbf75bc3c960584a"
+          },
+          "native/core/desk/lib/stead-codec.hoon": {
+            "bytes": 9532,
+            "origin": {
+              "authority": "240f dependency closure",
+              "bytes": 9532,
+              "sha256": "56e3d574381bbf8cdf29ca192c70eff256009f89d782e3ffe859b19c1321cbd7",
+              "source_path": ".runtime/native-model-doc-proof-prepared/dependency-source/native/core/desk/lib/stead-codec.hoon"
+            },
+            "sha256": "56e3d574381bbf8cdf29ca192c70eff256009f89d782e3ffe859b19c1321cbd7"
+          },
+          "native/core/desk/lib/stead-core-v1.hoon": {
+            "bytes": 19390,
+            "origin": {
+              "authority": "240f dependency closure",
+              "bytes": 19390,
+              "sha256": "879615a5547d06a09d382c2bac4c5cb20cdf03236ddfdab79c9f1da15bd33cb5",
+              "source_path": ".runtime/native-model-doc-proof-prepared/dependency-source/native/core/desk/lib/stead-core-v1.hoon"
+            },
+            "sha256": "879615a5547d06a09d382c2bac4c5cb20cdf03236ddfdab79c9f1da15bd33cb5"
+          },
+          "native/core/desk/lib/stead-core.hoon": {
+            "bytes": 30949,
+            "origin": {
+              "authority": "240f dependency closure",
+              "bytes": 30949,
+              "sha256": "4c183ef6283030437af5e1433e3fbf80f414757bcede4cab1282fc71ff5f34de",
+              "source_path": ".runtime/native-model-doc-proof-prepared/dependency-source/native/core/desk/lib/stead-core.hoon"
+            },
+            "sha256": "4c183ef6283030437af5e1433e3fbf80f414757bcede4cab1282fc71ff5f34de"
+          },
+          "native/core/desk/lib/stead-git.hoon": {
+            "bytes": 3935,
+            "origin": {
+              "authority": "240f dependency closure",
+              "bytes": 3935,
+              "sha256": "826b83485429c02f577c9b462ee6cddd3ab8ea1a099d33b66893f863d54c54d7",
+              "source_path": ".runtime/native-model-doc-proof-prepared/dependency-source/native/core/desk/lib/stead-git.hoon"
+            },
+            "sha256": "826b83485429c02f577c9b462ee6cddd3ab8ea1a099d33b66893f863d54c54d7"
+          },
+          "native/core/desk/lib/stead-model-codec.hoon": {
+            "bytes": 4753,
+            "origin": {
+              "authority": "240f dependency closure",
+              "bytes": 4753,
+              "sha256": "e2a74203d5325e12262179bcab7b05bc0fb1b56dbb814e9adb145e3093c7ccc1",
+              "source_path": ".runtime/native-model-doc-proof-prepared/dependency-source/native/core/desk/lib/stead-model-codec.hoon"
+            },
+            "sha256": "e2a74203d5325e12262179bcab7b05bc0fb1b56dbb814e9adb145e3093c7ccc1"
+          },
+          "native/core/desk/lib/stead-model-material.hoon": {
+            "bytes": 17466,
+            "origin": {
+              "authority": "240f dependency closure",
+              "bytes": 17466,
+              "sha256": "070e26bfbbcaae56d54c9c8045a8312056b21e3b82549d290ea33c696120c7d8",
+              "source_path": ".runtime/native-model-doc-proof-prepared/dependency-source/native/core/desk/lib/stead-model-material.hoon"
+            },
+            "sha256": "070e26bfbbcaae56d54c9c8045a8312056b21e3b82549d290ea33c696120c7d8"
+          },
+          "native/core/desk/lib/stead-model-reply.hoon": {
+            "bytes": 10223,
+            "origin": {
+              "authority": "240f dependency closure",
+              "bytes": 10223,
+              "sha256": "94c6ee089725377f183b3ca26b8987bddff9f1a2428fc87f34a5f2db2ce21a11",
+              "source_path": ".runtime/native-model-doc-proof-prepared/dependency-source/native/core/desk/lib/stead-model-reply.hoon"
+            },
+            "sha256": "94c6ee089725377f183b3ca26b8987bddff9f1a2428fc87f34a5f2db2ce21a11"
+          },
+          "native/core/desk/lib/stead-principals.hoon": {
+            "bytes": 6666,
+            "origin": {
+              "authority": "240f dependency closure",
+              "bytes": 6666,
+              "sha256": "59674e536e182c62902046a267aa644f05f7c97282e3eb737ab74f3ca6446d7f",
+              "source_path": ".runtime/native-model-doc-proof-prepared/dependency-source/native/core/desk/lib/stead-principals.hoon"
+            },
+            "sha256": "59674e536e182c62902046a267aa644f05f7c97282e3eb737ab74f3ca6446d7f"
+          },
+          "native/core/desk/lib/stead-run-codec.hoon": {
+            "bytes": 9030,
+            "origin": {
+              "authority": "240f dependency closure",
+              "bytes": 9030,
+              "sha256": "ba0c758e95230b133c5475e592a07e8106c73dfbab8e1c0967b04c8797e62ecb",
+              "source_path": ".runtime/native-model-doc-proof-prepared/dependency-source/native/core/desk/lib/stead-run-codec.hoon"
+            },
+            "sha256": "ba0c758e95230b133c5475e592a07e8106c73dfbab8e1c0967b04c8797e62ecb"
+          },
+          "native/core/desk/lib/stead-run-state.hoon": {
+            "bytes": 8894,
+            "origin": {
+              "authority": "240f dependency closure",
+              "bytes": 8894,
+              "sha256": "4c96eb466add4ae26f6c6fbfd390b338d26a14e20a8c3f70214f9e1445602c1d",
+              "source_path": ".runtime/native-model-doc-proof-prepared/dependency-source/native/core/desk/lib/stead-run-state.hoon"
+            },
+            "sha256": "4c96eb466add4ae26f6c6fbfd390b338d26a14e20a8c3f70214f9e1445602c1d"
+          },
+          "native/core/desk/lib/stead-session.hoon": {
+            "bytes": 8713,
+            "origin": {
+              "authority": "240f dependency closure",
+              "bytes": 8713,
+              "sha256": "ec331d4534cc19fc76f6b9ad590ec326d74e09f0b846b36f866e6351bdcbbb27",
+              "source_path": ".runtime/native-model-doc-proof-prepared/dependency-source/native/core/desk/lib/stead-session.hoon"
+            },
+            "sha256": "ec331d4534cc19fc76f6b9ad590ec326d74e09f0b846b36f866e6351bdcbbb27"
+          },
+          "native/core/desk/lib/stead-team-codec.hoon": {
+            "bytes": 8633,
+            "origin": {
+              "authority": "240f dependency closure",
+              "bytes": 8633,
+              "sha256": "0a7e54ad7cd6fc66dcbfabd90425d55a234d9239140dec97309474fb3b90ba76",
+              "source_path": ".runtime/native-model-doc-proof-prepared/dependency-source/native/core/desk/lib/stead-team-codec.hoon"
+            },
+            "sha256": "0a7e54ad7cd6fc66dcbfabd90425d55a234d9239140dec97309474fb3b90ba76"
+          },
+          "native/core/desk/lib/stead-team-config.hoon": {
+            "bytes": 6486,
+            "origin": {
+              "authority": "240f dependency closure",
+              "bytes": 6486,
+              "sha256": "ca95235550f5ebe34ac43f1f886620e4598fae4e304eef855068022400f5f630",
+              "source_path": ".runtime/native-model-doc-proof-prepared/dependency-source/native/core/desk/lib/stead-team-config.hoon"
+            },
+            "sha256": "ca95235550f5ebe34ac43f1f886620e4598fae4e304eef855068022400f5f630"
+          },
+          "native/core/desk/lib/stead-team.hoon": {
+            "bytes": 30909,
+            "origin": {
+              "authority": "240f dependency closure",
+              "bytes": 30909,
+              "sha256": "36c5affad6ba239f92b42ff7459b916fbb3223b387fa76149bf8350501872128",
+              "source_path": ".runtime/native-model-doc-proof-prepared/dependency-source/native/core/desk/lib/stead-team.hoon"
+            },
+            "sha256": "36c5affad6ba239f92b42ff7459b916fbb3223b387fa76149bf8350501872128"
+          },
+          "native/core/desk/tests/stead-model-reply.hoon": {
+            "bytes": 28633,
+            "origin": {
+              "authority": "native-model-reply-prepared frozen test",
+              "bytes": 28633,
+              "sha256": "ffb78cd22dc4b0c3c4a23ed8c7083cbe250c443e1f352077fa405fbd1c72159e",
+              "source_path": ".runtime/native-model-reply-prepared/native/core/desk/tests/stead-model-reply.hoon"
+            },
+            "sha256": "ffb78cd22dc4b0c3c4a23ed8c7083cbe250c443e1f352077fa405fbd1c72159e"
+          }
+        },
+        "source_offsets": [
+          {
+            "generated_end_byte": 9,
+            "generated_newlines": 1,
+            "generated_start_byte": 0,
+            "generated_start_line": 1,
+            "kind": "fixed-binding"
+          },
+          {
+            "generated_end_byte": 2518,
+            "generated_newlines": 103,
+            "generated_start_byte": 9,
+            "generated_start_line": 2,
+            "kind": "original-source",
+            "source": "pkg/base-dev/lib/test.hoon",
+            "source_end_byte": 2509,
+            "source_start_byte": 0,
+            "source_start_line": 1
+          },
+          {
+            "generated_end_byte": 2519,
+            "generated_newlines": 1,
+            "generated_start_byte": 2518,
+            "generated_start_line": 105,
+            "kind": "fixed-separator"
+          },
+          {
+            "generated_end_byte": 2538,
+            "generated_newlines": 1,
+            "generated_start_byte": 2519,
+            "generated_start_line": 106,
+            "kind": "fixed-binding"
+          },
+          {
+            "generated_end_byte": 11109,
+            "generated_newlines": 275,
+            "generated_start_byte": 2538,
+            "generated_start_line": 107,
+            "kind": "original-source",
+            "source": "native/core/desk/lib/stead-codec-v1.hoon",
+            "source_end_byte": 8571,
+            "source_start_byte": 0,
+            "source_start_line": 1
+          },
+          {
+            "generated_end_byte": 11110,
+            "generated_newlines": 1,
+            "generated_start_byte": 11109,
+            "generated_start_line": 382,
+            "kind": "fixed-separator"
+          },
+          {
+            "generated_end_byte": 11126,
+            "generated_newlines": 1,
+            "generated_start_byte": 11110,
+            "generated_start_line": 383,
+            "kind": "fixed-binding"
+          },
+          {
+            "generated_end_byte": 20658,
+            "generated_newlines": 294,
+            "generated_start_byte": 11126,
+            "generated_start_line": 384,
+            "kind": "original-source",
+            "source": "native/core/desk/lib/stead-codec.hoon",
+            "source_end_byte": 9532,
+            "source_start_byte": 0,
+            "source_start_line": 1
+          },
+          {
+            "generated_end_byte": 20659,
+            "generated_newlines": 1,
+            "generated_start_byte": 20658,
+            "generated_start_line": 678,
+            "kind": "fixed-separator"
+          },
+          {
+            "generated_end_byte": 20673,
+            "generated_newlines": 1,
+            "generated_start_byte": 20659,
+            "generated_start_line": 679,
+            "kind": "fixed-binding"
+          },
+          {
+            "generated_end_byte": 24608,
+            "generated_newlines": 132,
+            "generated_start_byte": 20673,
+            "generated_start_line": 680,
+            "kind": "original-source",
+            "source": "native/core/desk/lib/stead-git.hoon",
+            "source_end_byte": 3935,
+            "source_start_byte": 0,
+            "source_start_line": 1
+          },
+          {
+            "generated_end_byte": 24609,
+            "generated_newlines": 1,
+            "generated_start_byte": 24608,
+            "generated_start_line": 812,
+            "kind": "fixed-separator"
+          },
+          {
+            "generated_end_byte": 24627,
+            "generated_newlines": 1,
+            "generated_start_byte": 24609,
+            "generated_start_line": 813,
+            "kind": "fixed-binding"
+          },
+          {
+            "generated_end_byte": 24712,
+            "generated_newlines": 1,
+            "generated_start_byte": 24627,
+            "generated_start_line": 814,
+            "kind": "original-source",
+            "source": "native/core/desk/lib/stead-core-v1.hoon",
+            "source_end_byte": 85,
+            "source_start_byte": 0,
+            "source_start_line": 1
+          },
+          {
+            "generated_end_byte": 43987,
+            "generated_newlines": 433,
+            "generated_start_byte": 24712,
+            "generated_start_line": 815,
+            "kind": "original-source",
+            "source": "native/core/desk/lib/stead-core-v1.hoon",
+            "source_end_byte": 19390,
+            "source_start_byte": 115,
+            "source_start_line": 3
+          },
+          {
+            "generated_end_byte": 43988,
+            "generated_newlines": 1,
+            "generated_start_byte": 43987,
+            "generated_start_line": 1248,
+            "kind": "fixed-separator"
+          },
+          {
+            "generated_end_byte": 44006,
+            "generated_newlines": 1,
+            "generated_start_byte": 43988,
+            "generated_start_line": 1249,
+            "kind": "fixed-binding"
+          },
+          {
+            "generated_end_byte": 44140,
+            "generated_newlines": 2,
+            "generated_start_byte": 44006,
+            "generated_start_line": 1250,
+            "kind": "original-source",
+            "source": "native/core/desk/lib/stead-session.hoon",
+            "source_end_byte": 134,
+            "source_start_byte": 0,
+            "source_start_line": 1
+          },
+          {
+            "generated_end_byte": 52703,
+            "generated_newlines": 207,
+            "generated_start_byte": 44140,
+            "generated_start_line": 1252,
+            "kind": "original-source",
+            "source": "native/core/desk/lib/stead-session.hoon",
+            "source_end_byte": 8713,
+            "source_start_byte": 150,
+            "source_start_line": 4
+          },
+          {
+            "generated_end_byte": 52704,
+            "generated_newlines": 1,
+            "generated_start_byte": 52703,
+            "generated_start_line": 1459,
+            "kind": "fixed-separator"
+          },
+          {
+            "generated_end_byte": 52725,
+            "generated_newlines": 1,
+            "generated_start_byte": 52704,
+            "generated_start_line": 1460,
+            "kind": "fixed-binding"
+          },
+          {
+            "generated_end_byte": 52798,
+            "generated_newlines": 1,
+            "generated_start_byte": 52725,
+            "generated_start_line": 1461,
+            "kind": "original-source",
+            "source": "native/core/desk/lib/stead-team-codec.hoon",
+            "source_end_byte": 73,
+            "source_start_byte": 0,
+            "source_start_line": 1
+          },
+          {
+            "generated_end_byte": 61342,
+            "generated_newlines": 210,
+            "generated_start_byte": 52798,
+            "generated_start_line": 1462,
+            "kind": "original-source",
+            "source": "native/core/desk/lib/stead-team-codec.hoon",
+            "source_end_byte": 8633,
+            "source_start_byte": 89,
+            "source_start_line": 3
+          },
+          {
+            "generated_end_byte": 61343,
+            "generated_newlines": 1,
+            "generated_start_byte": 61342,
+            "generated_start_line": 1672,
+            "kind": "fixed-separator"
+          },
+          {
+            "generated_end_byte": 61358,
+            "generated_newlines": 1,
+            "generated_start_byte": 61343,
+            "generated_start_line": 1673,
+            "kind": "fixed-binding"
+          },
+          {
+            "generated_end_byte": 61443,
+            "generated_newlines": 1,
+            "generated_start_byte": 61358,
+            "generated_start_line": 1674,
+            "kind": "original-source",
+            "source": "native/core/desk/lib/stead-core.hoon",
+            "source_end_byte": 85,
+            "source_start_byte": 0,
+            "source_start_line": 1
+          },
+          {
+            "generated_end_byte": 92265,
+            "generated_newlines": 653,
+            "generated_start_byte": 61443,
+            "generated_start_line": 1675,
+            "kind": "original-source",
+            "source": "native/core/desk/lib/stead-core.hoon",
+            "source_end_byte": 30949,
+            "source_start_byte": 127,
+            "source_start_line": 3
+          },
+          {
+            "generated_end_byte": 92266,
+            "generated_newlines": 1,
+            "generated_start_byte": 92265,
+            "generated_start_line": 2328,
+            "kind": "fixed-separator"
+          },
+          {
+            "generated_end_byte": 92288,
+            "generated_newlines": 1,
+            "generated_start_byte": 92266,
+            "generated_start_line": 2329,
+            "kind": "fixed-binding"
+          },
+          {
+            "generated_end_byte": 92359,
+            "generated_newlines": 1,
+            "generated_start_byte": 92288,
+            "generated_start_line": 2330,
+            "kind": "original-source",
+            "source": "native/core/desk/lib/stead-team-config.hoon",
+            "source_end_byte": 71,
+            "source_start_byte": 0,
+            "source_start_line": 1
+          },
+          {
+            "generated_end_byte": 98743,
+            "generated_newlines": 137,
+            "generated_start_byte": 92359,
+            "generated_start_line": 2331,
+            "kind": "original-source",
+            "source": "native/core/desk/lib/stead-team-config.hoon",
+            "source_end_byte": 6486,
+            "source_start_byte": 102,
+            "source_start_line": 3
+          },
+          {
+            "generated_end_byte": 98744,
+            "generated_newlines": 1,
+            "generated_start_byte": 98743,
+            "generated_start_line": 2468,
+            "kind": "fixed-separator"
+          },
+          {
+            "generated_end_byte": 98765,
+            "generated_newlines": 1,
+            "generated_start_byte": 98744,
+            "generated_start_line": 2469,
+            "kind": "fixed-binding"
+          },
+          {
+            "generated_end_byte": 99001,
+            "generated_newlines": 3,
+            "generated_start_byte": 98765,
+            "generated_start_line": 2470,
+            "kind": "original-source",
+            "source": "native/core/desk/lib/stead-principals.hoon",
+            "source_end_byte": 236,
+            "source_start_byte": 0,
+            "source_start_line": 1
+          },
+          {
+            "generated_end_byte": 105381,
+            "generated_newlines": 152,
+            "generated_start_byte": 99001,
+            "generated_start_line": 2473,
+            "kind": "original-source",
+            "source": "native/core/desk/lib/stead-principals.hoon",
+            "source_end_byte": 6666,
+            "source_start_byte": 286,
+            "source_start_line": 5
+          },
+          {
+            "generated_end_byte": 105382,
+            "generated_newlines": 1,
+            "generated_start_byte": 105381,
+            "generated_start_line": 2625,
+            "kind": "fixed-separator"
+          },
+          {
+            "generated_end_byte": 105397,
+            "generated_newlines": 1,
+            "generated_start_byte": 105382,
+            "generated_start_line": 2626,
+            "kind": "fixed-binding"
+          },
+          {
+            "generated_end_byte": 105475,
+            "generated_newlines": 1,
+            "generated_start_byte": 105397,
+            "generated_start_line": 2627,
+            "kind": "original-source",
+            "source": "native/core/desk/lib/stead-team.hoon",
+            "source_end_byte": 78,
+            "source_start_byte": 0,
+            "source_start_line": 1
+          },
+          {
+            "generated_end_byte": 136215,
+            "generated_newlines": 612,
+            "generated_start_byte": 105475,
+            "generated_start_line": 2628,
+            "kind": "original-source",
+            "source": "native/core/desk/lib/stead-team.hoon",
+            "source_end_byte": 30909,
+            "source_start_byte": 169,
+            "source_start_line": 3
+          },
+          {
+            "generated_end_byte": 136216,
+            "generated_newlines": 1,
+            "generated_start_byte": 136215,
+            "generated_start_line": 3240,
+            "kind": "fixed-separator"
+          },
+          {
+            "generated_end_byte": 136232,
+            "generated_newlines": 1,
+            "generated_start_byte": 136216,
+            "generated_start_line": 3241,
+            "kind": "fixed-binding"
+          },
+          {
+            "generated_end_byte": 136701,
+            "generated_newlines": 6,
+            "generated_start_byte": 136232,
+            "generated_start_line": 3242,
+            "kind": "original-source",
+            "source": "native/core/desk/lib/stead-actor.hoon",
+            "source_end_byte": 469,
+            "source_start_byte": 0,
+            "source_start_line": 1
+          },
+          {
+            "generated_end_byte": 139657,
+            "generated_newlines": 79,
+            "generated_start_byte": 136701,
+            "generated_start_line": 3248,
+            "kind": "original-source",
+            "source": "native/core/desk/lib/stead-actor.hoon",
+            "source_end_byte": 3471,
+            "source_start_byte": 515,
+            "source_start_line": 8
+          },
+          {
+            "generated_end_byte": 139658,
+            "generated_newlines": 1,
+            "generated_start_byte": 139657,
+            "generated_start_line": 3327,
+            "kind": "fixed-separator"
+          },
+          {
+            "generated_end_byte": 139678,
+            "generated_newlines": 1,
+            "generated_start_byte": 139658,
+            "generated_start_line": 3328,
+            "kind": "fixed-binding"
+          },
+          {
+            "generated_end_byte": 139905,
+            "generated_newlines": 3,
+            "generated_start_byte": 139678,
+            "generated_start_line": 3329,
+            "kind": "original-source",
+            "source": "native/core/desk/lib/stead-run-state.hoon",
+            "source_end_byte": 227,
+            "source_start_byte": 0,
+            "source_start_line": 1
+          },
+          {
+            "generated_end_byte": 148531,
+            "generated_newlines": 183,
+            "generated_start_byte": 139905,
+            "generated_start_line": 3332,
+            "kind": "original-source",
+            "source": "native/core/desk/lib/stead-run-state.hoon",
+            "source_end_byte": 8894,
+            "source_start_byte": 268,
+            "source_start_line": 5
+          },
+          {
+            "generated_end_byte": 148532,
+            "generated_newlines": 1,
+            "generated_start_byte": 148531,
+            "generated_start_line": 3515,
+            "kind": "fixed-separator"
+          },
+          {
+            "generated_end_byte": 148552,
+            "generated_newlines": 1,
+            "generated_start_byte": 148532,
+            "generated_start_line": 3516,
+            "kind": "fixed-binding"
+          },
+          {
+            "generated_end_byte": 148779,
+            "generated_newlines": 3,
+            "generated_start_byte": 148552,
+            "generated_start_line": 3517,
+            "kind": "original-source",
+            "source": "native/core/desk/lib/stead-run-codec.hoon",
+            "source_end_byte": 227,
+            "source_start_byte": 0,
+            "source_start_line": 1
+          },
+          {
+            "generated_end_byte": 157537,
+            "generated_newlines": 180,
+            "generated_start_byte": 148779,
+            "generated_start_line": 3520,
+            "kind": "original-source",
+            "source": "native/core/desk/lib/stead-run-codec.hoon",
+            "source_end_byte": 9030,
+            "source_start_byte": 272,
+            "source_start_line": 5
+          },
+          {
+            "generated_end_byte": 157538,
+            "generated_newlines": 1,
+            "generated_start_byte": 157537,
+            "generated_start_line": 3700,
+            "kind": "fixed-separator"
+          },
+          {
+            "generated_end_byte": 157563,
+            "generated_newlines": 1,
+            "generated_start_byte": 157538,
+            "generated_start_line": 3701,
+            "kind": "fixed-binding"
+          },
+          {
+            "generated_end_byte": 157869,
+            "generated_newlines": 4,
+            "generated_start_byte": 157563,
+            "generated_start_line": 3702,
+            "kind": "original-source",
+            "source": "native/core/desk/lib/stead-model-material.hoon",
+            "source_end_byte": 306,
+            "source_start_byte": 0,
+            "source_start_line": 1
+          },
+          {
+            "generated_end_byte": 174979,
+            "generated_newlines": 386,
+            "generated_start_byte": 157869,
+            "generated_start_line": 3706,
+            "kind": "original-source",
+            "source": "native/core/desk/lib/stead-model-material.hoon",
+            "source_end_byte": 17466,
+            "source_start_byte": 356,
+            "source_start_line": 6
+          },
+          {
+            "generated_end_byte": 174980,
+            "generated_newlines": 1,
+            "generated_start_byte": 174979,
+            "generated_start_line": 4092,
+            "kind": "fixed-separator"
+          },
+          {
+            "generated_end_byte": 175002,
+            "generated_newlines": 1,
+            "generated_start_byte": 174980,
+            "generated_start_line": 4093,
+            "kind": "fixed-binding"
+          },
+          {
+            "generated_end_byte": 175237,
+            "generated_newlines": 3,
+            "generated_start_byte": 175002,
+            "generated_start_line": 4094,
+            "kind": "original-source",
+            "source": "native/core/desk/lib/stead-model-codec.hoon",
+            "source_end_byte": 235,
+            "source_start_byte": 0,
+            "source_start_line": 1
+          },
+          {
+            "generated_end_byte": 179683,
+            "generated_newlines": 96,
+            "generated_start_byte": 175237,
+            "generated_start_line": 4097,
+            "kind": "original-source",
+            "source": "native/core/desk/lib/stead-model-codec.hoon",
+            "source_end_byte": 4753,
+            "source_start_byte": 307,
+            "source_start_line": 5
+          },
+          {
+            "generated_end_byte": 179684,
+            "generated_newlines": 1,
+            "generated_start_byte": 179683,
+            "generated_start_line": 4193,
+            "kind": "fixed-separator"
+          },
+          {
+            "generated_end_byte": 179706,
+            "generated_newlines": 1,
+            "generated_start_byte": 179684,
+            "generated_start_line": 4194,
+            "kind": "fixed-binding"
+          },
+          {
+            "generated_end_byte": 180011,
+            "generated_newlines": 4,
+            "generated_start_byte": 179706,
+            "generated_start_line": 4195,
+            "kind": "original-source",
+            "source": "native/core/desk/lib/stead-model-reply.hoon",
+            "source_end_byte": 305,
+            "source_start_byte": 0,
+            "source_start_line": 1
+          },
+          {
+            "generated_end_byte": 189855,
+            "generated_newlines": 216,
+            "generated_start_byte": 180011,
+            "generated_start_line": 4199,
+            "kind": "original-source",
+            "source": "native/core/desk/lib/stead-model-reply.hoon",
+            "source_end_byte": 10223,
+            "source_start_byte": 379,
+            "source_start_line": 6
+          },
+          {
+            "generated_end_byte": 189856,
+            "generated_newlines": 1,
+            "generated_start_byte": 189855,
+            "generated_start_line": 4415,
+            "kind": "fixed-separator"
+          },
+          {
+            "generated_end_byte": 189868,
+            "generated_newlines": 2,
+            "generated_start_byte": 189856,
+            "generated_start_line": 4416,
+            "kind": "fixed-test-binding"
+          },
+          {
+            "generated_end_byte": 189941,
+            "generated_newlines": 1,
+            "generated_start_byte": 189868,
+            "generated_start_line": 4418,
+            "kind": "original-source",
+            "source": "native/core/desk/tests/stead-model-reply.hoon",
+            "source_end_byte": 73,
+            "source_start_byte": 0,
+            "source_start_line": 1
+          },
+          {
+            "generated_end_byte": 218418,
+            "generated_newlines": 176,
+            "generated_start_byte": 189941,
+            "generated_start_line": 4419,
+            "kind": "original-source",
+            "source": "native/core/desk/tests/stead-model-reply.hoon",
+            "source_end_byte": 28633,
+            "source_start_byte": 156,
+            "source_start_line": 3
+          },
+          {
+            "generated_end_byte": 218419,
+            "generated_newlines": 1,
+            "generated_start_byte": 218418,
+            "generated_start_line": 4595,
+            "kind": "fixed-separator"
+          },
+          {
+            "generated_end_byte": 219399,
+            "generated_newlines": 8,
+            "generated_start_byte": 218419,
+            "generated_start_line": 4596,
+            "kind": "fixed-inventory-expression"
+          }
+        ],
+        "transitive_library_count": 16,
+        "transitive_library_order": [
+          "native/core/desk/lib/stead-codec-v1.hoon",
+          "native/core/desk/lib/stead-codec.hoon",
+          "native/core/desk/lib/stead-git.hoon",
+          "native/core/desk/lib/stead-core-v1.hoon",
+          "native/core/desk/lib/stead-session.hoon",
+          "native/core/desk/lib/stead-team-codec.hoon",
+          "native/core/desk/lib/stead-core.hoon",
+          "native/core/desk/lib/stead-team-config.hoon",
+          "native/core/desk/lib/stead-principals.hoon",
+          "native/core/desk/lib/stead-team.hoon",
+          "native/core/desk/lib/stead-actor.hoon",
+          "native/core/desk/lib/stead-run-state.hoon",
+          "native/core/desk/lib/stead-run-codec.hoon",
+          "native/core/desk/lib/stead-model-material.hoon",
+          "native/core/desk/lib/stead-model-codec.hoon",
+          "native/core/desk/lib/stead-model-reply.hoon"
+        ]
+      },
+      {
+        "arms": [
+          "test-model-turn-codec-four-exact-parent-vectors",
+          "test-model-turn-codec-closed-canonical-claim-boundary",
+          "test-model-turn-codec-ids-digests-and-finite-uints",
+          "test-model-turn-codec-exact-answer-utf8-and-comment-bounds",
+          "test-model-turn-codec-five-child-identities-are-not-authority",
+          "test-model-turn-codec-escaped-limits-and-nested-shape-denials"
+        ],
+        "composed_source": {
+          "bytes": 192770,
+          "path": ".runtime/native-model-simple-pure-composition-prepared/composed/stead-model-turn-codec.hoon",
+          "sha256": "17bfc6d95c6fa975487ba893b8a873f08ece870c200c75b8249a3426699e6ed2"
+        },
+        "count": 6,
+        "import_header": "/+  *test, stead-codec, stead-core, stead-team, stead-team-codec, stead-model-turn-codec\n",
+        "inventory_expression": {
+          "bytes": 918,
+          "sha256": "d1775f83ddad9687fd1ac523dea5137ffb96a20d00dd944513ae043d7ba66471"
+        },
+        "label": "stead-model-turn-codec",
+        "path": "native/core/desk/tests/stead-model-turn-codec.hoon",
+        "source_files": {
+          "native/core/desk/lib/stead-actor.hoon": {
+            "bytes": 3471,
+            "origin": {
+              "authority": "240f dependency closure",
+              "bytes": 3471,
+              "sha256": "4739b3b7e65ff95a14e2410c5c0635833b13e5fc7ff197c9b004b27a92e9c7b8",
+              "source_path": ".runtime/native-model-doc-proof-prepared/dependency-source/native/core/desk/lib/stead-actor.hoon"
+            },
+            "sha256": "4739b3b7e65ff95a14e2410c5c0635833b13e5fc7ff197c9b004b27a92e9c7b8"
+          },
+          "native/core/desk/lib/stead-codec-v1.hoon": {
+            "bytes": 8571,
+            "origin": {
+              "authority": "240f dependency closure",
+              "bytes": 8571,
+              "sha256": "ce4c7a69b03ee1761590c37e71ff49b9f63a1a2edd2aaa6dfbf75bc3c960584a",
+              "source_path": ".runtime/native-model-doc-proof-prepared/dependency-source/native/core/desk/lib/stead-codec-v1.hoon"
+            },
+            "sha256": "ce4c7a69b03ee1761590c37e71ff49b9f63a1a2edd2aaa6dfbf75bc3c960584a"
+          },
+          "native/core/desk/lib/stead-codec.hoon": {
+            "bytes": 9532,
+            "origin": {
+              "authority": "240f dependency closure",
+              "bytes": 9532,
+              "sha256": "56e3d574381bbf8cdf29ca192c70eff256009f89d782e3ffe859b19c1321cbd7",
+              "source_path": ".runtime/native-model-doc-proof-prepared/dependency-source/native/core/desk/lib/stead-codec.hoon"
+            },
+            "sha256": "56e3d574381bbf8cdf29ca192c70eff256009f89d782e3ffe859b19c1321cbd7"
+          },
+          "native/core/desk/lib/stead-core-v1.hoon": {
+            "bytes": 19390,
+            "origin": {
+              "authority": "240f dependency closure",
+              "bytes": 19390,
+              "sha256": "879615a5547d06a09d382c2bac4c5cb20cdf03236ddfdab79c9f1da15bd33cb5",
+              "source_path": ".runtime/native-model-doc-proof-prepared/dependency-source/native/core/desk/lib/stead-core-v1.hoon"
+            },
+            "sha256": "879615a5547d06a09d382c2bac4c5cb20cdf03236ddfdab79c9f1da15bd33cb5"
+          },
+          "native/core/desk/lib/stead-core.hoon": {
+            "bytes": 30949,
+            "origin": {
+              "authority": "240f dependency closure",
+              "bytes": 30949,
+              "sha256": "4c183ef6283030437af5e1433e3fbf80f414757bcede4cab1282fc71ff5f34de",
+              "source_path": ".runtime/native-model-doc-proof-prepared/dependency-source/native/core/desk/lib/stead-core.hoon"
+            },
+            "sha256": "4c183ef6283030437af5e1433e3fbf80f414757bcede4cab1282fc71ff5f34de"
+          },
+          "native/core/desk/lib/stead-git.hoon": {
+            "bytes": 3935,
+            "origin": {
+              "authority": "240f dependency closure",
+              "bytes": 3935,
+              "sha256": "826b83485429c02f577c9b462ee6cddd3ab8ea1a099d33b66893f863d54c54d7",
+              "source_path": ".runtime/native-model-doc-proof-prepared/dependency-source/native/core/desk/lib/stead-git.hoon"
+            },
+            "sha256": "826b83485429c02f577c9b462ee6cddd3ab8ea1a099d33b66893f863d54c54d7"
+          },
+          "native/core/desk/lib/stead-model-turn-codec.hoon": {
+            "bytes": 8526,
+            "origin": {
+              "authority": "f85d frozen codec; same shared79d9702 bytes",
+              "bytes": 8526,
+              "sha256": "61b46434dc0708cb064bb10d565a80fae9f48b2a167c1b94cf0491b79869aae5",
+              "source_path": ".runtime/native-model-turn-codec-prepared/tree/native/core/desk/lib/stead-model-turn-codec.hoon"
+            },
+            "sha256": "61b46434dc0708cb064bb10d565a80fae9f48b2a167c1b94cf0491b79869aae5"
+          },
+          "native/core/desk/lib/stead-principals.hoon": {
+            "bytes": 6666,
+            "origin": {
+              "authority": "240f dependency closure",
+              "bytes": 6666,
+              "sha256": "59674e536e182c62902046a267aa644f05f7c97282e3eb737ab74f3ca6446d7f",
+              "source_path": ".runtime/native-model-doc-proof-prepared/dependency-source/native/core/desk/lib/stead-principals.hoon"
+            },
+            "sha256": "59674e536e182c62902046a267aa644f05f7c97282e3eb737ab74f3ca6446d7f"
+          },
+          "native/core/desk/lib/stead-run-codec.hoon": {
+            "bytes": 9030,
+            "origin": {
+              "authority": "240f dependency closure",
+              "bytes": 9030,
+              "sha256": "ba0c758e95230b133c5475e592a07e8106c73dfbab8e1c0967b04c8797e62ecb",
+              "source_path": ".runtime/native-model-doc-proof-prepared/dependency-source/native/core/desk/lib/stead-run-codec.hoon"
+            },
+            "sha256": "ba0c758e95230b133c5475e592a07e8106c73dfbab8e1c0967b04c8797e62ecb"
+          },
+          "native/core/desk/lib/stead-run-state.hoon": {
+            "bytes": 8894,
+            "origin": {
+              "authority": "240f dependency closure",
+              "bytes": 8894,
+              "sha256": "4c96eb466add4ae26f6c6fbfd390b338d26a14e20a8c3f70214f9e1445602c1d",
+              "source_path": ".runtime/native-model-doc-proof-prepared/dependency-source/native/core/desk/lib/stead-run-state.hoon"
+            },
+            "sha256": "4c96eb466add4ae26f6c6fbfd390b338d26a14e20a8c3f70214f9e1445602c1d"
+          },
+          "native/core/desk/lib/stead-session.hoon": {
+            "bytes": 8713,
+            "origin": {
+              "authority": "240f dependency closure",
+              "bytes": 8713,
+              "sha256": "ec331d4534cc19fc76f6b9ad590ec326d74e09f0b846b36f866e6351bdcbbb27",
+              "source_path": ".runtime/native-model-doc-proof-prepared/dependency-source/native/core/desk/lib/stead-session.hoon"
+            },
+            "sha256": "ec331d4534cc19fc76f6b9ad590ec326d74e09f0b846b36f866e6351bdcbbb27"
+          },
+          "native/core/desk/lib/stead-team-codec.hoon": {
+            "bytes": 8633,
+            "origin": {
+              "authority": "240f dependency closure",
+              "bytes": 8633,
+              "sha256": "0a7e54ad7cd6fc66dcbfabd90425d55a234d9239140dec97309474fb3b90ba76",
+              "source_path": ".runtime/native-model-doc-proof-prepared/dependency-source/native/core/desk/lib/stead-team-codec.hoon"
+            },
+            "sha256": "0a7e54ad7cd6fc66dcbfabd90425d55a234d9239140dec97309474fb3b90ba76"
+          },
+          "native/core/desk/lib/stead-team-config.hoon": {
+            "bytes": 6486,
+            "origin": {
+              "authority": "240f dependency closure",
+              "bytes": 6486,
+              "sha256": "ca95235550f5ebe34ac43f1f886620e4598fae4e304eef855068022400f5f630",
+              "source_path": ".runtime/native-model-doc-proof-prepared/dependency-source/native/core/desk/lib/stead-team-config.hoon"
+            },
+            "sha256": "ca95235550f5ebe34ac43f1f886620e4598fae4e304eef855068022400f5f630"
+          },
+          "native/core/desk/lib/stead-team.hoon": {
+            "bytes": 30909,
+            "origin": {
+              "authority": "240f dependency closure",
+              "bytes": 30909,
+              "sha256": "36c5affad6ba239f92b42ff7459b916fbb3223b387fa76149bf8350501872128",
+              "source_path": ".runtime/native-model-doc-proof-prepared/dependency-source/native/core/desk/lib/stead-team.hoon"
+            },
+            "sha256": "36c5affad6ba239f92b42ff7459b916fbb3223b387fa76149bf8350501872128"
+          },
+          "native/core/desk/tests/stead-model-turn-codec.hoon": {
+            "bytes": 25916,
+            "origin": {
+              "authority": "native-model-turn-codec-prepared frozen test",
+              "bytes": 25916,
+              "sha256": "5004bfcc9f1dbbd48658cefd8c495bb21d551c5fa590e664ae2901464cb3bd47",
+              "source_path": ".runtime/native-model-turn-codec-prepared/tree/native/core/desk/tests/stead-model-turn-codec.hoon"
+            },
+            "sha256": "5004bfcc9f1dbbd48658cefd8c495bb21d551c5fa590e664ae2901464cb3bd47"
+          }
+        },
+        "source_offsets": [
+          {
+            "generated_end_byte": 9,
+            "generated_newlines": 1,
+            "generated_start_byte": 0,
+            "generated_start_line": 1,
+            "kind": "fixed-binding"
+          },
+          {
+            "generated_end_byte": 2518,
+            "generated_newlines": 103,
+            "generated_start_byte": 9,
+            "generated_start_line": 2,
+            "kind": "original-source",
+            "source": "pkg/base-dev/lib/test.hoon",
+            "source_end_byte": 2509,
+            "source_start_byte": 0,
+            "source_start_line": 1
+          },
+          {
+            "generated_end_byte": 2519,
+            "generated_newlines": 1,
+            "generated_start_byte": 2518,
+            "generated_start_line": 105,
+            "kind": "fixed-separator"
+          },
+          {
+            "generated_end_byte": 2538,
+            "generated_newlines": 1,
+            "generated_start_byte": 2519,
+            "generated_start_line": 106,
+            "kind": "fixed-binding"
+          },
+          {
+            "generated_end_byte": 11109,
+            "generated_newlines": 275,
+            "generated_start_byte": 2538,
+            "generated_start_line": 107,
+            "kind": "original-source",
+            "source": "native/core/desk/lib/stead-codec-v1.hoon",
+            "source_end_byte": 8571,
+            "source_start_byte": 0,
+            "source_start_line": 1
+          },
+          {
+            "generated_end_byte": 11110,
+            "generated_newlines": 1,
+            "generated_start_byte": 11109,
+            "generated_start_line": 382,
+            "kind": "fixed-separator"
+          },
+          {
+            "generated_end_byte": 11126,
+            "generated_newlines": 1,
+            "generated_start_byte": 11110,
+            "generated_start_line": 383,
+            "kind": "fixed-binding"
+          },
+          {
+            "generated_end_byte": 20658,
+            "generated_newlines": 294,
+            "generated_start_byte": 11126,
+            "generated_start_line": 384,
+            "kind": "original-source",
+            "source": "native/core/desk/lib/stead-codec.hoon",
+            "source_end_byte": 9532,
+            "source_start_byte": 0,
+            "source_start_line": 1
+          },
+          {
+            "generated_end_byte": 20659,
+            "generated_newlines": 1,
+            "generated_start_byte": 20658,
+            "generated_start_line": 678,
+            "kind": "fixed-separator"
+          },
+          {
+            "generated_end_byte": 20673,
+            "generated_newlines": 1,
+            "generated_start_byte": 20659,
+            "generated_start_line": 679,
+            "kind": "fixed-binding"
+          },
+          {
+            "generated_end_byte": 24608,
+            "generated_newlines": 132,
+            "generated_start_byte": 20673,
+            "generated_start_line": 680,
+            "kind": "original-source",
+            "source": "native/core/desk/lib/stead-git.hoon",
+            "source_end_byte": 3935,
+            "source_start_byte": 0,
+            "source_start_line": 1
+          },
+          {
+            "generated_end_byte": 24609,
+            "generated_newlines": 1,
+            "generated_start_byte": 24608,
+            "generated_start_line": 812,
+            "kind": "fixed-separator"
+          },
+          {
+            "generated_end_byte": 24627,
+            "generated_newlines": 1,
+            "generated_start_byte": 24609,
+            "generated_start_line": 813,
+            "kind": "fixed-binding"
+          },
+          {
+            "generated_end_byte": 24712,
+            "generated_newlines": 1,
+            "generated_start_byte": 24627,
+            "generated_start_line": 814,
+            "kind": "original-source",
+            "source": "native/core/desk/lib/stead-core-v1.hoon",
+            "source_end_byte": 85,
+            "source_start_byte": 0,
+            "source_start_line": 1
+          },
+          {
+            "generated_end_byte": 43987,
+            "generated_newlines": 433,
+            "generated_start_byte": 24712,
+            "generated_start_line": 815,
+            "kind": "original-source",
+            "source": "native/core/desk/lib/stead-core-v1.hoon",
+            "source_end_byte": 19390,
+            "source_start_byte": 115,
+            "source_start_line": 3
+          },
+          {
+            "generated_end_byte": 43988,
+            "generated_newlines": 1,
+            "generated_start_byte": 43987,
+            "generated_start_line": 1248,
+            "kind": "fixed-separator"
+          },
+          {
+            "generated_end_byte": 44006,
+            "generated_newlines": 1,
+            "generated_start_byte": 43988,
+            "generated_start_line": 1249,
+            "kind": "fixed-binding"
+          },
+          {
+            "generated_end_byte": 44140,
+            "generated_newlines": 2,
+            "generated_start_byte": 44006,
+            "generated_start_line": 1250,
+            "kind": "original-source",
+            "source": "native/core/desk/lib/stead-session.hoon",
+            "source_end_byte": 134,
+            "source_start_byte": 0,
+            "source_start_line": 1
+          },
+          {
+            "generated_end_byte": 52703,
+            "generated_newlines": 207,
+            "generated_start_byte": 44140,
+            "generated_start_line": 1252,
+            "kind": "original-source",
+            "source": "native/core/desk/lib/stead-session.hoon",
+            "source_end_byte": 8713,
+            "source_start_byte": 150,
+            "source_start_line": 4
+          },
+          {
+            "generated_end_byte": 52704,
+            "generated_newlines": 1,
+            "generated_start_byte": 52703,
+            "generated_start_line": 1459,
+            "kind": "fixed-separator"
+          },
+          {
+            "generated_end_byte": 52725,
+            "generated_newlines": 1,
+            "generated_start_byte": 52704,
+            "generated_start_line": 1460,
+            "kind": "fixed-binding"
+          },
+          {
+            "generated_end_byte": 52798,
+            "generated_newlines": 1,
+            "generated_start_byte": 52725,
+            "generated_start_line": 1461,
+            "kind": "original-source",
+            "source": "native/core/desk/lib/stead-team-codec.hoon",
+            "source_end_byte": 73,
+            "source_start_byte": 0,
+            "source_start_line": 1
+          },
+          {
+            "generated_end_byte": 61342,
+            "generated_newlines": 210,
+            "generated_start_byte": 52798,
+            "generated_start_line": 1462,
+            "kind": "original-source",
+            "source": "native/core/desk/lib/stead-team-codec.hoon",
+            "source_end_byte": 8633,
+            "source_start_byte": 89,
+            "source_start_line": 3
+          },
+          {
+            "generated_end_byte": 61343,
+            "generated_newlines": 1,
+            "generated_start_byte": 61342,
+            "generated_start_line": 1672,
+            "kind": "fixed-separator"
+          },
+          {
+            "generated_end_byte": 61358,
+            "generated_newlines": 1,
+            "generated_start_byte": 61343,
+            "generated_start_line": 1673,
+            "kind": "fixed-binding"
+          },
+          {
+            "generated_end_byte": 61443,
+            "generated_newlines": 1,
+            "generated_start_byte": 61358,
+            "generated_start_line": 1674,
+            "kind": "original-source",
+            "source": "native/core/desk/lib/stead-core.hoon",
+            "source_end_byte": 85,
+            "source_start_byte": 0,
+            "source_start_line": 1
+          },
+          {
+            "generated_end_byte": 92265,
+            "generated_newlines": 653,
+            "generated_start_byte": 61443,
+            "generated_start_line": 1675,
+            "kind": "original-source",
+            "source": "native/core/desk/lib/stead-core.hoon",
+            "source_end_byte": 30949,
+            "source_start_byte": 127,
+            "source_start_line": 3
+          },
+          {
+            "generated_end_byte": 92266,
+            "generated_newlines": 1,
+            "generated_start_byte": 92265,
+            "generated_start_line": 2328,
+            "kind": "fixed-separator"
+          },
+          {
+            "generated_end_byte": 92288,
+            "generated_newlines": 1,
+            "generated_start_byte": 92266,
+            "generated_start_line": 2329,
+            "kind": "fixed-binding"
+          },
+          {
+            "generated_end_byte": 92359,
+            "generated_newlines": 1,
+            "generated_start_byte": 92288,
+            "generated_start_line": 2330,
+            "kind": "original-source",
+            "source": "native/core/desk/lib/stead-team-config.hoon",
+            "source_end_byte": 71,
+            "source_start_byte": 0,
+            "source_start_line": 1
+          },
+          {
+            "generated_end_byte": 98743,
+            "generated_newlines": 137,
+            "generated_start_byte": 92359,
+            "generated_start_line": 2331,
+            "kind": "original-source",
+            "source": "native/core/desk/lib/stead-team-config.hoon",
+            "source_end_byte": 6486,
+            "source_start_byte": 102,
+            "source_start_line": 3
+          },
+          {
+            "generated_end_byte": 98744,
+            "generated_newlines": 1,
+            "generated_start_byte": 98743,
+            "generated_start_line": 2468,
+            "kind": "fixed-separator"
+          },
+          {
+            "generated_end_byte": 98765,
+            "generated_newlines": 1,
+            "generated_start_byte": 98744,
+            "generated_start_line": 2469,
+            "kind": "fixed-binding"
+          },
+          {
+            "generated_end_byte": 99001,
+            "generated_newlines": 3,
+            "generated_start_byte": 98765,
+            "generated_start_line": 2470,
+            "kind": "original-source",
+            "source": "native/core/desk/lib/stead-principals.hoon",
+            "source_end_byte": 236,
+            "source_start_byte": 0,
+            "source_start_line": 1
+          },
+          {
+            "generated_end_byte": 105381,
+            "generated_newlines": 152,
+            "generated_start_byte": 99001,
+            "generated_start_line": 2473,
+            "kind": "original-source",
+            "source": "native/core/desk/lib/stead-principals.hoon",
+            "source_end_byte": 6666,
+            "source_start_byte": 286,
+            "source_start_line": 5
+          },
+          {
+            "generated_end_byte": 105382,
+            "generated_newlines": 1,
+            "generated_start_byte": 105381,
+            "generated_start_line": 2625,
+            "kind": "fixed-separator"
+          },
+          {
+            "generated_end_byte": 105397,
+            "generated_newlines": 1,
+            "generated_start_byte": 105382,
+            "generated_start_line": 2626,
+            "kind": "fixed-binding"
+          },
+          {
+            "generated_end_byte": 105475,
+            "generated_newlines": 1,
+            "generated_start_byte": 105397,
+            "generated_start_line": 2627,
+            "kind": "original-source",
+            "source": "native/core/desk/lib/stead-team.hoon",
+            "source_end_byte": 78,
+            "source_start_byte": 0,
+            "source_start_line": 1
+          },
+          {
+            "generated_end_byte": 136215,
+            "generated_newlines": 612,
+            "generated_start_byte": 105475,
+            "generated_start_line": 2628,
+            "kind": "original-source",
+            "source": "native/core/desk/lib/stead-team.hoon",
+            "source_end_byte": 30909,
+            "source_start_byte": 169,
+            "source_start_line": 3
+          },
+          {
+            "generated_end_byte": 136216,
+            "generated_newlines": 1,
+            "generated_start_byte": 136215,
+            "generated_start_line": 3240,
+            "kind": "fixed-separator"
+          },
+          {
+            "generated_end_byte": 136232,
+            "generated_newlines": 1,
+            "generated_start_byte": 136216,
+            "generated_start_line": 3241,
+            "kind": "fixed-binding"
+          },
+          {
+            "generated_end_byte": 136701,
+            "generated_newlines": 6,
+            "generated_start_byte": 136232,
+            "generated_start_line": 3242,
+            "kind": "original-source",
+            "source": "native/core/desk/lib/stead-actor.hoon",
+            "source_end_byte": 469,
+            "source_start_byte": 0,
+            "source_start_line": 1
+          },
+          {
+            "generated_end_byte": 139657,
+            "generated_newlines": 79,
+            "generated_start_byte": 136701,
+            "generated_start_line": 3248,
+            "kind": "original-source",
+            "source": "native/core/desk/lib/stead-actor.hoon",
+            "source_end_byte": 3471,
+            "source_start_byte": 515,
+            "source_start_line": 8
+          },
+          {
+            "generated_end_byte": 139658,
+            "generated_newlines": 1,
+            "generated_start_byte": 139657,
+            "generated_start_line": 3327,
+            "kind": "fixed-separator"
+          },
+          {
+            "generated_end_byte": 139678,
+            "generated_newlines": 1,
+            "generated_start_byte": 139658,
+            "generated_start_line": 3328,
+            "kind": "fixed-binding"
+          },
+          {
+            "generated_end_byte": 139905,
+            "generated_newlines": 3,
+            "generated_start_byte": 139678,
+            "generated_start_line": 3329,
+            "kind": "original-source",
+            "source": "native/core/desk/lib/stead-run-state.hoon",
+            "source_end_byte": 227,
+            "source_start_byte": 0,
+            "source_start_line": 1
+          },
+          {
+            "generated_end_byte": 148531,
+            "generated_newlines": 183,
+            "generated_start_byte": 139905,
+            "generated_start_line": 3332,
+            "kind": "original-source",
+            "source": "native/core/desk/lib/stead-run-state.hoon",
+            "source_end_byte": 8894,
+            "source_start_byte": 268,
+            "source_start_line": 5
+          },
+          {
+            "generated_end_byte": 148532,
+            "generated_newlines": 1,
+            "generated_start_byte": 148531,
+            "generated_start_line": 3515,
+            "kind": "fixed-separator"
+          },
+          {
+            "generated_end_byte": 148552,
+            "generated_newlines": 1,
+            "generated_start_byte": 148532,
+            "generated_start_line": 3516,
+            "kind": "fixed-binding"
+          },
+          {
+            "generated_end_byte": 148779,
+            "generated_newlines": 3,
+            "generated_start_byte": 148552,
+            "generated_start_line": 3517,
+            "kind": "original-source",
+            "source": "native/core/desk/lib/stead-run-codec.hoon",
+            "source_end_byte": 227,
+            "source_start_byte": 0,
+            "source_start_line": 1
+          },
+          {
+            "generated_end_byte": 157537,
+            "generated_newlines": 180,
+            "generated_start_byte": 148779,
+            "generated_start_line": 3520,
+            "kind": "original-source",
+            "source": "native/core/desk/lib/stead-run-codec.hoon",
+            "source_end_byte": 9030,
+            "source_start_byte": 272,
+            "source_start_line": 5
+          },
+          {
+            "generated_end_byte": 157538,
+            "generated_newlines": 1,
+            "generated_start_byte": 157537,
+            "generated_start_line": 3700,
+            "kind": "fixed-separator"
+          },
+          {
+            "generated_end_byte": 157565,
+            "generated_newlines": 1,
+            "generated_start_byte": 157538,
+            "generated_start_line": 3701,
+            "kind": "fixed-binding"
+          },
+          {
+            "generated_end_byte": 157958,
+            "generated_newlines": 5,
+            "generated_start_byte": 157565,
+            "generated_start_line": 3702,
+            "kind": "original-source",
+            "source": "native/core/desk/lib/stead-model-turn-codec.hoon",
+            "source_end_byte": 393,
+            "source_start_byte": 0,
+            "source_start_line": 1
+          },
+          {
+            "generated_end_byte": 166011,
+            "generated_newlines": 154,
+            "generated_start_byte": 157958,
+            "generated_start_line": 3707,
+            "kind": "original-source",
+            "source": "native/core/desk/lib/stead-model-turn-codec.hoon",
+            "source_end_byte": 8526,
+            "source_start_byte": 473,
+            "source_start_line": 7
+          },
+          {
+            "generated_end_byte": 166012,
+            "generated_newlines": 1,
+            "generated_start_byte": 166011,
+            "generated_start_line": 3861,
+            "kind": "fixed-separator"
+          },
+          {
+            "generated_end_byte": 166024,
+            "generated_newlines": 2,
+            "generated_start_byte": 166012,
+            "generated_start_line": 3862,
+            "kind": "fixed-test-binding"
+          },
+          {
+            "generated_end_byte": 166239,
+            "generated_newlines": 3,
+            "generated_start_byte": 166024,
+            "generated_start_line": 3864,
+            "kind": "original-source",
+            "source": "native/core/desk/tests/stead-model-turn-codec.hoon",
+            "source_end_byte": 215,
+            "source_start_byte": 0,
+            "source_start_line": 1
+          },
+          {
+            "generated_end_byte": 191851,
+            "generated_newlines": 268,
+            "generated_start_byte": 166239,
+            "generated_start_line": 3867,
+            "kind": "original-source",
+            "source": "native/core/desk/tests/stead-model-turn-codec.hoon",
+            "source_end_byte": 25916,
+            "source_start_byte": 304,
+            "source_start_line": 5
+          },
+          {
+            "generated_end_byte": 191852,
+            "generated_newlines": 1,
+            "generated_start_byte": 191851,
+            "generated_start_line": 4135,
+            "kind": "fixed-separator"
+          },
+          {
+            "generated_end_byte": 192770,
+            "generated_newlines": 8,
+            "generated_start_byte": 191852,
+            "generated_start_line": 4136,
+            "kind": "fixed-inventory-expression"
+          }
+        ],
+        "transitive_library_count": 14,
+        "transitive_library_order": [
+          "native/core/desk/lib/stead-codec-v1.hoon",
+          "native/core/desk/lib/stead-codec.hoon",
+          "native/core/desk/lib/stead-git.hoon",
+          "native/core/desk/lib/stead-core-v1.hoon",
+          "native/core/desk/lib/stead-session.hoon",
+          "native/core/desk/lib/stead-team-codec.hoon",
+          "native/core/desk/lib/stead-core.hoon",
+          "native/core/desk/lib/stead-team-config.hoon",
+          "native/core/desk/lib/stead-principals.hoon",
+          "native/core/desk/lib/stead-team.hoon",
+          "native/core/desk/lib/stead-actor.hoon",
+          "native/core/desk/lib/stead-run-state.hoon",
+          "native/core/desk/lib/stead-run-codec.hoon",
+          "native/core/desk/lib/stead-model-turn-codec.hoon"
+        ]
+      }
+    ],
+    "test_helper": {
+      "bytes": 2509,
+      "path": "pkg/base-dev/lib/test.hoon",
+      "sha256": "55d5196a3a8dbd5323943c06f138c9b9aa8fd955506c4f4b14e5d56ff05abcc6"
+    }
+  },
+  "controls": {
+    "compiler.hoon": {
+      "bytes": 22,
+      "sha256": "93861a0912003ecc017e98791b691937344580ec86980b12c1259e489f3ea89b",
+      "source_path": ".runtime/repository-pure-eval-prepared/controls/compiler.hoon"
+    },
+    "failing-tang.hoon": {
+      "bytes": 2622,
+      "sha256": "6ccdf445296a66cac869b95ff3a7d068421309cf7b541e2cf5adbc79589e0639",
+      "source_path": ".runtime/repository-pure-eval-prepared/controls/failing-tang.hoon"
+    }
+  },
+  "excluded": [
+    "Home",
+    "server",
+    "v11 whole history",
+    "model state/effect/Doc pair",
+    "live model inference",
+    "saved10 adoption",
+    "shared molds/routes",
+    "T04 codec/controller changes"
+  ],
+  "external_imports": [
+    "test"
+  ],
+  "independent_controls": 2,
+  "native_executed": false,
+  "planned_checks": 20,
+  "planned_jobs": 5,
+  "positive_arms": 18,
+  "positive_suites": 3,
+  "protocol": "stead.simple-native-model-pure-composition/1",
+  "runtime_admission": false,
+  "source_changed": false,
+  "source_selection": {
+    "bytes": 101760,
+    "path": ".runtime/private-native-pure-overlay-spacing-proposal/sources.json",
+    "sha256": "bdfbdcbfaacbcff16e9b1af625b37a1debd6dc179721f9667bfd5b18834d85ff"
+  },
+  "sources": {
+    "native/core/desk/lib/stead-actor.hoon": {
+      "bytes": 3471,
+      "origin": {
+        "authority": "240f dependency closure",
+        "bytes": 3471,
+        "sha256": "4739b3b7e65ff95a14e2410c5c0635833b13e5fc7ff197c9b004b27a92e9c7b8",
+        "source_path": ".runtime/native-model-doc-proof-prepared/dependency-source/native/core/desk/lib/stead-actor.hoon"
+      },
+      "sha256": "4739b3b7e65ff95a14e2410c5c0635833b13e5fc7ff197c9b004b27a92e9c7b8"
+    },
+    "native/core/desk/lib/stead-codec-v1.hoon": {
+      "bytes": 8571,
+      "origin": {
+        "authority": "240f dependency closure",
+        "bytes": 8571,
+        "sha256": "ce4c7a69b03ee1761590c37e71ff49b9f63a1a2edd2aaa6dfbf75bc3c960584a",
+        "source_path": ".runtime/native-model-doc-proof-prepared/dependency-source/native/core/desk/lib/stead-codec-v1.hoon"
+      },
+      "sha256": "ce4c7a69b03ee1761590c37e71ff49b9f63a1a2edd2aaa6dfbf75bc3c960584a"
+    },
+    "native/core/desk/lib/stead-codec.hoon": {
+      "bytes": 9532,
+      "origin": {
+        "authority": "240f dependency closure",
+        "bytes": 9532,
+        "sha256": "56e3d574381bbf8cdf29ca192c70eff256009f89d782e3ffe859b19c1321cbd7",
+        "source_path": ".runtime/native-model-doc-proof-prepared/dependency-source/native/core/desk/lib/stead-codec.hoon"
+      },
+      "sha256": "56e3d574381bbf8cdf29ca192c70eff256009f89d782e3ffe859b19c1321cbd7"
+    },
+    "native/core/desk/lib/stead-core-v1.hoon": {
+      "bytes": 19390,
+      "origin": {
+        "authority": "240f dependency closure",
+        "bytes": 19390,
+        "sha256": "879615a5547d06a09d382c2bac4c5cb20cdf03236ddfdab79c9f1da15bd33cb5",
+        "source_path": ".runtime/native-model-doc-proof-prepared/dependency-source/native/core/desk/lib/stead-core-v1.hoon"
+      },
+      "sha256": "879615a5547d06a09d382c2bac4c5cb20cdf03236ddfdab79c9f1da15bd33cb5"
+    },
+    "native/core/desk/lib/stead-core.hoon": {
+      "bytes": 30949,
+      "origin": {
+        "authority": "240f dependency closure",
+        "bytes": 30949,
+        "sha256": "4c183ef6283030437af5e1433e3fbf80f414757bcede4cab1282fc71ff5f34de",
+        "source_path": ".runtime/native-model-doc-proof-prepared/dependency-source/native/core/desk/lib/stead-core.hoon"
+      },
+      "sha256": "4c183ef6283030437af5e1433e3fbf80f414757bcede4cab1282fc71ff5f34de"
+    },
+    "native/core/desk/lib/stead-git.hoon": {
+      "bytes": 3935,
+      "origin": {
+        "authority": "240f dependency closure",
+        "bytes": 3935,
+        "sha256": "826b83485429c02f577c9b462ee6cddd3ab8ea1a099d33b66893f863d54c54d7",
+        "source_path": ".runtime/native-model-doc-proof-prepared/dependency-source/native/core/desk/lib/stead-git.hoon"
+      },
+      "sha256": "826b83485429c02f577c9b462ee6cddd3ab8ea1a099d33b66893f863d54c54d7"
+    },
+    "native/core/desk/lib/stead-model-codec.hoon": {
+      "bytes": 4753,
+      "origin": {
+        "authority": "240f dependency closure",
+        "bytes": 4753,
+        "sha256": "e2a74203d5325e12262179bcab7b05bc0fb1b56dbb814e9adb145e3093c7ccc1",
+        "source_path": ".runtime/native-model-doc-proof-prepared/dependency-source/native/core/desk/lib/stead-model-codec.hoon"
+      },
+      "sha256": "e2a74203d5325e12262179bcab7b05bc0fb1b56dbb814e9adb145e3093c7ccc1"
+    },
+    "native/core/desk/lib/stead-model-material.hoon": {
+      "bytes": 17466,
+      "origin": {
+        "authority": "240f dependency closure",
+        "bytes": 17466,
+        "sha256": "070e26bfbbcaae56d54c9c8045a8312056b21e3b82549d290ea33c696120c7d8",
+        "source_path": ".runtime/native-model-doc-proof-prepared/dependency-source/native/core/desk/lib/stead-model-material.hoon"
+      },
+      "sha256": "070e26bfbbcaae56d54c9c8045a8312056b21e3b82549d290ea33c696120c7d8"
+    },
+    "native/core/desk/lib/stead-model-reply.hoon": {
+      "bytes": 10223,
+      "origin": {
+        "authority": "240f dependency closure",
+        "bytes": 10223,
+        "sha256": "94c6ee089725377f183b3ca26b8987bddff9f1a2428fc87f34a5f2db2ce21a11",
+        "source_path": ".runtime/native-model-doc-proof-prepared/dependency-source/native/core/desk/lib/stead-model-reply.hoon"
+      },
+      "sha256": "94c6ee089725377f183b3ca26b8987bddff9f1a2428fc87f34a5f2db2ce21a11"
+    },
+    "native/core/desk/lib/stead-model-turn-codec.hoon": {
+      "bytes": 8526,
+      "origin": {
+        "authority": "f85d frozen codec; same shared79d9702 bytes",
+        "bytes": 8526,
+        "sha256": "61b46434dc0708cb064bb10d565a80fae9f48b2a167c1b94cf0491b79869aae5",
+        "source_path": ".runtime/native-model-turn-codec-prepared/tree/native/core/desk/lib/stead-model-turn-codec.hoon"
+      },
+      "sha256": "61b46434dc0708cb064bb10d565a80fae9f48b2a167c1b94cf0491b79869aae5"
+    },
+    "native/core/desk/lib/stead-principals.hoon": {
+      "bytes": 6666,
+      "origin": {
+        "authority": "240f dependency closure",
+        "bytes": 6666,
+        "sha256": "59674e536e182c62902046a267aa644f05f7c97282e3eb737ab74f3ca6446d7f",
+        "source_path": ".runtime/native-model-doc-proof-prepared/dependency-source/native/core/desk/lib/stead-principals.hoon"
+      },
+      "sha256": "59674e536e182c62902046a267aa644f05f7c97282e3eb737ab74f3ca6446d7f"
+    },
+    "native/core/desk/lib/stead-run-codec.hoon": {
+      "bytes": 9030,
+      "origin": {
+        "authority": "240f dependency closure",
+        "bytes": 9030,
+        "sha256": "ba0c758e95230b133c5475e592a07e8106c73dfbab8e1c0967b04c8797e62ecb",
+        "source_path": ".runtime/native-model-doc-proof-prepared/dependency-source/native/core/desk/lib/stead-run-codec.hoon"
+      },
+      "sha256": "ba0c758e95230b133c5475e592a07e8106c73dfbab8e1c0967b04c8797e62ecb"
+    },
+    "native/core/desk/lib/stead-run-state.hoon": {
+      "bytes": 8894,
+      "origin": {
+        "authority": "240f dependency closure",
+        "bytes": 8894,
+        "sha256": "4c96eb466add4ae26f6c6fbfd390b338d26a14e20a8c3f70214f9e1445602c1d",
+        "source_path": ".runtime/native-model-doc-proof-prepared/dependency-source/native/core/desk/lib/stead-run-state.hoon"
+      },
+      "sha256": "4c96eb466add4ae26f6c6fbfd390b338d26a14e20a8c3f70214f9e1445602c1d"
+    },
+    "native/core/desk/lib/stead-session.hoon": {
+      "bytes": 8713,
+      "origin": {
+        "authority": "240f dependency closure",
+        "bytes": 8713,
+        "sha256": "ec331d4534cc19fc76f6b9ad590ec326d74e09f0b846b36f866e6351bdcbbb27",
+        "source_path": ".runtime/native-model-doc-proof-prepared/dependency-source/native/core/desk/lib/stead-session.hoon"
+      },
+      "sha256": "ec331d4534cc19fc76f6b9ad590ec326d74e09f0b846b36f866e6351bdcbbb27"
+    },
+    "native/core/desk/lib/stead-team-codec.hoon": {
+      "bytes": 8633,
+      "origin": {
+        "authority": "240f dependency closure",
+        "bytes": 8633,
+        "sha256": "0a7e54ad7cd6fc66dcbfabd90425d55a234d9239140dec97309474fb3b90ba76",
+        "source_path": ".runtime/native-model-doc-proof-prepared/dependency-source/native/core/desk/lib/stead-team-codec.hoon"
+      },
+      "sha256": "0a7e54ad7cd6fc66dcbfabd90425d55a234d9239140dec97309474fb3b90ba76"
+    },
+    "native/core/desk/lib/stead-team-config.hoon": {
+      "bytes": 6486,
+      "origin": {
+        "authority": "240f dependency closure",
+        "bytes": 6486,
+        "sha256": "ca95235550f5ebe34ac43f1f886620e4598fae4e304eef855068022400f5f630",
+        "source_path": ".runtime/native-model-doc-proof-prepared/dependency-source/native/core/desk/lib/stead-team-config.hoon"
+      },
+      "sha256": "ca95235550f5ebe34ac43f1f886620e4598fae4e304eef855068022400f5f630"
+    },
+    "native/core/desk/lib/stead-team.hoon": {
+      "bytes": 30909,
+      "origin": {
+        "authority": "240f dependency closure",
+        "bytes": 30909,
+        "sha256": "36c5affad6ba239f92b42ff7459b916fbb3223b387fa76149bf8350501872128",
+        "source_path": ".runtime/native-model-doc-proof-prepared/dependency-source/native/core/desk/lib/stead-team.hoon"
+      },
+      "sha256": "36c5affad6ba239f92b42ff7459b916fbb3223b387fa76149bf8350501872128"
+    },
+    "native/core/desk/tests/stead-model-codec.hoon": {
+      "bytes": 51452,
+      "origin": {
+        "authority": "native-model-codec-prepared frozen test",
+        "bytes": 51452,
+        "sha256": "184e54bff341e7f7177881061626a6c3da68f4cb6a235b354de85eeba56070ee",
+        "source_path": ".runtime/native-model-codec-prepared/native/core/desk/tests/stead-model-codec.hoon"
+      },
+      "sha256": "184e54bff341e7f7177881061626a6c3da68f4cb6a235b354de85eeba56070ee"
+    },
+    "native/core/desk/tests/stead-model-reply.hoon": {
+      "bytes": 28633,
+      "origin": {
+        "authority": "native-model-reply-prepared frozen test",
+        "bytes": 28633,
+        "sha256": "ffb78cd22dc4b0c3c4a23ed8c7083cbe250c443e1f352077fa405fbd1c72159e",
+        "source_path": ".runtime/native-model-reply-prepared/native/core/desk/tests/stead-model-reply.hoon"
+      },
+      "sha256": "ffb78cd22dc4b0c3c4a23ed8c7083cbe250c443e1f352077fa405fbd1c72159e"
+    },
+    "native/core/desk/tests/stead-model-turn-codec.hoon": {
+      "bytes": 25916,
+      "origin": {
+        "authority": "native-model-turn-codec-prepared frozen test",
+        "bytes": 25916,
+        "sha256": "5004bfcc9f1dbbd48658cefd8c495bb21d551c5fa590e664ae2901464cb3bd47",
+        "source_path": ".runtime/native-model-turn-codec-prepared/tree/native/core/desk/tests/stead-model-turn-codec.hoon"
+      },
+      "sha256": "5004bfcc9f1dbbd48658cefd8c495bb21d551c5fa590e664ae2901464cb3bd47"
+    }
+  },
+  "unresolved_imports": []
+}

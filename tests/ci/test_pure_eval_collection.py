@@ -34,7 +34,7 @@ def observe(job, code, stdout, stderr):
             'stdout_sha256': hashlib.sha256(stdout).hexdigest(), 'stdout_bytes': len(stdout),
             'stderr_sha256': hashlib.sha256(stderr).hexdigest(), 'stderr_bytes': len(stderr),
             'compiler_failure': False}
-PROFILE = {'composition_sha256': '29f23ddb8849c5b182fca693a993a0634463e12104b47433ba3525adf93dfe31',
+PROFILE = {'name':'repository/1', 'composition_sha256': '29f23ddb8849c5b182fca693a993a0634463e12104b47433ba3525adf93dfe31',
            'positive_arms': 26, 'jobs': 6}
 # These lifecycle doubles remain synthetic. test_pure_eval_profiles uses the real
 # codec and both complete source maps to verify cross-profile admission.

@@ -12,6 +12,7 @@ import json
 import os
 from pathlib import Path
 import stat
+import sys
 import tempfile
 from types import SimpleNamespace
 import unittest
@@ -19,9 +20,10 @@ from unittest.mock import Mock, patch
 
 ROOT = Path(__file__).resolve().parents[2]
 PINS = {
-    'service_adapter.py': 'ac082299e2fb5707344d7199a0da89fe80c61f1c0511f5ce3dbde21d4a785d0f',
-    'owner_boundary.py': '15ae147d736f2967388a9e54e0b342f4e4dface6aee6b98fbcba407e3a286ea4',
-    'codec.py': 'dbc610914c8f38cc1724c932f10383a7fee7824ab54e85f61061e45e042e9bcb',
+    'stage_codec.py': '02d1291d10eed589612a83d5dfb365e53abef7adc88a4487674e9dd69e3e914e',
+    'service_adapter.py': '833c7328d49c2bad34ef203c0e7e25e681ffc25961f5d8887225a2b7c3eb0c54',
+    'owner_boundary.py': '67a761095b51ec253cae57ee3df66ff29539d07cfa14593e2ce00806c3dcd554',
+    'codec.py': '2d1d3c9fba170e15add8458988caa92ecde8eea252ae1dd77f7fa64efdc3bc9f',
 }
 
 
@@ -37,7 +39,8 @@ def load_fixed(name):
 
 adapter = load_fixed('service_adapter.py')
 boundary_source = load_fixed('owner_boundary.py')
-codec_source = load_fixed('codec.py')
+with patch.dict(sys.modules, {'stage_codec': load_fixed('stage_codec.py')}):
+    codec_source = load_fixed('codec.py')
 
 
 class Stream:

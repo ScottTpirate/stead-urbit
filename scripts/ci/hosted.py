@@ -731,7 +731,7 @@ def main():
     parser.add_argument('--run-id', required=True)
     parser.add_argument('--attempt', required=True)
     parser.add_argument('--control', choices=CONTROL_CASES)
-    parser.add_argument('--mode', choices=('native', 'model', 'pure', 'pure-model-simple', 'pure-repository-debug', 'home-assets-saved8'), default='native')
+    parser.add_argument('--mode', choices=('native', 'model', 'pure', 'pure-model-simple', 'pure-model-staged', 'pure-repository-debug', 'home-assets-saved8'), default='native')
     args = parser.parse_args()
     capture_artifacts = {}
     require(os.getuid() == 0 and sys.flags.isolated and sys.dont_write_bytecode, 'Root isolated controller required')
@@ -751,6 +751,9 @@ def main():
     if args.mode == 'pure-model-simple':
         from pure_eval.service_adapter import outer_model_simple
         return outer_model_simple(sys.modules[__name__], args, identity, binding)
+    if args.mode == 'pure-model-staged':
+        from pure_eval.service_adapter import outer_model_staged
+        return outer_model_staged(sys.modules[__name__], args, identity, binding)
     if args.mode == 'pure-repository-debug':
         from pure_eval.service_adapter import outer_repository_debug
         return outer_repository_debug(sys.modules[__name__], args, identity, binding)

@@ -5,6 +5,7 @@ import importlib.util
 import json
 from pathlib import Path
 import types
+import sys
 import unittest
 from unittest.mock import Mock, patch
 
@@ -19,7 +20,8 @@ def load(name):
     return module
 
 
-CODEC = load('codec')
+with patch.dict(sys.modules, {'stage_codec': load('stage_codec')}):
+    CODEC = load('codec')
 ADAPTER = load('service_adapter')
 WORKER = load('worker')
 DEBUG = '81085d13ec4a79a5b75f7e2bcaa4226eb48dd630e9d23e84af4068a3164b44c3'
@@ -35,6 +37,7 @@ class CatalogDebugTests(unittest.TestCase):
             code, sources, _ = ADAPTER.selected_paths(digest)
             paths.update(code.values())
             paths.update(sources.values())
+        paths.add(ADAPTER.MODEL_DATA_PREFIX + 'staged-composition.json')
         cls.captured = {name: (ROOT / name).read_bytes() for name in paths}
         cls.hosted = types.SimpleNamespace(CONTROLLER_FILES=cls.captured)
         cls.selected = {digest: ADAPTER.fixed_data(cls.hosted, CODEC, digest)

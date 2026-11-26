@@ -28,12 +28,15 @@ COMPOSITION_SHA = '29f23ddb8849c5b182fca693a993a0634463e12104b47433ba3525adf93df
 RUNTIME_SHA = 'f7f0d3b3c0480fc10f887dfbc09bde56a81d723a803541c7886c538a0675d833'
 OWNED_SHA = 'a01fc92a0b5f000f5ddee505d475127681ac47ea9a7aa4d8b450594cd50ec229'
 # Exact fixed codec/interface bytes; the outer profile still requires independent admission.
-CODEC_SHA = 'dbc610914c8f38cc1724c932f10383a7fee7824ab54e85f61061e45e042e9bcb'
-INTERFACE_SHA = '7c55126c6394794fea1c58143b03c86d54f33b566084d71cbd4955fb6f0ad958'
+CODEC_SHA = '2d1d3c9fba170e15add8458988caa92ecde8eea252ae1dd77f7fa64efdc3bc9f'
+STAGE_CODEC_SHA = '02d1291d10eed589612a83d5dfb365e53abef7adc88a4487674e9dd69e3e914e'
+STAGED_COMPOSITION_SHA = 'cbfd2cc91e2153cac9b4cb8c02b15bd1200ebf8fa1d58e2f849ec4ebb8b19561'
+INTERFACE_SHA = '7b7fdc06c4fef9d93f47b4854018a75154c6717021fea3258fa63f89a07e2327'
 MODEL_COMPOSITION_SHA = 'c23002a6a5d1423167a0ef2caa9c35bc86b5ccc64ba3fff640dc73edfd9dfaa6'
-MODEL_INTERFACE_SHA = '1714e10ef6c746b76b43e61cdca770e1bd168572994bfdc58b467752665c8913'
+MODEL_INTERFACE_SHA = 'c12b52e7795a009b25a13afd59507f06c40e27cac001de69b0e5a77d75bb74b4'
 DEBUG_COMPOSITION_SHA = '81085d13ec4a79a5b75f7e2bcaa4226eb48dd630e9d23e84af4068a3164b44c3'
-DEBUG_INTERFACE_SHA = '8cb3a5a81a8d3179150beb65ba61ed51a1ec35c0ada1d274a49ee9c6c678c0cb'
+DEBUG_INTERFACE_SHA = '5330b672f9cd5086dafa37a60547da3e0d11fcd6ff751da15e3a90aeb4c2aec1'
+STAGED_INTERFACE_SHA = '7b8552965898226093b8711f13077d91c5c779d0d5cb0c6defc5271a5cbcd65f'
 ENV = {'PATH':'/usr/bin','HOME':'/tmp','TMPDIR':'/tmp','LC_ALL':'C','PYTHONDONTWRITEBYTECODE':'1','PYTHONNOUSERSITE':'1'}
 LIMIT = 1000000
 TOTAL_SECONDS = 540
@@ -225,8 +228,13 @@ def load(name, raw):
 def source_inventory(composition, composition_sha256=COMPOSITION_SHA):
     # The owner-pinned digest selects the source count; a child supplies no count.
     require(type(composition_sha256) is str and composition_sha256 in
-            (COMPOSITION_SHA, MODEL_COMPOSITION_SHA, DEBUG_COMPOSITION_SHA))
-    expected_count = 21 if composition_sha256 == MODEL_COMPOSITION_SHA else 55
+            (COMPOSITION_SHA, MODEL_COMPOSITION_SHA, DEBUG_COMPOSITION_SHA, STAGED_COMPOSITION_SHA))
+    expected_count = 21 if composition_sha256 in (MODEL_COMPOSITION_SHA, STAGED_COMPOSITION_SHA) else 55
+    if composition_sha256 == STAGED_COMPOSITION_SHA:
+        require(type(composition) is dict and type(composition.get('base_composition')) is str)
+        base = composition['base_composition'].encode()
+        require(len(base) == 110358 and sha(base) == MODEL_COMPOSITION_SHA)
+        composition = json.loads(base, object_pairs_hook=unique)
     expected = {name: {k: row[k] for k in ('bytes', 'sha256')}
                 for name, row in composition['sources'].items()}
     helper = composition['composition']['test_helper']
@@ -247,14 +255,15 @@ def source_inventory(composition, composition_sha256=COMPOSITION_SHA):
 def input_profile(code):
     """Check fixed code/interface/composition pairing after root-pinned file custody."""
     require(type(code) is dict and set(code) ==
-            {'worker.py', 'codec.py', 'owned_child.py', 'interface.json', 'composition.json'}
+            {'worker.py', 'codec.py', 'stage_codec.py', 'owned_child.py', 'interface.json', 'composition.json'}
             and all(type(raw) is bytes for raw in code.values()))
     composition_sha = sha(code['composition.json'])
     interfaces = {COMPOSITION_SHA: INTERFACE_SHA, MODEL_COMPOSITION_SHA: MODEL_INTERFACE_SHA,
-                  DEBUG_COMPOSITION_SHA: DEBUG_INTERFACE_SHA}
+                  DEBUG_COMPOSITION_SHA: DEBUG_INTERFACE_SHA, STAGED_COMPOSITION_SHA: STAGED_INTERFACE_SHA}
     require(composition_sha in interfaces and sha(code['codec.py']) == CODEC_SHA
             and sha(code['interface.json']) == interfaces[composition_sha]
-            and sha(code['owned_child.py']) == OWNED_SHA)
+            and sha(code['owned_child.py']) == OWNED_SHA
+            and sha(code['stage_codec.py']) == STAGE_CODEC_SHA)
     return composition_sha
 
 
@@ -262,7 +271,7 @@ def admission():
     require(sys.argv == ['/input/worker.py'] and os.getuid() == os.geteuid() == 1000
             and os.getgid() == os.getegid() == 1000 and descriptors() == [0, 1, 2])
     require(all(stat.S_ISFIFO(os.fstat(fd).st_mode) for fd in (0, 1, 2)))
-    names = {'worker.py', 'codec.py', 'owned_child.py', 'interface.json', 'composition.json'}
+    names = {'worker.py', 'codec.py', 'stage_codec.py', 'owned_child.py', 'interface.json', 'composition.json'}
     require({p.name for p in INPUT.iterdir()} == names | {'owner.json'})
     raw = ordinary(INPUT / 'owner.json', owner=65534, maximum=262144)
     owner = parse(raw)
@@ -303,6 +312,7 @@ def admission():
     require({p.name for p in RUNTIME.parent.iterdir()} == {'vere'}
             and stat.S_IMODE(RUNTIME.lstat().st_mode) == 0o755)
     hash_file(RUNTIME, owner['runtime']['bytes'], RUNTIME_SHA)
+    load('stage_codec', code['stage_codec.py'])
     codec, owned = load('codec', code['codec.py']), load('owned_child', code['owned_child.py'])
     jobs = codec.jobs(files, code['composition.json'])
     selected = codec.profile(composition_sha)
@@ -359,14 +369,16 @@ def stop(process, pidfd):
             process.wait(timeout=3)
 
 
-def evaluate(job, owned, lease, baseline, deadline):
+def evaluate(job, owned, lease, baseline, deadline, *, retain_interruption=False):
     """Regular anonymous output files avoid pinned Vere's large-pipe truncation."""
     require(type(job) is dict and set(job) == {'label', 'kind', 'source', 'source_sha256', 'timeout_seconds', 'arms'}
             and type(job['source']) is bytes and 0 < len(job['source']) <= 1048576
             and sha(job['source']) == job['source_sha256']
             and type(job['timeout_seconds']) is int and job['timeout_seconds'] in (15, 85))
+    require(type(retain_interruption) is bool)
     process = None
     pidfd = None
+    interrupted_error = None
     with tempfile.TemporaryFile(dir='/tmp') as source, tempfile.TemporaryFile(dir='/tmp') as output, tempfile.TemporaryFile(dir='/tmp') as errors:
         source.write(job['source']); source.flush(); source.seek(0)
         require(process_ids() == baseline and len(list(Path('/proc/self/task').iterdir())) == 1)
@@ -380,11 +392,40 @@ def evaluate(job, owned, lease, baseline, deadline):
             except BaseException:
                 process.kill(); process.wait(timeout=3)
                 raise
-            end = min(deadline, time.monotonic() + job['timeout_seconds'])
+            evaluation_started = time.monotonic()
+            end = min(deadline, evaluation_started + job['timeout_seconds'])
             while process.poll() is None:
                 lease.check()
                 if not time.monotonic() < end:
-                    raise TimeoutError('Fixed evaluator job deadline')
+                    error = TimeoutError('Fixed evaluator job deadline')
+                    if retain_interruption:
+                        interrupted_error = error
+                        # Diagnostic bytes are read only after this owned child is
+                        # stopped/reaped. A failed snapshot never replaces the first
+                        # deadline error and never acquires a completed-job verdict.
+                        try:
+                            elapsed = int((time.monotonic() - evaluation_started) * 1000)
+                            stop(process, pidfd)
+                            require(type(process.returncode) is int
+                                    and -128 <= process.returncode <= 255
+                                    and process_ids() == baseline)
+                            lease.check()
+                            captured = []
+                            for stream in (output, errors):
+                                before = os.fstat(stream.fileno())
+                                require(0 <= before.st_size <= LIMIT)
+                                stream.seek(0); raw = stream.read(LIMIT + 1)
+                                require(len(raw) == before.st_size and stream.read(1) == b''
+                                        and identity(os.fstat(stream.fileno())) == identity(before))
+                                captured.append(raw)
+                            require(0 <= elapsed <= 540000)
+                            error.pure_interruption = (process.returncode, elapsed,
+                                                       captured[0], captured[1])
+                        except BaseException:
+                            # Main and the guardian still independently require
+                            # baseline restoration and complete owned cleanup.
+                            pass
+                    raise error
                 require(os.fstat(output.fileno()).st_size <= LIMIT and os.fstat(errors.fileno()).st_size <= LIMIT)
                 time.sleep(0.05)
             process.wait(timeout=1)
@@ -400,10 +441,23 @@ def evaluate(job, owned, lease, baseline, deadline):
                 captured.append(raw)
             return process.returncode, captured[0], captured[1]
         finally:
-            if process is not None and pidfd is not None:
-                stop(process, pidfd)
-            if pidfd is not None:
-                os.close(pidfd)
+            if interrupted_error is None:
+                if process is not None and pidfd is not None:
+                    stop(process, pidfd)
+                if pidfd is not None:
+                    os.close(pidfd)
+            else:
+                try:
+                    if process is not None and pidfd is not None:
+                        stop(process, pidfd)
+                except BaseException:
+                    interrupted_error.pure_cleanup_failed = True
+                finally:
+                    if pidfd is not None:
+                        try:
+                            os.close(pidfd)
+                        except BaseException:
+                            interrupted_error.pure_cleanup_failed = True
 
 
 def atomic_report(value):
@@ -418,6 +472,40 @@ def atomic_report(value):
     finally:
         os.close(fd)
     return {'bytes': len(raw), 'sha256': sha(raw)}
+
+
+def retain_deadline_interruption(report, job, error, before, jobs):
+    """Retain failed-job bytes without counting an interrupted job as completed."""
+    require(report['protocol'] == 'stead.fixed-staged-pure-eval-report/1'
+            and report['interruption'] is None
+            and job['label'] in ('model-codec-stage-core', 'model-codec-stage-mint',
+                                 'model-codec-stage-run')
+            and type(error) is TimeoutError
+            and not getattr(error, 'pure_cleanup_failed', False))
+    captured = getattr(error, 'pure_interruption', None)
+    if captured is None:
+        return
+    require(type(captured) is tuple and len(captured) == 4)
+    exit_code, elapsed, stdout, stderr = captured
+    require(type(exit_code) is int and -128 <= exit_code <= 255
+            and type(elapsed) is int and 0 <= elapsed <= 540000
+            and all(type(raw) is bytes and len(raw) <= LIMIT for raw in (stdout, stderr)))
+    record = {'label': job['label'], 'source_sha256': job['source_sha256'],
+              'source_bytes': len(job['source']), 'reason': 'evaluator-deadline',
+              'elapsed_ms': elapsed, 'exit_code': exit_code}
+    for name, raw in (('stdout', stdout), ('stderr', stderr)):
+        record[name] = {'present': True, 'bytes': len(raw), 'sha256': sha(raw),
+                        'base64': base64.b64encode(raw).decode('ascii')}
+    measured = dict(report, interruption=record, status='fail', source_hashes_after=before,
+                    error_class=max(ERRORS, key=len), children_reaped=False,
+                    namespace_baseline_restored=False,
+                    budget_stop={'label': max((j['label'] for j in jobs), key=len),
+                                 'bytes': 99999999, 'sha256': 'f' * 64})
+    raw = canonical(measured)
+    if len(raw) > STAGING_LIMIT:
+        report['budget_stop'] = {'label': job['label'], 'bytes': len(raw), 'sha256': sha(raw)}
+        return
+    report['interruption'] = record
 
 
 def main():
@@ -439,6 +527,10 @@ def main():
         owner, proof, codec, owned, jobs, composition, before = admission()
         selected = codec.job_profile(jobs)
         require(selected['composition_sha256'] == owner['sources']['composition.json']['sha256'])
+        staged_model = selected['name'] == 'native-model-codec-staged/1'
+        if staged_model:
+            report['protocol'] = 'stead.fixed-staged-pure-eval-report/1'
+            report['interruption'] = None
         report['composition_sha256'] = selected['composition_sha256']
         report['expected_positive_arms'] = selected['positive_arms']
         baseline = process_ids(); require(baseline == {1, os.getpid()})
@@ -454,7 +546,22 @@ def main():
         phase = 'parent-admission'; await_go(lease, min(started + 90, started + TOTAL_SECONDS))
         phase = 'evaluations'
         for job in jobs:
-            code, stdout, stderr = evaluate(job, owned, lease, baseline, started + TOTAL_SECONDS - 15)
+            evaluation_started = time.monotonic() if staged_model else None
+            if staged_model and job['label'] in ('model-codec-stage-core',
+                    'model-codec-stage-mint', 'model-codec-stage-run'):
+                try:
+                    code, stdout, stderr = evaluate(job, owned, lease, baseline,
+                        started + TOTAL_SECONDS - 15, retain_interruption=True)
+                except TimeoutError as error:
+                    try:
+                        retain_deadline_interruption(report, job, error, before, jobs)
+                    except BaseException:
+                        # Failure to retain diagnostics cannot replace the original
+                        # deadline or authorize another evaluation.
+                        pass
+                    raise
+            else:
+                code, stdout, stderr = evaluate(job, owned, lease, baseline, started + TOTAL_SECONDS - 15)
             record = {'label': job['label'], 'source_sha256': job['source_sha256'],
                       'source_bytes': len(job['source']), 'exit_code': code,
                       'stdout': {'present': True, 'bytes': len(stdout), 'sha256': sha(stdout),
@@ -462,6 +569,10 @@ def main():
                       'stderr': {'present': True, 'bytes': len(stderr), 'sha256': sha(stderr),
                                  'base64': base64.b64encode(stderr).decode('ascii')},
                       'observation': None}
+            if staged_model:
+                elapsed = int((time.monotonic() - evaluation_started) * 1000)
+                require(0 <= elapsed <= 540000)
+                record['elapsed_ms'] = elapsed
             observation_error = None
             try:
                 record['observation'] = codec.observe(job, code, stdout, stderr)
@@ -483,6 +594,8 @@ def main():
             if observation_error is not None:
                 raise observation_error
             lease.check()
+        if staged_model:
+            codec.validate_staged_records(report['records'])
         phase = 'source-after'
         _, after = source_inventory(composition, owner['sources']['composition.json']['sha256'])
         require(after == before); report['source_hashes_after'] = after
@@ -494,6 +607,8 @@ def main():
         failed = type(error).__name__ if type(error).__name__ in ERRORS else 'unrecognized'
         report['error_class'] = failed
         report['status'] = 'fail'
+        if getattr(error, 'pure_cleanup_failed', False):
+            cleanup = 'baseline-or-temporary-files'
     finally:
         signal.setitimer(signal.ITIMER_REAL, 0)
         try:

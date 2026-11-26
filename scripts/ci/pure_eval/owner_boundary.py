@@ -22,7 +22,7 @@ import struct
 
 
 NAMESPACES = ('user', 'mnt', 'pid', 'net')
-SOURCE_NAMES = {'worker.py', 'codec.py', 'owned_child.py', 'interface.json', 'composition.json'}
+SOURCE_NAMES = {'worker.py', 'codec.py', 'stage_codec.py', 'owned_child.py', 'interface.json', 'composition.json'}
 APPARMOR = 'stead-hosted-ci-userns-v1'
 LIMITS = {'cpu.max': '100000 100000', 'memory.max': '2147483648',
           'memory.swap.max': '0', 'pids.max': '128'}

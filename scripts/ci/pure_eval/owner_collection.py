@@ -182,14 +182,32 @@ def cleanup(process, value):
     return False
 
 
+def retained_streams(record):
+    values = []
+    for name in ('stdout','stderr'):
+        row = record[name]
+        require(type(row) is dict and set(row) == {'present','bytes','sha256','base64'}
+                and row['present'] is True and type(row['bytes']) is int and 0 <= row['bytes'] <= 1000000
+                and type(row['base64']) is str and len(row['base64']) <= 1333336
+                and type(row['sha256']) is str and len(row['sha256']) == 64)
+        data = base64.b64decode(row['base64'], validate=True)
+        require(len(data) == row['bytes'] and hashlib.sha256(data).hexdigest() == row['sha256']
+                and base64.b64encode(data).decode('ascii') == row['base64'])
+        values.append(data)
+    return values
+
+
 def validate_report(raw, codec, jobs, expected_hashes):
     selected = codec.job_profile(jobs)
     report = parse(raw, WORKER_REPORT_LIMIT)
+    staged = selected['name'] == 'native-model-codec-staged/1'
     require(type(report) is dict and set(report) == {'protocol','status','qualifies_phase',
             'composition_sha256','runtime_sha256','records','source_hashes_before','source_hashes_after',
             'budget_stop','error_class','children_reaped','namespace_baseline_restored',
-            'expected_positive_arms','expected_controls','native_application_executed'})
-    require(report['protocol'] == 'stead.fixed-pure-eval-report/1'
+            'expected_positive_arms','expected_controls','native_application_executed'}
+            | ({'interruption'} if staged else set()))
+    require(report['protocol'] == ('stead.fixed-staged-pure-eval-report/1' if staged
+                                 else 'stead.fixed-pure-eval-report/1')
             and report['status'] in ('pass','fail') and report['qualifies_phase'] is False
             and report['native_application_executed'] is False
             and report['composition_sha256'] == selected['composition_sha256']
@@ -205,20 +223,13 @@ def validate_report(raw, codec, jobs, expected_hashes):
     for index, record in enumerate(report['records']):
         job = jobs[index]
         require(type(record) is dict and set(record) == {'label','source_sha256','source_bytes','exit_code','stdout','stderr','observation'}
+                | ({'elapsed_ms'} if staged else set())
                 and record['label'] == job['label'] and record['source_sha256'] == job['source_sha256']
                 and type(record['source_bytes']) is int and record['source_bytes'] == len(job['source'])
                 and type(record['exit_code']) is int and -128 <= record['exit_code'] <= 255)
-        values = []
-        for name in ('stdout','stderr'):
-            row = record[name]
-            require(type(row) is dict and set(row) == {'present','bytes','sha256','base64'}
-                    and row['present'] is True and type(row['bytes']) is int and 0 <= row['bytes'] <= 1000000
-                    and type(row['base64']) is str and len(row['base64']) <= 1333336
-                    and type(row['sha256']) is str and len(row['sha256']) == 64)
-            data = base64.b64decode(row['base64'], validate=True)
-            require(len(data) == row['bytes'] and hashlib.sha256(data).hexdigest() == row['sha256']
-                    and base64.b64encode(data).decode('ascii') == row['base64'])
-            values.append(data)
+        if staged:
+            require(type(record['elapsed_ms']) is int and 0 <= record['elapsed_ms'] <= 540000)
+        values = retained_streams(record)
         try:
             actual = codec.observe(job, record['exit_code'], *values)
         except ValueError:
@@ -228,6 +239,30 @@ def validate_report(raw, codec, jobs, expected_hashes):
         else:
             require(canonical(record['observation']) == canonical(actual))
         observations.append(actual)
+    if staged:
+        codec.validate_staged_records(report['records'])
+        interrupted = report['interruption']
+        if interrupted is not None:
+            require(type(interrupted) is dict and set(interrupted) ==
+                    {'label','source_sha256','source_bytes','reason','elapsed_ms','stdout','stderr','exit_code'}
+                    and 2 <= len(report['records']) < len(jobs)
+                    and all(value is not None for value in observations)
+                    and all(value['status'] == 'pass' for value in observations[:2])
+                    and report['status'] == 'fail' and report['error_class'] == 'TimeoutError'
+                    and report['budget_stop'] is None and report['source_hashes_after'] == {})
+            job = jobs[len(report['records'])]
+            require(job['label'] in ('model-codec-stage-core','model-codec-stage-mint','model-codec-stage-run')
+                    and interrupted['label'] == job['label']
+                    and interrupted['source_sha256'] == job['source_sha256']
+                    and type(interrupted['source_bytes']) is int and interrupted['source_bytes'] == len(job['source'])
+                    and interrupted['reason'] == 'evaluator-deadline'
+                    and type(interrupted['elapsed_ms']) is int and 0 <= interrupted['elapsed_ms'] <= 540000
+                    and type(interrupted['exit_code']) is int and -128 <= interrupted['exit_code'] <= 255)
+            retained_streams(interrupted)  # Full raw custody only; never a completed observation.
+        measured_ms = sum(record['elapsed_ms'] for record in report['records'])
+        if interrupted is not None:
+            measured_ms += interrupted['elapsed_ms']
+        require(measured_ms <= 540000)
     stop = report['budget_stop']
     if stop is not None:
         require(type(stop) is dict and set(stop) == {'label','bytes','sha256'}
@@ -236,6 +271,7 @@ def validate_report(raw, codec, jobs, expected_hashes):
                 and type(stop['sha256']) is str and len(stop['sha256']) == 64
                 and all(c in '0123456789abcdef' for c in stop['sha256']) and report['status'] == 'fail')
     if report['status'] == 'pass':
+        require(not staged or report['interruption'] is None)
         require(len(observations) == selected['jobs'] and all(o is not None and o['status'] == 'pass' for o in observations)
                 and report['error_class'] == 'none' and stop is None
                 and report['source_hashes_after'] == expected_hashes)

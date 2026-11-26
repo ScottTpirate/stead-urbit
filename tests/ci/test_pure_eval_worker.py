@@ -223,7 +223,7 @@ class PureEvalWorkerTests(unittest.TestCase):
         def observe(item, code, stdout, stderr):
             if scenario == 'malformed' and item['label'] == 'catalog': raise ValueError('inert unknown output')
             return {'status': 'fail' if scenario == 'completed-failure' and item['label'] == 'catalog' else 'pass', 'arms': ()}
-        profile = {'composition_sha256': W.COMPOSITION_SHA, 'positive_arms': 26, 'jobs': 6}
+        profile = {'name':'repository/1', 'composition_sha256': W.COMPOSITION_SHA, 'positive_arms': 26, 'jobs': 6}
         codec = types.SimpleNamespace(observe=observe, job_profile=lambda _: profile)
         owner = {'sources': {'composition.json': {'sha256': W.COMPOSITION_SHA}}}
         original_path = Path

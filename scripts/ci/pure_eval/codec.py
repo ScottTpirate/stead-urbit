@@ -8,6 +8,7 @@ from __future__ import annotations
 import hashlib
 import json
 import re
+import stage_codec
 
 COMPOSITION_SHA256 = "29f23ddb8849c5b182fca693a993a0634463e12104b47433ba3525adf93dfe31"
 COMPOSITION_BYTES = 240159
@@ -84,6 +85,8 @@ def profile(composition_sha256):
     elif composition_sha256 == DEBUG_COMPOSITION_SHA256:
         name, size, sources, libraries, arms, suites = ("repository-catalog-debug/1", DEBUG_COMPOSITION_BYTES, 55, 50, 6, DEBUG_SUITES)
         paths = ("native/core/desk/tests/stead-repository-catalog.hoon",)
+    elif composition_sha256 == stage_codec.COMPOSITION_SHA256:
+        return stage_codec.profile()
     else:
         raise ValueError("Unknown fixed composition")
     return {"name": name, "composition_sha256": composition_sha256, "composition_bytes": size,
@@ -94,7 +97,7 @@ def profile(composition_sha256):
 def job_profile(jobs):
     """Recheck the complete fixed job sequence; child report fields select nothing."""
     _require(type(jobs) is tuple, "Job sequence type")
-    for digest in (COMPOSITION_SHA256, MODEL_COMPOSITION_SHA256, DEBUG_COMPOSITION_SHA256):
+    for digest in (COMPOSITION_SHA256, MODEL_COMPOSITION_SHA256, DEBUG_COMPOSITION_SHA256, stage_codec.COMPOSITION_SHA256):
         selected = profile(digest)
         labels = ("compiler-control", "failing-tang-control") + tuple(s[0] for s in selected["suites"])
         if len(jobs) == selected["jobs"] and all(type(job) is dict for job in jobs) and tuple(job.get("label") for job in jobs) == labels:
@@ -201,6 +204,8 @@ def jobs(files, composition_bytes):
     """Compose one of three exact retained profiles; original repository bytes select the original six jobs."""
     _require(type(files) is dict and type(composition_bytes) is bytes, "Input types")
     selected_profile = profile(_sha(composition_bytes))
+    if selected_profile["name"] == stage_codec.PROFILE_NAME:
+        return stage_codec.jobs(files, composition_bytes, jobs)
     _require(len(composition_bytes) == selected_profile["composition_bytes"], "Composition pin mismatch")
     document = json.loads(composition_bytes, object_pairs_hook=_unique)
     sources = document["sources"]
@@ -300,7 +305,7 @@ def _checked_job(job):
     _require(type(job) is dict and set(job) == JOB_FIELDS, "Closed job shape")
     label = job["label"]
     _require(type(label) is str, "Job label type")
-    specs = {name: ("suite", sha, arms, 85) for name, sha, arms in SUITES + MODEL_SUITES + DEBUG_SUITES}
+    specs = {name: ("suite", sha, arms, 85) for name, sha, arms in SUITES + MODEL_SUITES + DEBUG_SUITES + stage_codec.SUITES}
     specs.update({"compiler-control": ("compiler-control", COMPILER_SHA256, (), 15),
                   "failing-tang-control": ("failing-tang-control", TANG_SHA256, (), 15)})
     _require(label in specs, "Unknown job")
@@ -346,6 +351,8 @@ def _rows(text, names):
 def observe(job, exit_code, stdout, stderr):
     """Parse complete retained output. The caller separately proves completion."""
     _checked_job(job)
+    if job["label"] in stage_codec.LABELS:
+        return stage_codec.observe(job, exit_code, stdout, stderr, _text, BOOT_DIAGNOSTICS, EXIT_DIAGNOSTICS)
     _require(type(exit_code) is int and exit_code == 0, "Evaluator exit is not exact zero")
     out, err = _text(stdout), _text(stderr)
     kind = job["kind"]
@@ -373,3 +380,7 @@ def observe(job, exit_code, stdout, stderr):
             "arms": arms, "stdout_sha256": _sha(stdout), "stdout_bytes": len(stdout),
             "stderr_sha256": _sha(stderr), "stderr_bytes": len(stderr),
             "compiler_failure": compiler_failure}
+
+
+def validate_staged_records(records):
+    return stage_codec.validate_records(records)

@@ -26,7 +26,8 @@ def load(name, path):
     return module
 
 
-CODEC = load('profile_codec', DIRECTORY / 'codec.py')
+with patch.dict(sys.modules, {'stage_codec': load('profile_stage_codec', DIRECTORY / 'stage_codec.py')}):
+    CODEC = load('profile_codec', DIRECTORY / 'codec.py')
 BOUNDARY = load('profile_boundary', DIRECTORY / 'owner_boundary.py')
 with patch.dict(sys.modules, {'owner_boundary': BOUNDARY}):
     COLLECTION = load('profile_collection', DIRECTORY / 'owner_collection.py')
@@ -58,6 +59,7 @@ class FixedProfileTests(unittest.TestCase):
             source_paths, data_paths, _ = ADAPTER.selected_paths(digest)
             captured.update(source_paths.values())
             captured.update(data_paths.values())
+        captured.add(ADAPTER.MODEL_DATA_PREFIX + 'staged-composition.json')
         cls.captured = {name: (ROOT / name).read_bytes() for name in captured}
         cls.hosted = types.SimpleNamespace(CONTROLLER_FILES=cls.captured)
         cls.selected = {digest: ADAPTER.fixed_data(cls.hosted, CODEC, digest)
