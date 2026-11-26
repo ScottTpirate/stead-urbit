@@ -56,7 +56,8 @@ try {
       await request.click();
       await page.getByRole('heading',{name:'Approve on your identity ship'}).waitFor();
       await page.clock.fastForward(4001);
-      await page.getByText(/Your ship approved this sign-in/).waitFor();
+      await page.getByRole('button',{name:'Open Stead'}).waitFor();
+      await page.getByRole('heading',{name:'Sign-in approved'}).waitFor();
       assert.equal(consumes,0);
       const n = polls;
       await page.clock.fastForward(10_000);
