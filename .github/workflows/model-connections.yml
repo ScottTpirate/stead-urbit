@@ -1,0 +1,30 @@
+name: Model connection checks
+
+on:
+  pull_request:
+    paths:
+      - '.github/workflows/model-connections.yml'
+      - 'scripts/urbit/model_*.py'
+      - 'specs/urbit/fixtures/model-catalog.json'
+      - 'tests/urbit/test_model_*.py'
+      - 'tests/urbit/test_llamacpp_connection.py'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  host:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 3
+    steps:
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
+        with:
+          persist-credentials: false
+      - name: Check operator selection, adapters and journal
+        shell: bash
+        run: |
+          set -eu
+          ulimit -v 262144
+          python3 -IB -m unittest discover -v -s tests/urbit -p 'test_model_*.py'
+          python3 -IB -m unittest discover -v -s tests/urbit -p 'test_llamacpp_connection.py'

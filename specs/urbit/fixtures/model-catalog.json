@@ -1,0 +1,105 @@
+{
+  "protocol": "stead.model-catalog/1",
+  "connections": [
+    {
+      "protocol": "stead.model-connection/1",
+      "connection_id": "019939ba-4000-7000-8000-000000000001",
+      "revision": "1",
+      "display_name": "Planet writing assistant",
+      "adapter": "llamacpp.chat-completions/1",
+      "endpoint": {
+        "url": "http://127.0.0.1:8080/v1/chat/completions",
+        "placement": "local-isolated",
+        "egress_policy_digest": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+      },
+      "model": "example-local-model",
+      "authentication": {
+        "kind": "none"
+      },
+      "capabilities": {
+        "instruction_role": "system",
+        "function_tools": "json-schema-strings/1",
+        "token_limit_field": "max_tokens",
+        "strict_tools": "unsupported",
+        "parallel_tool_calls": "unsupported",
+        "store": "unsupported"
+      },
+      "limits": {
+        "input_bytes": "16384",
+        "output_bytes": "16384",
+        "turns": "3",
+        "tool_calls": "4",
+        "request_timeout_ms": "10000",
+        "duration_ms": "60000",
+        "input_tokens": "2048",
+        "output_tokens": "512",
+        "total_tokens": "2560",
+        "cost_units": "4096",
+        "billable_micro_usd": "0"
+      }
+    },
+    {
+      "protocol": "stead.model-connection/1",
+      "connection_id": "019939ba-4000-7000-8000-000000000002",
+      "revision": "1",
+      "display_name": "Hosted review assistant",
+      "adapter": "openai.chat-completions/1",
+      "endpoint": {
+        "url": "https://provider.invalid/v1/chat/completions",
+        "placement": "remote-api",
+        "egress_policy_digest": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb"
+      },
+      "model": "example-hosted-model",
+      "authentication": {
+        "kind": "bearer-reference",
+        "reference_id": "019939ba-4000-7000-8000-00000000000a",
+        "revision": "1"
+      },
+      "capabilities": {
+        "instruction_role": "system",
+        "function_tools": "json-schema-strings/1",
+        "token_limit_field": "max_tokens",
+        "strict_tools": "unsupported",
+        "parallel_tool_calls": "unsupported",
+        "store": "unsupported"
+      },
+      "limits": {
+        "input_bytes": "16384",
+        "output_bytes": "16384",
+        "turns": "3",
+        "tool_calls": "4",
+        "request_timeout_ms": "10000",
+        "duration_ms": "60000",
+        "input_tokens": "2048",
+        "output_tokens": "512",
+        "total_tokens": "2560",
+        "cost_units": "4096",
+        "billable_micro_usd": "1000"
+      }
+    }
+  ],
+  "bindings": [
+    {
+      "home": "~bus",
+      "project_id": "019939ba-4000-7000-8000-000000000003",
+      "definition_id": "019939ba-4000-7000-8000-000000000004",
+      "definition_revision": "1",
+      "runtime_id": "019939ba-4000-7000-8000-000000000006",
+      "runtime_revision": "1",
+      "runtime_policy_digest": "cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc",
+      "connection_id": "019939ba-4000-7000-8000-000000000001",
+      "connection_revision": "1"
+    },
+    {
+      "home": "~bus",
+      "project_id": "019939ba-4000-7000-8000-000000000003",
+      "definition_id": "019939ba-4000-7000-8000-000000000005",
+      "definition_revision": "1",
+      "runtime_id": "019939ba-4000-7000-8000-000000000007",
+      "runtime_revision": "1",
+      "runtime_policy_digest": "dddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddd",
+      "connection_id": "019939ba-4000-7000-8000-000000000002",
+      "connection_revision": "1"
+    }
+  ]
+}

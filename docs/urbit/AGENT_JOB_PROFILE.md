@@ -113,3 +113,17 @@ External Git additionally needs this job authority connected to accepted
 snapshots, scoped result ingestion, build acceptance and release authority.
 Any retained local passing evidence must name exact source/payload hashes,
 executed scope and exclusions. No gate closes merely because its UI exists.
+
+### Choose a model for an agent runtime
+
+The supervisor reads a bounded JSON catalog with two lists. Each connection names a model, its protocol, its endpoint, a credential reference when needed, and its limits. Each binding selects a connection revision for one Home, project, agent definition revision and runtime policy. Several agents can share a connection. A planet-owned agent can point to a model on an isolated local worker. Hosted providers that implement the supported chat-completions protocol use the same interface.
+
+Start with the [two-agent example](../../specs/urbit/fixtures/model-catalog.json). Its addresses, identities and policy digests are examples. To inspect the selected models and their pins, run the following command from the repository root.
+
+```sh
+python3 scripts/urbit/model_catalog.py specs/urbit/fixtures/model-catalog.json
+```
+
+Keep the operator catalog outside worker-writable storage. Save the selected connection digest with the run. When changing a model, create a new connection revision and runtime binding, and retain the previous revisions for review. The supervisor entry point `EffectJournal.for_run` matches the Home, project, definition, runtime, policy and connection digest before preparing or reopening the exact request. A missing or changed pin fails the request. An empty catalog disables all selections.
+
+This path prepares a request. Before sending it, the supervisor still needs the current native grant, lease, budget and egress decision. A proposed tool call also requires its own authorization. The catalog contains credential references only. Installing an example does not start a model, send data to a provider or enable the pilot's Run controls.
