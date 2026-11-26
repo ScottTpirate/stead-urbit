@@ -1,0 +1,38 @@
+{
+  "status": "actual_native_catalog_evaluator_pass",
+  "controller": "04549762b2d8a279a329eb8897c08230de147e57",
+  "run": "https://github.com/ScottTpirate/stead-urbit/actions/runs/45732106760",
+  "verified_source_segments": {
+    "native/core/desk/lib/stead-code-ancestry.hoon": "d46a3af25bb6a1ce0cdb36497717a160c96247fd1bcf831cff7035c7e4db91b9",
+    "native/core/desk/lib/stead-code-credentials.hoon": "6e7eb121e5aa7bb36f80170eeb58bd87db52348a40189ef4f7682952647de2d5",
+    "native/core/desk/lib/stead-code-git-graph.hoon": "501593e3f564fc07f7675f31f857e8adf5fee378366ab79f0742ea7ca3d7965c",
+    "native/core/desk/lib/stead-code-git-objects.hoon": "d82bfa622dd796835ad472bf2624f80b2d44460427b0746aca8ac46452f78440",
+    "native/core/desk/lib/stead-code-receive.hoon": "590de8fe7e1e0d06514fee365b8d9decc6f4a9c08c6fe4a6b08a76a90ebcf7d6",
+    "native/core/desk/lib/stead-code-store.hoon": "653148bad82c5853e58998adc36aebfa29536a4b9b6e9d5c31edaccd8b03df4d",
+    "native/core/desk/lib/stead-codec-v1.hoon": "ce4c7a69b03ee1761590c37e71ff49b9f63a1a2edd2aaa6dfbf75bc3c960584a",
+    "native/core/desk/lib/stead-codec.hoon": "56e3d574381bbf8cdf29ca192c70eff256009f89d782e3ffe859b19c1321cbd7",
+    "native/core/desk/lib/stead-core-v1.hoon": "879615a5547d06a09d382c2bac4c5cb20cdf03236ddfdab79c9f1da15bd33cb5",
+    "native/core/desk/lib/stead-core.hoon": "4c183ef6283030437af5e1433e3fbf80f414757bcede4cab1282fc71ff5f34de",
+    "native/core/desk/lib/stead-git.hoon": "826b83485429c02f577c9b462ee6cddd3ab8ea1a099d33b66893f863d54c54d7",
+    "native/core/desk/lib/stead-repository-catalog.hoon": "365acb867720e79b7ff0c5dca596736433cdfc908f1e1f714dfa4b0d53b06cff",
+    "native/core/desk/lib/stead-session.hoon": "ec331d4534cc19fc76f6b9ad590ec326d74e09f0b846b36f866e6351bdcbbb27",
+    "native/core/desk/tests/stead-repository-catalog.hoon": "60812a631b7d8ae87398fd6d3f85471a9ea07d782025d5c8986d5c4587c3f18e",
+    "pkg/base-dev/lib/test.hoon": "55d5196a3a8dbd5323943c06f138c9b9aa8fd955506c4f4b14e5d56ff05abcc6"
+  },
+  "arms": [
+    "test-repository-catalog-two-repos-exact-inline-profile",
+    "test-repository-catalog-typed-ids-never-infer-alias",
+    "test-repository-catalog-retry-is-original-and-current-authorized",
+    "test-repository-catalog-resolver-authority-cas-retirement",
+    "test-repository-catalog-global-retained-capacity-no-eviction",
+    "test-repository-catalog-closed-codec-and-receipt-closure"
+  ],
+  "controls": 2,
+  "native_home_app_executed": false,
+  "code_migrated": false,
+  "source_change": "Promote the evaluator-verified catalog and test to the product desk. The two origin-pattern tests and one explicit fixture type differ from the previous development copy.",
+  "composed_source": {
+    "bytes": 131344,
+    "sha256": "22d1fbebf744e9a035bb5cc4322f77db3e3306e8c378dbf9b702a6efba99299b"
+  }
+}
