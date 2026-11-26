@@ -1,0 +1,130 @@
+name: Isolated model Doc revision
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  id-token: write
+
+concurrency:
+  group: stead-model-doc-revision
+  cancel-in-progress: false
+
+jobs:
+  revision:
+    if: github.repository_id == '1367847927' && github.ref == 'refs/heads/main'
+    runs-on: ubuntu-24.04
+    timeout-minutes: 30
+    steps:
+      - name: Capture the reviewed controller and candidate data
+        env:
+          STEAD_WORKFLOW: ${{ github.sha }}
+          STEAD_CANDIDATE: ''
+          STEAD_MODE: model
+        shell: bash
+        run: |
+          sudo --preserve-env=STEAD_WORKFLOW,STEAD_CANDIDATE,STEAD_MODE python3 -I -B - <<'PY'
+          import json, os, pathlib, re, subprocess
+          workflow = os.environ['STEAD_WORKFLOW']
+          if not re.fullmatch(r'[0-9a-f]{40}', workflow):
+              raise SystemExit('Full immutable commits required')
+          for location in ('/', '/opt', '/var', '/var/lib'):
+              info = pathlib.Path(location).lstat()
+              print(json.dumps({'ancestor': location, 'uid': info.st_uid, 'gid': info.st_gid, 'mode': oct(info.st_mode & 0o7777)}), flush=True)
+          root = pathlib.Path('/var/lib/stead-ci-controller')
+          root.mkdir(mode=0o755)
+          env = {'PATH': '/usr/bin:/bin', 'LANG': 'C.UTF-8', 'GIT_CONFIG_NOSYSTEM': '1',
+                 'GIT_CONFIG_GLOBAL': '/dev/null', 'GIT_TERMINAL_PROMPT': '0', 'GIT_NO_REPLACE_OBJECTS': '1'}
+          def git(*args):
+              return subprocess.run(['/usr/bin/git', '-C', str(root), *args], env=env, check=True, timeout=120, stdout=subprocess.PIPE).stdout
+          git('init', '--initial-branch=controller')
+          git('remote', 'add', 'origin', 'https://github.com/ScottTpirate/stead-urbit.git')
+          git('fetch', '--no-tags', '--depth=1', 'origin', workflow)
+          raw = git('show', workflow + ':specs/urbit/model-doc-revision-controller.json')
+          if len(raw) > 4096:
+              raise SystemExit('Controller manifest too large')
+          def unique(pairs):
+              result = {}
+              for key, value in pairs:
+                  if key in result:
+                      raise SystemExit('Duplicate controller manifest field')
+                  result[key] = value
+              return result
+          manifest = json.loads(raw, object_pairs_hook=unique)
+          controller = manifest.get('controller_commit', '')
+          if manifest != {'format': 'stead.hosted-controller/1', 'repository': 'ScottTpirate/stead-urbit', 'controller_commit': controller}:
+              raise SystemExit('Invalid controller manifest')
+          mode = os.environ.get('STEAD_MODE') or 'native'
+          if mode not in ('native', 'model', 'pure', 'pure-model-simple', 'pure-repository-debug') or (mode in ('model', 'pure', 'pure-model-simple', 'pure-repository-debug') and os.environ.get('STEAD_CANDIDATE')):
+              raise SystemExit('Fixed standalone modes accept no candidate override')
+          candidate = os.environ.get('STEAD_CANDIDATE') or controller
+          if not all(re.fullmatch(r'[0-9a-f]{40}', value) for value in (controller, candidate)):
+              raise SystemExit('Full immutable commits required')
+          git('fetch', '--no-tags', '--depth=1', 'origin', controller, candidate)
+          git('checkout', '--detach', controller)
+          (root / '.runtime').mkdir(mode=0o700)
+          (root / '.runtime/candidate').write_text(candidate + '\n')
+          (root / '.runtime/controller').write_text(controller + '\n')
+          PY
+      - name: Install the fixed standalone namespace dependency
+        timeout-minutes: 5
+        run: |
+          sudo apt-get update -qq
+          sudo apt-get install --no-install-recommends -y bubblewrap
+          dpkg-query --show --showformat='${Package} ${Version}\n' bubblewrap
+      - name: Record namespace prerequisites
+        run: |
+          sudo python3 -I -B - <<'PY'
+          import json, pathlib
+          def bounded(path, maximum):
+              with path.open() as source:
+                  text = source.read(maximum + 1)
+              if len(text) > maximum:
+                  raise SystemExit('Platform observation exceeds bound: ' + str(path))
+              return text
+          for name in ('/proc/sys/kernel/apparmor_restrict_unprivileged_userns', '/proc/sys/kernel/apparmor_restrict_unprivileged_unconfined', '/etc/apparmor.d/bwrap'):
+              path = pathlib.Path(name)
+              print(json.dumps({'path': name, 'text': bounded(path, 8192) if path.is_file() else None}))
+          for name in ('/usr/bin/ip', '/usr/sbin/ip', '/usr/bin/nft', '/usr/sbin/nft'):
+              path = pathlib.Path(name)
+              print(json.dumps({'path': name, 'exists': path.is_file(), 'resolved': str(path.resolve())}))
+          profiles = bounded(pathlib.Path('/sys/kernel/security/apparmor/profiles'), 1048576)
+          print(json.dumps({'bwrap_profiles': [line for line in profiles.splitlines() if 'bwrap' in line][:16]}))
+          PY
+      - name: Execute the fixed standalone model proof
+        timeout-minutes: 24
+        env:
+          STEAD_WORKFLOW: ${{ github.sha }}
+          STEAD_RUN_ID: ${{ github.run_id }}
+          STEAD_ATTEMPT: ${{ github.run_attempt }}
+        run: |
+          controller=$(sudo cat /var/lib/stead-ci-controller/.runtime/controller)
+          sudo --preserve-env=ACTIONS_ID_TOKEN_REQUEST_URL,ACTIONS_ID_TOKEN_REQUEST_TOKEN python3 -I -B /var/lib/stead-ci-controller/scripts/ci/hosted.py --workflow "$STEAD_WORKFLOW" --controller "$controller" --candidate "$controller" --run-id "$STEAD_RUN_ID" --attempt "$STEAD_ATTEMPT" --mode model
+      - name: Record namespace kernel denial diagnostics
+        if: failure()
+        run: |
+          sudo python3 -I -B - <<'PY'
+          import json, subprocess
+          result = subprocess.run(['/usr/bin/journalctl', '-k', '--no-pager', '--output=cat',
+              '--grep=apparmor=.*comm="(bwrap|python3)"', '--lines=32'],
+              capture_output=True, text=True, timeout=10)
+          print(json.dumps({'classification': 'kernel-diagnostic-only', 'exit_code': result.returncode,
+              'stdout': result.stdout[:32768], 'stderr': result.stderr[:2048],
+              'truncated': len(result.stdout) > 32768 or len(result.stderr) > 2048}))
+          if result.returncode not in (0, 1):
+              raise SystemExit('Kernel diagnostic collection failed')
+          PY
+      - name: Publish fixed model evidence only
+        if: always()
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
+        with:
+          name: model-doc-revision-evidence-${{ github.run_id }}-${{ github.run_attempt }}
+          path: |
+            /var/lib/stead-ci-controller/model-evidence/owner-report.json
+            /var/lib/stead-ci-controller/model-evidence/request.json
+            /var/lib/stead-ci-controller/model-evidence/response.bin
+            /var/lib/stead-ci-controller/model-evidence/proposal.json
+            /var/lib/stead-ci-controller/model-evidence/report.json
+          if-no-files-found: error
+          retention-days: 7
