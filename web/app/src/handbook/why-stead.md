@@ -1,6 +1,6 @@
 # Why Stead?
 
-Stead gives a small team one place to answer three questions. Who’s doing the work? Why did we decide to do it? What actually changed? Your team runs that workspace on its Urbit ship. The writing stays in Markdown, and the code stays in Git.
+Stead keeps the task, the decision behind it and the change it produced together in a workspace your team runs on its own Urbit ship. When somebody else picks up the work, they can see what changed and why. Your writing stays in Markdown and your code stays in Git.
 
 Say a customer finds a bug in the setup instructions. The developer fixing the code and the person rewriting the guide can work from the same task. The next person answering that customer can open the task, read the decision and follow the link to the corrected guide.
 
