@@ -64,7 +64,7 @@
     ?~  pairs  [members principals history owners]
     =/  ship  (need (slaw %p p.i.pairs))
     ?>  (lte (met 0 ship) 128)
-    ?>  &(!=(ship home) =((scot %p ship) p.i.pairs) ?=([%o *] q.i.pairs))
+    ?>  &(=((scot %p ship) p.i.pairs) ?=([%o *] q.i.pairs))
     =/  person  p.q.i.pairs
     ?>  (keys person ~['principal_id' 'binding_id' 'binding_revision' 'active' 'expires_at_ms' 'display_name'])
     =/  principal  (field person 'principal_id')
@@ -123,7 +123,7 @@
   ?~  people  (levy ~(tap in creators.config) |=(id=@t (~(has in principals) id)))
   =/  actor  identity.q.i.people
   ?>  (lte (met 0 ship.actor) 128)
-  ?>  &(!=(p.i.people home) =(p.i.people ship.actor) (title display.q.i.people))
+  ?>  &(=(p.i.people ship.actor) (title display.q.i.people))
   ?>  (live:stead-session actor(active &) 0)
   ?>  &(!(~(has in principals) principal.actor) !(~(has in bindings) binding.actor))
   ?>  &(=(revision.actor (~(got by revisions.registry) principal.actor)) =(principal.actor (~(got by owners.registry) binding.actor)))

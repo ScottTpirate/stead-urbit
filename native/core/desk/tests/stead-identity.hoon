@@ -24,7 +24,10 @@
   ^-  tang
   ?>  =(1 revision.enrollment)
   ?>  (valid-configuration enrollment ~bus)
-  ?>  !(valid-configuration enrollment ~zod)
+  ?>  (valid-configuration enrollment ~zod)
+  =/  independent  (canonical:stead-codec (object:stead-codec ~[['protocol' 'stead.identity-config/2'] ['expected_revision' '0'] ['origin' personal]]))
+  =/  empty  (configure *state independent ~zod)
+  ?>  &(?=(^ config.empty) ?=(~ trusted.empty))
   ?>  !(valid-configuration enrollment(revision 0) ~bus)
   ?>  !(valid-configuration enrollment(revision 18.446.744.073.709.551.616) ~bus)
   ?>  (rejected |.((configure configured config-raw ~bus)))
@@ -44,6 +47,13 @@
   ?>  ?=([%o *] value)
   =/  wrong  (canonical:stead-codec [%o (~(put by p.value) 'purpose' [%s 'owner-session'])])
   ?>  (rejected |.((receive configured ~zod ~bus wrong 1.001 2)))
+  =/  invitation  (canonical:stead-codec [%o (~(put by p.value) 'purpose' [%s 'project-invitation'])])
+  =/  invited  (receive configured ~zod ~bus invitation 1.001 2)
+  ?>  =('project-invitation' purpose:(~(got by requests.invited) id))
+  =/  discovered  (need (parse:stead-codec (address-message invited id ~bus)))
+  ?>  ?=([%o *] discovered)
+  ?>  &(=(personal (field:stead-codec p.discovered 'identity_origin')) =(origin (field:stead-codec p.discovered 'origin')))
+  ?>  =(id (field:stead-codec p.discovered 'challenge_id'))
   ~
 ++  test-identity-native-expiry
   ^-  tang
@@ -96,6 +106,40 @@
       |=  field=@t
       =/  raw  (canonical:stead-codec [%o (~(put by p.value) field [%s 'wrong'])])
       (rejected |.((approve received raw 1.002)))
+  ~
+++  test-identity-trust-consent
+  ^-  tang
+  =/  second  'https://other.localhost'
+  =/  challenge  (begin:stead-session *state:stead-session actor ~nec second 1.000 8)
+  =/  key  id.challenge
+  =/  payload  (approval-message:stead-browser key (~(got by challenges.next.challenge) key))
+  =/  extra  (receive received ~nec ~bus payload 1.001 3)
+  ?>  (rejected |.((send-approval extra key 1.002)))
+  =/  nonce  nonce:(~(got by requests.extra) key)
+  =/  proof
+    |=  protocol=@t
+    (canonical:stead-codec (object:stead-codec ~[['protocol' protocol] ['challenge_id' key] ['csrf' nonce] ['comparison_code' (cut 3 [0 12] key)] ['origin' second]]))
+  ?>  (rejected |.((approve extra (proof 'stead.identity/1') 1.002)))
+  =/  agreed  (approve extra (proof 'stead.identity-consent/1') 1.002)
+  ?>  &(=(~nec home.agreed) =(payload outgoing.agreed) =(2 ~(wyt by trusted.next.agreed)))
+  ?>  !(permitted-pair trusted.next.agreed ~zod second)
+  ?>  !(permitted-pair trusted.next.agreed ~bud origin)
+  ?>  !(permitted-pair trusted.next.agreed ~nec 'https://changed.localhost')
+  ~
+++  test-identity-owner-passkey-ticket
+  ^-  tang
+  =/  secret  (token:stead-session 8 9 'synthetic-sidecar')
+  =/  raw  (canonical:stead-codec (object:stead-codec ~[['protocol' 'stead.verifier-config/1'] ['secret' secret]]))
+  =/  verified  (configure-verifier configured raw)
+  ?>  &(!=(secret verifier.verified) (token-valid:stead-session verifier.verified))
+  ?>  (rejected |.((owner-ticket configured 'register' 1.000 9)))
+  =/  intent  (owner-ticket verified 'register' 1.000 9)
+  ?>  (rejected |.((consume-ticket next.intent 'list' value.intent 1.001)))
+  ?>  (rejected |.((consume-ticket next.intent 'register' value.intent 61.000)))
+  =/  spent  (consume-ticket next.intent 'register' value.intent 1.001)
+  ?>  (rejected |.((consume-ticket spent 'register' value.intent 1.002)))
+  =/  disabled  (configure-verifier next.intent (canonical:stead-codec (object:stead-codec ~[['protocol' 'stead.verifier-config/1'] ['secret' '']])))
+  ?>  &(=('' verifier.disabled) ?=(~ tickets.disabled))
   ~
 ++  test-identity-acknowledgement
   ^-  tang

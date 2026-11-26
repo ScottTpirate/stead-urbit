@@ -6,7 +6,7 @@
 +$  challenge
   [identity=actor home=@p origin=@t browser=@t expires=@ud approved=?]
 +$  session
-  [identity=actor home=@p origin=@t browser=@t csrf=@t audit=@t expires=@ud]
+  [identity=actor home=@p origin=@t browser=@t csrf=@t audit=@t expires=@ud issued=@ud device=@t]
 +$  state
   [counter=@ud challenges=(map @t challenge) sessions=(map @t session)]
 +$  result  [status=@tas id=@t cookie=@t csrf=@t next=state]
@@ -87,7 +87,7 @@
   |=  [db=state identity=actor home=@p origin=@t now=@ud entropy=@]
   ^-  result
   =.  db  (prune db now)
-  ?.  &((live identity now) (origin-valid origin) !=(ship.identity home))  (reject db %denied)
+  ?.  &((live identity now) (origin-valid origin))  (reject db %denied)
   ?:  ?|  (gte counter.db 18.446.744.073.709.551.615)
           (gte (lent ~(tap by challenges.db)) 32)
           (gte (lent (skim ~(tap by challenges.db) |=([key=@t val=challenge] =(principal.identity principal.identity.val)))) 4)
@@ -142,7 +142,7 @@
   =/  key  (digest 'stead.session/1' bearer)
   =/  audit  (token entropy counter.db 'stead.session-audit/1')
   =/  logged=session
-    [identity home origin browser.row (digest 'stead.csrf/1' csrf) audit (min expires.identity (add now 1.800.000))]
+    [identity home origin browser.row (digest 'stead.csrf/1' csrf) audit (min expires.identity (add now 1.800.000)) now '']
   ?:  (~(has by sessions.db) key)  (reject before %capacity)
   =.  challenges.db  (~(del by challenges.db) id)
   [%accepted audit bearer csrf db(sessions (~(put by sessions.db) key logged))]
@@ -159,6 +159,27 @@
       ==
     ~
   found
+++  remember-device
+  ::  Caller supplies the row returned by authorize for this cookie and CSRF.
+  ::  Repeating the choice never advances the original sign-in deadline.
+  |=  [db=state cookie=@t row=session label=@t]
+  ^-  state
+  ?>  &((gth (met 3 label) 0) (lte (met 3 label) 64))
+  ?>  (levy (rip 3 label) |=(c=@ &((gte c 32) (lte c 126))))
+  =/  key  (digest 'stead.session/1' cookie)
+  ?>  =(row (~(got by sessions.db) key))
+  =/  deadline  (min expires.identity.row (add issued.row 604.800.000))
+  db(sessions (~(put by sessions.db) key row(device label, expires deadline)))
+++  devices
+  |=  [db=state owner=session now=@ud]
+  ^-  (map @t session)
+  %-  malt
+  %+  skim  ~(tap by sessions.db)
+  |=  [key=@t row=session]
+  ?&  !=('' device.row)  (gth expires.row now)
+      (same-actor identity.row identity.owner)
+      =(home.row home.owner)  =(origin.row origin.owner)
+  ==
 ++  logout
   |=  [db=state cookie=@t csrf=@t identity=actor home=@p origin=@t now=@ud]
   ^-  result

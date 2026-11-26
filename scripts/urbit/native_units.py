@@ -102,8 +102,9 @@ def validate_inventory(value: dict) -> dict:
         raise ValueError('Native inventory schema')
     suites = value.get('suites')
     definitions = {'/tests/stead-session': ('test-session-', 19, 60),
+                   '/tests/stead-invitations': ('test-invitation-', 5, 60),
                    '/tests/stead-http': ('test-http-', 14, 60),
-                   '/tests/stead-identity': ('test-identity-', 11, 60),
+                   '/tests/stead-identity': ('test-identity-', 13, 60),
                    '/tests/stead-updates': ('test-updates-', 25, 60),
                    '/tests/stead-work-assignment': ('test-work-assignment-', 7, 60),
                    '/tests/stead-work-comments': ('test-work-comments-', 4, 60),

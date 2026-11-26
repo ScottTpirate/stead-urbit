@@ -39,7 +39,7 @@
   ?:  =('/stead/api/capabilities' route)
     =/  checked  (small:stead-browser body.request ~['protocol'] 'stead.capabilities/3')
     (reply data view transient 200 (capabilities:stead-product-home db.data))
-  ?:  (~(has in (silt ~['/stead/auth/start' '/stead/auth/status' '/stead/auth/consume' '/stead/auth/resume' '/stead/auth/logout'])) route)
+  ?:  (~(has in (silt ~['/stead/auth/start' '/stead/auth/status' '/stead/auth/consume' '/stead/auth/resume' '/stead/auth/devices' '/stead/auth/logout'])) route)
     ::  Logout can erase an inactive member's session; it grants no content.
     ?.  ?|(=('/stead/auth/logout' route) (active-auth data transient request now))
       (reply data view transient 401 (error:stead-team 'session_required'))

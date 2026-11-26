@@ -68,7 +68,7 @@
   =/  raw  body.request
   ?:  =('/stead/api/capabilities' route)
     =/  input  (small raw ~['protocol'] 'stead.capabilities/3')
-    (reply db view transient 200 (canonical (object ~[['protocol' 'stead.capabilities/3'] ['profile' 'configured-team'] ['commands' 'stead.command/3'] ['queries' 'stead.query/3'] ['updates' 'stead.updates/3'] ['work_contract' 'stead.work-contract/1'] ['workspace_queries' 'stead.workspace-queries/1'] ['authentication' 'native-approved-browser/1'] ['max_request_bytes' '65536'] ['max_response_bytes' '262144'] ['page_size' '20'] ['runtime' runtime.config]])))
+    (reply db view transient 200 (canonical (object ~[['protocol' 'stead.capabilities/3'] ['profile' 'configured-team'] ['commands' 'stead.command/3'] ['queries' 'stead.query/3'] ['updates' 'stead.updates/3'] ['work_contract' 'stead.work-contract/1'] ['workspace_queries' 'stead.workspace-queries/1'] ['devices' 'stead.devices/1'] ['invitations' 'stead.invitation/1'] ['identity_discovery' 'stead.identity-address/1'] ['authentication' 'native-approved-browser/1'] ['max_request_bytes' '65536'] ['max_response_bytes' '262144'] ['page_size' '20'] ['runtime' runtime.config]])))
   ?:  =('/stead/auth/start' route)
     =/  input  (small raw ~['protocol' 'identity_ship'] 'stead.auth/1')
     =/  ship  (need (slaw %p (field input 'identity_ship')))
@@ -119,6 +119,35 @@
   =/  authenticated  (authorize:stead-session auth.transient session.request csrf.request identity.u.member home.config origin.config now)
   ?~  authenticated
     (reply db view transient 403 ?:(=('/stead/api/command' route) (correlated-error raw 'invalid_csrf') (error:stead-team 'invalid_csrf')))
+  ?:  =('/stead/auth/devices' route)
+    =/  input  (small raw ~['protocol' 'action' 'value'] 'stead.devices/1')
+    =/  action  (field input 'action')
+    =/  value  (field input 'value')
+    =/  row  u.authenticated
+    =/  owned  (devices:stead-session auth.transient row now)
+    ?:  =('list' action)
+      ?>  =('' value)
+      =/  rows
+        %+  turn  ~(tap by owned)
+        |=  [key=@t item=session:stead-session]
+        [audit.item (object ~[['label' device.item] ['expires_at_ms' (decimal expires.item)] ['current' ?:(=(audit.row audit.item) 'yes' 'no')]])]
+      =/  base  (object ~[['protocol' 'stead.devices/1'] ['status' 'read']])
+      ?>  ?=([%o *] base)
+      (reply db view transient 200 (canonical [%o (~(put by p.base) 'devices' [%o (malt rows)])]))
+    ?:  =('remember' action)
+      =/  next  (remember-device:stead-session auth.transient session.request row value)
+      =/  deadline  expires:(~(got by sessions.next) (digest:stead-session 'stead.session/1' session.request))
+      =/  seconds  (div (sub deadline now) 1.000)
+      =/  out  (reply db view transient(auth next) 200 (canonical (object ~[['protocol' 'stead.devices/1'] ['status' 'remembered']])))
+      out(cookies ~[(remembered-cookie:stead-http session.request seconds)])
+    ?>  &(=('revoke' action) (token-valid:stead-session value))
+    =/  target  (skim ~(tap by owned) |=([key=@t item=session:stead-session] =(value audit.item)))
+    ?~  target  (reply db view transient 200 (error:stead-team 'denied_or_not_found'))
+    =/  device=session:stead-session  +.i.target
+    =/  next  (invalidate-browser:stead-session auth.transient browser.device)
+    =/  out  (reply db view transient(auth next) 200 (canonical (object ~[['protocol' 'stead.devices/1'] ['status' 'revoked']])))
+    ?:  =(value audit.row)  out(cookies ~[(cookie:stead-http | '' &)])
+    out
   ?:  =('/stead/auth/logout' route)
     =/  input  (small raw ~['protocol'] 'stead.auth/1')
     =/  ended  (logout:stead-session auth.transient session.request csrf.request identity.u.member home.config origin.config now)

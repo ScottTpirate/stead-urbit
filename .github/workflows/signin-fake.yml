@@ -1,0 +1,36 @@
+name: Isolated invitation and Identity diagnostic
+on:
+  push:
+    branches: ['codex/signin-fake-20261126']
+permissions:
+  contents: read
+concurrency:
+  group: scoped-signin-fake
+  cancel-in-progress: true
+jobs:
+  fake:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 60
+    steps:
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
+        with:
+          persist-credentials: false
+      - name: Verify public runtime inputs
+        shell: bash
+        run: |
+          sudo install -d -o runner -g runner /runtime /runtime/downloads /runtime/bin
+          python3 -B focus-fetch.py
+          sudo install -d -o nobody -g nogroup /state
+          sudo install -d /src
+          sudo cp -a scripts native focus-files.json focus-runner.py /src/
+          sudo cp specs/urbit/toolchain.lock.json /toolchain.json
+          kernel=$(python3 -c "import json;print(json.load(open('/toolchain.json'))['kernel']['directory'])")
+          sudo ln -s "/runtime/$kernel" /kernel
+      - name: Run on a fresh private network with synthetic identity
+        shell: bash
+        run: |
+          sudo systemd-run --wait --collect --pipe --quiet --uid=nobody --gid=nogroup \
+            -p PrivateNetwork=yes -p NoNewPrivileges=yes -p 'CapabilityBoundingSet=' \
+            -p ProtectSystem=strict -p ProtectHome=yes -p PrivateTmp=yes \
+            -p ReadWritePaths=/state -p MemoryMax=9G -p RuntimeMaxSec=3000 \
+            --setenv=HOME=/state --setenv=LANG=C.UTF-8 /usr/bin/python3 -I -B /src/focus-runner.py

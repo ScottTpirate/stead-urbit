@@ -57,6 +57,10 @@
       =(team.actor team.u.fresh)  =(runtime.actor runtime.u.fresh)
       (gth expires.actor now)  (lte expires.actor expires.u.fresh)
       ?|  =(actor u.fresh)
+          ?&  =('project-invitation/1' method.actor)
+              =('delegated-invitation' strength.actor)
+              (token-valid:stead-session audit.actor)
+          ==
           ?&  =('native-approved-browser/1' method.actor)
               =('native-approved-browser' strength.actor)
               (token-valid:stead-session audit.actor)
@@ -159,6 +163,7 @@
   |=  [db=state actor=authentication cmd=command now=@ud]
   ^-  ?
   ?.  (current db actor now)  |
+  ?.  ?|(!=('project-invitation/1' method.actor) =('policy.grant' operation.cmd))  |
   =/  config  (need current.registry.db)
   ?:  =('project.create' operation.cmd)
     ?&  (~(has in creators.config) principal.identity.actor)
@@ -281,12 +286,13 @@
   ?>  =(raw (canonical value))
   =/  identity  (decode-actor (field obj 'identity'))
   =/  home  (need (slaw %p (field obj 'home')))
-  ?>  &((lte (met 0 home) 128) !=(home ship.identity) =((scot %p home) (field obj 'home')))
+  ?>  &((lte (met 0 home) 128) =((scot %p home) (field obj 'home')))
   =/  actor=authentication
     [identity (field obj 'authentication') (field obj 'authentication_strength') (field obj 'session_audit_id') (uint (field obj 'credential_expires_at_ms')) home (field obj 'organization_id') (field obj 'team_id') (field obj 'runtime')]
   ?>  &((uuid organization.actor) (uuid team.actor) (valid-runtime:stead-team-config runtime.actor))
   ?>  &((gth expires.actor 0) (lte expires.actor expires.identity))
   ?>  ?|  &(=('native-sender/1' method.actor) =('native-sender' strength.actor) =('' audit.actor) =(expires.actor expires.identity))
+          &(=('project-invitation/1' method.actor) =('delegated-invitation' strength.actor) (token-valid:stead-session audit.actor))
           &(=('native-approved-browser/1' method.actor) =('native-approved-browser' strength.actor) (token-valid:stead-session audit.actor))
       ==
   actor

@@ -1,0 +1,104 @@
+/+  *test, stead-codec, stead-core, stead-team, stead-team-codec, stead-team-config, stead-session, stead-invitations, stead-http, stead-restore
+=,  stead-codec
+=/  project=@t  '019939ba-4000-7000-8000-000000000001'
+=/  company-init  (configure:stead-team empty:stead-team '{"protocol":"stead.team-config/1","expected_revision":"0","home":"~zod","origin":"https://home.test","organization_id":"019939ba-4000-7000-8000-000000000005","team_id":"019939ba-4000-7000-8000-000000000006","custody":"local-disposable","runtime":"isolated-fake","bindings":{"~bus":{"principal_id":"019939ba-4000-7000-8000-000000000002","binding_id":"019939ba-4000-7000-8000-000000000003","binding_revision":"1","active":"yes","expires_at_ms":"2000000","display_name":"Synthetic member"}},"project_creators":{"019939ba-4000-7000-8000-000000000002":"yes"}}' ~zod 1)
+=/  create  (decode:stead-team-codec '{"protocol":"stead.command/3","request_id":"019939ba-4000-7000-8000-000000000007","project_id":"019939ba-4000-7000-8000-000000000001","resource_id":"019939ba-4000-7000-8000-000000000001","expected_revision":"0","authority_epoch":"1","operation":"project.create","payload":{"organization_id":"019939ba-4000-7000-8000-000000000005","owning_team_id":"019939ba-4000-7000-8000-000000000006","title":"Synthetic ledger reload","project_key":"LEDGER","preset":"general"}}')
+=/  actor  (need (native-context:stead-team company-init ~bus 1))
+=/  created  (apply-command:stead-team company-init actor create 1)
+=/  origin=@t  'https://home.test'
+=/  pending  (begin:stead-session *state:stead-session identity.actor ~zod origin 1 222)
+=/  proof  (approve:stead-session next.pending id.pending ~bus identity.actor ~zod origin 'stead.auth/1' 'member-session' 120.001 2)
+=/  login  (consume:stead-session next.proof id.pending cookie.pending identity.actor ~zod origin 3 333)
+=/  start=changes:stead-invitations  [~ ~ next.created next.login]
+=/  json-fields
+  |=  raw=@t
+  ^-  object-map
+  =/  o  (need (parse raw))
+  ?>  ?=([%o *] o)
+  p.o
+=/  manage
+  |=  [s=changes:stead-invitations action=@t fields=(list [@t @t]) now=@ud]
+  =/  raw  (canonical (object [['protocol' 'stead.invitation/1'] ['action' action] ['project_id' project] fields]))
+  (call:stead-invitations s ['/stead/api/invitations' raw cookie.login '' csrf.login] ~ now now)
+=/  issue
+  |=  [mode=@t role=@t who=@t]
+  (manage start 'issue' ~[['mode' mode] ['role' role] ['identity_ship' who] ['expires_at_ms' ''] ['use_limit' '1']] 4)
+=/  personal  (issue 'personal' 'contributor' '~nec')
+=/  request-link  (issue 'request' 'reader' '')
+=/  visit
+  |=  [state=changes:stead-invitations token=@t ship=@p now=@ud]
+  =/  body  (canonical (object ~[['protocol' 'stead.invitation/1'] ['token' token] ['identity_ship' (scot %p ship)]]))
+  (call:stead-invitations state ['/stead/auth/invite/start' body '' '' ''] ~ now now)
+=/  finish
+  |=  [opened=result:stead-invitations sender=@p now=@ud]
+  =/  msg  (need outgoing.opened)
+  =/  id  (field (json-fields bytes.opened) 'challenge_id')
+  =/  approvals  (approve-proof:stead-invitations pending.next.opened sender bytes.msg now)
+  =/  cookie  (cut 3 [(met 3 '__Host-stead-pending=') 64] i.cookies.opened)
+  =/  body  (canonical (object ~[['protocol' 'stead.invitation/1'] ['challenge_id' id]]))
+  (call:stead-invitations next.opened(pending approvals) ['/stead/auth/invite/consume' body '' cookie ''] ~ now now)
+=/  token  (field (json-fields bytes.personal) 'token')
+=/  link-id  (field (json-fields bytes.personal) 'invitation_id')
+=/  opened  (visit next.personal token ~nec 5)
+=/  joined  (finish opened ~nec 6)
+|%
+++  test-invitation-personal-binding-and-expiry
+  =/  wrong  (mule |.((visit next.personal token ~bud 5)))
+  =/  expired  (mule |.((finish opened ~nec 120.005)))
+  =/  later  (visit next.opened token ~nec 120.006)
+  =/  forwarded  (mule |.((finish later ~bud 120.007)))
+  (expect !>(&(?=(%| -.wrong) ?=(%| -.expired) ?=(%| -.forwarded) =('pending' (field (json-fields bytes.later) 'status')))))
+++  test-invitation-preserves-other-sessions-and-history
+  =/  row  (~(got by offers.next.joined) link-id)
+  =/  member  (need (native-context:stead-team db.next.joined ~nec 7))
+  =/  key  (digest:stead-session 'stead.session/1' cookie.login)
+  =/  old  (~(got by sessions.auth.start) key)
+  =/  events  journal.data.db.next.joined
+  ?>  ?=(^ events)
+  =/  grant  (need (parse-result bytes.i.events))
+  ?>  ?=([%o *] grant)
+  =/  recorded  (decode-authentication:stead-team (field p.grant 'authentication_context'))
+  =/  restored  (step:stead-restore (begin:stead-restore db.next.joined ~zod))
+  =/  ok=?
+    ?&  =(1 (uses:stead-invitations row))
+        =(2 (role:stead-team db.next.joined member project 7))
+        =([~ old] (~(get by sessions.auth.next.joined) key))
+        =('project-invitation/1' method.recorded)  =(link-id audit.recorded)
+        =([~ db.next.joined] (result:stead-restore restored))
+    ==
+  (expect !>(ok))
+++  test-invitation-retry-and-revocation
+  =/  again  (finish (visit next.joined token ~nec 7) ~nec 8)
+  ?>  =(db.next.joined db.next.again)
+  =/  revoked  (manage next.joined 'revoke' ~[['invitation_id' link-id]] 8)
+  =/  closed  (mule |.((visit next.revoked token ~nec 9)))
+  =/  member  (need (native-context:stead-team db.next.joined ~nec 9))
+  =/  g  (identifier:stead-invitations 'stead.invitation-grant/1' [link-id ~nec])
+  =/  group  data.db.next.joined
+  =/  key  (scope-key:stead-core project g)
+  =/  row  (~(got by grants.group) key)
+  =/  removed  db.next.joined(data group(grants (~(put by grants.group) key row(revoked &))))
+  =/  retried  (mule |.((finish (visit next.joined(db removed) token ~nec 10) ~nec 11)))
+  (expect !>(&(?=(%| -.closed) ?=(%| -.retried) =(0 (role:stead-team removed member project 12)))))
+++  test-invitation-requires-current-maintainer
+  =/  team  db.next.opened
+  =/  all  grants.data.team
+  =/  rows  ~(tap by all)
+  ?>  ?=(^ rows)
+  =/  key  p.i.rows
+  =/  row  (~(got by all) key)
+  =/  next  next.opened(db team(data data.team(grants (~(put by all) key row(revoked &)))))
+  =/  result  (mule |.((finish opened(next next) ~nec 6)))
+  (expect !>(?=(%| -.result)))
+++  test-invitation-group-request-needs-maintainer
+  =/  id  (field (json-fields bytes.request-link) 'invitation_id')
+  =/  group  (field (json-fields bytes.request-link) 'token')
+  =/  requested  (finish (visit next.request-link group ~nec 5) ~nec 6)
+  ?>  =(db.next.request-link db.next.requested)
+  ?>  =('requested' (field (json-fields bytes.requested) 'status'))
+  =/  accepted  (manage next.requested 'approve' ~[['identity_ship' '~nec'] ['invitation_id' id] ['role' 'reader']] 7)
+  =/  final  (finish (visit next.accepted group ~nec 8) ~nec 9)
+  =/  denied  (mule |.((visit next.final group ~bud 10)))
+  =/  member  (need (native-context:stead-team db.next.final ~nec 10))
+  (expect !>(&(?=(%| -.denied) =(1 (role:stead-team db.next.final member project 10)) =(db.next.final db.next.accepted))))
+--

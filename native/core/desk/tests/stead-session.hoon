@@ -50,7 +50,7 @@
   ^-  tang
   ?>  (levy `(list @t)`~['https://home.test' 'https://home.localhost:8443'] origin-valid)
   ?>  (levy `(list @t)`~['http://home.test' 'https://Home.test' 'https://home.test/' 'https://home.test:443' 'https://home.test:0' 'https://home.test:65536' 'https://home.test:0443' 'https://-home.test' 'https://home..test' 'https://home.test:443:80'] |=(x=@t !(origin-valid x)))
-  ?>  =(%denied status:(begin empty alice ~bus origin 1.000 1))
+  ?>  =(%pending status:(begin empty alice ~bus origin 1.000 1))
   ?>  =(%denied status:(begin empty alice(active |) ~zod origin 1.000 1))
   ?>  =(%denied status:(begin empty alice(revision 0) ~zod origin 1.000 1))
   ?>  =(%denied status:(begin empty alice(binding 'bad') ~zod origin 1.000 1))
@@ -132,6 +132,19 @@
   =/  failed  (consume collision id.first cookie.first alice ~zod origin 1.003 9)
   ?>  =(%capacity status.failed)
   ?>  =(collision next.failed)
+  ~
+++  test-remember-device
+  ^-  tang
+  =/  row  (need (authorize next.logged cookie.logged csrf.logged alice ~zod origin 1.003))
+  ?>  =(1.801.002 expires.row)
+  =/  next  (remember-device next.logged cookie.logged row 'My laptop')
+  =/  long  (need (authorize next cookie.logged csrf.logged alice ~zod origin 1.801.003))
+  ?>  =(expires.alice expires.long)
+  ?>  =(1 ~(wyt by (devices next long 1.004)))
+  ?>  =(0 ~(wyt by (devices next long(identity bob) 1.004)))
+  ?>  ?=(~ (authorize next cookie.logged csrf.logged alice(active |) ~zod origin 1.004))
+  =/  ended  (logout next cookie.logged csrf.logged alice ~zod origin 1.005)
+  ?>  ?=(~ (authorize next.ended cookie.logged csrf.logged alice ~zod origin 1.006))
   ~
 ++  test-session-replace-rollback
   ^-  tang

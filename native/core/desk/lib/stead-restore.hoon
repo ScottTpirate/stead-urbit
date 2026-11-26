@@ -44,7 +44,7 @@
 ++  remember
   |=  [registry=registry:stead-team-config observed=(map @t actor:stead-session) actor=actor:stead-session home=@p now=@ud]
   ^-  (map @t actor:stead-session)
-  ?>  &(!=(home ship.actor) (live:stead-session actor now))
+  ?>  (live:stead-session actor now)
   ?>  =(principal.actor (~(got by owners.registry) binding.actor))
   ?>  (lte revision.actor (~(got by revisions.registry) principal.actor))
   =/  prior  (~(get by observed) principal.actor)

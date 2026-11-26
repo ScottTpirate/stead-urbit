@@ -1,7 +1,7 @@
 ::  Pure application HTTP boundary. Only the owner agent handles Eyre events.
 ::  Host/Origin checks do not prove TLS: require Eyre secure and reject its
 ::  loopback Forwarded override inputs before trusting that bit.
-/+  stead-session
+/+  stead-session, stead-codec
 |%
 +$  incoming  [route=@t body=@t session=@t pending=@t csrf=@t]
 ++  lower
@@ -103,7 +103,7 @@
 ++  validate
   |=  [request=inbound-request:eyre origin=@t assets=(set @t)]
   ^-  (unit incoming)
-  (validate-routes request origin (~(put in assets) '/stead/') (silt ~['/stead/auth/start' '/stead/auth/status' '/stead/auth/consume' '/stead/auth/logout' '/stead/auth/resume' '/stead/api/capabilities' '/stead/api/command' '/stead/api/query' '/stead/api/updates' '/stead/api/code']))
+  (validate-routes request origin (~(put in assets) '/stead/') (silt ~['/stead/auth/start' '/stead/auth/status' '/stead/auth/consume' '/stead/auth/logout' '/stead/auth/devices' '/stead/auth/resume' '/stead/api/invitations' '/stead/auth/invite/start' '/stead/auth/invite/status' '/stead/auth/invite/consume' '/stead/api/capabilities' '/stead/api/command' '/stead/api/query' '/stead/api/updates' '/stead/api/code']))
 ++  validate-routes
   |=  [request=inbound-request:eyre origin=@t assets=(set @t) posts=(set @t)]
   ^-  (unit incoming)
@@ -143,6 +143,11 @@
       ['referrer-policy' 'no-referrer']
       ['cross-origin-resource-policy' 'same-origin']
   ==
+++  remembered-cookie
+  |=  [value=@t seconds=@ud]
+  ^-  @t
+  ?>  &((token-valid:stead-session value) (lte seconds 604.800))
+  (rap 3 ~['__Host-stead-session=' value '; Secure; HttpOnly; SameSite=Strict; Path=/; Max-Age=' (decimal:stead-codec seconds)])
 ++  cookie
   |=  [pending=? value=@t clear=?]
   ^-  @t
