@@ -1,9 +1,9 @@
 {
   "acceptance": [
-    "Actual one response from exact model alias passes existing strict llama.cpp adapter.",
-    "Exactly one untrusted propose_doc_update proposal contains exact public Markdown; no native write or tool execution.",
-    "Source/artifact hashes, original request/response/proposal bytes, usage and actual runtime/lifecycle controls retained.",
-    "Uncertain/timeout/invalid/incomplete response is failure with no retry; missing/mismatched/partial evidence never becomes pass."
+    "Exactly one initial inference through unchanged provider-neutral prepare_chat and normalize_reply.",
+    "Existing canonical Doc header and ID remain byte-exact; review moves Monday to Wednesday while time, room and all other Markdown remain exact.",
+    "The prompt contains only the task and original Markdown, never the completed edit.",
+    "Original request/response/proposal plus semantic assessment retained only after verified owned cleanup. No repair/retry/native effects/G3 claim."
   ],
   "boundary": {
     "billable_provider_micro_usd": 0,
@@ -50,9 +50,9 @@
   },
   "execution_admitted": false,
   "files": {
-    ".runtime/model-inference-proof-prepared/client.py": {
-      "bytes": 10025,
-      "sha256": "576320fadd45f50609a70c315872223b92c029e0096c228d50f03314ea5898aa"
+    "scripts/ci/model_proof/client.py": {
+      "bytes": 12485,
+      "sha256": "101b2b21a56d8ff6bf677d6f488656c60d5feed5808538b1748158b146ab304d"
     },
     "scripts/urbit/model_connections.py": {
       "bytes": 22885,
@@ -80,27 +80,17 @@
     "production local-model hosting"
   ],
   "profile_transition": {
-    "download_admitted": false,
-    "exact_47_byte_markdown_gate_unchanged": true,
-    "execution_admitted": false,
-    "greedy_temperature": "0",
-    "interpretation": "Changes model plus explicit sampling; any future success concerns this one compatibility profile, not a model-quality comparison or native G3 authority.",
-    "literal_prompt_unchanged": true,
-    "model_alias": "qwen2.5-1.5b-stead-compat2",
-    "predecessor_controller": "a9fe0cac7782122516b72096209cb1191f65eb57",
-    "predecessor_interface_sha256": "5cec94bd9c52423d502b41cec28af4726ad10d65018b7078c25cf0ba58e66a66",
-    "predecessor_protocol": "stead.synthetic-model-compatibility-profile/1",
+    "completed_output_in_prompt": false,
+    "model_runtime_and_sampling_unchanged": true,
+    "predecessor_controller": "71be1d75d042f0b1f31c0ccae18299f1f3ac8f72",
+    "predecessor_interface_sha256": "12d3bdbe84c502a77a1edb744490c705c92896ef813d52b48a242057b47fea25",
     "resources_and_cost_bounds_unchanged": true,
-    "retained_failed_runs": [
-      "43823695825",
-      "43832899126"
-    ],
-    "rng_seed": "42",
-    "runtime_archive_unchanged": true,
-    "synthetic_connection_id": "00000000-0000-7000-8000-000000000001",
-    "synthetic_connection_revision": "2"
+    "retained_literal_output_success": "43843435452",
+    "retry_allowed": false,
+    "synthetic_connection_revision": "2",
+    "task": "Move an existing weekly review two weekdays later, preserving all other Markdown bytes."
   },
-  "protocol": "stead.synthetic-model-compatibility-profile/2",
+  "protocol": "stead.synthetic-model-doc-revision-profile/1",
   "runtime": {
     "archive_layout_and_executable_dependencies": "Must inspect bounded exact archive contents and record executable/runtime tree pins on disposable setup before execution; no install scripts or symlinks outside fixed runtime.",
     "bytes": 23311084,
@@ -160,5 +150,5 @@
     "transitive_model_sha256": "6a1a2eb6d15622bf3c96857206351ba97e1af16c30d7a74ee38970e434e9407e"
   },
   "tests_executed": false,
-  "user_outcome": "Observe a real local model propose one exact public Markdown edit through the provider-neutral adapter; preserve all bytes and distinguish proposal from accepted work."
+  "user_outcome": "Observe one genuine local-model semantic revision of an existing canonical synthetic Stead Doc, preserving identity and untouched material; retain exact unmodified tool output."
 }

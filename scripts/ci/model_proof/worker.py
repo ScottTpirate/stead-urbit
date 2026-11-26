@@ -33,10 +33,10 @@ MODEL_SHA = '6a1a2eb6d15622bf3c96857206351ba97e1af16c30d7a74ee38970e434e9407e'
 MODEL_BYTES = 1117320736
 ARCHIVE_SHA = '0bc1f091e8916102b6d8f2cf944233a620e90a0f856c72d0ce41150c65c2e72e'
 SOURCE_PINS = {
-    'client.py': '576320fadd45f50609a70c315872223b92c029e0096c228d50f03314ea5898aa',
+    'client.py': '101b2b21a56d8ff6bf677d6f488656c60d5feed5808538b1748158b146ab304d',
     'model_connections.py': '6f65a2d6c0dcb666c6ed621f914dc8392b01637d488f4a1c4d33fb043cdb5400',
     'owned_child.py': 'a01fc92a0b5f000f5ddee505d475127681ac47ea9a7aa4d8b450594cd50ec229',
-    'interface.json': '12d3bdbe84c502a77a1edb744490c705c92896ef813d52b48a242057b47fea25',
+    'interface.json': 'f7649162343289cbc26800fbf8f600f23b43e8cb26ece1f13221b1c8377587cf',
 }
 NAMESPACES = ('user', 'mnt', 'pid', 'net')
 ENV = {'PATH': '/usr/bin', 'HOME': '/tmp', 'TMPDIR': '/tmp', 'LC_ALL': 'C',
@@ -482,8 +482,8 @@ def result_files():
             'model_adapter_sha256', 'model', 'attempted_requests', 'completed_responses',
             'native_authority_supplied', 'tool_executed', 'document_mutated', 'qualifies_g3',
             'artifacts', 'error_class', 'connection_digest', 'request_digest', 'proposal_state',
-            'observed_usage', 'exact_document_proposed', 'elapsed_ms'})
-    require(report['protocol'] == 'stead.synthetic-model-compatibility-proof/1'
+            'observed_usage', 'semantic_edit_proposed', 'revision_checks', 'elapsed_ms'})
+    require(report['protocol'] == 'stead.synthetic-model-doc-revision/1'
             and report['status'] == 'pass' and report['error_class'] == 'none'
             and report['classification'] == 'actual-local-inference-with-synthetic-public-document'
             and report['model_adapter_sha256'] == SOURCE_PINS['model_connections.py']
@@ -491,7 +491,7 @@ def result_files():
             and type(report['attempted_requests']) is int and report['attempted_requests'] == 1
             and type(report['completed_responses']) is int and report['completed_responses'] == 1
             and all(report[key] is False for key in ('native_authority_supplied', 'tool_executed', 'document_mutated', 'qualifies_g3'))
-            and report['exact_document_proposed'] is True and report['proposal_state'] == 'tool-proposals'
+            and report['semantic_edit_proposed'] is True and report['proposal_state'] == 'tool-proposals'
             and type(report['elapsed_ms']) is int and 0 <= report['elapsed_ms'] <= 65000)
     require(report['artifacts'] == {name: pins[name] for name in ('request.json', 'response.bin', 'proposal.json')})
     proposal = parse(raw['proposal.json'])
@@ -499,8 +499,17 @@ def result_files():
     calls = proposal['tool_proposals']
     require(type(calls) is list and len(calls) == 1 and calls[0]['name'] == 'propose_doc_update'
             and calls[0]['tool_id'] == '00000000-0000-7000-8000-000000000006'
-            and calls[0]['revision'] == '1'
-            and calls[0]['arguments'] == {'markdown': '# Team guide\n\nReview changes before accepting.\n'})
+            and calls[0]['revision'] == '1' and type(calls[0]['arguments']) is dict
+            and set(calls[0]['arguments']) == {'markdown'})
+    # Recheck the retained argument with the exact admitted verifier. A child
+    # report's success flag cannot substitute for the original output bytes.
+    client_raw = ordinary(INPUT / 'client.py', owner=65534, maximum=65536)
+    require(sha(client_raw) == SOURCE_PINS['client.py'])
+    module_spec = importlib.util.spec_from_file_location('stead_doc_revision', INPUT / 'client.py')
+    client = importlib.util.module_from_spec(module_spec)
+    module_spec.loader.exec_module(client)
+    checks = client.assess_revision(calls[0]['arguments']['markdown'])
+    require(report['revision_checks'] == checks and client.accepted_revision(checks))
     return pins, sha(raw['report.json'])
 
 

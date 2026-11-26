@@ -1,4 +1,4 @@
-"""One synthetic local-model request, inside the separately admitted CI worker.
+"""One semantic Doc revision, inside the separately admitted local-model worker.
 
 This is a compatibility proof, not a native Run worker. It has no native receipt,
 credentials, tool executor or authority. Its only network destination is fixed
@@ -25,7 +25,60 @@ PORT = 8088
 MODEL = 'qwen2.5-1.5b-stead-compat2'
 MAX_RESPONSE = 32768
 SOURCE_UID = 65534  # Root outside the one-UID worker user namespace is unmapped.
-EXPECTED_MARKDOWN = '# Team guide\n\nReview changes before accepting.\n'
+DOCUMENT_ID = '00000000-0000-7000-8000-000000000008'
+HEADER = '---\nid: ' + DOCUMENT_ID + '\ntype: page\nstate: published\n---\n'
+BEFORE_REVIEW = HEADER + '\n# Review schedule\n\n## Weekly review\n'
+REVIEW_LINE = 'The review is on Monday at 10:00 in Room Cedar.\n'
+AFTER_REVIEW = '\n## Contact\nAsk the document owner if you cannot attend.\n'
+SOURCE_MARKDOWN = BEFORE_REVIEW + REVIEW_LINE + AFTER_REVIEW
+TASK = ('Move the weekly review two weekdays later. Keep its time and room. '
+        'Change only the weekday in the review sentence. Preserve the complete '
+        'Stead header, document ID and every other character, including the final newline.')
+
+
+def revision_context():
+    """An existing synthetic Doc, with explicit scope and no repository context."""
+    return {'project_id': uid(2), 'collection_id': uid(7), 'document_id': DOCUMENT_ID,
+            'expected_revision': '1', 'base_markdown_sha256': sha(SOURCE_MARKDOWN.encode()),
+            'markdown': SOURCE_MARKDOWN, 'task': TASK, 'repositories': []}
+
+
+def prepare_revision(model, spec, scope):
+    """Use the ordinary provider-neutral request API; no completed edit is supplied."""
+    context = revision_context()
+    scope = dict(scope, context_digest=sha(canonical(context)))
+    registry = [{'tool_id': uid(6), 'revision': '1', 'name': 'propose_doc_update',
+                 'description': 'Propose the complete edited Markdown for review. Does not save it.',
+                 'arguments': {'markdown': '1024'}}]
+    instructions = ('You propose document edits for a reviewer. Use the supplied '
+                    'propose_doc_update function exactly once with the complete Markdown. '
+                    'Do not claim that any document was saved or accepted.')
+    messages = [{'role': 'user', 'content': 'Revise this existing document in a no-Code project. '
+                 'The JSON below contains the task and original document, not the completed edit. '
+                 + canonical(context).decode()}]
+    return model.prepare_chat(spec, scope, '1', instructions, messages, registry)
+
+
+def assess_revision(markdown):
+    """Compare original output bytes; never trim, normalize, append or repair them."""
+    is_text = type(markdown) is str
+    raw = markdown.encode('utf-8') if is_text else b''
+    # The expected weekday is verifier-only. It is never included in the request.
+    expected_line = REVIEW_LINE.replace('Monday', 'Wednesday')
+    return {'document_id': DOCUMENT_ID, 'base_markdown_sha256': sha(SOURCE_MARKDOWN.encode()),
+            'output_markdown_sha256': sha(raw), 'output_markdown_bytes': len(raw),
+            'canonical_header_preserved': is_text and markdown.startswith(HEADER),
+            'untouched_material_preserved': is_text and markdown.startswith(BEFORE_REVIEW)
+                and markdown.endswith(AFTER_REVIEW),
+            'requested_semantic_edit': is_text and markdown == BEFORE_REVIEW + expected_line + AFTER_REVIEW,
+            'changed_from_original': is_text and markdown != SOURCE_MARKDOWN,
+            'final_newline_preserved': is_text and markdown.endswith('\n')}
+
+
+def accepted_revision(checks):
+    return all(checks[key] is True for key in ('canonical_header_preserved',
+        'untouched_material_preserved', 'requested_semantic_edit',
+        'changed_from_original', 'final_newline_preserved'))
 
 
 def require(ok):
@@ -101,6 +154,32 @@ def uid(number):
     return '00000000-0000-7000-8000-' + str(number).zfill(12)
 
 
+def connection_and_scope(model):
+    value = {'protocol': 'stead.model-connection/1', 'connection_id': uid(1),
+             'revision': '2', 'display_name': 'Isolated Qwen Doc revision',
+             'adapter': 'llamacpp.chat-completions/1', 'model': MODEL,
+             'endpoint': {'url': 'http://127.0.0.1:8088/v1/chat/completions',
+                 'placement': 'local-isolated',
+                 'egress_policy_digest': sha(b'stead.synthetic-model-proof.loopback-only/1')},
+             'authentication': {'kind': 'none'},
+             'capabilities': {'instruction_role': 'system',
+                 'function_tools': 'json-schema-strings/1', 'token_limit_field': 'max_tokens',
+                 'strict_tools': 'unsupported', 'parallel_tool_calls': 'supported',
+                 'store': 'unsupported'},
+             'limits': {'input_bytes': '8192', 'output_bytes': str(MAX_RESPONSE),
+                 'turns': '1', 'tool_calls': '1', 'request_timeout_ms': '60000',
+                 'duration_ms': '180000', 'input_tokens': '1536', 'output_tokens': '256',
+                 'total_tokens': '1792', 'cost_units': '1', 'billable_micro_usd': '0'}}
+    spec = model.connection(canonical(value))
+    scope = {'home': '~zod', 'project_id': uid(2), 'run_id': uid(3), 'attempt': '1',
+             'effect_sequence': '1', 'definition_id': uid(4), 'definition_revision': '1',
+             'runtime_id': uid(5), 'runtime_revision': '1', 'connection_digest': spec.sha256,
+             'run_contract_sha256': sha(b'synthetic-contract'),
+             'context_digest': sha(canonical(revision_context())),
+             'runtime_policy_digest': sha(b'synthetic-compatibility-no-authority')}
+    return spec, scope
+
+
 def main():
     require(os.getuid() == os.geteuid() == 1000 and len(sys.argv) == 1)
     info = SOURCE.lstat()
@@ -118,46 +197,15 @@ def main():
     sys.modules[module_spec.name] = model
     module_spec.loader.exec_module(model)
     started = time.monotonic()
-    report = {'protocol': 'stead.synthetic-model-compatibility-proof/1', 'status': 'fail',
+    report = {'protocol': 'stead.synthetic-model-doc-revision/1', 'status': 'fail',
               'classification': 'actual-local-inference-with-synthetic-public-document',
               'model_adapter_sha256': SOURCE_SHA, 'model': MODEL, 'attempted_requests': 0,
               'completed_responses': 0, 'native_authority_supplied': False,
               'tool_executed': False, 'document_mutated': False, 'qualifies_g3': False,
               'artifacts': {}, 'error_class': 'none'}
     try:
-        value = {'protocol': 'stead.model-connection/1', 'connection_id': uid(1),
-                 'revision': '2', 'display_name': 'Isolated Qwen compatibility proof',
-                 'adapter': 'llamacpp.chat-completions/1', 'model': MODEL,
-                 'endpoint': {'url': 'http://127.0.0.1:8088/v1/chat/completions',
-                     'placement': 'local-isolated',
-                     'egress_policy_digest': sha(b'stead.synthetic-model-proof.loopback-only/1')},
-                 'authentication': {'kind': 'none'},
-                 'capabilities': {'instruction_role': 'system',
-                     'function_tools': 'json-schema-strings/1', 'token_limit_field': 'max_tokens',
-                     'strict_tools': 'unsupported', 'parallel_tool_calls': 'supported',
-                     'store': 'unsupported'},
-                 'limits': {'input_bytes': '8192', 'output_bytes': str(MAX_RESPONSE),
-                     'turns': '1', 'tool_calls': '1', 'request_timeout_ms': '60000',
-                     'duration_ms': '180000', 'input_tokens': '1536', 'output_tokens': '256',
-                     'total_tokens': '1792', 'cost_units': '1', 'billable_micro_usd': '0'}}
-        spec = model.connection(canonical(value))
-        scope = {'home': '~zod', 'project_id': uid(2), 'run_id': uid(3), 'attempt': '1',
-                 'effect_sequence': '1', 'definition_id': uid(4), 'definition_revision': '1',
-                 'runtime_id': uid(5), 'runtime_revision': '1', 'connection_digest': spec.sha256,
-                 'run_contract_sha256': sha(b'synthetic-contract'),
-                 'context_digest': sha(b'# Team guide\n'),
-                 'runtime_policy_digest': sha(b'synthetic-compatibility-no-authority')}
-        registry = [{'tool_id': uid(6), 'revision': '1', 'name': 'propose_doc_update',
-                     'description': 'Return a proposed Markdown document for human review. Does not save it.',
-                     'arguments': {'markdown': '1024'}}]
-        instructions = ('You propose document edits for a reviewer. Use the supplied '
-                        'propose_doc_update function exactly once with the complete Markdown. '
-                        'Do not claim that any document was saved or accepted.')
-        messages = [{'role': 'user', 'content': 'Update the public test document. Call propose_doc_update '
-                     'exactly once. Its markdown argument must equal the decoded JSON string below, '
-                     'including its final newline. Preserve every character; do not trim whitespace. '
-                     'JSON string: ' + json.dumps(EXPECTED_MARKDOWN, ensure_ascii=False)}]
-        request = model.prepare_chat(spec, scope, '1', instructions, messages, registry)
+        spec, scope = connection_and_scope(model)
+        request = prepare_revision(model, spec, scope)
         report['connection_digest'] = spec.sha256
         report['request_digest'] = request.request_digest
         report['artifacts']['request.json'] = publish('request.json', request.body, 8192)
@@ -172,10 +220,12 @@ def main():
         report['proposal_state'] = proposal['state']
         report['observed_usage'] = proposal['observed_usage']
         calls = proposal['tool_proposals']
-        report['exact_document_proposed'] = (proposal['state'] == 'tool-proposals' and len(calls) == 1
-            and calls[0]['name'] == 'propose_doc_update' and calls[0]['tool_id'] == uid(6)
-            and calls[0]['revision'] == '1' and calls[0]['arguments'] == {'markdown': EXPECTED_MARKDOWN})
-        require(report['exact_document_proposed'])
+        require(proposal['state'] == 'tool-proposals' and len(calls) == 1
+                and calls[0]['name'] == 'propose_doc_update' and calls[0]['tool_id'] == uid(6)
+                and calls[0]['revision'] == '1' and set(calls[0]['arguments']) == {'markdown'})
+        report['revision_checks'] = assess_revision(calls[0]['arguments']['markdown'])
+        report['semantic_edit_proposed'] = accepted_revision(report['revision_checks'])
+        require(report['semantic_edit_proposed'])
         report['status'] = 'pass'
     except BaseException as error:
         kind = type(error).__name__

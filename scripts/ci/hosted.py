@@ -708,8 +708,8 @@ def execute_control(case, process, job, context):
 
 
 def workflow_binding(workflow_sha, controller_sha):
-    manifest_path = 'specs/urbit/hosted-ci-controller.json'
-    workflow_path = '.github/workflows/native-hosted.yml'
+    manifest_path = 'specs/urbit/model-doc-revision-controller.json'
+    workflow_path = '.github/workflows/model-doc-revision.yml'
     files = local.inventory(workflow_sha, (manifest_path, workflow_path))
     require(set(files) == {manifest_path, workflow_path}, 'Incomplete trusted workflow binding')
     raw = files[manifest_path]
@@ -742,6 +742,8 @@ def main():
         run_id=args.run_id, attempt=args.attempt)
     require(local.git('rev-parse', 'HEAD').decode().strip() == args.controller, 'Controller checkout identity differs')
     binding = workflow_binding(args.workflow, args.controller)
+    require(args.mode == 'model' and args.control is None and args.candidate == args.controller,
+            'Fixed document revision accepts only its exact model controller')
     if args.mode == 'model':
         from model_proof.service_adapter import outer
         return outer(sys.modules[__name__], args, identity, binding)
