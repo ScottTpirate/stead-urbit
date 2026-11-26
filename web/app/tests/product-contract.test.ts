@@ -13,6 +13,7 @@ test('resource routes round-trip independent scope and exact revision without ti
     {kind:'collection',project,collection},
     {kind:'repository',project,repository:item,view:'history'},
     {kind:'change',project,change:item,revision:'2'}, {kind:'run',project,run:item},
+    {kind:'run',project,work:collection,run:item},
     {kind:'review',project,change:item,revision:'18446744073709551615'},
     {kind:'doc-change',project,work:item,change:collection},
     {kind:'doc-change',project,work:item,change:collection,result:{revision:'18446744073709551615',digest:'f'.repeat(64)}},
@@ -38,6 +39,15 @@ test('addresses reject ambiguous scope, query payloads, encodings and unsupporte
     `#file/${project}/${item}/${'a'.repeat(40)}/docs%2fguide.md`]) {
     assert.equal(decodeProductRoute(hash), null, hash);
   }
+});
+test('Run addresses retain original Work scope and never reinterpret an identifier as two segments', () => {
+  const scope = {kind: 'run', project, work: collection, run: item} as const;
+  assert.equal(encodeProductRoute(scope), `#run/${project}/${collection}/${item}`);
+  assert.deepEqual(decodeProductRoute(`#run/${project}/${item}`), {kind: 'run', project, run: item});
+  assert.equal(decodeProductRoute(`#run/${project}//${item}`), null);
+  assert.equal(decodeProductRoute(`#run/${project}/${collection}/invalid`), null);
+  assert.throws(() => encodeProductRoute({kind: 'run', project, run: `${collection}/${item}`}));
+  assert.throws(() => encodeProductRoute({kind: 'work', project: `${project}/${item}`}));
 });
 test('navigation retains view state without allowing cross-principal leakage or mutation', () => {
   const memory = new NavigationMemory(); const route: ProductRoute={kind:'work',project};

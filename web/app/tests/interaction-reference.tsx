@@ -4,6 +4,7 @@ import { createRoot } from 'react-dom/client';
 import { Button, Combobox, Dialog, EmptyState, Menu, OutcomeState, PersonBadge, PropertyPicker, StatusBadge, TextField, type OutcomeStateKind } from '../src/primitives';
 import {DocumentBody} from '../src/DocumentBody';
 import {Icon} from '../src/Icon';
+import {Markdown} from '../src/Markdown';
 import '../src/style.css';
 import '../src/work.css';
 import './interaction-reference.css';
@@ -31,7 +32,7 @@ function Reference() {
   const [readOnly, setReadOnly] = useState(false);
   const [variant, setVariant] = useState('normal');
   const [layout, setLayout] = useState('preview');
-  const [documentText, setDocumentText] = useState('This document is a readable reference surface. Start with a clear purpose, keep the steps short, and link supporting context beside the work.\n\n## Your first day\n\n1. Meet the project steward.\n2. Read the event brief.\n3. Choose a task and ask a question.\n\n- [x] Read the project purpose.\n- [ ] Choose a first task.\n\n> Everyone should know what to do next.');
+  const [documentText, setDocumentText] = useState('This document is a readable reference surface. Start with a clear purpose, keep the steps short, and link supporting context beside the work.\n\n## Your first day\n\n1. Meet the project steward.\n2. Read the event brief.\n3. Choose a task and ask a question.\n\n- [x] Read the project purpose.\n- [ ] Choose a first task.\n\n> Everyone should know what to do next.\n\n![Document diagram](https://attachments.example/document.svg)\n\n![Unavailable document image](relative-diagram.svg)');
   const [fullSource, setFullSource] = useState(false);
   const [action, setAction] = useState('No reference action selected');
   const titleInput = useRef<HTMLInputElement>(null);
@@ -52,6 +53,9 @@ function Reference() {
     </header>
     <section className="reference-panel" aria-labelledby="work-reference-title">
       <div className="reference-section-heading"><h2 id="work-reference-title">Work</h2>
+        <Menu label="More reference actions" triggerLabel={<Icon name="ellipsis"/>} items={[
+          {value: 'inspect', label: 'Inspect reference', onSelect: () => setAction('Inspect reference selected')},
+        ]}/>
         <Menu label="Work actions" items={[
           {value: 'copy', label: 'Copy link', onSelect: () => setAction('Copy link selected')},
           {value: 'unavailable', label: 'Unavailable action', disabled: true, onSelect: () => setAction('Invalid disabled action')},
@@ -84,6 +88,11 @@ function Reference() {
     </section>
     <section className="reference-panel reference-doc" aria-labelledby="doc-reference-title"><p className="reference-work-key">Synthetic Docs read reference</p><h2 id="doc-reference-title">Welcome to the project</h2>
       <DocumentBody text={documentText} header="" editable={!readOnly} locked={false} isNew={false} fullSource={fullSource} onFullSource={setFullSource} onChange={setDocumentText}/>
+    </section>
+    <section className="reference-panel reference-doc" aria-labelledby="attachment-reference-title">
+      <p className="reference-work-key">Synthetic repository Markdown · Read only · No attachment fetching</p>
+      <h2 id="attachment-reference-title">Repository attachments</h2>
+      <Markdown origin="repository" text={`![Repository diagram](./assets/diagram.svg)\n\n![External diagram](https://attachments.example/repository.svg)\n\n![Unavailable repository image](//attachments.example/blocked.svg)\n\n![${crowded ? 'A deliberately long image description — 雪 🪴 '.repeat(15) : 'Linked diagram'}](../images/linked.svg)\n\n[![Related diagram](../related.svg)](https://attachments.example/guide)`}/>
     </section>
     <section className="reference-panel" aria-labelledby="review-reference-title"><p className="reference-work-key">Synthetic review reference · No submitted change</p><h2 id="review-reference-title">Clarify the onboarding guide</h2>
       <p><PersonBadge name="Docs editor" kind="agent"/> <StatusBadge label="Ready for review" tone="active"/></p>

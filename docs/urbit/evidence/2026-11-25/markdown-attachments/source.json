@@ -1,0 +1,88 @@
+{
+  "browser_cases": [
+    "attachments-read-only-read-preview-source-preserve-exact-markdown",
+    "repository-attachments-show-clone-unavailable-and-explicit-web-links",
+    "long-attachment-descriptions-reflow-at-320-and-two-times-zoom",
+    "shared-icon-only-overflow-meets-desktop-target-and-keyboard-contract",
+    "shared-icon-only-overflow-meets-narrow-touch-target-and-focus-return"
+  ],
+  "browser_executed": false,
+  "driver": {
+    "bytes": 7981,
+    "sha256": "f3d1bdf563dc43c594bbd5816d66c2e109b2d04ec421343021ab3a79ee3b48f6"
+  },
+  "host_tests": [
+    "Markdown renders lists emphasis fences tables links and task markers",
+    "HTML and image URLs never create executable or automatically loading elements",
+    "resource navigation refuses scripts credentials controls protocol-relative and backslash URLs",
+    "dense and oversized documents stay bounded without truncating accepted source",
+    "attachment URLs use explicit governed links without loading images",
+    "repository relative images require a clone without false open controls",
+    "unavailable attachment targets never claim to open or navigate",
+    "document root links and repository web links retain their distinct origins",
+    "attachment alt text stays literal and original Markdown stays unchanged",
+    "linked images keep both governed destinations without nested anchors",
+    "resource routes round-trip independent scope and exact revision without titles",
+    "addresses reject ambiguous scope, query payloads, encodings and unsupported revisions",
+    "Run addresses retain original Work scope and never reinterpret an identifier as two segments",
+    "navigation retains view state without allowing cross-principal leakage or mutation",
+    "legacy labels keep blocked and supporting document meanings while defaults stay unassigned"
+  ],
+  "production": {
+    "web/app/src/Markdown.tsx": {
+      "bytes": 8810,
+      "sha256": "118374b82c663111aff015cb56aa9f319cc622702b70471a4f8608dd7fdb2b8e"
+    },
+    "web/app/src/MarkdownAttachment.tsx": {
+      "bytes": 1854,
+      "sha256": "2c0534bc9784bcc172d101c097c92339ba4949bfc69b5c46003909b6c99c2245"
+    },
+    "web/app/src/markdown.css": {
+      "bytes": 1840,
+      "sha256": "1a66f028f919afa0836b020a85378a5159d5762795b9e339924de595eae9f0b3"
+    }
+  },
+  "production_executed": false,
+  "protocol": "stead.markdown-attachments-source/1",
+  "release_a670_modified": false,
+  "source": {
+    "web/app/src/Markdown.tsx": {
+      "bytes": 8810,
+      "sha256": "118374b82c663111aff015cb56aa9f319cc622702b70471a4f8608dd7fdb2b8e"
+    },
+    "web/app/src/MarkdownAttachment.tsx": {
+      "bytes": 1854,
+      "sha256": "2c0534bc9784bcc172d101c097c92339ba4949bfc69b5c46003909b6c99c2245"
+    },
+    "web/app/src/markdown.css": {
+      "bytes": 1840,
+      "sha256": "1a66f028f919afa0836b020a85378a5159d5762795b9e339924de595eae9f0b3"
+    },
+    "web/app/tests/attachment-reference-checks.mjs": {
+      "bytes": 7211,
+      "sha256": "88d4822c597bead5da92a0d8ca23e0a03513764634bc0eb52d1808e0a453e62e"
+    },
+    "web/app/tests/interaction-reference.mjs": {
+      "bytes": 20686,
+      "sha256": "46553e32dda241e8919e3ff1c3459cd207c2569f96ddc1f3ed3d8b18a6a9e178"
+    },
+    "web/app/tests/interaction-reference.tsx": {
+      "bytes": 11151,
+      "sha256": "5373dca433df5ac770be8a7c9ca0a0ce859d4e8d92f5816904ee1145ca5d8d53"
+    },
+    "web/app/tests/markdown-attachments-host.ts": {
+      "bytes": 98,
+      "sha256": "e005db98b5d47e9c73ba24b25706141dab1e8c96d3cfe5c816c18eff832c3488"
+    },
+    "web/app/tests/markdown-attachments.mjs": {
+      "bytes": 2318,
+      "sha256": "253b135699649b2245c3f59f68321a57350d1eb245cfa6cc3362336f6c7ecc6c"
+    },
+    "web/app/tests/markdown-attachments.test.tsx": {
+      "bytes": 4738,
+      "sha256": "8e316df92e8e2a1c72e4d5d41122a860d05a61c32197fba9f919947838e9cb3d"
+    }
+  },
+  "source_baseline": "2280dcc7a00f972d6e33671d70386ada0344709f",
+  "tests_executed": false
+}
