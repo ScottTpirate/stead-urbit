@@ -491,6 +491,19 @@ class HTTPBoundary(unittest.TestCase):
             self.assertEqual(query.context.verify_mode, P.ssl.CERT_REQUIRED)
             return query({'protocol': 'stead.query/3'})
 
+    def test_tunnel_port_changes_only_the_local_tcp_destination(self):
+        credentials = {'origin': 'https://member.example.org', 'session': 'a' * 64, 'csrf': 'b' * 64}
+        query = P.HTTPSQueries(credentials, tunnel_port=19443)
+        connection = query._connection(7)
+        self.assertEqual((connection.host, connection.port), ('member.example.org', 443))
+        with patch.object(P.socket, 'create_connection') as tcp, patch.object(connection.tls_context, 'wrap_socket') as tls:
+            connection.connect()
+            tcp.assert_called_once_with(('127.0.0.1', 19443), 7)
+            tls.assert_called_once_with(tcp.return_value, server_hostname='member.example.org')
+        for port in (0, -1, 65536, True, '443'):
+            with self.subTest(port=port), self.assertRaisesRegex(P.RecoveryError, 'invalid-tunnel-port'):
+                P.HTTPSQueries(credentials, tunnel_port=port)
+
     def test_tls_required_exact_path_and_only_member_credentials(self):
         self.assertEqual(self.run_query(), b'{}')
         _, args, kwargs = self.requests[1]

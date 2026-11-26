@@ -59,6 +59,11 @@ python3 scripts/urbit/portable_recovery.py capture \
   --output /private/path/project.stead.zip
 ```
 
+For a private pilot reached through a local forward, add `--tunnel-port PORT`
+and supply its trusted CA with `--ca-file`. Use the named HTTPS Home in the
+session file. The exporter connects to the numeric loopback port and preserves
+the Home name for TLS, the HTTP host and the request origin.
+
 All connections verify the TLS certificate and hostname. `--ca-file` may supply
 an explicitly trusted development CA; there is no insecure mode. Requests go
 directly to the configured origin without environment proxy discovery and

@@ -15,6 +15,7 @@ import os
 from pathlib import Path
 import re
 import secrets
+import socket
 import ssl
 import stat
 import sys
@@ -157,9 +158,27 @@ def new_id():
     return f'{value[:8]}-{value[8:12]}-{value[12:16]}-{value[16:20]}-{value[20:]}'
 
 
+class LoopbackHTTPS(http.client.HTTPSConnection):
+    """Connect through a local listener while sending the configured Home TLS name and HTTP authority."""
+    def __init__(self, host, port, context, timeout, *, tunnel_port=None):
+        super().__init__(host, port, context=context, timeout=timeout)
+        self.tls_context = context
+        self.tunnel_port = self.port if tunnel_port is None else tunnel_port
+
+    def connect(self):
+        raw = socket.create_connection(('127.0.0.1', self.tunnel_port), self.timeout)
+        try:
+            self.sock = self.tls_context.wrap_socket(raw, server_hostname=self.host)
+        except BaseException:
+            raw.close()
+            raise
+
+
 class HTTPSQueries:
     """Fixed Stead read routes on one verified HTTPS origin."""
-    def __init__(self, credentials, *, ca_file=None):
+    def __init__(self, credentials, *, ca_file=None, tunnel_port=None):
+        require(tunnel_port is None or (type(tunnel_port) is int and 1 <= tunnel_port <= 65535), 'invalid-tunnel-port')
+        self.tunnel_port = tunnel_port
         self.credentials = credentials
         self.parts = origin(credentials['origin'])
         self.context = ssl.create_default_context(cafile=ca_file)
@@ -173,6 +192,9 @@ class HTTPSQueries:
         return self._post('/stead/api/code', {'protocol': 'stead.code/1', 'action': 'pack-view', 'project_id': project})
 
     def _connection(self, timeout):
+        if self.tunnel_port is not None:
+            return LoopbackHTTPS(self.parts.hostname, self.parts.port, self.context, timeout,
+                                 tunnel_port=self.tunnel_port)
         return http.client.HTTPSConnection(self.parts.hostname, self.parts.port,
             context=self.context, timeout=timeout)
 
@@ -628,6 +650,7 @@ def main(argv=None):
     cap.add_argument('--session-file', required=True)
     cap.add_argument('--project', required=True)
     cap.add_argument('--output', required=True)
+    cap.add_argument('--tunnel-port', type=int, help='Local port forwarding to the configured HTTPS Home')
     cap.add_argument('--ca-file', help='Trusted CA file; TLS hostname and certificate verification remain required')
     check = sub.add_parser('verify', help='Check offline integrity, not authority or authentication')
     check.add_argument('artifact')
@@ -641,7 +664,7 @@ def main(argv=None):
             output = Path(args.output)
             require(not output.exists() and not output.is_symlink() and output.parent.is_dir(), 'destination-unavailable')
             credentials = session_file(args.session_file)
-            data, receipt = capture(HTTPSQueries(credentials, ca_file=args.ca_file), args.project,
+            data, receipt = capture(HTTPSQueries(credentials, ca_file=args.ca_file, tunnel_port=args.tunnel_port), args.project,
                 credentials['principal_id'], credentials['origin'], source='https-member-query')
             result = write_bundle(data, receipt, args.output)
         elif args.action == 'verify':

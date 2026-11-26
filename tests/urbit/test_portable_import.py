@@ -299,7 +299,7 @@ class PortableImport(unittest.TestCase):
         raw = Mock()
         tls = Mock()
         connection = importer.LoopbackHTTPS('home.localhost', 8443, tls, 5)
-        with patch.object(importer.socket, 'create_connection', return_value=raw) as socket:
+        with patch.object(portable.socket, 'create_connection', return_value=raw) as socket:
             connection.connect()
             socket.assert_called_once_with(('127.0.0.1', 8443), 5)
             tls.wrap_socket.assert_called_once_with(raw, server_hostname='home.localhost')
