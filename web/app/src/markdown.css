@@ -12,5 +12,8 @@
 .markdown th,.markdown td {border:1px solid var(--border,#dedcd5);padding:.5em .7em;text-align:start}
 .markdown a {color:var(--accent,#5b50bd);text-decoration:underline;text-underline-offset:3px}
 .markdown input[type=checkbox] {display:inline-block;width:auto;inline-size:1em;block-size:1em;padding:0;margin:0 .5em 0 0;vertical-align:-.1em;accent-color:var(--accent,#5b50bd)}
-.markdown-attachment {display:inline-block;border:1px solid var(--border,#dedcd5);border-radius:6px;padding:.3em .6em}
+.markdown-attachment {display:inline-flex;flex-wrap:wrap;align-items:baseline;gap:.2em .7em;max-width:100%;box-sizing:border-box;border:1px solid var(--border,#dedcd5);border-radius:6px;padding:.3em .6em;vertical-align:baseline}
+.markdown-attachment > * {min-width:0;overflow-wrap:anywhere}
+.markdown-attachment-status {color:var(--muted,#63665f)}
+.markdown-linked-attachment {overflow-wrap:anywhere}
 .markdown .markdown-plain {white-space:pre-wrap}

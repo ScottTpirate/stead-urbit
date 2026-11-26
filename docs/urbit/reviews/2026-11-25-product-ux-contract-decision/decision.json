@@ -1,0 +1,54 @@
+{
+  "a670_modified": false,
+  "decision_sha256": "bfdd3bd915a847ae9d9bacc4419e0f083e4a0dcac8be16e6e4d0afcf2b25da46",
+  "implementation_or_release_qualification_claimed": false,
+  "native_migration_review": "separate",
+  "predecessor_receipt": {
+    "disposition": "Original UX decision retained; only compact-evidence location bindings refreshed.",
+    "path": ".runtime/product-ux-contract-decision-20261125/decision.json",
+    "sha256": "4663b34e637d44507a00f1d108932c8f23eb3f01ab8fb5a30a6fd0a5bcc9dce8"
+  },
+  "protocol": "stead.product-ux-contract-decision/1",
+  "source_files": {
+    ".runtime/markdown-attachments-a11y-static-owner-prepared/attempt1/attachments/report.json": {
+      "bytes": 226783,
+      "sha256": "abeb334b9cdc7d88f431fc1ff4409cc3d8c63eaae4323ec06f71892304006bfd"
+    },
+    "docs/urbit/AGENT_JOB_PROFILE.md": {
+      "bytes": 33206,
+      "sha256": "341b78c0fab3930465d318353a10a9e48dd4626f1a06d7f6d4be8bec3f43525e"
+    },
+    "docs/urbit/CODE_DELIVERY_PROFILE.md": {
+      "bytes": 9928,
+      "sha256": "a304535e529885a4e8cb35815ee24b940090d9a5f0e5c20af9262f3589db3031"
+    },
+    "docs/urbit/MASTER_BUILD_DIRECTIVE.md": {
+      "bytes": 30675,
+      "sha256": "0e408a1388b84ae015316fe8963e6775057591cb8d80ce2d2f839e8c461dc90b"
+    },
+    "docs/urbit/PRODUCT_EXPERIENCE_CONTRACT.md": {
+      "bytes": 22277,
+      "sha256": "beae892ef902b6d1c3905172329bd2f9ae6a02d5f748e1959ab600fa4e631f22"
+    },
+    "docs/urbit/evidence/2026-11-25/markdown-attachments/acceptance.json": {
+      "bytes": 2619,
+      "sha256": "fd23feb0c127021846d6364db9a0a7d053ede482406249e9629bd65a6ce60d1d"
+    },
+    "web/app/src/productModel.ts": {
+      "bytes": 1685,
+      "sha256": "be328c2430720be84e260decde60ea807ff61236c2f82baf6216b999b54be723"
+    },
+    "web/app/src/productRoutes.ts": {
+      "bytes": 7298,
+      "sha256": "047176cf71fcc31f1c2ec9b4550b98a2afdeedd477537f7017c60693825126fc"
+    },
+    "web/app/tests/product-contract.test.ts": {
+      "bytes": 4858,
+      "sha256": "dbee4b9cf2df288b22d82a139c0954e8fa8f03a2bd31e7d3850376c1e74a61cd"
+    }
+  },
+  "source_head": "2280dcc7a00f972d6e33671d70386ada0344709f",
+  "status": "accepted-as-ux-design-contract",
+  "tests_executed_locally": false,
+  "ux_conflict_found": false
+}

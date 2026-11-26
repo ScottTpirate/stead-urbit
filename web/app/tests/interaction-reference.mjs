@@ -8,17 +8,19 @@ import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { build } from 'esbuild';
 import { firefox } from 'playwright';
+import {attachmentCases} from './attachment-reference-checks.mjs';
 
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 assert.equal(process.version, 'v24.21.0', 'Use the pinned frontend Node runtime');
 const requestedCases = process.argv.slice(2);
-assert.ok(requestedCases.length <= 8 && new Set(requestedCases).size === requestedCases.length
-  && requestedCases.every(name => /^[a-z0-9-]{1,100}$/u.test(name)), 'At most eight unique bounded reference case names');
+assert.ok(requestedCases.length <= 13 && new Set(requestedCases).size === requestedCases.length
+  && requestedCases.every(name => /^[a-z0-9-]{1,100}$/u.test(name)), 'At most thirteen unique bounded reference case names');
 const runtime = path.resolve(root, '../../.runtime');
 await mkdir(runtime, {recursive: true});
 const output = await mkdtemp(path.join(runtime, 'interaction-reference-'));
 const files = ['src/primitives.tsx', 'src/Icon.tsx', 'src/controls.css', 'src/style.css', 'src/work.css', 'src/DocumentBody.tsx', 'src/Markdown.tsx',
-  'src/markdown.css', 'src/ResourceLink.tsx', 'src/documentFormatting.ts', 'tests/interaction-reference.tsx',
+  'src/markdown.css', 'src/MarkdownAttachment.tsx', 'src/ResourceLink.tsx', 'src/documentFormatting.ts',
+  'src/documentOutline.ts', 'src/document-outline.css', 'tests/attachment-reference-checks.mjs', 'tests/interaction-reference.tsx',
   'tests/interaction-reference.css', 'tests/interaction-reference.mjs', 'package-lock.json'];
 async function inputs() {
   return Object.fromEntries(await Promise.all(files.map(async file => {
@@ -48,9 +50,9 @@ try {
   const origin = `http://127.0.0.1:${server.address().port}`;
   browser = await firefox.launch({headless: true, timeout: 15000});
   report.browser = browser.version();
-  async function check(name, operation) {
+  async function check(name, operation, options = {}) {
     if (requestedCases.length && !requestedCases.includes(name)) return;
-    const context = await browser.newContext({viewport: {width: 1440, height: 1000}, reducedMotion: 'reduce'});
+    const context = await browser.newContext({viewport: {width: 1440, height: 1000}, reducedMotion: 'reduce', ...options});
     const page = await context.newPage();
     page.setDefaultTimeout(5000);
     const errors = [];
@@ -256,7 +258,11 @@ try {
       await page.screenshot({path: path.join(output, `theme-${theme}.png`), fullPage: true});
     }
   });
-  assert.equal(report.checks.length, requestedCases.length || 8, 'Every requested reference journey executed');
+  for (const item of attachmentCases) await check(item.name, async page => {
+    await item.run(page, report);
+    await page.screenshot({path: path.join(output, `${item.name}.png`), fullPage: true});
+  }, item.options);
+  assert.equal(report.checks.length, requestedCases.length || 13, 'Every requested reference journey executed');
   if (requestedCases.length) assert.deepEqual(report.checks.map(check => check.name).sort(), [...requestedCases].sort(), 'Exact requested reference case set');
   report.status = 'pass';
 } catch (error) {

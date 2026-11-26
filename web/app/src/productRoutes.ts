@@ -22,7 +22,7 @@ export type ProductRoute =
   | { kind: 'review'; project: string; change: string; revision: string }
   | { kind: 'doc-change'; project: string; work: string; change: string; result?: {revision: string; digest: string} }
   | { kind: 'file'; project: string; repository: string; commit: string; path: string }
-  | { kind: 'run'; project: string; run: string };
+  | { kind: 'run'; project: string; work?: string; run: string };
 
 export function decodeProductRoute(hash: string): ProductRoute | null {
   if (hash.length > 4096 || !hash.startsWith('#') || /[?\s]/u.test(hash)) return null;
@@ -66,7 +66,11 @@ export function decodeProductRoute(hash: string): ProductRoute | null {
   if (kind === 'review' && p.length === 4 && ID.test(a ?? '') && b !== undefined && validRevision(b)) {
     return {kind:'review',project:project!,change:a!,revision:b};
   }
-  if (kind === 'run' && p.length === 3 && ID.test(a ?? '')) return {kind: 'run', project: project!, run: a!};
+  if (kind === 'run' && ID.test(a ?? '')) {
+    // Older links omit Work. Preserve their address without guessing which Work is authorized.
+    if (p.length === 3) return {kind: 'run', project: project!, run: a!};
+    if (p.length === 4 && ID.test(b ?? '')) return {kind: 'run', project: project!, work: a!, run: b!};
+  }
   return null;
 }
 
@@ -82,7 +86,9 @@ export function encodeProductRoute(route: ProductRoute): string {
     : route.kind === 'doc-change' ? ['doc-change', route.project, route.work, route.change,
       ...(route.result ? [route.result.revision, route.result.digest] : [])]
     : route.kind === 'file' ? ['file', route.project, route.repository, route.commit, encodeURIComponent(route.path)]
-    : ['run', route.project, route.run];
+    : ['run', route.project, ...(route.work === undefined ? [] : [route.work]), route.run];
+  // A file path has already been escaped as one segment. Every other part is a single identifier or view.
+  if (parts.some(part => part.includes('/'))) throw new Error('Invalid resource address');
   const hash = '#' + parts.join('/');
   if (!decodeProductRoute(hash)) throw new Error('Invalid resource address');
   return hash;

@@ -3,6 +3,7 @@ import MarkdownIt, {type Token} from 'markdown-it';
 import {ResourceLink, safeResourceHref} from './ResourceLink';
 import {Button} from './primitives';
 import {documentOutline, type DocumentHeading} from './documentOutline';
+import {MarkdownAttachment} from './MarkdownAttachment';
 import './markdown.css';
 import './document-outline.css';
 
@@ -38,10 +39,17 @@ function renderTokens(tokens: Token[], origin: MarkdownOrigin, withinList = fals
       const token = tokens[index++]!;
       if (token.nesting === -1) break;
       if (token.nesting === 1) {
+        const childStart = index;
         const children = sequence(inList || token.tag === 'li');
         if (token.type === 'link_open') {
-          output.push(markdownLink(String(token.attrGet('href') ?? ''), children, origin, key,
-            String(token.attrGet('title') ?? '') || undefined));
+          const href = String(token.attrGet('href') ?? '');
+          const title = String(token.attrGet('title') ?? '') || undefined;
+          // A linked image has two destinations. Keep the attachment's policy
+          // visible and expose the enclosing destination separately; no nested
+          // anchors or misleading clickable unavailable-image label.
+          output.push(tokens.slice(childStart, index).some(child => child.type === 'image')
+            ? <span key={key} className="markdown-linked-attachment">{children} {markdownLink(href, 'Related link', origin, undefined, title)}</span>
+            : markdownLink(href, children, origin, key, title));
         } else if (token.hidden || !tags.has(token.tag)) {
           output.push(<Fragment key={key}>{children}</Fragment>);
         } else {
@@ -74,8 +82,8 @@ function renderTokens(tokens: Token[], origin: MarkdownOrigin, withinList = fals
         output.push(<pre key={key} tabIndex={0}><code>{token.content}</code></pre>);
       } else if (token.type === 'hr') output.push(<hr key={key}/>);
       else if (token.type === 'image') {
-        output.push(<span key={key} className="markdown-attachment">{markdownLink(String(token.attrGet('src') ?? ''),
-          <>Image: {token.content || 'attachment'} (open)</>, origin)}</span>);
+        output.push(<MarkdownAttachment key={key} target={String(token.attrGet('src') ?? '')}
+          alt={token.content} origin={origin}/>);
       } else output.push(token.content);
     }
     return output;
