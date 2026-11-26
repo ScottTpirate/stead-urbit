@@ -335,7 +335,11 @@ The creator must separately renew the project grant.
    ```
 
 4. Confirm the accepted policy receipt and retain its `resource_revision` for
-   the next policy change. Issue fresh Git credentials when needed. Renew any
+   the next policy change. Read that receipt with the renewal request ID in
+   `resource_id`. To verify the resulting role and policy revision, query
+   `kind: "project"` with the same `project_id` and an empty `resource_id`.
+   If the reply was lost, reuse the exact original renewal command and request ID.
+   Issue fresh Git credentials when needed. Renew any
    delegated grants separately using ordinary project policy commands.
 
 The home extends only the original, unrevoked creator grant through the new

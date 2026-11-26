@@ -1,0 +1,55 @@
+{
+  "protocol": "stead.named-private-pilot-member-renewal-evidence/1",
+  "observed_utc": "2026-11-26",
+  "source_commit": "a0e90ef29389077d453ec2a775cd8fd69f711727",
+  "profile": "existing two-planet synthetic private pilot",
+  "authorization": "owner approved seven-day renewal of existing member",
+  "prior_member_expired_utc": "2026-11-21T14:11:11.344Z",
+  "member_expires_utc": "2026-12-03T03:03:00.775Z",
+  "home_configuration_revision": "7",
+  "member_binding_revision": "6",
+  "identity_process_preserved": true,
+  "verified_stopped_checkpoint": {
+    "trees": 4,
+    "inventory_sha256": "523eeffbfe27f089a0c1d83e937bc0a81c32dad5c7da74641a854711330151c2"
+  },
+  "configuration_readback": {
+    "existing_principal_and_binding_preserved": true,
+    "business_fingerprint_preserved": true,
+    "remaining_registry_fingerprint_preserved": true,
+    "tls_preserved": true,
+    "prior_sessions_and_device_credentials_invalidated": true
+  },
+  "authenticated_project_readback": {
+    "original_grants_renewed": 3,
+    "roles": [
+      "maintainer",
+      "maintainer",
+      "maintainer"
+    ],
+    "policy_revision": "2",
+    "authority_epoch": "1",
+    "work_items": 2,
+    "document_pages": 3,
+    "full_content_and_git_readback_matches_previous_release": true,
+    "receipt_sha256": [
+      "7202f36d8a8a35084854fc2b7e166cea616774a8669072b191af44102664749e",
+      "4e6d2b2efcc5cdec6c9424be6d69f2ab44671ce42c6ce5aeb0b1fdd43ef3c938",
+      "16c3563fac8536c0fd2fb4d55714edb3505a7f378a3c219857c5485dfbdafb0d"
+    ]
+  },
+  "git_readback": {
+    "commit": "3ba8e4304e8d73d948905acdb2f1e1cfb1dff5af",
+    "count": 22,
+    "snapshot": "2d0565c884124cdbf5eacccc3626cf3cc72d5c0fda1fb295e70a6ce90fe782ca",
+    "signing_key_preserved": true
+  },
+  "real_member_login_and_approval": true,
+  "member_and_identity_session_signed_out": true,
+  "maintenance_fence_removed": true,
+  "human_trial_covered_by_this_record": false,
+  "helpful_failure_observations": [
+    "A read of the suspended native binding registry required a cord as the lookup key. The corrected check succeeded against the verified checkpoint before configuration.",
+    "A project detail query must carry the project ID in project_id and an empty resource_id. Reusing the first accepted command returned the original receipt. Each of the three project receipts and project details was read back."
+  ]
+}
