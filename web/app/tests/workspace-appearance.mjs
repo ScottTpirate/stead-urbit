@@ -56,6 +56,7 @@ try {
     const context = await browser.newContext({viewport: {width, height}, colorScheme: 'light',
       hasTouch: width < 600, serviceWorkers: 'block', reducedMotion: 'reduce'});
     const home = createHome(), errors = [];
+    let signedOut = false;
     home.state.documents = documents;
     await context.route('**/*', async route => {
       const request = route.request(), url = new URL(request.url());
@@ -69,6 +70,7 @@ try {
       }
       if (url.origin === base && request.method() === 'POST') {
         const q = request.postDataJSON();
+        if (signedOut && url.pathname === '/stead/auth/resume') return route.fulfill({status: 401, json: {}});
         if (url.pathname.endsWith('/command')) {
           errors.push('Unexpected write: ' + q.operation);
           return route.abort();
@@ -121,28 +123,31 @@ try {
       }
       report.screenshots.push(record);
     }
+    async function checkHouseSurface(selector) {
+      const node = page.locator(selector);
+      if (!await node.count()) return;
+      const paint = await node.evaluate(el => {
+        const style = getComputedStyle(el);
+        return {image: style.backgroundImage, color: style.backgroundColor};
+      });
+      assert.match(paint.image, /gradient/u);
+      assert.notEqual(paint.color, 'rgba(0, 0, 0, 0)');
+    }
     try {
       await page.goto(base + '/stead/#project/' + project + '/overview');
       await page.getByRole('heading', {name: projectRows[0].title, exact: true}).first().waitFor();
       await button('Open work').waitFor();
-      const cover = page.locator('.project-cover');
-      if (await cover.count()) {
-        const paint = await cover.evaluate(el => {
-          const style = getComputedStyle(el);
-          return {image: style.backgroundImage, color: style.backgroundColor};
-        });
-        assert.match(paint.image, /gradient/u);
-        assert.notEqual(paint.color, 'rgba(0, 0, 0, 0)');
-      }
+      await checkHouseSurface('.project-cover');
       await capture('overview');
       const nav = page.getByRole('navigation', {name: 'Project views'});
       await activate(nav.getByRole('button', {name: 'Work', exact: true}), 'Work');
       await button(tasks[0].title).waitFor();
       await capture('work');
       const appearance = page.getByRole('combobox', {name: 'Appearance', exact: true});
-      if (width === 1440 && await appearance.count()) {
+      const hasAppearance = Boolean(await appearance.count());
+      if (width === 1440 && hasAppearance) {
         assert.equal(await appearance.inputValue(), 'system');
-        const surface = () => page.locator('body').evaluate(el => getComputedStyle(el).backgroundColor);
+        const surface = () => page.locator('html').evaluate(el => getComputedStyle(el).backgroundColor);
         const light = await surface();
         await appearance.selectOption('dark');
         await page.locator('html[data-theme="dark"]').waitFor();
@@ -170,6 +175,12 @@ try {
       await activate(button(guideTitle), 'Open guide');
       await page.getByRole('heading', {name: 'Before visitors arrive', exact: true}).waitFor();
       await capture('guide');
+      signedOut = true;
+      await page.goto(base + '/stead/');
+      await page.reload();
+      await page.getByRole('heading', {name: 'Sign in with Urbit', exact: true}).waitFor();
+      if (hasAppearance) await checkHouseSurface('.entry-shell');
+      await capture('sign-in');
       assert.deepEqual(errors.concat(home.state.errors), []);
       assert.equal(home.state.commands.length, 0);
     } catch (error) {
