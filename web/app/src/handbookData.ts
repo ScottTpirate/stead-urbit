@@ -1,5 +1,7 @@
 import type {Row} from './api';
 import {handbookRepositoryResponse} from './handbookRepository';
+import whyStead from './handbook/why-stead.md' with {type: 'text'};
+import architecture from './handbook/architecture.md' with {type: 'text'};
 import dailyWork from './handbook/daily-work.md' with {type: 'text'};
 import settings from './handbook/settings.md' with {type: 'text'};
 import agents from './handbook/agents.md' with {type: 'text'};
@@ -41,6 +43,8 @@ function document(suffix: string, markdown: string): Row {
 }
 
 export const handbookDocs = Object.freeze({
+  'why-stead': document('15', whyStead),
+  architecture: document('16', architecture),
   'daily-work': document('11', dailyWork),
   settings: document('12', settings),
   agents: document('13', agents),

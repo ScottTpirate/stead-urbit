@@ -1,6 +1,6 @@
 # Working with Git in Stead
 
-Open a software project and choose **Code** beside **Docs**. The file list shows the snapshot that Home has accepted. Use the branch or tag picker to choose a version. Open a folder or file. For a Markdown file, **Read** shows the formatted page and **Raw** shows its exact text.
+Open a software project and choose **Code** beside **Docs**. The file list shows the snapshot that Home has accepted. Use the branch or tag picker to choose a version. A root README appears below the file list. Choose its filename to open it, or browse another folder or file. For a Markdown file, **Read** shows the formatted page and **Raw** shows its exact text.
 
 ## Clone a project
 

@@ -73,6 +73,12 @@ try {
   }
   await button('Replay tour').waitFor();
   const files=page.getByRole('list',{name:'Folder contents'});
+  const rootReadme=page.getByRole('region',{name:'Repository README'});
+  await rootReadme.getByRole('heading',{name:'Working with Git in Stead',exact:true}).waitFor();
+  assert.equal(await files.isVisible(),true);
+  const readmeFollowsDirectory=await files.evaluate(list =>
+    Boolean(list.compareDocumentPosition(document.querySelector('.repo-root-readme')) & Node.DOCUMENT_POSITION_FOLLOWING));
+  assert.equal(readmeFollowsDirectory,true);
   await files.getByRole('button',{name:'README.md',exact:true}).click();
   await heading('Working with Git in Stead').waitFor();
   await page.getByRole('tab',{name:'Raw',exact:true}).click();
@@ -100,6 +106,33 @@ try {
   assert.equal(full.slice(full.indexOf('---\n',4)+4),agentGuide);
 
   assert.deepEqual(nativePosts.slice(nativeBeforeGuide),[]);
+  const articles=[
+    ['why-stead','Why Stead?'],
+    ['architecture','How Stead works'],
+    ['settings','Settings and access'],
+  ];
+  for (const [slug,title] of articles) {
+    await tab('Docs').click();
+    await button(title).click();
+    await page.waitForURL(base+'#handbook/'+slug);
+    await page.reload();
+    const reader=page.locator('.document-reader');
+    await reader.getByRole('heading',{name:title,exact:true}).waitFor();
+    if (slug==='architecture') {
+      await reader.getByRole('heading',{name:'What lives in Git, and what lives in Home',exact:true}).waitFor();
+      await reader.getByRole('table').waitFor();
+    }
+    if (slug==='settings') {
+      await reader.getByRole('heading',{name:'Sign in on the private pilot',exact:true}).waitFor();
+      await reader.getByText('Approve sign-in',{exact:true}).waitFor();
+      await reader.getByText('Check approval',{exact:true}).waitFor();
+    }
+    await docModes.getByRole('button',{name:'Source'}).click();
+    const saved=await source.inputValue();
+    assert.equal(saved.slice(saved.indexOf('---\n',4)+4),
+      await readFile(new URL('../src/handbook/'+slug+'.md',import.meta.url),'utf8'));
+  }
+
   await preferences.click();await visibility.uncheck();assert.equal(await rail.count(),0);
   await page.reload();await visibility.waitFor();assert.equal(await visibility.isChecked(),false);
   await page.getByRole('link',{name:'Open Stead Handbook'}).click();

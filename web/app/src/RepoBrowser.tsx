@@ -9,7 +9,7 @@ type Location = { path: string[]; view: GitBrowseView };
 type BrowseState = { location: Location } & (
   { status: 'loading' | 'unsupported' | 'unavailable' | 'stale' }
   | { status: 'failed'; busy: boolean }
-  | { status: 'ready'; data: GitBrowseResult }
+  | { status: 'ready'; data: GitBrowseResult; readme?: {name: string; text: string} }
 );
 
 function decodeName(hex: string) {
@@ -30,6 +30,21 @@ const glyph = { tree: 'folder', file: 'file', symlink: 'link', submodule: 'submo
 export function repositoryMarkdown(path: readonly string[]): boolean {
   const name = path.length ? decodeName(path[path.length - 1]!) : null;
   return name !== null && !CONTROL.test(name) && /\.(md|markdown)$/iu.test(name);
+}
+
+type TreeData = Extract<GitBrowseResult, {status: 'tree'}>;
+type TreeEntry = TreeData['entries'][number];
+const readmeNames = ['README.md', 'README.markdown', 'README'];
+
+function rootReadme(entries: TreeEntry[]) {
+  // Git names are byte strings. Prefer the customary exact spelling, then a stable case variant.
+  for (const wanted of readmeNames) {
+    const matches = entries.filter(entry => entry.kind === 'file'
+      && decodeName(entry.name)?.toLowerCase() === wanted.toLowerCase());
+    const file = matches.find(entry => decodeName(entry.name) === wanted)
+      ?? matches.sort((a, b) => a.name < b.name ? -1 : a.name > b.name ? 1 : 0)[0];
+    if (file) return file;
+  }
 }
 
 type FileData = Extract<GitBrowseResult, {status: 'file'}>;
@@ -114,8 +129,16 @@ function RepoBrowserScope({client, project, snapshot, reference, refresh, token}
   const { location } = current;
   const [connection, setConnection] = useState({online: navigator.onLine, stale: !navigator.onLine});
   const online = useRef(connection.online);
+  // The mounted scope fixes the client, session, project, snapshot and ref. Share a root
+  // preview with an explicit open of that file, even if its read is still pending.
+  const cachedReadme = useRef<{entry: TreeEntry; commit: string; controller: AbortController; result: Promise<FileData>} | null>(null);
+  function forgetReadme() {
+    cachedReadme.current?.controller.abort();
+    cachedReadme.current = null;
+  }
+  useEffect(() => forgetReadme, []);
   useEffect(() => {
-    function changed() { online.current = navigator.onLine; setConnection({online: online.current, stale: true}); }
+    function changed() { forgetReadme(); online.current = navigator.onLine; setConnection({online: online.current, stale: true}); }
     window.addEventListener('offline', changed); window.addEventListener('online', changed);
     return () => { window.removeEventListener('offline', changed); window.removeEventListener('online', changed); };
   }, []);
@@ -128,8 +151,36 @@ function RepoBrowserScope({client, project, snapshot, reference, refresh, token}
         setCurrent(previous => previous.location === location ? next : previous);
       }
     }
-    void client.browseCode(project, snapshot, reference, location.path, location.view, controller.signal).then(data => {
+    const cached = cachedReadme.current;
+    const reuse = location.view === 'file' && location.path.length === 1 && location.path[0] === cached?.entry.name;
+    const read = reuse && cached ? cached.result : client.browseCode(project, snapshot, reference,
+      location.path, location.view, controller.signal);
+    void read.then(async data => {
       finish({ location, status: 'ready', data });
+      if (controller.signal.aborted || !online.current || client.currentSessionToken() !== token
+        || client.productMode().kind !== 'legacy' || location.path.length || data.status !== 'tree') return;
+      const entry = rootReadme(data.entries);
+      if (!entry) { forgetReadme(); return; }
+      let preview = cachedReadme.current;
+      if (!preview || preview.entry.name !== entry.name || preview.entry.oid !== entry.oid || preview.commit !== data.commit) {
+        forgetReadme();
+        const request = new AbortController();
+        const result = client.browseCode(project, snapshot, reference, [entry.name], 'file', request.signal).then(file => {
+          if (file.status !== 'file' || file.commit !== data.commit) throw new HomeError('stale_selection');
+          return file;
+        });
+        preview = {entry, commit: data.commit, controller: request, result};
+        cachedReadme.current = preview;
+      }
+      try {
+        const file = await preview.result;
+        if (cachedReadme.current === preview && online.current && file.preview === 'text') {
+          finish({location, status: 'ready', data, readme: {name: entry.name, text: file.text ?? ''}});
+        }
+      } catch {
+        // A missing or unreadable optional README leaves the confirmed folder available.
+        if (cachedReadme.current === preview) forgetReadme();
+      }
     }).catch((error: unknown) => {
       const code = error instanceof HomeError ? error.code : '';
       if (code === 'browse_unsupported') finish({ location, status: 'unsupported' });
@@ -153,6 +204,9 @@ function RepoBrowserScope({client, project, snapshot, reference, refresh, token}
 
   function go(path: string[], view: GitBrowseView, child = '') {
     if (!online.current || client.currentSessionToken() !== token || client.productMode().kind !== 'legacy') return;
+    if (connection.stale || (path.length && !(view === 'file' && path.length === 1 && path[0] === cachedReadme.current?.entry.name))) {
+      forgetReadme();
+    }
     setConnection({online: true, stale: false});
     returnTo.current = child;
     heading.current?.focus();
@@ -219,6 +273,13 @@ function RepoBrowserScope({client, project, snapshot, reference, refresh, token}
         })}
       </ul> : <p className="repo-browser-note">This folder is empty.</p>}
       {data.truncated && <p className="repo-browser-note">Clone to see the rest of this folder.</p>}
+      {!connection.stale && current.status === 'ready' && current.readme &&
+        <section className="repo-root-readme" aria-label="Repository README">
+          <h4>{displayName(current.readme.name)}</h4>
+          <div className="repo-file-rendered">{current.readme.text
+            ? <Markdown text={current.readme.text} origin="repository"/>
+            : <p className="repo-browser-note">This file is empty.</p>}</div>
+        </section>}
     </>}
     {data?.status === 'file' && <RepositoryFile key={`${data.commit}/${location.path.join('/')}`} data={data} path={location.path}/>}
   </section>;

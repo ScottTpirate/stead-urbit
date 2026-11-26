@@ -6,7 +6,7 @@ Look beside **Docs** in a project that has a repository you can access. General 
 
 ## Can I try this without changing team work?
 
-Yes. Open **Work** and select **Update the visitor guide**. Read the task and its discussion, then choose **Show links** under **Relationships** to open the related agent guide. In **Docs**, choose **Handbook guides** and open a page. In **Code**, select **README.md** from the file list and switch between **Read** and **Raw**. Everyone can explore this read-only project.
+Yes. Open **Work** and select **Update the visitor guide**. Read the task and its discussion, then choose **Show links** under **Relationships** to open the related agent guide. In **Docs**, choose **Handbook guides** and open a page. Open **Code** and read the README beneath the file list. Select **README.md** to switch between **Read** and **Raw**. Everyone can explore this read-only project.
 
 Choose **Show me around** for a short tour of those views. **Skip** dismisses it. **Replay tour** brings it back.
 

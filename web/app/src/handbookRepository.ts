@@ -5,9 +5,9 @@ const linkedWork = '019a0000-0000-7000-8000-000000000003';
 // Release fixture: refs/heads/main, with one root tree containing README.md.
 const main = '726566732f68656164732f6d61696e';
 const filename = '524541444d452e6d64';
-const readmeBlob = 'b254a011cac8555be116bc2b3de79e0d722e029c';
-const commit = '82c60cf639eba6b19aab1bfb15c03ebacf71ee70';
-const snapshot = '63d3ab94c452349ffcca44c7a4f2959ac3b263bd5e866661854c9dd76018b828';
+const readmeBlob = 'd9f3fd7188d9ba89e2aa935c4cd995e69e2b389b';
+const commit = '345276e439c94315fd446df7df64d2c33fd26954';
+const snapshot = '1791178cbe4cc9067ff83a4d7bf08ba59dcdde433d36d7de338fa3980874a8a6';
 
 function denied() {
   return Response.json({error: 'denied_or_not_found'}, {status: 403});
