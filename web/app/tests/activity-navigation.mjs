@@ -51,7 +51,9 @@ try {
       await page.goto(base + '/stead/' + activity);
       const work = page.getByRole('link', {name: 'Open work item', exact: true});
       const doc = page.getByRole('link', {name: 'Open document', exact: true});
+      await page.getByRole('heading', {name: 'Activity', exact: true}).waitFor();
       await work.waitFor();
+      assert.equal(await page.locator('.row-kind').count(), 0);
       assert.equal(await work.count(), 1);
       assert.equal(await doc.count(), 1);
       assert.equal(await page.locator('[data-activity-target]').count(), 2);
