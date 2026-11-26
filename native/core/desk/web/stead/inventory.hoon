@@ -7,7 +7,7 @@
   :~
       ['/stead/assets/NOTICE.txt' [[%web %stead 'asset-3e9102608b1a1d3dced1bd3f42068196621e3be103c017e5eb0ed70d4521b58e' %stead-asset ~] 'text/plain; charset=utf-8' '3e9102608b1a1d3dced1bd3f42068196621e3be103c017e5eb0ed70d4521b58e']]
       ['/stead-identity/assets/NOTICE.txt' [[%web %stead 'asset-3e9102608b1a1d3dced1bd3f42068196621e3be103c017e5eb0ed70d4521b58e' %stead-asset ~] 'text/plain; charset=utf-8' '3e9102608b1a1d3dced1bd3f42068196621e3be103c017e5eb0ed70d4521b58e']]
-      ['/stead/assets/app.css' [[%web %stead 'asset-8e74b7cfb5b1639fdcd8be92984108dc9b0f364455c542a62a0b939a99a8ed86' %stead-asset ~] 'text/css; charset=utf-8' '8e74b7cfb5b1639fdcd8be92984108dc9b0f364455c542a62a0b939a99a8ed86']]
+      ['/stead/assets/app.css' [[%web %stead 'asset-e3f8de6753442ee63b58bd6d28697c078f95edf71e8366bea48343c2cca0a25b' %stead-asset ~] 'text/css; charset=utf-8' 'e3f8de6753442ee63b58bd6d28697c078f95edf71e8366bea48343c2cca0a25b']]
       ['/stead/assets/app.js' [[%web %stead 'asset-756b037e242ee0a6829d437a169691a4127558f3524f70830ce83978d601e3ea' %stead-asset ~] 'text/javascript; charset=utf-8' '756b037e242ee0a6829d437a169691a4127558f3524f70830ce83978d601e3ea']]
       ['/stead/assets/app.js.LEGAL.txt' [[%web %stead 'asset-545015593ed73aed1b421833eb462ccc6ba2ae0179ebd64909ec13ea499ed07c' %stead-asset ~] 'text/plain; charset=utf-8' '545015593ed73aed1b421833eb462ccc6ba2ae0179ebd64909ec13ea499ed07c']]
       ['/stead/assets/chunk-HRUDAQ2O.js' [[%web %stead 'asset-d02c4a767baadf4c7a68b9dd7c0aba0e68a1181a57a9470952ae26dc75f25baa' %stead-asset ~] 'text/javascript; charset=utf-8' 'd02c4a767baadf4c7a68b9dd7c0aba0e68a1181a57a9470952ae26dc75f25baa']]
