@@ -45,12 +45,10 @@ jobs:
       - name: Verify Work grouping, filters, and keyboard details
         if: matrix.revision == 'after'
         run: |
-          if rg -q "await check\('work-status-groups-keyboard-and-responsive-rows'" tests/rendered.mjs; then
-            ./node_modules/.bin/playwright install firefox --with-deps
-            node tests/rendered.mjs work-status-groups-keyboard-and-responsive-rows
-            node -e 'require("node:assert/strict").deepEqual(require("../../.runtime/web-render-tests/report.json").checks,[{name:"work-status-groups-keyboard-and-responsive-rows",passed:true}])'
-            cp ../../.runtime/web-render-tests/work-{drawer-desktop,queue-filtered}.png "$RUNNER_TEMP/screens/"
-          fi
+          ./node_modules/.bin/playwright install firefox --with-deps
+          node tests/rendered.mjs work-status-groups-keyboard-and-responsive-rows
+          node -e 'require("node:assert/strict").deepEqual(require("../../.runtime/web-render-tests/report.json").checks,[{name:"work-status-groups-keyboard-and-responsive-rows",passed:true}])'
+          cp ../../.runtime/web-render-tests/work-{drawer-desktop,queue-filtered}.png "$RUNNER_TEMP/screens/"
       - uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
         if: always()
         with:
