@@ -217,6 +217,23 @@ publication supplies no actionable proposal. Reading the journal performs no
 provider call, tool execution or Home mutation. Native submission and
 independent acceptance still need current authorization.
 
+For a single change to an existing shared Doc, the supervisor can offer
+`replacement_tool(target, max_output_bytes)` from
+[scripts/urbit/model_doc_replacement.py](../../scripts/urbit/model_doc_replacement.py)
+in the registry passed to `catalog.prepare`. Use the current authorized
+target from the Run context, including its project, collection, Doc ID, positive
+revision and base Markdown SHA-256. The request pins that target and the issued
+UTF-8 output budget. The model supplies `old_text` and `new_text`, each bounded
+to 2,048 UTF-8 bytes. The reviewer receives the complete proposed Markdown.
+
+After recording the response, call
+`recover(journal, result_sha256, target, base_markdown, max_output_bytes)`.
+Recovery requires one matching tool call and exactly one occurrence in the Doc
+body. It preserves the published header, surrounding bytes and final line
+breaks. A changed base or ambiguous match requires another review decision.
+The resulting candidate goes through the ordinary authorized submission and
+independent acceptance path.
+
 ## Immutable run contract
 
 Home owns a new versioned job map. Preserve predecessor saved-state shapes
