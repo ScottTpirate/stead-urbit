@@ -5,16 +5,15 @@ import argparse
 from datetime import datetime, timedelta, timezone
 import fcntl
 import hashlib
-import http.client
 import os
 from pathlib import Path
 import re
 import secrets
-import socket
 import stat
 import sys
 
 import portable_recovery as portable
+from portable_recovery import LoopbackHTTPS
 
 MAX_STEPS = 256
 LEGACY_FORMAT = 'stead.portable-import-plan/1'
@@ -39,21 +38,6 @@ IMPORT_LOSSES = [
     'Private collections belong to the importing member. Shared collections are shared only with target project grants.',
     'No source identities, grants, ownership, history or historical attribution are restored.',
 ]
-
-
-class LoopbackHTTPS(http.client.HTTPSConnection):
-    """The fixed local route uses numeric TCP and the configured TLS hostname."""
-    def __init__(self, host, port, context, timeout):
-        super().__init__(host, port, context=context, timeout=timeout)
-        self.tls_context = context
-
-    def connect(self):
-        raw = socket.create_connection(('127.0.0.1', self.port), self.timeout)
-        try:
-            self.sock = self.tls_context.wrap_socket(raw, server_hostname=self.host)
-        except BaseException:
-            raw.close()
-            raise
 
 
 class LocalHome(portable.HTTPSQueries):

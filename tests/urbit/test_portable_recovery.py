@@ -196,6 +196,41 @@ class PortableRecovery(unittest.TestCase):
         with self.assertRaisesRegex(P.RecoveryError, 'work-comment-order'):
             P.validate_data(data)
 
+    def test_work_contract_metadata_roundtrips_with_legacy_records(self):
+        source = Source(2)
+        contract = {'execution_contract_protocol': 'stead.work-contract/1',
+                    'execution_contract_revision': '2', 'execution_contract_digest': 'a' * 64}
+        source.work[0].update(contract)
+        data, _, _ = self.publish(source)
+        files, checked = P.verify(self.bundle)
+        rows = json.loads(files['records.json'])['work']
+        self.assertEqual({key: rows[0][key] for key in contract}, contract)
+        self.assertFalse(set(contract).intersection(rows[1]))
+        self.assertEqual(checked['authentication'], 'not-independently-verifiable-offline')
+        self.assertEqual(rows, data['work'])
+
+    def test_work_contract_metadata_rejects_partial_or_malformed_pins(self):
+        data, _ = self.capture()
+        row = data['work'][0]
+        contract = {'execution_contract_protocol': 'stead.work-contract/1',
+                    'execution_contract_revision': '2', 'execution_contract_digest': 'a' * 64}
+        for missing in contract:
+            with self.subTest(missing=missing):
+                row.update(contract)
+                row.pop(missing)
+                with self.assertRaisesRegex(P.RecoveryError, 'work-contract'):
+                    P.validate_data(data)
+        row.update(contract)
+        for key, value in (('execution_contract_protocol', 'stead.work-contract/2'),
+                           ('execution_contract_revision', '02'),
+                           ('execution_contract_revision', '0'),
+                           ('execution_contract_digest', 'A' * 64)):
+            with self.subTest(key=key, value=value):
+                row[key] = value
+                with self.assertRaises(P.RecoveryError):
+                    P.validate_data(data)
+                row.update(contract)
+
     def test_queries_never_leave_requested_project_or_call_mutations(self):
         source = Source()
         self.capture(source)
@@ -490,6 +525,19 @@ class HTTPBoundary(unittest.TestCase):
             self.assertTrue(query.context.check_hostname)
             self.assertEqual(query.context.verify_mode, P.ssl.CERT_REQUIRED)
             return query({'protocol': 'stead.query/3'})
+
+    def test_tunnel_port_changes_only_the_local_tcp_destination(self):
+        credentials = {'origin': 'https://member.example.org', 'session': 'a' * 64, 'csrf': 'b' * 64}
+        query = P.HTTPSQueries(credentials, tunnel_port=19443)
+        connection = query._connection(7)
+        self.assertEqual((connection.host, connection.port), ('member.example.org', 443))
+        with patch.object(P.socket, 'create_connection') as tcp, patch.object(connection.tls_context, 'wrap_socket') as tls:
+            connection.connect()
+            tcp.assert_called_once_with(('127.0.0.1', 19443), 7)
+            tls.assert_called_once_with(tcp.return_value, server_hostname='member.example.org')
+        for port in (0, -1, 65536, True, '443'):
+            with self.subTest(port=port), self.assertRaisesRegex(P.RecoveryError, 'invalid-tunnel-port'):
+                P.HTTPSQueries(credentials, tunnel_port=port)
 
     def test_tls_required_exact_path_and_only_member_credentials(self):
         self.assertEqual(self.run_query(), b'{}')
