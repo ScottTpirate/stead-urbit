@@ -1,0 +1,34 @@
+{
+  "profile": "Shipping React client on a synthetic Home; read-only member; Chromium",
+  "source": "272f4c868fb5f98d4a304371eda36b89148266b6",
+  "run": "https://github.com/ScottTpirate/stead-urbit/actions/runs/45740072755",
+  "result": "passed",
+  "verified": [
+    "TypeScript checks and production build",
+    "event mapping tests",
+    "authorized Work and document links",
+    "Back restores the keyboard focus to the originating event",
+    "deleted and unknown events have no resource link",
+    "newly unavailable document hides the previous content",
+    "refresh preserves the Activity route",
+    "zero mutations"
+  ],
+  "visual_review": [
+    {
+      "width": 1440,
+      "height": 900,
+      "sha256": "553294479f8af913a60494df912f4579f4c34b11ca8aa4b082a44b4995b75da7",
+      "observed": "Single Activity heading, four event cards, readable link and time labels, no visible clipping."
+    },
+    {
+      "width": 320,
+      "height": 900,
+      "sha256": "11e3145078c8a6ea9fc6ce56f370cda4c906ef8686431795df308ee47ef2ea8f",
+      "observed": "Single Activity heading, four event cards, readable link and time labels, no visible clipping."
+    }
+  ],
+  "pending": [
+    "Private pilot release of this candidate",
+    "recipient-specific Inbox, read and handled state"
+  ]
+}

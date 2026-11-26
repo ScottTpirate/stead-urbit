@@ -1,0 +1,23 @@
+{
+  "commit": "e0ebfc4753734ffe251222ec32c990a9573290fb",
+  "elapsed_ns": 72022758,
+  "four_original_groups_passed": true,
+  "original_artifact": {
+    "bytes": 985,
+    "id": 15081675861,
+    "sha256": "a68491608b3816b54618867d421f459484625c677ce69139580d88329eb774b3"
+  },
+  "previous_upload_failure_retained": 45741089408,
+  "protocol": "stead.t06-host-observation/1",
+  "python": "3.12.3 (main, Aug 31 2026, 10:18:26) [GCC 13.3.0]",
+  "report": {
+    "bytes": 2371,
+    "sha256": "3fcd23a7f2aa16c370136c43e453294647bf3fae205cb426ec96c9581df09e1e"
+  },
+  "run_id": 45741243229,
+  "scope": "Synthetic transport/controller tests on public disposable Ubuntu only; no native workload or performance metrics",
+  "six_source_pins_before_after_exact": true,
+  "source_only_local": true,
+  "status": "pass",
+  "run": "https://github.com/ScottTpirate/stead-urbit/actions/runs/45741243229"
+}

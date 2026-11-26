@@ -30,6 +30,32 @@ the full-history offline proof and the native storage gate for cutover. The
 [browser identity profile](BROWSER_IDENTITY_PROFILE.md) is a separate design
 track. Use individual native member ships for this pilot.
 
+## Existing member sign-in and expiry
+
+A two-planet pilot can host Stead and sign in a member. One planet runs the
+Home desk. The second runs the Identity desk and approves member sign-ins.
+For an attended trial, the operator can approve the matching Home address
+and comparison code in a separate private Identity session. The person
+using Stead then has that member's current project permissions. Record
+which member was used and whether the operator assisted with sign-in.
+
+If the Home rejects a sign-in before a comparison code appears, check the
+configured member ship, active flag and expiry through the private owner
+connection. If sign-in succeeds but a project is missing, check its grant
+separately. The public response deliberately groups unknown and unavailable
+identities together.
+
+On the saved-v8 pilot, updating the full Home member configuration clears
+current browser sessions, device Git credentials and the private Git relay
+binding. Plan a supervised maintenance window with a verified checkpoint.
+Preserve the principal, binding ID and other members, compare the current
+configuration revision, and advance the changed member's binding revision.
+After applying the configuration, wait for the projection, bootstrap the
+Home with the existing origin and certificate, and verify the Git relay and
+accepted snapshot. Check a fresh sign-in and the intended project grant.
+The Identity configuration can stay in place when the two origins and Home
+ship are unchanged. See the [creator grant renewal procedure](PHASE2_CONTRACT.md#renewing-a-pilot-projects-creator-grant).
+
 ## Prepare a pilot update
 
 Prepare both role archives and the Git relay tools from a single reviewed
