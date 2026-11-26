@@ -111,6 +111,8 @@ review concrete versioned interfaces and migration designs first.
 
 ## 3. Relationships, Docs and navigation
 
+Project Activity is a secondary view with address `#project/PROJECT/activity`. A supported event opens the current, freshly authorized Work item or document and collection. Back returns to the project activity list.
+
 Relationship vocabulary: Parent/child (Work→Work), Blocks (Work→Work), Supports
 (Doc→Work/Project), Implements (Change→Work), Documents (Doc→CodeRef), Related
 (Work/Doc→Work/Doc), Derived from (artifact→source). Show dependencies, supporting

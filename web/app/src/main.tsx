@@ -18,7 +18,7 @@ import { newWorkDefaults, priorityLabel } from './productModel';
 import { UrbitSignIn } from './UrbitSignIn';
 import './style.css';
 import { DocumentBody } from './DocumentBody';
-import {eventPresentation} from './eventPresentation';
+import {eventPresentation, eventTarget} from './eventPresentation';
 import {WorkspaceView} from './WorkspaceView';
 import {workspaceRestore} from './workspaceNavigation';
 import {DocumentContext} from './DocumentContext';
@@ -161,7 +161,7 @@ function App() {
   const routedIdentity = useRef<string | undefined>(undefined);
   const lastAddress = useRef(decodeProductRoute(location.hash) ? location.hash : '');
   const navigationMemory = useRef(new NavigationMemory());
-  const pendingNavigation = useRef<{project:string;scroll:number;focus?:string}|null>(null);
+  const pendingNavigation = useRef<{project:string;scroll:number;focus?:string;tab?:'activity'}|null>(null);
   const workTrigger = useRef<HTMLElement | null>(null);
   const quickActionFocus = useRef<{trigger: HTMLElement; row: string; control: string} | null>(null);
   const feedbackHeading = useRef<HTMLHeadingElement>(null);
@@ -505,12 +505,16 @@ function App() {
   useEffect(() => { if (project) heading.current?.focus(); }, [project?.project_id]);
   useEffect(() => {
     const restore=pendingNavigation.current;
-    if(!restore||loading||tab!=='work'||project?.project_id!==restore.project
-      ||displayedSnapshot.current?.scope!==scopeKey(identity?.session_audit_id,blankQuery('work',restore.project)))return;
+    if(!restore||loading||tab!==(restore.tab ?? 'work')||project?.project_id!==restore.project
+      ||displayedSnapshot.current?.scope!==scopeKey(identity?.session_audit_id,blankQuery(restore.tab ?? 'work',restore.project)))return;
     const frame=requestAnimationFrame(()=>{
       if(pendingNavigation.current!==restore)return;
       pendingNavigation.current=null;
-      if(restore.focus)document.querySelector<HTMLElement>(`[data-work-row="${CSS.escape(restore.focus)}"] .work-title`)?.focus({preventScroll:true});
+      if (restore.focus) {
+        const selector = restore.tab === 'activity' ? `[data-activity-target="${CSS.escape(restore.focus)}"]`
+          : `[data-work-row="${CSS.escape(restore.focus)}"] .work-title`;
+        document.querySelector<HTMLElement>(selector)?.focus({preventScroll: true});
+      }
       window.scrollTo({top:restore.scroll});
     });
     return ()=>cancelAnimationFrame(frame);
@@ -590,6 +594,12 @@ function App() {
     enterProject(row, 'project');
   }
   function rememberNavigation() {
+    if (project?.project_id && tab === 'activity') {
+      const route = {kind: 'project', project: project.project_id, view: 'activity'} as const;
+      const focused = document.activeElement?.getAttribute('data-activity-target');
+      navigationMemory.current.set(route, {filters: {title: '', status: '', assignee: ''}, scroll: window.scrollY,
+        selection: focused ?? navigationMemory.current.get(route)?.selection});
+    }
     if (project?.project_id && tab === 'work') navigationMemory.current.set({kind:'work',project:project.project_id},
       {filters:workFilters,scroll:window.scrollY,selection:work?.resource_id??navigationMemory.current.get({kind:'work',project:project.project_id})?.selection});
     if(workspaceView) {
@@ -661,9 +671,14 @@ function App() {
     }
     if(address.kind==='project') {
       if (address.view === 'code' && mode !== 'legacy') { setError('Code is unavailable on this Home.'); return; }
-      const kind=({overview:'project',work:'work',docs:'documents',code:'project'} as const)[address.view];
+      if (address.view === 'activity' && mode !== 'legacy') { setError('Project activity is unavailable on this Home.'); return; }
+      const kind=({overview:'project',work:'work',docs:'documents',code:'project',activity:'activity'} as const)[address.view];
       enterProject(row,kind);
       if(address.view==='code')setShowRepository(true);
+      if (address.view === 'activity') {
+        const saved = navigationMemory.current.get(address);
+        if (saved) pendingNavigation.current = {project: address.project, tab: 'activity', scroll: saved.scroll, focus: saved.selection};
+      }
       return;
     }
     if(address.kind==='doc'||address.kind==='collection') {
@@ -763,6 +778,7 @@ function App() {
     if (productActive && !['project', 'work', 'documents', 'relations'].includes(kind)) return;
     if(project?.project_id) {
       if(kind==='work')syncWorkAddress(project.project_id);
+      else if (kind === 'activity') syncResourceAddress({kind: 'project', project: project.project_id, view: 'activity'});
       else if(kind==='project'||kind==='documents')syncResourceAddress({kind:'project',project:project.project_id,view:kind==='project'?'overview':'docs'});
       else syncResourceAddress();
     }
@@ -1129,6 +1145,7 @@ function App() {
   }
   function resourceRow(row: Row, index: number) {
     const event=row.kind==='activity'?eventPresentation(row,identity?.principal_id):null;
+    const target = event && tab === 'activity' ? eventTarget(row, project?.project_id) : null;
     const inWork = tab === 'work';
     const documentTitle = row.kind === 'document' ? row.title?.split('\n', 1)[0] : undefined;
     const title = event?.summary || documentTitle?.replace(/^#{1,6} +/u, '') || row.title || row.summary || 'Untitled resource';
@@ -1167,6 +1184,7 @@ function App() {
         {!inWork && row.description && <p>{row.description}</p>}
         {!inWork && snippet && snippet !== row.description && <p>{snippet}</p>}
         {!inWork && row.status && <span className="muted">{row.status}</span>}
+        {target && !locked && <a className="activity-target" href={target.href} data-activity-target={row.request_id}>{target.label}</a>}
         {event && <><p className="muted" data-event-request={row.request_id}><AcceptedTime milliseconds={event.acceptedAt}/></p>
           <details><summary>Details</summary><dl>{event.details.map(detail=><div key={detail.label}><dt>{detail.label}</dt><dd>{detail.value}</dd></div>)}</dl></details></>}
       </div>

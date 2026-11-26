@@ -1,4 +1,5 @@
-import type {Row} from './api';
+import {UUID, type Row} from './api';
+import {encodeProductRoute} from './productRoutes';
 
 const actions = new Map<string, string>([
   ['project.create', 'Created a project'],
@@ -14,6 +15,23 @@ const actions = new Map<string, string>([
   ['relation.create', 'Added a relationship'],
   ['relation.delete', 'Removed a relationship'],
 ]);
+
+const workTargetOperations = new Set(['work.create', 'work.update', 'work.assign', 'work.comment']);
+
+export function eventTarget(row: Readonly<Row>, project?: string): {href: string; label: string} | null {
+  const resource = row.resource_id;
+  if (row.kind !== 'activity' || !project || !UUID.test(project) || !resource || !UUID.test(resource)
+      || (row.project_id !== undefined && row.project_id !== project)) return null;
+  if (row.container_id === '' && workTargetOperations.has(row.operation ?? '')) {
+    return {href: encodeProductRoute({kind: 'work', project, item: resource}), label: 'Open work item'};
+  }
+  if (row.container_id && UUID.test(row.container_id)
+      && (row.operation === 'document.save' || row.operation === 'document.publish')) {
+    return {href: encodeProductRoute({kind: 'doc', project, collection: row.container_id, document: resource}),
+      label: 'Open document'};
+  }
+  return null;
+}
 
 export interface EventActor {
   readonly principal_id: string;
