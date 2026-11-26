@@ -104,7 +104,7 @@ def main():
         raw = (json.dumps(report, sort_keys=True, indent=2) + '\n').encode()
         if len(raw) > 16384:
             raise ValueError('Host report bound')
-        (ROOT / '.storage-host-report.json').write_bytes(raw)
+        (ROOT / 'storage-host-report.json').write_bytes(raw)
     print(json.dumps({'status': report['status'], 'tests': report['tests'],
                       'native_executed': False, 'actual_native_measurements': None}))
     return 0 if report['status'] == 'pass' else 1

@@ -29,6 +29,6 @@ jobs:
         if: always()
         with:
           name: storage-workload-host
-          path: .storage-host-report.json
+          path: storage-host-report.json
           if-no-files-found: error
           retention-days: 7
