@@ -7,6 +7,7 @@ on:
       - 'scripts/urbit/model_*.py'
       - 'specs/urbit/fixtures/model-catalog.json'
       - 'tests/urbit/test_model_*.py'
+      - 'tests/urbit/fixtures/model-proposal-*/**'
       - 'tests/urbit/test_llamacpp_connection.py'
   workflow_dispatch:
 

@@ -1,0 +1,80 @@
+{
+  "source_commit": "cff48cb64e725830ac8f82717303b7567d564722",
+  "run_id": 43843435452,
+  "connection": {
+    "protocol": "stead.model-connection/1",
+    "connection_id": "00000000-0000-7000-8000-000000000001",
+    "revision": "2",
+    "display_name": "Isolated Qwen compatibility proof",
+    "adapter": "llamacpp.chat-completions/1",
+    "model": "qwen2.5-1.5b-stead-compat2",
+    "endpoint": {
+      "url": "http://127.0.0.1:8088/v1/chat/completions",
+      "placement": "local-isolated",
+      "egress_policy_digest": "14a0fe5713447fa534150cf54372369f3bc76d2aa4ff461e0097973ed17919c8"
+    },
+    "authentication": {
+      "kind": "none"
+    },
+    "capabilities": {
+      "instruction_role": "system",
+      "function_tools": "json-schema-strings/1",
+      "token_limit_field": "max_tokens",
+      "strict_tools": "unsupported",
+      "parallel_tool_calls": "supported",
+      "store": "unsupported"
+    },
+    "limits": {
+      "input_bytes": "8192",
+      "output_bytes": "32768",
+      "turns": "1",
+      "tool_calls": "1",
+      "request_timeout_ms": "60000",
+      "duration_ms": "180000",
+      "input_tokens": "1536",
+      "output_tokens": "256",
+      "total_tokens": "1792",
+      "cost_units": "1",
+      "billable_micro_usd": "0"
+    }
+  },
+  "scope": {
+    "home": "~zod",
+    "project_id": "00000000-0000-7000-8000-000000000002",
+    "run_id": "00000000-0000-7000-8000-000000000003",
+    "attempt": "1",
+    "effect_sequence": "1",
+    "definition_id": "00000000-0000-7000-8000-000000000004",
+    "definition_revision": "1",
+    "runtime_id": "00000000-0000-7000-8000-000000000005",
+    "runtime_revision": "1",
+    "connection_digest": "4924a1f7ad904f33a19c45c8dab2ff2d801e8d7702619203b064aa2a4976b482",
+    "run_contract_sha256": "a0250f4f9750981100162f7e42cb68096ed432f0db8105c3bfeb052a4d2093d2",
+    "context_digest": "1b8b9e765d48135d66861841fc22f6094350d83996797f0a62f144aa27452fef",
+    "runtime_policy_digest": "4ba29df424da5161c65282303e05e7ced23af3b4cf43e42e71d64c25675d3597"
+  },
+  "registry": [
+    {
+      "tool_id": "00000000-0000-7000-8000-000000000006",
+      "revision": "1",
+      "name": "propose_doc_update",
+      "description": "Return a proposed Markdown document for human review. Does not save it.",
+      "arguments": {
+        "markdown": "1024"
+      }
+    }
+  ],
+  "messages": [
+    {
+      "content": "You propose document edits for a reviewer. Use the supplied propose_doc_update function exactly once with the complete Markdown. Do not claim that any document was saved or accepted.",
+      "role": "system"
+    },
+    {
+      "content": "Update the public test document. Call propose_doc_update exactly once. Its markdown argument must equal the decoded JSON string below, including its final newline. Preserve every character; do not trim whitespace. JSON string: \"# Team guide\\n\\nReview changes before accepting.\\n\"",
+      "role": "user"
+    }
+  ],
+  "request_digest": "4b8b4ae0c8467519411f3eba5e4a6012184a8ae6fc6e9e04b92289ccb5778e3b",
+  "request_body_sha256": "0679f4544d1a65e7e79290f93c9efb9a646073f6887c477a878b42bf9b21cbf8",
+  "normalized_sha256": "47a667b1e56875f5d9fed61298aec9a7114d6eff721850b1cabeffe334e8d8b7"
+}
