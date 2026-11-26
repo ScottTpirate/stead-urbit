@@ -1216,7 +1216,13 @@ packages:
   - Denied/expired/unreachable approval states are recoverable and clear.
   - Provider outage does not change identity or grant access implicitly.
   evidence: Real supported-auth integration and independent first-time-member journey.
-  implementation_status: planned
+  implementation_status: in_progress
+  current_progress: The native member sign-in client on dc870a61 explains a denied start, watches a visible
+    pending challenge until expiry and offers a fresh comparison code. Acceptance still requires a person
+    to choose Open Stead. Hosted Chromium exercised the real client against synthetic native responses at
+    1440px and 320px widths, including a manual check after the automatic check failed. The latest original
+    screenshots and independent review are retained at docs/urbit/evidence/2026-11-25/member-approval-recovery/README.md.
+    Browser-only invitations, an independent member journey and live deployment of this client remain open.
   parent_issue_numbers:
   - 9
   - 19
