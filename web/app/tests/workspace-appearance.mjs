@@ -10,6 +10,7 @@ import {chromium} from 'playwright';
 const root = fileURLToPath(new URL('../', import.meta.url));
 const output = process.argv[2];
 assert.ok(output, 'Supply a screenshot directory');
+const expectRedesign = process.argv[3] === 'after';
 await mkdir(output, {recursive: true});
 const [fixture] = (await build({absWorkingDir: root, entryPoints: ['tests/contextual-search-home.mjs'],
   bundle: true, write: false, platform: 'node', format: 'esm'})).outputFiles;
@@ -50,12 +51,14 @@ const browser = await chromium.launch();
 const source = (...args) => execFileSync('git', args, {cwd: root, encoding: 'utf8'}).trim();
 const report = {classification: 'Packaged app in Chromium with synthetic project, people and documents',
   commit: source('rev-parse', 'HEAD'), appSourceTree: source('rev-parse', 'HEAD:web/app/src'), browser: browser.version(),
-  screenshots: [], keyboardActivated: [], appearance: [], phoneSwitcher: [], noWrites: true};
+  screenshots: [], keyboardActivated: [], appearance: [], phoneSwitcher: [], noWrites: false};
 try {
   for (const [width, height] of [[1440, 960], [390, 844], [320, 800]]) {
     const context = await browser.newContext({viewport: {width, height}, colorScheme: 'light',
       hasTouch: width < 600, serviceWorkers: 'block', reducedMotion: 'reduce'});
-    const home = createHome(), errors = [], otherWatches = new Set();
+    const home = createHome(), errors = [], otherWatches = new Map();
+    let alternateSequence = 0;
+    const alternateToken = () => 'f' + (++alternateSequence).toString(16).padStart(63, '0');
     let signedOut = false;
     home.state.documents = documents;
     await context.route('**/*', async route => {
@@ -84,14 +87,15 @@ try {
           return route.fulfill({json: {protocol: 'stead.code/1', status: 'disabled', write: 'no', manage: 'no'}});
         }
         if (url.pathname === '/stead/api/updates' && (otherProject || otherWatches.has(q.watch_id))) {
-          const token = 'f'.repeat(62) + String(otherWatches.size + 1).padStart(2, '0');
           const status = {open: 'watching', poll: 'updated', cancel: 'cancelled'}[q.action];
           assert.ok(status);
-          const watchId = q.action === 'open' ? token : q.watch_id;
-          otherWatches.add(watchId);
+          const watchId = q.action === 'open' ? alternateToken() : q.watch_id;
+          if (q.action === 'poll') assert.equal(q.cursor, otherWatches.get(watchId));
+          const cursor = q.action === 'cancel' ? '' : alternateToken();
+          if (q.action === 'cancel') otherWatches.delete(watchId);
+          else otherWatches.set(watchId, cursor);
           return route.fulfill({json: {protocol: 'stead.update-result/3', request_id: q.request_id, status,
-            watch_id: watchId, cursor: q.action === 'cancel' ? '' : token,
-            generation: q.action === 'cancel' ? '' : home.state.generation, rows: {}}});
+            watch_id: watchId, cursor, generation: q.action === 'cancel' ? '' : home.state.generation, rows: {}}});
         }
         if (url.pathname === '/stead/api/query') {
           let rows;
@@ -139,7 +143,8 @@ try {
     }
     async function checkHouseSurface(selector) {
       const node = page.locator(selector);
-      if (!await node.count()) return;
+      if (!expectRedesign && !await node.count()) return;
+      await node.waitFor();
       const paint = await node.evaluate(el => {
         const style = getComputedStyle(el);
         return {image: style.backgroundImage, color: style.backgroundColor};
@@ -159,6 +164,7 @@ try {
       await capture('work');
       const appearance = page.getByRole('combobox', {name: 'Appearance', exact: true});
       const hasAppearance = Boolean(await appearance.count());
+      if (expectRedesign) assert.ok(hasAppearance, 'The revised shell has an Appearance control');
       if (width === 1440 && hasAppearance) {
         assert.equal(await appearance.inputValue(), 'system');
         const surface = () => page.locator('html').evaluate(el => getComputedStyle(el).backgroundColor);
@@ -190,6 +196,7 @@ try {
       await page.getByRole('heading', {name: 'Before visitors arrive', exact: true}).waitFor();
       await capture('guide');
       const switcher = button('Browse workspace');
+      if (expectRedesign && width <= 390) await switcher.waitFor();
       if (width <= 390 && await switcher.count()) {
         assert.equal(await switcher.getAttribute('aria-expanded'), 'false');
         await activate(switcher, 'Browse workspace');
@@ -226,6 +233,7 @@ try {
       throw error;
     } finally { await context.close(); }
   }
+  report.noWrites = true;
 } finally {
   await writeFile(join(output, 'browser-report.json'), JSON.stringify(report, null, 2) + '\n');
   await browser.close();

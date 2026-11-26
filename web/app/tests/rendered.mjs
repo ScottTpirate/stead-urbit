@@ -1284,6 +1284,8 @@ try {
     await page.getByRole('combobox', {name: 'Filter by status'}).selectOption('done');
     await page.getByRole('button', {name: tasks[4][0], exact: true}).waitFor();
     await page.getByText('1 of 5 work items', {exact: true}).waitFor();
+    assert.ok(await done.locator('.work-properties .work-property-label').evaluateAll(labels =>
+      labels.every(label => label.scrollWidth <= label.clientWidth)), 'Short list properties are fully visible');
     await page.screenshot({path: path.join(output, 'work-queue-filtered.png')});
     await page.getByRole('button', {name: 'Filters', exact: true}).click();
     await first.waitFor();
@@ -1294,6 +1296,12 @@ try {
     await page.setViewportSize({width: 1440, height: 960});
     await first.click();
     await page.locator('#work-detail-panel').getByRole('heading', {name: tasks[0][0], exact: true}).waitFor();
+    assert.ok(await page.locator('#work-detail-panel .work-property-label').evaluateAll(labels =>
+      labels.length === 3 && labels.every(label => {
+        const range = document.createRange();
+        range.selectNodeContents(label);
+        return range.getClientRects().length === 1;
+      })), 'Short detail values stay on one line');
     await page.screenshot({path: path.join(output, 'work-drawer-desktop.png')});
     assert.equal(state.commands.length, 0);
   });
