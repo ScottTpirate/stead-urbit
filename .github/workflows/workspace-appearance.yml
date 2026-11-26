@@ -1,0 +1,57 @@
+name: Workspace appearance
+on:
+  pull_request:
+    paths:
+      - 'web/app/src/**'
+      - 'web/app/tests/workspace-appearance.mjs'
+      - 'web/app/tests/contextual-search-home.mjs'
+      - 'web/app/package*.json'
+      - '.github/workflows/workspace-appearance.yml'
+permissions:
+  contents: read
+jobs:
+  compare:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    strategy:
+      fail-fast: false
+      matrix:
+        revision: [before, after]
+    defaults:
+      run:
+        working-directory: application/web/app
+    steps:
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
+        with:
+          ref: ${{ github.event.pull_request.head.sha }}
+          path: harness
+          persist-credentials: false
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
+        with:
+          ref: ${{ matrix.revision == 'before' && github.event.pull_request.base.sha || github.event.pull_request.head.sha }}
+          path: application
+          persist-credentials: false
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020
+        with:
+          node-version: '24.21.0'
+      - run: npm ci --ignore-scripts --no-audit --no-fund
+      - run: npm run check && npm run build
+      - run: ./node_modules/.bin/playwright install chromium --with-deps
+      - name: Capture the packaged client and check keyboard navigation
+        run: |
+          cp "$GITHUB_WORKSPACE/harness/web/app/tests/workspace-appearance.mjs" tests/
+          node tests/workspace-appearance.mjs "$RUNNER_TEMP/screens" "${{ matrix.revision }}"
+      - name: Verify Work grouping, filters, and keyboard details
+        if: matrix.revision == 'after'
+        run: |
+          ./node_modules/.bin/playwright install firefox --with-deps
+          node tests/rendered.mjs work-status-groups-keyboard-and-responsive-rows
+          node -e 'require("node:assert/strict").deepEqual(require("../../.runtime/web-render-tests/report.json").checks,[{name:"work-status-groups-keyboard-and-responsive-rows",passed:true}])'
+          cp ../../.runtime/web-render-tests/work-{drawer-desktop,queue-filtered}.png "$RUNNER_TEMP/screens/"
+      - uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
+        if: always()
+        with:
+          name: workspace-${{ matrix.revision }}-synthetic
+          path: ${{ runner.temp }}/screens/
+          if-no-files-found: error
+          retention-days: 14

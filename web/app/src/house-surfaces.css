@@ -1,0 +1,14 @@
+/* Shared by Home and the separate Identity entry point, served from each ship. */
+:root {
+  --house-ink: #f6f2eb;
+  --house-muted: #c2bdb4;
+  --house-field: #242422;
+  --house-line: #595650;
+  --house-focus: #c5b8ff;
+  --house-ground: #181817;
+  --house-light:
+    linear-gradient(90deg, rgb(17 17 16 / 86%), transparent 78%),
+    radial-gradient(ellipse 5% 140% at 78% 55%, rgb(227 218 197 / 15%), transparent),
+    radial-gradient(ellipse 7% 110% at 88% 28%, rgb(224 216 199 / 13%), transparent),
+    linear-gradient(101deg, #141413 25%, #2e2d29 68%, #181817 100%);
+}

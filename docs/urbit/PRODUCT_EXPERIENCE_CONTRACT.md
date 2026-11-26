@@ -240,8 +240,10 @@ maintainer and release governance still apply under URB-270/280.
 | Docs | 720–800 px prose; outline when useful; split source/preview only by choice with adequate width. |
 | Review | Dedicated full-width route; ~240 px changed-file navigator; Files/Checks/Overview, line numbers, accessible diff markers, threads and reachable decisions. |
 | Typography | System sans; 13–14 px controls, 14 px list titles, 16 px prose, 24–28 px headings, 12–13 px code; support zoom/text expansion. |
-| Palette | Background #F7F7F5, surface #FFFFFF, rail #F0EFEB, border #DEDCD5, text #20211F, secondary #63665F, accent #5B50BD; equivalent dark/system theme with measured contrast. |
+| Palette | A warm charcoal rail (#181817) with ivory type (#F6F2EB). Light work surfaces use #F8F7F4 and white, text #252420 and secondary #63605B. Dark surfaces use #1B1B1A and #242422. Reserve violet for focus and active state. |
 | Icons | One audited local Lucide subset subject to dependency review; 16 px ordinary icons, preferably 32 px hit areas / ~44 px touch. Text/shape plus color for state. |
+
+Use the low-light entrance and restrained typography of [Urbit House](https://urbit.house/front) for sign-in, approval and the project overview. Match the scan density and keyboard navigation of [Linear](https://linear.app/) in Work. Give Docs a quiet reading column and keep project actions in the same place across views. Use only locally served styling and assets. Provide a device-local system, light and dark appearance preference for working surfaces.
 
 Status/priority use compact ordered menus. Human owner and human/agent worker use
 the same searchable picker with distinct eligibility rules. Branches/tags use
