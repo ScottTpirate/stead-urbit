@@ -1,6 +1,7 @@
 """Authored private filesystem cases; no native effect, model call or transport."""
 from contextlib import contextmanager
 from dataclasses import replace
+import fcntl
 import importlib.util
 import json
 import os
@@ -257,12 +258,32 @@ class ModelEffectJournalTests(unittest.TestCase):
                 with self.assertRaises(ValueError): journal.observe()
             target.write_bytes(raw); self.assertEqual(journal.observe()['state'], 'completed')
 
+    def test_competing_preparations_share_the_scope_and_capacity_lock(self):
+        spec, request = inputs()
+        with directory() as (root, fd):
+            fcntl.flock(fd, fcntl.LOCK_EX | fcntl.LOCK_NB)
+            try:
+                with self.assertRaises(BlockingIOError):
+                    J.EffectJournal(fd, spec, request)
+                self.assertEqual(list(root.iterdir()), [])
+            finally:
+                fcntl.flock(fd, fcntl.LOCK_UN)
+            with opened(fd, spec, request) as journal:
+                self.assertEqual(journal.observe()['state'], 'prepared')
+                # Admission releases the lock before a supervisor uses the journal.
+                with opened(fd, spec, request) as same:
+                    self.assertEqual(same.observe(), journal.observe())
+                other_spec, other = inputs(run=88)
+                with self.assertRaises(ValueError):
+                    J.EffectJournal(fd, other_spec, other)
+            self.assertEqual([p.name for p in root.iterdir()], [request.effect_id])
+
     def test_invalid_preparation_does_not_leak_fd_or_touch_the_attempt(self):
         spec, request = inputs()
         with directory() as (root, fd):
-            with patch.object(J.os, 'dup', wraps=os.dup) as duplicate:
+            with patch.object(J.os, 'open', wraps=os.open) as opening:
                 with self.assertRaises(ValueError): J.EffectJournal(fd, spec, replace(request, body=b'{}'))
-                duplicate.assert_not_called()
+                opening.assert_not_called()
             self.assertEqual(list(root.iterdir()), [])
             with patch.object(J.os, 'geteuid', return_value=0), self.assertRaises(ValueError):
                 J.EffectJournal(fd, spec, request)

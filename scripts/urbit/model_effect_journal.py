@@ -6,6 +6,7 @@ secret resolver or tool invocation. A started marker cannot authorize a call.
 from __future__ import annotations
 
 from dataclasses import asdict
+import fcntl
 import hashlib
 import os
 import stat
@@ -126,8 +127,12 @@ class EffectJournal:
         self.request_raw = prepared_record(spec, request)
         self.key = {key: model.decode(request.scope, 8192)[key] for key in KEY_FIELDS}
         try:
-            self.root = os.dup(root_fd)
+            # A fresh open-file description also serializes callers sharing one root FD.
+            self.root = os.open('.', os.O_RDONLY | os.O_DIRECTORY | os.O_CLOEXEC, dir_fd=root_fd)
             self.root_identity = directory(self.root)
+            # Scope and capacity must be checked in the same critical section as publication.
+            # A busy prepare can be retried without starting an external effect.
+            fcntl.flock(self.root, fcntl.LOCK_EX | fcntl.LOCK_NB)
             names = os.listdir(self.root)
             require(len(names) <= 32 and all(type(name) is str and model.UUID.fullmatch(name) for name in names))
             # The dedicated attempt directory may not pool another Run's calls.
@@ -149,6 +154,7 @@ class EffectJournal:
             if fresh:
                 publish(self.fd, 'request.json', self.request_raw, REQUEST_MAX)
             self.observe()
+            fcntl.flock(self.root, fcntl.LOCK_UN)
         except BaseException:
             self.close()
             raise
