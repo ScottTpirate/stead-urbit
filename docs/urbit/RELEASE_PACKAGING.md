@@ -14,6 +14,15 @@ It includes the selected app's recursively resolved Ford imports, the selected
 v3 and owner/bootstrap marks, pinned standard marks, `sys.kelvin`, exact native
 frontend assets and their route inventory, licenses and operator guidance.
 
+The browser build keeps each packaged asset at or below 524,288 bytes and the
+native route inventory at or below 32 entries. The reserved Work/Doc journey has
+a separate build entry so shared code becomes bounded chunks; App imports remain
+synchronous. Exact private build evidence
+records 17 assets, 25 routes and a 360,473-byte largest asset after the previous
+single App asset exceeded the limit. This proves build and packaging only;
+rendered checks, native qualification and deployment of that candidate remain
+separate.
+
 `specs/urbit/release-package.json` pins the standard dependency bytes to the
 already pinned Urbit kernel and runtime. The initial dependency pins were checked
 against the SHA-256-verified kernel archive, without extracting it. Each pin also

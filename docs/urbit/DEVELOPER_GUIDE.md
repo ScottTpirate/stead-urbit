@@ -2,7 +2,12 @@
 
 ## Start with the working increment
 
-Read root AGENTS.md and AGENT_HANDOFF.md. Preserve the implementation agent's branch and uncommitted work. Use the pinned toolchain and guarded native commands established by URB-010/020; see [the local edit/build loop](DEV_FLOW.md). A successful static validator does not prove a Hoon desk compiles.
+Read root [AGENTS.md](../../AGENTS.md), the current
+[handoff](AGENT_HANDOFF.md), [experience contract](PRODUCT_EXPERIENCE_CONTRACT.md)
+and [capability matrix](CAPABILITY_MATRIX.md). Choose the next dependency-ready
+packet from the [product plan](../../specs/urbit/product-execution-plan.yaml);
+T01 still needs versioned interface/migration acceptance. Do not rerun historical
+bootstrap work merely because a dated profile describes it. Preserve the implementation agent's branch and uncommitted work. Use the pinned toolchain and guarded native commands established by URB-010/020; see [the local edit/build loop](DEV_FLOW.md). A successful static validator does not prove a Hoon desk compiles.
 
 Static checks shipped by this supplement:
 

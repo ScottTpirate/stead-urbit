@@ -6,6 +6,24 @@ profile below requires new verifier, Home and browser code before operators
 can enable it. A browser-only employee will need an organization IdP account
 and a browser. The organization still operates its Urbit Home.
 
+## Product alignment
+
+T03 and T27 in the [execution plan](../../specs/urbit/product-execution-plan.yaml)
+share one versioned principal registry and current-binding resolver. A durable
+principal is a person, agent or service, not a ship/model/runtime name. Preserve
+existing native login and attribution; service worker credentials are scoped
+separately from this human browser sign-in flow. Several logical agents may use
+one worker service without a planet per run. Changing an agent definition or
+runtime never rewrites authorship or silently expands authority.
+
+Use the [experience contract](PRODUCT_EXPERIENCE_CONTRACT.md) for Members &
+agents and guided invitation/sign-in. The target browser-only member path must
+qualify real provider exchange, Home lifecycle and first-time member behavior;
+the primitive proofs below do not establish a working sign-in flow. One shared
+migration owner coordinates tagged bindings with Git credentials, delegations,
+runs, review and recovery. The profile's one-active-binding limit remains an
+explicit initial constraint, not permission to share an identity or credential.
+
 ## Feasibility decision
 
 Use OpenID Connect Authorization Code with PKCE S256 through a dedicated
@@ -34,9 +52,9 @@ profile in Hoon. The pinned 408k kernel source at
 `5a187fededc4582a34fcd6055c67bb63e0917b94` exposes `veri-octs:ed:crypto`.
 The inspected `pkg/arvo/sys/zuse.hoon` SHA-256 is
 `eeb392d750757ec91aa3848d5a35ad4ba20557be85e62293fc63f72933343d73`.
-This establishes a candidate native primitive. Native interoperability,
-canonical signature handling and bounded verification cost need execution
-before enabling the profile.
+The primitive has executed the native signature checks recorded below.
+Full provider/Home/browser interoperability and responsiveness under bounded
+rejected-proof load still need qualification before enabling this profile.
 [Kernel source](https://github.com/urbit/urbit/blob/5a187fededc4582a34fcd6055c67bb63e0917b94/pkg/arvo/sys/zuse.hoon#L1259)
 and [RFC 8032 §5.1.7](https://www.rfc-editor.org/rfc/rfc8032.html#section-5.1.7).
 
@@ -185,6 +203,16 @@ cleanly. The report `.runtime/oidc-native-65w23io4/state/report.json` has SHA-25
 `0e56035f3d73eda2b457ce7f2a4c60ce5e454c5de3463adb35058970f770f8cc`.
 Provider exchange, the Home challenge/session lifecycle and browser sign-in
 remain implementation work. [Native proof](../../native/core/desk/lib/stead-browser-oidc-proof.hoon)
+
+The [current diagnostic run 43846986399](https://github.com/ScottTpirate/stead-urbit/actions/runs/43846986399)
+also records a source-bound positive result for `stead-browser-oidc-proof`
+(5 registered arms), `stead-session` (19), `stead-http` (14) and
+`stead-identity` (11) in its exact candidate/controller composition. These
+results are derived from the trusted all-pass sequence and closed observed
+counts; original positive-arm transcripts were not exported. The HTTP suite
+tests native boundary logic, not a newly observed provider exchange or browser
+sign-in journey. The overall run failed nine other suites and does not enable
+this browser-only identity profile.
 
 ```text
 Subject tag   3fd14320b0de7d6bb5f48da4c8d558ab8658c9b24a7d5a41305cdc82b346c4d8

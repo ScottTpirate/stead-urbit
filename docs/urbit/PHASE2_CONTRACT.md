@@ -1,8 +1,53 @@
 # Phase 2 implementation contract
 
-This defines the supported single-organization Work/Docs alpha. It is a design
-under review until the corresponding native, HTTP, browser and CI evidence is
-executed. It does not close M2 or authorize production identities/data.
+This records the configured-team Work/Docs baseline, including its existing
+wire, saved-state and authorization behavior. Qualification remains bound to
+its named source/profile in [acceptance evidence](LOCAL_ACCEPTANCE_20261109.md),
+not every future revision. This document does not authorize production
+identities/data or qualify the November 15 product redesign.
+
+## Product migration requirements
+
+The [product experience contract](PRODUCT_EXPERIENCE_CONTRACT.md) is the target
+for new work; the sections after this migration note retain baseline behavior
+for compatibility. The [execution plan](../../specs/urbit/product-execution-plan.yaml)
+requires:
+
+- T03: stable human/agent principals separate from ship/browser/service
+  authentication and versioned agent definitions/runtime bindings. Preserve
+  old actor IDs, bindings, historical authorship and revocation history.
+- T05: accountable human Owner, human/agent Working on it, and independent
+  run lifecycle. Split execution-contract revision from Work properties and
+  discussion/activity sequence. Comments must stop invalidating an unchanged
+  run contract; the combined revision below remains the actual baseline until
+  migration. Preserve old comments, revisions and receipts rather than
+  rewriting them into new historical events.
+- T07–T11: workspace Inbox/My work/Search within the selected Home; project
+  Overview/Work/Docs/optional Code; full Work routes and contextual relationships.
+  Inbox requires recipient/reason/read/action state, not just others' activity.
+  Preserve watch/poll, pending receipts, focus, private data and retry guarantees.
+- T09: Docs opens in rendered Read mode, with focused Edit, accurate Preview
+  and Source. Use a documented safe CommonMark/GFM subset, explicit new title
+  metadata and first-heading fallback for legacy documents. Preserve unsupported
+  metadata or report losses; keep canonical Markdown and truthful new authorship.
+  Existing commit OIDs and private draft publication boundaries are unchanged.
+- T10: use the new typed relationship vocabulary through explicit versioning.
+  Legacy `documents` means Doc→Work, not the new Doc→code-reference relation;
+  preserve its bytes and direction and display it as a supporting document.
+  Legacy `related_to` maps to the Related presentation. Do not silently
+  reinterpret old relations or rewrite accepted history. Future code anchors
+  carry repository, exact commit, path and optional lines.
+- T12–T18: typed Doc/code Changes and durable runs, exact review and explicit
+  expiry/adoption behavior; first prove the complete no-Code Docs journey.
+- T06/T31: bounded pagination, retention/archive and measured capacity before
+  increasing pilot limits. Keep reserve capacity for revocation and recovery.
+
+New native/wire/state shapes require one migration owner and real predecessor,
+stale/replay/revocation and recovery evidence. The frozen
+[version-2 amendment](CONTRACT_AMENDMENT_2.md) and its hashes stay historical;
+this note does not amend frozen bytes or activate new formats. The older local
+alpha reviewer criterion below is not the later G1–G5 usable-beta acceptance:
+T30 requires the newly specified independent user and technical journeys.
 
 ## Authority and compatibility
 

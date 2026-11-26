@@ -1,5 +1,61 @@
 # Native Home Git development profile
 
+## Repository model alignment
+
+The paragraphs below describe the bounded baseline at
+`539825650c60e606634bf4ab5967b698a6daa6e3`. Its one-repository-per-project
+scope construction is not the target product model. T04 in the
+[execution plan](../../specs/urbit/product-execution-plan.yaml) introduces an
+independent Repository ID and explicit association to one owning project. A
+project has zero or multiple repositories; Work and Docs remain complete
+without Code. Preserve existing repository IDs, refs, OIDs, receipts and
+permissions during versioned migration, including legacy IDs equal to a
+project ID. No alias may broaden authorization or silently move ownership.
+
+T20 provides one product-level repository capability interface across inline
+and external profiles. Expose exact supported tree/file/ref/compare/proposal/
+check/write operations, size limits and exclusions. Do not claim full-history
+push, equivalent external delivery, LFS or SHA-256 support from this bounded
+profile. [Current capability matrix](CAPABILITY_MATRIX.md)
+
+T19 must reproduce the reported live tree failure with actual profile, source,
+authorization and response evidence before claiming its cause or repair.
+Distinguish empty, unavailable, stale and unsupported results; demo tree data
+cannot establish live readiness. New Code work follows the
+[experience contract](PRODUCT_EXPERIENCE_CONTRACT.md) while the safeguards and
+baseline behavior below remain in force until their reviewed migrations pass.
+
+The implementation candidate adds a read-only Markdown reader to the existing
+accepted-snapshot file browser: Read is the default for supported Markdown
+filenames, with exact Raw/Copy contents and commit/size Details. It uses the
+existing authorized file response and preserves its origin. Empty, binary,
+oversized, stale and denied states remain explicit. Eight remote host and eight
+synthetic browser cases
+passed with full TypeScript and verified cleanup. This is frontend evidence;
+the current pilot has not received this change, and it establishes no additional
+Git write or multi-repository capability.
+
+## Current candidate native evidence
+
+[Diagnostic run 43846986399](https://github.com/ScottTpirate/stead-urbit/actions/runs/43846986399)
+built Home and records source-bound positive results for 39 suites containing
+254 registered arms. Nine suites containing the other 75 arms failed to
+compile. This applies to candidate `6e6c21a` composed with controller
+`e316934`, not to every later checkout change. Positive results are derived
+from the exact trusted test sequence and closed observed counts; original
+positive-arm transcripts were not exported.
+
+The positive suites include the external pack anchor, read, push, ledger,
+proof, control, carrier, relay-wire, worker-signature, admission, review and
+review-board helpers, plus the v8/v9 saved-envelope rehearsals. This is native
+helper evidence. It does not rerun stock-client HTTP conformance, qualify
+independent repository IDs, establish a new browser journey or deploy the
+current source. The ordinary journey and saved-state capture were not reached;
+full qualification remains open. The historical baseline below retains its
+original evidence scope.
+
+## Baseline development behavior
+
 A project maintainer can enable one SHA-1 repository through the project
 overview. The Code view appears after explicit enablement. A reader can issue
 a read credential. A contributor or maintainer can issue a write credential.

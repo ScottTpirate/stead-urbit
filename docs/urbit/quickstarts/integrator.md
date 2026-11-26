@@ -1,13 +1,22 @@
 # Native app integrator quickstart
 
+Before adding product interfaces, read the
+[experience contract](../PRODUCT_EXPERIENCE_CONTRACT.md) and
+[current handoff](../AGENT_HANDOFF.md). Existing SDK exports below retain their
+versioned meaning; owner/worker/run, independent repositories and separate Work
+contract revisions require reviewed successors rather than silent API changes.
+
 Use the separately versioned [SDK v3](../../../sdk/v3/README.md) for configured
 team homes. SDK v2 remains the legacy fixture interface. The package is a
 developer fragment, not an application installation or deployment credential.
 
-Obtain a reviewed source checkout and its matching export lock. Build and verify
-the exact archive using the pinned package command:
+For SDK v3 0.2.0-alpha with the Work discussion exports, use a clean checkout of
+package commit `12c92797b8cf60ed663b2edc2b71a3d1c46b3732`. Its export lock
+identifies native source `4ef41f5bb6a94976c46e1bff5220f256c828ef30`.
+From the package checkout, build and verify the archive.
 
 ```sh
+mkdir -p .runtime
 python3 scripts/package_sdk_v3.py build --archive .runtime/stead-sdk-v3.tar
 python3 scripts/package_sdk_v3.py verify --archive .runtime/stead-sdk-v3.tar
 python3 scripts/check_sdk_source.py --archive .runtime/stead-sdk-v3.tar

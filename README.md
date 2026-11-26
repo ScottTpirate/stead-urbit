@@ -1,5 +1,21 @@
 # Stead Urbit — experimental native implementation
 
+Stead is where a team defines an outcome, gathers context, assigns a human or
+agent, reviews the result, and accepts the work. Work and Docs must stand alone;
+software projects add optional repositories and delivery workflows.
+
+The November 15 product direction is adopted in the
+[experience contract](docs/urbit/PRODUCT_EXPERIENCE_CONTRACT.md) and
+[32-package execution plan](specs/urbit/product-execution-plan.yaml).
+The [capability matrix](docs/urbit/CAPABILITY_MATRIX.md) separates implemented,
+qualified and supported behavior. Agent dispatch, the redesigned experience and
+multi-repository migration remain implementation work; the foundation is retained.
+The private pilot currently supports sign-in, Work, Docs and read-only repository browsing.
+On the configured pilot computer, run `stead-pilot` to open Home and sign-in approval.
+The [pilot status](docs/urbit/CAPABILITY_MATRIX.md) records the serving release and its verified scope.
+
+## Existing qualification scope
+
 **Phases 0 and 1 are complete. Independent local review accepted the Phase 2
 Work/Docs workflow.** Phases 3 and 4 have verified local workflows for bounded
 native Git, review, builds, packaging and recovery. The private standalone
@@ -40,7 +56,7 @@ The working architecture is **federated project homes**: one authoritative home 
 - [Master directive](docs/urbit/MASTER_BUILD_DIRECTIVE.md)
 - [Development and deployment](docs/urbit/DEPLOYMENT.md)
 - [Phases and acceptance gates](docs/urbit/ROADMAP.md)
-- [First implementation-agent assignment](docs/urbit/AGENT_HANDOFF.md)
+- [Current implementation-agent handoff](docs/urbit/AGENT_HANDOFF.md)
 - [Research sources and verification limits](docs/urbit/SOURCES.md)
 - [Machine-readable backlog](specs/urbit/backlog.json)
 
@@ -61,4 +77,4 @@ No candidate dependency is approved by being named here. In particular, Urgit re
 
 [Roadmap issue #1](https://github.com/ScottTpirate/stead-urbit/issues/1) links the 30 tracked tasks. The [ecosystem plan](docs/urbit/ECOSYSTEM_PLAN.md) preserves phases 0–5 and adds a supported ecosystem release gate. Read the [developer guide](docs/urbit/DEVELOPER_GUIDE.md) for repo-local Hoon skills and checks, and the [carryover ledger](docs/urbit/STEAD_CARRYOVER.md) before reusing original Stead work.
 
-These are implementation requirements and tested planning tools, not evidence that the native product is complete. Existing agent work remains the priority. CONTRIBUTING.md, SECURITY.md and SUPPORT.md describe the current experimental scope.
+These are implementation requirements and tested planning tools, not evidence that the native product is complete. The mapped product packages guide new work without replacing existing URB IDs or historical acceptance. CONTRIBUTING.md, SECURITY.md and SUPPORT.md describe the current experimental scope.

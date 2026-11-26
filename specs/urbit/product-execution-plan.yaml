@@ -1,0 +1,1457 @@
+plan_version: 2
+status: implementation_in_progress
+prepared_on: '2026-11-15'
+repository: https://github.com/ScottTpirate/stead-urbit
+reviewed_commit: 539825650c60e606634bf4ab5967b698a6daa6e3
+screenshot_ui_commit: dbc8cc0
+primary_specification: docs/urbit/PRODUCT_EXPERIENCE_CONTRACT.md
+purpose: Convert the current native foundation into one coherent Work, Docs, optional Code and human/agent product.
+  These are next-work packages, not replacement URB identifiers or claims of implementation acceptance.
+canonical_tracker:
+  preserve_ids: URB-000 through URB-280 and M0 through M6
+  catalogs:
+  - specs/urbit/backlog.json
+  - specs/urbit/ecosystem.json
+  issue_mapping: Use current ecosystem.json issue_map and inspect live issue state.
+  rule: Create linked follow-ups only when implementation work is separately authorized. Do not erase historic acceptance
+    or treat a closed parent as accepting new scope.
+operating_contract:
+  integrator: One lead owns product decisions, shared schemas, migrations and integration.
+  concurrency: Lead plus two independent implementation lanes and one independent reviewer.
+  worktree_rule: Preserve existing work; inspect current branch and coordinate overlapping edits.
+  start_rule: Reconcile current main with reviewed_commit before implementation.
+  artifact_rule: A planning document or mock screen does not close a functional acceptance gate.
+  architecture:
+  - Retain native Hoon Home as authoritative mutation owner.
+  - Historical reference/stead Go architecture is not active instruction.
+  - Ordinary Git identities and canonical Markdown remain portable.
+  - Scoped resource identity includes project, kind, collection when applicable and local ID.
+  - Separate accountable owner, worker principal, agent definition/runtime and run/attempt.
+  - Separate Work contract revision from comments and operational progress.
+  - Retain independent review and current authorization at final acceptance.
+  - General projects have zero repositories; agents belong to Work rather than Code.
+  - No model or untrusted repository execution on the authority host.
+  - No House compatibility claim without verified host contract and installation evidence.
+  default_design:
+    nav: Workspace Inbox/My work/Search; project Overview/Work/Docs/optional Code.
+    scope: Workspace aggregation starts within the selected Home.
+    create_work: Current project; Task; To do; No priority; Unassigned; title only required.
+    autonomous_owner: Explicit owner or visibly inherited project human steward.
+    task_detail: Approximately 560px preview plus full route; no 350px primary workspace.
+    document: Read by default; focused Edit; Source available; one canonical Markdown representation.
+    review: Common Change envelope with specialized Doc/code diff; independent acceptance.
+    agent: Named worker picker and real run; no copied briefs in normal user flow.
+    policy: Review required by default; bounded low-risk automatic acceptance added later.
+  prohibitions:
+  - No blanket rewrite, new orchestration stack, general workflow builder or speculative Gnat migration.
+  - No indiscriminate removal of bounds, auth checks or uncertain-outcome semantics.
+  - No fake successful run, fabricated evidence or demo fixture presented as native behavior.
+  - No shared secrets or worker credentials in prompts, source, logs or clone URLs.
+  - No automatic external messages or deployment merely because an agent received a task.
+  required_packet_fields:
+  - user_outcome
+  - current_paths
+  - proposed_paths_or_boundaries
+  - changes
+  - non_goals
+  - depends_on
+  - acceptance
+  - evidence
+  definition_of_done:
+  - Implement the scoped outcome and relevant UI states on current agreed contracts.
+  - Provide exact source revision, dataset/profile, roles, commands and observed results.
+  - Separate native integration, mocked tests, static checks and unexecuted cases.
+  - Include relevant conflict, access, retry and recovery cases, not only happy path.
+  - Independent reviewer validates the task outcome; integrator reconciles into current docs/catalogs.
+  - Do not broaden testing after concrete risks and required gates are resolved.
+shared_ui_states:
+- initial_loading
+- incremental_update
+- empty
+- no_results
+- read_only
+- dirty_draft
+- saving
+- accepted
+- disconnected_or_stale
+- outcome_unknown
+- conflict
+- permission_revoked
+- retryable_error
+- unsupported_operation
+initial_dispatch:
+  tasks:
+  - T01
+  - T02
+  - T06
+  - T19
+  note: T02/T06/T19 can inspect and prepare in parallel with T01. Shared-contract mutations wait for T01. T19 is
+    a bounded current-pilot defect investigation, not forge completion.
+packages:
+- id: T01
+  title: Freeze the product and migration contract
+  phase: A
+  priority: P0
+  owner_role: product_integrator
+  parent_urb:
+  - URB-030
+  - URB-070
+  - URB-180
+  - URB-260
+  depends_on: []
+  user_outcome: Every implementer builds the same product and knows what success means.
+  current_paths:
+  - AGENTS.md
+  - docs/urbit/MASTER_BUILD_DIRECTIVE.md
+  - docs/urbit/CONTRACT_AMENDMENT_2.md
+  - docs/urbit/AGENT_JOB_PROFILE.md
+  - docs/urbit/CODE_DELIVERY_PROFILE.md
+  - specs/urbit/ecosystem.json
+  proposed_paths_or_boundaries: One compact experience contract and capability matrix; revise current profiles in
+    place.
+  changes:
+  - Freeze terminology, scoped IDs, owner/worker/run/Change, status model, routes and five golden journeys.
+  - Define principal bindings, independent repositories, Work contract revision and typed Change migration contracts.
+  - Specify decisions on blocked legacy state, completed outcomes, expiry/adoption and one canonical Doc origin.
+  - Preserve current URB parents and acceptance evidence; identify explicit follow-ups.
+  non_goals: No platform rewrite, implementation gate closure or speculative future feature expansion.
+  acceptance:
+  - No conflicting definitions across current directive, job profile, delivery profile and experience contract.
+  - Each old state/identity/ref has a migration or explicit compatibility disposition.
+  - Each golden journey identifies next action, durable outcome and failure behavior.
+  evidence: Decision table, interface sketches and dependency graph reviewed by UX and native leads.
+  implementation_status: accepted_design
+  parent_issue_numbers:
+  - 6
+  - 10
+  - 21
+  - 29
+  current_progress: >-
+    On November 25 the UX and native leads independently accepted the product and migration design.
+    The contract fixes the five journeys, scoped routes and principal, Work, repository, Run and Change
+    identities. The native profile specifies predecessor dispositions and the exact limits of saved version
+    10. Each functional package still requires its own implementation, native qualification and rollout.
+  acceptance_record: docs/urbit/PRODUCT_NATIVE_INTERFACES.md
+  ux_review_record: docs/urbit/reviews/2026-11-25-product-ux-contract-decision/decision.md
+- id: T02
+  title: Build the reusable interaction reference
+  phase: A
+  priority: P0
+  owner_role: ux_components
+  parent_urb:
+  - URB-070
+  - URB-260
+  depends_on:
+  - T01
+  user_outcome: Controls and layouts behave consistently across Work, Docs, Code and agents.
+  current_paths:
+  - web/app/src/primitives.tsx
+  - web/app/src/style.css
+  - web/app/src/work.css
+  proposed_paths_or_boundaries: Shared Menu, Combobox, Dialog, PropertyPicker, PersonBadge and state components.
+  changes:
+  - Apply exact tokens, spacing, row/detail widths and control rules from specification section 7.
+  - Create representative Work list/detail, Doc read/edit and review states with clearly synthetic fixtures.
+  - Retain governed DOM props; introduce vetted resource-link and attachment components.
+  non_goals: Theme builder, icon novelty, replacing every native select, independent new design systems per feature.
+  acceptance:
+  - Empty, normal and crowded fixtures work at desktop and narrow widths with long labels and zoom.
+  - Menus/comboboxes support keyboard selection, Escape, accessible labels and focus restoration.
+  - Icon controls meet target-size and contrast requirements; status never depends only on color.
+  evidence: Reference screens plus focused keyboard/accessibility observations; fixtures labeled synthetic.
+  implementation_status: accepted_on_named_profile
+  parent_issue_numbers:
+  - 10
+  - 29
+  current_progress: >-
+    The UX lead reviewed eight Firefox synthetic interaction cases and five additional Chromium attachment cases.
+    They cover responsive fixtures, keyboard/focus, control sizing, contrast, safe resource links and lossless
+    Markdown. The two source-bound sessions qualify the shared reference only. Integrated Home journeys have
+    separate package gates.
+  acceptance_record: docs/urbit/evidence/2026-11-25/markdown-attachments/acceptance.json
+- id: T03
+  title: Separate principals from authentication and runtime bindings
+  phase: A
+  priority: P0
+  owner_role: native_identity
+  parent_urb:
+  - URB-060
+  - URB-160
+  - URB-180
+  - URB-210
+  - URB-230
+  depends_on:
+  - T01
+  user_outcome: Add named agents without requiring a new planet for every worker or run.
+  current_paths:
+  - native/core/desk/lib/stead-team-config.hoon
+  - native/core/desk/lib/stead-session.hoon
+  - native/core/desk/lib/stead-identity-core.hoon
+  - native/core/desk/lib/stead-browser.hoon
+  - web/app/src/api.ts
+  proposed_paths_or_boundaries: Versioned principal registry, authentication bindings and scoped service credentials.
+  changes:
+  - Preserve existing ship login and historical actor identity while allowing explicit non-ship service bindings.
+  - Version agent definition and runtime bindings separately from stable principal.
+  - Share membership/roster concepts for people and agents; bind worker credentials to actual authority.
+  non_goals: Authentication from a supplied display name, shared organization session or automatic sponsor-derived
+    permission.
+  acceptance:
+  - Existing ship members authenticate after migration; agent service principal authenticates under its own scope.
+  - Credential rotation/revocation cannot transfer authority to another principal or preserve revoked access.
+  - New runtime version does not rewrite historical authorship or grant itself broader tools.
+  evidence: Native migration/authorization negatives and roster/API readback with two distinct agents.
+  implementation_status: in_progress
+  parent_issue_numbers:
+  - 9
+  - 19
+  - 21
+  - 24
+  - 26
+  current_progress: Source-only catalog preserves legacy principal IDs, binding custody and revision highwaters; owner declarations resolve kind explicitly and immutable runtime/definition versions stay separate. Ordered owner changes and concrete historical catalog reconstruction are also source-reviewed but uncompiled. Explicit service actor/binding preparation is in progress; no service credential or Home successor is active.
+- id: T04
+  title: Introduce independent repository identity
+  phase: A
+  priority: P0
+  owner_role: native_forge
+  parent_urb:
+  - URB-030
+  - URB-080
+  - URB-180
+  - URB-230
+  depends_on:
+  - T01
+  user_outcome: One software project can use frontend, backend and infrastructure repositories.
+  current_paths:
+  - native/core/desk/lib/stead-code-home.hoon
+  - native/core/desk/lib/stead-code-credentials.hoon
+  - native/core/desk/lib/stead-code-delivery.hoon
+  - web/app/src/api.ts
+  - web/app/src/CodeRepository.tsx
+  - web/app/src/CodePack.tsx
+  proposed_paths_or_boundaries: Repository registry and explicit project-repository association.
+  changes:
+  - Replace implicit repo equals project lookup with independent repository scope across reads, credentials, refs
+    and review.
+  - Preserve legacy repository IDs equal to project IDs as migrated identifiers.
+  - Start with one owning project per repository; leave explicit future association seam.
+  non_goals: Arbitrary shared-repository governance or a repository requirement for Work/Docs.
+  acceptance:
+  - Zero-repo and two-repo projects both work; task links select the intended repository.
+  - Reusing a credential, review or job with another repo ID is rejected.
+  - Existing refs, OIDs, proposal history and links survive predecessor migration.
+  evidence: Native scope/migration tests and a two-repository UI/API workflow.
+  implementation_status: in_progress
+  parent_issue_numbers:
+  - 6
+  - 11
+  - 21
+  - 26
+  current_progress: >-
+    Hosted native run 45732106760 verified the corrected repository catalog, with two controls and all six
+    catalog arm verdicts, 55 source bindings and empty worker cleanup. The importer, current-human authority,
+    repository-keyed storage and Git adapters have independently reviewed source. Import, cross-repository
+    authorization, Git writes, two-repository UI/API behavior and predecessor recovery still need integrated
+    qualification. The legacy deployed profile remains active.
+- id: T05
+  title: Split Work contract revisions and discussion storage
+  diagnostic_evidence: >-
+    Native 43846986399 built Home and completed 49 suite transcripts, with 254 positive
+    arms and 75 in failing suites. The updated 5aefa17f candidate built Home and completed
+    131 of 329 arms before restore timed out in 43863766357. Focused restore timed out
+    again in 44092512233. Repository catalog 45732106760 succeeded on its focused scope.
+    Model 45731575647 retained the two control records and timed out during evaluations
+    with zero model-suite records. Saved8 44109597188 verified cleanup and exported the owner
+    report and its inputs but failed before worker output. Corrected candidate 45734762563 returned a bound worker
+    failure after 261 native commands, before the first recorded capture. Its 15 original records and cleanup were verified.
+    Neither the complete successor native profile nor saved8 upgrade is qualified.
+  phase: A
+  priority: P0
+  owner_role: native_workflow
+  parent_urb:
+  - URB-030
+  - URB-040
+  - URB-090
+  - URB-190
+  - URB-230
+  depends_on:
+  - T01
+  user_outcome: Normal comments and progress updates do not invalidate ongoing work.
+  current_paths:
+  - native/core/desk/lib/stead-team.hoon
+  - native/core/desk/lib/stead-team-codec.hoon
+  - native/core/desk/lib/stead-core.hoon
+  - scripts/urbit/agent_proposal.py
+  - web/app/src/WorkDiscussion.tsx
+  - web/app/src/api.ts
+  proposed_paths_or_boundaries: Execution-contract revision plus separately identified paginated comment records.
+  changes:
+  - Separate objective/acceptance/output changes from ordinary properties and discussion sequences.
+  - Migrate embedded discussion without losing actor, time, order or prior revisions.
+  - Define immutable input/context digests and explicit supersession when requirements materially change.
+  - Implement the agreed In review and legacy blocked-state migration consistently across native validation, projections
+    and client labels; preserve historical meaning.
+  non_goals: Ignoring all stale data or weakening live policy/revocation checks.
+  acceptance:
+  - Comment and progress change leave an unchanged execution contract valid.
+  - Acceptance-criteria change prevents stale publication and requires explicit re-planning.
+  - Concurrent comment append and title edit succeed or conflict only according to their own expected revisions.
+  - Old comments paginate and survive restart/export with original attribution.
+  evidence: Native concurrency/migration cases and one handoff regression using the current helper.
+  implementation_status: in_progress
+  parent_issue_numbers:
+  - 6
+  - 7
+  - 12
+  - 22
+  - 26
+  current_progress: Historical T05a f254244 passed native run 43736509249 with 167 arms/1647 checks. Successor command/4, separate discussion, migration, concrete adapters and mixed replay are source-reviewed. Latest diagnostic 43846986399 at 6e6 builds Home positively and reaches all 49 modules; pinned sequence/count evidence verifies 39 positive suites/254 arms, while nine suites containing 75 arms fail. All 545 native checks pass; failed span lists are truncated. Six controls, eleven Doc-child checks and cleanup pass. The Home predicate and eleven fixture type corrections are independently source-reviewed and retained, preserving all 85 existing arm names. Eight further independently reviewed fixture corrections preserve all 69 arm names and assertions; the dependent rehearsal has six unchanged arms. Corrected compilation, ordinary qualification, exact old-v10 capture/adoption, connected browser and release readback remain pending. Raw positive transcripts were not exported. Earlier failures and accepted historical evidence remain retained. The nine unchanged capture-helper host cases pass against the exact 6e6c producer binding with three source inputs and verified cleanup; evidence is controller-refresh/product-ordinary-capture-host9/integrator-observed-review.json. These synthetic cases do not supply actual captured state.
+- id: T06
+  title: Define bounded storage and supported workload strategy
+  phase: A
+  priority: P0
+  owner_role: native_storage
+  parent_urb:
+  - URB-040
+  - URB-100
+  - URB-190
+  - URB-200
+  - URB-230
+  depends_on:
+  - T01
+  user_outcome: Sustained work does not hit tiny lifetime limits or silently lose history.
+  current_paths:
+  - native/core/desk/lib/stead-team.hoon
+  - native/core/desk/lib/stead-code-store.hoon
+  - native/core/desk/lib/stead-code-delivery.hoon
+  - docs/urbit/CODE_REPOSITORY_STORE_PROFILE.md
+  - docs/urbit/PAIRED_RECOVERY_PROFILE.md
+  proposed_paths_or_boundaries: Hot-state pointers, paged history, content-addressed bulk objects and explicit retention
+    policy.
+  changes:
+  - Inventory actual caps and per-event cost; retain bounds and reserve recovery/revocation capacity.
+  - Separate business events from transient agent/tool logs; define external artifact retention.
+  - Preserve retry deduplication and review/revocation evidence through compaction and export.
+  - Establish first measured workload; do not represent source limits as capacity benchmarks.
+  non_goals: Blindly raising constants, automatic private replicas or deletion of receipts to pass load tests.
+  acceptance:
+  - Frozen paging/retention/receipt contracts identify current limits, reserve control capacity and specify explicit
+    quota behavior.
+  - Actual initial workload baseline records memory/storage and read/save behavior at the tested pilot scale.
+  - Incremental storage changes and the beyond-pilot growth/compaction qualification are assigned to T05/T09/T14
+    and T31 without blocking ordinary UX on all future scale work.
+  evidence: Storage design plus real baseline measurements; full target qualification is T31.
+  implementation_status: in_progress
+  parent_issue_numbers:
+  - 7
+  - 13
+  - 22
+  - 23
+  - 26
+  current_progress: Source-bound storage inventory and actual read-only live point observation are retained in product-storage-profile.json. Eight pilot services used197255168bytes of current memory and27tasks; two native engine trees allocated1233436672bytes at the observed instant. No workload, content mutation or capacity claim. Representative read/save latency, sustained measurements, storage changes and recovery qualification remain open.
+- id: T07
+  title: Deliver the compact shell and resource routes
+  phase: B
+  priority: P1
+  owner_role: ux_components
+  parent_urb:
+  - URB-070
+  - URB-260
+  depends_on:
+  - T01
+  - T02
+  user_outcome: Users know where to go and return without losing context.
+  current_paths:
+  - web/app/src/main.tsx
+  - web/app/src/style.css
+  - web/app/src/protocol.ts
+  proposed_paths_or_boundaries: WorkspaceShell, ProjectShell, typed routes and per-resource draft/pending stores.
+  changes:
+  - Use workspace attention/navigation and project Overview/Work/Docs/optional Code.
+  - Extract route-owned features from main.tsx while preserving session and stale-response guards.
+  - Add shareable resource URLs and Back/Forward restoration of filter, selection and scroll.
+  - Move technical footer/copy into diagnostics; meaningful Overview and empty states.
+  non_goals: A React/framework rewrite or global bypass of dirty/pending protections.
+  acceptance:
+  - Direct URL, refresh and Back reach the same authorized Work/Doc/Change context.
+  - Related-object navigation preserves unsent discussion and editing drafts.
+  - Logout/access removal clears protected UI and follows approved draft retention policy.
+  evidence: Focused route/browser tests and before/after screenshots at representative sizes.
+  implementation_status: in_progress
+  parent_issue_numbers:
+  - 10
+  - 29
+  current_progress: Typed routes, scoped navigation memory and compact shell implemented in working branch; complete
+    rendered app checks and future resource views pending.
+- id: T08
+  title: Complete everyday Work list create and detail
+  phase: B
+  priority: P1
+  owner_role: work_ux
+  parent_urb:
+  - URB-030
+  - URB-070
+  - URB-260
+  depends_on:
+  - T07
+  - T05
+  user_outcome: Create, understand and finish ordinary work efficiently.
+  current_paths:
+  - web/app/src/main.tsx
+  - web/app/src/WorkQuickActions.tsx
+  - web/app/src/WorkDiscussion.tsx
+  - web/app/src/work.css
+  - native/core/desk/lib/stead-views.hoon
+  proposed_paths_or_boundaries: WorkList, WorkComposer, WorkDetail, short key projection and server filter contract.
+  changes:
+  - Title-only creation with fixed defaults; larger preview and full detail.
+  - Add acceptance criteria, human owner and worker presentation without conflating run state.
+  - Replace all-record client filtering with correct bounded filtered pagination.
+  - Introduce readable stable project sequence with collision/migration behavior.
+  - After list/detail acceptance, add board projection with identical filters/status policy and keyboard alternatives;
+    expose simple due/milestone and parent-child planning without a custom workflow builder.
+  non_goals: Arbitrary custom workflow/schema editor or comprehensive portfolio planning.
+  acceptance:
+  - Create unassigned item even when roster unavailable; no unexpected Enter submission.
+  - Change properties using visible and keyboard controls; focus returns correctly.
+  - Concurrent edit shows recoverable conflict; uncertain request cannot create duplicates.
+  - Filter results remain correct beyond one page and preserve open item.
+  evidence: Real multi-user Work journey plus keyboard, conflict and pagination observations.
+  implementation_status: in_progress
+  parent_issue_numbers:
+  - 6
+  - 10
+  - 29
+  current_progress: Layout, title-only defaults and priority wording are implemented. Reserved owner/worker and separate purpose/discussion components passed source review, ten state tests, fifteen protocol tests and eight isolated real-browser synthetic cases. The human app journey is wired in reserved source; optional roster and Doc choices now load independently, with full TypeScript, seventeen journey host checks and eight isolated browser cases passing. The first invalid response fixture is retained; production parsing stayed strict. The composer footer is corrected; three isolated browser cases pass visible actions, bounded body scrolling, full-width mobile layout, keyboard focus and retained drafts, with the first failure preserved. Current-page status grouping, priority and separate Owner/worker labels now pass full TypeScript, six host cases and eight isolated real-component browser cases, including keyboard disclosures, narrow panes, uniform text enlargement and retired controls. The escaped-text assertion failure is retained with its test-only correction; evidence is controller-refresh/work-list/custody.json. The permanent runner subsequently passed all six cases with full production TypeScript in controller-refresh/retained-ui-static14/integrator-review.json at6b7315e. Native carrier qualification, connected acceptance, live activation, readable keys, server filters and board remain pending.
+- id: T09
+  title: Make Docs a proper Markdown knowledge experience
+  phase: B
+  priority: P1
+  owner_role: docs
+  parent_urb:
+  - URB-040
+  - URB-070
+  - URB-100
+  - URB-240
+  - URB-260
+  depends_on:
+  - T07
+  - T06
+  user_outcome: Read and edit attractive portable documents without a required code project.
+  current_paths:
+  - web/app/src/Markdown.tsx
+  - web/app/src/main.tsx
+  - native/core/desk/lib/stead-team.hoon
+  - native/core/desk/lib/stead-git.hoon
+  - native/core/desk/lib/stead-views.hoon
+  - scripts/urbit/portable_docs.py
+  proposed_paths_or_boundaries: Safe Markdown codec/profile, document reader/editor/tree and canonical title metadata.
+  changes:
+  - Support documented CommonMark/GFM features with safe links and controlled attachments.
+  - Read by default; focused Edit/Source/Preview; useful draft/save/conflict indicators.
+  - Define title metadata and fallback; replace fixture authorship for new generated commits without rewriting old
+    OIDs.
+  - Preserve private publication boundaries and one canonical origin for mounted repository Markdown.
+  non_goals: Executable MDX/raw HTML, unrestricted remote image loading, lossy rich editor or keystroke commits.
+  acceptance:
+  - Lists, fences, tables, links and unknown syntax round-trip without silent loss.
+  - Hostile/oversized content stays bounded and cannot load or execute unapproved resources.
+  - Source/render/export/reimport agree; concurrent save preserves local work and reports conflict.
+  - Private draft publication cannot expose unrelated pages or ancestry; historic OIDs remain unchanged.
+  evidence: Markdown corpus, native save/export cases and real read/edit/publication browser journey.
+  implementation_status: in_progress
+  parent_issue_numbers:
+  - 7
+  - 10
+  - 13
+  - 27
+  - 29
+  current_progress: Maintained safe Markdown parser and explicit Read/Edit/Preview/Source implemented in working
+    branch. Direct title opening, keyboard/read-only/draft states, exact body/source save and corrected startup
+    capability ordering passed three isolated main-app browser cases; eleven carrier host checks and full TypeScript
+    passed. These use synthetic transport. Canonical native title metadata, full native roundtrip, authorship and
+    mounted-document integration remain pending.
+  outline_evidence: Saved Read mode now derives an optional current-document outline from the same bounded Markdown parse, with at least three useful headings and at most 64 entries. Full TypeScript, eight host cases and eight isolated explicit-prop component browser cases passed remotely with exact source custody and cleanup. Keyboard focus, duplicate and long headings, project/content replacement, unsent drafts and 320px layouts are covered. Enlarged text uses nested fixture scaling, not uniform browser zoom; private CJK glyph coverage is limited. The retained standalone runner subsequently passed all eight cases with full production TypeScript in controller-refresh/retained-ui-static14/integrator-review.json at6b7315e. No native or live qualification is claimed.
+  repository_reader_evidence: Existing Code file responses now support read-only Markdown Read/Raw and exact Copy contents, with commit/path and current-access fencing. Full TypeScript, eight host cases and eight synthetic browser cases pass remotely with desktop/320px inspection and verified cleanup. Retained test bodies are identical apart from import paths; the permanent runner subsequently passed in both contextual and current-source combined checks. Pilot rollout, repository editing and mounted Docs integration remain pending.
+  integration_followup: Full TypeScript and 96 host cases and packaging pass for 5142a237; the complete-App live-backend browser attempt then reproduces duplicated saved Doc body/mode controls during Preview. Adjacent sibling keys collide. The minimal distinct DocumentBody key preserves all four scope fields; the corrected6896e41b source passes full TypeScript/all96 retained host cases/build/package, with64 original outputs and unchanged966 inputs verified. Evidence is controller-refresh/current-client-document-key-static96/integrator-observed-review.json. The exact-asset browser retest passes14 retained checks and16 singleton-mode assertions, with22 original artifacts/19 installed/15 asset-after pins, both sign-outs and clean teardown. Evidence is controller-refresh/current-client-document-key-browser14/integrator-review.json. Offline Home package4 passes for a670d58c after an exact AST metadata-only correction; original final-check failure retained. Returned archive d7aa054c is1617920bytes/126members with all101 nonasset deskfiles unchanged,791input/788staged/794installed pins and cleanup verified. Evidence is controller-refresh/current-client-package4/integrator-review.json. Native asset serving/restart/recovery/rollout remain separate. Five functional checks and both sign-outs passed, zero business commands and clean teardown. Evidence is controller-refresh/current-client-fullapp-first-failure/integrator-review.json.
+- id: T10
+  title: Make relationships contextual and revision aware
+  phase: B
+  priority: P1
+  owner_role: work_docs
+  parent_urb:
+  - URB-030
+  - URB-090
+  - URB-180
+  - URB-190
+  depends_on:
+  - T08
+  - T09
+  user_outcome: See how tasks, documents and code relate without opening a separate database view.
+  current_paths:
+  - web/app/src/WorkContext.tsx
+  - web/app/src/WorkDevelopment.tsx
+  - web/app/src/WorkCodeLinks.tsx
+  - native/core/desk/lib/stead-team.hoon
+  - native/core/desk/lib/stead-views.hoon
+  proposed_paths_or_boundaries: Typed scoped ResourceRef and contextual RelationshipList/backlinks.
+  changes:
+  - Freeze relation direction/types and required versus informational outcome links.
+  - Deliver exact Doc revision references and latest-versus-pinned display; freeze code reference shape but complete
+    Code links in T21 after repository migration.
+  - Display endpoints with names and status; make demo/native data contracts agree.
+  non_goals: Primary graph canvas, arbitrary ontology builder or relation-based access inheritance.
+  acceptance:
+  - Rename, move or deleted target does not corrupt stable link identity.
+  - Private target cannot leak through backlinks, counts, search or notifications.
+  - Required multiple outcomes prevent premature completion; informational links do not block it.
+  evidence: Native Work/Doc relation/privacy tests and Work→Doc→Back navigation; Code relation proof closes with
+    T21.
+  implementation_status: in_progress
+  parent_issue_numbers:
+  - 6
+  - 12
+  - 21
+  - 22
+  current_progress: Saved-Doc contextual backlinks implemented with current endpoint authorization, bounded reads,
+    private/deleted endpoint omission and canonical Work navigation. Eight initial browser cases passed; real Back
+    focus failure corrected and both affected final-source cases passed. Pinned-revision and required-outcome semantics
+    remain pending; these links remain informational and latest-only.
+  related_reading_evidence: Same-project draft-preserving reading implemented; four private host cases and eight isolated App browser cases pass. Pending and dirty-Doc fences remain. Full production TypeScript and all 21 combined shared host checks pass remotely with exact inputs, empty cleanup and unchanged pilot health; prior pre-test failures retained. No native or pilot activation.
+  contextual_search_evidence: Exact picker source, full TypeScript and eleven host cases pass remotely; eight isolated browser cases pass, including six actual-App and two component-prop denial races. The retained Repo reader runner also passes eight cases. Desktop and 320px visuals, exact input hashes, empty cleanup and unchanged live pilot health are verified. Links remain latest-only and informational; native acceptance and pilot rollout are separate.
+  retained_frontend_evidence: Full production TypeScript and all three permanent Repo8, Workspace10 and Context11 runners pass together against exact b9bb6d7 source; 862 unchanged inputs, remote cleanup and eight-service pilot health verified. See docs/urbit/evidence/2026-11-15/controller-refresh/composite-static29/integrator-review.json. The additional combined browser journey is built only, not executed.
+- id: T11
+  title: Build actionable Inbox My work and scoped search
+  phase: B
+  priority: P1
+  owner_role: attention_ux
+  parent_urb:
+  - URB-070
+  - URB-180
+  - URB-190
+  - URB-260
+  depends_on:
+  - T07
+  - T08
+  - T05
+  user_outcome: Know what needs a decision across projects on the selected Home.
+  current_paths:
+  - native/core/desk/lib/stead-views.hoon
+  - native/core/desk/lib/stead-updates.hoon
+  - web/app/src/main.tsx
+  - web/app/src/AcceptedTime.tsx
+  - web/app/src/api.ts
+  proposed_paths_or_boundaries: Durable AttentionItem projection, readable EventPresentation and global scoped queries.
+  changes:
+  - Separate activity history from recipient-specific review/question/assignment/failure notifications.
+  - Persist unread and handled state, aggregate repeated updates, deep-link exact target.
+  - Resolve display names safely; never show raw wire event names as primary copy.
+  non_goals: Cross-home replication, unread count leaks, every agent heartbeat in Inbox.
+  acceptance:
+  - Handling attention survives refresh and does not mark business work complete.
+  - Permission changes remove protected targets/snippets/counts from every view.
+  - Ten simulated runs generate expected decision items without telemetry spam; live run proof follows T18/T24.
+  - Keyboard search opens exact authorized objects with preserved return context.
+  evidence: Projection/API negatives and browser action flow; synthetic load identified separately.
+  implementation_status: in_progress
+  parent_issue_numbers:
+  - 10
+  - 21
+  - 22
+  - 29
+  current_progress: Workspace-search and legacy Assigned-to-me read extensions implemented in working tree with
+    six native test arms and per-project roster cache; hosted native run 43745730053 passed the exact c2f2861 candidate with 173 arms and 1,672 checks. Release verification remains separate. Capability-gated browser workspace
+    passed ten Firefox cases including production Search-to-Doc-to-Back, source stable and owned cleanup verified.
+    The candidate restores later-page selection, scroll and focus through fresh authorized pages, bounded to the remembered page, 205 pages and 20 seconds. Full production TypeScript, ten host cases and eight isolated browser cases passed; deployment remains pending. Durable recipient Inbox/read-handled state still requires successor native state; activity
+    is not substituted for Inbox.
+- id: T12
+  title: Add common Changes and exact Docs review
+  phase: C
+  priority: P0
+  owner_role: native_docs
+  parent_urb:
+  - URB-040
+  - URB-090
+  - URB-180
+  - URB-230
+  depends_on:
+  - T01
+  - T05
+  - T09
+  user_outcome: Review proposed document edits as clearly as code changes.
+  current_paths:
+  - native/core/desk/lib/stead-team.hoon
+  - native/core/desk/lib/stead-code-delivery.hoon
+  - web/app/src/CodeReview.tsx
+  - web/app/src/ReviewChanges.tsx
+  - web/app/src/api.ts
+  proposed_paths_or_boundaries: Narrow Change envelope with typed Doc/code targets; Doc proposal reducer and shared
+    review shell.
+  changes:
+  - Represent exact before/after revisions, producer/run, purpose, checks, reviews and acceptance receipt.
+  - Keep existing Git proposal reducers; add Docs target behavior through canonical save.
+  - Request changes creates a new result revision with linked feedback; accepted revision advances Work outcomes.
+  non_goals: Universal transaction engine or multi-resource atomicity claims across unrelated authorities.
+  acceptance:
+  - Exact Markdown diff is reviewable and accepted only against valid current preconditions.
+  - Changed document/base invalidates stale acceptance; repeated request returns one receipt.
+  - Private source or deleted target cannot leak; restored proposal history remains attributable.
+  evidence: Native proposal/acceptance/migration cases and human Doc review workflow.
+  implementation_status: in_progress
+  parent_issue_numbers:
+  - 7
+  - 12
+  - 21
+  - 26
+  current_progress: Closed Doc Change decoder, pure proposal/review/adoption reducer, atomic Doc acceptance preparation and concrete accepted-outcome proof are independently source-reviewed. Fourteen reducer/proof arms and six compound-history arms are prepared, with exact pair replay and checkpoint boundaries. Seven additional source-reviewed native read arms cover bounded metadata, exact historical before/after bodies, access, result-specific feedback and pagination. The browser command codec passed ten host tests; the closed read/receipt client passed TypeScript and fifteen host tests with exact body/session/cursor checks and no serving route. Reserved Doc review components have independent source review, passing TypeScript and ten host tests; eight actual-browser synthetic cases passed on the reviewed Lightsail isolated component runtime after stable textarea-label correction. Explicit read-to-UI mapping and stale-load invalidation passed eight additional host/static-markup cases, preserving missing request IDs and rejected quarantine outcomes honestly. The reserved human Home carrier at34c62a4 and app journey at0f9aba9 are independently source-reviewed, with fourteen new native arms prepared and final TypeScript, 46 client, 19 typed-read and ten journey host checks passing. Native compilation, connected browser acceptance and deployment remain pending.
+- id: T13
+  title: Separate execution expiry from durable proposal review
+  phase: C
+  priority: P0
+  owner_role: native_policy
+  parent_urb:
+  - URB-090
+  - URB-210
+  - URB-230
+  - URB-250
+  depends_on:
+  - T01
+  - T03
+  - T12
+  user_outcome: A valid result can be reviewed the next day without reviving expired worker powers.
+  current_paths:
+  - native/core/desk/lib/stead-code-delivery.hoon
+  - native/core/desk/lib/stead-code-review-home.hoon
+  - native/core/desk/lib/stead-code-delivery-export.hoon
+  - docs/urbit/CODE_DELIVERY_PROFILE.md
+  proposed_paths_or_boundaries: Explicit lease/grant/proposal validity and exact maintainer adoption operation.
+  changes:
+  - Distinguish renewable execution lease, grant expiry, explicit revocation/compromise and accepted historical
+    output.
+  - Preserve immutable original provenance/digest; require current target/base, scope, checks, review and adopter
+    authority.
+  - Quarantine affected output where policy requires; never silently renew old credentials.
+  non_goals: Deleting eligible/current checks or treating historic permission as permanent acceptance authority.
+  acceptance:
+  - Result submitted before expiry can be inspected and follow the explicit authorized next-day path.
+  - Late publication after expiry/revocation is denied; adoption does not authorize a new worker effect.
+  - Changed target or output digest requires revalidation/new review; compromise never auto-accepts.
+  evidence: Reviewed ADR plus native time-shift, replay, revocation and migration tests.
+  implementation_status: in_progress
+  parent_issue_numbers:
+  - 12
+  - 24
+  - 26
+  - 28
+  current_progress: Source-only Doc result provenance retains the exact producer binding/session and scoped grant. Expiry requires explicit independent adoption; revoked or unknown authority quarantines unaccepted output, and accepted history is immutable. Time-shift, renewed-grant, late-effect and current-reviewer tests are written but uncompiled; Code adoption and real service/run integration remain pending.
+- id: T14
+  title: Implement durable native runs and attempts
+  phase: C
+  priority: P0
+  owner_role: native_workflow
+  parent_urb:
+  - URB-090
+  - URB-180
+  - URB-200
+  - URB-230
+  - URB-250
+  depends_on:
+  - T03
+  - T05
+  - T06
+  - T12
+  - T13
+  user_outcome: A delegated task has an honest persistent lifecycle through disconnects and retries.
+  current_paths:
+  - native/core/desk/app/stead-home.hoon
+  - native/core/desk/lib/stead-code-build-home.hoon
+  - native/core/desk/lib/stead-code-delivery.hoon
+  - docs/urbit/AGENT_JOB_PROFILE.md
+  - sdk/v3/README.md
+  proposed_paths_or_boundaries: New versioned native job reducer and public run protocol/SDK surface.
+  changes:
+  - Implement issue/read/list/claim/heartbeat/wait/resume/cancel/finish with immutable context/output contract.
+    Resume means continuing an authorized clarification wait, not general process checkpoint restoration.
+  - Use attempt fencing, bounded leases, budget/deadline and current final authorization.
+  - Output kinds include Docs, code and completion evidence; no repository requirement for generic jobs.
+  - Commit accepted result reference and submitted state coherently; retain ambiguous/staged reconciliation explicitly.
+  non_goals: Model inference on Home, repurposing post-proposal build jobs as pre-proposal agent jobs.
+  acceptance:
+  - Competing claims yield one live attempt; late stale attempt cannot publish.
+  - Restart/replay does not dispatch a duplicate external effect or duplicate accepted result.
+  - Comment/status changes preserve contract; changed requirements, canceled job or stale epoch block admission.
+  - Authored fields cannot spoof actor; scoped context fetch denies unauthorized linked Docs.
+  evidence: Native reducer/Gall integration, predecessor migration, export and failure/recovery evidence.
+  implementation_status: in_progress
+  parent_issue_numbers:
+  - 12
+  - 21
+  - 23
+  - 26
+  - 28
+  current_progress: Pure typed lifecycle, immutable contracts, three-attempt fencing, finite leases/budgets, current pre-effect authorization and explicit unknown-effect reconciliation are source-reviewed. All 32 Run arms are registered in the 329-arm/48-suite native composition. Diagnostic 43846986399 source-bound sequence/count evidence verifies Run codec6/adapters8/views8, totaling 22 arms; the ten-arm lifecycle suite still fails compilation. Original raw positive transcripts were not exported. The lifecycle fixture correction and ordinary qualification remain pending. Service/effect adapters, history/migration/export, saved-state custody, live wire activation, real executor and G3 remain open; no live dispatch is enabled.
+- id: T15
+  title: Build supervisor and deterministic executor proofs
+  phase: C
+  priority: P0
+  owner_role: runtime
+  parent_urb:
+  - URB-090
+  - URB-200
+  - URB-210
+  - URB-250
+  depends_on:
+  - T14
+  user_outcome: Starting work actually executes and returns a bounded reviewable result.
+  current_paths:
+  - scripts/urbit/code_build_worker.py
+  - scripts/urbit/agent_proposal.py
+  - docs/urbit/CODE_BUILD_WORKER.md
+  proposed_paths_or_boundaries: Separate job supervisor, result manifest and deterministic Docs/code recipes.
+  changes:
+  - Reuse isolation and receipt-last patterns; separate trusted supervisor credentials from untrusted child.
+  - Reconcile local receipt/Home state before repeat claims or execution.
+  - Submit only assigned Doc proposal or job-scoped code staging output.
+  - Docs supervisor proof is the gate for T17/T18. Deterministic Code recipe is an independent parallel proof on
+    the already supported inline profile, not a blocker for Docs.
+  non_goals: Claiming model autonomy from deterministic recipes or granting general repository write credentials.
+  acceptance:
+  - Kill before/after output and before/after publication reply yields one accepted proposal.
+  - Child cannot access Home sessions, provider keys or deployment credentials.
+  - Cancel fences publication; supervisor reports observed stop separately from cancel acceptance.
+  - Deterministic Docs edit is a real isolated output, not a mocked success response. Record the separate deterministic
+    Code recipe proof when available without claiming it proves larger Code capability.
+  evidence: Actual external supervisor/native Home integration and recorded crash points.
+  implementation_status: in_progress
+  parent_issue_numbers:
+  - 12
+  - 23
+  - 24
+  - 28
+  current_progress: The isolated deterministic Doc child source consumes exact native run-context bytes and one declared target, preserves original Markdown, enforces the output budget and publishes a private output-ready receipt last. Independent source review and eleven host boundary tests passed; child calls were mocked. Hosted run 43783836691 passes eleven actual isolated child output, namespace, credential and publication-fault checks. Current Run claim and lease reconciliation, supervisor transport and atomic Doc-plus-Run publication remain required. No model or G3 execution is enabled.
+  model_connection_evidence: Pure versioned connection parsing, exact request preparation and bounded untrusted text/tool proposals are retained with twelve passing remote host cases. Exact tested module and test bodies are preserved; only test import placement changes. The fixed loopback transport later returned one actual response; general provider transport, credentials, aggregate budget settlement, live native effect admission and real G3 remain pending. See docs/urbit/evidence/2026-11-15/controller-refresh/model-connections/promotion.json.
+- id: T16
+  title: Integrate the unified worker and run experience
+  browser_preparation_evidence: Ten remote orchestration host cases pass exact-source checks, session-cleanup refusal and current-native-before-finish ordering through authored owner, socket and thread doubles. Cleanup and unchanged pilot health passed. Actual connected browser/native execution remains required. Evidence is controller-refresh/browser-orchestration-host10/integrator-review.json.
+  phase: C
+  priority: P1
+  owner_role: agent_ux
+  parent_urb:
+  - URB-070
+  - URB-090
+  - URB-260
+  depends_on:
+  - T02
+  - T08
+  - T11
+  - T12
+  - T14
+  - T15
+  user_outcome: Delegate, answer, review and continue in the same Work experience.
+  current_paths:
+  - web/app/src/WorkDelegations.tsx
+  - web/app/src/main.tsx
+  - web/app/src/WorkDiscussion.tsx
+  - web/app/src/WorkDevelopment.tsx
+  - web/app/src/api.ts
+  proposed_paths_or_boundaries: WorkerAssignment, ExecutionCard, RunDetail, AgentPicker and clarification actions.
+  changes:
+  - Remove inline-Code gating from generic agent workflow; keep Code-only controls conditional.
+  - Named worker picker, contextual brief, output summary, policy defaults and expandable limits.
+  - Show meaningful progress and correct next action; evidence/proposal in ordinary Work outputs.
+  - Reuse same member and review surfaces for human/agent output.
+  - Fixture/UI work can proceed against frozen T14 contracts; functional acceptance waits for T15 real dispatch.
+  non_goals: Separate AI-task application, token-stream discussion spam or fake progress percentage.
+  acceptance:
+  - All relevant shared_ui_states are designed; start is not shown as running until actual accepted claim/readback.
+  - No-Code task has no branch/OID fields; normal flow needs no copied JSON brief.
+  - Question answer, requested changes, retry/reassign and cancel work with keyboard and honest pending state.
+  evidence: Component fixtures plus real dispatch/wait/review flow after T15; no mock-only closure.
+  implementation_status: in_progress
+  parent_issue_numbers:
+  - 10
+  - 12
+  - 29
+  current_progress: A reserved read-only Run client now checks the exact native query and sanitized preview/detail shapes, separates phase from lease and input freshness, and fences changed sessions, capabilities and superseded same-session pagination. TypeScript and fourteen host boundary checks passed after correcting an observed stale first-page race. A separate human answer/cancel client passed independent source review, TypeScript and fourteen host checks; it preserves exact explicit retries and distinguishes accepted answers from resume and canceled Runs from process exit. A reserved read-only RunHistory component passed scoped TypeScript and twelve host checks after immediate capability-withdrawal hiding and truthful requested/lease labels were corrected. Eight isolated real-browser synthetic cases also passed, including keyboard, 320px enlarged text, access withdrawal and retained draft behavior, with complete cleanup. Neither client exposes an endpoint; app activation, connected controls, real dispatch and G3 acceptance remain required.
+- id: T17
+  title: Qualify one real model adapter
+  phase: C
+  priority: P1
+  owner_role: runtime
+  parent_urb:
+  - URB-090
+  - URB-200
+  - URB-210
+  - URB-250
+  depends_on:
+  - T15
+  user_outcome: A configured agent can perform actual scoped Docs work.
+  current_paths:
+  - docs/urbit/AGENT_JOB_PROFILE.md
+  - scripts/urbit/code_build_worker.py
+  proposed_paths_or_boundaries: One pinned executor adapter behind the supervisor protocol.
+  changes:
+  - Bind model/config, instructions version, tool/network policy, context manifest and budget to the run.
+  - Keep provider secrets outside repository execution; document local versus cloud data egress.
+  - Record meaningful progress, clarification, outputs and ambiguous effect reconciliation.
+  - Keep adapter contract provider-neutral and compatible with local model execution; optional external provider
+    is explicit, never a mandatory dependency of Work/Docs/Code.
+  non_goals: Multi-provider marketplace or general task-success claim from one example.
+  acceptance:
+  - Actual model revises a synthetic document and produces a valid exact proposal with evidence.
+  - Cancel, lease renewal, maximum duration and cost/tool bounds work under real calls.
+  - Lost call/finish reply does not automatically repeat a billable effect without reconciliation.
+  - Retrieved content cannot broaden task permissions or authorize external side effects.
+  evidence: Real model run with sanitized configuration/context references and observed recovery outcomes.
+  owner_connection_decision: Multiple named agents may select independently versioned provider/model connections, including isolated local endpoints; implement one small compatible HTTP adapter and extension seam first. MCP tool access remains separate and every effect uses current native authority. One fixed Qwen2.5 local call passes the exact-content gate below; complete native connection and G3 qualification still require the connected journey.
+  current_progress: Provider-neutral connection/request/response source, llama.cpp compatibility and the no-overwrite journal retain 18 and 12 passing remote host cases respectively. Separate failure collection, setup diagnostics and exact CDN admission have 29, 33 and 8 passing constructed cases. Actual runs 43823695825 and 43832899126 each receive one original tool reply but miss the required final Markdown LF; strict fidelity fails, cleanup passes, and no tool or Doc mutation occurs. The latter uses 295 total tokens. A source-reviewed Qwen2.5-1.5B-Instruct Q4_K_M successor changes model/sampling under unchanged runtime/resource/cost bounds and the same 47-byte gate. Three response-fidelity cases now pass in controller-refresh/repository-pure-owner-host23/integrator-observed-review.json, preserving both actual failed replies and testing constructed byte-preservation inputs. The combined host23 covers twenty inert worker/collector/outer cases as well, with exact unchanged source custody and cleanup. Actual successor 43843435452 on cff48cb/workflow3b258285 now passes one original exact 47-byte Markdown proposal including terminal LF, using 258 input + 31 output tokens. All 480 source and 2 workflow blobs, 5 original ZIP members and cleanup are verified; evidence is controller-refresh/model-hosted-43843435452/integrator-review.json. No repair, tool execution, Doc mutation, native authority, reliability rate or general provider qualification follows. Native model/Doc transaction and five custody/rollback arms are source-reviewed but uncompiled. Two turn-codec files add six authored uncompiled arms; retained multi-turn state, clarification/revision, current native admission, aggregate budget settlement and G3 remain open. Evidence is controller-refresh/model-hosted-43832899126/integrator-review.json and model-qwen25-profile-source/custody.json. Original failures remain retained; no output repair or automatic retry is permitted.
+  operator_catalog:
+    implementation: scripts/urbit/model_catalog.py
+    example: specs/urbit/fixtures/model-catalog.json
+    review: https://github.com/ScottTpirate/stead-urbit/pull/129
+    verification: https://github.com/ScottTpirate/stead-urbit/actions/runs/45735439068
+    result: 39 host checks passed, including eight for model selection and exact journal reopening, plus a concurrent admission check.
+  implementation_status: in_progress
+  parent_issue_numbers:
+  - 12
+  - 23
+  - 24
+  - 28
+- id: T18
+  title: Accept the complete non-code agent journey
+  phase: C
+  priority: P0
+  owner_role: independent_qa
+  parent_urb:
+  - URB-090
+  - URB-110
+  - URB-260
+  depends_on:
+  - T09
+  - T10
+  - T12
+  - T13
+  - T15
+  - T16
+  - T17
+  user_outcome: The product works as a unified human/agent workspace without Git expertise.
+  current_paths:
+  - web/app/tests/native.mjs
+  - web/app/tests/rendered.mjs
+  - docs/urbit/AGENT_JOB_PROFILE.md
+  proposed_paths_or_boundaries: Golden journey G3/G5 evidence and focused regressions.
+  changes:
+  - Exercise PM creates task, named agent asks a question, updates Doc, receives revision request and submits again.
+  - Accept exact Doc result and complete Work under the declared outcome policy.
+  - Include ordinary comment during run, changed criteria, next-day review and revoked attempt.
+  non_goals: Passing solely through synthetic mocked APIs or calling submitted work completed.
+  acceptance:
+  - No repository exists; no manual staging, copied brief, raw IDs or operator intervention.
+  - Refresh/restart preserves accepted Doc, Work state, provenance and actionable Inbox.
+  - Each failed/revoked/stale operation has a truthful recoverable UI outcome.
+  evidence: Independent real-browser/native/model walkthrough, exact build and failures retained.
+  implementation_status: planned
+  parent_issue_numbers:
+  - 12
+  - 14
+  - 29
+- id: T19
+  title: Diagnose and repair live repository browsing
+  phase: B
+  priority: P1
+  owner_role: forge
+  parent_urb:
+  - URB-080
+  - URB-130
+  - URB-260
+  depends_on: []
+  user_outcome: The live Code view works as reliably as the demonstration screens.
+  current_paths:
+  - web/app/src/RepoBrowser.tsx
+  - web/app/src/CodeRepository.tsx
+  - web/app/src/CodePack.tsx
+  - web/app/src/api.ts
+  - docs/urbit/PHASE5_DEPLOYMENT.md
+  proposed_paths_or_boundaries: Targeted current-profile fix and retryable file-tree error state.
+  changes:
+  - Reproduce the capture's live file-tree failure with exact profile/source/access state.
+  - Trace request, native response and UI projection before changing unrelated layers.
+  - Fix the cause and distinguish empty, unavailable, unsupported and stale snapshots.
+  non_goals: Claiming full forge acceptance or using demo tree data as the repair.
+  acceptance:
+  - Authorized live root, folder and text file render at the selected revision.
+  - Error recovery is available; permission denial does not leak repository data.
+  - Wrong-generation responses cannot overwrite the currently selected branch.
+  evidence: Reproduction and actual live/native read result; if access unavailable, record the blocker without inventing
+    diagnosis.
+  implementation_status: accepted_on_named_profile
+  parent_issue_numbers:
+  - 11
+  - 16
+  - 29
+  current_progress: >-
+    Accepted for the read-only a0e90ef pilot. The original authenticated browser report
+    records 22 root entries, one entry inside the opened folder, focus on return, and the
+    exact 4,963-byte README at desktop and narrow widths. Wrong-snapshot and signed-out
+    HTTP reads withheld content. Independent review confirmed shipped retry, refresh and
+    late-response handling. The historical screenshot failure remains unreproduced.
+  acceptance_record: docs/urbit/evidence/2026-11-25/repository-browse-t19.json
+- id: T20
+  title: Unify Code capabilities and qualify standard Git writes
+  phase: D
+  priority: P0
+  owner_role: native_forge
+  parent_urb:
+  - URB-080
+  - URB-090
+  - URB-200
+  - URB-210
+  depends_on:
+  - T04
+  - T06
+  - T19
+  user_outcome: Developers can use ordinary Git against the declared repository profile.
+  current_paths:
+  - native/core/desk/lib/stead-code-home.hoon
+  - native/core/desk/lib/stead-code-store.hoon
+  - native/core/desk/lib/stead-code-pack-push.hoon
+  - native/core/desk/lib/stead-code-pack-admit.hoon
+  - web/app/src/CodeRepository.tsx
+  - web/app/src/CodePack.tsx
+  - docs/urbit/CODE_HOME_PROFILE.md
+  proposed_paths_or_boundaries: Typed Code capability interface with explicit supported operation/size/profile matrix.
+  changes:
+  - Align tree/ref/file/compare/proposal/check operations across inline and external profiles.
+  - Complete stock full-history clone/fetch/push for selected supported profile; preserve original OIDs.
+  - Keep quarantine, pack bounds, current policy, expected old ref and accepted receipt semantics.
+  non_goals: Claiming every Git extension, LFS or SHA-256 repo support before conformance proof.
+  acceptance:
+  - Stock client round trip and fsck preserve refs and objects in representative history.
+  - Concurrent ref CAS has one valid winner; revoked in-flight credential cannot update target.
+  - Unsupported operations fail clearly and are accurately surfaced in UI.
+  - Home/store restart and lost response reconcile without duplicate/ref-corrupt acceptance.
+  evidence: Actual Git/native profile-specific conformance and restore evidence; exact excluded features listed.
+  implementation_status: planned
+  parent_issue_numbers:
+  - 11
+  - 12
+  - 23
+  - 24
+- id: T21
+  title: Deliver proper repository and pull request review screens
+  phase: D
+  priority: P1
+  owner_role: forge_ux
+  parent_urb:
+  - URB-070
+  - URB-080
+  - URB-090
+  - URB-260
+  depends_on:
+  - T07
+  - T12
+  - T20
+  user_outcome: Understand and review code without decoding the storage protocol.
+  current_paths:
+  - web/app/src/CodeRepository.tsx
+  - web/app/src/CodePack.tsx
+  - web/app/src/RepoBrowser.tsx
+  - web/app/src/CodeReview.tsx
+  - web/app/src/CodeExternalReview.tsx
+  - web/app/src/ReviewChanges.tsx
+  - web/app/src/externalReview.ts
+  - web/app/src/repository.css
+  - native/core/desk/lib/stead-code-review-home.hoon
+  - native/core/desk/lib/stead-code-pack-review.hoon
+  - web/app/src/api.ts
+  proposed_paths_or_boundaries: Repository routes and shared review shell with code diff/thread renderer.
+  changes:
+  - Files/PRs/History navigation, README rendering, pinned file/line permalinks.
+  - Review header/purpose, Overview/Files/Checks, file navigator, unified diff and exact anchored discussion.
+  - Separate Comment/Request changes/Approve from gated Merge; hide raw IDs in Details.
+  - Persist review threads in native/API state under current authorization; anchor repository, base/head, path/blob,
+    side and line range; preserve outdated anchors.
+  - Complete code-specific scoped relationships and Work→Doc→file→review navigation after T04/T20. Friendly branch
+    naming applies only to newly created refs.
+  non_goals: Beautiful diff that conceals truncated/unsupported content or stale review.
+  acceptance:
+  - Multi-file review works with keyboard; outdated discussions remain linked to original revision.
+  - New bytes invalidate approval according to policy; stale refs and unmet checks explain next action.
+  - Reviewer without merge permission can review but cannot merge.
+  evidence: Real human-code golden journey plus binary/large/truncated/stale-head scenarios.
+  implementation_status: in_progress
+  parent_issue_numbers:
+  - 10
+  - 11
+  - 12
+  - 29
+  current_progress: Exact read-only Code diff source is promoted in a786f38 with production TypeScript, ten host cases and eight isolated real-browser synthetic cases passing. Old/New/Change/Content rows, Diff/Raw keyboard navigation, exact supplied fallback, access/session withdrawal, stale replies, offline refresh and desktop/320px rendering are checked. Uniform font enlargement is not browser zoom. The original filename-resolution failure remains retained. Evidence is controller-refresh/code-diff/custody.json. Full coherent client/app composition, live rollout, anchored threads and the human Code journey remain; no four-file backport to the older live client and no whole T21 acceptance.
+- id: T22
+  title: Connect independent checks builds and release evidence
+  phase: D
+  priority: P0
+  owner_role: delivery_runtime
+  parent_urb:
+  - URB-090
+  - URB-200
+  - URB-250
+  depends_on:
+  - T13
+  - T15
+  - T20
+  user_outcome: Reviewers see trustworthy results for the exact change they are considering.
+  current_paths:
+  - native/core/desk/lib/stead-code-build-home.hoon
+  - native/core/desk/lib/stead-code-delivery.hoon
+  - scripts/urbit/code_build_worker.py
+  - docs/urbit/CODE_EXTERNAL_BUILD_SOURCE.md
+  - docs/urbit/CODE_BUILD_WORKER.md
+  proposed_paths_or_boundaries: Required/advisory check contract and accepted-build evidence in common review surface.
+  changes:
+  - Bind check/artifact evidence to exact code, recipe, runtime and trusted worker identity.
+  - Keep producer, independent checker and acceptance authority distinct where policy requires.
+  - Expose pending/pass/fail/unknown and artifact/log links; release intent remains distinct from deployment.
+  non_goals: Entire Actions ecosystem or caller-supplied verified=true proofs.
+  acceptance:
+  - Passed result for another revision/recipe cannot satisfy required checks.
+  - Failed/unknown required check blocks acceptance; canceled/stale worker output is rejected.
+  - Retry after lost completion returns recorded exact outcome; artifact hashes/readback verify.
+  evidence: Real isolated build, negative provenance cases and native review-to-build-to-release-intent readback.
+  implementation_status: planned
+  parent_issue_numbers:
+  - 12
+  - 23
+  - 28
+- id: T23
+  title: Complete agent Code parity
+  phase: D
+  priority: P0
+  owner_role: forge_runtime
+  parent_urb:
+  - URB-080
+  - URB-090
+  - URB-250
+  - URB-260
+  depends_on:
+  - T17
+  - T18
+  - T20
+  - T21
+  - T22
+  user_outcome: Agent code work feels like ordinary code collaboration in the same Work flow.
+  current_paths:
+  - scripts/urbit/agent_proposal.py
+  - native/core/desk/lib/stead-code-review-home.hoon
+  - native/core/desk/lib/stead-code-pack-review.hoon
+  - web/app/src/WorkDevelopment.tsx
+  - docs/urbit/AGENT_JOB_PROFILE.md
+  proposed_paths_or_boundaries: Job-scoped result admission on selected larger Code profile.
+  changes:
+  - Replace manual authorized-writer staging with scoped immutable worker result submission.
+  - Bind Work, run, exact proposal, review, accepted ref and independent build.
+  - Implement request-changes/rebase as new scoped result revision with appropriate review.
+  non_goals: General writer credentials for proposal-only agent or automatic GitHub cutover.
+  acceptance:
+  - Real model code edit completes G4 without copying OIDs or briefs.
+  - Two workers on same base produce explicit stale-base handling, not silent overwrite.
+  - Non-code G3 still works and the UI shares ownership/review semantics.
+  evidence: Independent native/browser/Git/model journey on exact supported profile.
+  implementation_status: planned
+  parent_issue_numbers:
+  - 11
+  - 12
+  - 28
+  - 29
+- id: T24
+  title: Add a bounded project work queue
+  phase: E
+  priority: P1
+  owner_role: native_scheduling
+  parent_urb:
+  - URB-090
+  - URB-190
+  - URB-200
+  - URB-250
+  depends_on:
+  - T05
+  - T06
+  - T11
+  - T14
+  - T18
+  user_outcome: Agents continue ready work while the PM handles exceptions.
+  current_paths:
+  - native/core/desk/lib/stead-team.hoon
+  - native/core/desk/lib/stead-code-delivery.hoon
+  - docs/urbit/AGENT_JOB_PROFILE.md
+  proposed_paths_or_boundaries: Explicit parent-plan membership, dependency queue and per-project resource budget.
+  changes:
+  - Permit authorized agents to propose/create child Work within parent scope and budget.
+  - Claim ready tasks atomically; reject cycles; enforce concurrency and fairness.
+  - Inherit visible project steward, stop repeated failure loops and auto-continue accepted dependents.
+  - Pause new work stops new claims; running work continues unless separately canceled. Cancellation fences eligible
+    queued/active work with truthful partial outcomes.
+  non_goals: Unbounded autonomous bot chat or general arbitrary workflow engine.
+  acceptance:
+  - Ten-task Docs plan handles one clarification, retry and stale-document/result conflict without duplicate accepted
+    work. Code queue parity is separately qualified after T23.
+  - Restart preserves dependency/claim state; children cannot exceed parent budget/capabilities.
+  - PM only receives meaningful decisions and can pause/reassign with history preserved.
+  evidence: Real bounded multi-worker run; measured queue/resource behavior and failures retained.
+  implementation_status: planned
+  parent_issue_numbers:
+  - 12
+  - 22
+  - 23
+  - 28
+- id: T25
+  title: Add explicit low-risk automatic acceptance
+  phase: E
+  priority: P1
+  owner_role: native_policy
+  parent_urb:
+  - URB-090
+  - URB-210
+  - URB-250
+  - URB-260
+  depends_on:
+  - T13
+  - T18
+  - T24
+  user_outcome: A highly automated project does not require a human click on every routine result.
+  current_paths:
+  - native/core/desk/lib/stead-code-delivery.hoon
+  - native/core/desk/lib/stead-team.hoon
+  - specs/urbit/policy-contract.json
+  proposed_paths_or_boundaries: Small versioned policy presets and separately authorized review/acceptance actors.
+  changes:
+  - Keep Review required default; define narrow artifact/resource/check/reviewer conditions for automatic acceptance.
+  - Require current project-steward authorization to change automation policy.
+  - Route uncertain, privileged, out-of-scope or repeated-failure cases to Inbox.
+  - Initial automatic acceptance is narrowly scoped Docs work with separate reviewer and current acceptance authority.
+    Code automatic acceptance stays disabled until T22/T23 pass.
+  non_goals: Producer self-approval or agent-editable policy boundaries.
+  acceptance:
+  - Eligible low-risk output is accepted with separate evidence/authority; risky output waits for required decision.
+  - Agent cannot raise its own budget, tools, data access or acceptance scope.
+  - Revoked reviewer or changed exact output cannot reuse old acceptance evidence.
+  evidence: Native policy positives/negatives and bounded PM workflow with audit/readback.
+  implementation_status: planned
+  parent_issue_numbers:
+  - 12
+  - 24
+  - 28
+  - 29
+- id: T26
+  title: Deliver loss-aware import and export workflows
+  phase: F
+  priority: P1
+  owner_role: migration
+  parent_urb:
+  - URB-100
+  - URB-150
+  - URB-240
+  depends_on:
+  - T04
+  - T05
+  - T09
+  - T10
+  - T12
+  - T20
+  user_outcome: Bring real work and knowledge into Stead without hidden losses or duplicate records.
+  current_paths:
+  - scripts/urbit/portable_docs.py
+  - docs/urbit/PORTABLE_RECOVERY_PROFILE.md
+  - docs/urbit/PHASE5_DOGFOOD_REHEARSAL.md
+  proposed_paths_or_boundaries: Staged Git/Markdown/GitHub issue import first; Linear/Jira/Confluence adapters by
+    adoption need.
+  changes:
+  - Preserve source IDs/URLs, author/time provenance, supported comments, relations and attachments.
+  - Dry-run maps statuses/users and reports unsupported fields, losses and unresolved links.
+  - Resume/idempotent import into staged destination; explicitly activate accepted content.
+  non_goals: Git mirror described as complete project migration or dual writable masters.
+  acceptance:
+  - Re-running import creates no duplicate source records; interrupted import resumes predictably.
+  - Ambiguous identities and unsupported fields are reported rather than silently guessed.
+  - Export opens without Stead and restores canonical Markdown/Git identities plus scoped structured history.
+  evidence: Representative source fixtures, loss reports and real exported/imported round trip.
+  implementation_status: planned
+  parent_issue_numbers:
+  - 13
+  - 18
+  - 27
+- id: T27
+  title: Qualify browser-only member onboarding
+  phase: F
+  priority: P1
+  owner_role: native_identity
+  parent_urb:
+  - URB-060
+  - URB-160
+  - URB-210
+  - URB-260
+  depends_on:
+  - T03
+  - T07
+  user_outcome: Ordinary team members join without operating a personal server.
+  current_paths:
+  - docs/urbit/BROWSER_IDENTITY_PROFILE.md
+  - native/core/desk/lib/stead-browser.hoon
+  - native/core/desk/lib/stead-browser-oidc-proof.hoon
+  - web/app/src/UrbitSignIn.tsx
+  - web/app/src/identity.ts
+  proposed_paths_or_boundaries: One separately qualified browser identity binding and guided invitation flow.
+  changes:
+  - Inspect existing profile/proof before selecting supported authentication mechanism.
+  - Bind verified identity to individual principal; preserve native ship sign-in where supported.
+  - Improve current challenge flow with verified destination and automatic bounded approval observation.
+  non_goals: Treating organization +code/session as a member identity or claiming native passkey support from a
+    mock.
+  acceptance:
+  - Invited member joins; outsider, replay, wrong audience/origin and revoked identity are denied.
+  - Denied/expired/unreachable approval states are recoverable and clear.
+  - Provider outage does not change identity or grant access implicitly.
+  evidence: Real supported-auth integration and independent first-time-member journey.
+  implementation_status: planned
+  parent_issue_numbers:
+  - 9
+  - 19
+  - 24
+  - 29
+- id: T28
+  title: Productize self-hosting upgrades and recovery
+  phase: F
+  priority: P1
+  owner_role: operations
+  parent_urb:
+  - URB-100
+  - URB-120
+  - URB-130
+  - URB-220
+  - URB-230
+  depends_on:
+  - T06
+  - T14
+  - T20
+  - T26
+  - T27
+  user_outcome: Install, operate, update and recover Stead from a short supported path.
+  current_paths:
+  - docs/urbit/DEPLOYMENT.md
+  - docs/urbit/PHASE5_DEPLOYMENT.md
+  - docs/urbit/RELEASE_PACKAGING.md
+  - docs/urbit/PAIRED_RECOVERY_PROFILE.md
+  - docs/urbit/HOME_UPGRADE_PROFILE.md
+  proposed_paths_or_boundaries: One recommended installer/onboarding profile and operator health/backup surface.
+  changes:
+  - Bind runtime/desk/frontend/API/state compatibility in release manifest.
+  - First owner/project/member/worker setup with tested backup and clear supported limits.
+  - Upgrade preflight and recovery use exactly one active authority and fence stale workers.
+  non_goals: Every hosting provider, active-active Home or untested saved-state downgrade.
+  acceptance:
+  - Independent operator installs clean host, adds member, runs Work/Docs and optional worker.
+  - Upgrade interruption and backup restore retain accepted history and revoke unsafe stale access.
+  - Pending external jobs reconcile without automatic duplicate model effects after recovery.
+  evidence: Independent clean installation, upgrade and restore with measured recovery point/time.
+  implementation_status: planned
+  parent_issue_numbers:
+  - 13
+  - 15
+  - 16
+  - 25
+  - 26
+- id: T29
+  title: Investigate House integration through a narrow adapter
+  phase: F
+  priority: P2
+  owner_role: ecosystem
+  parent_urb:
+  - URB-160
+  - URB-180
+  - URB-220
+  - URB-280
+  depends_on:
+  - T01
+  - T03
+  - T07
+  user_outcome: Future House hosting can reuse Stead rather than force another rewrite.
+  current_paths:
+  - docs/urbit/MASTER_BUILD_DIRECTIVE.md
+  - docs/urbit/PHASE5_DEPLOYMENT.md
+  - sdk/v3/README.md
+  proposed_paths_or_boundaries: HostShell, IdentityAdapter, NotificationAdapter and versioned lifecycle seam.
+  changes:
+  - Time-box actual source/license/SDK/API/install investigation to a small dedicated work package.
+  - Prototype launch, verified identity, deep link and permission-filtered notification only against documented
+    host contracts.
+  - Record unresolved contracts and leave unsupported integration disabled.
+  non_goals: Gnat migration, inferred plugin ABI or blocker on standalone product delivery.
+  acceptance:
+  - Verified supported House version and source/license facts, or explicit evidence-backed unknowns.
+  - If interface available, two members and denied outsider pass install/launch/revoke/upgrade proof.
+  - Host membership cannot bypass explicit project grants.
+  evidence: Compatibility matrix and observed host integration; absence of docs is not a compatibility claim.
+  implementation_status: investigated_disabled
+  parent_issue_numbers:
+  - 19
+  - 21
+  - 25
+  - 31
+  current_progress: Bounded primary-source/site and connected GitHub repository search recorded in PHASE5_DEPLOYMENT.md.
+    Supported House source/license/SDK contract remains unknown; no inferred adapter or external permission change.
+    Actual member/outsider proof waits for documented host interfaces and T03/T07.
+- id: T30
+  title: Qualify independent usable beta and source cutover decision
+  phase: F
+  priority: P0
+  owner_role: independent_qa
+  parent_urb:
+  - URB-110
+  - URB-130
+  - URB-150
+  - URB-260
+  - URB-270
+  - URB-280
+  depends_on:
+  - T18
+  - T21
+  - T23
+  - T24
+  - T25
+  - T26
+  - T27
+  - T28
+  - T31
+  - T32
+  user_outcome: Teams can trust the advertised product and adopt it without insider knowledge.
+  current_paths:
+  - docs/urbit/RELEASE_READINESS.md
+  - docs/urbit/REVIEW_OWNERSHIP.md
+  - specs/urbit/ecosystem.json
+  - web/app/tests/native.mjs
+  proposed_paths_or_boundaries: Independent user/technical acceptance tied to exact candidate and supported capability
+    matrix.
+  changes:
+  - Run G1 through G5 with unfamiliar users and independent technical reviewers.
+  - Record real versus synthetic evidence, failures, support exclusions and recovery results.
+  - Prepare concrete source-cutover proposal only after selected profile passes full-history write/review/build/restore.
+  non_goals: Automatic deployment/source cutover or issue closure from plan completion.
+  acceptance:
+  - No lost accepted data, wrong permission disclosure or misleading success state.
+  - Initial usability target of four of five new testers completing core task without coaching is measured honestly.
+  - Required independent teams/app/release governance from existing URB-270/280 remains satisfied.
+  - GitHub stays source until explicit cutover authorization and complete exact-profile evidence.
+  evidence: Real candidate-specific qualification dossier and concise supported-release decision.
+  implementation_status: planned
+  parent_issue_numbers:
+  - 14
+  - 16
+  - 18
+  - 29
+  - 30
+  - 31
+- id: T31
+  title: Measure and qualify long-running team and agent capacity
+  phase: E
+  priority: P0
+  owner_role: native_storage_qa
+  parent_urb:
+  - URB-110
+  - URB-130
+  - URB-190
+  - URB-200
+  depends_on:
+  - T05
+  - T06
+  - T14
+  - T24
+  user_outcome: Sustained use has known limits, costs and recovery behavior.
+  current_paths:
+  - native/core/desk/lib/stead-team.hoon
+  - native/core/desk/lib/stead-code-store.hoon
+  - native/core/desk/lib/stead-code-delivery.hoon
+  - docs/urbit/DEV_FLOW.md
+  proposed_paths_or_boundaries: Reproducible bounded workload and published support thresholds.
+  changes:
+  - Attempt corpus of 1000 Work, 500 Docs, 100000 business events and 10 runs; label as target, not supported claim.
+  - Measure p50/p95 reads/saves, event backlog, memory/object growth, fairness and backup/restore.
+  - Lower or raise supported limits only from evidence; retain per-event/decompression and recovery bounds.
+  - Qualify Work/Docs/runs independently of Git profile completion; repository capacity extension waits for T20
+    and records its own corpus.
+  non_goals: Synthetic benchmark numbers or undocumented compaction that breaks replay/auth history.
+  acceptance:
+  - Workload and host/profile are reproducible; thresholds and excluded sizes documented.
+  - Quota behavior is recoverable; reserve control operations remain usable.
+  - Long-running activity and restarts preserve exact accepted outcomes and retained provenance.
+  - Demonstrate sustained growth beyond pilot history/comment limits and correct compaction/archive/replay/restore
+    under the chosen storage profile.
+  evidence: Actual measurements, supported-size decision and negative capacity/recovery cases.
+  implementation_status: planned
+  parent_issue_numbers:
+  - 14
+  - 16
+  - 22
+  - 23
+- id: T32
+  title: Consolidate current product and operator guidance
+  phase: F
+  priority: P1
+  owner_role: product_integrator
+  parent_urb:
+  - URB-120
+  - URB-220
+  - URB-260
+  - URB-270
+  depends_on:
+  - T18
+  - T23
+  - T28
+  user_outcome: People and agents find one current answer about how Stead works.
+  current_paths:
+  - README.md
+  - docs/urbit/AGENT_HANDOFF.md
+  - docs/urbit/MASTER_BUILD_DIRECTIVE.md
+  - docs/urbit/RUNBOOK.md
+  - docs/urbit/ROADMAP.md
+  - docs/urbit/RELEASE_READINESS.md
+  proposed_paths_or_boundaries: Compact product quickstart, current capability ledger and navigable evidence archive.
+  changes:
+  - Update existing authoritative docs instead of leaving contradictory new design layers.
+  - Separate implemented, qualified and supported per capability/profile.
+  - Keep long historical proofs behind links; expose normal user/operator/agent paths clearly.
+  non_goals: Deleting failed historic evidence or claiming tests were rerun because wording changed.
+  acceptance:
+  - New implementer can identify current contract, next package, owner and acceptance evidence.
+  - New operator/member completes supported quickstart without reading historical experiment logs.
+  - All feature claims match exact tested release profiles.
+  evidence: Independent documentation walkthrough and capability-to-evidence link check.
+  implementation_status: planned
+  parent_issue_numbers:
+  - 15
+  - 25
+  - 29
+  - 30
+phase_catalog:
+  A: Product and shared contracts
+  B: Daily human Work and Docs
+  C: Complete agent Docs outcome
+  D: Credible software forge
+  E: Bounded autonomous project
+  F: Installable supported beta
+dependency_note: Dependencies determine executable order. Docs autonomy can follow C without waiting for D; Code
+  automation requires its Code gates.
+source_review: Owner-supplied design review retained privately; see docs/urbit/PRODUCT_ALIGNMENT_20261115.md
+reconciliation:
+  date: '2026-11-15'
+  checkout: ScottTpirate/stead-urbit
+  baseline_commit: 539825650c60e606634bf4ab5967b698a6daa6e3
+  baseline_matches_review: true
+  scope: Historical initial documentation alignment; later implementation authorization and current progress are recorded separately below.
+  record: docs/urbit/PRODUCT_ALIGNMENT_20261115.md
+  capability_matrix: docs/urbit/CAPABILITY_MATRIX.md
+  t01: Product decisions documented; concrete versioned interfaces, migration review and acceptance remain pending.
+  t32: Current guidance aligned now; full shipped-product consolidation still depends on T18, T23 and T28.
+  gate_changes: []
+  source_plan_sha256: d5f4bf3fa0882cb0926ac747cbc768e5fe5162cc94f4e9e8a61dd1ebf65d0fb5
+  source_review_sha256: 59b43ffff05176000e0f9823244e417a4c7a4d7f8258f79821666619a5825973
+execution_authorization: User explicitly authorized all packages and supervised rollout to the existing Lightsail
+  pilot; no new paid instance or GitHub source cutover.

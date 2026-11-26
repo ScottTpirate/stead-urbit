@@ -1,12 +1,20 @@
 # Ecosystem implementation and release plan
 
-Status: proposed implementation gates, not runtime acceptance. Reviewed 2026-09-12 (America/New_York).
+Status: ecosystem acceptance gates retained; product alignment updated 2026-11-15 (America/New_York). Planning requirements are not runtime acceptance.
 Live coordination: [roadmap #1](https://github.com/ScottTpirate/stead-urbit/issues/1).
 This supplements the Master Build Directive and existing phases; it does not restart the local agent.
 
 ## Immediate sequence
 
-Continue URB-010/020/025: pin the actual toolchain, run a real four-fake-ship positive/negative test, and audit native Git reuse. Then freeze the minimum URB-030 contracts and deliver URB-040/050 together. Skills qualification can follow the first native harness; ecosystem planning must not prevent that first executable result.
+The native bootstrap is established. Continue from the current
+[handoff](AGENT_HANDOFF.md), [experience contract](PRODUCT_EXPERIENCE_CONTRACT.md)
+and [product plan](../../specs/urbit/product-execution-plan.yaml). Finish T01's
+versioned interface/migration review; T02 reference preparation, T06 storage
+inventory and T19 live-tree investigation can proceed independently. Deliver
+human Work/Docs and the no-Code agent Docs journey first; qualify software forge
+and Code automation on their own dependencies. Preserve URB IDs and M0–M6; A–F
+and T01–T32 are mapped follow-ups, not milestone renumbering. Current evidence and
+open gates are in the [capability matrix](CAPABILITY_MATRIX.md).
 
 Work+Knowledge remains universal. A general project must work without exposing Code/PR/Build navigation. Minimal canonical Git-backed document persistence belongs to the early Docs slice; the later native forge task adds protocol, refs and software collaboration. A temporary non-Git document store is not completion of canonical Docs.
 
