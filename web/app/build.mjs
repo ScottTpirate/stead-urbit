@@ -17,7 +17,8 @@ if (process.argv[2] !== '--locked') {
 const outdir = await mkdtemp(path.join(root, '.build-'));
 let published = false;
 try {
-  const result = await build({ absWorkingDir: root, entryPoints: { app: 'src/main.tsx', identity: 'src/identity.ts' },
+  // A product entry gives shared UI code a bounded chunk without changing synchronous app imports.
+  const result = await build({ absWorkingDir: root, entryPoints: { app: 'src/main.tsx', identity: 'src/identity.ts', product: 'src/productWorkJourney.tsx' },
     bundle: true, minify: true, sourcemap: false, metafile: true, target: ['es2022'],
     format: 'esm', splitting: true, chunkNames: 'chunk-[hash]', outdir, legalComments: 'external',
     define: { 'process.env.NODE_ENV': '"production"' } });

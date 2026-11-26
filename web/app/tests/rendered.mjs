@@ -14,7 +14,7 @@ assert.equal(process.version, 'v24.21.0', 'Use the pinned frontend Node runtime'
 const output = path.resolve(root, '../../.runtime/web-render-tests');
 async function inputs() {
   const entries = await readdir(path.join(root, 'src'), {withFileTypes: true});
-  assert.ok(entries.length > 0 && entries.length <= 64 && entries.every(entry => entry.isFile()));
+  assert.ok(entries.length > 0 && entries.length <= 128 && entries.every(entry => entry.isFile()));
   const result = {};
   for (const name of ['tests/rendered.mjs', 'package-lock.json', ...entries.map(entry => 'src/' + entry.name)].sort()) {
     const raw = await readFile(path.join(root, name)); assert.ok(raw.length <= 1024 * 1024);
@@ -48,7 +48,7 @@ const person = {principal_id: id(102), binding_id: id(202), binding_revision: '1
 const canonical = value => typeof value === 'string' ? JSON.stringify(value) : '{' + Object.keys(value).sort().map(key => JSON.stringify(key) + ':' + canonical(value[key])).join(',') + '}';
 const digest = command => createHash('sha256').update('stead.command/3\0' + canonical(command)).digest('hex');
 
-async function fixture(run, mockRepository = false) {
+async function fixture(run, mockRepository = false, holdFirstCapability = false) {
   const context = await browser.newContext();
   const page = await context.newPage();
   page.setDefaultTimeout(15000);
@@ -59,6 +59,7 @@ async function fixture(run, mockRepository = false) {
     holdOpen: false, releaseOpen: null, holdWork: false, releaseWork: null, invalidateCommands: false,
     project: {kind: 'project', resource_id: id(1), project_id: id(1), title: 'Garden', project_key: 'GARDEN', preset: 'general', authority_epoch: '1', resource_revision: '1', policy_revision: '1', role: 'maintainer'},
     work: [], assignees: [], activity: [], containers: [], documents: [], proposals: new Map(), mergeRequests: [], dropMergeResponse: false,
+    capabilityReads: 0, releasedCapability: false, releaseCapability: null,
     externalWritable: false, externalReviews: new Map(), externalRequests: [], browseRequests: [], browseFixture: null,
     changesRequests: [], changesFixture: null, comments: new Map(), delegations: new Map(), relations: []};
   await page.route(origin + '/stead/**', async route => {
@@ -69,12 +70,19 @@ async function fixture(run, mockRepository = false) {
     state.requests.push({path: pathname, kind: value.kind, action: value.action, search: value.search});
     const send = (body, status = 200) => route.fulfill({status, contentType: 'application/json', body: JSON.stringify(body)});
     if (state.unreachable) return route.abort('failed');
-    if (pathname.endsWith('/capabilities')) return send({protocol: 'stead.capabilities/3', profile: 'configured-team'});
+    if (pathname.endsWith('/capabilities')) {
+      state.capabilityReads++;
+      if (holdFirstCapability && state.capabilityReads === 1) return new Promise(resolve => {
+        state.releaseCapability = () => { state.releaseCapability = null; state.releasedCapability = true; void route.abort('failed').catch(() => {}).then(resolve); };
+      });
+      return send({protocol: 'stead.capabilities/3', profile: 'configured-team'});
+    }
     if (pathname.endsWith('/start')) {
       state.authStarts.push(value.identity_ship);
       return send({status: 'pending', challenge_id: 'c'.repeat(64), comparison_code: 'sample-comparison'});
     }
     if (pathname.endsWith('/resume')) {
+      state.releaseCapability?.();
       if (state.signedOut) return send({}, 401);
       if (state.resumeFailure) return send({}, 503);
       state.watches.clear(); state.pages.clear();
@@ -342,11 +350,11 @@ async function fixture(run, mockRepository = false) {
     await writeFile(path.join(output, 'failure.html'), await page.content());
     await page.screenshot({path: path.join(output, 'failure.png'), fullPage: true});
     throw error;
-  } finally { state.releaseWork?.(); state.releaseOpen?.(); await context.close(); }
+  } finally { state.releaseCapability?.(); state.releaseWork?.(); state.releaseOpen?.(); await context.close(); }
 }
 async function check(name, run) {
   if (requestedCases.length && !requestedCases.includes(name)) return;
-  await fixture(run, name.startsWith('code-')); report.checks.push({name, passed: true});
+  await fixture(run, name.startsWith('code-'), name === 'superseded-startup-capability-does-not-hide-admitted-home'); report.checks.push({name, passed: true});
   console.log('PASS ' + name);
 }
 async function workForm(page) {
@@ -934,7 +942,7 @@ try {
     state.documents = [{kind: 'document', resource_id: id(301), container_id: id(200), title: 'Dense note', resource_revision: '1', markdown}];
     await page.getByRole('button', {name: 'Docs', exact: true}).click();
     await page.getByLabel('Collection', {exact: true}).selectOption(id(200));
-    await page.getByRole('button', {name: 'Open page', exact: true}).click();
+    await page.locator('button.document-title').click();
     const editor = page.getByRole('textbox', {name: 'Markdown source', exact: true});
     const preview = page.getByRole('article', {name: 'Document content', exact: true});
     await preview.locator('pre').waitFor();
@@ -955,7 +963,7 @@ try {
     await page.getByRole('button', {name: 'Discard changes', exact: true}).click();
     state.documents = [{...state.documents[0], resource_id: id(302), title: 'Second note', markdown: `---\nid: ${id(302)}\ntype: page\nstate: draft\n---\n# Second body`}];
     await page.getByRole('button', {name: 'Refresh', exact: true}).click();
-    await page.getByRole('button', {name: 'Open page', exact: true}).click();
+    await page.locator('button.document-title').click();
     await preview.getByRole('heading', {name: 'Second body', exact: true}).waitFor();
     assert.equal((await preview.textContent()).includes('steadPreviewExecuted'), false);
   });
@@ -1584,10 +1592,23 @@ try {
     const body = '# A useful page — 東京\n\nKeep this exact Markdown.\n';
     const markdown = `---\nid: ${id(603)}\ntype: page\nstate: draft\n---\n` + body;
     state.containers = [{kind: 'container', resource_id: id(200), container_id: id(200), title: 'Private notes', visibility: 'private', container_head: ''}];
-    state.documents = [{kind: 'document', resource_id: id(603), container_id: id(200), title: '# A useful page — 東京', resource_revision: '2', markdown}];
+    const documents = [{kind: 'document', resource_id: id(603), container_id: id(200), title: '# A useful page — 東京', resource_revision: '2', markdown},
+      ...Array.from({length:19},(_,index)=>({kind:'document',resource_id:id(800+index),container_id:id(200),title:'Long document '+index+' — '+('AveryLongUnbrokenTitle東京'.repeat(5)),resource_revision:'1'}))];
     await page.getByRole('button', {name: 'Docs', exact: true}).click();
     await page.getByLabel('Collection', {exact: true}).selectOption(id(200));
-    await page.getByRole('button', {name: 'Open page', exact: true}).click();
+    await page.getByRole('heading',{name:'Nothing here yet',exact:true}).waitFor();
+    assert.equal(await page.locator('button.document-title').count(),0);
+    state.documents=documents;await page.getByRole('button',{name:'Refresh',exact:true}).click();
+    const title=page.getByRole('button',{name:'A useful page — 東京',exact:true});await title.waitFor();
+    assert.equal(await page.locator('button.document-title').count(),20);
+    assert.equal(await page.getByRole('button',{name:'Open page',exact:true}).count(),0);
+    for(const width of [1440,320]){
+      await page.setViewportSize({width,height:900});
+      assert.equal(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth),true);
+      assert.ok((await title.boundingBox()).height>=44);
+      await page.screenshot({path:path.join(output,`doc-title-collection-${width}.png`),fullPage:true});
+    }
+    await title.focus();await page.keyboard.press('Enter');
     await page.locator('.editor-heading').getByRole('heading', {name: 'A useful page — 東京', exact: true}).waitFor();
     assert.equal(await page.locator('.page-visibility').textContent(), 'Private draft · only you');
     assert.equal(await page.getByRole('button', {name: 'Discard changes…', exact: true}).count(), 0);
@@ -1597,7 +1618,7 @@ try {
     assert.equal(await page.getByRole('textbox', {name: 'Markdown source', exact: true}).inputValue(), body);
     await page.getByRole('button', {name: 'Close', exact: true}).click();
     assert.equal(await page.getByRole('alertdialog').count(), 0);
-    await page.getByRole('button', {name: 'Open page', exact: true}).click();
+    await page.getByRole('button',{name:'A useful page — 東京',exact:true}).click();
     await page.getByRole('button', {name:'Edit',exact:true}).click();
     await page.getByRole('textbox', {name: 'Markdown source', exact: true}).fill(body + 'Unsent local edit.');
     await page.getByRole('button', {name: 'Discard changes…', exact: true}).click();
@@ -1610,12 +1631,19 @@ try {
     }
     await page.getByRole('button', {name: 'Discard changes…', exact: true}).click();
     await page.getByRole('button', {name: 'Discard changes', exact: true}).click();
-    await page.getByRole('button', {name: 'Open page', exact: true}).click();
+    await page.getByRole('button',{name:'A useful page — 東京',exact:true}).click();
     assert.equal(await page.getByRole('textbox', {name: 'Markdown source', exact: true}).count(), 0);
     assert.equal(await page.getByRole('button', {name:'Read',exact:true}).getAttribute('aria-pressed'),'true');
     await page.getByRole('button', {name:'Edit',exact:true}).click();
     assert.equal(await page.getByRole('textbox', {name: 'Markdown source', exact: true}).inputValue(), body);
     assert.equal(state.commands.length, 0);
+    await page.getByRole('button',{name:'Close',exact:true}).click();
+    state.project.role='reader';await page.getByRole('button',{name:'Refresh',exact:true}).click();
+    await title.waitFor();await title.focus();await page.keyboard.press('Enter');
+    await page.locator('.editor-heading').getByRole('heading',{name:'A useful page — 東京',exact:true}).waitFor();
+    assert.equal(await page.getByRole('button',{name:'Edit',exact:true}).count(),0);
+    assert.equal(await page.getByRole('button',{name:'Save page',exact:true}).count(),0);
+    assert.equal(state.commands.length,0);
   });
   await check('page-body-and-full-source-roundtrip-preserves-metadata-and-explicit-save', async (page, state) => {
     const prefix = `---\nid: ${id(604)}\ntype: page\nstate: draft\n---\n`;
@@ -1624,7 +1652,7 @@ try {
     state.documents = [{kind: 'document', resource_id: id(604), container_id: id(200), title: 'Notes — 東京', resource_revision: '2', markdown: prefix + body}];
     await page.getByRole('button', {name: 'Docs', exact: true}).click();
     await page.getByLabel('Collection', {exact: true}).selectOption(id(200));
-    await page.getByRole('button', {name: 'Open page', exact: true}).click();
+    await page.locator('button.document-title').click();
     await page.getByRole('button', {name:'Edit',exact:true}).click();
     const editor = page.getByRole('textbox', {name: 'Markdown source', exact: true});
     assert.equal(await editor.inputValue(), body);
@@ -1644,6 +1672,16 @@ try {
     assert.equal(state.commands[0].operation, 'document.save');
     assert.equal(state.commands[0].payload.markdown, prefix + body + '\nEdited in full source.\n');
     assert.equal(state.commands[0].expected_revision, '2');
+  });
+  await check('superseded-startup-capability-does-not-hide-admitted-home', async (page, state) => {
+    assert.equal(state.capabilityReads, 2, 'StrictMode starts two capability checks');
+    assert.equal(state.releasedCapability, true, 'Resume releases the older failed check after the newer success');
+    await page.locator('#project-content[data-live-updates="connected"]').waitFor();
+    assert.equal(await page.getByText('This home does not support this version of Stead.', {exact:true}).count(), 0);
+    assert.equal(await page.getByRole('heading', {name:'This Home needs a supported connection',exact:true}).count(), 0);
+    await page.getByRole('button',{name:'Work',exact:true}).click();
+    await page.getByRole('button',{name:'New work item',exact:true}).waitFor();
+    assert.equal(state.commands.length,0);
   });
   await check('routine-refresh-announcement-expires-without-clearing-save-evidence', async (page, state) => {
     await workForm(page);

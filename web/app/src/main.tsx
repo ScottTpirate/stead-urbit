@@ -20,9 +20,14 @@ import './style.css';
 import { DocumentBody } from './DocumentBody';
 import {eventPresentation} from './eventPresentation';
 import {WorkspaceView} from './WorkspaceView';
+import {workspaceRestore} from './workspaceNavigation';
 import {DocumentContext} from './DocumentContext';
 import {Icon} from './Icon';
+import {ProductWorkJourney} from './productWorkJourney';
+import {ProductJourneyDraftStore, productJourneyRoute, productReadNavigationAllowed, readProductWorkEndpoint, type ProductJourneySelection} from './productJourneyState';
+import type {ProductCarrierMode} from './productCarrier';
 const client = new HomeClient();
+const productWorkEndpoint = (project: string, work: string) => readProductWorkEndpoint(client, project, work);
 const blankQuery = (kind: ViewKind, project_id = '', container_id = '', resource_id = '', search = '', cursor = ''): Query =>
   ({ kind, project_id, container_id, resource_id, search, cursor });
 const scopeKey = (session: string | undefined, scope: UpdateScope) => JSON.stringify([session, scope.kind, scope.project_id, scope.container_id, scope.resource_id, scope.search]);
@@ -83,6 +88,17 @@ function App() {
   const [project, setProject] = useState<Row | null>(null);
   const [workspaceView,setWorkspaceView]=useState<'my-work'|'search'|null>(null);
   const [workspaceSupported,setWorkspaceSupported]=useState(false);
+  const [carrierMode, setCarrierMode] = useState<ProductCarrierMode>({kind: 'unsupported'});
+  const capabilityRead = useRef<object | undefined>(undefined);
+  const productActive = carrierMode.kind === 'native-human-doc';
+  const productDrafts = useRef(new ProductJourneyDraftStore());
+  const productPartition = useRef<object | null>(null);
+  const [productSessionKey, setProductSessionKey] = useState('');
+  const [productSelection, setProductSelection] = useState<ProductJourneySelection>({kind: 'list'});
+  const [productDraftRevision, setProductDraftRevision] = useState(0);
+  const [productDraftReset, setProductDraftReset] = useState(0);
+  const [discardProduct, setDiscardProduct] = useState<string | null>(null);
+  const [productRefreshRevision, setProductRefreshRevision] = useState(0);
   const workspaceAvailable=useRef(false);
   const [workspaceSearch,setWorkspaceSearch]=useState({draft:'',term:''});
   const [containers, setContainers] = useState<Row[]>([]);
@@ -107,6 +123,7 @@ function App() {
   const [notice, setNotice] = useState('');
   const [refreshNotice, setRefreshNotice] = useState<{text: string; sequence: number} | null>(null);
   const [editor, setEditor] = useState<{ id: string; revision: string; head: string; text: string; dirty: boolean; fullSource?: boolean } | null>(null);
+  const retainedDocumentScope = useRef<{project: string; collection: string; document: string; token: object} | null>(null);
   const pageHeader = editor?.text.match(PAGE_HEADER)?.[0] ?? '';
   const [currentVersion, setCurrentVersion] = useState<{scope: string; row: Row} | null>(null);
   const [work, setWork] = useState<Row | null>(null);
@@ -150,7 +167,11 @@ function App() {
   const feedbackHeading = useRef<HTMLHeadingElement>(null);
   const discardTrigger = useRef<HTMLElement | null>(null);
   const [online, setOnline] = useState(navigator.onLine);
-  const clearViews = () => {
+  const clearViews = (retainProductDrafts = false) => {
+    if (retainProductDrafts && editor?.dirty && project?.project_id && container?.container_id && productPartition.current) {
+      retainedDocumentScope.current = {project: project.project_id, collection: container.container_id, document: editor.id, token: productPartition.current};
+    }
+    if (!retainProductDrafts) retainedDocumentScope.current = null;
     client.clearCodeMerges();
     activeQuery.current++;
     repositoryGeneration.current++;
@@ -163,11 +184,18 @@ function App() {
     setRepository(null); setShowRepository(false); clearCodeSelection();
     setWorkFiltersOpen(false); setWorkFilters(initialWorkFilters); setWorkRoster({status: 'loading'});
     setCommentDrafts({}); navigationMemory.current.clear(); pendingNavigation.current=null;
+    if (!retainProductDrafts) { productDrafts.current.clear(); productPartition.current = null; setProductSessionKey(''); }
+    setDiscardProduct(null);
+    setProductSelection({kind: 'list'});
     setLinkedPage(null);
-    setSearch(''); setSearchDraft(''); setCursor(''); setEditor(null); setWork(null); setWorkMenu(null); setForm(''); setFormDirty(false); setDiscard(null); setPending(null); setTargets([]); setTargetFilter(''); setConfirmation(null); setCurrentVersion(null); setNotice(''); setRefreshNotice(null);
+    setSearch(''); setSearchDraft(''); setCursor('');
+    if (!retainProductDrafts || !editor?.dirty) setEditor(null);
+    if (!retainProductDrafts) setPending(null);
+    setWork(null); setWorkMenu(null); setForm(''); setFormDirty(false); setDiscard(null); setTargets([]); setTargetFilter(''); setConfirmation(null); setCurrentVersion(null); setNotice(''); setRefreshNotice(null);
   };
   client.onInvalidated = () => { clearViews(); setIdentity(null); setChallenge(null); };
   async function loadRepository(projectId: string, enable = false) {
+    if (client.productMode().kind !== 'legacy') { setRepository(null); return; }
     const generation = ++repositoryGeneration.current;
     try {
       if (enable) {
@@ -186,15 +214,43 @@ function App() {
   }
   useEffect(() => {
     const id = project?.project_id;
-    if (!id || !identity?.session_audit_id) return;
+    if (!id || !identity?.session_audit_id || carrierMode.kind !== 'legacy') return;
     void loadRepository(id);
     const generation = repositoryGeneration.current;
     return () => { if (generation === repositoryGeneration.current) repositoryGeneration.current++; };
-  }, [project?.project_id, identity?.session_audit_id]);
+  }, [project?.project_id, identity?.session_audit_id, carrierMode.kind]);
+  function adoptCapabilities(capabilities: Fields) {
+    const mode = client.productMode(); setCarrierMode(mode);
+    if (mode.kind !== 'legacy') { repositoryGeneration.current++; setRepository(null); setShowRepository(false); clearCodeSelection(); }
+    workspaceAvailable.current = mode.kind === 'legacy' && capabilities.workspace_queries === 'stead.workspace-queries/1';
+    setWorkspaceSupported(workspaceAvailable.current);
+    if (mode.kind === 'unsupported') throw new HomeError('unsupported_version');
+  }
+  async function refreshCapabilities(active: () => boolean = () => true) {
+    const owner = {}; capabilityRead.current = owner;
+    const current = () => active() && capabilityRead.current === owner;
+    try {
+      const capabilities = await client.capabilities();
+      if (!current()) throw new HomeError('session_changed');
+      adoptCapabilities(capabilities);
+    } catch (failure) {
+      if (current() && !(failure instanceof HomeError && failure.code === 'session_changed')) {
+        setCarrierMode({kind: 'unsupported'}); workspaceAvailable.current = false; setWorkspaceSupported(false);
+      }
+      throw failure;
+    }
+  }
   async function identify(admitted?: Fields) {
+    if (client.productMode().kind === 'unsupported') throw new HomeError('unsupported_version');
     // consume/resume already validate identity in HomeClient.adopt().
     const person = admitted ?? Object.values((await client.query(blankQuery('identity'))).rows)[0];
     if (!person) throw new HomeError('invalid_response');
+    const token = client.currentSessionToken();
+    if (!token) throw new HomeError('session_required');
+    if (token !== productPartition.current) {
+      const key = newId(); productPartition.current = token;
+      productDrafts.current.bind(key); setProductSessionKey(key);
+    }
     setIdentity(person); navigationMemory.current.bind(person.session_audit_id ?? person.principal_id!);
     const list = await client.query(blankQuery('projects'));
     const allowed = Object.values(list.rows);
@@ -209,10 +265,8 @@ function App() {
     let active = true;
     void (async () => {
       try {
-        const capabilities=await client.capabilities();
+        await refreshCapabilities(() => active);
         if (!active) return;
-        workspaceAvailable.current=capabilities.workspace_queries==='stead.workspace-queries/1';
-        setWorkspaceSupported(workspaceAvailable.current);
         const person = await client.resume();
         if (active) await identify(person);
       }
@@ -230,10 +284,16 @@ function App() {
   }, [refreshNotice]);
   const announceRefresh = (text: string) => setRefreshNotice(previous => ({text, sequence: (previous?.sequence ?? 0) + 1}));
   useEffect(() => {
-    const warn = (event: BeforeUnloadEvent) => { if (busy || editor?.dirty || pending || formDirty || Object.keys(commentDrafts).length) { event.preventDefault(); event.returnValue = ''; } };
+    const warn = (event: BeforeUnloadEvent) => { if (busy || editor?.dirty || pending || formDirty || Object.keys(commentDrafts).length || productDrafts.current.hasDraft()) { event.preventDefault(); event.returnValue = ''; } };
     window.addEventListener('beforeunload', warn);
     return () => window.removeEventListener('beforeunload', warn);
-  }, [editor?.dirty, pending, formDirty, busy, commentDrafts]);
+  }, [editor?.dirty, pending, formDirty, busy, commentDrafts, productDraftRevision]);
+  useEffect(() => {
+    if (!productActive || !identity) return;
+    const refreshed = () => { if (navigator.onLine && tab !== 'work' && !pending && !editor?.dirty && !form) setUpdatesRevision(value => value + 1); };
+    window.addEventListener('focus', refreshed); window.addEventListener('online', refreshed);
+    return () => { window.removeEventListener('focus', refreshed); window.removeEventListener('online', refreshed); };
+  }, [productActive, identity?.session_audit_id, tab, pending, editor?.dirty, form]);
   useEffect(() => { setFormDirty(false); setDiscard(null); }, [form, work?.resource_id]);
   useEffect(() => { setWorkMenu(null); quickActionFocus.current = null; }, [tab, project?.project_id, project?.role, project?.authority_epoch, identity?.session_audit_id]);
   useEffect(() => {
@@ -254,14 +314,13 @@ function App() {
     setBusy(true); setError(''); setDiagnostic('none');
     try { await callback(); }
     catch (failure) {
-      if (failure instanceof HomeError && failure.code === 'denied_or_not_found') clearViews();
+      if (failure instanceof HomeError && failure.code === 'denied_or_not_found') clearViews(productActive);
       setDiagnostic(failure instanceof HomeError ? failure.code : 'unexpected_error');
       setError(describeFailure(failure));
     } finally { actionBusy.current = false; setBusy(false); }
   }
   async function retryConnection() {
-    const capabilities=await client.capabilities();
-    workspaceAvailable.current=capabilities.workspace_queries==='stead.workspace-queries/1';setWorkspaceSupported(workspaceAvailable.current);
+    await refreshCapabilities();
     try { await identify(await client.resume()); }
     catch (failure) {
       if (!(failure instanceof HomeError) || failure.code !== 'session_required') throw failure;
@@ -294,6 +353,8 @@ function App() {
   }
   async function refresh(nextTab = tab, nextContainer = container, nextCursor = '', term = search, applies = () => true, announce = true) {
     if (!project || !applies()) return false;
+    if (client.productMode().kind === 'unsupported') throw new HomeError('unsupported_version');
+    if (client.productMode().kind === 'native-human-doc' && !['project', 'documents', 'relations'].includes(nextTab)) throw new HomeError('unsupported_operation');
     if (nextTab === 'search' && new TextEncoder().encode(term).byteLength > 128) throw new HomeError('search_too_long');
     const generation = ++activeQuery.current;
     if (announce) setLoading(true);
@@ -334,7 +395,7 @@ function App() {
   }
   useEffect(() => {
     setUpdatesConnected(false);
-    if (!identity || !project
+    if (!identity || !project || carrierMode.kind === 'unsupported'
       || new TextEncoder().encode(search).byteLength > 128) return;
     let active = true;
     let watch: HomeWatch | null = null;
@@ -342,6 +403,27 @@ function App() {
     let pendingRefresh = false;
     let pendingGeneration: string | null = null;
     setLoading(true);
+    if (productActive) {
+      // This profile advertises explicit refresh, not the predecessor watch.
+      // Its Work journey owns query/4 reads and cannot fall through to query/3.
+      if (tab === 'work') { setLoading(false); setUpdatesConnected(true); return; }
+      const load = async () => {
+        if (!active) return;
+        if (actionBusy.current) { timer = setTimeout(load, 200); return; }
+        try {
+          await refresh(tab, container, '', search, () => active && !actionBusy.current, false);
+          if (active) { setUpdatesConnected(true); setLoading(false); }
+        } catch (failure) {
+          if (!active) return;
+          setLoading(false); setUpdatesConnected(false);
+          if (failure instanceof HomeError && failure.code === 'denied_or_not_found') clearViews(true);
+          setDiagnostic(failure instanceof HomeError ? failure.code : 'unexpected_error');
+          setError(explainConnection(failure));
+        }
+      };
+      void load();
+      return () => { active = false; if (timer) clearTimeout(timer); };
+    }
     const scope = {kind: tab === 'documents' && !container ? 'containers' as const : tab, project_id: project.project_id!, container_id: tab === 'documents' ? container?.container_id ?? '' : '', resource_id: '', search: tab === 'search' ? search : ''};
     const alreadyShown = (generation: string) => displayedSnapshot.current?.scope === scopeKey(identity.session_audit_id, scope)
       && displayedSnapshot.current.generation === generation;
@@ -419,7 +501,7 @@ function App() {
     }
     void connect();
     return () => { active = false; if (timer) clearTimeout(timer); if (watch) void client.retire(watch).catch(() => {}); };
-  }, [identity?.session_audit_id, project?.project_id, tab, container?.container_id, search, updatesRevision, workFiltersOpen]);
+  }, [identity?.session_audit_id, project?.project_id, tab, container?.container_id, search, updatesRevision, workFiltersOpen, carrierMode.kind]);
   useEffect(() => { if (project) heading.current?.focus(); }, [project?.project_id]);
   useEffect(() => {
     const restore=pendingNavigation.current;
@@ -456,9 +538,9 @@ function App() {
     });
     return () => cancelAnimationFrame(frame);
   }, [editor, project?.project_id, container?.container_id, identity?.session_audit_id]);
-  useEffect(() => { if (discard || confirmation || currentVersion) feedbackHeading.current?.focus(); }, [discard, confirmation, currentVersion]);
+  useEffect(() => { if (discard || discardProduct || confirmation || currentVersion) feedbackHeading.current?.focus(); }, [discard, discardProduct, confirmation, currentVersion]);
   function closeDraft(target: 'document' | 'form') {
-    if (target === 'document') { if(project?.project_id && container?.container_id)syncResourceAddress({kind:'collection',project:project.project_id,collection:container.container_id},true); setEditor(null); setLinkedPage(null); }
+    if (target === 'document') { if(project?.project_id && container?.container_id)syncResourceAddress({kind:'collection',project:project.project_id,collection:container.container_id},true); retainedDocumentScope.current = null; setEditor(null); setLinkedPage(null); }
     else {
       const keepDetail = form === 'work' && !!work;
       setForm(''); setEditWorkField(null); setFormDirty(false);
@@ -478,6 +560,7 @@ function App() {
     displayedSnapshot.current = null;
     setError(''); setLoading(true);
     setUpdatesRevision(value => value + 1);
+    if (client.productMode().kind === 'native-human-doc') setProductRefreshRevision(value => value + 1);
   }
   function submitSearch(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
@@ -496,20 +579,26 @@ function App() {
       setWorkFiltersOpen(false); setWorkFilters(initialWorkFilters);
     } else if (row.project_id) void loadRepository(row.project_id);
     setShowRepository(false);setWorkspaceView(null);
+    setProductSelection({kind: 'list'});
     clearCodeSelection();
     setWork(null); setForm(''); setTargets([]); setConfirmation(null); setCurrentVersion(null); setProject(row); setContainer(null); setEditor(null); setRows([]); setContainers([]); setTab(nextTab); setCursor('');
     reloadScope();
   }
   async function openProject(row: Row) {
-    if (busy || editor?.dirty || pending || form) { setError('Finish or discard the current draft before switching projects.'); return; }
+    if (busy || editor?.dirty || pending || form || currentProductDraft()) { setError('Finish or discard the current draft before switching projects.'); return; }
     syncResourceAddress({kind:'project',project:row.project_id!,view:'overview'});
     enterProject(row, 'project');
   }
   function rememberNavigation() {
     if (project?.project_id && tab === 'work') navigationMemory.current.set({kind:'work',project:project.project_id},
       {filters:workFilters,scroll:window.scrollY,selection:work?.resource_id??navigationMemory.current.get({kind:'work',project:project.project_id})?.selection});
-    if(workspaceView)navigationMemory.current.set({kind:'workspace',view:workspaceView},
-      {filters:{title:workspaceSearch.term,status:'',assignee:''},scroll:window.scrollY,selection:navigationMemory.current.get({kind:'workspace',view:workspaceView})?.selection});
+    if(workspaceView) {
+      const previous = navigationMemory.current.get({kind:'workspace',view:workspaceView});
+      const term = workspaceView === 'search' ? workspaceSearch.term : '';
+      navigationMemory.current.set({kind:'workspace',view:workspaceView},
+        {filters:{title:term,status:'',assignee:''},scroll:window.scrollY,
+          ...(previous?.filters.title === term ? {selection:previous.selection,workspacePage:previous.workspacePage} : {})});
+    }
   }
   function syncResourceAddress(route?: ProductRoute, replace = false) {
     rememberNavigation();
@@ -530,7 +619,8 @@ function App() {
     setCurrentVersion(null);setConfirmation(null);setCursor('');setTab('project');
   }
   function openWorkspace(view:'my-work'|'search') {
-    if(busy||editor?.dirty||pending||form){setError('Finish or discard the current draft before navigating.');return;}
+    if (!workspaceAvailable.current) return;
+    if(busy||editor?.dirty||pending||form||currentProductDraft()){setError('Finish or discard the current draft before navigating.');return;}
     syncResourceAddress({kind:'workspace',view});enterWorkspace(view);
   }
   async function openWorkspaceResource(row:Row) {
@@ -551,15 +641,26 @@ function App() {
   }
   async function restoreProductAddress(address: ProductRoute, allowed=projects) {
     pendingNavigation.current=null;
+    const mode = client.productMode().kind;
+    if (mode === 'unsupported') throw new HomeError('unsupported_version');
     if(address.kind==='work')return restoreWorkAddress({project:address.project,item:address.item},allowed);
     if(address.kind==='workspace') {
       if(address.view==='inbox'){setError('This Home does not yet support an actionable Inbox.');return;}
+      if (!workspaceAvailable.current) { setError('Workspace views are unavailable on this Home. Choose a project.'); return; }
       enterWorkspace(address.view);return;
     }
     const requestedHash=location.hash;
     const row=allowed.find(item=>item.project_id===address.project);
     if(!row){setError('This link is unavailable or you do not have access.');return;}
+    if (address.kind === 'doc-change') {
+      if (mode !== 'native-human-doc') { setError('Doc review is unavailable on this Home.'); return; }
+      enterProject(row, 'work');
+      setProductSelection({kind: 'doc-change', workId: address.work, changeId: address.change,
+        ...(address.result ? {result: address.result} : {})});
+      return;
+    }
     if(address.kind==='project') {
+      if (address.view === 'code' && mode !== 'legacy') { setError('Code is unavailable on this Home.'); return; }
       const kind=({overview:'project',work:'work',docs:'documents',code:'project'} as const)[address.view];
       enterProject(row,kind);
       if(address.view==='code')setShowRepository(true);
@@ -576,8 +677,13 @@ function App() {
       if(location.hash!==requestedHash)return;
       if(typeof page?.markdown!=='string'||!page.resource_revision){setError('This page is unavailable or you do not have access.');return;}
       if(address.revision&&address.revision!==page.resource_revision){setError('This exact page revision is not available through the current Home interface.');return;}
+      const retained = retainedDocumentScope.current;
+      const local = mode === 'native-human-doc' && editor?.dirty && retained?.token === client.currentSessionToken()
+        && retained.project === address.project && retained.collection === address.collection && retained.document === address.document ? editor : null;
       enterProject(row,'documents');setContainers(boxes);setContainer(selected);
-      setEditor({id:address.document,revision:page.resource_revision,head:page.container_head??'',text:page.markdown,dirty:false});
+      setEditor(local ?? {id:address.document,revision:page.resource_revision,head:page.container_head??'',text:page.markdown,dirty:false});
+      if (local) setNotice('Your unsaved Doc draft is kept. Compare the current saved version before saving again.');
+      retainedDocumentScope.current = null;
       pendingDocumentFocus.current={project:address.project,collection:address.collection,document:address.document,
         session:routedIdentity.current ?? identity?.session_audit_id ?? '',hash:location.hash};return;
     }
@@ -594,6 +700,12 @@ function App() {
     const requestedHash = location.hash;
     const row = allowed.find(item => item.project_id === address.project);
     if (!row) { setError('This work link is unavailable or you do not have access.'); return; }
+    if (client.productMode().kind === 'native-human-doc') {
+      enterProject(row, 'work');
+      setProductSelection(address.item ? {kind: 'work', workId: address.item} : {kind: 'list'});
+      return;
+    }
+    if (client.productMode().kind !== 'legacy') throw new HomeError('unsupported_version');
     let item: Row | null = null;
     let unavailable = false;
     if (address.item) {
@@ -622,7 +734,7 @@ function App() {
       const address = decodeProductRoute(location.hash);
       if (!address && !lastAddress.current) return;
       if (lastAddress.current === location.hash) return;
-      if (actionBusy.current || editor?.dirty || pending || form) {
+      if (actionBusy.current || editor?.dirty || pending || form || (currentProductDraft() && !canReadRelatedProduct(address))) {
         history.pushState(null, '', location.pathname + lastAddress.current);
         setError('Finish or discard the current draft before navigating.');
         return;
@@ -647,17 +759,62 @@ function App() {
     } catch { setError('This browser could not copy the link. Open the item and copy its address.'); }
   }
   function selectProjectTab(kind: ViewKind) {
-    if (busy || editor?.dirty || pending || form) { setError('Finish or discard the current draft first.'); return; }
+    if (busy || editor?.dirty || pending || form || currentProductDraft()) { setError('Finish or discard the current draft first.'); return; }
+    if (productActive && !['project', 'work', 'documents', 'relations'].includes(kind)) return;
     if(project?.project_id) {
       if(kind==='work')syncWorkAddress(project.project_id);
       else if(kind==='project'||kind==='documents')syncResourceAddress({kind:'project',project:project.project_id,view:kind==='project'?'overview':'docs'});
       else syncResourceAddress();
     }
-    setLinkedPage(null);
+    setLinkedPage(null); setProductSelection({kind: 'list'});
     activeQuery.current++; setShowRepository(false); clearCodeSelection(); setEditor(null); setWork(null); setCurrentVersion(null);
     setConfirmation(null); setForm(''); setTab(kind); setRows([]); setCursor(''); reloadScope();
   }
   function clearCodeSelection() { setSelectedReview(undefined); setInlineReview(undefined); setDevelopment(undefined); }
+  function currentProductDraft() { return !!project?.project_id && productDrafts.current.hasDraft(project.project_id); }
+  function canReadRelatedProduct(route: ProductRoute | null) {
+    return productActive && client.productMode().kind === 'native-human-doc' && productReadNavigationAllowed({projectId: project?.project_id,
+      partition: productPartition.current, currentSession: client.currentSessionToken(), pending: productDrafts.current.currentPending(project?.project_id),
+      legacyPending: !!pending, dirtyDocument: !!editor?.dirty, busy: busy || actionBusy.current, formOpen: !!form, online}, route);
+  }
+  function denyProductProject() {
+    // The Home session is still current. Hide revoked project content, while
+    // retaining opaque prepared requests and local drafts in that partition.
+    const denied = project?.project_id;
+    enterWorkspace(null); setForm(''); setFormDirty(false); setTargets([]); setTargetFilter('');
+    setProjects(previous => previous.filter(row => row.project_id !== denied));
+    setProductSelection({kind: 'list'}); routedIdentity.current = undefined;
+    setDiscardProduct(null);
+    setDiagnostic('denied_or_not_found');
+    setError('This project is no longer available. Drafts remain in this tab for this sign-in.'); setNotice('');
+  }
+  function navigateProduct(selection: ProductJourneySelection) {
+    if (!project?.project_id || !productActive || busy || pending || form || editor?.dirty) return;
+    const route = productJourneyRoute(project.project_id, selection);
+    if (!canReadRelatedProduct(route)) { setError('Confirm the pending request or refresh current access before navigating.'); return; }
+    syncResourceAddress(route); setProductSelection(selection); setError(''); setNotice('');
+  }
+  function openProductDocument(target: {collectionId: string; documentId: string}) {
+    if (!project?.project_id || !productActive || !UUID.test(target.collectionId) || !UUID.test(target.documentId)) return;
+    const projectId = project.project_id, selection = productSelection;
+    const route: ProductRoute = {kind: 'doc', project: projectId, collection: target.collectionId, document: target.documentId};
+    if (!canReadRelatedProduct(route)) return;
+    syncResourceAddress(route);
+    void action(async () => {
+      await restoreProductAddress(route);
+      if (selection.kind !== 'list' && location.hash === encodeProductRoute(route)) {
+        setLinkedPage({origin: {project: projectId, item: selection.workId}, collection: target.collectionId, document: target.documentId});
+      }
+    }, explainConnection);
+  }
+  function discardProductDrafts() {
+    if (!discardProduct || discardProduct !== project?.project_id) { setDiscardProduct(null); return; }
+    if (!productDrafts.current.discard(discardProduct)) {
+      setError('Confirm the pending request before discarding local drafts.'); setDiscardProduct(null); return;
+    }
+    setDiscardProduct(null); setProductDraftRevision(value => value + 1); setProductDraftReset(value => value + 1);
+    setError(''); setNotice('Local drafts discarded. Saved work and accepted changes are unchanged.');
+  }
   function openLinkedReview(proposalId: string) {
     if (!UUID.test(proposalId) || workActionsLocked) return;
     syncWorkAddress(); clearCodeSelection(); setSelectedReview(proposalId); setShowRepository(true);
@@ -690,6 +847,7 @@ function App() {
   function openLinkedWork(item: string) {
     const projectId = project?.project_id;
     if (!projectId || !UUID.test(item) || workActionsLocked) return;
+    if (productActive && !canReadRelatedProduct({kind: 'work', project: projectId, item})) return;
     syncWorkAddress(projectId, item);
     void action(() => restoreWorkAddress({project: projectId, item}), explainConnection);
   }
@@ -722,6 +880,7 @@ function App() {
   function backToWorkFromDocument() {
     if (!linkedPageOrigin || linkedPageOrigin.project !== project?.project_id || workActionsLocked) return;
     const origin = linkedPageOrigin;
+    if (productActive && !canReadRelatedProduct({kind: 'work', project: origin.project, item: origin.item})) return;
     syncWorkAddress(origin.project, origin.item);
     void action(() => restoreWorkAddress(origin), explainConnection);
   }
@@ -743,6 +902,7 @@ function App() {
       if (refreshDetail && work) setWork({...work, resource_revision: receipt.resource_revision!});
     }
     if (value.operation === 'document.save' && editor?.id === value.resource_id) {
+      retainedDocumentScope.current = null;
       setEditor({ ...editor, revision: receipt.resource_revision!, head: receipt.git_commit_oid ?? '', dirty: false });
       syncResourceAddress({kind:'doc',project:value.project_id,collection:value.payload.container_id!,document:value.resource_id},true);
     }
@@ -760,6 +920,7 @@ function App() {
     if (value.operation === 'project.create') await identify();
     else if (value.operation === 'container.create' && project) setContainers(await collections(project.project_id!));
     else if (project) await refresh();
+    else if (productActive) await identify();
     if (refreshDetail) {
       const generation = activeQuery.current;
       const view = await client.query(blankQuery('work', value.project_id, '', value.resource_id));
@@ -838,7 +999,7 @@ function App() {
     reloadScope();
   }
   useEffect(() => {
-    if (tab !== 'work' || showRepository || workActionsLocked || workMenu || !canEdit) return;
+    if (productActive || tab !== 'work' || showRepository || workActionsLocked || workMenu || !canEdit) return;
     function shortcut(event: KeyboardEvent) {
       if (event.defaultPrevented || event.repeat || event.isComposing || event.altKey || event.ctrlKey || event.metaKey || event.shiftKey
         || event.key.toLowerCase() !== 'c' || !(event.target instanceof HTMLElement)
@@ -848,7 +1009,7 @@ function App() {
     }
     document.addEventListener('keydown', shortcut);
     return () => document.removeEventListener('keydown', shortcut);
-  }, [tab, showRepository, workActionsLocked, workMenu, canEdit]);
+  }, [tab, showRepository, workActionsLocked, workMenu, canEdit, productActive]);
   function showWorkMenu(row: Row, view: WorkMenu['view'], trigger: HTMLElement, point?: {x: number; y: number}) {
     if (workActionsLocked || !project || (view !== 'actions' && !canEdit)) return;
     const rect = trigger.getBoundingClientRect();
@@ -1000,7 +1161,9 @@ function App() {
       } : undefined}>
       <div className="resource-summary">
         {!inWork && <span className="row-kind">{row.kind === 'document' ? 'Page' : row.kind ?? row.type ?? tab}</span>}
-        <h2>{inWork ? <button className="work-title" data-work-control="title" disabled={locked} aria-expanded={work?.resource_id === row.resource_id} aria-controls="work-detail-panel" aria-keyshortcuts={canEdit ? 'S A P Shift+F10' : 'Shift+F10'} onClick={event => { const trigger = event.currentTarget; void action(() => openWork(row, trigger), explainConnection); }}>{title}</button> : title}</h2>
+        <h2>{inWork ? <button className="work-title" data-work-control="title" disabled={locked} aria-expanded={work?.resource_id === row.resource_id} aria-controls="work-detail-panel" aria-keyshortcuts={canEdit ? 'S A P Shift+F10' : 'Shift+F10'} onClick={event => { const trigger = event.currentTarget; void action(() => openWork(row, trigger), explainConnection); }}>{title}</button>
+          : tab === 'documents' && row.kind === 'document' ? <button type="button" className="document-title" disabled={locked}
+              onClick={() => void action(() => openDocument(row), explainConnection)}>{title}</button> : title}</h2>
         {!inWork && row.description && <p>{row.description}</p>}
         {!inWork && snippet && snippet !== row.description && <p>{snippet}</p>}
         {!inWork && row.status && <span className="muted">{row.status}</span>}
@@ -1013,7 +1176,6 @@ function App() {
         {workProperty(row, 'assignee', title ?? 'work item')}
       </div>}
       <div className="actions row-actions">
-        {tab === 'documents' && <Button disabled={locked} onClick={() => void action(() => openDocument(row), explainConnection)}>Open page</Button>}
         {inWork && <button type="button" className="work-property work-overflow" data-work-control="actions" aria-label={`Actions for ${title}`} aria-haspopup="dialog" disabled={locked}
           onClick={event => showWorkMenu(row, 'actions', event.currentTarget)}><span aria-hidden="true">•••</span></button>}
         {canEdit && project && tab === 'relations' && <ActionMenu label={`Actions for ${title}`} disabled={locked}><Button variant="quiet" disabled={locked} onClick={() => setConfirmation({
@@ -1088,7 +1250,7 @@ function App() {
           </fieldset></form></Surface>;
 
   const brand = <><span className="brand-mark" aria-hidden="true">s</span><span>stead</span></>;
-  const canReconnect = ['outcome_unknown', 'invalid_csrf', 'resume_required', 'refresh_required', 'updates_unavailable'].includes(diagnostic);
+  const canReconnect = ['outcome_unknown', 'invalid_csrf', 'resume_required', 'refresh_required', 'updates_unavailable', 'denied_or_not_found'].includes(diagnostic);
   return <div className={identity ? 'app-shell signed-in' : 'app-shell entry-shell'}>
     <header className="topbar">{project ? <button className="brand" aria-label="Stead home" type="button" disabled={busy}
       onClick={() => void action(() => openProject(project), explainConnection)}>{brand}</button> : <span className="brand">{brand}</span>}
@@ -1124,44 +1286,74 @@ function App() {
             } else setNotice('Approval is still pending on your identity ship.');
           }, explainConnection);
         }}/>}
-      {identity && <div className="workspace">
-        <aside className="sidebar"><div className="space-label"><span className="space-mark" aria-hidden="true">~</span><div>Workspace{identity.home && <small>{identity.home}</small>}</div></div>{workspaceSupported&&<nav aria-label="Workspace"><button type="button" disabled={workActionsLocked} aria-current={workspaceView==='my-work'?'page':undefined} onClick={()=>openWorkspace('my-work')}>My work</button><button type="button" disabled={workActionsLocked} aria-current={workspaceView==='search'?'page':undefined} onClick={()=>openWorkspace('search')}>Search</button></nav>}<h2 className="rail-label">Projects</h2>{projects.length === 0 && <p className="muted">No projects are shared with you yet.</p>}<nav aria-label="Projects">{projects.map(row => <button disabled={busy} key={row.project_id} aria-current={project?.project_id === row.project_id ? 'page' : undefined} onClick={() => void action(() => openProject(row))}><span className="project-glyph" aria-hidden="true">◇</span><span className="project-name"><span className="project-key">{row.project_key}</span>{row.title}</span></button>)}</nav>{identity.can_create === 'yes' && <Button variant="quiet" disabled={busy || !!pending || !!form || !!editor?.dirty} onClick={() => { setEditor(null); setWork(null); setCurrentVersion(null); setForm('project'); }}><Icon name="plus"/>New project</Button>}<p className="sidebar-note">Only projects explicitly shared with you appear here.</p></aside>
-        <section className="content" id="project-content" data-live-updates={updatesConnected ? 'connected' : 'unavailable'}>
+      {identity && carrierMode.kind === 'unsupported' && <EmptyState title="This Home needs a supported connection" description="Check this Home’s capabilities again before continuing. Your pending requests have not been retried."
+        action={<Button disabled={busy} onClick={() => void action(retryConnection, explainConnection)}>Resume this tab</Button>}/>}
+      {identity && carrierMode.kind !== 'unsupported' && <div className="workspace">
+        <aside className="sidebar"><div className="space-label"><span className="space-mark" aria-hidden="true">~</span><div>Workspace{identity.home && <small>{identity.home}</small>}</div></div>{workspaceSupported&&<nav aria-label="Workspace"><button type="button" disabled={workActionsLocked} aria-current={workspaceView==='my-work'?'page':undefined} onClick={()=>openWorkspace('my-work')}>My work</button><button type="button" disabled={workActionsLocked} aria-current={workspaceView==='search'?'page':undefined} onClick={()=>openWorkspace('search')}>Search</button></nav>}<h2 className="rail-label">Projects</h2>{projects.length === 0 && <p className="muted">No projects are shared with you yet.</p>}<nav aria-label="Projects">{projects.map(row => <button disabled={busy} key={row.project_id} aria-current={project?.project_id === row.project_id ? 'page' : undefined} onClick={() => void action(() => openProject(row))}><span className="project-glyph" aria-hidden="true">◇</span><span className="project-name"><span className="project-key">{row.project_key}</span>{row.title}</span></button>)}</nav>{identity.can_create === 'yes' && <Button variant="quiet" disabled={busy || !!pending || !!form || !!editor?.dirty || currentProductDraft()} onClick={() => { setEditor(null); setWork(null); setCurrentVersion(null); setForm('project'); }}><Icon name="plus"/>New project</Button>}<p className="sidebar-note">Only projects explicitly shared with you appear here.</p></aside>
+        <section className="content" id="project-content" data-live-updates={productActive ? 'unsupported' : updatesConnected ? 'connected' : 'unavailable'} data-refresh={productActive ? 'explicit' : 'watch'}>
+          {productActive && !project && editor?.dirty && retainedDocumentScope.current && <Surface>
+            <h2>Doc draft kept in this tab</h2><p>Refresh access before continuing this draft. Its text stays hidden while access is unavailable.</p>
+            <div className="actions"><Button disabled={busy} onClick={() => void action(retryConnection, explainConnection)}>Refresh access</Button>
+              <Button disabled={busy || !!pending} onClick={() => requestClose('document')}>Discard Doc draft…</Button></div></Surface>}
           {pending && <Surface className="pending"><h2>Save awaiting confirmation</h2><p>Keep this tab open. Retrying uses the same request ID and cannot create a second accepted change.</p>{pending.operation === 'project.create' && <p>Use Retry this request to confirm a new project. Receipt lookup needs access to an existing project.</p>}<div className="actions">{pending.operation !== 'project.create' && <Button disabled={busy} onClick={() => void action(checkReceipt)}>Check receipt</Button>}<Button disabled={busy} onClick={() => void action(() => save(pending))}>Retry this request</Button></div></Surface>}
           {discard && <Surface className="confirmation" role="alertdialog" aria-labelledby="discard-title" aria-describedby="discard-description"><h2 id="discard-title" ref={feedbackHeading} tabIndex={-1}>Discard unsaved changes?</h2><p id="discard-description">Your local edits will be removed. Your last saved version stays at home.</p><div className="actions"><Button variant="danger" disabled={busy || !!pending} onClick={() => closeDraft(discard)}>Discard changes</Button><Button disabled={busy} onClick={() => { setDiscard(null); discardTrigger.current?.focus(); }}>Keep editing</Button></div></Surface>}
           {workspaceView && (workspaceSupported ? <WorkspaceView key={identity.session_audit_id}
             client={client} view={workspaceView==='search'?'workspace-search':'my-work'} search={workspaceSearch}
             onSearchChange={setWorkspaceSearch} sessionKey={identity.session_audit_id!} locked={workActionsLocked}
-            openingWatchRef={openingWatch} restoreNavigation={navigationMemory.current.get({kind:'workspace',view:workspaceView})}
+            openingWatchRef={openingWatch} restoreNavigation={workspaceRestore(workspaceView==='search'?'workspace-search':'my-work',workspaceSearch.term,
+              navigationMemory.current.get({kind:'workspace',view:workspaceView}))}
+            onPage={page=>{
+              const term=workspaceView==='search'?workspaceSearch.term:'';
+              const previous=navigationMemory.current.get({kind:'workspace',view:workspaceView});
+              navigationMemory.current.set({kind:'workspace',view:workspaceView},{filters:{title:term,status:'',assignee:''},
+                scroll:window.scrollY,workspacePage:page,...(previous?.filters.title===term?{selection:previous.selection}:{})});
+            }}
             onOpen={row=>void action(()=>openWorkspaceResource(row),explainConnection)}
             onError={failure=>{if(failure instanceof HomeError&&failure.code==='denied_or_not_found')clearViews();setError(explainConnection(failure));}}/>
             : <EmptyState title="Workspace views need a newer Home" description="Choose a project to keep working. This Home does not advertise workspace queries."/>)}
           {!project && !workspaceView && <div className="welcome"><p className="eyebrow">START WITH WHAT MATTERS</p><h1 ref={heading} tabIndex={-1}>A clear place for your work.</h1><p>Choose a project to see its work and knowledge.</p></div>}
           {project && <><div className="project-heading"><div><p className="eyebrow">Projects <span aria-hidden="true">/</span> {project.project_key}</p><h1 ref={heading} tabIndex={-1}>{project.title}</h1></div><span className="role-badge">{project.role}</span></div>
           <nav className="tabs" aria-label="Project views">{([['project','Overview'],['work','Work'],['documents','Docs']] as const).map(([kind,label]) => <Button disabled={busy} key={kind} variant={!showRepository && tab === kind ? 'primary' : 'quiet'} aria-current={!showRepository && tab === kind ? 'page' : undefined} onClick={() => selectProjectTab(kind)}>{label}</Button>)}
-          {(repository?.status === 'ready' || externalRepository) && <Button disabled={busy || !!editor?.dirty || !!pending || !!form}
+          {carrierMode.kind === 'legacy' && (repository?.status === 'ready' || externalRepository) && <Button disabled={busy || !!editor?.dirty || !!pending || !!form}
             variant={showRepository ? 'primary' : 'quiet'} aria-current={showRepository ? 'page' : undefined}
             onClick={() => { syncResourceAddress({kind:'project',project:project.project_id!,view:'code'}); clearCodeSelection(); setShowRepository(true); }}>Code</Button>}</nav>
-          {showRepository && repository?.status === 'ready' ? <CodeRepository key={`${identity.session_audit_id}/${project.project_id}/${project.authority_epoch}`}
+          {carrierMode.kind === 'legacy' && showRepository && repository?.status === 'ready' ? <CodeRepository key={`${identity.session_audit_id}/${project.project_id}/${project.authority_epoch}`}
             client={client} project={project.project_id!} writable={repository.write === 'yes'}
             manage={repository.manage === 'yes'} principal={identity.principal_id ?? ''}
             initialProposal={inlineReview} onOpenWork={openLinkedWork}/> :
-          showRepository && externalRepository ? <CodePack key={`${identity.session_audit_id}/${project.project_id}/${project.authority_epoch}`} client={client} project={project.project_id!}
+          carrierMode.kind === 'legacy' && showRepository && externalRepository ? <CodePack key={`${identity.session_audit_id}/${project.project_id}/${project.authority_epoch}`} client={client} project={project.project_id!}
             manage={repository?.manage === 'yes'} writable={repository?.write === 'yes'} principal={identity.principal_id ?? ''}
             initialProposal={selectedReview} onOpenWork={openLinkedWork} development={development}/> : <>
           {tab === 'project' && <Surface className="project-overview"><h2>Move this project forward</h2>
             <p>{project.summary || 'Define an outcome in Work, keep its context in Docs, and review the result together.'}</p>
             <div className="actions"><Button variant="primary" disabled={workActionsLocked} onClick={() => selectProjectTab('work')}>Open work</Button>
               <Button disabled={workActionsLocked} onClick={() => selectProjectTab('documents')}>Open docs</Button></div>
-            <details><summary>Project activity and relationships</summary><div className="actions">
+            {!productActive && <details><summary>Project activity and relationships</summary><div className="actions">
               <Button variant="quiet" disabled={workActionsLocked} onClick={() => selectProjectTab('activity')}>Activity</Button>
               <Button variant="quiet" disabled={workActionsLocked} onClick={() => selectProjectTab('relations')}>Relationships</Button>
               <Button variant="quiet" disabled={workActionsLocked} onClick={() => selectProjectTab('search')}>Search this project</Button>
-            </div></details></Surface>}
-          {tab === 'project' && repository?.status === 'disabled' && repository.manage === 'yes'
+            </div></details>}</Surface>}
+          {carrierMode.kind === 'legacy' && tab === 'project' && repository?.status === 'disabled' && repository.manage === 'yes'
             && <Button disabled={busy || !!pending || !!form} onClick={() => void action(() => loadRepository(project.project_id!, true))}>Enable Git repository</Button>}
+          {productActive && tab === 'work' ? <><ProductWorkJourney key={`${productSessionKey}/${project.project_id}/${productDraftReset}`}
+            client={client} project={{id: project.project_id!, title: project.title ?? '', authorityEpoch: project.authority_epoch!, role: project.role!}}
+            sessionKey={productSessionKey} principalId={identity.principal_id!} online={online} locked={busy || !!pending || !!form}
+            selection={productSelection} drafts={productDrafts.current} refreshRevision={productRefreshRevision}
+            allowDraftNavigation={canReadRelatedProduct(productJourneyRoute(project.project_id!, productSelection))}
+            onDraftChange={() => setProductDraftRevision(value => value + 1)} onNavigate={navigateProduct} onOpenDoc={openProductDocument}
+            onProjectRefresh={current => { setProject(current); setProjects(previous => previous.map(row => row.project_id === current.project_id ? current : row)); }}
+            onProjectDenied={denyProductProject}
+            onAccessChanged={() => { setError('This item is unavailable or you no longer have access.'); setNotice(''); }}/>
+            {currentProductDraft() && <Button variant="quiet" disabled={busy || productDrafts.current.currentPending(project.project_id)}
+              onClick={() => { discardTrigger.current = document.activeElement as HTMLElement; setDiscardProduct(project.project_id!); }}>Discard local drafts…</Button>}
+            {discardProduct === project.project_id && <Surface role="alertdialog" aria-labelledby="discard-product-title" aria-describedby="discard-product-description">
+              <h2 id="discard-product-title" ref={feedbackHeading} tabIndex={-1}>Discard this project’s local drafts?</h2>
+              <p id="discard-product-description">This removes unsent Work edits, comments, review notes and proposal drafts in this tab for this project. Saved work and accepted changes stay at home.</p>
+              <div className="actions"><Button variant="danger" disabled={busy || productDrafts.current.currentPending(project.project_id)} onClick={discardProductDrafts}>Discard local drafts</Button>
+                <Button onClick={() => { setDiscardProduct(null); discardTrigger.current?.focus(); }}>Keep editing</Button></div></Surface>}</>
+            : <>
           <div className="toolbar"><div className="view-heading">{tab === 'work' && <h2>Work items</h2>}{tab === 'documents' && <label>Collection <select aria-label="Collection" disabled={busy} value={container?.container_id ?? ''} onChange={event => { const selected = containers.find(row => row.container_id === event.target.value) ?? null; if (busy || editor?.dirty || pending || form) { setError('Finish or discard the current draft first.'); return; } activeQuery.current++; syncResourceAddress(selected?.container_id ? {kind:'collection',project:project.project_id!,collection:selected.container_id} : {kind:'project',project:project.project_id!,view:'docs'}); setContainer(selected); setEditor(null); setWork(null); setCurrentVersion(null); setConfirmation(null); setForm(''); setRows([]); setCursor(''); reloadScope(); }}><option value="">Choose a collection</option>{containers.map(row => <option key={row.container_id} value={row.container_id}>{row.title} · {row.visibility === 'private' ? 'Private drafts' : 'Shared'}</option>)}</select></label>}{tab === 'search' && <form className="search" onSubmit={submitSearch}><TextField label="Search this project" value={searchDraft} onChange={event => setSearchDraft(event.target.value)} maxLength={128}/><Button type="submit" disabled={busy}>Search</Button></form>}</div><div className="actions">
-          <Button variant="quiet" disabled={busy || loading} onClick={() => {
+          <Button variant="quiet" disabled={busy || loading || (productActive && (!!pending || !!editor?.dirty || !!form))} onClick={() => {
             reloadScope();
             if (tab === 'project') void loadRepository(project.project_id!);
           }}>Refresh</Button>
@@ -1187,17 +1379,17 @@ function App() {
           </section>}
           {currentVersion && currentVersion.scope === comparisonScope && <Surface className="comparison"><h2 ref={feedbackHeading} tabIndex={-1}>Current saved revision {currentVersion.row.resource_revision}</h2><pre>{currentVersion.row.markdown ?? `${currentVersion.row.title}\n${currentVersion.row.description}`}</pre><p>{canEdit ? 'Your local text has not changed. Choose its base revision before saving again.' : 'This is the current revision saved at home.'}</p>{canEdit && <Button disabled={busy || !!pending} onClick={() => { if (currentVersion.scope !== comparisonScope) { setCurrentVersion(null); return; } if (editor) setEditor({...editor, revision: currentVersion.row.resource_revision!, head: currentVersion.row.container_head ?? '', dirty: true}); else if (work) setWork(currentVersion.row); setCurrentVersion(null); setNotice('Local edits kept. Review them, then explicitly save against the current revision.'); }}>Keep my edits using this revision</Button>}<Button onClick={() => setCurrentVersion(null)}>Close comparison</Button></Surface>}
           {confirmation && <Surface className="confirmation"><h2 ref={feedbackHeading} tabIndex={-1}>Delete {confirmation.label}?</h2><p>{confirmation.command.operation === 'relation.delete' ? 'This removes only the relationship. Both linked resources stay where they are.' : 'This removes it from current views. Authorized historical Git exports retain earlier page versions; this does not erase copies others already hold.'}</p><div className="actions"><Button disabled={busy || !!pending || !!form || !!editor?.dirty} onClick={() => void action(() => save(confirmation.command))}>Confirm deletion</Button><Button disabled={busy} onClick={() => setConfirmation(null)}>Keep it</Button></div></Surface>}
-          {editor && container ? <Surface className="document-editor">{linkedPageOrigin?.project === project.project_id && !editor.dirty && <Button variant="quiet" disabled={workActionsLocked} onClick={backToWorkFromDocument}>← Back to work item</Button>}<div className="editor-heading"><div><h2 ref={documentEditorHeading} tabIndex={-1}>{pageTitle(editor.text)}</h2><span className="page-visibility">{draftMode ? 'Private draft · only you' : 'Shared with project members'}</span></div><span>{editor.dirty ? 'Local changes · not saved' : `Saved revision ${editor.revision}`}</span></div><DocumentBody key={`${identity.session_audit_id}/${container.container_id}/${editor.id}`} text={editor.text} header={pageHeader}
+          {editor && container ? <Surface className="document-editor">{linkedPageOrigin?.project === project.project_id && !editor.dirty && <Button variant="quiet" disabled={workActionsLocked} onClick={backToWorkFromDocument}>← Back to work item</Button>}<div className="editor-heading"><div><h2 ref={documentEditorHeading} tabIndex={-1}>{pageTitle(editor.text)}</h2><span className="page-visibility">{draftMode ? 'Private draft · only you' : 'Shared with project members'}</span></div><span>{editor.dirty ? 'Local changes · not saved' : `Saved revision ${editor.revision}`}</span></div><DocumentBody key={`document-body/${identity.session_audit_id}/${project.project_id}/${container.container_id}/${editor.id}`} text={editor.text} header={pageHeader}
             editable={!!canEdit} locked={busy || !!pending || !!form} isNew={editor.revision === '0'} fullSource={!!editor.fullSource}
             onFullSource={fullSource => setEditor({...editor,fullSource})}
             onChange={text => setEditor({...editor,text,dirty:true})}/>
           {editor.revision !== '0' && <DocumentContext
             key={`${identity.session_audit_id}/${project.project_id}/${container.container_id}/${editor.id}`}
             client={client} project={project.project_id!} collection={container.container_id!} document={editor.id}
-            sessionKey={identity.session_audit_id!}
+            sessionKey={identity.session_audit_id!} readWork={productActive ? productWorkEndpoint : undefined}
             viewRevision={`${project.authority_epoch}/${displayedSnapshot.current?.generation ?? ''}/${editor.revision}/${workContextRevision}`}
             locked={workActionsLocked || !online || !updatesConnected} onOpenWork={openLinkedWork}
-            onError={failure => { if (failure instanceof HomeError && failure.code === 'denied_or_not_found') clearViews(); setError(explainConnection(failure)); }}/>}
+            onError={failure => { if (failure instanceof HomeError && failure.code === 'denied_or_not_found') { clearViews(productActive); setDiagnostic(failure.code); } setError(explainConnection(failure)); }}/>}
           <div className="actions editor-actions">{canEdit && editor.dirty && <Button variant="primary" disabled={busy || !!pending || !!form} onClick={() => void action(() => save(command(project.project_id!, editor.id, editor.revision, project.authority_epoch!, 'document.save', { container_id: container.container_id!, markdown: editor.text })))}>Save page</Button>}<Button disabled={busy || !!pending || !!form} onClick={() => requestClose('document')}>{editor.dirty ? 'Discard changes…' : 'Close'}</Button>{(editor.revision !== '0' || pageHeader || editor.fullSource) && <ActionMenu label="More page actions" disabled={busy || !!pending || !!form}>
             {canEdit && !editor.dirty && editor.revision !== '0' && draftMode && <Button variant="quiet" disabled={busy || !!pending || !!form} onClick={() => void action(async () => { setContainers(await collections(project.project_id!)); setForm('publish'); })}>Publish selected page</Button>}
             {(pageHeader || editor.fullSource) && <Button variant="quiet" disabled={busy || !!pending || !!form}
@@ -1243,6 +1435,7 @@ function App() {
             </Surface>)}
           </div>
           {cursor && <Button disabled={busy || loading || !updatesConnected} onClick={() => void action(() => refresh(tab, container, cursor))}>Next page</Button>}</>}
+          </>}
           </>}
           </>}
           {!workPanelOpen && formPanel}

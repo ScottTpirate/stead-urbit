@@ -1,0 +1,32 @@
+.unified-patch, .unified-patch [role=tabpanel], .unified-patch-hunk { min-width: 0; max-width: 100%; }
+.unified-patch-toolbar, .unified-patch-toolbar nav, .unified-patch-toolbar [role=tablist] { display: flex; flex-wrap: wrap; align-items: center; gap: 4px 12px; }
+.unified-patch-toolbar { padding: 8px 16px; border-block: 1px solid var(--line); font-size: 12px; }
+.unified-patch-toolbar .stead-button, .unified-patch-headers summary { min-height: 44px; }
+.unified-patch-toolbar [aria-selected=true] { background: var(--canvas); box-shadow: inset 0 -2px var(--accent); }
+.unified-patch-toolbar nav { margin-inline-start: auto; }
+.unified-patch-note { margin: 0; padding: 12px 16px; color: var(--muted); font-size: 13px; overflow-wrap: anywhere; }
+.unified-patch-headers { padding-inline: 16px; min-width: 0; }
+.unified-patch-headers summary { display: flex; align-items: center; cursor: pointer; }
+.unified-patch-headers pre, .unified-patch-raw { max-width: 100%; overflow: auto; font: 12px/1.6 var(--mono); tab-size: 4; }
+.unified-patch-raw { max-height: 640px; margin: 0; padding: 12px 16px; }
+.unified-patch-hunk h5 { margin: 0; padding: 12px 16px; background: var(--canvas); font-size: 13px; overflow-wrap: anywhere; }
+.unified-patch-hunk h5:focus-visible, .unified-patch-lines:focus-visible, .unified-patch-raw:focus-visible { outline: 2px solid var(--accent); outline-offset: -2px; }
+.unified-patch-hunk h5 code { font-size: 12px; font-weight: normal; }
+.unified-patch-lines { overflow: auto; max-height: 560px; }
+.unified-patch-lines table { border-collapse: collapse; width: 100%; font: 12px/1.6 var(--mono); tab-size: 4; }
+.unified-patch-lines th { padding: 5px 8px; text-align: start; font: 12px/1.5 var(--sans, sans-serif); color: var(--muted); border-bottom: 1px solid var(--line); }
+.unified-patch-lines td { padding: 0 8px; vertical-align: top; white-space: pre; }
+.unified-patch-lines td:nth-child(-n+2) { width: 1%; min-width: 3ch; text-align: end; color: var(--muted); user-select: none; }
+.unified-patch-lines td:nth-child(3) { width: 1%; text-align: center; font-weight: bold; }
+.unified-patch-lines td:nth-child(4) { min-width: 16ch; }
+.unified-patch-lines code { font: inherit; }
+.unified-patch-added { background: color-mix(in srgb, #20934d 12%, var(--paper)); }
+.unified-patch-removed { background: color-mix(in srgb, #c64742 12%, var(--paper)); }
+.unified-patch-note-row td { padding-block: 5px; color: var(--muted); white-space: pre-wrap; }
+.review-changes .repo-file-row { min-height: 44px; }
+.review-changes .repo-browser-bar h4 { margin: 0; overflow-wrap: anywhere; }
+@media (max-width: 620px) {
+  .unified-patch-toolbar { padding-inline: 12px; }
+  .unified-patch-toolbar nav { margin-inline-start: 0; flex-basis: 100%; }
+  .unified-patch-lines td { padding-inline: 5px; }
+}

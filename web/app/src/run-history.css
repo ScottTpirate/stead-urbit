@@ -1,0 +1,28 @@
+.run-history { min-width: 0; }
+.run-history-heading, .run-history-row-heading { display: flex; align-items: flex-start; justify-content: space-between; gap: 1rem; }
+.run-history-heading h3, .run-history-current h4, .run-history-conversation h5 { margin: 0; }
+.run-history-heading p, .run-history-note, .run-history-observation, .run-history-byline { color: var(--muted); font-size: .875rem; }
+.run-history-actions { display: flex; flex-wrap: wrap; gap: .5rem; }
+.run-history-list { list-style: none; padding: 0; margin: 1rem 0; }
+.run-history-list > li { min-width: 0; border-top: 1px solid var(--border); padding: .875rem 0; }
+.run-history-row-heading .stead-button { text-align: left; min-height: 44px; white-space: normal; }
+.run-history-row-heading .stead-status-badge { flex-shrink: 0; }
+.run-history-people, .run-history-observations { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: .75rem 1.5rem; margin: .75rem 0; }
+.run-history dt { color: var(--muted); font-size: .8125rem; }
+.run-history dd { margin: .25rem 0 0; overflow-wrap: anywhere; }
+.run-history-current { margin-top: 1rem; min-width: 0; }
+.run-history-current > section { margin-top: 1.25rem; }
+.run-history-current p, .run-history-people dd, .run-history-row-heading h4 { overflow-wrap: anywhere; }
+.run-history-conversation > p, .run-history-conversation > div > p { max-width: 50rem; white-space: pre-wrap; line-height: 1.6; }
+.run-history-conversation > div { border-left: 2px solid var(--border); padding-left: 1rem; margin-top: 1rem; }
+.run-history-details { margin-top: .75rem; font-size: .8125rem; }
+.run-history-details summary { width: fit-content; cursor: pointer; min-height: 44px; display: flex; align-items: center; }
+.run-history-details summary:focus-visible { outline: 2px solid var(--focus); outline-offset: 3px; }
+.run-history-details dl { display: grid; gap: .625rem; margin-top: .5rem; }
+.run-history-details dd { white-space: pre-wrap; font-family: ui-monospace, monospace; }
+@media (max-width: 620px) {
+  .run-history-heading, .run-history-row-heading { flex-wrap: wrap; gap: .5rem; }
+  .run-history-actions { width: 100%; }
+  .run-history-people, .run-history-observations { grid-template-columns: minmax(0, 1fr); gap: .625rem; }
+  .run-history-conversation > div { padding-left: .625rem; }
+}

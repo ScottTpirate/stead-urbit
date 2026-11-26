@@ -54,6 +54,6 @@ export function DocumentBody({text,header,editable,locked,isNew,fullSource,onFul
       <textarea ref={source} id="markdown" value={body} readOnly={!editable||locked} spellCheck
         onChange={event=>onChange((mode==='source'?'':header)+event.target.value)}/>
       <p className="muted">{editable?'Changes stay in this tab until you save.':'Read only. The source is shown exactly as saved.'}</p>
-    </div> : <div className="document-reader"><Suspense fallback={<p>Loading document…</p>}><Markdown text={text}/></Suspense></div>}
+    </div> : <div className="document-reader"><Suspense fallback={<p>Loading document…</p>}><Markdown text={text} showOutline={mode==='read'}/></Suspense></div>}
   </div>;
 }

@@ -1,0 +1,14 @@
+.document-outline { margin-block: 0 24px; border: 1px solid var(--line); border-radius: 8px; background: var(--rail); font-size: 14px; }
+.document-outline summary { min-height: 44px; padding: 10px 14px; cursor: pointer; font-weight: 600; }
+.document-outline ol { list-style: none; margin: 0; padding: 0 10px 10px; max-height: 320px; max-height: min(40dvh, 320px); overflow-y: auto; overscroll-behavior: contain; }
+.document-outline li { margin: 0; padding: 0; min-width: 0; }
+.document-outline .stead-button { justify-content: flex-start; width: 100%; min-height: 44px; padding-block: 8px; text-align: left; white-space: normal; overflow-wrap: anywhere; }
+.document-outline li[data-level="2"] { padding-left: 8px; }
+.document-outline li[data-level="3"], .document-outline li[data-level="4"], .document-outline li[data-level="5"], .document-outline li[data-level="6"] { padding-left: 16px; }
+.document-outline p { margin: 0; padding: 0 14px 12px; color: var(--muted); }
+.markdown .document-outline-heading { scroll-margin-block-start: 80px; }
+@media (max-width: 620px) {
+  .document-outline { margin-bottom: 16px; }
+  .document-outline ol { padding-inline: 6px; }
+  .document-outline li[data-level] { padding-left: 0; }
+}

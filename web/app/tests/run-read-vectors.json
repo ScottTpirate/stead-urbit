@@ -1,0 +1,32 @@
+{
+  "classification": "source-derived-expected-values-not-native-execution",
+  "native_source": "native/core/desk/lib/stead-run-query.hoon bytes arm",
+  "vectors": [
+    {
+      "query": {
+        "protocol": "stead.run-query/1",
+        "request_id": "019939ba-4000-7000-8000-000000000700",
+        "kind": "runs",
+        "project_id": "019939ba-4000-7000-8000-000000000100",
+        "work_id": "019939ba-4000-7000-8000-000000000101",
+        "run_id": "",
+        "cursor": ""
+      },
+      "canonical": "{\"cursor\":\"\",\"kind\":\"runs\",\"project_id\":\"019939ba-4000-7000-8000-000000000100\",\"protocol\":\"stead.run-query/1\",\"request_id\":\"019939ba-4000-7000-8000-000000000700\",\"run_id\":\"\",\"work_id\":\"019939ba-4000-7000-8000-000000000101\"}",
+      "bytes_sha256": "12dda43c3a1e3143fb26907680a897847beb3ecee6fd9d520d1a5b9868c808f1"
+    },
+    {
+      "query": {
+        "protocol": "stead.run-query/1",
+        "request_id": "019939ba-4000-7000-8000-000000000700",
+        "kind": "run",
+        "project_id": "019939ba-4000-7000-8000-000000000100",
+        "work_id": "019939ba-4000-7000-8000-000000000101",
+        "run_id": "019939ba-4000-7000-8000-000000000400",
+        "cursor": ""
+      },
+      "canonical": "{\"cursor\":\"\",\"kind\":\"run\",\"project_id\":\"019939ba-4000-7000-8000-000000000100\",\"protocol\":\"stead.run-query/1\",\"request_id\":\"019939ba-4000-7000-8000-000000000700\",\"run_id\":\"019939ba-4000-7000-8000-000000000400\",\"work_id\":\"019939ba-4000-7000-8000-000000000101\"}",
+      "bytes_sha256": "035e16035a7509c7bd9c7ec48f520bf6d4e4ca69004a9c49dd2f3a56d18c33ea"
+    }
+  ]
+}
