@@ -39,3 +39,10 @@ jobs:
       - name: Exercise inline Code, staged and accepted snapshots, and Work branches
         run: |
           node tests/rendered.mjs code-survives-reopening-project code-discovers-staged-snapshot-without-reloading code-browses-accepted-branches-and-tags code-development-work-branch-and-review
+      - uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
+        if: always()
+        with:
+          name: synthetic-repository-access
+          path: .runtime/web-render-tests/credential-expiry-*.png
+          if-no-files-found: ignore
+          retention-days: 7
