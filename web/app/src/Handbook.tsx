@@ -1,5 +1,4 @@
-import {useEffect, useRef, useState, useSyncExternalStore} from 'react';
-import {Markdown} from './Markdown';
+import {lazy, Suspense, useEffect, useRef, useState, useSyncExternalStore} from 'react';
 import {AppearanceControl} from './Appearance';
 import type {HandbookPage} from './productRoutes';
 import dailyWork from './handbook/daily-work.md' with {type:'text'};
@@ -9,6 +8,7 @@ import questions from './handbook/questions.md' with {type:'text'};
 import readme from './handbook/README.md' with {type:'text'};
 import './handbook.css';
 
+const Markdown = lazy(() => import('./Markdown').then(module=>({default:module.Markdown})));
 const articles = {
   'daily-work': {title: 'Work and Docs', description: 'Find a task, edit a page and confirm your change.', text: dailyWork},
   settings: {title: 'Settings and access', description: 'Appearance, sign-in and what appears in your workspace.', text: settings},
@@ -84,11 +84,11 @@ export function Handbook({page}: {page: HandbookPage}) {
     {page==='docs' && <section className="handbook-pane"><h2>Guides</h2><div className="handbook-index">
       {Object.entries(articles).map(([key,doc])=><a key={key} href={'#handbook/'+key}><strong>{doc.title}</strong><span>{doc.description}</span></a>)}
     </div></section>}
-    {article && <div className="handbook-pane"><a href="#handbook/docs">All guides</a><Markdown key={page} text={article.text} showOutline/></div>}
+    {article && <div className="handbook-pane"><a href="#handbook/docs">All guides</a><Suspense fallback={<p>Loading guide…</p>}><Markdown key={page} text={article.text} showOutline/></Suspense></div>}
     {page==='code' && <section className="handbook-pane"><h2>README.md</h2>
       <div className="handbook-file-modes" role="group" aria-label="README display">
         <button type="button" aria-pressed={!raw} onClick={()=>setRaw(false)}>Read</button>
         <button type="button" aria-pressed={raw} onClick={()=>setRaw(true)}>Raw</button>
-      </div>{raw?<pre tabIndex={0} aria-label="README source">{readme}</pre>:<Markdown text={readme} origin="repository"/>}</section>}
+      </div>{raw?<pre tabIndex={0} aria-label="README source">{readme}</pre>:<Suspense fallback={<p>Loading README…</p>}><Markdown text={readme} origin="repository"/></Suspense>}</section>}
   </section>;
 }

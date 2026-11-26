@@ -8,7 +8,7 @@ Open **Settings** in the workspace sidebar. Choose **System**, **Light** or **Da
 
 ## What other people see
 
-Changing appearance or hiding the Handbook affects your view. Your teammates keep their own preferences. Other projects show only when your Home has granted you access. If you expected a project, ask its maintainer to check which Urbit identity has membership.
+Appearance applies to everyone using this browser profile. Each signed-in account chooses whether the Handbook appears in its own project list. Other projects show only when your Home has granted you access. If you expected a project, ask its maintainer to check which Urbit identity has membership.
 
 ## Sign in on the private pilot
 

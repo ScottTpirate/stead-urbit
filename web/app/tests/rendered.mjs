@@ -1,9 +1,10 @@
 // Real Firefox + synthetic HTTP responses. This does not qualify native TLS,
 // authentication, permissions or the business outcomes represented by fixtures.
 import assert from 'node:assert/strict';
+import {webSourceFiles} from './web-source-files.mjs';
 import { createHash } from 'node:crypto';
 import { createServer } from 'node:http';
-import { mkdir, readFile, writeFile, readdir } from 'node:fs/promises';
+import { mkdir, readFile, writeFile } from 'node:fs/promises';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { build } from 'esbuild';
@@ -13,10 +14,9 @@ const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 assert.equal(process.version, 'v24.21.0', 'Use the pinned frontend Node runtime');
 const output = path.resolve(root, '../../.runtime/web-render-tests');
 async function inputs() {
-  const entries = await readdir(path.join(root, 'src'), {withFileTypes: true});
-  assert.ok(entries.length > 0 && entries.length <= 128 && entries.every(entry => entry.isFile()));
+  const sourceFiles = await webSourceFiles(root);
   const result = {};
-  for (const name of ['tests/rendered.mjs', 'package-lock.json', ...entries.map(entry => 'src/' + entry.name)].sort()) {
+  for (const name of ['tests/rendered.mjs', 'package-lock.json', ...sourceFiles, 'tests/web-source-files.mjs'].sort()) {
     const raw = await readFile(path.join(root, name)); assert.ok(raw.length <= 1024 * 1024);
     result[name] = createHash('sha256').update(raw).digest('hex');
   }
