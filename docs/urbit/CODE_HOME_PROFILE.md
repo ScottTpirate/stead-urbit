@@ -20,11 +20,16 @@ validation. The exact library and test bytes are in the desk source. Its public
 Home routes, persisted registry and Code migration still require qualification.
 [Native catalog run](https://github.com/ScottTpirate/stead-urbit/actions/runs/45732106760)
 
-T20 provides one product-level repository capability interface across inline
-and external profiles. Expose exact supported tree/file/ref/compare/proposal/
-check/write operations, size limits and exclusions. Do not claim full-history
-push, equivalent external delivery, LFS or SHA-256 support from this bounded
-profile. [Current capability matrix](CAPABILITY_MATRIX.md)
+The Code client checks the repository mode and the member's write and
+management permissions returned by Home. The external snapshot and status
+must report the same mode before Work or Code presents its controls. The
+accepted snapshot stays readable when its update history is full.
+
+On November 25 the renewed pilot member used stock Git 2.43.0 to list refs,
+clone the accepted external repository, run a full strict integrity check,
+and fetch the original main commit. Revoking the temporary read credential
+denied the next Git request. T20 still requires the full write, concurrency
+and recovery run for the chosen repository profile. [Named Git check](evidence/2026-11-25/existing-member-git-read.json) · [Capability matrix](CAPABILITY_MATRIX.md)
 
 T19 is accepted for read-only browsing on the named `a0e90ef` pilot. A member
 opened the 22-entry root, a folder and the exact README on wide and narrow

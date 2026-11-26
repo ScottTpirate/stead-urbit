@@ -446,6 +446,14 @@ try {
     const credential = page.getByRole('textbox', {name: 'Git credential', exact: true});
     await credential.waitFor();
     assert.equal(await credential.inputValue(), 'c'.repeat(64));
+    const expiry = page.locator('.repo-clone-panel time');
+    assert.equal(await expiry.getAttribute('datetime'), new Date(1800000900000).toISOString());
+    for (const width of [1240, 320]) {
+      await page.setViewportSize({width, height: 900});
+      const bounds = await expiry.boundingBox();
+      assert.ok(bounds && bounds.x >= 0 && bounds.x + bounds.width <= width);
+      await page.screenshot({path: path.join(output, `credential-expiry-${width}.png`), fullPage: true, mask: [credential]});
+    }
     assert.equal(await page.getByRole('button', {name: 'Create write credential', exact: true}).count(), 0);
     await page.getByText('Manage credentials', {exact: true}).click();
     await page.getByRole('button', {name: 'Revoke credential', exact: true}).click();

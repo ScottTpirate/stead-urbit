@@ -2,6 +2,7 @@ import { useRef, useState } from 'react';
 import type { CodeReviewKey, Fields, HomeClient } from './api';
 import { Button, Surface, TextField } from './primitives';
 import { CodeReview } from './CodeReview';
+import { AcceptedTime } from './AcceptedTime';
 import { branchLabel } from './externalReview';
 import './repository.css';
 
@@ -93,7 +94,7 @@ export function GitCredentials({ client, project, writable, cloneUrl }: {
           <TextField ref={secretField} label="Git credential" value={credential.bearer ?? ''} readOnly autoComplete="off" spellCheck={false} />
           <CopyValue value={credential.bearer!} label="Copy credential" onUnavailable={() => { secretField.current?.focus(); secretField.current?.select(); }} />
         </div>
-        <p>Expires within 15 minutes. Copy it before closing.</p>
+        <p>Expires <AcceptedTime milliseconds={credential.expires_at_ms!} />. Copy it before closing.</p>
         <Button variant="quiet" onClick={() => setCredential(null)}>Hide credential</Button>
       </>}
       <details className="repo-revoke">
