@@ -1,6 +1,7 @@
 """Exercise the generated edge using stock nginx and synthetic private upstreams."""
 import base64
 from dataclasses import replace
+from http.client import parse_headers
 from http.server import BaseHTTPRequestHandler, HTTPServer
 import os
 from pathlib import Path
@@ -96,7 +97,7 @@ class NginxEdgeTests(unittest.TestCase):
     def cert(self, role):
         crt, key = self.root / (role + '.crt'), self.root / (role + '.key')
         subprocess.run(['/usr/bin/openssl', 'req', '-x509', '-newkey', 'ec', '-pkeyopt', 'ec_paramgen_curve:P-256',
-                        '-noenc', '-days', '1', '-subj', f'/CN={HOST}', '-addext', f'subjectAltName=DNS:{HOST}',
+                        '-noenc', '-days', '1', '-subj', f'/CN={HOST}', '-addext', f'subjectAltName=DNS:{HOST},DNS:identity.example',
                         '-keyout', key, '-out', crt], stdin=subprocess.DEVNULL, capture_output=True, check=True, timeout=5)
         key.chmod(0o600)
         return crt, key
@@ -143,23 +144,52 @@ class NginxEdgeTests(unittest.TestCase):
                 time.sleep(0.02)
         self.fail('local edge did not begin listening')
 
-    def exchange(self, method, target, headers=(), data=b'', *, host=True, request_version='HTTP/1.1'):
+    def exchange(self, method, target, headers=(), data=b'', *, host=True, request_version='HTTP/1.1',
+                 server_name=HOST, with_headers=False):
         authority = f'{HOST}:{self.profile.public_port}'
         fields = [('Host', authority)] if host else []
         fields += [('Connection', 'close'), *headers]
         raw = (f'{method} {target} {request_version}\r\n' + ''.join(f'{name}: {value}\r\n' for name, value in fields)
                + '\r\n').encode('ascii') + data
         with socket.create_connection(('127.0.0.1', self.profile.public_port), timeout=3) as connection, \
-                self.context.wrap_socket(connection, server_hostname=HOST) as tls:
+                self.context.wrap_socket(connection, server_hostname=server_name) as tls:
             tls.sendall(raw)
             with tls.makefile('rb') as response:
                 status = int(response.readline().split()[1])
-                count = 0
-                while (line := response.readline()) != b'\r\n':
-                    self.assertTrue(line)
-                    if line.lower().startswith(b'content-length:'):
-                        count = int(line.partition(b':')[2].strip())
+                response_headers = parse_headers(response)
+                if with_headers:
+                    return status, response_headers, response.read()
+                count = int(response_headers.get('Content-Length', '0'))
                 return status, response.read(count) if status == 200 else b''
+
+    def test_bare_home_redirects_to_relative_app_path_only_for_its_origin(self):
+        self.start(replace(self.profile, origin_port=443))
+        home = [('Host', HOST)]
+        for method in ('GET', 'HEAD'):
+            for framing in ([], [('Content-Length', '0')]):
+                with self.subTest(method=method, framing=framing):
+                    status, headers, body = self.exchange(method, '/', home + framing, host=False, with_headers=True)
+                    self.assertEqual((status, headers.get_all('Location')), (302, ['/stead/']))
+                    if method == 'HEAD':
+                        self.assertEqual(body, b'')
+
+        for method, target, headers, sni in (
+            ('GET', '/', [('Host', 'identity.example')], HOST),
+            ('GET', '/', home, 'identity.example'),
+            ('HEAD', '/', [('Host', f'{HOST}:{self.profile.public_port}')], HOST),
+            ('GET', '/?project=work', home, HOST), ('GET', '/?', home, HOST),
+            ('POST', '/', home, HOST), ('HEAD', '/stead/', home, HOST),
+            ('GET', '/', home + [('Content-Length', '1')], HOST),
+            ('GET', '/', home + [('Content-Type', 'text/plain')], HOST),
+            ('GET', '/', home + [('Content-Encoding', 'gzip')], HOST),
+        ):
+            with self.subTest(method=method, target=target, headers=headers, sni=sni):
+                data = b'x' if ('Content-Length', '1') in headers else b''
+                status, reply, _ = self.exchange(method, target, headers, data, host=False, server_name=sni, with_headers=True)
+                self.assertIn(status, (400, 404))
+                self.assertIsNone(reply.get('Location'))
+        self.assertTrue(self.home.observed.empty())
+        self.assertTrue(self.git.observed.empty())
 
     def test_only_exact_routes_to_distinct_backends_and_returns_clean_headers(self):
         self.start()
@@ -281,6 +311,8 @@ class NginxEdgeTests(unittest.TestCase):
         profile = replace(self.profile, origin_port=origin_port)
         self.start(profile)
         authority = f'{HOST}:{origin_port}'
+        status, headers, _ = self.exchange('GET', '/', [('Host', authority)], host=False, with_headers=True)
+        self.assertEqual((status, headers.get('Location')), (302, '/stead/'))
         for path, backend in (('/stead/', self.home), (READ, self.git)):
             self.assertEqual(self.exchange('GET', path)[0], 404)
             self.assertEqual(self.exchange('GET', path, [('Host', authority)], host=False), (200, backend.label))
