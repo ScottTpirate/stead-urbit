@@ -39,7 +39,7 @@ FROZEN = {
     PREFIX + '__init__.py': '012fb68d9afed4520e136077b0cc8124df015eb584ab421cf051d0d7c210bec4',
     PREFIX + 'worker.py': 'bfe387e7559d63eb84b160df7ce6c060fcbf92caf79d9f25802f74d80afbb4a9',
     PREFIX + 'runner.py': '8d759ca5d650c7ba9815bc1bf1949ca4e0f82bc13f015ca6b0915eebc0cbd037',
-    PREFIX + 'evidence.py': 'cfa4e7f2a0e5e8f26158237655cfc4f2f26446ea10b302e2343a424d698005f7',
+    PREFIX + 'evidence.py': 'd9c23d3dada2da6bd3ee3309761d4f01c1c42880df64d97f16f888fb73122506',
     PREFIX + 'capture.hoon': '04296e9706c1a58af9a139aed9fa7a7aba040b912bbb588292207610df84e6e3',
     'scripts/release_install.py': '30b2a651c3e7d124e7e5ef319f5581299d29427322e605f1ffca91e9015f5e80',
     'scripts/sdk_native/native.py': '3c12a59eafe9b165550d0bf469b359aaf3b3127ecf43f357cf561ce358ccde1c',

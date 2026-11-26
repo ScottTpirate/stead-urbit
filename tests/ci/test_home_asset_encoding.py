@@ -16,28 +16,30 @@ class Saved8EncodingTests(unittest.TestCase):
             calls = []
             def dojo(source):
                 calls.append(source)
-                return {E.SUSPENDED: '%.n', E.DESK: '%release-test', E.ENCODING_CONTROL: response}[source]
+                return {E.SUSPENDED: '%.n', E.DESK: '%release-test', E.SANITY: hex(E.ENCODING_MARKER), E.ENCODING_CONTROL: response}[source]
             with self.subTest(response=response), self.assertRaises(ValueError):
                 E.collect(dojo, 'seed8')
-            self.assertEqual(calls, [E.SUSPENDED, E.DESK, E.ENCODING_CONTROL])
+            self.assertEqual(calls, [E.SUSPENDED, E.DESK, E.SANITY, E.ENCODING_CONTROL])
         error = TimeoutError('inert owned request')
         calls = []
         def interrupted(source):
             calls.append(source)
             if source == E.ENCODING_CONTROL:
                 raise error
-            return {E.SUSPENDED: '%.n', E.DESK: '%release-test'}[source]
+            return {E.SUSPENDED: '%.n', E.DESK: '%release-test', E.SANITY: hex(E.ENCODING_MARKER)}[source]
         with self.assertRaises(TimeoutError) as raised:
             E.collect(interrupted, 'seed8')
         self.assertIs(raised.exception, error)
-        self.assertEqual(calls, [E.SUSPENDED, E.DESK, E.ENCODING_CONTROL])
-        self.assertEqual(E.ENCODING_CONTROL, "+home-ui-capture [262.144 'stead.saved8-hex-control/1']")
-        # This one fixed control is outside the unchanged ordinary offset range.
+        self.assertEqual(calls, [E.SUSPENDED, E.DESK, E.SANITY, E.ENCODING_CONTROL])
+        self.assertNotIn('home-ui-capture', E.ENCODING_CONTROL)
+        self.assertIn('en:base16:mimes:html', E.ENCODING_CONTROL)
+        self.assertNotIn('%gv', E.ENCODING_CONTROL)
+        # The historical chunk helper still refuses the non-data offset.
         with self.assertRaises(ValueError):
             E.command(262144, '')
 
     def test_control_then_multichunk_bytes_and_final_fingerprint_remain_required(self):
-        # Real canonical JSON/hex/hash checking around an explicitly inert byte vector.
+        # Real direct atom/byte/hash checking around an explicitly inert vector.
         raw = bytes(range(256)) * 65 + b'\x01'
         fingerprint = 'a' * 64
         capture_pin = E.sha(b'stead.saved8-capture/1\0' + raw.hex().encode())
@@ -46,24 +48,24 @@ class Saved8EncodingTests(unittest.TestCase):
             calls.append(source)
             if source == E.SUSPENDED: return '%.n'
             if source == E.DESK: return '%release-test'
-            if source == E.ENCODING_CONTROL: return '0x73.6176.6564.3868.6578'
+            if source in (E.SANITY, E.ENCODING_CONTROL): return '0x73.6176.6564.3868.6578'
             if source == E.FINGERPRINT: return '0x' + fingerprint
+            if source == E.TOTAL: return '16.641'
+            if source in [E.digest_command(field, fingerprint) for field in E.NOUNS]:
+                return '0x' + 'b' * 64
             for offset in (0, E.CHUNK):
-                previous = '' if offset == 0 else capture_pin
-                if source == E.command(offset, previous):
+                if source == E.chunk_command(len(raw), offset, fingerprint):
                     part = raw[offset:offset + E.CHUNK]
-                    row = dict.fromkeys(E.PINS, 'b' * 64)
-                    row.update(protocol='stead.saved8-capture/1', offset=str(offset),
-                        length=str(len(part)), total_bytes=str(len(raw)), data_hex=part.hex(),
-                        capture_pin=capture_pin, vase_fingerprint=fingerprint)
-                    return hex(int.from_bytes(E.canonical(row), 'little'))
+                    return hex(int.from_bytes(part, 'little'))
             raise AssertionError('unexpected native request')
         value = E.collect(dojo, 'seed8')
         self.assertEqual(value['data'], raw)
         self.assertEqual(value['artifact_sha256'], E.sha(raw))
         self.assertEqual(value['capture_pin'], capture_pin)
-        self.assertEqual(calls, [E.SUSPENDED, E.DESK, E.ENCODING_CONTROL, E.FINGERPRINT,
-            E.command(0, ''), E.command(E.CHUNK, capture_pin), E.SUSPENDED, E.DESK, E.FINGERPRINT])
+        self.assertEqual(calls, [E.SUSPENDED, E.DESK, E.SANITY, E.ENCODING_CONTROL, E.FINGERPRINT, E.TOTAL,
+            *[E.digest_command(field, fingerprint) for field in E.NOUNS],
+            E.chunk_command(len(raw), 0, fingerprint), E.chunk_command(len(raw), E.CHUNK, fingerprint),
+            E.SUSPENDED, E.DESK, E.FINGERPRINT])
         original = dojo
         count = 0
         def changed_fingerprint(source):

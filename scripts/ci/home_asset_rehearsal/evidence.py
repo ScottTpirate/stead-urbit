@@ -1,6 +1,6 @@
 """Closed saved8 capture/equality checks; supplied data alone proves no runtime.
 
-The exact source-owned generator observes p and q separately. Python verifies
+Small source-owned direct expressions observe p and q separately. Python verifies
 the complete emitted jam bytes and their domain pin without widening the
 unrelated 16KiB scheduled-Gall noun decoder. Actual producer, suspension,
 current process, source and lease custody remain mandatory runner/guardian
@@ -14,7 +14,6 @@ import re
 
 MAX_CAPTURE = 262144
 CHUNK = 16384
-ENCODING_CONTROL = "+home-ui-capture [262.144 'stead.saved8-hex-control/1']"
 ENCODING_MARKER = 0x736176656438686578
 STAGES = ('seed8', 'a0-loaded', 'a0-cold', 'assets-loaded', 'rollback-loaded')
 TAILS = ('db_pin', 'code_pin', 'handoff_pin', 'retired_pin', 'packs_pin', 'external_pin')
@@ -22,9 +21,95 @@ PINS = ('capture_pin', 'vase_fingerprint', 'type_pin', 'payload_pin', 'durable_p
 FIELDS = frozenset(('protocol', 'offset', 'length', 'total_bytes', 'data_hex', *PINS))
 SUSPENDED = '.^(? %gu /=stead-home=/$)'
 DESK = '.^(desk %gd /=stead-home=/$)'
-FINGERPRINT = ('=/  egg=egg-any:gall  .^(egg-any:gall %gv /=stead-home=/$)  '
+# Exact source-owned direct projection builders; no native library import.
+SANITY = '0x73.6176.6564.3868.6578'
+
+PREFIX = (
+    '?>  =(~zod our)  '
+    '?>  .^(? %j /(scot %p our)/fake/(scot %da now))  '
+    '?>  =(%.n .^(? %gu /=stead-home=/$))  '
+    '?>  =(%release-test .^(desk %gd /=stead-home=/$))  '
+    '=/  egg=egg-any:gall  .^(egg-any:gall %gv /=stead-home=/$)  '
     '?>  ?=([%20 %live *] egg)  =/  saved=vase  +.old-state.egg  '
-    '?>  ?=([%stead-home %8 *] q.saved)  ^-  @ux  (shax (jam saved))')
+    '?>  ?=([%stead-home %8 [* *] * * * * *] q.saved)  '
+    '=/  stored=[team=[db=* projection=*] code=* handoff=* retired=* packs=* external=*]  +>.q.saved  '
+    '?>  &(?=(^ code.stored) ?=(^ -.code.stored) =(handoff.stored [%open 2 ~]) '
+    '?=(^ retired.stored) ?=(^ packs.stored) ?=(^ external.stored))  '
+    '=/  packed  (jam saved)  =/  total  (met 3 packed)  '
+    '?>  &((gth total 0) (lte total 262.144))  '
+)
+
+FINGERPRINT = PREFIX + '^-  @ux  (shax packed)'
+
+TOTAL = PREFIX + '^-  @ud  total'
+
+ENCODING_CONTROL = (
+    '=/  capture-hex  |=  [size=@ud data=@]  ^-  @t  '
+    '?>  (lte (met 3 data) size)  ?:  =(0 size)  \'\'  '
+    '(en:base16:mimes:html [size (rev 3 size data)])  '
+    '=/  vectors=(list [size=@ud data=@ text=@t])  '
+    '~[[0 0 \'\'] [1 0 \'00\'] [2 0 \'0000\'] [1 0xff \'ff\'] '
+    '[2 0x100 \'0001\'] [3 0x1234 \'341200\'] '
+    '[4 0x102.0304 \'04030201\'] [4 0xff00.ff00 \'00ff00ff\']]  '
+    '?>  (levy vectors |=([size=@ud data=@ text=@t] =((capture-hex size data) text)))  '
+    '^-  @ux  0x73.6176.6564.3868.6578'
+)
+
+NOUNS = {
+    'type_pin': ('stead.saved8-type/1', 'p.saved'),
+    'payload_pin': ('stead.saved8-payload/1', 'q.saved'),
+    'durable_pin': ('stead.saved8-durable/1',
+                    '[db.team.stored code.stored handoff.stored retired.stored packs.stored external.stored]'),
+    'db_pin': ('stead.saved8-tail/1', 'db.team.stored'),
+    'code_pin': ('stead.saved8-tail/1', 'code.stored'),
+    'handoff_pin': ('stead.saved8-tail/1', 'handoff.stored'),
+    'retired_pin': ('stead.saved8-tail/1', 'retired.stored'),
+    'packs_pin': ('stead.saved8-tail/1', 'packs.stored'),
+    'external_pin': ('stead.saved8-tail/1', 'external.stored'),
+}
+
+def grouped(number, base=10):
+    require(type(number) is int and number >= 0 and base in (10, 16))
+    digits = str(number) if base == 10 else format(number, 'x')
+    width = 3 if base == 10 else 4
+    first = len(digits) % width or width
+    return digits[:first] + ''.join('.' + digits[i:i + width]
+                                  for i in range(first, len(digits), width))
+
+def bound(prefix, fingerprint):
+    require(type(fingerprint) is str and re.fullmatch('[0-9a-f]{64}', fingerprint))
+    return prefix + '?>  =(0x' + grouped(int(fingerprint, 16), 16) + ' (shax packed))  '
+
+def digest_command(field, fingerprint):
+    require(type(field) is str and field in NOUNS)
+    domain, noun = NOUNS[field]
+    # This is the exact a0 ++hash arithmetic. Return its numeric digest rather
+    # than running its64-character output formatter. Python formats064x.
+    return (bound(PREFIX, fingerprint)
+        + '=/  part  (jam ' + noun + ')  =/  width  (met 3 part)  '
+        + '=/  text=@t  (en:base16:mimes:html [width (rev 3 width part)])  '
+        + '=/  domain=@t  \'' + domain + '\'  =/  prefix  +((met 3 domain))  '
+        + '=/  length  (add prefix (met 3 text))  '
+        + '=/  data  (mix domain (lsh [3 prefix] text))  '
+        + '^-  @ux  (sha-256l:sha [length (rev 3 length data)])')
+
+def chunk_command(total, offset, fingerprint):
+    require(type(total) is int and 0 < total <= MAX_CAPTURE
+            and type(offset) is int and 0 <= offset < total and offset % CHUNK == 0)
+    size = min(CHUNK, total - offset)
+    return (bound(PREFIX, fingerprint)
+        + '?>  =(' + grouped(total) + ' total)  ^-  @ux  '
+        + '(cut 3 [' + grouped(offset) + ' ' + grouped(size) + '] packed)')
+
+def chunk_bytes(value, total, offset):
+    """The transport owner's strict @ux parser supplies an integer, not text."""
+    require(type(total) is int and 0 < total <= MAX_CAPTURE
+            and type(offset) is int and 0 <= offset < total and offset % CHUNK == 0)
+    size = min(CHUNK, total - offset)
+    require(type(value) is int and 0 <= value < 1 << (8 * size))
+    # A zero high byte is part of the original chunk. Never use minimal width.
+    return value.to_bytes(size, 'little')
+
 CAPABILITIES = {
     'protocol': 'stead.capabilities/3', 'profile': 'configured-team',
     'commands': 'stead.command/3', 'queries': 'stead.query/3',
@@ -118,31 +203,43 @@ def validate_capture(value):
     return value
 
 
+def native_decimal(output):
+    require(type(output) is str and 0 < len(output) <= 32
+            and re.fullmatch('[0-9. \t\r\n]+', output))
+    token = re.sub('[ \t\r\n]', '', output)
+    require(re.fullmatch('0|[1-9][0-9]{0,2}(?:\\.[0-9]{3})*', token))
+    value = int(token.replace('.', ''))
+    require(0 < value <= MAX_CAPTURE and token == grouped(value))
+    return value
+
+
 def collect(dojo, stage):
     require(type(stage) is str and stage in STAGES)
     require(dojo(SUSPENDED).strip() == '%.n' and dojo(DESK).strip() == '%release-test')
-    # The same fixed generator must compile and pass exact old/new encoding
-    # vectors before any large saved-state formatting request.
+    # Independent trivial control first. The separate encoder control proves
+    # only its eight small vectors; neither compiles a capture generator.
+    require(atom(dojo(SANITY), 64) == ENCODING_MARKER)
     require(atom(dojo(ENCODING_CONTROL), 64) == ENCODING_MARKER)
     before = fingerprint(dojo)
-    offset, previous, first, parts = 0, '', None, []
-    for _ in range(16):
-        row, data = chunk(dojo(command(offset, previous)), offset, previous, before)
-        if first is None:
-            first, previous = row, row['capture_pin']
-        require(all(row[k] == first[k] for k in (*PINS, 'total_bytes')))
-        parts.append(data)
-        offset += len(data)
-        if offset == decimal(first['total_bytes'], MAX_CAPTURE):
-            break
-    else:
-        raise ValueError('Fixed saved8 capture chunk bound')
+    total = native_decimal(dojo(TOTAL))
+    pins = {'vase_fingerprint': before}
+    for field in NOUNS:
+        value = atom(dojo(digest_command(field, before)), 96)
+        require(value < 2**256)
+        pins[field] = f'{value:064x}'
+    parts = []
+    for offset in range(0, total, CHUNK):
+        number = atom(dojo(chunk_command(total, offset, before)), 100000)
+        parts.append(chunk_bytes(number, total, offset))
+    require(0 < len(parts) <= 16)
     require(dojo(SUSPENDED).strip() == '%.n' and dojo(DESK).strip() == '%release-test'
             and fingerprint(dojo) == before)
     data = b''.join(parts)
+    require(len(data) == total)
+    pins['capture_pin'] = sha(b'stead.saved8-capture/1\0' + data.hex().encode())
     return validate_capture({'protocol': 'stead.saved8-capture-record/1', 'stage': stage,
         'saved_version': 8, 'artifact_bytes': len(data), 'artifact_sha256': sha(data), 'data': data,
-        **{k: first[k] for k in PINS}})
+        **pins})
 
 
 def metadata(value):
