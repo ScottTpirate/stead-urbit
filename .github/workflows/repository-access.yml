@@ -38,11 +38,17 @@ jobs:
       - run: ./node_modules/.bin/playwright install firefox --with-deps
       - name: Exercise inline Code, staged and accepted snapshots, and Work branches
         run: |
-          node tests/rendered.mjs code-survives-reopening-project code-discovers-staged-snapshot-without-reloading code-browses-accepted-branches-and-tags code-development-work-branch-and-review
+          for case_name in code-survives-reopening-project code-discovers-staged-snapshot-without-reloading code-browses-accepted-branches-and-tags code-development-work-branch-and-review
+          do
+            node tests/rendered.mjs "$case_name"
+            node -e 'const r = require("../../.runtime/web-render-tests/report.json"); require("node:assert/strict").deepEqual(r.checks, [{name: process.argv[1], passed: true}]);' "$case_name"
+          done
+          mkdir "$RUNNER_TEMP/repository-images"
+          cp ../../.runtime/web-render-tests/credential-expiry-{1240,320}.png "$RUNNER_TEMP/repository-images/"
       - uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
         if: always()
         with:
           name: synthetic-repository-access
-          path: .runtime/web-render-tests/credential-expiry-*.png
-          if-no-files-found: ignore
+          path: ${{ runner.temp }}/repository-images/*.png
+          if-no-files-found: error
           retention-days: 7
