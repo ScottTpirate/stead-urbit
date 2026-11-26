@@ -8,7 +8,7 @@ on:
         required: true
         default: native
         type: choice
-        options: [native, model, pure, pure-model-simple, pure-repository-debug, home-assets-saved8]
+        options: [native, model, pure, pure-model-simple, pure-model-staged, pure-repository-debug, home-assets-saved8]
       candidate:
         description: Full candidate commit from this repository; blank tests the pinned reviewed controller
         required: false
@@ -26,7 +26,7 @@ jobs:
   native:
     if: github.repository_id == '1367847927' && github.ref == 'refs/heads/main'
     runs-on: ubuntu-24.04
-    timeout-minutes: ${{ (inputs.mode == 'model' || inputs.mode == 'pure' || inputs.mode == 'pure-model-simple' || inputs.mode == 'pure-repository-debug') && 30 || 125 }}
+    timeout-minutes: ${{ (inputs.mode == 'model' || inputs.mode == 'pure' || inputs.mode == 'pure-model-simple' || inputs.mode == 'pure-model-staged' || inputs.mode == 'pure-repository-debug') && 30 || 125 }}
     steps:
       - name: Capture the reviewed controller and candidate data
         env:
@@ -67,7 +67,7 @@ jobs:
           if manifest != {'format': 'stead.hosted-controller/1', 'repository': 'ScottTpirate/stead-urbit', 'controller_commit': controller}:
               raise SystemExit('Invalid controller manifest')
           mode = os.environ.get('STEAD_MODE') or 'native'
-          if mode not in ('native', 'model', 'pure', 'pure-model-simple', 'pure-repository-debug', 'home-assets-saved8') or (mode in ('model', 'pure', 'pure-model-simple', 'pure-repository-debug', 'home-assets-saved8') and os.environ.get('STEAD_CANDIDATE')):
+          if mode not in ('native', 'model', 'pure', 'pure-model-simple', 'pure-model-staged', 'pure-repository-debug', 'home-assets-saved8') or (mode in ('model', 'pure', 'pure-model-simple', 'pure-model-staged', 'pure-repository-debug', 'home-assets-saved8') and os.environ.get('STEAD_CANDIDATE')):
               raise SystemExit('Fixed standalone modes accept no candidate override')
           candidate = os.environ.get('STEAD_CANDIDATE') or controller
           if not all(re.fullmatch(r'[0-9a-f]{40}', value) for value in (controller, candidate)):
@@ -79,7 +79,7 @@ jobs:
           (root / '.runtime/controller').write_text(controller + '\n')
           PY
       - name: Provision the exact Git corpus version on the disposable VM
-        if: inputs.mode != 'model' && inputs.mode != 'pure' && inputs.mode != 'pure-model-simple' && inputs.mode != 'pure-repository-debug'
+        if: inputs.mode != 'model' && inputs.mode != 'pure' && inputs.mode != 'pure-model-simple' && inputs.mode != 'pure-model-staged' && inputs.mode != 'pure-repository-debug'
         timeout-minutes: 15
         run: |
           sudo apt-get update -qq
@@ -120,7 +120,7 @@ jobs:
               'git_exec_path': helpers, 'build_options': options}))
           PY
       - name: Install the disposable VM dependency and verify pinned downloads
-        if: inputs.mode != 'model' && inputs.mode != 'pure' && inputs.mode != 'pure-model-simple' && inputs.mode != 'pure-repository-debug'
+        if: inputs.mode != 'model' && inputs.mode != 'pure' && inputs.mode != 'pure-model-simple' && inputs.mode != 'pure-model-staged' && inputs.mode != 'pure-repository-debug'
         run: |
           sudo apt-get update -qq
           sudo apt-get install --no-install-recommends -y bubblewrap
@@ -132,7 +132,7 @@ jobs:
           runpy.run_path('/var/lib/stead-ci-controller/scripts/urbit/toolchain.py', run_name='__main__')
           PY
       - name: Install the fixed standalone namespace dependency
-        if: inputs.mode == 'model' || inputs.mode == 'pure' || inputs.mode == 'pure-model-simple' || inputs.mode == 'pure-repository-debug'
+        if: inputs.mode == 'model' || inputs.mode == 'pure' || inputs.mode == 'pure-model-simple' || inputs.mode == 'pure-model-staged' || inputs.mode == 'pure-repository-debug'
         timeout-minutes: 5
         run: |
           sudo apt-get update -qq
@@ -158,7 +158,7 @@ jobs:
           print(json.dumps({'bwrap_profiles': [line for line in profiles.splitlines() if 'bwrap' in line][:16]}))
           PY
       - name: Authenticate admission and prove owned failure cleanup
-        if: inputs.mode != 'model' && inputs.mode != 'pure' && inputs.mode != 'pure-model-simple' && inputs.mode != 'pure-repository-debug'
+        if: inputs.mode != 'model' && inputs.mode != 'pure' && inputs.mode != 'pure-model-simple' && inputs.mode != 'pure-model-staged' && inputs.mode != 'pure-repository-debug'
         env:
           STEAD_WORKFLOW: ${{ github.sha }}
           STEAD_RUN_ID: ${{ github.run_id }}
@@ -170,7 +170,7 @@ jobs:
             sudo --preserve-env=ACTIONS_ID_TOKEN_REQUEST_URL,ACTIONS_ID_TOKEN_REQUEST_TOKEN python3 -I -B /var/lib/stead-ci-controller/scripts/ci/hosted.py --workflow "$STEAD_WORKFLOW" --controller "$controller" --candidate "$candidate" --run-id "$STEAD_RUN_ID" --attempt "$STEAD_ATTEMPT" --control "$control"
           done
       - name: Execute the isolated native job
-        if: inputs.mode != 'model' && inputs.mode != 'pure' && inputs.mode != 'pure-model-simple' && inputs.mode != 'pure-repository-debug' && inputs.mode != 'home-assets-saved8'
+        if: inputs.mode != 'model' && inputs.mode != 'pure' && inputs.mode != 'pure-model-simple' && inputs.mode != 'pure-model-staged' && inputs.mode != 'pure-repository-debug' && inputs.mode != 'home-assets-saved8'
         env:
           STEAD_WORKFLOW: ${{ github.sha }}
           STEAD_RUN_ID: ${{ github.run_id }}
@@ -218,6 +218,16 @@ jobs:
         run: |
           controller=$(sudo cat /var/lib/stead-ci-controller/.runtime/controller)
           sudo --preserve-env=ACTIONS_ID_TOKEN_REQUEST_URL,ACTIONS_ID_TOKEN_REQUEST_TOKEN python3 -I -B /var/lib/stead-ci-controller/scripts/ci/hosted.py --workflow "$STEAD_WORKFLOW" --controller "$controller" --candidate "$controller" --run-id "$STEAD_RUN_ID" --attempt "$STEAD_ATTEMPT" --mode pure-model-simple
+      - name: Execute the fixed staged first-model-arm diagnostic
+        if: inputs.mode == 'pure-model-staged'
+        timeout-minutes: 24
+        env:
+          STEAD_WORKFLOW: ${{ github.sha }}
+          STEAD_RUN_ID: ${{ github.run_id }}
+          STEAD_ATTEMPT: ${{ github.run_attempt }}
+        run: |
+          controller=$(sudo cat /var/lib/stead-ci-controller/.runtime/controller)
+          sudo --preserve-env=ACTIONS_ID_TOKEN_REQUEST_URL,ACTIONS_ID_TOKEN_REQUEST_TOKEN python3 -I -B /var/lib/stead-ci-controller/scripts/ci/hosted.py --workflow "$STEAD_WORKFLOW" --controller "$controller" --candidate "$controller" --run-id "$STEAD_RUN_ID" --attempt "$STEAD_ATTEMPT" --mode pure-model-staged
       - name: Execute the fixed catalog diagnostic
         if: inputs.mode == 'pure-repository-debug'
         timeout-minutes: 24
@@ -243,7 +253,7 @@ jobs:
               raise SystemExit('Kernel diagnostic collection failed')
           PY
       - name: Publish bounded evidence only
-        if: always() && inputs.mode != 'model' && inputs.mode != 'pure' && inputs.mode != 'pure-model-simple' && inputs.mode != 'pure-repository-debug' && inputs.mode != 'home-assets-saved8'
+        if: always() && inputs.mode != 'model' && inputs.mode != 'pure' && inputs.mode != 'pure-model-simple' && inputs.mode != 'pure-model-staged' && inputs.mode != 'pure-repository-debug' && inputs.mode != 'home-assets-saved8'
         uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
         with:
           name: native-ci-evidence-${{ github.run_id }}-${{ github.run_attempt }}
@@ -267,7 +277,7 @@ jobs:
           if-no-files-found: error
           retention-days: 7
       - name: Publish fixed pure evaluator evidence only
-        if: always() && (inputs.mode == 'pure' || inputs.mode == 'pure-model-simple' || inputs.mode == 'pure-repository-debug')
+        if: always() && (inputs.mode == 'pure' || inputs.mode == 'pure-model-simple' || inputs.mode == 'pure-model-staged' || inputs.mode == 'pure-repository-debug')
         uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
         with:
           name: pure-evaluator-evidence-${{ github.run_id }}-${{ github.run_attempt }}
