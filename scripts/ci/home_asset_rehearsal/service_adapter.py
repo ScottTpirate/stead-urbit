@@ -38,8 +38,8 @@ DRIVERS = {'lib/stead-codec.hoon': 'a0-stead-codec.hoon', 'lib/stead-delivery.ho
 FROZEN = {
     PREFIX + '__init__.py': '012fb68d9afed4520e136077b0cc8124df015eb584ab421cf051d0d7c210bec4',
     PREFIX + 'worker.py': 'bfe387e7559d63eb84b160df7ce6c060fcbf92caf79d9f25802f74d80afbb4a9',
-    PREFIX + 'runner.py': '4738d4d2b22d612c3c1e94d12309166ab5479586af87b124ff4709bde1bf0b8c',
-    PREFIX + 'evidence.py': '98fb6bc0613523dc9383b6c3fe845a21d4d02581904c405d9cf5bc00a2d287a0',
+    PREFIX + 'runner.py': '43b3c967b692bef27e0ff6ae0d314b94483286587ed4f05f3d0f0173b606613a',
+    PREFIX + 'evidence.py': '7534daf5dd443cc4e4a1be4724797bf5cf2535a81fe8afffb3e9f70349c90946',
     PREFIX + 'capture.hoon': '04296e9706c1a58af9a139aed9fa7a7aba040b912bbb588292207610df84e6e3',
     'scripts/release_install.py': '30b2a651c3e7d124e7e5ef319f5581299d29427322e605f1ffca91e9015f5e80',
     'scripts/sdk_native/native.py': '3c12a59eafe9b165550d0bf469b359aaf3b3127ecf43f357cf561ce358ccde1c',

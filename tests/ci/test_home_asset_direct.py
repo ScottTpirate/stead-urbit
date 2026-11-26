@@ -121,6 +121,28 @@ class Saved8DirectTests(unittest.TestCase):
             with self.subTest(args=args), self.assertRaises(ValueError):
                 E.chunk_bytes(*args)
 
+    def test_large_binary_capture_binds_each_native_digest_and_all_original_bytes(self):
+        data = b'x' * 3703891 + b'y'
+        observed = {}
+        def read(source, maximum):
+            raw = data if source.endswith('  packed') else b'part'
+            self.assertLessEqual(len(raw), maximum)
+            observed['raw'] = raw
+            return raw
+        replies = Replies(b'x')
+        def dojo(source):
+            if source.startswith('=/  value  '):
+                return '0x' + hashlib.sha256(observed['raw']).hexdigest()
+            if source == E.TOTAL:
+                return '3.703.892'
+            return replies(source)
+        result = E.collect(dojo, 'seed8', read_flat=read)
+        self.assertEqual(result['data'], data)
+        self.assertEqual(result['type_pin'], E.sha(b'stead.saved8-type/1\0' + b'part'.hex().encode()))
+        with self.assertRaises(ValueError):
+            E.collect(lambda source: '0x0' if source.startswith('=/  value  ') else dojo(source),
+                      'seed8', read_flat=read)
+
     def test_source_domains_and_cold_vs_durable_equality_remain_distinct(self):
         self.assertEqual(E.NOUNS, {
             'type_pin': ('stead.saved8-type/1', 'p.saved'),
@@ -144,6 +166,7 @@ class Saved8DirectTests(unittest.TestCase):
         self.assertEqual(error.exception.projection_results['external'], 'yes')
         self.assertNotIn('!<', E.PREFIX)
         self.assertNotIn('/+', E.PREFIX)
+        self.assertEqual(E.native_decimal('3.703.892\n'), 3703892)
         self.assertEqual(E.grouped(262144), '262.144')
         self.assertEqual(E.grouped(0x123456789, 16), '1.2345.6789')
         fingerprint = '0123456789abcdef' * 4

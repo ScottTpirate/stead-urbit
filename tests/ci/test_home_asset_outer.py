@@ -64,7 +64,7 @@ finally:
 
 # Test-only readonly chunks preserve the host's unchanged 1 MiB file limit.
 # Runtime archives remain exact full tar files; no host fixture is runtime evidence.
-ARCHIVE_CHUNKS = {'previous': [('previous-0.chunk', 524288, 'ff40efb3c3f8351cd7dc6f33e008e22a59ffae8510838032027597f65330fde3'), ('previous-1.chunk', 524288, 'c47dcb795b056405c06fb004c015e4c0d5498d5c78dc49ab20aea414f4233b9a'), ('previous-2.chunk', 344064, 'dee3742b0aeb62d9cfd357b04e1d3f9a5bec1953cfaaaa9aad95515982357e03')], 'target': [('target-0.chunk', 524288, 'ff40efb3c3f8351cd7dc6f33e008e22a59ffae8510838032027597f65330fde3'), ('target-1.chunk', 524288, 'cabc5735e83d70c7cd4506264d71b7b156b49e9287e771c7c026e7d7a2132053'), ('target-2.chunk', 524288, '06ebf214c2256892bcf6e49f488e02e00b93632d9e10837f500d0035f96e2ba4'), ('target-3.chunk', 75776, '69e84bc851b731a7df6f096bfff4ec89b39db9c387ce42d314b97e0c3752ed12')]}
+ARCHIVE_CHUNKS = {'previous': [('previous-0.chunk', 524288, 'ff40efb3c3f8351cd7dc6f33e008e22a59ffae8510838032027597f65330fde3'), ('previous-1.chunk', 524288, 'c47dcb795b056405c06fb004c015e4c0d5498d5c78dc49ab20aea414f4233b9a'), ('previous-2.chunk', 344064, 'dee3742b0aeb62d9cfd357b04e1d3f9a5bec1953cfaaaa9aad95515982357e03')], 'target': [('target-0.chunk', 524288, 'ff40efb3c3f8351cd7dc6f33e008e22a59ffae8510838032027597f65330fde3'), ('target-1.chunk', 524288, '9db277dd1c570f46c3605e61ed10d1418cd51f8470fa25543fe0151320230871'), ('target-2.chunk', 524288, '36ece196aaed5c25db52f741975d8539fa0ec1d116aef3cccc2b36b4aaaadf42'), ('target-3.chunk', 75776, '0059daddeb4524e1c4cc04d5827123c1ecd272f1a6b8e612eb713917ccbd486c')]}
 
 
 def archive_bytes(name):
@@ -164,6 +164,17 @@ def guard_check():
 
 
 class Saved8OuterTests(unittest.TestCase):
+    def test_full_native_capture_compression_is_bounded_and_reversible(self):
+        import base64
+        import zlib
+        raw = b'abcd' * 925973
+        encoded = R.file_value(raw)
+        self.assertEqual(R.file_bytes(encoded, E.MAX_CAPTURE), raw)
+        for payload in (b'', zlib.compress(raw + b'x'), zlib.compress(raw) + b'tailing'):
+            other = dict(encoded, deflate_base64=base64.b64encode(payload).decode())
+            with self.assertRaises(ValueError):
+                R.file_bytes(other, E.MAX_CAPTURE)
+
     def test_fixed_archive_source_routes_and_command_schema(self):
         # Real filesystem resolution only: neither competing initializer executes.
         # The captured host package must win over a later regular package.

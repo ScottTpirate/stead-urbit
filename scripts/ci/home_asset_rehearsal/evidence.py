@@ -12,7 +12,8 @@ import hashlib
 import json
 import re
 
-MAX_CAPTURE = 262144
+MAX_CAPTURE = 8 * 1024 * 1024
+LEGACY_CAPTURE_MAX = 262144
 CHUNK = 16384
 ENCODING_MARKER = 0x736176656438686578
 STAGES = ('seed8', 'a0-loaded', 'a0-cold', 'assets-loaded', 'rollback-loaded')
@@ -138,7 +139,7 @@ def digest_command(field, fingerprint):
         + '^-  @ux  (sha-256l:sha [length (rev 3 length data)])')
 
 def chunk_command(total, offset, fingerprint):
-    require(type(total) is int and 0 < total <= MAX_CAPTURE
+    require(type(total) is int and 0 < total <= LEGACY_CAPTURE_MAX
             and type(offset) is int and 0 <= offset < total and offset % CHUNK == 0)
     size = min(CHUNK, total - offset)
     return (bound(PREFIX, fingerprint)
@@ -147,7 +148,7 @@ def chunk_command(total, offset, fingerprint):
 
 def chunk_bytes(value, total, offset):
     """The transport owner's strict @ux parser supplies an integer, not text."""
-    require(type(total) is int and 0 < total <= MAX_CAPTURE
+    require(type(total) is int and 0 < total <= LEGACY_CAPTURE_MAX
             and type(offset) is int and 0 <= offset < total and offset % CHUNK == 0)
     size = min(CHUNK, total - offset)
     require(type(value) is int and 0 <= value < 1 << (8 * size))
@@ -199,7 +200,7 @@ def decimal(value, bound):
 
 
 def command(offset, previous):
-    require(type(offset) is int and 0 <= offset < MAX_CAPTURE and offset % CHUNK == 0)
+    require(type(offset) is int and 0 <= offset < LEGACY_CAPTURE_MAX and offset % CHUNK == 0)
     require(previous == '' if offset == 0 else digest(previous))
     return "+home-ui-capture [" + format(offset, ',').replace(',', '.') + " '" + previous + "']"
 
@@ -257,7 +258,43 @@ def native_decimal(output):
     return value
 
 
-def collect(dojo, stage):
+def projection_source(field, fingerprint):
+    if field == 'vase':
+        return bound(PREFIX, fingerprint) + 'packed'
+    require(field in NOUNS)
+    prefix = PREFIX if field in ('type_pin', 'payload_pin') else STORED + '=/  packed  (jam saved)  '
+    return bound(prefix, fingerprint) + '(jam ' + NOUNS[field][1] + ')'
+
+
+def full_capture(dojo, read_flat, stage, fingerprint_before, total):
+    # Lens sends actual binary atoms from the suspended ship. Native SHA-256
+    # independently binds each flat file before computing the historical
+    # domain-separated pin. The full vase is also retained at every stage.
+    pins = {'vase_fingerprint': fingerprint_before}
+    data = None
+    for field in ('vase', *NOUNS):
+        expr = projection_source(field, fingerprint_before)
+        raw = read_flat(expr, total if field == 'vase' else MAX_CAPTURE)
+        require(type(raw) is bytes and 0 < len(raw) <= MAX_CAPTURE and raw[-1] != 0)
+        source = ('=/  value  ' + expr + '  =/  width  (met 3 value)  ^-  @ux  '
+                  '(sha-256l:sha [width (rev 3 width value)])')
+        native_hash = atom(dojo(source), 96)
+        require(native_hash < 2**256 and f'{native_hash:064x}' == sha(raw))
+        if field == 'vase':
+            require(len(raw) == total)
+            data = raw
+        else:
+            domain = NOUNS[field][0].encode()
+            pins[field] = sha(domain + b'\0' + raw.hex().encode())
+    require(dojo(SUSPENDED).strip() == '%.n' and dojo(DESK).strip() == '%release-test'
+            and fingerprint(dojo) == fingerprint_before)
+    pins['capture_pin'] = sha(b'stead.saved8-capture/1\0' + data.hex().encode())
+    return validate_capture({'protocol': 'stead.saved8-capture-record/1', 'stage': stage,
+        'saved_version': 8, 'artifact_bytes': len(data), 'artifact_sha256': sha(data), 'data': data,
+        **pins})
+
+
+def collect(dojo, stage, *, read_flat=None):
     require(type(stage) is str and stage in STAGES)
     require(dojo(SUSPENDED).strip() == '%.n' and dojo(DESK).strip() == '%release-test')
     # Independent trivial control first. The separate encoder control proves
@@ -267,6 +304,9 @@ def collect(dojo, stage):
     before = fingerprint(dojo)
     projection_checks(dojo)
     total = native_decimal(dojo(TOTAL))
+    if read_flat is not None:
+        return full_capture(dojo, read_flat, stage, before, total)
+    require(total <= LEGACY_CAPTURE_MAX)
     pins = {'vase_fingerprint': before}
     for field in NOUNS:
         value = atom(dojo(digest_command(field, before)), 96)

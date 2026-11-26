@@ -7,6 +7,7 @@ not release approval. Only the fixed synthetic seed is ever installed.
 """
 from __future__ import annotations
 
+import base64
 import io
 import json
 import os
@@ -19,14 +20,15 @@ import stat
 import tarfile
 import time
 import types
+import urllib.request
 
 from . import evidence as E
 
 BASE = 'a0e90ef29389077d453ec2a775cd8fd69f711727'
-TARGET = '51d608cb81955c35a021247697bdcc9a0936a4c5'
+TARGET = '3acf4e193b2f4d95a522bfac829737733d6567e8'
 ARCHIVES = {
     'previous': (1392640, 'baa226f22bc1950981628486539fa1f087d2e6544c12a18c1d15e144b082e7da', BASE),
-    'target': (1648640, '17c4932589c75d132416746c748c8acd0aecc5c7394c5766155eaab692839d97', TARGET),
+    'target': (1648640, '8e4f5d1e27f916efed154394be27974b7aa07c121429afe521d2c1c21e9b7743', TARGET),
 }
 SEED = {
     'app/stead-home.hoon': 'd6d15bc9514001a2edcdcb67384881826215e7fd40c08465edc74962d8b70fdd',
@@ -267,6 +269,32 @@ def native_class(release):
             return [self.binary, '-t', '-L', '--no-dock', '--loom', '31', '-b', '127.0.0.1',
                 '-p', '31337', '--http-port', '18080', '--https-port', '18443', str(self.pier)]
 
+        def capture_atom(self, source, maximum):
+            self.check()
+            E.require(type(source) is str and len(source.encode()) <= 4096
+                and type(maximum) is int and 0 < maximum <= E.MAX_CAPTURE)
+            self.last_command = command_observation(source)
+            port = next(int(line.split()[0]) for line in (self.pier / '.http.ports').read_text().splitlines()
+                        if 'loopback' in line)
+            body = E.canonical({'source': {'dojo': source}, 'sink': {'output-file': 'saved-eight'}})
+            request = urllib.request.Request(f'http://127.0.0.1:{port}', data=body,
+                headers={'Content-Type': 'application/json'})
+            limit = 4 * ((maximum + 2) // 3) + 256
+            with urllib.request.urlopen(request, timeout=60) as response:
+                wire = response.read(limit + 1)
+            E.require(len(wire) <= limit)
+            value = json.loads(wire, object_pairs_hook=E.unique)
+            if isinstance(value, str):
+                self.last_command = command_observation(source, value)
+            E.require(type(value) is dict and set(value) == {'file', 'data'}
+                and value['file'] == '/saved-eight' and isinstance(value['data'], str))
+            data = base64.b64decode(value['data'], validate=True)
+            E.require(0 < len(data) <= maximum and base64.b64encode(data).decode() == value['data'])
+            self.commands.append({'source_sha256': E.sha(source.encode()), 'source_bytes': len(source.encode()),
+                'output_sha256': E.sha(data), 'output_bytes': len(data)})
+            self.check()
+            return data
+
         def dojo(self, source, timeout=60):
             E.require(type(source) is str and 0 < len(source.encode()) <= 65536
                 and type(timeout) in (int, float) and 0 < timeout <= 180)
@@ -397,7 +425,7 @@ def run(guard):
         E.require(stage not in rows)
         before = native.proof()
         pid = native.process.pid
-        value = E.collect(native.dojo, stage)
+        value = E.collect(native.dojo, stage, read_flat=native.capture_atom)
         after = native.proof()
         E.require(native.process.pid == pid and E.canonical(before) == E.canonical(after))
         rows[stage] = value

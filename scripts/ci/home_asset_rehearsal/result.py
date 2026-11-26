@@ -7,6 +7,8 @@ their exact original byte/custody associations without inventing a Python cue.
 """
 from __future__ import annotations
 
+import base64
+import zlib
 import json
 import math
 import re
@@ -14,12 +16,12 @@ import re
 from home_asset_rehearsal import evidence as E
 
 PREFIX = b'STEAD_SAVED8_REHEARSAL_RESULT_V1 '
-MAX_FRAME = 4 * 1024 * 1024
+MAX_FRAME = 24 * 1024 * 1024
 MAX_DESCRIPTOR = 8192
 BASE = 'a0e90ef29389077d453ec2a775cd8fd69f711727'
-TARGET = '51d608cb81955c35a021247697bdcc9a0936a4c5'
+TARGET = '3acf4e193b2f4d95a522bfac829737733d6567e8'
 PREVIOUS = 'baa226f22bc1950981628486539fa1f087d2e6544c12a18c1d15e144b082e7da'
-NEXT = '17c4932589c75d132416746c748c8acd0aecc5c7394c5766155eaab692839d97'
+NEXT = '8e4f5d1e27f916efed154394be27974b7aa07c121429afe521d2c1c21e9b7743'
 RUNTIME = 'f7f0d3b3c0480fc10f887dfbc09bde56a81d723a803541c7886c538a0675d833'
 KERNEL = '5a187fededc4582a34fcd6055c67bb63e0917b94'
 CLEAN = {'clean': True, 'exit_code': 0, 'forced': False, 'premature': False, 'reaped': True}
@@ -62,15 +64,29 @@ def bindings(value):
 
 def file_value(raw):
     require(type(raw) is bytes and raw)
+    if len(raw) > E.LEGACY_CAPTURE_MAX:
+        packed = zlib.compress(raw, 3)
+        return {'bytes': len(raw), 'sha256': E.sha(raw),
+            'deflate_base64': base64.b64encode(packed).decode('ascii')}
     return {'bytes': len(raw), 'sha256': E.sha(raw), 'data_hex': raw.hex()}
 
 
 def file_bytes(row, maximum):
-    require(type(row) is dict and set(row) == {'bytes', 'sha256', 'data_hex'})
+    require(type(row) is dict and set(row) in ({'bytes', 'sha256', 'data_hex'}, {'bytes', 'sha256', 'deflate_base64'}))
     size = integer(row['bytes'], 1, maximum)
-    require(E.digest(row['sha256']) and type(row['data_hex']) is str
+    require(E.digest(row['sha256']))
+    if 'deflate_base64' in row:
+        text = row['deflate_base64']
+        require(size > E.LEGACY_CAPTURE_MAX and type(text) is str and len(text) <= (size + 65536) * 2)
+        compressed = base64.b64decode(text, validate=True)
+        require(base64.b64encode(compressed).decode('ascii') == text)
+        decoder = zlib.decompressobj()
+        raw = decoder.decompress(compressed, size + 1)
+        require(len(raw) == size and decoder.eof and not decoder.unused_data and not decoder.unconsumed_tail)
+    else:
+        require(size <= E.LEGACY_CAPTURE_MAX and type(row['data_hex']) is str
             and len(row['data_hex']) == 2 * size and re.fullmatch('[0-9a-f]+', row['data_hex']))
-    raw = bytes.fromhex(row['data_hex'])
+        raw = bytes.fromhex(row['data_hex'])
     require(E.sha(raw) == row['sha256'])
     return raw
 
@@ -128,7 +144,7 @@ def passed_report(report, expected, context_sha, desk_hashes, assets):
     for row in report['commands']:
         require(type(row) is dict and set(row) == {'source_sha256', 'source_bytes', 'output_sha256', 'output_bytes'}
                 and E.digest(row['source_sha256']) and E.digest(row['output_sha256']))
-        integer(row['source_bytes'], 1, 65536); integer(row['output_bytes'], 0, 1000000)
+        integer(row['source_bytes'], 1, 65536); integer(row['output_bytes'], 0, E.MAX_CAPTURE)
     boot(report['boot'])
     require(type(report['restarts']) is list and len(report['restarts']) == 2)
     for row, stage in zip(report['restarts'], ('cold', 'rollback-cold')):
@@ -269,7 +285,7 @@ def diagnostic(row):
         if command['completed']:
             require(E.digest(command['output_sha256']) and type(command['output_kind']) is str
                 and command['output_kind'] in ('empty', 'yes', 'no', 'release-desk', 'hex-atom', 'other'))
-            integer(command['output_bytes'], 0, 1000000)
+            integer(command['output_bytes'], 0, E.MAX_CAPTURE)
         else:
             require(command['output_sha256'] is None and command['output_bytes'] is None
                 and command['output_kind'] == 'unobserved')
