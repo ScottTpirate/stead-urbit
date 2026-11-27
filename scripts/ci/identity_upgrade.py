@@ -21,19 +21,32 @@ def stop_agent(ship):
 
 
 def fingerprint(ship, version):
-    shape = '[%stead-identity %1 [~ 1 ~bus @ @] @]' if version == 1 else '[%stead-identity %2 [~ 1 ~bus @ @] @ * @]'
-    fields = 'config=* counter=@' if version == 1 else 'config=* counter=@ trusted=* verifier=@'
-    prefix = SAVED + f'?>  ?=({shape} q.saved)  =/  row=[{fields}]  +>.q.saved  '
-    prefix += "?>  =([~ 1 ~bus 'https://bus.localhost:18444' 'https://home.localhost:18443'] config.row)  "
-    if version == 2:
-        prefix += ("?>  =('' verifier.row)  =/  trusted  ;;((map @p @t) trusted.row)  "
-                   "?>  =(1 ~(wyt by trusted))  ?>  =('https://bus.localhost:18444' (~(got by trusted) ~bus))  ")
-    def measure(item):
-        output = ''.join(ship.dojo(prefix + f'^-  @ux  (shax (jam {item}))', timeout=25).split())
-        require(re.fullmatch(r'0x[0-9a-f]+(?:\.[0-9a-f]+)*',output) and len(output)<=82,
-                'Identity saved-state fingerprint failed for '+item)
-        return f'{int(output.replace(".",""),16):064x}'
-    return {'version':version,'saved':measure('q.saved'),'config_and_counter':measure('[config.row counter.row]')}
+    # Compare the entire returned saved noun with this private fixture, including
+    # the zero challenge counter and the exact migrated trust map.
+    config = "[~ 1 ~bus 'https://bus.localhost:18444' 'https://home.localhost:18443']"
+    known = '=/  config  ' + config + '  '
+    if version == 1:
+        expected = '[%stead-identity %1 config 0]'
+    else:
+        known += "=/  trusted  (~(put by *(map @p @t)) ~bus 'https://bus.localhost:18444')  "
+        expected = "[%stead-identity %2 config 0 trusted '']"
+
+    def measure(setup, item, label):
+        output = ship.dojo(setup + f'^-  @ux  (shax (jam {item}))', timeout=30)
+        token = ''.join(output.split())
+        if not re.fullmatch(r'0x[a-f0-9]+(?:\.[a-f0-9]+)*', token) or len(token) > 82:
+            terms = re.findall(r'nest-fail|find-(?:fork|limb)|mint-(?:nice|vain)|syntax error|exit|crash', output[:2000])
+            raise ValueError(f'{label}: invalid hash ({terms[:4]}, {len(output)} characters)')
+        return f'{int(token.replace(".", ""), 16):064x}'
+
+    actual_hash = measure(SAVED, 'q.saved', 'persisted Identity')
+    expected_hash = measure(known, expected, 'expected synthetic Identity')
+    require(actual_hash == expected_hash, 'saved Identity differs from the exact configured synthetic fixture')
+    return {
+        'version': version,
+        'saved': actual_hash,
+        'config_and_counter': measure(known, '[config 0]', 'verified Identity configuration')
+    }
 
 
 def resume(ship, ca, package, version, *, already_running=False):
