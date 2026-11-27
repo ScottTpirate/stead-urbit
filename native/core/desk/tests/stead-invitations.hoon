@@ -29,8 +29,8 @@
   |=  [state=changes:stead-invitations token=@t ship=@p now=@ud]
   =/  body  (canonical (object ~[['protocol' 'stead.invitation/1'] ['token' token] ['identity_ship' (scot %p ship)]]))
   (call:stead-invitations state ['/stead/auth/invite/start' body '' '' ''] ~ now now)
-=/  finish
-  |=  [opened=result:stead-invitations sender=@p now=@ud]
+=/  finish-with
+  |=  [opened=result:stead-invitations sender=@p now=@ud bearer=@t]
   =/  msg  (need outgoing.opened)
   =/  id  (field (json-fields bytes.opened) 'challenge_id')
   =/  returned  (token:stead-session now 1 'synthetic-device')
@@ -39,15 +39,18 @@
   ?>  ?=(^ cookies.opened)
   =/  cookie  (cut 3 [(met 3 '__Host-stead-pending=') 64] i.cookies.opened)
   =/  body  (canonical (object ~[['protocol' 'stead.invitation/1'] ['challenge_id' id] ['return_proof' returned]]))
-  (call:stead-invitations next.opened(pending approvals) ['/stead/auth/invite/consume' body '' cookie ''] ~ now now)
+  (call:stead-invitations next.opened(pending approvals) ['/stead/auth/invite/consume' body bearer cookie ''] ~ now now)
+=/  finish
+  |=  [opened=result:stead-invitations sender=@p now=@ud]
+  (finish-with opened sender now '')
 =/  token  (field (json-fields bytes.personal) 'token')
 =/  link-id  (field (json-fields bytes.personal) 'invitation_id')
 =/  opened  (visit next.personal token ~nec 5)
 =/  joined  (finish opened ~nec 6)
 |%
 ++  test-invitation-personal-binding-and-expiry
-  ?>  &(!(eligible:stead-invitations ~zod 'live-synthetic') !(eligible:stead-invitations 65.535 'live-synthetic'))
-  ?>  &((eligible:stead-invitations 65.536 'live-synthetic') !(eligible:stead-invitations 4.294.967.296 'live-synthetic'))
+  ?>  &(!(eligible:stead-invitations ~zod 'live-synthetic') !(eligible:stead-invitations `@p`65.535 'live-synthetic'))
+  ?>  &((eligible:stead-invitations `@p`65.536 'live-synthetic') !(eligible:stead-invitations `@p`4.294.967.296 'live-synthetic'))
   =/  wrong  (mule |.((visit next.personal token ~bud 5)))
   =/  expired  (mule |.((finish opened ~nec 120.005)))
   =/  later  (visit next.opened token ~nec 120.006)
@@ -100,6 +103,14 @@
 ++  test-invitation-retry-and-revocation
   =/  again  (finish (visit next.joined token ~nec 7) ~nec 8)
   ?>  =(db.next.joined db.next.again)
+  ?>  ?=(^ cookies.joined)
+  =/  bearer  (cut 3 [(met 3 '__Host-stead-session=') 64] i.cookies.joined)
+  =/  another  (visit next.joined token ~nec 7)
+  =/  switched  (mule |.((finish-with another ~nec 8 cookie.login)))
+  ?>  ?=(%| -.switched)
+  =/  replaced  (finish-with another ~nec 8 bearer)
+  ?>  !(~(has by sessions.auth.next.replaced) (digest:stead-session 'stead.session/1' bearer))
+  ?>  (~(has by sessions.auth.next.replaced) (digest:stead-session 'stead.session/1' cookie.login))
   =/  revoked  (manage next.joined 'revoke' ~[['invitation_id' link-id]] 8)
   =/  closed  (mule |.((visit next.revoked token ~nec 9)))
   =/  member  (need (native-context:stead-team db.next.joined ~nec 9))

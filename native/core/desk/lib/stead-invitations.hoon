@@ -329,6 +329,9 @@
   =/  offer  (~(got by offers.s) offer-id.f)
   ?>  (same-actor:stead-session issuer.offer identity:(authority db.s offer retired now))
   =/  person  identity.ch
+  =/  old-key  (digest:stead-session 'stead.session/1' session.req)
+  =/  previous  (~(get by sessions.auth.s) old-key)
+  ?>  ?~(previous & ?|((lte expires.u.previous now) (same-actor:stead-session person identity.u.previous)))
   ?>  &((available offer ship.person now) =(person (resolve db.s ship.person now)))
   ?:  =('/stead/auth/invite/status' route.req)
     [s (answer ?:(approved.ch 'approved' 'pending') ~[['challenge_id' id]]) ~ ~]
@@ -343,7 +346,10 @@
     =.  guests.offer  (~(put by guests.offer) ship.person [person |])
     [s(offers (~(put by offers.s) offer-id.f offer)) (answer 'requested' ~) ~[(cookie:stead-http & '' &)] ~]
   =/  out  (admit db.s offer-id.f offer person role.offer retired now)
-  =/  staged  auth.s(challenges (~(put by challenges.auth.s) id ch))
+  ::  An authenticated browser exchanging its own cookie loses its old trust
+  ::  only on successful issuance. Preserve all unrelated member/device sessions.
+  =/  sessions  ?~(previous sessions.auth.s (~(del by sessions.auth.s) old-key))
+  =/  staged  auth.s(challenges (~(put by challenges.auth.s) id ch), sessions sessions)
   =/  session  (consume-bound:stead-session staged id pending.req person home.config origin.config now entropy returned)
   ?>  =(%accepted status.session)
   =.  s  s(db next.out, auth next.session, offers (~(put by offers.s) offer-id.f changed.out))
