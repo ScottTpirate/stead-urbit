@@ -242,6 +242,7 @@ def run():
                 and release.checkpoint_tree(stopped, installed=True) == sealed, 'checkpoint copy differs')
         record('stopped-independent-copy', sealed)
         home = Home(sealed); home.start()
+        native_tls.install(home.binary, home.pier / '.urb/conn.sock', certs, 'zod')
         require(capture(home, 8)['saved'] == before['saved'], 'checkpoint resume changed saved state')
         release.replace_clay_files(home, old, new, package=candidate / 'desk')
         resume(home, ca, candidate, True)
@@ -251,7 +252,12 @@ def run():
         record('candidate-loaded-predecessor', migrated)
         resume(home, ca, candidate, True)
         peer = Native('bus', 31519, lambda: None)
-        peer.start(); peer.install(INPUT / 'drivers')
+        peer.start()
+        peer_drivers = STATE / 'member-drivers'
+        shutil.copytree(INPUT / 'drivers', peer_drivers)
+        (peer_drivers / 'mar').mkdir()
+        shutil.copyfile(candidate / 'desk/mar/stead-auth-approval-1.hoon', peer_drivers / 'mar/stead-auth-approval-1.hoon')
+        peer.install(peer_drivers)
         jar, csrf = member_session(peer, ca)
         request = {'protocol': 'stead.invitation/1', 'action': 'issue', 'project_id': PROJECT,
                    'mode': 'personal', 'identity_ship': '~nec', 'role': 'reader', 'expires_at_ms': '', 'use_limit': '1'}
@@ -262,6 +268,7 @@ def run():
         require(invited['core'] == before['core'], 'issuing invitation changed predecessor core')
         record('candidate-saved-invitation', invited)
         cold(new, 'candidate')
+        native_tls.install(home.binary, home.pier / '.urb/conn.sock', certs, 'zod')
         require(capture(home, 11) == invited, 'candidate cold restart changed its saved state')
         resume(home, ca, candidate, True)
         jar, csrf = member_session(peer, ca)
@@ -276,6 +283,7 @@ def run():
         require(release.checkpoint_tree(stopped, home.pier, installed=True) == sealed
                 and release.stopped_home_checkpoint(home.pier, old) == sealed, 'independent rollback copy differs')
         home = Home(sealed); home.start()
+        native_tls.install(home.binary, home.pier / '.urb/conn.sock', certs, 'zod')
         require(capture(home, 8) == before, 'restored v8 vase mismatch')
         resume(home, ca, previous, False)
         member_session(peer, ca)
