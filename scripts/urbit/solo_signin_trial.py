@@ -51,16 +51,18 @@ def uid(n):
 
 
 class Site:
-    def __init__(self, host, ca):
+    def __init__(self, host, ca, port=PORT):
         self.host = host
-        self.origin = f'https://{host}:{PORT}'
+        self.port = port
+        self.origin = f'https://{host}:{port}'
         self.context = ssl.create_default_context(cafile=str(ca))
         self.cookies = {}
+        self.cookie_ttls = {}
         self.csrf = ''
 
     def request(self, method, path, data=None, form=False):
         check(path.startswith('/'), 'site-relative request')
-        headers = {'Host': f'{self.host}:{PORT}', 'Origin': self.origin}
+        headers = {'Host': f'{self.host}:{self.port}', 'Origin': self.origin}
         if self.cookies:
             headers['Cookie'] = '; '.join(name + '=' + value for name, value in self.cookies.items())
         if self.csrf:
@@ -69,9 +71,9 @@ class Site:
         if data is not None:
             headers['Content-Type'] = 'application/x-www-form-urlencoded' if form else 'application/json'
             body = (urlencode(data) if form else json.dumps(data,separators=(',',':'))).encode()
-        connection = http.client.HTTPConnection('127.0.0.1', PORT, timeout=8)
+        connection = http.client.HTTPConnection('127.0.0.1', self.port, timeout=8)
         try:
-            raw = socket.create_connection(('127.0.0.1', PORT), timeout=5)
+            raw = socket.create_connection(('127.0.0.1', self.port), timeout=5)
             connection.sock = self.context.wrap_socket(raw, server_hostname=self.host)
             connection.request(method, path, body=body, headers=headers)
             response = connection.getresponse()
@@ -83,8 +85,11 @@ class Site:
                     check(not field['domain'], 'host-only cookie')
                     if field.value and field['max-age'] != '0':
                         self.cookies[name] = field.value
+                        if field['max-age']:
+                            self.cookie_ttls[name] = int(field['max-age'])
                     else:
                         self.cookies.pop(name, None)
+                        self.cookie_ttls.pop(name, None)
             return response.status, result
         finally:
             connection.close()
@@ -97,34 +102,39 @@ class Site:
         return value
 
 
-def certificates(native):
-    directory = Path('/state/solo-certificates')
+def certificates(native, home_host=HOME, identity_host=IDENTITY):
+    directory = Path('/state') / ('solo-certificates-' + native.ship)
+    hosts = [home_host, identity_host, native_tls.HOSTS[native.ship]]
+    check(all(re.fullmatch(r'[a-z0-9-]+(?:\.[a-z0-9-]+)+',host) for host in hosts),
+          'synthetic DNS names')
+    alt_names = ','.join('DNS:'+host for host in dict.fromkeys(hosts))
     # The pinned Eyre TLS listener serves exactly one native certificate. Give
     # the synthetic certificate SANs for the two independent browser hosts.
     directory.mkdir(mode=0o700)
     ca = directory / 'ca.pem'
-    key = directory / 'zod-key.pem'
-    crt = directory / 'zod.pem'
+    key = directory / (native.ship+'-key.pem')
+    csr = directory / (native.ship+'.csr')
+    crt = directory / (native.ship+'.pem')
     native_tls.openssl('req','-new','-newkey','ec','-pkeyopt','ec_paramgen_curve:P-256','-nodes',
                        '-x509','-days','1','-subj','/CN=Stead solo fixture CA','-addext','basicConstraints=critical,CA:true',
                        '-keyout',directory/'ca-key.pem','-out',ca)
     native_tls.openssl('req','-new','-newkey','ec','-pkeyopt','ec_paramgen_curve:P-256','-nodes',
-                       '-subj','/CN=home.localhost','-keyout',key,'-out',directory/'zod.csr')
+                       '-subj','/CN='+home_host,'-keyout',key,'-out',csr)
     extension = directory / 'server.ext'
     extension.write_text('basicConstraints=critical,CA:false\nkeyUsage=critical,digitalSignature\nextendedKeyUsage=serverAuth\n'
-                         'subjectAltName=DNS:home.localhost,DNS:identity.localhost\n')
-    native_tls.openssl('x509','-req','-days','1','-in',directory/'zod.csr','-CA',ca,'-CAkey',directory/'ca-key.pem',
+                         f'subjectAltName={alt_names}\n')
+    native_tls.openssl('x509','-req','-days','1','-in',csr,'-CA',ca,'-CAkey',directory/'ca-key.pem',
                        '-set_serial','1','-extfile',extension,'-out',crt)
     for path in directory.iterdir():
         path.chmod(0o600)
-    native_tls.install(native.binary, native.pier/'.urb/conn.sock', directory, 'zod')
-    native_tls.verify(native.process, directory, 'zod', native.check)
+    native_tls.install(native.binary, native.pier/'.urb/conn.sock', directory, native.ship)
+    native_tls.verify(native.process, directory, native.ship, native.check)
     return ca
 
 
 def owner_call(native, app, mode, value, path='/'):
     out = team_conn.run(native.binary, native.pier/'.urb/conn.sock', mode, path,
-                        json.dumps(value, separators=(',',':')).encode(), target='zod', app='stead-'+app)
+                        json.dumps(value, separators=(',',':')).encode(), target=native.ship, app='stead-'+app)
     result = (out.get('outcome') or {}).get('json')
     check(isinstance(result, dict), 'owner-local command returned a JSON object')
     return result
@@ -137,10 +147,11 @@ def bootstrap(native, app):
     wait_for(attempt, lambda value:value.get('status') == 'ready', app+' bootstrap',60)
 
 
-def sign_in(home, identity, invite=None, authenticator=None, *, previously_trusted=False):
+def sign_in(home, identity, invite=None, authenticator=None, *, previously_trusted=None,
+            member_ship=SHIP, home_ship=SHIP):
     protocol = INVITATION if invite else PROTOCOL
     path = '/stead/auth/invite/' if invite else '/stead/auth/'
-    payload = {'protocol':protocol,'identity_ship':SHIP}
+    payload = {'protocol':protocol,'identity_ship':member_ship}
     if invite:
         payload['token'] = invite
     begun = home.post(path+'start',payload)
@@ -151,10 +162,10 @@ def sign_in(home, identity, invite=None, authenticator=None, *, previously_trust
              lambda value:value.get('identity_origin') == identity.origin, 'native address discovery')
     listed = identity.post('/stead-identity/api/list',{'protocol':'stead.identity/2'})
     row = listed['requests'][key]
-    check(row['origin'] == home.origin and row['home'] == row['identity_ship'] == SHIP and row['direct'] == 'yes',
-          'one planet, distinct Home and Identity origins')
+    check(row['origin'] == home.origin and row['home'] == home_ship and row['identity_ship'] == member_ship and row['direct'] == 'yes',
+          'native Home and member identities and isolated origins')
     check(row['purpose'] == ('project-invitation' if invite else 'member-session'), 'correct purpose')
-    trusted = bool(invite or previously_trusted)
+    trusted = bool(invite) if previously_trusted is None else previously_trusted
     check(row['trusted'] == ('yes' if trusted else 'no'), 'explicit consent persisted for this Home')
     if authenticator is None:
         approved = identity.post('/stead-identity/api/approve',{
@@ -164,7 +175,8 @@ def sign_in(home, identity, invite=None, authenticator=None, *, previously_trust
     else:
         approved = authenticator.sign(key)
         check(approved.get('status') == 'ok' and approved.get('challenge_id') == key
-              and approved.get('origin') == home.origin, 'real passkey verifier approved native request')
+              and approved.get('origin') == home.origin and approved.get('home') == home_ship,
+              'real passkey verifier approved native request')
     proof = approved.get('return_proof','')
     check(re.fullmatch(r'[0-9a-f]{64}', proof), 'approving-browser return proof')
     observed = wait_for(lambda:home.post(path+'status',attempt),lambda value:value.get('status') == 'approved',
@@ -186,12 +198,40 @@ def projects(site, request):
 
 def configure_verifier(native, secret):
     wire = core_conn.atom(json.dumps({'protocol':'stead.verifier-config/1','secret':secret}).encode())
-    noun = f'[32 %fyrd [%base %stead-pilot-owner %noun [%noun [~zod %stead-identity %verifier-config ~ {wire}]]]]'
+    noun = f'[32 %fyrd [%base %stead-pilot-owner %noun [%noun [~{native.ship} %stead-identity %verifier-config ~ {wire}]]]]'
     try:
         result = core_conn.exchange(native.binary, native.pier/'.urb/conn.sock', noun)
         check((result.get('outcome') or {}).get('json') == {}, 'owner configured verifier')
     except Exception:
         raise RuntimeError('Solo fixture: verifier configuration failed') from None
+
+
+def member_maintenance(native, home, project, expiry, ca):
+    def call(mode, value=None):
+        path = '[%member ' + core_conn.atom(b'~bus') + ' ~]' if mode == 'member-status' else '~'
+        wire = core_conn.atom(json.dumps(value).encode()) if value is not None else '0'
+        noun = f'[32 %fyrd [%base %stead-pilot-owner %noun [%noun [~zod %stead-home %{mode} {path} {wire}]]]]'
+        result = core_conn.exchange(native.binary, native.pier/'.urb/conn.sock', noun)
+        return (result.get('outcome') or {}).get('json')
+
+    row = call('member-status')
+    check(row['binding_id'] == uid(203) and row['binding_revision'] == '1', 'inspected independent existing member')
+    change = {'protocol':'stead.member-change/1','identity_ship':'~bus','principal_id':row['principal_id'],
+              'binding_id':row['binding_id'],'expected_binding_revision':'1','expires_at_ms':str(expiry+86400000),
+              'action':'renew'}
+    check(call('member-change', change) == {} and call('member-change', change) == {}, 'targeted renewal and exact retry')
+    renewed = call('member-status')
+    check(renewed['binding_revision'] == '2' and renewed['expires_at_ms'] == change['expires_at_ms'], 'renewal readback')
+    offer = home.post('/stead/api/invitations',{'protocol':INVITATION,'action':'issue','project_id':project,
+                      'role':'reader','mode':'personal','identity_ship':'~bus','expires_at_ms':'','use_limit':'1'})
+    check(offer.get('status') == 'issued','outstanding offer for a current member')
+    change.update(action='remove', expected_binding_revision='2', expires_at_ms='')
+    check(call('member-change', change) == {} and call('member-change', change) == {}, 'targeted removal and exact retry')
+    removed = call('member-status')
+    check(removed['binding_revision'] == '3' and removed['active'] == 'no', 'durable inactive binding')
+    guest = Site(HOME,ca)
+    code, body = guest.request('POST','/stead/auth/invite/start',{'protocol':INVITATION,'token':offer['token'],'identity_ship':'~bus'})
+    check(code >= 400 or json.loads(body).get('status') != 'pending','older offer cannot reinstate removed member')
 
 
 class SoftwareAuthenticator:
@@ -207,8 +247,9 @@ class SoftwareAuthenticator:
         self.identity = identity
         secret = secrets.token_hex(32)
         configure_verifier(native, secret)
-        self.verifier = Verifier(Path('/state/solo-passkeys.db'),SHIP,identity.origin,
-                                 LocalIdentity(identity.origin,PORT,secret,ca))
+        self.verifier = Verifier(Path('/state/solo-passkeys.db'),'~'+native.ship,identity.origin,
+                                 LocalIdentity(identity.origin,identity.port,secret,ca))
+        self.counter = 0
         self.key = ec.generate_private_key(ec.SECP256R1())
         self.credential = AttestedCredentialData.create(bytes(16),secrets.token_bytes(32),
                                                         ES256.from_cryptography_key(self.key.public_key()))
@@ -228,7 +269,7 @@ class SoftwareAuthenticator:
         flags = AuthenticatorData.FLAG.UP | AuthenticatorData.FLAG.UV
         data = AuthenticatorData.create(hashlib.sha256(self.identity.host.encode()).digest(),
                                         flags | AuthenticatorData.FLAG.AT if register else flags,
-                                        0 if register else 1, self.credential if register else b'')
+                                        0 if register else self.counter, self.credential if register else b'')
         response = {'clientDataJSON':client.b64}
         if register:
             response['attestationObject'] = websafe_encode(AttestationObject.create('none',data,{}))
@@ -243,6 +284,7 @@ class SoftwareAuthenticator:
         check(self.verifier.dispatch('register/finish', self.response(options,True))['status']=='ok','real FIDO enrollment')
 
     def sign(self, challenge):
+        self.counter += 1
         options = self.verifier.dispatch('authenticate/begin',{'challenge_id':challenge})
         return self.verifier.dispatch('authenticate/finish',self.response(options,False))
 
@@ -279,7 +321,7 @@ def git_refs(home, project, ca, bearer=None):
                'GIT_ASKPASS':str(ask) if bearer else '/bin/false','GIT_SSL_CAINFO':str(ca),
                'STEAD_TEST_KEY':str(key)}
         command = ['/usr/bin/git','-c','credential.helper=','-c','http.followRedirects=false',
-                   '-c',f'http.curloptResolve={home.host}:{PORT}:127.0.0.1','ls-remote',home.origin+'/stead/git/'+project+'.git']
+                   '-c',f'http.curloptResolve={home.host}:{home.port}:127.0.0.1','ls-remote',home.origin+'/stead/git/'+project+'.git']
         child = subprocess.run(command,env=env,cwd=root,stdin=subprocess.DEVNULL,stdout=subprocess.PIPE,
                                stderr=subprocess.DEVNULL,timeout=15)
         check((child.returncode==0) == bool(bearer),'Git credential admission')
@@ -299,8 +341,11 @@ def run(native):
     config = {'protocol':'stead.team-config/1','expected_revision':'0','home':SHIP,'origin':owner.origin,
               'organization_id':uid(5),'team_id':uid(6),'custody':'local-disposable','runtime':'isolated-fake',
               'bindings':{SHIP:{'principal_id':uid(102),'binding_id':uid(202),'binding_revision':'1','active':'yes',
-                                'expires_at_ms':str(int(time.time()*1000)+86400000),'display_name':'Solo owner'}},
+                                'expires_at_ms':str(int(time.time()*1000)+14*86400000),'display_name':'Solo owner'}},
               'project_creators':{uid(102):'yes'}}
+    until = int(config['bindings'][SHIP]['expires_at_ms'])
+    config['bindings']['~bus'] = {'principal_id':uid(103),'binding_id':uid(203),'binding_revision':'1','active':'yes',
+                                  'expires_at_ms':str(until),'display_name':'Second workspace member'}
     check(owner_call(native,'home','configure',config) == {},'explicit Home owner binding')
     check(owner_call(native,'identity','identity-config',{'protocol':'stead.identity-config/2',
           'expected_revision':'0','origin':identity.origin}) == {},'standalone Identity configured')
@@ -317,6 +362,7 @@ def run(native):
     check(status in (200,302,303) and any(k.startswith('urbauth-') for k in identity.cookies),'ordinary ship-owner login')
 
     sign_in(owner,identity)
+    check(owner.cookie_ttls.get('__Host-stead-session') == 1800, 'default thirty-minute session')
     check(not projects(owner,301), 'ship ownership gives no implicit projects')
     project = uid(1)
     command = {'protocol':'stead.command/3','request_id':uid(302),'project_id':project,'resource_id':project,
@@ -329,6 +375,9 @@ def run(native):
     bearer = git_credentials(owner, project)
     git_refs(owner, project, ca)
     before_refs = git_refs(owner, project, ca, bearer)
+    member_maintenance(native, owner, project, until, ca)
+    check(any(r.get('project_id') == project for r in projects(owner,309).values()),'browser session survived owner maintenance')
+    check(git_refs(owner, project, ca, bearer) == before_refs, 'Git credential survived targeted renewal and removal')
     issue = owner.post('/stead/api/invitations', {'protocol':INVITATION,'action':'issue','project_id':project,
                        'role':'reader','mode':'personal','identity_ship':SHIP,'expires_at_ms':'','use_limit':'1'})
     check(issue.get('status') == 'issued','personal invitation issued')
@@ -344,10 +393,21 @@ def run(native):
         check(any(r.get('project_id') == project and r.get('role')=='maintainer' for r in projects(site,n).values()),
               'prior and redeemed sessions preserve role')
     check(git_refs(owner, project, ca, bearer) == before_refs, 'existing Git password survives redemption')
-    check(all(not name.startswith('urbauth-') for name in owner.cookies.keys() | guest.cookies.keys()),'ship login isolated')
+    # Eyre sets its own host-only urbauth cookie even for an anonymous guest.
+    # Only the owner session's value must stay on the Identity hostname.
+    personal = identity.cookies.get('urbauth-'+SHIP)
+    check(personal and all(personal not in site.cookies.values() for site in (owner, guest)),
+          'authenticated ship-owner cookie confined to Identity')
+    check(not any(key.startswith('__Host-stead-') for key in identity.cookies),
+          'workspace credentials confined to Home')
+    anonymous = Site(IDENTITY,ca)
+    anonymous.request('GET','/stead-identity/')
+    denied,_ = anonymous.request('POST','/stead-identity/api/list',{'protocol':'stead.identity/2'})
+    check(denied==401,'ordinary Eyre guest remains unauthorized')
     def device(site, action, value=''):
         return site.post('/stead/auth/devices', {'protocol':'stead.devices/1','action':action,'value':value})
     check(device(guest,'remember','Temporary laptop')['status']=='remembered','explicit device trust')
+    check(604700 <= guest.cookie_ttls.get('__Host-stead-session',0) <= 604800,'seven-day personal device')
     devices = device(owner,'list')['devices']
     target = next(key for key,row in devices.items() if row['label']=='Temporary laptop' and row['current']=='no')
     check(device(owner,'revoke',target)['status']=='revoked','remote device revocation')
@@ -365,6 +425,7 @@ def run(native):
               'forwarded_personal_link_denied':True,'wrong_return_proof_denied':True,'project_role':'maintainer',
               'unrelated_browser_session_survived':True,'existing_stock_git_credential_survived':True,
               'native_owner_ticket_and_signed_software_authenticator':True,'credential_removed':True,'remembered_device_revoked':True,
-              'ordinary_approval_after_disabling_verifier':True,'signout_removed_device_trust':True}
+              'ordinary_approval_after_disabling_verifier':True,'signout_removed_device_trust':True,
+              'default_session_seconds':1800,'remembered_session_days':7}
     print('Solo native HTTP result',json.dumps(report,sort_keys=True),flush=True)
     return report

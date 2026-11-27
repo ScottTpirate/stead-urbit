@@ -1,0 +1,12 @@
+{
+  "candidate": {
+    "bytes": 1423360,
+    "sha256": "58dbba5e5d1b1939cad344164bf5c87e3bdb2254c273a238e22cd0a3c881e64e",
+    "source_commit": "95bab9af3472a388dc2b8e9f5c800b027abbad46"
+  },
+  "previous": {
+    "bytes": 1064960,
+    "sha256": "534d9440572d8055d32fa98a7ad608ac933f038308995cf63be5f44b427cb353",
+    "source_commit": "a0e90ef29389077d453ec2a775cd8fd69f711727"
+  }
+}

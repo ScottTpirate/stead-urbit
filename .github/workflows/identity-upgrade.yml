@@ -1,0 +1,38 @@
+name: Isolated Identity upgrade and rollback
+on:
+  push:
+    branches: ['codex/identity-upgrade-95bab9a']
+permissions:
+  contents: read
+jobs:
+  identity:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 50
+    steps:
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
+        with:
+          persist-credentials: false
+      - name: Verify and stage pinned public inputs
+        shell: bash
+        run: |
+          sudo install -d -o runner -g runner /runtime /runtime/downloads /runtime/bin
+          python3 -B focus-fetch.py
+          sudo install -d -o nobody -g nogroup /state
+          sudo install -d /src
+          sudo cp -a scripts rehearsal /src/
+          sudo cp specs/urbit/toolchain.lock.json /toolchain.json
+          kernel=$(python3 -c "import json;print(json.load(open('/toolchain.json'))['kernel']['directory'])")
+          sudo ln -s "/runtime/$kernel" /kernel
+      - name: Exercise both Identity packages on a disposable offline planet
+        shell: bash
+        run: |
+          sudo systemd-run --wait --collect --pipe --quiet --uid=nobody --gid=nogroup \
+            -p PrivateNetwork=yes -p NoNewPrivileges=yes -p 'CapabilityBoundingSet=' \
+            -p ProtectSystem=strict -p ProtectHome=yes -p PrivateTmp=yes \
+            -p ReadWritePaths=/state -p MemoryMax=9G -p RuntimeMaxSec=2600 \
+            --setenv=HOME=/state --setenv=LANG=C.UTF-8 /usr/bin/python3 -I -B /src/scripts/ci/identity_upgrade.py
+      - name: Report aggregate checks
+        if: always()
+        shell: bash
+        run: |
+          if sudo test -f /state/identity-upgrade-result.json; then sudo cat /state/identity-upgrade-result.json; fi
