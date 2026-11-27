@@ -5,7 +5,7 @@ archives and a public synthetic seed. No production pier or credential is an
 input. The only retained result is an aggregate JSON receipt.
 """
 import hashlib
-import http.client
+from http.client import HTTPConnection
 import json
 import os
 from pathlib import Path
@@ -114,7 +114,7 @@ def capture(home, version):
 
 
 def http(ca, path, payload, jar, csrf='', method='POST'):
-    connection = http.client.HTTPConnection('127.0.0.1', release.TLS_PORT, timeout=10)
+    connection = HTTPConnection('127.0.0.1', release.TLS_PORT, timeout=10)
     try:
         connection.connect()
         connection.sock = ssl.create_default_context(cafile=str(ca)).wrap_socket(connection.sock, server_hostname=release.TLS_HOST)
