@@ -1,4 +1,4 @@
-/+  *test, stead-codec, stead-core, stead-team, stead-team-codec, stead-team-config, stead-session, stead-invitations, stead-http, stead-restore, stead-projection
+/+  *test, stead-codec, stead-core, stead-team, stead-team-codec, stead-team-config, stead-session, stead-invitations, stead-http, stead-restore, stead-code-credentials, stead-projection
 =,  stead-codec
 =/  project=@t  '019939ba-4000-7000-8000-000000000001'
 =/  company-init  (configure:stead-team empty:stead-team '{"protocol":"stead.team-config/1","expected_revision":"0","home":"~zod","origin":"https://home.test","organization_id":"019939ba-4000-7000-8000-000000000005","team_id":"019939ba-4000-7000-8000-000000000006","custody":"local-disposable","runtime":"isolated-fake","bindings":{"~bus":{"principal_id":"019939ba-4000-7000-8000-000000000002","binding_id":"019939ba-4000-7000-8000-000000000003","binding_revision":"1","active":"yes","expires_at_ms":"2000000","display_name":"Synthetic member"}},"project_creators":{"019939ba-4000-7000-8000-000000000002":"yes"}}' ~zod 1)
@@ -36,6 +36,7 @@
   =/  returned  (token:stead-session now 1 'synthetic-device')
   =/  approved-msg  (canonical [%o (~(put by (json-fields bytes.msg)) 'return_digest' [%s (digest:stead-session 'stead.identity-return/1' returned)])])
   =/  approvals  (approve-proof:stead-invitations pending.next.opened sender approved-msg now)
+  ?>  ?=(^ cookies.opened)
   =/  cookie  (cut 3 [(met 3 '__Host-stead-pending=') 64] i.cookies.opened)
   =/  body  (canonical (object ~[['protocol' 'stead.invitation/1'] ['challenge_id' id] ['return_proof' returned]]))
   (call:stead-invitations next.opened(pending approvals) ['/stead/auth/invite/consume' body '' cookie ''] ~ now now)
@@ -53,6 +54,20 @@
 ++  test-invitation-preserves-other-sessions-and-history
   =/  row  (~(got by offers.next.joined) link-id)
   =/  member  (need (native-context:stead-team db.next.joined ~nec 7))
+  =/  scope=scope:stead-code-credentials  [~zod project project 1]
+  =/  rights
+    |=  db=state:stead-team
+    ^-  allowance:stead-code-credentials
+    |=  [who=actor:stead-session target=scope:stead-code-credentials access=access:stead-code-credentials]
+    =/  identity  (native-context:stead-team db ship.who 7)
+    ?~(identity | (gte (role:stead-team db u.identity project.target 7) ?:(=(%write access) 2 1)))
+  =/  credential  (issue:stead-code-credentials *ledger:stead-code-credentials identity.actor scope & 900.000 3 7 (rights db.start))
+  ?>  ?=(%& -.credential)
+  =/  resolve=membership:stead-code-credentials
+    |=  ship=@p
+    =/  who  (native-context:stead-team db.next.joined ship 7)
+    ?~(who ~ (some identity.u.who))
+  ?>  =([~ identity.actor] (check:stead-code-credentials next.p.credential bearer.p.credential scope %write 7 resolve (rights db.next.joined)))
   =/  key  (digest:stead-session 'stead.session/1' cookie.login)
   =/  old  (~(got by sessions.auth.start) key)
   =/  events  journal.data.db.next.joined
@@ -79,12 +94,9 @@
   =/  revoked  (manage next.joined 'revoke' ~[['invitation_id' link-id]] 8)
   =/  closed  (mule |.((visit next.revoked token ~nec 9)))
   =/  member  (need (native-context:stead-team db.next.joined ~nec 9))
-  =/  g  (identifier:stead-invitations 'stead.invitation-grant/1' [link-id ~nec])
-  =/  group  data.db.next.joined
-  =/  key  (scope-key:stead-core project g)
-  =/  row  (~(got by grants.group) key)
-  =/  removed  db.next.joined(data group(grants (~(put by grants.group) key row(revoked &))))
-  =/  retried  (mule |.((finish (visit next.joined(db removed) token ~nec 10) ~nec 11)))
+  =/  out  (manage next.joined 'remove' ~[['identity_ship' '~nec'] ['invitation_id' link-id]] 9)
+  =/  removed  db.next.out
+  =/  retried  (mule |.((finish (visit next.out token ~nec 10) ~nec 11)))
   (expect !>(&(?=(%| -.closed) ?=(%| -.retried) =(0 (role:stead-team removed member project 12)))))
 ++  test-invitation-requires-current-maintainer
   =/  team  db.next.opened

@@ -238,7 +238,7 @@
     ?>  &(configured =(src.bowl our.bowl) ?=(~ restoring.owner) product-ready:team)
     =/  next  (transition:stead-home-handoff our.bowl handoff !<(command:stead-home-handoff vase))
     ?>  ?=(^ next)
-    [kicks:team this(handoff u.next, owner owner(transient *ephemeral:stead-browser, pending ~, incarnation '', files ~, code code.owner(book *ledger:stead-code-credentials), git-waiting ~, relay [%closed 0 ~]))]
+    [kicks:team this(handoff u.next, owner owner(transient *ephemeral:stead-browser, flights ~, addresses ~, pending ~, incarnation '', files ~, code code.owner(book *ledger:stead-code-credentials), git-waiting ~, relay [%closed 0 ~]))]
   ?:  =(%stead-product-activate-1 mark)
     ?>  &(configured =(src.bowl our.bowl) =(handoff [%open 1 ~]) ?=(~ product.owner))
     =/  [cards=(list card:agent:gall) next=state:stead-team-owner]  (poke:team mark vase)

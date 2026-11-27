@@ -30,7 +30,7 @@
           session-until=@ud  now=@ud  entropy=@  allows=allowance
       ==
   ^-  issue-result
-  ?.  &((scope-valid destination) (live:stead-session owner now) !=(ship.owner home.destination))
+  ?.  &((scope-valid destination) (live:stead-session owner now))
     [%| %denied]
   ?.  &((allows owner destination %read) ?:(writable (allows owner destination %write) &))
     [%| %denied]

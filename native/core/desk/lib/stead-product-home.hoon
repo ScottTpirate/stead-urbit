@@ -119,7 +119,7 @@
       ['product_profile' profile]  ['commands' 'stead.command/3']  ['queries' 'stead.query/3']
       ['work_commands' 'stead.command/4']  ['work_queries' 'stead.query/4']
       ['doc_change_commands' 'stead.doc-change/1']  ['doc_change_queries' 'stead.doc-change-query/1']
-      ['devices' 'stead.devices/1']  ['identity_discovery' 'stead.identity-address/1'] ['refresh' 'explicit/1']  ['authentication' 'native-approved-browser/1']
+      ['devices' 'stead.devices/1']  ['identity_discovery' 'stead.identity-address/1']  ['refresh' 'explicit/1']  ['authentication' 'native-approved-browser/1']
       ['max_request_bytes' '65536']  ['max_response_bytes' '262144']  ['page_size' '20']
       ['runtime' runtime.config]
   ==

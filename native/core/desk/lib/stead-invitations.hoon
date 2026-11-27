@@ -6,7 +6,7 @@
 +$  guest  [identity=actor:stead-session accepted=?]
 +$  offer
   $:  project=@t  epoch=@ud  issuer=actor:stead-session  mode=@t  target=@t
-      role=@t  expires=@ud  limit=@ud  revoked=?  guests=(map @p guest)
+      role=@t  expires=@ud  limit=@ud  revoked=?  guests=(map @p guest)  blocked=(set @p)
   ==
 +$  book  (map @t offer)
 +$  flight  [offer-id=@t row=challenge:stead-session]
@@ -45,7 +45,7 @@
   |=  [id=@t row=offer]
   ?>  &((token-valid:stead-session id) (uuid project.row) (gth epoch.row 0) (live:stead-session issuer.row 0))
   ?>  &((~(has by projects.data.db) project.row) (role-valid role.row) (gth expires.row 0) (lte expires.row 18.446.744.073.709.551.615))
-  ?>  &((gth limit.row 0) (lte limit.row 32) (lte ~(wyt by guests.row) 32) (lte (uses row) limit.row))
+  ?>  &((gth limit.row 0) (lte limit.row 32) (lte ~(wyt by guests.row) 32) (lte (uses row) limit.row) (lte ~(wyt in blocked.row) 128))
   ?>  ?:  =('personal' mode.row)
         &(=(limit.row 1) =((scot %p (ship-name target.row)) target.row))
       &(?|(=('reader' mode.row) =('request' mode.row)) =('' target.row) =('reader' role.row))
@@ -59,13 +59,34 @@
 ++  available
   |=  [row=offer who=@p now=@ud]
   ^-  ?
-  ?&  !revoked.row  (gth expires.row now)
+  ?&  !revoked.row  !(~(has in blocked.row) who)  (gth expires.row now)
       ?|(=('' target.row) =(target.row (scot %p who)))
       ?|  (lth (uses row) limit.row)
           =/  guest  (~(get by guests.row) who)
           ?~(guest | accepted.u.guest)
       ==
   ==
+++  after-config
+  ::  Close earlier offers for departed or rebound ships, preserving other recipients.
+  |=  [offers=book prior=registry:stead-team-config next=registry:stead-team-config]
+  ^-  book
+  ?~  current.prior  offers
+  =/  config  (need current.next)
+  =/  removed=(set @p)
+    %-  silt
+    %+  turn
+      %+  skip  ~(tap by members.u.current.prior)
+      |=  [ship=@p before=member:stead-team-config]
+      =/  after  (~(get by members.config) ship)
+      ?~  after  |
+      &((same-actor:stead-session identity.before identity.u.after) active.identity.u.after)
+    |=([ship=@p before=member:stead-team-config] ship)
+  ?~  removed  offers
+  %-  ~(run by offers)
+  |=  row=offer
+  =/  blocked  (~(uni in blocked.row) removed)
+  ?:  (gth ~(wyt in blocked) 128)  row(revoked &)
+  row(blocked blocked)
 ++  authority
   |=  [db=state:stead-team row=offer retired=ledger:stead-project-retirement now=@ud]
   ^-  authentication:stead-team
@@ -109,6 +130,9 @@
   ?^  past
     ?>  =(who identity.u.past)
     ?:  accepted.u.past
+      =/  id-grant  (identifier 'stead.invitation-grant/1' [id ship.who])
+      =/  g  (~(got by grants.data.db) (scope-key:stead-core project.row id-grant))
+      ?>  &(!revoked.g (gth expires.g now) =(principal.who principal.g))
       =/  existing  (need (native-context:stead-team db ship.who now))
       ?>  &((same-actor:stead-session who identity.existing) (gth (role:stead-team db existing project.row now) 0))
       [db row]
@@ -153,7 +177,7 @@
   ?>  &(!approved.row.found (gth expires.row.found now) =(sender ship.identity.row.found) =(original (proof-message id row.found)))
   (~(put by pending) id found(row row.found(approved &, return-digest (some return-hash))))
 ++  list-rows
-  |=  [offers=book project=@t now=@ud]
+  |=  [offers=book db=state:stead-team project=@t now=@ud]
   ^-  @t
   =/  output=(map @t json)  ~
   =/  rows  ~(tap by offers)
@@ -166,7 +190,15 @@
   ?.  =(project project.row)  $(rows t.rows)
   =/  detail  (object ~[['mode' mode.row] ['role' role.row] ['identity_ship' target.row] ['expires_at_ms' (decimal expires.row)] ['use_limit' (decimal limit.row)] ['uses' (decimal (uses row))] ['status' ?:(revoked.row 'revoked' ?:((lte expires.row now) 'expired' 'open'))]])
   ?>  ?=([%o *] detail)
-  =/  requests  (object (turn ~(tap by guests.row) |=([ship=@p g=guest] [(scot %p ship) ?:(accepted.g 'accepted' 'pending')])))
+  =/  requests
+    %-  object
+    %+  turn  ~(tap by guests.row)
+    |=  [ship=@p g=guest]
+    :-  (scot %p ship)
+    ?.  accepted.g  'pending'
+    =/  grant-id  (identifier 'stead.invitation-grant/1' [id ship])
+    =/  record  (~(got by grants.data.db) (scope-key:stead-core project grant-id))
+    ?:(revoked.record 'removed' 'accepted')
   $(rows t.rows, output (~(put by output) id [%o (~(put by p.detail) 'requests' requests)]))
 ++  manage
   |=  [s=changes input=object-map req=incoming:stead-http retired=ledger:stead-project-retirement now=@ud entropy=@]
@@ -180,7 +212,7 @@
   =/  action  (field input 'action')
   ?:  =('list' action)
     ?>  (keys input ~['protocol' 'action' 'project_id'])
-    [s (list-rows offers.s project now) ~ ~]
+    [s (list-rows offers.s db.s project now) ~ ~]
   ?:  =('issue' action)
     ?>  (keys input ~['protocol' 'action' 'project_id' 'mode' 'identity_ship' 'role' 'expires_at_ms' 'use_limit'])
     =/  mode  (field input 'mode')
@@ -198,7 +230,7 @@
     =/  token  (token:stead-session entropy now 'stead.invitation-secret/1')
     =/  id  (digest:stead-session 'stead.invitation-lookup/1' token)
     ?>  !(~(has by live) id)
-    =/  row=offer  [project epoch:(~(got by projects.data.db.s) project) identity.actor mode name role expires limit | ~]
+    =/  row=offer  [project epoch:(~(got by projects.data.db.s) project) identity.actor mode name role expires limit | ~ ~]
     [s(offers (~(put by live) id row)) (answer 'issued' ~[['token' token] ['invitation_id' id]]) ~ ~]
   =/  id  (field input 'invitation_id')
   =/  row  (~(got by offers.s) id)
@@ -206,6 +238,24 @@
   ?:  =('revoke' action)
     ?>  (keys input ~['protocol' 'action' 'project_id' 'invitation_id'])
     [s(offers (~(put by offers.s) id row(revoked &))) (answer 'revoked' ~) ~ ~]
+  ?:  =('remove' action)
+    ?>  (keys input ~['protocol' 'action' 'project_id' 'invitation_id' 'identity_ship'])
+    =/  who  (ship-name (field input 'identity_ship'))
+    =/  guest  (~(got by guests.row) who)
+    ?>  accepted.guest
+    =/  grant-id  (identifier 'stead.invitation-grant/1' [id who])
+    =/  g  (~(got by grants.data.db.s) (scope-key:stead-core project grant-id))
+    ?>  =(principal.identity.guest principal.g)
+    ?:  revoked.g  [s (answer 'removed' ~) ~ ~]
+    =/  pro  (~(got by projects.data.db.s) project)
+    =/  key  (identifier 'stead.invitation-remove/1' [id who])
+    =/  cmd  (object ~[['protocol' 'stead.command/3'] ['request_id' key] ['project_id' project] ['resource_id' project] ['operation' 'policy.revoke'] ['authority_epoch' (decimal epoch.pro)] ['expected_revision' (decimal policy.pro)]])
+    ?>  ?=([%o *] cmd)
+    =/  payload  (object ~[['grant_id' grant-id]])
+    =/  decoded  (decode:stead-team-codec (canonical [%o (~(put by p.cmd) 'payload' payload)]))
+    =/  applied  (apply-command:stead-team db.s actor decoded now)
+    ?>  !=(next.applied db.s)
+    [s(db next.applied) (answer 'removed' ~) ~ ~]
   ?>  &(=('approve' action) =('request' mode.row) (keys input ~['protocol' 'action' 'project_id' 'invitation_id' 'identity_ship' 'role']))
   =/  who  (ship-name (field input 'identity_ship'))
   =/  guest  (~(got by guests.row) who)

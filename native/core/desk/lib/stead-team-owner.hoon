@@ -198,7 +198,7 @@
     ?>  ?|(=('isolated-fake' runtime.config) (runtime-matches config))
     =/  view  (begin:stead-projection next view.owner)
     =/  job  (token:stead-session eny.bowl act.bowl 'stead.projection-job/1')
-    =.  owner  owner(db next, view view, transient *ephemeral:stead-browser, pending ~, incarnation '', job job, files ~, code code.owner(book *ledger:stead-code-credentials), git-waiting ~, relay (reset:stead-code-pack-relay-pin relay.owner))
+    =.  owner  owner(db next, view view, offers (after-config:stead-invitations offers.owner registry.db.owner registry.next), transient *ephemeral:stead-browser, flights ~, addresses ~, pending ~, incarnation '', job job, files ~, code code.owner(book *ledger:stead-code-credentials), git-waiting ~, relay (reset:stead-code-pack-relay-pin relay.owner))
     [(weld kicks ~[bind wait]) owner]
   ++  load-assets
     ^-  (map @t [mime=@t bytes=@t])
@@ -233,7 +233,7 @@
       (turn (skip ~(tap in old-paths) |=(old=path =(old route))) |=(old=path [%give %kick [old ~] ~]))
     =/  replies=(list card:agent:gall)
       ~[[%give %fact [route ~] %stead-result-3 !>(response)] [%give %kick [route ~] ~]]
-    :_  owner(transient *ephemeral:stead-browser, pending ~, incarnation incarnation, files files, code code.owner(book *ledger:stead-code-credentials), git-waiting ~, relay (reset:stead-code-pack-relay-pin relay.owner))
+    :_  owner(transient *ephemeral:stead-browser, flights ~, addresses ~, pending ~, incarnation incarnation, files files, code code.owner(book *ledger:stead-code-credentials), git-waiting ~, relay (reset:stead-code-pack-relay-pin relay.owner))
     (weld retired replies)
   ++  available
     ^-  ?
@@ -667,7 +667,7 @@
       =/  next  owner(db db.next.out, product (some phase.next.out), view projected)
       ?:  =(before registry.db.next)  [~ next]
       ::  Configuration/custody rotation invalidates every transient reader.
-      [kicks next(transient *ephemeral:stead-browser, pending ~, incarnation '', files ~, code code.next(book *ledger:stead-code-credentials), git-waiting ~, relay [%closed 0 ~])]
+      [kicks next(transient *ephemeral:stead-browser, flights ~, addresses ~, pending ~, incarnation '', files ~, code code.next(book *ledger:stead-code-credentials), git-waiting ~, relay [%closed 0 ~])]
     ?:  =(%stead-team-config-1 mark)  (configured !<(@t vase))
     ?:  =(%stead-bootstrap-1 mark)  (bootstrap !<(@t vase))
     ?:  =(%handle-http-request mark)  (http !<([@ta inbound-request:eyre] vase))
