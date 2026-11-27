@@ -20,9 +20,11 @@ jobs:
         run: |
           sudo install -d -o runner -g runner /runtime /runtime/downloads /runtime/bin
           python3 -B focus-fetch.py
+          /usr/bin/python3 -m pip install --disable-pip-version-check --only-binary=:all: --require-hashes --target /runtime/solo-python -r services/identity-passkeys/requirements.lock
           sudo install -d -o nobody -g nogroup /state
           sudo install -d /src
           sudo cp -a scripts native focus-files.json focus-runner.py /src/
+          sudo cp -a services/identity-passkeys/src /src/passkey-src
           sudo cp specs/urbit/toolchain.lock.json /toolchain.json
           kernel=$(python3 -c "import json;print(json.load(open('/toolchain.json'))['kernel']['directory'])")
           sudo ln -s "/runtime/$kernel" /kernel

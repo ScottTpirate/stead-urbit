@@ -31,6 +31,12 @@
   =/  who  (need (slaw %p name))
   ?>  &((lte (met 0 who) 32) =((scot %p who) name))
   who
+++  eligible
+  |=  [who=@p runtime=@t]
+  ^-  ?
+  ?&  (lte (met 0 who) 32)
+      ?|(=('isolated-fake' runtime) &(=('live-synthetic' runtime) (gth (met 0 who) 16)))
+  ==
 ++  role-valid
   |=  role=@t
   (~(has in (silt ~['reader' 'contributor' 'maintainer'])) role)
@@ -40,6 +46,7 @@
 ++  valid
   |=  [db=state:stead-team offers=book]
   ^-  ?
+  =/  config  (need current.registry.db)
   ?>  (lte ~(wyt by offers) 128)
   %+  levy  ~(tap by offers)
   |=  [id=@t row=offer]
@@ -47,11 +54,11 @@
   ?>  &((~(has by projects.data.db) project.row) (role-valid role.row) (gth expires.row 0) (lte expires.row 18.446.744.073.709.551.615))
   ?>  &((gth limit.row 0) (lte limit.row 32) (lte ~(wyt by guests.row) 32) (lte (uses row) limit.row) (lte ~(wyt in blocked.row) 128))
   ?>  ?:  =('personal' mode.row)
-        &(=(limit.row 1) =((scot %p (ship-name target.row)) target.row))
+        &(=(limit.row 1) (eligible (ship-name target.row) runtime.config))
       &(?|(=('reader' mode.row) =('request' mode.row)) =('' target.row) =('reader' role.row))
   %+  levy  ~(tap by guests.row)
   |=  [ship=@p guest=guest]
-  ?>  &(=(ship ship.identity.guest) (live:stead-session identity.guest 0) ?|(=('' target.row) =(target.row (scot %p ship))))
+  ?>  &((eligible ship runtime.config) =(ship ship.identity.guest) (live:stead-session identity.guest 0) ?|(=('' target.row) =(target.row (scot %p ship))))
   ?.  accepted.guest  =('request' mode.row)
   =/  grant-id  (identifier 'stead.invitation-grant/1' [id ship])
   =/  g  (~(get by grants.data.db) (scope-key:stead-core project.row grant-id))
@@ -175,6 +182,28 @@
   =/  original  (canonical [%o (~(del by p.obj) 'return_digest')])
   ?>  &(!approved.row.found (gth expires.row.found now) =(sender ship.identity.row.found) =(original (proof-message id row.found)))
   (~(put by pending) id found(row row.found(approved &, return-digest (some return-hash))))
+++  prune-book
+  ::  Link expiry ends admission. Its still-active project grants keep their
+  ::  administrative handles so a maintainer can revoke one after the link closes.
+  |=  [offers=book db=state:stead-team now=@ud]
+  ^-  book
+  =/  rows  ~(tap by offers)
+  =/  kept=book  ~
+  |-
+  ?~  rows  kept
+  =/  [id=@t row=offer]  i.rows
+  ?:  &(!revoked.row (gth expires.row now))
+    $(rows t.rows, kept (~(put by kept) id row))
+  =/  active=(map @p guest)
+    %-  malt
+    %+  skim  ~(tap by guests.row)
+    |=  [ship=@p g=guest]
+    ?.  accepted.g  |
+    =/  gid  (identifier 'stead.invitation-grant/1' [id ship])
+    =/  grant  (~(get by grants.data.db) (scope-key:stead-core project.row gid))
+    ?~(grant | &(!revoked.u.grant (gth expires.u.grant now)))
+  ?~  active  $(rows t.rows)
+  $(rows t.rows, kept (~(put by kept) id row(guests active, blocked ~)))
 ++  list-rows
   |=  [offers=book db=state:stead-team project=@t now=@ud]
   ^-  @t
@@ -222,9 +251,9 @@
     =/  expires  ?:(=('' expiry) (add now 604.800.000) (uint expiry))
     ?>  &((gth expires now) (lte expires (add now 2.592.000.000)) (gth limit 0) (lte limit 32) (role-valid role))
     ?>  ?:  =('personal' mode)
-          &(=(limit 1) =((scot %p (ship-name name)) name))
+          &(=(limit 1) (eligible (ship-name name) runtime.config))
         &(?|(=('reader' mode) =('request' mode)) =('' name) =('reader' role))
-    =/  live  (malt (skim ~(tap by offers.s) |=([key=@t o=offer] (gth expires.o now))))
+    =/  live  (prune-book offers.s db.s now)
     ?>  (lth ~(wyt by live) 128)
     =/  token  (token:stead-session entropy now 'stead.invitation-secret/1')
     =/  id  (digest:stead-session 'stead.invitation-lookup/1' token)
@@ -278,6 +307,7 @@
     =/  id  (digest:stead-session 'stead.invitation-lookup/1' token)
     =/  offer  (~(got by offers.s) id)
     =/  who  (ship-name (field input 'identity_ship'))
+    ?>  (eligible who runtime.config)
     ?>  (available offer who now)
     ?>  (same-actor:stead-session issuer.offer identity:(authority db.s offer retired now))
     =/  previous  (~(get by sessions.auth.s) (digest:stead-session 'stead.session/1' session.req))

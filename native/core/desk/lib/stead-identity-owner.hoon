@@ -2,10 +2,8 @@
 /+  stead-codec, stead-team, stead-session, stead-http, stead-browser, stead-identity-core, stead-eyre, stead-assets, server
 |%
 +$  state  [db=state:stead-identity-core files=cache:stead-assets incarnation=@t]
-+$  saved
-  $?  [%stead-identity %1 config=(unit configuration:stead-identity-core) counter=@ud]
-      [%stead-identity %2 config=(unit configuration:stead-identity-core) counter=@ud trusted=homes:stead-identity-core verifier=@t]
-  ==
++$  previous  [%stead-identity %1 config=(unit configuration:stead-identity-core) counter=@ud]
++$  saved  [%stead-identity %2 config=(unit configuration:stead-identity-core) counter=@ud trusted=homes:stead-identity-core verifier=@t]
 ++  now-ms
   |=  now=@da
   (div (mul 1.000 (sub now ~1970.1.1)) ~s1)
@@ -115,13 +113,16 @@
     !>([%stead-identity %2 config.db counter.db trusted.db verifier.db])
   ++  load
     |=  old=vase
-    =/  loaded  !<(saved old)
+    =/  loaded=saved
+      ?:  ?=([%stead-identity %1 *] q.old)
+        =/  before  !<(previous old)
+        [%stead-identity %2 config.before counter.before (seed:stead-identity-core config.before) '']
+      !<(saved old)
     ?>  (lte counter.loaded 18.446.744.073.709.551.615)
     =/  config  config.loaded
     ?>  ?~(config & (valid-configuration:stead-identity-core u.config our.bowl))
     =/  initial  (seed:stead-identity-core config)
     =/  fresh=state:stead-identity-core
-      ?:  ?=([%stead-identity %1 *] loaded)  [config ~ counter.loaded initial '' ~]
       ?>  ?|(=('' verifier.loaded) (token-valid:stead-session verifier.loaded))
       ?>  (lte ~(wyt by trusted.loaded) 32)
       ?~  config

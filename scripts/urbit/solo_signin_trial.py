@@ -4,6 +4,7 @@ The caller installs the exact candidate desk and starts its pinned Native
 fixture with --https-port 18443. All requests remain on the worker's loopback.
 Only stage names and assertions are intended for the qualification transcript.
 """
+import hashlib
 import http.client
 from http.cookies import SimpleCookie
 import json
@@ -12,11 +13,13 @@ import re
 import secrets
 import socket
 import ssl
+import sys
 import subprocess
 import time
 from tempfile import TemporaryDirectory
 from urllib.parse import urlencode
 
+import core_conn
 import native_tls
 import team_conn
 
@@ -134,7 +137,7 @@ def bootstrap(native, app):
     wait_for(attempt, lambda value:value.get('status') == 'ready', app+' bootstrap',60)
 
 
-def sign_in(home, identity, invite=None):
+def sign_in(home, identity, invite=None, authenticator=None, *, previously_trusted=False):
     protocol = INVITATION if invite else PROTOCOL
     path = '/stead/auth/invite/' if invite else '/stead/auth/'
     payload = {'protocol':protocol,'identity_ship':SHIP}
@@ -151,12 +154,19 @@ def sign_in(home, identity, invite=None):
     check(row['origin'] == home.origin and row['home'] == row['identity_ship'] == SHIP and row['direct'] == 'yes',
           'one planet, distinct Home and Identity origins')
     check(row['purpose'] == ('project-invitation' if invite else 'member-session'), 'correct purpose')
-    check(row['trusted'] == ('yes' if invite else 'no'), 'explicit consent persisted for this Home')
-    approved = identity.post('/stead-identity/api/approve',{
-        'protocol':'stead.identity/1' if invite else 'stead.identity-consent/1', 'challenge_id':key,
-        'origin':row['origin'], 'csrf':row['csrf'], 'comparison_code':row['comparison_code']})
+    trusted = bool(invite or previously_trusted)
+    check(row['trusted'] == ('yes' if trusted else 'no'), 'explicit consent persisted for this Home')
+    if authenticator is None:
+        approved = identity.post('/stead-identity/api/approve',{
+            'protocol':'stead.identity/1' if trusted else 'stead.identity-consent/1', 'challenge_id':key,
+            'origin':row['origin'], 'csrf':row['csrf'], 'comparison_code':row['comparison_code']})
+        check(approved.get('status') == 'sent', 'owner approved')
+    else:
+        approved = authenticator.sign(key)
+        check(approved.get('status') == 'ok' and approved.get('challenge_id') == key
+              and approved.get('origin') == home.origin, 'real passkey verifier approved native request')
     proof = approved.get('return_proof','')
-    check(approved.get('status') == 'sent' and re.fullmatch(r'[0-9a-f]{64}', proof), 'approving-browser return proof')
+    check(re.fullmatch(r'[0-9a-f]{64}', proof), 'approving-browser return proof')
     observed = wait_for(lambda:home.post(path+'status',attempt),lambda value:value.get('status') == 'approved',
                         'native ship approval')
     check('return_proof' not in observed and 'return_digest' not in observed, 'status contains no return secret')
@@ -172,6 +182,76 @@ def projects(site, request):
     query = {'protocol':'stead.query/3','kind':'projects','request_id':uid(request),
              'project_id':'','resource_id':'','container_id':'','search':'','cursor':''}
     return site.post('/stead/api/query',query)['rows']
+
+
+def configure_verifier(native, secret):
+    wire = core_conn.atom(json.dumps({'protocol':'stead.verifier-config/1','secret':secret}).encode())
+    noun = f'[32 %fyrd [%base %stead-pilot-owner %noun [%noun [~zod %stead-identity %verifier-config ~ {wire}]]]]'
+    try:
+        result = core_conn.exchange(native.binary, native.pier/'.urb/conn.sock', noun)
+        check((result.get('outcome') or {}).get('json') == {}, 'owner configured verifier')
+    except Exception:
+        raise RuntimeError('Solo fixture: verifier configuration failed') from None
+
+
+class SoftwareAuthenticator:
+    """Only the exercising key is synthetic. Both verifiers are production code."""
+
+    def __init__(self, native, identity, ca):
+        sys.path[:0] = ['/runtime/solo-python','/src/passkey-src']
+        from cryptography.hazmat.primitives.asymmetric import ec
+        from fido2.cose import ES256
+        from fido2.webauthn import AttestedCredentialData
+        from stead_identity_passkeys.bridge import LocalIdentity
+        from stead_identity_passkeys.verifier import Verifier
+        self.identity = identity
+        secret = secrets.token_hex(32)
+        configure_verifier(native, secret)
+        self.verifier = Verifier(Path('/state/solo-passkeys.db'),SHIP,identity.origin,
+                                 LocalIdentity(identity.origin,PORT,secret,ca))
+        self.key = ec.generate_private_key(ec.SECP256R1())
+        self.credential = AttestedCredentialData.create(bytes(16),secrets.token_bytes(32),
+                                                        ES256.from_cryptography_key(self.key.public_key()))
+
+    def ticket(self, action):
+        value = self.identity.post('/stead-identity/api/ticket',{'protocol':'stead.passkey-ticket/1','action':action})
+        check(value.get('status')=='ok','native owner ticket')
+        return value['ticket']
+
+    def response(self, options, register):
+        from cryptography.hazmat.primitives import hashes
+        from cryptography.hazmat.primitives.asymmetric import ec
+        from fido2.utils import websafe_encode
+        from fido2.webauthn import AttestationObject, AuthenticatorData, CollectedClientData
+        client = CollectedClientData.create('webauthn.create' if register else 'webauthn.get',
+                                             options['publicKey']['challenge'],self.identity.origin)
+        flags = AuthenticatorData.FLAG.UP | AuthenticatorData.FLAG.UV
+        data = AuthenticatorData.create(hashlib.sha256(self.identity.host.encode()).digest(),
+                                        flags | AuthenticatorData.FLAG.AT if register else flags,
+                                        0 if register else 1, self.credential if register else b'')
+        response = {'clientDataJSON':client.b64}
+        if register:
+            response['attestationObject'] = websafe_encode(AttestationObject.create('none',data,{}))
+        else:
+            response.update(authenticatorData=websafe_encode(data),userHandle=websafe_encode(self.verifier.user.id),
+                            signature=websafe_encode(self.key.sign(data+client.hash,ec.ECDSA(hashes.SHA256()))))
+        key = websafe_encode(self.credential.credential_id)
+        return {'ceremony':options['ceremony'],'credential':{'id':key,'rawId':key,'type':'public-key','response':response}}
+
+    def enroll(self):
+        options = self.verifier.dispatch('register/begin',{'ticket':self.ticket('register'),'label':'Synthetic hardware'})
+        check(self.verifier.dispatch('register/finish', self.response(options,True))['status']=='ok','real FIDO enrollment')
+
+    def sign(self, challenge):
+        options = self.verifier.dispatch('authenticate/begin',{'challenge_id':challenge})
+        return self.verifier.dispatch('authenticate/finish',self.response(options,False))
+
+    def remove(self):
+        keys = self.verifier.dispatch('list',{'ticket':self.ticket('list')})['credentials']
+        check(len(keys)==1,'list enrolled software credential')
+        result = self.verifier.dispatch('revoke',{'ticket':self.ticket('revoke'),'id':keys[0]['id']})
+        check(result.get('status')=='ok' and not self.verifier.dispatch('list',{'ticket':self.ticket('list')})['credentials'],
+              'native owner removal')
 
 
 def git_credentials(home, project):
@@ -255,16 +335,36 @@ def run(native):
     guest = Site(HOME,ca)
     wrong,denied = guest.request('POST','/stead/auth/invite/start',{'protocol':INVITATION,'token':issue['token'],'identity_ship':'~bus'})
     check(wrong >= 400 or json.loads(denied).get('status') != 'pending','forwarded invitation refused')
-    second = sign_in(guest,identity,issue['token'])
+    authenticator = SoftwareAuthenticator(native,identity,ca)
+    authenticator.enroll()
+    second = sign_in(guest,identity,issue['token'],authenticator)
+    authenticator.remove()
     check(second.get('project_id') == project,'invite delivers intended project')
     for site,n in ((owner,304),(guest,305)):
         check(any(r.get('project_id') == project and r.get('role')=='maintainer' for r in projects(site,n).values()),
               'prior and redeemed sessions preserve role')
     check(git_refs(owner, project, ca, bearer) == before_refs, 'existing Git password survives redemption')
     check(all(not name.startswith('urbauth-') for name in owner.cookies.keys() | guest.cookies.keys()),'ship login isolated')
+    def device(site, action, value=''):
+        return site.post('/stead/auth/devices', {'protocol':'stead.devices/1','action':action,'value':value})
+    check(device(guest,'remember','Temporary laptop')['status']=='remembered','explicit device trust')
+    devices = device(owner,'list')['devices']
+    target = next(key for key,row in devices.items() if row['label']=='Temporary laptop' and row['current']=='no')
+    check(device(owner,'revoke',target)['status']=='revoked','remote device revocation')
+    revoked,_ = guest.request('POST','/stead/auth/resume',{'protocol':'stead.auth/1'})
+    check(revoked == 401 and projects(owner,306),'revoked guest device and live first session')
+    configure_verifier(native, '')
+    fallback = Site(HOME,ca)
+    sign_in(fallback,identity,previously_trusted=True)
+    check(projects(fallback,307),'ordinary sign-in after disabling companion')
+    check(device(fallback,'remember','Recovery browser')['status']=='remembered','remember recovery browser')
+    check(fallback.post('/stead/auth/logout',{'protocol':'stead.auth/1'}).get('status')=='logged_out','ordinary signout')
+    check(all(row['label']!='Recovery browser' for row in device(owner,'list')['devices'].values()),'signout removes trust')
     report = {'status':'passed','planet':'~zod','native_apps':2,'verified_https_origins':2,
               'explicit_membership':True,'discovered_personal_address':True,'ordinary_owner_approval':True,
               'forwarded_personal_link_denied':True,'wrong_return_proof_denied':True,'project_role':'maintainer',
-              'unrelated_browser_session_survived':True,'existing_stock_git_credential_survived':True}
+              'unrelated_browser_session_survived':True,'existing_stock_git_credential_survived':True,
+              'native_owner_ticket_and_signed_software_authenticator':True,'credential_removed':True,'remembered_device_revoked':True,
+              'ordinary_approval_after_disabling_verifier':True,'signout_removed_device_trust':True}
     print('Solo native HTTP result',json.dumps(report,sort_keys=True),flush=True)
     return report

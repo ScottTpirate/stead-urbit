@@ -46,6 +46,8 @@
 =/  joined  (finish opened ~nec 6)
 |%
 ++  test-invitation-personal-binding-and-expiry
+  ?>  &(!(eligible:stead-invitations ~zod 'live-synthetic') !(eligible:stead-invitations 65.535 'live-synthetic'))
+  ?>  &((eligible:stead-invitations 65.536 'live-synthetic') !(eligible:stead-invitations 4.294.967.296 'live-synthetic'))
   =/  wrong  (mule |.((visit next.personal token ~bud 5)))
   =/  expired  (mule |.((finish opened ~nec 120.005)))
   =/  later  (visit next.opened token ~nec 120.006)
@@ -103,6 +105,12 @@
   =/  member  (need (native-context:stead-team db.next.joined ~nec 9))
   =/  out  (manage next.joined 'remove' ~[['identity_ship' '~nec'] ['invitation_id' link-id]] 9)
   =/  removed  db.next.out
+  =/  previous  (~(got by offers.next.joined) link-id)
+  =/  elapsed  next.joined(offers (~(put by offers.next.joined) link-id previous(expires 8)))
+  =/  later  (manage elapsed 'issue' ~[['mode' 'request'] ['role' 'reader'] ['identity_ship' ''] ['expires_at_ms' ''] ['use_limit' '1']] 10)
+  ?>  (~(has by offers.next.later) link-id)
+  =/  late-remove  (manage next.later 'remove' ~[['identity_ship' '~nec'] ['invitation_id' link-id]] 11)
+  ?>  !(~(has by (prune-book:stead-invitations offers.next.late-remove db.next.late-remove 12)) link-id)
   =/  retried  (mule |.((finish (visit next.out token ~nec 10) ~nec 11)))
   (expect !>(&(?=(%| -.closed) ?=(%| -.retried) =(0 (role:stead-team removed member project 12)))))
 ++  test-invitation-requires-current-maintainer

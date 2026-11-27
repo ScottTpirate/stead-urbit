@@ -48,7 +48,14 @@ try:
                 stream.seek(offset)
                 raw = stream.read(262145).decode()
             assert len(raw) <= 262144
-            print(native_units.verify_output(raw+'\n'+observed['stdout'], path=path, expected=arms,
+            # The airgapped fake emits unrelated outbound HTTP retry notices to
+            # the process log while the stock -test transcript is printing.
+            # Keep an explicit record, and retain every other line for strict validation.
+            rows = raw.splitlines()
+            transport = [line for line in rows if re.fullmatch(r'http: fail \(\d+, 504\): temporary failure', line)]
+            print('Offline network notices', transport, flush=True)
+            tested = '\n'.join(line for line in rows if line not in transport)
+            print(native_units.verify_output(tested+'\n'+observed['stdout'], path=path, expected=arms,
                 succeeds=not negative, failure_marker='stead-intentional-native-unit-failure' if negative else None), flush=True)
         except Exception as exc:
             failure = True

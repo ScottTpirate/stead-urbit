@@ -1,5 +1,6 @@
 ::  Pure helper controls; actual Eyre owner and Gall transport need team-check.
 /+  stead-codec, stead-session, stead-browser, stead-identity-core, stead-http, stead-eyre
+/=  identity-agent  /app/stead-identity
 =,  stead-identity-core
 =/  principal  '019939ba-4000-7000-8000-000000000102'
 =/  binding  '019939ba-4000-7000-8000-000000000202'
@@ -31,6 +32,23 @@
   ?>  !(valid-configuration enrollment(revision 0) ~bus)
   ?>  !(valid-configuration enrollment(revision 18.446.744.073.709.551.616) ~bus)
   ?>  (rejected |.((configure configured config-raw ~bus)))
+  =/  context=bowl:gall  *bowl:gall
+  =.  context  context(our ~bus, src ~bus, eny `@uvJ`18, act 8)
+  =/  initial=agent:gall  ~(. identity-agent context)
+  =/  old=vase  !>([%stead-identity %1 config.configured `@ud`42])
+  =/  [cards=(list card:agent:gall) upgraded=agent:gall]  (on-load:initial old)
+  ?>  ?=(^ cards)
+  =/  saved=vase  on-save:upgraded
+  ?>  =([%stead-identity %2 config.configured 42 trusted.configured ''] q.saved)
+  =/  homes  (~(put by trusted.configured) ~nec 'https://other.localhost')
+  =/  secret  (digest:stead-session 'stead.verifier/1' 'synthetic')
+  =/  paired=vase  !>([%stead-identity %2 config.configured `@ud`43 homes secret])
+  =/  [effects=(list card:agent:gall) restored=agent:gall]  (on-load:initial paired)
+  =/  second=vase  on-save:restored
+  ?>  =(q.paired q.second)
+  =/  collision  (~(put by homes) ~nec origin)
+  =/  invalid=vase  !>([%stead-identity %2 config.configured `@ud`44 collision secret])
+  ?>  (rejected |.((on-load:initial invalid)))
   ~
 ++  test-identity-origin-isolation
   ^-  tang

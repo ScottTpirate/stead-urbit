@@ -8,18 +8,20 @@
   ;;([~ @p @tas @tas path @t] q.arg)
 ?>  (lte (met 3 raw) 65.536)
 ?>  ?|  =(app %stead-home)
-        &(=(app %stead-identity) ?|(=(mode %bootstrap) =(mode %configure)))
+        &(=(app %stead-identity) ?|(=(mode %bootstrap) =(mode %configure) =(mode %verifier-config)))
     ==
+?>  ?|(!=(mode %verifier-config) =(app %stead-identity))
 =/  m  (strand ,vase)
 =/  n  (strand ,~)
 ^-  form:m
 %+  (set-timeout:strandio ,vase)  ~s55
 ;<  =bowl:spider  bind:m  get-bowl:strandio
 ?>  =(expected our.bowl)
-?:  ?|(=(%configure mode) =(%pack-stage mode) =(%project-retire mode))
+?:  ?|(=(%configure mode) =(%verifier-config mode) =(%pack-stage mode) =(%project-retire mode))
   ?>  ?=(~ route)
   =/  mark
     ?+  mode  ?:(=(app %stead-home) %stead-team-config-1 %stead-identity-config-1)
+      %verifier-config  %stead-verifier-config-1
       %pack-stage  %stead-code-pack-stage-1
       %project-retire  %stead-project-retirement-1
     ==
