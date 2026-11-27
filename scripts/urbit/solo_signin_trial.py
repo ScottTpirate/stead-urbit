@@ -1,0 +1,270 @@
+"""Exercise a real Home and Identity on one isolated, disposable fake planet.
+
+The caller installs the exact candidate desk and starts its pinned Native
+fixture with --https-port 18443. All requests remain on the worker's loopback.
+Only stage names and assertions are intended for the qualification transcript.
+"""
+import http.client
+from http.cookies import SimpleCookie
+import json
+from pathlib import Path
+import re
+import secrets
+import socket
+import ssl
+import subprocess
+import time
+from tempfile import TemporaryDirectory
+from urllib.parse import urlencode
+
+import native_tls
+import team_conn
+
+PORT = 18443
+HOME = 'home.localhost'
+IDENTITY = 'identity.localhost'
+SHIP = '~zod'
+PROTOCOL = 'stead.auth/2'
+INVITATION = 'stead.invitation/1'
+
+
+def check(condition, name):
+    if not condition:
+        raise ValueError('Solo fixture: ' + name)
+
+
+def wait_for(observe, predicate, name, seconds=30):
+    deadline = time.monotonic() + seconds
+    while time.monotonic() < deadline:
+        value = observe()
+        if predicate(value):
+            return value
+        time.sleep(.15)
+    raise TimeoutError('Solo fixture: ' + name)
+
+
+def uid(n):
+    return '019939ba-4000-7000-8000-' + str(n).zfill(12)
+
+
+class Site:
+    def __init__(self, host, ca):
+        self.host = host
+        self.origin = f'https://{host}:{PORT}'
+        self.context = ssl.create_default_context(cafile=str(ca))
+        self.cookies = {}
+        self.csrf = ''
+
+    def request(self, method, path, data=None, form=False):
+        check(path.startswith('/'), 'site-relative request')
+        headers = {'Host': f'{self.host}:{PORT}', 'Origin': self.origin}
+        if self.cookies:
+            headers['Cookie'] = '; '.join(name + '=' + value for name, value in self.cookies.items())
+        if self.csrf:
+            headers['X-Stead-CSRF'] = self.csrf
+        body = None
+        if data is not None:
+            headers['Content-Type'] = 'application/x-www-form-urlencoded' if form else 'application/json'
+            body = (urlencode(data) if form else json.dumps(data,separators=(',',':'))).encode()
+        connection = http.client.HTTPConnection('127.0.0.1', PORT, timeout=8)
+        try:
+            raw = socket.create_connection(('127.0.0.1', PORT), timeout=5)
+            connection.sock = self.context.wrap_socket(raw, server_hostname=self.host)
+            connection.request(method, path, body=body, headers=headers)
+            response = connection.getresponse()
+            result = response.read(262145)
+            check(len(result) <= 262144, 'bounded response')
+            for cookie in response.headers.get_all('Set-Cookie') or []:
+                pair = SimpleCookie(cookie)
+                for name, field in pair.items():
+                    check(not field['domain'], 'host-only cookie')
+                    if field.value and field['max-age'] != '0':
+                        self.cookies[name] = field.value
+                    else:
+                        self.cookies.pop(name, None)
+            return response.status, result
+        finally:
+            connection.close()
+
+    def post(self, path, payload):
+        status, result = self.request('POST',path,payload)
+        check(status == 200, f'{path} returned {status}')
+        value = json.loads(result)
+        check(isinstance(value, dict), 'JSON object')
+        return value
+
+
+def certificates(native):
+    directory = Path('/state/solo-certificates')
+    # The pinned Eyre TLS listener serves exactly one native certificate. Give
+    # the synthetic certificate SANs for the two independent browser hosts.
+    directory.mkdir(mode=0o700)
+    ca = directory / 'ca.pem'
+    key = directory / 'zod-key.pem'
+    crt = directory / 'zod.pem'
+    native_tls.openssl('req','-new','-newkey','ec','-pkeyopt','ec_paramgen_curve:P-256','-nodes',
+                       '-x509','-days','1','-subj','/CN=Stead solo fixture CA','-addext','basicConstraints=critical,CA:true',
+                       '-keyout',directory/'ca-key.pem','-out',ca)
+    native_tls.openssl('req','-new','-newkey','ec','-pkeyopt','ec_paramgen_curve:P-256','-nodes',
+                       '-subj','/CN=home.localhost','-keyout',key,'-out',directory/'zod.csr')
+    extension = directory / 'server.ext'
+    extension.write_text('basicConstraints=critical,CA:false\nkeyUsage=critical,digitalSignature\nextendedKeyUsage=serverAuth\n'
+                         'subjectAltName=DNS:home.localhost,DNS:identity.localhost\n')
+    native_tls.openssl('x509','-req','-days','1','-in',directory/'zod.csr','-CA',ca,'-CAkey',directory/'ca-key.pem',
+                       '-set_serial','1','-extfile',extension,'-out',crt)
+    for path in directory.iterdir():
+        path.chmod(0o600)
+    native_tls.install(native.binary, native.pier/'.urb/conn.sock', directory, 'zod')
+    native_tls.verify(native.process, directory, 'zod', native.check)
+    return ca
+
+
+def owner_call(native, app, mode, value, path='/'):
+    out = team_conn.run(native.binary, native.pier/'.urb/conn.sock', mode, path,
+                        json.dumps(value, separators=(',',':')).encode(), target='zod', app='stead-'+app)
+    result = (out.get('outcome') or {}).get('json')
+    check(isinstance(result, dict), 'owner-local command returned a JSON object')
+    return result
+
+
+def bootstrap(native, app):
+    def attempt():
+        nonce = secrets.token_hex(32)
+        return owner_call(native, app, 'bootstrap', {'protocol':'stead.bootstrap/1','nonce':nonce}, '/bootstrap/'+nonce)
+    wait_for(attempt, lambda value:value.get('status') == 'ready', app+' bootstrap',60)
+
+
+def sign_in(home, identity, invite=None):
+    protocol = INVITATION if invite else PROTOCOL
+    path = '/stead/auth/invite/' if invite else '/stead/auth/'
+    payload = {'protocol':protocol,'identity_ship':SHIP}
+    if invite:
+        payload['token'] = invite
+    begun = home.post(path+'start',payload)
+    key = begun.get('challenge_id','')
+    check(begun.get('status') == 'pending' and re.fullmatch(r'[0-9a-f]{64}',key), 'pending challenge')
+    attempt = {'protocol':protocol, 'challenge_id':key}
+    wait_for(lambda:home.post(path+'status',attempt),
+             lambda value:value.get('identity_origin') == identity.origin, 'native address discovery')
+    listed = identity.post('/stead-identity/api/list',{'protocol':'stead.identity/2'})
+    row = listed['requests'][key]
+    check(row['origin'] == home.origin and row['home'] == row['identity_ship'] == SHIP and row['direct'] == 'yes',
+          'one planet, distinct Home and Identity origins')
+    check(row['purpose'] == ('project-invitation' if invite else 'member-session'), 'correct purpose')
+    check(row['trusted'] == ('yes' if invite else 'no'), 'explicit consent persisted for this Home')
+    approved = identity.post('/stead-identity/api/approve',{
+        'protocol':'stead.identity/1' if invite else 'stead.identity-consent/1', 'challenge_id':key,
+        'origin':row['origin'], 'csrf':row['csrf'], 'comparison_code':row['comparison_code']})
+    proof = approved.get('return_proof','')
+    check(approved.get('status') == 'sent' and re.fullmatch(r'[0-9a-f]{64}', proof), 'approving-browser return proof')
+    observed = wait_for(lambda:home.post(path+'status',attempt),lambda value:value.get('status') == 'approved',
+                        'native ship approval')
+    check('return_proof' not in observed and 'return_digest' not in observed, 'status contains no return secret')
+    failed, body = home.request('POST', path+'consume',dict(attempt,return_proof='0'*64))
+    check(failed >= 400 or json.loads(body).get('status') != 'authenticated', 'reject incorrect return proof')
+    accepted = home.post(path+'consume',dict(attempt,return_proof=proof))
+    check(accepted.get('status') == 'authenticated', 'accepted Home session')
+    home.csrf = accepted['csrf']
+    return accepted
+
+
+def projects(site, request):
+    query = {'protocol':'stead.query/3','kind':'projects','request_id':uid(request),
+             'project_id':'','resource_id':'','container_id':'','search':'','cursor':''}
+    return site.post('/stead/api/query',query)['rows']
+
+
+def git_credentials(home, project):
+    envelope = {'protocol':'stead.code/1', 'project_id':project}
+    result = home.post('/stead/api/code', dict(envelope, action='create'))
+    check(result.get('status')=='ready', 'create Code repository')
+    result = home.post('/stead/api/code', dict(envelope, action='issue', access='read'))
+    bearer = result.get('bearer','')
+    check(re.fullmatch(r'[0-9a-f]{64}',bearer), 'issue scoped Git credential')
+    return bearer
+
+
+def git_refs(home, project, ca, bearer=None):
+    with TemporaryDirectory(dir='/state') as directory:
+        root = Path(directory)
+        ask = root/'prompt'
+        ask.write_text('#!/bin/sh\ncase "$1" in Username*) echo stead;; Password*) cat "$STEAD_TEST_KEY";; *) exit 1;; esac\n')
+        ask.chmod(0o700)
+        key = root/'credential'
+        if bearer:
+            key.write_text(bearer)
+            key.chmod(0o600)
+        env = {'PATH':'/usr/bin:/bin', 'HOME':directory, 'LANG':'C', 'GIT_CONFIG_NOSYSTEM':'1',
+               'GIT_CONFIG_GLOBAL':'/dev/null','GIT_TERMINAL_PROMPT':'0','GIT_ALLOW_PROTOCOL':'https',
+               'GIT_ASKPASS':str(ask) if bearer else '/bin/false','GIT_SSL_CAINFO':str(ca),
+               'STEAD_TEST_KEY':str(key)}
+        command = ['/usr/bin/git','-c','credential.helper=','-c','http.followRedirects=false',
+                   '-c',f'http.curloptResolve={home.host}:{PORT}:127.0.0.1','ls-remote',home.origin+'/stead/git/'+project+'.git']
+        child = subprocess.run(command,env=env,cwd=root,stdin=subprocess.DEVNULL,stdout=subprocess.PIPE,
+                               stderr=subprocess.DEVNULL,timeout=15)
+        check((child.returncode==0) == bool(bearer),'Git credential admission')
+        check(len(child.stdout)<=8192,'bounded Git ref list')
+        return child.stdout
+
+
+def run(native):
+    check(native.ship == 'zod' and native.pier == Path('/state/zod'), 'fresh pinned fake only')
+    check(native.dojo('.^(? %j /(scot %p our)/fake/(scot %da now))').strip() == '%.y','fake guard')
+    ca = certificates(native)
+    owner, identity = Site(HOME,ca), Site(IDENTITY,ca)
+    for app in ('stead-home','stead-identity'):
+        native.dojo(f'|rein %base [%.y %{app}]')
+        wait_for(lambda:native.dojo(f'.^(? %gu /={app}=/$)').strip(), lambda value:value=='%.y', app+' live',60)
+    print('Solo setup: native Home and Identity started on one fake planet',flush=True)
+    config = {'protocol':'stead.team-config/1','expected_revision':'0','home':SHIP,'origin':owner.origin,
+              'organization_id':uid(5),'team_id':uid(6),'custody':'local-disposable','runtime':'isolated-fake',
+              'bindings':{SHIP:{'principal_id':uid(102),'binding_id':uid(202),'binding_revision':'1','active':'yes',
+                                'expires_at_ms':str(int(time.time()*1000)+86400000),'display_name':'Solo owner'}},
+              'project_creators':{uid(102):'yes'}}
+    check(owner_call(native,'home','configure',config) == {},'explicit Home owner binding')
+    check(owner_call(native,'identity','identity-config',{'protocol':'stead.identity-config/2',
+          'expected_revision':'0','origin':identity.origin}) == {},'standalone Identity configured')
+    bootstrap(native,'home')
+    bootstrap(native,'identity')
+    for site, page in ((owner,'/stead/'),(identity,'/stead-identity/')):
+        code, html = site.request('GET',page)
+        check(code==200 and b'<html' in html.lower(), 'served '+page)
+    before, _ = identity.request('POST','/stead-identity/api/list',{'protocol':'stead.identity/2'})
+    check(before == 401,'owner approval requires ship login')
+    password = native.dojo('+code').strip().lstrip('~')
+    check(re.fullmatch(r'[a-z]{6}(?:-[a-z]{6}){3}',password), 'synthetic personal ship code')
+    status,_ = identity.request('POST','/~/login',{'password':password, 'redirect':'/stead-identity/'},form=True)
+    check(status in (200,302,303) and any(k.startswith('urbauth-') for k in identity.cookies),'ordinary ship-owner login')
+
+    sign_in(owner,identity)
+    check(not projects(owner,301), 'ship ownership gives no implicit projects')
+    project = uid(1)
+    command = {'protocol':'stead.command/3','request_id':uid(302),'project_id':project,'resource_id':project,
+               'expected_revision':'0','authority_epoch':'1','operation':'project.create',
+               'payload':{'organization_id':uid(5),'owning_team_id':uid(6),'project_key':'SOLO',
+                          'title':'Solo invitation trial','preset':'general'}}
+    response = owner.post('/stead/api/command', command)
+    check(response.get('status')=='accepted','granted owner creates project')
+    check(any(r.get('role')=='maintainer' for r in projects(owner,303).values()),'maintainer grant')
+    bearer = git_credentials(owner, project)
+    git_refs(owner, project, ca)
+    before_refs = git_refs(owner, project, ca, bearer)
+    issue = owner.post('/stead/api/invitations', {'protocol':INVITATION,'action':'issue','project_id':project,
+                       'role':'reader','mode':'personal','identity_ship':SHIP,'expires_at_ms':'','use_limit':'1'})
+    check(issue.get('status') == 'issued','personal invitation issued')
+    guest = Site(HOME,ca)
+    wrong,denied = guest.request('POST','/stead/auth/invite/start',{'protocol':INVITATION,'token':issue['token'],'identity_ship':'~bus'})
+    check(wrong >= 400 or json.loads(denied).get('status') != 'pending','forwarded invitation refused')
+    second = sign_in(guest,identity,issue['token'])
+    check(second.get('project_id') == project,'invite delivers intended project')
+    for site,n in ((owner,304),(guest,305)):
+        check(any(r.get('project_id') == project and r.get('role')=='maintainer' for r in projects(site,n).values()),
+              'prior and redeemed sessions preserve role')
+    check(git_refs(owner, project, ca, bearer) == before_refs, 'existing Git password survives redemption')
+    check(all(not name.startswith('urbauth-') for name in owner.cookies.keys() | guest.cookies.keys()),'ship login isolated')
+    report = {'status':'passed','planet':'~zod','native_apps':2,'verified_https_origins':2,
+              'explicit_membership':True,'discovered_personal_address':True,'ordinary_owner_approval':True,
+              'forwarded_personal_link_denied':True,'wrong_return_proof_denied':True,'project_role':'maintainer',
+              'unrelated_browser_session_survived':True,'existing_stock_git_credential_survived':True}
+    print('Solo native HTTP result',json.dumps(report,sort_keys=True),flush=True)
+    return report

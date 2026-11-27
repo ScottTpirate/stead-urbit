@@ -1,7 +1,7 @@
 /+  *test, stead-codec, stead-core, stead-team, stead-team-codec, stead-team-config, stead-session, stead-invitations, stead-http, stead-restore, stead-code-credentials, stead-projection
 =,  stead-codec
 =/  project=@t  '019939ba-4000-7000-8000-000000000001'
-=/  company-init  (configure:stead-team empty:stead-team '{"protocol":"stead.team-config/1","expected_revision":"0","home":"~zod","origin":"https://home.test","organization_id":"019939ba-4000-7000-8000-000000000005","team_id":"019939ba-4000-7000-8000-000000000006","custody":"local-disposable","runtime":"isolated-fake","bindings":{"~bus":{"principal_id":"019939ba-4000-7000-8000-000000000002","binding_id":"019939ba-4000-7000-8000-000000000003","binding_revision":"1","active":"yes","expires_at_ms":"2000000","display_name":"Synthetic member"}},"project_creators":{"019939ba-4000-7000-8000-000000000002":"yes"}}' ~zod 1)
+=/  company-init  (configure:stead-team empty:stead-team '{"protocol":"stead.team-config/1","expected_revision":"0","home":"~zod","origin":"https://home.test","organization_id":"019939ba-4000-7000-8000-000000000005","team_id":"019939ba-4000-7000-8000-000000000006","custody":"local-disposable","runtime":"isolated-fake","bindings":{"~bus":{"principal_id":"019939ba-4000-7000-8000-000000000002","binding_id":"019939ba-4000-7000-8000-000000000003","binding_revision":"1","active":"yes","expires_at_ms":"1600000000","display_name":"Synthetic member"}},"project_creators":{"019939ba-4000-7000-8000-000000000002":"yes"}}' ~zod 1)
 =/  create  (decode:stead-team-codec '{"protocol":"stead.command/3","request_id":"019939ba-4000-7000-8000-000000000007","project_id":"019939ba-4000-7000-8000-000000000001","resource_id":"019939ba-4000-7000-8000-000000000001","expected_revision":"0","authority_epoch":"1","operation":"project.create","payload":{"organization_id":"019939ba-4000-7000-8000-000000000005","owning_team_id":"019939ba-4000-7000-8000-000000000006","title":"Synthetic ledger reload","project_key":"LEDGER","preset":"general"}}')
 =/  actor  (need (native-context:stead-team company-init ~bus 1))
 =/  created  (apply-command:stead-team company-init actor create 1)
@@ -50,6 +50,13 @@
   =/  expired  (mule |.((finish opened ~nec 120.005)))
   =/  later  (visit next.opened token ~nec 120.006)
   =/  forwarded  (mule |.((finish later ~bud 120.007)))
+  ::  Three days later the issuing browser session has expired, as has the old proof.
+  =/  monday=@ud  259.200.007
+  =/  dormant  (prune:stead-session auth.next.opened monday)
+  ?>  ?=(~ sessions.dormant)
+  =/  anew  (visit next.opened(auth dormant) token ~nec monday)
+  =/  accepted  (finish anew ~nec +(monday))
+  ?>  =('authenticated' (field (json-fields bytes.accepted) 'status'))
   (expect !>(&(?=(%| -.wrong) ?=(%| -.expired) ?=(%| -.forwarded) =('pending' (field (json-fields bytes.later) 'status')))))
 ++  test-invitation-preserves-other-sessions-and-history
   =/  row  (~(got by offers.next.joined) link-id)
@@ -107,6 +114,12 @@
   =/  row  (~(got by all) key)
   =/  next  next.opened(db team(data data.team(grants (~(put by all) key row(revoked &)))))
   =/  result  (mule |.((finish opened(next next) ~nec 6)))
+  =/  old  registry.db.next.joined
+  =/  cfg  (need current.old)
+  =/  changed  old(current (some cfg(members (~(del by members.cfg) ~nec))))
+  =/  links  (after-config:stead-invitations offers.next.request-link old changed)
+  =/  group  (~(got by links) (field (json-fields bytes.request-link) 'invitation_id'))
+  ?>  &(!(available:stead-invitations group ~nec 7) (available:stead-invitations group ~bud 7))
   (expect !>(?=(%| -.result)))
 ++  test-invitation-group-request-needs-maintainer
   =/  id  (field (json-fields bytes.request-link) 'invitation_id')
@@ -117,6 +130,15 @@
   =/  accepted  (manage next.requested 'approve' ~[['identity_ship' '~nec'] ['invitation_id' id] ['role' 'reader']] 7)
   =/  final  (finish (visit next.accepted group ~nec 8) ~nec 9)
   =/  denied  (mule |.((visit next.final group ~bud 10)))
+  ::  Two independently proven guests race for the final Reader slot.
+  =/  open-link  (issue 'reader' 'reader' '')
+  =/  shared  (field (json-fields bytes.open-link) 'token')
+  =/  first  (visit next.open-link shared ~nec 10)
+  =/  second  (visit next.first shared ~bud 11)
+  =/  winner  (finish first(next next.second) ~nec 12)
+  =/  loser  (mule |.((finish second(next next.winner) ~bud 13)))
+  ?>  ?=(%| -.loser)
+  ?>  ?=(~ (native-context:stead-team db.next.winner ~bud 14))
   =/  member  (need (native-context:stead-team db.next.final ~nec 10))
   (expect !>(&(?=(%| -.denied) =(1 (role:stead-team db.next.final member project 10)) =(db.next.final db.next.accepted))))
 ++  test-invitation-direct-return-binding

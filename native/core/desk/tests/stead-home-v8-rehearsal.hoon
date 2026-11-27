@@ -1,4 +1,4 @@
-/+  *test, stead-team, stead-team-config, stead-team-codec, stead-team-owner, stead-code-home, stead-home-handoff, stead-project-retirement, stead-projection, stead-codec, stead-code-pack-anchor, stead-code-pack-push, stead-code-pack-ledger, stead-code-receive, stead-session, stead-code-git-graph, stead-git
+/+  *test, stead-team, stead-team-config, stead-team-codec, stead-team-owner, stead-code-home, stead-home-handoff, stead-project-retirement, stead-projection, stead-codec, stead-code-pack-anchor, stead-code-pack-push, stead-code-pack-ledger, stead-code-receive, stead-session, stead-code-git-graph, stead-git, stead-invitations
 /=  home-agent  /app/stead-home
 =,  stead-code-pack-ledger
 =/  project=@t  '019939ba-4000-7000-8000-000000000001'
@@ -133,4 +133,20 @@
   =/  changed-projection=vase  !>([%stead-home %8 different-team code [%open 1 ~] ~ anchors external])
   =/  changed-ledger=vase  !>([%stead-home %8 team code [%open 1 ~] ~ anchors pending-external])
   (expect !>(&(=((custody v8) (custody changed-projection)) !=((custody v8) (custody changed-ledger)))))
+++  test-home-v8-invitation-upgrade-and-checkpoint-backout
+  =/  row=offer:stead-invitations
+    [project 1 who 'personal' '~nec' 'reader' 900.000 1 | ~ ~]
+  =/  offers=book:stead-invitations  (malt ~[[digest row]])
+  =/  old-ledger  (~(run by external) from-v1)
+  =/  upgraded=vase  !>([%stead-home %11 team code [%open 1 ~] ~ anchors old-ledger *pack-boards:stead-team-owner offers])
+  =/  [cards=(list card:agent:gall) loaded=agent:gall]  (on-load:initial upgraded)
+  =/  persisted=vase  on-save:loaded
+  =/  [more=(list card:agent:gall) restarted=agent:gall]  (on-load:loaded persisted)
+  =/  durable=vase  on-save:restarted
+  ?>  ?=([%stead-home %11 *] q.durable)
+  =/  stored  !<([%stead-home %11 pair=saved:stead-team-owner code=persisted:stead-code-home mode=phase:stead-home-handoff retired=ledger:stead-project-retirement packs=state:stead-code-pack-anchor external=external-writes:stead-team-owner boards=pack-boards:stead-team-owner offers=book:stead-invitations] durable)
+  ?>  &(=(offers offers.stored) =(company db.pair.stored) =(old-ledger external.stored) =(anchors packs.stored))
+  ::  Restore the saved predecessor checkpoint including the exact accepted Git ledger.
+  =/  [backout=(list card:agent:gall) rolled-back=agent:gall]  (on-load:restarted v8)
+  (expect !>(&(?=(^ cards) ?=(^ more) ?=(^ backout) =((custody v8) (custody on-save:rolled-back)))))
 --

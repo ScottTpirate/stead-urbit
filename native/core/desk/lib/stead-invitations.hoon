@@ -81,7 +81,6 @@
       ?~  after  |
       &((same-actor:stead-session identity.before identity.u.after) active.identity.u.after)
     |=([ship=@p before=member:stead-team-config] ship)
-  ?~  removed  offers
   %-  ~(run by offers)
   |=  row=offer
   =/  blocked  (~(uni in blocked.row) removed)

@@ -9,7 +9,12 @@ sys.path[:0] = ['/src/scripts/sdk_native', '/src/scripts/urbit']
 from native import Native
 import native_units
 
-native = Native('zod', 31337, lambda: None)
+class SoloNative(Native):
+    def _arguments(self):
+        args = super()._arguments()
+        return args[:1] + ['--https-port', '18443'] + args[1:]
+
+native = SoloNative('zod', 31337, lambda: None)
 expected = json.loads(Path('/src/focus-files.json').read_text())
 try:
     print('Booting synthetic ~zod', flush=True)
@@ -56,6 +61,8 @@ try:
     except Exception:
         print(native.logpath.read_text(errors='replace')[-8000:], flush=True)
         raise
+    from solo_signin_trial import run as solo
+    solo(native)
     if failure:
         raise ValueError('A focused suite failed')
 finally:
