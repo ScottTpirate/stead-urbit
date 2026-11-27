@@ -1,76 +1,30 @@
-"""Compile the candidate and exercise focused suites on a fresh offline synthetic ship."""
 import json
 from pathlib import Path
-import re
 import sys
-import time
-
-sys.path[:0] = ['/src/scripts/sdk_native', '/src/scripts/urbit']
+sys.path[:0] = ['/src/scripts/sdk_native','/src/scripts/urbit']
 from native import Native
-import native_units
+import multi_home_signin_trial, native_tls
 
-class SoloNative(Native):
+class Peer(Native):
     def _arguments(self):
         args = super()._arguments()
-        return args[:1] + ['--https-port', '18443'] + args[1:]
+        return args[:1] + ['--https-port', str(native_tls.PORTS[self.ship])] + args[1:]
 
-native = SoloNative('zod', 31337, lambda: None)
-expected = json.loads(Path('/src/focus-files.json').read_text())
+ships = []
 try:
-    print('Booting synthetic ~zod', flush=True)
-    native.start()
     imports = Path('/state/source')
-    for name in expected:
-        source = Path('/src/native/core/desk') / name
+    for name in json.loads(Path('/src/focus-files.json').read_text()):
+        src = Path('/src/native/core/desk') / name
         target = imports / name
         target.parent.mkdir(parents=True, exist_ok=True)
-        target.write_bytes(source.read_bytes())
-    # A minimal generator forces both actual Gall agents through Ford.
-    probe = imports / 'gen' / 'stead-signin-build.hoon'
-    probe.parent.mkdir(exist_ok=True)
-    probe.write_text("/=  home  /app/stead-home\n/=  identity  /app/stead-identity\n:-  %say\n|=  *\n[%noun %stead-signin-built]\n")
-    print('Verifying imported source bytes', flush=True)
-    native.install(imports)
-    failure = False
-    for name in ('stead-invitations', 'stead-identity', 'stead-session', 'stead-home-v8-rehearsal', 'stead-unit-failure'):
-        negative = name == 'stead-unit-failure'
-        path = ('/controls/' if negative else '/tests/') + name
-        source = imports / (path.lstrip('/') + '.hoon')
-        arms = re.findall(r'^\+\+  (test-[a-z0-9-]+)$', source.read_text(), re.M)
-        if not arms:
-            raise ValueError('Missing test arms for '+path)
-        offset = native.logpath.stat().st_size
-        print('Testing', name, len(arms), flush=True)
-        try:
-            beam = native.dojo('`path`%' + path).strip()
-            observed = native_units.run(native.binary, native.pier / '.urb/conn.sock', beam, timeout=180)
-            with native.logpath.open('rb') as stream:
-                stream.seek(offset)
-                raw = stream.read(262145).decode()
-            assert len(raw) <= 262144
-            # The airgapped fake emits unrelated outbound HTTP retry notices to
-            # the process log while the stock -test transcript is printing.
-            # Keep an explicit record, and retain every other line for strict validation.
-            rows = raw.splitlines()
-            transport = [line for line in rows if re.fullmatch(r'http: fail \(\d+, 504\): temporary failure', line)]
-            print('Offline network notices', transport, flush=True)
-            tested = '\n'.join(line for line in rows if line not in transport)
-            print(native_units.verify_output(tested+'\n'+observed['stdout'], path=path, expected=arms,
-                succeeds=not negative, failure_marker='stead-intentional-native-unit-failure' if negative else None), flush=True)
-        except Exception as exc:
-            failure = True
-            print(name, type(exc).__name__, str(exc)[:600], flush=True)
-            print(native.logpath.read_text(errors='replace')[max(0,offset):][-8000:], flush=True)
-    try:
-        compiled = native.dojo('+stead-signin-build', timeout=180).strip()
-        print('Gall build', repr(compiled[:3000]), flush=True)
-        assert compiled == '%stead-signin-built'
-    except Exception:
-        print(native.logpath.read_text(errors='replace')[-8000:], flush=True)
-        raise
-    from solo_signin_trial import run as solo
-    solo(native)
-    if failure:
-        raise ValueError('A focused suite failed')
+        target.write_bytes(src.read_bytes())
+    for ship, port in [('zod',31337),('nec',31338)]:
+        peer = Peer(ship, port, lambda: None)
+        ships.append(peer)
+        print('Booting and verifying source on',ship,flush=True)
+        peer.start()
+        peer.install(imports)
+    multi_home_signin_trial.run(*ships)
 finally:
-    native.stop()
+    for peer in reversed(ships):
+        peer.stop()

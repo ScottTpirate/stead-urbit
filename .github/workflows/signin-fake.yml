@@ -1,11 +1,11 @@
-name: Isolated invitation and Identity diagnostic
+name: Two Homes and one passkey on two native ships
 on:
   push:
-    branches: ['codex/signin-fake-20261126']
+    branches: ['codex/invitations-two-home-check']
 permissions:
   contents: read
 concurrency:
-  group: scoped-signin-fake-v2
+  group: stead-two-home-diagnostic
   cancel-in-progress: true
 jobs:
   fake:
