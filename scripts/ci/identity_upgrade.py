@@ -12,7 +12,6 @@ from solo_signin_trial import Site
 AGENT = 'stead-identity'
 SAVED = ('=/  egg=egg-any:gall  .^(egg-any:gall %gv /=stead-identity=/$)  '
          '?>  ?=([%20 %live *] egg)  =/  saved=vase  +.old-state.egg  ')
-CONFIG = '[revision=@ud home=@p home-origin=@t origin=@t]'
 
 
 def stop_agent(ship):
@@ -22,15 +21,15 @@ def stop_agent(ship):
 
 
 def fingerprint(ship, version):
-    extra = '' if version == 1 else ' trusted=(map @p @t) verifier=@t'
-    prefix = SAVED + f'=/  row  !<([%stead-identity %{version} config=(unit {CONFIG}) counter=@ud{extra}] saved)  '
-    prefix += ('?>  ?=(^ config.row)  ?>  &(=(~bus home.u.config.row) =(1 revision.u.config.row)  '
-               "=('https://bus.localhost:18444' home-origin.u.config.row) =('https://home.localhost:18443' origin.u.config.row))  ")
+    shape = '[%stead-identity %1 [~ 1 ~bus @ @] @]' if version == 1 else '[%stead-identity %2 [~ 1 ~bus @ @] @ * @]'
+    fields = 'config=* counter=@' if version == 1 else 'config=* counter=@ trusted=* verifier=@'
+    prefix = SAVED + f'?>  ?=({shape} q.saved)  =/  row=[{fields}]  +>.q.saved  '
+    prefix += "?>  =([~ 1 ~bus 'https://bus.localhost:18444' 'https://home.localhost:18443'] config.row)  "
     if version == 2:
-        prefix += ("?>  &(=(1 ~(wyt by trusted.row)) =('' verifier.row) "
-                   "=('https://bus.localhost:18444' (~(got by trusted.row) ~bus)))  ")
+        prefix += ("?>  =('' verifier.row)  =/  trusted  ;;((map @p @t) trusted.row)  "
+                   "?>  =(1 ~(wyt by trusted))  ?>  =('https://bus.localhost:18444' (~(got by trusted) ~bus))  ")
     def measure(item):
-        output = ''.join(ship.dojo(prefix + f'^-  @ux  (shax (jam {item}))').split())
+        output = ''.join(ship.dojo(prefix + f'^-  @ux  (shax (jam {item}))', timeout=25).split())
         require(re.fullmatch(r'0x[0-9a-f]+(?:\.[0-9a-f]+)*',output) and len(output)<=82,
                 'Identity saved-state fingerprint failed for '+item)
         return f'{int(output.replace(".",""),16):064x}'

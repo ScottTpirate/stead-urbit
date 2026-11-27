@@ -126,12 +126,15 @@ def http(ca, path, payload, jar, csrf='', method='POST'):
         connection.request(method, path, json.dumps(payload).encode() if payload is not None else None, headers)
         res = connection.getresponse()
         raw = res.read(524289)
-        require(res.status == 200 and len(raw) <= 524288, 'Home HTTP request failed: ' + path)
+        require(res.status == 200 and len(raw) <= 524288, f'Home HTTP {res.status} at {path}')
         for key, val in res.getheaders():
             if key.lower() == 'set-cookie':
                 name, value = val.split(';', 1)[0].split('=', 1)
-                if name.startswith('__Host-stead-'):
-                    jar[name] = value
+                if name in ('__Host-stead-pending', '__Host-stead-session'):
+                    if value and 'max-age=0' not in val.lower():
+                        jar[name] = value
+                    else:
+                        jar.pop(name, None)
         return json.loads(raw) if payload is not None else raw
     finally:
         connection.close()
@@ -164,13 +167,13 @@ def resume(home, ca, package, supports_invites):
 
 def member_session(member, ca):
     jar = {}
-    value = {'protocol': 'stead.auth/1', 'identity_ship': '~bus'}
+    value = {'protocol': 'stead.auth/1', 'identity_ship': '~nec'}
     challenge = http(ca, '/stead/auth/start', value, jar)
     require(challenge.get('status') == 'pending', 'synthetic member challenge failed')
     approval = {'protocol': 'stead.auth/1', 'purpose': 'member-session', 'challenge_id': challenge['challenge_id'],
-                'home': '~zod', 'origin': release.HTTP_ORIGIN, 'identity_ship': '~bus',
-                'principal_id': '019939ba-4000-7000-8000-000000000002',
-                'binding_id': '019939ba-4000-7000-8000-000000000003', 'binding_revision': '1',
+                'home': '~zod', 'origin': release.HTTP_ORIGIN, 'identity_ship': '~nec',
+                'principal_id': '019939ba-4000-7000-8000-000000000103',
+                'binding_id': '019939ba-4000-7000-8000-000000000203', 'binding_revision': '1',
                 'expires_at_ms': challenge['expires_at_ms']}
     team_conn.run(member.binary, member.pier / '.urb/conn.sock', 'approve', '/',
                   json.dumps(approval, sort_keys=True, separators=(',', ':')).encode(), target='zod')
@@ -251,7 +254,7 @@ def run():
         require(migrated['core'] == before['core'] and migrated['external'] == before['external'], 'migration changed legacy state')
         record('candidate-loaded-predecessor', migrated)
         resume(home, ca, candidate, True)
-        peer = Native('bus', 31519, lambda: None)
+        peer = Native('nec', 31338, lambda: None)
         peer.start()
         peer_drivers = STATE / 'member-drivers'
         shutil.copytree(INPUT / 'drivers', peer_drivers)
@@ -259,8 +262,14 @@ def run():
         shutil.copyfile(candidate / 'desk/mar/stead-auth-approval-1.hoon', peer_drivers / 'mar/stead-auth-approval-1.hoon')
         peer.install(peer_drivers)
         jar, csrf = member_session(peer, ca)
+        query = {'protocol': 'stead.query/3', 'request_id': '019939ba-4000-7000-8000-000000000810',
+                 'kind': 'projects', 'project_id': '', 'resource_id': '', 'container_id': '', 'cursor': '', 'search': ''}
+        projects = http(ca, '/stead/api/query', query, jar, csrf)
+        require(any(row.get('project_id') == PROJECT and row.get('role') == 'maintainer'
+                    for row in projects.get('rows', {}).values()), 'synthetic member lacks the seeded project grant')
+        record('migrated-maintainer-role', True)
         request = {'protocol': 'stead.invitation/1', 'action': 'issue', 'project_id': PROJECT,
-                   'mode': 'personal', 'identity_ship': '~nec', 'role': 'reader', 'expires_at_ms': '', 'use_limit': '1'}
+                   'mode': 'personal', 'identity_ship': '~bud', 'role': 'reader', 'expires_at_ms': '', 'use_limit': '1'}
         issued = http(ca, '/stead/api/invitations', request, jar, csrf)
         require(issued.get('status') == 'issued', 'ordinary maintainer could not issue a durable invitation')
         suspend(home)

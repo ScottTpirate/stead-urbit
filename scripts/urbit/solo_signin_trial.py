@@ -206,6 +206,34 @@ def configure_verifier(native, secret):
         raise RuntimeError('Solo fixture: verifier configuration failed') from None
 
 
+def member_maintenance(native, home, project, expiry, ca):
+    def call(mode, value=None):
+        path = '[%member ' + core_conn.atom(b'~bus') + ' ~]' if mode == 'member-status' else '~'
+        wire = core_conn.atom(json.dumps(value).encode()) if value is not None else '0'
+        noun = f'[32 %fyrd [%base %stead-pilot-owner %noun [%noun [~zod %stead-home %{mode} {path} {wire}]]]]'
+        result = core_conn.exchange(native.binary, native.pier/'.urb/conn.sock', noun)
+        return (result.get('outcome') or {}).get('json')
+
+    row = call('member-status')
+    check(row['binding_id'] == uid(203) and row['binding_revision'] == '1', 'inspected independent existing member')
+    change = {'protocol':'stead.member-change/1','identity_ship':'~bus','principal_id':row['principal_id'],
+              'binding_id':row['binding_id'],'expected_binding_revision':'1','expires_at_ms':str(expiry+86400000),
+              'action':'renew'}
+    check(call('member-change', change) == {} and call('member-change', change) == {}, 'targeted renewal and exact retry')
+    renewed = call('member-status')
+    check(renewed['binding_revision'] == '2' and renewed['expires_at_ms'] == change['expires_at_ms'], 'renewal readback')
+    offer = home.post('/stead/api/invitations',{'protocol':INVITATION,'action':'issue','project_id':project,
+                      'role':'reader','mode':'personal','identity_ship':'~bus','expires_at_ms':'','use_limit':'1'})
+    check(offer.get('status') == 'issued','outstanding offer for a current member')
+    change.update(action='remove', expected_binding_revision='2', expires_at_ms='')
+    check(call('member-change', change) == {} and call('member-change', change) == {}, 'targeted removal and exact retry')
+    removed = call('member-status')
+    check(removed['binding_revision'] == '3' and removed['active'] == 'no', 'durable inactive binding')
+    guest = Site(HOME,ca)
+    code, body = guest.request('POST','/stead/auth/invite/start',{'protocol':INVITATION,'token':offer['token'],'identity_ship':'~bus'})
+    check(code >= 400 or json.loads(body).get('status') != 'pending','older offer cannot reinstate removed member')
+
+
 class SoftwareAuthenticator:
     """Only the exercising key is synthetic. Both verifiers are production code."""
 
@@ -315,6 +343,9 @@ def run(native):
               'bindings':{SHIP:{'principal_id':uid(102),'binding_id':uid(202),'binding_revision':'1','active':'yes',
                                 'expires_at_ms':str(int(time.time()*1000)+14*86400000),'display_name':'Solo owner'}},
               'project_creators':{uid(102):'yes'}}
+    until = int(config['bindings'][SHIP]['expires_at_ms'])
+    config['bindings']['~bus'] = {'principal_id':uid(103),'binding_id':uid(203),'binding_revision':'1','active':'yes',
+                                  'expires_at_ms':str(until),'display_name':'Second workspace member'}
     check(owner_call(native,'home','configure',config) == {},'explicit Home owner binding')
     check(owner_call(native,'identity','identity-config',{'protocol':'stead.identity-config/2',
           'expected_revision':'0','origin':identity.origin}) == {},'standalone Identity configured')
@@ -344,6 +375,9 @@ def run(native):
     bearer = git_credentials(owner, project)
     git_refs(owner, project, ca)
     before_refs = git_refs(owner, project, ca, bearer)
+    member_maintenance(native, owner, project, until, ca)
+    check(any(r.get('project_id') == project for r in projects(owner,309).values()),'browser session survived owner maintenance')
+    check(git_refs(owner, project, ca, bearer) == before_refs, 'Git credential survived targeted renewal and removal')
     issue = owner.post('/stead/api/invitations', {'protocol':INVITATION,'action':'issue','project_id':project,
                        'role':'reader','mode':'personal','identity_ship':SHIP,'expires_at_ms':'','use_limit':'1'})
     check(issue.get('status') == 'issued','personal invitation issued')
