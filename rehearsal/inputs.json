@@ -1,8 +1,8 @@
 {
   "candidate": {
     "bytes": 1986560,
-    "sha256": "35cb4a410719a30d5096d6d0a5dd402904cd834bb70e101e1ab5d4ffe515ff33",
-    "source_commit": "bd3e8410de86574f7fb39f292a7a25203dbe371c"
+    "sha256": "807a775a234d994bcc8cca8fa4ac7ad44960176f7db27139c8a5c8bca32867da",
+    "source_commit": "95bab9af3472a388dc2b8e9f5c800b027abbad46"
   },
   "drivers": {
     "lib/stead-codec.hoon": "56e3d574381bbf8cdf29ca192c70eff256009f89d782e3ffe859b19c1321cbd7",

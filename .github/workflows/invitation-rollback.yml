@@ -5,7 +5,7 @@ on:
 permissions:
   contents: read
 concurrency:
-  group: disposable-stead-invite-rollback-bd3e8410de86
+  group: disposable-stead-invite-rollback-95bab9af3472
   cancel-in-progress: true
 jobs:
   rollback:
