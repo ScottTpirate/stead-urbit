@@ -94,8 +94,8 @@
   ?:  (gth ~(wyt in blocked) 128)  row(revoked &)
   row(blocked blocked)
 ++  after-renewal
-  ::  A lease extension can keep a link with the same issuer. A pending
-  ::  applicant proves the new binding revision before requesting access again.
+  ::  Retain offers and verified access requests for an owner-extended
+  ::  lease on this exact binding. In-flight browser proofs start afresh.
   |=  [offers=book before=actor:stead-session after=actor:stead-session]
   ^-  book
   %-  ~(run by offers)
@@ -104,8 +104,7 @@
   =/  guest  (~(get by guests.row) ship.before)
   ?~  guest  row
   ?.  =(identity.u.guest before)  row
-  ?.  accepted.u.guest  row(guests (~(del by guests.row) ship.before))
-  row(guests (~(put by guests.row) ship.before [after &]))
+  row(guests (~(put by guests.row) ship.before u.guest(identity after)))
 ++  authority
   |=  [db=state:stead-team row=offer retired=ledger:stead-project-retirement now=@ud]
   ^-  authentication:stead-team

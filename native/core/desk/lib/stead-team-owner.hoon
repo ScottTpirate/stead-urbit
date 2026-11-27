@@ -209,6 +209,7 @@
     ?:  =(next.changed registry.db.owner)  [~ owner]
     =/  db  db.owner(registry next.changed)
     =/  cfg  (need current.next.changed)
+    ?>  ?|(=('isolated-fake' runtime.cfg) (runtime-matches cfg))
     =/  person  (~(got by members.cfg) who.changed)
     =/  principal  principal.identity.person
     =/  auth  (invalidate-actor:stead-session auth.transient.owner principal)
