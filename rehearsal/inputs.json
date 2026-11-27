@@ -1,0 +1,22 @@
+{
+  "candidate": {
+    "bytes": 1976320,
+    "sha256": "c4c1c06ccc22b15889d3c041f751f04a8c9f3ccacefbac953e730f5f83326163",
+    "source_commit": "8087554026a3b59cfeacf9850ad2c95ff9ae7750"
+  },
+  "drivers": {
+    "lib/stead-codec.hoon": "56e3d574381bbf8cdf29ca192c70eff256009f89d782e3ffe859b19c1321cbd7",
+    "lib/stead-delivery.hoon": "178cac634471554dae9928f8c38248751329314391061976a436a22a7075548d",
+    "ted/stead-local-tls.hoon": "2e32b120e8d838eba65b67974abc1fe182fe8ce543ffc36715ce1f48a563511d",
+    "ted/stead-team-client.hoon": "1c7d4abd0323c1020d99b7bd8109969cdc15423c3cd8b9fdc5a28bd9b074066d"
+  },
+  "previous": {
+    "bytes": 1689600,
+    "sha256": "7fb6222a2b2f6aabb4e02565014eeafa3fa880ae27220b2a9dca70d293b0faf2",
+    "source_commit": "97a1e270757ccfb9883fa6ac1d8fa514c37d765d"
+  },
+  "seed": {
+    "app/stead-home.hoon": "d6d15bc9514001a2edcdcb67384881826215e7fd40c08465edc74962d8b70fdd",
+    "lib/stead-home-ui-seed.hoon": "4021487a4d7878461e02951a8e00ccd28b1b9eb2346ec3a09f596ca93bc131e4"
+  }
+}

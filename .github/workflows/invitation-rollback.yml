@@ -1,0 +1,46 @@
+name: Isolated invitation upgrade and checkpoint rollback
+on:
+  push:
+    branches: ['codex/invitation-synthetic-rollback']
+permissions:
+  contents: read
+concurrency:
+  group: disposable-stead-invite-rollback
+  cancel-in-progress: true
+jobs:
+  rollback:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 85
+    steps:
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
+        with:
+          persist-credentials: false
+      - name: Pin runtime and inputs
+        shell: bash
+        run: |
+          sudo install -d -o runner -g runner /runtime /runtime/downloads /runtime/bin
+          python3 -B focus-fetch.py
+          sudo install -d -o nobody -g nogroup -m 700 /state
+          sudo install -d /src
+          sudo cp -a scripts rehearsal /src/
+          sudo cp specs/urbit/toolchain.lock.json /toolchain.json
+          kernel=$(python3 -c "import json;print(json.load(open('/toolchain.json'))['kernel']['directory'])")
+          sudo ln -s "/runtime/$kernel" /kernel
+      - name: Upgrade and restore synthetic Home
+        shell: bash
+        run: |
+          sudo systemd-run --wait --collect --pipe --quiet --uid=nobody --gid=nogroup \
+            -p PrivateNetwork=yes -p NoNewPrivileges=yes -p 'CapabilityBoundingSet=' \
+            -p ProtectSystem=strict -p ProtectHome=yes -p PrivateTmp=yes \
+            -p ReadWritePaths=/state -p MemoryMax=12G -p RuntimeMaxSec=4500 \
+            --setenv=HOME=/state --setenv=LANG=C.UTF-8 /usr/bin/python3 -I -B /src/scripts/ci/invitation_upgrade.py
+      - name: Collect aggregate receipt
+        if: always()
+        run: sudo test ! -f /state/upgrade-result.json || sudo install -m 644 /state/upgrade-result.json "$RUNNER_TEMP/upgrade-result.json"
+      - uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
+        if: always()
+        with:
+          name: synthetic-invitation-rollback
+          path: ${{ runner.temp }}/upgrade-result.json
+          if-no-files-found: ignore
+          retention-days: 5
