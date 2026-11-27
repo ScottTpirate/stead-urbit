@@ -593,9 +593,15 @@ def route_checks(native, role, ca_file, package=Path('/package'), *, evidence=No
         response = observe('POST', prefix + 'api/capabilities', body=b'{"protocol":"stead.capabilities/3"}', headers=common)
         assert_http(response, 200, mime='application/json')
         value = json.loads(response['body'])
-        if value != {'protocol': 'stead.capabilities/3', 'profile': 'configured-team', 'commands': 'stead.command/3',
+        expected = {'protocol': 'stead.capabilities/3', 'profile': 'configured-team', 'commands': 'stead.command/3',
                      'queries': 'stead.query/3', 'updates': 'stead.updates/3', 'authentication': 'native-approved-browser/1',
-                     'max_request_bytes': '65536', 'max_response_bytes': '262144', 'page_size': '20', 'runtime': 'isolated-fake'}:
+                     'max_request_bytes': '65536', 'max_response_bytes': '262144', 'page_size': '20', 'runtime': 'isolated-fake'}
+        version = execution_policy.read_json(package / 'manifest.json')['saved_state_version']
+        if version >= 11:
+            expected.update(work_contract='stead.work-contract/1', workspace_queries='stead.workspace-queries/1',
+                            devices='stead.devices/1', invitations='stead.invitation/1',
+                            identity_discovery='stead.identity-address/1')
+        if value != expected:
             raise ValueError('Packaged public capabilities differ')
         evidence['public_capabilities'] = value
     return evidence
@@ -607,14 +613,17 @@ def saved_home_fingerprint(native, *, authoritative=False):
     if authoritative:
         # The v3 payload is [authoritative-db derived-projection].
         source += (
-            '^-  @ux  ?:  ?=([%stead-home %10 *] q.saved)  '
+            '^-  @ux  ?:  ?=([%stead-home %11 *] q.saved)  '
+            '=/  stored  !<([%stead-home %11 team=[db=* projection=*] code=* mode=* retired=* packs=* external=* reviews=* offers=*] saved)  '
+            '(shax (jam [db.team.stored code.stored mode.stored retired.stored packs.stored external.stored reviews.stored offers.stored]))  '
+            '?:  ?=([%stead-home %10 *] q.saved)  '
             '=/  stored  !<([%stead-home %10 profile=@t target=* code=* mode=* retired=* packs=* external=* reviews=*] saved)  '
             "?>  =('native-human-doc/1' profile.stored)  "
             '?>  ?=(?(%predecessor %product) -.target.stored)  '
             '(shax (jam [profile.stored target.stored code.stored mode.stored retired.stored packs.stored external.stored reviews.stored]))  '
             '?>  ?=([%stead-home %3 [* *]] q.saved)  (shax (jam -.+>.q.saved))')
     else:
-        source += '?>  ?=([%stead-home ?(%3 %10) *] q.saved)  ^-  @ux  (shax (jam saved))'
+        source += '?>  ?=([%stead-home ?(%3 %10 %11) *] q.saved)  ^-  @ux  (shax (jam saved))'
     result = native.dojo(source).strip()
     if not re.fullmatch(r'0x[0-9a-f]+(?:\.[0-9a-f]+)*', result):
         raise ValueError('Restored Home saved vase is not a supported configured schema')
@@ -639,7 +648,9 @@ def replace_clay_assets(native, previous, target, package=Path('/package/desk'))
     return replace_clay_files(native, previous, target, package=package)
 
 
-def replace_clay_files(native, previous, target, *, package=Path('/package/desk')):
+def replace_clay_files(native, previous, target, *, package=Path('/package/desk'), agent='stead-home'):
+    if agent not in ('stead-home', 'stead-identity'):
+        raise ValueError('Unsupported release role')
     mount = native.pier / DESK
     if inventory(mount) != previous or inventory(package) != target:
         raise ValueError('Upgrade inputs do not match both verified desk inventories')
@@ -672,7 +683,7 @@ def replace_clay_files(native, previous, target, *, package=Path('/package/desk'
     if inventory(mount) != target:
         raise ValueError('Mounted desk does not match the target package')
     native.dojo(f'|commit %{DESK}')
-    clay_readback(native, target, 'stead-home')
+    clay_readback(native, target, agent)
     for name, route in obsolete.items():
         if native.dojo(f'.^(? %cu {route})').strip() != '%.n':
             raise ValueError('Superseded file is still present in Clay: ' + name)
