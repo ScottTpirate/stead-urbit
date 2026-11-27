@@ -4,7 +4,7 @@
 |%
 +$  actor  [ship=@p principal=@t binding=@t revision=@ud active=? expires=@ud]
 +$  challenge
-  [identity=actor home=@p origin=@t browser=@t expires=@ud approved=?]
+  [identity=actor home=@p origin=@t browser=@t expires=@ud approved=? return-digest=(unit @t)]
 +$  session
   [identity=actor home=@p origin=@t browser=@t csrf=@t audit=@t expires=@ud issued=@ud device=@t]
 +$  state
@@ -85,6 +85,9 @@
   [why '' '' '' db]
 ++  begin
   |=  [db=state identity=actor home=@p origin=@t now=@ud entropy=@]
+  (begin-as db identity home origin now entropy |)
+++  begin-as
+  |=  [db=state identity=actor home=@p origin=@t now=@ud entropy=@ direct=?]
   ^-  result
   =.  db  (prune db now)
   ?.  &((live identity now) (origin-valid origin))  (reject db %denied)
@@ -97,11 +100,14 @@
   =/  id  (token entropy counter.db 'stead.challenge/1')
   =/  cookie  (token entropy counter.db 'stead.browser-binding/1')
   =/  row=challenge
-    [identity home origin (digest 'stead.browser-binding/1' cookie) (min expires.identity (add now 120.000)) |]
+    [identity home origin (digest 'stead.browser-binding/1' cookie) (min expires.identity (add now 120.000)) | ?:(direct [~ ''] ~)]
   ?:  (~(has by challenges.db) id)  (reject db %capacity)
   [%pending id cookie '' db(challenges (~(put by challenges.db) id row))]
 ++  approve
   |=  [db=state id=@t sender=@p identity=actor home=@p origin=@t protocol=@t purpose=@t expires=@ud now=@ud]
+  (approve-bound db id sender identity home origin protocol purpose expires now '')
+++  approve-bound
+  |=  [db=state id=@t sender=@p identity=actor home=@p origin=@t protocol=@t purpose=@t expires=@ud now=@ud return-hash=@t]
   ^-  result
   =.  db  (prune db now)
   ?.  (token-valid id)  (reject db %denied)
@@ -111,19 +117,29 @@
   ?.  ?&  !approved.row  =(sender ship.identity.row)
           (same-actor identity.row identity)  (live identity now)
           =(home home.row)  =(origin origin.row)  =(expires expires.row)
-          =('stead.auth/1' protocol)  =('member-session' purpose)
+          =('member-session' purpose)
+          ?~  return-digest.row  &(=('stead.auth/1' protocol) =('' return-hash))
+          &(=('stead.auth/2' protocol) (token-valid return-hash))
       ==
     (reject db %denied)
-  [%approved id '' '' db(challenges (~(put by challenges.db) id row(approved &)))]
+  [%approved id '' '' db(challenges (~(put by challenges.db) id row(approved &, return-digest ?~(return-digest.row ~ (some return-hash)))))]
 ++  consume
   |=  [db=state id=@t cookie=@t identity=actor home=@p origin=@t now=@ud entropy=@]
+  (consume-bound db id cookie identity home origin now entropy '')
+++  proves-return
+  |=  [held=(unit @t) proof=@t]
+  ^-  ?
+  ?~  held  =('' proof)
+  &((token-valid proof) =(u.held (digest 'stead.identity-return/1' proof)))
+++  consume-bound
+  |=  [db=state id=@t cookie=@t identity=actor home=@p origin=@t now=@ud entropy=@ proof=@t]
   ^-  result
   =.  db  (prune db now)
   ?.  &((token-valid id) (token-valid cookie))  (reject db %denied)
   =/  found  (~(get by challenges.db) id)
   ?~  found  (reject db %denied)
   =/  row  u.found
-  ?.  ?&  approved.row  (live identity now)  (same-actor identity.row identity)
+  ?.  ?&  approved.row  (proves-return return-digest.row proof)  (live identity now)  (same-actor identity.row identity)
           =(home home.row)  =(origin origin.row)
           =(browser.row (digest 'stead.browser-binding/1' cookie))
       ==

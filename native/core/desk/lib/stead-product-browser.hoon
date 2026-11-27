@@ -17,13 +17,13 @@
   ^-  ?
   =/  ship=(unit @p)
     ?:  =('/stead/auth/start' route.request)
-      =/  value  (small:stead-browser body.request ~['protocol' 'identity_ship'] 'stead.auth/1')
+      =/  value  (small:stead-browser body.request ~['protocol' 'identity_ship'] (auth-version:stead-browser body.request))
       =/  who  (slaw %p (field value 'identity_ship'))
       ?~  who  ~
       ?.  =((scot %p u.who) (field value 'identity_ship'))  ~
       who
     ?:  ?|(=('/stead/auth/status' route.request) =('/stead/auth/consume' route.request))
-      =/  value  (small:stead-browser body.request ~['protocol' 'challenge_id'] 'stead.auth/1')
+      =/  value  (small:stead-browser body.request (consume-fields:stead-browser (auth-version:stead-browser body.request) route.request) (auth-version:stead-browser body.request))
       =/  found  (~(get by challenges.auth.transient) (field value 'challenge_id'))
       ?~(found ~ (some ship.identity.u.found))
     =/  found  (~(get by sessions.auth.transient) (digest:stead-session 'stead.session/1' session.request))

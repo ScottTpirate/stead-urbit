@@ -1,4 +1,4 @@
-/+  *test, stead-codec, stead-core, stead-team, stead-team-codec, stead-team-config, stead-session, stead-invitations, stead-http, stead-restore
+/+  *test, stead-codec, stead-core, stead-team, stead-team-codec, stead-team-config, stead-session, stead-invitations, stead-http, stead-restore, stead-projection
 =,  stead-codec
 =/  project=@t  '019939ba-4000-7000-8000-000000000001'
 =/  company-init  (configure:stead-team empty:stead-team '{"protocol":"stead.team-config/1","expected_revision":"0","home":"~zod","origin":"https://home.test","organization_id":"019939ba-4000-7000-8000-000000000005","team_id":"019939ba-4000-7000-8000-000000000006","custody":"local-disposable","runtime":"isolated-fake","bindings":{"~bus":{"principal_id":"019939ba-4000-7000-8000-000000000002","binding_id":"019939ba-4000-7000-8000-000000000003","binding_revision":"1","active":"yes","expires_at_ms":"2000000","display_name":"Synthetic member"}},"project_creators":{"019939ba-4000-7000-8000-000000000002":"yes"}}' ~zod 1)
@@ -33,9 +33,11 @@
   |=  [opened=result:stead-invitations sender=@p now=@ud]
   =/  msg  (need outgoing.opened)
   =/  id  (field (json-fields bytes.opened) 'challenge_id')
-  =/  approvals  (approve-proof:stead-invitations pending.next.opened sender bytes.msg now)
+  =/  returned  (token:stead-session now 1 'synthetic-device')
+  =/  approved-msg  (canonical [%o (~(put by (json-fields bytes.msg)) 'return_digest' [%s (digest:stead-session 'stead.identity-return/1' returned)])])
+  =/  approvals  (approve-proof:stead-invitations pending.next.opened sender approved-msg now)
   =/  cookie  (cut 3 [(met 3 '__Host-stead-pending=') 64] i.cookies.opened)
-  =/  body  (canonical (object ~[['protocol' 'stead.invitation/1'] ['challenge_id' id]]))
+  =/  body  (canonical (object ~[['protocol' 'stead.invitation/1'] ['challenge_id' id] ['return_proof' returned]]))
   (call:stead-invitations next.opened(pending approvals) ['/stead/auth/invite/consume' body '' cookie ''] ~ now now)
 =/  token  (field (json-fields bytes.personal) 'token')
 =/  link-id  (field (json-fields bytes.personal) 'invitation_id')
@@ -57,6 +59,10 @@
   ?>  ?=(^ events)
   =/  grant  (need (parse-result bytes.i.events))
   ?>  ?=([%o *] grant)
+  =/  before  db.next.personal
+  =/  prior  (batch:stead-projection before (begin:stead-projection before *state:stead-projection))
+  =/  view  (append:stead-projection prior i.events)
+  ?>  (ready:stead-projection db.next.joined view)
   =/  recorded  (decode-authentication:stead-team (field p.grant 'authentication_context'))
   =/  restored  (step:stead-restore (begin:stead-restore db.next.joined ~zod))
   =/  ok=?
@@ -101,4 +107,14 @@
   =/  denied  (mule |.((visit next.final group ~bud 10)))
   =/  member  (need (native-context:stead-team db.next.final ~nec 10))
   (expect !>(&(?=(%| -.denied) =(1 (role:stead-team db.next.final member project 10)) =(db.next.final db.next.accepted))))
+++  test-invitation-direct-return-binding
+  =/  opened  (begin-as:stead-session *state:stead-session identity.actor ~zod origin 1 98 &)
+  =/  returned  (token:stead-session 22 33 'identity-device')
+  =/  return-hash  (digest:stead-session 'stead.identity-return/1' returned)
+  =/  legacy  (approve:stead-session next.opened id.opened ~bus identity.actor ~zod origin 'stead.auth/1' 'member-session' 120.001 2)
+  =/  approved  (approve-bound:stead-session next.opened id.opened ~bus identity.actor ~zod origin 'stead.auth/2' 'member-session' 120.001 2 return-hash)
+  =/  missing  (consume:stead-session next.approved id.opened cookie.opened identity.actor ~zod origin 3 99)
+  =/  mismatch  (consume-bound:stead-session next.approved id.opened cookie.opened identity.actor ~zod origin 3 99 return-hash)
+  =/  consumed  (consume-bound:stead-session next.approved id.opened cookie.opened identity.actor ~zod origin 3 99 returned)
+  (expect !>(&(=(%denied status.legacy) =(%approved status.approved) =(%denied status.missing) =(%denied status.mismatch) =(%accepted status.consumed))))
 --

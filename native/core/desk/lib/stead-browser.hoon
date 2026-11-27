@@ -19,12 +19,26 @@
   ?>  ?=([%o *] value)
   ?>  &((keys p.value expected) =(protocol (field p.value 'protocol')))
   p.value
+++  auth-version
+  |=  raw=@t
+  ^-  @t
+  ?>  (lte (met 3 raw) 2.048)
+  =/  value  (need (parse raw))
+  ?>  ?=([%o *] value)
+  =/  protocol  (field p.value 'protocol')
+  ?>  ?|(=('stead.auth/1' protocol) =('stead.auth/2' protocol))
+  protocol
+++  consume-fields
+  |=  [protocol=@t route=@t]
+  ^-  (list @t)
+  ?:  &(=('stead.auth/2' protocol) =('/stead/auth/consume' route))  ~['protocol' 'challenge_id' 'return_proof']
+  ~['protocol' 'challenge_id']
 ++  approval-message
   |=  [id=@t row=challenge:stead-session]
   ^-  @t
   %-  canonical
   %-  object
-  :~  ['protocol' 'stead.auth/1']  ['purpose' 'member-session']
+  :~  ['protocol' ?~(return-digest.row 'stead.auth/1' 'stead.auth/2')]  ['purpose' 'member-session']
       ['challenge_id' id]  ['home' (scot %p home.row)]  ['origin' origin.row]
       ['identity_ship' (scot %p ship.identity.row)]
       ['principal_id' principal.identity.row]  ['binding_id' binding.identity.row]
@@ -33,13 +47,16 @@
 ++  approve
   |=  [db=state:stead-team transient=ephemeral sender=@p raw=@t now=@ud]
   ^-  ephemeral
-  =/  value  (small raw ~['protocol' 'purpose' 'challenge_id' 'home' 'origin' 'identity_ship' 'principal_id' 'binding_id' 'binding_revision' 'expires_at_ms'] 'stead.auth/1')
+  =/  version  (auth-version raw)
+  =/  names  ~['protocol' 'purpose' 'challenge_id' 'home' 'origin' 'identity_ship' 'principal_id' 'binding_id' 'binding_revision' 'expires_at_ms']
+  =/  value  (small raw ?:(=('stead.auth/2' version) ['return_digest' names] names) version)
+  =/  return-hash  ?:(=('stead.auth/2' version) (field value 'return_digest') '')
   =/  who  (need (identity:stead-team-config registry.db sender now))
   =/  config  (need current.registry.db)
   ?>  &(=(principal.identity.who (field value 'principal_id')) =(binding.identity.who (field value 'binding_id')))
   ?>  &(=(revision.identity.who (uint (field value 'binding_revision'))) =((scot %p sender) (field value 'identity_ship')))
   ?>  =((scot %p home.config) (field value 'home'))
-  =/  accepted  (approve:stead-session auth.transient (field value 'challenge_id') sender identity.who home.config (field value 'origin') (field value 'protocol') (field value 'purpose') (uint (field value 'expires_at_ms')) now)
+  =/  accepted  (approve-bound:stead-session auth.transient (field value 'challenge_id') sender identity.who home.config (field value 'origin') (field value 'protocol') (field value 'purpose') (uint (field value 'expires_at_ms')) now return-hash)
   ?>  =(%approved status.accepted)
   transient(auth next.accepted)
 ++  correlated-error
@@ -70,7 +87,8 @@
     =/  input  (small raw ~['protocol'] 'stead.capabilities/3')
     (reply db view transient 200 (canonical (object ~[['protocol' 'stead.capabilities/3'] ['profile' 'configured-team'] ['commands' 'stead.command/3'] ['queries' 'stead.query/3'] ['updates' 'stead.updates/3'] ['work_contract' 'stead.work-contract/1'] ['workspace_queries' 'stead.workspace-queries/1'] ['devices' 'stead.devices/1'] ['invitations' 'stead.invitation/1'] ['identity_discovery' 'stead.identity-address/1'] ['authentication' 'native-approved-browser/1'] ['max_request_bytes' '65536'] ['max_response_bytes' '262144'] ['page_size' '20'] ['runtime' runtime.config]])))
   ?:  =('/stead/auth/start' route)
-    =/  input  (small raw ~['protocol' 'identity_ship'] 'stead.auth/1')
+    =/  version  (auth-version raw)
+    =/  input  (small raw ~['protocol' 'identity_ship'] version)
     =/  ship  (need (slaw %p (field input 'identity_ship')))
     ?>  =((scot %p ship) (field input 'identity_ship'))
     =/  who  (identity:stead-team-config registry.db ship now)
@@ -78,18 +96,20 @@
     =/  previous  (~(get by sessions.auth.transient) (digest:stead-session 'stead.session/1' session.request))
     ?:  &(?=(^ previous) (gth expires.u.previous now))
       (reply db view transient 200 (error:stead-team 'logout_required'))
-    =/  started  (begin:stead-session auth.transient identity.u.who home.config origin.config now entropy)
+    =/  started  (begin-as:stead-session auth.transient identity.u.who home.config origin.config now entropy =('stead.auth/2' version))
     ?.  =(%pending status.started)  (reply db view transient 200 (error:stead-team 'capacity_exceeded'))
     =/  challenge  (~(got by challenges.next.started) id.started)
-    =/  response  (canonical (object ~[['protocol' 'stead.auth/1'] ['status' 'pending'] ['challenge_id' id.started] ['comparison_code' (cut 3 [0 12] id.started)] ['home' (scot %p home.config)] ['origin' origin.config] ['expires_at_ms' (decimal expires.challenge)]]))
+    =/  response  (canonical (object ~[['protocol' version] ['status' 'pending'] ['challenge_id' id.started] ['comparison_code' (cut 3 [0 12] id.started)] ['home' (scot %p home.config)] ['origin' origin.config] ['expires_at_ms' (decimal expires.challenge)]]))
     =/  out  (reply db view transient(auth next.started) 200 response)
     out(cookies ~[(cookie:stead-http & cookie.started |)], outgoing [~ [ship (approval-message id.started challenge)]])
   ?:  ?|(=('/stead/auth/status' route) =('/stead/auth/consume' route))
-    =/  input  (small raw ~['protocol' 'challenge_id'] 'stead.auth/1')
+    =/  version  (auth-version raw)
+    =/  input  (small raw (consume-fields version route) version)
     =/  id  (field input 'challenge_id')
     =/  found  (~(get by challenges.auth.transient) id)
     ?~  found  (reply db view transient 401 (error:stead-team 'session_required'))
     =/  row  u.found
+    ?>  =(version ?~(return-digest.row 'stead.auth/1' 'stead.auth/2'))
     =/  who  (identity:stead-team-config registry.db ship.identity.row now)
     ?~  who  (reply db view transient 401 (error:stead-team 'session_required'))
     ?.  ?&  (gth expires.row now)  (token-valid:stead-session pending.request)
@@ -99,10 +119,10 @@
         ==
       (reply db view transient 401 (error:stead-team 'session_required'))
     ?:  =('/stead/auth/status' route)
-      (reply db view transient 200 (canonical (object ~[['protocol' 'stead.auth/1'] ['status' ?:(approved.row 'approved' 'pending')] ['challenge_id' id]])))
-    =/  consumed  (consume:stead-session auth.transient id pending.request identity.u.who home.config origin.config now entropy)
+      (reply db view transient 200 (canonical (object ~[['protocol' version] ['status' ?:(approved.row 'approved' 'pending')] ['challenge_id' id]])))
+    =/  consumed  (consume-bound:stead-session auth.transient id pending.request identity.u.who home.config origin.config now entropy ?:(=('stead.auth/2' version) (field input 'return_proof') ''))
     ?.  =(%accepted status.consumed)  (reply db view transient 200 (error:stead-team 'denied_or_not_found'))
-    =/  out  (reply db view transient(auth next.consumed) 200 (canonical (object ~[['protocol' 'stead.auth/1'] ['status' 'authenticated'] ['csrf' csrf.consumed]])))
+    =/  out  (reply db view transient(auth next.consumed) 200 (canonical (object ~[['protocol' version] ['status' 'authenticated'] ['csrf' csrf.consumed]])))
     out(cookies ~[(cookie:stead-http | cookie.consumed |) (cookie:stead-http & '' &)])
   =/  existing  (~(get by sessions.auth.transient) (digest:stead-session 'stead.session/1' session.request))
   ?~  existing  (reply db view transient 401 (error:stead-team 'session_required'))

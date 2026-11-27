@@ -47,7 +47,9 @@
   ?>  ?=([%o *] value)
   =/  wrong  (canonical:stead-codec [%o (~(put by p.value) 'purpose' [%s 'owner-session'])])
   ?>  (rejected |.((receive configured ~zod ~bus wrong 1.001 2)))
-  =/  invitation  (canonical:stead-codec [%o (~(put by p.value) 'purpose' [%s 'project-invitation'])])
+  =/  old-invitation  (~(put by p.value) 'purpose' [%s 'project-invitation'])
+  ?>  (rejected |.((receive configured ~zod ~bus (canonical:stead-codec [%o old-invitation]) 1.001 2)))
+  =/  invitation  (canonical:stead-codec [%o (~(put by old-invitation) 'protocol' [%s 'stead.auth/2'])])
   =/  invited  (receive configured ~zod ~bus invitation 1.001 2)
   ?>  =('project-invitation' purpose:(~(got by requests.invited) id))
   =/  discovered  (need (parse:stead-codec (address-message invited id ~bus)))
@@ -59,7 +61,7 @@
   ^-  tang
   ?>  (rejected |.((receive configured ~zod ~bus metadata 121.000 2)))
   ?>  (rejected |.((receive configured ~zod ~bus metadata 999 2)))
-  ?>  (rejected |.((approve received approval 121.000)))
+  ?>  (rejected |.((approve received approval 121.000 16)))
   ?>  =(0 (lent ~(tap by requests:(prune received 121.000))))
   ~
 ++  test-identity-owner-display
@@ -90,9 +92,9 @@
   $(db (receive db ~zod ~bus raw 1.001 n), n +(n))
 ++  test-identity-single-use-approval
   ^-  tang
-  =/  out  (approve received approval 1.002)
+  =/  out  (approve received approval 1.002 16)
   =/  spent=state  next.out
-  =/  replay  (mule |.((approve spent approval 1.003)))
+  =/  replay  (mule |.((approve spent approval 1.003 16)))
   ?>  ?=(%| -.replay)
   ?>  =(metadata outgoing.out)
   ?>  =('sent' status:(~(got by requests.next.out) id))
@@ -105,7 +107,7 @@
   ?>  %+  levy  `(list @t)`~['csrf' 'comparison_code' 'origin']
       |=  field=@t
       =/  raw  (canonical:stead-codec [%o (~(put by p.value) field [%s 'wrong'])])
-      (rejected |.((approve received raw 1.002)))
+      (rejected |.((approve received raw 1.002 16)))
   ~
 ++  test-identity-trust-consent
   ^-  tang
@@ -113,15 +115,24 @@
   =/  challenge  (begin:stead-session *state:stead-session actor ~nec second 1.000 8)
   =/  key  id.challenge
   =/  payload  (approval-message:stead-browser key (~(got by challenges.next.challenge) key))
-  =/  extra  (receive received ~nec ~bus payload 1.001 3)
-  ?>  (rejected |.((send-approval extra key 1.002)))
+  =/  obj  (need (parse:stead-codec payload))
+  ?>  ?=([%o *] obj)
+  =/  direct  (canonical:stead-codec [%o (~(put by p.obj) 'protocol' [%s 'stead.auth/2'])])
+  =/  extra  (receive received ~nec ~bus direct 1.001 3)
+  ?>  (rejected |.((send-approval extra key 1.002 16)))
   =/  nonce  nonce:(~(got by requests.extra) key)
   =/  proof
     |=  protocol=@t
     (canonical:stead-codec (object:stead-codec ~[['protocol' protocol] ['challenge_id' key] ['csrf' nonce] ['comparison_code' (cut 3 [0 12] key)] ['origin' second]]))
-  ?>  (rejected |.((approve extra (proof 'stead.identity/1') 1.002)))
-  =/  agreed  (approve extra (proof 'stead.identity-consent/1') 1.002)
-  ?>  &(=(~nec home.agreed) =(payload outgoing.agreed) =(2 ~(wyt by trusted.next.agreed)))
+  ?>  (rejected |.((approve extra (proof 'stead.identity/1') 1.002 16)))
+  =/  agreed  (approve extra (proof 'stead.identity-consent/1') 1.002 16)
+  ?>  &(=(~nec home.agreed) (token-valid:stead-session proof.agreed) =(2 ~(wyt by trusted.next.agreed)))
+  =/  sealed  (need (parse:stead-codec outgoing.agreed))
+  ?>  ?=([%o *] sealed)
+  ?>  =((digest:stead-session 'stead.identity-return/1' proof.agreed) (field:stead-codec p.sealed 'return_digest'))
+  ?>  =('' nonce:(~(got by requests.next.agreed) key))
+  ?>  (rejected |.((send-approval next.agreed key 1.003 20)))
+  ?>  !=(proof.agreed outgoing.agreed)
   ?>  !(permitted-pair trusted.next.agreed ~zod second)
   ?>  !(permitted-pair trusted.next.agreed ~bud origin)
   ?>  !(permitted-pair trusted.next.agreed ~nec 'https://changed.localhost')
@@ -144,7 +155,7 @@
 ++  test-identity-acknowledgement
   ^-  tang
   ?>  =(received (acknowledge received id & 1.002))
-  =/  sent  next:(approve received approval 1.002)
+  =/  sent  next:(approve received approval 1.002 16)
   =/  yes  (acknowledge sent id & 1.003)
   =/  no  (acknowledge sent id | 1.003)
   ?>  =('approved' status:(~(got by requests.yes) id))

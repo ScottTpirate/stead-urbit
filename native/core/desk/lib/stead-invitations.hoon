@@ -147,8 +147,11 @@
   ?>  ?=([%o *] obj)
   =/  id  (field p.obj 'challenge_id')
   =/  found  (~(got by pending) id)
-  ?>  &(!approved.row.found (gth expires.row.found now) =(sender ship.identity.row.found) =(raw (proof-message id row.found)))
-  (~(put by pending) id found(row row.found(approved &)))
+  =/  return-hash  (field p.obj 'return_digest')
+  ?>  (token-valid:stead-session return-hash)
+  =/  original  (canonical [%o (~(del by p.obj) 'return_digest')])
+  ?>  &(!approved.row.found (gth expires.row.found now) =(sender ship.identity.row.found) =(original (proof-message id row.found)))
+  (~(put by pending) id found(row row.found(approved &, return-digest (some return-hash))))
 ++  list-rows
   |=  [offers=book project=@t now=@ud]
   ^-  @t
@@ -227,30 +230,32 @@
     =/  offer  (~(got by offers.s) id)
     =/  who  (ship-name (field input 'identity_ship'))
     ?>  (available offer who now)
-    =/  issuer  (authority db.s offer retired now)
+    ?>  (same-actor:stead-session issuer.offer identity:(authority db.s offer retired now))
     =/  previous  (~(get by sessions.auth.s) (digest:stead-session 'stead.session/1' session.req))
     ?>  ?~(previous & ?|((lte expires.u.previous now) =(who ship.identity.u.previous)))
     =/  identity  (resolve db.s who now)
     =/  seen  (~(get by guests.offer) who)
     ?>  ?~(seen & =(identity identity.u.seen))
     =/  shadow=state:stead-session  [counter.auth.s (~(run by pending.s) |=(f=flight row.f)) ~]
-    =/  started  (begin:stead-session shadow identity home.config origin.config now entropy)
+    =/  started  (begin-as:stead-session shadow identity home.config origin.config now entropy &)
     ?>  =(%pending status.started)
     =/  ch  (~(got by challenges.next.started) id.started)
     =/  result  (answer 'pending' ~[['challenge_id' id.started] ['comparison_code' (cut 3 [0 12] id.started)] ['home' (scot %p home.config)] ['origin' origin.config] ['expires_at_ms' (decimal expires.ch)]])
     [s(auth auth.s(counter counter.next.started), pending (~(put by pending.s) id.started [id ch])) result ~[(cookie:stead-http & cookie.started |)] [~ who (proof-message id.started ch)]]
-  ?>  (keys input ~['protocol' 'challenge_id'])
+  ?>  (keys input ?:(=('/stead/auth/invite/consume' route.req) ~['protocol' 'challenge_id' 'return_proof'] ~['protocol' 'challenge_id']))
   =/  id  (field input 'challenge_id')
   =/  f  (~(got by pending.s) id)
   =/  ch  row.f
   ?>  &((token-valid:stead-session pending.req) =(browser.ch (digest:stead-session 'stead.browser-binding/1' pending.req)) =(home.ch home.config) =(origin.ch origin.config))
   =/  offer  (~(got by offers.s) offer-id.f)
-  =/  issuer  (authority db.s offer retired now)
+  ?>  (same-actor:stead-session issuer.offer identity:(authority db.s offer retired now))
   =/  person  identity.ch
   ?>  &((available offer ship.person now) =(person (resolve db.s ship.person now)))
   ?:  =('/stead/auth/invite/status' route.req)
     [s (answer ?:(approved.ch 'approved' 'pending') ~[['challenge_id' id]]) ~ ~]
   ?>  &(=('/stead/auth/invite/consume' route.req) approved.ch)
+  =/  returned  (field input 'return_proof')
+  ?>  (proves-return:stead-session return-digest.ch returned)
   =.  pending.s  (~(del by pending.s) id)
   =/  seen  (~(get by guests.offer) ship.person)
   ?>  ?~(seen & =(person identity.u.seen))
@@ -260,7 +265,7 @@
     [s(offers (~(put by offers.s) offer-id.f offer)) (answer 'requested' ~) ~[(cookie:stead-http & '' &)] ~]
   =/  out  (admit db.s offer-id.f offer person role.offer retired now)
   =/  staged  auth.s(challenges (~(put by challenges.auth.s) id ch))
-  =/  session  (consume:stead-session staged id pending.req person home.config origin.config now entropy)
+  =/  session  (consume-bound:stead-session staged id pending.req person home.config origin.config now entropy returned)
   ?>  =(%accepted status.session)
   =.  s  s(db next.out, auth next.session, offers (~(put by offers.s) offer-id.f changed.out))
   [s (answer 'authenticated' ~[['csrf' csrf.session] ['project_id' project.offer]]) ~[(cookie:stead-http | cookie.session |) (cookie:stead-http & '' &)] ~]

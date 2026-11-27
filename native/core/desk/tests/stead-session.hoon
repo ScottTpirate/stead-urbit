@@ -133,7 +133,7 @@
   ?>  =(%capacity status.failed)
   ?>  =(collision next.failed)
   ~
-++  test-remember-device
+++  test-session-remember-device
   ^-  tang
   =/  row  (need (authorize next.logged cookie.logged csrf.logged alice ~zod origin 1.003))
   ?>  =(1.801.002 expires.row)

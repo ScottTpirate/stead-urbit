@@ -101,8 +101,8 @@ def validate_inventory(value: dict) -> dict:
     if not isinstance(value, dict) or type(value.get('format')) is not int or value.get('format') != 1 or value.get('classification') != 'pure-native-only':
         raise ValueError('Native inventory schema')
     suites = value.get('suites')
-    definitions = {'/tests/stead-session': ('test-session-', 19, 60),
-                   '/tests/stead-invitations': ('test-invitation-', 5, 60),
+    definitions = {'/tests/stead-session': ('test-session-', 20, 60),
+                   '/tests/stead-invitations': ('test-invitation-', 6, 60),
                    '/tests/stead-http': ('test-http-', 14, 60),
                    '/tests/stead-identity': ('test-identity-', 13, 60),
                    '/tests/stead-updates': ('test-updates-', 25, 60),

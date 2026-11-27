@@ -55,11 +55,15 @@
       [(response id 200 reply) owner(db next)]
     ?>  &(=('' ticket) (token-valid:stead-session key))
     =/  row  (~(got by requests.db) key)
-    ?>  &((gth expires.row now) =('pending' status.row) =([~ origin.row] (~(get by trusted.db) home.row)))
+    ?>  &(direct.row (gth expires.row now) =('pending' status.row) =([~ origin.row] (~(get by trusted.db) home.row)))
     =/  reply  (canonical:stead-codec (object:stead-codec ~[['status' 'ok'] ['planet' (scot %p our.bowl)] ['home' (scot %p home.row)] ['origin' origin.row] ['challenge_id' key]]))
     ?:  =('context' action)  [(response id 200 reply) owner]
     ?>  =('approve' action)
-    (deliver id (send-approval:stead-identity-core db key now) reply)
+    =/  out  (send-approval:stead-identity-core db key now eny.bowl)
+    =/  result  (need (parse:stead-codec reply))
+    ?>  ?=([%o *] result)
+    =/  completed  (canonical:stead-codec [%o (~(put by p.result) 'return_proof' [%s proof.out])])
+    (deliver id out completed)
   ++  http
     |=  [id=@ta request=inbound-request:eyre]
     ^-  (quip card:agent:gall state)
@@ -81,7 +85,7 @@
       ?>  (token-valid:stead-session key)
       =/  row  (~(got by requests.db) key)
       ?>  (gth expires.row now)
-      =/  enabled  &(!=('' verifier.db) =([~ origin.row] (~(get by trusted.db) home.row)))
+      =/  enabled  &(direct.row !=('' verifier.db) =([~ origin.row] (~(get by trusted.db) home.row)))
       =/  reply  (canonical:stead-codec (object:stead-codec ~[['protocol' 'stead.identity/1'] ['status' status.row] ['challenge_id' key] ['home' (scot %p home.row)] ['origin' origin.row] ['identity_ship' (scot %p our.bowl)] ['passkeys' ?:(enabled 'yes' 'no')]]))
       [(response id 200 reply) owner]
     ?.  &(authenticated.request =(src.bowl our.bowl) =(sap.bowl /eyre))
@@ -99,9 +103,12 @@
       =/  out  (owner-ticket:stead-identity-core db (field:stead-codec input 'action') now eny.bowl)
       =/  raw  (canonical:stead-codec (object:stead-codec ~[['protocol' 'stead.passkey-ticket/1'] ['status' 'ok'] ['ticket' value.out]]))
       [(response id 200 raw) owner(db next.out)]
-    =/  out  (approve:stead-identity-core db body.u.parsed now)
+    =/  out  (approve:stead-identity-core db body.u.parsed now eny.bowl)
     =/  raw  (canonical:stead-codec (object:stead-codec ~[['protocol' 'stead.identity/1'] ['status' 'sent'] ['challenge_id' id.out]]))
-    (deliver id out raw)
+    ?:  =('' proof.out)  (deliver id out raw)
+    =/  result  (need (parse:stead-codec raw))
+    ?>  ?=([%o *] result)
+    (deliver id out (canonical:stead-codec [%o (~(put by p.result) 'return_proof' [%s proof.out])]))
   ++  init
     [[bind ~] owner]
   ++  save

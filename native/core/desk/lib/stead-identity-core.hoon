@@ -3,7 +3,7 @@
 =,  stead-codec
 |%
 +$  configuration  [revision=@ud home=@p home-origin=@t origin=@t]
-+$  request  [raw=@t expires=@ud nonce=@t status=@t home=@p origin=@t purpose=@t]
++$  request  [raw=@t expires=@ud nonce=@t status=@t home=@p origin=@t purpose=@t direct=?]
 +$  ticket  [action=@t expires=@ud]
 +$  homes  (map @p @t)
 +$  state
@@ -66,13 +66,21 @@
   |=  [db=state sender=@p our=@p raw=@t now=@ud entropy=@]
   ^-  state
   =/  config  (need config.db)
-  =/  value  (small:stead-browser raw ~['protocol' 'purpose' 'challenge_id' 'home' 'origin' 'identity_ship' 'principal_id' 'binding_id' 'binding_revision' 'expires_at_ms'] 'stead.auth/1')
+  ?>  (lte (met 3 raw) 2.048)
+  =/  obj  (need (parse raw))
+  ?>  ?=([%o *] obj)
+  =/  value  p.obj
+  ?>  (keys value ~['protocol' 'purpose' 'challenge_id' 'home' 'origin' 'identity_ship' 'principal_id' 'binding_id' 'binding_revision' 'expires_at_ms'])
+  =/  protocol  (field value 'protocol')
+  =/  direct  =('stead.auth/2' protocol)
+  ?>  ?|(direct =('stead.auth/1' protocol))
   =/  purpose  (field value 'purpose')
   ?>  =((scot %p our) (field value 'identity_ship'))
-  ?>  ?|(=('member-session' purpose) =('project-invitation' purpose))
+  ?>  ?|(=('member-session' purpose) &(direct =('project-invitation' purpose)))
   =/  origin  (field value 'origin')
   ?>  &((isolated origin origin.config) =((scot %p sender) (field value 'home')) (lte (met 0 sender) 128))
   ?>  (permitted-pair trusted.db sender origin)
+  ?>  ?|(direct (~(has by trusted.db) sender))
   ?>  &((uuid (field value 'principal_id')) (uuid (field value 'binding_id')) (gth (uint (field value 'binding_revision')) 0))
   =/  id  (field value 'challenge_id')
   =/  expires  (uint (field value 'expires_at_ms'))
@@ -90,7 +98,7 @@
   ?>  (lth counter.db 18.446.744.073.709.551.615)
   =/  counter  +(counter.db)
   =/  nonce  (token:stead-session entropy counter 'stead.identity-approval-csrf/1')
-  db(counter counter, requests (~(put by requests.db) id [raw expires nonce 'pending' sender origin purpose]))
+  db(counter counter, requests (~(put by requests.db) id [raw expires nonce 'pending' sender origin purpose direct]))
 ++  address-message
   |=  [db=state id=@t our=@p]
   ^-  @t
@@ -107,7 +115,13 @@
   =/  db  (prune db now)
   =/  rows
     %-  malt
-    %+  turn  ~(tap by requests.db)
+    %+  turn
+      ?:  detailed  ~(tap by requests.db)
+      %+  skim  ~(tap by requests.db)
+      |=  [id=@t row=request]
+      ?&  !direct.row  ?=(^ config.db)
+          =(home.row home.u.config.db)
+      ==
     |=  [id=@t row=request]
     =/  value  (need (parse raw.row))
     ?>  ?=([%o *] value)
@@ -128,22 +142,33 @@
     ?.  detailed  info
     ?>  ?=([%o *] info)
     =/  trusted  ?:(=([~ origin.row] (~(get by trusted.db) home.row)) 'yes' 'no')
-    [%o (~(put by (~(put by p.info) 'trusted' [%s trusted])) 'purpose' [%s purpose.row])]
+    =/  result  (~(put by p.info) 'trusted' [%s trusted])
+    =.  result  (~(put by result) 'purpose' [%s purpose.row])
+    [%o (~(put by result) 'direct' [%s ?:(direct.row 'yes' 'no')])]
   =/  base
     ?.  detailed  (object ~[['protocol' 'stead.identity/1'] ['status' 'read']])
     (object ~[['protocol' 'stead.identity/2'] ['status' 'read'] ['passkeys' ?:(=(verifier.db '') 'no' 'yes')]])
   ?>  ?=([%o *] base)
   (canonical [%o (~(put by p.base) 'requests' [%o rows])])
-+$  approval  [next=state id=@t outgoing=@t home=@p]
++$  approval  [next=state id=@t outgoing=@t home=@p proof=@t]
 ++  send-approval
-  |=  [db=state id=@t now=@ud]
+  |=  [db=state id=@t now=@ud entropy=@]
   ^-  approval
   =.  db  (prune db now)
   =/  row  (~(got by requests.db) id)
   ?>  &(=('pending' status.row) =([~ origin.row] (~(get by trusted.db) home.row)))
-  [db(requests (~(put by requests.db) id row(status 'sent', nonce ''))) id raw.row home.row]
+  =.  requests.db  (~(put by requests.db) id row(status 'sent', nonce ''))
+  ?.  direct.row  [db id raw.row home.row '']
+  ?>  (lth counter.db 18.446.744.073.709.551.615)
+  =.  counter.db  +(counter.db)
+  =/  proof  (token:stead-session entropy counter.db 'stead.identity-return-secret/1')
+  =/  digest  (digest:stead-session 'stead.identity-return/1' proof)
+  =/  obj  (need (parse raw.row))
+  ?>  ?=([%o *] obj)
+  =/  outgoing  (canonical [%o (~(put by p.obj) 'return_digest' [%s digest])])
+  [db id outgoing home.row proof]
 ++  approve
-  |=  [db=state raw=@t now=@ud]
+  |=  [db=state raw=@t now=@ud entropy=@]
   ^-  approval
   ?>  (lte (met 3 raw) 2.048)
   =/  obj  (need (parse raw))
@@ -161,8 +186,8 @@
   ?>  (permitted-pair trusted.db home.row origin.row)
   ?.  (~(has by trusted.db) home.row)
     ?>  &(=('stead.identity-consent/1' protocol) (lth (lent ~(tap by trusted.db)) 32))
-    (send-approval db(trusted (~(put by trusted.db) home.row origin.row)) id now)
-  (send-approval db id now)
+    (send-approval db(trusted (~(put by trusted.db) home.row origin.row)) id now entropy)
+  (send-approval db id now entropy)
 ++  acknowledge
   |=  [db=state id=@t accepted=? now=@ud]
   ^-  state
