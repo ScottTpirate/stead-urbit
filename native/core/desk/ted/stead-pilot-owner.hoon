@@ -32,6 +32,10 @@
   =/  input  (decode:stead-home-handoff raw)
   ;<  ~  bind:m  (poke:strandio [our.bowl app] %stead-home-handoff-1 !>(input))
   (pure:m !>([%stead-core-result (bytes-hex:stead-codec '{}')]))
+?:  =(%member-change mode)
+  ?>  &(?=(~ route) (lte (met 3 raw) 2.048))
+  ;<  ~  bind:m  (poke:strandio [our.bowl app] %noun !>([~ %stead-member-change raw]))
+  (pure:m !>([%stead-core-result (bytes-hex:stead-codec '{}')]))
 ?:  =(%pack-relay-policy mode)
   ?>  ?=(~ route)
   =/  input  (decode:stead-code-pack-relay-policy raw our.bowl)
@@ -39,6 +43,7 @@
   (pure:m !>([%stead-core-result (bytes-hex:stead-codec '{}')]))
 ?>  ?+  mode  |
       %operator-status  &(?=([%operator @ ~] route) =('' raw))
+      %member-status  &(?=([%member @ ~] route) =('' raw))
       %pack-relay-status  &(=(route /pack-relay/status) =('' raw))
       %pack-selection  &(?=([%pack-selection @ ~] route) =('' raw))
       %handoff-status  &(=(route /home-handoff/status) =('' raw))

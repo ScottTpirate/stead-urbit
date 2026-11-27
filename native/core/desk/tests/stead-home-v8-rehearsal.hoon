@@ -1,4 +1,4 @@
-/+  *test, stead-team, stead-team-config, stead-team-codec, stead-team-owner, stead-code-home, stead-home-handoff, stead-project-retirement, stead-projection, stead-codec, stead-code-pack-anchor, stead-code-pack-push, stead-code-pack-ledger, stead-code-receive, stead-session, stead-code-git-graph, stead-git, stead-invitations
+/+  *test, stead-team, stead-team-config, stead-team-codec, stead-team-owner, stead-code-home, stead-home-handoff, stead-project-retirement, stead-projection, stead-codec, stead-code-pack-anchor, stead-code-pack-push, stead-code-pack-ledger, stead-code-receive, stead-session, stead-code-git-graph, stead-git, stead-invitations, stead-restore
 /=  home-agent  /app/stead-home
 =,  stead-code-pack-ledger
 =/  project=@t  '019939ba-4000-7000-8000-000000000001'
@@ -146,6 +146,30 @@
   ?>  ?=([%stead-home %11 *] q.durable)
   =/  stored  !<([%stead-home %11 pair=saved:stead-team-owner code=persisted:stead-code-home mode=phase:stead-home-handoff retired=ledger:stead-project-retirement packs=state:stead-code-pack-anchor external=external-writes:stead-team-owner boards=pack-boards:stead-team-owner offers=book:stead-invitations] durable)
   ?>  &(=(offers offers.stored) =(company db.pair.stored) =(old-ledger external.stored) =(anchors packs.stored))
+  ::  Renew a parked predecessor binding; a separate removal leaves a tombstone
+  ::  through cold replay and the exact v11 snapshot, preserving all project grants.
+  =/  change
+    |=  [action=@t revision=@t expiry=@t]
+    (canonical:stead-codec (object:stead-codec ~[['protocol' 'stead.member-change/1'] ['action' action] ['identity_ship' '~bus'] ['principal_id' principal.who] ['binding_id' binding.who] ['expected_binding_revision' revision] ['expires_at_ms' expiry]]))
+  =/  now  +(expires.who)
+  ?>  ?=(~ (native-context:stead-team company ~bus now))
+  =/  renewal  (change 'renew' '1' '4000000')
+  =/  renewed  (change-member:stead-team-config registry.company ~zod renewal now)
+  =/  repaired  company(registry next.renewed)
+  =/  person  (need (native-context:stead-team repaired ~bus now))
+  ?>  &(=(2 revision.identity.person) =(0 (role:stead-team repaired person project now)))
+  ?>  =(renewed (change-member:stead-team-config next.renewed ~zod renewal now))
+  =/  removal  (change 'remove' '2' '')
+  =/  removed  (change-member:stead-team-config next.renewed ~zod removal now)
+  =/  inactive  company(registry next.removed)
+  =/  denied  (mule |.((change-member:stead-team-config next.removed ~zod (change 'renew' '3' '5000000') now)))
+  ?>  &(?=(%| -.denied) ?=(~ (native-context:stead-team inactive ~bus now)))
+  =/  replay  (step:stead-restore (begin:stead-restore inactive ~zod))
+  ?>  =([~ inactive] (result:stead-restore replay))
+  =.  pair.stored  pair.stored(db inactive)
+  =/  [actions=(list card:agent:gall) cold=agent:gall]  (on-load:restarted !>(stored))
+  =/  cold-save=vase  on-save:cold
+  ?>  &(?=(^ actions) =(q.cold-save stored))
   ::  Restore the saved predecessor checkpoint including the exact accepted Git ledger.
   =/  [backout=(list card:agent:gall) rolled-back=agent:gall]  (on-load:restarted v8)
   (expect !>(&(?=(^ cards) ?=(^ more) ?=(^ backout) =((custody v8) (custody on-save:rolled-back)))))
