@@ -200,6 +200,31 @@
     =/  job  (token:stead-session eny.bowl act.bowl 'stead.projection-job/1')
     =.  owner  owner(db next, view view, offers (after-config:stead-invitations offers.owner registry.db.owner registry.next), transient *ephemeral:stead-browser, flights ~, addresses ~, pending ~, incarnation '', job job, files ~, code code.owner(book *ledger:stead-code-credentials), git-waiting ~, relay (reset:stead-code-pack-relay-pin relay.owner))
     [(weld kicks ~[bind wait]) owner]
+  ++  change-member
+    |=  raw=@t
+    ^-  (quip card:agent:gall state)
+    ?>  &(=(src.bowl our.bowl) ?=(~ product.owner) ?=(~ restoring.owner) !rebuilding.view.owner)
+    =/  now  (now-ms now.bowl)
+    =/  changed  (change-member:stead-team-config registry.db.owner our.bowl raw now)
+    ?:  =(next.changed registry.db.owner)  [~ owner]
+    =/  db  db.owner(registry next.changed)
+    =/  cfg  (need current.next.changed)
+    =/  person  (~(got by members.cfg) who.changed)
+    =/  principal  principal.identity.person
+    =/  auth  (invalidate-actor:stead-session auth.transient.owner principal)
+    =/  pages  pages.transient.owner
+    =.  cursors.pages  (malt (skip ~(tap by cursors.pages) |=([k=@t v=cursor-record:stead-views] =(principal principal.identity.actor.v))))
+    =/  reads  (prune:stead-updates db auth updates.transient.owner pages now)
+    =/  credentials  (malt (skip ~(tap by credentials.book.code.owner) |=([k=@t v=credential:stead-code-credentials] =(principal principal.owner.v))))
+    =/  removed  (skim ~(tap by pending.owner) |=([k=path v=pending-entry] =(principal principal.identity.actor.v)))
+    =/  pending  (malt (skip ~(tap by pending.owner) |=([k=path v=pending-entry] =(principal principal.identity.actor.v))))
+    =/  flights  (malt (skip ~(tap by flights.owner) |=([k=@t v=flight:stead-invitations] =(who.changed ship.identity.row.v))))
+    =/  offers
+      ?.  active.identity.person  (after-config:stead-invitations offers.owner registry.db.owner next.changed)
+      =/  before  (~(got by members:(need current.registry.db.owner)) who.changed)
+      (after-renewal:stead-invitations offers.owner identity.before identity.person)
+    =.  owner  owner(db db, offers offers, transient transient.owner(auth auth, updates next.reads, pages pages.reads), code code.owner(book book.code.owner(credentials credentials)), pending pending, flights flights)
+    [(turn removed |=([key=path val=pending-entry] [%give %kick [key ~] ~])) owner]
   ++  load-assets
     ^-  (map @t [mime=@t bytes=@t])
     (load:stead-assets byk.bowl '/stead/')
@@ -314,6 +339,26 @@
           ['projection_ready' ?:((ready:stead-projection db.owner view.owner) 'yes' 'no')]
           ['available' ?:(available 'yes' 'no')]
           ['incarnation' incarnation.owner]
+      ==
+    :_  owner
+    :~  [%give %fact ~ %stead-result-3 !>(response)]
+        [%give %kick ~ ~]
+    ==
+  ++  inspect-member
+    |=  name=@t
+    ^-  (quip card:agent:gall state)
+    ?>  &(=(src.bowl our.bowl) ?=(~ product.owner) ?=(~ restoring.owner))
+    =/  who  (need (slaw %p name))
+    ?>  =((scot %p who) name)
+    =/  config  (need current.registry.db.owner)
+    =/  person  (~(got by members.config) who)
+    =/  actor  identity.person
+    =/  response
+      %-  canonical  %-  object
+      :~  ['protocol' 'stead.member-status/1']  ['home' (scot %p our.bowl)]
+          ['identity_ship' name]  ['principal_id' principal.actor]  ['binding_id' binding.actor]
+          ['binding_revision' (decimal revision.actor)]  ['active' ?:(active.actor 'yes' 'no')]
+          ['expires_at_ms' (decimal expires.actor)]  ['config_revision' (decimal revision.config)]
       ==
     :_  owner
     :~  [%give %fact ~ %stead-result-3 !>(response)]
@@ -671,6 +716,9 @@
     ?:  =(%stead-team-config-1 mark)  (configured !<(@t vase))
     ?:  =(%stead-bootstrap-1 mark)  (bootstrap !<(@t vase))
     ?:  =(%handle-http-request mark)  (http !<([@ta inbound-request:eyre] vase))
+    ?:  &(=(%noun mark) ?=([~ %stead-member-change @] q.vase))
+      =/  [~ %stead-member-change raw=@t]  ;;([~ %stead-member-change @t] q.vase)
+      (change-member raw)
     ?>  available
     ?:  =(%noun mark)
       ?>  ?=(~ product.owner)
@@ -817,6 +865,7 @@
       ?>  (lte (lent ~(tap by sup.bowl)) 128)
       [~ owner]
     ?:  ?=([%operator @ ~] route)  (inspect i.t.route)
+    ?:  ?=([%member @ ~] route)  (inspect-member i.t.route)
     ?:  =(route /pack-relay/status)  inspect-relay
     ?:  ?=([%pack-selection @ ~] route)  (inspect-pack-selection i.t.route)
     ?:  ?=([%pack-local @ ~] route)

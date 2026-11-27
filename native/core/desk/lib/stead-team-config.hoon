@@ -102,6 +102,41 @@
   =/  id  p.i.create-pairs
   ?>  &((~(has in principals) id) =([%s 'yes'] q.i.create-pairs))
   $(create-pairs t.create-pairs, rights (~(put in rights) id))
+++  change-member
+  |=  [reg=registry home=@p raw=@t now=@ud]
+  ^-  [who=@p next=registry]
+  ~|  %stead-invalid-member-change
+  ?>  (lte (met 3 raw) 2.048)
+  =/  value  (need (parse-result raw))
+  ?>  ?=([%o *] value)
+  =/  obj  p.value
+  ?>  (keys obj ~['protocol' 'action' 'identity_ship' 'principal_id' 'binding_id' 'expected_binding_revision' 'expires_at_ms'])
+  ?>  =('stead.member-change/1' (field obj 'protocol'))
+  =/  action  (field obj 'action')
+  ?>  ?|(=('renew' action) =('remove' action))
+  =/  active=?  =('renew' action)
+  =/  who  (need (slaw %p (field obj 'identity_ship')))
+  ?>  =((scot %p who) (field obj 'identity_ship'))
+  =/  cfg  (need current.reg)
+  ?>  =(home home.cfg)
+  =/  member  (~(got by members.cfg) who)
+  =/  before  identity.member
+  ?>  &(=(principal.before (field obj 'principal_id')) =(binding.before (field obj 'binding_id')))
+  =/  rev  (uint (field obj 'expected_binding_revision'))
+  ?>  &((gth rev 0) (lth rev 18.446.744.073.709.551.615))
+  =/  requested  (field obj 'expires_at_ms')
+  ?>  ?|(active =('' requested))
+  =/  expiry  ?:(active (uint requested) expires.before)
+  ::  An exact retry acknowledges the applied operation without changing another revision.
+  ?:  =(+(rev) revision.before)
+    ?>  &(=(active active.before) =(expiry expires.before))
+    [who reg]
+  ?>  &(=(rev revision.before) active.before (lth revision.cfg 18.446.744.073.709.551.615))
+  ?>  ?|(!active &((gth expiry expires.before) (gth expiry now)))
+  =/  actor  before(revision +(rev), active active, expires expiry)
+  =.  members.cfg  (~(put by members.cfg) who member(identity actor))
+  =.  revisions.reg  (~(put by revisions.reg) principal.actor revision.actor)
+  [who reg(current (some cfg(revision +(revision.cfg))))]
 ++  validate
   |=  [registry=registry home=@p]
   ^-  ?
