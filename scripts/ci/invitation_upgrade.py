@@ -94,15 +94,21 @@ def suspend(home):
 
 
 def capture(home, version):
-    prefix = SAVED + f'?>  ?=([%stead-home %{version} *] q.saved)  '
-    tail = '' if version == 8 else ' boards=* offers=(map @t *)'
+    shape = '[* *] * * * * *' + ('' if version == 8 else ' * *')
+    prefix = SAVED + f'?>  ?=([%stead-home %{version} {shape}] q.saved)  '
+    tail = '' if version == 8 else ' boards=* offers=*'
     prefix += '=/  parts=[team=[db=* projection=*] code=* mode=* retired=* packs=* external=*' + tail + ']  +>.q.saved  '
     def pin(expression):
-        output = home.dojo(prefix + '^-  @ux  (shax (jam ' + expression + '))').strip()
-        require(re.fullmatch(r'0x[0-9a-f.]+', output), 'invalid saved-state fingerprint')
-        return output
+        output = home.dojo(prefix + '^-  @ux  (shax (jam ' + expression + '))')
+        token = ''.join(output.split())
+        if not re.fullmatch(r'0x[0-9a-f]+(?:\.[0-9a-f]+)*', token) or len(token) > 82:
+            terms = re.findall(r'nest-fail|find-(?:fork|limb)|mint-(?:nice|vain)|syntax error|exit', output[:2000])
+            raise ValueError(f'invalid {expression} fingerprint ({terms[:4]})')
+        value = int(token.replace('.', ''), 16)
+        require(value.bit_length() <= 256, 'fingerprint exceeds 256 bits')
+        return f'{value:064x}'
     if version == 11:
-        require(home.dojo(prefix + '=(1 ~(wyt by offers.parts))').strip() == '%.y', 'expected one durable offer')
+        require(home.dojo(prefix + '=/  offers  ;;((map @t *) offers.parts)  =(1 ~(wyt by offers))').strip() == '%.y', 'expected one durable offer')
     return dict(version=version, saved=pin('saved'), core=pin('[db.team.parts code.parts mode.parts retired.parts packs.parts]'),
                 external=pin('external.parts'))
 
@@ -212,11 +218,13 @@ def run():
         home.start()
         return sealed
     try:
+        print('Starting synthetic predecessor', flush=True)
         home.start()
         home.install(INPUT / 'drivers')
         release.install_desk(home, 'stead-home', seed)
         release.wait_agent(home, 'stead-home', True)
         suspend(home)
+        print('Suspended synthetic v8 seed', flush=True)
         seeded_state = capture(home, 8)
         release.replace_clay_files(home, seeded, old, package=previous / 'desk')
         certs = native_tls.create(STATE / 'certs')
