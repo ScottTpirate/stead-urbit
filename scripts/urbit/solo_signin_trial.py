@@ -359,7 +359,17 @@ def run(native):
         check(any(r.get('project_id') == project and r.get('role')=='maintainer' for r in projects(site,n).values()),
               'prior and redeemed sessions preserve role')
     check(git_refs(owner, project, ca, bearer) == before_refs, 'existing Git password survives redemption')
-    check(all(not name.startswith('urbauth-') for name in owner.cookies.keys() | guest.cookies.keys()),'ship login isolated')
+    # Eyre sets its own host-only urbauth cookie even for an anonymous guest.
+    # Only the owner session's value must stay on the Identity hostname.
+    personal = identity.cookies.get('urbauth-'+SHIP)
+    check(personal and all(personal not in site.cookies.values() for site in (owner, guest)),
+          'authenticated ship-owner cookie confined to Identity')
+    check(not any(key.startswith('__Host-stead-') for key in identity.cookies),
+          'workspace credentials confined to Home')
+    anonymous = Site(IDENTITY,ca)
+    anonymous.request('GET','/stead-identity/')
+    denied,_ = anonymous.request('POST','/stead-identity/api/list',{'protocol':'stead.identity/2'})
+    check(denied==401,'ordinary Eyre guest remains unauthorized')
     def device(site, action, value=''):
         return site.post('/stead/auth/devices', {'protocol':'stead.devices/1','action':action,'value':value})
     check(device(guest,'remember','Temporary laptop')['status']=='remembered','explicit device trust')
